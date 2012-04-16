@@ -636,25 +636,50 @@ end_return
 
 begin_comment
 unit|}
-comment|/// \brief If the union is set to the first pointer type we can get an
+comment|/// \brief If the union is set to the first pointer type get an address
 end_comment
 
 begin_comment
-comment|/// address pointing to it.
+comment|/// pointing to it.
 end_comment
 
 begin_expr_stmt
-unit|template
-operator|<
-name|typename
-name|T
-operator|>
-name|PT1
+unit|PT1
 specifier|const
 operator|*
-name|getAddrOf
+name|getAddrOfPtr1
 argument_list|()
 specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|PointerUnion
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getAddrOfPtr1
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief If the union is set to the first pointer type get an address
+end_comment
+
+begin_comment
+comment|/// pointing to it.
+end_comment
+
+begin_function
+name|PT1
+modifier|*
+name|getAddrOfPtr1
+parameter_list|()
 block|{
 name|assert
 argument_list|(
@@ -667,7 +692,7 @@ operator|)
 operator|&&
 literal|"Val is not the first pointer"
 argument_list|)
-block|;
+expr_stmt|;
 name|assert
 argument_list|(
 name|get
@@ -684,30 +709,19 @@ argument_list|()
 operator|&&
 literal|"Can't get the address because PointerLikeTypeTraits changes the ptr"
 argument_list|)
-block|;
-name|T
-specifier|const
-operator|*
-name|can_only_get_address_of_first_pointer_type
-operator|=
-name|reinterpret_cast
-operator|<
-name|PT1
-specifier|const
-operator|*
-operator|>
+expr_stmt|;
+return|return
 operator|(
+name|PT1
+operator|*
+operator|)
 name|Val
 operator|.
 name|getAddrOfPointer
 argument_list|()
-operator|)
-block|;
-return|return
-name|can_only_get_address_of_first_pointer_type
 return|;
 block|}
-end_expr_stmt
+end_function
 
 begin_comment
 comment|/// Assignment operators - Allow assigning into this union from either
@@ -1342,6 +1356,7 @@ argument_list|(
 name|Val
 argument_list|)
 operator|.
+name|template
 name|is
 operator|<
 name|T
@@ -1424,6 +1439,7 @@ argument_list|(
 name|Val
 argument_list|)
 operator|.
+name|template
 name|get
 operator|<
 name|T

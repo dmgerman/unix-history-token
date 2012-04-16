@@ -33,6 +33,7 @@ literal|"C"
 block|{
 endif|#
 directive|endif
+comment|/**  * @defgroup LLVMCInitialization Initialization Routines  * @ingroup LLVMC  *  * This module contains routines used to initialize the LLVM system.  *  * @{  */
 name|void
 name|LLVMInitializeCore
 parameter_list|(
@@ -49,6 +50,13 @@ parameter_list|)
 function_decl|;
 name|void
 name|LLVMInitializeScalarOpts
+parameter_list|(
+name|LLVMPassRegistryRef
+name|R
+parameter_list|)
+function_decl|;
+name|void
+name|LLVMInitializeVectorization
 parameter_list|(
 name|LLVMPassRegistryRef
 name|R
@@ -103,6 +111,7 @@ name|LLVMPassRegistryRef
 name|R
 parameter_list|)
 function_decl|;
+comment|/**  * @}  */
 ifdef|#
 directive|ifdef
 name|__cplusplus

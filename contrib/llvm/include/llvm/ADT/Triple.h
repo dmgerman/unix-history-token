@@ -102,24 +102,21 @@ name|ArchType
 block|{
 name|UnknownArch
 block|,
-name|alpha
-block|,
-comment|// Alpha: alpha
 name|arm
 block|,
 comment|// ARM; arm, armv.*, xscale
-name|bfin
-block|,
-comment|// Blackfin: bfin
 name|cellspu
 block|,
 comment|// CellSPU: spu, cellspu
+name|hexagon
+block|,
+comment|// Hexagon: hexagon
 name|mips
 block|,
 comment|// MIPS: mips, mipsallegrex
 name|mipsel
 block|,
-comment|// MIPSEL: mipsel, mipsallegrexel, psp
+comment|// MIPSEL: mipsel, mipsallegrexel
 name|mips64
 block|,
 comment|// MIPS64: mips64
@@ -135,15 +132,15 @@ comment|// PPC: powerpc
 name|ppc64
 block|,
 comment|// PPC64: powerpc64, ppu
+name|r600
+block|,
+comment|// R600: AMD GPUs HD2XXX - HD6XXX
 name|sparc
 block|,
 comment|// Sparc: sparc
 name|sparcv9
 block|,
 comment|// Sparcv9: Sparcv9
-name|systemz
-block|,
-comment|// SystemZ: s390x
 name|tce
 block|,
 comment|// TCE (http://tce.cs.tut.fi/): tce
@@ -172,9 +169,7 @@ name|le32
 block|,
 comment|// le32: generic little-endian 32-bit CPU (PNaCl / Emscripten)
 name|amdil
-block|,
 comment|// amdil: amd IL
-name|InvalidArch
 block|}
 enum|;
 enum|enum
@@ -187,6 +182,10 @@ block|,
 name|PC
 block|,
 name|SCEI
+block|,
+name|BGP
+block|,
+name|BGQ
 block|}
 enum|;
 enum|enum
@@ -222,8 +221,6 @@ name|NetBSD
 block|,
 name|OpenBSD
 block|,
-name|Psp
-block|,
 name|Solaris
 block|,
 name|Win32
@@ -235,6 +232,9 @@ block|,
 name|RTEMS
 block|,
 name|NativeClient
+block|,
+name|CNK
+comment|// BG/P Compute-Node Kernel
 block|}
 enum|;
 enum|enum
@@ -246,9 +246,13 @@ name|GNU
 block|,
 name|GNUEABI
 block|,
+name|GNUEABIHF
+block|,
 name|EABI
 block|,
 name|MachO
+block|,
+name|ANDROIDEABI
 block|}
 enum|;
 name|private
@@ -258,78 +262,28 @@ operator|::
 name|string
 name|Data
 expr_stmt|;
-comment|/// The parsed arch type (or InvalidArch if uninitialized).
-name|mutable
+comment|/// The parsed arch type.
 name|ArchType
 name|Arch
 decl_stmt|;
 comment|/// The parsed vendor type.
-name|mutable
 name|VendorType
 name|Vendor
 decl_stmt|;
 comment|/// The parsed OS type.
-name|mutable
 name|OSType
 name|OS
 decl_stmt|;
 comment|/// The parsed Environment type.
-name|mutable
 name|EnvironmentType
 name|Environment
 decl_stmt|;
-name|bool
-name|isInitialized
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Arch
-operator|!=
-name|InvalidArch
-return|;
-block|}
-specifier|static
-name|ArchType
-name|ParseArch
-parameter_list|(
-name|StringRef
-name|ArchName
-parameter_list|)
-function_decl|;
-specifier|static
-name|VendorType
-name|ParseVendor
-parameter_list|(
-name|StringRef
-name|VendorName
-parameter_list|)
-function_decl|;
-specifier|static
-name|OSType
-name|ParseOS
-parameter_list|(
-name|StringRef
-name|OSName
-parameter_list|)
-function_decl|;
-specifier|static
-name|EnvironmentType
-name|ParseEnvironment
-parameter_list|(
-name|StringRef
-name|EnvironmentName
-parameter_list|)
-function_decl|;
-name|void
-name|Parse
-argument_list|()
-specifier|const
-expr_stmt|;
 name|public
 label|:
 comment|/// @name Constructors
 comment|/// @{
+comment|/// \brief Default constructor is the same as an empty string and leaves all
+comment|/// triple fields unknown.
 name|Triple
 argument_list|()
 operator|:
@@ -337,9 +291,16 @@ name|Data
 argument_list|()
 operator|,
 name|Arch
-argument_list|(
-argument|InvalidArch
-argument_list|)
+argument_list|()
+operator|,
+name|Vendor
+argument_list|()
+operator|,
+name|OS
+argument_list|()
+operator|,
+name|Environment
+argument_list|()
 block|{}
 name|explicit
 name|Triple
@@ -349,20 +310,7 @@ name|Twine
 operator|&
 name|Str
 argument_list|)
-operator|:
-name|Data
-argument_list|(
-name|Str
-operator|.
-name|str
-argument_list|()
-argument_list|)
-operator|,
-name|Arch
-argument_list|(
-argument|InvalidArch
-argument_list|)
-block|{}
+expr_stmt|;
 name|Triple
 argument_list|(
 specifier|const
@@ -380,36 +328,7 @@ name|Twine
 operator|&
 name|OSStr
 argument_list|)
-operator|:
-name|Data
-argument_list|(
-operator|(
-name|ArchStr
-operator|+
-name|Twine
-argument_list|(
-literal|'-'
-argument_list|)
-operator|+
-name|VendorStr
-operator|+
-name|Twine
-argument_list|(
-literal|'-'
-argument_list|)
-operator|+
-name|OSStr
-operator|)
-operator|.
-name|str
-argument_list|()
-argument_list|)
-operator|,
-name|Arch
-argument_list|(
-argument|InvalidArch
-argument_list|)
-block|{   }
+expr_stmt|;
 name|Triple
 argument_list|(
 specifier|const
@@ -432,43 +351,7 @@ name|Twine
 operator|&
 name|EnvironmentStr
 argument_list|)
-operator|:
-name|Data
-argument_list|(
-operator|(
-name|ArchStr
-operator|+
-name|Twine
-argument_list|(
-literal|'-'
-argument_list|)
-operator|+
-name|VendorStr
-operator|+
-name|Twine
-argument_list|(
-literal|'-'
-argument_list|)
-operator|+
-name|OSStr
-operator|+
-name|Twine
-argument_list|(
-literal|'-'
-argument_list|)
-operator|+
-name|EnvironmentStr
-operator|)
-operator|.
-name|str
-argument_list|()
-argument_list|)
-operator|,
-name|Arch
-argument_list|(
-argument|InvalidArch
-argument_list|)
-block|{   }
+expr_stmt|;
 comment|/// @}
 comment|/// @name Normalization
 comment|/// @{
@@ -494,15 +377,6 @@ name|getArch
 argument_list|()
 specifier|const
 block|{
-if|if
-condition|(
-operator|!
-name|isInitialized
-argument_list|()
-condition|)
-name|Parse
-argument_list|()
-expr_stmt|;
 return|return
 name|Arch
 return|;
@@ -513,64 +387,25 @@ name|getVendor
 argument_list|()
 specifier|const
 block|{
-if|if
-condition|(
-operator|!
-name|isInitialized
-argument_list|()
-condition|)
-name|Parse
-argument_list|()
-expr_stmt|;
 return|return
 name|Vendor
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// getOS - Get the parsed operating system type of this triple.
-end_comment
-
-begin_expr_stmt
 name|OSType
 name|getOS
 argument_list|()
 specifier|const
 block|{
-if|if
-condition|(
-operator|!
-name|isInitialized
-argument_list|()
-condition|)
-name|Parse
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 name|OS
 return|;
-end_return
-
-begin_comment
-unit|}
+block|}
 comment|/// hasEnvironment - Does this triple have the optional environment
-end_comment
-
-begin_comment
 comment|/// (fourth) component?
-end_comment
-
-begin_macro
-unit|bool
+name|bool
 name|hasEnvironment
 argument_list|()
-end_macro
-
-begin_expr_stmt
 specifier|const
 block|{
 return|return
@@ -580,185 +415,22 @@ operator|!=
 literal|""
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// getEnvironment - Get the parsed environment type of this triple.
-end_comment
-
-begin_expr_stmt
 name|EnvironmentType
 name|getEnvironment
 argument_list|()
 specifier|const
 block|{
-if|if
-condition|(
-operator|!
-name|isInitialized
-argument_list|()
-condition|)
-name|Parse
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 name|Environment
 return|;
-end_return
-
-begin_comment
-unit|}
-comment|/// @}
-end_comment
-
-begin_comment
-comment|/// @name Direct Component Access
-end_comment
-
-begin_comment
-comment|/// @{
-end_comment
-
-begin_expr_stmt
-unit|const
-name|std
-operator|::
-name|string
-operator|&
-name|str
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Data
-return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|getTriple
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Data
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
-comment|/// getArchName - Get the architecture (first) component of the
-end_comment
-
-begin_comment
-comment|/// triple.
-end_comment
-
-begin_expr_stmt
-name|StringRef
-name|getArchName
-argument_list|()
-specifier|const
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/// getVendorName - Get the vendor (second) component of the triple.
-end_comment
-
-begin_expr_stmt
-name|StringRef
-name|getVendorName
-argument_list|()
-specifier|const
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/// getOSName - Get the operating system (third) component of the
-end_comment
-
-begin_comment
-comment|/// triple.
-end_comment
-
-begin_expr_stmt
-name|StringRef
-name|getOSName
-argument_list|()
-specifier|const
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/// getEnvironmentName - Get the optional environment (fourth)
-end_comment
-
-begin_comment
-comment|/// component of the triple, or "" if empty.
-end_comment
-
-begin_expr_stmt
-name|StringRef
-name|getEnvironmentName
-argument_list|()
-specifier|const
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/// getOSAndEnvironmentName - Get the operating system and optional
-end_comment
-
-begin_comment
-comment|/// environment components as a single string (separated by a '-'
-end_comment
-
-begin_comment
-comment|/// if the environment component is present).
-end_comment
-
-begin_expr_stmt
-name|StringRef
-name|getOSAndEnvironmentName
-argument_list|()
-specifier|const
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// getOSVersion - Parse the version number from the OS name component of the
-end_comment
-
-begin_comment
 comment|/// triple, if present.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// For example, "fooos1.2.3" would return (1, 2, 3).
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// If an entry is not defined, it will be returned as 0.
-end_comment
-
-begin_decl_stmt
 name|void
 name|getOSVersion
 argument_list|(
@@ -776,17 +448,8 @@ name|Micro
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// getOSMajorVersion - Return just the major version number, this is
-end_comment
-
-begin_comment
 comment|/// specialized because it is a common query.
-end_comment
-
-begin_expr_stmt
 name|unsigned
 name|getOSMajorVersion
 argument_list|()
@@ -812,17 +475,124 @@ return|return
 name|Maj
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
+comment|/// getMacOSXVersion - Parse the version number as with getOSVersion and then
+comment|/// translate generic "darwin" versions to the corresponding OS X versions.
+comment|/// This may also be called with IOS triples but the OS X version number is
+comment|/// just set to a constant 10.4.0 in that case.  Returns true if successful.
+name|bool
+name|getMacOSXVersion
+argument_list|(
+name|unsigned
+operator|&
+name|Major
+argument_list|,
+name|unsigned
+operator|&
+name|Minor
+argument_list|,
+name|unsigned
+operator|&
+name|Micro
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// @}
+comment|/// @name Direct Component Access
+comment|/// @{
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|str
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Data
+return|;
+block|}
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|getTriple
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Data
+return|;
+block|}
+comment|/// getArchName - Get the architecture (first) component of the
+comment|/// triple.
+name|StringRef
+name|getArchName
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// getVendorName - Get the vendor (second) component of the triple.
+name|StringRef
+name|getVendorName
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// getOSName - Get the operating system (third) component of the
+comment|/// triple.
+name|StringRef
+name|getOSName
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// getEnvironmentName - Get the optional environment (fourth)
+comment|/// component of the triple, or "" if empty.
+name|StringRef
+name|getEnvironmentName
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// getOSAndEnvironmentName - Get the operating system and optional
+comment|/// environment components as a single string (separated by a '-'
+comment|/// if the environment component is present).
+name|StringRef
+name|getOSAndEnvironmentName
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// @}
+comment|/// @name Convenience Predicates
+comment|/// @{
+comment|/// \brief Test whether the architecture is 64-bit
+comment|///
+comment|/// Note that this tests for 64-bit pointer width, and nothing else. Note
+comment|/// that we intentionally expose only three predicates, 64-bit, 32-bit, and
+comment|/// 16-bit. The inner details of pointer width for particular architectures
+comment|/// is not summed up in the triple, and so only a coarse grained predicate
+comment|/// system is provided.
+name|bool
+name|isArch64Bit
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \brief Test whether the architecture is 32-bit
+comment|///
+comment|/// Note that this tests for 32-bit pointer width, and nothing else.
+name|bool
+name|isArch32Bit
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \brief Test whether the architecture is 16-bit
+comment|///
+comment|/// Note that this tests for 16-bit pointer width, and nothing else.
+name|bool
+name|isArch16Bit
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// isOSVersionLT - Helper function for doing comparisons against version
-end_comment
-
-begin_comment
 comment|/// numbers included in the target triple.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|isOSVersionLT
 argument_list|(
@@ -920,112 +690,9 @@ return|return
 name|false
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
-comment|/// isMacOSX - Is this a Mac OS X triple. For legacy reasons, we support both
-end_comment
-
-begin_comment
-comment|/// "darwin" and "osx" as OS X triples.
-end_comment
-
-begin_expr_stmt
-name|bool
-name|isMacOSX
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getOS
-argument_list|()
-operator|==
-name|Triple
-operator|::
-name|Darwin
-operator|||
-name|getOS
-argument_list|()
-operator|==
-name|Triple
-operator|::
-name|MacOSX
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
-comment|/// isOSDarwin - Is this a "Darwin" OS (OS X or iOS).
-end_comment
-
-begin_expr_stmt
-name|bool
-name|isOSDarwin
-argument_list|()
-specifier|const
-block|{
-return|return
-name|isMacOSX
-argument_list|()
-operator|||
-name|getOS
-argument_list|()
-operator|==
-name|Triple
-operator|::
-name|IOS
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
-comment|/// isOSWindows - Is this a "Windows" OS.
-end_comment
-
-begin_expr_stmt
-name|bool
-name|isOSWindows
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getOS
-argument_list|()
-operator|==
-name|Triple
-operator|::
-name|Win32
-operator|||
-name|getOS
-argument_list|()
-operator|==
-name|Triple
-operator|::
-name|Cygwin
-operator|||
-name|getOS
-argument_list|()
-operator|==
-name|Triple
-operator|::
-name|MinGW32
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
 comment|/// isMacOSXVersionLT - Comparison function for checking OS X version
-end_comment
-
-begin_comment
 comment|/// compatibility, which handles supporting skewed version numbering schemes
-end_comment
-
-begin_comment
 comment|/// used by the "darwin" triples.
-end_comment
-
-begin_decl_stmt
 name|unsigned
 name|isMacOSXVersionLT
 argument_list|(
@@ -1095,29 +762,138 @@ literal|0
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
+comment|/// isMacOSX - Is this a Mac OS X triple. For legacy reasons, we support both
+comment|/// "darwin" and "osx" as OS X triples.
+name|bool
+name|isMacOSX
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOS
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|Darwin
+operator|||
+name|getOS
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|MacOSX
+return|;
+block|}
+comment|/// isOSDarwin - Is this a "Darwin" OS (OS X or iOS).
+name|bool
+name|isOSDarwin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isMacOSX
+argument_list|()
+operator|||
+name|getOS
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|IOS
+return|;
+block|}
+comment|/// \brief Tests for either Cygwin or MinGW OS
+name|bool
+name|isOSCygMing
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOS
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|Cygwin
+operator|||
+name|getOS
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|MinGW32
+return|;
+block|}
+comment|/// isOSWindows - Is this a "Windows" OS.
+name|bool
+name|isOSWindows
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOS
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|Win32
+operator|||
+name|isOSCygMing
+argument_list|()
+return|;
+block|}
+comment|/// \brief Tests whether the OS uses the ELF binary format.
+name|bool
+name|isOSBinFormatELF
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|isOSDarwin
+argument_list|()
+operator|&&
+operator|!
+name|isOSWindows
+argument_list|()
+return|;
+block|}
+comment|/// \brief Tests whether the OS uses the COFF binary format.
+name|bool
+name|isOSBinFormatCOFF
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isOSWindows
+argument_list|()
+return|;
+block|}
+comment|/// \brief Tests whether the environment is MachO.
+comment|// FIXME: Should this be an OSBinFormat predicate?
+name|bool
+name|isEnvironmentMachO
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getEnvironment
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|MachO
+operator|||
+name|isOSDarwin
+argument_list|()
+return|;
+block|}
 comment|/// @}
-end_comment
-
-begin_comment
 comment|/// @name Mutators
-end_comment
-
-begin_comment
 comment|/// @{
-end_comment
-
-begin_comment
 comment|/// setArch - Set the architecture (first) component of the triple
-end_comment
-
-begin_comment
 comment|/// to a known type.
-end_comment
-
-begin_function_decl
 name|void
 name|setArch
 parameter_list|(
@@ -1125,17 +901,8 @@ name|ArchType
 name|Kind
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// setVendor - Set the vendor (second) component of the triple to a
-end_comment
-
-begin_comment
 comment|/// known type.
-end_comment
-
-begin_function_decl
 name|void
 name|setVendor
 parameter_list|(
@@ -1143,17 +910,8 @@ name|VendorType
 name|Kind
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// setOS - Set the operating system (third) component of the triple
-end_comment
-
-begin_comment
 comment|/// to a known type.
-end_comment
-
-begin_function_decl
 name|void
 name|setOS
 parameter_list|(
@@ -1161,17 +919,8 @@ name|OSType
 name|Kind
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// setEnvironment - Set the environment (fourth) component of the triple
-end_comment
-
-begin_comment
 comment|/// to a known type.
-end_comment
-
-begin_function_decl
 name|void
 name|setEnvironment
 parameter_list|(
@@ -1179,13 +928,7 @@ name|EnvironmentType
 name|Kind
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// setTriple - Set all components to the new triple \arg Str.
-end_comment
-
-begin_function_decl
 name|void
 name|setTriple
 parameter_list|(
@@ -1195,17 +938,8 @@ modifier|&
 name|Str
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// setArchName - Set the architecture (first) component of the
-end_comment
-
-begin_comment
 comment|/// triple by name.
-end_comment
-
-begin_function_decl
 name|void
 name|setArchName
 parameter_list|(
@@ -1213,17 +947,8 @@ name|StringRef
 name|Str
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// setVendorName - Set the vendor (second) component of the triple
-end_comment
-
-begin_comment
 comment|/// by name.
-end_comment
-
-begin_function_decl
 name|void
 name|setVendorName
 parameter_list|(
@@ -1231,17 +956,8 @@ name|StringRef
 name|Str
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// setOSName - Set the operating system (third) component of the
-end_comment
-
-begin_comment
 comment|/// triple by name.
-end_comment
-
-begin_function_decl
 name|void
 name|setOSName
 parameter_list|(
@@ -1249,17 +965,8 @@ name|StringRef
 name|Str
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// setEnvironmentName - Set the optional environment (fourth)
-end_comment
-
-begin_comment
 comment|/// component of the triple by name.
-end_comment
-
-begin_function_decl
 name|void
 name|setEnvironmentName
 parameter_list|(
@@ -1267,17 +974,8 @@ name|StringRef
 name|Str
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// setOSAndEnvironmentName - Set the operating system and optional
-end_comment
-
-begin_comment
 comment|/// environment components with a single string.
-end_comment
-
-begin_function_decl
 name|void
 name|setOSAndEnvironmentName
 parameter_list|(
@@ -1285,46 +983,48 @@ name|StringRef
 name|Str
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// getArchNameForAssembler - Get an architecture name that is understood by
-end_comment
-
-begin_comment
 comment|/// the target assembler.
-end_comment
-
-begin_function_decl
 specifier|const
 name|char
 modifier|*
 name|getArchNameForAssembler
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// @}
-end_comment
-
-begin_comment
-comment|/// @name Static helpers for IDs.
-end_comment
-
-begin_comment
+comment|/// @name Helpers to build variants of a particular triple.
 comment|/// @{
-end_comment
-
-begin_comment
+comment|/// \brief Form a triple with a 32-bit variant of the current architecture.
+comment|///
+comment|/// This can be used to move across "families" of architectures where useful.
+comment|///
+comment|/// \returns A new triple with a 32-bit architecture or an unknown
+comment|///          architecture if no such variant can be found.
+name|llvm
+operator|::
+name|Triple
+name|get32BitArchVariant
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \brief Form a triple with a 64-bit variant of the current architecture.
+comment|///
+comment|/// This can be used to move across "families" of architectures where useful.
+comment|///
+comment|/// \returns A new triple with a 64-bit architecture or an unknown
+comment|///          architecture if no such variant can be found.
+name|llvm
+operator|::
+name|Triple
+name|get64BitArchVariant
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// @}
+comment|/// @name Static helpers for IDs.
+comment|/// @{
 comment|/// getArchTypeName - Get the canonical name for the \arg Kind
-end_comment
-
-begin_comment
 comment|/// architecture.
-end_comment
-
-begin_function_decl
 specifier|static
 specifier|const
 name|char
@@ -1335,33 +1035,12 @@ name|ArchType
 name|Kind
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// getArchTypePrefix - Get the "prefix" canonical name for the \arg Kind
-end_comment
-
-begin_comment
 comment|/// architecture. This is the prefix used by the architecture specific
-end_comment
-
-begin_comment
 comment|/// builtins, and is suitable for passing to \see
-end_comment
-
-begin_comment
 comment|/// Intrinsic::getIntrinsicForGCCBuiltin().
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \return - The architecture prefix, or 0 if none is defined.
-end_comment
-
-begin_function_decl
 specifier|static
 specifier|const
 name|char
@@ -1372,17 +1051,8 @@ name|ArchType
 name|Kind
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// getVendorTypeName - Get the canonical name for the \arg Kind
-end_comment
-
-begin_comment
 comment|/// vendor.
-end_comment
-
-begin_function_decl
 specifier|static
 specifier|const
 name|char
@@ -1393,17 +1063,8 @@ name|VendorType
 name|Kind
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// getOSTypeName - Get the canonical name for the \arg Kind operating
-end_comment
-
-begin_comment
 comment|/// system.
-end_comment
-
-begin_function_decl
 specifier|static
 specifier|const
 name|char
@@ -1414,17 +1075,8 @@ name|OSType
 name|Kind
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// getEnvironmentTypeName - Get the canonical name for the \arg Kind
-end_comment
-
-begin_comment
 comment|/// environment.
-end_comment
-
-begin_function_decl
 specifier|static
 specifier|const
 name|char
@@ -1435,29 +1087,11 @@ name|EnvironmentType
 name|Kind
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// @}
-end_comment
-
-begin_comment
 comment|/// @name Static helpers for converting alternate architecture names.
-end_comment
-
-begin_comment
 comment|/// @{
-end_comment
-
-begin_comment
 comment|/// getArchTypeForLLVMName - The canonical type for the given LLVM
-end_comment
-
-begin_comment
 comment|/// architecture name (e.g., "x86").
-end_comment
-
-begin_function_decl
 specifier|static
 name|ArchType
 name|getArchTypeForLLVMName
@@ -1466,21 +1100,9 @@ name|StringRef
 name|Str
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// getArchTypeForDarwinArchName - Get the architecture type for a "Darwin"
-end_comment
-
-begin_comment
 comment|/// architecture name, for example as accepted by "gcc -arch" (see also
-end_comment
-
-begin_comment
 comment|/// arch(3)).
-end_comment
-
-begin_function_decl
 specifier|static
 name|ArchType
 name|getArchTypeForDarwinArchName
@@ -1489,14 +1111,13 @@ name|StringRef
 name|Str
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// @}
-end_comment
+block|}
+empty_stmt|;
+block|}
+end_decl_stmt
 
 begin_comment
-unit|};  }
 comment|// End llvm namespace
 end_comment
 

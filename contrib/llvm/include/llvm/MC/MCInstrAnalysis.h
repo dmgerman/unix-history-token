@@ -152,7 +152,7 @@ name|getOpcode
 argument_list|()
 argument_list|)
 operator|.
-name|isBranch
+name|isConditionalBranch
 argument_list|()
 return|;
 block|}

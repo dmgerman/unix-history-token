@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//= UninitializedValues.h - Finding uses of uninitialized values --*- C++ -*-==//
+comment|//= UninitializedValues.h - Finding uses of uninitialized values -*- C++ -*-==//
 end_comment
 
 begin_comment
@@ -68,7 +68,7 @@ name|namespace
 name|clang
 block|{
 name|class
-name|AnalysisContext
+name|AnalysisDeclContext
 decl_stmt|;
 name|class
 name|CFG
@@ -153,7 +153,7 @@ name|CFG
 modifier|&
 name|cfg
 parameter_list|,
-name|AnalysisContext
+name|AnalysisDeclContext
 modifier|&
 name|ac
 parameter_list|,

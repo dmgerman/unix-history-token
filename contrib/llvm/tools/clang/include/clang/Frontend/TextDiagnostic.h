@@ -1,0 +1,336 @@
+begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|//===--- TextDiagnostic.h - Text Diagnostic Pretty-Printing -----*- C++ -*-===//
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//                     The LLVM Compiler Infrastructure
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// This file is distributed under the University of Illinois Open Source
+end_comment
+
+begin_comment
+comment|// License. See LICENSE.TXT for details.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// This is a utility class that provides support for textual pretty-printing of
+end_comment
+
+begin_comment
+comment|// diagnostics. It is used to implement the different code paths which require
+end_comment
+
+begin_comment
+comment|// such functionality in a consistent way.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LLVM_CLANG_FRONTEND_TEXT_DIAGNOSTIC_H_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LLVM_CLANG_FRONTEND_TEXT_DIAGNOSTIC_H_
+end_define
+
+begin_include
+include|#
+directive|include
+file|"clang/Frontend/DiagnosticRenderer.h"
+end_include
+
+begin_decl_stmt
+name|namespace
+name|clang
+block|{
+comment|/// \brief Class to encapsulate the logic for formatting and printing a textual
+comment|/// diagnostic message.
+comment|///
+comment|/// This class provides an interface for building and emitting a textual
+comment|/// diagnostic, including all of the macro backtraces, caret diagnostics, FixIt
+comment|/// Hints, and code snippets. In the presence of macros this involves
+comment|/// a recursive process, synthesizing notes for each macro expansion.
+comment|///
+comment|/// The purpose of this class is to isolate the implementation of printing
+comment|/// beautiful text diagnostics from any particular interfaces. The Clang
+comment|/// DiagnosticClient is implemented through this class as is diagnostic
+comment|/// printing coming out of libclang.
+name|class
+name|TextDiagnostic
+range|:
+name|public
+name|DiagnosticRenderer
+block|{
+name|raw_ostream
+operator|&
+name|OS
+block|;
+name|public
+operator|:
+name|TextDiagnostic
+argument_list|(
+name|raw_ostream
+operator|&
+name|OS
+argument_list|,
+specifier|const
+name|SourceManager
+operator|&
+name|SM
+argument_list|,
+specifier|const
+name|LangOptions
+operator|&
+name|LangOpts
+argument_list|,
+specifier|const
+name|DiagnosticOptions
+operator|&
+name|DiagOpts
+argument_list|)
+block|;
+name|virtual
+operator|~
+name|TextDiagnostic
+argument_list|()
+block|;
+comment|/// \brief Print the diagonstic level to a raw_ostream.
+comment|///
+comment|/// This is a static helper that handles colorizing the level and formatting
+comment|/// it into an arbitrary output stream. This is used internally by the
+comment|/// TextDiagnostic emission code, but it can also be used directly by
+comment|/// consumers that don't have a source manager or other state that the full
+comment|/// TextDiagnostic logic requires.
+specifier|static
+name|void
+name|printDiagnosticLevel
+argument_list|(
+argument|raw_ostream&OS
+argument_list|,
+argument|DiagnosticsEngine::Level Level
+argument_list|,
+argument|bool ShowColors
+argument_list|)
+block|;
+comment|/// \brief Pretty-print a diagnostic message to a raw_ostream.
+comment|///
+comment|/// This is a static helper to handle the line wrapping, colorizing, and
+comment|/// rendering of a diagnostic message to a particular ostream. It is
+comment|/// publically visible so that clients which do not have sufficient state to
+comment|/// build a complete TextDiagnostic object can still get consistent
+comment|/// formatting of their diagnostic messages.
+comment|///
+comment|/// \param OS Where the message is printed
+comment|/// \param Level Used to colorizing the message
+comment|/// \param Message The text actually printed
+comment|/// \param CurrentColumn The starting column of the first line, accounting
+comment|///                      for any prefix.
+comment|/// \param Columns The number of columns to use in line-wrapping, 0 disables
+comment|///                all line-wrapping.
+comment|/// \param ShowColors Enable colorizing of the message.
+specifier|static
+name|void
+name|printDiagnosticMessage
+argument_list|(
+argument|raw_ostream&OS
+argument_list|,
+argument|DiagnosticsEngine::Level Level
+argument_list|,
+argument|StringRef Message
+argument_list|,
+argument|unsigned CurrentColumn
+argument_list|,
+argument|unsigned Columns
+argument_list|,
+argument|bool ShowColors
+argument_list|)
+block|;
+name|protected
+operator|:
+name|virtual
+name|void
+name|emitDiagnosticMessage
+argument_list|(
+argument|SourceLocation Loc
+argument_list|,
+argument|PresumedLoc PLoc
+argument_list|,
+argument|DiagnosticsEngine::Level Level
+argument_list|,
+argument|StringRef Message
+argument_list|,
+argument|ArrayRef<CharSourceRange> Ranges
+argument_list|,
+argument|DiagOrStoredDiag D
+argument_list|)
+block|;
+name|virtual
+name|void
+name|emitDiagnosticLoc
+argument_list|(
+argument|SourceLocation Loc
+argument_list|,
+argument|PresumedLoc PLoc
+argument_list|,
+argument|DiagnosticsEngine::Level Level
+argument_list|,
+argument|ArrayRef<CharSourceRange> Ranges
+argument_list|)
+block|;
+name|virtual
+name|void
+name|emitCodeContext
+argument_list|(
+argument|SourceLocation Loc
+argument_list|,
+argument|DiagnosticsEngine::Level Level
+argument_list|,
+argument|SmallVectorImpl<CharSourceRange>& Ranges
+argument_list|,
+argument|ArrayRef<FixItHint> Hints
+argument_list|)
+block|{
+name|emitSnippetAndCaret
+argument_list|(
+name|Loc
+argument_list|,
+name|Level
+argument_list|,
+name|Ranges
+argument_list|,
+name|Hints
+argument_list|)
+block|;   }
+name|virtual
+name|void
+name|emitBasicNote
+argument_list|(
+argument|StringRef Message
+argument_list|)
+block|;
+name|virtual
+name|void
+name|emitIncludeLocation
+argument_list|(
+argument|SourceLocation Loc
+argument_list|,
+argument|PresumedLoc PLoc
+argument_list|)
+block|;
+name|private
+operator|:
+name|void
+name|emitSnippetAndCaret
+argument_list|(
+argument|SourceLocation Loc
+argument_list|,
+argument|DiagnosticsEngine::Level Level
+argument_list|,
+argument|SmallVectorImpl<CharSourceRange>& Ranges
+argument_list|,
+argument|ArrayRef<FixItHint> Hints
+argument_list|)
+block|;
+name|void
+name|highlightRange
+argument_list|(
+argument|const CharSourceRange&R
+argument_list|,
+argument|unsigned LineNo
+argument_list|,
+argument|FileID FID
+argument_list|,
+argument|const std::string&SourceLine
+argument_list|,
+argument|std::string&CaretLine
+argument_list|)
+block|;
+name|std
+operator|::
+name|string
+name|buildFixItInsertionLine
+argument_list|(
+argument|unsigned LineNo
+argument_list|,
+argument|const char *LineStart
+argument_list|,
+argument|const char *LineEnd
+argument_list|,
+argument|ArrayRef<FixItHint> Hints
+argument_list|)
+block|;
+name|void
+name|expandTabs
+argument_list|(
+name|std
+operator|::
+name|string
+operator|&
+name|SourceLine
+argument_list|,
+name|std
+operator|::
+name|string
+operator|&
+name|CaretLine
+argument_list|)
+block|;
+name|void
+name|emitParseableFixits
+argument_list|(
+name|ArrayRef
+operator|<
+name|FixItHint
+operator|>
+name|Hints
+argument_list|)
+block|; }
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|// end namespace clang
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+end_unit
+

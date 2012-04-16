@@ -68,13 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vector>
+file|<string>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -93,6 +93,9 @@ name|Module
 decl_stmt|;
 name|class
 name|LLVMContext
+decl_stmt|;
+name|class
+name|StringRef
 decl_stmt|;
 comment|/// This class provides the core functionality of linking in LLVM. It retains a
 comment|/// Module object which is the composite of the modules and libraries linked

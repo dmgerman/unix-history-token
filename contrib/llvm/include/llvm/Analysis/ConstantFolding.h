@@ -100,6 +100,9 @@ name|class
 name|TargetData
 decl_stmt|;
 name|class
+name|TargetLibraryInfo
+decl_stmt|;
+name|class
 name|Function
 decl_stmt|;
 name|class
@@ -132,6 +135,13 @@ modifier|*
 name|TD
 init|=
 literal|0
+parameter_list|,
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 comment|/// ConstantFoldConstantExpression - Attempt to fold the constant expression
@@ -150,6 +160,13 @@ specifier|const
 name|TargetData
 modifier|*
 name|TD
+init|=
+literal|0
+parameter_list|,
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
 init|=
 literal|0
 parameter_list|)
@@ -184,6 +201,13 @@ operator|*
 name|TD
 operator|=
 literal|0
+argument_list|,
+specifier|const
+name|TargetLibraryInfo
+operator|*
+name|TLI
+operator|=
+literal|0
 argument_list|)
 decl_stmt|;
 comment|/// ConstantFoldCompareInstOperands - Attempt to constant fold a compare
@@ -209,6 +233,13 @@ specifier|const
 name|TargetData
 modifier|*
 name|TD
+init|=
+literal|0
+parameter_list|,
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
 init|=
 literal|0
 parameter_list|)
@@ -270,6 +301,26 @@ modifier|*
 name|CE
 parameter_list|)
 function_decl|;
+comment|/// ConstantFoldLoadThroughGEPIndices - Given a constant and getelementptr
+comment|/// indices (with an *implied* zero pointer index that is not in the list),
+comment|/// return the constant value being addressed by a virtual load, or null if
+comment|/// something is funny and we can't decide.
+name|Constant
+modifier|*
+name|ConstantFoldLoadThroughGEPIndices
+argument_list|(
+name|Constant
+operator|*
+name|C
+argument_list|,
+name|ArrayRef
+operator|<
+name|Constant
+operator|*
+operator|>
+name|Indices
+argument_list|)
+decl_stmt|;
 comment|/// canConstantFoldCallTo - Return true if its even possible to fold a call to
 comment|/// the specified function.
 name|bool
@@ -297,6 +348,13 @@ name|Constant
 operator|*
 operator|>
 name|Operands
+argument_list|,
+specifier|const
+name|TargetLibraryInfo
+operator|*
+name|TLI
+operator|=
+literal|0
 argument_list|)
 decl_stmt|;
 block|}

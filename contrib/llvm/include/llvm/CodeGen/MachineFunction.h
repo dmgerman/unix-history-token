@@ -381,11 +381,13 @@ comment|/// Alignment - The alignment of the function.
 name|unsigned
 name|Alignment
 decl_stmt|;
-comment|/// CallsSetJmp - True if the function calls setjmp or sigsetjmp. This is used
-comment|/// to limit optimizations which cannot reason about the control flow of
-comment|/// setjmp.
+comment|/// ExposesReturnsTwice - True if the function calls setjmp or related
+comment|/// functions with attribute "returns twice", but doesn't have
+comment|/// the attribute itself.
+comment|/// This is used to limit optimizations which cannot reason
+comment|/// about the control flow of such functions.
 name|bool
-name|CallsSetJmp
+name|ExposesReturnsTwice
 decl_stmt|;
 name|MachineFunction
 argument_list|(
@@ -621,7 +623,7 @@ operator|=
 name|A
 expr_stmt|;
 block|}
-comment|/// EnsureAlignment - Make sure the function is at least 'A' bits aligned.
+comment|/// EnsureAlignment - Make sure the function is at least 1<< A bytes aligned.
 name|void
 name|EnsureAlignment
 parameter_list|(
@@ -640,26 +642,28 @@ operator|=
 name|A
 expr_stmt|;
 block|}
-comment|/// callsSetJmp - Returns true if the function calls setjmp or sigsetjmp.
+comment|/// exposesReturnsTwice - Returns true if the function calls setjmp or
+comment|/// any other similar functions with attribute "returns twice" without
+comment|/// having the attribute itself.
 name|bool
-name|callsSetJmp
+name|exposesReturnsTwice
 argument_list|()
 specifier|const
 block|{
 return|return
-name|CallsSetJmp
+name|ExposesReturnsTwice
 return|;
 block|}
-comment|/// setCallsSetJmp - Set a flag that indicates if there's a call to setjmp or
-comment|/// sigsetjmp.
+comment|/// setCallsSetJmp - Set a flag that indicates if there's a call to
+comment|/// a "returns twice" function.
 name|void
-name|setCallsSetJmp
+name|setExposesReturnsTwice
 parameter_list|(
 name|bool
 name|B
 parameter_list|)
 block|{
-name|CallsSetJmp
+name|ExposesReturnsTwice
 operator|=
 name|B
 expr_stmt|;
@@ -1418,6 +1422,13 @@ modifier|*
 name|TBAAInfo
 init|=
 literal|0
+parameter_list|,
+specifier|const
+name|MDNode
+modifier|*
+name|Ranges
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 comment|/// getMachineMemOperand - Allocate a new MachineMemOperand by copying
@@ -1602,6 +1613,20 @@ name|end
 argument_list|()
 return|;
 block|}
+specifier|static
+name|unsigned
+name|size
+argument_list|(
+argument|MachineFunction *F
+argument_list|)
+block|{
+return|return
+name|F
+operator|->
+name|size
+argument_list|()
+return|;
+block|}
 block|}
 empty_stmt|;
 name|template
@@ -1671,6 +1696,20 @@ return|return
 name|F
 operator|->
 name|end
+argument_list|()
+return|;
+block|}
+specifier|static
+name|unsigned
+name|size
+argument_list|(
+argument|const MachineFunction *F
+argument_list|)
+block|{
+return|return
+name|F
+operator|->
+name|size
 argument_list|()
 return|;
 block|}

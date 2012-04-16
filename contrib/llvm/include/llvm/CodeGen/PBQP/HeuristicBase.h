@@ -440,10 +440,8 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|assert
+name|llvm_unreachable
 argument_list|(
-name|false
-operator|&&
 literal|"Optimal reductions of degree> 2 nodes is invalid."
 argument_list|)
 expr_stmt|;
@@ -516,10 +514,8 @@ name|NodeItr
 name|nItr
 argument_list|)
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-name|false
-operator|&&
 literal|"Must be implemented in derived class."
 argument_list|)
 expr_stmt|;
@@ -532,10 +528,8 @@ name|void
 name|heuristicReduce
 parameter_list|()
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-name|false
-operator|&&
 literal|"Must be implemented in derived class."
 argument_list|)
 expr_stmt|;
@@ -551,10 +545,8 @@ name|EdgeItr
 name|eItr
 argument_list|)
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-name|false
-operator|&&
 literal|"Must be implemented in derived class."
 argument_list|)
 expr_stmt|;
@@ -570,10 +562,8 @@ name|EdgeItr
 name|eItr
 argument_list|)
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-name|false
-operator|&&
 literal|"Must be implemented in derived class."
 argument_list|)
 expr_stmt|;
@@ -589,10 +579,8 @@ name|EdgeItr
 name|eItr
 argument_list|)
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-name|false
-operator|&&
 literal|"Must be implemented in derived class."
 argument_list|)
 expr_stmt|;
@@ -618,10 +606,8 @@ name|NodeItr
 name|nItr
 argument_list|)
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-name|false
-operator|&&
 literal|"Must be implemented in derived class."
 argument_list|)
 expr_stmt|;

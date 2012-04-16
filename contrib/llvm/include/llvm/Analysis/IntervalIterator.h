@@ -447,10 +447,8 @@ argument_list|()
 argument_list|)
 condition|)
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"ProcessInterval should never fail for first interval!"
 argument_list|)
 expr_stmt|;
@@ -485,10 +483,8 @@ argument_list|()
 argument_list|)
 condition|)
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"ProcessInterval should never fail for first interval!"
 argument_list|)
 expr_stmt|;

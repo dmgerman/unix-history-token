@@ -206,6 +206,16 @@ argument|bool isCtor
 argument_list|)
 block|;
 name|void
+name|EmitRegMappingTables
+argument_list|(
+argument|raw_ostream&o
+argument_list|,
+argument|const std::vector<CodeGenRegister*>&Regs
+argument_list|,
+argument|bool isCtor
+argument_list|)
+block|;
+name|void
 name|EmitRegClasses
 argument_list|(
 name|raw_ostream
@@ -215,6 +225,26 @@ argument_list|,
 name|CodeGenTarget
 operator|&
 name|Target
+argument_list|)
+block|;
+name|void
+name|EmitRegUnitPressure
+argument_list|(
+name|raw_ostream
+operator|&
+name|OS
+argument_list|,
+specifier|const
+name|CodeGenRegBank
+operator|&
+name|RegBank
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|ClassName
 argument_list|)
 block|; }
 decl_stmt|;

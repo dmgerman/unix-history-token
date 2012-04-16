@@ -279,31 +279,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// createTDRRListDAGScheduler - This creates a top down register usage
-end_comment
-
-begin_comment
-comment|/// reduction list scheduler.
-end_comment
-
-begin_decl_stmt
-name|ScheduleDAGSDNodes
-modifier|*
-name|createTDRRListDAGScheduler
-argument_list|(
-name|SelectionDAGISel
-operator|*
-name|IS
-argument_list|,
-name|CodeGenOpt
-operator|::
-name|Level
-name|OptLevel
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// createBURRListDAGScheduler - This creates a bottom up list scheduler that
 end_comment
 
@@ -393,17 +368,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// createTDListDAGScheduler - This creates a top-down list scheduler with
+comment|/// createFastDAGScheduler - This creates a "fast" scheduler.
 end_comment
 
 begin_comment
-comment|/// a hazard recognizer.
+comment|///
 end_comment
 
 begin_decl_stmt
 name|ScheduleDAGSDNodes
 modifier|*
-name|createTDListDAGScheduler
+name|createFastDAGScheduler
 argument_list|(
 name|SelectionDAGISel
 operator|*
@@ -418,17 +393,21 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// createFastDAGScheduler - This creates a "fast" scheduler.
+comment|/// createVLIWDAGScheduler - Scheduler for VLIW targets. This creates top down
 end_comment
 
 begin_comment
-comment|///
+comment|/// DFA driven list scheduler with clustering heuristic to control
+end_comment
+
+begin_comment
+comment|/// register pressure.
 end_comment
 
 begin_decl_stmt
 name|ScheduleDAGSDNodes
 modifier|*
-name|createFastDAGScheduler
+name|createVLIWDAGScheduler
 argument_list|(
 name|SelectionDAGISel
 operator|*

@@ -133,12 +133,6 @@ name|getKind
 argument_list|()
 condition|)
 block|{
-default|default:
-name|llvm_unreachable
-argument_list|(
-literal|"Decl that isn't part of DeclNodes.inc!"
-argument_list|)
-expr_stmt|;
 define|#
 directive|define
 name|DECL
@@ -159,6 +153,11 @@ include|#
 directive|include
 file|"clang/AST/DeclNodes.inc"
 block|}
+name|llvm_unreachable
+argument_list|(
+literal|"Decl that isn't part of DeclNodes.inc!"
+argument_list|)
+expr_stmt|;
 block|}
 comment|// If the implementation chooses not to implement a certain visit
 comment|// method, fall back to the parent.

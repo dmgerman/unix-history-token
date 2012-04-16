@@ -388,6 +388,11 @@ comment|///
 name|class
 name|AbstractInterpreter
 block|{
+name|virtual
+name|void
+name|anchor
+parameter_list|()
+function_decl|;
 name|public
 label|:
 specifier|static

@@ -112,6 +112,11 @@ comment|/// The interface for consumers of difference data.
 name|class
 name|Consumer
 block|{
+name|virtual
+name|void
+name|anchor
+parameter_list|()
+function_decl|;
 name|public
 label|:
 comment|/// Record that a local context has been entered.  Left and

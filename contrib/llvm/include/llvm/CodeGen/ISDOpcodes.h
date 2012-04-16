@@ -117,6 +117,8 @@ name|CONDCODE
 block|,
 name|Register
 block|,
+name|RegisterMask
+block|,
 name|Constant
 block|,
 name|ConstantFP
@@ -181,13 +183,6 @@ comment|// This corresponds to the eh.sjlj.longjmp intrinsic.
 comment|// It takes an input chain and a pointer to the jump buffer as inputs
 comment|// and returns an outchain.
 name|EH_SJLJ_LONGJMP
-block|,
-comment|// OUTCHAIN = EH_SJLJ_DISPATCHSETUP(INCHAIN, setjmpval)
-comment|// This corresponds to the eh.sjlj.dispatchsetup intrinsic. It takes an
-comment|// input chain and the value returning from setjmp as inputs and returns an
-comment|// outchain. By default, this does nothing. Targets can lower this to unwind
-comment|// setup code if needed.
-name|EH_SJLJ_DISPATCHSETUP
 block|,
 comment|// TargetConstant* - Like Constant*, but the DAG does not do any folding,
 comment|// simplification, or lowering of the constant. They are used for constants
@@ -457,6 +452,11 @@ name|CTLZ
 block|,
 name|CTPOP
 block|,
+comment|/// Bit counting operators with an undefined result for zero inputs.
+name|CTTZ_ZERO_UNDEF
+block|,
+name|CTLZ_ZERO_UNDEF
+block|,
 comment|// Select(COND, TRUEVAL, FALSEVAL).  If the type of the boolean COND is not
 comment|// i1 then the high bits must conform to getBooleanContents.
 name|SELECT
@@ -465,6 +465,9 @@ comment|// Select with a vector condition (op #0) and two vector operands (ops #
 comment|// and #2), returning a vector result.  All vectors have the same length.
 comment|// Much like the scalar select and setcc, each bit in the condition selects
 comment|// whether the corresponding result element is taken from op #1 or op #2.
+comment|// At first, the VSELECT condition is of vXi1 type. Later, targets may change
+comment|// the condition type in order to match the VSELECT node using a a pattern.
+comment|// The condition follows the BooleanContent format of the target.
 name|VSELECT
 block|,
 comment|// Select with condition operator - This selects between a true value and

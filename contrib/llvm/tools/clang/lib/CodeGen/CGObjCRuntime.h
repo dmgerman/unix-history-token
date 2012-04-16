@@ -202,6 +202,26 @@ name|CGObjCRuntime
 block|{
 name|protected
 label|:
+name|CodeGen
+operator|::
+name|CodeGenModule
+operator|&
+name|CGM
+expr_stmt|;
+name|CGObjCRuntime
+argument_list|(
+name|CodeGen
+operator|::
+name|CodeGenModule
+operator|&
+name|CGM
+argument_list|)
+operator|:
+name|CGM
+argument_list|(
+argument|CGM
+argument_list|)
+block|{}
 comment|// Utility functions for unified ivar access. These need to
 comment|// eventually be folded into other places (the structure layout
 comment|// code).
@@ -230,7 +250,7 @@ name|ObjCIvarDecl
 operator|*
 name|Ivar
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|uint64_t
 name|ComputeIvarBaseOffset
 argument_list|(
@@ -469,6 +489,19 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
+comment|/// Register an class alias.
+name|virtual
+name|void
+name|RegisterAlias
+parameter_list|(
+specifier|const
+name|ObjCCompatibleAliasDecl
+modifier|*
+name|OAD
+parameter_list|)
+init|=
+literal|0
+function_decl|;
 comment|/// Generate an Objective-C message send operation.
 comment|///
 comment|/// \param Method - The method being called, this may be null if synthesizing
@@ -618,6 +651,21 @@ argument_list|()
 operator|=
 literal|0
 expr_stmt|;
+comment|/// Return the runtime function for optimized setting properties.
+name|virtual
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|GetOptimizedPropertySetFunction
+argument_list|(
+argument|bool atomic
+argument_list|,
+argument|bool copy
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
 comment|// API for atomic copying of qualified aggregates in getter.
 name|virtual
 name|llvm
@@ -636,6 +684,18 @@ operator|::
 name|Constant
 operator|*
 name|GetSetStructFunction
+argument_list|()
+operator|=
+literal|0
+expr_stmt|;
+comment|// API for atomic copying of qualified aggregates with non-trivial copy
+comment|// assignment (c++) in setter/getter.
+name|virtual
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|GetCppAtomicObjectFunction
 argument_list|()
 operator|=
 literal|0
@@ -1002,6 +1062,62 @@ argument_list|)
 operator|=
 literal|0
 expr_stmt|;
+struct|struct
+name|MessageSendInfo
+block|{
+specifier|const
+name|CGFunctionInfo
+modifier|&
+name|CallInfo
+decl_stmt|;
+name|llvm
+operator|::
+name|PointerType
+operator|*
+name|MessengerType
+expr_stmt|;
+name|MessageSendInfo
+argument_list|(
+specifier|const
+name|CGFunctionInfo
+operator|&
+name|callInfo
+argument_list|,
+name|llvm
+operator|::
+name|PointerType
+operator|*
+name|messengerType
+argument_list|)
+operator|:
+name|CallInfo
+argument_list|(
+name|callInfo
+argument_list|)
+operator|,
+name|MessengerType
+argument_list|(
+argument|messengerType
+argument_list|)
+block|{}
+block|}
+struct|;
+name|MessageSendInfo
+name|getMessageSendInfo
+parameter_list|(
+specifier|const
+name|ObjCMethodDecl
+modifier|*
+name|method
+parameter_list|,
+name|QualType
+name|resultType
+parameter_list|,
+name|CallArgList
+modifier|&
+name|callArgs
+parameter_list|)
+function_decl|;
 block|}
 empty_stmt|;
 comment|/// Creates an instance of an Objective-C runtime class.

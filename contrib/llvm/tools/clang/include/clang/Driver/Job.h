@@ -153,6 +153,11 @@ range|:
 name|public
 name|Job
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 comment|/// Source - The action which caused the creation of this job.
 specifier|const
 name|Action

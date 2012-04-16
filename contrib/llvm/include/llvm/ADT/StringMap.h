@@ -176,28 +176,13 @@ comment|/// all of its instantiations.
 name|class
 name|StringMapImpl
 block|{
-name|public
-label|:
-comment|/// ItemBucket - The hash table consists of an array of these.  If Item is
-comment|/// non-null, this is an extant entry, otherwise, it is a hole.
-struct|struct
-name|ItemBucket
-block|{
-comment|/// FullHashValue - This remembers the full hash value of the key for
-comment|/// easy scanning.
-name|unsigned
-name|FullHashValue
-decl_stmt|;
-comment|/// Item - This is a pointer to the actual item object.
-name|StringMapEntryBase
-modifier|*
-name|Item
-decl_stmt|;
-block|}
-struct|;
 name|protected
 label|:
-name|ItemBucket
+comment|// Array of NumBuckets pointers to entries, null pointers are holes.
+comment|// TheTable[NumBuckets] contains a sentinel value for easy iteration. Follwed
+comment|// by an array of the actual hash values as unsigned integers.
+name|StringMapEntryBase
+modifier|*
 modifier|*
 name|TheTable
 decl_stmt|;
@@ -932,6 +917,8 @@ block|{
 name|AllocatorTy
 name|Allocator
 block|;
+name|public
+operator|:
 typedef|typedef
 name|StringMapEntry
 operator|<
@@ -939,8 +926,6 @@ name|ValueTy
 operator|>
 name|MapEntryTy
 expr_stmt|;
-name|public
-operator|:
 name|StringMap
 argument_list|()
 operator|:
@@ -1211,6 +1196,8 @@ argument_list|(
 name|TheTable
 operator|+
 name|Bucket
+argument_list|,
+name|true
 argument_list|)
 return|;
 block|}
@@ -1247,6 +1234,8 @@ argument_list|(
 name|TheTable
 operator|+
 name|Bucket
+argument_list|,
+name|true
 argument_list|)
 return|;
 block|}
@@ -1348,7 +1337,8 @@ name|getKey
 argument_list|()
 argument_list|)
 decl_stmt|;
-name|ItemBucket
+name|StringMapEntryBase
+modifier|*
 modifier|&
 name|Bucket
 init|=
@@ -1360,12 +1350,8 @@ decl_stmt|;
 if|if
 condition|(
 name|Bucket
-operator|.
-name|Item
 operator|&&
 name|Bucket
-operator|.
-name|Item
 operator|!=
 name|getTombstoneVal
 argument_list|()
@@ -1377,8 +1363,6 @@ comment|// Already exists in map.
 if|if
 condition|(
 name|Bucket
-operator|.
-name|Item
 operator|==
 name|getTombstoneVal
 argument_list|()
@@ -1387,8 +1371,6 @@ operator|--
 name|NumTombstones
 expr_stmt|;
 name|Bucket
-operator|.
-name|Item
 operator|=
 name|KeyValue
 expr_stmt|;
@@ -1426,17 +1408,13 @@ comment|// Zap all values, resetting the keys back to non-present (not tombstone
 comment|// which is safe because we're removing all elements.
 for|for
 control|(
-name|ItemBucket
-modifier|*
+name|unsigned
 name|I
 init|=
-name|TheTable
+literal|0
 init|,
-modifier|*
 name|E
 init|=
-name|TheTable
-operator|+
 name|NumBuckets
 init|;
 name|I
@@ -1447,15 +1425,21 @@ operator|++
 name|I
 control|)
 block|{
+name|StringMapEntryBase
+modifier|*
+modifier|&
+name|Bucket
+init|=
+name|TheTable
+index|[
+name|I
+index|]
+decl_stmt|;
 if|if
 condition|(
-name|I
-operator|->
-name|Item
+name|Bucket
 operator|&&
-name|I
-operator|->
-name|Item
+name|Bucket
 operator|!=
 name|getTombstoneVal
 argument_list|()
@@ -1467,9 +1451,7 @@ name|MapEntryTy
 operator|*
 operator|>
 operator|(
-name|I
-operator|->
-name|Item
+name|Bucket
 operator|)
 operator|->
 name|Destroy
@@ -1477,9 +1459,7 @@ argument_list|(
 name|Allocator
 argument_list|)
 expr_stmt|;
-name|I
-operator|->
-name|Item
+name|Bucket
 operator|=
 literal|0
 expr_stmt|;
@@ -1519,7 +1499,8 @@ argument_list|(
 name|Key
 argument_list|)
 block|;
-name|ItemBucket
+name|StringMapEntryBase
+operator|*
 operator|&
 name|Bucket
 operator|=
@@ -1531,12 +1512,8 @@ block|;
 if|if
 condition|(
 name|Bucket
-operator|.
-name|Item
 operator|&&
 name|Bucket
-operator|.
-name|Item
 operator|!=
 name|getTombstoneVal
 argument_list|()
@@ -1550,8 +1527,6 @@ operator|*
 operator|>
 operator|(
 name|Bucket
-operator|.
-name|Item
 operator|)
 return|;
 name|MapEntryTy
@@ -1580,8 +1555,6 @@ expr_stmt|;
 if|if
 condition|(
 name|Bucket
-operator|.
-name|Item
 operator|==
 name|getTombstoneVal
 argument_list|()
@@ -1604,8 +1577,6 @@ expr_stmt|;
 comment|// Fill in the bucket for the hash table.  The FullHashValue was already
 comment|// filled in by LookupBucketFor.
 name|Bucket
-operator|.
-name|Item
 operator|=
 name|NewItem
 expr_stmt|;
@@ -1760,9 +1731,8 @@ name|StringMapConstIterator
 block|{
 name|protected
 operator|:
-name|StringMapImpl
-operator|::
-name|ItemBucket
+name|StringMapEntryBase
+operator|*
 operator|*
 name|Ptr
 block|;
@@ -1778,7 +1748,7 @@ expr_stmt|;
 name|explicit
 name|StringMapConstIterator
 argument_list|(
-argument|StringMapImpl::ItemBucket *Bucket
+argument|StringMapEntryBase **Bucket
 argument_list|,
 argument|bool NoAdvance = false
 argument_list|)
@@ -1817,9 +1787,8 @@ operator|>
 operator|*
 operator|>
 operator|(
+operator|*
 name|Ptr
-operator|->
-name|Item
 operator|)
 return|;
 block|}
@@ -1841,9 +1810,8 @@ operator|>
 operator|*
 operator|>
 operator|(
+operator|*
 name|Ptr
-operator|->
-name|Item
 operator|)
 return|;
 block|}
@@ -1953,15 +1921,13 @@ parameter_list|()
 block|{
 while|while
 condition|(
+operator|*
 name|Ptr
-operator|->
-name|Item
 operator|==
 literal|0
 operator|||
+operator|*
 name|Ptr
-operator|->
-name|Item
 operator|==
 name|StringMapImpl
 operator|::
@@ -1995,7 +1961,7 @@ operator|:
 name|explicit
 name|StringMapIterator
 argument_list|(
-argument|StringMapImpl::ItemBucket *Bucket
+argument|StringMapEntryBase **Bucket
 argument_list|,
 argument|bool NoAdvance = false
 argument_list|)
@@ -2032,11 +1998,10 @@ operator|>
 operator|*
 operator|>
 operator|(
+operator|*
 name|this
 operator|->
 name|Ptr
-operator|->
-name|Item
 operator|)
 return|;
 block|}
@@ -2064,11 +2029,10 @@ operator|>
 operator|*
 operator|>
 operator|(
+operator|*
 name|this
 operator|->
 name|Ptr
-operator|->
-name|Item
 operator|)
 return|;
 block|}

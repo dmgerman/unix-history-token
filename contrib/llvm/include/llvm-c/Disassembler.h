@@ -28,6 +28,10 @@ file|<stddef.h>
 end_include
 
 begin_comment
+comment|/**  * @defgroup LLVMCDisassembler Disassembler  * @ingroup LLVMC  *  * @{  */
+end_comment
+
+begin_comment
 comment|/**  * An opaque reference to a disassembler context.  */
 end_comment
 
@@ -339,6 +343,7 @@ name|size_t
 name|OutStringSize
 parameter_list|)
 function_decl|;
+comment|/**  * @}  */
 ifdef|#
 directive|ifdef
 name|__cplusplus

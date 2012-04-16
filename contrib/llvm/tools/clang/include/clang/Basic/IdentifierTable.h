@@ -96,12 +96,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallString.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/OwningPtr.h"
 end_include
 
@@ -115,12 +109,6 @@ begin_include
 include|#
 directive|include
 file|<cassert>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<cctype>
 end_include
 
 begin_include
@@ -189,8 +177,6 @@ comment|/// set, and all tok::identifier tokens have a pointer to one of these.
 name|class
 name|IdentifierInfo
 block|{
-comment|// Note: DON'T make TokenID a 'tok::TokenKind'; MSVC will treat it as a
-comment|//       signed char and TokenKinds> 255 won't be handled correctly.
 name|unsigned
 name|TokenID
 range|:
@@ -246,8 +232,15 @@ name|IsFromAST
 range|:
 literal|1
 decl_stmt|;
-comment|// True if identfier first appeared in an AST
-comment|// file and wasn't modified since.
+comment|// True if identifier was loaded (at least
+comment|// partially) from an AST file.
+name|bool
+name|ChangedAfterLoad
+range|:
+literal|1
+decl_stmt|;
+comment|// True if identifier has changed from the
+comment|// definition loaded from an AST file.
 name|bool
 name|RevertedTokenID
 range|:
@@ -255,7 +248,22 @@ literal|1
 decl_stmt|;
 comment|// True if RevertTokenIDToIdentifier was
 comment|// called.
-comment|// 5 bits left in 32-bit word.
+name|bool
+name|OutOfDate
+range|:
+literal|1
+decl_stmt|;
+comment|// True if there may be additional
+comment|// information about this identifier
+comment|// stored externally.
+name|bool
+name|IsModulesImport
+range|:
+literal|1
+decl_stmt|;
+comment|// True if this is the 'import' contextual
+comment|// keyword.
+comment|// 1 bit left in 32-bit word.
 name|void
 modifier|*
 name|FETokenInfo
@@ -545,10 +553,6 @@ expr_stmt|;
 else|else
 name|RecomputeNeedsHandleIdentifier
 argument_list|()
-expr_stmt|;
-name|IsFromAST
-operator|=
-name|false
 expr_stmt|;
 block|}
 end_function
@@ -975,10 +979,6 @@ else|else
 name|RecomputeNeedsHandleIdentifier
 argument_list|()
 expr_stmt|;
-name|IsFromAST
-operator|=
-name|false
-expr_stmt|;
 block|}
 end_function
 
@@ -1143,16 +1143,161 @@ end_expr_stmt
 begin_function
 name|void
 name|setIsFromAST
-parameter_list|(
-name|bool
-name|FromAST
-init|=
-name|true
-parameter_list|)
+parameter_list|()
 block|{
 name|IsFromAST
 operator|=
-name|FromAST
+name|true
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Determine whether this identifier has changed since it was loaded
+end_comment
+
+begin_comment
+comment|/// from an AST file.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|hasChangedSinceDeserialization
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ChangedAfterLoad
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Note that this identifier has changed since it was loaded from
+end_comment
+
+begin_comment
+comment|/// an AST file.
+end_comment
+
+begin_function
+name|void
+name|setChangedSinceDeserialization
+parameter_list|()
+block|{
+name|ChangedAfterLoad
+operator|=
+name|true
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Determine whether the information for this identifier is out of
+end_comment
+
+begin_comment
+comment|/// date with respect to the external source.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isOutOfDate
+argument_list|()
+specifier|const
+block|{
+return|return
+name|OutOfDate
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Set whether the information for this identifier is out of
+end_comment
+
+begin_comment
+comment|/// date with respect to the external source.
+end_comment
+
+begin_function
+name|void
+name|setOutOfDate
+parameter_list|(
+name|bool
+name|OOD
+parameter_list|)
+block|{
+name|OutOfDate
+operator|=
+name|OOD
+expr_stmt|;
+if|if
+condition|(
+name|OOD
+condition|)
+name|NeedsHandleIdentifier
+operator|=
+name|true
+expr_stmt|;
+else|else
+name|RecomputeNeedsHandleIdentifier
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Determine whether this is the contextual keyword
+end_comment
+
+begin_comment
+comment|/// '__experimental_modules_import'.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isModulesImport
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsModulesImport
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Set whether this identifier is the contextual keyword
+end_comment
+
+begin_comment
+comment|/// '__experimental_modules_import'.
+end_comment
+
+begin_function
+name|void
+name|setModulesImport
+parameter_list|(
+name|bool
+name|I
+parameter_list|)
+block|{
+name|IsModulesImport
+operator|=
+name|I
+expr_stmt|;
+if|if
+condition|(
+name|I
+condition|)
+name|NeedsHandleIdentifier
+operator|=
+name|true
+expr_stmt|;
+else|else
+name|RecomputeNeedsHandleIdentifier
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -1213,14 +1358,11 @@ operator||
 name|isCXX11CompatKeyword
 argument_list|()
 operator|||
-operator|(
-name|getTokenID
+name|isOutOfDate
 argument_list|()
-operator|==
-name|tok
-operator|::
-name|kw___import_module__
-operator|)
+operator|||
+name|isModulesImport
+argument_list|()
 operator|)
 expr_stmt|;
 block|}
@@ -1862,6 +2004,23 @@ name|Entry
 operator|=
 operator|&
 name|Entry
+expr_stmt|;
+comment|// If this is the 'import' contextual keyword, mark it as such.
+if|if
+condition|(
+name|Name
+operator|.
+name|equals
+argument_list|(
+literal|"import"
+argument_list|)
+condition|)
+name|II
+operator|->
+name|setModulesImport
+argument_list|(
+name|true
+argument_list|)
 expr_stmt|;
 block|}
 return|return
@@ -2743,60 +2902,7 @@ name|IdentifierInfo
 modifier|*
 name|Name
 parameter_list|)
-block|{
-name|llvm
-operator|::
-name|SmallString
-operator|<
-literal|100
-operator|>
-name|SelectorName
-expr_stmt|;
-name|SelectorName
-operator|=
-literal|"set"
-expr_stmt|;
-name|SelectorName
-operator|+=
-name|Name
-operator|->
-name|getName
-argument_list|()
-expr_stmt|;
-name|SelectorName
-index|[
-literal|3
-index|]
-operator|=
-name|toupper
-argument_list|(
-name|SelectorName
-index|[
-literal|3
-index|]
-argument_list|)
-expr_stmt|;
-name|IdentifierInfo
-modifier|*
-name|SetterName
-init|=
-operator|&
-name|Idents
-operator|.
-name|get
-argument_list|(
-name|SelectorName
-argument_list|)
-decl_stmt|;
-return|return
-name|SelTable
-operator|.
-name|getUnarySelector
-argument_list|(
-name|SetterName
-argument_list|)
-return|;
-block|}
+function_decl|;
 block|}
 end_decl_stmt
 

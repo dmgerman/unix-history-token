@@ -156,8 +156,10 @@ parameter_list|(
 name|int
 name|argc
 parameter_list|,
+specifier|const
 name|char
 modifier|*
+specifier|const
 modifier|*
 name|argv
 parameter_list|,
@@ -260,22 +262,22 @@ block|{
 comment|// Flags for the number of occurrences allowed
 name|Optional
 init|=
-literal|0x01
+literal|0x00
 block|,
 comment|// Zero or One occurrence
 name|ZeroOrMore
 init|=
-literal|0x02
+literal|0x01
 block|,
 comment|// Zero or more occurrences allowed
 name|Required
 init|=
-literal|0x03
+literal|0x02
 block|,
 comment|// One occurrence required
 name|OneOrMore
 init|=
-literal|0x04
+literal|0x03
 block|,
 comment|// One or more occurrences required
 comment|// ConsumeAfter - Indicates that this option is fed anything that follows the
@@ -287,35 +289,28 @@ comment|// passed, unprocessed, to the ConsumeAfter option.
 comment|//
 name|ConsumeAfter
 init|=
-literal|0x05
-block|,
-name|OccurrencesMask
-init|=
-literal|0x07
+literal|0x04
 block|}
 enum|;
 enum|enum
 name|ValueExpected
 block|{
 comment|// Is a value required for the option?
+comment|// zero reserved for the unspecified value
 name|ValueOptional
 init|=
-literal|0x08
+literal|0x01
 block|,
 comment|// The value can appear... or not
 name|ValueRequired
 init|=
-literal|0x10
+literal|0x02
 block|,
 comment|// The value is required to appear!
 name|ValueDisallowed
 init|=
-literal|0x18
-block|,
+literal|0x03
 comment|// A value may not be specified (for flags)
-name|ValueMask
-init|=
-literal|0x18
 block|}
 enum|;
 enum|enum
@@ -324,22 +319,18 @@ block|{
 comment|// Control whether -help shows this option
 name|NotHidden
 init|=
-literal|0x20
+literal|0x00
 block|,
 comment|// Option included in -help& -help-hidden
 name|Hidden
 init|=
-literal|0x40
+literal|0x01
 block|,
 comment|// -help doesn't, but -help-hidden does
 name|ReallyHidden
 init|=
-literal|0x60
-block|,
+literal|0x02
 comment|// Neither -help nor -help-hidden show this arg
-name|HiddenMask
-init|=
-literal|0x60
 block|}
 enum|;
 comment|// Formatting flags - This controls special features that the option might have
@@ -361,28 +352,23 @@ name|FormattingFlags
 block|{
 name|NormalFormatting
 init|=
-literal|0x000
+literal|0x00
 block|,
 comment|// Nothing special
 name|Positional
 init|=
-literal|0x080
+literal|0x01
 block|,
 comment|// Is a positional argument, no '-' required
 name|Prefix
 init|=
-literal|0x100
+literal|0x02
 block|,
 comment|// Can this option directly prefix its value?
 name|Grouping
 init|=
-literal|0x180
-block|,
+literal|0x03
 comment|// Can this option group with other options?
-name|FormattingMask
-init|=
-literal|0x180
-comment|// Union of the above flags.
 block|}
 enum|;
 enum|enum
@@ -391,23 +377,18 @@ block|{
 comment|// Miscellaneous flags to adjust argument
 name|CommaSeparated
 init|=
-literal|0x200
+literal|0x01
 block|,
 comment|// Should this cl::list split between commas?
 name|PositionalEatsArgs
 init|=
-literal|0x400
+literal|0x02
 block|,
 comment|// Should this positional cl::list eat -args?
 name|Sink
 init|=
-literal|0x800
-block|,
+literal|0x04
 comment|// Should this cl::list eat all unknown options?
-name|MiscMask
-init|=
-literal|0xE00
-comment|// Union of the above flags.
 block|}
 enum|;
 comment|//===----------------------------------------------------------------------===//
@@ -464,10 +445,38 @@ name|int
 name|NumOccurrences
 decl_stmt|;
 comment|// The number of times specified
-name|int
-name|Flags
+comment|// Occurrences, HiddenFlag, and Formatting are all enum types but to avoid
+comment|// problems with signed enums in bitfields.
+name|unsigned
+name|Occurrences
+range|:
+literal|3
 decl_stmt|;
-comment|// Flags for the argument
+comment|// enum NumOccurrencesFlag
+comment|// not using the enum type for 'Value' because zero is an implementation
+comment|// detail representing the non-value
+name|unsigned
+name|Value
+range|:
+literal|2
+decl_stmt|;
+name|unsigned
+name|HiddenFlag
+range|:
+literal|2
+decl_stmt|;
+comment|// enum OptionHidden
+name|unsigned
+name|Formatting
+range|:
+literal|2
+decl_stmt|;
+comment|// enum FormattingFlags
+name|unsigned
+name|Misc
+range|:
+literal|3
+decl_stmt|;
 name|unsigned
 name|Position
 decl_stmt|;
@@ -509,16 +518,11 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|static_cast
-operator|<
+operator|(
 expr|enum
 name|NumOccurrencesFlag
-operator|>
-operator|(
-name|Flags
-operator|&
-name|OccurrencesMask
 operator|)
+name|Occurrences
 return|;
 block|}
 specifier|inline
@@ -528,25 +532,17 @@ name|getValueExpectedFlag
 argument_list|()
 specifier|const
 block|{
-name|int
-name|VE
-operator|=
-name|Flags
-operator|&
-name|ValueMask
-block|;
 return|return
-name|VE
-condition|?
-name|static_cast
-operator|<
+name|Value
+operator|?
+operator|(
+operator|(
 expr|enum
 name|ValueExpected
-operator|>
-operator|(
-name|VE
 operator|)
-else|:
+name|Value
+operator|)
+operator|:
 name|getValueExpectedFlagDefault
 argument_list|()
 return|;
@@ -559,16 +555,11 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|static_cast
-operator|<
+operator|(
 expr|enum
 name|OptionHidden
-operator|>
-operator|(
-name|Flags
-operator|&
-name|HiddenMask
 operator|)
+name|HiddenFlag
 return|;
 block|}
 specifier|inline
@@ -579,16 +570,11 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|static_cast
-operator|<
+operator|(
 expr|enum
 name|FormattingFlags
-operator|>
-operator|(
-name|Flags
-operator|&
-name|FormattingMask
 operator|)
+name|Formatting
 return|;
 block|}
 specifier|inline
@@ -598,9 +584,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Flags
-operator|&
-name|MiscMask
+name|Misc
 return|;
 block|}
 specifier|inline
@@ -684,26 +668,6 @@ name|S
 expr_stmt|;
 block|}
 name|void
-name|setFlag
-parameter_list|(
-name|unsigned
-name|Flag
-parameter_list|,
-name|unsigned
-name|FlagMask
-parameter_list|)
-block|{
-name|Flags
-operator|&=
-operator|~
-name|FlagMask
-expr_stmt|;
-name|Flags
-operator||=
-name|Flag
-expr_stmt|;
-block|}
-name|void
 name|setNumOccurrencesFlag
 parameter_list|(
 name|enum
@@ -711,12 +675,9 @@ name|NumOccurrencesFlag
 name|Val
 parameter_list|)
 block|{
-name|setFlag
-argument_list|(
+name|Occurrences
+operator|=
 name|Val
-argument_list|,
-name|OccurrencesMask
-argument_list|)
 expr_stmt|;
 block|}
 name|void
@@ -727,12 +688,9 @@ name|ValueExpected
 name|Val
 parameter_list|)
 block|{
-name|setFlag
-argument_list|(
+name|Value
+operator|=
 name|Val
-argument_list|,
-name|ValueMask
-argument_list|)
 expr_stmt|;
 block|}
 name|void
@@ -743,12 +701,9 @@ name|OptionHidden
 name|Val
 parameter_list|)
 block|{
-name|setFlag
-argument_list|(
+name|HiddenFlag
+operator|=
 name|Val
-argument_list|,
-name|HiddenMask
-argument_list|)
 expr_stmt|;
 block|}
 name|void
@@ -759,12 +714,9 @@ name|FormattingFlags
 name|V
 parameter_list|)
 block|{
-name|setFlag
-argument_list|(
+name|Formatting
+operator|=
 name|V
-argument_list|,
-name|FormattingMask
-argument_list|)
 expr_stmt|;
 block|}
 name|void
@@ -775,12 +727,9 @@ name|MiscFlags
 name|M
 parameter_list|)
 block|{
-name|setFlag
-argument_list|(
+name|Misc
+operator||=
 name|M
-argument_list|,
-name|M
-argument_list|)
 expr_stmt|;
 block|}
 name|void
@@ -800,7 +749,9 @@ label|:
 name|explicit
 name|Option
 argument_list|(
-argument|unsigned DefaultFlags
+argument|enum NumOccurrencesFlag Occurrences
+argument_list|,
+argument|enum OptionHidden Hidden
 argument_list|)
 block|:
 name|NumOccurrences
@@ -808,10 +759,18 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
-name|Flags
+name|Occurrences
 argument_list|(
-name|DefaultFlags
-operator||
+name|Occurrences
+argument_list|)
+operator|,
+name|HiddenFlag
+argument_list|(
+name|Hidden
+argument_list|)
+operator|,
+name|Formatting
+argument_list|(
 name|NormalFormatting
 argument_list|)
 operator|,
@@ -844,22 +803,7 @@ name|ValueStr
 argument_list|(
 literal|""
 argument_list|)
-block|{
-name|assert
-argument_list|(
-name|getNumOccurrencesFlag
-argument_list|()
-operator|!=
-literal|0
-operator|&&
-name|getOptionHiddenFlag
-argument_list|()
-operator|!=
-literal|0
-operator|&&
-literal|"Not all default flags specified!"
-argument_list|)
-block|;   }
+block|{   }
 specifier|inline
 name|void
 name|setNumAdditionalVals
@@ -1246,6 +1190,13 @@ specifier|const
 operator|=
 literal|0
 expr_stmt|;
+name|private
+label|:
+name|virtual
+name|void
+name|anchor
+parameter_list|()
+function_decl|;
 block|}
 struct|;
 name|template
@@ -1296,10 +1247,8 @@ name|getValue
 argument_list|()
 specifier|const
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-name|false
-operator|&&
 literal|"no default value"
 argument_list|)
 block|; }
@@ -1684,6 +1633,19 @@ return|;
 block|}
 end_expr_stmt
 
+begin_label
+name|private
+label|:
+end_label
+
+begin_function_decl
+name|virtual
+name|void
+name|anchor
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_expr_stmt
 unit|};
 name|template
@@ -1752,6 +1714,19 @@ name|this
 return|;
 block|}
 end_expr_stmt
+
+begin_label
+name|private
+label|:
+end_label
+
+begin_function_decl
+name|virtual
+name|void
+name|anchor
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 unit|};
@@ -5383,7 +5358,9 @@ argument_list|)
 operator|:
 name|Option
 argument_list|(
-argument|Optional | NotHidden
+argument|Optional
+argument_list|,
+argument|NotHidden
 argument_list|)
 block|{
 name|apply
@@ -5420,7 +5397,9 @@ argument_list|)
 operator|:
 name|Option
 argument_list|(
-argument|Optional | NotHidden
+argument|Optional
+argument_list|,
+argument|NotHidden
 argument_list|)
 block|{
 name|apply
@@ -5472,7 +5451,9 @@ argument_list|)
 operator|:
 name|Option
 argument_list|(
-argument|Optional | NotHidden
+argument|Optional
+argument_list|,
+argument|NotHidden
 argument_list|)
 block|{
 name|apply
@@ -5539,7 +5520,9 @@ argument_list|)
 operator|:
 name|Option
 argument_list|(
-argument|Optional | NotHidden
+argument|Optional
+argument_list|,
+argument|NotHidden
 argument_list|)
 block|{
 name|apply
@@ -5621,7 +5604,9 @@ argument_list|)
 operator|:
 name|Option
 argument_list|(
-argument|Optional | NotHidden
+argument|Optional
+argument_list|,
+argument|NotHidden
 argument_list|)
 block|{
 name|apply
@@ -5718,7 +5703,9 @@ argument_list|)
 operator|:
 name|Option
 argument_list|(
-argument|Optional | NotHidden
+argument|Optional
+argument_list|,
+argument|NotHidden
 argument_list|)
 block|{
 name|apply
@@ -5830,7 +5817,9 @@ argument_list|)
 operator|:
 name|Option
 argument_list|(
-argument|Optional | NotHidden
+argument|Optional
+argument_list|,
+argument|NotHidden
 argument_list|)
 block|{
 name|apply
@@ -5957,7 +5946,9 @@ argument_list|)
 operator|:
 name|Option
 argument_list|(
-argument|Optional | NotHidden
+argument|Optional
+argument_list|,
+argument|NotHidden
 argument_list|)
 block|{
 name|apply
@@ -6593,7 +6584,9 @@ argument_list|)
 operator|:
 name|Option
 argument_list|(
-argument|ZeroOrMore | NotHidden
+argument|ZeroOrMore
+argument_list|,
+argument|NotHidden
 argument_list|)
 block|{
 name|apply
@@ -6630,7 +6623,9 @@ argument_list|)
 operator|:
 name|Option
 argument_list|(
-argument|ZeroOrMore | NotHidden
+argument|ZeroOrMore
+argument_list|,
+argument|NotHidden
 argument_list|)
 block|{
 name|apply
@@ -6682,7 +6677,9 @@ argument_list|)
 operator|:
 name|Option
 argument_list|(
-argument|ZeroOrMore | NotHidden
+argument|ZeroOrMore
+argument_list|,
+argument|NotHidden
 argument_list|)
 block|{
 name|apply
@@ -6749,7 +6746,9 @@ argument_list|)
 operator|:
 name|Option
 argument_list|(
-argument|ZeroOrMore | NotHidden
+argument|ZeroOrMore
+argument_list|,
+argument|NotHidden
 argument_list|)
 block|{
 name|apply
@@ -6831,7 +6830,9 @@ argument_list|)
 operator|:
 name|Option
 argument_list|(
-argument|ZeroOrMore | NotHidden
+argument|ZeroOrMore
+argument_list|,
+argument|NotHidden
 argument_list|)
 block|{
 name|apply
@@ -6928,7 +6929,9 @@ argument_list|)
 operator|:
 name|Option
 argument_list|(
-argument|ZeroOrMore | NotHidden
+argument|ZeroOrMore
+argument_list|,
+argument|NotHidden
 argument_list|)
 block|{
 name|apply
@@ -7040,7 +7043,9 @@ argument_list|)
 operator|:
 name|Option
 argument_list|(
-argument|ZeroOrMore | NotHidden
+argument|ZeroOrMore
+argument_list|,
+argument|NotHidden
 argument_list|)
 block|{
 name|apply
@@ -7167,7 +7172,9 @@ argument_list|)
 operator|:
 name|Option
 argument_list|(
-argument|ZeroOrMore | NotHidden
+argument|ZeroOrMore
+argument_list|,
+argument|NotHidden
 argument_list|)
 block|{
 name|apply
@@ -7922,7 +7929,9 @@ argument_list|)
 operator|:
 name|Option
 argument_list|(
-argument|ZeroOrMore | NotHidden
+argument|ZeroOrMore
+argument_list|,
+argument|NotHidden
 argument_list|)
 block|{
 name|apply
@@ -7959,7 +7968,9 @@ argument_list|)
 operator|:
 name|Option
 argument_list|(
-argument|ZeroOrMore | NotHidden
+argument|ZeroOrMore
+argument_list|,
+argument|NotHidden
 argument_list|)
 block|{
 name|apply
@@ -8011,7 +8022,9 @@ argument_list|)
 operator|:
 name|Option
 argument_list|(
-argument|ZeroOrMore | NotHidden
+argument|ZeroOrMore
+argument_list|,
+argument|NotHidden
 argument_list|)
 block|{
 name|apply
@@ -8078,7 +8091,9 @@ argument_list|)
 operator|:
 name|Option
 argument_list|(
-argument|ZeroOrMore | NotHidden
+argument|ZeroOrMore
+argument_list|,
+argument|NotHidden
 argument_list|)
 block|{
 name|apply
@@ -8160,7 +8175,9 @@ argument_list|)
 operator|:
 name|Option
 argument_list|(
-argument|ZeroOrMore | NotHidden
+argument|ZeroOrMore
+argument_list|,
+argument|NotHidden
 argument_list|)
 block|{
 name|apply
@@ -8257,7 +8274,9 @@ argument_list|)
 operator|:
 name|Option
 argument_list|(
-argument|ZeroOrMore | NotHidden
+argument|ZeroOrMore
+argument_list|,
+argument|NotHidden
 argument_list|)
 block|{
 name|apply
@@ -8369,7 +8388,9 @@ argument_list|)
 operator|:
 name|Option
 argument_list|(
-argument|ZeroOrMore | NotHidden
+argument|ZeroOrMore
+argument_list|,
+argument|NotHidden
 argument_list|)
 block|{
 name|apply
@@ -8496,7 +8517,9 @@ argument_list|)
 operator|:
 name|Option
 argument_list|(
-argument|ZeroOrMore | NotHidden
+argument|ZeroOrMore
+argument_list|,
+argument|NotHidden
 argument_list|)
 block|{
 name|apply
@@ -8719,7 +8742,7 @@ operator|:
 name|Option
 argument_list|(
 name|Optional
-operator||
+argument_list|,
 name|Hidden
 argument_list|)
 operator|,
@@ -8763,7 +8786,7 @@ operator|:
 name|Option
 argument_list|(
 name|Optional
-operator||
+argument_list|,
 name|Hidden
 argument_list|)
 operator|,
@@ -8822,7 +8845,7 @@ operator|:
 name|Option
 argument_list|(
 name|Optional
-operator||
+argument_list|,
 name|Hidden
 argument_list|)
 operator|,
@@ -8896,7 +8919,7 @@ operator|:
 name|Option
 argument_list|(
 name|Optional
-operator||
+argument_list|,
 name|Hidden
 argument_list|)
 operator|,

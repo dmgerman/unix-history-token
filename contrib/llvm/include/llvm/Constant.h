@@ -121,6 +121,11 @@ operator|&
 argument_list|)
 block|;
 comment|// Do not implement
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|protected
 operator|:
 name|Constant
@@ -220,14 +225,23 @@ name|getRelocationInfo
 argument_list|()
 specifier|const
 block|;
-comment|/// getVectorElements - This method, which is only valid on constant of vector
-comment|/// type, returns the elements of the vector in the specified smallvector.
-comment|/// This handles breaking down a vector undef into undef elements, etc.  For
-comment|/// constant exprs and other cases we can't handle, we return an empty vector.
-name|void
-name|getVectorElements
+comment|/// getAggregateElement - For aggregates (struct/array/vector) return the
+comment|/// constant that corresponds to the specified element if possible, or null if
+comment|/// not.  This can return null if the element index is a ConstantExpr, or if
+comment|/// 'this' is a constant expr.
+name|Constant
+operator|*
+name|getAggregateElement
 argument_list|(
-argument|SmallVectorImpl<Constant*>&Elts
+argument|unsigned Elt
+argument_list|)
+specifier|const
+block|;
+name|Constant
+operator|*
+name|getAggregateElement
+argument_list|(
+argument|Constant *Elt
 argument_list|)
 specifier|const
 block|;
@@ -243,10 +257,8 @@ name|void
 name|destroyConstant
 argument_list|()
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Not reached!"
 argument_list|)
 block|; }
@@ -334,11 +346,10 @@ literal|"replaceUsesOfWithOnConstant must be "
 literal|"implemented for all constants that have operands!"
 argument_list|)
 block|;
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
-literal|"Constants that do not have operands cannot be using 'From'!"
+literal|"Constants that do not have operands cannot be using "
+literal|"'From'!"
 argument_list|)
 block|;   }
 specifier|static

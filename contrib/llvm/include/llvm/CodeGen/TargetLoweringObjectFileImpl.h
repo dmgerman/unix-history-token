@@ -66,12 +66,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/MC/SectionKind.h"
 end_include
 
@@ -79,6 +73,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Target/TargetLoweringObjectFile.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_decl_stmt
@@ -218,6 +218,28 @@ argument_list|,
 argument|MachineModuleInfo *MMI
 argument_list|)
 specifier|const
+block|;
+name|virtual
+specifier|const
+name|MCSection
+operator|*
+name|getStaticCtorSection
+argument_list|(
+argument|unsigned Priority =
+literal|65535
+argument_list|)
+specifier|const
+block|;
+name|virtual
+specifier|const
+name|MCSection
+operator|*
+name|getStaticDtorSection
+argument_list|(
+argument|unsigned Priority =
+literal|65535
+argument_list|)
+specifier|const
 block|; }
 decl_stmt|;
 name|class
@@ -233,6 +255,22 @@ operator|~
 name|TargetLoweringObjectFileMachO
 argument_list|()
 block|{}
+comment|/// emitModuleFlags - Emit the module flags that specify the garbage
+comment|/// collection information.
+name|virtual
+name|void
+name|emitModuleFlags
+argument_list|(
+argument|MCStreamer&Streamer
+argument_list|,
+argument|ArrayRef<Module::ModuleFlagEntry> ModuleFlags
+argument_list|,
+argument|Mangler *Mang
+argument_list|,
+argument|const TargetMachine&TM
+argument_list|)
+specifier|const
+block|;
 name|virtual
 specifier|const
 name|MCSection

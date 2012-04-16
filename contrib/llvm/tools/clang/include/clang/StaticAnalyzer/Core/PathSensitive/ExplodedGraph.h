@@ -157,6 +157,12 @@ directive|include
 file|"clang/StaticAnalyzer/Core/PathSensitive/ProgramState.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -195,7 +201,7 @@ name|CoreEngine
 block|;
 name|friend
 name|class
-name|StmtNodeBuilder
+name|NodeBuilder
 block|;
 name|friend
 name|class
@@ -397,9 +403,7 @@ name|ProgramPoint
 name|Location
 block|;
 comment|/// State - The state associated with this node.
-specifier|const
-name|ProgramState
-operator|*
+name|ProgramStateRef
 name|State
 block|;
 comment|/// Preds - The predecessors of this node.
@@ -415,15 +419,11 @@ operator|:
 name|explicit
 name|ExplodedNode
 argument_list|(
-specifier|const
-name|ProgramPoint
-operator|&
-name|loc
+argument|const ProgramPoint&loc
 argument_list|,
-specifier|const
-name|ProgramState
-operator|*
-name|state
+argument|ProgramStateRef state
+argument_list|,
+argument|bool IsSink
 argument_list|)
 operator|:
 name|Location
@@ -436,34 +436,20 @@ argument_list|(
 argument|state
 argument_list|)
 block|{
-name|const_cast
-operator|<
-name|ProgramState
-operator|*
-operator|>
-operator|(
-name|State
-operator|)
-operator|->
-name|incrementReferenceCount
+if|if
+condition|(
+name|IsSink
+condition|)
+name|Succs
+operator|.
+name|setFlag
 argument_list|()
-block|;   }
+expr_stmt|;
+block|}
 operator|~
 name|ExplodedNode
 argument_list|()
-block|{
-name|const_cast
-operator|<
-name|ProgramState
-operator|*
-operator|>
-operator|(
-name|State
-operator|)
-operator|->
-name|decrementReferenceCount
-argument_list|()
-block|;   }
+block|{}
 comment|/// getLocation - Returns the edge associated with the given node.
 name|ProgramPoint
 name|getLocation
@@ -558,9 +544,7 @@ operator|(
 operator|)
 return|;
 block|}
-specifier|const
-name|ProgramState
-operator|*
+name|ProgramStateRef
 name|getState
 argument_list|()
 specifier|const
@@ -602,7 +586,9 @@ argument|llvm::FoldingSetNodeID&ID
 argument_list|,
 argument|const ProgramPoint&Loc
 argument_list|,
-argument|const ProgramState *state
+argument|ProgramStateRef state
+argument_list|,
+argument|bool IsSink
 argument_list|)
 block|{
 name|ID
@@ -617,6 +603,16 @@ operator|.
 name|AddPointer
 argument_list|(
 name|state
+operator|.
+name|getPtr
+argument_list|()
+argument_list|)
+block|;
+name|ID
+operator|.
+name|AddBoolean
+argument_list|(
+name|IsSink
 argument_list|)
 block|;   }
 name|void
@@ -634,6 +630,9 @@ name|getLocation
 argument_list|()
 argument_list|,
 name|getState
+argument_list|()
+argument_list|,
+name|isSink
 argument_list|()
 argument_list|)
 block|;   }
@@ -711,15 +710,20 @@ name|getFlag
 argument_list|()
 return|;
 block|}
-name|void
-name|markAsSink
+name|bool
+name|hasSinglePred
 argument_list|()
+specifier|const
 block|{
-name|Succs
-operator|.
-name|setFlag
+return|return
+operator|(
+name|pred_size
 argument_list|()
-block|; }
+operator|==
+literal|1
+operator|)
+return|;
+block|}
 name|ExplodedNode
 operator|*
 name|getFirstPred
@@ -728,9 +732,9 @@ block|{
 return|return
 name|pred_empty
 argument_list|()
-condition|?
+operator|?
 name|NULL
-else|:
+operator|:
 operator|*
 operator|(
 name|pred_begin
@@ -987,6 +991,11 @@ comment|// FIXME: Is this class necessary?
 name|class
 name|InterExplodedGraphMap
 block|{
+name|virtual
+name|void
+name|anchor
+parameter_list|()
+function_decl|;
 name|llvm
 operator|::
 name|DenseMap
@@ -1037,35 +1046,25 @@ name|CoreEngine
 decl_stmt|;
 comment|// Type definitions.
 typedef|typedef
-name|SmallVector
+name|std
+operator|::
+name|vector
 operator|<
 name|ExplodedNode
 operator|*
-operator|,
-literal|2
 operator|>
-name|RootsTy
+name|NodeVector
 expr_stmt|;
-typedef|typedef
-name|SmallVector
-operator|<
-name|ExplodedNode
-operator|*
-operator|,
-literal|10
-operator|>
-name|EndNodesTy
-expr_stmt|;
-comment|/// Roots - The roots of the simulation graph. Usually there will be only
+comment|/// The roots of the simulation graph. Usually there will be only
 comment|/// one, but clients are free to establish multiple subgraphs within a single
 comment|/// SimulGraph. Moreover, these subgraphs can often merge when paths from
 comment|/// different roots reach the same state at the same program location.
-name|RootsTy
+name|NodeVector
 name|Roots
 decl_stmt|;
-comment|/// EndNodes - The nodes in the simulation graph which have been
-comment|///  specially marked as the endpoint of an abstract simulation path.
-name|EndNodesTy
+comment|/// The nodes in the simulation graph which have been
+comment|/// specially marked as the endpoint of an abstract simulation path.
+name|NodeVector
 name|EndNodes
 decl_stmt|;
 comment|/// Nodes - The nodes in the graph.
@@ -1087,24 +1086,26 @@ name|unsigned
 name|NumNodes
 decl_stmt|;
 comment|/// A list of recently allocated nodes that can potentially be recycled.
-name|void
-modifier|*
-name|recentlyAllocatedNodes
+name|NodeVector
+name|ChangedNodes
 decl_stmt|;
 comment|/// A list of nodes that can be reused.
-name|void
-modifier|*
-name|freeNodes
+name|NodeVector
+name|FreeNodes
 decl_stmt|;
 comment|/// A flag that indicates whether nodes should be recycled.
 name|bool
 name|reclaimNodes
 decl_stmt|;
+comment|/// Counter to determine when to reclaim nodes.
+name|unsigned
+name|reclaimCounter
+decl_stmt|;
 name|public
 label|:
-comment|/// getNode - Retrieve the node associated with a (Location,State) pair,
+comment|/// \brief Retrieve the node associated with a (Location,State) pair,
 comment|///  where the 'Location' is a ProgramPoint in the CFG.  If no node for
-comment|///  this pair exists, it is created.  IsNew is set to true if
+comment|///  this pair exists, it is created. IsNew is set to true if
 comment|///  the node was freshly created.
 name|ExplodedNode
 modifier|*
@@ -1115,10 +1116,13 @@ name|ProgramPoint
 modifier|&
 name|L
 parameter_list|,
-specifier|const
-name|ProgramState
-modifier|*
+name|ProgramStateRef
 name|State
+parameter_list|,
+name|bool
+name|IsSink
+init|=
+name|false
 parameter_list|,
 name|bool
 modifier|*
@@ -1183,27 +1187,7 @@ return|;
 block|}
 name|ExplodedGraph
 argument_list|()
-operator|:
-name|NumNodes
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|recentlyAllocatedNodes
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|freeNodes
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|reclaimNodes
-argument_list|(
-argument|false
-argument_list|)
-block|{}
+expr_stmt|;
 operator|~
 name|ExplodedGraph
 argument_list|()
@@ -1267,31 +1251,29 @@ operator|>
 name|AllNodesTy
 expr_stmt|;
 typedef|typedef
-name|NodeTy
-modifier|*
-modifier|*
+name|NodeVector
+operator|::
+name|iterator
 name|roots_iterator
-typedef|;
+expr_stmt|;
 typedef|typedef
-name|NodeTy
-modifier|*
-specifier|const
-modifier|*
+name|NodeVector
+operator|::
+name|const_iterator
 name|const_roots_iterator
-typedef|;
+expr_stmt|;
 typedef|typedef
-name|NodeTy
-modifier|*
-modifier|*
+name|NodeVector
+operator|::
+name|iterator
 name|eop_iterator
-typedef|;
+expr_stmt|;
 typedef|typedef
-name|NodeTy
-modifier|*
-specifier|const
-modifier|*
+name|NodeVector
+operator|::
+name|const_iterator
 name|const_eop_iterator
-typedef|;
+expr_stmt|;
 typedef|typedef
 name|AllNodesTy
 operator|::
@@ -1558,6 +1540,25 @@ name|void
 name|reclaimRecentlyAllocatedNodes
 parameter_list|()
 function_decl|;
+name|private
+label|:
+name|bool
+name|shouldCollect
+parameter_list|(
+specifier|const
+name|ExplodedNode
+modifier|*
+name|node
+parameter_list|)
+function_decl|;
+name|void
+name|collectNode
+parameter_list|(
+name|ExplodedNode
+modifier|*
+name|node
+parameter_list|)
+function_decl|;
 block|}
 empty_stmt|;
 name|class
@@ -1648,28 +1649,6 @@ name|N
 argument_list|)
 expr_stmt|;
 block|}
-name|ExplodedNodeSet
-modifier|&
-name|operator
-init|=
-operator|(
-specifier|const
-name|ExplodedNodeSet
-operator|&
-name|X
-operator|)
-block|{
-name|Impl
-operator|=
-name|X
-operator|.
-name|Impl
-block|;
-return|return
-operator|*
-name|this
-return|;
-block|}
 typedef|typedef
 name|ImplTy
 operator|::
@@ -1706,6 +1685,23 @@ name|empty
 argument_list|()
 return|;
 block|}
+name|bool
+name|erase
+parameter_list|(
+name|ExplodedNode
+modifier|*
+name|N
+parameter_list|)
+block|{
+return|return
+name|Impl
+operator|.
+name|erase
+argument_list|(
+name|N
+argument_list|)
+return|;
+block|}
 name|void
 name|clear
 parameter_list|()
@@ -1725,6 +1721,14 @@ modifier|&
 name|S
 parameter_list|)
 block|{
+name|assert
+argument_list|(
+operator|&
+name|S
+operator|!=
+name|this
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|empty

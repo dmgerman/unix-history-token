@@ -102,6 +102,19 @@ name|PartialDiagnostic
 block|{
 name|public
 label|:
+enum|enum
+block|{
+comment|// The MaxArguments and MaxFixItHints member enum values from
+comment|// DiagnosticsEngine are private but DiagnosticsEngine declares
+comment|// PartialDiagnostic a friend.  These enum values are redeclared
+comment|// here so that the nested Storage class below can access them.
+name|MaxArguments
+init|=
+name|DiagnosticsEngine
+operator|::
+name|MaxArguments
+block|}
+enum|;
 struct|struct
 name|Storage
 block|{
@@ -117,11 +130,6 @@ name|NumDiagRanges
 argument_list|(
 literal|0
 argument_list|)
-operator|,
-name|NumFixItHints
-argument_list|(
-literal|0
-argument_list|)
 block|{ }
 expr|enum
 block|{
@@ -131,7 +139,7 @@ comment|/// A single diagnostic with more than that almost certainly has to
 comment|/// be simplified anyway.
 name|MaxArguments
 operator|=
-name|DiagnosticsEngine
+name|PartialDiagnostic
 operator|::
 name|MaxArguments
 block|}
@@ -145,12 +153,6 @@ comment|/// NumDiagRanges - This is the number of ranges in the DiagRanges array
 name|unsigned
 name|char
 name|NumDiagRanges
-decl_stmt|;
-comment|/// \brief The number of code modifications hints in the
-comment|/// FixItHints array.
-name|unsigned
-name|char
-name|NumFixItHints
 decl_stmt|;
 comment|/// DiagArgumentsKind - This is an array of ArgumentKind::ArgumentKind enum
 comment|/// values, with one for each argument.  This specifies whether the argument
@@ -190,23 +192,16 @@ index|[
 literal|10
 index|]
 decl_stmt|;
-enum|enum
-block|{
-name|MaxFixItHints
-init|=
-name|DiagnosticsEngine
-operator|::
-name|MaxFixItHints
-block|}
-enum|;
 comment|/// FixItHints - If valid, provides a hint with some code
 comment|/// to insert, remove, or modify at a particular position.
+name|SmallVector
+operator|<
 name|FixItHint
+operator|,
+literal|6
+operator|>
 name|FixItHints
-index|[
-name|MaxFixItHints
-index|]
-decl_stmt|;
+expr_stmt|;
 block|}
 struct|;
 comment|/// \brief An allocator for Storage objects, which uses a small cache to
@@ -286,9 +281,10 @@ literal|0
 expr_stmt|;
 name|Result
 operator|->
-name|NumFixItHints
-operator|=
-literal|0
+name|FixItHints
+operator|.
+name|clear
+argument_list|()
 expr_stmt|;
 return|return
 name|Result
@@ -418,6 +414,20 @@ operator|!
 name|DiagStorage
 condition|)
 return|return;
+comment|// The hot path for PartialDiagnostic is when we just used it to wrap an ID
+comment|// (typically so we have the flexibility of passing a more complex
+comment|// diagnostic into the callee, but that does not commonly occur).
+comment|//
+comment|// Split this out into a slow function for silly compilers (*cough*) which
+comment|// can't do decent partial inlining.
+name|freeStorageSlow
+argument_list|()
+expr_stmt|;
+block|}
+name|void
+name|freeStorageSlow
+parameter_list|()
+block|{
 if|if
 condition|(
 name|Allocator
@@ -534,42 +544,14 @@ operator|=
 name|getStorage
 argument_list|()
 expr_stmt|;
-name|assert
-argument_list|(
-name|DiagStorage
-operator|->
-name|NumFixItHints
-operator|<
-name|Storage
-operator|::
-name|MaxFixItHints
-operator|&&
-literal|"Too many code modification hints!"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|DiagStorage
-operator|->
-name|NumFixItHints
-operator|>=
-name|Storage
-operator|::
-name|MaxFixItHints
-condition|)
-return|return;
-comment|// Don't crash in release builds
 name|DiagStorage
 operator|->
 name|FixItHints
-index|[
-name|DiagStorage
-operator|->
-name|NumFixItHints
-operator|++
-index|]
-operator|=
+operator|.
+name|push_back
+argument_list|(
 name|Hint
+argument_list|)
 expr_stmt|;
 block|}
 name|public
@@ -1192,7 +1174,10 @@ name|e
 init|=
 name|DiagStorage
 operator|->
-name|NumFixItHints
+name|FixItHints
+operator|.
+name|size
+argument_list|()
 init|;
 name|i
 operator|!=

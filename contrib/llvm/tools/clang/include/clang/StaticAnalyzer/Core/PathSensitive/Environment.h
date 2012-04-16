@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Analysis/AnalysisContext.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/StaticAnalyzer/Core/PathSensitive/SVals.h"
 end_include
 
@@ -87,9 +93,149 @@ decl_stmt|;
 name|class
 name|SValBuilder
 decl_stmt|;
-comment|/// Environment - An immutable map from Stmts to their current
-comment|///  symbolic values (SVals).
-comment|///
+comment|/// An entry in the environment consists of a Stmt and an LocationContext.
+comment|/// This allows the environment to manage context-sensitive bindings,
+comment|/// which is essentially for modeling recursive function analysis, among
+comment|/// other things.
+name|class
+name|EnvironmentEntry
+range|:
+name|public
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|Stmt
+operator|*
+decl_stmt|,                                           const
+name|StackFrameContext
+modifier|*
+decl|>
+block|{
+name|public
+label|:
+name|EnvironmentEntry
+argument_list|(
+specifier|const
+name|Stmt
+operator|*
+name|s
+argument_list|,
+specifier|const
+name|LocationContext
+operator|*
+name|L
+argument_list|)
+operator|:
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|Stmt
+operator|*
+operator|,
+specifier|const
+name|StackFrameContext
+operator|*
+operator|>
+operator|(
+name|s
+operator|,
+name|L
+condition|?
+name|L
+operator|->
+name|getCurrentStackFrame
+argument_list|()
+else|:
+literal|0
+operator|)
+block|{}
+specifier|const
+name|Stmt
+operator|*
+name|getStmt
+argument_list|()
+specifier|const
+block|{
+return|return
+name|first
+return|;
+block|}
+specifier|const
+name|LocationContext
+operator|*
+name|getLocationContext
+argument_list|()
+specifier|const
+block|{
+return|return
+name|second
+return|;
+block|}
+comment|/// Profile an EnvironmentEntry for inclusion in a FoldingSet.
+specifier|static
+name|void
+name|Profile
+argument_list|(
+name|llvm
+operator|::
+name|FoldingSetNodeID
+operator|&
+name|ID
+argument_list|,
+specifier|const
+name|EnvironmentEntry
+operator|&
+name|E
+argument_list|)
+block|{
+name|ID
+operator|.
+name|AddPointer
+argument_list|(
+name|E
+operator|.
+name|getStmt
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|ID
+operator|.
+name|AddPointer
+argument_list|(
+name|E
+operator|.
+name|getLocationContext
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
+name|void
+name|Profile
+argument_list|(
+name|llvm
+operator|::
+name|FoldingSetNodeID
+operator|&
+name|ID
+argument_list|)
+decl|const
+block|{
+name|Profile
+argument_list|(
+name|ID
+argument_list|,
+operator|*
+name|this
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+empty_stmt|;
+comment|/// An immutable map from EnvironemntEntries to SVals.
 name|class
 name|Environment
 block|{
@@ -105,9 +251,7 @@ name|llvm
 operator|::
 name|ImmutableMap
 operator|<
-specifier|const
-name|Stmt
-operator|*
+name|EnvironmentEntry
 operator|,
 name|SVal
 operator|>
@@ -131,8 +275,8 @@ name|SVal
 name|lookupExpr
 argument_list|(
 specifier|const
-name|Stmt
-operator|*
+name|EnvironmentEntry
+operator|&
 name|E
 argument_list|)
 decl|const
@@ -169,15 +313,15 @@ name|end
 argument_list|()
 return|;
 block|}
-comment|/// getSVal - Fetches the current binding of the expression in the
-comment|///  Environment.
+comment|/// Fetches the current binding of the expression in the
+comment|/// Environment.
 name|SVal
 name|getSVal
 argument_list|(
 specifier|const
-name|Stmt
-operator|*
-name|Ex
+name|EnvironmentEntry
+operator|&
+name|E
 argument_list|,
 name|SValBuilder
 operator|&
@@ -258,6 +402,49 @@ operator|.
 name|ExprBindings
 return|;
 block|}
+name|void
+name|print
+argument_list|(
+name|raw_ostream
+operator|&
+name|Out
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|NL
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|Sep
+argument_list|)
+decl|const
+decl_stmt|;
+name|private
+label|:
+name|void
+name|printAux
+argument_list|(
+name|raw_ostream
+operator|&
+name|Out
+argument_list|,
+name|bool
+name|printLocations
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|NL
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|Sep
+argument_list|)
+decl|const
+decl_stmt|;
 block|}
 empty_stmt|;
 name|class
@@ -310,7 +497,7 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-comment|/// Bind the value 'V' to the statement 'S'.
+comment|/// Bind a symbolic value to the given environment entry.
 name|Environment
 name|bindExpr
 parameter_list|(
@@ -318,9 +505,9 @@ name|Environment
 name|Env
 parameter_list|,
 specifier|const
-name|Stmt
-modifier|*
-name|S
+name|EnvironmentEntry
+modifier|&
+name|E
 parameter_list|,
 name|SVal
 name|V
@@ -329,8 +516,8 @@ name|bool
 name|Invalidate
 parameter_list|)
 function_decl|;
-comment|/// Bind the location 'location' and value 'V' to the statement 'S'.  This
-comment|/// is used when simulating loads/stores.
+comment|/// Bind the location 'location' and value 'V' to the specified
+comment|/// environment entry.
 name|Environment
 name|bindExprAndLocation
 parameter_list|(
@@ -338,9 +525,9 @@ name|Environment
 name|Env
 parameter_list|,
 specifier|const
-name|Stmt
-modifier|*
-name|S
+name|EnvironmentEntry
+modifier|&
+name|E
 parameter_list|,
 name|SVal
 name|location
@@ -359,10 +546,8 @@ name|SymbolReaper
 modifier|&
 name|SymReaper
 parameter_list|,
-specifier|const
-name|ProgramState
-modifier|*
-name|ST
+name|ProgramStateRef
+name|state
 parameter_list|)
 function_decl|;
 block|}

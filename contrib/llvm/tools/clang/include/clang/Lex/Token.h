@@ -178,7 +178,12 @@ comment|// Contained an escaped newline or trigraph.
 name|LeadingEmptyMacro
 init|=
 literal|0x10
+block|,
 comment|// Empty macro exists before this token.
+name|HasUDSuffix
+init|=
+literal|0x20
+comment|// This string or character literal has a ud-suffix.
 block|}
 enum|;
 name|tok
@@ -991,6 +996,25 @@ operator|(
 name|Flags
 operator|&
 name|LeadingEmptyMacro
+operator|)
+operator|?
+name|true
+operator|:
+name|false
+return|;
+block|}
+comment|/// \brief Return true if this token is a string or character literal which
+comment|/// has a ud-suffix.
+name|bool
+name|hasUDSuffix
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|Flags
+operator|&
+name|HasUDSuffix
 operator|)
 operator|?
 name|true

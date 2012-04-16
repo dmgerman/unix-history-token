@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- MipsAsmPrinter.h - Mips LLVM assembly writer ----------------------===//
+comment|//===-- MipsAsmPrinter.h - Mips LLVM Assembly Printer ----------*- C++ -*--===//
 end_comment
 
 begin_comment
@@ -62,6 +62,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|"MipsMachineFunction.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"MipsMCInstLower.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"MipsSubtarget.h"
 end_include
 
@@ -94,13 +106,13 @@ name|class
 name|MachineInstr
 decl_stmt|;
 name|class
-name|raw_ostream
-decl_stmt|;
-name|class
 name|MachineBasicBlock
 decl_stmt|;
 name|class
 name|Module
+decl_stmt|;
+name|class
+name|raw_ostream
 decl_stmt|;
 name|class
 name|LLVM_LIBRARY_VISIBILITY
@@ -109,13 +121,30 @@ range|:
 name|public
 name|AsmPrinter
 block|{
+name|void
+name|EmitInstrWithMacroNoAT
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|*
+name|MI
+argument_list|)
+block|;
+name|public
+operator|:
 specifier|const
 name|MipsSubtarget
 operator|*
 name|Subtarget
 block|;
-name|public
-operator|:
+specifier|const
+name|MipsFunctionInfo
+operator|*
+name|MipsFI
+block|;
+name|MipsMCInstLower
+name|MCInstLowering
+block|;
 name|explicit
 name|MipsAsmPrinter
 argument_list|(
@@ -130,9 +159,14 @@ argument_list|)
 operator|:
 name|AsmPrinter
 argument_list|(
-argument|TM
+name|TM
 argument_list|,
-argument|Streamer
+name|Streamer
+argument_list|)
+block|,
+name|MCInstLowering
+argument_list|(
+argument|*this
 argument_list|)
 block|{
 name|Subtarget
@@ -159,6 +193,15 @@ return|return
 literal|"Mips Assembly Printer"
 return|;
 block|}
+name|virtual
+name|bool
+name|runOnMachineFunction
+argument_list|(
+name|MachineFunction
+operator|&
+name|MF
+argument_list|)
+block|;
 name|void
 name|EmitInstruction
 argument_list|(

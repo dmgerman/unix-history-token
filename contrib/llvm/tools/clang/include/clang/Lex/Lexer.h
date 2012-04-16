@@ -132,6 +132,11 @@ range|:
 name|public
 name|PreprocessorLexer
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Constant configuration values for this lexer.
 specifier|const
@@ -151,9 +156,9 @@ name|FileLoc
 block|;
 comment|// Location for start of file.
 name|LangOptions
-name|Features
+name|LangOpts
 block|;
-comment|// Features enabled by this language (cache).
+comment|// LangOpts enabled by this language (cache).
 name|bool
 name|Is_PragmaLexer
 block|;
@@ -255,7 +260,7 @@ name|Lexer
 argument_list|(
 argument|SourceLocation FileLoc
 argument_list|,
-argument|const LangOptions&Features
+argument|const LangOptions&LangOpts
 argument_list|,
 argument|const char *BufStart
 argument_list|,
@@ -275,7 +280,7 @@ argument|const llvm::MemoryBuffer *InputBuffer
 argument_list|,
 argument|const SourceManager&SM
 argument_list|,
-argument|const LangOptions&Features
+argument|const LangOptions&LangOpts
 argument_list|)
 block|;
 comment|/// Create_PragmaLexer: Lexer constructor - Create a new lexer object for
@@ -297,17 +302,17 @@ argument_list|,
 argument|Preprocessor&PP
 argument_list|)
 block|;
-comment|/// getFeatures - Return the language features currently enabled.  NOTE: this
-comment|/// lexer modifies features as a file is parsed!
+comment|/// getLangOpts - Return the language features currently enabled.
+comment|/// NOTE: this lexer modifies features as a file is parsed!
 specifier|const
 name|LangOptions
 operator|&
-name|getFeatures
+name|getLangOpts
 argument_list|()
 specifier|const
 block|{
 return|return
-name|Features
+name|LangOpts
 return|;
 block|}
 comment|/// getFileLoc - Return the File Location for the file we are lexing out of.
@@ -630,7 +635,7 @@ argument_list|,
 specifier|const
 name|LangOptions
 operator|&
-name|Features
+name|LangOpts
 argument_list|,
 name|bool
 operator|*
@@ -663,7 +668,7 @@ argument_list|,
 specifier|const
 name|LangOptions
 operator|&
-name|Features
+name|LangOpts
 argument_list|,
 name|bool
 operator|*
@@ -690,7 +695,7 @@ argument|SmallVectorImpl<char>&buffer
 argument_list|,
 argument|const SourceManager&SourceMgr
 argument_list|,
-argument|const LangOptions&Features
+argument|const LangOptions&LangOpts
 argument_list|,
 argument|bool *invalid =
 literal|0
@@ -740,7 +745,7 @@ argument|unsigned Character
 argument_list|,
 argument|const SourceManager&SM
 argument_list|,
-argument|const LangOptions&Features
+argument|const LangOptions&LangOpts
 argument_list|)
 block|;
 comment|/// \brief Computes the source location just past the end of the
@@ -768,11 +773,14 @@ argument|unsigned Offset
 argument_list|,
 argument|const SourceManager&SM
 argument_list|,
-argument|const LangOptions&Features
+argument|const LangOptions&LangOpts
 argument_list|)
 block|;
 comment|/// \brief Returns true if the given MacroID location points at the first
 comment|/// token of the macro expansion.
+comment|///
+comment|/// \param MacroBegin If non-null and function returns true, it is set to
+comment|/// begin location of the macro.
 specifier|static
 name|bool
 name|isAtStartOfMacroExpansion
@@ -782,15 +790,72 @@ argument_list|,
 argument|const SourceManager&SM
 argument_list|,
 argument|const LangOptions&LangOpts
+argument_list|,
+argument|SourceLocation *MacroBegin =
+literal|0
 argument_list|)
 block|;
 comment|/// \brief Returns true if the given MacroID location points at the last
 comment|/// token of the macro expansion.
+comment|///
+comment|/// \param MacroBegin If non-null and function returns true, it is set to
+comment|/// end location of the macro.
 specifier|static
 name|bool
 name|isAtEndOfMacroExpansion
 argument_list|(
 argument|SourceLocation loc
+argument_list|,
+argument|const SourceManager&SM
+argument_list|,
+argument|const LangOptions&LangOpts
+argument_list|,
+argument|SourceLocation *MacroEnd =
+literal|0
+argument_list|)
+block|;
+comment|/// \brief Accepts a range and returns a character range with file locations.
+comment|///
+comment|/// Returns a null range if a part of the range resides inside a macro
+comment|/// expansion or the range does not reside on the same FileID.
+specifier|static
+name|CharSourceRange
+name|makeFileCharRange
+argument_list|(
+argument|CharSourceRange Range
+argument_list|,
+argument|const SourceManager&SM
+argument_list|,
+argument|const LangOptions&LangOpts
+argument_list|)
+block|;
+comment|/// \brief Returns a string for the source that the range encompasses.
+specifier|static
+name|StringRef
+name|getSourceText
+argument_list|(
+argument|CharSourceRange Range
+argument_list|,
+argument|const SourceManager&SM
+argument_list|,
+argument|const LangOptions&LangOpts
+argument_list|,
+argument|bool *Invalid =
+literal|0
+argument_list|)
+block|;
+comment|/// \brief Retrieve the name of the immediate macro expansion.
+comment|///
+comment|/// This routine starts from a source location, and finds the name of the macro
+comment|/// responsible for its immediate expansion. It looks through any intervening
+comment|/// macro argument expansions to compute this. It returns a StringRef which
+comment|/// refers to the SourceManager-owned buffer of the source where that macro
+comment|/// name is spelled. Thus, the result shouldn't out-live that SourceManager.
+specifier|static
+name|StringRef
+name|getImmediateMacroName
+argument_list|(
+argument|SourceLocation Loc
 argument_list|,
 argument|const SourceManager&SM
 argument_list|,
@@ -825,7 +890,7 @@ name|ComputePreamble
 argument_list|(
 argument|const llvm::MemoryBuffer *Buffer
 argument_list|,
-argument|const LangOptions&Features
+argument|const LangOptions&LangOpts
 argument_list|,
 argument|unsigned MaxLines =
 literal|0
@@ -1153,7 +1218,7 @@ parameter_list|,
 specifier|const
 name|LangOptions
 modifier|&
-name|Features
+name|LangOpts
 parameter_list|)
 block|{
 comment|// If this is not a trigraph and not a UCN or escaped newline, return
@@ -1189,7 +1254,7 @@ name|Ptr
 argument_list|,
 name|Size
 argument_list|,
-name|Features
+name|LangOpts
 argument_list|)
 return|;
 block|}
@@ -1272,7 +1337,7 @@ parameter_list|,
 specifier|const
 name|LangOptions
 modifier|&
-name|Features
+name|LangOpts
 parameter_list|)
 function_decl|;
 comment|//===--------------------------------------------------------------------===//
@@ -1285,6 +1350,21 @@ name|Bytes
 parameter_list|,
 name|bool
 name|StartOfLine
+parameter_list|)
+function_decl|;
+specifier|const
+name|char
+modifier|*
+name|LexUDSuffix
+parameter_list|(
+name|Token
+modifier|&
+name|Result
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|CurPtr
 parameter_list|)
 function_decl|;
 comment|// Helper functions to lex the remainder of a token of the specific type.

@@ -116,11 +116,12 @@ decl_stmt|;
 name|unsigned
 name|NumArguments
 decl_stmt|;
-comment|/// \brief The location at which this macro was exported from its module.
+comment|/// \brief The location at which this macro was either explicitly exported
+comment|/// from its module or marked as private.
 comment|///
-comment|/// If invalid, this macro has not been explicitly exported.
+comment|/// If invalid, this macro has not been explicitly given any visibility.
 name|SourceLocation
-name|ExportLocation
+name|VisibilityLocation
 decl_stmt|;
 comment|/// ReplacementTokens - This is the list of tokens that the macro is defined
 comment|/// to.
@@ -215,6 +216,12 @@ decl_stmt|;
 comment|/// \brief Must warn if the macro is unused at the end of translation unit.
 name|bool
 name|IsWarnIfUnused
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief Whether the macro has public (when described in a module).
+name|bool
+name|IsPublic
 range|:
 literal|1
 decl_stmt|;
@@ -934,39 +941,43 @@ expr_stmt|;
 block|}
 comment|/// \brief Set the export location for this macro.
 name|void
-name|setExportLocation
+name|setVisibility
 parameter_list|(
+name|bool
+name|Public
+parameter_list|,
 name|SourceLocation
-name|ExportLoc
+name|Loc
 parameter_list|)
 block|{
-name|ExportLocation
+name|VisibilityLocation
 operator|=
-name|ExportLoc
+name|Loc
+expr_stmt|;
+name|IsPublic
+operator|=
+name|Public
 expr_stmt|;
 block|}
-comment|/// \brief Determine whether this macro was explicitly exported from its
+comment|/// \brief Determine whether this macro is part of the public API of its
 comment|/// module.
 name|bool
-name|isExported
+name|isPublic
 argument_list|()
 specifier|const
 block|{
 return|return
-name|ExportLocation
-operator|.
-name|isValid
-argument_list|()
+name|IsPublic
 return|;
 block|}
-comment|/// \brief Determine the location where this macro was explicitly exported
-comment|/// from its module.
+comment|/// \brief Determine the location where this macro was explicitly made
+comment|/// public or private within its module.
 name|SourceLocation
-name|getExportLocation
+name|getVisibilityLocation
 parameter_list|()
 block|{
 return|return
-name|ExportLocation
+name|VisibilityLocation
 return|;
 block|}
 name|private

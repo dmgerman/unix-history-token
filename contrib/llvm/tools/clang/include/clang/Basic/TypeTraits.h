@@ -101,6 +101,8 @@ name|UTT_IsEmpty
 block|,
 name|UTT_IsEnum
 block|,
+name|UTT_IsFinal
+block|,
 name|UTT_IsFloatingPoint
 block|,
 name|UTT_IsFunction
@@ -163,6 +165,8 @@ block|,
 name|BTT_IsSame
 block|,
 name|BTT_TypeCompatible
+block|,
+name|BTT_IsTriviallyAssignable
 block|}
 enum|;
 comment|/// ArrayTypeTrait - Names for the array type traits.
@@ -183,6 +187,13 @@ block|,
 name|UETT_AlignOf
 block|,
 name|UETT_VecStep
+block|}
+enum|;
+comment|/// \brief Names for type traits that operate specifically on types.
+enum|enum
+name|TypeTrait
+block|{
+name|TT_IsTriviallyConstructible
 block|}
 enum|;
 block|}

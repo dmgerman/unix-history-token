@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- ARMBaseRegisterInfo.h - ARM Register Information Impl ----*- C++ -*-===//
+comment|//===-- ARMBaseRegisterInfo.h - ARM Register Information Impl ---*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -123,7 +123,7 @@ name|unsigned
 name|Reg
 parameter_list|,
 name|bool
-name|isDarwin
+name|isIOS
 parameter_list|)
 block|{
 name|using
@@ -183,10 +183,10 @@ case|:
 case|case
 name|R11
 case|:
-comment|// For darwin we want r7 and lr to be next to each other.
+comment|// For iOS we want r7 and lr to be next to each other.
 return|return
 operator|!
-name|isDarwin
+name|isIOS
 return|;
 default|default:
 return|return
@@ -203,7 +203,7 @@ name|unsigned
 name|Reg
 parameter_list|,
 name|bool
-name|isDarwin
+name|isIOS
 parameter_list|)
 block|{
 name|using
@@ -227,9 +227,9 @@ case|:
 case|case
 name|R11
 case|:
-comment|// Darwin has this second area.
+comment|// iOS has this second area.
 return|return
-name|isDarwin
+name|isIOS
 return|;
 default|default:
 return|return
@@ -246,7 +246,7 @@ name|unsigned
 name|Reg
 parameter_list|,
 name|bool
-name|isDarwin
+name|isIOS
 parameter_list|)
 block|{
 name|using
@@ -346,7 +346,7 @@ name|public
 operator|:
 comment|/// Code Generation virtual methods...
 specifier|const
-name|unsigned
+name|uint16_t
 operator|*
 name|getCalleeSavedRegs
 argument_list|(
@@ -355,27 +355,19 @@ literal|0
 argument_list|)
 specifier|const
 block|;
+specifier|const
+name|uint32_t
+operator|*
+name|getCallPreservedMask
+argument_list|(
+argument|CallingConv::ID
+argument_list|)
+specifier|const
+block|;
 name|BitVector
 name|getReservedRegs
 argument_list|(
 argument|const MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
-comment|/// getMatchingSuperRegClass - Return a subclass of the specified register
-comment|/// class A so that each register in it has a sub-register of the
-comment|/// specified sub-register index which is in the specified register class B.
-name|virtual
-specifier|const
-name|TargetRegisterClass
-operator|*
-name|getMatchingSuperRegClass
-argument_list|(
-argument|const TargetRegisterClass *A
-argument_list|,
-argument|const TargetRegisterClass *B
-argument_list|,
-argument|unsigned Idx
 argument_list|)
 specifier|const
 block|;
@@ -436,7 +428,7 @@ specifier|const
 block|;
 name|ArrayRef
 operator|<
-name|unsigned
+name|uint16_t
 operator|>
 name|getRawAllocationOrder
 argument_list|(

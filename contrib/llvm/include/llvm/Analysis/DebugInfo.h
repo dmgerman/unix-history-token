@@ -156,6 +156,9 @@ decl_stmt|;
 name|class
 name|DIType
 decl_stmt|;
+name|class
+name|DIObjCProperty
+decl_stmt|;
 comment|/// DIDescriptor - A thin wraper around MDNode to access encoded debug info.
 comment|/// This should not be stored in a container, because underly MDNode may
 comment|/// change in certain situations.
@@ -584,6 +587,11 @@ name|isTemplateValueParameter
 argument_list|()
 specifier|const
 expr_stmt|;
+name|bool
+name|isObjCProperty
+argument_list|()
+specifier|const
+expr_stmt|;
 block|}
 end_decl_stmt
 
@@ -620,30 +628,24 @@ argument_list|(
 argument|N
 argument_list|)
 block|{}
-name|int64_t
+name|uint64_t
 name|getLo
 argument_list|()
 specifier|const
 block|{
 return|return
-operator|(
-name|int64_t
-operator|)
 name|getUInt64Field
 argument_list|(
 literal|1
 argument_list|)
 return|;
 block|}
-name|int64_t
+name|uint64_t
 name|getHi
 argument_list|()
 specifier|const
 block|{
 return|return
-operator|(
-name|int64_t
-operator|)
 name|getUInt64Field
 argument_list|(
 literal|2
@@ -705,6 +707,11 @@ operator|:
 name|public
 name|DIDescriptor
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 name|explicit
@@ -746,6 +753,11 @@ operator|:
 name|public
 name|DIScope
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 name|explicit
@@ -920,6 +932,11 @@ operator|:
 name|public
 name|DIScope
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 name|explicit
@@ -1064,8 +1081,11 @@ operator|:
 name|public
 name|DIScope
 block|{
-name|public
-operator|:
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|protected
 operator|:
 comment|// This ctor is used when the Tag has already been validated by a derived
@@ -1095,8 +1115,6 @@ name|Verify
 argument_list|()
 specifier|const
 block|;
-name|public
-operator|:
 name|explicit
 name|DIType
 argument_list|(
@@ -1527,6 +1545,11 @@ operator|:
 name|public
 name|DIType
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 name|explicit
@@ -1586,6 +1609,11 @@ operator|:
 name|public
 name|DIType
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|protected
 operator|:
 name|explicit
@@ -1654,11 +1682,30 @@ name|getOriginalTypeSize
 argument_list|()
 specifier|const
 block|;
+comment|/// getObjCProperty - Return property node, if this ivar is
+comment|/// associated with one.
+name|MDNode
+operator|*
+name|getObjCProperty
+argument_list|()
+specifier|const
+block|;
 name|StringRef
 name|getObjCPropertyName
 argument_list|()
 specifier|const
 block|{
+if|if
+condition|(
+name|getVersion
+argument_list|()
+operator|>
+name|LLVMDebugVersion11
+condition|)
+return|return
+name|StringRef
+argument_list|()
+return|;
 return|return
 name|getStringField
 argument_list|(
@@ -1671,6 +1718,16 @@ name|getObjCPropertyGetterName
 argument_list|()
 specifier|const
 block|{
+name|assert
+argument_list|(
+name|getVersion
+argument_list|()
+operator|<=
+name|LLVMDebugVersion11
+operator|&&
+literal|"Invalid Request"
+argument_list|)
+block|;
 return|return
 name|getStringField
 argument_list|(
@@ -1683,6 +1740,16 @@ name|getObjCPropertySetterName
 argument_list|()
 specifier|const
 block|{
+name|assert
+argument_list|(
+name|getVersion
+argument_list|()
+operator|<=
+name|LLVMDebugVersion11
+operator|&&
+literal|"Invalid Request"
+argument_list|)
+block|;
 return|return
 name|getStringField
 argument_list|(
@@ -1694,6 +1761,16 @@ name|bool
 name|isReadOnlyObjCProperty
 argument_list|()
 block|{
+name|assert
+argument_list|(
+name|getVersion
+argument_list|()
+operator|<=
+name|LLVMDebugVersion11
+operator|&&
+literal|"Invalid Request"
+argument_list|)
+block|;
 return|return
 operator|(
 name|getUnsignedField
@@ -1713,6 +1790,16 @@ name|bool
 name|isReadWriteObjCProperty
 argument_list|()
 block|{
+name|assert
+argument_list|(
+name|getVersion
+argument_list|()
+operator|<=
+name|LLVMDebugVersion11
+operator|&&
+literal|"Invalid Request"
+argument_list|)
+block|;
 return|return
 operator|(
 name|getUnsignedField
@@ -1732,6 +1819,16 @@ name|bool
 name|isAssignObjCProperty
 argument_list|()
 block|{
+name|assert
+argument_list|(
+name|getVersion
+argument_list|()
+operator|<=
+name|LLVMDebugVersion11
+operator|&&
+literal|"Invalid Request"
+argument_list|)
+block|;
 return|return
 operator|(
 name|getUnsignedField
@@ -1751,6 +1848,16 @@ name|bool
 name|isRetainObjCProperty
 argument_list|()
 block|{
+name|assert
+argument_list|(
+name|getVersion
+argument_list|()
+operator|<=
+name|LLVMDebugVersion11
+operator|&&
+literal|"Invalid Request"
+argument_list|)
+block|;
 return|return
 operator|(
 name|getUnsignedField
@@ -1770,6 +1877,16 @@ name|bool
 name|isCopyObjCProperty
 argument_list|()
 block|{
+name|assert
+argument_list|(
+name|getVersion
+argument_list|()
+operator|<=
+name|LLVMDebugVersion11
+operator|&&
+literal|"Invalid Request"
+argument_list|)
+block|;
 return|return
 operator|(
 name|getUnsignedField
@@ -1789,6 +1906,16 @@ name|bool
 name|isNonAtomicObjCProperty
 argument_list|()
 block|{
+name|assert
+argument_list|(
+name|getVersion
+argument_list|()
+operator|<=
+name|LLVMDebugVersion11
+operator|&&
+literal|"Invalid Request"
+argument_list|)
+block|;
 return|return
 operator|(
 name|getUnsignedField
@@ -1824,16 +1951,33 @@ name|dump
 argument_list|()
 specifier|const
 block|;   }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// DICompositeType - This descriptor holds a type that can refer to multiple
+end_comment
+
+begin_comment
 comment|/// other types, like a function or struct.
+end_comment
+
+begin_comment
 comment|/// FIXME: Why is this a DIDerivedType??
+end_comment
+
+begin_decl_stmt
 name|class
 name|DICompositeType
-operator|:
+range|:
 name|public
 name|DIDerivedType
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 name|explicit
@@ -1946,11 +2090,17 @@ name|dump
 argument_list|()
 specifier|const
 block|;   }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// DITemplateTypeParameter - This is a wrapper for template type parameter.
+end_comment
+
+begin_decl_stmt
 name|class
 name|DITemplateTypeParameter
-operator|:
+range|:
 name|public
 name|DIDescriptor
 block|{
@@ -2224,6 +2374,11 @@ operator|:
 name|public
 name|DIScope
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 name|explicit
@@ -2536,8 +2691,17 @@ operator|!=
 literal|0
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// isPrivate - Return true if this subprogram has "private"
+end_comment
+
+begin_comment
 comment|/// access specifier.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isPrivate
 argument_list|()
@@ -2555,6 +2719,9 @@ condition|)
 return|return
 name|false
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 operator|(
 name|getUnsignedField
@@ -2567,10 +2734,10 @@ operator|)
 operator|!=
 literal|0
 return|;
-block|}
-end_decl_stmt
+end_return
 
 begin_comment
+unit|}
 comment|/// isProtected - Return true if this subprogram has "protected"
 end_comment
 
@@ -2578,10 +2745,13 @@ begin_comment
 comment|/// access specifier.
 end_comment
 
-begin_expr_stmt
-name|bool
+begin_macro
+unit|bool
 name|isProtected
 argument_list|()
+end_macro
+
+begin_expr_stmt
 specifier|const
 block|{
 if|if
@@ -2793,19 +2963,46 @@ end_return
 
 begin_comment
 unit|}
-comment|/// Verify - Verify that a subprogram descriptor is well formed.
+comment|/// getScopeLineNumber - Get the beginning of the scope of the
+end_comment
+
+begin_comment
+comment|/// function, not necessarily where the name of the program
+end_comment
+
+begin_comment
+comment|/// starts.
 end_comment
 
 begin_macro
-unit|bool
-name|Verify
+unit|unsigned
+name|getScopeLineNumber
 argument_list|()
 end_macro
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|const
-decl_stmt|;
-end_decl_stmt
+block|{
+return|return
+name|getUnsignedField
+argument_list|(
+literal|20
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// Verify - Verify that a subprogram descriptor is well formed.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|Verify
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// print - print subprogram.
@@ -3694,6 +3891,11 @@ range|:
 name|public
 name|DIScope
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 name|explicit
@@ -3831,6 +4033,11 @@ operator|:
 name|public
 name|DIScope
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 name|explicit
@@ -3981,6 +4188,11 @@ operator|:
 name|public
 name|DIScope
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 name|explicit
@@ -4236,6 +4448,241 @@ argument_list|()
 specifier|const
 block|;   }
 block|;
+name|class
+name|DIObjCProperty
+operator|:
+name|public
+name|DIDescriptor
+block|{
+name|public
+operator|:
+name|explicit
+name|DIObjCProperty
+argument_list|(
+specifier|const
+name|MDNode
+operator|*
+name|N
+argument_list|)
+operator|:
+name|DIDescriptor
+argument_list|(
+argument|N
+argument_list|)
+block|{ }
+name|StringRef
+name|getObjCPropertyName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getStringField
+argument_list|(
+literal|1
+argument_list|)
+return|;
+block|}
+name|DIFile
+name|getFile
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getFieldAs
+operator|<
+name|DIFile
+operator|>
+operator|(
+literal|2
+operator|)
+return|;
+block|}
+name|unsigned
+name|getLineNumber
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getUnsignedField
+argument_list|(
+literal|3
+argument_list|)
+return|;
+block|}
+name|StringRef
+name|getObjCPropertyGetterName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getStringField
+argument_list|(
+literal|4
+argument_list|)
+return|;
+block|}
+name|StringRef
+name|getObjCPropertySetterName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getStringField
+argument_list|(
+literal|5
+argument_list|)
+return|;
+block|}
+name|bool
+name|isReadOnlyObjCProperty
+argument_list|()
+block|{
+return|return
+operator|(
+name|getUnsignedField
+argument_list|(
+literal|6
+argument_list|)
+operator|&
+name|dwarf
+operator|::
+name|DW_APPLE_PROPERTY_readonly
+operator|)
+operator|!=
+literal|0
+return|;
+block|}
+name|bool
+name|isReadWriteObjCProperty
+argument_list|()
+block|{
+return|return
+operator|(
+name|getUnsignedField
+argument_list|(
+literal|6
+argument_list|)
+operator|&
+name|dwarf
+operator|::
+name|DW_APPLE_PROPERTY_readwrite
+operator|)
+operator|!=
+literal|0
+return|;
+block|}
+name|bool
+name|isAssignObjCProperty
+argument_list|()
+block|{
+return|return
+operator|(
+name|getUnsignedField
+argument_list|(
+literal|6
+argument_list|)
+operator|&
+name|dwarf
+operator|::
+name|DW_APPLE_PROPERTY_assign
+operator|)
+operator|!=
+literal|0
+return|;
+block|}
+name|bool
+name|isRetainObjCProperty
+argument_list|()
+block|{
+return|return
+operator|(
+name|getUnsignedField
+argument_list|(
+literal|6
+argument_list|)
+operator|&
+name|dwarf
+operator|::
+name|DW_APPLE_PROPERTY_retain
+operator|)
+operator|!=
+literal|0
+return|;
+block|}
+name|bool
+name|isCopyObjCProperty
+argument_list|()
+block|{
+return|return
+operator|(
+name|getUnsignedField
+argument_list|(
+literal|6
+argument_list|)
+operator|&
+name|dwarf
+operator|::
+name|DW_APPLE_PROPERTY_copy
+operator|)
+operator|!=
+literal|0
+return|;
+block|}
+name|bool
+name|isNonAtomicObjCProperty
+argument_list|()
+block|{
+return|return
+operator|(
+name|getUnsignedField
+argument_list|(
+literal|6
+argument_list|)
+operator|&
+name|dwarf
+operator|::
+name|DW_APPLE_PROPERTY_nonatomic
+operator|)
+operator|!=
+literal|0
+return|;
+block|}
+name|DIType
+name|getType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getFieldAs
+operator|<
+name|DIType
+operator|>
+operator|(
+literal|7
+operator|)
+return|;
+block|}
+comment|/// Verify - Verify that a derived type descriptor is well formed.
+name|bool
+name|Verify
+argument_list|()
+specifier|const
+block|;
+comment|/// print - print derived type.
+name|void
+name|print
+argument_list|(
+argument|raw_ostream&OS
+argument_list|)
+specifier|const
+block|;
+comment|/// dump - print derived type to dbgs() with a newline.
+name|void
+name|dump
+argument_list|()
+specifier|const
+block|;   }
+block|;
 comment|/// getDISubprogram - Find subprogram that is enclosing this scope.
 name|DISubprogram
 name|getDISubprogram
@@ -4387,7 +4834,7 @@ argument_list|(
 argument|DIGlobalVariable DIG
 argument_list|)
 block|;
-comment|// addSubprogram - Add subprgoram into SPs.
+comment|// addSubprogram - Add subprogram into SPs.
 name|bool
 name|addSubprogram
 argument_list|(

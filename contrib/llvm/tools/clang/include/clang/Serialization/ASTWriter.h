@@ -126,6 +126,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DenseSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SetVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Bitcode/BitstreamWriter.h"
 end_include
 
@@ -186,6 +198,9 @@ name|class
 name|HeaderSearch
 decl_stmt|;
 name|class
+name|IdentifierResolver
+decl_stmt|;
+name|class
 name|MacroDefinition
 decl_stmt|;
 name|class
@@ -199,6 +214,9 @@ name|OpenCLOptions
 decl_stmt|;
 name|class
 name|ASTReader
+decl_stmt|;
+name|class
+name|Module
 decl_stmt|;
 name|class
 name|PreprocessedEntity
@@ -224,6 +242,13 @@ decl_stmt|;
 name|class
 name|VersionTuple
 decl_stmt|;
+name|namespace
+name|SrcMgr
+block|{
+name|class
+name|SLocEntry
+decl_stmt|;
+block|}
 comment|/// \brief Writes an AST file containing the contents of a translation unit.
 comment|///
 comment|/// The ASTWriter class produces a bitstream containing the serialized
@@ -301,15 +326,29 @@ name|ASTContext
 modifier|*
 name|Context
 decl_stmt|;
+comment|/// \brief The preprocessor we're writing.
+name|Preprocessor
+modifier|*
+name|PP
+decl_stmt|;
 comment|/// \brief The reader of existing AST files, if we're chaining.
 name|ASTReader
 modifier|*
 name|Chain
 decl_stmt|;
+comment|/// \brief The module we're currently writing, if any.
+name|Module
+modifier|*
+name|WritingModule
+decl_stmt|;
 comment|/// \brief Indicates when the AST writing is actively performing
 comment|/// serialization, rather than just queueing updates.
 name|bool
 name|WritingAST
+decl_stmt|;
+comment|/// \brief Indicates that the AST contained compiler errors.
+name|bool
+name|ASTHasCompilerErrors
 decl_stmt|;
 comment|/// \brief Stores a declaration or a type to be written to the AST file.
 name|class
@@ -476,10 +515,78 @@ name|std
 operator|::
 name|vector
 operator|<
-name|uint32_t
+name|serialization
+operator|::
+name|DeclOffset
 operator|>
 name|DeclOffsets
 expr_stmt|;
+comment|/// \brief Sorted (by file offset) vector of pairs of file offset/DeclID.
+typedef|typedef
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+operator|,
+name|serialization
+operator|::
+name|DeclID
+operator|>
+operator|,
+literal|64
+operator|>
+name|LocDeclIDsTy
+expr_stmt|;
+struct|struct
+name|DeclIDInFileInfo
+block|{
+name|LocDeclIDsTy
+name|DeclIDs
+decl_stmt|;
+comment|/// \brief Set when the DeclIDs vectors from all files are joined, this
+comment|/// indicates the index that this particular vector has in the global one.
+name|unsigned
+name|FirstDeclIndex
+decl_stmt|;
+block|}
+struct|;
+typedef|typedef
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|SrcMgr
+operator|::
+name|SLocEntry
+operator|*
+operator|,
+name|DeclIDInFileInfo
+operator|*
+operator|>
+name|FileDeclIDsTy
+expr_stmt|;
+comment|/// \brief Map from file SLocEntries to info about the file-level declarations
+comment|/// that it contains.
+name|FileDeclIDsTy
+name|FileDeclIDs
+decl_stmt|;
+name|void
+name|associateDeclWithFile
+argument_list|(
+specifier|const
+name|Decl
+operator|*
+name|D
+argument_list|,
+name|serialization
+operator|::
+name|DeclID
+argument_list|)
+decl_stmt|;
 comment|/// \brief The first ID number we can use for our own types.
 name|serialization
 operator|::
@@ -546,6 +653,32 @@ name|IdentID
 operator|>
 name|IdentifierIDs
 expr_stmt|;
+comment|/// @name FlushStmt Caches
+comment|/// @{
+comment|/// \brief Set of parent Stmts for the currently serializing sub stmt.
+name|llvm
+operator|::
+name|DenseSet
+operator|<
+name|Stmt
+operator|*
+operator|>
+name|ParentStmts
+expr_stmt|;
+comment|/// \brief Offsets of sub stmts already serialized. The offset points
+comment|/// just after the stmt record.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|Stmt
+operator|*
+operator|,
+name|uint64_t
+operator|>
+name|SubStmtEntries
+expr_stmt|;
+comment|/// @}
 comment|/// \brief Offsets of each of the identifier IDs into the identifier
 comment|/// table.
 name|std
@@ -556,13 +689,25 @@ name|uint32_t
 operator|>
 name|IdentifierOffsets
 expr_stmt|;
+comment|/// \brief The first ID number we can use for our own submodules.
+name|serialization
+operator|::
+name|SubmoduleID
+name|FirstSubmoduleID
+expr_stmt|;
+comment|/// \brief The submodule ID that will be assigned to the next new submodule.
+name|serialization
+operator|::
+name|SubmoduleID
+name|NextSubmoduleID
+expr_stmt|;
 comment|/// \brief The first ID number we can use for our own selectors.
 name|serialization
 operator|::
 name|SelectorID
 name|FirstSelectorID
 expr_stmt|;
-comment|/// \brief The selector ID that will be assigned to the next new identifier.
+comment|/// \brief The selector ID that will be assigned to the next new selector.
 name|serialization
 operator|::
 name|SelectorID
@@ -704,9 +849,10 @@ expr_stmt|;
 comment|/// \brief DeclContexts that have received extensions since their serialized
 comment|/// form.
 comment|///
-comment|/// For namespaces, when we're chaining and encountering a namespace, we check if
-comment|/// its primary namespace comes from the chain. If it does, we add the primary
-comment|/// to this set, so that we can write out lexical content updates for it.
+comment|/// For namespaces, when we're chaining and encountering a namespace, we check
+comment|/// if its primary namespace comes from the chain. If it does, we add the
+comment|/// primary to this set, so that we can write out lexical content updates for
+comment|/// it.
 name|llvm
 operator|::
 name|SmallPtrSet
@@ -736,46 +882,75 @@ comment|/// \brief Decls that will be replaced in the current dependent AST file
 name|DeclsToRewriteTy
 name|DeclsToRewrite
 decl_stmt|;
-struct|struct
-name|ChainedObjCCategoriesData
-block|{
-comment|/// \brief The interface in the imported module.
-specifier|const
+comment|/// \brief The set of Objective-C class that have categories we
+comment|/// should serialize.
+name|llvm
+operator|::
+name|SetVector
+operator|<
 name|ObjCInterfaceDecl
-modifier|*
-name|Interface
-decl_stmt|;
-comment|/// \brief The local tail category ID that got chained to the imported
-comment|/// interface.
-specifier|const
-name|ObjCCategoryDecl
-modifier|*
-name|TailCategory
-decl_stmt|;
-comment|/// \brief ID corresponding to \c Interface.
+operator|*
+operator|>
+name|ObjCClassesWithCategories
+expr_stmt|;
+struct|struct
+name|ReplacedDeclInfo
+block|{
 name|serialization
 operator|::
 name|DeclID
-name|InterfaceID
+name|ID
 expr_stmt|;
-comment|/// \brief ID corresponding to TailCategoryID.
-name|serialization
-operator|::
-name|DeclID
-name|TailCategoryID
-expr_stmt|;
+name|uint64_t
+name|Offset
+decl_stmt|;
+name|unsigned
+name|Loc
+decl_stmt|;
+name|ReplacedDeclInfo
+argument_list|()
+operator|:
+name|ID
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Offset
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Loc
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+name|ReplacedDeclInfo
+argument_list|(
+argument|serialization::DeclID ID
+argument_list|,
+argument|uint64_t Offset
+argument_list|,
+argument|SourceLocation Loc
+argument_list|)
+operator|:
+name|ID
+argument_list|(
+name|ID
+argument_list|)
+operator|,
+name|Offset
+argument_list|(
+name|Offset
+argument_list|)
+operator|,
+name|Loc
+argument_list|(
+argument|Loc.getRawEncoding()
+argument_list|)
+block|{}
 block|}
 struct|;
-comment|/// \brief ObjC categories that got chained to an interface imported from
-comment|/// another module.
-name|SmallVector
-operator|<
-name|ChainedObjCCategoriesData
-operator|,
-literal|16
-operator|>
-name|LocalChainedObjCCategories
-expr_stmt|;
 comment|/// \brief Decls that have been replaced in the current dependent AST file.
 comment|///
 comment|/// When a decl changes fundamentally after being deserialized (this shouldn't
@@ -784,20 +959,42 @@ comment|/// serialized again. In this case, it is registered here, so that the r
 comment|/// knows to read the updated version.
 name|SmallVector
 operator|<
-name|std
-operator|::
-name|pair
-operator|<
-name|serialization
-operator|::
-name|DeclID
-operator|,
-name|uint64_t
-operator|>
+name|ReplacedDeclInfo
 operator|,
 literal|16
 operator|>
 name|ReplacedDecls
+expr_stmt|;
+comment|/// \brief The set of declarations that may have redeclaration chains that
+comment|/// need to be serialized.
+name|llvm
+operator|::
+name|SetVector
+operator|<
+name|Decl
+operator|*
+operator|,
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|Decl
+operator|*
+operator|,
+literal|4
+operator|>
+operator|,
+name|llvm
+operator|::
+name|SmallPtrSet
+operator|<
+name|Decl
+operator|*
+operator|,
+literal|4
+operator|>
+expr|>
+name|Redeclarations
 expr_stmt|;
 comment|/// \brief Statements that we've encountered while serializing a
 comment|/// declaration or type.
@@ -833,18 +1030,6 @@ operator|,
 name|unsigned
 operator|>
 name|SwitchCaseIDs
-expr_stmt|;
-comment|/// \brief Mapping from OpaqueValueExpr expressions to IDs.
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-name|OpaqueValueExpr
-operator|*
-operator|,
-name|unsigned
-operator|>
-name|OpaqueValues
 expr_stmt|;
 comment|/// \brief The number of statements written to the AST file.
 name|unsigned
@@ -954,15 +1139,59 @@ literal|2
 operator|>
 name|CXXBaseSpecifiersToWrite
 expr_stmt|;
+comment|/// \brief A mapping from each known submodule to its ID number, which will
+comment|/// be a positive integer.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|Module
+operator|*
+operator|,
+name|unsigned
+operator|>
+name|SubmoduleIDs
+expr_stmt|;
+comment|/// \brief Retrieve or create a submodule ID for this module.
+name|unsigned
+name|getSubmoduleID
+parameter_list|(
+name|Module
+modifier|*
+name|Mod
+parameter_list|)
+function_decl|;
 comment|/// \brief Write the given subexpression to the bitstream.
 name|void
 name|WriteSubStmt
-parameter_list|(
+argument_list|(
 name|Stmt
-modifier|*
+operator|*
 name|S
-parameter_list|)
-function_decl|;
+argument_list|,
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|Stmt
+operator|*
+argument_list|,
+name|uint64_t
+operator|>
+operator|&
+name|SubStmtEntries
+argument_list|,
+name|llvm
+operator|::
+name|DenseSet
+operator|<
+name|Stmt
+operator|*
+operator|>
+operator|&
+name|ParentStmts
+argument_list|)
+decl_stmt|;
 name|void
 name|WriteBlockInfoBlock
 parameter_list|()
@@ -1033,6 +1262,7 @@ function_decl|;
 name|void
 name|WriteHeaderSearch
 parameter_list|(
+specifier|const
 name|HeaderSearch
 modifier|&
 name|HS
@@ -1047,6 +1277,14 @@ parameter_list|(
 name|PreprocessingRecord
 modifier|&
 name|PPRec
+parameter_list|)
+function_decl|;
+name|void
+name|WriteSubmodules
+parameter_list|(
+name|Module
+modifier|*
+name|WritingModule
 parameter_list|)
 function_decl|;
 name|void
@@ -1098,6 +1336,10 @@ name|WriteTypeDeclOffsets
 parameter_list|()
 function_decl|;
 name|void
+name|WriteFileDeclIDsMap
+parameter_list|()
+function_decl|;
+name|void
 name|WriteSelectors
 parameter_list|(
 name|Sema
@@ -1119,6 +1361,10 @@ parameter_list|(
 name|Preprocessor
 modifier|&
 name|PP
+parameter_list|,
+name|IdentifierResolver
+modifier|&
+name|IdResolver
 parameter_list|,
 name|bool
 name|IsModule
@@ -1150,14 +1396,6 @@ name|WriteDeclReplacementsBlock
 parameter_list|()
 function_decl|;
 name|void
-name|ResolveChainedObjCCategories
-parameter_list|()
-function_decl|;
-name|void
-name|WriteChainedObjCCategories
-parameter_list|()
-function_decl|;
-name|void
 name|WriteDeclContextVisibleUpdate
 parameter_list|(
 specifier|const
@@ -1182,6 +1420,18 @@ name|Sema
 modifier|&
 name|SemaRef
 parameter_list|)
+function_decl|;
+name|void
+name|WriteObjCCategories
+parameter_list|()
+function_decl|;
+name|void
+name|WriteRedeclarations
+parameter_list|()
+function_decl|;
+name|void
+name|WriteMergedDecls
+parameter_list|()
 function_decl|;
 name|unsigned
 name|DeclParmVarAbbrev
@@ -1259,8 +1509,9 @@ name|string
 operator|&
 name|OutputFile
 argument_list|,
-name|bool
-name|IsModule
+name|Module
+operator|*
+name|WritingModule
 argument_list|)
 decl_stmt|;
 name|public
@@ -1276,6 +1527,10 @@ operator|&
 name|Stream
 argument_list|)
 expr_stmt|;
+operator|~
+name|ASTWriter
+argument_list|()
+expr_stmt|;
 comment|/// \brief Write a precompiled header for the given semantic analysis.
 comment|///
 comment|/// \param SemaRef a reference to the semantic analysis object that processed
@@ -1284,8 +1539,8 @@ comment|///
 comment|/// \param StatCalls the object that cached all of the stat() calls made while
 comment|/// searching for source files and headers.
 comment|///
-comment|/// \param IsModule Whether we're writing a module (otherwise, we're writing a
-comment|/// precompiled header).
+comment|/// \param WritingModule The module that we are writing. If null, we are
+comment|/// writing a precompiled header.
 comment|///
 comment|/// \param isysroot if non-empty, write a relocatable file whose headers
 comment|/// are relative to the given system root.
@@ -1307,11 +1562,17 @@ name|string
 operator|&
 name|OutputFile
 argument_list|,
-name|bool
-name|IsModule
+name|Module
+operator|*
+name|WritingModule
 argument_list|,
 name|StringRef
 name|isysroot
+argument_list|,
+name|bool
+name|hasErrors
+operator|=
+name|false
 argument_list|)
 decl_stmt|;
 comment|/// \brief Emit a source location.
@@ -1902,22 +2163,36 @@ argument_list|(
 name|D
 argument_list|)
 expr_stmt|;
-comment|// Reset the flag, so that we don't add this decl multiple times.
-name|const_cast
-operator|<
+block|}
+name|bool
+name|isRewritten
+argument_list|(
+specifier|const
 name|Decl
 operator|*
-operator|>
-operator|(
 name|D
-operator|)
-operator|->
-name|setChangedSinceDeserialization
+argument_list|)
+decl|const
+block|{
+return|return
+name|DeclsToRewrite
+operator|.
+name|count
 argument_list|(
-name|false
+name|D
+argument_list|)
+return|;
+block|}
+comment|/// \brief Infer the submodule ID that contains an entity at the given
+comment|/// source location.
+name|serialization
+operator|::
+name|SubmoduleID
+name|inferSubmoduleIDFromLocation
+argument_list|(
+argument|SourceLocation Loc
 argument_list|)
 expr_stmt|;
-block|}
 comment|/// \brief Note that the identifier II occurs at the given offset
 comment|/// within the identifier table.
 name|void
@@ -2001,15 +2276,6 @@ function_decl|;
 name|void
 name|ClearSwitchCaseIDs
 parameter_list|()
-function_decl|;
-comment|/// \brief Retrieve the ID for the given opaque value expression.
-name|unsigned
-name|getOpaqueValueID
-parameter_list|(
-name|OpaqueValueExpr
-modifier|*
-name|e
-parameter_list|)
 function_decl|;
 name|unsigned
 name|getDeclParmVarAbbrev
@@ -2145,20 +2411,6 @@ name|T
 argument_list|)
 decl_stmt|;
 name|void
-name|DeclRead
-argument_list|(
-name|serialization
-operator|::
-name|DeclID
-name|ID
-argument_list|,
-specifier|const
-name|Decl
-operator|*
-name|D
-argument_list|)
-decl_stmt|;
-name|void
 name|SelectorRead
 argument_list|(
 name|serialization
@@ -2181,6 +2433,27 @@ argument_list|,
 name|MacroDefinition
 operator|*
 name|MD
+argument_list|)
+decl_stmt|;
+name|void
+name|MacroVisible
+parameter_list|(
+name|IdentifierInfo
+modifier|*
+name|II
+parameter_list|)
+function_decl|;
+name|void
+name|ModuleRead
+argument_list|(
+name|serialization
+operator|::
+name|SubmoduleID
+name|ID
+argument_list|,
+name|Module
+operator|*
+name|Mod
 argument_list|)
 decl_stmt|;
 comment|// ASTMutationListener implementation.
@@ -2289,6 +2562,26 @@ modifier|*
 name|IFD
 parameter_list|)
 function_decl|;
+name|virtual
+name|void
+name|AddedObjCPropertyInClassExtension
+parameter_list|(
+specifier|const
+name|ObjCPropertyDecl
+modifier|*
+name|Prop
+parameter_list|,
+specifier|const
+name|ObjCPropertyDecl
+modifier|*
+name|OrigProp
+parameter_list|,
+specifier|const
+name|ObjCCategoryDecl
+modifier|*
+name|ClassExt
+parameter_list|)
+function_decl|;
 block|}
 empty_stmt|;
 comment|/// \brief AST and semantic-analysis consumer that generates a
@@ -2309,8 +2602,11 @@ operator|::
 name|string
 name|OutputFile
 block|;
-name|bool
-name|IsModule
+name|clang
+operator|::
+name|Module
+operator|*
+name|Module
 block|;
 name|std
 operator|::
@@ -2330,12 +2626,13 @@ operator|*
 name|StatCalls
 block|;
 comment|// owned by the FileManager
-name|std
+name|llvm
 operator|::
-name|vector
+name|SmallVector
 operator|<
-name|unsigned
 name|char
+block|,
+literal|128
 operator|>
 name|Buffer
 block|;
@@ -2377,7 +2674,7 @@ argument|const Preprocessor&PP
 argument_list|,
 argument|StringRef OutputFile
 argument_list|,
-argument|bool IsModule
+argument|clang::Module *Module
 argument_list|,
 argument|StringRef isysroot
 argument_list|,

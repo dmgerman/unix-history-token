@@ -66,6 +66,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/AST/Type.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/AST/TemplateName.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/APSInt.h"
 end_include
 
@@ -78,19 +90,13 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/ErrorHandling.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/AST/Type.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/AST/TemplateName.h"
 end_include
 
 begin_decl_stmt
@@ -289,7 +295,6 @@ argument_list|(
 argument|Declaration
 argument_list|)
 block|{
-comment|// FIXME: Need to be sure we have the "canonical" declaration!
 name|TypeOrValue
 operator|=
 name|reinterpret_cast
@@ -1821,6 +1826,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 expr_stmt|;
 end_expr_stmt
 
@@ -2418,23 +2424,160 @@ argument_list|(
 argument|unsigned NumTemplateArgs
 argument_list|)
 expr_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/// \brief Extends ASTTemplateArgumentListInfo with the source location
+end_comment
+
+begin_comment
+comment|/// information for the template keyword; this is used as part of the
+end_comment
+
+begin_comment
+comment|/// representation of qualified identifiers, such as S<T>::template apply<T>.
+end_comment
+
+begin_decl_stmt
+name|struct
+name|ASTTemplateKWAndArgsInfo
+range|:
+name|public
+name|ASTTemplateArgumentListInfo
+block|{
+typedef|typedef
+name|ASTTemplateArgumentListInfo
+name|Base
+typedef|;
+comment|// NOTE: the source location of the (optional) template keyword is
+comment|// stored after all template arguments.
+comment|/// \brief Get the source location of the template keyword.
+name|SourceLocation
+name|getTemplateKeywordLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+name|reinterpret_cast
+operator|<
+specifier|const
+name|SourceLocation
+operator|*
+operator|>
+operator|(
+name|getTemplateArgs
+argument_list|()
+operator|+
+name|NumTemplateArgs
+operator|)
+return|;
+block|}
+comment|/// \brief Sets the source location of the template keyword.
+name|void
+name|setTemplateKeywordLoc
+argument_list|(
+argument|SourceLocation TemplateKWLoc
+argument_list|)
+block|{
+operator|*
+name|reinterpret_cast
+operator|<
+name|SourceLocation
+operator|*
+operator|>
+operator|(
+name|getTemplateArgs
+argument_list|()
+operator|+
+name|NumTemplateArgs
+operator|)
+operator|=
+name|TemplateKWLoc
+block|;   }
+specifier|static
+specifier|const
+name|ASTTemplateKWAndArgsInfo
+operator|*
+name|Create
+argument_list|(
+argument|ASTContext&C
+argument_list|,
+argument|SourceLocation TemplateKWLoc
+argument_list|,
+argument|const TemplateArgumentListInfo&List
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|void
+name|initializeFrom
+parameter_list|(
+name|SourceLocation
+name|TemplateKWLoc
+parameter_list|,
+specifier|const
+name|TemplateArgumentListInfo
+modifier|&
+name|List
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|initializeFrom
+parameter_list|(
+name|SourceLocation
+name|TemplateKWLoc
+parameter_list|,
+specifier|const
+name|TemplateArgumentListInfo
+modifier|&
+name|List
+parameter_list|,
+name|bool
+modifier|&
+name|Dependent
+parameter_list|,
+name|bool
+modifier|&
+name|InstantiationDependent
+parameter_list|,
+name|bool
+modifier|&
+name|ContainsUnexpandedParameterPack
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|initializeFrom
+parameter_list|(
+name|SourceLocation
+name|TemplateKWLoc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_expr_stmt
 specifier|static
 name|std
 operator|::
 name|size_t
 name|sizeFor
 argument_list|(
-specifier|const
-name|TemplateArgumentListInfo
-operator|&
-name|List
+argument|unsigned NumTemplateArgs
 argument_list|)
 expr_stmt|;
-block|}
-struct|;
-end_struct
+end_expr_stmt
 
 begin_expr_stmt
+unit|};
 specifier|const
 name|DiagnosticBuilder
 operator|&

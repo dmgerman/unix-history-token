@@ -136,6 +136,11 @@ range|:
 name|public
 name|Value
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|MDString
 argument_list|(
 specifier|const
@@ -144,15 +149,12 @@ operator|&
 argument_list|)
 block|;
 comment|// DO NOT IMPLEMENT
-name|StringRef
-name|Str
-block|;
 name|explicit
 name|MDString
 argument_list|(
-argument|LLVMContext&C
-argument_list|,
-argument|StringRef S
+name|LLVMContext
+operator|&
+name|C
 argument_list|)
 block|;
 name|public
@@ -200,7 +202,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Str
+name|getName
+argument_list|()
 return|;
 block|}
 name|unsigned
@@ -212,7 +215,8 @@ return|return
 operator|(
 name|unsigned
 operator|)
-name|Str
+name|getName
+argument_list|()
 operator|.
 name|size
 argument_list|()
@@ -225,28 +229,28 @@ name|iterator
 name|iterator
 expr_stmt|;
 comment|/// begin() - Pointer to the first byte of the string.
-comment|///
 name|iterator
 name|begin
 argument_list|()
 specifier|const
 block|{
 return|return
-name|Str
+name|getName
+argument_list|()
 operator|.
 name|begin
 argument_list|()
 return|;
 block|}
 comment|/// end() - Pointer to one byte past the end of the string.
-comment|///
 name|iterator
 name|end
 argument_list|()
 specifier|const
 block|{
 return|return
-name|Str
+name|getName
+argument_list|()
 operator|.
 name|end
 argument_list|()
@@ -322,6 +326,17 @@ decl_stmt|;
 name|friend
 name|class
 name|LLVMContextImpl
+decl_stmt|;
+name|friend
+block|struct
+name|FoldingSetTrait
+operator|<
+name|MDNode
+operator|>
+expr_stmt|;
+comment|/// Hash - If the MDNode is uniqued cache the hash to speed up lookup.
+name|unsigned
+name|Hash
 decl_stmt|;
 comment|/// NumOperands - This many 'MDNodeOperand' items are co-allocated onto the
 comment|/// end of this MDNode.
@@ -515,6 +530,18 @@ parameter_list|(
 name|MDNode
 modifier|*
 name|N
+parameter_list|)
+function_decl|;
+comment|/// replaceOperandWith - Replace a specific operand.
+name|void
+name|replaceOperandWith
+parameter_list|(
+name|unsigned
+name|i
+parameter_list|,
+name|Value
+modifier|*
+name|NewVal
 parameter_list|)
 function_decl|;
 comment|/// getOperand - Return specified operand.
@@ -815,6 +842,12 @@ argument_list|,
 argument|AssemblyAnnotationWriter *AAW =
 literal|0
 argument_list|)
+specifier|const
+block|;
+comment|/// dump() - Allow printing of NamedMDNodes from the debugger.
+name|void
+name|dump
+argument_list|()
 specifier|const
 block|; }
 decl_stmt|;

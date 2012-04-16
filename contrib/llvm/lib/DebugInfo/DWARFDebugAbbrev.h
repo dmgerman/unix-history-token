@@ -95,7 +95,7 @@ expr_stmt|;
 name|class
 name|DWARFAbbreviationDeclarationSet
 block|{
-name|uint64_t
+name|uint32_t
 name|Offset
 decl_stmt|;
 name|uint32_t
@@ -126,7 +126,7 @@ argument_list|)
 block|{}
 name|DWARFAbbreviationDeclarationSet
 argument_list|(
-argument|uint64_t offset
+argument|uint32_t offset
 argument_list|,
 argument|uint32_t idxOffset
 argument_list|)
@@ -154,7 +154,7 @@ operator|.
 name|clear
 argument_list|()
 block|;   }
-name|uint64_t
+name|uint32_t
 name|getOffset
 argument_list|()
 specifier|const

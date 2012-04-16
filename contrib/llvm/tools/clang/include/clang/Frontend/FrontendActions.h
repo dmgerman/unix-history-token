@@ -65,6 +65,9 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
+name|class
+name|Module
+decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|// Custom Consumer Actions
 comment|//===----------------------------------------------------------------------===//
@@ -209,8 +212,70 @@ operator|:
 name|public
 name|ASTFrontendAction
 block|{
+name|protected
+operator|:
+name|virtual
+name|ASTConsumer
+operator|*
+name|CreateASTConsumer
+argument_list|(
+argument|CompilerInstance&CI
+argument_list|,
+argument|StringRef InFile
+argument_list|)
+block|;
+name|virtual
+name|TranslationUnitKind
+name|getTranslationUnitKind
+argument_list|()
+block|{
+return|return
+name|TU_Prefix
+return|;
+block|}
+name|virtual
 name|bool
-name|MakeModule
+name|hasASTFileSupport
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+name|public
+operator|:
+comment|/// \brief Compute the AST consumer arguments that will be used to
+comment|/// create the PCHGenerator instance returned by CreateASTConsumer.
+comment|///
+comment|/// \returns true if an error occurred, false otherwise.
+specifier|static
+name|bool
+name|ComputeASTConsumerArguments
+argument_list|(
+argument|CompilerInstance&CI
+argument_list|,
+argument|StringRef InFile
+argument_list|,
+argument|std::string&Sysroot
+argument_list|,
+argument|std::string&OutputFile
+argument_list|,
+argument|raw_ostream *&OS
+argument_list|)
+block|; }
+block|;
+name|class
+name|GenerateModuleAction
+operator|:
+name|public
+name|ASTFrontendAction
+block|{
+name|clang
+operator|::
+name|Module
+operator|*
+name|Module
 block|;
 name|protected
 operator|:
@@ -230,11 +295,7 @@ name|getTranslationUnitKind
 argument_list|()
 block|{
 return|return
-name|MakeModule
-operator|?
 name|TU_Module
-operator|:
-name|TU_Prefix
 return|;
 block|}
 name|virtual
@@ -249,18 +310,15 @@ return|;
 block|}
 name|public
 operator|:
-comment|/// \brief Create a new action
-name|explicit
-name|GeneratePCHAction
+name|virtual
+name|bool
+name|BeginSourceFileAction
 argument_list|(
-argument|bool MakeModule
+argument|CompilerInstance&CI
+argument_list|,
+argument|StringRef Filename
 argument_list|)
-operator|:
-name|MakeModule
-argument_list|(
-argument|MakeModule
-argument_list|)
-block|{ }
+block|;
 comment|/// \brief Compute the AST consumer arguments that will be used to
 comment|/// create the PCHGenerator instance returned by CreateASTConsumer.
 comment|///
@@ -371,11 +429,17 @@ name|public
 operator|:
 name|ASTMergeAction
 argument_list|(
-argument|FrontendAction *AdaptedAction
+name|FrontendAction
+operator|*
+name|AdaptedAction
 argument_list|,
-argument|std::string *ASTFiles
-argument_list|,
-argument|unsigned NumASTFiles
+name|ArrayRef
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|ASTFiles
 argument_list|)
 block|;
 name|virtual
@@ -447,6 +511,38 @@ specifier|const
 block|{
 return|return
 name|true
+return|;
+block|}
+expr|}
+block|;
+name|class
+name|PubnamesDumpAction
+operator|:
+name|public
+name|ASTFrontendAction
+block|{
+name|protected
+operator|:
+name|virtual
+name|ASTConsumer
+operator|*
+name|CreateASTConsumer
+argument_list|(
+argument|CompilerInstance&CI
+argument_list|,
+argument|StringRef InFile
+argument_list|)
+block|;
+name|public
+operator|:
+name|virtual
+name|bool
+name|hasCodeCompletionSupport
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
 return|;
 block|}
 expr|}

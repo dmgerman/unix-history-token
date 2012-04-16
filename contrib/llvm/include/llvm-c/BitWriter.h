@@ -33,6 +33,7 @@ literal|"C"
 block|{
 endif|#
 directive|endif
+comment|/**  * @defgroup LLVMCBitWriter Bit Writer  * @ingroup LLVMC  *  * @{  */
 comment|/*===-- Operations on modules ---------------------------------------------===*/
 comment|/** Writes a module to the specified path. Returns 0 on success. */
 name|int
@@ -75,6 +76,7 @@ name|int
 name|Handle
 parameter_list|)
 function_decl|;
+comment|/**  * @}  */
 ifdef|#
 directive|ifdef
 name|__cplusplus

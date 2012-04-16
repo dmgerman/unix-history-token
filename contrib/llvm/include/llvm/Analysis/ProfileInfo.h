@@ -96,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Format.h"
 end_include
 
@@ -433,7 +439,6 @@ name|e
 operator|.
 name|first
 condition|)
-block|{
 return|return
 name|e
 operator|.
@@ -442,15 +447,12 @@ operator|->
 name|getParent
 argument_list|()
 return|;
-block|}
-elseif|else
 if|if
 condition|(
 name|e
 operator|.
 name|second
 condition|)
-block|{
 return|return
 name|e
 operator|.
@@ -459,22 +461,11 @@ operator|->
 name|getParent
 argument_list|()
 return|;
-block|}
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Invalid ProfileInfo::Edge"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-specifier|const
-name|FType
-operator|*
-operator|)
-literal|0
-return|;
 block|}
 comment|// getEdge() - Creates an Edge from two BasicBlocks.
 specifier|static

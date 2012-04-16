@@ -98,12 +98,6 @@ name|class
 name|JITCodeEmitter
 decl_stmt|;
 name|class
-name|MachineCodeEmitter
-decl_stmt|;
-name|class
-name|Target
-decl_stmt|;
-name|class
 name|X86TargetMachine
 decl_stmt|;
 comment|/// createX86ISelDag - This pass converts a legalized DAG into a

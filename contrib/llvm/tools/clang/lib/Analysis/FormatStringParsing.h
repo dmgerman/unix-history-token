@@ -39,6 +39,9 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
+name|class
+name|LangOptions
+decl_stmt|;
 name|template
 operator|<
 name|typename
@@ -233,6 +236,16 @@ specifier|const
 name|char
 modifier|*
 name|E
+parameter_list|,
+specifier|const
+name|LangOptions
+modifier|&
+name|LO
+parameter_list|,
+name|bool
+name|IsScanf
+init|=
+name|false
 parameter_list|)
 function_decl|;
 name|template

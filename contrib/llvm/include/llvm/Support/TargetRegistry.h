@@ -165,6 +165,9 @@ name|class
 name|TargetMachine
 decl_stmt|;
 name|class
+name|TargetOptions
+decl_stmt|;
+name|class
 name|raw_ostream
 decl_stmt|;
 name|class
@@ -190,6 +193,9 @@ name|useLoc
 parameter_list|,
 name|bool
 name|useCFI
+parameter_list|,
+name|bool
+name|useDwarfDirectory
 parameter_list|,
 name|MCInstPrinter
 modifier|*
@@ -276,6 +282,11 @@ name|CodeModel
 operator|::
 name|Model
 name|CM
+operator|,
+name|CodeGenOpt
+operator|::
+name|Level
+name|OL
 operator|)
 expr_stmt|;
 typedef|typedef
@@ -355,6 +366,11 @@ operator|,
 name|StringRef
 name|Features
 operator|,
+specifier|const
+name|TargetOptions
+operator|&
+name|Options
+operator|,
 name|Reloc
 operator|::
 name|Model
@@ -364,6 +380,11 @@ name|CodeModel
 operator|::
 name|Model
 name|CM
+operator|,
+name|CodeGenOpt
+operator|::
+name|Level
+name|OL
 operator|)
 expr_stmt|;
 typedef|typedef
@@ -482,6 +503,16 @@ modifier|&
 name|MAI
 parameter_list|,
 specifier|const
+name|MCInstrInfo
+modifier|&
+name|MII
+parameter_list|,
+specifier|const
+name|MCRegisterInfo
+modifier|&
+name|MRI
+parameter_list|,
+specifier|const
 name|MCSubtargetInfo
 modifier|&
 name|STI
@@ -574,6 +605,9 @@ parameter_list|,
 name|bool
 name|useCFI
 parameter_list|,
+name|bool
+name|useDwarfDirectory
+parameter_list|,
 name|MCInstPrinter
 modifier|*
 name|InstPrint
@@ -624,8 +658,8 @@ comment|/// registered.
 name|MCAsmInfoCtorFnTy
 name|MCAsmInfoCtorFn
 decl_stmt|;
-comment|/// MCCodeGenInfoCtorFn - Constructor function for this target's MCCodeGenInfo,
-comment|/// if registered.
+comment|/// MCCodeGenInfoCtorFn - Constructor function for this target's
+comment|/// MCCodeGenInfo, if registered.
 name|MCCodeGenInfoCtorFnTy
 name|MCCodeGenInfoCtorFn
 decl_stmt|;
@@ -935,6 +969,11 @@ name|CodeModel
 operator|::
 name|Model
 name|CM
+argument_list|,
+name|CodeGenOpt
+operator|::
+name|Level
+name|OL
 argument_list|)
 decl|const
 block|{
@@ -954,6 +993,8 @@ argument_list|,
 name|RM
 argument_list|,
 name|CM
+argument_list|,
+name|OL
 argument_list|)
 return|;
 block|}
@@ -1095,6 +1136,11 @@ argument_list|,
 name|StringRef
 name|Features
 argument_list|,
+specifier|const
+name|TargetOptions
+operator|&
+name|Options
+argument_list|,
 name|Reloc
 operator|::
 name|Model
@@ -1110,6 +1156,15 @@ name|Model
 name|CM
 operator|=
 name|CodeModel
+operator|::
+name|Default
+argument_list|,
+name|CodeGenOpt
+operator|::
+name|Level
+name|OL
+operator|=
+name|CodeGenOpt
 operator|::
 name|Default
 argument_list|)
@@ -1135,9 +1190,13 @@ name|CPU
 argument_list|,
 name|Features
 argument_list|,
+name|Options
+argument_list|,
 name|RM
 argument_list|,
 name|CM
+argument_list|,
+name|OL
 argument_list|)
 return|;
 block|}
@@ -1320,6 +1379,16 @@ operator|&
 name|MAI
 argument_list|,
 specifier|const
+name|MCInstrInfo
+operator|&
+name|MII
+argument_list|,
+specifier|const
+name|MCRegisterInfo
+operator|&
+name|MRI
+argument_list|,
+specifier|const
 name|MCSubtargetInfo
 operator|&
 name|STI
@@ -1343,6 +1412,10 @@ argument_list|,
 name|SyntaxVariant
 argument_list|,
 name|MAI
+argument_list|,
+name|MII
+argument_list|,
+name|MRI
 argument_list|,
 name|STI
 argument_list|)
@@ -1480,6 +1553,9 @@ argument_list|,
 name|bool
 name|useCFI
 argument_list|,
+name|bool
+name|useDwarfDirectory
+argument_list|,
 name|MCInstPrinter
 operator|*
 name|InstPrint
@@ -1510,6 +1586,8 @@ argument_list|,
 name|useLoc
 argument_list|,
 name|useCFI
+argument_list|,
+name|useDwarfDirectory
 argument_list|,
 name|InstPrint
 argument_list|,
@@ -3052,7 +3130,7 @@ name|TargetArchType
 operator|=
 name|Triple
 operator|::
-name|InvalidArch
+name|UnknownArch
 operator|,
 name|bool
 name|HasJIT
@@ -3322,6 +3400,8 @@ argument_list|,
 argument|Reloc::Model RM
 argument_list|,
 argument|CodeModel::Model CM
+argument_list|,
+argument|CodeGenOpt::Level OL
 argument_list|)
 block|{
 return|return
@@ -3993,9 +4073,13 @@ argument|StringRef CPU
 argument_list|,
 argument|StringRef FS
 argument_list|,
+argument|const TargetOptions&Options
+argument_list|,
 argument|Reloc::Model RM
 argument_list|,
 argument|CodeModel::Model CM
+argument_list|,
+argument|CodeGenOpt::Level OL
 argument_list|)
 block|{
 return|return
@@ -4010,9 +4094,13 @@ name|CPU
 argument_list|,
 name|FS
 argument_list|,
+name|Options
+argument_list|,
 name|RM
 argument_list|,
 name|CM
+argument_list|,
+name|OL
 argument_list|)
 return|;
 block|}

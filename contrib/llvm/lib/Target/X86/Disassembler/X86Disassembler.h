@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- X86Disassembler.h - Disassembler for x86 and x86_64 ------*- C++ -*-===//
+comment|//===-- X86Disassembler.h - Disassembler for x86 and x86_64 -----*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -312,7 +312,7 @@ define|#
 directive|define
 name|INSTRUCTION_IDS
 define|\
-value|const InstrUID *instructionIDs;
+value|unsigned instructionIDs;
 end_define
 
 begin_include
@@ -339,18 +339,15 @@ directive|include
 file|"llvm/MC/MCDisassembler.h"
 end_include
 
-begin_struct_decl
-struct_decl|struct
-name|InternalInstruction
-struct_decl|;
-end_struct_decl
-
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
 name|class
 name|MCInst
+decl_stmt|;
+name|class
+name|MCInstrInfo
 decl_stmt|;
 name|class
 name|MCSubtargetInfo
@@ -376,7 +373,12 @@ range|:
 name|public
 name|MCDisassembler
 block|{
-name|protected
+specifier|const
+name|MCInstrInfo
+operator|*
+name|MII
+block|;
+name|public
 operator|:
 comment|/// Constructor     - Initializes the disassembler.
 comment|///
@@ -386,14 +388,18 @@ argument_list|(
 argument|const MCSubtargetInfo&STI
 argument_list|,
 argument|DisassemblerMode mode
+argument_list|,
+argument|const MCInstrInfo *MII
 argument_list|)
 block|;
-name|public
+name|private
 operator|:
 operator|~
 name|X86GenericDisassembler
 argument_list|()
 block|;
+name|public
+operator|:
 comment|/// getInstruction - See MCDisassembler.
 name|DecodeStatus
 name|getInstruction
@@ -413,6 +419,7 @@ argument_list|)
 specifier|const
 block|;
 comment|/// getEDInfo - See MCDisassembler.
+specifier|const
 name|EDInstInfo
 operator|*
 name|getEDInfo
@@ -424,84 +431,6 @@ operator|:
 name|DisassemblerMode
 name|fMode
 block|; }
-decl_stmt|;
-comment|/// X86_16Disassembler - 16-bit X86 disassembler.
-name|class
-name|X86_16Disassembler
-range|:
-name|public
-name|X86GenericDisassembler
-block|{
-name|public
-operator|:
-name|X86_16Disassembler
-argument_list|(
-specifier|const
-name|MCSubtargetInfo
-operator|&
-name|STI
-argument_list|)
-operator|:
-name|X86GenericDisassembler
-argument_list|(
-argument|STI
-argument_list|,
-argument|MODE_16BIT
-argument_list|)
-block|{   }
-block|}
-decl_stmt|;
-comment|/// X86_16Disassembler - 32-bit X86 disassembler.
-name|class
-name|X86_32Disassembler
-range|:
-name|public
-name|X86GenericDisassembler
-block|{
-name|public
-operator|:
-name|X86_32Disassembler
-argument_list|(
-specifier|const
-name|MCSubtargetInfo
-operator|&
-name|STI
-argument_list|)
-operator|:
-name|X86GenericDisassembler
-argument_list|(
-argument|STI
-argument_list|,
-argument|MODE_32BIT
-argument_list|)
-block|{   }
-block|}
-decl_stmt|;
-comment|/// X86_16Disassembler - 64-bit X86 disassembler.
-name|class
-name|X86_64Disassembler
-range|:
-name|public
-name|X86GenericDisassembler
-block|{
-name|public
-operator|:
-name|X86_64Disassembler
-argument_list|(
-specifier|const
-name|MCSubtargetInfo
-operator|&
-name|STI
-argument_list|)
-operator|:
-name|X86GenericDisassembler
-argument_list|(
-argument|STI
-argument_list|,
-argument|MODE_64BIT
-argument_list|)
-block|{   }
-block|}
 decl_stmt|;
 block|}
 comment|// namespace X86Disassembler

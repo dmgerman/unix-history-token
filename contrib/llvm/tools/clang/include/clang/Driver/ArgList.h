@@ -794,6 +794,27 @@ name|Id3
 argument_list|)
 decl|const
 decl_stmt|;
+name|Arg
+modifier|*
+name|getLastArg
+argument_list|(
+name|OptSpecifier
+name|Id0
+argument_list|,
+name|OptSpecifier
+name|Id1
+argument_list|,
+name|OptSpecifier
+name|Id2
+argument_list|,
+name|OptSpecifier
+name|Id3
+argument_list|,
+name|OptSpecifier
+name|Id4
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// getArgString - Return the input argument string at \arg Index.
 name|virtual
 specifier|const
@@ -837,6 +858,26 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// getLastArgValue - Return the value of the last argument as an integer,
+comment|/// or a default. If Diags is non-null, emits an error if the argument
+comment|/// is given, but non-integral.
+name|int
+name|getLastArgIntValue
+argument_list|(
+name|OptSpecifier
+name|Id
+argument_list|,
+name|int
+name|Default
+argument_list|,
+name|DiagnosticsEngine
+operator|*
+name|Diags
+operator|=
+literal|0
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// getLastArgValue - Return the value of the last argument as an integer,
 comment|/// or a default. Emits an error if the argument is given, but non-integral.
 name|int
 name|getLastArgIntValue
@@ -852,7 +893,19 @@ operator|&
 name|Diags
 argument_list|)
 decl|const
-decl_stmt|;
+block|{
+return|return
+name|getLastArgIntValue
+argument_list|(
+name|Id
+argument_list|,
+name|Default
+argument_list|,
+operator|&
+name|Diags
+argument_list|)
+return|;
+block|}
 comment|/// getAllArgValues - Get the values of all instances of the given argument
 comment|/// as strings.
 name|std

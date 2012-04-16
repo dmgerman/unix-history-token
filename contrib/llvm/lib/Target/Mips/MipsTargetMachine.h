@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- MipsTargetMachine.h - Define TargetMachine for Mips -00--*- C++ -*-===//
+comment|//===-- MipsTargetMachine.h - Define TargetMachine for Mips -----*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -62,7 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"MipsSubtarget.h"
+file|"MipsFrameLowering.h"
 end_include
 
 begin_include
@@ -80,13 +80,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"MipsFrameLowering.h"
+file|"MipsJITInfo.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"MipsSelectionDAGInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"MipsSubtarget.h"
 end_include
 
 begin_include
@@ -105,12 +111,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Target/TargetFrameLowering.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"MipsJITInfo.h"
 end_include
 
 begin_decl_stmt
@@ -161,9 +161,13 @@ argument|StringRef CPU
 argument_list|,
 argument|StringRef FS
 argument_list|,
+argument|const TargetOptions&Options
+argument_list|,
 argument|Reloc::Model RM
 argument_list|,
 argument|CodeModel::Model CM
+argument_list|,
+argument|CodeGenOpt::Level OL
 argument_list|,
 argument|bool isLittle
 argument_list|)
@@ -275,53 +279,26 @@ return|;
 block|}
 comment|// Pass Pipeline Configuration
 name|virtual
-name|bool
-name|addInstSelector
-argument_list|(
-argument|PassManagerBase&PM
-argument_list|,
-argument|CodeGenOpt::Level OptLevel
-argument_list|)
-block|;
-name|virtual
-name|bool
-name|addPreEmitPass
-argument_list|(
-argument|PassManagerBase&PM
-argument_list|,
-argument|CodeGenOpt::Level OptLevel
-argument_list|)
-block|;
-name|virtual
-name|bool
-name|addPreRegAlloc
-argument_list|(
-argument|PassManagerBase&PM
-argument_list|,
-argument|CodeGenOpt::Level OptLevel
-argument_list|)
-block|;
-name|virtual
-name|bool
-name|addPostRegAlloc
+name|TargetPassConfig
+operator|*
+name|createPassConfig
 argument_list|(
 name|PassManagerBase
 operator|&
-argument_list|,
-name|CodeGenOpt
-operator|::
-name|Level
+name|PM
 argument_list|)
 block|;
 name|virtual
 name|bool
 name|addCodeEmitter
 argument_list|(
-argument|PassManagerBase&PM
+name|PassManagerBase
+operator|&
+name|PM
 argument_list|,
-argument|CodeGenOpt::Level OptLevel
-argument_list|,
-argument|JITCodeEmitter&JCE
+name|JITCodeEmitter
+operator|&
+name|JCE
 argument_list|)
 block|;    }
 decl_stmt|;
@@ -333,6 +310,11 @@ range|:
 name|public
 name|MipsTargetMachine
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 name|MipsebTargetMachine
@@ -345,9 +327,13 @@ argument|StringRef CPU
 argument_list|,
 argument|StringRef FS
 argument_list|,
+argument|const TargetOptions&Options
+argument_list|,
 argument|Reloc::Model RM
 argument_list|,
 argument|CodeModel::Model CM
+argument_list|,
+argument|CodeGenOpt::Level OL
 argument_list|)
 block|; }
 decl_stmt|;
@@ -359,6 +345,11 @@ range|:
 name|public
 name|MipsTargetMachine
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 name|MipselTargetMachine
@@ -371,9 +362,13 @@ argument|StringRef CPU
 argument_list|,
 argument|StringRef FS
 argument_list|,
+argument|const TargetOptions&Options
+argument_list|,
 argument|Reloc::Model RM
 argument_list|,
 argument|CodeModel::Model CM
+argument_list|,
+argument|CodeGenOpt::Level OL
 argument_list|)
 block|; }
 decl_stmt|;
@@ -385,6 +380,11 @@ range|:
 name|public
 name|MipsTargetMachine
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 name|Mips64ebTargetMachine
@@ -397,9 +397,13 @@ argument|StringRef CPU
 argument_list|,
 argument|StringRef FS
 argument_list|,
+argument|const TargetOptions&Options
+argument_list|,
 argument|Reloc::Model RM
 argument_list|,
 argument|CodeModel::Model CM
+argument_list|,
+argument|CodeGenOpt::Level OL
 argument_list|)
 block|; }
 decl_stmt|;
@@ -411,6 +415,11 @@ range|:
 name|public
 name|MipsTargetMachine
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 name|Mips64elTargetMachine
@@ -423,9 +432,13 @@ argument|StringRef CPU
 argument_list|,
 argument|StringRef FS
 argument_list|,
+argument|const TargetOptions&Options
+argument_list|,
 argument|Reloc::Model RM
 argument_list|,
 argument|CodeModel::Model CM
+argument_list|,
+argument|CodeGenOpt::Level OL
 argument_list|)
 block|; }
 decl_stmt|;

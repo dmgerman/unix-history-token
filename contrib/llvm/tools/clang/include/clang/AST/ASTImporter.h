@@ -622,6 +622,19 @@ return|return
 name|NonEquivalentDecls
 return|;
 block|}
+comment|/// \brief Called for ObjCInterfaceDecl, ObjCProtocolDecl, and TagDecl.
+comment|/// Mark the Decl as complete, filling it in as much as possible.
+comment|///
+comment|/// \param D A declaration in the "to" context.
+name|virtual
+name|void
+name|CompleteDecl
+parameter_list|(
+name|Decl
+modifier|*
+name|D
+parameter_list|)
+function_decl|;
 comment|/// \brief Note that we have imported the "from" declaration by mapping it
 comment|/// to the (potentially-newly-created) "to" declaration.
 comment|///

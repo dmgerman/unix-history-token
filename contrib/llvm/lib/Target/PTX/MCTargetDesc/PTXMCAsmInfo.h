@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//=====-- PTXMCAsmInfo.h - PTX asm properties -----------------*- C++ -*--====//
+comment|//===-- PTXMCAsmInfo.h - PTX asm properties --------------------*- C++ -*--===//
 end_comment
 
 begin_comment
@@ -75,12 +75,19 @@ decl_stmt|;
 name|class
 name|StringRef
 decl_stmt|;
-name|struct
+name|class
 name|PTXMCAsmInfo
 range|:
 name|public
 name|MCAsmInfo
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
+name|public
+operator|:
 name|explicit
 name|PTXMCAsmInfo
 argument_list|(

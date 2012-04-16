@@ -74,12 +74,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<cassert>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/ErrorHandling.h"
 end_include
 
@@ -87,6 +81,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/DataTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
 end_include
 
 begin_decl_stmt
@@ -110,6 +110,11 @@ comment|/// code generator.
 name|class
 name|TargetJITInfo
 block|{
+name|virtual
+name|void
+name|anchor
+parameter_list|()
+function_decl|;
 name|public
 label|:
 name|virtual
@@ -159,16 +164,12 @@ modifier|&
 name|JCE
 parameter_list|)
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
-literal|"This target doesn't implement emitGlobalValueIndirectSym!"
+literal|"This target doesn't implement "
+literal|"emitGlobalValueIndirectSym!"
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
 block|}
 comment|/// Records the required size and alignment for a call stub in bytes.
 struct|struct
@@ -193,18 +194,6 @@ argument_list|(
 literal|"This target doesn't implement getStubLayout!"
 argument_list|)
 expr_stmt|;
-name|StubLayout
-name|Result
-init|=
-block|{
-literal|0
-block|,
-literal|0
-block|}
-decl_stmt|;
-return|return
-name|Result
-return|;
 block|}
 comment|/// emitFunctionStub - Use the specified JITCodeEmitter object to emit a
 comment|/// small native function that simply calls the function at the specified
@@ -230,16 +219,11 @@ modifier|&
 name|JCE
 parameter_list|)
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"This target doesn't implement emitFunctionStub!"
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
 block|}
 comment|/// getPICJumpTableEntry - Returns the value of the jumptable entry for the
 comment|/// specific basic block.
@@ -254,16 +238,11 @@ name|uintptr_t
 name|JTBase
 parameter_list|)
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"This target doesn't implement getPICJumpTableEntry!"
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
 block|}
 comment|/// LazyResolverFn - This typedef is used to represent the function that
 comment|/// unresolved call points should invoke.  This is a target specific
@@ -305,16 +284,11 @@ parameter_list|(
 name|JITCompilerFn
 parameter_list|)
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Not implemented for this target!"
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
 block|}
 comment|/// relocate - Before the JIT can run a block of code that has been emitted,
 comment|/// it must rewrite the code to contain the actual addresses of any
@@ -362,16 +336,11 @@ name|size_t
 name|size
 parameter_list|)
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"This target does not implement thread local storage!"
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
 block|}
 comment|/// needsGOT - Allows a target to specify that it would like the
 comment|/// JIT to manage a GOT for it.

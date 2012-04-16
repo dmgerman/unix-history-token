@@ -141,8 +141,6 @@ name|TokenAtLoc
 expr_stmt|;
 comment|/// ScratchBuf - This is the buffer that we create scratch tokens from.
 comment|///
-name|llvm
-operator|::
 name|OwningPtr
 operator|<
 name|ScratchBuffer

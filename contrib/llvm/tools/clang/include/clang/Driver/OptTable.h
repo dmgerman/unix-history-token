@@ -190,12 +190,12 @@ name|char
 name|Kind
 decl_stmt|;
 name|unsigned
-name|short
-name|Flags
-decl_stmt|;
-name|unsigned
 name|char
 name|Param
+decl_stmt|;
+name|unsigned
+name|short
+name|Flags
 decl_stmt|;
 name|unsigned
 name|short

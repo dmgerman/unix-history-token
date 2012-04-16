@@ -264,15 +264,28 @@ name|public
 label|:
 name|explicit
 name|Pass
-parameter_list|(
-name|PassKind
-name|K
-parameter_list|,
-name|char
-modifier|&
+argument_list|(
+argument|PassKind K
+argument_list|,
+argument|char&pid
+argument_list|)
+block|:
+name|Resolver
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|PassID
+argument_list|(
+operator|&
 name|pid
-parameter_list|)
-function_decl|;
+argument_list|)
+operator|,
+name|Kind
+argument_list|(
+argument|K
+argument_list|)
+block|{ }
 name|virtual
 operator|~
 name|Pass
@@ -300,7 +313,6 @@ argument_list|()
 specifier|const
 expr_stmt|;
 comment|/// getPassID - Return the PassID number that corresponds to this pass.
-name|virtual
 name|AnalysisID
 name|getPassID
 argument_list|()
@@ -505,6 +517,17 @@ name|lookupPassInfo
 parameter_list|(
 name|StringRef
 name|Arg
+parameter_list|)
+function_decl|;
+comment|// createPass - Create a object for the specified pass class,
+comment|// or null if it is not known.
+specifier|static
+name|Pass
+modifier|*
+name|createPass
+parameter_list|(
+name|AnalysisID
+name|ID
 parameter_list|)
 function_decl|;
 comment|/// getAnalysisIfAvailable<AnalysisType>() - Subclasses use this function to

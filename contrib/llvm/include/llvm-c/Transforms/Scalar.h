@@ -33,6 +33,7 @@ literal|"C"
 block|{
 endif|#
 directive|endif
+comment|/**  * @defgroup LLVMCTransformsScalar Scalar transformations  * @ingroup LLVMCTransforms  *  * @{  */
 comment|/** See llvm::createAggressiveDCEPass function. */
 name|void
 name|LLVMAddAggressiveDCEPass
@@ -276,6 +277,7 @@ name|LLVMPassManagerRef
 name|PM
 parameter_list|)
 function_decl|;
+comment|/**  * @}  */
 ifdef|#
 directive|ifdef
 name|__cplusplus

@@ -46,50 +46,6 @@ value|""
 end_define
 
 begin_comment
-comment|/* 32 bit multilib directory. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CXX_INCLUDE_32BIT_DIR
-value|""
-end_define
-
-begin_comment
-comment|/* 64 bit multilib directory. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CXX_INCLUDE_64BIT_DIR
-value|""
-end_define
-
-begin_comment
-comment|/* Arch the libstdc++ headers. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CXX_INCLUDE_ARCH
-value|""
-end_define
-
-begin_comment
-comment|/* Directory with the libstdc++ headers. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CXX_INCLUDE_ROOT
-value|""
-end_define
-
-begin_comment
 comment|/* Directories clang will search for headers */
 end_comment
 
@@ -98,17 +54,6 @@ define|#
 directive|define
 name|C_INCLUDE_DIRS
 value|""
-end_define
-
-begin_comment
-comment|/* Define if CBE is enabled for printf %a output */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ENABLE_CBE_PRINTF_A
-value|1
 end_define
 
 begin_comment
@@ -123,17 +68,6 @@ value|0
 end_define
 
 begin_comment
-comment|/* Define if threads enabled */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ENABLE_THREADS
-value|0
-end_define
-
-begin_comment
 comment|/* Define if timestamp information (e.g., __DATE___) is allowed */
 end_comment
 
@@ -142,6 +76,17 @@ define|#
 directive|define
 name|ENABLE_TIMESTAMPS
 value|0
+end_define
+
+begin_comment
+comment|/* Directory where gcc is installed. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GCC_INSTALL_PREFIX
+value|""
 end_define
 
 begin_comment
@@ -959,6 +904,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `pread' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_PREAD
+value|1
+end_define
+
+begin_comment
 comment|/* Define if libtool can extract symbol lists from object files. */
 end_comment
 
@@ -1219,9 +1175,12 @@ begin_comment
 comment|/* Set to 1 if the std::isinf function is found in<cmath> */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_STD_ISINF_IN_CMATH */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_STD_ISINF_IN_CMATH
+value|1
+end_define
 
 begin_comment
 comment|/* Set to 1 if the std::isnan function is found in<cmath> */
@@ -1756,12 +1715,31 @@ comment|/* #undef LLVM_DATADIR */
 end_comment
 
 begin_comment
+comment|/* Target triple LLVM will generate code for by default */
+end_comment
+
+begin_comment
+comment|/* #undef LLVM_DEFAULT_TARGET_TRIPLE */
+end_comment
+
+begin_comment
 comment|/* Installation directory for documentation */
 end_comment
 
 begin_comment
 comment|/* #undef LLVM_DOCSDIR */
 end_comment
+
+begin_comment
+comment|/* Define if threads enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVM_ENABLE_THREADS
+value|0
+end_define
 
 begin_comment
 comment|/* Installation directory for config files */
@@ -1781,14 +1759,6 @@ directive|define
 name|LLVM_HAS_ATOMICS
 value|0
 end_define
-
-begin_comment
-comment|/* Host triple we were built on */
-end_comment
-
-begin_comment
-comment|/* #undef LLVM_HOSTTRIPLE */
-end_comment
 
 begin_comment
 comment|/* Installation directory for include files */
@@ -1853,6 +1823,17 @@ define|#
 directive|define
 name|LLVM_NATIVE_ASMPRINTER
 value|LLVMInitializeX86AsmPrinter
+end_define
+
+begin_comment
+comment|/* LLVM name for the native Disassembler init function, if available */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVM_NATIVE_DISASSEMBLER
+value|LLVMInitializeX86Disassembler
 end_define
 
 begin_comment
@@ -1988,6 +1969,50 @@ comment|/* #undef LLVM_PREFIX */
 end_comment
 
 begin_comment
+comment|/* Define if we have the Intel JIT API runtime support library */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVM_USE_INTEL_JITEVENTS
+value|0
+end_define
+
+begin_comment
+comment|/* Define if we have the oprofile JIT-support library */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVM_USE_OPROFILE
+value|0
+end_define
+
+begin_comment
+comment|/* Major version of the LLVM API */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVM_VERSION_MAJOR
+value|3
+end_define
+
+begin_comment
+comment|/* Minor version of the LLVM API */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVM_VERSION_MINOR
+value|1
+end_define
+
+begin_comment
 comment|/* Define if the OS needs help to load dependent libraries for dlopen(). */
 end_comment
 
@@ -2066,7 +2091,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_BUGREPORT
-value|"llvmbugs@cs.uiuc.edu"
+value|"http://llvm.org/bugs/"
 end_define
 
 begin_comment
@@ -2077,7 +2102,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_NAME
-value|"llvm"
+value|"LLVM"
 end_define
 
 begin_comment
@@ -2088,7 +2113,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"llvm 3.0"
+value|"LLVM 3.1svn"
 end_define
 
 begin_comment
@@ -2099,7 +2124,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_TARNAME
-value|"-llvm-"
+value|"llvm"
 end_define
 
 begin_comment
@@ -2110,7 +2135,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"3.0"
+value|"3.1svn"
 end_define
 
 begin_comment
@@ -2161,17 +2186,6 @@ end_comment
 begin_comment
 comment|/* #undef TM_IN_SYS_TIME */
 end_comment
-
-begin_comment
-comment|/* Define if we have the oprofile JIT-support library */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|USE_OPROFILE
-value|0
-end_define
 
 begin_comment
 comment|/* Define if use udis86 library */

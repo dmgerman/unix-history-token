@@ -207,11 +207,6 @@ argument_list|,
 name|NumOps
 argument_list|)
 block|,
-name|Parent
-argument_list|(
-literal|0
-argument_list|)
-block|,
 name|Linkage
 argument_list|(
 name|linkage
@@ -231,16 +226,17 @@ name|UnnamedAddr
 argument_list|(
 literal|0
 argument_list|)
+block|,
+name|Parent
+argument_list|(
+literal|0
+argument_list|)
 block|{
 name|setName
 argument_list|(
 name|Name
 argument_list|)
 block|;   }
-name|Module
-operator|*
-name|Parent
-block|;
 comment|// Note: VC++ treats enums as signed, so an extra bit is required to prevent
 comment|// Linkage and Visibility from turning into negative values.
 name|LinkageTypes
@@ -267,6 +263,11 @@ operator|:
 literal|1
 block|;
 comment|// This value's address is not significant
+name|Module
+operator|*
+name|Parent
+block|;
+comment|// The containing module.
 name|std
 operator|::
 name|string

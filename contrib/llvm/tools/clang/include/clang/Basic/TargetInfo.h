@@ -194,8 +194,6 @@ name|class
 name|TargetInfo
 range|:
 name|public
-name|llvm
-operator|::
 name|RefCountedBase
 operator|<
 name|TargetInfo
@@ -210,6 +208,9 @@ name|protected
 operator|:
 comment|// Target values set by the ctor of the actual target implementation.  Default
 comment|// values are specified by the TargetInfo constructor.
+name|bool
+name|BigEndian
+block|;
 name|bool
 name|TLSSupported
 block|;
@@ -276,6 +277,10 @@ name|char
 name|LongLongWidth
 block|,
 name|LongLongAlign
+block|;
+name|unsigned
+name|char
+name|SuitableAlign
 block|;
 name|unsigned
 name|char
@@ -347,6 +352,11 @@ name|unsigned
 name|RealTypeUsesObjCFPRet
 operator|:
 literal|3
+block|;
+name|unsigned
+name|ComplexLongDoubleUsesFP2Ret
+operator|:
+literal|1
 block|;
 comment|// TargetInfo Constructor.  Default initializes all fields.
 name|TargetInfo
@@ -773,6 +783,17 @@ return|return
 name|LongLongAlign
 return|;
 block|}
+comment|/// getSuitableAlign - Return the alignment that is suitable for storing any
+comment|/// object with a fundamental alignment requirement.
+name|unsigned
+name|getSuitableAlign
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SuitableAlign
+return|;
+block|}
 comment|/// getWCharWidth/Align - Return the size of 'wchar_t' for this target, in
 comment|/// bits.
 name|unsigned
@@ -984,6 +1005,17 @@ operator|*
 name|LongDoubleFormat
 return|;
 block|}
+comment|/// getFloatEvalMethod - Return the value for the C99 FLT_EVAL_METHOD macro.
+name|virtual
+name|unsigned
+name|getFloatEvalMethod
+argument_list|()
+specifier|const
+block|{
+return|return
+literal|0
+return|;
+block|}
 comment|// getLargeArrayMinWidth/Align - Return the minimum array size that is
 comment|// 'large' and its alignment.
 name|unsigned
@@ -1166,6 +1198,17 @@ name|T
 operator|)
 return|;
 block|}
+comment|/// \brief Check whether _Complex long double should use the "fp2ret" flavor
+comment|/// of Obj-C message passing on this target.
+name|bool
+name|useObjCFP2RetForComplexLongDouble
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ComplexLongDoubleUsesFP2Ret
+return|;
+block|}
 comment|///===---- Other target property query methods --------------------------===//
 comment|/// getTargetDefines - Appends the target-specific #define values for this
 comment|/// target set to the specified buffer.
@@ -1196,6 +1239,21 @@ specifier|const
 operator|=
 literal|0
 block|;
+comment|/// isCLZForZeroUndef - The __builtin_clz* and __builtin_ctz* built-in
+comment|/// functions are specified to have undefined results for zero inputs, but
+comment|/// on targets that support these operations in a way that provides
+comment|/// well-defined results for zero without loss of performance, it is a good
+comment|/// idea to avoid optimizing based on that undef behavior.
+name|virtual
+name|bool
+name|isCLZForZeroUndef
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
 comment|/// getVAListDeclaration - Return the declaration to use for
 comment|/// __builtin_va_list, which is target-specific.
 name|virtual
@@ -1645,6 +1703,27 @@ name|unsigned
 name|RegNum
 block|;   }
 block|;
+comment|/// hasProtectedVisibility - Does this target support "protected"
+comment|/// visibility?
+comment|///
+comment|/// Any target which dynamic libraries will naturally support
+comment|/// something like "default" (meaning that the symbol is visible
+comment|/// outside this shared object) and "hidden" (meaning that it isn't)
+comment|/// visibilities, but "protected" is really an ELF-specific concept
+comment|/// with wierd semantics designed around the convenience of dynamic
+comment|/// linker implementations.  Which is not to suggest that there's
+comment|/// consistent target-independent semantics for "default" visibility
+comment|/// either; the entire thing is pretty badly mangled.
+name|virtual
+name|bool
+name|hasProtectedVisibility
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
 name|virtual
 name|bool
 name|useGlobalsForAutomaticVariables
@@ -1909,11 +1988,7 @@ operator|>
 operator|&
 name|Features
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringRef
 name|Name
 argument_list|,
 name|bool
@@ -1947,6 +2022,20 @@ operator|&
 name|Features
 argument_list|)
 block|{   }
+comment|/// \brief Determine whether the given target has the given feature.
+name|virtual
+name|bool
+name|hasFeature
+argument_list|(
+name|StringRef
+name|Feature
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|// getRegParmMax - Returns maximal number of args passed in registers.
 name|unsigned
 name|getRegParmMax
@@ -2054,6 +2143,15 @@ specifier|const
 block|{
 return|return
 name|PlatformMinVersion
+return|;
+block|}
+name|bool
+name|isBigEndian
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BigEndian
 return|;
 block|}
 name|protected

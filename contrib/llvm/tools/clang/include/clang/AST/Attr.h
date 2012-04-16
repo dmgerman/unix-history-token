@@ -116,6 +116,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/raw_ostream.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cassert>
 end_include
 
@@ -184,8 +190,6 @@ name|Alignment
 operator|=
 literal|16
 argument_list|)
-name|throw
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -217,8 +221,6 @@ argument_list|,
 name|size_t
 name|Alignment
 argument_list|)
-name|throw
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -252,8 +254,6 @@ name|C
 argument_list|,
 name|size_t
 argument_list|)
-name|throw
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -276,8 +276,6 @@ name|C
 argument_list|,
 name|size_t
 argument_list|)
-name|throw
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -513,6 +511,35 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
+name|virtual
+name|bool
+name|isLateParsed
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|// Pretty print this attribute.
+name|virtual
+name|void
+name|printPretty
+argument_list|(
+name|llvm
+operator|::
+name|raw_ostream
+operator|&
+name|OS
+argument_list|,
+name|ASTContext
+operator|&
+name|C
+argument_list|)
+decl|const
+init|=
+literal|0
+decl_stmt|;
 comment|// Implement isa/cast/dyncast/etc.
 specifier|static
 name|bool
@@ -535,6 +562,11 @@ range|:
 name|public
 name|Attr
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|protected
 operator|:
 name|InheritableAttr
@@ -601,6 +633,11 @@ operator|:
 name|public
 name|InheritableAttr
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|protected
 operator|:
 name|InheritableParamAttr

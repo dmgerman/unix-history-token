@@ -195,6 +195,40 @@ name|WeakVH
 operator|>
 name|TypeCache
 expr_stmt|;
+comment|/// CompleteTypeCache - Cache of previously constructed complete RecordTypes.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|void
+operator|*
+operator|,
+name|llvm
+operator|::
+name|WeakVH
+operator|>
+name|CompletedTypeCache
+expr_stmt|;
+comment|/// ReplaceMap - Cache of forward declared types to RAUW at the end of
+comment|/// compilation.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|void
+operator|*
+operator|,
+name|llvm
+operator|::
+name|WeakVH
+operator|>
+expr|>
+name|ReplaceMap
+expr_stmt|;
 name|bool
 name|BlockLiteralGenericSet
 decl_stmt|;
@@ -385,7 +419,7 @@ name|DIType
 name|CreateType
 argument_list|(
 specifier|const
-name|TagType
+name|RecordType
 operator|*
 name|Ty
 argument_list|)
@@ -393,7 +427,7 @@ expr_stmt|;
 name|llvm
 operator|::
 name|DIType
-name|CreateType
+name|CreateLimitedType
 argument_list|(
 specifier|const
 name|RecordType
@@ -490,6 +524,24 @@ specifier|const
 name|EnumDecl
 operator|*
 name|ED
+argument_list|)
+expr_stmt|;
+name|llvm
+operator|::
+name|DIType
+name|getTypeOrNull
+argument_list|(
+specifier|const
+name|QualType
+argument_list|)
+expr_stmt|;
+name|llvm
+operator|::
+name|DIType
+name|getCompletedTypeOrNull
+argument_list|(
+specifier|const
+name|QualType
 argument_list|)
 expr_stmt|;
 name|llvm
@@ -711,6 +763,18 @@ argument|llvm::DIDescriptor scope
 argument_list|)
 expr_stmt|;
 name|void
+name|CollectRecordStaticVars
+argument_list|(
+specifier|const
+name|RecordDecl
+operator|*
+argument_list|,
+name|llvm
+operator|::
+name|DIType
+argument_list|)
+decl_stmt|;
+name|void
 name|CollectRecordFields
 argument_list|(
 specifier|const
@@ -787,14 +851,10 @@ argument_list|()
 expr_stmt|;
 name|void
 name|finalize
-parameter_list|()
-block|{
-name|DBuilder
-operator|.
-name|finalize
-argument_list|()
-expr_stmt|;
-block|}
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
 comment|/// setLocation - Update the current source location. If \arg loc is
 comment|/// invalid it is ignored.
 name|void
@@ -846,17 +906,6 @@ parameter_list|(
 name|CGBuilderTy
 modifier|&
 name|Builder
-parameter_list|)
-function_decl|;
-comment|/// UpdateCompletedType - Update type cache because the type is now
-comment|/// translated.
-name|void
-name|UpdateCompletedType
-parameter_list|(
-specifier|const
-name|TagDecl
-modifier|*
-name|TD
 parameter_list|)
 function_decl|;
 comment|/// EmitLexicalBlockStart - Emit metadata to indicate the beginning of a
@@ -1036,6 +1085,18 @@ argument_list|,
 argument|SourceLocation L
 argument_list|)
 expr_stmt|;
+comment|/// getOrCreateInterfaceType - Emit an objective c interface type standalone
+comment|/// debug info.
+name|llvm
+operator|::
+name|DIType
+name|getOrCreateInterfaceType
+argument_list|(
+argument|QualType Ty
+argument_list|,
+argument|SourceLocation Loc
+argument_list|)
+expr_stmt|;
 name|private
 label|:
 comment|/// EmitDeclare - Emit call to llvm.dbg.declare for a variable declaration.
@@ -1093,6 +1154,34 @@ operator|*
 name|Decl
 argument_list|)
 expr_stmt|;
+comment|/// createRecordFwdDecl - Create a forward decl for a RecordType in a given
+comment|/// context.
+name|llvm
+operator|::
+name|DIType
+name|createRecordFwdDecl
+argument_list|(
+specifier|const
+name|RecordDecl
+operator|*
+argument_list|,
+name|llvm
+operator|::
+name|DIDescriptor
+argument_list|)
+expr_stmt|;
+comment|/// createContextChain - Create a set of decls for the context chain.
+name|llvm
+operator|::
+name|DIDescriptor
+name|createContextChain
+argument_list|(
+specifier|const
+name|Decl
+operator|*
+name|Decl
+argument_list|)
+expr_stmt|;
 comment|/// getCurrentDirname - Return current directory name.
 name|StringRef
 name|getCurrentDirname
@@ -1132,11 +1221,35 @@ argument_list|,
 argument|llvm::DIFile F
 argument_list|)
 expr_stmt|;
+comment|/// getOrCreateLimitedType - Get the type from the cache or create a new
+comment|/// partial type if necessary.
+name|llvm
+operator|::
+name|DIType
+name|getOrCreateLimitedType
+argument_list|(
+argument|QualType Ty
+argument_list|,
+argument|llvm::DIFile F
+argument_list|)
+expr_stmt|;
 comment|/// CreateTypeNode - Create type metadata for a source language type.
 name|llvm
 operator|::
 name|DIType
 name|CreateTypeNode
+argument_list|(
+argument|QualType Ty
+argument_list|,
+argument|llvm::DIFile F
+argument_list|)
+expr_stmt|;
+comment|/// CreateLimitedTypeNode - Create type metadata for a source language
+comment|/// type, but only partial types for records.
+name|llvm
+operator|::
+name|DIType
+name|CreateLimitedTypeNode
 argument_list|(
 argument|QualType Ty
 argument_list|,
@@ -1207,6 +1320,7 @@ comment|/// getClassName - Get class name including template argument list.
 name|StringRef
 name|getClassName
 parameter_list|(
+specifier|const
 name|RecordDecl
 modifier|*
 name|RD

@@ -63,15 +63,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|Function
-decl_stmt|;
-name|class
-name|TargetData
-decl_stmt|;
-name|class
-name|TargetMachine
-decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|//                          TargetELFWriterInfo
 comment|//===--------------------------------------------------------------------===//

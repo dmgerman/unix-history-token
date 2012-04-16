@@ -59,6 +59,12 @@ directive|define
 name|MBLAZEMCTARGETDESC_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/DataTypes.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -76,6 +82,9 @@ name|class
 name|MCInstrInfo
 decl_stmt|;
 name|class
+name|MCObjectWriter
+decl_stmt|;
+name|class
 name|MCSubtargetInfo
 decl_stmt|;
 name|class
@@ -85,7 +94,7 @@ name|class
 name|StringRef
 decl_stmt|;
 name|class
-name|formatted_raw_ostream
+name|raw_ostream
 decl_stmt|;
 specifier|extern
 name|Target
@@ -121,6 +130,18 @@ name|T
 parameter_list|,
 name|StringRef
 name|TT
+parameter_list|)
+function_decl|;
+name|MCObjectWriter
+modifier|*
+name|createMBlazeELFObjectWriter
+parameter_list|(
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|,
+name|uint8_t
+name|OSABI
 parameter_list|)
 function_decl|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- SparcInstrInfo.h - Sparc Instruction Information ---------*- C++ -*-===//
+comment|//===-- SparcInstrInfo.h - Sparc Instruction Information --------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -62,13 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetInstrInfo.h"
+file|"SparcRegisterInfo.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"SparcRegisterInfo.h"
+file|"llvm/Target/TargetInstrInfo.h"
 end_include
 
 begin_define
@@ -197,6 +197,25 @@ argument_list|(
 argument|const MachineInstr *MI
 argument_list|,
 argument|int&FrameIndex
+argument_list|)
+specifier|const
+block|;
+comment|/// emitFrameIndexDebugValue - Emit a target-dependent form of
+comment|/// DBG_VALUE encoding the address of a frame index.
+name|virtual
+name|MachineInstr
+operator|*
+name|emitFrameIndexDebugValue
+argument_list|(
+argument|MachineFunction&MF
+argument_list|,
+argument|int FrameIx
+argument_list|,
+argument|uint64_t Offset
+argument_list|,
+argument|const MDNode *MDPtr
+argument_list|,
+argument|DebugLoc dl
 argument_list|)
 specifier|const
 block|;

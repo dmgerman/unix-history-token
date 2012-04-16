@@ -257,11 +257,6 @@ operator|<
 operator|>
 name|AliveBlocks
 block|;
-comment|/// NumUses - Number of uses of this register across the entire function.
-comment|///
-name|unsigned
-name|NumUses
-block|;
 comment|/// Kills - List of MachineInstruction's which are the last use of this
 comment|/// virtual register (kill it) in their basic block.
 comment|///
@@ -274,14 +269,6 @@ operator|*
 operator|>
 name|Kills
 block|;
-name|VarInfo
-argument_list|()
-operator|:
-name|NumUses
-argument_list|(
-literal|0
-argument_list|)
-block|{}
 comment|/// removeKill - Delete a kill corresponding to the specified
 comment|/// machine instruction. Returns true if there was a kill
 comment|/// corresponding to this instruction, false otherwise.
@@ -462,6 +449,15 @@ parameter_list|,
 name|MachineInstr
 modifier|*
 name|MI
+parameter_list|)
+function_decl|;
+comment|/// HandleRegMask - Call HandlePhysRegKill for all registers clobbered by Mask.
+name|void
+name|HandleRegMask
+parameter_list|(
+specifier|const
+name|MachineOperand
+modifier|&
 parameter_list|)
 function_decl|;
 name|void

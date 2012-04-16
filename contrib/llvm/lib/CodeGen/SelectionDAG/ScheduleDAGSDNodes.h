@@ -101,6 +101,10 @@ name|ScheduleDAG
 block|{
 name|public
 operator|:
+name|MachineBasicBlock
+operator|*
+name|BB
+block|;
 name|SelectionDAG
 operator|*
 name|DAG
@@ -110,6 +114,16 @@ specifier|const
 name|InstrItineraryData
 operator|*
 name|InstrItins
+block|;
+comment|/// The schedule. Null SUnit*'s represent noop instructions.
+name|std
+operator|::
+name|vector
+operator|<
+name|SUnit
+operator|*
+operator|>
+name|Sequence
 block|;
 name|explicit
 name|ScheduleDAGSDNodes
@@ -129,11 +143,13 @@ comment|///
 name|void
 name|Run
 argument_list|(
-argument|SelectionDAG *dag
+name|SelectionDAG
+operator|*
+name|dag
 argument_list|,
-argument|MachineBasicBlock *bb
-argument_list|,
-argument|MachineBasicBlock::iterator insertPos
+name|MachineBasicBlock
+operator|*
+name|bb
 argument_list|)
 block|;
 comment|/// isPassiveNode - Return true if the node is a non-scheduled leaf.
@@ -176,6 +192,19 @@ condition|(
 name|isa
 operator|<
 name|RegisterSDNode
+operator|>
+operator|(
+name|Node
+operator|)
+condition|)
+return|return
+name|true
+return|;
+if|if
+condition|(
+name|isa
+operator|<
+name|RegisterMaskSDNode
 operator|>
 operator|(
 name|Node
@@ -314,7 +343,7 @@ end_comment
 begin_function_decl
 name|SUnit
 modifier|*
-name|NewSUnit
+name|newSUnit
 parameter_list|(
 name|SDNode
 modifier|*
@@ -364,7 +393,6 @@ comment|/// flagged together nodes with a single SUnit.
 end_comment
 
 begin_function_decl
-name|virtual
 name|void
 name|BuildSchedGraph
 parameter_list|(
@@ -422,7 +450,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// ComputeLatency - Compute node latency.
+comment|/// computeLatency - Compute node latency.
 end_comment
 
 begin_comment
@@ -432,7 +460,7 @@ end_comment
 begin_function_decl
 name|virtual
 name|void
-name|ComputeLatency
+name|computeLatency
 parameter_list|(
 name|SUnit
 modifier|*
@@ -442,7 +470,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// ComputeOperandLatency - Override dependence edge latency using
+comment|/// computeOperandLatency - Override dependence edge latency using
 end_comment
 
 begin_comment
@@ -456,7 +484,7 @@ end_comment
 begin_decl_stmt
 name|virtual
 name|void
-name|ComputeOperandLatency
+name|computeOperandLatency
 argument_list|(
 name|SUnit
 operator|*
@@ -477,7 +505,7 @@ end_decl_stmt
 begin_decl_stmt
 name|virtual
 name|void
-name|ComputeOperandLatency
+name|computeOperandLatency
 argument_list|(
 name|SDNode
 operator|*
@@ -497,15 +525,6 @@ argument_list|)
 decl|const
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-name|virtual
-name|MachineBasicBlock
-modifier|*
-name|EmitSchedule
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/// Schedule - Order nodes according to selected style, filling
@@ -529,6 +548,50 @@ literal|0
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/// VerifyScheduledSequence - Verify that all SUnits are scheduled and
+end_comment
+
+begin_comment
+comment|/// consistent with the Sequence of scheduled instructions.
+end_comment
+
+begin_function_decl
+name|void
+name|VerifyScheduledSequence
+parameter_list|(
+name|bool
+name|isBottomUp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// EmitSchedule - Insert MachineInstrs into the MachineBasicBlock
+end_comment
+
+begin_comment
+comment|/// according to the order specified in Sequence.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_decl_stmt
+name|MachineBasicBlock
+modifier|*
+name|EmitSchedule
+argument_list|(
+name|MachineBasicBlock
+operator|::
+name|iterator
+operator|&
+name|InsertPos
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 name|virtual
 name|void
@@ -544,6 +607,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|void
+name|dumpSchedule
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|virtual
 name|std
 operator|::
@@ -552,6 +623,17 @@ name|getGraphNodeLabel
 argument_list|(
 argument|const SUnit *SU
 argument_list|)
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|virtual
+name|std
+operator|::
+name|string
+name|getDAGName
+argument_list|()
 specifier|const
 expr_stmt|;
 end_expr_stmt
@@ -746,6 +828,32 @@ name|AddSchedEdges
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+name|void
+name|EmitPhysRegCopy
+argument_list|(
+name|SUnit
+operator|*
+name|SU
+argument_list|,
+name|DenseMap
+operator|<
+name|SUnit
+operator|*
+argument_list|,
+name|unsigned
+operator|>
+operator|&
+name|VRBaseMap
+argument_list|,
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|InsertPos
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 unit|}; }

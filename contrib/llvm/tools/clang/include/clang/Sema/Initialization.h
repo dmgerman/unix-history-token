@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===--- SemaInit.h - Semantic Analysis for Initializers --------*- C++ -*-===//
+comment|//===--- Initialization.h - Semantic Analysis for Initializers --*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -192,6 +192,10 @@ block|,
 comment|/// \brief The entity being initialized is the real or imaginary part of a
 comment|/// complex number.
 name|EK_ComplexElement
+block|,
+comment|/// \brief The entity being initialized is the field that captures a
+comment|/// variable in a lambda.
+name|EK_LambdaCapture
 block|}
 enum|;
 name|private
@@ -213,7 +217,7 @@ name|Type
 decl_stmt|;
 union|union
 block|{
-comment|/// \brief When Kind == EK_Variable or EK_Member, the VarDecl or
+comment|/// \brief When Kind == EK_Variable, or EK_Member, the VarDecl or
 comment|/// FieldDecl, respectively.
 name|DeclaratorDecl
 modifier|*
@@ -232,7 +236,7 @@ name|TypeInfo
 decl_stmt|;
 struct|struct
 block|{
-comment|/// \brief When Kind == EK_Result, EK_Exception, or EK_New, the
+comment|/// \brief When Kind == EK_Result, EK_Exception, EK_New, the
 comment|/// location of the 'return', 'throw', or 'new' keyword,
 comment|/// respectively. When Kind == EK_Temporary, the location where
 comment|/// the temporary is being created.
@@ -259,6 +263,20 @@ comment|/// initialized.
 name|unsigned
 name|Index
 decl_stmt|;
+struct|struct
+block|{
+comment|/// \brief The variable being captured by an EK_LambdaCapture.
+name|VarDecl
+modifier|*
+name|Var
+decl_stmt|;
+comment|/// \brief The source location at which the capture occurs.
+name|unsigned
+name|Location
+decl_stmt|;
+block|}
+name|Capture
+struct|;
 block|}
 union|;
 name|InitializedEntity
@@ -385,17 +403,55 @@ argument_list|,
 argument|const InitializedEntity&Parent
 argument_list|)
 expr_stmt|;
+comment|/// \brief Create the initialization entity for a lambda capture.
+name|InitializedEntity
+argument_list|(
+argument|VarDecl *Var
+argument_list|,
+argument|FieldDecl *Field
+argument_list|,
+argument|SourceLocation Loc
+argument_list|)
+block|:
+name|Kind
+argument_list|(
+name|EK_LambdaCapture
+argument_list|)
+operator|,
+name|Parent
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Type
+argument_list|(
+argument|Field->getType()
+argument_list|)
+block|{
+name|Capture
+operator|.
+name|Var
+operator|=
+name|Var
+block|;
+name|Capture
+operator|.
+name|Location
+operator|=
+name|Loc
+operator|.
+name|getRawEncoding
+argument_list|()
+block|;   }
 name|public
-label|:
+operator|:
 comment|/// \brief Create the initialization entity for a variable.
 specifier|static
 name|InitializedEntity
 name|InitializeVariable
-parameter_list|(
-name|VarDecl
-modifier|*
-name|Var
-parameter_list|)
+argument_list|(
+argument|VarDecl *Var
+argument_list|)
 block|{
 return|return
 name|InitializedEntity
@@ -424,7 +480,7 @@ init|=
 operator|(
 name|Context
 operator|.
-name|getLangOptions
+name|getLangOpts
 argument_list|()
 operator|.
 name|ObjCAutoRefCount
@@ -835,6 +891,34 @@ name|Parent
 argument_list|)
 return|;
 block|}
+comment|/// \brief Create the initialization entity for a lambda capture.
+specifier|static
+name|InitializedEntity
+name|InitializeLambdaCapture
+parameter_list|(
+name|VarDecl
+modifier|*
+name|Var
+parameter_list|,
+name|FieldDecl
+modifier|*
+name|Field
+parameter_list|,
+name|SourceLocation
+name|Loc
+parameter_list|)
+block|{
+return|return
+name|InitializedEntity
+argument_list|(
+name|Var
+argument_list|,
+name|Field
+argument_list|,
+name|Loc
+argument_list|)
+return|;
+block|}
 comment|/// \brief Determine the kind of initialization.
 name|EntityKind
 name|getKind
@@ -1066,6 +1150,9 @@ argument_list|()
 operator|==
 name|EK_VectorElement
 operator|||
+name|getKind
+argument_list|()
+operator|==
 name|EK_ComplexElement
 argument_list|)
 expr_stmt|;
@@ -1075,6 +1162,57 @@ name|Index
 operator|=
 name|Index
 expr_stmt|;
+block|}
+comment|/// \brief Retrieve the variable for a captured variable in a lambda.
+name|VarDecl
+operator|*
+name|getCapturedVar
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|getKind
+argument_list|()
+operator|==
+name|EK_LambdaCapture
+operator|&&
+literal|"Not a lambda capture!"
+argument_list|)
+block|;
+return|return
+name|Capture
+operator|.
+name|Var
+return|;
+block|}
+comment|/// \brief Determine the location of the capture when initializing
+comment|/// field from a captured variable in a lambda.
+name|SourceLocation
+name|getCaptureLoc
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|getKind
+argument_list|()
+operator|==
+name|EK_LambdaCapture
+operator|&&
+literal|"Not a lambda capture!"
+argument_list|)
+block|;
+return|return
+name|SourceLocation
+operator|::
+name|getFromRawEncoding
+argument_list|(
+name|Capture
+operator|.
+name|Location
+argument_list|)
+return|;
 block|}
 block|}
 end_decl_stmt
@@ -1108,6 +1246,9 @@ block|{
 name|IK_Direct
 block|,
 comment|///< Direct initialization
+name|IK_DirectList
+block|,
+comment|///< Direct list-initialization
 name|IK_Copy
 block|,
 comment|///< Copy initialization
@@ -1120,46 +1261,40 @@ block|}
 enum|;
 name|private
 label|:
-comment|/// \brief The kind of initialization that we're storing.
+comment|/// \brief The context of the initialization.
 enum|enum
-name|StoredInitKind
+name|InitContext
 block|{
-name|SIK_Direct
-init|=
-name|IK_Direct
+name|IC_Normal
 block|,
-comment|///< Direct initialization
-name|SIK_Copy
-init|=
-name|IK_Copy
+comment|///< Normal context
+name|IC_ExplicitConvs
 block|,
-comment|///< Copy initialization
-name|SIK_Default
-init|=
-name|IK_Default
+comment|///< Normal context, but allows explicit conversion funcs
+name|IC_Implicit
 block|,
-comment|///< Default initialization
-name|SIK_Value
-init|=
-name|IK_Value
+comment|///< Implicit context (value initialization)
+name|IC_StaticCast
 block|,
-comment|///< Value initialization
-name|SIK_ImplicitValue
+comment|///< Static cast context
+name|IC_CStyleCast
 block|,
-comment|///< Implicit value initialization
-name|SIK_DirectCast
-block|,
-comment|///< Direct initialization due to a cast
-comment|/// \brief Direct initialization due to a C-style cast.
-name|SIK_DirectCStyleCast
-block|,
-comment|/// \brief Direct initialization due to a functional-style cast.
-name|SIK_DirectFunctionalCast
+comment|///< C-style cast context
+name|IC_FunctionalCast
+comment|///< Functional cast context
 block|}
 enum|;
 comment|/// \brief The kind of initialization being performed.
-name|StoredInitKind
+name|InitKind
 name|Kind
+range|:
+literal|8
+decl_stmt|;
+comment|/// \brief The context of the initialization.
+name|InitContext
+name|Context
+range|:
+literal|8
 decl_stmt|;
 comment|/// \brief The source locations involved in the initialization.
 name|SourceLocation
@@ -1170,7 +1305,9 @@ index|]
 decl_stmt|;
 name|InitializationKind
 argument_list|(
-argument|StoredInitKind Kind
+argument|InitKind Kind
+argument_list|,
+argument|InitContext Context
 argument_list|,
 argument|SourceLocation Loc1
 argument_list|,
@@ -1181,7 +1318,12 @@ argument_list|)
 block|:
 name|Kind
 argument_list|(
-argument|Kind
+name|Kind
+argument_list|)
+operator|,
+name|Context
+argument_list|(
+argument|Context
 argument_list|)
 block|{
 name|Locations
@@ -1190,49 +1332,70 @@ literal|0
 index|]
 operator|=
 name|Loc1
-expr_stmt|;
+block|;
 name|Locations
 index|[
 literal|1
 index|]
 operator|=
 name|Loc2
-expr_stmt|;
+block|;
 name|Locations
 index|[
 literal|2
 index|]
 operator|=
 name|Loc3
-expr_stmt|;
-block|}
+block|;   }
 name|public
-label|:
+operator|:
 comment|/// \brief Create a direct initialization.
 specifier|static
 name|InitializationKind
 name|CreateDirect
+argument_list|(
+argument|SourceLocation InitLoc
+argument_list|,
+argument|SourceLocation LParenLoc
+argument_list|,
+argument|SourceLocation RParenLoc
+argument_list|)
+block|{
+return|return
+name|InitializationKind
+argument_list|(
+name|IK_Direct
+argument_list|,
+name|IC_Normal
+argument_list|,
+name|InitLoc
+argument_list|,
+name|LParenLoc
+argument_list|,
+name|RParenLoc
+argument_list|)
+return|;
+block|}
+specifier|static
+name|InitializationKind
+name|CreateDirectList
 parameter_list|(
 name|SourceLocation
 name|InitLoc
-parameter_list|,
-name|SourceLocation
-name|LParenLoc
-parameter_list|,
-name|SourceLocation
-name|RParenLoc
 parameter_list|)
 block|{
 return|return
 name|InitializationKind
 argument_list|(
-name|SIK_Direct
+name|IK_DirectList
+argument_list|,
+name|IC_Normal
 argument_list|,
 name|InitLoc
 argument_list|,
-name|LParenLoc
+name|InitLoc
 argument_list|,
-name|RParenLoc
+name|InitLoc
 argument_list|)
 return|;
 block|}
@@ -1249,7 +1412,9 @@ block|{
 return|return
 name|InitializationKind
 argument_list|(
-name|SIK_DirectCast
+name|IK_Direct
+argument_list|,
+name|IC_StaticCast
 argument_list|,
 name|TypeRange
 operator|.
@@ -1278,12 +1443,23 @@ name|StartLoc
 parameter_list|,
 name|SourceRange
 name|TypeRange
+parameter_list|,
+name|bool
+name|InitList
 parameter_list|)
 block|{
+comment|// C++ cast syntax doesn't permit init lists, but C compound literals are
+comment|// exactly that.
 return|return
 name|InitializationKind
 argument_list|(
-name|SIK_DirectCStyleCast
+name|InitList
+condition|?
+name|IK_DirectList
+else|:
+name|IK_Direct
+argument_list|,
+name|IC_CStyleCast
 argument_list|,
 name|StartLoc
 argument_list|,
@@ -1306,12 +1482,21 @@ name|CreateFunctionalCast
 parameter_list|(
 name|SourceRange
 name|TypeRange
+parameter_list|,
+name|bool
+name|InitList
 parameter_list|)
 block|{
 return|return
 name|InitializationKind
 argument_list|(
-name|SIK_DirectFunctionalCast
+name|InitList
+condition|?
+name|IK_DirectList
+else|:
+name|IK_Direct
+argument_list|,
+name|IC_FunctionalCast
 argument_list|,
 name|TypeRange
 operator|.
@@ -1340,12 +1525,23 @@ name|InitLoc
 parameter_list|,
 name|SourceLocation
 name|EqualLoc
+parameter_list|,
+name|bool
+name|AllowExplicitConvs
+init|=
+name|false
 parameter_list|)
 block|{
 return|return
 name|InitializationKind
 argument_list|(
-name|SIK_Copy
+name|IK_Copy
+argument_list|,
+name|AllowExplicitConvs
+condition|?
+name|IC_ExplicitConvs
+else|:
+name|IC_Normal
 argument_list|,
 name|InitLoc
 argument_list|,
@@ -1367,7 +1563,9 @@ block|{
 return|return
 name|InitializationKind
 argument_list|(
-name|SIK_Default
+name|IK_Default
+argument_list|,
+name|IC_Normal
 argument_list|,
 name|InitLoc
 argument_list|,
@@ -1400,11 +1598,13 @@ block|{
 return|return
 name|InitializationKind
 argument_list|(
+name|IK_Value
+argument_list|,
 name|isImplicit
 condition|?
-name|SIK_ImplicitValue
+name|IC_Implicit
 else|:
-name|SIK_Value
+name|IC_Normal
 argument_list|,
 name|InitLoc
 argument_list|,
@@ -1420,148 +1620,73 @@ name|getKind
 argument_list|()
 specifier|const
 block|{
-if|if
-condition|(
-name|Kind
-operator|>
-name|SIK_ImplicitValue
-condition|)
 return|return
-name|IK_Direct
-return|;
-if|if
-condition|(
-name|Kind
-operator|==
-name|SIK_ImplicitValue
-condition|)
-return|return
-name|IK_Value
-return|;
-return|return
-operator|(
-name|InitKind
-operator|)
 name|Kind
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Determine whether this initialization is an explicit cast.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|isExplicitCast
 argument_list|()
 specifier|const
 block|{
 return|return
-name|Kind
-operator|==
-name|SIK_DirectCast
-operator|||
-name|Kind
-operator|==
-name|SIK_DirectCStyleCast
-operator|||
-name|Kind
-operator|==
-name|SIK_DirectFunctionalCast
+name|Context
+operator|>=
+name|IC_StaticCast
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine whether this initialization is a C-style cast.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|isCStyleOrFunctionalCast
 argument_list|()
 specifier|const
 block|{
 return|return
-name|Kind
-operator|==
-name|SIK_DirectCStyleCast
-operator|||
-name|Kind
-operator|==
-name|SIK_DirectFunctionalCast
+name|Context
+operator|>=
+name|IC_CStyleCast
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
-comment|/// brief Determine whether this is a C-style cast.
-end_comment
-
-begin_expr_stmt
+comment|/// \brief Determine whether this is a C-style cast.
 name|bool
 name|isCStyleCast
 argument_list|()
 specifier|const
 block|{
 return|return
-name|Kind
+name|Context
 operator|==
-name|SIK_DirectCStyleCast
+name|IC_CStyleCast
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
-comment|/// brief Determine whether this is a functional-style cast.
-end_comment
-
-begin_expr_stmt
+comment|/// \brief Determine whether this is a functional-style cast.
 name|bool
 name|isFunctionalCast
 argument_list|()
 specifier|const
 block|{
 return|return
-name|Kind
+name|Context
 operator|==
-name|SIK_DirectFunctionalCast
+name|IC_FunctionalCast
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine whether this initialization is an implicit
-end_comment
-
-begin_comment
 comment|/// value-initialization, e.g., as occurs during aggregate
-end_comment
-
-begin_comment
 comment|/// initialization.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|isImplicitValueInit
 argument_list|()
 specifier|const
 block|{
 return|return
-name|Kind
+name|Context
 operator|==
-name|SIK_ImplicitValue
+name|IC_Implicit
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Retrieve the location at which initialization is occurring.
-end_comment
-
-begin_expr_stmt
 name|SourceLocation
 name|getLocation
 argument_list|()
@@ -1574,13 +1699,7 @@ literal|0
 index|]
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Retrieve the source range that covers the initialization.
-end_comment
-
-begin_expr_stmt
 name|SourceRange
 name|getRange
 argument_list|()
@@ -1601,17 +1720,8 @@ index|]
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Retrieve the location of the equal sign for copy initialization
-end_comment
-
-begin_comment
 comment|/// (if present).
-end_comment
-
-begin_expr_stmt
 name|SourceLocation
 name|getEqualLoc
 argument_list|()
@@ -1621,7 +1731,7 @@ name|assert
 argument_list|(
 name|Kind
 operator|==
-name|SIK_Copy
+name|IK_Copy
 operator|&&
 literal|"Only copy initialization has an '='"
 argument_list|)
@@ -1633,9 +1743,6 @@ literal|1
 index|]
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|bool
 name|isCopyInit
 argument_list|()
@@ -1644,20 +1751,41 @@ block|{
 return|return
 name|Kind
 operator|==
-name|SIK_Copy
+name|IK_Copy
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
+comment|/// \brief Retrieve whether this initialization allows the use of explicit
+comment|///        constructors.
+name|bool
+name|AllowExplicit
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|isCopyInit
+argument_list|()
+return|;
+block|}
+comment|/// \brief Retrieve whether this initialization allows the use of explicit
+comment|/// conversion functions.
+name|bool
+name|allowExplicitConversionFunctions
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|isCopyInit
+argument_list|()
+operator|||
+name|Context
+operator|==
+name|IC_ExplicitConvs
+return|;
+block|}
 comment|/// \brief Retrieve the source range containing the locations of the open
-end_comment
-
-begin_comment
 comment|/// and closing parentheses for value and direct initializations.
-end_comment
-
-begin_expr_stmt
 name|SourceRange
 name|getParenRange
 argument_list|()
@@ -1666,14 +1794,13 @@ block|{
 name|assert
 argument_list|(
 operator|(
-name|getKind
-argument_list|()
+name|Kind
 operator|==
 name|IK_Direct
 operator|||
 name|Kind
 operator|==
-name|SIK_Value
+name|IK_Value
 operator|)
 operator|&&
 literal|"Only direct- and value-initialization have parentheses"
@@ -1694,10 +1821,14 @@ index|]
 argument_list|)
 return|;
 block|}
-end_expr_stmt
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
-unit|};
 comment|/// \brief Describes the sequence of initializations required to initialize
 end_comment
 
@@ -1781,6 +1912,12 @@ block|,
 comment|/// \brief Perform list-initialization with a constructor.
 name|SK_ListConstructorCall
 block|,
+comment|/// \brief Unwrap the single-element initializer list for a reference.
+name|SK_UnwrapInitList
+block|,
+comment|/// \brief Rewrap the single-element initializer list for a reference.
+name|SK_RewrapInitList
+block|,
 comment|/// \brief Perform initialization via a constructor.
 name|SK_ConstructorInitialization
 block|,
@@ -1801,6 +1938,10 @@ comment|/// \brief Array initialization (from an array rvalue).
 comment|/// This is a GNU C extension.
 name|SK_ArrayInit
 block|,
+comment|/// \brief Array initialization from a parenthesized initializer list.
+comment|/// This is a GNU C++ extension.
+name|SK_ParenthesizedArrayInit
+block|,
 comment|/// \brief Pass an object by indirect copy-and-restore.
 name|SK_PassByIndirectCopyRestore
 block|,
@@ -1809,6 +1950,9 @@ name|SK_PassByIndirectRestore
 block|,
 comment|/// \brief Produce an Objective-C object pointer.
 name|SK_ProduceObjCObject
+block|,
+comment|/// \brief Construct a std::initializer_list from an initializer list.
+name|SK_StdInitializerList
 block|}
 enum|;
 comment|/// \brief A single step in the initialization sequence.
@@ -1853,10 +1997,16 @@ block|}
 name|Function
 struct|;
 comment|/// \brief When Kind = SK_ConversionSequence, the implicit conversion
-comment|/// sequence
+comment|/// sequence.
 name|ImplicitConversionSequence
 modifier|*
 name|ICS
+decl_stmt|;
+comment|/// \brief When Kind = SK_RewrapInitList, the syntactic form of the
+comment|/// wrapping list.
+name|InitListExpr
+modifier|*
+name|WrappingSyntacticList
 decl_stmt|;
 block|}
 union|;
@@ -1945,8 +2095,11 @@ block|,
 comment|/// \brief Overloading for a user-defined conversion failed.
 name|FK_UserConversionOverloadFailed
 block|,
-comment|/// \brief Overloaded for initialization by constructor failed.
+comment|/// \brief Overloading for initialization by constructor failed.
 name|FK_ConstructorOverloadFailed
+block|,
+comment|/// \brief Overloading for list-initialization by constructor failed.
+name|FK_ListConstructorOverloadFailed
 block|,
 comment|/// \brief Default-initialization of a 'const' object.
 name|FK_DefaultInitOfConst
@@ -1954,8 +2107,22 @@ block|,
 comment|/// \brief Initialization of an incomplete type.
 name|FK_Incomplete
 block|,
+comment|/// \brief Variable-length array must not have an initializer.
+name|FK_VariableLengthArrayHasInitializer
+block|,
 comment|/// \brief List initialization failed at some point.
 name|FK_ListInitializationFailed
+block|,
+comment|/// \brief Initializer has a placeholder type which cannot be
+comment|/// resolved by initialization.
+name|FK_PlaceholderType
+block|,
+comment|/// \brief Failed to initialize a std::initializer_list because copy
+comment|/// construction of some element failed.
+name|FK_InitListElementCopyFailure
+block|,
+comment|/// \brief List-copy-initialization chose an explicit constructor.
+name|FK_ExplicitConstructor
 block|}
 enum|;
 name|private
@@ -1971,6 +2138,10 @@ decl_stmt|;
 comment|/// \brief The candidate set created when initialization failed.
 name|OverloadCandidateSet
 name|FailedCandidateSet
+decl_stmt|;
+comment|/// \brief The incomplete type that caused a failure.
+name|QualType
+name|FailedIncompleteType
 decl_stmt|;
 comment|/// \brief Prints a follow-up note that highlights the location of
 comment|/// the initialized entity, if it's remote.
@@ -2246,6 +2417,9 @@ name|Function
 parameter_list|,
 name|DeclAccessPair
 name|Found
+parameter_list|,
+name|bool
+name|HadMultipleCandidates
 parameter_list|)
 function_decl|;
 comment|/// \brief Add a new step in the initialization that performs a derived-to-
@@ -2314,6 +2488,9 @@ name|FoundDecl
 parameter_list|,
 name|QualType
 name|T
+parameter_list|,
+name|bool
+name|HadMultipleCandidates
 parameter_list|)
 function_decl|;
 comment|/// \brief Add a new step that performs a qualification conversion to the
@@ -2341,7 +2518,7 @@ name|QualType
 name|T
 parameter_list|)
 function_decl|;
-comment|/// \brief Add a list-initialiation step.
+comment|/// \brief Add a list-initialization step.
 name|void
 name|AddListInitializationStep
 parameter_list|(
@@ -2350,6 +2527,10 @@ name|T
 parameter_list|)
 function_decl|;
 comment|/// \brief Add a constructor-initialization step.
+comment|///
+comment|/// \arg FromInitList The constructor call is syntactically an initializer
+comment|/// list.
+comment|/// \arg AsInitList The constructor is called as an init list constructor.
 name|void
 name|AddConstructorInitializationStep
 parameter_list|(
@@ -2362,6 +2543,15 @@ name|Access
 parameter_list|,
 name|QualType
 name|T
+parameter_list|,
+name|bool
+name|HadMultipleCandidates
+parameter_list|,
+name|bool
+name|FromInitList
+parameter_list|,
+name|bool
+name|AsInitList
 parameter_list|)
 function_decl|;
 comment|/// \brief Add a zero-initialization step.
@@ -2409,6 +2599,14 @@ name|QualType
 name|T
 parameter_list|)
 function_decl|;
+comment|/// \brief Add a parenthesized array initialization step.
+name|void
+name|AddParenthesizedArrayInitStep
+parameter_list|(
+name|QualType
+name|T
+parameter_list|)
+function_decl|;
 comment|/// \brief Add a step to pass an object by indirect copy-restore.
 name|void
 name|AddPassByIndirectCopyRestoreStep
@@ -2429,6 +2627,28 @@ name|QualType
 name|T
 parameter_list|)
 function_decl|;
+comment|/// \brief Add a step to construct a std::initializer_list object from an
+comment|/// initializer list.
+name|void
+name|AddStdInitializerListConstructionStep
+parameter_list|(
+name|QualType
+name|T
+parameter_list|)
+function_decl|;
+comment|/// \brief Add steps to unwrap a initializer list for a reference around a
+comment|/// single element and rewrap it at the end.
+name|void
+name|RewrapReferenceInitList
+parameter_list|(
+name|QualType
+name|T
+parameter_list|,
+name|InitListExpr
+modifier|*
+name|Syntactic
+parameter_list|)
+function_decl|;
 comment|/// \brief Note that this initialization sequence failed.
 name|void
 name|SetFailed
@@ -2446,6 +2666,23 @@ operator|->
 name|Failure
 operator|=
 name|Failure
+expr_stmt|;
+name|assert
+argument_list|(
+operator|(
+name|Failure
+operator|!=
+name|FK_Incomplete
+operator|||
+operator|!
+name|FailedIncompleteType
+operator|.
+name|isNull
+argument_list|()
+operator|)
+operator|&&
+literal|"Incomplete type failure requires a type!"
+argument_list|)
 expr_stmt|;
 block|}
 comment|/// \brief Note that this initialization sequence failed due to failed
@@ -2471,7 +2708,7 @@ return|return
 name|FailedCandidateSet
 return|;
 block|}
-comment|/// brief Get the overloading result, for when the initialization
+comment|/// \brief Get the overloading result, for when the initialization
 comment|/// sequence failed due to a bad overload.
 name|OverloadingResult
 name|getFailedOverloadResult
@@ -2481,6 +2718,25 @@ block|{
 return|return
 name|FailedOverloadResult
 return|;
+block|}
+comment|/// \brief Note that this initialization sequence failed due to an
+comment|/// incomplete type.
+name|void
+name|setIncompleteTypeFailure
+parameter_list|(
+name|QualType
+name|IncompleteType
+parameter_list|)
+block|{
+name|FailedIncompleteType
+operator|=
+name|IncompleteType
+expr_stmt|;
+name|SetFailed
+argument_list|(
+name|FK_Incomplete
+argument_list|)
+expr_stmt|;
 block|}
 comment|/// \brief Determine why initialization failed.
 name|FailureKind

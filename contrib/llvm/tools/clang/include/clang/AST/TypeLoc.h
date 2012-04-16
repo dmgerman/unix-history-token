@@ -83,6 +83,12 @@ directive|include
 file|"clang/Basic/Specifiers.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -346,6 +352,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 block|{
 return|return
 name|SourceRange
@@ -356,6 +363,28 @@ argument_list|,
 name|getEndLoc
 argument_list|()
 argument_list|)
+return|;
+block|}
+name|SourceLocation
+name|getLocStart
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|getBeginLoc
+argument_list|()
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|getEndLoc
+argument_list|()
 return|;
 block|}
 comment|/// \brief Get the local source range.
@@ -2238,27 +2267,33 @@ name|isDefinition
 argument_list|()
 specifier|const
 block|{
-return|return
+name|TagDecl
+operator|*
+name|D
+operator|=
 name|getDecl
 argument_list|()
+block|;
+return|return
+name|D
 operator|->
 name|isCompleteDefinition
 argument_list|()
 operator|&&
 operator|(
-name|getNameLoc
-argument_list|()
-operator|.
-name|isInvalid
-argument_list|()
-operator|||
-name|getNameLoc
+name|D
+operator|->
+name|getIdentifier
 argument_list|()
 operator|==
-name|getDecl
-argument_list|()
+literal|0
+operator|||
+name|D
 operator|->
 name|getLocation
+argument_list|()
+operator|==
+name|getNameLoc
 argument_list|()
 operator|)
 return|;
@@ -3954,6 +3989,30 @@ name|TrailingReturn
 operator|=
 name|Trailing
 block|;   }
+name|ArrayRef
+operator|<
+name|ParmVarDecl
+operator|*
+operator|>
+name|getParams
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ArrayRef
+operator|<
+name|ParmVarDecl
+operator|*
+operator|>
+operator|(
+name|getParmArray
+argument_list|()
+expr|,
+name|getNumArgs
+argument_list|()
+operator|)
+return|;
+block|}
 comment|// ParmVarDecls* are stored after Info, one for each argument.
 name|ParmVarDecl
 operator|*
@@ -4429,6 +4488,9 @@ operator|:
 name|TemplateNameLocInfo
 block|{
 name|SourceLocation
+name|TemplateKWLoc
+block|;
+name|SourceLocation
 name|LAngleLoc
 block|;
 name|SourceLocation
@@ -4452,6 +4514,31 @@ operator|>
 block|{
 name|public
 operator|:
+name|SourceLocation
+name|getTemplateKeywordLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getLocalData
+argument_list|()
+operator|->
+name|TemplateKWLoc
+return|;
+block|}
+name|void
+name|setTemplateKeywordLoc
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+block|{
+name|getLocalData
+argument_list|()
+operator|->
+name|TemplateKWLoc
+operator|=
+name|Loc
+block|;   }
 name|SourceLocation
 name|getLAngleLoc
 argument_list|()
@@ -4639,6 +4726,25 @@ name|getLocalSourceRange
 argument_list|()
 specifier|const
 block|{
+if|if
+condition|(
+name|getTemplateKeywordLoc
+argument_list|()
+operator|.
+name|isValid
+argument_list|()
+condition|)
+return|return
+name|SourceRange
+argument_list|(
+name|getTemplateKeywordLoc
+argument_list|()
+argument_list|,
+name|getRAngleLoc
+argument_list|()
+argument_list|)
+return|;
+else|else
 return|return
 name|SourceRange
 argument_list|(
@@ -4658,17 +4764,22 @@ argument_list|,
 argument|SourceLocation Loc
 argument_list|)
 block|{
+name|setTemplateKeywordLoc
+argument_list|(
+name|Loc
+argument_list|)
+block|;
+name|setTemplateNameLoc
+argument_list|(
+name|Loc
+argument_list|)
+block|;
 name|setLAngleLoc
 argument_list|(
 name|Loc
 argument_list|)
 block|;
 name|setRAngleLoc
-argument_list|(
-name|Loc
-argument_list|)
-block|;
-name|setTemplateNameLoc
 argument_list|(
 name|Loc
 argument_list|)
@@ -5398,10 +5509,9 @@ block|;  struct
 name|ElaboratedLocInfo
 block|{
 name|SourceLocation
-name|KeywordLoc
+name|ElaboratedKWLoc
 block|;
-comment|/// \brief Opaque data pointer used to reconstruct a nested-name-specifier
-comment|/// from
+comment|/// \brief Data associated with the nested-name-specifier location.
 name|void
 operator|*
 name|QualifierData
@@ -5425,7 +5535,7 @@ block|{
 name|public
 operator|:
 name|SourceLocation
-name|getKeywordLoc
+name|getElaboratedKeywordLoc
 argument_list|()
 specifier|const
 block|{
@@ -5435,11 +5545,11 @@ operator|->
 name|getLocalData
 argument_list|()
 operator|->
-name|KeywordLoc
+name|ElaboratedKWLoc
 return|;
 block|}
 name|void
-name|setKeywordLoc
+name|setElaboratedKeywordLoc
 argument_list|(
 argument|SourceLocation Loc
 argument_list|)
@@ -5449,7 +5559,7 @@ operator|->
 name|getLocalData
 argument_list|()
 operator|->
-name|KeywordLoc
+name|ElaboratedKWLoc
 operator|=
 name|Loc
 block|;   }
@@ -5513,7 +5623,7 @@ specifier|const
 block|{
 if|if
 condition|(
-name|getKeywordLoc
+name|getElaboratedKeywordLoc
 argument_list|()
 operator|.
 name|isValid
@@ -5527,7 +5637,7 @@ condition|)
 return|return
 name|SourceRange
 argument_list|(
-name|getKeywordLoc
+name|getElaboratedKeywordLoc
 argument_list|()
 argument_list|,
 name|getQualifierLoc
@@ -5541,7 +5651,7 @@ else|else
 return|return
 name|SourceRange
 argument_list|(
-name|getKeywordLoc
+name|getElaboratedKeywordLoc
 argument_list|()
 argument_list|)
 return|;
@@ -5629,11 +5739,6 @@ name|ElaboratedLocInfo
 block|{
 name|SourceLocation
 name|NameLoc
-block|;
-comment|/// \brief Data associated with the nested-name-specifier location.
-name|void
-operator|*
-name|QualifierData
 block|; }
 block|;
 name|class
@@ -5654,7 +5759,7 @@ block|{
 name|public
 operator|:
 name|SourceLocation
-name|getKeywordLoc
+name|getElaboratedKeywordLoc
 argument_list|()
 specifier|const
 block|{
@@ -5664,11 +5769,11 @@ operator|->
 name|getLocalData
 argument_list|()
 operator|->
-name|KeywordLoc
+name|ElaboratedKWLoc
 return|;
 block|}
 name|void
-name|setKeywordLoc
+name|setElaboratedKeywordLoc
 argument_list|(
 argument|SourceLocation Loc
 argument_list|)
@@ -5678,7 +5783,7 @@ operator|->
 name|getLocalData
 argument_list|()
 operator|->
-name|KeywordLoc
+name|ElaboratedKWLoc
 operator|=
 name|Loc
 block|;   }
@@ -5771,7 +5876,7 @@ specifier|const
 block|{
 if|if
 condition|(
-name|getKeywordLoc
+name|getElaboratedKeywordLoc
 argument_list|()
 operator|.
 name|isValid
@@ -5780,7 +5885,7 @@ condition|)
 return|return
 name|SourceRange
 argument_list|(
-name|getKeywordLoc
+name|getElaboratedKeywordLoc
 argument_list|()
 argument_list|,
 name|getNameLoc
@@ -5849,7 +5954,7 @@ operator|:
 name|DependentNameLocInfo
 block|{
 name|SourceLocation
-name|KeywordLoc
+name|TemplateKWLoc
 block|;
 name|SourceLocation
 name|LAngleLoc
@@ -5878,7 +5983,7 @@ block|{
 name|public
 operator|:
 name|SourceLocation
-name|getKeywordLoc
+name|getElaboratedKeywordLoc
 argument_list|()
 specifier|const
 block|{
@@ -5888,11 +5993,11 @@ operator|->
 name|getLocalData
 argument_list|()
 operator|->
-name|KeywordLoc
+name|ElaboratedKWLoc
 return|;
 block|}
 name|void
-name|setKeywordLoc
+name|setElaboratedKeywordLoc
 argument_list|(
 argument|SourceLocation Loc
 argument_list|)
@@ -5902,7 +6007,7 @@ operator|->
 name|getLocalData
 argument_list|()
 operator|->
-name|KeywordLoc
+name|ElaboratedKWLoc
 operator|=
 name|Loc
 block|;   }
@@ -5991,7 +6096,32 @@ name|getOpaqueData
 argument_list|()
 block|;   }
 name|SourceLocation
-name|getNameLoc
+name|getTemplateKeywordLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getLocalData
+argument_list|()
+operator|->
+name|TemplateKWLoc
+return|;
+block|}
+name|void
+name|setTemplateKeywordLoc
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+block|{
+name|getLocalData
+argument_list|()
+operator|->
+name|TemplateKWLoc
+operator|=
+name|Loc
+block|;   }
+name|SourceLocation
+name|getTemplateNameLoc
 argument_list|()
 specifier|const
 block|{
@@ -6005,7 +6135,7 @@ name|NameLoc
 return|;
 block|}
 name|void
-name|setNameLoc
+name|setTemplateNameLoc
 argument_list|(
 argument|SourceLocation Loc
 argument_list|)
@@ -6153,7 +6283,7 @@ specifier|const
 block|{
 if|if
 condition|(
-name|getKeywordLoc
+name|getElaboratedKeywordLoc
 argument_list|()
 operator|.
 name|isValid
@@ -6162,7 +6292,7 @@ condition|)
 return|return
 name|SourceRange
 argument_list|(
-name|getKeywordLoc
+name|getElaboratedKeywordLoc
 argument_list|()
 argument_list|,
 name|getRAngleLoc
@@ -6188,11 +6318,30 @@ name|getRAngleLoc
 argument_list|()
 argument_list|)
 return|;
+elseif|else
+if|if
+condition|(
+name|getTemplateKeywordLoc
+argument_list|()
+operator|.
+name|isValid
+argument_list|()
+condition|)
+return|return
+name|SourceRange
+argument_list|(
+name|getTemplateKeywordLoc
+argument_list|()
+argument_list|,
+name|getRAngleLoc
+argument_list|()
+argument_list|)
+return|;
 else|else
 return|return
 name|SourceRange
 argument_list|(
-name|getNameLoc
+name|getTemplateNameLoc
 argument_list|()
 argument_list|,
 name|getRAngleLoc

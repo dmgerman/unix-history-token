@@ -103,6 +103,7 @@ literal|"C"
 block|{
 endif|#
 directive|endif
+comment|/**  * @defgroup LLVMCTarget Target information  * @ingroup LLVMC  *  * @{  */
 enum|enum
 name|LLVMByteOrdering
 block|{
@@ -174,6 +175,54 @@ undef|#
 directive|undef
 name|LLVM_TARGET
 comment|/* Explicit undef to make SWIG happier */
+comment|/* Declare all of the available assembly printer initialization functions. */
+define|#
+directive|define
+name|LLVM_ASM_PRINTER
+parameter_list|(
+name|TargetName
+parameter_list|)
+define|\
+value|void LLVMInitialize##TargetName##AsmPrinter();
+include|#
+directive|include
+file|"llvm/Config/AsmPrinters.def"
+undef|#
+directive|undef
+name|LLVM_ASM_PRINTER
+comment|/* Explicit undef to make SWIG happier */
+comment|/* Declare all of the available assembly parser initialization functions. */
+define|#
+directive|define
+name|LLVM_ASM_PARSER
+parameter_list|(
+name|TargetName
+parameter_list|)
+define|\
+value|void LLVMInitialize##TargetName##AsmParser();
+include|#
+directive|include
+file|"llvm/Config/AsmParsers.def"
+undef|#
+directive|undef
+name|LLVM_ASM_PARSER
+comment|/* Explicit undef to make SWIG happier */
+comment|/* Declare all of the available disassembler initialization functions. */
+define|#
+directive|define
+name|LLVM_DISASSEMBLER
+parameter_list|(
+name|TargetName
+parameter_list|)
+define|\
+value|void LLVMInitialize##TargetName##Disassembler();
+include|#
+directive|include
+file|"llvm/Config/Disassemblers.def"
+undef|#
+directive|undef
+name|LLVM_DISASSEMBLER
+comment|/* Explicit undef to make SWIG happier */
 comment|/** LLVMInitializeAllTargetInfos - The main program should call this function if     it wants access to all available targets that LLVM is configured to     support. */
 specifier|static
 specifier|inline
@@ -220,6 +269,97 @@ file|"llvm/Config/Targets.def"
 undef|#
 directive|undef
 name|LLVM_TARGET
+comment|/* Explicit undef to make SWIG happier */
+block|}
+comment|/** LLVMInitializeAllTargetMCs - The main program should call this function if     it wants access to all available target MC that LLVM is configured to     support. */
+specifier|static
+specifier|inline
+name|void
+name|LLVMInitializeAllTargetMCs
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+define|#
+directive|define
+name|LLVM_TARGET
+parameter_list|(
+name|TargetName
+parameter_list|)
+value|LLVMInitialize##TargetName##TargetMC();
+include|#
+directive|include
+file|"llvm/Config/Targets.def"
+undef|#
+directive|undef
+name|LLVM_TARGET
+comment|/* Explicit undef to make SWIG happier */
+block|}
+comment|/** LLVMInitializeAllAsmPrinters - The main program should call this function if     it wants all asm printers that LLVM is configured to support, to make them     available via the TargetRegistry. */
+specifier|static
+specifier|inline
+name|void
+name|LLVMInitializeAllAsmPrinters
+parameter_list|()
+block|{
+define|#
+directive|define
+name|LLVM_ASM_PRINTER
+parameter_list|(
+name|TargetName
+parameter_list|)
+value|LLVMInitialize##TargetName##AsmPrinter();
+include|#
+directive|include
+file|"llvm/Config/AsmPrinters.def"
+undef|#
+directive|undef
+name|LLVM_ASM_PRINTER
+comment|/* Explicit undef to make SWIG happier */
+block|}
+comment|/** LLVMInitializeAllAsmParsers - The main program should call this function if     it wants all asm parsers that LLVM is configured to support, to make them     available via the TargetRegistry. */
+specifier|static
+specifier|inline
+name|void
+name|LLVMInitializeAllAsmParsers
+parameter_list|()
+block|{
+define|#
+directive|define
+name|LLVM_ASM_PARSER
+parameter_list|(
+name|TargetName
+parameter_list|)
+value|LLVMInitialize##TargetName##AsmParser();
+include|#
+directive|include
+file|"llvm/Config/AsmParsers.def"
+undef|#
+directive|undef
+name|LLVM_ASM_PARSER
+comment|/* Explicit undef to make SWIG happier */
+block|}
+comment|/** LLVMInitializeAllDisassemblers - The main program should call this function     if it wants all disassemblers that LLVM is configured to support, to make     them available via the TargetRegistry. */
+specifier|static
+specifier|inline
+name|void
+name|LLVMInitializeAllDisassemblers
+parameter_list|()
+block|{
+define|#
+directive|define
+name|LLVM_DISASSEMBLER
+parameter_list|(
+name|TargetName
+parameter_list|)
+define|\
+value|LLVMInitialize##TargetName##Disassembler();
+include|#
+directive|include
+file|"llvm/Config/Disassemblers.def"
+undef|#
+directive|undef
+name|LLVM_DISASSEMBLER
 comment|/* Explicit undef to make SWIG happier */
 block|}
 comment|/** LLVMInitializeNativeTarget - The main program should call this function to     initialize the native target corresponding to the host.  This is useful      for JIT applications to ensure that the target gets linked in correctly. */
@@ -421,6 +561,7 @@ parameter_list|(
 name|LLVMTargetDataRef
 parameter_list|)
 function_decl|;
+comment|/**  * @}  */
 ifdef|#
 directive|ifdef
 name|__cplusplus

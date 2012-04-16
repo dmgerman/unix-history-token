@@ -57,6 +57,12 @@ name|class
 name|MCAsmInfo
 decl_stmt|;
 name|class
+name|MCInstrInfo
+decl_stmt|;
+name|class
+name|MCRegisterInfo
+decl_stmt|;
+name|class
 name|StringRef
 decl_stmt|;
 comment|/// MCInstPrinter - This is an instance of a target assembly language printer
@@ -77,6 +83,16 @@ specifier|const
 name|MCAsmInfo
 modifier|&
 name|MAI
+decl_stmt|;
+specifier|const
+name|MCInstrInfo
+modifier|&
+name|MII
+decl_stmt|;
+specifier|const
+name|MCRegisterInfo
+modifier|&
+name|MRI
 decl_stmt|;
 comment|/// The current set of available features.
 name|unsigned
@@ -102,6 +118,16 @@ specifier|const
 name|MCAsmInfo
 operator|&
 name|mai
+argument_list|,
+specifier|const
+name|MCInstrInfo
+operator|&
+name|mii
+argument_list|,
+specifier|const
+name|MCRegisterInfo
+operator|&
+name|mri
 argument_list|)
 operator|:
 name|CommentStream
@@ -112,6 +138,16 @@ operator|,
 name|MAI
 argument_list|(
 name|mai
+argument_list|)
+operator|,
+name|MII
+argument_list|(
+name|mii
+argument_list|)
+operator|,
+name|MRI
+argument_list|(
+name|mri
 argument_list|)
 operator|,
 name|AvailableFeatures
@@ -162,7 +198,6 @@ literal|0
 function_decl|;
 comment|/// getOpcodeName - Return the name of the specified opcode enum (e.g.
 comment|/// "MOV32ri") or empty if we can't resolve it.
-name|virtual
 name|StringRef
 name|getOpcodeName
 argument_list|(

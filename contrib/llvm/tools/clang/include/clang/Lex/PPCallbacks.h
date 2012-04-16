@@ -183,6 +183,37 @@ name|CharacteristicKind
 name|FileType
 argument_list|)
 block|{   }
+comment|/// FileNotFound - This callback is invoked whenever an inclusion directive
+comment|/// results in a file-not-found error.
+comment|///
+comment|/// \param FileName The name of the file being included, as written in the
+comment|/// source code.
+comment|///
+comment|/// \param RecoveryPath If this client indicates that it can recover from
+comment|/// this missing file, the client should set this as an additional header
+comment|/// search patch.
+comment|///
+comment|/// \returns true to indicate that the preprocessor should attempt to recover
+comment|/// by adding \p RecoveryPath as a header search path.
+name|virtual
+name|bool
+name|FileNotFound
+argument_list|(
+name|StringRef
+name|FileName
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|&
+name|RecoveryPath
+argument_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// \brief This callback is invoked whenever an inclusion directive of
 comment|/// any kind (\c #include, \c #import, etc.) has been processed, regardless
 comment|/// of whether the inclusion will actually result in an inclusion.
@@ -438,34 +469,49 @@ name|Range
 parameter_list|)
 block|{   }
 comment|/// If -- This hook is called whenever an #if is seen.
-comment|/// \param Range The SourceRange of the expression being tested.
+comment|/// \param Loc the source location of the directive.
+comment|/// \param ConditionRange The SourceRange of the expression being tested.
 comment|// FIXME: better to pass in a list (or tree!) of Tokens.
 name|virtual
 name|void
 name|If
 parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|,
 name|SourceRange
-name|Range
+name|ConditionRange
 parameter_list|)
 block|{   }
 comment|/// Elif -- This hook is called whenever an #elif is seen.
-comment|/// \param Range The SourceRange of the expression being tested.
+comment|/// \param Loc the source location of the directive.
+comment|/// \param ConditionRange The SourceRange of the expression being tested.
+comment|/// \param IfLoc the source location of the #if/#ifdef/#ifndef directive.
 comment|// FIXME: better to pass in a list (or tree!) of Tokens.
 name|virtual
 name|void
 name|Elif
 parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|,
 name|SourceRange
-name|Range
+name|ConditionRange
+parameter_list|,
+name|SourceLocation
+name|IfLoc
 parameter_list|)
 block|{   }
 comment|/// Ifdef -- This hook is called whenever an #ifdef is seen.
-comment|/// \param Loc The location of the token being tested.
+comment|/// \param Loc the source location of the directive.
 comment|/// \param II Information on the token being tested.
 name|virtual
 name|void
 name|Ifdef
 parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|,
 specifier|const
 name|Token
 modifier|&
@@ -473,12 +519,15 @@ name|MacroNameTok
 parameter_list|)
 block|{   }
 comment|/// Ifndef -- This hook is called whenever an #ifndef is seen.
-comment|/// \param Loc The location of the token being tested.
+comment|/// \param Loc the source location of the directive.
 comment|/// \param II Information on the token being tested.
 name|virtual
 name|void
 name|Ifndef
 parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|,
 specifier|const
 name|Token
 modifier|&
@@ -486,16 +535,32 @@ name|MacroNameTok
 parameter_list|)
 block|{   }
 comment|/// Else -- This hook is called whenever an #else is seen.
+comment|/// \param Loc the source location of the directive.
+comment|/// \param IfLoc the source location of the #if/#ifdef/#ifndef directive.
 name|virtual
 name|void
 name|Else
-parameter_list|()
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|,
+name|SourceLocation
+name|IfLoc
+parameter_list|)
 block|{   }
 comment|/// Endif -- This hook is called whenever an #endif is seen.
+comment|/// \param Loc the source location of the directive.
+comment|/// \param IfLoc the source location of the #if/#ifdef/#ifndef directive.
 name|virtual
 name|void
 name|Endif
-parameter_list|()
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|,
+name|SourceLocation
+name|IfLoc
+parameter_list|)
 block|{   }
 block|}
 empty_stmt|;
@@ -506,6 +571,11 @@ range|:
 name|public
 name|PPCallbacks
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|PPCallbacks
 operator|*
 name|First
@@ -618,6 +688,35 @@ argument_list|,
 name|FileType
 argument_list|)
 block|;   }
+name|virtual
+name|bool
+name|FileNotFound
+argument_list|(
+argument|StringRef FileName
+argument_list|,
+argument|SmallVectorImpl<char>&RecoveryPath
+argument_list|)
+block|{
+return|return
+name|First
+operator|->
+name|FileNotFound
+argument_list|(
+name|FileName
+argument_list|,
+name|RecoveryPath
+argument_list|)
+operator|||
+name|Second
+operator|->
+name|FileNotFound
+argument_list|(
+name|FileName
+argument_list|,
+name|RecoveryPath
+argument_list|)
+return|;
+block|}
 name|virtual
 name|void
 name|InclusionDirective
@@ -1010,21 +1109,27 @@ name|virtual
 name|void
 name|If
 argument_list|(
-argument|SourceRange Range
+argument|SourceLocation Loc
+argument_list|,
+argument|SourceRange ConditionRange
 argument_list|)
 block|{
 name|First
 operator|->
 name|If
 argument_list|(
-name|Range
+name|Loc
+argument_list|,
+name|ConditionRange
 argument_list|)
 block|;
 name|Second
 operator|->
 name|If
 argument_list|(
-name|Range
+name|Loc
+argument_list|,
+name|ConditionRange
 argument_list|)
 block|;   }
 comment|/// Elif -- This hook is called whenever an #if is seen.
@@ -1032,21 +1137,33 @@ name|virtual
 name|void
 name|Elif
 argument_list|(
-argument|SourceRange Range
+argument|SourceLocation Loc
+argument_list|,
+argument|SourceRange ConditionRange
+argument_list|,
+argument|SourceLocation IfLoc
 argument_list|)
 block|{
 name|First
 operator|->
 name|Elif
 argument_list|(
-name|Range
+name|Loc
+argument_list|,
+name|ConditionRange
+argument_list|,
+name|IfLoc
 argument_list|)
 block|;
 name|Second
 operator|->
 name|Elif
 argument_list|(
-name|Range
+name|Loc
+argument_list|,
+name|ConditionRange
+argument_list|,
+name|IfLoc
 argument_list|)
 block|;   }
 comment|/// Ifdef -- This hook is called whenever an #ifdef is seen.
@@ -1054,6 +1171,8 @@ name|virtual
 name|void
 name|Ifdef
 argument_list|(
+argument|SourceLocation Loc
+argument_list|,
 argument|const Token&MacroNameTok
 argument_list|)
 block|{
@@ -1061,6 +1180,8 @@ name|First
 operator|->
 name|Ifdef
 argument_list|(
+name|Loc
+argument_list|,
 name|MacroNameTok
 argument_list|)
 block|;
@@ -1068,6 +1189,8 @@ name|Second
 operator|->
 name|Ifdef
 argument_list|(
+name|Loc
+argument_list|,
 name|MacroNameTok
 argument_list|)
 block|;   }
@@ -1076,6 +1199,8 @@ name|virtual
 name|void
 name|Ifndef
 argument_list|(
+argument|SourceLocation Loc
+argument_list|,
 argument|const Token&MacroNameTok
 argument_list|)
 block|{
@@ -1083,6 +1208,8 @@ name|First
 operator|->
 name|Ifndef
 argument_list|(
+name|Loc
+argument_list|,
 name|MacroNameTok
 argument_list|)
 block|;
@@ -1090,6 +1217,8 @@ name|Second
 operator|->
 name|Ifndef
 argument_list|(
+name|Loc
+argument_list|,
 name|MacroNameTok
 argument_list|)
 block|;   }
@@ -1097,37 +1226,60 @@ comment|/// Else -- This hook is called whenever an #else is seen.
 name|virtual
 name|void
 name|Else
-argument_list|()
+argument_list|(
+argument|SourceLocation Loc
+argument_list|,
+argument|SourceLocation IfLoc
+argument_list|)
 block|{
 name|First
 operator|->
 name|Else
-argument_list|()
+argument_list|(
+name|Loc
+argument_list|,
+name|IfLoc
+argument_list|)
 block|;
 name|Second
 operator|->
 name|Else
-argument_list|()
+argument_list|(
+name|Loc
+argument_list|,
+name|IfLoc
+argument_list|)
 block|;   }
 comment|/// Endif -- This hook is called whenever an #endif is seen.
 name|virtual
 name|void
 name|Endif
-argument_list|()
+argument_list|(
+argument|SourceLocation Loc
+argument_list|,
+argument|SourceLocation IfLoc
+argument_list|)
 block|{
 name|First
 operator|->
 name|Endif
-argument_list|()
+argument_list|(
+name|Loc
+argument_list|,
+name|IfLoc
+argument_list|)
 block|;
 name|Second
 operator|->
 name|Endif
-argument_list|()
+argument_list|(
+name|Loc
+argument_list|,
+name|IfLoc
+argument_list|)
 block|;   }
-block|}
-decl_stmt|;
-block|}
+expr|}
+block|;  }
 end_decl_stmt
 
 begin_comment
