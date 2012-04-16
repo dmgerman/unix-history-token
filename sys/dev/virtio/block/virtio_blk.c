@@ -4306,6 +4306,11 @@ name|virtqueue
 modifier|*
 name|vq
 decl_stmt|;
+name|struct
+name|vtblk_request
+modifier|*
+name|r
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -4357,13 +4362,24 @@ argument_list|(
 name|vq
 argument_list|)
 expr_stmt|;
-name|req
+name|r
 operator|=
 name|virtqueue_poll
 argument_list|(
 name|vq
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|r
+operator|==
+name|req
+argument_list|,
+operator|(
+literal|"unexpected request response"
+operator|)
 argument_list|)
 expr_stmt|;
 name|error
