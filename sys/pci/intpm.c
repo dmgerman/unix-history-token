@@ -584,6 +584,17 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|0x43721002
+case|:
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"ATI IXP400 SMBus Controller"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|0x43851002
 case|:
 comment|/* SB800 and newer can not be configured in a compatible way. */
