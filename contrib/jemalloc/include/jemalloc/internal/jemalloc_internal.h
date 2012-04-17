@@ -1,4 +1,16 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|JEMALLOC_INTERNAL_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|JEMALLOC_INTERNAL_H
+end_define
+
 begin_include
 include|#
 directive|include
@@ -591,6 +603,23 @@ endif|#
 directive|endif
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|JEMALLOC_ATOMIC9
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<machine/atomic.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -3679,6 +3708,15 @@ end_undef
 
 begin_comment
 comment|/******************************************************************************/
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* JEMALLOC_INTERNAL_H */
 end_comment
 
 end_unit

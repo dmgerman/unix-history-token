@@ -189,6 +189,17 @@ value|__asm__ volatile("pause")
 end_define
 
 begin_comment
+comment|/* Defined if the equivalent of FreeBSD's atomic(9) functions are available. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|JEMALLOC_ATOMIC9
+value|1
+end_define
+
+begin_comment
 comment|/*  * Defined if OSAtomic*() functions are available, as provided by Darwin, and  * documented in the atomic(3) manual page.  */
 end_comment
 
@@ -200,21 +211,17 @@ begin_comment
 comment|/*  * Defined if __sync_add_and_fetch(uint32_t *, uint32_t) and  * __sync_sub_and_fetch(uint32_t *, uint32_t) are available, despite  * __GCC_HAVE_SYNC_COMPARE_AND_SWAP_4 not being defined (which means the  * functions are defined in libgcc instead of being inlines)  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|JE_FORCE_SYNC_COMPARE_AND_SWAP_4
-end_define
+begin_comment
+comment|/* #undef JE_FORCE_SYNC_COMPARE_AND_SWAP_4 */
+end_comment
 
 begin_comment
 comment|/*  * Defined if __sync_add_and_fetch(uint64_t *, uint64_t) and  * __sync_sub_and_fetch(uint64_t *, uint64_t) are available, despite  * __GCC_HAVE_SYNC_COMPARE_AND_SWAP_8 not being defined (which means the  * functions are defined in libgcc instead of being inlines)  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|JE_FORCE_SYNC_COMPARE_AND_SWAP_8
-end_define
+begin_comment
+comment|/* #undef JE_FORCE_SYNC_COMPARE_AND_SWAP_8 */
+end_comment
 
 begin_comment
 comment|/*  * Defined if OSSpin*() functions are available, as provided by Darwin, and  * documented in the spinlock(3) manual page.  */
