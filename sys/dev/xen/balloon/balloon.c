@@ -567,7 +567,7 @@ name|free
 argument_list|(
 name|entry
 argument_list|,
-name|M_DEVBUF
+name|M_BALLOON
 argument_list|)
 expr_stmt|;
 name|bs
