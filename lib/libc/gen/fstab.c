@@ -315,6 +315,12 @@ name|sf
 decl_stmt|;
 if|if
 condition|(
+name|_fs_fstab
+operator|.
+name|fs_file
+operator|!=
+name|NULL
+operator|&&
 name|strcmp
 argument_list|(
 name|_fs_fstab
