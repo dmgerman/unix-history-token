@@ -2123,6 +2123,12 @@ name|ifp
 operator|->
 name|if_l2com
 expr_stmt|;
+comment|/* 	 * Setup the RX free list lock early, so it can be consistently 	 * removed. 	 */
+name|MWL_RXFREE_INIT
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* set these up early for if_printf use */
 name|if_initname
 argument_list|(
@@ -3120,6 +3126,11 @@ argument_list|)
 expr_stmt|;
 name|bad
 label|:
+name|MWL_RXFREE_DESTROY
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|if_free
 argument_list|(
 name|ifp
@@ -3202,6 +3213,11 @@ name|sc_watchdog
 argument_list|)
 expr_stmt|;
 name|mwl_dma_cleanup
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|MWL_RXFREE_DESTROY
 argument_list|(
 name|sc
 argument_list|)
@@ -10989,11 +11005,6 @@ name|sc_nrxfree
 operator|++
 expr_stmt|;
 block|}
-name|MWL_RXFREE_INIT
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
@@ -11143,11 +11154,6 @@ operator|&
 name|sc
 operator|->
 name|sc_rxdma
-argument_list|)
-expr_stmt|;
-name|MWL_RXFREE_DESTROY
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 block|}
