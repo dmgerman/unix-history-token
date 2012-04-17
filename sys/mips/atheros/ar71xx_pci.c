@@ -74,6 +74,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -223,6 +235,28 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+name|struct
+name|mtx
+name|ar71xx_pci_mtx
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|MTX_SYSINIT
+argument_list|(
+name|ar71xx_pci_mtx
+argument_list|,
+operator|&
+name|ar71xx_pci_mtx
+argument_list|,
+literal|"ar71xx PCI space mutex"
+argument_list|,
+name|MTX_SPIN
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_struct
 struct|struct
 name|ar71xx_pci_softc
@@ -352,6 +386,7 @@ name|int
 operator|)
 name|source
 decl_stmt|;
+comment|/* XXX is the PCI lock required here? */
 name|reg
 operator|=
 name|ATH_READ_REG
@@ -407,6 +442,7 @@ name|int
 operator|)
 name|source
 decl_stmt|;
+comment|/* XXX is the PCI lock required here? */
 name|reg
 operator|=
 name|ATH_READ_REG
@@ -562,6 +598,14 @@ name|has_errors
 init|=
 literal|0
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|ar71xx_pci_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|ATH_READ_REG
@@ -808,6 +852,14 @@ operator|<<
 literal|4
 operator|)
 expr_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|ar71xx_pci_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|ATH_WRITE_REG
 argument_list|(
 name|AR71XX_PCI_CONF_ADDR
@@ -937,6 +989,12 @@ argument_list|,
 name|bytes
 argument_list|)
 expr_stmt|;
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|ar71xx_pci_mtx
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ar71xx_pci_conf_setup
@@ -968,6 +1026,12 @@ name|data
 operator|=
 operator|-
 literal|1
+expr_stmt|;
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|ar71xx_pci_mtx
+argument_list|)
 expr_stmt|;
 comment|/* get request bytes from 32-bit word */
 name|data
@@ -1067,6 +1131,12 @@ operator|<<
 literal|20
 operator|)
 expr_stmt|;
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|ar71xx_pci_mtx
+argument_list|)
+expr_stmt|;
 name|ATH_WRITE_REG
 argument_list|(
 name|AR71XX_PCI_LCONF_CMD
@@ -1079,6 +1149,12 @@ argument_list|(
 name|AR71XX_PCI_LCONF_WRITE_DATA
 argument_list|,
 name|data
+argument_list|)
+expr_stmt|;
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|ar71xx_pci_mtx
 argument_list|)
 expr_stmt|;
 block|}
@@ -1142,6 +1218,12 @@ literal|4
 operator|)
 operator|)
 expr_stmt|;
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|ar71xx_pci_mtx
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ar71xx_pci_conf_setup
@@ -1166,6 +1248,12 @@ argument_list|(
 name|AR71XX_PCI_CONF_WRITE_DATA
 argument_list|,
 name|data
+argument_list|)
+expr_stmt|;
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|ar71xx_pci_mtx
 argument_list|)
 expr_stmt|;
 block|}
@@ -2174,8 +2262,20 @@ argument_list|(
 literal|100000
 argument_list|)
 expr_stmt|;
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|ar71xx_pci_mtx
+argument_list|)
+expr_stmt|;
 name|ar71xx_pci_check_bus_error
 argument_list|()
+expr_stmt|;
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|ar71xx_pci_mtx
+argument_list|)
 expr_stmt|;
 comment|/* Fixup internal PCI bridge */
 name|ar71xx_pci_local_write
