@@ -475,7 +475,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * get bitmask for bytes of interest:   *   0 - we want this byte, 1 - ignore it. e.g: we read 1 byte   *   from register 7. Bitmask would be: 0111  */
+comment|/*  * get bitmask for bytes of interest:  *   0 - we want this byte, 1 - ignore it. e.g: we read 1 byte  *   from register 7. Bitmask would be: 0111  */
 end_comment
 
 begin_function
@@ -839,6 +839,14 @@ literal|3
 operator|)
 argument_list|)
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|ar71xx_pci_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|cmd
 operator||=
 operator|(
@@ -851,14 +859,6 @@ argument_list|)
 operator|<<
 literal|4
 operator|)
-expr_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|ar71xx_pci_mtx
-argument_list|,
-name|MA_OWNED
-argument_list|)
 expr_stmt|;
 name|ATH_WRITE_REG
 argument_list|(
@@ -2877,7 +2877,9 @@ expr_stmt|;
 block|}
 else|else
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 name|intr_event_add_handler
