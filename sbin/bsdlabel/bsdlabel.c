@@ -6144,6 +6144,14 @@ operator|->
 name|d_secperunit
 operator|==
 literal|0
+operator|||
+name|lp
+operator|->
+name|d_secperunit
+operator|>
+name|vl
+operator|->
+name|d_secperunit
 condition|)
 name|lp
 operator|->
