@@ -918,16 +918,15 @@ end_expr_stmt
 begin_define
 define|#
 directive|define
-name|MFI_ARRAY_SIZE
-value|288
+name|MAX_DRIVES_PER_ARRAY
+value|MFI_MAX_ROW_SIZE
 end_define
 
 begin_define
 define|#
 directive|define
-name|MAX_DRIVES_PER_ARRAY
-define|\
-value|((MFI_ARRAY_SIZE - sizeof(struct mfi_array)) / 8)
+name|MFI_ARRAY_SIZE
+value|sizeof(struct mfi_array)
 end_define
 
 begin_define
@@ -1371,7 +1370,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"Too many drives for a single array: max is %zu"
+literal|"Too many drives for a single array: max is %d"
 argument_list|,
 name|MAX_DRIVES_PER_ARRAY
 argument_list|)
