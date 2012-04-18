@@ -4281,8 +4281,6 @@ operator||
 name|SF_APPEND
 operator||
 name|SF_NOUNLINK
-operator||
-name|SF_SNAPSHOT
 operator|)
 operator|)
 operator|!=
@@ -4378,24 +4376,6 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* The snapshot flag cannot be toggled. */
-if|if
-condition|(
-operator|(
-name|flags
-operator|^
-name|node
-operator|->
-name|tn_flags
-operator|)
-operator|&
-name|SF_SNAPSHOT
-condition|)
-return|return
-operator|(
-name|EPERM
-operator|)
-return|;
 block|}
 else|else
 block|{
