@@ -356,7 +356,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * As speeds for umodem deivces increase, these numbers will need to  * be increased. They should be good for G3 speeds and below.  *  * TODO: The TTY buffers should be increased!  */
+comment|/*  * As speeds for umodem devices increase, these numbers will need to  * be increased. They should be good for G3 speeds and below.  *  * TODO: The TTY buffers should be increased!  */
 end_comment
 
 begin_define
