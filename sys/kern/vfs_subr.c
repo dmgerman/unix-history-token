@@ -10284,25 +10284,6 @@ literal|"vdropl: freeing when we shouldn't"
 operator|)
 argument_list|)
 expr_stmt|;
-name|VNASSERT
-argument_list|(
-operator|(
-name|vp
-operator|->
-name|v_iflag
-operator|&
-name|VI_DOOMED
-operator|)
-operator|==
-literal|0
-argument_list|,
-name|vp
-argument_list|,
-operator|(
-literal|"vdropl: Freeing doomed vnode"
-operator|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|vp
