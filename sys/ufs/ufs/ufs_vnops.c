@@ -2766,7 +2766,7 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* 	 * If immutable or append, no one can change any of its attributes 	 * except the ones already handled (exec atime and, in some cases 	 * for the superuser, file flags including the immutability flags 	 * themselves). 	 */
+comment|/* 	 * If immutable or append, no one can change any of its attributes 	 * except the ones already handled (in some cases, file flags 	 * including the immutability flags themselves for the superuser). 	 */
 if|if
 condition|(
 name|ip
