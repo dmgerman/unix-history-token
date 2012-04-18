@@ -20480,11 +20480,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-operator|*
-name|mvp
-operator|=
-name|NULL
-expr_stmt|;
 name|MNT_REL
 argument_list|(
 name|mp
@@ -20502,6 +20497,11 @@ name|mvp
 argument_list|,
 name|M_VNODE_MARKER
 argument_list|)
+expr_stmt|;
+operator|*
+name|mvp
+operator|=
+name|NULL
 expr_stmt|;
 return|return
 operator|(
