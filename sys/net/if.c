@@ -8521,18 +8521,6 @@ name|ifp
 operator|->
 name|if_bridge
 condition|)
-block|{
-name|KASSERT
-argument_list|(
-name|bstp_linkstate_p
-operator|!=
-name|NULL
-argument_list|,
-operator|(
-literal|"if_bridge bstp not loaded!"
-operator|)
-argument_list|)
-expr_stmt|;
 call|(
 modifier|*
 name|bstp_linkstate_p
@@ -8543,25 +8531,12 @@ argument_list|,
 name|link_state
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|ifp
 operator|->
 name|if_lagg
 condition|)
-block|{
-name|KASSERT
-argument_list|(
-name|lagg_linkstate_p
-operator|!=
-name|NULL
-argument_list|,
-operator|(
-literal|"if_lagg not loaded!"
-operator|)
-argument_list|)
-expr_stmt|;
 call|(
 modifier|*
 name|lagg_linkstate_p
@@ -8572,7 +8547,6 @@ argument_list|,
 name|link_state
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|IS_DEFAULT_VNET
