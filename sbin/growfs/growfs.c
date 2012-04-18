@@ -5812,7 +5812,9 @@ comment|/* last resort */
 name|DBG_LEAVE
 expr_stmt|;
 return|return
+operator|(
 name|columns
+operator|)
 return|;
 block|}
 end_function
@@ -6949,7 +6951,9 @@ expr_stmt|;
 name|DBG_LEAVE
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
