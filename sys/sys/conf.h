@@ -71,9 +71,10 @@ begin_struct
 struct|struct
 name|cdev
 block|{
-name|void
+name|struct
+name|mount
 modifier|*
-name|__si_reserved
+name|si_mountpt
 decl_stmt|;
 name|u_int
 name|si_flags

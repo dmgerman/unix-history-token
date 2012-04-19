@@ -2149,6 +2149,12 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|->
+name|b_vp
+operator|=
+name|vp
+expr_stmt|;
+name|bp
+operator|->
 name|b_bcount
 operator|=
 name|bsize
@@ -2220,6 +2226,12 @@ operator|=
 name|EIO
 expr_stmt|;
 comment|/* 			 * free the buffer header back to the swap buffer pool 			 */
+name|bp
+operator|->
+name|b_vp
+operator|=
+name|NULL
+expr_stmt|;
 name|pbrelbo
 argument_list|(
 name|bp
@@ -3987,6 +3999,12 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|->
+name|b_vp
+operator|=
+name|vp
+expr_stmt|;
+name|bp
+operator|->
 name|b_bcount
 operator|=
 name|size
@@ -4112,6 +4130,12 @@ name|count
 argument_list|)
 expr_stmt|;
 comment|/* 	 * free the buffer header back to the swap buffer pool 	 */
+name|bp
+operator|->
+name|b_vp
+operator|=
+name|NULL
+expr_stmt|;
 name|pbrelbo
 argument_list|(
 name|bp
