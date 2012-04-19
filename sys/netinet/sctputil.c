@@ -12952,12 +12952,12 @@ name|NULL
 argument_list|,
 name|SCTP_FROM_SCTPUTIL
 argument_list|,
-name|EINVAL
+name|ENOBUFS
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ENOSPC
+name|ENOBUFS
 operator|)
 return|;
 block|}
