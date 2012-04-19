@@ -399,22 +399,6 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|vinactive
-parameter_list|(
-name|struct
-name|vnode
-modifier|*
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
 name|v_incr_usecount
 parameter_list|(
 name|struct
@@ -10547,7 +10531,6 @@ comment|/*  * Call VOP_INACTIVE on the vnode and manage the DOINGINACT and OWEIN
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|vinactive
 parameter_list|(
