@@ -730,7 +730,7 @@ parameter_list|,
 name|mvp
 parameter_list|)
 define|\
-value|do {								\ 	  MNT_ILOCK(mp);						\           MNT_VNODE_FOREACH_ABORT_ILOCKED(mp, mvp);			\ 	  MNT_IUNLOCK(mp);						\ 	} while (0)
+value|do {								\ 		MNT_ILOCK(mp);						\ 		MNT_VNODE_FOREACH_ABORT_ILOCKED(mp, mvp);		\ 		MNT_IUNLOCK(mp);					\ 	} while (0)
 end_define
 
 begin_define
@@ -790,7 +790,7 @@ name|MNT_REL
 parameter_list|(
 name|mp
 parameter_list|)
-value|do {						\ 	KASSERT((mp)->mnt_ref> 0, ("negative mnt_ref"));			\ 	(mp)->mnt_ref--;						\ 	if ((mp)->mnt_ref == 0)						\ 		wakeup((mp));						\ } while (0)
+value|do {						\ 	KASSERT((mp)->mnt_ref> 0, ("negative mnt_ref"));		\ 	(mp)->mnt_ref--;						\ 	if ((mp)->mnt_ref == 0)						\ 		wakeup((mp));						\ } while (0)
 end_define
 
 begin_endif
