@@ -2003,9 +2003,8 @@ name|libusb_transfer
 modifier|*
 name|xfer
 decl_stmt|;
-specifier|volatile
 name|int
-name|complet
+name|done
 decl_stmt|;
 name|int
 name|ret
@@ -2112,7 +2111,7 @@ name|void
 operator|*
 operator|)
 operator|&
-name|complet
+name|done
 expr_stmt|;
 name|xfer
 operator|->
@@ -2120,7 +2119,7 @@ name|callback
 operator|=
 name|libusb10_do_transfer_cb
 expr_stmt|;
-name|complet
+name|done
 operator|=
 literal|0
 expr_stmt|;
@@ -2151,7 +2150,7 @@ return|;
 block|}
 while|while
 condition|(
-name|complet
+name|done
 operator|==
 literal|0
 condition|)
@@ -2440,7 +2439,7 @@ modifier|*
 name|transfer
 parameter_list|,
 name|uint32_t
-name|index
+name|off
 parameter_list|)
 block|{
 name|uint8_t
@@ -2465,7 +2464,7 @@ operator|)
 return|;
 if|if
 condition|(
-name|index
+name|off
 operator|>=
 operator|(
 name|uint32_t
@@ -2504,7 +2503,7 @@ literal|0
 init|;
 name|n
 operator|!=
-name|index
+name|off
 condition|;
 name|n
 operator|++
@@ -2541,7 +2540,7 @@ modifier|*
 name|transfer
 parameter_list|,
 name|uint32_t
-name|index
+name|off
 parameter_list|)
 block|{
 name|uint8_t
@@ -2563,7 +2562,7 @@ operator|)
 return|;
 if|if
 condition|(
-name|index
+name|off
 operator|>=
 operator|(
 name|uint32_t
@@ -2605,7 +2604,7 @@ index|]
 operator|.
 name|length
 operator|*
-name|index
+name|off
 expr_stmt|;
 return|return
 operator|(

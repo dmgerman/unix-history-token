@@ -3798,15 +3798,11 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
 name|cfg_index
 operator|=
-literal|0
-operator|-
-literal|1
+literal|0xFF
 expr_stmt|;
 comment|/* current config index */
-block|}
 if|if
 condition|(
 name|do_close
