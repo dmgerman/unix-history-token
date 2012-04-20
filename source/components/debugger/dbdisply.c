@@ -211,7 +211,10 @@ init|=
 block|{
 block|{
 operator|&
-name|AcpiGbl_SystemNotify
+name|AcpiGbl_GlobalNotify
+index|[
+literal|0
+index|]
 operator|.
 name|Handler
 block|,
@@ -220,7 +223,10 @@ block|}
 block|,
 block|{
 operator|&
-name|AcpiGbl_DeviceNotify
+name|AcpiGbl_GlobalNotify
+index|[
+literal|1
+index|]
 operator|.
 name|Handler
 block|,

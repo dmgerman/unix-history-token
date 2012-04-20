@@ -143,8 +143,12 @@ begin_define
 define|#
 directive|define
 name|ASL_LINE_BUFFER_SIZE
-value|4096
+value|(4096 * 4)
 end_define
+
+begin_comment
+comment|/* 16K */
+end_comment
 
 begin_define
 define|#
@@ -187,6 +191,18 @@ name|UINT32
 name|ASL_INIT_GLOBAL
 argument_list|(
 name|Gbl_CurrentColumn
+argument_list|,
+literal|0
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ASL_EXTERN
+name|UINT32
+name|ASL_INIT_GLOBAL
+argument_list|(
+name|Gbl_PreviousLineNumber
 argument_list|,
 literal|0
 argument_list|)
@@ -308,6 +324,18 @@ parameter_list|(
 name|Gbl_PreprocessOnly
 parameter_list|,
 name|FALSE
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ASL_EXTERN
+name|BOOLEAN
+name|ASL_INIT_GLOBAL
+parameter_list|(
+name|Gbl_PreprocessFlag
+parameter_list|,
+name|TRUE
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -522,6 +550,18 @@ name|BOOLEAN
 name|ASL_INIT_GLOBAL
 parameter_list|(
 name|Gbl_NoErrors
+parameter_list|,
+name|FALSE
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ASL_EXTERN
+name|BOOLEAN
+name|ASL_INIT_GLOBAL
+parameter_list|(
+name|Gbl_WarningsAsErrors
 parameter_list|,
 name|FALSE
 parameter_list|)

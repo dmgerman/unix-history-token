@@ -1277,6 +1277,14 @@ name|Rnode
 operator|->
 name|Buffer
 expr_stmt|;
+comment|/* Increment offset past StartDependent descriptor */
+name|CurrentByteOffset
+operator|+=
+sizeof|sizeof
+argument_list|(
+name|AML_RESOURCE_START_DEPENDENT
+argument_list|)
+expr_stmt|;
 comment|/* Descriptor has priority byte */
 name|Descriptor
 operator|->
@@ -1531,6 +1539,14 @@ expr_stmt|;
 name|PreviousRnode
 operator|=
 name|Rnode
+expr_stmt|;
+comment|/* Increment offset past StartDependentNoPri descriptor */
+name|CurrentByteOffset
+operator|+=
+sizeof|sizeof
+argument_list|(
+name|AML_RESOURCE_START_DEPENDENT_NOPRIO
+argument_list|)
 expr_stmt|;
 comment|/* Process all child initialization nodes */
 name|State

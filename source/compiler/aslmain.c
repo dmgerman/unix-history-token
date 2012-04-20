@@ -180,7 +180,7 @@ begin_define
 define|#
 directive|define
 name|ASL_SUPPORTED_OPTIONS
-value|"@:2b|c|d^D:e:fgh^i|I:l^mno|p:Pr:s|t|T:G^v|w|x:z"
+value|"@:2b|c|d^D:e:fgh^i|I:l^mno|p:P^r:s|t|T:G^v|w|x:z"
 end_define
 
 begin_comment
@@ -240,6 +240,13 @@ argument_list|,
 literal|"Preprocess only and create preprocessor output file (*.i)"
 argument_list|)
 expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-Pn"
+argument_list|,
+literal|"Disable preprocessor"
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"\nGeneral Output:\n"
@@ -292,6 +299,13 @@ argument_list|(
 literal|"-w1 -w2 -w3"
 argument_list|,
 literal|"Set warning reporting level"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-we"
+argument_list|,
+literal|"Report warnings as errors"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1611,7 +1625,19 @@ break|break;
 case|case
 literal|'P'
 case|:
-comment|/* Preprocess (plus .i file) only */
+comment|/* Preprocessor options */
+switch|switch
+condition|(
+name|AcpiGbl_Optarg
+index|[
+literal|0
+index|]
+condition|)
+block|{
+case|case
+literal|'^'
+case|:
+comment|/* Proprocess only, emit (.i) file */
 name|Gbl_PreprocessOnly
 operator|=
 name|TRUE
@@ -1620,6 +1646,31 @@ name|Gbl_PreprocessorOutputFlag
 operator|=
 name|TRUE
 expr_stmt|;
+break|break;
+case|case
+literal|'n'
+case|:
+comment|/* Disable preprocessor */
+name|Gbl_PreprocessFlag
+operator|=
+name|FALSE
+expr_stmt|;
+break|break;
+default|default:
+name|printf
+argument_list|(
+literal|"Unknown option: -P%s\n"
+argument_list|,
+name|AcpiGbl_Optarg
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 break|break;
 case|case
 literal|'p'
@@ -1876,6 +1927,14 @@ case|:
 name|Gbl_WarningLevel
 operator|=
 name|ASL_WARNING3
+expr_stmt|;
+break|break;
+case|case
+literal|'e'
+case|:
+name|Gbl_WarningsAsErrors
+operator|=
+name|TRUE
 expr_stmt|;
 break|break;
 default|default:

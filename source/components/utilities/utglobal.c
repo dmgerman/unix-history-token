@@ -851,13 +851,19 @@ endif|#
 directive|endif
 comment|/* !ACPI_REDUCED_HARDWARE */
 comment|/* Global handlers */
-name|AcpiGbl_SystemNotify
+name|AcpiGbl_GlobalNotify
+index|[
+literal|0
+index|]
 operator|.
 name|Handler
 operator|=
 name|NULL
 expr_stmt|;
-name|AcpiGbl_DeviceNotify
+name|AcpiGbl_GlobalNotify
+index|[
+literal|1
+index|]
 operator|.
 name|Handler
 operator|=

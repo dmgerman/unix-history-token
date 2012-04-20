@@ -523,10 +523,8 @@ define|#
 directive|define
 name|ACPI_COMMON_NOTIFY_INFO
 define|\
-value|union acpi_operand_object       *SystemNotify;
-comment|/* Handler for system notifies */
-value|\     union acpi_operand_object       *DeviceNotify;
-comment|/* Handler for driver notifies */
+value|union acpi_operand_object       *NotifyList[2];
+comment|/* Handlers for system/device notifies */
 value|\     union acpi_operand_object       *Handler;
 end_define
 
@@ -782,13 +780,27 @@ modifier|*
 name|Node
 decl_stmt|;
 comment|/* Parent device */
+name|UINT32
+name|HandlerType
+decl_stmt|;
+comment|/* Type: Device/System/Both */
 name|ACPI_NOTIFY_HANDLER
 name|Handler
 decl_stmt|;
+comment|/* Handler addess */
 name|void
 modifier|*
 name|Context
 decl_stmt|;
+name|union
+name|acpi_operand_object
+modifier|*
+name|Next
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* Device and System handler lists */
 block|}
 name|ACPI_OBJECT_NOTIFY_HANDLER
 typedef|;

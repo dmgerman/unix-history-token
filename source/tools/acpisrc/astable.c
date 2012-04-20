@@ -799,6 +799,12 @@ name|SRC_TYPE_STRUCT
 block|}
 block|,
 block|{
+literal|"ACPI_GLOBAL_NOTIFY_HANDLER"
+block|,
+name|SRC_TYPE_STRUCT
+block|}
+block|,
+block|{
 literal|"ACPI_GPE_BLOCK_INFO"
 block|,
 name|SRC_TYPE_STRUCT

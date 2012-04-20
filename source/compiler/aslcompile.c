@@ -424,7 +424,7 @@ operator|!=
 name|AE_ERROR
 condition|)
 block|{
-name|InsertLineBuffer
+name|AslInsertLineBuffer
 argument_list|(
 operator|(
 name|int
@@ -433,7 +433,7 @@ name|Buffer
 argument_list|)
 expr_stmt|;
 block|}
-name|ResetCurrentLineBuffer
+name|AslResetCurrentLineBuffer
 argument_list|()
 expr_stmt|;
 block|}
@@ -872,7 +872,6 @@ argument_list|(
 name|Event
 argument_list|)
 expr_stmt|;
-comment|/* Preprocessor */
 name|Event
 operator|=
 name|UtBeginEvent
@@ -880,19 +879,25 @@ argument_list|(
 literal|"Preprocess input file"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Gbl_PreprocessFlag
+condition|)
+block|{
+comment|/* Preprocessor */
 name|PrDoPreprocess
 argument_list|()
-expr_stmt|;
-name|UtEndEvent
-argument_list|(
-name|Event
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|Gbl_PreprocessOnly
 condition|)
 block|{
+name|UtEndEvent
+argument_list|(
+name|Event
+argument_list|)
+expr_stmt|;
 name|CmCleanupAndExit
 argument_list|()
 expr_stmt|;
@@ -900,6 +905,12 @@ return|return
 literal|0
 return|;
 block|}
+block|}
+name|UtEndEvent
+argument_list|(
+name|Event
+argument_list|)
+expr_stmt|;
 comment|/* Build the parse tree */
 name|Event
 operator|=
@@ -934,6 +945,19 @@ operator|!
 name|RootNode
 condition|)
 block|{
+comment|/*          * If there are no errors, then we have some sort of          * internal problem.          */
+name|Status
+operator|=
+name|AslCheckForErrorExit
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|Status
+operator|==
+name|AE_OK
+condition|)
+block|{
 name|AslError
 argument_list|(
 name|ASL_ERROR
@@ -945,6 +969,7 @@ argument_list|,
 literal|"- Could not resolve parse tree root node"
 argument_list|)
 expr_stmt|;
+block|}
 goto|goto
 name|ErrorExit
 goto|;
@@ -1173,12 +1198,12 @@ condition|)
 block|{
 name|AePrintErrorLog
 argument_list|(
-name|ASL_FILE_STDOUT
+name|ASL_FILE_STDERR
 argument_list|)
 expr_stmt|;
 name|UtDisplaySummary
 argument_list|(
-name|ASL_FILE_STDOUT
+name|ASL_FILE_STDERR
 argument_list|)
 expr_stmt|;
 if|if
@@ -1186,15 +1211,15 @@ condition|(
 name|Gbl_DebugFlag
 condition|)
 block|{
-comment|/* Print error summary to the debug file */
+comment|/* Print error summary to the stdout also */
 name|AePrintErrorLog
 argument_list|(
-name|ASL_FILE_STDERR
+name|ASL_FILE_STDOUT
 argument_list|)
 expr_stmt|;
 name|UtDisplaySummary
 argument_list|(
-name|ASL_FILE_STDERR
+name|ASL_FILE_STDOUT
 argument_list|)
 expr_stmt|;
 block|}
@@ -1665,7 +1690,7 @@ name|i
 decl_stmt|;
 name|AePrintErrorLog
 argument_list|(
-name|ASL_FILE_STDOUT
+name|ASL_FILE_STDERR
 argument_list|)
 expr_stmt|;
 if|if
@@ -1673,10 +1698,10 @@ condition|(
 name|Gbl_DebugFlag
 condition|)
 block|{
-comment|/* Print error summary to the debug file */
+comment|/* Print error summary to stdout also */
 name|AePrintErrorLog
 argument_list|(
-name|ASL_FILE_STDERR
+name|ASL_FILE_STDOUT
 argument_list|)
 expr_stmt|;
 block|}
@@ -1993,6 +2018,8 @@ if|if
 condition|(
 operator|!
 name|Gbl_PreprocessorOutputFlag
+operator|&&
+name|Gbl_PreprocessFlag
 operator|&&
 name|Gbl_Files
 index|[

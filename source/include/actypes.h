@@ -2314,6 +2314,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_NUM_NOTIFY_TYPES
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_MAX_SYS_NOTIFY
 value|0x7F
 end_define
@@ -2324,6 +2331,28 @@ directive|define
 name|ACPI_MAX_DEVICE_SPECIFIC_NOTIFY
 value|0xBF
 end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_SYSTEM_HANDLER_LIST
+value|0
+end_define
+
+begin_comment
+comment|/* Used as index, must be SYSTEM_NOTIFY -1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_DEVICE_HANDLER_LIST
+value|1
+end_define
+
+begin_comment
+comment|/* Used as index, must be DEVICE_NOTIFY -1 */
+end_comment
 
 begin_comment
 comment|/* Address Space (Operation Region) Types */
