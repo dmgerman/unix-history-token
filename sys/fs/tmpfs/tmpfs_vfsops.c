@@ -558,12 +558,6 @@ return|return
 name|EOPNOTSUPP
 return|;
 block|}
-name|printf
-argument_list|(
-literal|"WARNING: TMPFS is considered to be a highly experimental "
-literal|"feature in FreeBSD.\n"
-argument_list|)
-expr_stmt|;
 name|vn_lock
 argument_list|(
 name|mp
