@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- SPURegisterInfo.h - Cell SPU Register Information Impl ----*- C++ -*-==//
+comment|//===-- SPURegisterInfo.h - Cell SPU Register Information Impl --*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -177,7 +177,7 @@ block|}
 comment|//! Return the array of callee-saved registers
 name|virtual
 specifier|const
-name|unsigned
+name|uint16_t
 operator|*
 name|getCalleeSavedRegs
 argument_list|(

@@ -83,6 +83,12 @@ directive|include
 file|"clang/Basic/IdentifierTable.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -226,6 +232,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 block|{
 return|return
 name|SourceRange
@@ -285,6 +292,1130 @@ argument_list|)
 return|;
 block|}
 expr|}
+block|;
+comment|/// ObjCBoolLiteralExpr - Objective-C Boolean Literal.
+comment|///
+name|class
+name|ObjCBoolLiteralExpr
+operator|:
+name|public
+name|Expr
+block|{
+name|bool
+name|Value
+block|;
+name|SourceLocation
+name|Loc
+block|;
+name|public
+operator|:
+name|ObjCBoolLiteralExpr
+argument_list|(
+argument|bool val
+argument_list|,
+argument|QualType Ty
+argument_list|,
+argument|SourceLocation l
+argument_list|)
+operator|:
+name|Expr
+argument_list|(
+name|ObjCBoolLiteralExprClass
+argument_list|,
+name|Ty
+argument_list|,
+name|VK_RValue
+argument_list|,
+name|OK_Ordinary
+argument_list|,
+name|false
+argument_list|,
+name|false
+argument_list|,
+name|false
+argument_list|,
+name|false
+argument_list|)
+block|,
+name|Value
+argument_list|(
+name|val
+argument_list|)
+block|,
+name|Loc
+argument_list|(
+argument|l
+argument_list|)
+block|{}
+name|explicit
+name|ObjCBoolLiteralExpr
+argument_list|(
+argument|EmptyShell Empty
+argument_list|)
+operator|:
+name|Expr
+argument_list|(
+argument|ObjCBoolLiteralExprClass
+argument_list|,
+argument|Empty
+argument_list|)
+block|{ }
+name|bool
+name|getValue
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Value
+return|;
+block|}
+name|void
+name|setValue
+argument_list|(
+argument|bool V
+argument_list|)
+block|{
+name|Value
+operator|=
+name|V
+block|; }
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|SourceRange
+argument_list|(
+name|Loc
+argument_list|)
+return|;
+block|}
+name|SourceLocation
+name|getLocation
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Loc
+return|;
+block|}
+name|void
+name|setLocation
+argument_list|(
+argument|SourceLocation L
+argument_list|)
+block|{
+name|Loc
+operator|=
+name|L
+block|; }
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|ObjCBoolLiteralExprClass
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const ObjCBoolLiteralExpr *
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+comment|// Iterators
+name|child_range
+name|children
+argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|()
+return|;
+block|}
+expr|}
+block|;
+comment|/// ObjCNumericLiteral - used for objective-c numeric literals;
+comment|/// as in: @42 or @true (c++/objc++) or @__yes (c/objc)
+name|class
+name|ObjCNumericLiteral
+operator|:
+name|public
+name|Expr
+block|{
+comment|/// Number - expression AST node for the numeric literal
+name|Stmt
+operator|*
+name|Number
+block|;
+name|ObjCMethodDecl
+operator|*
+name|ObjCNumericLiteralMethod
+block|;
+name|SourceLocation
+name|AtLoc
+block|;
+name|public
+operator|:
+name|ObjCNumericLiteral
+argument_list|(
+argument|Stmt *NL
+argument_list|,
+argument|QualType T
+argument_list|,
+argument|ObjCMethodDecl *method
+argument_list|,
+argument|SourceLocation L
+argument_list|)
+operator|:
+name|Expr
+argument_list|(
+name|ObjCNumericLiteralClass
+argument_list|,
+name|T
+argument_list|,
+name|VK_RValue
+argument_list|,
+name|OK_Ordinary
+argument_list|,
+name|false
+argument_list|,
+name|false
+argument_list|,
+name|false
+argument_list|,
+name|false
+argument_list|)
+block|,
+name|Number
+argument_list|(
+name|NL
+argument_list|)
+block|,
+name|ObjCNumericLiteralMethod
+argument_list|(
+name|method
+argument_list|)
+block|,
+name|AtLoc
+argument_list|(
+argument|L
+argument_list|)
+block|{}
+name|explicit
+name|ObjCNumericLiteral
+argument_list|(
+argument|EmptyShell Empty
+argument_list|)
+operator|:
+name|Expr
+argument_list|(
+argument|ObjCNumericLiteralClass
+argument_list|,
+argument|Empty
+argument_list|)
+block|{}
+name|Expr
+operator|*
+name|getNumber
+argument_list|()
+block|{
+return|return
+name|cast
+operator|<
+name|Expr
+operator|>
+operator|(
+name|Number
+operator|)
+return|;
+block|}
+specifier|const
+name|Expr
+operator|*
+name|getNumber
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast
+operator|<
+name|Expr
+operator|>
+operator|(
+name|Number
+operator|)
+return|;
+block|}
+name|ObjCMethodDecl
+operator|*
+name|getObjCNumericLiteralMethod
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ObjCNumericLiteralMethod
+return|;
+block|}
+name|SourceLocation
+name|getAtLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AtLoc
+return|;
+block|}
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|SourceRange
+argument_list|(
+name|AtLoc
+argument_list|,
+name|Number
+operator|->
+name|getSourceRange
+argument_list|()
+operator|.
+name|getEnd
+argument_list|()
+argument_list|)
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|ObjCNumericLiteralClass
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const ObjCNumericLiteral *
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+comment|// Iterators
+name|child_range
+name|children
+argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|(
+operator|&
+name|Number
+argument_list|,
+operator|&
+name|Number
+operator|+
+literal|1
+argument_list|)
+return|;
+block|}
+name|friend
+name|class
+name|ASTStmtReader
+block|; }
+block|;
+comment|/// ObjCArrayLiteral - used for objective-c array containers; as in:
+comment|/// @[@"Hello", NSApp, [NSNumber numberWithInt:42]];
+name|class
+name|ObjCArrayLiteral
+operator|:
+name|public
+name|Expr
+block|{
+name|unsigned
+name|NumElements
+block|;
+name|SourceRange
+name|Range
+block|;
+name|ObjCMethodDecl
+operator|*
+name|ArrayWithObjectsMethod
+block|;
+name|ObjCArrayLiteral
+argument_list|(
+argument|llvm::ArrayRef<Expr *> Elements
+argument_list|,
+argument|QualType T
+argument_list|,
+argument|ObjCMethodDecl * Method
+argument_list|,
+argument|SourceRange SR
+argument_list|)
+block|;
+name|explicit
+name|ObjCArrayLiteral
+argument_list|(
+argument|EmptyShell Empty
+argument_list|,
+argument|unsigned NumElements
+argument_list|)
+operator|:
+name|Expr
+argument_list|(
+name|ObjCArrayLiteralClass
+argument_list|,
+name|Empty
+argument_list|)
+block|,
+name|NumElements
+argument_list|(
+argument|NumElements
+argument_list|)
+block|{}
+name|public
+operator|:
+specifier|static
+name|ObjCArrayLiteral
+operator|*
+name|Create
+argument_list|(
+argument|ASTContext&C
+argument_list|,
+argument|llvm::ArrayRef<Expr *> Elements
+argument_list|,
+argument|QualType T
+argument_list|,
+argument|ObjCMethodDecl * Method
+argument_list|,
+argument|SourceRange SR
+argument_list|)
+block|;
+specifier|static
+name|ObjCArrayLiteral
+operator|*
+name|CreateEmpty
+argument_list|(
+argument|ASTContext&C
+argument_list|,
+argument|unsigned NumElements
+argument_list|)
+block|;
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|Range
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|ObjCArrayLiteralClass
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const ObjCArrayLiteral *
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+comment|/// \brief Retrieve elements of array of literals.
+name|Expr
+operator|*
+operator|*
+name|getElements
+argument_list|()
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+name|Expr
+operator|*
+operator|*
+operator|>
+operator|(
+name|this
+operator|+
+literal|1
+operator|)
+return|;
+block|}
+comment|/// \brief Retrieve elements of array of literals.
+specifier|const
+name|Expr
+operator|*
+specifier|const
+operator|*
+name|getElements
+argument_list|()
+specifier|const
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+specifier|const
+name|Expr
+operator|*
+specifier|const
+operator|*
+operator|>
+operator|(
+name|this
+operator|+
+literal|1
+operator|)
+return|;
+block|}
+comment|/// getNumElements - Return number of elements of objective-c array literal.
+name|unsigned
+name|getNumElements
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NumElements
+return|;
+block|}
+comment|/// getExpr - Return the Expr at the specified index.
+name|Expr
+operator|*
+name|getElement
+argument_list|(
+argument|unsigned Index
+argument_list|)
+block|{
+name|assert
+argument_list|(
+operator|(
+name|Index
+operator|<
+name|NumElements
+operator|)
+operator|&&
+literal|"Arg access out of range!"
+argument_list|)
+block|;
+return|return
+name|cast
+operator|<
+name|Expr
+operator|>
+operator|(
+name|getElements
+argument_list|()
+index|[
+name|Index
+index|]
+operator|)
+return|;
+block|}
+specifier|const
+name|Expr
+operator|*
+name|getElement
+argument_list|(
+argument|unsigned Index
+argument_list|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+operator|(
+name|Index
+operator|<
+name|NumElements
+operator|)
+operator|&&
+literal|"Arg access out of range!"
+argument_list|)
+block|;
+return|return
+name|cast
+operator|<
+name|Expr
+operator|>
+operator|(
+name|getElements
+argument_list|()
+index|[
+name|Index
+index|]
+operator|)
+return|;
+block|}
+name|ObjCMethodDecl
+operator|*
+name|getArrayWithObjectsMethod
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ArrayWithObjectsMethod
+return|;
+block|}
+comment|// Iterators
+name|child_range
+name|children
+argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|(
+operator|(
+name|Stmt
+operator|*
+operator|*
+operator|)
+name|getElements
+argument_list|()
+argument_list|,
+operator|(
+name|Stmt
+operator|*
+operator|*
+operator|)
+name|getElements
+argument_list|()
+operator|+
+name|NumElements
+argument_list|)
+return|;
+block|}
+name|friend
+name|class
+name|ASTStmtReader
+block|; }
+block|;
+comment|/// \brief An element in an Objective-C dictionary literal.
+comment|///
+block|struct
+name|ObjCDictionaryElement
+block|{
+comment|/// \brief The key for the dictionary element.
+name|Expr
+operator|*
+name|Key
+block|;
+comment|/// \brief The value of the dictionary element.
+name|Expr
+operator|*
+name|Value
+block|;
+comment|/// \brief The location of the ellipsis, if this is a pack expansion.
+name|SourceLocation
+name|EllipsisLoc
+block|;
+comment|/// \brief The number of elements this pack expansion will expand to, if
+comment|/// this is a pack expansion and is known.
+name|llvm
+operator|::
+name|Optional
+operator|<
+name|unsigned
+operator|>
+name|NumExpansions
+block|;
+comment|/// \brief Determines whether this dictionary element is a pack expansion.
+name|bool
+name|isPackExpansion
+argument_list|()
+specifier|const
+block|{
+return|return
+name|EllipsisLoc
+operator|.
+name|isValid
+argument_list|()
+return|;
+block|}
+expr|}
+block|;
+comment|/// ObjCDictionaryLiteral - AST node to represent objective-c dictionary
+comment|/// literals; as in:  @{@"name" : NSUserName(), @"date" : [NSDate date] };
+name|class
+name|ObjCDictionaryLiteral
+operator|:
+name|public
+name|Expr
+block|{
+comment|/// \brief Key/value pair used to store the key and value of a given element.
+comment|///
+comment|/// Objects of this type are stored directly after the expression.
+block|struct
+name|KeyValuePair
+block|{
+name|Expr
+operator|*
+name|Key
+block|;
+name|Expr
+operator|*
+name|Value
+block|;   }
+block|;
+comment|/// \brief Data that describes an element that is a pack expansion, used if any
+comment|/// of the elements in the dictionary literal are pack expansions.
+block|struct
+name|ExpansionData
+block|{
+comment|/// \brief The location of the ellipsis, if this element is a pack
+comment|/// expansion.
+name|SourceLocation
+name|EllipsisLoc
+block|;
+comment|/// \brief If non-zero, the number of elements that this pack
+comment|/// expansion will expand to (+1).
+name|unsigned
+name|NumExpansionsPlusOne
+block|;   }
+block|;
+comment|/// \brief The number of elements in this dictionary literal.
+name|unsigned
+name|NumElements
+operator|:
+literal|31
+block|;
+comment|/// \brief Determine whether this dictionary literal has any pack expansions.
+comment|///
+comment|/// If the dictionary literal has pack expansions, then there will
+comment|/// be an array of pack expansion data following the array of
+comment|/// key/value pairs, which provide the locations of the ellipses (if
+comment|/// any) and number of elements in the expansion (if known). If
+comment|/// there are no pack expansions, we optimize away this storage.
+name|unsigned
+name|HasPackExpansions
+operator|:
+literal|1
+block|;
+name|SourceRange
+name|Range
+block|;
+name|ObjCMethodDecl
+operator|*
+name|DictWithObjectsMethod
+block|;
+name|ObjCDictionaryLiteral
+argument_list|(
+argument|ArrayRef<ObjCDictionaryElement> VK
+argument_list|,
+argument|bool HasPackExpansions
+argument_list|,
+argument|QualType T
+argument_list|,
+argument|ObjCMethodDecl *method
+argument_list|,
+argument|SourceRange SR
+argument_list|)
+block|;
+name|explicit
+name|ObjCDictionaryLiteral
+argument_list|(
+argument|EmptyShell Empty
+argument_list|,
+argument|unsigned NumElements
+argument_list|,
+argument|bool HasPackExpansions
+argument_list|)
+operator|:
+name|Expr
+argument_list|(
+name|ObjCDictionaryLiteralClass
+argument_list|,
+name|Empty
+argument_list|)
+block|,
+name|NumElements
+argument_list|(
+name|NumElements
+argument_list|)
+block|,
+name|HasPackExpansions
+argument_list|(
+argument|HasPackExpansions
+argument_list|)
+block|{}
+name|KeyValuePair
+operator|*
+name|getKeyValues
+argument_list|()
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+name|KeyValuePair
+operator|*
+operator|>
+operator|(
+name|this
+operator|+
+literal|1
+operator|)
+return|;
+block|}
+specifier|const
+name|KeyValuePair
+operator|*
+name|getKeyValues
+argument_list|()
+specifier|const
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+specifier|const
+name|KeyValuePair
+operator|*
+operator|>
+operator|(
+name|this
+operator|+
+literal|1
+operator|)
+return|;
+block|}
+name|ExpansionData
+operator|*
+name|getExpansionData
+argument_list|()
+block|{
+if|if
+condition|(
+operator|!
+name|HasPackExpansions
+condition|)
+return|return
+literal|0
+return|;
+return|return
+name|reinterpret_cast
+operator|<
+name|ExpansionData
+operator|*
+operator|>
+operator|(
+name|getKeyValues
+argument_list|()
+operator|+
+name|NumElements
+operator|)
+return|;
+block|}
+specifier|const
+name|ExpansionData
+operator|*
+name|getExpansionData
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+operator|!
+name|HasPackExpansions
+condition|)
+return|return
+literal|0
+return|;
+return|return
+name|reinterpret_cast
+operator|<
+specifier|const
+name|ExpansionData
+operator|*
+operator|>
+operator|(
+name|getKeyValues
+argument_list|()
+operator|+
+name|NumElements
+operator|)
+return|;
+block|}
+name|public
+operator|:
+specifier|static
+name|ObjCDictionaryLiteral
+operator|*
+name|Create
+argument_list|(
+argument|ASTContext&C
+argument_list|,
+argument|ArrayRef<ObjCDictionaryElement> VK
+argument_list|,
+argument|bool HasPackExpansions
+argument_list|,
+argument|QualType T
+argument_list|,
+argument|ObjCMethodDecl *method
+argument_list|,
+argument|SourceRange SR
+argument_list|)
+block|;
+specifier|static
+name|ObjCDictionaryLiteral
+operator|*
+name|CreateEmpty
+argument_list|(
+argument|ASTContext&C
+argument_list|,
+argument|unsigned NumElements
+argument_list|,
+argument|bool HasPackExpansions
+argument_list|)
+block|;
+comment|/// getNumElements - Return number of elements of objective-c dictionary
+comment|/// literal.
+name|unsigned
+name|getNumElements
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NumElements
+return|;
+block|}
+name|ObjCDictionaryElement
+name|getKeyValueElement
+argument_list|(
+argument|unsigned Index
+argument_list|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+operator|(
+name|Index
+operator|<
+name|NumElements
+operator|)
+operator|&&
+literal|"Arg access out of range!"
+argument_list|)
+block|;
+specifier|const
+name|KeyValuePair
+operator|&
+name|KV
+operator|=
+name|getKeyValues
+argument_list|()
+index|[
+name|Index
+index|]
+block|;
+name|ObjCDictionaryElement
+name|Result
+operator|=
+block|{
+name|KV
+operator|.
+name|Key
+block|,
+name|KV
+operator|.
+name|Value
+block|,
+name|SourceLocation
+argument_list|()
+block|,
+name|llvm
+operator|::
+name|Optional
+operator|<
+name|unsigned
+operator|>
+operator|(
+operator|)
+block|}
+block|;
+if|if
+condition|(
+name|HasPackExpansions
+condition|)
+block|{
+specifier|const
+name|ExpansionData
+modifier|&
+name|Expansion
+init|=
+name|getExpansionData
+argument_list|()
+index|[
+name|Index
+index|]
+decl_stmt|;
+name|Result
+operator|.
+name|EllipsisLoc
+operator|=
+name|Expansion
+operator|.
+name|EllipsisLoc
+expr_stmt|;
+if|if
+condition|(
+name|Expansion
+operator|.
+name|NumExpansionsPlusOne
+operator|>
+literal|0
+condition|)
+name|Result
+operator|.
+name|NumExpansions
+operator|=
+name|Expansion
+operator|.
+name|NumExpansionsPlusOne
+operator|-
+literal|1
+expr_stmt|;
+block|}
+return|return
+name|Result
+return|;
+block|}
+name|ObjCMethodDecl
+operator|*
+name|getDictWithObjectsMethod
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DictWithObjectsMethod
+return|;
+block|}
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|Range
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|ObjCDictionaryLiteralClass
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const ObjCDictionaryLiteral *
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+comment|// Iterators
+name|child_range
+name|children
+argument_list|()
+block|{
+comment|// Note: we're taking advantage of the layout of the KeyValuePair struct
+comment|// here. If that struct changes, this code will need to change as well.
+return|return
+name|child_range
+argument_list|(
+name|reinterpret_cast
+operator|<
+name|Stmt
+operator|*
+operator|*
+operator|>
+operator|(
+name|this
+operator|+
+literal|1
+operator|)
+argument_list|,
+name|reinterpret_cast
+operator|<
+name|Stmt
+operator|*
+operator|*
+operator|>
+operator|(
+name|this
+operator|+
+literal|1
+operator|)
+operator|+
+name|NumElements
+operator|*
+literal|2
+argument_list|)
+return|;
+block|}
+name|friend
+name|class
+name|ASTStmtReader
+block|;
+name|friend
+name|class
+name|ASTStmtWriter
+block|; }
 block|;
 comment|/// ObjCEncodeExpr, used for @encode in Objective-C.  @encode has the same type
 comment|/// and behavior as StringLiteral except that the string initializer is obtained
@@ -462,6 +1593,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 block|{
 return|return
 name|SourceRange
@@ -647,6 +1779,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 block|{
 return|return
 name|SourceRange
@@ -850,6 +1983,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 block|{
 return|return
 name|SourceRange
@@ -906,17 +2040,16 @@ operator|:
 name|public
 name|Expr
 block|{
-name|class
 name|ObjCIvarDecl
 operator|*
 name|D
 block|;
-name|SourceLocation
-name|Loc
-block|;
 name|Stmt
 operator|*
 name|Base
+block|;
+name|SourceLocation
+name|Loc
 block|;
 name|bool
 name|IsArrow
@@ -981,14 +2114,14 @@ argument_list|(
 name|d
 argument_list|)
 block|,
-name|Loc
-argument_list|(
-name|l
-argument_list|)
-block|,
 name|Base
 argument_list|(
 name|base
+argument_list|)
+block|,
+name|Loc
+argument_list|(
+name|l
 argument_list|)
 block|,
 name|IsArrow
@@ -1147,6 +2280,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 block|{
 return|return
 name|isFreeIvar
@@ -1218,7 +2352,6 @@ expr|}
 block|;
 comment|/// ObjCPropertyRefExpr - A dot-syntax expression to access an ObjC
 comment|/// property.
-comment|///
 name|class
 name|ObjCPropertyRefExpr
 operator|:
@@ -1244,10 +2377,43 @@ name|bool
 operator|>
 name|PropertyOrGetter
 block|;
+comment|/// \brief Indicates whether the property reference will result in a message
+comment|/// to the getter, the setter, or both.
+comment|/// This applies to both implicit and explicit property references.
+block|enum
+name|MethodRefFlags
+block|{
+name|MethodRef_None
+operator|=
+literal|0
+block|,
+name|MethodRef_Getter
+operator|=
+literal|0x1
+block|,
+name|MethodRef_Setter
+operator|=
+literal|0x2
+block|}
+block|;
+comment|/// \brief Contains the Setter method pointer and MethodRefFlags bit flags.
+name|llvm
+operator|::
+name|PointerIntPair
+operator|<
 name|ObjCMethodDecl
 operator|*
-name|Setter
+block|,
+literal|2
+block|,
+name|unsigned
+operator|>
+name|SetterAndMethodRefFlags
 block|;
+comment|// FIXME: Maybe we should store the property identifier here,
+comment|// because it's not rederivable from the other data when there's an
+comment|// implicit property with no getter (because the 'foo' -> 'setFoo:'
+comment|// transformation is lossy on the first character).
 name|SourceLocation
 name|IdLoc
 block|;
@@ -1326,10 +2492,8 @@ argument_list|,
 name|false
 argument_list|)
 block|,
-name|Setter
-argument_list|(
-literal|0
-argument_list|)
+name|SetterAndMethodRefFlags
+argument_list|()
 block|,
 name|IdLoc
 argument_list|(
@@ -1343,7 +2507,19 @@ name|Receiver
 argument_list|(
 argument|base
 argument_list|)
-block|{   }
+block|{
+name|assert
+argument_list|(
+name|t
+operator|->
+name|isSpecificPlaceholderType
+argument_list|(
+name|BuiltinType
+operator|::
+name|PseudoObject
+argument_list|)
+argument_list|)
+block|;   }
 name|ObjCPropertyRefExpr
 argument_list|(
 argument|ObjCPropertyDecl *PD
@@ -1394,10 +2570,8 @@ argument_list|,
 name|false
 argument_list|)
 block|,
-name|Setter
-argument_list|(
-literal|0
-argument_list|)
+name|SetterAndMethodRefFlags
+argument_list|()
 block|,
 name|IdLoc
 argument_list|(
@@ -1413,7 +2587,19 @@ name|Receiver
 argument_list|(
 argument|st.getTypePtr()
 argument_list|)
-block|{   }
+block|{
+name|assert
+argument_list|(
+name|t
+operator|->
+name|isSpecificPlaceholderType
+argument_list|(
+name|BuiltinType
+operator|::
+name|PseudoObject
+argument_list|)
+argument_list|)
+block|;   }
 name|ObjCPropertyRefExpr
 argument_list|(
 argument|ObjCMethodDecl *Getter
@@ -1466,9 +2652,11 @@ argument_list|,
 name|true
 argument_list|)
 block|,
-name|Setter
+name|SetterAndMethodRefFlags
 argument_list|(
 name|Setter
+argument_list|,
+literal|0
 argument_list|)
 block|,
 name|IdLoc
@@ -1483,7 +2671,19 @@ name|Receiver
 argument_list|(
 argument|Base
 argument_list|)
-block|{   }
+block|{
+name|assert
+argument_list|(
+name|T
+operator|->
+name|isSpecificPlaceholderType
+argument_list|(
+name|BuiltinType
+operator|::
+name|PseudoObject
+argument_list|)
+argument_list|)
+block|;   }
 name|ObjCPropertyRefExpr
 argument_list|(
 argument|ObjCMethodDecl *Getter
@@ -1529,9 +2729,11 @@ argument_list|,
 name|true
 argument_list|)
 block|,
-name|Setter
+name|SetterAndMethodRefFlags
 argument_list|(
 name|Setter
+argument_list|,
+literal|0
 argument_list|)
 block|,
 name|IdLoc
@@ -1548,7 +2750,19 @@ name|Receiver
 argument_list|(
 argument|SuperTy.getTypePtr()
 argument_list|)
-block|{   }
+block|{
+name|assert
+argument_list|(
+name|T
+operator|->
+name|isSpecificPlaceholderType
+argument_list|(
+name|BuiltinType
+operator|::
+name|PseudoObject
+argument_list|)
+argument_list|)
+block|;   }
 name|ObjCPropertyRefExpr
 argument_list|(
 argument|ObjCMethodDecl *Getter
@@ -1594,9 +2808,11 @@ argument_list|,
 name|true
 argument_list|)
 block|,
-name|Setter
+name|SetterAndMethodRefFlags
 argument_list|(
 name|Setter
+argument_list|,
+literal|0
 argument_list|)
 block|,
 name|IdLoc
@@ -1613,7 +2829,19 @@ name|Receiver
 argument_list|(
 argument|Receiver
 argument_list|)
-block|{   }
+block|{
+name|assert
+argument_list|(
+name|T
+operator|->
+name|isSpecificPlaceholderType
+argument_list|(
+name|BuiltinType
+operator|::
+name|PseudoObject
+argument_list|)
+argument_list|)
+block|;   }
 name|explicit
 name|ObjCPropertyRefExpr
 argument_list|(
@@ -1716,7 +2944,10 @@ argument_list|()
 argument_list|)
 block|;
 return|return
-name|Setter
+name|SetterAndMethodRefFlags
+operator|.
+name|getPointer
+argument_list|()
 return|;
 block|}
 name|Selector
@@ -1769,6 +3000,66 @@ name|getSetterName
 argument_list|()
 return|;
 block|}
+comment|/// \brief True if the property reference will result in a message to the
+comment|/// getter.
+comment|/// This applies to both implicit and explicit property references.
+name|bool
+name|isMessagingGetter
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SetterAndMethodRefFlags
+operator|.
+name|getInt
+argument_list|()
+operator|&
+name|MethodRef_Getter
+return|;
+block|}
+comment|/// \brief True if the property reference will result in a message to the
+comment|/// setter.
+comment|/// This applies to both implicit and explicit property references.
+name|bool
+name|isMessagingSetter
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SetterAndMethodRefFlags
+operator|.
+name|getInt
+argument_list|()
+operator|&
+name|MethodRef_Setter
+return|;
+block|}
+name|void
+name|setIsMessagingGetter
+argument_list|(
+argument|bool val = true
+argument_list|)
+block|{
+name|setMethodRefFlag
+argument_list|(
+name|MethodRef_Getter
+argument_list|,
+name|val
+argument_list|)
+block|;   }
+name|void
+name|setIsMessagingSetter
+argument_list|(
+argument|bool val = true
+argument_list|)
+block|{
+name|setMethodRefFlag
+argument_list|(
+name|MethodRef_Setter
+argument_list|,
+name|val
+argument_list|)
+block|;   }
 specifier|const
 name|Expr
 operator|*
@@ -1902,6 +3193,8 @@ expr_stmt|;
 else|else
 name|ResultType
 operator|=
+name|PDecl
+operator|->
 name|getType
 argument_list|()
 expr_stmt|;
@@ -1916,6 +3209,10 @@ init|=
 name|getImplicitPropertyGetter
 argument_list|()
 decl_stmt|;
+if|if
+condition|(
+name|Getter
+condition|)
 name|ResultType
 operator|=
 name|Getter
@@ -2108,6 +3405,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 block|{
 return|return
 name|SourceRange
@@ -2214,10 +3512,16 @@ name|friend
 name|class
 name|ASTStmtReader
 block|;
+name|friend
+name|class
+name|ASTStmtWriter
+block|;
 name|void
 name|setExplicitProperty
 argument_list|(
 argument|ObjCPropertyDecl *D
+argument_list|,
+argument|unsigned methRefFlags
 argument_list|)
 block|{
 name|PropertyOrGetter
@@ -2234,9 +3538,19 @@ argument_list|(
 name|false
 argument_list|)
 block|;
-name|Setter
-operator|=
+name|SetterAndMethodRefFlags
+operator|.
+name|setPointer
+argument_list|(
 literal|0
+argument_list|)
+block|;
+name|SetterAndMethodRefFlags
+operator|.
+name|setInt
+argument_list|(
+name|methRefFlags
+argument_list|)
 block|;   }
 name|void
 name|setImplicitProperty
@@ -2244,6 +3558,8 @@ argument_list|(
 argument|ObjCMethodDecl *Getter
 argument_list|,
 argument|ObjCMethodDecl *Setter
+argument_list|,
+argument|unsigned methRefFlags
 argument_list|)
 block|{
 name|PropertyOrGetter
@@ -2260,11 +3576,19 @@ argument_list|(
 name|true
 argument_list|)
 block|;
-name|this
-operator|->
+name|SetterAndMethodRefFlags
+operator|.
+name|setPointer
+argument_list|(
 name|Setter
-operator|=
-name|Setter
+argument_list|)
+block|;
+name|SetterAndMethodRefFlags
+operator|.
+name|setInt
+argument_list|(
+name|methRefFlags
+argument_list|)
 block|;   }
 name|void
 name|setBase
@@ -2319,7 +3643,411 @@ name|ReceiverLoc
 operator|=
 name|Loc
 block|; }
+name|void
+name|setMethodRefFlag
+argument_list|(
+argument|MethodRefFlags flag
+argument_list|,
+argument|bool val
+argument_list|)
+block|{
+name|unsigned
+name|f
+operator|=
+name|SetterAndMethodRefFlags
+operator|.
+name|getInt
+argument_list|()
+block|;
+if|if
+condition|(
+name|val
+condition|)
+name|f
+operator||=
+name|flag
+expr_stmt|;
+else|else
+name|f
+operator|&=
+operator|~
+name|flag
+expr_stmt|;
+name|SetterAndMethodRefFlags
+operator|.
+name|setInt
+argument_list|(
+name|f
+argument_list|)
+block|;   }
 block|}
+block|;
+comment|/// ObjCSubscriptRefExpr - used for array and dictionary subscripting.
+comment|/// array[4] = array[3]; dictionary[key] = dictionary[alt_key];
+comment|///
+name|class
+name|ObjCSubscriptRefExpr
+operator|:
+name|public
+name|Expr
+block|{
+comment|// Location of ']' in an indexing expression.
+name|SourceLocation
+name|RBracket
+block|;
+comment|// array/dictionary base expression.
+comment|// for arrays, this is a numeric expression. For dictionaries, this is
+comment|// an objective-c object pointer expression.
+block|enum
+block|{
+name|BASE
+block|,
+name|KEY
+block|,
+name|END_EXPR
+block|}
+block|;
+name|Stmt
+operator|*
+name|SubExprs
+index|[
+name|END_EXPR
+index|]
+block|;
+name|ObjCMethodDecl
+operator|*
+name|GetAtIndexMethodDecl
+block|;
+comment|// For immutable objects this is null. When ObjCSubscriptRefExpr is to read
+comment|// an indexed object this is null too.
+name|ObjCMethodDecl
+operator|*
+name|SetAtIndexMethodDecl
+block|;
+name|public
+operator|:
+name|ObjCSubscriptRefExpr
+argument_list|(
+argument|Expr *base
+argument_list|,
+argument|Expr *key
+argument_list|,
+argument|QualType T
+argument_list|,
+argument|ExprValueKind VK
+argument_list|,
+argument|ExprObjectKind OK
+argument_list|,
+argument|ObjCMethodDecl *getMethod
+argument_list|,
+argument|ObjCMethodDecl *setMethod
+argument_list|,
+argument|SourceLocation RB
+argument_list|)
+operator|:
+name|Expr
+argument_list|(
+name|ObjCSubscriptRefExprClass
+argument_list|,
+name|T
+argument_list|,
+name|VK
+argument_list|,
+name|OK
+argument_list|,
+name|base
+operator|->
+name|isTypeDependent
+argument_list|()
+operator|||
+name|key
+operator|->
+name|isTypeDependent
+argument_list|()
+argument_list|,
+name|base
+operator|->
+name|isValueDependent
+argument_list|()
+operator|||
+name|key
+operator|->
+name|isValueDependent
+argument_list|()
+argument_list|,
+name|base
+operator|->
+name|isInstantiationDependent
+argument_list|()
+operator|||
+name|key
+operator|->
+name|isInstantiationDependent
+argument_list|()
+argument_list|,
+operator|(
+name|base
+operator|->
+name|containsUnexpandedParameterPack
+argument_list|()
+operator|||
+name|key
+operator|->
+name|containsUnexpandedParameterPack
+argument_list|()
+operator|)
+argument_list|)
+block|,
+name|RBracket
+argument_list|(
+name|RB
+argument_list|)
+block|,
+name|GetAtIndexMethodDecl
+argument_list|(
+name|getMethod
+argument_list|)
+block|,
+name|SetAtIndexMethodDecl
+argument_list|(
+argument|setMethod
+argument_list|)
+block|{
+name|SubExprs
+index|[
+name|BASE
+index|]
+operator|=
+name|base
+block|;
+name|SubExprs
+index|[
+name|KEY
+index|]
+operator|=
+name|key
+block|;}
+name|explicit
+name|ObjCSubscriptRefExpr
+argument_list|(
+argument|EmptyShell Empty
+argument_list|)
+operator|:
+name|Expr
+argument_list|(
+argument|ObjCSubscriptRefExprClass
+argument_list|,
+argument|Empty
+argument_list|)
+block|{}
+specifier|static
+name|ObjCSubscriptRefExpr
+operator|*
+name|Create
+argument_list|(
+argument|ASTContext&C
+argument_list|,
+argument|Expr *base
+argument_list|,
+argument|Expr *key
+argument_list|,
+argument|QualType T
+argument_list|,
+argument|ObjCMethodDecl *getMethod
+argument_list|,
+argument|ObjCMethodDecl *setMethod
+argument_list|,
+argument|SourceLocation RB
+argument_list|)
+block|;
+name|SourceLocation
+name|getRBracket
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RBracket
+return|;
+block|}
+name|void
+name|setRBracket
+argument_list|(
+argument|SourceLocation RB
+argument_list|)
+block|{
+name|RBracket
+operator|=
+name|RB
+block|; }
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|SourceRange
+argument_list|(
+name|SubExprs
+index|[
+name|BASE
+index|]
+operator|->
+name|getLocStart
+argument_list|()
+argument_list|,
+name|RBracket
+argument_list|)
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|ObjCSubscriptRefExprClass
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const ObjCSubscriptRefExpr *
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+name|Expr
+operator|*
+name|getBaseExpr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast
+operator|<
+name|Expr
+operator|>
+operator|(
+name|SubExprs
+index|[
+name|BASE
+index|]
+operator|)
+return|;
+block|}
+name|void
+name|setBaseExpr
+argument_list|(
+argument|Stmt *S
+argument_list|)
+block|{
+name|SubExprs
+index|[
+name|BASE
+index|]
+operator|=
+name|S
+block|; }
+name|Expr
+operator|*
+name|getKeyExpr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast
+operator|<
+name|Expr
+operator|>
+operator|(
+name|SubExprs
+index|[
+name|KEY
+index|]
+operator|)
+return|;
+block|}
+name|void
+name|setKeyExpr
+argument_list|(
+argument|Stmt *S
+argument_list|)
+block|{
+name|SubExprs
+index|[
+name|KEY
+index|]
+operator|=
+name|S
+block|; }
+name|ObjCMethodDecl
+operator|*
+name|getAtIndexMethodDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|GetAtIndexMethodDecl
+return|;
+block|}
+name|ObjCMethodDecl
+operator|*
+name|setAtIndexMethodDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SetAtIndexMethodDecl
+return|;
+block|}
+name|bool
+name|isArraySubscriptRefExpr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getKeyExpr
+argument_list|()
+operator|->
+name|getType
+argument_list|()
+operator|->
+name|isIntegralOrEnumerationType
+argument_list|()
+return|;
+block|}
+name|child_range
+name|children
+argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|(
+name|SubExprs
+argument_list|,
+name|SubExprs
+operator|+
+name|END_EXPR
+argument_list|)
+return|;
+block|}
+name|private
+operator|:
+name|friend
+name|class
+name|ASTStmtReader
+block|; }
 block|;
 comment|/// \brief An expression that sends a message to the given Objective-C
 comment|/// object or class.
@@ -2418,6 +4146,13 @@ name|IsDelegateInitCall
 operator|:
 literal|1
 block|;
+comment|/// \brief Whether this message send was implicitly generated by
+comment|/// the implementation rather than explicitly written by the user.
+name|unsigned
+name|IsImplicit
+operator|:
+literal|1
+block|;
 comment|/// \brief Whether the locations of the selector identifiers are in a
 comment|/// "standard" position, a enum SelectorLocationsKind.
 name|unsigned
@@ -2470,6 +4205,16 @@ name|IsDelegateInitCall
 argument_list|(
 literal|0
 argument_list|)
+block|,
+name|IsImplicit
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|SelLocsKind
+argument_list|(
+literal|0
+argument_list|)
 block|{
 name|setNumArgs
 argument_list|(
@@ -2501,6 +4246,8 @@ argument_list|,
 argument|ArrayRef<Expr *> Args
 argument_list|,
 argument|SourceLocation RBracLoc
+argument_list|,
+argument|bool isImplicit
 argument_list|)
 block|;
 name|ObjCMessageExpr
@@ -2524,6 +4271,8 @@ argument_list|,
 argument|ArrayRef<Expr *> Args
 argument_list|,
 argument|SourceLocation RBracLoc
+argument_list|,
+argument|bool isImplicit
 argument_list|)
 block|;
 name|ObjCMessageExpr
@@ -2547,6 +4296,8 @@ argument_list|,
 argument|ArrayRef<Expr *> Args
 argument_list|,
 argument|SourceLocation RBracLoc
+argument_list|,
+argument|bool isImplicit
 argument_list|)
 block|;
 name|void
@@ -2808,6 +4559,8 @@ argument_list|,
 argument|ArrayRef<Expr *> Args
 argument_list|,
 argument|SourceLocation RBracLoc
+argument_list|,
+argument|bool isImplicit
 argument_list|)
 block|;
 comment|/// \brief Create a class message send.
@@ -2859,6 +4612,8 @@ argument_list|,
 argument|ArrayRef<Expr *> Args
 argument_list|,
 argument|SourceLocation RBracLoc
+argument_list|,
+argument|bool isImplicit
 argument_list|)
 block|;
 comment|/// \brief Create an instance message send.
@@ -2910,6 +4665,8 @@ argument_list|,
 argument|ArrayRef<Expr *> Args
 argument_list|,
 argument|SourceLocation RBracLoc
+argument_list|,
+argument|bool isImplicit
 argument_list|)
 block|;
 comment|/// \brief Create an empty Objective-C message expression, to be
@@ -2931,6 +4688,18 @@ argument_list|,
 argument|unsigned NumStoredSelLocs
 argument_list|)
 block|;
+comment|/// \brief Indicates whether the message send was implicitly
+comment|/// generated by the implementation. If false, it was written explicitly
+comment|/// in the source code.
+name|bool
+name|isImplicit
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsImplicit
+return|;
+block|}
 comment|/// \brief Determine the kind of receiver that this message is being
 comment|/// sent to.
 name|ReceiverKind
@@ -3115,6 +4884,9 @@ return|return
 literal|0
 return|;
 block|}
+end_decl_stmt
+
+begin_function
 name|void
 name|setClassReceiver
 parameter_list|(
@@ -3133,8 +4905,17 @@ name|TSInfo
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Retrieve the location of the 'super' keyword for a class
+end_comment
+
+begin_comment
 comment|/// or instance message to 'super', otherwise an invalid source location.
+end_comment
+
+begin_expr_stmt
 name|SourceLocation
 name|getSuperLoc
 argument_list|()
@@ -3155,14 +4936,17 @@ condition|)
 return|return
 name|SuperLoc
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 name|SourceLocation
 argument_list|()
 return|;
-block|}
-end_decl_stmt
+end_return
 
 begin_comment
+unit|}
 comment|/// \brief Retrieve the Objective-C interface to which this message
 end_comment
 
@@ -3203,7 +4987,7 @@ comment|/// \returns The Objective-C interface if known, otherwise NULL.
 end_comment
 
 begin_expr_stmt
-name|ObjCInterfaceDecl
+unit|ObjCInterfaceDecl
 operator|*
 name|getReceiverInterface
 argument_list|()
@@ -3721,23 +5505,36 @@ name|getSelectorStartLoc
 argument_list|()
 specifier|const
 block|{
+if|if
+condition|(
+name|isImplicit
+argument_list|()
+condition|)
+return|return
+name|getLocStart
+argument_list|()
+return|;
+end_expr_stmt
+
+begin_return
 return|return
 name|getSelectorLoc
 argument_list|(
 literal|0
 argument_list|)
 return|;
-block|}
-end_expr_stmt
+end_return
 
-begin_decl_stmt
-name|SourceLocation
+begin_macro
+unit|}   SourceLocation
 name|getSelectorLoc
 argument_list|(
-name|unsigned
-name|Index
+argument|unsigned Index
 argument_list|)
-decl|const
+end_macro
+
+begin_expr_stmt
+specifier|const
 block|{
 name|assert
 argument_list|(
@@ -3748,7 +5545,7 @@ argument_list|()
 operator|&&
 literal|"Index out of range!"
 argument_list|)
-expr_stmt|;
+block|;
 if|if
 condition|(
 name|hasStandardSelLocs
@@ -3789,6 +5586,9 @@ argument_list|,
 name|RBracLoc
 argument_list|)
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 name|getStoredSelLocs
 argument_list|()
@@ -3796,21 +5596,18 @@ index|[
 name|Index
 index|]
 return|;
-block|}
-end_decl_stmt
+end_return
 
-begin_decl_stmt
-name|void
+begin_macro
+unit|}    void
 name|getSelectorLocs
 argument_list|(
-name|SmallVectorImpl
-operator|<
-name|SourceLocation
-operator|>
-operator|&
-name|SelLocs
+argument|SmallVectorImpl<SourceLocation>&SelLocs
 argument_list|)
-decl|const
+end_macro
+
+begin_decl_stmt
+specifier|const
 decl_stmt|;
 end_decl_stmt
 
@@ -3820,12 +5617,23 @@ name|getNumSelectorLocs
 argument_list|()
 specifier|const
 block|{
+if|if
+condition|(
+name|isImplicit
+argument_list|()
+condition|)
+return|return
+literal|0
+return|;
 name|Selector
 name|Sel
 operator|=
 name|getSelector
 argument_list|()
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|Sel
@@ -3836,7 +5644,7 @@ condition|)
 return|return
 literal|1
 return|;
-end_expr_stmt
+end_if
 
 begin_return
 return|return
@@ -3879,6 +5687,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 block|{
 return|return
 name|SourceRange
@@ -4226,6 +6035,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 block|{
 return|return
 name|SourceRange
@@ -4244,6 +6054,7 @@ name|SourceLocation
 name|getExprLoc
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 block|{
 return|return
 name|IsaMemberLoc
@@ -4481,6 +6292,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 block|{
 return|return
 name|Operand
@@ -4493,6 +6305,7 @@ name|SourceLocation
 name|getExprLoc
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 block|{
 return|return
 name|getSubExpr
@@ -4675,6 +6488,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 block|{
 return|return
 name|SourceRange

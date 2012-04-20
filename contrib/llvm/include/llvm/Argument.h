@@ -115,6 +115,11 @@ decl|<
 name|Argument
 decl|>
 block|{
+name|virtual
+name|void
+name|anchor
+parameter_list|()
+function_decl|;
 name|Function
 modifier|*
 name|Parent

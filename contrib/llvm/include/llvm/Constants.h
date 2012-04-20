@@ -136,6 +136,9 @@ decl_stmt|;
 name|class
 name|VectorType
 decl_stmt|;
+name|class
+name|SequentialType
+decl_stmt|;
 name|template
 operator|<
 name|class
@@ -159,6 +162,17 @@ name|class
 name|TypeClass
 operator|>
 expr|struct
+name|ConstantArrayCreator
+expr_stmt|;
+name|template
+operator|<
+name|class
+name|ConstantClass
+operator|,
+name|class
+name|TypeClass
+operator|>
+expr|struct
 name|ConvertConstantType
 expr_stmt|;
 comment|//===----------------------------------------------------------------------===//
@@ -171,6 +185,11 @@ range|:
 name|public
 name|Constant
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|void
 operator|*
 name|operator
@@ -717,6 +736,11 @@ block|{
 name|APFloat
 name|Val
 block|;
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|void
 operator|*
 name|operator
@@ -1027,17 +1051,6 @@ operator|:
 name|public
 name|Constant
 block|{
-name|friend
-expr|struct
-name|ConstantCreator
-operator|<
-name|ConstantAggregateZero
-block|,
-name|Type
-block|,
-name|char
-operator|>
-block|;
 name|void
 operator|*
 name|operator
@@ -1118,6 +1131,44 @@ name|void
 name|destroyConstant
 argument_list|()
 block|;
+comment|/// getSequentialElement - If this CAZ has array or vector type, return a zero
+comment|/// with the right element type.
+name|Constant
+operator|*
+name|getSequentialElement
+argument_list|()
+specifier|const
+block|;
+comment|/// getStructElement - If this CAZ has struct type, return a zero with the
+comment|/// right element type for the specified element.
+name|Constant
+operator|*
+name|getStructElement
+argument_list|(
+argument|unsigned Elt
+argument_list|)
+specifier|const
+block|;
+comment|/// getElementValue - Return a zero of the right value for the specified GEP
+comment|/// index.
+name|Constant
+operator|*
+name|getElementValue
+argument_list|(
+argument|Constant *C
+argument_list|)
+specifier|const
+block|;
+comment|/// getElementValue - Return a zero of the right value for the specified GEP
+comment|/// index.
+name|Constant
+operator|*
+name|getElementValue
+argument_list|(
+argument|unsigned Idx
+argument_list|)
+specifier|const
+block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 comment|///
 specifier|static
@@ -1160,20 +1211,12 @@ name|Constant
 block|{
 name|friend
 expr|struct
-name|ConstantCreator
+name|ConstantArrayCreator
 operator|<
 name|ConstantArray
 block|,
 name|ArrayType
-block|,
-name|std
-operator|::
-name|vector
-operator|<
-name|Constant
-operator|*
 operator|>
-expr|>
 block|;
 name|ConstantArray
 argument_list|(
@@ -1219,24 +1262,6 @@ operator|>
 name|V
 argument_list|)
 block|;
-comment|/// This method constructs a ConstantArray and initializes it with a text
-comment|/// string. The default behavior (AddNull==true) causes a null terminator to
-comment|/// be placed at the end of the array. This effectively increases the length
-comment|/// of the array by one (you've been warned).  However, in some situations
-comment|/// this is not desired so if AddNull==false then the string is copied without
-comment|/// null termination.
-specifier|static
-name|Constant
-operator|*
-name|get
-argument_list|(
-argument|LLVMContext&Context
-argument_list|,
-argument|StringRef Initializer
-argument_list|,
-argument|bool AddNull = true
-argument_list|)
-block|;
 comment|/// Transparently provide more efficient getOperand methods.
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
@@ -1267,44 +1292,6 @@ argument_list|()
 operator|)
 return|;
 block|}
-comment|/// isString - This method returns true if the array is an array of i8 and
-comment|/// the elements of the array are all ConstantInt's.
-name|bool
-name|isString
-argument_list|()
-specifier|const
-block|;
-comment|/// isCString - This method returns true if the array is a string (see
-comment|/// @verbatim
-comment|/// isString) and it ends in a null byte \0 and does not contains any other
-comment|/// @endverbatim
-comment|/// null bytes except its terminator.
-name|bool
-name|isCString
-argument_list|()
-specifier|const
-block|;
-comment|/// getAsString - If this array is isString(), then this method converts the
-comment|/// array to an std::string and returns it.  Otherwise, it asserts out.
-comment|///
-name|std
-operator|::
-name|string
-name|getAsString
-argument_list|()
-specifier|const
-block|;
-comment|/// getAsCString - If this array is isCString(), then this method converts the
-comment|/// array (without the trailing null byte) to an std::string and returns it.
-comment|/// Otherwise, it asserts out.
-comment|///
-name|std
-operator|::
-name|string
-name|getAsCString
-argument_list|()
-specifier|const
-block|;
 name|virtual
 name|void
 name|destroyConstant
@@ -1391,20 +1378,12 @@ name|Constant
 block|{
 name|friend
 expr|struct
-name|ConstantCreator
+name|ConstantArrayCreator
 operator|<
 name|ConstantStruct
 block|,
 name|StructType
-block|,
-name|std
-operator|::
-name|vector
-operator|<
-name|Constant
-operator|*
 operator|>
-expr|>
 block|;
 name|ConstantStruct
 argument_list|(
@@ -1656,20 +1635,12 @@ name|Constant
 block|{
 name|friend
 expr|struct
-name|ConstantCreator
+name|ConstantArrayCreator
 operator|<
 name|ConstantVector
 block|,
 name|VectorType
-block|,
-name|std
-operator|::
-name|vector
-operator|<
-name|Constant
-operator|*
 operator|>
-expr|>
 block|;
 name|ConstantVector
 argument_list|(
@@ -1711,6 +1682,18 @@ operator|>
 name|V
 argument_list|)
 block|;
+comment|/// getSplat - Return a ConstantVector with the specified constant in each
+comment|/// element.
+specifier|static
+name|Constant
+operator|*
+name|getSplat
+argument_list|(
+argument|unsigned NumElts
+argument_list|,
+argument|Constant *Elt
+argument_list|)
+block|;
 comment|/// Transparently provide more efficient getOperand methods.
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
@@ -1741,15 +1724,6 @@ argument_list|()
 operator|)
 return|;
 block|}
-comment|/// This function will return true iff every element in this vector constant
-comment|/// is set to all ones.
-comment|/// @returns true iff this constant's emements are all set to all ones.
-comment|/// @brief Determine if the value is all ones.
-name|bool
-name|isAllOnesValue
-argument_list|()
-specifier|const
-block|;
 comment|/// getSplatValue - If this is a splat constant, meaning that all of the
 comment|/// elements have the same value, return that value. Otherwise return NULL.
 name|Constant
@@ -1842,17 +1816,6 @@ operator|:
 name|public
 name|Constant
 block|{
-name|friend
-expr|struct
-name|ConstantCreator
-operator|<
-name|ConstantPointerNull
-block|,
-name|PointerType
-block|,
-name|char
-operator|>
-block|;
 name|void
 operator|*
 name|operator
@@ -1985,6 +1948,894 @@ name|getValueID
 argument_list|()
 operator|==
 name|ConstantPointerNullVal
+return|;
+block|}
+expr|}
+block|;
+comment|//===----------------------------------------------------------------------===//
+comment|/// ConstantDataSequential - A vector or array constant whose element type is a
+comment|/// simple 1/2/4/8-byte integer or float/double, and whose elements are just
+comment|/// simple data values (i.e. ConstantInt/ConstantFP).  This Constant node has no
+comment|/// operands because it stores all of the elements of the constant as densely
+comment|/// packed data, instead of as Value*'s.
+comment|///
+comment|/// This is the common base class of ConstantDataArray and ConstantDataVector.
+comment|///
+name|class
+name|ConstantDataSequential
+operator|:
+name|public
+name|Constant
+block|{
+name|friend
+name|class
+name|LLVMContextImpl
+block|;
+comment|/// DataElements - A pointer to the bytes underlying this constant (which is
+comment|/// owned by the uniquing StringMap).
+specifier|const
+name|char
+operator|*
+name|DataElements
+block|;
+comment|/// Next - This forms a link list of ConstantDataSequential nodes that have
+comment|/// the same value but different type.  For example, 0,0,0,1 could be a 4
+comment|/// element array of i8, or a 1-element array of i32.  They'll both end up in
+comment|/// the same StringMap bucket, linked up.
+name|ConstantDataSequential
+operator|*
+name|Next
+block|;
+name|void
+operator|*
+name|operator
+name|new
+argument_list|(
+name|size_t
+argument_list|,
+name|unsigned
+argument_list|)
+block|;
+comment|// DO NOT IMPLEMENT
+name|ConstantDataSequential
+argument_list|(
+specifier|const
+name|ConstantDataSequential
+operator|&
+argument_list|)
+block|;
+comment|// DO NOT IMPLEMENT
+name|protected
+operator|:
+name|explicit
+name|ConstantDataSequential
+argument_list|(
+argument|Type *ty
+argument_list|,
+argument|ValueTy VT
+argument_list|,
+argument|const char *Data
+argument_list|)
+operator|:
+name|Constant
+argument_list|(
+name|ty
+argument_list|,
+name|VT
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|DataElements
+argument_list|(
+name|Data
+argument_list|)
+block|,
+name|Next
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+operator|~
+name|ConstantDataSequential
+argument_list|()
+block|{
+name|delete
+name|Next
+block|; }
+specifier|static
+name|Constant
+operator|*
+name|getImpl
+argument_list|(
+argument|StringRef Bytes
+argument_list|,
+argument|Type *Ty
+argument_list|)
+block|;
+name|protected
+operator|:
+comment|// allocate space for exactly zero operands.
+name|void
+operator|*
+name|operator
+name|new
+argument_list|(
+argument|size_t s
+argument_list|)
+block|{
+return|return
+name|User
+operator|::
+name|operator
+name|new
+argument_list|(
+name|s
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
+name|public
+operator|:
+comment|/// isElementTypeCompatible - Return true if a ConstantDataSequential can be
+comment|/// formed with a vector or array of the specified element type.
+comment|/// ConstantDataArray only works with normal float and int types that are
+comment|/// stored densely in memory, not with things like i42 or x86_f80.
+specifier|static
+name|bool
+name|isElementTypeCompatible
+argument_list|(
+specifier|const
+name|Type
+operator|*
+name|Ty
+argument_list|)
+block|;
+comment|/// getElementAsInteger - If this is a sequential container of integers (of
+comment|/// any size), return the specified element in the low bits of a uint64_t.
+name|uint64_t
+name|getElementAsInteger
+argument_list|(
+argument|unsigned i
+argument_list|)
+specifier|const
+block|;
+comment|/// getElementAsAPFloat - If this is a sequential container of floating point
+comment|/// type, return the specified element as an APFloat.
+name|APFloat
+name|getElementAsAPFloat
+argument_list|(
+argument|unsigned i
+argument_list|)
+specifier|const
+block|;
+comment|/// getElementAsFloat - If this is an sequential container of floats, return
+comment|/// the specified element as a float.
+name|float
+name|getElementAsFloat
+argument_list|(
+argument|unsigned i
+argument_list|)
+specifier|const
+block|;
+comment|/// getElementAsDouble - If this is an sequential container of doubles, return
+comment|/// the specified element as a double.
+name|double
+name|getElementAsDouble
+argument_list|(
+argument|unsigned i
+argument_list|)
+specifier|const
+block|;
+comment|/// getElementAsConstant - Return a Constant for a specified index's element.
+comment|/// Note that this has to compute a new constant to return, so it isn't as
+comment|/// efficient as getElementAsInteger/Float/Double.
+name|Constant
+operator|*
+name|getElementAsConstant
+argument_list|(
+argument|unsigned i
+argument_list|)
+specifier|const
+block|;
+comment|/// getType - Specialize the getType() method to always return a
+comment|/// SequentialType, which reduces the amount of casting needed in parts of the
+comment|/// compiler.
+specifier|inline
+name|SequentialType
+operator|*
+name|getType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+name|SequentialType
+operator|*
+operator|>
+operator|(
+name|Value
+operator|::
+name|getType
+argument_list|()
+operator|)
+return|;
+block|}
+comment|/// getElementType - Return the element type of the array/vector.
+name|Type
+operator|*
+name|getElementType
+argument_list|()
+specifier|const
+block|;
+comment|/// getNumElements - Return the number of elements in the array or vector.
+name|unsigned
+name|getNumElements
+argument_list|()
+specifier|const
+block|;
+comment|/// getElementByteSize - Return the size (in bytes) of each element in the
+comment|/// array/vector.  The size of the elements is known to be a multiple of one
+comment|/// byte.
+name|uint64_t
+name|getElementByteSize
+argument_list|()
+specifier|const
+block|;
+comment|/// isString - This method returns true if this is an array of i8.
+name|bool
+name|isString
+argument_list|()
+specifier|const
+block|;
+comment|/// isCString - This method returns true if the array "isString", ends with a
+comment|/// nul byte, and does not contains any other nul bytes.
+name|bool
+name|isCString
+argument_list|()
+specifier|const
+block|;
+comment|/// getAsString - If this array is isString(), then this method returns the
+comment|/// array as a StringRef.  Otherwise, it asserts out.
+comment|///
+name|StringRef
+name|getAsString
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isString
+argument_list|()
+operator|&&
+literal|"Not a string"
+argument_list|)
+block|;
+return|return
+name|getRawDataValues
+argument_list|()
+return|;
+block|}
+comment|/// getAsCString - If this array is isCString(), then this method returns the
+comment|/// array (without the trailing null byte) as a StringRef. Otherwise, it
+comment|/// asserts out.
+comment|///
+name|StringRef
+name|getAsCString
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isCString
+argument_list|()
+operator|&&
+literal|"Isn't a C string"
+argument_list|)
+block|;
+name|StringRef
+name|Str
+operator|=
+name|getAsString
+argument_list|()
+block|;
+return|return
+name|Str
+operator|.
+name|substr
+argument_list|(
+literal|0
+argument_list|,
+name|Str
+operator|.
+name|size
+argument_list|()
+operator|-
+literal|1
+argument_list|)
+return|;
+block|}
+comment|/// getRawDataValues - Return the raw, underlying, bytes of this data.  Note
+comment|/// that this is an extremely tricky thing to work with, as it exposes the
+comment|/// host endianness of the data elements.
+name|StringRef
+name|getRawDataValues
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|void
+name|destroyConstant
+argument_list|()
+block|;
+comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
+comment|///
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const ConstantDataSequential *
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Value *V
+argument_list|)
+block|{
+return|return
+name|V
+operator|->
+name|getValueID
+argument_list|()
+operator|==
+name|ConstantDataArrayVal
+operator|||
+name|V
+operator|->
+name|getValueID
+argument_list|()
+operator|==
+name|ConstantDataVectorVal
+return|;
+block|}
+name|private
+operator|:
+specifier|const
+name|char
+operator|*
+name|getElementPointer
+argument_list|(
+argument|unsigned Elt
+argument_list|)
+specifier|const
+block|; }
+block|;
+comment|//===----------------------------------------------------------------------===//
+comment|/// ConstantDataArray - An array constant whose element type is a simple
+comment|/// 1/2/4/8-byte integer or float/double, and whose elements are just simple
+comment|/// data values (i.e. ConstantInt/ConstantFP).  This Constant node has no
+comment|/// operands because it stores all of the elements of the constant as densely
+comment|/// packed data, instead of as Value*'s.
+name|class
+name|ConstantDataArray
+operator|:
+name|public
+name|ConstantDataSequential
+block|{
+name|void
+operator|*
+name|operator
+name|new
+argument_list|(
+name|size_t
+argument_list|,
+name|unsigned
+argument_list|)
+block|;
+comment|// DO NOT IMPLEMENT
+name|ConstantDataArray
+argument_list|(
+specifier|const
+name|ConstantDataArray
+operator|&
+argument_list|)
+block|;
+comment|// DO NOT IMPLEMENT
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
+name|friend
+name|class
+name|ConstantDataSequential
+block|;
+name|explicit
+name|ConstantDataArray
+argument_list|(
+name|Type
+operator|*
+name|ty
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|Data
+argument_list|)
+operator|:
+name|ConstantDataSequential
+argument_list|(
+argument|ty
+argument_list|,
+argument|ConstantDataArrayVal
+argument_list|,
+argument|Data
+argument_list|)
+block|{}
+name|protected
+operator|:
+comment|// allocate space for exactly zero operands.
+name|void
+operator|*
+name|operator
+name|new
+argument_list|(
+argument|size_t s
+argument_list|)
+block|{
+return|return
+name|User
+operator|::
+name|operator
+name|new
+argument_list|(
+name|s
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
+name|public
+operator|:
+comment|/// get() constructors - Return a constant with array type with an element
+comment|/// count and element type matching the ArrayRef passed in.  Note that this
+comment|/// can return a ConstantAggregateZero object.
+specifier|static
+name|Constant
+operator|*
+name|get
+argument_list|(
+name|LLVMContext
+operator|&
+name|Context
+argument_list|,
+name|ArrayRef
+operator|<
+name|uint8_t
+operator|>
+name|Elts
+argument_list|)
+block|;
+specifier|static
+name|Constant
+operator|*
+name|get
+argument_list|(
+name|LLVMContext
+operator|&
+name|Context
+argument_list|,
+name|ArrayRef
+operator|<
+name|uint16_t
+operator|>
+name|Elts
+argument_list|)
+block|;
+specifier|static
+name|Constant
+operator|*
+name|get
+argument_list|(
+name|LLVMContext
+operator|&
+name|Context
+argument_list|,
+name|ArrayRef
+operator|<
+name|uint32_t
+operator|>
+name|Elts
+argument_list|)
+block|;
+specifier|static
+name|Constant
+operator|*
+name|get
+argument_list|(
+name|LLVMContext
+operator|&
+name|Context
+argument_list|,
+name|ArrayRef
+operator|<
+name|uint64_t
+operator|>
+name|Elts
+argument_list|)
+block|;
+specifier|static
+name|Constant
+operator|*
+name|get
+argument_list|(
+name|LLVMContext
+operator|&
+name|Context
+argument_list|,
+name|ArrayRef
+operator|<
+name|float
+operator|>
+name|Elts
+argument_list|)
+block|;
+specifier|static
+name|Constant
+operator|*
+name|get
+argument_list|(
+name|LLVMContext
+operator|&
+name|Context
+argument_list|,
+name|ArrayRef
+operator|<
+name|double
+operator|>
+name|Elts
+argument_list|)
+block|;
+comment|/// getString - This method constructs a CDS and initializes it with a text
+comment|/// string. The default behavior (AddNull==true) causes a null terminator to
+comment|/// be placed at the end of the array (increasing the length of the string by
+comment|/// one more than the StringRef would normally indicate.  Pass AddNull=false
+comment|/// to disable this behavior.
+specifier|static
+name|Constant
+operator|*
+name|getString
+argument_list|(
+argument|LLVMContext&Context
+argument_list|,
+argument|StringRef Initializer
+argument_list|,
+argument|bool AddNull = true
+argument_list|)
+block|;
+comment|/// getType - Specialize the getType() method to always return an ArrayType,
+comment|/// which reduces the amount of casting needed in parts of the compiler.
+comment|///
+specifier|inline
+name|ArrayType
+operator|*
+name|getType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+name|ArrayType
+operator|*
+operator|>
+operator|(
+name|Value
+operator|::
+name|getType
+argument_list|()
+operator|)
+return|;
+block|}
+comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
+comment|///
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const ConstantDataArray *
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Value *V
+argument_list|)
+block|{
+return|return
+name|V
+operator|->
+name|getValueID
+argument_list|()
+operator|==
+name|ConstantDataArrayVal
+return|;
+block|}
+expr|}
+block|;
+comment|//===----------------------------------------------------------------------===//
+comment|/// ConstantDataVector - A vector constant whose element type is a simple
+comment|/// 1/2/4/8-byte integer or float/double, and whose elements are just simple
+comment|/// data values (i.e. ConstantInt/ConstantFP).  This Constant node has no
+comment|/// operands because it stores all of the elements of the constant as densely
+comment|/// packed data, instead of as Value*'s.
+name|class
+name|ConstantDataVector
+operator|:
+name|public
+name|ConstantDataSequential
+block|{
+name|void
+operator|*
+name|operator
+name|new
+argument_list|(
+name|size_t
+argument_list|,
+name|unsigned
+argument_list|)
+block|;
+comment|// DO NOT IMPLEMENT
+name|ConstantDataVector
+argument_list|(
+specifier|const
+name|ConstantDataVector
+operator|&
+argument_list|)
+block|;
+comment|// DO NOT IMPLEMENT
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
+name|friend
+name|class
+name|ConstantDataSequential
+block|;
+name|explicit
+name|ConstantDataVector
+argument_list|(
+name|Type
+operator|*
+name|ty
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|Data
+argument_list|)
+operator|:
+name|ConstantDataSequential
+argument_list|(
+argument|ty
+argument_list|,
+argument|ConstantDataVectorVal
+argument_list|,
+argument|Data
+argument_list|)
+block|{}
+name|protected
+operator|:
+comment|// allocate space for exactly zero operands.
+name|void
+operator|*
+name|operator
+name|new
+argument_list|(
+argument|size_t s
+argument_list|)
+block|{
+return|return
+name|User
+operator|::
+name|operator
+name|new
+argument_list|(
+name|s
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
+name|public
+operator|:
+comment|/// get() constructors - Return a constant with vector type with an element
+comment|/// count and element type matching the ArrayRef passed in.  Note that this
+comment|/// can return a ConstantAggregateZero object.
+specifier|static
+name|Constant
+operator|*
+name|get
+argument_list|(
+name|LLVMContext
+operator|&
+name|Context
+argument_list|,
+name|ArrayRef
+operator|<
+name|uint8_t
+operator|>
+name|Elts
+argument_list|)
+block|;
+specifier|static
+name|Constant
+operator|*
+name|get
+argument_list|(
+name|LLVMContext
+operator|&
+name|Context
+argument_list|,
+name|ArrayRef
+operator|<
+name|uint16_t
+operator|>
+name|Elts
+argument_list|)
+block|;
+specifier|static
+name|Constant
+operator|*
+name|get
+argument_list|(
+name|LLVMContext
+operator|&
+name|Context
+argument_list|,
+name|ArrayRef
+operator|<
+name|uint32_t
+operator|>
+name|Elts
+argument_list|)
+block|;
+specifier|static
+name|Constant
+operator|*
+name|get
+argument_list|(
+name|LLVMContext
+operator|&
+name|Context
+argument_list|,
+name|ArrayRef
+operator|<
+name|uint64_t
+operator|>
+name|Elts
+argument_list|)
+block|;
+specifier|static
+name|Constant
+operator|*
+name|get
+argument_list|(
+name|LLVMContext
+operator|&
+name|Context
+argument_list|,
+name|ArrayRef
+operator|<
+name|float
+operator|>
+name|Elts
+argument_list|)
+block|;
+specifier|static
+name|Constant
+operator|*
+name|get
+argument_list|(
+name|LLVMContext
+operator|&
+name|Context
+argument_list|,
+name|ArrayRef
+operator|<
+name|double
+operator|>
+name|Elts
+argument_list|)
+block|;
+comment|/// getSplat - Return a ConstantVector with the specified constant in each
+comment|/// element.  The specified constant has to be a of a compatible type (i8/i16/
+comment|/// i32/i64/float/double) and must be a ConstantFP or ConstantInt.
+specifier|static
+name|Constant
+operator|*
+name|getSplat
+argument_list|(
+argument|unsigned NumElts
+argument_list|,
+argument|Constant *Elt
+argument_list|)
+block|;
+comment|/// getSplatValue - If this is a splat constant, meaning that all of the
+comment|/// elements have the same value, return that value. Otherwise return NULL.
+name|Constant
+operator|*
+name|getSplatValue
+argument_list|()
+specifier|const
+block|;
+comment|/// getType - Specialize the getType() method to always return a VectorType,
+comment|/// which reduces the amount of casting needed in parts of the compiler.
+comment|///
+specifier|inline
+name|VectorType
+operator|*
+name|getType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+name|VectorType
+operator|*
+operator|>
+operator|(
+name|Value
+operator|::
+name|getType
+argument_list|()
+operator|)
+return|;
+block|}
+comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
+comment|///
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const ConstantDataVector *
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Value *V
+argument_list|)
+block|{
+return|return
+name|V
+operator|->
+name|getValueID
+argument_list|()
+operator|==
+name|ConstantDataVectorVal
 return|;
 block|}
 expr|}
@@ -3750,17 +4601,6 @@ operator|:
 name|public
 name|Constant
 block|{
-name|friend
-expr|struct
-name|ConstantCreator
-operator|<
-name|UndefValue
-block|,
-name|Type
-block|,
-name|char
-operator|>
-block|;
 name|void
 operator|*
 name|operator
@@ -3838,6 +4678,44 @@ name|Type
 operator|*
 name|T
 argument_list|)
+block|;
+comment|/// getSequentialElement - If this Undef has array or vector type, return a
+comment|/// undef with the right element type.
+name|UndefValue
+operator|*
+name|getSequentialElement
+argument_list|()
+specifier|const
+block|;
+comment|/// getStructElement - If this undef has struct type, return a undef with the
+comment|/// right element type for the specified element.
+name|UndefValue
+operator|*
+name|getStructElement
+argument_list|(
+argument|unsigned Elt
+argument_list|)
+specifier|const
+block|;
+comment|/// getElementValue - Return an undef of the right value for the specified GEP
+comment|/// index.
+name|UndefValue
+operator|*
+name|getElementValue
+argument_list|(
+argument|Constant *C
+argument_list|)
+specifier|const
+block|;
+comment|/// getElementValue - Return an undef of the right value for the specified GEP
+comment|/// index.
+name|UndefValue
+operator|*
+name|getElementValue
+argument_list|(
+argument|unsigned Idx
+argument_list|)
+specifier|const
 block|;
 name|virtual
 name|void

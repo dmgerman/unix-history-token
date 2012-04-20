@@ -159,7 +159,10 @@ literal|" for '"
 operator|+
 name|F
 operator|.
-name|getNameStr
+name|getName
+argument_list|()
+operator|.
+name|str
 argument_list|()
 operator|+
 literal|"' function"
@@ -260,7 +263,10 @@ literal|"."
 operator|+
 name|F
 operator|.
-name|getNameStr
+name|getName
+argument_list|()
+operator|.
+name|str
 argument_list|()
 operator|+
 literal|".dot"
@@ -328,7 +334,10 @@ literal|" for '"
 operator|+
 name|F
 operator|.
-name|getNameStr
+name|getName
+argument_list|()
+operator|.
+name|str
 argument_list|()
 operator|+
 literal|"' function"

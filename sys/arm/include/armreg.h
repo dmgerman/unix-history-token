@@ -1825,6 +1825,12 @@ begin_comment
 comment|/*  * Address of the vector page, low and high versions.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__ASSEMBLER__
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -1838,6 +1844,30 @@ directive|define
 name|ARM_VECTORS_HIGH
 value|0xffff0000U
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ARM_VECTORS_LOW
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARM_VECTORS_HIGH
+value|0xffff0000
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * ARM Instructions  *  *       3 3 2 2 2                                *       1 0 9 8 7                                                     0  *      +-------+-------------------------------------------------------+  *      | cond  |              instruction dependant                    |  *      |c c c c|                                                       |  *      +-------+-------------------------------------------------------+  */

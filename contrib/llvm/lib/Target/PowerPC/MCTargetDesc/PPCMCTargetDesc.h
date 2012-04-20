@@ -59,6 +59,12 @@ directive|define
 name|PPCMCTARGETDESC_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/DataTypes.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -76,6 +82,9 @@ name|class
 name|MCInstrInfo
 decl_stmt|;
 name|class
+name|MCObjectWriter
+decl_stmt|;
+name|class
 name|MCSubtargetInfo
 decl_stmt|;
 name|class
@@ -83,6 +92,9 @@ name|Target
 decl_stmt|;
 name|class
 name|StringRef
+decl_stmt|;
+name|class
+name|raw_ostream
 decl_stmt|;
 specifier|extern
 name|Target
@@ -122,6 +134,22 @@ name|T
 parameter_list|,
 name|StringRef
 name|TT
+parameter_list|)
+function_decl|;
+comment|/// createPPCELFObjectWriter - Construct an PPC ELF object writer.
+name|MCObjectWriter
+modifier|*
+name|createPPCELFObjectWriter
+parameter_list|(
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|,
+name|bool
+name|Is64Bit
+parameter_list|,
+name|uint8_t
+name|OSABI
 parameter_list|)
 function_decl|;
 block|}

@@ -60,6 +60,12 @@ directive|ifndef
 name|LOCORE
 end_ifndef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__ASSEMBLER__
+end_ifndef
+
 begin_include
 include|#
 directive|include
@@ -173,6 +179,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __ASSEMBLER__ */
+end_comment
 
 begin_endif
 endif|#

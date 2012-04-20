@@ -225,6 +225,11 @@ comment|/// availability attribute.
 name|SourceLocation
 name|UnavailableLoc
 decl_stmt|;
+specifier|const
+name|Expr
+modifier|*
+name|MessageExpr
+decl_stmt|;
 comment|/// The next attribute in the current position.
 name|AttributeList
 modifier|*
@@ -520,6 +525,8 @@ argument|const AvailabilityChange&obsoleted
 argument_list|,
 argument|SourceLocation unavailable
 argument_list|,
+argument|const Expr *messageExpr
+argument_list|,
 argument|bool declspec
 argument_list|,
 argument|bool cxx0x
@@ -590,6 +597,11 @@ argument_list|(
 name|unavailable
 argument_list|)
 operator|,
+name|MessageExpr
+argument_list|(
+name|messageExpr
+argument_list|)
+operator|,
 name|NextInPosition
 argument_list|(
 literal|0
@@ -648,266 +660,63 @@ label|:
 enum|enum
 name|Kind
 block|{
-comment|// Please keep this list alphabetized.
-name|AT_acquired_after
-block|,
-name|AT_acquired_before
-block|,
-name|AT_address_space
-block|,
-name|AT_alias
-block|,
-name|AT_aligned
-block|,
-name|AT_always_inline
-block|,
-name|AT_analyzer_noreturn
-block|,
-name|AT_annotate
-block|,
-name|AT_arc_weakref_unavailable
-block|,
-name|AT_availability
-block|,
-comment|// Clang-specific
-name|AT_base_check
-block|,
-name|AT_blocks
-block|,
-name|AT_carries_dependency
-block|,
-name|AT_cdecl
-block|,
-name|AT_cf_audited_transfer
-block|,
-comment|// Clang-specific.
-name|AT_cf_consumed
-block|,
-comment|// Clang-specific.
-name|AT_cf_returns_autoreleased
-block|,
-comment|// Clang-specific.
-name|AT_cf_returns_not_retained
-block|,
-comment|// Clang-specific.
-name|AT_cf_returns_retained
-block|,
-comment|// Clang-specific.
-name|AT_cf_unknown_transfer
-block|,
-comment|// Clang-specific.
-name|AT_cleanup
-block|,
-name|AT_common
-block|,
-name|AT_const
-block|,
-name|AT_constant
-block|,
-name|AT_constructor
-block|,
-name|AT_deprecated
-block|,
-name|AT_destructor
-block|,
-name|AT_device
-block|,
-name|AT_dllexport
-block|,
-name|AT_dllimport
-block|,
-name|AT_exclusive_lock_function
-block|,
-name|AT_exclusive_locks_required
-block|,
-name|AT_exclusive_trylock_function
-block|,
-name|AT_ext_vector_type
-block|,
-name|AT_fastcall
-block|,
-name|AT_format
-block|,
-name|AT_format_arg
-block|,
-name|AT_global
-block|,
-name|AT_gnu_inline
-block|,
-name|AT_guarded_by
-block|,
-name|AT_guarded_var
-block|,
-name|AT_host
-block|,
-name|AT_IBAction
-block|,
-comment|// Clang-specific.
-name|AT_IBOutlet
-block|,
-comment|// Clang-specific.
-name|AT_IBOutletCollection
-block|,
-comment|// Clang-specific.
-name|AT_init_priority
-block|,
-name|AT_launch_bounds
-block|,
-name|AT_lock_returned
-block|,
-name|AT_lockable
-block|,
-name|AT_locks_excluded
-block|,
-name|AT_malloc
-block|,
-name|AT_may_alias
-block|,
-name|AT_mode
-block|,
-name|AT_MsStruct
-block|,
-name|AT_naked
-block|,
-name|AT_neon_polyvector_type
-block|,
-comment|// Clang-specific.
-name|AT_neon_vector_type
-block|,
-comment|// Clang-specific.
-name|AT_no_instrument_function
-block|,
-name|AT_no_thread_safety_analysis
-block|,
-name|AT_nocommon
-block|,
-name|AT_nodebug
-block|,
-name|AT_noinline
-block|,
-name|AT_nonnull
-block|,
-name|AT_noreturn
-block|,
-name|AT_nothrow
-block|,
-name|AT_ns_bridged
-block|,
-comment|// Clang-specific.
-name|AT_ns_consumed
-block|,
-comment|// Clang-specific.
-name|AT_ns_consumes_self
-block|,
-comment|// Clang-specific.
-name|AT_ns_returns_autoreleased
-block|,
-comment|// Clang-specific.
-name|AT_ns_returns_not_retained
-block|,
-comment|// Clang-specific.
-name|AT_ns_returns_retained
-block|,
-comment|// Clang-specific.
-name|AT_nsobject
-block|,
-name|AT_objc_exception
-block|,
-name|AT_objc_gc
-block|,
-name|AT_objc_method_family
-block|,
-name|AT_objc_ownership
-block|,
-comment|// Clang-specific.
-name|AT_objc_precise_lifetime
-block|,
-comment|// Clang-specific.
-name|AT_objc_returns_inner_pointer
-block|,
-comment|// Clang-specific.
-name|AT_opencl_image_access
-block|,
-comment|// OpenCL-specific.
-name|AT_opencl_kernel_function
-block|,
-comment|// OpenCL-specific.
-name|AT_overloadable
-block|,
-comment|// Clang-specific.
-name|AT_ownership_holds
-block|,
-comment|// Clang-specific.
-name|AT_ownership_returns
-block|,
-comment|// Clang-specific.
-name|AT_ownership_takes
-block|,
-comment|// Clang-specific.
-name|AT_packed
-block|,
-name|AT_pascal
-block|,
-name|AT_pcs
-block|,
-comment|// ARM specific
-name|AT_pt_guarded_by
-block|,
-name|AT_pt_guarded_var
-block|,
-name|AT_pure
-block|,
-name|AT_regparm
-block|,
-name|AT_reqd_wg_size
-block|,
-name|AT_scoped_lockable
-block|,
-name|AT_section
-block|,
-name|AT_sentinel
-block|,
-name|AT_shared
-block|,
-name|AT_shared_lock_function
-block|,
-name|AT_shared_locks_required
-block|,
-name|AT_shared_trylock_function
-block|,
-name|AT_stdcall
-block|,
-name|AT_thiscall
-block|,
-name|AT_transparent_union
-block|,
-name|AT_unavailable
-block|,
-name|AT_unlock_function
-block|,
-name|AT_unused
-block|,
-name|AT_used
-block|,
-name|AT_uuid
-block|,
-name|AT_vecreturn
-block|,
-comment|// PS3 PPU-specific.
-name|AT_vector_size
-block|,
-name|AT_visibility
-block|,
-name|AT_warn_unused_result
-block|,
-name|AT_weak
-block|,
-name|AT_weak_import
-block|,
-name|AT_weakref
-block|,
-name|AT_returns_twice
-block|,
+define|#
+directive|define
+name|PARSED_ATTR
+parameter_list|(
+name|NAME
+parameter_list|)
+value|AT_##NAME,
+include|#
+directive|include
+file|"clang/Sema/AttrParsedAttrList.inc"
+name|PARSED_ATTR
+argument_list|(
+argument|address_space
+argument_list|)
+name|PARSED_ATTR
+argument_list|(
+argument|base_check
+argument_list|)
+name|PARSED_ATTR
+argument_list|(
+argument|cf_returns_autoreleased
+argument_list|)
+name|PARSED_ATTR
+argument_list|(
+argument|ext_vector_type
+argument_list|)
+name|PARSED_ATTR
+argument_list|(
+argument|mode
+argument_list|)
+name|PARSED_ATTR
+argument_list|(
+argument|neon_polyvector_type
+argument_list|)
+name|PARSED_ATTR
+argument_list|(
+argument|neon_vector_type
+argument_list|)
+name|PARSED_ATTR
+argument_list|(
+argument|objc_gc
+argument_list|)
+name|PARSED_ATTR
+argument_list|(
+argument|objc_ownership
+argument_list|)
+name|PARSED_ATTR
+argument_list|(
+argument|opencl_image_access
+argument_list|)
+name|PARSED_ATTR
+argument_list|(
+argument|vector_size
+argument_list|)
+undef|#
+directive|undef
+name|PARSED_ATTR
 name|IgnoredAttribute
 block|,
 name|UnknownAttribute
@@ -1389,6 +1198,27 @@ argument_list|)
 block|;
 return|return
 name|UnavailableLoc
+return|;
+block|}
+specifier|const
+name|Expr
+operator|*
+name|getMessageExpr
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|getKind
+argument_list|()
+operator|==
+name|AT_availability
+operator|&&
+literal|"Not an availability attribute"
+argument_list|)
+block|;
+return|return
+name|MessageExpr
 return|;
 block|}
 block|}
@@ -1880,6 +1710,11 @@ parameter_list|,
 name|SourceLocation
 name|unavailable
 parameter_list|,
+specifier|const
+name|Expr
+modifier|*
+name|MessageExpr
+parameter_list|,
 name|bool
 name|declspec
 init|=
@@ -1930,6 +1765,8 @@ argument_list|,
 name|obsoleted
 argument_list|,
 name|unavailable
+argument_list|,
+name|MessageExpr
 argument_list|,
 name|declspec
 argument_list|,
@@ -2498,6 +2335,11 @@ parameter_list|,
 name|SourceLocation
 name|unavailable
 parameter_list|,
+specifier|const
+name|Expr
+modifier|*
+name|MessageExpr
+parameter_list|,
 name|bool
 name|declspec
 init|=
@@ -2536,6 +2378,8 @@ argument_list|,
 name|obsoleted
 argument_list|,
 name|unavailable
+argument_list|,
+name|MessageExpr
 argument_list|,
 name|declspec
 argument_list|,

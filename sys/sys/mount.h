@@ -631,6 +631,102 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Definitions for MNT_VNODE_FOREACH_ALL.  */
+end_comment
+
+begin_function_decl
+name|struct
+name|vnode
+modifier|*
+name|__mnt_vnode_next_all
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+modifier|*
+name|mvp
+parameter_list|,
+name|struct
+name|mount
+modifier|*
+name|mp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|vnode
+modifier|*
+name|__mnt_vnode_first_all
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+modifier|*
+name|mvp
+parameter_list|,
+name|struct
+name|mount
+modifier|*
+name|mp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|__mnt_vnode_markerfree_all
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+modifier|*
+name|mvp
+parameter_list|,
+name|struct
+name|mount
+modifier|*
+name|mp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|MNT_VNODE_FOREACH_ALL
+parameter_list|(
+name|vp
+parameter_list|,
+name|mp
+parameter_list|,
+name|mvp
+parameter_list|)
+define|\
+value|for (vp = __mnt_vnode_first_all(&(mvp), (mp)); \ 		(vp) != NULL; vp = __mnt_vnode_next_all(&(mvp), (mp)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MNT_VNODE_FOREACH_ALL_ABORT
+parameter_list|(
+name|mp
+parameter_list|,
+name|mvp
+parameter_list|)
+define|\
+value|do {								\ 		MNT_ILOCK(mp);						\ 		__mnt_vnode_markerfree_all(&(mvp), (mp));		\
+comment|/* MNT_IUNLOCK(mp); -- done in above function */
+value|\ 		mtx_assert(MNT_MTX(mp), MA_NOTOWNED);			\ 	} while (0)
+end_define
+
+begin_comment
+comment|/*  * Definitions for MNT_VNODE_FOREACH.  *  * This interface has been deprecated in favor of MNT_VNODE_FOREACH_ALL.  */
+end_comment
+
 begin_function_decl
 name|struct
 name|vnode
@@ -727,7 +823,7 @@ parameter_list|,
 name|mvp
 parameter_list|)
 define|\
-value|do {								\ 	  MNT_ILOCK(mp);						\           MNT_VNODE_FOREACH_ABORT_ILOCKED(mp, mvp);			\ 	  MNT_IUNLOCK(mp);						\ 	} while (0)
+value|do {								\ 		MNT_ILOCK(mp);						\ 		MNT_VNODE_FOREACH_ABORT_ILOCKED(mp, mvp);		\ 		MNT_IUNLOCK(mp);					\ 	} while (0)
 end_define
 
 begin_define
@@ -787,7 +883,7 @@ name|MNT_REL
 parameter_list|(
 name|mp
 parameter_list|)
-value|do {						\ 	KASSERT((mp)->mnt_ref> 0, ("negative mnt_ref"));			\ 	(mp)->mnt_ref--;						\ 	if ((mp)->mnt_ref == 0)						\ 		wakeup((mp));						\ } while (0)
+value|do {						\ 	KASSERT((mp)->mnt_ref> 0, ("negative mnt_ref"));		\ 	(mp)->mnt_ref--;						\ 	if ((mp)->mnt_ref == 0)						\ 		wakeup((mp));						\ } while (0)
 end_define
 
 begin_endif

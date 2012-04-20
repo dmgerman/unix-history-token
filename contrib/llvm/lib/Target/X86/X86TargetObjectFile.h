@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/Target/X86/X86TargetObjectFile.h - X86 Object Info -*- C++ -*-===//
+comment|//===-- X86TargetObjectFile.h - X86 Object Info -----------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -65,9 +65,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|X86TargetMachine
-decl_stmt|;
 comment|/// X8664_MachoTargetObjectFile - This TLOF implementation is used for Darwin
 comment|/// x86-64.
 name|class

@@ -85,12 +85,6 @@ decl_stmt|;
 name|class
 name|FunctionPass
 decl_stmt|;
-name|class
-name|MachineCodeEmitter
-decl_stmt|;
-name|class
-name|formatted_raw_ostream
-decl_stmt|;
 name|FunctionPass
 modifier|*
 name|createMipsISelDag

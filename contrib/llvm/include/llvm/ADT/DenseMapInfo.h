@@ -302,7 +302,7 @@ argument_list|()
 block|{
 return|return
 operator|~
-literal|0
+literal|0U
 return|;
 block|}
 specifier|static

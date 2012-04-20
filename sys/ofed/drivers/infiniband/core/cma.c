@@ -414,12 +414,26 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+end_if
+
 begin_decl_stmt
 specifier|static
 name|int
 name|next_port
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct
@@ -11467,6 +11481,12 @@ modifier|*
 name|id_priv
 parameter_list|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
 name|struct
 name|rdma_bind_list
 modifier|*
@@ -11654,6 +11674,14 @@ expr_stmt|;
 return|return
 name|ret
 return|;
+else|#
+directive|else
+return|return
+operator|-
+name|ENOSPC
+return|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -15698,6 +15726,17 @@ modifier|*
 name|mgid
 parameter_list|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
 name|unsigned
 name|char
 name|mc_map
@@ -15721,6 +15760,11 @@ name|addr
 operator|.
 name|dev_addr
 decl_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|INET
 name|struct
 name|sockaddr_in
 modifier|*
@@ -15733,6 +15777,8 @@ operator|*
 operator|)
 name|addr
 decl_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|INET6
@@ -15882,6 +15928,9 @@ operator|)
 expr_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|INET
 block|}
 else|else
 block|{
@@ -15933,6 +15982,8 @@ operator|+
 literal|4
 operator|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 end_function
@@ -18190,7 +18241,14 @@ parameter_list|)
 block|{
 name|int
 name|ret
-decl_stmt|,
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+name|int
 name|low
 decl_stmt|,
 name|high
@@ -18239,6 +18297,8 @@ operator|)
 operator|+
 name|low
 expr_stmt|;
+endif|#
+directive|endif
 name|cma_wq
 operator|=
 name|create_singlethread_workqueue

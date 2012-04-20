@@ -147,7 +147,7 @@ argument_list|(
 argument|R
 argument_list|)
 block|{ }
-comment|// run - Output the instruction set description, returning true on failure.
+comment|// run - Output the instruction set description.
 name|void
 name|run
 argument_list|(

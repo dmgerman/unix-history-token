@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- XCoreFrameLowering.h - Frame info for XCore Target -------*- C++ -*-==//
+comment|//===-- XCoreFrameLowering.h - Frame info for XCore Target ------*- C++ -*-===//
 end_comment
 
 begin_comment

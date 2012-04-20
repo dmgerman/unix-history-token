@@ -70,6 +70,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Frontend/MigratorOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Frontend/CodeGenOptions.h"
 end_include
 
@@ -150,8 +156,101 @@ name|namespace
 name|clang
 block|{
 name|class
+name|CompilerInvocation
+decl_stmt|;
+name|class
 name|DiagnosticsEngine
 decl_stmt|;
+name|namespace
+name|driver
+block|{
+name|class
+name|ArgList
+decl_stmt|;
+block|}
+comment|/// CompilerInvocation - Fill out Opts based on the options given in Args.
+comment|/// Args must have been created from the OptTable returned by
+comment|/// createCC1OptTable(). When errors are encountered, return false and,
+comment|/// if Diags is non-null, report the error(s).
+name|bool
+name|ParseDiagnosticArgs
+argument_list|(
+name|DiagnosticOptions
+operator|&
+name|Opts
+argument_list|,
+name|driver
+operator|::
+name|ArgList
+operator|&
+name|Args
+argument_list|,
+name|DiagnosticsEngine
+operator|*
+name|Diags
+operator|=
+literal|0
+argument_list|)
+decl_stmt|;
+name|class
+name|CompilerInvocationBase
+range|:
+name|public
+name|RefCountedBase
+operator|<
+name|CompilerInvocation
+operator|>
+block|{
+name|protected
+operator|:
+comment|/// Options controlling the language variant.
+name|IntrusiveRefCntPtr
+operator|<
+name|LangOptions
+operator|>
+name|LangOpts
+block|;
+name|public
+operator|:
+name|CompilerInvocationBase
+argument_list|()
+block|;
+name|CompilerInvocationBase
+argument_list|(
+specifier|const
+name|CompilerInvocationBase
+operator|&
+name|X
+argument_list|)
+block|;
+name|LangOptions
+operator|*
+name|getLangOpts
+argument_list|()
+block|{
+return|return
+name|LangOpts
+operator|.
+name|getPtr
+argument_list|()
+return|;
+block|}
+specifier|const
+name|LangOptions
+operator|*
+name|getLangOpts
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LangOpts
+operator|.
+name|getPtr
+argument_list|()
+return|;
+block|}
+expr|}
+block|;
 comment|/// CompilerInvocation - Helper class for holding the data necessary to invoke
 comment|/// the compiler.
 comment|///
@@ -160,18 +259,16 @@ comment|/// compiler, including data such as the include paths, the code generat
 comment|/// options, the warning flags, and so on.
 name|class
 name|CompilerInvocation
-range|:
+operator|:
 name|public
-name|llvm
-operator|::
-name|RefCountedBase
-operator|<
-name|CompilerInvocation
-operator|>
+name|CompilerInvocationBase
 block|{
 comment|/// Options controlling the static analyzer.
 name|AnalyzerOptions
 name|AnalyzerOpts
+block|;
+name|MigratorOptions
+name|MigratorOpts
 block|;
 comment|/// Options controlling IRgen and the backend.
 name|CodeGenOptions
@@ -197,10 +294,6 @@ comment|/// Options controlling the #include directive.
 name|HeaderSearchOptions
 name|HeaderSearchOpts
 block|;
-comment|/// Options controlling the language variant.
-name|LangOptions
-name|LangOpts
-block|;
 comment|/// Options controlling the preprocessor (aside from #include handling).
 name|PreprocessorOptions
 name|PreprocessorOpts
@@ -221,14 +314,14 @@ block|{}
 comment|/// @name Utility Methods
 comment|/// @{
 comment|/// CreateFromArgs - Create a compiler invocation from a list of input
-comment|/// options.
+comment|/// options. Returns true on success.
 comment|///
 comment|/// \param Res [out] - The resulting invocation.
 comment|/// \param ArgBegin - The first element in the argument vector.
 comment|/// \param ArgEnd - The last element in the argument vector.
 comment|/// \param Diags - The diagnostic engine to use for errors.
 specifier|static
-name|void
+name|bool
 name|CreateFromArgs
 argument_list|(
 name|CompilerInvocation
@@ -310,7 +403,9 @@ argument_list|)
 block|{
 name|setLangDefaults
 argument_list|(
-name|LangOpts
+operator|*
+name|getLangOpts
+argument_list|()
 argument_list|,
 name|IK
 argument_list|,
@@ -366,6 +461,26 @@ return|return
 name|AnalyzerOpts
 return|;
 block|}
+name|MigratorOptions
+operator|&
+name|getMigratorOpts
+argument_list|()
+block|{
+return|return
+name|MigratorOpts
+return|;
+block|}
+specifier|const
+name|MigratorOptions
+operator|&
+name|getMigratorOpts
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MigratorOpts
+return|;
+block|}
 name|CodeGenOptions
 operator|&
 name|getCodeGenOpts
@@ -484,26 +599,6 @@ specifier|const
 block|{
 return|return
 name|FrontendOpts
-return|;
-block|}
-name|LangOptions
-operator|&
-name|getLangOpts
-argument_list|()
-block|{
-return|return
-name|LangOpts
-return|;
-block|}
-specifier|const
-name|LangOptions
-operator|&
-name|getLangOpts
-argument_list|()
-specifier|const
-block|{
-return|return
-name|LangOpts
 return|;
 block|}
 name|PreprocessorOptions

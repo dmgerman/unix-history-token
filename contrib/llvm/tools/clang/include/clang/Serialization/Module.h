@@ -112,6 +112,9 @@ block|{
 name|class
 name|DeclContext
 decl_stmt|;
+name|class
+name|Module
+decl_stmt|;
 name|namespace
 name|serialization
 block|{
@@ -167,21 +170,23 @@ comment|/// \brief Information about a module that has been loaded by the ASTRea
 comment|///
 comment|/// Each instance of the Module class corresponds to a single AST file, which
 comment|/// may be a precompiled header, precompiled preamble, a module, or an AST file
-comment|/// of some sort loaded as the main file, all of which are specific formulations of
-comment|/// the general notion of a "module". A module may depend on any number of
+comment|/// of some sort loaded as the main file, all of which are specific formulations
+comment|/// of the general notion of a "module". A module may depend on any number of
 comment|/// other modules.
 name|class
-name|Module
+name|ModuleFile
 block|{
 name|public
 label|:
-name|Module
+name|ModuleFile
 argument_list|(
 argument|ModuleKind Kind
+argument_list|,
+argument|unsigned Generation
 argument_list|)
 empty_stmt|;
 operator|~
-name|Module
+name|ModuleFile
 argument_list|()
 expr_stmt|;
 comment|// === General information ===
@@ -200,10 +205,12 @@ comment|/// user.
 name|bool
 name|DirectlyImported
 decl_stmt|;
+comment|/// \brief The generation of which this module file is a part.
+name|unsigned
+name|Generation
+decl_stmt|;
 comment|/// \brief The memory buffer that stores the data associated with
 comment|/// this AST file.
-name|llvm
-operator|::
 name|OwningPtr
 operator|<
 name|llvm
@@ -422,6 +429,28 @@ name|char
 modifier|*
 name|HeaderFileFrameworkStrings
 decl_stmt|;
+comment|// === Submodule information ===
+comment|/// \brief The number of submodules in this module.
+name|unsigned
+name|LocalNumSubmodules
+decl_stmt|;
+comment|/// \brief Base submodule ID for submodules local to this module.
+name|serialization
+operator|::
+name|SubmoduleID
+name|BaseSubmoduleID
+expr_stmt|;
+comment|/// \brief Remapping table for submodule IDs in this module.
+name|ContinuousRangeMap
+operator|<
+name|uint32_t
+operator|,
+name|int
+operator|,
+literal|2
+operator|>
+name|SubmoduleRemap
+expr_stmt|;
 comment|// === Selectors ===
 comment|/// \brief The number of selectors new to this file.
 comment|///
@@ -487,7 +516,7 @@ decl_stmt|;
 comment|/// \brief Offset of each declaration within the bitstream, indexed
 comment|/// by the declaration ID (-1).
 specifier|const
-name|uint32_t
+name|DeclOffset
 modifier|*
 name|DeclOffsets
 decl_stmt|;
@@ -507,6 +536,26 @@ operator|,
 literal|2
 operator|>
 name|DeclRemap
+expr_stmt|;
+comment|/// \brief Mapping from the module files that this module file depends on
+comment|/// to the base declaration ID for that module as it is understood within this
+comment|/// module.
+comment|///
+comment|/// This is effectively a reverse global-to-local mapping for declaration
+comment|/// IDs, so that we can interpret a true global ID (for this translation unit)
+comment|/// as a local ID (for this module file).
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|ModuleFile
+operator|*
+operator|,
+name|serialization
+operator|::
+name|DeclID
+operator|>
+name|GlobalToLocalDeclIDs
 expr_stmt|;
 comment|/// \brief The number of C++ base specifier sets in this AST file.
 name|unsigned
@@ -537,37 +586,60 @@ comment|/// for each DeclContext.
 name|DeclContextInfosMap
 name|DeclContextInfos
 decl_stmt|;
-typedef|typedef
-name|llvm
-operator|::
-name|DenseMap
-operator|<
+comment|/// \brief Array of file-level DeclIDs sorted by file.
+specifier|const
 name|serialization
 operator|::
-name|GlobalDeclID
-operator|,
-name|std
-operator|::
-name|pair
-operator|<
-name|serialization
-operator|::
-name|LocalDeclID
-operator|,
-name|serialization
-operator|::
-name|LocalDeclID
-operator|>
-expr|>
-name|ChainedObjCCategoriesMap
+name|DeclID
+operator|*
+name|FileSortedDecls
 expr_stmt|;
-comment|/// \brief ObjC categories that got chained to an interface from another
-comment|/// module.
-comment|/// Key is the ID of the interface.
-comment|/// Value is a pair of linked category DeclIDs (head category, tail category).
-name|ChainedObjCCategoriesMap
-name|ChainedObjCCategories
+comment|/// \brief Array of redeclaration chain location information within this
+comment|/// module file, sorted by the first declaration ID.
+specifier|const
+name|serialization
+operator|::
+name|LocalRedeclarationsInfo
+operator|*
+name|RedeclarationsMap
+expr_stmt|;
+comment|/// \brief The number of redeclaration info entries in RedeclarationsMap.
+name|unsigned
+name|LocalNumRedeclarationsInMap
 decl_stmt|;
+comment|/// \brief The redeclaration chains for declarations local to this
+comment|/// module file.
+name|SmallVector
+operator|<
+name|uint64_t
+operator|,
+literal|1
+operator|>
+name|RedeclarationChains
+expr_stmt|;
+comment|/// \brief Array of category list location information within this
+comment|/// module file, sorted by the definition ID.
+specifier|const
+name|serialization
+operator|::
+name|ObjCCategoriesInfo
+operator|*
+name|ObjCCategoriesMap
+expr_stmt|;
+comment|/// \brief The number of redeclaration info entries in ObjCCategoriesMap.
+name|unsigned
+name|LocalNumObjCCategoriesInMap
+decl_stmt|;
+comment|/// \brief The Objective-C category lists for categories known to this
+comment|/// module.
+name|SmallVector
+operator|<
+name|uint64_t
+operator|,
+literal|1
+operator|>
+name|ObjCCategories
+expr_stmt|;
 comment|// === Types ===
 comment|/// \brief The number of types in this AST file.
 name|unsigned
@@ -620,7 +692,7 @@ name|llvm
 operator|::
 name|SetVector
 operator|<
-name|Module
+name|ModuleFile
 operator|*
 operator|>
 name|ImportedBy
@@ -630,7 +702,7 @@ name|llvm
 operator|::
 name|SetVector
 operator|<
-name|Module
+name|ModuleFile
 operator|*
 operator|>
 name|Imports

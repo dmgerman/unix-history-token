@@ -102,6 +102,18 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
+comment|/// \brief Update an out-of-date identifier.
+name|virtual
+name|void
+name|updateOutOfDateIdentifier
+parameter_list|(
+name|IdentifierInfo
+modifier|&
+name|II
+parameter_list|)
+init|=
+literal|0
+function_decl|;
 block|}
 empty_stmt|;
 block|}

@@ -1133,13 +1133,15 @@ operator|==
 literal|0
 condition|)
 block|{
-specifier|const
 name|int
-name|ac
+name|tid
 init|=
+name|WME_AC_TO_TID
+argument_list|(
 name|M_WME_GETAC
 argument_list|(
 name|m
+argument_list|)
 argument_list|)
 decl_stmt|;
 name|struct
@@ -1152,7 +1154,7 @@ name|ni
 operator|->
 name|ni_tx_ampdu
 index|[
-name|ac
+name|tid
 index|]
 decl_stmt|;
 name|ieee80211_txampdu_count_packet
@@ -2355,10 +2357,7 @@ name|ni
 operator|->
 name|ni_tx_ampdu
 index|[
-name|TID_TO_WME_AC
-argument_list|(
 name|tid
-argument_list|)
 index|]
 expr_stmt|;
 if|if

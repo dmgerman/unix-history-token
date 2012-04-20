@@ -173,6 +173,13 @@ comment|/// available, unset means the register is currently being used.
 name|BitVector
 name|RegsAvailable
 decl_stmt|;
+comment|// These BitVectors are only used internally to forward(). They are members
+comment|// to avoid frequent reallocations.
+name|BitVector
+name|KillRegs
+decl_stmt|,
+name|DefRegs
+decl_stmt|;
 name|public
 label|:
 name|RegScavenger
@@ -431,18 +438,8 @@ name|test
 argument_list|(
 name|Reg
 argument_list|)
-return|;
-block|}
-name|bool
-name|isUnused
-argument_list|(
-name|unsigned
-name|Reg
-argument_list|)
-decl|const
-block|{
-return|return
-name|RegsAvailable
+operator|||
+name|ReservedRegs
 operator|.
 name|test
 argument_list|(
@@ -470,9 +467,11 @@ name|Regs
 parameter_list|)
 block|{
 name|RegsAvailable
-operator|&=
-operator|~
+operator|.
+name|reset
+argument_list|(
 name|Regs
+argument_list|)
 expr_stmt|;
 block|}
 name|void
@@ -491,18 +490,6 @@ block|}
 comment|/// Add Reg and all its sub-registers to BV.
 name|void
 name|addRegWithSubRegs
-parameter_list|(
-name|BitVector
-modifier|&
-name|BV
-parameter_list|,
-name|unsigned
-name|Reg
-parameter_list|)
-function_decl|;
-comment|/// Add Reg and its aliases to BV.
-name|void
-name|addRegWithAliases
 parameter_list|(
 name|BitVector
 modifier|&

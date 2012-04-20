@@ -348,6 +348,11 @@ range|:
 name|public
 name|DWARFContext
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|StringRef
 name|InfoSection
 block|;

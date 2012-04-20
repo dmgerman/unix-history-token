@@ -75,24 +75,10 @@ directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<string>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-name|class
-name|SmallVectorImpl
-expr_stmt|;
 name|class
 name|Value
 decl_stmt|;
@@ -104,6 +90,12 @@ name|APInt
 decl_stmt|;
 name|class
 name|TargetData
+decl_stmt|;
+name|class
+name|StringRef
+decl_stmt|;
+name|class
+name|MDNode
 decl_stmt|;
 comment|/// ComputeMaskedBits - Determine which of the bits specified in Mask are
 comment|/// known to be either zero or one and return them in the KnownZero/KnownOne
@@ -121,11 +113,6 @@ parameter_list|(
 name|Value
 modifier|*
 name|V
-parameter_list|,
-specifier|const
-name|APInt
-modifier|&
-name|Mask
 parameter_list|,
 name|APInt
 modifier|&
@@ -146,6 +133,19 @@ name|unsigned
 name|Depth
 init|=
 literal|0
+parameter_list|)
+function_decl|;
+name|void
+name|computeMaskedBitsLoad
+parameter_list|(
+specifier|const
+name|MDNode
+modifier|&
+name|Ranges
+parameter_list|,
+name|APInt
+modifier|&
+name|KnownZero
 parameter_list|)
 function_decl|;
 comment|/// ComputeSignBit - Determine whether the sign bit is known to be zero or
@@ -181,7 +181,8 @@ function_decl|;
 comment|/// isPowerOfTwo - Return true if the given value is known to have exactly one
 comment|/// bit set when defined. For vectors return true if every element is known to
 comment|/// be a power of two when defined.  Supports values with integer or pointer
-comment|/// type and vectors of integers.
+comment|/// type and vectors of integers.  If 'OrZero' is set then returns true if the
+comment|/// given value is either a power of two or zero.
 name|bool
 name|isPowerOfTwo
 parameter_list|(
@@ -195,6 +196,11 @@ modifier|*
 name|TD
 init|=
 literal|0
+parameter_list|,
+name|bool
+name|OrZero
+init|=
+name|false
 parameter_list|,
 name|unsigned
 name|Depth
@@ -438,37 +444,35 @@ name|TD
 argument_list|)
 return|;
 block|}
-comment|/// GetConstantStringInfo - This function computes the length of a
+comment|/// getConstantStringInfo - This function computes the length of a
 comment|/// null-terminated C string pointed to by V.  If successful, it returns true
-comment|/// and returns the string in Str.  If unsuccessful, it returns false.  If
-comment|/// StopAtNul is set to true (the default), the returned string is truncated
-comment|/// by a nul character in the global.  If StopAtNul is false, the nul
-comment|/// character is included in the result string.
+comment|/// and returns the string in Str.  If unsuccessful, it returns false.  This
+comment|/// does not include the trailing nul character by default.  If TrimAtNul is
+comment|/// set to false, then this returns any trailing nul characters as well as any
+comment|/// other characters that come after it.
 name|bool
-name|GetConstantStringInfo
-argument_list|(
+name|getConstantStringInfo
+parameter_list|(
 specifier|const
 name|Value
-operator|*
+modifier|*
 name|V
-argument_list|,
-name|std
-operator|::
-name|string
-operator|&
+parameter_list|,
+name|StringRef
+modifier|&
 name|Str
-argument_list|,
+parameter_list|,
 name|uint64_t
 name|Offset
-operator|=
+init|=
 literal|0
-argument_list|,
+parameter_list|,
 name|bool
-name|StopAtNul
-operator|=
+name|TrimAtNul
+init|=
 name|true
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// GetStringLength - If we can compute the length of the string pointed to by
 comment|/// the specified pointer, return 'len+1'.  If we can't, return 0.
 name|uint64_t
@@ -557,6 +561,40 @@ specifier|const
 name|Value
 modifier|*
 name|V
+parameter_list|)
+function_decl|;
+comment|/// isSafeToSpeculativelyExecute - Return true if the instruction does not
+comment|/// have any effects besides calculating the result and does not have
+comment|/// undefined behavior.
+comment|///
+comment|/// This method never returns true for an instruction that returns true for
+comment|/// mayHaveSideEffects; however, this method also does some other checks in
+comment|/// addition. It checks for undefined behavior, like dividing by zero or
+comment|/// loading from an invalid pointer (but not for undefined results, like a
+comment|/// shift with a shift amount larger than the width of the result). It checks
+comment|/// for malloc and alloca because speculatively executing them might cause a
+comment|/// memory leak. It also returns false for instructions related to control
+comment|/// flow, specifically terminators and PHI nodes.
+comment|///
+comment|/// This method only looks at the instruction itself and its operands, so if
+comment|/// this method returns true, it is safe to move the instruction as long as
+comment|/// the correct dominance relationships for the operands and users hold.
+comment|/// However, this method can return true for instructions that read memory;
+comment|/// for such instructions, moving them may change the resulting value.
+name|bool
+name|isSafeToSpeculativelyExecute
+parameter_list|(
+specifier|const
+name|Value
+modifier|*
+name|V
+parameter_list|,
+specifier|const
+name|TargetData
+modifier|*
+name|TD
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 block|}

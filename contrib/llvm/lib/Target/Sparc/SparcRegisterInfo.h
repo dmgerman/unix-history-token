@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- SparcRegisterInfo.h - Sparc Register Information Impl ----*- C++ -*-===//
+comment|//===-- SparcRegisterInfo.h - Sparc Register Information Impl ---*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -119,7 +119,7 @@ argument_list|)
 block|;
 comment|/// Code Generation virtual methods...
 specifier|const
-name|unsigned
+name|uint16_t
 operator|*
 name|getCalleeSavedRegs
 argument_list|(

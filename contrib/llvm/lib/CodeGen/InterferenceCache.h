@@ -70,6 +70,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|LiveIntervals
+decl_stmt|;
+name|class
 name|InterferenceCache
 block|{
 specifier|const
@@ -80,10 +83,6 @@ decl_stmt|;
 name|LiveIntervalUnion
 modifier|*
 name|LIUArray
-decl_stmt|;
-name|SlotIndexes
-modifier|*
-name|Indexes
 decl_stmt|;
 name|MachineFunction
 modifier|*
@@ -140,6 +139,11 @@ comment|/// Indexes - Mapping block numbers to SlotIndex ranges.
 name|SlotIndexes
 modifier|*
 name|Indexes
+decl_stmt|;
+comment|/// LIS - Used for accessing register mask interference maps.
+name|LiveIntervals
+modifier|*
+name|LIS
 decl_stmt|;
 comment|/// PrevPos - The previous position the iterators were moved to.
 name|SlotIndex
@@ -219,6 +223,11 @@ name|Indexes
 argument_list|(
 literal|0
 argument_list|)
+operator|,
+name|LIS
+argument_list|(
+literal|0
+argument_list|)
 block|{}
 name|void
 name|clear
@@ -226,6 +235,8 @@ argument_list|(
 argument|MachineFunction *mf
 argument_list|,
 argument|SlotIndexes *indexes
+argument_list|,
+argument|LiveIntervals *lis
 argument_list|)
 block|{
 name|assert
@@ -248,6 +259,10 @@ block|;
 name|Indexes
 operator|=
 name|indexes
+block|;
+name|LIS
+operator|=
+name|lis
 block|;     }
 name|unsigned
 name|getPhysReg
@@ -412,11 +427,6 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
-name|Indexes
-argument_list|(
-literal|0
-argument_list|)
-operator|,
 name|MF
 argument_list|(
 literal|0
@@ -438,6 +448,9 @@ name|LiveIntervalUnion
 operator|*
 argument_list|,
 name|SlotIndexes
+operator|*
+argument_list|,
+name|LiveIntervals
 operator|*
 argument_list|,
 specifier|const

@@ -65,6 +65,12 @@ directive|include
 file|"clang/AST/Stmt.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -148,6 +154,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 block|{
 return|return
 name|SourceRange
@@ -365,6 +372,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 block|{
 return|return
 name|SourceRange
@@ -1053,6 +1061,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 block|{
 return|return
 name|SourceRange
@@ -1119,7 +1128,246 @@ argument_list|)
 return|;
 block|}
 expr|}
-block|;   }
+block|;
+comment|/// \brief Representation of a Microsoft __if_exists or __if_not_exists
+comment|/// statement with a dependent name.
+comment|///
+comment|/// The __if_exists statement can be used to include a sequence of statements
+comment|/// in the program only when a particular dependent name does not exist. For
+comment|/// example:
+comment|///
+comment|/// \code
+comment|/// template<typename T>
+comment|/// void call_foo(T&t) {
+comment|///   __if_exists (T::foo) {
+comment|///     t.foo(); // okay: only called when T::foo exists.
+comment|///   }
+comment|/// }
+comment|/// \endcode
+comment|///
+comment|/// Similarly, the __if_not_exists statement can be used to include the
+comment|/// statements when a particular name does not exist.
+comment|///
+comment|/// Note that this statement only captures __if_exists and __if_not_exists
+comment|/// statements whose name is dependent. All non-dependent cases are handled
+comment|/// directly in the parser, so that they don't introduce a new scope. Clang
+comment|/// introduces scopes in the dependent case to keep names inside the compound
+comment|/// statement from leaking out into the surround statements, which would
+comment|/// compromise the template instantiation model. This behavior differs from
+comment|/// Visual C++ (which never introduces a scope), but is a fairly reasonable
+comment|/// approximation of the VC++ behavior.
+name|class
+name|MSDependentExistsStmt
+operator|:
+name|public
+name|Stmt
+block|{
+name|SourceLocation
+name|KeywordLoc
+block|;
+name|bool
+name|IsIfExists
+block|;
+name|NestedNameSpecifierLoc
+name|QualifierLoc
+block|;
+name|DeclarationNameInfo
+name|NameInfo
+block|;
+name|Stmt
+operator|*
+name|SubStmt
+block|;
+name|friend
+name|class
+name|ASTReader
+block|;
+name|friend
+name|class
+name|ASTStmtReader
+block|;
+name|public
+operator|:
+name|MSDependentExistsStmt
+argument_list|(
+argument|SourceLocation KeywordLoc
+argument_list|,
+argument|bool IsIfExists
+argument_list|,
+argument|NestedNameSpecifierLoc QualifierLoc
+argument_list|,
+argument|DeclarationNameInfo NameInfo
+argument_list|,
+argument|CompoundStmt *SubStmt
+argument_list|)
+operator|:
+name|Stmt
+argument_list|(
+name|MSDependentExistsStmtClass
+argument_list|)
+block|,
+name|KeywordLoc
+argument_list|(
+name|KeywordLoc
+argument_list|)
+block|,
+name|IsIfExists
+argument_list|(
+name|IsIfExists
+argument_list|)
+block|,
+name|QualifierLoc
+argument_list|(
+name|QualifierLoc
+argument_list|)
+block|,
+name|NameInfo
+argument_list|(
+name|NameInfo
+argument_list|)
+block|,
+name|SubStmt
+argument_list|(
+argument|reinterpret_cast<Stmt *>(SubStmt)
+argument_list|)
+block|{ }
+comment|/// \brief Retrieve the location of the __if_exists or __if_not_exists
+comment|/// keyword.
+name|SourceLocation
+name|getKeywordLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|KeywordLoc
+return|;
+block|}
+comment|/// \brief Determine whether this is an __if_exists statement.
+name|bool
+name|isIfExists
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsIfExists
+return|;
+block|}
+comment|/// \brief Determine whether this is an __if_exists statement.
+name|bool
+name|isIfNotExists
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|IsIfExists
+return|;
+block|}
+comment|/// \brief Retrieve the nested-name-specifier that qualifies this name, if
+comment|/// any.
+name|NestedNameSpecifierLoc
+name|getQualifierLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|QualifierLoc
+return|;
+block|}
+comment|/// \brief Retrieve the name of the entity we're testing for, along with
+comment|/// location information
+name|DeclarationNameInfo
+name|getNameInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NameInfo
+return|;
+block|}
+comment|/// \brief Retrieve the compound statement that will be included in the
+comment|/// program only if the existence of the symbol matches the initial keyword.
+name|CompoundStmt
+operator|*
+name|getSubStmt
+argument_list|()
+specifier|const
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+name|CompoundStmt
+operator|*
+operator|>
+operator|(
+name|SubStmt
+operator|)
+return|;
+block|}
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|SourceRange
+argument_list|(
+name|KeywordLoc
+argument_list|,
+name|SubStmt
+operator|->
+name|getLocEnd
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|child_range
+name|children
+argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|(
+operator|&
+name|SubStmt
+argument_list|,
+operator|&
+name|SubStmt
+operator|+
+literal|1
+argument_list|)
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|MSDependentExistsStmtClass
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|MSDependentExistsStmt *
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+expr|}
+block|;  }
 end_decl_stmt
 
 begin_comment

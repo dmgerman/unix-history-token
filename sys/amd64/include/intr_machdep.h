@@ -58,7 +58,7 @@ value|0xfee00000
 end_define
 
 begin_comment
-comment|/*  * - 1 ??? dummy counter.  * - 2 counters for each I/O interrupt.  * - 1 counter for each CPU for lapic timer.  * - 7 counters for each CPU for IPI counters for SMP.  */
+comment|/*  * - 1 ??? dummy counter.  * - 2 counters for each I/O interrupt.  * - 1 counter for each CPU for lapic timer.  * - 8 counters for each CPU for IPI counters for SMP.  */
 end_comment
 
 begin_ifdef
@@ -71,7 +71,7 @@ begin_define
 define|#
 directive|define
 name|INTRCNT_COUNT
-value|(1 + NUM_IO_INTS * 2 + (1 + 7) * MAXCPU)
+value|(1 + NUM_IO_INTS * 2 + (1 + 8) * MAXCPU)
 end_define
 
 begin_else

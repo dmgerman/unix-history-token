@@ -533,9 +533,7 @@ name|MDNode
 modifier|*
 name|getMetadata
 argument_list|(
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|Kind
 argument_list|)
 decl|const
@@ -640,9 +638,7 @@ function_decl|;
 name|void
 name|setMetadata
 parameter_list|(
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|Kind
 parameter_list|,
 name|MDNode
@@ -711,9 +707,7 @@ name|MDNode
 modifier|*
 name|getMetadataImpl
 argument_list|(
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|Kind
 argument_list|)
 decl|const
@@ -876,29 +870,6 @@ name|mayThrow
 argument_list|()
 return|;
 block|}
-comment|/// isSafeToSpeculativelyExecute - Return true if the instruction does not
-comment|/// have any effects besides calculating the result and does not have
-comment|/// undefined behavior.
-comment|///
-comment|/// This method never returns true for an instruction that returns true for
-comment|/// mayHaveSideEffects; however, this method also does some other checks in
-comment|/// addition. It checks for undefined behavior, like dividing by zero or
-comment|/// loading from an invalid pointer (but not for undefined results, like a
-comment|/// shift with a shift amount larger than the width of the result). It checks
-comment|/// for malloc and alloca because speculatively executing them might cause a
-comment|/// memory leak. It also returns false for instructions related to control
-comment|/// flow, specifically terminators and PHI nodes.
-comment|///
-comment|/// This method only looks at the instruction itself and its operands, so if
-comment|/// this method returns true, it is safe to move the instruction as long as
-comment|/// the correct dominance relationships for the operands and users hold.
-comment|/// However, this method can return true for instructions that read memory;
-comment|/// for such instructions, moving them may change the resulting value.
-name|bool
-name|isSafeToSpeculativelyExecute
-argument_list|()
-specifier|const
-expr_stmt|;
 comment|/// clone() - Create a copy of 'this' instruction that is identical in all
 comment|/// ways except the following:
 comment|///   * The instruction has no parent

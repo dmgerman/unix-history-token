@@ -186,7 +186,7 @@ decl_stmt|;
 comment|// Callee saved registers of last MF. Assumed to be valid until the next
 comment|// runOnFunction() call.
 specifier|const
-name|unsigned
+name|uint16_t
 modifier|*
 name|CalleeSaved
 decl_stmt|;

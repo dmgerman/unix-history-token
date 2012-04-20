@@ -2444,7 +2444,77 @@ init|=
 literal|0x82
 block|}
 enum|;
+comment|// Mips Specific e_flags
+enum|enum
+block|{
+name|EF_MIPS_NOREORDER
+init|=
+literal|0x00000001
+block|,
+comment|// Don't reorder instructions
+name|EF_MIPS_PIC
+init|=
+literal|0x00000002
+block|,
+comment|// Position independent code
+name|EF_MIPS_CPIC
+init|=
+literal|0x00000004
+block|,
+comment|// Call object with Position independent code
+name|EF_MIPS_ARCH_1
+init|=
+literal|0x00000000
+block|,
+comment|// MIPS1 instruction set
+name|EF_MIPS_ARCH_2
+init|=
+literal|0x10000000
+block|,
+comment|// MIPS2 instruction set
+name|EF_MIPS_ARCH_3
+init|=
+literal|0x20000000
+block|,
+comment|// MIPS3 instruction set
+name|EF_MIPS_ARCH_4
+init|=
+literal|0x30000000
+block|,
+comment|// MIPS4 instruction set
+name|EF_MIPS_ARCH_5
+init|=
+literal|0x40000000
+block|,
+comment|// MIPS5 instruction set
+name|EF_MIPS_ARCH_32
+init|=
+literal|0x50000000
+block|,
+comment|// MIPS32 instruction set per linux not elf.h
+name|EF_MIPS_ARCH_64
+init|=
+literal|0x60000000
+block|,
+comment|// MIPS64 instruction set per linux not elf.h
+name|EF_MIPS_ARCH_32R2
+init|=
+literal|0x70000000
+block|,
+comment|// mips32r2
+name|EF_MIPS_ARCH_64R2
+init|=
+literal|0x80000000
+block|,
+comment|// mips64r2
+name|EF_MIPS_ARCH
+init|=
+literal|0xf0000000
+comment|// Mask for applying EF_MIPS_ARCH_ variant
+block|}
+enum|;
 comment|// ELF Relocation types for Mips
+comment|// .
 enum|enum
 block|{
 name|R_MIPS_NONE
@@ -2484,6 +2554,10 @@ init|=
 literal|8
 block|,
 name|R_MIPS_GOT16
+init|=
+literal|9
+block|,
+name|R_MIPS_GOT
 init|=
 literal|9
 block|,
@@ -2885,6 +2959,21 @@ init|=
 literal|0x60000000
 block|,
 comment|// Lowest operating system-specific type.
+name|SHT_GNU_verdef
+init|=
+literal|0x6ffffffd
+block|,
+comment|// GNU version definitions.
+name|SHT_GNU_verneed
+init|=
+literal|0x6ffffffe
+block|,
+comment|// GNU version references.
+name|SHT_GNU_versym
+init|=
+literal|0x6fffffff
+block|,
+comment|// GNU symbol versions table.
 name|SHT_HIOS
 init|=
 literal|0x6fffffff
@@ -3385,6 +3474,11 @@ init|=
 literal|8
 block|,
 comment|// Highest operating system-specific symbol type
+name|STT_GNU_IFUNC
+init|=
+literal|10
+block|,
+comment|// GNU indirect function
 name|STT_LOPROC
 init|=
 literal|13
@@ -4294,6 +4388,70 @@ name|DF_STATIC_TLS
 init|=
 literal|0x10
 comment|// Reject attempts to load dynamically.
+block|}
+enum|;
+comment|// ElfXX_VerDef structure version (GNU versioning)
+enum|enum
+block|{
+name|VER_DEF_NONE
+init|=
+literal|0
+block|,
+name|VER_DEF_CURRENT
+init|=
+literal|1
+block|}
+enum|;
+comment|// VerDef Flags (ElfXX_VerDef::vd_flags)
+enum|enum
+block|{
+name|VER_FLG_BASE
+init|=
+literal|0x1
+block|,
+name|VER_FLG_WEAK
+init|=
+literal|0x2
+block|,
+name|VER_FLG_INFO
+init|=
+literal|0x4
+block|}
+enum|;
+comment|// Special constants for the version table. (SHT_GNU_versym/.gnu.version)
+enum|enum
+block|{
+name|VER_NDX_LOCAL
+init|=
+literal|0
+block|,
+comment|// Unversioned local symbol
+name|VER_NDX_GLOBAL
+init|=
+literal|1
+block|,
+comment|// Unversioned global symbol
+name|VERSYM_VERSION
+init|=
+literal|0x7fff
+block|,
+comment|// Version Index mask
+name|VERSYM_HIDDEN
+init|=
+literal|0x8000
+comment|// Hidden bit (non-default version)
+block|}
+enum|;
+comment|// ElfXX_VerNeed structure version (GNU versioning)
+enum|enum
+block|{
+name|VER_NEED_NONE
+init|=
+literal|0
+block|,
+name|VER_NEED_CURRENT
+init|=
+literal|1
 block|}
 enum|;
 block|}

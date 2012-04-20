@@ -113,6 +113,12 @@ directive|include
 file|"llvm/Support/Atomic.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Valgrind.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -505,6 +511,11 @@ name|tmp
 condition|)
 name|RegisterStatistic
 argument_list|()
+expr_stmt|;
+name|TsanHappensAfter
+argument_list|(
+name|this
+argument_list|)
 expr_stmt|;
 return|return
 operator|*

@@ -69,6 +69,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|error_code
+decl_stmt|;
 name|namespace
 name|sys
 block|{
@@ -278,21 +281,21 @@ operator|&
 name|name
 argument_list|)
 decl_stmt|;
-comment|// These methods change the specified standard stream (stdin,
-comment|// stdout, or stderr) to binary mode. They return true if an error
-comment|// occurred
+comment|// These methods change the specified standard stream (stdin, stdout, or
+comment|// stderr) to binary mode. They return errc::success if the specified stream
+comment|// was changed. Otherwise a platform dependent error is returned.
 specifier|static
-name|bool
+name|error_code
 name|ChangeStdinToBinary
 parameter_list|()
 function_decl|;
 specifier|static
-name|bool
+name|error_code
 name|ChangeStdoutToBinary
 parameter_list|()
 function_decl|;
 specifier|static
-name|bool
+name|error_code
 name|ChangeStderrToBinary
 parameter_list|()
 function_decl|;

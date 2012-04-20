@@ -99,6 +99,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|TargetLowering
+decl_stmt|;
 comment|/// SCEVExpander - This class uses information about analyze scalars to
 comment|/// rewrite expressions in canonical form.
 comment|///
@@ -207,6 +210,18 @@ name|Instruction
 modifier|*
 name|IVIncInsertPos
 decl_stmt|;
+comment|/// Phis that complete an IV chain. Reuse
+name|std
+operator|::
+name|set
+operator|<
+name|AssertingVH
+operator|<
+name|PHINode
+operator|>
+expr|>
+name|ChainedPhis
+expr_stmt|;
 comment|/// CanonicalMode - When true, expressions are expanded in "canonical"
 comment|/// form. In particular, addrecs are expanded as arithmetic based on
 comment|/// a canonical induction variable. When false, expression are expanded
@@ -351,6 +366,11 @@ name|InsertedPostIncValues
 operator|.
 name|clear
 argument_list|()
+block|;
+name|ChainedPhis
+operator|.
+name|clear
+argument_list|()
 block|;     }
 comment|/// getOrInsertCanonicalInductionVariable - This method returns the
 comment|/// canonical induction variable of the specified type for the specified
@@ -370,10 +390,10 @@ operator|*
 name|Ty
 argument_list|)
 expr_stmt|;
-comment|/// hoistStep - Utility for hoisting an IV increment.
-specifier|static
-name|bool
-name|hoistStep
+comment|/// getIVIncOperand - Return the induction variable increment's IV operand.
+name|Instruction
+modifier|*
+name|getIVIncOperand
 parameter_list|(
 name|Instruction
 modifier|*
@@ -383,10 +403,21 @@ name|Instruction
 modifier|*
 name|InsertPos
 parameter_list|,
-specifier|const
-name|DominatorTree
+name|bool
+name|allowScale
+parameter_list|)
+function_decl|;
+comment|/// hoistIVInc - Utility for hoisting an IV increment.
+name|bool
+name|hoistIVInc
+parameter_list|(
+name|Instruction
 modifier|*
-name|DT
+name|IncV
+parameter_list|,
+name|Instruction
+modifier|*
+name|InsertPos
 parameter_list|)
 function_decl|;
 comment|/// replaceCongruentIVs - replace congruent phis with their most canonical
@@ -409,6 +440,13 @@ name|WeakVH
 operator|>
 operator|&
 name|DeadInsts
+argument_list|,
+specifier|const
+name|TargetLowering
+operator|*
+name|TLI
+operator|=
+name|NULL
 argument_list|)
 decl_stmt|;
 comment|/// expandCodeFor - Insert code to directly compute the specified SCEV
@@ -538,6 +576,50 @@ name|Builder
 operator|.
 name|ClearInsertionPoint
 argument_list|()
+expr_stmt|;
+block|}
+comment|/// isInsertedInstruction - Return true if the specified instruction was
+comment|/// inserted by the code rewriter.  If so, the client should not modify the
+comment|/// instruction.
+name|bool
+name|isInsertedInstruction
+argument_list|(
+name|Instruction
+operator|*
+name|I
+argument_list|)
+decl|const
+block|{
+return|return
+name|InsertedValues
+operator|.
+name|count
+argument_list|(
+name|I
+argument_list|)
+operator|||
+name|InsertedPostIncValues
+operator|.
+name|count
+argument_list|(
+name|I
+argument_list|)
+return|;
+block|}
+name|void
+name|setChainedPhi
+parameter_list|(
+name|PHINode
+modifier|*
+name|PN
+parameter_list|)
+block|{
+name|ChainedPhis
+operator|.
+name|insert
+argument_list|(
+name|PN
+argument_list|)
 expr_stmt|;
 block|}
 name|private
@@ -681,34 +763,6 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
-comment|/// isInsertedInstruction - Return true if the specified instruction was
-comment|/// inserted by the code rewriter.  If so, the client should not modify the
-comment|/// instruction.
-name|bool
-name|isInsertedInstruction
-argument_list|(
-name|Instruction
-operator|*
-name|I
-argument_list|)
-decl|const
-block|{
-return|return
-name|InsertedValues
-operator|.
-name|count
-argument_list|(
-name|I
-argument_list|)
-operator|||
-name|InsertedPostIncValues
-operator|.
-name|count
-argument_list|(
-name|I
-argument_list|)
-return|;
-block|}
 comment|/// getRelevantLoop - Determine the most "relevant" loop for the given SCEV.
 specifier|const
 name|Loop
@@ -929,6 +983,35 @@ parameter_list|,
 name|Type
 modifier|*
 name|IntTy
+parameter_list|)
+function_decl|;
+name|Value
+modifier|*
+name|expandIVInc
+parameter_list|(
+name|PHINode
+modifier|*
+name|PN
+parameter_list|,
+name|Value
+modifier|*
+name|StepV
+parameter_list|,
+specifier|const
+name|Loop
+modifier|*
+name|L
+parameter_list|,
+name|Type
+modifier|*
+name|ExpandTy
+parameter_list|,
+name|Type
+modifier|*
+name|IntTy
+parameter_list|,
+name|bool
+name|useSubtract
 parameter_list|)
 function_decl|;
 block|}

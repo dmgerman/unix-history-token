@@ -784,12 +784,10 @@ name|pllb_init
 expr_stmt|;
 block|}
 else|else
-block|{
 name|value
 operator|=
 literal|0
 expr_stmt|;
-block|}
 comment|/* Workaround RM9200 Errata #26 */
 if|if
 condition|(
@@ -1447,7 +1445,7 @@ name|at91_pmc_clock
 modifier|*
 name|clk
 parameter_list|)
-block|{ }
+block|{  }
 end_function
 
 begin_function
@@ -1605,8 +1603,12 @@ name|clk
 operator|->
 name|pll_mul_mask
 expr_stmt|;
-comment|//	printf("pll = (%d /  %d) * %d = %d\n",
-comment|//	    freq, div ,mul + 1, (freq/div) * (mul+1));
+if|#
+directive|if
+literal|0
+block|printf("pll = (%d /  %d) * %d = %d\n", 	    freq, div, mul + 1, (freq/div) * (mul+1));
+endif|#
+directive|endif
 if|if
 condition|(
 name|div
@@ -1630,12 +1632,10 @@ literal|1
 expr_stmt|;
 block|}
 else|else
-block|{
 name|freq
 operator|=
 literal|0
 expr_stmt|;
-block|}
 name|clk
 operator|->
 name|hz
@@ -1910,6 +1910,9 @@ if|if
 condition|(
 name|at91_is_sam9
 argument_list|()
+operator|||
+name|at91_is_sam9xe
+argument_list|()
 condition|)
 block|{
 name|uhpck
@@ -2040,7 +2043,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
 name|WR4
 argument_list|(
 name|sc
@@ -2052,7 +2054,6 @@ operator||
 name|PMC_SCER_UDP_SAM9
 argument_list|)
 expr_stmt|;
-block|}
 name|WR4
 argument_list|(
 name|sc
@@ -2122,6 +2123,9 @@ expr_stmt|;
 if|if
 condition|(
 name|at91_is_sam9
+argument_list|()
+operator|||
+name|at91_is_sam9xe
 argument_list|()
 condition|)
 block|{
@@ -2307,7 +2311,6 @@ name|mem_res
 operator|=
 literal|0
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2659,12 +2662,8 @@ argument_list|,
 name|at91_pmc_attach
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
+name|DEVMETHOD_END
 block|}
-block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -2705,9 +2704,9 @@ name|at91_pmc_driver
 argument_list|,
 name|at91_pmc_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt

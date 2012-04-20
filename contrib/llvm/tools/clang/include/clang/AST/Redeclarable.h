@@ -261,7 +261,7 @@ comment|/// \brief Return the previous declaration of this declaration or NULL i
 comment|/// is the first declaration.
 name|decl_type
 operator|*
-name|getPreviousDeclaration
+name|getPreviousDecl
 argument_list|()
 block|{
 if|if
@@ -284,7 +284,7 @@ block|}
 specifier|const
 name|decl_type
 operator|*
-name|getPreviousDeclaration
+name|getPreviousDecl
 argument_list|()
 specifier|const
 block|{
@@ -306,7 +306,7 @@ name|this
 operator|)
 operator|)
 operator|->
-name|getPreviousDeclaration
+name|getPreviousDecl
 argument_list|()
 return|;
 block|}
@@ -334,14 +334,14 @@ while|while
 condition|(
 name|D
 operator|->
-name|getPreviousDeclaration
+name|getPreviousDecl
 argument_list|()
 condition|)
 name|D
 operator|=
 name|D
 operator|->
-name|getPreviousDeclaration
+name|getPreviousDecl
 argument_list|()
 expr_stmt|;
 return|return
@@ -376,14 +376,14 @@ while|while
 condition|(
 name|D
 operator|->
-name|getPreviousDeclaration
+name|getPreviousDecl
 argument_list|()
 condition|)
 name|D
 operator|=
 name|D
 operator|->
-name|getPreviousDeclaration
+name|getPreviousDecl
 argument_list|()
 expr_stmt|;
 return|return
@@ -418,7 +418,7 @@ end_comment
 begin_function
 name|decl_type
 modifier|*
-name|getMostRecentDeclaration
+name|getMostRecentDecl
 parameter_list|()
 block|{
 return|return
@@ -441,7 +441,7 @@ begin_expr_stmt
 specifier|const
 name|decl_type
 operator|*
-name|getMostRecentDeclaration
+name|getMostRecentDecl
 argument_list|()
 specifier|const
 block|{
@@ -492,6 +492,9 @@ decl_stmt|;
 name|decl_type
 modifier|*
 name|Starter
+decl_stmt|;
+name|bool
+name|PassedFirst
 decl_stmt|;
 name|public
 label|:
@@ -545,7 +548,12 @@ argument_list|)
 operator|,
 name|Starter
 argument_list|(
-argument|C
+name|C
+argument_list|)
+operator|,
+name|PassedFirst
+argument_list|(
+argument|false
 argument_list|)
 block|{ }
 name|reference
@@ -587,8 +595,49 @@ operator|&&
 literal|"Advancing while iterator has reached end"
 argument_list|)
 block|;
+comment|// Sanity check to avoid infinite loop on invalid redecl chain.
+if|if
+condition|(
+name|Current
+operator|->
+name|isFirstDeclaration
+argument_list|()
+condition|)
+block|{
+if|if
+condition|(
+name|PassedFirst
+condition|)
+block|{
+name|assert
+argument_list|(
+literal|0
+operator|&&
+literal|"Passed first decl twice, invalid redecl chain!"
+argument_list|)
+expr_stmt|;
+name|Current
+operator|=
+literal|0
+expr_stmt|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+name|PassedFirst
+operator|=
+name|true
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+unit|}
 comment|// Get either previous decl or latest decl.
-name|decl_type
+end_comment
+
+begin_expr_stmt
+unit|decl_type
 operator|*
 name|Next
 operator|=
@@ -598,7 +647,10 @@ name|RedeclLink
 operator|.
 name|getNext
 argument_list|()
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|Current
 operator|=
 operator|(
@@ -610,16 +662,18 @@ name|Next
 else|:
 literal|0
 operator|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 operator|*
 name|this
 return|;
-block|}
-end_expr_stmt
+end_return
 
 begin_expr_stmt
-name|redecl_iterator
+unit|}      redecl_iterator
 name|operator
 operator|++
 operator|(

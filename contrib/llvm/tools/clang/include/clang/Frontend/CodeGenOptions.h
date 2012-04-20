@@ -182,6 +182,12 @@ literal|1
 decl_stmt|;
 comment|/// Set when -mno-red-zone is enabled.
 name|unsigned
+name|DisableTailCalls
+range|:
+literal|1
+decl_stmt|;
+comment|/// Do not emit tail calls.
+name|unsigned
 name|EmitDeclMetadata
 range|:
 literal|1
@@ -268,6 +274,13 @@ literal|1
 decl_stmt|;
 comment|/// Set when -fno-dwarf2-cfi-asm is enabled.
 name|unsigned
+name|NoDwarfDirectoryAsm
+range|:
+literal|1
+decl_stmt|;
+comment|/// Set when -fno-dwarf-directory-asm is
+comment|/// enabled.
+name|unsigned
 name|NoExecStack
 range|:
 literal|1
@@ -291,6 +304,13 @@ range|:
 literal|1
 decl_stmt|;
 comment|/// Assume FP arguments, results not +-Inf.
+name|unsigned
+name|NoInline
+range|:
+literal|1
+decl_stmt|;
+comment|/// Set when -fno-inline is enabled. Disables
+comment|/// use of the inline keyword.
 name|unsigned
 name|NoNaNsFPMath
 range|:
@@ -371,6 +391,12 @@ literal|1
 decl_stmt|;
 comment|/// -soft-float.
 name|unsigned
+name|StrictEnums
+range|:
+literal|1
+decl_stmt|;
+comment|/// Optimize based on strict enum definition.
+name|unsigned
 name|TimePasses
 range|:
 literal|1
@@ -415,6 +441,18 @@ literal|1
 decl_stmt|;
 comment|/// Control whether the module should be run
 comment|/// through the LLVM Verifier.
+name|unsigned
+name|StackRealignment
+range|:
+literal|1
+decl_stmt|;
+comment|/// Control whether to permit stack
+comment|/// realignment.
+name|unsigned
+name|StackAlignment
+decl_stmt|;
+comment|/// Overrides default stack alignment,
+comment|/// if not 0.
 comment|/// The code model to use (-mcmodel).
 name|std
 operator|::
@@ -433,6 +471,12 @@ name|std
 operator|::
 name|string
 name|DebugPass
+expr_stmt|;
+comment|/// The string to embed in debug information as the current working directory.
+name|std
+operator|::
+name|string
+name|DebugCompilationDir
 expr_stmt|;
 comment|/// The string to embed in the debug information for the compile unit, if
 comment|/// non-empty.
@@ -453,6 +497,12 @@ operator|::
 name|string
 name|LimitFloatPrecision
 expr_stmt|;
+comment|/// The name of the bitcode file to link before optzns.
+name|std
+operator|::
+name|string
+name|LinkBitcodeFile
+expr_stmt|;
 comment|/// The kind of inlining to perform.
 name|InliningMethod
 name|Inlining
@@ -470,6 +520,13 @@ name|std
 operator|::
 name|string
 name|RelocationModel
+expr_stmt|;
+comment|/// If not an empty string, trap intrinsics are lowered to calls to this
+comment|/// function instead of to trap instructions.
+name|std
+operator|::
+name|string
+name|TrapFuncName
 expr_stmt|;
 comment|/// A list of command-line options to forward to the LLVM backend.
 name|std
@@ -529,6 +586,10 @@ operator|=
 literal|0
 expr_stmt|;
 name|DisableRedZone
+operator|=
+literal|0
+expr_stmt|;
+name|DisableTailCalls
 operator|=
 literal|0
 expr_stmt|;
@@ -592,6 +653,10 @@ name|NoInfsFPMath
 operator|=
 literal|0
 expr_stmt|;
+name|NoInline
+operator|=
+literal|0
+expr_stmt|;
 name|NoNaNsFPMath
 operator|=
 literal|0
@@ -652,6 +717,10 @@ name|SoftFloat
 operator|=
 literal|0
 expr_stmt|;
+name|StrictEnums
+operator|=
+literal|0
+expr_stmt|;
 name|TimePasses
 operator|=
 literal|0
@@ -679,6 +748,14 @@ expr_stmt|;
 name|VerifyModule
 operator|=
 literal|1
+expr_stmt|;
+name|StackRealignment
+operator|=
+literal|0
+expr_stmt|;
+name|StackAlignment
+operator|=
+literal|0
 expr_stmt|;
 name|Inlining
 operator|=

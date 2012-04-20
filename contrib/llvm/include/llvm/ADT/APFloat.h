@@ -911,6 +911,17 @@ name|fcZero
 return|;
 block|}
 name|bool
+name|isNormal
+argument_list|()
+specifier|const
+block|{
+return|return
+name|category
+operator|==
+name|fcNormal
+return|;
+block|}
+name|bool
 name|isNaN
 argument_list|()
 specifier|const
@@ -978,12 +989,25 @@ name|APFloat
 operator|&
 operator|)
 decl_stmt|;
-comment|/* Return an arbitrary integer value usable for hashing. */
-name|uint32_t
-name|getHashValue
-argument_list|()
+comment|/// \brief Overload to compute a hash code for an APFloat value.
+comment|///
+comment|/// Note that the use of hash codes for floating point values is in general
+comment|/// frought with peril. Equality is hard to define for these values. For
+comment|/// example, should negative and positive zero hash to different codes? Are
+comment|/// they equal or not? This hash value implementation specifically
+comment|/// emphasizes producing different codes for different inputs in order to
+comment|/// be used in canonicalization and memoization. As such, equality is
+comment|/// bitwiseIsEqual, and 0 != -0.
+name|friend
+name|hash_code
+name|hash_value
+parameter_list|(
 specifier|const
-expr_stmt|;
+name|APFloat
+modifier|&
+name|Arg
+parameter_list|)
+function_decl|;
 comment|/// Converts this value into a decimal string.
 comment|///
 comment|/// \param FormatPrecision The maximum number of digits of

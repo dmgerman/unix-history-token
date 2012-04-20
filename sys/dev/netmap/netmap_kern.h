@@ -19,6 +19,16 @@ directive|define
 name|_NET_NETMAP_KERN_H_
 end_define
 
+begin_define
+define|#
+directive|define
+name|NETMAP_MEM2
+end_define
+
+begin_comment
+comment|// use the new memory allocator
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -247,18 +257,27 @@ name|int
 name|refcount
 decl_stmt|;
 comment|/* number of user-space descriptors using this 			 interface, which is equal to the number of 			 struct netmap_if objs in the mapped region. */
+comment|/* 	 * The selwakeup in the interrupt thread can use per-ring 	 * and/or global wait queues. We track how many clients 	 * of each type we have so we can optimize the drivers, 	 * and especially avoid huge contention on the locks. 	 */
+name|int
+name|na_single
+decl_stmt|;
+comment|/* threads attached to a single hw queue */
+name|int
+name|na_multi
+decl_stmt|;
+comment|/* threads attached to multiple hw queues */
 name|int
 name|separate_locks
 decl_stmt|;
 comment|/* set if the interface suports different 			       locks for rx, tx and core. */
 name|u_int
-name|num_rx_queues
+name|num_rx_rings
 decl_stmt|;
-comment|/* number of tx/rx queue pairs: this is 			   a duplicate field needed to simplify the 			   signature of ``netmap_detach``. */
+comment|/* number of tx/rx ring pairs */
 name|u_int
-name|num_tx_queues
+name|num_tx_rings
 decl_stmt|;
-comment|// if nonzero, overrides num_queues XXX
+comment|// if nonzero, overrides num_rx_rings
 name|u_int
 name|num_tx_desc
 decl_stmt|;
@@ -266,11 +285,7 @@ comment|/* number of descriptor in each queue */
 name|u_int
 name|num_rx_desc
 decl_stmt|;
-name|u_int
-name|buff_size
-decl_stmt|;
-comment|// XXX deprecate, use NETMAP_BUF_SIZE
-comment|//u_int	flags;	// XXX unused
+comment|//u_int buff_size;	// XXX deprecate, use NETMAP_BUF_SIZE
 comment|/* tx_rings and rx_rings are private but allocated 	 * as a contiguous chunk of memory. Each array has 	 * N+1 entries, for the adapter queues and for the host queue. 	 */
 name|struct
 name|netmap_kring
@@ -290,8 +305,7 @@ decl_stmt|,
 name|rx_si
 decl_stmt|;
 comment|/* global wait queues */
-comment|/* copy of if_qflush and if_transmit pointers, to intercept 	 * packets from the network stack when netmap is active. 	 * XXX probably if_qflush is not necessary. 	 */
-comment|//void    (*if_qflush)(struct ifnet *);	// XXX unused
+comment|/* copy of if_qflush and if_transmit pointers, to intercept 	 * packets from the network stack when netmap is active. 	 */
 name|int
 function_decl|(
 modifier|*
@@ -931,6 +945,96 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NETMAP_MEM2
+end_ifdef
+
+begin_comment
+comment|/* Entries of the look-up table. */
+end_comment
+
+begin_struct
+struct|struct
+name|lut_entry
+block|{
+name|void
+modifier|*
+name|vaddr
+decl_stmt|;
+comment|/* virtual address. */
+name|vm_paddr_t
+name|paddr
+decl_stmt|;
+comment|/* phisical address. */
+block|}
+struct|;
+end_struct
+
+begin_struct_decl
+struct_decl|struct
+name|netmap_obj_pool
+struct_decl|;
+end_struct_decl
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|lut_entry
+modifier|*
+name|netmap_buffer_lut
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|NMB_VA
+parameter_list|(
+name|i
+parameter_list|)
+value|(netmap_buffer_lut[i].vaddr)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NMB_PA
+parameter_list|(
+name|i
+parameter_list|)
+value|(netmap_buffer_lut[i].paddr)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* NETMAP_MEM1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NMB_VA
+parameter_list|(
+name|i
+parameter_list|)
+value|(netmap_buffer_base + (i * NETMAP_BUF_SIZE) )
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NETMAP_MEM2 */
+end_comment
+
 begin_comment
 comment|/*  * NMB return the virtual address of a buffer (buffer 0 on bad index)  * PNMB also fills the physical address  */
 end_comment
@@ -962,15 +1066,15 @@ operator|>=
 name|netmap_total_buffers
 operator|)
 condition|?
-name|netmap_buffer_base
+name|NMB_VA
+argument_list|(
+literal|0
+argument_list|)
 else|:
-name|netmap_buffer_base
-operator|+
-operator|(
+name|NMB_VA
+argument_list|(
 name|i
-operator|*
-name|NETMAP_BUF_SIZE
-operator|)
+argument_list|)
 return|;
 block|}
 end_function
@@ -1009,16 +1113,40 @@ operator|>=
 name|netmap_total_buffers
 operator|)
 condition|?
-name|netmap_buffer_base
+name|NMB_VA
+argument_list|(
+literal|0
+argument_list|)
 else|:
-name|netmap_buffer_base
-operator|+
+name|NMB_VA
+argument_list|(
+name|i
+argument_list|)
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|NETMAP_MEM2
+operator|*
+name|pp
+operator|=
 operator|(
 name|i
-operator|*
-name|NETMAP_BUF_SIZE
+operator|>=
+name|netmap_total_buffers
 operator|)
-decl_stmt|;
+condition|?
+name|NMB_PA
+argument_list|(
+literal|0
+argument_list|)
+else|:
+name|NMB_PA
+argument_list|(
+name|i
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 operator|*
 name|pp
 operator|=
@@ -1027,6 +1155,8 @@ argument_list|(
 name|ret
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 name|ret
 return|;
@@ -1064,51 +1194,6 @@ name|_q
 parameter_list|)
 value|netmap_rx_irq(_n, _q, NULL)
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__linux__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|bus_dmamap_sync
-parameter_list|(
-name|_a
-parameter_list|,
-name|_b
-parameter_list|,
-name|_c
-parameter_list|)
-end_define
-
-begin_comment
-comment|// wmb() or rmb() ?
-end_comment
-
-begin_function_decl
-name|netdev_tx_t
-name|netmap_start_linux
-parameter_list|(
-name|struct
-name|sk_buff
-modifier|*
-name|skb
-parameter_list|,
-name|struct
-name|net_device
-modifier|*
-name|dev
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

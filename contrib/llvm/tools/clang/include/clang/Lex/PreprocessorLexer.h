@@ -90,6 +90,11 @@ decl_stmt|;
 name|class
 name|PreprocessorLexer
 block|{
+name|virtual
+name|void
+name|anchor
+parameter_list|()
+function_decl|;
 name|protected
 label|:
 name|Preprocessor

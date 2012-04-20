@@ -18,7 +18,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: asprintf.c,v 1.3 2009/02/03 20:27:51 christos Exp $"
+literal|"@(#)$File: asprintf.c,v 1.4 2010/07/21 16:47:17 christos Exp $"
 argument_list|)
 end_macro
 
@@ -26,26 +26,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_function_decl
-name|int
-name|vasprintf
-parameter_list|(
-name|char
-modifier|*
-modifier|*
-name|ptr
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|format_string
-parameter_list|,
-name|va_list
-name|vargs
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function
 name|int

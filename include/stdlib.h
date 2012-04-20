@@ -827,17 +827,18 @@ operator|>=
 literal|201103L
 end_if
 
-begin_function_decl
+begin_decl_stmt
 name|void
 modifier|*
 name|aligned_alloc
-parameter_list|(
+argument_list|(
 name|size_t
-parameter_list|,
+argument_list|,
 name|size_t
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__malloc_like
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|int
@@ -1397,7 +1398,7 @@ specifier|extern
 specifier|const
 name|char
 modifier|*
-name|_malloc_options
+name|malloc_conf
 decl_stmt|;
 end_decl_stmt
 
@@ -1406,19 +1407,10 @@ specifier|extern
 name|void
 function_decl|(
 modifier|*
-name|_malloc_message
+name|malloc_message
 function_decl|)
 parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-specifier|const
-name|char
+name|void
 modifier|*
 parameter_list|,
 specifier|const

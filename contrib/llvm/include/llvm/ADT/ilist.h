@@ -3731,47 +3731,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|// Special forms of insert...
-end_comment
-
-begin_expr_stmt
-name|template
-operator|<
-name|class
-name|InIt
-operator|>
-name|void
-name|insert
-argument_list|(
-argument|iterator where
-argument_list|,
-argument|InIt first
-argument_list|,
-argument|InIt last
-argument_list|)
-block|{
-for|for
-control|(
-init|;
-name|first
-operator|!=
-name|last
-condition|;
-operator|++
-name|first
-control|)
-name|insert
-argument_list|(
-name|where
-argument_list|,
-operator|*
-name|first
-argument_list|)
-expr_stmt|;
-block|}
-end_expr_stmt
-
 begin_function
 name|void
 name|insert

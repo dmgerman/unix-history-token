@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -116,12 +122,6 @@ ifdef|#
 directive|ifdef
 name|DDB
 end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/kdb.h>
-end_include
 
 begin_include
 include|#
@@ -359,7 +359,7 @@ name|turnstile_max_depth
 argument_list|,
 literal|0
 argument_list|,
-literal|"maxmimum depth achieved of a single chain"
+literal|"maximum depth achieved of a single chain"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -711,19 +711,11 @@ operator|->
 name|p_pid
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DDB
-name|db_trace_thread
+name|kdb_backtrace_thread
 argument_list|(
 name|td
-argument_list|,
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|panic
 argument_list|(
 literal|"sleeping thread"

@@ -66,6 +66,9 @@ block|{
 name|class
 name|ModulePass
 decl_stmt|;
+name|class
+name|FunctionPass
+decl_stmt|;
 comment|// Insert edge profiling instrumentation
 name|ModulePass
 modifier|*
@@ -103,7 +106,24 @@ name|bool
 name|Use402Format
 init|=
 name|false
+parameter_list|,
+name|bool
+name|UseExtraChecksum
+init|=
+name|false
 parameter_list|)
+function_decl|;
+comment|// Insert AddressSanitizer (address sanity checking) instrumentation
+name|ModulePass
+modifier|*
+name|createAddressSanitizerPass
+parameter_list|()
+function_decl|;
+comment|// Insert ThreadSanitizer (race detection) instrumentation
+name|FunctionPass
+modifier|*
+name|createThreadSanitizerPass
+parameter_list|()
 function_decl|;
 block|}
 end_decl_stmt

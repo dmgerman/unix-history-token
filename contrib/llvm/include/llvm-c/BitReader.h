@@ -33,6 +33,7 @@ literal|"C"
 block|{
 endif|#
 directive|endif
+comment|/**  * @defgroup LLVMCBitReader Bit Reader  * @ingroup LLVMC  *  * @{  */
 comment|/* Builds a module from the bitcode in the specified memory buffer, returning a    reference to the module via the OutModule parameter. Returns 0 on success.    Optionally returns a human-readable error message via OutMessage. */
 name|LLVMBool
 name|LLVMParseBitcode
@@ -142,6 +143,7 @@ modifier|*
 name|OutMessage
 parameter_list|)
 function_decl|;
+comment|/**  * @}  */
 ifdef|#
 directive|ifdef
 name|__cplusplus

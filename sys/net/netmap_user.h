@@ -54,7 +54,7 @@ parameter_list|,
 name|index
 parameter_list|)
 define|\
-value|((struct netmap_ring *)((char *)(nifp) +	\ 	    (nifp)->ring_ofs[index + (nifp)->ni_tx_queues+1] ) )
+value|((struct netmap_ring *)((char *)(nifp) +	\ 	    (nifp)->ring_ofs[index + (nifp)->ni_tx_rings + 1] ) )
 end_define
 
 begin_define

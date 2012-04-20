@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//==-- MSP430ISelLowering.h - MSP430 DAG Lowering Interface ------*- C++ -*-==//
+comment|//===-- MSP430ISelLowering.h - MSP430 DAG Lowering Interface ----*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -498,6 +498,8 @@ argument_list|,
 argument|CallingConv::ID CallConv
 argument_list|,
 argument|bool isVarArg
+argument_list|,
+argument|bool doesNotRet
 argument_list|,
 argument|bool&isTailCall
 argument_list|,

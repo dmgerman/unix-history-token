@@ -87,6 +87,9 @@ decl_stmt|;
 name|class
 name|HeaderSearch
 decl_stmt|;
+name|class
+name|Module
+decl_stmt|;
 comment|/// DirectoryLookup - This class represents one entry in the search list that
 comment|/// specifies the search order for directories in #include directives.  It
 comment|/// represents either a directory, a framework, or a headermap.
@@ -418,11 +421,13 @@ comment|/// \param RelativePath If not NULL, will be set to the path relative to
 comment|/// SearchPath at which the file was found. This only differs from the
 comment|/// Filename for framework includes.
 comment|///
-comment|/// \param BuildingModule The name of the module we're currently building.
-comment|///
 comment|/// \param SuggestedModule If non-null, and the file found is semantically
-comment|/// part of a known module, this will be set to the name of the module that
-comment|/// could be imported instead of preprocessing/parsing the file found.
+comment|/// part of a known module, this will be set to the module that should
+comment|/// be imported instead of preprocessing/parsing the file found.
+comment|///
+comment|/// \param InUserSpecifiedSystemHeader [out] If the file is found, set to true
+comment|/// if the file is located in a framework that has been user-specified to be
+comment|/// treated as a system framework.
 specifier|const
 name|FileEntry
 modifier|*
@@ -449,12 +454,14 @@ operator|>
 operator|*
 name|RelativePath
 argument_list|,
-name|StringRef
-name|BuildingModule
-argument_list|,
-name|StringRef
+name|Module
+operator|*
 operator|*
 name|SuggestedModule
+argument_list|,
+name|bool
+operator|&
+name|InUserSpecifiedSystemHeader
 argument_list|)
 decl|const
 decl_stmt|;
@@ -486,12 +493,14 @@ operator|>
 operator|*
 name|RelativePath
 argument_list|,
-name|StringRef
-name|BuildingModule
-argument_list|,
-name|StringRef
+name|Module
+operator|*
 operator|*
 name|SuggestedModule
+argument_list|,
+name|bool
+operator|&
+name|InUserSpecifiedSystemHeader
 argument_list|)
 decl|const
 decl_stmt|;

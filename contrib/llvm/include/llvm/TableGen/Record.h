@@ -96,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/raw_ostream.h"
 end_include
 
@@ -129,9 +135,6 @@ name|class
 name|ListRecTy
 decl_stmt|;
 name|class
-name|CodeRecTy
-decl_stmt|;
-name|class
 name|DagRecTy
 decl_stmt|;
 name|class
@@ -155,9 +158,6 @@ name|IntInit
 decl_stmt|;
 name|class
 name|StringInit
-decl_stmt|;
-name|class
-name|CodeInit
 decl_stmt|;
 name|class
 name|ListInit
@@ -215,6 +215,11 @@ name|ListRecTy
 modifier|*
 name|ListTy
 decl_stmt|;
+name|virtual
+name|void
+name|anchor
+parameter_list|()
+function_decl|;
 name|public
 label|:
 name|RecTy
@@ -436,20 +441,6 @@ name|Init
 modifier|*
 name|convertValue
 parameter_list|(
-name|CodeInit
-modifier|*
-name|CI
-parameter_list|)
-block|{
-return|return
-literal|0
-return|;
-block|}
-name|virtual
-name|Init
-modifier|*
-name|convertValue
-parameter_list|(
 name|VarBitInit
 modifier|*
 name|VB
@@ -628,21 +619,6 @@ name|bool
 name|baseClassOf
 argument_list|(
 specifier|const
-name|CodeRecTy
-operator|*
-name|RHS
-argument_list|)
-decl|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-specifier|const
 name|DagRecTy
 operator|*
 name|RHS
@@ -795,18 +771,6 @@ operator|*
 name|convertValue
 argument_list|(
 argument|ListInit *LI
-argument_list|)
-block|{
-return|return
-literal|0
-return|;
-block|}
-name|virtual
-name|Init
-operator|*
-name|convertValue
-argument_list|(
-argument|CodeInit *CI
 argument_list|)
 block|{
 return|return
@@ -1035,18 +999,6 @@ name|virtual
 name|bool
 name|baseClassOf
 argument_list|(
-argument|const CodeRecTy   *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
 argument|const DagRecTy    *RHS
 argument_list|)
 specifier|const
@@ -1169,18 +1121,6 @@ operator|*
 name|convertValue
 argument_list|(
 argument|ListInit *LI
-argument_list|)
-block|{
-return|return
-literal|0
-return|;
-block|}
-name|virtual
-name|Init
-operator|*
-name|convertValue
-argument_list|(
-argument|CodeInit *CI
 argument_list|)
 block|{
 return|return
@@ -1411,18 +1351,6 @@ name|virtual
 name|bool
 name|baseClassOf
 argument_list|(
-argument|const CodeRecTy   *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
 argument|const DagRecTy    *RHS
 argument_list|)
 specifier|const
@@ -1543,18 +1471,6 @@ operator|*
 name|convertValue
 argument_list|(
 argument|ListInit *LI
-argument_list|)
-block|{
-return|return
-literal|0
-return|;
-block|}
-name|virtual
-name|Init
-operator|*
-name|convertValue
-argument_list|(
-argument|CodeInit *CI
 argument_list|)
 block|{
 return|return
@@ -1783,18 +1699,6 @@ name|virtual
 name|bool
 name|baseClassOf
 argument_list|(
-argument|const CodeRecTy   *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
 argument|const DagRecTy    *RHS
 argument_list|)
 specifier|const
@@ -1967,18 +1871,6 @@ name|Init
 operator|*
 name|convertValue
 argument_list|(
-argument|CodeInit *CI
-argument_list|)
-block|{
-return|return
-literal|0
-return|;
-block|}
-name|virtual
-name|Init
-operator|*
-name|convertValue
-argument_list|(
 argument|VarBitInit *VB
 argument_list|)
 block|{
@@ -2134,18 +2026,6 @@ name|bool
 name|baseClassOf
 argument_list|(
 argument|const ListRecTy   *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-argument|const CodeRecTy   *RHS
 argument_list|)
 specifier|const
 block|{
@@ -2321,18 +2201,6 @@ name|Init
 operator|*
 name|convertValue
 argument_list|(
-argument|CodeInit *CI
-argument_list|)
-block|{
-return|return
-literal|0
-return|;
-block|}
-name|virtual
-name|Init
-operator|*
-name|convertValue
-argument_list|(
 argument|VarBitInit *VB
 argument_list|)
 block|{
@@ -2554,394 +2422,6 @@ name|virtual
 name|bool
 name|baseClassOf
 argument_list|(
-argument|const CodeRecTy   *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-argument|const DagRecTy    *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-argument|const RecordRecTy *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-expr|}
-block|;
-comment|/// CodeRecTy - 'code' - Represent an code fragment, function or method.
-comment|///
-name|class
-name|CodeRecTy
-operator|:
-name|public
-name|RecTy
-block|{
-specifier|static
-name|CodeRecTy
-name|Shared
-block|;
-name|CodeRecTy
-argument_list|()
-block|{}
-name|public
-operator|:
-specifier|static
-name|CodeRecTy
-operator|*
-name|get
-argument_list|()
-block|{
-return|return
-operator|&
-name|Shared
-return|;
-block|}
-name|virtual
-name|Init
-operator|*
-name|convertValue
-argument_list|(
-argument|UnsetInit *UI
-argument_list|)
-block|{
-return|return
-operator|(
-name|Init
-operator|*
-operator|)
-name|UI
-return|;
-block|}
-name|virtual
-name|Init
-operator|*
-name|convertValue
-argument_list|(
-argument|BitInit *BI
-argument_list|)
-block|{
-return|return
-literal|0
-return|;
-block|}
-name|virtual
-name|Init
-operator|*
-name|convertValue
-argument_list|(
-argument|BitsInit *BI
-argument_list|)
-block|{
-return|return
-literal|0
-return|;
-block|}
-name|virtual
-name|Init
-operator|*
-name|convertValue
-argument_list|(
-argument|IntInit *II
-argument_list|)
-block|{
-return|return
-literal|0
-return|;
-block|}
-name|virtual
-name|Init
-operator|*
-name|convertValue
-argument_list|(
-argument|StringInit *SI
-argument_list|)
-block|{
-return|return
-literal|0
-return|;
-block|}
-name|virtual
-name|Init
-operator|*
-name|convertValue
-argument_list|(
-argument|ListInit *LI
-argument_list|)
-block|{
-return|return
-literal|0
-return|;
-block|}
-name|virtual
-name|Init
-operator|*
-name|convertValue
-argument_list|(
-argument|CodeInit *CI
-argument_list|)
-block|{
-return|return
-operator|(
-name|Init
-operator|*
-operator|)
-name|CI
-return|;
-block|}
-name|virtual
-name|Init
-operator|*
-name|convertValue
-argument_list|(
-argument|VarBitInit *VB
-argument_list|)
-block|{
-return|return
-literal|0
-return|;
-block|}
-name|virtual
-name|Init
-operator|*
-name|convertValue
-argument_list|(
-argument|DefInit *DI
-argument_list|)
-block|{
-return|return
-literal|0
-return|;
-block|}
-name|virtual
-name|Init
-operator|*
-name|convertValue
-argument_list|(
-argument|DagInit *DI
-argument_list|)
-block|{
-return|return
-literal|0
-return|;
-block|}
-name|virtual
-name|Init
-operator|*
-name|convertValue
-argument_list|(
-argument|UnOpInit *UI
-argument_list|)
-block|{
-return|return
-name|RecTy
-operator|::
-name|convertValue
-argument_list|(
-name|UI
-argument_list|)
-return|;
-block|}
-name|virtual
-name|Init
-operator|*
-name|convertValue
-argument_list|(
-argument|BinOpInit *UI
-argument_list|)
-block|{
-return|return
-name|RecTy
-operator|::
-name|convertValue
-argument_list|(
-name|UI
-argument_list|)
-return|;
-block|}
-name|virtual
-name|Init
-operator|*
-name|convertValue
-argument_list|(
-argument|TernOpInit *UI
-argument_list|)
-block|{
-return|return
-name|RecTy
-operator|::
-name|convertValue
-argument_list|(
-name|UI
-argument_list|)
-return|;
-block|}
-name|virtual
-name|Init
-operator|*
-name|convertValue
-argument_list|(
-name|TypedInit
-operator|*
-name|TI
-argument_list|)
-block|;
-name|virtual
-name|Init
-operator|*
-name|convertValue
-argument_list|(
-argument|VarInit *VI
-argument_list|)
-block|{
-return|return
-name|RecTy
-operator|::
-name|convertValue
-argument_list|(
-name|VI
-argument_list|)
-return|;
-block|}
-name|virtual
-name|Init
-operator|*
-name|convertValue
-argument_list|(
-argument|FieldInit *FI
-argument_list|)
-block|{
-return|return
-name|RecTy
-operator|::
-name|convertValue
-argument_list|(
-name|FI
-argument_list|)
-return|;
-block|}
-name|std
-operator|::
-name|string
-name|getAsString
-argument_list|()
-specifier|const
-block|{
-return|return
-literal|"code"
-return|;
-block|}
-name|bool
-name|typeIsConvertibleTo
-argument_list|(
-argument|const RecTy *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|RHS
-operator|->
-name|baseClassOf
-argument_list|(
-name|this
-argument_list|)
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-argument|const BitRecTy    *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-argument|const BitsRecTy   *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-argument|const IntRecTy    *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-argument|const StringRecTy *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-argument|const ListRecTy   *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-argument|const CodeRecTy   *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|true
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
 argument|const DagRecTy    *RHS
 argument_list|)
 specifier|const
@@ -3062,18 +2542,6 @@ operator|*
 name|convertValue
 argument_list|(
 argument|ListInit *LI
-argument_list|)
-block|{
-return|return
-literal|0
-return|;
-block|}
-name|virtual
-name|Init
-operator|*
-name|convertValue
-argument_list|(
-argument|CodeInit *CI
 argument_list|)
 block|{
 return|return
@@ -3292,18 +2760,6 @@ name|virtual
 name|bool
 name|baseClassOf
 argument_list|(
-argument|const CodeRecTy   *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
 argument|const DagRecTy    *RHS
 argument_list|)
 specifier|const
@@ -3448,18 +2904,6 @@ operator|*
 name|convertValue
 argument_list|(
 argument|ListInit *LI
-argument_list|)
-block|{
-return|return
-literal|0
-return|;
-block|}
-name|virtual
-name|Init
-operator|*
-name|convertValue
-argument_list|(
-argument|CodeInit *CI
 argument_list|)
 block|{
 return|return
@@ -3682,18 +3126,6 @@ name|virtual
 name|bool
 name|baseClassOf
 argument_list|(
-argument|const CodeRecTy   *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
 argument|const DagRecTy    *RHS
 argument_list|)
 specifier|const
@@ -3752,6 +3184,11 @@ operator|&
 operator|)
 block|;
 comment|// Do not define.
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|protected
 operator|:
 name|Init
@@ -4135,6 +3572,11 @@ name|Other
 operator|)
 block|;
 comment|// Do not define.
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 specifier|static
@@ -4234,6 +3676,11 @@ name|Other
 operator|)
 block|;
 comment|// Do not define.
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 specifier|static
@@ -4675,17 +4122,11 @@ argument|unsigned Bit
 argument_list|)
 specifier|const
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Illegal bit reference off int"
 argument_list|)
-block|;
-return|return
-literal|0
-return|;
-block|}
+block|;   }
 comment|/// resolveListElementReference - This method is used to implement
 comment|/// VarListElementInit::resolveReferences.  If the list element is resolvable
 comment|/// now, we return the resolved value, otherwise we return null.
@@ -4702,18 +4143,12 @@ argument|unsigned Elt
 argument_list|)
 specifier|const
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Illegal element reference off int"
 argument_list|)
-block|;
-return|return
-literal|0
-return|;
+block|;   }
 block|}
-expr|}
 block|;
 comment|/// StringInit - "foo" - Represent an initialization by a string value.
 comment|///
@@ -4773,6 +4208,11 @@ name|Other
 operator|)
 block|;
 comment|// Do not define.
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 specifier|static
@@ -4780,12 +4220,7 @@ name|StringInit
 operator|*
 name|get
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|V
+name|StringRef
 argument_list|)
 block|;
 specifier|const
@@ -4871,17 +4306,11 @@ argument|unsigned Bit
 argument_list|)
 specifier|const
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Illegal bit reference off string"
 argument_list|)
-block|;
-return|return
-literal|0
-return|;
-block|}
+block|;   }
 comment|/// resolveListElementReference - This method is used to implement
 comment|/// VarListElementInit::resolveReferences.  If the list element is resolvable
 comment|/// now, we return the resolved value, otherwise we return null.
@@ -4898,138 +4327,11 @@ argument|unsigned Elt
 argument_list|)
 specifier|const
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Illegal element reference off string"
 argument_list|)
-block|;
-return|return
-literal|0
-return|;
-block|}
-expr|}
-block|;
-comment|/// CodeInit - "[{...}]" - Represent a code fragment.
-comment|///
-name|class
-name|CodeInit
-operator|:
-name|public
-name|Init
-block|{
-name|std
-operator|::
-name|string
-name|Value
-block|;
-name|explicit
-name|CodeInit
-argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|V
-argument_list|)
-operator|:
-name|Value
-argument_list|(
-argument|V
-argument_list|)
-block|{}
-name|CodeInit
-argument_list|(
-specifier|const
-name|CodeInit
-operator|&
-name|Other
-argument_list|)
-block|;
-comment|// Do not define.
-name|CodeInit
-operator|&
-name|operator
-operator|=
-operator|(
-specifier|const
-name|CodeInit
-operator|&
-name|Other
-operator|)
-block|;
-comment|// Do not define.
-name|public
-operator|:
-specifier|static
-name|CodeInit
-operator|*
-name|get
-argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|V
-argument_list|)
-block|;
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|getValue
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Value
-return|;
-block|}
-name|virtual
-name|Init
-operator|*
-name|convertInitializerTo
-argument_list|(
-argument|RecTy *Ty
-argument_list|)
-specifier|const
-block|{
-return|return
-name|Ty
-operator|->
-name|convertValue
-argument_list|(
-name|const_cast
-operator|<
-name|CodeInit
-operator|*
-operator|>
-operator|(
-name|this
-operator|)
-argument_list|)
-return|;
-block|}
-name|virtual
-name|std
-operator|::
-name|string
-name|getAsString
-argument_list|()
-specifier|const
-block|{
-return|return
-literal|"[{"
-operator|+
-name|Value
-operator|+
-literal|"}]"
-return|;
-block|}
+block|;   }
 expr|}
 block|;
 comment|/// ListInit - [AL, AH, CL] - Represent a list of defs
@@ -5333,17 +4635,11 @@ argument|unsigned Bit
 argument_list|)
 specifier|const
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Illegal bit reference off list"
 argument_list|)
-block|;
-return|return
-literal|0
-return|;
-block|}
+block|;   }
 comment|/// resolveListElementReference - This method is used to implement
 comment|/// VarListElementInit::resolveReferences.  If the list element is resolvable
 comment|/// now, we return the resolved value, otherwise we return null.
@@ -6301,9 +5597,8 @@ operator|:
 name|public
 name|TypedInit
 block|{
-name|std
-operator|::
-name|string
+name|Init
+operator|*
 name|VarName
 block|;
 name|explicit
@@ -6314,6 +5609,28 @@ name|std
 operator|::
 name|string
 operator|&
+name|VN
+argument_list|,
+name|RecTy
+operator|*
+name|T
+argument_list|)
+operator|:
+name|TypedInit
+argument_list|(
+name|T
+argument_list|)
+block|,
+name|VarName
+argument_list|(
+argument|StringInit::get(VN)
+argument_list|)
+block|{}
+name|explicit
+name|VarInit
+argument_list|(
+name|Init
+operator|*
 name|VN
 argument_list|,
 name|RecTy
@@ -6418,9 +5735,30 @@ operator|&
 name|getName
 argument_list|()
 specifier|const
+block|;
+name|Init
+operator|*
+name|getNameInit
+argument_list|()
+specifier|const
 block|{
 return|return
 name|VarName
+return|;
+block|}
+name|std
+operator|::
+name|string
+name|getNameInitAsString
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getNameInit
+argument_list|()
+operator|->
+name|getAsUnquotedString
+argument_list|()
 return|;
 block|}
 name|virtual
@@ -6496,7 +5834,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|VarName
+name|getName
+argument_list|()
 return|;
 block|}
 expr|}
@@ -7020,17 +6359,11 @@ argument|unsigned Bit
 argument_list|)
 specifier|const
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Illegal bit reference off def"
 argument_list|)
-block|;
-return|return
-literal|0
-return|;
-block|}
+block|;   }
 comment|/// resolveListElementReference - This method is used to implement
 comment|/// VarListElementInit::resolveReferences.  If the list element is resolvable
 comment|/// now, we return the resolved value, otherwise we return null.
@@ -7047,18 +6380,12 @@ argument|unsigned Elt
 argument_list|)
 specifier|const
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Illegal element reference off def"
 argument_list|)
-block|;
-return|return
-literal|0
-return|;
+block|;   }
 block|}
-expr|}
 block|;
 comment|/// FieldInit - X.Y - Represent a reference to a subfield of a variable
 comment|///
@@ -7744,17 +7071,11 @@ argument|unsigned Bit
 argument_list|)
 specifier|const
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Illegal bit reference off dag"
 argument_list|)
-block|;
-return|return
-literal|0
-return|;
-block|}
+block|;   }
 name|virtual
 name|Init
 operator|*
@@ -7768,17 +7089,11 @@ argument|unsigned Elt
 argument_list|)
 specifier|const
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Illegal element reference off dag"
 argument_list|)
-block|;
-return|return
-literal|0
-return|;
-block|}
+block|;   }
 expr|}
 block|;
 comment|//===----------------------------------------------------------------------===//
@@ -7831,6 +7146,32 @@ name|getName
 argument_list|()
 specifier|const
 block|;
+specifier|const
+name|Init
+operator|*
+name|getNameInit
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Name
+return|;
+block|}
+name|std
+operator|::
+name|string
+name|getNameInitAsString
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getNameInit
+argument_list|()
+operator|->
+name|getAsUnquotedString
+argument_list|()
+return|;
+block|}
 name|unsigned
 name|getPrefix
 argument_list|()
@@ -7960,9 +7301,8 @@ name|std
 operator|::
 name|vector
 operator|<
-name|std
-operator|::
-name|string
+name|Init
+operator|*
 operator|>
 name|TemplateArgs
 block|;
@@ -7991,6 +7331,10 @@ block|;
 name|DefInit
 operator|*
 name|TheInit
+block|;
+name|void
+name|init
+argument_list|()
 block|;
 name|void
 name|checkName
@@ -8039,7 +7383,49 @@ name|TheInit
 argument_list|(
 literal|0
 argument_list|)
-block|{}
+block|{
+name|init
+argument_list|()
+block|;   }
+name|explicit
+name|Record
+argument_list|(
+argument|Init *N
+argument_list|,
+argument|SMLoc loc
+argument_list|,
+argument|RecordKeeper&records
+argument_list|)
+operator|:
+name|ID
+argument_list|(
+name|LastID
+operator|++
+argument_list|)
+block|,
+name|Name
+argument_list|(
+name|N
+argument_list|)
+block|,
+name|Loc
+argument_list|(
+name|loc
+argument_list|)
+block|,
+name|TrackedRecords
+argument_list|(
+name|records
+argument_list|)
+block|,
+name|TheInit
+argument_list|(
+literal|0
+argument_list|)
+block|{
+name|init
+argument_list|()
+block|;   }
 operator|~
 name|Record
 argument_list|()
@@ -8072,6 +7458,32 @@ name|getName
 argument_list|()
 specifier|const
 block|;
+name|Init
+operator|*
+name|getNameInit
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Name
+return|;
+block|}
+specifier|const
+name|std
+operator|::
+name|string
+name|getNameInitAsString
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getNameInit
+argument_list|()
+operator|->
+name|getAsUnquotedString
+argument_list|()
+return|;
+block|}
 name|void
 name|setName
 argument_list|(
@@ -8113,9 +7525,8 @@ name|std
 operator|::
 name|vector
 operator|<
-name|std
-operator|::
-name|string
+name|Init
+operator|*
 operator|>
 operator|&
 name|getTemplateArgs
@@ -8162,7 +7573,7 @@ block|}
 name|bool
 name|isTemplateArg
 argument_list|(
-argument|StringRef Name
+argument|Init *Name
 argument_list|)
 specifier|const
 block|{
@@ -8203,12 +7614,34 @@ return|return
 name|false
 return|;
 block|}
+name|bool
+name|isTemplateArg
+argument_list|(
+argument|StringRef Name
+argument_list|)
+specifier|const
+block|{
+return|return
+name|isTemplateArg
+argument_list|(
+name|StringInit
+operator|::
+name|get
+argument_list|(
+name|Name
+operator|.
+name|str
+argument_list|()
+argument_list|)
+argument_list|)
+return|;
+block|}
 specifier|const
 name|RecordVal
 operator|*
 name|getValue
 argument_list|(
-argument|StringRef Name
+argument|const Init *Name
 argument_list|)
 specifier|const
 block|{
@@ -8240,7 +7673,79 @@ index|[
 name|i
 index|]
 operator|.
-name|getName
+name|getNameInit
+argument_list|()
+operator|==
+name|Name
+condition|)
+return|return
+operator|&
+name|Values
+index|[
+name|i
+index|]
+return|;
+return|return
+literal|0
+return|;
+block|}
+specifier|const
+name|RecordVal
+operator|*
+name|getValue
+argument_list|(
+argument|StringRef Name
+argument_list|)
+specifier|const
+block|{
+return|return
+name|getValue
+argument_list|(
+name|StringInit
+operator|::
+name|get
+argument_list|(
+name|Name
+argument_list|)
+argument_list|)
+return|;
+block|}
+name|RecordVal
+operator|*
+name|getValue
+argument_list|(
+argument|const Init *Name
+argument_list|)
+block|{
+for|for
+control|(
+name|unsigned
+name|i
+init|=
+literal|0
+init|,
+name|e
+init|=
+name|Values
+operator|.
+name|size
+argument_list|()
+init|;
+name|i
+operator|!=
+name|e
+condition|;
+operator|++
+name|i
+control|)
+if|if
+condition|(
+name|Values
+index|[
+name|i
+index|]
+operator|.
+name|getNameInit
 argument_list|()
 operator|==
 name|Name
@@ -8263,54 +7768,22 @@ argument_list|(
 argument|StringRef Name
 argument_list|)
 block|{
-for|for
-control|(
-name|unsigned
-name|i
-init|=
-literal|0
-init|,
-name|e
-init|=
-name|Values
-operator|.
-name|size
-argument_list|()
-init|;
-name|i
-operator|!=
-name|e
-condition|;
-operator|++
-name|i
-control|)
-if|if
-condition|(
-name|Values
-index|[
-name|i
-index|]
-operator|.
-name|getName
-argument_list|()
-operator|==
+return|return
+name|getValue
+argument_list|(
+name|StringInit
+operator|::
+name|get
+argument_list|(
 name|Name
-condition|)
-return|return
-operator|&
-name|Values
-index|[
-name|i
-index|]
-return|;
-return|return
-literal|0
+argument_list|)
+argument_list|)
 return|;
 block|}
 name|void
 name|addTemplateArg
 argument_list|(
-argument|StringRef Name
+argument|Init *Name
 argument_list|)
 block|{
 name|assert
@@ -8332,6 +7805,25 @@ name|Name
 argument_list|)
 block|;   }
 name|void
+name|addTemplateArg
+argument_list|(
+argument|StringRef Name
+argument_list|)
+block|{
+name|addTemplateArg
+argument_list|(
+name|StringInit
+operator|::
+name|get
+argument_list|(
+name|Name
+operator|.
+name|str
+argument_list|()
+argument_list|)
+argument_list|)
+block|;   }
+name|void
 name|addValue
 argument_list|(
 argument|const RecordVal&RV
@@ -8343,7 +7835,7 @@ name|getValue
 argument_list|(
 name|RV
 operator|.
-name|getName
+name|getNameInit
 argument_list|()
 argument_list|)
 operator|==
@@ -8358,11 +7850,51 @@ name|push_back
 argument_list|(
 name|RV
 argument_list|)
-block|;   }
+block|;
+if|if
+condition|(
+name|Values
+operator|.
+name|size
+argument_list|()
+operator|>
+literal|1
+condition|)
+comment|// Keep NAME at the end of the list.  It makes record dumps a
+comment|// bit prettier and allows TableGen tests to be written more
+comment|// naturally.  Tests can use CHECK-NEXT to look for Record
+comment|// fields they expect to see after a def.  They can't do that if
+comment|// NAME is the first Record field.
+name|std
+operator|::
+name|swap
+argument_list|(
+name|Values
+index|[
+name|Values
+operator|.
+name|size
+argument_list|()
+operator|-
+literal|2
+index|]
+argument_list|,
+name|Values
+index|[
+name|Values
+operator|.
+name|size
+argument_list|()
+operator|-
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+block|}
 name|void
 name|removeValue
 argument_list|(
-argument|StringRef Name
+argument|Init *Name
 argument_list|)
 block|{
 for|for
@@ -8393,7 +7925,7 @@ index|[
 name|i
 index|]
 operator|.
-name|getName
+name|getNameInit
 argument_list|()
 operator|==
 name|Name
@@ -8413,14 +7945,31 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Cannot remove an entry that does not exist!"
 argument_list|)
 expr_stmt|;
 block|}
+name|void
+name|removeValue
+argument_list|(
+argument|StringRef Name
+argument_list|)
+block|{
+name|removeValue
+argument_list|(
+name|StringInit
+operator|::
+name|get
+argument_list|(
+name|Name
+operator|.
+name|str
+argument_list|()
+argument_list|)
+argument_list|)
+block|;   }
 name|bool
 name|isSubClassOf
 argument_list|(
@@ -8500,7 +8049,7 @@ index|[
 name|i
 index|]
 operator|->
-name|getName
+name|getNameInitAsString
 argument_list|()
 operator|==
 name|Name
@@ -8718,19 +8267,6 @@ comment|///
 name|DagInit
 operator|*
 name|getValueAsDag
-argument_list|(
-argument|StringRef FieldName
-argument_list|)
-specifier|const
-block|;
-comment|/// getValueAsCode - This method looks up the specified field and returns
-comment|/// its value as the string data in a CodeInit, throwing an exception if the
-comment|/// field does not exist or if the value is not a code object.
-comment|///
-name|std
-operator|::
-name|string
-name|getValueAsCode
 argument_list|(
 argument|StringRef FieldName
 argument_list|)
@@ -9047,7 +8583,7 @@ name|getClass
 argument_list|(
 name|R
 operator|->
-name|getName
+name|getNameInitAsString
 argument_list|()
 argument_list|)
 operator|==
@@ -9066,7 +8602,7 @@ name|make_pair
 argument_list|(
 name|R
 operator|->
-name|getName
+name|getNameInitAsString
 argument_list|()
 argument_list|,
 name|R
@@ -9085,7 +8621,7 @@ name|getDef
 argument_list|(
 name|R
 operator|->
-name|getName
+name|getNameInitAsString
 argument_list|()
 argument_list|)
 operator|==
@@ -9104,7 +8640,7 @@ name|make_pair
 argument_list|(
 name|R
 operator|->
-name|getName
+name|getNameInitAsString
 argument_list|()
 argument_list|,
 name|R
@@ -9188,10 +8724,10 @@ name|dump
 argument_list|()
 specifier|const
 block|; }
-block|;
+decl_stmt|;
 comment|/// LessRecord - Sorting predicate to sort record pointers by name.
 comment|///
-block|struct
+struct|struct
 name|LessRecord
 block|{
 name|bool
@@ -9202,7 +8738,7 @@ specifier|const
 name|Record
 operator|*
 name|Rec1
-expr|,
+operator|,
 specifier|const
 name|Record
 operator|*
@@ -9230,12 +8766,12 @@ operator|<
 literal|0
 return|;
 block|}
-expr|}
-block|;
+block|}
+struct|;
 comment|/// LessRecordFieldName - Sorting predicate to sort record pointers by their
 comment|/// name field.
 comment|///
-block|struct
+struct|struct
 name|LessRecordFieldName
 block|{
 name|bool
@@ -9246,7 +8782,7 @@ specifier|const
 name|Record
 operator|*
 name|Rec1
-expr|,
+operator|,
 specifier|const
 name|Record
 operator|*
@@ -9270,8 +8806,8 @@ literal|"Name"
 argument_list|)
 return|;
 block|}
-expr|}
-block|;
+block|}
+struct|;
 name|raw_ostream
 operator|&
 name|operator
@@ -9280,13 +8816,69 @@ operator|(
 name|raw_ostream
 operator|&
 name|OS
-expr|,
+operator|,
 specifier|const
 name|RecordKeeper
 operator|&
 name|RK
 operator|)
-block|;  }
+expr_stmt|;
+comment|/// QualifyName - Return an Init with a qualifier prefix referring
+comment|/// to CurRec's name.
+name|Init
+modifier|*
+name|QualifyName
+argument_list|(
+name|Record
+operator|&
+name|CurRec
+argument_list|,
+name|MultiClass
+operator|*
+name|CurMultiClass
+argument_list|,
+name|Init
+operator|*
+name|Name
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Scoper
+argument_list|)
+decl_stmt|;
+comment|/// QualifyName - Return an Init with a qualifier prefix referring
+comment|/// to CurRec's name.
+name|Init
+modifier|*
+name|QualifyName
+argument_list|(
+name|Record
+operator|&
+name|CurRec
+argument_list|,
+name|MultiClass
+operator|*
+name|CurMultiClass
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Name
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Scoper
+argument_list|)
+decl_stmt|;
+block|}
 end_decl_stmt
 
 begin_comment

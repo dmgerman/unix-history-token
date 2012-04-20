@@ -2550,6 +2550,20 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
+name|TASK_INIT
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_fataltask
+argument_list|,
+literal|0
+argument_list|,
+name|ath_fatal_proc
+argument_list|,
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Allocate hardware transmit queues: one queue for 	 * beacon frames and one data queue for each QoS 	 * priority.  Note that the hal handles resetting 	 * these queues at the needed time. 	 * 	 * XXX PS-Poll 	 */
 name|sc
 operator|->
@@ -6959,11 +6973,16 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* disable intr's until reset */
-name|ath_fatal_proc
+name|taskqueue_enqueue
 argument_list|(
 name|sc
+operator|->
+name|sc_tq
 argument_list|,
-literal|0
+operator|&
+name|sc
+operator|->
+name|sc_fataltask
 argument_list|)
 expr_stmt|;
 block|}

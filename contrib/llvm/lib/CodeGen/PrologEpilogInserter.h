@@ -166,17 +166,6 @@ name|getPassRegistry
 argument_list|()
 argument_list|)
 block|;     }
-specifier|const
-name|char
-operator|*
-name|getPassName
-argument_list|()
-specifier|const
-block|{
-return|return
-literal|"Prolog/Epilog Insertion& Frame Finalization"
-return|;
-block|}
 name|virtual
 name|void
 name|getAnalysisUsage

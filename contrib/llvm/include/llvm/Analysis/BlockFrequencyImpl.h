@@ -122,12 +122,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sstream>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<string>
 end_include
 
@@ -162,6 +156,7 @@ name|BlockFrequencyImpl
 block|{
 name|DenseMap
 operator|<
+specifier|const
 name|BlockT
 operator|*
 block|,
@@ -204,7 +199,10 @@ block|{
 return|return
 name|BB
 operator|->
-name|getNameStr
+name|getName
+argument_list|()
+operator|.
+name|str
 argument_list|()
 return|;
 block|}
@@ -219,8 +217,14 @@ specifier|const
 block|{
 name|std
 operator|::
-name|stringstream
+name|string
+name|str
+block|;
+name|raw_string_ostream
 name|ss
+argument_list|(
+name|str
+argument_list|)
 block|;
 name|ss
 operator|<<
@@ -249,7 +253,7 @@ literal|" derived from LLVM BB "
 operator|<<
 name|BB
 operator|->
-name|getNameStr
+name|getName
 argument_list|()
 expr_stmt|;
 return|return
@@ -1761,6 +1765,7 @@ begin_decl_stmt
 name|BlockFrequency
 name|getBlockFreq
 argument_list|(
+specifier|const
 name|BlockT
 operator|*
 name|BB
@@ -1770,6 +1775,7 @@ block|{
 name|typename
 name|DenseMap
 operator|<
+specifier|const
 name|BlockT
 operator|*
 operator|,

@@ -1514,6 +1514,11 @@ expr_stmt|;
 block|}
 end_function
 
+begin_label
+name|public
+label|:
+end_label
+
 begin_comment
 comment|/// aliasesPointer - Return true if the specified pointer "may" (or must)
 end_comment

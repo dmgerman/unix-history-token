@@ -22,7 +22,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: softmagic.c,v 1.135 2009/03/27 22:42:49 christos Exp $"
+literal|"@(#)$File: softmagic.c,v 1.147 2011/11/05 15:44:22 rrt Exp $"
 argument_list|)
 end_macro
 
@@ -88,6 +88,8 @@ parameter_list|,
 name|size_t
 parameter_list|,
 name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -113,6 +115,8 @@ parameter_list|,
 name|size_t
 parameter_list|,
 name|unsigned
+name|int
+parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
@@ -360,6 +364,9 @@ name|nbytes
 parameter_list|,
 name|int
 name|mode
+parameter_list|,
+name|int
+name|text
 parameter_list|)
 block|{
 name|struct
@@ -414,6 +421,8 @@ argument_list|,
 name|nbytes
 argument_list|,
 name|mode
+argument_list|,
+name|text
 argument_list|)
 operator|)
 operator|!=
@@ -461,6 +470,9 @@ name|nbytes
 parameter_list|,
 name|int
 name|mode
+parameter_list|,
+name|int
+name|text
 parameter_list|)
 block|{
 name|uint32_t
@@ -564,11 +576,59 @@ decl_stmt|;
 if|if
 condition|(
 operator|(
+name|IS_STRING
+argument_list|(
+name|m
+operator|->
+name|type
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|text
+operator|&&
+operator|(
+name|m
+operator|->
+name|str_flags
+operator|&
+operator|(
+name|STRING_BINTEST
+operator||
+name|STRING_TEXTTEST
+operator|)
+operator|)
+operator|==
+name|STRING_BINTEST
+operator|)
+operator|||
+operator|(
+operator|!
+name|text
+operator|&&
+operator|(
+name|m
+operator|->
+name|str_flags
+operator|&
+operator|(
+name|STRING_TEXTTEST
+operator||
+name|STRING_BINTEST
+operator|)
+operator|)
+operator|==
+name|STRING_TEXTTEST
+operator|)
+operator|)
+operator|)
+operator|||
+operator|(
 name|m
 operator|->
 name|flag
 operator|&
-name|BINTEST
+name|mode
 operator|)
 operator|!=
 name|mode
@@ -627,6 +687,8 @@ argument_list|,
 name|nbytes
 argument_list|,
 name|cont_level
+argument_list|,
+name|text
 argument_list|)
 condition|)
 block|{
@@ -727,23 +789,6 @@ operator|++
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 		 * If we are going to print something, we'll need to print 		 * a blank before we print something else. 		 */
-if|if
-condition|(
-operator|*
-name|m
-operator|->
-name|desc
-condition|)
-block|{
-name|need_separator
-operator|=
-literal|1
-expr_stmt|;
-name|printed_something
-operator|=
-literal|1
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -762,6 +807,23 @@ condition|)
 return|return
 name|e
 return|;
+comment|/* 		 * If we are going to print something, we'll need to print 		 * a blank before we print something else. 		 */
+if|if
+condition|(
+operator|*
+name|m
+operator|->
+name|desc
+condition|)
+block|{
+name|need_separator
+operator|=
+literal|1
+expr_stmt|;
+name|printed_something
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|print_sep
@@ -980,6 +1042,8 @@ argument_list|,
 name|nbytes
 argument_list|,
 name|cont_level
+argument_list|,
+name|text
 argument_list|)
 condition|)
 block|{
@@ -1141,15 +1205,6 @@ literal|0
 expr_stmt|;
 break|break;
 block|}
-comment|/* 				 * If we are going to print something, 				 * make sure that we have a separator first. 				 */
-if|if
-condition|(
-operator|*
-name|m
-operator|->
-name|desc
-condition|)
-block|{
 if|if
 condition|(
 operator|(
@@ -1168,6 +1223,15 @@ condition|)
 return|return
 name|e
 return|;
+comment|/* 				 * If we are going to print something, 				 * make sure that we have a separator first. 				 */
+if|if
+condition|(
+operator|*
+name|m
+operator|->
+name|desc
+condition|)
+block|{
 if|if
 condition|(
 operator|!
@@ -2221,7 +2285,11 @@ operator|==
 name|FILE_PSTRING
 condition|)
 name|t
-operator|++
+operator|+=
+name|file_pstring_length_size
+argument_list|(
+name|m
+argument_list|)
 expr_stmt|;
 block|}
 break|break;
@@ -2923,6 +2991,11 @@ case|case
 name|FILE_BYTE
 case|:
 return|return
+name|CAST
+argument_list|(
+name|int32_t
+argument_list|,
+operator|(
 name|ms
 operator|->
 name|offset
@@ -2930,6 +3003,8 @@ operator|+
 sizeof|sizeof
 argument_list|(
 name|char
+argument_list|)
+operator|)
 argument_list|)
 return|;
 case|case
@@ -2942,6 +3017,11 @@ case|case
 name|FILE_LESHORT
 case|:
 return|return
+name|CAST
+argument_list|(
+name|int32_t
+argument_list|,
+operator|(
 name|ms
 operator|->
 name|offset
@@ -2949,6 +3029,8 @@ operator|+
 sizeof|sizeof
 argument_list|(
 name|short
+argument_list|)
+operator|)
 argument_list|)
 return|;
 case|case
@@ -2964,6 +3046,11 @@ case|case
 name|FILE_MELONG
 case|:
 return|return
+name|CAST
+argument_list|(
+name|int32_t
+argument_list|,
+operator|(
 name|ms
 operator|->
 name|offset
@@ -2971,6 +3058,8 @@ operator|+
 sizeof|sizeof
 argument_list|(
 name|int32_t
+argument_list|)
+operator|)
 argument_list|)
 return|;
 case|case
@@ -2983,6 +3072,11 @@ case|case
 name|FILE_LEQUAD
 case|:
 return|return
+name|CAST
+argument_list|(
+name|int32_t
+argument_list|,
+operator|(
 name|ms
 operator|->
 name|offset
@@ -2990,6 +3084,8 @@ operator|+
 sizeof|sizeof
 argument_list|(
 name|int64_t
+argument_list|)
+operator|)
 argument_list|)
 return|;
 case|case
@@ -3071,6 +3167,11 @@ literal|'\0'
 expr_stmt|;
 name|t
 operator|=
+name|CAST
+argument_list|(
+name|uint32_t
+argument_list|,
+operator|(
 name|ms
 operator|->
 name|offset
@@ -3080,6 +3181,8 @@ argument_list|(
 name|p
 operator|->
 name|s
+argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3091,7 +3194,11 @@ operator|==
 name|FILE_PSTRING
 condition|)
 name|t
-operator|++
+operator|+=
+name|file_pstring_length_size
+argument_list|(
+name|m
+argument_list|)
 expr_stmt|;
 return|return
 name|t
@@ -3110,6 +3217,11 @@ case|case
 name|FILE_MEDATE
 case|:
 return|return
+name|CAST
+argument_list|(
+name|int32_t
+argument_list|,
+operator|(
 name|ms
 operator|->
 name|offset
@@ -3117,6 +3229,8 @@ operator|+
 sizeof|sizeof
 argument_list|(
 name|time_t
+argument_list|)
+operator|)
 argument_list|)
 return|;
 case|case
@@ -3132,6 +3246,11 @@ case|case
 name|FILE_MELDATE
 case|:
 return|return
+name|CAST
+argument_list|(
+name|int32_t
+argument_list|,
+operator|(
 name|ms
 operator|->
 name|offset
@@ -3139,6 +3258,8 @@ operator|+
 sizeof|sizeof
 argument_list|(
 name|time_t
+argument_list|)
+operator|)
 argument_list|)
 return|;
 case|case
@@ -3151,6 +3272,11 @@ case|case
 name|FILE_LEQDATE
 case|:
 return|return
+name|CAST
+argument_list|(
+name|int32_t
+argument_list|,
+operator|(
 name|ms
 operator|->
 name|offset
@@ -3158,6 +3284,8 @@ operator|+
 sizeof|sizeof
 argument_list|(
 name|uint64_t
+argument_list|)
+operator|)
 argument_list|)
 return|;
 case|case
@@ -3170,6 +3298,11 @@ case|case
 name|FILE_LEQLDATE
 case|:
 return|return
+name|CAST
+argument_list|(
+name|int32_t
+argument_list|,
+operator|(
 name|ms
 operator|->
 name|offset
@@ -3177,6 +3310,8 @@ operator|+
 sizeof|sizeof
 argument_list|(
 name|uint64_t
+argument_list|)
+operator|)
 argument_list|)
 return|;
 case|case
@@ -3189,6 +3324,11 @@ case|case
 name|FILE_LEFLOAT
 case|:
 return|return
+name|CAST
+argument_list|(
+name|int32_t
+argument_list|,
+operator|(
 name|ms
 operator|->
 name|offset
@@ -3196,6 +3336,8 @@ operator|+
 sizeof|sizeof
 argument_list|(
 name|float
+argument_list|)
+operator|)
 argument_list|)
 return|;
 case|case
@@ -3208,6 +3350,11 @@ case|case
 name|FILE_LEDOUBLE
 case|:
 return|return
+name|CAST
+argument_list|(
+name|int32_t
+argument_list|,
+operator|(
 name|ms
 operator|->
 name|offset
@@ -3216,8 +3363,9 @@ sizeof|sizeof
 argument_list|(
 name|double
 argument_list|)
+operator|)
+argument_list|)
 return|;
-break|break;
 case|case
 name|FILE_REGEX
 case|:
@@ -3234,14 +3382,24 @@ operator|!=
 literal|0
 condition|)
 return|return
+name|CAST
+argument_list|(
+name|int32_t
+argument_list|,
 name|ms
 operator|->
 name|search
 operator|.
 name|offset
+argument_list|)
 return|;
 else|else
 return|return
+name|CAST
+argument_list|(
+name|int32_t
+argument_list|,
+operator|(
 name|ms
 operator|->
 name|search
@@ -3253,6 +3411,8 @@ operator|->
 name|search
 operator|.
 name|rm_len
+operator|)
+argument_list|)
 return|;
 case|case
 name|FILE_SEARCH
@@ -3270,14 +3430,24 @@ operator|!=
 literal|0
 condition|)
 return|return
+name|CAST
+argument_list|(
+name|int32_t
+argument_list|,
 name|ms
 operator|->
 name|search
 operator|.
 name|offset
+argument_list|)
 return|;
 else|else
 return|return
+name|CAST
+argument_list|(
+name|int32_t
+argument_list|,
+operator|(
 name|ms
 operator|->
 name|search
@@ -3287,6 +3457,8 @@ operator|+
 name|m
 operator|->
 name|vallen
+operator|)
+argument_list|)
 return|;
 case|case
 name|FILE_DEFAULT
@@ -3628,13 +3800,6 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* Why? breaks magic numbers that end with \xa */
-block|len = strlen(p->s); 		if (len--&& p->s[len] == '\n') 			p->s[len] = '\0';
-endif|#
-directive|endif
 return|return
 literal|1
 return|;
@@ -3656,15 +3821,20 @@ name|ptr2
 init|=
 name|ptr1
 operator|+
-literal|1
+name|file_pstring_length_size
+argument_list|(
+name|m
+argument_list|)
 decl_stmt|;
 name|size_t
 name|len
 init|=
-operator|*
-name|p
-operator|->
-name|s
+name|file_pstring_get_length
+argument_list|(
+name|m
+argument_list|,
+name|ptr1
+argument_list|)
 decl_stmt|;
 if|if
 condition|(
@@ -3706,13 +3876,6 @@ name|ptr1
 operator|=
 literal|'\0'
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* Why? breaks magic numbers that end with \xa */
-block|len = strlen(p->s); 		if (len--&& p->s[len] == '\n') 			p->s[len] = '\0';
-endif|#
-directive|endif
 return|return
 literal|1
 return|;
@@ -4860,12 +5023,14 @@ name|search
 operator|.
 name|s
 operator|=
-operator|(
+name|RCAST
+argument_list|(
 specifier|const
 name|char
 operator|*
-operator|)
+argument_list|,
 name|s
+argument_list|)
 operator|+
 name|offset
 expr_stmt|;
@@ -4953,12 +5118,14 @@ return|;
 block|}
 name|buf
 operator|=
-operator|(
+name|RCAST
+argument_list|(
 specifier|const
 name|char
 operator|*
-operator|)
+argument_list|,
 name|s
+argument_list|)
 operator|+
 name|offset
 expr_stmt|;
@@ -4966,12 +5133,14 @@ name|end
 operator|=
 name|last
 operator|=
-operator|(
+name|RCAST
+argument_list|(
 specifier|const
 name|char
 operator|*
-operator|)
+argument_list|,
 name|s
+argument_list|)
 operator|+
 name|nbytes
 expr_stmt|;
@@ -4988,10 +5157,20 @@ name|buf
 init|;
 name|lines
 operator|&&
+name|b
+operator|<
+name|end
+operator|&&
 operator|(
 operator|(
 name|b
 operator|=
+name|CAST
+argument_list|(
+specifier|const
+name|char
+operator|*
+argument_list|,
 name|memchr
 argument_list|(
 name|c
@@ -5000,24 +5179,46 @@ name|b
 argument_list|,
 literal|'\n'
 argument_list|,
+name|CAST
+argument_list|(
+name|size_t
+argument_list|,
+operator|(
 name|end
 operator|-
 name|b
+operator|)
+argument_list|)
+argument_list|)
 argument_list|)
 operator|)
 operator|||
 operator|(
 name|b
 operator|=
+name|CAST
+argument_list|(
+specifier|const
+name|char
+operator|*
+argument_list|,
 name|memchr
 argument_list|(
 name|c
 argument_list|,
 literal|'\r'
 argument_list|,
+name|CAST
+argument_list|(
+name|size_t
+argument_list|,
+operator|(
 name|end
 operator|-
 name|c
+operator|)
+argument_list|)
+argument_list|)
 argument_list|)
 operator|)
 operator|)
@@ -5059,12 +5260,14 @@ name|lines
 condition|)
 name|last
 operator|=
-operator|(
+name|RCAST
+argument_list|(
 specifier|const
 name|char
 operator|*
-operator|)
+argument_list|,
 name|s
+argument_list|)
 operator|+
 name|nbytes
 expr_stmt|;
@@ -5423,6 +5626,9 @@ parameter_list|,
 name|unsigned
 name|int
 name|cont_level
+parameter_list|,
+name|int
+name|text
 parameter_list|)
 block|{
 name|uint32_t
@@ -9008,6 +9214,8 @@ operator|-
 name|offset
 argument_list|,
 name|BINTEST
+argument_list|,
+name|text
 argument_list|)
 return|;
 case|case
@@ -9218,7 +9426,7 @@ condition|(
 operator|(
 name|flags
 operator|&
-name|STRING_COMPACT_BLANK
+name|STRING_COMPACT_WHITESPACE
 operator|)
 operator|&&
 name|isspace
@@ -9241,6 +9449,15 @@ operator|++
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|isspace
+argument_list|(
+operator|*
+name|a
+argument_list|)
+condition|)
 while|while
 condition|(
 name|isspace
@@ -9268,7 +9485,7 @@ condition|(
 operator|(
 name|flags
 operator|&
-name|STRING_COMPACT_OPTIONAL_BLANK
+name|STRING_COMPACT_OPTIONAL_WHITESPACE
 operator|)
 operator|&&
 name|isspace
@@ -10393,7 +10610,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%llu == *any* = 1\n"
+literal|"%"
+name|INT64_T_FORMAT
+literal|"u == *any* = 1\n"
 argument_list|,
 operator|(
 name|unsigned
@@ -10436,7 +10655,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%llu != %llu = %d\n"
+literal|"%"
+name|INT64_T_FORMAT
+literal|"u != %"
+name|INT64_T_FORMAT
+literal|"u = %d\n"
 argument_list|,
 operator|(
 name|unsigned
@@ -10484,7 +10707,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%llu == %llu = %d\n"
+literal|"%"
+name|INT64_T_FORMAT
+literal|"u == %"
+name|INT64_T_FORMAT
+literal|"u = %d\n"
 argument_list|,
 operator|(
 name|unsigned
@@ -10541,7 +10768,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%llu> %llu = %d\n"
+literal|"%"
+name|INT64_T_FORMAT
+literal|"u> %"
+name|INT64_T_FORMAT
+literal|"u = %d\n"
 argument_list|,
 operator|(
 name|unsigned
@@ -10594,7 +10825,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%lld> %lld = %d\n"
+literal|"%"
+name|INT64_T_FORMAT
+literal|"d> %"
+name|INT64_T_FORMAT
+literal|"d = %d\n"
 argument_list|,
 operator|(
 name|long
@@ -10650,7 +10885,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%llu< %llu = %d\n"
+literal|"%"
+name|INT64_T_FORMAT
+literal|"u< %"
+name|INT64_T_FORMAT
+literal|"u = %d\n"
 argument_list|,
 operator|(
 name|unsigned
@@ -10703,7 +10942,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%lld< %lld = %d\n"
+literal|"%"
+name|INT64_T_FORMAT
+literal|"d< %"
+name|INT64_T_FORMAT
+literal|"d = %d\n"
 argument_list|,
 operator|(
 name|long
@@ -10754,7 +10997,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"((%llx& %llx) == %llx) = %d\n"
+literal|"((%"
+name|INT64_T_FORMAT
+literal|"x& %"
+name|INT64_T_FORMAT
+literal|"x) == %"
+name|INT64_T_FORMAT
+literal|"x) = %d\n"
 argument_list|,
 operator|(
 name|unsigned
@@ -10813,7 +11062,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"((%llx& %llx) != %llx) = %d\n"
+literal|"((%"
+name|INT64_T_FORMAT
+literal|"x& %"
+name|INT64_T_FORMAT
+literal|"x) != %"
+name|INT64_T_FORMAT
+literal|"x) = %d\n"
 argument_list|,
 operator|(
 name|unsigned

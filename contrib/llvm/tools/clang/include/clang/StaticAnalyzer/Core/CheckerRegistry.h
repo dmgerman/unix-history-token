@@ -366,9 +366,13 @@ argument_list|,
 argument|StringRef desc
 argument_list|)
 block|{
+comment|// Avoid MSVC's Compiler Error C2276:
+comment|// http://msdn.microsoft.com/en-us/library/850cstw1(v=VS.80).aspx
 name|addChecker
 argument_list|(
 operator|&
+name|CheckerRegistry
+operator|::
 name|initializeManager
 operator|<
 name|T

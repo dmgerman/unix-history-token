@@ -5081,7 +5081,7 @@ condition|(
 name|hw_direct_map
 condition|)
 block|{
-name|kcopy
+name|bcopy
 argument_list|(
 operator|(
 name|void
@@ -5125,7 +5125,7 @@ argument_list|,
 name|dst
 argument_list|)
 expr_stmt|;
-name|kcopy
+name|bcopy
 argument_list|(
 operator|(
 name|void
@@ -8539,7 +8539,6 @@ operator|!=
 operator|-
 literal|1
 condition|)
-block|{
 name|MOEA64_PTE_CHANGE
 argument_list|(
 name|mmu
@@ -8598,6 +8597,18 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|(
+name|pg
+operator|->
+name|oflags
+operator|&
+name|VPO_UNMANAGED
+operator|)
+operator|==
+literal|0
+condition|)
 name|vm_page_aflag_set
 argument_list|(
 name|pg
@@ -8629,7 +8640,6 @@ argument_list|,
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 comment|/* 	 * Update vm about the REF/CHG bits if the page is managed and we have 	 * removed write access. 	 */
 if|if
@@ -10582,6 +10592,13 @@ operator|)
 operator|==
 name|PVO_MANAGED
 operator|&&
+name|pg
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
 operator|(
 name|pvo
 operator|->
@@ -10595,13 +10612,6 @@ name|LPTE_PP
 operator|)
 operator|!=
 name|LPTE_BR
-condition|)
-block|{
-if|if
-condition|(
-name|pg
-operator|!=
-name|NULL
 condition|)
 block|{
 if|if
@@ -10658,13 +10668,8 @@ name|PGA_WRITEABLE
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 if|if
 condition|(
-name|pg
-operator|!=
-name|NULL
-operator|&&
 name|LIST_EMPTY
 argument_list|(
 name|vm_page_to_pvoh
@@ -10680,6 +10685,7 @@ argument_list|,
 name|PGA_EXECUTABLE
 argument_list|)
 expr_stmt|;
+block|}
 name|moea64_pvo_entries
 operator|--
 expr_stmt|;

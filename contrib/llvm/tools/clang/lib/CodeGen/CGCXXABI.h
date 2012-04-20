@@ -135,8 +135,6 @@ name|CodeGenModule
 modifier|&
 name|CGM
 decl_stmt|;
-name|llvm
-operator|::
 name|OwningPtr
 operator|<
 name|MangleContext
@@ -173,7 +171,7 @@ block|{
 return|return
 name|CGF
 operator|.
-name|CXXThisDecl
+name|CXXABIThisDecl
 return|;
 block|}
 name|llvm
@@ -189,7 +187,7 @@ block|{
 return|return
 name|CGF
 operator|.
-name|CXXThisValue
+name|CXXABIThisValue
 return|;
 block|}
 name|ImplicitParamDecl
@@ -356,8 +354,8 @@ operator|*
 name|MPT
 argument_list|)
 expr_stmt|;
-comment|/// Perform a derived-to-base or base-to-derived member pointer
-comment|/// conversion.
+comment|/// Perform a derived-to-base, base-to-derived, or bitcast member
+comment|/// pointer conversion.
 name|virtual
 name|llvm
 operator|::
@@ -381,8 +379,8 @@ operator|*
 name|Src
 argument_list|)
 expr_stmt|;
-comment|/// Perform a derived-to-base or base-to-derived member pointer
-comment|/// conversion on a constant member pointer.
+comment|/// Perform a derived-to-base, base-to-derived, or bitcast member
+comment|/// pointer conversion on a constant value.
 name|virtual
 name|llvm
 operator|::
@@ -390,16 +388,16 @@ name|Constant
 operator|*
 name|EmitMemberPointerConversion
 argument_list|(
-name|llvm
-operator|::
-name|Constant
-operator|*
-name|C
-argument_list|,
 specifier|const
 name|CastExpr
 operator|*
 name|E
+argument_list|,
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|Src
 argument_list|)
 expr_stmt|;
 comment|/// Return true if the given member pointer can be zero-initialized
@@ -455,6 +453,19 @@ argument_list|,
 argument|CharUnits offset
 argument_list|)
 expr_stmt|;
+comment|/// Create a member pointer for the given member pointer constant.
+name|virtual
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|EmitMemberPointer
+argument_list|(
+argument|const APValue&MP
+argument_list|,
+argument|QualType MPT
+argument_list|)
+expr_stmt|;
 comment|/// Emit a comparison between two member pointers.  Returns an i1.
 name|virtual
 name|llvm
@@ -498,6 +509,27 @@ operator|*
 name|MPT
 argument_list|)
 expr_stmt|;
+name|protected
+label|:
+comment|/// A utility method for computing the offset required for the given
+comment|/// base-to-derived or derived-to-base member-pointer conversion.
+comment|/// Does not handle virtual conversions (in case we ever fully
+comment|/// support an ABI that allows this).  Returns null if no adjustment
+comment|/// is required.
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|getMemberPointerAdjustment
+argument_list|(
+specifier|const
+name|CastExpr
+operator|*
+name|E
+argument_list|)
+expr_stmt|;
+name|public
+label|:
 comment|/// Build the signature of the given constructor variant by adding
 comment|/// any required parameters.  For convenience, ResTy has been
 comment|/// initialized to 'void', and ArgTys has been initialized with the
@@ -719,6 +751,8 @@ decl_stmt|;
 comment|/*************************** Static local guards ****************************/
 comment|/// Emits the guarded initializer and destructor setup for the given
 comment|/// variable, given that it couldn't be emitted as a constant.
+comment|/// If \p PerformInit is false, the initialization has been folded to a
+comment|/// constant and should not be performed.
 comment|///
 comment|/// The variable may be:
 comment|///   - a static local variable
@@ -741,6 +775,9 @@ operator|::
 name|GlobalVariable
 operator|*
 name|DeclPtr
+argument_list|,
+name|bool
+name|PerformInit
 argument_list|)
 decl_stmt|;
 block|}

@@ -66,6 +66,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|"MBlaze.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"MBlazeSubtarget.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/ErrorHandling.h"
 end_include
 
@@ -79,18 +91,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Target/TargetLowering.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"MBlaze.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"MBlazeSubtarget.h"
 end_include
 
 begin_decl_stmt
@@ -441,6 +441,8 @@ argument_list|,
 argument|CallingConv::ID CallConv
 argument_list|,
 argument|bool isVarArg
+argument_list|,
+argument|bool doesNotRet
 argument_list|,
 argument|bool&isTailCall
 argument_list|,

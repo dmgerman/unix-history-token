@@ -104,19 +104,22 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|Serializer
-decl_stmt|;
-name|class
 name|Deserializer
 decl_stmt|;
 name|class
 name|FoldingSetNodeID
 decl_stmt|;
 name|class
-name|raw_ostream
+name|Serializer
 decl_stmt|;
 name|class
 name|StringRef
+decl_stmt|;
+name|class
+name|hash_code
+decl_stmt|;
+name|class
+name|raw_ostream
 decl_stmt|;
 name|template
 operator|<
@@ -1732,8 +1735,8 @@ return|;
 comment|// For small values, return quickly.
 if|if
 condition|(
-name|numBits
-operator|<
+name|loBitsSet
+operator|<=
 name|APINT_BITS_PER_WORD
 condition|)
 return|return
@@ -1741,13 +1744,14 @@ name|APInt
 argument_list|(
 name|numBits
 argument_list|,
-operator|(
+operator|-
 literal|1ULL
-operator|<<
+operator|>>
+operator|(
+name|APINT_BITS_PER_WORD
+operator|-
 name|loBitsSet
 operator|)
-operator|-
-literal|1
 argument_list|)
 return|;
 return|return
@@ -1767,24 +1771,21 @@ block|}
 end_function
 
 begin_comment
-comment|/// The hash value is computed as the sum of the words and the bit width.
+comment|/// \brief Overload to compute a hash_code for an APInt value.
 end_comment
 
-begin_comment
-comment|/// @returns A hash value computed from the sum of the APInt words.
-end_comment
-
-begin_comment
-comment|/// @brief Get a hash value based on this APInt
-end_comment
-
-begin_expr_stmt
-name|uint64_t
-name|getHashValue
-argument_list|()
+begin_function_decl
+name|friend
+name|hash_code
+name|hash_value
+parameter_list|(
 specifier|const
-expr_stmt|;
-end_expr_stmt
+name|APInt
+modifier|&
+name|Arg
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// This function returns a pointer to the internal storage of the APInt.
@@ -2041,10 +2042,54 @@ operator|!
 operator|(
 operator|)
 specifier|const
-expr_stmt|;
+block|{
+if|if
+condition|(
+name|isSingleWord
+argument_list|()
+condition|)
+return|return
+operator|!
+name|VAL
+return|;
 end_expr_stmt
 
+begin_for
+for|for
+control|(
+name|unsigned
+name|i
+init|=
+literal|0
+init|;
+name|i
+operator|!=
+name|getNumWords
+argument_list|()
+condition|;
+operator|++
+name|i
+control|)
+if|if
+condition|(
+name|pVal
+index|[
+name|i
+index|]
+condition|)
+return|return
+name|false
+return|;
+end_for
+
+begin_return
+return|return
+name|true
+return|;
+end_return
+
 begin_comment
+unit|}
 comment|/// @}
 end_comment
 
@@ -2064,11 +2109,11 @@ begin_comment
 comment|/// @brief Copy assignment operator.
 end_comment
 
-begin_decl_stmt
-name|APInt
-modifier|&
+begin_expr_stmt
+unit|APInt
+operator|&
 name|operator
-init|=
+operator|=
 operator|(
 specifier|const
 name|APInt
@@ -2105,16 +2150,19 @@ name|clearUnusedBits
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_return
 return|return
 name|AssignSlowCase
 argument_list|(
 name|RHS
 argument_list|)
 return|;
-block|}
-end_decl_stmt
+end_return
 
 begin_comment
+unit|}
 comment|/// The RHS value is assigned to *this. If the significant bits in RHS exceed
 end_comment
 
@@ -2134,17 +2182,17 @@ begin_comment
 comment|/// @brief Assignment operator.
 end_comment
 
-begin_decl_stmt
-name|APInt
-modifier|&
+begin_expr_stmt
+unit|APInt
+operator|&
 name|operator
-init|=
+operator|=
 operator|(
 name|uint64_t
 name|RHS
 operator|)
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// Performs a bitwise AND operation on this APInt and RHS. The result is
@@ -3669,7 +3717,43 @@ name|unsigned
 name|bitPosition
 argument_list|)
 decl|const
-decl_stmt|;
+block|{
+name|assert
+argument_list|(
+name|bitPosition
+operator|<
+name|getBitWidth
+argument_list|()
+operator|&&
+literal|"Bit position out of bounds!"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|maskBit
+argument_list|(
+name|bitPosition
+argument_list|)
+operator|&
+operator|(
+name|isSingleWord
+argument_list|()
+condition|?
+name|VAL
+else|:
+name|pVal
+index|[
+name|whichWord
+argument_list|(
+name|bitPosition
+argument_list|)
+index|]
+operator|)
+operator|)
+operator|!=
+literal|0
+return|;
+block|}
 end_decl_stmt
 
 begin_comment
@@ -4735,6 +4819,52 @@ end_comment
 begin_decl_stmt
 name|APInt
 name|zextOrTrunc
+argument_list|(
+name|unsigned
+name|width
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// Make this APInt have the bit width given by \p width. The value is sign
+end_comment
+
+begin_comment
+comment|/// extended, or left alone to make it that width.
+end_comment
+
+begin_comment
+comment|/// @brief Sign extend or truncate to width
+end_comment
+
+begin_decl_stmt
+name|APInt
+name|sextOrSelf
+argument_list|(
+name|unsigned
+name|width
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// Make this APInt have the bit width given by \p width. The value is zero
+end_comment
+
+begin_comment
+comment|/// extended, or left alone to make it that width.
+end_comment
+
+begin_comment
+comment|/// @brief Zero extend or truncate to width
+end_comment
+
+begin_decl_stmt
+name|APInt
+name|zextOrSelf
 argument_list|(
 name|unsigned
 name|width

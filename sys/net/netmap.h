@@ -20,7 +20,7 @@ name|_NET_NETMAP_H_
 end_define
 
 begin_comment
-comment|/*  * --- Netmap data structures ---  *  * The data structures used by netmap are shown below. Those in  * capital letters are in an mmapp()ed area shared with userspace,  * while others are private to the kernel.  * Shared structures do not contain pointers but only memory  * offsets, so that addressing is portable between kernel and userspace.    softc +----------------+ | standard fields| | if_pspare[0] ----------+ +----------------+       |                          | +----------------+<------+ |(netmap_adapter)| |                |                             netmap_kring | tx_rings *--------------------------------->+---------------+ |                |       netmap_kring         | ring    *---------. | rx_rings *--------->+---------------+       | nr_hwcur      |   | +----------------+    | ring    *--------.    | nr_hwavail    |   V                       | nr_hwcur      |  |    | selinfo       |   |                       | nr_hwavail    |  |    +---------------+   .                       | selinfo       |  |    |     ...       |   .                       +---------------+  |    |(ntx+1 entries)|                       |    ....       |  |    |               |                       |(nrx+1 entries)|  |    +---------------+                       |               |  |    KERNEL             +---------------+  |                                          |   ====================================================================                                          |    USERSPACE                             |      NETMAP_RING                                          +---->+-------------+                                              / | cur         |    NETMAP_IF  (nifp, one per file desc.)    /  | avail       |     +---------------+                      /   | buf_ofs     |     | ni_num_queues |                     /    +=============+     |               |                    /     | buf_idx     | slot[0]     |               |                   /      | len, flags  |     |               |                  /       +-------------+     +===============+                 /        | buf_idx     | slot[1]     | txring_ofs[0] | (rel.to nifp)--'         | len, flags  |     | txring_ofs[1] |                          +-------------+   (num_rings+1 entries)                     (nr_num_slots entries)     | txring_ofs[n] |                          | buf_idx     | slot[n-1]     +---------------+                          | len, flags  |     | rxring_ofs[0] |                          +-------------+     | rxring_ofs[1] |   (num_rings+1 entries)     | txring_ofs[n] |     +---------------+   * The private descriptor ('softc' or 'adapter') of each interface  * is extended with a "struct netmap_adapter" containing netmap-related  * info (see description in dev/netmap/netmap_kernel.h.  * Among other things, tx_rings and rx_rings point to the arrays of  * "struct netmap_kring" which in turn reache the various  * "struct netmap_ring", shared with userspace.   * The NETMAP_RING is the userspace-visible replica of the NIC ring.  * Each slot has the index of a buffer, its length and some flags.  * In user space, the buffer address is computed as  *	(char *)ring + buf_ofs + index*NETMAP_BUF_SIZE  * In the kernel, buffers do not necessarily need to be contiguous,  * and the virtual and physical addresses are derived through  * a lookup table.  * To associate a different buffer to a slot, applications must  * write the new index in buf_idx, and set NS_BUF_CHANGED flag to  * make sure that the kernel updates the hardware ring as needed.  *  * Normally the driver is not requested to report the result of  * transmissions (this can dramatically speed up operation).  * However the user may request to report completion by setting  * NS_REPORT.  */
+comment|/*  * --- Netmap data structures ---  *  * The data structures used by netmap are shown below. Those in  * capital letters are in an mmapp()ed area shared with userspace,  * while others are private to the kernel.  * Shared structures do not contain pointers but only memory  * offsets, so that addressing is portable between kernel and userspace.    softc +----------------+ | standard fields| | if_pspare[0] ----------+ +----------------+       |                          | +----------------+<------+ |(netmap_adapter)| |                |                             netmap_kring | tx_rings *--------------------------------->+---------------+ |                |       netmap_kring         | ring    *---------. | rx_rings *--------->+---------------+       | nr_hwcur      |   | +----------------+    | ring    *--------.    | nr_hwavail    |   V                       | nr_hwcur      |  |    | selinfo       |   |                       | nr_hwavail    |  |    +---------------+   .                       | selinfo       |  |    |     ...       |   .                       +---------------+  |    |(ntx+1 entries)|                       |    ....       |  |    |               |                       |(nrx+1 entries)|  |    +---------------+                       |               |  |    KERNEL             +---------------+  |                                          |   ====================================================================                                          |    USERSPACE                             |      NETMAP_RING                                          +---->+-------------+                                              / | cur         |    NETMAP_IF  (nifp, one per file desc.)    /  | avail       |     +---------------+                      /   | buf_ofs     |     | ni_tx_rings   |                     /    +=============+     | ni_rx_rings   |                    /     | buf_idx     | slot[0]     |               |                   /      | len, flags  |     |               |                  /       +-------------+     +===============+                 /        | buf_idx     | slot[1]     | txring_ofs[0] | (rel.to nifp)--'         | len, flags  |     | txring_ofs[1] |                          +-------------+   (num_rings+1 entries)                     (nr_num_slots entries)     | txring_ofs[n] |                          | buf_idx     | slot[n-1]     +---------------+                          | len, flags  |     | rxring_ofs[0] |                          +-------------+     | rxring_ofs[1] |   (num_rings+1 entries)     | txring_ofs[n] |     +---------------+   * The private descriptor ('softc' or 'adapter') of each interface  * is extended with a "struct netmap_adapter" containing netmap-related  * info (see description in dev/netmap/netmap_kernel.h.  * Among other things, tx_rings and rx_rings point to the arrays of  * "struct netmap_kring" which in turn reache the various  * "struct netmap_ring", shared with userspace.   * The NETMAP_RING is the userspace-visible replica of the NIC ring.  * Each slot has the index of a buffer, its length and some flags.  * In user space, the buffer address is computed as  *	(char *)ring + buf_ofs + index*NETMAP_BUF_SIZE  * In the kernel, buffers do not necessarily need to be contiguous,  * and the virtual and physical addresses are derived through  * a lookup table.  * To associate a different buffer to a slot, applications must  * write the new index in buf_idx, and set NS_BUF_CHANGED flag to  * make sure that the kernel updates the hardware ring as needed.  *  * Normally the driver is not requested to report the result of  * transmissions (this can dramatically speed up operation).  * However the user may request to report completion by setting  * NS_REPORT.  */
 end_comment
 
 begin_struct
@@ -135,14 +135,14 @@ decl_stmt|;
 comment|/* API version, currently unused */
 specifier|const
 name|u_int
-name|ni_rx_queues
+name|ni_rx_rings
 decl_stmt|;
-comment|/* number of rx queue pairs */
+comment|/* number of rx rings */
 specifier|const
 name|u_int
-name|ni_tx_queues
+name|ni_tx_rings
 decl_stmt|;
-comment|/* if zero, same as ni_tx_queues */
+comment|/* if zero, same as ni_rx_rings */
 comment|/* 	 * The following array contains the offset of each netmap ring 	 * from this structure. The first ni_tx_queues+1 entries refer 	 * to the tx rings, the next ni_rx_queues+1 refer to the rx rings 	 * (the last entry in each block refers to the host stack rings). 	 * The area is filled up by the kernel on NIOCREG, 	 * and then only read by userspace code. 	 */
 specifier|const
 name|ssize_t
@@ -154,28 +154,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|IFCAP_NETMAP
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|IFCAP_NETMAP
-value|0x100000
-end_define
-
-begin_comment
-comment|/* used on linux */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -208,7 +186,7 @@ comment|/* API version */
 define|#
 directive|define
 name|NETMAP_API
-value|2
+value|3
 comment|/* current version */
 name|uint32_t
 name|nr_offset

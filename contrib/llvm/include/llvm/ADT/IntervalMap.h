@@ -3501,7 +3501,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// The Path class also constains the tree navigation code that doesn't have to
+comment|// The Path class also contains the tree navigation code that doesn't have to
 end_comment
 
 begin_comment
@@ -11628,6 +11628,7 @@ name|this
 operator|->
 name|map
 operator|->
+name|template
 name|newNode
 operator|<
 name|NodeT

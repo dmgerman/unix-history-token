@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- MSP430MCInstLower.h - Lower MachineInstr to MCInst ----------------===//
+comment|//===-- MSP430MCInstLower.h - Lower MachineInstr to MCInst ------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -55,9 +55,6 @@ name|llvm
 block|{
 name|class
 name|AsmPrinter
-decl_stmt|;
-name|class
-name|MCAsmInfo
 decl_stmt|;
 name|class
 name|MCContext

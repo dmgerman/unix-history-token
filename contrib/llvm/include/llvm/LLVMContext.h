@@ -74,6 +74,9 @@ name|class
 name|StringRef
 decl_stmt|;
 name|class
+name|Twine
+decl_stmt|;
+name|class
 name|Instruction
 decl_stmt|;
 name|class
@@ -129,7 +132,17 @@ comment|// "tbaa"
 name|MD_prof
 init|=
 literal|2
+block|,
 comment|// "prof"
+name|MD_fpaccuracy
+init|=
+literal|3
+block|,
+comment|// "fpaccuracy"
+name|MD_range
+init|=
+literal|4
+comment|// "range"
 block|}
 enum|;
 comment|/// getMDKindID - Return a unique non-zero ID for the specified metadata kind.
@@ -221,7 +234,9 @@ parameter_list|(
 name|unsigned
 name|LocCookie
 parameter_list|,
-name|StringRef
+specifier|const
+name|Twine
+modifier|&
 name|ErrorStr
 parameter_list|)
 function_decl|;
@@ -233,14 +248,18 @@ name|Instruction
 modifier|*
 name|I
 parameter_list|,
-name|StringRef
+specifier|const
+name|Twine
+modifier|&
 name|ErrorStr
 parameter_list|)
 function_decl|;
 name|void
 name|emitError
 parameter_list|(
-name|StringRef
+specifier|const
+name|Twine
+modifier|&
 name|ErrorStr
 parameter_list|)
 function_decl|;

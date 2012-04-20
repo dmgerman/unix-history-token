@@ -5457,6 +5457,21 @@ operator|<<
 literal|16
 operator|)
 expr_stmt|;
+comment|/* 		 * When the internal queue falls below PTHRESH (32), 		 * start prefetching as long as there are at least 		 * HTHRESH (1) buffers ready. The values are taken 		 * from the Intel linux driver 3.8.21. 		 * Prefetching enables tx line rate even with 1 queue. 		 */
+name|txdctl
+operator||=
+operator|(
+literal|16
+operator|<<
+literal|0
+operator|)
+operator||
+operator|(
+literal|1
+operator|<<
+literal|8
+operator|)
+expr_stmt|;
 name|IXGBE_WRITE_REG
 argument_list|(
 name|hw
@@ -17535,6 +17550,26 @@ operator|&=
 operator|~
 name|IXGBE_RDRXCTL_RSCFRSTSIZE
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEV_NETMAP
+comment|/* crcstrip is optional in netmap */
+if|if
+condition|(
+name|adapter
+operator|->
+name|ifp
+operator|->
+name|if_capenable
+operator|&
+name|IFCAP_NETMAP
+operator|&&
+operator|!
+name|ix_crcstrip
+condition|)
+endif|#
+directive|endif
+comment|/* DEV_NETMAP */
 name|rdrxctl
 operator||=
 name|IXGBE_RDRXCTL_CRCSTRIP
@@ -18866,6 +18901,34 @@ operator|&=
 operator|~
 name|IXGBE_HLREG0_JUMBOEN
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEV_NETMAP
+comment|/* crcstrip is conditional in netmap (in RDRXCTL too ?) */
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_capenable
+operator|&
+name|IFCAP_NETMAP
+operator|&&
+operator|!
+name|ix_crcstrip
+condition|)
+name|hlreg
+operator|&=
+operator|~
+name|IXGBE_HLREG0_RXCRCSTRP
+expr_stmt|;
+else|else
+name|hlreg
+operator||=
+name|IXGBE_HLREG0_RXCRCSTRP
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* DEV_NETMAP */
 name|IXGBE_WRITE_REG
 argument_list|(
 name|hw

@@ -737,7 +737,7 @@ name|struct
 name|ieee80211_tx_ampdu
 name|ni_tx_ampdu
 index|[
-name|WME_NUM_AC
+name|WME_NUM_TID
 index|]
 decl_stmt|;
 name|struct

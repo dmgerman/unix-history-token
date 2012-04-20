@@ -113,6 +113,12 @@ name|HasWeak
 range|:
 literal|1
 decl_stmt|;
+comment|/// \brief True if the runtime supports subscripting methods.
+name|unsigned
+name|HasSubscripting
+range|:
+literal|1
+decl_stmt|;
 comment|/// True if the runtime provides the following entrypoint:
 comment|///   void objc_terminate(void);
 comment|/// If available, this will be called instead of abort() when an
@@ -136,6 +142,11 @@ name|false
 argument_list|)
 operator|,
 name|HasWeak
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|HasSubscripting
 argument_list|(
 name|false
 argument_list|)

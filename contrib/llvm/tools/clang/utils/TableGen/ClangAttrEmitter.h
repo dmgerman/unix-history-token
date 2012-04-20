@@ -321,6 +321,114 @@ name|OS
 argument_list|)
 block|; }
 decl_stmt|;
+comment|/// ClangAttrTemplateInstantiateEmitter emits code to instantiate dependent
+comment|/// attributes on templates.
+name|class
+name|ClangAttrTemplateInstantiateEmitter
+range|:
+name|public
+name|TableGenBackend
+block|{
+name|RecordKeeper
+operator|&
+name|Records
+block|;
+name|public
+operator|:
+name|explicit
+name|ClangAttrTemplateInstantiateEmitter
+argument_list|(
+name|RecordKeeper
+operator|&
+name|R
+argument_list|)
+operator|:
+name|Records
+argument_list|(
+argument|R
+argument_list|)
+block|{}
+name|void
+name|run
+argument_list|(
+name|raw_ostream
+operator|&
+name|OS
+argument_list|)
+block|; }
+decl_stmt|;
+comment|/// ClangAttrParsedAttrListEmitter emits the list of parsed attributes
+comment|/// for clang.
+name|class
+name|ClangAttrParsedAttrListEmitter
+range|:
+name|public
+name|TableGenBackend
+block|{
+name|RecordKeeper
+operator|&
+name|Records
+block|;
+name|public
+operator|:
+name|explicit
+name|ClangAttrParsedAttrListEmitter
+argument_list|(
+name|RecordKeeper
+operator|&
+name|R
+argument_list|)
+operator|:
+name|Records
+argument_list|(
+argument|R
+argument_list|)
+block|{}
+name|void
+name|run
+argument_list|(
+name|raw_ostream
+operator|&
+name|OS
+argument_list|)
+block|; }
+decl_stmt|;
+comment|/// ClangAttrParsedAttrKindsEmitter emits the kind list of parsed attributes
+comment|/// for clang.
+name|class
+name|ClangAttrParsedAttrKindsEmitter
+range|:
+name|public
+name|TableGenBackend
+block|{
+name|RecordKeeper
+operator|&
+name|Records
+block|;
+name|public
+operator|:
+name|explicit
+name|ClangAttrParsedAttrKindsEmitter
+argument_list|(
+name|RecordKeeper
+operator|&
+name|R
+argument_list|)
+operator|:
+name|Records
+argument_list|(
+argument|R
+argument_list|)
+block|{}
+name|void
+name|run
+argument_list|(
+name|raw_ostream
+operator|&
+name|OS
+argument_list|)
+block|; }
+decl_stmt|;
 block|}
 end_decl_stmt
 

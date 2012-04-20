@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- PPCRegisterInfo.h - PowerPC Register Information Impl -----*- C++ -*-==//
+comment|//===-- PPCRegisterInfo.h - PowerPC Register Information Impl ---*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -154,14 +154,32 @@ literal|0
 argument_list|)
 specifier|const
 block|;
+name|unsigned
+name|getRegPressureLimit
+argument_list|(
+argument|const TargetRegisterClass *RC
+argument_list|,
+argument|MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
 comment|/// Code Generation virtual methods...
 specifier|const
-name|unsigned
+name|uint16_t
 operator|*
 name|getCalleeSavedRegs
 argument_list|(
 argument|const MachineFunction* MF =
 literal|0
+argument_list|)
+specifier|const
+block|;
+specifier|const
+name|unsigned
+operator|*
+name|getCallPreservedMask
+argument_list|(
+argument|CallingConv::ID CC
 argument_list|)
 specifier|const
 block|;
@@ -205,6 +223,19 @@ specifier|const
 block|;
 name|void
 name|lowerCRSpilling
+argument_list|(
+argument|MachineBasicBlock::iterator II
+argument_list|,
+argument|unsigned FrameIndex
+argument_list|,
+argument|int SPAdj
+argument_list|,
+argument|RegScavenger *RS
+argument_list|)
+specifier|const
+block|;
+name|void
+name|lowerCRRestore
 argument_list|(
 argument|MachineBasicBlock::iterator II
 argument_list|,

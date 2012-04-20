@@ -5045,7 +5045,7 @@ argument_list|(
 name|msrc
 argument_list|)
 expr_stmt|;
-name|kcopy
+name|bcopy
 argument_list|(
 operator|(
 name|void
@@ -5516,20 +5516,28 @@ argument_list|,
 name|pvo_flags
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Flush the real page from the instruction cache. This has be done 	 * for all user mappings to prevent information leakage via the 	 * instruction cache. 	 */
+comment|/* 	 * Flush the real page from the instruction cache. This has be done 	 * for all user mappings to prevent information leakage via the 	 * instruction cache. moea_pvo_enter() returns ENOENT for the first 	 * mapping for a page. 	 */
 if|if
 condition|(
 name|pmap
 operator|!=
 name|kernel_pmap
 operator|&&
-name|LIST_EMPTY
-argument_list|(
-name|vm_page_to_pvoh
-argument_list|(
-name|m
-argument_list|)
-argument_list|)
+name|error
+operator|==
+name|ENOENT
+operator|&&
+operator|(
+name|pte_lo
+operator|&
+operator|(
+name|PTE_I
+operator||
+name|PTE_G
+operator|)
+operator|)
+operator|==
+literal|0
 condition|)
 name|moea_syncicache
 argument_list|(

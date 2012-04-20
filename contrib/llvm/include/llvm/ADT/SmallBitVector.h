@@ -671,10 +671,8 @@ argument_list|(
 name|Bits
 argument_list|)
 return|;
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Unsupported!"
 argument_list|)
 expr_stmt|;
@@ -868,10 +866,8 @@ argument_list|(
 name|Bits
 argument_list|)
 return|;
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Unsupported!"
 argument_list|)
 expr_stmt|;
@@ -986,10 +982,8 @@ argument_list|(
 name|Bits
 argument_list|)
 return|;
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Unsupported!"
 argument_list|)
 expr_stmt|;

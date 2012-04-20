@@ -70,7 +70,7 @@ begin_define
 define|#
 directive|define
 name|ATH_TXBUF
-value|512
+value|128
 end_define
 
 begin_define
@@ -1910,6 +1910,11 @@ name|task
 name|sc_resettask
 decl_stmt|;
 comment|/* interface reset task */
+name|struct
+name|task
+name|sc_fataltask
+decl_stmt|;
+comment|/* fatal task */
 enum|enum
 block|{
 name|OK

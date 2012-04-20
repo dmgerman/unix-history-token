@@ -646,6 +646,17 @@ literal|0
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|access_mask
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 return|return
 operator|(
 literal|1
