@@ -266,10 +266,6 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__powerpc64__
-name|sched_pin
-argument_list|()
-expr_stmt|;
-asm|__asm __volatile("ptesync");
 name|mtx_lock
 argument_list|(
 operator|&
@@ -284,9 +280,6 @@ name|tlbie_mutex
 argument_list|)
 expr_stmt|;
 asm|__asm __volatile("eieio; tlbsync; ptesync");
-name|sched_unpin
-argument_list|()
-expr_stmt|;
 else|#
 directive|else
 name|vpn_hi
@@ -314,7 +307,7 @@ operator|&
 name|tlbie_mutex
 argument_list|)
 expr_stmt|;
-asm|__asm __volatile("\ 	    mfmsr %0; \ 	    mr %1, %0; \ 	    insrdi %1,%5,1,0; \ 	    mtmsrd %1; isync; \ 	    ptesync; \ 	    \ 	    sld %1,%2,%4; \ 	    or %1,%1,%3; \ 	    tlbie %1; \ 	    \ 	    mtmsrd %0; isync; \ 	    eieio; \ 	    tlbsync; \ 	    ptesync;"
+asm|__asm __volatile("\ 	    mfmsr %0; \ 	    mr %1, %0; \ 	    insrdi %1,%5,1,0; \ 	    mtmsrd %1; isync; \ 	    \ 	    sld %1,%2,%4; \ 	    or %1,%1,%3; \ 	    tlbie %1; \ 	    \ 	    mtmsrd %0; isync; \ 	    eieio; \ 	    tlbsync; \ 	    ptesync;"
 block|:
 literal|"=r"
 operator|(
@@ -802,10 +795,16 @@ operator|&=
 operator|~
 name|ptebit
 expr_stmt|;
+name|sched_pin
+argument_list|()
+expr_stmt|;
 name|TLBIE
 argument_list|(
 name|vpn
 argument_list|)
+expr_stmt|;
+name|sched_unpin
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -905,6 +904,13 @@ operator|*
 operator|)
 name|pt_cookie
 decl_stmt|;
+comment|/* 	 * Invalidate the pte. 	 */
+name|isync
+argument_list|()
+expr_stmt|;
+name|sched_pin
+argument_list|()
+expr_stmt|;
 name|pvo_pt
 operator|->
 name|pte_hi
@@ -912,15 +918,6 @@ operator|&=
 operator|~
 name|LPTE_VALID
 expr_stmt|;
-comment|/* Finish all pending operations */
-name|isync
-argument_list|()
-expr_stmt|;
-comment|/* 	 * Force the reg& chg bits back into the PTEs. 	 */
-name|SYNC
-argument_list|()
-expr_stmt|;
-comment|/* 	 * Invalidate the pte. 	 */
 name|pt
 operator|->
 name|pte_hi
@@ -928,10 +925,16 @@ operator|&=
 operator|~
 name|LPTE_VALID
 expr_stmt|;
+name|PTESYNC
+argument_list|()
+expr_stmt|;
 name|TLBIE
 argument_list|(
 name|vpn
 argument_list|)
+expr_stmt|;
+name|sched_unpin
+argument_list|()
 expr_stmt|;
 comment|/* 	 * Save the reg& chg bits. 	 */
 name|moea64_pte_synch_native
