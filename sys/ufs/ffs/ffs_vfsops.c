@@ -7294,7 +7294,7 @@ condition|)
 goto|goto
 name|qupdate
 goto|;
-name|MNT_VNODE_FOREACH_ALL
+name|MNT_VNODE_FOREACH_ACTIVE
 argument_list|(
 argument|vp
 argument_list|,
