@@ -881,6 +881,7 @@ name|ah_eepromdata
 operator|=
 name|eepromdata
 expr_stmt|;
+block|}
 comment|/* XXX override with 9280 specific state */
 comment|/* override 5416 methods for our needs */
 name|AH5416
@@ -1996,6 +1997,9 @@ return|return
 name|AH_NULL
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|ar9280ConfigPCIE
@@ -2064,6 +2068,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|ar9280WriteIni
@@ -2410,22 +2417,37 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_define
 define|#
 directive|define
 name|AR_BASE_FREQ_2GHZ
 value|2300
+end_define
+
+begin_define
 define|#
 directive|define
 name|AR_BASE_FREQ_5GHZ
 value|4900
+end_define
+
+begin_define
 define|#
 directive|define
 name|AR_SPUR_FEEQ_BOUND_HT40
 value|19
+end_define
+
+begin_define
 define|#
 directive|define
 name|AR_SPUR_FEEQ_BOUND_HT20
 value|10
+end_define
+
+begin_function
 name|void
 name|ar9280SpurMitigate
 parameter_list|(
@@ -4533,7 +4555,13 @@ name|tmp_mask
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Fill all software cached or static hardware state information.  * Return failure if capabilities are to come from EEPROM and  * cannot be read.  */
+end_comment
+
+begin_function
 specifier|static
 name|HAL_BOOL
 name|ar9280FillCapabilityInfo
@@ -4713,7 +4741,13 @@ return|return
 name|AH_TRUE
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * This has been disabled - having the HAL flip chainmasks on/off  * when attempting to implement 11n disrupts things. For now, just  * leave this flipped off and worry about implementing TX diversity  * for legacy and MCS0-7 when 11n is fully functioning.  */
+end_comment
+
+begin_function
 name|HAL_BOOL
 name|ar9280SetAntennaSwitch
 parameter_list|(
@@ -4759,6 +4793,9 @@ undef|#
 directive|undef
 name|ANTENNA1_CHAINMASK
 block|}
+end_function
+
+begin_function
 specifier|static
 specifier|const
 name|char
@@ -4802,6 +4839,9 @@ return|return
 name|AH_NULL
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 name|AH_CHIP
 argument_list|(
 name|AR9280
@@ -4811,7 +4851,7 @@ argument_list|,
 name|ar9280Attach
 argument_list|)
 expr_stmt|;
-end_function
+end_expr_stmt
 
 end_unit
 
