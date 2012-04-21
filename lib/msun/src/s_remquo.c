@@ -233,7 +233,14 @@ block|{
 operator|*
 name|quo
 operator|=
+operator|(
+name|sxy
+condition|?
+operator|-
 literal|1
+else|:
+literal|1
+operator|)
 expr_stmt|;
 return|return
 name|Zero
@@ -712,6 +719,10 @@ literal|0
 condition|)
 block|{
 comment|/* return sign(x)*0 */
+name|q
+operator|&=
+literal|0x7fffffff
+expr_stmt|;
 operator|*
 name|quo
 operator|=
@@ -868,7 +879,7 @@ operator|)
 expr_stmt|;
 name|hx
 operator|=
-name|sx
+literal|0
 expr_stmt|;
 block|}
 else|else
@@ -885,7 +896,7 @@ operator|)
 expr_stmt|;
 name|hx
 operator|=
-name|sx
+literal|0
 expr_stmt|;
 block|}
 block|}
