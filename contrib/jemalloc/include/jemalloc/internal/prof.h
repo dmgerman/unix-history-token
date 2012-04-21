@@ -64,7 +64,7 @@ begin_define
 define|#
 directive|define
 name|LG_PROF_SAMPLE_DEFAULT
-value|0
+value|19
 end_define
 
 begin_define
@@ -402,6 +402,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* High-water memory dumping. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|opt_prof_final
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Final profile dumping. */
 end_comment
 
 begin_decl_stmt

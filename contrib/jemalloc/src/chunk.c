@@ -841,13 +841,11 @@ name|prev
 decl_stmt|,
 name|key
 decl_stmt|;
-name|madvise
+name|pages_purge
 argument_list|(
 name|chunk
 argument_list|,
 name|size
-argument_list|,
-name|JEMALLOC_MADV_PURGE
 argument_list|)
 expr_stmt|;
 name|xnode

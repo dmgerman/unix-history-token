@@ -3085,8 +3085,6 @@ name|chunk
 operator|!=
 name|ptr
 condition|)
-block|{
-comment|/* Region. */
 name|ret
 operator|=
 name|arena_salloc
@@ -3096,7 +3094,6 @@ argument_list|,
 name|demote
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 name|ret
 operator|=

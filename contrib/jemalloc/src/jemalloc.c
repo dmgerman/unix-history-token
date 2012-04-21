@@ -1838,7 +1838,7 @@ parameter_list|,
 name|hit
 parameter_list|)
 define|\
-value|if (sizeof(#n)-1 == klen&& strncmp(#n, k,	\ 			    klen) == 0) {				\ 				if (strncmp("true", v, vlen) == 0&&	\ 				    vlen == sizeof("true")-1)		\ 					o = true;			\ 				else if (strncmp("false", v, vlen) ==	\ 				    0&& vlen == sizeof("false")-1)	\ 					o = false;			\ 				else {					\ 					malloc_conf_error(		\ 					    "Invalid conf value",	\ 					    k, klen, v, vlen);		\ 				}					\ 				hit = true;				\ 			} else						\ 				hit = false;
+value|if (sizeof(n)-1 == klen&& strncmp(n, k,	\ 			    klen) == 0) {				\ 				if (strncmp("true", v, vlen) == 0&&	\ 				    vlen == sizeof("true")-1)		\ 					o = true;			\ 				else if (strncmp("false", v, vlen) ==	\ 				    0&& vlen == sizeof("false")-1)	\ 					o = false;			\ 				else {					\ 					malloc_conf_error(		\ 					    "Invalid conf value",	\ 					    k, klen, v, vlen);		\ 				}					\ 				hit = true;				\ 			} else						\ 				hit = false;
 define|#
 directive|define
 name|CONF_HANDLE_BOOL
@@ -1861,7 +1861,7 @@ parameter_list|,
 name|max
 parameter_list|)
 define|\
-value|if (sizeof(#n)-1 == klen&& strncmp(#n, k,	\ 			    klen) == 0) {				\ 				uintmax_t um;				\ 				char *end;				\ 									\ 				errno = 0;				\ 				um = malloc_strtoumax(v,&end, 0);	\ 				if (errno != 0 || (uintptr_t)end -	\ 				    (uintptr_t)v != vlen) {		\ 					malloc_conf_error(		\ 					    "Invalid conf value",	\ 					    k, klen, v, vlen);		\ 				} else if (um< min || um> max) {	\ 					malloc_conf_error(		\ 					    "Out-of-range conf value",	\ 					    k, klen, v, vlen);		\ 				} else					\ 					o = um;				\ 				continue;				\ 			}
+value|if (sizeof(n)-1 == klen&& strncmp(n, k,	\ 			    klen) == 0) {				\ 				uintmax_t um;				\ 				char *end;				\ 									\ 				errno = 0;				\ 				um = malloc_strtoumax(v,&end, 0);	\ 				if (errno != 0 || (uintptr_t)end -	\ 				    (uintptr_t)v != vlen) {		\ 					malloc_conf_error(		\ 					    "Invalid conf value",	\ 					    k, klen, v, vlen);		\ 				} else if (um< min || um> max) {	\ 					malloc_conf_error(		\ 					    "Out-of-range conf value",	\ 					    k, klen, v, vlen);		\ 				} else					\ 					o = um;				\ 				continue;				\ 			}
 define|#
 directive|define
 name|CONF_HANDLE_SSIZE_T
@@ -1875,7 +1875,7 @@ parameter_list|,
 name|max
 parameter_list|)
 define|\
-value|if (sizeof(#n)-1 == klen&& strncmp(#n, k,	\ 			    klen) == 0) {				\ 				long l;					\ 				char *end;				\ 									\ 				errno = 0;				\ 				l = strtol(v,&end, 0);			\ 				if (errno != 0 || (uintptr_t)end -	\ 				    (uintptr_t)v != vlen) {		\ 					malloc_conf_error(		\ 					    "Invalid conf value",	\ 					    k, klen, v, vlen);		\ 				} else if (l< (ssize_t)min || l>	\ 				    (ssize_t)max) {			\ 					malloc_conf_error(		\ 					    "Out-of-range conf value",	\ 					    k, klen, v, vlen);		\ 				} else					\ 					o = l;				\ 				continue;				\ 			}
+value|if (sizeof(n)-1 == klen&& strncmp(n, k,	\ 			    klen) == 0) {				\ 				long l;					\ 				char *end;				\ 									\ 				errno = 0;				\ 				l = strtol(v,&end, 0);			\ 				if (errno != 0 || (uintptr_t)end -	\ 				    (uintptr_t)v != vlen) {		\ 					malloc_conf_error(		\ 					    "Invalid conf value",	\ 					    k, klen, v, vlen);		\ 				} else if (l< (ssize_t)min || l>	\ 				    (ssize_t)max) {			\ 					malloc_conf_error(		\ 					    "Out-of-range conf value",	\ 					    k, klen, v, vlen);		\ 				} else					\ 					o = l;				\ 				continue;				\ 			}
 define|#
 directive|define
 name|CONF_HANDLE_CHAR_P
@@ -1887,19 +1887,19 @@ parameter_list|,
 name|d
 parameter_list|)
 define|\
-value|if (sizeof(#n)-1 == klen&& strncmp(#n, k,	\ 			    klen) == 0) {				\ 				size_t cpylen = (vlen<=		\ 				    sizeof(o)-1) ? vlen :		\ 				    sizeof(o)-1;			\ 				strncpy(o, v, cpylen);			\ 				o[cpylen] = '\0';			\ 				continue;				\ 			}
+value|if (sizeof(n)-1 == klen&& strncmp(n, k,	\ 			    klen) == 0) {				\ 				size_t cpylen = (vlen<=		\ 				    sizeof(o)-1) ? vlen :		\ 				    sizeof(o)-1;			\ 				strncpy(o, v, cpylen);			\ 				o[cpylen] = '\0';			\ 				continue;				\ 			}
 name|CONF_HANDLE_BOOL
 argument_list|(
 argument|opt_abort
 argument_list|,
-argument|abort
+literal|"abort"
 argument_list|)
 comment|/* 			 * Chunks always require at least one header page, plus 			 * one data page in the absence of redzones, or three 			 * pages in the presence of redzones.  In order to 			 * simplify options processing, fix the limit based on 			 * config_fill. 			 */
 name|CONF_HANDLE_SIZE_T
 argument_list|(
 argument|opt_lg_chunk
 argument_list|,
-argument|lg_chunk
+literal|"lg_chunk"
 argument_list|,
 argument|LG_PAGE + 			    (config_fill ?
 literal|2
@@ -1916,7 +1916,7 @@ name|CONF_HANDLE_SIZE_T
 argument_list|(
 argument|opt_narenas
 argument_list|,
-argument|narenas
+literal|"narenas"
 argument_list|,
 literal|1
 argument_list|,
@@ -1926,7 +1926,7 @@ name|CONF_HANDLE_SSIZE_T
 argument_list|(
 argument|opt_lg_dirty_mult
 argument_list|,
-argument|lg_dirty_mult
+literal|"lg_dirty_mult"
 argument_list|,
 argument|-
 literal|1
@@ -1940,7 +1940,7 @@ name|CONF_HANDLE_BOOL
 argument_list|(
 argument|opt_stats_print
 argument_list|,
-argument|stats_print
+literal|"stats_print"
 argument_list|)
 if|if
 condition|(
@@ -1951,13 +1951,13 @@ name|CONF_HANDLE_BOOL
 argument_list|(
 argument|opt_junk
 argument_list|,
-argument|junk
+literal|"junk"
 argument_list|)
 name|CONF_HANDLE_SIZE_T
 argument_list|(
 argument|opt_quarantine
 argument_list|,
-argument|quarantine
+literal|"quarantine"
 argument_list|,
 literal|0
 argument_list|,
@@ -1967,13 +1967,13 @@ name|CONF_HANDLE_BOOL
 argument_list|(
 argument|opt_redzone
 argument_list|,
-argument|redzone
+literal|"redzone"
 argument_list|)
 name|CONF_HANDLE_BOOL
 argument_list|(
 argument|opt_zero
 argument_list|,
-argument|zero
+literal|"zero"
 argument_list|)
 block|}
 if|if
@@ -1985,7 +1985,7 @@ name|CONF_HANDLE_BOOL
 argument_list|(
 argument|opt_utrace
 argument_list|,
-argument|utrace
+literal|"utrace"
 argument_list|)
 block|}
 if|if
@@ -2000,7 +2000,7 @@ name|CONF_HANDLE_BOOL_HIT
 argument_list|(
 argument|opt_valgrind
 argument_list|,
-argument|valgrind
+literal|"valgrind"
 argument_list|,
 argument|hit
 argument_list|)
@@ -2053,7 +2053,7 @@ name|CONF_HANDLE_BOOL
 argument_list|(
 argument|opt_xmalloc
 argument_list|,
-argument|xmalloc
+literal|"xmalloc"
 argument_list|)
 block|}
 if|if
@@ -2065,13 +2065,13 @@ name|CONF_HANDLE_BOOL
 argument_list|(
 argument|opt_tcache
 argument_list|,
-argument|tcache
+literal|"tcache"
 argument_list|)
 name|CONF_HANDLE_SSIZE_T
 argument_list|(
 argument|opt_lg_tcache_max
 argument_list|,
-argument|lg_tcache_max
+literal|"lg_tcache_max"
 argument_list|,
 argument|-
 literal|1
@@ -2091,13 +2091,13 @@ name|CONF_HANDLE_BOOL
 argument_list|(
 argument|opt_prof
 argument_list|,
-argument|prof
+literal|"prof"
 argument_list|)
 name|CONF_HANDLE_CHAR_P
 argument_list|(
 argument|opt_prof_prefix
 argument_list|,
-argument|prof_prefix
+literal|"prof_prefix"
 argument_list|,
 literal|"jeprof"
 argument_list|)
@@ -2105,13 +2105,13 @@ name|CONF_HANDLE_BOOL
 argument_list|(
 argument|opt_prof_active
 argument_list|,
-argument|prof_active
+literal|"prof_active"
 argument_list|)
 name|CONF_HANDLE_SSIZE_T
 argument_list|(
 argument|opt_lg_prof_sample
 argument_list|,
-argument|lg_prof_sample
+literal|"lg_prof_sample"
 argument_list|,
 literal|0
 argument_list|,
@@ -2124,13 +2124,13 @@ name|CONF_HANDLE_BOOL
 argument_list|(
 argument|opt_prof_accum
 argument_list|,
-argument|prof_accum
+literal|"prof_accum"
 argument_list|)
 name|CONF_HANDLE_SSIZE_T
 argument_list|(
 argument|opt_lg_prof_interval
 argument_list|,
-argument|lg_prof_interval
+literal|"lg_prof_interval"
 argument_list|,
 argument|-
 literal|1
@@ -2144,13 +2144,19 @@ name|CONF_HANDLE_BOOL
 argument_list|(
 argument|opt_prof_gdump
 argument_list|,
-argument|prof_gdump
+literal|"prof_gdump"
+argument_list|)
+name|CONF_HANDLE_BOOL
+argument_list|(
+argument|opt_prof_final
+argument_list|,
+literal|"prof_final"
 argument_list|)
 name|CONF_HANDLE_BOOL
 argument_list|(
 argument|opt_prof_leak
 argument_list|,
-argument|prof_leak
+literal|"prof_leak"
 argument_list|)
 block|}
 name|malloc_conf_error
@@ -7206,6 +7212,13 @@ name|void
 argument_list|)
 else|#
 directive|else
+name|JEMALLOC_ATTR
+argument_list|(
+name|visibility
+argument_list|(
+literal|"default"
+argument_list|)
+argument_list|)
 name|void
 name|_malloc_prefork
 argument_list|(
@@ -7282,6 +7295,13 @@ name|void
 argument_list|)
 else|#
 directive|else
+name|JEMALLOC_ATTR
+argument_list|(
+name|visibility
+argument_list|(
+literal|"default"
+argument_list|)
+argument_list|)
 name|void
 name|_malloc_postfork
 argument_list|(

@@ -164,7 +164,7 @@ begin_define
 define|#
 directive|define
 name|JEMALLOC_PRIVATE_NAMESPACE
-value|""
+value|"__jemalloc_"
 end_define
 
 begin_define
@@ -174,7 +174,7 @@ name|JEMALLOC_N
 parameter_list|(
 name|string_that_no_one_should_want_to_use_as_a_jemalloc_private_namespace_prefix
 parameter_list|)
-value|string_that_no_one_should_want_to_use_as_a_jemalloc_private_namespace_prefix
+value|__jemalloc_##string_that_no_one_should_want_to_use_as_a_jemalloc_private_namespace_prefix
 end_define
 
 begin_comment
@@ -575,51 +575,6 @@ define|#
 directive|define
 name|JEMALLOC_PURGE_MADVISE_FREE
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|JEMALLOC_PURGE_MADVISE_DONTNEED
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|JEMALLOC_MADV_PURGE
-value|MADV_DONTNEED
-end_define
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|JEMALLOC_PURGE_MADVISE_FREE
-argument_list|)
-end_elif
-
-begin_define
-define|#
-directive|define
-name|JEMALLOC_MADV_PURGE
-value|MADV_FREE
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_error
-error|#
-directive|error
-literal|"No method defined for purging unused dirty pages."
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* sizeof(void *) == 2^LG_SIZEOF_PTR. */

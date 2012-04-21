@@ -560,7 +560,7 @@ argument_list|,
 name|config_prof
 argument_list|)
 decl_stmt|;
-name|assert
+name|cassert
 argument_list|(
 name|config_fill
 argument_list|)
@@ -826,7 +826,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|assert
+name|cassert
 argument_list|(
 name|config_fill
 argument_list|)

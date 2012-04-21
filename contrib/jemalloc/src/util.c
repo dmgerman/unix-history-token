@@ -1527,7 +1527,7 @@ name|val
 parameter_list|,
 name|len
 parameter_list|)
-value|do {					\ 	switch (len) {							\ 	case '?':							\ 		val = va_arg(ap, int);					\ 		break;							\ 	case 'l':							\ 		val = va_arg(ap, long);					\ 		break;							\ 	case 'q':							\ 		val = va_arg(ap, long long);				\ 		break;							\ 	case 'j':							\ 		val = va_arg(ap, intmax_t);				\ 		break;							\ 	case 't':							\ 		val = va_arg(ap, ptrdiff_t);				\ 		break;							\ 	case 'z':							\ 		val = va_arg(ap, ssize_t);				\ 		break;							\ 	case 'p':
+value|do {					\ 	switch (len) {							\ 	case '?':							\ 		val = va_arg(ap, int);					\ 		break;							\ 	case '?' | 0x80:						\ 		val = va_arg(ap, unsigned int);				\ 		break;							\ 	case 'l':							\ 		val = va_arg(ap, long);					\ 		break;							\ 	case 'l' | 0x80:						\ 		val = va_arg(ap, unsigned long);			\ 		break;							\ 	case 'q':							\ 		val = va_arg(ap, long long);				\ 		break;							\ 	case 'q' | 0x80:						\ 		val = va_arg(ap, unsigned long long);			\ 		break;							\ 	case 'j':							\ 		val = va_arg(ap, intmax_t);				\ 		break;							\ 	case 't':							\ 		val = va_arg(ap, ptrdiff_t);				\ 		break;							\ 	case 'z':							\ 		val = va_arg(ap, ssize_t);				\ 		break;							\ 	case 'z' | 0x80:						\ 		val = va_arg(ap, size_t);				\ 		break;							\ 	case 'p':
 comment|/* Synthetic; used for %p. */
 value|\ 		val = va_arg(ap, uintptr_t);				\ 		break;							\ 	default: not_reached();						\ 	}								\ } while (0)
 if|if
@@ -1607,6 +1607,7 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
+name|unsigned
 name|char
 name|len
 init|=
@@ -2142,6 +2143,8 @@ argument_list|(
 name|val
 argument_list|,
 name|len
+operator||
+literal|0x80
 argument_list|)
 expr_stmt|;
 name|s
@@ -2196,6 +2199,8 @@ argument_list|(
 name|val
 argument_list|,
 name|len
+operator||
+literal|0x80
 argument_list|)
 expr_stmt|;
 name|s
@@ -2255,6 +2260,8 @@ argument_list|(
 name|val
 argument_list|,
 name|len
+operator||
+literal|0x80
 argument_list|)
 expr_stmt|;
 name|s

@@ -49,6 +49,20 @@ end_ifdef
 
 begin_function_decl
 name|void
+name|pages_purge
+parameter_list|(
+name|void
+modifier|*
+name|addr
+parameter_list|,
+name|size_t
+name|length
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 modifier|*
 name|chunk_alloc_mmap
 parameter_list|(
