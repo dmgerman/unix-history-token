@@ -3296,7 +3296,9 @@ literal|0
 init|;
 name|i
 operator|<
-name|RT_NUMFIBS
+name|priv
+operator|->
+name|maxfibs
 condition|;
 name|i
 operator|++
