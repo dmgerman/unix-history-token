@@ -247,7 +247,7 @@ goto|;
 block|}
 do|while
 condition|(
-name|ws
+name|wsp
 operator|!=
 name|NULL
 condition|)
