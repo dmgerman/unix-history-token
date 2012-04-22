@@ -71,6 +71,10 @@ name|size
 parameter_list|,
 name|size_t
 name|alignment
+parameter_list|,
+name|bool
+modifier|*
+name|zero
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -85,15 +89,6 @@ name|chunk
 parameter_list|,
 name|size_t
 name|size
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|bool
-name|chunk_mmap_boot
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl

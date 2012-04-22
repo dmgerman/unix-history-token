@@ -32,7 +32,7 @@ file|<strings.h>
 define|#
 directive|define
 name|JEMALLOC_VERSION
-value|"1.0.0-283-g606f1fdc3cdbc700717133ca56685313caea24bb"
+value|"1.0.0-286-ga8f8d7540d66ddee7337db80c92890916e1063ca"
 define|#
 directive|define
 name|JEMALLOC_VERSION_MAJOR
@@ -48,11 +48,11 @@ value|0
 define|#
 directive|define
 name|JEMALLOC_VERSION_NREV
-value|283
+value|286
 define|#
 directive|define
 name|JEMALLOC_VERSION_GID
-value|"606f1fdc3cdbc700717133ca56685313caea24bb"
+value|"a8f8d7540d66ddee7337db80c92890916e1063ca"
 include|#
 directive|include
 file|"jemalloc_defs.h"

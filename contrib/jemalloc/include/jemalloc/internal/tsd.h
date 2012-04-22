@@ -236,7 +236,7 @@ parameter_list|)
 define|\
 comment|/* Initialization/cleanup. */
 define|\
-value|a_attr bool								\ a_name##_tsd_cleanup_wrapper(void)					\ {									\ 									\ 	if (a_name##_initialized) {					\ 		a_name##_initialized = false;				\ 		a_cleanup(&a_name##_tls);					\ 	}								\ 	return (a_name##_initialized);					\ }									\ a_attr bool								\ a_name##_tsd_boot(void)							\ {									\ 									\ 	if (a_cleanup != malloc_tsd_no_cleanup) {			\ 		malloc_tsd_cleanup_register(				\&a_name##_tsd_cleanup_wrapper);			\ 	}								\ 	a_name##_booted = true;						\ 	return (false);							\ }									\
+value|a_attr bool								\ a_name##_tsd_cleanup_wrapper(void)					\ {									\ 									\ 	if (a_name##_initialized) {					\ 		a_name##_initialized = false;				\ 		a_cleanup(&a_name##_tls);				\ 	}								\ 	return (a_name##_initialized);					\ }									\ a_attr bool								\ a_name##_tsd_boot(void)							\ {									\ 									\ 	if (a_cleanup != malloc_tsd_no_cleanup) {			\ 		malloc_tsd_cleanup_register(				\&a_name##_tsd_cleanup_wrapper);			\ 	}								\ 	a_name##_booted = true;						\ 	return (false);							\ }									\
 comment|/* Get/set. */
 value|\ a_attr a_type *								\ a_name##_tsd_get(void)							\ {									\ 									\ 	assert(a_name##_booted);					\ 	return (&a_name##_tls);						\ }									\ a_attr void								\ a_name##_tsd_set(a_type *val)						\ {									\ 									\ 	assert(a_name##_booted);					\ 	a_name##_tls = (*val);						\ 	if (a_cleanup != malloc_tsd_no_cleanup)				\ 		a_name##_initialized = true;				\ }
 end_define

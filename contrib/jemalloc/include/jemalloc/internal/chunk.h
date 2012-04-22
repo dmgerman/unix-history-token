@@ -227,16 +227,7 @@ end_function_decl
 
 begin_function_decl
 name|bool
-name|chunk_boot0
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|bool
-name|chunk_boot1
+name|chunk_boot
 parameter_list|(
 name|void
 parameter_list|)
