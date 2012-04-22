@@ -1139,8 +1139,6 @@ decl_stmt|,
 name|nchars
 decl_stmt|,
 name|nconv
-decl_stmt|,
-name|nread
 decl_stmt|;
 name|char
 name|buf
@@ -1160,8 +1158,6 @@ operator|&
 name|twc
 expr_stmt|;
 name|n
-operator|=
-name|nread
 operator|=
 literal|0
 expr_stmt|;
@@ -1326,10 +1322,6 @@ expr_stmt|;
 block|}
 break|break;
 block|}
-name|nread
-operator|+=
-name|n
-expr_stmt|;
 name|width
 operator|--
 expr_stmt|;
@@ -1408,13 +1400,9 @@ literal|1
 operator|)
 return|;
 block|}
-name|n
-operator|=
-name|nchars
-expr_stmt|;
 if|if
 condition|(
-name|n
+name|nchars
 operator|==
 literal|0
 condition|)
@@ -1429,12 +1417,9 @@ operator|=
 literal|L'
 expr|\0'
 expr_stmt|;
-comment|/* XXX This matches historical behavior, but it's wrong. */
 return|return
 operator|(
-name|nread
-operator|+
-name|n
+name|nchars
 operator|)
 return|;
 block|}
