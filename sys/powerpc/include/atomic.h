@@ -44,12 +44,6 @@ parameter_list|()
 value|__asm __volatile("lwsync" : : : "memory")
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__powerpc64__
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -62,6 +56,32 @@ begin_define
 define|#
 directive|define
 name|rmb
+parameter_list|()
+value|__asm __volatile("lwsync" : : : "memory")
+end_define
+
+begin_comment
+comment|/*  * The __ATOMIC_XMB() macros provide memory barriers only in conjunction  * with the atomic lXarx/stXcx. sequences below. See Appendix B.2 of Book II  * of the architecture manual.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|__ATOMIC_WMB
+parameter_list|()
+value|__asm __volatile("lwsync" : : : "memory")
+end_define
+
+begin_define
+define|#
+directive|define
+name|__ATOMIC_RMB
 parameter_list|()
 value|__asm __volatile("lwsync" : : : "memory")
 end_define
@@ -74,7 +94,7 @@ end_else
 begin_define
 define|#
 directive|define
-name|wmb
+name|__ATOMIC_WMB
 parameter_list|()
 value|__asm __volatile("eieio" : : : "memory")
 end_define
@@ -82,7 +102,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|rmb
+name|__ATOMIC_RMB
 parameter_list|()
 value|__asm __volatile("isync" : : : "memory")
 end_define
@@ -180,7 +200,7 @@ parameter_list|(
 name|type
 parameter_list|)
 define|\
-value|static __inline void					\     atomic_add_##type(volatile u_##type *p, u_##type v) {	\ 	u_##type t;						\ 	__atomic_add_##type(p, v, t);				\     }								\ 								\     static __inline void					\     atomic_add_acq_##type(volatile u_##type *p, u_##type v) {	\ 	u_##type t;						\ 	__atomic_add_##type(p, v, t);				\ 	rmb();							\     }								\ 								\     static __inline void					\     atomic_add_rel_##type(volatile u_##type *p, u_##type v) {	\ 	u_##type t;						\ 	wmb();							\ 	__atomic_add_##type(p, v, t);				\     }
+value|static __inline void					\     atomic_add_##type(volatile u_##type *p, u_##type v) {	\ 	u_##type t;						\ 	__atomic_add_##type(p, v, t);				\     }								\ 								\     static __inline void					\     atomic_add_acq_##type(volatile u_##type *p, u_##type v) {	\ 	u_##type t;						\ 	__atomic_add_##type(p, v, t);				\ 	__ATOMIC_RMB();						\     }								\ 								\     static __inline void					\     atomic_add_rel_##type(volatile u_##type *p, u_##type v) {	\ 	u_##type t;						\ 	__ATOMIC_WMB();						\ 	__atomic_add_##type(p, v, t);				\     }
 end_define
 
 begin_comment
@@ -408,7 +428,7 @@ parameter_list|(
 name|type
 parameter_list|)
 define|\
-value|static __inline void					\     atomic_clear_##type(volatile u_##type *p, u_##type v) {	\ 	u_##type t;						\ 	__atomic_clear_##type(p, v, t);				\     }								\ 								\     static __inline void					\     atomic_clear_acq_##type(volatile u_##type *p, u_##type v) {	\ 	u_##type t;						\ 	__atomic_clear_##type(p, v, t);				\ 	rmb();							\     }								\ 								\     static __inline void					\     atomic_clear_rel_##type(volatile u_##type *p, u_##type v) {	\ 	u_##type t;						\ 	wmb();							\ 	__atomic_clear_##type(p, v, t);				\     }
+value|static __inline void					\     atomic_clear_##type(volatile u_##type *p, u_##type v) {	\ 	u_##type t;						\ 	__atomic_clear_##type(p, v, t);				\     }								\ 								\     static __inline void					\     atomic_clear_acq_##type(volatile u_##type *p, u_##type v) {	\ 	u_##type t;						\ 	__atomic_clear_##type(p, v, t);				\ 	__ATOMIC_RMB();						\     }								\ 								\     static __inline void					\     atomic_clear_rel_##type(volatile u_##type *p, u_##type v) {	\ 	u_##type t;						\ 	__ATOMIC_WMB();						\ 	__atomic_clear_##type(p, v, t);				\     }
 end_define
 
 begin_comment
@@ -660,7 +680,7 @@ parameter_list|(
 name|type
 parameter_list|)
 define|\
-value|static __inline void					\     atomic_set_##type(volatile u_##type *p, u_##type v) {	\ 	u_##type t;						\ 	__atomic_set_##type(p, v, t);				\     }								\ 								\     static __inline void					\     atomic_set_acq_##type(volatile u_##type *p, u_##type v) {	\ 	u_##type t;						\ 	__atomic_set_##type(p, v, t);				\ 	rmb();							\     }								\ 								\     static __inline void					\     atomic_set_rel_##type(volatile u_##type *p, u_##type v) {	\ 	u_##type t;						\ 	wmb();							\ 	__atomic_set_##type(p, v, t);				\     }
+value|static __inline void					\     atomic_set_##type(volatile u_##type *p, u_##type v) {	\ 	u_##type t;						\ 	__atomic_set_##type(p, v, t);				\     }								\ 								\     static __inline void					\     atomic_set_acq_##type(volatile u_##type *p, u_##type v) {	\ 	u_##type t;						\ 	__atomic_set_##type(p, v, t);				\ 	__ATOMIC_RMB();						\     }								\ 								\     static __inline void					\     atomic_set_rel_##type(volatile u_##type *p, u_##type v) {	\ 	u_##type t;						\ 	__ATOMIC_WMB();						\ 	__atomic_set_##type(p, v, t);				\     }
 end_define
 
 begin_comment
@@ -888,7 +908,7 @@ parameter_list|(
 name|type
 parameter_list|)
 define|\
-value|static __inline void						\     atomic_subtract_##type(volatile u_##type *p, u_##type v) {		\ 	u_##type t;							\ 	__atomic_subtract_##type(p, v, t);				\     }									\ 									\     static __inline void						\     atomic_subtract_acq_##type(volatile u_##type *p, u_##type v) {	\ 	u_##type t;							\ 	__atomic_subtract_##type(p, v, t);				\ 	rmb();								\     }									\ 									\     static __inline void						\     atomic_subtract_rel_##type(volatile u_##type *p, u_##type v) {	\ 	u_##type t;							\ 	wmb();								\ 	__atomic_subtract_##type(p, v, t);				\     }
+value|static __inline void						\     atomic_subtract_##type(volatile u_##type *p, u_##type v) {		\ 	u_##type t;							\ 	__atomic_subtract_##type(p, v, t);				\     }									\ 									\     static __inline void						\     atomic_subtract_acq_##type(volatile u_##type *p, u_##type v) {	\ 	u_##type t;							\ 	__atomic_subtract_##type(p, v, t);				\ 	__ATOMIC_RMB();							\     }									\ 									\     static __inline void						\     atomic_subtract_rel_##type(volatile u_##type *p, u_##type v) {	\ 	u_##type t;							\ 	__ATOMIC_WMB();							\ 	__atomic_subtract_##type(p, v, t);				\     }
 end_define
 
 begin_comment
@@ -1713,7 +1733,7 @@ argument_list|,
 name|newval
 argument_list|)
 expr_stmt|;
-name|rmb
+name|__ATOMIC_RMB
 argument_list|()
 expr_stmt|;
 return|return
@@ -1792,7 +1812,7 @@ argument_list|,
 name|newval
 argument_list|)
 expr_stmt|;
-name|rmb
+name|__ATOMIC_RMB
 argument_list|()
 expr_stmt|;
 return|return
