@@ -2916,9 +2916,6 @@ break|break;
 case|case
 literal|'n'
 case|:
-name|nconversions
-operator|++
-expr_stmt|;
 if|if
 condition|(
 name|flags
