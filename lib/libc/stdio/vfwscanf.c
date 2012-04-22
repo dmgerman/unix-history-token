@@ -2404,7 +2404,9 @@ argument_list|,
 name|locale
 argument_list|)
 condition|)
-empty_stmt|;
+name|nread
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|c
