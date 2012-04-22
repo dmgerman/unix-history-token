@@ -15,23 +15,6 @@ directive|define
 name|_MACHINE_CPUFUNC_H_
 end_define
 
-begin_comment
-comment|/*  * Required for user-space atomic.h includes  */
-end_comment
-
-begin_function
-specifier|static
-name|__inline
-name|void
-name|powerpc_mb
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-asm|__asm __volatile("eieio; sync" : : : "memory");
-block|}
-end_function
-
 begin_ifdef
 ifdef|#
 directive|ifdef
