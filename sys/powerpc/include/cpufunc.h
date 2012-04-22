@@ -408,7 +408,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-asm|__asm __volatile ("eieio");
+asm|__asm __volatile ("eieio" : : : "memory");
 block|}
 end_function
 
@@ -421,7 +421,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-asm|__asm __volatile ("isync");
+asm|__asm __volatile ("isync" : : : "memory");
 block|}
 end_function
 
@@ -434,7 +434,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-asm|__asm __volatile ("sync");
+asm|__asm __volatile ("sync" : : : "memory");
 block|}
 end_function
 
