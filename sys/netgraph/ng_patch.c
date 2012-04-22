@@ -2806,7 +2806,9 @@ argument_list|)
 expr_stmt|;
 name|m
 operator|->
-name|m_flags
+name|m_pkthdr
+operator|.
+name|csum_flags
 operator||=
 name|priv
 operator|->
