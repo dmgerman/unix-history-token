@@ -44,6 +44,12 @@ parameter_list|()
 value|__asm __volatile("lwsync" : : : "memory")
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -59,6 +65,32 @@ name|rmb
 parameter_list|()
 value|__asm __volatile("lwsync" : : : "memory")
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|wmb
+parameter_list|()
+value|__asm __volatile("eieio" : : : "memory")
+end_define
+
+begin_define
+define|#
+directive|define
+name|rmb
+parameter_list|()
+value|__asm __volatile("isync" : : : "memory")
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * atomic_add(p, v)  * { *p += v; }  */
