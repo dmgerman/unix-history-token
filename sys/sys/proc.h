@@ -4224,6 +4224,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PGET_NOTID
+value|0x00040
+end_define
+
+begin_comment
+comment|/* Do not assume tid if pid> PID_MAX. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PGET_WANTREAD
 value|(PGET_HOLD | PGET_CANDEBUG | PGET_NOTWEXIT)
 end_define
