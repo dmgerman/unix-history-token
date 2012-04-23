@@ -202,7 +202,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ResetCurrentLineBuffer
+name|AslResetCurrentLineBuffer
 parameter_list|(
 name|void
 parameter_list|)
@@ -211,7 +211,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|InsertLineBuffer
+name|AslInsertLineBuffer
 parameter_list|(
 name|int
 name|SourceChar
@@ -291,6 +291,15 @@ parameter_list|(
 name|char
 modifier|*
 name|Filename
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AslCheckForErrorExit
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1606,9 +1615,19 @@ begin_function_decl
 name|void
 name|FlSetLineNumber
 parameter_list|(
-name|ACPI_PARSE_OBJECT
+name|UINT32
+name|LineNumber
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|FlSetFilename
+parameter_list|(
+name|char
 modifier|*
-name|Op
+name|Filename
 parameter_list|)
 function_decl|;
 end_function_decl

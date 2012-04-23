@@ -306,25 +306,6 @@ name|PR_FILE_NODE
 typedef|;
 end_typedef
 
-begin_typedef
-typedef|typedef
-struct|struct
-name|pr_line_mapping
-block|{
-name|UINT32
-modifier|*
-name|Map
-decl_stmt|;
-name|struct
-name|pr_line_mapping
-modifier|*
-name|Next
-decl_stmt|;
-block|}
-name|PR_LINE_MAPPING
-typedef|;
-end_typedef
-
 begin_comment
 comment|/*  * Globals  */
 end_comment
@@ -366,14 +347,6 @@ name|Gbl_ExpressionTokenBuffer
 index|[
 name|ASL_LINE_BUFFER_SIZE
 index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|PR_EXTERN
-name|PR_LINE_MAPPING
-modifier|*
-name|Gbl_MapBlockHead
 decl_stmt|;
 end_decl_stmt
 
@@ -460,16 +433,6 @@ name|BOOLEAN
 name|PrDoPreprocess
 parameter_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|UINT32
-name|PrGetLineNumber
-parameter_list|(
-name|UINT32
-name|PreprocessorLineNumber
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -678,19 +641,6 @@ name|char
 modifier|*
 modifier|*
 name|Next
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|PrSetLineNumber
-parameter_list|(
-name|UINT32
-name|OriginalLineNumber
-parameter_list|,
-name|UINT32
-name|NewLineNumber
 parameter_list|)
 function_decl|;
 end_function_decl

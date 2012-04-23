@@ -434,7 +434,10 @@ name|ACPI_EXD_OFFSET
 argument_list|(
 name|Device
 operator|.
-name|SystemNotify
+name|NotifyList
+index|[
+literal|0
+index|]
 argument_list|)
 block|,
 literal|"System Notify"
@@ -447,7 +450,10 @@ name|ACPI_EXD_OFFSET
 argument_list|(
 name|Device
 operator|.
-name|DeviceNotify
+name|NotifyList
+index|[
+literal|1
+index|]
 argument_list|)
 block|,
 literal|"Device Notify"
@@ -848,7 +854,10 @@ name|ACPI_EXD_OFFSET
 argument_list|(
 name|PowerResource
 operator|.
-name|SystemNotify
+name|NotifyList
+index|[
+literal|0
+index|]
 argument_list|)
 block|,
 literal|"System Notify"
@@ -861,7 +870,10 @@ name|ACPI_EXD_OFFSET
 argument_list|(
 name|PowerResource
 operator|.
-name|DeviceNotify
+name|NotifyList
+index|[
+literal|1
+index|]
 argument_list|)
 block|,
 literal|"Device Notify"
@@ -936,7 +948,10 @@ name|ACPI_EXD_OFFSET
 argument_list|(
 name|Processor
 operator|.
-name|SystemNotify
+name|NotifyList
+index|[
+literal|0
+index|]
 argument_list|)
 block|,
 literal|"System Notify"
@@ -949,7 +964,10 @@ name|ACPI_EXD_OFFSET
 argument_list|(
 name|Processor
 operator|.
-name|DeviceNotify
+name|NotifyList
+index|[
+literal|1
+index|]
 argument_list|)
 block|,
 literal|"Device Notify"
@@ -998,7 +1016,10 @@ name|ACPI_EXD_OFFSET
 argument_list|(
 name|ThermalZone
 operator|.
-name|SystemNotify
+name|NotifyList
+index|[
+literal|0
+index|]
 argument_list|)
 block|,
 literal|"System Notify"
@@ -1011,7 +1032,10 @@ name|ACPI_EXD_OFFSET
 argument_list|(
 name|ThermalZone
 operator|.
-name|DeviceNotify
+name|NotifyList
+index|[
+literal|1
+index|]
 argument_list|)
 block|,
 literal|"Device Notify"
@@ -1489,7 +1513,7 @@ specifier|static
 name|ACPI_EXDUMP_INFO
 name|AcpiExDumpNotify
 index|[
-literal|3
+literal|7
 index|]
 init|=
 block|{
@@ -1518,6 +1542,32 @@ literal|"Node"
 block|}
 block|,
 block|{
+name|ACPI_EXD_UINT32
+block|,
+name|ACPI_EXD_OFFSET
+argument_list|(
+name|Notify
+operator|.
+name|HandlerType
+argument_list|)
+block|,
+literal|"Handler Type"
+block|}
+block|,
+block|{
+name|ACPI_EXD_POINTER
+block|,
+name|ACPI_EXD_OFFSET
+argument_list|(
+name|Notify
+operator|.
+name|Handler
+argument_list|)
+block|,
+literal|"Handler"
+block|}
+block|,
+block|{
 name|ACPI_EXD_POINTER
 block|,
 name|ACPI_EXD_OFFSET
@@ -1528,6 +1578,38 @@ name|Context
 argument_list|)
 block|,
 literal|"Context"
+block|}
+block|,
+block|{
+name|ACPI_EXD_POINTER
+block|,
+name|ACPI_EXD_OFFSET
+argument_list|(
+name|Notify
+operator|.
+name|Next
+index|[
+literal|0
+index|]
+argument_list|)
+block|,
+literal|"Next System Notify"
+block|}
+block|,
+block|{
+name|ACPI_EXD_POINTER
+block|,
+name|ACPI_EXD_OFFSET
+argument_list|(
+name|Notify
+operator|.
+name|Next
+index|[
+literal|1
+index|]
+argument_list|)
+block|,
+literal|"Next Device Notify"
 block|}
 block|}
 decl_stmt|;
@@ -3586,39 +3668,17 @@ argument_list|(
 literal|"[String]  Value: "
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|ObjDesc
-operator|->
-name|String
-operator|.
-name|Length
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|AcpiOsPrintf
+name|AcpiUtPrintString
 argument_list|(
-literal|"%c"
-argument_list|,
 name|ObjDesc
 operator|->
 name|String
 operator|.
 name|Pointer
-index|[
-name|i
-index|]
+argument_list|,
+name|ACPI_UINT8_MAX
 argument_list|)
 expr_stmt|;
-block|}
 name|AcpiOsPrintf
 argument_list|(
 literal|"\n"

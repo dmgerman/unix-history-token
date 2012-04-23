@@ -1406,7 +1406,7 @@ name|Size
 operator|==
 sizeof|sizeof
 argument_list|(
-name|ACPI_DESC_TYPE_OPERAND
+name|ACPI_OPERAND_OBJECT
 argument_list|)
 condition|)
 block|{
@@ -1427,7 +1427,7 @@ name|Size
 operator|==
 sizeof|sizeof
 argument_list|(
-name|ACPI_DESC_TYPE_PARSER
+name|ACPI_PARSE_OBJECT
 argument_list|)
 condition|)
 block|{
@@ -1448,7 +1448,7 @@ name|Size
 operator|==
 sizeof|sizeof
 argument_list|(
-name|ACPI_DESC_TYPE_NAMED
+name|ACPI_NAMESPACE_NODE
 argument_list|)
 condition|)
 block|{
