@@ -434,8 +434,6 @@ operator||
 name|IO_NORMAL
 argument_list|,
 name|NOCRED
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if

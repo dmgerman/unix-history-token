@@ -2941,8 +2941,6 @@ argument_list|,
 name|IO_NORMAL
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 operator|)
 operator|!=
@@ -7380,8 +7378,6 @@ argument_list|,
 name|tcnp
 operator|->
 name|cn_cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}

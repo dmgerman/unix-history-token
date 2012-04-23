@@ -5690,11 +5690,6 @@ name|ucred
 modifier|*
 name|cred
 parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
 name|off_t
 name|length
 parameter_list|,

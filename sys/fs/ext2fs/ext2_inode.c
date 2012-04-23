@@ -1220,8 +1220,6 @@ name|ovp
 argument_list|,
 name|cred
 argument_list|,
-name|td
-argument_list|,
 name|length
 argument_list|,
 operator|(

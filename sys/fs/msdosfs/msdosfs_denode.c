@@ -1143,8 +1143,6 @@ parameter_list|,
 name|flags
 parameter_list|,
 name|cred
-parameter_list|,
-name|td
 parameter_list|)
 name|struct
 name|denode
@@ -1161,11 +1159,6 @@ name|struct
 name|ucred
 modifier|*
 name|cred
-decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
 decl_stmt|;
 block|{
 name|int
@@ -1532,8 +1525,6 @@ argument_list|)
 argument_list|,
 name|cred
 argument_list|,
-name|td
-argument_list|,
 name|length
 argument_list|,
 name|pmp
@@ -1869,8 +1860,6 @@ argument_list|,
 literal|0
 argument_list|,
 name|cred
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 return|return
@@ -2224,8 +2213,6 @@ argument_list|,
 literal|0
 argument_list|,
 name|NOCRED
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|dep

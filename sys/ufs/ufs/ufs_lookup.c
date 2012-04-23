@@ -4569,8 +4569,6 @@ operator||
 name|IO_SYNC
 argument_list|,
 name|cr
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
