@@ -35967,9 +35967,6 @@ name|u16
 name|pg_cons
 decl_stmt|;
 name|int
-name|bce_link_tick
-decl_stmt|;
-name|int
 name|bce_link_up
 decl_stmt|;
 name|struct
