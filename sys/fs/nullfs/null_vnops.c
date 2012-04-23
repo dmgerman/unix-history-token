@@ -1992,15 +1992,6 @@ name|ap
 operator|->
 name|a_vp
 decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
-init|=
-name|ap
-operator|->
-name|a_td
-decl_stmt|;
 name|vp
 operator|->
 name|v_object
@@ -2011,8 +2002,6 @@ comment|/* 	 * If this is the last reference, then free up the vnode 	 * so as n
 name|vrecycle
 argument_list|(
 name|vp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 return|return

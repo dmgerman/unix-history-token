@@ -177,15 +177,6 @@ argument_list|(
 name|vp
 argument_list|)
 decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
-init|=
-name|ap
-operator|->
-name|a_td
-decl_stmt|;
 name|mode_t
 name|mode
 decl_stmt|;
@@ -664,8 +655,6 @@ condition|)
 name|vrecycle
 argument_list|(
 name|vp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if

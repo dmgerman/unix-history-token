@@ -2519,8 +2519,6 @@ condition|)
 name|vrecycle
 argument_list|(
 name|vp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 return|return
