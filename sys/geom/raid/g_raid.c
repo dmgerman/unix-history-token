@@ -1356,7 +1356,7 @@ name|G_RAID_VOLUME_RLQ_R4P0
 condition|)
 return|return
 operator|(
-literal|"RAID3-P0"
+literal|"RAID4-P0"
 operator|)
 return|;
 if|if
@@ -1367,7 +1367,7 @@ name|G_RAID_VOLUME_RLQ_R4PN
 condition|)
 return|return
 operator|(
-literal|"RAID3-PN"
+literal|"RAID4-PN"
 operator|)
 return|;
 return|return
