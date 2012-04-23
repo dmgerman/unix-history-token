@@ -58,7 +58,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/cpufunc.h>
+file|<machine/atomic.h>
 end_include
 
 begin_include
@@ -2060,7 +2060,7 @@ index|]
 operator|=
 name|target
 expr_stmt|;
-name|powerpc_mb
+name|mb
 argument_list|()
 expr_stmt|;
 comment|/* Order jmptab update before next changes */
