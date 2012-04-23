@@ -8901,7 +8901,7 @@ name|dev
 operator|->
 name|if_capabilities
 operator||=
-name|IFCAP_TSO
+name|IFCAP_TSO4
 operator||
 name|IFCAP_VLAN_HWTSO
 expr_stmt|;
