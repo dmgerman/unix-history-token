@@ -3998,6 +3998,17 @@ argument_list|,
 literal|"Write the raw packets to file"
 argument_list|)
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|FMT
+argument_list|,
+literal|"-h"
+argument_list|,
+literal|"Display summary of command line options"
+argument_list|)
+expr_stmt|;
 undef|#
 directive|undef
 name|FMT
@@ -4081,7 +4092,7 @@ name|pp
 decl_stmt|;
 name|optstring
 operator|=
-literal|"b:i:r:s:vw:f:"
+literal|"b:hi:r:s:vw:f:"
 expr_stmt|;
 while|while
 condition|(
