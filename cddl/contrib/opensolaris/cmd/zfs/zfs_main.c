@@ -1156,7 +1156,7 @@ return|return
 operator|(
 name|gettext
 argument_list|(
-literal|"\tcreate [-p] [-o property=value] ... "
+literal|"\tcreate [-pu] [-o property=value] ... "
 literal|"<filesystem>\n"
 literal|"\tcreate [-ps] [-b blocksize] [-o property=value] ... "
 literal|"-V<size><volume>\n"
@@ -3190,7 +3190,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * zfs create [-p] [-o prop=value] ... fs  * zfs create [-ps] [-b blocksize] [-o prop=value] ... -V vol size  *  * Create a new dataset.  This command can be used to create filesystems  * and volumes.  Snapshot creation is handled by 'zfs snapshot'.  * For volumes, the user must specify a size to be used.  *  * The '-s' flag applies only to volumes, and indicates that we should not try  * to set the reservation for this volume.  By default we set a reservation  * equal to the size for any volume.  For pools with SPA_VERSION>=  * SPA_VERSION_REFRESERVATION, we set a refreservation instead.  *  * The '-p' flag creates all the non-existing ancestors of the target first.  */
+comment|/*  * zfs create [-pu] [-o prop=value] ... fs  * zfs create [-ps] [-b blocksize] [-o prop=value] ... -V vol size  *  * Create a new dataset.  This command can be used to create filesystems  * and volumes.  Snapshot creation is handled by 'zfs snapshot'.  * For volumes, the user must specify a size to be used.  *  * The '-s' flag applies only to volumes, and indicates that we should not try  * to set the reservation for this volume.  By default we set a reservation  * equal to the size for any volume.  For pools with SPA_VERSION>=  * SPA_VERSION_REFRESERVATION, we set a refreservation instead.  *  * The '-p' flag creates all the non-existing ancestors of the target first.  *  * The '-u' flag prevents mounting of newly created file system.  */
 end_comment
 
 begin_function
@@ -3236,6 +3236,11 @@ name|B_FALSE
 decl_stmt|;
 name|boolean_t
 name|parents
+init|=
+name|B_FALSE
+decl_stmt|;
+name|boolean_t
+name|nomount
 init|=
 name|B_FALSE
 decl_stmt|;
@@ -3285,7 +3290,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|":V:b:so:p"
+literal|":V:b:so:pu"
 argument_list|)
 operator|)
 operator|!=
@@ -3467,6 +3472,14 @@ name|B_TRUE
 expr_stmt|;
 break|break;
 case|case
+literal|'u'
+case|:
+name|nomount
+operator|=
+name|B_TRUE
+expr_stmt|;
+break|break;
+case|case
 literal|':'
 case|:
 operator|(
@@ -3534,6 +3547,33 @@ name|gettext
 argument_list|(
 literal|"'-s' and '-b' can only be "
 literal|"used when creating a volume\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+goto|goto
+name|badusage
+goto|;
+block|}
+if|if
+condition|(
+name|nomount
+operator|&&
+name|type
+operator|!=
+name|ZFS_TYPE_FILESYSTEM
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|gettext
+argument_list|(
+literal|"'-u' can only be "
+literal|"used when creating a file system\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3896,6 +3936,9 @@ expr_stmt|;
 comment|/* 	 * Mount and/or share the new filesystem as appropriate.  We provide a 	 * verbose error message to let the user know that their filesystem was 	 * in fact created, even if we failed to mount or share it. 	 */
 if|if
 condition|(
+operator|!
+name|nomount
+operator|&&
 name|canmount
 operator|==
 name|ZFS_CANMOUNT_ON
