@@ -43,11 +43,17 @@ argument|THREAD_ALLOCATED_INITIALIZER
 argument_list|)
 end_macro
 
+begin_comment
+comment|/* Work around<http://llvm.org/bugs/show_bug.cgi?id=12623>: */
+end_comment
+
 begin_decl_stmt
 specifier|const
 name|char
 modifier|*
 name|__malloc_options_1_0
+init|=
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
