@@ -19,16 +19,12 @@ begin_comment
 comment|/*  * I/O macros.  */
 end_comment
 
-begin_comment
-comment|/*  * Note: this should be eieio, but many drivers expect ordering with  * main storage too.  */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|powerpc_iomb
 parameter_list|()
-value|__asm __volatile("sync" : : : "memory")
+value|__asm __volatile("eieio" : : : "memory")
 end_define
 
 begin_function
