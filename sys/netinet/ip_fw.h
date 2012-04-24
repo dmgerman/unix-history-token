@@ -27,13 +27,20 @@ value|65535
 end_define
 
 begin_comment
-comment|/*  * The number of ipfw tables.  The maximum allowed table number is the  * (IPFW_TABLES_MAX - 1).  */
+comment|/*  * Default number of ipfw tables.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|IPFW_TABLES_MAX
+value|65535
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPFW_TABLES_DEFAULT
 value|128
 end_define
 
@@ -76,6 +83,79 @@ directive|define
 name|IPFW_CALLSTACK_SIZE
 value|16
 end_define
+
+begin_comment
+comment|/* IP_FW3 header/opcodes */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_ip_fw3_opheader
+block|{
+name|uint16_t
+name|opcode
+decl_stmt|;
+comment|/* Operation opcode */
+name|uint16_t
+name|reserved
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* Align to 64-bit boundary */
+block|}
+name|ip_fw3_opheader
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* IPFW extented tables support */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_TABLE_XADD
+value|86
+end_define
+
+begin_comment
+comment|/* add entry */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_TABLE_XDEL
+value|87
+end_define
+
+begin_comment
+comment|/* delete entry */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_TABLE_XGETSIZE
+value|88
+end_define
+
+begin_comment
+comment|/* get table size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_TABLE_XLIST
+value|89
+end_define
+
+begin_comment
+comment|/* list table contents */
+end_comment
 
 begin_comment
 comment|/*  * The kernel representation of ipfw rules is made of a list of  * 'instructions' (for all practical purposes equivalent to BPF  * instructions), which specify which fields of the packet  * (or its metadata) should be analysed.  *  * Each instruction is stored in a structure which begins with  * "ipfw_insn", and can contain extra fields depending on the  * instruction type (listed below).  * Note that the code is written so that individual instructions  * have a size which is a multiple of 32 bits. This means that, if  * such structures contain pointers or other 64-bit entities,  * (there is just one instance now) they may end up unaligned on  * 64-bit architectures, so the must be handled with care.  *  * "enum ipfw_opcodes" are the opcodes supported. We can have up  * to 256 different opcodes. When adding new opcodes, they should  * be appended to the end of the opcode list before O_LAST_OPCODE,  * this will prevent the ABI from being broken, otherwise users  * will have to recompile ipfw(8) when they update the kernel.  */
@@ -1395,6 +1475,39 @@ begin_comment
 comment|/*  * These are used for lookup tables.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IPFW_TABLE_CIDR
+value|1
+end_define
+
+begin_comment
+comment|/* Table for holding IPv4/IPv6 prefixes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPFW_TABLE_INTERFACE
+value|2
+end_define
+
+begin_comment
+comment|/* Table for holding interface names */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPFW_TABLE_MAXTYPE
+value|2
+end_define
+
+begin_comment
+comment|/* Maximum valid number */
+end_comment
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -1424,6 +1537,54 @@ end_typedef
 begin_typedef
 typedef|typedef
 struct|struct
+name|_ipfw_table_xentry
+block|{
+name|uint16_t
+name|len
+decl_stmt|;
+comment|/* Total entry length		*/
+name|uint8_t
+name|type
+decl_stmt|;
+comment|/* entry type			*/
+name|uint8_t
+name|masklen
+decl_stmt|;
+comment|/* mask length			*/
+name|uint16_t
+name|tbl
+decl_stmt|;
+comment|/* table number			*/
+name|uint32_t
+name|value
+decl_stmt|;
+comment|/* value			*/
+union|union
+block|{
+comment|/* Longest field needs to be aligned by 4-byte boundary	*/
+name|struct
+name|in6_addr
+name|addr6
+decl_stmt|;
+comment|/* IPv6 address 		*/
+name|char
+name|iface
+index|[
+name|IF_NAMESIZE
+index|]
+decl_stmt|;
+comment|/* interface name	*/
+block|}
+name|k
+union|;
+block|}
+name|ipfw_table_xentry
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
 name|_ipfw_table
 block|{
 name|u_int32_t
@@ -1447,6 +1608,43 @@ decl_stmt|;
 comment|/* entries			*/
 block|}
 name|ipfw_table
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_ipfw_xtable
+block|{
+name|ip_fw3_opheader
+name|opheader
+decl_stmt|;
+comment|/* eXtended tables are controlled via IP_FW3 */
+name|uint32_t
+name|size
+decl_stmt|;
+comment|/* size of entries in bytes	*/
+name|uint32_t
+name|cnt
+decl_stmt|;
+comment|/* # of entries			*/
+name|uint16_t
+name|tbl
+decl_stmt|;
+comment|/* table number			*/
+name|uint8_t
+name|type
+decl_stmt|;
+comment|/* table type			*/
+name|ipfw_table_xentry
+name|xent
+index|[
+literal|0
+index|]
+decl_stmt|;
+comment|/* entries			*/
+block|}
+name|ipfw_xtable
 typedef|;
 end_typedef
 
