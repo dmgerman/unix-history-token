@@ -307,6 +307,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_FADVISE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|static
 name|uma_zone_t
@@ -10880,6 +10888,15 @@ argument_list|(
 name|fp
 operator|->
 name|f_cred
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|fp
+operator|->
+name|f_advice
+argument_list|,
+name|M_FADVISE
 argument_list|)
 expr_stmt|;
 name|uma_zfree
