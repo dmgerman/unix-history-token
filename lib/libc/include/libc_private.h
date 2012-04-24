@@ -144,6 +144,38 @@ parameter_list|)
 value|if (__isthreaded) _funlockfile(fp)
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|_spinlock
+struct_decl|;
+end_struct_decl
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|_spinlock
+name|__stdio_thread_lock
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|STDIO_THREAD_LOCK
+parameter_list|()
+define|\
+value|do {							\ 	if (__isthreaded)				\ 		_SPINLOCK(&__stdio_thread_lock);	\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|STDIO_THREAD_UNLOCK
+parameter_list|()
+define|\
+value|do {							\ 	if (__isthreaded)				\ 		_SPINUNLOCK(&__stdio_thread_lock);	\ } while (0)
+end_define
+
 begin_comment
 comment|/*  * Indexes into the pthread jump table.  *  * Warning! If you change this type, you must also change the threads  * libraries that reference it (libc_r, libpthread).  */
 end_comment
