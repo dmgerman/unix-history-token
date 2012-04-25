@@ -185,7 +185,7 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*  * The hardware registers are native little-endian byte order.  * Big-endian hosts are handled by enabling hardware byte-swap  * of register reads and writes at reset.  But the PCI clock  * domain registers are not byte swapped!  Thus, on big-endian  * platforms we have to explicitly byte-swap those registers.  * OS_REG_UNSWAPPED identifies the registers that need special handling.  */
+comment|/*  * The hardware registers are native little-endian byte order.  * Big-endian hosts are handled by enabling hardware byte-swap  * of register reads and writes at reset.  But the PCI clock  * domain registers are not byte swapped!  Thus, on big-endian  * platforms we have to explicitly byte-swap those registers.  * OS_REG_UNSWAPPED identifies the registers that need special handling.  *  * This is not currently used by the FreeBSD HAL osdep code; the HAL  * currently does not configure hardware byteswapping for register space  * accesses and instead does it through the FreeBSD bus space code.  */
 end_comment
 
 begin_if
