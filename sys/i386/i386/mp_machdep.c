@@ -6880,6 +6880,31 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
+literal|"cpu%d: invlcache"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+name|intrcnt_add
+argument_list|(
+name|buf
+argument_list|,
+operator|&
+name|ipi_invlcache_counts
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+name|snprintf
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
 literal|"cpu%d: preempt"
 argument_list|,
 name|i
