@@ -3306,10 +3306,33 @@ name|dst
 operator|=
 name|altdst
 expr_stmt|;
-block|}
-else|else
+comment|/* 		 * Disable MMU.  Otherwise, setup_pagetables call below 		 * might overwrite the L1 table we are currently using. 		 */
+name|cpu_idcache_wbinv_all
+argument_list|()
+expr_stmt|;
+name|cpu_l2cache_wbinv_all
+argument_list|()
+expr_stmt|;
+asm|__asm __volatile("mrc p15, 0, %0, c1, c0, 0\n"
+literal|"bic %0, %0, #1\n"
+comment|/* MMU_DISABLE */
+literal|"mcr p15, 0, %0, c1, c0, 0\n"
+operator|:
+literal|"=r"
+operator|(
+name|pt_addr
+operator|)
+block|)
+empty_stmt|;
+end_if
+
+begin_endif
+unit|} else
 endif|#
 directive|endif
+end_endif
+
+begin_expr_stmt
 name|dst
 operator|=
 literal|4
@@ -3339,7 +3362,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-end_if
+end_expr_stmt
 
 begin_expr_stmt
 name|dst
