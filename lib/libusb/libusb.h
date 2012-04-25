@@ -1049,7 +1049,7 @@ decl_stmt|;
 name|uint8_t
 name|flags
 decl_stmt|;
-name|uint32_t
+name|uint8_t
 name|endpoint
 decl_stmt|;
 name|uint8_t
@@ -1078,10 +1078,6 @@ decl_stmt|;
 name|uint8_t
 modifier|*
 name|buffer
-decl_stmt|;
-name|void
-modifier|*
-name|os_priv
 decl_stmt|;
 name|int
 name|num_iso_packets
