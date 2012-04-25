@@ -236,6 +236,43 @@ comment|/* _BYTE_ORDER */
 end_comment
 
 begin_comment
+comment|/*  * For USB/SDIO support (where access latencies are quite high);  * some write accesses may be buffered and then flushed when  * either a read is done, or an explicit flush is done.  *  * These are simply placeholders for now.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OS_REG_WRITE_BUFFER_ENABLE
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|do { } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OS_REG_WRITE_BUFFER_DISABLE
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|do { } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OS_REG_WRITE_BUFFER_FLUSH
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|do { } while (0)
+end_define
+
+begin_comment
 comment|/*  * Register read/write operations are either handled through  * platform-dependent routines (or when debugging is enabled  * with AH_DEBUG); or they are inline expanded using the macros  * defined below.  */
 end_comment
 
