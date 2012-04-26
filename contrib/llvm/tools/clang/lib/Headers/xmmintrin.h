@@ -3624,7 +3624,7 @@ name|a
 parameter_list|,
 name|sel
 parameter_list|)
-value|(__builtin_prefetch((void *)(a), 0, sel))
+value|(__builtin_prefetch((void *)(a), 0, (sel)))
 end_define
 
 begin_decl_stmt
@@ -4052,8 +4052,7 @@ name|a
 parameter_list|,
 name|n
 parameter_list|)
-define|\
-value|((__m64)__builtin_ia32_pshufw(a, n))
+value|__extension__ ({ \   __m64 __a = (a); \   (__m64)__builtin_ia32_pshufw((__v4hi)__a, (n)); })
 end_define
 
 begin_decl_stmt
@@ -4285,8 +4284,7 @@ name|b
 parameter_list|,
 name|mask
 parameter_list|)
-define|\
-value|(__builtin_shufflevector((__v4sf)(a), (__v4sf)(b),                \                                  (mask)& 0x3, ((mask)& 0xc)>> 2, \                                  (((mask)& 0x30)>> 4) + 4, \                                  (((mask)& 0xc0)>> 6) + 4))
+value|__extension__ ({ \   __m128 __a = (a); \   __m128 __b = (b); \   (__m128)__builtin_shufflevector((__v4sf)__a, (__v4sf)__b, \                                   (mask)& 0x3, ((mask)& 0xc)>> 2, \                                   (((mask)& 0x30)>> 4) + 4, \                                   (((mask)& 0xc0)>> 6) + 4); })
 end_define
 
 begin_decl_stmt
@@ -5124,7 +5122,7 @@ begin_define
 define|#
 directive|define
 name|_MM_FLUSH_ZERO_OFF
-value|(0x8000)
+value|(0x0000)
 end_define
 
 begin_define

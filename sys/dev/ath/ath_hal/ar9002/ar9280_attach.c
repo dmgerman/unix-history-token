@@ -845,6 +845,43 @@ argument_list|,
 name|status
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Use the "local" EEPROM data given to us by the higher layers. 	 * This is a private copy out of system flash. The Linux ath9k 	 * commit for the initial AR9130 support mentions MMIO flash 	 * access is "unreliable." -adrian 	 */
+if|if
+condition|(
+name|eepromdata
+operator|!=
+name|AH_NULL
+condition|)
+block|{
+name|AH_PRIVATE
+argument_list|(
+operator|(
+name|ah
+operator|)
+argument_list|)
+operator|->
+name|ah_eepromRead
+operator|=
+name|ath_hal_EepromDataRead
+expr_stmt|;
+name|AH_PRIVATE
+argument_list|(
+operator|(
+name|ah
+operator|)
+argument_list|)
+operator|->
+name|ah_eepromWrite
+operator|=
+name|NULL
+expr_stmt|;
+name|ah
+operator|->
+name|ah_eepromdata
+operator|=
+name|eepromdata
+expr_stmt|;
+block|}
 comment|/* XXX override with 9280 specific state */
 comment|/* override 5416 methods for our needs */
 name|AH5416
@@ -4582,19 +4619,6 @@ literal|0
 block|pCap->halWowMatchPatternDword = AH_TRUE;
 endif|#
 directive|endif
-comment|/* AR9280 is a 2x2 stream device */
-name|pCap
-operator|->
-name|halTxStreams
-operator|=
-literal|2
-expr_stmt|;
-name|pCap
-operator|->
-name|halRxStreams
-operator|=
-literal|2
-expr_stmt|;
 name|pCap
 operator|->
 name|halCSTSupport

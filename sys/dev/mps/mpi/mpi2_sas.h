@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $FreeBSD$ */
+comment|/*-  * Copyright (c) 2011 LSI Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * LSI MPT-Fusion Host Adapter FreeBSD  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
-comment|/*  *  Copyright (c) 2000-2007 LSI Corporation.  *  *  *           Name:  mpi2_sas.h  *          Title:  MPI Serial Attached SCSI structures and definitions  *  Creation Date:  February 9, 2007  *  *  mpi2.h Version:  02.00.03  *  *  Version History  *  ---------------  *  *  Date      Version   Description  *  --------  --------  ------------------------------------------------------  *  04-30-07  02.00.00  Corresponds to Fusion-MPT MPI Specification Rev A.  *  06-26-07  02.00.01  Added Clear All Persistent Operation to SAS IO Unit  *                      Control Request.  *  10-02-08  02.00.02  Added Set IOC Parameter Operation to SAS IO Unit Control  *                      Request.  *  10-28-09  02.00.03  Changed the type of SGL in MPI2_SATA_PASSTHROUGH_REQUEST  *                      to MPI2_SGE_IO_UNION since it supports chained SGLs.  *  --------------------------------------------------------------------------  */
+comment|/*  *  Copyright (c) 2000-2011 LSI Corporation.  *  *  *           Name:  mpi2_sas.h  *          Title:  MPI Serial Attached SCSI structures and definitions  *  Creation Date:  February 9, 2007  *  *  mpi2_sas.h Version:  02.00.05  *  *  Version History  *  ---------------  *  *  Date      Version   Description  *  --------  --------  ------------------------------------------------------  *  04-30-07  02.00.00  Corresponds to Fusion-MPT MPI Specification Rev A.  *  06-26-07  02.00.01  Added Clear All Persistent Operation to SAS IO Unit  *                      Control Request.  *  10-02-08  02.00.02  Added Set IOC Parameter Operation to SAS IO Unit Control  *                      Request.  *  10-28-09  02.00.03  Changed the type of SGL in MPI2_SATA_PASSTHROUGH_REQUEST  *                      to MPI2_SGE_IO_UNION since it supports chained SGLs.  *  05-12-10  02.00.04  Modified some comments.  *  08-11-10  02.00.05  Added NCQ operations to SAS IO Unit Control.  *  --------------------------------------------------------------------------  */
 end_comment
 
 begin_ifndef
@@ -395,7 +395,7 @@ value|(0x80)
 end_define
 
 begin_comment
-comment|/* values for SGLFlags field are in the SGL section of mpi2.h */
+comment|/* use MPI2_SGLFLAGS_ defines from mpi2.h for the SGLFlags field */
 end_comment
 
 begin_comment
@@ -577,7 +577,7 @@ comment|/* 0x1C */
 name|MPI2_SGE_IO_UNION
 name|SGL
 decl_stmt|;
-comment|/* 0x20 */
+comment|/* 0x30 */
 block|}
 name|MPI2_SATA_PASSTHROUGH_REQUEST
 operator|,
@@ -638,7 +638,7 @@ value|(0x0001)
 end_define
 
 begin_comment
-comment|/* values for SGLFlags field are in the SGL section of mpi2.h */
+comment|/* use MPI2_SGLFLAGS_ defines from mpi2.h for the SGLFlags field */
 end_comment
 
 begin_comment
@@ -916,6 +916,20 @@ define|#
 directive|define
 name|MPI2_SAS_OP_SET_IOC_PARAMETER
 value|(0x0F)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_SAS_OP_DEV_ENABLE_NCQ
+value|(0x14)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_SAS_OP_DEV_DISABLE_NCQ
+value|(0x15)
 end_define
 
 begin_define

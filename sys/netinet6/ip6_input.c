@@ -568,6 +568,22 @@ operator|&
 name|V_ip6_auto_linklocal
 argument_list|)
 expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"net.inet6.ip6.accept_rtadv"
+argument_list|,
+operator|&
+name|V_ip6_accept_rtadv
+argument_list|)
+expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"net.inet6.ip6.no_radr"
+argument_list|,
+operator|&
+name|V_ip6_no_radr
+argument_list|)
+expr_stmt|;
 name|TAILQ_INIT
 argument_list|(
 operator|&
@@ -2397,7 +2413,7 @@ name|a2
 parameter_list|)
 define|\
 value|(bcmp((a1), (a2), ((a1))->sin6_len) == 0)
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -2558,7 +2574,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -2636,7 +2652,7 @@ name|rin6
 operator|.
 name|ro_rt
 operator|=
-name|rtalloc1
+name|in6_rtalloc1
 argument_list|(
 operator|(
 expr|struct
@@ -2648,6 +2664,11 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+name|M_GETFIB
+argument_list|(
+name|m
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if

@@ -60,6 +60,10 @@ modifier|*
 name|names_from_file
 decl_stmt|;
 comment|/* -T file */
+name|int
+name|newer_ctime_filter
+decl_stmt|;
+comment|/* --newer/--newer-than */
 name|time_t
 name|newer_ctime_sec
 decl_stmt|;
@@ -68,6 +72,10 @@ name|long
 name|newer_ctime_nsec
 decl_stmt|;
 comment|/* --newer/--newer-than */
+name|int
+name|newer_mtime_filter
+decl_stmt|;
+comment|/* --newer-mtime/--newer-mtime-than */
 name|time_t
 name|newer_mtime_sec
 decl_stmt|;
@@ -80,6 +88,10 @@ name|int
 name|bytes_per_block
 decl_stmt|;
 comment|/* -b block_size */
+name|int
+name|bytes_in_last_block
+decl_stmt|;
+comment|/* See -b handling. */
 name|int
 name|verbose
 decl_stmt|;
@@ -168,6 +180,10 @@ name|option_no_subdirs
 decl_stmt|;
 comment|/* -n */
 name|char
+name|option_numeric_owner
+decl_stmt|;
+comment|/* --numeric-owner */
+name|char
 name|option_null
 decl_stmt|;
 comment|/* --null */
@@ -191,6 +207,18 @@ name|char
 name|day_first
 decl_stmt|;
 comment|/* show day before month in -tv output */
+name|char
+name|enable_copyfile
+decl_stmt|;
+comment|/* For Mac OS */
+comment|/* Option parser state */
+name|int
+name|getopt_state
+decl_stmt|;
+name|char
+modifier|*
+name|getopt_word
+decl_stmt|;
 comment|/* If>= 0, then close this when done. */
 name|int
 name|fd
@@ -207,7 +235,7 @@ decl_stmt|;
 specifier|const
 name|char
 modifier|*
-name|optarg
+name|argument
 decl_stmt|;
 name|size_t
 name|gs_width
@@ -263,6 +291,10 @@ modifier|*
 name|buff
 decl_stmt|;
 comment|/* for write.c */
+name|size_t
+name|buff_size
+decl_stmt|;
+comment|/* for write.c */
 name|struct
 name|lafe_matching
 modifier|*
@@ -310,6 +342,8 @@ literal|1
 block|,
 name|OPTION_CHROOT
 block|,
+name|OPTION_DISABLE_COPYFILE
+block|,
 name|OPTION_EXCLUDE
 block|,
 name|OPTION_FORMAT
@@ -323,6 +357,8 @@ block|,
 name|OPTION_INCLUDE
 block|,
 name|OPTION_KEEP_NEWER_FILES
+block|,
+name|OPTION_LZIP
 block|,
 name|OPTION_LZMA
 block|,
@@ -593,6 +629,8 @@ parameter_list|,
 name|char
 modifier|*
 modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|)

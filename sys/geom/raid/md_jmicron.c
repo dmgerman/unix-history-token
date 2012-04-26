@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2010 Alexander Motin<mav@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2010 Alexander Motin<mav@FreeBSD.org>  * Copyright (c) 2000 - 2008 SÃ¸ren Schmidt<sos@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -1922,6 +1922,17 @@ operator|)
 return|;
 if|if
 condition|(
+name|qual
+operator|!=
+name|G_RAID_VOLUME_RLQ_R5LA
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+if|if
+condition|(
 operator|!
 name|force
 condition|)
@@ -1940,6 +1951,10 @@ return|;
 block|}
 if|if
 condition|(
+name|level
+operator|!=
+name|G_RAID_VOLUME_RL_RAID5
+operator|&&
 name|qual
 operator|!=
 name|G_RAID_VOLUME_RLQ_NONE
@@ -3089,6 +3104,12 @@ operator|*=
 literal|512
 expr_stmt|;
 comment|//ZZZ
+name|vol
+operator|->
+name|v_raid_level_qualifier
+operator|=
+name|G_RAID_VOLUME_RLQ_NONE
+expr_stmt|;
 if|if
 condition|(
 name|meta
@@ -3223,6 +3244,12 @@ name|G_RAID_VOLUME_RL_RAID5
 expr_stmt|;
 name|vol
 operator|->
+name|v_raid_level_qualifier
+operator|=
+name|G_RAID_VOLUME_RLQ_R5LA
+expr_stmt|;
+name|vol
+operator|->
 name|v_mediasize
 operator|=
 name|size
@@ -3251,12 +3278,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|vol
-operator|->
-name|v_raid_level_qualifier
-operator|=
-name|G_RAID_VOLUME_RLQ_NONE
-expr_stmt|;
 name|vol
 operator|->
 name|v_strip_size
@@ -5299,6 +5320,21 @@ return|;
 block|}
 if|if
 condition|(
+name|strcasecmp
+argument_list|(
+name|levelname
+argument_list|,
+literal|"RAID5"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|levelname
+operator|=
+literal|"RAID5LA"
+expr_stmt|;
+if|if
+condition|(
 name|g_raid_volume_str2level
 argument_list|(
 name|levelname
@@ -6087,7 +6123,7 @@ name|vol
 operator|->
 name|v_raid_level_qualifier
 operator|=
-name|G_RAID_VOLUME_RLQ_NONE
+name|qual
 expr_stmt|;
 name|vol
 operator|->

@@ -315,6 +315,26 @@ name|getAsmParser
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// getAsmParserVariant - Return the AssmblyParserVariant definition for
+comment|/// this target.
+comment|///
+name|Record
+modifier|*
+name|getAsmParserVariant
+argument_list|(
+name|unsigned
+name|i
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// getAsmParserVariantCount - Return the AssmblyParserVariant definition
+comment|/// available for this target.
+comment|///
+name|unsigned
+name|getAsmParserVariantCount
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// getAsmWriter - Return the AssemblyWriter definition for this target.
 comment|///
 name|Record

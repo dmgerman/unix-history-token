@@ -100,34 +100,18 @@ operator|)
 name|addr
 expr_stmt|;
 comment|/* XXX all because dofhp_dof is 64 bit */
-ifdef|#
-directive|ifdef
-name|__i386
 name|addr
 operator|=
 operator|(
 name|caddr_t
 operator|)
 operator|(
-name|uint32_t
+name|vm_offset_t
 operator|)
 name|dhp
 operator|->
 name|dofhp_dof
 expr_stmt|;
-else|#
-directive|else
-name|addr
-operator|=
-operator|(
-name|caddr_t
-operator|)
-name|dhp
-operator|->
-name|dofhp_dof
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* FALLTHROUGH */
 case|case
 name|DTRACEHIOC_ADD

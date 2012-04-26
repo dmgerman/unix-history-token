@@ -5174,14 +5174,12 @@ name|isBigEndian
 argument_list|()
 condition|)
 block|{
-comment|/* 			 * Set CFG, little-endian for register 			 * and descriptor accesses. 			 */
+comment|/* 			 * Set CFG, little-endian for descriptor accesses. 			 */
 name|mask
 operator|=
 name|INIT_CONFIG_STATUS
 operator||
 name|AR_CFG_SWRD
-operator||
-name|AR_CFG_SWRG
 expr_stmt|;
 ifndef|#
 directive|ifndef
@@ -5198,11 +5196,7 @@ name|ah
 argument_list|,
 name|AR_CFG
 argument_list|,
-name|LE_READ_4
-argument_list|(
-operator|&
 name|mask
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

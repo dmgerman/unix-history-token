@@ -216,6 +216,10 @@ decl_stmt|;
 block|}
 name|_sigev_thread
 struct|;
+name|unsigned
+name|short
+name|_kevent_flags
+decl_stmt|;
 name|uint32_t
 name|__spare__
 index|[

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  * Copyright (c) 2011 Pawel Jakub Dawidek<pawel@dawidek.net>.  * Copyright (c) 2011 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2012 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  * Copyright (c) 2011-2012 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  * Copyright (c) 2011 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
 end_comment
 
 begin_include
@@ -1156,7 +1156,7 @@ return|return
 operator|(
 name|gettext
 argument_list|(
-literal|"\tcreate [-p] [-o property=value] ... "
+literal|"\tcreate [-pu] [-o property=value] ... "
 literal|"<filesystem>\n"
 literal|"\tcreate [-ps] [-b blocksize] [-o property=value] ... "
 literal|"-V<size><volume>\n"
@@ -1184,7 +1184,8 @@ operator|(
 name|gettext
 argument_list|(
 literal|"\tget [-rHp] [-d max] "
-literal|"[-o \"all\" | field[,...]] [-s source[,...]]\n"
+literal|"[-o \"all\" | field[,...]] [-t type[,...]] "
+literal|"[-s source[,...]]\n"
 literal|"\t<\"all\" | property[,...]> "
 literal|"[filesystem|volume|snapshot] ...\n"
 argument_list|)
@@ -2790,6 +2791,8 @@ name|props
 decl_stmt|;
 name|int
 name|ret
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|c
@@ -3187,7 +3190,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * zfs create [-p] [-o prop=value] ... fs  * zfs create [-ps] [-b blocksize] [-o prop=value] ... -V vol size  *  * Create a new dataset.  This command can be used to create filesystems  * and volumes.  Snapshot creation is handled by 'zfs snapshot'.  * For volumes, the user must specify a size to be used.  *  * The '-s' flag applies only to volumes, and indicates that we should not try  * to set the reservation for this volume.  By default we set a reservation  * equal to the size for any volume.  For pools with SPA_VERSION>=  * SPA_VERSION_REFRESERVATION, we set a refreservation instead.  *  * The '-p' flag creates all the non-existing ancestors of the target first.  */
+comment|/*  * zfs create [-pu] [-o prop=value] ... fs  * zfs create [-ps] [-b blocksize] [-o prop=value] ... -V vol size  *  * Create a new dataset.  This command can be used to create filesystems  * and volumes.  Snapshot creation is handled by 'zfs snapshot'.  * For volumes, the user must specify a size to be used.  *  * The '-s' flag applies only to volumes, and indicates that we should not try  * to set the reservation for this volume.  By default we set a reservation  * equal to the size for any volume.  For pools with SPA_VERSION>=  * SPA_VERSION_REFRESERVATION, we set a refreservation instead.  *  * The '-p' flag creates all the non-existing ancestors of the target first.  *  * The '-u' flag prevents mounting of newly created file system.  */
 end_comment
 
 begin_function
@@ -3233,6 +3236,11 @@ name|B_FALSE
 decl_stmt|;
 name|boolean_t
 name|parents
+init|=
+name|B_FALSE
+decl_stmt|;
+name|boolean_t
+name|nomount
 init|=
 name|B_FALSE
 decl_stmt|;
@@ -3282,7 +3290,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|":V:b:so:p"
+literal|":V:b:so:pu"
 argument_list|)
 operator|)
 operator|!=
@@ -3464,6 +3472,14 @@ name|B_TRUE
 expr_stmt|;
 break|break;
 case|case
+literal|'u'
+case|:
+name|nomount
+operator|=
+name|B_TRUE
+expr_stmt|;
+break|break;
+case|case
 literal|':'
 case|:
 operator|(
@@ -3531,6 +3547,33 @@ name|gettext
 argument_list|(
 literal|"'-s' and '-b' can only be "
 literal|"used when creating a volume\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+goto|goto
+name|badusage
+goto|;
+block|}
+if|if
+condition|(
+name|nomount
+operator|&&
+name|type
+operator|!=
+name|ZFS_TYPE_FILESYSTEM
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|gettext
+argument_list|(
+literal|"'-u' can only be "
+literal|"used when creating a file system\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3893,6 +3936,9 @@ expr_stmt|;
 comment|/* 	 * Mount and/or share the new filesystem as appropriate.  We provide a 	 * verbose error message to let the user know that their filesystem was 	 * in fact created, even if we failed to mount or share it. 	 */
 if|if
 condition|(
+operator|!
+name|nomount
+operator|&&
 name|canmount
 operator|==
 name|ZFS_CANMOUNT_ON
@@ -4810,6 +4856,8 @@ parameter_list|)
 block|{
 name|int
 name|err
+init|=
+literal|0
 decl_stmt|;
 name|assert
 argument_list|(
@@ -5209,6 +5257,8 @@ name|cb_defer_destroy
 decl_stmt|;
 name|int
 name|err
+init|=
+literal|0
 decl_stmt|;
 comment|/* 			 * We can't defer destroy non-snapshots, so set it to 			 * false while destroying the clones. 			 */
 name|cb
@@ -5518,6 +5568,8 @@ condition|)
 block|{
 name|int
 name|err
+init|=
+literal|0
 decl_stmt|;
 comment|/* Build the list of snaps to destroy in cb_nvl. */
 if|if
@@ -6796,6 +6848,11 @@ name|flags
 init|=
 name|ZFS_ITER_ARGS_CAN_BE_PATHS
 decl_stmt|;
+name|int
+name|types
+init|=
+name|ZFS_TYPE_DATASET
+decl_stmt|;
 name|char
 modifier|*
 name|value
@@ -6805,6 +6862,8 @@ name|fields
 decl_stmt|;
 name|int
 name|ret
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|limit
@@ -6879,7 +6938,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|":d:o:s:rHp"
+literal|":d:o:s:rt:Hp"
 argument_list|)
 operator|)
 operator|!=
@@ -7377,6 +7436,114 @@ block|}
 block|}
 break|break;
 case|case
+literal|'t'
+case|:
+name|types
+operator|=
+literal|0
+expr_stmt|;
+name|flags
+operator|&=
+operator|~
+name|ZFS_ITER_PROP_LISTSNAPS
+expr_stmt|;
+while|while
+condition|(
+operator|*
+name|optarg
+operator|!=
+literal|'\0'
+condition|)
+block|{
+specifier|static
+name|char
+modifier|*
+name|type_subopts
+index|[]
+init|=
+block|{
+literal|"filesystem"
+block|,
+literal|"volume"
+block|,
+literal|"snapshot"
+block|,
+literal|"all"
+block|,
+name|NULL
+block|}
+decl_stmt|;
+switch|switch
+condition|(
+name|getsubopt
+argument_list|(
+operator|&
+name|optarg
+argument_list|,
+name|type_subopts
+argument_list|,
+operator|&
+name|value
+argument_list|)
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|types
+operator||=
+name|ZFS_TYPE_FILESYSTEM
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|types
+operator||=
+name|ZFS_TYPE_VOLUME
+expr_stmt|;
+break|break;
+case|case
+literal|2
+case|:
+name|types
+operator||=
+name|ZFS_TYPE_SNAPSHOT
+expr_stmt|;
+break|break;
+case|case
+literal|3
+case|:
+name|types
+operator|=
+name|ZFS_TYPE_DATASET
+expr_stmt|;
+break|break;
+default|default:
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|gettext
+argument_list|(
+literal|"invalid type '%s'\n"
+argument_list|)
+argument_list|,
+name|value
+argument_list|)
+expr_stmt|;
+name|usage
+argument_list|(
+name|B_FALSE
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+break|break;
+case|case
 literal|'?'
 case|:
 operator|(
@@ -7533,7 +7700,7 @@ name|argv
 argument_list|,
 name|flags
 argument_list|,
-name|ZFS_TYPE_DATASET
+name|types
 argument_list|,
 name|NULL
 argument_list|,
@@ -7752,6 +7919,8 @@ name|propname
 decl_stmt|;
 name|int
 name|ret
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|flags
@@ -8735,6 +8904,8 @@ name|B_FALSE
 decl_stmt|;
 name|int
 name|ret
+init|=
+literal|0
 decl_stmt|;
 name|upgrade_cbdata_t
 name|cb
@@ -10204,6 +10375,8 @@ directive|ifdef
 name|sun
 name|int
 name|err
+init|=
+literal|0
 decl_stmt|;
 name|directory_error_t
 name|e
@@ -11899,6 +12072,8 @@ name|B_FALSE
 decl_stmt|;
 name|int
 name|error
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|c
@@ -13211,6 +13386,48 @@ condition|(
 name|pl
 operator|->
 name|pl_prop
+operator|==
+name|ZFS_PROP_NAME
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|strlcpy
+argument_list|(
+name|property
+argument_list|,
+name|zfs_get_name
+argument_list|(
+name|zhp
+argument_list|)
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|property
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|propstr
+operator|=
+name|property
+expr_stmt|;
+name|right_justify
+operator|=
+name|zfs_prop_align_right
+argument_list|(
+name|pl
+operator|->
+name|pl_prop
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|pl
+operator|->
+name|pl_prop
 operator|!=
 name|ZPROP_INVAL
 condition|)
@@ -13609,6 +13826,8 @@ literal|0
 decl_stmt|;
 name|int
 name|ret
+init|=
+literal|0
 decl_stmt|;
 name|zfs_sort_column_t
 modifier|*
@@ -13946,6 +14165,27 @@ name|fields
 operator|=
 name|default_fields
 expr_stmt|;
+comment|/* 	 * If we are only going to list snapshot names and sort by name, 	 * then we can use faster version. 	 */
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|fields
+argument_list|,
+literal|"name"
+argument_list|)
+operator|==
+literal|0
+operator|&&
+name|zfs_sort_only_by_name
+argument_list|(
+name|sortcol
+argument_list|)
+condition|)
+name|flags
+operator||=
+name|ZFS_ITER_SIMPLE
+expr_stmt|;
 comment|/* 	 * If "-o space" and no types were specified, don't display snapshots. 	 */
 if|if
 condition|(
@@ -14111,9 +14351,13 @@ block|}
 decl_stmt|;
 name|int
 name|c
-decl_stmt|,
+decl_stmt|;
+name|int
 name|ret
-decl_stmt|,
+init|=
+literal|0
+decl_stmt|;
+name|int
 name|types
 decl_stmt|;
 name|boolean_t
@@ -14538,6 +14782,8 @@ name|zhp
 decl_stmt|;
 name|int
 name|ret
+init|=
+literal|0
 decl_stmt|;
 comment|/* check options */
 if|if
@@ -15041,6 +15287,8 @@ parameter_list|)
 block|{
 name|int
 name|ret
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|c
@@ -15565,6 +15813,8 @@ name|cb
 decl_stmt|;
 name|int
 name|ret
+init|=
+literal|0
 decl_stmt|;
 comment|/* check for options */
 if|if
@@ -15830,6 +16080,8 @@ name|B_FALSE
 decl_stmt|;
 name|int
 name|ret
+init|=
+literal|0
 decl_stmt|;
 name|char
 name|c
@@ -20917,6 +21169,9 @@ condition|(
 name|argc
 operator|==
 literal|1
+operator|&&
+operator|!
+name|un
 condition|)
 block|{
 name|opts
@@ -23409,6 +23664,8 @@ operator|.
 name|dataset
 argument_list|,
 name|ZFS_TYPE_FILESYSTEM
+operator||
+name|ZFS_TYPE_VOLUME
 argument_list|)
 operator|)
 operator|==
@@ -23422,7 +23679,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Failed to open Dataset *%s*\n"
+literal|"Failed to open dataset: %s\n"
 argument_list|,
 name|opts
 operator|.
@@ -23477,7 +23734,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Failed to parse fsacl permissionsn"
+literal|"Failed to parse fsacl permissions\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -24759,6 +25016,8 @@ literal|0
 decl_stmt|;
 name|int
 name|ret
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|flags
@@ -27317,6 +27576,8 @@ name|zhp
 decl_stmt|;
 name|int
 name|ret
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|stat64
@@ -29504,6 +29765,8 @@ block|}
 decl_stmt|;
 name|int
 name|ret
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|c
@@ -30246,6 +30509,8 @@ name|copy
 decl_stmt|;
 name|int
 name|err
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|c
@@ -30541,6 +30806,8 @@ parameter_list|)
 block|{
 name|int
 name|ret
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|i

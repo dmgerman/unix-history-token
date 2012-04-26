@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- ARMCallingConv.h - ARM Custom Calling Convention Routines ---------===//
+comment|//=== ARMCallingConv.h - ARM Custom Calling Convention Routines -*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -66,6 +66,24 @@ end_define
 begin_include
 include|#
 directive|include
+file|"ARM.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ARMBaseInstrInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ARMSubtarget.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CallingConv.h"
 end_include
 
@@ -79,30 +97,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Target/TargetInstrInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ARMBaseInstrInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ARMRegisterInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ARMSubtarget.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ARM.h"
 end_include
 
 begin_decl_stmt
@@ -142,7 +136,7 @@ argument_list|)
 block|{
 specifier|static
 specifier|const
-name|unsigned
+name|uint16_t
 name|RegList
 index|[]
 init|=
@@ -427,7 +421,7 @@ argument_list|)
 block|{
 specifier|static
 specifier|const
-name|unsigned
+name|uint16_t
 name|HiRegList
 index|[]
 init|=
@@ -443,7 +437,7 @@ block|}
 decl_stmt|;
 specifier|static
 specifier|const
-name|unsigned
+name|uint16_t
 name|LoRegList
 index|[]
 init|=
@@ -459,7 +453,7 @@ block|}
 decl_stmt|;
 specifier|static
 specifier|const
-name|unsigned
+name|uint16_t
 name|ShadowRegList
 index|[]
 init|=
@@ -752,7 +746,7 @@ argument_list|)
 block|{
 specifier|static
 specifier|const
-name|unsigned
+name|uint16_t
 name|HiRegList
 index|[]
 init|=
@@ -768,7 +762,7 @@ block|}
 decl_stmt|;
 specifier|static
 specifier|const
-name|unsigned
+name|uint16_t
 name|LoRegList
 index|[]
 init|=

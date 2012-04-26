@@ -353,7 +353,7 @@ if|if
 condition|(
 name|sysctlbyname
 argument_list|(
-literal|"net.inet.pfsync.stats"
+literal|"net.pfsync.stats"
 argument_list|,
 operator|&
 name|pfsyncstat
@@ -386,7 +386,7 @@ name|ENOENT
 condition|)
 name|warn
 argument_list|(
-literal|"sysctl: net.inet.pfsync.stats"
+literal|"sysctl: net.pfsync.stats"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -822,9 +822,6 @@ name|u_long
 name|ifaddrfound
 decl_stmt|;
 name|u_long
-name|ifnetfound
-decl_stmt|;
-name|u_long
 name|opackets
 decl_stmt|;
 name|u_long
@@ -1102,10 +1099,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|ifnetfound
-operator|=
-name|ifnetaddr
-expr_stmt|;
 if|if
 condition|(
 name|kread

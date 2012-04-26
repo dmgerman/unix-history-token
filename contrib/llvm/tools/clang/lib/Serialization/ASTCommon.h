@@ -81,8 +81,6 @@ block|{
 enum|enum
 name|DeclUpdateKind
 block|{
-name|UPD_CXX_SET_DEFINITIONDATA
-block|,
 name|UPD_CXX_ADDED_IMPLICIT_MEMBER
 block|,
 name|UPD_CXX_ADDED_TEMPLATE_SPECIALIZATION

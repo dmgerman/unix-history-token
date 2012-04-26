@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2007-2011  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: dnssec-keyfromlabel.c,v 1.32.14.2 2011-03-12 04:59:14 tbox Exp $ */
+comment|/* $Id: dnssec-keyfromlabel.c,v 1.32.14.4 2011/11/30 00:51:38 marka Exp $ */
 end_comment
 
 begin_comment
@@ -482,6 +482,12 @@ name|algname
 init|=
 name|NULL
 decl_stmt|,
+modifier|*
+name|freeit
+init|=
+name|NULL
+decl_stmt|;
+name|char
 modifier|*
 name|nametype
 init|=
@@ -1525,6 +1531,21 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|algname
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"strdup failed"
+argument_list|)
+expr_stmt|;
+name|freeit
+operator|=
+name|algname
+expr_stmt|;
+if|if
+condition|(
 name|verbose
 operator|>
 literal|0
@@ -2417,16 +2438,11 @@ if|if
 condition|(
 name|key_collision
 argument_list|(
-name|dst_key_id
-argument_list|(
 name|key
-argument_list|)
 argument_list|,
 name|name
 argument_list|,
 name|directory
-argument_list|,
-name|alg
 argument_list|,
 name|mctx
 argument_list|,
@@ -2653,6 +2669,17 @@ name|isc_mem_destroy
 argument_list|(
 operator|&
 name|mctx
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|freeit
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|freeit
 argument_list|)
 expr_stmt|;
 return|return

@@ -284,7 +284,7 @@ begin_define
 define|#
 directive|define
 name|SIGCANCEL
-value|32
+value|SIGTHR
 end_define
 
 begin_comment
@@ -631,17 +631,20 @@ name|struct
 name|ucond
 name|b_cv
 decl_stmt|;
-specifier|volatile
 name|int64_t
 name|b_cycle
 decl_stmt|;
-specifier|volatile
 name|int
 name|b_count
 decl_stmt|;
-specifier|volatile
 name|int
 name|b_waiters
+decl_stmt|;
+name|int
+name|b_refcount
+decl_stmt|;
+name|int
+name|b_destroying
 decl_stmt|;
 block|}
 struct|;
@@ -1148,6 +1151,10 @@ begin_struct
 struct|struct
 name|pthread
 block|{
+define|#
+directive|define
+name|_pthread_startzero
+value|tid
 comment|/* Kernel thread id. */
 name|long
 name|tid
@@ -1426,24 +1433,6 @@ comment|/* Event */
 name|td_event_msg_t
 name|event_buf
 decl_stmt|;
-name|struct
-name|wake_addr
-modifier|*
-name|wake_addr
-decl_stmt|;
-define|#
-directive|define
-name|WAKE_ADDR
-parameter_list|(
-name|td
-parameter_list|)
-value|((td)->wake_addr)
-comment|/* Sleep queue */
-name|struct
-name|sleepqueue
-modifier|*
-name|sleepqueue
-decl_stmt|;
 comment|/* Wait channel */
 name|void
 modifier|*
@@ -1471,6 +1460,28 @@ name|defer_waiters
 index|[
 name|MAX_DEFER_WAITERS
 index|]
+decl_stmt|;
+define|#
+directive|define
+name|_pthread_endzero
+value|wake_addr
+name|struct
+name|wake_addr
+modifier|*
+name|wake_addr
+decl_stmt|;
+define|#
+directive|define
+name|WAKE_ADDR
+parameter_list|(
+name|td
+parameter_list|)
+value|((td)->wake_addr)
+comment|/* Sleep queue */
+name|struct
+name|sleepqueue
+modifier|*
+name|sleepqueue
 decl_stmt|;
 block|}
 struct|;
@@ -3298,28 +3309,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_decl_stmt
-name|int
-name|_umtx_op_err
-argument_list|(
-name|void
-operator|*
-argument_list|,
-name|int
-name|op
-argument_list|,
-name|u_long
-argument_list|,
-name|void
-operator|*
-argument_list|,
-name|void
-operator|*
-argument_list|)
-name|__hidden
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 specifier|static

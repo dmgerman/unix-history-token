@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2010, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2012, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -132,7 +132,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|s32
+name|void
 name|ixgbe_raise_i2c_clk
 parameter_list|(
 name|struct
@@ -192,18 +192,6 @@ parameter_list|(
 name|u32
 modifier|*
 name|i2cctl
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ixgbe_i2c_bus_clear
-parameter_list|(
-name|struct
-name|ixgbe_hw
-modifier|*
-name|hw
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -360,7 +348,7 @@ operator|.
 name|identify_sfp
 operator|=
 operator|&
-name|ixgbe_identify_sfp_module_generic
+name|ixgbe_identify_module_generic
 expr_stmt|;
 name|phy
 operator|->
@@ -817,7 +805,7 @@ name|ixgbe_phy_tn
 expr_stmt|;
 break|break;
 case|case
-name|AQ1002_PHY_ID
+name|X540_PHY_ID
 case|:
 name|phy_type
 operator|=
@@ -1121,7 +1109,13 @@ name|IXGBE_GSSR_PHY0_SM
 expr_stmt|;
 if|if
 condition|(
-name|ixgbe_acquire_swfw_sync
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|acquire_swfw_sync
 argument_list|(
 name|hw
 argument_list|,
@@ -1384,7 +1378,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|ixgbe_release_swfw_sync
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|release_swfw_sync
 argument_list|(
 name|hw
 argument_list|,
@@ -1462,7 +1462,13 @@ name|IXGBE_GSSR_PHY0_SM
 expr_stmt|;
 if|if
 condition|(
-name|ixgbe_acquire_swfw_sync
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|acquire_swfw_sync
 argument_list|(
 name|hw
 argument_list|,
@@ -1711,7 +1717,13 @@ name|IXGBE_ERR_PHY
 expr_stmt|;
 block|}
 block|}
-name|ixgbe_release_swfw_sync
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|release_swfw_sync
 argument_list|(
 name|hw
 argument_list|,
@@ -1936,7 +1948,11 @@ expr_stmt|;
 name|autoneg_reg
 operator|&=
 operator|~
+operator|(
 name|IXGBE_MII_100BASE_T_ADVERTISE
+operator||
+name|IXGBE_MII_100BASE_T_ADVERTISE_HALF
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -2061,9 +2077,7 @@ name|autoneg_reg
 operator|==
 name|IXGBE_MII_AUTONEG_COMPLETE
 condition|)
-block|{
 break|break;
-block|}
 block|}
 if|if
 condition|(
@@ -2111,13 +2125,10 @@ name|bool
 name|autoneg_wait_to_complete
 parameter_list|)
 block|{
-name|UNREFERENCED_PARAMETER
+name|UNREFERENCED_2PARAMETER
 argument_list|(
 name|autoneg
-argument_list|)
-expr_stmt|;
-name|UNREFERENCED_PARAMETER
-argument_list|(
+argument_list|,
 name|autoneg_wait_to_complete
 argument_list|)
 expr_stmt|;
@@ -2793,9 +2804,7 @@ name|autoneg_reg
 operator|==
 name|IXGBE_MII_AUTONEG_COMPLETE
 condition|)
-block|{
 break|break;
-block|}
 block|}
 if|if
 condition|(
@@ -3206,7 +3215,7 @@ name|IXGBE_DATA_NL
 case|:
 name|DEBUGOUT
 argument_list|(
-literal|"DATA:  \n"
+literal|"DATA:\n"
 argument_list|)
 expr_stmt|;
 name|data_offset
@@ -3301,7 +3310,7 @@ operator|++
 expr_stmt|;
 name|DEBUGOUT
 argument_list|(
-literal|"CONTROL: \n"
+literal|"CONTROL:\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3370,6 +3379,76 @@ name|out
 label|:
 return|return
 name|ret_val
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  *  ixgbe_identify_module_generic - Identifies module type  *  @hw: pointer to hardware structure  *  *  Determines HW type and calls appropriate function.  **/
+end_comment
+
+begin_function
+name|s32
+name|ixgbe_identify_module_generic
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
+name|hw
+parameter_list|)
+block|{
+name|s32
+name|status
+init|=
+name|IXGBE_ERR_SFP_NOT_PRESENT
+decl_stmt|;
+name|DEBUGFUNC
+argument_list|(
+literal|"ixgbe_identify_module_generic"
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|get_media_type
+argument_list|(
+name|hw
+argument_list|)
+condition|)
+block|{
+case|case
+name|ixgbe_media_type_fiber
+case|:
+name|status
+operator|=
+name|ixgbe_identify_sfp_module_generic
+argument_list|(
+name|hw
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|hw
+operator|->
+name|phy
+operator|.
+name|sfp_type
+operator|=
+name|ixgbe_sfp_type_not_present
+expr_stmt|;
+name|status
+operator|=
+name|IXGBE_ERR_SFP_NOT_PRESENT
+expr_stmt|;
+break|break;
+block|}
+return|return
+name|status
 return|;
 block|}
 end_function
@@ -4892,7 +4971,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  ixgbe_read_i2c_byte_generic - Reads 8 bit word over I2C  *  @hw: pointer to hardware structure  *  @byte_offset: byte offset to read  *  @data: value read  *  *  Performs byte read operation to SFP module's EEPROM over I2C interface at  *  a specified deivce address.  **/
+comment|/**  *  ixgbe_read_i2c_byte_generic - Reads 8 bit word over I2C  *  @hw: pointer to hardware structure  *  @byte_offset: byte offset to read  *  @data: value read  *  *  Performs byte read operation to SFP module's EEPROM over I2C interface at  *  a specified device address.  **/
 end_comment
 
 begin_function
@@ -4940,6 +5019,11 @@ name|nack
 init|=
 literal|1
 decl_stmt|;
+operator|*
+name|data
+operator|=
+literal|0
+expr_stmt|;
 name|DEBUGFUNC
 argument_list|(
 literal|"ixgbe_read_i2c_byte_generic"
@@ -4969,7 +5053,13 @@ do|do
 block|{
 if|if
 condition|(
-name|ixgbe_acquire_swfw_sync
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|acquire_swfw_sync
 argument_list|(
 name|hw
 argument_list|,
@@ -5149,7 +5239,13 @@ expr_stmt|;
 break|break;
 name|fail
 label|:
-name|ixgbe_release_swfw_sync
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|release_swfw_sync
 argument_list|(
 name|hw
 argument_list|,
@@ -5194,7 +5290,13 @@ operator|<
 name|max_retry
 condition|)
 do|;
-name|ixgbe_release_swfw_sync
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|release_swfw_sync
 argument_list|(
 name|hw
 argument_list|,
@@ -5279,7 +5381,13 @@ name|IXGBE_GSSR_PHY0_SM
 expr_stmt|;
 if|if
 condition|(
-name|ixgbe_acquire_swfw_sync
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|acquire_swfw_sync
 argument_list|(
 name|hw
 argument_list|,
@@ -5447,7 +5555,13 @@ operator|<
 name|max_retry
 condition|)
 do|;
-name|ixgbe_release_swfw_sync
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|release_swfw_sync
 argument_list|(
 name|hw
 argument_list|,
@@ -5644,11 +5758,6 @@ name|data
 parameter_list|)
 block|{
 name|s32
-name|status
-init|=
-name|IXGBE_SUCCESS
-decl_stmt|;
-name|s32
 name|i
 decl_stmt|;
 name|bool
@@ -5675,8 +5784,6 @@ name|i
 operator|--
 control|)
 block|{
-name|status
-operator|=
 name|ixgbe_clock_in_i2c_bit
 argument_list|(
 name|hw
@@ -5692,16 +5799,9 @@ name|bit
 operator|<<
 name|i
 expr_stmt|;
-if|if
-condition|(
-name|status
-operator|!=
-name|IXGBE_SUCCESS
-condition|)
-break|break;
 block|}
 return|return
-name|status
+name|IXGBE_SUCCESS
 return|;
 block|}
 end_function
@@ -5809,6 +5909,11 @@ argument_list|,
 name|i2cctl
 argument_list|)
 expr_stmt|;
+name|IXGBE_WRITE_FLUSH
+argument_list|(
+name|hw
+argument_list|)
+expr_stmt|;
 return|return
 name|status
 return|;
@@ -5832,6 +5937,8 @@ parameter_list|)
 block|{
 name|s32
 name|status
+init|=
+name|IXGBE_SUCCESS
 decl_stmt|;
 name|u32
 name|i
@@ -5863,8 +5970,6 @@ argument_list|(
 literal|"ixgbe_get_i2c_ack"
 argument_list|)
 expr_stmt|;
-name|status
-operator|=
 name|ixgbe_raise_i2c_clk
 argument_list|(
 name|hw
@@ -5873,15 +5978,6 @@ operator|&
 name|i2cctl
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|status
-operator|!=
-name|IXGBE_SUCCESS
-condition|)
-goto|goto
-name|out
-goto|;
 comment|/* Minimum high period of clock is 4us */
 name|usec_delay
 argument_list|(
@@ -5964,8 +6060,6 @@ argument_list|(
 name|IXGBE_I2C_T_LOW
 argument_list|)
 expr_stmt|;
-name|out
-label|:
 return|return
 name|status
 return|;
@@ -5991,9 +6085,6 @@ modifier|*
 name|data
 parameter_list|)
 block|{
-name|s32
-name|status
-decl_stmt|;
 name|u32
 name|i2cctl
 init|=
@@ -6009,8 +6100,6 @@ argument_list|(
 literal|"ixgbe_clock_in_i2c_bit"
 argument_list|)
 expr_stmt|;
-name|status
-operator|=
 name|ixgbe_raise_i2c_clk
 argument_list|(
 name|hw
@@ -6058,7 +6147,7 @@ name|IXGBE_I2C_T_LOW
 argument_list|)
 expr_stmt|;
 return|return
-name|status
+name|IXGBE_SUCCESS
 return|;
 block|}
 end_function
@@ -6118,8 +6207,6 @@ operator|==
 name|IXGBE_SUCCESS
 condition|)
 block|{
-name|status
-operator|=
 name|ixgbe_raise_i2c_clk
 argument_list|(
 name|hw
@@ -6175,7 +6262,7 @@ end_comment
 
 begin_function
 specifier|static
-name|s32
+name|void
 name|ixgbe_raise_i2c_clk
 parameter_list|(
 name|struct
@@ -6188,11 +6275,6 @@ modifier|*
 name|i2cctl
 parameter_list|)
 block|{
-name|s32
-name|status
-init|=
-name|IXGBE_SUCCESS
-decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
 literal|"ixgbe_raise_i2c_clk"
@@ -6213,15 +6295,17 @@ operator|*
 name|i2cctl
 argument_list|)
 expr_stmt|;
+name|IXGBE_WRITE_FLUSH
+argument_list|(
+name|hw
+argument_list|)
+expr_stmt|;
 comment|/* SCL rise time (1000ns) */
 name|usec_delay
 argument_list|(
 name|IXGBE_I2C_T_RISE
 argument_list|)
 expr_stmt|;
-return|return
-name|status
-return|;
 block|}
 end_function
 
@@ -6263,6 +6347,11 @@ name|IXGBE_I2CCTL
 argument_list|,
 operator|*
 name|i2cctl
+argument_list|)
+expr_stmt|;
+name|IXGBE_WRITE_FLUSH
+argument_list|(
+name|hw
 argument_list|)
 expr_stmt|;
 comment|/* SCL fall time (300ns) */
@@ -6330,6 +6419,11 @@ name|IXGBE_I2CCTL
 argument_list|,
 operator|*
 name|i2cctl
+argument_list|)
+expr_stmt|;
+name|IXGBE_WRITE_FLUSH
+argument_list|(
+name|hw
 argument_list|)
 expr_stmt|;
 comment|/* Data rise/fall (1000ns/300ns) and set-up time (250ns) */

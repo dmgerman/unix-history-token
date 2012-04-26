@@ -5170,7 +5170,7 @@ modifier|*
 name|tap
 decl_stmt|;
 name|int
-name|ac
+name|tid
 decl_stmt|;
 if|if
 condition|(
@@ -5190,15 +5190,15 @@ expr_stmt|;
 block|}
 for|for
 control|(
-name|ac
+name|tid
 operator|=
 literal|0
 init|;
-name|ac
+name|tid
 operator|<
-name|WME_NUM_AC
+name|WME_NUM_TID
 condition|;
-name|ac
+name|tid
 operator|++
 control|)
 block|{
@@ -5209,14 +5209,14 @@ name|ni
 operator|->
 name|ni_tx_ampdu
 index|[
-name|ac
+name|tid
 index|]
 expr_stmt|;
 name|tap
 operator|->
-name|txa_ac
+name|txa_tid
 operator|=
-name|ac
+name|tid
 expr_stmt|;
 name|tap
 operator|->
@@ -5285,7 +5285,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|WME_NUM_AC
+name|WME_NUM_TID
 condition|;
 name|i
 operator|++
@@ -5762,7 +5762,7 @@ modifier|*
 name|tap
 decl_stmt|;
 name|int
-name|ac
+name|tid
 decl_stmt|;
 name|KASSERT
 argument_list|(
@@ -5945,15 +5945,15 @@ expr_stmt|;
 comment|/* XXX need info */
 for|for
 control|(
-name|ac
+name|tid
 operator|=
 literal|0
 init|;
-name|ac
+name|tid
 operator|<
-name|WME_NUM_AC
+name|WME_NUM_TID
 condition|;
-name|ac
+name|tid
 operator|++
 control|)
 block|{
@@ -5964,14 +5964,14 @@ name|ni
 operator|->
 name|ni_tx_ampdu
 index|[
-name|ac
+name|tid
 index|]
 expr_stmt|;
 name|tap
 operator|->
-name|txa_ac
+name|txa_tid
 operator|=
-name|ac
+name|tid
 expr_stmt|;
 block|}
 comment|/* NB: AMPDU tx/rx governed by IEEE80211_FHT_AMPDU_{TX,RX} */
@@ -6768,7 +6768,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|htinfo_update_chw
 parameter_list|(
 name|struct
@@ -6796,6 +6796,11 @@ name|c
 decl_stmt|;
 name|int
 name|chanflags
+decl_stmt|;
+name|int
+name|ret
+init|=
+literal|0
 decl_stmt|;
 name|chanflags
 operator|=
@@ -6925,6 +6930,10 @@ name|ni_chan
 operator|=
 name|c
 expr_stmt|;
+name|ret
+operator|=
+literal|1
+expr_stmt|;
 block|}
 comment|/* NB: caller responsible for forcing any channel change */
 block|}
@@ -6944,6 +6953,11 @@ literal|40
 else|:
 literal|20
 expr_stmt|;
+return|return
+operator|(
+name|ret
+operator|)
+return|;
 block|}
 end_function
 
@@ -7137,7 +7151,7 @@ comment|/*  * Parse and update HT-related state extracted from  * the HT cap and
 end_comment
 
 begin_function
-name|void
+name|int
 name|ieee80211_ht_updateparams
 parameter_list|(
 name|struct
@@ -7173,6 +7187,11 @@ name|htinfo
 decl_stmt|;
 name|int
 name|htflags
+decl_stmt|;
+name|int
+name|ret
+init|=
+literal|0
 decl_stmt|;
 name|ieee80211_parse_htcap
 argument_list|(
@@ -7289,12 +7308,18 @@ operator|=
 name|IEEE80211_CHAN_HT40D
 expr_stmt|;
 block|}
+if|if
+condition|(
 name|htinfo_update_chw
 argument_list|(
 name|ni
 argument_list|,
 name|htflags
 argument_list|)
+condition|)
+name|ret
+operator|=
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -7328,6 +7353,11 @@ operator|&=
 operator|~
 name|IEEE80211_NODE_RIFS
 expr_stmt|;
+return|return
+operator|(
+name|ret
+operator|)
+return|;
 block|}
 end_function
 
@@ -7454,6 +7484,9 @@ operator|=
 name|IEEE80211_CHAN_HT40D
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|htinfo_update_chw
 argument_list|(
 name|ni
@@ -7994,7 +8027,7 @@ operator|&
 name|IEEE80211_AGGR_SETUP
 argument_list|,
 operator|(
-literal|"txa_flags 0x%x ac %d"
+literal|"txa_flags 0x%x tid %d ac %d"
 operator|,
 name|tap
 operator|->
@@ -8002,7 +8035,14 @@ name|txa_flags
 operator|,
 name|tap
 operator|->
-name|txa_ac
+name|txa_tid
+operator|,
+name|TID_TO_WME_AC
+argument_list|(
+name|tap
+operator|->
+name|txa_tid
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -8849,8 +8889,6 @@ decl_stmt|;
 name|int
 name|tid
 decl_stmt|,
-name|ac
-decl_stmt|,
 name|bufsiz
 decl_stmt|;
 name|dialogtoken
@@ -8914,13 +8952,6 @@ operator|+
 literal|7
 argument_list|)
 expr_stmt|;
-name|ac
-operator|=
-name|TID_TO_WME_AC
-argument_list|(
-name|tid
-argument_list|)
-expr_stmt|;
 name|tap
 operator|=
 operator|&
@@ -8928,7 +8959,7 @@ name|ni
 operator|->
 name|ni_tx_ampdu
 index|[
-name|ac
+name|tid
 index|]
 expr_stmt|;
 if|if
@@ -9189,8 +9220,6 @@ name|code
 decl_stmt|;
 name|int
 name|tid
-decl_stmt|,
-name|ac
 decl_stmt|;
 name|baparamset
 operator|=
@@ -9259,13 +9288,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|ac
-operator|=
-name|TID_TO_WME_AC
-argument_list|(
-name|tid
-argument_list|)
-expr_stmt|;
 name|tap
 operator|=
 operator|&
@@ -9273,7 +9295,7 @@ name|ni
 operator|->
 name|ni_tx_ampdu
 index|[
-name|ac
+name|tid
 index|]
 expr_stmt|;
 name|ic
@@ -9588,9 +9610,12 @@ name|vap
 operator|->
 name|iv_ampdu_mintraffic
 index|[
+name|TID_TO_WME_AC
+argument_list|(
 name|tap
 operator|->
-name|txa_ac
+name|txa_tid
+argument_list|)
 index|]
 condition|)
 return|return
@@ -9625,13 +9650,20 @@ name|IEEE80211_MSG_11N
 argument_list|,
 name|ni
 argument_list|,
-literal|"enable AMPDU on %s, avgpps %d pkts %d"
+literal|"enable AMPDU on tid %d (%s), avgpps %d pkts %d"
+argument_list|,
+name|tap
+operator|->
+name|txa_tid
 argument_list|,
 name|ieee80211_wme_acnames
 index|[
+name|TID_TO_WME_AC
+argument_list|(
 name|tap
 operator|->
-name|txa_ac
+name|txa_tid
+argument_list|)
 index|]
 argument_list|,
 name|tap
@@ -9737,12 +9769,9 @@ expr_stmt|;
 comment|/* XXX */
 name|tid
 operator|=
-name|WME_AC_TO_TID
-argument_list|(
 name|tap
 operator|->
-name|txa_ac
-argument_list|)
+name|txa_tid
 expr_stmt|;
 name|tap
 operator|->
@@ -9836,13 +9865,20 @@ name|IEEE80211_MSG_11N
 argument_list|,
 name|ni
 argument_list|,
-literal|"%s: could not setup BA stream for AC %d"
+literal|"%s: could not setup BA stream for TID %d AC %d"
 argument_list|,
 name|__func__
 argument_list|,
 name|tap
 operator|->
-name|txa_ac
+name|txa_tid
+argument_list|,
+name|TID_TO_WME_AC
+argument_list|(
+name|tap
+operator|->
+name|txa_tid
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* defer next try so we don't slam the driver with requests */
@@ -9989,13 +10025,13 @@ name|IEEE80211_MSG_11N
 argument_list|,
 name|ni
 argument_list|,
-literal|"%s: stop BA stream for AC %d (reason %d)"
+literal|"%s: stop BA stream for TID %d (reason %d)"
 argument_list|,
 name|__func__
 argument_list|,
 name|tap
 operator|->
-name|txa_ac
+name|txa_tid
 argument_list|,
 name|reason
 argument_list|)
@@ -10021,12 +10057,9 @@ index|[
 literal|0
 index|]
 operator|=
-name|WME_AC_TO_TID
-argument_list|(
 name|tap
 operator|->
-name|txa_ac
-argument_list|)
+name|txa_tid
 expr_stmt|;
 name|args
 index|[
@@ -10069,13 +10102,13 @@ name|IEEE80211_MSG_11N
 argument_list|,
 name|ni
 argument_list|,
-literal|"%s: BA stream for AC %d not running (reason %d)"
+literal|"%s: BA stream for TID %d not running (reason %d)"
 argument_list|,
 name|__func__
 argument_list|,
 name|tap
 operator|->
-name|txa_ac
+name|txa_tid
 argument_list|,
 name|reason
 argument_list|)
@@ -10154,7 +10187,7 @@ name|__func__
 argument_list|,
 name|tap
 operator|->
-name|txa_ac
+name|txa_tid
 argument_list|,
 name|tap
 operator|->
@@ -10188,6 +10221,16 @@ name|txa_attempts
 operator|>=
 name|ieee80211_bar_maxtries
 condition|)
+block|{
+name|ni
+operator|->
+name|ni_vap
+operator|->
+name|iv_stats
+operator|.
+name|is_ampdu_bar_tx_fail
+operator|++
+expr_stmt|;
 name|ieee80211_ampdu_stop
 argument_list|(
 name|ni
@@ -10197,7 +10240,18 @@ argument_list|,
 name|IEEE80211_REASON_TIMEOUT
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
+name|ni
+operator|->
+name|ni_vap
+operator|->
+name|iv_stats
+operator|.
+name|is_ampdu_bar_tx_retry
+operator|++
+expr_stmt|;
 name|ieee80211_send_bar
 argument_list|(
 name|ni
@@ -10209,6 +10263,7 @@ operator|->
 name|txa_seqpending
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -10303,7 +10358,7 @@ name|__func__
 argument_list|,
 name|tap
 operator|->
-name|txa_ac
+name|txa_tid
 argument_list|,
 name|tap
 operator|->
@@ -10319,6 +10374,15 @@ argument_list|)
 argument_list|,
 name|status
 argument_list|)
+expr_stmt|;
+name|ni
+operator|->
+name|ni_vap
+operator|->
+name|iv_stats
+operator|.
+name|is_ampdu_bar_tx
+operator|++
 expr_stmt|;
 comment|/* XXX locking */
 if|if
@@ -10441,12 +10505,9 @@ name|tap
 operator|->
 name|txa_seqpending
 argument_list|,
-name|WME_AC_TO_TID
-argument_list|(
 name|tap
 operator|->
-name|txa_ac
-argument_list|)
+name|txa_tid
 argument_list|)
 expr_stmt|;
 comment|/* NB: timer already stopped in bar_tx_complete */
@@ -10688,12 +10749,9 @@ argument_list|)
 expr_stmt|;
 name|tid
 operator|=
-name|WME_AC_TO_TID
-argument_list|(
 name|tap
 operator|->
-name|txa_ac
-argument_list|)
+name|txa_tid
 expr_stmt|;
 name|barctl
 operator|=
@@ -10867,6 +10925,13 @@ operator|&=
 operator|~
 name|IEEE80211_AGGR_BARPEND
 expr_stmt|;
+name|vap
+operator|->
+name|iv_stats
+operator|.
+name|is_ampdu_bar_tx_fail
+operator|++
+expr_stmt|;
 return|return
 name|ret
 return|;
@@ -10890,6 +10955,13 @@ literal|0
 return|;
 name|bad
 label|:
+name|vap
+operator|->
+name|iv_stats
+operator|.
+name|is_ampdu_bar_tx_fail
+operator|++
+expr_stmt|;
 name|ieee80211_free_node
 argument_list|(
 name|ni

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//====- ARMMachineFuctionInfo.h - ARM machine function info -----*- C++ -*-===//
+comment|//===-- ARMMachineFuctionInfo.h - ARM machine function info -----*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -101,6 +101,11 @@ range|:
 name|public
 name|MachineFunctionInfo
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 comment|/// isThumb - True if this function is compiled under Thumb mode.
 comment|/// Used to initialized Align, so must precede it.
 name|bool
@@ -145,6 +150,9 @@ comment|/// --------------------------------------------
 comment|/// GPR callee-saved (2) : r8, r10, r11
 comment|/// --------------------------------------------
 comment|/// DPR callee-saved : d8 - d15
+comment|///
+comment|/// Also see AlignedDPRCSRegs below. Not all D-regs need to go in area 3.
+comment|/// Some may be spilled after the stack has been realigned.
 name|unsigned
 name|GPRCS1Offset
 block|;
@@ -175,6 +183,16 @@ name|GPRCS2Frames
 block|;
 name|BitVector
 name|DPRCSFrames
+block|;
+comment|/// NumAlignedDPRCS2Regs - The number of callee-saved DPRs that are saved in
+comment|/// the aligned portion of the stack frame.  This is always a contiguous
+comment|/// sequence of D-registers starting from d8.
+comment|///
+comment|/// We do not keep track of the frame indices used for these registers - they
+comment|/// behave like any other frame index in the aligned stack frame.  These
+comment|/// registers also aren't included in DPRCSSize above.
+name|unsigned
+name|NumAlignedDPRCS2Regs
 block|;
 comment|/// JumpTableUId - Unique id for jumptables.
 comment|///
@@ -283,6 +301,11 @@ literal|0
 argument_list|)
 block|,
 name|DPRCSFrames
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|NumAlignedDPRCS2Regs
 argument_list|(
 literal|0
 argument_list|)
@@ -567,6 +590,25 @@ block|{
 name|FramePtrSpillOffset
 operator|=
 name|o
+block|; }
+name|unsigned
+name|getNumAlignedDPRCS2Regs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NumAlignedDPRCS2Regs
+return|;
+block|}
+name|void
+name|setNumAlignedDPRCS2Regs
+argument_list|(
+argument|unsigned n
+argument_list|)
+block|{
+name|NumAlignedDPRCS2Regs
+operator|=
+name|n
 block|; }
 name|unsigned
 name|getGPRCalleeSavedArea1Offset

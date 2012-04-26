@@ -6106,15 +6106,26 @@ name|mpt_softc
 modifier|*
 name|mpt
 decl_stmt|;
+name|bus_addr_t
+name|chain_list_addr
+decl_stmt|;
 name|int
+name|first_lim
+decl_stmt|,
 name|seg
 decl_stmt|,
-name|first_lim
+name|this_seg_lim
 decl_stmt|;
 name|uint32_t
+name|addr
+decl_stmt|,
+name|cur_off
+decl_stmt|,
 name|flags
 decl_stmt|,
 name|nxt_off
+decl_stmt|,
+name|tf
 decl_stmt|;
 name|void
 modifier|*
@@ -6519,7 +6530,7 @@ operator|.
 name|status
 argument_list|,
 operator|(
-literal|"zero ccb sts at %d\n"
+literal|"zero ccb sts at %d"
 operator|,
 name|__LINE__
 operator|)
@@ -6849,9 +6860,10 @@ name|dm_segs
 operator|++
 control|)
 block|{
-name|uint32_t
 name|tf
-decl_stmt|;
+operator|=
+name|flags
+expr_stmt|;
 name|memset
 argument_list|(
 name|se
@@ -6863,6 +6875,15 @@ argument_list|(
 operator|*
 name|se
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|MPI_pSGE_SET_LENGTH
+argument_list|(
+name|se
+argument_list|,
+name|dm_segs
+operator|->
+name|ds_len
 argument_list|)
 expr_stmt|;
 name|se
@@ -6890,14 +6911,8 @@ operator|>
 literal|4
 condition|)
 block|{
-name|se
-operator|->
-name|Address
-operator|.
-name|High
+name|addr
 operator|=
-name|htole32
-argument_list|(
 operator|(
 operator|(
 name|uint64_t
@@ -6908,22 +6923,62 @@ name|ds_addr
 operator|)
 operator|>>
 literal|32
+expr_stmt|;
+comment|/* SAS1078 36GB limitation WAR */
+if|if
+condition|(
+name|mpt
+operator|->
+name|is_1078
+operator|&&
+operator|(
+operator|(
+operator|(
+name|uint64_t
+operator|)
+name|dm_segs
+operator|->
+name|ds_addr
+operator|+
+name|MPI_SGE_LENGTH
+argument_list|(
+name|se
+operator|->
+name|FlagsLength
+argument_list|)
+operator|)
+operator|>>
+literal|32
+operator|)
+operator|==
+literal|9
+condition|)
+block|{
+name|addr
+operator||=
+operator|(
+literal|1
+operator|<<
+literal|31
+operator|)
+expr_stmt|;
+name|tf
+operator||=
+name|MPI_SGE_FLAGS_LOCAL_ADDRESS
+expr_stmt|;
+block|}
+name|se
+operator|->
+name|Address
+operator|.
+name|High
+operator|=
+name|htole32
+argument_list|(
+name|addr
 argument_list|)
 expr_stmt|;
 block|}
-name|MPI_pSGE_SET_LENGTH
-argument_list|(
-name|se
-argument_list|,
-name|dm_segs
-operator|->
-name|ds_len
-argument_list|)
-expr_stmt|;
-name|tf
-operator|=
-name|flags
-expr_stmt|;
 if|if
 condition|(
 name|seg
@@ -7016,7 +7071,7 @@ name|trq
 operator|=
 name|req
 expr_stmt|;
-comment|/* 	 * Make up the rest of the data segments out of a chain element 	 * (contiained in the current request frame) which points to 	 * SIMPLE64 elements in the next request frame, possibly ending 	 * with *another* chain element (if there's more). 	 */
+comment|/* 	 * Make up the rest of the data segments out of a chain element 	 * (contained in the current request frame) which points to 	 * SIMPLE64 elements in the next request frame, possibly ending 	 * with *another* chain element (if there's more). 	 */
 while|while
 condition|(
 name|seg
@@ -7024,17 +7079,6 @@ operator|<
 name|nseg
 condition|)
 block|{
-name|int
-name|this_seg_lim
-decl_stmt|;
-name|uint32_t
-name|tf
-decl_stmt|,
-name|cur_off
-decl_stmt|;
-name|bus_addr_t
-name|chain_list_addr
-decl_stmt|;
 comment|/* 		 * Point to the chain descriptor. Note that the chain 		 * descriptor is at the end of the *previous* list (whether 		 * chain or simple). 		 */
 name|ce
 operator|=
@@ -7091,7 +7135,7 @@ argument_list|(
 name|mpt
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Now initialized the chain descriptor. 		 */
+comment|/* 		 * Now initialize the chain descriptor. 		 */
 name|memset
 argument_list|(
 name|ce
@@ -7269,6 +7313,10 @@ operator|<
 name|this_seg_lim
 condition|)
 block|{
+name|tf
+operator|=
+name|flags
+expr_stmt|;
 name|memset
 argument_list|(
 name|se
@@ -7280,6 +7328,15 @@ argument_list|(
 operator|*
 name|se
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|MPI_pSGE_SET_LENGTH
+argument_list|(
+name|se
+argument_list|,
+name|dm_segs
+operator|->
+name|ds_len
 argument_list|)
 expr_stmt|;
 name|se
@@ -7307,14 +7364,8 @@ operator|>
 literal|4
 condition|)
 block|{
-name|se
-operator|->
-name|Address
-operator|.
-name|High
+name|addr
 operator|=
-name|htole32
-argument_list|(
 operator|(
 operator|(
 name|uint64_t
@@ -7325,22 +7376,62 @@ name|ds_addr
 operator|)
 operator|>>
 literal|32
+expr_stmt|;
+comment|/* SAS1078 36GB limitation WAR */
+if|if
+condition|(
+name|mpt
+operator|->
+name|is_1078
+operator|&&
+operator|(
+operator|(
+operator|(
+name|uint64_t
+operator|)
+name|dm_segs
+operator|->
+name|ds_addr
+operator|+
+name|MPI_SGE_LENGTH
+argument_list|(
+name|se
+operator|->
+name|FlagsLength
+argument_list|)
+operator|)
+operator|>>
+literal|32
+operator|)
+operator|==
+literal|9
+condition|)
+block|{
+name|addr
+operator||=
+operator|(
+literal|1
+operator|<<
+literal|31
+operator|)
+expr_stmt|;
+name|tf
+operator||=
+name|MPI_SGE_FLAGS_LOCAL_ADDRESS
+expr_stmt|;
+block|}
+name|se
+operator|->
+name|Address
+operator|.
+name|High
+operator|=
+name|htole32
+argument_list|(
+name|addr
 argument_list|)
 expr_stmt|;
 block|}
-name|MPI_pSGE_SET_LENGTH
-argument_list|(
-name|se
-argument_list|,
-name|dm_segs
-operator|->
-name|ds_len
-argument_list|)
-expr_stmt|;
-name|tf
-operator|=
-name|flags
-expr_stmt|;
 if|if
 condition|(
 name|seg
@@ -7670,7 +7761,7 @@ operator|.
 name|status
 argument_list|,
 operator|(
-literal|"zero ccb sts at %d\n"
+literal|"zero ccb sts at %d"
 operator|,
 name|__LINE__
 operator|)
@@ -8358,7 +8449,7 @@ operator|.
 name|status
 argument_list|,
 operator|(
-literal|"zero ccb sts at %d\n"
+literal|"zero ccb sts at %d"
 operator|,
 name|__LINE__
 operator|)
@@ -8816,7 +8907,7 @@ name|trq
 operator|=
 name|req
 expr_stmt|;
-comment|/* 	 * Make up the rest of the data segments out of a chain element 	 * (contiained in the current request frame) which points to 	 * SIMPLE32 elements in the next request frame, possibly ending 	 * with *another* chain element (if there's more). 	 */
+comment|/* 	 * Make up the rest of the data segments out of a chain element 	 * (contained in the current request frame) which points to 	 * SIMPLE32 elements in the next request frame, possibly ending 	 * with *another* chain element (if there's more). 	 */
 while|while
 condition|(
 name|seg
@@ -8891,7 +8982,7 @@ argument_list|(
 name|mpt
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Now initialized the chain descriptor. 		 */
+comment|/* 		 * Now initialize the chain descriptor. 		 */
 name|memset
 argument_list|(
 name|ce
@@ -9400,7 +9491,7 @@ operator|.
 name|status
 argument_list|,
 operator|(
-literal|"zero ccb sts at %d\n"
+literal|"zero ccb sts at %d"
 operator|,
 name|__LINE__
 operator|)
@@ -12731,7 +12822,7 @@ operator|.
 name|status
 argument_list|,
 operator|(
-literal|"zero ccb sts at %d\n"
+literal|"zero ccb sts at %d"
 operator|,
 name|__LINE__
 operator|)
@@ -16990,7 +17081,7 @@ operator|.
 name|status
 argument_list|,
 operator|(
-literal|"zero ccb sts at %d\n"
+literal|"zero ccb sts at %d"
 operator|,
 name|__LINE__
 operator|)
@@ -21296,7 +21387,7 @@ operator|!=
 name|CAM_DIR_NONE
 argument_list|,
 operator|(
-literal|"dxfer_len %u but direction is NONE\n"
+literal|"dxfer_len %u but direction is NONE"
 operator|,
 name|csio
 operator|->
@@ -25889,7 +25980,7 @@ operator|.
 name|status
 argument_list|,
 operator|(
-literal|"zero ccb sts at %d\n"
+literal|"zero ccb sts at %d"
 operator|,
 name|__LINE__
 operator|)
@@ -26186,7 +26277,7 @@ operator|.
 name|status
 argument_list|,
 operator|(
-literal|"ZERO ccb sts at %d\n"
+literal|"ZERO ccb sts at %d"
 operator|,
 name|__LINE__
 operator|)
@@ -26481,7 +26572,7 @@ operator|==
 name|TGT_STATE_LOADING
 argument_list|,
 operator|(
-literal|"bad state 0x%x on reply to buffer post\n"
+literal|"bad state 0x%x on reply to buffer post"
 operator|,
 name|tgt
 operator|->

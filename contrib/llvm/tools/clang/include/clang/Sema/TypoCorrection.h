@@ -85,6 +85,49 @@ name|TypoCorrection
 block|{
 name|public
 label|:
+comment|// "Distance" for unusable corrections
+specifier|static
+specifier|const
+name|unsigned
+name|InvalidDistance
+init|=
+operator|~
+literal|0U
+decl_stmt|;
+comment|// The largest distance still considered valid (larger edit distances are
+comment|// mapped to InvalidDistance by getEditDistance).
+specifier|static
+specifier|const
+name|unsigned
+name|MaximumDistance
+init|=
+literal|10000U
+decl_stmt|;
+comment|// Relative weightings of the "edit distance" components. The higher the
+comment|// weight, the more of a penalty to fitness the component will give (higher
+comment|// weights mean greater contribution to the total edit distance, with the
+comment|// best correction candidates having the lowest edit distance).
+specifier|static
+specifier|const
+name|unsigned
+name|CharDistanceWeight
+init|=
+literal|100U
+decl_stmt|;
+specifier|static
+specifier|const
+name|unsigned
+name|QualifierDistanceWeight
+init|=
+literal|110U
+decl_stmt|;
+specifier|static
+specifier|const
+name|unsigned
+name|CallbackDistanceWeight
+init|=
+literal|150U
+decl_stmt|;
 name|TypoCorrection
 argument_list|(
 argument|const DeclarationName&Name
@@ -94,7 +137,10 @@ argument_list|,
 argument|NestedNameSpecifier *NNS=
 literal|0
 argument_list|,
-argument|unsigned distance=
+argument|unsigned CharDistance=
+literal|0
+argument_list|,
+argument|unsigned QualifierDistance=
 literal|0
 argument_list|)
 block|:
@@ -108,9 +154,19 @@ argument_list|(
 name|NNS
 argument_list|)
 operator|,
-name|EditDistance
+name|CharDistance
 argument_list|(
-argument|distance
+name|CharDistance
+argument_list|)
+operator|,
+name|QualifierDistance
+argument_list|(
+name|QualifierDistance
+argument_list|)
+operator|,
+name|CallbackDistance
+argument_list|(
+literal|0
 argument_list|)
 block|{
 if|if
@@ -132,7 +188,7 @@ argument_list|,
 argument|NestedNameSpecifier *NNS=
 literal|0
 argument_list|,
-argument|unsigned distance=
+argument|unsigned CharDistance=
 literal|0
 argument_list|)
 block|:
@@ -149,9 +205,19 @@ argument_list|(
 name|NNS
 argument_list|)
 operator|,
-name|EditDistance
+name|CharDistance
 argument_list|(
-argument|distance
+name|CharDistance
+argument_list|)
+operator|,
+name|QualifierDistance
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|CallbackDistance
+argument_list|(
+literal|0
 argument_list|)
 block|{
 if|if
@@ -173,7 +239,7 @@ argument_list|,
 argument|NestedNameSpecifier *NNS=
 literal|0
 argument_list|,
-argument|unsigned distance=
+argument|unsigned CharDistance=
 literal|0
 argument_list|)
 block|:
@@ -187,9 +253,19 @@ argument_list|(
 name|NNS
 argument_list|)
 operator|,
-name|EditDistance
+name|CharDistance
 argument_list|(
-argument|distance
+name|CharDistance
+argument_list|)
+operator|,
+name|QualifierDistance
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|CallbackDistance
+argument_list|(
+literal|0
 argument_list|)
 block|{}
 name|TypoCorrection
@@ -200,7 +276,17 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
-name|EditDistance
+name|CharDistance
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|QualifierDistance
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|CallbackDistance
 argument_list|(
 literal|0
 argument_list|)
@@ -252,14 +338,128 @@ operator|=
 name|NNS
 expr_stmt|;
 block|}
-comment|/// \brief Gets the "edit distance" of the typo correction from the typo
+name|void
+name|setQualifierDistance
+parameter_list|(
+name|unsigned
+name|ED
+parameter_list|)
+block|{
+name|QualifierDistance
+operator|=
+name|ED
+expr_stmt|;
+block|}
+name|void
+name|setCallbackDistance
+parameter_list|(
+name|unsigned
+name|ED
+parameter_list|)
+block|{
+name|CallbackDistance
+operator|=
+name|ED
+expr_stmt|;
+block|}
+comment|// Convert the given weighted edit distance to a roughly equivalent number of
+comment|// single-character edits (typically for comparison to the length of the
+comment|// string being edited).
+specifier|static
+name|unsigned
+name|NormalizeEditDistance
+parameter_list|(
+name|unsigned
+name|ED
+parameter_list|)
+block|{
+if|if
+condition|(
+name|ED
+operator|>
+name|MaximumDistance
+condition|)
+return|return
+name|InvalidDistance
+return|;
+return|return
+operator|(
+name|ED
+operator|+
+name|CharDistanceWeight
+operator|/
+literal|2
+operator|)
+operator|/
+name|CharDistanceWeight
+return|;
+block|}
+comment|/// \brief Gets the "edit distance" of the typo correction from the typo.
+comment|/// If Normalized is true, scale the distance down by the CharDistanceWeight
+comment|/// to return the edit distance in terms of single-character edits.
 name|unsigned
 name|getEditDistance
-argument_list|()
-specifier|const
+argument_list|(
+name|bool
+name|Normalized
+operator|=
+name|true
+argument_list|)
+decl|const
 block|{
+if|if
+condition|(
+name|CharDistance
+operator|>
+name|MaximumDistance
+operator|||
+name|QualifierDistance
+operator|>
+name|MaximumDistance
+operator|||
+name|CallbackDistance
+operator|>
+name|MaximumDistance
+condition|)
 return|return
-name|EditDistance
+name|InvalidDistance
+return|;
+name|unsigned
+name|ED
+init|=
+name|CharDistance
+operator|*
+name|CharDistanceWeight
+operator|+
+name|QualifierDistance
+operator|*
+name|QualifierDistanceWeight
+operator|+
+name|CallbackDistance
+operator|*
+name|CallbackDistanceWeight
+decl_stmt|;
+if|if
+condition|(
+name|ED
+operator|>
+name|MaximumDistance
+condition|)
+return|return
+name|InvalidDistance
+return|;
+comment|// Half the CharDistanceWeight is added to ED to simulate rounding since
+comment|// integer division truncates the value (i.e. round-to-nearest-int instead
+comment|// of round-to-zero).
+return|return
+name|Normalized
+condition|?
+name|NormalizeEditDistance
+argument_list|(
+name|ED
+argument_list|)
+else|:
+name|ED
 return|;
 block|}
 comment|/// \brief Gets the pointer to the declaration of the typo correction
@@ -421,6 +621,34 @@ operator|==
 literal|0
 return|;
 block|}
+comment|// Check if this TypoCorrection is the given keyword.
+name|template
+operator|<
+name|std
+operator|::
+name|size_t
+name|StrLen
+operator|>
+name|bool
+name|isKeyword
+argument_list|(
+argument|const char (&Str)[StrLen]
+argument_list|)
+specifier|const
+block|{
+return|return
+name|isKeyword
+argument_list|()
+operator|&&
+name|getCorrectionAsIdentifierInfo
+argument_list|()
+operator|->
+name|isStr
+argument_list|(
+name|Str
+argument_list|)
+return|;
+block|}
 comment|// Returns true if the correction either is a keyword or has a known decl.
 name|bool
 name|isResolved
@@ -493,6 +721,52 @@ name|end
 argument_list|()
 return|;
 block|}
+typedef|typedef
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|NamedDecl
+operator|*
+operator|,
+literal|1
+operator|>
+operator|::
+name|const_iterator
+name|const_decl_iterator
+expr_stmt|;
+name|const_decl_iterator
+name|begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isKeyword
+argument_list|()
+operator|?
+name|CorrectionDecls
+operator|.
+name|end
+argument_list|()
+operator|:
+name|CorrectionDecls
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+name|const_decl_iterator
+name|end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CorrectionDecls
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
 name|private
 label|:
 name|bool
@@ -534,11 +808,173 @@ operator|>
 name|CorrectionDecls
 expr_stmt|;
 name|unsigned
-name|EditDistance
+name|CharDistance
+decl_stmt|;
+name|unsigned
+name|QualifierDistance
+decl_stmt|;
+name|unsigned
+name|CallbackDistance
 decl_stmt|;
 block|}
 empty_stmt|;
+comment|/// @brief Base class for callback objects used by Sema::CorrectTypo to check
+comment|/// the validity of a potential typo correction.
+name|class
+name|CorrectionCandidateCallback
+block|{
+name|public
+label|:
+specifier|static
+specifier|const
+name|unsigned
+name|InvalidDistance
+init|=
+name|TypoCorrection
+operator|::
+name|InvalidDistance
+decl_stmt|;
+name|CorrectionCandidateCallback
+argument_list|()
+operator|:
+name|WantTypeSpecifiers
+argument_list|(
+name|true
+argument_list|)
+operator|,
+name|WantExpressionKeywords
+argument_list|(
+name|true
+argument_list|)
+operator|,
+name|WantCXXNamedCasts
+argument_list|(
+name|true
+argument_list|)
+operator|,
+name|WantRemainingKeywords
+argument_list|(
+name|true
+argument_list|)
+operator|,
+name|WantObjCSuper
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|IsObjCIvarLookup
+argument_list|(
+argument|false
+argument_list|)
+block|{}
+name|virtual
+operator|~
+name|CorrectionCandidateCallback
+argument_list|()
+block|{}
+comment|/// \brief Simple predicate used by the default RankCandidate to
+comment|/// determine whether to return an edit distance of 0 or InvalidDistance.
+comment|/// This can be overrided by validators that only need to determine if a
+comment|/// candidate is viable, without ranking potentially viable candidates.
+comment|/// Only ValidateCandidate or RankCandidate need to be overriden by a
+comment|/// callback wishing to check the viability of correction candidates.
+name|virtual
+name|bool
+name|ValidateCandidate
+argument_list|(
+argument|const TypoCorrection&candidate
+argument_list|)
+block|{
+return|return
+name|true
+return|;
 block|}
+comment|/// \brief Method used by Sema::CorrectTypo to assign an "edit distance" rank
+comment|/// to a candidate (where a lower value represents a better candidate), or
+comment|/// returning InvalidDistance if the candidate is not at all viable. For
+comment|/// validation callbacks that only need to determine if a candidate is viable,
+comment|/// the default RankCandidate returns either 0 or InvalidDistance depending
+comment|/// whether ValidateCandidate returns true or false.
+name|virtual
+name|unsigned
+name|RankCandidate
+parameter_list|(
+specifier|const
+name|TypoCorrection
+modifier|&
+name|candidate
+parameter_list|)
+block|{
+return|return
+name|ValidateCandidate
+argument_list|(
+name|candidate
+argument_list|)
+condition|?
+literal|0
+else|:
+name|InvalidDistance
+return|;
+block|}
+comment|// Flags for context-dependent keywords.
+comment|// TODO: Expand these to apply to non-keywords or possibly remove them.
+name|bool
+name|WantTypeSpecifiers
+decl_stmt|;
+name|bool
+name|WantExpressionKeywords
+decl_stmt|;
+name|bool
+name|WantCXXNamedCasts
+decl_stmt|;
+name|bool
+name|WantRemainingKeywords
+decl_stmt|;
+name|bool
+name|WantObjCSuper
+decl_stmt|;
+comment|// Temporary hack for the one case where a CorrectTypoContext enum is used
+comment|// when looking up results.
+name|bool
+name|IsObjCIvarLookup
+decl_stmt|;
+block|}
+empty_stmt|;
+comment|/// @brief Simple template class for restricting typo correction candidates
+comment|/// to ones having a single Decl* of the given type.
+name|template
+operator|<
+name|class
+name|C
+operator|>
+name|class
+name|DeclFilterCCC
+operator|:
+name|public
+name|CorrectionCandidateCallback
+block|{
+name|public
+operator|:
+name|virtual
+name|bool
+name|ValidateCandidate
+argument_list|(
+argument|const TypoCorrection&candidate
+argument_list|)
+block|{
+return|return
+name|candidate
+operator|.
+name|getCorrectionDeclAs
+operator|<
+name|C
+operator|>
+operator|(
+operator|)
+return|;
+block|}
+expr|}
+block|;  }
 end_decl_stmt
 
 begin_endif

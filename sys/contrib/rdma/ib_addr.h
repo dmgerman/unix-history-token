@@ -59,12 +59,8 @@ begin_define
 define|#
 directive|define
 name|MAX_ADDR_LEN
-value|ETHER_ADDR_LEN
+value|20
 end_define
-
-begin_comment
-comment|/* XXX doesn't support IB! */
-end_comment
 
 begin_struct
 struct|struct

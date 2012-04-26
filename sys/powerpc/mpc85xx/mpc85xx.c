@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/pio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/spr.h>
 end_include
 
@@ -142,7 +148,9 @@ name|ptr
 operator|=
 name|val
 expr_stmt|;
-asm|__asm __volatile("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 

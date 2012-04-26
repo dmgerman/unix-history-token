@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2011, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_define
@@ -82,17 +82,6 @@ name|Line
 parameter_list|,
 name|UINT32
 name|Offset
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|UINT32
-name|DtGetNextLine
-parameter_list|(
-name|FILE
-modifier|*
-name|Handle
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -189,6 +178,13 @@ define|#
 directive|define
 name|DT_MERGE_LINES
 value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT_ESCAPE_SEQUENCE
+value|7
 end_define
 
 begin_decl_stmt
@@ -966,6 +962,9 @@ name|UINT32
 name|CurrentLineOffset
 decl_stmt|;
 name|UINT32
+name|BeyondBufferCount
+decl_stmt|;
+name|UINT32
 name|i
 decl_stmt|;
 name|char
@@ -1175,18 +1174,66 @@ expr_stmt|;
 name|i
 operator|++
 expr_stmt|;
-if|if
+switch|switch
 condition|(
 name|c
-operator|==
-literal|'"'
 condition|)
 block|{
+case|case
+literal|'"'
+case|:
 name|State
 operator|=
 name|DT_NORMAL_TEXT
 expr_stmt|;
+break|break;
+case|case
+literal|'\\'
+case|:
+name|State
+operator|=
+name|DT_ESCAPE_SEQUENCE
+expr_stmt|;
+break|break;
+case|case
+literal|'\n'
+case|:
+name|AcpiOsPrintf
+argument_list|(
+literal|"ERROR at line %u: Unterminated quoted string\n"
+argument_list|,
+name|Gbl_CurrentLineNumber
+operator|++
+argument_list|)
+expr_stmt|;
+name|State
+operator|=
+name|DT_NORMAL_TEXT
+expr_stmt|;
+break|break;
+default|default:
+comment|/* Get next character */
+break|break;
 block|}
+break|break;
+case|case
+name|DT_ESCAPE_SEQUENCE
+case|:
+comment|/* Just copy the escaped character. TBD: sufficient for table compiler? */
+name|Gbl_CurrentLineBuffer
+index|[
+name|i
+index|]
+operator|=
+name|c
+expr_stmt|;
+name|i
+operator|++
+expr_stmt|;
+name|State
+operator|=
+name|DT_START_QUOTED_STRING
+expr_stmt|;
 break|break;
 case|case
 name|DT_START_COMMENT
@@ -1431,9 +1478,52 @@ operator|)
 return|;
 block|}
 block|}
+comment|/* Line is too long for internal buffer. Determine actual length */
+name|BeyondBufferCount
+operator|=
+literal|1
+expr_stmt|;
+name|c
+operator|=
+operator|(
+name|char
+operator|)
+name|getc
+argument_list|(
+name|Handle
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+name|c
+operator|!=
+literal|'\n'
+condition|)
+block|{
+name|c
+operator|=
+operator|(
+name|char
+operator|)
+name|getc
+argument_list|(
+name|Handle
+argument_list|)
+expr_stmt|;
+name|BeyondBufferCount
+operator|++
+expr_stmt|;
+block|}
 name|printf
 argument_list|(
-literal|"ERROR - Input line is too long (max %u)\n"
+literal|"ERROR - At %u: Input line (%u bytes) is too long (max %u)\n"
+argument_list|,
+name|Gbl_CurrentLineNumber
+operator|++
+argument_list|,
+name|ASL_LINE_BUFFER_SIZE
+operator|+
+name|BeyondBufferCount
 argument_list|,
 name|ASL_LINE_BUFFER_SIZE
 argument_list|)

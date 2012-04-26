@@ -971,7 +971,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Allocate a dmatag for our SCB DMA maps */
-comment|/* XXX Should be a child of the VLB/ISA bus dma tag */
 name|error
 operator|=
 name|aic_dma_tag_create

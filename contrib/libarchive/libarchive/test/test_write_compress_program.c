@@ -44,18 +44,6 @@ end_macro
 
 begin_block
 block|{
-if|#
-directive|if
-name|ARCHIVE_VERSION_NUMBER
-operator|<
-literal|1009000
-name|skipping
-argument_list|(
-literal|"archive_write_set_compress_program()"
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|struct
 name|archive_entry
 modifier|*
@@ -91,6 +79,49 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* NOTE: Setting blocksize=1024 will cause gunzip failure because 	 * it add extra bytes that gunzip ignores with its warning and 	 * exit code 1. So we should set blocksize=1 in order not to 	 * yield the extra bytes when using gunzip. */
+name|assert
+argument_list|(
+operator|(
+name|a
+operator|=
+name|archive_read_new
+argument_list|()
+operator|)
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+name|r
+operator|=
+name|archive_read_support_filter_gzip
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|r
+operator|!=
+name|ARCHIVE_OK
+operator|&&
+name|canGunzip
+argument_list|()
+condition|)
+name|blocksize
+operator|=
+literal|1
+expr_stmt|;
+name|assertEqualInt
+argument_list|(
+name|ARCHIVE_OK
+argument_list|,
+name|archive_read_free
+argument_list|(
+name|a
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* Create a new archive in memory. */
 comment|/* Write it through an external "gzip" program. */
 name|assert
@@ -137,7 +168,7 @@ literal|"Write compression via external "
 literal|"program unsupported on this platform"
 argument_list|)
 expr_stmt|;
-name|archive_write_finish
+name|archive_write_free
 argument_list|(
 name|a
 argument_list|)
@@ -285,21 +316,23 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Close out the archive. */
-name|assertA
+name|assertEqualIntA
 argument_list|(
-literal|0
-operator|==
+name|a
+argument_list|,
+name|ARCHIVE_OK
+argument_list|,
 name|archive_write_close
 argument_list|(
 name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|assertA
+name|assertEqualInt
 argument_list|(
-literal|0
-operator|==
-name|archive_write_finish
+name|ARCHIVE_OK
+argument_list|,
+name|archive_write_free
 argument_list|(
 name|a
 argument_list|)
@@ -336,7 +369,7 @@ name|a
 argument_list|,
 name|ARCHIVE_OK
 argument_list|,
-name|archive_read_support_compression_all
+name|archive_read_support_filter_all
 argument_list|(
 name|a
 argument_list|)
@@ -344,7 +377,7 @@ argument_list|)
 expr_stmt|;
 name|r
 operator|=
-name|archive_read_support_compression_gzip
+name|archive_read_support_filter_gzip
 argument_list|(
 name|a
 argument_list|)
@@ -371,7 +404,7 @@ name|assertEqualInt
 argument_list|(
 name|ARCHIVE_OK
 argument_list|,
-name|archive_read_finish
+name|archive_read_free
 argument_list|(
 name|a
 argument_list|)
@@ -414,7 +447,7 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-name|archive_read_finish
+name|archive_read_free
 argument_list|(
 name|a
 argument_list|)
@@ -542,14 +575,12 @@ name|assertEqualInt
 argument_list|(
 name|ARCHIVE_OK
 argument_list|,
-name|archive_read_finish
+name|archive_read_free
 argument_list|(
 name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_block
 

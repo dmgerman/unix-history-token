@@ -483,9 +483,9 @@ name|lseek
 argument_list|,
 name|fd_file
 argument_list|,
-name|SEEK_SET
-argument_list|,
 literal|0
+argument_list|,
+name|SEEK_SET
 argument_list|)
 expr_stmt|;
 name|CHECK_SYSCALL_SUCCEEDS

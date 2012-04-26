@@ -146,6 +146,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<mips/atheros/ar71xx_chip.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<mips/atheros/ar91xxreg.h>
 end_include
 
@@ -635,6 +641,9 @@ name|ar91xx_chip_device_stopped
 block|,
 operator|&
 name|ar91xx_chip_set_pll_ge
+block|,
+operator|&
+name|ar71xx_chip_set_mii_speed
 block|,
 operator|&
 name|ar91xx_chip_ddr_flush_ge

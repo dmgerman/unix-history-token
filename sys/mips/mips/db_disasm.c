@@ -2302,6 +2302,11 @@ name|imm
 argument_list|)
 expr_stmt|;
 block|}
+name|db_printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|delay

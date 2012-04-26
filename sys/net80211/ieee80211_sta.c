@@ -5280,6 +5280,11 @@ decl_stmt|;
 name|uint8_t
 name|rate
 decl_stmt|;
+name|int
+name|ht_state_change
+init|=
+literal|0
+decl_stmt|;
 name|wh
 operator|=
 name|mtod
@@ -5376,7 +5381,27 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|ic
+operator|->
+name|ic_flags
+operator|&
+name|IEEE80211_F_SCAN
+operator|)
+condition|)
+name|vap
+operator|->
+name|iv_stats
+operator|.
+name|is_beacon_bad
+operator|++
+expr_stmt|;
 return|return;
+block|}
 comment|/* 		 * Count frame now that we know it's to be processed. 		 */
 if|if
 condition|(
@@ -5710,6 +5735,9 @@ name|IEEE80211_FHT_HT
 operator|)
 condition|)
 block|{
+comment|/* XXX state changes? */
+if|if
+condition|(
 name|ieee80211_ht_updateparams
 argument_list|(
 name|ni
@@ -5722,8 +5750,11 @@ name|scan
 operator|.
 name|htinfo
 argument_list|)
+condition|)
+name|ht_state_change
+operator|=
+literal|1
 expr_stmt|;
-comment|/* XXX state changes? */
 block|}
 if|if
 condition|(
@@ -5919,6 +5950,16 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 			 * If we've had a channel width change (eg HT20<->HT40) 			 * then schedule a delayed driver notification. 			 */
+if|if
+condition|(
+name|ht_state_change
+condition|)
+name|ieee80211_update_chw
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 comment|/* 		 * If scanning, just pass information to the scan module. 		 */

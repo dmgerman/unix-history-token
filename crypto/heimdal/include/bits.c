@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2002 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997-2002 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Portions Copyright (c) 2010 Apple Inc. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifdef
@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: bits.c 18703 2006-10-20 20:33:58Z lha $"
+literal|"$Id$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -52,6 +52,29 @@ directive|include
 file|<ctype.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WIN32
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<winsock2.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ws2tcpip.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -60,7 +83,7 @@ parameter_list|(
 name|TYPE
 parameter_list|)
 define|\
-value|{								\     int b = 0; TYPE x = 1, zero = 0; const char *pre = "u";	\     char tmp[128], tmp2[128];					\     while(x){ x<<= 1; b++; if(x< zero) pre=""; }		\     if(b>= len){						\         int tabs;						\ 	sprintf(tmp, "%sint%d_t" , pre, len);			\ 	sprintf(tmp2, "typedef %s %s;", #TYPE, tmp);		\ 	tabs = 5 - strlen(tmp2) / 8;				\         fprintf(f, "%s", tmp2);					\ 	while(tabs--> 0) fprintf(f, "\t");			\ 	fprintf(f, "/* %2d bits */\n", b);			\         return;                                                 \     }								\ }
+value|{								\     int b = 0; TYPE x = 1, zero = 0; const char *pre = "u";	\     char tmp[128], tmp2[128];					\     while(x){ x<<= 1; b++; if(x< zero) pre=""; }		\     if(b>= len){						\         size_t tabs;						\ 	sprintf(tmp, "%sint%d_t" , pre, len);			\ 	sprintf(tmp2, "typedef %s %s;", #TYPE, tmp);		\ 	tabs = 5 - strlen(tmp2) / 8;				\         fprintf(f, "%s", tmp2);					\ 	while(tabs--> 0) fprintf(f, "\t");			\ 	fprintf(f, "/* %2d bits */\n", b);			\         return;                                                 \     }								\ }
 end_define
 
 begin_ifndef
@@ -497,7 +520,7 @@ argument_list|)
 argument_list|,
 literal|""
 argument_list|,
-literal|"$Id: bits.c 18703 2006-10-20 20:33:58Z lha $"
+literal|"$Id$"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -588,6 +611,9 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|HAVE_SOCKLEN_T
+ifndef|#
+directive|ifndef
+name|WIN32
 name|fprintf
 argument_list|(
 name|f
@@ -595,6 +621,24 @@ argument_list|,
 literal|"#include<sys/socket.h>\n"
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"#include<winsock2.h>\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"#include<ws2tcpip.h>\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 name|fprintf
@@ -968,6 +1012,37 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"typedef SOCKET krb5_socket_t;\n"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"typedef int krb5_socket_t;\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* KRB5 */
@@ -975,9 +1050,230 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
+literal|"#ifndef HEIMDAL_DEPRECATED\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"#if defined(__GNUC__)&& ((__GNUC__> 3) || ((__GNUC__ == 3)&& (__GNUC_MINOR__>= 1 )))\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"#define HEIMDAL_DEPRECATED __attribute__((deprecated))\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"#elif defined(_MSC_VER)&& (_MSC_VER>1200)\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"#define HEIMDAL_DEPRECATED __declspec(deprecated)\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"#else\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"#define HEIMDAL_DEPRECATED\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"#endif\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"#endif\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"#ifndef HEIMDAL_PRINTF_ATTRIBUTE\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"#if defined(__GNUC__)&& ((__GNUC__> 3) || ((__GNUC__ == 3)&& (__GNUC_MINOR__>= 1 )))\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"#define HEIMDAL_PRINTF_ATTRIBUTE(x) __attribute__((format x))\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"#else\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"#define HEIMDAL_PRINTF_ATTRIBUTE(x)\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"#endif\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"#endif\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"#ifndef HEIMDAL_NORETURN_ATTRIBUTE\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"#if defined(__GNUC__)&& ((__GNUC__> 3) || ((__GNUC__ == 3)&& (__GNUC_MINOR__>= 1 )))\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"#define HEIMDAL_NORETURN_ATTRIBUTE __attribute__((noreturn))\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"#else\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"#define HEIMDAL_NORETURN_ATTRIBUTE\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"#endif\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"#endif\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"#ifndef HEIMDAL_UNUSED_ATTRIBUTE\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"#if defined(__GNUC__)&& ((__GNUC__> 3) || ((__GNUC__ == 3)&& (__GNUC_MINOR__>= 1 )))\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"#define HEIMDAL_UNUSED_ATTRIBUTE __attribute__((unused))\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"#else\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"#define HEIMDAL_UNUSED_ATTRIBUTE\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"#endif\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"#endif\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
 literal|"#endif /* %s */\n"
 argument_list|,
 name|hb
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|f
+operator|!=
+name|stdout
+condition|)
+name|fclose
+argument_list|(
+name|f
 argument_list|)
 expr_stmt|;
 return|return

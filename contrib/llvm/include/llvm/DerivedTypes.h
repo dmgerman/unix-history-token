@@ -685,6 +685,10 @@ block|,
 name|SCDB_IsLiteral
 operator|=
 literal|4
+block|,
+name|SCDB_IsSized
+operator|=
+literal|8
 block|}
 block|;
 comment|/// SymbolTableEntry - For a named struct that actually has a name, this is a
@@ -891,6 +895,12 @@ operator|==
 literal|0
 return|;
 block|}
+comment|/// isSized - Return true if this is a sized type.
+name|bool
+name|isSized
+argument_list|()
+specifier|const
+block|;
 comment|/// hasName - Return true if this is a named struct that has a non-empty name.
 name|bool
 name|hasName
@@ -1367,6 +1377,13 @@ operator|->
 name|getPrimitiveSizeInBits
 argument_list|()
 block|;
+name|assert
+argument_list|(
+name|EltBits
+operator|&&
+literal|"Element size must be of a non-zero size"
+argument_list|)
+block|;
 name|Type
 operator|*
 name|EltTy
@@ -1542,6 +1559,7 @@ name|NumElements
 return|;
 block|}
 comment|/// @brief Return the number of bits in the Vector type.
+comment|/// Returns zero when the vector is a vector of pointers.
 name|unsigned
 name|getBitWidth
 argument_list|()

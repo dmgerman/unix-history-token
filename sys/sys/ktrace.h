@@ -327,6 +327,22 @@ end_define
 
 begin_struct
 struct|struct
+name|ktr_csw_old
+block|{
+name|int
+name|out
+decl_stmt|;
+comment|/* 1 if switch out, 0 if switch in */
+name|int
+name|user
+decl_stmt|;
+comment|/* 1 if usermode (ivcsw), 0 if kernel (vcsw) */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|ktr_csw
 block|{
 name|int
@@ -337,6 +353,12 @@ name|int
 name|user
 decl_stmt|;
 comment|/* 1 if usermode (ivcsw), 0 if kernel (vcsw) */
+name|char
+name|wmesg
+index|[
+literal|8
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -495,6 +517,53 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * KTR_FAULT - page fault record  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KTR_FAULT
+value|13
+end_define
+
+begin_struct
+struct|struct
+name|ktr_fault
+block|{
+name|vm_offset_t
+name|vaddr
+decl_stmt|;
+name|int
+name|type
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * KTR_FAULTEND - end of page fault record  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KTR_FAULTEND
+value|14
+end_define
+
+begin_struct
+struct|struct
+name|ktr_faultend
+block|{
+name|int
+name|result
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * KTR_DROP - If this bit is set in ktr_type, then at least one event  * between the previous record and this record was dropped.  */
 end_comment
 
@@ -600,6 +669,20 @@ name|KTRFAC_CAPFAIL
 value|(1<<KTR_CAPFAIL)
 end_define
 
+begin_define
+define|#
+directive|define
+name|KTRFAC_FAULT
+value|(1<<KTR_FAULT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KTRFAC_FAULTEND
+value|(1<<KTR_FAULTEND)
+end_define
+
 begin_comment
 comment|/*  * trace flags (also in p_traceflags)  */
 end_comment
@@ -660,6 +743,10 @@ parameter_list|(
 name|int
 parameter_list|,
 name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -675,6 +762,26 @@ parameter_list|,
 name|sigset_t
 modifier|*
 parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ktrfault
+parameter_list|(
+name|vm_offset_t
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ktrfaultend
+parameter_list|(
 name|int
 parameter_list|)
 function_decl|;

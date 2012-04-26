@@ -1670,7 +1670,7 @@ name|ctio
 operator|->
 name|dxfer_len
 argument_list|,
-name|SCSI_CDB6_LEN
+name|scsi_2btoul
 argument_list|(
 name|inq
 operator|->

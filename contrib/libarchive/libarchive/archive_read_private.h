@@ -69,7 +69,7 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*  * How bidding works for filters:  *   * The bid manager reads the first block from the current source.  *   * It shows that block to each registered bidder.  *   * The bid manager creates a new filter structure for the winning  *     bidder and gives the winning bidder a chance to initialize it.  *   * The new filter becomes the top filter in the archive_read structure  *     and we repeat the process.  * This ends only when no bidder provides a non-zero bid.  */
+comment|/*  * How bidding works for filters:  *   * The bid manager initializes the client-provided reader as the  *     first filter.  *   * It invokes the bidder for each registered filter with the  *     current head filter.  *   * The bidders can use archive_read_filter_ahead() to peek ahead  *     at the incoming data to compose their bids.  *   * The bid manager creates a new filter structure for the winning  *     bidder and gives the winning bidder a chance to initialize it.  *   * The new filter becomes the new top filter and we repeat the  *     process.  * This ends only when no bidder provides a non-zero bid.  Then  * we perform a similar dance with the registered format handlers.  */
 end_comment
 
 begin_struct
@@ -155,6 +155,9 @@ begin_struct
 struct|struct
 name|archive_read_filter
 block|{
+name|int64_t
+name|position
+decl_stmt|;
 comment|/* Essentially all filters will need these values, so 	 * just declare them here. */
 name|struct
 name|archive_read_filter_bidder
@@ -205,6 +208,25 @@ name|self
 parameter_list|,
 name|int64_t
 name|request
+parameter_list|)
+function_decl|;
+comment|/* Seek to an absolute location. */
+name|int64_t
+function_decl|(
+modifier|*
+name|seek
+function_decl|)
+parameter_list|(
+name|struct
+name|archive_read_filter
+modifier|*
+name|self
+parameter_list|,
+name|int64_t
+name|offset
+parameter_list|,
+name|int
+name|whence
 parameter_list|)
 function_decl|;
 comment|/* Close (just this filter) and free(self). */
@@ -267,11 +289,11 @@ decl_stmt|;
 name|size_t
 name|client_avail
 decl_stmt|;
-name|int64_t
-name|position
-decl_stmt|;
 name|char
 name|end_of_file
+decl_stmt|;
+name|char
+name|closed
 decl_stmt|;
 name|char
 name|fatal
@@ -288,6 +310,10 @@ begin_struct
 struct|struct
 name|archive_read_client
 block|{
+name|archive_open_callback
+modifier|*
+name|opener
+decl_stmt|;
 name|archive_read_callback
 modifier|*
 name|reader
@@ -296,9 +322,17 @@ name|archive_skip_callback
 modifier|*
 name|skipper
 decl_stmt|;
+name|archive_seek_callback
+modifier|*
+name|seeker
+decl_stmt|;
 name|archive_close_callback
 modifier|*
 name|closer
+decl_stmt|;
+name|void
+modifier|*
+name|data
 decl_stmt|;
 block|}
 struct|;
@@ -318,6 +352,9 @@ modifier|*
 name|entry
 decl_stmt|;
 comment|/* Dev/ino of the archive being read/written. */
+name|int
+name|skip_file_set
+decl_stmt|;
 name|dev_t
 name|skip_file_dev
 decl_stmt|;
@@ -330,10 +367,10 @@ name|char
 modifier|*
 name|read_data_block
 decl_stmt|;
-name|off_t
+name|int64_t
 name|read_data_offset
 decl_stmt|;
-name|off_t
+name|int64_t
 name|read_data_output_offset
 decl_stmt|;
 name|size_t
@@ -349,7 +386,7 @@ name|struct
 name|archive_read_filter_bidder
 name|bidders
 index|[
-literal|8
+literal|9
 index|]
 decl_stmt|;
 comment|/* Last filter in chain */
@@ -359,7 +396,7 @@ modifier|*
 name|filter
 decl_stmt|;
 comment|/* File offset of beginning of most recently-read header. */
-name|off_t
+name|int64_t
 name|header_position
 decl_stmt|;
 comment|/* 	 * Format detection is mostly the same as compression 	 * detection, with one significant difference: The bidders 	 * use the read_ahead calls above to examine the stream rather 	 * than having the supervisor hand them a block of data to 	 * examine. 	 */
@@ -384,6 +421,9 @@ parameter_list|(
 name|struct
 name|archive_read
 modifier|*
+parameter_list|,
+name|int
+name|best_bid
 parameter_list|)
 function_decl|;
 name|int
@@ -440,7 +480,7 @@ parameter_list|,
 name|size_t
 modifier|*
 parameter_list|,
-name|off_t
+name|int64_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -469,7 +509,7 @@ function_decl|;
 block|}
 name|formats
 index|[
-literal|9
+literal|16
 index|]
 struct|;
 name|struct
@@ -526,6 +566,8 @@ parameter_list|(
 name|struct
 name|archive_read
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 parameter_list|,
 name|int
@@ -580,7 +622,7 @@ parameter_list|,
 name|size_t
 modifier|*
 parameter_list|,
-name|off_t
+name|int64_t
 modifier|*
 parameter_list|)
 parameter_list|,
@@ -610,15 +652,19 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|struct
-name|archive_read_filter_bidder
-modifier|*
+name|int
 name|__archive_read_get_bidder
 parameter_list|(
 name|struct
 name|archive_read
 modifier|*
 name|a
+parameter_list|,
+name|struct
+name|archive_read_filter_bidder
+modifier|*
+modifier|*
+name|bidder
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -660,60 +706,51 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|ssize_t
+name|int64_t
+name|__archive_read_seek
+parameter_list|(
+name|struct
+name|archive_read
+modifier|*
+parameter_list|,
+name|int64_t
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int64_t
+name|__archive_read_filter_seek
+parameter_list|(
+name|struct
+name|archive_read_filter
+modifier|*
+parameter_list|,
+name|int64_t
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int64_t
 name|__archive_read_consume
 parameter_list|(
 name|struct
 name|archive_read
 modifier|*
 parameter_list|,
-name|size_t
+name|int64_t
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|ssize_t
+name|int64_t
 name|__archive_read_filter_consume
-parameter_list|(
-name|struct
-name|archive_read_filter
-modifier|*
-parameter_list|,
-name|size_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int64_t
-name|__archive_read_skip
-parameter_list|(
-name|struct
-name|archive_read
-modifier|*
-parameter_list|,
-name|int64_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int64_t
-name|__archive_read_skip_lenient
-parameter_list|(
-name|struct
-name|archive_read
-modifier|*
-parameter_list|,
-name|int64_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int64_t
-name|__archive_read_filter_skip
 parameter_list|(
 name|struct
 name|archive_read_filter

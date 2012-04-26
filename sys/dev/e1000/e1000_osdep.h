@@ -355,7 +355,7 @@ name|E1000_MUTEX_INIT
 parameter_list|(
 name|mutex
 parameter_list|)
-value|mtx_init((mutex), #mutex, \                                             MTX_NETWORK_LOCK, MTX_DEF)
+value|mtx_init((mutex), #mutex, \                                             MTX_NETWORK_LOCK, \                                             MTX_DEF | MTX_DUPOK)
 end_define
 
 begin_define

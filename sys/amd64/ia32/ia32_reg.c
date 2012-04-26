@@ -218,12 +218,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<compat/ia32/ia32_reg.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/psl.h>
 end_include
 
@@ -780,12 +774,10 @@ argument_list|)
 expr_stmt|;
 name|sv_fpu
 operator|=
-operator|&
+name|get_pcb_user_save_td
+argument_list|(
 name|td
-operator|->
-name|td_pcb
-operator|->
-name|pcb_user_save
+argument_list|)
 expr_stmt|;
 name|penv_xmm
 operator|=
@@ -945,12 +937,10 @@ name|savefpu
 modifier|*
 name|sv_fpu
 init|=
-operator|&
+name|get_pcb_user_save_td
+argument_list|(
 name|td
-operator|->
-name|td_pcb
-operator|->
-name|pcb_user_save
+argument_list|)
 decl_stmt|;
 name|struct
 name|envxmm

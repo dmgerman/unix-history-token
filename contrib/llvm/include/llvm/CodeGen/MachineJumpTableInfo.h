@@ -159,6 +159,11 @@ comment|/// EK_BlockAddress - Each entry is a plain address of block, e.g.:
 comment|///     .word LBB123
 name|EK_BlockAddress
 block|,
+comment|/// EK_GPRel64BlockAddress - Each entry is an address of block, encoded
+comment|/// with a relocation as gp-relative, e.g.:
+comment|///     .gpdword LBB123
+name|EK_GPRel64BlockAddress
+block|,
 comment|/// EK_GPRel32BlockAddress - Each entry is an address of block, encoded
 comment|/// with a relocation as gp-relative, e.g.:
 comment|///     .gprel32 LBB123

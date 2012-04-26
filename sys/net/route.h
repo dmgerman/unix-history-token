@@ -172,124 +172,16 @@ parameter_list|)
 value|((r) / (RTM_RTTUNIT / PR_SLOWHZ))
 end_define
 
-begin_comment
-comment|/* MRT compile-time constants */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ROUTETABLES
-end_ifndef
-
 begin_define
 define|#
 directive|define
-name|RT_NUMFIBS
-value|1
+name|RT_DEFAULT_FIB
+value|0
 end_define
-
-begin_define
-define|#
-directive|define
-name|RT_MAXFIBS
-value|1
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_comment
-comment|/* while we use 4 bits in the mbuf flags, we are limited to 16 */
+comment|/* Explicitly mark fib=0 restricted cases */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|RT_MAXFIBS
-value|16
-end_define
-
-begin_if
-if|#
-directive|if
-name|ROUTETABLES
-operator|>
-name|RT_MAXFIBS
-end_if
-
-begin_define
-define|#
-directive|define
-name|RT_NUMFIBS
-value|RT_MAXFIBS
-end_define
-
-begin_error
-error|#
-directive|error
-literal|"ROUTETABLES defined too big"
-end_error
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_if
-if|#
-directive|if
-name|ROUTETABLES
-operator|==
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|RT_NUMFIBS
-value|1
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|RT_NUMFIBS
-value|ROUTETABLES
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -1908,6 +1800,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
+end_ifndef
+
 begin_comment
 comment|/* defaults to "all" FIBs */
 end_comment
@@ -1926,6 +1824,11 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* XXX MRT NEW VERSIONS THAT USE FIBs  * For now the protocol indepedent versions are the same as the AF_INET ones  * but this will change..   */

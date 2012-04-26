@@ -953,6 +953,47 @@ value|0x0f
 end_define
 
 begin_comment
+comment|/* qos[1] byte used for all frames sent by mesh STAs in a mesh BSS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_QOS_MC
+value|0x10
+end_define
+
+begin_comment
+comment|/* Mesh control */
+end_comment
+
+begin_comment
+comment|/* Mesh power save level*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_QOS_MESH_PSL
+value|0x20
+end_define
+
+begin_comment
+comment|/* Mesh Receiver Service Period Initiated */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_QOS_RSPI
+value|0x40
+end_define
+
+begin_comment
+comment|/* bits 11 to 15 reserved */
+end_comment
+
+begin_comment
 comment|/* does frame have QoS sequence control data */
 end_comment
 
@@ -1489,6 +1530,17 @@ end_define
 
 begin_comment
 comment|/* HT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_ACTION_CAT_MESH
+value|13
+end_define
+
+begin_comment
+comment|/* Mesh */
 end_comment
 
 begin_define
@@ -3551,76 +3603,82 @@ init|=
 literal|221
 block|,
 comment|/* vendor private */
-comment|/* 	 * 802.11s IEs based on D3.03 spec and were not assigned by 	 * ANA. Beware changing them because some of them are being 	 * kept compatible with Linux. 	 */
+comment|/* 	 * 802.11s IEs 	 * NB: On vanilla Linux still IEEE80211_ELEMID_MESHPEER = 55, 	 * but they defined a new with id 117 called PEER_MGMT. 	 * NB: complies with open80211 	 */
 name|IEEE80211_ELEMID_MESHCONF
 init|=
-literal|51
+literal|113
 block|,
 name|IEEE80211_ELEMID_MESHID
 init|=
-literal|52
+literal|114
 block|,
 name|IEEE80211_ELEMID_MESHLINK
 init|=
-literal|35
+literal|115
 block|,
 name|IEEE80211_ELEMID_MESHCNGST
 init|=
-literal|36
+literal|116
 block|,
 name|IEEE80211_ELEMID_MESHPEER
 init|=
-literal|55
+literal|117
 block|,
 name|IEEE80211_ELEMID_MESHCSA
 init|=
-literal|38
+literal|118
 block|,
 name|IEEE80211_ELEMID_MESHTIM
 init|=
 literal|39
 block|,
+comment|/* XXX: remove */
 name|IEEE80211_ELEMID_MESHAWAKEW
 init|=
-literal|40
+literal|119
 block|,
 name|IEEE80211_ELEMID_MESHBEACONT
 init|=
-literal|41
+literal|120
 block|,
+comment|/* 121-124 MMCAOP not implemented yet */
 name|IEEE80211_ELEMID_MESHPANN
 init|=
-literal|48
+literal|125
 block|,
+comment|/* XXX: is GANN now, not used */
 name|IEEE80211_ELEMID_MESHRANN
 init|=
-literal|49
+literal|126
 block|,
+comment|/* 127 Extended Capabilities */
+comment|/* 128-129 reserved */
 name|IEEE80211_ELEMID_MESHPREQ
 init|=
-literal|68
+literal|130
 block|,
 name|IEEE80211_ELEMID_MESHPREP
 init|=
-literal|69
+literal|131
 block|,
 name|IEEE80211_ELEMID_MESHPERR
 init|=
-literal|70
+literal|132
 block|,
+comment|/* 133-136 reserved */
 name|IEEE80211_ELEMID_MESHPXU
 init|=
-literal|53
+literal|137
 block|,
 name|IEEE80211_ELEMID_MESHPXUC
 init|=
-literal|54
+literal|138
 block|,
 name|IEEE80211_ELEMID_MESHAH
 init|=
 literal|60
 block|,
-comment|/* Abbreviated Handshake */
+comment|/* XXX: remove */
 block|}
 enum|;
 end_enum
@@ -4422,65 +4480,79 @@ init|=
 literal|39
 block|,
 comment|/* 11e */
-comment|/* values not yet allocated by ANA */
 name|IEEE80211_REASON_PEER_LINK_CANCELED
 init|=
-literal|2
+literal|52
 block|,
 comment|/* 11s */
 name|IEEE80211_REASON_MESH_MAX_PEERS
 init|=
-literal|3
+literal|53
 block|,
 comment|/* 11s */
 name|IEEE80211_REASON_MESH_CPVIOLATION
 init|=
-literal|4
+literal|54
 block|,
 comment|/* 11s */
 name|IEEE80211_REASON_MESH_CLOSE_RCVD
 init|=
-literal|5
+literal|55
 block|,
 comment|/* 11s */
 name|IEEE80211_REASON_MESH_MAX_RETRIES
 init|=
-literal|6
+literal|56
 block|,
 comment|/* 11s */
 name|IEEE80211_REASON_MESH_CONFIRM_TIMEOUT
 init|=
-literal|7
+literal|57
 block|,
 comment|/* 11s */
 name|IEEE80211_REASON_MESH_INVALID_GTK
 init|=
-literal|8
+literal|58
 block|,
 comment|/* 11s */
 name|IEEE80211_REASON_MESH_INCONS_PARAMS
 init|=
-literal|9
+literal|59
 block|,
 comment|/* 11s */
 name|IEEE80211_REASON_MESH_INVALID_SECURITY
 init|=
-literal|10
+literal|60
 block|,
 comment|/* 11s */
-name|IEEE80211_REASON_MESH_PERR_UNSPEC
+name|IEEE80211_REASON_MESH_PERR_NO_PROXY
 init|=
-literal|11
+literal|61
 block|,
 comment|/* 11s */
 name|IEEE80211_REASON_MESH_PERR_NO_FI
 init|=
-literal|12
+literal|62
 block|,
 comment|/* 11s */
 name|IEEE80211_REASON_MESH_PERR_DEST_UNREACH
 init|=
-literal|13
+literal|63
+block|,
+comment|/* 11s */
+name|IEEE80211_REASON_MESH_MAC_ALRDY_EXISTS_MBSS
+init|=
+literal|64
+block|,
+comment|/* 11s */
+name|IEEE80211_REASON_MESH_CHAN_SWITCH_REG
+init|=
+literal|65
+block|,
+comment|/* 11s */
+name|IEEE80211_REASON_MESH_CHAN_SWITCH_UNSPEC
+init|=
+literal|66
 block|,
 comment|/* 11s */
 name|IEEE80211_STATUS_SUCCESS

@@ -34,6 +34,10 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_comment
+comment|/**  * @defgroup LLVMCLTO LTO  * @ingroup LLVMC  *  * @{  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -505,6 +509,15 @@ name|int
 name|nargs
 parameter_list|)
 function_decl|;
+comment|/**  * Enables the internalize pass during LTO optimizations.  */
+specifier|extern
+name|void
+name|lto_codegen_set_whole_program_optimization
+parameter_list|(
+name|lto_code_gen_t
+name|cg
+parameter_list|)
+function_decl|;
 comment|/**  * Adds to a list of all global symbols that must exist in the final  * generated code.  If a function is not listed, it might be  * inlined into every usage and optimized away.  */
 specifier|extern
 name|void
@@ -533,7 +546,7 @@ modifier|*
 name|path
 parameter_list|)
 function_decl|;
-comment|/**  * Generates code for all added modules into one native object file.  * On success returns a pointer to a generated mach-o/ELF buffer and  * length set to the buffer size.  The buffer is owned by the   * lto_code_gen_t and will be freed when lto_codegen_dispose()  * is called, or lto_codegen_compile() is called again.  * On failure, returns NULL (check lto_get_error_message() for details).  */
+comment|/**  * Generates code for all added modules into one native object file.  * On success returns a pointer to a generated mach-o/ELF buffer and  * length set to the buffer size.  The buffer is owned by the  * lto_code_gen_t and will be freed when lto_codegen_dispose()  * is called, or lto_codegen_compile() is called again.  * On failure, returns NULL (check lto_get_error_message() for details).  */
 specifier|extern
 specifier|const
 name|void
@@ -586,6 +599,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/**  * @}  */
+end_comment
 
 begin_endif
 endif|#

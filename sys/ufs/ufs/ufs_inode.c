@@ -177,15 +177,6 @@ argument_list|(
 name|vp
 argument_list|)
 decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
-init|=
-name|ap
-operator|->
-name|a_td
-decl_stmt|;
 name|mode_t
 name|mode
 decl_stmt|;
@@ -222,6 +213,17 @@ ifdef|#
 directive|ifdef
 name|UFS_GJOURNAL
 name|ufs_gjournal_close
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|QUOTA
+comment|/* 	 * Before moving off the active list, we must be sure that 	 * any modified quotas have been pushed since these will no 	 * longer be checked once the vnode is on the inactive list. 	 */
+name|qsyncvp
 argument_list|(
 name|vp
 argument_list|)
@@ -423,8 +425,6 @@ operator||
 name|IO_NORMAL
 argument_list|,
 name|NOCRED
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -481,7 +481,9 @@ name|ufs_extattr_vnode_inactive
 argument_list|(
 name|vp
 argument_list|,
-name|td
+name|ap
+operator|->
+name|a_td
 argument_list|)
 expr_stmt|;
 endif|#
@@ -655,8 +657,6 @@ condition|)
 name|vrecycle
 argument_list|(
 name|vp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if

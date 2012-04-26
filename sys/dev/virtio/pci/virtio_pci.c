@@ -958,11 +958,7 @@ argument_list|,
 name|vtpci_write_dev_config
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1255,7 +1251,7 @@ return|;
 block|}
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|dev
 argument_list|,
@@ -1274,7 +1270,7 @@ name|VIRTIO_PCI_FLAG_NO_MSI
 expr_stmt|;
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|dev
 argument_list|,

@@ -802,6 +802,10 @@ define|#
 directive|define
 name|VDEV_ALLOC_SPLIT
 value|5
+define|#
+directive|define
+name|VDEV_ALLOC_ATTACH
+value|6
 comment|/*  * Allocate or free a vdev  */
 specifier|extern
 name|vdev_t

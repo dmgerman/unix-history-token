@@ -24,6 +24,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_atpic.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_hwpmc_hooks.h"
 end_include
 
@@ -5464,6 +5470,18 @@ block|{
 name|u_int
 name|apic_id
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DEV_ATPIC
+if|if
+condition|(
+name|lapic
+operator|==
+name|NULL
+condition|)
+return|return;
+endif|#
+directive|endif
 name|apic_id
 operator|=
 name|PCPU_GET
@@ -7250,6 +7268,16 @@ argument_list|(
 literal|"APIC: Could not find any APICs.\n"
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|DEV_ATPIC
+name|panic
+argument_list|(
+literal|"running without device atpic requires a local APIC"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return;
 block|}
 if|if

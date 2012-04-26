@@ -3346,13 +3346,13 @@ name|vsnrprintf
 argument_list|(
 name|dev
 operator|->
-name|__si_namebuf
+name|si_name
 argument_list|,
 sizeof|sizeof
 argument_list|(
 name|dev
 operator|->
-name|__si_namebuf
+name|si_name
 argument_list|)
 argument_list|,
 literal|32
@@ -3370,7 +3370,7 @@ sizeof|sizeof
 argument_list|(
 name|dev
 operator|->
-name|__si_namebuf
+name|si_name
 argument_list|)
 operator|-
 literal|1
@@ -3387,7 +3387,7 @@ name|from
 operator|=
 name|dev
 operator|->
-name|__si_namebuf
+name|si_name
 init|;
 operator|*
 name|from
@@ -3404,7 +3404,7 @@ name|to
 operator|=
 name|dev
 operator|->
-name|__si_namebuf
+name|si_name
 init|;
 operator|*
 name|from
@@ -3476,7 +3476,7 @@ if|if
 condition|(
 name|dev
 operator|->
-name|__si_namebuf
+name|si_name
 index|[
 literal|0
 index|]
@@ -3495,7 +3495,7 @@ name|s
 operator|=
 name|dev
 operator|->
-name|__si_namebuf
+name|si_name
 init|;
 condition|;
 control|)
@@ -3588,7 +3588,7 @@ name|devfs_dev_exists
 argument_list|(
 name|dev
 operator|->
-name|__si_namebuf
+name|si_name
 argument_list|)
 operator|!=
 literal|0

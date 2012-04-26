@@ -105,8 +105,9 @@ end_comment
 
 begin_struct
 specifier|static
+specifier|const
 struct|struct
-name|option
+name|bsdtar_option
 block|{
 specifier|const
 name|char
@@ -239,6 +240,14 @@ literal|'C'
 block|}
 block|,
 block|{
+literal|"disable-copyfile"
+block|,
+literal|0
+block|,
+name|OPTION_DISABLE_COPYFILE
+block|}
+block|,
+block|{
 literal|"exclude"
 block|,
 literal|1
@@ -343,19 +352,19 @@ name|OPTION_INCLUDE
 block|}
 block|,
 block|{
-literal|"interactive"
-block|,
-literal|0
-block|,
-literal|'w'
-block|}
-block|,
-block|{
 literal|"insecure"
 block|,
 literal|0
 block|,
 literal|'P'
+block|}
+block|,
+block|{
+literal|"interactive"
+block|,
+literal|0
+block|,
+literal|'w'
 block|}
 block|,
 block|{
@@ -380,6 +389,14 @@ block|,
 literal|0
 block|,
 literal|'t'
+block|}
+block|,
+block|{
+literal|"lzip"
+block|,
+literal|0
+block|,
+name|OPTION_LZIP
 block|}
 block|,
 block|{
@@ -447,22 +464,6 @@ name|OPTION_NEWER_CTIME_THAN
 block|}
 block|,
 block|{
-literal|"nodump"
-block|,
-literal|0
-block|,
-name|OPTION_NODUMP
-block|}
-block|,
-block|{
-literal|"norecurse"
-block|,
-literal|0
-block|,
-literal|'n'
-block|}
-block|,
-block|{
 literal|"no-recursion"
 block|,
 literal|0
@@ -484,6 +485,22 @@ block|,
 literal|0
 block|,
 name|OPTION_NO_SAME_PERMISSIONS
+block|}
+block|,
+block|{
+literal|"nodump"
+block|,
+literal|0
+block|,
+name|OPTION_NODUMP
+block|}
+block|,
+block|{
+literal|"norecurse"
+block|,
+literal|0
+block|,
+literal|'n'
 block|}
 block|,
 block|{
@@ -674,7 +691,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * This getopt implementation has two key features that common  * getopt_long() implementations lack.  Apart from those, it's a  * straightforward option parser, considerably simplified by not  * needing to support the wealth of exotic getopt_long() features.  It  * has, of course, been shamelessly tailored for bsdtar.  (If you're  * looking for a generic getopt_long() implementation for your  * project, I recommend Gregory Pietsch's public domain getopt_long()  * implementation.)  The two additional features are:  *  * Old-style tar arguments: The original tar implementation treated  * the first argument word as a list of single-character option  * letters.  All arguments follow as separate words.  For example,  *    tar xbf 32 /dev/tape  * Here, the "xbf" is three option letters, "32" is the argument for  * "b" and "/dev/tape" is the argument for "f".  We support this usage  * if the first command-line argument does not begin with '-'.  We  * also allow regular short and long options to follow, e.g.,  *    tar xbf 32 /dev/tape -P --format=pax  *  * -W long options: There's an obscure GNU convention (only rarely  * supported even there) that allows "-W option=argument" as an  * alternative way to support long options.  This was supported in  * early bsdtar as a way to access long options on platforms that did  * not support getopt_long() and is preserved here for backwards  * compatibility.  (Of course, if I'd started with a custom  * command-line parser from the beginning, I would have had normal  * long option support on every platform so that hack wouldn't have  * been necessary.  Oh, well.  Some mistakes you just have to live  * with.)  *  * TODO: We should be able to use this to pull files and intermingled  * options (such as -C) from the command line in write mode.  That  * will require a little rethinking of the argument handling in  * bsdtar.c.  *  * TODO: If we want to support arbitrary command-line options from -T  * input (as GNU tar does), we may need to extend this to handle option  * words from sources other than argv/arc.  I'm not really sure if I  * like that feature of GNU tar, so it's certainly not a priority.  */
+comment|/*  * This getopt implementation has two key features that common  * getopt_long() implementations lack.  Apart from those, it's a  * straightforward option parser, considerably simplified by not  * needing to support the wealth of exotic getopt_long() features.  It  * has, of course, been shamelessly tailored for bsdtar.  (If you're  * looking for a generic getopt_long() implementation for your  * project, I recommend Gregory Pietsch's public domain getopt_long()  * implementation.)  The two additional features are:  *  * Old-style tar arguments: The original tar implementation treated  * the first argument word as a list of single-character option  * letters.  All arguments follow as separate words.  For example,  *    tar xbf 32 /dev/tape  * Here, the "xbf" is three option letters, "32" is the argument for  * "b" and "/dev/tape" is the argument for "f".  We support this usage  * if the first command-line argument does not begin with '-'.  We  * also allow regular short and long options to follow, e.g.,  *    tar xbf 32 /dev/tape -P --format=pax  *  * -W long options: There's an obscure GNU convention (only rarely  * supported even there) that allows "-W option=argument" as an  * alternative way to support long options.  This was supported in  * early bsdtar as a way to access long options on platforms that did  * not support getopt_long() and is preserved here for backwards  * compatibility.  (Of course, if I'd started with a custom  * command-line parser from the beginning, I would have had normal  * long option support on every platform so that hack wouldn't have  * been necessary.  Oh, well.  Some mistakes you just have to live  * with.)  *  * TODO: We should be able to use this to pull files and intermingled  * options (such as -C) from the command line in write mode.  That  * will require a little rethinking of the argument handling in  * bsdtar.c.  *  * TODO: If we want to support arbitrary command-line options from -T  * input (as GNU tar does), we may need to extend this to handle option  * words from sources other than argv/argc.  I'm not really sure if I  * like that feature of GNU tar, so it's certainly not a priority.  */
 end_comment
 
 begin_function
@@ -702,20 +719,9 @@ block|,
 name|state_long
 block|}
 enum|;
-specifier|static
-name|int
-name|state
-init|=
-name|state_start
-decl_stmt|;
-specifier|static
-name|char
-modifier|*
-name|opt_word
-decl_stmt|;
 specifier|const
 name|struct
-name|option
+name|bsdtar_option
 modifier|*
 name|popt
 decl_stmt|,
@@ -754,14 +760,16 @@ literal|0
 decl_stmt|;
 name|bsdtar
 operator|->
-name|optarg
+name|argument
 operator|=
 name|NULL
 expr_stmt|;
 comment|/* First time through, initialize everything. */
 if|if
 condition|(
-name|state
+name|bsdtar
+operator|->
+name|getopt_state
 operator|==
 name|state_start
 condition|)
@@ -808,18 +816,24 @@ operator|==
 literal|'-'
 condition|)
 block|{
-name|state
+name|bsdtar
+operator|->
+name|getopt_state
 operator|=
 name|state_next_word
 expr_stmt|;
 block|}
 else|else
 block|{
-name|state
+name|bsdtar
+operator|->
+name|getopt_state
 operator|=
 name|state_old_tar
 expr_stmt|;
-name|opt_word
+name|bsdtar
+operator|->
+name|getopt_word
 operator|=
 operator|*
 name|bsdtar
@@ -837,7 +851,9 @@ block|}
 comment|/* 	 * We're parsing old-style tar arguments 	 */
 if|if
 condition|(
-name|state
+name|bsdtar
+operator|->
+name|getopt_state
 operator|==
 name|state_old_tar
 condition|)
@@ -846,7 +862,9 @@ comment|/* Get the next option character. */
 name|opt
 operator|=
 operator|*
-name|opt_word
+name|bsdtar
+operator|->
+name|getopt_word
 operator|++
 expr_stmt|;
 if|if
@@ -857,7 +875,9 @@ literal|'\0'
 condition|)
 block|{
 comment|/* New-style args can follow old-style. */
-name|state
+name|bsdtar
+operator|->
+name|getopt_state
 operator|=
 name|state_next_word
 expr_stmt|;
@@ -897,7 +917,7 @@ condition|)
 block|{
 name|bsdtar
 operator|->
-name|optarg
+name|argument
 operator|=
 operator|*
 name|bsdtar
@@ -908,7 +928,7 @@ if|if
 condition|(
 name|bsdtar
 operator|->
-name|optarg
+name|argument
 operator|==
 name|NULL
 condition|)
@@ -944,7 +964,9 @@ block|}
 comment|/* 	 * We're ready to look at the next word in argv. 	 */
 if|if
 condition|(
-name|state
+name|bsdtar
+operator|->
+name|getopt_state
 operator|==
 name|state_next_word
 condition|)
@@ -1024,7 +1046,9 @@ operator|)
 return|;
 block|}
 comment|/* Get next word for parsing. */
-name|opt_word
+name|bsdtar
+operator|->
+name|getopt_word
 operator|=
 operator|*
 name|bsdtar
@@ -1039,7 +1063,9 @@ name|argc
 expr_stmt|;
 if|if
 condition|(
-name|opt_word
+name|bsdtar
+operator|->
+name|getopt_word
 index|[
 literal|1
 index|]
@@ -1048,11 +1074,15 @@ literal|'-'
 condition|)
 block|{
 comment|/* Set up long option parser. */
-name|state
+name|bsdtar
+operator|->
+name|getopt_state
 operator|=
 name|state_long
 expr_stmt|;
-name|opt_word
+name|bsdtar
+operator|->
+name|getopt_word
 operator|+=
 literal|2
 expr_stmt|;
@@ -1061,12 +1091,16 @@ block|}
 else|else
 block|{
 comment|/* Set up short option parser. */
-name|state
+name|bsdtar
+operator|->
+name|getopt_state
 operator|=
 name|state_short
 expr_stmt|;
 operator|++
-name|opt_word
+name|bsdtar
+operator|->
+name|getopt_word
 expr_stmt|;
 comment|/* Skip leading '-' */
 block|}
@@ -1074,7 +1108,9 @@ block|}
 comment|/* 	 * We're parsing a group of POSIX-style single-character options. 	 */
 if|if
 condition|(
-name|state
+name|bsdtar
+operator|->
+name|getopt_state
 operator|==
 name|state_short
 condition|)
@@ -1083,7 +1119,9 @@ comment|/* Peel next option off of a group of short options. */
 name|opt
 operator|=
 operator|*
-name|opt_word
+name|bsdtar
+operator|->
+name|getopt_word
 operator|++
 expr_stmt|;
 if|if
@@ -1094,7 +1132,9 @@ literal|'\0'
 condition|)
 block|{
 comment|/* End of this group; recurse to get next option. */
-name|state
+name|bsdtar
+operator|->
+name|getopt_state
 operator|=
 name|state_next_word
 expr_stmt|;
@@ -1145,10 +1185,12 @@ condition|(
 name|required
 condition|)
 block|{
-comment|/* If arg is run-in, opt_word already points to it. */
+comment|/* If arg is run-in, bsdtar->getopt_word already points to it. */
 if|if
 condition|(
-name|opt_word
+name|bsdtar
+operator|->
+name|getopt_word
 index|[
 literal|0
 index|]
@@ -1157,7 +1199,9 @@ literal|'\0'
 condition|)
 block|{
 comment|/* Otherwise, pick up the next word. */
-name|opt_word
+name|bsdtar
+operator|->
+name|getopt_word
 operator|=
 operator|*
 name|bsdtar
@@ -1166,7 +1210,9 @@ name|argv
 expr_stmt|;
 if|if
 condition|(
-name|opt_word
+name|bsdtar
+operator|->
+name|getopt_word
 operator|==
 name|NULL
 condition|)
@@ -1204,7 +1250,9 @@ operator|==
 literal|'W'
 condition|)
 block|{
-name|state
+name|bsdtar
+operator|->
+name|getopt_state
 operator|=
 name|state_long
 expr_stmt|;
@@ -1216,15 +1264,19 @@ comment|/* For clearer errors. */
 block|}
 else|else
 block|{
-name|state
+name|bsdtar
+operator|->
+name|getopt_state
 operator|=
 name|state_next_word
 expr_stmt|;
 name|bsdtar
 operator|->
-name|optarg
+name|argument
 operator|=
-name|opt_word
+name|bsdtar
+operator|->
+name|getopt_word
 expr_stmt|;
 block|}
 block|}
@@ -1232,13 +1284,17 @@ block|}
 comment|/* We're reading a long option, including -W long=arg convention. */
 if|if
 condition|(
-name|state
+name|bsdtar
+operator|->
+name|getopt_state
 operator|==
 name|state_long
 condition|)
 block|{
 comment|/* After this long option, we'll be starting a new word. */
-name|state
+name|bsdtar
+operator|->
+name|getopt_state
 operator|=
 name|state_next_word
 expr_stmt|;
@@ -1247,7 +1303,9 @@ name|p
 operator|=
 name|strchr
 argument_list|(
-name|opt_word
+name|bsdtar
+operator|->
+name|getopt_word
 argument_list|,
 literal|'='
 argument_list|)
@@ -1267,12 +1325,14 @@ call|)
 argument_list|(
 name|p
 operator|-
-name|opt_word
+name|bsdtar
+operator|->
+name|getopt_word
 argument_list|)
 expr_stmt|;
 name|bsdtar
 operator|->
-name|optarg
+name|argument
 operator|=
 operator|(
 name|char
@@ -1294,7 +1354,9 @@ name|optlength
 operator|=
 name|strlen
 argument_list|(
-name|opt_word
+name|bsdtar
+operator|->
+name|getopt_word
 argument_list|)
 expr_stmt|;
 block|}
@@ -1325,7 +1387,9 @@ index|[
 literal|0
 index|]
 operator|!=
-name|opt_word
+name|bsdtar
+operator|->
+name|getopt_word
 index|[
 literal|0
 index|]
@@ -1336,7 +1400,9 @@ if|if
 condition|(
 name|strncmp
 argument_list|(
-name|opt_word
+name|bsdtar
+operator|->
+name|getopt_word
 argument_list|,
 name|popt
 operator|->
@@ -1395,7 +1461,9 @@ literal|"Option %s%s is not supported"
 argument_list|,
 name|long_prefix
 argument_list|,
-name|opt_word
+name|bsdtar
+operator|->
+name|getopt_word
 argument_list|)
 expr_stmt|;
 return|return
@@ -1419,7 +1487,9 @@ literal|"Ambiguous option %s%s (matches --%s and --%s)"
 argument_list|,
 name|long_prefix
 argument_list|,
-name|opt_word
+name|bsdtar
+operator|->
+name|getopt_word
 argument_list|,
 name|match
 operator|->
@@ -1449,14 +1519,14 @@ if|if
 condition|(
 name|bsdtar
 operator|->
-name|optarg
+name|argument
 operator|==
 name|NULL
 condition|)
 block|{
 name|bsdtar
 operator|->
-name|optarg
+name|argument
 operator|=
 operator|*
 name|bsdtar
@@ -1467,7 +1537,7 @@ if|if
 condition|(
 name|bsdtar
 operator|->
-name|optarg
+name|argument
 operator|==
 name|NULL
 condition|)
@@ -1510,7 +1580,7 @@ if|if
 condition|(
 name|bsdtar
 operator|->
-name|optarg
+name|argument
 operator|!=
 name|NULL
 condition|)

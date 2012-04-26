@@ -184,10 +184,6 @@ name|ngpcb
 name|ngpcb
 decl_stmt|;
 name|struct
-name|ngsock
-name|info
-decl_stmt|;
-name|struct
 name|socket
 name|sockb
 decl_stmt|;
@@ -705,45 +701,10 @@ operator|.
 name|sb_cc
 argument_list|)
 expr_stmt|;
-comment|/* Get ngsock structure */
-if|if
-condition|(
-name|ngpcb
-operator|.
-name|sockdata
-operator|==
-name|NULL
-condition|)
-comment|/* unconnected data socket */
-goto|goto
-name|finish
-goto|;
-name|kread
-argument_list|(
-operator|(
-name|u_long
-operator|)
-name|ngpcb
-operator|.
-name|sockdata
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|info
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|info
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* Get info on associated node */
 if|if
 condition|(
-name|info
+name|ngpcb
 operator|.
 name|node_id
 operator|==
@@ -768,7 +729,7 @@ argument_list|)
 argument_list|,
 literal|"[%x]:"
 argument_list|,
-name|info
+name|ngpcb
 operator|.
 name|node_id
 argument_list|)

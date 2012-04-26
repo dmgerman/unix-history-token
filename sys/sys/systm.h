@@ -79,17 +79,6 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|stop_scheduler
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* only one thread runs after panic */
-end_comment
-
-begin_decl_stmt
-specifier|extern
 specifier|const
 name|char
 modifier|*
@@ -382,7 +371,7 @@ define|#
 directive|define
 name|SCHEDULER_STOPPED
 parameter_list|()
-value|__predict_false(stop_scheduler)
+value|__predict_false(curthread->td_stopsched)
 end_define
 
 begin_comment
@@ -478,6 +467,20 @@ end_decl_stmt
 begin_comment
 comment|/* address space maps to a zeroed page	*/
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|iosize_max_clamp
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|IOSIZE_MAX
+value|(iosize_max_clamp ? INT_MAX : SSIZE_MAX)
+end_define
 
 begin_comment
 comment|/*  * General function declarations.  */
@@ -1908,7 +1911,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|hardclock_anycpu
+name|hardclock_cnt
 parameter_list|(
 name|int
 name|cnt
@@ -1961,8 +1964,37 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|statclock_cnt
+parameter_list|(
+name|int
+name|cnt
+parameter_list|,
+name|int
+name|usermode
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|profclock
 parameter_list|(
+name|int
+name|usermode
+parameter_list|,
+name|uintfptr_t
+name|pc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|profclock_cnt
+parameter_list|(
+name|int
+name|cnt
+parameter_list|,
 name|int
 name|usermode
 parameter_list|,

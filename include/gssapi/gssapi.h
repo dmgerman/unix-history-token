@@ -2122,7 +2122,7 @@ name|gss_OID
 parameter_list|,
 comment|/* desired mechanism */
 name|gss_buffer_t
-comment|/* decapsulated mechanism dependant token */
+comment|/* decapsulated mechanism dependent token */
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2134,7 +2134,7 @@ parameter_list|(
 specifier|const
 name|gss_buffer_t
 parameter_list|,
-comment|/* mechanism dependant token */
+comment|/* mechanism dependent token */
 name|gss_OID
 parameter_list|,
 comment|/* desired mechanism */

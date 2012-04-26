@@ -5627,9 +5627,6 @@ name|u_int32_t
 name|descsz
 decl_stmt|;
 name|u_int32_t
-name|type
-decl_stmt|;
-name|u_int32_t
 name|desc
 decl_stmt|;
 name|char
@@ -5730,17 +5727,6 @@ argument_list|,
 name|n
 argument_list|,
 name|N_DESCSZ
-argument_list|)
-expr_stmt|;
-name|type
-operator|=
-name|elf_get_word
-argument_list|(
-name|e
-argument_list|,
-name|n
-argument_list|,
-name|N_TYPE
 argument_list|)
 expr_stmt|;
 name|s

@@ -163,7 +163,7 @@ decl_stmt|;
 name|int
 name|nbytes
 decl_stmt|;
-name|int
+name|ssize_t
 name|resid
 decl_stmt|;
 name|int

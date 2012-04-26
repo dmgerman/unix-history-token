@@ -124,9 +124,15 @@ name|DIAG_START_DRIVER
 operator|+
 literal|100
 block|,
-name|DIAG_START_LEX
+name|DIAG_START_SERIALIZATION
 init|=
 name|DIAG_START_FRONTEND
+operator|+
+literal|100
+block|,
+name|DIAG_START_LEX
+init|=
+name|DIAG_START_SERIALIZATION
 operator|+
 literal|120
 block|,
@@ -140,7 +146,7 @@ name|DIAG_START_AST
 init|=
 name|DIAG_START_PARSE
 operator|+
-literal|300
+literal|400
 block|,
 name|DIAG_START_SEMA
 init|=
@@ -195,10 +201,6 @@ parameter_list|,
 name|NOWERROR
 parameter_list|,
 name|SHOWINSYSHEADER
-parameter_list|,
-name|BRIEF
-parameter_list|,
-name|FULL
 parameter_list|)
 value|ENUM,
 include|#
@@ -454,8 +456,6 @@ name|class
 name|DiagnosticIDs
 range|:
 name|public
-name|llvm
-operator|::
 name|RefCountedBase
 operator|<
 name|DiagnosticIDs
@@ -618,6 +618,15 @@ argument_list|(
 argument|unsigned CategoryID
 argument_list|)
 block|;
+comment|/// isARCDiagnostic - Return true if a given diagnostic falls into an
+comment|/// ARC diagnostic category;
+specifier|static
+name|bool
+name|isARCDiagnostic
+argument_list|(
+argument|unsigned DiagID
+argument_list|)
+block|;
 comment|/// \brief Enumeration describing how the the emission of a diagnostic should
 comment|/// be treated when it occurs during C++ template argument deduction.
 block|enum
@@ -661,137 +670,6 @@ argument_list|(
 argument|unsigned DiagID
 argument_list|)
 block|;
-comment|/// getName - Given a diagnostic ID, return its name
-specifier|static
-name|StringRef
-name|getName
-argument_list|(
-argument|unsigned DiagID
-argument_list|)
-block|;
-comment|/// getIdFromName - Given a diagnostic name, return its ID, or 0
-specifier|static
-name|unsigned
-name|getIdFromName
-argument_list|(
-argument|StringRef Name
-argument_list|)
-block|;
-comment|/// getBriefExplanation - Given a diagnostic ID, return a brief explanation
-comment|/// of the issue
-specifier|static
-name|StringRef
-name|getBriefExplanation
-argument_list|(
-argument|unsigned DiagID
-argument_list|)
-block|;
-comment|/// getFullExplanation - Given a diagnostic ID, return a full explanation
-comment|/// of the issue
-specifier|static
-name|StringRef
-name|getFullExplanation
-argument_list|(
-argument|unsigned DiagID
-argument_list|)
-block|;
-comment|/// Iterator class used for traversing all statically declared
-comment|/// diagnostics.
-name|class
-name|diag_iterator
-block|{
-specifier|const
-name|void
-operator|*
-name|impl
-block|;
-name|friend
-name|class
-name|DiagnosticIDs
-block|;
-name|diag_iterator
-argument_list|(
-specifier|const
-name|void
-operator|*
-name|im
-argument_list|)
-operator|:
-name|impl
-argument_list|(
-argument|im
-argument_list|)
-block|{}
-name|public
-operator|:
-name|diag_iterator
-operator|&
-name|operator
-operator|++
-operator|(
-operator|)
-block|;
-name|bool
-name|operator
-operator|==
-operator|(
-specifier|const
-name|diag_iterator
-operator|&
-name|x
-operator|)
-specifier|const
-block|{
-return|return
-name|impl
-operator|==
-name|x
-operator|.
-name|impl
-return|;
-block|}
-name|bool
-name|operator
-operator|!=
-operator|(
-specifier|const
-name|diag_iterator
-operator|&
-name|x
-operator|)
-specifier|const
-block|{
-return|return
-name|impl
-operator|!=
-name|x
-operator|.
-name|impl
-return|;
-block|}
-name|llvm
-operator|::
-name|StringRef
-name|getDiagName
-argument_list|()
-specifier|const
-block|;
-name|unsigned
-name|getDiagID
-argument_list|()
-specifier|const
-block|;       }
-block|;
-specifier|static
-name|diag_iterator
-name|diags_begin
-argument_list|()
-block|;
-specifier|static
-name|diag_iterator
-name|diags_end
-argument_list|()
-block|;
 comment|/// \brief Get the set of all diagnostic IDs in the group with the given name.
 comment|///
 comment|/// \param Diags [out] - On return, the diagnostics in the group.
@@ -804,6 +682,23 @@ argument_list|,
 argument|llvm::SmallVectorImpl<diag::kind>&Diags
 argument_list|)
 specifier|const
+block|;
+comment|/// \brief Get the set of all diagnostic IDs.
+name|void
+name|getAllDiagnostics
+argument_list|(
+argument|llvm::SmallVectorImpl<diag::kind>&Diags
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Get the warning option with the closest edit distance to the given
+comment|/// group name.
+specifier|static
+name|StringRef
+name|getNearestWarningOption
+argument_list|(
+argument|StringRef Group
+argument_list|)
 block|;
 name|private
 operator|:

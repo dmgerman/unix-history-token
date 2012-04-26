@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2009  Internet Systems Consortium, Inc. ("ISC")  *  
 end_comment
 
 begin_comment
-comment|/* $Id: keydata.h,v 1.2 2009-06-30 02:52:32 each Exp $ */
+comment|/* $Id: keydata.h,v 1.2 2009/06/30 02:52:32 each Exp $ */
 end_comment
 
 begin_ifndef

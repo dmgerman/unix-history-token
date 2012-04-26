@@ -560,14 +560,6 @@ name|cdp
 operator|->
 name|cdp_c
 expr_stmt|;
-name|cdev
-operator|->
-name|si_name
-operator|=
-name|cdev
-operator|->
-name|__si_namebuf
-expr_stmt|;
 name|LIST_INIT
 argument_list|(
 operator|&

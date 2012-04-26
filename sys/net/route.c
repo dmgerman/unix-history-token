@@ -16,6 +16,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_inet6.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_route.h"
 end_include
 
@@ -168,6 +174,103 @@ directive|include
 file|<vm/uma.h>
 end_include
 
+begin_comment
+comment|/* We use 4 bits in the mbuf flags, thus we are limited to 16 FIBS. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RT_MAXFIBS
+value|16
+end_define
+
+begin_comment
+comment|/* Kernel config default option. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ROUTETABLES
+end_ifdef
+
+begin_if
+if|#
+directive|if
+name|ROUTETABLES
+operator|<=
+literal|0
+end_if
+
+begin_error
+error|#
+directive|error
+literal|"ROUTETABLES defined too low"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|ROUTETABLES
+operator|>
+name|RT_MAXFIBS
+end_if
+
+begin_error
+error|#
+directive|error
+literal|"ROUTETABLES defined too big"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|RT_NUMFIBS
+value|ROUTETABLES
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ROUTETABLES */
+end_comment
+
+begin_comment
+comment|/* Initialize to default if not otherwise set. */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|RT_NUMFIBS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|RT_NUMFIBS
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|u_int
 name|rt_numfibs
@@ -198,7 +301,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Allow the boot code to allow LESS than RT_MAXFIBS to be used.  * We can't do more because storage is statically allocated for now.  * (for compatibility reasons.. this will change).  */
+comment|/*  * Allow the boot code to allow LESS than RT_MAXFIBS to be used.  * We can't do more because storage is statically allocated for now.  * (for compatibility reasons.. this will change. When this changes, code should  * be refactored to protocol independent parts and protocol dependent parts,  * probably hanging of domain(9) specific storage to not need the full  * fib * af RNH allocation etc. but allow tuning the number of tables per  * address family).  */
 end_comment
 
 begin_expr_stmt
@@ -213,7 +316,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * By default add routes to all fibs for new interfaces.  * Once this is set to 0 then only allocate routes on interface  * changes for the FIB of the caller when adding a new set of addresses  * to an interface.  XXX this is a shotgun aproach to a problem that needs  * a more fine grained solution.. that will come.  */
+comment|/*  * By default add routes to all fibs for new interfaces.  * Once this is set to 0 then only allocate routes on interface  * changes for the FIB of the caller when adding a new set of addresses  * to an interface.  XXX this is a shotgun aproach to a problem that needs  * a more fine grained solution.. that will come.  * XXX also has the problems getting the FIB from curthread which will not  * always work given the fib can be overridden and prefixes can be added  * from the network stack context.  */
 end_comment
 
 begin_decl_stmt
@@ -753,8 +856,10 @@ condition|(
 name|dom
 operator|->
 name|dom_rtattach
+operator|==
+name|NULL
 condition|)
-block|{
+continue|continue;
 for|for
 control|(
 name|table
@@ -769,25 +874,28 @@ name|table
 operator|++
 control|)
 block|{
-if|if
-condition|(
-operator|(
 name|fam
 operator|=
 name|dom
 operator|->
 name|dom_family
-operator|)
-operator|==
-name|AF_INET
-operator|||
+expr_stmt|;
+if|if
+condition|(
 name|table
-operator|==
+operator|!=
 literal|0
+operator|&&
+name|fam
+operator|!=
+name|AF_INET6
+operator|&&
+name|fam
+operator|!=
+name|AF_INET
 condition|)
-block|{
-comment|/* for now only AF_INET has> 1 table */
-comment|/* XXX MRT  					 * rtattach will be also called 					 * from vfs_export.c but the 					 * offset will be 0 					 * (only for AF_INET and AF_INET6 					 * which don't need it anyhow) 					 */
+break|break;
+comment|/* 			 * XXX MRT rtattach will be also called from 			 * vfs_export.c but the offset will be 0 (only for 			 * AF_INET and AF_INET6 which don't need it anyhow). 			 */
 name|rnh
 operator|=
 name|rt_tables_get_rnh_ptr
@@ -826,12 +934,6 @@ operator|->
 name|dom_rtoffset
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-break|break;
-block|}
-block|}
 block|}
 block|}
 block|}
@@ -908,8 +1010,10 @@ condition|(
 name|dom
 operator|->
 name|dom_rtdetach
+operator|==
+name|NULL
 condition|)
-block|{
+continue|continue;
 for|for
 control|(
 name|table
@@ -924,24 +1028,27 @@ name|table
 operator|++
 control|)
 block|{
-if|if
-condition|(
-operator|(
 name|fam
 operator|=
 name|dom
 operator|->
 name|dom_family
-operator|)
-operator|==
-name|AF_INET
-operator|||
+expr_stmt|;
+if|if
+condition|(
 name|table
-operator|==
+operator|!=
 literal|0
+operator|&&
+name|fam
+operator|!=
+name|AF_INET6
+operator|&&
+name|fam
+operator|!=
+name|AF_INET
 condition|)
-block|{
-comment|/* For now only AF_INET has> 1 tbl. */
+break|break;
 name|rnh
 operator|=
 name|rt_tables_get_rnh_ptr
@@ -980,12 +1087,6 @@ operator|->
 name|dom_rtoffset
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-break|break;
-block|}
-block|}
 block|}
 block|}
 block|}
@@ -1104,7 +1205,7 @@ name|ro
 argument_list|,
 literal|0UL
 argument_list|,
-literal|0
+name|RT_DEFAULT_FIB
 argument_list|)
 expr_stmt|;
 block|}
@@ -1208,7 +1309,7 @@ literal|1
 argument_list|,
 name|ignore
 argument_list|,
-literal|0
+name|RT_DEFAULT_FIB
 argument_list|)
 expr_stmt|;
 if|if
@@ -1354,7 +1455,7 @@ name|report
 argument_list|,
 name|ignflags
 argument_list|,
-literal|0
+name|RT_DEFAULT_FIB
 argument_list|)
 operator|)
 return|;
@@ -1426,19 +1527,28 @@ literal|"rtalloc1_fib: bad fibnum"
 operator|)
 argument_list|)
 expr_stmt|;
-if|if
+switch|switch
 condition|(
 name|dst
 operator|->
 name|sa_family
-operator|!=
-name|AF_INET
 condition|)
-comment|/* Only INET supports> 1 fib now */
+block|{
+case|case
+name|AF_INET6
+case|:
+case|case
+name|AF_INET
+case|:
+comment|/* We support multiple FIBs. */
+break|break;
+default|default:
 name|fibnum
 operator|=
-literal|0
+name|RT_DEFAULT_FIB
 expr_stmt|;
+break|break;
+block|}
 name|rnh
 operator|=
 name|rt_tables_get_rnh
@@ -1910,7 +2020,7 @@ name|flags
 argument_list|,
 name|src
 argument_list|,
-literal|0
+name|RT_DEFAULT_FIB
 argument_list|)
 expr_stmt|;
 block|}
@@ -2537,7 +2647,7 @@ name|req
 argument_list|,
 name|data
 argument_list|,
-literal|0
+name|RT_DEFAULT_FIB
 argument_list|)
 operator|)
 return|;
@@ -2627,7 +2737,7 @@ name|dst
 argument_list|,
 name|gateway
 argument_list|,
-literal|0
+name|RT_DEFAULT_FIB
 argument_list|)
 operator|)
 return|;
@@ -2986,7 +3096,7 @@ name|flags
 argument_list|,
 name|ret_nrt
 argument_list|,
-literal|0
+name|RT_DEFAULT_FIB
 argument_list|)
 operator|)
 return|;
@@ -3170,7 +3280,7 @@ name|rt_getifa_fib
 argument_list|(
 name|info
 argument_list|,
-literal|0
+name|RT_DEFAULT_FIB
 argument_list|)
 operator|)
 return|;
@@ -4289,19 +4399,28 @@ literal|"rtrequest1_fib: bad fibnum"
 operator|)
 argument_list|)
 expr_stmt|;
-if|if
+switch|switch
 condition|(
 name|dst
 operator|->
 name|sa_family
-operator|!=
-name|AF_INET
 condition|)
-comment|/* Only INET supports> 1 fib now */
+block|{
+case|case
+name|AF_INET6
+case|:
+case|case
+name|AF_INET
+case|:
+comment|/* We support multiple FIBs. */
+break|break;
+default|default:
 name|fibnum
 operator|=
-literal|0
+name|RT_DEFAULT_FIB
 expr_stmt|;
+break|break;
+block|}
 comment|/* 	 * Find the correct routing tree to use for this Address Family 	 */
 name|rnh
 operator|=
@@ -4719,7 +4838,7 @@ name|rt_fibnum
 operator|=
 name|fibnum
 expr_stmt|;
-comment|/* 		 * Add the gateway. Possibly re-malloc-ing the storage for it 		 *  		 */
+comment|/* 		 * Add the gateway. Possibly re-malloc-ing the storage for it. 		 */
 name|RT_LOCK
 argument_list|(
 name|rt
@@ -4893,19 +5012,41 @@ name|rt0
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* XXX 		 * "flow-table" only support IPv4 at the moment. 		 * XXX-BZ as of r205066 it would support IPv6. 		 */
-ifdef|#
-directive|ifdef
-name|INET
-if|if
+comment|/* "flow-table" only supports IPv6 and IPv4 at the moment. */
+switch|switch
 condition|(
 name|dst
 operator|->
 name|sa_family
-operator|==
-name|AF_INET
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|INET6
+case|case
+name|AF_INET6
+case|:
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|INET
+case|case
+name|AF_INET
+case|:
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET
+argument_list|)
 name|rn
 operator|=
 name|rnh
@@ -5085,11 +5226,13 @@ expr_stmt|;
 block|}
 block|}
 block|}
+endif|#
+directive|endif
+comment|/* INET6 || INET */
 block|}
 endif|#
 directive|endif
-endif|#
-directive|endif
+comment|/* FLOWTABLE */
 comment|/* XXX mtu manipulation will be done in rnh_addaddr -- itojun */
 name|rn
 operator|=
@@ -5176,9 +5319,35 @@ operator|!=
 name|NULL
 condition|)
 block|{
+switch|switch
+condition|(
+name|dst
+operator|->
+name|sa_family
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|INET6
+case|case
+name|AF_INET6
+case|:
+name|flowtable_route_flush
+argument_list|(
+name|V_ip6_ft
+argument_list|,
+name|rt0
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|INET
+case|case
+name|AF_INET
+case|:
 name|flowtable_route_flush
 argument_list|(
 name|V_ip_ft
@@ -5186,8 +5355,10 @@ argument_list|,
 name|rt0
 argument_list|)
 expr_stmt|;
+break|break;
 endif|#
 directive|endif
+block|}
 name|RTFREE
 argument_list|(
 name|rt0
@@ -5759,14 +5930,37 @@ if|if
 condition|(
 name|dst
 operator|->
-name|sa_family
-operator|!=
-name|AF_INET
+name|sa_len
+operator|==
+literal|0
 condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+switch|switch
+condition|(
+name|dst
+operator|->
+name|sa_family
+condition|)
+block|{
+case|case
+name|AF_INET6
+case|:
+case|case
+name|AF_INET
+case|:
+comment|/* We support multiple FIBs. */
+break|break;
+default|default:
 name|fibnum
 operator|=
-literal|0
+name|RT_DEFAULT_FIB
 expr_stmt|;
+break|break;
+block|}
 if|if
 condition|(
 name|fibnum
@@ -5838,19 +6032,6 @@ operator|=
 name|fibnum
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|dst
-operator|->
-name|sa_len
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
 comment|/* 	 * If it's a delete, check that if it exists, 	 * it's on the correct interface or we might scrub 	 * a route to another ifa which would 	 * be confusing at best and possibly worse. 	 */
 if|if
 condition|(
@@ -5892,7 +6073,7 @@ name|tempbuf
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Now go through all the requested tables (fibs) and do the 	 * requested action. Realistically, this will either be fib 0 	 * for protocols that don't do multiple tables or all the 	 * tables for those that do. XXX For this version only AF_INET. 	 * When that changes code should be refactored to protocol 	 * independent parts and protocol dependent parts. 	 */
+comment|/* 	 * Now go through all the requested tables (fibs) and do the 	 * requested action. Realistically, this will either be fib 0 	 * for protocols that don't do multiple tables or all the 	 * tables for those that do. 	 */
 for|for
 control|(
 name|fibnum
@@ -6206,7 +6387,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|RADIX_MPATH
-comment|/* 			 * in case address alias finds the first address 			 * e.g. ifconfig bge0 192.103.54.246/24 			 * e.g. ifconfig bge0 192.103.54.247/24 			 * the address set in the route is 192.103.54.246 			 * so we need to replace it with 192.103.54.247 			 */
+comment|/* 			 * in case address alias finds the first address 			 * e.g. ifconfig bge0 192.0.2.246/24 			 * e.g. ifconfig bge0 192.0.2.247/24 			 * the address set in the route is 192.0.2.246 			 * so we need to replace it with 192.0.2.247 			 */
 if|if
 condition|(
 name|memcmp
@@ -6446,6 +6627,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
+end_ifndef
+
 begin_comment
 comment|/* special one for inet internal use. may not use. */
 end_comment
@@ -6484,6 +6671,11 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Set up a routing table entry, normally  * for an interface.  */
 end_comment
@@ -6512,7 +6704,7 @@ decl_stmt|;
 name|int
 name|fib
 init|=
-literal|0
+name|RT_DEFAULT_FIB
 decl_stmt|;
 if|if
 condition|(
@@ -6537,19 +6729,27 @@ operator|->
 name|ifa_addr
 expr_stmt|;
 block|}
-if|if
+switch|switch
 condition|(
 name|dst
 operator|->
 name|sa_family
-operator|==
-name|AF_INET
 condition|)
+block|{
+case|case
+name|AF_INET6
+case|:
+case|case
+name|AF_INET
+case|:
+comment|/* We do support multiple FIBs. */
 name|fib
 operator|=
 operator|-
 literal|1
 expr_stmt|;
+break|break;
+block|}
 return|return
 operator|(
 name|rtinit1

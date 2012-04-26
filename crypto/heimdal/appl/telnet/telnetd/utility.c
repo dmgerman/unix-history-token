@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: utility.c 15844 2005-08-08 13:36:16Z lha $"
+literal|"$Id$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -320,7 +320,7 @@ name|DIAG
 argument_list|(
 argument|(TD_REPORT | TD_PTYDATA)
 argument_list|,
-argument|{  	    output_data(
+argument|{ 	    output_data(
 literal|"td: ptyflush %d chars\r\n"
 argument|, n); 	}
 argument_list|)
@@ -1772,7 +1772,7 @@ name|char
 modifier|*
 name|pointer
 parameter_list|,
-name|int
+name|size_t
 name|length
 parameter_list|)
 comment|/* '<' or '>' */
@@ -2006,9 +2006,14 @@ name|output_data
 argument_list|(
 literal|"IS \"%.*s\""
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|length
 operator|-
 literal|2
+argument_list|)
 argument_list|,
 operator|(
 name|char
@@ -2084,9 +2089,14 @@ name|output_data
 argument_list|(
 literal|" IS %.*s"
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|length
 operator|-
 literal|2
+argument_list|)
 argument_list|,
 operator|(
 name|char
@@ -3400,9 +3410,14 @@ name|output_data
 argument_list|(
 literal|"IS \"%.*s\""
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|length
 operator|-
 literal|2
+argument_list|)
 argument_list|,
 operator|(
 name|char
@@ -3504,9 +3519,9 @@ name|env_common
 label|:
 block|{
 name|int
-name|noquote
+name|quote
 init|=
-literal|2
+literal|0
 decl_stmt|;
 for|for
 control|(
@@ -3533,61 +3548,89 @@ block|{
 case|case
 name|NEW_ENV_VAR
 case|:
+if|if
+condition|(
+name|quote
+condition|)
 name|output_data
 argument_list|(
-literal|"\" VAR "
-operator|+
-name|noquote
+literal|"\" "
 argument_list|)
 expr_stmt|;
-name|noquote
+name|output_data
+argument_list|(
+literal|"VAR "
+argument_list|)
+expr_stmt|;
+name|quote
 operator|=
-literal|2
+literal|0
 expr_stmt|;
 break|break;
 case|case
 name|NEW_ENV_VALUE
 case|:
+if|if
+condition|(
+name|quote
+condition|)
 name|output_data
 argument_list|(
-literal|"\" VALUE "
-operator|+
-name|noquote
+literal|"\" "
 argument_list|)
 expr_stmt|;
-name|noquote
+name|output_data
+argument_list|(
+literal|"VALUE "
+argument_list|)
+expr_stmt|;
+name|quote
 operator|=
-literal|2
+literal|0
 expr_stmt|;
 break|break;
 case|case
 name|ENV_ESC
 case|:
+if|if
+condition|(
+name|quote
+condition|)
 name|output_data
 argument_list|(
-literal|"\" ESC "
-operator|+
-name|noquote
+literal|"\" "
 argument_list|)
 expr_stmt|;
-name|noquote
+name|output_data
+argument_list|(
+literal|"ESC "
+argument_list|)
+expr_stmt|;
+name|quote
 operator|=
-literal|2
+literal|0
 expr_stmt|;
 break|break;
 case|case
 name|ENV_USERVAR
 case|:
+if|if
+condition|(
+name|quote
+condition|)
 name|output_data
 argument_list|(
-literal|"\" USERVAR "
-operator|+
-name|noquote
+literal|"\" "
 argument_list|)
 expr_stmt|;
-name|noquote
+name|output_data
+argument_list|(
+literal|"USERVAR "
+argument_list|)
+expr_stmt|;
+name|quote
 operator|=
-literal|2
+literal|0
 expr_stmt|;
 break|break;
 default|default:
@@ -3611,7 +3654,8 @@ condition|)
 block|{
 if|if
 condition|(
-name|noquote
+operator|!
+name|quote
 condition|)
 block|{
 name|output_data
@@ -3619,9 +3663,9 @@ argument_list|(
 literal|"\""
 argument_list|)
 expr_stmt|;
-name|noquote
+name|quote
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 block|}
 name|output_data
@@ -3639,9 +3683,7 @@ else|else
 block|{
 name|output_data
 argument_list|(
-literal|"\" %03o "
-operator|+
-name|noquote
+literal|"%03o "
 argument_list|,
 name|pointer
 index|[
@@ -3649,9 +3691,9 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|noquote
+name|quote
 operator|=
-literal|2
+literal|0
 expr_stmt|;
 block|}
 break|break;
@@ -3659,8 +3701,7 @@ block|}
 block|}
 if|if
 condition|(
-operator|!
-name|noquote
+name|quote
 condition|)
 name|output_data
 argument_list|(
@@ -3966,9 +4007,14 @@ name|output_data
 argument_list|(
 literal|" NAME \"%.*s\""
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|length
 operator|-
 literal|2
+argument_list|)
 argument_list|,
 name|pointer
 argument_list|)
@@ -4393,11 +4439,11 @@ name|char
 modifier|*
 name|ptr
 parameter_list|,
-name|int
+name|size_t
 name|cnt
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|;
 name|char

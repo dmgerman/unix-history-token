@@ -141,7 +141,10 @@ literal|"CFG for '"
 operator|+
 name|F
 operator|->
-name|getNameStr
+name|getName
+argument_list|()
+operator|.
+name|str
 argument_list|()
 operator|+
 literal|"' function"
@@ -155,7 +158,7 @@ name|getSimpleNodeLabel
 argument_list|(
 argument|const BasicBlock *Node
 argument_list|,
-argument|const Function *Graph
+argument|const Function *
 argument_list|)
 block|{
 if|if
@@ -172,7 +175,10 @@ condition|)
 return|return
 name|Node
 operator|->
-name|getNameStr
+name|getName
+argument_list|()
+operator|.
+name|str
 argument_list|()
 return|;
 name|std
@@ -210,7 +216,7 @@ name|getCompleteNodeLabel
 argument_list|(
 argument|const BasicBlock *Node
 argument_list|,
-argument|const Function *Graph
+argument|const Function *
 argument_list|)
 block|{
 name|std
@@ -534,14 +540,28 @@ parameter_list|(
 name|Str
 parameter_list|)
 function_decl|;
-name|OS
-operator|<<
-name|SI
-operator|->
-name|getCaseValue
+name|SwitchInst
+operator|::
+name|ConstCaseIt
+name|Case
+operator|=
+name|SwitchInst
+operator|::
+name|ConstCaseIt
+operator|::
+name|fromSuccessorIndex
 argument_list|(
+name|SI
+argument_list|,
 name|SuccNo
 argument_list|)
+expr_stmt|;
+name|OS
+operator|<<
+name|Case
+operator|.
+name|getCaseValue
+argument_list|()
 operator|->
 name|getValue
 argument_list|()

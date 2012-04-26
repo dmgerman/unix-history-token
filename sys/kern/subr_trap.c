@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_hwpmc_hooks.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_ktrace.h"
 end_include
 
@@ -229,6 +235,23 @@ begin_include
 include|#
 directive|include
 file|<vm/pmap.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HWPMC_HOOKS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/pmckern.h>
 end_include
 
 begin_endif
@@ -649,6 +672,32 @@ operator|~
 name|TDP_OWEUPC
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|HWPMC_HOOKS
+comment|/* Handle Software PMC callchain capture. */
+if|if
+condition|(
+name|PMC_IS_PENDING_CALLCHAIN
+argument_list|(
+name|td
+argument_list|)
+condition|)
+name|PMC_CALL_HOOK_UNLOCKED
+argument_list|(
+name|td
+argument_list|,
+name|PMC_FN_USER_CALLCHAIN_SOFT
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|framep
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|flags
@@ -739,6 +788,8 @@ argument_list|(
 literal|1
 argument_list|,
 literal|1
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 endif|#
@@ -788,6 +839,8 @@ argument_list|(
 literal|0
 argument_list|,
 literal|1
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 endif|#

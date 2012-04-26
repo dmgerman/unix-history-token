@@ -401,8 +401,6 @@ name|sblock
 decl_stmt|;
 name|ino_t
 name|inumber
-decl_stmt|,
-name|maxino
 decl_stmt|;
 name|ufs2_daddr_t
 name|sblockloc
@@ -720,16 +718,6 @@ literal|1
 operator|)
 return|;
 block|}
-name|maxino
-operator|=
-name|sblock
-operator|->
-name|fs_ncg
-operator|*
-name|sblock
-operator|->
-name|fs_ipg
-expr_stmt|;
 if|if
 condition|(
 name|sblock

@@ -156,6 +156,19 @@ end_function_decl
 
 begin_function_decl
 name|uint32_t
+name|cfi_read_raw
+parameter_list|(
+name|struct
+name|cfi_softc
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint32_t
 name|cfi_read
 parameter_list|(
 name|struct

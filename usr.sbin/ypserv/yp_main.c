@@ -1011,10 +1011,6 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|char
-modifier|*
-name|sname
-decl_stmt|;
 name|SVCXPRT
 modifier|*
 name|transp
@@ -1043,10 +1039,6 @@ name|struct
 name|netbuf
 name|svcaddr
 decl_stmt|;
-name|sname
-operator|=
-name|NULL
-expr_stmt|;
 name|SLIST_INIT
 argument_list|(
 operator|&
@@ -1460,6 +1452,10 @@ name|sap
 decl_stmt|;
 name|socklen_t
 name|slen
+decl_stmt|;
+name|char
+modifier|*
+name|sname
 decl_stmt|;
 name|sname
 operator|=
@@ -1976,11 +1972,6 @@ name|nconf
 argument_list|,
 operator|&
 name|svcaddr
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|sname
 argument_list|)
 expr_stmt|;
 name|freeaddrinfo

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright 2000 Hans Reiser  * See README for licensing and copyright details  *   * Ported to FreeBSD by Jean-Sébastien Pédron<jspedron@club-internet.fr>  *   * $FreeBSD$  */
+comment|/*-  * Copyright 2000 Hans Reiser  * See README for licensing and copyright details  *   * Ported to FreeBSD by Jean-SÃ©bastien PÃ©dron<jspedron@club-internet.fr>  *   * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -1168,7 +1168,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/* XXX Il ne semble pas y avoir de compteur de référence dans struct buf */
+comment|/* XXX Il ne semble pas y avoir de compteur de rÃ©fÃ©rence dans struct buf */
 end_comment
 
 begin_endif

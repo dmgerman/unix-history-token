@@ -303,6 +303,9 @@ name|int
 name|sc_scan_timer
 decl_stmt|;
 name|bus_dma_tag_t
+name|parent_dmat
+decl_stmt|;
+name|bus_dma_tag_t
 name|tbd_dmat
 decl_stmt|;
 name|bus_dma_tag_t

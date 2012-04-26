@@ -1075,7 +1075,7 @@ block|,
 literal|0xff
 block|}
 decl_stmt|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -1131,7 +1131,7 @@ goto|goto
 name|found
 goto|;
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -1218,7 +1218,7 @@ operator|!=
 literal|6
 condition|)
 block|{
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -1243,7 +1243,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -1267,7 +1267,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -1409,7 +1409,7 @@ operator|!=
 literal|1
 condition|)
 block|{
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -1428,7 +1428,7 @@ literal|0
 index|]
 condition|)
 block|{
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -1498,7 +1498,7 @@ case|:
 endif|#
 directive|endif
 comment|/* 		 * RFC2893 says: "SHOULD use IPv4 address as ifid source". 		 * however, IPv4 address is not very suitable as unique 		 * identifier source (can be renumbered). 		 * we don't do this. 		 */
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -1508,7 +1508,7 @@ operator|-
 literal|1
 return|;
 default|default:
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -1527,7 +1527,7 @@ name|in6
 argument_list|)
 condition|)
 block|{
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -1582,7 +1582,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -1592,7 +1592,7 @@ operator|-
 literal|1
 return|;
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -2232,24 +2232,21 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* ia must not be NULL */
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
-if|if
-condition|(
-operator|!
-name|ia
-condition|)
-block|{
-name|panic
+name|KASSERT
 argument_list|(
-literal|"ia == NULL in in6_ifattach_linklocal"
+name|ia
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"%s: ia == NULL, ifp=%p"
+operator|,
+name|__func__
+operator|,
+name|ifp
+operator|)
 argument_list|)
 expr_stmt|;
-comment|/* NOTREACHED */
-block|}
-endif|#
-directive|endif
 name|ifa_free
 argument_list|(
 operator|&
@@ -3323,9 +3320,6 @@ name|rtentry
 modifier|*
 name|rt
 decl_stmt|;
-name|short
-name|rtflags
-decl_stmt|;
 name|struct
 name|sockaddr_in6
 name|sin6
@@ -3450,98 +3444,34 @@ name|imm
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* remove from the routing table */
+comment|/* Remove link-local from the routing table. */
 if|if
 condition|(
-operator|(
 name|ia
 operator|->
 name|ia_flags
 operator|&
 name|IFA_ROUTE
-operator|)
-operator|&&
+condition|)
 operator|(
-name|rt
-operator|=
-name|rtalloc1
+name|void
+operator|)
+name|rtinit
 argument_list|(
-operator|(
-expr|struct
-name|sockaddr
-operator|*
-operator|)
 operator|&
 name|ia
 operator|->
-name|ia_addr
+name|ia_ifa
 argument_list|,
-literal|0
-argument_list|,
-literal|0UL
-argument_list|)
-operator|)
-condition|)
-block|{
-name|rtflags
-operator|=
-name|rt
-operator|->
-name|rt_flags
-expr_stmt|;
-name|RTFREE_LOCKED
-argument_list|(
-name|rt
-argument_list|)
-expr_stmt|;
-name|rtrequest
-argument_list|(
 name|RTM_DELETE
 argument_list|,
-operator|(
-expr|struct
-name|sockaddr
-operator|*
-operator|)
-operator|&
 name|ia
 operator|->
-name|ia_addr
-argument_list|,
-operator|(
-expr|struct
-name|sockaddr
-operator|*
-operator|)
-operator|&
-name|ia
-operator|->
-name|ia_addr
-argument_list|,
-operator|(
-expr|struct
-name|sockaddr
-operator|*
-operator|)
-operator|&
-name|ia
-operator|->
-name|ia_prefixmask
-argument_list|,
-name|rtflags
-argument_list|,
-operator|(
-expr|struct
-name|rtentry
-operator|*
-operator|*
-operator|)
-literal|0
+name|ia_flags
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* remove from the linked list */
-name|IF_ADDR_LOCK
+name|IF_ADDR_WLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -3558,7 +3488,7 @@ argument_list|,
 name|ifa_link
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_WUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -3619,7 +3549,7 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-comment|/* remove route to link-local allnodes multicast (ff02::1) */
+comment|/* 	 * Remove route to link-local allnodes multicast (ff02::1). 	 * These only get automatically installed for the default FIB. 	 */
 name|bzero
 argument_list|(
 operator|&
@@ -3674,7 +3604,7 @@ name|rnh
 operator|=
 name|rt_tables_get_rnh
 argument_list|(
-literal|0
+name|RT_DEFAULT_FIB
 argument_list|,
 name|AF_INET6
 argument_list|)
@@ -3693,7 +3623,7 @@ argument_list|)
 expr_stmt|;
 name|rt
 operator|=
-name|rtalloc1
+name|in6_rtalloc1
 argument_list|(
 operator|(
 expr|struct
@@ -3706,6 +3636,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|RTF_RNH_LOCKED
+argument_list|,
+name|RT_DEFAULT_FIB
 argument_list|)
 expr_stmt|;
 if|if
@@ -4042,7 +3974,7 @@ name|IN6_MULTI_LOCK
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Extract list of in6_multi associated with the detaching ifp 	 * which the PF_INET6 layer is about to release. 	 * We need to do this as IF_ADDR_LOCK() may be re-acquired 	 * by code further down. 	 */
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -4095,7 +4027,7 @@ name|in6m_entry
 argument_list|)
 expr_stmt|;
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)

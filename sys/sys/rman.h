@@ -157,7 +157,7 @@ value|(0x003F<< RF_ALIGNMENT_SHIFT)
 end_define
 
 begin_comment
-comment|/* resource address alignemnt size bit mask */
+comment|/* resource address alignment size bit mask */
 end_comment
 
 begin_define

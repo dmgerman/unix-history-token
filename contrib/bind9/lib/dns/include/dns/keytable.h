@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007, 2009, 2010  Internet Systems Conso
 end_comment
 
 begin_comment
-comment|/* $Id: keytable.h,v 1.23 2010-06-25 03:24:05 marka Exp $ */
+comment|/* $Id: keytable.h,v 1.23 2010/06/25 03:24:05 marka Exp $ */
 end_comment
 
 begin_ifndef

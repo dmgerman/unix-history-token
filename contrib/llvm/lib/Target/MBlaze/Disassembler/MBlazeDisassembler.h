@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- MBlazeDisassembler.h - Disassembler for MicroBlaze  ------*- C++ -*-===//
+comment|//===-- MBlazeDisassembler.h - Disassembler for MicroBlaze  -----*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -69,12 +69,6 @@ directive|include
 file|"llvm/MC/MCDisassembler.h"
 end_include
 
-begin_struct_decl
-struct_decl|struct
-name|InternalInstruction
-struct_decl|;
-end_struct_decl
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -140,6 +134,7 @@ argument_list|)
 specifier|const
 block|;
 comment|/// getEDInfo - See MCDisassembler.
+specifier|const
 name|EDInstInfo
 operator|*
 name|getEDInfo

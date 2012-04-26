@@ -1048,7 +1048,7 @@ operator|)
 return|;
 block|}
 comment|/// doesAccessArgPointees - Return true if functions with the specified
-comment|/// behavior are known to potentially read or write  from objects pointed
+comment|/// behavior are known to potentially read or write from objects pointed
 comment|/// to be their pointer-typed arguments (with arbitrary offsets).
 comment|///
 specifier|static
@@ -2129,6 +2129,18 @@ comment|///    NoAlias returns
 comment|///
 name|bool
 name|isIdentifiedObject
+argument_list|(
+specifier|const
+name|Value
+operator|*
+name|V
+argument_list|)
+block|;
+comment|/// isKnownNonNull - Return true if this pointer couldn't possibly be null by
+comment|/// its definition.  This returns true for allocas, non-extern-weak globals and
+comment|/// byval arguments.
+name|bool
+name|isKnownNonNull
 argument_list|(
 specifier|const
 name|Value

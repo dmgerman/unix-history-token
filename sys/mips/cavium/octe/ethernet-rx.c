@@ -244,6 +244,10 @@ operator|&&
 operator|(
 name|work
 operator|->
+name|word1
+operator|.
+name|s
+operator|.
 name|len
 operator|<=
 literal|64
@@ -292,6 +296,10 @@ name|cvmx_helper_get_interface_num
 argument_list|(
 name|work
 operator|->
+name|word1
+operator|.
+name|cn38xx
+operator|.
 name|ipprt
 argument_list|)
 decl_stmt|;
@@ -302,6 +310,10 @@ name|cvmx_helper_get_interface_index_num
 argument_list|(
 name|work
 operator|->
+name|word1
+operator|.
+name|cn38xx
+operator|.
 name|ipprt
 argument_list|)
 decl_stmt|;
@@ -359,6 +371,10 @@ name|i
 operator|<
 name|work
 operator|->
+name|word1
+operator|.
+name|s
+operator|.
 name|len
 operator|-
 literal|1
@@ -387,7 +403,7 @@ operator|==
 literal|0xd5
 condition|)
 block|{
-comment|/* 				DEBUGPRINT("Port %d received 0xd5 preamble\n", work->ipprt); 				*/
+comment|/* 				DEBUGPRINT("Port %d received 0xd5 preamble\n", work->word1.cn38xx.ipprt); 				*/
 name|work
 operator|->
 name|packet_ptr
@@ -402,6 +418,10 @@ literal|1
 expr_stmt|;
 name|work
 operator|->
+name|word1
+operator|.
+name|s
+operator|.
 name|len
 operator|-=
 name|i
@@ -422,7 +442,7 @@ operator|==
 literal|0xd
 condition|)
 block|{
-comment|/* 				DEBUGPRINT("Port %d received 0x?d preamble\n", work->ipprt); 				*/
+comment|/* 				DEBUGPRINT("Port %d received 0x?d preamble\n", work->word1.cn38xx.ipprt); 				*/
 name|work
 operator|->
 name|packet_ptr
@@ -435,6 +455,10 @@ name|i
 expr_stmt|;
 name|work
 operator|->
+name|word1
+operator|.
+name|s
+operator|.
 name|len
 operator|-=
 name|i
@@ -451,6 +475,10 @@ name|i
 operator|<
 name|work
 operator|->
+name|word1
+operator|.
+name|s
+operator|.
 name|len
 condition|;
 name|i
@@ -499,6 +527,10 @@ literal|"Port %d unknown preamble, packet dropped\n"
 argument_list|,
 name|work
 operator|->
+name|word1
+operator|.
+name|cn38xx
+operator|.
 name|ipprt
 argument_list|)
 expr_stmt|;
@@ -522,6 +554,10 @@ literal|"Port %d receive error code %d, packet dropped\n"
 argument_list|,
 name|work
 operator|->
+name|word1
+operator|.
+name|cn38xx
+operator|.
 name|ipprt
 argument_list|,
 name|work
@@ -765,6 +801,10 @@ name|cvm_oct_device
 index|[
 name|work
 operator|->
+name|word1
+operator|.
+name|cn38xx
+operator|.
 name|ipprt
 index|]
 argument_list|,
@@ -827,6 +867,10 @@ name|m_len
 operator|=
 name|work
 operator|->
+name|word1
+operator|.
+name|s
+operator|.
 name|len
 expr_stmt|;
 name|packet_not_copied
@@ -888,6 +932,10 @@ literal|"Port %d failed to allocate mbuf, packet dropped\n"
 argument_list|,
 name|work
 operator|->
+name|word1
+operator|.
+name|cn38xx
+operator|.
 name|ipprt
 argument_list|)
 expr_stmt|;
@@ -992,6 +1040,10 @@ name|len
 init|=
 name|work
 operator|->
+name|word1
+operator|.
+name|s
+operator|.
 name|len
 decl_stmt|;
 while|while
@@ -1102,6 +1154,10 @@ operator|(
 operator|(
 name|work
 operator|->
+name|word1
+operator|.
+name|cn38xx
+operator|.
 name|ipprt
 operator|<
 name|TOTAL_NUMBER_OF_PORTS
@@ -1111,6 +1167,10 @@ name|cvm_oct_device
 index|[
 name|work
 operator|->
+name|word1
+operator|.
+name|cn38xx
+operator|.
 name|ipprt
 index|]
 operator|)
@@ -1125,6 +1185,10 @@ name|cvm_oct_device
 index|[
 name|work
 operator|->
+name|word1
+operator|.
+name|cn38xx
+operator|.
 name|ipprt
 index|]
 decl_stmt|;
@@ -1274,6 +1338,10 @@ literal|"Port %d not controlled by Linux, packet dropped\n"
 argument_list|,
 name|work
 operator|->
+name|word1
+operator|.
+name|cn38xx
+operator|.
 name|ipprt
 argument_list|)
 expr_stmt|;

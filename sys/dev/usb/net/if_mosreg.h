@@ -439,6 +439,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MCS7832
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
 name|MOS_INC
 parameter_list|(
 name|x

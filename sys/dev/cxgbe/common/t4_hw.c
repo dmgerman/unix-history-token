@@ -20622,7 +20622,7 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
-name|t4_wr_mbox
+name|t4_wr_mbox_ns
 argument_list|(
 name|adap
 argument_list|,

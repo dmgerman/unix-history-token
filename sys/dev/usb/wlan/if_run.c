@@ -277,11 +277,11 @@ end_include
 begin_define
 define|#
 directive|define
-name|nitems
+name|N
 parameter_list|(
 name|_a
 parameter_list|)
-value|(sizeof((_a)) / sizeof((_a)[0]))
+value|((int)(sizeof((_a)) / sizeof((_a)[0])))
 end_define
 
 begin_ifdef
@@ -1174,7 +1174,7 @@ argument_list|)
 block|,
 name|RUN_DEV
 argument_list|(
-name|LOGITECH
+name|LOGITEC
 argument_list|,
 name|LANW300NU2
 argument_list|)
@@ -4120,38 +4120,6 @@ name|sc_bssid
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|error
-operator|=
-name|run_load_microcode
-argument_list|(
-name|sc
-argument_list|)
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|,
-literal|"could not load 8051 microcode\n"
-argument_list|)
-expr_stmt|;
-name|RUN_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-goto|goto
-name|detach
-goto|;
-block|}
 name|RUN_UNLOCK
 argument_list|(
 name|sc
@@ -4405,7 +4373,7 @@ literal|14
 init|;
 name|i
 operator|<
-name|nitems
+name|N
 argument_list|(
 name|rt2860_rf2850
 argument_list|)
@@ -6302,7 +6270,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"firmware %s loaded\n"
+literal|"firmware %s ver. %u.%u loaded\n"
 argument_list|,
 operator|(
 name|base
@@ -6315,6 +6283,20 @@ condition|?
 literal|"RT2870"
 else|:
 literal|"RT3071"
+argument_list|,
+operator|*
+operator|(
+name|base
+operator|+
+literal|4092
+operator|)
+argument_list|,
+operator|*
+operator|(
+name|base
+operator|+
+literal|4093
+operator|)
 argument_list|)
 expr_stmt|;
 name|fail
@@ -15240,6 +15222,10 @@ if|if
 condition|(
 name|xferlen
 operator|<
+call|(
+name|int
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 name|uint32_t
@@ -15255,6 +15241,7 @@ sizeof|sizeof
 argument_list|(
 expr|struct
 name|rt2870_rxd
+argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -15496,6 +15483,16 @@ if|if
 condition|(
 operator|(
 name|dmalen
+operator|>=
+operator|(
+name|uint32_t
+operator|)
+operator|-
+literal|8
+operator|)
+operator|||
+operator|(
+name|dmalen
 operator|==
 literal|0
 operator|)
@@ -15528,6 +15525,9 @@ operator|+
 literal|8
 operator|)
 operator|>
+operator|(
+name|uint32_t
+operator|)
 name|xferlen
 condition|)
 block|{
@@ -24400,7 +24400,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|nitems
+name|N
 argument_list|(
 name|rt2860_def_bbp
 argument_list|)
@@ -24616,7 +24616,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|nitems
+name|N
 argument_list|(
 name|rt3572_def_rf
 argument_list|)
@@ -24656,7 +24656,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|nitems
+name|N
 argument_list|(
 name|rt3070_def_rf
 argument_list|)
@@ -26535,6 +26535,29 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|run_load_microcode
+argument_list|(
+name|sc
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"could not load 8051 microcode\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
 for|for
 control|(
 name|ntries
@@ -26849,7 +26872,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|nitems
+name|N
 argument_list|(
 name|rt2870_def_mac
 argument_list|)
@@ -28035,10 +28058,19 @@ name|driver_t
 name|run_driver
 init|=
 block|{
+operator|.
+name|name
+operator|=
 literal|"run"
 block|,
+operator|.
+name|methods
+operator|=
 name|run_methods
 block|,
+operator|.
+name|size
+operator|=
 expr|sizeof
 operator|(
 expr|struct

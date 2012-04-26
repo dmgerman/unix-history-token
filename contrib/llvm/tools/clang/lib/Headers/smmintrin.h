@@ -228,9 +228,9 @@ name|_mm_round_ps
 parameter_list|(
 name|X
 parameter_list|,
-name|Y
+name|M
 parameter_list|)
-value|__builtin_ia32_roundps((X), (Y))
+value|__extension__ ({ \   __m128 __X = (X); \   (__m128) __builtin_ia32_roundps((__v4sf)__X, (M)); })
 end_define
 
 begin_define
@@ -244,7 +244,7 @@ name|Y
 parameter_list|,
 name|M
 parameter_list|)
-value|__builtin_ia32_roundss((X), (Y), (M))
+value|__extension__ ({ \   __m128 __X = (X); \   __m128 __Y = (Y); \   (__m128) __builtin_ia32_roundss((__v4sf)__X, (__v4sf)__Y, (M)); })
 end_define
 
 begin_define
@@ -256,7 +256,7 @@ name|X
 parameter_list|,
 name|M
 parameter_list|)
-value|__builtin_ia32_roundpd((X), (M))
+value|__extension__ ({ \   __m128d __X = (X); \   (__m128d) __builtin_ia32_roundpd((__v2df)__X, (M)); })
 end_define
 
 begin_define
@@ -270,106 +270,40 @@ name|Y
 parameter_list|,
 name|M
 parameter_list|)
-value|__builtin_ia32_roundsd((X), (Y), (M))
+value|__extension__ ({ \   __m128d __X = (X); \   __m128d __Y = (Y); \   (__m128d) __builtin_ia32_roundsd((__v2df)__X, (__v2df)__Y, (M)); })
 end_define
 
 begin_comment
 comment|/* SSE4 Packed Blending Intrinsics.  */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|__inline__
-name|__m128d
-name|__attribute__
-argument_list|(
-operator|(
-name|__always_inline__
-operator|,
-name|__nodebug__
-operator|)
-argument_list|)
+begin_define
+define|#
+directive|define
 name|_mm_blend_pd
-argument_list|(
-name|__m128d
-name|__V1
-argument_list|,
-name|__m128d
-name|__V2
-argument_list|,
-specifier|const
-name|int
-name|__M
-argument_list|)
-block|{
-return|return
-operator|(
-name|__m128d
-operator|)
-name|__builtin_ia32_blendpd
-argument_list|(
-operator|(
-name|__v2df
-operator|)
-name|__V1
-argument_list|,
-operator|(
-name|__v2df
-operator|)
-name|__V2
-argument_list|,
-name|__M
-argument_list|)
-return|;
-block|}
-end_decl_stmt
+parameter_list|(
+name|V1
+parameter_list|,
+name|V2
+parameter_list|,
+name|M
+parameter_list|)
+value|__extension__ ({ \   __m128d __V1 = (V1); \   __m128d __V2 = (V2); \   (__m128d) __builtin_ia32_blendpd ((__v2df)__V1, (__v2df)__V2, (M)); })
+end_define
 
-begin_decl_stmt
-specifier|static
-name|__inline__
-name|__m128
-name|__attribute__
-argument_list|(
-operator|(
-name|__always_inline__
-operator|,
-name|__nodebug__
-operator|)
-argument_list|)
+begin_define
+define|#
+directive|define
 name|_mm_blend_ps
-argument_list|(
-name|__m128
-name|__V1
-argument_list|,
-name|__m128
-name|__V2
-argument_list|,
-specifier|const
-name|int
-name|__M
-argument_list|)
-block|{
-return|return
-operator|(
-name|__m128
-operator|)
-name|__builtin_ia32_blendps
-argument_list|(
-operator|(
-name|__v4sf
-operator|)
-name|__V1
-argument_list|,
-operator|(
-name|__v4sf
-operator|)
-name|__V2
-argument_list|,
-name|__M
-argument_list|)
-return|;
-block|}
-end_decl_stmt
+parameter_list|(
+name|V1
+parameter_list|,
+name|V2
+parameter_list|,
+name|M
+parameter_list|)
+value|__extension__ ({ \   __m128 __V1 = (V1); \   __m128 __V2 = (V2); \   (__m128) __builtin_ia32_blendps ((__v4sf)__V1, (__v4sf)__V2, (M)); })
+end_define
 
 begin_decl_stmt
 specifier|static
@@ -518,52 +452,19 @@ return|;
 block|}
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|__inline__
-name|__m128i
-name|__attribute__
-argument_list|(
-operator|(
-name|__always_inline__
-operator|,
-name|__nodebug__
-operator|)
-argument_list|)
+begin_define
+define|#
+directive|define
 name|_mm_blend_epi16
-argument_list|(
-name|__m128i
-name|__V1
-argument_list|,
-name|__m128i
-name|__V2
-argument_list|,
-specifier|const
-name|int
-name|__M
-argument_list|)
-block|{
-return|return
-operator|(
-name|__m128i
-operator|)
-name|__builtin_ia32_pblendw128
-argument_list|(
-operator|(
-name|__v8hi
-operator|)
-name|__V1
-argument_list|,
-operator|(
-name|__v8hi
-operator|)
-name|__V2
-argument_list|,
-name|__M
-argument_list|)
-return|;
-block|}
-end_decl_stmt
+parameter_list|(
+name|V1
+parameter_list|,
+name|V2
+parameter_list|,
+name|M
+parameter_list|)
+value|__extension__ ({ \   __m128i __V1 = (V1); \   __m128i __V2 = (V2); \   (__m128i) __builtin_ia32_pblendw128 ((__v8hi)__V1, (__v8hi)__V2, (M)); })
+end_define
 
 begin_comment
 comment|/* SSE4 Dword Multiply Instructions.  */
@@ -665,7 +566,7 @@ name|Y
 parameter_list|,
 name|M
 parameter_list|)
-value|__builtin_ia32_dpps ((X), (Y), (M))
+value|__extension__ ({ \   __m128 __X = (X); \   __m128 __Y = (Y); \   (__m128) __builtin_ia32_dpps((__v4sf)__X, (__v4sf)__Y, (M)); })
 end_define
 
 begin_define
@@ -679,7 +580,7 @@ name|Y
 parameter_list|,
 name|M
 parameter_list|)
-value|__builtin_ia32_dppd ((X), (Y), (M))
+value|__extension__ ({\   __m128d __X = (X); \   __m128d __Y = (Y); \   (__m128d) __builtin_ia32_dppd((__v2df)__X, (__v2df)__Y, (M)); })
 end_define
 
 begin_comment
@@ -1154,7 +1055,7 @@ name|I
 parameter_list|,
 name|N
 parameter_list|)
-value|(__extension__ ({ __v16qi __a = (__v16qi)(X); \                                                    __a[N] = I;               \                                                    __a;}))
+value|(__extension__ ({ __v16qi __a = (__v16qi)(X); \                                                    __a[(N)] = (I);             \                                                    __a;}))
 end_define
 
 begin_define
@@ -1168,7 +1069,7 @@ name|I
 parameter_list|,
 name|N
 parameter_list|)
-value|(__extension__ ({ __v4si __a = (__v4si)(X); \                                                     __a[N] = I;             \                                                     __a;}))
+value|(__extension__ ({ __v4si __a = (__v4si)(X); \                                                     __a[(N)] = (I);           \                                                     __a;}))
 end_define
 
 begin_ifdef
@@ -1188,7 +1089,7 @@ name|I
 parameter_list|,
 name|N
 parameter_list|)
-value|(__extension__ ({ __v2di __a = (__v2di)(X); \                                                     __a[N] = I;             \                                                     __a;}))
+value|(__extension__ ({ __v2di __a = (__v2di)(X); \                                                     __a[(N)] = (I);           \                                                     __a;}))
 end_define
 
 begin_endif
@@ -1213,7 +1114,7 @@ name|X
 parameter_list|,
 name|N
 parameter_list|)
-value|(__extension__ ({ __v16qi __a = (__v16qi)(X); \                                                  (unsigned char)__a[N];}))
+value|(__extension__ ({ __v16qi __a = (__v16qi)(X); \                                                  (unsigned char)__a[(N)];}))
 end_define
 
 begin_define
@@ -1225,7 +1126,7 @@ name|X
 parameter_list|,
 name|N
 parameter_list|)
-value|(__extension__ ({ __v4si __a = (__v4si)(X); \                                                   (unsigned)__a[N];}))
+value|(__extension__ ({ __v4si __a = (__v4si)(X); \                                                   (unsigned)__a[(N)];}))
 end_define
 
 begin_ifdef
@@ -1243,7 +1144,7 @@ name|X
 parameter_list|,
 name|N
 parameter_list|)
-value|(__extension__ ({ __v2di __a = (__v2di)(X); \                                                   __a[N];}))
+value|(__extension__ ({ __v2di __a = (__v2di)(X); \                                                   __a[(N)];}))
 end_define
 
 begin_endif
@@ -1404,7 +1305,7 @@ name|M
 parameter_list|,
 name|V
 parameter_list|)
-value|_mm_testz_si128 ((V), (V))
+value|_mm_testz_si128 ((M), (V))
 end_define
 
 begin_comment
@@ -1433,16 +1334,15 @@ name|__V2
 argument_list|)
 block|{
 return|return
-operator|(
+call|(
 name|__m128i
-operator|)
-name|__builtin_ia32_pcmpeqq
+call|)
 argument_list|(
 operator|(
 name|__v2di
 operator|)
 name|__V1
-argument_list|,
+operator|==
 operator|(
 name|__v2di
 operator|)
@@ -1916,8 +1816,41 @@ name|Y
 parameter_list|,
 name|M
 parameter_list|)
-value|__builtin_ia32_mpsadbw128((X), (Y), (M))
+value|__extension__ ({ \   __m128i __X = (X); \   __m128i __Y = (Y); \   (__m128i) __builtin_ia32_mpsadbw128((__v16qi)__X, (__v16qi)__Y, (M)); })
 end_define
+
+begin_decl_stmt
+specifier|static
+name|__inline__
+name|__m128i
+name|__attribute__
+argument_list|(
+operator|(
+name|__always_inline__
+operator|,
+name|__nodebug__
+operator|)
+argument_list|)
+name|_mm_minpos_epu16
+argument_list|(
+name|__m128i
+name|__V
+argument_list|)
+block|{
+return|return
+operator|(
+name|__m128i
+operator|)
+name|__builtin_ia32_phminposuw128
+argument_list|(
+operator|(
+name|__v8hi
+operator|)
+name|__V
+argument_list|)
+return|;
+block|}
+end_decl_stmt
 
 begin_comment
 comment|/* These definitions are normally in nmmintrin.h, but gcc puts them in here    so we'll do the same.  */
@@ -2117,13 +2050,13 @@ define|#
 directive|define
 name|_mm_cmpestri
 parameter_list|(
-name|X
+name|A
 parameter_list|,
-name|LX
+name|LA
 parameter_list|,
-name|Y
+name|B
 parameter_list|,
-name|LY
+name|LB
 parameter_list|,
 name|M
 parameter_list|)
@@ -2142,16 +2075,12 @@ name|_mm_cmpistra
 parameter_list|(
 name|A
 parameter_list|,
-name|LA
-parameter_list|,
 name|B
-parameter_list|,
-name|LB
 parameter_list|,
 name|M
 parameter_list|)
 define|\
-value|__builtin_ia32_pcmpistria128((A), (LA), (B), (LB), (M))
+value|__builtin_ia32_pcmpistria128((A), (B), (M))
 end_define
 
 begin_define
@@ -2161,16 +2090,12 @@ name|_mm_cmpistrc
 parameter_list|(
 name|A
 parameter_list|,
-name|LA
-parameter_list|,
 name|B
-parameter_list|,
-name|LB
 parameter_list|,
 name|M
 parameter_list|)
 define|\
-value|__builtin_ia32_pcmpistric128((A), (LA), (B), (LB), (M))
+value|__builtin_ia32_pcmpistric128((A), (B), (M))
 end_define
 
 begin_define
@@ -2180,16 +2105,12 @@ name|_mm_cmpistro
 parameter_list|(
 name|A
 parameter_list|,
-name|LA
-parameter_list|,
 name|B
-parameter_list|,
-name|LB
 parameter_list|,
 name|M
 parameter_list|)
 define|\
-value|__builtin_ia32_pcmpistrio128((A), (LA), (B), (LB), (M))
+value|__builtin_ia32_pcmpistrio128((A), (B), (M))
 end_define
 
 begin_define
@@ -2199,16 +2120,12 @@ name|_mm_cmpistrs
 parameter_list|(
 name|A
 parameter_list|,
-name|LA
-parameter_list|,
 name|B
-parameter_list|,
-name|LB
 parameter_list|,
 name|M
 parameter_list|)
 define|\
-value|__builtin_ia32_pcmpistris128((A), (LA), (B), (LB), (M))
+value|__builtin_ia32_pcmpistris128((A), (B), (M))
 end_define
 
 begin_define
@@ -2218,16 +2135,12 @@ name|_mm_cmpistrz
 parameter_list|(
 name|A
 parameter_list|,
-name|LA
-parameter_list|,
 name|B
-parameter_list|,
-name|LB
 parameter_list|,
 name|M
 parameter_list|)
 define|\
-value|__builtin_ia32_pcmpistriz128((A), (LA), (B), (LB), (M))
+value|__builtin_ia32_pcmpistriz128((A), (B), (M))
 end_define
 
 begin_define
@@ -2351,13 +2264,15 @@ name|__V2
 argument_list|)
 block|{
 return|return
-name|__builtin_ia32_pcmpgtq
+call|(
+name|__m128i
+call|)
 argument_list|(
 operator|(
 name|__v2di
 operator|)
 name|__V1
-argument_list|,
+operator|>
 operator|(
 name|__v2di
 operator|)
@@ -2529,82 +2444,22 @@ begin_comment
 comment|/* __x86_64__ */
 end_comment
 
-begin_comment
-comment|/* SSE4.2 Population Count.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|__inline__
-name|int
-name|__attribute__
-argument_list|(
-operator|(
-name|__always_inline__
-operator|,
-name|__nodebug__
-operator|)
-argument_list|)
-name|_mm_popcnt_u32
-argument_list|(
-name|unsigned
-name|int
-name|__A
-argument_list|)
-block|{
-return|return
-name|__builtin_popcount
-argument_list|(
-name|__A
-argument_list|)
-return|;
-block|}
-end_decl_stmt
-
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__x86_64__
+name|__POPCNT__
 end_ifdef
 
-begin_decl_stmt
-specifier|static
-name|__inline__
-name|long
-name|long
-name|__attribute__
-argument_list|(
-operator|(
-name|__always_inline__
-operator|,
-name|__nodebug__
-operator|)
-argument_list|)
-name|_mm_popcnt_u64
-argument_list|(
-name|unsigned
-name|long
-name|long
-name|__A
-argument_list|)
-block|{
-return|return
-name|__builtin_popcountll
-argument_list|(
-name|__A
-argument_list|)
-return|;
-block|}
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|<popcntintrin.h>
+end_include
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* __x86_64__ */
-end_comment
 
 begin_endif
 endif|#

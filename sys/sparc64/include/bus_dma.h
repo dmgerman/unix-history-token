@@ -236,7 +236,7 @@ decl_stmt|;
 name|bus_size_t
 name|dt_alignment
 decl_stmt|;
-name|bus_size_t
+name|bus_addr_t
 name|dt_boundary
 decl_stmt|;
 name|bus_addr_t

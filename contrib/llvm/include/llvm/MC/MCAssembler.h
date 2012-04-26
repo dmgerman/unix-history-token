@@ -121,9 +121,6 @@ name|class
 name|MCAssembler
 decl_stmt|;
 name|class
-name|MCBinaryExpr
-decl_stmt|;
-name|class
 name|MCContext
 decl_stmt|;
 name|class
@@ -351,6 +348,11 @@ range|:
 name|public
 name|MCFragment
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|SmallString
 operator|<
 literal|32
@@ -637,6 +639,11 @@ range|:
 name|public
 name|MCFragment
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 comment|/// Inst - The instruction this is a fragment for.
 name|MCInst
 name|Inst
@@ -969,6 +976,11 @@ range|:
 name|public
 name|MCFragment
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 comment|/// Alignment - The alignment to ensure, in bytes.
 name|unsigned
 name|Alignment
@@ -1137,6 +1149,11 @@ operator|:
 name|public
 name|MCFragment
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 comment|/// Value - Value to use for filling bytes.
 name|int64_t
 name|Value
@@ -1271,6 +1288,11 @@ operator|:
 name|public
 name|MCFragment
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 comment|/// Offset - The offset this fragment should start at.
 specifier|const
 name|MCExpr
@@ -1372,6 +1394,11 @@ operator|:
 name|public
 name|MCFragment
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 comment|/// Value - The value this fragment should contain.
 specifier|const
 name|MCExpr
@@ -1511,6 +1538,11 @@ operator|:
 name|public
 name|MCFragment
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 comment|/// LineDelta - the value of the difference between the two line numbers
 comment|/// between two .loc dwarf directives.
 name|int64_t
@@ -1651,6 +1683,11 @@ operator|:
 name|public
 name|MCFragment
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 comment|/// AddrDelta - The expression for the difference of the two symbols that
 comment|/// make up the address delta between two .cfi_* dwarf directives.
 specifier|const
@@ -2838,7 +2875,7 @@ end_comment
 
 begin_decl_stmt
 name|bool
-name|EvaluateFixup
+name|evaluateFixup
 argument_list|(
 specifier|const
 name|MCAsmLayout
@@ -2877,7 +2914,7 @@ end_comment
 
 begin_decl_stmt
 name|bool
-name|FixupNeedsRelaxation
+name|fixupNeedsRelaxation
 argument_list|(
 specifier|const
 name|MCFixup
@@ -2885,7 +2922,7 @@ operator|&
 name|Fixup
 argument_list|,
 specifier|const
-name|MCFragment
+name|MCInstFragment
 operator|*
 name|DF
 argument_list|,
@@ -2904,7 +2941,7 @@ end_comment
 
 begin_decl_stmt
 name|bool
-name|FragmentNeedsRelaxation
+name|fragmentNeedsRelaxation
 argument_list|(
 specifier|const
 name|MCInstFragment
@@ -2921,7 +2958,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// LayoutOnce - Perform one layout iteration and return true if any offsets
+comment|/// layoutOnce - Perform one layout iteration and return true if any offsets
 end_comment
 
 begin_comment
@@ -2930,7 +2967,7 @@ end_comment
 
 begin_function_decl
 name|bool
-name|LayoutOnce
+name|layoutOnce
 parameter_list|(
 name|MCAsmLayout
 modifier|&
@@ -2941,7 +2978,7 @@ end_function_decl
 
 begin_function_decl
 name|bool
-name|LayoutSectionOnce
+name|layoutSectionOnce
 parameter_list|(
 name|MCAsmLayout
 modifier|&
@@ -2956,7 +2993,7 @@ end_function_decl
 
 begin_function_decl
 name|bool
-name|RelaxInstruction
+name|relaxInstruction
 parameter_list|(
 name|MCAsmLayout
 modifier|&
@@ -2971,7 +3008,7 @@ end_function_decl
 
 begin_function_decl
 name|bool
-name|RelaxLEB
+name|relaxLEB
 parameter_list|(
 name|MCAsmLayout
 modifier|&
@@ -2986,7 +3023,7 @@ end_function_decl
 
 begin_function_decl
 name|bool
-name|RelaxDwarfLineAddr
+name|relaxDwarfLineAddr
 parameter_list|(
 name|MCAsmLayout
 modifier|&
@@ -3001,7 +3038,7 @@ end_function_decl
 
 begin_function_decl
 name|bool
-name|RelaxDwarfCallFrameFragment
+name|relaxDwarfCallFrameFragment
 parameter_list|(
 name|MCAsmLayout
 modifier|&
@@ -3015,12 +3052,12 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// FinishLayout - Finalize a layout, including fragment lowering.
+comment|/// finishLayout - Finalize a layout, including fragment lowering.
 end_comment
 
 begin_function_decl
 name|void
-name|FinishLayout
+name|finishLayout
 parameter_list|(
 name|MCAsmLayout
 modifier|&
@@ -3031,7 +3068,7 @@ end_function_decl
 
 begin_function_decl
 name|uint64_t
-name|HandleFixup
+name|handleFixup
 parameter_list|(
 specifier|const
 name|MCAsmLayout
@@ -3065,7 +3102,7 @@ end_comment
 
 begin_decl_stmt
 name|uint64_t
-name|ComputeFragmentSize
+name|computeFragmentSize
 argument_list|(
 specifier|const
 name|MCAsmLayout
@@ -3139,7 +3176,7 @@ end_comment
 
 begin_decl_stmt
 name|void
-name|WriteSectionData
+name|writeSectionData
 argument_list|(
 specifier|const
 name|MCSectionData

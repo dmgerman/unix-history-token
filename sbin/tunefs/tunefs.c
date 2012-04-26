@@ -355,8 +355,6 @@ decl_stmt|;
 name|int
 name|svalue
 decl_stmt|,
-name|Sflag
-decl_stmt|,
 name|Svalue
 decl_stmt|;
 name|int
@@ -1146,10 +1144,6 @@ name|SUJ_MIN
 argument_list|,
 name|optarg
 argument_list|)
-expr_stmt|;
-name|Sflag
-operator|=
-literal|1
 expr_stmt|;
 break|break;
 case|case

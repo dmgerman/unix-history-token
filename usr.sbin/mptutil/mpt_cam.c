@@ -1386,8 +1386,17 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|uint8_t
+operator|*
+operator|)
 operator|&
 name|rcaplong
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|rcaplong
+argument_list|)
 argument_list|,
 name|SSD_FULL_SIZE
 argument_list|,

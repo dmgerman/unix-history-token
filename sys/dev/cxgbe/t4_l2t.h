@@ -201,6 +201,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SBUF_DRAIN
+end_ifdef
+
 begin_function_decl
 name|int
 name|sysctl_l2t
@@ -209,6 +215,11 @@ name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#

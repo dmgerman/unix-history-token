@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- PPCTargetMachine.h - Define TargetMachine for PowerPC -----*- C++ -*-=//
+comment|//===-- PPCTargetMachine.h - Define TargetMachine for PowerPC ---*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -111,12 +111,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|PassManager
-decl_stmt|;
-name|class
-name|GlobalValue
-decl_stmt|;
 comment|/// PPCTargetMachine - Common code between 32-bit and 64-bit PowerPC targets.
 comment|///
 name|class
@@ -163,9 +157,13 @@ argument|StringRef CPU
 argument_list|,
 argument|StringRef FS
 argument_list|,
+argument|const TargetOptions&Options
+argument_list|,
 argument|Reloc::Model RM
 argument_list|,
 argument|CodeModel::Model CM
+argument_list|,
+argument|CodeGenOpt::Level OL
 argument_list|,
 argument|bool is64Bit
 argument_list|)
@@ -290,39 +288,27 @@ return|;
 block|}
 comment|// Pass Pipeline Configuration
 name|virtual
-name|bool
-name|addInstSelector
+name|TargetPassConfig
+operator|*
+name|createPassConfig
 argument_list|(
-argument|PassManagerBase&PM
-argument_list|,
-argument|CodeGenOpt::Level OptLevel
-argument_list|)
-block|;
-name|virtual
-name|bool
-name|addPreEmitPass
-argument_list|(
-argument|PassManagerBase&PM
-argument_list|,
-argument|CodeGenOpt::Level OptLevel
+name|PassManagerBase
+operator|&
+name|PM
 argument_list|)
 block|;
 name|virtual
 name|bool
 name|addCodeEmitter
 argument_list|(
-argument|PassManagerBase&PM
+name|PassManagerBase
+operator|&
+name|PM
 argument_list|,
-argument|CodeGenOpt::Level OptLevel
-argument_list|,
-argument|JITCodeEmitter&JCE
+name|JITCodeEmitter
+operator|&
+name|JCE
 argument_list|)
-block|;
-name|virtual
-name|bool
-name|getEnableTailMergeDefault
-argument_list|()
-specifier|const
 block|; }
 decl_stmt|;
 comment|/// PPC32TargetMachine - PowerPC 32-bit target machine.
@@ -333,6 +319,11 @@ range|:
 name|public
 name|PPCTargetMachine
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 name|PPC32TargetMachine
@@ -345,9 +336,13 @@ argument|StringRef CPU
 argument_list|,
 argument|StringRef FS
 argument_list|,
+argument|const TargetOptions&Options
+argument_list|,
 argument|Reloc::Model RM
 argument_list|,
 argument|CodeModel::Model CM
+argument_list|,
+argument|CodeGenOpt::Level OL
 argument_list|)
 block|; }
 decl_stmt|;
@@ -359,6 +354,11 @@ range|:
 name|public
 name|PPCTargetMachine
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 name|PPC64TargetMachine
@@ -371,9 +371,13 @@ argument|StringRef CPU
 argument_list|,
 argument|StringRef FS
 argument_list|,
+argument|const TargetOptions&Options
+argument_list|,
 argument|Reloc::Model RM
 argument_list|,
 argument|CodeModel::Model CM
+argument_list|,
+argument|CodeGenOpt::Level OL
 argument_list|)
 block|; }
 decl_stmt|;

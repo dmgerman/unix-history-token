@@ -100,10 +100,6 @@ comment|//  * the loop depth
 end_comment
 
 begin_comment
-comment|//  * the trip count
-end_comment
-
-begin_comment
 comment|//  * etc...
 end_comment
 
@@ -2393,6 +2389,88 @@ operator|&&
 literal|"Loop header is missing"
 argument_list|)
 block|;
+comment|// Setup for using a depth-first iterator to visit every block in the loop.
+name|SmallVector
+operator|<
+name|BlockT
+operator|*
+block|,
+literal|8
+operator|>
+name|ExitBBs
+block|;
+name|getExitBlocks
+argument_list|(
+name|ExitBBs
+argument_list|)
+block|;
+name|llvm
+operator|::
+name|SmallPtrSet
+operator|<
+name|BlockT
+operator|*
+block|,
+literal|8
+operator|>
+name|VisitSet
+block|;
+name|VisitSet
+operator|.
+name|insert
+argument_list|(
+name|ExitBBs
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|ExitBBs
+operator|.
+name|end
+argument_list|()
+argument_list|)
+block|;
+name|df_ext_iterator
+operator|<
+name|BlockT
+operator|*
+block|,
+name|llvm
+operator|::
+name|SmallPtrSet
+operator|<
+name|BlockT
+operator|*
+block|,
+literal|8
+operator|>
+expr|>
+name|BI
+operator|=
+name|df_ext_begin
+argument_list|(
+name|getHeader
+argument_list|()
+argument_list|,
+name|VisitSet
+argument_list|)
+block|,
+name|BE
+operator|=
+name|df_ext_end
+argument_list|(
+name|getHeader
+argument_list|()
+argument_list|,
+name|VisitSet
+argument_list|)
+block|;
+comment|// Keep track of the number of BBs visited.
+name|unsigned
+name|NumVisited
+operator|=
+literal|0
+block|;
 comment|// Sort the blocks vector so that we can use binary search to do quick
 comment|// lookups.
 name|SmallVector
@@ -2429,23 +2507,13 @@ block|;
 comment|// Check the individual blocks.
 for|for
 control|(
-name|block_iterator
-name|I
-init|=
-name|block_begin
-argument_list|()
-init|,
-name|E
-init|=
-name|block_end
-argument_list|()
 init|;
-name|I
+name|BI
 operator|!=
-name|E
+name|BE
 condition|;
 operator|++
-name|I
+name|BI
 control|)
 block|{
 name|BlockT
@@ -2453,7 +2521,7 @@ modifier|*
 name|BB
 init|=
 operator|*
-name|I
+name|BI
 decl_stmt|;
 name|bool
 name|HasInsideLoopSuccs
@@ -2589,16 +2657,13 @@ operator|++
 name|PI
 control|)
 block|{
-name|typename
-name|InvBlockTraits
-operator|::
-name|NodeType
-operator|*
+name|BlockT
+modifier|*
 name|N
-operator|=
+init|=
 operator|*
 name|PI
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 name|std
@@ -2783,39 +2848,51 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-unit|}
-comment|// Check the subloops.
-end_comment
+begin_expr_stmt
+name|NumVisited
+operator|++
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
-unit|for
+unit|}      assert
 operator|(
-name|iterator
-name|I
-operator|=
-name|begin
+name|NumVisited
+operator|==
+name|getNumBlocks
 argument_list|()
-operator|,
-name|E
-operator|=
-name|end
-argument_list|()
-expr|;
-name|I
-operator|!=
-name|E
-expr|;
-operator|++
-name|I
+operator|&&
+literal|"Unreachable block in loop"
 operator|)
+expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|// Each block in each subloop should be contained within this loop.
+comment|// Check the subloops.
 end_comment
 
 begin_for
+for|for
+control|(
+name|iterator
+name|I
+init|=
+name|begin
+argument_list|()
+init|,
+name|E
+init|=
+name|end
+argument_list|()
+init|;
+name|I
+operator|!=
+name|E
+condition|;
+operator|++
+name|I
+control|)
+comment|// Each block in each subloop should be contained within this loop.
 for|for
 control|(
 name|block_iterator
@@ -3334,47 +3411,6 @@ name|getCanonicalInductionVariable
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// getTripCount - Return a loop-invariant LLVM value indicating the number of
-comment|/// times the loop will be executed.  Note that this means that the backedge
-comment|/// of the loop executes N-1 times.  If the trip-count cannot be determined,
-comment|/// this returns null.
-comment|///
-comment|/// The IndVarSimplify pass transforms loops to have a form that this
-comment|/// function easily understands.
-comment|///
-name|Value
-operator|*
-name|getTripCount
-argument_list|()
-specifier|const
-expr_stmt|;
-comment|/// getSmallConstantTripCount - Returns the trip count of this loop as a
-comment|/// normal unsigned value, if possible. Returns 0 if the trip count is unknown
-comment|/// of not constant. Will also return 0 if the trip count is very large
-comment|/// (>= 2^32)
-comment|///
-comment|/// The IndVarSimplify pass transforms loops to have a form that this
-comment|/// function easily understands.
-comment|///
-name|unsigned
-name|getSmallConstantTripCount
-argument_list|()
-specifier|const
-expr_stmt|;
-comment|/// getSmallConstantTripMultiple - Returns the largest constant divisor of the
-comment|/// trip count of this loop as a normal unsigned value, if possible. This
-comment|/// means that the actual trip count is always a multiple of the returned
-comment|/// value (don't forget the trip count could very well be zero as well!).
-comment|///
-comment|/// Returns 1 if the trip count is unknown or not guaranteed to be the
-comment|/// multiple of a constant (which is also the case if the trip count is simply
-comment|/// constant, use getSmallConstantTripCount for that case), Will also return 1
-comment|/// if the trip count is very large (>= 2^32).
-name|unsigned
-name|getSmallConstantTripMultiple
-argument_list|()
-specifier|const
-expr_stmt|;
 comment|/// isLCSSAForm - Return true if the Loop is in LCSSA form
 name|bool
 name|isLCSSAForm
@@ -3390,6 +3426,12 @@ comment|/// the LoopSimplify form transforms loops to, which is sometimes called
 comment|/// normal form.
 name|bool
 name|isLoopSimplifyForm
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// isSafeToClone - Return true if the loop body is safe to clone in practice.
+name|bool
+name|isSafeToClone
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -3709,22 +3751,10 @@ name|BB
 argument_list|)
 decl|const
 block|{
-name|typename
-name|DenseMap
-operator|<
-name|BlockT
-operator|*
-operator|,
-name|LoopT
-operator|*
-operator|>
-operator|::
-name|const_iterator
-name|I
-operator|=
+return|return
 name|BBMap
 operator|.
-name|find
+name|lookup
 argument_list|(
 name|const_cast
 operator|<
@@ -3735,20 +3765,6 @@ operator|(
 name|BB
 operator|)
 argument_list|)
-expr_stmt|;
-return|return
-name|I
-operator|!=
-name|BBMap
-operator|.
-name|end
-argument_list|()
-condition|?
-name|I
-operator|->
-name|second
-else|:
-literal|0
 return|;
 block|}
 end_decl_stmt
@@ -3971,40 +3987,11 @@ operator|!
 name|L
 condition|)
 block|{
-name|typename
-name|DenseMap
-operator|<
-name|BlockT
-operator|*
-operator|,
-name|LoopT
-operator|*
-operator|>
-operator|::
-name|iterator
-name|I
-operator|=
-name|BBMap
-operator|.
-name|find
-argument_list|(
-name|BB
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|I
-operator|!=
-name|BBMap
-operator|.
-name|end
-argument_list|()
-condition|)
 name|BBMap
 operator|.
 name|erase
 argument_list|(
-name|I
+name|BB
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4382,15 +4369,10 @@ if|if
 condition|(
 name|BBMap
 operator|.
-name|find
+name|count
 argument_list|(
 name|BB
 argument_list|)
-operator|!=
-name|BBMap
-operator|.
-name|end
-argument_list|()
 condition|)
 return|return
 literal|0
@@ -4460,6 +4442,7 @@ operator|=
 operator|*
 name|I
 expr_stmt|;
+comment|// If BB dominates its predecessor...
 if|if
 condition|(
 name|DT
@@ -4470,8 +4453,14 @@ name|BB
 argument_list|,
 name|N
 argument_list|)
+operator|&&
+name|DT
+operator|.
+name|isReachableFromEntry
+argument_list|(
+name|N
+argument_list|)
 condition|)
-comment|// If BB dominates its predecessor...
 name|TodoStack
 operator|.
 name|push_back
@@ -4509,18 +4498,6 @@ index|]
 operator|=
 name|L
 expr_stmt|;
-name|BlockT
-modifier|*
-name|EntryBlock
-init|=
-name|BB
-operator|->
-name|getParent
-argument_list|()
-operator|->
-name|begin
-argument_list|()
-decl_stmt|;
 while|while
 condition|(
 operator|!
@@ -4558,15 +4535,12 @@ operator|&&
 comment|// As of yet unprocessed??
 name|DT
 operator|.
-name|dominates
+name|isReachableFromEntry
 argument_list|(
-name|EntryBlock
-argument_list|,
 name|X
 argument_list|)
 condition|)
 block|{
-comment|// X is reachable from entry block?
 comment|// Check to see if this block already belongs to a loop.  If this occurs
 comment|// then we have a case where a loop that is supposed to be a child of
 comment|// the current loop was processed before the current loop.  When this

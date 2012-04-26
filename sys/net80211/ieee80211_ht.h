@@ -85,7 +85,7 @@ name|IEEE80211_AGGR_BARPEND
 value|0x0020
 comment|/* BAR response pending */
 name|uint8_t
-name|txa_ac
+name|txa_tid
 decl_stmt|;
 name|uint8_t
 name|txa_token
@@ -764,7 +764,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|ieee80211_ht_updateparams
 parameter_list|(
 name|struct

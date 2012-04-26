@@ -82,12 +82,31 @@ comment|/* #undef LLVM_DATADIR */
 end_comment
 
 begin_comment
+comment|/* Target triple LLVM will generate code for by default */
+end_comment
+
+begin_comment
+comment|/* #undef LLVM_DEFAULT_TARGET_TRIPLE */
+end_comment
+
+begin_comment
 comment|/* Installation directory for documentation */
 end_comment
 
 begin_comment
 comment|/* #undef LLVM_DOCSDIR */
 end_comment
+
+begin_comment
+comment|/* Define if threads enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVM_ENABLE_THREADS
+value|0
+end_define
 
 begin_comment
 comment|/* Installation directory for config files */
@@ -107,14 +126,6 @@ directive|define
 name|LLVM_HAS_ATOMICS
 value|0
 end_define
-
-begin_comment
-comment|/* Host triple we were built on */
-end_comment
-
-begin_comment
-comment|/* #undef LLVM_HOSTTRIPLE */
-end_comment
 
 begin_comment
 comment|/* Installation directory for include files */
@@ -179,6 +190,17 @@ define|#
 directive|define
 name|LLVM_NATIVE_ASMPRINTER
 value|LLVMInitializeX86AsmPrinter
+end_define
+
+begin_comment
+comment|/* LLVM name for the native Disassembler init function, if available */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVM_NATIVE_DISASSEMBLER
+value|LLVMInitializeX86Disassembler
 end_define
 
 begin_comment
@@ -312,6 +334,28 @@ end_comment
 begin_comment
 comment|/* #undef LLVM_PREFIX */
 end_comment
+
+begin_comment
+comment|/* Major version of the LLVM API */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVM_VERSION_MAJOR
+value|3
+end_define
+
+begin_comment
+comment|/* Minor version of the LLVM API */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVM_VERSION_MINOR
+value|1
+end_define
 
 begin_endif
 endif|#

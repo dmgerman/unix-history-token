@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2011, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -282,7 +282,7 @@ name|ActualLength
 init|=
 literal|0
 decl_stmt|;
-comment|/* VendorData field is always optional */
+comment|/* Vendor Data field is always optional */
 if|if
 condition|(
 name|InitializerOp
@@ -966,7 +966,7 @@ break|break;
 case|case
 literal|4
 case|:
-comment|/* DebounceTimeout [WORD] (_DBT) */
+comment|/* Debounce Timeout [WORD] (_DBT) */
 name|Descriptor
 operator|->
 name|Gpio
@@ -1084,7 +1084,7 @@ break|break;
 case|case
 literal|8
 case|:
-comment|/* ResourceTag (Descriptor Name) */
+comment|/* Resource Tag (Descriptor Name) */
 name|UtAttachNamepathToOwner
 argument_list|(
 name|Op
@@ -1589,7 +1589,7 @@ break|break;
 case|case
 literal|2
 case|:
-comment|/* DebounceTimeout [WORD] (_DBT) */
+comment|/* Debounce Timeout [WORD] (_DBT) */
 name|Descriptor
 operator|->
 name|Gpio
@@ -1786,7 +1786,7 @@ break|break;
 case|case
 literal|8
 case|:
-comment|/* ResourceTag (Descriptor Name) */
+comment|/* Resource Tag (Descriptor Name) */
 name|UtAttachNamepathToOwner
 argument_list|(
 name|Op
@@ -2251,7 +2251,7 @@ break|break;
 case|case
 literal|2
 case|:
-comment|/* ConnectionSpeed [DWORD] (_SPE) */
+comment|/* Connection Speed [DWORD] (_SPE) */
 name|Descriptor
 operator|->
 name|I2cSerialBus
@@ -2289,7 +2289,7 @@ break|break;
 case|case
 literal|3
 case|:
-comment|/* Addresssing Mode [Flag] (_MOD) */
+comment|/* Addressing Mode [Flag] (_MOD) */
 name|RsSetFlagBits16
 argument_list|(
 operator|&
@@ -2408,7 +2408,7 @@ break|break;
 case|case
 literal|7
 case|:
-comment|/* ResourceTag (Descriptor Name) */
+comment|/* Resource Tag (Descriptor Name) */
 name|UtAttachNamepathToOwner
 argument_list|(
 name|Op
@@ -2885,7 +2885,7 @@ break|break;
 case|case
 literal|5
 case|:
-comment|/* ConnectionSpeed [DWORD] (_SPE) */
+comment|/* Connection Speed [DWORD] (_SPE) */
 name|Descriptor
 operator|->
 name|SpiSerialBus
@@ -3079,7 +3079,7 @@ break|break;
 case|case
 literal|11
 case|:
-comment|/* ResourceTag (Descriptor Name) */
+comment|/* Resource Tag (Descriptor Name) */
 name|UtAttachNamepathToOwner
 argument_list|(
 name|Op
@@ -3363,7 +3363,7 @@ block|{
 case|case
 literal|0
 case|:
-comment|/* ConnectionSpeed (Baud Rate) [DWORD] (_SPE) */
+comment|/* Connection Speed (Baud Rate) [DWORD] (_SPE) */
 name|Descriptor
 operator|->
 name|UartSerialBus
@@ -3814,7 +3814,7 @@ break|break;
 case|case
 literal|12
 case|:
-comment|/* ResourceTag (Descriptor Name) */
+comment|/* Resource Tag (Descriptor Name) */
 name|UtAttachNamepathToOwner
 argument_list|(
 name|Op

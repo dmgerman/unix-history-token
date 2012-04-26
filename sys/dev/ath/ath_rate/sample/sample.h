@@ -179,6 +179,11 @@ modifier|*
 name|sched
 decl_stmt|;
 comment|/* tx schedule table */
+specifier|const
+name|HAL_RATE_TABLE
+modifier|*
+name|currates
+decl_stmt|;
 name|struct
 name|rate_stats
 name|stats

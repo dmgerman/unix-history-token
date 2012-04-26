@@ -116,12 +116,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fs/fifofs/fifo.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<fs/udf/ecma167-udf.h>
 end_include
 
@@ -2181,6 +2175,9 @@ name|diff
 decl_stmt|,
 name|fsize
 decl_stmt|;
+name|ssize_t
+name|n
+decl_stmt|;
 name|int
 name|error
 init|=
@@ -2188,8 +2185,6 @@ literal|0
 decl_stmt|;
 name|long
 name|size
-decl_stmt|,
-name|n
 decl_stmt|,
 name|on
 decl_stmt|;

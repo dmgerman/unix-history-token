@@ -49,7 +49,7 @@ value|4096
 end_define
 
 begin_comment
-comment|/*  * IGB_RXD: Maximum number of Transmit Descriptors  *  *   This value is the number of receive descriptors allocated by the driver.  *   Increasing this value allows the driver to buffer more incoming packets.  *   Each descriptor is 16 bytes.  A receive buffer is also allocated for each  *   descriptor. The maximum MTU size is 16110.  *   Since TDLEN should be multiple of 128bytes, the number of transmit  *   desscriptors should meet the following condition.  *      (num_tx_desc * sizeof(struct e1000_tx_desc)) % 128 == 0  */
+comment|/*  * IGB_RXD: Maximum number of Receive Descriptors  *  *   This value is the number of receive descriptors allocated by the driver.  *   Increasing this value allows the driver to buffer more incoming packets.  *   Each descriptor is 16 bytes.  A receive buffer is also allocated for each  *   descriptor. The maximum MTU size is 16110.  *   Since TDLEN should be multiple of 128bytes, the number of transmit  *   desscriptors should meet the following condition.  *      (num_tx_desc * sizeof(struct e1000_tx_desc)) % 128 == 0  */
 end_comment
 
 begin_define
@@ -843,6 +843,10 @@ endif|#
 directive|endif
 name|bus_dma_tag_t
 name|txtag
+decl_stmt|;
+name|struct
+name|task
+name|txq_task
 decl_stmt|;
 name|u32
 name|bytes

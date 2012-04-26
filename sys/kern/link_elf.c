@@ -3217,9 +3217,10 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|int
+name|ssize_t
 name|resid
-decl_stmt|,
+decl_stmt|;
+name|int
 name|flags
 decl_stmt|;
 name|elf_file_t

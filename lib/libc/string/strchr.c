@@ -126,7 +126,7 @@ block|}
 end_function
 
 begin_expr_stmt
-name|__strong_reference
+name|__weak_reference
 argument_list|(
 name|strchr
 argument_list|,

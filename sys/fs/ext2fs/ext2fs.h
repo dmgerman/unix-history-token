@@ -315,9 +315,70 @@ name|e3fs_first_meta_bg
 decl_stmt|;
 comment|/* First metablock block group */
 name|uint32_t
+name|e3fs_mkfs_time
+decl_stmt|;
+comment|/* when the fs was created */
+name|uint32_t
+name|e3fs_jnl_blks
+index|[
+literal|17
+index|]
+decl_stmt|;
+comment|/* backup of the journal inode */
+name|uint32_t
+name|e4fs_bcount_hi
+decl_stmt|;
+comment|/* block count */
+name|uint32_t
+name|e4fs_rbcount_hi
+decl_stmt|;
+comment|/* reserved blocks count */
+name|uint32_t
+name|e4fs_fbcount_hi
+decl_stmt|;
+comment|/* free blocks count */
+name|uint16_t
+name|e4fs_min_extra_isize
+decl_stmt|;
+comment|/* all inodes have at least some bytes */
+name|uint16_t
+name|e4fs_want_extra_isize
+decl_stmt|;
+comment|/* inodes must reserve some bytes */
+name|uint32_t
+name|e4fs_flags
+decl_stmt|;
+comment|/* miscellaneous flags */
+name|uint16_t
+name|e4fs_raid_stride
+decl_stmt|;
+comment|/* RAID stride */
+name|uint16_t
+name|e4fs_mmpintv
+decl_stmt|;
+comment|/* number of seconds to wait in MMP checking */
+name|uint64_t
+name|e4fs_mmpblk
+decl_stmt|;
+comment|/* block for multi-mount protection */
+name|uint32_t
+name|e4fs_raid_stripe_wid
+decl_stmt|;
+comment|/* blocks on all data disks (N * stride) */
+name|uint8_t
+name|e4fs_log_gpf
+decl_stmt|;
+comment|/* FLEX_BG group size */
+name|uint8_t
+name|e4fs_char_pad2
+decl_stmt|;
+name|uint16_t
+name|e4fs_pad
+decl_stmt|;
+name|uint32_t
 name|reserved2
 index|[
-literal|190
+literal|162
 index|]
 decl_stmt|;
 comment|/* Padding to the end of the block */
@@ -601,6 +662,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|EXT4F_ROCOMPAT_EXTRA_ISIZE
+value|0x0040
+end_define
+
+begin_define
+define|#
+directive|define
 name|EXT2F_INCOMPAT_COMP
 value|0x0001
 end_define
@@ -627,7 +695,7 @@ begin_define
 define|#
 directive|define
 name|EXT2F_ROCOMPAT_SUPP
-value|(EXT2F_ROCOMPAT_SPARSESUPER \ 					 | EXT2F_ROCOMPAT_LARGEFILE)
+value|(EXT2F_ROCOMPAT_SPARSESUPER | \ 					 EXT2F_ROCOMPAT_LARGEFILE | \ 					 EXT4F_ROCOMPAT_EXTRA_ISIZE)
 end_define
 
 begin_define

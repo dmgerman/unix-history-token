@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Networks (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Networks nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM  NETWORKS MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
+comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Inc. (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Inc. nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM INC. MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
 end_comment
 
 begin_comment
@@ -35,6 +35,12 @@ begin_include
 include|#
 directive|include
 file|<asm/octeon/cvmx-helper.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<asm/octeon/cvmx-qlm.h>
 end_include
 
 begin_include
@@ -129,6 +135,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|"cvmx-qlm.h"
+end_include
+
 begin_else
 else|#
 directive|else
@@ -144,6 +156,12 @@ begin_include
 include|#
 directive|include
 file|"cvmx-helper.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"cvmx-qlm.h"
 end_include
 
 begin_include
@@ -189,14 +207,94 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|OCTEON_IS_MODEL
+name|octeon_has_feature
 argument_list|(
-name|OCTEON_CN63XX
+name|OCTEON_FEATURE_SRIO
 argument_list|)
 condition|)
 return|return
 literal|0
 return|;
+comment|/* Read MIO_QLMX_CFG CSRs to find SRIO status. */
+if|if
+condition|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+condition|)
+block|{
+name|int
+name|status
+init|=
+name|cvmx_qlm_get_status
+argument_list|(
+literal|0
+argument_list|)
+decl_stmt|;
+name|int
+name|srio_port
+init|=
+name|interface
+operator|-
+literal|4
+decl_stmt|;
+switch|switch
+condition|(
+name|srio_port
+condition|)
+block|{
+case|case
+literal|0
+case|:
+comment|/* 1x4 lane */
+if|if
+condition|(
+name|status
+operator|==
+literal|4
+condition|)
+return|return
+literal|2
+return|;
+break|break;
+case|case
+literal|2
+case|:
+comment|/* 2x2 lane */
+if|if
+condition|(
+name|status
+operator|==
+literal|5
+condition|)
+return|return
+literal|2
+return|;
+break|break;
+case|case
+literal|1
+case|:
+comment|/* 4x1 long/short */
+case|case
+literal|3
+case|:
+comment|/* 4x1 long/short */
+if|if
+condition|(
+name|status
+operator|==
+literal|6
+condition|)
+return|return
+literal|2
+return|;
+break|break;
+block|}
+return|return
+literal|0
+return|;
+block|}
 name|srio0_status_reg
 operator|.
 name|u64
@@ -274,8 +372,18 @@ decl_stmt|;
 name|cvmx_sriox_imsg_ctrl_t
 name|sriox_imsg_ctrl
 decl_stmt|;
+name|cvmx_sriox_status_reg_t
+name|srio_status_reg
+decl_stmt|;
 name|cvmx_dpi_ctl_t
 name|dpi_ctl
+decl_stmt|;
+name|int
+name|srio_port
+init|=
+name|interface
+operator|-
+literal|4
 decl_stmt|;
 comment|/* All SRIO ports have a cvmx_srio_rx_message_header_t header         on them that must be skipped by IPD */
 for|for
@@ -375,9 +483,7 @@ name|CVMX_SRIOX_OMSG_PORTX
 argument_list|(
 name|index
 argument_list|,
-name|interface
-operator|-
-literal|4
+name|srio_port
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -388,9 +494,7 @@ operator|.
 name|port
 operator|=
 operator|(
-name|interface
-operator|-
-literal|4
+name|srio_port
 operator|)
 operator|*
 literal|2
@@ -411,9 +515,7 @@ name|CVMX_SRIOX_OMSG_PORTX
 argument_list|(
 name|index
 argument_list|,
-name|interface
-operator|-
-literal|4
+name|srio_port
 argument_list|)
 argument_list|,
 name|sriox_omsg_portx
@@ -522,9 +624,7 @@ name|CVMX_SRIOX_OMSG_SP_MRX
 argument_list|(
 name|index
 argument_list|,
-name|interface
-operator|-
-literal|4
+name|srio_port
 argument_list|)
 argument_list|,
 name|sriox_omsg_sp_mrx
@@ -625,9 +725,7 @@ name|CVMX_SRIOX_OMSG_FMP_MRX
 argument_list|(
 name|index
 argument_list|,
-name|interface
-operator|-
-literal|4
+name|srio_port
 argument_list|)
 argument_list|,
 name|sriox_omsg_fmp_mrx
@@ -672,9 +770,7 @@ name|CVMX_SRIOX_OMSG_NMP_MRX
 argument_list|(
 name|index
 argument_list|,
-name|interface
-operator|-
-literal|4
+name|srio_port
 argument_list|)
 argument_list|,
 name|sriox_omsg_nmp_mrx
@@ -692,9 +788,7 @@ name|cvmx_read_csr
 argument_list|(
 name|CVMX_SRIOX_IMSG_CTRL
 argument_list|(
-name|interface
-operator|-
-literal|4
+name|srio_port
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -718,9 +812,7 @@ name|cvmx_write_csr
 argument_list|(
 name|CVMX_SRIOX_IMSG_CTRL
 argument_list|(
-name|interface
-operator|-
-literal|4
+name|srio_port
 argument_list|)
 argument_list|,
 name|sriox_imsg_ctrl
@@ -763,15 +855,38 @@ operator|.
 name|u64
 argument_list|)
 expr_stmt|;
+comment|/* Make sure register access is allowed */
+name|srio_status_reg
+operator|.
+name|u64
+operator|=
+name|cvmx_read_csr
+argument_list|(
+name|CVMX_SRIOX_STATUS_REG
+argument_list|(
+name|srio_port
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|srio_status_reg
+operator|.
+name|s
+operator|.
+name|access
+condition|)
+return|return
+literal|0
+return|;
 comment|/* Enable RX */
 if|if
 condition|(
 operator|!
 name|cvmx_srio_config_read32
 argument_list|(
-name|interface
-operator|-
-literal|4
+name|srio_port
 argument_list|,
 literal|0
 argument_list|,
@@ -784,9 +899,7 @@ literal|0
 argument_list|,
 name|CVMX_SRIOMAINTX_CORE_ENABLES
 argument_list|(
-name|interface
-operator|-
-literal|4
+name|srio_port
 argument_list|)
 argument_list|,
 operator|&
@@ -814,9 +927,7 @@ literal|1
 expr_stmt|;
 name|cvmx_srio_config_write32
 argument_list|(
-name|interface
-operator|-
-literal|4
+name|srio_port
 argument_list|,
 literal|0
 argument_list|,
@@ -829,9 +940,7 @@ literal|0
 argument_list|,
 name|CVMX_SRIOMAINTX_CORE_ENABLES
 argument_list|(
-name|interface
-operator|-
-literal|4
+name|srio_port
 argument_list|)
 argument_list|,
 name|sriomaintx_core_enables

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//====-- MSP430Subtarget.h - Define Subtarget for the MSP430 ---*- C++ -*--===//
+comment|//===-- MSP430Subtarget.h - Define Subtarget for the MSP430 ----*- C++ -*--===//
 end_comment
 
 begin_comment
@@ -65,6 +65,12 @@ directive|include
 file|"llvm/Target/TargetSubtargetInfo.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -75,12 +81,6 @@ begin_include
 include|#
 directive|include
 file|"MSP430GenSubtargetInfo.inc"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string>
 end_include
 
 begin_decl_stmt
@@ -96,6 +96,11 @@ range|:
 name|public
 name|MSP430GenSubtargetInfo
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|bool
 name|ExtendedInsts
 block|;

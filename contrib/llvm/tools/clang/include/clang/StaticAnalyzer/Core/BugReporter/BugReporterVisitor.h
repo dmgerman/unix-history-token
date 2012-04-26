@@ -97,6 +97,13 @@ decl_stmt|;
 name|class
 name|PathDiagnosticPiece
 decl_stmt|;
+comment|/// \brief BugReporterVisitors are used to add custom diagnostics along a path.
+comment|///
+comment|/// Custom visitors should subclass the BugReporterVisitorImpl class for a
+comment|/// default implementation of the clone() method.
+comment|/// (Warning: if you have a deep subclass of BugReporterVisitorImpl, the
+comment|/// default implementation of clone() will NOT do the right thing, and you
+comment|/// will have to provide your own implementation.)
 name|class
 name|BugReporterVisitor
 range|:
@@ -111,6 +118,24 @@ name|virtual
 operator|~
 name|BugReporterVisitor
 argument_list|()
+block|;
+comment|/// \brief Returns a copy of this BugReporter.
+comment|///
+comment|/// Custom BugReporterVisitors should not override this method directly.
+comment|/// Instead, they should inherit from BugReporterVisitorImpl and provide
+comment|/// a protected or public copy constructor.
+comment|///
+comment|/// (Warning: if you have a deep subclass of BugReporterVisitorImpl, the
+comment|/// default implementation of clone() will NOT do the right thing, and you
+comment|/// will have to provide your own implementation.)
+name|virtual
+name|BugReporterVisitor
+operator|*
+name|clone
+argument_list|()
+specifier|const
+operator|=
+literal|0
 block|;
 comment|/// \brief Return a diagnostic piece which should be associated with the
 comment|/// given node.
@@ -199,11 +224,59 @@ name|BR
 argument_list|)
 block|;  }
 decl_stmt|;
+comment|/// This class provides a convenience implementation for clone() using the
+comment|/// Curiously-Recurring Template Pattern. If you are implementing a custom
+comment|/// BugReporterVisitor, subclass BugReporterVisitorImpl and provide a public
+comment|/// or protected copy constructor.
+comment|///
+comment|/// (Warning: if you have a deep subclass of BugReporterVisitorImpl, the
+comment|/// default implementation of clone() will NOT do the right thing, and you
+comment|/// will have to provide your own implementation.)
+name|template
+operator|<
 name|class
-name|FindLastStoreBRVisitor
-range|:
+name|DERIVED
+operator|>
+name|class
+name|BugReporterVisitorImpl
+operator|:
 name|public
 name|BugReporterVisitor
+block|{
+name|virtual
+name|BugReporterVisitor
+operator|*
+name|clone
+argument_list|()
+specifier|const
+block|{
+return|return
+name|new
+name|DERIVED
+argument_list|(
+operator|*
+name|static_cast
+operator|<
+specifier|const
+name|DERIVED
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+argument_list|)
+return|;
+block|}
+expr|}
+block|;
+name|class
+name|FindLastStoreBRVisitor
+operator|:
+name|public
+name|BugReporterVisitorImpl
+operator|<
+name|FindLastStoreBRVisitor
+operator|>
 block|{
 specifier|const
 name|MemRegion
@@ -329,12 +402,15 @@ operator|&
 name|BR
 argument_list|)
 block|; }
-decl_stmt|;
+block|;
 name|class
 name|TrackConstraintBRVisitor
-range|:
+operator|:
 name|public
-name|BugReporterVisitor
+name|BugReporterVisitorImpl
+operator|<
+name|TrackConstraintBRVisitor
+operator|>
 block|{
 name|DefinedSVal
 name|Constraint
@@ -400,12 +476,15 @@ operator|&
 name|BR
 argument_list|)
 block|; }
-decl_stmt|;
+block|;
 name|class
 name|NilReceiverBRVisitor
-range|:
+operator|:
 name|public
-name|BugReporterVisitor
+name|BugReporterVisitorImpl
+operator|<
+name|NilReceiverBRVisitor
+operator|>
 block|{
 name|public
 operator|:
@@ -453,13 +532,16 @@ operator|&
 name|BR
 argument_list|)
 block|; }
-decl_stmt|;
+block|;
 comment|/// Visitor that tries to report interesting diagnostics from conditions.
 name|class
 name|ConditionBRVisitor
-range|:
+operator|:
 name|public
-name|BugReporterVisitor
+name|BugReporterVisitorImpl
+operator|<
+name|ConditionBRVisitor
+operator|>
 block|{
 name|public
 operator|:
@@ -510,6 +592,29 @@ argument_list|)
 block|;
 name|PathDiagnosticPiece
 operator|*
+name|VisitNodeImpl
+argument_list|(
+specifier|const
+name|ExplodedNode
+operator|*
+name|N
+argument_list|,
+specifier|const
+name|ExplodedNode
+operator|*
+name|Prev
+argument_list|,
+name|BugReporterContext
+operator|&
+name|BRC
+argument_list|,
+name|BugReport
+operator|&
+name|BR
+argument_list|)
+block|;
+name|PathDiagnosticPiece
+operator|*
 name|VisitTerminator
 argument_list|(
 specifier|const
@@ -532,6 +637,10 @@ name|CFGBlock
 operator|*
 name|dstBlk
 argument_list|,
+name|BugReport
+operator|&
+name|R
+argument_list|,
 name|BugReporterContext
 operator|&
 name|BRC
@@ -547,7 +656,9 @@ argument|bool tookTrue
 argument_list|,
 argument|BugReporterContext&BRC
 argument_list|,
-argument|const LocationContext *LC
+argument|BugReport&R
+argument_list|,
+argument|const ExplodedNode *N
 argument_list|)
 block|;
 name|PathDiagnosticPiece
@@ -562,7 +673,9 @@ argument|const bool tookTrue
 argument_list|,
 argument|BugReporterContext&BRC
 argument_list|,
-argument|const LocationContext *LC
+argument|BugReport&R
+argument_list|,
+argument|const ExplodedNode *N
 argument_list|)
 block|;
 name|PathDiagnosticPiece
@@ -577,7 +690,26 @@ argument|const bool tookTrue
 argument_list|,
 argument|BugReporterContext&BRC
 argument_list|,
-argument|const LocationContext *LC
+argument|BugReport&R
+argument_list|,
+argument|const ExplodedNode *N
+argument_list|)
+block|;
+name|PathDiagnosticPiece
+operator|*
+name|VisitConditionVariable
+argument_list|(
+argument|StringRef LhsString
+argument_list|,
+argument|const Expr *CondVarExpr
+argument_list|,
+argument|const bool tookTrue
+argument_list|,
+argument|BugReporterContext&BRC
+argument_list|,
+argument|BugReport&R
+argument_list|,
+argument|const ExplodedNode *N
 argument_list|)
 block|;
 name|bool
@@ -597,72 +729,93 @@ argument_list|,
 name|BugReporterContext
 operator|&
 name|BRC
+argument_list|,
+name|BugReport
+operator|&
+name|R
+argument_list|,
+specifier|const
+name|ExplodedNode
+operator|*
+name|N
+argument_list|,
+name|llvm
+operator|::
+name|Optional
+operator|<
+name|bool
+operator|>
+operator|&
+name|prunable
 argument_list|)
 block|; }
-decl_stmt|;
+block|;
 name|namespace
 name|bugreporter
 block|{
 name|BugReporterVisitor
-modifier|*
+operator|*
 name|getTrackNullOrUndefValueVisitor
-parameter_list|(
+argument_list|(
 specifier|const
 name|ExplodedNode
-modifier|*
+operator|*
 name|N
-parameter_list|,
+argument_list|,
 specifier|const
 name|Stmt
-modifier|*
+operator|*
 name|S
-parameter_list|)
-function_decl|;
+argument_list|,
+name|BugReport
+operator|*
+name|R
+argument_list|)
+block|;
 specifier|const
 name|Stmt
-modifier|*
+operator|*
 name|GetDerefExpr
-parameter_list|(
+argument_list|(
 specifier|const
 name|ExplodedNode
-modifier|*
+operator|*
 name|N
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 specifier|const
 name|Stmt
-modifier|*
+operator|*
 name|GetDenomExpr
-parameter_list|(
+argument_list|(
 specifier|const
 name|ExplodedNode
-modifier|*
+operator|*
 name|N
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 specifier|const
 name|Stmt
-modifier|*
+operator|*
 name|GetCalleeExpr
-parameter_list|(
+argument_list|(
 specifier|const
 name|ExplodedNode
-modifier|*
+operator|*
 name|N
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 specifier|const
 name|Stmt
-modifier|*
+operator|*
 name|GetRetValExpr
-parameter_list|(
+argument_list|(
 specifier|const
 name|ExplodedNode
-modifier|*
+operator|*
 name|N
-parameter_list|)
-function_decl|;
-block|}
+argument_list|)
+block|;  }
 comment|// end namespace clang
 block|}
 comment|// end namespace ento

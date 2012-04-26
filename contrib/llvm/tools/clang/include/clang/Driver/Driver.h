@@ -70,6 +70,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
@@ -150,9 +156,6 @@ name|Compilation
 decl_stmt|;
 name|class
 name|DerivedArgList
-decl_stmt|;
-name|class
-name|HostInfo
 decl_stmt|;
 name|class
 name|InputArgList
@@ -264,11 +267,11 @@ comment|/// If the standard library is used
 name|bool
 name|UseStdLib
 decl_stmt|;
-comment|/// Default host triple.
+comment|/// Default target triple.
 name|std
 operator|::
 name|string
-name|DefaultHostTriple
+name|DefaultTargetTriple
 expr_stmt|;
 comment|/// Default name for linked images (e.g., "a.out").
 name|std
@@ -282,13 +285,6 @@ operator|::
 name|string
 name|DriverTitle
 expr_stmt|;
-comment|/// Host information for the platform the driver is running as. This
-comment|/// will generally be the actual host platform, but not always.
-specifier|const
-name|HostInfo
-modifier|*
-name|Host
-decl_stmt|;
 comment|/// Information about the host which can be overridden by the user.
 name|std
 operator|::
@@ -346,7 +342,7 @@ name|CCCIsCXX
 range|:
 literal|1
 decl_stmt|;
-comment|/// Whether the driver is just the preprocessor
+comment|/// Whether the driver is just the preprocessor.
 name|unsigned
 name|CCCIsCPP
 range|:
@@ -476,6 +472,21 @@ name|string
 operator|>
 name|ResultFiles
 expr_stmt|;
+comment|/// \brief Cache of all the ToolChains in use by the driver.
+comment|///
+comment|/// This maps from the string representation of a triple to a ToolChain
+comment|/// created targetting that triple. The driver owns all the ToolChain objects
+comment|/// stored in it, and will clean them up when torn down.
+name|mutable
+name|llvm
+operator|::
+name|StringMap
+operator|<
+name|ToolChain
+operator|*
+operator|>
+name|ToolChains
+expr_stmt|;
 name|private
 label|:
 comment|/// TranslateInputArgs - Create a new derived argument list from the input
@@ -511,7 +522,7 @@ name|Driver
 argument_list|(
 argument|StringRef _ClangExecutable
 argument_list|,
-argument|StringRef _DefaultHostTriple
+argument|StringRef _DefaultTargetTriple
 argument_list|,
 argument|StringRef _DefaultImageName
 argument_list|,
@@ -1057,20 +1068,6 @@ argument|const char *Suffix
 argument_list|)
 specifier|const
 expr_stmt|;
-comment|/// GetHostInfo - Construct a new host info object for the given
-comment|/// host triple.
-specifier|const
-name|HostInfo
-modifier|*
-name|GetHostInfo
-argument_list|(
-specifier|const
-name|char
-operator|*
-name|HostTriple
-argument_list|)
-decl|const
-decl_stmt|;
 comment|/// ShouldUseClangCompilar - Should the clang compiler be used to
 comment|/// handle this action.
 name|bool
@@ -1105,7 +1102,32 @@ name|Args
 argument_list|)
 decl|const
 decl_stmt|;
+name|private
+label|:
+comment|/// \brief Retrieves a ToolChain for a particular target triple.
+comment|///
+comment|/// Will cache ToolChains for the life of the driver object, and create them
+comment|/// on-demand.
+specifier|const
+name|ToolChain
+modifier|&
+name|getToolChain
+argument_list|(
+specifier|const
+name|ArgList
+operator|&
+name|Args
+argument_list|,
+name|StringRef
+name|DarwinArchName
+operator|=
+literal|""
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// @}
+name|public
+label|:
 comment|/// GetReleaseVersion - Parse (([0-9]+)(.([0-9]+)(.([0-9]+)?))?)? and
 comment|/// return the grouped values as integers. Numbers which are not
 comment|/// provided are set to 0.

@@ -83,18 +83,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|DominatorTree
-decl_stmt|;
-name|class
-name|Instruction
-decl_stmt|;
-name|class
-name|Value
-decl_stmt|;
-name|class
-name|TargetData
-decl_stmt|;
 name|template
 operator|<
 name|typename
@@ -103,6 +91,24 @@ operator|>
 name|class
 name|ArrayRef
 expr_stmt|;
+name|class
+name|DominatorTree
+decl_stmt|;
+name|class
+name|Instruction
+decl_stmt|;
+name|class
+name|TargetData
+decl_stmt|;
+name|class
+name|TargetLibraryInfo
+decl_stmt|;
+name|class
+name|Type
+decl_stmt|;
+name|class
+name|Value
+decl_stmt|;
 comment|/// SimplifyAddInst - Given operands for an Add, see if we can
 comment|/// fold the result.  If not, this returns null.
 name|Value
@@ -127,6 +133,13 @@ specifier|const
 name|TargetData
 modifier|*
 name|TD
+init|=
+literal|0
+parameter_list|,
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
 init|=
 literal|0
 parameter_list|,
@@ -166,6 +179,13 @@ init|=
 literal|0
 parameter_list|,
 specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
+init|=
+literal|0
+parameter_list|,
+specifier|const
 name|DominatorTree
 modifier|*
 name|DT
@@ -191,6 +211,13 @@ specifier|const
 name|TargetData
 modifier|*
 name|TD
+init|=
+literal|0
+parameter_list|,
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
 init|=
 literal|0
 parameter_list|,
@@ -224,6 +251,13 @@ init|=
 literal|0
 parameter_list|,
 specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
+init|=
+literal|0
+parameter_list|,
+specifier|const
 name|DominatorTree
 modifier|*
 name|DT
@@ -249,6 +283,13 @@ specifier|const
 name|TargetData
 modifier|*
 name|TD
+init|=
+literal|0
+parameter_list|,
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
 init|=
 literal|0
 parameter_list|,
@@ -282,6 +323,13 @@ init|=
 literal|0
 parameter_list|,
 specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
+init|=
+literal|0
+parameter_list|,
+specifier|const
 name|DominatorTree
 modifier|*
 name|DT
@@ -307,6 +355,13 @@ specifier|const
 name|TargetData
 modifier|*
 name|TD
+init|=
+literal|0
+parameter_list|,
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
 init|=
 literal|0
 parameter_list|,
@@ -340,6 +395,13 @@ init|=
 literal|0
 parameter_list|,
 specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
+init|=
+literal|0
+parameter_list|,
+specifier|const
 name|DominatorTree
 modifier|*
 name|DT
@@ -365,6 +427,13 @@ specifier|const
 name|TargetData
 modifier|*
 name|TD
+init|=
+literal|0
+parameter_list|,
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
 init|=
 literal|0
 parameter_list|,
@@ -404,6 +473,13 @@ init|=
 literal|0
 parameter_list|,
 specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
+init|=
+literal|0
+parameter_list|,
+specifier|const
 name|DominatorTree
 modifier|*
 name|DT
@@ -432,6 +508,13 @@ specifier|const
 name|TargetData
 modifier|*
 name|TD
+init|=
+literal|0
+parameter_list|,
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
 init|=
 literal|0
 parameter_list|,
@@ -468,6 +551,13 @@ init|=
 literal|0
 parameter_list|,
 specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
+init|=
+literal|0
+parameter_list|,
+specifier|const
 name|DominatorTree
 modifier|*
 name|DT
@@ -493,6 +583,13 @@ specifier|const
 name|TargetData
 modifier|*
 name|TD
+init|=
+literal|0
+parameter_list|,
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
 init|=
 literal|0
 parameter_list|,
@@ -526,6 +623,13 @@ init|=
 literal|0
 parameter_list|,
 specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
+init|=
+literal|0
+parameter_list|,
+specifier|const
 name|DominatorTree
 modifier|*
 name|DT
@@ -551,6 +655,13 @@ specifier|const
 name|TargetData
 modifier|*
 name|TD
+init|=
+literal|0
+parameter_list|,
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
 init|=
 literal|0
 parameter_list|,
@@ -587,6 +698,13 @@ init|=
 literal|0
 parameter_list|,
 specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
+init|=
+literal|0
+parameter_list|,
+specifier|const
 name|DominatorTree
 modifier|*
 name|DT
@@ -615,6 +733,13 @@ specifier|const
 name|TargetData
 modifier|*
 name|TD
+init|=
+literal|0
+parameter_list|,
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
 init|=
 literal|0
 parameter_list|,
@@ -652,6 +777,13 @@ init|=
 literal|0
 parameter_list|,
 specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
+init|=
+literal|0
+parameter_list|,
+specifier|const
 name|DominatorTree
 modifier|*
 name|DT
@@ -676,6 +808,13 @@ specifier|const
 name|TargetData
 operator|*
 name|TD
+operator|=
+literal|0
+argument_list|,
+specifier|const
+name|TargetLibraryInfo
+operator|*
+name|TLI
 operator|=
 literal|0
 argument_list|,
@@ -715,6 +854,13 @@ operator|=
 literal|0
 argument_list|,
 specifier|const
+name|TargetLibraryInfo
+operator|*
+name|TLI
+operator|=
+literal|0
+argument_list|,
+specifier|const
 name|DominatorTree
 operator|*
 name|DT
@@ -722,6 +868,42 @@ operator|=
 literal|0
 argument_list|)
 decl_stmt|;
+comment|/// SimplifyTruncInst - Given operands for an TruncInst, see if we can fold
+comment|/// the result.  If not, this returns null.
+name|Value
+modifier|*
+name|SimplifyTruncInst
+parameter_list|(
+name|Value
+modifier|*
+name|Op
+parameter_list|,
+name|Type
+modifier|*
+name|Ty
+parameter_list|,
+specifier|const
+name|TargetData
+modifier|*
+name|TD
+init|=
+literal|0
+parameter_list|,
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
+init|=
+literal|0
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
+init|=
+literal|0
+parameter_list|)
+function_decl|;
 comment|//=== Helper functions for higher up the class hierarchy.
 comment|/// SimplifyCmpInst - Given operands for a CmpInst, see if we can
 comment|/// fold the result.  If not, this returns null.
@@ -744,6 +926,13 @@ specifier|const
 name|TargetData
 modifier|*
 name|TD
+init|=
+literal|0
+parameter_list|,
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
 init|=
 literal|0
 parameter_list|,
@@ -780,6 +969,13 @@ init|=
 literal|0
 parameter_list|,
 specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
+init|=
+literal|0
+parameter_list|,
+specifier|const
 name|DominatorTree
 modifier|*
 name|DT
@@ -805,6 +1001,13 @@ init|=
 literal|0
 parameter_list|,
 specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
+init|=
+literal|0
+parameter_list|,
+specifier|const
 name|DominatorTree
 modifier|*
 name|DT
@@ -812,27 +1015,71 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
-comment|/// ReplaceAndSimplifyAllUses - Perform From->replaceAllUsesWith(To) and then
-comment|/// delete the From instruction.  In addition to a basic RAUW, this does a
-comment|/// recursive simplification of the updated instructions.  This catches
-comment|/// things where one simplification exposes other opportunities.  This only
-comment|/// simplifies and deletes scalar operations, it does not change the CFG.
+comment|/// \brief Replace all uses of 'I' with 'SimpleV' and simplify the uses
+comment|/// recursively.
 comment|///
-name|void
-name|ReplaceAndSimplifyAllUses
+comment|/// This first performs a normal RAUW of I with SimpleV. It then recursively
+comment|/// attempts to simplify those users updated by the operation. The 'I'
+comment|/// instruction must not be equal to the simplified value 'SimpleV'.
+comment|///
+comment|/// The function returns true if any simplifications were performed.
+name|bool
+name|replaceAndRecursivelySimplify
 parameter_list|(
 name|Instruction
 modifier|*
-name|From
+name|I
 parameter_list|,
 name|Value
 modifier|*
-name|To
+name|SimpleV
 parameter_list|,
 specifier|const
 name|TargetData
 modifier|*
 name|TD
+init|=
+literal|0
+parameter_list|,
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
+init|=
+literal|0
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+comment|/// \brief Recursively attempt to simplify an instruction.
+comment|///
+comment|/// This routine uses SimplifyInstruction to simplify 'I', and if successful
+comment|/// replaces uses of 'I' with the simplified value. It then recurses on each
+comment|/// of the users impacted. It returns true if any simplifications were
+comment|/// performed.
+name|bool
+name|recursivelySimplifyInstruction
+parameter_list|(
+name|Instruction
+modifier|*
+name|I
+parameter_list|,
+specifier|const
+name|TargetData
+modifier|*
+name|TD
+init|=
+literal|0
+parameter_list|,
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
 init|=
 literal|0
 parameter_list|,

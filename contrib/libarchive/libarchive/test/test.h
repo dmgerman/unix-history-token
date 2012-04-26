@@ -306,25 +306,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|LOCALE_UTF8
-value|NULL
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|LOCALE_UTF8
-value|"de_DE.UTF-8"
-end_define
-
 begin_endif
 endif|#
 directive|endif
@@ -379,35 +360,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Cygwin */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__CYGWIN__
-argument_list|)
-end_if
-
-begin_comment
-comment|/* Cygwin-1.7.x is lazy about populating nlinks, so don't  * expect it to be accurate. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NLINKS_INACCURATE_FOR_DIRS
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* Haiku OS */
+comment|/* Haiku OS and QNX */
 end_comment
 
 begin_if
@@ -417,10 +370,15 @@ name|defined
 argument_list|(
 name|__HAIKU__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__QNXNTO__
+argument_list|)
 end_if
 
 begin_comment
-comment|/* Haiku has typedefs in stdint.h (needed for int64_t) */
+comment|/* Haiku and QNX have typedefs in stdint.h (needed for int64_t) */
 end_comment
 
 begin_include
@@ -578,7 +536,20 @@ parameter_list|,
 name|v2
 parameter_list|)
 define|\
-value|assertion_equal_string(__FILE__, __LINE__, (v1), #v1, (v2), #v2, NULL)
+value|assertion_equal_string(__FILE__, __LINE__, (v1), #v1, (v2), #v2, NULL, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|assertEqualUTF8String
+parameter_list|(
+name|v1
+parameter_list|,
+name|v2
+parameter_list|)
+define|\
+value|assertion_equal_string(__FILE__, __LINE__, (v1), #v1, (v2), #v2, NULL, 1)
 end_define
 
 begin_comment
@@ -618,39 +589,50 @@ value|assertion_equal_mem(__FILE__, __LINE__, (v1), #v1, (v2), #v2, (l), #l, NUL
 end_define
 
 begin_comment
-comment|/* Assert two files are the same; allow printf-style expansion of second name.  * See below for comments about variable arguments here...  */
+comment|/* Assert two files are the same. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|assertEqualFile
+parameter_list|(
+name|f1
+parameter_list|,
+name|f2
+parameter_list|)
 define|\
-value|assertion_setup(__FILE__, __LINE__);assertion_equal_file
+value|assertion_equal_file(__FILE__, __LINE__, (f1), (f2))
 end_define
 
 begin_comment
-comment|/* Assert that a file is empty; supports printf-style arguments. */
+comment|/* Assert that a file is empty. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|assertEmptyFile
+parameter_list|(
+name|pathname
+parameter_list|)
 define|\
-value|assertion_setup(__FILE__, __LINE__);assertion_empty_file
+value|assertion_empty_file(__FILE__, __LINE__, (pathname))
 end_define
 
 begin_comment
-comment|/* Assert that a file is not empty; supports printf-style arguments. */
+comment|/* Assert that a file is not empty. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|assertNonEmptyFile
+parameter_list|(
+name|pathname
+parameter_list|)
 define|\
-value|assertion_setup(__FILE__, __LINE__);assertion_non_empty_file
+value|assertion_non_empty_file(__FILE__, __LINE__, (pathname))
 end_define
 
 begin_define
@@ -713,32 +695,45 @@ begin_define
 define|#
 directive|define
 name|assertFileExists
+parameter_list|(
+name|pathname
+parameter_list|)
 define|\
-value|assertion_setup(__FILE__, __LINE__);assertion_file_exists
+value|assertion_file_exists(__FILE__, __LINE__, pathname)
 end_define
 
 begin_comment
-comment|/* Assert that a file exists; supports printf-style arguments. */
+comment|/* Assert that a file exists. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|assertFileNotExists
+parameter_list|(
+name|pathname
+parameter_list|)
 define|\
-value|assertion_setup(__FILE__, __LINE__);assertion_file_not_exists
+value|assertion_file_not_exists(__FILE__, __LINE__, pathname)
 end_define
 
 begin_comment
-comment|/* Assert that file contents match a string; supports printf-style arguments. */
+comment|/* Assert that file contents match a string. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|assertFileContents
+parameter_list|(
+name|data
+parameter_list|,
+name|data_size
+parameter_list|,
+name|pathname
+parameter_list|)
 define|\
-value|assertion_setup(__FILE__, __LINE__);assertion_file_contents
+value|assertion_file_contents(__FILE__, __LINE__, data, data_size, pathname)
 end_define
 
 begin_define
@@ -797,8 +792,26 @@ begin_define
 define|#
 directive|define
 name|assertTextFileContents
+parameter_list|(
+name|text
+parameter_list|,
+name|pathname
+parameter_list|)
 define|\
-value|assertion_setup(__FILE__, __LINE__);assertion_text_file_contents
+value|assertion_text_file_contents(__FILE__, __LINE__, text, pathname)
+end_define
+
+begin_define
+define|#
+directive|define
+name|assertFileContainsLinesAnyOrder
+parameter_list|(
+name|pathname
+parameter_list|,
+name|lines
+parameter_list|)
+define|\
+value|assertion_file_contains_lines_any_order(__FILE__, __LINE__, pathname, lines)
 end_define
 
 begin_define
@@ -935,6 +948,25 @@ define|\
 value|assertion_umask(__FILE__, __LINE__, mask)
 end_define
 
+begin_define
+define|#
+directive|define
+name|assertUtimes
+parameter_list|(
+name|pathname
+parameter_list|,
+name|atime
+parameter_list|,
+name|atime_nsec
+parameter_list|,
+name|mtime
+parameter_list|,
+name|mtime_nsec
+parameter_list|)
+define|\
+value|assertion_utimes(__FILE__, __LINE__, pathname, atime, atime_nsec, mtime, mtime_nsec)
+end_define
+
 begin_comment
 comment|/*  * This would be simple with C99 variadic macros, but I don't want to  * require that.  Instead, I insert a function call before each  * skipping() call to pass the file and line information down.  Crude,  * but effective.  */
 end_comment
@@ -944,7 +976,7 @@ define|#
 directive|define
 name|skipping
 define|\
-value|assertion_setup(__FILE__, __LINE__);test_skipping
+value|skipping_setup(__FILE__, __LINE__);test_skipping
 end_define
 
 begin_comment
@@ -1012,7 +1044,11 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-modifier|...
+name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1025,11 +1061,15 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
+name|int
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 parameter_list|,
-modifier|...
+specifier|const
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1132,6 +1172,8 @@ modifier|*
 parameter_list|,
 name|void
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1248,8 +1290,36 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|assertion_file_contains_lines_any_order
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|assertion_file_contents
 parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
 specifier|const
 name|void
 modifier|*
@@ -1259,8 +1329,6 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-parameter_list|,
-modifier|...
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1273,7 +1341,11 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-modifier|...
+name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1343,7 +1415,11 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-modifier|...
+name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1562,7 +1638,11 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-modifier|...
+name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1571,6 +1651,12 @@ begin_function_decl
 name|int
 name|assertion_text_file_contents
 parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -1600,8 +1686,33 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|assertion_utimes
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|long
+parameter_list|,
+name|long
+parameter_list|,
+name|long
+parameter_list|,
+name|long
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
-name|assertion_setup
+name|skipping_setup
 parameter_list|(
 specifier|const
 name|char
@@ -1697,6 +1808,21 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Return true if the file has large i-node number(>0xffffffff). */
+end_comment
+
+begin_function_decl
+name|int
+name|is_LargeInode
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Suck file into string allocated via malloc(). Call free() when done. */
 end_comment
 
@@ -1736,6 +1862,18 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* Path to working directory for current test */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|testworkdir
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Special interfaces for libarchive test harness.  */
@@ -1798,6 +1936,28 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* _seek version produces a seekable file. */
+end_comment
+
+begin_function_decl
+name|int
+name|read_open_memory_seek
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Versions of above that accept an archive argument for additional info. */
 end_comment
 
@@ -1838,7 +1998,7 @@ parameter_list|,
 name|v2
 parameter_list|)
 define|\
-value|assertion_equal_string(__FILE__, __LINE__, (v1), #v1, (v2), #v2, (a))
+value|assertion_equal_string(__FILE__, __LINE__, (v1), #v1, (v2), #v2, (a), 0)
 end_define
 
 begin_ifdef

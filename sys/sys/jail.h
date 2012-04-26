@@ -624,9 +624,13 @@ name|pr_enforce_statfs
 decl_stmt|;
 comment|/* (p) statfs permission */
 name|int
+name|pr_devfs_rsnum
+decl_stmt|;
+comment|/* (p) devfs ruleset */
+name|int
 name|pr_spare
 index|[
-literal|5
+literal|4
 index|]
 decl_stmt|;
 name|unsigned
@@ -928,8 +932,36 @@ end_define
 begin_define
 define|#
 directive|define
+name|PR_ALLOW_MOUNT_DEVFS
+value|0x0080
+end_define
+
+begin_define
+define|#
+directive|define
+name|PR_ALLOW_MOUNT_NULLFS
+value|0x0100
+end_define
+
+begin_define
+define|#
+directive|define
+name|PR_ALLOW_MOUNT_ZFS
+value|0x0200
+end_define
+
+begin_define
+define|#
+directive|define
+name|PR_ALLOW_MOUNT_PROCFS
+value|0x0400
+end_define
+
+begin_define
+define|#
+directive|define
 name|PR_ALLOW_ALL
-value|0x007f
+value|0x07ff
 end_define
 
 begin_comment
@@ -1224,6 +1256,21 @@ name|descr
 parameter_list|)
 define|\
 value|SYSCTL_NODE(_security_jail_param, OID_AUTO, module, 0, 0, descr)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_JAIL_PARAM_SUBNODE
+parameter_list|(
+name|parent
+parameter_list|,
+name|module
+parameter_list|,
+name|descr
+parameter_list|)
+define|\
+value|SYSCTL_NODE(_security_jail_param_##parent, OID_AUTO, module, 0, 0, descr)
 end_define
 
 begin_define

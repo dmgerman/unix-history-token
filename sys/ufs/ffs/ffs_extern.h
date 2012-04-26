@@ -729,6 +729,9 @@ name|vp
 parameter_list|,
 name|int
 name|waitfor
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -747,10 +750,6 @@ name|int
 parameter_list|,
 name|struct
 name|ucred
-modifier|*
-parameter_list|,
-name|struct
-name|thread
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1509,6 +1508,17 @@ define|#
 directive|define
 name|FLUSH_BLOCKS_WAIT
 value|4
+end_define
+
+begin_comment
+comment|/*  * Flag to ffs_syncvnode() to request flushing of data only,  * but skip the ffs_update() on the inode itself. Used to avoid  * deadlock when flushing snapshot inodes while holding snaplk.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NO_INO_UPDT
+value|0x00000001
 end_define
 
 begin_function_decl

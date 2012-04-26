@@ -1187,7 +1187,7 @@ define|#
 directive|define
 name|PF_LOCK
 parameter_list|()
-value|do {				\ 	PF_UNLOCK_ASSERT();				\ 	mtx_lock(&pf_task_mtx);				\ } while(0)
+value|mtx_lock(&pf_task_mtx)
 end_define
 
 begin_define
@@ -1195,7 +1195,7 @@ define|#
 directive|define
 name|PF_UNLOCK
 parameter_list|()
-value|do {				\ 	PF_LOCK_ASSERT();				\ 	mtx_unlock(&pf_task_mtx);			\ } while(0)
+value|mtx_unlock(&pf_task_mtx)
 end_define
 
 begin_else
@@ -1772,6 +1772,10 @@ begin_comment
 comment|/* PF_INET_INET6 */
 end_comment
 
+begin_comment
+comment|/*  * XXX callers not FIB-aware in our version of pf yet.  * OpenBSD fixed it later it seems, 2010/05/07 13:33:16 claudio.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1786,9 +1790,11 @@ parameter_list|,
 name|neg
 parameter_list|,
 name|ifp
+parameter_list|,
+name|rtid
 parameter_list|)
 define|\
-value|(								\ 		(((aw)->type == PF_ADDR_NOROUTE&&			\ 		    pf_routable((x), (af), NULL)) ||			\ 		(((aw)->type == PF_ADDR_URPFFAILED&& (ifp) != NULL&&	\ 		    pf_routable((x), (af), (ifp))) ||			\ 		((aw)->type == PF_ADDR_RTLABEL&&			\ 		    !pf_rtlabel_match((x), (af), (aw))) ||		\ 		((aw)->type == PF_ADDR_TABLE&&				\ 		    !pfr_match_addr((aw)->p.tbl, (x), (af))) ||		\ 		((aw)->type == PF_ADDR_DYNIFTL&&			\ 		    !pfi_match_addr((aw)->p.dyn, (x), (af))) ||		\ 		((aw)->type == PF_ADDR_RANGE&&				\ 		    !pf_match_addr_range(&(aw)->v.a.addr,		\&(aw)->v.a.mask, (x), (af))) ||			\ 		((aw)->type == PF_ADDR_ADDRMASK&&			\ 		    !PF_AZERO(&(aw)->v.a.mask, (af))&&			\ 		    !PF_MATCHA(0,&(aw)->v.a.addr,			\&(aw)->v.a.mask, (x), (af))))) !=			\ 		(neg)							\ 	)
+value|(								\ 		(((aw)->type == PF_ADDR_NOROUTE&&			\ 		    pf_routable((x), (af), NULL, (rtid))) ||		\ 		(((aw)->type == PF_ADDR_URPFFAILED&& (ifp) != NULL&&	\ 		    pf_routable((x), (af), (ifp), (rtid))) ||		\ 		((aw)->type == PF_ADDR_RTLABEL&&			\ 		    !pf_rtlabel_match((x), (af), (aw), (rtid))) ||	\ 		((aw)->type == PF_ADDR_TABLE&&				\ 		    !pfr_match_addr((aw)->p.tbl, (x), (af))) ||		\ 		((aw)->type == PF_ADDR_DYNIFTL&&			\ 		    !pfi_match_addr((aw)->p.dyn, (x), (af))) ||		\ 		((aw)->type == PF_ADDR_RANGE&&				\ 		    !pf_match_addr_range(&(aw)->v.a.addr,		\&(aw)->v.a.mask, (x), (af))) ||			\ 		((aw)->type == PF_ADDR_ADDRMASK&&			\ 		    !PF_AZERO(&(aw)->v.a.mask, (af))&&			\ 		    !PF_MATCHA(0,&(aw)->v.a.addr,			\&(aw)->v.a.mask, (x), (af))))) !=			\ 		(neg)							\ 	)
 end_define
 
 begin_struct
@@ -9262,6 +9268,8 @@ parameter_list|,
 name|struct
 name|pfi_kif
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -9279,6 +9287,8 @@ parameter_list|,
 name|struct
 name|pf_addr_wrap
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -912,6 +912,21 @@ operator|==
 name|opt_replace
 condition|)
 block|{
+comment|/* relinquish the setuid status of the binary during 		 * the open, lest nonroot users read files they should 		 * not be able to read.  we can't use access() here 		 * since there's a race condition.  thanks go out to 		 * Arnt Gulbrandsen<agulbra@pvv.unit.no> for spotting 		 * the race. 		 */
+if|if
+condition|(
+name|swap_uids
+argument_list|()
+operator|<
+name|OK
+condition|)
+name|err
+argument_list|(
+name|ERROR_EXIT
+argument_list|,
+literal|"swapping uids"
+argument_list|)
+expr_stmt|;
 comment|/* we have to open the file here because we're going to 		 * chdir(2) into /var/cron before we get around to 		 * reading the file. 		 */
 if|if
 condition|(
@@ -961,21 +976,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* relinquish the setuid status of the binary during 			 * the open, lest nonroot users read files they should 			 * not be able to read.  we can't use access() here 			 * since there's a race condition.  thanks go out to 			 * Arnt Gulbrandsen<agulbra@pvv.unit.no> for spotting 			 * the race. 			 */
-if|if
-condition|(
-name|swap_uids
-argument_list|()
-operator|<
-name|OK
-condition|)
-name|err
-argument_list|(
-name|ERROR_EXIT
-argument_list|,
-literal|"swapping uids"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -999,6 +999,7 @@ argument_list|,
 name|Filename
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|swap_uids_back
@@ -1013,7 +1014,6 @@ argument_list|,
 literal|"swapping uids back"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|Debug
 argument_list|(
@@ -1766,6 +1766,20 @@ name|again
 label|:
 if|if
 condition|(
+name|swap_uids
+argument_list|()
+operator|<
+name|OK
+condition|)
+name|err
+argument_list|(
+name|ERROR_EXIT
+argument_list|,
+literal|"swapping uids"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|stat
 argument_list|(
 name|Filename
@@ -1795,6 +1809,20 @@ name|ERROR_EXIT
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|swap_uids_back
+argument_list|()
+operator|<
+name|OK
+condition|)
+name|err
+argument_list|(
+name|ERROR_EXIT
+argument_list|,
+literal|"swapping uids back"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|statbuf
@@ -2159,6 +2187,20 @@ goto|;
 block|}
 if|if
 condition|(
+name|swap_uids
+argument_list|()
+operator|<
+name|OK
+condition|)
+name|err
+argument_list|(
+name|ERROR_EXIT
+argument_list|,
+literal|"swapping uids"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|stat
 argument_list|(
 name|Filename
@@ -2225,6 +2267,20 @@ goto|goto
 name|fatal
 goto|;
 block|}
+if|if
+condition|(
+name|swap_uids_back
+argument_list|()
+operator|<
+name|OK
+condition|)
+name|err
+argument_list|(
+name|ERROR_EXIT
+argument_list|,
+literal|"swapping uids back"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|strcmp

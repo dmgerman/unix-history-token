@@ -112,6 +112,19 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|cvm_assign_mac_address
+parameter_list|(
+name|uint64_t
+modifier|*
+parameter_list|,
+name|uint8_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|cvm_oct_init_module
 parameter_list|(
 name|device_t
@@ -203,14 +216,6 @@ name|ifp
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|unsigned
-name|int
-name|cvm_oct_mac_addr_offset
-decl_stmt|;
-end_decl_stmt
 
 end_unit
 

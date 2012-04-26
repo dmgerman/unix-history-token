@@ -89,16 +89,12 @@ name|ASTFrontendAction
 block|{
 name|protected
 operator|:
-name|llvm
-operator|::
 name|OwningPtr
 operator|<
 name|FixItRewriter
 operator|>
 name|Rewriter
 block|;
-name|llvm
-operator|::
 name|OwningPtr
 operator|<
 name|FixItOptions
@@ -147,6 +143,40 @@ block|;
 operator|~
 name|FixItAction
 argument_list|()
+block|; }
+decl_stmt|;
+comment|/// \brief Emits changes to temporary files and uses them for the original
+comment|/// frontend action.
+name|class
+name|FixItRecompile
+range|:
+name|public
+name|WrapperFrontendAction
+block|{
+name|public
+operator|:
+name|FixItRecompile
+argument_list|(
+name|FrontendAction
+operator|*
+name|WrappedAction
+argument_list|)
+operator|:
+name|WrapperFrontendAction
+argument_list|(
+argument|WrappedAction
+argument_list|)
+block|{}
+name|protected
+operator|:
+name|virtual
+name|bool
+name|BeginInvocation
+argument_list|(
+name|CompilerInstance
+operator|&
+name|CI
+argument_list|)
 block|; }
 decl_stmt|;
 name|class

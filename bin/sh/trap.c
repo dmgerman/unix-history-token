@@ -810,11 +810,15 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-while|while
-condition|(
+for|for
+control|(
+init|;
 operator|*
 name|argv
-condition|)
+condition|;
+name|argv
+operator|++
+control|)
 block|{
 if|if
 condition|(
@@ -844,6 +848,7 @@ name|errors
 operator|=
 literal|1
 expr_stmt|;
+continue|continue;
 block|}
 name|INTOFF
 expr_stmt|;
@@ -892,9 +897,6 @@ name|signo
 argument_list|)
 expr_stmt|;
 name|INTON
-expr_stmt|;
-name|argv
-operator|++
 expr_stmt|;
 block|}
 return|return
@@ -1635,6 +1637,10 @@ name|i
 decl_stmt|;
 name|int
 name|savestatus
+decl_stmt|,
+name|prev_evalskip
+decl_stmt|,
+name|prev_skipcount
 decl_stmt|;
 name|in_dotrap
 operator|++
@@ -1692,6 +1698,19 @@ condition|)
 name|ignore_sigchld
 operator|++
 expr_stmt|;
+comment|/* 					 * Backup current evalskip 					 * state and reset it before 					 * executing a trap, so that the 					 * trap is not disturbed by an 					 * ongoing break/continue/return 					 * statement. 					 */
+name|prev_evalskip
+operator|=
+name|evalskip
+expr_stmt|;
+name|prev_skipcount
+operator|=
+name|skipcount
+expr_stmt|;
+name|evalskip
+operator|=
+literal|0
+expr_stmt|;
 name|last_trapsig
 operator|=
 name|i
@@ -1714,6 +1733,23 @@ name|exitstatus
 operator|=
 name|savestatus
 expr_stmt|;
+comment|/* 					 * If such a command was not 					 * already in progress, allow a 					 * break/continue/return in the 					 * trap action to have an effect 					 * outside of it. 					 */
+if|if
+condition|(
+name|prev_evalskip
+operator|!=
+literal|0
+condition|)
+block|{
+name|evalskip
+operator|=
+name|prev_evalskip
+expr_stmt|;
+name|skipcount
+operator|=
+name|prev_skipcount
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|i
@@ -1954,6 +1990,11 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
+comment|/* 		 * Reset evalskip, or the trap on EXIT could be 		 * interrupted if the last command was a "return". 		 */
+name|evalskip
+operator|=
+literal|0
+expr_stmt|;
 name|trap
 index|[
 literal|0

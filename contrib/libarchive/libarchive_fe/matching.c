@@ -603,12 +603,7 @@ name|match
 operator|->
 name|pattern
 index|[
-name|strlen
-argument_list|(
-name|match
-operator|->
-name|pattern
-argument_list|)
+name|len
 operator|-
 literal|1
 index|]
@@ -672,6 +667,63 @@ operator|(
 literal|0
 operator|)
 return|;
+comment|/* Mark off any unmatched inclusions. */
+comment|/* In particular, if a filename does appear in the archive and 	 * is explicitly included and excluded, then we don't report 	 * it as missing even though we don't extract it. 	 */
+name|matched
+operator|=
+name|NULL
+expr_stmt|;
+for|for
+control|(
+name|match
+operator|=
+name|matching
+operator|->
+name|inclusions
+init|;
+name|match
+operator|!=
+name|NULL
+condition|;
+name|match
+operator|=
+name|match
+operator|->
+name|next
+control|)
+block|{
+if|if
+condition|(
+name|match
+operator|->
+name|matches
+operator|==
+literal|0
+operator|&&
+name|match_inclusion
+argument_list|(
+name|match
+argument_list|,
+name|pathname
+argument_list|)
+condition|)
+block|{
+name|matching
+operator|->
+name|inclusions_unmatched_count
+operator|--
+expr_stmt|;
+name|match
+operator|->
+name|matches
+operator|++
+expr_stmt|;
+name|matched
+operator|=
+name|match
+expr_stmt|;
+block|}
+block|}
 comment|/* Exclusions take priority */
 for|for
 control|(
@@ -707,11 +759,19 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* Then check for inclusions */
+comment|/* It's not excluded and we found an inclusion above, so it's included. */
+if|if
+condition|(
 name|matched
-operator|=
+operator|!=
 name|NULL
-expr_stmt|;
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* We didn't find an unmatched inclusion, check the remaining ones. */
 for|for
 control|(
 name|match
@@ -731,8 +791,15 @@ operator|->
 name|next
 control|)
 block|{
+comment|/* We looked at previously-unmatched inclusions already. */
 if|if
 condition|(
+name|match
+operator|->
+name|matches
+operator|>
+literal|0
+operator|&&
 name|match_inclusion
 argument_list|(
 name|match
@@ -741,48 +808,7 @@ name|pathname
 argument_list|)
 condition|)
 block|{
-comment|/* 			 * If this pattern has never been matched, 			 * then we're done. 			 */
-if|if
-condition|(
 name|match
-operator|->
-name|matches
-operator|==
-literal|0
-condition|)
-block|{
-name|match
-operator|->
-name|matches
-operator|++
-expr_stmt|;
-name|matching
-operator|->
-name|inclusions_unmatched_count
-operator|--
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-comment|/* 			 * Otherwise, remember the match but keep checking 			 * in case we can tick off an unmatched pattern. 			 */
-name|matched
-operator|=
-name|match
-expr_stmt|;
-block|}
-block|}
-comment|/* 	 * We didn't find a pattern that had never been matched, but 	 * we did find a match, so count it and exit. 	 */
-if|if
-condition|(
-name|matched
-operator|!=
-name|NULL
-condition|)
-block|{
-name|matched
 operator|->
 name|matches
 operator|++
@@ -792,6 +818,7 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
 block|}
 comment|/* If there were inclusions, default is to exclude. */
 if|if
@@ -875,12 +902,6 @@ modifier|*
 name|pathname
 parameter_list|)
 block|{
-if|#
-directive|if
-literal|0
-block|return (lafe_pathmatch(match->pattern, pathname, 0));
-else|#
-directive|else
 return|return
 operator|(
 name|lafe_pathmatch
@@ -895,8 +916,6 @@ name|PATHMATCH_NO_ANCHOR_END
 argument_list|)
 operator|)
 return|;
-endif|#
-directive|endif
 block|}
 end_function
 

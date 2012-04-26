@@ -550,6 +550,11 @@ name|ah_isFastClockEnabled
 operator|=
 name|ar5212IsFastClockEnabled
 block|,
+operator|.
+name|ah_get11nExtBusy
+operator|=
+name|ar5212Get11nExtBusy
+block|,
 comment|/* Key Cache Functions */
 operator|.
 name|ah_getKeyCacheSize
@@ -4044,6 +4049,13 @@ expr_stmt|;
 name|pCap
 operator|->
 name|halChanQuarterRate
+operator|=
+name|AH_TRUE
+expr_stmt|;
+comment|/* 	 * RSSI uses the combined field; some 11n NICs may use 	 * the control chain RSSI. 	 */
+name|pCap
+operator|->
+name|halUseCombinedRadarRssi
 operator|=
 name|AH_TRUE
 expr_stmt|;

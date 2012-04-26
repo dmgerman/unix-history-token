@@ -209,6 +209,16 @@ name|m
 operator|->
 name|phys_addr
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|wait
+operator|&
+name|M_NODUMP
+operator|)
+operator|==
+literal|0
+condition|)
 name|dump_add_page
 argument_list|(
 name|pa

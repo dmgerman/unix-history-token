@@ -15,26 +15,6 @@ directive|define
 name|__AR9130_EEPROM_H__
 end_define
 
-begin_function_decl
-specifier|extern
-name|HAL_BOOL
-name|ar9130EepromRead
-parameter_list|(
-name|struct
-name|ath_hal
-modifier|*
-name|ah
-parameter_list|,
-name|u_int
-name|off
-parameter_list|,
-name|uint16_t
-modifier|*
-name|data
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_endif
 endif|#
 directive|endif

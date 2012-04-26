@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2010  Internet Systems Consortium, Inc. ("ISC")  *  
 end_comment
 
 begin_comment
-comment|/* $Id: isc-hmac-fixup.c,v 1.4 2010-03-10 02:17:52 marka Exp $ */
+comment|/* $Id: isc-hmac-fixup.c,v 1.4 2010/03/10 02:17:52 marka Exp $ */
 end_comment
 
 begin_include

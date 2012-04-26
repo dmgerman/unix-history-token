@@ -608,6 +608,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|OP_SPECIAL2
+value|034
+end_define
+
+begin_define
+define|#
+directive|define
+name|OP_JALX
+value|035
+end_define
+
+begin_define
+define|#
+directive|define
+name|OP_SPECIAL3
+value|037
+end_define
+
+begin_define
+define|#
+directive|define
 name|OP_LB
 value|040
 end_define
@@ -1824,6 +1845,17 @@ define|#
 directive|define
 name|OP_R_BGEZALL
 value|OP_BGEZALL
+end_define
+
+begin_comment
+comment|/*  * Values for the 'func' field when 'op' == OP_SPECIAL3.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OP_RDHWR
+value|073
 end_define
 
 begin_comment

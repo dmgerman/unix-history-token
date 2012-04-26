@@ -477,6 +477,19 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
+name|arge_update_link_locked
+parameter_list|(
+name|struct
+name|arge_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
 name|arge_set_pll
 parameter_list|(
 name|struct
@@ -570,6 +583,19 @@ parameter_list|(
 name|struct
 name|arge_softc
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|arge_rx_ring_free
+parameter_list|(
+name|struct
+name|arge_softc
+modifier|*
+name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -966,7 +992,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * RedBoot passes MAC address to entry point as environment   * variable. platfrom_start parses it and stores in this variable  */
+comment|/*  * RedBoot passes MAC address to entry point as environment  * variable. platfrom_start parses it and stores in this variable  */
 end_comment
 
 begin_decl_stmt
@@ -1003,7 +1029,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Flushes all   */
+comment|/*  * Flushes all  */
 end_comment
 
 begin_function
@@ -1469,7 +1495,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 		 * Use port 4 (WAN) for GE0. For any other port use  		 * its PHY the same as its unit number  		 */
+comment|/* 		 * Use port 4 (WAN) for GE0. For any other port use 		 * its PHY the same as its unit number 		 */
 if|if
 condition|(
 name|sc
@@ -1508,7 +1534,7 @@ name|phymask
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 *  Get default media& duplex mode, by default its Base100T  	 *  and full duplex 	 */
+comment|/* 	 *  Get default media& duplex mode, by default its Base100T 	 *  and full duplex 	 */
 if|if
 condition|(
 name|resource_int_value
@@ -2170,7 +2196,7 @@ argument_list|(
 literal|100
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Set all Ethernet address registers to the same initial values 	 * set all four addresses to 66-88-aa-cc-dd-ee  	 */
+comment|/* 	 * Set all Ethernet address registers to the same initial values 	 * set all four addresses to 66-88-aa-cc-dd-ee 	 */
 name|ARGE_WRITE
 argument_list|(
 name|sc
@@ -2313,7 +2339,7 @@ argument_list|,
 name|FIFO_RX_FILTMASK_DEFAULT
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Check if we have single-PHY MAC or multi-PHY 	 */
+comment|/* 	 * Check if we have single-PHY MAC or multi-PHY 	 */
 name|phys_total
 operator|=
 literal|0
@@ -3269,6 +3295,44 @@ name|arge_softc
 modifier|*
 name|sc
 decl_stmt|;
+name|sc
+operator|=
+operator|(
+expr|struct
+name|arge_softc
+operator|*
+operator|)
+name|arg
+expr_stmt|;
+name|ARGE_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|arge_update_link_locked
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|ARGE_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|arge_update_link_locked
+parameter_list|(
+name|struct
+name|arge_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
 name|struct
 name|mii_data
 modifier|*
@@ -3284,20 +3348,6 @@ name|media
 decl_stmt|,
 name|duplex
 decl_stmt|;
-name|sc
-operator|=
-operator|(
-expr|struct
-name|arge_softc
-operator|*
-operator|)
-name|arg
-expr_stmt|;
-name|ARGE_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|mii
 operator|=
 name|device_get_softc
@@ -3334,11 +3384,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|ARGE_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
 if|if
@@ -3392,17 +3437,14 @@ expr_stmt|;
 block|}
 block|}
 else|else
+block|{
 name|sc
 operator|->
 name|arge_link_status
 operator|=
 literal|0
 expr_stmt|;
-name|ARGE_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -3716,7 +3758,7 @@ argument_list|,
 name|DMA_RX_STATUS_PKT_RECVD
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Clear all possible TX interrupts 	 */
+comment|/* 	 * Clear all possible TX interrupts 	 */
 while|while
 condition|(
 name|ARGE_READ
@@ -3737,7 +3779,7 @@ argument_list|,
 name|DMA_TX_STATUS_PKT_SENT
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Now Rx/Tx errors 	 */
+comment|/* 	 * Now Rx/Tx errors 	 */
 name|ARGE_WRITE
 argument_list|(
 name|sc
@@ -3758,6 +3800,12 @@ argument_list|,
 name|DMA_TX_STATUS_BUS_ERROR
 operator||
 name|DMA_TX_STATUS_UNDERRUN
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Force a DDR flush so any pending data is properly 	 * flushed to RAM before underlying buffers are freed. 	 */
+name|arge_flush_ddr
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 block|}
@@ -3878,12 +3926,6 @@ operator|->
 name|arge_miibus
 condition|)
 block|{
-name|sc
-operator|->
-name|arge_link_status
-operator|=
-literal|0
-expr_stmt|;
 name|mii
 operator|=
 name|device_get_softc
@@ -3928,6 +3970,7 @@ name|sc
 operator|->
 name|arge_miibus
 condition|)
+block|{
 name|callout_reset
 argument_list|(
 operator|&
@@ -3942,6 +3985,12 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
+name|arge_update_link_locked
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
 name|ARGE_WRITE
 argument_list|(
 name|sc
@@ -4358,7 +4407,7 @@ argument_list|,
 name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Make a list of descriptors for this packet. DMA controller will 	 * walk through it while arge_link is not zero. 	 */
+comment|/* 	 * Make a list of descriptors for this packet. DMA controller will 	 * walk through it while arge_link is not zero. 	 */
 name|prev_prod
 operator|=
 name|prod
@@ -4855,6 +4904,17 @@ literal|0
 argument_list|)
 expr_stmt|;
 name|arge_reset_dma
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/* Flush FIFO and free any existing mbufs */
+name|arge_flush_ddr
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|arge_rx_ring_free
 argument_list|(
 name|sc
 argument_list|)
@@ -7073,6 +7133,29 @@ index|[
 name|i
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|rxd
+operator|->
+name|rx_m
+operator|!=
+name|NULL
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|arge_dev
+argument_list|,
+literal|"%s: ring[%d] rx_m wasn't free?\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+block|}
 name|rxd
 operator|->
 name|rx_m
@@ -7172,6 +7255,101 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Free all the buffers in the RX ring.  *  * TODO: ensure that DMA is disabled and no pending DMA  * is lurking in the FIFO.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|arge_rx_ring_free
+parameter_list|(
+name|struct
+name|arge_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+name|int
+name|i
+decl_stmt|;
+name|struct
+name|arge_rxdesc
+modifier|*
+name|rxd
+decl_stmt|;
+name|ARGE_LOCK_ASSERT
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|ARGE_RX_RING_COUNT
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|rxd
+operator|=
+operator|&
+name|sc
+operator|->
+name|arge_cdata
+operator|.
+name|arge_rxdesc
+index|[
+name|i
+index|]
+expr_stmt|;
+comment|/* Unmap the mbuf */
+if|if
+condition|(
+name|rxd
+operator|->
+name|rx_m
+operator|!=
+name|NULL
+condition|)
+block|{
+name|bus_dmamap_unload
+argument_list|(
+name|sc
+operator|->
+name|arge_cdata
+operator|.
+name|arge_rx_tag
+argument_list|,
+name|rxd
+operator|->
+name|rx_dmamap
+argument_list|)
+expr_stmt|;
+name|m_free
+argument_list|(
+name|rxd
+operator|->
+name|rx_m
+argument_list|)
+expr_stmt|;
+name|rxd
+operator|->
+name|rx_m
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+block|}
 block|}
 end_function
 
@@ -8427,7 +8605,7 @@ literal|"\20\10\7RX_OVERFLOW\5RX_PKT_RCVD"
 literal|"\4TX_BUS_ERROR\2TX_UNDERRUN\1TX_PKT_SENT"
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Is it our interrupt at all?  	 */
+comment|/* 	 * Is it our interrupt at all? 	 */
 if|if
 condition|(
 name|status
@@ -8505,7 +8683,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/*  	 * RX overrun disables the receiver.  	 * Clear indication and re-enable rx.  	 */
+comment|/* 	 * RX overrun disables the receiver. 	 * Clear indication and re-enable rx. 	 */
 if|if
 condition|(
 name|status
@@ -8550,7 +8728,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Underrun turns off TX. Clear underrun indication.  	 * If there's anything left in the ring, reactivate the tx.  	 */
+comment|/* 	 * Underrun turns off TX. Clear underrun indication. 	 * If there's anything left in the ring, reactivate the tx. 	 */
 if|if
 condition|(
 name|status
@@ -8664,7 +8842,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * re-enable all interrupts  	 */
+comment|/* 	 * re-enable all interrupts 	 */
 name|ARGE_WRITE
 argument_list|(
 name|sc

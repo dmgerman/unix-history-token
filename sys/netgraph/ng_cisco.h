@@ -138,11 +138,11 @@ begin_struct
 struct|struct
 name|ng_cisco_stats
 block|{
-name|u_int32_t
+name|uint32_t
 name|seqRetries
 decl_stmt|;
 comment|/* # unack'd retries */
-name|u_int32_t
+name|uint32_t
 name|keepAlivePeriod
 decl_stmt|;
 comment|/* in seconds */

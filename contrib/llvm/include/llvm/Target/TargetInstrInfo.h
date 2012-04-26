@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/DFAPacketizer.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineFunction.h"
 end_include
 
@@ -649,17 +655,11 @@ argument|MachineBasicBlock&MBB
 argument_list|)
 specifier|const
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Target didn't implement TargetInstrInfo::RemoveBranch!"
 argument_list|)
-block|;
-return|return
-literal|0
-return|;
-block|}
+block|;   }
 comment|/// InsertBranch - Insert branch code into the end of the specified
 comment|/// MachineBasicBlock.  The operands to this method are the same as those
 comment|/// returned by AnalyzeBranch.  This is only invoked in cases where
@@ -686,17 +686,11 @@ argument|DebugLoc DL
 argument_list|)
 specifier|const
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Target didn't implement TargetInstrInfo::InsertBranch!"
 argument_list|)
-block|;
-return|return
-literal|0
-return|;
-block|}
+block|;   }
 comment|/// ReplaceTailWithBranchTo - Delete the instruction OldInst and everything
 comment|/// after it, replacing it with an unconditional branch to NewDest. This is
 comment|/// used by the tail merging pass.
@@ -804,6 +798,31 @@ return|return
 name|false
 return|;
 block|}
+comment|/// isProfitableToUnpredicate - Return true if it's profitable to unpredicate
+comment|/// one side of a 'diamond', i.e. two sides of if-else predicated on mutually
+comment|/// exclusive predicates.
+comment|/// e.g.
+comment|///   subeq  r0, r1, #1
+comment|///   addne  r0, r1, #1
+comment|/// =>
+comment|///   sub    r0, r1, #1
+comment|///   addne  r0, r1, #1
+comment|///
+comment|/// This may be profitable is conditional instructions are always executed.
+name|virtual
+name|bool
+name|isProfitableToUnpredicate
+argument_list|(
+argument|MachineBasicBlock&TMBB
+argument_list|,
+argument|MachineBasicBlock&FMBB
+argument_list|)
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// copyPhysReg - Emit instructions to copy a pair of physical registers.
 name|virtual
 name|void
@@ -823,10 +842,8 @@ argument|bool KillSrc
 argument_list|)
 specifier|const
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Target didn't implement TargetInstrInfo::copyPhysReg!"
 argument_list|)
 block|;   }
@@ -855,11 +872,10 @@ argument|const TargetRegisterInfo *TRI
 argument_list|)
 specifier|const
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
-literal|"Target didn't implement TargetInstrInfo::storeRegToStackSlot!"
+literal|"Target didn't implement "
+literal|"TargetInstrInfo::storeRegToStackSlot!"
 argument_list|)
 block|;   }
 comment|/// loadRegFromStackSlot - Load the specified register of the given register
@@ -884,11 +900,10 @@ argument|const TargetRegisterInfo *TRI
 argument_list|)
 specifier|const
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
-literal|"Target didn't implement TargetInstrInfo::loadRegFromStackSlot!"
+literal|"Target didn't implement "
+literal|"TargetInstrInfo::loadRegFromStackSlot!"
 argument_list|)
 block|;   }
 comment|/// expandPostRAPseudo - This function is called for all pseudo instructions
@@ -1211,6 +1226,8 @@ argument_list|(
 argument|const MachineInstr *MI
 argument_list|)
 specifier|const
+operator|=
+literal|0
 block|;
 comment|/// PredicateInstruction - Convert the instruction into a predicated
 comment|/// instruction. It returns true if the operation was successful.
@@ -1486,7 +1503,30 @@ argument_list|,
 argument|unsigned UseIdx
 argument_list|)
 specifier|const
+operator|=
+literal|0
 block|;
+comment|/// getOutputLatency - Compute and return the output dependency latency of a
+comment|/// a given pair of defs which both target the same register. This is usually
+comment|/// one.
+name|virtual
+name|unsigned
+name|getOutputLatency
+argument_list|(
+argument|const InstrItineraryData *ItinData
+argument_list|,
+argument|const MachineInstr *DefMI
+argument_list|,
+argument|unsigned DefIdx
+argument_list|,
+argument|const MachineInstr *DepMI
+argument_list|)
+specifier|const
+block|{
+return|return
+literal|1
+return|;
+block|}
 comment|/// getInstrLatency - Compute the instruction latency of a given instruction.
 comment|/// If the instruction has higher cost when predicated, it's returned via
 comment|/// PredCost.
@@ -1512,6 +1552,8 @@ argument_list|,
 argument|SDNode *Node
 argument_list|)
 specifier|const
+operator|=
+literal|0
 block|;
 comment|/// isHighLatencyDef - Return true if this opcode has high latency to its
 comment|/// result.
@@ -1643,6 +1685,107 @@ argument|unsigned Domain
 argument_list|)
 specifier|const
 block|{}
+comment|/// getPartialRegUpdateClearance - Returns the preferred minimum clearance
+comment|/// before an instruction with an unwanted partial register update.
+comment|///
+comment|/// Some instructions only write part of a register, and implicitly need to
+comment|/// read the other parts of the register.  This may cause unwanted stalls
+comment|/// preventing otherwise unrelated instructions from executing in parallel in
+comment|/// an out-of-order CPU.
+comment|///
+comment|/// For example, the x86 instruction cvtsi2ss writes its result to bits
+comment|/// [31:0] of the destination xmm register. Bits [127:32] are unaffected, so
+comment|/// the instruction needs to wait for the old value of the register to become
+comment|/// available:
+comment|///
+comment|///   addps %xmm1, %xmm0
+comment|///   movaps %xmm0, (%rax)
+comment|///   cvtsi2ss %rbx, %xmm0
+comment|///
+comment|/// In the code above, the cvtsi2ss instruction needs to wait for the addps
+comment|/// instruction before it can issue, even though the high bits of %xmm0
+comment|/// probably aren't needed.
+comment|///
+comment|/// This hook returns the preferred clearance before MI, measured in
+comment|/// instructions.  Other defs of MI's operand OpNum are avoided in the last N
+comment|/// instructions before MI.  It should only return a positive value for
+comment|/// unwanted dependencies.  If the old bits of the defined register have
+comment|/// useful values, or if MI is determined to otherwise read the dependency,
+comment|/// the hook should return 0.
+comment|///
+comment|/// The unwanted dependency may be handled by:
+comment|///
+comment|/// 1. Allocating the same register for an MI def and use.  That makes the
+comment|///    unwanted dependency identical to a required dependency.
+comment|///
+comment|/// 2. Allocating a register for the def that has no defs in the previous N
+comment|///    instructions.
+comment|///
+comment|/// 3. Calling breakPartialRegDependency() with the same arguments.  This
+comment|///    allows the target to insert a dependency breaking instruction.
+comment|///
+name|virtual
+name|unsigned
+name|getPartialRegUpdateClearance
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|unsigned OpNum
+argument_list|,
+argument|const TargetRegisterInfo *TRI
+argument_list|)
+specifier|const
+block|{
+comment|// The default implementation returns 0 for no partial register dependency.
+return|return
+literal|0
+return|;
+block|}
+comment|/// breakPartialRegDependency - Insert a dependency-breaking instruction
+comment|/// before MI to eliminate an unwanted dependency on OpNum.
+comment|///
+comment|/// If it wasn't possible to avoid a def in the last N instructions before MI
+comment|/// (see getPartialRegUpdateClearance), this hook will be called to break the
+comment|/// unwanted dependency.
+comment|///
+comment|/// On x86, an xorps instruction can be used as a dependency breaker:
+comment|///
+comment|///   addps %xmm1, %xmm0
+comment|///   movaps %xmm0, (%rax)
+comment|///   xorps %xmm0, %xmm0
+comment|///   cvtsi2ss %rbx, %xmm0
+comment|///
+comment|/// An<imp-kill> operand should be added to MI if an instruction was
+comment|/// inserted.  This ties the instructions together in the post-ra scheduler.
+comment|///
+name|virtual
+name|void
+name|breakPartialRegDependency
+argument_list|(
+argument|MachineBasicBlock::iterator MI
+argument_list|,
+argument|unsigned OpNum
+argument_list|,
+argument|const TargetRegisterInfo *TRI
+argument_list|)
+specifier|const
+block|{}
+comment|/// Create machine specific model for scheduling.
+name|virtual
+name|DFAPacketizer
+operator|*
+name|CreateTargetScheduleState
+argument_list|(
+argument|const TargetMachine*
+argument_list|,
+argument|const ScheduleDAG*
+argument_list|)
+specifier|const
+block|{
+return|return
+name|NULL
+return|;
+block|}
 name|private
 operator|:
 name|int
@@ -1750,6 +1893,14 @@ specifier|const
 block|;
 name|virtual
 name|bool
+name|isUnpredicatedTerminator
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
 name|PredicateInstruction
 argument_list|(
 argument|MachineInstr *MI
@@ -1808,6 +1959,42 @@ argument_list|,
 argument|const MachineBasicBlock *MBB
 argument_list|,
 argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+name|using
+name|TargetInstrInfo
+operator|::
+name|getOperandLatency
+block|;
+name|virtual
+name|int
+name|getOperandLatency
+argument_list|(
+argument|const InstrItineraryData *ItinData
+argument_list|,
+argument|SDNode *DefNode
+argument_list|,
+argument|unsigned DefIdx
+argument_list|,
+argument|SDNode *UseNode
+argument_list|,
+argument|unsigned UseIdx
+argument_list|)
+specifier|const
+block|;
+name|using
+name|TargetInstrInfo
+operator|::
+name|getInstrLatency
+block|;
+name|virtual
+name|int
+name|getInstrLatency
+argument_list|(
+argument|const InstrItineraryData *ItinData
+argument_list|,
+argument|SDNode *Node
 argument_list|)
 specifier|const
 block|;

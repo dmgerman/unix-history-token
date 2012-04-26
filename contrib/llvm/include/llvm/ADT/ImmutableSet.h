@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cassert>
 end_include
 
@@ -1650,8 +1656,13 @@ name|factory
 operator|->
 name|Cache
 index|[
+name|factory
+operator|->
+name|maskCacheIndex
+argument_list|(
 name|computeDigest
 argument_list|()
+argument_list|)
 index|]
 operator|=
 name|next
@@ -2091,6 +2102,31 @@ name|value
 return|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// Make sure the index is not the Tombstone or Entry key of the DenseMap.
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|unsigned
+name|maskCacheIndex
+parameter_list|(
+name|unsigned
+name|I
+parameter_list|)
+block|{
+return|return
+operator|(
+name|I
+operator|&
+operator|~
+literal|0x02
+operator|)
+return|;
+block|}
+end_function
 
 begin_decl_stmt
 name|unsigned
@@ -3328,7 +3364,10 @@ name|entry
 init|=
 name|Cache
 index|[
+name|maskCacheIndex
+argument_list|(
 name|digest
+argument_list|)
 index|]
 decl_stmt|;
 do|do
@@ -3707,10 +3746,8 @@ name|VisitedRight
 expr_stmt|;
 break|break;
 default|default:
-name|assert
+name|llvm_unreachable
 argument_list|(
-name|false
-operator|&&
 literal|"Unreachable."
 argument_list|)
 expr_stmt|;
@@ -3944,10 +3981,8 @@ argument_list|()
 expr_stmt|;
 break|break;
 default|default:
-name|assert
+name|llvm_unreachable
 argument_list|(
-name|false
-operator|&&
 literal|"Unreachable."
 argument_list|)
 expr_stmt|;
@@ -4102,10 +4137,8 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|assert
+name|llvm_unreachable
 argument_list|(
-name|false
-operator|&&
 literal|"Unreachable."
 argument_list|)
 expr_stmt|;

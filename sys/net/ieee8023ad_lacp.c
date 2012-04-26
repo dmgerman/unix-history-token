@@ -4612,11 +4612,17 @@ return|;
 block|}
 if|if
 condition|(
+name|sc
+operator|->
+name|use_flowid
+operator|&&
+operator|(
 name|m
 operator|->
 name|m_flags
 operator|&
 name|M_FLOWID
+operator|)
 condition|)
 name|hash
 operator|=
@@ -4631,6 +4637,8 @@ name|hash
 operator|=
 name|lagg_hashmbuf
 argument_list|(
+name|sc
+argument_list|,
 name|m
 argument_list|,
 name|lsc

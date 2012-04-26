@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//=====-- X86MCAsmInfo.h - X86 asm properties -----------------*- C++ -*--====//
+comment|//===-- X86MCAsmInfo.h - X86 asm properties --------------------*- C++ -*--===//
 end_comment
 
 begin_comment
@@ -84,12 +84,19 @@ block|{
 name|class
 name|Triple
 decl_stmt|;
-name|struct
+name|class
 name|X86MCAsmInfoDarwin
 range|:
 name|public
 name|MCAsmInfoDarwin
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
+name|public
+operator|:
 name|explicit
 name|X86MCAsmInfoDarwin
 argument_list|(
@@ -130,12 +137,19 @@ argument_list|)
 specifier|const
 block|;   }
 decl_stmt|;
-name|struct
+name|class
 name|X86ELFMCAsmInfo
 range|:
 name|public
 name|MCAsmInfo
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
+name|public
+operator|:
 name|explicit
 name|X86ELFMCAsmInfo
 argument_list|(
@@ -156,14 +170,44 @@ argument_list|)
 specifier|const
 block|;   }
 decl_stmt|;
-name|struct
-name|X86MCAsmInfoCOFF
+name|class
+name|X86MCAsmInfoMicrosoft
 range|:
 name|public
-name|MCAsmInfoCOFF
+name|MCAsmInfoMicrosoft
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
+name|public
+operator|:
 name|explicit
-name|X86MCAsmInfoCOFF
+name|X86MCAsmInfoMicrosoft
+argument_list|(
+specifier|const
+name|Triple
+operator|&
+name|Triple
+argument_list|)
+block|;   }
+decl_stmt|;
+name|class
+name|X86MCAsmInfoGNUCOFF
+range|:
+name|public
+name|MCAsmInfoGNUCOFF
+block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
+name|public
+operator|:
+name|explicit
+name|X86MCAsmInfoGNUCOFF
 argument_list|(
 specifier|const
 name|Triple

@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1999 The NetBSD Foundation, Inc.  * All rights rese
 end_comment
 
 begin_comment
-comment|/*-  * This font lives in the public domain. It is a PC font, IBM encoding,  * which was designed for use with syscons.  *  * Copyright (c) 2000 Andrew Miklic  */
+comment|/*-  * This font lives in the public domain. It is a PC font, IBM encoding  * (CP437), which was designed for use with syscons.  *  * Copyright (c) 2000 Andrew Miklic  */
 end_comment
 
 begin_include
@@ -7885,7 +7885,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/*   */
+comment|/* Ã¡ */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -7934,7 +7934,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* ¡ */
+comment|/* Ã­ */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -7983,7 +7983,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* ¢ */
+comment|/* Ã³ */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -8032,7 +8032,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* £ */
+comment|/* Ãº */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -8081,7 +8081,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* ¤ */
+comment|/* Ã± */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -8130,7 +8130,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* ¥ */
+comment|/* Ã */
 literal|0x76
 block|,
 comment|/* .***.**. */
@@ -8179,7 +8179,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* ¦ */
+comment|/* Âª */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -8228,7 +8228,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* § */
+comment|/* Âº */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -8277,7 +8277,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* ¨ */
+comment|/* Â¿ */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -8326,7 +8326,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* © */
+comment|/* â */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -8375,7 +8375,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* ª */
+comment|/* Â¬ */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -8424,7 +8424,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* « */
+comment|/* Â½ */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -8473,7 +8473,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* ¬ */
+comment|/* Â¼ */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -8522,7 +8522,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* ­ */
+comment|/* Â¡ */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -8571,7 +8571,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* ® */
+comment|/* Â« */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -8620,7 +8620,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* ¯ */
+comment|/* Â» */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -8669,7 +8669,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* ° */
+comment|/* â */
 literal|0x82
 block|,
 comment|/* *.....*. */
@@ -8718,7 +8718,7 @@ comment|/* *.....*. */
 literal|0x10
 block|,
 comment|/* ...*.... */
-comment|/* ± */
+comment|/* â */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -8767,7 +8767,7 @@ comment|/* ........ */
 literal|0xa9
 block|,
 comment|/* *.*.*..* */
-comment|/* ² */
+comment|/* â */
 literal|0x92
 block|,
 comment|/* *..*..*. */
@@ -8816,7 +8816,7 @@ comment|/* *..*..*. */
 literal|0x49
 block|,
 comment|/* .*..*..* */
-comment|/* ³ */
+comment|/* â */
 literal|0x18
 block|,
 comment|/* ...**... */
@@ -8865,7 +8865,7 @@ comment|/* ...**... */
 literal|0x18
 block|,
 comment|/* ...**... */
-comment|/* ´ */
+comment|/* â¤ */
 literal|0x18
 block|,
 comment|/* ...**... */
@@ -8914,7 +8914,7 @@ comment|/* ...**... */
 literal|0x18
 block|,
 comment|/* ...**... */
-comment|/* µ */
+comment|/* â¡ */
 literal|0x18
 block|,
 comment|/* ...**... */
@@ -8963,7 +8963,7 @@ comment|/* ...**... */
 literal|0x18
 block|,
 comment|/* ...**... */
-comment|/* ¶ */
+comment|/* â¢ */
 literal|0x3c
 block|,
 comment|/* ..****.. */
@@ -9012,7 +9012,7 @@ comment|/* ..****.. */
 literal|0x3c
 block|,
 comment|/* ..****.. */
-comment|/* · */
+comment|/* â */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -9061,7 +9061,7 @@ comment|/* ..****.. */
 literal|0x3c
 block|,
 comment|/* ..****.. */
-comment|/* ¸ */
+comment|/* â */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -9110,7 +9110,7 @@ comment|/* ...**... */
 literal|0x18
 block|,
 comment|/* ...**... */
-comment|/* ¹ */
+comment|/* â£ */
 literal|0x3c
 block|,
 comment|/* ..****.. */
@@ -9159,7 +9159,7 @@ comment|/* ..****.. */
 literal|0x3c
 block|,
 comment|/* ..****.. */
-comment|/* º */
+comment|/* â */
 literal|0x3c
 block|,
 comment|/* ..****.. */
@@ -9208,7 +9208,7 @@ comment|/* ..****.. */
 literal|0x3c
 block|,
 comment|/* ..****.. */
-comment|/* » */
+comment|/* â */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -9257,7 +9257,7 @@ comment|/* ..****.. */
 literal|0x3c
 block|,
 comment|/* ..****.. */
-comment|/* ¼ */
+comment|/* â */
 literal|0x3c
 block|,
 comment|/* ..****.. */
@@ -9306,7 +9306,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* ½ */
+comment|/* â */
 literal|0x3c
 block|,
 comment|/* ..****.. */
@@ -9355,7 +9355,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* ¾ */
+comment|/* â */
 literal|0x18
 block|,
 comment|/* ...**... */
@@ -9404,7 +9404,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* ¿ */
+comment|/* â */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -9453,7 +9453,7 @@ comment|/* ...**... */
 literal|0x18
 block|,
 comment|/* ...**... */
-comment|/* À */
+comment|/* â */
 literal|0x18
 block|,
 comment|/* ...**... */
@@ -9502,7 +9502,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* Á */
+comment|/* â´ */
 literal|0x18
 block|,
 comment|/* ...**... */
@@ -9551,7 +9551,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* Â */
+comment|/* â¬ */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -9600,7 +9600,7 @@ comment|/* ...**... */
 literal|0x18
 block|,
 comment|/* ...**... */
-comment|/* Ã */
+comment|/* â */
 literal|0x18
 block|,
 comment|/* ...**... */
@@ -9649,7 +9649,7 @@ comment|/* ...**... */
 literal|0x18
 block|,
 comment|/* ...**... */
-comment|/* Ä */
+comment|/* â */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -9698,7 +9698,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* Å */
+comment|/* â¼ */
 literal|0x18
 block|,
 comment|/* ...**... */
@@ -9747,7 +9747,7 @@ comment|/* ...**... */
 literal|0x18
 block|,
 comment|/* ...**... */
-comment|/* Æ */
+comment|/* â */
 literal|0x18
 block|,
 comment|/* ...**... */
@@ -9796,7 +9796,7 @@ comment|/* ...**... */
 literal|0x18
 block|,
 comment|/* ...**... */
-comment|/* Ç */
+comment|/* â */
 literal|0x3c
 block|,
 comment|/* ..****.. */
@@ -9845,7 +9845,7 @@ comment|/* ..****.. */
 literal|0x3c
 block|,
 comment|/* ..****.. */
-comment|/* È */
+comment|/* â */
 literal|0x3c
 block|,
 comment|/* ..****.. */
@@ -9894,7 +9894,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* É */
+comment|/* â */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -9943,7 +9943,7 @@ comment|/* ..****.. */
 literal|0x3c
 block|,
 comment|/* ..****.. */
-comment|/* Ê */
+comment|/* â© */
 literal|0x3c
 block|,
 comment|/* ..****.. */
@@ -9992,7 +9992,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* Ë */
+comment|/* â¦ */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -10041,7 +10041,7 @@ comment|/* ..****.. */
 literal|0x3c
 block|,
 comment|/* ..****.. */
-comment|/* Ì */
+comment|/* â  */
 literal|0x3c
 block|,
 comment|/* ..****.. */
@@ -10090,7 +10090,7 @@ comment|/* ..****.. */
 literal|0x3c
 block|,
 comment|/* ..****.. */
-comment|/* Í */
+comment|/* â */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -10139,7 +10139,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* Î */
+comment|/* â¬ */
 literal|0x3c
 block|,
 comment|/* ..****.. */
@@ -10188,7 +10188,7 @@ comment|/* ..****.. */
 literal|0x3c
 block|,
 comment|/* ..****.. */
-comment|/* Ï */
+comment|/* â§ */
 literal|0x18
 block|,
 comment|/* ...**... */
@@ -10237,7 +10237,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* Ð */
+comment|/* â¨ */
 literal|0x3c
 block|,
 comment|/* ..****.. */
@@ -10286,7 +10286,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* Ñ */
+comment|/* â¤ */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -10335,7 +10335,7 @@ comment|/* ...**... */
 literal|0x18
 block|,
 comment|/* ...**... */
-comment|/* Ò */
+comment|/* â¥ */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -10384,7 +10384,7 @@ comment|/* ..****.. */
 literal|0x3c
 block|,
 comment|/* ..****.. */
-comment|/* Ó */
+comment|/* â */
 literal|0x3c
 block|,
 comment|/* ..****.. */
@@ -10433,7 +10433,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* Ô */
+comment|/* â */
 literal|0x18
 block|,
 comment|/* ...**... */
@@ -10482,7 +10482,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* Õ */
+comment|/* â */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -10531,7 +10531,7 @@ comment|/* ...**... */
 literal|0x18
 block|,
 comment|/* ...**... */
-comment|/* Ö */
+comment|/* â */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -10580,7 +10580,7 @@ comment|/* ..****.. */
 literal|0x3c
 block|,
 comment|/* ..****.. */
-comment|/* × */
+comment|/* â« */
 literal|0x3c
 block|,
 comment|/* ..****.. */
@@ -10629,7 +10629,7 @@ comment|/* ..****.. */
 literal|0x3c
 block|,
 comment|/* ..****.. */
-comment|/* Ø */
+comment|/* âª */
 literal|0x18
 block|,
 comment|/* ...**... */
@@ -10678,7 +10678,7 @@ comment|/* ...**... */
 literal|0x18
 block|,
 comment|/* ...**... */
-comment|/* Ù */
+comment|/* â */
 literal|0x18
 block|,
 comment|/* ...**... */
@@ -10727,7 +10727,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* Ú */
+comment|/* â */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -10776,7 +10776,7 @@ comment|/* ...**... */
 literal|0x18
 block|,
 comment|/* ...**... */
-comment|/* Û */
+comment|/* â */
 literal|0xff
 block|,
 comment|/* ******** */
@@ -10825,7 +10825,7 @@ comment|/* ******** */
 literal|0xff
 block|,
 comment|/* ******** */
-comment|/* Ü */
+comment|/* â */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -10874,7 +10874,7 @@ comment|/* ******** */
 literal|0xff
 block|,
 comment|/* ******** */
-comment|/* Ý */
+comment|/* â */
 literal|0xf0
 block|,
 comment|/* ****.... */
@@ -10923,7 +10923,7 @@ comment|/* ****.... */
 literal|0xf0
 block|,
 comment|/* ****.... */
-comment|/* Þ */
+comment|/* â */
 literal|0x0f
 block|,
 comment|/* ....**** */
@@ -10972,7 +10972,7 @@ comment|/* ....**** */
 literal|0x0f
 block|,
 comment|/* ....**** */
-comment|/* ß */
+comment|/* â */
 literal|0xff
 block|,
 comment|/* ******** */
@@ -11021,7 +11021,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* à */
+comment|/* Î± */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -11070,7 +11070,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* á */
+comment|/* Ã */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -11119,7 +11119,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* â */
+comment|/* Î */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -11168,7 +11168,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* ã */
+comment|/* Ï */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -11217,7 +11217,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* ä */
+comment|/* Î£ */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -11266,7 +11266,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* å */
+comment|/* Ï */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -11315,7 +11315,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* æ */
+comment|/* Âµ */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -11364,7 +11364,7 @@ comment|/* **...... */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* ç */
+comment|/* Ï */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -11413,7 +11413,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* è */
+comment|/* Î¦ */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -11462,7 +11462,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* é */
+comment|/* Î */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -11511,7 +11511,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* ê */
+comment|/* Î© */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -11560,7 +11560,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* ë */
+comment|/* Î´ */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -11609,7 +11609,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* ì */
+comment|/* â */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -11658,7 +11658,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* í */
+comment|/* Ï */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -11707,7 +11707,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* î */
+comment|/* Îµ */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -11756,7 +11756,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* ï */
+comment|/* â© */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -11805,7 +11805,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* ð */
+comment|/* â¡ */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -11854,7 +11854,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* ñ */
+comment|/* Â± */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -11903,7 +11903,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* ò */
+comment|/* â¥ */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -11952,7 +11952,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* ó */
+comment|/* â¤ */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -12001,7 +12001,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* ô */
+comment|/* â  */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -12050,7 +12050,7 @@ comment|/* ...**... */
 literal|0x18
 block|,
 comment|/* ...**... */
-comment|/* õ */
+comment|/* â¡ */
 literal|0x18
 block|,
 comment|/* ...**... */
@@ -12099,7 +12099,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* ö */
+comment|/* Ã· */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -12148,7 +12148,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* ÷ */
+comment|/* â */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -12197,7 +12197,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* ø */
+comment|/* Â° */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -12246,7 +12246,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* ù */
+comment|/* â */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -12295,7 +12295,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* ú */
+comment|/* Â· */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -12344,7 +12344,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* û */
+comment|/* â */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -12393,7 +12393,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* ü */
+comment|/* â¿ */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -12442,7 +12442,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* ý */
+comment|/* Â² */
 literal|0x00
 block|,
 comment|/* ........ */
@@ -12491,7 +12491,7 @@ comment|/* ........ */
 literal|0x00
 block|,
 comment|/* ........ */
-comment|/* þ */
+comment|/* â  */
 literal|0x00
 block|,
 comment|/* ........ */

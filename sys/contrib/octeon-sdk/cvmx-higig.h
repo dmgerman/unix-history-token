@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Networks (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Networks nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM  NETWORKS MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
+comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Inc. (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Inc. nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM INC. MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
 end_comment
 
 begin_comment
-comment|/**  * @file  *  * Functions and typedefs for using Octeon in HiGig/HiGig+/HiGig2 mode over  * XAUI.  *  *<hr>$Revision: 49448 $<hr>  */
+comment|/**  * @file  *  * Functions and typedefs for using Octeon in HiGig/HiGig+/HiGig2 mode over  * XAUI.  *  *<hr>$Revision: 70030 $<hr>  */
 end_comment
 
 begin_ifndef
@@ -23,6 +23,18 @@ begin_include
 include|#
 directive|include
 file|"cvmx-wqe.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"cvmx-helper.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"cvmx-helper-util.h"
 end_include
 
 begin_ifdef
@@ -54,23 +66,11 @@ literal|8
 decl_stmt|;
 comment|/**< 8-bits of Preamble indicating start of frame */
 name|uint32_t
-name|dst_modid_6
+name|hgi
 range|:
-literal|1
+literal|2
 decl_stmt|;
-comment|/**< This field is valid only if the HGI field is a b'10' and it represents Bit 6 of                                             DST_MODID (bits 4:0 are in Byte 7 and bit 5 is in Byte 9). ). For HGI field                                             value of b'01' this field should be b'1'. For all other values of HGI it is don't                                             care. */
-name|uint32_t
-name|src_modid_6
-range|:
-literal|1
-decl_stmt|;
-comment|/**< This field is valid only if the HGI field is a b'10' and it represents Bit 6 of                                             SRC_MODID (bits 4:0 are in Byte 4 and bit 5 is in Byte 9). For HGI field                                             value of b'01' this field should be b'0'. For all other values of HGI it is don't                                             care. */
-name|uint32_t
-name|hdr_ext_len
-range|:
-literal|3
-decl_stmt|;
-comment|/**< This field is valid only if the HGI field is a b'10' and it indicates the extension                                             to the standard 12-bytes of XGS HiGig header. Each unit represents 4                                             bytes, giving a total of 16 additional extension bytes. Value of b'101', b'110'                                             and b'111' are reserved. For HGI field value of b'01' this field should be                                             b'01'. For all other values of HGI it is don't care. */
+comment|/**< HiGig interface format indicator                                             00 = Reserved                                             01 = Pure preamble - IEEE standard framing of 10GE                                             10 = XGS header - framing based on XGS family definition In this                                                 format, the default length of the header is 12 bytes and additional                                                 bytes are indicated by the HDR_EXT_LEN field                                             11 = Reserved */
 name|uint32_t
 name|cng_high
 range|:
@@ -78,11 +78,23 @@ literal|1
 decl_stmt|;
 comment|/**< Congestion Bit High flag */
 name|uint32_t
-name|hgi
+name|hdr_ext_len
 range|:
-literal|2
+literal|3
 decl_stmt|;
-comment|/**< HiGig interface format indicator                                             00 = Reserved                                             01 = Pure preamble - IEEE standard framing of 10GE                                             10 = XGS header - framing based on XGS family definition In this                                                 format, the default length of the header is 12 bytes and additional                                                 bytes are indicated by the HDR_EXT_LEN field                                             11 = Reserved */
+comment|/**< This field is valid only if the HGI field is a b'10' and it indicates the extension                                             to the standard 12-bytes of XGS HiGig header. Each unit represents 4                                             bytes, giving a total of 16 additional extension bytes. Value of b'101', b'110'                                             and b'111' are reserved. For HGI field value of b'01' this field should be                                             b'01'. For all other values of HGI it is don't care. */
+name|uint32_t
+name|src_modid_6
+range|:
+literal|1
+decl_stmt|;
+comment|/**< This field is valid only if the HGI field is a b'10' and it represents Bit 6 of                                             SRC_MODID (bits 4:0 are in Byte 4 and bit 5 is in Byte 9). For HGI field                                             value of b'01' this field should be b'0'. For all other values of HGI it is don't                                             care. */
+name|uint32_t
+name|dst_modid_6
+range|:
+literal|1
+decl_stmt|;
+comment|/**< This field is valid only if the HGI field is a b'10' and it represents Bit 6 of                                             DST_MODID (bits 4:0 are in Byte 7 and bit 5 is in Byte 9). ). For HGI field                                             value of b'01' this field should be b'1'. For all other values of HGI it is don't                                             care. */
 name|uint32_t
 name|vid_high
 range|:
@@ -109,23 +121,17 @@ decl_stmt|;
 struct|struct
 block|{
 name|uint32_t
-name|opcode
-range|:
-literal|3
-decl_stmt|;
-comment|/**< XGS HiGig op-code, indicating the type of packet                                             000 =     Control frames used for CPU to CPU communications                                             001 =     Unicast packet with destination resolved; The packet can be                                                       either Layer 2 unicast packet or L3 unicast packet that was                                                       routed in the ingress chip.                                             010 =     Broadcast or unknown Unicast packet or unknown multicast,                                                       destined to all members of the VLAN                                             011 =     L2 Multicast packet, destined to all ports of the group indicated                                                       in the L2MC_INDEX which is overlayed on DST_PORT/DST_MODID fields                                             100 =     IP Multicast packet, destined to all ports of the group indicated                                                       in the IPMC_INDEX which is overlayed on DST_PORT/DST_MODID fields                                             101 =     Reserved                                             110 =     Reserved                                             111 =     Reserved */
-name|uint32_t
 name|src_modid_low
 range|:
 literal|5
 decl_stmt|;
 comment|/**< Bits 4:0 of Module ID of the source module on which the packet ingress (bit                                             5 is in Byte 9 and bit 6 Is in Byte 1) */
 name|uint32_t
-name|src_port_tgid
+name|opcode
 range|:
-literal|6
+literal|3
 decl_stmt|;
-comment|/**< If the MSB of this field is set, then it indicates the LAG the packet ingressed                                             on, else it represents the physical port the packet ingressed on. */
+comment|/**< XGS HiGig op-code, indicating the type of packet                                             000 =     Control frames used for CPU to CPU communications                                             001 =     Unicast packet with destination resolved; The packet can be                                                       either Layer 2 unicast packet or L3 unicast packet that was                                                       routed in the ingress chip.                                             010 =     Broadcast or unknown Unicast packet or unknown multicast,                                                       destined to all members of the VLAN                                             011 =     L2 Multicast packet, destined to all ports of the group indicated                                                       in the L2MC_INDEX which is overlayed on DST_PORT/DST_MODID fields                                             100 =     IP Multicast packet, destined to all ports of the group indicated                                                       in the IPMC_INDEX which is overlayed on DST_PORT/DST_MODID fields                                             101 =     Reserved                                             110 =     Reserved                                             111 =     Reserved */
 name|uint32_t
 name|pfm
 range|:
@@ -133,11 +139,11 @@ literal|2
 decl_stmt|;
 comment|/**< Three Port Filtering Modes (0, 1, 2) used in handling registed/unregistered                                             multicast (unknown L2 multicast and IPMC) packets. This field is used                                             when OPCODE is 011 or 100 Semantics of PFM bits are as follows;                                             For registered L2 multicast packets:                                                 PFM= 0 ­ Flood to VLAN                                                 PFM= 1 or 2 ­ Send to group members in the L2MC table                                             For unregistered L2 multicast packets:                                                 PFM= 0 or 1 ­ Flood to VLAN                                                 PFM= 2 ­ Drop the packet */
 name|uint32_t
-name|priority
+name|src_port_tgid
 range|:
-literal|3
+literal|6
 decl_stmt|;
-comment|/**< This is the internal priority of the packet. This internal priority will go through                                             COS_SEL mapping registers to map to the actual MMU queues. */
+comment|/**< If the MSB of this field is set, then it indicates the LAG the packet ingressed                                             on, else it represents the physical port the packet ingressed on. */
 name|uint32_t
 name|dst_port
 range|:
@@ -145,23 +151,29 @@ literal|5
 decl_stmt|;
 comment|/**< Port number of destination port on which the packet needs to egress. */
 name|uint32_t
-name|dst_modid_low
+name|priority
 range|:
-literal|5
+literal|3
 decl_stmt|;
-comment|/**< Bits [4-: 0] of Module ID of the destination port on which the packet needs to egress. */
-name|uint32_t
-name|cng_low
-range|:
-literal|1
-decl_stmt|;
-comment|/**< Semantics of CNG_HIGH and CNG_LOW are as follows: The following                                             encodings are to make it backward compatible:                                             {CNG_HIGH, CNG_LOW] - COLOR                                             [0, 0] ­ Packet is green                                             [0, 1] ­ Packet is red                                             [1, 1] ­ Packet is yellow                                             [1, 0] ­ Undefined */
+comment|/**< This is the internal priority of the packet. This internal priority will go through                                             COS_SEL mapping registers to map to the actual MMU queues. */
 name|uint32_t
 name|header_type
 range|:
 literal|2
 decl_stmt|;
 comment|/**< Indicates the format of the next 4 bytes of the XGS HiGig header                                             00 = Overlay 1 (default)                                             01 = Overlay 2 (Classification Tag)                                             10 = Reserved                                             11 = Reserved */
+name|uint32_t
+name|cng_low
+range|:
+literal|1
+decl_stmt|;
+comment|/**< Semantics of CNG_HIGH and CNG_LOW are as follows: The following                                             encodings are to make it backward compatible:                                             [CNG_HIGH, CNG_LOW] - COLOR                                             [0, 0] ­ Packet is green                                             [0, 1] ­ Packet is red                                             [1, 1] ­ Packet is yellow                                             [1, 0] ­ Undefined */
+name|uint32_t
+name|dst_modid_low
+range|:
+literal|5
+decl_stmt|;
+comment|/**< Bits [4-: 0] of Module ID of the destination port on which the packet needs to egress. */
 block|}
 name|s
 struct|;
@@ -176,29 +188,11 @@ decl_stmt|;
 struct|struct
 block|{
 name|uint32_t
-name|mirror
+name|dst_t
 range|:
 literal|1
 decl_stmt|;
-comment|/**< Mirror: XGS3 mode: a mirror copy packet. XGS1/2 mode: Indicates that the                                             packet was switched and only needs to be mirrored. */
-name|uint32_t
-name|mirror_done
-range|:
-literal|1
-decl_stmt|;
-comment|/**< Mirroring Done: XGS1/2 mode: Indicates that the packet was mirrored and                                             may still need to be switched. */
-name|uint32_t
-name|mirror_only
-range|:
-literal|1
-decl_stmt|;
-comment|/**< Mirror Only: XGS 1/2 mode: Indicates that the packet was switched and only                                             needs to be mirrored. */
-name|uint32_t
-name|ingress_tagged
-range|:
-literal|1
-decl_stmt|;
-comment|/**< Ingress Tagged: Indicates whether the packet was tagged when it originally                                             ingressed the system. */
+comment|/**< Destination Trunk: Indicates that the destination port is a member of a trunk                                             group. */
 name|uint32_t
 name|dst_tgid
 range|:
@@ -206,29 +200,35 @@ literal|3
 decl_stmt|;
 comment|/**< Destination Trunk Group ID: Trunk group ID of the destination port. The                                             DO_NOT_LEARN bit is overlaid on the second bit of this field. */
 name|uint32_t
-name|dst_t
+name|ingress_tagged
 range|:
 literal|1
 decl_stmt|;
-comment|/**< Destination Trunk: Indicates that the destination port is a member of a trunk                                             group. */
+comment|/**< Ingress Tagged: Indicates whether the packet was tagged when it originally                                             ingressed the system. */
 name|uint32_t
-name|vc_label_16_19
-range|:
-literal|4
-decl_stmt|;
-comment|/**< VC Label: Bits 19:16 of VC label: HiGig+ added field */
-name|uint32_t
-name|label_present
+name|mirror_only
 range|:
 literal|1
 decl_stmt|;
-comment|/**< Label Present: Indicates that header contains a 20-bit VC label: HiGig+                                             added field. */
+comment|/**< Mirror Only: XGS 1/2 mode: Indicates that the packet was switched and only                                             needs to be mirrored. */
 name|uint32_t
-name|l3
+name|mirror_done
 range|:
 literal|1
 decl_stmt|;
-comment|/**< L3: Indicates that the packet is L3 switched */
+comment|/**< Mirroring Done: XGS1/2 mode: Indicates that the packet was mirrored and                                             may still need to be switched. */
+name|uint32_t
+name|mirror
+range|:
+literal|1
+decl_stmt|;
+comment|/**< Mirror: XGS3 mode: a mirror copy packet. XGS1/2 mode: Indicates that the                                             packet was switched and only needs to be mirrored. */
+name|uint32_t
+name|src_modid_5
+range|:
+literal|1
+decl_stmt|;
+comment|/**< Source Module ID: Bit 5 of Src_ModID (bits 4:0 are in byte 4 and bit 6 is in                                             byte 1) */
 name|uint32_t
 name|dst_modid_5
 range|:
@@ -236,11 +236,23 @@ literal|1
 decl_stmt|;
 comment|/**< Destination Module ID: Bit 5 of Dst_ModID (bits 4:0 are in byte 7 and bit 6                                             is in byte 1) */
 name|uint32_t
-name|src_modid_5
+name|l3
 range|:
 literal|1
 decl_stmt|;
-comment|/**< Source Module ID: Bit 5 of Src_ModID (bits 4:0 are in byte 4 and bit 6 is in                                             byte 1) */
+comment|/**< L3: Indicates that the packet is L3 switched */
+name|uint32_t
+name|label_present
+range|:
+literal|1
+decl_stmt|;
+comment|/**< Label Present: Indicates that header contains a 20-bit VC label: HiGig+                                             added field. */
+name|uint32_t
+name|vc_label_16_19
+range|:
+literal|4
+decl_stmt|;
+comment|/**< VC Label: Bits 19:16 of VC label: HiGig+ added field */
 name|uint32_t
 name|vc_label_0_15
 range|:
@@ -554,6 +566,8 @@ name|gmx_tx_xaui_ctl
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|pknd
 decl_stmt|;
 name|int
 name|header_size
@@ -567,6 +581,29 @@ else|:
 literal|12
 decl_stmt|;
 comment|/* Setup PIP to handle HiGig */
+if|if
+condition|(
+name|octeon_has_feature
+argument_list|(
+name|OCTEON_FEATURE_PKND
+argument_list|)
+condition|)
+name|pknd
+operator|=
+name|cvmx_helper_get_pknd
+argument_list|(
+name|interface
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+else|else
+name|pknd
+operator|=
+name|interface
+operator|*
+literal|16
+expr_stmt|;
 name|pip_prt_cfg
 operator|.
 name|u64
@@ -575,9 +612,7 @@ name|cvmx_read_csr
 argument_list|(
 name|CVMX_PIP_PRT_CFGX
 argument_list|(
-name|interface
-operator|*
-literal|16
+name|pknd
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -617,9 +652,7 @@ name|cvmx_write_csr
 argument_list|(
 name|CVMX_PIP_PRT_CFGX
 argument_list|(
-name|interface
-operator|*
-literal|16
+name|pknd
 argument_list|)
 argument_list|,
 name|pip_prt_cfg
@@ -628,6 +661,15 @@ name|u64
 argument_list|)
 expr_stmt|;
 comment|/* Setup some sample QoS defaults. These can be changed later */
+if|if
+condition|(
+operator|!
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN68XX
+argument_list|)
+condition|)
+block|{
 for|for
 control|(
 name|i
@@ -686,6 +728,7 @@ operator|.
 name|u64
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* Setup GMX RX to treat the HiGig header as user data to ignore */
 name|gmx_rx_udd_skp

@@ -2309,15 +2309,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/* The BSP is always a valid target. */
-name|CPU_SETOF
-argument_list|(
-literal|0
-argument_list|,
-operator|&
-name|intr_cpus
-argument_list|)
-expr_stmt|;
 comment|/* Don't bother on UP. */
 if|if
 condition|(

@@ -17,72 +17,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_function
-specifier|static
-name|int
-name|touch
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|fn
-parameter_list|)
-block|{
-name|FILE
-modifier|*
-name|f
-init|=
-name|fopen
-argument_list|(
-name|fn
-argument_list|,
-literal|"w"
-argument_list|)
-decl_stmt|;
-name|failure
-argument_list|(
-literal|"Couldn't create file '%s', errno=%d (%s)\n"
-argument_list|,
-name|fn
-argument_list|,
-name|errno
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|assert
-argument_list|(
-name|f
-operator|!=
-name|NULL
-argument_list|)
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-comment|/* Failure. */
-name|fclose
-argument_list|(
-name|f
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-comment|/* Success */
-block|}
-end_function
-
 begin_macro
 name|DEFINE_TEST
 argument_list|(
@@ -125,14 +59,13 @@ argument_list|,
 literal|0755
 argument_list|)
 expr_stmt|;
-name|assertEqualInt
-argument_list|(
-literal|1
-argument_list|,
-name|touch
+name|assertMakeFile
 argument_list|(
 literal|"d1/d2/f1"
-argument_list|)
+argument_list|,
+literal|0644
+argument_list|,
+literal|""
 argument_list|)
 expr_stmt|;
 name|assertMakeHardlink
@@ -175,13 +108,32 @@ argument_list|(
 literal|".."
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Test 1: Strip components when extracting archives. 	 */
+if|if
+condition|(
+name|canSymlink
+argument_list|()
+condition|)
 name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
 name|systemf
 argument_list|(
-literal|"%s -cf test.tar d0"
+literal|"%s -cf test.tar d0/l1 d0/s1 d0/d1"
+argument_list|,
+name|testprog
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+name|assertEqualInt
+argument_list|(
+literal|0
+argument_list|,
+name|systemf
+argument_list|(
+literal|"%s -cf test.tar d0/l1 d0/d1"
 argument_list|,
 name|testprog
 argument_list|)
@@ -229,6 +181,16 @@ argument_list|)
 expr_stmt|;
 name|failure
 argument_list|(
+literal|"d0/s1 is too short and should not get restored"
+argument_list|)
+expr_stmt|;
+name|assertFileNotExists
+argument_list|(
+literal|"target/s1"
+argument_list|)
+expr_stmt|;
+name|failure
+argument_list|(
 literal|"d0/d1/s2 is a symlink to something that won't be extracted"
 argument_list|)
 expr_stmt|;
@@ -264,10 +226,156 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 	 * This next is a complicated case.  d0/l1, d0/d1/l2, and 	 * d0/d1/d2/f1 are all hardlinks to the same file; d0/l1 can't 	 * be extracted with --strip-components=2 and the other two 	 * can.  Remember that tar normally stores the first file with 	 * a body and the other as hardlink entries to the first 	 * appearance.  So the final result depends on the order in 	 * which these three names get archived.  If d0/l1 is first, 	 * none of the three can be restored.  If either of the longer 	 * names are first, then the two longer ones can both be 	 * restored. 	 * 	 * The tree-walking code used by bsdtar always visits files 	 * before subdirectories, so bsdtar's behavior is fortunately 	 * deterministic:  d0/l1 will always get stored first and the 	 * other two will be stored as hardlinks to d0/l1.  Since 	 * d0/l1 can't be extracted, none of these three will be 	 * extracted. 	 * 	 * It may be worth extending this test to force a particular 	 * archiving order so as to exercise both of the cases described 	 * above. 	 * 	 * Of course, this is all totally different for cpio and newc 	 * formats because the hardlink management is different. 	 * TODO: Rename this to test_strip_components_tar and create 	 * parallel tests for cpio and newc formats. 	 */
+comment|/* 	 * Test 1b: Strip components extracting archives involving hardlinks. 	 * 	 * This next is a complicated case.  d0/l1, d0/d1/l2, and 	 * d0/d1/d2/f1 are all hardlinks to the same file; d0/l1 can't 	 * be extracted with --strip-components=2 and the other two 	 * can.  Remember that tar normally stores the first file with 	 * a body and the other as hardlink entries to the first 	 * appearance.  So the final result depends on the order in 	 * which these three names get archived.  If d0/l1 is first, 	 * none of the three can be restored.  If either of the longer 	 * names are first, then the two longer ones can both be 	 * restored.  Note that the "tar -cf" command above explicitly 	 * lists d0/l1 before d0/d1. 	 * 	 * It may be worth extending this test to exercise other 	 * archiving orders. 	 * 	 * Of course, this is all totally different for cpio and newc 	 * formats because the hardlink management is different. 	 * TODO: Rename this to test_strip_components_tar and create 	 * parallel tests for cpio and newc formats. 	 */
 name|failure
 argument_list|(
 literal|"d0/l1 is too short and should not get restored"
+argument_list|)
+expr_stmt|;
+name|assertFileNotExists
+argument_list|(
+literal|"target/l1"
+argument_list|)
+expr_stmt|;
+name|failure
+argument_list|(
+literal|"d0/d1/l2 is a hardlink to file whose name was too short"
+argument_list|)
+expr_stmt|;
+name|assertFileNotExists
+argument_list|(
+literal|"target/l2"
+argument_list|)
+expr_stmt|;
+name|failure
+argument_list|(
+literal|"d0/d1/d2/f1 is a hardlink to file whose name was too short"
+argument_list|)
+expr_stmt|;
+name|assertFileNotExists
+argument_list|(
+literal|"target/d2/f1"
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Test 2: Strip components when creating archives. 	 */
+if|if
+condition|(
+name|canSymlink
+argument_list|()
+condition|)
+name|assertEqualInt
+argument_list|(
+literal|0
+argument_list|,
+name|systemf
+argument_list|(
+literal|"%s --strip-components 2 -cf test2.tar "
+literal|"d0/l1 d0/s1 d0/d1"
+argument_list|,
+name|testprog
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+name|assertEqualInt
+argument_list|(
+literal|0
+argument_list|,
+name|systemf
+argument_list|(
+literal|"%s --strip-components 2 -cf test2.tar "
+literal|"d0/l1 d0/d1"
+argument_list|,
+name|testprog
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|assertMakeDir
+argument_list|(
+literal|"target2"
+argument_list|,
+literal|0755
+argument_list|)
+expr_stmt|;
+name|assertEqualInt
+argument_list|(
+literal|0
+argument_list|,
+name|systemf
+argument_list|(
+literal|"%s -x -C target2 -f test2.tar"
+argument_list|,
+name|testprog
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|failure
+argument_list|(
+literal|"d0/ is too short and should not have been archived"
+argument_list|)
+expr_stmt|;
+name|assertFileNotExists
+argument_list|(
+literal|"target2/d0"
+argument_list|)
+expr_stmt|;
+name|failure
+argument_list|(
+literal|"d0/d1/ is too short and should not have been archived"
+argument_list|)
+expr_stmt|;
+name|assertFileNotExists
+argument_list|(
+literal|"target2/d1"
+argument_list|)
+expr_stmt|;
+name|failure
+argument_list|(
+literal|"d0/s1 is too short and should not get restored"
+argument_list|)
+expr_stmt|;
+name|assertFileNotExists
+argument_list|(
+literal|"target/s1"
+argument_list|)
+expr_stmt|;
+comment|/* If platform supports symlinks, target/s2 is included. */
+if|if
+condition|(
+name|canSymlink
+argument_list|()
+condition|)
+block|{
+name|failure
+argument_list|(
+literal|"d0/d1/s2 is a symlink to something included in archive"
+argument_list|)
+expr_stmt|;
+name|assertIsSymlink
+argument_list|(
+literal|"target2/s2"
+argument_list|,
+literal|"d2/f1"
+argument_list|)
+expr_stmt|;
+block|}
+name|failure
+argument_list|(
+literal|"d0/d1/d2 should be archived"
+argument_list|)
+expr_stmt|;
+name|assertIsDir
+argument_list|(
+literal|"target2/d2"
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Test 2b: Strip components creating archives involving hardlinks. 	 */
+name|failure
+argument_list|(
+literal|"d0/l1 is too short and should not have been archived"
 argument_list|)
 expr_stmt|;
 name|assertFileNotExists

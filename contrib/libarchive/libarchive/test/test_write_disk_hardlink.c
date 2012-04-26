@@ -75,7 +75,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Exercise hardlink recreation.  *  * File permissions are chosen so that the authoritive entry  * has the correct permission and the non-authoritive versions  * are just writeable files.  */
+comment|/*  * Exercise hardlink recreation.  *  * File permissions are chosen so that the authoritative entry  * has the correct permission and the non-authoritative versions  * are just writeable files.  */
 end_comment
 
 begin_macro
@@ -771,11 +771,6 @@ name|ae
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|ARCHIVE_VERSION_NUMBER
-operator|<
-literal|3000000
 name|assertEqualInt
 argument_list|(
 name|ARCHIVE_WARN
@@ -790,25 +785,6 @@ literal|1
 argument_list|)
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|assertEqualInt
-argument_list|(
-operator|-
-literal|1
-argument_list|,
-name|archive_write_data
-argument_list|(
-name|ad
-argument_list|,
-name|data
-argument_list|,
-literal|1
-argument_list|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|assertEqualIntA
 argument_list|(
 name|ad
@@ -937,7 +913,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|archive_write_finish
+name|archive_write_free
 argument_list|(
 name|ad
 argument_list|)
@@ -945,7 +921,7 @@ argument_list|)
 expr_stmt|;
 comment|/* Test the entries on disk. */
 comment|/* Test #1 */
-comment|/* If the hardlink was successfully created and the archive 	 * doesn't carry data for it, we consider it to be 	 * non-authoritive for meta data as well.  This is consistent 	 * with GNU tar and BSD pax.  */
+comment|/* If the hardlink was successfully created and the archive 	 * doesn't carry data for it, we consider it to be 	 * non-authoritative for meta data as well.  This is consistent 	 * with GNU tar and BSD pax.  */
 name|assertIsReg
 argument_list|(
 literal|"link1a"

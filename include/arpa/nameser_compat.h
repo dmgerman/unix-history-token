@@ -115,7 +115,7 @@ name|aa
 range|:
 literal|1
 decl_stmt|;
-comment|/*%< authoritive answer */
+comment|/*%< authoritative answer */
 name|unsigned
 name|tc
 range|:
@@ -188,7 +188,7 @@ name|aa
 range|:
 literal|1
 decl_stmt|;
-comment|/*%< authoritive answer */
+comment|/*%< authoritative answer */
 name|unsigned
 name|opcode
 range|:

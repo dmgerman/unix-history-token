@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: socket.c,v 1.333.14.9 2011-07-29 02:19:20 marka Exp $ */
+comment|/* $Id$ */
 end_comment
 
 begin_comment
@@ -7399,7 +7399,7 @@ name|ev
 operator|->
 name|result
 operator|=
-name|ISC_R_UNEXPECTED
+name|ISC_R_UNSET
 expr_stmt|;
 name|ISC_LINK_INIT
 argument_list|(
@@ -9242,10 +9242,6 @@ operator|(
 name|ISC_R_NOMEMORY
 operator|)
 return|;
-name|result
-operator|=
-name|ISC_R_UNEXPECTED
-expr_stmt|;
 name|sock
 operator|->
 name|common
@@ -9401,9 +9397,15 @@ name|recvcmsgbuf
 operator|==
 name|NULL
 condition|)
+block|{
+name|result
+operator|=
+name|ISC_R_NOMEMORY
+expr_stmt|;
 goto|goto
 name|error
 goto|;
+block|}
 block|}
 name|cmsgbuflen
 operator|=
@@ -9488,9 +9490,15 @@ name|sendcmsgbuf
 operator|==
 name|NULL
 condition|)
+block|{
+name|result
+operator|=
+name|ISC_R_NOMEMORY
+expr_stmt|;
 goto|goto
 name|error
 goto|;
+block|}
 block|}
 name|memset
 argument_list|(
@@ -10141,6 +10149,9 @@ modifier|*
 name|sock
 parameter_list|)
 block|{
+name|isc_result_t
+name|result
+decl_stmt|;
 name|char
 name|strbuf
 index|[
@@ -10619,14 +10630,18 @@ operator|)
 return|;
 block|}
 block|}
-if|if
-condition|(
+name|result
+operator|=
 name|make_nonblock
 argument_list|(
 name|sock
 operator|->
 name|fd
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|result
 operator|!=
 name|ISC_R_SUCCESS
 condition|)
@@ -10643,7 +10658,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ISC_R_UNEXPECTED
+name|result
 operator|)
 return|;
 block|}
@@ -14612,15 +14627,20 @@ name|fd
 operator|!=
 operator|-
 literal|1
-operator|&&
-operator|(
+condition|)
+block|{
+name|result
+operator|=
 name|make_nonblock
 argument_list|(
 name|fd
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|result
 operator|!=
 name|ISC_R_SUCCESS
-operator|)
 condition|)
 block|{
 operator|(
@@ -14636,10 +14656,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-name|result
-operator|=
-name|ISC_R_UNEXPECTED
-expr_stmt|;
+block|}
 block|}
 comment|/* 	 * -1 means the new socket didn't happen. 	 */
 if|if
@@ -17028,9 +17045,6 @@ name|isc_boolean_t
 name|done
 decl_stmt|;
 name|int
-name|ctlfd
-decl_stmt|;
-name|int
 name|cc
 decl_stmt|;
 ifdef|#
@@ -17089,6 +17103,9 @@ decl_stmt|;
 name|int
 name|maxfd
 decl_stmt|;
+name|int
+name|ctlfd
+decl_stmt|;
 endif|#
 directive|endif
 name|char
@@ -17107,6 +17124,12 @@ name|poll_idle
 decl_stmt|;
 endif|#
 directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|USE_SELECT
+argument_list|)
 comment|/* 	 * Get the control fd here.  This will never change. 	 */
 name|ctlfd
 operator|=
@@ -17117,6 +17140,8 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+endif|#
+directive|endif
 name|done
 operator|=
 name|ISC_FALSE
@@ -21255,7 +21280,7 @@ name|event
 operator|->
 name|result
 operator|=
-name|ISC_R_UNEXPECTED
+name|ISC_R_UNSET
 expr_stmt|;
 name|ISC_LIST_INIT
 argument_list|(
@@ -22285,7 +22310,7 @@ name|event
 operator|->
 name|result
 operator|=
-name|ISC_R_UNEXPECTED
+name|ISC_R_UNSET
 expr_stmt|;
 name|ISC_LIST_INIT
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: /p/tcsh/cvsroot/tcsh/sh.h,v 3.150 2009/06/25 21:27:37 christos Exp $ */
+comment|/* $Header: /p/tcsh/cvsroot/tcsh/sh.h,v 3.165 2011/04/14 18:25:25 christos Exp $ */
 end_comment
 
 begin_comment
@@ -263,6 +263,41 @@ begin_comment
 comment|/*!WINNT_NATIVE */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|KANJI
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|WIDE_STRINGS
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_NL_LANGINFO
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|CODESET
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|AUTOSET_KANJI
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Sanity  */
 end_comment
@@ -319,6 +354,13 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|TMP_TEMPLATE
+value|".XXXXXX"
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -337,12 +379,35 @@ directive|include
 file|<wchar.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|UTF16_STRINGS
+end_ifdef
+
+begin_typedef
+typedef|typedef
+name|wint_t
+name|Char
+typedef|;
+end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_typedef
 typedef|typedef
 name|wchar_t
 name|Char
 typedef|;
 end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
@@ -393,7 +458,7 @@ define|#
 directive|define
 name|reset_mbtowc
 parameter_list|()
-value|IGNORE(mbtowc(NULL, NULL, 0))
+value|TCSH_IGNORE(mbtowc(NULL, NULL, 0))
 end_define
 
 begin_else
@@ -538,6 +603,39 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__inline
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|__inline
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Elide unused argument warnings */
 end_comment
@@ -555,18 +653,18 @@ end_define
 begin_define
 define|#
 directive|define
-name|IGNORE
+name|TCSH_IGNORE
 parameter_list|(
 name|a
 parameter_list|)
-value|ignore((intptr_t)a)
+value|tcsh_ignore((intptr_t)a)
 end_define
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
-name|ignore
+name|tcsh_ignore
 parameter_list|(
 name|intptr_t
 name|a
@@ -1098,6 +1196,37 @@ begin_comment
 comment|/* __HP_CXD_SPP&& !__hpux */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_LONG_LONG
+end_ifdef
+
+begin_typedef
+typedef|typedef
+name|long
+name|long
+name|tcsh_number_t
+typedef|;
+end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_typedef
+typedef|typedef
+name|long
+name|tcsh_number_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * This macro compares the st_dev field of struct stat. On aix on ibmESA  * st_dev is a structure, so comparison does not work.   */
 end_comment
@@ -1503,6 +1632,11 @@ directive|if
 name|SYSVREL
 operator|>
 literal|3
+operator|||
+name|defined
+argument_list|(
+name|__linux__
+argument_list|)
 end_if
 
 begin_undef
@@ -1621,7 +1755,7 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|linux
+name|__linux__
 argument_list|)
 operator|||
 name|defined
@@ -1773,7 +1907,7 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|linux
+name|__linux__
 argument_list|)
 operator|||
 name|defined
@@ -1899,6 +2033,61 @@ include|#
 directive|include
 file|<sys/ioctl.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|SYSVREL
+operator|>
+literal|3
+operator|||
+name|defined
+argument_list|(
+name|__linux__
+argument_list|)
+end_if
+
+begin_undef
+undef|#
+directive|undef
+name|TIOCGLTC
+end_undef
+
+begin_comment
+comment|/* we don't need those, since POSIX has them */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|TIOCSLTC
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|CSWTCH
+end_undef
+
+begin_define
+define|#
+directive|define
+name|CSWTCH
+value|_POSIX_VDISABLE
+end_define
+
+begin_comment
+comment|/* So job control works */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SYSVREL> 3 */
+end_comment
 
 begin_endif
 endif|#
@@ -2077,24 +2266,6 @@ include|#
 directive|include
 file|<fcntl.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|O_LARGEFILE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|O_LARGEFILE
-value|0
-end_define
 
 begin_endif
 endif|#
@@ -3377,6 +3548,18 @@ end_comment
 begin_decl_stmt
 name|EXTERN
 name|int
+name|handle_intr
+name|IZERO
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Are we currently handling an interrupt? */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
 name|havhash
 name|IZERO
 decl_stmt|;
@@ -3420,6 +3603,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* PWP: tcsh-style quoting?  (in sh.c) */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|anyerror
+name|IZERO
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* propagate errors from pipelines/backq */
 end_comment
 
 begin_decl_stmt
@@ -4002,6 +4197,7 @@ end_comment
 begin_if
 if|#
 directive|if
+operator|(
 name|SYSVREL
 operator|==
 literal|4
@@ -4009,6 +4205,12 @@ operator|&&
 name|defined
 argument_list|(
 name|_UTS
+argument_list|)
+operator|)
+operator|||
+name|defined
+argument_list|(
+name|__linux__
 argument_list|)
 end_if
 
@@ -4054,7 +4256,7 @@ define|#
 directive|define
 name|setexit
 parameter_list|()
-value|sigsetjmp(reslab.j)
+value|sigsetjmp(reslab.j, 1)
 end_define
 
 begin_define
@@ -5718,6 +5920,7 @@ decl_stmt|;
 name|int
 name|Hnum
 decl_stmt|;
+comment|/* eventno when inserted into history list  */
 name|int
 name|Href
 decl_stmt|;
@@ -5732,7 +5935,15 @@ name|struct
 name|Hist
 modifier|*
 name|Hnext
+decl_stmt|,
+modifier|*
+name|Hprev
 decl_stmt|;
+comment|/* doubly linked list */
+name|unsigned
+name|Hhash
+decl_stmt|;
+comment|/* hash value of command line */
 block|}
 name|Histlist
 name|IZERO_STRUCT
@@ -6122,11 +6333,20 @@ else|#
 directive|else
 end_else
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|WIDE_STRINGS
-end_ifdef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|UTF16_STRINGS
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -6793,51 +7013,11 @@ directive|ifdef
 name|NLS_CATALOGS
 end_ifdef
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|linux
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__GNU__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__GLIBC__
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<locale.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|notdef
+name|HAVE_FEATURES_H
 end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<localeinfo.h>
-end_include
-
-begin_comment
-comment|/* Has this changed ? */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -6853,67 +7033,19 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|SUNOS4
+name|HAVE_NL_LANGINFO
 end_ifdef
 
-begin_comment
-comment|/* Who stole my nl_types.h? :-(      * All this stuff is in the man pages, but nowhere else?     * This does not link right now...     */
-end_comment
+begin_include
+include|#
+directive|include
+file|<langinfo.h>
+end_include
 
-begin_typedef
-typedef|typedef
-name|void
-modifier|*
-name|nl_catd
-typedef|;
-end_typedef
-
-begin_function_decl
-specifier|extern
-specifier|const
-name|char
-modifier|*
-name|catgets
-parameter_list|(
-name|nl_catd
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|nl_catd
-name|catopen
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|catclose
-parameter_list|(
-name|nl_catd
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -6950,29 +7082,6 @@ undef|#
 directive|undef
 name|gettxt
 end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MCLoadBySet
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|MCLoadBySet
-value|0
-end_define
 
 begin_endif
 endif|#

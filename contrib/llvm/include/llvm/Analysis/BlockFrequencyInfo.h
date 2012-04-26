@@ -162,7 +162,7 @@ comment|///
 name|BlockFrequency
 name|getBlockFreq
 argument_list|(
-argument|BasicBlock *BB
+argument|const BasicBlock *BB
 argument_list|)
 specifier|const
 block|; }

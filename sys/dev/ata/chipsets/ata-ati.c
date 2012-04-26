@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 - 2008 Søren Schmidt<sos@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1998 - 2008 SÃ¸ren Schmidt<sos@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -216,14 +216,36 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ATI_PATA
-value|0x01
+name|SII_MEMIO
+value|1
 end_define
+
+begin_comment
+comment|/* must match ata_siliconimage.c's definition */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SII_BUG
+value|0x04
+end_define
+
+begin_comment
+comment|/* must match ata_siliconimage.c's definition */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|ATI_SATA
+value|SII_MEMIO
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATI_PATA
 value|0x02
 end_define
 
@@ -231,20 +253,6 @@ begin_define
 define|#
 directive|define
 name|ATI_AHCI
-value|0x04
-end_define
-
-begin_define
-define|#
-directive|define
-name|SII_MEMIO
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|SII_BUG
 value|0x04
 end_define
 
@@ -292,8 +300,10 @@ name|dev
 argument_list|)
 decl_stmt|;
 specifier|static
+specifier|const
 name|struct
 name|ata_chip_id
+specifier|const
 name|ids
 index|[]
 init|=
@@ -333,7 +343,7 @@ literal|0x00
 block|,
 name|ATI_SATA
 block|,
-literal|0
+name|SII_BUG
 block|,
 name|ATA_SA150
 block|,
@@ -361,7 +371,7 @@ literal|0x00
 block|,
 name|ATI_SATA
 block|,
-literal|0
+name|SII_BUG
 block|,
 name|ATA_SA150
 block|,
@@ -375,7 +385,7 @@ literal|0x00
 block|,
 name|ATI_SATA
 block|,
-literal|0
+name|SII_BUG
 block|,
 name|ATA_SA150
 block|,
@@ -581,23 +591,7 @@ break|break;
 case|case
 name|ATI_SATA
 case|:
-comment|/* 	 * the ATI SATA controller is actually a SiI 3112 controller 	 * cfg values below much match those in ata-siliconimage.c 	 */
-name|ctlr
-operator|->
-name|chip
-operator|->
-name|cfg1
-operator|=
-name|SII_MEMIO
-expr_stmt|;
-name|ctlr
-operator|->
-name|chip
-operator|->
-name|cfg2
-operator|=
-name|SII_BUG
-expr_stmt|;
+comment|/* 	 * the ATI SATA controller is actually a SiI 3112 controller 	 */
 name|ctlr
 operator|->
 name|chipinit
@@ -1075,7 +1069,9 @@ decl_stmt|;
 name|int
 name|piomode
 decl_stmt|;
-name|u_int8_t
+specifier|static
+specifier|const
+name|uint8_t
 name|piotimings
 index|[]
 init|=
@@ -1091,7 +1087,9 @@ block|,
 literal|0x20
 block|}
 decl_stmt|;
-name|u_int8_t
+specifier|static
+specifier|const
+name|uint8_t
 name|dmatimings
 index|[]
 init|=

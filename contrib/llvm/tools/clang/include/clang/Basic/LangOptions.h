@@ -68,17 +68,113 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/LLVM.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/Visibility.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/IntrusiveRefCntPtr.h"
 end_include
 
 begin_decl_stmt
 name|namespace
 name|clang
 block|{
+comment|/// Bitfields of LangOptions, split out from LangOptions in order to ensure that
+comment|/// this large collection of bitfields is a trivial class type.
+name|class
+name|LangOptionsBase
+block|{
+name|public
+label|:
+comment|// Define simple language options (with no accessors).
+define|#
+directive|define
+name|LANGOPT
+parameter_list|(
+name|Name
+parameter_list|,
+name|Bits
+parameter_list|,
+name|Default
+parameter_list|,
+name|Description
+parameter_list|)
+value|unsigned Name : Bits;
+define|#
+directive|define
+name|ENUM_LANGOPT
+parameter_list|(
+name|Name
+parameter_list|,
+name|Type
+parameter_list|,
+name|Bits
+parameter_list|,
+name|Default
+parameter_list|,
+name|Description
+parameter_list|)
+include|#
+directive|include
+file|"clang/Basic/LangOptions.def"
+name|protected
+label|:
+comment|// Define language options of enumeration type. These are private, and will
+comment|// have accessors (below).
+define|#
+directive|define
+name|LANGOPT
+parameter_list|(
+name|Name
+parameter_list|,
+name|Bits
+parameter_list|,
+name|Default
+parameter_list|,
+name|Description
+parameter_list|)
+define|#
+directive|define
+name|ENUM_LANGOPT
+parameter_list|(
+name|Name
+parameter_list|,
+name|Type
+parameter_list|,
+name|Bits
+parameter_list|,
+name|Default
+parameter_list|,
+name|Description
+parameter_list|)
+define|\
+value|unsigned Name : Bits;
+include|#
+directive|include
+file|"clang/Basic/LangOptions.def"
+block|}
+empty_stmt|;
 comment|/// LangOptions - This class keeps track of the various options that can be
 comment|/// enabled, which controls the dialect of C that is accepted.
 name|class
 name|LangOptions
+range|:
+name|public
+name|RefCountedBase
+operator|<
+name|LangOptions
+operator|>
+decl_stmt|,
+name|public
+name|LangOptionsBase
 block|{
 name|public
 label|:
@@ -121,72 +217,6 @@ name|SOB_Trapping
 comment|// -ftrapv
 block|}
 enum|;
-comment|// Define simple language options (with no accessors).
-define|#
-directive|define
-name|LANGOPT
-parameter_list|(
-name|Name
-parameter_list|,
-name|Bits
-parameter_list|,
-name|Default
-parameter_list|,
-name|Description
-parameter_list|)
-value|unsigned Name : Bits;
-define|#
-directive|define
-name|ENUM_LANGOPT
-parameter_list|(
-name|Name
-parameter_list|,
-name|Type
-parameter_list|,
-name|Bits
-parameter_list|,
-name|Default
-parameter_list|,
-name|Description
-parameter_list|)
-include|#
-directive|include
-file|"clang/Basic/LangOptions.def"
-name|private
-label|:
-comment|// Define language options of enumeration type. These are private, and will
-comment|// have accessors (below).
-define|#
-directive|define
-name|LANGOPT
-parameter_list|(
-name|Name
-parameter_list|,
-name|Bits
-parameter_list|,
-name|Default
-parameter_list|,
-name|Description
-parameter_list|)
-define|#
-directive|define
-name|ENUM_LANGOPT
-parameter_list|(
-name|Name
-parameter_list|,
-name|Type
-parameter_list|,
-name|Bits
-parameter_list|,
-name|Default
-parameter_list|,
-name|Description
-parameter_list|)
-define|\
-value|unsigned Name : Bits;
-include|#
-directive|include
-file|"clang/Basic/LangOptions.def"
 name|public
 label|:
 name|std
@@ -200,6 +230,12 @@ name|std
 operator|::
 name|string
 name|OverflowHandler
+expr_stmt|;
+comment|/// \brief The name of the current module.
+name|std
+operator|::
+name|string
+name|CurrentModule
 expr_stmt|;
 name|LangOptions
 argument_list|()

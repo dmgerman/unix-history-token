@@ -66,24 +66,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<vector>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<map>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/MC/MCCodeGenInfo.h"
 end_include
 
@@ -114,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/ValueHandle.h"
 end_include
 
@@ -127,6 +115,30 @@ begin_include
 include|#
 directive|include
 file|"llvm/Target/TargetMachine.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<map>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
 end_include
 
 begin_decl_stmt
@@ -168,6 +180,9 @@ name|MutexGuard
 decl_stmt|;
 name|class
 name|TargetData
+decl_stmt|;
+name|class
+name|Triple
 decl_stmt|;
 name|class
 name|Type
@@ -464,11 +479,6 @@ name|JITMemoryManager
 operator|*
 name|JMM
 operator|,
-name|CodeGenOpt
-operator|::
-name|Level
-name|OptLevel
-operator|,
 name|bool
 name|GVsWithCode
 operator|,
@@ -498,11 +508,6 @@ operator|,
 name|JITMemoryManager
 operator|*
 name|JMM
-operator|,
-name|CodeGenOpt
-operator|::
-name|Level
-name|OptLevel
 operator|,
 name|bool
 name|GVsWithCode
@@ -728,6 +733,57 @@ argument_list|)
 init|=
 literal|0
 decl_stmt|;
+comment|/// getPointerToNamedFunction - This method returns the address of the
+comment|/// specified function by using the dlsym function call.  As such it is only
+comment|/// useful for resolving library symbols, not code generated symbols.
+comment|///
+comment|/// If AbortOnFailure is false and no function with the given name is
+comment|/// found, this function silently returns a null pointer. Otherwise,
+comment|/// it prints a message to stderr and aborts.
+comment|///
+name|virtual
+name|void
+modifier|*
+name|getPointerToNamedFunction
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Name
+argument_list|,
+name|bool
+name|AbortOnFailure
+operator|=
+name|true
+argument_list|)
+init|=
+literal|0
+decl_stmt|;
+comment|/// mapSectionAddress - map a section to its target address space value.
+comment|/// Map the address of a JIT section as returned from the memory manager
+comment|/// to the address in the target process as the running code will see it.
+comment|/// This is the address which will be used for relocation resolution.
+name|virtual
+name|void
+name|mapSectionAddress
+parameter_list|(
+name|void
+modifier|*
+name|LocalAddress
+parameter_list|,
+name|uint64_t
+name|TargetAddress
+parameter_list|)
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"Re-mapping of section addresses not supported with this "
+literal|"EE!"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// runStaticConstructorsDestructors - This method is used to execute all of
 comment|/// the static constructors or destructors for a program.
 comment|///
@@ -1443,6 +1499,9 @@ decl_stmt|;
 name|bool
 name|AllocateGVsWithCode
 decl_stmt|;
+name|TargetOptions
+name|Options
+decl_stmt|;
 name|Reloc
 operator|::
 name|Model
@@ -1500,6 +1559,11 @@ expr_stmt|;
 name|JMM
 operator|=
 name|NULL
+expr_stmt|;
+name|Options
+operator|=
+name|TargetOptions
+argument_list|()
 expr_stmt|;
 name|AllocateGVsWithCode
 operator|=
@@ -1618,6 +1682,27 @@ block|{
 name|OptLevel
 operator|=
 name|l
+expr_stmt|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+comment|/// setTargetOptions - Set the target options that the ExecutionEngine
+comment|/// target is using. Defaults to TargetOptions().
+name|EngineBuilder
+modifier|&
+name|setTargetOptions
+parameter_list|(
+specifier|const
+name|TargetOptions
+modifier|&
+name|Opts
+parameter_list|)
+block|{
+name|Options
+operator|=
+name|Opts
 expr_stmt|;
 return|return
 operator|*
@@ -1806,16 +1891,21 @@ operator|*
 name|this
 return|;
 block|}
+name|TargetMachine
+modifier|*
+name|selectTarget
+parameter_list|()
+function_decl|;
 comment|/// selectTarget - Pick a target either via -march or by guessing the native
 comment|/// arch.  Add any CPU features specified via -mcpu or -mattr.
-specifier|static
 name|TargetMachine
 modifier|*
 name|selectTarget
 argument_list|(
-name|Module
-operator|*
-name|M
+specifier|const
+name|Triple
+operator|&
+name|TargetTriple
 argument_list|,
 name|StringRef
 name|MArch
@@ -1832,28 +1922,29 @@ name|string
 operator|>
 operator|&
 name|MAttrs
-argument_list|,
-name|Reloc
-operator|::
-name|Model
-name|RM
-argument_list|,
-name|CodeModel
-operator|::
-name|Model
-name|CM
-argument_list|,
-name|std
-operator|::
-name|string
-operator|*
-name|Err
 argument_list|)
 decl_stmt|;
 name|ExecutionEngine
 modifier|*
 name|create
 parameter_list|()
+block|{
+return|return
+name|create
+argument_list|(
+name|selectTarget
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|ExecutionEngine
+modifier|*
+name|create
+parameter_list|(
+name|TargetMachine
+modifier|*
+name|TM
+parameter_list|)
 function_decl|;
 block|}
 end_decl_stmt

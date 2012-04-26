@@ -4522,23 +4522,6 @@ decl_stmt|;
 name|u_int32_t
 name|flags6
 decl_stmt|;
-comment|/* XXX: interface name should not be hardcoded */
-name|strncpy
-argument_list|(
-name|ifr6
-operator|.
-name|ifr_name
-argument_list|,
-literal|"lo0"
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ifr6
-operator|.
-name|ifr_name
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|memset
 argument_list|(
 operator|&

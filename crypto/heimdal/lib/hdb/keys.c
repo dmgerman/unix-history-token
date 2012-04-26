@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 - 2001, 2003 - 2004 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997 - 2001, 2003 - 2004 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -8,14 +8,6 @@ include|#
 directive|include
 file|"hdb_locl.h"
 end_include
-
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: keys.c 22071 2007-11-14 20:04:50Z lha $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/*  * free all the memory used by (len, keys)  */
@@ -137,12 +129,25 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * for each entry in `default_keys' try to parse it as a sequence  * of etype:salttype:salt, syntax of this if something like:  * [(des|des3|etype):](pw-salt|afs3)[:string], if etype is omitted it  *      means all etypes, and if string is omitted is means the default  * string (for that principal). Additional special values:  *	v5 == pw-salt, and  *	v4 == des:pw-salt:  *	afs or afs3 == des:afs3-salt  */
+comment|/*  * for each entry in `default_keys' try to parse it as a sequence  * of etype:salttype:salt, syntax of this if something like:  * [(des|des3|etype):](pw-salt|afs3)[:string], if etype is omitted it  *      means all etypes, and if string is omitted is means the default  * string (for that principal). Additional special values:  *	v5 == pw-salt, and  *	v4 == des:pw-salt:  *	afs or afs3 == des:afs3-salt  */
 end_comment
 
-begin_comment
-comment|/* the 3 DES types must be first */
-end_comment
+begin_decl_stmt
+specifier|static
+specifier|const
+name|krb5_enctype
+name|des_etypes
+index|[]
+init|=
+block|{
+name|ETYPE_DES_CBC_MD5
+block|,
+name|ETYPE_DES_CBC_MD4
+block|,
+name|ETYPE_DES_CBC_CRC
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -152,12 +157,6 @@ name|all_etypes
 index|[]
 init|=
 block|{
-name|ETYPE_DES_CBC_MD5
-block|,
-name|ETYPE_DES_CBC_MD4
-block|,
-name|ETYPE_DES_CBC_CRC
-block|,
 name|ETYPE_AES256_CTS_HMAC_SHA1_96
 block|,
 name|ETYPE_ARCFOUR_HMAC_MD5
@@ -351,11 +350,22 @@ condition|)
 block|{
 name|enctypes
 operator|=
-name|all_etypes
+name|des_etypes
 expr_stmt|;
 name|num_enctypes
 operator|=
-literal|3
+sizeof|sizeof
+argument_list|(
+name|des_etypes
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|des_etypes
+index|[
+literal|0
+index|]
+argument_list|)
 expr_stmt|;
 block|}
 elseif|else
@@ -514,11 +524,22 @@ condition|)
 block|{
 name|enctypes
 operator|=
-name|all_etypes
+name|des_etypes
 expr_stmt|;
 name|num_enctypes
 operator|=
-literal|3
+sizeof|sizeof
+argument_list|(
+name|des_etypes
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|des_etypes
+index|[
+literal|0
+index|]
+argument_list|)
 expr_stmt|;
 block|}
 name|salt
@@ -557,11 +578,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"out of memory"
+name|ENOMEM
+argument_list|,
+literal|"malloc: out of memory"
 argument_list|)
 expr_stmt|;
 return|return
@@ -597,9 +620,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|EINVAL
 argument_list|,
 literal|"bad value for default_keys `%s'"
 argument_list|,
@@ -651,11 +676,10 @@ operator|==
 name|KRB5_AFS3_SALT
 condition|)
 block|{
-name|krb5_realm
-modifier|*
+name|krb5_const_realm
 name|realm
 init|=
-name|krb5_princ_realm
+name|krb5_principal_get_realm
 argument_list|(
 name|context
 argument_list|,
@@ -670,7 +694,6 @@ name|data
 operator|=
 name|strdup
 argument_list|(
-operator|*
 name|realm
 argument_list|)
 expr_stmt|;
@@ -685,9 +708,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|ENOMEM
 argument_list|,
 literal|"out of memory while "
 literal|"parsing salt specifiers"
@@ -714,7 +739,6 @@ name|length
 operator|=
 name|strlen
 argument_list|(
-operator|*
 name|realm
 argument_list|)
 expr_stmt|;
@@ -752,11 +776,13 @@ operator|*
 name|salt
 argument_list|)
 expr_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"out of memory"
+name|ENOMEM
+argument_list|,
+literal|"malloc: out of memory"
 argument_list|)
 expr_stmt|;
 return|return
@@ -913,8 +939,10 @@ name|key
 operator|.
 name|salt
 operator|=
-name|malloc
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -1078,19 +1106,19 @@ decl_stmt|,
 modifier|*
 name|key_set
 decl_stmt|;
-name|int
+name|size_t
 name|i
 decl_stmt|,
 name|j
 decl_stmt|;
+specifier|static
+specifier|const
 name|char
 modifier|*
 name|default_keytypes
 index|[]
 init|=
 block|{
-literal|"des:pw-salt"
-block|,
 literal|"aes256-cts-hmac-sha1-96:pw-salt"
 block|,
 literal|"des3-cbc-sha1:pw-salt"
@@ -1123,16 +1151,15 @@ name|NULL
 condition|)
 name|ktypes
 operator|=
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
+operator|(
+name|intptr_t
+operator|)
 name|default_keytypes
-expr_stmt|;
-if|if
-condition|(
-name|ktypes
-operator|==
-name|NULL
-condition|)
-name|abort
-argument_list|()
 expr_stmt|;
 operator|*
 name|ret_key_set
@@ -1518,6 +1545,14 @@ if|if
 condition|(
 name|ktypes
 operator|!=
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
+operator|(
+name|intptr_t
+operator|)
 name|default_keytypes
 condition|)
 name|krb5_config_free_strings
@@ -1624,7 +1659,7 @@ block|{
 name|krb5_error_code
 name|ret
 decl_stmt|;
-name|int
+name|size_t
 name|i
 decl_stmt|;
 name|ret

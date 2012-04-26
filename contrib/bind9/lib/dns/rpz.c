@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2011  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2011, 2012  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: rpz.c,v 1.7 2011-01-17 04:27:23 marka Exp $ */
+comment|/* $Id$ */
 end_comment
 
 begin_comment
@@ -278,8 +278,9 @@ modifier|*
 name|mctx
 decl_stmt|;
 name|isc_boolean_t
-name|had_nsdname
+name|have_nsdname
 decl_stmt|;
+comment|/* zone has NSDNAME record */
 name|dns_rpz_cidr_node_t
 modifier|*
 name|root
@@ -367,7 +368,7 @@ name|__FILE__
 argument_list|,
 name|__LINE__
 argument_list|,
-literal|"impossible response policy zone type %d"
+literal|"impossible rpz type %d"
 argument_list|,
 name|type
 argument_list|)
@@ -423,12 +424,27 @@ name|strcasecmp
 argument_list|(
 name|str
 argument_list|,
-literal|"no-op"
+literal|"disabled"
 argument_list|)
 condition|)
 return|return
 operator|(
-name|DNS_RPZ_POLICY_NO_OP
+name|DNS_RPZ_POLICY_DISABLED
+operator|)
+return|;
+if|if
+condition|(
+operator|!
+name|strcasecmp
+argument_list|(
+name|str
+argument_list|,
+literal|"passthru"
+argument_list|)
+condition|)
+return|return
+operator|(
+name|DNS_RPZ_POLICY_PASSTHRU
 operator|)
 return|;
 if|if
@@ -476,9 +492,107 @@ operator|(
 name|DNS_RPZ_POLICY_CNAME
 operator|)
 return|;
+comment|/* 	 * Obsolete 	 */
+if|if
+condition|(
+operator|!
+name|strcasecmp
+argument_list|(
+name|str
+argument_list|,
+literal|"no-op"
+argument_list|)
+condition|)
+return|return
+operator|(
+name|DNS_RPZ_POLICY_PASSTHRU
+operator|)
+return|;
 return|return
 operator|(
 name|DNS_RPZ_POLICY_ERROR
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|const
+name|char
+modifier|*
+name|dns_rpz_policy2str
+parameter_list|(
+name|dns_rpz_policy_t
+name|policy
+parameter_list|)
+block|{
+specifier|const
+name|char
+modifier|*
+name|str
+decl_stmt|;
+switch|switch
+condition|(
+name|policy
+condition|)
+block|{
+case|case
+name|DNS_RPZ_POLICY_PASSTHRU
+case|:
+name|str
+operator|=
+literal|"PASSTHRU"
+expr_stmt|;
+break|break;
+case|case
+name|DNS_RPZ_POLICY_NXDOMAIN
+case|:
+name|str
+operator|=
+literal|"NXDOMAIN"
+expr_stmt|;
+break|break;
+case|case
+name|DNS_RPZ_POLICY_NODATA
+case|:
+name|str
+operator|=
+literal|"NODATA"
+expr_stmt|;
+break|break;
+case|case
+name|DNS_RPZ_POLICY_RECORD
+case|:
+name|str
+operator|=
+literal|"records"
+expr_stmt|;
+break|break;
+case|case
+name|DNS_RPZ_POLICY_CNAME
+case|:
+case|case
+name|DNS_RPZ_POLICY_WILDCNAME
+case|:
+name|str
+operator|=
+literal|"CNAME"
+expr_stmt|;
+break|break;
+default|default:
+name|str
+operator|=
+literal|""
+expr_stmt|;
+name|INSIST
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|str
 operator|)
 return|;
 block|}
@@ -1198,6 +1312,13 @@ block|{
 if|if
 condition|(
 name|cidr
+operator|==
+name|NULL
+condition|)
+return|return;
+if|if
+condition|(
+name|cidr
 operator|->
 name|root
 operator|!=
@@ -1277,13 +1398,13 @@ if|if
 condition|(
 name|cidr
 operator|->
-name|had_nsdname
+name|have_nsdname
 condition|)
 name|st
 operator|->
 name|state
 operator||=
-name|DNS_RPZ_HAD_NSDNAME
+name|DNS_RPZ_HAVE_NSDNAME
 expr_stmt|;
 block|}
 end_function
@@ -1701,13 +1822,13 @@ name|isc_log_write
 argument_list|(
 name|dns_lctx
 argument_list|,
-name|DNS_LOGCATEGORY_DATABASE
+name|DNS_LOGCATEGORY_RPZ
 argument_list|,
 name|DNS_LOGMODULE_RBTDB
 argument_list|,
 name|level
 argument_list|,
-literal|"invalid response policy name \"%s\"%s"
+literal|"invalid rpz \"%s\"%s"
 argument_list|,
 name|printname
 argument_list|,
@@ -3221,7 +3342,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * find first differing bit  */
+comment|/*  * Find first differing bit.  */
 end_comment
 
 begin_function
@@ -3236,45 +3357,104 @@ block|{
 name|int
 name|bit
 decl_stmt|;
-if|if
-condition|(
-name|w
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-name|DNS_RPZ_CIDR_WORD_BITS
-operator|)
-return|;
-for|for
-control|(
 name|bit
 operator|=
-literal|0
-init|;
-operator|(
-name|w
-operator|&
-operator|(
-literal|1U
-operator|<<
-operator|(
 name|DNS_RPZ_CIDR_WORD_BITS
 operator|-
 literal|1
-operator|)
-operator|)
-operator|)
-operator|==
-literal|0
-condition|;
-name|bit
-operator|++
-control|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
 name|w
-operator|<<=
-literal|1
+operator|&
+literal|0xffff0000
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|w
+operator|>>=
+literal|16
+expr_stmt|;
+name|bit
+operator|-=
+literal|16
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|(
+name|w
+operator|&
+literal|0xff00
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|w
+operator|>>=
+literal|8
+expr_stmt|;
+name|bit
+operator|-=
+literal|8
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|(
+name|w
+operator|&
+literal|0xf0
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|w
+operator|>>=
+literal|4
+expr_stmt|;
+name|bit
+operator|-=
+literal|4
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|(
+name|w
+operator|&
+literal|0xc
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|w
+operator|>>=
+literal|2
+expr_stmt|;
+name|bit
+operator|-=
+literal|2
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|(
+name|w
+operator|&
+literal|2
+operator|)
+operator|!=
+literal|0
+condition|)
+operator|--
+name|bit
 expr_stmt|;
 return|return
 operator|(
@@ -3285,7 +3465,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * find the first differing bit in two keys  */
+comment|/*  * Find the first differing bit in two keys.  */
 end_comment
 
 begin_function
@@ -3400,7 +3580,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Search a radix tree for an IP address for ordinary lookup  *	or for a CIDR block adding or deleting an entry  * The tree read (for simple search) or write lock must be held by the caller.  *  * return ISC_R_SUCCESS, ISC_R_NOTFOUND, DNS_R_PARTIALMATCH, ISC_R_EXISTS,  *	ISC_R_NOMEMORY  */
+comment|/*  * Search a radix tree for an IP address for ordinary lookup  *	or for a CIDR block adding or deleting an entry  * The tree read (for simple search) or write lock must be held by the caller.  *  * Return ISC_R_SUCCESS, ISC_R_NOTFOUND, DNS_R_PARTIALMATCH, ISC_R_EXISTS,  *	ISC_R_NOMEMORY  */
 end_comment
 
 begin_function
@@ -4136,7 +4316,7 @@ operator|==
 name|NULL
 condition|)
 return|return;
-comment|/* 	 * no worries if the new name is not an IP address 	 */
+comment|/* 	 * No worries if the new name is not an IP address. 	 */
 name|type
 operator|=
 name|set_type
@@ -4163,7 +4343,7 @@ name|DNS_RPZ_TYPE_NSDNAME
 case|:
 name|cidr
 operator|->
-name|had_nsdname
+name|have_nsdname
 operator|=
 name|ISC_TRUE
 expr_stmt|;
@@ -4248,13 +4428,13 @@ name|isc_log_write
 argument_list|(
 name|dns_lctx
 argument_list|,
-name|DNS_LOGCATEGORY_DATABASE
+name|DNS_LOGCATEGORY_RPZ
 argument_list|,
 name|DNS_LOGMODULE_RBTDB
 argument_list|,
 name|DNS_RPZ_ERROR_LEVEL
 argument_list|,
-literal|"duplicate response policy name \"%s\""
+literal|"duplicate rpz name \"%s\""
 argument_list|,
 name|printname
 argument_list|)
@@ -4357,7 +4537,7 @@ name|name2ipkey
 argument_list|(
 name|cidr
 argument_list|,
-name|DNS_RPZ_DEBUG_LEVEL2
+name|DNS_RPZ_DEBUG_LEVEL3
 argument_list|,
 name|name
 argument_list|,
@@ -4425,13 +4605,13 @@ name|isc_log_write
 argument_list|(
 name|dns_lctx
 argument_list|,
-name|DNS_LOGCATEGORY_DATABASE
+name|DNS_LOGCATEGORY_RPZ
 argument_list|,
 name|DNS_LOGMODULE_RBTDB
 argument_list|,
 name|DNS_RPZ_ERROR_LEVEL
 argument_list|,
-literal|"missing response policy node \"%s\""
+literal|"missing rpz node \"%s\""
 argument_list|,
 name|printname
 argument_list|)
@@ -5043,7 +5223,18 @@ operator|(
 name|DNS_RPZ_POLICY_NXDOMAIN
 operator|)
 return|;
-comment|/* 	 * CNAME *. means NODATA 	 */
+if|if
+condition|(
+name|dns_name_iswildcard
+argument_list|(
+operator|&
+name|cname
+operator|.
+name|cname
+argument_list|)
+condition|)
+block|{
+comment|/* 		 * CNAME *. means NODATA 		 */
 if|if
 condition|(
 name|dns_name_countlabels
@@ -5055,20 +5246,31 @@ name|cname
 argument_list|)
 operator|==
 literal|2
-operator|&&
-name|dns_name_iswildcard
-argument_list|(
-operator|&
-name|cname
-operator|.
-name|cname
-argument_list|)
 condition|)
 return|return
 operator|(
 name|DNS_RPZ_POLICY_NODATA
 operator|)
 return|;
+comment|/* 		 * A qname of www.evil.com and a policy of 		 *	*.evil.com    CNAME   *.garden.net 		 * gives a result of 		 *	evil.com    CNAME   evil.com.garden.net 		 */
+if|if
+condition|(
+name|dns_name_countlabels
+argument_list|(
+operator|&
+name|cname
+operator|.
+name|cname
+argument_list|)
+operator|>
+literal|2
+condition|)
+return|return
+operator|(
+name|DNS_RPZ_POLICY_WILDCNAME
+operator|)
+return|;
+block|}
 comment|/* 	 * 128.1.0.127.rpz-ip CNAME  128.1.0.0.127. means "do not rewrite" 	 */
 if|if
 condition|(
@@ -5088,10 +5290,10 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|DNS_RPZ_POLICY_NO_OP
+name|DNS_RPZ_POLICY_PASSTHRU
 operator|)
 return|;
-comment|/* 	 * evil.com CNAME garden.net rewrites www.evil.com to www.garden.net. 	 */
+comment|/* 	 * Any other rdata gives a response consisting of the rdata. 	 */
 return|return
 operator|(
 name|DNS_RPZ_POLICY_RECORD

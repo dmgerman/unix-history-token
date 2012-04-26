@@ -329,6 +329,17 @@ name|MAP_ENTRY_WIRE_SKIPPED
 value|0x4000
 end_define
 
+begin_define
+define|#
+directive|define
+name|MAP_ENTRY_VN_WRITECNT
+value|0x8000
+end_define
+
+begin_comment
+comment|/* writeable vnode mapping */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1100,7 +1111,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MAP_UNUSED_01
+name|MAP_INHERIT_SHARE
 value|0x0001
 end_define
 
@@ -1156,6 +1167,13 @@ end_define
 begin_comment
 comment|/* from (user) madvise request */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MAP_VN_WRITECOUNT
+value|0x0400
+end_define
 
 begin_define
 define|#

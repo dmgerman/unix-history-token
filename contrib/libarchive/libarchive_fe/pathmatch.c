@@ -465,7 +465,7 @@ return|;
 case|case
 literal|'?'
 case|:
-comment|/* ? always succeds, unless we hit end of 's' */
+comment|/* ? always succeeds, unless we hit end of 's' */
 if|if
 condition|(
 operator|*

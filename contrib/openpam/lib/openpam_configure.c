@@ -1351,6 +1351,9 @@ name|ctlf
 decl_stmt|;
 name|char
 modifier|*
+name|line0
+decl_stmt|,
+modifier|*
 name|line
 decl_stmt|,
 modifier|*
@@ -1456,6 +1459,8 @@ expr_stmt|;
 while|while
 condition|(
 operator|(
+name|line0
+operator|=
 name|line
 operator|=
 name|openpam_readline
@@ -1511,7 +1516,7 @@ argument_list|)
 expr_stmt|;
 name|FREE
 argument_list|(
-name|line
+name|line0
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -1532,7 +1537,7 @@ condition|)
 block|{
 name|FREE
 argument_list|(
-name|line
+name|line0
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -1586,7 +1591,7 @@ condition|)
 block|{
 name|FREE
 argument_list|(
-name|line
+name|line0
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -1705,7 +1710,7 @@ name|fail
 goto|;
 name|FREE
 argument_list|(
-name|line
+name|line0
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -2017,7 +2022,7 @@ expr_stmt|;
 comment|/* next please... */
 name|FREE
 argument_list|(
-name|line
+name|line0
 argument_list|)
 expr_stmt|;
 block|}

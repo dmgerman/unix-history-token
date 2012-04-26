@@ -812,14 +812,14 @@ begin_define
 define|#
 directive|define
 name|EMU_A_IOCFG_GPOUT0
-value|0x0040
+value|0x0044
 end_define
 
 begin_define
 define|#
 directive|define
 name|EMU_A_IOCFG_GPOUT1
-value|0x0004
+value|0x0002
 end_define
 
 begin_define
@@ -2926,14 +2926,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|EMU_A_SPDIF_48000
+name|EMU_A_SPDIF_44100
 value|0x00000080
 end_define
 
 begin_define
 define|#
 directive|define
-name|EMU_A_SPDIF_44100
+name|EMU_A_SPDIF_48000
 value|0x00000000
 end_define
 

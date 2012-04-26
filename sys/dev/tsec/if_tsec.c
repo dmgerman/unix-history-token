@@ -704,20 +704,6 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
-name|struct
-name|tsec_softc
-modifier|*
-name|tsec0_sc
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* XXX ugly hack! */
-end_comment
-
-begin_decl_stmt
 name|devclass_t
 name|tsec_devclass
 decl_stmt|;
@@ -1462,12 +1448,6 @@ argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
-name|if_mtu
-operator|=
-name|ETHERMTU
-expr_stmt|;
-name|ifp
-operator|->
 name|if_flags
 operator|=
 name|IFF_SIMPLEX
@@ -2009,7 +1989,9 @@ expr_stmt|;
 comment|/* Step 6: Reset the management interface */
 name|TSEC_WRITE
 argument_list|(
-name|tsec0_sc
+name|sc
+operator|->
+name|phy_sc
 argument_list|,
 name|TSEC_REG_MIIMCFG
 argument_list|,
@@ -2019,7 +2001,9 @@ expr_stmt|;
 comment|/* Step 7: Setup the MII Mgmt clock speed */
 name|TSEC_WRITE
 argument_list|(
-name|tsec0_sc
+name|sc
+operator|->
+name|phy_sc
 argument_list|,
 name|TSEC_REG_MIIMCFG
 argument_list|,
@@ -2039,7 +2023,9 @@ operator|&&
 operator|(
 name|TSEC_READ
 argument_list|(
-name|tsec0_sc
+name|sc
+operator|->
+name|phy_sc
 argument_list|,
 name|TSEC_REG_MIIMIND
 argument_list|)
@@ -6945,11 +6931,16 @@ name|timeout
 decl_stmt|;
 name|sc
 operator|=
-name|tsec0_sc
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
 expr_stmt|;
 name|TSEC_WRITE
 argument_list|(
 name|sc
+operator|->
+name|phy_sc
 argument_list|,
 name|TSEC_REG_MIIMADD
 argument_list|,
@@ -6965,6 +6956,8 @@ expr_stmt|;
 name|TSEC_WRITE
 argument_list|(
 name|sc
+operator|->
+name|phy_sc
 argument_list|,
 name|TSEC_REG_MIIMCOM
 argument_list|,
@@ -6974,6 +6967,8 @@ expr_stmt|;
 name|TSEC_WRITE
 argument_list|(
 name|sc
+operator|->
+name|phy_sc
 argument_list|,
 name|TSEC_REG_MIIMCOM
 argument_list|,
@@ -6992,6 +6987,8 @@ operator|&&
 name|TSEC_READ
 argument_list|(
 name|sc
+operator|->
+name|phy_sc
 argument_list|,
 name|TSEC_REG_MIIMIND
 argument_list|)
@@ -7025,6 +7022,8 @@ operator|(
 name|TSEC_READ
 argument_list|(
 name|sc
+operator|->
+name|phy_sc
 argument_list|,
 name|TSEC_REG_MIIMSTAT
 argument_list|)
@@ -7060,11 +7059,16 @@ name|timeout
 decl_stmt|;
 name|sc
 operator|=
-name|tsec0_sc
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
 expr_stmt|;
 name|TSEC_WRITE
 argument_list|(
 name|sc
+operator|->
+name|phy_sc
 argument_list|,
 name|TSEC_REG_MIIMADD
 argument_list|,
@@ -7080,6 +7084,8 @@ expr_stmt|;
 name|TSEC_WRITE
 argument_list|(
 name|sc
+operator|->
+name|phy_sc
 argument_list|,
 name|TSEC_REG_MIIMCON
 argument_list|,
@@ -7099,6 +7105,8 @@ operator|(
 name|TSEC_READ
 argument_list|(
 name|sc
+operator|->
+name|phy_sc
 argument_list|,
 name|TSEC_REG_MIIMIND
 argument_list|)

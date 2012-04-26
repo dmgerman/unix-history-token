@@ -3013,8 +3013,11 @@ name|wh
 argument_list|,
 name|NULL
 argument_list|,
-literal|"bogus beacon interval"
+literal|"bogus beacon interval (%d TU)"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|scan
 operator|->
 name|bintval
@@ -3431,6 +3434,92 @@ empty_stmt|;
 break|break;
 block|}
 break|break;
+ifdef|#
+directive|ifdef
+name|IEEE80211_SUPPORT_MESH
+case|case
+name|IEEE80211_ACTION_CAT_MESH
+case|:
+switch|switch
+condition|(
+name|ia
+operator|->
+name|ia_action
+condition|)
+block|{
+case|case
+name|IEEE80211_ACTION_MESH_LMETRIC
+case|:
+comment|/* 			 * XXX: verification is true only if we are using 			 * Airtime link metric (default) 			 */
+name|IEEE80211_VERIFY_LENGTH
+argument_list|(
+argument|efrm - frm
+argument_list|,
+argument|sizeof(struct ieee80211_meshlmetric_ie)
+argument_list|,
+argument|return EINVAL
+argument_list|)
+empty_stmt|;
+break|break;
+case|case
+name|IEEE80211_ACTION_MESH_HWMP
+case|:
+comment|/* verify something */
+break|break;
+case|case
+name|IEEE80211_ACTION_MESH_GANN
+case|:
+case|case
+name|IEEE80211_ACTION_MESH_CC
+case|:
+case|case
+name|IEEE80211_ACTION_MESH_MCCA_SREQ
+case|:
+case|case
+name|IEEE80211_ACTION_MESH_MCCA_SREP
+case|:
+case|case
+name|IEEE80211_ACTION_MESH_MCCA_AREQ
+case|:
+case|case
+name|IEEE80211_ACTION_MESH_MCCA_ADVER
+case|:
+case|case
+name|IEEE80211_ACTION_MESH_MCCA_TRDOWN
+case|:
+case|case
+name|IEEE80211_ACTION_MESH_TBTT_REQ
+case|:
+case|case
+name|IEEE80211_ACTION_MESH_TBTT_RES
+case|:
+comment|/* reject these early on, not implemented */
+name|IEEE80211_DISCARD
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_MSG_ELEMID
+operator||
+name|IEEE80211_MSG_INPUT
+argument_list|,
+name|wh
+argument_list|,
+name|NULL
+argument_list|,
+literal|"not implemented yet, act=0x%02X"
+argument_list|,
+name|ia
+operator|->
+name|ia_action
+argument_list|)
+expr_stmt|;
+return|return
+name|EINVAL
+return|;
+block|}
+break|break;
+endif|#
+directive|endif
 block|}
 return|return
 literal|0

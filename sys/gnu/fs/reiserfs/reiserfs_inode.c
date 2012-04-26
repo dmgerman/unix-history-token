@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright 2000 Hans Reiser  * See README for licensing and copyright details  *   * Ported to FreeBSD by Jean-Sébastien Pédron<dumbbell@FreeBSD.org>  *   * $FreeBSD$  */
+comment|/*-  * Copyright 2000 Hans Reiser  * See README for licensing and copyright details  *   * Ported to FreeBSD by Jean-SÃ©bastien PÃ©dron<dumbbell@FreeBSD.org>  *   * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -442,11 +442,6 @@ modifier|*
 name|vp
 decl_stmt|;
 name|struct
-name|thread
-modifier|*
-name|td
-decl_stmt|;
-name|struct
 name|reiserfs_node
 modifier|*
 name|ip
@@ -460,12 +455,6 @@ operator|=
 name|ap
 operator|->
 name|a_vp
-expr_stmt|;
-name|td
-operator|=
-name|ap
-operator|->
-name|a_td
 expr_stmt|;
 name|ip
 operator|=
@@ -512,8 +501,6 @@ expr_stmt|;
 name|vrecycle
 argument_list|(
 name|vp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}

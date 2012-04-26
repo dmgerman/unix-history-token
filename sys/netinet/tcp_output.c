@@ -2502,7 +2502,8 @@ name|to
 operator|.
 name|to_tsval
 operator|=
-name|ticks
+name|tcp_ts_getticks
+argument_list|()
 operator|+
 name|tp
 operator|->
@@ -2545,7 +2546,8 @@ name|tp
 operator|->
 name|rfbuf_ts
 operator|=
-name|ticks
+name|tcp_ts_getticks
+argument_list|()
 expr_stmt|;
 block|}
 comment|/* Selective ACK's. */
@@ -5087,7 +5089,8 @@ name|tp
 operator|->
 name|t_inpcb
 argument_list|,
-literal|0
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 return|return

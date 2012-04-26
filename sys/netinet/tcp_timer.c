@@ -525,13 +525,33 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-specifier|static
 name|int
 name|tcp_keepcnt
 init|=
 name|TCPTV_KEEPCNT
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_inet_tcp
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|keepcnt
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|tcp_keepcnt
+argument_list|,
+literal|0
+argument_list|,
+literal|"Number of keepalive probes to send"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* max idle probes */
@@ -540,16 +560,6 @@ end_comment
 begin_decl_stmt
 name|int
 name|tcp_maxpersistidle
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* max idle time in persist */
-end_comment
-
-begin_decl_stmt
-name|int
-name|tcp_maxidle
 decl_stmt|;
 end_decl_stmt
 
@@ -621,12 +631,6 @@ name|CURVNET_SET
 argument_list|(
 name|vnet_iter
 argument_list|)
-expr_stmt|;
-name|tcp_maxidle
-operator|=
-name|tcp_keepcnt
-operator|*
-name|tcp_keepintvl
 expr_stmt|;
 name|INP_INFO_WLOCK
 argument_list|(
@@ -1130,7 +1134,10 @@ name|tp
 operator|->
 name|t_rcvtime
 operator|<=
-name|tcp_maxidle
+name|TP_MAXIDLE
+argument_list|(
+name|tp
+argument_list|)
 condition|)
 name|callout_reset_on
 argument_list|(
@@ -1141,7 +1148,10 @@ name|t_timers
 operator|->
 name|tt_2msl
 argument_list|,
-name|tcp_keepintvl
+name|TP_KEEPINTVL
+argument_list|(
+name|tp
+argument_list|)
 argument_list|,
 name|tcp_timer_2msl
 argument_list|,
@@ -1422,9 +1432,15 @@ name|tp
 operator|->
 name|t_rcvtime
 operator|>=
-name|tcp_keepidle
+name|TP_KEEPIDLE
+argument_list|(
+name|tp
+argument_list|)
 operator|+
-name|tcp_maxidle
+name|TP_MAXIDLE
+argument_list|(
+name|tp
+argument_list|)
 condition|)
 goto|goto
 name|dropit
@@ -1497,7 +1513,10 @@ name|t_timers
 operator|->
 name|tt_keep
 argument_list|,
-name|tcp_keepintvl
+name|TP_KEEPINTVL
+argument_list|(
+name|tp
+argument_list|)
 argument_list|,
 name|tcp_timer_keep
 argument_list|,
@@ -1520,7 +1539,10 @@ name|t_timers
 operator|->
 name|tt_keep
 argument_list|,
-name|tcp_keepidle
+name|TP_KEEPIDLE
+argument_list|(
+name|tp
+argument_list|)
 argument_list|,
 name|tcp_timer_keep
 argument_list|,

@@ -183,8 +183,9 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|pjdlog_errno
@@ -209,8 +210,9 @@ argument_list|,
 operator|&
 name|nvin
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|pjdlog_errno
@@ -306,8 +308,9 @@ argument_list|,
 operator|&
 name|nvin
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 comment|/* 		 * First error log as debug. This is because worker process 		 * most likely exited. 		 */
@@ -513,8 +516,9 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|pjdlog_errno

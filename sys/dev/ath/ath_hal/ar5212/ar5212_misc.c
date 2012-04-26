@@ -5549,5 +5549,25 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Return what percentage of the extension channel is busy.  * This is always disabled for AR5212 series NICs.  */
+end_comment
+
+begin_function
+name|uint32_t
+name|ar5212Get11nExtBusy
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|)
+block|{
+return|return
+literal|0
+return|;
+block|}
+end_function
+
 end_unit
 

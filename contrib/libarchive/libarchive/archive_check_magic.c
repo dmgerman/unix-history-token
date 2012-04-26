@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2003-2007 Tim Kientzle  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR(S) BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2003-2010 Tim Kientzle  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR(S) BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -305,9 +305,70 @@ end_function
 
 begin_function
 specifier|static
-name|void
+specifier|const
+name|char
+modifier|*
+name|archive_handle_type_name
+parameter_list|(
+name|unsigned
+name|m
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|m
+condition|)
+block|{
+case|case
+name|ARCHIVE_WRITE_MAGIC
+case|:
+return|return
+operator|(
+literal|"archive_write"
+operator|)
+return|;
+case|case
+name|ARCHIVE_READ_MAGIC
+case|:
+return|return
+operator|(
+literal|"archive_read"
+operator|)
+return|;
+case|case
+name|ARCHIVE_WRITE_DISK_MAGIC
+case|:
+return|return
+operator|(
+literal|"archive_write_disk"
+operator|)
+return|;
+case|case
+name|ARCHIVE_READ_DISK_MAGIC
+case|:
+return|return
+operator|(
+literal|"archive_read_disk"
+operator|)
+return|;
+default|default:
+return|return
+name|NULL
+return|;
+block|}
+block|}
+end_function
+
+begin_function
+specifier|static
+name|char
+modifier|*
 name|write_all_states
 parameter_list|(
+name|char
+modifier|*
+name|buff
+parameter_list|,
 name|unsigned
 name|int
 name|states
@@ -317,6 +378,13 @@ name|unsigned
 name|int
 name|lowbit
 decl_stmt|;
+name|buff
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 comment|/* A trick for computing the lowest set bit. */
 while|while
 condition|(
@@ -342,8 +410,10 @@ operator|~
 name|lowbit
 expr_stmt|;
 comment|/* Clear the low bit. */
-name|errmsg
+name|strcat
 argument_list|(
+name|buff
+argument_list|,
 name|state_name
 argument_list|(
 name|lowbit
@@ -356,21 +426,26 @@ name|states
 operator|!=
 literal|0
 condition|)
-name|errmsg
+name|strcat
 argument_list|(
+name|buff
+argument_list|,
 literal|"/"
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+name|buff
+return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Check magic value and current state; bail if it isn't valid.  *  * This is designed to catch serious programming errors that violate  * the libarchive API.  */
+comment|/*  * Check magic value and current state.  *   Magic value mismatches are fatal and result in calls to abort().  *   State mismatches return ARCHIVE_FATAL.  *   Otherwise, returns ARCHIVE_OK.  *  * This is designed to catch serious programming errors that violate  * the libarchive API.  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|__archive_check_magic
 parameter_list|(
 name|struct
@@ -392,18 +467,42 @@ modifier|*
 name|function
 parameter_list|)
 block|{
-if|if
-condition|(
+name|char
+name|states1
+index|[
+literal|64
+index|]
+decl_stmt|;
+name|char
+name|states2
+index|[
+literal|64
+index|]
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|handle_type
+decl_stmt|;
+comment|/* 	 * If this isn't some form of archive handle, 	 * then the library user has screwed up so bad that 	 * we don't even have a reliable way to report an error. 	 */
+name|handle_type
+operator|=
+name|archive_handle_type_name
+argument_list|(
 name|a
 operator|->
 name|magic
-operator|!=
-name|magic
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|handle_type
 condition|)
 block|{
 name|errmsg
 argument_list|(
-literal|"INTERNAL ERROR: Function "
+literal|"PROGRAMMER ERROR: Function "
 argument_list|)
 expr_stmt|;
 name|errmsg
@@ -413,7 +512,7 @@ argument_list|)
 expr_stmt|;
 name|errmsg
 argument_list|(
-literal|" invoked with invalid struct archive structure.\n"
+literal|" invoked with invalid archive handle.\n"
 argument_list|)
 expr_stmt|;
 name|diediedie
@@ -422,11 +521,40 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|state
-operator|==
-name|ARCHIVE_STATE_ANY
+name|a
+operator|->
+name|magic
+operator|!=
+name|magic
 condition|)
-return|return;
+block|{
+name|archive_set_error
+argument_list|(
+name|a
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+literal|"PROGRAMMER ERROR: Function '%s' invoked"
+literal|" on '%s' archive object, which is not supported."
+argument_list|,
+name|function
+argument_list|,
+name|handle_type
+argument_list|)
+expr_stmt|;
+name|a
+operator|->
+name|state
+operator|=
+name|ARCHIVE_STATE_FATAL
+expr_stmt|;
+return|return
+operator|(
+name|ARCHIVE_FATAL
+operator|)
+return|;
+block|}
 if|if
 condition|(
 operator|(
@@ -440,47 +568,60 @@ operator|==
 literal|0
 condition|)
 block|{
-name|errmsg
+comment|/* If we're already FATAL, don't overwrite the error. */
+if|if
+condition|(
+name|a
+operator|->
+name|state
+operator|!=
+name|ARCHIVE_STATE_FATAL
+condition|)
+name|archive_set_error
 argument_list|(
-literal|"INTERNAL ERROR: Function '"
-argument_list|)
-expr_stmt|;
-name|errmsg
-argument_list|(
+name|a
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+literal|"INTERNAL ERROR: Function '%s' invoked with"
+literal|" archive structure in state '%s',"
+literal|" should be in state '%s'"
+argument_list|,
 name|function
-argument_list|)
-expr_stmt|;
-name|errmsg
-argument_list|(
-literal|"' invoked with archive structure in state '"
-argument_list|)
-expr_stmt|;
+argument_list|,
 name|write_all_states
 argument_list|(
+name|states1
+argument_list|,
 name|a
 operator|->
 name|state
 argument_list|)
-expr_stmt|;
-name|errmsg
-argument_list|(
-literal|"', should be in state '"
-argument_list|)
-expr_stmt|;
+argument_list|,
 name|write_all_states
 argument_list|(
+name|states2
+argument_list|,
 name|state
 argument_list|)
-expr_stmt|;
-name|errmsg
-argument_list|(
-literal|"'\n"
 argument_list|)
 expr_stmt|;
-name|diediedie
-argument_list|()
+name|a
+operator|->
+name|state
+operator|=
+name|ARCHIVE_STATE_FATAL
 expr_stmt|;
+return|return
+operator|(
+name|ARCHIVE_FATAL
+operator|)
+return|;
 block|}
+return|return
+name|ARCHIVE_OK
+return|;
 block|}
 end_function
 

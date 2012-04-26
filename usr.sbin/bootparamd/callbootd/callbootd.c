@@ -381,10 +381,6 @@ name|CLIENT
 modifier|*
 name|clnt
 decl_stmt|;
-name|enum
-name|clnt_stat
-name|clnt_stat
-decl_stmt|;
 name|stat_whoami_res
 operator|.
 name|client_name
@@ -584,8 +580,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|clnt_stat
-operator|=
+operator|(
+name|void
+operator|)
 name|clnt_broadcast
 argument_list|(
 name|BOOTPARAMPROG
@@ -699,8 +696,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|clnt_stat
-operator|=
+operator|(
+name|void
+operator|)
 name|clnt_broadcast
 argument_list|(
 name|BOOTPARAMPROG

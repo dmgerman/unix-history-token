@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2004 Stefan Farfeleder.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2004 Stefan Farfeleder.  * All rights reserved.  *  * Copyright (c) 2012 Ed Schouten<ed@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -28,94 +28,54 @@ file|<math.h>
 end_include
 
 begin_comment
-comment|/*  * This implementation of<tgmath.h> requires two implementation-dependent  * macros to be defined:  * __tg_impl_simple(x, y, z, fn, fnf, fnl, ...)  *	Invokes fnl() if the corresponding real type of x, y or z is long  *	double, fn() if it is double or any has an integer type, and fnf()  *	otherwise.  * __tg_impl_full(x, y, z, fn, fnf, fnl, cfn, cfnf, cfnl, ...)  *	Invokes [c]fnl() if the corresponding real type of x, y or z is long  *	double, [c]fn() if it is double or any has an integer type, and  *	[c]fnf() otherwise.  The function with the 'c' prefix is called if  *	any of x, y or z is a complex number.  * Both macros call the chosen function with all additional arguments passed  * to them, as given by __VA_ARGS__.  *  * Note that these macros cannot be implemented with C's ?: operator,  * because the return type of the whole expression would incorrectly be long  * double complex regardless of the argument types.  */
+comment|/*  * This implementation of<tgmath.h> uses the two following macros,  * which are based on the macros described in C11 proposal N1404:  * __tg_impl_simple(x, y, z, fnl, fn, fnf, ...)  *	Invokes fnl() if the corresponding real type of x, y or z is long  *	double, fn() if it is double or any has an integer type, and fnf()  *	otherwise.  * __tg_impl_full(x, y, cfnl, cfn, cfnf, fnl, fn, fnf, ...)  *	Invokes [c]fnl() if the corresponding real type of x or y is long  *	double, [c]fn() if it is double or any has an integer type, and  *	[c]fnf() otherwise.  The function with the 'c' prefix is called if  *	any of x or y is a complex number.  * Both macros call the chosen function with all additional arguments passed  * to them, as given by __VA_ARGS__.  *  * Note that these macros cannot be implemented with C's ?: operator,  * because the return type of the whole expression would incorrectly be long  * double complex regardless of the argument types.  *  * The structure of the C11 implementation of these macros can in  * principle be reused for non-C11 compilers, but due to an integer  * promotion bug for complex types in GCC 4.2, simply let non-C11  * compilers use an inefficient yet reliable version.  */
 end_comment
 
 begin_if
 if|#
 directive|if
-name|__GNUC_PREREQ__
+name|defined
 argument_list|(
-literal|3
-operator|,
-literal|1
+name|__STDC_VERSION__
 argument_list|)
+operator|&&
+name|__STDC_VERSION__
+operator|>=
+literal|201112L
 end_if
+
+begin_define
+define|#
+directive|define
+name|__tg_generic
+parameter_list|(
+name|x
+parameter_list|,
+name|cfnl
+parameter_list|,
+name|cfn
+parameter_list|,
+name|cfnf
+parameter_list|,
+name|fnl
+parameter_list|,
+name|fn
+parameter_list|,
+name|fnf
+parameter_list|)
+define|\
+value|_Generic(x,							\ 		long double _Complex: cfnl,				\ 		double _Complex: cfn,					\ 		float _Complex: cfnf,					\ 		long double: fnl,					\ 		default: fn,						\ 		float: fnf						\ 	)
+end_define
 
 begin_define
 define|#
 directive|define
 name|__tg_type
 parameter_list|(
-name|e
-parameter_list|,
-name|t
-parameter_list|)
-value|__builtin_types_compatible_p(__typeof__(e), t)
-end_define
-
-begin_define
-define|#
-directive|define
-name|__tg_type3
-parameter_list|(
-name|e1
-parameter_list|,
-name|e2
-parameter_list|,
-name|e3
-parameter_list|,
-name|t
+name|x
 parameter_list|)
 define|\
-value|(__tg_type(e1, t) || __tg_type(e2, t) || __tg_type(e3, t))
-end_define
-
-begin_define
-define|#
-directive|define
-name|__tg_type_corr
-parameter_list|(
-name|e1
-parameter_list|,
-name|e2
-parameter_list|,
-name|e3
-parameter_list|,
-name|t
-parameter_list|)
-define|\
-value|(__tg_type3(e1, e2, e3, t) || __tg_type3(e1, e2, e3, t _Complex))
-end_define
-
-begin_define
-define|#
-directive|define
-name|__tg_integer
-parameter_list|(
-name|e1
-parameter_list|,
-name|e2
-parameter_list|,
-name|e3
-parameter_list|)
-define|\
-value|(((__typeof__(e1))1.5 == 1) || ((__typeof__(e2))1.5 == 1) ||	\ 	    ((__typeof__(e3))1.5 == 1))
-end_define
-
-begin_define
-define|#
-directive|define
-name|__tg_is_complex
-parameter_list|(
-name|e1
-parameter_list|,
-name|e2
-parameter_list|,
-name|e3
-parameter_list|)
-define|\
-value|(__tg_type3(e1, e2, e3, float _Complex) ||			\ 	    __tg_type3(e1, e2, e3, double _Complex) ||			\ 	    __tg_type3(e1, e2, e3, long double _Complex) ||		\ 	    __tg_type3(e1, e2, e3, __typeof__(_Complex_I)))
+value|__tg_generic(x, (long double _Complex)0, (double _Complex)0,	\ 	    (float _Complex)0, (long double)0, (double)0, (float)0)
 end_define
 
 begin_define
@@ -129,16 +89,16 @@ name|y
 parameter_list|,
 name|z
 parameter_list|,
+name|fnl
+parameter_list|,
 name|fn
 parameter_list|,
 name|fnf
 parameter_list|,
-name|fnl
-parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|__builtin_choose_expr(__tg_type_corr(x, y, z, long double),	\ 	    fnl(__VA_ARGS__), __builtin_choose_expr(			\ 		__tg_type_corr(x, y, z, double) || __tg_integer(x, y, z),\ 		fn(__VA_ARGS__), fnf(__VA_ARGS__)))
+value|__tg_generic(							\ 	    __tg_type(x) + __tg_type(y) + __tg_type(z),			\ 	    fnl, fn, fnf, fnl, fn, fnf)(__VA_ARGS__)
 end_define
 
 begin_define
@@ -150,34 +110,127 @@ name|x
 parameter_list|,
 name|y
 parameter_list|,
-name|z
-parameter_list|,
-name|fn
-parameter_list|,
-name|fnf
-parameter_list|,
-name|fnl
+name|cfnl
 parameter_list|,
 name|cfn
 parameter_list|,
 name|cfnf
 parameter_list|,
-name|cfnl
+name|fnl
+parameter_list|,
+name|fn
+parameter_list|,
+name|fnf
 parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|__builtin_choose_expr(__tg_is_complex(x, y, z),			\ 	    __tg_impl_simple(x, y, z, cfn, cfnf, cfnl, __VA_ARGS__),	\ 	    __tg_impl_simple(x, y, z, fn, fnf, fnl, __VA_ARGS__))
+value|__tg_generic(							\ 	    __tg_type(x) + __tg_type(y),				\ 	    cfnl, cfn, cfnf, fnl, fn, fnf)(__VA_ARGS__)
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__generic
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|__tg_generic_simple
+parameter_list|(
+name|x
+parameter_list|,
+name|fnl
+parameter_list|,
+name|fn
+parameter_list|,
+name|fnf
+parameter_list|)
+define|\
+value|__generic(x, long double _Complex, fnl,				\ 	    __generic(x, double _Complex, fn,				\ 	        __generic(x, float _Complex, fnf,			\ 	            __generic(x, long double, fnl,			\ 	                __generic(x, float, fnf, fn)))))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__tg_impl_simple
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|,
+name|z
+parameter_list|,
+name|fnl
+parameter_list|,
+name|fn
+parameter_list|,
+name|fnf
+parameter_list|,
+modifier|...
+parameter_list|)
+define|\
+value|__tg_generic_simple(x,						\ 	    __tg_generic_simple(y,					\ 	        __tg_generic_simple(z, fnl, fnl, fnl),			\ 	        __tg_generic_simple(z, fnl, fnl, fnl),			\ 	        __tg_generic_simple(z, fnl, fnl, fnl)),			\ 	    __tg_generic_simple(y,					\ 	        __tg_generic_simple(z, fnl, fnl, fnl),			\ 	        __tg_generic_simple(z, fnl, fn , fn ),			\ 	        __tg_generic_simple(z, fnl, fn , fn )),			\ 	    __tg_generic_simple(y,					\ 	        __tg_generic_simple(z, fnl, fnl, fnl),			\ 	        __tg_generic_simple(z, fnl, fn , fn ),			\ 	        __tg_generic_simple(z, fnl, fn , fnf)))(__VA_ARGS__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__tg_generic_full
+parameter_list|(
+name|x
+parameter_list|,
+name|cfnl
+parameter_list|,
+name|cfn
+parameter_list|,
+name|cfnf
+parameter_list|,
+name|fnl
+parameter_list|,
+name|fn
+parameter_list|,
+name|fnf
+parameter_list|)
+define|\
+value|__generic(x, long double _Complex, cfnl,			\ 	    __generic(x, double _Complex, cfn,				\ 	        __generic(x, float _Complex, cfnf,			\ 	            __generic(x, long double, fnl,			\ 	                __generic(x, float, fnf, fn)))))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__tg_impl_full
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|,
+name|cfnl
+parameter_list|,
+name|cfn
+parameter_list|,
+name|cfnf
+parameter_list|,
+name|fnl
+parameter_list|,
+name|fn
+parameter_list|,
+name|fnf
+parameter_list|,
+modifier|...
+parameter_list|)
+define|\
+value|__tg_generic_full(x,						\ 	    __tg_generic_full(y, cfnl, cfnl, cfnl, cfnl, cfnl, cfnl),	\ 	    __tg_generic_full(y, cfnl, cfn , cfn , cfnl, cfn , cfn ),	\ 	    __tg_generic_full(y, cfnl, cfn , cfnf, cfnl, cfn , cfnf),	\ 	    __tg_generic_full(y, cfnl, cfnl, cfnl, fnl , fnl , fnl ),	\ 	    __tg_generic_full(y, cfnl, cfn , cfn , fnl , fn  , fn  ),	\ 	    __tg_generic_full(y, cfnl, cfn , cfnf, fnl , fn  , fnf ))	\ 	    (__VA_ARGS__)
 end_define
 
 begin_else
 else|#
 directive|else
 end_else
-
-begin_comment
-comment|/* __GNUC__ */
-end_comment
 
 begin_error
 error|#
@@ -189,10 +242,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* !__GNUC__ */
-end_comment
 
 begin_comment
 comment|/* Macros to save lots of repetition below */
@@ -208,7 +257,7 @@ parameter_list|,
 name|fn
 parameter_list|)
 define|\
-value|__tg_impl_simple(x, x, x, fn, fn##f, fn##l, x)
+value|__tg_impl_simple(x, x, x, fn##l, fn, fn##f, x)
 end_define
 
 begin_define
@@ -223,7 +272,24 @@ parameter_list|,
 name|fn
 parameter_list|)
 define|\
-value|__tg_impl_simple(x, x, y, fn, fn##f, fn##l, x, y)
+value|__tg_impl_simple(x, x, y, fn##l, fn, fn##f, x, y)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__tg_simple3
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|,
+name|z
+parameter_list|,
+name|fn
+parameter_list|)
+define|\
+value|__tg_impl_simple(x, y, z, fn##l, fn, fn##f, x, y, z)
 end_define
 
 begin_define
@@ -238,7 +304,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|__tg_impl_simple(x, x, x, fn, fn##f, fn##l, __VA_ARGS__)
+value|__tg_impl_simple(x, x, x, fn##l, fn, fn##f, __VA_ARGS__)
 end_define
 
 begin_define
@@ -251,7 +317,22 @@ parameter_list|,
 name|fn
 parameter_list|)
 define|\
-value|__tg_impl_full(x, x, x, fn, fn##f, fn##l, c##fn, c##fn##f, c##fn##l, x)
+value|__tg_impl_full(x, x, c##fn##l, c##fn, c##fn##f, fn##l, fn, fn##f, x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__tg_full2
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|,
+name|fn
+parameter_list|)
+define|\
+value|__tg_impl_full(x, y, c##fn##l, c##fn, c##fn##f, fn##l, fn, fn##f, x, y)
 end_define
 
 begin_comment
@@ -407,7 +488,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|__tg_impl_full(x, x, y, pow, powf, powl,	\ 			    cpow, cpowf, cpowl, x, y)
+value|__tg_full2(x, y, pow)
 end_define
 
 begin_define
@@ -431,7 +512,7 @@ name|fabs
 parameter_list|(
 name|x
 parameter_list|)
-value|__tg_impl_full(x, x, x, fabs, fabsf, fabsl,	\     			    cabs, cabsf, cabsl, x)
+value|__tg_impl_full(x, x, cabsl, cabs, cabsf,	\     			    fabsl, fabs, fabsf, x)
 end_define
 
 begin_comment
@@ -555,7 +636,7 @@ name|y
 parameter_list|,
 name|z
 parameter_list|)
-value|__tg_impl_simple(x, y, z, fma, fmaf, fmal, x, y, z)
+value|__tg_simple3(x, y, z, fma)
 end_define
 
 begin_define
@@ -787,7 +868,7 @@ name|y
 parameter_list|,
 name|z
 parameter_list|)
-value|__tg_impl_simple(x, x, y, remquo, remquof,	\ 			    remquol, x, y, z)
+value|__tg_impl_simple(x, x, y, remquol, remquo,	\ 			    remquof, x, y, z)
 end_define
 
 begin_define

@@ -2237,13 +2237,11 @@ control|)
 block|{
 if|if
 condition|(
-operator|(
 name|adp
 operator|->
 name|va_type
 operator|==
 name|KD_VGA
-operator|)
 condition|)
 break|break;
 block|}

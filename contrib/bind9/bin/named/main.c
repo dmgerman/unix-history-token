@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: main.c,v 1.180.14.3 2011-03-11 06:47:00 marka Exp $ */
+comment|/* $Id: main.c,v 1.180.14.4 2011/11/05 00:45:52 each Exp $ */
 end_comment
 
 begin_comment
@@ -3122,6 +3122,84 @@ argument_list|,
 literal|"built with %s"
 argument_list|,
 name|ns_g_configargs
+argument_list|)
+expr_stmt|;
+name|isc_log_write
+argument_list|(
+name|ns_g_lctx
+argument_list|,
+name|NS_LOGCATEGORY_GENERAL
+argument_list|,
+name|NS_LOGMODULE_MAIN
+argument_list|,
+name|ISC_LOG_NOTICE
+argument_list|,
+literal|"----------------------------------------------------"
+argument_list|)
+expr_stmt|;
+name|isc_log_write
+argument_list|(
+name|ns_g_lctx
+argument_list|,
+name|NS_LOGCATEGORY_GENERAL
+argument_list|,
+name|NS_LOGMODULE_MAIN
+argument_list|,
+name|ISC_LOG_NOTICE
+argument_list|,
+literal|"BIND 9 is maintained by Internet Systems Consortium,"
+argument_list|)
+expr_stmt|;
+name|isc_log_write
+argument_list|(
+name|ns_g_lctx
+argument_list|,
+name|NS_LOGCATEGORY_GENERAL
+argument_list|,
+name|NS_LOGMODULE_MAIN
+argument_list|,
+name|ISC_LOG_NOTICE
+argument_list|,
+literal|"Inc. (ISC), a non-profit 501(c)(3) public-benefit "
+argument_list|)
+expr_stmt|;
+name|isc_log_write
+argument_list|(
+name|ns_g_lctx
+argument_list|,
+name|NS_LOGCATEGORY_GENERAL
+argument_list|,
+name|NS_LOGMODULE_MAIN
+argument_list|,
+name|ISC_LOG_NOTICE
+argument_list|,
+literal|"corporation.  Support and training for BIND 9 are "
+argument_list|)
+expr_stmt|;
+name|isc_log_write
+argument_list|(
+name|ns_g_lctx
+argument_list|,
+name|NS_LOGCATEGORY_GENERAL
+argument_list|,
+name|NS_LOGMODULE_MAIN
+argument_list|,
+name|ISC_LOG_NOTICE
+argument_list|,
+literal|"available at https://www.isc.org/support"
+argument_list|)
+expr_stmt|;
+name|isc_log_write
+argument_list|(
+name|ns_g_lctx
+argument_list|,
+name|NS_LOGCATEGORY_GENERAL
+argument_list|,
+name|NS_LOGMODULE_MAIN
+argument_list|,
+name|ISC_LOG_NOTICE
+argument_list|,
+literal|"----------------------------------------------------"
 argument_list|)
 expr_stmt|;
 name|dump_symboltable

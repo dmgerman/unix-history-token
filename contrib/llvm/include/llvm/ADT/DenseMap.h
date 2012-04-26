@@ -145,14 +145,6 @@ operator|<
 name|KeyT
 operator|>
 operator|,
-name|typename
-name|ValueInfoT
-operator|=
-name|DenseMapInfo
-operator|<
-name|ValueT
-operator|>
-operator|,
 name|bool
 name|IsConst
 operator|=
@@ -175,14 +167,6 @@ operator|=
 name|DenseMapInfo
 operator|<
 name|KeyT
-operator|>
-operator|,
-name|typename
-name|ValueInfoT
-operator|=
-name|DenseMapInfo
-operator|<
-name|ValueT
 operator|>
 expr|>
 name|class
@@ -432,8 +416,6 @@ name|ValueT
 operator|,
 name|KeyInfoT
 operator|,
-name|ValueInfoT
-operator|,
 name|true
 operator|>
 name|const_iterator
@@ -482,6 +464,8 @@ argument_list|,
 name|Buckets
 operator|+
 name|NumBuckets
+argument_list|,
+name|true
 argument_list|)
 return|;
 block|}
@@ -530,6 +514,8 @@ argument_list|,
 name|Buckets
 operator|+
 name|NumBuckets
+argument_list|,
+name|true
 argument_list|)
 return|;
 block|}
@@ -785,6 +771,8 @@ argument_list|,
 name|Buckets
 operator|+
 name|NumBuckets
+argument_list|,
+name|true
 argument_list|)
 return|;
 return|return
@@ -826,6 +814,8 @@ argument_list|,
 name|Buckets
 operator|+
 name|NumBuckets
+argument_list|,
+name|true
 argument_list|)
 return|;
 return|return
@@ -836,6 +826,120 @@ block|}
 end_decl_stmt
 
 begin_comment
+comment|/// Alternate version of find() which allows a different, and possibly
+end_comment
+
+begin_comment
+comment|/// less expensive, key type.
+end_comment
+
+begin_comment
+comment|/// The DenseMapInfo is responsible for supplying methods
+end_comment
+
+begin_comment
+comment|/// getHashValue(LookupKeyT) and isEqual(LookupKeyT, KeyT) for each key
+end_comment
+
+begin_comment
+comment|/// type used.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|class
+name|LookupKeyT
+operator|>
+name|iterator
+name|find_as
+argument_list|(
+argument|const LookupKeyT&Val
+argument_list|)
+block|{
+name|BucketT
+operator|*
+name|TheBucket
+block|;
+if|if
+condition|(
+name|LookupBucketFor
+argument_list|(
+name|Val
+argument_list|,
+name|TheBucket
+argument_list|)
+condition|)
+return|return
+name|iterator
+argument_list|(
+name|TheBucket
+argument_list|,
+name|Buckets
+operator|+
+name|NumBuckets
+argument_list|,
+name|true
+argument_list|)
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+name|end
+argument_list|()
+return|;
+end_return
+
+begin_expr_stmt
+unit|}   template
+operator|<
+name|class
+name|LookupKeyT
+operator|>
+name|const_iterator
+name|find_as
+argument_list|(
+argument|const LookupKeyT&Val
+argument_list|)
+specifier|const
+block|{
+name|BucketT
+operator|*
+name|TheBucket
+block|;
+if|if
+condition|(
+name|LookupBucketFor
+argument_list|(
+name|Val
+argument_list|,
+name|TheBucket
+argument_list|)
+condition|)
+return|return
+name|const_iterator
+argument_list|(
+name|TheBucket
+argument_list|,
+name|Buckets
+operator|+
+name|NumBuckets
+argument_list|,
+name|true
+argument_list|)
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+name|end
+argument_list|()
+return|;
+end_return
+
+begin_comment
+unit|}
 comment|/// lookup - Return the entry for the specified key, or a default
 end_comment
 
@@ -843,21 +947,21 @@ begin_comment
 comment|/// constructed value if no such entry exists.
 end_comment
 
-begin_decl_stmt
-name|ValueT
+begin_macro
+unit|ValueT
 name|lookup
 argument_list|(
-specifier|const
-name|KeyT
-operator|&
-name|Val
+argument|const KeyT&Val
 argument_list|)
-decl|const
+end_macro
+
+begin_expr_stmt
+specifier|const
 block|{
 name|BucketT
-modifier|*
+operator|*
 name|TheBucket
-decl_stmt|;
+block|;
 if|if
 condition|(
 name|LookupBucketFor
@@ -872,14 +976,17 @@ name|TheBucket
 operator|->
 name|second
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 name|ValueT
 argument_list|()
 return|;
-block|}
-end_decl_stmt
+end_return
 
 begin_comment
+unit|}
 comment|// Inserts key,value pair into the map if the key isn't already in the map.
 end_comment
 
@@ -892,7 +999,7 @@ comment|// value.
 end_comment
 
 begin_expr_stmt
-name|std
+unit|std
 operator|::
 name|pair
 operator|<
@@ -934,6 +1041,8 @@ argument_list|,
 name|Buckets
 operator|+
 name|NumBuckets
+argument_list|,
+name|true
 argument_list|)
 argument_list|,
 name|false
@@ -971,6 +1080,8 @@ argument_list|,
 name|Buckets
 operator|+
 name|NumBuckets
+argument_list|,
+name|true
 argument_list|)
 argument_list|,
 name|true
@@ -1345,7 +1456,7 @@ operator|(
 operator|!
 name|isPodLike
 operator|<
-name|KeyInfoT
+name|KeyT
 operator|>
 operator|::
 name|value
@@ -1353,7 +1464,7 @@ operator|||
 operator|!
 name|isPodLike
 operator|<
-name|ValueInfoT
+name|ValueT
 operator|>
 operator|::
 name|value
@@ -1529,14 +1640,14 @@ if|if
 condition|(
 name|isPodLike
 operator|<
-name|KeyInfoT
+name|KeyT
 operator|>
 operator|::
 name|value
 operator|&&
 name|isPodLike
 operator|<
-name|ValueInfoT
+name|ValueT
 operator|>
 operator|::
 name|value
@@ -1795,6 +1906,30 @@ return|;
 block|}
 end_function
 
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|LookupKeyT
+operator|>
+specifier|static
+name|unsigned
+name|getHashValue
+argument_list|(
+argument|const LookupKeyT&Val
+argument_list|)
+block|{
+return|return
+name|KeyInfoT
+operator|::
+name|getHashValue
+argument_list|(
+name|Val
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
 begin_function
 specifier|static
 specifier|const
@@ -1843,41 +1978,40 @@ begin_comment
 comment|/// returns false.
 end_comment
 
-begin_decl_stmt
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|LookupKeyT
+operator|>
 name|bool
 name|LookupBucketFor
 argument_list|(
-specifier|const
-name|KeyT
-operator|&
-name|Val
+argument|const LookupKeyT&Val
 argument_list|,
-name|BucketT
-operator|*
-operator|&
-name|FoundBucket
+argument|BucketT *&FoundBucket
 argument_list|)
-decl|const
+specifier|const
 block|{
 name|unsigned
 name|BucketNo
-init|=
+operator|=
 name|getHashValue
 argument_list|(
 name|Val
 argument_list|)
-decl_stmt|;
+block|;
 name|unsigned
 name|ProbeAmt
-init|=
+operator|=
 literal|1
-decl_stmt|;
+block|;
 name|BucketT
-modifier|*
+operator|*
 name|BucketsPtr
-init|=
+operator|=
 name|Buckets
-decl_stmt|;
+block|;
 if|if
 condition|(
 name|NumBuckets
@@ -1895,11 +2029,14 @@ return|;
 block|}
 comment|// FoundTombstone - Keep track of whether we find a tombstone while probing.
 name|BucketT
-modifier|*
+operator|*
 name|FoundTombstone
-init|=
+operator|=
 literal|0
-decl_stmt|;
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 specifier|const
 name|KeyT
 name|EmptyKey
@@ -1907,6 +2044,9 @@ init|=
 name|getEmptyKey
 argument_list|()
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|const
 name|KeyT
 name|TombstoneKey
@@ -1914,6 +2054,9 @@ init|=
 name|getTombstoneKey
 argument_list|()
 decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
 name|assert
 argument_list|(
 operator|!
@@ -1939,6 +2082,9 @@ operator|&&
 literal|"Empty/Tombstone value shouldn't be inserted into map!"
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_while
 while|while
 condition|(
 literal|1
@@ -1967,11 +2113,11 @@ name|KeyInfoT
 operator|::
 name|isEqual
 argument_list|(
+name|Val
+argument_list|,
 name|ThisBucket
 operator|->
 name|first
-argument_list|,
-name|Val
 argument_list|)
 condition|)
 block|{
@@ -2052,16 +2198,17 @@ name|ProbeAmt
 operator|++
 expr_stmt|;
 block|}
-block|}
-end_decl_stmt
+end_while
 
-begin_function
-name|void
+begin_macro
+unit|}    void
 name|init
-parameter_list|(
-name|unsigned
-name|InitBuckets
-parameter_list|)
+argument_list|(
+argument|unsigned InitBuckets
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|NumEntries
 operator|=
@@ -2159,7 +2306,7 @@ name|EmptyKey
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_function
 name|void
@@ -2684,9 +2831,6 @@ operator|,
 name|typename
 name|KeyInfoT
 operator|,
-name|typename
-name|ValueInfoT
-operator|,
 name|bool
 name|IsConst
 operator|>
@@ -2716,8 +2860,6 @@ name|ValueT
 operator|,
 name|KeyInfoT
 operator|,
-name|ValueInfoT
-operator|,
 name|true
 operator|>
 name|ConstIterator
@@ -2734,8 +2876,6 @@ operator|,
 name|ValueT
 operator|,
 name|KeyInfoT
-operator|,
-name|ValueInfoT
 operator|,
 name|true
 operator|>
@@ -2834,6 +2974,8 @@ argument_list|(
 argument|pointer Pos
 argument_list|,
 argument|pointer E
+argument_list|,
+argument|bool NoAdvance = false
 argument_list|)
 operator|:
 name|Ptr
@@ -2846,12 +2988,30 @@ argument_list|(
 argument|E
 argument_list|)
 block|{
+if|if
+condition|(
+operator|!
+name|NoAdvance
+condition|)
 name|AdvancePastEmptyBuckets
 argument_list|()
-block|;   }
+expr_stmt|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|// If IsConst is true this is a converting constructor from iterator to
+end_comment
+
+begin_comment
 comment|// const_iterator and the default copy constructor is used.
+end_comment
+
+begin_comment
 comment|// Otherwise this is a copy constructor for iterator.
+end_comment
+
+begin_expr_stmt
 name|DenseMapIterator
 argument_list|(
 specifier|const
@@ -2862,8 +3022,6 @@ argument_list|,
 name|ValueT
 argument_list|,
 name|KeyInfoT
-argument_list|,
-name|ValueInfoT
 argument_list|,
 name|false
 operator|>
@@ -3086,9 +3244,6 @@ name|ValueT
 operator|,
 name|typename
 name|KeyInfoT
-operator|,
-name|typename
-name|ValueInfoT
 operator|>
 specifier|static
 specifier|inline
@@ -3099,9 +3254,7 @@ argument|const DenseMap<KeyT
 argument_list|,
 argument|ValueT
 argument_list|,
-argument|KeyInfoT
-argument_list|,
-argument|ValueInfoT>&X
+argument|KeyInfoT>&X
 argument_list|)
 block|{
 return|return

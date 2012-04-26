@@ -1673,7 +1673,7 @@ name|mp
 operator|->
 name|mnt_data
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 return|return
 operator|(

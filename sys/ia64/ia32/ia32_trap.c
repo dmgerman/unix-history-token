@@ -122,7 +122,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/include/psl.h>
+file|<x86/include/psl.h>
 end_include
 
 begin_include

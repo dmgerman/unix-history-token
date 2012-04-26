@@ -64,6 +64,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/CallSite.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/ErrorHandling.h"
 end_include
 
@@ -491,28 +497,6 @@ name|TerminatorInst
 argument_list|)
 block|;}
 name|RetTy
-name|visitInvokeInst
-argument_list|(
-argument|InvokeInst&I
-argument_list|)
-block|{
-name|DELEGATE
-argument_list|(
-name|TerminatorInst
-argument_list|)
-block|;}
-name|RetTy
-name|visitUnwindInst
-argument_list|(
-argument|UnwindInst&I
-argument_list|)
-block|{
-name|DELEGATE
-argument_list|(
-name|TerminatorInst
-argument_list|)
-block|;}
-name|RetTy
 name|visitResumeInst
 argument_list|(
 argument|ResumeInst&I
@@ -564,9 +548,9 @@ argument_list|)
 block|{
 name|DELEGATE
 argument_list|(
-name|Instruction
+name|UnaryInstruction
 argument_list|)
-block|; }
+block|;}
 name|RetTy
 name|visitLoadInst
 argument_list|(
@@ -575,9 +559,9 @@ argument_list|)
 block|{
 name|DELEGATE
 argument_list|(
-name|Instruction
+name|UnaryInstruction
 argument_list|)
-block|; }
+block|;}
 name|RetTy
 name|visitStoreInst
 argument_list|(
@@ -588,7 +572,7 @@ name|DELEGATE
 argument_list|(
 name|Instruction
 argument_list|)
-block|; }
+block|;}
 name|RetTy
 name|visitAtomicCmpXchgInst
 argument_list|(
@@ -599,7 +583,7 @@ name|DELEGATE
 argument_list|(
 name|Instruction
 argument_list|)
-block|; }
+block|;}
 name|RetTy
 name|visitAtomicRMWInst
 argument_list|(
@@ -610,7 +594,7 @@ name|DELEGATE
 argument_list|(
 name|Instruction
 argument_list|)
-block|; }
+block|;}
 name|RetTy
 name|visitFenceInst
 argument_list|(
@@ -621,7 +605,7 @@ name|DELEGATE
 argument_list|(
 name|Instruction
 argument_list|)
-block|; }
+block|;}
 name|RetTy
 name|visitGetElementPtrInst
 argument_list|(
@@ -632,7 +616,7 @@ name|DELEGATE
 argument_list|(
 name|Instruction
 argument_list|)
-block|; }
+block|;}
 name|RetTy
 name|visitPHINode
 argument_list|(
@@ -643,7 +627,7 @@ name|DELEGATE
 argument_list|(
 name|Instruction
 argument_list|)
-block|; }
+block|;}
 name|RetTy
 name|visitTruncInst
 argument_list|(
@@ -654,7 +638,7 @@ name|DELEGATE
 argument_list|(
 name|CastInst
 argument_list|)
-block|; }
+block|;}
 name|RetTy
 name|visitZExtInst
 argument_list|(
@@ -665,7 +649,7 @@ name|DELEGATE
 argument_list|(
 name|CastInst
 argument_list|)
-block|; }
+block|;}
 name|RetTy
 name|visitSExtInst
 argument_list|(
@@ -676,7 +660,7 @@ name|DELEGATE
 argument_list|(
 name|CastInst
 argument_list|)
-block|; }
+block|;}
 name|RetTy
 name|visitFPTruncInst
 argument_list|(
@@ -687,7 +671,7 @@ name|DELEGATE
 argument_list|(
 name|CastInst
 argument_list|)
-block|; }
+block|;}
 name|RetTy
 name|visitFPExtInst
 argument_list|(
@@ -698,7 +682,7 @@ name|DELEGATE
 argument_list|(
 name|CastInst
 argument_list|)
-block|; }
+block|;}
 name|RetTy
 name|visitFPToUIInst
 argument_list|(
@@ -709,7 +693,7 @@ name|DELEGATE
 argument_list|(
 name|CastInst
 argument_list|)
-block|; }
+block|;}
 name|RetTy
 name|visitFPToSIInst
 argument_list|(
@@ -720,7 +704,7 @@ name|DELEGATE
 argument_list|(
 name|CastInst
 argument_list|)
-block|; }
+block|;}
 name|RetTy
 name|visitUIToFPInst
 argument_list|(
@@ -731,7 +715,7 @@ name|DELEGATE
 argument_list|(
 name|CastInst
 argument_list|)
-block|; }
+block|;}
 name|RetTy
 name|visitSIToFPInst
 argument_list|(
@@ -742,7 +726,7 @@ name|DELEGATE
 argument_list|(
 name|CastInst
 argument_list|)
-block|; }
+block|;}
 name|RetTy
 name|visitPtrToIntInst
 argument_list|(
@@ -753,7 +737,7 @@ name|DELEGATE
 argument_list|(
 name|CastInst
 argument_list|)
-block|; }
+block|;}
 name|RetTy
 name|visitIntToPtrInst
 argument_list|(
@@ -764,7 +748,7 @@ name|DELEGATE
 argument_list|(
 name|CastInst
 argument_list|)
-block|; }
+block|;}
 name|RetTy
 name|visitBitCastInst
 argument_list|(
@@ -775,7 +759,7 @@ name|DELEGATE
 argument_list|(
 name|CastInst
 argument_list|)
-block|; }
+block|;}
 name|RetTy
 name|visitSelectInst
 argument_list|(
@@ -786,18 +770,7 @@ name|DELEGATE
 argument_list|(
 name|Instruction
 argument_list|)
-block|; }
-name|RetTy
-name|visitCallInst
-argument_list|(
-argument|CallInst&I
-argument_list|)
-block|{
-name|DELEGATE
-argument_list|(
-name|Instruction
-argument_list|)
-block|; }
+block|;}
 name|RetTy
 name|visitVAArgInst
 argument_list|(
@@ -806,9 +779,9 @@ argument_list|)
 block|{
 name|DELEGATE
 argument_list|(
-name|Instruction
+name|UnaryInstruction
 argument_list|)
-block|; }
+block|;}
 name|RetTy
 name|visitExtractElementInst
 argument_list|(
@@ -830,7 +803,7 @@ name|DELEGATE
 argument_list|(
 name|Instruction
 argument_list|)
-block|; }
+block|;}
 name|RetTy
 name|visitShuffleVectorInst
 argument_list|(
@@ -841,7 +814,7 @@ name|DELEGATE
 argument_list|(
 name|Instruction
 argument_list|)
-block|; }
+block|;}
 name|RetTy
 name|visitExtractValueInst
 argument_list|(
@@ -850,7 +823,7 @@ argument_list|)
 block|{
 name|DELEGATE
 argument_list|(
-name|Instruction
+name|UnaryInstruction
 argument_list|)
 block|;}
 name|RetTy
@@ -875,21 +848,69 @@ argument_list|(
 name|Instruction
 argument_list|)
 block|; }
+comment|// Call and Invoke are slightly different as they delegate first through
+comment|// a generic CallSite visitor.
+name|RetTy
+name|visitCallInst
+argument_list|(
+argument|CallInst&I
+argument_list|)
+block|{
+return|return
+name|static_cast
+operator|<
+name|SubClass
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|visitCallSite
+argument_list|(
+operator|&
+name|I
+argument_list|)
+return|;
+block|}
+name|RetTy
+name|visitInvokeInst
+argument_list|(
+argument|InvokeInst&I
+argument_list|)
+block|{
+return|return
+name|static_cast
+operator|<
+name|SubClass
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|visitCallSite
+argument_list|(
+operator|&
+name|I
+argument_list|)
+return|;
+block|}
 comment|// Next level propagators: If the user does not overload a specific
 comment|// instruction type, they can overload one of these to get the whole class
 comment|// of instructions...
 comment|//
 name|RetTy
-name|visitTerminatorInst
+name|visitCastInst
 argument_list|(
-argument|TerminatorInst&I
+argument|CastInst&I
 argument_list|)
 block|{
 name|DELEGATE
 argument_list|(
-name|Instruction
+name|UnaryInstruction
 argument_list|)
-block|; }
+block|;}
 name|RetTy
 name|visitBinaryOperator
 argument_list|(
@@ -900,7 +921,7 @@ name|DELEGATE
 argument_list|(
 name|Instruction
 argument_list|)
-block|; }
+block|;}
 name|RetTy
 name|visitCmpInst
 argument_list|(
@@ -911,18 +932,78 @@ name|DELEGATE
 argument_list|(
 name|Instruction
 argument_list|)
-block|; }
+block|;}
 name|RetTy
-name|visitCastInst
+name|visitTerminatorInst
 argument_list|(
-argument|CastInst&I
+argument|TerminatorInst&I
 argument_list|)
 block|{
 name|DELEGATE
 argument_list|(
 name|Instruction
 argument_list|)
-block|; }
+block|;}
+name|RetTy
+name|visitUnaryInstruction
+argument_list|(
+argument|UnaryInstruction&I
+argument_list|)
+block|{
+name|DELEGATE
+argument_list|(
+name|Instruction
+argument_list|)
+block|;}
+comment|// Provide a special visitor for a 'callsite' that visits both calls and
+comment|// invokes. When unimplemented, properly delegates to either the terminator or
+comment|// regular instruction visitor.
+name|RetTy
+name|visitCallSite
+argument_list|(
+argument|CallSite CS
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|CS
+argument_list|)
+block|;
+name|Instruction
+operator|&
+name|I
+operator|=
+operator|*
+name|CS
+operator|.
+name|getInstruction
+argument_list|()
+block|;
+if|if
+condition|(
+name|CS
+operator|.
+name|isCall
+argument_list|()
+condition|)
+name|DELEGATE
+argument_list|(
+name|Instruction
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|CS
+operator|.
+name|isInvoke
+argument_list|()
+argument_list|)
+block|;
+name|DELEGATE
+argument_list|(
+name|TerminatorInst
+argument_list|)
+block|;   }
 comment|// If the user wants a 'default' case, they can choose to override this
 comment|// function.  If this function is not overloaded in the user's subclass, then
 comment|// this instruction just gets ignored.
@@ -936,15 +1017,21 @@ argument|Instruction&I
 argument_list|)
 block|{}
 comment|// Ignore unhandled instructions
-expr|}
-block|;
-undef|#
-directive|undef
-name|DELEGATE
 block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_undef
+undef|#
+directive|undef
+name|DELEGATE
+end_undef
+
 begin_comment
+unit|}
 comment|// End llvm namespace
 end_comment
 

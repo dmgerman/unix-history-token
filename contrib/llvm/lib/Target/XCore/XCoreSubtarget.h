@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//=====-- XCoreSubtarget.h - Define Subtarget for the XCore -----*- C++ -*--==//
+comment|//===-- XCoreSubtarget.h - Define Subtarget for the XCore -------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -102,6 +102,11 @@ range|:
 name|public
 name|XCoreGenSubtargetInfo
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 comment|/// This constructor initializes the data members to match that

@@ -1130,8 +1130,6 @@ argument_list|(
 name|writenode
 argument_list|,
 name|temp_file_name
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|ret

@@ -41,10 +41,6 @@ directive|include
 file|"archive.h"
 end_include
 
-begin_comment
-comment|/*  * This is a little tricky.  I used to allow the  * compression handling layer to fork the compressor,  * which means this write function gets invoked in  * a separate process.  That would, of course, make it impossible  * to actually use the data stored into memory here.  * Fortunately, none of the compressors fork today and  * I'm reluctant to use that route in the future but, if  * forking compressors ever do reappear, this will have  * to get a lot more complicated.  */
-end_comment
-
 begin_struct
 struct|struct
 name|write_memory_data

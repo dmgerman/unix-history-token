@@ -143,7 +143,7 @@ begin_define
 define|#
 directive|define
 name|DEFAULT_PATH
-value|"/usr/bin:/bin:/usr/sbin:/sbin:/usr/X11R6/bin"
+value|"/usr/bin:/bin:/usr/sbin:/sbin"
 end_define
 
 begin_comment

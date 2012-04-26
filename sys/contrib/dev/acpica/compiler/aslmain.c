@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2011, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_define
@@ -180,7 +180,7 @@ begin_define
 define|#
 directive|define
 name|ASL_SUPPORTED_OPTIONS
-value|"@:2b:c:d^e:fgh^i^I:l^mno:p:r:s:t:T:G^v:w:x:z"
+value|"@:2b|c|d^D:e:fgh^i|I:l^mno|p:P^r:s|t|T:G^v|w|x:z"
 end_define
 
 begin_comment
@@ -212,6 +212,39 @@ argument_list|(
 literal|"-I<dir>"
 argument_list|,
 literal|"Specify additional include directory"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\nPreprocessor:\n"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-D<symbol>"
+argument_list|,
+literal|"Define symbol for preprocessor use"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-li"
+argument_list|,
+literal|"Create preprocessed output file (*.i)"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-P"
+argument_list|,
+literal|"Preprocess only and create preprocessor output file (*.i)"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-Pn"
+argument_list|,
+literal|"Disable preprocessor"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -263,9 +296,16 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-w<1|2|3>"
+literal|"-w1 -w2 -w3"
 argument_list|,
 literal|"Set warning reporting level"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-we"
+argument_list|,
+literal|"Report warnings as errors"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -275,21 +315,21 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-s<a|c>"
+literal|"-sa -sc"
 argument_list|,
 literal|"Create AML in assembler or C source file (*.asm or *.c)"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-i<a|c>"
+literal|"-ia -ic"
 argument_list|,
 literal|"Create assembler or C include file (*.inc or *.h)"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-t<a|c|s>"
+literal|"-ta -tc -ts"
 argument_list|,
 literal|"Create AML in assembler, C, or ASL hex table (*.hex)"
 argument_list|)
@@ -552,7 +592,7 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-b<p|t|b>"
+literal|"-bb -bp -bt"
 argument_list|,
 literal|"Create compiler debug/trace file (*.txt)"
 argument_list|)
@@ -1021,8 +1061,10 @@ literal|"Nested command files are not supported\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 if|if
@@ -1034,14 +1076,17 @@ argument_list|)
 condition|)
 block|{
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 break|break;
 case|case
 literal|'2'
 case|:
+comment|/* ACPI 2.0 compatibility mode */
 name|Gbl_Acpi2
 operator|=
 name|TRUE
@@ -1050,6 +1095,7 @@ break|break;
 case|case
 literal|'b'
 case|:
+comment|/* Debug output options */
 switch|switch
 condition|(
 name|AcpiGbl_Optarg
@@ -1070,6 +1116,10 @@ name|DtParserdebug
 operator|=
 literal|1
 expr_stmt|;
+name|PrParserdebug
+operator|=
+literal|1
+expr_stmt|;
 break|break;
 case|case
 literal|'p'
@@ -1080,6 +1130,10 @@ literal|1
 expr_stmt|;
 comment|/* same as yydebug */
 name|DtParserdebug
+operator|=
+literal|1
+expr_stmt|;
+name|PrParserdebug
 operator|=
 literal|1
 expr_stmt|;
@@ -1147,6 +1201,7 @@ break|break;
 case|case
 literal|'d'
 case|:
+comment|/* Disassembler */
 switch|switch
 condition|(
 name|AcpiGbl_Optarg
@@ -1200,8 +1255,23 @@ name|TRUE
 expr_stmt|;
 break|break;
 case|case
+literal|'D'
+case|:
+comment|/* Define a symbol */
+name|PrAddDefine
+argument_list|(
+name|AcpiGbl_Optarg
+argument_list|,
+name|NULL
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'e'
 case|:
+comment|/* External files for disassembler */
 name|Status
 operator|=
 name|AcpiDmAddToExternalFileList
@@ -1237,6 +1307,14 @@ literal|'f'
 case|:
 comment|/* Ignore errors and force creation of aml file */
 name|Gbl_IgnoreErrors
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
+literal|'G'
+case|:
+name|Gbl_CompileGeneric
 operator|=
 name|TRUE
 expr_stmt|;
@@ -1338,6 +1416,7 @@ break|break;
 case|case
 literal|'i'
 case|:
+comment|/* Output AML as an include file */
 switch|switch
 condition|(
 name|AcpiGbl_Optarg
@@ -1367,7 +1446,7 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"Unknown option: -s%s\n"
+literal|"Unknown option: -i%s\n"
 argument_list|,
 name|AcpiGbl_Optarg
 argument_list|)
@@ -1383,6 +1462,7 @@ break|break;
 case|case
 literal|'l'
 case|:
+comment|/* Listing files */
 switch|switch
 condition|(
 name|AcpiGbl_Optarg
@@ -1396,6 +1476,15 @@ literal|'^'
 case|:
 comment|/* Produce listing file (Mixed source/aml) */
 name|Gbl_ListingFlag
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
+literal|'i'
+case|:
+comment|/* Produce preprocessor output file */
+name|Gbl_PreprocessorOutputFlag
 operator|=
 name|TRUE
 expr_stmt|;
@@ -1437,6 +1526,7 @@ break|break;
 case|case
 literal|'m'
 case|:
+comment|/* Do not convert buffers to resource descriptors */
 name|AcpiGbl_NoResourceDisassembly
 operator|=
 name|TRUE
@@ -1454,6 +1544,7 @@ break|break;
 case|case
 literal|'o'
 case|:
+comment|/* Control compiler AML optimizations */
 switch|switch
 condition|(
 name|AcpiGbl_Optarg
@@ -1532,6 +1623,56 @@ return|;
 block|}
 break|break;
 case|case
+literal|'P'
+case|:
+comment|/* Preprocessor options */
+switch|switch
+condition|(
+name|AcpiGbl_Optarg
+index|[
+literal|0
+index|]
+condition|)
+block|{
+case|case
+literal|'^'
+case|:
+comment|/* Proprocess only, emit (.i) file */
+name|Gbl_PreprocessOnly
+operator|=
+name|TRUE
+expr_stmt|;
+name|Gbl_PreprocessorOutputFlag
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
+literal|'n'
+case|:
+comment|/* Disable preprocessor */
+name|Gbl_PreprocessFlag
+operator|=
+name|FALSE
+expr_stmt|;
+break|break;
+default|default:
+name|printf
+argument_list|(
+literal|"Unknown option: -P%s\n"
+argument_list|,
+name|AcpiGbl_Optarg
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+break|break;
+case|case
 literal|'p'
 case|:
 comment|/* Override default AML output filename */
@@ -1547,6 +1688,7 @@ break|break;
 case|case
 literal|'r'
 case|:
+comment|/* Override revision found in table header */
 name|Gbl_RevisionOverride
 operator|=
 operator|(
@@ -1565,6 +1707,7 @@ break|break;
 case|case
 literal|'s'
 case|:
+comment|/* Create AML in a source code file */
 switch|switch
 condition|(
 name|AcpiGbl_Optarg
@@ -1660,16 +1803,9 @@ return|;
 block|}
 break|break;
 case|case
-literal|'G'
-case|:
-name|Gbl_CompileGeneric
-operator|=
-name|TRUE
-expr_stmt|;
-break|break;
-case|case
 literal|'T'
 case|:
+comment|/* Create a ACPI table template file */
 name|Gbl_DoTemplates
 operator|=
 name|TRUE
@@ -1682,6 +1818,7 @@ break|break;
 case|case
 literal|'v'
 case|:
+comment|/* Verbosity settings */
 switch|switch
 condition|(
 name|AcpiGbl_Optarg
@@ -1792,6 +1929,14 @@ operator|=
 name|ASL_WARNING3
 expr_stmt|;
 break|break;
+case|case
+literal|'e'
+case|:
+name|Gbl_WarningsAsErrors
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
 default|default:
 name|printf
 argument_list|(
@@ -1811,6 +1956,7 @@ break|break;
 case|case
 literal|'x'
 case|:
+comment|/* Set debug print output level */
 name|AcpiDbgLevel
 operator|=
 name|strtoul
@@ -1982,6 +2128,17 @@ name|ASL_COMPILER_NAME
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Gbl_IgnoreErrors
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Ignoring all errors, forcing AML file generation\n\n"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 comment|/* Abort if anything went wrong on the command line */
 if|if
@@ -2061,6 +2218,9 @@ endif|#
 directive|endif
 comment|/* Init and command line */
 name|AslInitialize
+argument_list|()
+expr_stmt|;
+name|PrInitializePreprocessor
 argument_list|()
 expr_stmt|;
 name|Index1

@@ -193,8 +193,32 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* The standard layout for the ring is a continuous chunk of memory which  * looks like this.  We assume num is a power of 2.  *  * struct vring {  *      // The actual descriptors (16 bytes each)  *      struct vring_desc desc[num];  *  *      // A ring of available descriptor heads with free-running index.  *      __u16 avail_flags;  *      __u16 avail_idx;  *      __u16 available[num];  *  *      // Padding to the next align boundary.  *      char pad[];  *  *      // A ring of used descriptor heads with free-running index.  *      __u16 used_flags;  *      __u16 used_idx;  *      struct vring_used_elem used[num];  * };  *  * NOTE: for VirtIO PCI, align is 4096.  */
+comment|/* The standard layout for the ring is a continuous chunk of memory which  * looks like this.  We assume num is a power of 2.  *  * struct vring {  *      // The actual descriptors (16 bytes each)  *      struct vring_desc desc[num];  *  *      // A ring of available descriptor heads with free-running index.  *      __u16 avail_flags;  *      __u16 avail_idx;  *      __u16 available[num];  *      __u16 used_event_idx;  *  *      // Padding to the next align boundary.  *      char pad[];  *  *      // A ring of used descriptor heads with free-running index.  *      __u16 used_flags;  *      __u16 used_idx;  *      struct vring_used_elem used[num];  *      __u16 avail_event_idx;  * };  *  * NOTE: for VirtIO PCI, align is 4096.  */
 end_comment
+
+begin_comment
+comment|/*  * We publish the used event index at the end of the available ring, and vice  * versa. They are at the end for backwards compatibility.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|vring_used_event
+parameter_list|(
+name|vr
+parameter_list|)
+value|((vr)->avail->ring[(vr)->num])
+end_define
+
+begin_define
+define|#
+directive|define
+name|vring_avail_event
+parameter_list|(
+name|vr
+parameter_list|)
+value|(*(uint16_t *)&(vr)->used->ring[(vr)->num])
+end_define
 
 begin_function
 specifier|static
@@ -383,6 +407,50 @@ literal|1
 operator|)
 operator|)
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * The following is used with VIRTIO_RING_F_EVENT_IDX.  *  * Assuming a given event_idx value from the other size, if we have  * just incremented index from old to new_idx, should we trigger an  * event?  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|vring_need_event
+parameter_list|(
+name|uint16_t
+name|event_idx
+parameter_list|,
+name|uint16_t
+name|new_idx
+parameter_list|,
+name|uint16_t
+name|old
+parameter_list|)
+block|{
+return|return
+call|(
+name|uint16_t
+call|)
+argument_list|(
+name|new_idx
+operator|-
+name|event_idx
+operator|-
+literal|1
+argument_list|)
+operator|<
+call|(
+name|uint16_t
+call|)
+argument_list|(
+name|new_idx
+operator|-
+name|old
+argument_list|)
+return|;
 block|}
 end_function
 

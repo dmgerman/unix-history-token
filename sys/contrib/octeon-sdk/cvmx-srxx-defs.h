@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Networks (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Networks nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM  NETWORKS MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
+comment|/***********************license start***************  * Copyright (c) 2003-2012  Cavium Inc. (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Inc. nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM INC. MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
 end_comment
 
 begin_comment
@@ -10,13 +10,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__CVMX_SRXX_TYPEDEFS_H__
+name|__CVMX_SRXX_DEFS_H__
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__CVMX_SRXX_TYPEDEFS_H__
+name|__CVMX_SRXX_DEFS_H__
 end_define
 
 begin_if
@@ -661,11 +661,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_srxx_com_ctl_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint64_t
 name|reserved_8_63
 range|:
@@ -768,11 +766,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_srxx_ign_rx_full_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint64_t
 name|reserved_16_63
 range|:
@@ -843,11 +839,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_srxx_spi4_calx_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint64_t
 name|reserved_17_63
 range|:
@@ -962,11 +956,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_srxx_spi4_stat_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint64_t
 name|reserved_16_63
 range|:
@@ -1058,11 +1050,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_srxx_sw_tick_ctl_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint64_t
 name|reserved_14_63
 range|:
@@ -1173,11 +1163,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_srxx_sw_tick_dat_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint64_t
 name|dat
 range|:

@@ -156,16 +156,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|char
-name|error
-index|[]
-init|=
-literal|":"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 specifier|const
 name|u_int8_t
 name|Base64Code
@@ -797,9 +787,9 @@ operator|>
 name|BCRYPT_VERSION
 condition|)
 block|{
-comment|/* How do I handle errors ? Return ':' */
+comment|/* How do I handle errors ? Return NULL */
 return|return
-name|error
+name|NULL
 return|;
 block|}
 comment|/* Check for minor versions */
@@ -841,7 +831,7 @@ expr_stmt|;
 break|break;
 default|default:
 return|return
-name|error
+name|NULL
 return|;
 block|}
 block|}
@@ -866,7 +856,7 @@ literal|'$'
 condition|)
 comment|/* Out of sync with passwd entry */
 return|return
-name|error
+name|NULL
 return|;
 comment|/* Computer power doesnt increase linear, 2^x should be fine */
 name|logr
@@ -892,7 +882,7 @@ operator|<
 name|BCRYPT_MINROUNDS
 condition|)
 return|return
-name|error
+name|NULL
 return|;
 comment|/* Discard num rounds + "$" identifier */
 name|salt

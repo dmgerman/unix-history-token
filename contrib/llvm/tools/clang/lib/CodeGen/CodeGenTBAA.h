@@ -235,6 +235,15 @@ argument_list|(
 argument|QualType QTy
 argument_list|)
 expr_stmt|;
+comment|/// getTBAAInfoForVTablePtr - Get the TBAA MDNode to be used for a
+comment|/// dereference of a vtable pointer.
+name|llvm
+operator|::
+name|MDNode
+operator|*
+name|getTBAAInfoForVTablePtr
+argument_list|()
+expr_stmt|;
 block|}
 empty_stmt|;
 block|}

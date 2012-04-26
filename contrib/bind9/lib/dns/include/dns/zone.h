@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: zone.h,v 1.182.16.2 2011-07-08 23:47:16 tbox Exp $ */
+comment|/* $Id$ */
 end_comment
 
 begin_ifndef
@@ -3028,6 +3028,56 @@ comment|/*%<  *	Add the pair of addresses to the unreachable cache.  *  * Requir
 end_comment
 
 begin_function_decl
+name|isc_boolean_t
+name|dns_zonemgr_unreachable
+parameter_list|(
+name|dns_zonemgr_t
+modifier|*
+name|zmgr
+parameter_list|,
+name|isc_sockaddr_t
+modifier|*
+name|remote
+parameter_list|,
+name|isc_sockaddr_t
+modifier|*
+name|local
+parameter_list|,
+name|isc_time_t
+modifier|*
+name|now
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  *	Returns ISC_TRUE if the given local/remote address pair  *	is found in the zone maanger's unreachable cache.  *  * Requires:  *\li	'zmgr' to be a valid zone manager.  *\li	'remote' to be a valid sockaddr.  *\li	'local' to be a valid sockaddr.  *\li	'now' != NULL  */
+end_comment
+
+begin_function_decl
+name|void
+name|dns_zonemgr_unreachabledel
+parameter_list|(
+name|dns_zonemgr_t
+modifier|*
+name|zmgr
+parameter_list|,
+name|isc_sockaddr_t
+modifier|*
+name|remote
+parameter_list|,
+name|isc_sockaddr_t
+modifier|*
+name|local
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  *	Remove the pair of addresses from the unreachable cache.  *  * Requires:  *\li	'zmgr' to be a valid zone manager.  *\li	'remote' to be a valid sockaddr.  *\li	'local' to be a valid sockaddr.  */
+end_comment
+
+begin_function_decl
 name|void
 name|dns_zone_forcereload
 parameter_list|(
@@ -3627,6 +3677,21 @@ end_function_decl
 
 begin_comment
 comment|/*%  * Load the origin names for a writeable DLZ database.  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|dns_zone_synckeyzone
+parameter_list|(
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%  * Force the managed key zone to synchronize, and start the key  * maintenance timer.  */
 end_comment
 
 begin_macro

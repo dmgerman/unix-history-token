@@ -187,7 +187,7 @@ operator|->
 name|ut_line
 argument_list|)
 expr_stmt|;
-name|SHA_Final
+name|SHA1_Final
 argument_list|(
 name|id
 argument_list|,

@@ -898,6 +898,12 @@ block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_comment
 comment|/*  * Connection groups hold sets of connections that have similar CPU/thread  * affinity.  Each connection belongs to exactly one connection group.  */
 end_comment
@@ -1089,12 +1095,6 @@ name|inp
 parameter_list|)
 value|rw_assert(&(inp)->inp_lock, RA_UNLOCKED)
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
 
 begin_comment
 comment|/*  * These locking functions are for inpcb consumers outside of sys/netinet,  * more specifically, they were added for the benefit of TOE drivers. The  * macros are reserved for use by the stack.  */

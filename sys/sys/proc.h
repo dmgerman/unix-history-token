@@ -643,6 +643,10 @@ name|short
 name|td_lk_slocks
 decl_stmt|;
 comment|/* (k) Count of lockmgr shared locks. */
+name|short
+name|td_stopsched
+decl_stmt|;
+comment|/* (k) Scheduler stopped. */
 name|struct
 name|turnstile
 modifier|*
@@ -960,6 +964,12 @@ modifier|*
 name|td_intr_frame
 decl_stmt|;
 comment|/* (k) Frame of the current irq */
+name|struct
+name|proc
+modifier|*
+name|td_rfppwait_p
+decl_stmt|;
+comment|/* (k) The vforked child */
 block|}
 struct|;
 end_struct
@@ -1508,6 +1518,17 @@ begin_comment
 comment|/* Stop at the return from fork (child 				      only) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TDB_CHILD
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* New child indicator for ptrace() */
+end_comment
+
 begin_comment
 comment|/*  * "Private" flags kept in td_pflags:  * These are only written by curthread and thus need no locking.  */
 end_comment
@@ -1636,12 +1657,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDP_UNUSED800
+name|TDP_SYNCIO
 value|0x00000800
 end_define
 
 begin_comment
-comment|/* available. */
+comment|/* Local override, disable async i/o. */
 end_comment
 
 begin_define
@@ -1785,6 +1806,39 @@ end_define
 
 begin_comment
 comment|/* Audit record pending on thread */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDP_RFPPWAIT
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* Handle RFPPWAIT on syscall exit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDP_RESETSPUR
+value|0x04000000
+end_define
+
+begin_comment
+comment|/* Reset spurious page fault history. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDP_NERRNO
+value|0x08000000
+end_define
+
+begin_comment
+comment|/* Last errno is already in td_errno */
 end_comment
 
 begin_comment
@@ -2286,10 +2340,6 @@ name|pid_t
 name|p_oppid
 decl_stmt|;
 comment|/* (c + e) Save ppid in ptrace. XXX */
-name|int
-name|p_dbg_child
-decl_stmt|;
-comment|/* (c + e) # of debugged children in 							ptrace. */
 name|struct
 name|vmspace
 modifier|*
@@ -2597,6 +2647,22 @@ modifier|*
 name|p_racct
 decl_stmt|;
 comment|/* (b) Resource accounting. */
+comment|/* 	 * An orphan is the child that has beed re-parented to the 	 * debugger as a result of attaching to it.  Need to keep 	 * track of them for parent to be able to collect the exit 	 * status of what used to be children. 	 */
+name|LIST_ENTRY
+argument_list|(
+argument|proc
+argument_list|)
+name|p_orphan
+expr_stmt|;
+comment|/* (e) List of orphan processes. */
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|proc
+argument_list|)
+name|p_orphans
+expr_stmt|;
+comment|/* (e) Pointer to list of orphans. */
 block|}
 struct|;
 end_struct
@@ -2935,6 +3001,17 @@ end_define
 
 begin_comment
 comment|/* Process is in jail. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|P_ORPHAN
+value|0x2000000
+end_define
+
+begin_comment
+comment|/* Orphaned. */
 end_comment
 
 begin_define
@@ -4147,6 +4224,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PGET_NOTID
+value|0x00040
+end_define
+
+begin_comment
+comment|/* Do not assume tid if pid> PID_MAX. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PGET_WANTREAD
 value|(PGET_HOLD | PGET_CANDEBUG | PGET_NOTWEXIT)
 end_define
@@ -4574,9 +4662,6 @@ name|struct
 name|sbuf
 modifier|*
 name|sb
-parameter_list|,
-name|size_t
-name|nchr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4599,9 +4684,6 @@ name|struct
 name|sbuf
 modifier|*
 name|sb
-parameter_list|,
-name|size_t
-name|nchr
 parameter_list|)
 function_decl|;
 end_function_decl

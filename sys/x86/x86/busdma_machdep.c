@@ -197,7 +197,7 @@ decl_stmt|;
 name|bus_size_t
 name|alignment
 decl_stmt|;
-name|bus_size_t
+name|bus_addr_t
 name|boundary
 decl_stmt|;
 name|bus_addr_t
@@ -875,7 +875,7 @@ parameter_list|,
 name|bus_size_t
 name|alignment
 parameter_list|,
-name|bus_size_t
+name|bus_addr_t
 name|boundary
 parameter_list|,
 name|bus_addr_t

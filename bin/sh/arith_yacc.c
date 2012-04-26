@@ -305,6 +305,19 @@ name|ARITH_MAX_PREC
 value|8
 end_define
 
+begin_function_decl
+name|int
+name|letcmd
+parameter_list|(
+name|int
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 specifier|static
 name|__dead2

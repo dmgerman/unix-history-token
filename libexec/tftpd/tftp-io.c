@@ -249,7 +249,7 @@ parameter_list|(
 name|s
 parameter_list|)
 define|\
-value|if (packetdroppercentage != 0&&				\ 	    random()%100< packetdroppercentage) {			\ 		tftp_log(LOG_DEBUG, "Artifical packet drop in %s", s);	\ 		return;							\ 	}
+value|if (packetdroppercentage != 0&&				\ 	    random()%100< packetdroppercentage) {			\ 		tftp_log(LOG_DEBUG, "Artificial packet drop in %s", s);	\ 		return;							\ 	}
 end_define
 
 begin_define
@@ -262,7 +262,7 @@ parameter_list|,
 name|n
 parameter_list|)
 define|\
-value|if (packetdroppercentage != 0&&				\ 	    random()%100< packetdroppercentage) {			\ 		tftp_log(LOG_DEBUG, "Artifical packet drop in %s", s);	\ 		return (n);						\ 	}
+value|if (packetdroppercentage != 0&&				\ 	    random()%100< packetdroppercentage) {			\ 		tftp_log(LOG_DEBUG, "Artificial packet drop in %s", s);	\ 		return (n);						\ 	}
 end_define
 
 begin_function
@@ -1514,10 +1514,6 @@ name|int
 name|size
 decl_stmt|;
 name|char
-modifier|*
-name|bp
-decl_stmt|;
-name|char
 name|buf
 index|[
 name|MAXPKTSIZE
@@ -1553,12 +1549,6 @@ name|tftphdr
 operator|*
 operator|)
 name|buf
-expr_stmt|;
-name|bp
-operator|=
-name|buf
-operator|+
-literal|2
 expr_stmt|;
 name|size
 operator|=
@@ -2206,6 +2196,14 @@ condition|)
 block|{
 name|tftp_log
 argument_list|(
+name|pkt
+operator|->
+name|th_code
+operator|==
+name|EUNDEF
+condition|?
+name|LOG_DEBUG
+else|:
 name|LOG_ERR
 argument_list|,
 literal|"Got ERROR packet: %s"

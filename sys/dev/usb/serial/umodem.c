@@ -356,7 +356,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * As speeds for umodem deivces increase, these numbers will need to  * be increased. They should be good for G3 speeds and below.  *  * TODO: The TTY buffers should be increased!  */
+comment|/*  * As speeds for umodem devices increase, these numbers will need to  * be increased. They should be good for G3 speeds and below.  *  * TODO: The TTY buffers should be increased!  */
 end_comment
 
 begin_define
@@ -1374,15 +1374,11 @@ name|bIfaceIndex
 argument_list|,
 name|UDESC_CS_INTERFACE
 argument_list|,
-literal|0
-operator|-
-literal|1
+literal|0xFF
 argument_list|,
 name|UDESCSUB_CDC_UNION
 argument_list|,
-literal|0
-operator|-
-literal|1
+literal|0xFF
 argument_list|)
 expr_stmt|;
 if|if
@@ -3174,6 +3170,9 @@ if|if
 condition|(
 name|actlen
 operator|>
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|pkt
@@ -3734,15 +3733,11 @@ name|bIfaceIndex
 argument_list|,
 name|type
 argument_list|,
-literal|0
-operator|-
-literal|1
+literal|0xFF
 argument_list|,
 name|subtype
 argument_list|,
-literal|0
-operator|-
-literal|1
+literal|0xFF
 argument_list|)
 operator|)
 return|;

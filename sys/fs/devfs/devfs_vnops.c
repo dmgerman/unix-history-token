@@ -5870,7 +5870,8 @@ decl_stmt|,
 name|error
 decl_stmt|,
 name|ref
-decl_stmt|,
+decl_stmt|;
+name|ssize_t
 name|resid
 decl_stmt|;
 name|struct
@@ -8495,7 +8496,8 @@ decl_stmt|,
 name|ioflag
 decl_stmt|,
 name|ref
-decl_stmt|,
+decl_stmt|;
+name|ssize_t
 name|resid
 decl_stmt|;
 name|struct

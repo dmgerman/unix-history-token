@@ -338,8 +338,7 @@ name|n
 parameter_list|,
 name|s
 parameter_list|)
-value|do {					\ 	putchar('
-value|');							\ 	closeifstat(wnd);						\ 	err((n), (s));							\ } while (0)
+value|do {					\ 	putchar('\014');						\ 	closeifstat(wnd);						\ 	err((n), (s));							\ } while (0)
 end_define
 
 begin_define

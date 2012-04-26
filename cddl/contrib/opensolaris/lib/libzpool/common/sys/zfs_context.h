@@ -1207,6 +1207,10 @@ value|0
 comment|/* not needed for userland caches */
 define|#
 directive|define
+name|KM_NODEBUG
+value|0
+define|#
+directive|define
 name|kmem_alloc
 parameter_list|(
 name|_s

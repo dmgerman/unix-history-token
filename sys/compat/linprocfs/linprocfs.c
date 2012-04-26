@@ -4426,8 +4426,6 @@ argument_list|,
 name|p
 argument_list|,
 name|sb
-argument_list|,
-name|ARG_MAX
 argument_list|)
 expr_stmt|;
 return|return
@@ -4545,8 +4543,6 @@ argument_list|,
 name|p
 argument_list|,
 name|sb
-argument_list|,
-name|ARG_MAX
 argument_list|)
 expr_stmt|;
 return|return
@@ -6596,6 +6592,8 @@ argument_list|(
 name|linprocfs
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt

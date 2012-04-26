@@ -29,10 +29,6 @@ begin_comment
 comment|/* not lint */
 end_comment
 
-begin_comment
-comment|/* ********************************************************** INCLUDES ***** */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -81,10 +77,6 @@ directive|ifdef
 name|FS_DEBUG
 end_ifdef
 
-begin_comment
-comment|/* *********************************************************** GLOBALS ***** */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|FILE
@@ -107,10 +99,6 @@ end_decl_stmt
 
 begin_comment
 comment|/*  * prototypes not done here, as they come with debug.h  */
-end_comment
-
-begin_comment
-comment|/* ********************************************************** dbg_open ***** */
 end_comment
 
 begin_comment
@@ -162,10 +150,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* ********************************************************* dbg_close ***** */
-end_comment
-
-begin_comment
 comment|/*  * Close the filehandle where all debug output went to.  */
 end_comment
 
@@ -194,10 +178,6 @@ block|}
 return|return;
 block|}
 end_function
-
-begin_comment
-comment|/* ****************************************************** dbg_dump_hex ***** */
-end_comment
 
 begin_comment
 comment|/*  * Dump out a full file system block in hex.  */
@@ -235,9 +215,7 @@ condition|(
 operator|!
 name|dbg_log
 condition|)
-block|{
 return|return;
-block|}
 name|fprintf
 argument_list|(
 name|dbg_log
@@ -309,7 +287,6 @@ condition|;
 name|k
 operator|++
 control|)
-block|{
 name|fprintf
 argument_list|(
 name|dbg_log
@@ -321,7 +298,6 @@ name|mem
 operator|++
 argument_list|)
 expr_stmt|;
-block|}
 name|fprintf
 argument_list|(
 name|dbg_log
@@ -353,10 +329,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* ******************************************************* dbg_dump_fs ***** */
-end_comment
-
-begin_comment
 comment|/*  * Dump the superblock.  */
 end_comment
 
@@ -375,23 +347,15 @@ modifier|*
 name|comment
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|FSMAXSNAP
 name|int
 name|j
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* FSMAXSNAP */
 if|if
 condition|(
 operator|!
 name|dbg_log
 condition|)
-block|{
 return|return;
-block|}
 name|fprintf
 argument_list|(
 name|dbg_log
@@ -1343,9 +1307,6 @@ operator|->
 name|fs_pendinginodes
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|FSMAXSNAP
 for|for
 control|(
 name|j
@@ -1391,9 +1352,6 @@ comment|/* list is dense */
 break|break;
 block|}
 block|}
-endif|#
-directive|endif
-comment|/* FSMAXSNAP */
 name|fprintf
 argument_list|(
 name|dbg_log
@@ -1674,10 +1632,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* ******************************************************* dbg_dump_cg ***** */
-end_comment
-
-begin_comment
 comment|/*  * Dump a cylinder group.  */
 end_comment
 
@@ -1704,9 +1658,7 @@ condition|(
 operator|!
 name|dbg_log
 condition|)
-block|{
 return|return;
-block|}
 name|fprintf
 argument_list|(
 name|dbg_log
@@ -2025,10 +1977,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* ***************************************************** dbg_dump_csum ***** */
-end_comment
-
-begin_comment
 comment|/*  * Dump a cylinder summary.  */
 end_comment
 
@@ -2052,9 +2000,7 @@ condition|(
 operator|!
 name|dbg_log
 condition|)
-block|{
 return|return;
-block|}
 name|fprintf
 argument_list|(
 name|dbg_log
@@ -2141,10 +2087,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* ************************************************ dbg_dump_csum_total ***** */
-end_comment
-
-begin_comment
 comment|/*  * Dump a cylinder summary.  */
 end_comment
 
@@ -2168,9 +2110,7 @@ condition|(
 operator|!
 name|dbg_log
 condition|)
-block|{
 return|return;
-block|}
 name|fprintf
 argument_list|(
 name|dbg_log
@@ -2418,10 +2358,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* **************************************************** dbg_dump_inmap ***** */
-end_comment
-
-begin_comment
 comment|/*  * Dump the inode allocation map in one cylinder group.  */
 end_comment
 
@@ -2464,9 +2400,7 @@ condition|(
 operator|!
 name|dbg_log
 condition|)
-block|{
 return|return;
-block|}
 name|fprintf
 argument_list|(
 name|dbg_log
@@ -2682,10 +2616,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* **************************************************** dbg_dump_frmap ***** */
-end_comment
-
-begin_comment
 comment|/*  * Dump the fragment allocation map in one cylinder group.  */
 end_comment
 
@@ -2728,9 +2658,7 @@ condition|(
 operator|!
 name|dbg_log
 condition|)
-block|{
 return|return;
-block|}
 name|fprintf
 argument_list|(
 name|dbg_log
@@ -2970,10 +2898,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* **************************************************** dbg_dump_clmap ***** */
-end_comment
-
-begin_comment
 comment|/*  * Dump the cluster allocation map in one cylinder group.  */
 end_comment
 
@@ -3016,9 +2940,7 @@ condition|(
 operator|!
 name|dbg_log
 condition|)
-block|{
 return|return;
-block|}
 name|fprintf
 argument_list|(
 name|dbg_log
@@ -3262,10 +3184,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* **************************************************** dbg_dump_clsum ***** */
-end_comment
-
-begin_comment
 comment|/*  * Dump the cluster availability summary of one cylinder group.  */
 end_comment
 
@@ -3301,9 +3219,7 @@ condition|(
 operator|!
 name|dbg_log
 condition|)
-block|{
 return|return;
-block|}
 name|fprintf
 argument_list|(
 name|dbg_log
@@ -3397,10 +3313,6 @@ comment|/*  * This code dates from before the UFS2 integration, and doesn't comp
 end_comment
 
 begin_comment
-comment|/* **************************************************** dbg_dump_sptbl ***** */
-end_comment
-
-begin_comment
 comment|/*  * Dump the block summary, and the rotational layout table.  */
 end_comment
 
@@ -3438,9 +3350,7 @@ condition|(
 operator|!
 name|dbg_log
 condition|)
-block|{
 return|return;
-block|}
 name|fprintf
 argument_list|(
 name|dbg_log
@@ -3553,7 +3463,6 @@ name|fs_old_nrpos
 operator|-
 literal|1
 condition|)
-block|{
 name|fprintf
 argument_list|(
 name|dbg_log
@@ -3561,7 +3470,6 @@ argument_list|,
 literal|" + "
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|fprintf
 argument_list|(
@@ -3589,10 +3497,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* ************************************************** dbg_dump_ufs1_ino ***** */
-end_comment
 
 begin_comment
 comment|/*  * Dump a UFS1 inode structure.  */
@@ -3629,9 +3533,7 @@ condition|(
 operator|!
 name|dbg_log
 condition|)
-block|{
 return|return;
-block|}
 name|fprintf
 argument_list|(
 name|dbg_log
@@ -3906,7 +3808,7 @@ name|SQUARE
 parameter_list|(
 name|a
 parameter_list|)
-value|((a)*(a))
+value|((a) * (a))
 name|remaining_blocks
 operator|-=
 name|SQUARE
@@ -4019,10 +3921,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* ************************************************** dbg_dump_ufs2_ino ***** */
-end_comment
-
-begin_comment
 comment|/*  * Dump a UFS2 inode structure.  */
 end_comment
 
@@ -4057,9 +3955,7 @@ condition|(
 operator|!
 name|dbg_log
 condition|)
-block|{
 return|return;
-block|}
 name|fprintf
 argument_list|(
 name|dbg_log
@@ -4475,7 +4371,7 @@ name|SQUARE
 parameter_list|(
 name|a
 parameter_list|)
-value|((a)*(a))
+value|((a) * (a))
 name|remaining_blocks
 operator|-=
 name|SQUARE
@@ -4533,10 +4429,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* ***************************************************** dbg_dump_iblk ***** */
-end_comment
-
-begin_comment
 comment|/*  * Dump an indirect block. The iteration to dump a full file has to be  * written around.  */
 end_comment
 
@@ -4578,9 +4470,7 @@ condition|(
 operator|!
 name|dbg_log
 condition|)
-block|{
 return|return;
-block|}
 name|fprintf
 argument_list|(
 name|dbg_log
@@ -4706,7 +4596,6 @@ argument_list|)
 operator|<
 name|length
 condition|)
-block|{
 name|fprintf
 argument_list|(
 name|dbg_log
@@ -4718,7 +4607,6 @@ name|mem
 operator|++
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|fprintf
 argument_list|(

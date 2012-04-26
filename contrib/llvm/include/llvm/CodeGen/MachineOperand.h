@@ -154,6 +154,9 @@ comment|///< Address of a global value
 name|MO_BlockAddress
 block|,
 comment|///< Address of a basic block
+name|MO_RegisterMask
+block|,
+comment|///< Mask of preserved registers.
 name|MO_Metadata
 block|,
 comment|///< Metadata reference (for debug info)
@@ -233,6 +236,20 @@ name|IsUndef
 range|:
 literal|1
 decl_stmt|;
+comment|/// IsInternalRead - True if this operand reads a value that was defined
+comment|/// inside the same instruction or bundle.  This flag can be set on both use
+comment|/// and def operands.  On a sub-register def operand, it refers to the part
+comment|/// of the register that isn't written.  On a full-register def operand, it
+comment|/// is a noop.
+comment|///
+comment|/// When this flag is set, the instruction bundle must contain at least one
+comment|/// other def of the register.  If multiple instructions in the bundle define
+comment|/// the register, the meaning is target-defined.
+name|bool
+name|IsInternalRead
+range|:
+literal|1
+decl_stmt|;
 comment|/// IsEarlyClobber - True if this MO_Register 'def' operand is written to
 comment|/// by the MachineInstr before all input registers are read.  This is used to
 comment|/// model the GCC inline asm '&' constraint modifier.
@@ -295,6 +312,12 @@ name|int64_t
 name|ImmVal
 decl_stmt|;
 comment|// For MO_Immediate.
+specifier|const
+name|uint32_t
+modifier|*
+name|RegMask
+decl_stmt|;
+comment|// For MO_RegisterMask.
 specifier|const
 name|MDNode
 modifier|*
@@ -627,6 +650,18 @@ operator|==
 name|MO_BlockAddress
 return|;
 block|}
+comment|/// isRegMask - Tests if this is a MO_RegisterMask operand.
+name|bool
+name|isRegMask
+argument_list|()
+specifier|const
+block|{
+return|return
+name|OpKind
+operator|==
+name|MO_RegisterMask
+return|;
+block|}
 comment|/// isMetadata - Tests if this is a MO_Metadata operand.
 name|bool
 name|isMetadata
@@ -797,6 +832,23 @@ name|IsUndef
 return|;
 block|}
 name|bool
+name|isInternalRead
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isReg
+argument_list|()
+operator|&&
+literal|"Wrong MachineOperand accessor"
+argument_list|)
+block|;
+return|return
+name|IsInternalRead
+return|;
+block|}
+name|bool
 name|isEarlyClobber
 argument_list|()
 specifier|const
@@ -834,6 +886,9 @@ comment|/// readsReg - Returns true if this operand reads the previous value of 
 comment|/// register.  A use operand with the<undef> flag set doesn't read its
 comment|/// register.  A sub-register def implicitly reads the other parts of the
 comment|/// register being redefined unless the<undef> flag is set.
+comment|///
+comment|/// This refers to reading the register value from before the current
+comment|/// instruction or bundle. Internal bundle reads are not included.
 name|bool
 name|readsReg
 argument_list|()
@@ -850,6 +905,10 @@ block|;
 return|return
 operator|!
 name|isUndef
+argument_list|()
+operator|&&
+operator|!
+name|isInternalRead
 argument_list|()
 operator|&&
 operator|(
@@ -1130,6 +1189,28 @@ literal|"Wrong MachineOperand accessor"
 argument_list|)
 expr_stmt|;
 name|IsUndef
+operator|=
+name|Val
+expr_stmt|;
+block|}
+name|void
+name|setIsInternalRead
+parameter_list|(
+name|bool
+name|Val
+init|=
+name|true
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|isReg
+argument_list|()
+operator|&&
+literal|"Wrong MachineOperand accessor"
+argument_list|)
+expr_stmt|;
+name|IsInternalRead
 operator|=
 name|Val
 expr_stmt|;
@@ -1435,6 +1516,99 @@ operator|.
 name|Val
 operator|.
 name|SymbolName
+return|;
+block|}
+comment|/// clobbersPhysReg - Returns true if this RegMask clobbers PhysReg.
+comment|/// It is sometimes necessary to detach the register mask pointer from its
+comment|/// machine operand. This static method can be used for such detached bit
+comment|/// mask pointers.
+specifier|static
+name|bool
+name|clobbersPhysReg
+parameter_list|(
+specifier|const
+name|uint32_t
+modifier|*
+name|RegMask
+parameter_list|,
+name|unsigned
+name|PhysReg
+parameter_list|)
+block|{
+comment|// See TargetRegisterInfo.h.
+name|assert
+argument_list|(
+name|PhysReg
+operator|<
+operator|(
+literal|1u
+operator|<<
+literal|30
+operator|)
+operator|&&
+literal|"Not a physical register"
+argument_list|)
+expr_stmt|;
+return|return
+operator|!
+operator|(
+name|RegMask
+index|[
+name|PhysReg
+operator|/
+literal|32
+index|]
+operator|&
+operator|(
+literal|1u
+operator|<<
+name|PhysReg
+operator|%
+literal|32
+operator|)
+operator|)
+return|;
+block|}
+comment|/// clobbersPhysReg - Returns true if this RegMask operand clobbers PhysReg.
+name|bool
+name|clobbersPhysReg
+argument_list|(
+name|unsigned
+name|PhysReg
+argument_list|)
+decl|const
+block|{
+return|return
+name|clobbersPhysReg
+argument_list|(
+name|getRegMask
+argument_list|()
+argument_list|,
+name|PhysReg
+argument_list|)
+return|;
+block|}
+comment|/// getRegMask - Returns a bit mask of registers preserved by this RegMask
+comment|/// operand.
+specifier|const
+name|uint32_t
+operator|*
+name|getRegMask
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isRegMask
+argument_list|()
+operator|&&
+literal|"Wrong MachineOperand accessor"
+argument_list|)
+block|;
+return|return
+name|Contents
+operator|.
+name|RegMask
 return|;
 block|}
 specifier|const
@@ -1828,6 +2002,12 @@ name|isUndef
 expr_stmt|;
 name|Op
 operator|.
+name|IsInternalRead
+operator|=
+name|false
+expr_stmt|;
+name|Op
+operator|.
 name|IsEarlyClobber
 operator|=
 name|isEarlyClobber
@@ -2196,6 +2376,55 @@ name|setTargetFlags
 argument_list|(
 name|TargetFlags
 argument_list|)
+expr_stmt|;
+return|return
+name|Op
+return|;
+block|}
+comment|/// CreateRegMask - Creates a register mask operand referencing Mask.  The
+comment|/// operand does not take ownership of the memory referenced by Mask, it must
+comment|/// remain valid for the lifetime of the operand.
+comment|///
+comment|/// A RegMask operand represents a set of non-clobbered physical registers on
+comment|/// an instruction that clobbers many registers, typically a call.  The bit
+comment|/// mask has a bit set for each physreg that is preserved by this
+comment|/// instruction, as described in the documentation for
+comment|/// TargetRegisterInfo::getCallPreservedMask().
+comment|///
+comment|/// Any physreg with a 0 bit in the mask is clobbered by the instruction.
+comment|///
+specifier|static
+name|MachineOperand
+name|CreateRegMask
+parameter_list|(
+specifier|const
+name|uint32_t
+modifier|*
+name|Mask
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|Mask
+operator|&&
+literal|"Missing register mask"
+argument_list|)
+expr_stmt|;
+name|MachineOperand
+name|Op
+argument_list|(
+name|MachineOperand
+operator|::
+name|MO_RegisterMask
+argument_list|)
+decl_stmt|;
+name|Op
+operator|.
+name|Contents
+operator|.
+name|RegMask
+operator|=
+name|Mask
 expr_stmt|;
 return|return
 name|Op

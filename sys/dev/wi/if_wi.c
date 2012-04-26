@@ -25,6 +25,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_include
+include|#
+directive|include
+file|"opt_wlan.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -8148,6 +8154,15 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|vap
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|finish
+goto|;
 switch|switch
 condition|(
 name|le16toh
@@ -8442,6 +8457,8 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+name|finish
+label|:
 name|CSR_WRITE_2
 argument_list|(
 name|sc

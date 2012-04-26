@@ -1639,7 +1639,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|archive_write_finish
+name|archive_write_free
 argument_list|(
 name|ad
 argument_list|)
@@ -1682,7 +1682,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|archive_write_finish
+name|archive_write_free
 argument_list|(
 name|ad
 argument_list|)

@@ -1419,7 +1419,7 @@ name|p
 operator|->
 name|pipefds
 expr_stmt|;
-comment|/* l_ulong * */
+comment|/* l_int * */
 operator|*
 name|n_args
 operator|=
@@ -3684,7 +3684,7 @@ name|p
 operator|->
 name|level
 expr_stmt|;
-comment|/* l_ulong */
+comment|/* l_int */
 operator|*
 name|n_args
 operator|=
@@ -6787,7 +6787,7 @@ name|p
 operator|->
 name|filename
 expr_stmt|;
-comment|/* char * */
+comment|/* const char * */
 name|uarg
 index|[
 literal|1
@@ -6801,20 +6801,10 @@ operator|->
 name|statbuf
 expr_stmt|;
 comment|/* struct l_stat64 * */
-name|iarg
-index|[
-literal|2
-index|]
-operator|=
-name|p
-operator|->
-name|flags
-expr_stmt|;
-comment|/* l_long */
 operator|*
 name|n_args
 operator|=
-literal|3
+literal|2
 expr_stmt|;
 break|break;
 block|}
@@ -6842,7 +6832,7 @@ name|p
 operator|->
 name|filename
 expr_stmt|;
-comment|/* char * */
+comment|/* const char * */
 name|uarg
 index|[
 literal|1
@@ -6856,20 +6846,10 @@ operator|->
 name|statbuf
 expr_stmt|;
 comment|/* struct l_stat64 * */
-name|iarg
-index|[
-literal|2
-index|]
-operator|=
-name|p
-operator|->
-name|flags
-expr_stmt|;
-comment|/* l_long */
 operator|*
 name|n_args
 operator|=
-literal|3
+literal|2
 expr_stmt|;
 break|break;
 block|}
@@ -6894,7 +6874,7 @@ name|p
 operator|->
 name|fd
 expr_stmt|;
-comment|/* l_ulong */
+comment|/* l_int */
 name|uarg
 index|[
 literal|1
@@ -6908,20 +6888,10 @@ operator|->
 name|statbuf
 expr_stmt|;
 comment|/* struct l_stat64 * */
-name|iarg
-index|[
-literal|2
-index|]
-operator|=
-name|p
-operator|->
-name|flags
-expr_stmt|;
-comment|/* l_long */
 operator|*
 name|n_args
 operator|=
-literal|3
+literal|2
 expr_stmt|;
 break|break;
 block|}
@@ -10116,6 +10086,420 @@ literal|0
 expr_stmt|;
 break|break;
 block|}
+comment|/* linux_move_pages */
+case|case
+literal|317
+case|:
+block|{
+operator|*
+name|n_args
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
+comment|/* linux_getcpu */
+case|case
+literal|318
+case|:
+block|{
+operator|*
+name|n_args
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
+comment|/* linux_epoll_pwait */
+case|case
+literal|319
+case|:
+block|{
+operator|*
+name|n_args
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
+comment|/* linux_utimensat */
+case|case
+literal|320
+case|:
+block|{
+operator|*
+name|n_args
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
+comment|/* linux_signalfd */
+case|case
+literal|321
+case|:
+block|{
+operator|*
+name|n_args
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
+comment|/* linux_timerfd_create */
+case|case
+literal|322
+case|:
+block|{
+operator|*
+name|n_args
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
+comment|/* linux_eventfd */
+case|case
+literal|323
+case|:
+block|{
+operator|*
+name|n_args
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
+comment|/* linux_fallocate */
+case|case
+literal|324
+case|:
+block|{
+operator|*
+name|n_args
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
+comment|/* linux_timerfd_settime */
+case|case
+literal|325
+case|:
+block|{
+operator|*
+name|n_args
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
+comment|/* linux_timerfd_gettime */
+case|case
+literal|326
+case|:
+block|{
+operator|*
+name|n_args
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
+comment|/* linux_signalfd4 */
+case|case
+literal|327
+case|:
+block|{
+operator|*
+name|n_args
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
+comment|/* linux_eventfd2 */
+case|case
+literal|328
+case|:
+block|{
+operator|*
+name|n_args
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
+comment|/* linux_epoll_create1 */
+case|case
+literal|329
+case|:
+block|{
+operator|*
+name|n_args
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
+comment|/* linux_dup3 */
+case|case
+literal|330
+case|:
+block|{
+operator|*
+name|n_args
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
+comment|/* linux_pipe2 */
+case|case
+literal|331
+case|:
+block|{
+name|struct
+name|linux_pipe2_args
+modifier|*
+name|p
+init|=
+name|params
+decl_stmt|;
+name|uarg
+index|[
+literal|0
+index|]
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|p
+operator|->
+name|pipefds
+expr_stmt|;
+comment|/* l_int * */
+name|iarg
+index|[
+literal|1
+index|]
+operator|=
+name|p
+operator|->
+name|flags
+expr_stmt|;
+comment|/* l_int */
+operator|*
+name|n_args
+operator|=
+literal|2
+expr_stmt|;
+break|break;
+block|}
+comment|/* linux_inotify_init1 */
+case|case
+literal|332
+case|:
+block|{
+operator|*
+name|n_args
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
+comment|/* linux_preadv */
+case|case
+literal|333
+case|:
+block|{
+operator|*
+name|n_args
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
+comment|/* linux_pwritev */
+case|case
+literal|334
+case|:
+block|{
+operator|*
+name|n_args
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
+comment|/* linux_rt_tsigqueueinfo */
+case|case
+literal|335
+case|:
+block|{
+operator|*
+name|n_args
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
+comment|/* linux_perf_event_open */
+case|case
+literal|336
+case|:
+block|{
+operator|*
+name|n_args
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
+comment|/* linux_recvmmsg */
+case|case
+literal|337
+case|:
+block|{
+operator|*
+name|n_args
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
+comment|/* linux_fanotify_init */
+case|case
+literal|338
+case|:
+block|{
+operator|*
+name|n_args
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
+comment|/* linux_fanotify_mark */
+case|case
+literal|339
+case|:
+block|{
+operator|*
+name|n_args
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
+comment|/* linux_prlimit64 */
+case|case
+literal|340
+case|:
+block|{
+operator|*
+name|n_args
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
+comment|/* linux_name_to_handle_at */
+case|case
+literal|341
+case|:
+block|{
+operator|*
+name|n_args
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
+comment|/* linux_open_by_handle_at */
+case|case
+literal|342
+case|:
+block|{
+operator|*
+name|n_args
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
+comment|/* linux_clock_adjtime */
+case|case
+literal|343
+case|:
+block|{
+operator|*
+name|n_args
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
+comment|/* linux_syncfs */
+case|case
+literal|344
+case|:
+block|{
+operator|*
+name|n_args
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
+comment|/* linux_sendmmsg */
+case|case
+literal|345
+case|:
+block|{
+operator|*
+name|n_args
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
+comment|/* linux_setns */
+case|case
+literal|346
+case|:
+block|{
+operator|*
+name|n_args
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
+comment|/* linux_process_vm_readv */
+case|case
+literal|347
+case|:
+block|{
+operator|*
+name|n_args
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
+comment|/* linux_process_vm_writev */
+case|case
+literal|348
+case|:
+block|{
+operator|*
+name|n_args
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
 default|default:
 operator|*
 name|n_args
@@ -11123,7 +11507,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"l_ulong *"
+literal|"l_int *"
 expr_stmt|;
 break|break;
 default|default:
@@ -12728,7 +13112,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"l_ulong"
+literal|"l_int"
 expr_stmt|;
 break|break;
 default|default:
@@ -14916,7 +15300,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -14925,14 +15309,6 @@ case|:
 name|p
 operator|=
 literal|"struct l_stat64 *"
-expr_stmt|;
-break|break;
-case|case
-literal|2
-case|:
-name|p
-operator|=
-literal|"l_long"
 expr_stmt|;
 break|break;
 default|default:
@@ -14954,7 +15330,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -14963,14 +15339,6 @@ case|:
 name|p
 operator|=
 literal|"struct l_stat64 *"
-expr_stmt|;
-break|break;
-case|case
-literal|2
-case|:
-name|p
-operator|=
-literal|"l_long"
 expr_stmt|;
 break|break;
 default|default:
@@ -14992,7 +15360,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"l_ulong"
+literal|"l_int"
 expr_stmt|;
 break|break;
 case|case
@@ -15001,14 +15369,6 @@ case|:
 name|p
 operator|=
 literal|"struct l_stat64 *"
-expr_stmt|;
-break|break;
-case|case
-literal|2
-case|:
-name|p
-operator|=
-literal|"l_long"
 expr_stmt|;
 break|break;
 default|default:
@@ -17122,6 +17482,191 @@ break|break;
 comment|/* linux_vmsplice */
 case|case
 literal|316
+case|:
+break|break;
+comment|/* linux_move_pages */
+case|case
+literal|317
+case|:
+break|break;
+comment|/* linux_getcpu */
+case|case
+literal|318
+case|:
+break|break;
+comment|/* linux_epoll_pwait */
+case|case
+literal|319
+case|:
+break|break;
+comment|/* linux_utimensat */
+case|case
+literal|320
+case|:
+break|break;
+comment|/* linux_signalfd */
+case|case
+literal|321
+case|:
+break|break;
+comment|/* linux_timerfd_create */
+case|case
+literal|322
+case|:
+break|break;
+comment|/* linux_eventfd */
+case|case
+literal|323
+case|:
+break|break;
+comment|/* linux_fallocate */
+case|case
+literal|324
+case|:
+break|break;
+comment|/* linux_timerfd_settime */
+case|case
+literal|325
+case|:
+break|break;
+comment|/* linux_timerfd_gettime */
+case|case
+literal|326
+case|:
+break|break;
+comment|/* linux_signalfd4 */
+case|case
+literal|327
+case|:
+break|break;
+comment|/* linux_eventfd2 */
+case|case
+literal|328
+case|:
+break|break;
+comment|/* linux_epoll_create1 */
+case|case
+literal|329
+case|:
+break|break;
+comment|/* linux_dup3 */
+case|case
+literal|330
+case|:
+break|break;
+comment|/* linux_pipe2 */
+case|case
+literal|331
+case|:
+switch|switch
+condition|(
+name|ndx
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|p
+operator|=
+literal|"l_int *"
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|p
+operator|=
+literal|"l_int"
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+empty_stmt|;
+break|break;
+comment|/* linux_inotify_init1 */
+case|case
+literal|332
+case|:
+break|break;
+comment|/* linux_preadv */
+case|case
+literal|333
+case|:
+break|break;
+comment|/* linux_pwritev */
+case|case
+literal|334
+case|:
+break|break;
+comment|/* linux_rt_tsigqueueinfo */
+case|case
+literal|335
+case|:
+break|break;
+comment|/* linux_perf_event_open */
+case|case
+literal|336
+case|:
+break|break;
+comment|/* linux_recvmmsg */
+case|case
+literal|337
+case|:
+break|break;
+comment|/* linux_fanotify_init */
+case|case
+literal|338
+case|:
+break|break;
+comment|/* linux_fanotify_mark */
+case|case
+literal|339
+case|:
+break|break;
+comment|/* linux_prlimit64 */
+case|case
+literal|340
+case|:
+break|break;
+comment|/* linux_name_to_handle_at */
+case|case
+literal|341
+case|:
+break|break;
+comment|/* linux_open_by_handle_at */
+case|case
+literal|342
+case|:
+break|break;
+comment|/* linux_clock_adjtime */
+case|case
+literal|343
+case|:
+break|break;
+comment|/* linux_syncfs */
+case|case
+literal|344
+case|:
+break|break;
+comment|/* linux_sendmmsg */
+case|case
+literal|345
+case|:
+break|break;
+comment|/* linux_setns */
+case|case
+literal|346
+case|:
+break|break;
+comment|/* linux_process_vm_readv */
+case|case
+literal|347
+case|:
+break|break;
+comment|/* linux_process_vm_writev */
+case|case
+literal|348
 case|:
 break|break;
 default|default:
@@ -21271,6 +21816,149 @@ case|:
 comment|/* linux_vmsplice */
 case|case
 literal|316
+case|:
+comment|/* linux_move_pages */
+case|case
+literal|317
+case|:
+comment|/* linux_getcpu */
+case|case
+literal|318
+case|:
+comment|/* linux_epoll_pwait */
+case|case
+literal|319
+case|:
+comment|/* linux_utimensat */
+case|case
+literal|320
+case|:
+comment|/* linux_signalfd */
+case|case
+literal|321
+case|:
+comment|/* linux_timerfd_create */
+case|case
+literal|322
+case|:
+comment|/* linux_eventfd */
+case|case
+literal|323
+case|:
+comment|/* linux_fallocate */
+case|case
+literal|324
+case|:
+comment|/* linux_timerfd_settime */
+case|case
+literal|325
+case|:
+comment|/* linux_timerfd_gettime */
+case|case
+literal|326
+case|:
+comment|/* linux_signalfd4 */
+case|case
+literal|327
+case|:
+comment|/* linux_eventfd2 */
+case|case
+literal|328
+case|:
+comment|/* linux_epoll_create1 */
+case|case
+literal|329
+case|:
+comment|/* linux_dup3 */
+case|case
+literal|330
+case|:
+comment|/* linux_pipe2 */
+case|case
+literal|331
+case|:
+if|if
+condition|(
+name|ndx
+operator|==
+literal|0
+operator|||
+name|ndx
+operator|==
+literal|1
+condition|)
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+comment|/* linux_inotify_init1 */
+case|case
+literal|332
+case|:
+comment|/* linux_preadv */
+case|case
+literal|333
+case|:
+comment|/* linux_pwritev */
+case|case
+literal|334
+case|:
+comment|/* linux_rt_tsigqueueinfo */
+case|case
+literal|335
+case|:
+comment|/* linux_perf_event_open */
+case|case
+literal|336
+case|:
+comment|/* linux_recvmmsg */
+case|case
+literal|337
+case|:
+comment|/* linux_fanotify_init */
+case|case
+literal|338
+case|:
+comment|/* linux_fanotify_mark */
+case|case
+literal|339
+case|:
+comment|/* linux_prlimit64 */
+case|case
+literal|340
+case|:
+comment|/* linux_name_to_handle_at */
+case|case
+literal|341
+case|:
+comment|/* linux_open_by_handle_at */
+case|case
+literal|342
+case|:
+comment|/* linux_clock_adjtime */
+case|case
+literal|343
+case|:
+comment|/* linux_syncfs */
+case|case
+literal|344
+case|:
+comment|/* linux_sendmmsg */
+case|case
+literal|345
+case|:
+comment|/* linux_setns */
+case|case
+literal|346
+case|:
+comment|/* linux_process_vm_readv */
+case|case
+literal|347
+case|:
+comment|/* linux_process_vm_writev */
+case|case
+literal|348
 case|:
 default|default:
 break|break;

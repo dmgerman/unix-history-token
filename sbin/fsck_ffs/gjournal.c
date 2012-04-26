@@ -1664,9 +1664,6 @@ decl_stmt|;
 name|uint8_t
 modifier|*
 name|inosused
-decl_stmt|,
-modifier|*
-name|blksfree
 decl_stmt|;
 name|ino_t
 name|cino
@@ -1814,13 +1811,6 @@ expr_stmt|;
 name|inosused
 operator|=
 name|cg_inosused
-argument_list|(
-name|cgp
-argument_list|)
-expr_stmt|;
-name|blksfree
-operator|=
-name|cg_blksfree
 argument_list|(
 name|cgp
 argument_list|)

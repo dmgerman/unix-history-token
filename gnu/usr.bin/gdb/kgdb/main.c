@@ -319,7 +319,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-afqv] [-d crashdir] [-c core | -n dumpnr | -r device]\n"
+literal|"usage: %s [-afqvw] [-d crashdir] [-c core | -n dumpnr | -r device]\n"
 literal|"\t[kernel [core]]\n"
 argument_list|,
 name|getprogname

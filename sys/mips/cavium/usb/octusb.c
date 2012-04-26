@@ -613,7 +613,7 @@ name|td
 operator|->
 name|qh
 operator|->
-name|port_index
+name|root_port_index
 index|]
 operator|.
 name|state
@@ -715,12 +715,23 @@ name|ep_handle
 operator|<
 literal|0
 condition|)
+block|{
+name|DPRINTFN
+argument_list|(
+literal|1
+argument_list|,
+literal|"cvmx_usb_open_pipe failed: %d\n"
+argument_list|,
+name|ep_handle
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1
 operator|)
 return|;
 comment|/* busy */
+block|}
 name|cvmx_usb_set_toggle
 argument_list|(
 operator|&
@@ -732,7 +743,7 @@ name|td
 operator|->
 name|qh
 operator|->
-name|port_index
+name|root_port_index
 index|]
 operator|.
 name|state
@@ -879,7 +890,7 @@ name|td
 operator|->
 name|qh
 operator|->
-name|port_index
+name|root_port_index
 index|]
 operator|.
 name|state
@@ -909,7 +920,7 @@ name|td
 operator|->
 name|qh
 operator|->
-name|port_index
+name|root_port_index
 index|]
 operator|.
 name|state
@@ -1301,7 +1312,7 @@ name|td
 operator|->
 name|qh
 operator|->
-name|port_index
+name|root_port_index
 index|]
 operator|.
 name|state
@@ -1795,7 +1806,7 @@ name|td
 operator|->
 name|qh
 operator|->
-name|port_index
+name|root_port_index
 index|]
 operator|.
 name|state
@@ -2217,7 +2228,7 @@ name|td
 operator|->
 name|qh
 operator|->
-name|port_index
+name|root_port_index
 index|]
 operator|.
 name|state
@@ -2275,7 +2286,7 @@ name|td
 operator|->
 name|qh
 operator|->
-name|port_index
+name|root_port_index
 index|]
 operator|.
 name|state
@@ -2318,7 +2329,7 @@ name|td
 operator|->
 name|qh
 operator|->
-name|port_index
+name|root_port_index
 index|]
 operator|.
 name|state
@@ -2793,7 +2804,7 @@ name|td
 operator|->
 name|qh
 operator|->
-name|port_index
+name|root_port_index
 index|]
 operator|.
 name|state
@@ -2851,7 +2862,7 @@ name|td
 operator|->
 name|qh
 operator|->
-name|port_index
+name|root_port_index
 index|]
 operator|.
 name|state
@@ -2894,7 +2905,7 @@ name|td
 operator|->
 name|qh
 operator|->
-name|port_index
+name|root_port_index
 index|]
 operator|.
 name|state
@@ -3512,7 +3523,7 @@ name|sc_port
 index|[
 name|qh
 operator|->
-name|port_index
+name|root_port_index
 index|]
 operator|.
 name|state
@@ -7277,6 +7288,11 @@ name|usb_xfer
 modifier|*
 name|xfer
 decl_stmt|;
+name|struct
+name|usb_device
+modifier|*
+name|hub
+decl_stmt|;
 name|void
 modifier|*
 name|last_obj
@@ -7465,7 +7481,7 @@ argument_list|)
 expr_stmt|;
 name|qh
 operator|->
-name|port_index
+name|root_port_index
 operator|=
 name|xfer
 operator|->
@@ -7475,6 +7491,41 @@ name|udev
 operator|->
 name|port_index
 expr_stmt|;
+comment|/* We need Octeon USB HUB's port index, not the local port */
+name|hub
+operator|=
+name|xfer
+operator|->
+name|xroot
+operator|->
+name|udev
+operator|->
+name|parent_hub
+expr_stmt|;
+while|while
+condition|(
+name|hub
+operator|&&
+name|hub
+operator|->
+name|parent_hub
+condition|)
+block|{
+name|qh
+operator|->
+name|root_port_index
+operator|=
+name|hub
+operator|->
+name|port_index
+expr_stmt|;
+name|hub
+operator|=
+name|hub
+operator|->
+name|parent_hub
+expr_stmt|;
+block|}
 switch|switch
 condition|(
 name|xfer

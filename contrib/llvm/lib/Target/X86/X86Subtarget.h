@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//=====---- X86Subtarget.h - Define Subtarget for the X86 -----*- C++ -*--====//
+comment|//===-- X86Subtarget.h - Define Subtarget for the X86 ----------*- C++ -*--===//
 end_comment
 
 begin_comment
@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/CallingConv.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/Triple.h"
 end_include
 
@@ -69,12 +75,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Target/TargetSubtargetInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/CallingConv.h"
 end_include
 
 begin_include
@@ -159,6 +159,10 @@ block|,
 name|SSE41
 block|,
 name|SSE42
+block|,
+name|AVX
+block|,
+name|AVX2
 block|}
 block|;    enum
 name|X863DNowEnum
@@ -169,6 +173,17 @@ name|ThreeDNow
 block|,
 name|ThreeDNowA
 block|}
+block|;    enum
+name|X86ProcFamilyEnum
+block|{
+name|Others
+block|,
+name|IntelAtom
+block|}
+block|;
+comment|/// X86ProcFamily - X86 processor family: Intel Atom, and others
+name|X86ProcFamilyEnum
+name|X86ProcFamily
 block|;
 comment|/// PICStyle - Which PIC style to use
 comment|///
@@ -205,10 +220,6 @@ comment|/// HasSSE4A - True if the processor supports SSE4A instructions.
 name|bool
 name|HasSSE4A
 block|;
-comment|/// HasAVX - Target has AVX instructions
-name|bool
-name|HasAVX
-block|;
 comment|/// HasAES - Target has AES instructions
 name|bool
 name|HasAES
@@ -225,6 +236,10 @@ comment|/// HasFMA4 - Target has 4-operand fused multiply-add
 name|bool
 name|HasFMA4
 block|;
+comment|/// HasXOP - Target has XOP instructions
+name|bool
+name|HasXOP
+block|;
 comment|/// HasMOVBE - True if the processor has the MOVBE instruction.
 name|bool
 name|HasMOVBE
@@ -237,6 +252,10 @@ comment|/// HasF16C - Processor has 16-bit floating point conversion instruction
 name|bool
 name|HasF16C
 block|;
+comment|/// HasFSGSBase - Processor has FS/GS base insturctions.
+name|bool
+name|HasFSGSBase
+block|;
 comment|/// HasLZCNT - Processor has LZCNT instruction.
 name|bool
 name|HasLZCNT
@@ -244,6 +263,10 @@ block|;
 comment|/// HasBMI - Processor has BMI1 instructions.
 name|bool
 name|HasBMI
+block|;
+comment|/// HasBMI2 - Processor has BMI2 instructions.
+name|bool
+name|HasBMI2
 block|;
 comment|/// IsBTMemSlow - True if BT (bit test) of memory instructions are slow.
 name|bool
@@ -263,6 +286,15 @@ comment|/// this is true for most x86-64 chips, but not the first AMD chips.
 name|bool
 name|HasCmpxchg16b
 block|;
+comment|/// UseLeaForSP - True if the LEA instruction should be used for adjusting
+comment|/// the stack pointer. This is an optimization for Intel Atom processors.
+name|bool
+name|UseLeaForSP
+block|;
+comment|/// PostRAScheduler - True if using post-register-allocation scheduler.
+name|bool
+name|PostRAScheduler
+block|;
 comment|/// stackAlignment - The minimum alignment known to hold of the stack frame on
 comment|/// entry to the function and which must be maintained by every function.
 name|unsigned
@@ -277,15 +309,15 @@ comment|/// TargetTriple - What processor and OS we're targeting.
 name|Triple
 name|TargetTriple
 block|;
+comment|/// Instruction itineraries for scheduling
+name|InstrItineraryData
+name|InstrItins
+block|;
 name|private
 operator|:
 comment|/// In64BitMode - True if compiling for 64-bit, false for 32-bit.
 name|bool
 name|In64BitMode
-block|;
-comment|/// InNaClMode - True if compiling for Native Client target.
-name|bool
-name|InNaClMode
 block|;
 name|public
 operator|:
@@ -461,6 +493,28 @@ name|SSE42
 return|;
 block|}
 name|bool
+name|hasAVX
+argument_list|()
+specifier|const
+block|{
+return|return
+name|X86SSELevel
+operator|>=
+name|AVX
+return|;
+block|}
+name|bool
+name|hasAVX2
+argument_list|()
+specifier|const
+block|{
+return|return
+name|X86SSELevel
+operator|>=
+name|AVX2
+return|;
+block|}
+name|bool
 name|hasSSE4A
 argument_list|()
 specifier|const
@@ -501,41 +555,6 @@ name|HasPOPCNT
 return|;
 block|}
 name|bool
-name|hasAVX
-argument_list|()
-specifier|const
-block|{
-return|return
-name|HasAVX
-return|;
-block|}
-name|bool
-name|hasXMM
-argument_list|()
-specifier|const
-block|{
-return|return
-name|hasSSE1
-argument_list|()
-operator|||
-name|hasAVX
-argument_list|()
-return|;
-block|}
-name|bool
-name|hasXMMInt
-argument_list|()
-specifier|const
-block|{
-return|return
-name|hasSSE2
-argument_list|()
-operator|||
-name|hasAVX
-argument_list|()
-return|;
-block|}
-name|bool
 name|hasAES
 argument_list|()
 specifier|const
@@ -572,6 +591,15 @@ name|HasFMA4
 return|;
 block|}
 name|bool
+name|hasXOP
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasXOP
+return|;
+block|}
+name|bool
 name|hasMOVBE
 argument_list|()
 specifier|const
@@ -599,6 +627,15 @@ name|HasF16C
 return|;
 block|}
 name|bool
+name|hasFSGSBase
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasFSGSBase
+return|;
+block|}
+name|bool
 name|hasLZCNT
 argument_list|()
 specifier|const
@@ -614,6 +651,15 @@ specifier|const
 block|{
 return|return
 name|HasBMI
+return|;
+block|}
+name|bool
+name|hasBMI2
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasBMI2
 return|;
 block|}
 name|bool
@@ -650,6 +696,26 @@ specifier|const
 block|{
 return|return
 name|HasCmpxchg16b
+return|;
+block|}
+name|bool
+name|useLeaForSP
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UseLeaForSP
+return|;
+block|}
+name|bool
+name|isAtom
+argument_list|()
+specifier|const
+block|{
+return|return
+name|X86ProcFamily
+operator|==
+name|IntelAtom
 return|;
 block|}
 specifier|const
@@ -715,16 +781,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|!
-name|isTargetDarwin
-argument_list|()
-operator|&&
-operator|!
-name|isTargetWindows
-argument_list|()
-operator|&&
-operator|!
-name|isTargetCygMing
+name|TargetTriple
+operator|.
+name|isOSBinFormatELF
 argument_list|()
 return|;
 block|}
@@ -841,27 +900,33 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|isTargetMingw
-argument_list|()
-operator|||
-name|isTargetCygwin
+name|TargetTriple
+operator|.
+name|isOSCygMing
 argument_list|()
 return|;
 block|}
-comment|/// isTargetCOFF - Return true if this is any COFF/Windows target variant.
 name|bool
 name|isTargetCOFF
 argument_list|()
 specifier|const
 block|{
 return|return
-name|isTargetMingw
+name|TargetTriple
+operator|.
+name|isOSBinFormatCOFF
 argument_list|()
-operator|||
-name|isTargetCygwin
+return|;
+block|}
+name|bool
+name|isTargetEnvMacho
 argument_list|()
-operator|||
-name|isTargetWindows
+specifier|const
+block|{
+return|return
+name|TargetTriple
+operator|.
+name|isEnvironmentMachO
 argument_list|()
 return|;
 block|}
@@ -874,34 +939,10 @@ comment|// FIXME: x86_64-cygwin has not been released yet.
 return|return
 name|In64BitMode
 operator|&&
-operator|(
-name|isTargetCygMing
-argument_list|()
-operator|||
-name|isTargetWindows
-argument_list|()
-operator|)
-return|;
-block|}
-name|bool
-name|isTargetEnvMacho
-argument_list|()
-specifier|const
-block|{
-return|return
-name|isTargetDarwin
-argument_list|()
-operator|||
-operator|(
 name|TargetTriple
 operator|.
-name|getEnvironment
+name|isOSWindows
 argument_list|()
-operator|==
-name|Triple
-operator|::
-name|MachO
-operator|)
 return|;
 block|}
 name|bool
@@ -909,6 +950,8 @@ name|isTargetWin32
 argument_list|()
 specifier|const
 block|{
+comment|// FIXME: Cygwin is included for isTargetWin64 -- should it be included
+comment|// here too?
 return|return
 operator|!
 name|In64BitMode
@@ -1057,9 +1100,34 @@ name|unsigned
 name|getSpecialAddressLatency
 argument_list|()
 specifier|const
-block|; }
-decl_stmt|;
+block|;
+comment|/// enablePostRAScheduler - run for Atom optimization.
+name|bool
+name|enablePostRAScheduler
+argument_list|(
+argument|CodeGenOpt::Level OptLevel
+argument_list|,
+argument|TargetSubtargetInfo::AntiDepBreakMode& Mode
+argument_list|,
+argument|RegClassVector& CriticalPathRCs
+argument_list|)
+specifier|const
+block|;
+comment|/// getInstrItins = Return the instruction itineraries based on the
+comment|/// subtarget selection.
+specifier|const
+name|InstrItineraryData
+operator|&
+name|getInstrItineraryData
+argument_list|()
+specifier|const
+block|{
+return|return
+name|InstrItins
+return|;
 block|}
+expr|}
+block|;  }
 end_decl_stmt
 
 begin_comment

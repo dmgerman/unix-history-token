@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: ruserpass.c 16161 2005-10-12 09:44:24Z joda $"
+literal|"$Id$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -370,7 +370,7 @@ end_function
 
 begin_function
 name|int
-name|ruserpass
+name|ruserpassword
 parameter_list|(
 name|char
 modifier|*
@@ -535,7 +535,7 @@ operator|!=
 name|ID
 condition|)
 continue|continue;
-comment|/* 	     * Allow match either for user's input host name 	     * or official hostname.  Also allow match of  	     * incompletely-specified host in local domain. 	     */
+comment|/* 	     * Allow match either for user's input host name 	     * or official hostname.  Also allow match of 	     * incompletely-specified host in local domain. 	     */
 if|if
 condition|(
 name|strcasecmp

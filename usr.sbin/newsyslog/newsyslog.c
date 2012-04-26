@@ -2513,6 +2513,9 @@ index|[
 name|REASON_MAX
 index|]
 decl_stmt|;
+name|int
+name|oversized
+decl_stmt|;
 name|free_or_keep
 operator|=
 name|FREE_ENT
@@ -2553,6 +2556,28 @@ name|ent
 operator|->
 name|log
 argument_list|)
+expr_stmt|;
+name|oversized
+operator|=
+operator|(
+operator|(
+name|ent
+operator|->
+name|trsize
+operator|>
+literal|0
+operator|)
+operator|&&
+operator|(
+name|ent
+operator|->
+name|fsize
+operator|>=
+name|ent
+operator|->
+name|trsize
+operator|)
+operator|)
 expr_stmt|;
 name|modtime
 operator|=
@@ -2707,6 +2732,9 @@ name|force
 operator|&&
 operator|!
 name|rotatereq
+operator|&&
+operator|!
+name|oversized
 condition|)
 block|{
 name|diffsecs
@@ -2971,23 +2999,7 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|(
-name|ent
-operator|->
-name|trsize
-operator|>
-literal|0
-operator|)
-operator|&&
-operator|(
-name|ent
-operator|->
-name|fsize
-operator|>=
-name|ent
-operator|->
-name|trsize
-operator|)
+name|oversized
 condition|)
 block|{
 name|ent
@@ -7515,7 +7527,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|gen_clasiclog_fname
+name|gen_classiclog_fname
 parameter_list|(
 name|char
 modifier|*
@@ -7586,13 +7598,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Delete a rotated logfiles, when using classic filenames.  */
+comment|/*  * Delete a rotated logfile, when using classic filenames.  */
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|delete_clasiclog
+name|delete_classiclog
 parameter_list|(
 specifier|const
 name|char
@@ -7622,7 +7634,7 @@ decl_stmt|;
 name|int
 name|c
 decl_stmt|;
-name|gen_clasiclog_fname
+name|gen_classiclog_fname
 argument_list|(
 name|file1
 argument_list|,
@@ -8213,7 +8225,7 @@ expr_stmt|;
 else|else
 block|{
 comment|/* 		 * Handle cleaning up after legacy newsyslog where we 		 * kept ent->numlogs + 1 files.  This code can go away 		 * at some point in the future. 		 */
-name|delete_clasiclog
+name|delete_classiclog
 argument_list|(
 name|dirpart
 argument_list|,
@@ -8232,7 +8244,7 @@ name|numlogs
 operator|>
 literal|0
 condition|)
-name|delete_clasiclog
+name|delete_classiclog
 argument_list|(
 name|dirpart
 argument_list|,
@@ -8361,7 +8373,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|gen_clasiclog_fname
+name|gen_classiclog_fname
 argument_list|(
 name|file1
 argument_list|,
@@ -8418,7 +8430,7 @@ name|file2
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|gen_clasiclog_fname
+name|gen_classiclog_fname
 argument_list|(
 name|file1
 argument_list|,

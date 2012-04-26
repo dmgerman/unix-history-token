@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2011 Matteo Landi, Luigi Rizzo. All rights reserved.
 end_comment
 
 begin_comment
-comment|/*  * $FreeBSD$  * $Id: pkt-gen.c 9827 2011-12-05 11:29:34Z luigi $  *  * Example program to show how to build a multithreaded packet  * source/sink using the netmap device.  *  * In this example we create a programmable number of threads  * to take care of all the queues of the interface used to  * send or receive traffic.  *  */
+comment|/*  * $FreeBSD$  * $Id: pkt-gen.c 10637 2012-02-24 16:36:25Z luigi $  *  * Example program to show how to build a multithreaded packet  * source/sink using the netmap device.  *  * In this example we create a programmable number of threads  * to take care of all the queues of the interface used to  * send or receive traffic.  *  */
 end_comment
 
 begin_decl_stmt
@@ -483,9 +483,10 @@ decl_stmt|;
 name|uint8_t
 name|body
 index|[
-name|NETMAP_BUF_SIZE
+literal|2048
 index|]
 decl_stmt|;
+comment|// XXX hardwired
 block|}
 name|__attribute__
 argument_list|(
@@ -3662,6 +3663,12 @@ name|nmr
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|nmr
+operator|.
+name|nr_version
+operator|=
+name|NETMAP_API
+expr_stmt|;
 comment|/* 	 * Open the netmap device to fetch the number of queues of our 	 * interface. 	 * 	 * The first NIOCREGIF also detaches the card from the 	 * protocol stack and may cause a reset of the card, 	 * which in turn may take some time for the PHY to 	 * reconfigure. 	 */
 name|fd
 operator|=
@@ -3738,6 +3745,12 @@ name|nmr
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|nmr
+operator|.
+name|nr_version
+operator|=
+name|NETMAP_API
+expr_stmt|;
 name|strncpy
 argument_list|(
 name|nmr
@@ -3784,7 +3797,7 @@ name|devqueues
 operator|=
 name|nmr
 operator|.
-name|nr_numrings
+name|nr_rx_rings
 expr_stmt|;
 block|}
 comment|/* validate provided nthreads. */
@@ -3925,6 +3938,12 @@ expr_stmt|;
 comment|// continue, fail later
 block|}
 comment|/* 	 * Register the interface on the netmap device: from now on, 	 * we can operate on the network interface without any 	 * interference from the legacy network stack. 	 * 	 * We decide to put the first interface registration here to 	 * give time to cards that take a long time to reset the PHY. 	 */
+name|nmr
+operator|.
+name|nr_version
+operator|=
+name|NETMAP_API
+expr_stmt|;
 if|if
 condition|(
 name|ioctl
@@ -4186,6 +4205,12 @@ argument_list|)
 expr_stmt|;
 name|tifreq
 operator|.
+name|nr_version
+operator|=
+name|NETMAP_API
+expr_stmt|;
+name|tifreq
+operator|.
 name|nr_ringid
 operator|=
 operator|(
@@ -4369,9 +4394,19 @@ name|i
 operator|+
 literal|1
 else|:
+operator|(
+name|td_body
+operator|==
+name|receiver_body
+condition|?
 name|tifreq
 operator|.
-name|nr_numrings
+name|nr_rx_rings
+else|:
+name|tifreq
+operator|.
+name|nr_tx_rings
+operator|)
 expr_stmt|;
 name|targs
 index|[

@@ -2445,9 +2445,7 @@ argument_list|)
 expr_stmt|;
 name|alt_index
 operator|=
-literal|0
-operator|-
-literal|1
+literal|0xFF
 expr_stmt|;
 while|while
 condition|(
@@ -2711,7 +2709,6 @@ name|sc_fifo
 argument_list|,
 name|unit
 argument_list|,
-literal|0
 operator|-
 literal|1
 argument_list|,
@@ -2762,7 +2759,6 @@ name|sc_fifo_noreset
 argument_list|,
 name|unit
 argument_list|,
-literal|0
 operator|-
 literal|1
 argument_list|,

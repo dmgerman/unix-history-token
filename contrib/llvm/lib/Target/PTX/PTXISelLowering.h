@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//==-- PTXISelLowering.h - PTX DAG Lowering Interface ------------*- C++ -*-==//
+comment|//===-- PTXISelLowering.h - PTX DAG Lowering Interface ----------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -73,12 +73,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|PTXSubtarget
-decl_stmt|;
-name|class
-name|PTXTargetMachine
-decl_stmt|;
 name|namespace
 name|PTXISD
 block|{
@@ -207,6 +201,8 @@ argument_list|,
 argument|CallingConv::ID CallConv
 argument_list|,
 argument|bool isVarArg
+argument_list|,
+argument|bool doesNotRet
 argument_list|,
 argument|bool&isTailCall
 argument_list|,

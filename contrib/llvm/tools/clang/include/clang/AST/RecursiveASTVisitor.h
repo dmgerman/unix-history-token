@@ -333,6 +333,41 @@ return|return
 name|true
 return|;
 block|}
+comment|/// \brief Return whether \param S should be traversed using data recursion
+comment|/// to avoid a stack overflow with extreme cases.
+name|bool
+name|shouldUseDataRecursionFor
+argument_list|(
+argument|Stmt *S
+argument_list|)
+specifier|const
+block|{
+return|return
+name|isa
+operator|<
+name|BinaryOperator
+operator|>
+operator|(
+name|S
+operator|)
+operator|||
+name|isa
+operator|<
+name|UnaryOperator
+operator|>
+operator|(
+name|S
+operator|)
+operator|||
+name|isa
+operator|<
+name|CaseStmt
+operator|>
+operator|(
+name|S
+operator|)
+return|;
+block|}
 comment|/// \brief Recursively visit a statement or expression, by
 comment|/// dispatching to Traverse*() based on the argument's dynamic type.
 comment|///
@@ -402,6 +437,15 @@ argument_list|(
 argument|NestedNameSpecifierLoc NNS
 argument_list|)
 block|;
+comment|/// \brief Recursively visit a name with its location information.
+comment|///
+comment|/// \returns false if the visitation was terminated early, true otherwise.
+name|bool
+name|TraverseDeclarationNameInfo
+argument_list|(
+argument|DeclarationNameInfo NameInfo
+argument_list|)
+block|;
 comment|/// \brief Recursively visit a template name and dispatch to the
 comment|/// appropriate method.
 comment|///
@@ -465,6 +509,15 @@ argument_list|(
 name|CXXCtorInitializer
 operator|*
 name|Init
+argument_list|)
+block|;
+comment|/// \brief Recursively visit a lambda capture.
+comment|///
+comment|/// \returns false if the visitation was terminated early, true otherwise.
+name|bool
+name|TraverseLambdaCapture
+argument_list|(
+argument|LambdaExpr::Capture C
 argument_list|)
 block|;
 comment|// ---- Methods on Stmts ----
@@ -935,8 +988,403 @@ name|VarDecl
 operator|*
 name|D
 argument_list|)
-block|; }
+block|;
+name|bool
+name|Walk
+argument_list|(
+name|Stmt
+operator|*
+name|S
+argument_list|)
+block|;    struct
+name|EnqueueJob
+block|{
+name|Stmt
+operator|*
+name|S
+block|;
+name|Stmt
+operator|::
+name|child_iterator
+name|StmtIt
+block|;
+name|EnqueueJob
+argument_list|(
+name|Stmt
+operator|*
+name|S
+argument_list|)
+operator|:
+name|S
+argument_list|(
+name|S
+argument_list|)
+block|,
+name|StmtIt
+argument_list|()
+block|{
+if|if
+condition|(
+name|Expr
+modifier|*
+name|E
+init|=
+name|dyn_cast_or_null
+operator|<
+name|Expr
+operator|>
+operator|(
+name|S
+operator|)
+condition|)
+name|S
+operator|=
+name|E
+operator|->
+name|IgnoreParens
+argument_list|()
 expr_stmt|;
+block|}
+expr|}
+block|;
+name|bool
+name|dataTraverse
+argument_list|(
+name|Stmt
+operator|*
+name|S
+argument_list|)
+block|; }
+block|;
+name|template
+operator|<
+name|typename
+name|Derived
+operator|>
+name|bool
+name|RecursiveASTVisitor
+operator|<
+name|Derived
+operator|>
+operator|::
+name|dataTraverse
+argument_list|(
+argument|Stmt *S
+argument_list|)
+block|{
+name|SmallVector
+operator|<
+name|EnqueueJob
+block|,
+literal|16
+operator|>
+name|Queue
+block|;
+name|Queue
+operator|.
+name|push_back
+argument_list|(
+name|S
+argument_list|)
+block|;
+while|while
+condition|(
+operator|!
+name|Queue
+operator|.
+name|empty
+argument_list|()
+condition|)
+block|{
+name|EnqueueJob
+modifier|&
+name|job
+init|=
+name|Queue
+operator|.
+name|back
+argument_list|()
+decl_stmt|;
+name|Stmt
+modifier|*
+name|CurrS
+init|=
+name|job
+operator|.
+name|S
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|CurrS
+condition|)
+block|{
+name|Queue
+operator|.
+name|pop_back
+argument_list|()
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
+name|getDerived
+argument_list|()
+operator|.
+name|shouldUseDataRecursionFor
+argument_list|(
+name|CurrS
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|job
+operator|.
+name|StmtIt
+operator|==
+name|Stmt
+operator|::
+name|child_iterator
+argument_list|()
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|Walk
+argument_list|(
+name|CurrS
+argument_list|)
+condition|)
+return|return
+name|false
+return|;
+name|job
+operator|.
+name|StmtIt
+operator|=
+name|CurrS
+operator|->
+name|child_begin
+argument_list|()
+expr_stmt|;
+block|}
+else|else
+block|{
+operator|++
+name|job
+operator|.
+name|StmtIt
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|job
+operator|.
+name|StmtIt
+operator|!=
+name|CurrS
+operator|->
+name|child_end
+argument_list|()
+condition|)
+name|Queue
+operator|.
+name|push_back
+argument_list|(
+operator|*
+name|job
+operator|.
+name|StmtIt
+argument_list|)
+expr_stmt|;
+else|else
+name|Queue
+operator|.
+name|pop_back
+argument_list|()
+expr_stmt|;
+continue|continue;
+block|}
+name|Queue
+operator|.
+name|pop_back
+argument_list|()
+expr_stmt|;
+name|TRY_TO
+argument_list|(
+name|TraverseStmt
+argument_list|(
+name|CurrS
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+name|true
+return|;
+block|}
+name|template
+operator|<
+name|typename
+name|Derived
+operator|>
+name|bool
+name|RecursiveASTVisitor
+operator|<
+name|Derived
+operator|>
+operator|::
+name|Walk
+argument_list|(
+argument|Stmt *S
+argument_list|)
+block|{
+define|#
+directive|define
+name|DISPATCH_WALK
+parameter_list|(
+name|NAME
+parameter_list|,
+name|CLASS
+parameter_list|,
+name|VAR
+parameter_list|)
+define|\
+value|return getDerived().WalkUpFrom##NAME(static_cast<CLASS*>(VAR));
+if|if
+condition|(
+name|BinaryOperator
+modifier|*
+name|BinOp
+init|=
+name|dyn_cast
+operator|<
+name|BinaryOperator
+operator|>
+operator|(
+name|S
+operator|)
+condition|)
+block|{
+switch|switch
+condition|(
+name|BinOp
+operator|->
+name|getOpcode
+argument_list|()
+condition|)
+block|{
+define|#
+directive|define
+name|OPERATOR
+parameter_list|(
+name|NAME
+parameter_list|)
+define|\
+value|case BO_##NAME: DISPATCH_WALK(Bin##NAME, BinaryOperator, S);
+name|BINOP_LIST
+argument_list|()
+undef|#
+directive|undef
+name|OPERATOR
+define|#
+directive|define
+name|OPERATOR
+parameter_list|(
+name|NAME
+parameter_list|)
+define|\
+value|case BO_##NAME##Assign:                          \     DISPATCH_WALK(Bin##NAME##Assign, CompoundAssignOperator, S);
+name|CAO_LIST
+argument_list|()
+undef|#
+directive|undef
+name|OPERATOR
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|UnaryOperator
+modifier|*
+name|UnOp
+init|=
+name|dyn_cast
+operator|<
+name|UnaryOperator
+operator|>
+operator|(
+name|S
+operator|)
+condition|)
+block|{
+switch|switch
+condition|(
+name|UnOp
+operator|->
+name|getOpcode
+argument_list|()
+condition|)
+block|{
+define|#
+directive|define
+name|OPERATOR
+parameter_list|(
+name|NAME
+parameter_list|)
+define|\
+value|case UO_##NAME: DISPATCH_WALK(Unary##NAME, UnaryOperator, S);
+name|UNARYOP_LIST
+argument_list|()
+undef|#
+directive|undef
+name|OPERATOR
+block|}
+block|}
+comment|// Top switch stmt: dispatch to TraverseFooStmt for each concrete FooStmt.
+switch|switch
+condition|(
+name|S
+operator|->
+name|getStmtClass
+argument_list|()
+condition|)
+block|{
+case|case
+name|Stmt
+operator|::
+name|NoStmtClass
+case|:
+break|break;
+define|#
+directive|define
+name|ABSTRACT_STMT
+parameter_list|(
+name|STMT
+parameter_list|)
+define|#
+directive|define
+name|STMT
+parameter_list|(
+name|CLASS
+parameter_list|,
+name|PARENT
+parameter_list|)
+define|\
+value|case Stmt::CLASS##Class: DISPATCH_WALK(CLASS, CLASS, S);
+include|#
+directive|include
+file|"clang/AST/StmtNodes.inc"
+block|}
+undef|#
+directive|undef
+name|DISPATCH_WALK
+return|return
+name|true
+return|;
+block|}
 define|#
 directive|define
 name|DISPATCH
@@ -972,6 +1420,22 @@ name|S
 condition|)
 return|return
 name|true
+return|;
+if|if
+condition|(
+name|getDerived
+argument_list|()
+operator|.
+name|shouldUseDataRecursionFor
+argument_list|(
+name|S
+argument_list|)
+condition|)
+return|return
+name|dataTraverse
+argument_list|(
+name|S
+argument_list|)
 return|;
 comment|// If we have a binary expr, dispatch to the subcode of the binop.  A smart
 comment|// optimizer (e.g. LLVM) will fold this comparison into the switch stmt
@@ -1589,6 +2053,117 @@ operator|<
 name|Derived
 operator|>
 operator|::
+name|TraverseDeclarationNameInfo
+argument_list|(
+argument|DeclarationNameInfo NameInfo
+argument_list|)
+block|{
+switch|switch
+condition|(
+name|NameInfo
+operator|.
+name|getName
+argument_list|()
+operator|.
+name|getNameKind
+argument_list|()
+condition|)
+block|{
+case|case
+name|DeclarationName
+operator|::
+name|CXXConstructorName
+case|:
+case|case
+name|DeclarationName
+operator|::
+name|CXXDestructorName
+case|:
+case|case
+name|DeclarationName
+operator|::
+name|CXXConversionFunctionName
+case|:
+if|if
+condition|(
+name|TypeSourceInfo
+modifier|*
+name|TSInfo
+init|=
+name|NameInfo
+operator|.
+name|getNamedTypeInfo
+argument_list|()
+condition|)
+name|TRY_TO
+argument_list|(
+name|TraverseTypeLoc
+argument_list|(
+name|TSInfo
+operator|->
+name|getTypeLoc
+argument_list|()
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|DeclarationName
+operator|::
+name|Identifier
+case|:
+case|case
+name|DeclarationName
+operator|::
+name|ObjCZeroArgSelector
+case|:
+case|case
+name|DeclarationName
+operator|::
+name|ObjCOneArgSelector
+case|:
+case|case
+name|DeclarationName
+operator|::
+name|ObjCMultiArgSelector
+case|:
+case|case
+name|DeclarationName
+operator|::
+name|CXXOperatorName
+case|:
+case|case
+name|DeclarationName
+operator|::
+name|CXXLiteralOperatorName
+case|:
+case|case
+name|DeclarationName
+operator|::
+name|CXXUsingDirective
+case|:
+break|break;
+block|}
+end_expr_stmt
+
+begin_return
+return|return
+name|true
+return|;
+end_return
+
+begin_expr_stmt
+unit|}  template
+operator|<
+name|typename
+name|Derived
+operator|>
+name|bool
+name|RecursiveASTVisitor
+operator|<
+name|Derived
+operator|>
+operator|::
 name|TraverseTemplateName
 argument_list|(
 argument|TemplateName Template
@@ -2068,7 +2643,31 @@ argument_list|(
 argument|CXXCtorInitializer *Init
 argument_list|)
 block|{
-comment|// FIXME: recurse on TypeLoc of the base initializer if isBaseInitializer()?
+if|if
+condition|(
+name|TypeSourceInfo
+modifier|*
+name|TInfo
+init|=
+name|Init
+operator|->
+name|getTypeSourceInfo
+argument_list|()
+condition|)
+name|TRY_TO
+argument_list|(
+name|TraverseTypeLoc
+argument_list|(
+name|TInfo
+operator|->
+name|getTypeLoc
+argument_list|()
+argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|Init
@@ -2087,7 +2686,7 @@ argument_list|()
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+end_if
 
 begin_return
 return|return
@@ -2095,8 +2694,30 @@ name|true
 return|;
 end_return
 
+begin_expr_stmt
+unit|}  template
+operator|<
+name|typename
+name|Derived
+operator|>
+name|bool
+name|RecursiveASTVisitor
+operator|<
+name|Derived
+operator|>
+operator|::
+name|TraverseLambdaCapture
+argument_list|(
+argument|LambdaExpr::Capture C
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+end_expr_stmt
+
 begin_comment
-unit|}
 comment|// ----------------- Type traversal -----------------
 end_comment
 
@@ -2117,43 +2738,61 @@ define|\
 value|template<typename Derived>                                           \   bool RecursiveASTVisitor<Derived>::Traverse##TYPE (TYPE *T) {        \     TRY_TO(WalkUpFrom##TYPE (T));                                      \     { CODE; }                                                          \     return true;                                                       \   }
 end_define
 
-begin_expr_stmt
-unit|DEF_TRAVERSE_TYPE
-operator|(
-name|BuiltinType
-operator|,
-block|{ }
-operator|)
+begin_macro
+name|DEF_TRAVERSE_TYPE
+argument_list|(
+argument|BuiltinType
+argument_list|,
+argument|{ }
+argument_list|)
+end_macro
+
+begin_macro
 name|DEF_TRAVERSE_TYPE
 argument_list|(
 argument|ComplexType
 argument_list|,
 argument|{     TRY_TO(TraverseType(T->getElementType()));   }
 argument_list|)
+end_macro
+
+begin_macro
 name|DEF_TRAVERSE_TYPE
 argument_list|(
 argument|PointerType
 argument_list|,
 argument|{     TRY_TO(TraverseType(T->getPointeeType()));   }
 argument_list|)
+end_macro
+
+begin_macro
 name|DEF_TRAVERSE_TYPE
 argument_list|(
 argument|BlockPointerType
 argument_list|,
 argument|{     TRY_TO(TraverseType(T->getPointeeType()));   }
 argument_list|)
+end_macro
+
+begin_macro
 name|DEF_TRAVERSE_TYPE
 argument_list|(
 argument|LValueReferenceType
 argument_list|,
 argument|{     TRY_TO(TraverseType(T->getPointeeType()));   }
 argument_list|)
+end_macro
+
+begin_macro
 name|DEF_TRAVERSE_TYPE
 argument_list|(
 argument|RValueReferenceType
 argument_list|,
 argument|{     TRY_TO(TraverseType(T->getPointeeType()));   }
 argument_list|)
+end_macro
+
+begin_macro
 name|DEF_TRAVERSE_TYPE
 argument_list|(
 argument|MemberPointerType
@@ -2162,186 +2801,279 @@ argument|{     TRY_TO(TraverseType(QualType(T->getClass(),
 literal|0
 argument|)));     TRY_TO(TraverseType(T->getPointeeType()));   }
 argument_list|)
+end_macro
+
+begin_macro
 name|DEF_TRAVERSE_TYPE
 argument_list|(
 argument|ConstantArrayType
 argument_list|,
 argument|{     TRY_TO(TraverseType(T->getElementType()));   }
 argument_list|)
+end_macro
+
+begin_macro
 name|DEF_TRAVERSE_TYPE
 argument_list|(
 argument|IncompleteArrayType
 argument_list|,
 argument|{     TRY_TO(TraverseType(T->getElementType()));   }
 argument_list|)
+end_macro
+
+begin_macro
 name|DEF_TRAVERSE_TYPE
 argument_list|(
 argument|VariableArrayType
 argument_list|,
 argument|{     TRY_TO(TraverseType(T->getElementType()));     TRY_TO(TraverseStmt(T->getSizeExpr()));   }
 argument_list|)
+end_macro
+
+begin_macro
 name|DEF_TRAVERSE_TYPE
 argument_list|(
 argument|DependentSizedArrayType
 argument_list|,
 argument|{     TRY_TO(TraverseType(T->getElementType()));     if (T->getSizeExpr())       TRY_TO(TraverseStmt(T->getSizeExpr()));   }
 argument_list|)
+end_macro
+
+begin_macro
 name|DEF_TRAVERSE_TYPE
 argument_list|(
 argument|DependentSizedExtVectorType
 argument_list|,
 argument|{     if (T->getSizeExpr())       TRY_TO(TraverseStmt(T->getSizeExpr()));     TRY_TO(TraverseType(T->getElementType()));   }
 argument_list|)
+end_macro
+
+begin_macro
 name|DEF_TRAVERSE_TYPE
 argument_list|(
 argument|VectorType
 argument_list|,
 argument|{     TRY_TO(TraverseType(T->getElementType()));   }
 argument_list|)
+end_macro
+
+begin_macro
 name|DEF_TRAVERSE_TYPE
 argument_list|(
 argument|ExtVectorType
 argument_list|,
 argument|{     TRY_TO(TraverseType(T->getElementType()));   }
 argument_list|)
+end_macro
+
+begin_macro
 name|DEF_TRAVERSE_TYPE
 argument_list|(
 argument|FunctionNoProtoType
 argument_list|,
 argument|{     TRY_TO(TraverseType(T->getResultType()));   }
 argument_list|)
+end_macro
+
+begin_macro
 name|DEF_TRAVERSE_TYPE
 argument_list|(
 argument|FunctionProtoType
 argument_list|,
 argument|{     TRY_TO(TraverseType(T->getResultType()));      for (FunctionProtoType::arg_type_iterator A = T->arg_type_begin(),                                            AEnd = T->arg_type_end();          A != AEnd; ++A) {       TRY_TO(TraverseType(*A));     }      for (FunctionProtoType::exception_iterator E = T->exception_begin(),                                             EEnd = T->exception_end();          E != EEnd; ++E) {       TRY_TO(TraverseType(*E));     }   }
 argument_list|)
+end_macro
+
+begin_macro
 name|DEF_TRAVERSE_TYPE
 argument_list|(
 argument|UnresolvedUsingType
 argument_list|,
 argument|{ }
 argument_list|)
+end_macro
+
+begin_macro
 name|DEF_TRAVERSE_TYPE
 argument_list|(
 argument|TypedefType
 argument_list|,
 argument|{ }
 argument_list|)
+end_macro
+
+begin_macro
 name|DEF_TRAVERSE_TYPE
 argument_list|(
 argument|TypeOfExprType
 argument_list|,
 argument|{     TRY_TO(TraverseStmt(T->getUnderlyingExpr()));   }
 argument_list|)
+end_macro
+
+begin_macro
 name|DEF_TRAVERSE_TYPE
 argument_list|(
 argument|TypeOfType
 argument_list|,
 argument|{     TRY_TO(TraverseType(T->getUnderlyingType()));   }
 argument_list|)
+end_macro
+
+begin_macro
 name|DEF_TRAVERSE_TYPE
 argument_list|(
 argument|DecltypeType
 argument_list|,
 argument|{     TRY_TO(TraverseStmt(T->getUnderlyingExpr()));   }
 argument_list|)
+end_macro
+
+begin_macro
 name|DEF_TRAVERSE_TYPE
 argument_list|(
 argument|UnaryTransformType
 argument_list|,
 argument|{     TRY_TO(TraverseType(T->getBaseType()));     TRY_TO(TraverseType(T->getUnderlyingType()));     }
 argument_list|)
+end_macro
+
+begin_macro
 name|DEF_TRAVERSE_TYPE
 argument_list|(
 argument|AutoType
 argument_list|,
 argument|{     TRY_TO(TraverseType(T->getDeducedType()));   }
 argument_list|)
+end_macro
+
+begin_macro
 name|DEF_TRAVERSE_TYPE
 argument_list|(
 argument|RecordType
 argument_list|,
 argument|{ }
 argument_list|)
+end_macro
+
+begin_macro
 name|DEF_TRAVERSE_TYPE
 argument_list|(
 argument|EnumType
 argument_list|,
 argument|{ }
 argument_list|)
+end_macro
+
+begin_macro
 name|DEF_TRAVERSE_TYPE
 argument_list|(
 argument|TemplateTypeParmType
 argument_list|,
 argument|{ }
 argument_list|)
+end_macro
+
+begin_macro
 name|DEF_TRAVERSE_TYPE
 argument_list|(
 argument|SubstTemplateTypeParmType
 argument_list|,
 argument|{ }
 argument_list|)
+end_macro
+
+begin_macro
 name|DEF_TRAVERSE_TYPE
 argument_list|(
 argument|SubstTemplateTypeParmPackType
 argument_list|,
 argument|{ }
 argument_list|)
+end_macro
+
+begin_macro
 name|DEF_TRAVERSE_TYPE
 argument_list|(
 argument|TemplateSpecializationType
 argument_list|,
 argument|{     TRY_TO(TraverseTemplateName(T->getTemplateName()));     TRY_TO(TraverseTemplateArguments(T->getArgs(), T->getNumArgs()));   }
 argument_list|)
+end_macro
+
+begin_macro
 name|DEF_TRAVERSE_TYPE
 argument_list|(
 argument|InjectedClassNameType
 argument_list|,
 argument|{ }
 argument_list|)
+end_macro
+
+begin_macro
 name|DEF_TRAVERSE_TYPE
 argument_list|(
 argument|AttributedType
 argument_list|,
 argument|{     TRY_TO(TraverseType(T->getModifiedType()));   }
 argument_list|)
+end_macro
+
+begin_macro
 name|DEF_TRAVERSE_TYPE
 argument_list|(
 argument|ParenType
 argument_list|,
 argument|{     TRY_TO(TraverseType(T->getInnerType()));   }
 argument_list|)
+end_macro
+
+begin_macro
 name|DEF_TRAVERSE_TYPE
 argument_list|(
 argument|ElaboratedType
 argument_list|,
 argument|{     if (T->getQualifier()) {       TRY_TO(TraverseNestedNameSpecifier(T->getQualifier()));     }     TRY_TO(TraverseType(T->getNamedType()));   }
 argument_list|)
+end_macro
+
+begin_macro
 name|DEF_TRAVERSE_TYPE
 argument_list|(
 argument|DependentNameType
 argument_list|,
 argument|{     TRY_TO(TraverseNestedNameSpecifier(T->getQualifier()));   }
 argument_list|)
+end_macro
+
+begin_macro
 name|DEF_TRAVERSE_TYPE
 argument_list|(
 argument|DependentTemplateSpecializationType
 argument_list|,
 argument|{     TRY_TO(TraverseNestedNameSpecifier(T->getQualifier()));     TRY_TO(TraverseTemplateArguments(T->getArgs(), T->getNumArgs()));   }
 argument_list|)
+end_macro
+
+begin_macro
 name|DEF_TRAVERSE_TYPE
 argument_list|(
 argument|PackExpansionType
 argument_list|,
 argument|{     TRY_TO(TraverseType(T->getPattern()));   }
 argument_list|)
+end_macro
+
+begin_macro
 name|DEF_TRAVERSE_TYPE
 argument_list|(
 argument|ObjCInterfaceType
 argument_list|,
 argument|{ }
 argument_list|)
+end_macro
+
+begin_macro
 name|DEF_TRAVERSE_TYPE
 argument_list|(
 argument|ObjCObjectType
@@ -2351,27 +3083,57 @@ comment|// We have to watch out here because an ObjCInterfaceType's base
 comment|// type is itself.
 argument|if (T->getBaseType().getTypePtr() != T)       TRY_TO(TraverseType(T->getBaseType()));   }
 argument_list|)
+end_macro
+
+begin_macro
 name|DEF_TRAVERSE_TYPE
 argument_list|(
 argument|ObjCObjectPointerType
 argument_list|,
 argument|{     TRY_TO(TraverseType(T->getPointeeType()));   }
 argument_list|)
+end_macro
+
+begin_macro
 name|DEF_TRAVERSE_TYPE
 argument_list|(
 argument|AtomicType
 argument_list|,
 argument|{     TRY_TO(TraverseType(T->getValueType()));   }
 argument_list|)
+end_macro
+
+begin_undef
 undef|#
 directive|undef
 name|DEF_TRAVERSE_TYPE
+end_undef
+
+begin_comment
 comment|// ----------------- TypeLoc traversal -----------------
+end_comment
+
+begin_comment
 comment|// This macro makes available a variable TL, the passed-in TypeLoc.
+end_comment
+
+begin_comment
 comment|// If requested, it calls WalkUpFrom* for the Type in the given TypeLoc,
+end_comment
+
+begin_comment
 comment|// in addition to WalkUpFrom* for the TypeLoc itself, such that existing
+end_comment
+
+begin_comment
 comment|// clients that override the WalkUpFrom*Type() and/or Visit*Type() methods
+end_comment
+
+begin_comment
 comment|// continue to work.
+end_comment
+
+begin_define
 define|#
 directive|define
 name|DEF_TRAVERSE_TYPELOC
@@ -2382,6 +3144,9 @@ name|CODE
 parameter_list|)
 define|\
 value|template<typename Derived>                                            \   bool RecursiveASTVisitor<Derived>::Traverse##TYPE##Loc(TYPE##Loc TL) { \     if (getDerived().shouldWalkTypesOfTypeLocs())                       \       TRY_TO(WalkUpFrom##TYPE(const_cast<TYPE*>(TL.getTypePtr())));     \     TRY_TO(WalkUpFrom##TYPE##Loc(TL));                                  \     { CODE; }                                                           \     return true;                                                        \   }
+end_define
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -2825,7 +3590,7 @@ name|DEF_TRAVERSE_TYPELOC
 argument_list|(
 argument|DependentTemplateSpecializationType
 argument_list|,
-argument|{     if (TL.getQualifierLoc()) {       TRY_TO(TraverseNestedNameSpecifierLoc(TL.getQualifierLoc()));     }          for (unsigned I =
+argument|{     if (TL.getQualifierLoc()) {       TRY_TO(TraverseNestedNameSpecifierLoc(TL.getQualifierLoc()));     }      for (unsigned I =
 literal|0
 argument|, E = TL.getNumArgs(); I != E; ++I) {       TRY_TO(TraverseTemplateArgumentLoc(TL.getArgLoc(I)));     }   }
 argument_list|)
@@ -3038,6 +3803,12 @@ argument|{     TRY_TO(TraverseStmt(D->getAsmString()));   }
 argument_list|)
 name|DEF_TRAVERSE_DECL
 argument_list|(
+argument|ImportDecl
+argument_list|,
+argument|{ }
+argument_list|)
+name|DEF_TRAVERSE_DECL
+argument_list|(
 argument|FriendDecl
 argument_list|,
 argument|{
@@ -3063,22 +3834,6 @@ argument_list|(
 argument|LinkageSpecDecl
 argument_list|,
 argument|{ }
-argument_list|)
-name|DEF_TRAVERSE_DECL
-argument_list|(
-argument|ObjCClassDecl
-argument_list|,
-argument|{
-comment|// FIXME: implement this
-argument|}
-argument_list|)
-name|DEF_TRAVERSE_DECL
-argument_list|(
-argument|ObjCForwardProtocolDecl
-argument_list|,
-argument|{
-comment|// FIXME: implement this
-argument|}
 argument_list|)
 name|DEF_TRAVERSE_DECL
 argument_list|(
@@ -3201,7 +3956,7 @@ name|DEF_TRAVERSE_DECL
 argument_list|(
 argument|UsingDecl
 argument_list|,
-argument|{     TRY_TO(TraverseNestedNameSpecifierLoc(D->getQualifierLoc()));   }
+argument|{     TRY_TO(TraverseNestedNameSpecifierLoc(D->getQualifierLoc()));     TRY_TO(TraverseDeclarationNameInfo(D->getNameInfo()));   }
 argument_list|)
 name|DEF_TRAVERSE_DECL
 argument_list|(
@@ -3700,12 +4455,6 @@ case|case
 name|TSK_ExplicitSpecialization
 case|:
 break|break;
-default|default:
-name|llvm_unreachable
-argument_list|(
-literal|"Unknown specialization kind."
-argument_list|)
-expr_stmt|;
 block|}
 end_expr_stmt
 
@@ -4257,7 +5006,7 @@ argument_list|,
 argument|{
 comment|// Like UnresolvedUsingTypenameDecl, but without the 'typename':
 comment|//    template<class T> Class A : public Base<T> { using Base<T>::foo; };
-argument|TRY_TO(TraverseNestedNameSpecifierLoc(D->getQualifierLoc()));   }
+argument|TRY_TO(TraverseNestedNameSpecifierLoc(D->getQualifierLoc()));     TRY_TO(TraverseDeclarationNameInfo(D->getNameInfo()));   }
 argument_list|)
 end_macro
 
@@ -4371,6 +5120,25 @@ argument_list|()
 argument_list|)
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|D
+operator|->
+name|hasInClassInitializer
+argument_list|()
+condition|)
+name|TRY_TO
+argument_list|(
+name|TraverseStmt
+argument_list|(
+name|D
+operator|->
+name|getInClassInitializer
+argument_list|()
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 end_expr_stmt
 
@@ -4421,6 +5189,17 @@ argument_list|(
 name|D
 operator|->
 name|getQualifierLoc
+argument_list|()
+argument_list|)
+argument_list|)
+block|;
+name|TRY_TO
+argument_list|(
+name|TraverseDeclarationNameInfo
+argument_list|(
+name|D
+operator|->
+name|getNameInfo
 argument_list|()
 argument_list|)
 argument_list|)
@@ -4712,6 +5491,18 @@ name|D
 argument_list|)
 argument_list|)
 block|;
+comment|// Default params are taken care of when we traverse the ParmVarDecl.
+if|if
+condition|(
+operator|!
+name|isa
+operator|<
+name|ParmVarDecl
+operator|>
+operator|(
+name|D
+operator|)
+condition|)
 name|TRY_TO
 argument_list|(
 name|TraverseStmt
@@ -4722,32 +5513,36 @@ name|getInit
 argument_list|()
 argument_list|)
 argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 name|true
 return|;
-block|}
-end_expr_stmt
+end_return
 
-begin_macro
-name|DEF_TRAVERSE_DECL
+begin_expr_stmt
+unit|}  DEF_TRAVERSE_DECL
+operator|(
+name|VarDecl
+operator|,
+block|{
+name|TRY_TO
 argument_list|(
-argument|VarDecl
-argument_list|,
-argument|{     TRY_TO(TraverseVarHelper(D));   }
+name|TraverseVarHelper
+argument_list|(
+name|D
 argument_list|)
-end_macro
-
-begin_macro
+argument_list|)
+block|;   }
+operator|)
 name|DEF_TRAVERSE_DECL
 argument_list|(
 argument|ImplicitParamDecl
 argument_list|,
 argument|{     TRY_TO(TraverseVarHelper(D));   }
 argument_list|)
-end_macro
-
-begin_macro
 name|DEF_TRAVERSE_DECL
 argument_list|(
 argument|NonTypeTemplateParmDecl
@@ -4756,60 +5551,24 @@ argument|{
 comment|// A non-type template parameter, e.g. "S" in template<int S> class Foo ...
 argument|TRY_TO(TraverseDeclaratorHelper(D));     TRY_TO(TraverseStmt(D->getDefaultArgument()));   }
 argument_list|)
-end_macro
-
-begin_macro
 name|DEF_TRAVERSE_DECL
 argument_list|(
 argument|ParmVarDecl
 argument_list|,
 argument|{     TRY_TO(TraverseVarHelper(D));      if (D->hasDefaultArg()&&         D->hasUninstantiatedDefaultArg()&&         !D->hasUnparsedDefaultArg())       TRY_TO(TraverseStmt(D->getUninstantiatedDefaultArg()));      if (D->hasDefaultArg()&&         !D->hasUninstantiatedDefaultArg()&&         !D->hasUnparsedDefaultArg())       TRY_TO(TraverseStmt(D->getDefaultArg()));   }
 argument_list|)
-end_macro
-
-begin_undef
 undef|#
 directive|undef
 name|DEF_TRAVERSE_DECL
-end_undef
-
-begin_comment
 comment|// ----------------- Stmt traversal -----------------
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|// For stmts, we automate (in the DEF_TRAVERSE_STMT macro) iterating
-end_comment
-
-begin_comment
 comment|// over the children defined in children() (every stmt defines these,
-end_comment
-
-begin_comment
 comment|// though sometimes the range is empty).  Each individual Traverse*
-end_comment
-
-begin_comment
 comment|// method only needs to worry about children other than those.  To see
-end_comment
-
-begin_comment
 comment|// what children() does for a given class, see, e.g.,
-end_comment
-
-begin_comment
 comment|//   http://clang.llvm.org/doxygen/Stmt_8cpp_source.html
-end_comment
-
-begin_comment
 comment|// This macro makes available a variable S, the passed-in stmt.
-end_comment
-
-begin_define
 define|#
 directive|define
 name|DEF_TRAVERSE_STMT
@@ -4820,9 +5579,6 @@ name|CODE
 parameter_list|)
 define|\
 value|template<typename Derived>                                              \ bool RecursiveASTVisitor<Derived>::Traverse##STMT (STMT *S) {           \   TRY_TO(WalkUpFrom##STMT(S));                                          \   { CODE; }                                                             \   for (Stmt::child_range range = S->children(); range; ++range) {       \     TRY_TO(TraverseStmt(*range));                                       \   }                                                                     \   return true;                                                          \ }
-end_define
-
-begin_macro
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|AsmStmt
@@ -4837,9 +5593,6 @@ argument|, E = S->getNumClobbers(); I< E; ++I) {       TRY_TO(TraverseStmt(S->ge
 comment|// children() iterates over inputExpr and outputExpr.
 argument|}
 argument_list|)
-end_macro
-
-begin_macro
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|CXXCatchStmt
@@ -4848,9 +5601,6 @@ argument|{     TRY_TO(TraverseDecl(S->getExceptionDecl()));
 comment|// children() iterates over the handler block.
 argument|}
 argument_list|)
-end_macro
-
-begin_macro
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|DeclStmt
@@ -4863,269 +5613,182 @@ comment|// initializers, so we don't have to do it again (which
 comment|// children() would do).
 argument|return true;   }
 argument_list|)
-end_macro
-
-begin_comment
 comment|// These non-expr stmts (most of them), do not need any action except
-end_comment
-
-begin_comment
 comment|// iterating over the children.
-end_comment
-
-begin_macro
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|BreakStmt
 argument_list|,
 argument|{ }
 argument_list|)
-end_macro
-
-begin_macro
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|CXXTryStmt
 argument_list|,
 argument|{ }
 argument_list|)
-end_macro
-
-begin_macro
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|CaseStmt
 argument_list|,
 argument|{ }
 argument_list|)
-end_macro
-
-begin_macro
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|CompoundStmt
 argument_list|,
 argument|{ }
 argument_list|)
-end_macro
-
-begin_macro
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|ContinueStmt
 argument_list|,
 argument|{ }
 argument_list|)
-end_macro
-
-begin_macro
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|DefaultStmt
 argument_list|,
 argument|{ }
 argument_list|)
-end_macro
-
-begin_macro
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|DoStmt
 argument_list|,
 argument|{ }
 argument_list|)
-end_macro
-
-begin_macro
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|ForStmt
 argument_list|,
 argument|{ }
 argument_list|)
-end_macro
-
-begin_macro
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|GotoStmt
 argument_list|,
 argument|{ }
 argument_list|)
-end_macro
-
-begin_macro
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|IfStmt
 argument_list|,
 argument|{ }
 argument_list|)
-end_macro
-
-begin_macro
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|IndirectGotoStmt
 argument_list|,
 argument|{ }
 argument_list|)
-end_macro
-
-begin_macro
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|LabelStmt
 argument_list|,
 argument|{ }
 argument_list|)
-end_macro
-
-begin_macro
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|NullStmt
 argument_list|,
 argument|{ }
 argument_list|)
-end_macro
-
-begin_macro
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|ObjCAtCatchStmt
 argument_list|,
 argument|{ }
 argument_list|)
-end_macro
-
-begin_macro
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|ObjCAtFinallyStmt
 argument_list|,
 argument|{ }
 argument_list|)
-end_macro
-
-begin_macro
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|ObjCAtSynchronizedStmt
 argument_list|,
 argument|{ }
 argument_list|)
-end_macro
-
-begin_macro
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|ObjCAtThrowStmt
 argument_list|,
 argument|{ }
 argument_list|)
-end_macro
-
-begin_macro
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|ObjCAtTryStmt
 argument_list|,
 argument|{ }
 argument_list|)
-end_macro
-
-begin_macro
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|ObjCForCollectionStmt
 argument_list|,
 argument|{ }
 argument_list|)
-end_macro
-
-begin_macro
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|ObjCAutoreleasePoolStmt
 argument_list|,
 argument|{ }
 argument_list|)
-end_macro
-
-begin_macro
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|CXXForRangeStmt
 argument_list|,
 argument|{ }
 argument_list|)
-end_macro
-
-begin_macro
+name|DEF_TRAVERSE_STMT
+argument_list|(
+argument|MSDependentExistsStmt
+argument_list|,
+argument|{     TRY_TO(TraverseNestedNameSpecifierLoc(S->getQualifierLoc()));     TRY_TO(TraverseDeclarationNameInfo(S->getNameInfo())); }
+argument_list|)
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|ReturnStmt
 argument_list|,
 argument|{ }
 argument_list|)
-end_macro
-
-begin_macro
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|SwitchStmt
 argument_list|,
 argument|{ }
 argument_list|)
-end_macro
-
-begin_macro
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|WhileStmt
 argument_list|,
 argument|{ }
 argument_list|)
-end_macro
-
-begin_macro
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|CXXDependentScopeMemberExpr
 argument_list|,
-argument|{     TRY_TO(TraverseNestedNameSpecifierLoc(S->getQualifierLoc()));     if (S->hasExplicitTemplateArgs()) {       TRY_TO(TraverseTemplateArgumentLocsHelper(           S->getTemplateArgs(), S->getNumTemplateArgs()));     }   }
+argument|{     TRY_TO(TraverseNestedNameSpecifierLoc(S->getQualifierLoc()));     TRY_TO(TraverseDeclarationNameInfo(S->getMemberNameInfo()));     if (S->hasExplicitTemplateArgs()) {       TRY_TO(TraverseTemplateArgumentLocsHelper(           S->getTemplateArgs(), S->getNumTemplateArgs()));     }   }
 argument_list|)
-end_macro
-
-begin_macro
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|DeclRefExpr
 argument_list|,
-argument|{     TRY_TO(TraverseNestedNameSpecifierLoc(S->getQualifierLoc()));     TRY_TO(TraverseTemplateArgumentLocsHelper(         S->getTemplateArgs(), S->getNumTemplateArgs()));   }
+argument|{     TRY_TO(TraverseNestedNameSpecifierLoc(S->getQualifierLoc()));     TRY_TO(TraverseDeclarationNameInfo(S->getNameInfo()));     TRY_TO(TraverseTemplateArgumentLocsHelper(         S->getTemplateArgs(), S->getNumTemplateArgs()));   }
 argument_list|)
-end_macro
-
-begin_macro
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|DependentScopeDeclRefExpr
 argument_list|,
-argument|{     TRY_TO(TraverseNestedNameSpecifierLoc(S->getQualifierLoc()));     if (S->hasExplicitTemplateArgs()) {       TRY_TO(TraverseTemplateArgumentLocsHelper(           S->getExplicitTemplateArgs().getTemplateArgs(),           S->getNumTemplateArgs()));     }   }
+argument|{     TRY_TO(TraverseNestedNameSpecifierLoc(S->getQualifierLoc()));     TRY_TO(TraverseDeclarationNameInfo(S->getNameInfo()));     if (S->hasExplicitTemplateArgs()) {       TRY_TO(TraverseTemplateArgumentLocsHelper(           S->getExplicitTemplateArgs().getTemplateArgs(),           S->getNumTemplateArgs()));     }   }
 argument_list|)
-end_macro
-
-begin_macro
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|MemberExpr
 argument_list|,
-argument|{     TRY_TO(TraverseNestedNameSpecifierLoc(S->getQualifierLoc()));     TRY_TO(TraverseTemplateArgumentLocsHelper(         S->getTemplateArgs(), S->getNumTemplateArgs()));   }
+argument|{     TRY_TO(TraverseNestedNameSpecifierLoc(S->getQualifierLoc()));     TRY_TO(TraverseDeclarationNameInfo(S->getMemberNameInfo()));     TRY_TO(TraverseTemplateArgumentLocsHelper(         S->getTemplateArgs(), S->getNumTemplateArgs()));   }
 argument_list|)
-end_macro
-
-begin_macro
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|ImplicitCastExpr
@@ -5135,83 +5798,47 @@ comment|// We don't traverse the cast type, as it's not written in the
 comment|// source code.
 argument|}
 argument_list|)
-end_macro
-
-begin_macro
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|CStyleCastExpr
 argument_list|,
 argument|{     TRY_TO(TraverseTypeLoc(S->getTypeInfoAsWritten()->getTypeLoc()));   }
 argument_list|)
-end_macro
-
-begin_macro
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|CXXFunctionalCastExpr
 argument_list|,
 argument|{     TRY_TO(TraverseTypeLoc(S->getTypeInfoAsWritten()->getTypeLoc()));   }
 argument_list|)
-end_macro
-
-begin_macro
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|CXXConstCastExpr
 argument_list|,
 argument|{     TRY_TO(TraverseTypeLoc(S->getTypeInfoAsWritten()->getTypeLoc()));   }
 argument_list|)
-end_macro
-
-begin_macro
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|CXXDynamicCastExpr
 argument_list|,
 argument|{     TRY_TO(TraverseTypeLoc(S->getTypeInfoAsWritten()->getTypeLoc()));   }
 argument_list|)
-end_macro
-
-begin_macro
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|CXXReinterpretCastExpr
 argument_list|,
 argument|{     TRY_TO(TraverseTypeLoc(S->getTypeInfoAsWritten()->getTypeLoc()));   }
 argument_list|)
-end_macro
-
-begin_macro
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|CXXStaticCastExpr
 argument_list|,
 argument|{     TRY_TO(TraverseTypeLoc(S->getTypeInfoAsWritten()->getTypeLoc()));   }
 argument_list|)
-end_macro
-
-begin_comment
 comment|// InitListExpr is a tricky one, because we want to do all our work on
-end_comment
-
-begin_comment
 comment|// the syntactic form of the listexpr, but this method takes the
-end_comment
-
-begin_comment
 comment|// semantic form by default.  We can't use the macro helper because it
-end_comment
-
-begin_comment
 comment|// calls WalkUp*() on the semantic form, before our code can convert
-end_comment
-
-begin_comment
 comment|// to the syntactic form.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -5407,6 +6034,123 @@ name|true
 return|;
 end_return
 
+begin_comment
+unit|}
+comment|// PseudoObjectExpr is a special case because of the wierdness with
+end_comment
+
+begin_comment
+comment|// syntactic expressions and opaque values.
+end_comment
+
+begin_expr_stmt
+unit|template
+operator|<
+name|typename
+name|Derived
+operator|>
+name|bool
+name|RecursiveASTVisitor
+operator|<
+name|Derived
+operator|>
+operator|::
+name|TraversePseudoObjectExpr
+argument_list|(
+argument|PseudoObjectExpr *S
+argument_list|)
+block|{
+name|TRY_TO
+argument_list|(
+name|WalkUpFromPseudoObjectExpr
+argument_list|(
+name|S
+argument_list|)
+argument_list|)
+block|;
+name|TRY_TO
+argument_list|(
+name|TraverseStmt
+argument_list|(
+name|S
+operator|->
+name|getSyntacticForm
+argument_list|()
+argument_list|)
+argument_list|)
+block|;
+for|for
+control|(
+name|PseudoObjectExpr
+operator|::
+name|semantics_iterator
+name|i
+operator|=
+name|S
+operator|->
+name|semantics_begin
+argument_list|()
+operator|,
+name|e
+operator|=
+name|S
+operator|->
+name|semantics_end
+argument_list|()
+init|;
+name|i
+operator|!=
+name|e
+condition|;
+operator|++
+name|i
+control|)
+block|{
+name|Expr
+modifier|*
+name|sub
+init|=
+operator|*
+name|i
+decl_stmt|;
+if|if
+condition|(
+name|OpaqueValueExpr
+modifier|*
+name|OVE
+init|=
+name|dyn_cast
+operator|<
+name|OpaqueValueExpr
+operator|>
+operator|(
+name|sub
+operator|)
+condition|)
+name|sub
+operator|=
+name|OVE
+operator|->
+name|getSourceExpr
+argument_list|()
+expr_stmt|;
+name|TRY_TO
+argument_list|(
+name|TraverseStmt
+argument_list|(
+name|sub
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_expr_stmt
+
+begin_return
+return|return
+name|true
+return|;
+end_return
+
 begin_expr_stmt
 unit|}  DEF_TRAVERSE_STMT
 operator|(
@@ -5490,6 +6234,14 @@ argument|{     TRY_TO(TraverseTypeLoc(S->getLhsTypeSourceInfo()->getTypeLoc()));
 argument_list|)
 name|DEF_TRAVERSE_STMT
 argument_list|(
+argument|TypeTraitExpr
+argument_list|,
+argument|{   for (unsigned I =
+literal|0
+argument|, N = S->getNumArgs(); I != N; ++I)     TRY_TO(TraverseTypeLoc(S->getArg(I)->getTypeLoc())); }
+argument_list|)
+name|DEF_TRAVERSE_STMT
+argument_list|(
 argument|ArrayTypeTraitExpr
 argument_list|,
 argument|{     TRY_TO(TraverseTypeLoc(S->getQueriedTypeSourceInfo()->getTypeLoc()));   }
@@ -5516,14 +6268,242 @@ argument|{
 comment|// This is called for code like 'return T()' where T is a class type.
 argument|TRY_TO(TraverseTypeLoc(S->getTypeSourceInfo()->getTypeLoc()));   }
 argument_list|)
-name|DEF_TRAVERSE_STMT
+comment|// Walk only the visible parts of lambda expressions.
+name|template
+operator|<
+name|typename
+name|Derived
+operator|>
+name|bool
+name|RecursiveASTVisitor
+operator|<
+name|Derived
+operator|>
+operator|::
+name|TraverseLambdaExpr
 argument_list|(
-argument|CXXUnresolvedConstructExpr
-argument_list|,
-argument|{
-comment|// This is called for code like 'T()', where T is a template argument.
-argument|TRY_TO(TraverseTypeLoc(S->getTypeSourceInfo()->getTypeLoc()));   }
+argument|LambdaExpr *S
 argument_list|)
+block|{
+for|for
+control|(
+name|LambdaExpr
+operator|::
+name|capture_iterator
+name|C
+operator|=
+name|S
+operator|->
+name|explicit_capture_begin
+argument_list|()
+operator|,
+name|CEnd
+operator|=
+name|S
+operator|->
+name|explicit_capture_end
+argument_list|()
+init|;
+name|C
+operator|!=
+name|CEnd
+condition|;
+operator|++
+name|C
+control|)
+block|{
+name|TRY_TO
+argument_list|(
+name|TraverseLambdaCapture
+argument_list|(
+operator|*
+name|C
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|S
+operator|->
+name|hasExplicitParameters
+argument_list|()
+operator|||
+name|S
+operator|->
+name|hasExplicitResultType
+argument_list|()
+condition|)
+block|{
+name|TypeLoc
+name|TL
+init|=
+name|S
+operator|->
+name|getCallOperator
+argument_list|()
+operator|->
+name|getTypeSourceInfo
+argument_list|()
+operator|->
+name|getTypeLoc
+argument_list|()
+decl_stmt|;
+if|if
+condition|(
+name|S
+operator|->
+name|hasExplicitParameters
+argument_list|()
+operator|&&
+name|S
+operator|->
+name|hasExplicitResultType
+argument_list|()
+condition|)
+block|{
+comment|// Visit the whole type.
+name|TRY_TO
+argument_list|(
+name|TraverseTypeLoc
+argument_list|(
+name|TL
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|isa
+operator|<
+name|FunctionProtoTypeLoc
+operator|>
+operator|(
+name|TL
+operator|)
+condition|)
+block|{
+name|FunctionProtoTypeLoc
+name|Proto
+init|=
+name|cast
+operator|<
+name|FunctionProtoTypeLoc
+operator|>
+operator|(
+name|TL
+operator|)
+decl_stmt|;
+if|if
+condition|(
+name|S
+operator|->
+name|hasExplicitParameters
+argument_list|()
+condition|)
+block|{
+comment|// Visit parameters.
+for|for
+control|(
+name|unsigned
+name|I
+init|=
+literal|0
+init|,
+name|N
+init|=
+name|Proto
+operator|.
+name|getNumArgs
+argument_list|()
+init|;
+name|I
+operator|!=
+name|N
+condition|;
+operator|++
+name|I
+control|)
+block|{
+name|TRY_TO
+argument_list|(
+name|TraverseDecl
+argument_list|(
+name|Proto
+operator|.
+name|getArg
+argument_list|(
+name|I
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+name|TRY_TO
+argument_list|(
+name|TraverseTypeLoc
+argument_list|(
+name|Proto
+operator|.
+name|getResultLoc
+argument_list|()
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+block|}
+end_if
+
+begin_expr_stmt
+name|TRY_TO
+argument_list|(
+name|TraverseStmt
+argument_list|(
+name|S
+operator|->
+name|getBody
+argument_list|()
+argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_return
+return|return
+name|true
+return|;
+end_return
+
+begin_expr_stmt
+unit|}  DEF_TRAVERSE_STMT
+operator|(
+name|CXXUnresolvedConstructExpr
+operator|,
+block|{
+comment|// This is called for code like 'T()', where T is a template argument.
+name|TRY_TO
+argument_list|(
+name|TraverseTypeLoc
+argument_list|(
+name|S
+operator|->
+name|getTypeSourceInfo
+argument_list|()
+operator|->
+name|getTypeLoc
+argument_list|()
+argument_list|)
+argument_list|)
+block|;   }
+operator|)
 comment|// These expressions all might take explicit template arguments.
 comment|// We traverse those if so.  FIXME: implement these.
 name|DEF_TRAVERSE_STMT
@@ -5555,12 +6535,6 @@ argument_list|)
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|ArraySubscriptExpr
-argument_list|,
-argument|{ }
-argument_list|)
-name|DEF_TRAVERSE_STMT
-argument_list|(
-argument|BlockDeclRefExpr
 argument_list|,
 argument|{ }
 argument_list|)
@@ -5624,7 +6598,7 @@ name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|CXXPseudoDestructorExpr
 argument_list|,
-argument|{    TRY_TO(TraverseNestedNameSpecifierLoc(S->getQualifierLoc()));   if (TypeSourceInfo *ScopeInfo = S->getScopeTypeInfo())     TRY_TO(TraverseTypeLoc(ScopeInfo->getTypeLoc()));   if (TypeSourceInfo *DestroyedTypeInfo = S->getDestroyedTypeInfo())     TRY_TO(TraverseTypeLoc(DestroyedTypeInfo->getTypeLoc())); }
+argument|{   TRY_TO(TraverseNestedNameSpecifierLoc(S->getQualifierLoc()));   if (TypeSourceInfo *ScopeInfo = S->getScopeTypeInfo())     TRY_TO(TraverseTypeLoc(ScopeInfo->getTypeLoc()));   if (TypeSourceInfo *DestroyedTypeInfo = S->getDestroyedTypeInfo())     TRY_TO(TraverseTypeLoc(DestroyedTypeInfo->getTypeLoc())); }
 argument_list|)
 name|DEF_TRAVERSE_STMT
 argument_list|(
@@ -5635,6 +6609,12 @@ argument_list|)
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|CXXThrowExpr
+argument_list|,
+argument|{ }
+argument_list|)
+name|DEF_TRAVERSE_STMT
+argument_list|(
+argument|UserDefinedLiteral
 argument_list|,
 argument|{ }
 argument_list|)
@@ -5659,6 +6639,12 @@ argument_list|)
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|ImplicitValueInitExpr
+argument_list|,
+argument|{ }
+argument_list|)
+name|DEF_TRAVERSE_STMT
+argument_list|(
+argument|ObjCBoolLiteralExpr
 argument_list|,
 argument|{ }
 argument_list|)
@@ -5689,6 +6675,12 @@ argument_list|)
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|ObjCPropertyRefExpr
+argument_list|,
+argument|{ }
+argument_list|)
+name|DEF_TRAVERSE_STMT
+argument_list|(
+argument|ObjCSubscriptRefExpr
 argument_list|,
 argument|{ }
 argument_list|)
@@ -5750,13 +6742,13 @@ name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|UnresolvedLookupExpr
 argument_list|,
-argument|{   TRY_TO(TraverseNestedNameSpecifierLoc(S->getQualifierLoc()));   if (S->hasExplicitTemplateArgs()) {     TRY_TO(TraverseTemplateArgumentLocsHelper(S->getTemplateArgs(),                                                S->getNumTemplateArgs()));   } }
+argument|{   TRY_TO(TraverseNestedNameSpecifierLoc(S->getQualifierLoc()));   if (S->hasExplicitTemplateArgs()) {     TRY_TO(TraverseTemplateArgumentLocsHelper(S->getTemplateArgs(),                                               S->getNumTemplateArgs()));   } }
 argument_list|)
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|UnresolvedMemberExpr
 argument_list|,
-argument|{   TRY_TO(TraverseNestedNameSpecifierLoc(S->getQualifierLoc()));   if (S->hasExplicitTemplateArgs()) {     TRY_TO(TraverseTemplateArgumentLocsHelper(S->getTemplateArgs(),                                                S->getNumTemplateArgs()));   } }
+argument|{   TRY_TO(TraverseNestedNameSpecifierLoc(S->getQualifierLoc()));   if (S->hasExplicitTemplateArgs()) {     TRY_TO(TraverseTemplateArgumentLocsHelper(S->getTemplateArgs(),                                               S->getNumTemplateArgs()));   } }
 argument_list|)
 name|DEF_TRAVERSE_STMT
 argument_list|(
@@ -5902,6 +6894,24 @@ argument_list|)
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|ObjCStringLiteral
+argument_list|,
+argument|{ }
+argument_list|)
+name|DEF_TRAVERSE_STMT
+argument_list|(
+argument|ObjCNumericLiteral
+argument_list|,
+argument|{ }
+argument_list|)
+name|DEF_TRAVERSE_STMT
+argument_list|(
+argument|ObjCArrayLiteral
+argument_list|,
+argument|{ }
+argument_list|)
+name|DEF_TRAVERSE_STMT
+argument_list|(
+argument|ObjCDictionaryLiteral
 argument_list|,
 argument|{ }
 argument_list|)

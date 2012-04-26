@@ -4194,7 +4194,7 @@ condition|(
 name|sc
 operator|->
 name|pcn_link
-operator|&
+operator|&&
 operator|!
 operator|(
 name|mii

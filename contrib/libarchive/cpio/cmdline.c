@@ -131,7 +131,7 @@ name|char
 modifier|*
 name|short_options
 init|=
-literal|"0AaBC:cdE:F:f:H:hI:iJjLlmnO:opR:rtuvW:yZz"
+literal|"0AaBC:cdE:F:f:H:hI:iJjLlmnO:opR:rtuVvW:yZz"
 decl_stmt|;
 end_decl_stmt
 
@@ -169,6 +169,14 @@ block|,
 literal|0
 block|,
 literal|'o'
+block|}
+block|,
+block|{
+literal|"dot"
+block|,
+literal|0
+block|,
+literal|'V'
 block|}
 block|,
 block|{
@@ -429,7 +437,7 @@ literal|0
 decl_stmt|;
 name|cpio
 operator|->
-name|optarg
+name|argument
 operator|=
 name|NULL
 expr_stmt|;
@@ -738,7 +746,7 @@ name|state_next_word
 expr_stmt|;
 name|cpio
 operator|->
-name|optarg
+name|argument
 operator|=
 name|opt_word
 expr_stmt|;
@@ -788,7 +796,7 @@ argument_list|)
 expr_stmt|;
 name|cpio
 operator|->
-name|optarg
+name|argument
 operator|=
 operator|(
 name|char
@@ -965,14 +973,14 @@ if|if
 condition|(
 name|cpio
 operator|->
-name|optarg
+name|argument
 operator|==
 name|NULL
 condition|)
 block|{
 name|cpio
 operator|->
-name|optarg
+name|argument
 operator|=
 operator|*
 name|cpio
@@ -983,7 +991,7 @@ if|if
 condition|(
 name|cpio
 operator|->
-name|optarg
+name|argument
 operator|==
 name|NULL
 condition|)
@@ -1026,7 +1034,7 @@ if|if
 condition|(
 name|cpio
 operator|->
-name|optarg
+name|argument
 operator|!=
 name|NULL
 condition|)
@@ -1320,6 +1328,9 @@ expr_stmt|;
 operator|*
 name|uid
 operator|=
+operator|(
+name|int
+operator|)
 name|strtoul
 argument_list|(
 name|user
@@ -1427,6 +1438,9 @@ expr_stmt|;
 operator|*
 name|gid
 operator|=
+operator|(
+name|int
+operator|)
 name|strtoul
 argument_list|(
 name|g

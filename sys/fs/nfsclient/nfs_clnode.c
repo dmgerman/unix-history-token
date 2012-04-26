@@ -473,6 +473,21 @@ name|vp
 operator|=
 name|nvp
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|vp
+operator|->
+name|v_bufobj
+operator|.
+name|bo_bsize
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"ncl_nget: bo_bsize == 0"
+operator|)
+argument_list|)
+expr_stmt|;
 name|vp
 operator|->
 name|v_bufobj

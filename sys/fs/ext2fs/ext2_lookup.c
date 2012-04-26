@@ -3947,9 +3947,10 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|,
-name|count
-decl_stmt|,
 name|namlen
+decl_stmt|;
+name|ssize_t
+name|count
 decl_stmt|;
 define|#
 directive|define

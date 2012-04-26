@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2011 The FreeBSD Foundation  * All rights reserved.  *  * This software was developed by David Chisnall under sponsorship from  * the FreeBSD Foundation.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1.  Redistributions of source code must retain the above copyright notice,  *     this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright notice,  *    this list of conditions and the following disclaimer in the documentation  *    and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2011 The FreeBSD Foundation  * All rights reserved.  *  * This software was developed by David Chisnall under sponsorship from  * the FreeBSD Foundation.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -152,7 +152,7 @@ index|[
 name|XLC_LAST
 index|]
 decl_stmt|;
-comment|/** Flag indicating if components[XLC_MONETARY] has changed since the last 	 * call to localeconv_l() with this locale. */
+comment|/** Flag indicating if components[XLC_MONETARY] has changed since the 	 * last call to localeconv_l() with this locale. */
 name|int
 name|monetary_locale_changed
 decl_stmt|;
@@ -160,7 +160,7 @@ comment|/** Flag indicating whether this locale is actually using a locale for 	
 name|int
 name|using_monetary_locale
 decl_stmt|;
-comment|/** Flag indicating if components[XLC_NUMERIC] has changed since the last 	 * call to localeconv_l() with this locale. */
+comment|/** Flag indicating if components[XLC_NUMERIC] has changed since the 	 * last call to localeconv_l() with this locale. */
 name|int
 name|numeric_locale_changed
 decl_stmt|;
@@ -464,8 +464,91 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/**  * Caches the rune table in TLS for fast access.  */
+end_comment
+
+begin_function_decl
+name|void
+name|__set_thread_rune_locale
+parameter_list|(
+name|locale_t
+name|loc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * Flag indicating whether a per-thread locale has been set.  If no per-thread  * locale has ever been set, then we always use the global locale.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|__has_thread_locale
+decl_stmt|;
+end_decl_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__NO_TLS
+end_ifndef
+
+begin_comment
+comment|/**  * The per-thread locale.  Avoids the need to use pthread lookup functions when  * getting the per-thread locale.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+specifier|_Thread_local
+name|locale_t
+name|__thread_locale
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/**  * Returns the current locale for this thread, or the global locale if none is  * set.  The caller does not have to free the locale.  The return value from  * this call is not guaranteed to remain valid after the locale changes.  As  * such, this should only be called within libc functions.  */
 end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|locale_t
+name|__get_locale
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|__has_thread_locale
+condition|)
+block|{
+return|return
+operator|(
+operator|&
+name|__xlocale_global_locale
+operator|)
+return|;
+block|}
+return|return
+operator|(
+name|__thread_locale
+condition|?
+name|__thread_locale
+else|:
+operator|&
+name|__xlocale_global_locale
+operator|)
+return|;
+block|}
+end_function
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_function_decl
 name|locale_t
@@ -475,6 +558,11 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/**  * Two magic values are allowed for locale_t objects.  NULL and -1.  This  * function maps those to the real locales that they represent.  */

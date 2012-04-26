@@ -3867,7 +3867,7 @@ argument_list|,
 name|stdin
 argument_list|)
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 if|if

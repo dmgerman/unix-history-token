@@ -33,10 +33,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/* TODO __Userspace__ IPv6 stuff... */
-end_comment
-
 begin_if
 if|#
 directive|if

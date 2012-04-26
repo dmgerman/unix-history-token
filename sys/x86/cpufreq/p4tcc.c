@@ -961,14 +961,14 @@ name|sc
 operator|->
 name|auto_mode
 operator|=
-name|TRUE
+name|FALSE
 expr_stmt|;
 else|else
 name|sc
 operator|->
 name|auto_mode
 operator|=
-name|FALSE
+name|TRUE
 expr_stmt|;
 return|return
 operator|(

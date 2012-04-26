@@ -516,6 +516,23 @@ return|return
 name|Redecl
 return|;
 block|}
+comment|/// \brief Determine whether this lookup is permitted to see hidden
+comment|/// declarations, such as those in modules that have not yet been imported.
+name|bool
+name|isHiddenDeclarationVisible
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Redecl
+operator|||
+name|LookupKind
+operator|==
+name|Sema
+operator|::
+name|LookupTagName
+return|;
+block|}
 comment|/// Sets whether tag declarations should be hidden by non-tag
 comment|/// declarations during resolution.  The default is true.
 name|void
@@ -675,9 +692,41 @@ return|return
 name|Paths
 return|;
 block|}
-comment|/// \brief Tests whether the given declaration is acceptable.
+comment|/// \brief Determine whether the given declaration is visible to the
+comment|/// program.
+specifier|static
 name|bool
-name|isAcceptableDecl
+name|isVisible
+parameter_list|(
+name|NamedDecl
+modifier|*
+name|D
+parameter_list|)
+block|{
+comment|// If this declaration is not hidden, it's visible.
+if|if
+condition|(
+operator|!
+name|D
+operator|->
+name|isHidden
+argument_list|()
+condition|)
+return|return
+name|true
+return|;
+comment|// FIXME: We should be allowed to refer to a module-private name from
+comment|// within the same module, e.g., during template instantiation.
+comment|// This requires us know which module a particular declaration came from.
+return|return
+name|false
+return|;
+block|}
+comment|/// \brief Retrieve the accepted (re)declaration of the given declaration,
+comment|/// if there is one.
+name|NamedDecl
+modifier|*
+name|getAcceptableDecl
 argument_list|(
 name|NamedDecl
 operator|*
@@ -696,35 +745,42 @@ name|IDNS
 argument_list|)
 condition|)
 return|return
-name|false
+literal|0
 return|;
-comment|// So long as this declaration is not module-private or was parsed as
-comment|// part of this translation unit (i.e., in the module), we're allowed to
-comment|// find it.
 if|if
 condition|(
-operator|!
-name|D
-operator|->
-name|isModulePrivate
+name|isHiddenDeclarationVisible
 argument_list|()
 operator|||
-operator|!
+name|isVisible
+argument_list|(
 name|D
-operator|->
-name|isFromASTFile
-argument_list|()
+argument_list|)
 condition|)
 return|return
-name|true
+name|D
 return|;
-comment|// FIXME: We should be allowed to refer to a module-private name from
-comment|// within the same module, e.g., during template instantiation.
-comment|// This requires us know which module a particular declaration came from.
 return|return
-name|false
+name|getAcceptableDeclSlow
+argument_list|(
+name|D
+argument_list|)
 return|;
 block|}
+name|private
+label|:
+name|NamedDecl
+modifier|*
+name|getAcceptableDeclSlow
+argument_list|(
+name|NamedDecl
+operator|*
+name|D
+argument_list|)
+decl|const
+decl_stmt|;
+name|public
+label|:
 comment|/// \brief Returns the identifier namespace mask for this lookup.
 name|unsigned
 name|getIdentifierNamespace
@@ -1590,6 +1646,19 @@ name|I
 operator|++
 return|;
 block|}
+comment|/// Restart the iteration.
+name|void
+name|restart
+parameter_list|()
+block|{
+name|I
+operator|=
+name|Results
+operator|.
+name|begin
+argument_list|()
+expr_stmt|;
+block|}
 comment|/// Erase the last element returned from this iterator.
 name|void
 name|erase
@@ -1753,7 +1822,7 @@ argument_list|()
 operator|&&
 name|SemaRef
 operator|.
-name|getLangOptions
+name|getLangOpts
 argument_list|()
 operator|.
 name|AccessControl
@@ -1813,13 +1882,27 @@ end_comment
 
 begin_expr_stmt
 name|void
-name|sanity
+name|sanityImpl
 argument_list|()
 specifier|const
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|void
+name|sanity
+argument_list|()
+specifier|const
+block|{
+ifndef|#
+directive|ifndef
+name|NDEBUG
+name|sanityImpl
+argument_list|()
+block|;
+endif|#
+directive|endif
+block|}
 name|bool
 name|sanityCheckUnresolved
 argument_list|()

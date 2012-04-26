@@ -181,6 +181,66 @@ file|<dev/ath/ath_hal/ah_desc.h>
 end_include
 
 begin_comment
+comment|/*  * These are default parameters for the AR5416 and  * later 802.11n NICs.  They simply enable some  * radar pulse event generation.  *  * These are very likely not valid for the AR5212 era  * NICs.  *  * Since these define signal sizing and threshold  * parameters, they may need changing based on the  * specific antenna and receive amplifier  * configuration.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR5416_DFS_FIRPWR
+value|-33
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR5416_DFS_RRSSI
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR5416_DFS_HEIGHT
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR5416_DFS_PRSSI
+value|15
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR5416_DFS_INBAND
+value|15
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR5416_DFS_RELPWR
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR5416_DFS_RELSTEP
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR5416_DFS_MAXLEN
+value|255
+end_define
+
+begin_comment
 comment|/*  * Methods which are required  */
 end_comment
 
@@ -229,7 +289,7 @@ comment|/*  * Enable radar check  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|ath_dfs_radar_enable
 parameter_list|(
 name|struct
@@ -243,16 +303,27 @@ modifier|*
 name|chan
 parameter_list|)
 block|{
+if|#
+directive|if
+literal|0
+block|HAL_PHYERR_PARAM pe;
 comment|/* Check if the current channel is radar-enabled */
-if|if
-condition|(
-operator|!
-name|IEEE80211_IS_CHAN_DFS
-argument_list|(
-name|chan
-argument_list|)
-condition|)
-return|return;
+block|if (! IEEE80211_IS_CHAN_DFS(chan)) 		return (0);
+comment|/* Enable radar PHY error reporting */
+block|sc->sc_dodfs = 1;
+comment|/* 	 * These are general examples of the parameter values 	 * to use when configuring radar pulse detection for 	 * the AR5416, AR91xx, AR92xx NICs.  They are only 	 * for testing and do require tuning depending upon the 	 * hardware and deployment specifics. 	 */
+block|pe.pe_firpwr = AR5416_DFS_FIRPWR; 	pe.pe_rrssi = AR5416_DFS_RRSSI; 	pe.pe_height = AR5416_DFS_HEIGHT; 	pe.pe_prssi = AR5416_DFS_PRSSI; 	pe.pe_inband = AR5416_DFS_INBAND; 	pe.pe_relpwr = AR5416_DFS_RELPWR; 	pe.pe_relstep = AR5416_DFS_RELSTEP; 	pe.pe_maxlen = AR5416_DFS_MAXLEN; 	pe.pe_enabled = 1;
+comment|/* Flip on extension channel events only if doing HT40 */
+block|if (IEEE80211_IS_CHAN_HT40(chan)) 		pe.pe_extchannel = 1; 	else 		pe.pe_extchannel = 0;  	ath_hal_enabledfs(sc->sc_ah,&pe);  	return (1);
+else|#
+directive|else
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+endif|#
+directive|endif
 block|}
 end_function
 

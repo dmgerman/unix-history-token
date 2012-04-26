@@ -1186,6 +1186,10 @@ name|struct
 name|task
 name|bp_rtagetask
 decl_stmt|;
+name|struct
+name|task
+name|bp_mediatask
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1361,25 +1365,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-specifier|extern
-name|void
-function_decl|(
-modifier|*
-name|bstp_linkstate_p
-function_decl|)
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-parameter_list|,
-name|int
-name|state
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|bstp_attach
 parameter_list|(
@@ -1484,10 +1469,8 @@ name|void
 name|bstp_linkstate
 parameter_list|(
 name|struct
-name|ifnet
+name|bstp_port
 modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1649,9 +1632,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|struct
-name|mbuf
-modifier|*
+name|void
 name|bstp_input
 parameter_list|(
 name|struct

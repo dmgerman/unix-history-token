@@ -94,7 +94,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<contrib/octeon-sdk/cvmx-interrupt.h>
+file|<mips/cavium/octeon_irq.h>
 end_include
 
 begin_decl_stmt
@@ -328,9 +328,9 @@ name|sc
 operator|->
 name|oba_irq_rman
 argument_list|,
-name|CVMX_IRQ_UART0
+name|OCTEON_IRQ_UART0
 argument_list|,
-name|CVMX_IRQ_UART1
+name|OCTEON_IRQ_UART1
 argument_list|)
 operator|!=
 literal|0
@@ -464,7 +464,7 @@ name|start
 operator|=
 name|end
 operator|=
-name|CVMX_IRQ_UART0
+name|OCTEON_IRQ_UART0
 expr_stmt|;
 break|break;
 case|case
@@ -474,7 +474,7 @@ name|start
 operator|=
 name|end
 operator|=
-name|CVMX_IRQ_UART1
+name|OCTEON_IRQ_UART1
 expr_stmt|;
 break|break;
 default|default:

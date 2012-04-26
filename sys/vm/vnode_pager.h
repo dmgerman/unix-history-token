@@ -22,10 +22,6 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_comment
-comment|/*  * XXX Generic routines; currently called by badly written FS code; these  * XXX should go away soon.  */
-end_comment
-
 begin_function_decl
 name|int
 name|vnode_pager_generic_getpages
@@ -76,6 +72,22 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|vnode_pager_release_writecount
+parameter_list|(
+name|vm_object_t
+name|object
+parameter_list|,
+name|vm_offset_t
+name|start
+parameter_list|,
+name|vm_offset_t
+name|end
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|vnode_pager_undirty_pages
 parameter_list|(
 name|vm_page_t
@@ -88,6 +100,22 @@ name|rtvals
 parameter_list|,
 name|int
 name|written
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vnode_pager_update_writecount
+parameter_list|(
+name|vm_object_t
+name|object
+parameter_list|,
+name|vm_offset_t
+name|start
+parameter_list|,
+name|vm_offset_t
+name|end
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -446,8 +446,9 @@ elseif|else
 if|if
 condition|(
 name|done
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 if|if
@@ -889,8 +890,9 @@ elseif|else
 if|if
 condition|(
 name|done
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 comment|/* 		 * If this is blocking socket and we got EAGAIN, this 		 * means the request timed out. Translate errno to 		 * ETIMEDOUT, to give administrator a hint to 		 * eventually increase timeout. 		 */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 - 2005 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997 - 2005 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -15,13 +15,11 @@ directive|include
 file|<dirent.h>
 end_include
 
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: kuserok.c 16048 2005-09-09 10:33:33Z lha $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_WIN32
+end_ifndef
 
 begin_comment
 comment|/* see if principal is mentioned in the filename access file, return    TRUE (in result) if so, FALSE otherwise */
@@ -93,6 +91,11 @@ condition|)
 return|return
 name|errno
 return|;
+name|rk_cloexec_file
+argument_list|(
+name|f
+argument_list|)
+expr_stmt|;
 comment|/* check type and mode of file */
 if|if
 condition|(
@@ -474,9 +477,6 @@ condition|)
 return|return
 name|errno
 return|;
-ifdef|#
-directive|ifdef
-name|HAVE_DIRFD
 block|{
 name|int
 name|fd
@@ -543,8 +543,6 @@ name|EACCES
 return|;
 block|}
 block|}
-endif|#
-directive|endif
 while|while
 condition|(
 operator|(
@@ -672,6 +670,15 @@ name|ret
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_WIN32 */
+end_comment
 
 begin_function
 specifier|static
@@ -812,12 +819,13 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Return TRUE iff `principal' is allowed to login as `luser'.  */
+comment|/**  * This function takes the name of a local user and checks if  * principal is allowed to log in as that user.  *  * The user may have a ~/.k5login file listing principals that are  * allowed to login as that user. If that file does not exist, all  * principals with a first component identical to the username, and a  * realm considered local, are allowed access.  *  * The .k5login file must contain one principal per line, be owned by  * user and not be writable by group or other (but must be readable by  * anyone).  *  * Note that if the file exists, no implicit access rights are given  * to user@@LOCALREALM.  *  * Optionally, a set of files may be put in ~/.k5login.d (a  * directory), in which case they will all be checked in the same  * manner as .k5login.  The files may be called anything, but files  * starting with a hash (#) , or ending with a tilde (~) are  * ignored. Subdirectories are not traversed. Note that this directory  * may not be checked by other Kerberos implementations.  *  * If no configuration file exists, match user against local domains,  * ie luser@@LOCAL-REALMS-IN-CONFIGURATION-FILES.  *  * @param context Kerberos 5 context.  * @param principal principal to check if allowed to login  * @param luser local user id  *  * @return returns TRUE if access should be granted, FALSE otherwise.  *  * @ingroup krb5_support  */
 end_comment
 
 begin_function
-name|krb5_boolean
 name|KRB5_LIB_FUNCTION
+name|krb5_boolean
+name|KRB5_LIB_CALL
 name|krb5_kuserok
 parameter_list|(
 name|krb5_context
@@ -832,6 +840,9 @@ modifier|*
 name|luser
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|_WIN32
 name|char
 modifier|*
 name|buf
@@ -843,6 +854,14 @@ name|struct
 name|passwd
 modifier|*
 name|pwd
+init|=
+name|NULL
+decl_stmt|;
+name|char
+modifier|*
+name|profile_dir
+init|=
+name|NULL
 decl_stmt|;
 name|krb5_error_code
 name|ret
@@ -915,6 +934,12 @@ condition|)
 return|return
 name|FALSE
 return|;
+name|profile_dir
+operator|=
+name|pwd
+operator|->
+name|pw_dir
+expr_stmt|;
 define|#
 directive|define
 name|KLOGIN
@@ -923,9 +948,7 @@ name|buflen
 operator|=
 name|strlen
 argument_list|(
-name|pwd
-operator|->
-name|pw_dir
+name|profile_dir
 argument_list|)
 operator|+
 sizeof|sizeof
@@ -957,9 +980,7 @@ name|strlcpy
 argument_list|(
 name|buf
 argument_list|,
-name|pwd
-operator|->
-name|pw_dir
+name|profile_dir
 argument_list|,
 name|buflen
 argument_list|)
@@ -1096,6 +1117,21 @@ return|;
 return|return
 name|FALSE
 return|;
+else|#
+directive|else
+comment|/* The .k5login file may be on a remote profile and we don't have        access to the profile until we have a token handle for the        user's credentials. */
+return|return
+name|match_local_principals
+argument_list|(
+name|context
+argument_list|,
+name|principal
+argument_list|,
+name|luser
+argument_list|)
+return|;
+endif|#
+directive|endif
 block|}
 end_function
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*===- X86DisassemblerDecoderInternal.h - Disassembler decoder -----*- C -*-==*  *  *                     The LLVM Compiler Infrastructure  *  * This file is distributed under the University of Illinois Open Source  * License. See LICENSE.TXT for details.  *  *===----------------------------------------------------------------------===*  *  * This file is part of the X86 Disassembler.  * It contains the public interface of the instruction decoder.  * Documentation for the disassembler can be found in X86Disassembler.h.  *  *===----------------------------------------------------------------------===*/
+comment|/*===-- X86DisassemblerDecoderInternal.h - Disassembler decoder ---*- C -*-===*  *  *                     The LLVM Compiler Infrastructure  *  * This file is distributed under the University of Illinois Open Source  * License. See LICENSE.TXT for details.  *  *===----------------------------------------------------------------------===*  *  * This file is part of the X86 Disassembler.  * It contains the public interface of the instruction decoder.  * Documentation for the disassembler can be found in X86Disassembler.h.  *  *===----------------------------------------------------------------------===*/
 end_comment
 
 begin_ifndef
@@ -30,13 +30,11 @@ directive|endif
 define|#
 directive|define
 name|INSTRUCTION_SPECIFIER_FIELDS
-define|\
-value|const char*             name;
 define|#
 directive|define
 name|INSTRUCTION_IDS
 define|\
-value|const InstrUID *instructionIDs;
+value|unsigned instructionIDs;
 include|#
 directive|include
 file|"X86DisassemblerDecoderCommon.h"
@@ -583,6 +581,13 @@ decl_stmt|;
 name|uint8_t
 name|immediateSize
 decl_stmt|;
+comment|/* Offsets from the start of the instruction to the pieces of data, which is      needed to find relocation entries for adding symbolic operands */
+name|uint8_t
+name|displacementOffset
+decl_stmt|;
+name|uint8_t
+name|immediateOffset
+decl_stmt|;
 comment|/* opcode state */
 comment|/* The value of the two-byte escape prefix (usually 0x0f) */
 name|uint8_t
@@ -722,6 +727,10 @@ name|void
 modifier|*
 name|loggerArg
 parameter_list|,
+name|void
+modifier|*
+name|miiArg
+parameter_list|,
 name|uint64_t
 name|startLoc
 parameter_list|,
@@ -745,6 +754,19 @@ specifier|const
 name|char
 modifier|*
 name|s
+parameter_list|)
+function_decl|;
+specifier|const
+name|char
+modifier|*
+name|x86DisassemblerGetInstrName
+parameter_list|(
+name|unsigned
+name|Opcode
+parameter_list|,
+name|void
+modifier|*
+name|mii
 parameter_list|)
 function_decl|;
 ifdef|#

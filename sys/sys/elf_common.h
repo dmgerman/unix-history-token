@@ -2229,6 +2229,20 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SHT_MIPS_REGINFO
+value|0x70000006
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHT_MIPS_OPTIONS
+value|0x7000000d
+end_define
+
+begin_define
+define|#
+directive|define
 name|SHT_MIPS_DWARF
 value|0x7000001e
 end_define
@@ -2532,6 +2546,13 @@ define|#
 directive|define
 name|PT_GNU_STACK
 value|0x6474e551
+end_define
+
+begin_define
+define|#
+directive|define
+name|PT_GNU_RELRO
+value|0x6474e552
 end_define
 
 begin_define
@@ -3015,7 +3036,7 @@ value|28
 end_define
 
 begin_comment
-comment|/* Size in bytes of the array of 				   terminationfunctions. */
+comment|/* Size in bytes of the array of 				   termination functions. */
 end_comment
 
 begin_define
@@ -4797,6 +4818,43 @@ directive|define
 name|R_ARM_THM_XPC22
 value|16
 end_define
+
+begin_comment
+comment|/* TLS relocations */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_ARM_TLS_DTPMOD32
+value|17
+end_define
+
+begin_comment
+comment|/* ID of module containing symbol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_ARM_TLS_DTPOFF32
+value|18
+end_define
+
+begin_comment
+comment|/* Offset in TLS block */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_ARM_TLS_TPOFF32
+value|19
+end_define
+
+begin_comment
+comment|/* Offset in static TLS block */
+end_comment
 
 begin_define
 define|#

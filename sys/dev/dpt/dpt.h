@@ -506,7 +506,7 @@ begin_define
 define|#
 directive|define
 name|DPT_CACHE_WRITEBACK
-value|-2
+value|2
 end_define
 
 begin_define

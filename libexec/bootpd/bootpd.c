@@ -2611,7 +2611,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * client doesnt know his IP address, 		 * search by hardware address. 		 */
+comment|/* 		 * client doesn't know his IP address, 		 * search by hardware address. 		 */
 if|if
 condition|(
 name|debug
@@ -4288,7 +4288,7 @@ comment|/* setarp() - now in hwaddr.c */
 end_comment
 
 begin_comment
-comment|/*  * This call checks read access to a file.  It returns 0 if the file given  * by "path" exists and is publically readable.  A value of -1 is returned if  * access is not permitted or an error occurs.  Successful calls also  * return the file size in bytes using the long pointer "filesize".  *  * The read permission bit for "other" users is checked.  This bit must be  * set for tftpd(8) to allow clients to read the file.  */
+comment|/*  * This call checks read access to a file.  It returns 0 if the file given  * by "path" exists and is publicly readable.  A value of -1 is returned if  * access is not permitted or an error occurs.  Successful calls also  * return the file size in bytes using the long pointer "filesize".  *  * The read permission bit for "other" users is checked.  This bit must be  * set for tftpd(8) to allow clients to read the file.  */
 end_comment
 
 begin_function

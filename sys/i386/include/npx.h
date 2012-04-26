@@ -19,324 +19,17 @@ directive|define
 name|_MACHINE_NPX_H_
 end_define
 
-begin_comment
-comment|/* Environment information of floating point unit */
-end_comment
-
-begin_struct
-struct|struct
-name|env87
-block|{
-name|long
-name|en_cw
-decl_stmt|;
-comment|/* control word (16bits) */
-name|long
-name|en_sw
-decl_stmt|;
-comment|/* status word (16bits) */
-name|long
-name|en_tw
-decl_stmt|;
-comment|/* tag word (16bits) */
-name|long
-name|en_fip
-decl_stmt|;
-comment|/* floating point instruction pointer */
-name|u_short
-name|en_fcs
-decl_stmt|;
-comment|/* floating code segment selector */
-name|u_short
-name|en_opcode
-decl_stmt|;
-comment|/* opcode last executed (11 bits ) */
-name|long
-name|en_foo
-decl_stmt|;
-comment|/* floating operand offset */
-name|long
-name|en_fos
-decl_stmt|;
-comment|/* floating operand segment selector */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* Contents of each floating point accumulator */
-end_comment
-
-begin_struct
-struct|struct
-name|fpacc87
-block|{
-ifdef|#
-directive|ifdef
-name|dontdef
-comment|/* too unportable */
-name|u_long
-name|fp_mantlo
-decl_stmt|;
-comment|/* mantissa low (31:0) */
-name|u_long
-name|fp_manthi
-decl_stmt|;
-comment|/* mantissa high (63:32) */
-name|int
-name|fp_exp
-range|:
-literal|15
-decl_stmt|;
-comment|/* exponent */
-name|int
-name|fp_sgn
-range|:
-literal|1
-decl_stmt|;
-comment|/* mantissa sign */
-else|#
-directive|else
-name|u_char
-name|fp_bytes
-index|[
-literal|10
-index|]
-decl_stmt|;
-endif|#
-directive|endif
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* Floating point context */
-end_comment
-
-begin_struct
-struct|struct
-name|save87
-block|{
-name|struct
-name|env87
-name|sv_env
-decl_stmt|;
-comment|/* floating point control/status */
-name|struct
-name|fpacc87
-name|sv_ac
-index|[
-literal|8
-index|]
-decl_stmt|;
-comment|/* accumulator contents, 0-7 */
-name|u_char
-name|sv_pad0
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* padding for (now unused) saved status word */
-comment|/* 	 * Bogus padding for emulators.  Emulators should use their own 	 * struct and arrange to store into this struct (ending here) 	 * before it is inspected for ptracing or for core dumps.  Some 	 * emulators overwrite the whole struct.  We have no good way of 	 * knowing how much padding to leave.  Leave just enough for the 	 * GPL emulator's i387_union (176 bytes total). 	 */
-name|u_char
-name|sv_pad
-index|[
-literal|64
-index|]
-decl_stmt|;
-comment|/* padding; used by emulators */
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|envxmm
-block|{
-name|u_int16_t
-name|en_cw
-decl_stmt|;
-comment|/* control word (16bits) */
-name|u_int16_t
-name|en_sw
-decl_stmt|;
-comment|/* status word (16bits) */
-name|u_int16_t
-name|en_tw
-decl_stmt|;
-comment|/* tag word (16bits) */
-name|u_int16_t
-name|en_opcode
-decl_stmt|;
-comment|/* opcode last executed (11 bits ) */
-name|u_int32_t
-name|en_fip
-decl_stmt|;
-comment|/* floating point instruction pointer */
-name|u_int16_t
-name|en_fcs
-decl_stmt|;
-comment|/* floating code segment selector */
-name|u_int16_t
-name|en_pad0
-decl_stmt|;
-comment|/* padding */
-name|u_int32_t
-name|en_foo
-decl_stmt|;
-comment|/* floating operand offset */
-name|u_int16_t
-name|en_fos
-decl_stmt|;
-comment|/* floating operand segment selector */
-name|u_int16_t
-name|en_pad1
-decl_stmt|;
-comment|/* padding */
-name|u_int32_t
-name|en_mxcsr
-decl_stmt|;
-comment|/* SSE control/status register */
-name|u_int32_t
-name|en_mxcsr_mask
-decl_stmt|;
-comment|/* valid bits in mxcsr */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* Contents of each SSE extended accumulator */
-end_comment
-
-begin_struct
-struct|struct
-name|xmmacc
-block|{
-name|u_char
-name|xmm_bytes
-index|[
-literal|16
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|savexmm
-block|{
-name|struct
-name|envxmm
-name|sv_env
-decl_stmt|;
-struct|struct
-block|{
-name|struct
-name|fpacc87
-name|fp_acc
-decl_stmt|;
-name|u_char
-name|fp_pad
-index|[
-literal|6
-index|]
-decl_stmt|;
-comment|/* padding */
-block|}
-name|sv_fp
-index|[
-literal|8
-index|]
-struct|;
-name|struct
-name|xmmacc
-name|sv_xmm
-index|[
-literal|8
-index|]
-decl_stmt|;
-name|u_char
-name|sv_pad
-index|[
-literal|224
-index|]
-decl_stmt|;
-block|}
-name|__aligned
-argument_list|(
-literal|16
-argument_list|)
-struct|;
-end_struct
-
-begin_union
-union|union
-name|savefpu
-block|{
-name|struct
-name|save87
-name|sv_87
-decl_stmt|;
-name|struct
-name|savexmm
-name|sv_xmm
-decl_stmt|;
-block|}
-union|;
-end_union
-
-begin_comment
-comment|/*  * The hardware default control word for i387's and later coprocessors is  * 0x37F, giving:  *  *	round to nearest  *	64-bit precision  *	all exceptions masked.  *  * We modify the affine mode bit and precision bits in this to give:  *  *	affine mode for 287's (if they work at all) (1 in bitfield 1<<12)  *	53-bit precision (2 in bitfield 3<<8)  *  * 64-bit precision often gives bad results with high level languages  * because it makes the results of calculations depend on whether  * intermediate values are stored in memory or in FPU registers.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|__INITIAL_NPXCW__
-value|0x127F
-end_define
-
-begin_define
-define|#
-directive|define
-name|__INITIAL_MXCSR__
-value|0x1F80
-end_define
+begin_include
+include|#
+directive|include
+file|<x86/fpu.h>
+end_include
 
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
-
-begin_struct
-struct|struct
-name|fpu_kern_ctx
-block|{
-name|union
-name|savefpu
-name|hwstate
-decl_stmt|;
-name|union
-name|savefpu
-modifier|*
-name|prev
-decl_stmt|;
-name|uint32_t
-name|flags
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|FPU_KERN_CTX_NPXINITDONE
-value|0x01
-end_define
 
 begin_define
 define|#
@@ -458,6 +151,30 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|struct
+name|fpu_kern_ctx
+modifier|*
+name|fpu_kern_alloc_ctx
+parameter_list|(
+name|u_int
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|fpu_kern_free_ctx
+parameter_list|(
+name|struct
+name|fpu_kern_ctx
+modifier|*
+name|ctx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|fpu_kern_enter
 parameter_list|(
@@ -523,6 +240,13 @@ define|#
 directive|define
 name|FPU_KERN_NORMAL
 value|0x0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|FPU_KERN_NOWAIT
+value|0x0001
 end_define
 
 begin_endif

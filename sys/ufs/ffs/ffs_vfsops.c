@@ -298,6 +298,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|int
+name|ffs_sync_lazy
+parameter_list|(
+name|struct
+name|mount
+modifier|*
+name|mp
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|static
 name|vfs_init_t
@@ -621,7 +634,7 @@ name|error
 decl_stmt|,
 name|flags
 decl_stmt|;
-name|u_int
+name|uint64_t
 name|mntorflags
 decl_stmt|;
 name|accmode_t
@@ -937,9 +950,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|vfs_mount_error
 argument_list|(
-literal|"Checker enable: Must be read-only\n"
+name|mp
+argument_list|,
+literal|"Checker enable: Must be read-only"
 argument_list|)
 expr_stmt|;
 return|return
@@ -968,9 +983,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|vfs_mount_error
 argument_list|(
-literal|"Checker enable: Must be read-only\n"
+name|mp
+argument_list|,
+literal|"Checker enable: Must be read-only"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1017,10 +1034,12 @@ operator|&
 name|MNT_ACLS
 condition|)
 block|{
-name|printf
+name|vfs_mount_error
 argument_list|(
-literal|"WARNING: \"acls\" and \"nfsv4acls\" "
-literal|"options are mutually exclusive\n"
+name|mp
+argument_list|,
+literal|"\"acls\" and \"nfsv4acls\" options "
+literal|"are mutually exclusive"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1389,13 +1408,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: %s: blocks %jd files %d\n"
+literal|"WARNING: %s Update error: blocks %jd "
+literal|"files %d\n"
 argument_list|,
 name|fs
 operator|->
 name|fs_fsmnt
-argument_list|,
-literal|"update error"
 argument_list|,
 operator|(
 name|intmax_t
@@ -1613,9 +1631,11 @@ operator|>
 literal|0
 condition|)
 block|{
-name|printf
+name|vfs_mount_error
 argument_list|(
-literal|"Active checker, cannot rw upgrade\n"
+name|mp
+argument_list|,
+literal|"Active checker, cannot upgrade to write"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1748,38 +1768,43 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"WARNING: %s was not %s\n"
+literal|"WARNING: %s was not properly "
+literal|"dismounted\n"
 argument_list|,
 name|fs
 operator|->
 name|fs_fsmnt
-argument_list|,
-literal|"properly dismounted"
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|vfs_mount_error
 argument_list|(
-literal|"WARNING: R/W mount of %s denied.  Filesystem is not clean - run fsck\n"
+name|mp
+argument_list|,
+literal|"R/W mount of %s denied. %s.%s"
 argument_list|,
 name|fs
 operator|->
 name|fs_fsmnt
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+argument_list|,
+literal|"Filesystem is not clean - run fsck"
+argument_list|,
+operator|(
 name|fs
 operator|->
 name|fs_flags
 operator|&
 name|FS_SUJ
-condition|)
-name|printf
-argument_list|(
-literal|"WARNING: Forced mount will invalidate journal contents\n"
+operator|)
+operator|==
+literal|0
+condition|?
+literal|""
+else|:
+literal|" Forced mount will invalidate"
+literal|" journal contents"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2083,9 +2108,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|vfs_mount_error
 argument_list|(
-literal|"Active checker already running on %s\n"
+name|mp
+argument_list|,
+literal|"Active checker already running on %s"
 argument_list|,
 name|fs
 operator|->
@@ -2145,9 +2172,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|vfs_mount_error
 argument_list|(
-literal|"Checker activation failed on %s\n"
+name|mp
+argument_list|,
+literal|"Checker activation failed on %s"
 argument_list|,
 name|fs
 operator|->
@@ -2516,7 +2545,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Checker activation failed on %s\n"
+literal|"WARNING: %s: Checker activation "
+literal|"failed\n"
 argument_list|,
 name|fs
 operator|->
@@ -2608,7 +2638,7 @@ name|void
 modifier|*
 name|data
 parameter_list|,
-name|int
+name|uint64_t
 name|flags
 parameter_list|)
 block|{
@@ -3067,7 +3097,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: reload pending error: blocks %jd files %d\n"
+literal|"WARNING: %s: reload pending error: blocks %jd "
+literal|"files %d\n"
 argument_list|,
 name|fs
 operator|->
@@ -3104,24 +3135,81 @@ name|ump
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Step 3: re-read summary information from disk. 	 */
+name|size
+operator|=
+name|fs
+operator|->
+name|fs_cssize
+expr_stmt|;
 name|blks
 operator|=
 name|howmany
 argument_list|(
-name|fs
-operator|->
-name|fs_cssize
+name|size
 argument_list|,
 name|fs
 operator|->
 name|fs_fsize
 argument_list|)
 expr_stmt|;
-name|space
-operator|=
+if|if
+condition|(
+name|fs
+operator|->
+name|fs_contigsumsize
+operator|>
+literal|0
+condition|)
+name|size
+operator|+=
+name|fs
+operator|->
+name|fs_ncg
+operator|*
+sizeof|sizeof
+argument_list|(
+name|int32_t
+argument_list|)
+expr_stmt|;
+name|size
+operator|+=
+name|fs
+operator|->
+name|fs_ncg
+operator|*
+sizeof|sizeof
+argument_list|(
+name|u_int8_t
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
 name|fs
 operator|->
 name|fs_csp
+argument_list|,
+name|M_UFSMNT
+argument_list|)
+expr_stmt|;
+name|space
+operator|=
+name|malloc
+argument_list|(
+operator|(
+name|u_long
+operator|)
+name|size
+argument_list|,
+name|M_UFSMNT
+argument_list|,
+name|M_WAITOK
+argument_list|)
+expr_stmt|;
+name|fs
+operator|->
+name|fs_csp
+operator|=
+name|space
 expr_stmt|;
 for|for
 control|(
@@ -3242,11 +3330,13 @@ operator|>
 literal|0
 condition|)
 block|{
-name|lp
-operator|=
 name|fs
 operator|->
 name|fs_maxcluster
+operator|=
+name|lp
+operator|=
+name|space
 expr_stmt|;
 for|for
 control|(
@@ -3271,15 +3361,44 @@ name|fs
 operator|->
 name|fs_contigsumsize
 expr_stmt|;
+name|space
+operator|=
+name|lp
+expr_stmt|;
 block|}
-name|loop
-label|:
-name|MNT_ILOCK
+name|size
+operator|=
+name|fs
+operator|->
+name|fs_ncg
+operator|*
+sizeof|sizeof
 argument_list|(
-name|mp
+name|u_int8_t
 argument_list|)
 expr_stmt|;
-name|MNT_VNODE_FOREACH
+name|fs
+operator|->
+name|fs_contigdirs
+operator|=
+operator|(
+name|u_int8_t
+operator|*
+operator|)
+name|space
+expr_stmt|;
+name|bzero
+argument_list|(
+name|fs
+operator|->
+name|fs_contigdirs
+argument_list|,
+name|size
+argument_list|)
+expr_stmt|;
+name|loop
+label|:
+name|MNT_VNODE_FOREACH_ALL
 argument_list|(
 argument|vp
 argument_list|,
@@ -3288,32 +3407,6 @@ argument_list|,
 argument|mvp
 argument_list|)
 block|{
-name|VI_LOCK
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|vp
-operator|->
-name|v_iflag
-operator|&
-name|VI_DOOMED
-condition|)
-block|{
-name|VI_UNLOCK
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
-continue|continue;
-block|}
-name|MNT_IUNLOCK
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
 comment|/* 		 * Step 4: invalidate all cached file data. 		 */
 if|if
 condition|(
@@ -3329,7 +3422,7 @@ name|td
 argument_list|)
 condition|)
 block|{
-name|MNT_VNODE_FOREACH_ABORT
+name|MNT_VNODE_FOREACH_ALL_ABORT
 argument_list|(
 name|mp
 argument_list|,
@@ -3416,7 +3509,7 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|MNT_VNODE_FOREACH_ABORT
+name|MNT_VNODE_FOREACH_ALL_ABORT
 argument_list|(
 name|mp
 argument_list|,
@@ -3467,17 +3560,7 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|MNT_ILOCK
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
 block|}
-name|MNT_IUNLOCK
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -3998,26 +4081,31 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|vfs_mount_error
 argument_list|(
-literal|"WARNING: R/W mount of %s denied.  Filesystem is not clean - run fsck\n"
+name|mp
+argument_list|,
+literal|"R/W mount of %s denied. %s%s"
 argument_list|,
 name|fs
 operator|->
 name|fs_fsmnt
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+argument_list|,
+literal|"Filesystem is not clean - run fsck."
+argument_list|,
+operator|(
 name|fs
 operator|->
 name|fs_flags
 operator|&
 name|FS_SUJ
-condition|)
-name|printf
-argument_list|(
-literal|"WARNING: Forced mount will invalidate journal contents\n"
+operator|)
+operator|==
+literal|0
+condition|?
+literal|""
+else|:
+literal|" Forced mount will invalidate journal contents"
 argument_list|)
 expr_stmt|;
 name|error
@@ -4055,7 +4143,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: lost blocks %jd files %d\n"
+literal|"WARNING: %s: lost blocks %jd files %d\n"
 argument_list|,
 name|fs
 operator|->
@@ -4104,7 +4192,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: mount pending error: blocks %jd files %d\n"
+literal|"WARNING: %s: mount pending error: blocks %jd "
+literal|"files %d\n"
 argument_list|,
 name|fs
 operator|->
@@ -4226,7 +4315,8 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"WARNING: %s: GJOURNAL flag on fs but no gjournal provider below\n"
+literal|"WARNING: %s: GJOURNAL flag on fs "
+literal|"but no gjournal provider below\n"
 argument_list|,
 name|mp
 operator|->
@@ -4255,7 +4345,8 @@ else|#
 directive|else
 name|printf
 argument_list|(
-literal|"WARNING: %s: GJOURNAL flag on fs but no UFS_GJOURNAL support\n"
+literal|"WARNING: %s: GJOURNAL flag on fs but no "
+literal|"UFS_GJOURNAL support\n"
 argument_list|,
 name|mp
 operator|->
@@ -4915,7 +5006,8 @@ else|#
 directive|else
 name|printf
 argument_list|(
-literal|"WARNING: %s: multilabel flag on fs but no MAC support\n"
+literal|"WARNING: %s: multilabel flag on fs but "
+literal|"no MAC support\n"
 argument_list|,
 name|mp
 operator|->
@@ -4958,8 +5050,14 @@ name|MNT_NFS4ACLS
 condition|)
 name|printf
 argument_list|(
-literal|"WARNING: ACLs flag on fs conflicts with "
+literal|"WARNING: %s: ACLs flag on fs conflicts with "
 literal|"\"nfsv4acls\" mount option; option ignored\n"
+argument_list|,
+name|mp
+operator|->
+name|mnt_stat
+operator|.
+name|f_mntonname
 argument_list|)
 expr_stmt|;
 name|mp
@@ -5027,8 +5125,14 @@ name|MNT_ACLS
 condition|)
 name|printf
 argument_list|(
-literal|"WARNING: NFSv4 ACLs flag on fs conflicts with "
-literal|"\"acls\" mount option; option ignored\n"
+literal|"WARNING: %s: NFSv4 ACLs flag on fs conflicts "
+literal|"with \"acls\" mount option; option ignored\n"
+argument_list|,
+name|mp
+operator|->
+name|mnt_stat
+operator|.
+name|f_mntonname
 argument_list|)
 expr_stmt|;
 name|mp
@@ -5053,7 +5157,8 @@ else|#
 directive|else
 name|printf
 argument_list|(
-literal|"WARNING: %s: NFSv4 ACLs flag on fs but no ACLs support\n"
+literal|"WARNING: %s: NFSv4 ACLs flag on fs but no "
+literal|"ACLs support\n"
 argument_list|,
 name|mp
 operator|->
@@ -5114,7 +5219,8 @@ name|um_candelete
 condition|)
 name|printf
 argument_list|(
-literal|"WARNING: %s: TRIM flag on fs but disk does not support TRIM\n"
+literal|"WARNING: %s: TRIM flag on fs but disk "
+literal|"does not support TRIM\n"
 argument_list|,
 name|mp
 operator|->
@@ -5128,7 +5234,8 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"WARNING: %s: TRIM flag on fs but cannot get whether disk supports TRIM\n"
+literal|"WARNING: %s: TRIM flag on fs but disk does "
+literal|"not confirm that it supports TRIM\n"
 argument_list|,
 name|mp
 operator|->
@@ -5339,6 +5446,28 @@ goto|goto
 name|out
 goto|;
 block|}
+if|if
+condition|(
+name|devvp
+operator|->
+name|v_type
+operator|==
+name|VCHR
+operator|&&
+name|devvp
+operator|->
+name|v_rdev
+operator|!=
+name|NULL
+condition|)
+name|devvp
+operator|->
+name|v_rdev
+operator|->
+name|si_mountpt
+operator|=
+name|mp
+expr_stmt|;
 if|if
 condition|(
 name|fs
@@ -6089,6 +6218,10 @@ name|ump
 operator|->
 name|um_fs
 expr_stmt|;
+name|susp
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|mntflags
@@ -6109,11 +6242,6 @@ operator|!=
 literal|0
 expr_stmt|;
 block|}
-else|else
-name|susp
-operator|=
-literal|0
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|UFS_EXTATTR
@@ -6139,7 +6267,14 @@ name|EOPNOTSUPP
 condition|)
 name|printf
 argument_list|(
-literal|"ffs_unmount: ufs_extattr_stop returned %d\n"
+literal|"WARNING: unmount %s: ufs_extattr_stop "
+literal|"returned errno %d\n"
+argument_list|,
+name|mp
+operator|->
+name|mnt_stat
+operator|.
+name|f_mntonname
 argument_list|,
 name|error
 argument_list|)
@@ -6329,7 +6464,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: unmount pending error: blocks %jd files %d\n"
+literal|"WARNING: unmount %s: pending error: blocks %jd "
+literal|"files %d\n"
 argument_list|,
 name|fs
 operator|->
@@ -6506,6 +6642,34 @@ argument_list|()
 expr_stmt|;
 name|PICKUP_GIANT
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|ump
+operator|->
+name|um_devvp
+operator|->
+name|v_type
+operator|==
+name|VCHR
+operator|&&
+name|ump
+operator|->
+name|um_devvp
+operator|->
+name|v_rdev
+operator|!=
+name|NULL
+condition|)
+name|ump
+operator|->
+name|um_devvp
+operator|->
+name|v_rdev
+operator|->
+name|si_mountpt
+operator|=
+name|NULL
 expr_stmt|;
 name|vrele
 argument_list|(
@@ -7104,7 +7268,233 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Go through the disk queues to initiate sandbagged IO;  * go through the inodes to write those that have been modified;  * initiate the writing of the super block if it has been modified.  *  * Note: we are always called with the filesystem marked `MPBUSY'.  */
+comment|/*  * For a lazy sync, we only care about access times, quotas and the  * superblock.  Other filesystem changes are already converted to  * cylinder group blocks or inode blocks updates and are written to  * disk by syncer.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|ffs_sync_lazy
+parameter_list|(
+name|mp
+parameter_list|)
+name|struct
+name|mount
+modifier|*
+name|mp
+decl_stmt|;
+block|{
+name|struct
+name|vnode
+modifier|*
+name|mvp
+decl_stmt|,
+modifier|*
+name|vp
+decl_stmt|;
+name|struct
+name|inode
+modifier|*
+name|ip
+decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
+name|int
+name|allerror
+decl_stmt|,
+name|error
+decl_stmt|;
+name|allerror
+operator|=
+literal|0
+expr_stmt|;
+name|td
+operator|=
+name|curthread
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|mp
+operator|->
+name|mnt_flag
+operator|&
+name|MNT_NOATIME
+operator|)
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|qupdate
+goto|;
+name|MNT_VNODE_FOREACH_ACTIVE
+argument_list|(
+argument|vp
+argument_list|,
+argument|mp
+argument_list|,
+argument|mvp
+argument_list|)
+block|{
+if|if
+condition|(
+name|vp
+operator|->
+name|v_type
+operator|==
+name|VNON
+condition|)
+block|{
+name|VI_UNLOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+name|ip
+operator|=
+name|VTOI
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+comment|/* 		 * The IN_ACCESS flag is converted to IN_MODIFIED by 		 * ufs_close() and ufs_getattr() by the calls to 		 * ufs_itimes_locked(), without subsequent UFS_UPDATE(). 		 * Test also all the other timestamp flags too, to pick up 		 * any other cases that could be missed. 		 */
+if|if
+condition|(
+operator|(
+name|ip
+operator|->
+name|i_flag
+operator|&
+operator|(
+name|IN_ACCESS
+operator||
+name|IN_CHANGE
+operator||
+name|IN_MODIFIED
+operator||
+name|IN_UPDATE
+operator|)
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|VI_UNLOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
+operator|(
+name|error
+operator|=
+name|vget
+argument_list|(
+name|vp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_NOWAIT
+operator||
+name|LK_INTERLOCK
+argument_list|,
+name|td
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+continue|continue;
+name|error
+operator|=
+name|ffs_update
+argument_list|(
+name|vp
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+name|allerror
+operator|=
+name|error
+expr_stmt|;
+name|vput
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+block|}
+name|qupdate
+label|:
+ifdef|#
+directive|ifdef
+name|QUOTA
+name|qsync
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+name|VFSTOUFS
+argument_list|(
+name|mp
+argument_list|)
+operator|->
+name|um_fs
+operator|->
+name|fs_fmod
+operator|!=
+literal|0
+operator|&&
+operator|(
+name|error
+operator|=
+name|ffs_sbupdate
+argument_list|(
+name|VFSTOUFS
+argument_list|(
+name|mp
+argument_list|)
+argument_list|,
+name|MNT_LAZY
+argument_list|,
+literal|0
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+name|allerror
+operator|=
+name|error
+expr_stmt|;
+return|return
+operator|(
+name|allerror
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Go through the disk queues to initiate sandbagged IO;  * go through the inodes to write those that have been modified;  * initiate the writing of the super block if it has been modified.  *  * Note: we are always called with the filesystem marked busy using  * vfs_busy().  */
 end_comment
 
 begin_function
@@ -7197,6 +7587,18 @@ name|bufobj
 modifier|*
 name|bo
 decl_stmt|;
+name|wait
+operator|=
+literal|0
+expr_stmt|;
+name|suspend
+operator|=
+literal|0
+expr_stmt|;
+name|suspended
+operator|=
+literal|0
+expr_stmt|;
 name|td
 operator|=
 name|curthread
@@ -7227,35 +7629,30 @@ name|um_fsckpid
 operator|==
 literal|0
 condition|)
-block|{
-name|printf
+name|panic
 argument_list|(
-literal|"fs = %s\n"
+literal|"%s: ffs_sync: modification on read-only filesystem"
 argument_list|,
 name|fs
 operator|->
 name|fs_fsmnt
 argument_list|)
 expr_stmt|;
-name|panic
+if|if
+condition|(
+name|waitfor
+operator|==
+name|MNT_LAZY
+condition|)
+return|return
+operator|(
+name|ffs_sync_lazy
 argument_list|(
-literal|"ffs_sync: rofs mod"
+name|mp
 argument_list|)
-expr_stmt|;
-block|}
+operator|)
+return|;
 comment|/* 	 * Write back each (modified) inode. 	 */
-name|wait
-operator|=
-literal|0
-expr_stmt|;
-name|suspend
-operator|=
-literal|0
-expr_stmt|;
-name|suspended
-operator|=
-literal|0
-expr_stmt|;
 name|lockreq
 operator|=
 name|LK_EXCLUSIVE
@@ -7300,14 +7697,14 @@ name|LK_INTERLOCK
 operator||
 name|LK_SLEEPFAIL
 expr_stmt|;
+name|loop
+label|:
+comment|/* Grab snapshot of secondary write counts */
 name|MNT_ILOCK
 argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
-name|loop
-label|:
-comment|/* Grab snapshot of secondary write counts */
 name|secondary_writes
 operator|=
 name|mp
@@ -7320,12 +7717,12 @@ name|mp
 operator|->
 name|mnt_secondary_accwrites
 expr_stmt|;
-comment|/* Grab snapshot of softdep dependency counts */
 name|MNT_IUNLOCK
 argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
+comment|/* Grab snapshot of softdep dependency counts */
 name|softdep_get_depcounts
 argument_list|(
 name|mp
@@ -7337,12 +7734,7 @@ operator|&
 name|softdep_accdeps
 argument_list|)
 expr_stmt|;
-name|MNT_ILOCK
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
-name|MNT_VNODE_FOREACH
+name|MNT_VNODE_FOREACH_ALL
 argument_list|(
 argument|vp
 argument_list|,
@@ -7351,19 +7743,14 @@ argument_list|,
 argument|mvp
 argument_list|)
 block|{
-comment|/* 		 * Depend on the mntvnode_slock to keep things stable enough 		 * for a quick test.  Since there might be hundreds of 		 * thousands of vnodes, we cannot afford even a subroutine 		 * call unless there's a good chance that we have work to do. 		 */
-name|VI_LOCK
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
+comment|/* 		 * Depend on the vnode interlock to keep things stable enough 		 * for a quick test.  Since there might be hundreds of 		 * thousands of vnodes, we cannot afford even a subroutine 		 * call unless there's a good chance that we have work to do. 		 */
 if|if
 condition|(
 name|vp
 operator|->
-name|v_iflag
-operator|&
-name|VI_DOOMED
+name|v_type
+operator|==
+name|VNON
 condition|)
 block|{
 name|VI_UNLOCK
@@ -7382,13 +7769,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|vp
-operator|->
-name|v_type
-operator|==
-name|VNON
-operator|||
-operator|(
 operator|(
 name|ip
 operator|->
@@ -7416,7 +7796,6 @@ operator|.
 name|bv_cnt
 operator|==
 literal|0
-operator|)
 condition|)
 block|{
 name|VI_UNLOCK
@@ -7426,11 +7805,6 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-name|MNT_IUNLOCK
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -7449,11 +7823,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|MNT_ILOCK
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|error
@@ -7465,7 +7834,7 @@ operator|==
 name|ENOLCK
 condition|)
 block|{
-name|MNT_VNODE_FOREACH_ABORT_ILOCKED
+name|MNT_VNODE_FOREACH_ALL_ABORT
 argument_list|(
 name|mp
 argument_list|,
@@ -7488,6 +7857,8 @@ argument_list|(
 name|vp
 argument_list|,
 name|waitfor
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 operator|!=
@@ -7502,17 +7873,7 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|MNT_ILOCK
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
 block|}
-name|MNT_IUNLOCK
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Force stale filesystem control information to be flushed. 	 */
 if|if
 condition|(
@@ -7552,16 +7913,9 @@ literal|0
 operator|&&
 name|count
 condition|)
-block|{
-name|MNT_ILOCK
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
 goto|goto
 name|loop
 goto|;
-block|}
 block|}
 ifdef|#
 directive|ifdef
@@ -7593,11 +7947,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|waitfor
-operator|!=
-name|MNT_LAZY
-operator|&&
-operator|(
 name|bo
 operator|->
 name|bo_numoutput
@@ -7611,7 +7960,6 @@ operator|.
 name|bv_cnt
 operator|>
 literal|0
-operator|)
 condition|)
 block|{
 name|BO_UNLOCK
@@ -7666,16 +8014,9 @@ name|waitfor
 operator|==
 name|MNT_WAIT
 condition|)
-block|{
-name|MNT_ILOCK
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
 goto|goto
 name|loop
 goto|;
-block|}
 block|}
 elseif|else
 if|if
@@ -7704,10 +8045,17 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|MNT_IUNLOCK
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
 goto|goto
 name|loop
 goto|;
 comment|/* More work needed */
+block|}
 name|mtx_assert
 argument_list|(
 name|MNT_MTX
@@ -9073,7 +9421,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: correcting fs_sblockloc from %jd to %d\n"
+literal|"WARNING: %s: correcting fs_sblockloc from %jd to %d\n"
 argument_list|,
 name|fs
 operator|->
@@ -9120,7 +9468,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: correcting fs_sblockloc from %jd to %d\n"
+literal|"WARNING: %s: correcting fs_sblockloc from %jd to %d\n"
 argument_list|,
 name|fs
 operator|->

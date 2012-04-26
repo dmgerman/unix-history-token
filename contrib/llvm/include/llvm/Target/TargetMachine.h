@@ -62,7 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCCodeGenInfo.h"
+file|"llvm/Support/CodeGen.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetOptions.h"
 end_include
 
 begin_include
@@ -94,6 +100,9 @@ name|class
 name|JITCodeEmitter
 decl_stmt|;
 name|class
+name|GlobalValue
+decl_stmt|;
+name|class
 name|MCAsmInfo
 decl_stmt|;
 name|class
@@ -101,12 +110,6 @@ name|MCCodeGenInfo
 decl_stmt|;
 name|class
 name|MCContext
-decl_stmt|;
-name|class
-name|Pass
-decl_stmt|;
-name|class
-name|PassManager
 decl_stmt|;
 name|class
 name|PassManagerBase
@@ -136,6 +139,9 @@ name|class
 name|TargetLowering
 decl_stmt|;
 name|class
+name|TargetPassConfig
+decl_stmt|;
+name|class
 name|TargetRegisterInfo
 decl_stmt|;
 name|class
@@ -150,50 +156,6 @@ decl_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;
-comment|// Code generation optimization level.
-name|namespace
-name|CodeGenOpt
-block|{
-enum|enum
-name|Level
-block|{
-name|None
-block|,
-comment|// -O0
-name|Less
-block|,
-comment|// -O1
-name|Default
-block|,
-comment|// -O2, -Os
-name|Aggressive
-comment|// -O3
-block|}
-enum|;
-block|}
-name|namespace
-name|Sched
-block|{
-enum|enum
-name|Preference
-block|{
-name|None
-block|,
-comment|// No preference
-name|Latency
-block|,
-comment|// Scheduling for shortest total latency.
-name|RegPressure
-block|,
-comment|// Scheduling for lowest register pressure.
-name|Hybrid
-block|,
-comment|// Scheduling for both latency and register pressure.
-name|ILP
-comment|// Scheduling for ILP in low register pressure mode.
-block|}
-enum|;
-block|}
 comment|//===----------------------------------------------------------------------===//
 comment|///
 comment|/// TargetMachine - Primary interface to the complete machine description for
@@ -233,6 +195,8 @@ argument_list|,
 argument|StringRef CPU
 argument_list|,
 argument|StringRef FS
+argument_list|,
+argument|const TargetOptions&Options
 argument_list|)
 empty_stmt|;
 comment|/// getSubtargetImpl - virtual method implemented by subclasses that returns
@@ -310,6 +274,11 @@ name|MCUseCFI
 range|:
 literal|1
 decl_stmt|;
+name|unsigned
+name|MCUseDwarfDirectory
+range|:
+literal|1
+decl_stmt|;
 name|public
 label|:
 name|virtual
@@ -358,6 +327,9 @@ return|return
 name|TargetFS
 return|;
 block|}
+name|TargetOptions
+name|Options
+decl_stmt|;
 comment|// Interfaces to the major aspects of target machine information:
 comment|// -- Instruction opcode and operand information
 comment|// -- Pipelines and scheduling information
@@ -659,6 +631,31 @@ operator|=
 name|Value
 expr_stmt|;
 block|}
+comment|/// hasMCUseDwarfDirectory - Check whether we should use .file directives with
+comment|/// explicit directories.
+name|bool
+name|hasMCUseDwarfDirectory
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MCUseDwarfDirectory
+return|;
+block|}
+comment|/// setMCUseDwarfDirectory - Set whether all we should use .file directives
+comment|/// with explicit directories.
+name|void
+name|setMCUseDwarfDirectory
+parameter_list|(
+name|bool
+name|Value
+parameter_list|)
+block|{
+name|MCUseDwarfDirectory
+operator|=
+name|Value
+expr_stmt|;
+block|}
 comment|/// getRelocationModel - Returns the code generation relocation model. The
 comment|/// choices are static, PIC, and dynamic-no-pic, and target default.
 name|Reloc
@@ -677,6 +674,51 @@ name|getCodeModel
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// getTLSModel - Returns the TLS model which should be used for the given
+comment|/// global variable.
+name|TLSModel
+operator|::
+name|Model
+name|getTLSModel
+argument_list|(
+argument|const GlobalValue *GV
+argument_list|)
+specifier|const
+expr_stmt|;
+comment|/// getOptLevel - Returns the optimization level: None, Less,
+comment|/// Default, or Aggressive.
+name|CodeGenOpt
+operator|::
+name|Level
+name|getOptLevel
+argument_list|()
+specifier|const
+expr_stmt|;
+name|void
+name|setFastISel
+parameter_list|(
+name|bool
+name|Enable
+parameter_list|)
+block|{
+name|Options
+operator|.
+name|EnableFastISel
+operator|=
+name|Enable
+expr_stmt|;
+block|}
+name|bool
+name|shouldPrintMachineCode
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Options
+operator|.
+name|PrintMachineCode
+return|;
+block|}
 comment|/// getAsmVerbosityDefault - Returns the default value of asm verbosity.
 comment|///
 specifier|static
@@ -738,18 +780,6 @@ name|CGFT_Null
 comment|// Do not emit any output.
 block|}
 enum|;
-comment|/// getEnableTailMergeDefault - the default setting for -enable-tail-merge
-comment|/// on this target.  User flag overrides.
-name|virtual
-name|bool
-name|getEnableTailMergeDefault
-argument_list|()
-specifier|const
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|/// addPassesToEmitFile - Add passes to the specified pass manager to get the
 comment|/// specified file emitted.  Typically this will involve several steps of code
 comment|/// generation.  This method should return true if emission of this file type
@@ -757,23 +787,20 @@ comment|/// is not supported, or false on success.
 name|virtual
 name|bool
 name|addPassesToEmitFile
-argument_list|(
+parameter_list|(
 name|PassManagerBase
-operator|&
-argument_list|,
+modifier|&
+parameter_list|,
 name|formatted_raw_ostream
-operator|&
-argument_list|,
+modifier|&
+parameter_list|,
 name|CodeGenFileType
-argument_list|,
-name|CodeGenOpt
-operator|::
-name|Level
-argument_list|,
+parameter_list|,
 name|bool
-operator|=
+comment|/*DisableVerify*/
+init|=
 name|true
-argument_list|)
+parameter_list|)
 block|{
 return|return
 name|true
@@ -788,21 +815,18 @@ comment|///
 name|virtual
 name|bool
 name|addPassesToEmitMachineCode
-argument_list|(
+parameter_list|(
 name|PassManagerBase
-operator|&
-argument_list|,
+modifier|&
+parameter_list|,
 name|JITCodeEmitter
-operator|&
-argument_list|,
-name|CodeGenOpt
-operator|::
-name|Level
-argument_list|,
+modifier|&
+parameter_list|,
 name|bool
-operator|=
+comment|/*DisableVerify*/
+init|=
 name|true
-argument_list|)
+parameter_list|)
 block|{
 return|return
 name|true
@@ -816,25 +840,22 @@ comment|///
 name|virtual
 name|bool
 name|addPassesToEmitMC
-argument_list|(
+parameter_list|(
 name|PassManagerBase
-operator|&
-argument_list|,
+modifier|&
+parameter_list|,
 name|MCContext
-operator|*
-operator|&
-argument_list|,
+modifier|*
+modifier|&
+parameter_list|,
 name|raw_ostream
-operator|&
-argument_list|,
-name|CodeGenOpt
-operator|::
-name|Level
-argument_list|,
+modifier|&
+parameter_list|,
 name|bool
-operator|=
+comment|/*DisableVerify*/
+init|=
 name|true
-argument_list|)
+parameter_list|)
 block|{
 return|return
 name|true
@@ -864,34 +885,32 @@ argument|StringRef CPU
 argument_list|,
 argument|StringRef FS
 argument_list|,
+argument|TargetOptions Options
+argument_list|,
 argument|Reloc::Model RM
 argument_list|,
 argument|CodeModel::Model CM
-argument_list|)
-block|;
-name|private
-operator|:
-comment|/// addCommonCodeGenPasses - Add standard LLVM codegen passes used for
-comment|/// both emitting to assembly files or machine code output.
-comment|///
-name|bool
-name|addCommonCodeGenPasses
-argument_list|(
-argument|PassManagerBase&
 argument_list|,
-argument|CodeGenOpt::Level
-argument_list|,
-argument|bool DisableVerify
-argument_list|,
-argument|MCContext *&OutCtx
+argument|CodeGenOpt::Level OL
 argument_list|)
 block|;
 name|public
 operator|:
+comment|/// createPassConfig - Create a pass configuration object to be used by
+comment|/// addPassToEmitX methods for generating a pipeline of CodeGen passes.
+name|virtual
+name|TargetPassConfig
+operator|*
+name|createPassConfig
+argument_list|(
+name|PassManagerBase
+operator|&
+name|PM
+argument_list|)
+block|;
 comment|/// addPassesToEmitFile - Add passes to the specified pass manager to get the
 comment|/// specified file emitted.  Typically this will involve several steps of code
-comment|/// generation.  If OptLevel is None, the code generator should emit code as
-comment|/// fast as possible, though the generated code may be less efficient.
+comment|/// generation.
 name|virtual
 name|bool
 name|addPassesToEmitFile
@@ -901,8 +920,6 @@ argument_list|,
 argument|formatted_raw_ostream&Out
 argument_list|,
 argument|CodeGenFileType FileType
-argument_list|,
-argument|CodeGenOpt::Level
 argument_list|,
 argument|bool DisableVerify = true
 argument_list|)
@@ -920,8 +937,6 @@ argument_list|(
 argument|PassManagerBase&PM
 argument_list|,
 argument|JITCodeEmitter&MCE
-argument_list|,
-argument|CodeGenOpt::Level
 argument_list|,
 argument|bool DisableVerify = true
 argument_list|)
@@ -941,108 +956,9 @@ argument|MCContext *&Ctx
 argument_list|,
 argument|raw_ostream&OS
 argument_list|,
-argument|CodeGenOpt::Level OptLevel
-argument_list|,
 argument|bool DisableVerify = true
 argument_list|)
 block|;
-comment|/// Target-Independent Code Generator Pass Configuration Options.
-comment|/// addPreISelPasses - This method should add any "last minute" LLVM->LLVM
-comment|/// passes (which are run just before instruction selector).
-name|virtual
-name|bool
-name|addPreISel
-argument_list|(
-argument|PassManagerBase&
-argument_list|,
-argument|CodeGenOpt::Level
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-comment|/// addInstSelector - This method should install an instruction selector pass,
-comment|/// which converts from LLVM code to machine instructions.
-name|virtual
-name|bool
-name|addInstSelector
-argument_list|(
-argument|PassManagerBase&
-argument_list|,
-argument|CodeGenOpt::Level
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-comment|/// addPreRegAlloc - This method may be implemented by targets that want to
-comment|/// run passes immediately before register allocation. This should return
-comment|/// true if -print-machineinstrs should print after these passes.
-name|virtual
-name|bool
-name|addPreRegAlloc
-argument_list|(
-argument|PassManagerBase&
-argument_list|,
-argument|CodeGenOpt::Level
-argument_list|)
-block|{
-return|return
-name|false
-return|;
-block|}
-comment|/// addPostRegAlloc - This method may be implemented by targets that want
-comment|/// to run passes after register allocation but before prolog-epilog
-comment|/// insertion.  This should return true if -print-machineinstrs should print
-comment|/// after these passes.
-name|virtual
-name|bool
-name|addPostRegAlloc
-argument_list|(
-argument|PassManagerBase&
-argument_list|,
-argument|CodeGenOpt::Level
-argument_list|)
-block|{
-return|return
-name|false
-return|;
-block|}
-comment|/// addPreSched2 - This method may be implemented by targets that want to
-comment|/// run passes after prolog-epilog insertion and before the second instruction
-comment|/// scheduling pass.  This should return true if -print-machineinstrs should
-comment|/// print after these passes.
-name|virtual
-name|bool
-name|addPreSched2
-argument_list|(
-argument|PassManagerBase&
-argument_list|,
-argument|CodeGenOpt::Level
-argument_list|)
-block|{
-return|return
-name|false
-return|;
-block|}
-comment|/// addPreEmitPass - This pass may be implemented by targets that want to run
-comment|/// passes immediately before machine code is emitted.  This should return
-comment|/// true if -print-machineinstrs should print out the code after the passes.
-name|virtual
-name|bool
-name|addPreEmitPass
-argument_list|(
-argument|PassManagerBase&
-argument_list|,
-argument|CodeGenOpt::Level
-argument_list|)
-block|{
-return|return
-name|false
-return|;
-block|}
 comment|/// addCodeEmitter - This pass should be overridden by the target to add a
 comment|/// code emitter, if supported.  If this is not supported, 'true' should be
 comment|/// returned.
@@ -1052,22 +968,8 @@ name|addCodeEmitter
 argument_list|(
 argument|PassManagerBase&
 argument_list|,
-argument|CodeGenOpt::Level
-argument_list|,
 argument|JITCodeEmitter&
 argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-comment|/// getEnableTailMergeDefault - the default setting for -enable-tail-merge
-comment|/// on this target.  User flag overrides.
-name|virtual
-name|bool
-name|getEnableTailMergeDefault
-argument_list|()
-specifier|const
 block|{
 return|return
 name|true

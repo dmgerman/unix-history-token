@@ -20,11 +20,6 @@ end_expr_stmt
 begin_if
 if|#
 directive|if
-name|ARCHIVE_VERSION_NUMBER
-operator|>=
-literal|1009000
-operator|&&
-operator|(
 operator|!
 name|defined
 argument_list|(
@@ -35,7 +30,6 @@ name|defined
 argument_list|(
 name|__CYGWIN__
 argument_list|)
-operator|)
 end_if
 
 begin_define
@@ -372,11 +366,6 @@ begin_block
 block|{
 if|#
 directive|if
-name|ARCHIVE_VERSION_NUMBER
-operator|<
-literal|1009000
-operator|||
-operator|(
 name|defined
 argument_list|(
 name|_WIN32
@@ -387,7 +376,6 @@ name|defined
 argument_list|(
 name|__CYGWIN__
 argument_list|)
-operator|)
 name|skipping
 argument_list|(
 literal|"archive_write_disk interface"
@@ -1690,30 +1678,16 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|ARCHIVE_VERSION_NUMBER
-operator|<
-literal|2000000
-name|archive_write_finish
+name|assertEqualInt
 argument_list|(
-name|a
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|assert
-argument_list|(
-literal|0
-operator|==
-name|archive_write_finish
+name|ARCHIVE_OK
+argument_list|,
+name|archive_write_free
 argument_list|(
 name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|archive_entry_free
 argument_list|(
 name|ae

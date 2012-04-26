@@ -1126,7 +1126,7 @@ name|cpu_freq
 condition|)
 name|printf
 argument_list|(
-literal|"%u Mhz "
+literal|"%u MHz "
 argument_list|,
 name|cpu_freq
 argument_list|)

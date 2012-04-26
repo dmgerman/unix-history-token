@@ -643,7 +643,7 @@ modifier|*
 name|bas
 parameter_list|,
 name|int
-name|ac
+name|tid
 parameter_list|,
 name|int
 name|txq
@@ -661,10 +661,7 @@ name|qos
 operator|=
 name|htole16
 argument_list|(
-name|WME_AC_TO_TID
-argument_list|(
-name|ac
-argument_list|)
+name|tid
 operator||
 name|IEEE80211_QOS_ACKPOLICY_BA
 argument_list|)

@@ -1499,7 +1499,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * stream reset event  */
+comment|/*  * Stream reset event - subscribe to SCTP_STREAM_RESET_EVENT  */
 end_comment
 
 begin_struct
@@ -1519,7 +1519,7 @@ name|sctp_assoc_t
 name|strreset_assoc_id
 decl_stmt|;
 name|uint16_t
-name|strreset_list
+name|strreset_stream_list
 index|[]
 decl_stmt|;
 block|}
@@ -1527,49 +1527,130 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* flags in strreset_flags field */
+comment|/* flags in stream_reset_event (strreset_flags) */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SCTP_STRRESET_INBOUND_STR
+name|SCTP_STREAM_RESET_INCOMING_SSN
 value|0x0001
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_STRRESET_OUTBOUND_STR
+name|SCTP_STREAM_RESET_OUTGOING_SSN
 value|0x0002
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_STRRESET_ALL_STREAMS
+name|SCTP_STREAM_RESET_DENIED
 value|0x0004
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_STRRESET_STREAM_LIST
+name|SCTP_STREAM_RESET_FAILED
 value|0x0008
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_STRRESET_FAILED
+name|SCTP_STREAM_CHANGED_DENIED
 value|0x0010
+end_define
+
+begin_comment
+comment|/*  * Assoc reset event - subscribe to SCTP_ASSOC_RESET_EVENT  */
+end_comment
+
+begin_struct
+struct|struct
+name|sctp_assoc_reset_event
+block|{
+name|uint16_t
+name|assocreset_type
+decl_stmt|;
+name|uint16_t
+name|assocreset_flags
+decl_stmt|;
+name|uint32_t
+name|assocreset_length
+decl_stmt|;
+name|sctp_assoc_t
+name|assocreset_assoc_id
+decl_stmt|;
+name|uint32_t
+name|assocreset_local_tsn
+decl_stmt|;
+name|uint32_t
+name|assocreset_remote_tsn
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|SCTP_ASSOC_RESET_DENIED
+value|0x0004
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_STRRESET_ADD_STREAM
-value|0x0020
+name|SCTP_ASSOC_RESET_FAILED
+value|0x0008
+end_define
+
+begin_comment
+comment|/*  * Stream change event - subscribe to SCTP_STREAM_CHANGE_EVENT  */
+end_comment
+
+begin_struct
+struct|struct
+name|sctp_stream_change_event
+block|{
+name|uint16_t
+name|strchange_type
+decl_stmt|;
+name|uint16_t
+name|strchange_flags
+decl_stmt|;
+name|uint32_t
+name|strchange_length
+decl_stmt|;
+name|sctp_assoc_t
+name|strchange_assoc_id
+decl_stmt|;
+name|uint16_t
+name|strchange_instrms
+decl_stmt|;
+name|uint16_t
+name|strchange_outstrms
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|SCTP_STREAM_CHANGE_DENIED
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_STREAM_CHANGE_FAILED
+value|0x0008
 end_define
 
 begin_comment
@@ -1645,6 +1726,14 @@ decl_stmt|;
 name|struct
 name|sctp_stream_reset_event
 name|sn_strreset_event
+decl_stmt|;
+name|struct
+name|sctp_assoc_reset_event
+name|sn_assocreset_event
+decl_stmt|;
+name|struct
+name|sctp_stream_change_event
+name|sn_strchange_event
 decl_stmt|;
 block|}
 union|;
@@ -1745,6 +1834,20 @@ end_define
 begin_comment
 comment|/* we don't send this */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_ASSOC_RESET_EVENT
+value|0x000c
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_STREAM_CHANGE_EVENT
+value|0x000d
+end_define
 
 begin_comment
 comment|/*  * socket option structs  */
@@ -2434,60 +2537,42 @@ name|SCTP_MAX_EXPLICT_STR_RESET
 value|1000
 end_define
 
-begin_define
-define|#
-directive|define
-name|SCTP_RESET_LOCAL_RECV
-value|0x0001
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTP_RESET_LOCAL_SEND
-value|0x0002
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTP_RESET_BOTH
-value|0x0003
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTP_RESET_TSN
-value|0x0004
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTP_RESET_ADD_STREAMS
-value|0x0005
-end_define
-
 begin_struct
 struct|struct
-name|sctp_stream_reset
+name|sctp_reset_streams
 block|{
 name|sctp_assoc_t
-name|strrst_assoc_id
+name|srs_assoc_id
 decl_stmt|;
 name|uint16_t
-name|strrst_flags
+name|srs_flags
 decl_stmt|;
 name|uint16_t
-name|strrst_num_streams
+name|srs_number_streams
 decl_stmt|;
 comment|/* 0 == ALL */
 name|uint16_t
-name|strrst_list
+name|srs_stream_list
 index|[]
 decl_stmt|;
 comment|/* list if strrst_num_streams is not 0 */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|sctp_add_streams
+block|{
+name|sctp_assoc_t
+name|sas_assoc_id
+decl_stmt|;
+name|uint16_t
+name|sas_instrms
+decl_stmt|;
+name|uint16_t
+name|sas_outstrms
+decl_stmt|;
 block|}
 struct|;
 end_struct

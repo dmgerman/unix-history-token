@@ -109,6 +109,11 @@ comment|//===-------------------------------------------------------------------
 name|class
 name|MachinePassRegistryListener
 block|{
+name|virtual
+name|void
+name|anchor
+parameter_list|()
+function_decl|;
 name|public
 label|:
 name|MachinePassRegistryListener

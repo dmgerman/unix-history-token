@@ -491,7 +491,7 @@ name|ah_macVersion
 operator|=
 name|AR_XSREV_VERSION_HOWL
 expr_stmt|;
-comment|/* 	 * Use the "local" EEPROM data given to us by the higher layers. 	 * This is a private copy out of system flash. The Linux ath9k 	 * commit for the initial AR9130 support mentions MMIO flash 	 * access is "unreliable." -adrian 	 */
+comment|/* 	 * Use the "local" EEPROM data given to us by the higher layers. 	 * This is a private copy out of system flash. 	 * By this stage the SoC SPI flash may have disabled the memory- 	 * mapping and rely purely on port-based SPI IO. 	 */
 name|AH_PRIVATE
 argument_list|(
 operator|(
@@ -501,7 +501,7 @@ argument_list|)
 operator|->
 name|ah_eepromRead
 operator|=
-name|ar9130EepromRead
+name|ath_hal_EepromDataRead
 expr_stmt|;
 name|AH_PRIVATE
 argument_list|(

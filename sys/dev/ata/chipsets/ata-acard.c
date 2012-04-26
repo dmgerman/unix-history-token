@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 - 2008 Søren Schmidt<sos@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1998 - 2008 SÃ¸ren Schmidt<sos@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -155,6 +155,12 @@ directive|include
 file|<ata_if.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATA_CAM
+end_ifndef
+
 begin_struct
 struct|struct
 name|ata_serialize
@@ -173,6 +179,11 @@ block|}
 struct|;
 end_struct
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* local prototypes */
 end_comment
@@ -181,17 +192,6 @@ begin_function_decl
 specifier|static
 name|int
 name|ata_acard_chipinit
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|ata_acard_chipdeinit
 parameter_list|(
 name|device_t
 name|dev
@@ -255,6 +255,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATA_CAM
+end_ifndef
+
+begin_function_decl
+specifier|static
+name|int
+name|ata_acard_chipdeinit
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function_decl
 specifier|static
 name|int
@@ -281,6 +298,11 @@ name|serial
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* misc defines */
@@ -317,8 +339,10 @@ name|dev
 argument_list|)
 decl_stmt|;
 specifier|static
+specifier|const
 name|struct
 name|ata_chip_id
+specifier|const
 name|ids
 index|[]
 init|=
@@ -450,12 +474,17 @@ name|chipinit
 operator|=
 name|ata_acard_chipinit
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|ATA_CAM
 name|ctlr
 operator|->
 name|chipdeinit
 operator|=
 name|ata_acard_chipdeinit
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|BUS_PROBE_DEFAULT
@@ -483,11 +512,16 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|ATA_CAM
 name|struct
 name|ata_serialize
 modifier|*
 name|serial
 decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|ata_setup_interrupt
@@ -529,6 +563,9 @@ name|setmode
 operator|=
 name|ata_acard_850_setmode
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|ATA_CAM
 name|ctlr
 operator|->
 name|locking
@@ -563,6 +600,8 @@ name|chipset_data
 operator|=
 name|serial
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 name|ctlr
@@ -576,6 +615,12 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATA_CAM
+end_ifndef
 
 begin_function
 specifier|static
@@ -647,6 +692,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -1222,6 +1272,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATA_CAM
+end_ifndef
+
 begin_function
 specifier|static
 name|void
@@ -1466,6 +1522,11 @@ name|res
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|ATA_DECLARE_DRIVER

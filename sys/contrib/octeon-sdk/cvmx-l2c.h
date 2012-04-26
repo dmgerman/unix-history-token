@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Networks (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Networks nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM  NETWORKS MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
+comment|/***********************license start***************  * Copyright (c) 2003-2011  Cavium, Inc. (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Inc. nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM INC. MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
 end_comment
 
 begin_comment
-comment|/**  * @file  *  * Interface to the Level 2 Cache (L2C) control, measurement, and debugging  * facilities.  *  *<hr>$Revision: 52004 $<hr>  *  */
+comment|/**  * @file  *  * Interface to the Level 2 Cache (L2C) control, measurement, and debugging  * facilities.  *  *<hr>$Revision: 70030 $<hr>  *  */
 end_comment
 
 begin_ifndef
@@ -18,39 +18,6 @@ define|#
 directive|define
 name|__CVMX_L2C_H__
 end_define
-
-begin_define
-define|#
-directive|define
-name|CVMX_L2_ASSOC
-value|cvmx_l2c_get_num_assoc()
-end_define
-
-begin_comment
-comment|/* Deprecated macro, use function */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CVMX_L2_SET_BITS
-value|cvmx_l2c_get_set_bits()
-end_define
-
-begin_comment
-comment|/* Deprecated macro, use function */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CVMX_L2_SETS
-value|cvmx_l2c_get_num_sets()
-end_define
-
-begin_comment
-comment|/* Deprecated macro, use function */
-end_comment
 
 begin_define
 define|#
@@ -103,14 +70,14 @@ begin_define
 define|#
 directive|define
 name|CVMX_L2C_VRT_MAX_VIRTID_ALLOWED
-value|((OCTEON_IS_MODEL(OCTEON_CN63XX)) ? 64 : 0)
+value|((OCTEON_IS_MODEL(OCTEON_CN6XXX) || OCTEON_IS_MODEL(OCTEON_CNF7XXX)) ? 64 : 0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CVMX_L2C_VRT_MAX_MEMSZ_ALLOWED
-value|((OCTEON_IS_MODEL(OCTEON_CN63XX)) ? 32 : 0)
+name|CVMX_L2C_MAX_MEMSZ_ALLOWED
+value|((OCTEON_IS_MODEL(OCTEON_CN6XXX) || OCTEON_IS_MODEL(OCTEON_CNF7XXX)) ? 32 : 0)
 end_define
 
 begin_comment
@@ -125,18 +92,16 @@ begin_comment
 comment|/*------------*/
 end_comment
 
-begin_typedef
-typedef|typedef
+begin_union
 union|union
+name|cvmx_l2c_tag
 block|{
 name|uint64_t
 name|u64
 decl_stmt|;
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 struct|struct
 block|{
 name|uint64_t
@@ -149,40 +114,111 @@ name|V
 range|:
 literal|1
 decl_stmt|;
-comment|// Line valid
+comment|/* Line valid */
 name|uint64_t
 name|D
 range|:
 literal|1
 decl_stmt|;
-comment|// Line dirty
+comment|/* Line dirty */
 name|uint64_t
 name|L
 range|:
 literal|1
 decl_stmt|;
-comment|// Line locked
+comment|/* Line locked */
 name|uint64_t
 name|U
 range|:
 literal|1
 decl_stmt|;
-comment|// Use, LRU eviction
+comment|/* Use, LRU eviction */
 name|uint64_t
 name|addr
 range|:
 literal|32
 decl_stmt|;
-comment|// Phys mem (not all bits valid)
+comment|/* Phys mem (not all bits valid) */
+block|}
+name|s
+struct|;
+else|#
+directive|else
+struct|struct
+block|{
+name|uint64_t
+name|addr
+range|:
+literal|32
+decl_stmt|;
+comment|/* Phys mem (not all bits valid) */
+name|uint64_t
+name|U
+range|:
+literal|1
+decl_stmt|;
+comment|/* Use, LRU eviction */
+name|uint64_t
+name|L
+range|:
+literal|1
+decl_stmt|;
+comment|/* Line locked */
+name|uint64_t
+name|D
+range|:
+literal|1
+decl_stmt|;
+comment|/* Line dirty */
+name|uint64_t
+name|V
+range|:
+literal|1
+decl_stmt|;
+comment|/* Line valid */
+name|uint64_t
+name|reserved
+range|:
+literal|28
+decl_stmt|;
 block|}
 name|s
 struct|;
 endif|#
 directive|endif
 block|}
+union|;
+end_union
+
+begin_typedef
+typedef|typedef
+name|union
+name|cvmx_l2c_tag
 name|cvmx_l2c_tag_t
 typedef|;
 end_typedef
+
+begin_comment
+comment|/* Maximium number of TADs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CVMX_L2C_MAX_TADS
+value|4
+end_define
+
+begin_comment
+comment|/* Maximium number of L2C performance counters */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CVMX_L2C_MAX_PCNT
+value|4
+end_define
 
 begin_comment
 comment|/* Number of L2C Tag-and-data sections (TADs) that are connected to LMC. */
@@ -192,16 +228,27 @@ begin_define
 define|#
 directive|define
 name|CVMX_L2C_TADS
-value|1
+value|((OCTEON_IS_MODEL(OCTEON_CN68XX)) ? 4 : 1)
+end_define
+
+begin_comment
+comment|/* Number of L2C IOBs connected to LMC. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CVMX_L2C_IOBS
+value|((OCTEON_IS_MODEL(OCTEON_CN68XX)) ? 2 : 1)
 end_define
 
 begin_comment
 comment|/* L2C Performance Counter events. */
 end_comment
 
-begin_typedef
-typedef|typedef
+begin_enum
 enum|enum
+name|cvmx_l2c_event
 block|{
 name|CVMX_L2C_EVENT_CYCLES
 init|=
@@ -475,6 +522,13 @@ block|,
 comment|/**< DT WR-INVAL */
 name|CVMX_L2C_EVENT_MAX
 block|}
+enum|;
+end_enum
+
+begin_typedef
+typedef|typedef
+name|enum
+name|cvmx_l2c_event
 name|cvmx_l2c_event_t
 typedef|;
 end_typedef
@@ -483,9 +537,9 @@ begin_comment
 comment|/* L2C Performance Counter events for Octeon2. */
 end_comment
 
-begin_typedef
-typedef|typedef
+begin_enum
 enum|enum
+name|cvmx_l2c_tad_event
 block|{
 name|CVMX_L2C_TAD_EVENT_NONE
 init|=
@@ -619,6 +673,13 @@ block|,
 comment|/* Quad 3 wdat flops inuse (0-4/cycle) */
 name|CVMX_L2C_TAD_EVENT_MAX
 block|}
+enum|;
+end_enum
+
+begin_typedef
+typedef|typedef
+name|enum
+name|cvmx_l2c_tad_event
 name|cvmx_l2c_tad_event_t
 typedef|;
 end_typedef
@@ -672,7 +733,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Partitions the L2 cache for a core  *  * @param core   The core that the partitioning applies to.  * @param mask The partitioning of the ways expressed as a binary mask. A 0 bit allows the core  *             to evict cache lines from a way, while a 1 bit blocks the core from evicting any lines  *             from that way. There must be at least one allowed way (0 bit) in the mask.  *  * @note  If any ways are blocked for all cores and the HW blocks, then those ways will never have  *        any cache lines evicted from them.  All cores and the hardware blocks are free to read from  *        all ways regardless of the partitioning.  */
+comment|/**  * Partitions the L2 cache for a core  *  * @param core The core that the partitioning applies to.  * @param mask The partitioning of the ways expressed as a binary  *             mask. A 0 bit allows the core to evict cache lines from  *             a way, while a 1 bit blocks the core from evicting any  *             lines from that way. There must be at least one allowed  *             way (0 bit) in the mask.  *   * @note If any ways are blocked for all cores and the HW blocks, then  *       those ways will never have any cache lines evicted from them.  *       All cores and the hardware blocks are free to read from all  *       ways regardless of the partitioning.  */
 end_comment
 
 begin_function_decl
@@ -702,12 +763,39 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Partitions the L2 cache for the hardware blocks.  *  * @param mask The partitioning of the ways expressed as a binary mask. A 0 bit allows the core  *             to evict cache lines from a way, while a 1 bit blocks the core from evicting any lines  *             from that way. There must be at least one allowed way (0 bit) in the mask.  *  * @note  If any ways are blocked for all cores and the HW blocks, then those ways will never have  *        any cache lines evicted from them.  All cores and the hardware blocks are free to read from  *        all ways regardless of the partitioning.  */
+comment|/**  * Partitions the L2 cache for the hardware blocks.  *  * @param mask The partitioning of the ways expressed as a binary  *             mask. A 0 bit allows the core to evict cache lines from  *             a way, while a 1 bit blocks the core from evicting any  *             lines from that way. There must be at least one allowed  *             way (0 bit) in the mask.  *   * @note If any ways are blocked for all cores and the HW blocks, then  *       those ways will never have any cache lines evicted from them.  *       All cores and the hardware blocks are free to read from all  *       ways regardless of the partitioning.  */
 end_comment
 
 begin_function_decl
 name|int
 name|cvmx_l2c_set_hw_way_partition
+parameter_list|(
+name|uint32_t
+name|mask
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * Return the L2 Cache way partitioning for the second set of hw blocks.  *  * @return    The mask specifying the reserved way. 0 bits in mask indicates  *              the cache 'ways' that a core can evict from.  *            -1 on error  */
+end_comment
+
+begin_function_decl
+name|int
+name|cvmx_l2c_get_hw_way_partition2
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * Partitions the L2 cache for the second set of  blocks.  *  * @param mask The partitioning of the ways expressed as a binary  *             mask. A 0 bit allows the core to evict cache lines from  *             a way, while a 1 bit blocks the core from evicting any  *             lines from that way. There must be at least one allowed  *             way (0 bit) in the mask.  *   * @note If any ways are blocked for all cores and the HW blocks, then  *       those ways will never have any cache lines evicted from them.  *       All cores and the hardware blocks are free to read from all  *       ways regardless of the partitioning.  */
+end_comment
+
+begin_function_decl
+name|int
+name|cvmx_l2c_set_hw_way_partition2
 parameter_list|(
 name|uint32_t
 name|mask
@@ -778,31 +866,12 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Read the L2 controller tag for a given location in L2  *  * @param association  *               Which association to read line from  * @param index  Which way to read from.  *  * @return l2c tag structure for line requested.  */
+comment|/**  * Read the L2 controller tag for a given location in L2  *  * @param association  *               Which association to read line from  * @param index  Which way to read from.  *  * @return l2c tag structure for line requested.  *   * NOTE: This function is deprecated and cannot be used on devices with   *       multiple L2C interfaces such as the OCTEON CN68XX.  *       Please use cvmx_l2c_get_tag_v2 instead.  */
 end_comment
 
 begin_function_decl
 name|cvmx_l2c_tag_t
 name|cvmx_l2c_get_tag
-parameter_list|(
-name|uint32_t
-name|association
-parameter_list|,
-name|uint32_t
-name|index
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Wrapper providing a deprecated old function name */
-end_comment
-
-begin_function_decl
-specifier|static
-specifier|inline
-name|cvmx_l2c_tag_t
-name|cvmx_get_l2c_tag
 parameter_list|(
 name|uint32_t
 name|association
@@ -820,29 +889,39 @@ unit|))
 empty_stmt|;
 end_empty_stmt
 
-begin_function
-specifier|static
-specifier|inline
+begin_comment
+comment|/**  * Read the L2 controller tag for a given location in L2  *  * @param association  *               Which association to read line from  * @param index  Which way to read from.  *   * @param tad    Which TAD to read from, set to 0 except on OCTEON CN68XX.  *  * @return l2c tag structure for line requested.  */
+end_comment
+
+begin_function_decl
 name|cvmx_l2c_tag_t
-name|cvmx_get_l2c_tag
+name|cvmx_l2c_get_tag_v2
 parameter_list|(
 name|uint32_t
 name|association
 parameter_list|,
 name|uint32_t
 name|index
+parameter_list|,
+name|uint32_t
+name|tad
 parameter_list|)
-block|{
-return|return
-name|cvmx_l2c_get_tag
-argument_list|(
-name|association
-argument_list|,
-name|index
-argument_list|)
-return|;
-block|}
-end_function
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * Find the TAD for the specified address  *  * @param addr   physical address to get TAD for  *   * @return TAD number for address.  */
+end_comment
+
+begin_function_decl
+name|int
+name|cvmx_l2c_address_to_tad
+parameter_list|(
+name|uint64_t
+name|addr
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/**  * Returns the cache index for a given physical address  *  * @param addr   physical address  *  * @return L2 cache index  */
@@ -851,6 +930,20 @@ end_comment
 begin_function_decl
 name|uint32_t
 name|cvmx_l2c_address_to_index
+parameter_list|(
+name|uint64_t
+name|addr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * Returns the L2 tag that will be used for the given physical address  *  * @param addr   physical address  * @return L2 cache tag. Addreses in the LMC hole are not valid.  * Returns 0xFFFFFFFF if the address specified is in the LMC hole.  */
+end_comment
+
+begin_function_decl
+name|uint32_t
+name|cvmx_l2c_v2_address_to_tag
 parameter_list|(
 name|uint64_t
 name|addr
@@ -939,6 +1032,39 @@ name|index
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/**  * Initialize the BIG address in L2C+DRAM to generate proper error  * on reading/writing to an non-existant memory location.   *  * @param mem_size  Amount of DRAM configured in MB.  * @param mode      Allow/Disallow reporting errors L2C_INT_SUM[BIGRD,BIGWR].  */
+end_comment
+
+begin_function_decl
+name|void
+name|cvmx_l2c_set_big_size
+parameter_list|(
+name|uint64_t
+name|mem_size
+parameter_list|,
+name|int
+name|mode
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|CVMX_BUILD_FOR_LINUX_HOST
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|CVMX_BUILD_FOR_LINUX_KERNEL
+argument_list|)
+end_if
 
 begin_comment
 comment|/*  * Set maxium number of Virtual IDS allowed in a machine.  *  * @param nvid  Number of virtial ids allowed in a machine.  * @return      Return 0 on success or -1 on failure.  */
@@ -1061,6 +1187,15 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CVMX_BUILD_FOR_LINUX_HOST */
+end_comment
 
 begin_endif
 endif|#

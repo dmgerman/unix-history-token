@@ -48,23 +48,50 @@ begin_comment
 comment|/* b */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_ARM_HARD_FLOAT
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|FLT_ROUNDS
-value|-1
+value|__flt_rounds()
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|FLT_ROUNDS
+value|(-1)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__ISO_C_VISIBLE
+operator|>=
+literal|1999
+end_if
 
 begin_define
 define|#
 directive|define
 name|FLT_EVAL_METHOD
-value|(-1)
+value|0
 end_define
-
-begin_comment
-comment|/* XXX */
-end_comment
 
 begin_define
 define|#
@@ -76,6 +103,11 @@ end_define
 begin_comment
 comment|/* max precision in decimal digits */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -176,6 +208,52 @@ begin_comment
 comment|/* floor(log10((1-b**(-p))*b**emax)) */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__ISO_C_VISIBLE
+operator|>=
+literal|2011
+end_if
+
+begin_define
+define|#
+directive|define
+name|FLT_TRUE_MIN
+value|1.40129846E-45F
+end_define
+
+begin_comment
+comment|/* b**(emin-p) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FLT_DECIMAL_DIG
+value|9
+end_define
+
+begin_comment
+comment|/* ceil(1+p*log10(b)) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FLT_HAS_SUBNORM
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __ISO_C_VISIBLE>= 2011 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -239,6 +317,44 @@ name|DBL_MAX_10_EXP
 value|308
 end_define
 
+begin_if
+if|#
+directive|if
+name|__ISO_C_VISIBLE
+operator|>=
+literal|2011
+end_if
+
+begin_define
+define|#
+directive|define
+name|DBL_TRUE_MIN
+value|4.9406564584124654E-324
+end_define
+
+begin_define
+define|#
+directive|define
+name|DBL_DECIMAL_DIG
+value|17
+end_define
+
+begin_define
+define|#
+directive|define
+name|DBL_HAS_SUBNORM
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __ISO_C_VISIBLE>= 2011 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -250,7 +366,7 @@ begin_define
 define|#
 directive|define
 name|LDBL_EPSILON
-value|DBL_EPSILON
+value|((long double)DBL_EPSILON)
 end_define
 
 begin_define
@@ -271,7 +387,7 @@ begin_define
 define|#
 directive|define
 name|LDBL_MIN
-value|DBL_MIN
+value|((long double)DBL_MIN)
 end_define
 
 begin_define
@@ -292,7 +408,7 @@ begin_define
 define|#
 directive|define
 name|LDBL_MAX
-value|DBL_MAX
+value|((long double)DBL_MAX)
 end_define
 
 begin_define
@@ -301,6 +417,44 @@ directive|define
 name|LDBL_MAX_10_EXP
 value|DBL_MAX_10_EXP
 end_define
+
+begin_if
+if|#
+directive|if
+name|__ISO_C_VISIBLE
+operator|>=
+literal|2011
+end_if
+
+begin_define
+define|#
+directive|define
+name|LDBL_TRUE_MIN
+value|((long double)DBL_TRUE_MIN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LDBL_DECIMAL_DIG
+value|DBL_DECIMAL_DIG
+end_define
+
+begin_define
+define|#
+directive|define
+name|LDBL_HAS_SUBNORM
+value|DBL_HAS_SUBNORM
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __ISO_C_VISIBLE>= 2011 */
+end_comment
 
 begin_endif
 endif|#

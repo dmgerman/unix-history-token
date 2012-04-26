@@ -379,7 +379,7 @@ name|assertA
 argument_list|(
 literal|0
 operator|==
-name|archive_write_set_format_options
+name|archive_write_set_options
 argument_list|(
 name|a
 argument_list|,
@@ -687,21 +687,23 @@ name|entry
 argument_list|)
 expr_stmt|;
 comment|/* Close the archive . */
-name|assertA
+name|assertEqualIntA
 argument_list|(
-literal|0
-operator|==
+name|a
+argument_list|,
+name|ARCHIVE_OK
+argument_list|,
 name|archive_write_close
 argument_list|(
 name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|assertA
+name|assertEqualInt
 argument_list|(
-literal|0
-operator|==
-name|archive_write_finish
+name|ARCHIVE_OK
+argument_list|,
+name|archive_write_free
 argument_list|(
 name|a
 argument_list|)
@@ -1284,10 +1286,10 @@ argument_list|(
 name|p
 argument_list|)
 argument_list|,
-literal|0x7855
+literal|0x7875
 argument_list|)
 expr_stmt|;
-comment|/* 'Ux' extension header */
+comment|/* 'ux' extension header */
 name|assertEqualInt
 argument_list|(
 name|i2
@@ -1300,7 +1302,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 'Ux' size */
+comment|/* 'ux' size */
 name|p
 operator|=
 name|p
@@ -1515,7 +1517,7 @@ operator|+
 literal|28
 argument_list|)
 argument_list|,
-literal|25
+literal|32
 argument_list|)
 expr_stmt|;
 comment|/* Extra field length */
@@ -1632,10 +1634,10 @@ argument_list|(
 name|q
 argument_list|)
 argument_list|,
-literal|0x7855
+literal|0x7875
 argument_list|)
 expr_stmt|;
-comment|/* 'Ux' extension header */
+comment|/* 'ux' extension header */
 name|assertEqualInt
 argument_list|(
 name|i2
@@ -1645,17 +1647,39 @@ operator|+
 literal|2
 argument_list|)
 argument_list|,
+literal|11
+argument_list|)
+expr_stmt|;
+comment|/* 'ux' size */
+name|assertEqualInt
+argument_list|(
+name|q
+index|[
+literal|4
+index|]
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* 'ux' version */
+name|assertEqualInt
+argument_list|(
+name|q
+index|[
+literal|5
+index|]
+argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|/* 'Ux' size */
+comment|/* 'ux' uid size */
 name|assertEqualInt
 argument_list|(
-name|i2
+name|i4
 argument_list|(
 name|q
 operator|+
-literal|4
+literal|6
 argument_list|)
 argument_list|,
 name|file_uid
@@ -1664,11 +1688,22 @@ expr_stmt|;
 comment|/* 'Ux' UID */
 name|assertEqualInt
 argument_list|(
-name|i2
+name|q
+index|[
+literal|10
+index|]
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+comment|/* 'ux' gid size */
+name|assertEqualInt
+argument_list|(
+name|i4
 argument_list|(
 name|q
 operator|+
-literal|6
+literal|11
 argument_list|)
 argument_list|,
 name|file_gid
@@ -1679,7 +1714,7 @@ name|q
 operator|=
 name|q
 operator|+
-literal|8
+literal|15
 expr_stmt|;
 comment|/* Verify data of file entry. */
 name|assertEqualMem
@@ -2168,10 +2203,10 @@ argument_list|(
 name|p
 argument_list|)
 argument_list|,
-literal|0x7855
+literal|0x7875
 argument_list|)
 expr_stmt|;
-comment|/* 'Ux' extension header */
+comment|/* 'ux' extension header */
 name|assertEqualInt
 argument_list|(
 name|i2
@@ -2184,13 +2219,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 'Ux' size */
-name|p
-operator|=
-name|p
-operator|+
-literal|4
-expr_stmt|;
+comment|/* 'ux' size */
+comment|/*p = p + 4;*/
 comment|/* Verify local header of folder entry. */
 name|assertEqualMem
 argument_list|(
@@ -2379,7 +2409,7 @@ operator|+
 literal|28
 argument_list|)
 argument_list|,
-literal|25
+literal|32
 argument_list|)
 expr_stmt|;
 comment|/* Extra field length */
@@ -2496,10 +2526,10 @@ argument_list|(
 name|q
 argument_list|)
 argument_list|,
-literal|0x7855
+literal|0x7875
 argument_list|)
 expr_stmt|;
-comment|/* 'Ux' extension header */
+comment|/* 'ux' extension header */
 name|assertEqualInt
 argument_list|(
 name|i2
@@ -2509,41 +2539,74 @@ operator|+
 literal|2
 argument_list|)
 argument_list|,
-literal|4
+literal|11
 argument_list|)
 expr_stmt|;
-comment|/* 'Ux' size */
+comment|/* 'ux' size */
 name|assertEqualInt
-argument_list|(
-name|i2
 argument_list|(
 name|q
-operator|+
+index|[
 literal|4
-argument_list|)
+index|]
 argument_list|,
-name|folder_uid
+literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 'Ux' UID */
+comment|/* 'ux' version */
 name|assertEqualInt
 argument_list|(
-name|i2
+name|q
+index|[
+literal|5
+index|]
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+comment|/* 'ux' uid size */
+name|assertEqualInt
+argument_list|(
+name|i4
 argument_list|(
 name|q
 operator|+
 literal|6
 argument_list|)
 argument_list|,
+name|folder_uid
+argument_list|)
+expr_stmt|;
+comment|/* 'ux' UID */
+name|assertEqualInt
+argument_list|(
+name|q
+index|[
+literal|10
+index|]
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+comment|/* 'ux' gid size */
+name|assertEqualInt
+argument_list|(
+name|i4
+argument_list|(
+name|q
+operator|+
+literal|11
+argument_list|)
+argument_list|,
 name|folder_gid
 argument_list|)
 expr_stmt|;
-comment|/* 'Ux' GID */
+comment|/* 'ux' GID */
 name|q
 operator|=
 name|q
 operator|+
-literal|8
+literal|15
 expr_stmt|;
 comment|/* There should not be any data in the folder entry, 	 * meaning next is the data descriptor header. */
 comment|/* Verify data descriptor of folder entry. */
@@ -2596,12 +2659,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Uncompressed size */
-name|q
-operator|=
-name|q
-operator|+
-literal|16
-expr_stmt|;
+comment|/*q = q + 16;*/
 block|}
 end_block
 

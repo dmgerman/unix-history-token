@@ -182,6 +182,14 @@ end_define
 
 begin_decl_stmt
 name|__BEGIN_DECLS
+ifdef|#
+directive|ifdef
+name|_XLOCALE_H_
+include|#
+directive|include
+file|<xlocale/_stdlib.h>
+endif|#
+directive|endif
 specifier|extern
 name|int
 name|__mb_cur_max
@@ -804,7 +812,7 @@ comment|/* __ISO_C_VISIBLE>= 1999 */
 end_comment
 
 begin_comment
-comment|/*  * If we're in a mode greater than C99, expose C1x functions.  */
+comment|/*  * If we're in a mode greater than C99, expose C11 functions.  */
 end_comment
 
 begin_if
@@ -813,17 +821,24 @@ directive|if
 name|__ISO_C_VISIBLE
 operator|>=
 literal|2011
+operator|||
+name|__cplusplus
+operator|>=
+literal|201103L
 end_if
 
-begin_function_decl
-specifier|_Noreturn
+begin_decl_stmt
 name|void
-name|quick_exit
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
+modifier|*
+name|aligned_alloc
+argument_list|(
+name|size_t
+argument_list|,
+name|size_t
+argument_list|)
+name|__malloc_like
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|int
@@ -836,6 +851,16 @@ function_decl|)
 parameter_list|(
 name|void
 parameter_list|)
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|_Noreturn
+name|void
+name|quick_exit
+parameter_list|(
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1373,7 +1398,7 @@ specifier|extern
 specifier|const
 name|char
 modifier|*
-name|_malloc_options
+name|malloc_conf
 decl_stmt|;
 end_decl_stmt
 
@@ -1382,19 +1407,10 @@ specifier|extern
 name|void
 function_decl|(
 modifier|*
-name|_malloc_message
+name|malloc_message
 function_decl|)
 parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-specifier|const
-name|char
+name|void
 modifier|*
 parameter_list|,
 specifier|const

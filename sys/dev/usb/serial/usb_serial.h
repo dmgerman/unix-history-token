@@ -45,6 +45,12 @@ directive|include
 file|<sys/fcntl.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
 begin_comment
 comment|/* Module interface related macros */
 end_comment
@@ -492,11 +498,27 @@ name|struct
 name|usb_process
 name|sc_tq
 decl_stmt|;
-name|uint32_t
+name|int
 name|sc_unit
 decl_stmt|;
-name|uint32_t
+name|int
 name|sc_subunits
+decl_stmt|;
+name|struct
+name|sysctl_oid
+modifier|*
+name|sc_sysctl_ttyname
+decl_stmt|;
+name|struct
+name|sysctl_oid
+modifier|*
+name|sc_sysctl_ttyports
+decl_stmt|;
+name|char
+name|sc_ttyname
+index|[
+literal|16
+index|]
 decl_stmt|;
 block|}
 struct|;
@@ -584,7 +606,7 @@ name|void
 modifier|*
 name|sc_parent
 decl_stmt|;
-name|uint32_t
+name|int
 name|sc_subunit
 decl_stmt|;
 name|uint16_t
@@ -707,7 +729,7 @@ name|struct
 name|ucom_softc
 modifier|*
 parameter_list|,
-name|uint32_t
+name|int
 parameter_list|,
 name|void
 modifier|*

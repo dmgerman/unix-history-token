@@ -737,7 +737,7 @@ name|struct
 name|ieee80211_tx_ampdu
 name|ni_tx_ampdu
 index|[
-name|WME_NUM_AC
+name|WME_NUM_TID
 index|]
 decl_stmt|;
 name|struct
@@ -1036,12 +1036,6 @@ comment|/* guard against use */
 block|}
 end_function
 
-begin_struct_decl
-struct_decl|struct
-name|ieee80211com
-struct_decl|;
-end_struct_decl
-
 begin_function_decl
 name|void
 name|ieee80211_node_attach
@@ -1243,6 +1237,17 @@ modifier|*
 parameter_list|,
 name|struct
 name|ieee80211_channel
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ieee80211_update_chw
+parameter_list|(
+name|struct
+name|ieee80211com
 modifier|*
 parameter_list|)
 function_decl|;

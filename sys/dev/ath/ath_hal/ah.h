@@ -2142,6 +2142,12 @@ name|int32_t
 name|pe_enabled
 decl_stmt|;
 comment|/* Whether radar detection is enabled */
+name|int32_t
+name|pe_enrelpwr
+decl_stmt|;
+name|int32_t
+name|pe_en_relstep_check
+decl_stmt|;
 block|}
 name|HAL_PHYERR_PARAM
 typedef|;
@@ -2153,17 +2159,6 @@ directive|define
 name|HAL_PHYERR_PARAM_NOVAL
 value|65535
 end_define
-
-begin_define
-define|#
-directive|define
-name|HAL_PHYERR_PARAM_ENABLE
-value|0x8000
-end_define
-
-begin_comment
-comment|/* Enable/Disable if applicable */
-end_comment
 
 begin_comment
 comment|/*  * DFS operating mode flags.  */
@@ -2398,6 +2393,10 @@ literal|8
 index|]
 decl_stmt|;
 comment|/* last int state */
+name|uint32_t
+name|ah_syncstate
+decl_stmt|;
+comment|/* last sync intr state */
 name|HAL_OPS_CONFIG
 name|ah_config
 decl_stmt|;
@@ -4192,6 +4191,8 @@ parameter_list|,
 name|HAL_BOOL
 parameter_list|,
 name|HAL_BOOL
+parameter_list|,
+name|HAL_BOOL
 parameter_list|)
 function_decl|;
 name|HAL_BOOL
@@ -4916,6 +4917,30 @@ name|struct
 name|ath_hal
 modifier|*
 name|ah
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Read EEPROM data from ah_eepromdata  */
+end_comment
+
+begin_function_decl
+name|HAL_BOOL
+name|__ahdecl
+name|ath_hal_EepromDataRead
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|u_int
+name|off
+parameter_list|,
+name|uint16_t
+modifier|*
+name|data
 parameter_list|)
 function_decl|;
 end_function_decl

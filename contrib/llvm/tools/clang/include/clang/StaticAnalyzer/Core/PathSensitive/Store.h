@@ -109,6 +109,9 @@ name|namespace
 name|ento
 block|{
 name|class
+name|CallOrObjCMessage
+decl_stmt|;
+name|class
 name|ProgramState
 decl_stmt|;
 name|class
@@ -162,7 +165,7 @@ comment|///   lazily computed.
 comment|/// \return The value bound to the location \c loc.
 name|virtual
 name|SVal
-name|Retrieve
+name|getBinding
 argument_list|(
 argument|Store store
 argument_list|,
@@ -322,30 +325,6 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-name|virtual
-name|Loc
-name|getLValueString
-parameter_list|(
-specifier|const
-name|StringLiteral
-modifier|*
-name|S
-parameter_list|)
-block|{
-return|return
-name|svalBuilder
-operator|.
-name|makeLoc
-argument_list|(
-name|MRMgr
-operator|.
-name|getStringRegion
-argument_list|(
-name|S
-argument_list|)
-argument_list|)
-return|;
-block|}
 name|Loc
 name|getLValueCompoundLiteral
 parameter_list|(
@@ -388,16 +367,7 @@ parameter_list|,
 name|SVal
 name|base
 parameter_list|)
-block|{
-return|return
-name|getLValueFieldOrIvar
-argument_list|(
-name|decl
-argument_list|,
-name|base
-argument_list|)
-return|;
-block|}
+function_decl|;
 name|virtual
 name|SVal
 name|getLValueField
@@ -440,9 +410,7 @@ name|virtual
 name|DefinedOrUnknownSVal
 name|getSizeInElements
 parameter_list|(
-specifier|const
-name|ProgramState
-modifier|*
+name|ProgramStateRef
 name|state
 parameter_list|,
 specifier|const
@@ -482,18 +450,38 @@ parameter_list|,
 name|QualType
 name|basePtrType
 parameter_list|)
-block|{
-return|return
-name|UnknownVal
-argument_list|()
-return|;
-block|}
+init|=
+literal|0
+function_decl|;
+comment|/// \brief Evaluates C++ dynamic_cast cast.
+comment|/// The callback may result in the following 3 scenarios:
+comment|///  - Successful cast (ex: derived is subclass of base).
+comment|///  - Failed cast (ex: derived is definitely not a subclass of base).
+comment|///  - We don't know (base is a symbolic region and we don't have
+comment|///    enough info to determine if the cast will succeed at run time).
+comment|/// The function returns an SVal representing the derived class; it's
+comment|/// valid only if Failed flag is set to false.
+name|virtual
+name|SVal
+name|evalDynamicCast
+parameter_list|(
+name|SVal
+name|base
+parameter_list|,
+name|QualType
+name|derivedPtrType
+parameter_list|,
+name|bool
+modifier|&
+name|Failed
+parameter_list|)
+init|=
+literal|0
+function_decl|;
 name|class
 name|CastResult
 block|{
-specifier|const
-name|ProgramState
-modifier|*
+name|ProgramStateRef
 name|state
 decl_stmt|;
 specifier|const
@@ -503,9 +491,7 @@ name|region
 decl_stmt|;
 name|public
 label|:
-specifier|const
-name|ProgramState
-operator|*
+name|ProgramStateRef
 name|getState
 argument_list|()
 specifier|const
@@ -527,19 +513,12 @@ return|;
 block|}
 name|CastResult
 argument_list|(
-specifier|const
-name|ProgramState
-operator|*
-name|s
+argument|ProgramStateRef s
 argument_list|,
-specifier|const
-name|MemRegion
-operator|*
-name|r
-operator|=
+argument|const MemRegion* r =
 literal|0
 argument_list|)
-operator|:
+block|:
 name|state
 argument_list|(
 name|s
@@ -705,8 +684,8 @@ comment|/// \param[in] Count The current block count. Used to conjure
 comment|///   symbols to mark the values of invalidated regions.
 comment|/// \param[in,out] IS A set to fill with any symbols that are no longer
 comment|///   accessible. Pass \c NULL if this information will not be used.
-comment|/// \param[in] invalidateGlobals If \c true, any non-static global regions
-comment|///   are invalidated as well.
+comment|/// \param[in] Call The call expression which will be used to determine which
+comment|///   globals should get invalidated.
 comment|/// \param[in,out] Regions A vector to fill with any regions being
 comment|///   invalidated. This should include any regions explicitly invalidated
 comment|///   even if they do not currently have bindings. Pass \c NULL if this
@@ -734,12 +713,19 @@ argument_list|,
 name|unsigned
 name|Count
 argument_list|,
+specifier|const
+name|LocationContext
+operator|*
+name|LCtx
+argument_list|,
 name|InvalidatedSymbols
 operator|&
 name|IS
 argument_list|,
-name|bool
-name|invalidateGlobals
+specifier|const
+name|CallOrObjCMessage
+operator|*
+name|Call
 argument_list|,
 name|InvalidatedRegions
 operator|*
@@ -754,15 +740,18 @@ name|virtual
 name|StoreRef
 name|enterStackFrame
 parameter_list|(
-specifier|const
-name|ProgramState
-modifier|*
+name|ProgramStateRef
 name|state
+parameter_list|,
+specifier|const
+name|LocationContext
+modifier|*
+name|callerCtx
 parameter_list|,
 specifier|const
 name|StackFrameContext
 modifier|*
-name|frame
+name|calleeCtx
 parameter_list|)
 function_decl|;
 name|virtual
@@ -823,81 +812,132 @@ literal|0
 function_decl|;
 block|}
 empty_stmt|;
+name|class
+name|FindUniqueBinding
+range|:
+name|public
+name|BindingsHandler
+block|{
+name|SymbolRef
+name|Sym
+block|;
+specifier|const
+name|MemRegion
+operator|*
+name|Binding
+block|;
+name|bool
+name|First
+block|;
+name|public
+operator|:
+name|FindUniqueBinding
+argument_list|(
+argument|SymbolRef sym
+argument_list|)
+operator|:
+name|Sym
+argument_list|(
+name|sym
+argument_list|)
+block|,
+name|Binding
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|First
+argument_list|(
+argument|true
+argument_list|)
+block|{}
+name|bool
+name|HandleBinding
+argument_list|(
+argument|StoreManager& SMgr
+argument_list|,
+argument|Store store
+argument_list|,
+argument|const MemRegion* R
+argument_list|,
+argument|SVal val
+argument_list|)
+block|;
+name|operator
+name|bool
+argument_list|()
+block|{
+return|return
+name|First
+operator|&&
+name|Binding
+return|;
+block|}
+specifier|const
+name|MemRegion
+operator|*
+name|getRegion
+argument_list|()
+block|{
+return|return
+name|Binding
+return|;
+block|}
+expr|}
+block|;
 comment|/// iterBindings - Iterate over the bindings in the Store.
 name|virtual
 name|void
 name|iterBindings
-parameter_list|(
-name|Store
-name|store
-parameter_list|,
-name|BindingsHandler
-modifier|&
-name|f
-parameter_list|)
-init|=
+argument_list|(
+argument|Store store
+argument_list|,
+argument|BindingsHandler& f
+argument_list|)
+operator|=
 literal|0
-function_decl|;
+block|;
 name|protected
-label|:
+operator|:
 specifier|const
 name|MemRegion
-modifier|*
+operator|*
 name|MakeElementRegion
-parameter_list|(
-specifier|const
-name|MemRegion
-modifier|*
-name|baseRegion
-parameter_list|,
-name|QualType
-name|pointeeTy
-parameter_list|,
-name|uint64_t
-name|index
-init|=
+argument_list|(
+argument|const MemRegion *baseRegion
+argument_list|,
+argument|QualType pointeeTy
+argument_list|,
+argument|uint64_t index =
 literal|0
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|/// CastRetrievedVal - Used by subclasses of StoreManager to implement
 comment|///  implicit casts that arise from loads from regions that are reinterpreted
 comment|///  as another region.
 name|SVal
 name|CastRetrievedVal
-parameter_list|(
-name|SVal
-name|val
-parameter_list|,
-specifier|const
-name|TypedValueRegion
-modifier|*
-name|region
-parameter_list|,
-name|QualType
-name|castTy
-parameter_list|,
-name|bool
-name|performTestOnly
-init|=
-name|true
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|SVal val
+argument_list|,
+argument|const TypedValueRegion *region
+argument_list|,
+argument|QualType castTy
+argument_list|,
+argument|bool performTestOnly = true
+argument_list|)
+block|;
 name|private
-label|:
+operator|:
 name|SVal
 name|getLValueFieldOrIvar
-parameter_list|(
-specifier|const
-name|Decl
-modifier|*
-name|decl
-parameter_list|,
-name|SVal
-name|base
-parameter_list|)
-function_decl|;
-block|}
-empty_stmt|;
+argument_list|(
+argument|const Decl *decl
+argument_list|,
+argument|SVal base
+argument_list|)
+block|; }
+decl_stmt|;
 specifier|inline
 name|StoreRef
 operator|::
@@ -1053,6 +1093,11 @@ comment|///  between MemRegion objects and their subregions.
 name|class
 name|SubRegionMap
 block|{
+name|virtual
+name|void
+name|anchor
+parameter_list|()
+function_decl|;
 name|public
 label|:
 name|virtual
@@ -1063,6 +1108,11 @@ block|{}
 name|class
 name|Visitor
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 name|virtual

@@ -184,6 +184,32 @@ block|, }
 enum|;
 end_enum
 
+begin_enum
+enum|enum
+block|{
+name|MLX4_EN_1G_SPEED
+init|=
+literal|0x02
+block|,
+name|MLX4_EN_10G_SPEED_XFI
+init|=
+literal|0x01
+block|,
+name|MLX4_EN_10G_SPEED_XAUI
+init|=
+literal|0x00
+block|,
+name|MLX4_EN_40G_SPEED
+init|=
+literal|0x40
+block|,
+name|MLX4_EN_OTHER_SPEED
+init|=
+literal|0x0f
+block|, }
+enum|;
+end_enum
+
 begin_struct
 struct|struct
 name|mlx4_en_query_port_context
@@ -210,11 +236,7 @@ decl_stmt|;
 define|#
 directive|define
 name|MLX4_EN_SPEED_MASK
-value|0x3
-define|#
-directive|define
-name|MLX4_EN_1G_SPEED
-value|0x2
+value|0x43
 name|u16
 name|reserved3
 index|[

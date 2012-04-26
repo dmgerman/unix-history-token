@@ -209,6 +209,34 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/**  * Return the state of the "other end" (peer) of a XenBus device.  *  * \param dev   The XenBus device whose peer to query.  *  * \return  The current state of the peer device or XenbusStateClosed if no  *          state can be read.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|XenbusState
+name|xenbus_get_otherend_state
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
+return|return
+operator|(
+name|xenbus_read_driver_state
+argument_list|(
+name|xenbus_get_otherend_path
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/**  * Initialize and register a watch on the given path (client suplied storage).  *  * \param dev       The XenBus device requesting the watch service.  * \param path      The XenStore path of the object to be watched.  The  *                  storage for this string must be stable for the lifetime  *                  of the watch.  * \param watch     The watch object to use for this request.  This object  *                  must be stable for the lifetime of the watch.  * \param callback  The function to call when XenStore objects at or below  *                  path are modified.  * \param cb_data   Client data that can be retrieved from the watch object  *                  during the callback.  *  * \return  On success, 0. Otherwise an errno value indicating the  *          type of failure.  *  * \note  On error, the device 'dev' will be switched to the XenbusStateClosing  *        state and the returned error is saved in the per-device error node  *        for dev in the XenStore.  */
 end_comment
 

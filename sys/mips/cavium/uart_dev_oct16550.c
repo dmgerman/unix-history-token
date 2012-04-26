@@ -96,12 +96,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<contrib/octeon-sdk/cvmx-interrupt.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"uart_if.h"
 end_include
 
@@ -1998,41 +1992,6 @@ argument_list|(
 name|bas
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Enable the interrupt in CIU.     // UART-x2 @ IP2 	 */
-switch|switch
-condition|(
-name|unit
-condition|)
-block|{
-case|case
-literal|0
-case|:
-name|cvmx_interrupt_unmask_irq
-argument_list|(
-name|CVMX_IRQ_UART0
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|1
-case|:
-name|cvmx_interrupt_unmask_irq
-argument_list|(
-name|CVMX_IRQ_UART1
-argument_list|)
-expr_stmt|;
-break|break;
-default|default:
-name|panic
-argument_list|(
-literal|"%s: invalid UART %d"
-argument_list|,
-name|__func__
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 operator|(
 literal|0

@@ -244,7 +244,7 @@ name|ic
 operator|->
 name|ic_ifp
 argument_list|,
-literal|"%s: no tx channel, radiotap 0x%x"
+literal|"%s: no tx channel, radiotap 0x%x\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -357,7 +357,7 @@ name|ic
 operator|->
 name|ic_ifp
 argument_list|,
-literal|"%s: no rx channel, radiotap 0x%x"
+literal|"%s: no rx channel, radiotap 0x%x\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -1529,6 +1529,30 @@ operator|*
 sizeof|sizeof
 argument_list|(
 name|uint32_t
+argument_list|)
+block|, 		}
+block|,
+index|[
+name|IEEE80211_RADIOTAP_MCS
+index|]
+operator|=
+block|{
+operator|.
+name|align
+operator|=
+sizeof|sizeof
+argument_list|(
+name|uint8_t
+argument_list|)
+block|,
+operator|.
+name|width
+operator|=
+literal|3
+operator|*
+sizeof|sizeof
+argument_list|(
+name|uint8_t
 argument_list|)
 block|, 		}
 block|, 	}

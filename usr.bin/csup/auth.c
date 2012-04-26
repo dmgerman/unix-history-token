@@ -1655,7 +1655,7 @@ operator|=
 name|getppid
 argument_list|()
 expr_stmt|;
-name|srand
+name|srandom
 argument_list|(
 name|tv
 operator|.

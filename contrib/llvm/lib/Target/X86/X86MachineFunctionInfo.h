@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//====- X86MachineFuctionInfo.h - X86 machine function info -----*- C++ -*-===//
+comment|//===-- X86MachineFuctionInfo.h - X86 machine function info -----*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -77,6 +77,11 @@ range|:
 name|public
 name|MachineFunctionInfo
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 comment|/// ForceFramePointer - True if the function is required to use of frame
 comment|/// pointer for reasons other than it containing dynamic allocation or
 comment|/// that FP eliminatation is turned off. For example, Cygwin main function

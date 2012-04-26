@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2011, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_ifndef
@@ -1563,6 +1563,43 @@ value|0xFF
 end_define
 
 begin_comment
+comment|/*  * Sleep/Wake flags  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_NO_OPTIONAL_METHODS
+value|0x00
+end_define
+
+begin_comment
+comment|/* Do not execute any optional methods */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_EXECUTE_GTS
+value|0x01
+end_define
+
+begin_comment
+comment|/* For enter sleep interface */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_EXECUTE_BFS
+value|0x02
+end_define
+
+begin_comment
+comment|/* For leave sleep prep interface */
+end_comment
+
+begin_comment
 comment|/*  * Standard notify values  */
 end_comment
 
@@ -1653,8 +1690,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_NOTIFY_SHUTDOWN_REQUEST
+value|(UINT8) 0x0C
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_NOTIFY_MAX
-value|0x0B
+value|0x0C
 end_define
 
 begin_comment
@@ -2270,9 +2314,45 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_MAX_SYS_NOTIFY
-value|0x7f
+name|ACPI_NUM_NOTIFY_TYPES
+value|2
 end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MAX_SYS_NOTIFY
+value|0x7F
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MAX_DEVICE_SPECIFIC_NOTIFY
+value|0xBF
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_SYSTEM_HANDLER_LIST
+value|0
+end_define
+
+begin_comment
+comment|/* Used as index, must be SYSTEM_NOTIFY -1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_DEVICE_HANDLER_LIST
+value|1
+end_define
+
+begin_comment
+comment|/* Used as index, must be DEVICE_NOTIFY -1 */
+end_comment
 
 begin_comment
 comment|/* Address Space (Operation Region) Types */
@@ -2604,6 +2684,43 @@ directive|define
 name|ACPI_DISABLE_EVENT
 value|0
 end_define
+
+begin_comment
+comment|/* Sleep function dispatch */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|ACPI_STATUS
+function_decl|(
+modifier|*
+name|ACPI_SLEEP_FUNCTION
+function_decl|)
+parameter_list|(
+name|UINT8
+name|SleepState
+parameter_list|,
+name|UINT8
+name|Flags
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_sleep_functions
+block|{
+name|ACPI_SLEEP_FUNCTION
+name|LegacyFunction
+decl_stmt|;
+name|ACPI_SLEEP_FUNCTION
+name|ExtendedFunction
+decl_stmt|;
+block|}
+name|ACPI_SLEEP_FUNCTIONS
+typedef|;
+end_typedef
 
 begin_comment
 comment|/*  * External ACPI object definition  */

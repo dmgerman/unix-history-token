@@ -1458,7 +1458,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set up nameidata for a lookup() call and do it  * For the cases where we are crossing mount points  * (looking up the public fh path or the v4 root path when  *  not using a pseudo-root fs), set/release the Giant lock,  * as required.  */
+comment|/*  * Set up nameidata for a lookup() call and do it.  */
 end_comment
 
 begin_function
@@ -1791,6 +1791,12 @@ operator|->
 name|ni_rootdir
 operator|=
 name|rootvnode
+expr_stmt|;
+name|ndp
+operator|->
+name|ni_topdir
+operator|=
+name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -14496,6 +14502,14 @@ operator|.
 name|mnt_nvnodelist
 argument_list|)
 expr_stmt|;
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|nfsv4root_mnt
+operator|.
+name|mnt_activevnodelist
+argument_list|)
+expr_stmt|;
 name|nfsv4root_mnt
 operator|.
 name|mnt_export
@@ -14531,6 +14545,12 @@ expr_stmt|;
 name|nfsv4root_mnt
 operator|.
 name|mnt_nvnodelistsize
+operator|=
+literal|0
+expr_stmt|;
+name|nfsv4root_mnt
+operator|.
+name|mnt_activevnodelistsize
 operator|=
 literal|0
 expr_stmt|;

@@ -1720,6 +1720,17 @@ operator|)
 name|nd_opt
 expr_stmt|;
 break|break;
+comment|/* What about ND_OPT_ROUTE_INFO? RFC 4191 */
+case|case
+name|ND_OPT_RDNSS
+case|:
+comment|/* RFC 6106 */
+case|case
+name|ND_OPT_DNSSL
+case|:
+comment|/* RFC 6106 */
+comment|/* 			 * Silently ignore options we know and do not care about 			 * in the kernel. 			 */
+break|break;
 default|default:
 comment|/* 			 * Unknown options must be silently ignored, 			 * to accomodate future extension to the protocol. 			 */
 name|nd6log
@@ -2596,11 +2607,6 @@ decl_stmt|,
 modifier|*
 name|nia6
 decl_stmt|;
-name|struct
-name|in6_addrlifetime
-modifier|*
-name|lt6
-decl_stmt|;
 name|callout_reset
 argument_list|(
 operator|&
@@ -2665,13 +2671,6 @@ argument|nia6
 argument_list|)
 block|{
 comment|/* check address lifetime */
-name|lt6
-operator|=
-operator|&
-name|ia6
-operator|->
-name|ia6_lifetime
-expr_stmt|;
 if|if
 condition|(
 name|IFA6_IS_INVALID
@@ -2898,7 +2897,7 @@ name|ia_ifa
 operator|.
 name|ifa_ifp
 expr_stmt|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -3023,7 +3022,7 @@ name|ia_ifa
 argument_list|)
 expr_stmt|;
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -3563,9 +3562,10 @@ name|rtentry
 modifier|*
 name|rt
 decl_stmt|;
+comment|/* Always use the default FIB here. */
 name|rt
 operator|=
-name|rtalloc1
+name|in6_rtalloc1
 argument_list|(
 operator|(
 expr|struct
@@ -3580,6 +3580,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+name|RT_DEFAULT_FIB
 argument_list|)
 expr_stmt|;
 if|if
@@ -5236,48 +5238,6 @@ name|in6_ifaddr
 modifier|*
 name|ia
 decl_stmt|;
-comment|/* 		 * Try to clear ifdisabled flag when enabling 		 * accept_rtadv or auto_linklocal. 		 */
-if|if
-condition|(
-operator|(
-name|ND_IFINFO
-argument_list|(
-name|ifp
-argument_list|)
-operator|->
-name|flags
-operator|&
-name|ND6_IFF_IFDISABLED
-operator|)
-operator|&&
-operator|!
-operator|(
-name|ND
-operator|.
-name|flags
-operator|&
-name|ND6_IFF_IFDISABLED
-operator|)
-operator|&&
-operator|(
-name|ND
-operator|.
-name|flags
-operator|&
-operator|(
-name|ND6_IFF_ACCEPT_RTADV
-operator||
-name|ND6_IFF_AUTO_LINKLOCAL
-operator|)
-operator|)
-condition|)
-name|ND
-operator|.
-name|flags
-operator|&=
-operator|~
-name|ND6_IFF_IFDISABLED
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -5308,7 +5268,7 @@ name|duplicated_linklocal
 init|=
 literal|0
 decl_stmt|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -5368,7 +5328,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -5456,7 +5416,7 @@ name|flags
 operator||=
 name|ND6_IFF_IFDISABLED
 expr_stmt|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -5497,7 +5457,7 @@ operator||=
 name|IN6_IFF_TENTATIVE
 expr_stmt|;
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -5571,7 +5531,7 @@ name|haslinklocal
 init|=
 literal|0
 decl_stmt|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -5623,7 +5583,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)

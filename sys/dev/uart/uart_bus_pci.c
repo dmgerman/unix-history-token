@@ -640,6 +640,20 @@ literal|16384000
 block|}
 block|,
 block|{
+literal|0x14e4
+block|,
+literal|0x4344
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|"Sony Ericsson GC89 PC Card"
+block|,
+literal|0x10
+block|}
+block|,
+block|{
 literal|0x151f
 block|,
 literal|0x0000
@@ -663,6 +677,34 @@ block|,
 literal|0
 block|,
 literal|"Intel AMT - KT Controller"
+block|,
+literal|0x10
+block|}
+block|,
+block|{
+literal|0x8086
+block|,
+literal|0x2e17
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|"4 Series Chipset Serial KT Controller"
+block|,
+literal|0x10
+block|}
+block|,
+block|{
+literal|0x8086
+block|,
+literal|0x3b67
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|"5 Series/3400 Series Chipset KT Controller"
 block|,
 literal|0x10
 block|}
@@ -789,6 +831,20 @@ block|,
 literal|0x1000
 block|,
 literal|"MosChip MCS9901 PCIe to Peripheral Controller"
+block|,
+literal|0x10
+block|}
+block|,
+block|{
+literal|0x9710
+block|,
+literal|0x9904
+block|,
+literal|0xa000
+block|,
+literal|0x1000
+block|,
+literal|"MosChip MCS9904 PCIe to Peripheral Controller"
 block|,
 literal|0x10
 block|}

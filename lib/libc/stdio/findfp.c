@@ -287,29 +287,12 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
-specifier|static
 name|spinlock_t
-name|thread_lock
+name|__stdio_thread_lock
 init|=
 name|_SPINLOCK_INITIALIZER
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|THREAD_LOCK
-parameter_list|()
-value|if (__isthreaded) _SPINLOCK(&thread_lock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|THREAD_UNLOCK
-parameter_list|()
-value|if (__isthreaded) _SPINUNLOCK(&thread_lock)
-end_define
 
 begin_if
 if|#
@@ -503,7 +486,7 @@ name|__sinit
 argument_list|()
 expr_stmt|;
 comment|/* 	 * The list must be locked because a FILE may be updated. 	 */
-name|THREAD_LOCK
+name|STDIO_THREAD_LOCK
 argument_list|()
 expr_stmt|;
 for|for
@@ -558,7 +541,7 @@ goto|goto
 name|found
 goto|;
 block|}
-name|THREAD_UNLOCK
+name|STDIO_THREAD_UNLOCK
 argument_list|()
 expr_stmt|;
 comment|/* don't hold lock while malloc()ing. */
@@ -580,7 +563,7 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|THREAD_LOCK
+name|STDIO_THREAD_LOCK
 argument_list|()
 expr_stmt|;
 comment|/* reacquire the lock */
@@ -614,7 +597,7 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* reserve this slot; caller sets real flags */
-name|THREAD_UNLOCK
+name|STDIO_THREAD_UNLOCK
 argument_list|()
 expr_stmt|;
 name|fp
@@ -827,7 +810,7 @@ name|NULL
 operator|)
 condition|)
 block|{
-name|THREAD_LOCK
+name|STDIO_THREAD_LOCK
 argument_list|()
 expr_stmt|;
 name|SET_GLUE_PTR
@@ -843,7 +826,7 @@ name|lastglue
 operator|=
 name|g
 expr_stmt|;
-name|THREAD_UNLOCK
+name|STDIO_THREAD_UNLOCK
 argument_list|()
 expr_stmt|;
 block|}

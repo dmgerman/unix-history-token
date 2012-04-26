@@ -383,7 +383,7 @@ control|)
 block|{
 name|val
 operator|=
-name|cfi_read
+name|cfi_read_raw
 argument_list|(
 name|sc
 argument_list|,
@@ -806,7 +806,7 @@ name|uio_offset
 expr_stmt|;
 name|val
 operator|=
-name|cfi_read
+name|cfi_read_raw
 argument_list|(
 name|sc
 argument_list|,

@@ -523,7 +523,7 @@ name|i
 operator|-
 name|j
 expr_stmt|;
-comment|/* the lenght of the string */
+comment|/* the length of the string */
 operator|*
 name|av_p
 operator|++

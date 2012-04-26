@@ -377,6 +377,18 @@ name|ae
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|assertEqualIntA
+argument_list|(
+name|a
+argument_list|,
+name|ARCHIVE_OK
+argument_list|,
+name|archive_write_finish_entry
+argument_list|(
+name|a
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|archive_entry_free
 argument_list|(
 name|ae
@@ -490,7 +502,7 @@ name|assertEqualInt
 argument_list|(
 name|ARCHIVE_OK
 argument_list|,
-name|archive_write_finish
+name|archive_write_free
 argument_list|(
 name|a
 argument_list|)
@@ -765,7 +777,7 @@ name|assertEqualInt
 argument_list|(
 name|ARCHIVE_OK
 argument_list|,
-name|archive_read_finish
+name|archive_read_free
 argument_list|(
 name|a
 argument_list|)

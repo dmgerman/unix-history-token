@@ -1435,7 +1435,7 @@ name|OID_AUTO
 argument_list|,
 name|arc_meta_used
 argument_list|,
-name|CTLFLAG_RDTUN
+name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|arc_meta_used
@@ -1456,7 +1456,7 @@ name|OID_AUTO
 argument_list|,
 name|arc_meta_limit
 argument_list|,
-name|CTLFLAG_RDTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|arc_meta_limit

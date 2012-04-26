@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: termstat.c 10587 2001-08-29 00:45:23Z assar $"
+literal|"$Id$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

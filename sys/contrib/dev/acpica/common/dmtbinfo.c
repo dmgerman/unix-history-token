@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2011, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -58,7 +58,7 @@ name|ACPI_FACS_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_FACS,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_FACS,f)
 end_define
 
 begin_define
@@ -68,7 +68,7 @@ name|ACPI_GAS_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_GENERIC_ADDRESS,f)
+value|(UINT16) ACPI_OFFSET (ACPI_GENERIC_ADDRESS,f)
 end_define
 
 begin_define
@@ -78,7 +78,7 @@ name|ACPI_HDR_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_HEADER,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_HEADER,f)
 end_define
 
 begin_define
@@ -88,7 +88,7 @@ name|ACPI_RSDP_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_RSDP,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_RSDP,f)
 end_define
 
 begin_define
@@ -98,7 +98,7 @@ name|ACPI_BERT_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_BERT,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_BERT,f)
 end_define
 
 begin_define
@@ -108,7 +108,7 @@ name|ACPI_BGRT_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_BGRT,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_BGRT,f)
 end_define
 
 begin_define
@@ -118,7 +118,7 @@ name|ACPI_BOOT_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_BOOT,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_BOOT,f)
 end_define
 
 begin_define
@@ -128,7 +128,7 @@ name|ACPI_CPEP_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_CPEP,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_CPEP,f)
 end_define
 
 begin_define
@@ -138,7 +138,7 @@ name|ACPI_DBGP_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_DBGP,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_DBGP,f)
 end_define
 
 begin_define
@@ -148,7 +148,7 @@ name|ACPI_DMAR_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_DMAR,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_DMAR,f)
 end_define
 
 begin_define
@@ -158,7 +158,7 @@ name|ACPI_DRTM_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_DRTM,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_DRTM,f)
 end_define
 
 begin_define
@@ -168,7 +168,7 @@ name|ACPI_ECDT_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_ECDT,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_ECDT,f)
 end_define
 
 begin_define
@@ -178,7 +178,7 @@ name|ACPI_EINJ_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_EINJ,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_EINJ,f)
 end_define
 
 begin_define
@@ -188,7 +188,7 @@ name|ACPI_ERST_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_ERST,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_ERST,f)
 end_define
 
 begin_define
@@ -198,7 +198,7 @@ name|ACPI_GTDT_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_GTDT,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_GTDT,f)
 end_define
 
 begin_define
@@ -208,7 +208,7 @@ name|ACPI_HEST_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_HEST,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_HEST,f)
 end_define
 
 begin_define
@@ -218,7 +218,7 @@ name|ACPI_HPET_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_HPET,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_HPET,f)
 end_define
 
 begin_define
@@ -228,7 +228,7 @@ name|ACPI_IVRS_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_IVRS,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_IVRS,f)
 end_define
 
 begin_define
@@ -238,7 +238,7 @@ name|ACPI_MADT_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_MADT,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_MADT,f)
 end_define
 
 begin_define
@@ -248,7 +248,7 @@ name|ACPI_MCFG_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_MCFG,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_MCFG,f)
 end_define
 
 begin_define
@@ -258,7 +258,7 @@ name|ACPI_MCHI_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_MCHI,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_MCHI,f)
 end_define
 
 begin_define
@@ -268,7 +268,7 @@ name|ACPI_MPST_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_MPST,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_MPST,f)
 end_define
 
 begin_define
@@ -278,7 +278,7 @@ name|ACPI_MSCT_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_MSCT,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_MSCT,f)
 end_define
 
 begin_define
@@ -288,7 +288,7 @@ name|ACPI_PCCT_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_PCCT,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_PCCT,f)
 end_define
 
 begin_define
@@ -298,7 +298,7 @@ name|ACPI_PMTT_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_PMTT,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_PMTT,f)
 end_define
 
 begin_define
@@ -308,7 +308,7 @@ name|ACPI_S3PT_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_S3PT,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_S3PT,f)
 end_define
 
 begin_define
@@ -318,7 +318,7 @@ name|ACPI_SBST_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_SBST,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_SBST,f)
 end_define
 
 begin_define
@@ -328,7 +328,7 @@ name|ACPI_SLIT_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_SLIT,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_SLIT,f)
 end_define
 
 begin_define
@@ -338,7 +338,7 @@ name|ACPI_SPCR_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_SPCR,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_SPCR,f)
 end_define
 
 begin_define
@@ -348,7 +348,7 @@ name|ACPI_SPMI_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_SPMI,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_SPMI,f)
 end_define
 
 begin_define
@@ -358,7 +358,7 @@ name|ACPI_SRAT_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_SRAT,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_SRAT,f)
 end_define
 
 begin_define
@@ -368,7 +368,7 @@ name|ACPI_TCPA_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_TCPA,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_TCPA,f)
 end_define
 
 begin_define
@@ -378,7 +378,7 @@ name|ACPI_UEFI_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_UEFI,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_UEFI,f)
 end_define
 
 begin_define
@@ -388,7 +388,7 @@ name|ACPI_WAET_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_WAET,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_WAET,f)
 end_define
 
 begin_define
@@ -398,7 +398,7 @@ name|ACPI_WDAT_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_WDAT,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_WDAT,f)
 end_define
 
 begin_define
@@ -408,7 +408,7 @@ name|ACPI_WDDT_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_WDDT,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_WDDT,f)
 end_define
 
 begin_define
@@ -418,7 +418,7 @@ name|ACPI_WDRT_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_WDRT,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_WDRT,f)
 end_define
 
 begin_comment
@@ -432,7 +432,7 @@ name|ACPI_ASF0_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_ASF_INFO,f)
+value|(UINT16) ACPI_OFFSET (ACPI_ASF_INFO,f)
 end_define
 
 begin_define
@@ -442,7 +442,7 @@ name|ACPI_ASF1_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_ASF_ALERT,f)
+value|(UINT16) ACPI_OFFSET (ACPI_ASF_ALERT,f)
 end_define
 
 begin_define
@@ -452,7 +452,7 @@ name|ACPI_ASF1a_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_ASF_ALERT_DATA,f)
+value|(UINT16) ACPI_OFFSET (ACPI_ASF_ALERT_DATA,f)
 end_define
 
 begin_define
@@ -462,7 +462,7 @@ name|ACPI_ASF2_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_ASF_REMOTE,f)
+value|(UINT16) ACPI_OFFSET (ACPI_ASF_REMOTE,f)
 end_define
 
 begin_define
@@ -472,7 +472,7 @@ name|ACPI_ASF2a_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_ASF_CONTROL_DATA,f)
+value|(UINT16) ACPI_OFFSET (ACPI_ASF_CONTROL_DATA,f)
 end_define
 
 begin_define
@@ -482,7 +482,7 @@ name|ACPI_ASF3_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_ASF_RMCP,f)
+value|(UINT16) ACPI_OFFSET (ACPI_ASF_RMCP,f)
 end_define
 
 begin_define
@@ -492,7 +492,7 @@ name|ACPI_ASF4_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_ASF_ADDRESS,f)
+value|(UINT16) ACPI_OFFSET (ACPI_ASF_ADDRESS,f)
 end_define
 
 begin_define
@@ -502,7 +502,7 @@ name|ACPI_CPEP0_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_CPEP_POLLING,f)
+value|(UINT16) ACPI_OFFSET (ACPI_CPEP_POLLING,f)
 end_define
 
 begin_define
@@ -512,7 +512,7 @@ name|ACPI_DMARS_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_DMAR_DEVICE_SCOPE,f)
+value|(UINT16) ACPI_OFFSET (ACPI_DMAR_DEVICE_SCOPE,f)
 end_define
 
 begin_define
@@ -522,7 +522,7 @@ name|ACPI_DMAR0_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_DMAR_HARDWARE_UNIT,f)
+value|(UINT16) ACPI_OFFSET (ACPI_DMAR_HARDWARE_UNIT,f)
 end_define
 
 begin_define
@@ -532,7 +532,7 @@ name|ACPI_DMAR1_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_DMAR_RESERVED_MEMORY,f)
+value|(UINT16) ACPI_OFFSET (ACPI_DMAR_RESERVED_MEMORY,f)
 end_define
 
 begin_define
@@ -542,7 +542,7 @@ name|ACPI_DMAR2_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_DMAR_ATSR,f)
+value|(UINT16) ACPI_OFFSET (ACPI_DMAR_ATSR,f)
 end_define
 
 begin_define
@@ -552,7 +552,7 @@ name|ACPI_DMAR3_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_DMAR_RHSA,f)
+value|(UINT16) ACPI_OFFSET (ACPI_DMAR_RHSA,f)
 end_define
 
 begin_define
@@ -562,7 +562,7 @@ name|ACPI_EINJ0_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_WHEA_HEADER,f)
+value|(UINT16) ACPI_OFFSET (ACPI_WHEA_HEADER,f)
 end_define
 
 begin_define
@@ -572,7 +572,7 @@ name|ACPI_ERST0_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_WHEA_HEADER,f)
+value|(UINT16) ACPI_OFFSET (ACPI_WHEA_HEADER,f)
 end_define
 
 begin_define
@@ -582,7 +582,7 @@ name|ACPI_FPDTH_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_FPDT_HEADER,f)
+value|(UINT16) ACPI_OFFSET (ACPI_FPDT_HEADER,f)
 end_define
 
 begin_define
@@ -592,7 +592,7 @@ name|ACPI_FPDT0_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_FPDT_BOOT,f)
+value|(UINT16) ACPI_OFFSET (ACPI_FPDT_BOOT,f)
 end_define
 
 begin_define
@@ -602,7 +602,7 @@ name|ACPI_FPDT1_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_FPDT_S3PT_PTR,f)
+value|(UINT16) ACPI_OFFSET (ACPI_FPDT_S3PT_PTR,f)
 end_define
 
 begin_define
@@ -612,7 +612,7 @@ name|ACPI_HEST0_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_HEST_IA_MACHINE_CHECK,f)
+value|(UINT16) ACPI_OFFSET (ACPI_HEST_IA_MACHINE_CHECK,f)
 end_define
 
 begin_define
@@ -622,7 +622,7 @@ name|ACPI_HEST1_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_HEST_IA_CORRECTED,f)
+value|(UINT16) ACPI_OFFSET (ACPI_HEST_IA_CORRECTED,f)
 end_define
 
 begin_define
@@ -632,7 +632,7 @@ name|ACPI_HEST2_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_HEST_IA_NMI,f)
+value|(UINT16) ACPI_OFFSET (ACPI_HEST_IA_NMI,f)
 end_define
 
 begin_define
@@ -642,7 +642,7 @@ name|ACPI_HEST6_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_HEST_AER_ROOT,f)
+value|(UINT16) ACPI_OFFSET (ACPI_HEST_AER_ROOT,f)
 end_define
 
 begin_define
@@ -652,7 +652,7 @@ name|ACPI_HEST7_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_HEST_AER,f)
+value|(UINT16) ACPI_OFFSET (ACPI_HEST_AER,f)
 end_define
 
 begin_define
@@ -662,7 +662,7 @@ name|ACPI_HEST8_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_HEST_AER_BRIDGE,f)
+value|(UINT16) ACPI_OFFSET (ACPI_HEST_AER_BRIDGE,f)
 end_define
 
 begin_define
@@ -672,7 +672,7 @@ name|ACPI_HEST9_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_HEST_GENERIC,f)
+value|(UINT16) ACPI_OFFSET (ACPI_HEST_GENERIC,f)
 end_define
 
 begin_define
@@ -682,7 +682,7 @@ name|ACPI_HESTN_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_HEST_NOTIFY,f)
+value|(UINT16) ACPI_OFFSET (ACPI_HEST_NOTIFY,f)
 end_define
 
 begin_define
@@ -692,7 +692,7 @@ name|ACPI_HESTB_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_HEST_IA_ERROR_BANK,f)
+value|(UINT16) ACPI_OFFSET (ACPI_HEST_IA_ERROR_BANK,f)
 end_define
 
 begin_define
@@ -702,7 +702,7 @@ name|ACPI_IVRSH_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_IVRS_HEADER,f)
+value|(UINT16) ACPI_OFFSET (ACPI_IVRS_HEADER,f)
 end_define
 
 begin_define
@@ -712,7 +712,7 @@ name|ACPI_IVRS0_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_IVRS_HARDWARE,f)
+value|(UINT16) ACPI_OFFSET (ACPI_IVRS_HARDWARE,f)
 end_define
 
 begin_define
@@ -722,7 +722,7 @@ name|ACPI_IVRS1_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_IVRS_MEMORY,f)
+value|(UINT16) ACPI_OFFSET (ACPI_IVRS_MEMORY,f)
 end_define
 
 begin_define
@@ -732,7 +732,7 @@ name|ACPI_IVRSD_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_IVRS_DE_HEADER,f)
+value|(UINT16) ACPI_OFFSET (ACPI_IVRS_DE_HEADER,f)
 end_define
 
 begin_define
@@ -742,7 +742,7 @@ name|ACPI_IVRS8A_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_IVRS_DEVICE8A,f)
+value|(UINT16) ACPI_OFFSET (ACPI_IVRS_DEVICE8A,f)
 end_define
 
 begin_define
@@ -752,7 +752,7 @@ name|ACPI_IVRS8B_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_IVRS_DEVICE8B,f)
+value|(UINT16) ACPI_OFFSET (ACPI_IVRS_DEVICE8B,f)
 end_define
 
 begin_define
@@ -762,7 +762,7 @@ name|ACPI_IVRS8C_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_IVRS_DEVICE8C,f)
+value|(UINT16) ACPI_OFFSET (ACPI_IVRS_DEVICE8C,f)
 end_define
 
 begin_define
@@ -772,7 +772,7 @@ name|ACPI_MADT0_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_MADT_LOCAL_APIC,f)
+value|(UINT16) ACPI_OFFSET (ACPI_MADT_LOCAL_APIC,f)
 end_define
 
 begin_define
@@ -782,7 +782,7 @@ name|ACPI_MADT1_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_MADT_IO_APIC,f)
+value|(UINT16) ACPI_OFFSET (ACPI_MADT_IO_APIC,f)
 end_define
 
 begin_define
@@ -792,7 +792,7 @@ name|ACPI_MADT2_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_MADT_INTERRUPT_OVERRIDE,f)
+value|(UINT16) ACPI_OFFSET (ACPI_MADT_INTERRUPT_OVERRIDE,f)
 end_define
 
 begin_define
@@ -802,7 +802,7 @@ name|ACPI_MADT3_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_MADT_NMI_SOURCE,f)
+value|(UINT16) ACPI_OFFSET (ACPI_MADT_NMI_SOURCE,f)
 end_define
 
 begin_define
@@ -812,7 +812,7 @@ name|ACPI_MADT4_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_MADT_LOCAL_APIC_NMI,f)
+value|(UINT16) ACPI_OFFSET (ACPI_MADT_LOCAL_APIC_NMI,f)
 end_define
 
 begin_define
@@ -822,7 +822,7 @@ name|ACPI_MADT5_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_MADT_LOCAL_APIC_OVERRIDE,f)
+value|(UINT16) ACPI_OFFSET (ACPI_MADT_LOCAL_APIC_OVERRIDE,f)
 end_define
 
 begin_define
@@ -832,7 +832,7 @@ name|ACPI_MADT6_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_MADT_IO_SAPIC,f)
+value|(UINT16) ACPI_OFFSET (ACPI_MADT_IO_SAPIC,f)
 end_define
 
 begin_define
@@ -842,7 +842,7 @@ name|ACPI_MADT7_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_MADT_LOCAL_SAPIC,f)
+value|(UINT16) ACPI_OFFSET (ACPI_MADT_LOCAL_SAPIC,f)
 end_define
 
 begin_define
@@ -852,7 +852,7 @@ name|ACPI_MADT8_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_MADT_INTERRUPT_SOURCE,f)
+value|(UINT16) ACPI_OFFSET (ACPI_MADT_INTERRUPT_SOURCE,f)
 end_define
 
 begin_define
@@ -862,7 +862,7 @@ name|ACPI_MADT9_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_MADT_LOCAL_X2APIC,f)
+value|(UINT16) ACPI_OFFSET (ACPI_MADT_LOCAL_X2APIC,f)
 end_define
 
 begin_define
@@ -872,7 +872,7 @@ name|ACPI_MADT10_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_MADT_LOCAL_X2APIC_NMI,f)
+value|(UINT16) ACPI_OFFSET (ACPI_MADT_LOCAL_X2APIC_NMI,f)
 end_define
 
 begin_define
@@ -882,7 +882,7 @@ name|ACPI_MADT11_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_MADT_GENERIC_INTERRUPT,f)
+value|(UINT16) ACPI_OFFSET (ACPI_MADT_GENERIC_INTERRUPT,f)
 end_define
 
 begin_define
@@ -892,7 +892,7 @@ name|ACPI_MADT12_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_MADT_GENERIC_DISTRIBUTOR,f)
+value|(UINT16) ACPI_OFFSET (ACPI_MADT_GENERIC_DISTRIBUTOR,f)
 end_define
 
 begin_define
@@ -902,7 +902,7 @@ name|ACPI_MADTH_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_SUBTABLE_HEADER,f)
+value|(UINT16) ACPI_OFFSET (ACPI_SUBTABLE_HEADER,f)
 end_define
 
 begin_define
@@ -912,7 +912,7 @@ name|ACPI_MCFG0_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_MCFG_ALLOCATION,f)
+value|(UINT16) ACPI_OFFSET (ACPI_MCFG_ALLOCATION,f)
 end_define
 
 begin_define
@@ -922,7 +922,7 @@ name|ACPI_MPST0_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_MPST_POWER_NODE,f)
+value|(UINT16) ACPI_OFFSET (ACPI_MPST_POWER_NODE,f)
 end_define
 
 begin_define
@@ -932,7 +932,7 @@ name|ACPI_MPST0A_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_MPST_POWER_STATE,f)
+value|(UINT16) ACPI_OFFSET (ACPI_MPST_POWER_STATE,f)
 end_define
 
 begin_define
@@ -942,7 +942,7 @@ name|ACPI_MPST0B_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_MPST_COMPONENT,f)
+value|(UINT16) ACPI_OFFSET (ACPI_MPST_COMPONENT,f)
 end_define
 
 begin_define
@@ -952,7 +952,7 @@ name|ACPI_MPST1_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_MPST_DATA_HDR,f)
+value|(UINT16) ACPI_OFFSET (ACPI_MPST_DATA_HDR,f)
 end_define
 
 begin_define
@@ -962,7 +962,7 @@ name|ACPI_MPST2_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_MPST_POWER_DATA,f)
+value|(UINT16) ACPI_OFFSET (ACPI_MPST_POWER_DATA,f)
 end_define
 
 begin_define
@@ -972,7 +972,7 @@ name|ACPI_MSCT0_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_MSCT_PROXIMITY,f)
+value|(UINT16) ACPI_OFFSET (ACPI_MSCT_PROXIMITY,f)
 end_define
 
 begin_define
@@ -982,7 +982,7 @@ name|ACPI_PCCT0_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_PCCT_SUBSPACE,f)
+value|(UINT16) ACPI_OFFSET (ACPI_PCCT_SUBSPACE,f)
 end_define
 
 begin_define
@@ -992,7 +992,7 @@ name|ACPI_PMTT0_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_PMTT_SOCKET,f)
+value|(UINT16) ACPI_OFFSET (ACPI_PMTT_SOCKET,f)
 end_define
 
 begin_define
@@ -1002,7 +1002,7 @@ name|ACPI_PMTT1_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_PMTT_CONTROLLER,f)
+value|(UINT16) ACPI_OFFSET (ACPI_PMTT_CONTROLLER,f)
 end_define
 
 begin_define
@@ -1012,7 +1012,7 @@ name|ACPI_PMTT1A_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_PMTT_DOMAIN,f)
+value|(UINT16) ACPI_OFFSET (ACPI_PMTT_DOMAIN,f)
 end_define
 
 begin_define
@@ -1022,7 +1022,7 @@ name|ACPI_PMTT2_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_PMTT_PHYSICAL_COMPONENT,f)
+value|(UINT16) ACPI_OFFSET (ACPI_PMTT_PHYSICAL_COMPONENT,f)
 end_define
 
 begin_define
@@ -1032,7 +1032,7 @@ name|ACPI_PMTTH_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_PMTT_HEADER,f)
+value|(UINT16) ACPI_OFFSET (ACPI_PMTT_HEADER,f)
 end_define
 
 begin_define
@@ -1042,7 +1042,7 @@ name|ACPI_S3PTH_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_S3PT_HEADER,f)
+value|(UINT16) ACPI_OFFSET (ACPI_S3PT_HEADER,f)
 end_define
 
 begin_define
@@ -1052,7 +1052,7 @@ name|ACPI_S3PT0_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_S3PT_RESUME,f)
+value|(UINT16) ACPI_OFFSET (ACPI_S3PT_RESUME,f)
 end_define
 
 begin_define
@@ -1062,7 +1062,7 @@ name|ACPI_S3PT1_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_S3PT_SUSPEND,f)
+value|(UINT16) ACPI_OFFSET (ACPI_S3PT_SUSPEND,f)
 end_define
 
 begin_define
@@ -1072,7 +1072,7 @@ name|ACPI_SLICH_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_SLIC_HEADER,f)
+value|(UINT16) ACPI_OFFSET (ACPI_SLIC_HEADER,f)
 end_define
 
 begin_define
@@ -1082,7 +1082,7 @@ name|ACPI_SLIC0_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_SLIC_KEY,f)
+value|(UINT16) ACPI_OFFSET (ACPI_SLIC_KEY,f)
 end_define
 
 begin_define
@@ -1092,7 +1092,7 @@ name|ACPI_SLIC1_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_SLIC_MARKER,f)
+value|(UINT16) ACPI_OFFSET (ACPI_SLIC_MARKER,f)
 end_define
 
 begin_define
@@ -1102,7 +1102,7 @@ name|ACPI_SRATH_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_SUBTABLE_HEADER,f)
+value|(UINT16) ACPI_OFFSET (ACPI_SUBTABLE_HEADER,f)
 end_define
 
 begin_define
@@ -1112,7 +1112,7 @@ name|ACPI_SRAT0_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_SRAT_CPU_AFFINITY,f)
+value|(UINT16) ACPI_OFFSET (ACPI_SRAT_CPU_AFFINITY,f)
 end_define
 
 begin_define
@@ -1122,7 +1122,7 @@ name|ACPI_SRAT1_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_SRAT_MEM_AFFINITY,f)
+value|(UINT16) ACPI_OFFSET (ACPI_SRAT_MEM_AFFINITY,f)
 end_define
 
 begin_define
@@ -1132,7 +1132,7 @@ name|ACPI_SRAT2_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_SRAT_X2APIC_CPU_AFFINITY,f)
+value|(UINT16) ACPI_OFFSET (ACPI_SRAT_X2APIC_CPU_AFFINITY,f)
 end_define
 
 begin_define
@@ -1142,7 +1142,7 @@ name|ACPI_WDAT0_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_WDAT_ENTRY,f)
+value|(UINT16) ACPI_OFFSET (ACPI_WDAT_ENTRY,f)
 end_define
 
 begin_comment
@@ -1160,7 +1160,7 @@ name|f
 parameter_list|,
 name|o
 parameter_list|)
-value|(UINT8) (ACPI_OFFSET (d,f) + o)
+value|(UINT16) (ACPI_OFFSET (d,f) + o)
 end_define
 
 begin_comment
@@ -2648,6 +2648,21 @@ literal|0
 block|}
 block|,
 block|{
+name|ACPI_DMT_FLAG5
+block|,
+name|ACPI_FADT_FLAG_OFFSET
+argument_list|(
+name|BootFlags
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"CMOS RTC Not Present (V5)"
+block|,
+literal|0
+block|}
+block|,
+block|{
 name|ACPI_DMT_UINT8
 block|,
 name|ACPI_FADT_OFFSET
@@ -3001,22 +3016,7 @@ argument_list|,
 literal|2
 argument_list|)
 block|,
-literal|"Prefer S0 Idle (V5)"
-block|,
-literal|0
-block|}
-block|,
-block|{
-name|ACPI_DMT_FLAG6
-block|,
-name|ACPI_FADT_FLAG_OFFSET
-argument_list|(
-name|Flags
-argument_list|,
-literal|2
-argument_list|)
-block|,
-literal|"Use Sleep Register (V5)"
+literal|"Low Power S0 Idle (V5)"
 block|,
 literal|0
 block|}
@@ -3285,10 +3285,23 @@ name|ACPI_DMT_GAS
 block|,
 name|ACPI_FADT_OFFSET
 argument_list|(
-name|SleepRegister
+name|SleepControl
 argument_list|)
 block|,
-literal|"Sleep Register"
+literal|"Sleep Control Register"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_GAS
+block|,
+name|ACPI_FADT_OFFSET
+argument_list|(
+name|SleepStatus
+argument_list|)
+block|,
+literal|"Sleep Status Register"
 block|,
 literal|0
 block|}

@@ -611,32 +611,30 @@ comment|///
 name|BasicBlock
 modifier|*
 name|SplitBlockPredecessors
-parameter_list|(
+argument_list|(
 name|BasicBlock
-modifier|*
+operator|*
 name|BB
-parameter_list|,
+argument_list|,
+name|ArrayRef
+operator|<
 name|BasicBlock
-modifier|*
-specifier|const
-modifier|*
+operator|*
+operator|>
 name|Preds
-parameter_list|,
-name|unsigned
-name|NumPreds
-parameter_list|,
+argument_list|,
 specifier|const
 name|char
-modifier|*
+operator|*
 name|Suffix
-parameter_list|,
+argument_list|,
 name|Pass
-modifier|*
+operator|*
 name|P
-init|=
+operator|=
 literal|0
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|/// SplitLandingPadPredecessors - This method transforms the landing pad,
 comment|/// OrigBB, by introducing two new basic blocks into the function. One of those
 comment|/// new basic blocks gets the predecessors listed in Preds. The other basic

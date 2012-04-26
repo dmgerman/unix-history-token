@@ -626,6 +626,14 @@ directive|define
 name|stderr
 value|__stderrp
 name|__BEGIN_DECLS
+ifdef|#
+directive|ifdef
+name|_XLOCALE_H_
+include|#
+directive|include
+file|<xlocale/_stdio.h>
+endif|#
+directive|endif
 comment|/*  * Functions defined in ANSI C standard.  */
 name|void
 name|clearerr

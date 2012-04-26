@@ -54,6 +54,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<limits.h>
 end_include
 
@@ -141,10 +147,22 @@ name|n
 operator|>
 name|INT_MAX
 condition|)
-name|n
+block|{
+name|errno
 operator|=
-name|INT_MAX
+name|EOVERFLOW
 expr_stmt|;
+operator|*
+name|str
+operator|=
+literal|'\0'
+expr_stmt|;
+return|return
+operator|(
+name|EOF
+operator|)
+return|;
+block|}
 comment|/* Stdio internals do not deal correctly with zero length buffer */
 if|if
 condition|(

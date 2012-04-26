@@ -2166,6 +2166,156 @@ value|0x6
 end_define
 
 begin_comment
+comment|/*  * EEPROM map  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FXP_EEPROM_MAP_IA0
+value|0x00
+end_define
+
+begin_comment
+comment|/* Station address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FXP_EEPROM_MAP_IA1
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|FXP_EEPROM_MAP_IA2
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|FXP_EEPROM_MAP_COMPAT
+value|0x03
+end_define
+
+begin_comment
+comment|/* Compatibility */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FXP_EEPROM_MAP_CNTR
+value|0x05
+end_define
+
+begin_comment
+comment|/* Controller/connector type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FXP_EEPROM_MAP_PRI_PHY
+value|0x06
+end_define
+
+begin_comment
+comment|/* Primary PHY record */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FXP_EEPROM_MAP_SEC_PHY
+value|0x07
+end_define
+
+begin_comment
+comment|/* Secondary PHY record */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FXP_EEPROM_MAP_PWA0
+value|0x08
+end_define
+
+begin_comment
+comment|/* Printed wire assembly num. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FXP_EEPROM_MAP_PWA1
+value|0x09
+end_define
+
+begin_comment
+comment|/* Printed wire assembly num. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FXP_EEPROM_MAP_ID
+value|0x0A
+end_define
+
+begin_comment
+comment|/* EEPROM ID */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FXP_EEPROM_MAP_SUBSYS
+value|0x0B
+end_define
+
+begin_comment
+comment|/* Subsystem ID */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FXP_EEPROM_MAP_SUBVEN
+value|0x0C
+end_define
+
+begin_comment
+comment|/* Subsystem vendor ID */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FXP_EEPROM_MAP_CKSUM64
+value|0x3F
+end_define
+
+begin_comment
+comment|/* 64-word EEPROM checksum */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FXP_EEPROM_MAP_CKSUM256
+value|0xFF
+end_define
+
+begin_comment
+comment|/* 256-word EEPROM checksum */
+end_comment
+
+begin_comment
 comment|/*  * Management Data Interface opcodes  */
 end_comment
 

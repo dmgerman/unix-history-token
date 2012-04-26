@@ -58,7 +58,7 @@ value|0xfee00000
 end_define
 
 begin_comment
-comment|/*  * - 1 ??? dummy counter.  * - 2 counters for each I/O interrupt.  * - 1 counter for each CPU for lapic timer.  * - 7 counters for each CPU for IPI counters for SMP.  */
+comment|/*  * - 1 ??? dummy counter.  * - 2 counters for each I/O interrupt.  * - 1 counter for each CPU for lapic timer.  * - 9 counters for each CPU for IPI counters for SMP.  */
 end_comment
 
 begin_ifdef
@@ -71,7 +71,7 @@ begin_define
 define|#
 directive|define
 name|INTRCNT_COUNT
-value|(1 + NUM_IO_INTS * 2 + (1 + 7) * MAXCPU)
+value|(1 + NUM_IO_INTS * 2 + (1 + 9) * MAXCPU)
 end_define
 
 begin_else
@@ -353,6 +353,26 @@ name|int
 name|elcr_found
 decl_stmt|;
 end_decl_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DEV_ATPIC
+end_ifndef
+
+begin_function_decl
+name|void
+name|atpic_reset
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* XXX: The elcr_* prototypes probably belong somewhere else. */

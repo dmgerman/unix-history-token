@@ -47,6 +47,23 @@ decl_stmt|;
 name|u_int32_t
 name|aggr_sched_nopkt
 decl_stmt|;
+name|u_int32_t
+name|aggr_rts_aggr_limited
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ath_intr_stats
+block|{
+name|u_int32_t
+name|sync_intr
+index|[
+literal|32
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -494,9 +511,13 @@ name|ast_tx_aggr_fail
 decl_stmt|;
 comment|/* aggregate TX failed */
 name|u_int32_t
+name|ast_tx_mcastq_overflow
+decl_stmt|;
+comment|/* multicast queue overflow */
+name|u_int32_t
 name|ast_pad
 index|[
-literal|2
+literal|1
 index|]
 decl_stmt|;
 block|}

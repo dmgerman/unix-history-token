@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Networks (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Networks nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM  NETWORKS MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
+comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Inc. (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Inc. nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM INC. MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
 end_comment
 
 begin_comment
-comment|/**  * @file  *  * This file provides atomic operations  *  *<hr>$Revision: 49448 $<hr>  *  *  */
+comment|/**  * @file  *  * This file provides atomic operations  *  *<hr>$Revision: 70030 $<hr>  *  *  */
 end_comment
 
 begin_ifndef
@@ -423,6 +423,11 @@ name|OCTEON_IS_MODEL
 argument_list|(
 name|OCTEON_CN6XXX
 argument_list|)
+operator|||
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CNF7XXX
+argument_list|)
 condition|)
 block|{
 name|CVMX_PUSH_OCTEON2
@@ -570,6 +575,11 @@ condition|(
 name|OCTEON_IS_MODEL
 argument_list|(
 name|OCTEON_CN6XXX
+argument_list|)
+operator|||
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CNF7XXX
 argument_list|)
 condition|)
 block|{
@@ -831,6 +841,11 @@ name|OCTEON_IS_MODEL
 argument_list|(
 name|OCTEON_CN6XXX
 argument_list|)
+operator|||
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CNF7XXX
+argument_list|)
 condition|)
 block|{
 name|CVMX_PUSH_OCTEON2
@@ -945,6 +960,11 @@ name|OCTEON_IS_MODEL
 argument_list|(
 name|OCTEON_CN6XXX
 argument_list|)
+operator|||
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CNF7XXX
+argument_list|)
 condition|)
 block|{
 name|CVMX_PUSH_OCTEON2
@@ -1021,16 +1041,6 @@ name|ret
 operator|)
 return|;
 block|}
-comment|/**  * This atomic operation is now named cvmx_atomic_compare_and_store32_nosync  * and the (deprecated) macro is provided for backward compatibility.  * @deprecated  */
-define|#
-directive|define
-name|cvmx_atomic_compare_and_store_nosync32
-value|cvmx_atomic_compare_and_store32_nosync
-comment|/**  * This atomic operation is now named cvmx_atomic_compare_and_store64_nosync  * and the (deprecated) macro is provided for backward compatibility.  * @deprecated  */
-define|#
-directive|define
-name|cvmx_atomic_compare_and_store_nosync64
-value|cvmx_atomic_compare_and_store64_nosync
 ifdef|#
 directive|ifdef
 name|__cplusplus

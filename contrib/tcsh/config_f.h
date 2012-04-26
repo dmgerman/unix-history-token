@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: /p/tcsh/cvsroot/tcsh/config_f.h,v 3.42 2009/06/25 12:10:56 christos Exp $ */
+comment|/* $Header: /p/tcsh/cvsroot/tcsh/config_f.h,v 3.47 2011/02/05 20:34:55 christos Exp $ */
 end_comment
 
 begin_comment
@@ -50,15 +50,6 @@ argument_list|(
 name|NLS
 argument_list|)
 operator|&&
-name|SIZEOF_WCHAR_T
-operator|>=
-literal|4
-operator|&&
-name|defined
-argument_list|(
-name|HAVE_MBRTOWC
-argument_list|)
-operator|&&
 operator|!
 name|defined
 argument_list|(
@@ -78,34 +69,24 @@ directive|define
 name|WIDE_STRINGS
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * NLS_CATALOGS:Use Native Language System catalogs for  *		international messages.  *		Routines like catopen() are needed  *		if you don't have<nl_types.h>, you don't want  *		to define this.  */
-end_comment
-
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
-name|NLS
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|HAVE_CATGETS
-argument_list|)
+name|SIZEOF_WCHAR_T
+operator|<
+literal|4
 end_if
 
 begin_define
 define|#
 directive|define
-name|NLS_CATALOGS
+name|UTF16_STRINGS
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -283,6 +264,16 @@ name|defined
 argument_list|(
 name|__MVS__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__GLIBC__
+argument_list|)
 end_if
 
 begin_define
@@ -459,25 +450,6 @@ ifdef|#
 directive|ifdef
 name|WIDE_STRINGS
 end_ifdef
-
-begin_if
-if|#
-directive|if
-name|SIZEOF_WCHAR_T
-operator|<
-literal|4
-end_if
-
-begin_error
-error|#
-directive|error
-literal|"wchar_t must be at least 4 bytes for WIDE_STRINGS"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#

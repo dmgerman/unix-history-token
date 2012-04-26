@@ -107,12 +107,6 @@ name|getTypeClass
 argument_list|()
 condition|)
 block|{
-default|default:
-name|llvm_unreachable
-argument_list|(
-literal|"Unknown type class!"
-argument_list|)
-expr_stmt|;
 define|#
 directive|define
 name|ABSTRACT_TYPE
@@ -134,6 +128,11 @@ include|#
 directive|include
 file|"clang/AST/TypeNodes.def"
 block|}
+name|llvm_unreachable
+argument_list|(
+literal|"Unknown type class!"
+argument_list|)
+expr_stmt|;
 block|}
 comment|// If the implementation chooses not to implement a certain visit method, fall
 comment|// back on superclass.

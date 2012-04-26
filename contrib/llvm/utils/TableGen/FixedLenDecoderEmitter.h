@@ -177,7 +177,8 @@ expr_stmt|;
 block|}
 name|unsigned
 name|numFields
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 return|return
 name|Fields
@@ -194,12 +195,13 @@ operator|<
 name|EncodingField
 operator|>
 operator|::
-name|iterator
-name|iterator
+name|const_iterator
+name|const_iterator
 expr_stmt|;
-name|iterator
+name|const_iterator
 name|begin
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 return|return
 name|Fields
@@ -208,9 +210,10 @@ name|begin
 argument_list|()
 return|;
 block|}
-name|iterator
+name|const_iterator
 name|end
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 return|return
 name|Fields
@@ -239,7 +242,8 @@ argument|std::string GPrefix  =
 literal|"if ("
 argument_list|,
 argument|std::string GPostfix =
-literal|" == MCDisassembler::Fail) return MCDisassembler::Fail;"
+literal|" == MCDisassembler::Fail)"
+literal|" return MCDisassembler::Fail;"
 argument_list|,
 argument|std::string ROK      =
 literal|"MCDisassembler::Success"
@@ -251,22 +255,9 @@ argument|std::string L        =
 literal|""
 argument_list|)
 operator|:
-name|Records
-argument_list|(
-name|R
-argument_list|)
-block|,
 name|Target
 argument_list|(
 name|R
-argument_list|)
-block|,
-name|NumberedInstructions
-argument_list|(
-name|Target
-operator|.
-name|getInstructionsByEnumValue
-argument_list|()
 argument_list|)
 block|,
 name|PredicateNamespace
@@ -310,45 +301,8 @@ argument_list|)
 block|;
 name|private
 operator|:
-name|RecordKeeper
-operator|&
-name|Records
-block|;
 name|CodeGenTarget
 name|Target
-block|;
-name|std
-operator|::
-name|vector
-operator|<
-specifier|const
-name|CodeGenInstruction
-operator|*
-operator|>
-name|NumberedInstructions
-block|;
-name|std
-operator|::
-name|vector
-operator|<
-name|unsigned
-operator|>
-name|Opcodes
-block|;
-name|std
-operator|::
-name|map
-operator|<
-name|unsigned
-block|,
-name|std
-operator|::
-name|vector
-operator|<
-name|OperandInfo
-operator|>
-expr|>
-name|Operands
 block|;
 name|public
 operator|:

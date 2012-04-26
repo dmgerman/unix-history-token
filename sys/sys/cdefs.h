@@ -1116,11 +1116,15 @@ parameter_list|)
 value|static_assert(e, s)
 end_define
 
+begin_comment
+comment|/* FIXME: change this to thread_local when clang in base supports it */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|_Thread_local
-value|thread_local
+value|__thread
 end_define
 
 begin_elif
@@ -1246,6 +1250,79 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Emulation of C11 _Generic().  Unlike the previously defined C11  * keywords, it is not possible to implement this using exactly the same  * syntax.  Therefore implement something similar under the name  * __generic().  Unlike _Generic(), this macro can only distinguish  * between a single type, so it requires nested invocations to  * distinguish multiple cases.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__STDC_VERSION__
+argument_list|)
+operator|&&
+name|__STDC_VERSION__
+operator|>=
+literal|201112L
+end_if
+
+begin_define
+define|#
+directive|define
+name|__generic
+parameter_list|(
+name|expr
+parameter_list|,
+name|t
+parameter_list|,
+name|yes
+parameter_list|,
+name|no
+parameter_list|)
+define|\
+value|_Generic(expr, t: yes, default: no)
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|__GNUC_PREREQ__
+argument_list|(
+literal|3
+operator|,
+literal|1
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__cplusplus
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|__generic
+parameter_list|(
+name|expr
+parameter_list|,
+name|t
+parameter_list|,
+name|yes
+parameter_list|,
+name|no
+parameter_list|)
+define|\
+value|__builtin_choose_expr(						\ 	    __builtin_types_compatible_p(__typeof(expr), t), yes, no)
+end_define
 
 begin_endif
 endif|#
@@ -1882,6 +1959,28 @@ name|fmtarg
 parameter_list|)
 end_define
 
+begin_define
+define|#
+directive|define
+name|__strfmonlike
+parameter_list|(
+name|fmtarg
+parameter_list|,
+name|firstvararg
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__strftimelike
+parameter_list|(
+name|fmtarg
+parameter_list|,
+name|firstvararg
+parameter_list|)
+end_define
+
 begin_else
 else|#
 directive|else
@@ -1921,6 +2020,32 @@ parameter_list|(
 name|fmtarg
 parameter_list|)
 value|__attribute__((__format_arg__ (fmtarg)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__strfmonlike
+parameter_list|(
+name|fmtarg
+parameter_list|,
+name|firstvararg
+parameter_list|)
+define|\
+value|__attribute__((__format__ (__strfmon__, fmtarg, firstvararg)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__strftimelike
+parameter_list|(
+name|fmtarg
+parameter_list|,
+name|firstvararg
+parameter_list|)
+define|\
+value|__attribute__((__format__ (__strftime__, fmtarg, firstvararg)))
 end_define
 
 begin_endif
@@ -3180,6 +3305,32 @@ parameter_list|(
 name|x
 parameter_list|)
 value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__mips
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__powerpc64__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|__NO_TLS
+value|1
 end_define
 
 begin_endif

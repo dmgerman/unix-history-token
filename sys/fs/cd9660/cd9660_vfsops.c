@@ -341,7 +341,7 @@ name|void
 modifier|*
 name|data
 parameter_list|,
-name|int
+name|uint64_t
 name|flags
 parameter_list|)
 block|{
@@ -930,12 +930,7 @@ name|iso_mnt
 modifier|*
 name|isomp
 init|=
-operator|(
-expr|struct
-name|iso_mnt
-operator|*
-operator|)
-literal|0
+name|NULL
 decl_stmt|;
 name|struct
 name|buf
@@ -2374,9 +2369,6 @@ condition|)
 block|{
 name|free
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|isomp
 argument_list|,
 name|M_ISOFSMNT
@@ -2550,9 +2542,6 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|isomp
 argument_list|,
 name|M_ISOFSMNT

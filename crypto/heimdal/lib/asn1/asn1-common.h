@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: asn1-common.h 22429 2008-01-13 10:25:50Z lha $ */
+comment|/* $Id$ */
 end_comment
 
 begin_include
@@ -13,6 +13,12 @@ begin_include
 include|#
 directive|include
 file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<krb5-types.h>
 end_include
 
 begin_ifndef
@@ -82,16 +88,16 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|char
-modifier|*
+name|struct
+name|heim_octet_string
 name|heim_printable_string
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|char
-modifier|*
+name|struct
+name|heim_octet_string
 name|heim_ia5_string
 typedef|;
 end_typedef
@@ -208,6 +214,70 @@ parameter_list|)
 define|\
 value|do {                                                         \     (BL) = length_##T((S));                                    \     (B) = malloc((BL));                                        \     if((B) == NULL) {                                          \       (R) = ENOMEM;                                            \     } else {                                                   \       (R) = encode_##T(((unsigned char*)(B)) + (BL) - 1, (BL), \                        (S), (L));                              \       if((R) != 0) {                                           \         free((B));                                             \         (B) = NULL;                                            \       }                                                        \     }                                                          \   } while (0)
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_WIN32
+end_ifdef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ASN1_LIB
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ASN1EXP
+value|__declspec(dllimport)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ASN1EXP
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|ASN1CALL
+value|__stdcall
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ASN1EXP
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASN1CALL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

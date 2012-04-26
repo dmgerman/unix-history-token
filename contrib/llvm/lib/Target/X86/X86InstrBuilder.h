@@ -117,12 +117,6 @@ directive|include
 file|"llvm/CodeGen/MachineMemOperand.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"llvm/CodeGen/PseudoSourceValue.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm

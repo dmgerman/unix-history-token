@@ -161,13 +161,6 @@ name|SNF_SYNC
 value|0x04
 end_define
 
-begin_define
-define|#
-directive|define
-name|SIGSERVICE
-value|(SIGTHR+1)
-end_define
-
 begin_function_decl
 name|int
 name|__sigev_check_init

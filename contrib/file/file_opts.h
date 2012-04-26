@@ -192,6 +192,19 @@ end_ifdef
 begin_macro
 name|OPT
 argument_list|(
+literal|'l'
+argument_list|,
+literal|"list"
+argument_list|,
+literal|0
+argument_list|,
+literal|"                 list magic strength\n"
+argument_list|)
+end_macro
+
+begin_macro
+name|OPT
+argument_list|(
 literal|'L'
 argument_list|,
 literal|"dereference"

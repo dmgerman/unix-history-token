@@ -399,10 +399,6 @@ parameter_list|,
 name|struct
 name|ucred
 modifier|*
-parameter_list|,
-name|struct
-name|thread
-modifier|*
 parameter_list|)
 function_decl|;
 name|int
@@ -544,10 +540,8 @@ parameter_list|,
 name|cc
 parameter_list|,
 name|dd
-parameter_list|,
-name|ee
 parameter_list|)
-value|VFSTOUFS((aa)->v_mount)->um_truncate(aa, bb, cc, dd, ee)
+value|VFSTOUFS((aa)->v_mount)->um_truncate(aa, bb, cc, dd)
 end_define
 
 begin_define

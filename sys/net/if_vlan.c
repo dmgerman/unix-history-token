@@ -360,7 +360,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ifv_tag
+name|ifv_vid
 value|ifv_mib.ifvm_tag
 end_define
 
@@ -764,7 +764,7 @@ name|vlan_gethash
 argument_list|(
 argument|struct ifvlantrunk *trunk
 argument_list|,
-argument|uint16_t tag
+argument|uint16_t vid
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1019,7 +1019,7 @@ specifier|static
 name|struct
 name|ifnet
 modifier|*
-name|vlan_clone_match_ethertag
+name|vlan_clone_match_ethervid
 parameter_list|(
 name|struct
 name|if_clone
@@ -1460,7 +1460,7 @@ name|HASH
 argument_list|(
 name|ifv
 operator|->
-name|ifv_tag
+name|ifv_vid
 argument_list|,
 name|trunk
 operator|->
@@ -1479,11 +1479,11 @@ if|if
 condition|(
 name|ifv
 operator|->
-name|ifv_tag
+name|ifv_vid
 operator|==
 name|ifv2
 operator|->
-name|ifv_tag
+name|ifv_vid
 condition|)
 return|return
 operator|(
@@ -1519,7 +1519,7 @@ name|HASH
 argument_list|(
 name|ifv
 operator|->
-name|ifv_tag
+name|ifv_vid
 argument_list|,
 name|trunk
 operator|->
@@ -1615,7 +1615,7 @@ name|HASH
 argument_list|(
 name|ifv
 operator|->
-name|ifv_tag
+name|ifv_vid
 argument_list|,
 name|trunk
 operator|->
@@ -1902,7 +1902,7 @@ name|HASH
 argument_list|(
 name|ifv
 operator|->
-name|ifv_tag
+name|ifv_vid
 argument_list|,
 name|n2
 operator|-
@@ -1982,7 +1982,7 @@ name|vlan_gethash
 argument_list|(
 argument|struct ifvlantrunk *trunk
 argument_list|,
-argument|uint16_t tag
+argument|uint16_t vid
 argument_list|)
 block|{ 	struct
 name|ifvlan
@@ -1998,7 +1998,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|ifv
 argument_list|,
-argument|&trunk->hash[HASH(tag, trunk->hmask)]
+argument|&trunk->hash[HASH(vid, trunk->hmask)]
 argument_list|,
 argument|ifv_list
 argument_list|)
@@ -2006,9 +2006,9 @@ if|if
 condition|(
 name|ifv
 operator|->
-name|ifv_tag
+name|ifv_vid
 operator|==
-name|tag
+name|vid
 condition|)
 return|return
 operator|(
@@ -2065,7 +2065,7 @@ modifier|*
 name|trunk
 parameter_list|,
 name|uint16_t
-name|tag
+name|vid
 parameter_list|)
 block|{
 return|return
@@ -2073,7 +2073,7 @@ name|trunk
 operator|->
 name|vlans
 index|[
-name|tag
+name|vid
 index|]
 return|;
 block|}
@@ -2104,7 +2104,7 @@ name|vlans
 index|[
 name|ifv
 operator|->
-name|ifv_tag
+name|ifv_vid
 index|]
 operator|!=
 name|NULL
@@ -2118,7 +2118,7 @@ name|vlans
 index|[
 name|ifv
 operator|->
-name|ifv_tag
+name|ifv_vid
 index|]
 operator|=
 name|ifv
@@ -2159,7 +2159,7 @@ name|vlans
 index|[
 name|ifv
 operator|->
-name|ifv_tag
+name|ifv_vid
 index|]
 operator|=
 name|NULL
@@ -2922,7 +2922,7 @@ name|ifp
 operator|)
 return|;
 block|}
-comment|/*  * Return the 16bit vlan tag for this interface.  */
+comment|/*  * Return the 12-bit VLAN VID for this interface, for use by external  * components such as Infiniband.  *  * XXXRW: Note that the function name here is historical; it should be named  * vlan_vid().  */
 specifier|static
 name|int
 name|vlan_tag
@@ -2934,7 +2934,7 @@ name|ifp
 parameter_list|,
 name|uint16_t
 modifier|*
-name|tagp
+name|vidp
 parameter_list|)
 block|{
 name|struct
@@ -2962,11 +2962,11 @@ operator|->
 name|if_softc
 expr_stmt|;
 operator|*
-name|tagp
+name|vidp
 operator|=
 name|ifv
 operator|->
-name|ifv_tag
+name|ifv_vid
 expr_stmt|;
 return|return
 operator|(
@@ -3069,7 +3069,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/*  * Return the vlan device present at the specific tag.  */
+comment|/*  * Return the vlan device present at the specific VID.  */
 specifier|static
 name|struct
 name|ifnet
@@ -3082,7 +3082,7 @@ modifier|*
 name|ifp
 parameter_list|,
 name|uint16_t
-name|tag
+name|vid
 parameter_list|)
 block|{
 name|struct
@@ -3127,7 +3127,7 @@ name|vlan_gethash
 argument_list|(
 name|trunk
 argument_list|,
-name|tag
+name|vid
 argument_list|)
 expr_stmt|;
 if|if
@@ -3509,7 +3509,7 @@ specifier|static
 name|struct
 name|ifnet
 modifier|*
-name|vlan_clone_match_ethertag
+name|vlan_clone_match_ethervid
 parameter_list|(
 name|struct
 name|if_clone
@@ -3523,7 +3523,7 @@ name|name
 parameter_list|,
 name|int
 modifier|*
-name|tag
+name|vidp
 parameter_list|)
 block|{
 specifier|const
@@ -3537,7 +3537,7 @@ modifier|*
 name|ifp
 decl_stmt|;
 name|int
-name|t
+name|vid
 decl_stmt|;
 comment|/* Check for<etherif>.<vlan> style interface names. */
 name|IFNET_RLOCK_NOSLEEP
@@ -3621,7 +3621,7 @@ operator|==
 literal|'\0'
 condition|)
 continue|continue;
-name|t
+name|vid
 operator|=
 literal|0
 expr_stmt|;
@@ -3641,10 +3641,10 @@ condition|;
 name|cp
 operator|++
 control|)
-name|t
+name|vid
 operator|=
 operator|(
-name|t
+name|vid
 operator|*
 literal|10
 operator|)
@@ -3666,14 +3666,14 @@ condition|)
 continue|continue;
 if|if
 condition|(
-name|tag
+name|vidp
 operator|!=
 name|NULL
 condition|)
 operator|*
-name|tag
+name|vidp
 operator|=
-name|t
+name|vid
 expr_stmt|;
 break|break;
 block|}
@@ -3708,7 +3708,7 @@ name|cp
 decl_stmt|;
 if|if
 condition|(
-name|vlan_clone_match_ethertag
+name|vlan_clone_match_ethervid
 argument_list|(
 name|ifc
 argument_list|,
@@ -3820,7 +3820,7 @@ name|int
 name|error
 decl_stmt|;
 name|int
-name|tag
+name|vid
 decl_stmt|;
 name|int
 name|ethertag
@@ -3863,7 +3863,7 @@ name|ETHER_ADDR_LEN
 index|]
 decl_stmt|;
 comment|/* 00:00:00:00:00:00 */
-comment|/* 	 * There are 3 (ugh) ways to specify the cloned device: 	 * o pass a parameter block with the clone request. 	 * o specify parameters in the text of the clone device name 	 * o specify no parameters and get an unattached device that 	 *   must be configured separately. 	 * The first technique is preferred; the latter two are 	 * supported for backwards compatibilty. 	 */
+comment|/* 	 * There are 3 (ugh) ways to specify the cloned device: 	 * o pass a parameter block with the clone request. 	 * o specify parameters in the text of the clone device name 	 * o specify no parameters and get an unattached device that 	 *   must be configured separately. 	 * The first technique is preferred; the latter two are 	 * supported for backwards compatibilty. 	 * 	 * XXXRW: Note historic use of the word "tag" here.  New ioctls may be 	 * called for. 	 */
 if|if
 condition|(
 name|params
@@ -3909,7 +3909,7 @@ condition|)
 return|return
 name|ENXIO
 return|;
-comment|/* 		 * Don't let the caller set up a VLAN tag with 		 * anything except VLID bits. 		 */
+comment|/* 		 * Don't let the caller set up a VLAN VID with 		 * anything except VLID bits. 		 */
 if|if
 condition|(
 name|vlr
@@ -3949,7 +3949,7 @@ name|ethertag
 operator|=
 literal|1
 expr_stmt|;
-name|tag
+name|vid
 operator|=
 name|vlr
 operator|.
@@ -3970,14 +3970,14 @@ condition|(
 operator|(
 name|p
 operator|=
-name|vlan_clone_match_ethertag
+name|vlan_clone_match_ethervid
 argument_list|(
 name|ifc
 argument_list|,
 name|name
 argument_list|,
 operator|&
-name|tag
+name|vid
 argument_list|)
 operator|)
 operator|!=
@@ -3997,10 +3997,10 @@ name|wildcard
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 		 * Don't let the caller set up a VLAN tag with 		 * anything except VLID bits. 		 */
+comment|/* 		 * Don't let the caller set up a VLAN VID with 		 * anything except VLID bits. 		 */
 if|if
 condition|(
-name|tag
+name|vid
 operator|&
 operator|~
 name|EVL_VLID_MASK
@@ -4337,7 +4337,7 @@ name|ifv
 argument_list|,
 name|p
 argument_list|,
-name|tag
+name|vid
 argument_list|)
 expr_stmt|;
 if|if
@@ -4700,7 +4700,7 @@ name|ether_vtag
 operator|=
 name|ifv
 operator|->
-name|ifv_tag
+name|ifv_vid
 expr_stmt|;
 name|m
 operator|->
@@ -4719,7 +4719,7 @@ name|m
 argument_list|,
 name|ifv
 operator|->
-name|ifv_tag
+name|ifv_vid
 argument_list|)
 expr_stmt|;
 if|if
@@ -4840,7 +4840,7 @@ modifier|*
 name|ifv
 decl_stmt|;
 name|uint16_t
-name|tag
+name|vid
 decl_stmt|;
 name|KASSERT
 argument_list|(
@@ -4865,7 +4865,7 @@ name|M_VLANTAG
 condition|)
 block|{
 comment|/* 		 * Packet is tagged, but m contains a normal 		 * Ethernet frame; the tag is stored out-of-band. 		 */
-name|tag
+name|vid
 operator|=
 name|EVL_VLANOFTAG
 argument_list|(
@@ -4952,7 +4952,7 @@ name|ether_vlan_header
 operator|*
 argument_list|)
 expr_stmt|;
-name|tag
+name|vid
 operator|=
 name|EVL_VLANOFTAG
 argument_list|(
@@ -5039,7 +5039,7 @@ name|vlan_gethash
 argument_list|(
 name|trunk
 argument_list|,
-name|tag
+name|vid
 argument_list|)
 expr_stmt|;
 if|if
@@ -5127,7 +5127,7 @@ modifier|*
 name|p
 parameter_list|,
 name|uint16_t
-name|tag
+name|vid
 parameter_list|)
 block|{
 name|struct
@@ -5148,11 +5148,11 @@ decl_stmt|;
 comment|/* VID numbers 0x0 and 0xFFF are reserved */
 if|if
 condition|(
-name|tag
+name|vid
 operator|==
 literal|0
 operator|||
-name|tag
+name|vid
 operator|==
 literal|0xFFF
 condition|)
@@ -5316,9 +5316,9 @@ expr_stmt|;
 block|}
 name|ifv
 operator|->
-name|ifv_tag
+name|ifv_vid
 operator|=
-name|tag
+name|vid
 expr_stmt|;
 comment|/* must set this before vlan_inshash() */
 name|error
@@ -5577,7 +5577,7 @@ name|p
 argument_list|,
 name|ifv
 operator|->
-name|ifv_tag
+name|ifv_vid
 argument_list|)
 expr_stmt|;
 name|VLAN_UNLOCK
@@ -5841,7 +5841,7 @@ name|parent
 argument_list|,
 name|ifv
 operator|->
-name|ifv_tag
+name|ifv_vid
 argument_list|)
 expr_stmt|;
 block|}
@@ -6831,6 +6831,7 @@ case|:
 ifdef|#
 directive|ifdef
 name|VIMAGE
+comment|/* 		 * XXXRW/XXXBZ: The goal in these checks is to allow a VLAN 		 * interface to be delegated to a jail without allowing the 		 * jail to change what underlying interface/VID it is 		 * associated with.  We are not entirely convinced that this 		 * is the right way to accomplish that policy goal. 		 */
 if|if
 condition|(
 name|ifp
@@ -6913,7 +6914,7 @@ name|ENOENT
 expr_stmt|;
 break|break;
 block|}
-comment|/* 		 * Don't let the caller set up a VLAN tag with 		 * anything except VLID bits. 		 */
+comment|/* 		 * Don't let the caller set up a VLAN VID with 		 * anything except VLID bits. 		 */
 if|if
 condition|(
 name|vlr
@@ -7033,7 +7034,7 @@ name|vlr_tag
 operator|=
 name|ifv
 operator|->
-name|ifv_tag
+name|ifv_vid
 expr_stmt|;
 block|}
 name|VLAN_UNLOCK

@@ -62,19 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCCodeGenInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/StringRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/MC/SectionKind.h"
+file|"llvm/Support/CodeGen.h"
 end_include
 
 begin_decl_stmt
@@ -86,6 +74,9 @@ name|MCContext
 decl_stmt|;
 name|class
 name|MCSection
+decl_stmt|;
+name|class
+name|StringRef
 decl_stmt|;
 name|class
 name|Triple
@@ -129,6 +120,13 @@ name|FDECFIEncoding
 decl_stmt|;
 name|unsigned
 name|TTypeEncoding
+decl_stmt|;
+comment|// Section flags for eh_frame
+name|unsigned
+name|EHSectionType
+decl_stmt|;
+name|unsigned
+name|EHSectionFlags
 decl_stmt|;
 comment|/// TextSection - Section directive for standard text.
 comment|///
@@ -188,6 +186,29 @@ name|MCSection
 modifier|*
 name|CompactUnwindSection
 decl_stmt|;
+comment|/// DwarfAccelNamesSection, DwarfAccelObjCSection
+comment|/// If we use the DWARF accelerated hash tables then we want toe emit these
+comment|/// sections.
+specifier|const
+name|MCSection
+modifier|*
+name|DwarfAccelNamesSection
+decl_stmt|;
+specifier|const
+name|MCSection
+modifier|*
+name|DwarfAccelObjCSection
+decl_stmt|;
+specifier|const
+name|MCSection
+modifier|*
+name|DwarfAccelNamespaceSection
+decl_stmt|;
+specifier|const
+name|MCSection
+modifier|*
+name|DwarfAccelTypesSection
+decl_stmt|;
 comment|// Dwarf sections for debug info.  If a target supports debug info, these must
 comment|// be set.
 specifier|const
@@ -209,11 +230,6 @@ specifier|const
 name|MCSection
 modifier|*
 name|DwarfFrameSection
-decl_stmt|;
-specifier|const
-name|MCSection
-modifier|*
-name|DwarfPubNamesSection
 decl_stmt|;
 specifier|const
 name|MCSection
@@ -258,7 +274,7 @@ modifier|*
 name|TLSExtraDataSection
 decl_stmt|;
 comment|/// TLSDataSection - Section directive for Thread Local data.
-comment|/// ELF and MachO only.
+comment|/// ELF, MachO and COFF.
 specifier|const
 name|MCSection
 modifier|*
@@ -548,28 +564,6 @@ block|}
 specifier|const
 name|MCSection
 operator|*
-name|getStaticCtorSection
-argument_list|()
-specifier|const
-block|{
-return|return
-name|StaticCtorSection
-return|;
-block|}
-specifier|const
-name|MCSection
-operator|*
-name|getStaticDtorSection
-argument_list|()
-specifier|const
-block|{
-return|return
-name|StaticDtorSection
-return|;
-block|}
-specifier|const
-name|MCSection
-operator|*
 name|getLSDASection
 argument_list|()
 specifier|const
@@ -587,6 +581,50 @@ specifier|const
 block|{
 return|return
 name|CompactUnwindSection
+return|;
+block|}
+specifier|const
+name|MCSection
+operator|*
+name|getDwarfAccelNamesSection
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DwarfAccelNamesSection
+return|;
+block|}
+specifier|const
+name|MCSection
+operator|*
+name|getDwarfAccelObjCSection
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DwarfAccelObjCSection
+return|;
+block|}
+specifier|const
+name|MCSection
+operator|*
+name|getDwarfAccelNamespaceSection
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DwarfAccelNamespaceSection
+return|;
+block|}
+specifier|const
+name|MCSection
+operator|*
+name|getDwarfAccelTypesSection
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DwarfAccelTypesSection
 return|;
 block|}
 specifier|const
@@ -631,17 +669,6 @@ specifier|const
 block|{
 return|return
 name|DwarfFrameSection
-return|;
-block|}
-specifier|const
-name|MCSection
-operator|*
-name|getDwarfPubNamesSection
-argument_list|()
-specifier|const
-block|{
-return|return
-name|DwarfPubNamesSection
 return|;
 block|}
 specifier|const

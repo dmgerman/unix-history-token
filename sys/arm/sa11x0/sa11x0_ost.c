@@ -735,7 +735,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|mtx_init(&clock_lock, "SA1110 Clock locké", NULL, MTX_SPIN);
+block|mtx_init(&clock_lock, "SA1110 Clock locked", NULL, MTX_SPIN);
 endif|#
 directive|endif
 name|saost_sc

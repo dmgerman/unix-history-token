@@ -34,6 +34,10 @@ name|uint32_t
 name|r_timestamp
 decl_stmt|;
 comment|/* XXX may wrap! */
+name|uint32_t
+name|r_threadid
+decl_stmt|;
+comment|/* current thread id */
 name|uint16_t
 name|r_wlan
 decl_stmt|;

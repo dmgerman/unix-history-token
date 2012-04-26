@@ -16895,8 +16895,11 @@ if|if
 condition|(
 name|bus_dma_tag_create
 argument_list|(
-comment|/*parent*/
-name|NULL
+comment|/*PCI parent*/
+name|bus_get_dma_tag
+argument_list|(
+name|dev
+argument_list|)
 argument_list|,
 comment|/*alignemnt*/
 literal|1
@@ -19113,7 +19116,9 @@ name|buf
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|(
+name|BUS_PROBE_DEFAULT
+operator|)
 return|;
 block|}
 comment|/* ************************************************************************ ************************************************************************ */

@@ -795,25 +795,6 @@ index|]
 operator|.
 name|pcd_ri
 expr_stmt|;
-name|KASSERT
-argument_list|(
-name|ri
-operator|==
-literal|0
-operator|&&
-name|ri
-operator|<
-name|TSC_NPMCS
-argument_list|,
-operator|(
-literal|"[tsc,%d] ri=%d"
-operator|,
-name|__LINE__
-operator|,
-name|ri
-operator|)
-argument_list|)
-expr_stmt|;
 name|pc
 operator|=
 name|pmc_pcpu

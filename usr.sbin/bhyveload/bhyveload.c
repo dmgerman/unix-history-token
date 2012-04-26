@@ -2339,7 +2339,7 @@ name|h
 operator|=
 name|dlopen
 argument_list|(
-literal|"./userboot.so"
+literal|"/boot/userboot.so"
 argument_list|,
 name|RTLD_LOCAL
 argument_list|)

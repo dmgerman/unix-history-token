@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2009  Internet Systems Consortium, Inc. ("ISC")  *  
 end_comment
 
 begin_comment
-comment|/* $Id: arpaname.c,v 1.4 2009-10-27 03:05:33 marka Exp $ */
+comment|/* $Id: arpaname.c,v 1.4 2009/10/27 03:05:33 marka Exp $ */
 end_comment
 
 begin_include

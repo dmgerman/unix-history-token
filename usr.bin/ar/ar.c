@@ -1606,7 +1606,7 @@ literal|"BSD ar %s - %s\n"
 argument_list|,
 name|BSDAR_VERSION
 argument_list|,
-name|archive_version
+name|archive_version_string
 argument_list|()
 argument_list|)
 expr_stmt|;
@@ -1635,7 +1635,7 @@ literal|"ranlib %s - %s\n"
 argument_list|,
 name|BSDAR_VERSION
 argument_list|,
-name|archive_version
+name|archive_version_string
 argument_list|()
 argument_list|)
 expr_stmt|;

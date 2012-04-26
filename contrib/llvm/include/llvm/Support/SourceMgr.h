@@ -76,19 +76,13 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vector>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<cassert>
 end_include
 
 begin_decl_stmt
@@ -117,6 +111,16 @@ name|SourceMgr
 block|{
 name|public
 label|:
+enum|enum
+name|DiagKind
+block|{
+name|DK_Error
+block|,
+name|DK_Warning
+block|,
+name|DK_Note
+block|}
+enum|;
 comment|/// DiagHandlerTy - Clients that want to handle their own diagnostics in a
 comment|/// custom way can register a function pointer+context as a diagnostic
 comment|/// handler.  It gets called each time PrintMessage is invoked.
@@ -480,29 +484,32 @@ decl_stmt|;
 comment|/// PrintMessage - Emit a message about the specified location with the
 comment|/// specified string.
 comment|///
-comment|/// @param Type - If non-null, the kind of message (e.g., "error") which is
-comment|/// prefixed to the message.
-comment|/// @param ShowLine - Should the diagnostic show the source line.
 name|void
 name|PrintMessage
 argument_list|(
 name|SMLoc
 name|Loc
 argument_list|,
+name|DiagKind
+name|Kind
+argument_list|,
 specifier|const
 name|Twine
 operator|&
 name|Msg
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|Type
-argument_list|,
-name|bool
-name|ShowLine
+name|ArrayRef
+operator|<
+name|SMRange
+operator|>
+name|Ranges
 operator|=
-name|true
+name|ArrayRef
+operator|<
+name|SMRange
+operator|>
+operator|(
+operator|)
 argument_list|)
 decl|const
 decl_stmt|;
@@ -511,27 +518,32 @@ comment|/// specified string.
 comment|///
 comment|/// @param Type - If non-null, the kind of message (e.g., "error") which is
 comment|/// prefixed to the message.
-comment|/// @param ShowLine - Should the diagnostic show the source line.
 name|SMDiagnostic
 name|GetMessage
 argument_list|(
 name|SMLoc
 name|Loc
 argument_list|,
+name|DiagKind
+name|Kind
+argument_list|,
 specifier|const
 name|Twine
 operator|&
 name|Msg
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|Type
-argument_list|,
-name|bool
-name|ShowLine
+name|ArrayRef
+operator|<
+name|SMRange
+operator|>
+name|Ranges
 operator|=
-name|true
+name|ArrayRef
+operator|<
+name|SMRange
+operator|>
+operator|(
+operator|)
 argument_list|)
 decl|const
 decl_stmt|;
@@ -578,6 +590,11 @@ name|LineNo
 decl_stmt|,
 name|ColumnNo
 decl_stmt|;
+name|SourceMgr
+operator|::
+name|DiagKind
+name|Kind
+expr_stmt|;
 name|std
 operator|::
 name|string
@@ -585,11 +602,21 @@ name|Message
 operator|,
 name|LineContents
 expr_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
 name|unsigned
-name|ShowLine
-range|:
-literal|1
-decl_stmt|;
+operator|,
+name|unsigned
+operator|>
+expr|>
+name|Ranges
+expr_stmt|;
 name|public
 label|:
 comment|// Null diagnostic.
@@ -611,27 +638,19 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
-name|ShowLine
+name|Kind
 argument_list|(
-literal|0
+argument|SourceMgr::DK_Error
 argument_list|)
 block|{}
 comment|// Diagnostic with no location (e.g. file not found, command line arg error).
 name|SMDiagnostic
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|filename
+argument|const std::string&filename
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Msg
+argument|SourceMgr::DiagKind Kind
+argument_list|,
+argument|const std::string&Msg
 argument_list|)
 operator|:
 name|SM
@@ -656,14 +675,14 @@ operator|-
 literal|1
 argument_list|)
 operator|,
-name|Message
+name|Kind
 argument_list|(
-name|Msg
+name|Kind
 argument_list|)
 operator|,
-name|ShowLine
+name|Message
 argument_list|(
-argument|false
+argument|Msg
 argument_list|)
 block|{}
 comment|// Diagnostic with a location.
@@ -679,54 +698,17 @@ argument|int Line
 argument_list|,
 argument|int Col
 argument_list|,
+argument|SourceMgr::DiagKind Kind
+argument_list|,
 argument|const std::string&Msg
 argument_list|,
 argument|const std::string&LineStr
 argument_list|,
-argument|bool showline = true
+argument|ArrayRef<std::pair<unsigned
+argument_list|,
+argument|unsigned>> Ranges
 argument_list|)
-operator|:
-name|SM
-argument_list|(
-operator|&
-name|sm
-argument_list|)
-operator|,
-name|Loc
-argument_list|(
-name|L
-argument_list|)
-operator|,
-name|Filename
-argument_list|(
-name|FN
-argument_list|)
-operator|,
-name|LineNo
-argument_list|(
-name|Line
-argument_list|)
-operator|,
-name|ColumnNo
-argument_list|(
-name|Col
-argument_list|)
-operator|,
-name|Message
-argument_list|(
-name|Msg
-argument_list|)
-operator|,
-name|LineContents
-argument_list|(
-name|LineStr
-argument_list|)
-operator|,
-name|ShowLine
-argument_list|(
-argument|showline
-argument_list|)
-block|{}
+expr_stmt|;
 specifier|const
 name|SourceMgr
 operator|*
@@ -778,6 +760,17 @@ return|return
 name|ColumnNo
 return|;
 block|}
+name|SourceMgr
+operator|::
+name|DiagKind
+name|getKind
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind
+return|;
+block|}
 specifier|const
 name|std
 operator|::
@@ -804,17 +797,31 @@ return|return
 name|LineContents
 return|;
 block|}
-name|bool
-name|getShowLine
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+operator|,
+name|unsigned
+operator|>
+expr|>
+operator|&
+name|getRanges
 argument_list|()
 specifier|const
 block|{
 return|return
-name|ShowLine
+name|Ranges
 return|;
 block|}
 name|void
-name|Print
+name|print
 argument_list|(
 specifier|const
 name|char

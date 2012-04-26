@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: spx.c 22071 2007-11-14 20:04:50Z lha $"
+literal|"$Id$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -911,8 +911,19 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"target is '%s'\n"
+literal|"target is '%.*s'\n"
 argument_list|,
+operator|(
+name|int
+operator|)
+name|output_name_buffer
+operator|.
+name|length
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|output_name_buffer
 operator|.
 name|value
@@ -1270,8 +1281,19 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s\n"
+literal|"%.*s\n"
 argument_list|,
+operator|(
+name|int
+operator|)
+name|status_string
+operator|.
+name|length
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|status_string
 operator|.
 name|value
@@ -2022,8 +2044,19 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"[ SPX mutual response fails ... '%s' ]\r\n"
+literal|"[ SPX mutual response fails ... '%.*s' ]\r\n"
 argument_list|,
+operator|(
+name|int
+operator|)
+name|status_string
+operator|.
+name|length
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|status_string
 operator|.
 name|value
@@ -2264,35 +2297,24 @@ begin_function
 name|void
 name|spx_printsub
 parameter_list|(
-name|data
-parameter_list|,
-name|cnt
-parameter_list|,
-name|buf
-parameter_list|,
-name|buflen
-parameter_list|)
 name|unsigned
 name|char
 modifier|*
 name|data
-decl_stmt|,
-decl|*
-name|buf
-decl_stmt|;
-end_function
-
-begin_decl_stmt
-name|int
+parameter_list|,
+name|size_t
 name|cnt
-decl_stmt|,
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+name|buf
+parameter_list|,
+name|size_t
 name|buflen
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|;
 name|buf
@@ -2506,7 +2528,7 @@ block|}
 break|break;
 block|}
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#

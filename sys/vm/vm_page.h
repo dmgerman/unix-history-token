@@ -679,7 +679,7 @@ value|vm_page_queue_free_lock.data
 end_define
 
 begin_comment
-comment|/*  * These are the flags defined for vm_page.  *  * aflags are updated by atomic accesses. Use the vm_page_aflag_set()  * and vm_page_aflag_clear() functions to set and clear the flags.  *  * PGA_REFERENCED may be cleared only if the object containing the page is  * locked.  *  * PGA_WRITEABLE is set exclusively on managed pages by pmap_enter().  When it  * does so, the page must be VPO_BUSY.  */
+comment|/*  * These are the flags defined for vm_page.  *  * aflags are updated by atomic accesses. Use the vm_page_aflag_set()  * and vm_page_aflag_clear() functions to set and clear the flags.  *  * PGA_REFERENCED may be cleared only if the object containing the page is  * locked.  *  * PGA_WRITEABLE is set exclusively on managed pages by pmap_enter().  When it  * does so, the page must be VPO_BUSY.  *  * PGA_EXECUTABLE may be set by pmap routines, and indicates that a page has  * at least one executable mapping. It is not consumed by the VM layer.  */
 end_comment
 
 begin_define
@@ -702,6 +702,17 @@ end_define
 
 begin_comment
 comment|/* page has been referenced */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PGA_EXECUTABLE
+value|0x04
+end_define
+
+begin_comment
+comment|/* page may be mapped executable */
 end_comment
 
 begin_comment
@@ -783,6 +794,17 @@ end_define
 
 begin_comment
 comment|/* flush dirty page on inactive q */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PG_NODUMP
+value|0x80
+end_define
+
+begin_comment
+comment|/* don't include this page in the dump */
 end_comment
 
 begin_comment
@@ -1130,6 +1152,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|VM_ALLOC_NODUMP
+value|0x2000
+end_define
+
+begin_comment
+comment|/* don't include in dump */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|VM_ALLOC_COUNT_SHIFT
 value|16
 end_define
@@ -1384,15 +1417,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|vm_page_cache_remove
-parameter_list|(
-name|vm_page_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|vm_page_cache_transfer
 parameter_list|(
 name|vm_object_t
@@ -1473,6 +1497,19 @@ parameter_list|,
 name|vm_object_t
 parameter_list|,
 name|vm_pindex_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|boolean_t
+name|vm_page_is_cached
+parameter_list|(
+name|vm_object_t
+name|object
+parameter_list|,
+name|vm_pindex_t
+name|pindex
 parameter_list|)
 function_decl|;
 end_function_decl

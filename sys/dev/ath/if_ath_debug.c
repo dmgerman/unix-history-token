@@ -684,8 +684,6 @@ block|{
 name|printf
 argument_list|(
 literal|" (DS.V:%p DS.P:%p) L:%08x D:%08x F:%04x%s\n"
-literal|"        TXF: %04x Seq: %d swtry: %d ADDBAW?: %d DOBAW?: %d\n"
-literal|"        %08x %08x %08x %08x %08x %08x\n"
 argument_list|,
 name|ds
 argument_list|,
@@ -711,7 +709,9 @@ name|ds_data
 argument_list|,
 name|bf
 operator|->
-name|bf_txflags
+name|bf_state
+operator|.
+name|bfs_txflags
 argument_list|,
 operator|!
 name|done
@@ -729,12 +729,11 @@ condition|?
 literal|" *"
 else|:
 literal|" !"
-argument_list|,
-name|bf
-operator|->
-name|bf_state
-operator|.
-name|bfs_flags
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"        Seq: %d swtry: %d ADDBAW?: %d DOBAW?: %d\n"
 argument_list|,
 name|bf
 operator|->
@@ -759,6 +758,28 @@ operator|->
 name|bf_state
 operator|.
 name|bfs_dobaw
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"        SEQNO_ASSIGNED: %d, NEED_SEQNO: %d\n"
+argument_list|,
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_seqno_assigned
+argument_list|,
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_need_seqno
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"        %08x %08x %08x %08x %08x %08x\n"
 argument_list|,
 name|ds
 operator|->

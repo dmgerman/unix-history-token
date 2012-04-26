@@ -96,11 +96,22 @@ name|st
 argument_list|)
 argument_list|)
 condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\nFile %s does not exist; aborting test.\n\n"
+argument_list|,
+name|testprog
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 name|failure
 argument_list|(
 literal|"%s is not executable?!"
@@ -124,12 +135,23 @@ operator|!=
 literal|0
 argument_list|)
 condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\nFile %s not executable; aborting test.\n\n"
+argument_list|,
+name|testprog
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Try to succesfully run the program; this requires that 	 * we know some option that will succeed. 	 */
+block|}
+comment|/* 	 * Try to successfully run the program; this requires that 	 * we know some option that will succeed. 	 */
 if|if
 condition|(
 literal|0

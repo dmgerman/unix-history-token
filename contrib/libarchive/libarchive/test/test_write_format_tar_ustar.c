@@ -270,7 +270,7 @@ name|assertEqualIntA
 argument_list|(
 name|a
 argument_list|,
-literal|0
+name|ARCHIVE_OK
 argument_list|,
 name|archive_write_set_format_ustar
 argument_list|(
@@ -282,7 +282,7 @@ name|assertEqualIntA
 argument_list|(
 name|a
 argument_list|,
-literal|0
+name|ARCHIVE_OK
 argument_list|,
 name|archive_write_set_compression_none
 argument_list|(
@@ -294,7 +294,7 @@ name|assertEqualIntA
 argument_list|(
 name|a
 argument_list|,
-literal|0
+name|ARCHIVE_OK
 argument_list|,
 name|archive_write_open_memory
 argument_list|(
@@ -394,7 +394,7 @@ name|assertEqualIntA
 argument_list|(
 name|a
 argument_list|,
-literal|0
+name|ARCHIVE_OK
 argument_list|,
 name|archive_write_header
 argument_list|(
@@ -504,7 +504,7 @@ name|assertEqualIntA
 argument_list|(
 name|a
 argument_list|,
-literal|0
+name|ARCHIVE_OK
 argument_list|,
 name|archive_write_header
 argument_list|(
@@ -592,7 +592,7 @@ name|assertEqualIntA
 argument_list|(
 name|a
 argument_list|,
-literal|0
+name|ARCHIVE_OK
 argument_list|,
 name|archive_write_header
 argument_list|(
@@ -720,7 +720,7 @@ name|assertEqualIntA
 argument_list|(
 name|a
 argument_list|,
-literal|0
+name|ARCHIVE_OK
 argument_list|,
 name|archive_write_header
 argument_list|(
@@ -836,7 +836,7 @@ name|assertEqualIntA
 argument_list|(
 name|a
 argument_list|,
-literal|0
+name|ARCHIVE_OK
 argument_list|,
 name|archive_write_header
 argument_list|(
@@ -935,7 +935,7 @@ name|assertEqualIntA
 argument_list|(
 name|a
 argument_list|,
-literal|0
+name|ARCHIVE_OK
 argument_list|,
 name|archive_write_header
 argument_list|(
@@ -1034,7 +1034,7 @@ name|assertEqualIntA
 argument_list|(
 name|a
 argument_list|,
-literal|0
+name|ARCHIVE_OK
 argument_list|,
 name|archive_write_header
 argument_list|(
@@ -1049,30 +1049,17 @@ argument_list|(
 name|entry
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|ARCHIVE_VERSION_NUMBER
-operator|<
-literal|2000000
-name|archive_write_finish
+comment|/* Close out the archive. */
+name|assertEqualInt
 argument_list|(
-name|a
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|assert
-argument_list|(
-literal|0
-operator|==
-name|archive_write_finish
+name|ARCHIVE_OK
+argument_list|,
+name|archive_write_free
 argument_list|(
 name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Verify the archive format. 	 */
 name|e
 operator|=

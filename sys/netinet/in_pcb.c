@@ -1096,6 +1096,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* INET */
+end_comment
+
+begin_comment
 comment|/*  * in_pcb.c: manage the Protocol Control Blocks.  *  * NOTE: It is assumed that most of these functions will be called with  * the pcbinfo lock held, and often, the inpcb lock held, as these utility  * functions often modify hash chains or addresses in pcbs.  */
 end_comment
 
@@ -3714,7 +3718,7 @@ name|ia
 operator|=
 name|NULL
 expr_stmt|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -3798,7 +3802,7 @@ name|sin_addr
 operator|.
 name|s_addr
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -3807,7 +3811,7 @@ goto|goto
 name|done
 goto|;
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -3973,7 +3977,7 @@ name|ro_rt
 operator|->
 name|rt_ifp
 expr_stmt|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -4057,7 +4061,7 @@ name|sin_addr
 operator|.
 name|s_addr
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -4066,7 +4070,7 @@ goto|goto
 name|done
 goto|;
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -4291,7 +4295,7 @@ name|ia
 operator|=
 name|NULL
 expr_stmt|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -4375,7 +4379,7 @@ name|sin_addr
 operator|.
 name|s_addr
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -4384,7 +4388,7 @@ goto|goto
 name|done
 goto|;
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -5040,6 +5044,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* INET */
+end_comment
+
+begin_comment
 comment|/*  * in_pcbdetach() is responsibe for disassociating a socket from an inpcb.  * For most protocols, this will be invoked immediately prior to calling  * in_pcbfree().  However, with TCP the inpcb may significantly outlive the  * socket, in which case in_pcbfree() is deferred.  */
 end_comment
 
@@ -5411,7 +5419,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* IPSEC */
 name|inp
 operator|->
 name|inp_gencnt
@@ -7137,7 +7144,6 @@ expr_stmt|;
 elseif|else
 endif|#
 directive|endif
-comment|/* INET6 */
 if|if
 condition|(
 name|injail
@@ -7193,7 +7199,6 @@ name|local_wild_mapped
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* defined(INET6) */
 if|if
 condition|(
 name|inp
@@ -7758,7 +7763,6 @@ expr_stmt|;
 elseif|else
 endif|#
 directive|endif
-comment|/* INET6 */
 if|if
 condition|(
 name|injail
@@ -7824,7 +7828,6 @@ operator|)
 return|;
 endif|#
 directive|endif
-comment|/* defined(INET6) */
 block|}
 comment|/* if ((lookupflags& INPLOOKUP_WILDCARD) != 0) */
 return|return
@@ -8489,7 +8492,6 @@ expr_stmt|;
 else|else
 endif|#
 directive|endif
-comment|/* INET6 */
 name|hashkey_faddr
 operator|=
 name|inp
@@ -8817,7 +8819,6 @@ expr_stmt|;
 else|else
 endif|#
 directive|endif
-comment|/* INET6 */
 name|hashkey_faddr
 operator|=
 name|inp
@@ -9826,9 +9827,9 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
 endif|#
 directive|endif
+block|{
 comment|/* IPv4. */
 name|inet_ntoa_r
 argument_list|(
@@ -9848,12 +9849,7 @@ argument_list|,
 name|faddr_str
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INET6
 block|}
-endif|#
-directive|endif
 name|db_print_indent
 argument_list|(
 name|indent
@@ -10945,6 +10941,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* DDB */
+end_comment
 
 end_unit
 

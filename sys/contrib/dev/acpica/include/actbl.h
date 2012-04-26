@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2011, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_ifndef
@@ -766,9 +766,13 @@ name|XGpe1Block
 decl_stmt|;
 comment|/* 64-bit Extended General Purpose Event 1 Reg Blk address */
 name|ACPI_GENERIC_ADDRESS
-name|SleepRegister
+name|SleepControl
 decl_stmt|;
-comment|/* 64-bit address of the Sleep register */
+comment|/* 64-bit Sleep Control register */
+name|ACPI_GENERIC_ADDRESS
+name|SleepStatus
+decl_stmt|;
+comment|/* 64-bit Sleep Status register */
 block|}
 name|ACPI_TABLE_FADT
 typedef|;
@@ -1082,23 +1086,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ACPI_FADT_PREFER_S0_IDLE
+name|ACPI_FADT_LOW_POWER_S0
 value|(1<<21)
 end_define
 
 begin_comment
-comment|/* 21: [V5] Use advanced idle capabilities (ACPI 5.0) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_FADT_USE_SLEEP_REG
-value|(1<<22)
-end_define
-
-begin_comment
-comment|/* 22: [V5] Use the sleep register for sleep (ACPI 5.0) */
+comment|/* 21: [V5] S0 power savings are equal or better than S3 (ACPI 5.0) */
 end_comment
 
 begin_comment
@@ -1141,12 +1134,44 @@ name|PM_PERFORMANCE_SERVER
 init|=
 literal|7
 block|,
-name|PM_SLATE
+name|PM_TABLET
 init|=
 literal|8
 block|}
 enum|;
 end_enum
+
+begin_comment
+comment|/* Values for SleepStatus and SleepControl registers (V5 FADT) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_X_WAKE_STATUS
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_X_SLEEP_TYPE_MASK
+value|0x1C
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_X_SLEEP_TYPE_POSITION
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_X_SLEEP_ENABLE
+value|0x20
+end_define
 
 begin_comment
 comment|/* Reset to default packing */
@@ -1296,11 +1321,11 @@ name|ACPI_FADT_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_FADT, f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_FADT, f)
 end_define
 
 begin_comment
-comment|/*  * Sizes of the various flavors of FADT. We need to look closely  * at the FADT length because the version number essentially tells  * us nothing because of many BIOS bugs where the version does not  * match the expected length. In other words, the length of the  * FADT is the bottom line as to what the version really is.  *  * For reference, the values below are as follows:  *     FADT V1  size: 0x074  *     FADT V2  size: 0x084  *     FADT V3  size: 0x0F4  *     FADT V4  size: 0x0F4  *     FADT V5  size: 0x100  */
+comment|/*  * Sizes of the various flavors of FADT. We need to look closely  * at the FADT length because the version number essentially tells  * us nothing because of many BIOS bugs where the version does not  * match the expected length. In other words, the length of the  * FADT is the bottom line as to what the version really is.  *  * For reference, the values below are as follows:  *     FADT V1  size: 0x074  *     FADT V2  size: 0x084  *     FADT V3  size: 0x0F4  *     FADT V4  size: 0x0F4  *     FADT V5  size: 0x10C  */
 end_comment
 
 begin_define
@@ -1321,7 +1346,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_FADT_V3_SIZE
-value|(UINT32) (ACPI_FADT_OFFSET (SleepRegister))
+value|(UINT32) (ACPI_FADT_OFFSET (SleepControl))
 end_define
 
 begin_define

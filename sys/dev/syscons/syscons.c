@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992-1998 Søren Schmidt  * All rights reserved.  *  * This code is derived from software contributed to The DragonFly Project  * by Sascha Wildner<saw@online.de>  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1992-1998 SÃ¸ren Schmidt  * All rights reserved.  *  * This code is derived from software contributed to The DragonFly Project  * by Sascha Wildner<saw@online.de>  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -328,6 +328,20 @@ end_define
 begin_comment
 comment|/* "<-- Backspace" key, XXX */
 end_comment
+
+begin_comment
+comment|/* NULL-safe version of "tty_opened()" */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|tty_opened_ns
+parameter_list|(
+name|tp
+parameter_list|)
+value|((tp) != NULL&& tty_opened(tp))
+end_define
 
 begin_typedef
 typedef|typedef
@@ -4259,7 +4273,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|tty_opened
+name|tty_opened_ns
 argument_list|(
 name|cur_tty
 argument_list|)
@@ -6537,7 +6551,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|tty_opened
+name|tty_opened_ns
 argument_list|(
 name|tp
 argument_list|)
@@ -9561,7 +9575,9 @@ if|#
 directive|if
 literal|0
 comment|/* 	 * XXX: Now that TTY's have their own locks, we cannot process 	 * any data after disabling scroll lock. cnputs already holds a 	 * spinlock. 	 */
-block|tp = SC_DEV(scp->sc, scp->index); 	tty_lock(tp); 	if (tty_opened(tp)) 	    sctty_outwakeup(tp); 	tty_unlock(tp);
+block|tp = SC_DEV(scp->sc, scp->index);
+comment|/* XXX "tp" can be NULL */
+block|tty_lock(tp); 	if (tty_opened(tp)) 	    sctty_outwakeup(tp); 	tty_unlock(tp);
 endif|#
 directive|endif
 block|}
@@ -13003,7 +13019,7 @@ operator|!=
 name|next_scr
 operator|)
 operator|&&
-name|tty_opened
+name|tty_opened_ns
 argument_list|(
 name|tp
 argument_list|)
@@ -13083,7 +13099,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|tty_opened
+name|tty_opened_ns
 argument_list|(
 name|tp
 argument_list|)
@@ -18884,7 +18900,7 @@ condition|(
 operator|!
 name|kdb_active
 operator|&&
-name|tty_opened
+name|tty_opened_ns
 argument_list|(
 name|tp
 argument_list|)
@@ -19220,7 +19236,7 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-name|tty_opened
+name|tty_opened_ns
 argument_list|(
 name|tp
 argument_list|)
@@ -19317,7 +19333,7 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-name|tty_opened
+name|tty_opened_ns
 argument_list|(
 name|tp
 argument_list|)
@@ -20345,7 +20361,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|tty_opened
+name|tty_opened_ns
 argument_list|(
 name|tp
 argument_list|)
@@ -20436,7 +20452,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|tty_opened
+name|tty_opened_ns
 argument_list|(
 name|tp
 argument_list|)
@@ -20674,7 +20690,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|tty_opened
+name|tty_opened_ns
 argument_list|(
 name|tp
 argument_list|)

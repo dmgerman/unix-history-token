@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- MipsInstrInfo.h - Mips Instruction Information -----------*- C++ -*-===//
+comment|//===-- MipsInstrInfo.h - Mips Instruction Information ----------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"MipsRegisterInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/ErrorHandling.h"
 end_include
 
@@ -75,12 +81,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Target/TargetInstrInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"MipsRegisterInfo.h"
 end_include
 
 begin_define
@@ -112,116 +112,6 @@ name|Opc
 parameter_list|)
 function_decl|;
 block|}
-comment|/// MipsII - This namespace holds all of the target specific flags that
-comment|/// instruction info tracks.
-comment|///
-name|namespace
-name|MipsII
-block|{
-comment|/// Target Operand Flag enum.
-enum|enum
-name|TOF
-block|{
-comment|//===------------------------------------------------------------------===//
-comment|// Mips Specific MachineOperand flags.
-name|MO_NO_FLAG
-block|,
-comment|/// MO_GOT - Represents the offset into the global offset table at which
-comment|/// the address the relocation entry symbol resides during execution.
-name|MO_GOT
-block|,
-comment|/// MO_GOT_CALL - Represents the offset into the global offset table at
-comment|/// which the address of a call site relocation entry symbol resides
-comment|/// during execution. This is different from the above since this flag
-comment|/// can only be present in call instructions.
-name|MO_GOT_CALL
-block|,
-comment|/// MO_GPREL - Represents the offset from the current gp value to be used
-comment|/// for the relocatable object file being produced.
-name|MO_GPREL
-block|,
-comment|/// MO_ABS_HI/LO - Represents the hi or low part of an absolute symbol
-comment|/// address.
-name|MO_ABS_HI
-block|,
-name|MO_ABS_LO
-block|,
-comment|/// MO_TLSGD - Represents the offset into the global offset table at which
-comment|// the module ID and TSL block offset reside during execution (General
-comment|// Dynamic TLS).
-name|MO_TLSGD
-block|,
-comment|/// MO_GOTTPREL - Represents the offset from the thread pointer (Initial
-comment|// Exec TLS).
-name|MO_GOTTPREL
-block|,
-comment|/// MO_TPREL_HI/LO - Represents the hi and low part of the offset from
-comment|// the thread pointer (Local Exec TLS).
-name|MO_TPREL_HI
-block|,
-name|MO_TPREL_LO
-block|,
-comment|// N32/64 Flags.
-name|MO_GPOFF_HI
-block|,
-name|MO_GPOFF_LO
-block|,
-name|MO_GOT_DISP
-block|,
-name|MO_GOT_PAGE
-block|,
-name|MO_GOT_OFST
-block|}
-enum|;
-enum|enum
-block|{
-comment|//===------------------------------------------------------------------===//
-comment|// Instruction encodings.  These are the standard/most common forms for
-comment|// Mips instructions.
-comment|//
-comment|// Pseudo - This represents an instruction that is a pseudo instruction
-comment|// or one that has not been implemented yet.  It is illegal to code generate
-comment|// it, but tolerated for intermediate implementation stages.
-name|Pseudo
-init|=
-literal|0
-block|,
-comment|/// FrmR - This form is for instructions of the format R.
-name|FrmR
-init|=
-literal|1
-block|,
-comment|/// FrmI - This form is for instructions of the format I.
-name|FrmI
-init|=
-literal|2
-block|,
-comment|/// FrmJ - This form is for instructions of the format J.
-name|FrmJ
-init|=
-literal|3
-block|,
-comment|/// FrmFR - This form is for instructions of the format FR.
-name|FrmFR
-init|=
-literal|4
-block|,
-comment|/// FrmFI - This form is for instructions of the format FI.
-name|FrmFI
-init|=
-literal|5
-block|,
-comment|/// FrmOther - This form is for instructions that have no specific format.
-name|FrmOther
-init|=
-literal|6
-block|,
-name|FormMask
-init|=
-literal|15
-block|}
-enum|;
-block|}
 name|class
 name|MipsInstrInfo
 range|:
@@ -238,6 +128,9 @@ block|;
 specifier|const
 name|MipsRegisterInfo
 name|RI
+block|;
+name|unsigned
+name|UncondBrOpc
 block|;
 name|public
 operator|:
@@ -438,17 +331,6 @@ argument_list|(
 argument|MachineBasicBlock&MBB
 argument_list|,
 argument|MachineBasicBlock::iterator MI
-argument_list|)
-specifier|const
-block|;
-comment|/// getGlobalBaseReg - Return a virtual register initialized with the
-comment|/// the global base register value. Output instructions required to
-comment|/// initialize the register in the function entry block, if necessary.
-comment|///
-name|unsigned
-name|getGlobalBaseReg
-argument_list|(
-argument|MachineFunction *MF
 argument_list|)
 specifier|const
 block|; }

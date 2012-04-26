@@ -218,6 +218,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"zfs_comutil.h"
 end_include
 
@@ -7146,6 +7152,23 @@ decl_stmt|;
 name|int
 name|canwrite
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|prison_allow
+argument_list|(
+name|td
+operator|->
+name|td_ucred
+argument_list|,
+name|PR_ALLOW_MOUNT_ZFS
+argument_list|)
+condition|)
+return|return
+operator|(
+name|EPERM
+operator|)
+return|;
 if|if
 condition|(
 name|vfs_getopt

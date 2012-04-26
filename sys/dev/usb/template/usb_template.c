@@ -1540,9 +1540,7 @@ name|temp
 operator|->
 name|bInterfaceNumber
 operator|=
-literal|0
-operator|-
-literal|1
+literal|0xFF
 expr_stmt|;
 name|temp
 operator|->

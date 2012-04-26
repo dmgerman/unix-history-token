@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Lex/ModuleMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringMap.h"
 end_include
 
@@ -86,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/OwningPtr.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -93,6 +105,9 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
+name|class
+name|DiagnosticsEngine
+decl_stmt|;
 name|class
 name|ExternalIdentifierLookup
 decl_stmt|;
@@ -307,9 +322,31 @@ comment|/// file referenced by a #include or #include_next, (sub-)framework look
 name|class
 name|HeaderSearch
 block|{
+comment|/// This structure is used to record entries in our framework cache.
+struct|struct
+name|FrameworkCacheEntry
+block|{
+comment|/// The directory entry which should be used for the cached framework.
+specifier|const
+name|DirectoryEntry
+modifier|*
+name|Directory
+decl_stmt|;
+comment|/// Whether this framework has been "user-specified" to be treated as if it
+comment|/// were a system framework (even if it was found outside a system framework
+comment|/// directory).
+name|bool
+name|IsUserSpecifiedSystemFramework
+decl_stmt|;
+block|}
+struct|;
 name|FileManager
 modifier|&
 name|FileMgr
+decl_stmt|;
+name|DiagnosticsEngine
+modifier|&
+name|Diags
 decl_stmt|;
 comment|/// #include search path information.  Requests for #include "x" search the
 comment|/// directory of the #including file first, then each directory in SearchDirs
@@ -339,12 +376,6 @@ name|std
 operator|::
 name|string
 name|ModuleCachePath
-expr_stmt|;
-comment|/// \brief The name of the module we're building.
-name|std
-operator|::
-name|string
-name|BuildingModule
 expr_stmt|;
 comment|/// FileInfo - This contains all of the preprocessor-specific data about files
 comment|/// that are included.  The vector is indexed by the FileEntry's UID.
@@ -388,15 +419,37 @@ name|llvm
 operator|::
 name|StringMap
 operator|<
-specifier|const
-name|DirectoryEntry
-operator|*
+name|FrameworkCacheEntry
 operator|,
 name|llvm
 operator|::
 name|BumpPtrAllocator
 operator|>
 name|FrameworkMap
+expr_stmt|;
+comment|/// IncludeAliases - maps include file names (including the quotes or
+comment|/// angle brackets) to other include file names.  This is used to support the
+comment|/// include_alias pragma for Microsoft compatibility.
+typedef|typedef
+name|llvm
+operator|::
+name|StringMap
+operator|<
+name|std
+operator|::
+name|string
+operator|,
+name|llvm
+operator|::
+name|BumpPtrAllocator
+operator|>
+name|IncludeAliasMap
+expr_stmt|;
+name|OwningPtr
+operator|<
+name|IncludeAliasMap
+operator|>
+name|IncludeAliases
 expr_stmt|;
 comment|/// HeaderMaps - This is a mapping from FileEntry -> HeaderMap, uniquing
 comment|/// headermaps.  This vector owns the headermap.
@@ -418,6 +471,23 @@ operator|*
 operator|>
 expr|>
 name|HeaderMaps
+expr_stmt|;
+comment|/// \brief The mapping between modules and headers.
+name|ModuleMap
+name|ModMap
+decl_stmt|;
+comment|/// \brief Describes whether a given directory has a module map in it.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|DirectoryEntry
+operator|*
+operator|,
+name|bool
+operator|>
+name|DirectoryHasModuleMap
 expr_stmt|;
 comment|/// \brief Uniqued set of framework names, which is used to track which
 comment|/// headers were included as framework headers.
@@ -476,6 +546,10 @@ name|HeaderSearch
 operator|&
 operator|)
 decl_stmt|;
+name|friend
+name|class
+name|DirectoryLookup
+decl_stmt|;
 name|public
 label|:
 name|HeaderSearch
@@ -483,6 +557,20 @@ argument_list|(
 name|FileManager
 operator|&
 name|FM
+argument_list|,
+name|DiagnosticsEngine
+operator|&
+name|Diags
+argument_list|,
+specifier|const
+name|LangOptions
+operator|&
+name|LangOpts
+argument_list|,
+specifier|const
+name|TargetInfo
+operator|*
+name|Target
 argument_list|)
 expr_stmt|;
 operator|~
@@ -558,28 +646,172 @@ name|noCurDirSearch
 expr_stmt|;
 comment|//LookupFileCache.clear();
 block|}
-comment|/// \brief Set the path to the module cache and the name of the module
-comment|/// we're building
+comment|/// AddSearchPath - Add an additional search path.
 name|void
-name|configureModules
+name|AddSearchPath
+parameter_list|(
+specifier|const
+name|DirectoryLookup
+modifier|&
+name|dir
+parameter_list|,
+name|bool
+name|isAngled
+parameter_list|)
+block|{
+name|unsigned
+name|idx
+init|=
+name|isAngled
+condition|?
+name|SystemDirIdx
+else|:
+name|AngledDirIdx
+decl_stmt|;
+name|SearchDirs
+operator|.
+name|insert
+argument_list|(
+name|SearchDirs
+operator|.
+name|begin
+argument_list|()
+operator|+
+name|idx
+argument_list|,
+name|dir
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|isAngled
+condition|)
+name|AngledDirIdx
+operator|++
+expr_stmt|;
+name|SystemDirIdx
+operator|++
+expr_stmt|;
+block|}
+comment|/// HasIncludeAliasMap - Checks whether the map exists or not
+name|bool
+name|HasIncludeAliasMap
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IncludeAliases
+return|;
+block|}
+comment|/// AddIncludeAlias - Map the source include name to the dest include name.
+comment|/// The Source should include the angle brackets or quotes, the dest
+comment|/// should not.  This allows for distinction between<> and "" headers.
+name|void
+name|AddIncludeAlias
+parameter_list|(
+name|StringRef
+name|Source
+parameter_list|,
+name|StringRef
+name|Dest
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|IncludeAliases
+condition|)
+name|IncludeAliases
+operator|.
+name|reset
+argument_list|(
+argument|new IncludeAliasMap
+argument_list|)
+expr_stmt|;
+operator|(
+operator|*
+name|IncludeAliases
+operator|)
+index|[
+name|Source
+index|]
+operator|=
+name|Dest
+expr_stmt|;
+block|}
+comment|/// MapHeaderToIncludeAlias - Maps one header file name to a different header
+comment|/// file name, for use with the include_alias pragma.  Note that the source
+comment|/// file name should include the angle brackets or quotes.  Returns StringRef
+comment|/// as null if the header cannot be mapped.
+name|StringRef
+name|MapHeaderToIncludeAlias
+parameter_list|(
+name|StringRef
+name|Source
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|IncludeAliases
+operator|&&
+literal|"Trying to map headers when there's no map"
+argument_list|)
+expr_stmt|;
+comment|// Do any filename replacements before anything else
+name|IncludeAliasMap
+operator|::
+name|const_iterator
+name|Iter
+operator|=
+name|IncludeAliases
+operator|->
+name|find
+argument_list|(
+name|Source
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Iter
+operator|!=
+name|IncludeAliases
+operator|->
+name|end
+argument_list|()
+condition|)
+return|return
+name|Iter
+operator|->
+name|second
+return|;
+return|return
+name|StringRef
+argument_list|()
+return|;
+block|}
+comment|/// \brief Set the path to the module cache.
+name|void
+name|setModuleCachePath
 parameter_list|(
 name|StringRef
 name|CachePath
-parameter_list|,
-name|StringRef
-name|BuildingModule
 parameter_list|)
 block|{
 name|ModuleCachePath
 operator|=
 name|CachePath
 expr_stmt|;
-name|this
-operator|->
-name|BuildingModule
-operator|=
-name|BuildingModule
-expr_stmt|;
+block|}
+comment|/// \brief Retrieve the path to the module cache.
+name|StringRef
+name|getModuleCachePath
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ModuleCachePath
+return|;
 block|}
 comment|/// ClearFileInfo - Forget everything we know about headers so far.
 name|void
@@ -629,6 +861,17 @@ operator|=
 name|ES
 expr_stmt|;
 block|}
+comment|/// \brief Set the target information for the header search, if not
+comment|/// already known.
+name|void
+name|setTarget
+parameter_list|(
+specifier|const
+name|TargetInfo
+modifier|&
+name|Target
+parameter_list|)
+function_decl|;
 comment|/// LookupFile - Given a "foo" or<foo> reference, look up the indicated file,
 comment|/// return null on failure.
 comment|///
@@ -652,8 +895,8 @@ comment|/// SearchPath at which the file was found. This only differs from the
 comment|/// Filename for framework includes.
 comment|///
 comment|/// \param SuggestedModule If non-null, and the file found is semantically
-comment|/// part of a known module, this will be set to the name of the module that
-comment|/// could be imported instead of preprocessing/parsing the file found.
+comment|/// part of a known module, this will be set to the module that should
+comment|/// be imported instead of preprocessing/parsing the file found.
 specifier|const
 name|FileEntry
 modifier|*
@@ -695,9 +938,15 @@ operator|>
 operator|*
 name|RelativePath
 argument_list|,
-name|StringRef
+name|Module
+operator|*
 operator|*
 name|SuggestedModule
+argument_list|,
+name|bool
+name|SkipCache
+operator|=
+name|false
 argument_list|)
 decl_stmt|;
 comment|/// LookupSubframeworkHeader - Look up a subframework for the specified
@@ -736,9 +985,7 @@ decl_stmt|;
 comment|/// LookupFrameworkCache - Look up the specified framework name in our
 comment|/// framework cache, returning the DirectoryEntry it is in if we know,
 comment|/// otherwise, return null.
-specifier|const
-name|DirectoryEntry
-modifier|*
+name|FrameworkCacheEntry
 modifier|&
 name|LookupFrameworkCache
 parameter_list|(
@@ -927,44 +1174,60 @@ modifier|*
 name|FE
 parameter_list|)
 function_decl|;
-comment|/// \brief Search in the module cache path for a module with the given
-comment|/// name.
+comment|/// \brief Retrieve the name of the module file that should be used to
+comment|/// load the given module.
 comment|///
-comment|/// \param If non-NULL, will be set to the module file name we expected to
-comment|/// find (regardless of whether it was actually found or not).
+comment|/// \param Module The module whose module file name will be returned.
 comment|///
-comment|/// \param UmbrellaHeader If non-NULL, and no module was found in the module
-comment|/// cache, this routine will search in the framework paths to determine
-comment|/// whether a module can be built from an umbrella header. If so, the pointee
-comment|/// will be set to the path of the umbrella header.
+comment|/// \returns The name of the module file that corresponds to this module,
+comment|/// or an empty string if this module does not correspond to any module file.
+name|std
+operator|::
+name|string
+name|getModuleFileName
+argument_list|(
+name|Module
+operator|*
+name|Module
+argument_list|)
+expr_stmt|;
+comment|/// \brief Retrieve the name of the module file that should be used to
+comment|/// load a module with the given name.
 comment|///
-comment|/// \returns A file describing the named module, if available, or NULL to
-comment|/// indicate that the module could not be found.
-specifier|const
-name|FileEntry
+comment|/// \param Module The module whose module file name will be returned.
+comment|///
+comment|/// \returns The name of the module file that corresponds to this module,
+comment|/// or an empty string if this module does not correspond to any module file.
+name|std
+operator|::
+name|string
+name|getModuleFileName
+argument_list|(
+argument|StringRef ModuleName
+argument_list|)
+expr_stmt|;
+comment|/// \brief Lookup a module Search for a module with the given name.
+comment|///
+comment|/// \param ModuleName The name of the module we're looking for.
+comment|///
+comment|/// \param AllowSearch Whether we are allowed to search in the various
+comment|/// search directories to produce a module definition. If not, this lookup
+comment|/// will only return an already-known module.
+comment|///
+comment|/// \returns The module with the given name.
+name|Module
 modifier|*
 name|lookupModule
-argument_list|(
+parameter_list|(
 name|StringRef
 name|ModuleName
-argument_list|,
-name|std
-operator|::
-name|string
-operator|*
-name|ModuleFileName
-operator|=
-literal|0
-argument_list|,
-name|std
-operator|::
-name|string
-operator|*
-name|UmbrellaHeader
-operator|=
-literal|0
-argument_list|)
-decl_stmt|;
+parameter_list|,
+name|bool
+name|AllowSearch
+init|=
+name|true
+parameter_list|)
+function_decl|;
 name|void
 name|IncrementFrameworkLookupCount
 parameter_list|()
@@ -973,39 +1236,110 @@ operator|++
 name|NumFrameworkLookups
 expr_stmt|;
 block|}
-typedef|typedef
-name|std
+comment|/// \brief Determine whether there is a module map that may map the header
+comment|/// with the given file name to a (sub)module.
+comment|///
+comment|/// \param Filename The name of the file.
+comment|///
+comment|/// \param Root The "root" directory, at which we should stop looking for
+comment|/// module maps.
+name|bool
+name|hasModuleMap
+parameter_list|(
+name|StringRef
+name|Filename
+parameter_list|,
+specifier|const
+name|DirectoryEntry
+modifier|*
+name|Root
+parameter_list|)
+function_decl|;
+comment|/// \brief Retrieve the module that corresponds to the given file, if any.
+comment|///
+comment|/// \param File The header that we wish to map to a module.
+name|Module
+modifier|*
+name|findModuleForHeader
+parameter_list|(
+specifier|const
+name|FileEntry
+modifier|*
+name|File
+parameter_list|)
+function_decl|;
+comment|/// \brief Read the contents of the given module map file.
+comment|///
+comment|/// \param File The module map file.
+comment|///
+comment|/// \param OnlyModule If non-NULL, this will receive the
+comment|///
+comment|/// \returns true if an error occurred, false otherwise.
+name|bool
+name|loadModuleMapFile
+parameter_list|(
+specifier|const
+name|FileEntry
+modifier|*
+name|File
+parameter_list|)
+function_decl|;
+comment|/// \brief Collect the set of all known, top-level modules.
+comment|///
+comment|/// \param Modules Will be filled with the set of known, top-level modules.
+name|void
+name|collectAllModules
+argument_list|(
+name|llvm
 operator|::
-name|vector
+name|SmallVectorImpl
 operator|<
-name|HeaderFileInfo
+name|Module
+operator|*
 operator|>
-operator|::
-name|const_iterator
-name|header_file_iterator
-expr_stmt|;
-name|header_file_iterator
-name|header_file_begin
-argument_list|()
+operator|&
+name|Modules
+argument_list|)
+decl_stmt|;
+name|private
+label|:
+comment|/// \brief Retrieve a module with the given name, which may be part of the
+comment|/// given framework.
+comment|///
+comment|/// \param Name The name of the module to retrieve.
+comment|///
+comment|/// \param Dir The framework directory (e.g., ModuleName.framework).
+comment|///
+comment|/// \param IsSystem Whether the framework directory is part of the system
+comment|/// frameworks.
+comment|///
+comment|/// \returns The module, if found; otherwise, null.
+name|Module
+modifier|*
+name|loadFrameworkModule
+parameter_list|(
+name|StringRef
+name|Name
+parameter_list|,
 specifier|const
+name|DirectoryEntry
+modifier|*
+name|Dir
+parameter_list|,
+name|bool
+name|IsSystem
+parameter_list|)
+function_decl|;
+name|public
+label|:
+comment|/// \brief Retrieve the module map.
+name|ModuleMap
+modifier|&
+name|getModuleMap
+parameter_list|()
 block|{
 return|return
-name|FileInfo
-operator|.
-name|begin
-argument_list|()
-return|;
-block|}
-name|header_file_iterator
-name|header_file_end
-argument_list|()
-specifier|const
-block|{
-return|return
-name|FileInfo
-operator|.
-name|end
-argument_list|()
+name|ModMap
 return|;
 block|}
 name|unsigned
@@ -1031,6 +1365,36 @@ name|unsigned
 name|UID
 parameter_list|)
 function_decl|;
+comment|/// getFileInfo - Return the HeaderFileInfo structure for the specified
+comment|/// FileEntry.
+specifier|const
+name|HeaderFileInfo
+modifier|&
+name|getFileInfo
+argument_list|(
+specifier|const
+name|FileEntry
+operator|*
+name|FE
+argument_list|)
+decl|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|HeaderSearch
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getFileInfo
+argument_list|(
+name|FE
+argument_list|)
+return|;
+block|}
 comment|// Used by external tools
 typedef|typedef
 name|std
@@ -1176,8 +1540,66 @@ name|getTotalMemory
 argument_list|()
 specifier|const
 expr_stmt|;
+specifier|static
+name|std
+operator|::
+name|string
+name|NormalizeDashIncludePath
+argument_list|(
+argument|StringRef File
+argument_list|,
+argument|FileManager&FileMgr
+argument_list|)
+expr_stmt|;
 name|private
 label|:
+comment|/// \brief Describes what happened when we tried to load a module map file.
+enum|enum
+name|LoadModuleMapResult
+block|{
+comment|/// \brief The module map file had already been loaded.
+name|LMM_AlreadyLoaded
+block|,
+comment|/// \brief The module map file was loaded by this invocation.
+name|LMM_NewlyLoaded
+block|,
+comment|/// \brief There is was directory with the given name.
+name|LMM_NoDirectory
+block|,
+comment|/// \brief There was either no module map file or the module map file was
+comment|/// invalid.
+name|LMM_InvalidModuleMap
+block|}
+enum|;
+comment|/// \brief Try to load the module map file in the given directory.
+comment|///
+comment|/// \param DirName The name of the directory where we will look for a module
+comment|/// map file.
+comment|///
+comment|/// \returns The result of attempting to load the module map file from the
+comment|/// named directory.
+name|LoadModuleMapResult
+name|loadModuleMapFile
+parameter_list|(
+name|StringRef
+name|DirName
+parameter_list|)
+function_decl|;
+comment|/// \brief Try to load the module map file in the given directory.
+comment|///
+comment|/// \param Dir The directory where we will look for a module map file.
+comment|///
+comment|/// \returns The result of attempting to load the module map file from the
+comment|/// named directory.
+name|LoadModuleMapResult
+name|loadModuleMapFile
+parameter_list|(
+specifier|const
+name|DirectoryEntry
+modifier|*
+name|Dir
+parameter_list|)
+function_decl|;
 comment|/// getFileInfo - Return the HeaderFileInfo structure for the specified
 comment|/// FileEntry.
 name|HeaderFileInfo

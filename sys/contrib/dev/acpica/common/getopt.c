@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2011, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -40,13 +40,14 @@ end_include
 begin_define
 define|#
 directive|define
-name|ERR
+name|ACPI_OPTION_ERROR
 parameter_list|(
-name|szz
+name|msg
 parameter_list|,
-name|czz
+name|badchar
 parameter_list|)
-value|if(AcpiGbl_Opterr){fprintf(stderr,"%s%s%c\n",argv[0],szz,czz);}
+define|\
+value|if (AcpiGbl_Opterr) {fprintf (stderr, "%s%c\n", msg, badchar);}
 end_define
 
 begin_decl_stmt
@@ -204,9 +205,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|ERR
+name|ACPI_OPTION_ERROR
 argument_list|(
-literal|": illegal option -- "
+literal|"Illegal option: -"
 argument_list|,
 name|CurrentChar
 argument_list|)
@@ -298,9 +299,9 @@ operator|>=
 name|argc
 condition|)
 block|{
-name|ERR
+name|ACPI_OPTION_ERROR
 argument_list|(
-literal|": option requires an argument -- "
+literal|"Option requires an argument: -"
 argument_list|,
 name|CurrentChar
 argument_list|)
@@ -386,6 +387,82 @@ name|AcpiGbl_Optarg
 operator|=
 literal|"^"
 expr_stmt|;
+block|}
+name|AcpiGbl_Optind
+operator|++
+expr_stmt|;
+name|CurrentCharPtr
+operator|=
+literal|1
+expr_stmt|;
+block|}
+comment|/* Option has a required single-char argument? */
+elseif|else
+if|if
+condition|(
+operator|*
+name|OptsPtr
+operator|==
+literal|'|'
+condition|)
+block|{
+if|if
+condition|(
+name|argv
+index|[
+name|AcpiGbl_Optind
+index|]
+index|[
+call|(
+name|int
+call|)
+argument_list|(
+name|CurrentCharPtr
+operator|+
+literal|1
+argument_list|)
+index|]
+operator|!=
+literal|'\0'
+condition|)
+block|{
+name|AcpiGbl_Optarg
+operator|=
+operator|&
+name|argv
+index|[
+name|AcpiGbl_Optind
+index|]
+index|[
+call|(
+name|int
+call|)
+argument_list|(
+name|CurrentCharPtr
+operator|+
+literal|1
+argument_list|)
+index|]
+expr_stmt|;
+block|}
+else|else
+block|{
+name|ACPI_OPTION_ERROR
+argument_list|(
+literal|"Option requires a single-character suboption: -"
+argument_list|,
+name|CurrentChar
+argument_list|)
+expr_stmt|;
+name|CurrentCharPtr
+operator|=
+literal|1
+expr_stmt|;
+return|return
+operator|(
+literal|'?'
+operator|)
+return|;
 block|}
 name|AcpiGbl_Optind
 operator|++

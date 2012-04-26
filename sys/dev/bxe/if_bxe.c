@@ -10337,12 +10337,6 @@ name|bxe_init
 expr_stmt|;
 name|ifp
 operator|->
-name|if_mtu
-operator|=
-name|ETHERMTU
-expr_stmt|;
-name|ifp
-operator|->
 name|if_hwassist
 operator|=
 name|BXE_IF_HWASSIST
@@ -58797,9 +58791,12 @@ name|rc
 operator|=
 name|bus_dma_tag_create
 argument_list|(
-name|NULL
+name|bus_get_dma_tag
+argument_list|(
+name|dev
+argument_list|)
 argument_list|,
-comment|/* parent tag */
+comment|/* PCI parent tag */
 literal|1
 argument_list|,
 comment|/* alignment for segs */
@@ -61152,7 +61149,7 @@ argument_list|,
 name|mcast_config
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_LOCK
+name|if_maddr_rlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -61337,7 +61334,7 @@ name|lsb_mac_addr
 argument_list|)
 expr_stmt|;
 block|}
-name|IF_ADDR_UNLOCK
+name|if_maddr_runlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -61491,7 +61488,7 @@ operator|*
 name|MC_HASH_SIZE
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_LOCK
+name|if_maddr_rlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -61561,7 +61558,7 @@ name|bit
 operator|)
 expr_stmt|;
 block|}
-name|IF_ADDR_UNLOCK
+name|if_maddr_runlock
 argument_list|(
 name|ifp
 argument_list|)

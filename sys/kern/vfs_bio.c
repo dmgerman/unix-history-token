@@ -3485,62 +3485,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get a buffer with the specified data.  Look in the cache first.  We  * must clear BIO_ERROR and B_INVAL prior to initiating I/O.  If B_CACHE  * is set, the buffer is valid and we do not have to do anything ( see  * getblk() ).  This is really just a special case of breadn().  */
-end_comment
-
-begin_function
-name|int
-name|bread
-parameter_list|(
-name|struct
-name|vnode
-modifier|*
-name|vp
-parameter_list|,
-name|daddr_t
-name|blkno
-parameter_list|,
-name|int
-name|size
-parameter_list|,
-name|struct
-name|ucred
-modifier|*
-name|cred
-parameter_list|,
-name|struct
-name|buf
-modifier|*
-modifier|*
-name|bpp
-parameter_list|)
-block|{
-return|return
-operator|(
-name|breadn
-argument_list|(
-name|vp
-argument_list|,
-name|blkno
-argument_list|,
-name|size
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-name|cred
-argument_list|,
-name|bpp
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Attempt to initiate asynchronous I/O on read-ahead blocks.  We must  * clear BIO_ERROR and B_INVAL prior to initiating I/O . If B_CACHE is set,  * the buffer is valid and we do not have to do anything.  */
 end_comment
 
@@ -3745,12 +3689,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Operates like bread, but also starts asynchronous I/O on  * read-ahead blocks.  */
+comment|/*  * Entry point for bread() and breadn() via #defines in sys/buf.h.  *  * Get a buffer with the specified data.  Look in the cache first.  We  * must clear BIO_ERROR and B_INVAL prior to initiating I/O.  If B_CACHE  * is set, the buffer is valid and we do not have to do anything, see  * getblk(). Also starts asynchronous I/O on read-ahead blocks.  */
 end_comment
 
 begin_function
 name|int
-name|breadn
+name|breadn_flags
 parameter_list|(
 name|struct
 name|vnode
@@ -3778,6 +3722,9 @@ name|struct
 name|ucred
 modifier|*
 name|cred
+parameter_list|,
+name|int
+name|flags
 parameter_list|,
 name|struct
 name|buf
@@ -3813,6 +3760,7 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Can only return NULL if GB_LOCK_NOWAIT flag is specified. 	 */
 operator|*
 name|bpp
 operator|=
@@ -3830,9 +3778,20 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+name|flags
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bp
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|EBUSY
+operator|)
+return|;
 comment|/* if not found in cache, do some I/O */
 if|if
 condition|(
@@ -12059,7 +12018,7 @@ block|{
 name|vm_page_t
 name|m
 decl_stmt|;
-comment|/* 				 * We must allocate system pages since blocking 				 * here could intefere with paging I/O, no 				 * matter which process we are. 				 * 				 * We can only test VPO_BUSY here.  Blocking on 				 * m->busy might lead to a deadlock: 				 *  vm_fault->getpages->cluster_read->allocbuf 				 * Thus, we specify VM_ALLOC_IGN_SBUSY. 				 */
+comment|/* 				 * We must allocate system pages since blocking 				 * here could interfere with paging I/O, no 				 * matter which process we are. 				 * 				 * We can only test VPO_BUSY here.  Blocking on 				 * m->busy might lead to a deadlock: 				 *  vm_fault->getpages->cluster_read->allocbuf 				 * Thus, we specify VM_ALLOC_IGN_SBUSY. 				 */
 name|m
 operator|=
 name|vm_page_grab

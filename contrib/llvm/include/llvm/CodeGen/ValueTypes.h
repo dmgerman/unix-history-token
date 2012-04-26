@@ -70,6 +70,24 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/Support/DataTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/MathExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cassert>
 end_include
 
@@ -77,18 +95,6 @@ begin_include
 include|#
 directive|include
 file|<string>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/DataTypes.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/MathExtras.h"
 end_include
 
 begin_decl_stmt
@@ -160,134 +166,152 @@ name|LAST_INTEGER_VALUETYPE
 init|=
 name|i128
 block|,
-name|f32
+name|f16
 init|=
 literal|7
+block|,
+comment|// This is a 16 bit floating point value
+name|f32
+init|=
+literal|8
 block|,
 comment|// This is a 32 bit floating point value
 name|f64
 init|=
-literal|8
+literal|9
 block|,
 comment|// This is a 64 bit floating point value
 name|f80
 init|=
-literal|9
+literal|10
 block|,
 comment|// This is a 80 bit floating point value
 name|f128
 init|=
-literal|10
+literal|11
 block|,
 comment|// This is a 128 bit floating point value
 name|ppcf128
 init|=
-literal|11
+literal|12
 block|,
 comment|// This is a PPC 128-bit floating point value
+name|FIRST_FP_VALUETYPE
+init|=
+name|f16
+block|,
+name|LAST_FP_VALUETYPE
+init|=
+name|ppcf128
+block|,
 name|v2i8
 init|=
-literal|12
+literal|13
 block|,
 comment|//  2 x i8
 name|v4i8
 init|=
-literal|13
+literal|14
 block|,
 comment|//  4 x i8
 name|v8i8
 init|=
-literal|14
+literal|15
 block|,
 comment|//  8 x i8
 name|v16i8
 init|=
-literal|15
+literal|16
 block|,
 comment|// 16 x i8
 name|v32i8
 init|=
-literal|16
+literal|17
 block|,
 comment|// 32 x i8
 name|v2i16
 init|=
-literal|17
+literal|18
 block|,
 comment|//  2 x i16
 name|v4i16
 init|=
-literal|18
+literal|19
 block|,
 comment|//  4 x i16
 name|v8i16
 init|=
-literal|19
+literal|20
 block|,
 comment|//  8 x i16
 name|v16i16
 init|=
-literal|20
+literal|21
 block|,
 comment|// 16 x i16
 name|v2i32
 init|=
-literal|21
+literal|22
 block|,
 comment|//  2 x i32
 name|v4i32
 init|=
-literal|22
+literal|23
 block|,
 comment|//  4 x i32
 name|v8i32
 init|=
-literal|23
+literal|24
 block|,
 comment|//  8 x i32
 name|v1i64
 init|=
-literal|24
+literal|25
 block|,
 comment|//  1 x i64
 name|v2i64
 init|=
-literal|25
+literal|26
 block|,
 comment|//  2 x i64
 name|v4i64
 init|=
-literal|26
+literal|27
 block|,
 comment|//  4 x i64
 name|v8i64
 init|=
-literal|27
+literal|28
 block|,
 comment|//  8 x i64
+name|v2f16
+init|=
+literal|29
+block|,
+comment|//  2 x f16
 name|v2f32
 init|=
-literal|28
+literal|30
 block|,
 comment|//  2 x f32
 name|v4f32
 init|=
-literal|29
+literal|31
 block|,
 comment|//  4 x f32
 name|v8f32
 init|=
-literal|30
+literal|32
 block|,
 comment|//  8 x f32
 name|v2f64
 init|=
-literal|31
+literal|33
 block|,
 comment|//  2 x f64
 name|v4f64
 init|=
-literal|32
+literal|34
 block|,
 comment|//  4 x f64
 name|FIRST_VECTOR_VALUETYPE
@@ -298,31 +322,39 @@ name|LAST_VECTOR_VALUETYPE
 init|=
 name|v4f64
 block|,
+name|FIRST_FP_VECTOR_VALUETYPE
+init|=
+name|v2f16
+block|,
+name|LAST_FP_VECTOR_VALUETYPE
+init|=
+name|v4f64
+block|,
 name|x86mmx
 init|=
-literal|33
+literal|35
 block|,
 comment|// This is an X86 MMX value
 name|Glue
 init|=
-literal|34
+literal|36
 block|,
 comment|// This glues nodes together during pre-RA sched
 name|isVoid
 init|=
-literal|35
+literal|37
 block|,
 comment|// This has no value
-name|untyped
+name|Untyped
 init|=
-literal|36
+literal|38
 block|,
 comment|// This value takes a register, but has
 comment|// unspecified type.  The register class
 comment|// will be determined by the opcode.
 name|LAST_VALUETYPE
 init|=
-literal|37
+literal|39
 block|,
 comment|// This always remains at the end of the list.
 comment|// This is the current maximum for LAST_VALUETYPE.
@@ -533,13 +565,13 @@ name|SimpleTy
 operator|>=
 name|MVT
 operator|::
-name|f32
+name|FIRST_FP_VALUETYPE
 operator|&&
 name|SimpleTy
 operator|<=
 name|MVT
 operator|::
-name|ppcf128
+name|LAST_FP_VALUETYPE
 operator|)
 operator|||
 operator|(
@@ -547,13 +579,13 @@ name|SimpleTy
 operator|>=
 name|MVT
 operator|::
-name|v2f32
+name|FIRST_FP_VECTOR_VALUETYPE
 operator|&&
 name|SimpleTy
 operator|<=
 name|MVT
 operator|::
-name|v4f64
+name|LAST_FP_VECTOR_VALUETYPE
 operator|)
 operator|)
 return|;
@@ -789,6 +821,12 @@ return|return
 name|i64
 return|;
 case|case
+name|v2f16
+case|:
+return|return
+name|f16
+return|;
+case|case
 name|v2f32
 case|:
 case|case
@@ -893,6 +931,9 @@ case|case
 name|v2i64
 case|:
 case|case
+name|v2f16
+case|:
+case|case
 name|v2f32
 case|:
 case|case
@@ -922,10 +963,8 @@ block|{
 case|case
 name|iPTR
 case|:
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Value type size is target-dependent. Ask TLI."
 argument_list|)
 expr_stmt|;
@@ -938,18 +977,14 @@ case|:
 case|case
 name|fAny
 case|:
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Value type is overloaded."
 argument_list|)
 expr_stmt|;
 default|default:
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"getSizeInBits called on extended MVT."
 argument_list|)
 expr_stmt|;
@@ -969,6 +1004,9 @@ case|case
 name|i16
 case|:
 case|case
+name|f16
+case|:
+case|case
 name|v2i8
 case|:
 return|return
@@ -985,6 +1023,9 @@ name|v4i8
 case|:
 case|case
 name|v2i16
+case|:
+case|case
+name|v2f16
 case|:
 return|return
 literal|32
@@ -1127,13 +1168,19 @@ name|BitWidth
 condition|)
 block|{
 default|default:
-name|assert
+name|llvm_unreachable
 argument_list|(
-name|false
-operator|&&
 literal|"Bad bit width!"
 argument_list|)
 expr_stmt|;
+case|case
+literal|16
+case|:
+return|return
+name|MVT
+operator|::
+name|f16
+return|;
 case|case
 literal|32
 case|:
@@ -1462,6 +1509,23 @@ return|return
 name|MVT
 operator|::
 name|v8i64
+return|;
+break|break;
+case|case
+name|MVT
+operator|::
+name|f16
+case|:
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|2
+condition|)
+return|return
+name|MVT
+operator|::
+name|v2f16
 return|;
 break|break;
 case|case
@@ -1814,85 +1878,6 @@ name|VT
 argument_list|,
 name|NumElements
 argument_list|)
-return|;
-block|}
-comment|/// getIntVectorWithNumElements - Return any integer vector type that has
-comment|/// the specified number of elements.
-decl|static
-name|EVT
-name|getIntVectorWithNumElements
-argument_list|(
-name|LLVMContext
-operator|&
-name|C
-argument_list|,
-name|unsigned
-name|NumElts
-argument_list|)
-block|{
-switch|switch
-condition|(
-name|NumElts
-condition|)
-block|{
-default|default:
-return|return
-name|getVectorVT
-argument_list|(
-name|C
-argument_list|,
-name|MVT
-operator|::
-name|i8
-argument_list|,
-name|NumElts
-argument_list|)
-return|;
-case|case
-literal|1
-case|:
-return|return
-name|MVT
-operator|::
-name|v1i64
-return|;
-case|case
-literal|2
-case|:
-return|return
-name|MVT
-operator|::
-name|v2i32
-return|;
-case|case
-literal|4
-case|:
-return|return
-name|MVT
-operator|::
-name|v4i16
-return|;
-case|case
-literal|8
-case|:
-return|return
-name|MVT
-operator|::
-name|v8i8
-return|;
-case|case
-literal|16
-case|:
-return|return
-name|MVT
-operator|::
-name|v16i8
-return|;
-block|}
-return|return
-name|MVT
-operator|::
-name|INVALID_SIMPLE_VALUE_TYPE
 return|;
 block|}
 comment|/// changeVectorElementTypeToInteger - Return a vector with the same number

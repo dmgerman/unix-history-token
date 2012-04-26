@@ -32,6 +32,12 @@ directive|define
 name|ARCHIVE_READ_DISK_PRIVATE_H_INCLUDED
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|tree
+struct_decl|;
+end_struct_decl
+
 begin_struct
 struct|struct
 name|archive_read_disk
@@ -49,6 +55,19 @@ name|char
 name|follow_symlinks
 decl_stmt|;
 comment|/* Either 'L' or 'P'. */
+comment|/* Directory traversals. */
+name|struct
+name|tree
+modifier|*
+name|tree
+decl_stmt|;
+comment|/* Set 1 if users request to restore atime . */
+name|int
+name|restore_time
+decl_stmt|;
+name|int
+name|entry_wd_fd
+decl_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -61,7 +80,7 @@ name|void
 modifier|*
 name|private
 parameter_list|,
-name|gid_t
+name|int64_t
 name|gid
 parameter_list|)
 function_decl|;
@@ -92,8 +111,8 @@ name|void
 modifier|*
 name|private
 parameter_list|,
-name|gid_t
-name|gid
+name|int64_t
+name|uid
 parameter_list|)
 function_decl|;
 name|void

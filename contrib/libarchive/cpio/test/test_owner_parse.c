@@ -48,6 +48,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|int
 name|root_uids
 index|[]
@@ -58,12 +59,9 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* Solaris 9 root has gid 1 (other) */
-end_comment
-
 begin_decl_stmt
 specifier|static
+specifier|const
 name|int
 name|root_gids
 index|[]
@@ -98,6 +96,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|int
 name|root_uids
 index|[]
@@ -110,6 +109,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|int
 name|root_gids
 index|[]
@@ -146,6 +146,7 @@ parameter_list|(
 name|int
 name|i
 parameter_list|,
+specifier|const
 name|int
 modifier|*
 name|l

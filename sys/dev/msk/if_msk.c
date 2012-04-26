@@ -8885,12 +8885,6 @@ argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
-name|if_mtu
-operator|=
-name|ETHERMTU
-expr_stmt|;
-name|ifp
-operator|->
 name|if_flags
 operator|=
 name|IFF_BROADCAST
@@ -19653,6 +19647,26 @@ argument_list|,
 name|STAT_CTRL
 argument_list|,
 name|SC_STAT_CLR_IRQ
+argument_list|)
+expr_stmt|;
+comment|/* Clear TWSI IRQ. */
+if|if
+condition|(
+operator|(
+name|status
+operator|&
+name|Y2_IS_TWSI_RDY
+operator|)
+operator|!=
+literal|0
+condition|)
+name|CSR_WRITE_4
+argument_list|(
+name|sc
+argument_list|,
+name|B2_I2C_IRQ
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Reenable interrupts. */

@@ -3065,7 +3065,7 @@ name|isBigEndian
 argument_list|()
 condition|)
 block|{
-comment|/* 			 * Set CFG, little-endian for register 			 * and descriptor accesses. 			 */
+comment|/* 			 * Set CFG, little-endian for descriptor accesses. 			 */
 ifdef|#
 directive|ifdef
 name|AH_NEED_DESC_SWAP

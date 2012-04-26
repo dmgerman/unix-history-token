@@ -344,6 +344,11 @@ decl_stmt|;
 name|int
 name|phyaddr
 decl_stmt|;
+name|struct
+name|tsec_softc
+modifier|*
+name|phy_sc
+decl_stmt|;
 block|}
 struct|;
 end_struct

@@ -2146,37 +2146,6 @@ name|STA_PPSTIME
 operator|)
 expr_stmt|;
 block|}
-else|else
-block|{
-if|if
-condition|(
-operator|(
-name|ntv
-operator|.
-name|status
-operator|^
-name|pll_status
-operator|)
-operator|&
-operator|~
-name|STA_FLL
-condition|)
-name|NLOG
-argument_list|(
-argument|NLOG_SYNCEVENT | NLOG_SYSEVENT
-argument_list|)
-name|msyslog
-argument_list|(
-name|LOG_NOTICE
-argument_list|,
-literal|"kernel time sync status change %04x"
-argument_list|,
-name|ntv
-operator|.
-name|status
-argument_list|)
-expr_stmt|;
-block|}
 name|pll_status
 operator|=
 name|ntv

@@ -116,7 +116,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<contrib/octeon-sdk/cvmx-interrupt.h>
+file|<mips/cavium/octeon_irq.h>
 end_include
 
 begin_include
@@ -1966,7 +1966,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|CVMX_IRQ_PCI_INT0
+name|OCTEON_IRQ_PCI_INT0
 operator|+
 name|pin
 operator|-
@@ -2017,7 +2017,7 @@ literal|0
 condition|)
 return|return
 operator|(
-name|CVMX_IRQ_PCI_INT2
+name|OCTEON_IRQ_PCI_INT2
 operator|)
 return|;
 endif|#
@@ -2042,7 +2042,7 @@ name|CVMX_BOARD_TYPE_CUST_LANNER_MR955
 case|:
 return|return
 operator|(
-name|CVMX_IRQ_PCI_INT0
+name|OCTEON_IRQ_PCI_INT0
 operator|+
 name|pin
 operator|-
@@ -2082,7 +2082,7 @@ literal|1
 expr_stmt|;
 return|return
 operator|(
-name|CVMX_IRQ_PCI_INT0
+name|OCTEON_IRQ_PCI_INT0
 operator|+
 operator|(
 name|irq
@@ -2108,7 +2108,7 @@ literal|3
 expr_stmt|;
 return|return
 operator|(
-name|CVMX_IRQ_PCI_INT0
+name|OCTEON_IRQ_PCI_INT0
 operator|+
 operator|(
 name|irq

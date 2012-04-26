@@ -811,11 +811,19 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|_KERNEL
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_WANT_FILE
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -877,9 +885,25 @@ modifier|*
 name|shm_label
 decl_stmt|;
 comment|/* MAC label */
+specifier|const
+name|char
+modifier|*
+name|shm_path
+decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
 
 begin_function_decl
 name|int
@@ -938,6 +962,25 @@ parameter_list|,
 name|void
 modifier|*
 name|mem
+parameter_list|,
+name|size_t
+name|size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|shm_path
+parameter_list|(
+name|struct
+name|shmfd
+modifier|*
+name|shmfd
+parameter_list|,
+name|char
+modifier|*
+name|path
 parameter_list|,
 name|size_t
 name|size

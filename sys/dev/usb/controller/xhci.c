@@ -4246,6 +4246,9 @@ literal|0
 operator|&&
 name|offset
 operator|<
+operator|(
+name|int64_t
+operator|)
 sizeof|sizeof
 argument_list|(
 name|td
@@ -10044,6 +10047,9 @@ decl_stmt|;
 name|uint32_t
 name|route
 decl_stmt|;
+name|uint32_t
+name|rh_port
+decl_stmt|;
 name|uint8_t
 name|is_hub
 decl_stmt|;
@@ -10051,7 +10057,7 @@ name|uint8_t
 name|index
 decl_stmt|;
 name|uint8_t
-name|rh_port
+name|depth
 decl_stmt|;
 name|index
 operator|=
@@ -10131,6 +10137,14 @@ operator|==
 name|NULL
 condition|)
 break|break;
+name|depth
+operator|=
+name|hubdev
+operator|->
+name|parent_hub
+operator|->
+name|depth
+expr_stmt|;
 comment|/* 		 * NOTE: HS/FS/LS devices and the SS root HUB can have 		 * more than 15 ports 		 */
 name|rh_port
 operator|=
@@ -10140,35 +10154,49 @@ name|port_no
 expr_stmt|;
 if|if
 condition|(
-name|hubdev
-operator|->
-name|parent_hub
-operator|->
-name|parent_hub
+name|depth
 operator|==
-name|NULL
+literal|0
 condition|)
 break|break;
-name|route
-operator|*=
-literal|16
-expr_stmt|;
 if|if
 condition|(
 name|rh_port
 operator|>
 literal|15
 condition|)
-name|route
-operator||=
+name|rh_port
+operator|=
 literal|15
 expr_stmt|;
-else|else
+if|if
+condition|(
+name|depth
+operator|<
+literal|6
+condition|)
 name|route
 operator||=
 name|rh_port
+operator|<<
+operator|(
+literal|4
+operator|*
+operator|(
+name|depth
+operator|-
+literal|1
+operator|)
+operator|)
 expr_stmt|;
 block|}
+name|DPRINTF
+argument_list|(
+literal|"Route=0x%08x\n"
+argument_list|,
+name|route
+argument_list|)
+expr_stmt|;
 name|temp
 operator|=
 name|XHCI_SCTX_0_ROUTE_SET
@@ -10205,7 +10233,7 @@ expr_stmt|;
 break|break;
 default|default:
 name|temp
-operator|=
+operator||=
 name|XHCI_SCTX_0_CTX_NUM_SET
 argument_list|(
 literal|1
@@ -12505,7 +12533,7 @@ name|ptr
 parameter_list|,
 name|val
 parameter_list|)
-value|ptr[0] = (uint8_t)(val), ptr[1] = (uint8_t)((val)>> 8)
+value|ptr = { (uint8_t)(val), (uint8_t)((val)>> 8) }
 end_define
 
 begin_decl_stmt
@@ -12743,19 +12771,12 @@ block|,
 comment|/* dummy - not used */
 operator|.
 name|wU2DevExitLat
-index|[
-literal|0
-index|]
 operator|=
+block|{
 literal|0x00
 block|,
-operator|.
-name|wU2DevExitLat
-index|[
-literal|1
-index|]
-operator|=
 literal|0x08
+block|}
 block|, 	}
 block|,
 operator|.
@@ -13763,6 +13784,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|UHF_C_PORT_SUSPEND
+case|:
+case|case
 name|UHF_C_PORT_LINK_STATE
 case|:
 name|XWRITE4
@@ -14345,10 +14369,13 @@ name|v
 operator|&
 name|XHCI_PS_PP
 condition|)
+block|{
+comment|/* 			 * The USB 3.0 RH is using the 			 * USB 2.0's power bit 			 */
 name|i
 operator||=
 name|UPS_PORT_POWER
 expr_stmt|;
+block|}
 name|USETW
 argument_list|(
 name|sc

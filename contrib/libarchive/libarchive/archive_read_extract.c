@@ -450,6 +450,12 @@ decl_stmt|,
 name|r2
 decl_stmt|;
 comment|/* Set up for this particular entry. */
+if|if
+condition|(
+name|a
+operator|->
+name|skip_file_set
+condition|)
 name|archive_write_disk_set_skip_file
 argument_list|(
 name|ad
@@ -667,7 +673,7 @@ modifier|*
 name|aw
 parameter_list|)
 block|{
-name|off_t
+name|int64_t
 name|offset
 decl_stmt|;
 specifier|const
@@ -698,6 +704,17 @@ operator|)
 name|ar
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|extract
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ARCHIVE_FATAL
+operator|)
+return|;
 for|for
 control|(
 init|;

@@ -346,6 +346,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Optional ACPI methods for suspend and resume, e.g., _GTS and _BFS. */
+end_comment
+
+begin_decl_stmt
+name|int
+name|acpi_sleep_flags
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Supported sleep states. */
 end_comment
 
@@ -991,6 +1001,19 @@ name|acpi_has_hid
 parameter_list|(
 name|ACPI_HANDLE
 name|handle
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|acpi_resync_clock
+parameter_list|(
+name|struct
+name|acpi_softc
+modifier|*
+name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1820,6 +1843,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__amd64__
+end_ifdef
+
 begin_comment
 comment|/* Reset system clock while resuming.  XXX Remove once tested. */
 end_comment
@@ -1865,6 +1894,11 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Allow users to override quirks. */
 end_comment
@@ -1876,6 +1910,44 @@ literal|"debug.acpi.quirks"
 argument_list|,
 operator|&
 name|acpi_quirks
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* Execute optional ACPI methods for suspend and resume. */
+end_comment
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"debug.acpi.sleep_flags"
+argument_list|,
+operator|&
+name|acpi_sleep_flags
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_debug_acpi
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|sleep_flags
+argument_list|,
+name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
+argument_list|,
+operator|&
+name|acpi_sleep_flags
+argument_list|,
+literal|0
+argument_list|,
+literal|"Execute optional ACPI methods for suspend/resume."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -8506,7 +8578,7 @@ block|{
 name|ACPI_OBJECT_TYPE
 name|type
 decl_stmt|;
-comment|/*      * 1. CPUs      * 2. I/O port and memory system resource holders      * 3. Embedded controllers (to handle early accesses)      * 4. PCI Link Devices      */
+comment|/* 	 * 0. CPUs 	 * 1. I/O port and memory system resource holders 	 * 2. Clocks and timers (to handle early accesses) 	 * 3. Embedded controllers (to handle early accesses) 	 * 4. PCI Link Devices 	 */
 name|AcpiGetType
 argument_list|(
 name|handle
@@ -8524,7 +8596,7 @@ condition|)
 operator|*
 name|order
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 elseif|else
 if|if
@@ -8541,6 +8613,35 @@ argument_list|(
 name|handle
 argument_list|,
 literal|"PNP0C02"
+argument_list|)
+condition|)
+operator|*
+name|order
+operator|=
+literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|acpi_MatchHid
+argument_list|(
+name|handle
+argument_list|,
+literal|"PNP0100"
+argument_list|)
+operator|||
+name|acpi_MatchHid
+argument_list|(
+name|handle
+argument_list|,
+literal|"PNP0103"
+argument_list|)
+operator|||
+name|acpi_MatchHid
+argument_list|(
+name|handle
+argument_list|,
+literal|"PNP0B00"
 argument_list|)
 condition|)
 operator|*
@@ -8786,7 +8887,7 @@ name|level
 operator|*
 literal|10
 operator|+
-literal|100
+name|ACPI_DEV_BASE_ORDER
 expr_stmt|;
 name|acpi_probe_order
 argument_list|(
@@ -8950,6 +9051,9 @@ operator|*
 operator|)
 name|arg
 decl_stmt|;
+name|register_t
+name|intr
+decl_stmt|;
 name|ACPI_STATUS
 name|status
 decl_stmt|;
@@ -9005,7 +9109,9 @@ argument_list|,
 literal|"Powering system off\n"
 argument_list|)
 expr_stmt|;
-name|ACPI_DISABLE_IRQS
+name|intr
+operator|=
+name|intr_disable
 argument_list|()
 expr_stmt|;
 name|status
@@ -9013,6 +9119,8 @@ operator|=
 name|AcpiEnterSleepState
 argument_list|(
 name|ACPI_STATE_S5
+argument_list|,
+name|acpi_sleep_flags
 argument_list|)
 expr_stmt|;
 if|if
@@ -9022,6 +9130,12 @@ argument_list|(
 name|status
 argument_list|)
 condition|)
+block|{
+name|intr_restore
+argument_list|(
+name|intr
+argument_list|)
+expr_stmt|;
 name|device_printf
 argument_list|(
 name|sc
@@ -9036,11 +9150,17 @@ name|status
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 block|{
 name|DELAY
 argument_list|(
 literal|1000000
+argument_list|)
+expr_stmt|;
+name|intr_restore
+argument_list|(
+name|intr
 argument_list|)
 expr_stmt|;
 name|device_printf
@@ -11712,6 +11832,9 @@ name|int
 name|state
 parameter_list|)
 block|{
+name|register_t
+name|intr
+decl_stmt|;
 name|ACPI_STATUS
 name|status
 decl_stmt|;
@@ -11976,13 +12099,18 @@ operator|!=
 name|ACPI_STATE_S1
 condition|)
 block|{
+if|if
+condition|(
 name|acpi_sleep_machdep
 argument_list|(
 name|sc
 argument_list|,
 name|state
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|backout
+goto|;
 comment|/* Re-enable ACPI hardware on wakeup from sleep state 4. */
 if|if
 condition|(
@@ -11996,7 +12124,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|ACPI_DISABLE_IRQS
+name|intr
+operator|=
+name|intr_disable
 argument_list|()
 expr_stmt|;
 name|status
@@ -12004,6 +12134,13 @@ operator|=
 name|AcpiEnterSleepState
 argument_list|(
 name|state
+argument_list|,
+name|acpi_sleep_flags
+argument_list|)
+expr_stmt|;
+name|intr_restore
+argument_list|(
+name|intr
 argument_list|)
 expr_stmt|;
 if|if
@@ -12065,11 +12202,20 @@ name|slp_state
 operator|>=
 name|ACPI_SS_SLP_PREP
 condition|)
+block|{
+name|AcpiLeaveSleepStatePrep
+argument_list|(
+name|state
+argument_list|,
+name|acpi_sleep_flags
+argument_list|)
+expr_stmt|;
 name|AcpiLeaveSleepState
 argument_list|(
 name|state
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|slp_state
@@ -12087,11 +12233,18 @@ name|slp_state
 operator|>=
 name|ACPI_SS_SLEPT
 condition|)
+block|{
+name|acpi_resync_clock
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|acpi_enable_fixed_events
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+block|}
 name|sc
 operator|->
 name|acpi_next_sstate
@@ -12166,6 +12319,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|acpi_resync_clock
 parameter_list|(
@@ -12175,6 +12329,9 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|__amd64__
 if|if
 condition|(
 operator|!
@@ -12211,6 +12368,8 @@ operator|->
 name|acpi_sleep_delay
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -15557,6 +15716,12 @@ block|{
 literal|"ACPI_LV_INFO"
 block|,
 name|ACPI_LV_INFO
+block|}
+block|,
+block|{
+literal|"ACPI_LV_REPAIR"
+block|,
+name|ACPI_LV_REPAIR
 block|}
 block|,
 block|{

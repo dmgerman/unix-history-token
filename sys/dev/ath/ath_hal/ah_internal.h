@@ -69,6 +69,24 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|AH_SUPPORT_AR5416
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|AH_SUPPORT_AR5416
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|NBBY
 end_ifndef
 

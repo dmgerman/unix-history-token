@@ -793,7 +793,7 @@ name|PMAP_LOCK_INIT
 parameter_list|(
 name|pmap
 parameter_list|)
-value|mtx_init(&(pmap)->pm_mtx, "pmap", \ 				    NULL, MTX_DEF)
+value|mtx_init(&(pmap)->pm_mtx, \ 				    (pmap == kernel_pmap) ? "kernelpmap" : \ 				    "pmap", NULL, MTX_DEF)
 end_define
 
 begin_define

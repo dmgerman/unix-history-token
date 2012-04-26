@@ -81,6 +81,12 @@ directive|include
 file|"llvm/ADT/PointerIntPair.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -116,8 +122,9 @@ comment|/// C++ nested name specifiers are the prefixes to qualified
 comment|/// namespaces. For example, "foo::" in "foo::x" is a nested name
 comment|/// specifier. Nested name specifiers are made up of a sequence of
 comment|/// specifiers, each of which can be a namespace, type, identifier
-comment|/// (for dependent names), or the global specifier ('::', must be the
-comment|/// first specifier).
+comment|/// (for dependent names), decltype specifier, or the global specifier ('::').
+comment|/// The last two specifiers can only appear at the start of a
+comment|/// nested-namespace-specifier.
 name|class
 name|NestedNameSpecifier
 range|:
@@ -261,7 +268,8 @@ name|NestedNameSpecifier
 operator|&
 operator|)
 block|;
-comment|// do not implement
+comment|// do not
+comment|// implement
 comment|/// \brief Either find or insert the given nested name specifier
 comment|/// mockup in the given context.
 specifier|static
@@ -754,6 +762,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 expr_stmt|;
 comment|/// \brief Retrieve the source range covering just the last part of
 comment|/// this nested-name-specifier, not including the prefix.
@@ -1003,7 +1012,27 @@ name|public
 label|:
 name|NestedNameSpecifierLocBuilder
 argument_list|()
-expr_stmt|;
+operator|:
+name|Representation
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Buffer
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|BufferSize
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|BufferCapacity
+argument_list|(
+literal|0
+argument_list|)
+block|{ }
 name|NestedNameSpecifierLocBuilder
 argument_list|(
 specifier|const
@@ -1026,7 +1055,17 @@ decl_stmt|;
 operator|~
 name|NestedNameSpecifierLocBuilder
 argument_list|()
+block|{
+if|if
+condition|(
+name|BufferCapacity
+condition|)
+name|free
+argument_list|(
+name|Buffer
+argument_list|)
 expr_stmt|;
+block|}
 comment|/// \brief Retrieve the representation of the nested-name-specifier.
 name|NestedNameSpecifier
 operator|*
@@ -1202,6 +1241,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 block|{
 return|return
 name|NestedNameSpecifierLoc
@@ -1299,11 +1339,11 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/// Insertion operator for diagnostics.  This allows sending NestedNameSpecifiers
+comment|/// Insertion operator for diagnostics.  This allows sending
 end_comment
 
 begin_comment
-comment|/// into a diagnostic with<<.
+comment|/// NestedNameSpecifiers into a diagnostic with<<.
 end_comment
 
 begin_expr_stmt

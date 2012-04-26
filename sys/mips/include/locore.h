@@ -51,13 +51,6 @@ begin_comment
 comment|/*  * CPU identification, from PRID register.  */
 end_comment
 
-begin_typedef
-typedef|typedef
-name|int
-name|mips_prid_t
-typedef|;
-end_typedef
-
 begin_define
 define|#
 directive|define
@@ -282,41 +275,6 @@ end_define
 
 begin_comment
 comment|/* Company Options */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__HAVE_MIPS_MACHDEP_CACHE_CONFIG
-end_ifdef
-
-begin_function_decl
-name|void
-name|mips_machdep_cache_config
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _KERNEL */
 end_comment
 
 begin_endif

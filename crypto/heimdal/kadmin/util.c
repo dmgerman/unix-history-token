@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 - 2006 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997 - 2006 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -14,14 +14,6 @@ include|#
 directive|include
 file|<parse_units.h>
 end_include
-
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: util.c 21745 2007-07-31 16:11:25Z lha $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/*  * util.c - functions for parsing, unparsing, and editing different  * types of data used in kadmin.  */
@@ -53,7 +45,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * attributes   */
+comment|/*  * attributes  */
 end_comment
 
 begin_decl_stmt
@@ -173,6 +165,8 @@ block|}
 block|,
 block|{
 name|NULL
+block|,
+literal|0
 block|}
 block|}
 decl_stmt|;
@@ -493,7 +487,7 @@ comment|/*  * time_t  * the special value 0 means ``never''  */
 end_comment
 
 begin_comment
-comment|/*  * Convert the time `t' to a string representation in `str' (of max  * size `len').  If include_time also include time, otherwise just  * date.    */
+comment|/*  * Convert the time `t' to a string representation in `str' (of max  * size `len').  If include_time also include time, otherwise just  * date.  */
 end_comment
 
 begin_function
@@ -623,6 +617,67 @@ name|tm2
 argument_list|)
 argument_list|)
 expr_stmt|;
+while|while
+condition|(
+name|isspace
+argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
+operator|*
+name|str
+argument_list|)
+condition|)
+name|str
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|str
+index|[
+literal|0
+index|]
+operator|==
+literal|'+'
+condition|)
+block|{
+name|str
+operator|++
+expr_stmt|;
+operator|*
+name|t
+operator|=
+name|parse_time
+argument_list|(
+name|str
+argument_list|,
+literal|"month"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|t
+operator|<
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+operator|*
+name|t
+operator|+=
+name|time
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 if|if
 condition|(
 name|strcasecmp
@@ -1637,7 +1692,7 @@ name|int
 name|set_entry
 parameter_list|(
 name|krb5_context
-name|context
+name|contextp
 parameter_list|,
 name|kadm5_principal_ent_t
 name|ent
@@ -1698,7 +1753,7 @@ condition|)
 block|{
 name|krb5_warnx
 argument_list|(
-name|context
+name|contextp
 argument_list|,
 literal|"unable to parse `%s'"
 argument_list|,
@@ -1736,7 +1791,7 @@ condition|)
 block|{
 name|krb5_warnx
 argument_list|(
-name|context
+name|contextp
 argument_list|,
 literal|"unable to parse `%s'"
 argument_list|,
@@ -1772,7 +1827,7 @@ condition|)
 block|{
 name|krb5_warnx
 argument_list|(
-name|context
+name|contextp
 argument_list|,
 literal|"unable to parse `%s'"
 argument_list|,
@@ -1808,7 +1863,7 @@ condition|)
 block|{
 name|krb5_warnx
 argument_list|(
-name|context
+name|contextp
 argument_list|,
 literal|"unable to parse `%s'"
 argument_list|,
@@ -1846,7 +1901,7 @@ condition|)
 block|{
 name|krb5_warnx
 argument_list|(
-name|context
+name|contextp
 argument_list|,
 literal|"unable to parse `%s'"
 argument_list|,
@@ -1985,9 +2040,13 @@ name|char
 modifier|*
 modifier|*
 name|princs
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|num_princs
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|i
@@ -2185,7 +2244,7 @@ condition|(
 name|ret
 condition|)
 block|{
-name|krb5_clear_error_string
+name|krb5_clear_error_message
 argument_list|(
 name|context
 argument_list|)

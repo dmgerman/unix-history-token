@@ -223,6 +223,18 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
+name|Pass
+modifier|*
+name|createGlobalMergePass
+parameter_list|(
+specifier|const
+name|TargetLowering
+modifier|*
+name|TLI
+init|=
+literal|0
+parameter_list|)
+function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
 comment|// LoopUnswitch - This pass is a simple loop unswitching pass.
@@ -571,15 +583,6 @@ name|InstructionNamerID
 decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
-comment|// GEPSplitter - Split complex GEPs into simple ones
-comment|//
-name|FunctionPass
-modifier|*
-name|createGEPSplitterPass
-parameter_list|()
-function_decl|;
-comment|//===----------------------------------------------------------------------===//
-comment|//
 comment|// Sink - Code Sinking
 comment|//
 name|FunctionPass
@@ -603,6 +606,15 @@ comment|//
 name|Pass
 modifier|*
 name|createCorrelatedValuePropagationPass
+parameter_list|()
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
+comment|// ObjCARCAPElim - ObjC ARC autorelease pool elimination.
+comment|//
+name|Pass
+modifier|*
+name|createObjCARCAPElimPass
 parameter_list|()
 function_decl|;
 comment|//===----------------------------------------------------------------------===//

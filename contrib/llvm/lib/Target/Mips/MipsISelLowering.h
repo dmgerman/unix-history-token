@@ -66,18 +66,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/SelectionDAG.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Target/TargetLowering.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"Mips.h"
 end_include
 
@@ -85,6 +73,18 @@ begin_include
 include|#
 directive|include
 file|"MipsSubtarget.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/SelectionDAG.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetLowering.h"
 end_include
 
 begin_decl_stmt
@@ -117,14 +117,6 @@ name|Lo
 block|,
 comment|// Handle gp_rel (small data/bss sections) relocation.
 name|GPRel
-block|,
-comment|// General Dynamic TLS
-name|TlsGd
-block|,
-comment|// Local Exec TLS
-name|TprelHi
-block|,
-name|TprelLo
 block|,
 comment|// Thread Pointer
 name|ThreadPointer
@@ -164,7 +156,7 @@ name|BuildPairF64
 block|,
 name|ExtractElementF64
 block|,
-name|WrapperPIC
+name|Wrapper
 block|,
 name|DynAlloc
 block|,
@@ -195,6 +187,20 @@ operator|&
 name|TM
 argument_list|)
 block|;
+name|virtual
+name|MVT
+name|getShiftAmountTy
+argument_list|(
+argument|EVT LHSTy
+argument_list|)
+specifier|const
+block|{
+return|return
+name|MVT
+operator|::
+name|i32
+return|;
+block|}
 name|virtual
 name|bool
 name|allowsUnalignedMemoryAccesses
@@ -256,6 +262,8 @@ name|bool
 name|HasMips64
 block|,
 name|IsN64
+block|,
+name|IsO32
 block|;
 comment|// Lower Operand helpers
 name|SDValue
@@ -353,6 +361,15 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
+name|LowerSETCC
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
 name|LowerVASTART
 argument_list|(
 argument|SDValue Op
@@ -363,6 +380,15 @@ specifier|const
 block|;
 name|SDValue
 name|LowerFCOPYSIGN
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerFABS
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -428,6 +454,8 @@ argument_list|,
 argument|CallingConv::ID CallConv
 argument_list|,
 argument|bool isVarArg
+argument_list|,
+argument|bool doesNotRet
 argument_list|,
 argument|bool&isTailCall
 argument_list|,
@@ -532,6 +560,12 @@ argument|const APFloat&Imm
 argument_list|,
 argument|EVT VT
 argument_list|)
+specifier|const
+block|;
+name|virtual
+name|unsigned
+name|getJumpTableEncoding
+argument_list|()
 specifier|const
 block|;
 name|MachineBasicBlock

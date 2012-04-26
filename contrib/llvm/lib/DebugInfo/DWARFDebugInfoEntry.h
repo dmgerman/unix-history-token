@@ -76,7 +76,7 @@ name|class
 name|DWARFDebugInfoEntryMinimal
 block|{
 comment|/// Offset within the .debug_info of the start of this entry.
-name|uint64_t
+name|uint32_t
 name|Offset
 decl_stmt|;
 comment|/// How many to subtract from "this" to get the parent.
@@ -221,7 +221,7 @@ operator|==
 literal|0
 return|;
 block|}
-name|uint64_t
+name|uint32_t
 name|getOffset
 argument_list|()
 specifier|const

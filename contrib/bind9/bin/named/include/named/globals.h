@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: globals.h,v 1.89.54.2 2011-06-17 23:47:10 tbox Exp $ */
+comment|/* $Id: globals.h,v 1.89.54.2 2011/06/17 23:47:10 tbox Exp $ */
 end_comment
 
 begin_ifndef

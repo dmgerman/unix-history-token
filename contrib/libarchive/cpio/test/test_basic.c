@@ -30,6 +30,11 @@ parameter_list|)
 block|{
 comment|/* 	 * Verify unpacked files. 	 */
 comment|/* Regular file with 2 links. */
+name|failure
+argument_list|(
+name|msg
+argument_list|)
+expr_stmt|;
 name|assertIsReg
 argument_list|(
 literal|"file"
@@ -49,6 +54,11 @@ argument_list|,
 literal|10
 argument_list|)
 expr_stmt|;
+name|failure
+argument_list|(
+name|msg
+argument_list|)
+expr_stmt|;
 name|assertFileNLinks
 argument_list|(
 literal|"file"
@@ -57,6 +67,11 @@ literal|2
 argument_list|)
 expr_stmt|;
 comment|/* Another name for the same file. */
+name|failure
+argument_list|(
+name|msg
+argument_list|)
+expr_stmt|;
 name|assertIsHardlink
 argument_list|(
 literal|"linkfile"
@@ -78,6 +93,11 @@ literal|"file"
 argument_list|)
 expr_stmt|;
 comment|/* Another file with 1 link and different permissions. */
+name|failure
+argument_list|(
+name|msg
+argument_list|)
+expr_stmt|;
 name|assertIsReg
 argument_list|(
 literal|"file2"
@@ -85,11 +105,21 @@ argument_list|,
 literal|0777
 argument_list|)
 expr_stmt|;
+name|failure
+argument_list|(
+name|msg
+argument_list|)
+expr_stmt|;
 name|assertFileSize
 argument_list|(
 literal|"file2"
 argument_list|,
 literal|10
+argument_list|)
+expr_stmt|;
+name|failure
+argument_list|(
+name|msg
 argument_list|)
 expr_stmt|;
 name|assertFileNLinks
@@ -134,6 +164,11 @@ specifier|const
 name|char
 modifier|*
 name|se
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|se2
 parameter_list|)
 block|{
 name|int
@@ -246,7 +281,7 @@ argument_list|)
 expr_stmt|;
 name|assertTextFileContents
 argument_list|(
-name|se
+name|se2
 argument_list|,
 literal|"unpack.err"
 argument_list|)
@@ -372,6 +407,12 @@ name|char
 modifier|*
 name|msg
 decl_stmt|;
+name|char
+name|result
+index|[
+literal|1024
+index|]
+decl_stmt|;
 name|assertUmask
 argument_list|(
 literal|0
@@ -385,6 +426,18 @@ argument_list|(
 literal|"filelist"
 argument_list|,
 literal|"w"
+argument_list|)
+expr_stmt|;
+name|memset
+argument_list|(
+name|result
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|result
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* File with 10 bytes content. */
@@ -404,6 +457,31 @@ argument_list|,
 literal|"file\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|is_LargeInode
+argument_list|(
+literal|"file"
+argument_list|)
+condition|)
+name|strncat
+argument_list|(
+name|result
+argument_list|,
+literal|"bsdcpio: file: large inode number truncated: "
+literal|"Numerical result out of range\n"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|result
+argument_list|)
+operator|-
+name|strlen
+argument_list|(
+name|result
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* hardlink to above file. */
 name|assertMakeHardlink
 argument_list|(
@@ -417,6 +495,31 @@ argument_list|(
 name|filelist
 argument_list|,
 literal|"linkfile\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|is_LargeInode
+argument_list|(
+literal|"linkfile"
+argument_list|)
+condition|)
+name|strncat
+argument_list|(
+name|result
+argument_list|,
+literal|"bsdcpio: linkfile: large inode number truncated: "
+literal|"Numerical result out of range\n"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|result
+argument_list|)
+operator|-
+name|strlen
+argument_list|(
+name|result
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Symlink to above file. */
@@ -440,6 +543,31 @@ argument_list|,
 literal|"symlink\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|is_LargeInode
+argument_list|(
+literal|"symlink"
+argument_list|)
+condition|)
+name|strncat
+argument_list|(
+name|result
+argument_list|,
+literal|"bsdcpio: symlink: large inode number truncated: "
+literal|"Numerical result out of range\n"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|result
+argument_list|)
+operator|-
+name|strlen
+argument_list|(
+name|result
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* Another file with different permissions. */
 name|assertMakeFile
@@ -458,6 +586,31 @@ argument_list|,
 literal|"file2\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|is_LargeInode
+argument_list|(
+literal|"file2"
+argument_list|)
+condition|)
+name|strncat
+argument_list|(
+name|result
+argument_list|,
+literal|"bsdcpio: file2: large inode number truncated: "
+literal|"Numerical result out of range\n"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|result
+argument_list|)
+operator|-
+name|strlen
+argument_list|(
+name|result
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* Directory. */
 name|assertMakeDir
 argument_list|(
@@ -471,6 +624,48 @@ argument_list|(
 name|filelist
 argument_list|,
 literal|"dir\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|is_LargeInode
+argument_list|(
+literal|"dir"
+argument_list|)
+condition|)
+name|strncat
+argument_list|(
+name|result
+argument_list|,
+literal|"bsdcpio: dir: large inode number truncated: "
+literal|"Numerical result out of range\n"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|result
+argument_list|)
+operator|-
+name|strlen
+argument_list|(
+name|result
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|strncat
+argument_list|(
+name|result
+argument_list|,
+literal|"2 blocks\n"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|result
+argument_list|)
+operator|-
+name|strlen
+argument_list|(
+name|result
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* All done. */
@@ -503,6 +698,8 @@ argument_list|,
 literal|""
 argument_list|,
 name|msg
+argument_list|,
+name|msg
 argument_list|)
 expr_stmt|;
 name|basic_cpio
@@ -512,6 +709,8 @@ argument_list|,
 literal|"--format=odc"
 argument_list|,
 literal|""
+argument_list|,
+name|msg
 argument_list|,
 name|msg
 argument_list|)
@@ -524,6 +723,8 @@ literal|"-H newc"
 argument_list|,
 literal|""
 argument_list|,
+name|result
+argument_list|,
 literal|"2 blocks\n"
 argument_list|)
 expr_stmt|;
@@ -534,6 +735,8 @@ argument_list|,
 literal|"-H odc"
 argument_list|,
 literal|""
+argument_list|,
+name|msg
 argument_list|,
 name|msg
 argument_list|)
@@ -554,6 +757,8 @@ argument_list|,
 literal|"-H ustar"
 argument_list|,
 literal|""
+argument_list|,
+name|msg
 argument_list|,
 name|msg
 argument_list|)

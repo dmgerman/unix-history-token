@@ -94,6 +94,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CallingConv.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cassert>
 end_include
 
@@ -134,22 +140,24 @@ name|public
 label|:
 typedef|typedef
 specifier|const
-name|unsigned
+name|uint16_t
 modifier|*
 name|iterator
 typedef|;
 typedef|typedef
 specifier|const
-name|unsigned
+name|uint16_t
 modifier|*
 name|const_iterator
 typedef|;
 typedef|typedef
 specifier|const
-name|EVT
-modifier|*
+name|MVT
+operator|::
+name|SimpleValueType
+operator|*
 name|vt_iterator
-typedef|;
+expr_stmt|;
 typedef|typedef
 specifier|const
 name|TargetRegisterClass
@@ -158,8 +166,7 @@ specifier|const
 modifier|*
 name|sc_iterator
 typedef|;
-name|private
-label|:
+comment|// Instance variables filled by tablegen, do not use!
 specifier|const
 name|MCRegisterClass
 modifier|*
@@ -182,71 +189,20 @@ specifier|const
 name|sc_iterator
 name|SuperRegClasses
 decl_stmt|;
-name|public
-label|:
-name|TargetRegisterClass
+name|ArrayRef
+operator|<
+name|uint16_t
+operator|>
+call|(
+modifier|*
+name|OrderFunc
+call|)
 argument_list|(
 specifier|const
-name|MCRegisterClass
-operator|*
-name|MC
-argument_list|,
-specifier|const
-name|EVT
-operator|*
-name|vts
-argument_list|,
-specifier|const
-name|unsigned
-operator|*
-name|subcm
-argument_list|,
-specifier|const
-name|TargetRegisterClass
-operator|*
-specifier|const
-operator|*
-name|supcs
-argument_list|,
-specifier|const
-name|TargetRegisterClass
-operator|*
-specifier|const
-operator|*
-name|superregcs
+name|MachineFunction
+operator|&
 argument_list|)
-operator|:
-name|MC
-argument_list|(
-name|MC
-argument_list|)
-operator|,
-name|VTs
-argument_list|(
-name|vts
-argument_list|)
-operator|,
-name|SubClassMask
-argument_list|(
-name|subcm
-argument_list|)
-operator|,
-name|SuperClasses
-argument_list|(
-name|supcs
-argument_list|)
-operator|,
-name|SuperRegClasses
-argument_list|(
-argument|superregcs
-argument_list|)
-block|{}
-name|virtual
-operator|~
-name|TargetRegisterClass
-argument_list|()
-block|{}
-comment|// Allow subclasses
+expr_stmt|;
 comment|/// getID() - Return the register class ID number.
 comment|///
 name|unsigned
@@ -466,10 +422,13 @@ name|i
 control|)
 if|if
 condition|(
+name|EVT
+argument_list|(
 name|VTs
 index|[
 name|i
 index|]
+argument_list|)
 operator|==
 name|vt
 condition|)
@@ -708,7 +667,7 @@ end_comment
 
 begin_expr_stmt
 specifier|const
-name|unsigned
+name|uint32_t
 operator|*
 name|getSubClassMask
 argument_list|()
@@ -826,10 +785,9 @@ comment|///
 end_comment
 
 begin_expr_stmt
-name|virtual
 name|ArrayRef
 operator|<
-name|unsigned
+name|uint16_t
 operator|>
 name|getRawAllocationOrder
 argument_list|(
@@ -838,6 +796,13 @@ argument_list|)
 specifier|const
 block|{
 return|return
+name|OrderFunc
+operator|?
+name|OrderFunc
+argument_list|(
+name|MF
+argument_list|)
+operator|:
 name|makeArrayRef
 argument_list|(
 name|begin
@@ -871,6 +836,28 @@ name|bool
 name|inAllocatableClass
 decl_stmt|;
 comment|// Register belongs to an allocatable regclass.
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/// Each TargetRegisterClass has a per register weight, and weight
+end_comment
+
+begin_comment
+comment|/// limit which must be less than the limits of its pressure sets.
+end_comment
+
+begin_struct
+struct|struct
+name|RegClassWeight
+block|{
+name|unsigned
+name|RegWeigt
+decl_stmt|;
+name|unsigned
+name|WeightLimit
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1517,7 +1504,7 @@ return|;
 for|for
 control|(
 specifier|const
-name|unsigned
+name|uint16_t
 modifier|*
 name|regList
 init|=
@@ -1606,7 +1593,7 @@ block|{
 for|for
 control|(
 specifier|const
-name|unsigned
+name|uint16_t
 modifier|*
 name|regList
 init|=
@@ -1652,13 +1639,17 @@ comment|/// order of desired callee-save stack frame offset. The first register 
 end_comment
 
 begin_comment
-comment|/// closed to the incoming stack pointer if stack grows down, and vice versa.
+comment|/// closest to the incoming stack pointer if stack grows down, and vice versa.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_decl_stmt
 name|virtual
 specifier|const
-name|unsigned
+name|uint16_t
 modifier|*
 name|getCalleeSavedRegs
 argument_list|(
@@ -1673,6 +1664,98 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// getCallPreservedMask - Return a mask of call-preserved registers for the
+end_comment
+
+begin_comment
+comment|/// given calling convention on the current sub-target.  The mask should
+end_comment
+
+begin_comment
+comment|/// include all call-preserved aliases.  This is used by the register
+end_comment
+
+begin_comment
+comment|/// allocator to determine which registers can be live across a call.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// The mask is an array containing (TRI::getNumRegs()+31)/32 entries.
+end_comment
+
+begin_comment
+comment|/// A set bit indicates that all bits of the corresponding register are
+end_comment
+
+begin_comment
+comment|/// preserved across the function call.  The bit mask is expected to be
+end_comment
+
+begin_comment
+comment|/// sub-register complete, i.e. if A is preserved, so are all its
+end_comment
+
+begin_comment
+comment|/// sub-registers.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Bits are numbered from the LSB, so the bit for physical register Reg can
+end_comment
+
+begin_comment
+comment|/// be found as (Mask[Reg / 32]>> Reg % 32)& 1.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// A NULL pointer means that no register mask will be used, and call
+end_comment
+
+begin_comment
+comment|/// instructions should use implicit-def operands to indicate call clobbered
+end_comment
+
+begin_comment
+comment|/// registers.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_decl_stmt
+name|virtual
+specifier|const
+name|uint32_t
+modifier|*
+name|getCallPreservedMask
+argument_list|(
+name|CallingConv
+operator|::
+name|ID
+argument_list|)
+decl|const
+block|{
+comment|// The default mask clobbers everything.  All targets should override.
+return|return
+literal|0
+return|;
+block|}
 end_decl_stmt
 
 begin_comment
@@ -1708,64 +1791,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getSubReg - Returns the physical register number of sub-register "Index"
-end_comment
-
-begin_comment
-comment|/// for physical register RegNo. Return zero if the sub-register does not
-end_comment
-
-begin_comment
-comment|/// exist.
-end_comment
-
-begin_decl_stmt
-name|virtual
-name|unsigned
-name|getSubReg
-argument_list|(
-name|unsigned
-name|RegNo
-argument_list|,
-name|unsigned
-name|Index
-argument_list|)
-decl|const
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/// getSubRegIndex - For a given register pair, return the sub-register index
-end_comment
-
-begin_comment
-comment|/// if the second register is a sub-register of the first. Return zero
-end_comment
-
-begin_comment
-comment|/// otherwise.
-end_comment
-
-begin_decl_stmt
-name|virtual
-name|unsigned
-name|getSubRegIndex
-argument_list|(
-name|unsigned
-name|RegNo
-argument_list|,
-name|unsigned
-name|SubRegNo
-argument_list|)
-decl|const
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// getMatchingSuperReg - Return a super-register of the specified register
 end_comment
 
@@ -1790,50 +1815,19 @@ name|RC
 argument_list|)
 decl|const
 block|{
-for|for
-control|(
-specifier|const
-name|unsigned
-modifier|*
-name|SRs
-init|=
-name|getSuperRegisters
+return|return
+name|MCRegisterInfo
+operator|::
+name|getMatchingSuperReg
 argument_list|(
 name|Reg
-argument_list|)
-init|;
-name|unsigned
-name|SR
-operator|=
-operator|*
-name|SRs
-condition|;
-operator|++
-name|SRs
-control|)
-if|if
-condition|(
-name|Reg
-operator|==
-name|getSubReg
-argument_list|(
-name|SR
 argument_list|,
 name|SubIdx
-argument_list|)
-operator|&&
+argument_list|,
 name|RC
 operator|->
-name|contains
-argument_list|(
-name|SR
+name|MC
 argument_list|)
-condition|)
-return|return
-name|SR
-return|;
-return|return
-literal|0
 return|;
 block|}
 end_decl_stmt
@@ -1903,6 +1897,14 @@ begin_comment
 comment|/// specified sub-register index which is in the specified register class B.
 end_comment
 
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// TableGen will synthesize missing A sub-classes.
+end_comment
+
 begin_decl_stmt
 name|virtual
 specifier|const
@@ -1924,11 +1926,9 @@ name|unsigned
 name|Idx
 argument_list|)
 decl|const
-block|{
-return|return
+init|=
 literal|0
-return|;
-block|}
+decl_stmt|;
 end_decl_stmt
 
 begin_comment
@@ -1973,6 +1973,10 @@ end_comment
 
 begin_comment
 comment|///
+end_comment
+
+begin_comment
+comment|/// TableGen will synthesize missing RC sub-classes.
 end_comment
 
 begin_decl_stmt
@@ -2221,17 +2225,11 @@ literal|0
 argument_list|)
 decl|const
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Target didn't implement getPointerRegClass!"
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
-comment|// Must return a value in order to compile with VS 2005
 block|}
 end_decl_stmt
 
@@ -2325,6 +2323,18 @@ begin_comment
 comment|/// mode (for the specific register class) if it goes over the limit.
 end_comment
 
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Note: this is the old register pressure model that relies on a manually
+end_comment
+
+begin_comment
+comment|/// specified representative register class per value type.
+end_comment
+
 begin_decl_stmt
 name|virtual
 name|unsigned
@@ -2345,6 +2355,91 @@ return|return
 literal|0
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
+comment|/// Get the weight in units of pressure for this register class.
+end_comment
+
+begin_decl_stmt
+name|virtual
+specifier|const
+name|RegClassWeight
+modifier|&
+name|getRegClassWeight
+argument_list|(
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|RC
+argument_list|)
+decl|const
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// Get the number of dimensions of register pressure.
+end_comment
+
+begin_expr_stmt
+name|virtual
+name|unsigned
+name|getNumRegPressureSets
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// Get the register unit pressure limit for this dimension.
+end_comment
+
+begin_comment
+comment|/// This limit must be adjusted dynamically for reserved registers.
+end_comment
+
+begin_decl_stmt
+name|virtual
+name|unsigned
+name|getRegPressureSetLimit
+argument_list|(
+name|unsigned
+name|Idx
+argument_list|)
+decl|const
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// Get the dimensions of register pressure impacted by this register class.
+end_comment
+
+begin_comment
+comment|/// Returns a -1 terminated array of pressure set IDs.
+end_comment
+
+begin_decl_stmt
+name|virtual
+specifier|const
+name|int
+modifier|*
+name|getRegClassPressureSets
+argument_list|(
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|RC
+argument_list|)
+decl|const
+init|=
+literal|0
+decl_stmt|;
 end_decl_stmt
 
 begin_comment
@@ -2375,7 +2470,7 @@ begin_expr_stmt
 name|virtual
 name|ArrayRef
 operator|<
-name|unsigned
+name|uint16_t
 operator|>
 name|getRawAllocationOrder
 argument_list|(
@@ -2811,11 +2906,10 @@ name|Offset
 argument_list|)
 decl|const
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
-literal|"materializeFrameBaseRegister does not exist on this target"
+literal|"materializeFrameBaseRegister does not exist on this "
+literal|"target"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2847,10 +2941,8 @@ name|Offset
 argument_list|)
 decl|const
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"resolveFrameIndex does not exist on this target"
 argument_list|)
 expr_stmt|;
@@ -2880,17 +2972,11 @@ name|Offset
 argument_list|)
 decl|const
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"isFrameOffsetLegal does not exist on this target"
 argument_list|)
 expr_stmt|;
-return|return
-name|false
-return|;
-comment|// Must return a value in order to compile with VS 2005
 block|}
 end_decl_stmt
 
@@ -2942,11 +3028,10 @@ name|MI
 argument_list|)
 decl|const
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
-literal|"Call Frame Pseudo Instructions do not exist on this target!"
+literal|"Call Frame Pseudo Instructions do not exist on this "
+literal|"target!"
 argument_list|)
 expr_stmt|;
 block|}

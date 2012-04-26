@@ -128,8 +128,6 @@ block|;
 name|bool
 name|OwnsPrimaryClient
 block|;
-name|llvm
-operator|::
 name|OwningPtr
 operator|<
 name|TextDiagnosticBuffer

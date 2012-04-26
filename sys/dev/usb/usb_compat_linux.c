@@ -3546,9 +3546,7 @@ control|)
 block|{
 name|iface_no_curr
 operator|=
-literal|0
-operator|-
-literal|1
+literal|0xFFFF
 expr_stmt|;
 name|niface_total
 operator|=

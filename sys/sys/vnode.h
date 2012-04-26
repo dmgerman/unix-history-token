@@ -304,11 +304,11 @@ name|int
 name|v_usecount
 decl_stmt|;
 comment|/* i ref count of users */
-name|u_long
+name|u_int
 name|v_iflag
 decl_stmt|;
 comment|/* i vnode flags (see below) */
-name|u_long
+name|u_int
 name|v_vflag
 decl_stmt|;
 comment|/* v vnode flags */
@@ -321,9 +321,9 @@ name|TAILQ_ENTRY
 argument_list|(
 argument|vnode
 argument_list|)
-name|v_freelist
+name|v_actfreelist
 expr_stmt|;
-comment|/* f vnode freelist */
+comment|/* f vnode active/free lists */
 name|struct
 name|bufobj
 name|v_bufobj
@@ -621,6 +621,17 @@ end_define
 
 begin_comment
 comment|/* This vnode is on the freelist */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VI_ACTIVE
+value|0x0200
+end_define
+
+begin_comment
+comment|/* This vnode is on the active list */
 end_comment
 
 begin_define
@@ -1420,17 +1431,6 @@ end_define
 
 begin_comment
 comment|/* vflush: only close writable files */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DOCLOSE
-value|0x0008
-end_define
-
-begin_comment
-comment|/* vclean: close active files */
 end_comment
 
 begin_define
@@ -2281,6 +2281,17 @@ parameter_list|)
 value|((c)->a_desc->vdesc_call(c))
 end_define
 
+begin_define
+define|#
+directive|define
+name|DOINGASYNC
+parameter_list|(
+name|vp
+parameter_list|)
+define|\
+value|(((vp)->v_mount->mnt_kern_flag& MNTK_ASYNC) != 0&&	\ 	 ((curthread->td_pflags& TDP_SYNCIO) == 0))
+end_define
+
 begin_comment
 comment|/*  * VMIO support inline  */
 end_comment
@@ -2446,9 +2457,24 @@ begin_comment
 comment|/* cache_* may belong in namei.h. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|cache_enter
+parameter_list|(
+name|dvp
+parameter_list|,
+name|vp
+parameter_list|,
+name|cnp
+parameter_list|)
+define|\
+value|cache_enter_time(dvp, vp, cnp, NULL, NULL)
+end_define
+
 begin_function_decl
 name|void
-name|cache_enter
+name|cache_enter_time
 parameter_list|(
 name|struct
 name|vnode
@@ -2464,6 +2490,16 @@ name|struct
 name|componentname
 modifier|*
 name|cnp
+parameter_list|,
+name|struct
+name|timespec
+modifier|*
+name|tsp
+parameter_list|,
+name|struct
+name|timespec
+modifier|*
+name|dtsp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2487,6 +2523,15 @@ name|struct
 name|componentname
 modifier|*
 name|cnp
+parameter_list|,
+name|struct
+name|timespec
+modifier|*
+name|tsp
+parameter_list|,
+name|int
+modifier|*
+name|ticksp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2809,6 +2854,30 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|vn_path_to_global_path
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|struct
+name|vnode
+modifier|*
+name|vp
+parameter_list|,
+name|char
+modifier|*
+name|path
+parameter_list|,
+name|u_int
+name|pathlen
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|vaccess
 parameter_list|(
 name|enum
@@ -2954,17 +3023,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|vdestroy
-parameter_list|(
-name|struct
-name|vnode
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|vflush
 parameter_list|(
@@ -3042,6 +3100,21 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|vinactive
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|vinvalbuf
 parameter_list|(
@@ -3075,11 +3148,6 @@ name|struct
 name|ucred
 modifier|*
 name|cred
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|,
 name|off_t
 name|length
@@ -3149,11 +3217,6 @@ name|struct
 name|vnode
 modifier|*
 name|vp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3391,7 +3454,7 @@ name|ucred
 modifier|*
 name|file_cred
 parameter_list|,
-name|int
+name|ssize_t
 modifier|*
 name|aresid
 parameter_list|,
@@ -3989,6 +4052,42 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|vop_stdunp_bind
+parameter_list|(
+name|struct
+name|vop_unp_bind_args
+modifier|*
+name|ap
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|vop_stdunp_connect
+parameter_list|(
+name|struct
+name|vop_unp_connect_args
+modifier|*
+name|ap
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|vop_stdunp_detach
+parameter_list|(
+name|struct
+name|vop_unp_detach_args
+modifier|*
+name|ap
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|vop_eopnotsupp
 parameter_list|(
 name|struct
@@ -4540,6 +4639,21 @@ value|((void*)(uintptr_t)vop_eopnotsupp)
 end_define
 
 begin_comment
+comment|/* fifo_vnops.c */
+end_comment
+
+begin_function_decl
+name|int
+name|fifo_printinfo
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* vfs_hash.c */
 end_comment
 
@@ -4723,6 +4837,18 @@ parameter_list|(
 name|accmode_t
 modifier|*
 name|accmode
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vfs_unp_reclaim
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+name|vp
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -313,8 +313,6 @@ name|fw_header
 decl_stmt|;
 name|uint32_t
 name|signature
-decl_stmt|,
-name|flags
 decl_stmt|;
 name|int32_t
 name|revision
@@ -481,22 +479,6 @@ name|fail
 goto|;
 block|}
 comment|/* 	 * MSR_IA32_PLATFORM_ID contains flag in BCD in bits 52-50. 	 */
-name|flags
-operator|=
-literal|1
-operator|<<
-operator|(
-operator|(
-name|msrargs
-operator|.
-name|data
-operator|>>
-literal|50
-operator|)
-operator|&
-literal|7
-operator|)
-expr_stmt|;
 name|msrargs
 operator|.
 name|msr

@@ -481,6 +481,25 @@ name|VTBALLOON_PAGES_PER_REQUEST
 value|256
 end_define
 
+begin_comment
+comment|/* Must be able to fix all pages frames in one page (segment). */
+end_comment
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+name|VTBALLOON_PAGES_PER_REQUEST
+operator|*
+sizeof|sizeof
+argument_list|(
+name|uint32_t
+argument_list|)
+operator|<=
+name|PAGE_SIZE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_define
 define|#
 directive|define
@@ -570,11 +589,7 @@ argument_list|,
 name|vtballoon_config_change
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1765,15 +1780,15 @@ literal|"error enqueuing page frames to virtqueue"
 operator|)
 argument_list|)
 expr_stmt|;
+name|virtqueue_notify
+argument_list|(
+name|vq
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Inflate and deflate operations are done synchronously. The 	 * interrupt handler will wake us up. 	 */
 name|VTBALLOON_LOCK
 argument_list|(
 name|sc
-argument_list|)
-expr_stmt|;
-name|virtqueue_notify
-argument_list|(
-name|vq
 argument_list|)
 expr_stmt|;
 while|while

@@ -535,7 +535,7 @@ condition|(
 operator|(
 name|td
 operator|->
-name|td_flags
+name|td_pflags
 operator|&
 name|TDP_ALTSTACK
 operator|)

@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2011, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_ifndef
@@ -260,6 +260,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* DEFINE_ACPI_GLOBALS */
+end_comment
+
+begin_comment
 comment|/* Do not disassemble buffers to resource descriptors */
 end_comment
 
@@ -290,6 +294,15 @@ name|AcpiGbl_RootTableList
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+operator|(
+operator|!
+name|ACPI_REDUCED_HARDWARE
+operator|)
+end_if
+
 begin_decl_stmt
 name|ACPI_EXTERN
 name|ACPI_TABLE_FACS
@@ -297,6 +310,15 @@ modifier|*
 name|AcpiGbl_FACS
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !ACPI_REDUCED_HARDWARE */
+end_comment
 
 begin_comment
 comment|/* These addresses are calculated from the FADT Event Block addresses */
@@ -548,15 +570,11 @@ end_comment
 
 begin_decl_stmt
 name|ACPI_EXTERN
-name|ACPI_OBJECT_NOTIFY_HANDLER
-name|AcpiGbl_DeviceNotify
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|ACPI_EXTERN
-name|ACPI_OBJECT_NOTIFY_HANDLER
-name|AcpiGbl_SystemNotify
+name|ACPI_GLOBAL_NOTIFY_HANDLER
+name|AcpiGbl_GlobalNotify
+index|[
+literal|2
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -722,6 +740,17 @@ name|ACPI_EXTERN
 name|ACPI_INTERFACE_INFO
 modifier|*
 name|AcpiGbl_SupportedInterfaces
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ACPI_EXTERN
+name|ACPI_ADDRESS_RANGE
+modifier|*
+name|AcpiGbl_AddressRangeList
+index|[
+name|ACPI_ADDRESS_RANGE_MAX
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -1118,6 +1147,15 @@ begin_comment
 comment|/*****************************************************************************  *  * Event and GPE globals  *  ****************************************************************************/
 end_comment
 
+begin_if
+if|#
+directive|if
+operator|(
+operator|!
+name|ACPI_REDUCED_HARDWARE
+operator|)
+end_if
+
 begin_decl_stmt
 name|ACPI_EXTERN
 name|UINT8
@@ -1178,6 +1216,15 @@ name|ACPI_NUM_FIXED_EVENTS
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !ACPI_REDUCED_HARDWARE */
+end_comment
 
 begin_comment
 comment|/*****************************************************************************  *  * Debug support  *  ****************************************************************************/

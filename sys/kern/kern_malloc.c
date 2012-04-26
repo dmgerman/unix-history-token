@@ -1727,8 +1727,7 @@ name|unsigned
 name|long
 name|alignment
 parameter_list|,
-name|unsigned
-name|long
+name|vm_paddr_t
 name|boundary
 parameter_list|)
 block|{

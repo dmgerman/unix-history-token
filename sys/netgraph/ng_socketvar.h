@@ -50,51 +50,6 @@ name|int
 name|type
 decl_stmt|;
 comment|/* NG_CONTROL or NG_DATA */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* Per-node private data */
-end_comment
-
-begin_struct
-struct|struct
-name|ngsock
-block|{
-name|struct
-name|ng_node
-modifier|*
-name|node
-decl_stmt|;
-comment|/* the associated netgraph node */
-name|struct
-name|ngpcb
-modifier|*
-name|datasock
-decl_stmt|;
-comment|/* optional data socket */
-name|struct
-name|ngpcb
-modifier|*
-name|ctlsock
-decl_stmt|;
-comment|/* optional control socket */
-name|int
-name|flags
-decl_stmt|;
-name|int
-name|refs
-decl_stmt|;
-name|struct
-name|mtx
-name|mtx
-decl_stmt|;
-comment|/* mtx to wait on */
-name|int
-name|error
-decl_stmt|;
-comment|/* place to store error */
 name|ng_ID_t
 name|node_id
 decl_stmt|;
@@ -102,17 +57,6 @@ comment|/* a hint for netstat(1) to find the node */
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|NGS_FLAG_NOLINGER
-value|1
-end_define
-
-begin_comment
-comment|/* close with last hook */
-end_comment
 
 begin_endif
 endif|#

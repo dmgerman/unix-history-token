@@ -728,6 +728,9 @@ case|case
 name|IFT_L2VLAN
 case|:
 case|case
+name|IFT_STF
+case|:
+case|case
 name|IFT_IP
 case|:
 case|case
@@ -736,6 +739,10 @@ case|:
 case|case
 name|IFT_IPOVERCLAW
 case|:
+case|case
+name|IFT_PROPVIRTUAL
+case|:
+comment|/* NetGraph Virtual too */
 case|case
 name|IFT_VIRTUALIPADDRESS
 case|:
@@ -808,7 +815,7 @@ argument_list|,
 argument|if_list
 argument_list|)
 block|{
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifn
 argument_list|)
@@ -1027,7 +1034,7 @@ name|SCTP_ADDR_DEFER_USE
 expr_stmt|;
 block|}
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifn
 argument_list|)

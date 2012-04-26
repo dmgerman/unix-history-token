@@ -914,15 +914,6 @@ operator|&
 name|capfd
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
 comment|/* 	 * Release our reference to the file (kern_capwrap has held a reference 	 * for the filedesc array). 	 */
 name|fdrop
 argument_list|(
@@ -931,6 +922,12 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
 name|td
 operator|->
 name|td_retval
@@ -942,7 +939,7 @@ name|capfd
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}

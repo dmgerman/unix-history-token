@@ -1984,6 +1984,8 @@ name|tmpname
 argument_list|,
 name|CTF_COMPRESS
 operator||
+name|CTF_SWAP_BYTES
+operator||
 name|keep_stabs
 argument_list|)
 expr_stmt|;
@@ -3785,6 +3787,8 @@ argument_list|,
 name|tmpname
 argument_list|,
 name|CTF_COMPRESS
+operator||
+name|CTF_SWAP_BYTES
 operator||
 name|write_fuzzy_match
 operator||

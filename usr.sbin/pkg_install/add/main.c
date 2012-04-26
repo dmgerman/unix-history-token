@@ -485,6 +485,14 @@ literal|"/packages-8.2-release"
 block|}
 block|,
 block|{
+literal|803000
+block|,
+literal|803499
+block|,
+literal|"/packages-8.3-release"
+block|}
+block|,
+block|{
 literal|900000
 block|,
 literal|900499
@@ -1647,7 +1655,7 @@ name|setenv
 argument_list|(
 literal|"PATH"
 argument_list|,
-literal|"/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin:/usr/X11R6/bin"
+literal|"/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin"
 argument_list|,
 literal|1
 argument_list|)

@@ -123,7 +123,7 @@ decl_stmt|;
 name|size_t
 name|size
 decl_stmt|;
-name|off_t
+name|int64_t
 name|offset
 decl_stmt|;
 name|int
@@ -171,7 +171,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|archive_read_support_compression_all
+name|archive_read_support_filter_all
 argument_list|(
 name|a
 argument_list|)
@@ -1171,9 +1171,11 @@ name|ARCHIVE_FORMAT_ISO9660_ROCKRIDGE
 argument_list|)
 expr_stmt|;
 comment|/* Close the archive. */
-name|assertEqualInt
+name|assertEqualIntA
 argument_list|(
-literal|0
+name|a
+argument_list|,
+name|ARCHIVE_OK
 argument_list|,
 name|archive_read_close
 argument_list|(
@@ -1183,9 +1185,9 @@ argument_list|)
 expr_stmt|;
 name|assertEqualInt
 argument_list|(
-literal|0
+name|ARCHIVE_OK
 argument_list|,
-name|archive_read_finish
+name|archive_read_free
 argument_list|(
 name|a
 argument_list|)

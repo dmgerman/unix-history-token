@@ -112,6 +112,8 @@ block|,
 comment|// C++0x char32_t
 name|TST_int
 block|,
+name|TST_int128
+block|,
 name|TST_half
 block|,
 comment|// OpenCL half, ARM NEON __fp16
@@ -161,7 +163,7 @@ block|,
 comment|// __unknown_anytype extension
 name|TST_atomic
 block|,
-comment|// C1X _Atomic
+comment|// C11 _Atomic
 name|TST_error
 comment|// erroneous type
 block|}
@@ -248,6 +250,11 @@ block|,
 comment|/// An Objective C property is a logical field of an Objective-C
 comment|/// object which is read and written via Objective C method calls.
 name|OK_ObjCProperty
+block|,
+comment|/// An Objective C array/dictionary subscripting which reads an object
+comment|/// or writes at the subscripted array/dictionary element via
+comment|/// Objective C method calls.
+name|OK_ObjCSubscript
 block|}
 enum|;
 comment|// \brief Describes the kind of template specialization that a

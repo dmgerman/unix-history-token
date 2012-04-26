@@ -518,20 +518,99 @@ begin_comment
 comment|/*  * Blocking I/O is enabled on any TCP type socket by default. For the UDP  * model if this is turned on then the socket buffer is shared for send  * resources amongst all associations.  The default for the UDP model is that  * is SS_NBIO is set.  Which means all associations have a separate send  * limit BUT they will NOT ever BLOCK instead you will get an error back  * EAGAIN if you try to send too much. If you want the blocking semantics you  * set this option at the cost of sharing one socket send buffer size amongst  * all associations. Peeled off sockets turn this option off and block. But  * since both TCP and peeled off sockets have only one assoc per socket this  * is fine. It probably does NOT make sense to set this on SS_NBIO on a TCP  * model OR peeled off UDP model, but we do allow you to do so. You just use  * the normal syscall to toggle SS_NBIO the way you want.  *  * Blocking I/O is controlled by the SS_NBIO flag on the socket state so_state  * field.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SCTP_ENABLE_STREAM_RESET
+value|0x00000900
+end_define
+
 begin_comment
-comment|/* these should probably go into sockets API */
+comment|/* struct 							 * sctp_assoc_value */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SCTP_RESET_STREAMS
-value|0x00001004
+value|0x00000901
 end_define
 
 begin_comment
-comment|/* wo */
+comment|/* struct 							 * sctp_reset_streams */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_RESET_ASSOC
+value|0x00000902
+end_define
+
+begin_comment
+comment|/* sctp_assoc_t */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_ADD_STREAMS
+value|0x00000903
+end_define
+
+begin_comment
+comment|/* struct 							 * sctp_add_streams */
+end_comment
+
+begin_comment
+comment|/* For enable stream reset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_ENABLE_RESET_STREAM_REQ
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_ENABLE_RESET_ASSOC_REQ
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_ENABLE_CHANGE_ASSOC_REQ
+value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_ENABLE_VALUE_MASK
+value|0x00000007
+end_define
+
+begin_comment
+comment|/* For reset streams */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_STREAM_RESET_INCOMING
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_STREAM_RESET_OUTGOING
+value|0x00000002
+end_define
 
 begin_comment
 comment|/* here on down are more implementation specific */

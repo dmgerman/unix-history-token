@@ -21,14 +21,6 @@ directive|include
 file|"includes.h"
 end_include
 
-begin_expr_stmt
-name|__RCSID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_include
 include|#
 directive|include
@@ -1373,19 +1365,6 @@ name|defined
 argument_list|(
 name|HAVE_GETUTXUSER
 argument_list|)
-return|return
-operator|(
-name|utmpx_get_entry
-argument_list|(
-name|li
-argument_list|)
-operator|)
-return|;
-endif|#
-directive|endif
-if|#
-directive|if
-literal|1
 return|return
 operator|(
 name|utmpx_get_entry

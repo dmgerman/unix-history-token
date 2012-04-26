@@ -70,7 +70,7 @@ begin_define
 define|#
 directive|define
 name|ATH_TXBUF
-value|512
+value|128
 end_define
 
 begin_define
@@ -327,6 +327,14 @@ name|int
 name|paused
 decl_stmt|;
 comment|/*>0 if the TID has been paused */
+name|int
+name|bar_wait
+decl_stmt|;
+comment|/* waiting for BAR */
+name|int
+name|bar_tx
+decl_stmt|;
+comment|/* BAR TXed */
 comment|/* 	 * Is the TID being cleaned up after a transition 	 * from aggregation to non-aggregation? 	 * When this is set to 1, this TID will be paused 	 * and no further traffic will be queued until all 	 * the hardware packets pending for this TID have been 	 * TXed/completed; at which point (non-aggregation) 	 * traffic will resume being TXed. 	 */
 name|int
 name|cleanup_inprogress
@@ -538,10 +546,6 @@ name|int
 name|bf_nseg
 decl_stmt|;
 name|uint16_t
-name|bf_txflags
-decl_stmt|;
-comment|/* tx descriptor flags */
-name|uint16_t
 name|bf_flags
 decl_stmt|;
 comment|/* status flags (below) */
@@ -661,66 +665,67 @@ name|uint16_t
 name|bfs_ndelim
 decl_stmt|;
 comment|/* number of delims for padding */
-name|int
+name|u_int32_t
 name|bfs_aggr
 range|:
 literal|1
-decl_stmt|;
+decl_stmt|,
 comment|/* part of aggregate? */
-name|int
 name|bfs_aggrburst
 range|:
 literal|1
-decl_stmt|;
+decl_stmt|,
 comment|/* part of aggregate burst? */
-name|int
 name|bfs_isretried
 range|:
 literal|1
-decl_stmt|;
+decl_stmt|,
 comment|/* retried frame? */
-name|int
 name|bfs_dobaw
 range|:
 literal|1
-decl_stmt|;
+decl_stmt|,
 comment|/* actually check against BAW? */
-name|int
 name|bfs_addedbaw
 range|:
 literal|1
-decl_stmt|;
+decl_stmt|,
 comment|/* has been added to the BAW */
-name|int
 name|bfs_shpream
 range|:
 literal|1
-decl_stmt|;
+decl_stmt|,
 comment|/* use short preamble */
-name|int
 name|bfs_istxfrag
 range|:
 literal|1
-decl_stmt|;
+decl_stmt|,
 comment|/* is fragmented */
-name|int
 name|bfs_ismrr
 range|:
 literal|1
-decl_stmt|;
+decl_stmt|,
 comment|/* do multi-rate TX retry */
-name|int
 name|bfs_doprot
 range|:
 literal|1
-decl_stmt|;
+decl_stmt|,
 comment|/* do RTS/CTS based protection */
-name|int
 name|bfs_doratelookup
 range|:
 literal|1
-decl_stmt|;
+decl_stmt|,
 comment|/* do rate lookup before each TX */
+name|bfs_need_seqno
+range|:
+literal|1
+decl_stmt|,
+comment|/* need to assign a seqno for aggr */
+name|bfs_seqno_assigned
+range|:
+literal|1
+decl_stmt|;
+comment|/* seqno has been assigned */
 name|int
 name|bfs_nfl
 decl_stmt|;
@@ -743,9 +748,9 @@ name|bfs_al
 decl_stmt|;
 comment|/* length of aggregate */
 name|int
-name|bfs_flags
+name|bfs_txflags
 decl_stmt|;
-comment|/* HAL descriptor flags */
+comment|/* HAL (tx) descriptor flags */
 name|int
 name|bfs_txrate0
 decl_stmt|;
@@ -1252,6 +1257,10 @@ comment|/* interface statistics */
 name|struct
 name|ath_tx_aggr_stats
 name|sc_aggr_stats
+decl_stmt|;
+name|struct
+name|ath_intr_stats
+name|sc_intr_stats
 decl_stmt|;
 name|int
 name|sc_debug
@@ -1835,6 +1844,11 @@ name|task
 name|sc_txtask
 decl_stmt|;
 comment|/* tx int processing */
+name|struct
+name|task
+name|sc_txqtask
+decl_stmt|;
+comment|/* tx proc processing */
 name|int
 name|sc_wd_timer
 decl_stmt|;
@@ -1891,6 +1905,16 @@ name|task
 name|sc_bstucktask
 decl_stmt|;
 comment|/* stuck beacon processing */
+name|struct
+name|task
+name|sc_resettask
+decl_stmt|;
+comment|/* interface reset task */
+name|struct
+name|task
+name|sc_fataltask
+decl_stmt|;
+comment|/* fatal task */
 enum|enum
 block|{
 name|OK
@@ -1995,6 +2019,18 @@ name|int
 name|sc_rxchainmask
 decl_stmt|;
 comment|/* currently configured RX chainmask */
+name|int
+name|sc_rts_aggr_limit
+decl_stmt|;
+comment|/* TX limit on RTS aggregates */
+comment|/* Queue limits */
+comment|/* 	 * To avoid queue starvation in congested conditions, 	 * these parameters tune the maximum number of frames 	 * queued to the data/mcastq before they're dropped. 	 * 	 * This is to prevent: 	 * + a single destination overwhelming everything, including 	 *   management/multicast frames; 	 * + multicast frames overwhelming everything (when the 	 *   air is sufficiently busy that cabq can't drain.) 	 * 	 * These implement: 	 * + data_minfree is the maximum number of free buffers 	 *   overall to successfully allow a data frame. 	 * 	 * + mcastq_maxdepth is the maximum depth allowed of the cabq. 	 */
+name|int
+name|sc_txq_data_minfree
+decl_stmt|;
+name|int
+name|sc_txq_mcastq_maxdepth
+decl_stmt|;
 comment|/* 	 * Aggregation twiddles 	 * 	 * hwq_limit:	how busy to keep the hardware queue - don't schedule 	 *		further packets to the hardware, regardless of the TID 	 * tid_hwq_lo:	how low the per-TID hwq count has to be before the 	 *		TID will be scheduled again 	 * tid_hwq_hi:	how many frames to queue to the HWQ before the TID 	 *		stops being scheduled. 	 */
 name|int
 name|sc_hwq_limit
@@ -3938,7 +3974,7 @@ parameter_list|(
 name|_ah
 parameter_list|)
 define|\
-value|(ath_hal_getcapability(_ah, HAL_CAP_INTMIT, HAL_CAP_INTMIT_PRESENT, NULL) == HAL_OK)
+value|(ath_hal_getcapability(_ah, HAL_CAP_INTMIT, \ 	HAL_CAP_INTMIT_PRESENT, NULL) == HAL_OK)
 end_define
 
 begin_define
@@ -3949,7 +3985,7 @@ parameter_list|(
 name|_ah
 parameter_list|)
 define|\
-value|(ath_hal_getcapability(_ah, HAL_CAP_INTMIT, HAL_CAP_INTMIT_ENABLE, NULL) == HAL_OK)
+value|(ath_hal_getcapability(_ah, HAL_CAP_INTMIT, \ 	HAL_CAP_INTMIT_ENABLE, NULL) == HAL_OK)
 end_define
 
 begin_define
@@ -3962,7 +3998,7 @@ parameter_list|,
 name|_v
 parameter_list|)
 define|\
-value|ath_hal_setcapability(_ah, HAL_CAP_INTMIT, HAL_CAP_INTMIT_ENABLE, _v, NULL)
+value|ath_hal_setcapability(_ah, HAL_CAP_INTMIT, \ 	HAL_CAP_INTMIT_ENABLE, _v, NULL)
 end_define
 
 begin_define
@@ -4007,12 +4043,38 @@ end_define
 begin_define
 define|#
 directive|define
+name|ath_hal_setrxchainmask
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_rx
+parameter_list|)
+define|\
+value|(ath_hal_setcapability(_ah, HAL_CAP_RX_CHAINMASK, 1, _rx, NULL))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_settxchainmask
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_tx
+parameter_list|)
+define|\
+value|(ath_hal_setcapability(_ah, HAL_CAP_TX_CHAINMASK, 1, _tx, NULL))
+end_define
+
+begin_define
+define|#
+directive|define
 name|ath_hal_split4ktrans
 parameter_list|(
 name|_ah
 parameter_list|)
 define|\
-value|(ath_hal_getcapability(_ah, HAL_CAP_SPLIT_4KB_TRANS, 0, NULL) == HAL_OK)
+value|(ath_hal_getcapability(_ah, HAL_CAP_SPLIT_4KB_TRANS, \ 	0, NULL) == HAL_OK)
 end_define
 
 begin_define
@@ -4023,7 +4085,7 @@ parameter_list|(
 name|_ah
 parameter_list|)
 define|\
-value|(ath_hal_getcapability(_ah, HAL_CAP_RXDESC_SELFLINK, 0, NULL) == HAL_OK)
+value|(ath_hal_getcapability(_ah, HAL_CAP_RXDESC_SELFLINK, \ 	0, NULL) == HAL_OK)
 end_define
 
 begin_define
@@ -4045,7 +4107,7 @@ parameter_list|(
 name|_ah
 parameter_list|)
 define|\
-value|(ath_hal_getcapability(_ah, HAL_CAP_LONG_RXDESC_TSF, 0, NULL) == HAL_OK)
+value|(ath_hal_getcapability(_ah, HAL_CAP_LONG_RXDESC_TSF, \ 	0, NULL) == HAL_OK)
 end_define
 
 begin_define
@@ -4265,9 +4327,11 @@ parameter_list|,
 name|_first
 parameter_list|,
 name|_last
+parameter_list|,
+name|_lastaggr
 parameter_list|)
 define|\
-value|((*(_ah)->ah_chainTxDesc)((_ah), (_ds), (_pktlen), (_hdrlen), \ 	(_type), (_keyix), (_cipher), (_delims), (_seglen), \ 	(_first), (_last)))
+value|((*(_ah)->ah_chainTxDesc)((_ah), (_ds), (_pktlen), (_hdrlen), \ 	(_type), (_keyix), (_cipher), (_delims), (_seglen), \ 	(_first), (_last), (_lastaggr)))
 end_define
 
 begin_define
@@ -4381,66 +4445,6 @@ define|\
 value|((*(_ah)->ah_clr11nAggr)((_ah), (_ds)))
 end_define
 
-begin_comment
-comment|/*  * This is badly-named; you need to set the correct parameters  * to begin to receive useful radar events; and even then  * it doesn't "enable" DFS. See the ath_dfs/null/ module for  * more information.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ath_hal_enabledfs
-parameter_list|(
-name|_ah
-parameter_list|,
-name|_param
-parameter_list|)
-define|\
-value|((*(_ah)->ah_enableDfs)((_ah), (_param)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ath_hal_getdfsthresh
-parameter_list|(
-name|_ah
-parameter_list|,
-name|_param
-parameter_list|)
-define|\
-value|((*(_ah)->ah_getDfsThresh)((_ah), (_param)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ath_hal_procradarevent
-parameter_list|(
-name|_ah
-parameter_list|,
-name|_rxs
-parameter_list|,
-name|_fulltsf
-parameter_list|,
-name|_buf
-parameter_list|,
-name|_event
-parameter_list|)
-define|\
-value|((*(_ah)->ah_procRadarEvent)((_ah), (_rxs), (_fulltsf), (_buf), (_event)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ath_hal_is_fast_clock_enabled
-parameter_list|(
-name|_ah
-parameter_list|)
-define|\
-value|((*(_ah)->ah_isFastClockEnabled)((_ah)))
-end_define
-
 begin_define
 define|#
 directive|define
@@ -4499,6 +4503,66 @@ define|\
 value|((*(_ah)->ah_gpioSetIntr)((_ah), (_gpio), (_b)))
 end_define
 
+begin_comment
+comment|/*  * This is badly-named; you need to set the correct parameters  * to begin to receive useful radar events; and even then  * it doesn't "enable" DFS. See the ath_dfs/null/ module for  * more information.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ath_hal_enabledfs
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_param
+parameter_list|)
+define|\
+value|((*(_ah)->ah_enableDfs)((_ah), (_param)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_getdfsthresh
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_param
+parameter_list|)
+define|\
+value|((*(_ah)->ah_getDfsThresh)((_ah), (_param)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_procradarevent
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_rxs
+parameter_list|,
+name|_fulltsf
+parameter_list|,
+name|_buf
+parameter_list|,
+name|_event
+parameter_list|)
+define|\
+value|((*(_ah)->ah_procRadarEvent)((_ah), (_rxs), (_fulltsf), \ 	(_buf), (_event)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_is_fast_clock_enabled
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|((*(_ah)->ah_isFastClockEnabled)((_ah)))
+end_define
+
 begin_define
 define|#
 directive|define
@@ -4510,6 +4574,17 @@ name|_chan
 parameter_list|)
 define|\
 value|((*(_ah)->ah_radarWait)((_ah), (_chan)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_get_chan_ext_busy
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|((*(_ah)->ah_get11nExtBusy)((_ah)))
 end_define
 
 begin_endif

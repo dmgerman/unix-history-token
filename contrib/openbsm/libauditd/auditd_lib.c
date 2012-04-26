@@ -1994,6 +1994,11 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+name|closedir
+argument_list|(
+name|dirp
+argument_list|)
+expr_stmt|;
 block|}
 name|oldest_time
 operator|=

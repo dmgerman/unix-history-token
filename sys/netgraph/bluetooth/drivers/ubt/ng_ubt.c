@@ -2549,6 +2549,9 @@ name|m_pkthdr
 operator|.
 name|len
 operator|<
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -2788,7 +2791,7 @@ name|usb_page_cache
 modifier|*
 name|pc
 decl_stmt|;
-name|uint16_t
+name|int
 name|len
 decl_stmt|;
 name|int
@@ -2975,6 +2978,9 @@ name|m_pkthdr
 operator|.
 name|len
 operator|<
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -3021,7 +3027,10 @@ if|if
 condition|(
 name|len
 operator|!=
-operator|(
+call|(
+name|int
+call|)
+argument_list|(
 name|m
 operator|->
 name|m_pkthdr
@@ -3033,7 +3042,7 @@ argument_list|(
 operator|*
 name|hdr
 argument_list|)
-operator|)
+argument_list|)
 condition|)
 block|{
 name|UBT_ERR
@@ -5831,6 +5840,9 @@ name|len
 operator|-
 literal|1
 operator|>
+operator|(
+name|int
+operator|)
 name|UBT_CTRL_BUFFER_SIZE
 condition|)
 name|panic

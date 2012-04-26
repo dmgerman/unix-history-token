@@ -128,7 +128,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<mips/nlm/hal/mips-extns.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<mips/nlm/hal/uart.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<mips/nlm/board.h>
 end_include
 
 begin_decl_stmt
@@ -160,7 +172,6 @@ parameter_list|)
 block|{
 return|return
 operator|(
-operator|(
 name|b1
 operator|->
 name|bsh
@@ -176,11 +187,6 @@ operator|==
 name|b2
 operator|->
 name|bst
-operator|)
-condition|?
-literal|1
-else|:
-literal|0
 operator|)
 return|;
 block|}
@@ -235,7 +241,7 @@ name|nlm_get_uart_regbase
 argument_list|(
 literal|0
 argument_list|,
-literal|0
+name|BOARD_CONSOLE_UART
 argument_list|)
 expr_stmt|;
 name|di
@@ -253,13 +259,13 @@ name|bas
 operator|.
 name|rclk
 operator|=
-literal|133000000
+name|XLP_IO_CLK
 expr_stmt|;
 name|di
 operator|->
 name|baudrate
 operator|=
-literal|115200
+name|BOARD_CONSOLE_SPEED
 expr_stmt|;
 name|di
 operator|->

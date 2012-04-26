@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2009  Internet Systems Consortium, Inc. ("ISC")  *  
 end_comment
 
 begin_comment
-comment|/* $Id: dnsconf.c,v 1.4 2009-09-02 23:48:03 tbox Exp $ */
+comment|/* $Id: dnsconf.c,v 1.4 2009/09/02 23:48:03 tbox Exp $ */
 end_comment
 
 begin_comment

@@ -3135,7 +3135,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Play: %d Hz, %d ch, %s format\n"
+literal|"Play: %d Hz, %d ch, %s format.\n"
 argument_list|,
 name|sc
 operator|->
@@ -3167,7 +3167,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"No playback!\n"
+literal|"No playback.\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3184,7 +3184,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Record: %d Hz, %d ch, %s format\n"
+literal|"Record: %d Hz, %d ch, %s format.\n"
 argument_list|,
 name|sc
 operator|->
@@ -3216,7 +3216,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"No recording!\n"
+literal|"No recording.\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3245,7 +3245,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"MIDI sequencer\n"
+literal|"MIDI sequencer.\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3255,7 +3255,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"No midi sequencer\n"
+literal|"No midi sequencer.\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3273,6 +3273,26 @@ name|func
 operator|=
 name|SCF_PCM
 expr_stmt|;
+comment|/* 	 * Only attach a PCM device if we have a playback, recording 	 * or mixer device present: 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_play_chan
+operator|.
+name|valid
+operator|||
+name|sc
+operator|->
+name|sc_rec_chan
+operator|.
+name|valid
+operator|||
+name|sc
+operator|->
+name|sc_mix_info
+condition|)
+block|{
 name|child
 operator|=
 name|device_add_child
@@ -3311,6 +3331,7 @@ operator|->
 name|sc_sndcard_func
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|bus_generic_attach
@@ -5876,15 +5897,6 @@ modifier|*
 name|pc
 decl_stmt|;
 name|uint32_t
-name|n
-decl_stmt|;
-name|uint32_t
-name|m
-decl_stmt|;
-name|uint32_t
-name|blockcount
-decl_stmt|;
-name|uint32_t
 name|offset0
 decl_stmt|;
 name|uint32_t
@@ -5894,6 +5906,12 @@ name|uint32_t
 name|mfl
 decl_stmt|;
 name|int
+name|m
+decl_stmt|;
+name|int
+name|n
+decl_stmt|;
+name|int
 name|len
 decl_stmt|;
 name|int
@@ -5901,6 +5919,9 @@ name|actlen
 decl_stmt|;
 name|int
 name|nframes
+decl_stmt|;
+name|int
+name|blockcount
 decl_stmt|;
 name|usbd_xfer_status
 argument_list|(
@@ -6027,12 +6048,10 @@ name|m
 operator|>
 name|len
 condition|)
-block|{
 name|m
 operator|=
 name|len
 expr_stmt|;
-block|}
 name|usbd_copy_out
 argument_list|(
 name|pc
@@ -8783,7 +8802,7 @@ modifier|*
 name|d
 parameter_list|,
 name|uint8_t
-name|index
+name|i
 parameter_list|)
 block|{
 name|uint32_t
@@ -8795,7 +8814,7 @@ name|uint32_t
 name|offset
 init|=
 operator|(
-name|index
+name|i
 operator|*
 name|d
 operator|->
@@ -12431,8 +12450,8 @@ block|}
 end_function
 
 begin_function
-specifier|const
 specifier|static
+specifier|const
 name|struct
 name|uaudio_terminal_node
 modifier|*
@@ -12445,7 +12464,7 @@ modifier|*
 name|iot
 parameter_list|,
 name|uint8_t
-name|index
+name|i
 parameter_list|)
 block|{
 name|struct
@@ -12497,10 +12516,9 @@ block|{
 if|if
 condition|(
 operator|!
-name|index
+name|i
 operator|--
 condition|)
-block|{
 return|return
 operator|(
 name|root
@@ -12508,7 +12526,6 @@ operator|+
 name|n
 operator|)
 return|;
-block|}
 block|}
 block|}
 do|while
@@ -12526,8 +12543,8 @@ block|}
 end_function
 
 begin_function
-specifier|const
 specifier|static
+specifier|const
 name|struct
 name|uaudio_terminal_node
 modifier|*
@@ -12540,7 +12557,7 @@ modifier|*
 name|iot
 parameter_list|,
 name|uint8_t
-name|index
+name|i
 parameter_list|)
 block|{
 name|struct
@@ -12592,10 +12609,9 @@ block|{
 if|if
 condition|(
 operator|!
-name|index
+name|i
 operator|--
 condition|)
-block|{
 return|return
 operator|(
 name|root
@@ -12603,7 +12619,6 @@ operator|+
 name|n
 operator|)
 return|;
-block|}
 block|}
 block|}
 do|while

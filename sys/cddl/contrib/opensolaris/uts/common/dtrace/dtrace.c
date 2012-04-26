@@ -1195,6 +1195,11 @@ name|defined
 argument_list|(
 name|__amd64__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__mips__
+argument_list|)
 end_if
 
 begin_decl_stmt
@@ -11861,6 +11866,23 @@ return|;
 endif|#
 directive|endif
 block|}
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|sun
+argument_list|)
+case|case
+name|DIF_VAR_CPU
+case|:
+block|{
+return|return
+name|curcpu
+return|;
+block|}
+endif|#
+directive|endif
 default|default:
 name|DTRACE_CPUFLAG_SET
 argument_list|(
@@ -44697,6 +44719,11 @@ directive|if
 name|defined
 argument_list|(
 name|__amd64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__mips__
 argument_list|)
 comment|/* 	 * FreeBSD isn't good at limiting the amount of memory we 	 * ask to malloc, so let's place a limit here before trying 	 * to do something that might well end in tears at bedtime. 	 */
 if|if

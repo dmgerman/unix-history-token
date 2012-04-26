@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: sys_bsd.c 10941 2002-04-18 16:18:43Z joda $"
+literal|"$Id$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2507,9 +2507,10 @@ modifier|*
 name|cols
 parameter_list|)
 block|{
-name|struct
-name|winsize
-name|ws
+name|int
+name|irows
+decl_stmt|,
+name|icols
 decl_stmt|;
 if|if
 condition|(
@@ -2518,7 +2519,10 @@ argument_list|(
 name|STDIN_FILENO
 argument_list|,
 operator|&
-name|ws
+name|irows
+argument_list|,
+operator|&
+name|icols
 argument_list|)
 operator|==
 literal|0
@@ -2527,16 +2531,12 @@ block|{
 operator|*
 name|rows
 operator|=
-name|ws
-operator|.
-name|ws_row
+name|irows
 expr_stmt|;
 operator|*
 name|cols
 operator|=
-name|ws
-operator|.
-name|ws_col
+name|icols
 expr_stmt|;
 return|return
 literal|1

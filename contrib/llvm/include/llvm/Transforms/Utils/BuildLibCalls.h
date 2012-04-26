@@ -79,6 +79,9 @@ decl_stmt|;
 name|class
 name|TargetData
 decl_stmt|;
+name|class
+name|TargetLibraryInfo
+decl_stmt|;
 comment|/// CastToCStr - Return V if it is an i8*, otherwise cast it to i8*.
 name|Value
 modifier|*
@@ -346,9 +349,7 @@ name|Value
 operator|*
 name|Op
 argument_list|,
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|Name
 argument_list|,
 name|IRBuilder
@@ -454,6 +455,11 @@ specifier|const
 name|TargetData
 operator|*
 name|TD
+argument_list|,
+specifier|const
+name|TargetLibraryInfo
+operator|*
+name|TLI
 argument_list|)
 decl_stmt|;
 comment|/// EmitFWrite - Emit a call to the fwrite function.  This assumes that Ptr is
@@ -483,6 +489,11 @@ specifier|const
 name|TargetData
 operator|*
 name|TD
+argument_list|,
+specifier|const
+name|TargetLibraryInfo
+operator|*
+name|TLI
 argument_list|)
 decl_stmt|;
 comment|/// SimplifyFortifiedLibCalls - Helper class for folding checked library

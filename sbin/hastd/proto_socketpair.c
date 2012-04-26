@@ -217,8 +217,9 @@ name|spctx
 operator|->
 name|sp_fd
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|ret

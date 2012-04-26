@@ -112,8 +112,8 @@ name|isLittleEndianHost
 argument_list|()
 return|;
 block|}
-comment|/// getHostTriple() - Return the target triple of the running
-comment|/// system.
+comment|/// getDefaultTargetTriple() - Return the default target triple the compiler
+comment|/// has been configured to produce code for.
 comment|///
 comment|/// The target triple is a string in the format of:
 comment|///   CPU_TYPE-VENDOR-OPERATING_SYSTEM
@@ -122,7 +122,7 @@ comment|///   CPU_TYPE-VENDOR-KERNEL-OPERATING_SYSTEM
 name|std
 operator|::
 name|string
-name|getHostTriple
+name|getDefaultTargetTriple
 argument_list|()
 expr_stmt|;
 comment|/// getHostCPUName - Get the LLVM name for the host CPU. The particular format

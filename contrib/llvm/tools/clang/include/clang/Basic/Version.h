@@ -126,7 +126,7 @@ define|#
 directive|define
 name|CLANG_VERSION_STRING
 define|\
-value|CLANG_MAKE_VERSION_STRING(CLANG_VERSION_MAJOR,CLANG_VERSION_MINOR,CLANG_VERSION_PATCHLEVEL)
+value|CLANG_MAKE_VERSION_STRING(CLANG_VERSION_MAJOR,CLANG_VERSION_MINOR, \                             CLANG_VERSION_PATCHLEVEL)
 end_define
 
 begin_else
@@ -184,12 +184,29 @@ name|string
 name|getClangRepositoryPath
 argument_list|()
 expr_stmt|;
+comment|/// \brief Retrieves the repository path from which LLVM was built. Supports
+comment|/// LLVM residing in a separate repository from clang.
+name|std
+operator|::
+name|string
+name|getLLVMRepositoryPath
+argument_list|()
+expr_stmt|;
 comment|/// \brief Retrieves the repository revision number (or identifer) from which
 comment|///  this Clang was built.
 name|std
 operator|::
 name|string
 name|getClangRevision
+argument_list|()
+expr_stmt|;
+comment|/// \brief Retrieves the repository revision number (or identifer) from which
+comment|/// LLVM was built. If Clang and LLVM are in the same repository, this returns
+comment|/// the same string as getClangRevision.
+name|std
+operator|::
+name|string
+name|getLLVMRevision
 argument_list|()
 expr_stmt|;
 comment|/// \brief Retrieves the full repository version that is an amalgamation of

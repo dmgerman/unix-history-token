@@ -113,12 +113,10 @@ begin_function
 name|int
 name|closedir
 parameter_list|(
-name|dirp
-parameter_list|)
 name|DIR
 modifier|*
 name|dirp
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|fd
@@ -135,16 +133,6 @@ operator|->
 name|dd_lock
 argument_list|)
 expr_stmt|;
-name|_seekdir
-argument_list|(
-name|dirp
-argument_list|,
-name|dirp
-operator|->
-name|dd_rewind
-argument_list|)
-expr_stmt|;
-comment|/* free seekdir storage */
 name|fd
 operator|=
 name|dirp

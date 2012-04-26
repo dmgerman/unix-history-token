@@ -599,13 +599,29 @@ modifier|*
 name|osd
 decl_stmt|;
 comment|/* storage for Khelp module data */
+name|u_int
+name|t_keepinit
+decl_stmt|;
+comment|/* time to establish connection */
+name|u_int
+name|t_keepidle
+decl_stmt|;
+comment|/* time before keepalive probes begin */
+name|u_int
+name|t_keepintvl
+decl_stmt|;
+comment|/* interval between keepalives */
+name|u_int
+name|t_keepcnt
+decl_stmt|;
+comment|/* number of keepalives before close */
 name|uint32_t
 name|t_ispare
 index|[
-literal|12
+literal|8
 index|]
 decl_stmt|;
-comment|/* 4 keep timers, 5 UTO, 3 TBD */
+comment|/* 5 UTO, 3 TBD */
 name|void
 modifier|*
 name|t_pspare2
@@ -2960,6 +2976,8 @@ parameter_list|(
 name|struct
 name|tcpcb
 modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|,

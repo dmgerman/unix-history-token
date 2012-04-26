@@ -376,7 +376,7 @@ operator|<=
 name|MPT_MAX_PERSONALITIES
 argument_list|,
 operator|(
-literal|"mpt_pers_find: starting position out of range\n"
+literal|"mpt_pers_find: starting position out of range"
 operator|)
 argument_list|)
 block|;
@@ -3947,6 +3947,29 @@ argument_list|,
 literal|"hard reset\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mpt
+operator|->
+name|is_1078
+condition|)
+block|{
+name|mpt_write
+argument_list|(
+name|mpt
+argument_list|,
+name|MPT_OFFSET_RESET_1078
+argument_list|,
+literal|0x07
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|1000
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|error
 operator|=
 name|mpt_enable_diag_mode
@@ -4394,10 +4417,9 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"mpt_free_request bad req ptr\n"
+literal|"mpt_free_request: bad req ptr"
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 if|if
 condition|(
@@ -4796,7 +4818,7 @@ name|index
 index|]
 argument_list|,
 operator|(
-literal|"mpt_get_request: corrupted request free list\n"
+literal|"mpt_get_request: corrupted request free list"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -10469,6 +10491,28 @@ decl_stmt|;
 name|uint32_t
 name|data
 decl_stmt|;
+if|if
+condition|(
+name|mpt
+operator|->
+name|pci_pio_reg
+operator|==
+name|NULL
+condition|)
+block|{
+name|mpt_prt
+argument_list|(
+name|mpt
+argument_list|,
+literal|"No PIO resource!\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
 name|mpt_prt
 argument_list|(
 name|mpt

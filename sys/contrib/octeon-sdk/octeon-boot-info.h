@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Networks (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Networks nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM  NETWORKS MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
+comment|/***********************license start***************  * Copyright (c) 2003-2011  Cavium Inc. (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Inc. nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM INC. MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
 end_comment
 
 begin_comment
@@ -29,6 +29,23 @@ begin_include
 include|#
 directive|include
 file|<linux/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<asm/octeon/cvmx-asm.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|"cvmx-asm.h"
 end_include
 
 begin_endif
@@ -78,6 +95,336 @@ name|boot_init_vector_t
 typedef|;
 end_typedef
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__ASM_GBL_DATA_H
+argument_list|)
+end_if
+
+begin_comment
+comment|/* defined above */
+end_comment
+
+begin_comment
+comment|/*  * Definition of a data structure to mimic the old u-boot gd_t data structure.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|GD_TMP_STR_SIZE
+end_undef
+
+begin_define
+define|#
+directive|define
+name|GD_TMP_STR_SIZE
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_APP_GLOBAL_DATA_MAGIC
+value|0x221eb111476f410full
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_APP_GLOBAL_DATA_VERSION
+value|2
+end_define
+
+begin_struct
+struct|struct
+name|linux_app_global_data
+block|{
+name|bd_t
+modifier|*
+name|bd
+decl_stmt|;
+name|unsigned
+name|long
+name|flags
+decl_stmt|;
+name|unsigned
+name|long
+name|baudrate
+decl_stmt|;
+name|unsigned
+name|long
+name|have_console
+decl_stmt|;
+comment|/* serial_init() was called */
+name|uint64_t
+name|ram_size
+decl_stmt|;
+comment|/* RAM size */
+name|uint64_t
+name|reloc_off
+decl_stmt|;
+comment|/* Relocation Offset */
+name|unsigned
+name|long
+name|env_addr
+decl_stmt|;
+comment|/* Address  of Environment struct */
+name|unsigned
+name|long
+name|env_valid
+decl_stmt|;
+comment|/* Checksum of Environment valid? */
+name|unsigned
+name|long
+name|cpu_clock_mhz
+decl_stmt|;
+comment|/* CPU clock speed in MHz */
+name|unsigned
+name|long
+name|ddr_clock_mhz
+decl_stmt|;
+comment|/* DDR clock (not data rate!) in MHz */
+name|unsigned
+name|long
+name|ddr_ref_hertz
+decl_stmt|;
+comment|/* DDR Ref clock Hertz */
+name|int
+name|mcu_rev_maj
+decl_stmt|;
+name|int
+name|mcu_rev_min
+decl_stmt|;
+name|int
+name|console_uart
+decl_stmt|;
+comment|/* EEPROM data structures as read from EEPROM or populated by other      * means on boards without an EEPROM      */
+name|octeon_eeprom_board_desc_t
+name|board_desc
+decl_stmt|;
+name|octeon_eeprom_clock_desc_t
+name|clock_desc
+decl_stmt|;
+name|octeon_eeprom_mac_addr_t
+name|mac_desc
+decl_stmt|;
+name|void
+modifier|*
+modifier|*
+name|jt
+decl_stmt|;
+comment|/* jump table, not used */
+name|char
+modifier|*
+name|err_msg
+decl_stmt|;
+comment|/* pointer to error message to save 					 * until console is up.  Not used. 					 */
+union|union
+block|{
+struct|struct
+block|{
+comment|/* Keep under 32 bytes! */
+name|uint64_t
+name|magic
+decl_stmt|;
+name|uint32_t
+name|version
+decl_stmt|;
+name|uint32_t
+name|fdt_addr
+decl_stmt|;
+block|}
+struct|;
+name|char
+name|tmp_str
+index|[
+name|GD_TMP_STR_SIZE
+index|]
+decl_stmt|;
+block|}
+union|;
+name|unsigned
+name|long
+name|uboot_flash_address
+decl_stmt|;
+comment|/* Address of normal bootloader 						 * in flash 						 */
+name|unsigned
+name|long
+name|uboot_flash_size
+decl_stmt|;
+comment|/* Size of normal bootloader */
+name|uint64_t
+name|dfm_ram_size
+decl_stmt|;
+comment|/* DFM RAM size */
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|linux_app_global_data
+name|linux_app_global_data_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Flags for linux_app_global_data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LA_GD_FLG_RELOC
+value|0x0001
+end_define
+
+begin_comment
+comment|/* Code was relocated to RAM	 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LA_GD_FLG_DEVINIT
+value|0x0002
+end_define
+
+begin_comment
+comment|/* Devices have been initialized */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LA_GD_FLG_SILENT
+value|0x0004
+end_define
+
+begin_comment
+comment|/* Silent mode			 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LA_GD_FLG_CLOCK_DESC_MISSING
+value|0x0008
+end_define
+
+begin_define
+define|#
+directive|define
+name|LA_GD_FLG_BOARD_DESC_MISSING
+value|0x0010
+end_define
+
+begin_define
+define|#
+directive|define
+name|LA_GD_FLG_DDR_VERBOSE
+value|0x0020
+end_define
+
+begin_define
+define|#
+directive|define
+name|LA_GD_FLG_DDR0_CLK_INITIALIZED
+value|0x0040
+end_define
+
+begin_define
+define|#
+directive|define
+name|LA_GD_FLG_DDR1_CLK_INITIALIZED
+value|0x0080
+end_define
+
+begin_define
+define|#
+directive|define
+name|LA_GD_FLG_DDR2_CLK_INITIALIZED
+value|0x0100
+end_define
+
+begin_define
+define|#
+directive|define
+name|LA_GD_FLG_DDR3_CLK_INITIALIZED
+value|0x0200
+end_define
+
+begin_define
+define|#
+directive|define
+name|LA_GD_FLG_FAILSAFE_MODE
+value|0x0400
+end_define
+
+begin_comment
+comment|/* Use failsafe mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LA_GD_FLG_DDR_TRACE_INIT
+value|0x0800
+end_define
+
+begin_define
+define|#
+directive|define
+name|LA_GD_FLG_DFM_CLK_INITIALIZED
+value|0x1000
+end_define
+
+begin_define
+define|#
+directive|define
+name|LA_GD_FLG_DFM_VERBOSE
+value|0x2000
+end_define
+
+begin_define
+define|#
+directive|define
+name|LA_GD_FLG_DFM_TRACE_INIT
+value|0x4000
+end_define
+
+begin_define
+define|#
+directive|define
+name|LA_GD_FLG_MEMORY_PRESERVED
+value|0x8000
+end_define
+
+begin_define
+define|#
+directive|define
+name|LA_GD_FLG_RAM_RESIDENT
+value|0x10000
+end_define
+
+begin_comment
+comment|/* RAM boot detected */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __ASM_GBL_DATA_H */
+end_comment
+
 begin_comment
 comment|/*  * Definition of a data structure setup by the bootloader to enable Linux to  * launch SE apps on idle cores.  */
 end_comment
@@ -122,26 +469,16 @@ decl_stmt|;
 name|uint32_t
 name|led_display_base_addr
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|__OCTEON_NEWLIB__
 if|#
 directive|if
 name|defined
 argument_list|(
-name|__U_BOOT__
+name|__ASM_GBL_DATA_H
 argument_list|)
-operator|||
-operator|!
-name|defined
-argument_list|(
-name|__KERNEL__
-argument_list|)
-name|gd_t
+comment|/* defined above */
+name|linux_app_global_data_t
 name|gd
 decl_stmt|;
-endif|#
-directive|endif
 endif|#
 directive|endif
 block|}
@@ -211,7 +548,7 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|__OCTEON_NEWLIB__
+name|CVMX_BUILD_FOR_TOOLCHAIN
 argument_list|)
 end_if
 
@@ -226,13 +563,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|OCTEON_NUM_CORES
-value|16
-end_define
 
 begin_comment
 comment|/* Increment size for exception base addresses (4k minimum) */
@@ -285,11 +615,11 @@ begin_define
 define|#
 directive|define
 name|OCTEON_EXCEPTION_VECTOR_BLOCK_SIZE
-value|(OCTEON_NUM_CORES*EXCEPTION_BASE_INCR)
+value|(CVMX_MAX_CORES*EXCEPTION_BASE_INCR)
 end_define
 
 begin_comment
-comment|/* 16 4k blocks */
+comment|/* 32 4k blocks */
 end_comment
 
 begin_define
@@ -310,7 +640,7 @@ begin_define
 define|#
 directive|define
 name|BOOT_VECTOR_SIZE
-value|((OCTEON_NUM_CORES*4)*BOOT_VECTOR_NUM_WORDS)
+value|((CVMX_MAX_CORES*4)*BOOT_VECTOR_NUM_WORDS)
 end_define
 
 begin_endif

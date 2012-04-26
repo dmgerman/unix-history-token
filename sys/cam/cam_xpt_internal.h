@@ -302,6 +302,13 @@ modifier|*
 name|physpath
 decl_stmt|;
 comment|/* physical path string form */
+name|uint32_t
+name|rcap_len
+decl_stmt|;
+name|uint8_t
+modifier|*
+name|rcap_buf
+decl_stmt|;
 name|struct
 name|ata_params
 name|ident_data

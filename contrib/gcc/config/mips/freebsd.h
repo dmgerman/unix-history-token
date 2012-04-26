@@ -528,5 +528,17 @@ begin_comment
 comment|/************************[  Debugger stuff  ]*********************************/
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|DBX_DEBUGGING_INFO
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|MIPS_DEBUGGING_INFO
+end_undef
+
 end_unit
 

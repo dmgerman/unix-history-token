@@ -15,6 +15,12 @@ directive|define
 name|_COMPLEX_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -45,8 +51,39 @@ begin_define
 define|#
 directive|define
 name|_Complex_I
-value|1.0fi
+value|((float _Complex)1.0i)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__generic
+end_ifdef
+
+begin_assert
+assert|_Static_assert
+argument_list|(
+name|__generic
+argument_list|(
+name|_Complex_I
+argument_list|,
+name|float
+specifier|_Complex
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|)
+argument_list|,
+literal|"_Complex_I must be of type float _Complex"
+argument_list|)
+assert|;
+end_assert
 
 begin_endif
 endif|#
@@ -66,12 +103,6 @@ directive|define
 name|I
 value|_Complex_I
 end_define
-
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
 
 begin_function_decl
 name|__BEGIN_DECLS

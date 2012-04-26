@@ -419,7 +419,9 @@ name|res
 operator|->
 name|length
 operator|=
-literal|0
+operator|(
+name|usb_size_t
+operator|)
 operator|-
 literal|1
 expr_stmt|;
@@ -479,7 +481,9 @@ name|res
 operator|->
 name|length
 operator|=
-literal|0
+operator|(
+name|usb_size_t
+operator|)
 operator|-
 literal|1
 expr_stmt|;

@@ -863,7 +863,7 @@ break|break;
 case|case
 literal|'r'
 case|:
-comment|/* 				 * We accept and ignode -r for compatibility with 				 * historically disklabel usage. 				 */
+comment|/* 				 * We accept and ignore -r for compatibility with 				 * historical disklabel usage. 				 */
 break|break;
 case|case
 literal|'w'
@@ -1743,7 +1743,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"write to disk label supressed - label was as follows:"
+literal|"write to disk label suppressed - label was as follows:"
 argument_list|)
 expr_stmt|;
 name|display
@@ -6202,6 +6202,14 @@ operator|->
 name|d_secperunit
 operator|==
 literal|0
+operator|||
+name|lp
+operator|->
+name|d_secperunit
+operator|>
+name|vl
+operator|->
+name|d_secperunit
 condition|)
 name|lp
 operator|->
@@ -7771,7 +7779,7 @@ name|mediasize
 operator|/
 name|secsize
 expr_stmt|;
-comment|/* 	 * Nobody in these enligthened days uses the CHS geometry for 	 * anything, but nontheless try to get it right.  If we fail 	 * to get any good ideas from the device, construct something 	 * which is IBM-PC friendly. 	 */
+comment|/* 	 * Nobody in these enlightened days uses the CHS geometry for 	 * anything, but nonetheless try to get it right.  If we fail 	 * to get any good ideas from the device, construct something 	 * which is IBM-PC friendly. 	 */
 if|if
 condition|(
 name|ioctl

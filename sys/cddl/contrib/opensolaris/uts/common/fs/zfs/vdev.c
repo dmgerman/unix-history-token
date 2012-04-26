@@ -2281,6 +2281,10 @@ operator|!
 name|parent
 operator|->
 name|vdev_parent
+operator|&&
+name|alloctype
+operator|!=
+name|VDEV_ALLOC_ATTACH
 condition|)
 block|{
 name|ASSERT
@@ -3050,6 +3054,25 @@ operator|->
 name|vdev_ms_count
 operator|=
 literal|0
+expr_stmt|;
+if|if
+condition|(
+name|tvd
+operator|->
+name|vdev_mg
+condition|)
+name|ASSERT3P
+argument_list|(
+name|tvd
+operator|->
+name|vdev_mg
+argument_list|,
+operator|==
+argument_list|,
+name|svd
+operator|->
+name|vdev_mg
+argument_list|)
 expr_stmt|;
 name|tvd
 operator|->
@@ -5997,7 +6020,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Called once the vdevs are all opened, this routine validates the label  * contents.  This needs to be done before vdev_load() so that we don't  * inadvertently do repair I/Os to the wrong device.  *  * This function will only return failure if one of the vdevs indicates that it  * has since been destroyed or exported.  This is only possible if  * /etc/zfs/zpool.cache was readonly at the time.  Otherwise, the vdev state  * will be updated but the function will return 0.  */
+comment|/*  * Called once the vdevs are all opened, this routine validates the label  * contents.  This needs to be done before vdev_load() so that we don't  * inadvertently do repair I/Os to the wrong device.  *  * If 'strict' is false ignore the spa guid check. This is necessary because  * if the machine crashed during a re-guid the new guid might have been written  * to all of the vdev labels, but not the cached config. The strict check  * will be performed when the pool is opened again using the mos config.  *  * This function will only return failure if one of the vdevs indicates that it  * has since been destroyed or exported.  This is only possible if  * /etc/zfs/zpool.cache was readonly at the time.  Otherwise, the vdev state  * will be updated but the function will return 0.  */
 end_comment
 
 begin_function
@@ -6007,6 +6030,9 @@ parameter_list|(
 name|vdev_t
 modifier|*
 name|vd
+parameter_list|,
+name|boolean_t
+name|strict
 parameter_list|)
 block|{
 name|spa_t
@@ -6057,6 +6083,8 @@ name|vdev_child
 index|[
 name|c
 index|]
+argument_list|,
+name|strict
 argument_list|)
 operator|!=
 literal|0
@@ -6168,6 +6196,9 @@ return|;
 block|}
 if|if
 condition|(
+name|strict
+operator|&&
+operator|(
 name|nvlist_lookup_uint64
 argument_list|(
 name|label
@@ -6186,6 +6217,7 @@ name|spa_guid
 argument_list|(
 name|spa
 argument_list|)
+operator|)
 condition|)
 block|{
 name|vdev_set_state
@@ -6802,6 +6834,8 @@ operator|)
 name|vdev_validate
 argument_list|(
 name|vd
+argument_list|,
+name|B_TRUE
 argument_list|)
 expr_stmt|;
 block|}

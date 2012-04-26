@@ -96,8 +96,6 @@ argument|TargetJITInfo&tji
 argument_list|,
 argument|RTDyldMemoryManager *MemMgr
 argument_list|,
-argument|CodeGenOpt::Level OptLevel
-argument_list|,
 argument|bool AllocateGVsWithCode
 argument_list|)
 block|;
@@ -212,6 +210,7 @@ comment|/// If AbortOnFailure is false and no function with the given name is
 comment|/// found, this function silently returns a null pointer. Otherwise,
 comment|/// it prints a message to stderr and aborts.
 comment|///
+name|virtual
 name|void
 operator|*
 name|getPointerToNamedFunction
@@ -221,6 +220,28 @@ argument_list|,
 argument|bool AbortOnFailure = true
 argument_list|)
 block|;
+comment|/// mapSectionAddress - map a section to its target address space value.
+comment|/// Map the address of a JIT section as returned from the memory manager
+comment|/// to the address in the target process as the running code will see it.
+comment|/// This is the address which will be used for relocation resolution.
+name|virtual
+name|void
+name|mapSectionAddress
+argument_list|(
+argument|void *LocalAddress
+argument_list|,
+argument|uint64_t TargetAddress
+argument_list|)
+block|{
+name|Dyld
+operator|.
+name|mapSectionAddress
+argument_list|(
+name|LocalAddress
+argument_list|,
+name|TargetAddress
+argument_list|)
+block|;   }
 comment|/// @}
 comment|/// @name (Private) Registration Interfaces
 comment|/// @{
@@ -243,8 +264,6 @@ argument_list|,
 argument|std::string *ErrorStr
 argument_list|,
 argument|JITMemoryManager *JMM
-argument_list|,
-argument|CodeGenOpt::Level OptLevel
 argument_list|,
 argument|bool GVsWithCode
 argument_list|,

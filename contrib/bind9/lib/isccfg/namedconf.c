@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2002, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2002, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: namedconf.c,v 1.131.8.4 2011-05-23 20:56:11 each Exp $ */
+comment|/* $Id$ */
 end_comment
 
 begin_comment
@@ -5492,7 +5492,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  *  response-policy {  *	zone<string> [ policy (given|no-op|nxdomain|nodata|cname<domain> ) ];  *  };  *  * this is a chimera of doc_optional_keyvalue() and cfg_doc_enum()  */
+comment|/*  *  response-policy {  *	zone<string> [ policy (given|disabled|passthru|  *					nxdomain|nodata|cname<domain> ) ];  *  };  *  * this is a chimera of doc_optional_keyvalue() and cfg_doc_enum()  */
 end_comment
 
 begin_function
@@ -5913,6 +5913,10 @@ init|=
 block|{
 literal|"given"
 block|,
+literal|"disabled"
+block|,
+literal|"passthru"
+block|,
 literal|"no-op"
 block|,
 literal|"nxdomain"
@@ -6243,7 +6247,7 @@ name|cfg_print_cstr
 argument_list|(
 name|pctx
 argument_list|,
-literal|"(<string> trust-anchor<string> | auto )"
+literal|"(<string> trust-anchor<string> | auto | no )"
 argument_list|)
 expr_stmt|;
 block|}
@@ -7445,6 +7449,15 @@ literal|0
 block|}
 block|,
 block|{
+literal|"auto-dnssec"
+block|,
+operator|&
+name|cfg_type_autodnssec
+block|,
+literal|0
+block|}
+block|,
+block|{
 literal|"check-dup-records"
 block|,
 operator|&
@@ -7960,15 +7973,6 @@ literal|"ixfr-from-differences"
 block|,
 operator|&
 name|cfg_type_boolean
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"auto-dnssec"
-block|,
-operator|&
-name|cfg_type_autodnssec
 block|,
 literal|0
 block|}

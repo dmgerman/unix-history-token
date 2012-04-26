@@ -856,7 +856,7 @@ operator|*
 name|dp
 operator|++
 operator|=
-name|cfi_read
+name|cfi_read_raw
 argument_list|(
 name|sc
 argument_list|,
@@ -918,7 +918,7 @@ operator|*
 name|dp
 operator|++
 operator|=
-name|cfi_read
+name|cfi_read_raw
 argument_list|(
 name|sc
 argument_list|,
@@ -972,7 +972,7 @@ operator|*
 name|dp
 operator|++
 operator|=
-name|cfi_read
+name|cfi_read_raw
 argument_list|(
 name|sc
 argument_list|,

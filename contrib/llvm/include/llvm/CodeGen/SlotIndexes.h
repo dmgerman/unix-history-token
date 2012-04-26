@@ -82,7 +82,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineBasicBlock.h"
+file|"llvm/CodeGen/MachineInstrBundle.h"
 end_include
 
 begin_include
@@ -357,15 +357,27 @@ expr_stmt|;
 enum|enum
 name|Slot
 block|{
-name|LOAD
+comment|/// Basic block boundary.  Used for live ranges entering and leaving a
+comment|/// block without being live in the layout neighbor.  Also used as the
+comment|/// def slot of PHI-defs.
+name|Slot_Block
 block|,
-name|USE
+comment|/// Early-clobber register use/def slot.  A live range defined at
+comment|/// Slot_EarlyCLobber interferes with normal live ranges killed at
+comment|/// Slot_Register.  Also used as the kill slot for live ranges tied to an
+comment|/// early-clobber def.
+name|Slot_EarlyClobber
 block|,
-name|DEF
+comment|/// Normal register use/def slot.  Normal instructions kill and define
+comment|/// register live ranges at this slot.
+name|Slot_Register
 block|,
-name|STORE
+comment|/// Dead def kill point.  Kill slot for a live range that is defined by
+comment|/// the same instruction (Slot_Register or Slot_EarlyClobber), but isn't
+comment|/// used anywhere.
+name|Slot_Dead
 block|,
-name|NUM
+name|Slot_Count
 block|}
 enum|;
 name|PointerIntPair
@@ -506,7 +518,7 @@ name|InstrDist
 init|=
 literal|4
 operator|*
-name|NUM
+name|Slot_Count
 block|}
 enum|;
 specifier|static
@@ -766,6 +778,37 @@ name|getPointer
 argument_list|()
 return|;
 block|}
+comment|/// isEarlierInstr - Return true if A refers to an instruction earlier than
+comment|/// B. This is equivalent to A< B&& !isSameInstr(A, B).
+specifier|static
+name|bool
+name|isEarlierInstr
+parameter_list|(
+name|SlotIndex
+name|A
+parameter_list|,
+name|SlotIndex
+name|B
+parameter_list|)
+block|{
+return|return
+name|A
+operator|.
+name|entry
+argument_list|()
+operator|.
+name|getIndex
+argument_list|()
+operator|<
+name|B
+operator|.
+name|entry
+argument_list|()
+operator|.
+name|getIndex
+argument_list|()
+return|;
+block|}
 comment|/// Return the distance from this index to the given one.
 name|int
 name|distance
@@ -785,9 +828,9 @@ name|getIndex
 argument_list|()
 return|;
 block|}
-comment|/// isLoad - Return true if this is a LOAD slot.
+comment|/// isBlock - Returns true if this is a block boundary slot.
 name|bool
-name|isLoad
+name|isBlock
 argument_list|()
 specifier|const
 block|{
@@ -795,12 +838,12 @@ return|return
 name|getSlot
 argument_list|()
 operator|==
-name|LOAD
+name|Slot_Block
 return|;
 block|}
-comment|/// isDef - Return true if this is a DEF slot.
+comment|/// isEarlyClobber - Returns true if this is an early-clobber slot.
 name|bool
-name|isDef
+name|isEarlyClobber
 argument_list|()
 specifier|const
 block|{
@@ -808,12 +851,13 @@ return|return
 name|getSlot
 argument_list|()
 operator|==
-name|DEF
+name|Slot_EarlyClobber
 return|;
 block|}
-comment|/// isUse - Return true if this is a USE slot.
+comment|/// isRegister - Returns true if this is a normal register use/def slot.
+comment|/// Note that early-clobber slots may also be used for uses and defs.
 name|bool
-name|isUse
+name|isRegister
 argument_list|()
 specifier|const
 block|{
@@ -821,12 +865,12 @@ return|return
 name|getSlot
 argument_list|()
 operator|==
-name|USE
+name|Slot_Register
 return|;
 block|}
-comment|/// isStore - Return true if this is a STORE slot.
+comment|/// isDead - Returns true if this is a dead def kill slot.
 name|bool
-name|isStore
+name|isDead
 argument_list|()
 specifier|const
 block|{
@@ -834,24 +878,30 @@ return|return
 name|getSlot
 argument_list|()
 operator|==
-name|STORE
+name|Slot_Dead
 return|;
 block|}
 comment|/// Returns the base index for associated with this index. The base index
-comment|/// is the one associated with the LOAD slot for the instruction pointed to
-comment|/// by this index.
+comment|/// is the one associated with the Slot_Block slot for the instruction
+comment|/// pointed to by this index.
 name|SlotIndex
 name|getBaseIndex
 argument_list|()
 specifier|const
 block|{
 return|return
-name|getLoadIndex
+name|SlotIndex
+argument_list|(
+operator|&
+name|entry
 argument_list|()
+argument_list|,
+name|Slot_Block
+argument_list|)
 return|;
 block|}
 comment|/// Returns the boundary index for associated with this index. The boundary
-comment|/// index is the one associated with the LOAD slot for the instruction
+comment|/// index is the one associated with the Slot_Block slot for the instruction
 comment|/// pointed to by this index.
 name|SlotIndex
 name|getBoundaryIndex
@@ -859,36 +909,27 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|getStoreIndex
-argument_list|()
-return|;
-block|}
-comment|/// Returns the index of the LOAD slot for the instruction pointed to by
-comment|/// this index.
-name|SlotIndex
-name|getLoadIndex
-argument_list|()
-specifier|const
-block|{
-return|return
 name|SlotIndex
 argument_list|(
 operator|&
 name|entry
 argument_list|()
 argument_list|,
-name|SlotIndex
-operator|::
-name|LOAD
+name|Slot_Dead
 argument_list|)
 return|;
 block|}
-comment|/// Returns the index of the USE slot for the instruction pointed to by
-comment|/// this index.
+comment|/// Returns the register use/def slot in the current instruction for a
+comment|/// normal or early-clobber def.
 name|SlotIndex
-name|getUseIndex
-argument_list|()
-specifier|const
+name|getRegSlot
+argument_list|(
+name|bool
+name|EC
+operator|=
+name|false
+argument_list|)
+decl|const
 block|{
 return|return
 name|SlotIndex
@@ -897,16 +938,17 @@ operator|&
 name|entry
 argument_list|()
 argument_list|,
-name|SlotIndex
-operator|::
-name|USE
+name|EC
+condition|?
+name|Slot_EarlyClobber
+else|:
+name|Slot_Register
 argument_list|)
 return|;
 block|}
-comment|/// Returns the index of the DEF slot for the instruction pointed to by
-comment|/// this index.
+comment|/// Returns the dead def kill slot for the current instruction.
 name|SlotIndex
-name|getDefIndex
+name|getDeadSlot
 argument_list|()
 specifier|const
 block|{
@@ -917,29 +959,7 @@ operator|&
 name|entry
 argument_list|()
 argument_list|,
-name|SlotIndex
-operator|::
-name|DEF
-argument_list|)
-return|;
-block|}
-comment|/// Returns the index of the STORE slot for the instruction pointed to by
-comment|/// this index.
-name|SlotIndex
-name|getStoreIndex
-argument_list|()
-specifier|const
-block|{
-return|return
-name|SlotIndex
-argument_list|(
-operator|&
-name|entry
-argument_list|()
-argument_list|,
-name|SlotIndex
-operator|::
-name|STORE
+name|Slot_Dead
 argument_list|)
 return|;
 block|}
@@ -964,9 +984,7 @@ if|if
 condition|(
 name|s
 operator|==
-name|SlotIndex
-operator|::
-name|STORE
+name|Slot_Dead
 condition|)
 block|{
 return|return
@@ -978,9 +996,7 @@ operator|.
 name|getNext
 argument_list|()
 argument_list|,
-name|SlotIndex
-operator|::
-name|LOAD
+name|Slot_Block
 argument_list|)
 return|;
 block|}
@@ -1020,7 +1036,7 @@ return|;
 block|}
 comment|/// Returns the previous slot in the index list. This could be either the
 comment|/// previous slot for the instruction pointed to by this index or, if this
-comment|/// index is a LOAD, the last slot for the previous instruction.
+comment|/// index is a Slot_Block, the last slot for the previous instruction.
 comment|/// WARNING: This method is considerably more expensive than the methods
 comment|/// that return specific slots (getUseIndex(), etc). If you can - please
 comment|/// use one of those methods.
@@ -1039,9 +1055,7 @@ if|if
 condition|(
 name|s
 operator|==
-name|SlotIndex
-operator|::
-name|LOAD
+name|Slot_Block
 condition|)
 block|{
 return|return
@@ -1053,9 +1067,7 @@ operator|.
 name|getPrev
 argument_list|()
 argument_list|,
-name|SlotIndex
-operator|::
-name|STORE
+name|Slot_Dead
 argument_list|)
 return|;
 block|}
@@ -1807,16 +1819,6 @@ literal|0
 argument_list|)
 return|;
 block|}
-comment|/// Returns the invalid index marker for this analysis.
-name|SlotIndex
-name|getInvalidIndex
-argument_list|()
-block|{
-return|return
-name|getZeroIndex
-argument_list|()
-return|;
-block|}
 comment|/// Returns the distance between the highest and lowest indexes allocated
 comment|/// so far.
 name|unsigned
@@ -1865,29 +1867,23 @@ argument_list|)
 specifier|const
 block|{
 return|return
-operator|(
 name|mi2iMap
 operator|.
-name|find
+name|count
 argument_list|(
 name|instr
 argument_list|)
-operator|!=
-name|mi2iMap
-operator|.
-name|end
-argument_list|()
-operator|)
 return|;
 block|}
 comment|/// Returns the base index for the given instruction.
 name|SlotIndex
 name|getInstructionIndex
 argument_list|(
-argument|const MachineInstr *instr
+argument|const MachineInstr *MI
 argument_list|)
 specifier|const
 block|{
+comment|// Instructions inside a bundle have the same number as the bundle itself.
 name|Mi2IndexMap
 operator|::
 name|const_iterator
@@ -1897,7 +1893,10 @@ name|mi2iMap
 operator|.
 name|find
 argument_list|(
-name|instr
+name|getBundleStart
+argument_list|(
+name|MI
+argument_list|)
 argument_list|)
 block|;
 name|assert
@@ -2648,6 +2647,17 @@ parameter_list|)
 block|{
 name|assert
 argument_list|(
+operator|!
+name|mi
+operator|->
+name|isInsideBundle
+argument_list|()
+operator|&&
+literal|"Instructions inside bundles should use bundle start's slot."
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
 name|mi2iMap
 operator|.
 name|find
@@ -2815,7 +2825,7 @@ name|newEntry
 argument_list|,
 name|SlotIndex
 operator|::
-name|LOAD
+name|Slot_Block
 argument_list|)
 decl_stmt|;
 name|mi2iMap
@@ -3135,7 +3145,7 @@ name|startEntry
 argument_list|,
 name|SlotIndex
 operator|::
-name|LOAD
+name|Slot_Block
 argument_list|)
 decl_stmt|;
 name|SlotIndex
@@ -3145,7 +3155,7 @@ name|nextEntry
 argument_list|,
 name|SlotIndex
 operator|::
-name|LOAD
+name|Slot_Block
 argument_list|)
 decl_stmt|;
 name|assert

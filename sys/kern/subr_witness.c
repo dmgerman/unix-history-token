@@ -2423,10 +2423,10 @@ name|lock_class_mtx_sleep
 block|}
 block|,
 block|{
-literal|"if_addr_mtx"
+literal|"if_addr_lock"
 block|,
 operator|&
-name|lock_class_mtx_sleep
+name|lock_class_rw
 block|}
 block|,
 block|{
@@ -2458,10 +2458,10 @@ name|lock_class_mtx_sleep
 block|}
 block|,
 block|{
-literal|"if_addr_mtx"
+literal|"if_addr_lock"
 block|,
 operator|&
-name|lock_class_mtx_sleep
+name|lock_class_rw
 block|}
 block|,
 block|{
@@ -2594,14 +2594,14 @@ block|{
 literal|"bpf interface lock"
 block|,
 operator|&
-name|lock_class_mtx_sleep
+name|lock_class_rw
 block|}
 block|,
 block|{
 literal|"bpf cdev lock"
 block|,
 operator|&
-name|lock_class_mtx_sleep
+name|lock_class_rw
 block|}
 block|,
 block|{

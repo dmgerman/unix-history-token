@@ -107,12 +107,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sysexits.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"mntopts.h"
 end_include
 
@@ -501,7 +495,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|checkpath
 parameter_list|(
 specifier|const
@@ -526,9 +520,9 @@ name|path
 argument_list|,
 name|resolved
 argument_list|)
-operator|!=
+operator|==
 name|NULL
-operator|&&
+operator|||
 name|stat
 argument_list|(
 name|resolved
@@ -536,10 +530,14 @@ argument_list|,
 operator|&
 name|sb
 argument_list|)
-operator|==
+operator|!=
 literal|0
 condition|)
-block|{
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 if|if
 condition|(
 operator|!
@@ -550,31 +548,22 @@ operator|.
 name|st_mode
 argument_list|)
 condition|)
-name|errx
-argument_list|(
-name|EX_USAGE
-argument_list|,
-literal|"%s: not a directory"
-argument_list|,
-name|resolved
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|errx
-argument_list|(
-name|EX_USAGE
-argument_list|,
-literal|"%s: %s"
-argument_list|,
-name|resolved
-argument_list|,
-name|strerror
-argument_list|(
+block|{
 name|errno
-argument_list|)
-argument_list|)
+operator|=
+name|ENOTDIR
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

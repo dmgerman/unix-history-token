@@ -919,6 +919,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+name|int
+name|exit_code
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|main
@@ -1461,7 +1469,7 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-literal|0
+name|exit_code
 return|;
 block|}
 end_function

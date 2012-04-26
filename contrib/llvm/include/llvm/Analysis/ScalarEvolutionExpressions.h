@@ -1998,13 +1998,8 @@ name|llvm_unreachable
 argument_list|(
 literal|"Invalid use of SCEVCouldNotCompute!"
 argument_list|)
-block|;
-return|return
-name|RetVal
-argument_list|()
-return|;
+block|;     }
 block|}
-expr|}
 block|; }
 end_decl_stmt
 

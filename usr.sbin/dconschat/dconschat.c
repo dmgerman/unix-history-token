@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -637,8 +643,11 @@ name|buf
 argument_list|,
 name|PAGE_SIZE
 argument_list|,
-literal|"\r\n[dconschat reset target(addr=0x%zx)...]\r\n"
+literal|"\r\n[dconschat reset target(addr=0x%jx)...]\r\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|dc
 operator|->
 name|reset

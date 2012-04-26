@@ -150,7 +150,11 @@ comment|/// any empty subobjects.
 name|CharUnits
 name|SizeOfLargestEmptySubobject
 decl_stmt|;
-comment|/// VBPtrOffset - Virtual base table offset.
+comment|/// VFPtrOffset - Virtual function table offset (Microsoft-only).
+name|CharUnits
+name|VFPtrOffset
+decl_stmt|;
+comment|/// VBPtrOffset - Virtual base table offset (Microsoft-only).
 name|CharUnits
 name|VBPtrOffset
 decl_stmt|;
@@ -232,6 +236,8 @@ argument_list|,
 argument|CharUnits size
 argument_list|,
 argument|CharUnits alignment
+argument_list|,
+argument|CharUnits vfptroffset
 argument_list|,
 argument|CharUnits vbptroffset
 argument_list|,
@@ -644,11 +650,40 @@ operator|->
 name|SizeOfLargestEmptySubobject
 return|;
 block|}
+comment|/// getVFPtrOffset - Get the offset for virtual function table pointer.
+comment|/// This is only meaningful with the Microsoft ABI.
+name|CharUnits
+name|getVFPtrOffset
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|CXXInfo
+operator|&&
+literal|"Record layout does not have C++ specific info!"
+argument_list|)
+block|;
+return|return
+name|CXXInfo
+operator|->
+name|VFPtrOffset
+return|;
+block|}
+comment|/// getVBPtrOffset - Get the offset for virtual base table pointer.
+comment|/// This is only meaningful with the Microsoft ABI.
 name|CharUnits
 name|getVBPtrOffset
 argument_list|()
 specifier|const
 block|{
+name|assert
+argument_list|(
+name|CXXInfo
+operator|&&
+literal|"Record layout does not have C++ specific info!"
+argument_list|)
+block|;
 return|return
 name|CXXInfo
 operator|->

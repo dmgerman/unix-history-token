@@ -139,9 +139,6 @@ name|ValueT
 operator|,
 name|typename
 name|KeyInfoT
-operator|,
-name|typename
-name|ValueInfoT
 operator|>
 name|class
 name|DenseMap
@@ -649,6 +646,89 @@ block|,
 name|Pointer64
 block|}
 enum|;
+comment|/// An enumeration for the supported behaviors of module flags. The following
+comment|/// module flags behavior values are supported:
+comment|///
+comment|///    Value        Behavior
+comment|///    -----        --------
+comment|///      1          Error
+comment|///                   Emits an error if two values disagree.
+comment|///
+comment|///      2          Warning
+comment|///                   Emits a warning if two values disagree.
+comment|///
+comment|///      3          Require
+comment|///                   Emits an error when the specified value is not present
+comment|///                   or doesn't have the specified value. It is an error for
+comment|///                   two (or more) llvm.module.flags with the same ID to have
+comment|///                   the Require behavior but different values. There may be
+comment|///                   multiple Require flags per ID.
+comment|///
+comment|///      4          Override
+comment|///                   Uses the specified value if the two values disagree. It
+comment|///                   is an error for two (or more) llvm.module.flags with the
+comment|///                   same ID to have the Override behavior but different
+comment|///                   values.
+enum|enum
+name|ModFlagBehavior
+block|{
+name|Error
+init|=
+literal|1
+block|,
+name|Warning
+init|=
+literal|2
+block|,
+name|Require
+init|=
+literal|3
+block|,
+name|Override
+init|=
+literal|4
+block|}
+enum|;
+struct|struct
+name|ModuleFlagEntry
+block|{
+name|ModFlagBehavior
+name|Behavior
+decl_stmt|;
+name|MDString
+modifier|*
+name|Key
+decl_stmt|;
+name|Value
+modifier|*
+name|Val
+decl_stmt|;
+name|ModuleFlagEntry
+argument_list|(
+argument|ModFlagBehavior B
+argument_list|,
+argument|MDString *K
+argument_list|,
+argument|Value *V
+argument_list|)
+block|:
+name|Behavior
+argument_list|(
+name|B
+argument_list|)
+operator|,
+name|Key
+argument_list|(
+name|K
+argument_list|)
+operator|,
+name|Val
+argument_list|(
+argument|V
+argument_list|)
+block|{}
+block|}
+struct|;
 comment|/// @}
 comment|/// @name Member Variables
 comment|/// @{
@@ -1007,11 +1087,6 @@ operator|<
 name|StructType
 operator|*
 operator|>
-operator|,
-name|DenseMapInfo
-operator|<
-name|unsigned
-operator|>
 expr|>
 name|NumeredTypesMapTy
 expr_stmt|;
@@ -1261,6 +1336,77 @@ parameter_list|(
 name|NamedMDNode
 modifier|*
 name|NMD
+parameter_list|)
+function_decl|;
+comment|/// @}
+comment|/// @name Module Flags Accessors
+comment|/// @{
+comment|/// getModuleFlagsMetadata - Returns the module flags in the provided vector.
+name|void
+name|getModuleFlagsMetadata
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|ModuleFlagEntry
+operator|>
+operator|&
+name|Flags
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// getModuleFlagsMetadata - Returns the NamedMDNode in the module that
+comment|/// represents module-level flags. This method returns null if there are no
+comment|/// module-level flags.
+name|NamedMDNode
+operator|*
+name|getModuleFlagsMetadata
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// getOrInsertModuleFlagsMetadata - Returns the NamedMDNode in the module
+comment|/// that represents module-level flags. If module-level flags aren't found,
+comment|/// it creates the named metadata that contains them.
+name|NamedMDNode
+modifier|*
+name|getOrInsertModuleFlagsMetadata
+parameter_list|()
+function_decl|;
+comment|/// addModuleFlag - Add a module-level flag to the module-level flags
+comment|/// metadata. It will create the module-level flags named metadata if it
+comment|/// doesn't already exist.
+name|void
+name|addModuleFlag
+parameter_list|(
+name|ModFlagBehavior
+name|Behavior
+parameter_list|,
+name|StringRef
+name|Key
+parameter_list|,
+name|Value
+modifier|*
+name|Val
+parameter_list|)
+function_decl|;
+name|void
+name|addModuleFlag
+parameter_list|(
+name|ModFlagBehavior
+name|Behavior
+parameter_list|,
+name|StringRef
+name|Key
+parameter_list|,
+name|uint32_t
+name|Val
+parameter_list|)
+function_decl|;
+name|void
+name|addModuleFlag
+parameter_list|(
+name|MDNode
+modifier|*
+name|Node
 parameter_list|)
 function_decl|;
 comment|/// @}

@@ -193,7 +193,7 @@ block|{
 literal|"ev"
 block|}
 block|,
-comment|/* enviroment */
+comment|/* environment */
 block|{
 literal|"lo"
 block|,

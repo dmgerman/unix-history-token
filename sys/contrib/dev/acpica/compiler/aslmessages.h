@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2011, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_ifndef
@@ -270,6 +270,8 @@ name|ASL_MSG_OUTPUT_FILENAME
 block|,
 name|ASL_MSG_PACKAGE_LENGTH
 block|,
+name|ASL_MSG_PREPROCESSOR_FILENAME
+block|,
 name|ASL_MSG_READ
 block|,
 name|ASL_MSG_RECURSION
@@ -347,6 +349,25 @@ block|,
 name|ASL_MSG_VENDOR_LIST
 block|,
 name|ASL_MSG_WRITE
+block|,
+comment|/* These messages are used by the Preprocessor only */
+name|ASL_MSG_DIRECTIVE_SYNTAX
+block|,
+name|ASL_MSG_ENDIF_MISMATCH
+block|,
+name|ASL_MSG_ERROR_DIRECTIVE
+block|,
+name|ASL_MSG_EXISTING_NAME
+block|,
+name|ASL_MSG_INVALID_INVOCATION
+block|,
+name|ASL_MSG_MACRO_SYNTAX
+block|,
+name|ASL_MSG_TOO_MANY_ARGUMENTS
+block|,
+name|ASL_MSG_UNKNOWN_DIRECTIVE
+block|,
+name|ASL_MSG_UNKNOWN_PRAGMA
 block|,
 comment|/* These messages are used by the data table compiler only */
 name|ASL_MSG_BUFFER_ELEMENT
@@ -684,6 +705,9 @@ block|,
 comment|/*    ASL_MSG_PACKAGE_LENGTH */
 literal|"Effective AML package length is zero"
 block|,
+comment|/*    ASL_MSG_PREPROCESSOR_FILENAME */
+literal|"Could not create preprocessor filename"
+block|,
 comment|/*    ASL_MSG_READ */
 literal|"Could not read file"
 block|,
@@ -801,7 +825,35 @@ block|,
 comment|/*    ASL_MSG_WRITE */
 literal|"Could not write file"
 block|,
-comment|/* These messages are used by the data table compiler only */
+comment|/* Preprocessor */
+comment|/*    ASL_MSG_DIRECTIVE_SYNTAX */
+literal|"Invalid directive syntax"
+block|,
+comment|/*    ASL_MSG_ENDIF_MISMATCH */
+literal|"Mismatched #endif"
+block|,
+comment|/*    ASL_MSG_ERROR_DIRECTIVE */
+literal|"#error"
+block|,
+comment|/*    ASL_MSG_EXISTING_NAME */
+literal|"Name is already defined"
+block|,
+comment|/*    ASL_MSG_INVALID_INVOCATION */
+literal|"Invalid macro invocation"
+block|,
+comment|/*    ASL_MSG_MACRO_SYNTAX */
+literal|"Invalid macro syntax"
+block|,
+comment|/*    ASL_MSG_TOO_MANY_ARGUMENTS */
+literal|"Too many macro arguments"
+block|,
+comment|/*    ASL_MSG_UNKNOWN_DIRECTIVE */
+literal|"Unknown directive"
+block|,
+comment|/*    ASL_MSG_UNKNOWN_PRAGMA */
+literal|"Unknown pragma"
+block|,
+comment|/* Table compiler */
 comment|/*    ASL_MSG_BUFFER_ELEMENT */
 literal|"Invalid element in buffer initializer list"
 block|,
