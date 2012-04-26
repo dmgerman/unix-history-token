@@ -1004,17 +1004,12 @@ argument_list|,
 name|curcpu
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SMP
 comment|/* 	 * Add BSP as an interrupt target. 	 */
 name|intr_add_cpu
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
