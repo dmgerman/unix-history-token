@@ -5075,7 +5075,7 @@ condition|(
 name|hw_direct_map
 condition|)
 block|{
-name|kcopy
+name|bcopy
 argument_list|(
 operator|(
 name|void
@@ -5119,7 +5119,7 @@ argument_list|,
 name|dst
 argument_list|)
 expr_stmt|;
-name|kcopy
+name|bcopy
 argument_list|(
 operator|(
 name|void
