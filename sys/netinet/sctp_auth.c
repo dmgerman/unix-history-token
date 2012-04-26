@@ -8039,7 +8039,7 @@ name|sctp_notify_authentication
 argument_list|(
 name|stcb
 argument_list|,
-name|SCTP_AUTH_NEWKEY
+name|SCTP_AUTH_NEW_KEY
 argument_list|,
 name|shared_key_id
 argument_list|,
