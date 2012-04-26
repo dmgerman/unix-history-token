@@ -1714,6 +1714,23 @@ operator|=
 name|table_primary
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|hdr_primary_lba
+operator|>
+literal|0
+condition|)
+block|{
+comment|/* 		 * If primary header is valid, we can get backup 		 * header location from there. 		 */
+name|altlba
+operator|=
+name|hdr_primary
+operator|.
+name|hdr_lba_alt
+expr_stmt|;
+block|}
+else|else
+block|{
 name|altlba
 operator|=
 name|drvsize
@@ -1729,21 +1746,6 @@ literal|0
 condition|)
 name|altlba
 operator|--
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|hdr_primary_lba
-operator|>
-literal|0
-condition|)
-block|{
-comment|/* 		 * If we cannot obtain disk size, but primary header 		 * is valid, we can get backup header location from 		 * there. 		 */
-name|altlba
-operator|=
-name|hdr_primary
-operator|.
-name|hdr_lba_alt
 expr_stmt|;
 block|}
 if|if
