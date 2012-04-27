@@ -6672,7 +6672,7 @@ literal|0
 condition|)
 name|levelname
 operator|=
-literal|"RAID5LA"
+literal|"RAID5-LA"
 expr_stmt|;
 if|if
 condition|(
