@@ -2123,26 +2123,6 @@ end_struct
 
 begin_struct
 struct|struct
-name|sctp_setstrm_timeout
-block|{
-name|sctp_assoc_t
-name|ssto_assoc_id
-decl_stmt|;
-name|uint32_t
-name|ssto_timeout
-decl_stmt|;
-name|uint32_t
-name|ssto_streamid_start
-decl_stmt|;
-name|uint32_t
-name|ssto_streamid_end
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
 name|sctp_status
 block|{
 name|sctp_assoc_t
