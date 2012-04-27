@@ -2103,7 +2103,7 @@ argument_list|)
 expr_stmt|;
 name|FREE
 argument_list|(
-name|line
+name|line0
 argument_list|)
 expr_stmt|;
 name|FREE
