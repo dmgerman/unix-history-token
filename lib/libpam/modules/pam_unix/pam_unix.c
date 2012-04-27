@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -227,15 +233,6 @@ directive|define
 name|PAM_OPT_NIS_PASS
 value|"nis_pass"
 end_define
-
-begin_decl_stmt
-name|char
-modifier|*
-name|tempname
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * authentication management  */
@@ -1195,6 +1192,9 @@ name|char
 modifier|*
 name|encrypted
 decl_stmt|;
+name|time_t
+name|passwordtime
+decl_stmt|;
 name|int
 name|pfd
 decl_stmt|,
@@ -1713,12 +1713,6 @@ operator|(
 name|PAM_BUF_ERR
 operator|)
 return|;
-name|pwd
-operator|->
-name|pw_change
-operator|=
-literal|0
-expr_stmt|;
 name|lc
 operator|=
 name|login_getclass
@@ -1747,6 +1741,43 @@ name|PAM_LOG_ERROR
 argument_list|,
 literal|"can't set password cipher, relying on default"
 argument_list|)
+expr_stmt|;
+comment|/* set password expiry date */
+name|pwd
+operator|->
+name|pw_change
+operator|=
+literal|0
+expr_stmt|;
+name|passwordtime
+operator|=
+name|login_getcaptime
+argument_list|(
+name|lc
+argument_list|,
+literal|"passwordtime"
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|passwordtime
+operator|>
+literal|0
+condition|)
+name|pwd
+operator|->
+name|pw_change
+operator|=
+name|time
+argument_list|(
+name|NULL
+argument_list|)
+operator|+
+name|passwordtime
 expr_stmt|;
 name|login_close
 argument_list|(
