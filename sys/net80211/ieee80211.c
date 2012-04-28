@@ -1924,7 +1924,8 @@ parameter_list|,
 name|int
 name|unit
 parameter_list|,
-name|int
+name|enum
+name|ieee80211_opmode
 name|opmode
 parameter_list|,
 name|int
@@ -2208,6 +2209,8 @@ block|}
 break|break;
 endif|#
 directive|endif
+default|default:
+break|break;
 block|}
 comment|/* auto-enable s/w beacon miss support */
 if|if
@@ -4771,8 +4774,6 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|,
-name|mode
-decl_stmt|,
 name|rate
 decl_stmt|,
 name|maxrate
@@ -4780,6 +4781,10 @@ decl_stmt|,
 name|mword
 decl_stmt|,
 name|r
+decl_stmt|;
+name|enum
+name|ieee80211_phymode
+name|mode
 decl_stmt|;
 specifier|const
 name|struct
@@ -5440,11 +5445,13 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|,
-name|mode
-decl_stmt|,
 name|rate
 decl_stmt|,
 name|mword
+decl_stmt|;
+name|enum
+name|ieee80211_phymode
+name|mode
 decl_stmt|;
 specifier|const
 name|struct

@@ -1341,7 +1341,8 @@ index|]
 parameter_list|,
 name|int
 parameter_list|,
-name|int
+name|enum
+name|ieee80211_opmode
 parameter_list|,
 name|int
 parameter_list|,
@@ -22518,7 +22519,8 @@ parameter_list|,
 name|int
 name|unit
 parameter_list|,
-name|int
+name|enum
+name|ieee80211_opmode
 name|opmode
 parameter_list|,
 name|int

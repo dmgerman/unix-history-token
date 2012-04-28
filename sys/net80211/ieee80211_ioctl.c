@@ -14286,6 +14286,10 @@ name|ic
 operator|->
 name|ic_protmode
 operator|=
+operator|(
+expr|enum
+name|ieee80211_protmode
+operator|)
 name|ireq
 operator|->
 name|i_val
@@ -14389,6 +14393,10 @@ name|vap
 operator|->
 name|iv_roaming
 operator|=
+operator|(
+expr|enum
+name|ieee80211_roamingmode
+operator|)
 name|ireq
 operator|->
 name|i_val
