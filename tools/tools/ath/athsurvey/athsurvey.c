@@ -945,17 +945,17 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  tx%%  rx%%  cc%%  ec%%  "
+literal|"  tx%%  rx%%  bc%%  ec%%  "
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  tx%%  rx%%  cc%%  ec%%  "
+literal|"  tx%%  rx%%  bc%%  ec%%  "
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  tx%%  rx%%  cc%%  ec%%\n"
+literal|"  tx%%  rx%%  bc%%  ec%%\n"
 argument_list|)
 expr_stmt|;
 block|}
