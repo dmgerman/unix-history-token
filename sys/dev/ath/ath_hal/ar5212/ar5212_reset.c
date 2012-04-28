@@ -825,6 +825,22 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* NB: silence compiler */
+comment|/* Blank the channel survey statistics */
+name|OS_MEMZERO
+argument_list|(
+operator|&
+name|ahp
+operator|->
+name|ah_chansurvey
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ahp
+operator|->
+name|ah_chansurvey
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 literal|0

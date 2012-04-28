@@ -3442,34 +3442,12 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* XXX bounds check? */
-if|if
-condition|(
-name|AH_PRIVATE
-argument_list|(
-name|ah
-argument_list|)
-operator|->
-name|ah_curchan
-operator|!=
-name|AH_NULL
-condition|)
 name|cs
 operator|=
 operator|&
 name|ahp
 operator|->
 name|ah_chansurvey
-index|[
-name|AH_PRIVATE
-argument_list|(
-name|ah
-argument_list|)
-operator|->
-name|ah_curchan
-operator|->
-name|ic_devdata
-index|]
 expr_stmt|;
 comment|/* 	 * Fetch the current statistics, squirrel away the current 	 * sample, bump the sequence/sample counter. 	 */
 name|OS_MEMZERO
