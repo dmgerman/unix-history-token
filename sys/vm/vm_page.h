@@ -1488,6 +1488,19 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|boolean_t
+name|vm_page_is_cached
+parameter_list|(
+name|vm_object_t
+name|object
+parameter_list|,
+name|vm_pindex_t
+name|pindex
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|vm_page_t
 name|vm_page_lookup
 parameter_list|(
