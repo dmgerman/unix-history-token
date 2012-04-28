@@ -1191,6 +1191,13 @@ name|AH_MAXCHAN
 index|]
 decl_stmt|;
 comment|/* per-channel state */
+name|HAL_CHANNEL_SURVEY
+name|ah_chansurvey
+index|[
+name|AH_MAXCHAN
+index|]
+decl_stmt|;
+comment|/* channel survey */
 comment|/* AR5416 uses some of the AR5212 ANI code; these are the ANI methods */
 name|HAL_BOOL
 function_decl|(
