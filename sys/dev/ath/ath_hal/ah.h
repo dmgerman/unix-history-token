@@ -1951,7 +1951,17 @@ name|uint32_t
 name|chan_busy
 decl_stmt|;
 name|uint32_t
+name|ext_chan_busy
+decl_stmt|;
+name|uint32_t
 name|cycle_count
+decl_stmt|;
+comment|/* XXX TODO */
+name|uint32_t
+name|ofdm_phyerr_count
+decl_stmt|;
+name|uint32_t
+name|cck_phyerr_count
 decl_stmt|;
 block|}
 name|HAL_SURVEY_SAMPLE
