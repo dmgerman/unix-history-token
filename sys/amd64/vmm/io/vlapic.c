@@ -3073,6 +3073,11 @@ modifier|*
 name|vlapic
 parameter_list|)
 block|{
+name|vlapic_op_halt
+argument_list|(
+name|vlapic
+argument_list|)
+expr_stmt|;
 name|vdev_unregister
 argument_list|(
 name|vlapic

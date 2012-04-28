@@ -270,6 +270,38 @@ end_struct
 
 begin_struct
 struct|struct
+name|vm_pptdev_msix
+block|{
+name|int
+name|vcpu
+decl_stmt|;
+name|int
+name|bus
+decl_stmt|;
+name|int
+name|slot
+decl_stmt|;
+name|int
+name|func
+decl_stmt|;
+name|int
+name|idx
+decl_stmt|;
+name|uint32_t
+name|msg
+decl_stmt|;
+name|uint32_t
+name|vector_control
+decl_stmt|;
+name|uint64_t
+name|addr
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|vm_nmi
 block|{
 name|int
@@ -367,6 +399,8 @@ block|,
 name|IOCNUM_MAP_PPTDEV_MMIO
 block|,
 name|IOCNUM_PPTDEV_MSI
+block|,
+name|IOCNUM_PPTDEV_MSIX
 block|,
 name|IOCNUM_INJECT_NMI
 block|,
@@ -511,6 +545,14 @@ directive|define
 name|VM_PPTDEV_MSI
 define|\
 value|_IOW('v', IOCNUM_PPTDEV_MSI, struct vm_pptdev_msi)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_PPTDEV_MSIX
+define|\
+value|_IOW('v', IOCNUM_PPTDEV_MSIX, struct vm_pptdev_msix)
 end_define
 
 begin_define

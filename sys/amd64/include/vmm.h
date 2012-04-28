@@ -1202,8 +1202,10 @@ name|VM_EXITCODE_MTRAP
 block|,
 name|VM_EXITCODE_PAUSE
 block|,
+name|VM_EXITCODE_PAGING
+block|,
 name|VM_EXITCODE_MAX
-block|, }
+block|}
 enum|;
 end_enum
 
@@ -1257,6 +1259,14 @@ decl_stmt|;
 comment|/* valid for out */
 block|}
 name|inout
+struct|;
+struct|struct
+block|{
+name|uint64_t
+name|cr3
+decl_stmt|;
+block|}
+name|paging
 struct|;
 comment|/* 		 * VMX specific payload. Used when there is no "better" 		 * exitcode to represent the VM-exit. 		 */
 struct|struct

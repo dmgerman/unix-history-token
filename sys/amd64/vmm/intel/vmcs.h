@@ -270,6 +270,14 @@ parameter_list|()
 value|vmcs_read(VMCS_EXIT_QUALIFICATION)
 end_define
 
+begin_define
+define|#
+directive|define
+name|vmcs_guest_cr3
+parameter_list|()
+value|vmcs_read(VMCS_GUEST_CR3)
+end_define
+
 begin_endif
 endif|#
 directive|endif
