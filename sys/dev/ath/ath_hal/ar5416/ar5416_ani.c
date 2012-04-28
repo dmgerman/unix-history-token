@@ -3399,6 +3399,8 @@ name|NULL
 decl_stmt|;
 name|int32_t
 name|listenTime
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|good
