@@ -1108,7 +1108,7 @@ parameter_list|(
 name|n
 parameter_list|)
 define|\
-value|do {									\ 	if ( MGA_VERBOSE ) {						\ 		DRM_INFO( "BEGIN_DMA( %d )\n", (n) );		\ 		DRM_INFO( "   space=0x%x req=0x%Zx\n",			\ 			  dev_priv->prim.space, (n) * DMA_BLOCK_SIZE );	\ 	}								\ 	prim = dev_priv->prim.start;					\ 	write = dev_priv->prim.tail;					\ } while (0)
+value|do {									\ 	if ( MGA_VERBOSE ) {						\ 		DRM_INFO( "BEGIN_DMA( %d )\n", (n) );		\ 		DRM_INFO( "   space=0x%x req=0x%zx\n",			\ 			  dev_priv->prim.space, (n) * DMA_BLOCK_SIZE );	\ 	}								\ 	prim = dev_priv->prim.start;					\ 	write = dev_priv->prim.tail;					\ } while (0)
 end_define
 
 begin_define
@@ -1152,7 +1152,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|do {									\ 	if ( MGA_VERBOSE ) {						\ 		DRM_INFO( "   DMA_WRITE( 0x%08x ) at 0x%04Zx\n",	\ 			  (u32)(val), write + (offset) * sizeof(u32) );	\ 	}								\ 	*(volatile u32 *)(prim + write + (offset) * sizeof(u32)) = val;	\ } while (0)
+value|do {									\ 	if ( MGA_VERBOSE ) {						\ 		DRM_INFO( "   DMA_WRITE( 0x%08x ) at 0x%04zx\n",	\ 			  (u32)(val), write + (offset) * sizeof(u32) );	\ 	}								\ 	*(volatile u32 *)(prim + write + (offset) * sizeof(u32)) = val;	\ } while (0)
 end_define
 
 begin_define
