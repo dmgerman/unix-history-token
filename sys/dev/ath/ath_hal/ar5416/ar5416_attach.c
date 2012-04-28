@@ -560,6 +560,12 @@ name|ar5416SetRxFilter
 expr_stmt|;
 name|ah
 operator|->
+name|ah_stopDmaReceive
+operator|=
+name|ar5416StopDmaReceive
+expr_stmt|;
+name|ah
+operator|->
 name|ah_startPcuReceive
 operator|=
 name|ar5416StartPcuReceive
