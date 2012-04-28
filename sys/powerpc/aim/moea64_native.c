@@ -347,8 +347,10 @@ function|;
 end_function
 
 begin_expr_stmt
-name|intr_enable
-argument_list|()
+name|intr_restore
+argument_list|(
+name|intr
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 
