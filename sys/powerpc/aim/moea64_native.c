@@ -212,18 +212,6 @@ name|VSID_HASH_MASK
 value|0x0000007fffffffffULL
 end_define
 
-begin_comment
-comment|/*  * The tlbie instruction must be executed in 64-bit mode  * so we have to twiddle MSR[SF] around every invocation.  * Just to add to the fun, exceptions must be off as well  * so that we can't trap in 64-bit mode. What a pain.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|mtx
-name|tlbie_mutex
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|__inline
@@ -247,9 +235,18 @@ name|msr
 decl_stmt|;
 name|register_t
 name|scratch
+decl_stmt|,
+name|intr
 decl_stmt|;
 endif|#
 directive|endif
+specifier|static
+specifier|volatile
+name|u_int
+name|tlbie_lock
+init|=
+literal|0
+decl_stmt|;
 name|vpn
 operator|<<=
 name|ADDR_PIDX_SHFT
@@ -263,23 +260,30 @@ operator|<<
 literal|48
 operator|)
 expr_stmt|;
+comment|/* Hobo spinlock: we need stronger guarantees than mutexes provide */
+while|while
+condition|(
+operator|!
+name|atomic_cmpset_int
+argument_list|(
+operator|&
+name|tlbie_lock
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+empty_stmt|;
+name|isync
+argument_list|()
+expr_stmt|;
+comment|/* Flush instruction queue once lock acquired */
 ifdef|#
 directive|ifdef
 name|__powerpc64__
-name|mtx_lock
-argument_list|(
-operator|&
-name|tlbie_mutex
-argument_list|)
-expr_stmt|;
 asm|__asm __volatile("tlbie %0" :: "r"(vpn) : "memory");
-name|mtx_unlock
-argument_list|(
-operator|&
-name|tlbie_mutex
-argument_list|)
-expr_stmt|;
-asm|__asm __volatile("eieio; tlbsync; ptesync");
+asm|__asm __volatile("eieio; tlbsync; ptesync" ::: "memory");
 else|#
 directive|else
 name|vpn_hi
@@ -300,12 +304,10 @@ name|uint32_t
 operator|)
 name|vpn
 expr_stmt|;
-comment|/* Note: spin mutex is to disable exceptions while fiddling MSR */
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|tlbie_mutex
-argument_list|)
+name|intr
+operator|=
+name|intr_disable
+argument_list|()
 expr_stmt|;
 asm|__asm __volatile("\ 	    mfmsr %0; \ 	    mr %1, %0; \ 	    insrdi %1,%5,1,0; \ 	    mtmsrd %1; isync; \ 	    \ 	    sld %1,%2,%4; \ 	    or %1,%1,%3; \ 	    tlbie %1; \ 	    \ 	    mtmsrd %0; isync; \ 	    eieio; \ 	    tlbsync; \ 	    ptesync;"
 block|:
@@ -345,11 +347,8 @@ function|;
 end_function
 
 begin_expr_stmt
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|tlbie_mutex
-argument_list|)
+name|intr_enable
+argument_list|()
 expr_stmt|;
 end_expr_stmt
 
@@ -357,6 +356,17 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* No barriers or special ops -- taken care of by ptesync above */
+end_comment
+
+begin_expr_stmt
+name|tlbie_lock
+operator|=
+literal|0
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 unit|}
@@ -795,7 +805,7 @@ operator|&=
 operator|~
 name|ptebit
 expr_stmt|;
-name|sched_pin
+name|critical_enter
 argument_list|()
 expr_stmt|;
 name|TLBIE
@@ -803,7 +813,7 @@ argument_list|(
 name|vpn
 argument_list|)
 expr_stmt|;
-name|sched_unpin
+name|critical_exit
 argument_list|()
 expr_stmt|;
 block|}
@@ -908,7 +918,7 @@ comment|/* 	 * Invalidate the pte. 	 */
 name|isync
 argument_list|()
 expr_stmt|;
-name|sched_pin
+name|critical_enter
 argument_list|()
 expr_stmt|;
 name|pvo_pt
@@ -933,7 +943,7 @@ argument_list|(
 name|vpn
 argument_list|)
 expr_stmt|;
-name|sched_unpin
+name|critical_exit
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Save the reg& chg bits. 	 */
@@ -1319,38 +1329,6 @@ argument_list|,
 name|moea64_pteg_table
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Initialize the TLBIE lock. TLBIE can only be executed by one CPU. 	 */
-ifdef|#
-directive|ifdef
-name|__powerpc64__
-name|mtx_init
-argument_list|(
-operator|&
-name|tlbie_mutex
-argument_list|,
-literal|"tlbie"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|mtx_init
-argument_list|(
-operator|&
-name|tlbie_mutex
-argument_list|,
-literal|"tlbie"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_SPIN
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|moea64_mid_bootstrap
 argument_list|(
 name|mmup

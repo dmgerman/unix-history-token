@@ -505,7 +505,7 @@ name|idx
 index|]
 expr_stmt|;
 comment|/* 	 * The above stores must be visible before the next one, so 	 * that a lockless searcher always sees a valid path through 	 * the tree. 	 */
-name|powerpc_sync
+name|mb
 argument_list|()
 expr_stmt|;
 name|idx
@@ -754,7 +754,7 @@ argument_list|,
 name|idx
 argument_list|)
 expr_stmt|;
-name|powerpc_sync
+name|mb
 argument_list|()
 expr_stmt|;
 comment|/* Set up parent to point to intermediate node ... */
