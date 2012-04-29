@@ -468,6 +468,16 @@ end_decl_stmt
 begin_expr_stmt
 name|VNET_DECLARE
 argument_list|(
+name|int
+argument_list|,
+name|udp_cksum
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
 expr|struct
 name|udpstat
 argument_list|,
@@ -485,6 +495,13 @@ name|udp_blackhole
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_udp_cksum
+value|VNET(udp_cksum)
+end_define
 
 begin_define
 define|#

@@ -304,17 +304,20 @@ begin_comment
 comment|/*  * BSD 4.2 defaulted the udp checksum to be off.  Turning off udp checksums  * removes the only data integrity mechanism for packets and malformed  * packets that would otherwise be discarded due to bad checksums, and may  * cause problems (especially for NFS data blocks).  */
 end_comment
 
-begin_decl_stmt
-specifier|static
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|udp_cksum
-init|=
+argument_list|)
+operator|=
 literal|1
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_VNET_INT
 argument_list|(
 name|_net_inet_udp
 argument_list|,
@@ -325,7 +328,10 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
+name|VNET_NAME
+argument_list|(
 name|udp_cksum
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -5511,7 +5517,7 @@ directive|endif
 comment|/* 	 * Set up checksum and output datagram. 	 */
 if|if
 condition|(
-name|udp_cksum
+name|V_udp_cksum
 condition|)
 block|{
 if|if
