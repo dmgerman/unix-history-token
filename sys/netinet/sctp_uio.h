@@ -1460,8 +1460,15 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SCTP_AUTH_NEWKEY
+name|SCTP_AUTH_NEW_KEY
 value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_AUTH_NEWKEY
+value|SCTP_AUTH_NEW_KEY
 end_define
 
 begin_define
