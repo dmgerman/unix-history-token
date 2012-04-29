@@ -121,7 +121,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|":e:i:o:"
+literal|"e:i:o:"
 argument_list|)
 operator|)
 operator|!=
@@ -159,32 +159,9 @@ name|optarg
 expr_stmt|;
 break|break;
 case|case
-literal|':'
-case|:
-name|warnx
-argument_list|(
-literal|"Missing argument for option -%c"
-argument_list|,
-name|optopt
-argument_list|)
-expr_stmt|;
-name|usage
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
 literal|'?'
 case|:
 default|default:
-name|warnx
-argument_list|(
-literal|"Unknown option: %c"
-argument_list|,
-name|optopt
-argument_list|)
-expr_stmt|;
 name|usage
 argument_list|(
 literal|1
