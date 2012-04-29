@@ -1533,13 +1533,23 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SCTP_STREAM_RESET_INCOMING_SSN
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_STREAM_RESET_OUTGOING_SSN
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
 name|SCTP_STREAM_RESET_DENIED
 value|0x0004
 end_define
-
-begin_comment
-comment|/* SCTP_STRRESET_FAILED */
-end_comment
 
 begin_define
 define|#
@@ -1547,10 +1557,6 @@ directive|define
 name|SCTP_STREAM_RESET_FAILED
 value|0x0008
 end_define
-
-begin_comment
-comment|/* SCTP_STRRESET_FAILED */
-end_comment
 
 begin_define
 define|#
