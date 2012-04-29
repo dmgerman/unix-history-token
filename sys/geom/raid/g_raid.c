@@ -9449,7 +9449,7 @@ name|sc
 operator|->
 name|sc_lock
 argument_list|,
-literal|"gmirror:lock"
+literal|"graid:lock"
 argument_list|)
 expr_stmt|;
 name|mtx_init
@@ -9459,7 +9459,7 @@ name|sc
 operator|->
 name|sc_queue_mtx
 argument_list|,
-literal|"gmirror:queue"
+literal|"graid:queue"
 argument_list|,
 name|NULL
 argument_list|,
