@@ -18103,7 +18103,7 @@ operator|)
 name|data
 operator|)
 argument_list|,
-name|SCTP_STREAM_RESET_INCOMING
+name|SCTP_STREAM_RESET_OUTGOING_SSN
 argument_list|)
 expr_stmt|;
 break|break;
@@ -18124,7 +18124,7 @@ operator|)
 name|data
 operator|)
 argument_list|,
-name|SCTP_STREAM_RESET_OUTGOING
+name|SCTP_STREAM_RESET_INCOMING
 argument_list|)
 expr_stmt|;
 break|break;
@@ -18146,9 +18146,9 @@ name|data
 operator|)
 argument_list|,
 operator|(
-name|SCTP_STREAM_RESET_OUTGOING
+name|SCTP_STREAM_RESET_OUTGOING_SSN
 operator||
-name|SCTP_STREAM_RESET_INCOMING
+name|SCTP_STREAM_RESET_FAILED
 operator|)
 argument_list|)
 expr_stmt|;
@@ -18171,9 +18171,9 @@ name|data
 operator|)
 argument_list|,
 operator|(
-name|SCTP_STREAM_RESET_OUTGOING
-operator||
 name|SCTP_STREAM_RESET_INCOMING
+operator||
+name|SCTP_STREAM_RESET_FAILED
 operator|)
 argument_list|)
 expr_stmt|;
