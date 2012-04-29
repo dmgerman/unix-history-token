@@ -5890,7 +5890,17 @@ name|size
 argument_list|,
 name|VM_MAP_WIRE_USER
 operator||
+operator|(
+operator|(
+name|flags
+operator|&
+name|MAP_STACK
+operator|)
+condition|?
+name|VM_MAP_WIRE_HOLESOK
+else|:
 name|VM_MAP_WIRE_NOHOLES
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
