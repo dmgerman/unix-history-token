@@ -17503,14 +17503,6 @@ name|av
 operator|->
 name|assoc_value
 operator|!=
-name|SCTP_SS_DEFAULT
-operator|)
-operator|&&
-operator|(
-name|av
-operator|->
-name|assoc_value
-operator|!=
 name|SCTP_SS_ROUND_ROBIN
 operator|)
 operator|&&
