@@ -3131,6 +3131,9 @@ decl_stmt|;
 name|uint16_t
 name|strm_realoutsize
 decl_stmt|;
+name|uint16_t
+name|strm_pending_add_size
+decl_stmt|;
 comment|/* my maximum number of retrans of INIT and SEND */
 comment|/* copied from SCTP but should be individually setable */
 name|uint16_t
@@ -3235,6 +3238,10 @@ comment|/* Flag to tell if ECN is allowed */
 name|uint8_t
 name|ecn_allowed
 decl_stmt|;
+comment|/* Did the peer make the stream config (add out) request */
+name|uint8_t
+name|peer_req_out
+decl_stmt|;
 comment|/* flag to indicate if peer can do asconf */
 name|uint8_t
 name|peer_supports_asconf
@@ -3254,6 +3261,9 @@ decl_stmt|;
 comment|/* stream resets are supported by the peer */
 name|uint8_t
 name|peer_supports_strreset
+decl_stmt|;
+name|uint8_t
+name|local_strreset_support
 decl_stmt|;
 name|uint8_t
 name|peer_supports_nat

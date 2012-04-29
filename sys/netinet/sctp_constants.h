@@ -1816,8 +1816,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|SCTP_STR_RESET_ADD_STREAMS
+name|SCTP_STR_RESET_ADD_OUT_STREAMS
 value|0x0011
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_STR_RESET_ADD_IN_STREAMS
+value|0x0012
 end_define
 
 begin_define
