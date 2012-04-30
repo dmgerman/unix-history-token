@@ -320,7 +320,7 @@ name|fbytes
 operator|=
 name|obj
 operator|->
-name|nchains
+name|dynsymcount
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -437,7 +437,7 @@ name|fbytes
 operator|=
 name|obj
 operator|->
-name|nchains
+name|dynsymcount
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -1318,7 +1318,7 @@ name|bytes
 init|=
 name|obj
 operator|->
-name|nchains
+name|dynsymcount
 operator|*
 sizeof|sizeof
 argument_list|(
