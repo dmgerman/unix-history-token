@@ -1113,6 +1113,12 @@ operator|=
 literal|"SpeedStor large partition"
 block|,
 index|[
+literal|0xFB
+index|]
+operator|=
+literal|"VMware VMFS"
+block|,
+index|[
 literal|0xFE
 index|]
 operator|=
