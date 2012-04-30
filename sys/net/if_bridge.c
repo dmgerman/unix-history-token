@@ -357,12 +357,6 @@ directive|include
 file|<netinet/ip_fw.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netinet/ipfw/ip_fw_private.h>
-end_include
-
 begin_comment
 comment|/*  * Size of the route hash table.  Must be a power of two.  */
 end_comment
