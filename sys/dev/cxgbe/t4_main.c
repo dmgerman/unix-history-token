@@ -867,7 +867,7 @@ begin_define
 define|#
 directive|define
 name|PKTC_IDX_10G
-value|2
+value|(-1)
 end_define
 
 begin_decl_stmt
@@ -921,7 +921,7 @@ begin_define
 define|#
 directive|define
 name|PKTC_IDX_1G
-value|2
+value|(-1)
 end_define
 
 begin_decl_stmt
