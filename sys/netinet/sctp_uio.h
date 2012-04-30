@@ -2299,6 +2299,9 @@ block|{
 name|sctp_assoc_t
 name|gauth_assoc_id
 decl_stmt|;
+name|uint32_t
+name|gauth_number_of_chunks
+decl_stmt|;
 name|uint8_t
 name|gauth_chunks
 index|[]
