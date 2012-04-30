@@ -579,7 +579,6 @@ name|fp
 parameter_list|,
 name|char
 modifier|*
-name|__restrict
 name|mbp
 parameter_list|,
 name|int
@@ -797,7 +796,6 @@ name|fp
 parameter_list|,
 name|char
 modifier|*
-name|__restrict
 name|mbp
 parameter_list|,
 name|int
@@ -1133,7 +1131,6 @@ name|fp
 parameter_list|,
 name|char
 modifier|*
-name|__restrict
 name|mbp
 parameter_list|,
 name|int
