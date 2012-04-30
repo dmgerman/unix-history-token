@@ -689,6 +689,33 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+if|if
+condition|(
+name|argc
+operator|<
+literal|1
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"error: No printer name(s) specified before"
+literal|" '-msg'.\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"usage: %s  {all | printer ...}"
+argument_list|,
+name|generic_cmdname
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" [-msg<text> ...]\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 block|}
 comment|/* call initialization routine, if there is one for this cmd */
 if|if
