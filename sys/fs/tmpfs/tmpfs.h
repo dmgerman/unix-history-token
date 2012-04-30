@@ -590,11 +590,11 @@ begin_struct
 struct|struct
 name|tmpfs_mount
 block|{
-comment|/* Maximum number of memory pages available for use by the file 	 * system, set during mount time.  This variable must never be 	 * used directly as it may be bigger than the current amount of 	 * free memory; in the extreme case, it will hold the SIZE_MAX 	 * value.  Instead, use the TMPFS_PAGES_MAX macro. */
+comment|/* Maximum number of memory pages available for use by the file 	 * system, set during mount time.  This variable must never be 	 * used directly as it may be bigger than the current amount of 	 * free memory; in the extreme case, it will hold the SIZE_MAX 	 * value. */
 name|size_t
 name|tm_pages_max
 decl_stmt|;
-comment|/* Number of pages in use by the file system.  Cannot be bigger 	 * than the value returned by TMPFS_PAGES_MAX in any case. */
+comment|/* Number of pages in use by the file system. */
 name|size_t
 name|tm_pages_used
 decl_stmt|;
@@ -1268,129 +1268,36 @@ comment|/*  * Memory management stuff.  */
 end_comment
 
 begin_comment
-comment|/* Amount of memory pages to reserve for the system (e.g., to not use by  * tmpfs).  * XXX: Should this be tunable through sysctl, for instance? */
+comment|/*  * Amount of memory pages to reserve for the system (e.g., to not use by  * tmpfs).  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TMPFS_PAGES_RESERVED
+name|TMPFS_PAGES_MINRESERVED
 value|(4 * 1024 * 1024 / PAGE_SIZE)
 end_define
 
-begin_comment
-comment|/*  * Returns information about the number of available memory pages,  * including physical and virtual ones.  *  * Remember to remove TMPFS_PAGES_RESERVED from the returned value to avoid  * excessive memory usage.  *  */
-end_comment
-
-begin_function
-specifier|static
-name|__inline
+begin_function_decl
 name|size_t
-name|tmpfs_mem_info
+name|tmpfs_mem_avail
 parameter_list|(
 name|void
 parameter_list|)
-block|{
-return|return
-operator|(
-name|swap_pager_avail
-operator|+
-name|cnt
-operator|.
-name|v_free_count
-operator|+
-name|cnt
-operator|.
-name|v_cache_count
-operator|)
-return|;
-block|}
-end_function
+function_decl|;
+end_function_decl
 
-begin_comment
-comment|/* Returns the maximum size allowed for a tmpfs file system.  This macro  * must be used instead of directly retrieving the value from tm_pages_max.  * The reason is that the size of a tmpfs file system is dynamic: it lets  * the user store files as long as there is enough free memory (including  * physical memory and swap space).  Therefore, the amount of memory to be  * used is either the limit imposed by the user during mount time or the  * amount of available memory, whichever is lower.  To avoid consuming all  * the memory for a given mount point, the system will always reserve a  * minimum of TMPFS_PAGES_RESERVED pages, which is also taken into account  * by this macro (see above). */
-end_comment
-
-begin_function
-specifier|static
-name|__inline
+begin_function_decl
 name|size_t
-name|TMPFS_PAGES_MAX
+name|tmpfs_pages_used
 parameter_list|(
 name|struct
 name|tmpfs_mount
 modifier|*
 name|tmp
 parameter_list|)
-block|{
-name|size_t
-name|freepages
-decl_stmt|;
-name|freepages
-operator|=
-name|tmpfs_mem_info
-argument_list|()
-expr_stmt|;
-name|freepages
-operator|-=
-name|freepages
-operator|<
-name|TMPFS_PAGES_RESERVED
-condition|?
-name|freepages
-else|:
-name|TMPFS_PAGES_RESERVED
-expr_stmt|;
-return|return
-name|MIN
-argument_list|(
-name|tmp
-operator|->
-name|tm_pages_max
-argument_list|,
-name|freepages
-operator|+
-name|tmp
-operator|->
-name|tm_pages_used
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* Returns the available space for the given file system. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TMPFS_META_PAGES
-parameter_list|(
-name|tmp
-parameter_list|)
-value|(howmany((tmp)->tm_nodes_inuse * (sizeof(struct tmpfs_node) \ 				+ sizeof(struct tmpfs_dirent)), PAGE_SIZE))
-end_define
-
-begin_define
-define|#
-directive|define
-name|TMPFS_FILE_PAGES
-parameter_list|(
-name|tmp
-parameter_list|)
-value|((tmp)->tm_pages_used)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TMPFS_PAGES_AVAIL
-parameter_list|(
-name|tmp
-parameter_list|)
-value|(TMPFS_PAGES_MAX(tmp)> \ 			TMPFS_META_PAGES(tmp)+TMPFS_FILE_PAGES(tmp)? \ 			TMPFS_PAGES_MAX(tmp) - TMPFS_META_PAGES(tmp) \ 			- TMPFS_FILE_PAGES(tmp):0)
-end_define
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
