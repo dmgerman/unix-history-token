@@ -213,32 +213,32 @@ define|\
 value|ARGE_WRITE(sc, reg, ARGE_READ(sc, (reg))& ~(bits))
 end_define
 
-begin_comment
-comment|/*  * MII registers access macros  */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|ARGE_MII_READ
+name|ARGE_MDIO_WRITE
 parameter_list|(
-name|reg
+name|_sc
+parameter_list|,
+name|_reg
+parameter_list|,
+name|_val
 parameter_list|)
 define|\
-value|*((volatile uint32_t *)MIPS_PHYS_TO_KSEG1((AR71XX_MII_BASE + reg)))
+value|ARGE_WRITE((_sc), (_reg), (_val))
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARGE_MII_WRITE
+name|ARGE_MDIO_READ
 parameter_list|(
-name|reg
+name|_sc
 parameter_list|,
-name|val
+name|_reg
 parameter_list|)
 define|\
-value|*((volatile uint32_t *)MIPS_PHYS_TO_KSEG1((AR71XX_MII_BASE + reg))) = (val)
+value|ARGE_READ((_sc), (_reg))
 end_define
 
 begin_define
@@ -435,6 +435,15 @@ decl_stmt|;
 name|uint32_t
 name|arge_duplex_mode
 decl_stmt|;
+name|uint32_t
+name|arge_phymask
+decl_stmt|;
+name|uint8_t
+name|arge_eaddr
+index|[
+name|ETHER_ADDR_LEN
+index|]
+decl_stmt|;
 name|struct
 name|resource
 modifier|*
@@ -454,6 +463,9 @@ name|arge_intrhand
 decl_stmt|;
 name|device_t
 name|arge_miibus
+decl_stmt|;
+name|device_t
+name|arge_miiproxy
 decl_stmt|;
 name|bus_dma_tag_t
 name|arge_parent_tag
@@ -492,9 +504,6 @@ name|arge_intr_status
 decl_stmt|;
 name|int
 name|arge_mac_unit
-decl_stmt|;
-name|int
-name|arge_phymask
 decl_stmt|;
 name|int
 name|arge_if_flags
