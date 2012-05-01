@@ -1345,48 +1345,6 @@ index|]
 decl_stmt|;
 comment|/* Sequence No. */
 name|uint8_t
-name|mc_addr4
-index|[
-name|IEEE80211_ADDR_LEN
-index|]
-decl_stmt|;
-name|uint8_t
-name|mc_addr5
-index|[
-name|IEEE80211_ADDR_LEN
-index|]
-decl_stmt|;
-block|}
-name|__packed
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|ieee80211_meshcntl_ae11
-block|{
-name|uint8_t
-name|mc_flags
-decl_stmt|;
-comment|/* Address Extension 11 */
-name|uint8_t
-name|mc_ttl
-decl_stmt|;
-comment|/* TTL */
-name|uint8_t
-name|mc_seq
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* Sequence No. */
-name|uint8_t
-name|mc_addr4
-index|[
-name|IEEE80211_ADDR_LEN
-index|]
-decl_stmt|;
-name|uint8_t
 name|mc_addr5
 index|[
 name|IEEE80211_ADDR_LEN
@@ -1402,6 +1360,40 @@ block|}
 name|__packed
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_MESH_AE_MASK
+value|0x03
+end_define
+
+begin_enum
+enum|enum
+block|{
+name|IEEE80211_MESH_AE_00
+init|=
+literal|0
+block|,
+comment|/* MC has no AE subfield */
+name|IEEE80211_MESH_AE_01
+init|=
+literal|1
+block|,
+comment|/* MC contain addr4 */
+name|IEEE80211_MESH_AE_10
+init|=
+literal|2
+block|,
+comment|/* MC contain addr5& addr6 */
+name|IEEE80211_MESH_AE_11
+init|=
+literal|3
+block|,
+comment|/* RESERVED */
+block|}
+enum|;
+end_enum
 
 begin_ifdef
 ifdef|#
@@ -1471,6 +1463,13 @@ name|IEEE80211_ADDR_LEN
 index|]
 decl_stmt|;
 name|uint8_t
+name|rt_mesh_gate
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
+decl_stmt|;
+comment|/* meshDA */
+name|uint8_t
 name|rt_nexthop
 index|[
 name|IEEE80211_ADDR_LEN
@@ -1505,6 +1504,10 @@ name|uint32_t
 name|rt_lastmseq
 decl_stmt|;
 comment|/* last seq# seen dest */
+name|uint32_t
+name|rt_ext_seq
+decl_stmt|;
+comment|/* proxy seq number */
 name|void
 modifier|*
 name|rt_priv
