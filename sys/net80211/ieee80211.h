@@ -1546,6 +1546,21 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IEEE80211_ACTION_CAT_SELF_PROT
+value|15
+end_define
+
+begin_comment
+comment|/* Self-protected */
+end_comment
+
+begin_comment
+comment|/* 16 - 125 reserved */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_ACTION_CAT_VENDOR
 value|127
 end_define

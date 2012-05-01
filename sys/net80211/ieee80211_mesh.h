@@ -439,26 +439,6 @@ name|__packed
 struct|;
 end_struct
 
-begin_enum
-enum|enum
-block|{
-name|IEEE80211_MESH_PEER_LINK_OPEN
-init|=
-literal|0
-block|,
-name|IEEE80211_MESH_PEER_LINK_CONFIRM
-init|=
-literal|1
-block|,
-name|IEEE80211_MESH_PEER_LINK_CLOSE
-init|=
-literal|2
-block|,
-comment|/* values 3-255 are reserved */
-block|}
-enum|;
-end_enum
-
 begin_comment
 comment|/* Mesh Peering Management Protocol */
 end_comment
@@ -1164,22 +1144,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * 802.11s Action Frames  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_ACTION_CAT_MESHPEERING
-value|30
-end_define
-
-begin_comment
-comment|/* XXX Linux */
-end_comment
-
-begin_comment
-comment|/* XXX: these need to be looked into */
+comment|/*  * 802.11s Action Frames  * XXX: these are wrong, and some of them should be  * under MESH category while PROXY is under MULTIHOP category.  */
 end_comment
 
 begin_define
@@ -1210,19 +1175,20 @@ end_comment
 begin_enum
 enum|enum
 block|{
+comment|/* 0 reserved */
 name|IEEE80211_ACTION_MESHPEERING_OPEN
-init|=
-literal|0
-block|,
-name|IEEE80211_ACTION_MESHPEERING_CONFIRM
 init|=
 literal|1
 block|,
-name|IEEE80211_ACTION_MESHPEERING_CLOSE
+name|IEEE80211_ACTION_MESHPEERING_CONFIRM
 init|=
 literal|2
 block|,
-comment|/* 3-255 reserved */
+name|IEEE80211_ACTION_MESHPEERING_CLOSE
+init|=
+literal|3
+block|,
+comment|/* 4-255 reserved */
 block|}
 enum|;
 end_enum

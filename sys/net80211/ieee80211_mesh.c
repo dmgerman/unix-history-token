@@ -2293,7 +2293,7 @@ expr_stmt|;
 comment|/* 	 * Register action frame handlers. 	 */
 name|ieee80211_recv_action_register
 argument_list|(
-name|IEEE80211_ACTION_CAT_MESHPEERING
+name|IEEE80211_ACTION_CAT_SELF_PROT
 argument_list|,
 name|IEEE80211_ACTION_MESHPEERING_OPEN
 argument_list|,
@@ -2302,7 +2302,7 @@ argument_list|)
 expr_stmt|;
 name|ieee80211_recv_action_register
 argument_list|(
-name|IEEE80211_ACTION_CAT_MESHPEERING
+name|IEEE80211_ACTION_CAT_SELF_PROT
 argument_list|,
 name|IEEE80211_ACTION_MESHPEERING_CONFIRM
 argument_list|,
@@ -2311,7 +2311,7 @@ argument_list|)
 expr_stmt|;
 name|ieee80211_recv_action_register
 argument_list|(
-name|IEEE80211_ACTION_CAT_MESHPEERING
+name|IEEE80211_ACTION_CAT_SELF_PROT
 argument_list|,
 name|IEEE80211_ACTION_MESHPEERING_CLOSE
 argument_list|,
@@ -2329,7 +2329,7 @@ argument_list|)
 expr_stmt|;
 name|ieee80211_send_action_register
 argument_list|(
-name|IEEE80211_ACTION_CAT_MESHPEERING
+name|IEEE80211_ACTION_CAT_SELF_PROT
 argument_list|,
 name|IEEE80211_ACTION_MESHPEERING_OPEN
 argument_list|,
@@ -2338,7 +2338,7 @@ argument_list|)
 expr_stmt|;
 name|ieee80211_send_action_register
 argument_list|(
-name|IEEE80211_ACTION_CAT_MESHPEERING
+name|IEEE80211_ACTION_CAT_SELF_PROT
 argument_list|,
 name|IEEE80211_ACTION_MESHPEERING_CONFIRM
 argument_list|,
@@ -2347,7 +2347,7 @@ argument_list|)
 expr_stmt|;
 name|ieee80211_send_action_register
 argument_list|(
-name|IEEE80211_ACTION_CAT_MESHPEERING
+name|IEEE80211_ACTION_CAT_SELF_PROT
 argument_list|,
 name|IEEE80211_ACTION_MESHPEERING_CLOSE
 argument_list|,
@@ -2491,7 +2491,7 @@ name|ieee80211_send_action
 argument_list|(
 name|ni
 argument_list|,
-name|IEEE80211_ACTION_CAT_MESHPEERING
+name|IEEE80211_ACTION_CAT_SELF_PROT
 argument_list|,
 name|IEEE80211_ACTION_MESHPEERING_CLOSE
 argument_list|,
@@ -7184,7 +7184,7 @@ name|ieee80211_send_action
 argument_list|(
 name|ni
 argument_list|,
-name|IEEE80211_ACTION_CAT_MESHPEERING
+name|IEEE80211_ACTION_CAT_SELF_PROT
 argument_list|,
 name|IEEE80211_ACTION_MESHPEERING_OPEN
 argument_list|,
@@ -7912,7 +7912,7 @@ if|if
 condition|(
 name|subtype
 operator|==
-name|IEEE80211_MESH_PEER_LINK_CLOSE
+name|IEEE80211_ACTION_MESHPEERING_CLOSE
 operator|&&
 name|mpie
 operator|->
@@ -8107,7 +8107,7 @@ name|ieee80211_send_action
 argument_list|(
 name|ni
 argument_list|,
-name|IEEE80211_ACTION_CAT_MESHPEERING
+name|IEEE80211_ACTION_CAT_SELF_PROT
 argument_list|,
 name|IEEE80211_ACTION_MESHPEERING_CLOSE
 argument_list|,
@@ -8308,7 +8308,7 @@ name|ieee80211_send_action
 argument_list|(
 name|ni
 argument_list|,
-name|IEEE80211_ACTION_CAT_MESHPEERING
+name|IEEE80211_ACTION_CAT_SELF_PROT
 argument_list|,
 name|IEEE80211_ACTION_MESHPEERING_OPEN
 argument_list|,
@@ -8338,7 +8338,7 @@ name|ieee80211_send_action
 argument_list|(
 name|ni
 argument_list|,
-name|IEEE80211_ACTION_CAT_MESHPEERING
+name|IEEE80211_ACTION_CAT_SELF_PROT
 argument_list|,
 name|IEEE80211_ACTION_MESHPEERING_CONFIRM
 argument_list|,
@@ -8395,7 +8395,7 @@ name|ieee80211_send_action
 argument_list|(
 name|ni
 argument_list|,
-name|IEEE80211_ACTION_CAT_MESHPEERING
+name|IEEE80211_ACTION_CAT_SELF_PROT
 argument_list|,
 name|IEEE80211_ACTION_MESHPEERING_CLOSE
 argument_list|,
@@ -8439,7 +8439,7 @@ name|ieee80211_send_action
 argument_list|(
 name|ni
 argument_list|,
-name|IEEE80211_ACTION_CAT_MESHPEERING
+name|IEEE80211_ACTION_CAT_SELF_PROT
 argument_list|,
 name|IEEE80211_ACTION_MESHPEERING_CONFIRM
 argument_list|,
@@ -8487,7 +8487,7 @@ name|ieee80211_send_action
 argument_list|(
 name|ni
 argument_list|,
-name|IEEE80211_ACTION_CAT_MESHPEERING
+name|IEEE80211_ACTION_CAT_SELF_PROT
 argument_list|,
 name|IEEE80211_ACTION_MESHPEERING_CONFIRM
 argument_list|,
@@ -8547,7 +8547,7 @@ name|ieee80211_send_action
 argument_list|(
 name|ni
 argument_list|,
-name|IEEE80211_ACTION_CAT_MESHPEERING
+name|IEEE80211_ACTION_CAT_SELF_PROT
 argument_list|,
 name|IEEE80211_ACTION_MESHPEERING_CLOSE
 argument_list|,
@@ -8605,7 +8605,7 @@ name|ieee80211_send_action
 argument_list|(
 name|ni
 argument_list|,
-name|IEEE80211_ACTION_CAT_MESHPEERING
+name|IEEE80211_ACTION_CAT_SELF_PROT
 argument_list|,
 name|IEEE80211_ACTION_MESHPEERING_CONFIRM
 argument_list|,
@@ -8661,7 +8661,7 @@ name|ieee80211_send_action
 argument_list|(
 name|ni
 argument_list|,
-name|IEEE80211_ACTION_CAT_MESHPEERING
+name|IEEE80211_ACTION_CAT_SELF_PROT
 argument_list|,
 name|IEEE80211_ACTION_MESHPEERING_CLOSE
 argument_list|,
@@ -8704,7 +8704,7 @@ name|ieee80211_send_action
 argument_list|(
 name|ni
 argument_list|,
-name|IEEE80211_ACTION_CAT_MESHPEERING
+name|IEEE80211_ACTION_CAT_SELF_PROT
 argument_list|,
 name|IEEE80211_ACTION_MESHPEERING_CONFIRM
 argument_list|,
@@ -8744,7 +8744,7 @@ name|ieee80211_send_action
 argument_list|(
 name|ni
 argument_list|,
-name|IEEE80211_ACTION_CAT_MESHPEERING
+name|IEEE80211_ACTION_CAT_SELF_PROT
 argument_list|,
 name|IEEE80211_ACTION_MESHPEERING_CLOSE
 argument_list|,
@@ -8936,7 +8936,7 @@ name|ieee80211_send_action
 argument_list|(
 name|ni
 argument_list|,
-name|IEEE80211_ACTION_CAT_MESHPEERING
+name|IEEE80211_ACTION_CAT_SELF_PROT
 argument_list|,
 name|IEEE80211_ACTION_MESHPEERING_CLOSE
 argument_list|,
@@ -8987,7 +8987,7 @@ name|ieee80211_send_action
 argument_list|(
 name|ni
 argument_list|,
-name|IEEE80211_ACTION_CAT_MESHPEERING
+name|IEEE80211_ACTION_CAT_SELF_PROT
 argument_list|,
 name|IEEE80211_ACTION_MESHPEERING_CLOSE
 argument_list|,
@@ -9146,7 +9146,7 @@ name|ieee80211_send_action
 argument_list|(
 name|ni
 argument_list|,
-name|IEEE80211_ACTION_CAT_MESHPEERING
+name|IEEE80211_ACTION_CAT_SELF_PROT
 argument_list|,
 name|IEEE80211_ACTION_MESHPEERING_CLOSE
 argument_list|,
@@ -9652,7 +9652,7 @@ name|ieee80211_add_meshpeer
 argument_list|(
 name|frm
 argument_list|,
-name|IEEE80211_MESH_PEER_LINK_OPEN
+name|IEEE80211_ACTION_MESHPEERING_OPEN
 argument_list|,
 name|args
 index|[
@@ -10007,7 +10007,7 @@ name|ieee80211_add_meshpeer
 argument_list|(
 name|frm
 argument_list|,
-name|IEEE80211_MESH_PEER_LINK_CONFIRM
+name|IEEE80211_ACTION_MESHPEERING_CONFIRM
 argument_list|,
 name|args
 index|[
@@ -10274,7 +10274,7 @@ name|ieee80211_add_meshpeer
 argument_list|(
 name|frm
 argument_list|,
-name|IEEE80211_MESH_PEER_LINK_CLOSE
+name|IEEE80211_ACTION_MESHPEERING_CLOSE
 argument_list|,
 name|args
 index|[
@@ -10850,7 +10850,7 @@ name|ieee80211_send_action
 argument_list|(
 name|ni
 argument_list|,
-name|IEEE80211_ACTION_CAT_MESHPEERING
+name|IEEE80211_ACTION_CAT_SELF_PROT
 argument_list|,
 name|IEEE80211_ACTION_MESHPEERING_CLOSE
 argument_list|,
@@ -10891,7 +10891,7 @@ name|ieee80211_send_action
 argument_list|(
 name|ni
 argument_list|,
-name|IEEE80211_ACTION_CAT_MESHPEERING
+name|IEEE80211_ACTION_CAT_SELF_PROT
 argument_list|,
 name|IEEE80211_ACTION_MESHPEERING_OPEN
 argument_list|,
@@ -10942,7 +10942,7 @@ name|ieee80211_send_action
 argument_list|(
 name|ni
 argument_list|,
-name|IEEE80211_ACTION_CAT_MESHPEERING
+name|IEEE80211_ACTION_CAT_SELF_PROT
 argument_list|,
 name|IEEE80211_ACTION_MESHPEERING_CLOSE
 argument_list|,
@@ -11346,7 +11346,7 @@ name|subtype
 condition|)
 block|{
 case|case
-name|IEEE80211_MESH_PEER_LINK_OPEN
+name|IEEE80211_ACTION_MESHPEERING_OPEN
 case|:
 if|if
 condition|(
@@ -11361,7 +11361,7 @@ literal|1
 return|;
 break|break;
 case|case
-name|IEEE80211_MESH_PEER_LINK_CONFIRM
+name|IEEE80211_ACTION_MESHPEERING_CONFIRM
 case|:
 if|if
 condition|(
@@ -11376,7 +11376,7 @@ literal|1
 return|;
 break|break;
 case|case
-name|IEEE80211_MESH_PEER_LINK_CLOSE
+name|IEEE80211_ACTION_MESHPEERING_CLOSE
 case|:
 if|if
 condition|(
@@ -11737,7 +11737,7 @@ name|subtype
 condition|)
 block|{
 case|case
-name|IEEE80211_MESH_PEER_LINK_OPEN
+name|IEEE80211_ACTION_MESHPEERING_OPEN
 case|:
 operator|*
 name|frm
@@ -11769,7 +11769,7 @@ expr_stmt|;
 comment|/* local ID */
 break|break;
 case|case
-name|IEEE80211_MESH_PEER_LINK_CONFIRM
+name|IEEE80211_ACTION_MESHPEERING_CONFIRM
 case|:
 name|KASSERT
 argument_list|(
@@ -11820,7 +11820,7 @@ expr_stmt|;
 comment|/* peer ID */
 break|break;
 case|case
-name|IEEE80211_MESH_PEER_LINK_CLOSE
+name|IEEE80211_ACTION_MESHPEERING_CLOSE
 case|:
 if|if
 condition|(
