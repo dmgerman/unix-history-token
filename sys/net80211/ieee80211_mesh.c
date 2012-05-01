@@ -5619,17 +5619,41 @@ operator|->
 name|i_addr3
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
+if|if
+condition|(
 name|rt_meshda
-operator|!=
+operator|==
 name|NULL
+condition|)
+block|{
+name|IEEE80211_NOTE_MAC
+argument_list|(
+name|vap
 argument_list|,
-operator|(
-literal|"no route"
-operator|)
+name|IEEE80211_MSG_MESH
+argument_list|,
+name|qwh
+operator|->
+name|i_addr2
+argument_list|,
+literal|"no route to meshDA(%6D)"
+argument_list|,
+name|qwh
+operator|->
+name|i_addr3
+argument_list|,
+literal|":"
 argument_list|)
 expr_stmt|;
+comment|/* 		 * [Optional] any of the following three actions: 		 * o silently discard 				[X] 		 * o trigger a path discovery			[ ] 		 * o inform TA that meshDA is unknown.		[ ] 		 */
+comment|/* XXX: stats */
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 name|ieee80211_mesh_rt_update
 argument_list|(
 name|rt_meshda
