@@ -7746,7 +7746,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Parse meshpeering action ie's for open+confirm frames; the  * important bits are returned in the supplied structure.  */
+comment|/*  * Parse meshpeering action ie's for open+confirm frames  */
 end_comment
 
 begin_function
@@ -7897,6 +7897,18 @@ argument_list|)
 expr_stmt|;
 name|mp
 operator|->
+name|peer_proto
+operator|=
+name|LE_READ_2
+argument_list|(
+operator|&
+name|mpie
+operator|->
+name|peer_proto
+argument_list|)
+expr_stmt|;
+name|mp
+operator|->
 name|peer_llinkid
 operator|=
 name|LE_READ_2
@@ -7907,18 +7919,42 @@ operator|->
 name|peer_llinkid
 argument_list|)
 expr_stmt|;
-comment|/* NB: peer link ID is optional on these frames */
-if|if
+switch|switch
 condition|(
 name|subtype
-operator|==
+condition|)
+block|{
+case|case
+name|IEEE80211_ACTION_MESHPEERING_CONFIRM
+case|:
+name|mp
+operator|->
+name|peer_linkid
+operator|=
+name|LE_READ_2
+argument_list|(
+operator|&
+name|mpie
+operator|->
+name|peer_linkid
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|IEEE80211_ACTION_MESHPEERING_CLOSE
-operator|&&
+case|:
+comment|/* NB: peer link ID is optional */
+if|if
+condition|(
 name|mpie
 operator|->
 name|peer_len
 operator|==
-literal|8
+operator|(
+name|IEEE80211_MPM_BASE_SZ
+operator|+
+literal|2
+operator|)
 condition|)
 block|{
 name|mp
@@ -7966,6 +8002,8 @@ operator|->
 name|peer_rcode
 argument_list|)
 expr_stmt|;
+block|}
+break|break;
 block|}
 break|break;
 block|}
@@ -11329,17 +11367,45 @@ name|meshpeer
 operator|->
 name|peer_len
 operator|<
-literal|6
+name|IEEE80211_MPM_BASE_SZ
 operator|||
 name|meshpeer
 operator|->
 name|peer_len
 operator|>
-literal|10
+name|IEEE80211_MPM_MAX_SZ
 condition|)
 return|return
 literal|1
 return|;
+if|if
+condition|(
+name|meshpeer
+operator|->
+name|peer_proto
+operator|!=
+name|IEEE80211_MPPID_MPM
+condition|)
+block|{
+name|IEEE80211_DPRINTF
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_MSG_ACTION
+operator||
+name|IEEE80211_MSG_MESH
+argument_list|,
+literal|"Only MPM protocol is supported (proto: 0x%02X)"
+argument_list|,
+name|meshpeer
+operator|->
+name|peer_proto
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
 switch|switch
 condition|(
 name|subtype
@@ -11354,7 +11420,7 @@ name|meshpeer
 operator|->
 name|peer_len
 operator|!=
-literal|6
+name|IEEE80211_MPM_BASE_SZ
 condition|)
 return|return
 literal|1
@@ -11369,7 +11435,9 @@ name|meshpeer
 operator|->
 name|peer_len
 operator|!=
-literal|8
+name|IEEE80211_MPM_BASE_SZ
+operator|+
+literal|2
 condition|)
 return|return
 literal|1
@@ -11384,7 +11452,9 @@ name|meshpeer
 operator|->
 name|peer_len
 operator|<
-literal|8
+name|IEEE80211_MPM_BASE_SZ
+operator|+
+literal|2
 condition|)
 return|return
 literal|1
@@ -11395,7 +11465,11 @@ name|meshpeer
 operator|->
 name|peer_len
 operator|==
-literal|8
+operator|(
+name|IEEE80211_MPM_BASE_SZ
+operator|+
+literal|2
+operator|)
 operator|&&
 name|meshpeer
 operator|->
@@ -11703,17 +11777,6 @@ name|uint16_t
 name|reason
 parameter_list|)
 block|{
-comment|/* XXX change for AH */
-specifier|static
-specifier|const
-name|uint8_t
-name|meshpeerproto
-index|[
-literal|4
-index|]
-init|=
-name|IEEE80211_MESH_PEER_PROTO
-decl_stmt|;
 name|KASSERT
 argument_list|(
 name|localid
@@ -11743,22 +11806,17 @@ operator|*
 name|frm
 operator|++
 operator|=
-literal|6
+name|IEEE80211_MPM_BASE_SZ
 expr_stmt|;
 comment|/* length */
-name|memcpy
+name|ADDSHORT
 argument_list|(
 name|frm
 argument_list|,
-name|meshpeerproto
-argument_list|,
-literal|4
+name|IEEE80211_MPPID_MPM
 argument_list|)
 expr_stmt|;
-name|frm
-operator|+=
-literal|4
-expr_stmt|;
+comment|/* proto */
 name|ADDSHORT
 argument_list|(
 name|frm
@@ -11786,22 +11844,19 @@ operator|*
 name|frm
 operator|++
 operator|=
-literal|8
+name|IEEE80211_MPM_BASE_SZ
+operator|+
+literal|2
 expr_stmt|;
 comment|/* length */
-name|memcpy
+name|ADDSHORT
 argument_list|(
 name|frm
 argument_list|,
-name|meshpeerproto
-argument_list|,
-literal|4
+name|IEEE80211_MPPID_MPM
 argument_list|)
 expr_stmt|;
-name|frm
-operator|+=
-literal|4
-expr_stmt|;
+comment|/* proto */
 name|ADDSHORT
 argument_list|(
 name|frm
@@ -11830,7 +11885,7 @@ operator|*
 name|frm
 operator|++
 operator|=
-literal|10
+name|IEEE80211_MPM_MAX_SZ
 expr_stmt|;
 comment|/* length */
 else|else
@@ -11838,22 +11893,19 @@ operator|*
 name|frm
 operator|++
 operator|=
-literal|8
+name|IEEE80211_MPM_BASE_SZ
+operator|+
+literal|2
 expr_stmt|;
 comment|/* length */
-name|memcpy
+name|ADDSHORT
 argument_list|(
 name|frm
 argument_list|,
-name|meshpeerproto
-argument_list|,
-literal|4
+name|IEEE80211_MPPID_MPM
 argument_list|)
 expr_stmt|;
-name|frm
-operator|+=
-literal|4
-expr_stmt|;
+comment|/* proto */
 name|ADDSHORT
 argument_list|(
 name|frm

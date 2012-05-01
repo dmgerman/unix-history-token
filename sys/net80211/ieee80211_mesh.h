@@ -405,6 +405,20 @@ begin_comment
 comment|/* Peer Link Management */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_MPM_BASE_SZ
+value|(4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_MPM_MAX_SZ
+value|(8)
+end_define
+
 begin_struct
 struct|struct
 name|ieee80211_meshpeer_ie
@@ -416,11 +430,8 @@ comment|/* IEEE80211_ELEMID_MESHPEER */
 name|uint8_t
 name|peer_len
 decl_stmt|;
-name|uint8_t
+name|uint16_t
 name|peer_proto
-index|[
-literal|4
-index|]
 decl_stmt|;
 comment|/* Peer Management Protocol */
 name|uint16_t
@@ -440,54 +451,26 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Mesh Peering Management Protocol */
+comment|/* Mesh Peering Protocol Identifier field value */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IEEE80211_MESH_PEER_PROTO_OUI
-value|0x00, 0x0f, 0xac
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_MESH_PEER_PROTO_VALUE
-value|0x2a
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_MESH_PEER_PROTO
-value|{ IEEE80211_MESH_PEER_PROTO_OUI, \ 					  IEEE80211_MESH_PEER_PROTO_VALUE }
-end_define
-
-begin_comment
-comment|/* Abbreviated Handshake Protocol */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_MESH_PEER_PROTO_AH_OUI
-value|0x00, 0x0f, 0xac
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_MESH_PEER_PROTO_AH_VALUE
-value|0x2b
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_MESH_PEER_PROTO_AH
-value|{ IEEE80211_MESH_PEER_PROTO_AH_OUI, \ 					  IEEE80211_MESH_PEER_PROTO_AH_VALUE }
-end_define
+begin_enum
+enum|enum
+block|{
+name|IEEE80211_MPPID_MPM
+init|=
+literal|0
+block|,
+comment|/* Mesh peering management */
+name|IEEE80211_MPPID_AUTH_MPM
+init|=
+literal|1
+block|,
+comment|/* Auth. mesh peering exchange */
+comment|/* 2-65535 reserved */
+block|}
+enum|;
+end_enum
 
 begin_ifdef
 ifdef|#
