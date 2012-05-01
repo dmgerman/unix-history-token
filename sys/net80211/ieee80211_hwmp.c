@@ -386,6 +386,14 @@ parameter_list|,
 name|struct
 name|ieee80211_meshpreq_ie
 modifier|*
+parameter_list|,
+name|struct
+name|timeval
+modifier|*
+parameter_list|,
+name|struct
+name|timeval
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -772,6 +780,11 @@ name|ieee80211_hwmp_seq
 name|hr_origseq
 decl_stmt|;
 comment|/* seq. no. on our latest PREQ*/
+name|struct
+name|timeval
+name|hr_lastpreq
+decl_stmt|;
+comment|/* last time we sent a PREQ */
 name|int
 name|hr_preqretries
 decl_stmt|;
@@ -791,20 +804,15 @@ name|ieee80211_hwmp_seq
 name|hs_preqid
 decl_stmt|;
 comment|/* next PREQ ID to be used */
-name|struct
-name|timeval
-name|hs_lastpreq
+name|int
+name|hs_rootmode
 decl_stmt|;
-comment|/* last time we sent a PREQ */
+comment|/* proactive HWMP */
 name|struct
 name|timeval
 name|hs_lastperr
 decl_stmt|;
 comment|/* last time we sent a PERR */
-name|int
-name|hs_rootmode
-decl_stmt|;
-comment|/* proactive HWMP */
 name|struct
 name|callout
 name|hs_roottimer
@@ -4481,8 +4489,13 @@ name|broadcastaddr
 argument_list|,
 operator|&
 name|preq
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
+comment|/* NB: we enforce rate check ourself */
 name|hwmp_rootmode_setup
 argument_list|(
 name|vap
@@ -5648,18 +5661,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|rt
-operator|=
-name|ieee80211_mesh_rt_find
-argument_list|(
-name|vap
-argument_list|,
-name|PREQ_TADDR
-argument_list|(
-literal|0
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Forwarding and Intermediate reply for PREQs with 1 target. 	 */
 if|if
 condition|(
@@ -5691,12 +5692,12 @@ expr_stmt|;
 comment|/* 		 * We have a valid route to this node. 		 */
 if|if
 condition|(
-name|rt
+name|rttarg
 operator|!=
 name|NULL
 operator|&&
 operator|(
-name|rt
+name|rttarg
 operator|->
 name|rt_flags
 operator|&
@@ -5738,7 +5739,7 @@ argument_list|,
 literal|":"
 argument_list|)
 expr_stmt|;
-comment|/* 				 * Propagate the original PREQ. 				 * PREQ is unicast now to rt->rt_nexthop 				 */
+comment|/* 				 * Propagate the original PREQ. 				 * PREQ is unicast now to rttarg->rt_nexthop 				 */
 name|ppreq
 operator|.
 name|preq_flags
@@ -5803,12 +5804,20 @@ name|vap
 operator|->
 name|iv_myaddr
 argument_list|,
-name|rt
+name|rttarg
 operator|->
 name|rt_nexthop
 argument_list|,
 operator|&
 name|ppreq
+argument_list|,
+operator|&
+name|hrtarg
+operator|->
+name|hr_lastpreq
+argument_list|,
+operator|&
+name|ieee80211_hwmp_preqminint
 argument_list|)
 expr_stmt|;
 block|}
@@ -5977,12 +5986,12 @@ condition|)
 block|{
 if|if
 condition|(
-name|rt
+name|rttarg
 operator|==
 name|NULL
 condition|)
 block|{
-name|rt
+name|rttarg
 operator|=
 name|ieee80211_mesh_rt_add
 argument_list|(
@@ -5996,7 +6005,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|rt
+name|rttarg
 operator|==
 name|NULL
 condition|)
@@ -6029,7 +6038,7 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-name|rt
+name|rttarg
 operator|->
 name|rt_metric
 operator|=
@@ -6039,32 +6048,33 @@ name|preq_metric
 expr_stmt|;
 name|ieee80211_mesh_rt_update
 argument_list|(
-name|rt
+name|rttarg
 argument_list|,
 name|preq
 operator|->
 name|preq_lifetime
 argument_list|)
 expr_stmt|;
-name|hrorig
+name|hrtarg
 operator|=
 name|IEEE80211_MESH_ROUTE_PRIV
 argument_list|(
-name|rt
+name|rttarg
 argument_list|,
 expr|struct
 name|ieee80211_hwmp_route
 argument_list|)
 expr_stmt|;
-name|hrorig
+name|hrtarg
 operator|->
 name|hr_seq
 operator|=
-name|preq
-operator|->
-name|preq_origseq
+name|PREQ_TSEQ
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
-name|hrorig
+name|hrtarg
 operator|->
 name|hr_preqid
 operator|=
@@ -6126,6 +6136,14 @@ name|broadcastaddr
 argument_list|,
 operator|&
 name|ppreq
+argument_list|,
+operator|&
+name|hrtarg
+operator|->
+name|hr_lastpreq
+argument_list|,
+operator|&
+name|ieee80211_hwmp_preqminint
 argument_list|)
 expr_stmt|;
 block|}
@@ -6179,31 +6197,37 @@ name|struct
 name|ieee80211_meshpreq_ie
 modifier|*
 name|preq
+parameter_list|,
+name|struct
+name|timeval
+modifier|*
+name|last
+parameter_list|,
+name|struct
+name|timeval
+modifier|*
+name|minint
 parameter_list|)
 block|{
-name|struct
-name|ieee80211_hwmp_state
-modifier|*
-name|hs
-init|=
-name|ni
-operator|->
-name|ni_vap
-operator|->
-name|iv_hwmp
-decl_stmt|;
-comment|/* 	 * Enforce PREQ interval. 	 */
+comment|/* 	 * Enforce PREQ interval. 	 * NB: Proactive ROOT PREQs rate is handled by cb task. 	 */
+if|if
+condition|(
+name|last
+operator|!=
+name|NULL
+operator|&&
+name|minint
+operator|!=
+name|NULL
+condition|)
+block|{
 if|if
 condition|(
 name|ratecheck
 argument_list|(
-operator|&
-name|hs
-operator|->
-name|hs_lastpreq
+name|last
 argument_list|,
-operator|&
-name|ieee80211_hwmp_preqminint
+name|minint
 argument_list|)
 operator|==
 literal|0
@@ -6211,14 +6235,13 @@ condition|)
 return|return
 name|EALREADY
 return|;
+comment|/* XXX: we should postpone */
 name|getmicrouptime
 argument_list|(
-operator|&
-name|hs
-operator|->
-name|hs_lastpreq
+name|last
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * mesh preq action frame format 	 *     [6] da 	 *     [6] sa 	 *     [6] addr3 = sa 	 *     [1] action 	 *     [1] category 	 *     [tlv] mesh path request 	 */
 name|preq
 operator|->
@@ -8789,6 +8812,14 @@ name|broadcastaddr
 argument_list|,
 operator|&
 name|preq
+argument_list|,
+operator|&
+name|hr
+operator|->
+name|hr_lastpreq
+argument_list|,
+operator|&
+name|ieee80211_hwmp_preqminint
 argument_list|)
 expr_stmt|;
 block|}
