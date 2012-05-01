@@ -20787,6 +20787,16 @@ name|rt
 operator|->
 name|imr_flags
 operator|&
+name|IEEE80211_MESHRT_FLAGS_DISCOVER
+operator|)
+condition|?
+literal|'D'
+else|:
+operator|(
+name|rt
+operator|->
+name|imr_flags
+operator|&
 name|IEEE80211_MESHRT_FLAGS_VALID
 operator|)
 condition|?
