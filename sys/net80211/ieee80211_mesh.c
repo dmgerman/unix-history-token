@@ -1323,6 +1323,17 @@ name|lifetime
 init|=
 literal|0
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|rt
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"route is NULL"
+operator|)
+argument_list|)
+expr_stmt|;
 name|now
 operator|=
 name|ticks
