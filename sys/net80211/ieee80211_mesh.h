@@ -1441,6 +1441,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * Basic forwarding information:  * o Destination MAC  * o Next-hop MAC  * o Precursor list (not implemented yet)  * o Path timeout  * The rest is part of the active Mesh path selection protocol.  * XXX: to be moved out later.  */
+end_comment
+
 begin_struct
 struct|struct
 name|ieee80211_mesh_route
@@ -1451,10 +1455,15 @@ argument|ieee80211_mesh_route
 argument_list|)
 name|rt_next
 expr_stmt|;
-name|int
-name|rt_crtime
+name|struct
+name|mtx
+name|rt_lock
 decl_stmt|;
-comment|/* creation time */
+comment|/* fine grained route lock */
+name|int
+name|rt_updtime
+decl_stmt|;
+comment|/* last update time */
 name|uint8_t
 name|rt_dest
 index|[
@@ -1491,6 +1500,7 @@ comment|/* proxy entry */
 name|uint32_t
 name|rt_lifetime
 decl_stmt|;
+comment|/* route timeout */
 name|uint32_t
 name|rt_lastmseq
 decl_stmt|;
@@ -1919,6 +1929,20 @@ name|uint8_t
 index|[
 name|IEEE80211_ADDR_LEN
 index|]
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ieee80211_mesh_rt_update
+parameter_list|(
+name|struct
+name|ieee80211_mesh_route
+modifier|*
+name|rt
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

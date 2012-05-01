@@ -741,22 +741,6 @@ value|((int32_t)((a)-(b))>= 0)
 end_define
 
 begin_comment
-comment|/* The longer one of the lifetime should be stored as new lifetime */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MESH_ROUTE_LIFETIME_MAX
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|(a> b ? a : b)
-end_define
-
-begin_comment
 comment|/*  * Private extension of ieee80211_mesh_route.  */
 end_comment
 
@@ -5119,19 +5103,13 @@ name|preq_hopcount
 operator|+
 literal|1
 expr_stmt|;
-name|rtorig
-operator|->
-name|rt_lifetime
-operator|=
-name|MESH_ROUTE_LIFETIME_MAX
+name|ieee80211_mesh_rt_update
 argument_list|(
+name|rtorig
+argument_list|,
 name|preq
 operator|->
 name|preq_lifetime
-argument_list|,
-name|rtorig
-operator|->
-name|rt_lifetime
 argument_list|)
 expr_stmt|;
 comment|/* path to orig is valid now */
@@ -6007,13 +5985,14 @@ name|preq
 operator|->
 name|preq_metric
 expr_stmt|;
+name|ieee80211_mesh_rt_update
+argument_list|(
 name|rt
-operator|->
-name|rt_lifetime
-operator|=
+argument_list|,
 name|preq
 operator|->
 name|preq_lifetime
+argument_list|)
 expr_stmt|;
 name|hrorig
 operator|=
@@ -6479,13 +6458,14 @@ name|prep
 operator|->
 name|prep_hopcount
 expr_stmt|;
+name|ieee80211_mesh_rt_update
+argument_list|(
 name|rt
-operator|->
-name|rt_lifetime
-operator|=
+argument_list|,
 name|prep
 operator|->
 name|prep_lifetime
+argument_list|)
 expr_stmt|;
 name|rt
 operator|->
@@ -6941,13 +6921,14 @@ name|prep_hopcount
 operator|+
 literal|1
 expr_stmt|;
+name|ieee80211_mesh_rt_update
+argument_list|(
 name|rt
-operator|->
-name|rt_lifetime
-operator|=
+argument_list|,
 name|prep
 operator|->
 name|prep_lifetime
+argument_list|)
 expr_stmt|;
 name|rt
 operator|->
@@ -8475,13 +8456,15 @@ name|rt_metric
 operator|=
 name|IEEE80211_MESHLMETRIC_INITIALVAL
 expr_stmt|;
+comment|/* XXX: special discovery timeout, larger lifetime? */
+name|ieee80211_mesh_rt_update
+argument_list|(
 name|rt
-operator|->
-name|rt_lifetime
-operator|=
+argument_list|,
 name|ticks_to_msecs
 argument_list|(
 name|ieee80211_hwmp_pathtimeout
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* XXX check preq retries */
@@ -8577,9 +8560,10 @@ name|preq
 operator|.
 name|preq_lifetime
 operator|=
-name|rt
-operator|->
-name|rt_lifetime
+name|ticks_to_msecs
+argument_list|(
+name|ieee80211_hwmp_pathtimeout
+argument_list|)
 expr_stmt|;
 name|preq
 operator|.
