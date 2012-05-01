@@ -1485,7 +1485,7 @@ define|#
 directive|define
 name|IEEE80211_MESHRT_FLAGS_VALID
 value|0x01
-comment|/* patch discovery complete */
+comment|/* path discovery complete */
 define|#
 directive|define
 name|IEEE80211_MESHRT_FLAGS_PROXY
