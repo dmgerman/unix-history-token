@@ -4440,7 +4440,7 @@ name|preq
 operator|.
 name|preq_flags
 operator|=
-name|IEEE80211_MESHPREQ_FLAGS_AM
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -5835,8 +5835,7 @@ comment|/* 				 * Propagate the original PREQ. 				 * PREQ is unicast now to rtt
 name|ppreq
 operator|.
 name|preq_flags
-operator|&=
-operator|~
+operator||=
 name|IEEE80211_MESHPREQ_FLAGS_AM
 expr_stmt|;
 name|ppreq
@@ -8861,7 +8860,7 @@ name|preq
 operator|.
 name|preq_flags
 operator|=
-name|IEEE80211_MESHPREQ_FLAGS_AM
+literal|0
 expr_stmt|;
 name|preq
 operator|.

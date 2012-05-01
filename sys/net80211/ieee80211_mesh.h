@@ -759,7 +759,7 @@ define|#
 directive|define
 name|IEEE80211_MESHPREQ_FLAGS_AM
 value|0x02
-comment|/* 0 = ucast / 1 = bcast */
+comment|/* 0 = bcast / 1 = ucast */
 define|#
 directive|define
 name|IEEE80211_MESHPREQ_FLAGS_PP
