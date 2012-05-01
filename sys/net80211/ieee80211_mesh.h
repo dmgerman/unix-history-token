@@ -818,11 +818,6 @@ value|0x01
 comment|/* Target Only */
 define|#
 directive|define
-name|IEEE80211_MESHPREQ_TFLAGS_RF
-value|0x02
-comment|/* Reply and Forward */
-define|#
-directive|define
 name|IEEE80211_MESHPREQ_TFLAGS_USN
 value|0x04
 comment|/* Unknown HWMP seq number */
