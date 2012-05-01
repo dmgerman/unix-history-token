@@ -1005,9 +1005,9 @@ modifier|*
 name|mesh_rt_add_locked
 parameter_list|(
 name|struct
-name|ieee80211_mesh_state
+name|ieee80211vap
 modifier|*
-name|ms
+name|vap
 parameter_list|,
 specifier|const
 name|uint8_t
@@ -1017,6 +1017,15 @@ name|IEEE80211_ADDR_LEN
 index|]
 parameter_list|)
 block|{
+name|struct
+name|ieee80211_mesh_state
+modifier|*
+name|ms
+init|=
+name|vap
+operator|->
+name|iv_mesh
+decl_stmt|;
 name|struct
 name|ieee80211_mesh_route
 modifier|*
@@ -1077,6 +1086,12 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|rt
+operator|->
+name|rt_vap
+operator|=
+name|vap
+expr_stmt|;
 name|IEEE80211_ADDR_COPY
 argument_list|(
 name|rt
@@ -1115,6 +1130,16 @@ argument_list|,
 literal|"802.11s route entry"
 argument_list|,
 name|MTX_DEF
+argument_list|)
+expr_stmt|;
+name|callout_init
+argument_list|(
+operator|&
+name|rt
+operator|->
+name|rt_discovery
+argument_list|,
+name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
 name|rt
@@ -1280,7 +1305,7 @@ name|rt
 operator|=
 name|mesh_rt_add_locked
 argument_list|(
-name|ms
+name|vap
 argument_list|,
 name|dest
 argument_list|)
@@ -1531,7 +1556,7 @@ name|rt
 operator|=
 name|mesh_rt_add_locked
 argument_list|(
-name|ms
+name|vap
 argument_list|,
 name|dest
 argument_list|)
@@ -1746,6 +1771,14 @@ comment|/* 	 * Grab the lock before destroying it, to be sure no one else 	 * is
 name|RT_ENTRY_LOCK
 argument_list|(
 name|rt
+argument_list|)
+expr_stmt|;
+name|callout_drain
+argument_list|(
+operator|&
+name|rt
+operator|->
+name|rt_discovery
 argument_list|)
 expr_stmt|;
 name|mtx_destroy
@@ -2090,6 +2123,16 @@ argument_list|,
 argument|next
 argument_list|)
 block|{
+comment|/* Discover paths will be deleted by their own callout */
+if|if
+condition|(
+name|rt
+operator|->
+name|rt_flags
+operator|&
+name|IEEE80211_MESHRT_FLAGS_DISCOVER
+condition|)
+continue|continue;
 name|ieee80211_mesh_rt_update
 argument_list|(
 name|rt
@@ -2097,7 +2140,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 		 * NB: we check for lifetime == 0 so that we give a chance 		 * for route discovery to complete. 		 */
 if|if
 condition|(
 operator|(
@@ -2107,12 +2149,6 @@ name|rt_flags
 operator|&
 name|IEEE80211_MESHRT_FLAGS_VALID
 operator|)
-operator|==
-literal|0
-operator|&&
-name|rt
-operator|->
-name|rt_lifetime
 operator|==
 literal|0
 condition|)

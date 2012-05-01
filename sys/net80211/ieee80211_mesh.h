@@ -1427,10 +1427,20 @@ argument_list|)
 name|rt_next
 expr_stmt|;
 name|struct
+name|ieee80211vap
+modifier|*
+name|rt_vap
+decl_stmt|;
+name|struct
 name|mtx
 name|rt_lock
 decl_stmt|;
 comment|/* fine grained route lock */
+name|struct
+name|callout
+name|rt_discovery
+decl_stmt|;
+comment|/* discovery timeout */
 name|int
 name|rt_updtime
 decl_stmt|;
@@ -1467,13 +1477,18 @@ name|rt_flags
 decl_stmt|;
 define|#
 directive|define
-name|IEEE80211_MESHRT_FLAGS_VALID
+name|IEEE80211_MESHRT_FLAGS_DISCOVER
 value|0x01
+comment|/* path discovery */
+define|#
+directive|define
+name|IEEE80211_MESHRT_FLAGS_VALID
+value|0x02
 comment|/* path discovery complete */
 define|#
 directive|define
 name|IEEE80211_MESHRT_FLAGS_PROXY
-value|0x02
+value|0x04
 comment|/* proxy entry */
 name|uint32_t
 name|rt_lifetime
