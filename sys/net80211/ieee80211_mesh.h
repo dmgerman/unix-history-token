@@ -22,6 +22,13 @@ name|IEEE80211_MESH_DEFAULT_TTL
 value|31
 end_define
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_MESH_MAX_NEIGHBORS
+value|15
+end_define
+
 begin_comment
 comment|/*  * NB: all structures are __packed  so sizeof works on arm, et. al.  */
 end_comment
