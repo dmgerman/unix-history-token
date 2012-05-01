@@ -4518,6 +4518,8 @@ literal|0
 argument_list|)
 operator|=
 name|IEEE80211_MESHPREQ_TFLAGS_TO
+operator||
+name|IEEE80211_MESHPREQ_TFLAGS_USN
 expr_stmt|;
 name|PREQ_TSEQ
 argument_list|(
