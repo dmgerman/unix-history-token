@@ -2937,6 +2937,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IEEE80211_IOC_MESH_GATE
+value|181
+end_define
+
+begin_comment
+comment|/* mesh gate XXX: 173? */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_IOC_HWMP_ROOTMODE
 value|190
 end_define

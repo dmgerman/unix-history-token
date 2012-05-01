@@ -210,12 +210,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IEEE80211_MESHCONF_FORM_MP
+name|IEEE80211_MESHCONF_FORM_GATE
 value|0x01
 end_define
 
 begin_comment
-comment|/* Connected to Portal */
+comment|/* Connected to Gate */
 end_comment
 
 begin_define
@@ -602,17 +602,17 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Portal (MP) Annoucement */
+comment|/* Gate (GANN) Annoucement */
 end_comment
 
 begin_struct
 struct|struct
-name|ieee80211_meshpann_ie
+name|ieee80211_meshgann_ie
 block|{
 name|uint8_t
 name|pann_ie
 decl_stmt|;
-comment|/* IEEE80211_ELEMID_MESHPANN */
+comment|/* IEEE80211_ELEMID_MESHGANN */
 name|uint8_t
 name|pann_len
 decl_stmt|;
@@ -667,9 +667,9 @@ name|rann_flags
 decl_stmt|;
 define|#
 directive|define
-name|IEEE80211_MESHRANN_FLAGS_PR
+name|IEEE80211_MESHRANN_FLAGS_GATE
 value|0x01
-comment|/* Portal Role */
+comment|/* Mesh Gate */
 name|uint8_t
 name|rann_hopcount
 decl_stmt|;
@@ -752,9 +752,9 @@ name|preq_flags
 decl_stmt|;
 define|#
 directive|define
-name|IEEE80211_MESHPREQ_FLAGS_PR
+name|IEEE80211_MESHPREQ_FLAGS_GATE
 value|0x01
-comment|/* Portal Role */
+comment|/* Mesh Gate */
 define|#
 directive|define
 name|IEEE80211_MESHPREQ_FLAGS_AM
@@ -1241,22 +1241,6 @@ literal|10
 block|,
 comment|/* TBTT Adjustment Response */
 comment|/* 11-255 reserved */
-block|}
-enum|;
-end_enum
-
-begin_comment
-comment|/*  * Mesh Portal Annoucement Action codes.  */
-end_comment
-
-begin_enum
-enum|enum
-block|{
-name|IEEE80211_ACTION_MESHPANN
-init|=
-literal|0
-block|,
-comment|/* 1-255 reserved */
 block|}
 enum|;
 end_enum
@@ -1809,9 +1793,9 @@ value|0x01
 comment|/* accept peers */
 define|#
 directive|define
-name|IEEE80211_MESHFLAGS_PORTAL
+name|IEEE80211_MESHFLAGS_GATE
 value|0x02
-comment|/* mesh portal role */
+comment|/* mesh gate role */
 define|#
 directive|define
 name|IEEE80211_MESHFLAGS_FWD
@@ -2190,7 +2174,7 @@ operator|&
 operator|(
 name|IEEE80211_MESHFLAGS_AP
 operator||
-name|IEEE80211_MESHFLAGS_PORTAL
+name|IEEE80211_MESHFLAGS_GATE
 operator|)
 operator|)
 operator|!=

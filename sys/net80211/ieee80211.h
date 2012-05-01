@@ -3657,11 +3657,10 @@ init|=
 literal|120
 block|,
 comment|/* 121-124 MMCAOP not implemented yet */
-name|IEEE80211_ELEMID_MESHPANN
+name|IEEE80211_ELEMID_MESHGANN
 init|=
 literal|125
 block|,
-comment|/* XXX: is GANN now, not used */
 name|IEEE80211_ELEMID_MESHRANN
 init|=
 literal|126
