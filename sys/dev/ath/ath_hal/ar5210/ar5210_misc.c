@@ -2610,5 +2610,53 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Return what percentage of the extension channel is busy.  * This is always disabled for AR5210 series NICs.  */
+end_comment
+
+begin_function
+name|uint32_t
+name|ar5210Get11nExtBusy
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * There's no channel survey support for the AR5210.  */
+end_comment
+
+begin_function
+name|HAL_BOOL
+name|ar5210GetMibCycleCounts
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|HAL_SURVEY_SAMPLE
+modifier|*
+name|hsample
+parameter_list|)
+block|{
+return|return
+operator|(
+name|AH_FALSE
+operator|)
+return|;
+block|}
+end_function
+
 end_unit
 

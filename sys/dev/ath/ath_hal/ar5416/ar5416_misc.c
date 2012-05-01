@@ -574,7 +574,7 @@ comment|/*  * Return the busy for rx_frame, rx_clear, and tx_frame  */
 end_comment
 
 begin_function
-name|uint32_t
+name|HAL_BOOL
 name|ar5416GetMibCycleCounts
 parameter_list|(
 name|struct
@@ -600,7 +600,7 @@ decl_stmt|;
 name|u_int32_t
 name|good
 init|=
-literal|1
+name|AH_TRUE
 decl_stmt|;
 comment|/* XXX freeze/unfreeze mib counters */
 name|uint32_t
@@ -683,7 +683,7 @@ argument_list|)
 expr_stmt|;
 name|good
 operator|=
-literal|0
+name|AH_FALSE
 expr_stmt|;
 block|}
 else|else
@@ -771,7 +771,9 @@ operator|=
 name|ec
 expr_stmt|;
 return|return
+operator|(
 name|good
+operator|)
 return|;
 block|}
 end_function

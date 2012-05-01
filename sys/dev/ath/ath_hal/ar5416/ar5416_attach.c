@@ -705,6 +705,12 @@ name|ar5416SetQuiet
 expr_stmt|;
 name|ah
 operator|->
+name|ah_getMibCycleCounts
+operator|=
+name|ar5416GetMibCycleCounts
+expr_stmt|;
+name|ah
+operator|->
 name|ah_resetKeyCacheEntry
 operator|=
 name|ar5416ResetKeyCacheEntry

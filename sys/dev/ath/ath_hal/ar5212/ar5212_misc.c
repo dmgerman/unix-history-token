@@ -5592,5 +5592,31 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * There's no channel survey support for the AR5211.  */
+end_comment
+
+begin_function
+name|HAL_BOOL
+name|ar5212GetMibCycleCounts
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|HAL_SURVEY_SAMPLE
+modifier|*
+name|hsample
+parameter_list|)
+block|{
+return|return
+operator|(
+name|AH_FALSE
+operator|)
+return|;
+block|}
+end_function
+
 end_unit
 

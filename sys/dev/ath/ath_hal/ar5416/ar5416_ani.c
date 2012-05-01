@@ -3551,7 +3551,7 @@ if|if
 condition|(
 name|good
 operator|==
-literal|0
+name|AH_FALSE
 condition|)
 block|{
 comment|/* 		 * Cycle counter wrap (or initial call); it's not possible 		 * to accurately calculate a value because the registers 		 * right shift rather than wrap--so punt and return 0. 		 */

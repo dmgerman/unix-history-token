@@ -1146,7 +1146,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|uint32_t
+name|HAL_BOOL
 name|ar5416GetMibCycleCounts
 parameter_list|(
 name|struct

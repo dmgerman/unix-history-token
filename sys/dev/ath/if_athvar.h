@@ -4579,6 +4579,19 @@ end_define
 begin_define
 define|#
 directive|define
+name|ath_hal_get_mib_cycle_counts
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_sample
+parameter_list|)
+define|\
+value|((*(_ah)->ah_getMibCycleCounts)((_ah), (_sample)))
+end_define
+
+begin_define
+define|#
+directive|define
 name|ath_hal_get_chan_ext_busy
 parameter_list|(
 name|_ah
