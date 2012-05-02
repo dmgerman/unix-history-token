@@ -467,6 +467,9 @@ decl_stmt|;
 name|device_t
 name|arge_miiproxy
 decl_stmt|;
+name|ar71xx_mii_mode
+name|arge_miicfg
+decl_stmt|;
 name|bus_dma_tag_t
 name|arge_parent_tag
 decl_stmt|;
