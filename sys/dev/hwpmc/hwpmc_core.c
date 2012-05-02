@@ -134,7 +134,7 @@ define|#
 directive|define
 name|IAF_PMC_CAPS
 define|\
-value|(PMC_CAP_READ | PMC_CAP_WRITE | PMC_CAP_INTERRUPT)
+value|(PMC_CAP_READ | PMC_CAP_WRITE | PMC_CAP_INTERRUPT | \ 	 PMC_CAP_USER | PMC_CAP_SYSTEM)
 end_define
 
 begin_define
