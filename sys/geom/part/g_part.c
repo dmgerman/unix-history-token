@@ -426,6 +426,24 @@ literal|"netbsd-swap"
 block|,
 name|G_PART_ALIAS_NETBSD_SWAP
 block|}
+block|,
+block|{
+literal|"vmware-vmfs"
+block|,
+name|G_PART_ALIAS_VMFS
+block|}
+block|,
+block|{
+literal|"vmware-vmkdiag"
+block|,
+name|G_PART_ALIAS_VMKDIAG
+block|}
+block|,
+block|{
+literal|"vmware-reserved"
+block|,
+name|G_PART_ALIAS_VMRESERVED
+block|}
 block|, }
 struct|;
 end_struct
