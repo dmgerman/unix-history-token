@@ -1411,6 +1411,26 @@ name|AR91XX_REV_ID_REVISION_SHIFT
 value|2
 end_define
 
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|AR71XX_MII_MODE_NONE
+init|=
+literal|0
+block|,
+name|AR71XX_MII_MODE_GMII
+block|,
+name|AR71XX_MII_MODE_MII
+block|,
+name|AR71XX_MII_MODE_RGMII
+block|,
+name|AR71XX_MII_MODE_RMII
+block|, }
+name|ar71xx_mii_mode
+typedef|;
+end_typedef
+
 begin_comment
 comment|/*  * AR71xx MII control region  */
 end_comment
