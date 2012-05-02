@@ -411,6 +411,27 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Allow PLL values to be overridden.  */
+end_comment
+
+begin_struct
+struct|struct
+name|arge_pll_data
+block|{
+name|uint32_t
+name|pll_10
+decl_stmt|;
+name|uint32_t
+name|pll_100
+decl_stmt|;
+name|uint32_t
+name|pll_1000
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_struct
 struct|struct
 name|arge_softc
@@ -469,6 +490,10 @@ name|arge_miiproxy
 decl_stmt|;
 name|ar71xx_mii_mode
 name|arge_miicfg
+decl_stmt|;
+name|struct
+name|arge_pll_data
+name|arge_pllcfg
 decl_stmt|;
 name|bus_dma_tag_t
 name|arge_parent_tag
