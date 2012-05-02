@@ -448,6 +448,9 @@ name|unit
 parameter_list|,
 name|int
 name|speed
+parameter_list|,
+name|uint32_t
+name|pll
 parameter_list|)
 block|{
 switch|switch
@@ -557,7 +560,9 @@ name|speed
 parameter_list|)
 block|{
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function

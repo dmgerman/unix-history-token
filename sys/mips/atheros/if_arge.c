@@ -3862,6 +3862,21 @@ name|mii_media_active
 operator|&
 name|IFM_GMASK
 expr_stmt|;
+name|ARGEDEBUG
+argument_list|(
+name|sc
+argument_list|,
+name|ARGE_DBG_MII
+argument_list|,
+literal|"%s: media=%d, duplex=%d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|media
+argument_list|,
+name|duplex
+argument_list|)
+expr_stmt|;
 name|arge_set_pll
 argument_list|(
 name|sc
@@ -3911,6 +3926,8 @@ name|rx_filtmask
 decl_stmt|;
 name|uint32_t
 name|fifo_tx
+decl_stmt|,
+name|pll
 decl_stmt|;
 name|int
 name|if_speed
@@ -4061,6 +4078,19 @@ name|media
 argument_list|)
 expr_stmt|;
 block|}
+name|ARGEDEBUG
+argument_list|(
+name|sc
+argument_list|,
+name|ARGE_DBG_MII
+argument_list|,
+literal|"%s: if_speed=%d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|if_speed
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|ar71xx_soc
@@ -4134,7 +4164,31 @@ name|fifo_tx
 argument_list|)
 expr_stmt|;
 comment|/* set PLL registers */
+name|pll
+operator|=
+name|ar71xx_device_get_eth_pll
+argument_list|(
+name|sc
+operator|->
+name|arge_mac_unit
+argument_list|,
+name|if_speed
+argument_list|)
+expr_stmt|;
+comment|/* XXX ensure pll != 0 */
 name|ar71xx_device_set_pll_ge
+argument_list|(
+name|sc
+operator|->
+name|arge_mac_unit
+argument_list|,
+name|if_speed
+argument_list|,
+name|pll
+argument_list|)
+expr_stmt|;
+comment|/* set MII registers */
+name|ar71xx_device_set_mii_speed
 argument_list|(
 name|sc
 operator|->
