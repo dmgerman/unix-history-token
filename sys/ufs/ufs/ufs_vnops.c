@@ -2777,9 +2777,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|vap
+name|ip
 operator|->
-name|va_flags
+name|i_flags
 operator|&
 operator|(
 name|IMMUTABLE
@@ -2793,6 +2793,7 @@ name|error
 operator|)
 return|;
 block|}
+comment|/* 	 * If immutable or append, no one can change any of its attributes 	 * except the ones already handled (in some cases, file flags 	 * including the immutability flags themselves for the superuser). 	 */
 if|if
 condition|(
 name|ip
