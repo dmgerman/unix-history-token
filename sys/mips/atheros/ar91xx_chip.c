@@ -471,6 +471,13 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|ar71xx_chip_set_mii_speed
+argument_list|(
+name|unit
+argument_list|,
+name|speed
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -644,6 +651,9 @@ name|ar91xx_chip_set_pll_ge
 block|,
 operator|&
 name|ar71xx_chip_set_mii_speed
+block|,
+operator|&
+name|ar71xx_chip_set_mii_if
 block|,
 operator|&
 name|ar91xx_chip_ddr_flush_ge

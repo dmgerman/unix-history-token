@@ -158,6 +158,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<mips/atheros/ar71xx_chip.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<mips/atheros/ar724x_chip.h>
 end_include
 
@@ -428,6 +434,10 @@ return|return;
 block|}
 end_function
 
+begin_comment
+comment|/*  * XXX TODO: set the PLL for arge0 only on AR7242.  * The PLL/clock requirements are different.  *  * Otherwise, it's a NULL function for AR7240, AR7241 and  * AR7242 arge1.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -674,6 +684,9 @@ name|ar724x_chip_set_pll_ge
 block|,
 operator|&
 name|ar724x_chip_set_mii_speed
+block|,
+operator|&
+name|ar71xx_chip_set_mii_if
 block|,
 operator|&
 name|ar724x_chip_ddr_flush_ge
