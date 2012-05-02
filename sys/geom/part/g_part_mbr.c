@@ -676,6 +676,18 @@ name|DOSPTYP_LINRAID
 block|,
 name|G_PART_ALIAS_LINUX_RAID
 block|}
+block|,
+block|{
+name|DOSPTYP_VMFS
+block|,
+name|G_PART_ALIAS_VMFS
+block|}
+block|,
+block|{
+name|DOSPTYP_VMKDIAG
+block|,
+name|G_PART_ALIAS_VMKDIAG
+block|}
 block|, }
 struct|;
 end_struct

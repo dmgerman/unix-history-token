@@ -198,6 +198,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|DOSPTYP_VMFS
+value|0xfb
+end_define
+
+begin_comment
+comment|/* VMware VMFS partition */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DOSPTYP_VMKDIAG
+value|0xfc
+end_define
+
+begin_comment
+comment|/* VMware vmkDiagnostic partition */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DOSPTYP_LINRAID
 value|0xfd
 end_define

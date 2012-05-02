@@ -149,6 +149,15 @@ comment|/* A Microsoft FAT32 partition entry. */
 name|G_PART_ALIAS_BIOS_BOOT
 block|,
 comment|/* A GRUB 2 boot partition entry. */
+name|G_PART_ALIAS_VMFS
+block|,
+comment|/* A VMware VMFS partition entry */
+name|G_PART_ALIAS_VMKDIAG
+block|,
+comment|/* A VMware vmkDiagnostic partition entry */
+name|G_PART_ALIAS_VMRESERVED
+block|,
+comment|/* A VMware reserved partition entry */
 comment|/* Keep the following last */
 name|G_PART_ALIAS_COUNT
 block|}
