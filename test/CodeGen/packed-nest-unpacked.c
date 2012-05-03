@@ -3,10 +3,6 @@ begin_comment
 comment|// RUN: %clang_cc1 %s -triple x86_64-apple-macosx10.7.2 -emit-llvm -o - | FileCheck %s
 end_comment
 
-begin_comment
-comment|//<rdar://problem/10463337>
-end_comment
-
 begin_struct
 struct|struct
 name|X
@@ -61,6 +57,20 @@ name|X
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|struct
+name|X
+name|foo
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|//<rdar://problem/10463337>
+end_comment
 
 begin_function
 name|struct
@@ -120,6 +130,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|//<rdar://problem/10530444>
+end_comment
+
 begin_function
 name|void
 name|test4
@@ -133,6 +147,51 @@ name|g
 operator|.
 name|y
 argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// PR12395
+end_comment
+
+begin_function
+name|int
+name|test5
+parameter_list|()
+block|{
+comment|// CHECK: @test5
+comment|// CHECK: load i32* getelementptr inbounds (%struct.Y* @g, i32 0, i32 1, i32 0, i64 0), align 1
+return|return
+name|g
+operator|.
+name|y
+operator|.
+name|x
+index|[
+literal|0
+index|]
+return|;
+block|}
+end_function
+
+begin_comment
+comment|//<rdar://problem/11220251>
+end_comment
+
+begin_function
+name|void
+name|test6
+parameter_list|()
+block|{
+comment|// CHECK: @test6
+comment|// CHECK: call void @llvm.memcpy.p0i8.p0i8.i64(i8* bitcast (%struct.X* getelementptr inbounds (%struct.Y* @g, i32 0, i32 1) to i8*), i8* %{{.*}}, i64 24, i32 1, i1 false)
+name|g
+operator|.
+name|y
+operator|=
+name|foo
+argument_list|()
 expr_stmt|;
 block|}
 end_function

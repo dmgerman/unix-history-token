@@ -224,7 +224,7 @@ comment|// CHECK: FILE:23:78
 end_comment
 
 begin_comment
-comment|// CHECK: {{^  ...// some long comment text and a brace, eh {} }}
+comment|// CHECK: {{^  ...// some long comment text and a brace, eh {}}}
 end_comment
 
 begin_struct

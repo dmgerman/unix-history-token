@@ -329,6 +329,8 @@ name|ConversionFlags
 name|flags
 parameter_list|)
 function_decl|;
+endif|#
+directive|endif
 name|Boolean
 name|isLegalUTF8Sequence
 parameter_list|(
@@ -343,8 +345,6 @@ modifier|*
 name|sourceEnd
 parameter_list|)
 function_decl|;
-endif|#
-directive|endif
 name|Boolean
 name|isLegalUTF8String
 parameter_list|(

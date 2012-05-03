@@ -1125,5 +1125,114 @@ begin_comment
 comment|// expected-error {{variable length array}}
 end_comment
 
+begin_comment
+comment|//<rdar://problem/10962435>
+end_comment
+
+begin_macro
+name|EVAL_EXPR
+argument_list|(
+literal|45
+argument_list|,
+argument|((char*)-
+literal|1
+argument|) +
+literal|1
+argument|==
+literal|0
+argument|?
+literal|1
+argument|: -
+literal|1
+argument_list|)
+end_macro
+
+begin_macro
+name|EVAL_EXPR
+argument_list|(
+literal|46
+argument_list|,
+argument|((char*)-
+literal|1
+argument|) +
+literal|1
+argument|< (char*) -
+literal|1
+argument|?
+literal|1
+argument|: -
+literal|1
+argument_list|)
+end_macro
+
+begin_macro
+name|EVAL_EXPR
+argument_list|(
+literal|47
+argument_list|,
+argument|&x<&x +
+literal|1
+argument|?
+literal|1
+argument|: -
+literal|1
+argument_list|)
+end_macro
+
+begin_macro
+name|EVAL_EXPR
+argument_list|(
+literal|48
+argument_list|,
+argument|&x !=&x -
+literal|1
+argument|?
+literal|1
+argument|: -
+literal|1
+argument_list|)
+end_macro
+
+begin_macro
+name|EVAL_EXPR
+argument_list|(
+literal|49
+argument_list|,
+argument|&x<&x -
+literal|100
+argument|?
+literal|1
+argument|: -
+literal|1
+argument_list|)
+end_macro
+
+begin_comment
+comment|// expected-error {{must have a constant size}}
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|Test50S
+name|Test50
+decl_stmt|;
+end_decl_stmt
+
+begin_macro
+name|EVAL_EXPR
+argument_list|(
+literal|50
+argument_list|,
+argument|&Test50< (struct Test50S*)((unsigned)&Test50 +
+literal|10
+argument|)
+argument_list|)
+end_macro
+
+begin_comment
+comment|// expected-error {{must have a constant size}}
+end_comment
+
 end_unit
 

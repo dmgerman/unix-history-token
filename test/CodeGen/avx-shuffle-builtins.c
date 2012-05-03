@@ -178,7 +178,7 @@ name|b
 parameter_list|)
 block|{
 comment|// Check if the mask is correct
-comment|// CHECK: shufflevector{{.*}}<i32 2, i32 3, i32 6, i32 7>
+comment|// CHECK: @llvm.x86.avx.vperm2f128.pd.256
 return|return
 name|_mm256_permute2f128_pd
 argument_list|(
@@ -204,7 +204,7 @@ name|b
 parameter_list|)
 block|{
 comment|// Check if the mask is correct
-comment|// CHECK: shufflevector{{.*}}<i32 12, i32 13, i32 14, i32 15, i32 4, i32 5, i32 6, i32 7>
+comment|// CHECK: @llvm.x86.avx.vperm2f128.ps.256
 return|return
 name|_mm256_permute2f128_ps
 argument_list|(
@@ -230,7 +230,7 @@ name|b
 parameter_list|)
 block|{
 comment|// Check if the mask is correct
-comment|// CHECK: shufflevector{{.*}}<i32 0, i32 1, i32 2, i32 3, i32 8, i32 9, i32 10, i32 11>
+comment|// CHECK: @llvm.x86.avx.vperm2f128.si.256
 return|return
 name|_mm256_permute2f128_si256
 argument_list|(

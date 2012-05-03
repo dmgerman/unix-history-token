@@ -1191,6 +1191,17 @@ operator|.
 name|length
 argument_list|)
 expr_stmt|;
+name|assert
+argument_list|(
+name|B
+operator|.
+name|length
+operator|!=
+literal|0
+operator|&&
+literal|"Bucket has a head but zero length?"
+argument_list|)
+expr_stmt|;
 comment|// Write out the entries in the bucket.
 for|for
 control|(
@@ -2390,16 +2401,12 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief Iterates over all the entries in the table, returning
-end_comment
-
-begin_comment
-comment|/// a key/data pair.
+comment|/// \brief Iterates over all the entries in the table, returning the data.
 end_comment
 
 begin_decl_stmt
 name|class
-name|item_iterator
+name|data_iterator
 block|{
 specifier|const
 name|unsigned
@@ -2420,17 +2427,10 @@ decl_stmt|;
 name|public
 label|:
 typedef|typedef
-name|std
-operator|::
-name|pair
-operator|<
-name|external_key_type
-operator|,
 name|data_type
-operator|>
 name|value_type
-expr_stmt|;
-name|item_iterator
+typedef|;
+name|data_iterator
 argument_list|(
 argument|const unsigned char* const Ptr
 argument_list|,
@@ -2459,7 +2459,7 @@ argument_list|(
 argument|InfoObj
 argument_list|)
 block|{ }
-name|item_iterator
+name|data_iterator
 argument_list|()
 operator|:
 name|Ptr
@@ -2487,7 +2487,7 @@ name|operator
 operator|==
 operator|(
 specifier|const
-name|item_iterator
+name|data_iterator
 operator|&
 name|X
 operator|)
@@ -2506,7 +2506,7 @@ name|operator
 operator|!=
 operator|(
 specifier|const
-name|item_iterator
+name|data_iterator
 operator|&
 name|X
 operator|)
@@ -2520,7 +2520,7 @@ operator|!=
 name|NumEntriesLeft
 return|;
 block|}
-name|item_iterator
+name|data_iterator
 operator|&
 name|operator
 operator|++
@@ -2605,7 +2605,7 @@ block|}
 end_decl_stmt
 
 begin_expr_stmt
-name|item_iterator
+name|data_iterator
 name|operator
 operator|++
 operator|(
@@ -2613,7 +2613,7 @@ name|int
 operator|)
 block|{
 comment|// Postincrement
-name|item_iterator
+name|data_iterator
 name|tmp
 operator|=
 operator|*
@@ -2716,17 +2716,6 @@ end_decl_stmt
 
 begin_return
 return|return
-name|std
-operator|::
-name|make_pair
-argument_list|(
-name|InfoObj
-operator|->
-name|GetExternalKey
-argument_list|(
-name|Key
-argument_list|)
-argument_list|,
 name|InfoObj
 operator|->
 name|ReadData
@@ -2743,7 +2732,6 @@ name|L
 operator|.
 name|second
 argument_list|)
-argument_list|)
 return|;
 end_return
 
@@ -2753,12 +2741,12 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function
-name|item_iterator
-name|item_begin
+name|data_iterator
+name|data_begin
 parameter_list|()
 block|{
 return|return
-name|item_iterator
+name|data_iterator
 argument_list|(
 name|Base
 operator|+
@@ -2775,12 +2763,12 @@ block|}
 end_function
 
 begin_function
-name|item_iterator
-name|item_end
+name|data_iterator
+name|data_end
 parameter_list|()
 block|{
 return|return
-name|item_iterator
+name|data_iterator
 argument_list|()
 return|;
 block|}

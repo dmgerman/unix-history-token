@@ -5689,6 +5689,12 @@ argument|{ }
 argument_list|)
 name|DEF_TRAVERSE_STMT
 argument_list|(
+argument|AttributedStmt
+argument_list|,
+argument|{ }
+argument_list|)
+name|DEF_TRAVERSE_STMT
+argument_list|(
 argument|NullStmt
 argument_list|,
 argument|{ }

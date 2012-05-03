@@ -11794,6 +11794,11 @@ name|spelling
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|clang_disposeString
+argument_list|(
+name|spelling
+argument_list|)
+expr_stmt|;
 name|PrintExtent
 argument_list|(
 name|stdout

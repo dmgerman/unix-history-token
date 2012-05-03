@@ -384,6 +384,9 @@ name|class
 name|FieldDecl
 decl_stmt|;
 name|class
+name|FunctionDecl
+decl_stmt|;
+name|class
 name|ObjCInterfaceDecl
 decl_stmt|;
 name|class
@@ -10354,6 +10357,16 @@ argument_list|(
 literal|0
 argument_list|)
 block|,
+name|ExceptionSpecDecl
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|ExceptionSpecTemplate
+argument_list|(
+literal|0
+argument_list|)
+block|,
 name|ConsumedArguments
 argument_list|(
 literal|0
@@ -10395,6 +10408,14 @@ block|;
 name|Expr
 operator|*
 name|NoexceptExpr
+block|;
+name|FunctionDecl
+operator|*
+name|ExceptionSpecDecl
+block|;
+name|FunctionDecl
+operator|*
+name|ExceptionSpecTemplate
 block|;
 specifier|const
 name|bool
@@ -10501,6 +10522,10 @@ comment|// Exceptions - There is another variable size array after ArgInfo that
 comment|// holds the exception types.
 comment|// NoexceptExpr - Instead of Exceptions, there may be a single Expr* pointing
 comment|// to the expression in the noexcept() specifier.
+comment|// ExceptionSpecDecl, ExceptionSpecTemplate - Instead of Exceptions, there may
+comment|// be a pair of FunctionDecl* pointing to the function which should be used to
+comment|// instantiate this function type's exception specification, and the function
+comment|// from which it should be instantiated.
 comment|// ConsumedArgs - A variable size array, following Exceptions
 comment|// and of length NumArgs, holding flags indicating which arguments
 comment|// are consumed.  This only appears if HasAnyConsumedArgs is true.
@@ -10703,6 +10728,31 @@ name|getNoexceptExpr
 argument_list|()
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|EPI
+operator|.
+name|ExceptionSpecType
+operator|==
+name|EST_Uninstantiated
+condition|)
+block|{
+name|EPI
+operator|.
+name|ExceptionSpecDecl
+operator|=
+name|getExceptionSpecDecl
+argument_list|()
+expr_stmt|;
+name|EPI
+operator|.
+name|ExceptionSpecTemplate
+operator|=
+name|getExceptionSpecTemplate
+argument_list|()
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|hasAnyConsumedArgs
@@ -10869,6 +10919,79 @@ argument_list|()
 operator|)
 return|;
 block|}
+comment|/// \brief If this function type has an uninstantiated exception
+comment|/// specification, this is the function whose exception specification
+comment|/// is represented by this type.
+name|FunctionDecl
+operator|*
+name|getExceptionSpecDecl
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|getExceptionSpecType
+argument_list|()
+operator|!=
+name|EST_Uninstantiated
+condition|)
+return|return
+literal|0
+return|;
+return|return
+name|reinterpret_cast
+operator|<
+name|FunctionDecl
+operator|*
+specifier|const
+operator|*
+operator|>
+operator|(
+name|arg_type_end
+argument_list|()
+operator|)
+index|[
+literal|0
+index|]
+return|;
+block|}
+comment|/// \brief If this function type has an uninstantiated exception
+comment|/// specification, this is the function whose exception specification
+comment|/// should be instantiated to find the exception specification for
+comment|/// this type.
+name|FunctionDecl
+operator|*
+name|getExceptionSpecTemplate
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|getExceptionSpecType
+argument_list|()
+operator|!=
+name|EST_Uninstantiated
+condition|)
+return|return
+literal|0
+return|;
+return|return
+name|reinterpret_cast
+operator|<
+name|FunctionDecl
+operator|*
+specifier|const
+operator|*
+operator|>
+operator|(
+name|arg_type_end
+argument_list|()
+operator|)
+index|[
+literal|1
+index|]
+return|;
+block|}
 name|bool
 name|isNothrow
 argument_list|(
@@ -10887,6 +11010,10 @@ argument_list|(
 name|EST
 operator|!=
 name|EST_Delayed
+operator|&&
+name|EST
+operator|!=
+name|EST_Uninstantiated
 argument_list|)
 block|;
 if|if
@@ -18415,6 +18542,9 @@ return|return
 literal|0
 return|;
 block|}
+end_block
+
+begin_expr_stmt
 specifier|inline
 name|bool
 name|Type
@@ -18470,11 +18600,16 @@ operator|)
 name|K
 operator|)
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 name|false
 return|;
-block|}
-specifier|inline
+end_return
+
+begin_expr_stmt
+unit|}  inline
 name|bool
 name|Type
 operator|::
@@ -18503,14 +18638,16 @@ operator|->
 name|isNonOverloadPlaceholderType
 argument_list|()
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 name|false
 return|;
-block|}
-end_block
+end_return
 
 begin_expr_stmt
-specifier|inline
+unit|}  inline
 name|bool
 name|Type
 operator|::

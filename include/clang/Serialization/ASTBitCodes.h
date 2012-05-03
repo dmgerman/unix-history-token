@@ -1904,6 +1904,9 @@ block|,
 comment|/// \brief A LabelStmt record.
 name|STMT_LABEL
 block|,
+comment|/// \brief An AttributedStmt record.
+name|STMT_ATTRIBUTED
+block|,
 comment|/// \brief An IfStmt record.
 name|STMT_IF
 block|,

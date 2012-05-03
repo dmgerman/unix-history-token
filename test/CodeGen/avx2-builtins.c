@@ -2876,7 +2876,7 @@ name|__m256d
 name|a
 parameter_list|)
 block|{
-comment|// CHECK: @llvm.x86.avx2.permpd
+comment|// CHECK: shufflevector{{.*}}<i32 1, i32 2, i32 1, i32 0>
 return|return
 name|_mm256_permute4x64_pd
 argument_list|(
@@ -2919,7 +2919,7 @@ name|__m256i
 name|a
 parameter_list|)
 block|{
-comment|// CHECK:  @llvm.x86.avx2.permq
+comment|// CHECK: shufflevector{{.*}}<i32 3, i32 0, i32 2, i32 0>
 return|return
 name|_mm256_permute4x64_epi64
 argument_list|(
@@ -2942,7 +2942,7 @@ name|__m256i
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: shufflevector{{.*}}<i32 2, i32 3, i32 6, i32 7>
+comment|// CHECK: @llvm.x86.avx2.vperm2i128
 return|return
 name|_mm256_permute2x128_si256
 argument_list|(

@@ -76,6 +76,7 @@ name|malloc
 argument_list|()
 operator|+
 name|system
+argument_list|()
 operator|+
 name|stdin
 argument_list|()

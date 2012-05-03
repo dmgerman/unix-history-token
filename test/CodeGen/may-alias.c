@@ -129,7 +129,7 @@ comment|// CHECK: !1 = metadata !{metadata !"omnipotent char", metadata !2}
 end_comment
 
 begin_comment
-comment|// CHECK: !2 = metadata !{metadata !"Simple C/C++ TBAA", null}
+comment|// CHECK: !2 = metadata !{metadata !"Simple C/C++ TBAA"}
 end_comment
 
 begin_comment
