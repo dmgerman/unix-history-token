@@ -11258,7 +11258,7 @@ name|g_new_geomf
 argument_list|(
 name|mp
 argument_list|,
-literal|"mirror:taste"
+literal|"raid:taste"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * This orphan function should be never called. 	 */
@@ -11416,6 +11416,11 @@ modifier|*
 name|format
 parameter_list|,
 name|struct
+name|gctl_req
+modifier|*
+name|req
+parameter_list|,
+name|struct
 name|g_geom
 modifier|*
 modifier|*
@@ -11516,12 +11521,14 @@ name|class
 expr_stmt|;
 name|status
 operator|=
-name|G_RAID_MD_CREATE
+name|G_RAID_MD_CREATE_REQ
 argument_list|(
 name|obj
 argument_list|,
 operator|&
 name|g_raid_class
+argument_list|,
+name|req
 argument_list|,
 name|gp
 argument_list|)

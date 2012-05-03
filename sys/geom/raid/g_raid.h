@@ -1615,6 +1615,11 @@ modifier|*
 name|format
 parameter_list|,
 name|struct
+name|gctl_req
+modifier|*
+name|req
+parameter_list|,
+name|struct
 name|g_geom
 modifier|*
 modifier|*

@@ -332,6 +332,8 @@ name|g_raid_create_node_format
 argument_list|(
 name|format
 argument_list|,
+name|req
+argument_list|,
 operator|&
 name|geom
 argument_list|)
