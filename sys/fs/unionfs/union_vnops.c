@@ -7819,11 +7819,6 @@ expr_stmt|;
 name|pos
 operator|+=
 name|ncookies_bk
-operator|*
-sizeof|sizeof
-argument_list|(
-name|u_long
-argument_list|)
 expr_stmt|;
 name|memcpy
 argument_list|(
