@@ -2431,31 +2431,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return EOPNOTSUPP in the UP case. */
-end_comment
-
-begin_function
-name|int
-name|intr_bind
-parameter_list|(
-name|u_int
-name|vector
-name|__unused
-parameter_list|,
-name|u_char
-name|cpu
-name|__unused
-parameter_list|)
-block|{
-return|return
-operator|(
-name|EOPNOTSUPP
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/* Use an empty stub for compatibility. */
 end_comment
 
