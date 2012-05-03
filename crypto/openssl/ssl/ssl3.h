@@ -759,6 +759,11 @@ define|#
 directive|define
 name|TLS1_FLAGS_TLS_PADDING_BUG
 value|0x0008
+comment|/* SSL3_FLAGS_SGC_RESTART_DONE is set when we  * restart a handshake because of MS SGC and so prevents us  * from restarting the handshake in a loop. It's reset on a  * renegotiation, so effectively limits the client to one restart  * per negotiation. This limits the possibility of a DDoS  * attack where the client handshakes in a loop using SGC to  * restart. Servers which permit renegotiation can still be  * effected, but we can't prevent that.  */
+define|#
+directive|define
+name|SSL3_FLAGS_SGC_RESTART_DONE
+value|0x0040
 typedef|typedef
 struct|struct
 name|ssl3_state_st
