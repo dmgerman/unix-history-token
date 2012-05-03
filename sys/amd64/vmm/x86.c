@@ -296,6 +296,21 @@ name|CPUID2_X2APIC
 operator||
 name|CPUID2_HV
 expr_stmt|;
+comment|/* 			 * Hide xsave/osxsave/avx until the FPU save/restore 			 * issues are resolved 			 */
+name|regs
+index|[
+literal|2
+index|]
+operator|&=
+operator|~
+operator|(
+name|CPUID2_XSAVE
+operator||
+name|CPUID2_OSXSAVE
+operator||
+name|CPUID2_AVX
+operator|)
+expr_stmt|;
 comment|/* 			 * Hide thermal monitoring 			 */
 name|regs
 index|[
