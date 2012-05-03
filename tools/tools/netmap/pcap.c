@@ -770,6 +770,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|pcap_lib_version
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_struct
 struct|struct
 name|eproto
@@ -1562,6 +1573,21 @@ block|}
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_function
+specifier|const
+name|char
+modifier|*
+name|pcap_lib_version
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+name|pcap_version
+return|;
+block|}
+end_function
 
 begin_function
 name|int
@@ -2597,14 +2623,6 @@ argument_list|(
 literal|""
 argument_list|)
 expr_stmt|;
-name|me
-operator|->
-name|st
-operator|.
-name|ps_recv
-operator|+=
-literal|10
-expr_stmt|;
 operator|*
 name|ps
 operator|=
@@ -2612,19 +2630,10 @@ name|me
 operator|->
 name|st
 expr_stmt|;
-name|sprintf
-argument_list|(
-name|me
-operator|->
-name|msg
-argument_list|,
-literal|"stats not supported"
-argument_list|)
-expr_stmt|;
 return|return
-operator|-
-literal|1
+literal|0
 return|;
+comment|/* accumulate from pcap_dispatch() */
 block|}
 end_function
 
@@ -3342,6 +3351,14 @@ operator|++
 expr_stmt|;
 block|}
 block|}
+name|me
+operator|->
+name|st
+operator|.
+name|ps_recv
+operator|+=
+name|got
+expr_stmt|;
 return|return
 name|got
 return|;
