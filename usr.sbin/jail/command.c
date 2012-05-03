@@ -491,7 +491,7 @@ operator|)
 condition|)
 block|{
 case|case
-literal|0
+name|IP__NULL
 case|:
 return|return
 literal|0

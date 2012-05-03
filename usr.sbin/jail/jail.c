@@ -396,7 +396,7 @@ name|startcommands
 index|[]
 init|=
 block|{
-literal|0
+name|IP__NULL
 block|,
 ifdef|#
 directive|ifdef
@@ -430,7 +430,7 @@ name|IP_COMMAND
 block|,
 name|IP_EXEC_POSTSTART
 block|,
-literal|0
+name|IP__NULL
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -444,7 +444,7 @@ name|stopcommands
 index|[]
 init|=
 block|{
-literal|0
+name|IP__NULL
 block|,
 name|IP_EXEC_PRESTOP
 block|,
@@ -476,7 +476,7 @@ name|IP__IP4_IFADDR
 block|,
 endif|#
 directive|endif
-literal|0
+name|IP__NULL
 block|}
 decl_stmt|;
 end_decl_stmt

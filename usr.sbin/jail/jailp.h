@@ -340,9 +340,12 @@ begin_enum
 enum|enum
 name|intparam
 block|{
-name|IP_ALLOW_DYING
+name|IP__NULL
 init|=
-literal|1
+literal|0
+block|,
+comment|/* Null command */
+name|IP_ALLOW_DYING
 block|,
 comment|/* Allow making changes to a dying jail */
 name|IP_COMMAND

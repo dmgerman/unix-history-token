@@ -1944,7 +1944,7 @@ if|if
 condition|(
 name|ipnum
 operator|!=
-literal|0
+name|IP__NULL
 condition|)
 block|{
 name|name
@@ -2088,7 +2088,7 @@ if|if
 condition|(
 name|ipnum
 operator|!=
-literal|0
+name|IP__NULL
 condition|)
 name|dp
 operator|=
@@ -2278,7 +2278,7 @@ if|if
 condition|(
 name|ipnum
 operator|!=
-literal|0
+name|IP__NULL
 condition|)
 name|j
 operator|->
@@ -2294,6 +2294,8 @@ for|for
 control|(
 name|ipnum
 operator|=
+name|IP__NULL
+operator|+
 literal|1
 init|;
 name|ipnum
