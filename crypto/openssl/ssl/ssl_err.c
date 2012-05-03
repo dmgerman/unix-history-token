@@ -672,6 +672,15 @@ block|,
 block|{
 name|ERR_FUNC
 argument_list|(
+name|SSL_F_SSL3_CHECK_CLIENT_HELLO
+argument_list|)
+block|,
+literal|"SSL3_CHECK_CLIENT_HELLO"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
 name|SSL_F_SSL3_CLIENT_HELLO
 argument_list|)
 block|,
@@ -2780,6 +2789,15 @@ name|SSL_R_MISSING_VERIFY_MESSAGE
 argument_list|)
 block|,
 literal|"missing verify message"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_MULTIPLE_SGC_RESTARTS
+argument_list|)
+block|,
+literal|"multiple sgc restarts"
 block|}
 block|,
 block|{
