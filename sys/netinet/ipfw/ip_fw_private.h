@@ -66,6 +66,155 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* Return values from ipfw_chk() */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|IP_FW_PASS
+init|=
+literal|0
+block|,
+name|IP_FW_DENY
+block|,
+name|IP_FW_DIVERT
+block|,
+name|IP_FW_TEE
+block|,
+name|IP_FW_DUMMYNET
+block|,
+name|IP_FW_NETGRAPH
+block|,
+name|IP_FW_NGTEE
+block|,
+name|IP_FW_NAT
+block|,
+name|IP_FW_REASS
+block|, }
+enum|;
+end_enum
+
+begin_comment
+comment|/*  * Structure for collecting parameters to dummynet for ip6_output forwarding  */
+end_comment
+
+begin_struct
+struct|struct
+name|_ip6dn_args
+block|{
+name|struct
+name|ip6_pktopts
+modifier|*
+name|opt_or
+decl_stmt|;
+name|struct
+name|route_in6
+name|ro_or
+decl_stmt|;
+name|int
+name|flags_or
+decl_stmt|;
+name|struct
+name|ip6_moptions
+modifier|*
+name|im6o_or
+decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|origifp_or
+decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|ifp_or
+decl_stmt|;
+name|struct
+name|sockaddr_in6
+name|dst_or
+decl_stmt|;
+name|u_long
+name|mtu_or
+decl_stmt|;
+name|struct
+name|route_in6
+name|ro_pmtu_or
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Arguments for calling ipfw_chk() and dummynet_io(). We put them  * all into a structure because this way it is easier and more  * efficient to pass variables around and extend the interface.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ip_fw_args
+block|{
+name|struct
+name|mbuf
+modifier|*
+name|m
+decl_stmt|;
+comment|/* the mbuf chain		*/
+name|struct
+name|ifnet
+modifier|*
+name|oif
+decl_stmt|;
+comment|/* output interface		*/
+name|struct
+name|sockaddr_in
+modifier|*
+name|next_hop
+decl_stmt|;
+comment|/* forward address		*/
+name|struct
+name|sockaddr_in6
+modifier|*
+name|next_hop6
+decl_stmt|;
+comment|/* ipv6 forward address		*/
+comment|/* 	 * On return, it points to the matching rule. 	 * On entry, rule.slot> 0 means the info is valid and 	 * contains the starting rule for an ipfw search. 	 * If chain_id == chain->id&& slot>0 then jump to that slot. 	 * Otherwise, we locate the first rule>= rulenum:rule_id 	 */
+name|struct
+name|ipfw_rule_ref
+name|rule
+decl_stmt|;
+comment|/* match/restart info		*/
+name|struct
+name|ether_header
+modifier|*
+name|eh
+decl_stmt|;
+comment|/* for bridged packets		*/
+name|struct
+name|ipfw_flow_id
+name|f_id
+decl_stmt|;
+comment|/* grabbed from IP header	*/
+comment|//uint32_t	cookie;		/* a cookie depending on rule action */
+name|struct
+name|inpcb
+modifier|*
+name|inp
+decl_stmt|;
+name|struct
+name|_ip6dn_args
+name|dummypar
+decl_stmt|;
+comment|/* dummynet->ip6_output */
+name|struct
+name|sockaddr_in
+name|hopstore
+decl_stmt|;
+comment|/* store here if cannot use a pointer */
+block|}
+struct|;
+end_struct
+
 begin_expr_stmt
 name|MALLOC_DECLARE
 argument_list|(
@@ -73,6 +222,57 @@ name|M_IPFW
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/*  * Hooks sometime need to know the direction of the packet  * (divert, dummynet, netgraph, ...)  * We use a generic definition here, with bit0-1 indicating the  * direction, bit 2 indicating layer2 or 3, bit 3-4 indicating the  * specific protocol  * indicating the protocol (if necessary)  */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|DIR_MASK
+init|=
+literal|0x3
+block|,
+name|DIR_OUT
+init|=
+literal|0
+block|,
+name|DIR_IN
+init|=
+literal|1
+block|,
+name|DIR_FWD
+init|=
+literal|2
+block|,
+name|DIR_DROP
+init|=
+literal|3
+block|,
+name|PROTO_LAYER2
+init|=
+literal|0x4
+block|,
+comment|/* set for layer 2 */
+comment|/* PROTO_DEFAULT = 0, */
+name|PROTO_IPV4
+init|=
+literal|0x08
+block|,
+name|PROTO_IPV6
+init|=
+literal|0x10
+block|,
+name|PROTO_IFB
+init|=
+literal|0x0c
+block|,
+comment|/* layer2 + ifbridge */
+comment|/*	PROTO_OLDBDG =	0x14, unused, old bridge */
+block|}
+enum|;
+end_enum
 
 begin_comment
 comment|/* wrapper for freeing a packet, in case we need to do more work */

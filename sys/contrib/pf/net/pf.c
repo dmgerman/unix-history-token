@@ -467,6 +467,16 @@ directive|include
 file|<netinet/ip_fw.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netinet/ipfw/ip_fw_private.h>
+end_include
+
+begin_comment
+comment|/* XXX: only for DIR_IN/DIR_OUT */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
