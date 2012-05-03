@@ -137,7 +137,7 @@ name|obj
 parameter_list|,
 name|value
 parameter_list|)
-value|__atomic_init(obj, value)
+value|__c11_atomic_init(obj, value)
 end_define
 
 begin_else
@@ -323,19 +323,40 @@ begin_comment
 comment|/*  * 7.17.4 Fences.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__CLANG_ATOMICS
-argument_list|)
-operator|||
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|atomic_thread_fence
+parameter_list|(
+name|order
+parameter_list|)
+value|__c11_atomic_thread_fence(order)
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_signal_fence
+parameter_list|(
+name|order
+parameter_list|)
+value|__c11_atomic_signal_fence(order)
+end_define
+
+begin_elif
+elif|#
+directive|elif
 name|defined
 argument_list|(
 name|__GNUC_ATOMICS
 argument_list|)
-end_if
+end_elif
 
 begin_define
 define|#
@@ -408,7 +429,7 @@ parameter_list|(
 name|obj
 parameter_list|)
 define|\
-value|__atomic_is_lock_free(sizeof(obj))
+value|__c11_atomic_is_lock_free(sizeof(obj))
 end_define
 
 begin_elif
@@ -859,7 +880,7 @@ parameter_list|,
 name|failure
 parameter_list|)
 define|\
-value|__atomic_compare_exchange_strong(object, expected, desired,	\ 	    success, failure)
+value|__c11_atomic_compare_exchange_strong(object, expected, desired,	\ 	    success, failure)
 end_define
 
 begin_define
@@ -878,7 +899,7 @@ parameter_list|,
 name|failure
 parameter_list|)
 define|\
-value|__atomic_compare_exchange_weak(object, expected, desired,	\ 	    success, failure)
+value|__c11_atomic_compare_exchange_weak(object, expected, desired,	\ 	    success, failure)
 end_define
 
 begin_define
@@ -893,7 +914,7 @@ parameter_list|,
 name|order
 parameter_list|)
 define|\
-value|__atomic_exchange(object, desired, order)
+value|__c11_atomic_exchange(object, desired, order)
 end_define
 
 begin_define
@@ -908,7 +929,7 @@ parameter_list|,
 name|order
 parameter_list|)
 define|\
-value|__atomic_fetch_add(object, operand, order)
+value|__c11_atomic_fetch_add(object, operand, order)
 end_define
 
 begin_define
@@ -923,7 +944,7 @@ parameter_list|,
 name|order
 parameter_list|)
 define|\
-value|__atomic_fetch_and(object, operand, order)
+value|__c11_atomic_fetch_and(object, operand, order)
 end_define
 
 begin_define
@@ -938,7 +959,7 @@ parameter_list|,
 name|order
 parameter_list|)
 define|\
-value|__atomic_fetch_or(object, operand, order)
+value|__c11_atomic_fetch_or(object, operand, order)
 end_define
 
 begin_define
@@ -953,7 +974,7 @@ parameter_list|,
 name|order
 parameter_list|)
 define|\
-value|__atomic_fetch_sub(object, operand, order)
+value|__c11_atomic_fetch_sub(object, operand, order)
 end_define
 
 begin_define
@@ -968,7 +989,7 @@ parameter_list|,
 name|order
 parameter_list|)
 define|\
-value|__atomic_fetch_xor(object, operand, order)
+value|__c11_atomic_fetch_xor(object, operand, order)
 end_define
 
 begin_define
@@ -981,7 +1002,7 @@ parameter_list|,
 name|order
 parameter_list|)
 define|\
-value|__atomic_load(object, order)
+value|__c11_atomic_load(object, order)
 end_define
 
 begin_define
@@ -996,7 +1017,7 @@ parameter_list|,
 name|order
 parameter_list|)
 define|\
-value|__atomic_store(object, desired, order)
+value|__c11_atomic_store(object, desired, order)
 end_define
 
 begin_elif
