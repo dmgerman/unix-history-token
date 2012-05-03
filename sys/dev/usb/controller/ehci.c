@@ -11773,6 +11773,15 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
+comment|/* 	 * We don't allow cancelling of the SPLIT transaction USB FULL 	 * speed transfer, because it disturbs the bandwidth 	 * computation algorithm. 	 */
+name|xfer
+operator|->
+name|flags_int
+operator|.
+name|can_cancel_immed
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_function
 
@@ -11787,6 +11796,31 @@ modifier|*
 name|xfer
 parameter_list|)
 block|{
+comment|/* 	 * We don't allow cancelling of the SPLIT transaction USB FULL 	 * speed transfer, because it disturbs the bandwidth 	 * computation algorithm. 	 */
+name|xfer
+operator|->
+name|flags_int
+operator|.
+name|can_cancel_immed
+operator|=
+literal|0
+expr_stmt|;
+comment|/* set a default timeout */
+if|if
+condition|(
+name|xfer
+operator|->
+name|timeout
+operator|==
+literal|0
+condition|)
+name|xfer
+operator|->
+name|timeout
+operator|=
+literal|500
+expr_stmt|;
+comment|/* ms */
 comment|/* put transfer on interrupt queue */
 name|ehci_transfer_intr_enqueue
 argument_list|(
