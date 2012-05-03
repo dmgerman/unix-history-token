@@ -509,15 +509,6 @@ name|int
 name|nargs
 parameter_list|)
 function_decl|;
-comment|/**  * Enables the internalize pass during LTO optimizations.  */
-specifier|extern
-name|void
-name|lto_codegen_set_whole_program_optimization
-parameter_list|(
-name|lto_code_gen_t
-name|cg
-parameter_list|)
-function_decl|;
 comment|/**  * Adds to a list of all global symbols that must exist in the final  * generated code.  If a function is not listed, it might be  * inlined into every usage and optimized away.  */
 specifier|extern
 name|void

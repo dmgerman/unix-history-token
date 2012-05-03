@@ -456,6 +456,10 @@ name|UNPCKH
 block|,
 name|VPERMILP
 block|,
+name|VPERMV
+block|,
+name|VPERMI
+block|,
 name|VPERM2X128
 block|,
 name|VBROADCAST
@@ -2323,7 +2327,7 @@ argument|unsigned EAXreg
 argument_list|,
 argument|const TargetRegisterClass *RC
 argument_list|,
-argument|bool invSrc = false
+argument|bool Invert = false
 argument_list|)
 specifier|const
 block|;
@@ -2343,7 +2347,7 @@ argument|unsigned immOpcL
 argument_list|,
 argument|unsigned immOpcH
 argument_list|,
-argument|bool invSrc = false
+argument|bool Invert = false
 argument_list|)
 specifier|const
 block|;

@@ -273,15 +273,6 @@ modifier|*
 name|opts
 parameter_list|)
 function_decl|;
-name|void
-name|enableInternalizePass
-parameter_list|()
-block|{
-name|_runInternalizePass
-operator|=
-name|true
-expr_stmt|;
-block|}
 name|private
 label|:
 name|bool

@@ -972,7 +972,6 @@ argument_list|(
 argument|A
 argument_list|)
 block|{}
-name|explicit
 name|StringMap
 argument_list|(
 specifier|const

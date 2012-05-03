@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/LLVMContext.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/ArrayRef.h"
 end_include
 
@@ -1348,6 +1354,10 @@ block|{
 name|T
 name|Folder
 block|;
+name|MDNode
+operator|*
+name|DefaultFPMathTag
+block|;
 name|public
 operator|:
 name|IRBuilder
@@ -1368,6 +1378,12 @@ name|I
 operator|=
 name|Inserter
 argument_list|()
+argument_list|,
+name|MDNode
+operator|*
+name|FPMathTag
+operator|=
+literal|0
 argument_list|)
 operator|:
 name|IRBuilderBase
@@ -1382,7 +1398,12 @@ argument_list|)
 block|,
 name|Folder
 argument_list|(
-argument|F
+name|F
+argument_list|)
+block|,
+name|DefaultFPMathTag
+argument_list|(
+argument|FPMathTag
 argument_list|)
 block|{   }
 name|explicit
@@ -1391,6 +1412,12 @@ argument_list|(
 name|LLVMContext
 operator|&
 name|C
+argument_list|,
+name|MDNode
+operator|*
+name|FPMathTag
+operator|=
+literal|0
 argument_list|)
 operator|:
 name|IRBuilderBase
@@ -1400,6 +1427,11 @@ argument_list|)
 block|,
 name|Folder
 argument_list|()
+block|,
+name|DefaultFPMathTag
+argument_list|(
+argument|FPMathTag
+argument_list|)
 block|{   }
 name|explicit
 name|IRBuilder
@@ -1412,6 +1444,12 @@ specifier|const
 name|T
 operator|&
 name|F
+argument_list|,
+name|MDNode
+operator|*
+name|FPMathTag
+operator|=
+literal|0
 argument_list|)
 operator|:
 name|IRBuilderBase
@@ -1424,7 +1462,12 @@ argument_list|)
 block|,
 name|Folder
 argument_list|(
-argument|F
+name|F
+argument_list|)
+block|,
+name|DefaultFPMathTag
+argument_list|(
+argument|FPMathTag
 argument_list|)
 block|{
 name|SetInsertPoint
@@ -1438,6 +1481,12 @@ argument_list|(
 name|BasicBlock
 operator|*
 name|TheBB
+argument_list|,
+name|MDNode
+operator|*
+name|FPMathTag
+operator|=
+literal|0
 argument_list|)
 operator|:
 name|IRBuilderBase
@@ -1450,6 +1499,11 @@ argument_list|)
 block|,
 name|Folder
 argument_list|()
+block|,
+name|DefaultFPMathTag
+argument_list|(
+argument|FPMathTag
+argument_list|)
 block|{
 name|SetInsertPoint
 argument_list|(
@@ -1462,6 +1516,12 @@ argument_list|(
 name|Instruction
 operator|*
 name|IP
+argument_list|,
+name|MDNode
+operator|*
+name|FPMathTag
+operator|=
+literal|0
 argument_list|)
 operator|:
 name|IRBuilderBase
@@ -1474,6 +1534,11 @@ argument_list|)
 block|,
 name|Folder
 argument_list|()
+block|,
+name|DefaultFPMathTag
+argument_list|(
+argument|FPMathTag
+argument_list|)
 block|{
 name|SetInsertPoint
 argument_list|(
@@ -1494,6 +1559,12 @@ argument_list|(
 name|Use
 operator|&
 name|U
+argument_list|,
+name|MDNode
+operator|*
+name|FPMathTag
+operator|=
+literal|0
 argument_list|)
 operator|:
 name|IRBuilderBase
@@ -1506,6 +1577,11 @@ argument_list|)
 block|,
 name|Folder
 argument_list|()
+block|,
+name|DefaultFPMathTag
+argument_list|(
+argument|FPMathTag
+argument_list|)
 block|{
 name|SetInsertPoint
 argument_list|(
@@ -1536,6 +1612,9 @@ argument_list|,
 argument|BasicBlock::iterator IP
 argument_list|,
 argument|const T& F
+argument_list|,
+argument|MDNode *FPMathTag =
+literal|0
 argument_list|)
 operator|:
 name|IRBuilderBase
@@ -1548,7 +1627,12 @@ argument_list|)
 block|,
 name|Folder
 argument_list|(
-argument|F
+name|F
+argument_list|)
+block|,
+name|DefaultFPMathTag
+argument_list|(
+argument|FPMathTag
 argument_list|)
 block|{
 name|SetInsertPoint
@@ -1563,6 +1647,9 @@ argument_list|(
 argument|BasicBlock *TheBB
 argument_list|,
 argument|BasicBlock::iterator IP
+argument_list|,
+argument|MDNode *FPMathTag =
+literal|0
 argument_list|)
 operator|:
 name|IRBuilderBase
@@ -1575,6 +1662,11 @@ argument_list|)
 block|,
 name|Folder
 argument_list|()
+block|,
+name|DefaultFPMathTag
+argument_list|(
+argument|FPMathTag
+argument_list|)
 block|{
 name|SetInsertPoint
 argument_list|(
@@ -1594,8 +1686,48 @@ return|return
 name|Folder
 return|;
 block|}
+comment|/// getDefaultFPMathTag - Get the floating point math metadata being used.
+name|MDNode
+operator|*
+name|getDefaultFPMathTag
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DefaultFPMathTag
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// SetDefaultFPMathTag - Set the floating point math metadata to be used.
+end_comment
+
+begin_function
+name|void
+name|SetDefaultFPMathTag
+parameter_list|(
+name|MDNode
+modifier|*
+name|FPMathTag
+parameter_list|)
+block|{
+name|DefaultFPMathTag
+operator|=
+name|FPMathTag
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/// isNamePreserving - Return true if this builder is configured to actually
+end_comment
+
+begin_comment
 comment|/// add the requested names to IR created through it.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isNamePreserving
 argument_list|()
@@ -2391,6 +2523,51 @@ return|;
 block|}
 end_decl_stmt
 
+begin_decl_stmt
+name|Instruction
+modifier|*
+name|AddFPMathTag
+argument_list|(
+name|Instruction
+operator|*
+name|I
+argument_list|,
+name|MDNode
+operator|*
+name|FPMathTag
+argument_list|)
+decl|const
+block|{
+if|if
+condition|(
+operator|!
+name|FPMathTag
+condition|)
+name|FPMathTag
+operator|=
+name|DefaultFPMathTag
+expr_stmt|;
+if|if
+condition|(
+name|FPMathTag
+condition|)
+name|I
+operator|->
+name|setMetadata
+argument_list|(
+name|LLVMContext
+operator|::
+name|MD_fpmath
+argument_list|,
+name|FPMathTag
+argument_list|)
+expr_stmt|;
+return|return
+name|I
+return|;
+block|}
+end_decl_stmt
+
 begin_label
 name|public
 label|:
@@ -2590,6 +2767,12 @@ modifier|&
 name|Name
 init|=
 literal|""
+parameter_list|,
+name|MDNode
+modifier|*
+name|FPMathTag
+init|=
+literal|0
 parameter_list|)
 block|{
 if|if
@@ -2638,6 +2821,8 @@ return|;
 return|return
 name|Insert
 argument_list|(
+name|AddFPMathTag
+argument_list|(
 name|BinaryOperator
 operator|::
 name|CreateFAdd
@@ -2645,6 +2830,9 @@ argument_list|(
 name|LHS
 argument_list|,
 name|RHS
+argument_list|)
+argument_list|,
+name|FPMathTag
 argument_list|)
 argument_list|,
 name|Name
@@ -2843,6 +3031,12 @@ modifier|&
 name|Name
 init|=
 literal|""
+parameter_list|,
+name|MDNode
+modifier|*
+name|FPMathTag
+init|=
+literal|0
 parameter_list|)
 block|{
 if|if
@@ -2891,6 +3085,8 @@ return|;
 return|return
 name|Insert
 argument_list|(
+name|AddFPMathTag
+argument_list|(
 name|BinaryOperator
 operator|::
 name|CreateFSub
@@ -2898,6 +3094,9 @@ argument_list|(
 name|LHS
 argument_list|,
 name|RHS
+argument_list|)
+argument_list|,
+name|FPMathTag
 argument_list|)
 argument_list|,
 name|Name
@@ -3096,6 +3295,12 @@ modifier|&
 name|Name
 init|=
 literal|""
+parameter_list|,
+name|MDNode
+modifier|*
+name|FPMathTag
+init|=
+literal|0
 parameter_list|)
 block|{
 if|if
@@ -3144,6 +3349,8 @@ return|;
 return|return
 name|Insert
 argument_list|(
+name|AddFPMathTag
+argument_list|(
 name|BinaryOperator
 operator|::
 name|CreateFMul
@@ -3151,6 +3358,9 @@ argument_list|(
 name|LHS
 argument_list|,
 name|RHS
+argument_list|)
+argument_list|,
+name|FPMathTag
 argument_list|)
 argument_list|,
 name|Name
@@ -3468,6 +3678,12 @@ modifier|&
 name|Name
 init|=
 literal|""
+parameter_list|,
+name|MDNode
+modifier|*
+name|FPMathTag
+init|=
+literal|0
 parameter_list|)
 block|{
 if|if
@@ -3516,6 +3732,8 @@ return|;
 return|return
 name|Insert
 argument_list|(
+name|AddFPMathTag
+argument_list|(
 name|BinaryOperator
 operator|::
 name|CreateFDiv
@@ -3525,6 +3743,9 @@ argument_list|,
 name|RHS
 argument_list|)
 argument_list|,
+name|FPMathTag
+argument_list|)
+argument_list|,
 name|Name
 argument_list|)
 return|;
@@ -3714,6 +3935,12 @@ modifier|&
 name|Name
 init|=
 literal|""
+parameter_list|,
+name|MDNode
+modifier|*
+name|FPMathTag
+init|=
+literal|0
 parameter_list|)
 block|{
 if|if
@@ -3762,6 +3989,8 @@ return|;
 return|return
 name|Insert
 argument_list|(
+name|AddFPMathTag
+argument_list|(
 name|BinaryOperator
 operator|::
 name|CreateFRem
@@ -3769,6 +3998,9 @@ argument_list|(
 name|LHS
 argument_list|,
 name|RHS
+argument_list|)
+argument_list|,
+name|FPMathTag
 argument_list|)
 argument_list|,
 name|Name
@@ -5232,6 +5464,12 @@ modifier|&
 name|Name
 init|=
 literal|""
+parameter_list|,
+name|MDNode
+modifier|*
+name|FPMathTag
+init|=
+literal|0
 parameter_list|)
 block|{
 if|if
@@ -5264,11 +5502,16 @@ return|;
 return|return
 name|Insert
 argument_list|(
+name|AddFPMathTag
+argument_list|(
 name|BinaryOperator
 operator|::
 name|CreateFNeg
 argument_list|(
 name|V
+argument_list|)
+argument_list|,
+name|FPMathTag
 argument_list|)
 argument_list|,
 name|Name

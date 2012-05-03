@@ -853,7 +853,7 @@ struct|struct
 name|RegClassWeight
 block|{
 name|unsigned
-name|RegWeigt
+name|RegWeight
 decl_stmt|;
 name|unsigned
 name|WeightLimit

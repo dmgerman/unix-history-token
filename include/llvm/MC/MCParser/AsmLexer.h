@@ -74,12 +74,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCAsmInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -89,21 +83,12 @@ directive|include
 file|<string>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<cassert>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
 name|class
 name|MemoryBuffer
-decl_stmt|;
-name|class
-name|SMLoc
 decl_stmt|;
 name|class
 name|MCAsmInfo

@@ -134,11 +134,11 @@ init|=
 literal|2
 block|,
 comment|// "prof"
-name|MD_fpaccuracy
+name|MD_fpmath
 init|=
 literal|3
 block|,
-comment|// "fpaccuracy"
+comment|// "fpmath"
 name|MD_range
 init|=
 literal|4
