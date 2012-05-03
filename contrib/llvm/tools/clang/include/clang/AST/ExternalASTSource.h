@@ -295,6 +295,20 @@ name|DeclarationName
 name|Name
 parameter_list|)
 function_decl|;
+comment|/// \brief Ensures that the table of all visible declarations inside this
+comment|/// context is up to date.
+comment|///
+comment|/// The default implementation of this functino is a no-op.
+name|virtual
+name|void
+name|completeVisibleDeclsMap
+parameter_list|(
+specifier|const
+name|DeclContext
+modifier|*
+name|DC
+parameter_list|)
+function_decl|;
 comment|/// \brief Finds all declarations lexically contained within the given
 comment|/// DeclContext, after applying an optional filter predicate.
 comment|///

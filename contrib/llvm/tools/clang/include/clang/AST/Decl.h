@@ -218,6 +218,19 @@ argument_list|()
 specifier|const
 expr_stmt|;
 comment|// implemented in TypeLoc.h
+comment|/// \brief Override the type stored in this TypeSourceInfo. Use with caution!
+name|void
+name|overrideType
+parameter_list|(
+name|QualType
+name|T
+parameter_list|)
+block|{
+name|Ty
+operator|=
+name|T
+expr_stmt|;
+block|}
 block|}
 empty_stmt|;
 comment|/// TranslationUnitDecl - The top declaration context.
@@ -904,18 +917,6 @@ name|setVisibility
 parameter_list|(
 name|Visibility
 name|V
-parameter_list|)
-block|{
-name|visibility_
-operator|=
-name|V
-expr_stmt|;
-block|}
-name|void
-name|setVisibility
-parameter_list|(
-name|Visibility
-name|V
 parameter_list|,
 name|bool
 name|E
@@ -928,27 +929,6 @@ expr_stmt|;
 name|explicit_
 operator|=
 name|E
-expr_stmt|;
-block|}
-name|void
-name|setVisibility
-parameter_list|(
-name|LinkageInfo
-name|Other
-parameter_list|)
-block|{
-name|setVisibility
-argument_list|(
-name|Other
-operator|.
-name|visibility
-argument_list|()
-argument_list|,
-name|Other
-operator|.
-name|visibilityExplicit
-argument_list|()
-argument_list|)
 expr_stmt|;
 block|}
 name|void

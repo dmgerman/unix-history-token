@@ -119,12 +119,6 @@ directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<map>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -145,7 +139,7 @@ name|class
 name|InstrItineraryData
 decl_stmt|;
 name|class
-name|DefaultVLIWScheduler
+name|ScheduleDAGInstrs
 decl_stmt|;
 name|class
 name|SUnit
@@ -292,17 +286,6 @@ operator|*
 name|MI
 argument_list|)
 decl_stmt|;
-specifier|const
-name|InstrItineraryData
-operator|*
-name|getInstrItins
-argument_list|()
-specifier|const
-block|{
-return|return
-name|InstrItins
-return|;
-block|}
 block|}
 empty_stmt|;
 comment|// VLIWPacketizerList - Implements a simple VLIW packetizer using DFA. The
@@ -315,8 +298,6 @@ comment|// API call is made to prune the dependence.
 name|class
 name|VLIWPacketizerList
 block|{
-name|protected
-label|:
 specifier|const
 name|TargetMachine
 modifier|&
@@ -332,11 +313,13 @@ name|TargetInstrInfo
 modifier|*
 name|TII
 decl_stmt|;
-comment|// The VLIW Scheduler.
-name|DefaultVLIWScheduler
+comment|// Encapsulate data types not exposed to the target interface.
+name|ScheduleDAGInstrs
 modifier|*
-name|VLIWScheduler
+name|SchedulerImpl
 decl_stmt|;
+name|protected
+label|:
 comment|// Vector of instructions assigned to the current packet.
 name|std
 operator|::
@@ -352,18 +335,14 @@ name|DFAPacketizer
 modifier|*
 name|ResourceTracker
 decl_stmt|;
-comment|// Generate MI -> SU map.
+comment|// Scheduling units.
 name|std
 operator|::
-name|map
+name|vector
 operator|<
-name|MachineInstr
-operator|*
-operator|,
 name|SUnit
-operator|*
 operator|>
-name|MIToSUnit
+name|SUnits
 expr_stmt|;
 name|public
 label|:
@@ -413,40 +392,14 @@ name|ResourceTracker
 return|;
 block|}
 comment|// addToPacket - Add MI to the current packet.
-name|virtual
-name|MachineBasicBlock
-operator|::
-name|iterator
+name|void
 name|addToPacket
-argument_list|(
-argument|MachineInstr *MI
-argument_list|)
-block|{
-name|MachineBasicBlock
-operator|::
-name|iterator
-name|MII
-operator|=
+parameter_list|(
+name|MachineInstr
+modifier|*
 name|MI
-block|;
-name|CurrentPacketMIs
-operator|.
-name|push_back
-argument_list|(
-name|MI
-argument_list|)
-block|;
-name|ResourceTracker
-operator|->
-name|reserveResources
-argument_list|(
-name|MI
-argument_list|)
-block|;
-return|return
-name|MII
-return|;
-block|}
+parameter_list|)
+function_decl|;
 comment|// endPacket - End the current packet.
 name|void
 name|endPacket
@@ -457,23 +410,10 @@ name|MBB
 parameter_list|,
 name|MachineInstr
 modifier|*
-name|MI
+name|I
 parameter_list|)
 function_decl|;
-comment|// initPacketizerState - perform initialization before packetizing
-comment|// an instruction. This function is supposed to be overrided by
-comment|// the target dependent packetizer.
-name|virtual
-name|void
-name|initPacketizerState
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return;
-block|}
 comment|// ignorePseudoInstruction - Ignore bundling of pseudo instructions.
-name|virtual
 name|bool
 name|ignorePseudoInstruction
 parameter_list|(
@@ -485,26 +425,17 @@ name|MachineBasicBlock
 modifier|*
 name|MBB
 parameter_list|)
-block|{
-return|return
-name|false
-return|;
-block|}
-comment|// isSoloInstruction - return true if instruction MI can not be packetized
-comment|// with any other instruction, which means that MI itself is a packet.
-name|virtual
+function_decl|;
+comment|// isSoloInstruction - return true if instruction I must end previous
+comment|// packet.
 name|bool
 name|isSoloInstruction
 parameter_list|(
 name|MachineInstr
 modifier|*
-name|MI
+name|I
 parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
+function_decl|;
 comment|// isLegalToPacketizeTogether - Is it legal to packetize SUI and SUJ
 comment|// together.
 name|virtual

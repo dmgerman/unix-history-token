@@ -174,8 +174,7 @@ name|ObjRelocationInfo
 operator|&
 name|Rel
 argument_list|,
-specifier|const
-name|ObjectFile
+name|ObjectImage
 operator|&
 name|Obj
 argument_list|,

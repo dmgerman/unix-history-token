@@ -607,6 +607,8 @@ block|{
 return|return
 name|Data1
 operator|==
+name|RHS
+operator|.
 name|Data1
 operator|&&
 name|Data2

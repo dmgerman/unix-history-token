@@ -333,6 +333,11 @@ name|bool
 name|DontDeleteUselessPHIs
 init|=
 name|false
+parameter_list|,
+name|bool
+name|SplitLandingPads
+init|=
+name|false
 parameter_list|)
 function_decl|;
 specifier|inline

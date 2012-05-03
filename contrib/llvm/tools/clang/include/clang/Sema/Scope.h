@@ -174,17 +174,10 @@ name|SwitchScope
 init|=
 literal|0x800
 block|,
-comment|/// ThisScope - This is the scope of a struct/union/class definition,
-comment|/// outside of any member function definition, where 'this' is nonetheless
-comment|/// usable.
-name|ThisScope
-init|=
-literal|0x1000
-block|,
 comment|/// TryScope - This is the scope of a C++ try statement.
 name|TryScope
 init|=
-literal|0x2000
+literal|0x1000
 block|}
 enum|;
 name|private

@@ -262,16 +262,6 @@ name|Name
 argument_list|)
 decl|const
 decl_stmt|;
-name|external_key_type
-name|GetExternalKey
-argument_list|(
-specifier|const
-name|internal_key_type
-operator|&
-name|Key
-argument_list|)
-decl|const
-decl_stmt|;
 specifier|static
 name|std
 operator|::
@@ -315,14 +305,6 @@ parameter_list|)
 function_decl|;
 block|}
 empty_stmt|;
-comment|/// \brief The on-disk hash table used for the DeclContext's Name lookup table.
-typedef|typedef
-name|OnDiskChainedHashTable
-operator|<
-name|ASTDeclContextNameLookupTrait
-operator|>
-name|ASTDeclContextNameLookupTable
-expr_stmt|;
 comment|/// \brief Class that performs lookup for an identifier stored in an AST file.
 name|class
 name|ASTIdentifierLookupTrait

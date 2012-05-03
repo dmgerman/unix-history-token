@@ -92,6 +92,10 @@ comment|/// @brief Vectorize floating-point values.
 name|bool
 name|VectorizeFloats
 decl_stmt|;
+comment|/// @brief Vectorize pointer values.
+name|bool
+name|VectorizePointers
+decl_stmt|;
 comment|/// @brief Vectorize casting (conversion) operations.
 name|bool
 name|VectorizeCasts
@@ -103,6 +107,14 @@ decl_stmt|;
 comment|/// @brief Vectorize the fused-multiply-add intrinsic.
 name|bool
 name|VectorizeFMA
+decl_stmt|;
+comment|/// @brief Vectorize select instructions.
+name|bool
+name|VectorizeSelect
+decl_stmt|;
+comment|/// @brief Vectorize getelementptr instructions.
+name|bool
+name|VectorizeGEP
 decl_stmt|;
 comment|/// @brief Vectorize loads and stores.
 name|bool

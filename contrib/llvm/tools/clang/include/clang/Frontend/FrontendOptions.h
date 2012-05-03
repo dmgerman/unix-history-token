@@ -146,9 +146,6 @@ comment|///< Print the "preamble" of the input file
 name|PrintPreprocessedInput
 block|,
 comment|///< -E mode.
-name|PubnamesDump
-block|,
-comment|///< Print all of the "public" names in the source.
 name|RewriteMacros
 block|,
 comment|///< Expand macros but not #includes.

@@ -57,6 +57,14 @@ value|""
 end_define
 
 begin_comment
+comment|/* Default<path> to all compiler invocations for --sysroot=<path>. */
+end_comment
+
+begin_comment
+comment|/* #undef DEFAULT_SYSROOT */
+end_comment
+
+begin_comment
 comment|/* Define if position independent code is enabled */
 end_comment
 

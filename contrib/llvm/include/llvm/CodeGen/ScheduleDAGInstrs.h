@@ -919,6 +919,14 @@ comment|/// the def-side latency only.
 name|bool
 name|UnitLatencies
 block|;
+comment|/// The standard DAG builder does not normally include terminators as DAG
+comment|/// nodes because it does not create the necessary dependencies to prevent
+comment|/// reordering. A specialized scheduler can overide
+comment|/// TargetInstrInfo::isSchedulingBoundary then enable this flag to indicate
+comment|/// it has taken responsibility for scheduling the terminator correctly.
+name|bool
+name|CanHandleTerminators
+block|;
 comment|/// State specific to the current scheduling region.
 comment|/// ------------------------------------------------
 comment|/// The block in which to insert instructions

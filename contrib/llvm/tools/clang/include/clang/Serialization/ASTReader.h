@@ -597,6 +597,14 @@ block|{
 name|class
 name|ASTIdentifierLookupTrait
 decl_stmt|;
+comment|/// \brief The on-disk hash table used for the DeclContext's Name lookup table.
+typedef|typedef
+name|OnDiskChainedHashTable
+operator|<
+name|ASTDeclContextNameLookupTrait
+operator|>
+name|ASTDeclContextNameLookupTable
+expr_stmt|;
 block|}
 block|}
 comment|// end namespace serialization
@@ -1070,7 +1078,11 @@ name|std
 operator|::
 name|pair
 operator|<
-name|void
+name|serialization
+operator|::
+name|reader
+operator|::
+name|ASTDeclContextNameLookupTable
 operator|*
 operator|,
 name|ModuleFile
@@ -4702,6 +4714,7 @@ comment|/// \brief Load all external visible decls in the given DeclContext.
 name|void
 name|completeVisibleDeclsMap
 parameter_list|(
+specifier|const
 name|DeclContext
 modifier|*
 name|DC

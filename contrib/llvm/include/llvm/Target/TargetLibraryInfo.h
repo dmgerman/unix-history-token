@@ -165,7 +165,7 @@ comment|/// long double expm1l(long double x);
 name|expm1l
 block|,
 comment|/// float expm1f(float x);
-name|expl1f
+name|expm1f
 block|,
 comment|/// double fabs(double x);
 name|fabs
@@ -279,8 +279,17 @@ block|,
 comment|/// float rintf(float x);
 name|rintf
 block|,
-comment|/// long dobule rintl(long double x);
+comment|/// long double rintl(long double x);
 name|rintl
+block|,
+comment|/// double round(double x);
+name|round
+block|,
+comment|/// float roundf(float x);
+name|roundf
+block|,
+comment|/// long double roundl(long double x);
+name|roundl
 block|,
 comment|/// double sin(double x);
 name|sin
