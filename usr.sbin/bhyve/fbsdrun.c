@@ -510,6 +510,7 @@ literal|"	-e: exit on unhandled i/o access\n"
 literal|"       -h: help\n"
 literal|"       -z: guest hz (default is %d)\n"
 literal|"       -s:<slot,driver,configinfo> PCI slot config\n"
+literal|"       -S:<slot,driver,configinfo> legacy PCI slot config\n"
 literal|"	-n:<slot,name> PCI slot naming\n"
 literal|"       -m: lowmem in MB\n"
 literal|"       -M: highmem in MB\n"
@@ -2286,7 +2287,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ehBHPxp:g:c:z:s:n:m:M:"
+literal|"ehBHPxp:g:c:z:s:S:n:m:M:"
 argument_list|)
 operator|)
 operator|!=
@@ -2376,6 +2377,19 @@ case|:
 name|pci_parse_slot
 argument_list|(
 name|optarg
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'S'
+case|:
+name|pci_parse_slot
+argument_list|(
+name|optarg
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 break|break;
