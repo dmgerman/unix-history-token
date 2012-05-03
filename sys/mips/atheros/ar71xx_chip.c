@@ -698,6 +698,7 @@ operator|=
 name|MII0_CTRL_IF_RMII
 expr_stmt|;
 else|else
+block|{
 name|printf
 argument_list|(
 literal|"%s: invalid MII mode (%d) for unit %d\n"
@@ -710,6 +711,7 @@ name|unit
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
 break|break;
 case|case
 literal|1
@@ -728,6 +730,7 @@ name|mii_if
 operator|=
 name|MII1_CTRL_IF_RGMII
 expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|mii_mode
@@ -739,6 +742,7 @@ operator|=
 name|MII1_CTRL_IF_RMII
 expr_stmt|;
 else|else
+block|{
 name|printf
 argument_list|(
 literal|"%s: invalid MII mode (%d) for unit %d\n"
@@ -751,6 +755,7 @@ name|unit
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
 break|break;
 default|default:
 name|printf
