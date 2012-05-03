@@ -2273,6 +2273,24 @@ name|l
 operator|+=
 name|i
 expr_stmt|;
+comment|/* the last of these zero bytes will be overwritten 			 * with the padding length. */
+name|memset
+argument_list|(
+operator|&
+name|rec
+operator|->
+name|input
+index|[
+name|rec
+operator|->
+name|length
+index|]
+argument_list|,
+literal|0
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
 name|rec
 operator|->
 name|length
