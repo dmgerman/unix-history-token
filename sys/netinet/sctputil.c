@@ -16590,7 +16590,7 @@ name|sctp_ep
 argument_list|,
 name|stcb
 argument_list|,
-name|SCTP_PCB_FLAGS_STREAM_RESETEVNT
+name|SCTP_PCB_FLAGS_STREAM_CHANGEEVNT
 argument_list|)
 condition|)
 block|{
@@ -16923,7 +16923,7 @@ name|sctp_ep
 argument_list|,
 name|stcb
 argument_list|,
-name|SCTP_PCB_FLAGS_STREAM_RESETEVNT
+name|SCTP_PCB_FLAGS_ASSOC_RESETEVNT
 argument_list|)
 condition|)
 block|{
