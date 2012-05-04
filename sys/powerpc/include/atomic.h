@@ -96,33 +96,6 @@ begin_comment
 comment|/*  * The __ATOMIC_REL/ACQ() macros provide memory barriers only in conjunction  * with the atomic lXarx/stXcx. sequences below. See Appendix B.2 of Book II  * of the architecture manual.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__powerpc64__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|__ATOMIC_REL
-parameter_list|()
-value|__asm __volatile("lwsync" : : : "memory")
-end_define
-
-begin_define
-define|#
-directive|define
-name|__ATOMIC_ACQ
-parameter_list|()
-value|__asm __volatile("lwsync" : : : "memory")
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -138,11 +111,6 @@ name|__ATOMIC_ACQ
 parameter_list|()
 value|__asm __volatile("isync" : : : "memory")
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * atomic_add(p, v)  * { *p += v; }  */

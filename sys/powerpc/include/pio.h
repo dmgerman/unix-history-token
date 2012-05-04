@@ -19,12 +19,16 @@ begin_comment
 comment|/*  * I/O macros.  */
 end_comment
 
+begin_comment
+comment|/*  * Use sync so that bus space operations cannot sneak out the bottom of  * mutex-protected sections (mutex release does not guarantee completion of  * accesses to caching-inhibited memory on some systems)  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|powerpc_iomb
 parameter_list|()
-value|__asm __volatile("eieio" : : : "memory")
+value|__asm __volatile("sync" : : : "memory")
 end_define
 
 begin_function
