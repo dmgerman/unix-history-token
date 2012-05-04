@@ -669,7 +669,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mfi_tbolt_adp_reset - For controller reset  * @regs: MFI register set  */
+comment|/*  * mfi_tbolt_adp_reset - For controller reset  * @regs: MFI register set  */
 end_comment
 
 begin_function
@@ -965,7 +965,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *******************************************************************************************  * Description:  *      This routine initialize Thunderbolt specific device information  *******************************************************************************************  */
+comment|/*  * This routine initialize Thunderbolt specific device information  */
 end_comment
 
 begin_function
@@ -1110,7 +1110,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  ****************************************************************************  * Description:  *      This function calculates the memory requirement for Thunderbolt  *      controller  * Return Value:  *      Total required memory in bytes  ****************************************************************************  */
+comment|/*  * This function calculates the memory requirement for Thunderbolt  * controller, returns the total required memory in bytes  */
 end_comment
 
 begin_function
@@ -1171,7 +1171,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  ****************************************************************************  * Description:  *      This function will prepare message pools for the Thunderbolt controller  * Arguments:  *      DevExt - HBA miniport driver's adapter data storage structure  *      pMemLocation - start of the memory allocated for Thunderbolt.  * Return Value:  *      TRUE if successful  *      FALSE if failed  ****************************************************************************  */
+comment|/*  * Description:  *      This function will prepare message pools for the Thunderbolt controller  * Arguments:  *      DevExt - HBA miniport driver's adapter data storage structure  *      pMemLocation - start of the memory allocated for Thunderbolt.  * Return Value:  *      TRUE if successful  *      FALSE if failed  */
 end_comment
 
 begin_function
@@ -1504,7 +1504,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  ****************************************************************************  * Description:  *   This routine prepare and issue INIT2 frame to the Firmware  ****************************************************************************  */
+comment|/*  * This routine prepare and issue INIT2 frame to the Firmware  */
 end_comment
 
 begin_function
@@ -2745,7 +2745,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * map_cmd_status -	Maps FW cmd status to OS cmd status  * @cmd :		Pointer to cmd  * @status :		status of cmd returned by FW  * @ext_status :	ext status of cmd returned by FW  */
+comment|/*  * map_cmd_status -	Maps FW cmd status to OS cmd status  * @cmd :		Pointer to cmd  * @status :		status of cmd returned by FW  * @ext_status :	ext status of cmd returned by FW  */
 end_comment
 
 begin_function
@@ -2930,7 +2930,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mfi_tbolt_return_cmd -	Return a cmd to free command pool  * @instance:		Adapter soft state  * @cmd:		Command packet to be returned to free command pool  */
+comment|/*  * mfi_tbolt_return_cmd -	Return a cmd to free command pool  * @instance:		Adapter soft state  * @cmd:		Command packet to be returned to free command pool  */
 end_comment
 
 begin_function
@@ -3417,7 +3417,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mfi_get_cmd -	Get a command from the free pool  * @instance:		Adapter soft state  *  * Returns a free command from the pool  */
+comment|/*  * mfi_get_cmd -	Get a command from the free pool  * @instance:		Adapter soft state  *  * Returns a free command from the pool  */
 end_comment
 
 begin_function
@@ -6598,7 +6598,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The ThunderBolt HW has an option for the driver to directly  * access the underlying disks and operate on the RAID.  To   * do this there needs to be a capability to keep the RAID controller  * and driver in sync.  The FreeBSD driver does not take advantage  * of this feature since it adds a lot of complexity and slows down  * performance.  Performance is gained by using the controller's  * cache etc.  *  * Even though this driver doesn't access the disks directly, an  * AEN like command is used to inform the RAID firmware to "sync"  * with all LD's via the MFI_DCMD_LD_MAP_GET_INFO command.  This  * command in write mode will return when the RAID firmware has  * detected a change to the RAID state.  Examples of this type  * of change are removing a disk.  Once the command returns then  * the driver needs to acknowledge this and "sync" all LD's again.  * This repeats until we shutdown.  Then we need to cancel this  * pending command.  *  * If this is not done right the RAID firmware will not remove a  * pulled drive and the RAID won't go degraded etc.  Effectively,  * stopping any RAID mangement to functions.  *  * Doing another LD sync, requires the use of an event since the  * driver needs to do a mfi_wait_command and can't do that in an  * interrupt thread.  *  * The driver could get the RAID state via the MFI_DCMD_LD_MAP_GET_INFO  * That requires a bunch of structure and it is simplier to just do  * the MFI_DCMD_LD_GET_LIST versus walking the RAID map.  */
+comment|/*  * The ThunderBolt HW has an option for the driver to directly  * access the underlying disks and operate on the RAID.  To  * do this there needs to be a capability to keep the RAID controller  * and driver in sync.  The FreeBSD driver does not take advantage  * of this feature since it adds a lot of complexity and slows down  * performance.  Performance is gained by using the controller's  * cache etc.  *  * Even though this driver doesn't access the disks directly, an  * AEN like command is used to inform the RAID firmware to "sync"  * with all LD's via the MFI_DCMD_LD_MAP_GET_INFO command.  This  * command in write mode will return when the RAID firmware has  * detected a change to the RAID state.  Examples of this type  * of change are removing a disk.  Once the command returns then  * the driver needs to acknowledge this and "sync" all LD's again.  * This repeats until we shutdown.  Then we need to cancel this  * pending command.  *  * If this is not done right the RAID firmware will not remove a  * pulled drive and the RAID won't go degraded etc.  Effectively,  * stopping any RAID mangement to functions.  *  * Doing another LD sync, requires the use of an event since the  * driver needs to do a mfi_wait_command and can't do that in an  * interrupt thread.  *  * The driver could get the RAID state via the MFI_DCMD_LD_MAP_GET_INFO  * That requires a bunch of structure and it is simplier to just do  * the MFI_DCMD_LD_GET_LIST versus walking the RAID map.  */
 end_comment
 
 begin_function
