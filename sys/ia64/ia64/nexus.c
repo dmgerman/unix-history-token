@@ -130,18 +130,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<isa/isareg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/rtprio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clock_if.h"
 end_include
 
@@ -954,25 +942,6 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-comment|/* 	 * Mask the legacy PICs - we will use the I/O SAPIC for interrupt. 	 */
-name|outb
-argument_list|(
-name|IO_ICU1
-operator|+
-literal|1
-argument_list|,
-literal|0xff
-argument_list|)
-expr_stmt|;
-name|outb
-argument_list|(
-name|IO_ICU2
-operator|+
-literal|1
-argument_list|,
-literal|0xff
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|acpi_identify
