@@ -1839,7 +1839,7 @@ literal|"RAID3-PN"
 argument_list|)
 operator|==
 literal|0
-operator|&&
+operator|||
 name|strcasecmp
 argument_list|(
 name|str
@@ -1858,7 +1858,7 @@ expr_stmt|;
 operator|*
 name|qual
 operator|=
-name|G_RAID_VOLUME_RLQ_R3P0
+name|G_RAID_VOLUME_RLQ_R3PN
 expr_stmt|;
 block|}
 elseif|else
@@ -1896,7 +1896,7 @@ literal|"RAID4-PN"
 argument_list|)
 operator|==
 literal|0
-operator|&&
+operator|||
 name|strcasecmp
 argument_list|(
 name|str
@@ -1915,7 +1915,7 @@ expr_stmt|;
 operator|*
 name|qual
 operator|=
-name|G_RAID_VOLUME_RLQ_R4P0
+name|G_RAID_VOLUME_RLQ_R4PN
 expr_stmt|;
 block|}
 elseif|else
