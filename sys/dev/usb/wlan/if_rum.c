@@ -342,6 +342,16 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|N
+parameter_list|(
+name|a
+parameter_list|)
+value|((int)(sizeof (a) / sizeof ((a)[0])))
+end_define
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -5002,11 +5012,14 @@ name|m_pkthdr
 operator|.
 name|len
 operator|>
-operator|(
+call|(
+name|int
+call|)
+argument_list|(
 name|MCLBYTES
 operator|+
 name|RT2573_TX_DESC_SIZE
-operator|)
+argument_list|)
 condition|)
 block|{
 name|DPRINTFN
@@ -5409,9 +5422,14 @@ if|if
 condition|(
 name|len
 operator|<
+call|(
+name|int
+call|)
+argument_list|(
 name|RT2573_RX_DESC_SIZE
 operator|+
 name|IEEE80211_MIN_LEN
+argument_list|)
 condition|)
 block|{
 name|DPRINTF
@@ -8306,7 +8324,7 @@ decl_stmt|;
 name|usb_error_t
 name|error
 decl_stmt|;
-name|int
+name|size_t
 name|offset
 decl_stmt|;
 name|req
@@ -11162,13 +11180,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof (a) / sizeof ((a)[0]))
 name|int
 name|i
 decl_stmt|,
@@ -11347,9 +11358,6 @@ block|}
 return|return
 literal|0
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -11364,13 +11372,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof (a) / sizeof ((a)[0]))
 name|struct
 name|ifnet
 modifier|*

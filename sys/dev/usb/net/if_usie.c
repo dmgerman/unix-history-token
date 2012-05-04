@@ -4707,7 +4707,10 @@ name|m_pkthdr
 operator|.
 name|len
 operator|>
-operator|(
+call|(
+name|int
+call|)
+argument_list|(
 name|MCLBYTES
 operator|-
 name|ETHER_HDR_LEN
@@ -4720,7 +4723,7 @@ name|sc
 operator|->
 name|sc_txd
 argument_list|)
-operator|)
+argument_list|)
 condition|)
 block|{
 name|DPRINTF

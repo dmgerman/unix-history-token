@@ -13415,26 +13415,16 @@ name|usb_hub_descriptor
 name|ehci_hubd
 init|=
 block|{
+operator|.
+name|bDescLength
+operator|=
 literal|0
 block|,
 comment|/* dynamic length */
+operator|.
+name|bDescriptorType
+operator|=
 name|UDESC_HUB
-block|,
-literal|0
-block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
-block|,
-literal|0
-block|,
-literal|0
-block|,
-block|{
-literal|0
-block|}
 block|, }
 decl_stmt|;
 end_decl_stmt

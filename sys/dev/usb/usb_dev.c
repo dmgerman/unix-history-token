@@ -6953,7 +6953,7 @@ parameter_list|,
 name|uint16_t
 name|unit
 parameter_list|,
-name|uint16_t
+name|int16_t
 name|subunit
 parameter_list|,
 name|uint8_t
@@ -7312,8 +7312,8 @@ block|}
 if|if
 condition|(
 name|subunit
-operator|==
-literal|0xFFFF
+operator|<
+literal|0
 condition|)
 block|{
 if|if
@@ -7372,7 +7372,7 @@ argument_list|(
 name|devname
 argument_list|)
 argument_list|,
-literal|"%s%u.%u%s"
+literal|"%s%u.%d%s"
 argument_list|,
 name|pm
 operator|->

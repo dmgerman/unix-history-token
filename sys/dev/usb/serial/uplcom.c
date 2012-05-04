@@ -3068,7 +3068,7 @@ end_function
 begin_decl_stmt
 specifier|static
 specifier|const
-name|int32_t
+name|uint32_t
 name|uplcom_rates
 index|[]
 init|=

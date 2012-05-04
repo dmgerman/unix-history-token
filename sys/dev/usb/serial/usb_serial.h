@@ -606,7 +606,7 @@ name|void
 modifier|*
 name|sc_parent
 decl_stmt|;
-name|uint32_t
+name|int
 name|sc_subunit
 decl_stmt|;
 name|uint16_t
@@ -729,7 +729,7 @@ name|struct
 name|ucom_softc
 modifier|*
 parameter_list|,
-name|uint32_t
+name|int
 parameter_list|,
 name|void
 modifier|*
