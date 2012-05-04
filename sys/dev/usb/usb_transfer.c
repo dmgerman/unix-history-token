@@ -6211,6 +6211,15 @@ argument_list|(
 literal|"enter\n"
 argument_list|)
 expr_stmt|;
+comment|/* the transfer can now be cancelled */
+name|xfer
+operator|->
+name|flags_int
+operator|.
+name|can_cancel_immed
+operator|=
+literal|1
+expr_stmt|;
 comment|/* enter the transfer */
 call|(
 name|ep
@@ -6222,14 +6231,6 @@ call|)
 argument_list|(
 name|xfer
 argument_list|)
-expr_stmt|;
-name|xfer
-operator|->
-name|flags_int
-operator|.
-name|can_cancel_immed
-operator|=
-literal|1
 expr_stmt|;
 comment|/* check for transfer error */
 if|if
@@ -8551,6 +8552,15 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* the transfer can now be cancelled */
+name|xfer
+operator|->
+name|flags_int
+operator|.
+name|can_cancel_immed
+operator|=
+literal|1
+expr_stmt|;
 comment|/* start USB transfer, if no error */
 if|if
 condition|(
@@ -8571,15 +8581,7 @@ argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
-name|xfer
-operator|->
-name|flags_int
-operator|.
-name|can_cancel_immed
-operator|=
-literal|1
-expr_stmt|;
-comment|/* check for error */
+comment|/* check for transfer error */
 if|if
 condition|(
 name|xfer
@@ -9122,6 +9124,15 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* the transfer can now be cancelled */
+name|xfer
+operator|->
+name|flags_int
+operator|.
+name|can_cancel_immed
+operator|=
+literal|1
+expr_stmt|;
 comment|/* start USB transfer, if no error */
 if|if
 condition|(
@@ -9142,15 +9153,7 @@ argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
-name|xfer
-operator|->
-name|flags_int
-operator|.
-name|can_cancel_immed
-operator|=
-literal|1
-expr_stmt|;
-comment|/* check for error */
+comment|/* check for transfer error */
 if|if
 condition|(
 name|xfer
