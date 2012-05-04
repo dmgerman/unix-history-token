@@ -3870,7 +3870,7 @@ name|defined
 argument_list|(
 name|SCTP_PANIC_ON_ABORT
 argument_list|)
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"stcb:%p state:%d rport:%d net:%p\n"
 argument_list|,
@@ -3911,7 +3911,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"No panic its in state %x closed\n"
 argument_list|,
@@ -28772,7 +28772,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static void sctp_print_mbuf_chain(struct mbuf *m) { 	for (; m; m = SCTP_BUF_NEXT(m)) { 		printf("%p: m_len = %ld\n", m, SCTP_BUF_LEN(m)); 		if (SCTP_BUF_IS_EXTENDED(m)) 			printf("%p: extend_size = %d\n", m, SCTP_BUF_EXTEND_SIZE(m)); 	} }
+unit|static void sctp_print_mbuf_chain(struct mbuf *m) { 	for (; m; m = SCTP_BUF_NEXT(m)) { 		SCTP_PRINTF("%p: m_len = %ld\n", m, SCTP_BUF_LEN(m)); 		if (SCTP_BUF_IS_EXTENDED(m)) 			SCTP_PRINTF("%p: extend_size = %d\n", m, SCTP_BUF_EXTEND_SIZE(m)); 	} }
 endif|#
 directive|endif
 end_endif

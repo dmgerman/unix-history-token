@@ -702,6 +702,17 @@ begin_comment
 comment|/* FIX ME: temp */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SCTP_PRINTF
+parameter_list|(
+name|params
+modifier|...
+parameter_list|)
+value|printf(params)
+end_define
+
 begin_if
 if|#
 directive|if
@@ -722,7 +733,7 @@ name|params
 modifier|...
 parameter_list|)
 define|\
-value|{									\     do {								\ 	if (SCTP_BASE_SYSCTL(sctp_debug_on)& level ) {			\ 	    printf(params);						\ 	}								\     } while (0);							\ }
+value|{									\     do {								\ 	if (SCTP_BASE_SYSCTL(sctp_debug_on)& level ) {			\ 	    SCTP_PRINTF(params);						\ 	}								\     } while (0);							\ }
 end_define
 
 begin_define
@@ -799,17 +810,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|SCTP_PRINTF
-parameter_list|(
-name|params
-modifier|...
-parameter_list|)
-value|printf(params)
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -880,7 +880,8 @@ name|file
 parameter_list|,
 name|err
 parameter_list|)
-value|if(SCTP_BASE_SYSCTL(sctp_logging_level)& SCTP_LTRACE_ERROR_ENABLE) \                                                          printf("mbuf:%p inp:%p stcb:%p net:%p file:%x line:%d error:%d\n", \ 								     m, inp, stcb, net, file, __LINE__, err);
+define|\
+value|if (SCTP_BASE_SYSCTL(sctp_logging_level)& SCTP_LTRACE_ERROR_ENABLE) \         	SCTP_PRINTF("mbuf:%p inp:%p stcb:%p net:%p file:%x line:%d error:%d\n", \ 		            m, inp, stcb, net, file, __LINE__, err);
 end_define
 
 begin_define
@@ -898,7 +899,8 @@ name|file
 parameter_list|,
 name|err
 parameter_list|)
-value|if(SCTP_BASE_SYSCTL(sctp_logging_level)& SCTP_LTRACE_ERROR_ENABLE) \                                                           printf("inp:%p stcb:%p net:%p file:%x line:%d error:%d\n", \ 								     inp, stcb, net, file, __LINE__, err);
+define|\
+value|if (SCTP_BASE_SYSCTL(sctp_logging_level)& SCTP_LTRACE_ERROR_ENABLE) \         	SCTP_PRINTF("inp:%p stcb:%p net:%p file:%x line:%d error:%d\n", \ 		            inp, stcb, net, file, __LINE__, err);
 end_define
 
 begin_else

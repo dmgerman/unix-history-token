@@ -6441,7 +6441,7 @@ name|i
 decl_stmt|,
 name|limit
 decl_stmt|;
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"Mapping array size: %d, baseTSN: %8.8x, cumAck: %8.8x, highestTSN: (%8.8x, %8.8x).\n"
 argument_list|,
@@ -6499,7 +6499,7 @@ block|{
 break|break;
 block|}
 block|}
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"Renegable mapping array (last %d entries are zero):\n"
 argument_list|,
@@ -6524,7 +6524,7 @@ name|i
 operator|++
 control|)
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"%2.2x%c"
 argument_list|,
@@ -6557,7 +6557,7 @@ name|limit
 operator|%
 literal|16
 condition|)
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -6593,7 +6593,7 @@ block|{
 break|break;
 block|}
 block|}
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"Non renegable mapping array (last %d entries are zero):\n"
 argument_list|,
@@ -6618,7 +6618,7 @@ name|i
 operator|++
 control|)
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"%2.2x%c"
 argument_list|,
@@ -6651,7 +6651,7 @@ name|limit
 operator|%
 literal|16
 condition|)
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -7435,7 +7435,7 @@ name|no_stcb
 goto|;
 block|}
 comment|/* If we reach here huh? */
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"Unknown it ctl flag %x\n"
 argument_list|,
@@ -27240,7 +27240,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"refcnt already incremented?\n"
 argument_list|)

@@ -9018,16 +9018,6 @@ name|SCTP_HS_TABLE_SIZE
 operator|-
 literal|1
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-name|printf
-argument_list|(
-literal|"HS CC CAlled.\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|cur_val
