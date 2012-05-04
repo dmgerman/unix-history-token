@@ -429,9 +429,7 @@ block|{
 comment|/* catch overflow early */
 return|return
 operator|(
-literal|0
-operator|-
-literal|1
+literal|0xFFFFFFFF
 operator|)
 return|;
 block|}
