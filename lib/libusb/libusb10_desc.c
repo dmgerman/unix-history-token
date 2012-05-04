@@ -2034,11 +2034,15 @@ name|struct
 name|libusb_usb_2_0_device_capability_descriptor
 modifier|*
 name|dcap_20
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|libusb_ss_usb_device_capability_descriptor
 modifier|*
 name|ss_cap
+init|=
+name|NULL
 decl_stmt|;
 if|if
 condition|(
@@ -2315,6 +2319,10 @@ operator|->
 name|usb_2_0_ext_cap
 operator|!=
 name|NULL
+operator|||
+name|dcap_20
+operator|==
+name|NULL
 condition|)
 break|break;
 if|if
@@ -2432,6 +2440,10 @@ name|ptr
 operator|->
 name|ss_usb_cap
 operator|!=
+name|NULL
+operator|||
+name|ss_cap
+operator|==
 name|NULL
 condition|)
 break|break;
