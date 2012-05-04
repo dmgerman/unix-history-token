@@ -4560,15 +4560,13 @@ name|pll
 argument_list|)
 expr_stmt|;
 comment|/* set MII registers */
-name|ar71xx_device_set_mii_speed
-argument_list|(
-name|sc
-operator|->
-name|arge_mac_unit
-argument_list|,
-name|if_speed
-argument_list|)
-expr_stmt|;
+comment|/* 	 * This was introduced to match what the Linux ag71xx ethernet 	 * driver does.  For the AR71xx case, it does set the port 	 * MII speed.  However, if this is done, non-gigabit speeds 	 * are not at all reliable when speaking via RGMII through 	 * 'bridge' PHY port that's pretending to be a local PHY. 	 * 	 * Until that gets root caused, and until an AR71xx + normal 	 * PHY board is tested, leave this disabled. 	 */
+if|#
+directive|if
+literal|0
+block|ar71xx_device_set_mii_speed(sc->arge_mac_unit, if_speed);
+endif|#
+directive|endif
 block|}
 end_function
 
