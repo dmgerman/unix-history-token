@@ -1937,7 +1937,7 @@ name|acpi_cpu_unordered
 argument_list|,
 literal|0
 argument_list|,
-literal|"Do not use the MADT to match ACPI processor objects to CPUs."
+literal|"Do not use the MADT to match ACPI Processor objects to CPUs."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
