@@ -10853,12 +10853,10 @@ argument_list|)
 operator|==
 name|UE_DIR_IN
 condition|)
-block|{
 name|sitd_portaddr
 operator||=
 name|EHCI_SITD_SET_DIR_IN
 expr_stmt|;
-block|}
 name|sitd_portaddr
 operator|=
 name|htohc32
@@ -10982,21 +10980,6 @@ operator|->
 name|bus
 argument_list|)
 decl_stmt|;
-name|struct
-name|usb_fs_isoc_schedule
-modifier|*
-name|fss_start
-decl_stmt|;
-name|struct
-name|usb_fs_isoc_schedule
-modifier|*
-name|fss_end
-decl_stmt|;
-name|struct
-name|usb_fs_isoc_schedule
-modifier|*
-name|fss
-decl_stmt|;
 name|ehci_sitd_t
 modifier|*
 name|td
@@ -11036,9 +11019,6 @@ name|sa
 decl_stmt|;
 name|uint8_t
 name|sb
-decl_stmt|;
-name|uint8_t
-name|error
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -11186,19 +11166,12 @@ name|xfer
 operator|->
 name|isoc_time_complete
 operator|=
-name|usbd_fs_isoc_schedule_isoc_time_expand
+name|usb_isoc_time_expand
 argument_list|(
-name|xfer
-operator|->
-name|xroot
-operator|->
-name|udev
-argument_list|,
 operator|&
-name|fss_start
-argument_list|,
-operator|&
-name|fss_end
+name|sc
+operator|->
+name|sc_bus
 argument_list|,
 name|nframes
 argument_list|)
@@ -11280,18 +11253,6 @@ name|endpoint
 operator|->
 name|isoc_next
 expr_stmt|;
-name|fss
-operator|=
-name|fss_start
-operator|+
-operator|(
-name|xfer
-operator|->
-name|qh_pos
-operator|%
-name|USB_ISOC_TIME_MAX
-operator|)
-expr_stmt|;
 while|while
 condition|(
 name|nframes
@@ -11327,7 +11288,6 @@ index|[
 name|EHCI_VIRTUAL_FRAMELIST_COUNT
 index|]
 condition|)
-block|{
 name|pp_last
 operator|=
 operator|&
@@ -11338,19 +11298,6 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-block|}
-if|if
-condition|(
-name|fss
-operator|>=
-name|fss_end
-condition|)
-block|{
-name|fss
-operator|=
-name|fss_start
-expr_stmt|;
-block|}
 comment|/* reuse sitd_portaddr and sitd_back from last transfer */
 if|if
 condition|(
@@ -11400,30 +11347,40 @@ operator|->
 name|max_frame_size
 expr_stmt|;
 block|}
-comment|/* 		 * We currently don't care if the ISOCHRONOUS schedule is 		 * full! 		 */
-name|error
-operator|=
-name|usbd_fs_isoc_schedule_alloc
-argument_list|(
-name|fss
-argument_list|,
-operator|&
+comment|/* allocate a slot */
 name|sa
+operator|=
+name|usbd_fs_isoc_schedule_alloc_slot
+argument_list|(
+name|xfer
 argument_list|,
-operator|*
-name|plen
+name|xfer
+operator|->
+name|isoc_time_complete
+operator|-
+name|nframes
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|error
+name|sa
+operator|==
+literal|255
 condition|)
 block|{
-comment|/* 			 * The FULL speed schedule is FULL! Set length 			 * to zero. 			 */
+comment|/* 			 * Schedule is FULL, set length to zero: 			 */
 operator|*
 name|plen
 operator|=
 literal|0
+expr_stmt|;
+name|sa
+operator|=
+name|USB_FS_ISOC_UFRAME_MAX
+operator|-
+literal|1
 expr_stmt|;
 block|}
 if|if
@@ -11773,9 +11730,6 @@ expr_stmt|;
 name|plen
 operator|++
 expr_stmt|;
-name|fss
-operator|++
-expr_stmt|;
 name|td_last
 operator|=
 name|td
@@ -11818,6 +11772,15 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
+comment|/* 	 * We don't allow cancelling of the SPLIT transaction USB FULL 	 * speed transfer, because it disturbs the bandwidth 	 * computation algorithm. 	 */
+name|xfer
+operator|->
+name|flags_int
+operator|.
+name|can_cancel_immed
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_function
 
@@ -11832,6 +11795,31 @@ modifier|*
 name|xfer
 parameter_list|)
 block|{
+comment|/* 	 * We don't allow cancelling of the SPLIT transaction USB FULL 	 * speed transfer, because it disturbs the bandwidth 	 * computation algorithm. 	 */
+name|xfer
+operator|->
+name|flags_int
+operator|.
+name|can_cancel_immed
+operator|=
+literal|0
+expr_stmt|;
+comment|/* set a default timeout */
+if|if
+condition|(
+name|xfer
+operator|->
+name|timeout
+operator|==
+literal|0
+condition|)
+name|xfer
+operator|->
+name|timeout
+operator|=
+literal|500
+expr_stmt|;
+comment|/* ms */
 comment|/* put transfer on interrupt queue */
 name|ehci_transfer_intr_enqueue
 argument_list|(
