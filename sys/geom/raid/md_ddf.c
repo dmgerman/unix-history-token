@@ -5882,8 +5882,10 @@ name|meta
 argument_list|,
 name|NULL
 argument_list|,
+name|GET32
+argument_list|(
 name|src
-operator|->
+argument_list|,
 name|pdr
 operator|->
 name|entry
@@ -5892,6 +5894,7 @@ name|i
 index|]
 operator|.
 name|PD_Reference
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
