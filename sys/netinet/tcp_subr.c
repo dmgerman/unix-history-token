@@ -1087,6 +1087,22 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|struct
+name|inpcb
+modifier|*
+name|tcp_mtudisc_notify
+parameter_list|(
+name|struct
+name|inpcb
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|tcp_log_addr
@@ -6330,7 +6346,7 @@ name|PRC_MSGSIZE
 condition|)
 name|notify
 operator|=
-name|tcp_mtudisc
+name|tcp_mtudisc_notify
 expr_stmt|;
 elseif|else
 if|if
@@ -6667,7 +6683,15 @@ argument_list|,
 name|mtu
 argument_list|)
 expr_stmt|;
+name|tcp_mtudisc
+argument_list|(
+name|inp
+argument_list|,
+name|mtu
+argument_list|)
+expr_stmt|;
 block|}
+else|else
 name|inp
 operator|=
 call|(
@@ -6896,7 +6920,7 @@ name|PRC_MSGSIZE
 condition|)
 name|notify
 operator|=
-name|tcp_mtudisc
+name|tcp_mtudisc_notify
 expr_stmt|;
 elseif|else
 if|if
@@ -7799,8 +7823,38 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * When `need fragmentation' ICMP is received, update our idea of the MSS  * based on the new value in the route.  Also nudge TCP to send something,  * since we know the packet we just sent was dropped.  * This duplicates some code in the tcp_mss() function in tcp_input.c.  */
+comment|/*  * When `need fragmentation' ICMP is received, update our idea of the MSS  * based on the new value. Also nudge TCP to send something, since we  * know the packet we just sent was dropped.  * This duplicates some code in the tcp_mss() function in tcp_input.c.  */
 end_comment
+
+begin_function
+specifier|static
+name|struct
+name|inpcb
+modifier|*
+name|tcp_mtudisc_notify
+parameter_list|(
+name|struct
+name|inpcb
+modifier|*
+name|inp
+parameter_list|,
+name|int
+name|error
+parameter_list|)
+block|{
+return|return
+operator|(
+name|tcp_mtudisc
+argument_list|(
+name|inp
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
 
 begin_function
 name|struct
@@ -7814,7 +7868,7 @@ modifier|*
 name|inp
 parameter_list|,
 name|int
-name|errno
+name|mtuoffer
 parameter_list|)
 block|{
 name|struct
@@ -7879,6 +7933,8 @@ name|tp
 argument_list|,
 operator|-
 literal|1
+argument_list|,
+name|mtuoffer
 argument_list|,
 name|NULL
 argument_list|,

@@ -5114,7 +5114,8 @@ name|tp
 operator|->
 name|t_inpcb
 argument_list|,
-literal|0
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 return|return
