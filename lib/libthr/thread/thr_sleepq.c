@@ -369,6 +369,13 @@ name|sleepqueue
 modifier|*
 name|sq
 decl_stmt|;
+name|sc
+operator|=
+name|SC_LOOKUP
+argument_list|(
+name|wchan
+argument_list|)
+expr_stmt|;
 name|sq
 operator|=
 name|_sleepq_lookup
@@ -400,13 +407,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|sc
-operator|=
-name|SC_LOOKUP
-argument_list|(
-name|wchan
-argument_list|)
-expr_stmt|;
 name|sq
 operator|=
 name|td
