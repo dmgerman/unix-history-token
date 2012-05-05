@@ -529,6 +529,11 @@ name|ah_setQuiet
 operator|=
 name|ar5212SetQuiet
 block|,
+operator|.
+name|ah_getMibCycleCounts
+operator|=
+name|ar5212GetMibCycleCounts
+block|,
 comment|/* DFS Functions */
 operator|.
 name|ah_enableDfs

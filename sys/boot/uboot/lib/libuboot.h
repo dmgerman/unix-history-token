@@ -63,6 +63,13 @@ name|PTYPE_GPT
 value|2
 end_define
 
+begin_define
+define|#
+directive|define
+name|PTYPE_MBR
+value|3
+end_define
+
 begin_comment
 comment|/*  * Default network packet alignment in memory  */
 end_comment

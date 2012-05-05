@@ -203,12 +203,35 @@ directive|ifdef
 name|__mips__
 end_ifdef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__mips_n64
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|LG_SIZEOF_PTR
+value|3
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|LG_SIZEOF_PTR
 value|2
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

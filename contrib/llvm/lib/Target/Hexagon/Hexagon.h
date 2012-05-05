@@ -184,11 +184,6 @@ modifier|*
 name|createHexagonFixupHwLoops
 parameter_list|()
 function_decl|;
-name|FunctionPass
-modifier|*
-name|createHexagonPacketizer
-parameter_list|()
-function_decl|;
 comment|/* TODO: object output.   MCCodeEmitter *createHexagonMCCodeEmitter(const Target&,                                             TargetMachine&TM,                                             MCContext&Ctx); */
 comment|/* TODO: assembler input.   TargetAsmBackend *createHexagonAsmBackend(const Target&, const std::string&); */
 name|void

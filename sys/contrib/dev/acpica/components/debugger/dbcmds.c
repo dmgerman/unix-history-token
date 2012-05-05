@@ -695,21 +695,15 @@ condition|)
 block|{
 return|return;
 block|}
-comment|/* Decode Named object type */
-switch|switch
+comment|/* Dispatch the notify if legal */
+if|if
 condition|(
+name|AcpiEvIsNotifyObject
+argument_list|(
 name|Node
-operator|->
-name|Type
+argument_list|)
 condition|)
 block|{
-case|case
-name|ACPI_TYPE_DEVICE
-case|:
-case|case
-name|ACPI_TYPE_THERMAL
-case|:
-comment|/* Send the notify */
 name|Status
 operator|=
 name|AcpiEvQueueNotifyRequest
@@ -733,14 +727,26 @@ literal|"Could not queue notify\n"
 argument_list|)
 expr_stmt|;
 block|}
-break|break;
-default|default:
+block|}
+else|else
+block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"Named object is not a device or a thermal object\n"
+literal|"Named object [%4.4s] Type %s, must be Device/Thermal/Processor type\n"
+argument_list|,
+name|AcpiUtGetNodeName
+argument_list|(
+name|Node
+argument_list|)
+argument_list|,
+name|AcpiUtGetTypeName
+argument_list|(
+name|Node
+operator|->
+name|Type
+argument_list|)
 argument_list|)
 expr_stmt|;
-break|break;
 block|}
 block|}
 end_function

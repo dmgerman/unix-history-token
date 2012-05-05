@@ -32,20 +32,30 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|__ATOMIC_BARRIER
-define|\
-value|__asm __volatile("sync" : : : "memory")
-end_define
+begin_comment
+comment|/* NOTE: lwsync is equivalent to sync on systems without lwsync */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|mb
 parameter_list|()
-value|__ATOMIC_BARRIER
+value|__asm __volatile("lwsync" : : : "memory")
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|rmb
+parameter_list|()
+value|__asm __volatile("lwsync" : : : "memory")
 end_define
 
 begin_define
@@ -53,15 +63,53 @@ define|#
 directive|define
 name|wmb
 parameter_list|()
-value|mb()
+value|__asm __volatile("lwsync" : : : "memory")
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
 directive|define
 name|rmb
 parameter_list|()
-value|mb()
+value|__asm __volatile("lwsync" : : : "memory")
+end_define
+
+begin_define
+define|#
+directive|define
+name|wmb
+parameter_list|()
+value|__asm __volatile("eieio" : : : "memory")
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * The __ATOMIC_REL/ACQ() macros provide memory barriers only in conjunction  * with the atomic lXarx/stXcx. sequences below. See Appendix B.2 of Book II  * of the architecture manual.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__ATOMIC_REL
+parameter_list|()
+value|__asm __volatile("lwsync" : : : "memory")
+end_define
+
+begin_define
+define|#
+directive|define
+name|__ATOMIC_ACQ
+parameter_list|()
+value|__asm __volatile("isync" : : : "memory")
 end_define
 
 begin_comment
@@ -152,7 +200,7 @@ parameter_list|(
 name|type
 parameter_list|)
 define|\
-value|static __inline void					\     atomic_add_##type(volatile u_##type *p, u_##type v) {	\ 	u_##type t;						\ 	__atomic_add_##type(p, v, t);				\     }								\ 								\     static __inline void					\     atomic_add_acq_##type(volatile u_##type *p, u_##type v) {	\ 	u_##type t;						\ 	__atomic_add_##type(p, v, t);				\ 	__ATOMIC_BARRIER;					\     }								\ 								\     static __inline void					\     atomic_add_rel_##type(volatile u_##type *p, u_##type v) {	\ 	u_##type t;						\ 	__ATOMIC_BARRIER;					\ 	__atomic_add_##type(p, v, t);				\     }
+value|static __inline void					\     atomic_add_##type(volatile u_##type *p, u_##type v) {	\ 	u_##type t;						\ 	__atomic_add_##type(p, v, t);				\     }								\ 								\     static __inline void					\     atomic_add_acq_##type(volatile u_##type *p, u_##type v) {	\ 	u_##type t;						\ 	__atomic_add_##type(p, v, t);				\ 	__ATOMIC_ACQ();						\     }								\ 								\     static __inline void					\     atomic_add_rel_##type(volatile u_##type *p, u_##type v) {	\ 	u_##type t;						\ 	__ATOMIC_REL();						\ 	__atomic_add_##type(p, v, t);				\     }
 end_define
 
 begin_comment
@@ -380,7 +428,7 @@ parameter_list|(
 name|type
 parameter_list|)
 define|\
-value|static __inline void					\     atomic_clear_##type(volatile u_##type *p, u_##type v) {	\ 	u_##type t;						\ 	__atomic_clear_##type(p, v, t);				\     }								\ 								\     static __inline void					\     atomic_clear_acq_##type(volatile u_##type *p, u_##type v) {	\ 	u_##type t;						\ 	__atomic_clear_##type(p, v, t);				\ 	__ATOMIC_BARRIER;					\     }								\ 								\     static __inline void					\     atomic_clear_rel_##type(volatile u_##type *p, u_##type v) {	\ 	u_##type t;						\ 	__ATOMIC_BARRIER;					\ 	__atomic_clear_##type(p, v, t);				\     }
+value|static __inline void					\     atomic_clear_##type(volatile u_##type *p, u_##type v) {	\ 	u_##type t;						\ 	__atomic_clear_##type(p, v, t);				\     }								\ 								\     static __inline void					\     atomic_clear_acq_##type(volatile u_##type *p, u_##type v) {	\ 	u_##type t;						\ 	__atomic_clear_##type(p, v, t);				\ 	__ATOMIC_ACQ();						\     }								\ 								\     static __inline void					\     atomic_clear_rel_##type(volatile u_##type *p, u_##type v) {	\ 	u_##type t;						\ 	__ATOMIC_REL();						\ 	__atomic_clear_##type(p, v, t);				\     }
 end_define
 
 begin_comment
@@ -632,7 +680,7 @@ parameter_list|(
 name|type
 parameter_list|)
 define|\
-value|static __inline void					\     atomic_set_##type(volatile u_##type *p, u_##type v) {	\ 	u_##type t;						\ 	__atomic_set_##type(p, v, t);				\     }								\ 								\     static __inline void					\     atomic_set_acq_##type(volatile u_##type *p, u_##type v) {	\ 	u_##type t;						\ 	__atomic_set_##type(p, v, t);				\ 	__ATOMIC_BARRIER;					\     }								\ 								\     static __inline void					\     atomic_set_rel_##type(volatile u_##type *p, u_##type v) {	\ 	u_##type t;						\ 	__ATOMIC_BARRIER;					\ 	__atomic_set_##type(p, v, t);				\     }
+value|static __inline void					\     atomic_set_##type(volatile u_##type *p, u_##type v) {	\ 	u_##type t;						\ 	__atomic_set_##type(p, v, t);				\     }								\ 								\     static __inline void					\     atomic_set_acq_##type(volatile u_##type *p, u_##type v) {	\ 	u_##type t;						\ 	__atomic_set_##type(p, v, t);				\ 	__ATOMIC_ACQ();						\     }								\ 								\     static __inline void					\     atomic_set_rel_##type(volatile u_##type *p, u_##type v) {	\ 	u_##type t;						\ 	__ATOMIC_REL();						\ 	__atomic_set_##type(p, v, t);				\     }
 end_define
 
 begin_comment
@@ -860,7 +908,7 @@ parameter_list|(
 name|type
 parameter_list|)
 define|\
-value|static __inline void						\     atomic_subtract_##type(volatile u_##type *p, u_##type v) {		\ 	u_##type t;							\ 	__atomic_subtract_##type(p, v, t);				\     }									\ 									\     static __inline void						\     atomic_subtract_acq_##type(volatile u_##type *p, u_##type v) {	\ 	u_##type t;							\ 	__atomic_subtract_##type(p, v, t);				\ 	__ATOMIC_BARRIER;						\     }									\ 									\     static __inline void						\     atomic_subtract_rel_##type(volatile u_##type *p, u_##type v) {	\ 	u_##type t;							\ 	__ATOMIC_BARRIER;						\ 	__atomic_subtract_##type(p, v, t);				\     }
+value|static __inline void						\     atomic_subtract_##type(volatile u_##type *p, u_##type v) {		\ 	u_##type t;							\ 	__atomic_subtract_##type(p, v, t);				\     }									\ 									\     static __inline void						\     atomic_subtract_acq_##type(volatile u_##type *p, u_##type v) {	\ 	u_##type t;							\ 	__atomic_subtract_##type(p, v, t);				\ 	__ATOMIC_ACQ();							\     }									\ 									\     static __inline void						\     atomic_subtract_rel_##type(volatile u_##type *p, u_##type v) {	\ 	u_##type t;							\ 	__ATOMIC_REL();							\ 	__atomic_subtract_##type(p, v, t);				\     }
 end_define
 
 begin_comment
@@ -1270,7 +1318,7 @@ parameter_list|(
 name|TYPE
 parameter_list|)
 define|\
-value|static __inline u_##TYPE					\ atomic_load_acq_##TYPE(volatile u_##TYPE *p)			\ {								\ 	u_##TYPE v;						\ 								\ 	v = *p;							\ 	__ATOMIC_BARRIER;					\ 	return (v);						\ }								\ 								\ static __inline void						\ atomic_store_rel_##TYPE(volatile u_##TYPE *p, u_##TYPE v)	\ {								\ 	__ATOMIC_BARRIER;					\ 	*p = v;							\ }
+value|static __inline u_##TYPE					\ atomic_load_acq_##TYPE(volatile u_##TYPE *p)			\ {								\ 	u_##TYPE v;						\ 								\ 	v = *p;							\ 	mb();							\ 	return (v);						\ }								\ 								\ static __inline void						\ atomic_store_rel_##TYPE(volatile u_##TYPE *p, u_##TYPE v)	\ {								\ 	mb();							\ 	*p = v;							\ }
 end_define
 
 begin_macro
@@ -1685,7 +1733,8 @@ argument_list|,
 name|newval
 argument_list|)
 expr_stmt|;
-name|__ATOMIC_BARRIER
+name|__ATOMIC_ACQ
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -1713,7 +1762,8 @@ name|u_int
 name|newval
 parameter_list|)
 block|{
-name|__ATOMIC_BARRIER
+name|__ATOMIC_REL
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -1762,7 +1812,8 @@ argument_list|,
 name|newval
 argument_list|)
 expr_stmt|;
-name|__ATOMIC_BARRIER
+name|__ATOMIC_ACQ
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -1790,7 +1841,8 @@ name|u_long
 name|newval
 parameter_list|)
 block|{
-name|__ATOMIC_BARRIER
+name|__ATOMIC_REL
+argument_list|()
 expr_stmt|;
 return|return
 operator|(

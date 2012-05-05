@@ -4980,6 +4980,10 @@ operator|>=
 name|lim
 condition|)
 block|{
+if|if
+condition|(
+name|netmap_verbose
+condition|)
 name|D
 argument_list|(
 literal|"stack ring %s full\n"

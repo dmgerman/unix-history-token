@@ -527,6 +527,15 @@ name|int
 name|mnt_nvnodelistsize
 decl_stmt|;
 comment|/* (i) # of vnodes */
+name|struct
+name|vnodelst
+name|mnt_activevnodelist
+decl_stmt|;
+comment|/* (i) list of active vnodes */
+name|int
+name|mnt_activevnodelistsize
+decl_stmt|;
+comment|/* (i) # of active vnodes */
 name|int
 name|mnt_writeopcount
 decl_stmt|;
@@ -719,6 +728,97 @@ name|mvp
 parameter_list|)
 define|\
 value|do {								\ 		MNT_ILOCK(mp);						\ 		__mnt_vnode_markerfree_all(&(mvp), (mp));		\
+comment|/* MNT_IUNLOCK(mp); -- done in above function */
+value|\ 		mtx_assert(MNT_MTX(mp), MA_NOTOWNED);			\ 	} while (0)
+end_define
+
+begin_comment
+comment|/*  * Definitions for MNT_VNODE_FOREACH_ACTIVE.  */
+end_comment
+
+begin_function_decl
+name|struct
+name|vnode
+modifier|*
+name|__mnt_vnode_next_active
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+modifier|*
+name|mvp
+parameter_list|,
+name|struct
+name|mount
+modifier|*
+name|mp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|vnode
+modifier|*
+name|__mnt_vnode_first_active
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+modifier|*
+name|mvp
+parameter_list|,
+name|struct
+name|mount
+modifier|*
+name|mp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|__mnt_vnode_markerfree_active
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+modifier|*
+name|mvp
+parameter_list|,
+name|struct
+name|mount
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|MNT_VNODE_FOREACH_ACTIVE
+parameter_list|(
+name|vp
+parameter_list|,
+name|mp
+parameter_list|,
+name|mvp
+parameter_list|)
+define|\
+value|for (vp = __mnt_vnode_first_active(&(mvp), (mp)); \ 		(vp) != NULL; vp = __mnt_vnode_next_active(&(mvp), (mp)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MNT_VNODE_FOREACH_ACTIVE_ABORT
+parameter_list|(
+name|mp
+parameter_list|,
+name|mvp
+parameter_list|)
+define|\
+value|do {								\ 		MNT_ILOCK(mp);						\ 		__mnt_vnode_markerfree_active(&(mvp), (mp));		\
 comment|/* MNT_IUNLOCK(mp); -- done in above function */
 value|\ 		mtx_assert(MNT_MTX(mp), MA_NOTOWNED);			\ 	} while (0)
 end_define

@@ -68,12 +68,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/Basic/DelayedCleanupPool.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/Lex/Preprocessor.h"
 end_include
 
@@ -556,10 +550,16 @@ comment|/// Factory object for creating AttributeList objects.
 name|AttributeFactory
 name|AttrFactory
 block|;
-comment|/// \brief Gathers and cleans up objects when parsing of a top-level
-comment|/// declaration is finished.
-name|DelayedCleanupPool
-name|TopLevelDeclCleanupPool
+comment|/// \brief Gathers and cleans up TemplateIdAnnotations when parsing of a
+comment|/// top-level declaration is finished.
+name|SmallVector
+operator|<
+name|TemplateIdAnnotation
+operator|*
+block|,
+literal|16
+operator|>
+name|TemplateIds
 block|;
 name|IdentifierInfo
 operator|*
@@ -2062,9 +2062,7 @@ modifier|&
 name|isInvalid
 parameter_list|)
 function_decl|;
-comment|/// \brief Get the TemplateIdAnnotation from the token and put it in the
-comment|/// cleanup pool so that it gets destroyed when parsing the current top level
-comment|/// declaration is finished.
+comment|/// \brief Get the TemplateIdAnnotation from the token.
 name|TemplateIdAnnotation
 modifier|*
 name|takeTemplateIdAnnotation
@@ -3064,7 +3062,12 @@ argument_list|)
 block|,
 name|TemplateScope
 argument_list|(
-argument|false
+name|false
+argument_list|)
+block|,
+name|ExceptionSpecTokens
+argument_list|(
+literal|0
 argument_list|)
 block|{ }
 name|virtual
@@ -3099,6 +3102,12 @@ block|,
 literal|8
 operator|>
 name|DefaultArgs
+block|;
+comment|/// \brief The set of tokens that make up an exception-specification that
+comment|/// has not yet been parsed.
+name|CachedTokens
+operator|*
+name|ExceptionSpecTokens
 block|;   }
 decl_stmt|;
 comment|/// LateParsedMemberInitializer - An initializer for a non-static class data
@@ -5061,8 +5070,11 @@ name|ParseThrowExpression
 parameter_list|()
 function_decl|;
 name|ExceptionSpecificationType
-name|MaybeParseExceptionSpecification
+name|tryParseExceptionSpecification
 argument_list|(
+name|bool
+name|Delayed
+argument_list|,
 name|SourceRange
 operator|&
 name|SpecificationRange
@@ -5084,6 +5096,11 @@ argument_list|,
 name|ExprResult
 operator|&
 name|NoexceptExpr
+argument_list|,
+name|CachedTokens
+operator|*
+operator|&
+name|ExceptionSpecTokens
 argument_list|)
 decl_stmt|;
 comment|// EndLoc is filled with the location of the last token of the specification.
@@ -5415,7 +5432,7 @@ name|SourceLocation
 modifier|*
 name|TrailingElseLoc
 init|=
-name|NULL
+literal|0
 parameter_list|)
 block|{
 name|StmtVector
@@ -5449,32 +5466,43 @@ name|SourceLocation
 modifier|*
 name|TrailingElseLoc
 init|=
-name|NULL
+literal|0
 parameter_list|)
 function_decl|;
 name|StmtResult
-name|ParseExprStatement
+name|ParseStatementOrDeclarationAfterAttributes
 parameter_list|(
-name|ParsedAttributes
+name|StmtVector
+modifier|&
+name|Stmts
+parameter_list|,
+name|bool
+name|OnlyStatement
+parameter_list|,
+name|SourceLocation
+modifier|*
+name|TrailingElseLoc
+parameter_list|,
+name|ParsedAttributesWithRange
 modifier|&
 name|Attrs
 parameter_list|)
 function_decl|;
 name|StmtResult
+name|ParseExprStatement
+parameter_list|()
+function_decl|;
+name|StmtResult
 name|ParseLabeledStatement
 parameter_list|(
-name|ParsedAttributes
+name|ParsedAttributesWithRange
 modifier|&
-name|Attr
+name|attrs
 parameter_list|)
 function_decl|;
 name|StmtResult
 name|ParseCaseStatement
 parameter_list|(
-name|ParsedAttributes
-modifier|&
-name|Attr
-parameter_list|,
 name|bool
 name|MissingCase
 init|=
@@ -5489,19 +5517,11 @@ parameter_list|)
 function_decl|;
 name|StmtResult
 name|ParseDefaultStatement
-parameter_list|(
-name|ParsedAttributes
-modifier|&
-name|Attr
-parameter_list|)
+parameter_list|()
 function_decl|;
 name|StmtResult
 name|ParseCompoundStatement
 parameter_list|(
-name|ParsedAttributes
-modifier|&
-name|Attr
-parameter_list|,
 name|bool
 name|isStmtExpr
 init|=
@@ -5511,10 +5531,6 @@ function_decl|;
 name|StmtResult
 name|ParseCompoundStatement
 parameter_list|(
-name|ParsedAttributes
-modifier|&
-name|Attr
-parameter_list|,
 name|bool
 name|isStmtExpr
 parameter_list|,
@@ -5553,10 +5569,6 @@ function_decl|;
 name|StmtResult
 name|ParseIfStatement
 parameter_list|(
-name|ParsedAttributes
-modifier|&
-name|Attr
-parameter_list|,
 name|SourceLocation
 modifier|*
 name|TrailingElseLoc
@@ -5565,10 +5577,6 @@ function_decl|;
 name|StmtResult
 name|ParseSwitchStatement
 parameter_list|(
-name|ParsedAttributes
-modifier|&
-name|Attr
-parameter_list|,
 name|SourceLocation
 modifier|*
 name|TrailingElseLoc
@@ -5577,10 +5585,6 @@ function_decl|;
 name|StmtResult
 name|ParseWhileStatement
 parameter_list|(
-name|ParsedAttributes
-modifier|&
-name|Attr
-parameter_list|,
 name|SourceLocation
 modifier|*
 name|TrailingElseLoc
@@ -5588,19 +5592,11 @@ parameter_list|)
 function_decl|;
 name|StmtResult
 name|ParseDoStatement
-parameter_list|(
-name|ParsedAttributes
-modifier|&
-name|Attr
-parameter_list|)
+parameter_list|()
 function_decl|;
 name|StmtResult
 name|ParseForStatement
 parameter_list|(
-name|ParsedAttributes
-modifier|&
-name|Attr
-parameter_list|,
 name|SourceLocation
 modifier|*
 name|TrailingElseLoc
@@ -5608,35 +5604,19 @@ parameter_list|)
 function_decl|;
 name|StmtResult
 name|ParseGotoStatement
-parameter_list|(
-name|ParsedAttributes
-modifier|&
-name|Attr
-parameter_list|)
+parameter_list|()
 function_decl|;
 name|StmtResult
 name|ParseContinueStatement
-parameter_list|(
-name|ParsedAttributes
-modifier|&
-name|Attr
-parameter_list|)
+parameter_list|()
 function_decl|;
 name|StmtResult
 name|ParseBreakStatement
-parameter_list|(
-name|ParsedAttributes
-modifier|&
-name|Attr
-parameter_list|)
+parameter_list|()
 function_decl|;
 name|StmtResult
 name|ParseReturnStatement
-parameter_list|(
-name|ParsedAttributes
-modifier|&
-name|Attr
-parameter_list|)
+parameter_list|()
 function_decl|;
 name|StmtResult
 name|ParseAsmStatement
@@ -5775,11 +5755,7 @@ comment|//===-------------------------------------------------------------------
 comment|// C++ 6: Statements and Blocks
 name|StmtResult
 name|ParseCXXTryBlock
-parameter_list|(
-name|ParsedAttributes
-modifier|&
-name|Attr
-parameter_list|)
+parameter_list|()
 function_decl|;
 name|StmtResult
 name|ParseCXXTryBlockCommon
@@ -5796,11 +5772,7 @@ comment|//===-------------------------------------------------------------------
 comment|// MS: SEH Statements and Blocks
 name|StmtResult
 name|ParseSEHTryBlock
-parameter_list|(
-name|ParsedAttributes
-modifier|&
-name|Attr
-parameter_list|)
+parameter_list|()
 function_decl|;
 name|StmtResult
 name|ParseSEHTryBlockCommon
@@ -6784,6 +6756,11 @@ name|DiagnoseProhibitedAttributes
 argument_list|(
 name|attrs
 argument_list|)
+expr_stmt|;
+name|attrs
+operator|.
+name|clear
+argument_list|()
 expr_stmt|;
 block|}
 name|void
@@ -7977,7 +7954,7 @@ name|ConstructorDecl
 parameter_list|)
 function_decl|;
 name|void
-name|HandleMemberFunctionDefaultArgs
+name|HandleMemberFunctionDeclDelays
 parameter_list|(
 name|Declarator
 modifier|&

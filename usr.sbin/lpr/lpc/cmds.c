@@ -689,6 +689,33 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+if|if
+condition|(
+name|argc
+operator|<
+literal|1
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"error: No printer name(s) specified before"
+literal|" '-msg'.\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"usage: %s  {all | printer ...}"
+argument_list|,
+name|generic_cmdname
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" [-msg<text> ...]\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 block|}
 comment|/* call initialization routine, if there is one for this cmd */
 if|if
@@ -3662,6 +3689,13 @@ modifier|*
 name|pp
 parameter_list|)
 block|{
+name|struct
+name|stat
+name|stbuf
+decl_stmt|;
+name|int
+name|not_shown
+decl_stmt|;
 name|char
 name|lf
 index|[
@@ -3696,6 +3730,58 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Warn the user if 'lpq' will not display this new status-message. 	 * Note that if lock file does not exist, then the queue is enabled 	 * for both queuing and printing. 	 */
+name|not_shown
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|stat
+argument_list|(
+name|lf
+argument_list|,
+operator|&
+name|stbuf
+argument_list|)
+operator|>=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|stbuf
+operator|.
+name|st_mode
+operator|&
+name|LFM_PRINT_DIS
+condition|)
+name|not_shown
+operator|=
+literal|0
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|not_shown
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"\tnote: This queue currently has printing enabled,\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\t    so this -msg will only be shown by 'lpq' if\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\t    a job is actively printing on it.\n"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 

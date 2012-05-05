@@ -1953,6 +1953,27 @@ function_decl|;
 end_typedef
 
 begin_comment
+comment|/* Global handlers for AML Notifies */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_global_notify_handler
+block|{
+name|ACPI_NOTIFY_HANDLER
+name|Handler
+decl_stmt|;
+name|void
+modifier|*
+name|Context
+decl_stmt|;
+block|}
+name|ACPI_GLOBAL_NOTIFY_HANDLER
+typedef|;
+end_typedef
+
+begin_comment
 comment|/*  * Notify info - used to pass info to the deferred notify  * handler/dispatcher.  */
 end_comment
 
@@ -1962,6 +1983,9 @@ struct|struct
 name|acpi_notify_info
 block|{
 name|ACPI_STATE_COMMON
+name|UINT8
+name|HandlerListId
+decl_stmt|;
 name|ACPI_NAMESPACE_NODE
 modifier|*
 name|Node
@@ -1969,7 +1993,11 @@ decl_stmt|;
 name|union
 name|acpi_operand_object
 modifier|*
-name|HandlerObj
+name|HandlerListHead
+decl_stmt|;
+name|ACPI_GLOBAL_NOTIFY_HANDLER
+modifier|*
+name|Global
 decl_stmt|;
 block|}
 name|ACPI_NOTIFY_INFO

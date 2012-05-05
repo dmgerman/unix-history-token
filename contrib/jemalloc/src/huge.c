@@ -111,6 +111,9 @@ name|extent_node_t
 modifier|*
 name|node
 decl_stmt|;
+name|bool
+name|is_zeroed
+decl_stmt|;
 comment|/* Allocate one or more contiguous chunks for this request. */
 name|csize
 operator|=
@@ -150,6 +153,11 @@ operator|(
 name|NULL
 operator|)
 return|;
+comment|/* 	 * Copy zero into is_zeroed and pass the copy to chunk_alloc(), so that 	 * it is possible to make correct junk/zero fill decisions below. 	 */
+name|is_zeroed
+operator|=
+name|zero
+expr_stmt|;
 name|ret
 operator|=
 name|chunk_alloc
@@ -161,7 +169,7 @@ argument_list|,
 name|false
 argument_list|,
 operator|&
-name|zero
+name|is_zeroed
 argument_list|)
 expr_stmt|;
 if|if
@@ -259,6 +267,10 @@ elseif|else
 if|if
 condition|(
 name|opt_zero
+operator|&&
+name|is_zeroed
+operator|==
+name|false
 condition|)
 name|memset
 argument_list|(

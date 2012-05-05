@@ -4784,8 +4784,6 @@ argument_list|,
 literal|0
 argument_list|,
 name|NOCRED
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 operator|(
@@ -11428,8 +11426,6 @@ argument_list|,
 literal|0
 argument_list|,
 name|NOCRED
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 operator|(

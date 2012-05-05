@@ -13932,6 +13932,7 @@ name|bf_list
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Schedule the TID to be re-tried. 	 */
 name|ath_tx_tid_sched
 argument_list|(
 name|sc
@@ -13954,31 +13955,7 @@ name|tid
 argument_list|)
 expr_stmt|;
 block|}
-name|ATH_TXQ_UNLOCK
-argument_list|(
-name|sc
-operator|->
-name|sc_ac2q
-index|[
-name|tid
-operator|->
-name|ac
-index|]
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Send BAR if required 	 */
-name|ATH_TXQ_LOCK
-argument_list|(
-name|sc
-operator|->
-name|sc_ac2q
-index|[
-name|tid
-operator|->
-name|ac
-index|]
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ath_tx_tid_bar_tx_ready
@@ -15043,7 +15020,21 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Prepend all frames to the beginning of the queue */
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|ATH_DEBUG_SW_TX_AGGR
+argument_list|,
+literal|"%s: txa_start now %d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|tap
+operator|->
+name|txa_start
+argument_list|)
+expr_stmt|;
 name|ATH_TXQ_LOCK
 argument_list|(
 name|sc
@@ -15056,6 +15047,7 @@ name|ac
 index|]
 argument_list|)
 expr_stmt|;
+comment|/* Prepend all frames to the beginning of the queue */
 while|while
 condition|(
 operator|(
@@ -15093,6 +15085,7 @@ name|bf_list
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Reschedule to grab some further frames. 	 */
 name|ath_tx_tid_sched
 argument_list|(
 name|sc
@@ -15100,46 +15093,7 @@ argument_list|,
 name|atid
 argument_list|)
 expr_stmt|;
-name|ATH_TXQ_UNLOCK
-argument_list|(
-name|sc
-operator|->
-name|sc_ac2q
-index|[
-name|atid
-operator|->
-name|ac
-index|]
-argument_list|)
-expr_stmt|;
-name|DPRINTF
-argument_list|(
-name|sc
-argument_list|,
-name|ATH_DEBUG_SW_TX_AGGR
-argument_list|,
-literal|"%s: txa_start now %d\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|tap
-operator|->
-name|txa_start
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Send BAR if required 	 */
-name|ATH_TXQ_LOCK
-argument_list|(
-name|sc
-operator|->
-name|sc_ac2q
-index|[
-name|atid
-operator|->
-name|ac
-index|]
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ath_tx_tid_bar_tx_ready
@@ -17136,7 +17090,7 @@ name|sc_ac2q
 index|[
 name|atid
 operator|->
-name|tid
+name|ac
 index|]
 argument_list|)
 expr_stmt|;
@@ -17155,7 +17109,7 @@ name|sc_ac2q
 index|[
 name|atid
 operator|->
-name|tid
+name|ac
 index|]
 argument_list|)
 expr_stmt|;
@@ -17479,7 +17433,7 @@ name|sc_ac2q
 index|[
 name|atid
 operator|->
-name|tid
+name|ac
 index|]
 argument_list|)
 expr_stmt|;
@@ -17498,7 +17452,7 @@ name|sc_ac2q
 index|[
 name|atid
 operator|->
-name|tid
+name|ac
 index|]
 argument_list|)
 expr_stmt|;

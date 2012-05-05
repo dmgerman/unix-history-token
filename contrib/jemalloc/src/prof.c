@@ -117,6 +117,14 @@ end_decl_stmt
 
 begin_decl_stmt
 name|bool
+name|opt_prof_final
+init|=
+name|true
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
 name|opt_prof_leak
 init|=
 name|false
@@ -127,7 +135,7 @@ begin_decl_stmt
 name|bool
 name|opt_prof_accum
 init|=
-name|true
+name|false
 decl_stmt|;
 end_decl_stmt
 
@@ -4277,6 +4285,8 @@ condition|)
 return|return;
 if|if
 condition|(
+name|opt_prof_final
+operator|&&
 name|opt_prof_prefix
 index|[
 literal|0

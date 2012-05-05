@@ -23399,6 +23399,7 @@ name|ah
 argument_list|)
 expr_stmt|;
 comment|/* disable DMA engine */
+comment|/* 	 * TODO: see if this particular DELAY() is required; it may be 	 * masking some missing FIFO flush or DMA sync. 	 */
 if|if
 condition|(
 name|dodelay

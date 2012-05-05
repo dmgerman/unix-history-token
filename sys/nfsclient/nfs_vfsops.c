@@ -8035,6 +8035,11 @@ name|EBADF
 operator|)
 return|;
 block|}
+name|MNT_IUNLOCK
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Force stale buffer cache information to be flushed. 	 */
 name|loop
 label|:

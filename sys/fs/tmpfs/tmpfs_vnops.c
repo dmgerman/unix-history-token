@@ -7256,15 +7256,6 @@ operator|->
 name|a_vp
 decl_stmt|;
 name|struct
-name|thread
-modifier|*
-name|l
-init|=
-name|v
-operator|->
-name|a_td
-decl_stmt|;
-name|struct
 name|tmpfs_node
 modifier|*
 name|node
@@ -7295,8 +7286,6 @@ condition|)
 name|vrecycle
 argument_list|(
 name|vp
-argument_list|,
-name|l
 argument_list|)
 expr_stmt|;
 return|return

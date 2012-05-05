@@ -73,6 +73,12 @@ directive|include
 file|"clang/Frontend/DiagnosticRenderer.h"
 end_include
 
+begin_struct_decl
+struct_decl|struct
+name|SourceColumnMap
+struct_decl|;
+end_struct_decl
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -266,6 +272,12 @@ argument|ArrayRef<FixItHint> Hints
 argument_list|)
 block|;
 name|void
+name|emitSnippet
+argument_list|(
+argument|StringRef SourceLine
+argument_list|)
+block|;
+name|void
 name|highlightRange
 argument_list|(
 argument|const CharSourceRange&R
@@ -274,7 +286,7 @@ argument|unsigned LineNo
 argument_list|,
 argument|FileID FID
 argument_list|,
-argument|const std::string&SourceLine
+argument|const SourceColumnMap&map
 argument_list|,
 argument|std::string&CaretLine
 argument_list|)
@@ -286,27 +298,9 @@ name|buildFixItInsertionLine
 argument_list|(
 argument|unsigned LineNo
 argument_list|,
-argument|const char *LineStart
-argument_list|,
-argument|const char *LineEnd
+argument|const SourceColumnMap&map
 argument_list|,
 argument|ArrayRef<FixItHint> Hints
-argument_list|)
-block|;
-name|void
-name|expandTabs
-argument_list|(
-name|std
-operator|::
-name|string
-operator|&
-name|SourceLine
-argument_list|,
-name|std
-operator|::
-name|string
-operator|&
-name|CaretLine
 argument_list|)
 block|;
 name|void

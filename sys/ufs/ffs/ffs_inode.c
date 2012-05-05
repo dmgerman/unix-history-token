@@ -662,8 +662,6 @@ parameter_list|,
 name|flags
 parameter_list|,
 name|cred
-parameter_list|,
-name|td
 parameter_list|)
 name|struct
 name|vnode
@@ -680,11 +678,6 @@ name|struct
 name|ucred
 modifier|*
 name|cred
-decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
 decl_stmt|;
 block|{
 name|struct
@@ -2284,8 +2277,6 @@ argument_list|(
 name|vp
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|,
 name|length
 argument_list|,

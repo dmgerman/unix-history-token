@@ -3985,12 +3985,12 @@ name|TAILQ_NEXT
 argument_list|(
 name|vp
 argument_list|,
-name|v_freelist
+name|v_actfreelist
 argument_list|)
 argument_list|,
 name|vp
 operator|->
-name|v_freelist
+name|v_actfreelist
 operator|.
 name|tqe_prev
 argument_list|,

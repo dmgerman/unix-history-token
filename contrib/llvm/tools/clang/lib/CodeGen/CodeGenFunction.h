@@ -9780,6 +9780,18 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|EmitAttributedStmt
+parameter_list|(
+specifier|const
+name|AttributedStmt
+modifier|&
+name|S
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|EmitGotoStmt
 parameter_list|(
 specifier|const
@@ -10878,6 +10890,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|RValue
+name|EmitRValueForField
+parameter_list|(
+name|LValue
+name|LV
+parameter_list|,
+specifier|const
+name|FieldDecl
+modifier|*
+name|FD
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|class
 name|ConstantEmission
@@ -11131,26 +11158,20 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 name|LValue
 name|EmitLValueForField
-argument_list|(
-name|llvm
-operator|::
-name|Value
-operator|*
+parameter_list|(
+name|LValue
 name|Base
-argument_list|,
+parameter_list|,
 specifier|const
 name|FieldDecl
-operator|*
+modifier|*
 name|Field
-argument_list|,
-name|unsigned
-name|CVRQualifiers
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// EmitLValueForFieldInitialization - Like EmitLValueForField, except that
@@ -11164,26 +11185,20 @@ begin_comment
 comment|/// and not the address of the value stored in the reference.
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|LValue
 name|EmitLValueForFieldInitialization
-argument_list|(
-name|llvm
-operator|::
-name|Value
-operator|*
+parameter_list|(
+name|LValue
 name|Base
-argument_list|,
+parameter_list|,
 specifier|const
 name|FieldDecl
-operator|*
+modifier|*
 name|Field
-argument_list|,
-name|unsigned
-name|CVRQualifiers
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|LValue

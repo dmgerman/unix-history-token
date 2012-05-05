@@ -566,6 +566,22 @@ operator|>=
 name|AR_EEPROM_VER14_1
 argument_list|)
 expr_stmt|;
+comment|/* Blank the channel survey statistics */
+name|OS_MEMZERO
+argument_list|(
+operator|&
+name|ahp
+operator|->
+name|ah_chansurvey
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ahp
+operator|->
+name|ah_chansurvey
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* XXX Turn on fast channel change for 5416 */
 comment|/* 	 * Preserve the bmiss rssi threshold and count threshold 	 * across resets 	 */
 name|rssiThrReg

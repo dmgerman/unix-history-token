@@ -889,6 +889,19 @@ directive|define
 name|DIF_VAR_EXECARGS
 value|0x0121
 comment|/* process arguments */
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|sun
+argument_list|)
+define|#
+directive|define
+name|DIF_VAR_CPU
+value|0x0200
+endif|#
+directive|endif
 define|#
 directive|define
 name|DIF_SUBR_RAND

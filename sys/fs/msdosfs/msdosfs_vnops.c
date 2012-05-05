@@ -2028,8 +2028,6 @@ argument_list|,
 literal|0
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -3722,8 +3720,6 @@ operator|&
 name|IO_SYNC
 argument_list|,
 name|NOCRED
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|uio
@@ -3758,8 +3754,6 @@ operator|&
 name|IO_SYNC
 argument_list|,
 name|NOCRED
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -6161,15 +6155,6 @@ decl_stmt|,
 modifier|*
 name|dp
 decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
-init|=
-name|cnp
-operator|->
-name|cn_thread
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -6255,8 +6240,6 @@ argument_list|,
 name|cnp
 operator|->
 name|cn_cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|cache_purge

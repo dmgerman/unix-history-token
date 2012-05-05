@@ -570,15 +570,11 @@ end_comment
 
 begin_decl_stmt
 name|ACPI_EXTERN
-name|ACPI_OBJECT_NOTIFY_HANDLER
-name|AcpiGbl_DeviceNotify
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|ACPI_EXTERN
-name|ACPI_OBJECT_NOTIFY_HANDLER
-name|AcpiGbl_SystemNotify
+name|ACPI_GLOBAL_NOTIFY_HANDLER
+name|AcpiGbl_GlobalNotify
+index|[
+literal|2
+index|]
 decl_stmt|;
 end_decl_stmt
 

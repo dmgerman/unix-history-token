@@ -560,6 +560,16 @@ name|ah_setCoverageClass
 operator|=
 name|ar5211SetCoverageClass
 block|,
+operator|.
+name|ah_get11nExtBusy
+operator|=
+name|ar5211Get11nExtBusy
+block|,
+operator|.
+name|ah_getMibCycleCounts
+operator|=
+name|ar5211GetMibCycleCounts
+block|,
 comment|/* Key Cache Functions */
 operator|.
 name|ah_getKeyCacheSize

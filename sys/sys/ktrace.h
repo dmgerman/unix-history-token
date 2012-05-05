@@ -327,6 +327,22 @@ end_define
 
 begin_struct
 struct|struct
+name|ktr_csw_old
+block|{
+name|int
+name|out
+decl_stmt|;
+comment|/* 1 if switch out, 0 if switch in */
+name|int
+name|user
+decl_stmt|;
+comment|/* 1 if usermode (ivcsw), 0 if kernel (vcsw) */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|ktr_csw
 block|{
 name|int
@@ -337,6 +353,12 @@ name|int
 name|user
 decl_stmt|;
 comment|/* 1 if usermode (ivcsw), 0 if kernel (vcsw) */
+name|char
+name|wmesg
+index|[
+literal|8
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -721,6 +743,10 @@ parameter_list|(
 name|int
 parameter_list|,
 name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

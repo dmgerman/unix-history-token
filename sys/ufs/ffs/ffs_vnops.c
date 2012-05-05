@@ -3377,10 +3377,6 @@ argument_list|,
 name|ap
 operator|->
 name|a_cred
-argument_list|,
-name|uio
-operator|->
-name|uio_td
 argument_list|)
 expr_stmt|;
 name|uio
@@ -4752,10 +4748,6 @@ name|IO_SYNC
 operator|)
 argument_list|,
 name|ucred
-argument_list|,
-name|uio
-operator|->
-name|uio_td
 argument_list|)
 expr_stmt|;
 name|uio
@@ -5765,8 +5757,6 @@ argument_list|,
 name|IO_EXT
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|error

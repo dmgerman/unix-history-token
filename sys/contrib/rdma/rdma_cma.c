@@ -6533,6 +6533,9 @@ name|remote_addr
 expr_stmt|;
 switch|switch
 condition|(
+operator|(
+name|int
+operator|)
 name|iw_event
 operator|->
 name|status

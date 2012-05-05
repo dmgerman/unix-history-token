@@ -88,7 +88,7 @@ parameter_list|)
 block|{
 name|AePrintErrorLog
 argument_list|(
-name|ASL_FILE_STDOUT
+name|ASL_FILE_STDERR
 argument_list|)
 expr_stmt|;
 if|if
@@ -96,10 +96,10 @@ condition|(
 name|Gbl_DebugFlag
 condition|)
 block|{
-comment|/* Print error summary to the debug file */
+comment|/* Print error summary to stdout also */
 name|AePrintErrorLog
 argument_list|(
-name|ASL_FILE_STDERR
+name|ASL_FILE_STDOUT
 argument_list|)
 expr_stmt|;
 block|}
@@ -670,36 +670,69 @@ begin_function
 name|void
 name|FlSetLineNumber
 parameter_list|(
-name|ACPI_PARSE_OBJECT
-modifier|*
-name|Op
+name|UINT32
+name|LineNumber
 parameter_list|)
 block|{
+name|DbgPrint
+argument_list|(
+name|ASL_PARSE_OUTPUT
+argument_list|,
+literal|"\n#line: New line number %u (old %u)\n"
+argument_list|,
+name|LineNumber
+argument_list|,
+name|Gbl_LogicalLineNumber
+argument_list|)
+expr_stmt|;
 name|Gbl_CurrentLineNumber
 operator|=
-operator|(
-name|UINT32
-operator|)
-name|Op
-operator|->
-name|Asl
-operator|.
-name|Value
-operator|.
-name|Integer
+name|LineNumber
 expr_stmt|;
 name|Gbl_LogicalLineNumber
 operator|=
-operator|(
-name|UINT32
-operator|)
-name|Op
-operator|->
-name|Asl
+name|LineNumber
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    FlSetFilename  *  * PARAMETERS:  Op        - Parse node for the LINE asl statement  *  * RETURN:      None.  *  * DESCRIPTION: Set the current filename  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|FlSetFilename
+parameter_list|(
+name|char
+modifier|*
+name|Filename
+parameter_list|)
+block|{
+name|DbgPrint
+argument_list|(
+name|ASL_PARSE_OUTPUT
+argument_list|,
+literal|"\n#line: New filename %s (old %s)\n"
+argument_list|,
+name|Filename
+argument_list|,
+name|Gbl_Files
+index|[
+name|ASL_FILE_INPUT
+index|]
 operator|.
-name|Value
+name|Filename
+argument_list|)
+expr_stmt|;
+name|Gbl_Files
+index|[
+name|ASL_FILE_INPUT
+index|]
 operator|.
-name|Integer
+name|Filename
+operator|=
+name|Filename
 expr_stmt|;
 block|}
 end_function
@@ -1039,7 +1072,7 @@ expr_stmt|;
 return|return;
 block|}
 comment|/*      * Flush out the "include ()" statement on this line, start      * the actual include file on the next line      */
-name|ResetCurrentLineBuffer
+name|AslResetCurrentLineBuffer
 argument_list|()
 expr_stmt|;
 name|FlPrintFile
@@ -1634,7 +1667,12 @@ name|ASL_FILE_LISTING_OUTPUT
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Create the preprocessor output file */
+comment|/* Create the preprocessor output file if preprocessor enabled */
+if|if
+condition|(
+name|Gbl_PreprocessFlag
+condition|)
+block|{
 name|Filename
 operator|=
 name|FlGenerateFilename
@@ -1684,6 +1722,7 @@ argument_list|,
 literal|"w+b"
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* All done for data table compiler */
 if|if
 condition|(

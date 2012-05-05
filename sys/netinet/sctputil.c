@@ -6441,7 +6441,7 @@ name|i
 decl_stmt|,
 name|limit
 decl_stmt|;
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"Mapping array size: %d, baseTSN: %8.8x, cumAck: %8.8x, highestTSN: (%8.8x, %8.8x).\n"
 argument_list|,
@@ -6499,7 +6499,7 @@ block|{
 break|break;
 block|}
 block|}
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"Renegable mapping array (last %d entries are zero):\n"
 argument_list|,
@@ -6524,7 +6524,7 @@ name|i
 operator|++
 control|)
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"%2.2x%c"
 argument_list|,
@@ -6557,7 +6557,7 @@ name|limit
 operator|%
 literal|16
 condition|)
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -6593,7 +6593,7 @@ block|{
 break|break;
 block|}
 block|}
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"Non renegable mapping array (last %d entries are zero):\n"
 argument_list|,
@@ -6618,7 +6618,7 @@ name|i
 operator|++
 control|)
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"%2.2x%c"
 argument_list|,
@@ -6651,7 +6651,7 @@ name|limit
 operator|%
 literal|16
 condition|)
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -7435,7 +7435,7 @@ name|no_stcb
 goto|;
 block|}
 comment|/* If we reach here huh? */
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"Unknown it ctl flag %x\n"
 argument_list|,
@@ -16582,13 +16582,15 @@ name|len
 decl_stmt|;
 if|if
 condition|(
-name|sctp_is_feature_off
+name|sctp_stcb_is_feature_off
 argument_list|(
 name|stcb
 operator|->
 name|sctp_ep
 argument_list|,
-name|SCTP_PCB_FLAGS_STREAM_RESETEVNT
+name|stcb
+argument_list|,
+name|SCTP_PCB_FLAGS_STREAM_CHANGEEVNT
 argument_list|)
 condition|)
 block|{
@@ -16913,13 +16915,15 @@ name|len
 decl_stmt|;
 if|if
 condition|(
-name|sctp_is_feature_off
+name|sctp_stcb_is_feature_off
 argument_list|(
 name|stcb
 operator|->
 name|sctp_ep
 argument_list|,
-name|SCTP_PCB_FLAGS_STREAM_RESETEVNT
+name|stcb
+argument_list|,
+name|SCTP_PCB_FLAGS_ASSOC_RESETEVNT
 argument_list|)
 condition|)
 block|{
@@ -17214,11 +17218,13 @@ name|len
 decl_stmt|;
 if|if
 condition|(
-name|sctp_is_feature_off
+name|sctp_stcb_is_feature_off
 argument_list|(
 name|stcb
 operator|->
 name|sctp_ep
+argument_list|,
+name|stcb
 argument_list|,
 name|SCTP_PCB_FLAGS_STREAM_RESETEVNT
 argument_list|)
@@ -18097,7 +18103,7 @@ operator|)
 name|data
 operator|)
 argument_list|,
-name|SCTP_STREAM_RESET_INCOMING
+name|SCTP_STREAM_RESET_OUTGOING_SSN
 argument_list|)
 expr_stmt|;
 break|break;
@@ -18118,7 +18124,7 @@ operator|)
 name|data
 operator|)
 argument_list|,
-name|SCTP_STREAM_RESET_OUTGOING
+name|SCTP_STREAM_RESET_INCOMING
 argument_list|)
 expr_stmt|;
 break|break;
@@ -18140,9 +18146,9 @@ name|data
 operator|)
 argument_list|,
 operator|(
-name|SCTP_STREAM_RESET_OUTGOING
+name|SCTP_STREAM_RESET_OUTGOING_SSN
 operator||
-name|SCTP_STREAM_RESET_INCOMING
+name|SCTP_STREAM_RESET_FAILED
 operator|)
 argument_list|)
 expr_stmt|;
@@ -18165,9 +18171,9 @@ name|data
 operator|)
 argument_list|,
 operator|(
-name|SCTP_STREAM_RESET_OUTGOING
-operator||
 name|SCTP_STREAM_RESET_INCOMING
+operator||
+name|SCTP_STREAM_RESET_FAILED
 operator|)
 argument_list|)
 expr_stmt|;
@@ -18241,7 +18247,7 @@ name|sctp_notify_authentication
 argument_list|(
 name|stcb
 argument_list|,
-name|SCTP_AUTH_NEWKEY
+name|SCTP_AUTH_NEW_KEY
 argument_list|,
 name|error
 argument_list|,
@@ -27234,7 +27240,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"refcnt already incremented?\n"
 argument_list|)

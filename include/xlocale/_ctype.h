@@ -315,6 +315,7 @@ argument_list|)
 decl_stmt|;
 return|return
 operator|(
+operator|(
 name|__c
 operator|<
 literal|0
@@ -337,6 +338,7 @@ name|__runetype
 index|[
 name|__c
 index|]
+operator|)
 operator|&
 name|__f
 return|;

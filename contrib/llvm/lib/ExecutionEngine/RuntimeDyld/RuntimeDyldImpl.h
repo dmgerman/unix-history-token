@@ -149,6 +149,12 @@ directive|include
 file|"llvm/Support/Format.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"ObjectImage.h"
+end_include
+
 begin_decl_stmt
 name|using
 name|namespace
@@ -631,6 +637,10 @@ comment|/// \return SectionID.
 name|unsigned
 name|emitCommonSymbols
 parameter_list|(
+name|ObjectImage
+modifier|&
+name|Obj
+parameter_list|,
 specifier|const
 name|CommonSymbolMap
 modifier|&
@@ -651,6 +661,10 @@ comment|/// \return SectionID.
 name|unsigned
 name|emitSection
 parameter_list|(
+name|ObjectImage
+modifier|&
+name|Obj
+parameter_list|,
 specifier|const
 name|SectionRef
 modifier|&
@@ -668,6 +682,10 @@ comment|/// \return SectionID.
 name|unsigned
 name|findOrEmitSection
 parameter_list|(
+name|ObjectImage
+modifier|&
+name|Obj
+parameter_list|,
 specifier|const
 name|SectionRef
 modifier|&
@@ -777,8 +795,7 @@ name|ObjRelocationInfo
 modifier|&
 name|Rel
 parameter_list|,
-specifier|const
-name|ObjectFile
+name|ObjectImage
 modifier|&
 name|Obj
 parameter_list|,
@@ -801,6 +818,31 @@ name|void
 name|resolveSymbols
 parameter_list|()
 function_decl|;
+name|virtual
+name|ObjectImage
+modifier|*
+name|createObjectImage
+parameter_list|(
+specifier|const
+name|MemoryBuffer
+modifier|*
+name|InputBuffer
+parameter_list|)
+function_decl|;
+name|virtual
+name|void
+name|handleObjectLoaded
+parameter_list|(
+name|ObjectImage
+modifier|*
+name|Obj
+parameter_list|)
+block|{
+comment|// Subclasses may choose to retain this image if they have a use for it
+name|delete
+name|Obj
+decl_stmt|;
+block|}
 name|public
 label|:
 name|RuntimeDyldImpl

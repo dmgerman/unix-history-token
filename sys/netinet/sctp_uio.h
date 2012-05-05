@@ -461,7 +461,7 @@ struct|struct
 name|sctp_authinfo
 block|{
 name|uint16_t
-name|auth_keyid
+name|auth_keynumber
 decl_stmt|;
 block|}
 struct|;
@@ -1460,8 +1460,15 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SCTP_AUTH_NEWKEY
+name|SCTP_AUTH_NEW_KEY
 value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_AUTH_NEWKEY
+value|SCTP_AUTH_NEW_KEY
 end_define
 
 begin_define
@@ -1533,13 +1540,23 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SCTP_STREAM_RESET_INCOMING_SSN
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_STREAM_RESET_OUTGOING_SSN
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
 name|SCTP_STREAM_RESET_DENIED
 value|0x0004
 end_define
-
-begin_comment
-comment|/* SCTP_STRRESET_FAILED */
-end_comment
 
 begin_define
 define|#
@@ -1547,10 +1564,6 @@ directive|define
 name|SCTP_STREAM_RESET_FAILED
 value|0x0008
 end_define
-
-begin_comment
-comment|/* SCTP_STRRESET_FAILED */
-end_comment
 
 begin_define
 define|#
@@ -2110,26 +2123,6 @@ end_struct
 
 begin_struct
 struct|struct
-name|sctp_setstrm_timeout
-block|{
-name|sctp_assoc_t
-name|ssto_assoc_id
-decl_stmt|;
-name|uint32_t
-name|ssto_timeout
-decl_stmt|;
-name|uint32_t
-name|ssto_streamid_start
-decl_stmt|;
-name|uint32_t
-name|ssto_streamid_end
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
 name|sctp_status
 block|{
 name|sctp_assoc_t
@@ -2305,6 +2298,9 @@ name|sctp_authchunks
 block|{
 name|sctp_assoc_t
 name|gauth_assoc_id
+decl_stmt|;
+name|uint32_t
+name|gauth_number_of_chunks
 decl_stmt|;
 name|uint8_t
 name|gauth_chunks

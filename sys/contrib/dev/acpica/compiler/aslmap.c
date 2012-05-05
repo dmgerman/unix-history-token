@@ -1513,18 +1513,6 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-comment|/* INCLUDE_CSTYLE */
-name|OP_TABLE_ENTRY
-argument_list|(
-name|AML_DEFAULT_ARG_OP
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-block|,
 comment|/* INCLUDE_END */
 name|OP_TABLE_ENTRY
 argument_list|(
@@ -1811,18 +1799,6 @@ argument_list|,
 literal|0
 argument_list|,
 name|ACPI_BTYPE_INTEGER
-argument_list|)
-block|,
-comment|/* LINE */
-name|OP_TABLE_ENTRY
-argument_list|(
-name|AML_DEFAULT_ARG_OP
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 block|,
 comment|/* LLESS */

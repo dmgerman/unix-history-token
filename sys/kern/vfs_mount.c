@@ -2067,6 +2067,20 @@ name|mnt_nvnodelistsize
 operator|=
 literal|0
 expr_stmt|;
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|mp
+operator|->
+name|mnt_activevnodelist
+argument_list|)
+expr_stmt|;
+name|mp
+operator|->
+name|mnt_activevnodelistsize
+operator|=
+literal|0
+expr_stmt|;
 name|mp
 operator|->
 name|mnt_ref
@@ -2387,6 +2401,19 @@ condition|)
 name|panic
 argument_list|(
 literal|"vfs_mount_destroy: nonzero nvnodelistsize"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mp
+operator|->
+name|mnt_activevnodelistsize
+operator|!=
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"vfs_mount_destroy: nonzero activevnodelistsize"
 argument_list|)
 expr_stmt|;
 if|if

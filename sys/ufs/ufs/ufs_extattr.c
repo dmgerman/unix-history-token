@@ -479,11 +479,6 @@ name|struct
 name|ufsmount
 modifier|*
 name|ump
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|sx_xlock
@@ -508,11 +503,6 @@ name|struct
 name|ufsmount
 modifier|*
 name|ump
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|sx_xunlock
@@ -839,8 +829,6 @@ expr_stmt|;
 name|ufs_extattr_uepm_lock
 argument_list|(
 name|ump
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -855,8 +843,6 @@ expr_stmt|;
 name|ufs_extattr_uepm_unlock
 argument_list|(
 name|ump
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -1957,8 +1943,6 @@ expr_stmt|;
 name|ufs_extattr_uepm_lock
 argument_list|(
 name|ump
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -1973,8 +1957,6 @@ expr_stmt|;
 name|ufs_extattr_uepm_unlock
 argument_list|(
 name|ump
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -2362,8 +2344,6 @@ decl_stmt|;
 name|ufs_extattr_uepm_lock
 argument_list|(
 name|ump
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -2454,8 +2434,6 @@ label|:
 name|ufs_extattr_uepm_unlock
 argument_list|(
 name|ump
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -3282,8 +3260,6 @@ comment|/* 		 * ufs_extattr_enable_with_open() will always unlock the 		 * vnode
 name|ufs_extattr_uepm_lock
 argument_list|(
 name|ump
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -3304,8 +3280,6 @@ expr_stmt|;
 name|ufs_extattr_uepm_unlock
 argument_list|(
 name|ump
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -3350,8 +3324,6 @@ return|;
 name|ufs_extattr_uepm_lock
 argument_list|(
 name|ump
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -3370,8 +3342,6 @@ expr_stmt|;
 name|ufs_extattr_uepm_unlock
 argument_list|(
 name|ump
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -3431,10 +3401,6 @@ decl_stmt|;
 name|ufs_extattr_uepm_lock
 argument_list|(
 name|ump
-argument_list|,
-name|ap
-operator|->
-name|a_td
 argument_list|)
 expr_stmt|;
 name|error
@@ -3473,10 +3439,6 @@ expr_stmt|;
 name|ufs_extattr_uepm_unlock
 argument_list|(
 name|ump
-argument_list|,
-name|ap
-operator|->
-name|a_td
 argument_list|)
 expr_stmt|;
 return|return
@@ -4107,10 +4069,6 @@ decl_stmt|;
 name|ufs_extattr_uepm_lock
 argument_list|(
 name|ump
-argument_list|,
-name|ap
-operator|->
-name|a_td
 argument_list|)
 expr_stmt|;
 name|error
@@ -4141,10 +4099,6 @@ expr_stmt|;
 name|ufs_extattr_uepm_unlock
 argument_list|(
 name|ump
-argument_list|,
-name|ap
-operator|->
-name|a_td
 argument_list|)
 expr_stmt|;
 return|return
@@ -4211,10 +4165,6 @@ return|;
 name|ufs_extattr_uepm_lock
 argument_list|(
 name|ump
-argument_list|,
-name|ap
-operator|->
-name|a_td
 argument_list|)
 expr_stmt|;
 name|error
@@ -4249,10 +4199,6 @@ expr_stmt|;
 name|ufs_extattr_uepm_unlock
 argument_list|(
 name|ump
-argument_list|,
-name|ap
-operator|->
-name|a_td
 argument_list|)
 expr_stmt|;
 return|return
@@ -5356,8 +5302,6 @@ return|return;
 name|ufs_extattr_uepm_lock
 argument_list|(
 name|ump
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -5377,8 +5321,6 @@ block|{
 name|ufs_extattr_uepm_unlock
 argument_list|(
 name|ump
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 return|return;
@@ -5411,8 +5353,6 @@ expr_stmt|;
 name|ufs_extattr_uepm_unlock
 argument_list|(
 name|ump
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}

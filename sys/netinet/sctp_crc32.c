@@ -376,11 +376,16 @@ name|defined
 argument_list|(
 name|SCTP_WITH_NO_CSUM
 argument_list|)
+ifdef|#
+directive|ifdef
+name|INVARIANTS
 name|panic
 argument_list|(
 literal|"sctp_delayed_cksum() called when using no SCTP CRC."
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 else|#
 directive|else
 name|uint32_t
@@ -434,7 +439,7 @@ name|m_len
 argument_list|)
 condition|)
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"sctp_delayed_cksum(): m->len: %d,  off: %d.\n"
 argument_list|,

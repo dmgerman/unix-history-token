@@ -2212,6 +2212,20 @@ name|SCTP_PCB_FLAGS_RECVNXTINFO
 value|0x10000000
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCTP_PCB_FLAGS_ASSOC_RESETEVNT
+value|0x20000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_PCB_FLAGS_STREAM_CHANGEEVNT
+value|0x40000000
+end_define
+
 begin_comment
 comment|/*-  * mobility_features parameters (by micchie).Note  * these features are applied against the  * sctp_mobility_features flags.. not the sctp_features  * flags.  */
 end_comment

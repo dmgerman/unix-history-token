@@ -1443,6 +1443,13 @@ name|MR_EVT_PD_INSERTED
 value|0x005b
 end_define
 
+begin_define
+define|#
+directive|define
+name|MR_EVT_LD_CHANGE
+value|0x0051
+end_define
+
 begin_typedef
 typedef|typedef
 enum|enum

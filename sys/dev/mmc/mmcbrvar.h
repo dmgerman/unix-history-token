@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/mmc/mmcreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"mmcbr_if.h"
 end_include
 
@@ -58,8 +64,6 @@ block|,
 name|MMCBR_IVAR_TIMING
 block|,
 name|MMCBR_IVAR_MAX_DATA
-block|,
-comment|//    MMCBR_IVAR_,
 block|}
 enum|;
 end_enum

@@ -2825,15 +2825,15 @@ name|uint8_t
 name|endpoint
 parameter_list|,
 name|uint8_t
-name|index
+name|xfer_index
 parameter_list|)
 block|{
-name|index
+name|xfer_index
 operator|&=
 literal|1
 expr_stmt|;
 comment|/* double buffering */
-name|index
+name|xfer_index
 operator||=
 operator|(
 name|endpoint
@@ -2851,7 +2851,7 @@ name|LIBUSB20_ENDPOINT_DIR_MASK
 condition|)
 block|{
 comment|/* this is an IN endpoint */
-name|index
+name|xfer_index
 operator||=
 literal|2
 expr_stmt|;
@@ -2862,7 +2862,7 @@ name|libusb20_tr_get_pointer
 argument_list|(
 name|pdev
 argument_list|,
-name|index
+name|xfer_index
 argument_list|)
 operator|)
 return|;
@@ -5440,7 +5440,7 @@ name|libusb_device
 modifier|*
 name|dev
 decl_stmt|;
-name|uint32_t
+name|uint8_t
 name|endpoint
 decl_stmt|;
 name|int
@@ -5476,17 +5476,6 @@ name|uxfer
 operator|->
 name|endpoint
 expr_stmt|;
-if|if
-condition|(
-name|endpoint
-operator|>
-literal|255
-condition|)
-return|return
-operator|(
-name|LIBUSB_ERROR_INVALID_PARAM
-operator|)
-return|;
 name|dev
 operator|=
 name|libusb_get_device
@@ -5714,7 +5703,7 @@ name|libusb_device
 modifier|*
 name|dev
 decl_stmt|;
-name|uint32_t
+name|uint8_t
 name|endpoint
 decl_stmt|;
 name|int
@@ -5751,17 +5740,6 @@ name|uxfer
 operator|->
 name|endpoint
 expr_stmt|;
-if|if
-condition|(
-name|endpoint
-operator|>
-literal|255
-condition|)
-return|return
-operator|(
-name|LIBUSB_ERROR_INVALID_PARAM
-operator|)
-return|;
 name|dev
 operator|=
 name|libusb_get_device

@@ -1191,6 +1191,10 @@ name|AH_MAXCHAN
 index|]
 decl_stmt|;
 comment|/* per-channel state */
+name|HAL_CHANNEL_SURVEY
+name|ah_chansurvey
+decl_stmt|;
+comment|/* channel survey */
 comment|/* AR5416 uses some of the AR5212 ANI code; these are the ANI methods */
 name|HAL_BOOL
 function_decl|(
@@ -2656,6 +2660,21 @@ name|nextStart
 parameter_list|,
 name|HAL_QUIET_FLAG
 name|flag
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|HAL_BOOL
+name|ar5212GetMibCycleCounts
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+name|HAL_SURVEY_SAMPLE
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1220,8 +1220,6 @@ name|ovp
 argument_list|,
 name|cred
 argument_list|,
-name|td
-argument_list|,
 name|length
 argument_list|,
 operator|(
@@ -2521,8 +2519,6 @@ condition|)
 name|vrecycle
 argument_list|(
 name|vp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 return|return

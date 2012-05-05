@@ -185,7 +185,7 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*  * The hardware registers are native little-endian byte order.  * Big-endian hosts are handled by enabling hardware byte-swap  * of register reads and writes at reset.  But the PCI clock  * domain registers are not byte swapped!  Thus, on big-endian  * platforms we have to explicitly byte-swap those registers.  * OS_REG_UNSWAPPED identifies the registers that need special handling.  */
+comment|/*  * The hardware registers are native little-endian byte order.  * Big-endian hosts are handled by enabling hardware byte-swap  * of register reads and writes at reset.  But the PCI clock  * domain registers are not byte swapped!  Thus, on big-endian  * platforms we have to explicitly byte-swap those registers.  * OS_REG_UNSWAPPED identifies the registers that need special handling.  *  * This is not currently used by the FreeBSD HAL osdep code; the HAL  * currently does not configure hardware byteswapping for register space  * accesses and instead does it through the FreeBSD bus space code.  */
 end_comment
 
 begin_if
@@ -234,6 +234,43 @@ end_endif
 begin_comment
 comment|/* _BYTE_ORDER */
 end_comment
+
+begin_comment
+comment|/*  * For USB/SDIO support (where access latencies are quite high);  * some write accesses may be buffered and then flushed when  * either a read is done, or an explicit flush is done.  *  * These are simply placeholders for now.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OS_REG_WRITE_BUFFER_ENABLE
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|do { } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OS_REG_WRITE_BUFFER_DISABLE
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|do { } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OS_REG_WRITE_BUFFER_FLUSH
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|do { } while (0)
+end_define
 
 begin_comment
 comment|/*  * Register read/write operations are either handled through  * platform-dependent routines (or when debugging is enabled  * with AH_DEBUG); or they are inline expanded using the macros  * defined below.  */

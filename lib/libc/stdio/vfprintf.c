@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<limits.h>
 end_include
 
@@ -1830,6 +1836,10 @@ block|{
 name|ret
 operator|=
 name|EOF
+expr_stmt|;
+name|errno
+operator|=
+name|EOVERFLOW
 expr_stmt|;
 goto|goto
 name|error
@@ -3775,6 +3785,10 @@ block|{
 name|ret
 operator|=
 name|EOF
+expr_stmt|;
+name|errno
+operator|=
+name|EOVERFLOW
 expr_stmt|;
 goto|goto
 name|error

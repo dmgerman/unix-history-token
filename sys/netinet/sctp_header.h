@@ -1514,67 +1514,62 @@ end_struct
 begin_define
 define|#
 directive|define
-name|SCTP_STREAM_RESET_NOTHING
+name|SCTP_STREAM_RESET_RESULT_NOTHING_TO_DO
 value|0x00000000
 end_define
 
 begin_comment
-comment|/* Nothing for me to do */
+comment|/* XXX: unused */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SCTP_STREAM_RESET_PERFORMED
+name|SCTP_STREAM_RESET_RESULT_PERFORMED
 value|0x00000001
 end_define
 
-begin_comment
-comment|/* Did it */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|SCTP_STREAM_RESET_REJECT
+name|SCTP_STREAM_RESET_RESULT_DENIED
 value|0x00000002
 end_define
 
-begin_comment
-comment|/* refused to do it */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|SCTP_STREAM_RESET_ERROR_STR
+name|SCTP_STREAM_RESET_RESULT_ERR__WRONG_SSN
 value|0x00000003
 end_define
 
 begin_comment
-comment|/* bad Stream no */
+comment|/* XXX: unused */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SCTP_STREAM_RESET_TRY_LATER
+name|SCTP_STREAM_RESET_RESULT_ERR_IN_PROGRESS
 value|0x00000004
 end_define
 
-begin_comment
-comment|/* collision, try again */
-end_comment
+begin_define
+define|#
+directive|define
+name|SCTP_STREAM_RESET_RESULT_ERR_BAD_SEQNO
+value|0x00000005
+end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_STREAM_RESET_BAD_SEQNO
-value|0x00000005
+name|SCTP_STREAM_RESET_RESULT_IN_PROGRESS
+value|0x00000006
 end_define
 
 begin_comment
-comment|/* bad str-reset seq no */
+comment|/* XXX: unused */
 end_comment
 
 begin_comment

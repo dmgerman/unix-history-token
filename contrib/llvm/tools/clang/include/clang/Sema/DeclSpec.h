@@ -4198,6 +4198,12 @@ comment|/// function, if it has one.
 name|Expr
 operator|*
 name|NoexceptExpr
+block|;
+comment|/// \brief Pointer to the cached tokens for an exception-specification
+comment|/// that has not yet been parsed.
+name|CachedTokens
+operator|*
+name|ExceptionSpecTokens
 block|;     }
 block|;
 comment|/// TrailingReturnType - If this isn't null, it's the trailing return type
@@ -4254,6 +4260,17 @@ condition|)
 name|delete
 index|[]
 name|Exceptions
+decl_stmt|;
+elseif|else
+if|if
+condition|(
+name|getExceptionSpecType
+argument_list|()
+operator|==
+name|EST_Delayed
+condition|)
+name|delete
+name|ExceptionSpecTokens
 decl_stmt|;
 block|}
 comment|/// isKNRPrototype - Return true if this is a K&R style identifier list,
@@ -4917,6 +4934,8 @@ argument_list|,
 argument|unsigned NumExceptions
 argument_list|,
 argument|Expr *NoexceptExpr
+argument_list|,
+argument|CachedTokens *ExceptionSpecTokens
 argument_list|,
 argument|SourceLocation LocalRangeBegin
 argument_list|,

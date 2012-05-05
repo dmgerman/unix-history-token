@@ -583,20 +583,6 @@ argument_list|)
 specifier|const
 block|;
 name|bool
-name|isSaveCalleeSavedRegsCall
-argument_list|(
-argument|const MachineInstr* MI
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|isConditionalTransfer
-argument_list|(
-argument|const MachineInstr* MI
-argument_list|)
-specifier|const
-block|;
-name|bool
 name|isConditionalALU32
 argument_list|(
 argument|const MachineInstr* MI
@@ -605,13 +591,6 @@ specifier|const
 block|;
 name|bool
 name|isConditionalLoad
-argument_list|(
-argument|const MachineInstr* MI
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|isConditionalStore
 argument_list|(
 argument|const MachineInstr* MI
 argument_list|)
@@ -628,55 +607,6 @@ name|unsigned
 name|getInvertedPredicatedOpcode
 argument_list|(
 argument|const int Opc
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|isExtendable
-argument_list|(
-argument|const MachineInstr* MI
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|isExtended
-argument_list|(
-argument|const MachineInstr* MI
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|isPostIncrement
-argument_list|(
-argument|const MachineInstr* MI
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|isNewValueStore
-argument_list|(
-argument|const MachineInstr* MI
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|isNewValueJump
-argument_list|(
-argument|const MachineInstr* MI
-argument_list|)
-specifier|const
-block|;
-name|unsigned
-name|getImmExtForm
-argument_list|(
-argument|const MachineInstr* MI
-argument_list|)
-specifier|const
-block|;
-name|unsigned
-name|getNormalBranchForm
-argument_list|(
-argument|const MachineInstr* MI
 argument_list|)
 specifier|const
 block|;

@@ -436,7 +436,7 @@ name|R1_STATUS
 parameter_list|(
 name|x
 parameter_list|)
-value|(x& 0xFFFFE000
+value|((x)& 0xFFFFE000)
 end_define
 
 begin_define
@@ -446,7 +446,7 @@ name|R1_CURRENT_STATE
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)& R1_CURRENT_STATE_MASK)>> 9
+value|(((x)& R1_CURRENT_STATE_MASK)>> 9)
 end_define
 
 begin_define
@@ -1387,6 +1387,20 @@ define|#
 directive|define
 name|SD_SWITCH_NOCHANGE
 value|0xF
+end_define
+
+begin_define
+define|#
+directive|define
+name|SD_CLR_CARD_DETECT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SD_SET_CARD_DETECT
+value|1
 end_define
 
 begin_define

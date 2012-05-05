@@ -1837,6 +1837,10 @@ argument|prof_gdump
 argument_list|)
 name|OPT_WRITE_BOOL
 argument_list|(
+argument|prof_final
+argument_list|)
+name|OPT_WRITE_BOOL
+argument_list|(
 argument|prof_leak
 argument_list|)
 undef|#

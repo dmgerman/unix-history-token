@@ -13394,6 +13394,18 @@ name|struct
 name|vattr
 name|vattr
 decl_stmt|;
+comment|/* We can't support the value matching VNOVAL. */
+if|if
+condition|(
+name|flags
+operator|==
+name|VNOVAL
+condition|)
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
 comment|/* 	 * Prevent non-root users from setting flags on devices.  When 	 * a device is reused, users can retain ownership of the device 	 * if they are allowed to set flags and programs assume that 	 * chown can't fail when done as root. 	 */
 if|if
 condition|(
