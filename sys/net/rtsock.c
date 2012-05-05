@@ -9667,7 +9667,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|RADIX_NODE_HEAD_LOCK
+name|RADIX_NODE_HEAD_RLOCK
 argument_list|(
 name|rnh
 argument_list|)
@@ -9686,7 +9686,7 @@ operator|&
 name|w
 argument_list|)
 expr_stmt|;
-name|RADIX_NODE_HEAD_UNLOCK
+name|RADIX_NODE_HEAD_RUNLOCK
 argument_list|(
 name|rnh
 argument_list|)
