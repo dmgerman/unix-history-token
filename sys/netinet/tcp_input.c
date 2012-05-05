@@ -13218,7 +13218,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Determine a reasonable value for maxseg size.  * If the route is known, check route for mtu.  * If none, use an mss that can be handled on the outgoing  * interface without forcing IP to fragment; if bigger than  * an mbuf cluster (MCLBYTES), round down to nearest multiple of MCLBYTES  * to utilize large mbufs.  If no route is found, route has no mtu,  * or the destination isn't local, use a default, hopefully conservative  * size (usually 512 or the default IP max size, but no more than the mtu  * of the interface), as we can't discover anything about intervening  * gateways or networks.  We also initialize the congestion/slow start  * window to be a single segment if the destination isn't local.  * While looking at the routing entry, we also initialize other path-dependent  * parameters from pre-set or cached values in the routing entry.  *  * Also take into account the space needed for options that we  * send regularly.  Make maxseg shorter by that amount to assure  * that we can send maxseg amount of data even when the options  * are present.  Store the upper limit of the length of options plus  * data in maxopd.  *  * In case of T/TCP, we call this routine during implicit connection  * setup as well (offer = -1), to initialize maxseg from the cached  * MSS of our peer.  *  * NOTE that this routine is only called when we process an incoming  * segment. Outgoing SYN/ACK MSS settings are handled in tcp_mssopt().  */
+comment|/*  * Determine a reasonable value for maxseg size.  * If the route is known, check route for mtu.  * If none, use an mss that can be handled on the outgoing  * interface without forcing IP to fragment; if bigger than  * an mbuf cluster (MCLBYTES), round down to nearest multiple of MCLBYTES  * to utilize large mbufs.  If no route is found, route has no mtu,  * or the destination isn't local, use a default, hopefully conservative  * size (usually 512 or the default IP max size, but no more than the mtu  * of the interface), as we can't discover anything about intervening  * gateways or networks.  We also initialize the congestion/slow start  * window to be a single segment if the destination isn't local.  * While looking at the routing entry, we also initialize other path-dependent  * parameters from pre-set or cached values in the routing entry.  *  * Also take into account the space needed for options that we  * send regularly.  Make maxseg shorter by that amount to assure  * that we can send maxseg amount of data even when the options  * are present.  Store the upper limit of the length of options plus  * data in maxopd.  *  * NOTE that this routine is only called when we process an incoming  * segment, or an ICMP need fragmentation datagram. Outgoing SYN/ACK MSS  * settings are handled in tcp_mssopt().  */
 end_comment
 
 begin_function
@@ -13232,6 +13232,9 @@ name|tp
 parameter_list|,
 name|int
 name|offer
+parameter_list|,
+name|int
+name|mtuoffer
 parameter_list|,
 name|struct
 name|hc_metrics_lite
@@ -13264,8 +13267,6 @@ name|metrics
 decl_stmt|;
 name|int
 name|origoffer
-init|=
-name|offer
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -13332,6 +13333,39 @@ name|tp
 operator|->
 name|t_inpcb
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mtuoffer
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+name|KASSERT
+argument_list|(
+name|offer
+operator|==
+operator|-
+literal|1
+argument_list|,
+operator|(
+literal|"%s: conflict"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
+name|offer
+operator|=
+name|mtuoffer
+operator|-
+name|min_protoh
+expr_stmt|;
+block|}
+name|origoffer
+operator|=
+name|offer
 expr_stmt|;
 comment|/* Initialize. */
 ifdef|#
@@ -13757,6 +13791,9 @@ argument_list|(
 name|tp
 argument_list|,
 name|offer
+argument_list|,
+operator|-
+literal|1
 argument_list|,
 operator|&
 name|metrics

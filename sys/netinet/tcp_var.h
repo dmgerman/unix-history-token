@@ -2912,6 +2912,8 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
+name|int
+parameter_list|,
 name|struct
 name|hc_metrics_lite
 modifier|*
