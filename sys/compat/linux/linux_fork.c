@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_kdtrace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -63,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|<sys/sched.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sdt.h>
 end_include
 
 begin_include
@@ -120,6 +132,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<compat/linux/linux_dtrace.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<compat/linux/linux_signal.h>
 end_include
 
@@ -128,6 +146,46 @@ include|#
 directive|include
 file|<compat/linux/linux_emul.h>
 end_include
+
+begin_comment
+comment|/* DTrace init */
+end_comment
+
+begin_expr_stmt
+name|LIN_SDT_PROVIDER_DECLARE
+argument_list|(
+name|LINUX_DTRACE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* Linuxulator-global DTrace probes */
+end_comment
+
+begin_expr_stmt
+name|LIN_SDT_PROBE_DECLARE
+argument_list|(
+name|locks
+argument_list|,
+name|emul_lock
+argument_list|,
+name|locked
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|LIN_SDT_PROBE_DECLARE
+argument_list|(
+name|locks
+argument_list|,
+name|emul_lock
+argument_list|,
+name|unlock
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
