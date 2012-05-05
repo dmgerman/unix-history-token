@@ -17589,7 +17589,7 @@ name|res
 decl_stmt|,
 name|mres
 decl_stmt|;
-comment|/*      * There is at least one valid hash at this point, and we prefer to use      * the faster GNU version if available.      */
+comment|/*      * If there is at least one valid hash at this point, we prefer to      * use the faster GNU version if available.      */
 if|if
 condition|(
 name|obj
@@ -17605,7 +17605,13 @@ argument_list|,
 name|obj
 argument_list|)
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+name|obj
+operator|->
+name|valid_hash_sysv
+condition|)
 name|mres
 operator|=
 name|symlook_obj1_sysv
@@ -17615,6 +17621,12 @@ argument_list|,
 name|obj
 argument_list|)
 expr_stmt|;
+else|else
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 if|if
 condition|(
 name|mres
