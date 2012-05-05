@@ -589,7 +589,7 @@ name|fd
 operator|=
 name|open
 argument_list|(
-name|path
+name|rpath
 argument_list|,
 name|O_RDONLY
 argument_list|)
@@ -604,9 +604,9 @@ condition|)
 block|{
 name|dbg
 argument_list|(
-literal|"lm_init: open(\"%s\") failed, %s"
+literal|"lm_parse_file: open(\"%s\") failed, %s"
 argument_list|,
-name|path
+name|rpath
 argument_list|,
 name|rtld_strerror
 argument_list|(
@@ -642,9 +642,9 @@ argument_list|)
 expr_stmt|;
 name|dbg
 argument_list|(
-literal|"lm_init: fstat(\"%s\") failed, %s"
+literal|"lm_parse_file: fstat(\"%s\") failed, %s"
 argument_list|,
-name|path
+name|rpath
 argument_list|,
 name|rtld_strerror
 argument_list|(
@@ -697,9 +697,9 @@ argument_list|)
 expr_stmt|;
 name|dbg
 argument_list|(
-literal|"lm_init: mmap(\"%s\") failed, %s"
+literal|"lm_parse_file: mmap(\"%s\") failed, %s"
 argument_list|,
-name|path
+name|rpath
 argument_list|,
 name|rtld_strerror
 argument_list|(
