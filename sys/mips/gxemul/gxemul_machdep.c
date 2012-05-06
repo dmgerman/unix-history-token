@@ -209,6 +209,12 @@ directive|include
 file|<machine/trap.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<mips/gxemul/mpreg.h>
+end_include
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -429,12 +435,6 @@ operator|*
 operator|)
 name|a2
 decl_stmt|;
-name|unsigned
-name|int
-name|memsize
-init|=
-name|a3
-decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -531,6 +531,13 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|envp
+operator|!=
+name|NULL
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"envp:\n"
@@ -568,19 +575,24 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
 name|printf
 argument_list|(
-literal|"memsize = %08x\n"
-argument_list|,
-name|memsize
+literal|"no envp.\n"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|realmem
 operator|=
 name|btoc
 argument_list|(
-name|memsize
+name|GXEMUL_MP_DEV_READ
+argument_list|(
+name|GXEMUL_MP_DEV_MEMORY
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|mips_init
