@@ -72,12 +72,35 @@ directive|ifndef
 name|MACHINE_ARCH
 end_ifndef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__ARMEB__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|MACHINE_ARCH
+value|"armeb"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|MACHINE_ARCH
 value|"arm"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
