@@ -1435,6 +1435,7 @@ block|,
 comment|/*quirks*/
 name|DA_Q_NO_SYNC_CACHE
 block|}
+block|,
 block|{
 comment|/* 		 * Olympus FE-210 camera 		 */
 block|{
