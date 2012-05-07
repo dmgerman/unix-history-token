@@ -23400,10 +23400,12 @@ argument_list|)
 expr_stmt|;
 comment|/* disable DMA engine */
 comment|/* 	 * TODO: see if this particular DELAY() is required; it may be 	 * masking some missing FIFO flush or DMA sync. 	 */
-if|if
-condition|(
-name|dodelay
-condition|)
+if|#
+directive|if
+literal|0
+block|if (dodelay)
+endif|#
+directive|endif
 name|DELAY
 argument_list|(
 literal|3000
