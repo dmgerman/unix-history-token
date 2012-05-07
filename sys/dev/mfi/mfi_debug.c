@@ -671,6 +671,14 @@ operator|=
 literal|"CLUSTER_RESET_LD"
 expr_stmt|;
 break|break;
+case|case
+name|MFI_DCMD_LD_MAP_GET_INFO
+case|:
+name|opcode
+operator|=
+literal|"LD_MAP_GET_INFO"
+expr_stmt|;
+break|break;
 default|default:
 name|opcode
 operator|=
