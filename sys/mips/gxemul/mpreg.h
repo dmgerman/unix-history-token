@@ -60,6 +60,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|GXEMUL_MP_DEV_RANDOM
+value|0x0080
+end_define
+
+begin_define
+define|#
+directive|define
 name|GXEMUL_MP_DEV_MEMORY
 value|0x0090
 end_define
@@ -83,6 +90,13 @@ define|#
 directive|define
 name|GXEMUL_MP_DEV_IPI_READ
 value|0x00c0
+end_define
+
+begin_define
+define|#
+directive|define
+name|GXEMUL_MP_DEV_CYCLES
+value|0x00d0
 end_define
 
 begin_define
