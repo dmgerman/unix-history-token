@@ -461,7 +461,7 @@ struct|struct
 name|sctp_authinfo
 block|{
 name|uint16_t
-name|auth_keyid
+name|auth_keynumber
 decl_stmt|;
 block|}
 struct|;
