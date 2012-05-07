@@ -2014,9 +2014,9 @@ name|IN_CHANGE
 expr_stmt|;
 if|if
 condition|(
-name|vap
+name|ip
 operator|->
-name|va_flags
+name|i_flags
 operator|&
 operator|(
 name|IMMUTABLE
