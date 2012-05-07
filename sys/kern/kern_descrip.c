@@ -3807,7 +3807,7 @@ name|DUP_FCNTL
 condition|?
 name|EINVAL
 else|:
-name|EMFILE
+name|EBADF
 operator|)
 return|;
 name|FILEDESC_XLOCK
