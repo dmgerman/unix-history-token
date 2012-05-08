@@ -1653,6 +1653,15 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+if|if
+condition|(
+name|sc
+operator|->
+name|tsec_ifp
+operator|!=
+name|NULL
+condition|)
+block|{
 ifdef|#
 directive|ifdef
 name|DEVICE_POLLING
@@ -1681,10 +1690,6 @@ condition|(
 name|sc
 operator|->
 name|sc_rres
-operator|&&
-name|sc
-operator|->
-name|tsec_ifp
 condition|)
 name|tsec_shutdown
 argument_list|(
@@ -1694,13 +1699,6 @@ name|dev
 argument_list|)
 expr_stmt|;
 comment|/* Detach network interface */
-if|if
-condition|(
-name|sc
-operator|->
-name|tsec_ifp
-condition|)
-block|{
 name|ether_ifdetach
 argument_list|(
 name|sc
