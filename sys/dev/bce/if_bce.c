@@ -3281,7 +3281,7 @@ name|_hw_bce
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|loose_rx_mtu
+name|strict_rx_mtu
 argument_list|,
 name|CTLFLAG_RDTUN
 argument_list|,
