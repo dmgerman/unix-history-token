@@ -10429,7 +10429,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 		 * printf("findassociation_ep_asconf: zero lookup address 		 * finds stcb 0x%x\n", (uint32_t)stcb); 		 */
+comment|/* 		 * SCTP_PRINTF("findassociation_ep_asconf: zero lookup 		 * address finds stcb 0x%x\n", (uint32_t)stcb); 		 */
 block|}
 else|else
 block|{
@@ -25842,7 +25842,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"V6 not yet supported\n"
 argument_list|)
@@ -28385,7 +28385,7 @@ operator|->
 name|param_length
 argument_list|)
 expr_stmt|;
-comment|/* 		 * printf("ptype => %0x, plen => %d\n", (uint32_t)ptype, 		 * (int)plen); 		 */
+comment|/* 		 * SCTP_PRINTF("ptype => %0x, plen => %d\n", 		 * (uint32_t)ptype, (int)plen); 		 */
 if|if
 condition|(
 name|offset

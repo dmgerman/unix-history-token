@@ -1891,7 +1891,7 @@ operator|>=
 name|SCTP_PACKET_LOG_SIZE
 condition|)
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"Insanity stops a log thisbegin:%d thisend:%d writers:%d lock:%d end:%d\n"
 argument_list|,

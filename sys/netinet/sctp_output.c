@@ -14434,7 +14434,7 @@ block|}
 block|}
 else|else
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"Stcb is null - no print\n"
 argument_list|)
@@ -46759,7 +46759,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"TSN:%x chk->snd_count:%d chk->sent:%d can't retran - no data\n"
 argument_list|,
@@ -69373,7 +69373,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"Warning - inp is NULL so cant validate locks\n"
 argument_list|)

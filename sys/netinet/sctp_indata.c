@@ -1595,7 +1595,7 @@ name|gap
 argument_list|)
 condition|)
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"gap:%x tsn:%x\n"
 argument_list|,
@@ -12049,7 +12049,7 @@ index|]
 operator|)
 condition|)
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"Error Mapping array's not clean at clear\n"
 argument_list|)
@@ -12138,7 +12138,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"impossible slide lgap:%x slide_end:%x slide_from:%x? at:%d\n"
 argument_list|,
@@ -12174,7 +12174,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"Gak, would have overrun map end:%d slide_end:%d\n"
 argument_list|,
@@ -17175,7 +17175,7 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
-comment|/* printf("OK, we are now ready to FR this guy\n"); */
+comment|/* 			 * SCTP_PRINTF("OK, we are now ready to FR this 			 * guy\n"); 			 */
 if|if
 condition|(
 name|SCTP_BASE_SYSCTL
@@ -17374,7 +17374,7 @@ name|tot_retrans
 operator|++
 expr_stmt|;
 comment|/* mark the sending seq for possible subsequent FR's */
-comment|/* 			 * printf("Marking TSN for FR new value %x\n", 			 * (uint32_t)tpi->rec.data.TSN_seq); 			 */
+comment|/* 			 * SCTP_PRINTF("Marking TSN for FR new value %x\n", 			 * (uint32_t)tpi->rec.data.TSN_seq); 			 */
 if|if
 condition|(
 name|TAILQ_EMPTY
@@ -17927,7 +17927,7 @@ operator|<
 name|SCTP_DATAGRAM_RESEND
 condition|)
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"Chk TSN:%u size:%d inflight cnt:%d\n"
 argument_list|,
@@ -18026,7 +18026,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"asoc->total_flight:%d cnt:%d\n"
 argument_list|,
@@ -18918,7 +18918,7 @@ operator|==
 name|SCTP_DATAGRAM_UNSENT
 condition|)
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"Warning, an unsent is now acked?\n"
 argument_list|)
@@ -21513,7 +21513,7 @@ modifier|*
 name|oper
 decl_stmt|;
 comment|/* 			 * no way, we have not even sent this TSN out yet. 			 * Peer is hopelessly messed up with us. 			 */
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"NEW cum_ack:%x send_s:%x is smaller or equal\n"
 argument_list|,
@@ -21527,7 +21527,7 @@ condition|(
 name|tp1
 condition|)
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"Got send_s from tsn:%x + 1 of tp1:%p\n"
 argument_list|,
@@ -22527,7 +22527,7 @@ argument_list|)
 condition|)
 block|{
 comment|/* 				 * peer is either confused or we are under 				 * attack. We must abort. 				 */
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"Hopeless peer! biggest_tsn_acked:%x largest seq:%x\n"
 argument_list|,
@@ -22672,7 +22672,7 @@ name|SCTP_DATAGRAM_UNSENT
 condition|)
 block|{
 comment|/* no more sent on list */
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"Warning, tp1->sent == %d and its now acked?\n"
 argument_list|,
