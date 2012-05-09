@@ -533,5 +533,35 @@ parameter_list|)
 block|{ }
 end_function
 
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|_rtld_addr_phdr
+end_pragma
+
+begin_function
+name|int
+name|_rtld_addr_phdr
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|addr
+parameter_list|,
+name|struct
+name|dl_phdr_info
+modifier|*
+name|phdr_info
+parameter_list|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
 end_unit
 
