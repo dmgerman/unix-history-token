@@ -15974,7 +15974,7 @@ name|sinfo_keynumber
 operator|=
 name|authinfo
 operator|.
-name|auth_keyid
+name|auth_keynumber
 expr_stmt|;
 break|break;
 default|default:
