@@ -3683,19 +3683,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SCTP_PANIC_ON_ABORT
-argument_list|)
-name|panic
-argument_list|(
-literal|"disconnect does an abort"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|sctp_send_abort_tcb
 argument_list|(
 name|stcb
@@ -4240,19 +4227,6 @@ name|SCTP_LOC_4
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SCTP_PANIC_ON_ABORT
-argument_list|)
-name|panic
-argument_list|(
-literal|"disconnect does an abort"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|stcb
 operator|->
 name|sctp_ep
@@ -5270,19 +5244,6 @@ name|SCTP_LOC_6
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SCTP_PANIC_ON_ABORT
-argument_list|)
-name|panic
-argument_list|(
-literal|"shutdown does an abort"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|stcb
 operator|->
 name|sctp_ep
