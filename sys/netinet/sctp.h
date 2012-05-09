@@ -2121,6 +2121,10 @@ name|SCTP_PCB_FLAGS_RECVSENDFAILEVNT
 value|0x00004000
 end_define
 
+begin_comment
+comment|/* deprecated */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2224,6 +2228,13 @@ define|#
 directive|define
 name|SCTP_PCB_FLAGS_STREAM_CHANGEEVNT
 value|0x40000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_PCB_FLAGS_RECVNSENDFAILEVNT
+value|0x80000000
 end_define
 
 begin_comment
