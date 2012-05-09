@@ -3645,6 +3645,17 @@ begin_comment
 comment|/* Process $ORIGIN */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|DF_1_NODEFLIB
+value|0x00000800
+end_define
+
+begin_comment
+comment|/* Do not search default paths */
+end_comment
+
 begin_comment
 comment|/* Values for n_type.  Used in core files. */
 end_comment
