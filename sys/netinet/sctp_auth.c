@@ -1053,7 +1053,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"%s: [Null key]\n"
 argument_list|,
@@ -1062,7 +1062,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"%s: len %u, "
 argument_list|,
@@ -1095,7 +1095,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"%02x"
 argument_list|,
@@ -1107,7 +1107,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -1115,7 +1115,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"[Null key]\n"
 argument_list|)
@@ -1148,7 +1148,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"%s: [Null key]\n"
 argument_list|,
@@ -1157,7 +1157,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"%s: len %u, "
 argument_list|,
@@ -1190,7 +1190,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"%02x"
 argument_list|,
@@ -1202,7 +1202,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -1210,7 +1210,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"[Null key]\n"
 argument_list|)

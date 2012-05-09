@@ -434,7 +434,7 @@ name|m_len
 argument_list|)
 condition|)
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"sctp_delayed_cksum(): m->len: %d,  off: %d.\n"
 argument_list|,
