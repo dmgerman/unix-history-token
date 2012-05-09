@@ -1891,6 +1891,15 @@ name|val
 decl_stmt|,
 name|i
 decl_stmt|;
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
+condition|)
+return|return;
 name|TSEC_GLOBAL_LOCK_ASSERT
 argument_list|(
 name|sc
