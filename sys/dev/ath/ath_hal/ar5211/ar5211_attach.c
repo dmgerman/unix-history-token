@@ -570,6 +570,18 @@ name|ah_getMibCycleCounts
 operator|=
 name|ar5211GetMibCycleCounts
 block|,
+operator|.
+name|ah_enableDfs
+operator|=
+name|ar5211EnableDfs
+block|,
+operator|.
+name|ah_getDfsThresh
+operator|=
+name|ar5211GetDfsThresh
+block|,
+comment|/* XXX procRadarEvent */
+comment|/* XXX isFastClockEnabled */
 comment|/* Key Cache Functions */
 operator|.
 name|ah_getKeyCacheSize
