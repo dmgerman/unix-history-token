@@ -4248,11 +4248,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"Huh, can't get associd? TSNH!\n"
-argument_list|)
-expr_stmt|;
 operator|(
 name|void
 operator|)
