@@ -3573,29 +3573,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|SCTP_NOTIFY_STR_RESET_ADD_OK
+name|SCTP_NOTIFY_STR_RESET_DENIED_OUT
 value|30
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_NOTIFY_STR_RESET_ADD_FAIL
+name|SCTP_NOTIFY_STR_RESET_DENIED_IN
 value|31
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_NOTIFY_STR_RESET_INSTREAM_ADD_OK
-value|32
-end_define
-
-begin_define
-define|#
-directive|define
 name|SCTP_NOTIFY_MAX
-value|32
+value|31
 end_define
 
 begin_comment
