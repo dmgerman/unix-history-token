@@ -1216,7 +1216,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* data send failure event */
+comment|/* data send failure event (deprecated) */
 end_comment
 
 begin_struct
@@ -1244,6 +1244,41 @@ name|ssf_assoc_id
 decl_stmt|;
 name|uint8_t
 name|ssf_data
+index|[]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* data send failure event (not deprecated) */
+end_comment
+
+begin_struct
+struct|struct
+name|sctp_send_failed_event
+block|{
+name|uint16_t
+name|ssfe_type
+decl_stmt|;
+name|uint16_t
+name|ssfe_flags
+decl_stmt|;
+name|uint32_t
+name|ssfe_length
+decl_stmt|;
+name|uint32_t
+name|ssfe_error
+decl_stmt|;
+name|struct
+name|sctp_sndinfo
+name|ssfe_info
+decl_stmt|;
+name|sctp_assoc_t
+name|ssfe_assoc_id
+decl_stmt|;
+name|uint8_t
+name|ssfe_data
 index|[]
 decl_stmt|;
 block|}
@@ -1847,6 +1882,13 @@ define|#
 directive|define
 name|SCTP_STREAM_CHANGE_EVENT
 value|0x000d
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_SEND_FAILED_EVENT
+value|0x000e
 end_define
 
 begin_comment
