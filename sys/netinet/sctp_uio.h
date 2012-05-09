@@ -1565,13 +1565,6 @@ name|SCTP_STREAM_RESET_FAILED
 value|0x0008
 end_define
 
-begin_define
-define|#
-directive|define
-name|SCTP_STREAM_CHANGED_DENIED
-value|0x0010
-end_define
-
 begin_comment
 comment|/*  * Assoc reset event - subscribe to SCTP_ASSOC_RESET_EVENT  */
 end_comment
