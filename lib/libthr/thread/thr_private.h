@@ -2844,6 +2844,24 @@ expr_stmt|;
 block|}
 end_function
 
+begin_struct_decl
+struct_decl|struct
+name|dl_phdr_info
+struct_decl|;
+end_struct_decl
+
+begin_function_decl
+name|void
+name|__pthread_cxa_finalize
+parameter_list|(
+name|struct
+name|dl_phdr_info
+modifier|*
+name|phdr_info
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_macro
 name|__END_DECLS
 end_macro

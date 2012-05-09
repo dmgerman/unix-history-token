@@ -745,6 +745,26 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_struct_decl
+struct_decl|struct
+name|dl_phdr_info
+struct_decl|;
+end_struct_decl
+
+begin_function_decl
+name|int
+name|__elf_phdr_match_addr
+parameter_list|(
+name|struct
+name|dl_phdr_info
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
