@@ -17109,6 +17109,13 @@ name|len
 decl_stmt|;
 if|if
 condition|(
+operator|(
+name|stcb
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
 name|sctp_stcb_is_feature_off
 argument_list|(
 name|stcb
@@ -17119,6 +17126,7 @@ name|stcb
 argument_list|,
 name|SCTP_PCB_FLAGS_STREAM_CHANGEEVNT
 argument_list|)
+operator|)
 condition|)
 block|{
 comment|/* event not enabled */
@@ -17442,6 +17450,13 @@ name|len
 decl_stmt|;
 if|if
 condition|(
+operator|(
+name|stcb
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
 name|sctp_stcb_is_feature_off
 argument_list|(
 name|stcb
@@ -17452,6 +17467,7 @@ name|stcb
 argument_list|,
 name|SCTP_PCB_FLAGS_ASSOC_RESETEVNT
 argument_list|)
+operator|)
 condition|)
 block|{
 comment|/* event not enabled */
@@ -17745,6 +17761,13 @@ name|len
 decl_stmt|;
 if|if
 condition|(
+operator|(
+name|stcb
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
 name|sctp_stcb_is_feature_off
 argument_list|(
 name|stcb
@@ -17755,6 +17778,7 @@ name|stcb
 argument_list|,
 name|SCTP_PCB_FLAGS_STREAM_RESETEVNT
 argument_list|)
+operator|)
 condition|)
 block|{
 comment|/* event not enabled */
