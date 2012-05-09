@@ -133,6 +133,13 @@ begin_comment
 comment|/* maximum number of distinct devices */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MAXBDDEV
+value|MAXDEV
+end_define
+
 begin_comment
 comment|/* exported devices XXX rename? */
 end_comment
