@@ -2333,6 +2333,20 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/* ** Global variable to store last used CPU when binding queues ** to CPUs in igb_allocate_msix.  Starts at CPU_FIRST and increments when a ** queue is bound to a cpu. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|igb_last_bind_cpu
+init|=
+operator|-
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* How many packets rxeof tries to clean at a time */
 end_comment
 
@@ -11839,6 +11853,18 @@ name|num_queues
 operator|>
 literal|1
 condition|)
+block|{
+if|if
+condition|(
+name|igb_last_bind_cpu
+operator|<
+literal|0
+condition|)
+name|igb_last_bind_cpu
+operator|=
+name|CPU_FIRST
+argument_list|()
+expr_stmt|;
 name|bus_bind_intr
 argument_list|(
 name|dev
@@ -11847,9 +11873,34 @@ name|que
 operator|->
 name|res
 argument_list|,
-name|i
+name|igb_last_bind_cpu
 argument_list|)
 expr_stmt|;
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Bound queue %d to cpu %d\n"
+argument_list|,
+name|i
+argument_list|,
+name|igb_last_bind_cpu
+argument_list|)
+expr_stmt|;
+name|igb_last_bind_cpu
+operator|=
+name|CPU_NEXT
+argument_list|(
+name|igb_last_bind_cpu
+argument_list|)
+expr_stmt|;
+name|igb_last_bind_cpu
+operator|=
+name|igb_last_bind_cpu
+operator|%
+name|mp_ncpus
+expr_stmt|;
+block|}
 if|#
 directive|if
 name|__FreeBSD_version
