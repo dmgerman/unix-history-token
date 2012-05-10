@@ -558,10 +558,10 @@ name|size
 else|:
 name|oldsize
 expr_stmt|;
-comment|/* 	 * Use mremap(2) if this is a huge-->huge reallocation, and neither the 	 * source nor the destination are in dss. 	 */
 ifdef|#
 directive|ifdef
-name|JEMALLOC_MREMAP_FIXED
+name|JEMALLOC_MREMAP
+comment|/* 	 * Use mremap(2) if this is a huge-->huge reallocation, and neither the 	 * source nor the destination are in dss. 	 */
 if|if
 condition|(
 name|oldsize
@@ -636,8 +636,6 @@ index|]
 decl_stmt|;
 name|buferror
 argument_list|(
-name|errno
-argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof

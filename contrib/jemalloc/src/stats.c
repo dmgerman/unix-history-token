@@ -1499,23 +1499,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|write_cb
-operator|==
-name|NULL
-condition|)
-block|{
-comment|/* 		 * The caller did not provide an alternate write_cb callback 		 * function, so use the default one.  malloc_write() is an 		 * inline function, so use malloc_message() directly here. 		 */
-name|write_cb
-operator|=
-name|je_malloc_message
-expr_stmt|;
-name|cbopaque
-operator|=
-name|NULL
-expr_stmt|;
-block|}
-if|if
-condition|(
 name|opts
 operator|!=
 name|NULL
@@ -1594,8 +1577,10 @@ empty_stmt|;
 block|}
 block|}
 block|}
-name|write_cb
+name|malloc_cprintf
 argument_list|(
+name|write_cb
+argument_list|,
 name|cbopaque
 argument_list|,
 literal|"___ Begin jemalloc statistics ___\n"
@@ -1744,8 +1729,10 @@ name|n
 parameter_list|)
 define|\
 value|if ((err = je_mallctl("opt."#n,&cpv,&cpsz, NULL, 0))	\ 		    == 0) {						\ 			malloc_cprintf(write_cb, cbopaque,		\ 			    "  opt."#n": \"%s\"\n", cpv);		\ 		}
-name|write_cb
+name|malloc_cprintf
 argument_list|(
+name|write_cb
+argument_list|,
 name|cbopaque
 argument_list|,
 literal|"Run-time option settings:\n"
@@ -1979,8 +1966,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|write_cb
+name|malloc_cprintf
 argument_list|(
+name|write_cb
+argument_list|,
 name|cbopaque
 argument_list|,
 literal|"Min active:dirty page ratio per arena: N/A\n"
@@ -2127,8 +2116,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|write_cb
+name|malloc_cprintf
 argument_list|(
+name|write_cb
+argument_list|,
 name|cbopaque
 argument_list|,
 literal|"Average profile dump interval: N/A\n"
@@ -2405,12 +2396,15 @@ name|unsigned
 argument_list|)
 expr_stmt|;
 block|{
+name|VARIABLE_ARRAY
+argument_list|(
 name|bool
+argument_list|,
 name|initialized
-index|[
+argument_list|,
 name|narenas
-index|]
-decl_stmt|;
+argument_list|)
+expr_stmt|;
 name|size_t
 name|isz
 decl_stmt|;
@@ -2423,8 +2417,10 @@ name|isz
 operator|=
 sizeof|sizeof
 argument_list|(
-name|initialized
+name|bool
 argument_list|)
+operator|*
+name|narenas
 expr_stmt|;
 name|xmallctl
 argument_list|(
@@ -2524,12 +2520,15 @@ name|unsigned
 argument_list|)
 expr_stmt|;
 block|{
+name|VARIABLE_ARRAY
+argument_list|(
 name|bool
+argument_list|,
 name|initialized
-index|[
+argument_list|,
 name|narenas
-index|]
-decl_stmt|;
+argument_list|)
+expr_stmt|;
 name|size_t
 name|isz
 decl_stmt|;
@@ -2540,8 +2539,10 @@ name|isz
 operator|=
 sizeof|sizeof
 argument_list|(
-name|initialized
+name|bool
 argument_list|)
+operator|*
+name|narenas
 expr_stmt|;
 name|xmallctl
 argument_list|(
@@ -2608,8 +2609,10 @@ block|}
 block|}
 block|}
 block|}
-name|write_cb
+name|malloc_cprintf
 argument_list|(
+name|write_cb
+argument_list|,
 name|cbopaque
 argument_list|,
 literal|"--- End jemalloc statistics ---\n"

@@ -56,6 +56,131 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
+comment|/* Helpers for named and indexed nodes. */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+specifier|const
+name|ctl_named_node_t
+modifier|*
+name|ctl_named_node
+parameter_list|(
+specifier|const
+name|ctl_node_t
+modifier|*
+name|node
+parameter_list|)
+block|{
+return|return
+operator|(
+operator|(
+name|node
+operator|->
+name|named
+operator|)
+condition|?
+operator|(
+specifier|const
+name|ctl_named_node_t
+operator|*
+operator|)
+name|node
+else|:
+name|NULL
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+specifier|const
+name|ctl_named_node_t
+modifier|*
+name|ctl_named_children
+parameter_list|(
+specifier|const
+name|ctl_named_node_t
+modifier|*
+name|node
+parameter_list|,
+name|int
+name|index
+parameter_list|)
+block|{
+specifier|const
+name|ctl_named_node_t
+modifier|*
+name|children
+init|=
+name|ctl_named_node
+argument_list|(
+name|node
+operator|->
+name|children
+argument_list|)
+decl_stmt|;
+return|return
+operator|(
+name|children
+condition|?
+operator|&
+name|children
+index|[
+name|index
+index|]
+else|:
+name|NULL
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+specifier|const
+name|ctl_indexed_node_t
+modifier|*
+name|ctl_indexed_node
+parameter_list|(
+specifier|const
+name|ctl_node_t
+modifier|*
+name|node
+parameter_list|)
+block|{
+return|return
+operator|(
+operator|(
+name|node
+operator|->
+name|named
+operator|==
+name|false
+operator|)
+condition|?
+operator|(
+specifier|const
+name|ctl_indexed_node_t
+operator|*
+operator|)
+name|node
+else|:
+name|NULL
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/******************************************************************************/
+end_comment
+
+begin_comment
 comment|/* Function prototypes for non-inline static functions. */
 end_comment
 
@@ -78,7 +203,7 @@ parameter_list|(
 name|n
 parameter_list|)
 define|\
-value|const ctl_node_t	*n##_index(const size_t *mib, size_t miblen,	\     size_t i);
+value|const ctl_named_node_t	*n##_index(const size_t *mib, size_t miblen,	\     size_t i);
 end_define
 
 begin_function_decl
@@ -287,6 +412,13 @@ begin_macro
 name|CTL_PROTO
 argument_list|(
 argument|config_lazy_lock
+argument_list|)
+end_macro
+
+begin_macro
+name|CTL_PROTO
+argument_list|(
+argument|config_mremap
 argument_list|)
 end_macro
 
@@ -960,7 +1092,7 @@ name|NAME
 parameter_list|(
 name|n
 parameter_list|)
-value|true,	{.named = {n
+value|{true},	n
 end_define
 
 begin_define
@@ -968,9 +1100,12 @@ define|#
 directive|define
 name|CHILD
 parameter_list|(
+name|t
+parameter_list|,
 name|c
 parameter_list|)
-value|sizeof(c##_node) / sizeof(ctl_node_t),	c##_node}},	NULL
+define|\
+value|sizeof(c##_node) / sizeof(ctl_##t##_node_t),			\ 	(ctl_node_t *)c##_node,						\ 	NULL
 end_define
 
 begin_define
@@ -980,7 +1115,7 @@ name|CTL
 parameter_list|(
 name|c
 parameter_list|)
-value|0,				NULL}},		c##_ctl
+value|0, NULL, c##_ctl
 end_define
 
 begin_comment
@@ -994,13 +1129,13 @@ name|INDEX
 parameter_list|(
 name|i
 parameter_list|)
-value|false,	{.indexed = {i##_index}},		NULL
+value|{false},	i##_index
 end_define
 
 begin_decl_stmt
 specifier|static
 specifier|const
-name|ctl_node_t
+name|ctl_named_node_t
 name|tcache_node
 index|[]
 init|=
@@ -1035,7 +1170,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|ctl_node_t
+name|ctl_named_node_t
 name|thread_node
 index|[]
 init|=
@@ -1108,6 +1243,8 @@ argument_list|)
 block|,
 name|CHILD
 argument_list|(
+argument|named
+argument_list|,
 argument|tcache
 argument_list|)
 block|}
@@ -1118,7 +1255,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|ctl_node_t
+name|ctl_named_node_t
 name|config_node
 index|[]
 init|=
@@ -1168,6 +1305,18 @@ block|,
 name|CTL
 argument_list|(
 argument|config_lazy_lock
+argument_list|)
+block|}
+block|,
+block|{
+name|NAME
+argument_list|(
+literal|"mremap"
+argument_list|)
+block|,
+name|CTL
+argument_list|(
+argument|config_mremap
 argument_list|)
 block|}
 block|,
@@ -1297,7 +1446,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|ctl_node_t
+name|ctl_named_node_t
 name|opt_node
 index|[]
 init|=
@@ -1584,7 +1733,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|ctl_node_t
+name|ctl_named_node_t
 name|arenas_bin_i_node
 index|[]
 init|=
@@ -1631,7 +1780,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|ctl_node_t
+name|ctl_named_node_t
 name|super_arenas_bin_i_node
 index|[]
 init|=
@@ -1644,6 +1793,8 @@ argument_list|)
 block|,
 name|CHILD
 argument_list|(
+argument|named
+argument_list|,
 argument|arenas_bin_i
 argument_list|)
 block|}
@@ -1654,7 +1805,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|ctl_node_t
+name|ctl_indexed_node_t
 name|arenas_bin_node
 index|[]
 init|=
@@ -1672,7 +1823,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|ctl_node_t
+name|ctl_named_node_t
 name|arenas_lrun_i_node
 index|[]
 init|=
@@ -1695,7 +1846,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|ctl_node_t
+name|ctl_named_node_t
 name|super_arenas_lrun_i_node
 index|[]
 init|=
@@ -1708,6 +1859,8 @@ argument_list|)
 block|,
 name|CHILD
 argument_list|(
+argument|named
+argument_list|,
 argument|arenas_lrun_i
 argument_list|)
 block|}
@@ -1718,7 +1871,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|ctl_node_t
+name|ctl_indexed_node_t
 name|arenas_lrun_node
 index|[]
 init|=
@@ -1736,7 +1889,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|ctl_node_t
+name|ctl_named_node_t
 name|arenas_node
 index|[]
 init|=
@@ -1833,6 +1986,8 @@ argument_list|)
 block|,
 name|CHILD
 argument_list|(
+argument|indexed
+argument_list|,
 argument|arenas_bin
 argument_list|)
 block|}
@@ -1857,6 +2012,8 @@ argument_list|)
 block|,
 name|CHILD
 argument_list|(
+argument|indexed
+argument_list|,
 argument|arenas_lrun
 argument_list|)
 block|}
@@ -1879,7 +2036,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|ctl_node_t
+name|ctl_named_node_t
 name|prof_node
 index|[]
 init|=
@@ -1926,7 +2083,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|ctl_node_t
+name|ctl_named_node_t
 name|stats_chunks_node
 index|[]
 init|=
@@ -1973,7 +2130,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|ctl_node_t
+name|ctl_named_node_t
 name|stats_huge_node
 index|[]
 init|=
@@ -2020,7 +2177,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|ctl_node_t
+name|ctl_named_node_t
 name|stats_arenas_i_small_node
 index|[]
 init|=
@@ -2079,7 +2236,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|ctl_node_t
+name|ctl_named_node_t
 name|stats_arenas_i_large_node
 index|[]
 init|=
@@ -2138,7 +2295,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|ctl_node_t
+name|ctl_named_node_t
 name|stats_arenas_i_bins_j_node
 index|[]
 init|=
@@ -2257,7 +2414,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|ctl_node_t
+name|ctl_named_node_t
 name|super_stats_arenas_i_bins_j_node
 index|[]
 init|=
@@ -2270,6 +2427,8 @@ argument_list|)
 block|,
 name|CHILD
 argument_list|(
+argument|named
+argument_list|,
 argument|stats_arenas_i_bins_j
 argument_list|)
 block|}
@@ -2280,7 +2439,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|ctl_node_t
+name|ctl_indexed_node_t
 name|stats_arenas_i_bins_node
 index|[]
 init|=
@@ -2298,7 +2457,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|ctl_node_t
+name|ctl_named_node_t
 name|stats_arenas_i_lruns_j_node
 index|[]
 init|=
@@ -2357,7 +2516,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|ctl_node_t
+name|ctl_named_node_t
 name|super_stats_arenas_i_lruns_j_node
 index|[]
 init|=
@@ -2370,6 +2529,8 @@ argument_list|)
 block|,
 name|CHILD
 argument_list|(
+argument|named
+argument_list|,
 argument|stats_arenas_i_lruns_j
 argument_list|)
 block|}
@@ -2380,7 +2541,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|ctl_node_t
+name|ctl_indexed_node_t
 name|stats_arenas_i_lruns_node
 index|[]
 init|=
@@ -2398,7 +2559,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|ctl_node_t
+name|ctl_named_node_t
 name|stats_arenas_i_node
 index|[]
 init|=
@@ -2495,6 +2656,8 @@ argument_list|)
 block|,
 name|CHILD
 argument_list|(
+argument|named
+argument_list|,
 argument|stats_arenas_i_small
 argument_list|)
 block|}
@@ -2507,6 +2670,8 @@ argument_list|)
 block|,
 name|CHILD
 argument_list|(
+argument|named
+argument_list|,
 argument|stats_arenas_i_large
 argument_list|)
 block|}
@@ -2519,6 +2684,8 @@ argument_list|)
 block|,
 name|CHILD
 argument_list|(
+argument|indexed
+argument_list|,
 argument|stats_arenas_i_bins
 argument_list|)
 block|}
@@ -2531,6 +2698,8 @@ argument_list|)
 block|,
 name|CHILD
 argument_list|(
+argument|indexed
+argument_list|,
 argument|stats_arenas_i_lruns
 argument_list|)
 block|}
@@ -2541,7 +2710,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|ctl_node_t
+name|ctl_named_node_t
 name|super_stats_arenas_i_node
 index|[]
 init|=
@@ -2554,6 +2723,8 @@ argument_list|)
 block|,
 name|CHILD
 argument_list|(
+argument|named
+argument_list|,
 argument|stats_arenas_i
 argument_list|)
 block|}
@@ -2564,7 +2735,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|ctl_node_t
+name|ctl_indexed_node_t
 name|stats_arenas_node
 index|[]
 init|=
@@ -2582,7 +2753,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|ctl_node_t
+name|ctl_named_node_t
 name|stats_node
 index|[]
 init|=
@@ -2643,6 +2814,8 @@ argument_list|)
 block|,
 name|CHILD
 argument_list|(
+argument|named
+argument_list|,
 argument|stats_chunks
 argument_list|)
 block|}
@@ -2655,6 +2828,8 @@ argument_list|)
 block|,
 name|CHILD
 argument_list|(
+argument|named
+argument_list|,
 argument|stats_huge
 argument_list|)
 block|}
@@ -2667,6 +2842,8 @@ argument_list|)
 block|,
 name|CHILD
 argument_list|(
+argument|indexed
+argument_list|,
 argument|stats_arenas
 argument_list|)
 block|}
@@ -2677,7 +2854,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|ctl_node_t
+name|ctl_named_node_t
 name|root_node
 index|[]
 init|=
@@ -2714,6 +2891,8 @@ argument_list|)
 block|,
 name|CHILD
 argument_list|(
+argument|named
+argument_list|,
 argument|thread
 argument_list|)
 block|}
@@ -2726,6 +2905,8 @@ argument_list|)
 block|,
 name|CHILD
 argument_list|(
+argument|named
+argument_list|,
 argument|config
 argument_list|)
 block|}
@@ -2738,6 +2919,8 @@ argument_list|)
 block|,
 name|CHILD
 argument_list|(
+argument|named
+argument_list|,
 argument|opt
 argument_list|)
 block|}
@@ -2750,6 +2933,8 @@ argument_list|)
 block|,
 name|CHILD
 argument_list|(
+argument|named
+argument_list|,
 argument|arenas
 argument_list|)
 block|}
@@ -2762,6 +2947,8 @@ argument_list|)
 block|,
 name|CHILD
 argument_list|(
+argument|named
+argument_list|,
 argument|prof
 argument_list|)
 block|}
@@ -2774,6 +2961,8 @@ argument_list|)
 block|,
 name|CHILD
 argument_list|(
+argument|named
+argument_list|,
 argument|stats
 argument_list|)
 block|}
@@ -2784,7 +2973,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|ctl_node_t
+name|ctl_named_node_t
 name|super_root_node
 index|[]
 init|=
@@ -2797,6 +2986,8 @@ argument_list|)
 block|,
 name|CHILD
 argument_list|(
+argument|named
+argument_list|,
 argument|root
 argument_list|)
 block|}
@@ -3663,13 +3854,16 @@ block|{
 name|unsigned
 name|i
 decl_stmt|;
+name|VARIABLE_ARRAY
+argument_list|(
 name|arena_t
-modifier|*
+operator|*
+argument_list|,
 name|tarenas
-index|[
+argument_list|,
 name|narenas
-index|]
-decl_stmt|;
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|config_stats
@@ -4208,7 +4402,7 @@ decl_stmt|,
 name|j
 decl_stmt|;
 specifier|const
-name|ctl_node_t
+name|ctl_named_node_t
 modifier|*
 name|node
 decl_stmt|;
@@ -4297,18 +4491,12 @@ block|{
 name|assert
 argument_list|(
 name|node
-operator|->
-name|named
 argument_list|)
 expr_stmt|;
 name|assert
 argument_list|(
 name|node
 operator|->
-name|u
-operator|.
-name|named
-operator|.
 name|nchildren
 operator|>
 literal|0
@@ -4316,22 +4504,18 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|ctl_named_node
+argument_list|(
 name|node
 operator|->
-name|u
-operator|.
-name|named
-operator|.
 name|children
-index|[
-literal|0
-index|]
-operator|.
-name|named
+argument_list|)
+operator|!=
+name|NULL
 condition|)
 block|{
 specifier|const
-name|ctl_node_t
+name|ctl_named_node_t
 modifier|*
 name|pnode
 init|=
@@ -4348,10 +4532,6 @@ name|j
 operator|<
 name|node
 operator|->
-name|u
-operator|.
-name|named
-operator|.
 name|nchildren
 condition|;
 name|j
@@ -4359,21 +4539,16 @@ operator|++
 control|)
 block|{
 specifier|const
-name|ctl_node_t
+name|ctl_named_node_t
 modifier|*
 name|child
 init|=
-operator|&
+name|ctl_named_children
+argument_list|(
 name|node
-operator|->
-name|u
-operator|.
-name|named
-operator|.
-name|children
-index|[
+argument_list|,
 name|j
-index|]
+argument_list|)
 decl_stmt|;
 if|if
 condition|(
@@ -4381,10 +4556,6 @@ name|strlen
 argument_list|(
 name|child
 operator|->
-name|u
-operator|.
-name|named
-operator|.
 name|name
 argument_list|)
 operator|==
@@ -4396,10 +4567,6 @@ name|elm
 argument_list|,
 name|child
 operator|->
-name|u
-operator|.
-name|named
-operator|.
 name|name
 argument_list|,
 name|elen
@@ -4423,6 +4590,11 @@ index|[
 name|i
 index|]
 operator|=
+operator|(
+specifier|const
+name|ctl_node_t
+operator|*
+operator|)
 name|node
 expr_stmt|;
 name|mibp
@@ -4457,7 +4629,7 @@ name|uintmax_t
 name|index
 decl_stmt|;
 specifier|const
-name|ctl_node_t
+name|ctl_indexed_node_t
 modifier|*
 name|inode
 decl_stmt|;
@@ -4494,26 +4666,17 @@ goto|;
 block|}
 name|inode
 operator|=
-operator|&
+name|ctl_indexed_node
+argument_list|(
 name|node
 operator|->
-name|u
-operator|.
-name|named
-operator|.
 name|children
-index|[
-literal|0
-index|]
+argument_list|)
 expr_stmt|;
 name|node
 operator|=
 name|inode
 operator|->
-name|u
-operator|.
-name|indexed
-operator|.
 name|index
 argument_list|(
 name|mibp
@@ -4553,6 +4716,11 @@ index|[
 name|i
 index|]
 operator|=
+operator|(
+specifier|const
+name|ctl_node_t
+operator|*
+operator|)
 name|node
 expr_stmt|;
 name|mibp
@@ -4732,6 +4900,11 @@ index|[
 name|CTL_MAX_DEPTH
 index|]
 decl_stmt|;
+specifier|const
+name|ctl_named_node_t
+modifier|*
+name|node
+decl_stmt|;
 if|if
 condition|(
 name|ctl_initialized
@@ -4777,37 +4950,31 @@ condition|)
 goto|goto
 name|label_return
 goto|;
+name|node
+operator|=
+name|ctl_named_node
+argument_list|(
+name|nodes
+index|[
+name|depth
+operator|-
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|nodes
-index|[
-name|depth
-operator|-
-literal|1
-index|]
+name|node
+operator|!=
+name|NULL
+operator|&&
+name|node
 operator|->
 name|ctl
-operator|==
-name|NULL
 condition|)
-block|{
-comment|/* The name refers to a partial path through the ctl tree. */
 name|ret
 operator|=
-name|ENOENT
-expr_stmt|;
-goto|goto
-name|label_return
-goto|;
-block|}
-name|ret
-operator|=
-name|nodes
-index|[
-name|depth
-operator|-
-literal|1
-index|]
+name|node
 operator|->
 name|ctl
 argument_list|(
@@ -4824,6 +4991,14 @@ argument_list|,
 name|newlen
 argument_list|)
 expr_stmt|;
+else|else
+block|{
+comment|/* The name refers to a partial path through the ctl tree. */
+name|ret
+operator|=
+name|ENOENT
+expr_stmt|;
+block|}
 name|label_return
 label|:
 return|return
@@ -4928,7 +5103,7 @@ name|int
 name|ret
 decl_stmt|;
 specifier|const
-name|ctl_node_t
+name|ctl_named_node_t
 modifier|*
 name|node
 decl_stmt|;
@@ -4972,20 +5147,30 @@ name|i
 operator|++
 control|)
 block|{
-if|if
-condition|(
+name|assert
+argument_list|(
+name|node
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
 name|node
 operator|->
-name|u
-operator|.
-name|named
-operator|.
-name|children
-index|[
+name|nchildren
+operator|>
 literal|0
-index|]
-operator|.
-name|named
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ctl_named_node
+argument_list|(
+name|node
+operator|->
+name|children
+argument_list|)
+operator|!=
+name|NULL
 condition|)
 block|{
 comment|/* Children are named. */
@@ -4993,10 +5178,6 @@ if|if
 condition|(
 name|node
 operator|->
-name|u
-operator|.
-name|named
-operator|.
 name|nchildren
 operator|<=
 name|mib
@@ -5015,52 +5196,38 @@ goto|;
 block|}
 name|node
 operator|=
-operator|&
+name|ctl_named_children
+argument_list|(
 name|node
-operator|->
-name|u
-operator|.
-name|named
-operator|.
-name|children
-index|[
+argument_list|,
 name|mib
 index|[
 name|i
 index|]
-index|]
+argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
 specifier|const
-name|ctl_node_t
+name|ctl_indexed_node_t
 modifier|*
 name|inode
 decl_stmt|;
 comment|/* Indexed element. */
 name|inode
 operator|=
-operator|&
+name|ctl_indexed_node
+argument_list|(
 name|node
 operator|->
-name|u
-operator|.
-name|named
-operator|.
 name|children
-index|[
-literal|0
-index|]
+argument_list|)
 expr_stmt|;
 name|node
 operator|=
 name|inode
 operator|->
-name|u
-operator|.
-name|indexed
-operator|.
 name|index
 argument_list|(
 name|mib
@@ -5094,21 +5261,11 @@ comment|/* Call the ctl function. */
 if|if
 condition|(
 name|node
+operator|&&
+name|node
 operator|->
 name|ctl
-operator|==
-name|NULL
 condition|)
-block|{
-comment|/* Partial MIB. */
-name|ret
-operator|=
-name|ENOENT
-expr_stmt|;
-goto|goto
-name|label_return
-goto|;
-block|}
 name|ret
 operator|=
 name|node
@@ -5128,6 +5285,14 @@ argument_list|,
 name|newlen
 argument_list|)
 expr_stmt|;
+else|else
+block|{
+comment|/* Partial MIB. */
+name|ret
+operator|=
+name|ENOENT
+expr_stmt|;
+block|}
 name|label_return
 label|:
 return|return
@@ -5183,7 +5348,7 @@ define|#
 directive|define
 name|READONLY
 parameter_list|()
-value|do {						\ 	if (newp != NULL || newlen != 0) {				\ 		ret = EPERM;						\ 		goto label_return;						\ 	}								\ } while (0)
+value|do {						\ 	if (newp != NULL || newlen != 0) {				\ 		ret = EPERM;						\ 		goto label_return;					\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -5191,15 +5356,7 @@ define|#
 directive|define
 name|WRITEONLY
 parameter_list|()
-value|do {						\ 	if (oldp != NULL || oldlenp != NULL) {				\ 		ret = EPERM;						\ 		goto label_return;						\ 	}								\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VOID
-parameter_list|()
-value|do {							\ 	READONLY();							\ 	WRITEONLY();							\ } while (0)
+value|do {						\ 	if (oldp != NULL || oldlenp != NULL) {				\ 		ret = EPERM;						\ 		goto label_return;					\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -5211,7 +5368,7 @@ name|v
 parameter_list|,
 name|t
 parameter_list|)
-value|do {						\ 	if (oldp != NULL&& oldlenp != NULL) {				\ 		if (*oldlenp != sizeof(t)) {				\ 			size_t	copylen = (sizeof(t)<= *oldlenp)	\ 			    ? sizeof(t) : *oldlenp;			\ 			memcpy(oldp, (void *)&v, copylen);		\ 			ret = EINVAL;					\ 			goto label_return;					\ 		} else							\ 			*(t *)oldp = v;					\ 	}								\ } while (0)
+value|do {						\ 	if (oldp != NULL&& oldlenp != NULL) {				\ 		if (*oldlenp != sizeof(t)) {				\ 			size_t	copylen = (sizeof(t)<= *oldlenp)	\ 			    ? sizeof(t) : *oldlenp;			\ 			memcpy(oldp, (void *)&v, copylen);		\ 			ret = EINVAL;					\ 			goto label_return;				\ 		} else							\ 			*(t *)oldp = v;					\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -5223,7 +5380,7 @@ name|v
 parameter_list|,
 name|t
 parameter_list|)
-value|do {						\ 	if (newp != NULL) {						\ 		if (newlen != sizeof(t)) {				\ 			ret = EINVAL;					\ 			goto label_return;					\ 		}							\ 		v = *(t *)newp;						\ 	}								\ } while (0)
+value|do {						\ 	if (newp != NULL) {						\ 		if (newlen != sizeof(t)) {				\ 			ret = EINVAL;					\ 			goto label_return;				\ 		}							\ 		v = *(t *)newp;						\ 	}								\ } while (0)
 end_define
 
 begin_comment
@@ -5246,7 +5403,7 @@ parameter_list|,
 name|t
 parameter_list|)
 define|\
-value|static int								\ n##_ctl(const size_t *mib, size_t miblen, void *oldp, size_t *oldlenp,	\     void *newp, size_t newlen)						\ {									\ 	int ret;							\ 	t oldval;							\ 									\ 	if ((c) == false)						\ 		return (ENOENT);					\ 	if (l)								\ 		malloc_mutex_lock(&ctl_mtx);				\ 	READONLY();							\ 	oldval = v;							\ 	READ(oldval, t);						\ 									\ 	ret = 0;							\ label_return:									\ 	if (l)								\ 		malloc_mutex_unlock(&ctl_mtx);				\ 	return (ret);							\ }
+value|static int								\ n##_ctl(const size_t *mib, size_t miblen, void *oldp, size_t *oldlenp,	\     void *newp, size_t newlen)						\ {									\ 	int ret;							\ 	t oldval;							\ 									\ 	if ((c) == false)						\ 		return (ENOENT);					\ 	if (l)								\ 		malloc_mutex_lock(&ctl_mtx);				\ 	READONLY();							\ 	oldval = v;							\ 	READ(oldval, t);						\ 									\ 	ret = 0;							\ label_return:								\ 	if (l)								\ 		malloc_mutex_unlock(&ctl_mtx);				\ 	return (ret);							\ }
 end_define
 
 begin_define
@@ -5263,7 +5420,7 @@ parameter_list|,
 name|t
 parameter_list|)
 define|\
-value|static int								\ n##_ctl(const size_t *mib, size_t miblen, void *oldp, size_t *oldlenp,	\     void *newp, size_t newlen)						\ {									\ 	int ret;							\ 	t oldval;							\ 									\ 	if ((c) == false)						\ 		return (ENOENT);					\ 	malloc_mutex_lock(&ctl_mtx);					\ 	READONLY();							\ 	oldval = v;							\ 	READ(oldval, t);						\ 									\ 	ret = 0;							\ label_return:									\ 	malloc_mutex_unlock(&ctl_mtx);					\ 	return (ret);							\ }
+value|static int								\ n##_ctl(const size_t *mib, size_t miblen, void *oldp, size_t *oldlenp,	\     void *newp, size_t newlen)						\ {									\ 	int ret;							\ 	t oldval;							\ 									\ 	if ((c) == false)						\ 		return (ENOENT);					\ 	malloc_mutex_lock(&ctl_mtx);					\ 	READONLY();							\ 	oldval = v;							\ 	READ(oldval, t);						\ 									\ 	ret = 0;							\ label_return:								\ 	malloc_mutex_unlock(&ctl_mtx);					\ 	return (ret);							\ }
 end_define
 
 begin_define
@@ -5278,7 +5435,7 @@ parameter_list|,
 name|t
 parameter_list|)
 define|\
-value|static int								\ n##_ctl(const size_t *mib, size_t miblen, void *oldp, size_t *oldlenp,	\     void *newp, size_t newlen)						\ {									\ 	int ret;							\ 	t oldval;							\ 									\ 	malloc_mutex_lock(&ctl_mtx);					\ 	READONLY();							\ 	oldval = v;							\ 	READ(oldval, t);						\ 									\ 	ret = 0;							\ label_return:									\ 	malloc_mutex_unlock(&ctl_mtx);					\ 	return (ret);							\ }
+value|static int								\ n##_ctl(const size_t *mib, size_t miblen, void *oldp, size_t *oldlenp,	\     void *newp, size_t newlen)						\ {									\ 	int ret;							\ 	t oldval;							\ 									\ 	malloc_mutex_lock(&ctl_mtx);					\ 	READONLY();							\ 	oldval = v;							\ 	READ(oldval, t);						\ 									\ 	ret = 0;							\ label_return:								\ 	malloc_mutex_unlock(&ctl_mtx);					\ 	return (ret);							\ }
 end_define
 
 begin_comment
@@ -5299,7 +5456,7 @@ parameter_list|,
 name|t
 parameter_list|)
 define|\
-value|static int								\ n##_ctl(const size_t *mib, size_t miblen, void *oldp, size_t *oldlenp,	\     void *newp, size_t newlen)						\ {									\ 	int ret;							\ 	t oldval;							\ 									\ 	if ((c) == false)						\ 		return (ENOENT);					\ 	READONLY();							\ 	oldval = v;							\ 	READ(oldval, t);						\ 									\ 	ret = 0;							\ label_return:									\ 	return (ret);							\ }
+value|static int								\ n##_ctl(const size_t *mib, size_t miblen, void *oldp, size_t *oldlenp,	\     void *newp, size_t newlen)						\ {									\ 	int ret;							\ 	t oldval;							\ 									\ 	if ((c) == false)						\ 		return (ENOENT);					\ 	READONLY();							\ 	oldval = v;							\ 	READ(oldval, t);						\ 									\ 	ret = 0;							\ label_return:								\ 	return (ret);							\ }
 end_define
 
 begin_define
@@ -5314,7 +5471,7 @@ parameter_list|,
 name|t
 parameter_list|)
 define|\
-value|static int								\ n##_ctl(const size_t *mib, size_t miblen, void *oldp, size_t *oldlenp,	\     void *newp, size_t newlen)						\ {									\ 	int ret;							\ 	t oldval;							\ 									\ 	READONLY();							\ 	oldval = v;							\ 	READ(oldval, t);						\ 									\ 	ret = 0;							\ label_return:									\ 	return (ret);							\ }
+value|static int								\ n##_ctl(const size_t *mib, size_t miblen, void *oldp, size_t *oldlenp,	\     void *newp, size_t newlen)						\ {									\ 	int ret;							\ 	t oldval;							\ 									\ 	READONLY();							\ 	oldval = v;							\ 	READ(oldval, t);						\ 									\ 	ret = 0;							\ label_return:								\ 	return (ret);							\ }
 end_define
 
 begin_define
@@ -5325,7 +5482,7 @@ parameter_list|(
 name|n
 parameter_list|)
 define|\
-value|static int								\ n##_ctl(const size_t *mib, size_t miblen, void *oldp, size_t *oldlenp,	\     void *newp, size_t newlen)						\ {									\ 	int ret;							\ 	bool oldval;							\ 									\ 	READONLY();							\ 	oldval = n;							\ 	READ(oldval, bool);						\ 									\ 	ret = 0;							\ label_return:									\ 	return (ret);							\ }
+value|static int								\ n##_ctl(const size_t *mib, size_t miblen, void *oldp, size_t *oldlenp,	\     void *newp, size_t newlen)						\ {									\ 	int ret;							\ 	bool oldval;							\ 									\ 	READONLY();							\ 	oldval = n;							\ 	READ(oldval, bool);						\ 									\ 	ret = 0;							\ label_return:								\ 	return (ret);							\ }
 end_define
 
 begin_macro
@@ -5380,10 +5537,6 @@ operator|&
 name|ctl_mtx
 argument_list|)
 expr_stmt|;
-name|newval
-operator|=
-literal|0
-expr_stmt|;
 name|WRITE
 argument_list|(
 name|newval
@@ -5393,9 +5546,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|newval
+name|newp
 operator|!=
-literal|0
+name|NULL
 condition|)
 name|ctl_refresh
 argument_list|()
@@ -5578,7 +5731,10 @@ operator|(
 name|ENOENT
 operator|)
 return|;
-name|VOID
+name|READONLY
+argument_list|()
+expr_stmt|;
+name|WRITEONLY
 argument_list|()
 expr_stmt|;
 name|tcache_flush
@@ -5910,6 +6066,13 @@ begin_macro
 name|CTL_RO_BOOL_CONFIG_GEN
 argument_list|(
 argument|config_lazy_lock
+argument_list|)
+end_macro
+
+begin_macro
+name|CTL_RO_BOOL_CONFIG_GEN
+argument_list|(
+argument|config_mremap
 argument_list|)
 end_macro
 
@@ -6325,7 +6488,7 @@ end_macro
 
 begin_function
 specifier|const
-name|ctl_node_t
+name|ctl_named_node_t
 modifier|*
 name|arenas_bin_i_index
 parameter_list|(
@@ -6377,7 +6540,7 @@ end_macro
 
 begin_function
 specifier|const
-name|ctl_node_t
+name|ctl_named_node_t
 modifier|*
 name|arenas_lrun_i_index
 parameter_list|(
@@ -6713,13 +6876,16 @@ goto|;
 block|}
 else|else
 block|{
+name|VARIABLE_ARRAY
+argument_list|(
 name|arena_t
-modifier|*
+operator|*
+argument_list|,
 name|tarenas
-index|[
+argument_list|,
 name|narenas
-index|]
-decl_stmt|;
+argument_list|)
+expr_stmt|;
 name|malloc_mutex_lock
 argument_list|(
 operator|&
@@ -7404,7 +7570,7 @@ end_macro
 
 begin_function
 specifier|const
-name|ctl_node_t
+name|ctl_named_node_t
 modifier|*
 name|stats_arenas_i_bins_j_index
 parameter_list|(
@@ -7509,7 +7675,7 @@ end_macro
 
 begin_function
 specifier|const
-name|ctl_node_t
+name|ctl_named_node_t
 modifier|*
 name|stats_arenas_i_lruns_j_index
 parameter_list|(
@@ -7645,7 +7811,7 @@ end_macro
 
 begin_function
 specifier|const
-name|ctl_node_t
+name|ctl_named_node_t
 modifier|*
 name|stats_arenas_i_index
 parameter_list|(
@@ -7662,7 +7828,7 @@ name|i
 parameter_list|)
 block|{
 specifier|const
-name|ctl_node_t
+name|ctl_named_node_t
 modifier|*
 name|ret
 decl_stmt|;
