@@ -358,12 +358,6 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
 begin_function_decl
 name|void
 name|intr_add_cpu
@@ -373,6 +367,12 @@ name|cpu
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
 
 begin_function_decl
 name|int
