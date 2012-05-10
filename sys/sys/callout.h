@@ -173,6 +173,17 @@ begin_comment
 comment|/* callout lock held in shared mode */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CALLOUT_DFRMIGRATION
+value|0x0040
+end_define
+
+begin_comment
+comment|/* callout in deferred migration mode */
+end_comment
+
 begin_struct
 struct|struct
 name|callout_handle
