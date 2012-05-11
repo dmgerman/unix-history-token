@@ -19,6 +19,12 @@ directive|define
 name|ARM_AT91_AT91_PIOREG_H
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATMEL_ENV
+end_ifndef
+
 begin_comment
 comment|/* Registers */
 end_comment
@@ -369,6 +375,11 @@ end_comment
 begin_comment
 comment|/*	0xac		   reserved */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
