@@ -689,6 +689,12 @@ operator|<
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|errno
+operator|!=
+name|EPROTONOSUPPORT
+condition|)
 name|warn
 argument_list|(
 literal|"socket(AF_INET6, SOCK_DGRAM)"
@@ -713,6 +719,12 @@ condition|(
 name|error
 condition|)
 block|{
+if|if
+condition|(
+name|errno
+operator|!=
+name|EPFNOSUPPORT
+condition|)
 name|warn
 argument_list|(
 literal|"ioctl(SIOCGIFINFO_IN6)"
