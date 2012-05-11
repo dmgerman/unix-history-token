@@ -655,11 +655,6 @@ argument_list|,
 name|SIGSTOP
 argument_list|)
 expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|wakeup
 argument_list|(
 name|p
