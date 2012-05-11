@@ -19449,6 +19449,8 @@ decl_stmt|,
 name|nsegs
 decl_stmt|,
 name|error
+init|=
+literal|0
 decl_stmt|;
 ifdef|#
 directive|ifdef
