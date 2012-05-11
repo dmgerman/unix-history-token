@@ -417,6 +417,7 @@ argument_list|(
 name|proc
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|rtprio
@@ -438,8 +439,12 @@ argument_list|,
 literal|"RTP_SET"
 argument_list|)
 expr_stmt|;
-block|}
-else|else
+if|if
+condition|(
+name|proc
+operator|==
+literal|0
+condition|)
 block|{
 name|execvp
 argument_list|(
