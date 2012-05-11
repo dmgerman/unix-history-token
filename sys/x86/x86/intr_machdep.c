@@ -2266,15 +2266,6 @@ comment|/* 	 * Doesn't work yet 	 */
 return|return;
 endif|#
 directive|endif
-comment|/* The BSP is always a valid target. */
-name|CPU_SETOF
-argument_list|(
-literal|0
-argument_list|,
-operator|&
-name|intr_cpus
-argument_list|)
-expr_stmt|;
 comment|/* Don't bother on UP. */
 if|if
 condition|(
@@ -2437,6 +2428,21 @@ argument_list|)
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
+comment|/* Use an empty stub for compatibility. */
+end_comment
+
+begin_function
+name|void
+name|intr_add_cpu
+parameter_list|(
+name|u_int
+name|cpu
+name|__unused
+parameter_list|)
+block|{  }
 end_function
 
 begin_endif

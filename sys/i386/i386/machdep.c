@@ -1597,6 +1597,12 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * Add BSP as an interrupt target. 	 */
+name|intr_add_cpu
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

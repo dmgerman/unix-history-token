@@ -3272,7 +3272,7 @@ comment|/*******************************************************************  * 
 end_comment
 
 begin_comment
-comment|/*  * We tell the I/O APIC code about all the CPUs we want to receive  * interrupts.  If we don't want certain CPUs to receive IRQs we  * can simply not tell the I/O APIC code about them in this function.  * We also do not tell it about the BSP since it tells itself about  * the BSP internally to work with UP kernels and on UP machines.  */
+comment|/*  * We tell the I/O APIC code about all the CPUs we want to receive  * interrupts.  If we don't want certain CPUs to receive IRQs we  * can simply not tell the I/O APIC code about them in this function.  */
 end_comment
 
 begin_function
@@ -3315,16 +3315,6 @@ name|apic_id
 operator|==
 operator|-
 literal|1
-condition|)
-continue|continue;
-if|if
-condition|(
-name|cpu_info
-index|[
-name|apic_id
-index|]
-operator|.
-name|cpu_bsp
 condition|)
 continue|continue;
 if|if
