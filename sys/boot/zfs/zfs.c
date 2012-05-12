@@ -2040,8 +2040,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Unexpected object set type %llu\n"
+literal|"Unexpected object set type %ju\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|mount
 operator|->
 name|objset

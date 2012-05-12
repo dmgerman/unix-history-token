@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"zfsimpl.h"
 end_include
 
@@ -1270,8 +1276,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" = 0x%llx\n"
+literal|" = 0x%jx\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|val
 argument_list|)
 expr_stmt|;
@@ -1507,7 +1516,7 @@ operator|=
 name|size
 expr_stmt|;
 block|}
-comment|/*printf("ZFS: reading %d bytes at 0x%llx to %p\n", psize, offset, buf);*/
+comment|/*printf("ZFS: reading %d bytes at 0x%jx to %p\n", psize, (uintmax_t)offset, buf);*/
 name|rc
 operator|=
 name|vdev
@@ -6368,7 +6377,7 @@ index|[
 literal|0
 index|]
 condition|)
-comment|//printf("%-32s 0x%llx\n", mze->mze_name, mze->mze_value);
+comment|//printf("%-32s 0x%jx\n", mze->mze_name, (uintmax_t)mze->mze_value);
 name|printf
 argument_list|(
 literal|"%s\n"
@@ -6716,10 +6725,13 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s 0x%llx\n"
+literal|"%s 0x%jx\n"
 argument_list|,
 name|name
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|value
 argument_list|)
 expr_stmt|;
@@ -7762,8 +7774,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ZFS: can't find dataset %llu\n"
+literal|"ZFS: can't find dataset %ju\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|objnum
 argument_list|)
 expr_stmt|;
@@ -8316,8 +8331,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ZFS: can't find dataset %llu\n"
+literal|"ZFS: can't find dataset %ju\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|objnum
 argument_list|)
 expr_stmt|;
@@ -8355,8 +8373,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ZFS: can't read object set for dataset %llu\n"
+literal|"ZFS: can't read object set for dataset %ju\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|objnum
 argument_list|)
 expr_stmt|;
@@ -9139,8 +9160,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ZFS: unexpected object set type %llu\n"
+literal|"ZFS: unexpected object set type %ju\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|mount
 operator|->
 name|objset
