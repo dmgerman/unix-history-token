@@ -193,7 +193,7 @@ union|;
 comment|/* union { ... }; */
 endif|#
 directive|endif
-comment|/* 	 * Run address (or size) and various flags are stored together.  The bit 	 * layout looks like (assuming 32-bit system): 	 * 	 *   ???????? ???????? ????---- ----dula 	 * 	 * ? : Unallocated: Run address for first/last pages, unset for internal 	 *                  pages. 	 *     Small: Run page offset. 	 *     Large: Run size for first page, unset for trailing pages. 	 * - : Unused. 	 * d : dirty? 	 * u : unzeroed? 	 * l : large? 	 * a : allocated? 	 * 	 * Following are example bit patterns for the three types of runs. 	 * 	 * p : run page offset 	 * s : run size 	 * n : binind for size class; large objects set these to BININD_INVALID 	 *     except for promoted allocations (see prof_promote) 	 * x : don't care 	 * - : 0 	 * + : 1 	 * [DULA] : bit set 	 * [dula] : bit unset 	 * 	 *   Unallocated (clean): 	 *     ssssssss ssssssss ssss1111 1111du-a 	 *     xxxxxxxx xxxxxxxx xxxxxxxx xxxx-Uxx 	 *     ssssssss ssssssss ssss1111 1111dU-a 	 * 	 *   Unallocated (dirty): 	 *     ssssssss ssssssss ssss1111 1111D--a 	 *     xxxxxxxx xxxxxxxx xxxxxxxx xxxxxxxx 	 *     ssssssss ssssssss ssss1111 1111D--a 	 * 	 *   Small: 	 *     pppppppp pppppppp ppppnnnn nnnnd--A 	 *     pppppppp pppppppp ppppnnnn nnnn---A 	 *     pppppppp pppppppp ppppnnnn nnnnd--A 	 * 	 *   Large: 	 *     ssssssss ssssssss ssss1111 1111D-LA 	 *     xxxxxxxx xxxxxxxx xxxxxxxx xxxxxxxx 	 *     -------- -------- ----1111 1111D-LA 	 * 	 *   Large (sampled, size<= PAGE): 	 *     ssssssss ssssssss ssssnnnn nnnnD-LA 	 * 	 *   Large (not sampled, size == PAGE): 	 *     ssssssss ssssssss ssss1111 1111D-LA 	 */
+comment|/* 	 * Run address (or size) and various flags are stored together.  The bit 	 * layout looks like (assuming 32-bit system): 	 * 	 *   ???????? ???????? ????nnnn nnnndula 	 * 	 * ? : Unallocated: Run address for first/last pages, unset for internal 	 *                  pages. 	 *     Small: Run page offset. 	 *     Large: Run size for first page, unset for trailing pages. 	 * n : binind for small size class, BININD_INVALID for large size class. 	 * d : dirty? 	 * u : unzeroed? 	 * l : large? 	 * a : allocated? 	 * 	 * Following are example bit patterns for the three types of runs. 	 * 	 * p : run page offset 	 * s : run size 	 * n : binind for size class; large objects set these to BININD_INVALID 	 *     except for promoted allocations (see prof_promote) 	 * x : don't care 	 * - : 0 	 * + : 1 	 * [DULA] : bit set 	 * [dula] : bit unset 	 * 	 *   Unallocated (clean): 	 *     ssssssss ssssssss ssss++++ ++++du-a 	 *     xxxxxxxx xxxxxxxx xxxxxxxx xxxx-Uxx 	 *     ssssssss ssssssss ssss++++ ++++dU-a 	 * 	 *   Unallocated (dirty): 	 *     ssssssss ssssssss ssss++++ ++++D--a 	 *     xxxxxxxx xxxxxxxx xxxxxxxx xxxxxxxx 	 *     ssssssss ssssssss ssss++++ ++++D--a 	 * 	 *   Small: 	 *     pppppppp pppppppp ppppnnnn nnnnd--A 	 *     pppppppp pppppppp ppppnnnn nnnn---A 	 *     pppppppp pppppppp ppppnnnn nnnnd--A 	 * 	 *   Large: 	 *     ssssssss ssssssss ssss++++ ++++D-LA 	 *     xxxxxxxx xxxxxxxx xxxxxxxx xxxxxxxx 	 *     -------- -------- ----++++ ++++D-LA 	 * 	 *   Large (sampled, size<= PAGE): 	 *     ssssssss ssssssss ssssnnnn nnnnD-LA 	 * 	 *   Large (not sampled, size == PAGE): 	 *     ssssssss ssssssss ssss++++ ++++D-LA 	 */
 name|size_t
 name|bits
 decl_stmt|;
@@ -1916,6 +1916,21 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
+name|assert
+argument_list|(
+operator|(
+name|flags
+operator|&
+operator|(
+name|CHUNK_MAP_DIRTY
+operator||
+name|CHUNK_MAP_UNZEROED
+operator|)
+operator|)
+operator|==
+name|flags
+argument_list|)
+expr_stmt|;
 operator|*
 name|mapbitsp
 operator|=
@@ -2022,6 +2037,9 @@ name|size_t
 modifier|*
 name|mapbitsp
 decl_stmt|;
+name|size_t
+name|unzeroed
+decl_stmt|;
 name|mapbitsp
 operator|=
 name|arena_mapbitsp_get
@@ -2047,13 +2065,20 @@ argument_list|(
 operator|(
 name|flags
 operator|&
-operator|~
-name|CHUNK_MAP_FLAGS_MASK
+name|CHUNK_MAP_DIRTY
 operator|)
 operator|==
-literal|0
+name|flags
 argument_list|)
 expr_stmt|;
+name|unzeroed
+operator|=
+operator|*
+name|mapbitsp
+operator|&
+name|CHUNK_MAP_UNZEROED
+expr_stmt|;
+comment|/* Preserve unzeroed. */
 operator|*
 name|mapbitsp
 operator|=
@@ -2062,6 +2087,8 @@ operator||
 name|CHUNK_MAP_BININD_INVALID
 operator||
 name|flags
+operator||
+name|unzeroed
 operator||
 name|CHUNK_MAP_LARGE
 operator||
@@ -2164,6 +2191,9 @@ name|size_t
 modifier|*
 name|mapbitsp
 decl_stmt|;
+name|size_t
+name|unzeroed
+decl_stmt|;
 name|assert
 argument_list|(
 name|binind
@@ -2194,13 +2224,20 @@ argument_list|(
 operator|(
 name|flags
 operator|&
-operator|~
-name|CHUNK_MAP_FLAGS_MASK
+name|CHUNK_MAP_DIRTY
 operator|)
 operator|==
-literal|0
+name|flags
 argument_list|)
 expr_stmt|;
+name|unzeroed
+operator|=
+operator|*
+name|mapbitsp
+operator|&
+name|CHUNK_MAP_UNZEROED
+expr_stmt|;
+comment|/* Preserve unzeroed. */
 operator|*
 name|mapbitsp
 operator|=
@@ -2217,6 +2254,8 @@ name|CHUNK_MAP_BININD_SHIFT
 operator|)
 operator||
 name|flags
+operator||
+name|unzeroed
 operator||
 name|CHUNK_MAP_ALLOCATED
 expr_stmt|;

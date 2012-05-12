@@ -7074,6 +7074,23 @@ block|{
 name|unsigned
 name|i
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|JEMALLOC_MUTEX_INIT_CB
+if|if
+condition|(
+name|malloc_initialized
+operator|==
+name|false
+condition|)
+return|return;
+endif|#
+directive|endif
+name|assert
+argument_list|(
+name|malloc_initialized
+argument_list|)
+expr_stmt|;
 comment|/* Acquire all mutexes in a safe order. */
 name|malloc_mutex_prefork
 argument_list|(
@@ -7151,6 +7168,23 @@ block|{
 name|unsigned
 name|i
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|JEMALLOC_MUTEX_INIT_CB
+if|if
+condition|(
+name|malloc_initialized
+operator|==
+name|false
+condition|)
+return|return;
+endif|#
+directive|endif
+name|assert
+argument_list|(
+name|malloc_initialized
+argument_list|)
+expr_stmt|;
 comment|/* Release all mutexes, now that fork() has completed. */
 name|chunk_dss_postfork_parent
 argument_list|()
@@ -7212,6 +7246,11 @@ block|{
 name|unsigned
 name|i
 decl_stmt|;
+name|assert
+argument_list|(
+name|malloc_initialized
+argument_list|)
+expr_stmt|;
 comment|/* Release all mutexes, now that fork() has completed. */
 name|chunk_dss_postfork_child
 argument_list|()
