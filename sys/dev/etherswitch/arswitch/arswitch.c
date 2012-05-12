@@ -168,6 +168,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/etherswitch/arswitch/arswitch_7240.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/etherswitch/arswitch/arswitch_8216.h>
 end_include
 
@@ -390,6 +396,32 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+comment|/* AR7240 probe */
+if|if
+condition|(
+name|ar7240_probe
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|chipname
+operator|=
+literal|"AR7240"
+expr_stmt|;
+name|sc
+operator|->
+name|sc_switchtype
+operator|=
+name|AR8X16_SWITCH_AR7240
+expr_stmt|;
+goto|goto
+name|done
+goto|;
+block|}
+comment|/* AR8xxx probe */
 name|id
 operator|=
 name|arswitch_readreg
@@ -458,6 +490,8 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|done
+label|:
 name|DPRINTF
 argument_list|(
 name|dev
@@ -842,6 +876,21 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Attach switch related functions 	 */
+if|if
+condition|(
+name|AR8X16_IS_SWITCH
+argument_list|(
+name|sc
+argument_list|,
+name|AR7240
+argument_list|)
+condition|)
+name|ar7240_attach
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|AR8X16_IS_SWITCH

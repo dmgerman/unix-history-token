@@ -21,6 +21,8 @@ enum|enum
 block|{
 name|AR8X16_SWITCH_NONE
 block|,
+name|AR8X16_SWITCH_AR7240
+block|,
 name|AR8X16_SWITCH_AR8216
 block|,
 name|AR8X16_SWITCH_AR8226
