@@ -1825,7 +1825,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-pqrtx] [-s string] [files ...]\n"
+literal|"usage: %s [-pqrtx] [-c string] [-s string] [files ...]\n"
 argument_list|,
 name|alg
 operator|->
