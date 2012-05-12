@@ -180,6 +180,13 @@ directive|include
 file|"dev_net.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|MAXBDDEV
+value|31
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|char
@@ -710,7 +717,7 @@ end_ifdef
 begin_function_decl
 specifier|static
 name|int
-name|zfs_dev_init
+name|sparc64_zfs_dev_init
 parameter_list|(
 name|void
 parameter_list|)
@@ -760,7 +767,7 @@ ifdef|#
 directive|ifdef
 name|LOADER_ZFS_SUPPORT
 operator|&
-name|zfs_dev
+name|zfs_dev_compat
 block|,
 endif|#
 directive|endif
@@ -3466,7 +3473,7 @@ end_ifdef
 begin_function
 specifier|static
 name|int
-name|zfs_dev_init
+name|sparc64_zfs_dev_init
 parameter_list|(
 name|void
 parameter_list|)
@@ -4112,6 +4119,18 @@ argument_list|,
 name|env_nounset
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LOADER_ZFS_SUPPORT
+comment|/* 	 * Patch up ZFS. 	 */
+name|zfs_dev_compat
+operator|.
+name|dv_init
+operator|=
+name|sparc64_zfs_dev_init
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Initialize devices. 	 */
 for|for
 control|(
