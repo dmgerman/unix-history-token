@@ -413,13 +413,16 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [-CumdibcsDvhL] poolname [object...]\n"
-literal|"       %s [-div] dataset [object...]\n"
-literal|"       %s -m [-L] poolname [vdev [metaslab...]]\n"
-literal|"       %s -R poolname vdev:offset:size[:flags]\n"
-literal|"       %s -S poolname\n"
-literal|"       %s -l [-u] device\n"
-literal|"       %s -C\n\n"
+literal|"Usage: %s [-CumdibcsDvhLXFPA] [-t txg] [-e [-p path...]]"
+literal|"poolname [object...]\n"
+literal|"       %s [-divPA] [-e -p path...] dataset [object...]\n"
+literal|"       %s -m [-LXFPA] [-t txg] [-e [-p path...]]"
+literal|"poolname [vdev [metaslab...]]\n"
+literal|"       %s -R [-A] [-e [-p path...]] poolname "
+literal|"vdev:offset:size[:flags]\n"
+literal|"       %s -S [-PA] [-e [-p path...]] poolname\n"
+literal|"       %s -l [-uA] device\n"
+literal|"       %s -C [-A] [-U config]\n\n"
 argument_list|,
 name|cmdname
 argument_list|,
@@ -716,7 +719,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"	-P print numbers parsable\n"
+literal|"	-P print numbers in parseable form\n"
 argument_list|)
 expr_stmt|;
 operator|(

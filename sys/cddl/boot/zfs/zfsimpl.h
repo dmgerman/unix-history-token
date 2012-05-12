@@ -4545,10 +4545,10 @@ name|objset_phys_t
 name|spa_mos
 decl_stmt|;
 comment|/* MOS for this pool */
-name|objset_phys_t
-name|spa_root_objset
+name|int
+name|spa_inited
 decl_stmt|;
-comment|/* current mounted ZPL objset */
+comment|/* initialized */
 block|}
 name|spa_t
 typedef|;

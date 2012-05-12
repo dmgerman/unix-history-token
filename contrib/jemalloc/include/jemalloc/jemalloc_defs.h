@@ -279,14 +279,52 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|JEMALLOC_CATTR
+name|JEMALLOC_ATTR
 parameter_list|(
 name|s
-parameter_list|,
-name|a
 parameter_list|)
 value|__attribute__((s))
 end_define
+
+begin_define
+define|#
+directive|define
+name|JEMALLOC_EXPORT
+value|JEMALLOC_ATTR(visibility("default"))
+end_define
+
+begin_define
+define|#
+directive|define
+name|JEMALLOC_ALIGNED
+parameter_list|(
+name|s
+parameter_list|)
+value|JEMALLOC_ATTR(aligned(s))
+end_define
+
+begin_define
+define|#
+directive|define
+name|JEMALLOC_SECTION
+parameter_list|(
+name|s
+parameter_list|)
+value|JEMALLOC_ATTR(section(s))
+end_define
+
+begin_define
+define|#
+directive|define
+name|JEMALLOC_NOINLINE
+value|JEMALLOC_ATTR(noinline)
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|_MSC_VER
+end_elif
 
 begin_define
 define|#
@@ -295,7 +333,19 @@ name|JEMALLOC_ATTR
 parameter_list|(
 name|s
 parameter_list|)
-value|JEMALLOC_CATTR(s,)
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DLLEXPORT
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|JEMALLOC_EXPORT
+value|__declspec(dllexport)
 end_define
 
 begin_else
@@ -306,14 +356,46 @@ end_else
 begin_define
 define|#
 directive|define
-name|JEMALLOC_CATTR
+name|JEMALLOC_EXPORT
+value|__declspec(dllimport)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|JEMALLOC_ALIGNED
 parameter_list|(
 name|s
-parameter_list|,
-name|a
 parameter_list|)
-value|a
+value|__declspec(align(s))
 end_define
+
+begin_define
+define|#
+directive|define
+name|JEMALLOC_SECTION
+parameter_list|(
+name|s
+parameter_list|)
+value|__declspec(allocate(s))
+end_define
+
+begin_define
+define|#
+directive|define
+name|JEMALLOC_NOINLINE
+value|__declspec(noinline)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -322,7 +404,36 @@ name|JEMALLOC_ATTR
 parameter_list|(
 name|s
 parameter_list|)
-value|JEMALLOC_CATTR(s,)
+end_define
+
+begin_define
+define|#
+directive|define
+name|JEMALLOC_EXPORT
+end_define
+
+begin_define
+define|#
+directive|define
+name|JEMALLOC_ALIGNED
+parameter_list|(
+name|s
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|JEMALLOC_SECTION
+parameter_list|(
+name|s
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|JEMALLOC_NOINLINE
 end_define
 
 begin_endif
@@ -501,7 +612,7 @@ value|12
 end_define
 
 begin_comment
-comment|/*  * If defined, use munmap() to unmap freed chunks, rather than storing them for  * later reuse.  This is automatically disabled if configuration determines  * that common sequences of mmap()/munmap() calls will cause virtual memory map  * holes.  */
+comment|/*  * If defined, use munmap() to unmap freed chunks, rather than storing them for  * later reuse.  This is disabled by default on Linux because common sequences  * of mmap()/munmap() calls will cause virtual memory map holes.  */
 end_comment
 
 begin_define
@@ -509,6 +620,14 @@ define|#
 directive|define
 name|JEMALLOC_MUNMAP
 end_define
+
+begin_comment
+comment|/*  * If defined, use mremap(...MREMAP_FIXED...) for huge realloc().  This is  * disabled by default because it is Linux-specific and it will cause virtual  * memory map holes, much like munmap(2) does.  */
+end_comment
+
+begin_comment
+comment|/* #undef JEMALLOC_MREMAP */
+end_comment
 
 begin_comment
 comment|/* TLS is used to map arenas and magazine caches to threads. */
@@ -552,14 +671,6 @@ end_comment
 
 begin_comment
 comment|/* #undef JEMALLOC_ZONE_VERSION */
-end_comment
-
-begin_comment
-comment|/* If defined, use mremap(...MREMAP_FIXED...) for huge realloc(). */
-end_comment
-
-begin_comment
-comment|/* #undef JEMALLOC_MREMAP_FIXED */
 end_comment
 
 begin_comment

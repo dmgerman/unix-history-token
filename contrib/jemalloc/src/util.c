@@ -196,18 +196,8 @@ begin_comment
 comment|/* malloc_message() setup. */
 end_comment
 
-begin_macro
-name|JEMALLOC_CATTR
-argument_list|(
-argument|visibility(
-literal|"hidden"
-argument|)
-argument_list|,
-argument|static
-argument_list|)
-end_macro
-
 begin_function
+specifier|static
 name|void
 name|wrtmessage
 parameter_list|(
@@ -267,6 +257,7 @@ block|}
 end_function
 
 begin_function_decl
+name|JEMALLOC_EXPORT
 name|void
 function_decl|(
 modifier|*
@@ -281,28 +272,15 @@ name|char
 modifier|*
 name|s
 parameter_list|)
-function_decl|JEMALLOC_ATTR
-parameter_list|(
-function_decl|visibility
-parameter_list|(
-function_decl|"default"
+function_decl|;
 end_function_decl
 
-begin_expr_stmt
-unit|))
-operator|=
-name|wrtmessage
-expr_stmt|;
-end_expr_stmt
-
 begin_macro
-name|JEMALLOC_CATTR
+name|JEMALLOC_ATTR
 argument_list|(
 argument|visibility(
 literal|"hidden"
 argument|)
-argument_list|,
-argument|static
 argument_list|)
 end_macro
 
@@ -408,6 +386,44 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/*  * Wrapper around malloc_message() that avoids the need for  * je_malloc_message(...) throughout the code.  */
+end_comment
+
+begin_function
+name|void
+name|malloc_write
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|s
+parameter_list|)
+block|{
+if|if
+condition|(
+name|je_malloc_message
+operator|!=
+name|NULL
+condition|)
+name|je_malloc_message
+argument_list|(
+name|NULL
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
+else|else
+name|wrtmessage
+argument_list|(
+name|NULL
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * glibc provides a non-standard strerror_r() when _GNU_SOURCE is defined, so  * provide a wrapper.  */
 end_comment
 
@@ -415,9 +431,6 @@ begin_function
 name|int
 name|buferror
 parameter_list|(
-name|int
-name|errnum
-parameter_list|,
 name|char
 modifier|*
 name|buf
@@ -428,7 +441,39 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
+name|_WIN32
+name|FormatMessageA
+argument_list|(
+name|FORMAT_MESSAGE_FROM_SYSTEM
+argument_list|,
+name|NULL
+argument_list|,
+name|GetLastError
+argument_list|()
+argument_list|,
+literal|0
+argument_list|,
+operator|(
+name|LPSTR
+operator|)
+name|buf
+argument_list|,
+name|buflen
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
 name|_GNU_SOURCE
+argument_list|)
 name|char
 modifier|*
 name|b
@@ -544,9 +589,10 @@ operator|>
 literal|36
 condition|)
 block|{
-name|errno
-operator|=
+name|set_errno
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -907,9 +953,10 @@ name|pret
 condition|)
 block|{
 comment|/* Overflow. */
-name|errno
-operator|=
+name|set_errno
+argument_list|(
 name|ERANGE
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -1481,9 +1528,6 @@ name|char
 modifier|*
 name|f
 decl_stmt|;
-name|va_list
-name|tap
-decl_stmt|;
 define|#
 directive|define
 name|APPEND_C
@@ -1530,17 +1574,6 @@ parameter_list|)
 value|do {					\ 	switch (len) {							\ 	case '?':							\ 		val = va_arg(ap, int);					\ 		break;							\ 	case '?' | 0x80:						\ 		val = va_arg(ap, unsigned int);				\ 		break;							\ 	case 'l':							\ 		val = va_arg(ap, long);					\ 		break;							\ 	case 'l' | 0x80:						\ 		val = va_arg(ap, unsigned long);			\ 		break;							\ 	case 'q':							\ 		val = va_arg(ap, long long);				\ 		break;							\ 	case 'q' | 0x80:						\ 		val = va_arg(ap, unsigned long long);			\ 		break;							\ 	case 'j':							\ 		val = va_arg(ap, intmax_t);				\ 		break;							\ 	case 't':							\ 		val = va_arg(ap, ptrdiff_t);				\ 		break;							\ 	case 'z':							\ 		val = va_arg(ap, ssize_t);				\ 		break;							\ 	case 'z' | 0x80:						\ 		val = va_arg(ap, size_t);				\ 		break;							\ 	case 'p':
 comment|/* Synthetic; used for %p. */
 value|\ 		val = va_arg(ap, uintptr_t);				\ 		break;							\ 	default: not_reached();						\ 	}								\ } while (0)
-if|if
-condition|(
-name|config_debug
-condition|)
-name|va_copy
-argument_list|(
-name|tap
-argument_list|,
-name|ap
-argument_list|)
-expr_stmt|;
 name|i
 operator|=
 literal|0
@@ -1788,9 +1821,10 @@ block|{
 name|uintmax_t
 name|uwidth
 decl_stmt|;
-name|errno
-operator|=
+name|set_errno
+argument_list|(
 literal|0
+argument_list|)
 expr_stmt|;
 name|uwidth
 operator|=
@@ -1815,7 +1849,8 @@ name|uwidth
 operator|!=
 name|UINTMAX_MAX
 operator|||
-name|errno
+name|get_errno
+argument_list|()
 operator|!=
 name|ERANGE
 argument_list|)
@@ -1921,9 +1956,10 @@ block|{
 name|uintmax_t
 name|uprec
 decl_stmt|;
-name|errno
-operator|=
+name|set_errno
+argument_list|(
 literal|0
+argument_list|)
 expr_stmt|;
 name|uprec
 operator|=
@@ -1948,7 +1984,8 @@ name|uprec
 operator|!=
 name|UINTMAX_MAX
 operator|||
-name|errno
+name|get_errno
+argument_list|()
 operator|!=
 name|ERANGE
 argument_list|)
@@ -2671,7 +2708,15 @@ block|{
 comment|/* 		 * The caller did not provide an alternate write_cb callback 		 * function, so use the default one.  malloc_write() is an 		 * inline function, so use malloc_message() directly here. 		 */
 name|write_cb
 operator|=
+operator|(
 name|je_malloc_message
+operator|!=
+name|NULL
+operator|)
+condition|?
+name|je_malloc_message
+else|:
+name|wrtmessage
 expr_stmt|;
 name|cbopaque
 operator|=

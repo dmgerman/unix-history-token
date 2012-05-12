@@ -167,6 +167,12 @@ directive|define
 name|AT91RM9200_H
 end_define
 
+begin_define
+define|#
+directive|define
+name|ATMEL_ENV
+end_define
+
 begin_typedef
 typedef|typedef
 specifier|volatile

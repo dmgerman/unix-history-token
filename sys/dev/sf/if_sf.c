@@ -9601,11 +9601,6 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|struct
-name|mii_data
-modifier|*
-name|mii
-decl_stmt|;
 name|uint8_t
 name|eaddr
 index|[
@@ -9642,15 +9637,6 @@ operator|!=
 literal|0
 condition|)
 return|return;
-name|mii
-operator|=
-name|device_get_softc
-argument_list|(
-name|sc
-operator|->
-name|sf_miibus
-argument_list|)
-expr_stmt|;
 name|sf_stop
 argument_list|(
 name|sc

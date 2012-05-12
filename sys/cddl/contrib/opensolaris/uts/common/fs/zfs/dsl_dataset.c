@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  * Copyright (c) 2011 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  * Portions Copyright (c) 2011 Martin Matuska<mm@FreeBSD.org>  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright (c) 2011 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  * Portions Copyright (c) 2011 Martin Matuska<mm@FreeBSD.org>  */
 end_comment
 
 begin_include
@@ -41,6 +41,12 @@ begin_include
 include|#
 directive|include
 file|<sys/dmu_traverse.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/dmu_impl.h>
 end_include
 
 begin_include
@@ -2093,6 +2099,20 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|mutex_init
+argument_list|(
+operator|&
+name|ds
+operator|->
+name|ds_sendstream_lock
+argument_list|,
+name|NULL
+argument_list|,
+name|MUTEX_DEFAULT
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|rw_init
 argument_list|(
 operator|&
@@ -2143,6 +2163,26 @@ operator|->
 name|ds_phys
 operator|->
 name|ds_deadlist_obj
+argument_list|)
+expr_stmt|;
+name|list_create
+argument_list|(
+operator|&
+name|ds
+operator|->
+name|ds_sendstreams
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|dmu_sendarg_t
+argument_list|)
+argument_list|,
+name|offsetof
+argument_list|(
+name|dmu_sendarg_t
+argument_list|,
+name|dsa_link
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if

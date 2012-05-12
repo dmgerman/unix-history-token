@@ -4050,11 +4050,6 @@ name|bufobj
 modifier|*
 name|bo
 decl_stmt|;
-name|MNT_ILOCK
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
 name|MNT_VNODE_FOREACH_ALL
 argument_list|(
 argument|vp

@@ -4388,11 +4388,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Write back each (modified) inode. 	 */
-name|MNT_ILOCK
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
 name|loop
 label|:
 name|MNT_VNODE_FOREACH_ALL
@@ -4491,11 +4486,6 @@ condition|(
 name|error
 condition|)
 block|{
-name|MNT_ILOCK
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|error

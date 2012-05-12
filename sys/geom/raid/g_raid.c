@@ -9675,6 +9675,12 @@ name|v_raid_level_qualifier
 operator|=
 name|G_RAID_VOLUME_RLQ_UNKNOWN
 expr_stmt|;
+name|vol
+operator|->
+name|v_rotate_parity
+operator|=
+literal|1
+expr_stmt|;
 name|bioq_init
 argument_list|(
 operator|&

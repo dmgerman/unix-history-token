@@ -319,6 +319,12 @@ decl_stmt|;
 name|int
 name|n_directio_asyncwr
 decl_stmt|;
+name|struct
+name|ucred
+modifier|*
+name|n_writecred
+decl_stmt|;
+comment|/* Cred. for putpages */
 block|}
 struct|;
 end_struct

@@ -32,11 +32,11 @@ file|<strings.h>
 define|#
 directive|define
 name|JEMALLOC_VERSION
-value|"1.0.0-286-ga8f8d7540d66ddee7337db80c92890916e1063ca"
+value|"3.0.0-0-gfc9b1dbf69f59d7ecfc4ac68da9847e017e1d046"
 define|#
 directive|define
 name|JEMALLOC_VERSION_MAJOR
-value|1
+value|3
 define|#
 directive|define
 name|JEMALLOC_VERSION_MINOR
@@ -48,11 +48,11 @@ value|0
 define|#
 directive|define
 name|JEMALLOC_VERSION_NREV
-value|286
+value|0
 define|#
 directive|define
 name|JEMALLOC_VERSION_GID
-value|"a8f8d7540d66ddee7337db80c92890916e1063ca"
+value|"fc9b1dbf69f59d7ecfc4ac68da9847e017e1d046"
 include|#
 directive|include
 file|"jemalloc_defs.h"
@@ -116,12 +116,14 @@ endif|#
 directive|endif
 comment|/*  * The je_ prefix on the following public symbol declarations is an artifact of  * namespace management, and should be omitted in application code unless  * JEMALLOC_NO_DEMANGLE is defined (see below).  */
 specifier|extern
+name|JEMALLOC_EXPORT
 specifier|const
 name|char
 modifier|*
 name|je_malloc_conf
 decl_stmt|;
 specifier|extern
+name|JEMALLOC_EXPORT
 name|void
 function_decl|(
 modifier|*
@@ -130,12 +132,15 @@ function_decl|)
 parameter_list|(
 name|void
 modifier|*
+name|cbopaque
 parameter_list|,
 specifier|const
 name|char
 modifier|*
+name|s
 parameter_list|)
 function_decl|;
+name|JEMALLOC_EXPORT
 name|void
 modifier|*
 name|je_malloc
@@ -148,6 +153,7 @@ parameter_list|(
 name|malloc
 parameter_list|)
 function_decl|;
+name|JEMALLOC_EXPORT
 name|void
 modifier|*
 name|je_calloc
@@ -163,6 +169,7 @@ parameter_list|(
 name|malloc
 parameter_list|)
 function_decl|;
+name|JEMALLOC_EXPORT
 name|int
 name|je_posix_memalign
 parameter_list|(
@@ -191,6 +198,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+name|JEMALLOC_EXPORT
 name|void
 modifier|*
 name|je_aligned_alloc
@@ -209,6 +217,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|JEMALLOC_EXPORT
 name|void
 modifier|*
 name|je_realloc
@@ -224,6 +233,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|JEMALLOC_EXPORT
 name|void
 name|je_free
 parameter_list|(
@@ -234,7 +244,65 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|JEMALLOC_OVERRIDE_MEMALIGN
+end_ifdef
+
 begin_function_decl
+name|JEMALLOC_EXPORT
+name|void
+modifier|*
+name|je_memalign
+parameter_list|(
+name|size_t
+name|alignment
+parameter_list|,
+name|size_t
+name|size
+parameter_list|)
+function_decl|JEMALLOC_ATTR
+parameter_list|(
+name|malloc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|JEMALLOC_OVERRIDE_VALLOC
+end_ifdef
+
+begin_function_decl
+name|JEMALLOC_EXPORT
+name|void
+modifier|*
+name|je_valloc
+parameter_list|(
+name|size_t
+name|size
+parameter_list|)
+function_decl|JEMALLOC_ATTR
+parameter_list|(
+name|malloc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function_decl
+name|JEMALLOC_EXPORT
 name|size_t
 name|je_malloc_usable_size
 parameter_list|(
@@ -247,6 +315,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|JEMALLOC_EXPORT
 name|void
 name|je_malloc_stats_print
 parameter_list|(
@@ -277,6 +346,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|JEMALLOC_EXPORT
 name|int
 name|je_mallctl
 parameter_list|(
@@ -304,6 +374,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|JEMALLOC_EXPORT
 name|int
 name|je_mallctlnametomib
 parameter_list|(
@@ -324,6 +395,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|JEMALLOC_EXPORT
 name|int
 name|je_mallctlbymib
 parameter_list|(
@@ -360,6 +432,7 @@ name|JEMALLOC_EXPERIMENTAL
 end_ifdef
 
 begin_function_decl
+name|JEMALLOC_EXPORT
 name|int
 name|je_allocm
 parameter_list|(
@@ -391,6 +464,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+name|JEMALLOC_EXPORT
 name|int
 name|je_rallocm
 parameter_list|(
@@ -425,6 +499,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+name|JEMALLOC_EXPORT
 name|int
 name|je_sallocm
 parameter_list|(
@@ -453,6 +528,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+name|JEMALLOC_EXPORT
 name|int
 name|je_dallocm
 parameter_list|(
@@ -476,6 +552,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+name|JEMALLOC_EXPORT
 name|int
 name|je_nallocm
 parameter_list|(

@@ -180,50 +180,12 @@ directive|include
 file|"dev_net.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|CTASSERT
-end_ifndef
-
 begin_define
 define|#
 directive|define
-name|CTASSERT
-parameter_list|(
-name|x
-parameter_list|)
-value|_CTASSERT(x, __LINE__)
+name|MAXBDDEV
+value|31
 end_define
-
-begin_define
-define|#
-directive|define
-name|_CTASSERT
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-value|__CTASSERT(x, y)
-end_define
-
-begin_define
-define|#
-directive|define
-name|__CTASSERT
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-value|typedef char __assert ## y[(x) ? 1 : -1]
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -755,7 +717,7 @@ end_ifdef
 begin_function_decl
 specifier|static
 name|int
-name|zfs_dev_init
+name|sparc64_zfs_dev_init
 parameter_list|(
 name|void
 parameter_list|)
@@ -805,7 +767,7 @@ ifdef|#
 directive|ifdef
 name|LOADER_ZFS_SUPPORT
 operator|&
-name|zfs_dev
+name|zfs_dev_compat
 block|,
 endif|#
 directive|endif
@@ -3511,7 +3473,7 @@ end_ifdef
 begin_function
 specifier|static
 name|int
-name|zfs_dev_init
+name|sparc64_zfs_dev_init
 parameter_list|(
 name|void
 parameter_list|)
@@ -4157,6 +4119,18 @@ argument_list|,
 name|env_nounset
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LOADER_ZFS_SUPPORT
+comment|/* 	 * Patch up ZFS. 	 */
+name|zfs_dev_compat
+operator|.
+name|dv_init
+operator|=
+name|sparc64_zfs_dev_init
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Initialize devices. 	 */
 for|for
 control|(

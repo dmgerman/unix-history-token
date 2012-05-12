@@ -193,6 +193,12 @@ directive|include
 file|<dev/ral/rt2661var.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/ral/rt2860var.h>
+end_include
+
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
@@ -286,6 +292,86 @@ index|[]
 init|=
 block|{
 block|{
+literal|0x1432
+block|,
+literal|0x7708
+block|,
+literal|"Edimax RT2860"
+block|}
+block|,
+block|{
+literal|0x1432
+block|,
+literal|0x7711
+block|,
+literal|"Edimax RT3591"
+block|}
+block|,
+block|{
+literal|0x1432
+block|,
+literal|0x7722
+block|,
+literal|"Edimax RT3591"
+block|}
+block|,
+block|{
+literal|0x1432
+block|,
+literal|0x7727
+block|,
+literal|"Edimax RT2860"
+block|}
+block|,
+block|{
+literal|0x1432
+block|,
+literal|0x7728
+block|,
+literal|"Edimax RT2860"
+block|}
+block|,
+block|{
+literal|0x1432
+block|,
+literal|0x7738
+block|,
+literal|"Edimax RT2860"
+block|}
+block|,
+block|{
+literal|0x1432
+block|,
+literal|0x7748
+block|,
+literal|"Edimax RT2860"
+block|}
+block|,
+block|{
+literal|0x1432
+block|,
+literal|0x7758
+block|,
+literal|"Edimax RT2860"
+block|}
+block|,
+block|{
+literal|0x1432
+block|,
+literal|0x7768
+block|,
+literal|"Edimax RT2860"
+block|}
+block|,
+block|{
+literal|0x1462
+block|,
+literal|0x891a
+block|,
+literal|"MSI RT3090"
+block|}
+block|,
+block|{
 literal|0x1814
 block|,
 literal|0x0201
@@ -315,6 +401,142 @@ block|,
 literal|0x0401
 block|,
 literal|"Ralink Technology RT2661"
+block|}
+block|,
+block|{
+literal|0x1814
+block|,
+literal|0x0601
+block|,
+literal|"Ralink Technology RT2860"
+block|}
+block|,
+block|{
+literal|0x1814
+block|,
+literal|0x0681
+block|,
+literal|"Ralink Technology RT2890"
+block|}
+block|,
+block|{
+literal|0x1814
+block|,
+literal|0x0701
+block|,
+literal|"Ralink Technology RT2760"
+block|}
+block|,
+block|{
+literal|0x1814
+block|,
+literal|0x0781
+block|,
+literal|"Ralink Technology RT2790"
+block|}
+block|,
+block|{
+literal|0x1814
+block|,
+literal|0x3060
+block|,
+literal|"Ralink Technology RT3060"
+block|}
+block|,
+block|{
+literal|0x1814
+block|,
+literal|0x3062
+block|,
+literal|"Ralink Technology RT3062"
+block|}
+block|,
+block|{
+literal|0x1814
+block|,
+literal|0x3090
+block|,
+literal|"Ralink Technology RT3090"
+block|}
+block|,
+block|{
+literal|0x1814
+block|,
+literal|0x3091
+block|,
+literal|"Ralink Technology RT3091"
+block|}
+block|,
+block|{
+literal|0x1814
+block|,
+literal|0x3092
+block|,
+literal|"Ralink Technology RT3092"
+block|}
+block|,
+block|{
+literal|0x1814
+block|,
+literal|0x3390
+block|,
+literal|"Ralink Technology RT3390"
+block|}
+block|,
+block|{
+literal|0x1814
+block|,
+literal|0x3562
+block|,
+literal|"Ralink Technology RT3562"
+block|}
+block|,
+block|{
+literal|0x1814
+block|,
+literal|0x3592
+block|,
+literal|"Ralink Technology RT3592"
+block|}
+block|,
+block|{
+literal|0x1814
+block|,
+literal|0x3593
+block|,
+literal|"Ralink Technology RT3593"
+block|}
+block|,
+block|{
+literal|0x1814
+block|,
+literal|0x5390
+block|,
+literal|"Ralink Technology RT5390"
+block|}
+block|,
+block|{
+literal|0x1814
+block|,
+literal|0x539a
+block|,
+literal|"Ralink Technology RT5390"
+block|}
+block|,
+block|{
+literal|0x1814
+block|,
+literal|0x539f
+block|,
+literal|"Ralink Technology RT5390"
+block|}
+block|,
+block|{
+literal|0x1a3b
+block|,
+literal|0x1059
+block|,
+literal|"AWT RT2890"
 block|}
 block|,
 block|{
@@ -426,6 +648,22 @@ name|rt2661_resume
 block|,
 name|rt2661_intr
 block|}
+struct|,
+name|ral_rt2860_opns
+init|=
+block|{
+name|rt2860_attach
+block|,
+name|rt2860_detach
+block|,
+name|rt2860_shutdown
+block|,
+name|rt2860_suspend
+block|,
+name|rt2860_resume
+block|,
+name|rt2860_intr
+block|}
 struct|;
 end_struct
 
@@ -442,6 +680,10 @@ decl_stmt|;
 name|struct
 name|rt2661_softc
 name|sc_rt2661
+decl_stmt|;
+name|struct
+name|rt2860_softc
+name|sc_rt2860
 decl_stmt|;
 block|}
 name|u
@@ -792,25 +1034,52 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|psc
-operator|->
-name|sc_opns
-operator|=
-operator|(
+switch|switch
+condition|(
 name|pci_get_device
 argument_list|(
 name|dev
 argument_list|)
-operator|==
+condition|)
+block|{
+case|case
 literal|0x0201
-operator|)
-condition|?
+case|:
+name|psc
+operator|->
+name|sc_opns
+operator|=
 operator|&
 name|ral_rt2560_opns
-else|:
+expr_stmt|;
+break|break;
+case|case
+literal|0x0301
+case|:
+case|case
+literal|0x0302
+case|:
+case|case
+literal|0x0401
+case|:
+name|psc
+operator|->
+name|sc_opns
+operator|=
 operator|&
 name|ral_rt2661_opns
 expr_stmt|;
+break|break;
+default|default:
+name|psc
+operator|->
+name|sc_opns
+operator|=
+operator|&
+name|ral_rt2860_opns
+expr_stmt|;
+break|break;
+block|}
 name|psc
 operator|->
 name|mem_rid

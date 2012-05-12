@@ -156,14 +156,18 @@ name|vm_inherit_t
 name|inheritance
 decl_stmt|;
 comment|/* inheritance */
+name|uint8_t
+name|read_ahead
+decl_stmt|;
+comment|/* pages in the read-ahead window */
 name|int
 name|wired_count
 decl_stmt|;
 comment|/* can be paged if = 0 */
 name|vm_pindex_t
-name|lastr
+name|next_read
 decl_stmt|;
-comment|/* last read */
+comment|/* index of the next sequential read */
 name|struct
 name|ucred
 modifier|*
@@ -1239,6 +1243,31 @@ end_define
 begin_comment
 comment|/* Dirty the page; use w/VM_PROT_COPY */
 end_comment
+
+begin_comment
+comment|/*  * Initially, mappings are slightly sequential.  The maximum window size must  * account for the map entry's "read_ahead" field being defined as an uint8_t.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VM_FAULT_READ_AHEAD_MIN
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_FAULT_READ_AHEAD_INIT
+value|15
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_FAULT_READ_AHEAD_MAX
+value|min(atop(MAXPHYS) - 1, UINT8_MAX)
+end_define
 
 begin_comment
 comment|/*  * The following "find_space" options are supported by vm_map_find()  */

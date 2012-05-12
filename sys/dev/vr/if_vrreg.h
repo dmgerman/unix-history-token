@@ -3864,6 +3864,10 @@ name|rxcycles
 decl_stmt|;
 endif|#
 directive|endif
+name|struct
+name|task
+name|vr_inttask
+decl_stmt|;
 block|}
 struct|;
 end_struct

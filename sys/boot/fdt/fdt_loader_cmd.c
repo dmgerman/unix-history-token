@@ -1489,6 +1489,13 @@ argument_list|,
 literal|"/cpus"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|o
+operator|<
+literal|0
+condition|)
+return|return;
 comment|/* maxo should contain offset of node next to /cpus */
 name|depth
 operator|=

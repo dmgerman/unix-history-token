@@ -2849,5 +2849,37 @@ return|;
 block|}
 end_function
 
+begin_function
+name|void
+name|ar5211EnableDfs
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|HAL_PHYERR_PARAM
+modifier|*
+name|pe
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+name|void
+name|ar5211GetDfsThresh
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|HAL_PHYERR_PARAM
+modifier|*
+name|pe
+parameter_list|)
+block|{ }
+end_function
+
 end_unit
 

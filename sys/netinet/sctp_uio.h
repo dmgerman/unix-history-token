@@ -1020,6 +1020,10 @@ decl_stmt|;
 name|sctp_assoc_t
 name|sac_assoc_id
 decl_stmt|;
+name|uint8_t
+name|sac_info
+index|[]
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1061,6 +1065,52 @@ define|#
 directive|define
 name|SCTP_CANT_STR_ASSOC
 value|0x0005
+end_define
+
+begin_comment
+comment|/* sac_info values */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_ASSOC_SUPPORTS_PR
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_ASSOC_SUPPORTS_AUTH
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_ASSOC_SUPPORTS_ASCONF
+value|0x03
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_ASSOC_SUPPORTS_MULTIBUF
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_ASSOC_SUPPORTS_RE_CONFIG
+value|0x05
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_ASSOC_SUPPORTS_MAX
+value|0x05
 end_define
 
 begin_comment
@@ -1216,7 +1266,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* data send failure event */
+comment|/* data send failure event (deprecated) */
 end_comment
 
 begin_struct
@@ -1244,6 +1294,41 @@ name|ssf_assoc_id
 decl_stmt|;
 name|uint8_t
 name|ssf_data
+index|[]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* data send failure event (not deprecated) */
+end_comment
+
+begin_struct
+struct|struct
+name|sctp_send_failed_event
+block|{
+name|uint16_t
+name|ssfe_type
+decl_stmt|;
+name|uint16_t
+name|ssfe_flags
+decl_stmt|;
+name|uint32_t
+name|ssfe_length
+decl_stmt|;
+name|uint32_t
+name|ssfe_error
+decl_stmt|;
+name|struct
+name|sctp_sndinfo
+name|ssfe_info
+decl_stmt|;
+name|sctp_assoc_t
+name|ssfe_assoc_id
+decl_stmt|;
+name|uint8_t
+name|ssfe_data
 index|[]
 decl_stmt|;
 block|}
@@ -1565,13 +1650,6 @@ name|SCTP_STREAM_RESET_FAILED
 value|0x0008
 end_define
 
-begin_define
-define|#
-directive|define
-name|SCTP_STREAM_CHANGED_DENIED
-value|0x0010
-end_define
-
 begin_comment
 comment|/*  * Assoc reset event - subscribe to SCTP_ASSOC_RESET_EVENT  */
 end_comment
@@ -1854,6 +1932,13 @@ define|#
 directive|define
 name|SCTP_STREAM_CHANGE_EVENT
 value|0x000d
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_SEND_FAILED_EVENT
+value|0x000e
 end_define
 
 begin_comment

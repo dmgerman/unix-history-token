@@ -1536,6 +1536,16 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
+comment|/* Probe ZFS pool(s), if needed. */
+name|void
+function_decl|(
+modifier|*
+name|arch_zfs_probe
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct
@@ -1581,6 +1591,55 @@ name|tloc
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CTASSERT
+end_ifndef
+
+begin_comment
+comment|/* Allow lint to override */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTASSERT
+parameter_list|(
+name|x
+parameter_list|)
+value|_CTASSERT(x, __LINE__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_CTASSERT
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|__CTASSERT(x, y)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__CTASSERT
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|typedef char __assert ## y[(x) ? 1 : -1]
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

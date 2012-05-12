@@ -15004,19 +15004,6 @@ name|SCTP_FROM_SCTP_PCB
 operator|+
 name|SCTP_LOC_3
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SCTP_PANIC_ON_ABORT
-argument_list|)
-name|panic
-argument_list|(
-literal|"inpcb_free does an abort"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|sctp_send_abort_tcb
 argument_list|(
 name|asoc
@@ -15583,19 +15570,6 @@ name|SCTP_FROM_SCTP_PCB
 operator|+
 name|SCTP_LOC_5
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SCTP_PANIC_ON_ABORT
-argument_list|)
-name|panic
-argument_list|(
-literal|"inpcb_free does an abort"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|sctp_send_abort_tcb
 argument_list|(
 name|asoc
@@ -16000,19 +15974,6 @@ name|SCTP_FROM_SCTP_PCB
 operator|+
 name|SCTP_LOC_7
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SCTP_PANIC_ON_ABORT
-argument_list|)
-name|panic
-argument_list|(
-literal|"inpcb_free does an abort"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|sctp_send_abort_tcb
 argument_list|(
 name|asoc

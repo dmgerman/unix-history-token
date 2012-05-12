@@ -335,6 +335,16 @@ end_decl_stmt
 
 begin_decl_stmt
 name|unsigned
+name|board_id
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* board type to pass to kernel, if set by board_* code */
+end_comment
+
+begin_decl_stmt
+name|unsigned
 name|dsk_start
 decl_stmt|;
 end_decl_stmt
@@ -368,7 +378,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|uint8_t
 name|dsk_meta
 decl_stmt|;
 end_decl_stmt
@@ -1143,6 +1153,12 @@ operator|*
 argument_list|)
 argument_list|(
 name|int
+argument_list|,
+name|int
+argument_list|,
+name|int
+argument_list|,
+name|int
 argument_list|)
 operator|)
 name|addr
@@ -1151,6 +1167,12 @@ operator|(
 name|opts
 operator|&
 name|RBX_MASK
+operator|,
+name|board_id
+operator|,
+literal|0
+operator|,
+literal|0
 operator|)
 expr_stmt|;
 block|}
