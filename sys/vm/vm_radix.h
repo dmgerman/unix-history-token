@@ -215,32 +215,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|vm_radix_foreach
-parameter_list|(
-name|struct
-name|vm_radix
-modifier|*
-parameter_list|,
-name|vm_pindex_t
-parameter_list|,
-name|vm_pindex_t
-parameter_list|,
-name|int
-parameter_list|,
-name|void
-function_decl|(
-modifier|*
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * Look up any entry at a position greater or equal to index.  */
 end_comment
