@@ -776,8 +776,6 @@ name|inp
 argument_list|,
 name|stcb
 argument_list|,
-name|SCTP_FAILED_THRESHOLD
-argument_list|,
 name|oper
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
@@ -5038,8 +5036,6 @@ argument_list|(
 name|inp
 argument_list|,
 name|stcb
-argument_list|,
-name|SCTP_INTERNAL_ERROR
 argument_list|,
 name|oper
 argument_list|,

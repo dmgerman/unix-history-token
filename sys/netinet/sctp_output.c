@@ -32812,8 +32812,6 @@ name|inp
 argument_list|,
 name|stcb
 argument_list|,
-name|SCTP_RESPONSE_TO_USER_REQ
-argument_list|,
 name|m
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
@@ -33189,8 +33187,6 @@ operator|->
 name|sctp_ep
 argument_list|,
 name|stcb
-argument_list|,
-name|SCTP_RESPONSE_TO_USER_REQ
 argument_list|,
 name|NULL
 argument_list|,
@@ -46837,8 +46833,6 @@ operator|->
 name|sctp_ep
 argument_list|,
 name|stcb
-argument_list|,
-literal|0
 argument_list|,
 name|NULL
 argument_list|,
@@ -65804,8 +65798,6 @@ name|sctp_ep
 argument_list|,
 name|stcb
 argument_list|,
-name|SCTP_RESPONSE_TO_USER_REQ
-argument_list|,
 name|mm
 argument_list|,
 name|SCTP_SO_LOCKED
@@ -68581,8 +68573,6 @@ operator|->
 name|sctp_ep
 argument_list|,
 name|stcb
-argument_list|,
-name|SCTP_RESPONSE_TO_USER_REQ
 argument_list|,
 name|NULL
 argument_list|,
