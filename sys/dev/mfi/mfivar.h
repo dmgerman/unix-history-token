@@ -474,7 +474,7 @@ decl_stmt|;
 name|bus_dmamap_t
 name|verbuf_h_dmamap
 decl_stmt|;
-name|bus_dmamap_t
+name|bus_addr_t
 name|verbuf_h_busaddr
 decl_stmt|;
 name|uint32_t
@@ -675,7 +675,7 @@ decl_stmt|;
 name|bus_dmamap_t
 name|mfi_sense_dmamap
 decl_stmt|;
-name|bus_dmamap_t
+name|bus_addr_t
 name|mfi_sense_busaddr
 decl_stmt|;
 name|struct
