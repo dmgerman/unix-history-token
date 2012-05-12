@@ -474,7 +474,7 @@ decl_stmt|;
 name|bus_dmamap_t
 name|verbuf_h_dmamap
 decl_stmt|;
-name|uint32_t
+name|bus_dmamap_t
 name|verbuf_h_busaddr
 decl_stmt|;
 name|uint32_t
@@ -675,7 +675,7 @@ decl_stmt|;
 name|bus_dmamap_t
 name|mfi_sense_dmamap
 decl_stmt|;
-name|uint32_t
+name|bus_dmamap_t
 name|mfi_sense_busaddr
 decl_stmt|;
 name|struct
@@ -942,7 +942,6 @@ name|uint8_t
 modifier|*
 name|request_desc_pool
 decl_stmt|;
-comment|//uint32_t			request_desc_busaddr;
 name|bus_addr_t
 name|request_msg_busaddr
 decl_stmt|;
