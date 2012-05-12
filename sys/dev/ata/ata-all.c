@@ -2961,6 +2961,13 @@ operator|->
 name|state_mtx
 argument_list|)
 expr_stmt|;
+name|xpt_batch_start
+argument_list|(
+name|ch
+operator|->
+name|sim
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 name|ata_interrupt_locked
@@ -2971,6 +2978,13 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|ATA_CAM
+name|xpt_batch_done
+argument_list|(
+name|ch
+operator|->
+name|sim
+argument_list|)
+expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
