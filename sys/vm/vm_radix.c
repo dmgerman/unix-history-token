@@ -284,7 +284,7 @@ name|KSPLT64L
 parameter_list|(
 name|x
 parameter_list|)
-value|(u_long)((x)& 0xFFFFFFFF)
+value|((u_long)((x)& 0xFFFFFFFF))
 end_define
 
 begin_define
