@@ -257,6 +257,51 @@ define|\
 value|((h) == VM_RADIX_LIMIT ? VM_RADIX_MAXVAL :			\ 	    (((vm_pindex_t)1<< ((h) * VM_RADIX_WIDTH)) - 1))
 end_define
 
+begin_comment
+comment|/*  * On 32-bits architectures KTR cannot handle 64-bits values.  * Add macros for splitting in 32-bits quantity and provide format strings.  * Note that braces are not used because they would break compilation.  * Also, note that arguments are cast to u_long in order to follow KTR  * convention.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KTR
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|KFRMT64
+parameter_list|(
+name|x
+parameter_list|)
+value|__STRING(x)"l 0x%08lx, "__STRING(x)"h 0x%08lx"
+end_define
+
+begin_define
+define|#
+directive|define
+name|KSPLT64L
+parameter_list|(
+name|x
+parameter_list|)
+value|(u_long)((x)& 0xFFFFFFFF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KSPLT64H
+parameter_list|(
+name|x
+parameter_list|)
+value|((u_long)(((x)>> 32)& 0xFFFFFFFF))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_expr_stmt
 name|CTASSERT
 argument_list|(
@@ -1392,18 +1437,28 @@ name|level
 decl_stmt|,
 name|slot
 decl_stmt|;
-name|CTR3
+name|CTR4
 argument_list|(
 name|KTR_VM
 argument_list|,
-literal|"insert: tree %p, index %ju, val %p"
+literal|"insert: tree %p, "
+name|KFRMT64
+argument_list|(
+name|index
+argument_list|)
+literal|", val %p"
 argument_list|,
 name|rtree
 argument_list|,
-operator|(
-name|uintmax_t
-operator|)
+name|KSPLT64L
+argument_list|(
 name|index
+argument_list|)
+argument_list|,
+name|KSPLT64H
+argument_list|(
+name|index
+argument_list|)
 argument_list|,
 name|val
 argument_list|)
@@ -1453,23 +1508,46 @@ name|level
 argument_list|)
 condition|)
 block|{
-name|CTR3
+name|CTR5
 argument_list|(
 name|KTR_VM
 argument_list|,
-literal|"insert: expanding %ju> %ju height %d"
-argument_list|,
-operator|(
-name|uintmax_t
-operator|)
+literal|"insert: expanding "
+name|KFRMT64
+argument_list|(
 name|index
+argument_list|)
+literal|">"
+name|KFRMT64
+argument_list|(
+name|mxl
+argument_list|)
+literal|", height %d"
 argument_list|,
-operator|(
-name|uintmax_t
-operator|)
+name|KSPLT64L
+argument_list|(
+name|index
+argument_list|)
+argument_list|,
+name|KSPLT64H
+argument_list|(
+name|index
+argument_list|)
+argument_list|,
+name|KSPLT64L
+argument_list|(
 name|VM_RADIX_MAX
 argument_list|(
 name|level
+argument_list|)
+argument_list|)
+argument_list|,
+name|KSPLT64H
+argument_list|(
+name|VM_RADIX_MAX
+argument_list|(
+name|level
+argument_list|)
 argument_list|)
 argument_list|,
 name|level
@@ -1519,20 +1597,30 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|CTR4
+name|CTR5
 argument_list|(
 name|KTR_VM
 argument_list|,
-literal|"insert: tree %p, root %p, index: %ju, level: %d ENOMEM"
+literal|"insert: tree %p, root %p, "
+name|KFRMT64
+argument_list|(
+name|index
+argument_list|)
+literal|", level %d ENOMEM"
 argument_list|,
 name|rtree
 argument_list|,
 name|root
 argument_list|,
-operator|(
-name|uintmax_t
-operator|)
+name|KSPLT64L
+argument_list|(
 name|index
+argument_list|)
+argument_list|,
+name|KSPLT64H
+argument_list|(
+name|index
+argument_list|)
 argument_list|,
 name|level
 argument_list|)
@@ -1676,18 +1764,28 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|CTR5
+name|CTR6
 argument_list|(
 name|KTR_VM
 argument_list|,
-literal|"insert: tree %p, index %ju, level %d, slot %d, rnode %p ENOMEM"
+literal|"insert: tree %p, "
+name|KFRMT64
+argument_list|(
+name|index
+argument_list|)
+literal|", level %d, slot %d, rnode %p ENOMEM"
 argument_list|,
 name|rtree
 argument_list|,
-operator|(
-name|uintmax_t
-operator|)
+name|KSPLT64L
+argument_list|(
 name|index
+argument_list|)
+argument_list|,
+name|KSPLT64H
+argument_list|(
+name|index
+argument_list|)
 argument_list|,
 name|level
 argument_list|,
@@ -1908,18 +2006,28 @@ name|level
 operator|)
 expr_stmt|;
 block|}
-name|CTR5
+name|CTR6
 argument_list|(
 name|KTR_VM
 argument_list|,
-literal|"insert: tree %p, index %ju, level %d, slot %d, rnode %p"
+literal|"insert: tree %p, "
+name|KFRMT64
+argument_list|(
+name|index
+argument_list|)
+literal|", level %d, slot %d, rnode %p"
 argument_list|,
 name|rtree
 argument_list|,
-operator|(
-name|uintmax_t
-operator|)
+name|KSPLT64L
+argument_list|(
 name|index
+argument_list|)
+argument_list|,
+name|KSPLT64H
+argument_list|(
+name|index
+argument_list|)
 argument_list|,
 name|level
 argument_list|,
@@ -2038,20 +2146,39 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|CTR6
+name|CTR5
 argument_list|(
 name|KTR_VM
 argument_list|,
-literal|"insert: tree %p, index %ju, level %d, slot %d, rnode %p, count %u"
+literal|"insert: tree %p, "
+name|KFRMT64
+argument_list|(
+name|index
+argument_list|)
+literal|", level %d, slot %d"
 argument_list|,
 name|rtree
 argument_list|,
-operator|(
-name|uintmax_t
-operator|)
+name|KSPLT64L
+argument_list|(
 name|index
+argument_list|)
+argument_list|,
+name|KSPLT64H
+argument_list|(
+name|index
+argument_list|)
 argument_list|,
 name|level
+argument_list|,
+name|slot
+argument_list|)
+expr_stmt|;
+name|CTR3
+argument_list|(
+name|KTR_VM
+argument_list|,
+literal|"insert: slot %d, rnode %p, count %u"
 argument_list|,
 name|slot
 argument_list|,
@@ -2143,18 +2270,37 @@ name|CTR6
 argument_list|(
 name|KTR_VM
 argument_list|,
-literal|"lookup: tree %p, index %ju, level %d, slot %d, rnode %p, child %p"
+literal|"lookup: tree %p, "
+name|KFRMT64
+argument_list|(
+name|index
+argument_list|)
+literal|", level %d, slot %d, rnode %p"
 argument_list|,
 name|rtree
 argument_list|,
-operator|(
-name|uintmax_t
-operator|)
+name|KSPLT64L
+argument_list|(
 name|index
+argument_list|)
+argument_list|,
+name|KSPLT64H
+argument_list|(
+name|index
+argument_list|)
 argument_list|,
 name|level
 argument_list|,
 name|slot
+argument_list|,
+name|rnode
+argument_list|)
+expr_stmt|;
+name|CTR2
+argument_list|(
+name|KTR_VM
+argument_list|,
+literal|"lookup: rnode %p, child %p"
 argument_list|,
 name|rnode
 argument_list|,
@@ -2198,18 +2344,28 @@ name|level
 operator|--
 expr_stmt|;
 block|}
-name|CTR2
+name|CTR3
 argument_list|(
 name|KTR_VM
 argument_list|,
-literal|"lookup: tree %p, index %ju failed"
+literal|"lookup: tree %p, "
+name|KFRMT64
+argument_list|(
+name|index
+argument_list|)
+literal|" failed"
 argument_list|,
 name|rtree
 argument_list|,
-operator|(
-name|uintmax_t
-operator|)
+name|KSPLT64L
+argument_list|(
 name|index
+argument_list|)
+argument_list|,
+name|KSPLT64H
+argument_list|(
+name|index
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2292,18 +2448,37 @@ name|CTR6
 argument_list|(
 name|KTR_VM
 argument_list|,
-literal|"color: tree %p, index %ju, level %d, slot %d, rnode %p, child %p"
+literal|"color: tree %p, "
+name|KFRMT64
+argument_list|(
+name|index
+argument_list|)
+literal|", level %d, slot %d, rnode %p"
 argument_list|,
 name|rtree
 argument_list|,
-operator|(
-name|uintmax_t
-operator|)
+name|KSPLT64L
+argument_list|(
 name|index
+argument_list|)
+argument_list|,
+name|KSPLT64H
+argument_list|(
+name|index
+argument_list|)
 argument_list|,
 name|level
 argument_list|,
 name|slot
+argument_list|,
+name|rnode
+argument_list|)
+expr_stmt|;
+name|CTR2
+argument_list|(
+name|KTR_VM
+argument_list|,
+literal|"color: rnode %p, child %p"
 argument_list|,
 name|rnode
 argument_list|,
@@ -2508,35 +2683,46 @@ name|CTR6
 argument_list|(
 name|KTR_VM
 argument_list|,
-literal|"leaf: tree %p, index %ju, level %d, slot %d, rnode %p, child %p"
+literal|"leaf: tree %p, "
+name|KFRMT64
+argument_list|(
+name|start
+argument_list|)
+literal|", level %d, slot %d, rnode %p"
 argument_list|,
 name|rtree
 argument_list|,
-operator|(
-name|uintmax_t
-operator|)
+name|KSPLT64L
+argument_list|(
 name|start
+argument_list|)
+argument_list|,
+name|KSPLT64H
+argument_list|(
+name|start
+argument_list|)
 argument_list|,
 name|level
 argument_list|,
 name|slot
 argument_list|,
 name|rnode
+argument_list|)
+expr_stmt|;
+name|CTR2
+argument_list|(
+name|KTR_VM
 argument_list|,
-operator|(
+literal|"leaf: rnode %p, child %p"
+argument_list|,
 name|rnode
-operator|!=
-name|NULL
-operator|)
-condition|?
+argument_list|,
 name|rnode
 operator|->
 name|rn_child
 index|[
 name|slot
 index|]
-else|:
-name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -2608,35 +2794,64 @@ expr_stmt|;
 name|slot
 operator|++
 expr_stmt|;
-name|CTR5
+name|CTR6
 argument_list|(
 name|KTR_VM
 argument_list|,
-literal|"leaf: start %ju end %ju inc %ju mask 0x%jX slot %d"
-argument_list|,
-operator|(
-name|uintmax_t
-operator|)
-name|start
-argument_list|,
-operator|(
-name|uintmax_t
-operator|)
-name|end
-argument_list|,
-operator|(
-name|uintmax_t
-operator|)
-name|inc
-argument_list|,
-operator|(
-name|uintmax_t
-operator|)
-operator|~
-name|VM_RADIX_MAX
+literal|"leaf: "
+name|KFRMT64
 argument_list|(
-name|level
+name|start
 argument_list|)
+literal|", "
+name|KFRMT64
+argument_list|(
+name|end
+argument_list|)
+literal|", "
+name|KFRMT64
+argument_list|(
+name|inc
+argument_list|)
+argument_list|,
+name|KSPLT64L
+argument_list|(
+name|start
+argument_list|)
+argument_list|,
+name|KSPLT64H
+argument_list|(
+name|start
+argument_list|)
+argument_list|,
+name|KSPLT64L
+argument_list|(
+name|end
+argument_list|)
+argument_list|,
+name|KSPLT64H
+argument_list|(
+name|end
+argument_list|)
+argument_list|,
+name|KSPLT64L
+argument_list|(
+name|inc
+argument_list|)
+argument_list|,
+name|KSPLT64H
+argument_list|(
+name|inc
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|CTR2
+argument_list|(
+name|KTR_VM
+argument_list|,
+literal|"leaf: level %d, slot %d"
+argument_list|,
+name|level
 argument_list|,
 name|slot
 argument_list|)
@@ -2791,23 +3006,42 @@ decl_stmt|;
 name|int
 name|outidx
 decl_stmt|;
-name|CTR3
+name|CTR5
 argument_list|(
 name|KTR_VM
 argument_list|,
-literal|"lookupn: tree %p, start %ju, end %ju"
+literal|"lookupn: tree %p, "
+name|KFRMT64
+argument_list|(
+name|start
+argument_list|)
+literal|", "
+name|KFRMT64
+argument_list|(
+name|end
+argument_list|)
 argument_list|,
 name|rtree
 argument_list|,
-operator|(
-name|uintmax_t
-operator|)
+name|KSPLT64L
+argument_list|(
 name|start
+argument_list|)
 argument_list|,
-operator|(
-name|uintmax_t
-operator|)
+name|KSPLT64H
+argument_list|(
+name|start
+argument_list|)
+argument_list|,
+name|KSPLT64L
+argument_list|(
 name|end
+argument_list|)
+argument_list|,
+name|KSPLT64H
+argument_list|(
+name|end
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2924,18 +3158,28 @@ goto|;
 block|}
 continue|continue;
 block|}
-name|CTR4
+name|CTR5
 argument_list|(
 name|KTR_VM
 argument_list|,
-literal|"lookupn: tree %p index %ju slot %d found child %p"
+literal|"lookupn: tree %p "
+name|KFRMT64
+argument_list|(
+name|index
+argument_list|)
+literal|" slot %d found child %p"
 argument_list|,
 name|rtree
 argument_list|,
-operator|(
-name|uintmax_t
-operator|)
+name|KSPLT64L
+argument_list|(
 name|start
+argument_list|)
+argument_list|,
+name|KSPLT64H
+argument_list|(
+name|start
+argument_list|)
 argument_list|,
 name|slot
 argument_list|,
@@ -3075,18 +3319,27 @@ decl_stmt|;
 name|int
 name|level
 decl_stmt|;
-name|CTR2
+name|CTR3
 argument_list|(
 name|KTR_VM
 argument_list|,
-literal|"lookup_le: tree %p, index %ju"
+literal|"lookup_le: tree %p, "
+name|KFRMT64
+argument_list|(
+name|index
+argument_list|)
 argument_list|,
 name|rtree
 argument_list|,
-operator|(
-name|uintmax_t
-operator|)
+name|KSPLT64L
+argument_list|(
 name|index
+argument_list|)
+argument_list|,
+name|KSPLT64H
+argument_list|(
+name|index
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|restart
@@ -3155,18 +3408,37 @@ name|CTR6
 argument_list|(
 name|KTR_VM
 argument_list|,
-literal|"lookup_le: tree %p, index %ju, level %d, slot %d, rnode %p, child %p"
+literal|"lookup_le: tree %p, "
+name|KFRMT64
+argument_list|(
+name|index
+argument_list|)
+literal|", level %d, slot %d, rnode %p"
 argument_list|,
 name|rtree
 argument_list|,
-operator|(
-name|uintmax_t
-operator|)
+name|KSPLT64L
+argument_list|(
 name|index
+argument_list|)
+argument_list|,
+name|KSPLT64H
+argument_list|(
+name|index
+argument_list|)
 argument_list|,
 name|level
 argument_list|,
 name|slot
+argument_list|,
+name|rnode
+argument_list|)
+expr_stmt|;
+name|CTR2
+argument_list|(
+name|KTR_VM
+argument_list|,
+literal|"lookup_le:  rnode %p, child %p"
 argument_list|,
 name|rnode
 argument_list|,
@@ -3227,29 +3499,43 @@ expr_stmt|;
 name|slot
 operator|--
 expr_stmt|;
-name|CTR4
+name|CTR6
 argument_list|(
 name|KTR_VM
 argument_list|,
-literal|"lookup_le: start %ju inc %ju mask 0x%jX slot %d"
-argument_list|,
-operator|(
-name|uintmax_t
-operator|)
-name|index
-argument_list|,
-operator|(
-name|uintmax_t
-operator|)
-name|inc
-argument_list|,
-operator|(
-name|uintmax_t
-operator|)
-name|VM_RADIX_MAX
+literal|"lookup_le: "
+name|KFRMT64
 argument_list|(
-name|level
+name|start
 argument_list|)
+literal|", "
+name|KFRMT64
+argument_list|(
+name|inc
+argument_list|)
+literal|", level %d slot %d"
+argument_list|,
+name|KSPLT64L
+argument_list|(
+name|index
+argument_list|)
+argument_list|,
+name|KSPLT64H
+argument_list|(
+name|index
+argument_list|)
+argument_list|,
+name|KSPLT64L
+argument_list|(
+name|inc
+argument_list|)
+argument_list|,
+name|KSPLT64H
+argument_list|(
+name|inc
+argument_list|)
+argument_list|,
+name|level
 argument_list|,
 name|slot
 argument_list|)
@@ -3422,14 +3708,9 @@ name|level
 argument_list|)
 argument_list|,
 operator|(
-literal|"vm_radix_remove: %p index %ju out of range %jd."
+literal|"vm_radix_remove: %p index out of range %jd."
 operator|,
 name|rtree
-operator|,
-operator|(
-name|uintmax_t
-operator|)
-name|index
 operator|,
 name|VM_RADIX_MAX
 argument_list|(
@@ -3473,18 +3754,28 @@ argument_list|,
 name|level
 argument_list|)
 expr_stmt|;
-name|CTR5
+name|CTR6
 argument_list|(
 name|KTR_VM
 argument_list|,
-literal|"remove: tree %p, index %ju, level %d, slot %d, rnode %p"
+literal|"remove: tree %p, "
+name|KFRMT64
+argument_list|(
+name|index
+argument_list|)
+literal|", level %d, slot %d, rnode %p"
 argument_list|,
 name|rtree
 argument_list|,
-operator|(
-name|uintmax_t
-operator|)
+name|KSPLT64L
+argument_list|(
 name|index
+argument_list|)
+argument_list|,
+name|KSPLT64H
+argument_list|(
+name|index
+argument_list|)
 argument_list|,
 name|level
 argument_list|,
@@ -3535,12 +3826,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"vm_radix_remove: index %ju not present in the tree.\n"
-operator|,
-operator|(
-name|uintmax_t
-operator|)
-name|index
+literal|"vm_radix_remove: index not present in the tree.\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3574,12 +3860,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"vm_radix_remove: index %ju not present in the tree.\n"
-operator|,
-operator|(
-name|uintmax_t
-operator|)
-name|index
+literal|"vm_radix_remove: index not present in the tree.\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3589,18 +3870,28 @@ init|;
 condition|;
 control|)
 block|{
-name|CTR5
+name|CTR6
 argument_list|(
 name|KTR_VM
 argument_list|,
-literal|"remove: resetting tree %p, index %ju, level %d, slot %d, rnode %p"
+literal|"remove: resetting tree %p, "
+name|KFRMT64
+argument_list|(
+name|index
+argument_list|)
+literal|", level %d, slot %d, rnode %p"
 argument_list|,
 name|rtree
 argument_list|,
-operator|(
-name|uintmax_t
-operator|)
+name|KSPLT64L
+argument_list|(
 name|index
+argument_list|)
+argument_list|,
+name|KSPLT64H
+argument_list|(
+name|index
+argument_list|)
 argument_list|,
 name|level
 argument_list|,
