@@ -881,7 +881,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|long
 name|vm_page_array_size
 decl_stmt|;
 end_decl_stmt
