@@ -464,7 +464,12 @@ block|,
 comment|/* OBJT_DEAD */
 operator|&
 name|sgpagerops
+block|,
 comment|/* OBJT_SG */
+operator|&
+name|mgtdevicepagerops
+block|,
+comment|/* OBJT_MGTDEVICE */
 block|}
 decl_stmt|;
 end_decl_stmt
