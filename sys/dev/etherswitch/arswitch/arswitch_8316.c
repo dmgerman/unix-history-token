@@ -426,6 +426,7 @@ argument_list|,
 literal|0xc000050e
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Flood address table misses to all ports, and enable forwarding of 	 * broadcasts to the cpu port. 	 */
 name|arswitch_writereg
 argument_list|(
 name|sc
@@ -434,6 +435,8 @@ name|sc_dev
 argument_list|,
 name|AR8X16_REG_FLOOD_MASK
 argument_list|,
+name|AR8X16_FLOOD_MASK_BCAST_TO_CPU
+operator||
 literal|0x003f003f
 argument_list|)
 expr_stmt|;
