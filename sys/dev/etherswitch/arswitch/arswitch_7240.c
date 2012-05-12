@@ -274,7 +274,25 @@ argument_list|,
 literal|0xfa50
 argument_list|)
 expr_stmt|;
-comment|/* XXX MTU */
+comment|/* MTU */
+name|arswitch_modifyreg
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+name|AR8X16_REG_GLOBAL_CTRL
+argument_list|,
+name|AR7240_GLOBAL_CTRL_MTU_MASK
+argument_list|,
+name|SM
+argument_list|(
+literal|1536
+argument_list|,
+name|AR7240_GLOBAL_CTRL_MTU_MASK
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* XXX Service Tag */
 return|return
 operator|(
