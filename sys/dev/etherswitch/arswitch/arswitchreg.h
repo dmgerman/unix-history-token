@@ -556,6 +556,30 @@ end_define
 begin_define
 define|#
 directive|define
+name|AR8X16_MIRROR_PORT_MASK
+value|(0xf<< AR8X16_MIRROR_PORT_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR8X16_CPU_MIRROR_PORT
+parameter_list|(
+name|_p
+parameter_list|)
+value|((_p)<< AR8X16_MIRROR_PORT_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR8X16_CPU_MIRROR_DIS
+value|AR8X16_CPU_MIRROR_PORT(0xf)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AR8X16_CPU_PORT_EN
 value|(1<< 8)
 end_define
