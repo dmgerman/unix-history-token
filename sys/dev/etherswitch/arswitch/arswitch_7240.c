@@ -194,17 +194,6 @@ file|"etherswitch_if.h"
 end_include
 
 begin_comment
-comment|/* XXX belongs in arswitch_7240_reg.h */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AR7240_REG_TAG_PRIORITY
-value|0x70
-end_define
-
-begin_comment
 comment|/*  * AR7240 specific functions  */
 end_comment
 
@@ -269,12 +258,26 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-name|AR7240_REG_TAG_PRIORITY
+name|AR8X16_REG_TAG_PRIO
 argument_list|,
 literal|0xfa50
 argument_list|)
 expr_stmt|;
-comment|/* MTU */
+comment|/* Enable broadcast frames transmitted to the CPU */
+name|arswitch_writereg
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+name|AR8X16_REG_FLOOD_MASK
+argument_list|,
+name|AR8X16_FLOOD_MASK_BCAST_TO_CPU
+operator||
+literal|0x003f003f
+argument_list|)
+expr_stmt|;
+comment|/* Setup MTU */
 name|arswitch_modifyreg
 argument_list|(
 name|sc
@@ -293,7 +296,20 @@ name|AR7240_GLOBAL_CTRL_MTU_MASK
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* XXX Service Tag */
+comment|/* Service Tag */
+name|arswitch_modifyreg
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+name|AR8X16_REG_SERVICE_TAG
+argument_list|,
+name|AR8X16_SERVICE_TAG_MASK
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
