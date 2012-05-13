@@ -366,7 +366,7 @@ name|SCTP_NOTIFY_INTERFACE_DOWN
 argument_list|,
 name|stcb
 argument_list|,
-name|SCTP_FAILED_THRESHOLD
+literal|0
 argument_list|,
 operator|(
 name|void
