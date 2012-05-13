@@ -797,6 +797,8 @@ name|struct
 name|sctp_tcb
 modifier|*
 parameter_list|,
+name|uint8_t
+parameter_list|,
 name|uint16_t
 parameter_list|,
 name|struct
