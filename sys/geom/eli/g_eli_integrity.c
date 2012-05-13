@@ -660,7 +660,7 @@ argument_list|(
 literal|0
 argument_list|,
 literal|"%s: Failed to authenticate %jd "
-literal|"bytes of data at offset %jd"
+literal|"bytes of data at offset %jd."
 argument_list|,
 name|sc
 operator|->
@@ -730,7 +730,7 @@ argument_list|(
 literal|0
 argument_list|,
 literal|"%s: Failed to authenticate %jd "
-literal|"bytes of data at offset %jd"
+literal|"bytes of data at offset %jd."
 argument_list|,
 name|sc
 operator|->
