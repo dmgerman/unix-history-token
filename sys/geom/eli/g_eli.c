@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/cons.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -5392,7 +5398,7 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-name|gets
+name|cngets
 argument_list|(
 name|passphrase
 argument_list|,

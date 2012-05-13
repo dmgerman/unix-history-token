@@ -278,6 +278,43 @@ begin_comment
 comment|/* Temporarily not available. */
 end_comment
 
+begin_comment
+comment|/* Visibility of characters in cngets() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GETS_NOECHO
+value|0
+end_define
+
+begin_comment
+comment|/* Disable echoing of characters. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GETS_ECHO
+value|1
+end_define
+
+begin_comment
+comment|/* Enable echoing of characters. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GETS_ECHOPASS
+value|2
+end_define
+
+begin_comment
+comment|/* Print a * for every character. */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -435,6 +472,20 @@ name|int
 name|cngetc
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|cngets
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
