@@ -98,6 +98,20 @@ name|uart_cnputc
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|cn_grab_t
+name|uart_cngrab
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|cn_ungrab_t
+name|uart_cnungrab
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -265,6 +279,32 @@ begin_function
 specifier|static
 name|void
 name|uart_cnterm
+parameter_list|(
+name|struct
+name|consdev
+modifier|*
+name|cp
+parameter_list|)
+block|{  }
+end_function
+
+begin_function
+specifier|static
+name|void
+name|uart_cngrab
+parameter_list|(
+name|struct
+name|consdev
+modifier|*
+name|cp
+parameter_list|)
+block|{  }
+end_function
+
+begin_function
+specifier|static
+name|void
+name|uart_cnungrab
 parameter_list|(
 name|struct
 name|consdev
