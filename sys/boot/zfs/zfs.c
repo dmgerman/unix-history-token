@@ -230,13 +230,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|devsw
-name|zfs_dev_compat
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
 name|fs_ops
 name|zfs_fsops
 init|=
@@ -342,13 +335,6 @@ name|f_dev
 operator|!=
 operator|&
 name|zfs_dev
-operator|&&
-name|f
-operator|->
-name|f_dev
-operator|!=
-operator|&
-name|zfs_dev_compat
 condition|)
 return|return
 operator|(
