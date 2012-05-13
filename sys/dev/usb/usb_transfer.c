@@ -7753,6 +7753,10 @@ name|info
 operator|->
 name|xfer_mtx
 argument_list|)
+operator|&&
+operator|!
+name|SCHEDULER_STOPPED
+argument_list|()
 condition|)
 block|{
 comment|/* 	       	 * Cases that end up here: 		 * 		 * 5) HW interrupt done callback or other source. 		 */
@@ -10866,6 +10870,10 @@ name|bus
 operator|->
 name|bus_mtx
 argument_list|)
+operator|&&
+operator|!
+name|SCHEDULER_STOPPED
+argument_list|()
 condition|)
 block|{
 name|mtx_unlock
@@ -10897,6 +10905,10 @@ name|xroot
 operator|->
 name|xfer_mtx
 argument_list|)
+operator|&&
+operator|!
+name|SCHEDULER_STOPPED
+argument_list|()
 condition|)
 block|{
 name|mtx_unlock
