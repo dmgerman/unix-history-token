@@ -22756,7 +22756,7 @@ name|SCTP_NOTIFY_SPECIAL_SP_FAIL
 argument_list|,
 name|stcb
 argument_list|,
-name|SCTP_NOTIFY_DATAGRAM_UNSENT
+literal|0
 argument_list|,
 operator|(
 name|void
@@ -23102,11 +23102,11 @@ block|{
 comment|/* Still a socket? */
 name|sctp_ulp_notify
 argument_list|(
-name|SCTP_NOTIFY_DG_FAIL
+name|SCTP_NOTIFY_UNSENT_DG_FAIL
 argument_list|,
 name|stcb
 argument_list|,
-name|SCTP_NOTIFY_DATAGRAM_UNSENT
+literal|0
 argument_list|,
 name|chk
 argument_list|,
@@ -23228,11 +23228,11 @@ block|{
 comment|/* Still a socket? */
 name|sctp_ulp_notify
 argument_list|(
-name|SCTP_NOTIFY_DG_FAIL
+name|SCTP_NOTIFY_SENT_DG_FAIL
 argument_list|,
 name|stcb
 argument_list|,
-name|SCTP_NOTIFY_DATAGRAM_SENT
+literal|0
 argument_list|,
 name|chk
 argument_list|,
