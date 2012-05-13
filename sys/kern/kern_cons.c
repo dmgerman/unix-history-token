@@ -1844,6 +1844,9 @@ operator|*
 name|cp
 argument_list|)
 expr_stmt|;
+name|cngrab
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|cngetc
@@ -1854,6 +1857,9 @@ condition|)
 name|console_pausing
 operator|=
 literal|0
+expr_stmt|;
+name|cnungrab
+argument_list|()
 expr_stmt|;
 name|cnputc
 argument_list|(
