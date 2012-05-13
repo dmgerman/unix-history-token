@@ -5015,6 +5015,12 @@ name|tid
 decl_stmt|,
 name|x
 decl_stmt|;
+if|if
+condition|(
+name|SCHEDULER_STOPPED
+argument_list|()
+condition|)
+return|return;
 name|tid
 operator|=
 operator|(

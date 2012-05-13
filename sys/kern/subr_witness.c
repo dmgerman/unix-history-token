@@ -10236,6 +10236,13 @@ name|lock_class
 modifier|*
 name|class
 decl_stmt|;
+comment|/* 	 * This function is used independently in locking code to deal with 	 * Giant, SCHEDULER_STOPPED() check can be removed here after Giant 	 * is gone. 	 */
+if|if
+condition|(
+name|SCHEDULER_STOPPED
+argument_list|()
+condition|)
+return|return;
 name|KASSERT
 argument_list|(
 name|witness_cold
@@ -10383,6 +10390,13 @@ name|lock_class
 modifier|*
 name|class
 decl_stmt|;
+comment|/* 	 * This function is used independently in locking code to deal with 	 * Giant, SCHEDULER_STOPPED() check can be removed here after Giant 	 * is gone. 	 */
+if|if
+condition|(
+name|SCHEDULER_STOPPED
+argument_list|()
+condition|)
+return|return;
 name|KASSERT
 argument_list|(
 name|witness_cold

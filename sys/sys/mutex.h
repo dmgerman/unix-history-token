@@ -1470,7 +1470,7 @@ directive|define
 name|DROP_GIANT
 parameter_list|()
 define|\
-value|do {									\ 	int _giantcnt = 0;						\ 	WITNESS_SAVE_DECL(Giant);					\ 									\ 	if (mtx_owned(&Giant)) {					\ 		WITNESS_SAVE(&Giant.lock_object, Giant);		\ 		for (_giantcnt = 0; mtx_owned(&Giant); _giantcnt++)	\ 			mtx_unlock(&Giant);				\ 	}
+value|do {									\ 	int _giantcnt = 0;						\ 	WITNESS_SAVE_DECL(Giant);					\ 									\ 	if (mtx_owned(&Giant)) {					\ 		WITNESS_SAVE(&Giant.lock_object, Giant);		\ 		for (_giantcnt = 0; mtx_owned(&Giant)&&		\ 		    !SCHEDULER_STOPPED(); _giantcnt++)			\ 			mtx_unlock(&Giant);				\ 	}
 end_define
 
 begin_define

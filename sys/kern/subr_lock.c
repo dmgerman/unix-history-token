@@ -2544,6 +2544,12 @@ decl_stmt|;
 name|int
 name|spin
 decl_stmt|;
+if|if
+condition|(
+name|SCHEDULER_STOPPED
+argument_list|()
+condition|)
+return|return;
 comment|/* don't reset the timer when/if recursing */
 if|if
 condition|(
@@ -2858,6 +2864,12 @@ decl_stmt|;
 name|int
 name|spin
 decl_stmt|;
+if|if
+condition|(
+name|SCHEDULER_STOPPED
+argument_list|()
+condition|)
+return|return;
 if|if
 condition|(
 name|lo
