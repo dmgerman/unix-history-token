@@ -895,17 +895,6 @@ value|0x0000800b
 end_define
 
 begin_comment
-comment|/* temporary workaround for Apple listen() issue, no args used */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTP_LISTEN_FIX
-value|0x0000800c
-end_define
-
-begin_comment
 comment|/* Debug things that need to be purged */
 end_comment
 
