@@ -86,8 +86,6 @@ end_include
 begin_decl_stmt
 name|bool
 name|byte_sort
-init|=
-name|false
 decl_stmt|;
 end_decl_stmt
 
@@ -97,8 +95,6 @@ name|wchar_t
 modifier|*
 modifier|*
 name|wmonths
-init|=
-name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -109,8 +105,6 @@ name|char
 modifier|*
 modifier|*
 name|cmonths
-init|=
-name|NULL
 decl_stmt|;
 end_decl_stmt
 

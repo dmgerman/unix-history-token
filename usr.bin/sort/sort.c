@@ -191,8 +191,6 @@ begin_decl_stmt
 specifier|static
 name|bool
 name|need_random
-init|=
-name|false
 decl_stmt|;
 end_decl_stmt
 
@@ -213,8 +211,6 @@ specifier|const
 name|void
 modifier|*
 name|random_seed
-init|=
-name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -222,8 +218,6 @@ begin_decl_stmt
 specifier|static
 name|size_t
 name|random_seed_size
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -311,16 +305,12 @@ end_decl_stmt
 begin_decl_stmt
 name|bool
 name|debug_sort
-init|=
-name|false
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|bool
 name|need_hint
-init|=
-name|false
 decl_stmt|;
 end_decl_stmt
 
@@ -358,8 +348,6 @@ begin_decl_stmt
 specifier|static
 name|bool
 name|gnusort_numeric_compatibility
-init|=
-name|false
 decl_stmt|;
 end_decl_stmt
 
@@ -387,8 +375,6 @@ begin_decl_stmt
 specifier|static
 name|bool
 name|print_symbols_on_debug
-init|=
-name|false
 decl_stmt|;
 end_decl_stmt
 
@@ -412,8 +398,6 @@ name|char
 modifier|*
 modifier|*
 name|argv_from_file0
-init|=
-name|NULL
 decl_stmt|;
 end_decl_stmt
 

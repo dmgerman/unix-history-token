@@ -137,8 +137,6 @@ begin_decl_stmt
 specifier|static
 name|bool
 name|reverse_sort
-init|=
-name|false
 decl_stmt|;
 end_decl_stmt
 
@@ -251,8 +249,6 @@ name|struct
 name|level_stack
 modifier|*
 name|g_ls
-init|=
-name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -284,8 +280,6 @@ begin_decl_stmt
 specifier|static
 name|size_t
 name|sort_left
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 

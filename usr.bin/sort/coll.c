@@ -100,8 +100,6 @@ name|struct
 name|key_specs
 modifier|*
 name|keys
-init|=
-name|NULL
 decl_stmt|;
 end_decl_stmt
 

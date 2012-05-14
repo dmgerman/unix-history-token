@@ -168,8 +168,6 @@ specifier|const
 name|char
 modifier|*
 name|compress_program
-init|=
-name|NULL
 decl_stmt|;
 end_decl_stmt
 
