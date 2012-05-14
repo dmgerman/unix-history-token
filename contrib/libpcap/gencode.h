@@ -376,6 +376,13 @@ name|Q_RADIO
 value|40
 end_define
 
+begin_define
+define|#
+directive|define
+name|Q_CARP
+value|41
+end_define
+
 begin_comment
 comment|/* Directional qualifiers. */
 end_comment
@@ -434,6 +441,20 @@ define|#
 directive|define
 name|Q_ADDR4
 value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|Q_RA
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|Q_TA
+value|10
 end_define
 
 begin_define

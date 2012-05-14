@@ -312,10 +312,22 @@ modifier|*
 name|errbuf
 parameter_list|)
 block|{
-comment|/* 	 * This is a savefile, not a live capture file, so ignore 	 * requests to put it in non-blocking mode. 	 */
+comment|/* 	 * This is a savefile, not a live capture file, so reject 	 * requests to put it in non-blocking mode.  (If it's a 	 * pipe, it could be put in non-blocking mode, but that 	 * would significantly complicate the code to read packets, 	 * as it would have to handle reading partial packets and 	 * keeping the state of the read.) 	 */
+name|snprintf
+argument_list|(
+name|p
+operator|->
+name|errbuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
+argument_list|,
+literal|"Savefiles cannot be put into non-blocking mode"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-literal|0
+operator|-
+literal|1
 operator|)
 return|;
 block|}
@@ -593,6 +605,14 @@ argument_list|(
 name|p
 operator|->
 name|buffer
+argument_list|)
+expr_stmt|;
+name|pcap_freecode
+argument_list|(
+operator|&
+name|p
+operator|->
+name|fcode
 argument_list|)
 expr_stmt|;
 block|}
@@ -1410,9 +1430,7 @@ name|bpf_filter
 argument_list|(
 name|fcode
 argument_list|,
-name|p
-operator|->
-name|buffer
+name|data
 argument_list|,
 name|h
 operator|.
