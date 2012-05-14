@@ -1744,6 +1744,8 @@ name|ret
 operator|=
 name|ethertype_print
 argument_list|(
+name|gndo
+argument_list|,
 name|et
 argument_list|,
 name|p
@@ -1778,6 +1780,8 @@ name|ret
 operator|=
 name|ethertype_print
 argument_list|(
+name|gndo
+argument_list|,
 name|et
 argument_list|,
 name|p
@@ -1925,6 +1929,8 @@ expr_stmt|;
 comment|/* 			 * What remains is an Ethernet packet. 			 */
 name|ether_print
 argument_list|(
+name|gndo
+argument_list|,
 name|p
 argument_list|,
 name|length

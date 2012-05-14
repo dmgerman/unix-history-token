@@ -929,6 +929,7 @@ begin_function
 name|int
 name|ospf_print_grace_lsa
 parameter_list|(
+specifier|const
 name|u_int8_t
 modifier|*
 name|tptr
@@ -1247,6 +1248,7 @@ begin_function
 name|int
 name|ospf_print_te_lsa
 parameter_list|(
+specifier|const
 name|u_int8_t
 modifier|*
 name|tptr
@@ -4942,13 +4944,10 @@ literal|", %d LSA%s"
 argument_list|,
 name|lsa_count_max
 argument_list|,
+name|PLURAL_SUFFIX
+argument_list|(
 name|lsa_count_max
-operator|>
-literal|1
-condition|?
-literal|"s"
-else|:
-literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 for|for

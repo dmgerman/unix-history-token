@@ -2069,18 +2069,40 @@ value|0x0009
 end_define
 
 begin_comment
-comment|/* draft-ietf-l3vpn-2547bis-mcast-bgp-02.txt */
+comment|/* RFC-ietf-l3vpn-2547bis-mcast-bgp-08.txt */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|BGP_EXT_COM_VRF_RT_IMP
-value|0x010a
+value|0x010b
 end_define
 
 begin_comment
-comment|/* draft-ietf-l3vpn-2547bis-mcast-bgp-02.txt */
+comment|/* RFC-ietf-l3vpn-2547bis-mcast-bgp-08.txt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BGP_EXT_COM_L2VPN_RT_0
+value|0x000a
+end_define
+
+begin_comment
+comment|/* L2VPN Identifier,Format AS(2bytes):AN(4bytes) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BGP_EXT_COM_L2VPN_RT_1
+value|0xF10a
+end_define
+
+begin_comment
+comment|/* L2VPN Identifier,Format IP address:AN(2bytes) */
 end_comment
 
 begin_comment
@@ -2308,6 +2330,18 @@ block|{
 name|BGP_EXT_COM_VRF_RT_IMP
 block|,
 literal|"vrf-route-import"
+block|}
+block|,
+block|{
+name|BGP_EXT_COM_L2VPN_RT_0
+block|,
+literal|"l2vpn-id"
+block|}
+block|,
+block|{
+name|BGP_EXT_COM_L2VPN_RT_1
+block|,
+literal|"l2vpn-id"
 block|}
 block|,
 block|{
@@ -4861,6 +4895,87 @@ name|pptr
 operator|+=
 literal|2
 expr_stmt|;
+comment|/* Old and new L2VPN NLRI share AFI/SAFI          *   -> Assume a 12 Byte-length NLRI is auto-discovery-only          *      and> 17 as old format. Complain for the middle case          */
+if|if
+condition|(
+name|plen
+operator|==
+literal|12
+condition|)
+block|{
+comment|/* assume AD-only with RD, BGPNH */
+name|TCHECK2
+argument_list|(
+name|pptr
+index|[
+literal|0
+index|]
+argument_list|,
+literal|12
+argument_list|)
+expr_stmt|;
+name|buf
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+name|strlen
+operator|=
+name|snprintf
+argument_list|(
+name|buf
+argument_list|,
+name|buflen
+argument_list|,
+literal|"RD: %s, BGPNH: %s"
+argument_list|,
+name|bgp_vpn_rd_print
+argument_list|(
+name|pptr
+argument_list|)
+argument_list|,
+comment|/* need something like getname() here */
+name|getname
+argument_list|(
+name|pptr
+operator|+
+literal|8
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|UPDATE_BUF_BUFLEN
+argument_list|(
+name|buf
+argument_list|,
+name|buflen
+argument_list|,
+name|strlen
+argument_list|)
+expr_stmt|;
+name|pptr
+operator|+=
+literal|12
+expr_stmt|;
+name|tlen
+operator|-=
+literal|12
+expr_stmt|;
+return|return
+name|plen
+return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|plen
+operator|>
+literal|17
+condition|)
+block|{
+comment|/* assume old format */
+comment|/* RD, ID, LBLKOFF, LBLBASE */
 name|TCHECK2
 argument_list|(
 name|pptr
@@ -5135,6 +5250,15 @@ name|plen
 operator|+
 literal|2
 return|;
+block|}
+else|else
+block|{
+comment|/* complain bitterly ? */
+comment|/* fall through */
+goto|goto
+name|trunc
+goto|;
+block|}
 name|trunc
 label|:
 return|return
@@ -10425,6 +10549,9 @@ case|:
 case|case
 name|BGP_EXT_COM_RO_0
 case|:
+case|case
+name|BGP_EXT_COM_L2VPN_RT_0
+case|:
 name|printf
 argument_list|(
 literal|": %u:%u (= %s)"
@@ -10457,6 +10584,9 @@ name|BGP_EXT_COM_RT_1
 case|:
 case|case
 name|BGP_EXT_COM_RO_1
+case|:
+case|case
+name|BGP_EXT_COM_L2VPN_RT_1
 case|:
 case|case
 name|BGP_EXT_COM_VRF_RT_IMP

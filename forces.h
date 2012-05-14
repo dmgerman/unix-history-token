@@ -3015,7 +3015,7 @@ specifier|register
 name|u_int
 name|len
 parameter_list|,
-name|u_int32_t
+name|u_int16_t
 name|IDcnt
 parameter_list|,
 name|u_int16_t

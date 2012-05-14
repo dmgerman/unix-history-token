@@ -210,6 +210,10 @@ specifier|static
 name|void
 name|lane_hdr_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -219,14 +223,18 @@ block|{
 operator|(
 name|void
 operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"lecid:%x "
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 name|bp
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -344,6 +352,8 @@ expr_stmt|;
 comment|/* 	 * Now print the encapsulated frame, under the assumption 	 * that it's an Ethernet frame. 	 */
 name|ether_print
 argument_list|(
+name|gndo
+argument_list|,
 name|p
 argument_list|,
 name|length
