@@ -248,13 +248,13 @@ block|{
 literal|""
 block|,
 comment|/* 1*/
-literal|"you cannot use -%c and -%c together"
+literal|"mutually exclusive flags"
 block|,
 comment|/* 2*/
 literal|"extra argument not allowed with -c"
 block|,
 comment|/* 3*/
-literal|"Unknown feature: %s"
+literal|"Unknown feature"
 block|,
 comment|/* 4*/
 literal|"Wrong memory buffer specification"
@@ -1764,6 +1764,8 @@ condition|)
 block|{
 name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|getstr
 argument_list|(
 literal|4
@@ -1909,28 +1911,19 @@ name|sig_handler
 parameter_list|(
 name|int
 name|sig
+name|__unused
 parameter_list|,
 name|siginfo_t
 modifier|*
 name|siginfo
+name|__unused
 parameter_list|,
 name|void
 modifier|*
 name|context
+name|__unused
 parameter_list|)
 block|{
-name|sig
-operator|=
-name|sig
-expr_stmt|;
-name|siginfo
-operator|=
-name|siginfo
-expr_stmt|;
-name|context
-operator|=
-name|context
-expr_stmt|;
 name|clear_tmp_files
 argument_list|()
 expr_stmt|;
@@ -2205,6 +2198,8 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
+literal|"%s: %s"
+argument_list|,
 name|getstr
 argument_list|(
 literal|3
@@ -2298,14 +2293,16 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-name|getstr
-argument_list|(
-literal|1
-argument_list|)
+literal|"%c:%c: %s"
 argument_list|,
 name|c
 argument_list|,
 name|mec
+argument_list|,
+name|getstr
+argument_list|(
+literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|found_others
@@ -2328,10 +2325,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-name|getstr
-argument_list|(
-literal|1
-argument_list|)
+literal|"%c:%c: %s"
 argument_list|,
 name|c
 argument_list|,
@@ -2339,6 +2333,11 @@ name|mutually_exclusive_flags
 index|[
 name|fo_index
 index|]
+argument_list|,
+name|getstr
+argument_list|(
+literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|mef_flags
@@ -2867,6 +2866,8 @@ condition|)
 block|{
 name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|getstr
 argument_list|(
 literal|5
@@ -2929,6 +2930,8 @@ condition|)
 block|{
 name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|getstr
 argument_list|(
 literal|5
@@ -3111,6 +3114,8 @@ condition|)
 block|{
 name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|getstr
 argument_list|(
 literal|6
@@ -3745,6 +3750,8 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
+literal|"%s"
+argument_list|,
 name|getstr
 argument_list|(
 literal|11
@@ -3855,6 +3862,8 @@ condition|)
 name|errx
 argument_list|(
 literal|2
+argument_list|,
+literal|"%s"
 argument_list|,
 name|getstr
 argument_list|(
@@ -4850,14 +4859,10 @@ name|outfile
 argument_list|,
 name|optarg
 argument_list|,
-operator|(
 name|strlen
 argument_list|(
-name|optarg
+name|outfile
 argument_list|)
-operator|+
-literal|1
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5415,14 +5420,16 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-name|getstr
-argument_list|(
-literal|1
-argument_list|)
+literal|"%c:%c: %s"
 argument_list|,
 literal|'m'
 argument_list|,
 literal|'c'
+argument_list|,
+name|getstr
+argument_list|(
+literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 ifndef|#

@@ -2520,6 +2520,8 @@ name|err
 argument_list|(
 literal|2
 argument_list|,
+literal|"%s"
+argument_list|,
 name|getstr
 argument_list|(
 literal|7
@@ -4171,6 +4173,8 @@ name|err
 argument_list|(
 literal|2
 argument_list|,
+literal|"%s"
+argument_list|,
 name|getstr
 argument_list|(
 literal|8
@@ -5758,6 +5762,8 @@ name|err
 argument_list|(
 literal|2
 argument_list|,
+literal|"%s"
+argument_list|,
 name|getstr
 argument_list|(
 literal|9
@@ -5801,6 +5807,8 @@ default|default:
 name|errx
 argument_list|(
 literal|2
+argument_list|,
+literal|"%s"
 argument_list|,
 name|getstr
 argument_list|(
