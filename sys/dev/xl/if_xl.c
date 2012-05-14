@@ -1398,7 +1398,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|DRIVER_MODULE
+name|DRIVER_MODULE_ORDERED
 argument_list|(
 name|xl
 argument_list|,
@@ -1408,9 +1408,11 @@ name|xl_driver
 argument_list|,
 name|xl_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
+argument_list|,
+name|SI_ORDER_ANY
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1426,9 +1428,9 @@ name|miibus_driver
 argument_list|,
 name|miibus_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
