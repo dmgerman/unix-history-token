@@ -111,12 +111,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<termios.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"shell.h"
 end_include
 
