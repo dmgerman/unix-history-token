@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sdt.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/smp.h>
 end_include
 
@@ -1120,6 +1126,174 @@ endif|#
 directive|endif
 end_endif
 
+begin_expr_stmt
+name|SDT_PROVIDER_DEFINE
+argument_list|(
+name|sched
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE3
+argument_list|(
+name|sched
+argument_list|, , ,
+name|change_pri
+argument_list|,
+name|change
+operator|-
+name|pri
+argument_list|,
+literal|"struct thread *"
+argument_list|,
+literal|"struct proc *"
+argument_list|,
+literal|"uint8_t"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE3
+argument_list|(
+name|sched
+argument_list|, , ,
+name|dequeue
+argument_list|,
+name|dequeue
+argument_list|,
+literal|"struct thread *"
+argument_list|,
+literal|"struct proc *"
+argument_list|,
+literal|"void *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE4
+argument_list|(
+name|sched
+argument_list|, , ,
+name|enqueue
+argument_list|,
+name|enqueue
+argument_list|,
+literal|"struct thread *"
+argument_list|,
+literal|"struct proc *"
+argument_list|,
+literal|"void *"
+argument_list|,
+literal|"int"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE4
+argument_list|(
+name|sched
+argument_list|, , ,
+name|lend_pri
+argument_list|,
+name|lend
+operator|-
+name|pri
+argument_list|,
+literal|"struct thread *"
+argument_list|,
+literal|"struct proc *"
+argument_list|,
+literal|"uint8_t"
+argument_list|,
+literal|"struct thread *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE2
+argument_list|(
+name|sched
+argument_list|, , ,
+name|load_change
+argument_list|,
+name|load
+operator|-
+name|change
+argument_list|,
+literal|"int"
+argument_list|,
+literal|"int"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE2
+argument_list|(
+name|sched
+argument_list|, , ,
+name|off_cpu
+argument_list|,
+name|off
+operator|-
+name|cpu
+argument_list|,
+literal|"struct thread *"
+argument_list|,
+literal|"struct proc *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE
+argument_list|(
+name|sched
+argument_list|, , ,
+name|on_cpu
+argument_list|,
+name|on
+operator|-
+name|cpu
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE
+argument_list|(
+name|sched
+argument_list|, , ,
+name|remain_cpu
+argument_list|,
+name|remain
+operator|-
+name|cpu
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE2
+argument_list|(
+name|sched
+argument_list|, , ,
+name|surrender
+argument_list|,
+name|surrender
+argument_list|,
+literal|"struct thread *"
+argument_list|,
+literal|"struct proc *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|__inline
@@ -1139,6 +1313,17 @@ argument_list|,
 literal|"load"
 argument_list|,
 literal|"global load"
+argument_list|,
+name|sched_tdcnt
+argument_list|)
+expr_stmt|;
+name|SDT_PROBE2
+argument_list|(
+name|sched
+argument_list|, , ,
+name|load_change
+argument_list|,
+name|NOCPU
 argument_list|,
 name|sched_tdcnt
 argument_list|)
@@ -1165,6 +1350,17 @@ argument_list|,
 literal|"load"
 argument_list|,
 literal|"global load"
+argument_list|,
+name|sched_tdcnt
+argument_list|)
+expr_stmt|;
+name|SDT_PROBE2
+argument_list|(
+name|sched
+argument_list|, , ,
+name|load_change
+argument_list|,
+name|NOCPU
 argument_list|,
 name|sched_tdcnt
 argument_list|)
@@ -2852,6 +3048,21 @@ name|curthread
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|SDT_PROBE3
+argument_list|(
+name|sched
+argument_list|, , ,
+name|change_pri
+argument_list|,
+name|td
+argument_list|,
+name|td
+operator|->
+name|td_proc
+argument_list|,
+name|prio
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|td
@@ -2894,6 +3105,23 @@ name|sched_tdname
 argument_list|(
 name|td
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|SDT_PROBE4
+argument_list|(
+name|sched
+argument_list|, , ,
+name|lend_pri
+argument_list|,
+name|td
+argument_list|,
+name|td
+operator|->
+name|td_proc
+argument_list|,
+name|prio
+argument_list|,
+name|curthread
 argument_list|)
 expr_stmt|;
 block|}
@@ -3631,6 +3859,19 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|SDT_PROBE2
+argument_list|(
+name|sched
+argument_list|, , ,
+name|off_cpu
+argument_list|,
+name|td
+argument_list|,
+name|td
+operator|->
+name|td_proc
+argument_list|)
+expr_stmt|;
 comment|/* I feel sleepy */
 name|lock_profile_release_lock
 argument_list|(
@@ -3692,6 +3933,13 @@ name|__LINE__
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Where am I?  What year is it? 		 * We are in the same thread that went to sleep above, 		 * but any amount of time may have passed. All our context 		 * will still be available as will local variables. 		 * PCPU values however may have changed as we may have 		 * changed CPU so don't trust cached values of them. 		 * New threads will go to fork_exit() instead of here 		 * so if you change things here you may need to change 		 * things there too. 		 * 		 * If the thread above was exiting it will never wake 		 * up again here, so either it has saved everything it 		 * needed to, or the thread_wait() or wait() will 		 * need to reap it. 		 */
+name|SDT_PROBE0
+argument_list|(
+name|sched
+argument_list|, , ,
+name|on_cpu
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|HWPMC_HOOKS
@@ -3714,6 +3962,14 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+else|else
+name|SDT_PROBE0
+argument_list|(
+name|sched
+argument_list|, , ,
+name|remain_cpu
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
@@ -4667,6 +4923,25 @@ name|td
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|SDT_PROBE4
+argument_list|(
+name|sched
+argument_list|, , ,
+name|enqueue
+argument_list|,
+name|td
+argument_list|,
+name|td
+operator|->
+name|td_proc
+argument_list|,
+name|NULL
+argument_list|,
+name|flags
+operator|&
+name|SRQ_PREEMPTED
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Now that the thread is moving to the run-queue, set the lock 	 * to the scheduler's lock. 	 */
 if|if
 condition|(
@@ -5122,6 +5397,25 @@ name|td
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|STD_PROBE4
+argument_list|(
+name|sched
+argument_list|, , ,
+name|enqueue
+argument_list|,
+name|td
+argument_list|,
+name|td
+operator|->
+name|td_proc
+argument_list|,
+name|NULL
+argument_list|,
+name|flags
+operator|&
+name|SRQ_PREEMPTED
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Now that the thread is moving to the run-queue, set the lock 	 * to the scheduler's lock. 	 */
 if|if
 condition|(
@@ -5314,6 +5608,21 @@ name|sched_tdname
 argument_list|(
 name|curthread
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|SDT_PROBE3
+argument_list|(
+name|sched
+argument_list|, , ,
+name|dequeue
+argument_list|,
+name|td
+argument_list|,
+name|td
+operator|->
+name|td_proc
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -5598,6 +5907,19 @@ modifier|*
 name|td
 parameter_list|)
 block|{
+name|SDT_PROBE2
+argument_list|(
+name|sched
+argument_list|, , ,
+name|surrender
+argument_list|,
+name|td
+argument_list|,
+name|td
+operator|->
+name|td_proc
+argument_list|)
+expr_stmt|;
 name|thread_lock
 argument_list|(
 name|td
