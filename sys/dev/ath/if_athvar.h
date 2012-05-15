@@ -1262,7 +1262,7 @@ name|struct
 name|ath_intr_stats
 name|sc_intr_stats
 decl_stmt|;
-name|int
+name|uint64_t
 name|sc_debug
 decl_stmt|;
 name|int

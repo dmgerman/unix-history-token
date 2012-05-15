@@ -2376,7 +2376,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|ATH_DEBUG
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -2395,8 +2395,6 @@ operator|&
 name|sc
 operator|->
 name|sc_debug
-argument_list|,
-literal|0
 argument_list|,
 literal|"control debugging printfs"
 argument_list|)

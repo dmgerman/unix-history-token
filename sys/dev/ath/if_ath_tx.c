@@ -10811,7 +10811,7 @@ name|DPRINTF
 argument_list|(
 name|sc
 argument_list|,
-name|ATH_DEBUG_SW_TX_BAW
+name|ATH_DEBUG_SW_TX_BAR
 argument_list|,
 literal|"%s: tid=%p, called\n"
 argument_list|,
@@ -10902,7 +10902,7 @@ name|DPRINTF
 argument_list|(
 name|sc
 argument_list|,
-name|ATH_DEBUG_SW_TX_BAW
+name|ATH_DEBUG_SW_TX_BAR
 argument_list|,
 literal|"%s: tid=%p, called\n"
 argument_list|,
@@ -11017,6 +11017,23 @@ operator|(
 literal|0
 operator|)
 return|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|ATH_DEBUG_SW_TX_BAR
+argument_list|,
+literal|"%s: tid=%p (%d), bar ready\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|tid
+argument_list|,
+name|tid
+operator|->
+name|tid
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1
@@ -11066,7 +11083,7 @@ name|DPRINTF
 argument_list|(
 name|sc
 argument_list|,
-name|ATH_DEBUG_SW_TX_BAW
+name|ATH_DEBUG_SW_TX_BAR
 argument_list|,
 literal|"%s: tid=%p, called\n"
 argument_list|,
@@ -11141,7 +11158,7 @@ name|DPRINTF
 argument_list|(
 name|sc
 argument_list|,
-name|ATH_DEBUG_SW_TX_BAW
+name|ATH_DEBUG_SW_TX_BAR
 argument_list|,
 literal|"%s: tid=%p, hwq_depth=%d, waiting\n"
 argument_list|,
@@ -11168,7 +11185,7 @@ name|DPRINTF
 argument_list|(
 name|sc
 argument_list|,
-name|ATH_DEBUG_SW_TX_BAW
+name|ATH_DEBUG_SW_TX_BAR
 argument_list|,
 literal|"%s: tid=%p, new BAW left edge=%d\n"
 argument_list|,
@@ -11452,7 +11469,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"%s: node %p: bf=%p: tid txq_depth=%d hwq_depth=%d\n"
+literal|"%s: node %p: bf=%p: tid txq_depth=%d hwq_depth=%d, bar_wait=%d\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -11467,6 +11484,10 @@ argument_list|,
 name|tid
 operator|->
 name|hwq_depth
+argument_list|,
+name|tid
+operator|->
+name|bar_wait
 argument_list|)
 expr_stmt|;
 name|device_printf
@@ -17567,13 +17588,15 @@ name|DPRINTF
 argument_list|(
 name|sc
 argument_list|,
-name|ATH_DEBUG_SW_TX_CTRL
+name|ATH_DEBUG_SW_TX_BAR
 argument_list|,
-literal|"%s: called; status=%d\n"
+literal|"%s: called; status=%d, attempts=%d\n"
 argument_list|,
 name|__func__
 argument_list|,
 name|status
+argument_list|,
+name|attempts
 argument_list|)
 expr_stmt|;
 comment|/* Note: This may update the BAW details */

@@ -26,159 +26,164 @@ enum|enum
 block|{
 name|ATH_DEBUG_XMIT
 init|=
-literal|0x00000001
+literal|0x000000001ULL
 block|,
 comment|/* basic xmit operation */
 name|ATH_DEBUG_XMIT_DESC
 init|=
-literal|0x00000002
+literal|0x000000002ULL
 block|,
 comment|/* xmit descriptors */
 name|ATH_DEBUG_RECV
 init|=
-literal|0x00000004
+literal|0x000000004ULL
 block|,
 comment|/* basic recv operation */
 name|ATH_DEBUG_RECV_DESC
 init|=
-literal|0x00000008
+literal|0x000000008ULL
 block|,
 comment|/* recv descriptors */
 name|ATH_DEBUG_RATE
 init|=
-literal|0x00000010
+literal|0x000000010ULL
 block|,
 comment|/* rate control */
 name|ATH_DEBUG_RESET
 init|=
-literal|0x00000020
+literal|0x000000020ULL
 block|,
 comment|/* reset processing */
 name|ATH_DEBUG_MODE
 init|=
-literal|0x00000040
+literal|0x000000040ULL
 block|,
 comment|/* mode init/setup */
 name|ATH_DEBUG_BEACON
 init|=
-literal|0x00000080
+literal|0x000000080ULL
 block|,
 comment|/* beacon handling */
 name|ATH_DEBUG_WATCHDOG
 init|=
-literal|0x00000100
+literal|0x000000100ULL
 block|,
 comment|/* watchdog timeout */
 name|ATH_DEBUG_INTR
 init|=
-literal|0x00001000
+literal|0x000001000ULL
 block|,
 comment|/* ISR */
 name|ATH_DEBUG_TX_PROC
 init|=
-literal|0x00002000
+literal|0x000002000ULL
 block|,
 comment|/* tx ISR proc */
 name|ATH_DEBUG_RX_PROC
 init|=
-literal|0x00004000
+literal|0x000004000ULL
 block|,
 comment|/* rx ISR proc */
 name|ATH_DEBUG_BEACON_PROC
 init|=
-literal|0x00008000
+literal|0x000008000ULL
 block|,
 comment|/* beacon ISR proc */
 name|ATH_DEBUG_CALIBRATE
 init|=
-literal|0x00010000
+literal|0x000010000ULL
 block|,
 comment|/* periodic calibration */
 name|ATH_DEBUG_KEYCACHE
 init|=
-literal|0x00020000
+literal|0x000020000ULL
 block|,
 comment|/* key cache management */
 name|ATH_DEBUG_STATE
 init|=
-literal|0x00040000
+literal|0x000040000ULL
 block|,
 comment|/* 802.11 state transitions */
 name|ATH_DEBUG_NODE
 init|=
-literal|0x00080000
+literal|0x000080000ULL
 block|,
 comment|/* node management */
 name|ATH_DEBUG_LED
 init|=
-literal|0x00100000
+literal|0x000100000ULL
 block|,
 comment|/* led management */
 name|ATH_DEBUG_FF
 init|=
-literal|0x00200000
+literal|0x000200000ULL
 block|,
 comment|/* fast frames */
 name|ATH_DEBUG_DFS
 init|=
-literal|0x00400000
+literal|0x000400000ULL
 block|,
 comment|/* DFS processing */
 name|ATH_DEBUG_TDMA
 init|=
-literal|0x00800000
+literal|0x000800000ULL
 block|,
 comment|/* TDMA processing */
 name|ATH_DEBUG_TDMA_TIMER
 init|=
-literal|0x01000000
+literal|0x001000000ULL
 block|,
 comment|/* TDMA timer processing */
 name|ATH_DEBUG_REGDOMAIN
 init|=
-literal|0x02000000
+literal|0x002000000ULL
 block|,
 comment|/* regulatory processing */
 name|ATH_DEBUG_SW_TX
 init|=
-literal|0x04000000
+literal|0x004000000ULL
 block|,
 comment|/* per-packet software TX */
 name|ATH_DEBUG_SW_TX_BAW
 init|=
-literal|0x08000000
+literal|0x008000000ULL
 block|,
 comment|/* BAW handling */
 name|ATH_DEBUG_SW_TX_CTRL
 init|=
-literal|0x10000000
+literal|0x010000000ULL
 block|,
 comment|/* queue control */
 name|ATH_DEBUG_SW_TX_AGGR
 init|=
-literal|0x20000000
+literal|0x020000000ULL
 block|,
 comment|/* aggregate TX */
 name|ATH_DEBUG_SW_TX_RETRIES
 init|=
-literal|0x40000000
+literal|0x040000000ULL
 block|,
 comment|/* software TX retries */
 name|ATH_DEBUG_FATAL
 init|=
-literal|0x80000000
+literal|0x080000000ULL
 block|,
 comment|/* fatal errors */
+name|ATH_DEBUG_SW_TX_BAR
+init|=
+literal|0x100000000ULL
+block|,
+comment|/* BAR TX */
 name|ATH_DEBUG_ANY
 init|=
-literal|0xffffffff
+literal|0xffffffffffffffffULL
 block|}
 enum|;
 end_enum
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|uint64_t
 name|ath_debug
 decl_stmt|;
 end_decl_stmt
