@@ -5397,7 +5397,7 @@ name|td
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|STD_PROBE4
+name|SDT_PROBE4
 argument_list|(
 name|sched
 argument_list|, , ,
