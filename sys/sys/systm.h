@@ -79,17 +79,6 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|stop_scheduler
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* only one thread runs after panic */
-end_comment
-
-begin_decl_stmt
-specifier|extern
 specifier|const
 name|char
 modifier|*
@@ -406,7 +395,7 @@ define|#
 directive|define
 name|SCHEDULER_STOPPED
 parameter_list|()
-value|__predict_false(stop_scheduler)
+value|__predict_false(curthread->td_stopsched)
 end_define
 
 begin_comment

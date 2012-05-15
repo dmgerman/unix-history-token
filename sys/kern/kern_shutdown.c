@@ -620,16 +620,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|stop_scheduler
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* system stopped CPUs for panic */
-end_comment
-
-begin_decl_stmt
-name|int
 name|dumping
 decl_stmt|;
 end_decl_stmt
@@ -2238,7 +2228,9 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 		 * We set stop_scheduler here and not in the block above, 		 * because we want to ensure that if panic has been called and 		 * stop_scheduler_on_panic is true, then stop_scheduler will 		 * always be set.  Even if panic has been entered from kdb. 		 */
-name|stop_scheduler
+name|td
+operator|->
+name|td_stopsched
 operator|=
 literal|1
 expr_stmt|;
