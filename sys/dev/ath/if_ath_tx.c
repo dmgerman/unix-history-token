@@ -14460,14 +14460,20 @@ name|bf_state
 operator|.
 name|bfs_pktlen
 expr_stmt|;
-comment|/* 	 * handle errors first 	 */
+comment|/* 	 * Handle errors first! 	 * 	 * Here, handle _any_ error as a "exceeded retries" error. 	 * Later on (when filtered frames are to be specially handled) 	 * it'll have to be expanded. 	 */
+if|#
+directive|if
+literal|0
+block|if (ts.ts_status& HAL_TXERR_XRETRY) {
+endif|#
+directive|endif
 if|if
 condition|(
 name|ts
 operator|.
 name|ts_status
-operator|&
-name|HAL_TXERR_XRETRY
+operator|!=
+literal|0
 condition|)
 block|{
 name|ATH_TXQ_UNLOCK
@@ -15429,6 +15435,12 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* 	 * Don't bother with the retry check if all frames 	 * are being failed (eg during queue deletion.) 	 */
+if|#
+directive|if
+literal|0
+block|if (fail == 0&& ts->ts_status& HAL_TXERR_XRETRY) {
+endif|#
+directive|endif
 if|if
 condition|(
 name|fail
@@ -15438,8 +15450,8 @@ operator|&&
 name|ts
 operator|->
 name|ts_status
-operator|&
-name|HAL_TXERR_XRETRY
+operator|!=
+literal|0
 condition|)
 block|{
 name|ATH_TXQ_UNLOCK
