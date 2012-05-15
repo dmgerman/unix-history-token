@@ -8503,7 +8503,7 @@ index|[
 literal|0
 index|]
 operator|=
-literal|"/dev/dsk"
+literal|"/dev"
 expr_stmt|;
 name|nsearch
 operator|=
