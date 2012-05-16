@@ -5636,6 +5636,12 @@ name|d_type
 operator|==
 name|DT_WHT
 operator|||
+name|dp
+operator|->
+name|d_fileno
+operator|==
+literal|0
+operator|||
 operator|(
 name|dp
 operator|->
