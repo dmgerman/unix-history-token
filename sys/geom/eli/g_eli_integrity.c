@@ -646,8 +646,8 @@ name|G_ELI_DEBUG
 argument_list|(
 literal|0
 argument_list|,
-literal|"%s: %jd bytes "
-literal|"corrupted at offset %jd."
+literal|"%s: Failed to authenticate %jd "
+literal|"bytes of data at offset %jd."
 argument_list|,
 name|sc
 operator|->
@@ -716,7 +716,8 @@ name|G_ELI_DEBUG
 argument_list|(
 literal|0
 argument_list|,
-literal|"%s: %jd bytes corrupted at offset %jd."
+literal|"%s: Failed to authenticate %jd "
+literal|"bytes of data at offset %jd."
 argument_list|,
 name|sc
 operator|->
