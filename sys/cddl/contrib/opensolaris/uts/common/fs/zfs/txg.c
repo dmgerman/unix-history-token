@@ -135,7 +135,7 @@ name|OID_AUTO
 argument_list|,
 name|timeout
 argument_list|,
-name|CTLFLAG_RDTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|zfs_txg_timeout
