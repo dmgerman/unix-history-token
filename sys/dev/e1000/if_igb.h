@@ -49,7 +49,7 @@ value|4096
 end_define
 
 begin_comment
-comment|/*  * IGB_RXD: Maximum number of Transmit Descriptors  *  *   This value is the number of receive descriptors allocated by the driver.  *   Increasing this value allows the driver to buffer more incoming packets.  *   Each descriptor is 16 bytes.  A receive buffer is also allocated for each  *   descriptor. The maximum MTU size is 16110.  *   Since TDLEN should be multiple of 128bytes, the number of transmit  *   desscriptors should meet the following condition.  *      (num_tx_desc * sizeof(struct e1000_tx_desc)) % 128 == 0  */
+comment|/*  * IGB_RXD: Maximum number of Receive Descriptors  *  *   This value is the number of receive descriptors allocated by the driver.  *   Increasing this value allows the driver to buffer more incoming packets.  *   Each descriptor is 16 bytes.  A receive buffer is also allocated for each  *   descriptor. The maximum MTU size is 16110.  *   Since TDLEN should be multiple of 128bytes, the number of transmit  *   desscriptors should meet the following condition.  *      (num_tx_desc * sizeof(struct e1000_tx_desc)) % 128 == 0  */
 end_comment
 
 begin_define
@@ -320,25 +320,47 @@ name|IGB_EEPROM_APME
 value|0x400;
 end_define
 
-begin_define
-define|#
-directive|define
-name|IGB_QUEUE_IDLE
-value|0
-end_define
+begin_comment
+comment|/* Queue minimum free for use */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|IGB_QUEUE_WORKING
+name|IGB_QUEUE_THRESHOLD
+value|(adapter->num_tx_desc / 8)
+end_define
+
+begin_comment
+comment|/* Queue bit defines */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGB_QUEUE_IDLE
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|IGB_QUEUE_HUNG
+name|IGB_QUEUE_WORKING
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGB_QUEUE_HUNG
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGB_QUEUE_DEPLETED
+value|8
 end_define
 
 begin_comment

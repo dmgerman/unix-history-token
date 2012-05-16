@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2010, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2011, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -206,6 +206,24 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_ICH_FWSM_PCIM2PCI
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* ME PCIm-to-PCI active */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_ICH_FWSM_PCIM2PCI_COUNT
+value|2000
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_ICH_MNG_IAMT_MODE
 value|0x2
 end_define
@@ -219,6 +237,17 @@ end_define
 
 begin_comment
 comment|/* FW is in proxy mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_FWSM_MEMC
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* ME Messaging capable */
 end_comment
 
 begin_comment
@@ -359,7 +388,7 @@ begin_define
 define|#
 directive|define
 name|ID_LED_DEFAULT_ICH8LAN
-value|((ID_LED_DEF1_DEF2<< 12) | \                                  (ID_LED_OFF1_OFF2<<  8) | \                                  (ID_LED_OFF1_ON2<<  4) | \                                  (ID_LED_DEF1_DEF2))
+value|((ID_LED_DEF1_DEF2<< 12) | \ 				 (ID_LED_OFF1_OFF2<<  8) | \ 				 (ID_LED_OFF1_ON2<<  4) | \ 				 (ID_LED_DEF1_DEF2))
 end_define
 
 begin_define
@@ -477,7 +506,7 @@ name|page
 parameter_list|,
 name|reg
 parameter_list|)
-value|(((page)<< PHY_PAGE_SHIFT) | \                            ((reg)& MAX_PHY_REG_ADDRESS))
+value|(((page)<< PHY_PAGE_SHIFT) | \ 				 ((reg)& MAX_PHY_REG_ADDRESS))
 end_define
 
 begin_define
@@ -555,6 +584,13 @@ end_define
 begin_comment
 comment|/* PHY Wakeup Registers and defines */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|BM_PORT_GEN_CFG
+value|PHY_REG(BM_PORT_CTRL_PAGE, 17)
+end_define
 
 begin_define
 define|#
@@ -813,8 +849,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|HV_STATS_PAGE
+value|778
+end_define
+
+begin_define
+define|#
+directive|define
 name|HV_SCC_UPPER
-value|PHY_REG(778, 16)
+value|PHY_REG(HV_STATS_PAGE, 16)
 end_define
 
 begin_comment
@@ -825,50 +868,50 @@ begin_define
 define|#
 directive|define
 name|HV_SCC_LOWER
-value|PHY_REG(778, 17)
+value|PHY_REG(HV_STATS_PAGE, 17)
 end_define
 
 begin_define
 define|#
 directive|define
 name|HV_ECOL_UPPER
-value|PHY_REG(778, 18)
+value|PHY_REG(HV_STATS_PAGE, 18)
 end_define
 
 begin_comment
-comment|/* Excessive Collision Count */
+comment|/* Excessive Coll. Count */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|HV_ECOL_LOWER
-value|PHY_REG(778, 19)
+value|PHY_REG(HV_STATS_PAGE, 19)
 end_define
 
 begin_define
 define|#
 directive|define
 name|HV_MCC_UPPER
-value|PHY_REG(778, 20)
+value|PHY_REG(HV_STATS_PAGE, 20)
 end_define
 
 begin_comment
-comment|/* Multiple Collision Count */
+comment|/* Multiple Coll. Count */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|HV_MCC_LOWER
-value|PHY_REG(778, 21)
+value|PHY_REG(HV_STATS_PAGE, 21)
 end_define
 
 begin_define
 define|#
 directive|define
 name|HV_LATECOL_UPPER
-value|PHY_REG(778, 23)
+value|PHY_REG(HV_STATS_PAGE, 23)
 end_define
 
 begin_comment
@@ -879,14 +922,14 @@ begin_define
 define|#
 directive|define
 name|HV_LATECOL_LOWER
-value|PHY_REG(778, 24)
+value|PHY_REG(HV_STATS_PAGE, 24)
 end_define
 
 begin_define
 define|#
 directive|define
 name|HV_COLC_UPPER
-value|PHY_REG(778, 25)
+value|PHY_REG(HV_STATS_PAGE, 25)
 end_define
 
 begin_comment
@@ -897,14 +940,14 @@ begin_define
 define|#
 directive|define
 name|HV_COLC_LOWER
-value|PHY_REG(778, 26)
+value|PHY_REG(HV_STATS_PAGE, 26)
 end_define
 
 begin_define
 define|#
 directive|define
 name|HV_DC_UPPER
-value|PHY_REG(778, 27)
+value|PHY_REG(HV_STATS_PAGE, 27)
 end_define
 
 begin_comment
@@ -915,14 +958,14 @@ begin_define
 define|#
 directive|define
 name|HV_DC_LOWER
-value|PHY_REG(778, 28)
+value|PHY_REG(HV_STATS_PAGE, 28)
 end_define
 
 begin_define
 define|#
 directive|define
 name|HV_TNCRS_UPPER
-value|PHY_REG(778, 29)
+value|PHY_REG(HV_STATS_PAGE, 29)
 end_define
 
 begin_comment
@@ -933,7 +976,7 @@ begin_define
 define|#
 directive|define
 name|HV_TNCRS_LOWER
-value|PHY_REG(778, 30)
+value|PHY_REG(HV_STATS_PAGE, 30)
 end_define
 
 begin_define
@@ -946,6 +989,46 @@ end_define
 begin_comment
 comment|/* PCH Flow Control Refresh Timer Value */
 end_comment
+
+begin_comment
+comment|/*  * For ICH, the name used for NVM word 17h is LED1 Config.  * For PCH, the word was re-named to OEM Config.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_NVM_LED1_CONFIG
+value|0x17
+end_define
+
+begin_comment
+comment|/* NVM LED1/LPLU Config Word */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_NVM_LED1_CONFIG_LPLU_NONDOA
+value|0x0400
+end_define
+
+begin_comment
+comment|/* NVM LPLU in non-D0a Bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_NVM_OEM_CONFIG
+value|E1000_NVM_LED1_CONFIG
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_NVM_OEM_CONFIG_LPLU_NONDOA
+value|E1000_NVM_LED1_CONFIG_LPLU_NONDOA
+end_define
 
 begin_define
 define|#
@@ -1078,7 +1161,7 @@ value|0x0020
 end_define
 
 begin_comment
-comment|/* Phy address bit from LCD Config word */
+comment|/* Phy addr bit from LCD Config word */
 end_comment
 
 begin_comment
@@ -1100,6 +1183,31 @@ value|0x0400
 end_define
 
 begin_comment
+comment|/* KMRN FIFO Control and Status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HV_KMRN_FIFO_CTRLSTA
+value|PHY_REG(770, 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HV_KMRN_FIFO_CTRLSTA_PREAMBLE_MASK
+value|0x7000
+end_define
+
+begin_define
+define|#
+directive|define
+name|HV_KMRN_FIFO_CTRLSTA_PREAMBLE_SHIFT
+value|12
+end_define
+
+begin_comment
 comment|/* PHY Power Management Control */
 end_comment
 
@@ -1118,7 +1226,7 @@ value|1000
 end_define
 
 begin_comment
-comment|/* SW Semaphore flag timeout in milliseconds */
+comment|/* SW Semaphore flag timeout in ms */
 end_comment
 
 begin_comment
@@ -1137,6 +1245,13 @@ define|#
 directive|define
 name|I82579_LPI_CTRL_ENABLE_MASK
 value|0x6000
+end_define
+
+begin_define
+define|#
+directive|define
+name|I82579_LPI_CTRL_FORCE_PLL_LOCK_COUNT
+value|0x80
 end_define
 
 begin_comment
@@ -1168,6 +1283,28 @@ begin_comment
 comment|/* in 40ns units + 40 ns base value */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|I82579_MSE_THRESHOLD
+value|0x084F
+end_define
+
+begin_comment
+comment|/* Mean Square Error Threshold */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I82579_MSE_LINK_DOWN
+value|0x2411
+end_define
+
+begin_comment
+comment|/* MSE count before dropping link */
+end_comment
+
 begin_comment
 comment|/*  * Additional interrupts need to be handled for ICH family:  *  DSW = The FW changed the status of the DISSW bit in FWSM  *  PHYINT = The LAN connected device generates an interrupt  *  EPRST = Manageability reset event  */
 end_comment
@@ -1176,7 +1313,7 @@ begin_define
 define|#
 directive|define
 name|IMS_ICH_ENABLE_MASK
-value|(\     E1000_IMS_DSW   | \     E1000_IMS_PHYINT | \     E1000_IMS_EPRST)
+value|(\ 	E1000_IMS_DSW   | \ 	E1000_IMS_PHYINT | \ 	E1000_IMS_EPRST)
 end_define
 
 begin_comment
@@ -1310,7 +1447,19 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|e1000_disable_gig_wol_ich8lan
+name|e1000_suspend_workarounds_ich8lan
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|e1000_resume_workarounds_pchlan
 parameter_list|(
 name|struct
 name|e1000_hw
@@ -1331,33 +1480,6 @@ name|hw
 parameter_list|,
 name|bool
 name|k1_enable
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|s32
-name|e1000_oem_bits_config_ich8lan
-parameter_list|(
-name|struct
-name|e1000_hw
-modifier|*
-name|hw
-parameter_list|,
-name|bool
-name|d0_config
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|s32
-name|e1000_hv_phy_powerdown_workaround_ich8lan
-parameter_list|(
-name|struct
-name|e1000_hw
-modifier|*
-name|hw
 parameter_list|)
 function_decl|;
 end_function_decl
