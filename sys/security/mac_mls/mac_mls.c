@@ -9068,6 +9068,17 @@ operator|(
 literal|0
 operator|)
 return|;
+if|if
+condition|(
+name|vplabel
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|subj
 operator|=
 name|SLOT
