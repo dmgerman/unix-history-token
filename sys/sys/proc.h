@@ -608,6 +608,10 @@ name|short
 name|td_lk_slocks
 decl_stmt|;
 comment|/* (k) Count of lockmgr shared locks. */
+name|short
+name|td_stopsched
+decl_stmt|;
+comment|/* (k) Scheduler stopped. */
 name|struct
 name|turnstile
 modifier|*

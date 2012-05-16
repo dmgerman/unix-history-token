@@ -398,6 +398,18 @@ value|KASSERT(sizeof(var) == sizeof(void *)&&			\ 	    ((uintptr_t)&(var)& (size
 end_define
 
 begin_comment
+comment|/*  * If we have already panic'd and this is the thread that called  * panic(), then don't block on any mutexes but silently succeed.  * Otherwise, the kernel will deadlock since the scheduler isn't  * going to run the thread that holds any lock we need.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCHEDULER_STOPPED
+parameter_list|()
+value|__predict_false(curthread->td_stopsched)
+end_define
+
+begin_comment
 comment|/*  * XXX the hints declarations are even more misplaced than most declarations  * in this file, since they are needed in one file (per arch) and only used  * in two files.  * XXX most of these variables should be const.  */
 end_comment
 

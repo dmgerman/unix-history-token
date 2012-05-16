@@ -1317,19 +1317,6 @@ modifier|*
 name|msg
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|SMP
-name|stop_cpus_hard
-argument_list|(
-name|PCPU_GET
-argument_list|(
-name|other_cpus
-argument_list|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|printf
 argument_list|(
 literal|"KDB: panic\n"
@@ -2647,6 +2634,13 @@ directive|ifdef
 name|SMP
 if|if
 condition|(
+operator|!
+name|SCHEDULER_STOPPED
+argument_list|()
+condition|)
+block|{
+if|if
+condition|(
 operator|(
 name|did_stop_cpus
 operator|=
@@ -2662,6 +2656,12 @@ argument_list|(
 name|other_cpus
 argument_list|)
 argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|did_stop_cpus
+operator|=
+literal|0
 expr_stmt|;
 endif|#
 directive|endif

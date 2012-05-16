@@ -24068,6 +24068,13 @@ decl_stmt|;
 name|hrtime_t
 name|now
 decl_stmt|;
+if|if
+condition|(
+name|panicstr
+operator|!=
+name|NULL
+condition|)
+return|return;
 if|#
 directive|if
 name|defined
