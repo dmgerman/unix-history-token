@@ -809,6 +809,8 @@ parameter_list|)
 block|{
 name|int
 name|n
+decl_stmt|,
+name|rval
 decl_stmt|;
 if|if
 condition|(
@@ -832,6 +834,7 @@ condition|;
 name|n
 operator|++
 control|)
+block|{
 if|if
 condition|(
 name|wake
@@ -847,6 +850,11 @@ name|n
 index|]
 argument_list|)
 condition|)
+block|{
+name|rval
+operator|=
+literal|1
+expr_stmt|;
 name|warnx
 argument_list|(
 literal|"error sending Wake on LAN frame over %s to %s"
@@ -862,11 +870,13 @@ name|n
 index|]
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+block|}
+block|}
+name|exit
+argument_list|(
+name|rval
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
