@@ -74,6 +74,11 @@ init|=
 literal|20
 block|,
 comment|/**< @brief probe succeeded */
+name|DS_ATTACHING
+init|=
+literal|25
+block|,
+comment|/**< @brief currently attaching */
 name|DS_ATTACHED
 init|=
 literal|30
