@@ -1654,7 +1654,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_ABC_L_VAR_DEFAULT
-value|1
+value|2
 end_define
 
 begin_comment
