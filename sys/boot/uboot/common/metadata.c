@@ -82,7 +82,7 @@ end_if
 
 begin_function_decl
 specifier|extern
-name|int
+name|vm_offset_t
 name|fdt_fixup
 parameter_list|(
 name|void
@@ -1236,10 +1236,7 @@ if|if
 condition|(
 name|dtbp
 operator|!=
-operator|(
-name|vm_offset_t
-operator|)
-name|NULL
+literal|0
 condition|)
 name|file_addmetadata
 argument_list|(
