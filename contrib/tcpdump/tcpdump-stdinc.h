@@ -524,22 +524,36 @@ begin_comment
 comment|/* WIN32 */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE___ATTRIBUTE__
+end_ifndef
 
-begin_include
-include|#
-directive|include
-file|"ip6.h"
-end_include
+begin_define
+define|#
+directive|define
+name|__attribute__
+parameter_list|(
+name|x
+parameter_list|)
+end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * Used to declare a structure unaligned, so that the C compiler,  * if necessary, generates code that doesn't assume alignment.  * This is required because there is no guarantee that the packet  * data we get from libpcap/WinPcap is properly aligned.  *  * This assumes that, for all compilers that support __attribute__:  *  *	1) they support __attribute__((packed));  *  *	2) for all instruction set architectures requiring strict  *	   alignment, declaring a structure with that attribute  *	   causes the compiler to generate code that handles  *	   misaligned 2-byte, 4-byte, and 8-byte integral  *	   quantities.  *  * It does not (yet) handle compilers where you can get the compiler  * to generate code of that sort by some other means.  *  * This is required in order to, for example, keep the compiler from  * generating, for  *  *	if (bp->bp_htype == 1&& bp->bp_hlen == 6&& bp->bp_op == BOOTPREQUEST) {  *  * in print-bootp.c, code that loads the first 4-byte word of a  * "struct bootp", masking out the bp_hops field, and comparing the result  * against 0x01010600.  *  * Note: this also requires that padding be put into the structure,  * at least for compilers where it's implemented as __attribute__((packed)).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UNALIGNED
+value|__attribute__((packed))
+end_define
 
 begin_if
 if|#
@@ -632,6 +646,12 @@ operator|&&
 name|defined
 argument_list|(
 name|__i386__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__APPLE__
 argument_list|)
 operator|&&
 operator|!

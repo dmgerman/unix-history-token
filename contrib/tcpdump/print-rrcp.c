@@ -563,14 +563,14 @@ name|ndo
 operator|,
 literal|" addr=0x%04x, data=0x%08x"
 operator|,
-name|EXTRACT_16BITS
+name|EXTRACT_LE_16BITS
 argument_list|(
 name|rrcp
 operator|+
 name|RRCP_REG_ADDR_OFFSET
 argument_list|)
 operator|,
-name|EXTRACT_32BITS
+name|EXTRACT_LE_32BITS
 argument_list|(
 name|rrcp
 operator|+

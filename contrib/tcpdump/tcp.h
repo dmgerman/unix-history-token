@@ -446,6 +446,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|RPKI_RTR_PORT
+value|2222
+end_define
+
+begin_comment
+comment|/* experimental up until sidr-wg registers a well-known port */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|LDP_PORT
 value|646
 end_define

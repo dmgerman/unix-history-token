@@ -128,21 +128,21 @@ begin_define
 define|#
 directive|define
 name|CHAN_HP
-value|6700
+value|6704
 end_define
 
 begin_define
 define|#
 directive|define
 name|CHAN_MP
-value|6701
+value|6705
 end_define
 
 begin_define
 define|#
 directive|define
 name|CHAN_LP
-value|6702
+value|6706
 end_define
 
 begin_decl_stmt
