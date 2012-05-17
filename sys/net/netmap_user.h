@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2011 Matteo Landi, Luigi Rizzo. All rights reserved.
 end_comment
 
 begin_comment
-comment|/*  * $FreeBSD$  * $Id: netmap_user.h 9495 2011-10-18 15:28:23Z luigi $  *  * This header contains the macros used to manipulate netmap structures  * and packets in userspace. See netmap(4) for more information.  *  * The address of the struct netmap_if, say nifp, is determined  * by the value returned from ioctl(.., NIOCREG, ...) and the mmap  * region:  *	ioctl(fd, NIOCREG,&req);  *	mem = mmap(0, ... );  *	nifp = NETMAP_IF(mem, req.nr_nifp);  *		(so simple, we could just do it manually)  *  * From there:  *	struct netmap_ring *NETMAP_TXRING(nifp, index)  *	struct netmap_ring *NETMAP_RXRING(nifp, index)  *		we can access ring->nr_cur, ring->nr_avail, ring->nr_flags  *  *	ring->slot[i] gives us the i-th slot (we can access  *		directly plen, flags, bufindex)  *  *	char *buf = NETMAP_BUF(ring, index) returns a pointer to  *		the i-th buffer  *  * Since rings are circular, we have macros to compute the next index  *	i = NETMAP_RING_NEXT(ring, i);  */
+comment|/*  * $FreeBSD$  * $Id: netmap_user.h 10597 2012-02-21 05:08:32Z luigi $  *  * This header contains the macros used to manipulate netmap structures  * and packets in userspace. See netmap(4) for more information.  *  * The address of the struct netmap_if, say nifp, is computed from the  * value returned from ioctl(.., NIOCREG, ...) and the mmap region:  *	ioctl(fd, NIOCREG,&req);  *	mem = mmap(0, ... );  *	nifp = NETMAP_IF(mem, req.nr_nifp);  *		(so simple, we could just do it manually)  *  * From there:  *	struct netmap_ring *NETMAP_TXRING(nifp, index)  *	struct netmap_ring *NETMAP_RXRING(nifp, index)  *		we can access ring->nr_cur, ring->nr_avail, ring->nr_flags  *  *	ring->slot[i] gives us the i-th slot (we can access  *		directly plen, flags, bufindex)  *  *	char *buf = NETMAP_BUF(ring, index) returns a pointer to  *		the i-th buffer  *  * Since rings are circular, we have macros to compute the next index  *	i = NETMAP_RING_NEXT(ring, i);  */
 end_comment
 
 begin_ifndef
@@ -54,7 +54,7 @@ parameter_list|,
 name|index
 parameter_list|)
 define|\
-value|((struct netmap_ring *)((char *)(nifp) +	\ 	    (nifp)->ring_ofs[index + (nifp)->ni_num_queues+1] ) )
+value|((struct netmap_ring *)((char *)(nifp) +	\ 	    (nifp)->ring_ofs[index + (nifp)->ni_tx_rings + 1] ) )
 end_define
 
 begin_define
@@ -73,6 +73,19 @@ end_define
 begin_define
 define|#
 directive|define
+name|NETMAP_BUF_IDX
+parameter_list|(
+name|ring
+parameter_list|,
+name|buf
+parameter_list|)
+define|\
+value|( ((char *)(buf) - ((char *)(ring) + (ring)->buf_ofs) ) / \ 		(ring)->nr_buf_size )
+end_define
+
+begin_define
+define|#
+directive|define
 name|NETMAP_RING_NEXT
 parameter_list|(
 name|r
@@ -83,8 +96,19 @@ define|\
 value|((i)+1 == (r)->num_slots ? 0 : (i) + 1 )
 end_define
 
+begin_define
+define|#
+directive|define
+name|NETMAP_RING_FIRST_RESERVED
+parameter_list|(
+name|r
+parameter_list|)
+define|\
+value|( (r)->cur< (r)->reserved ?			\ 	  (r)->cur + (r)->num_slots - (r)->reserved :	\ 	  (r)->cur - (r)->reserved )
+end_define
+
 begin_comment
-comment|/*  * Return 1 if the given tx ring is empty.  *  * @r netmap_ring descriptor pointer.  * Special case, a negative value in hwavail indicates that the  * transmit queue is idle.  * XXX revise  */
+comment|/*  * Return 1 if the given tx ring is empty.  */
 end_comment
 
 begin_define
