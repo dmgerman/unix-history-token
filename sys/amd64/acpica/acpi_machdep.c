@@ -89,14 +89,6 @@ directive|include
 file|<machine/nexusvar.h>
 end_include
 
-begin_expr_stmt
-name|SYSCTL_DECL
-argument_list|(
-name|_debug_acpi
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_decl_stmt
 name|int
 name|acpi_resume_beep
