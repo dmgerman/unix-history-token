@@ -1852,7 +1852,7 @@ name|DEV_NETMAP
 end_ifdef
 
 begin_comment
-comment|/*  * The #ifdef DEV_NETMAP / #endif blocks in this file are meant to  * be a reference on how to implement netmap support in a driver.  * Additional comments are in ixgbe_netmap.h .  *  *<dev/netma/ixgbe_netmap.h> contains functions for netmap support  * that extend the standard driver.  */
+comment|/*  * The #ifdef DEV_NETMAP / #endif blocks in this file are meant to  * be a reference on how to implement netmap support in a driver.  * Additional comments are in ixgbe_netmap.h .  *  *<dev/netmap/ixgbe_netmap.h> contains functions for netmap support  * that extend the standard driver.  */
 end_comment
 
 begin_include
