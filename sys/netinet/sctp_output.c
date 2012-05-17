@@ -68174,16 +68174,6 @@ name|got_all_of_the_send
 operator|==
 literal|1
 operator|)
-operator|&&
-operator|(
-name|stcb
-operator|->
-name|sctp_ep
-operator|->
-name|sctp_flags
-operator|&
-name|SCTP_PCB_FLAGS_UDPTYPE
-operator|)
 condition|)
 block|{
 name|int
