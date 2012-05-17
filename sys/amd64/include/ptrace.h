@@ -28,28 +28,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PT_GETXMMREGS
-value|(PT_FIRSTMACH + 0)
-end_define
-
-begin_comment
-comment|/* i386 only */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PT_SETXMMREGS
-value|(PT_FIRSTMACH + 1)
-end_define
-
-begin_comment
-comment|/* i386 only */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|PT_GETXSTATE
 value|(PT_FIRSTMACH + 2)
 end_define
