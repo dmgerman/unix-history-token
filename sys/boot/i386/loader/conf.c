@@ -187,6 +187,17 @@ block|,
 operator|&
 name|cd9660_fsops
 block|,
+if|#
+directive|if
+name|defined
+argument_list|(
+name|LOADER_NANDFS_SUPPORT
+argument_list|)
+operator|&
+name|nandfs_fsops
+block|,
+endif|#
+directive|endif
 operator|&
 name|splitfs_fsops
 block|,

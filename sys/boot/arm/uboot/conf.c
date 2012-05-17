@@ -140,6 +140,17 @@ if|#
 directive|if
 name|defined
 argument_list|(
+name|LOADER_NANDFS_SUPPORT
+argument_list|)
+operator|&
+name|nandfs_fsops
+block|,
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
 name|LOADER_NFS_SUPPORT
 argument_list|)
 operator|&

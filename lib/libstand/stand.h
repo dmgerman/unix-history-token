@@ -394,6 +394,14 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|fs_ops
+name|nandfs_fsops
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|fs_ops
 name|gzipfs_fsops
 decl_stmt|;
 end_decl_stmt
