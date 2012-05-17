@@ -1609,6 +1609,11 @@ operator|.
 name|pipe_bof
 operator|=
 literal|1
+block|,
+operator|.
+name|no_pipe_ok
+operator|=
+literal|1
 block|, }
 block|,
 operator|.
@@ -1889,11 +1894,22 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|sc
 operator|->
 name|sc_flags
 operator|&
 name|UHID_FLAG_IMMED
+operator|)
+operator|||
+name|sc
+operator|->
+name|sc_xfer
+index|[
+name|UHID_INTR_DT_WR
+index|]
+operator|==
+name|NULL
 condition|)
 block|{
 name|usbd_transfer_start
