@@ -3402,14 +3402,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 name|pid_t
 name|vfork
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__returns_twice
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

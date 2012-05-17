@@ -205,16 +205,17 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|savectx
-parameter_list|(
-name|struct
+argument_list|(
+expr|struct
 name|pcb
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|*
+argument_list|)
+name|__returns_twice
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

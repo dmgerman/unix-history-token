@@ -582,16 +582,17 @@ name|trapframe
 struct_decl|;
 end_struct_decl
 
-begin_function_decl
+begin_decl_stmt
 name|int
 name|setjmp
-parameter_list|(
-name|struct
+argument_list|(
+expr|struct
 name|_jmp_buf
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|*
+argument_list|)
+name|__returns_twice
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|void
