@@ -445,11 +445,6 @@ argument_list|,
 name|handle
 argument_list|)
 expr_stmt|;
-name|vm_object_reference
-argument_list|(
-name|object
-argument_list|)
-expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
