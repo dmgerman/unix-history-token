@@ -321,9 +321,9 @@ name|TAILQ_ENTRY
 argument_list|(
 argument|vnode
 argument_list|)
-name|v_freelist
+name|v_actfreelist
 expr_stmt|;
-comment|/* f vnode freelist */
+comment|/* f vnode active/free lists */
 name|struct
 name|bufobj
 name|v_bufobj
@@ -621,6 +621,17 @@ end_define
 
 begin_comment
 comment|/* This vnode is on the freelist */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VI_ACTIVE
+value|0x0200
+end_define
+
+begin_comment
+comment|/* This vnode is on the active list */
 end_comment
 
 begin_define
@@ -3029,17 +3040,6 @@ end_function_decl
 begin_function_decl
 name|void
 name|vdropl
-parameter_list|(
-name|struct
-name|vnode
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|vdestroy
 parameter_list|(
 name|struct
 name|vnode

@@ -14523,6 +14523,14 @@ operator|.
 name|mnt_nvnodelist
 argument_list|)
 expr_stmt|;
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|nfsv4root_mnt
+operator|.
+name|mnt_activevnodelist
+argument_list|)
+expr_stmt|;
 name|nfsv4root_mnt
 operator|.
 name|mnt_export
@@ -14558,6 +14566,12 @@ expr_stmt|;
 name|nfsv4root_mnt
 operator|.
 name|mnt_nvnodelistsize
+operator|=
+literal|0
+expr_stmt|;
+name|nfsv4root_mnt
+operator|.
+name|mnt_activevnodelistsize
 operator|=
 literal|0
 expr_stmt|;

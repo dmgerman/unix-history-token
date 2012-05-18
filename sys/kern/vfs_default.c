@@ -4436,14 +4436,9 @@ operator||=
 name|LK_NOWAIT
 expr_stmt|;
 comment|/* 	 * Force stale buffer cache information to be flushed. 	 */
-name|MNT_ILOCK
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
 name|loop
 label|:
-name|MNT_VNODE_FOREACH
+name|MNT_VNODE_FOREACH_ALL
 argument_list|(
 argument|vp
 argument_list|,
@@ -4452,7 +4447,6 @@ argument_list|,
 argument|mvp
 argument_list|)
 block|{
-comment|/* bv_cnt is an acceptable race here. */
 if|if
 condition|(
 name|vp
@@ -4465,17 +4459,14 @@ name|bv_cnt
 operator|==
 literal|0
 condition|)
-continue|continue;
-name|VI_LOCK
+block|{
+name|VI_UNLOCK
 argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|MNT_IUNLOCK
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
+continue|continue;
+block|}
 if|if
 condition|(
 operator|(
@@ -4494,11 +4485,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|MNT_ILOCK
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|error
@@ -4506,7 +4492,7 @@ operator|==
 name|ENOENT
 condition|)
 block|{
-name|MNT_VNODE_FOREACH_ABORT_ILOCKED
+name|MNT_VNODE_FOREACH_ALL_ABORT
 argument_list|(
 name|mp
 argument_list|,
@@ -4543,17 +4529,7 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|MNT_ILOCK
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
 block|}
-name|MNT_IUNLOCK
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|allerror

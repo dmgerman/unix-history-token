@@ -272,18 +272,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|MALLOC_DEFINE
-argument_list|(
-name|M_VNODE_MARKER
-argument_list|,
-literal|"vnodemarker"
-argument_list|,
-literal|"vnode marker"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_decl_stmt
 specifier|static
 name|uma_zone_t
@@ -2073,6 +2061,20 @@ name|mnt_nvnodelistsize
 operator|=
 literal|0
 expr_stmt|;
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|mp
+operator|->
+name|mnt_activevnodelist
+argument_list|)
+expr_stmt|;
+name|mp
+operator|->
+name|mnt_activevnodelistsize
+operator|=
+literal|0
+expr_stmt|;
 name|mp
 operator|->
 name|mnt_ref
@@ -2393,6 +2395,19 @@ condition|)
 name|panic
 argument_list|(
 literal|"vfs_mount_destroy: nonzero nvnodelistsize"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mp
+operator|->
+name|mnt_activevnodelistsize
+operator|!=
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"vfs_mount_destroy: nonzero activevnodelistsize"
 argument_list|)
 expr_stmt|;
 if|if
@@ -8348,8 +8363,16 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This is a helper function for filesystems to traverse their  * vnodes.  See MNT_VNODE_FOREACH() in sys/mount.h  */
+comment|/*  * These are helper functions for filesystems to traverse all  * their vnodes.  See MNT_VNODE_FOREACH() in sys/mount.h.  *  * This interface has been deprecated in favor of MNT_VNODE_FOREACH_ALL.  */
 end_comment
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_VNODE_MARKER
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|struct

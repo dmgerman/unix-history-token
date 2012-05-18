@@ -8533,10 +8533,15 @@ name|EBADF
 operator|)
 return|;
 block|}
+name|MNT_IUNLOCK
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Force stale buffer cache information to be flushed. 	 */
 name|loop
 label|:
-name|MNT_VNODE_FOREACH
+name|MNT_VNODE_FOREACH_ALL
 argument_list|(
 argument|vp
 argument_list|,
@@ -8545,16 +8550,6 @@ argument_list|,
 argument|mvp
 argument_list|)
 block|{
-name|VI_LOCK
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
-name|MNT_IUNLOCK
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
 comment|/* XXX Racy bv_cnt check. */
 if|if
 condition|(
@@ -8583,11 +8578,6 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|MNT_ILOCK
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
 continue|continue;
 block|}
 if|if
@@ -8604,12 +8594,7 @@ name|td
 argument_list|)
 condition|)
 block|{
-name|MNT_ILOCK
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
-name|MNT_VNODE_FOREACH_ABORT_ILOCKED
+name|MNT_VNODE_FOREACH_ALL_ABORT
 argument_list|(
 name|mp
 argument_list|,
@@ -8651,17 +8636,7 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|MNT_ILOCK
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
 block|}
-name|MNT_IUNLOCK
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|allerror
