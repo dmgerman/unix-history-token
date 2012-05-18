@@ -482,6 +482,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|G_MIRROR_DEVICE_FLAG_TASTING
+value|0x0800000000000000ULL
+end_define
+
+begin_define
+define|#
+directive|define
 name|G_MIRROR_DEVICE_STATE_STARTING
 value|0
 end_define
