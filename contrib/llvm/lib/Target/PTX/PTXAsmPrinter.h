@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- PTXAsmPrinter.h - Print machine code to a PTX file ----------------===//
+comment|//===-- PTXAsmPrinter.h - Print machine code to a PTX file ------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -221,7 +221,12 @@ argument_list|)
 block|;
 name|void
 name|EmitFunctionDeclaration
-argument_list|()
+argument_list|(
+specifier|const
+name|Function
+operator|*
+name|func
+argument_list|)
 block|;
 name|StringMap
 operator|<

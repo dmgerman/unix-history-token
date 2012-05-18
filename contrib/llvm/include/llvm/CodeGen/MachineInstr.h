@@ -88,6 +88,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/ilist.h"
 end_include
 
@@ -201,8 +207,16 @@ init|=
 literal|1
 operator|<<
 literal|0
+block|,
 comment|// Instruction is used as a part of
 comment|// function frame setup code.
+name|InsideBundle
+init|=
+literal|1
+operator|<<
+literal|1
+comment|// Instruction is inside a bundle (not
+comment|// the first MI in a bundle)
 block|}
 enum|;
 name|private
@@ -228,6 +242,13 @@ comment|// comments.  This is *not* semantic
 comment|// information.  Do not use this for
 comment|// anything other than to convey comment
 comment|// information to AsmPrinter.
+name|uint16_t
+name|NumMemRefs
+decl_stmt|;
+comment|// information on memory references
+name|mmo_iterator
+name|MemRefs
+decl_stmt|;
 name|std
 operator|::
 name|vector
@@ -237,13 +258,6 @@ operator|>
 name|Operands
 expr_stmt|;
 comment|// the operands
-name|mmo_iterator
-name|MemRefs
-decl_stmt|;
-comment|// information on memory references
-name|mmo_iterator
-name|MemRefsEnd
-decl_stmt|;
 name|MachineBasicBlock
 modifier|*
 name|Parent
@@ -470,6 +484,21 @@ operator|)
 name|Flag
 expr_stmt|;
 block|}
+comment|/// clearAsmPrinterFlag - clear specific AsmPrinter flags
+comment|///
+name|void
+name|clearAsmPrinterFlag
+parameter_list|(
+name|CommentFlag
+name|Flag
+parameter_list|)
+block|{
+name|AsmPrinterFlags
+operator|&=
+operator|~
+name|Flag
+expr_stmt|;
+block|}
 comment|/// getFlags - Return the MI flags bitvector.
 name|uint8_t
 name|getFlags
@@ -523,21 +552,107 @@ operator|=
 name|flags
 expr_stmt|;
 block|}
-comment|/// clearAsmPrinterFlag - clear specific AsmPrinter flags
-comment|///
+comment|/// clearFlag - Clear a MI flag.
 name|void
-name|clearAsmPrinterFlag
+name|clearFlag
 parameter_list|(
-name|CommentFlag
+name|MIFlag
 name|Flag
 parameter_list|)
 block|{
-name|AsmPrinterFlags
+name|Flags
 operator|&=
 operator|~
+operator|(
+operator|(
+name|uint8_t
+operator|)
 name|Flag
+operator|)
 expr_stmt|;
 block|}
+comment|/// isInsideBundle - Return true if MI is in a bundle (but not the first MI
+comment|/// in a bundle).
+comment|///
+comment|/// A bundle looks like this before it's finalized:
+comment|///   ----------------
+comment|///   |      MI      |
+comment|///   ----------------
+comment|///          |
+comment|///   ----------------
+comment|///   |      MI    * |
+comment|///   ----------------
+comment|///          |
+comment|///   ----------------
+comment|///   |      MI    * |
+comment|///   ----------------
+comment|/// In this case, the first MI starts a bundle but is not inside a bundle, the
+comment|/// next 2 MIs are considered "inside" the bundle.
+comment|///
+comment|/// After a bundle is finalized, it looks like this:
+comment|///   ----------------
+comment|///   |    Bundle    |
+comment|///   ----------------
+comment|///          |
+comment|///   ----------------
+comment|///   |      MI    * |
+comment|///   ----------------
+comment|///          |
+comment|///   ----------------
+comment|///   |      MI    * |
+comment|///   ----------------
+comment|///          |
+comment|///   ----------------
+comment|///   |      MI    * |
+comment|///   ----------------
+comment|/// The first instruction has the special opcode "BUNDLE". It's not "inside"
+comment|/// a bundle, but the next three MIs are.
+name|bool
+name|isInsideBundle
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getFlag
+argument_list|(
+name|InsideBundle
+argument_list|)
+return|;
+block|}
+comment|/// setIsInsideBundle - Set InsideBundle bit.
+comment|///
+name|void
+name|setIsInsideBundle
+parameter_list|(
+name|bool
+name|Val
+init|=
+name|true
+parameter_list|)
+block|{
+if|if
+condition|(
+name|Val
+condition|)
+name|setFlag
+argument_list|(
+name|InsideBundle
+argument_list|)
+expr_stmt|;
+else|else
+name|clearFlag
+argument_list|(
+name|InsideBundle
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// isBundled - Return true if this instruction part of a bundle. This is true
+comment|/// if either itself or its following instruction is marked "InsideBundle".
+name|bool
+name|isBundled
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// getDebugLoc - Returns the debug location id of this MachineInstr.
 comment|///
 name|DebugLoc
@@ -752,7 +867,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|MemRefsEnd
+name|MemRefs
+operator|+
+name|NumMemRefs
 return|;
 block|}
 name|bool
@@ -761,9 +878,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|MemRefsEnd
+name|NumMemRefs
 operator|==
-name|MemRefs
+literal|0
 return|;
 block|}
 comment|/// hasOneMemOperand - Return true if this instruction has exactly one
@@ -774,11 +891,812 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|MemRefsEnd
-operator|-
-name|MemRefs
+name|NumMemRefs
 operator|==
 literal|1
+return|;
+block|}
+comment|/// API for querying MachineInstr properties. They are the same as MCInstrDesc
+comment|/// queries but they are bundle aware.
+enum|enum
+name|QueryType
+block|{
+name|IgnoreBundle
+block|,
+comment|// Ignore bundles
+name|AnyInBundle
+block|,
+comment|// Return true if any instruction in bundle has property
+name|AllInBundle
+comment|// Return true if all instructions in bundle have property
+block|}
+enum|;
+comment|/// hasProperty - Return true if the instruction (or in the case of a bundle,
+comment|/// the instructions inside the bundle) has the specified property.
+comment|/// The first argument is the property being queried.
+comment|/// The second argument indicates whether the query should look inside
+comment|/// instruction bundles.
+name|bool
+name|hasProperty
+argument_list|(
+name|unsigned
+name|MCFlag
+argument_list|,
+name|QueryType
+name|Type
+operator|=
+name|AnyInBundle
+argument_list|)
+decl|const
+block|{
+comment|// Inline the fast path.
+if|if
+condition|(
+name|Type
+operator|==
+name|IgnoreBundle
+operator|||
+operator|!
+name|isBundle
+argument_list|()
+condition|)
+return|return
+name|getDesc
+argument_list|()
+operator|.
+name|getFlags
+argument_list|()
+operator|&
+operator|(
+literal|1
+operator|<<
+name|MCFlag
+operator|)
+return|;
+comment|// If we have a bundle, take the slow path.
+return|return
+name|hasPropertyInBundle
+argument_list|(
+literal|1
+operator|<<
+name|MCFlag
+argument_list|,
+name|Type
+argument_list|)
+return|;
+block|}
+comment|/// isVariadic - Return true if this instruction can have a variable number of
+comment|/// operands.  In this case, the variable operands will be after the normal
+comment|/// operands but before the implicit definitions and uses (if any are
+comment|/// present).
+name|bool
+name|isVariadic
+argument_list|(
+name|QueryType
+name|Type
+operator|=
+name|IgnoreBundle
+argument_list|)
+decl|const
+block|{
+return|return
+name|hasProperty
+argument_list|(
+name|MCID
+operator|::
+name|Variadic
+argument_list|,
+name|Type
+argument_list|)
+return|;
+block|}
+comment|/// hasOptionalDef - Set if this instruction has an optional definition, e.g.
+comment|/// ARM instructions which can set condition code if 's' bit is set.
+name|bool
+name|hasOptionalDef
+argument_list|(
+name|QueryType
+name|Type
+operator|=
+name|IgnoreBundle
+argument_list|)
+decl|const
+block|{
+return|return
+name|hasProperty
+argument_list|(
+name|MCID
+operator|::
+name|HasOptionalDef
+argument_list|,
+name|Type
+argument_list|)
+return|;
+block|}
+comment|/// isPseudo - Return true if this is a pseudo instruction that doesn't
+comment|/// correspond to a real machine instruction.
+comment|///
+name|bool
+name|isPseudo
+argument_list|(
+name|QueryType
+name|Type
+operator|=
+name|IgnoreBundle
+argument_list|)
+decl|const
+block|{
+return|return
+name|hasProperty
+argument_list|(
+name|MCID
+operator|::
+name|Pseudo
+argument_list|,
+name|Type
+argument_list|)
+return|;
+block|}
+name|bool
+name|isReturn
+argument_list|(
+name|QueryType
+name|Type
+operator|=
+name|AnyInBundle
+argument_list|)
+decl|const
+block|{
+return|return
+name|hasProperty
+argument_list|(
+name|MCID
+operator|::
+name|Return
+argument_list|,
+name|Type
+argument_list|)
+return|;
+block|}
+name|bool
+name|isCall
+argument_list|(
+name|QueryType
+name|Type
+operator|=
+name|AnyInBundle
+argument_list|)
+decl|const
+block|{
+return|return
+name|hasProperty
+argument_list|(
+name|MCID
+operator|::
+name|Call
+argument_list|,
+name|Type
+argument_list|)
+return|;
+block|}
+comment|/// isBarrier - Returns true if the specified instruction stops control flow
+comment|/// from executing the instruction immediately following it.  Examples include
+comment|/// unconditional branches and return instructions.
+name|bool
+name|isBarrier
+argument_list|(
+name|QueryType
+name|Type
+operator|=
+name|AnyInBundle
+argument_list|)
+decl|const
+block|{
+return|return
+name|hasProperty
+argument_list|(
+name|MCID
+operator|::
+name|Barrier
+argument_list|,
+name|Type
+argument_list|)
+return|;
+block|}
+comment|/// isTerminator - Returns true if this instruction part of the terminator for
+comment|/// a basic block.  Typically this is things like return and branch
+comment|/// instructions.
+comment|///
+comment|/// Various passes use this to insert code into the bottom of a basic block,
+comment|/// but before control flow occurs.
+name|bool
+name|isTerminator
+argument_list|(
+name|QueryType
+name|Type
+operator|=
+name|AnyInBundle
+argument_list|)
+decl|const
+block|{
+return|return
+name|hasProperty
+argument_list|(
+name|MCID
+operator|::
+name|Terminator
+argument_list|,
+name|Type
+argument_list|)
+return|;
+block|}
+comment|/// isBranch - Returns true if this is a conditional, unconditional, or
+comment|/// indirect branch.  Predicates below can be used to discriminate between
+comment|/// these cases, and the TargetInstrInfo::AnalyzeBranch method can be used to
+comment|/// get more information.
+name|bool
+name|isBranch
+argument_list|(
+name|QueryType
+name|Type
+operator|=
+name|AnyInBundle
+argument_list|)
+decl|const
+block|{
+return|return
+name|hasProperty
+argument_list|(
+name|MCID
+operator|::
+name|Branch
+argument_list|,
+name|Type
+argument_list|)
+return|;
+block|}
+comment|/// isIndirectBranch - Return true if this is an indirect branch, such as a
+comment|/// branch through a register.
+name|bool
+name|isIndirectBranch
+argument_list|(
+name|QueryType
+name|Type
+operator|=
+name|AnyInBundle
+argument_list|)
+decl|const
+block|{
+return|return
+name|hasProperty
+argument_list|(
+name|MCID
+operator|::
+name|IndirectBranch
+argument_list|,
+name|Type
+argument_list|)
+return|;
+block|}
+comment|/// isConditionalBranch - Return true if this is a branch which may fall
+comment|/// through to the next instruction or may transfer control flow to some other
+comment|/// block.  The TargetInstrInfo::AnalyzeBranch method can be used to get more
+comment|/// information about this branch.
+name|bool
+name|isConditionalBranch
+argument_list|(
+name|QueryType
+name|Type
+operator|=
+name|AnyInBundle
+argument_list|)
+decl|const
+block|{
+return|return
+name|isBranch
+argument_list|(
+name|Type
+argument_list|)
+operator|&
+operator|!
+name|isBarrier
+argument_list|(
+name|Type
+argument_list|)
+operator|&
+operator|!
+name|isIndirectBranch
+argument_list|(
+name|Type
+argument_list|)
+return|;
+block|}
+comment|/// isUnconditionalBranch - Return true if this is a branch which always
+comment|/// transfers control flow to some other block.  The
+comment|/// TargetInstrInfo::AnalyzeBranch method can be used to get more information
+comment|/// about this branch.
+name|bool
+name|isUnconditionalBranch
+argument_list|(
+name|QueryType
+name|Type
+operator|=
+name|AnyInBundle
+argument_list|)
+decl|const
+block|{
+return|return
+name|isBranch
+argument_list|(
+name|Type
+argument_list|)
+operator|&
+name|isBarrier
+argument_list|(
+name|Type
+argument_list|)
+operator|&
+operator|!
+name|isIndirectBranch
+argument_list|(
+name|Type
+argument_list|)
+return|;
+block|}
+comment|// isPredicable - Return true if this instruction has a predicate operand that
+comment|// controls execution.  It may be set to 'always', or may be set to other
+comment|/// values.   There are various methods in TargetInstrInfo that can be used to
+comment|/// control and modify the predicate in this instruction.
+name|bool
+name|isPredicable
+argument_list|(
+name|QueryType
+name|Type
+operator|=
+name|AllInBundle
+argument_list|)
+decl|const
+block|{
+comment|// If it's a bundle than all bundled instructions must be predicable for this
+comment|// to return true.
+return|return
+name|hasProperty
+argument_list|(
+name|MCID
+operator|::
+name|Predicable
+argument_list|,
+name|Type
+argument_list|)
+return|;
+block|}
+comment|/// isCompare - Return true if this instruction is a comparison.
+name|bool
+name|isCompare
+argument_list|(
+name|QueryType
+name|Type
+operator|=
+name|IgnoreBundle
+argument_list|)
+decl|const
+block|{
+return|return
+name|hasProperty
+argument_list|(
+name|MCID
+operator|::
+name|Compare
+argument_list|,
+name|Type
+argument_list|)
+return|;
+block|}
+comment|/// isMoveImmediate - Return true if this instruction is a move immediate
+comment|/// (including conditional moves) instruction.
+name|bool
+name|isMoveImmediate
+argument_list|(
+name|QueryType
+name|Type
+operator|=
+name|IgnoreBundle
+argument_list|)
+decl|const
+block|{
+return|return
+name|hasProperty
+argument_list|(
+name|MCID
+operator|::
+name|MoveImm
+argument_list|,
+name|Type
+argument_list|)
+return|;
+block|}
+comment|/// isBitcast - Return true if this instruction is a bitcast instruction.
+comment|///
+name|bool
+name|isBitcast
+argument_list|(
+name|QueryType
+name|Type
+operator|=
+name|IgnoreBundle
+argument_list|)
+decl|const
+block|{
+return|return
+name|hasProperty
+argument_list|(
+name|MCID
+operator|::
+name|Bitcast
+argument_list|,
+name|Type
+argument_list|)
+return|;
+block|}
+comment|/// isNotDuplicable - Return true if this instruction cannot be safely
+comment|/// duplicated.  For example, if the instruction has a unique labels attached
+comment|/// to it, duplicating it would cause multiple definition errors.
+name|bool
+name|isNotDuplicable
+argument_list|(
+name|QueryType
+name|Type
+operator|=
+name|AnyInBundle
+argument_list|)
+decl|const
+block|{
+return|return
+name|hasProperty
+argument_list|(
+name|MCID
+operator|::
+name|NotDuplicable
+argument_list|,
+name|Type
+argument_list|)
+return|;
+block|}
+comment|/// hasDelaySlot - Returns true if the specified instruction has a delay slot
+comment|/// which must be filled by the code generator.
+name|bool
+name|hasDelaySlot
+argument_list|(
+name|QueryType
+name|Type
+operator|=
+name|AnyInBundle
+argument_list|)
+decl|const
+block|{
+return|return
+name|hasProperty
+argument_list|(
+name|MCID
+operator|::
+name|DelaySlot
+argument_list|,
+name|Type
+argument_list|)
+return|;
+block|}
+comment|/// canFoldAsLoad - Return true for instructions that can be folded as
+comment|/// memory operands in other instructions. The most common use for this
+comment|/// is instructions that are simple loads from memory that don't modify
+comment|/// the loaded value in any way, but it can also be used for instructions
+comment|/// that can be expressed as constant-pool loads, such as V_SETALLONES
+comment|/// on x86, to allow them to be folded when it is beneficial.
+comment|/// This should only be set on instructions that return a value in their
+comment|/// only virtual register definition.
+name|bool
+name|canFoldAsLoad
+argument_list|(
+name|QueryType
+name|Type
+operator|=
+name|IgnoreBundle
+argument_list|)
+decl|const
+block|{
+return|return
+name|hasProperty
+argument_list|(
+name|MCID
+operator|::
+name|FoldableAsLoad
+argument_list|,
+name|Type
+argument_list|)
+return|;
+block|}
+comment|//===--------------------------------------------------------------------===//
+comment|// Side Effect Analysis
+comment|//===--------------------------------------------------------------------===//
+comment|/// mayLoad - Return true if this instruction could possibly read memory.
+comment|/// Instructions with this flag set are not necessarily simple load
+comment|/// instructions, they may load a value and modify it, for example.
+name|bool
+name|mayLoad
+argument_list|(
+name|QueryType
+name|Type
+operator|=
+name|AnyInBundle
+argument_list|)
+decl|const
+block|{
+return|return
+name|hasProperty
+argument_list|(
+name|MCID
+operator|::
+name|MayLoad
+argument_list|,
+name|Type
+argument_list|)
+return|;
+block|}
+comment|/// mayStore - Return true if this instruction could possibly modify memory.
+comment|/// Instructions with this flag set are not necessarily simple store
+comment|/// instructions, they may store a modified value based on their operands, or
+comment|/// may not actually modify anything, for example.
+name|bool
+name|mayStore
+argument_list|(
+name|QueryType
+name|Type
+operator|=
+name|AnyInBundle
+argument_list|)
+decl|const
+block|{
+return|return
+name|hasProperty
+argument_list|(
+name|MCID
+operator|::
+name|MayStore
+argument_list|,
+name|Type
+argument_list|)
+return|;
+block|}
+comment|//===--------------------------------------------------------------------===//
+comment|// Flags that indicate whether an instruction can be modified by a method.
+comment|//===--------------------------------------------------------------------===//
+comment|/// isCommutable - Return true if this may be a 2- or 3-address
+comment|/// instruction (of the form "X = op Y, Z, ..."), which produces the same
+comment|/// result if Y and Z are exchanged.  If this flag is set, then the
+comment|/// TargetInstrInfo::commuteInstruction method may be used to hack on the
+comment|/// instruction.
+comment|///
+comment|/// Note that this flag may be set on instructions that are only commutable
+comment|/// sometimes.  In these cases, the call to commuteInstruction will fail.
+comment|/// Also note that some instructions require non-trivial modification to
+comment|/// commute them.
+name|bool
+name|isCommutable
+argument_list|(
+name|QueryType
+name|Type
+operator|=
+name|IgnoreBundle
+argument_list|)
+decl|const
+block|{
+return|return
+name|hasProperty
+argument_list|(
+name|MCID
+operator|::
+name|Commutable
+argument_list|,
+name|Type
+argument_list|)
+return|;
+block|}
+comment|/// isConvertibleTo3Addr - Return true if this is a 2-address instruction
+comment|/// which can be changed into a 3-address instruction if needed.  Doing this
+comment|/// transformation can be profitable in the register allocator, because it
+comment|/// means that the instruction can use a 2-address form if possible, but
+comment|/// degrade into a less efficient form if the source and dest register cannot
+comment|/// be assigned to the same register.  For example, this allows the x86
+comment|/// backend to turn a "shl reg, 3" instruction into an LEA instruction, which
+comment|/// is the same speed as the shift but has bigger code size.
+comment|///
+comment|/// If this returns true, then the target must implement the
+comment|/// TargetInstrInfo::convertToThreeAddress method for this instruction, which
+comment|/// is allowed to fail if the transformation isn't valid for this specific
+comment|/// instruction (e.g. shl reg, 4 on x86).
+comment|///
+name|bool
+name|isConvertibleTo3Addr
+argument_list|(
+name|QueryType
+name|Type
+operator|=
+name|IgnoreBundle
+argument_list|)
+decl|const
+block|{
+return|return
+name|hasProperty
+argument_list|(
+name|MCID
+operator|::
+name|ConvertibleTo3Addr
+argument_list|,
+name|Type
+argument_list|)
+return|;
+block|}
+comment|/// usesCustomInsertionHook - Return true if this instruction requires
+comment|/// custom insertion support when the DAG scheduler is inserting it into a
+comment|/// machine basic block.  If this is true for the instruction, it basically
+comment|/// means that it is a pseudo instruction used at SelectionDAG time that is
+comment|/// expanded out into magic code by the target when MachineInstrs are formed.
+comment|///
+comment|/// If this is true, the TargetLoweringInfo::InsertAtEndOfBasicBlock method
+comment|/// is used to insert this into the MachineBasicBlock.
+name|bool
+name|usesCustomInsertionHook
+argument_list|(
+name|QueryType
+name|Type
+operator|=
+name|IgnoreBundle
+argument_list|)
+decl|const
+block|{
+return|return
+name|hasProperty
+argument_list|(
+name|MCID
+operator|::
+name|UsesCustomInserter
+argument_list|,
+name|Type
+argument_list|)
+return|;
+block|}
+comment|/// hasPostISelHook - Return true if this instruction requires *adjustment*
+comment|/// after instruction selection by calling a target hook. For example, this
+comment|/// can be used to fill in ARM 's' optional operand depending on whether
+comment|/// the conditional flag register is used.
+name|bool
+name|hasPostISelHook
+argument_list|(
+name|QueryType
+name|Type
+operator|=
+name|IgnoreBundle
+argument_list|)
+decl|const
+block|{
+return|return
+name|hasProperty
+argument_list|(
+name|MCID
+operator|::
+name|HasPostISelHook
+argument_list|,
+name|Type
+argument_list|)
+return|;
+block|}
+comment|/// isRematerializable - Returns true if this instruction is a candidate for
+comment|/// remat.  This flag is deprecated, please don't use it anymore.  If this
+comment|/// flag is set, the isReallyTriviallyReMaterializable() method is called to
+comment|/// verify the instruction is really rematable.
+name|bool
+name|isRematerializable
+argument_list|(
+name|QueryType
+name|Type
+operator|=
+name|AllInBundle
+argument_list|)
+decl|const
+block|{
+comment|// It's only possible to re-mat a bundle if all bundled instructions are
+comment|// re-materializable.
+return|return
+name|hasProperty
+argument_list|(
+name|MCID
+operator|::
+name|Rematerializable
+argument_list|,
+name|Type
+argument_list|)
+return|;
+block|}
+comment|/// isAsCheapAsAMove - Returns true if this instruction has the same cost (or
+comment|/// less) than a move instruction. This is useful during certain types of
+comment|/// optimizations (e.g., remat during two-address conversion or machine licm)
+comment|/// where we would like to remat or hoist the instruction, but not if it costs
+comment|/// more than moving the instruction into the appropriate register. Note, we
+comment|/// are not marking copies from and to the same register class with this flag.
+name|bool
+name|isAsCheapAsAMove
+argument_list|(
+name|QueryType
+name|Type
+operator|=
+name|AllInBundle
+argument_list|)
+decl|const
+block|{
+comment|// Only returns true for a bundle if all bundled instructions are cheap.
+comment|// FIXME: This probably requires a target hook.
+return|return
+name|hasProperty
+argument_list|(
+name|MCID
+operator|::
+name|CheapAsAMove
+argument_list|,
+name|Type
+argument_list|)
+return|;
+block|}
+comment|/// hasExtraSrcRegAllocReq - Returns true if this instruction source operands
+comment|/// have special register allocation requirements that are not captured by the
+comment|/// operand register classes. e.g. ARM::STRD's two source registers must be an
+comment|/// even / odd pair, ARM::STM registers have to be in ascending order.
+comment|/// Post-register allocation passes should not attempt to change allocations
+comment|/// for sources of instructions with this flag.
+name|bool
+name|hasExtraSrcRegAllocReq
+argument_list|(
+name|QueryType
+name|Type
+operator|=
+name|AnyInBundle
+argument_list|)
+decl|const
+block|{
+return|return
+name|hasProperty
+argument_list|(
+name|MCID
+operator|::
+name|ExtraSrcRegAllocReq
+argument_list|,
+name|Type
+argument_list|)
+return|;
+block|}
+comment|/// hasExtraDefRegAllocReq - Returns true if this instruction def operands
+comment|/// have special register allocation requirements that are not captured by the
+comment|/// operand register classes. e.g. ARM::LDRD's two def registers must be an
+comment|/// even / odd pair, ARM::LDM registers have to be in ascending order.
+comment|/// Post-register allocation passes should not attempt to change allocations
+comment|/// for definitions of instructions with this flag.
+name|bool
+name|hasExtraDefRegAllocReq
+argument_list|(
+name|QueryType
+name|Type
+operator|=
+name|AnyInBundle
+argument_list|)
+decl|const
+block|{
+return|return
+name|hasProperty
+argument_list|(
+name|MCID
+operator|::
+name|ExtraDefRegAllocReq
+argument_list|,
+name|Type
+argument_list|)
 return|;
 block|}
 enum|enum
@@ -1017,6 +1935,20 @@ name|REG_SEQUENCE
 return|;
 block|}
 name|bool
+name|isBundle
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOpcode
+argument_list|()
+operator|==
+name|TargetOpcode
+operator|::
+name|BUNDLE
+return|;
+block|}
+name|bool
 name|isCopy
 argument_list|()
 specifier|const
@@ -1116,6 +2048,12 @@ name|getSubReg
 argument_list|()
 return|;
 block|}
+comment|/// getBundleSize - Return the number of instructions inside the MI bundle.
+name|unsigned
+name|getBundleSize
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// readsRegister - Return true if the MachineInstr reads the specified
 comment|/// register. If TargetRegisterInfo is passed, then it also checks if there
 comment|/// is a read of a super-register.
@@ -1403,6 +2341,7 @@ comment|/// the specified register or -1 if it is not found. If isDead is true, 
 comment|/// that are not dead are skipped. If Overlap is true, then it also looks for
 comment|/// defs that merely overlap the specified register. If TargetRegisterInfo is
 comment|/// non-null, then it also checks if there is a def of a super-register.
+comment|/// This may also return a register mask operand when Overlap is true.
 name|int
 name|findRegisterDefOperandIdx
 argument_list|(
@@ -1543,7 +2482,7 @@ decl_stmt|;
 comment|/// isRegTiedToUseOperand - Given the index of a register def operand,
 comment|/// check if the register def is tied to a source operand, due to either
 comment|/// two-address elimination or inline assembly constraints. Returns the
-comment|/// first tied use operand index by reference is UseOpIdx is not null.
+comment|/// first tied use operand index by reference if UseOpIdx is not null.
 name|bool
 name|isRegTiedToUseOperand
 argument_list|(
@@ -1643,6 +2582,20 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
+comment|/// clearRegisterKills - Clear all kill flags affecting Reg.  If RegInfo is
+comment|/// provided, this includes super-register kills.
+name|void
+name|clearRegisterKills
+parameter_list|(
+name|unsigned
+name|Reg
+parameter_list|,
+specifier|const
+name|TargetRegisterInfo
+modifier|*
+name|RegInfo
+parameter_list|)
+function_decl|;
 comment|/// addRegisterDead - We have determined MI defined a register without a use.
 comment|/// Look for the operand that defines it and mark it as IsDead. If
 comment|/// AddIfNotFound is true, add a implicit operand if it's not found. Returns
@@ -1682,15 +2635,16 @@ parameter_list|)
 function_decl|;
 comment|/// setPhysRegsDeadExcept - Mark every physreg used by this instruction as
 comment|/// dead except those in the UsedRegs list.
+comment|///
+comment|/// On instructions with register mask operands, also add implicit-def
+comment|/// operands for all registers in UsedRegs.
 name|void
 name|setPhysRegsDeadExcept
 argument_list|(
-specifier|const
-name|SmallVectorImpl
+name|ArrayRef
 operator|<
 name|unsigned
 operator|>
-operator|&
 name|UsedRegs
 argument_list|,
 specifier|const
@@ -1914,9 +2868,11 @@ name|MemRefs
 operator|=
 name|NewMemRefs
 expr_stmt|;
-name|MemRefsEnd
+name|NumMemRefs
 operator|=
 name|NewMemRefsEnd
+operator|-
+name|NewMemRefs
 expr_stmt|;
 block|}
 name|private
@@ -1953,6 +2909,19 @@ modifier|&
 name|RegInfo
 parameter_list|)
 function_decl|;
+comment|/// hasPropertyInBundle - Slow path for hasProperty when we're dealing with a
+comment|/// bundle.
+name|bool
+name|hasPropertyInBundle
+argument_list|(
+name|unsigned
+name|Mask
+argument_list|,
+name|QueryType
+name|Type
+argument_list|)
+decl|const
+decl_stmt|;
 block|}
 end_decl_stmt
 

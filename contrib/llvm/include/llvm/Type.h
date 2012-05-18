@@ -69,6 +69,12 @@ directive|include
 file|"llvm/Support/Casting.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/DataTypes.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -90,6 +96,9 @@ name|LLVMContext
 decl_stmt|;
 name|class
 name|LLVMContextImpl
+decl_stmt|;
+name|class
+name|StringRef
 decl_stmt|;
 name|template
 operator|<
@@ -128,50 +137,53 @@ init|=
 literal|0
 block|,
 comment|///<  0: type with no size
+name|HalfTyID
+block|,
+comment|///<  1: 16-bit floating point type
 name|FloatTyID
 block|,
-comment|///<  1: 32-bit floating point type
+comment|///<  2: 32-bit floating point type
 name|DoubleTyID
 block|,
-comment|///<  2: 64-bit floating point type
+comment|///<  3: 64-bit floating point type
 name|X86_FP80TyID
 block|,
-comment|///<  3: 80-bit floating point type (X87)
+comment|///<  4: 80-bit floating point type (X87)
 name|FP128TyID
 block|,
-comment|///<  4: 128-bit floating point type (112-bit mantissa)
+comment|///<  5: 128-bit floating point type (112-bit mantissa)
 name|PPC_FP128TyID
 block|,
-comment|///<  5: 128-bit floating point type (two 64-bits, PowerPC)
+comment|///<  6: 128-bit floating point type (two 64-bits, PowerPC)
 name|LabelTyID
 block|,
-comment|///<  6: Labels
+comment|///<  7: Labels
 name|MetadataTyID
 block|,
-comment|///<  7: Metadata
+comment|///<  8: Metadata
 name|X86_MMXTyID
 block|,
-comment|///<  8: MMX vectors (64 bits, X86 specific)
+comment|///<  9: MMX vectors (64 bits, X86 specific)
 comment|// Derived types... see DerivedTypes.h file.
 comment|// Make sure FirstDerivedTyID stays up to date!
 name|IntegerTyID
 block|,
-comment|///<  9: Arbitrary bit width integers
+comment|///< 10: Arbitrary bit width integers
 name|FunctionTyID
 block|,
-comment|///< 10: Functions
+comment|///< 11: Functions
 name|StructTyID
 block|,
-comment|///< 11: Structures
+comment|///< 12: Structures
 name|ArrayTyID
 block|,
-comment|///< 12: Arrays
+comment|///< 13: Arrays
 name|PointerTyID
 block|,
-comment|///< 13: Pointers
+comment|///< 14: Pointers
 name|VectorTyID
 block|,
-comment|///< 14: SIMD 'packed' format, or other vector type
+comment|///< 15: SIMD 'packed' format, or other vector type
 name|NumTypeIDs
 block|,
 comment|// Must remain as last defined ID
@@ -191,18 +203,13 @@ name|LLVMContext
 modifier|&
 name|Context
 decl_stmt|;
-name|TypeID
-name|ID
-range|:
-literal|8
+comment|// Due to Ubuntu GCC bug 910363:
+comment|// https://bugs.launchpad.net/ubuntu/+source/gcc-4.5/+bug/910363
+comment|// Bitpack ID and SubclassData manually.
+comment|// Note: TypeID : low 8 bit; SubclassData : high 24 bit.
+name|uint32_t
+name|IDAndSubclassData
 decl_stmt|;
-comment|// The current base type of this type.
-name|unsigned
-name|SubclassData
-range|:
-literal|24
-decl_stmt|;
-comment|// Space for subclasses to store data
 name|protected
 label|:
 name|friend
@@ -222,12 +229,7 @@ argument_list|(
 name|C
 argument_list|)
 operator|,
-name|ID
-argument_list|(
-name|tid
-argument_list|)
-operator|,
-name|SubclassData
+name|IDAndSubclassData
 argument_list|(
 literal|0
 argument_list|)
@@ -241,18 +243,55 @@ name|ContainedTys
 argument_list|(
 literal|0
 argument_list|)
-block|{}
+block|{
+name|setTypeID
+argument_list|(
+name|tid
+argument_list|)
+block|;   }
 operator|~
 name|Type
 argument_list|()
 block|{}
+name|void
+name|setTypeID
+argument_list|(
+argument|TypeID ID
+argument_list|)
+block|{
+name|IDAndSubclassData
+operator|=
+operator|(
+name|ID
+operator|&
+literal|0xFF
+operator|)
+operator||
+operator|(
+name|IDAndSubclassData
+operator|&
+literal|0xFFFFFF00
+operator|)
+block|;
+name|assert
+argument_list|(
+name|getTypeID
+argument_list|()
+operator|==
+name|ID
+operator|&&
+literal|"TypeID data too large for field"
+argument_list|)
+block|;   }
 name|unsigned
 name|getSubclassData
 argument_list|()
 specifier|const
 block|{
 return|return
-name|SubclassData
+name|IDAndSubclassData
+operator|>>
+literal|8
 return|;
 block|}
 name|void
@@ -262,14 +301,25 @@ name|unsigned
 name|val
 parameter_list|)
 block|{
-name|SubclassData
+name|IDAndSubclassData
 operator|=
+operator|(
+name|IDAndSubclassData
+operator|&
+literal|0xFF
+operator|)
+operator||
+operator|(
 name|val
+operator|<<
+literal|8
+operator|)
 expr_stmt|;
 comment|// Ensure we don't have any accidental truncation.
 name|assert
 argument_list|(
-name|SubclassData
+name|getSubclassData
+argument_list|()
 operator|==
 name|val
 operator|&&
@@ -332,7 +382,14 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ID
+call|(
+name|TypeID
+call|)
+argument_list|(
+name|IDAndSubclassData
+operator|&
+literal|0xFF
+argument_list|)
 return|;
 block|}
 comment|/// isVoidTy - Return true if this is 'void'.
@@ -342,9 +399,23 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ID
+name|getTypeID
+argument_list|()
 operator|==
 name|VoidTyID
+return|;
+block|}
+comment|/// isHalfTy - Return true if this is 'half', a 16-bit IEEE fp type.
+name|bool
+name|isHalfTy
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getTypeID
+argument_list|()
+operator|==
+name|HalfTyID
 return|;
 block|}
 comment|/// isFloatTy - Return true if this is 'float', a 32-bit IEEE fp type.
@@ -354,7 +425,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ID
+name|getTypeID
+argument_list|()
 operator|==
 name|FloatTyID
 return|;
@@ -366,7 +438,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ID
+name|getTypeID
+argument_list|()
 operator|==
 name|DoubleTyID
 return|;
@@ -378,7 +451,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ID
+name|getTypeID
+argument_list|()
 operator|==
 name|X86_FP80TyID
 return|;
@@ -390,7 +464,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ID
+name|getTypeID
+argument_list|()
 operator|==
 name|FP128TyID
 return|;
@@ -402,7 +477,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ID
+name|getTypeID
+argument_list|()
 operator|==
 name|PPC_FP128TyID
 return|;
@@ -415,23 +491,33 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ID
+name|getTypeID
+argument_list|()
+operator|==
+name|HalfTyID
+operator|||
+name|getTypeID
+argument_list|()
 operator|==
 name|FloatTyID
 operator|||
-name|ID
+name|getTypeID
+argument_list|()
 operator|==
 name|DoubleTyID
 operator|||
-name|ID
+name|getTypeID
+argument_list|()
 operator|==
 name|X86_FP80TyID
 operator|||
-name|ID
+name|getTypeID
+argument_list|()
 operator|==
 name|FP128TyID
 operator|||
-name|ID
+name|getTypeID
+argument_list|()
 operator|==
 name|PPC_FP128TyID
 return|;
@@ -443,7 +529,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ID
+name|getTypeID
+argument_list|()
 operator|==
 name|X86_MMXTyID
 return|;
@@ -462,7 +549,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ID
+name|getTypeID
+argument_list|()
 operator|==
 name|LabelTyID
 return|;
@@ -474,7 +562,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ID
+name|getTypeID
+argument_list|()
 operator|==
 name|MetadataTyID
 return|;
@@ -487,7 +576,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ID
+name|getTypeID
+argument_list|()
 operator|==
 name|IntegerTyID
 return|;
@@ -517,7 +607,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ID
+name|getTypeID
+argument_list|()
 operator|==
 name|FunctionTyID
 return|;
@@ -530,7 +621,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ID
+name|getTypeID
+argument_list|()
 operator|==
 name|StructTyID
 return|;
@@ -543,7 +635,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ID
+name|getTypeID
+argument_list|()
 operator|==
 name|ArrayTyID
 return|;
@@ -556,7 +649,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ID
+name|getTypeID
+argument_list|()
 operator|==
 name|PointerTyID
 return|;
@@ -569,7 +663,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ID
+name|getTypeID
+argument_list|()
 operator|==
 name|VectorTyID
 return|;
@@ -604,7 +699,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ID
+name|getTypeID
+argument_list|()
 operator|<=
 name|LastPrimitiveTyID
 return|;
@@ -615,7 +711,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ID
+name|getTypeID
+argument_list|()
 operator|>=
 name|FirstDerivedTyID
 return|;
@@ -629,11 +726,13 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ID
+name|getTypeID
+argument_list|()
 operator|!=
 name|FunctionTyID
 operator|&&
-name|ID
+name|getTypeID
+argument_list|()
 operator|!=
 name|VoidTyID
 return|;
@@ -649,7 +748,8 @@ specifier|const
 block|{
 return|return
 operator|(
-name|ID
+name|getTypeID
+argument_list|()
 operator|!=
 name|VoidTyID
 operator|&&
@@ -657,15 +757,18 @@ name|isPrimitiveType
 argument_list|()
 operator|)
 operator|||
-name|ID
+name|getTypeID
+argument_list|()
 operator|==
 name|IntegerTyID
 operator|||
-name|ID
+name|getTypeID
+argument_list|()
 operator|==
 name|PointerTyID
 operator|||
-name|ID
+name|getTypeID
+argument_list|()
 operator|==
 name|VectorTyID
 return|;
@@ -681,11 +784,13 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ID
+name|getTypeID
+argument_list|()
 operator|==
 name|StructTyID
 operator|||
-name|ID
+name|getTypeID
+argument_list|()
 operator|==
 name|ArrayTyID
 return|;
@@ -702,18 +807,21 @@ block|{
 comment|// If it's a primitive, it is always sized.
 if|if
 condition|(
-name|ID
+name|getTypeID
+argument_list|()
 operator|==
 name|IntegerTyID
 operator|||
 name|isFloatingPointTy
 argument_list|()
 operator|||
-name|ID
+name|getTypeID
+argument_list|()
 operator|==
 name|PointerTyID
 operator|||
-name|ID
+name|getTypeID
+argument_list|()
 operator|==
 name|X86_MMXTyID
 condition|)
@@ -724,15 +832,18 @@ comment|// If it is not something that can have a size (e.g. a function or label
 comment|// it doesn't have a size.
 if|if
 condition|(
-name|ID
+name|getTypeID
+argument_list|()
 operator|!=
 name|StructTyID
 operator|&&
-name|ID
+name|getTypeID
+argument_list|()
 operator|!=
 name|ArrayTyID
 operator|&&
-name|ID
+name|getTypeID
+argument_list|()
 operator|!=
 name|VectorTyID
 condition|)
@@ -855,6 +966,109 @@ name|NumContainedTys
 return|;
 block|}
 comment|//===--------------------------------------------------------------------===//
+comment|// Helper methods corresponding to subclass methods.  This forces a cast to
+comment|// the specified subclass and calls its accessor.  "getVectorNumElements" (for
+comment|// example) is shorthand for cast<VectorType>(Ty)->getNumElements().  This is
+comment|// only intended to cover the core methods that are frequently used, helper
+comment|// methods should not be added here.
+name|unsigned
+name|getIntegerBitWidth
+argument_list|()
+specifier|const
+expr_stmt|;
+name|Type
+modifier|*
+name|getFunctionParamType
+argument_list|(
+name|unsigned
+name|i
+argument_list|)
+decl|const
+decl_stmt|;
+name|unsigned
+name|getFunctionNumParams
+argument_list|()
+specifier|const
+expr_stmt|;
+name|bool
+name|isFunctionVarArg
+argument_list|()
+specifier|const
+expr_stmt|;
+name|StringRef
+name|getStructName
+argument_list|()
+specifier|const
+expr_stmt|;
+name|unsigned
+name|getStructNumElements
+argument_list|()
+specifier|const
+expr_stmt|;
+name|Type
+modifier|*
+name|getStructElementType
+argument_list|(
+name|unsigned
+name|N
+argument_list|)
+decl|const
+decl_stmt|;
+name|Type
+operator|*
+name|getSequentialElementType
+argument_list|()
+specifier|const
+expr_stmt|;
+name|uint64_t
+name|getArrayNumElements
+argument_list|()
+specifier|const
+expr_stmt|;
+name|Type
+operator|*
+name|getArrayElementType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getSequentialElementType
+argument_list|()
+return|;
+block|}
+name|unsigned
+name|getVectorNumElements
+argument_list|()
+specifier|const
+expr_stmt|;
+name|Type
+operator|*
+name|getVectorElementType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getSequentialElementType
+argument_list|()
+return|;
+block|}
+name|unsigned
+name|getPointerAddressSpace
+argument_list|()
+specifier|const
+expr_stmt|;
+name|Type
+operator|*
+name|getPointerElementType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getSequentialElementType
+argument_list|()
+return|;
+block|}
+comment|//===--------------------------------------------------------------------===//
 comment|// Static members exported by the Type class itself.  Useful for getting
 comment|// instances of Type.
 comment|//
@@ -889,6 +1103,16 @@ specifier|static
 name|Type
 modifier|*
 name|getLabelTy
+parameter_list|(
+name|LLVMContext
+modifier|&
+name|C
+parameter_list|)
+function_decl|;
+specifier|static
+name|Type
+modifier|*
+name|getHalfTy
 parameter_list|(
 name|LLVMContext
 modifier|&
@@ -1032,6 +1256,21 @@ comment|//===-------------------------------------------------------------------
 comment|// Convenience methods for getting pointer types with one of the above builtin
 comment|// types as pointee.
 comment|//
+specifier|static
+name|PointerType
+modifier|*
+name|getHalfPtrTy
+parameter_list|(
+name|LLVMContext
+modifier|&
+name|C
+parameter_list|,
+name|unsigned
+name|AS
+init|=
+literal|0
+parameter_list|)
+function_decl|;
 specifier|static
 name|PointerType
 modifier|*

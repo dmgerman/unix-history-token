@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/ExprObjC.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/StaticAnalyzer/Core/PathSensitive/SVals.h"
 end_include
 
@@ -97,15 +103,20 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
+name|class
+name|CXXBoolLiteralExpr
+decl_stmt|;
 name|namespace
 name|ento
 block|{
 name|class
-name|ProgramState
-decl_stmt|;
-name|class
 name|SValBuilder
 block|{
+name|virtual
+name|void
+name|anchor
+parameter_list|()
+function_decl|;
 name|protected
 label|:
 name|ASTContext
@@ -138,10 +149,6 @@ specifier|const
 name|unsigned
 name|ArrayIndexWidth
 decl_stmt|;
-name|public
-label|:
-comment|// FIXME: Make these protected again once RegionStoreManager correctly
-comment|// handles loads from different bound value types.
 name|virtual
 name|SVal
 name|evalCastFromNonLoc
@@ -160,6 +167,23 @@ name|SVal
 name|evalCastFromLoc
 parameter_list|(
 name|Loc
+name|val
+parameter_list|,
+name|QualType
+name|castTy
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+name|public
+label|:
+comment|// FIXME: Make these protected again once RegionStoreManager correctly
+comment|// handles loads from different bound value types.
+name|virtual
+name|SVal
+name|dispatchCast
+parameter_list|(
+name|SVal
 name|val
 parameter_list|,
 name|QualType
@@ -237,16 +261,88 @@ operator|~
 name|SValBuilder
 argument_list|()
 block|{}
+name|bool
+name|haveSameType
+argument_list|(
+argument|const SymExpr *Sym1
+argument_list|,
+argument|const SymExpr *Sym2
+argument_list|)
+block|{
+return|return
+name|haveSameType
+argument_list|(
+name|Sym1
+operator|->
+name|getType
+argument_list|(
+name|Context
+argument_list|)
+argument_list|,
+name|Sym2
+operator|->
+name|getType
+argument_list|(
+name|Context
+argument_list|)
+argument_list|)
+return|;
+block|}
+name|bool
+name|haveSameType
+parameter_list|(
+name|QualType
+name|Ty1
+parameter_list|,
+name|QualType
+name|Ty2
+parameter_list|)
+block|{
+comment|// FIXME: Remove the second disjunct when we support symbolic
+comment|// truncation/extension.
+return|return
+operator|(
+name|Context
+operator|.
+name|getCanonicalType
+argument_list|(
+name|Ty1
+argument_list|)
+operator|==
+name|Context
+operator|.
+name|getCanonicalType
+argument_list|(
+name|Ty2
+argument_list|)
+operator|||
+operator|(
+name|Ty2
+operator|->
+name|isIntegerType
+argument_list|()
+operator|&&
+name|Ty2
+operator|->
+name|isIntegerType
+argument_list|()
+operator|)
+operator|)
+return|;
+block|}
 name|SVal
 name|evalCast
-argument_list|(
-argument|SVal val
-argument_list|,
-argument|QualType castTy
-argument_list|,
-argument|QualType originalType
-argument_list|)
-expr_stmt|;
+parameter_list|(
+name|SVal
+name|val
+parameter_list|,
+name|QualType
+name|castTy
+parameter_list|,
+name|QualType
+name|originalType
+parameter_list|)
+function_decl|;
 name|virtual
 name|SVal
 name|evalMinus
@@ -267,13 +363,13 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
+comment|/// Create a new value which represents a binary expression with two non
+comment|/// location operands.
 name|virtual
 name|SVal
 name|evalBinOpNN
 argument_list|(
-specifier|const
-name|ProgramState
-operator|*
+name|ProgramStateRef
 name|state
 argument_list|,
 name|BinaryOperator
@@ -293,13 +389,13 @@ argument_list|)
 init|=
 literal|0
 decl_stmt|;
+comment|/// Create a new value which represents a binary expression with two memory
+comment|/// location operands.
 name|virtual
 name|SVal
 name|evalBinOpLL
 argument_list|(
-specifier|const
-name|ProgramState
-operator|*
+name|ProgramStateRef
 name|state
 argument_list|,
 name|BinaryOperator
@@ -319,13 +415,14 @@ argument_list|)
 init|=
 literal|0
 decl_stmt|;
+comment|/// Create a new value which represents a binary expression with a memory
+comment|/// location and non location operands. For example, this would be used to
+comment|/// evaluate a pointer arithmetic operation.
 name|virtual
 name|SVal
 name|evalBinOpLN
 argument_list|(
-specifier|const
-name|ProgramState
-operator|*
+name|ProgramStateRef
 name|state
 argument_list|,
 name|BinaryOperator
@@ -345,8 +442,8 @@ argument_list|)
 init|=
 literal|0
 decl_stmt|;
-comment|/// getKnownValue - evaluates a given SVal. If the SVal has only one possible
-comment|///  (integer) value, that value is returned. Otherwise, returns NULL.
+comment|/// Evaluates a given SVal. If the SVal has only one possible (integer) value,
+comment|/// that value is returned. Otherwise, returns NULL.
 name|virtual
 specifier|const
 name|llvm
@@ -355,19 +452,42 @@ name|APSInt
 operator|*
 name|getKnownValue
 argument_list|(
-argument|const ProgramState *state
+argument|ProgramStateRef state
 argument_list|,
 argument|SVal val
 argument_list|)
 operator|=
 literal|0
 expr_stmt|;
+comment|/// Handles generation of the value in case the builder is not smart enough to
+comment|/// handle the given binary expression. Depending on the state, decides to
+comment|/// either keep the expression or forget the history and generate an
+comment|/// UnknownVal.
+name|SVal
+name|makeGenericVal
+argument_list|(
+name|ProgramStateRef
+name|state
+argument_list|,
+name|BinaryOperator
+operator|::
+name|Opcode
+name|op
+argument_list|,
+name|NonLoc
+name|lhs
+argument_list|,
+name|NonLoc
+name|rhs
+argument_list|,
+name|QualType
+name|resultTy
+argument_list|)
+decl_stmt|;
 name|SVal
 name|evalBinOp
 argument_list|(
-specifier|const
-name|ProgramState
-operator|*
+name|ProgramStateRef
 name|state
 argument_list|,
 name|BinaryOperator
@@ -388,9 +508,7 @@ decl_stmt|;
 name|DefinedOrUnknownSVal
 name|evalEQ
 parameter_list|(
-specifier|const
-name|ProgramState
-modifier|*
+name|ProgramStateRef
 name|state
 parameter_list|,
 name|DefinedOrUnknownSVal
@@ -521,6 +639,11 @@ name|Stmt
 modifier|*
 name|stmt
 parameter_list|,
+specifier|const
+name|LocationContext
+modifier|*
+name|LCtx
+parameter_list|,
 name|QualType
 name|type
 parameter_list|,
@@ -542,6 +665,8 @@ name|getConjuredSymbol
 argument_list|(
 name|stmt
 argument_list|,
+name|LCtx
+argument_list|,
 name|type
 argument_list|,
 name|visitCount
@@ -559,6 +684,11 @@ specifier|const
 name|Expr
 modifier|*
 name|expr
+parameter_list|,
+specifier|const
+name|LocationContext
+modifier|*
+name|LCtx
 parameter_list|,
 name|unsigned
 name|visitCount
@@ -578,13 +708,15 @@ name|getConjuredSymbol
 argument_list|(
 name|expr
 argument_list|,
+name|LCtx
+argument_list|,
 name|visitCount
 argument_list|,
 name|symbolTag
 argument_list|)
 return|;
 block|}
-comment|/// makeZeroVal - Construct an SVal representing '0' for the specified type.
+comment|/// Construct an SVal representing '0' for the specified type.
 name|DefinedOrUnknownSVal
 name|makeZeroVal
 parameter_list|(
@@ -592,7 +724,7 @@ name|QualType
 name|type
 parameter_list|)
 function_decl|;
-comment|/// getRegionValueSymbolVal - make a unique symbol for value of region.
+comment|/// Make a unique symbol for value of region.
 name|DefinedOrUnknownSVal
 name|getRegionValueSymbolVal
 parameter_list|(
@@ -602,6 +734,12 @@ modifier|*
 name|region
 parameter_list|)
 function_decl|;
+comment|/// \brief Create a new symbol with a unique 'name'.
+comment|///
+comment|/// We resort to conjured symbols when we cannot construct a derived symbol.
+comment|/// The advantage of symbols derived/built from other symbols is that we
+comment|/// preserve the relation between related(or even equivalent) expressions, so
+comment|/// conjured symbols should be used sparingly.
 name|DefinedOrUnknownSVal
 name|getConjuredSymbolVal
 parameter_list|(
@@ -614,6 +752,11 @@ specifier|const
 name|Expr
 modifier|*
 name|expr
+parameter_list|,
+specifier|const
+name|LocationContext
+modifier|*
+name|LCtx
 parameter_list|,
 name|unsigned
 name|count
@@ -632,11 +775,36 @@ name|Expr
 modifier|*
 name|expr
 parameter_list|,
+specifier|const
+name|LocationContext
+modifier|*
+name|LCtx
+parameter_list|,
 name|QualType
 name|type
 parameter_list|,
 name|unsigned
 name|count
+parameter_list|)
+function_decl|;
+name|DefinedOrUnknownSVal
+name|getConjuredSymbolVal
+parameter_list|(
+specifier|const
+name|Stmt
+modifier|*
+name|stmt
+parameter_list|,
+specifier|const
+name|LocationContext
+modifier|*
+name|LCtx
+parameter_list|,
+name|QualType
+name|type
+parameter_list|,
+name|unsigned
+name|visitCount
 parameter_list|)
 function_decl|;
 name|DefinedOrUnknownSVal
@@ -851,7 +1019,7 @@ operator|::
 name|ConcreteInt
 name|makeBoolVal
 argument_list|(
-argument|const CXXBoolLiteralExpr *boolean
+argument|const ObjCBoolLiteralExpr *boolean
 argument_list|)
 block|{
 return|return
@@ -861,9 +1029,25 @@ name|boolean
 operator|->
 name|getValue
 argument_list|()
+argument_list|,
+name|boolean
+operator|->
+name|getType
+argument_list|()
 argument_list|)
 return|;
 block|}
+name|nonloc
+operator|::
+name|ConcreteInt
+name|makeBoolVal
+argument_list|(
+specifier|const
+name|CXXBoolLiteralExpr
+operator|*
+name|boolean
+argument_list|)
+expr_stmt|;
 name|nonloc
 operator|::
 name|ConcreteInt
@@ -1125,6 +1309,30 @@ name|NonLoc
 name|makeNonLoc
 argument_list|(
 specifier|const
+name|llvm
+operator|::
+name|APSInt
+operator|&
+name|rhs
+argument_list|,
+name|BinaryOperator
+operator|::
+name|Opcode
+name|op
+argument_list|,
+specifier|const
+name|SymExpr
+operator|*
+name|lhs
+argument_list|,
+name|QualType
+name|type
+argument_list|)
+decl_stmt|;
+name|NonLoc
+name|makeNonLoc
+argument_list|(
+specifier|const
 name|SymExpr
 operator|*
 name|lhs
@@ -1143,6 +1351,22 @@ name|QualType
 name|type
 argument_list|)
 decl_stmt|;
+comment|/// \brief Create a NonLoc value for cast.
+name|NonLoc
+name|makeNonLoc
+parameter_list|(
+specifier|const
+name|SymExpr
+modifier|*
+name|operand
+parameter_list|,
+name|QualType
+name|fromTy
+parameter_list|,
+name|QualType
+name|toTy
+parameter_list|)
+function_decl|;
 name|nonloc
 operator|::
 name|ConcreteInt

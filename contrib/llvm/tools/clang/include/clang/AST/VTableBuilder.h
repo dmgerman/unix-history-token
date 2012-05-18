@@ -837,18 +837,26 @@ label|:
 name|uint64_t
 name|NumVTableComponents
 decl_stmt|;
+name|llvm
+operator|::
+name|OwningArrayPtr
+operator|<
 name|VTableComponent
-modifier|*
+operator|>
 name|VTableComponents
-decl_stmt|;
+expr_stmt|;
 comment|/// VTableThunks - Contains thunks needed by vtables.
 name|uint64_t
 name|NumVTableThunks
 decl_stmt|;
+name|llvm
+operator|::
+name|OwningArrayPtr
+operator|<
 name|VTableThunkTy
-modifier|*
+operator|>
 name|VTableThunks
-decl_stmt|;
+expr_stmt|;
 comment|/// Address points - Address points for all vtables.
 name|AddressPointsMapTy
 name|AddressPoints
@@ -888,6 +896,9 @@ specifier|const
 block|{
 return|return
 name|VTableComponents
+operator|.
+name|get
+argument_list|()
 return|;
 block|}
 name|vtable_component_iterator
@@ -897,6 +908,9 @@ specifier|const
 block|{
 return|return
 name|VTableComponents
+operator|.
+name|get
+argument_list|()
 operator|+
 name|NumVTableComponents
 return|;
@@ -917,6 +931,9 @@ specifier|const
 block|{
 return|return
 name|VTableThunks
+operator|.
+name|get
+argument_list|()
 return|;
 block|}
 name|vtable_thunk_iterator
@@ -926,6 +943,9 @@ specifier|const
 block|{
 return|return
 name|VTableThunks
+operator|.
+name|get
+argument_list|()
 operator|+
 name|NumVTableThunks
 return|;

@@ -128,26 +128,6 @@ modifier|*
 name|GV
 parameter_list|)
 function_decl|;
-comment|/// This function checks debug info intrinsics. If an intrinsic is invalid
-comment|/// then this function simply removes the intrinsic.
-name|void
-name|CheckDebugInfoIntrinsics
-parameter_list|(
-name|Module
-modifier|*
-name|M
-parameter_list|)
-function_decl|;
-comment|/// This function upgrades the old pre-3.0 exception handling system to the
-comment|/// new one. N.B. This will be removed in 3.1.
-name|void
-name|UpgradeExceptionHandling
-parameter_list|(
-name|Module
-modifier|*
-name|M
-parameter_list|)
-function_decl|;
 block|}
 end_decl_stmt
 

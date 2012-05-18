@@ -263,7 +263,176 @@ comment|/// NumLines - The number of lines in this ContentCache.  This is only v
 comment|/// if SourceLineCache is non-null.
 name|unsigned
 name|NumLines
+range|:
+literal|31
 decl_stmt|;
+comment|/// \brief Indicates whether the buffer itself was provided to override
+comment|/// the actual file contents.
+comment|///
+comment|/// When true, the original entry may be a virtual file that does not
+comment|/// exist.
+name|unsigned
+name|BufferOverridden
+range|:
+literal|1
+decl_stmt|;
+name|ContentCache
+argument_list|(
+specifier|const
+name|FileEntry
+operator|*
+name|Ent
+operator|=
+literal|0
+argument_list|)
+operator|:
+name|Buffer
+argument_list|(
+literal|0
+argument_list|,
+name|false
+argument_list|)
+operator|,
+name|OrigEntry
+argument_list|(
+name|Ent
+argument_list|)
+operator|,
+name|ContentsEntry
+argument_list|(
+name|Ent
+argument_list|)
+operator|,
+name|SourceLineCache
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|NumLines
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|BufferOverridden
+argument_list|(
+argument|false
+argument_list|)
+block|{}
+name|ContentCache
+argument_list|(
+specifier|const
+name|FileEntry
+operator|*
+name|Ent
+argument_list|,
+specifier|const
+name|FileEntry
+operator|*
+name|contentEnt
+argument_list|)
+operator|:
+name|Buffer
+argument_list|(
+literal|0
+argument_list|,
+name|false
+argument_list|)
+operator|,
+name|OrigEntry
+argument_list|(
+name|Ent
+argument_list|)
+operator|,
+name|ContentsEntry
+argument_list|(
+name|contentEnt
+argument_list|)
+operator|,
+name|SourceLineCache
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|NumLines
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|BufferOverridden
+argument_list|(
+argument|false
+argument_list|)
+block|{}
+operator|~
+name|ContentCache
+argument_list|()
+expr_stmt|;
+comment|/// The copy ctor does not allow copies where source object has either
+comment|///  a non-NULL Buffer or SourceLineCache.  Ownership of allocated memory
+comment|///  is not transferred, so this is a logical error.
+name|ContentCache
+argument_list|(
+specifier|const
+name|ContentCache
+operator|&
+name|RHS
+argument_list|)
+operator|:
+name|Buffer
+argument_list|(
+literal|0
+argument_list|,
+name|false
+argument_list|)
+operator|,
+name|SourceLineCache
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|BufferOverridden
+argument_list|(
+argument|false
+argument_list|)
+block|{
+name|OrigEntry
+operator|=
+name|RHS
+operator|.
+name|OrigEntry
+block|;
+name|ContentsEntry
+operator|=
+name|RHS
+operator|.
+name|ContentsEntry
+block|;
+name|assert
+argument_list|(
+name|RHS
+operator|.
+name|Buffer
+operator|.
+name|getPointer
+argument_list|()
+operator|==
+literal|0
+operator|&&
+name|RHS
+operator|.
+name|SourceLineCache
+operator|==
+literal|0
+operator|&&
+literal|"Passed ContentCache object cannot own a buffer."
+argument_list|)
+block|;
+name|NumLines
+operator|=
+name|RHS
+operator|.
+name|NumLines
+block|;     }
 comment|/// getBuffer - Returns the memory buffer for the associated content.
 comment|///
 comment|/// \param Diag Object through which diagnostics will be emitted if the
@@ -426,162 +595,20 @@ operator|==
 literal|0
 return|;
 block|}
-name|ContentCache
-argument_list|(
-specifier|const
-name|FileEntry
-operator|*
-name|Ent
-operator|=
-literal|0
-argument_list|)
-operator|:
-name|Buffer
-argument_list|(
-literal|0
-argument_list|,
-name|false
-argument_list|)
-operator|,
-name|OrigEntry
-argument_list|(
-name|Ent
-argument_list|)
-operator|,
-name|ContentsEntry
-argument_list|(
-name|Ent
-argument_list|)
-operator|,
-name|SourceLineCache
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NumLines
-argument_list|(
-literal|0
-argument_list|)
-block|{}
-name|ContentCache
-argument_list|(
-specifier|const
-name|FileEntry
-operator|*
-name|Ent
-argument_list|,
-specifier|const
-name|FileEntry
-operator|*
-name|contentEnt
-argument_list|)
-operator|:
-name|Buffer
-argument_list|(
-literal|0
-argument_list|,
-name|false
-argument_list|)
-operator|,
-name|OrigEntry
-argument_list|(
-name|Ent
-argument_list|)
-operator|,
-name|ContentsEntry
-argument_list|(
-name|contentEnt
-argument_list|)
-operator|,
-name|SourceLineCache
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NumLines
-argument_list|(
-literal|0
-argument_list|)
-block|{}
-operator|~
-name|ContentCache
-argument_list|()
-expr_stmt|;
-comment|/// The copy ctor does not allow copies where source object has either
-comment|///  a non-NULL Buffer or SourceLineCache.  Ownership of allocated memory
-comment|///  is not transferred, so this is a logical error.
-name|ContentCache
-argument_list|(
-specifier|const
-name|ContentCache
-operator|&
-name|RHS
-argument_list|)
-operator|:
-name|Buffer
-argument_list|(
-literal|0
-argument_list|,
-name|false
-argument_list|)
-operator|,
-name|SourceLineCache
-argument_list|(
-literal|0
-argument_list|)
-block|{
-name|OrigEntry
-operator|=
-name|RHS
-operator|.
-name|OrigEntry
-block|;
-name|ContentsEntry
-operator|=
-name|RHS
-operator|.
-name|ContentsEntry
-block|;
-name|assert
-argument_list|(
-name|RHS
-operator|.
-name|Buffer
-operator|.
-name|getPointer
-argument_list|()
-operator|==
-literal|0
-operator|&&
-name|RHS
-operator|.
-name|SourceLineCache
-operator|==
-literal|0
-operator|&&
-literal|"Passed ContentCache object cannot own a buffer."
-argument_list|)
-block|;
-name|NumLines
-operator|=
-name|RHS
-operator|.
-name|NumLines
-block|;     }
 name|private
-operator|:
+label|:
 comment|// Disable assignments.
 name|ContentCache
-operator|&
+modifier|&
 name|operator
-operator|=
+init|=
 operator|(
 specifier|const
 name|ContentCache
 operator|&
 name|RHS
 operator|)
-expr_stmt|;
+decl_stmt|;
 block|}
 empty_stmt|;
 comment|/// FileInfo - Information about a FileID, basically just the logical file
@@ -926,6 +953,25 @@ name|ExpansionLocEnd
 argument_list|)
 operator|.
 name|isInvalid
+argument_list|()
+return|;
+block|}
+name|bool
+name|isFunctionMacroExpansion
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getExpansionLocStart
+argument_list|()
+operator|.
+name|isValid
+argument_list|()
+operator|&&
+name|getExpansionLocStart
+argument_list|()
+operator|!=
+name|getExpansionLocEnd
 argument_list|()
 return|;
 block|}
@@ -1327,16 +1373,6 @@ condition|(
 name|LOffset
 operator|==
 name|ROffset
-operator|&&
-operator|(
-name|LQueryFID
-operator|!=
-name|CommonFID
-operator|||
-name|RQueryFID
-operator|!=
-name|CommonFID
-operator|)
 condition|)
 return|return
 name|IsLQFIDBeforeRQFID
@@ -1441,8 +1477,6 @@ name|class
 name|SourceManager
 range|:
 name|public
-name|llvm
-operator|::
 name|RefCountedBase
 operator|<
 name|SourceManager
@@ -1534,6 +1568,7 @@ comment|/// \brief The table of SLocEntries that are loaded from other modules.
 comment|///
 comment|/// Negative FileIDs are indexes into this table. To get from ID to an index,
 comment|/// use (-ID - 2).
+name|mutable
 name|std
 operator|::
 name|vector
@@ -1646,6 +1681,13 @@ operator|::
 name|MemoryBuffer
 operator|*
 name|FakeBufferForRecovery
+block|;
+name|mutable
+name|SrcMgr
+operator|::
+name|ContentCache
+operator|*
+name|FakeContentCacheForRecovery
 block|;
 comment|/// \brief Lazily computed map of macro argument chunks to their expanded
 comment|/// source location.
@@ -1796,12 +1838,21 @@ block|}
 comment|/// createMainFileID - Create the FileID for the main source file.
 name|FileID
 name|createMainFileID
-parameter_list|(
+argument_list|(
 specifier|const
 name|FileEntry
-modifier|*
+operator|*
 name|SourceFile
-parameter_list|)
+argument_list|,
+name|SrcMgr
+operator|::
+name|CharacteristicKind
+name|Kind
+operator|=
+name|SrcMgr
+operator|::
+name|C_User
+argument_list|)
 block|{
 name|assert
 argument_list|(
@@ -1822,14 +1873,35 @@ argument_list|,
 name|SourceLocation
 argument_list|()
 argument_list|,
-name|SrcMgr
-operator|::
-name|C_User
+name|Kind
 argument_list|)
 expr_stmt|;
 return|return
 name|MainFileID
 return|;
+block|}
+comment|/// \brief Set the file ID for the main source file.
+name|void
+name|setMainFileID
+parameter_list|(
+name|FileID
+name|FID
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|MainFileID
+operator|.
+name|isInvalid
+argument_list|()
+operator|&&
+literal|"MainFileID already set!"
+argument_list|)
+expr_stmt|;
+name|MainFileID
+operator|=
+name|FID
+expr_stmt|;
 block|}
 comment|/// \brief Set the file ID for the precompiled preamble.
 name|void
@@ -1953,6 +2025,12 @@ name|unsigned
 name|LoadedOffset
 operator|=
 literal|0
+argument_list|,
+name|SourceLocation
+name|IncludeLoc
+operator|=
+name|SourceLocation
+argument_list|()
 argument_list|)
 block|{
 return|return
@@ -1963,8 +2041,7 @@ argument_list|(
 name|Buffer
 argument_list|)
 argument_list|,
-name|SourceLocation
-argument_list|()
+name|IncludeLoc
 argument_list|,
 name|SrcMgr
 operator|::
@@ -2311,7 +2388,13 @@ condition|)
 return|return
 literal|0
 return|;
-return|return
+specifier|const
+name|SrcMgr
+operator|::
+name|ContentCache
+operator|*
+name|Content
+operator|=
 name|Entry
 operator|.
 name|getFile
@@ -2319,6 +2402,17 @@ argument_list|()
 operator|.
 name|getContentCache
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Content
+condition|)
+return|return
+literal|0
+return|;
+return|return
+name|Content
 operator|->
 name|OrigEntry
 return|;
@@ -2338,7 +2432,13 @@ name|sloc
 argument_list|)
 decl|const
 block|{
-return|return
+specifier|const
+name|SrcMgr
+operator|::
+name|ContentCache
+operator|*
+name|Content
+operator|=
 name|sloc
 operator|.
 name|getFile
@@ -2346,6 +2446,17 @@ argument_list|()
 operator|.
 name|getContentCache
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Content
+condition|)
+return|return
+literal|0
+return|;
+return|return
+name|Content
 operator|->
 name|OrigEntry
 return|;
@@ -2370,7 +2481,7 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// \brief Get the number of FileIDs (files and macros) that were created
-comment|/// during preprocessing of \arg FID, including it.
+comment|/// during preprocessing of \p FID, including it.
 name|unsigned
 name|getNumCreatedFIDsForFileID
 argument_list|(
@@ -2422,7 +2533,7 @@ name|NumCreatedFIDs
 return|;
 block|}
 comment|/// \brief Set the number of FileIDs (files and macros) that were created
-comment|/// during preprocessing of \arg FID, including it.
+comment|/// during preprocessing of \p FID, including it.
 name|void
 name|setNumCreatedFIDsForFileID
 argument_list|(
@@ -2603,7 +2714,75 @@ name|FileOffset
 argument_list|)
 return|;
 block|}
-comment|/// \brief Returns the include location if \arg FID is a #include'd file
+comment|/// \brief Return the source location corresponding to the last byte of the
+comment|/// specified file.
+name|SourceLocation
+name|getLocForEndOfFile
+argument_list|(
+name|FileID
+name|FID
+argument_list|)
+decl|const
+block|{
+name|bool
+name|Invalid
+init|=
+name|false
+decl_stmt|;
+specifier|const
+name|SrcMgr
+operator|::
+name|SLocEntry
+operator|&
+name|Entry
+operator|=
+name|getSLocEntry
+argument_list|(
+name|FID
+argument_list|,
+operator|&
+name|Invalid
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Invalid
+operator|||
+operator|!
+name|Entry
+operator|.
+name|isFile
+argument_list|()
+condition|)
+return|return
+name|SourceLocation
+argument_list|()
+return|;
+name|unsigned
+name|FileOffset
+init|=
+name|Entry
+operator|.
+name|getOffset
+argument_list|()
+decl_stmt|;
+return|return
+name|SourceLocation
+operator|::
+name|getFileLoc
+argument_list|(
+name|FileOffset
+operator|+
+name|getFileIDSize
+argument_list|(
+name|FID
+argument_list|)
+operator|-
+literal|1
+argument_list|)
+return|;
+block|}
+comment|/// \brief Returns the include location if \p FID is a #include'd file
 comment|/// otherwise it returns an invalid location.
 name|SourceLocation
 name|getIncludeLoc
@@ -2686,7 +2865,7 @@ name|Loc
 argument_list|)
 return|;
 block|}
-comment|/// \brief Given \arg Loc, if it is a macro location return the expansion
+comment|/// \brief Given \p Loc, if it is a macro location return the expansion
 comment|/// location or the spelling location, depending on if it comes from a
 comment|/// macro argument or not.
 name|SourceLocation
@@ -2813,6 +2992,41 @@ argument_list|(
 name|Loc
 argument_list|)
 block|;
+name|bool
+name|Invalid
+operator|=
+name|false
+block|;
+specifier|const
+name|SrcMgr
+operator|::
+name|SLocEntry
+operator|&
+name|E
+operator|=
+name|getSLocEntry
+argument_list|(
+name|FID
+argument_list|,
+operator|&
+name|Invalid
+argument_list|)
+block|;
+if|if
+condition|(
+name|Invalid
+condition|)
+return|return
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|FileID
+argument_list|()
+argument_list|,
+literal|0
+argument_list|)
+return|;
 return|return
 name|std
 operator|::
@@ -2825,19 +3039,28 @@ operator|.
 name|getOffset
 argument_list|()
 operator|-
-name|getSLocEntry
-argument_list|(
-name|FID
-argument_list|)
+name|E
 operator|.
 name|getOffset
 argument_list|()
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// getDecomposedExpansionLoc - Decompose the specified location into a raw
+end_comment
+
+begin_comment
 comment|/// FileID + Offset pair. If the location is an expansion record, walk
+end_comment
+
+begin_comment
 comment|/// through it until we find the final location expanded.
+end_comment
+
+begin_expr_stmt
 name|std
 operator|::
 name|pair
@@ -2860,6 +3083,11 @@ argument_list|(
 name|Loc
 argument_list|)
 block|;
+name|bool
+name|Invalid
+operator|=
+name|false
+block|;
 specifier|const
 name|SrcMgr
 operator|::
@@ -2871,8 +3099,26 @@ operator|&
 name|getSLocEntry
 argument_list|(
 name|FID
+argument_list|,
+operator|&
+name|Invalid
 argument_list|)
 block|;
+if|if
+condition|(
+name|Invalid
+condition|)
+return|return
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|FileID
+argument_list|()
+argument_list|,
+literal|0
+argument_list|)
+return|;
 name|unsigned
 name|Offset
 operator|=
@@ -2885,7 +3131,10 @@ name|E
 operator|->
 name|getOffset
 argument_list|()
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|Loc
@@ -2903,16 +3152,19 @@ argument_list|,
 name|Offset
 argument_list|)
 return|;
+end_if
+
+begin_return
 return|return
 name|getDecomposedExpansionLocSlowCase
 argument_list|(
 name|E
 argument_list|)
 return|;
-block|}
-end_decl_stmt
+end_return
 
 begin_comment
+unit|}
 comment|/// getDecomposedSpellingLoc - Decompose the specified location into a raw
 end_comment
 
@@ -2925,7 +3177,7 @@ comment|/// through it until we find its spelling record.
 end_comment
 
 begin_expr_stmt
-name|std
+unit|std
 operator|::
 name|pair
 operator|<
@@ -2947,6 +3199,11 @@ argument_list|(
 name|Loc
 argument_list|)
 block|;
+name|bool
+name|Invalid
+operator|=
+name|false
+block|;
 specifier|const
 name|SrcMgr
 operator|::
@@ -2958,8 +3215,26 @@ operator|&
 name|getSLocEntry
 argument_list|(
 name|FID
+argument_list|,
+operator|&
+name|Invalid
 argument_list|)
 block|;
+if|if
+condition|(
+name|Invalid
+condition|)
+return|return
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|FileID
+argument_list|()
+argument_list|,
+literal|0
+argument_list|)
+return|;
 name|unsigned
 name|Offset
 operator|=
@@ -2972,7 +3247,10 @@ name|E
 operator|->
 name|getOffset
 argument_list|()
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|Loc
@@ -2990,7 +3268,7 @@ argument_list|,
 name|Offset
 argument_list|)
 return|;
-end_expr_stmt
+end_if
 
 begin_return
 return|return
@@ -3070,7 +3348,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// \brief Returns true if \arg Loc is inside the [\arg Start, +\arg Length)
+comment|/// \brief Returns true if \p Loc is inside the [\p Start, +\p Length)
 end_comment
 
 begin_comment
@@ -3078,11 +3356,11 @@ comment|/// chunk of the source location address space.
 end_comment
 
 begin_comment
-comment|/// If it's true and \arg RelativeOffset is non-null, it will be set to the
+comment|/// If it's true and \p RelativeOffset is non-null, it will be set to the
 end_comment
 
 begin_comment
-comment|/// relative offset of \arg Loc inside the chunk.
+comment|/// relative offset of \p Loc inside the chunk.
 end_comment
 
 begin_decl_stmt
@@ -3205,19 +3483,19 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// \brief Return true if both \arg LHS and \arg RHS are in the local source
+comment|/// \brief Return true if both \p LHS and \p RHS are in the local source
 end_comment
 
 begin_comment
-comment|/// location address space or the loaded one. If it's true and
+comment|/// location address space or the loaded one. If it's true and \p
 end_comment
 
 begin_comment
-comment|/// \arg RelativeOffset is non-null, it will be set to the offset of \arg RHS
+comment|/// RelativeOffset is non-null, it will be set to the offset of \p RHS
 end_comment
 
 begin_comment
-comment|/// relative to \arg LHS.
+comment|/// relative to \p LHS.
 end_comment
 
 begin_decl_stmt
@@ -3772,7 +4050,36 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// \brief The size of the SLocEnty that \arg FID represents.
+comment|/// \brief Returns whether \p Loc is expanded from a macro in a system header.
+end_comment
+
+begin_function
+name|bool
+name|isInSystemMacro
+parameter_list|(
+name|SourceLocation
+name|loc
+parameter_list|)
+block|{
+return|return
+name|loc
+operator|.
+name|isMacroID
+argument_list|()
+operator|&&
+name|isInSystemHeader
+argument_list|(
+name|getSpellingLoc
+argument_list|(
+name|loc
+argument_list|)
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief The size of the SLocEnty that \p FID represents.
 end_comment
 
 begin_decl_stmt
@@ -3787,15 +4094,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// \brief Given a specific FileID, returns true if \arg Loc is inside that
+comment|/// \brief Given a specific FileID, returns true if \p Loc is inside that
 end_comment
 
 begin_comment
-comment|/// FileID chunk and sets relative offset (offset of \arg Loc from beginning
+comment|/// FileID chunk and sets relative offset (offset of \p Loc from beginning
 end_comment
 
 begin_comment
-comment|/// of FileID) to \arg relativeOffset.
+comment|/// of FileID) to \p relativeOffset.
 end_comment
 
 begin_decl_stmt
@@ -4154,11 +4461,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// \brief Get the source location in \arg FID for the given line:col.
+comment|/// \brief Get the source location in \p FID for the given line:col.
 end_comment
 
 begin_comment
-comment|/// Returns null location if \arg FID is not a file SLocEntry.
+comment|/// Returns null location if \p FID is not a file SLocEntry.
 end_comment
 
 begin_decl_stmt
@@ -4179,7 +4486,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// \brief If \arg Loc points inside a function macro argument, the returned
+comment|/// \brief If \p Loc points inside a function macro argument, the returned
 end_comment
 
 begin_comment
@@ -4611,7 +4918,7 @@ name|getLoadedSLocEntry
 argument_list|(
 argument|unsigned Index
 argument_list|,
-argument|bool *Invalid=
+argument|bool *Invalid =
 literal|0
 argument_list|)
 specifier|const
@@ -4630,38 +4937,27 @@ argument_list|)
 block|;
 if|if
 condition|(
-operator|!
 name|SLocEntryLoaded
 index|[
 name|Index
 index|]
 condition|)
-name|ExternalSLocEntries
-operator|->
-name|ReadSLocEntry
-argument_list|(
-operator|-
-operator|(
-name|static_cast
-operator|<
-name|int
-operator|>
-operator|(
-name|Index
-operator|)
-operator|+
-literal|2
-operator|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 name|LoadedSLocEntryTable
 index|[
 name|Index
 index|]
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+name|loadSLocEntry
+argument_list|(
+name|Index
+argument_list|,
+name|Invalid
+argument_list|)
 return|;
 end_return
 
@@ -4680,6 +4976,41 @@ literal|0
 argument_list|)
 specifier|const
 block|{
+if|if
+condition|(
+name|FID
+operator|.
+name|ID
+operator|==
+literal|0
+operator|||
+name|FID
+operator|.
+name|ID
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+if|if
+condition|(
+name|Invalid
+condition|)
+operator|*
+name|Invalid
+operator|=
+name|true
+expr_stmt|;
+return|return
+name|LocalSLocEntryTable
+index|[
+literal|0
+index|]
+return|;
+block|}
+end_expr_stmt
+
+begin_return
 return|return
 name|getSLocEntryByID
 argument_list|(
@@ -4688,13 +5019,15 @@ operator|.
 name|ID
 argument_list|)
 return|;
-block|}
-end_expr_stmt
+end_return
 
-begin_expr_stmt
-name|unsigned
+begin_macro
+unit|}    unsigned
 name|getNextLocalOffset
 argument_list|()
+end_macro
+
+begin_expr_stmt
 specifier|const
 block|{
 return|return
@@ -4772,7 +5105,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Returns true if \arg Loc came from a PCH/Module.
+comment|/// \brief Returns true if \p Loc came from a PCH/Module.
 end_comment
 
 begin_decl_stmt
@@ -4796,7 +5129,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// \brief Returns true if \arg Loc did not come from a PCH/Module.
+comment|/// \brief Returns true if \p Loc did not come from a PCH/Module.
 end_comment
 
 begin_decl_stmt
@@ -4819,6 +5152,64 @@ return|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|/// \brief Returns true if \p FID came from a PCH/Module.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|isLoadedFileID
+argument_list|(
+name|FileID
+name|FID
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+name|FID
+operator|.
+name|ID
+operator|!=
+operator|-
+literal|1
+operator|&&
+literal|"Using FileID sentinel value"
+argument_list|)
+expr_stmt|;
+return|return
+name|FID
+operator|.
+name|ID
+operator|<
+literal|0
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Returns true if \p FID did not come from a PCH/Module.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|isLocalFileID
+argument_list|(
+name|FileID
+name|FID
+argument_list|)
+decl|const
+block|{
+return|return
+operator|!
+name|isLoadedFileID
+argument_list|(
+name|FID
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
 begin_label
 name|private
 label|:
@@ -4832,6 +5223,34 @@ name|MemoryBuffer
 operator|*
 name|getFakeBufferForRecovery
 argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+specifier|const
+name|SrcMgr
+operator|::
+name|ContentCache
+operator|*
+name|getFakeContentCacheForRecovery
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+specifier|const
+name|SrcMgr
+operator|::
+name|SLocEntry
+operator|&
+name|loadSLocEntry
+argument_list|(
+argument|unsigned Index
+argument_list|,
+argument|bool *Invalid
+argument_list|)
 specifier|const
 expr_stmt|;
 end_expr_stmt
@@ -4900,6 +5319,9 @@ operator|&
 name|getLoadedSLocEntryByID
 argument_list|(
 argument|int ID
+argument_list|,
+argument|bool *Invalid =
+literal|0
 argument_list|)
 specifier|const
 block|{
@@ -4916,6 +5338,8 @@ name|ID
 operator|-
 literal|2
 operator|)
+argument_list|,
+name|Invalid
 argument_list|)
 return|;
 block|}

@@ -69,6 +69,12 @@ directive|include
 file|"clang/AST/DeclCXX.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -94,6 +100,11 @@ range|:
 name|public
 name|Decl
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 typedef|typedef
@@ -249,14 +260,14 @@ function_decl|;
 specifier|static
 name|FriendDecl
 modifier|*
-name|Create
+name|CreateDeserialized
 parameter_list|(
 name|ASTContext
 modifier|&
 name|C
 parameter_list|,
-name|EmptyShell
-name|Empty
+name|unsigned
+name|ID
 parameter_list|)
 function_decl|;
 comment|/// If this friend declaration names an (untemplated but possibly
@@ -316,6 +327,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 block|{
 comment|/* FIXME: consider the case of templates wrt start of range. */
 if|if

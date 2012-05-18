@@ -399,6 +399,11 @@ comment|/// \brief The nested-name-specifier that precedes the template name.
 name|CXXScopeSpec
 name|SS
 decl_stmt|;
+comment|/// TemplateKWLoc - The location of the template keyword within the
+comment|/// source.
+name|SourceLocation
+name|TemplateKWLoc
+decl_stmt|;
 comment|/// TemplateNameLoc - The location of the template name within the
 comment|/// source.
 name|SourceLocation
@@ -455,14 +460,24 @@ literal|1
 operator|)
 return|;
 block|}
+comment|/// \brief Creates a new TemplateIdAnnotation with NumArgs arguments and
+comment|/// appends it to List.
 specifier|static
 name|TemplateIdAnnotation
 modifier|*
 name|Allocate
-parameter_list|(
+argument_list|(
 name|unsigned
 name|NumArgs
-parameter_list|)
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|TemplateIdAnnotation
+operator|*
+operator|>
+operator|&
+name|List
+argument_list|)
 block|{
 name|TemplateIdAnnotation
 modifier|*
@@ -533,6 +548,13 @@ argument|TemplateArgs + I
 argument_list|)
 name|ParsedTemplateArgument
 argument_list|()
+expr_stmt|;
+name|List
+operator|.
+name|push_back
+argument_list|(
+name|TemplateId
+argument_list|)
 expr_stmt|;
 return|return
 name|TemplateId

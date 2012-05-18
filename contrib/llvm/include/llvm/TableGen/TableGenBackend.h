@@ -69,12 +69,6 @@ directive|include
 file|"llvm/Support/raw_ostream.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<string>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -88,6 +82,11 @@ decl_stmt|;
 struct|struct
 name|TableGenBackend
 block|{
+name|virtual
+name|void
+name|anchor
+parameter_list|()
+function_decl|;
 name|virtual
 operator|~
 name|TableGenBackend
@@ -114,11 +113,7 @@ comment|/// ostream.
 name|void
 name|EmitSourceFileHeader
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringRef
 name|Desc
 argument_list|,
 name|raw_ostream

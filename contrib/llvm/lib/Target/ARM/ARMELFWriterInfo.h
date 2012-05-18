@@ -70,6 +70,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|TargetMachine
+decl_stmt|;
+name|class
 name|ARMELFWriterInfo
 range|:
 name|public

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- X86InstComments.h - Generate verbose-asm comments for instrs ------===//
+comment|//=- X86InstComments.h - Generate verbose-asm comments for instrs -*- C++ -*-=//
 end_comment
 
 begin_comment

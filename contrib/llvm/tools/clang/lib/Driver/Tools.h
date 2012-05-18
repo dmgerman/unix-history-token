@@ -104,6 +104,8 @@ block|{
 name|void
 name|AddPreprocessingOptions
 argument_list|(
+argument|Compilation&C
+argument_list|,
 argument|const Driver&D
 argument_list|,
 argument|const ArgList&Args
@@ -147,6 +149,15 @@ specifier|const
 block|;
 name|void
 name|AddX86TargetArgs
+argument_list|(
+argument|const ArgList&Args
+argument_list|,
+argument|ArgStringList&CmdArgs
+argument_list|)
+specifier|const
+block|;
+name|void
+name|AddHexagonTargetArgs
 argument_list|(
 argument|const ArgList&Args
 argument_list|,
@@ -230,6 +241,15 @@ range|:
 name|public
 name|Tool
 block|{
+name|void
+name|AddARMTargetArgs
+argument_list|(
+argument|const ArgList&Args
+argument_list|,
+argument|ArgStringList&CmdArgs
+argument_list|)
+specifier|const
+block|;
 name|public
 operator|:
 name|ClangAs
@@ -626,6 +646,16 @@ name|false
 return|;
 block|}
 name|virtual
+name|bool
+name|isLinkJob
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+name|virtual
 name|void
 name|RenderExtraToolArgs
 argument_list|(
@@ -639,6 +669,153 @@ decl_stmt|;
 block|}
 comment|// end namespace gcc
 name|namespace
+name|hexagon
+block|{
+comment|// For Hexagon, we do not need to instantiate tools for PreProcess, PreCompile and Compile.
+comment|// We simply use "clang -cc1" for those actions.
+name|class
+name|LLVM_LIBRARY_VISIBILITY
+name|Assemble
+range|:
+name|public
+name|Tool
+block|{
+name|public
+operator|:
+name|Assemble
+argument_list|(
+specifier|const
+name|ToolChain
+operator|&
+name|TC
+argument_list|)
+operator|:
+name|Tool
+argument_list|(
+literal|"hexagon::Assemble"
+argument_list|,
+literal|"hexagon-as"
+argument_list|,
+argument|TC
+argument_list|)
+block|{}
+name|virtual
+name|bool
+name|hasIntegratedCPP
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+name|virtual
+name|void
+name|RenderExtraToolArgs
+argument_list|(
+argument|const JobAction&JA
+argument_list|,
+argument|ArgStringList&CmdArgs
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|void
+name|ConstructJob
+argument_list|(
+argument|Compilation&C
+argument_list|,
+argument|const JobAction&JA
+argument_list|,
+argument|const InputInfo&Output
+argument_list|,
+argument|const InputInfoList&Inputs
+argument_list|,
+argument|const ArgList&TCArgs
+argument_list|,
+argument|const char *LinkingOutput
+argument_list|)
+specifier|const
+block|;   }
+decl_stmt|;
+name|class
+name|LLVM_LIBRARY_VISIBILITY
+name|Link
+range|:
+name|public
+name|Tool
+block|{
+name|public
+operator|:
+name|Link
+argument_list|(
+specifier|const
+name|ToolChain
+operator|&
+name|TC
+argument_list|)
+operator|:
+name|Tool
+argument_list|(
+literal|"hexagon::Link"
+argument_list|,
+literal|"hexagon-ld"
+argument_list|,
+argument|TC
+argument_list|)
+block|{}
+name|virtual
+name|bool
+name|hasIntegratedCPP
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+name|virtual
+name|bool
+name|isLinkJob
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+name|virtual
+name|void
+name|RenderExtraToolArgs
+argument_list|(
+argument|const JobAction&JA
+argument_list|,
+argument|ArgStringList&CmdArgs
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|void
+name|ConstructJob
+argument_list|(
+argument|Compilation&C
+argument_list|,
+argument|const JobAction&JA
+argument_list|,
+argument|const InputInfo&Output
+argument_list|,
+argument|const InputInfoList&Inputs
+argument_list|,
+argument|const ArgList&TCArgs
+argument_list|,
+argument|const char *LinkingOutput
+argument_list|)
+specifier|const
+block|;   }
+decl_stmt|;
+block|}
+comment|// end namespace hexagon.
+name|namespace
 name|darwin
 block|{
 name|class
@@ -648,6 +825,11 @@ range|:
 name|public
 name|Tool
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|protected
 operator|:
 name|void
@@ -721,6 +903,11 @@ operator|:
 name|public
 name|DarwinTool
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 specifier|static
@@ -1091,6 +1278,16 @@ name|false
 return|;
 block|}
 name|virtual
+name|bool
+name|isLinkJob
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+name|virtual
 name|void
 name|ConstructJob
 argument_list|(
@@ -1370,6 +1567,16 @@ name|false
 return|;
 block|}
 name|virtual
+name|bool
+name|isLinkJob
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+name|virtual
 name|void
 name|ConstructJob
 argument_list|(
@@ -1485,6 +1692,16 @@ name|false
 return|;
 block|}
 name|virtual
+name|bool
+name|isLinkJob
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+name|virtual
 name|void
 name|ConstructJob
 argument_list|(
@@ -1515,14 +1732,6 @@ operator|:
 name|public
 name|Tool
 block|{
-name|private
-operator|:
-specifier|const
-name|llvm
-operator|::
-name|Triple
-name|ToolTriple
-block|;
 name|public
 operator|:
 name|Assemble
@@ -1531,13 +1740,6 @@ specifier|const
 name|ToolChain
 operator|&
 name|TC
-argument_list|,
-specifier|const
-name|llvm
-operator|::
-name|Triple
-operator|&
-name|ToolTriple
 argument_list|)
 operator|:
 name|Tool
@@ -1546,12 +1748,7 @@ literal|"netbsd::Assemble"
 argument_list|,
 literal|"assembler"
 argument_list|,
-name|TC
-argument_list|)
-block|,
-name|ToolTriple
-argument_list|(
-argument|ToolTriple
+argument|TC
 argument_list|)
 block|{}
 name|virtual
@@ -1590,14 +1787,6 @@ operator|:
 name|public
 name|Tool
 block|{
-name|private
-operator|:
-specifier|const
-name|llvm
-operator|::
-name|Triple
-name|ToolTriple
-block|;
 name|public
 operator|:
 name|Link
@@ -1606,13 +1795,6 @@ specifier|const
 name|ToolChain
 operator|&
 name|TC
-argument_list|,
-specifier|const
-name|llvm
-operator|::
-name|Triple
-operator|&
-name|ToolTriple
 argument_list|)
 operator|:
 name|Tool
@@ -1621,12 +1803,7 @@ literal|"netbsd::Link"
 argument_list|,
 literal|"linker"
 argument_list|,
-name|TC
-argument_list|)
-block|,
-name|ToolTriple
-argument_list|(
-argument|ToolTriple
+argument|TC
 argument_list|)
 block|{}
 name|virtual
@@ -1637,6 +1814,16 @@ specifier|const
 block|{
 return|return
 name|false
+return|;
+block|}
+name|virtual
+name|bool
+name|isLinkJob
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
 return|;
 block|}
 name|virtual
@@ -1755,6 +1942,16 @@ name|false
 return|;
 block|}
 name|virtual
+name|bool
+name|isLinkJob
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+name|virtual
 name|void
 name|ConstructJob
 argument_list|(
@@ -1869,6 +2066,16 @@ name|false
 return|;
 block|}
 name|virtual
+name|bool
+name|isLinkJob
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+name|virtual
 name|void
 name|ConstructJob
 argument_list|(
@@ -1888,6 +2095,131 @@ specifier|const
 block|;   }
 block|; }
 comment|// end namespace minix
+comment|/// solaris -- Directly call Solaris assembler and linker
+name|namespace
+name|solaris
+block|{
+name|class
+name|LLVM_LIBRARY_VISIBILITY
+name|Assemble
+operator|:
+name|public
+name|Tool
+block|{
+name|public
+operator|:
+name|Assemble
+argument_list|(
+specifier|const
+name|ToolChain
+operator|&
+name|TC
+argument_list|)
+operator|:
+name|Tool
+argument_list|(
+literal|"solaris::Assemble"
+argument_list|,
+literal|"assembler"
+argument_list|,
+argument|TC
+argument_list|)
+block|{}
+name|virtual
+name|bool
+name|hasIntegratedCPP
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+name|virtual
+name|void
+name|ConstructJob
+argument_list|(
+argument|Compilation&C
+argument_list|,
+argument|const JobAction&JA
+argument_list|,
+argument|const InputInfo&Output
+argument_list|,
+argument|const InputInfoList&Inputs
+argument_list|,
+argument|const ArgList&TCArgs
+argument_list|,
+argument|const char *LinkingOutput
+argument_list|)
+specifier|const
+block|;   }
+block|;
+name|class
+name|LLVM_LIBRARY_VISIBILITY
+name|Link
+operator|:
+name|public
+name|Tool
+block|{
+name|public
+operator|:
+name|Link
+argument_list|(
+specifier|const
+name|ToolChain
+operator|&
+name|TC
+argument_list|)
+operator|:
+name|Tool
+argument_list|(
+literal|"solaris::Link"
+argument_list|,
+literal|"linker"
+argument_list|,
+argument|TC
+argument_list|)
+block|{}
+name|virtual
+name|bool
+name|hasIntegratedCPP
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+name|virtual
+name|bool
+name|isLinkJob
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+name|virtual
+name|void
+name|ConstructJob
+argument_list|(
+argument|Compilation&C
+argument_list|,
+argument|const JobAction&JA
+argument_list|,
+argument|const InputInfo&Output
+argument_list|,
+argument|const InputInfoList&Inputs
+argument_list|,
+argument|const ArgList&TCArgs
+argument_list|,
+argument|const char *LinkingOutput
+argument_list|)
+specifier|const
+block|;   }
+block|; }
+comment|// end namespace solaris
 comment|/// auroraux -- Directly call GNU Binutils assembler and linker
 name|namespace
 name|auroraux
@@ -1981,6 +2313,16 @@ specifier|const
 block|{
 return|return
 name|false
+return|;
+block|}
+name|virtual
+name|bool
+name|isLinkJob
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
 return|;
 block|}
 name|virtual
@@ -2099,6 +2441,16 @@ name|false
 return|;
 block|}
 name|virtual
+name|bool
+name|isLinkJob
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+name|virtual
 name|void
 name|ConstructJob
 argument_list|(
@@ -2156,6 +2508,16 @@ specifier|const
 block|{
 return|return
 name|false
+return|;
+block|}
+name|virtual
+name|bool
+name|isLinkJob
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
 return|;
 block|}
 name|virtual

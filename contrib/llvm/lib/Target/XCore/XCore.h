@@ -94,12 +94,17 @@ decl_stmt|;
 name|FunctionPass
 modifier|*
 name|createXCoreISelDag
-parameter_list|(
+argument_list|(
 name|XCoreTargetMachine
-modifier|&
+operator|&
 name|TM
-parameter_list|)
-function_decl|;
+argument_list|,
+name|CodeGenOpt
+operator|::
+name|Level
+name|OptLevel
+argument_list|)
+decl_stmt|;
 block|}
 end_decl_stmt
 

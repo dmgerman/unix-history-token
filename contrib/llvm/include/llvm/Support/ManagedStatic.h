@@ -71,6 +71,12 @@ directive|include
 file|"llvm/Support/Threading.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Valgrind.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -287,6 +293,11 @@ operator|::
 name|call
 argument_list|)
 expr_stmt|;
+name|TsanHappensAfter
+argument_list|(
+name|this
+argument_list|)
+expr_stmt|;
 return|return
 operator|*
 name|static_cast
@@ -346,6 +357,11 @@ name|C
 operator|>
 operator|::
 name|call
+argument_list|)
+expr_stmt|;
+name|TsanHappensAfter
+argument_list|(
+name|this
 argument_list|)
 expr_stmt|;
 return|return
@@ -411,6 +427,14 @@ name|call
 argument_list|)
 expr_stmt|;
 end_if
+
+begin_expr_stmt
+name|TsanHappensAfter
+argument_list|(
+name|this
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_return
 return|return
@@ -479,6 +503,14 @@ name|call
 argument_list|)
 expr_stmt|;
 end_if
+
+begin_expr_stmt
+name|TsanHappensAfter
+argument_list|(
+name|this
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_return
 return|return

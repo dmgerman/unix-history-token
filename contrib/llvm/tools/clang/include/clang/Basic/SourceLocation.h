@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<utility>
 end_include
 
@@ -1105,6 +1111,16 @@ return|return
 name|IsTokenRange
 return|;
 block|}
+name|bool
+name|isCharRange
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|IsTokenRange
+return|;
+block|}
 name|SourceLocation
 name|getBegin
 argument_list|()
@@ -1450,19 +1466,12 @@ expr|}
 block|;
 comment|/// Prints information about this FullSourceLoc to stderr. Useful for
 comment|///  debugging.
+name|LLVM_ATTRIBUTE_USED
 name|void
 name|dump
 argument_list|()
 specifier|const
-block|{
-name|SourceLocation
-operator|::
-name|dump
-argument_list|(
-operator|*
-name|SrcMgr
-argument_list|)
-block|; }
+block|;
 name|friend
 specifier|inline
 name|bool

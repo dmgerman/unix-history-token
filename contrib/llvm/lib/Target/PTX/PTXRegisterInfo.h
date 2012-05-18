@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- PTXRegisterInfo.h - PTX Register Information Impl --------*- C++ -*-===//
+comment|//===-- PTXRegisterInfo.h - PTX Register Information Impl -------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -122,7 +122,7 @@ argument_list|)
 block|;
 name|virtual
 specifier|const
-name|unsigned
+name|uint16_t
 operator|*
 name|getCalleeSavedRegs
 argument_list|(
@@ -133,7 +133,7 @@ specifier|const
 block|{
 specifier|static
 specifier|const
-name|unsigned
+name|uint16_t
 name|CalleeSavedRegs
 index|[]
 operator|=
@@ -190,13 +190,9 @@ name|llvm_unreachable
 argument_list|(
 literal|"PTX does not have a frame register"
 argument_list|)
-block|;
-return|return
-literal|0
-return|;
+block|;   }
 block|}
-expr|}
-block|;
+decl_stmt|;
 comment|// struct PTXRegisterInfo
 block|}
 end_decl_stmt

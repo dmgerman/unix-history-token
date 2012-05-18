@@ -66,9 +66,6 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|MCAsmInfo
-decl_stmt|;
-name|class
 name|MCAsmLayout
 decl_stmt|;
 name|class
@@ -526,6 +523,8 @@ block|,
 name|VK_TLVP
 block|,
 comment|// Mach-O thread local variable relocation
+name|VK_SECREL
+block|,
 comment|// FIXME: We'd really like to use the generic Kinds listed above for these.
 name|VK_ARM_PLT
 block|,
@@ -541,6 +540,8 @@ name|VK_ARM_TPOFF
 block|,
 name|VK_ARM_GOTTPOFF
 block|,
+name|VK_ARM_TARGET1
+block|,
 name|VK_PPC_TOC
 block|,
 name|VK_PPC_DARWIN_HA16
@@ -553,7 +554,43 @@ name|VK_PPC_GAS_HA16
 block|,
 comment|// symbol@ha
 name|VK_PPC_GAS_LO16
+block|,
 comment|// symbol@l
+name|VK_Mips_GPREL
+block|,
+name|VK_Mips_GOT_CALL
+block|,
+name|VK_Mips_GOT16
+block|,
+name|VK_Mips_GOT
+block|,
+name|VK_Mips_ABS_HI
+block|,
+name|VK_Mips_ABS_LO
+block|,
+name|VK_Mips_TLSGD
+block|,
+name|VK_Mips_TLSLDM
+block|,
+name|VK_Mips_DTPREL_HI
+block|,
+name|VK_Mips_DTPREL_LO
+block|,
+name|VK_Mips_GOTTPREL
+block|,
+name|VK_Mips_TPREL_HI
+block|,
+name|VK_Mips_TPREL_LO
+block|,
+name|VK_Mips_GPOFF_HI
+block|,
+name|VK_Mips_GPOFF_LO
+block|,
+name|VK_Mips_GOT_DISP
+block|,
+name|VK_Mips_GOT_PAGE
+block|,
+name|VK_Mips_GOT_OFST
 block|}
 block|;
 name|private
@@ -593,7 +630,12 @@ name|Kind
 argument_list|(
 argument|_Kind
 argument_list|)
-block|{}
+block|{
+name|assert
+argument_list|(
+name|Symbol
+argument_list|)
+block|;   }
 name|public
 operator|:
 comment|/// @name Construction

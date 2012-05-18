@@ -79,6 +79,12 @@ directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/ErrorHandling.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -91,21 +97,6 @@ name|GCStrategy
 decl_stmt|;
 name|class
 name|Constant
-decl_stmt|;
-name|class
-name|ConstantArray
-decl_stmt|;
-name|class
-name|ConstantFP
-decl_stmt|;
-name|class
-name|ConstantInt
-decl_stmt|;
-name|class
-name|ConstantStruct
-decl_stmt|;
-name|class
-name|ConstantVector
 decl_stmt|;
 name|class
 name|GCMetadataPrinter
@@ -135,12 +126,6 @@ name|class
 name|MachineLoop
 decl_stmt|;
 name|class
-name|MachineConstantPool
-decl_stmt|;
-name|class
-name|MachineConstantPoolEntry
-decl_stmt|;
-name|class
 name|MachineConstantPoolValue
 decl_stmt|;
 name|class
@@ -154,9 +139,6 @@ name|MachineMove
 decl_stmt|;
 name|class
 name|MCAsmInfo
-decl_stmt|;
-name|class
-name|MCInst
 decl_stmt|;
 name|class
 name|MCContext
@@ -190,12 +172,6 @@ name|TargetData
 decl_stmt|;
 name|class
 name|TargetMachine
-decl_stmt|;
-name|class
-name|Twine
-decl_stmt|;
-name|class
-name|Type
 decl_stmt|;
 comment|/// AsmPrinter - This class is intended to be used as a driving class for all
 comment|/// asm writers.
@@ -258,6 +234,13 @@ comment|///
 name|MCSymbol
 operator|*
 name|CurrentFnSym
+block|;
+comment|/// The symbol used to represent the start of the current function for the
+comment|/// purpose of calculating its size (e.g. using the .size directive). By
+comment|/// default, this is equal to CurrentFnSym.
+name|MCSymbol
+operator|*
+name|CurrentFnSymForSize
 block|;
 name|private
 operator|:
@@ -464,6 +447,14 @@ name|bool
 name|needsSEHMoves
 argument_list|()
 block|;
+comment|/// needsRelocationsForDwarfStringPool - Specifies whether the object format
+comment|/// expects to use relocations to refer to debug entries. Alternatively we
+comment|/// emit section offsets in bytes from the start of the string pool.
+name|bool
+name|needsRelocationsForDwarfStringPool
+argument_list|()
+specifier|const
+block|;
 comment|/// EmitConstantPool - Print to the current output stream assembly
 comment|/// representations of the constants in the constant pool MCP. This is
 comment|/// used to print out constants which have been "spilled to memory" by
@@ -585,10 +576,8 @@ argument_list|(
 argument|const MachineInstr *
 argument_list|)
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"EmitInstruction not implemented"
 argument_list|)
 block|;     }
@@ -606,6 +595,21 @@ operator|*
 name|MCPV
 argument_list|)
 block|;
+comment|/// EmitXXStructor - Targets can override this to change how global
+comment|/// constants that are part of a C++ static/global constructor list are
+comment|/// emitted.
+name|virtual
+name|void
+name|EmitXXStructor
+argument_list|(
+argument|const Constant *CV
+argument_list|)
+block|{
+name|EmitGlobalConstant
+argument_list|(
+name|CV
+argument_list|)
+block|;     }
 comment|/// isBlockOnlyReachableByFallthough - Return true if the basic block has
 comment|/// exactly one predecessor and the control transfer mechanism between
 comment|/// the predecessor and this block is a fall-through.
@@ -1094,10 +1098,9 @@ block|;
 name|void
 name|EmitXXStructorList
 argument_list|(
-specifier|const
-name|Constant
-operator|*
-name|List
+argument|const Constant *List
+argument_list|,
+argument|bool isCtor
 argument_list|)
 block|;
 name|GCMetadataPrinter

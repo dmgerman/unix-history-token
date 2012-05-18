@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- X86InstrInfo.h - X86 Instruction Information ------------*- C++ -*- ===//
+comment|//===-- X86InstrInfo.h - X86 Instruction Information ------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -62,12 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetInstrInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"X86.h"
 end_include
 
@@ -81,6 +75,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetInstrInfo.h"
 end_include
 
 begin_define
@@ -1488,6 +1488,42 @@ name|MI
 argument_list|,
 name|unsigned
 name|Domain
+argument_list|)
+decl|const
+decl_stmt|;
+name|unsigned
+name|getPartialRegUpdateClearance
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|*
+name|MI
+argument_list|,
+name|unsigned
+name|OpNum
+argument_list|,
+specifier|const
+name|TargetRegisterInfo
+operator|*
+name|TRI
+argument_list|)
+decl|const
+decl_stmt|;
+name|void
+name|breakPartialRegDependency
+argument_list|(
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|MI
+argument_list|,
+name|unsigned
+name|OpNum
+argument_list|,
+specifier|const
+name|TargetRegisterInfo
+operator|*
+name|TRI
 argument_list|)
 decl|const
 decl_stmt|;

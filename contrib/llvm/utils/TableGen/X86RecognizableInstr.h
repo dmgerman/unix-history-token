@@ -148,6 +148,10 @@ comment|/// The hasOpSizePrefix field from the record
 name|bool
 name|HasOpSizePrefix
 decl_stmt|;
+comment|/// The hasAdSizePrefix field from the record
+name|bool
+name|HasAdSizePrefix
+decl_stmt|;
 comment|/// The hasREX_WPrefix field from the record
 name|bool
 name|HasREX_WPrefix
@@ -160,6 +164,10 @@ comment|/// The hasVEX_4VPrefix field from the record
 name|bool
 name|HasVEX_4VPrefix
 decl_stmt|;
+comment|/// The hasVEX_4VOp3Prefix field from the record
+name|bool
+name|HasVEX_4VOp3Prefix
+decl_stmt|;
 comment|/// The hasVEX_WPrefix field from the record
 name|bool
 name|HasVEX_WPrefix
@@ -168,7 +176,11 @@ comment|/// Inferred from the operands; indicates whether the L bit in the VEX p
 name|bool
 name|HasVEX_LPrefix
 decl_stmt|;
-comment|// The ignoreVEX_L field from the record
+comment|/// The hasMemOp4Prefix field from the record
+name|bool
+name|HasMemOp4Prefix
+decl_stmt|;
+comment|/// The ignoreVEX_L field from the record
 name|bool
 name|IgnoresVEX_L
 decl_stmt|;

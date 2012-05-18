@@ -88,6 +88,18 @@ modifier|*
 name|Desc
 decl_stmt|;
 comment|// Raw array to allow static init'n
+specifier|const
+name|unsigned
+modifier|*
+name|InstrNameIndices
+decl_stmt|;
+comment|// Array for name indices in InstrNameData
+specifier|const
+name|char
+modifier|*
+name|InstrNameData
+decl_stmt|;
+comment|// Instruction name string pool
 name|unsigned
 name|NumOpcodes
 decl_stmt|;
@@ -104,6 +116,16 @@ name|MCInstrDesc
 modifier|*
 name|D
 parameter_list|,
+specifier|const
+name|unsigned
+modifier|*
+name|NI
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|ND
+parameter_list|,
 name|unsigned
 name|NO
 parameter_list|)
@@ -111,6 +133,14 @@ block|{
 name|Desc
 operator|=
 name|D
+expr_stmt|;
+name|InstrNameIndices
+operator|=
+name|NI
+expr_stmt|;
+name|InstrNameData
+operator|=
+name|ND
 expr_stmt|;
 name|NumOpcodes
 operator|=
@@ -152,6 +182,37 @@ return|return
 name|Desc
 index|[
 name|Opcode
+index|]
+return|;
+block|}
+comment|/// getName - Returns the name for the instructions with the given opcode.
+specifier|const
+name|char
+modifier|*
+name|getName
+argument_list|(
+name|unsigned
+name|Opcode
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+name|Opcode
+operator|<
+name|NumOpcodes
+operator|&&
+literal|"Invalid opcode!"
+argument_list|)
+expr_stmt|;
+return|return
+operator|&
+name|InstrNameData
+index|[
+name|InstrNameIndices
+index|[
+name|Opcode
+index|]
 index|]
 return|;
 block|}

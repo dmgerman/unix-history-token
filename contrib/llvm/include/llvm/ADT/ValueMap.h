@@ -151,9 +151,6 @@ name|ValueT
 operator|,
 name|typename
 name|Config
-operator|,
-name|typename
-name|ValueInfoT
 operator|>
 name|class
 name|ValueMapCallbackVH
@@ -285,14 +282,6 @@ name|ValueMapConfig
 operator|<
 name|KeyT
 operator|>
-block|,
-name|typename
-name|ValueInfoT
-operator|=
-name|DenseMapInfo
-operator|<
-name|ValueT
-operator|>
 expr|>
 name|class
 name|ValueMap
@@ -306,8 +295,6 @@ block|,
 name|ValueT
 block|,
 name|Config
-block|,
-name|ValueInfoT
 operator|>
 block|;
 typedef|typedef
@@ -318,8 +305,6 @@ operator|,
 name|ValueT
 operator|,
 name|Config
-operator|,
-name|ValueInfoT
 operator|>
 name|ValueMapCVH
 expr_stmt|;
@@ -334,9 +319,7 @@ name|DenseMapInfo
 operator|<
 name|ValueMapCVH
 operator|>
-operator|,
-name|ValueInfoT
-operator|>
+expr|>
 name|MapT
 expr_stmt|;
 typedef|typedef
@@ -938,9 +921,6 @@ name|ValueT
 operator|,
 name|typename
 name|Config
-operator|,
-name|typename
-name|ValueInfoT
 operator|>
 name|class
 name|ValueMapCallbackVH
@@ -957,8 +937,6 @@ block|,
 name|ValueT
 block|,
 name|Config
-block|,
-name|ValueInfoT
 operator|>
 block|;
 name|friend
@@ -976,8 +954,6 @@ operator|,
 name|ValueT
 operator|,
 name|Config
-operator|,
-name|ValueInfoT
 operator|>
 name|ValueMapT
 expr_stmt|;
@@ -1333,9 +1309,6 @@ name|ValueT
 operator|,
 name|typename
 name|Config
-operator|,
-name|typename
-name|ValueInfoT
 operator|>
 expr|struct
 name|DenseMapInfo
@@ -1347,8 +1320,6 @@ operator|,
 name|ValueT
 operator|,
 name|Config
-operator|,
-name|ValueInfoT
 operator|>
 expr|>
 block|{
@@ -1360,8 +1331,6 @@ operator|,
 name|ValueT
 operator|,
 name|Config
-operator|,
-name|ValueInfoT
 operator|>
 name|VH
 expr_stmt|;

@@ -86,7 +86,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<cassert>
+file|"llvm/Support/ErrorHandling.h"
 end_include
 
 begin_decl_stmt
@@ -256,6 +256,12 @@ comment|/// is some TLS offset from the picbase.
 comment|///
 comment|/// This is the 32-bit TLS offset for Darwin TLS in PIC mode.
 name|MO_TLVP_PIC_BASE
+block|,
+comment|/// MO_SECREL - On a symbol operand this indicates that the immediate is
+comment|/// the offset from beginning of section.
+comment|///
+comment|/// This is the TLS offset for the COFF/Windows TLS mechanism.
+name|MO_SECREL
 block|}
 enum|;
 enum|enum
@@ -391,7 +397,7 @@ name|MRMInitReg
 init|=
 literal|32
 block|,
-comment|//// MRM_C1 - A mod/rm byte of exactly 0xC1.
+comment|//// MRM_XX - A mod/rm byte of exactly 0xXX.
 name|MRM_C1
 init|=
 literal|33
@@ -439,6 +445,42 @@ block|,
 name|MRM_D1
 init|=
 literal|46
+block|,
+name|MRM_D4
+init|=
+literal|47
+block|,
+name|MRM_D8
+init|=
+literal|48
+block|,
+name|MRM_D9
+init|=
+literal|49
+block|,
+name|MRM_DA
+init|=
+literal|50
+block|,
+name|MRM_DB
+init|=
+literal|51
+block|,
+name|MRM_DC
+init|=
+literal|52
+block|,
+name|MRM_DD
+init|=
+literal|53
+block|,
+name|MRM_DE
+init|=
+literal|54
+block|,
+name|MRM_DF
+init|=
+literal|55
 block|,
 comment|/// RawFrmImm8 - This is used for the ENTER instruction, which has two
 comment|/// immediates, the first of which is a 16-bit immediate (specified by
@@ -600,10 +642,38 @@ literal|16
 operator|<<
 name|Op0Shift
 block|,
-comment|// TF - Prefix before and after 0x0F
-name|TF
+comment|// T8XD - Prefix before and after 0x0F. Combination of T8 and XD.
+name|T8XD
 init|=
 literal|17
+operator|<<
+name|Op0Shift
+block|,
+comment|// T8XS - Prefix before and after 0x0F. Combination of T8 and XS.
+name|T8XS
+init|=
+literal|18
+operator|<<
+name|Op0Shift
+block|,
+comment|// TAXD - Prefix before and after 0x0F. Combination of TA and XD.
+name|TAXD
+init|=
+literal|19
+operator|<<
+name|Op0Shift
+block|,
+comment|// XOP8 - Prefix to include use of imm byte.
+name|XOP8
+init|=
+literal|20
+operator|<<
+name|Op0Shift
+block|,
+comment|// XOP9 - Prefix to exclude use of imm byte.
+name|XOP9
+init|=
+literal|21
 operator|<<
 name|Op0Shift
 block|,
@@ -842,6 +912,14 @@ literal|1U
 operator|<<
 literal|2
 block|,
+comment|/// VEX_4VOp3 - Similar to VEX_4V, but used on instructions that encode
+comment|/// operand 3 with VEX.vvvv.
+name|VEX_4VOp3
+init|=
+literal|1U
+operator|<<
+literal|3
+block|,
 comment|/// VEX_I8IMM - Specifies that the last register used in a AVX instruction,
 comment|/// must be encoded in the i8 immediate field. This usually happens in
 comment|/// instructions with 4 operands.
@@ -849,7 +927,7 @@ name|VEX_I8IMM
 init|=
 literal|1U
 operator|<<
-literal|3
+literal|4
 block|,
 comment|/// VEX_L - Stands for a bit in the VEX opcode prefix meaning the current
 comment|/// instruction uses 256-bit wide registers. This is usually auto detected
@@ -859,7 +937,7 @@ name|VEX_L
 init|=
 literal|1U
 operator|<<
-literal|4
+literal|5
 block|,
 comment|// VEX_LIG - Specifies that this instruction ignores the L-bit in the VEX
 comment|// prefix. Usually used for scalar instructions. Needed by disassembler.
@@ -867,7 +945,7 @@ name|VEX_LIG
 init|=
 literal|1U
 operator|<<
-literal|5
+literal|6
 block|,
 comment|/// Has3DNow0F0FOpcode - This flag indicates that the instruction uses the
 comment|/// wacky 0x0F 0x0F prefix for 3DNow! instructions.  The manual documents
@@ -879,7 +957,22 @@ name|Has3DNow0F0FOpcode
 init|=
 literal|1U
 operator|<<
-literal|6
+literal|7
+block|,
+comment|/// MemOp4 - Used to indicate swapping of operand 3 and 4 to be encoded in
+comment|/// ModRM or I8IMM. This is used for FMA4 and XOP instructions.
+name|MemOp4
+init|=
+literal|1U
+operator|<<
+literal|8
+block|,
+comment|/// XOP - Opcode prefix used by XOP instructions.
+name|XOP
+init|=
+literal|1U
+operator|<<
+literal|9
 block|}
 enum|;
 comment|// getBaseOpcodeFor - This function returns the "base" X86 opcode for the
@@ -945,10 +1038,8 @@ name|ImmMask
 condition|)
 block|{
 default|default:
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Unknown immediate size"
 argument_list|)
 expr_stmt|;
@@ -1022,10 +1113,8 @@ name|ImmMask
 condition|)
 block|{
 default|default:
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Unknown immediate size"
 argument_list|)
 expr_stmt|;
@@ -1087,6 +1176,9 @@ name|getMemoryOperandNo
 parameter_list|(
 name|uint64_t
 name|TSFlags
+parameter_list|,
+name|unsigned
+name|Opcode
 parameter_list|)
 block|{
 switch|switch
@@ -1103,18 +1195,14 @@ name|X86II
 operator|::
 name|MRMInitReg
 case|:
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"FIXME: Remove this form"
 argument_list|)
 expr_stmt|;
 default|default:
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Unknown FormMask value in getMemoryOperandNo!"
 argument_list|)
 expr_stmt|;
@@ -1186,6 +1274,21 @@ name|X86II
 operator|::
 name|VEX_4V
 decl_stmt|;
+name|bool
+name|HasMemOp4
+init|=
+operator|(
+name|TSFlags
+operator|>>
+name|X86II
+operator|::
+name|VEXShift
+operator|)
+operator|&
+name|X86II
+operator|::
+name|MemOp4
+decl_stmt|;
 name|unsigned
 name|FirstMemOp
 init|=
@@ -1199,6 +1302,14 @@ operator|++
 name|FirstMemOp
 expr_stmt|;
 comment|// Skip the register source (which is encoded in VEX_VVVV).
+if|if
+condition|(
+name|HasMemOp4
+condition|)
+operator|++
+name|FirstMemOp
+expr_stmt|;
+comment|// Skip the register source (which is encoded in I8IMM).
 comment|// FIXME: Maybe lea should have its own form?  This is a horrible hack.
 comment|//if (Opcode == X86::LEA64r || Opcode == X86::LEA64_32r ||
 comment|//    Opcode == X86::LEA16r || Opcode == X86::LEA32r)
@@ -1290,9 +1401,39 @@ name|X86II
 operator|::
 name|MRM7m
 case|:
-return|return
+block|{
+name|bool
+name|HasVEX_4V
+init|=
+operator|(
+name|TSFlags
+operator|>>
+name|X86II
+operator|::
+name|VEXShift
+operator|)
+operator|&
+name|X86II
+operator|::
+name|VEX_4V
+decl_stmt|;
+name|unsigned
+name|FirstMemOp
+init|=
 literal|0
+decl_stmt|;
+if|if
+condition|(
+name|HasVEX_4V
+condition|)
+operator|++
+name|FirstMemOp
+expr_stmt|;
+comment|// Skip the register dest (which is encoded in VEX_VVVV).
+return|return
+name|FirstMemOp
 return|;
+block|}
 case|case
 name|X86II
 operator|::
@@ -1352,6 +1493,51 @@ case|case
 name|X86II
 operator|::
 name|MRM_D1
+case|:
+case|case
+name|X86II
+operator|::
+name|MRM_D4
+case|:
+case|case
+name|X86II
+operator|::
+name|MRM_D8
+case|:
+case|case
+name|X86II
+operator|::
+name|MRM_D9
+case|:
+case|case
+name|X86II
+operator|::
+name|MRM_DA
+case|:
+case|case
+name|X86II
+operator|::
+name|MRM_DB
+case|:
+case|case
+name|X86II
+operator|::
+name|MRM_DC
+case|:
+case|case
+name|X86II
+operator|::
+name|MRM_DD
+case|:
+case|case
+name|X86II
+operator|::
+name|MRM_DE
+case|:
+case|case
+name|X86II
+operator|::
+name|MRM_DF
 case|:
 return|return
 operator|-

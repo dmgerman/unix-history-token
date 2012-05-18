@@ -81,6 +81,9 @@ decl_stmt|;
 name|class
 name|TargetData
 decl_stmt|;
+name|class
+name|TargetLibraryInfo
+decl_stmt|;
 comment|/// PHITransAddr - An address value which tracks and handles phi translation.
 comment|/// As we walk "up" the CFG through predecessors, we need to ensure that the
 comment|/// address we're tracking is kept up to date.  For example, if we're analyzing
@@ -104,6 +107,12 @@ specifier|const
 name|TargetData
 modifier|*
 name|TD
+decl_stmt|;
+comment|/// TLI - The target library info if known, otherwise null.
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
 decl_stmt|;
 comment|/// InstInputs - The inputs for our symbolic address.
 name|SmallVector
@@ -136,7 +145,12 @@ argument_list|)
 operator|,
 name|TD
 argument_list|(
-argument|td
+name|td
+argument_list|)
+operator|,
+name|TLI
+argument_list|(
+literal|0
 argument_list|)
 block|{
 comment|// If the address is an instruction, the whole thing is considered an input.

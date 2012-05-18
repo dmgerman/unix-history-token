@@ -4720,12 +4720,11 @@ define|#
 directive|define
 name|_mm_slli_si128
 parameter_list|(
-name|VEC
+name|a
 parameter_list|,
-name|IMM
+name|count
 parameter_list|)
-define|\
-value|((__m128i)__builtin_ia32_pslldqi128((__m128i)(VEC), (IMM)*8))
+value|__extension__ ({ \   __m128i __a = (a); \   (__m128i)__builtin_ia32_pslldqi128(__a, (count)*8); })
 end_define
 
 begin_decl_stmt
@@ -5113,12 +5112,11 @@ define|#
 directive|define
 name|_mm_srli_si128
 parameter_list|(
-name|VEC
+name|a
 parameter_list|,
-name|IMM
+name|count
 parameter_list|)
-define|\
-value|((__m128i)__builtin_ia32_psrldqi128((__m128i)(VEC), (IMM)*8))
+value|__extension__ ({ \   __m128i __a = (a); \   (__m128i)__builtin_ia32_psrldqi128(__a, (count)*8); })
 end_define
 
 begin_decl_stmt
@@ -5484,18 +5482,27 @@ name|__m128i
 name|b
 argument_list|)
 block|{
+comment|/* This function always performs a signed comparison, but __v16qi is a char      which may be signed or unsigned. */
+typedef|typedef
+name|signed
+name|char
+name|__v16qs
+name|__attribute__
+typedef|((
+name|__vector_size__
+typedef|(16)));
 return|return
 call|(
 name|__m128i
 call|)
 argument_list|(
 operator|(
-name|__v16qi
+name|__v16qs
 operator|)
 name|a
 operator|>
 operator|(
-name|__v16qi
+name|__v16qs
 operator|)
 name|b
 argument_list|)
@@ -7544,8 +7551,7 @@ name|a
 parameter_list|,
 name|imm
 parameter_list|)
-define|\
-value|((__m128i)__builtin_shufflevector((__v4si)(a), (__v4si) _mm_set1_epi32(0), \                                     (imm)& 0x3, ((imm)& 0xc)>> 2, \                                     ((imm)& 0x30)>> 4, ((imm)& 0xc0)>> 6))
+value|__extension__ ({ \   __m128i __a = (a); \   (__m128i)__builtin_shufflevector((__v4si)__a, (__v4si) _mm_set1_epi32(0), \                                    (imm)& 0x3, ((imm)& 0xc)>> 2, \                                    ((imm)& 0x30)>> 4, ((imm)& 0xc0)>> 6); })
 end_define
 
 begin_define
@@ -7557,8 +7563,7 @@ name|a
 parameter_list|,
 name|imm
 parameter_list|)
-define|\
-value|((__m128i)__builtin_shufflevector((__v8hi)(a), (__v8hi) _mm_set1_epi16(0), \                                     (imm)& 0x3, ((imm)& 0xc)>> 2, \                                     ((imm)& 0x30)>> 4, ((imm)& 0xc0)>> 6, \                                     4, 5, 6, 7))
+value|__extension__ ({ \   __m128i __a = (a); \   (__m128i)__builtin_shufflevector((__v8hi)__a, (__v8hi) _mm_set1_epi16(0), \                                    (imm)& 0x3, ((imm)& 0xc)>> 2, \                                    ((imm)& 0x30)>> 4, ((imm)& 0xc0)>> 6, \                                    4, 5, 6, 7); })
 end_define
 
 begin_define
@@ -7570,8 +7575,7 @@ name|a
 parameter_list|,
 name|imm
 parameter_list|)
-define|\
-value|((__m128i)__builtin_shufflevector((__v8hi)(a), (__v8hi) _mm_set1_epi16(0), 0, 1, 2, 3, \                                     4 + (((imm)& 0x03)>> 0), \                                     4 + (((imm)& 0x0c)>> 2), \                                     4 + (((imm)& 0x30)>> 4), \                                     4 + (((imm)& 0xc0)>> 6)))
+value|__extension__ ({ \   __m128i __a = (a); \   (__m128i)__builtin_shufflevector((__v8hi)__a, (__v8hi) _mm_set1_epi16(0), \                                    0, 1, 2, 3, \                                    4 + (((imm)& 0x03)>> 0), \                                    4 + (((imm)& 0x0c)>> 2), \                                    4 + (((imm)& 0x30)>> 4), \                                    4 + (((imm)& 0xc0)>> 6)); })
 end_define
 
 begin_decl_stmt
@@ -8287,8 +8291,7 @@ name|b
 parameter_list|,
 name|i
 parameter_list|)
-define|\
-value|(__builtin_shufflevector((__m128d)(a), (__m128d)(b), (i)& 1, \                                                        (((i)& 2)>> 1) + 2))
+value|__extension__ ({ \   __m128d __a = (a); \   __m128d __b = (b); \   __builtin_shufflevector(__a, __b, (i)& 1, (((i)& 2)>> 1) + 2); })
 end_define
 
 begin_decl_stmt

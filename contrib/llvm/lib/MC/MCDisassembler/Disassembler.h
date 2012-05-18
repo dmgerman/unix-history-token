@@ -118,7 +118,13 @@ name|class
 name|MCInstPrinter
 decl_stmt|;
 name|class
+name|MCInstrInfo
+decl_stmt|;
+name|class
 name|MCRegisterInfo
+decl_stmt|;
+name|class
+name|MCSubtargetInfo
 decl_stmt|;
 name|class
 name|Target
@@ -193,6 +199,30 @@ name|MCRegisterInfo
 operator|>
 name|MRI
 expr_stmt|;
+comment|// The subtarget information for the target architecture.
+name|llvm
+operator|::
+name|OwningPtr
+operator|<
+specifier|const
+name|llvm
+operator|::
+name|MCSubtargetInfo
+operator|>
+name|MSI
+expr_stmt|;
+comment|// The instruction information for the target architecture.
+name|llvm
+operator|::
+name|OwningPtr
+operator|<
+specifier|const
+name|llvm
+operator|::
+name|MCInstrInfo
+operator|>
+name|MII
+expr_stmt|;
 comment|// The assembly context for creating symbols and MCExprs.
 name|llvm
 operator|::
@@ -258,6 +288,10 @@ argument|const MCAsmInfo *mAI
 argument_list|,
 argument|const MCRegisterInfo *mRI
 argument_list|,
+argument|const MCSubtargetInfo *mSI
+argument_list|,
+argument|const MCInstrInfo *mII
+argument_list|,
 argument|llvm::MCContext *ctx
 argument_list|,
 argument|const MCDisassembler *disAsm
@@ -312,6 +346,20 @@ operator|.
 name|reset
 argument_list|(
 name|mRI
+argument_list|)
+block|;
+name|MSI
+operator|.
+name|reset
+argument_list|(
+name|mSI
+argument_list|)
+block|;
+name|MII
+operator|.
+name|reset
+argument_list|(
+name|mII
 argument_list|)
 block|;
 name|Ctx

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//=====---- ARMSubtarget.h - Define Subtarget for the ARM -----*- C++ -*--====//
+comment|//===-- ARMSubtarget.h - Define Subtarget for the ARM ----------*- C++ -*--===//
 end_comment
 
 begin_comment
@@ -153,13 +153,16 @@ block|;
 name|bool
 name|HasV7Ops
 block|;
-comment|/// HasVFPv2, HasVFPv3, HasNEON - Specify what floating point ISAs are
-comment|/// supported.
+comment|/// HasVFPv2, HasVFPv3, HasVFPv4, HasNEON - Specify what
+comment|/// floating point ISAs are supported.
 name|bool
 name|HasVFPv2
 block|;
 name|bool
 name|HasVFPv3
+block|;
+name|bool
+name|HasVFPv4
 block|;
 name|bool
 name|HasNEON
@@ -187,10 +190,6 @@ block|;
 comment|/// InThumbMode - True if compiling for Thumb, false for ARM.
 name|bool
 name|InThumbMode
-block|;
-comment|/// InNaClMode - True if targeting Native Client
-name|bool
-name|InNaClMode
 block|;
 comment|/// HasThumb2 - True if Thumb2 instructions are supported.
 name|bool
@@ -258,6 +257,11 @@ comment|/// that partially update CPSR and add false dependency on the previous
 comment|/// CPSR setting instruction.
 name|bool
 name|AvoidCPSRPartialUpdate
+block|;
+comment|/// HasRAS - Some processors perform return stack prediction. CodeGen should
+comment|/// avoid issue "normal" call instructions to callees which do not return.
+name|bool
+name|HasRAS
 block|;
 comment|/// HasMPExtension - True if the subtarget supports Multiprocessing
 comment|/// extension (ARMv7 only).
@@ -453,6 +457,17 @@ name|CortexA9
 return|;
 block|}
 name|bool
+name|isCortexM3
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CPUString
+operator|==
+literal|"cortex-m3"
+return|;
+block|}
+name|bool
 name|hasARMOps
 argument_list|()
 specifier|const
@@ -478,6 +493,15 @@ specifier|const
 block|{
 return|return
 name|HasVFPv3
+return|;
+block|}
+name|bool
+name|hasVFP4
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasVFPv4
 return|;
 block|}
 name|bool
@@ -584,6 +608,15 @@ name|AvoidCPSRPartialUpdate
 return|;
 block|}
 name|bool
+name|hasRAS
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasRAS
+return|;
+block|}
+name|bool
 name|hasMPExtension
 argument_list|()
 specifier|const
@@ -628,6 +661,22 @@ specifier|const
 block|{
 return|return
 name|TargetTriple
+return|;
+block|}
+name|bool
+name|isTargetIOS
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TargetTriple
+operator|.
+name|getOS
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|IOS
 return|;
 block|}
 name|bool

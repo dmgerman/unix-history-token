@@ -741,7 +741,8 @@ operator|(
 name|getPrimaryContext
 argument_list|()
 operator|->
-name|LookupPtr
+name|getLookupPtr
+argument_list|()
 operator|)
 block|;
 if|if

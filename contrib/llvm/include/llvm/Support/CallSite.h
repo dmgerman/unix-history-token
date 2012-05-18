@@ -1009,14 +1009,60 @@ name|CALLSITE_DELEGATE_GETTER
 undef|#
 directive|undef
 name|CALLSITE_DELEGATE_SETTER
+comment|/// @brief Determine whether this argument is not captured.
+name|bool
+name|doesNotCapture
+argument_list|(
+argument|unsigned ArgNo
+argument_list|)
+specifier|const
+block|{
+return|return
+name|paramHasAttr
+argument_list|(
+name|ArgNo
+operator|+
+literal|1
+argument_list|,
+name|Attribute
+operator|::
+name|NoCapture
+argument_list|)
+return|;
+block|}
+comment|/// @brief Determine whether this argument is passed by value.
+name|bool
+name|isByValArgument
+argument_list|(
+name|unsigned
+name|ArgNo
+argument_list|)
+decl|const
+block|{
+return|return
+name|paramHasAttr
+argument_list|(
+name|ArgNo
+operator|+
+literal|1
+argument_list|,
+name|Attribute
+operator|::
+name|ByVal
+argument_list|)
+return|;
+block|}
 comment|/// hasArgument - Returns true if this CallSite passes the given Value* as an
 comment|/// argument to the called function.
 name|bool
 name|hasArgument
 argument_list|(
-argument|const Value *Arg
-argument_list|)
 specifier|const
+name|Value
+operator|*
+name|Arg
+argument_list|)
+decl|const
 block|{
 for|for
 control|(
@@ -1058,14 +1104,8 @@ return|return
 name|false
 return|;
 block|}
-end_decl_stmt
-
-begin_label
 name|private
 label|:
-end_label
-
-begin_expr_stmt
 name|unsigned
 name|getArgumentEndOffset
 argument_list|()
@@ -1086,9 +1126,6 @@ literal|3
 return|;
 comment|// Skip BB, BB, Callee
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|IterTy
 name|getCallee
 argument_list|()
@@ -1133,10 +1170,14 @@ operator|-
 literal|3
 return|;
 block|}
-end_expr_stmt
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_decl_stmt
-unit|};
 name|class
 name|CallSite
 range|:

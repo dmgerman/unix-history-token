@@ -323,6 +323,10 @@ argument|Enum
 argument_list|)
 name|DISPATCH_CASE
 argument_list|(
+argument|Field
+argument_list|)
+name|DISPATCH_CASE
+argument_list|(
 argument|UsingDirective
 argument_list|)
 name|DISPATCH_CASE
@@ -375,11 +379,11 @@ argument|Enum
 argument_list|)
 name|DEFAULT_DISPATCH
 argument_list|(
-argument|ObjCInterface
+argument|Field
 argument_list|)
 name|DEFAULT_DISPATCH
 argument_list|(
-argument|ObjCClass
+argument|ObjCInterface
 argument_list|)
 name|DEFAULT_DISPATCH
 argument_list|(

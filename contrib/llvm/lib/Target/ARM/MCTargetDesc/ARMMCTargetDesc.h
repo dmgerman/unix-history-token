@@ -169,6 +169,19 @@ name|StringRef
 name|TT
 parameter_list|)
 function_decl|;
+comment|/// createARMELFObjectWriter - Construct an ELF Mach-O object writer.
+name|MCObjectWriter
+modifier|*
+name|createARMELFObjectWriter
+parameter_list|(
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|,
+name|uint8_t
+name|OSABI
+parameter_list|)
+function_decl|;
 comment|/// createARMMachObjectWriter - Construct an ARM Mach-O object writer.
 name|MCObjectWriter
 modifier|*

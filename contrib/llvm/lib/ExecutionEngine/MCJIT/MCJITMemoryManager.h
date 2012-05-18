@@ -80,6 +80,11 @@ range|:
 name|public
 name|RTDyldMemoryManager
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|JITMemoryManager
 operator|*
 name|JMM
@@ -105,6 +110,13 @@ operator|:
 name|JMM
 argument_list|(
 name|jmm
+condition|?
+name|jmm
+else|:
+name|JITMemoryManager
+operator|::
+name|CreateDefaultMemManager
+argument_list|()
 argument_list|)
 block|,
 name|M
@@ -112,205 +124,84 @@ argument_list|(
 argument|m
 argument_list|)
 block|{}
-comment|// Allocate ActualSize bytes, or more, for the named function. Return
-comment|// a pointer to the allocated memory and update Size to reflect how much
-comment|// memory was acutally allocated.
+comment|// We own the JMM, so make sure to delete it.
+operator|~
+name|MCJITMemoryManager
+argument_list|()
+block|{
+name|delete
+name|JMM
+block|; }
 name|uint8_t
 operator|*
-name|startFunctionBody
+name|allocateDataSection
 argument_list|(
-argument|const char *Name
+argument|uintptr_t Size
 argument_list|,
-argument|uintptr_t&Size
+argument|unsigned Alignment
+argument_list|,
+argument|unsigned SectionID
 argument_list|)
 block|{
-comment|// FIXME: This should really reference the MCAsmInfo to get the global
-comment|//        prefix.
-if|if
-condition|(
-name|Name
-index|[
-literal|0
-index|]
-operator|==
-literal|'_'
-condition|)
-operator|++
-name|Name
-expr_stmt|;
-name|Function
-operator|*
-name|F
-operator|=
-name|M
-operator|->
-name|getFunction
-argument_list|(
-name|Name
-argument_list|)
-block|;
-comment|// Some ObjC names have a prefixed \01 in the IR. If we failed to find
-comment|// the symbol and it's of the ObjC conventions (starts with "-"), try
-comment|// prepending a \01 and see if we can find it that way.
-if|if
-condition|(
-operator|!
-name|F
-operator|&&
-name|Name
-index|[
-literal|0
-index|]
-operator|==
-literal|'-'
-condition|)
-name|F
-operator|=
-name|M
-operator|->
-name|getFunction
-argument_list|(
-operator|(
-name|Twine
-argument_list|(
-literal|"\1"
-argument_list|)
-operator|+
-name|Name
-operator|)
-operator|.
-name|str
-argument_list|()
-argument_list|)
-expr_stmt|;
-name|assert
-argument_list|(
-name|F
-operator|&&
-literal|"No matching function in JIT IR Module!"
-argument_list|)
-decl_stmt|;
 return|return
 name|JMM
 operator|->
-name|startFunctionBody
+name|allocateSpace
 argument_list|(
-name|F
-argument_list|,
 name|Size
+argument_list|,
+name|Alignment
 argument_list|)
 return|;
 block|}
+name|uint8_t
+operator|*
+name|allocateCodeSection
+argument_list|(
+argument|uintptr_t Size
+argument_list|,
+argument|unsigned Alignment
+argument_list|,
+argument|unsigned SectionID
+argument_list|)
+block|{
+return|return
+name|JMM
+operator|->
+name|allocateSpace
+argument_list|(
+name|Size
+argument_list|,
+name|Alignment
+argument_list|)
+return|;
+block|}
+name|virtual
+name|void
+operator|*
+name|getPointerToNamedFunction
+argument_list|(
+argument|const std::string&Name
+argument_list|,
+argument|bool AbortOnFailure = true
+argument_list|)
+block|{
+return|return
+name|JMM
+operator|->
+name|getPointerToNamedFunction
+argument_list|(
+name|Name
+argument_list|,
+name|AbortOnFailure
+argument_list|)
+return|;
+block|}
+expr|}
+block|;  }
 end_decl_stmt
 
 begin_comment
-comment|// Mark the end of the function, including how much of the allocated
-end_comment
-
-begin_comment
-comment|// memory was actually used.
-end_comment
-
-begin_function
-name|void
-name|endFunctionBody
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|Name
-parameter_list|,
-name|uint8_t
-modifier|*
-name|FunctionStart
-parameter_list|,
-name|uint8_t
-modifier|*
-name|FunctionEnd
-parameter_list|)
-block|{
-comment|// FIXME: This should really reference the MCAsmInfo to get the global
-comment|//        prefix.
-if|if
-condition|(
-name|Name
-index|[
-literal|0
-index|]
-operator|==
-literal|'_'
-condition|)
-operator|++
-name|Name
-expr_stmt|;
-name|Function
-modifier|*
-name|F
-init|=
-name|M
-operator|->
-name|getFunction
-argument_list|(
-name|Name
-argument_list|)
-decl_stmt|;
-comment|// Some ObjC names have a prefixed \01 in the IR. If we failed to find
-comment|// the symbol and it's of the ObjC conventions (starts with "-"), try
-comment|// prepending a \01 and see if we can find it that way.
-if|if
-condition|(
-operator|!
-name|F
-operator|&&
-name|Name
-index|[
-literal|0
-index|]
-operator|==
-literal|'-'
-condition|)
-name|F
-operator|=
-name|M
-operator|->
-name|getFunction
-argument_list|(
-operator|(
-name|Twine
-argument_list|(
-literal|"\1"
-argument_list|)
-operator|+
-name|Name
-operator|)
-operator|.
-name|str
-argument_list|()
-argument_list|)
-expr_stmt|;
-name|assert
-argument_list|(
-name|F
-operator|&&
-literal|"No matching function in JIT IR Module!"
-argument_list|)
-expr_stmt|;
-name|JMM
-operator|->
-name|endFunctionBody
-argument_list|(
-name|F
-argument_list|,
-name|FunctionStart
-argument_list|,
-name|FunctionEnd
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-unit|};  }
 comment|// End llvm namespace
 end_comment
 

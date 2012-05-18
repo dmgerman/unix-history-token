@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- MipsRegisterInfo.h - Mips Register Information Impl ------*- C++ -*-===//
+comment|//===-- MipsRegisterInfo.h - Mips Register Information Impl -----*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -150,7 +150,7 @@ specifier|const
 block|;
 comment|/// Code Generation virtual methods...
 specifier|const
-name|unsigned
+name|uint16_t
 operator|*
 name|getCalleeSavedRegs
 argument_list|(
@@ -159,8 +159,25 @@ literal|0
 argument_list|)
 specifier|const
 block|;
+specifier|const
+name|uint32_t
+operator|*
+name|getCallPreservedMask
+argument_list|(
+argument|CallingConv::ID
+argument_list|)
+specifier|const
+block|;
 name|BitVector
 name|getReservedRegs
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|requiresRegisterScavenging
 argument_list|(
 argument|const MachineFunction&MF
 argument_list|)

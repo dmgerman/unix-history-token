@@ -151,9 +151,13 @@ argument|StringRef CPU
 argument_list|,
 argument|StringRef FS
 argument_list|,
+argument|const TargetOptions&Options
+argument_list|,
 argument|Reloc::Model RM
 argument_list|,
 argument|CodeModel::Model CM
+argument_list|,
+argument|CodeGenOpt::Level OL
 argument_list|,
 argument|bool is64Bit
 argument_list|)
@@ -252,46 +256,6 @@ operator|&
 name|Subtarget
 return|;
 block|}
-name|virtual
-name|bool
-name|addInstSelector
-argument_list|(
-argument|PassManagerBase&PM
-argument_list|,
-argument|CodeGenOpt::Level OptLevel
-argument_list|)
-block|;
-name|virtual
-name|bool
-name|addPostRegAlloc
-argument_list|(
-argument|PassManagerBase&PM
-argument_list|,
-argument|CodeGenOpt::Level OptLevel
-argument_list|)
-block|;
-comment|// We override this method to supply our own set of codegen passes.
-name|virtual
-name|bool
-name|addPassesToEmitFile
-argument_list|(
-name|PassManagerBase
-operator|&
-argument_list|,
-name|formatted_raw_ostream
-operator|&
-argument_list|,
-name|CodeGenFileType
-argument_list|,
-name|CodeGenOpt
-operator|::
-name|Level
-argument_list|,
-name|bool
-operator|=
-name|true
-argument_list|)
-block|;
 comment|// Emission of machine code through JITCodeEmitter is not supported.
 name|virtual
 name|bool
@@ -300,8 +264,6 @@ argument_list|(
 argument|PassManagerBase&
 argument_list|,
 argument|JITCodeEmitter&
-argument_list|,
-argument|CodeGenOpt::Level
 argument_list|,
 argument|bool = true
 argument_list|)
@@ -321,8 +283,6 @@ argument|MCContext *&
 argument_list|,
 argument|raw_ostream&
 argument_list|,
-argument|CodeGenOpt::Level
-argument_list|,
 argument|bool = true
 argument_list|)
 block|{
@@ -330,18 +290,15 @@ return|return
 name|true
 return|;
 block|}
-name|private
-operator|:
-name|bool
-name|addCommonCodeGenPasses
+comment|// Pass Pipeline Configuration
+name|virtual
+name|TargetPassConfig
+operator|*
+name|createPassConfig
 argument_list|(
-argument|PassManagerBase&
-argument_list|,
-argument|CodeGenOpt::Level
-argument_list|,
-argument|bool DisableVerify
-argument_list|,
-argument|MCContext *&OutCtx
+name|PassManagerBase
+operator|&
+name|PM
 argument_list|)
 block|; }
 decl_stmt|;
@@ -352,6 +309,11 @@ range|:
 name|public
 name|PTXTargetMachine
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 name|PTX32TargetMachine
@@ -364,9 +326,13 @@ argument|StringRef CPU
 argument_list|,
 argument|StringRef FS
 argument_list|,
+argument|const TargetOptions&Options
+argument_list|,
 argument|Reloc::Model RM
 argument_list|,
 argument|CodeModel::Model CM
+argument_list|,
+argument|CodeGenOpt::Level OL
 argument_list|)
 block|; }
 decl_stmt|;
@@ -377,6 +343,11 @@ range|:
 name|public
 name|PTXTargetMachine
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 name|PTX64TargetMachine
@@ -389,9 +360,13 @@ argument|StringRef CPU
 argument_list|,
 argument|StringRef FS
 argument_list|,
+argument|const TargetOptions&Options
+argument_list|,
 argument|Reloc::Model RM
 argument_list|,
 argument|CodeModel::Model CM
+argument_list|,
+argument|CodeGenOpt::Level OL
 argument_list|)
 block|; }
 decl_stmt|;

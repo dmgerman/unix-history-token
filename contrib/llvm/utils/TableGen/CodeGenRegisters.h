@@ -108,6 +108,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cstdlib>
 end_include
 
@@ -142,6 +148,242 @@ block|{
 name|class
 name|CodeGenRegBank
 decl_stmt|;
+comment|/// CodeGenSubRegIndex - Represents a sub-register index.
+name|class
+name|CodeGenSubRegIndex
+block|{
+name|Record
+modifier|*
+specifier|const
+name|TheDef
+decl_stmt|;
+specifier|const
+name|unsigned
+name|EnumValue
+decl_stmt|;
+name|public
+label|:
+name|CodeGenSubRegIndex
+argument_list|(
+argument|Record *R
+argument_list|,
+argument|unsigned Enum
+argument_list|)
+empty_stmt|;
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|getName
+argument_list|()
+specifier|const
+expr_stmt|;
+name|std
+operator|::
+name|string
+name|getNamespace
+argument_list|()
+specifier|const
+expr_stmt|;
+name|std
+operator|::
+name|string
+name|getQualifiedName
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|// Order CodeGenSubRegIndex pointers by EnumValue.
+struct|struct
+name|Less
+block|{
+name|bool
+name|operator
+argument_list|()
+operator|(
+specifier|const
+name|CodeGenSubRegIndex
+operator|*
+name|A
+operator|,
+specifier|const
+name|CodeGenSubRegIndex
+operator|*
+name|B
+operator|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|A
+operator|&&
+name|B
+argument_list|)
+block|;
+return|return
+name|A
+operator|->
+name|EnumValue
+operator|<
+name|B
+operator|->
+name|EnumValue
+return|;
+block|}
+block|}
+struct|;
+comment|// Map of composite subreg indices.
+typedef|typedef
+name|std
+operator|::
+name|map
+operator|<
+name|CodeGenSubRegIndex
+operator|*
+operator|,
+name|CodeGenSubRegIndex
+operator|*
+operator|,
+name|Less
+operator|>
+name|CompMap
+expr_stmt|;
+comment|// Returns the subreg index that results from composing this with Idx.
+comment|// Returns NULL if this and Idx don't compose.
+name|CodeGenSubRegIndex
+modifier|*
+name|compose
+argument_list|(
+name|CodeGenSubRegIndex
+operator|*
+name|Idx
+argument_list|)
+decl|const
+block|{
+name|CompMap
+operator|::
+name|const_iterator
+name|I
+operator|=
+name|Composed
+operator|.
+name|find
+argument_list|(
+name|Idx
+argument_list|)
+expr_stmt|;
+return|return
+name|I
+operator|==
+name|Composed
+operator|.
+name|end
+argument_list|()
+condition|?
+literal|0
+else|:
+name|I
+operator|->
+name|second
+return|;
+block|}
+comment|// Add a composite subreg index: this+A = B.
+comment|// Return a conflicting composite, or NULL
+name|CodeGenSubRegIndex
+modifier|*
+name|addComposite
+parameter_list|(
+name|CodeGenSubRegIndex
+modifier|*
+name|A
+parameter_list|,
+name|CodeGenSubRegIndex
+modifier|*
+name|B
+parameter_list|)
+block|{
+name|std
+operator|::
+name|pair
+operator|<
+name|CompMap
+operator|::
+name|iterator
+operator|,
+name|bool
+operator|>
+name|Ins
+operator|=
+name|Composed
+operator|.
+name|insert
+argument_list|(
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|A
+argument_list|,
+name|B
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|Ins
+operator|.
+name|second
+operator|||
+name|Ins
+operator|.
+name|first
+operator|->
+name|second
+operator|==
+name|B
+operator|)
+condition|?
+literal|0
+else|:
+name|Ins
+operator|.
+name|first
+operator|->
+name|second
+return|;
+block|}
+comment|// Update the composite maps of components specified in 'ComposedOf'.
+name|void
+name|updateComponents
+parameter_list|(
+name|CodeGenRegBank
+modifier|&
+parameter_list|)
+function_decl|;
+comment|// Clean out redundant composite mappings.
+name|void
+name|cleanComposites
+parameter_list|()
+function_decl|;
+comment|// Return the map of composites.
+specifier|const
+name|CompMap
+operator|&
+name|getComposites
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Composed
+return|;
+block|}
+name|private
+label|:
+name|CompMap
+name|Composed
+decl_stmt|;
+block|}
+empty_stmt|;
 comment|/// CodeGenRegister - Represents a register definition.
 struct|struct
 name|CodeGenRegister
@@ -156,19 +398,24 @@ decl_stmt|;
 name|unsigned
 name|CostPerUse
 decl_stmt|;
+name|bool
+name|CoveredBySubRegs
+decl_stmt|;
 comment|// Map SubRegIndex -> Register.
 typedef|typedef
 name|std
 operator|::
 name|map
 operator|<
-name|Record
+name|CodeGenSubRegIndex
 operator|*
 operator|,
 name|CodeGenRegister
 operator|*
 operator|,
-name|LessRecord
+name|CodeGenSubRegIndex
+operator|::
+name|Less
 operator|>
 name|SubRegMap
 expr_stmt|;
@@ -223,11 +470,15 @@ name|addSubRegsPreOrder
 argument_list|(
 name|SetVector
 operator|<
+specifier|const
 name|CodeGenRegister
 operator|*
 operator|>
 operator|&
 name|OSet
+argument_list|,
+name|CodeGenRegBank
+operator|&
 argument_list|)
 decl|const
 decl_stmt|;
@@ -237,13 +488,14 @@ name|std
 operator|::
 name|vector
 operator|<
+specifier|const
 name|CodeGenRegister
 operator|*
 operator|>
 name|SuperRegList
 expr_stmt|;
-comment|// Get the list of super-registers.
-comment|// This is only valid after computeDerivedInfo has visited all registers.
+comment|// Get the list of super-registers. This is valid after getSubReg
+comment|// visits all registers during RegBank construction.
 specifier|const
 name|SuperRegList
 operator|&
@@ -262,6 +514,67 @@ return|return
 name|SuperRegs
 return|;
 block|}
+comment|// List of register units in ascending order.
+typedef|typedef
+name|SmallVector
+operator|<
+name|unsigned
+operator|,
+literal|16
+operator|>
+name|RegUnitList
+expr_stmt|;
+comment|// Get the list of register units.
+comment|// This is only valid after getSubRegs() completes.
+specifier|const
+name|RegUnitList
+operator|&
+name|getRegUnits
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RegUnits
+return|;
+block|}
+comment|// Inherit register units from subregisters.
+comment|// Return true if the RegUnits changed.
+name|bool
+name|inheritRegUnits
+parameter_list|(
+name|CodeGenRegBank
+modifier|&
+name|RegBank
+parameter_list|)
+function_decl|;
+comment|// Adopt a register unit for pressure tracking.
+comment|// A unit is adopted iff its unit number is>= NumNativeRegUnits.
+name|void
+name|adoptRegUnit
+parameter_list|(
+name|unsigned
+name|RUID
+parameter_list|)
+block|{
+name|RegUnits
+operator|.
+name|push_back
+argument_list|(
+name|RUID
+argument_list|)
+expr_stmt|;
+block|}
+comment|// Get the sum of this register's register unit weights.
+name|unsigned
+name|getWeight
+argument_list|(
+specifier|const
+name|CodeGenRegBank
+operator|&
+name|RegBank
+argument_list|)
+decl|const
+decl_stmt|;
 comment|// Order CodeGenRegister pointers by EnumValue.
 struct|struct
 name|Less
@@ -326,6 +639,9 @@ decl_stmt|;
 name|SuperRegList
 name|SuperRegs
 decl_stmt|;
+name|RegUnitList
+name|RegUnits
+decl_stmt|;
 block|}
 struct|;
 name|class
@@ -384,16 +700,37 @@ name|CodeGenRegBank
 modifier|&
 parameter_list|)
 function_decl|;
-comment|// Map SubRegIndex -> sub-class
+comment|// Map SubRegIndex -> sub-class.  This is the largest sub-class where all
+comment|// registers have a SubRegIndex sub-register.
 name|DenseMap
 operator|<
-name|Record
+name|CodeGenSubRegIndex
 operator|*
 operator|,
 name|CodeGenRegisterClass
 operator|*
 operator|>
 name|SubClassWithSubReg
+expr_stmt|;
+comment|// Map SubRegIndex -> set of super-reg classes.  This is all register
+comment|// classes SuperRC such that:
+comment|//
+comment|//   R:SubRegIndex in this RC for all R in SuperRC.
+comment|//
+name|DenseMap
+operator|<
+name|CodeGenSubRegIndex
+operator|*
+operator|,
+name|SmallPtrSet
+operator|<
+name|CodeGenRegisterClass
+operator|*
+operator|,
+literal|8
+operator|>
+expr|>
+name|SuperRegClasses
 expr_stmt|;
 name|public
 label|:
@@ -529,15 +866,10 @@ index|[
 name|VTNum
 index|]
 return|;
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"VTNum greater than number of ValueTypes in RegClass!"
 argument_list|)
-expr_stmt|;
-name|abort
-argument_list|()
 expr_stmt|;
 block|}
 comment|// Return true if this this class contains the register.
@@ -586,7 +918,7 @@ name|CodeGenRegisterClass
 modifier|*
 name|getSubClassWithSubReg
 argument_list|(
-name|Record
+name|CodeGenSubRegIndex
 operator|*
 name|SubIdx
 argument_list|)
@@ -604,7 +936,7 @@ block|}
 name|void
 name|setSubClassWithSubReg
 parameter_list|(
-name|Record
+name|CodeGenSubRegIndex
 modifier|*
 name|SubIdx
 parameter_list|,
@@ -619,6 +951,45 @@ name|SubIdx
 index|]
 operator|=
 name|SubRC
+expr_stmt|;
+block|}
+comment|// getSuperRegClasses - Returns a bit vector of all register classes
+comment|// containing only SubIdx super-registers of this class.
+name|void
+name|getSuperRegClasses
+argument_list|(
+name|CodeGenSubRegIndex
+operator|*
+name|SubIdx
+argument_list|,
+name|BitVector
+operator|&
+name|Out
+argument_list|)
+decl|const
+decl_stmt|;
+comment|// addSuperRegClass - Add a class containing only SudIdx super-registers.
+name|void
+name|addSuperRegClass
+parameter_list|(
+name|CodeGenSubRegIndex
+modifier|*
+name|SubIdx
+parameter_list|,
+name|CodeGenRegisterClass
+modifier|*
+name|SuperRC
+parameter_list|)
+block|{
+name|SuperRegClasses
+index|[
+name|SubIdx
+index|]
+operator|.
+name|insert
+argument_list|(
+name|SuperRC
+argument_list|)
 expr_stmt|;
 block|}
 comment|// getSubClasses - Returns a constant BitVector of subclasses indexed by
@@ -700,6 +1071,21 @@ return|return
 name|Members
 return|;
 block|}
+comment|// Populate a unique sorted list of units from a register set.
+name|void
+name|buildRegUnitSet
+argument_list|(
+name|std
+operator|::
+name|vector
+operator|<
+name|unsigned
+operator|>
+operator|&
+name|RegUnits
+argument_list|)
+decl|const
+decl_stmt|;
 name|CodeGenRegisterClass
 argument_list|(
 name|CodeGenRegBank
@@ -849,6 +1235,42 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
+comment|// Each RegUnitSet is a sorted vector with a name.
+end_comment
+
+begin_struct
+struct|struct
+name|RegUnitSet
+block|{
+typedef|typedef
+name|std
+operator|::
+name|vector
+operator|<
+name|unsigned
+operator|>
+operator|::
+name|const_iterator
+name|iterator
+expr_stmt|;
+name|std
+operator|::
+name|string
+name|Name
+expr_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|unsigned
+operator|>
+name|Units
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|// CodeGenRegBank - Represent a target's registers and the relations between
 end_comment
 
@@ -867,18 +1289,30 @@ decl_stmt|;
 name|SetTheory
 name|Sets
 decl_stmt|;
+comment|// SubRegIndices.
 name|std
 operator|::
 name|vector
 operator|<
-name|Record
+name|CodeGenSubRegIndex
 operator|*
 operator|>
 name|SubRegIndices
 expr_stmt|;
+name|DenseMap
+operator|<
+name|Record
+operator|*
+operator|,
+name|CodeGenSubRegIndex
+operator|*
+operator|>
+name|Def2SubRegIdx
+expr_stmt|;
 name|unsigned
 name|NumNamedIndices
 decl_stmt|;
+comment|// Registers.
 name|std
 operator|::
 name|vector
@@ -897,6 +1331,23 @@ name|CodeGenRegister
 operator|*
 operator|>
 name|Def2Reg
+expr_stmt|;
+name|unsigned
+name|NumNativeRegUnits
+decl_stmt|;
+name|unsigned
+name|NumRegUnits
+decl_stmt|;
+comment|// # native + adopted register units.
+comment|// Map each register unit to a weight (for register pressure).
+comment|// Includes native and adopted register units.
+name|std
+operator|::
+name|vector
+operator|<
+name|unsigned
+operator|>
+name|RegUnitWeights
 expr_stmt|;
 comment|// Register classes.
 name|std
@@ -935,6 +1386,32 @@ expr_stmt|;
 name|RCKeyMap
 name|Key2RC
 decl_stmt|;
+comment|// Remember each unique set of register units. Initially, this contains a
+comment|// unique set for each register class. Simliar sets are coalesced with
+comment|// pruneUnitSets and new supersets are inferred during computeRegUnitSets.
+name|std
+operator|::
+name|vector
+operator|<
+name|RegUnitSet
+operator|>
+name|RegUnitSets
+expr_stmt|;
+comment|// Map RegisterClass index to the index of the RegUnitSet that contains the
+comment|// class's units and any inferred RegUnit supersets.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|vector
+operator|<
+name|unsigned
+operator|>
+expr|>
+name|RegClassUnitSets
+expr_stmt|;
 comment|// Add RC to *2RC maps.
 name|void
 name|addToMaps
@@ -943,35 +1420,76 @@ name|CodeGenRegisterClass
 modifier|*
 parameter_list|)
 function_decl|;
+comment|// Create a synthetic sub-class if it is missing.
+name|CodeGenRegisterClass
+modifier|*
+name|getOrCreateSubClass
+argument_list|(
+specifier|const
+name|CodeGenRegisterClass
+operator|*
+name|RC
+argument_list|,
+specifier|const
+name|CodeGenRegister
+operator|::
+name|Set
+operator|*
+name|Membs
+argument_list|,
+name|StringRef
+name|Name
+argument_list|)
+decl_stmt|;
 comment|// Infer missing register classes.
 name|void
 name|computeInferredRegisterClasses
 parameter_list|()
 function_decl|;
-comment|// Composite SubRegIndex instances.
-comment|// Map (SubRegIndex, SubRegIndex) -> SubRegIndex.
-typedef|typedef
-name|DenseMap
-operator|<
-name|std
-operator|::
-name|pair
-operator|<
-name|Record
-operator|*
-operator|,
-name|Record
-operator|*
-operator|>
-operator|,
-name|Record
-operator|*
-operator|>
-name|CompositeMap
-expr_stmt|;
-name|CompositeMap
-name|Composite
-decl_stmt|;
+name|void
+name|inferCommonSubClass
+parameter_list|(
+name|CodeGenRegisterClass
+modifier|*
+name|RC
+parameter_list|)
+function_decl|;
+name|void
+name|inferSubClassWithSubReg
+parameter_list|(
+name|CodeGenRegisterClass
+modifier|*
+name|RC
+parameter_list|)
+function_decl|;
+name|void
+name|inferMatchingSuperRegClass
+parameter_list|(
+name|CodeGenRegisterClass
+modifier|*
+name|RC
+parameter_list|,
+name|unsigned
+name|FirstSubRegRC
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+comment|// Iteratively prune unit sets.
+name|void
+name|pruneUnitSets
+parameter_list|()
+function_decl|;
+comment|// Compute a weight for each register unit created during getSubRegs.
+name|void
+name|computeRegUnitWeights
+parameter_list|()
+function_decl|;
+comment|// Create a RegUnitSet for each RegClass and infer superclasses.
+name|void
+name|computeRegUnitSets
+parameter_list|()
+function_decl|;
 comment|// Populate the Composite map from sub-register relationships.
 name|void
 name|computeComposites
@@ -997,15 +1515,11 @@ block|}
 comment|// Sub-register indices. The first NumNamedIndices are defined by the user
 comment|// in the .td files. The rest are synthesized such that all sub-registers
 comment|// have a unique name.
-specifier|const
-name|std
-operator|::
-name|vector
+name|ArrayRef
 operator|<
-name|Record
+name|CodeGenSubRegIndex
 operator|*
 operator|>
-operator|&
 name|getSubRegIndices
 argument_list|()
 block|{
@@ -1021,32 +1535,27 @@ return|return
 name|NumNamedIndices
 return|;
 block|}
-comment|// Map a SubRegIndex Record to its enum value.
-name|unsigned
-name|getSubRegIndexNo
+comment|// Find a SubRegIndex form its Record def.
+name|CodeGenSubRegIndex
+modifier|*
+name|getSubRegIdx
 parameter_list|(
 name|Record
 modifier|*
-name|idx
 parameter_list|)
 function_decl|;
 comment|// Find or create a sub-register index representing the A+B composition.
-name|Record
+name|CodeGenSubRegIndex
 modifier|*
 name|getCompositeSubRegIndex
 parameter_list|(
-name|Record
+name|CodeGenSubRegIndex
 modifier|*
 name|A
 parameter_list|,
-name|Record
+name|CodeGenSubRegIndex
 modifier|*
 name|B
-parameter_list|,
-name|bool
-name|create
-init|=
-name|false
 parameter_list|)
 function_decl|;
 specifier|const
@@ -1074,6 +1583,88 @@ name|Record
 modifier|*
 parameter_list|)
 function_decl|;
+comment|// Get a Register's index into the Registers array.
+name|unsigned
+name|getRegIndex
+argument_list|(
+specifier|const
+name|CodeGenRegister
+operator|*
+name|Reg
+argument_list|)
+decl|const
+block|{
+return|return
+name|Reg
+operator|->
+name|EnumValue
+operator|-
+literal|1
+return|;
+block|}
+comment|// Create a new non-native register unit that can be adopted by a register
+comment|// to increase its pressure. Note that NumNativeRegUnits is not increased.
+name|unsigned
+name|newRegUnit
+parameter_list|(
+name|unsigned
+name|Weight
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|RegUnitWeights
+operator|.
+name|empty
+argument_list|()
+condition|)
+block|{
+name|assert
+argument_list|(
+name|Weight
+operator|&&
+literal|"should only add allocatable units"
+argument_list|)
+expr_stmt|;
+name|RegUnitWeights
+operator|.
+name|resize
+argument_list|(
+name|NumRegUnits
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+name|RegUnitWeights
+index|[
+name|NumRegUnits
+index|]
+operator|=
+name|Weight
+expr_stmt|;
+block|}
+return|return
+name|NumRegUnits
+operator|++
+return|;
+block|}
+comment|// Native units are the singular unit of a leaf register. Register aliasing
+comment|// is completely characterized by native units. Adopted units exist to give
+comment|// register additional weight but don't affect aliasing.
+name|bool
+name|isNativeUnit
+parameter_list|(
+name|unsigned
+name|RUID
+parameter_list|)
+block|{
+return|return
+name|RUID
+operator|<
+name|NumNativeRegUnits
+return|;
+block|}
 name|ArrayRef
 operator|<
 name|CodeGenRegisterClass
@@ -1111,6 +1702,155 @@ modifier|*
 name|R
 parameter_list|)
 function_decl|;
+comment|// Get a register unit's weight. Zero for unallocatable registers.
+name|unsigned
+name|getRegUnitWeight
+argument_list|(
+name|unsigned
+name|RUID
+argument_list|)
+decl|const
+block|{
+return|return
+name|RegUnitWeights
+index|[
+name|RUID
+index|]
+return|;
+block|}
+comment|// Get the sum of unit weights.
+name|unsigned
+name|getRegUnitSetWeight
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|unsigned
+operator|>
+operator|&
+name|Units
+argument_list|)
+decl|const
+block|{
+name|unsigned
+name|Weight
+init|=
+literal|0
+decl_stmt|;
+for|for
+control|(
+name|std
+operator|::
+name|vector
+operator|<
+name|unsigned
+operator|>
+operator|::
+name|const_iterator
+name|I
+operator|=
+name|Units
+operator|.
+name|begin
+argument_list|()
+operator|,
+name|E
+operator|=
+name|Units
+operator|.
+name|end
+argument_list|()
+init|;
+name|I
+operator|!=
+name|E
+condition|;
+operator|++
+name|I
+control|)
+name|Weight
+operator|+=
+name|getRegUnitWeight
+argument_list|(
+operator|*
+name|I
+argument_list|)
+expr_stmt|;
+return|return
+name|Weight
+return|;
+block|}
+comment|// Increase a RegUnitWeight.
+name|void
+name|increaseRegUnitWeight
+parameter_list|(
+name|unsigned
+name|RUID
+parameter_list|,
+name|unsigned
+name|Inc
+parameter_list|)
+block|{
+name|RegUnitWeights
+index|[
+name|RUID
+index|]
+operator|+=
+name|Inc
+expr_stmt|;
+block|}
+comment|// Get the number of register pressure dimensions.
+name|unsigned
+name|getNumRegPressureSets
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RegUnitSets
+operator|.
+name|size
+argument_list|()
+return|;
+block|}
+comment|// Get a set of register unit IDs for a given dimension of pressure.
+name|RegUnitSet
+name|getRegPressureSet
+argument_list|(
+name|unsigned
+name|Idx
+argument_list|)
+decl|const
+block|{
+return|return
+name|RegUnitSets
+index|[
+name|Idx
+index|]
+return|;
+block|}
+comment|// Get a list of pressure set IDs for a register class. Liveness of a
+comment|// register in this class impacts each pressure set in this list by the
+comment|// weight of the register. An exact solution requires all registers in a
+comment|// class to have the same class, but it is not strictly guaranteed.
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|getRCPressureSetIDs
+argument_list|(
+argument|unsigned RCIdx
+argument_list|)
+specifier|const
+block|{
+return|return
+name|RegClassUnitSets
+index|[
+name|RCIdx
+index|]
+return|;
+block|}
 comment|// Computed derived records such as missing sub-register indices.
 name|void
 name|computeDerivedInfo
@@ -1139,6 +1879,24 @@ name|Set
 operator|>
 operator|&
 name|Map
+argument_list|)
+decl_stmt|;
+comment|// Compute the set of registers completely covered by the registers in Regs.
+comment|// The returned BitVector will have a bit set for each register in Regs,
+comment|// all sub-registers, and all super-registers that are covered by the
+comment|// registers in Regs.
+comment|//
+comment|// This is used to compute the mask of call-preserved registers from a list
+comment|// of callee-saves.
+name|BitVector
+name|computeCoveredRegisters
+argument_list|(
+name|ArrayRef
+operator|<
+name|Record
+operator|*
+operator|>
+name|Regs
 argument_list|)
 decl_stmt|;
 block|}

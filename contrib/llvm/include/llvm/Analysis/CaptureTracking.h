@@ -59,13 +59,34 @@ directive|define
 name|LLVM_ANALYSIS_CAPTURETRACKING_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"llvm/Constants.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Instructions.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Analysis/AliasAnalysis.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/CallSite.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|Value
-decl_stmt|;
 comment|/// PointerMayBeCaptured - Return true if this pointer value may be captured
 comment|/// by the enclosing function (which is required to exist).  This routine can
 comment|/// be expensive, so consider caching the results.  The boolean ReturnCaptures
@@ -86,6 +107,74 @@ name|ReturnCaptures
 parameter_list|,
 name|bool
 name|StoreCaptures
+parameter_list|)
+function_decl|;
+comment|/// This callback is used in conjunction with PointerMayBeCaptured. In
+comment|/// addition to the interface here, you'll need to provide your own getters
+comment|/// to see whether anything was captured.
+struct|struct
+name|CaptureTracker
+block|{
+name|virtual
+operator|~
+name|CaptureTracker
+argument_list|()
+expr_stmt|;
+comment|/// tooManyUses - The depth of traversal has breached a limit. There may be
+comment|/// capturing instructions that will not be passed into captured().
+name|virtual
+name|void
+name|tooManyUses
+parameter_list|()
+init|=
+literal|0
+function_decl|;
+comment|/// shouldExplore - This is the use of a value derived from the pointer.
+comment|/// To prune the search (ie., assume that none of its users could possibly
+comment|/// capture) return false. To search it, return true.
+comment|///
+comment|/// U->getUser() is always an Instruction.
+name|virtual
+name|bool
+name|shouldExplore
+parameter_list|(
+name|Use
+modifier|*
+name|U
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+comment|/// captured - Information about the pointer was captured by the user of
+comment|/// use U. Return true to stop the traversal or false to continue looking
+comment|/// for more capturing instructions.
+name|virtual
+name|bool
+name|captured
+parameter_list|(
+name|Use
+modifier|*
+name|U
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+block|}
+struct|;
+comment|/// PointerMayBeCaptured - Visit the value and the values derived from it and
+comment|/// find values which appear to be capturing the pointer value. This feeds
+comment|/// results into and is controlled by the CaptureTracker object.
+name|void
+name|PointerMayBeCaptured
+parameter_list|(
+specifier|const
+name|Value
+modifier|*
+name|V
+parameter_list|,
+name|CaptureTracker
+modifier|*
+name|Tracker
 parameter_list|)
 function_decl|;
 block|}

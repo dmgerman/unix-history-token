@@ -110,21 +110,21 @@ name|DIEAbbrevData
 block|{
 comment|/// Attribute - Dwarf attribute code.
 comment|///
-name|unsigned
+name|uint16_t
 name|Attribute
 decl_stmt|;
 comment|/// Form - Dwarf form code.
 comment|///
-name|unsigned
+name|uint16_t
 name|Form
 decl_stmt|;
 name|public
 label|:
 name|DIEAbbrevData
 argument_list|(
-argument|unsigned A
+argument|uint16_t A
 argument_list|,
-argument|unsigned F
+argument|uint16_t F
 argument_list|)
 block|:
 name|Attribute
@@ -138,7 +138,7 @@ argument|F
 argument_list|)
 block|{}
 comment|// Accessors.
-name|unsigned
+name|uint16_t
 name|getAttribute
 argument_list|()
 specifier|const
@@ -147,7 +147,7 @@ return|return
 name|Attribute
 return|;
 block|}
-name|unsigned
+name|uint16_t
 name|getForm
 argument_list|()
 specifier|const
@@ -180,18 +180,18 @@ name|FoldingSetNode
 block|{
 comment|/// Tag - Dwarf tag code.
 comment|///
-name|unsigned
+name|uint16_t
 name|Tag
+block|;
+comment|/// ChildrenFlag - Dwarf children flag.
+comment|///
+name|uint16_t
+name|ChildrenFlag
 block|;
 comment|/// Unique number for node.
 comment|///
 name|unsigned
 name|Number
-block|;
-comment|/// ChildrenFlag - Dwarf children flag.
-comment|///
-name|unsigned
-name|ChildrenFlag
 block|;
 comment|/// Data - Raw data bytes for abbreviation.
 comment|///
@@ -207,9 +207,9 @@ name|public
 operator|:
 name|DIEAbbrev
 argument_list|(
-argument|unsigned T
+argument|uint16_t T
 argument_list|,
-argument|unsigned C
+argument|uint16_t C
 argument_list|)
 operator|:
 name|Tag
@@ -226,7 +226,7 @@ name|Data
 argument_list|()
 block|{}
 comment|// Accessors.
-name|unsigned
+name|uint16_t
 name|getTag
 argument_list|()
 specifier|const
@@ -244,7 +244,7 @@ return|return
 name|Number
 return|;
 block|}
-name|unsigned
+name|uint16_t
 name|getChildrenFlag
 argument_list|()
 specifier|const
@@ -272,7 +272,7 @@ block|}
 name|void
 name|setTag
 argument_list|(
-argument|unsigned T
+argument|uint16_t T
 argument_list|)
 block|{
 name|Tag
@@ -282,7 +282,7 @@ block|; }
 name|void
 name|setChildrenFlag
 argument_list|(
-argument|unsigned CF
+argument|uint16_t CF
 argument_list|)
 block|{
 name|ChildrenFlag
@@ -304,9 +304,9 @@ comment|/// abbreviation.
 name|void
 name|AddAttribute
 argument_list|(
-argument|unsigned Attribute
+argument|uint16_t Attribute
 argument_list|,
-argument|unsigned Form
+argument|uint16_t Form
 argument_list|)
 block|{
 name|Data
@@ -326,9 +326,9 @@ comment|/// of the abbreviation.
 name|void
 name|AddFirstAttribute
 argument_list|(
-argument|unsigned Attribute
+argument|uint16_t Attribute
 argument_list|,
-argument|unsigned Form
+argument|uint16_t Form
 argument_list|)
 block|{
 name|Data
@@ -396,11 +396,6 @@ name|DIE
 block|{
 name|protected
 label|:
-comment|/// Abbrev - Buffer for constructing abbreviation.
-comment|///
-name|DIEAbbrev
-name|Abbrev
-decl_stmt|;
 comment|/// Offset - Offset in debug info section.
 comment|///
 name|unsigned
@@ -410,6 +405,11 @@ comment|/// Size - Size of instance + children.
 comment|///
 name|unsigned
 name|Size
+decl_stmt|;
+comment|/// Abbrev - Buffer for constructing abbreviation.
+comment|///
+name|DIEAbbrev
+name|Abbrev
 decl_stmt|;
 comment|/// Children DIEs.
 comment|///
@@ -450,15 +450,6 @@ argument_list|(
 argument|unsigned Tag
 argument_list|)
 block|:
-name|Abbrev
-argument_list|(
-name|Tag
-argument_list|,
-name|dwarf
-operator|::
-name|DW_CHILDREN_no
-argument_list|)
-operator|,
 name|Offset
 argument_list|(
 literal|0
@@ -467,6 +458,15 @@ operator|,
 name|Size
 argument_list|(
 literal|0
+argument_list|)
+operator|,
+name|Abbrev
+argument_list|(
+name|Tag
+argument_list|,
+name|dwarf
+operator|::
+name|DW_CHILDREN_no
 argument_list|)
 operator|,
 name|Parent
@@ -652,32 +652,6 @@ name|Value
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// SiblingOffset - Return the offset of the debug information entry's
-comment|/// sibling.
-name|unsigned
-name|getSiblingOffset
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Offset
-operator|+
-name|Size
-return|;
-block|}
-comment|/// addSiblingOffset - Add a sibling offset field to the front of the DIE.
-comment|/// The caller is responsible for deleting the return value at or after the
-comment|/// same time it destroys this DIE.
-comment|///
-name|DIEValue
-modifier|*
-name|addSiblingOffset
-parameter_list|(
-name|BumpPtrAllocator
-modifier|&
-name|A
-parameter_list|)
-function_decl|;
 comment|/// addChild - Add a child to the DIE.
 comment|///
 name|void
@@ -763,6 +737,11 @@ comment|///
 name|class
 name|DIEValue
 block|{
+name|virtual
+name|void
+name|anchor
+parameter_list|()
+function_decl|;
 name|public
 label|:
 enum|enum
@@ -772,8 +751,6 @@ block|,
 name|isString
 block|,
 name|isLabel
-block|,
-name|isSectionOffset
 block|,
 name|isDelta
 block|,
@@ -1117,119 +1094,6 @@ directive|endif
 block|}
 decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
-comment|/// DIEString - A string value DIE. This DIE keeps string reference only.
-comment|///
-name|class
-name|DIEString
-range|:
-name|public
-name|DIEValue
-block|{
-specifier|const
-name|StringRef
-name|Str
-block|;
-name|public
-operator|:
-name|explicit
-name|DIEString
-argument_list|(
-argument|const StringRef S
-argument_list|)
-operator|:
-name|DIEValue
-argument_list|(
-name|isString
-argument_list|)
-block|,
-name|Str
-argument_list|(
-argument|S
-argument_list|)
-block|{}
-comment|/// EmitValue - Emit string value.
-comment|///
-name|virtual
-name|void
-name|EmitValue
-argument_list|(
-argument|AsmPrinter *AP
-argument_list|,
-argument|unsigned Form
-argument_list|)
-specifier|const
-block|;
-comment|/// SizeOf - Determine size of string value in bytes.
-comment|///
-name|virtual
-name|unsigned
-name|SizeOf
-argument_list|(
-argument|AsmPrinter *AP
-argument_list|,
-argument|unsigned
-comment|/*Form*/
-argument_list|)
-specifier|const
-block|{
-return|return
-name|Str
-operator|.
-name|size
-argument_list|()
-operator|+
-sizeof|sizeof
-argument_list|(
-name|char
-argument_list|)
-return|;
-comment|// sizeof('\0');
-block|}
-comment|// Implement isa/cast/dyncast.
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const DIEString *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const DIEValue *S
-argument_list|)
-block|{
-return|return
-name|S
-operator|->
-name|getType
-argument_list|()
-operator|==
-name|isString
-return|;
-block|}
-ifndef|#
-directive|ifndef
-name|NDEBUG
-name|virtual
-name|void
-name|print
-argument_list|(
-name|raw_ostream
-operator|&
-name|O
-argument_list|)
-block|;
-endif|#
-directive|endif
-block|}
-decl_stmt|;
-comment|//===--------------------------------------------------------------------===//
 comment|/// DIELabel - A label expression DIE.
 comment|//
 name|class
@@ -1463,7 +1327,7 @@ directive|endif
 block|}
 decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
-comment|/// DIEntry - A pointer to another debug information entry.  An instance of
+comment|/// DIEEntry - A pointer to another debug information entry.  An instance of
 comment|/// this class can also be used as a proxy for a debug information entry not
 comment|/// yet defined (ie. types.)
 name|class

@@ -273,6 +273,15 @@ name|bool
 name|bg
 parameter_list|)
 function_decl|;
+comment|/// This function returns the escape sequence to reverse forground and
+comment|/// background colors.
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|OutputReverse
+parameter_list|()
+function_decl|;
 comment|/// Resets the terminals colors, or returns an escape sequence to do so.
 specifier|static
 specifier|const
@@ -281,17 +290,6 @@ modifier|*
 name|ResetColor
 parameter_list|()
 function_decl|;
-comment|/// Change the program working directory to that given by \arg Path.
-specifier|static
-name|void
-name|SetWorkingDirectory
-argument_list|(
-name|std
-operator|::
-name|string
-name|Path
-argument_list|)
-decl_stmt|;
 comment|/// @}
 block|}
 empty_stmt|;

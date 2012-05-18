@@ -80,12 +80,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringSet.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/CodeGen/AsmPrinter.h"
 end_include
 
@@ -112,19 +106,7 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|MachineJumpTableInfo
-decl_stmt|;
-name|class
-name|MCContext
-decl_stmt|;
-name|class
-name|MCInst
-decl_stmt|;
-name|class
 name|MCStreamer
-decl_stmt|;
-name|class
-name|MCSymbol
 decl_stmt|;
 name|class
 name|LLVM_LIBRARY_VISIBILITY

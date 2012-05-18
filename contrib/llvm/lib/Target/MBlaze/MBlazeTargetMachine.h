@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- MBlazeTargetMachine.h - Define TargetMachine for MBlaze --- C++ ---===//
+comment|//===-- MBlazeTargetMachine.h - Define TargetMachine for MBlaze -*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -179,9 +179,13 @@ argument|StringRef CPU
 argument_list|,
 argument|StringRef FS
 argument_list|,
+argument|const TargetOptions&Options
+argument_list|,
 argument|Reloc::Model RM
 argument_list|,
 argument|CodeModel::Model CM
+argument_list|,
+argument|CodeGenOpt::Level OL
 argument_list|)
 block|;
 name|virtual
@@ -318,21 +322,13 @@ return|;
 block|}
 comment|// Pass Pipeline Configuration
 name|virtual
-name|bool
-name|addInstSelector
+name|TargetPassConfig
+operator|*
+name|createPassConfig
 argument_list|(
-argument|PassManagerBase&PM
-argument_list|,
-argument|CodeGenOpt::Level Opt
-argument_list|)
-block|;
-name|virtual
-name|bool
-name|addPreEmitPass
-argument_list|(
-argument|PassManagerBase&PM
-argument_list|,
-argument|CodeGenOpt::Level Opt
+name|PassManagerBase
+operator|&
+name|PM
 argument_list|)
 block|;   }
 decl_stmt|;

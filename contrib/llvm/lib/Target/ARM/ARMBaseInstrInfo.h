@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- ARMBaseInstrInfo.h - ARM Base Instruction Information ----*- C++ -*-===//
+comment|//===-- ARMBaseInstrInfo.h - ARM Base Instruction Information ---*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -136,6 +136,12 @@ argument_list|)
 block|;
 name|public
 operator|:
+comment|// Return whether the target has an explicit NOP encoding.
+name|bool
+name|hasNOP
+argument_list|()
+specifier|const
+block|;
 comment|// Return the non-pre/post incrementing version of 'Opc'. Return 0
 comment|// if there is not such an opcode.
 name|virtual
@@ -258,36 +264,7 @@ argument_list|(
 argument|const MachineInstr *MI
 argument_list|)
 specifier|const
-block|{
-name|int
-name|PIdx
-operator|=
-name|MI
-operator|->
-name|findFirstPredOperandIdx
-argument_list|()
 block|;
-return|return
-name|PIdx
-operator|!=
-operator|-
-literal|1
-operator|&&
-name|MI
-operator|->
-name|getOperand
-argument_list|(
-name|PIdx
-argument_list|)
-operator|.
-name|getImm
-argument_list|()
-operator|!=
-name|ARMCC
-operator|::
-name|AL
-return|;
-block|}
 name|ARMCC
 operator|::
 name|CondCodes
@@ -528,6 +505,16 @@ argument|MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
+name|MachineInstr
+operator|*
+name|commuteInstruction
+argument_list|(
+argument|MachineInstr*
+argument_list|,
+argument|bool=false
+argument_list|)
+specifier|const
+block|;
 name|virtual
 name|bool
 name|produceSameValue
@@ -740,6 +727,20 @@ argument|unsigned UseIdx
 argument_list|)
 specifier|const
 block|;
+name|virtual
+name|unsigned
+name|getOutputLatency
+argument_list|(
+argument|const InstrItineraryData *ItinData
+argument_list|,
+argument|const MachineInstr *DefMI
+argument_list|,
+argument|unsigned DefIdx
+argument_list|,
+argument|const MachineInstr *DepMI
+argument_list|)
+specifier|const
+block|;
 comment|/// VFP/NEON execution domains.
 name|std
 operator|::
@@ -766,6 +767,13 @@ specifier|const
 block|;
 name|private
 operator|:
+name|unsigned
+name|getInstBundleLength
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
 name|int
 name|getVLDMDefCycle
 argument_list|(

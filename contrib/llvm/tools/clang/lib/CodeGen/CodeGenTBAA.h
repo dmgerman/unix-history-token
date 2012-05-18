@@ -75,6 +75,12 @@ directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/MDBuilder.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -137,6 +143,12 @@ name|MangleContext
 modifier|&
 name|MContext
 decl_stmt|;
+comment|// MDHelper - Helper for creating metadata.
+name|llvm
+operator|::
+name|MDBuilder
+name|MDHelper
+expr_stmt|;
 comment|/// MetadataCache - This maps clang::Types to llvm::MDNodes describing them.
 name|llvm
 operator|::
@@ -183,19 +195,6 @@ operator|*
 name|getChar
 argument_list|()
 expr_stmt|;
-name|llvm
-operator|::
-name|MDNode
-operator|*
-name|getTBAAInfoForNamedType
-argument_list|(
-argument|StringRef NameStr
-argument_list|,
-argument|llvm::MDNode *Parent
-argument_list|,
-argument|bool Readonly = false
-argument_list|)
-expr_stmt|;
 name|public
 label|:
 name|CodeGenTBAA
@@ -234,6 +233,15 @@ name|getTBAAInfo
 argument_list|(
 argument|QualType QTy
 argument_list|)
+expr_stmt|;
+comment|/// getTBAAInfoForVTablePtr - Get the TBAA MDNode to be used for a
+comment|/// dereference of a vtable pointer.
+name|llvm
+operator|::
+name|MDNode
+operator|*
+name|getTBAAInfoForVTablePtr
+argument_list|()
 expr_stmt|;
 block|}
 empty_stmt|;

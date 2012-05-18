@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"ARM.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ARMSubtarget.h"
 end_include
 
@@ -186,6 +192,15 @@ comment|// ARM fmstat instruction.
 name|CMOV
 block|,
 comment|// ARM conditional move instructions.
+name|CAND
+block|,
+comment|// ARM conditional and instructions.
+name|COR
+block|,
+comment|// ARM conditional or instructions.
+name|CXOR
+block|,
+comment|// ARM conditional xor instructions.
 name|BCC_i64
 block|,
 name|RBIT
@@ -236,9 +251,6 @@ comment|// SjLj exception handling setjmp.
 name|EH_SJLJ_LONGJMP
 block|,
 comment|// SjLj exception handling longjmp.
-name|EH_SJLJ_DISPATCHSETUP
-block|,
-comment|// SjLj exception handling dispatch setup.
 name|TC_RETURN
 block|,
 comment|// Tail call return pseudo.
@@ -369,6 +381,9 @@ comment|// Vector move immediate and move negated immediate:
 name|VMOVIMM
 block|,
 name|VMVNIMM
+block|,
+comment|// Vector move f32 immediate:
+name|VMOVFPIMM
 block|,
 comment|// Vector duplicate:
 name|VDUP
@@ -633,12 +648,29 @@ specifier|const
 block|;
 comment|/// allowsUnalignedMemoryAccesses - Returns true if the target allows
 comment|/// unaligned memory accesses. of the specified type.
-comment|/// FIXME: Add getOptimalMemOpType to implement memcpy with NEON?
 name|virtual
 name|bool
 name|allowsUnalignedMemoryAccesses
 argument_list|(
 argument|EVT VT
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|EVT
+name|getOptimalMemOpType
+argument_list|(
+argument|uint64_t Size
+argument_list|,
+argument|unsigned DstAlign
+argument_list|,
+argument|unsigned SrcAlign
+argument_list|,
+argument|bool IsZeroVal
+argument_list|,
+argument|bool MemcpyStrSrc
+argument_list|,
+argument|MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
@@ -733,8 +765,6 @@ name|computeMaskedBitsForTargetNode
 argument_list|(
 argument|const SDValue Op
 argument_list|,
-argument|const APInt&Mask
-argument_list|,
 argument|APInt&KnownZero
 argument_list|,
 argument|APInt&KnownOne
@@ -821,6 +851,7 @@ block|}
 comment|/// getRegClassFor - Return the register class that should be used for the
 comment|/// specified value type.
 name|virtual
+specifier|const
 name|TargetRegisterClass
 operator|*
 name|getRegClassFor
@@ -1103,18 +1134,6 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|SDValue
-name|LowerEH_SJLJ_DISPATCHSETUP
-argument_list|(
-name|SDValue
-name|Op
-argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
-argument_list|)
-decl|const
-decl_stmt|;
-name|SDValue
 name|LowerINTRINSIC_WO_CHAIN
 argument_list|(
 name|SDValue
@@ -1338,6 +1357,23 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|SDValue
+name|LowerConstantFP
+argument_list|(
+name|SDValue
+name|Op
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|,
+specifier|const
+name|ARMSubtarget
+operator|*
+name|ST
+argument_list|)
+decl|const
+decl_stmt|;
+name|SDValue
 name|LowerBUILD_VECTOR
 argument_list|(
 name|SDValue
@@ -1513,6 +1549,9 @@ name|bool
 name|isVarArg
 argument_list|,
 name|bool
+name|doesNotRet
+argument_list|,
+name|bool
 operator|&
 name|isTailCall
 argument_list|,
@@ -1679,6 +1718,10 @@ argument_list|(
 name|SDNode
 operator|*
 name|N
+argument_list|,
+name|SDValue
+operator|&
+name|Chain
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1850,23 +1893,6 @@ name|ARMCC
 operator|::
 name|CondCodes
 name|Cond
-argument_list|)
-decl|const
-decl_stmt|;
-name|void
-name|EmitBasePointerRecalculation
-argument_list|(
-name|MachineInstr
-operator|*
-name|MI
-argument_list|,
-name|MachineBasicBlock
-operator|*
-name|MBB
-argument_list|,
-name|MachineBasicBlock
-operator|*
-name|DispatchBB
 argument_list|)
 decl|const
 decl_stmt|;

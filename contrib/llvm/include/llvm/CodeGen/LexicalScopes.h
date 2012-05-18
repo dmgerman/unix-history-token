@@ -529,6 +529,11 @@ comment|///
 name|class
 name|LexicalScope
 block|{
+name|virtual
+name|void
+name|anchor
+parameter_list|()
+function_decl|;
 name|public
 label|:
 name|LexicalScope
@@ -835,7 +840,7 @@ name|NewScope
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// dominates - Return true if current scope dominsates given lexical scope.
+comment|/// dominates - Return true if current scope dominates given lexical scope.
 name|bool
 name|dominates
 argument_list|(

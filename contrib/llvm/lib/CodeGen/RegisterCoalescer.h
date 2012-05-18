@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- RegisterCoalescer.h - Register Coalescing Interface ------*- C++ -*-===//
+comment|//===-- RegisterCoalescer.h - Register Coalescing Interface -----*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -118,7 +118,7 @@ comment|/// CrossClass - True when both regs are virtual, and newRC is constrain
 name|bool
 name|CrossClass
 decl_stmt|;
-comment|/// Flipped - True when DstReg and SrcReg are reversed from the oriignal
+comment|/// Flipped - True when DstReg and SrcReg are reversed from the original
 comment|/// copy instruction.
 name|bool
 name|Flipped

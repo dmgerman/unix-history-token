@@ -81,6 +81,14 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|class
+name|ArrayRef
+expr_stmt|;
 name|namespace
 name|object
 block|{
@@ -166,21 +174,11 @@ operator|::
 name|little16_t
 name|SectionNumber
 expr_stmt|;
-struct|struct
-block|{
 name|support
 operator|::
-name|ulittle8_t
-name|BaseType
-expr_stmt|;
-name|support
-operator|::
-name|ulittle8_t
-name|ComplexType
-expr_stmt|;
-block|}
+name|ulittle16_t
 name|Type
-struct|;
+expr_stmt|;
 name|support
 operator|::
 name|ulittle8_t
@@ -191,6 +189,32 @@ operator|::
 name|ulittle8_t
 name|NumberOfAuxSymbols
 expr_stmt|;
+name|uint8_t
+name|getBaseType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Type
+operator|&
+literal|0x0F
+return|;
+block|}
+name|uint8_t
+name|getComplexType
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|Type
+operator|&
+literal|0xF0
+operator|)
+operator|>>
+literal|4
+return|;
+block|}
 block|}
 struct|;
 struct|struct
@@ -269,6 +293,47 @@ name|Type
 expr_stmt|;
 block|}
 struct|;
+struct|struct
+name|coff_aux_section_definition
+block|{
+name|support
+operator|::
+name|ulittle32_t
+name|Length
+expr_stmt|;
+name|support
+operator|::
+name|ulittle16_t
+name|NumberOfRelocations
+expr_stmt|;
+name|support
+operator|::
+name|ulittle16_t
+name|NumberOfLinenumbers
+expr_stmt|;
+name|support
+operator|::
+name|ulittle32_t
+name|CheckSum
+expr_stmt|;
+name|support
+operator|::
+name|ulittle16_t
+name|Number
+expr_stmt|;
+name|support
+operator|::
+name|ulittle8_t
+name|Selection
+expr_stmt|;
+name|char
+name|Unused
+index|[
+literal|3
+index|]
+decl_stmt|;
+block|}
+struct|;
 name|class
 name|COFFObjectFile
 range|:
@@ -301,29 +366,11 @@ name|uint32_t
 name|StringTableSize
 block|;
 name|error_code
-name|getSection
-argument_list|(
-argument|int32_t index
-argument_list|,
-argument|const coff_section *&Res
-argument_list|)
-specifier|const
-block|;
-name|error_code
 name|getString
 argument_list|(
 argument|uint32_t offset
 argument_list|,
 argument|StringRef&Res
-argument_list|)
-specifier|const
-block|;
-name|error_code
-name|getSymbol
-argument_list|(
-argument|uint32_t index
-argument_list|,
-argument|const coff_symbol *&Res
 argument_list|)
 specifier|const
 block|;
@@ -378,7 +425,7 @@ specifier|const
 block|;
 name|virtual
 name|error_code
-name|getSymbolOffset
+name|getSymbolFileOffset
 argument_list|(
 argument|DataRefImpl Symb
 argument_list|,
@@ -418,21 +465,11 @@ specifier|const
 block|;
 name|virtual
 name|error_code
-name|isSymbolInternal
+name|getSymbolFlags
 argument_list|(
 argument|DataRefImpl Symb
 argument_list|,
-argument|bool&Res
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|error_code
-name|isSymbolGlobal
-argument_list|(
-argument|DataRefImpl Symb
-argument_list|,
-argument|bool&Res
+argument|uint32_t&Res
 argument_list|)
 specifier|const
 block|;
@@ -442,7 +479,17 @@ name|getSymbolType
 argument_list|(
 argument|DataRefImpl Symb
 argument_list|,
-argument|SymbolRef::SymbolType&Res
+argument|SymbolRef::Type&Res
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|error_code
+name|getSymbolSection
+argument_list|(
+argument|DataRefImpl Symb
+argument_list|,
+argument|section_iterator&Res
 argument_list|)
 specifier|const
 block|;
@@ -538,6 +585,36 @@ specifier|const
 block|;
 name|virtual
 name|error_code
+name|isSectionVirtual
+argument_list|(
+argument|DataRefImpl Sec
+argument_list|,
+argument|bool&Res
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|error_code
+name|isSectionZeroInit
+argument_list|(
+argument|DataRefImpl Sec
+argument_list|,
+argument|bool&Res
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|error_code
+name|isSectionRequiredForExecution
+argument_list|(
+argument|DataRefImpl Sec
+argument_list|,
+argument|bool&Res
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|error_code
 name|sectionContainsSymbol
 argument_list|(
 argument|DataRefImpl Sec
@@ -586,6 +663,16 @@ specifier|const
 block|;
 name|virtual
 name|error_code
+name|getRelocationOffset
+argument_list|(
+argument|DataRefImpl Rel
+argument_list|,
+argument|uint64_t&Res
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|error_code
 name|getRelocationSymbol
 argument_list|(
 argument|DataRefImpl Rel
@@ -600,7 +687,7 @@ name|getRelocationType
 argument_list|(
 argument|DataRefImpl Rel
 argument_list|,
-argument|uint32_t&Res
+argument|uint64_t&Res
 argument_list|)
 specifier|const
 block|;
@@ -634,6 +721,26 @@ argument|SmallVectorImpl<char>&Result
 argument_list|)
 specifier|const
 block|;
+name|virtual
+name|error_code
+name|getLibraryNext
+argument_list|(
+argument|DataRefImpl LibData
+argument_list|,
+argument|LibraryRef&Result
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|error_code
+name|getLibraryPath
+argument_list|(
+argument|DataRefImpl LibData
+argument_list|,
+argument|StringRef&Result
+argument_list|)
+specifier|const
+block|;
 name|public
 operator|:
 name|COFFObjectFile
@@ -656,6 +763,30 @@ block|;
 name|virtual
 name|symbol_iterator
 name|end_symbols
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|symbol_iterator
+name|begin_dynamic_symbols
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|symbol_iterator
+name|end_dynamic_symbols
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|library_iterator
+name|begin_libraries_needed
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|library_iterator
+name|end_libraries_needed
 argument_list|()
 specifier|const
 block|;
@@ -688,9 +819,139 @@ name|unsigned
 name|getArch
 argument_list|()
 specifier|const
-block|; }
-decl_stmt|;
+block|;
+name|virtual
+name|StringRef
+name|getLoadName
+argument_list|()
+specifier|const
+block|;
+name|error_code
+name|getHeader
+argument_list|(
+argument|const coff_file_header *&Res
+argument_list|)
+specifier|const
+block|;
+name|error_code
+name|getSection
+argument_list|(
+argument|int32_t index
+argument_list|,
+argument|const coff_section *&Res
+argument_list|)
+specifier|const
+block|;
+name|error_code
+name|getSymbol
+argument_list|(
+argument|uint32_t index
+argument_list|,
+argument|const coff_symbol *&Res
+argument_list|)
+specifier|const
+block|;
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|error_code
+name|getAuxSymbol
+argument_list|(
+argument|uint32_t index
+argument_list|,
+argument|const T *&Res
+argument_list|)
+specifier|const
+block|{
+specifier|const
+name|coff_symbol
+operator|*
+name|s
+block|;
+name|error_code
+name|ec
+operator|=
+name|getSymbol
+argument_list|(
+name|index
+argument_list|,
+name|s
+argument_list|)
+block|;
+name|Res
+operator|=
+name|reinterpret_cast
+operator|<
+specifier|const
+name|T
+operator|*
+operator|>
+operator|(
+name|s
+operator|)
+block|;
+return|return
+name|ec
+return|;
 block|}
+name|error_code
+name|getSymbolName
+argument_list|(
+argument|const coff_symbol *symbol
+argument_list|,
+argument|StringRef&Res
+argument_list|)
+specifier|const
+block|;
+name|error_code
+name|getSectionName
+argument_list|(
+argument|const coff_section *Sec
+argument_list|,
+argument|StringRef&Res
+argument_list|)
+specifier|const
+block|;
+name|error_code
+name|getSectionContents
+argument_list|(
+argument|const coff_section *Sec
+argument_list|,
+argument|ArrayRef<uint8_t>&Res
+argument_list|)
+specifier|const
+block|;
+specifier|static
+specifier|inline
+name|bool
+name|classof
+argument_list|(
+argument|const Binary *v
+argument_list|)
+block|{
+return|return
+name|v
+operator|->
+name|isCOFF
+argument_list|()
+return|;
+block|}
+specifier|static
+specifier|inline
+name|bool
+name|classof
+argument_list|(
+argument|const COFFObjectFile *v
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+expr|}
+block|;  }
 block|}
 end_decl_stmt
 

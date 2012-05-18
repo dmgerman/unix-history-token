@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- XCoreRegisterInfo.h - XCore Register Information Impl ----*- C++ -*-===//
+comment|//===-- XCoreRegisterInfo.h - XCore Register Information Impl ---*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -154,7 +154,7 @@ argument_list|)
 block|;
 comment|/// Code Generation virtual methods...
 specifier|const
-name|unsigned
+name|uint16_t
 operator|*
 name|getCalleeSavedRegs
 argument_list|(
@@ -213,35 +213,6 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
-block|;
-comment|//! Return the array of argument passing registers
-comment|/*!     \note The size of this array is returned by getArgRegsSize().     */
-specifier|static
-specifier|const
-name|unsigned
-operator|*
-name|getArgRegs
-argument_list|(
-specifier|const
-name|MachineFunction
-operator|*
-name|MF
-operator|=
-literal|0
-argument_list|)
-block|;
-comment|//! Return the size of the argument passing register array
-specifier|static
-name|unsigned
-name|getNumArgRegs
-argument_list|(
-specifier|const
-name|MachineFunction
-operator|*
-name|MF
-operator|=
-literal|0
-argument_list|)
 block|;
 comment|//! Return whether to emit frame moves
 specifier|static

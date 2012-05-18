@@ -209,6 +209,35 @@ modifier|*
 name|rEDX
 parameter_list|)
 function_decl|;
+comment|/// GetCpuIDAndInfoEx - Execute the specified cpuid with subleaf and return
+comment|/// the 4 values in the specified arguments.  If we can't run cpuid on the
+comment|/// host, return true.
+name|bool
+name|GetCpuIDAndInfoEx
+parameter_list|(
+name|unsigned
+name|value
+parameter_list|,
+name|unsigned
+name|subleaf
+parameter_list|,
+name|unsigned
+modifier|*
+name|rEAX
+parameter_list|,
+name|unsigned
+modifier|*
+name|rEBX
+parameter_list|,
+name|unsigned
+modifier|*
+name|rECX
+parameter_list|,
+name|unsigned
+modifier|*
+name|rEDX
+parameter_list|)
+function_decl|;
 name|void
 name|DetectFamilyModel
 parameter_list|(
@@ -329,6 +358,35 @@ name|CPUType
 parameter_list|,
 name|uint32_t
 name|CPUSubtype
+parameter_list|)
+function_decl|;
+comment|/// createX86ELFObjectWriter - Construct an X86 ELF object writer.
+name|MCObjectWriter
+modifier|*
+name|createX86ELFObjectWriter
+parameter_list|(
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|,
+name|bool
+name|Is64Bit
+parameter_list|,
+name|uint8_t
+name|OSABI
+parameter_list|)
+function_decl|;
+comment|/// createX86WinCOFFObjectWriter - Construct an X86 Win COFF object writer.
+name|MCObjectWriter
+modifier|*
+name|createX86WinCOFFObjectWriter
+parameter_list|(
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|,
+name|bool
+name|Is64Bit
 parameter_list|)
 function_decl|;
 block|}

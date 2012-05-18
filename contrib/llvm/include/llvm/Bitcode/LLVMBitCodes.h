@@ -100,17 +100,13 @@ block|,
 comment|// Module sub-block id's.
 name|PARAMATTR_BLOCK_ID
 block|,
-comment|/// TYPE_BLOCK_ID_OLD - This is the type descriptor block in LLVM 2.9 and
-comment|/// earlier, replaced with TYPE_BLOCK_ID2.  FIXME: Remove in LLVM 3.1.
-name|TYPE_BLOCK_ID_OLD
+name|UNUSED_ID1
 block|,
 name|CONSTANTS_BLOCK_ID
 block|,
 name|FUNCTION_BLOCK_ID
 block|,
-comment|/// TYPE_SYMTAB_BLOCK_ID_OLD - This type descriptor is from LLVM 2.9 and
-comment|/// earlier bitcode files.  FIXME: Remove in LLVM 3.1
-name|TYPE_SYMTAB_BLOCK_ID_OLD
+name|UNUSED_ID2
 block|,
 name|VALUE_SYMTAB_BLOCK_ID
 block|,
@@ -119,6 +115,8 @@ block|,
 name|METADATA_ATTACHMENT_ID
 block|,
 name|TYPE_BLOCK_ID_NEW
+block|,
+name|USELIST_BLOCK_ID
 block|}
 enum|;
 comment|/// MODULE blocks have a number of optional fields and subblocks.
@@ -162,12 +160,12 @@ init|=
 literal|7
 block|,
 comment|// FUNCTION:  [type, callingconv, isproto, linkage, paramattrs, alignment,
-comment|//             section, visibility]
+comment|//             section, visibility, gc, unnamed_addr]
 name|MODULE_CODE_FUNCTION
 init|=
 literal|8
 block|,
-comment|// ALIAS: [alias type, aliasee val#, linkage]
+comment|// ALIAS: [alias type, aliasee val#, linkage, visibility]
 name|MODULE_CODE_ALIAS
 init|=
 literal|9
@@ -238,18 +236,17 @@ init|=
 literal|8
 block|,
 comment|// POINTER: [pointee type]
-name|TYPE_CODE_FUNCTION
+name|TYPE_CODE_FUNCTION_OLD
 init|=
 literal|9
 block|,
-comment|// FUNCTION: [vararg, retty, paramty x N]
-comment|// FIXME: This is the encoding used for structs in LLVM 2.9 and earlier.
-comment|// REMOVE this in LLVM 3.1
-name|TYPE_CODE_STRUCT_OLD
+comment|// FUNCTION: [vararg, attrid, retty,
+comment|//            paramty x N]
+name|TYPE_CODE_HALF
 init|=
 literal|10
 block|,
-comment|// STRUCT: [ispacked, eltty x N]
+comment|// HALF
 name|TYPE_CODE_ARRAY
 init|=
 literal|11
@@ -301,7 +298,12 @@ comment|// STRUCT_NAME: [strchr x N]
 name|TYPE_CODE_STRUCT_NAMED
 init|=
 literal|20
+block|,
 comment|// STRUCT_NAMED: [ispacked, eltty x N]
+name|TYPE_CODE_FUNCTION
+init|=
+literal|21
+comment|// FUNCTION: [vararg, retty, paramty x N]
 block|}
 enum|;
 comment|// The type symbol table only has one code (TST_ENTRY_CODE).
@@ -480,7 +482,12 @@ comment|// INBOUNDS_GEP:  [n x operands]
 name|CST_CODE_BLOCKADDRESS
 init|=
 literal|21
+block|,
 comment|// CST_CODE_BLOCKADDRESS [fnty, fnval, bb#]
+name|CST_CODE_DATA
+init|=
+literal|22
+comment|// DATA:          [n x elements]
 block|}
 enum|;
 comment|/// CastOpcodes - These are values used in the bitcode files to encode which
@@ -792,11 +799,7 @@ init|=
 literal|13
 block|,
 comment|// INVOKE:     [attr, fnty, op0,op1, ...]
-name|FUNC_CODE_INST_UNWIND
-init|=
-literal|14
-block|,
-comment|// UNWIND
+comment|// 14 is unused.
 name|FUNC_CODE_INST_UNREACHABLE
 init|=
 literal|15
@@ -923,6 +926,15 @@ init|=
 literal|42
 comment|// STORE: [ptrty,ptr,val, align, vol
 comment|//         ordering, synchscope]
+block|}
+enum|;
+enum|enum
+name|UseListCodes
+block|{
+name|USELIST_CODE_ENTRY
+init|=
+literal|1
+comment|// USELIST_CODE_ENTRY: TBD.
 block|}
 enum|;
 block|}

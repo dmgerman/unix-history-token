@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Attributes.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Instructions.h"
 end_include
 
@@ -840,7 +846,7 @@ function_decl|;
 name|bool
 name|ParseOptionalAttrs
 parameter_list|(
-name|unsigned
+name|Attributes
 modifier|&
 name|Attrs
 parameter_list|,
@@ -1681,7 +1687,7 @@ name|Value
 modifier|*
 name|V
 decl_stmt|;
-name|unsigned
+name|Attributes
 name|Attrs
 decl_stmt|;
 name|ParamInfo
@@ -1690,7 +1696,7 @@ argument|LocTy loc
 argument_list|,
 argument|Value *v
 argument_list|,
-argument|unsigned attrs
+argument|Attributes attrs
 argument_list|)
 block|:
 name|Loc
@@ -1836,7 +1842,7 @@ name|Type
 modifier|*
 name|Ty
 decl_stmt|;
-name|unsigned
+name|Attributes
 name|Attrs
 decl_stmt|;
 name|std
@@ -1850,7 +1856,7 @@ argument|LocTy L
 argument_list|,
 argument|Type *ty
 argument_list|,
-argument|unsigned Attr
+argument|Attributes Attr
 argument_list|,
 argument|const std::string&N
 argument_list|)
@@ -2246,9 +2252,6 @@ parameter_list|,
 name|PerFunctionState
 modifier|&
 name|PFS
-parameter_list|,
-name|bool
-name|isVolatile
 parameter_list|)
 function_decl|;
 name|int
@@ -2262,9 +2265,6 @@ parameter_list|,
 name|PerFunctionState
 modifier|&
 name|PFS
-parameter_list|,
-name|bool
-name|isVolatile
 parameter_list|)
 function_decl|;
 name|int

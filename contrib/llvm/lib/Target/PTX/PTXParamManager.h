@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- PTXParamManager.h - Manager for .param variables ----------*- C++ -*-==//
+comment|//===-- PTXParamManager.h - Manager for .param variables --------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -73,6 +73,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
 end_include
 
 begin_decl_stmt

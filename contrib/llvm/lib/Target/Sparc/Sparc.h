@@ -81,12 +81,6 @@ directive|include
 file|"llvm/Target/TargetMachine.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<cassert>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -338,12 +332,6 @@ condition|(
 name|CC
 condition|)
 block|{
-default|default:
-name|llvm_unreachable
-argument_list|(
-literal|"Unknown condition code"
-argument_list|)
-expr_stmt|;
 case|case
 name|SPCC
 operator|::
@@ -569,6 +557,11 @@ return|return
 literal|"o"
 return|;
 block|}
+name|llvm_unreachable
+argument_list|(
+literal|"Invalid cond code"
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_decl_stmt

@@ -80,6 +80,9 @@ name|class
 name|TargetData
 decl_stmt|;
 name|class
+name|TargetLibraryInfo
+decl_stmt|;
+name|class
 name|Value
 decl_stmt|;
 comment|/// LazyValueInfo - This pass computes, caches, and vends lazy value constraint
@@ -94,6 +97,11 @@ name|class
 name|TargetData
 operator|*
 name|TD
+block|;
+name|class
+name|TargetLibraryInfo
+operator|*
+name|TLI
 block|;
 name|void
 operator|*
@@ -263,12 +271,7 @@ argument_list|(
 argument|AnalysisUsage&AU
 argument_list|)
 specifier|const
-block|{
-name|AU
-operator|.
-name|setPreservesAll
-argument_list|()
-block|;   }
+block|;
 name|virtual
 name|void
 name|releaseMemory

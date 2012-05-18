@@ -1485,7 +1485,6 @@ index|]
 operator|.
 name|isSpillSlot
 return|;
-empty_stmt|;
 block|}
 comment|/// isDeadObjectIndex - Returns true if the specified index corresponds to
 comment|/// a dead object.

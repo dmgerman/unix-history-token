@@ -86,11 +86,8 @@ specifier|const
 name|Value
 operator|*
 operator|,
-name|TrackingVH
-operator|<
-name|Value
+name|WeakVH
 operator|>
-expr|>
 name|ValueToValueMapTy
 expr_stmt|;
 comment|/// ValueMapTypeRemapper - This is a class that can be implemented by clients

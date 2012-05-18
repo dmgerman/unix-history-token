@@ -141,6 +141,10 @@ comment|/// any other transformations, allowing them to see the code as it is co
 comment|/// out of the frontend.
 name|EP_EarlyAsPossible
 block|,
+comment|/// EP_ModuleOptimizerEarly - This extension point allows adding passes
+comment|/// just before the main module-level optimization passes.
+name|EP_ModuleOptimizerEarly
+block|,
 comment|/// EP_LoopOptimizerEnd - This extension point allows adding loop passes to
 comment|/// the end of the loop optimizer.
 name|EP_LoopOptimizerEnd
@@ -149,6 +153,15 @@ comment|/// EP_ScalarOptimizerLate - This extension point allows adding optimiza
 comment|/// passes after most of the main optimizations, but before the last
 comment|/// cleanup-ish optimizations.
 name|EP_ScalarOptimizerLate
+block|,
+comment|/// EP_OptimizerLast -- This extension point allows adding passes that
+comment|/// run after everything else.
+name|EP_OptimizerLast
+block|,
+comment|/// EP_EnabledOnOptLevel0 - This extension point allows adding passes that
+comment|/// should not be disabled by O0 optimization level. The passes will be
+comment|/// inserted after the inlining pass.
+name|EP_EnabledOnOptLevel0
 block|}
 enum|;
 comment|/// The Optimization Level - Specify the basic optimization level.
@@ -182,6 +195,9 @@ name|DisableUnitAtATime
 decl_stmt|;
 name|bool
 name|DisableUnrollLoops
+decl_stmt|;
+name|bool
+name|Vectorize
 decl_stmt|;
 name|private
 label|:
@@ -291,6 +307,11 @@ name|Internalize
 parameter_list|,
 name|bool
 name|RunInliner
+parameter_list|,
+name|bool
+name|DisableGVNLoadPRE
+init|=
+name|false
 parameter_list|)
 function_decl|;
 block|}

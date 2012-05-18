@@ -155,6 +155,8 @@ decl_stmt|;
 name|class
 name|VarRegion
 decl_stmt|;
+comment|/// \brief Symbolic value. These values used to capture symbolic execution of
+comment|/// the program.
 name|class
 name|SymExpr
 range|:
@@ -163,6 +165,11 @@ name|llvm
 operator|::
 name|FoldingSetNode
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 expr|enum
@@ -188,7 +195,11 @@ name|MetadataKind
 block|,
 name|SymIntKind
 block|,
+name|IntSymKind
+block|,
 name|SymSymKind
+block|,
+name|CastSymbolKind
 block|}
 block|;
 name|private
@@ -224,6 +235,7 @@ return|return
 name|K
 return|;
 block|}
+name|virtual
 name|void
 name|dump
 argument_list|()
@@ -236,9 +248,7 @@ argument_list|(
 argument|raw_ostream&os
 argument_list|)
 specifier|const
-operator|=
-literal|0
-block|;
+block|{}
 name|virtual
 name|QualType
 name|getType
@@ -275,20 +285,137 @@ return|return
 name|true
 return|;
 block|}
+comment|/// \brief Iterator over symbols that the current symbol depends on.
+comment|///
+comment|/// For SymbolData, it's the symbol itself; for expressions, it's the
+comment|/// expression symbol and all the operands in it. Note, SymbolDerived is
+comment|/// treated as SymbolData - the iterator will NOT visit the parent region.
+name|class
+name|symbol_iterator
+block|{
+name|SmallVector
+operator|<
+specifier|const
+name|SymExpr
+operator|*
+block|,
+literal|5
+operator|>
+name|itr
+block|;
+name|void
+name|expand
+argument_list|()
+block|;
+name|public
+operator|:
+name|symbol_iterator
+argument_list|()
+block|{}
+name|symbol_iterator
+argument_list|(
+specifier|const
+name|SymExpr
+operator|*
+name|SE
+argument_list|)
+block|;
+name|symbol_iterator
+operator|&
+name|operator
+operator|++
+operator|(
+operator|)
+block|;
+specifier|const
+name|SymExpr
+operator|*
+name|operator
+operator|*
+operator|(
+operator|)
+block|;
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|symbol_iterator
+operator|&
+name|X
+operator|)
+specifier|const
+block|;
+name|bool
+name|operator
+operator|!=
+operator|(
+specifier|const
+name|symbol_iterator
+operator|&
+name|X
+operator|)
+specifier|const
+block|;   }
+block|;
+name|symbol_iterator
+name|symbol_begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|symbol_iterator
+argument_list|(
+name|this
+argument_list|)
+return|;
+block|}
+specifier|static
+name|symbol_iterator
+name|symbol_end
+argument_list|()
+block|{
+return|return
+name|symbol_iterator
+argument_list|()
+return|;
+block|}
 expr|}
 block|;
+typedef|typedef
+specifier|const
+name|SymExpr
+modifier|*
+name|SymbolRef
+typedef|;
+typedef|typedef
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|SymbolRef
+operator|,
+literal|2
+operator|>
+name|SymbolRefSmallVectorTy
+expr_stmt|;
 typedef|typedef
 name|unsigned
 name|SymbolID
 typedef|;
+comment|/// \brief A symbol representing data which can be stored in a memory location
+comment|/// (region).
 name|class
 name|SymbolData
-operator|:
+range|:
 name|public
 name|SymExpr
 block|{
-name|private
-operator|:
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 specifier|const
 name|SymbolID
 name|Sym
@@ -357,27 +484,10 @@ return|;
 block|}
 expr|}
 block|;
-typedef|typedef
-specifier|const
-name|SymbolData
-modifier|*
-name|SymbolRef
-typedef|;
-typedef|typedef
-name|llvm
-operator|::
-name|SmallVector
-operator|<
-name|SymbolRef
-operator|,
-literal|2
-operator|>
-name|SymbolRefSmallVectorTy
-expr_stmt|;
-comment|/// A symbol representing the value of a MemRegion.
+comment|///\brief A symbol representing the value stored at a MemRegion.
 name|class
 name|SymbolRegionValue
-range|:
+operator|:
 name|public
 name|SymbolData
 block|{
@@ -458,6 +568,7 @@ argument_list|,
 name|R
 argument_list|)
 block|;   }
+name|virtual
 name|void
 name|dumpToStream
 argument_list|(
@@ -492,7 +603,8 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// A symbol representing the result of an expression.
+comment|/// A symbol representing the result of an expression in the case when we do
+comment|/// not know anything about what the expression is.
 name|class
 name|SymbolConjured
 operator|:
@@ -511,6 +623,11 @@ name|unsigned
 name|Count
 block|;
 specifier|const
+name|LocationContext
+operator|*
+name|LCtx
+block|;
+specifier|const
 name|void
 operator|*
 name|SymbolTag
@@ -522,6 +639,8 @@ argument_list|(
 argument|SymbolID sym
 argument_list|,
 argument|const Stmt *s
+argument_list|,
+argument|const LocationContext *lctx
 argument_list|,
 argument|QualType t
 argument_list|,
@@ -550,6 +669,11 @@ block|,
 name|Count
 argument_list|(
 name|count
+argument_list|)
+block|,
+name|LCtx
+argument_list|(
+name|lctx
 argument_list|)
 block|,
 name|SymbolTag
@@ -595,6 +719,7 @@ argument|ASTContext&
 argument_list|)
 specifier|const
 block|;
+name|virtual
 name|void
 name|dumpToStream
 argument_list|(
@@ -614,6 +739,8 @@ argument|QualType T
 argument_list|,
 argument|unsigned Count
 argument_list|,
+argument|const LocationContext *LCtx
+argument_list|,
 argument|const void *SymbolTag
 argument_list|)
 block|{
@@ -632,6 +759,13 @@ operator|.
 name|AddPointer
 argument_list|(
 name|S
+argument_list|)
+block|;
+name|profile
+operator|.
+name|AddPointer
+argument_list|(
+name|LCtx
 argument_list|)
 block|;
 name|profile
@@ -671,6 +805,8 @@ argument_list|,
 name|T
 argument_list|,
 name|Count
+argument_list|,
+name|LCtx
 argument_list|,
 name|SymbolTag
 argument_list|)
@@ -766,6 +902,7 @@ argument|ASTContext&
 argument_list|)
 specifier|const
 block|;
+name|virtual
 name|void
 name|dumpToStream
 argument_list|(
@@ -897,6 +1034,7 @@ argument|ASTContext&
 argument_list|)
 specifier|const
 block|;
+name|virtual
 name|void
 name|dumpToStream
 argument_list|(
@@ -1093,6 +1231,7 @@ argument|ASTContext&
 argument_list|)
 specifier|const
 block|;
+name|virtual
 name|void
 name|dumpToStream
 argument_list|(
@@ -1204,6 +1343,168 @@ return|;
 block|}
 expr|}
 block|;
+comment|/// \brief Represents a cast expression.
+name|class
+name|SymbolCast
+operator|:
+name|public
+name|SymExpr
+block|{
+specifier|const
+name|SymExpr
+operator|*
+name|Operand
+block|;
+comment|/// Type of the operand.
+name|QualType
+name|FromTy
+block|;
+comment|/// The type of the result.
+name|QualType
+name|ToTy
+block|;
+name|public
+operator|:
+name|SymbolCast
+argument_list|(
+argument|const SymExpr *In
+argument_list|,
+argument|QualType From
+argument_list|,
+argument|QualType To
+argument_list|)
+operator|:
+name|SymExpr
+argument_list|(
+name|CastSymbolKind
+argument_list|)
+block|,
+name|Operand
+argument_list|(
+name|In
+argument_list|)
+block|,
+name|FromTy
+argument_list|(
+name|From
+argument_list|)
+block|,
+name|ToTy
+argument_list|(
+argument|To
+argument_list|)
+block|{ }
+name|QualType
+name|getType
+argument_list|(
+argument|ASTContext&C
+argument_list|)
+specifier|const
+block|{
+return|return
+name|ToTy
+return|;
+block|}
+specifier|const
+name|SymExpr
+operator|*
+name|getOperand
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Operand
+return|;
+block|}
+name|virtual
+name|void
+name|dumpToStream
+argument_list|(
+argument|raw_ostream&os
+argument_list|)
+specifier|const
+block|;
+specifier|static
+name|void
+name|Profile
+argument_list|(
+argument|llvm::FoldingSetNodeID& ID
+argument_list|,
+argument|const SymExpr *In
+argument_list|,
+argument|QualType From
+argument_list|,
+argument|QualType To
+argument_list|)
+block|{
+name|ID
+operator|.
+name|AddInteger
+argument_list|(
+operator|(
+name|unsigned
+operator|)
+name|CastSymbolKind
+argument_list|)
+block|;
+name|ID
+operator|.
+name|AddPointer
+argument_list|(
+name|In
+argument_list|)
+block|;
+name|ID
+operator|.
+name|Add
+argument_list|(
+name|From
+argument_list|)
+block|;
+name|ID
+operator|.
+name|Add
+argument_list|(
+name|To
+argument_list|)
+block|;   }
+name|void
+name|Profile
+argument_list|(
+argument|llvm::FoldingSetNodeID& ID
+argument_list|)
+block|{
+name|Profile
+argument_list|(
+name|ID
+argument_list|,
+name|Operand
+argument_list|,
+name|FromTy
+argument_list|,
+name|ToTy
+argument_list|)
+block|;   }
+comment|// Implement isa<T> support.
+specifier|static
+specifier|inline
+name|bool
+name|classof
+argument_list|(
+argument|const SymExpr *SE
+argument_list|)
+block|{
+return|return
+name|SE
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|CastSymbolKind
+return|;
+block|}
+expr|}
+block|;
 comment|/// SymIntExpr - Represents symbolic expression like 'x' + 3.
 name|class
 name|SymIntExpr
@@ -1293,6 +1594,7 @@ return|return
 name|Op
 return|;
 block|}
+name|virtual
 name|void
 name|dumpToStream
 argument_list|(
@@ -1417,6 +1719,218 @@ return|;
 block|}
 expr|}
 block|;
+comment|/// IntSymExpr - Represents symbolic expression like 3 - 'x'.
+name|class
+name|IntSymExpr
+operator|:
+name|public
+name|SymExpr
+block|{
+specifier|const
+name|llvm
+operator|::
+name|APSInt
+operator|&
+name|LHS
+block|;
+name|BinaryOperator
+operator|::
+name|Opcode
+name|Op
+block|;
+specifier|const
+name|SymExpr
+operator|*
+name|RHS
+block|;
+name|QualType
+name|T
+block|;
+name|public
+operator|:
+name|IntSymExpr
+argument_list|(
+argument|const llvm::APSInt& lhs
+argument_list|,
+argument|BinaryOperator::Opcode op
+argument_list|,
+argument|const SymExpr *rhs
+argument_list|,
+argument|QualType t
+argument_list|)
+operator|:
+name|SymExpr
+argument_list|(
+name|IntSymKind
+argument_list|)
+block|,
+name|LHS
+argument_list|(
+name|lhs
+argument_list|)
+block|,
+name|Op
+argument_list|(
+name|op
+argument_list|)
+block|,
+name|RHS
+argument_list|(
+name|rhs
+argument_list|)
+block|,
+name|T
+argument_list|(
+argument|t
+argument_list|)
+block|{}
+name|QualType
+name|getType
+argument_list|(
+argument|ASTContext&C
+argument_list|)
+specifier|const
+block|{
+return|return
+name|T
+return|;
+block|}
+name|BinaryOperator
+operator|::
+name|Opcode
+name|getOpcode
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Op
+return|;
+block|}
+name|virtual
+name|void
+name|dumpToStream
+argument_list|(
+argument|raw_ostream&os
+argument_list|)
+specifier|const
+block|;
+specifier|const
+name|SymExpr
+operator|*
+name|getRHS
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RHS
+return|;
+block|}
+specifier|const
+name|llvm
+operator|::
+name|APSInt
+operator|&
+name|getLHS
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LHS
+return|;
+block|}
+specifier|static
+name|void
+name|Profile
+argument_list|(
+argument|llvm::FoldingSetNodeID& ID
+argument_list|,
+argument|const llvm::APSInt& lhs
+argument_list|,
+argument|BinaryOperator::Opcode op
+argument_list|,
+argument|const SymExpr *rhs
+argument_list|,
+argument|QualType t
+argument_list|)
+block|{
+name|ID
+operator|.
+name|AddInteger
+argument_list|(
+operator|(
+name|unsigned
+operator|)
+name|IntSymKind
+argument_list|)
+block|;
+name|ID
+operator|.
+name|AddPointer
+argument_list|(
+operator|&
+name|lhs
+argument_list|)
+block|;
+name|ID
+operator|.
+name|AddInteger
+argument_list|(
+name|op
+argument_list|)
+block|;
+name|ID
+operator|.
+name|AddPointer
+argument_list|(
+name|rhs
+argument_list|)
+block|;
+name|ID
+operator|.
+name|Add
+argument_list|(
+name|t
+argument_list|)
+block|;   }
+name|void
+name|Profile
+argument_list|(
+argument|llvm::FoldingSetNodeID& ID
+argument_list|)
+block|{
+name|Profile
+argument_list|(
+name|ID
+argument_list|,
+name|LHS
+argument_list|,
+name|Op
+argument_list|,
+name|RHS
+argument_list|,
+name|T
+argument_list|)
+block|;   }
+comment|// Implement isa<T> support.
+specifier|static
+specifier|inline
+name|bool
+name|classof
+argument_list|(
+argument|const SymExpr *SE
+argument_list|)
+block|{
+return|return
+name|SE
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|IntSymKind
+return|;
+block|}
+expr|}
+block|;
 comment|/// SymSymExpr - Represents symbolic expression like 'x' + 'y'.
 name|class
 name|SymSymExpr
@@ -1526,6 +2040,7 @@ return|return
 name|T
 return|;
 block|}
+name|virtual
 name|void
 name|dumpToStream
 argument_list|(
@@ -1748,6 +2263,8 @@ name|getConjuredSymbol
 argument_list|(
 argument|const Stmt *E
 argument_list|,
+argument|const LocationContext *LCtx
+argument_list|,
 argument|QualType T
 argument_list|,
 argument|unsigned VisitCount
@@ -1763,6 +2280,8 @@ name|getConjuredSymbol
 argument_list|(
 argument|const Expr *E
 argument_list|,
+argument|const LocationContext *LCtx
+argument_list|,
 argument|unsigned VisitCount
 argument_list|,
 argument|const void *SymbolTag =
@@ -1773,6 +2292,8 @@ return|return
 name|getConjuredSymbol
 argument_list|(
 name|E
+argument_list|,
+name|LCtx
 argument_list|,
 name|E
 operator|->
@@ -1828,6 +2349,18 @@ literal|0
 argument_list|)
 block|;
 specifier|const
+name|SymbolCast
+operator|*
+name|getCastSymbol
+argument_list|(
+argument|const SymExpr *Operand
+argument_list|,
+argument|QualType From
+argument_list|,
+argument|QualType To
+argument_list|)
+block|;
+specifier|const
 name|SymIntExpr
 operator|*
 name|getSymIntExpr
@@ -1869,6 +2402,20 @@ name|t
 argument_list|)
 return|;
 block|}
+specifier|const
+name|IntSymExpr
+operator|*
+name|getIntSymExpr
+argument_list|(
+argument|const llvm::APSInt& lhs
+argument_list|,
+argument|BinaryOperator::Opcode op
+argument_list|,
+argument|const SymExpr *rhs
+argument_list|,
+argument|QualType t
+argument_list|)
+block|;
 specifier|const
 name|SymSymExpr
 operator|*
@@ -2110,6 +2657,8 @@ name|bool
 name|isLive
 argument_list|(
 argument|const Stmt *ExprVal
+argument_list|,
+argument|const LocationContext *LCtx
 argument_list|)
 specifier|const
 block|;
@@ -2331,7 +2880,7 @@ operator|(
 name|raw_ostream
 operator|&
 name|os
-operator|,
+expr|,
 specifier|const
 name|clang
 operator|::
@@ -2353,7 +2902,7 @@ return|return
 name|os
 return|;
 block|}
-block|}
+expr|}
 end_decl_stmt
 
 begin_comment

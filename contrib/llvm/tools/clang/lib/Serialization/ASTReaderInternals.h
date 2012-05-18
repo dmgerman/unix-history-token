@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Endian.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<utility>
 end_include
 
@@ -100,7 +106,7 @@ name|namespace
 name|serialization
 block|{
 name|class
-name|Module
+name|ModuleFile
 decl_stmt|;
 name|namespace
 name|reader
@@ -114,7 +120,7 @@ name|ASTReader
 modifier|&
 name|Reader
 decl_stmt|;
-name|Module
+name|ModuleFile
 modifier|&
 name|F
 decl_stmt|;
@@ -125,14 +131,22 @@ comment|///
 comment|/// Note that these declaration IDs are local to the module that contains this
 comment|/// particular lookup t
 typedef|typedef
+name|llvm
+operator|::
+name|support
+operator|::
+name|ulittle32_t
+name|LE32DeclID
+expr_stmt|;
+typedef|typedef
 name|std
 operator|::
 name|pair
 operator|<
-name|DeclID
+name|LE32DeclID
 operator|*
 operator|,
-name|DeclID
+name|LE32DeclID
 operator|*
 operator|>
 name|data_type
@@ -186,7 +200,7 @@ name|ASTReader
 operator|&
 name|Reader
 argument_list|,
-name|Module
+name|ModuleFile
 operator|&
 name|F
 argument_list|)
@@ -248,16 +262,6 @@ name|Name
 argument_list|)
 decl|const
 decl_stmt|;
-name|external_key_type
-name|GetExternalKey
-argument_list|(
-specifier|const
-name|internal_key_type
-operator|&
-name|Key
-argument_list|)
-decl|const
-decl_stmt|;
 specifier|static
 name|std
 operator|::
@@ -301,14 +305,6 @@ parameter_list|)
 function_decl|;
 block|}
 empty_stmt|;
-comment|/// \brief The on-disk hash table used for the DeclContext's Name lookup table.
-typedef|typedef
-name|OnDiskChainedHashTable
-operator|<
-name|ASTDeclContextNameLookupTrait
-operator|>
-name|ASTDeclContextNameLookupTable
-expr_stmt|;
 comment|/// \brief Class that performs lookup for an identifier stored in an AST file.
 name|class
 name|ASTIdentifierLookupTrait
@@ -317,7 +313,7 @@ name|ASTReader
 modifier|&
 name|Reader
 decl_stmt|;
-name|Module
+name|ModuleFile
 modifier|&
 name|F
 decl_stmt|;
@@ -359,7 +355,7 @@ name|ASTReader
 operator|&
 name|Reader
 argument_list|,
-name|Module
+name|ModuleFile
 operator|&
 name|F
 argument_list|,
@@ -520,6 +516,16 @@ name|unsigned
 name|DataLen
 parameter_list|)
 function_decl|;
+name|ASTReader
+operator|&
+name|getReader
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Reader
+return|;
+block|}
 block|}
 empty_stmt|;
 comment|/// \brief The on-disk hash table used to contain information about
@@ -540,7 +546,7 @@ name|ASTReader
 modifier|&
 name|Reader
 decl_stmt|;
-name|Module
+name|ModuleFile
 modifier|&
 name|F
 decl_stmt|;
@@ -590,7 +596,7 @@ name|ASTReader
 operator|&
 name|Reader
 argument_list|,
-name|Module
+name|ModuleFile
 operator|&
 name|F
 argument_list|)
@@ -711,7 +717,7 @@ name|ASTReader
 modifier|&
 name|Reader
 decl_stmt|;
-name|Module
+name|ModuleFile
 modifier|&
 name|M
 decl_stmt|;
@@ -820,7 +826,7 @@ name|ASTReader
 operator|&
 name|Reader
 argument_list|,
-name|Module
+name|ModuleFile
 operator|&
 name|M
 argument_list|,

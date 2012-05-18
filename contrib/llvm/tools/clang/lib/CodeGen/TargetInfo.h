@@ -111,10 +111,16 @@ name|namespace
 name|CodeGen
 block|{
 name|class
+name|CallArgList
+decl_stmt|;
+name|class
 name|CodeGenModule
 decl_stmt|;
 name|class
 name|CodeGenFunction
+decl_stmt|;
+name|class
+name|CGFunctionInfo
 decl_stmt|;
 block|}
 comment|/// TargetCodeGenInfo - This class organizes various target-specific
@@ -384,8 +390,17 @@ name|virtual
 name|bool
 name|isNoProtoCallVariadic
 argument_list|(
-name|CallingConv
-name|CC
+specifier|const
+name|CodeGen
+operator|::
+name|CallArgList
+operator|&
+name|args
+argument_list|,
+specifier|const
+name|FunctionNoProtoType
+operator|*
+name|fnType
 argument_list|)
 decl|const
 decl_stmt|;

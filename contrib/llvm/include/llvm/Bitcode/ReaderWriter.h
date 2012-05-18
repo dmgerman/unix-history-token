@@ -70,19 +70,22 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|Module
+name|BitstreamWriter
 decl_stmt|;
 name|class
 name|MemoryBuffer
 decl_stmt|;
 name|class
-name|ModulePass
-decl_stmt|;
-name|class
-name|BitstreamWriter
+name|DataStreamer
 decl_stmt|;
 name|class
 name|LLVMContext
+decl_stmt|;
+name|class
+name|Module
+decl_stmt|;
+name|class
+name|ModulePass
 decl_stmt|;
 name|class
 name|raw_ostream
@@ -99,6 +102,38 @@ argument_list|(
 name|MemoryBuffer
 operator|*
 name|Buffer
+argument_list|,
+name|LLVMContext
+operator|&
+name|Context
+argument_list|,
+name|std
+operator|::
+name|string
+operator|*
+name|ErrMsg
+operator|=
+literal|0
+argument_list|)
+decl_stmt|;
+comment|/// getStreamedBitcodeModule - Read the header of the specified stream
+comment|/// and prepare for lazy deserialization and streaming of function bodies.
+comment|/// On error, this returns null, and fills in *ErrMsg with an error
+comment|/// description if ErrMsg is non-null.
+name|Module
+modifier|*
+name|getStreamedBitcodeModule
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|name
+argument_list|,
+name|DataStreamer
+operator|*
+name|streamer
 argument_list|,
 name|LLVMContext
 operator|&
@@ -178,21 +213,6 @@ parameter_list|,
 name|raw_ostream
 modifier|&
 name|Out
-parameter_list|)
-function_decl|;
-comment|/// WriteBitcodeToStream - Write the specified module to the specified
-comment|/// raw output stream.
-name|void
-name|WriteBitcodeToStream
-parameter_list|(
-specifier|const
-name|Module
-modifier|*
-name|M
-parameter_list|,
-name|BitstreamWriter
-modifier|&
-name|Stream
 parameter_list|)
 function_decl|;
 comment|/// createBitcodeWriterPass - Create and return a pass that writes the module
@@ -371,22 +391,29 @@ comment|///
 comment|/// This function is called when we find a file with a matching magic number.
 comment|/// In this case, skip down to the subsection of the file that is actually a
 comment|/// BC file.
+comment|/// If 'VerifyBufferSize' is true, check that the buffer is large enough to
+comment|/// contain the whole bitcode file.
 specifier|static
 specifier|inline
 name|bool
 name|SkipBitcodeWrapperHeader
 parameter_list|(
+specifier|const
 name|unsigned
 name|char
 modifier|*
 modifier|&
 name|BufPtr
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
 modifier|&
 name|BufEnd
+parameter_list|,
+name|bool
+name|VerifyBufferSize
 parameter_list|)
 block|{
 enum|enum
@@ -514,6 +541,8 @@ decl_stmt|;
 comment|// Verify that Offset+Size fits in the file.
 if|if
 condition|(
+name|VerifyBufferSize
+operator|&&
 name|Offset
 operator|+
 name|Size

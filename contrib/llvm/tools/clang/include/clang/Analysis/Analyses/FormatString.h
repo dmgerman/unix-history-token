@@ -263,7 +263,10 @@ block|,
 comment|// 'l'
 name|AsLongLong
 block|,
-comment|// 'll', 'q' (BSD, deprecated)
+comment|// 'll'
+name|AsQuad
+block|,
+comment|// 'q' (BSD, deprecated, for 64-bit integer types)
 name|AsIntMax
 block|,
 comment|// 'j'
@@ -276,6 +279,12 @@ comment|// 't'
 name|AsLongDouble
 block|,
 comment|// 'L'
+name|AsAllocate
+block|,
+comment|// for '%as', GNU extension to C90 scanf
+name|AsMAllocate
+block|,
+comment|// for '%ms', GNU extension to scanf
 name|AsWideChar
 init|=
 name|AsLong
@@ -665,6 +674,21 @@ operator|:
 literal|1
 return|;
 block|}
+name|bool
+name|isUIntArg
+argument_list|()
+specifier|const
+block|{
+return|return
+name|kind
+operator|>=
+name|UIntArgBeg
+operator|&&
+name|kind
+operator|<=
+name|UIntArgEnd
+return|;
+block|}
 specifier|const
 name|char
 operator|*
@@ -719,6 +743,8 @@ name|ObjCPointerTy
 block|,
 name|CPointerTy
 block|,
+name|AnyCharTy
+block|,
 name|CStrTy
 block|,
 name|WCStrTy
@@ -735,6 +761,11 @@ decl_stmt|;
 name|QualType
 name|T
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|Name
+decl_stmt|;
 name|ArgTypeResult
 argument_list|(
 name|bool
@@ -742,7 +773,12 @@ argument_list|)
 operator|:
 name|K
 argument_list|(
-argument|InvalidTy
+name|InvalidTy
+argument_list|)
+operator|,
+name|Name
+argument_list|(
+literal|0
 argument_list|)
 block|{}
 name|public
@@ -754,7 +790,29 @@ argument_list|)
 operator|:
 name|K
 argument_list|(
-argument|k
+name|k
+argument_list|)
+operator|,
+name|Name
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+name|ArgTypeResult
+argument_list|(
+argument|Kind k
+argument_list|,
+argument|const char *n
+argument_list|)
+operator|:
+name|K
+argument_list|(
+name|k
+argument_list|)
+operator|,
+name|Name
+argument_list|(
+argument|n
 argument_list|)
 block|{}
 name|ArgTypeResult
@@ -769,7 +827,34 @@ argument_list|)
 operator|,
 name|T
 argument_list|(
-argument|t
+name|t
+argument_list|)
+operator|,
+name|Name
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+name|ArgTypeResult
+argument_list|(
+argument|QualType t
+argument_list|,
+argument|const char *n
+argument_list|)
+operator|:
+name|K
+argument_list|(
+name|SpecificTy
+argument_list|)
+operator|,
+name|T
+argument_list|(
+name|t
+argument_list|)
+operator|,
+name|Name
+argument_list|(
+argument|n
 argument_list|)
 block|{}
 name|ArgTypeResult
@@ -784,7 +869,12 @@ argument_list|)
 operator|,
 name|T
 argument_list|(
-argument|t
+name|t
+argument_list|)
+operator|,
+name|Name
+argument_list|(
+literal|0
 argument_list|)
 block|{}
 specifier|static
@@ -860,6 +950,15 @@ name|C
 argument_list|)
 decl|const
 decl_stmt|;
+name|std
+operator|::
+name|string
+name|getRepresentativeTypeName
+argument_list|(
+argument|ASTContext&C
+argument_list|)
+specifier|const
+expr_stmt|;
 block|}
 empty_stmt|;
 name|class
@@ -1301,6 +1400,26 @@ name|hasValidLengthModifier
 argument_list|()
 specifier|const
 expr_stmt|;
+name|bool
+name|hasStandardLengthModifier
+argument_list|()
+specifier|const
+expr_stmt|;
+name|bool
+name|hasStandardConversionSpecifier
+argument_list|(
+specifier|const
+name|LangOptions
+operator|&
+name|LangOpt
+argument_list|)
+decl|const
+decl_stmt|;
+name|bool
+name|hasStandardLengthConversionCombination
+argument_list|()
+specifier|const
+expr_stmt|;
 block|}
 empty_stmt|;
 block|}
@@ -1379,21 +1498,6 @@ name|IntArgEnd
 return|;
 block|}
 name|bool
-name|isUIntArg
-argument_list|()
-specifier|const
-block|{
-return|return
-name|kind
-operator|>=
-name|UIntArgBeg
-operator|&&
-name|kind
-operator|<=
-name|UIntArgEnd
-return|;
-block|}
-name|bool
 name|isDoubleArg
 argument_list|()
 specifier|const
@@ -1405,7 +1509,7 @@ name|DoubleArgBeg
 operator|&&
 name|kind
 operator|<=
-name|DoubleArgBeg
+name|DoubleArgEnd
 return|;
 block|}
 name|unsigned
@@ -1733,6 +1837,8 @@ name|ArgTypeResult
 name|getArgType
 argument_list|(
 argument|ASTContext&Ctx
+argument_list|,
+argument|bool IsObjCLiteral
 argument_list|)
 specifier|const
 block|;
@@ -1818,6 +1924,12 @@ name|bool
 name|fixType
 argument_list|(
 argument|QualType QT
+argument_list|,
+argument|const LangOptions&LangOpt
+argument_list|,
+argument|ASTContext&Ctx
+argument_list|,
+argument|bool IsObjCLiteral
 argument_list|)
 block|;
 name|void
@@ -1943,6 +2055,11 @@ block|;
 name|using
 name|analyze_format_string
 operator|::
+name|ArgTypeResult
+block|;
+name|using
+name|analyze_format_string
+operator|::
 name|LengthModifier
 block|;
 name|using
@@ -1954,6 +2071,141 @@ name|using
 name|analyze_format_string
 operator|::
 name|OptionalFlag
+block|;
+name|class
+name|ScanfArgTypeResult
+operator|:
+name|public
+name|ArgTypeResult
+block|{
+name|public
+operator|:
+expr|enum
+name|Kind
+block|{
+name|UnknownTy
+block|,
+name|InvalidTy
+block|,
+name|CStrTy
+block|,
+name|WCStrTy
+block|,
+name|PtrToArgTypeResultTy
+block|}
+block|;
+name|private
+operator|:
+name|Kind
+name|K
+block|;
+name|ArgTypeResult
+name|A
+block|;
+specifier|const
+name|char
+operator|*
+name|Name
+block|;
+name|QualType
+name|getRepresentativeType
+argument_list|(
+argument|ASTContext&C
+argument_list|)
+specifier|const
+block|;
+name|public
+operator|:
+name|ScanfArgTypeResult
+argument_list|(
+argument|Kind k = UnknownTy
+argument_list|,
+argument|const char* n =
+literal|0
+argument_list|)
+operator|:
+name|K
+argument_list|(
+name|k
+argument_list|)
+block|,
+name|Name
+argument_list|(
+argument|n
+argument_list|)
+block|{}
+name|ScanfArgTypeResult
+argument_list|(
+argument|ArgTypeResult a
+argument_list|,
+argument|const char *n =
+literal|0
+argument_list|)
+operator|:
+name|K
+argument_list|(
+name|PtrToArgTypeResultTy
+argument_list|)
+block|,
+name|A
+argument_list|(
+name|a
+argument_list|)
+block|,
+name|Name
+argument_list|(
+argument|n
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|A
+operator|.
+name|isValid
+argument_list|()
+argument_list|)
+block|;   }
+specifier|static
+name|ScanfArgTypeResult
+name|Invalid
+argument_list|()
+block|{
+return|return
+name|ScanfArgTypeResult
+argument_list|(
+name|InvalidTy
+argument_list|)
+return|;
+block|}
+name|bool
+name|isValid
+argument_list|()
+specifier|const
+block|{
+return|return
+name|K
+operator|!=
+name|InvalidTy
+return|;
+block|}
+name|bool
+name|matchesType
+argument_list|(
+argument|ASTContext& C
+argument_list|,
+argument|QualType argTy
+argument_list|)
+specifier|const
+block|;
+name|std
+operator|::
+name|string
+name|getRepresentativeTypeName
+argument_list|(
+argument|ASTContext& C
+argument_list|)
+specifier|const
+block|; }
 block|;
 name|class
 name|ScanfSpecifier
@@ -2053,6 +2305,30 @@ operator|!
 name|SuppressAssignment
 return|;
 block|}
+name|ScanfArgTypeResult
+name|getArgType
+argument_list|(
+argument|ASTContext&Ctx
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|fixType
+argument_list|(
+argument|QualType QT
+argument_list|,
+argument|const LangOptions&LangOpt
+argument_list|,
+argument|ASTContext&Ctx
+argument_list|)
+block|;
+name|void
+name|toString
+argument_list|(
+argument|raw_ostream&os
+argument_list|)
+specifier|const
+block|;
 specifier|static
 name|ScanfSpecifier
 name|Parse
@@ -2104,6 +2380,15 @@ name|void
 name|HandleNullChar
 argument_list|(
 argument|const char *nullCharacter
+argument_list|)
+block|{}
+name|virtual
+name|void
+name|HandlePosition
+argument_list|(
+argument|const char *startPos
+argument_list|,
+argument|unsigned posLen
 argument_list|)
 block|{}
 name|virtual
@@ -2211,13 +2496,24 @@ block|;
 name|bool
 name|ParsePrintfString
 argument_list|(
-argument|FormatStringHandler&H
+name|FormatStringHandler
+operator|&
+name|H
 argument_list|,
-argument|const char *beg
+specifier|const
+name|char
+operator|*
+name|beg
 argument_list|,
-argument|const char *end
+specifier|const
+name|char
+operator|*
+name|end
 argument_list|,
-argument|bool FormatExtensions
+specifier|const
+name|LangOptions
+operator|&
+name|LO
 argument_list|)
 block|;
 name|bool
@@ -2236,6 +2532,11 @@ specifier|const
 name|char
 operator|*
 name|end
+argument_list|,
+specifier|const
+name|LangOptions
+operator|&
+name|LO
 argument_list|)
 block|;  }
 comment|// end analyze_format_string namespace

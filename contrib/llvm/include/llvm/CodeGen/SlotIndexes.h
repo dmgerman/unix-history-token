@@ -82,7 +82,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineBasicBlock.h"
+file|"llvm/CodeGen/MachineInstrBundle.h"
 end_include
 
 begin_include
@@ -101,6 +101,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/PointerIntPair.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/ilist.h"
 end_include
 
 begin_include
@@ -131,35 +137,34 @@ comment|/// SlotIndex& SlotIndexes classes for the public interface to this
 comment|/// information.
 name|class
 name|IndexListEntry
-block|{
+range|:
+name|public
+name|ilist_node
+operator|<
 name|IndexListEntry
-modifier|*
-name|next
-decl_stmt|,
-modifier|*
-name|prev
-decl_stmt|;
+operator|>
+block|{
 name|MachineInstr
-modifier|*
+operator|*
 name|mi
-decl_stmt|;
+block|;
 name|unsigned
 name|index
-decl_stmt|;
+block|;
 name|public
-label|:
+operator|:
 name|IndexListEntry
 argument_list|(
 argument|MachineInstr *mi
 argument_list|,
 argument|unsigned index
 argument_list|)
-block|:
+operator|:
 name|mi
 argument_list|(
 name|mi
 argument_list|)
-operator|,
+block|,
 name|index
 argument_list|(
 argument|index
@@ -177,19 +182,16 @@ return|;
 block|}
 name|void
 name|setInstr
-parameter_list|(
-name|MachineInstr
-modifier|*
-name|mi
-parameter_list|)
+argument_list|(
+argument|MachineInstr *mi
+argument_list|)
 block|{
 name|this
 operator|->
 name|mi
 operator|=
 name|mi
-expr_stmt|;
-block|}
+block|;     }
 name|unsigned
 name|getIndex
 argument_list|()
@@ -201,124 +203,49 @@ return|;
 block|}
 name|void
 name|setIndex
-parameter_list|(
-name|unsigned
-name|index
-parameter_list|)
+argument_list|(
+argument|unsigned index
+argument_list|)
 block|{
 name|this
 operator|->
 name|index
 operator|=
 name|index
-expr_stmt|;
-block|}
-name|IndexListEntry
-modifier|*
-name|getNext
-parameter_list|()
-block|{
-return|return
-name|next
-return|;
-block|}
-specifier|const
-name|IndexListEntry
-operator|*
-name|getNext
-argument_list|()
-specifier|const
-block|{
-return|return
-name|next
-return|;
-block|}
-name|void
-name|setNext
-parameter_list|(
-name|IndexListEntry
-modifier|*
-name|next
-parameter_list|)
-block|{
-name|this
-operator|->
-name|next
-operator|=
-name|next
-expr_stmt|;
-block|}
-name|IndexListEntry
-modifier|*
-name|getPrev
-parameter_list|()
-block|{
-return|return
-name|prev
-return|;
-block|}
-specifier|const
-name|IndexListEntry
-operator|*
-name|getPrev
-argument_list|()
-specifier|const
-block|{
-return|return
-name|prev
-return|;
-block|}
-name|void
-name|setPrev
-parameter_list|(
-name|IndexListEntry
-modifier|*
-name|prev
-parameter_list|)
-block|{
-name|this
-operator|->
-name|prev
-operator|=
-name|prev
-expr_stmt|;
-block|}
-block|}
-empty_stmt|;
-comment|// Specialize PointerLikeTypeTraits for IndexListEntry.
+block|;     }
+expr|}
+block|;
 name|template
 operator|<
 operator|>
-name|class
-name|PointerLikeTypeTraits
+expr|struct
+name|ilist_traits
 operator|<
 name|IndexListEntry
-operator|*
+operator|>
+operator|:
+name|public
+name|ilist_default_traits
+operator|<
+name|IndexListEntry
 operator|>
 block|{
+name|private
+operator|:
+name|mutable
+name|ilist_half_node
+operator|<
+name|IndexListEntry
+operator|>
+name|Sentinel
+block|;
 name|public
 operator|:
-specifier|static
-specifier|inline
-name|void
-operator|*
-name|getAsVoidPointer
-argument_list|(
-argument|IndexListEntry *p
-argument_list|)
-block|{
-return|return
-name|p
-return|;
-block|}
-specifier|static
-specifier|inline
 name|IndexListEntry
 operator|*
-name|getFromVoidPointer
-argument_list|(
-argument|void *p
-argument_list|)
+name|createSentinel
+argument_list|()
+specifier|const
 block|{
 return|return
 name|static_cast
@@ -327,18 +254,68 @@ name|IndexListEntry
 operator|*
 operator|>
 operator|(
-name|p
+operator|&
+name|Sentinel
 operator|)
 return|;
 block|}
-expr|enum
+name|void
+name|destroySentinel
+argument_list|(
+argument|IndexListEntry *
+argument_list|)
+specifier|const
+block|{}
+name|IndexListEntry
+operator|*
+name|provideInitialHead
+argument_list|()
+specifier|const
 block|{
-name|NumLowBitsAvailable
-operator|=
-literal|3
+return|return
+name|createSentinel
+argument_list|()
+return|;
 block|}
+name|IndexListEntry
+operator|*
+name|ensureHead
+argument_list|(
+argument|IndexListEntry*
+argument_list|)
+specifier|const
+block|{
+return|return
+name|createSentinel
+argument_list|()
+return|;
+block|}
+specifier|static
+name|void
+name|noteHead
+argument_list|(
+argument|IndexListEntry*
+argument_list|,
+argument|IndexListEntry*
+argument_list|)
+block|{}
+name|void
+name|deleteNode
+argument_list|(
+argument|IndexListEntry *N
+argument_list|)
+block|{}
+name|private
+operator|:
+name|void
+name|createNode
+argument_list|(
+specifier|const
+name|IndexListEntry
+operator|&
+argument_list|)
 block|;   }
-expr_stmt|;
+block|;
 comment|/// SlotIndex - An opaque wrapper around machine indexes.
 name|class
 name|SlotIndex
@@ -346,46 +323,57 @@ block|{
 name|friend
 name|class
 name|SlotIndexes
-decl_stmt|;
+block|;
 name|friend
-block|struct
+expr|struct
 name|DenseMapInfo
 operator|<
 name|SlotIndex
 operator|>
-expr_stmt|;
-enum|enum
+block|;      enum
 name|Slot
 block|{
-name|LOAD
+comment|/// Basic block boundary.  Used for live ranges entering and leaving a
+comment|/// block without being live in the layout neighbor.  Also used as the
+comment|/// def slot of PHI-defs.
+name|Slot_Block
 block|,
-name|USE
+comment|/// Early-clobber register use/def slot.  A live range defined at
+comment|/// Slot_EarlyCLobber interferes with normal live ranges killed at
+comment|/// Slot_Register.  Also used as the kill slot for live ranges tied to an
+comment|/// early-clobber def.
+name|Slot_EarlyClobber
 block|,
-name|DEF
+comment|/// Normal register use/def slot.  Normal instructions kill and define
+comment|/// register live ranges at this slot.
+name|Slot_Register
 block|,
-name|STORE
+comment|/// Dead def kill point.  Kill slot for a live range that is defined by
+comment|/// the same instruction (Slot_Register or Slot_EarlyClobber), but isn't
+comment|/// used anywhere.
+name|Slot_Dead
 block|,
-name|NUM
+name|Slot_Count
 block|}
-enum|;
+block|;
 name|PointerIntPair
 operator|<
 name|IndexListEntry
 operator|*
-operator|,
+block|,
 literal|2
-operator|,
+block|,
 name|unsigned
 operator|>
 name|lie
-expr_stmt|;
+block|;
 name|SlotIndex
 argument_list|(
 argument|IndexListEntry *entry
 argument_list|,
 argument|unsigned slot
 argument_list|)
-block|:
+operator|:
 name|lie
 argument_list|(
 argument|entry
@@ -394,8 +382,8 @@ argument|slot
 argument_list|)
 block|{}
 name|IndexListEntry
-operator|&
-name|entry
+operator|*
+name|listEntry
 argument_list|()
 specifier|const
 block|{
@@ -408,7 +396,6 @@ literal|"Attempt to compare reserved index."
 argument_list|)
 block|;
 return|return
-operator|*
 name|lie
 operator|.
 name|getPointer
@@ -421,9 +408,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|entry
+name|listEntry
 argument_list|()
-operator|.
+operator|->
 name|getIndex
 argument_list|()
 operator||
@@ -454,24 +441,21 @@ specifier|static
 specifier|inline
 name|unsigned
 name|getHashValue
-parameter_list|(
-specifier|const
-name|SlotIndex
-modifier|&
-name|v
-parameter_list|)
+argument_list|(
+argument|const SlotIndex&v
+argument_list|)
 block|{
 name|void
-modifier|*
+operator|*
 name|ptrVal
-init|=
+operator|=
 name|v
 operator|.
 name|lie
 operator|.
 name|getOpaqueValue
 argument_list|()
-decl_stmt|;
+block|;
 return|return
 operator|(
 name|unsigned
@@ -497,23 +481,23 @@ operator|)
 return|;
 block|}
 name|public
-label|:
-enum|enum
+operator|:
+expr|enum
 block|{
 comment|/// The default distance between instructions as returned by distance().
 comment|/// This may vary as instructions are inserted and removed.
 name|InstrDist
-init|=
+operator|=
 literal|4
 operator|*
-name|NUM
+name|Slot_Count
 block|}
-enum|;
+block|;
 specifier|static
 specifier|inline
 name|SlotIndex
 name|getEmptyKey
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|SlotIndex
@@ -528,7 +512,7 @@ specifier|static
 specifier|inline
 name|SlotIndex
 name|getTombstoneKey
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|SlotIndex
@@ -560,7 +544,7 @@ argument_list|)
 operator|:
 name|lie
 argument_list|(
-argument|&li.entry()
+argument|li.listEntry()
 argument_list|,
 argument|unsigned(s)
 argument_list|)
@@ -606,18 +590,16 @@ comment|/// Print this index to the given raw_ostream.
 name|void
 name|print
 argument_list|(
-name|raw_ostream
-operator|&
-name|os
+argument|raw_ostream&os
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 comment|/// Dump this index to stderr.
 name|void
 name|dump
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// Compare two SlotIndex objects for equality.
 name|bool
 name|operator
@@ -742,13 +724,11 @@ comment|/// isSameInstr - Return true if A and B refer to the same instruction.
 specifier|static
 name|bool
 name|isSameInstr
-parameter_list|(
-name|SlotIndex
-name|A
-parameter_list|,
-name|SlotIndex
-name|B
-parameter_list|)
+argument_list|(
+argument|SlotIndex A
+argument_list|,
+argument|SlotIndex B
+argument_list|)
 block|{
 return|return
 name|A
@@ -766,14 +746,42 @@ name|getPointer
 argument_list|()
 return|;
 block|}
+comment|/// isEarlierInstr - Return true if A refers to an instruction earlier than
+comment|/// B. This is equivalent to A< B&& !isSameInstr(A, B).
+specifier|static
+name|bool
+name|isEarlierInstr
+argument_list|(
+argument|SlotIndex A
+argument_list|,
+argument|SlotIndex B
+argument_list|)
+block|{
+return|return
+name|A
+operator|.
+name|listEntry
+argument_list|()
+operator|->
+name|getIndex
+argument_list|()
+operator|<
+name|B
+operator|.
+name|listEntry
+argument_list|()
+operator|->
+name|getIndex
+argument_list|()
+return|;
+block|}
 comment|/// Return the distance from this index to the given one.
 name|int
 name|distance
 argument_list|(
-name|SlotIndex
-name|other
+argument|SlotIndex other
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|other
@@ -785,9 +793,9 @@ name|getIndex
 argument_list|()
 return|;
 block|}
-comment|/// isLoad - Return true if this is a LOAD slot.
+comment|/// isBlock - Returns true if this is a block boundary slot.
 name|bool
-name|isLoad
+name|isBlock
 argument_list|()
 specifier|const
 block|{
@@ -795,12 +803,12 @@ return|return
 name|getSlot
 argument_list|()
 operator|==
-name|LOAD
+name|Slot_Block
 return|;
 block|}
-comment|/// isDef - Return true if this is a DEF slot.
+comment|/// isEarlyClobber - Returns true if this is an early-clobber slot.
 name|bool
-name|isDef
+name|isEarlyClobber
 argument_list|()
 specifier|const
 block|{
@@ -808,12 +816,13 @@ return|return
 name|getSlot
 argument_list|()
 operator|==
-name|DEF
+name|Slot_EarlyClobber
 return|;
 block|}
-comment|/// isUse - Return true if this is a USE slot.
+comment|/// isRegister - Returns true if this is a normal register use/def slot.
+comment|/// Note that early-clobber slots may also be used for uses and defs.
 name|bool
-name|isUse
+name|isRegister
 argument_list|()
 specifier|const
 block|{
@@ -821,12 +830,12 @@ return|return
 name|getSlot
 argument_list|()
 operator|==
-name|USE
+name|Slot_Register
 return|;
 block|}
-comment|/// isStore - Return true if this is a STORE slot.
+comment|/// isDead - Returns true if this is a dead def kill slot.
 name|bool
-name|isStore
+name|isDead
 argument_list|()
 specifier|const
 block|{
@@ -834,24 +843,29 @@ return|return
 name|getSlot
 argument_list|()
 operator|==
-name|STORE
+name|Slot_Dead
 return|;
 block|}
 comment|/// Returns the base index for associated with this index. The base index
-comment|/// is the one associated with the LOAD slot for the instruction pointed to
-comment|/// by this index.
+comment|/// is the one associated with the Slot_Block slot for the instruction
+comment|/// pointed to by this index.
 name|SlotIndex
 name|getBaseIndex
 argument_list|()
 specifier|const
 block|{
 return|return
-name|getLoadIndex
+name|SlotIndex
+argument_list|(
+name|listEntry
 argument_list|()
+argument_list|,
+name|Slot_Block
+argument_list|)
 return|;
 block|}
 comment|/// Returns the boundary index for associated with this index. The boundary
-comment|/// index is the one associated with the LOAD slot for the instruction
+comment|/// index is the one associated with the Slot_Block slot for the instruction
 comment|/// pointed to by this index.
 name|SlotIndex
 name|getBoundaryIndex
@@ -859,87 +873,51 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|getStoreIndex
-argument_list|()
-return|;
-block|}
-comment|/// Returns the index of the LOAD slot for the instruction pointed to by
-comment|/// this index.
-name|SlotIndex
-name|getLoadIndex
-argument_list|()
-specifier|const
-block|{
-return|return
 name|SlotIndex
 argument_list|(
-operator|&
-name|entry
+name|listEntry
 argument_list|()
 argument_list|,
-name|SlotIndex
-operator|::
-name|LOAD
+name|Slot_Dead
 argument_list|)
 return|;
 block|}
-comment|/// Returns the index of the USE slot for the instruction pointed to by
-comment|/// this index.
+comment|/// Returns the register use/def slot in the current instruction for a
+comment|/// normal or early-clobber def.
 name|SlotIndex
-name|getUseIndex
-argument_list|()
+name|getRegSlot
+argument_list|(
+argument|bool EC = false
+argument_list|)
 specifier|const
 block|{
 return|return
 name|SlotIndex
 argument_list|(
-operator|&
-name|entry
+name|listEntry
 argument_list|()
 argument_list|,
-name|SlotIndex
-operator|::
-name|USE
+name|EC
+operator|?
+name|Slot_EarlyClobber
+operator|:
+name|Slot_Register
 argument_list|)
 return|;
 block|}
-comment|/// Returns the index of the DEF slot for the instruction pointed to by
-comment|/// this index.
+comment|/// Returns the dead def kill slot for the current instruction.
 name|SlotIndex
-name|getDefIndex
+name|getDeadSlot
 argument_list|()
 specifier|const
 block|{
 return|return
 name|SlotIndex
 argument_list|(
-operator|&
-name|entry
+name|listEntry
 argument_list|()
 argument_list|,
-name|SlotIndex
-operator|::
-name|DEF
-argument_list|)
-return|;
-block|}
-comment|/// Returns the index of the STORE slot for the instruction pointed to by
-comment|/// this index.
-name|SlotIndex
-name|getStoreIndex
-argument_list|()
-specifier|const
-block|{
-return|return
-name|SlotIndex
-argument_list|(
-operator|&
-name|entry
-argument_list|()
-argument_list|,
-name|SlotIndex
-operator|::
-name|STORE
+name|Slot_Dead
 argument_list|)
 return|;
 block|}
@@ -964,31 +942,26 @@ if|if
 condition|(
 name|s
 operator|==
-name|SlotIndex
-operator|::
-name|STORE
+name|Slot_Dead
 condition|)
 block|{
 return|return
 name|SlotIndex
 argument_list|(
-name|entry
+name|listEntry
 argument_list|()
-operator|.
-name|getNext
+operator|->
+name|getNextNode
 argument_list|()
 argument_list|,
-name|SlotIndex
-operator|::
-name|LOAD
+name|Slot_Block
 argument_list|)
 return|;
 block|}
 return|return
 name|SlotIndex
 argument_list|(
-operator|&
-name|entry
+name|listEntry
 argument_list|()
 argument_list|,
 name|s
@@ -1007,10 +980,10 @@ block|{
 return|return
 name|SlotIndex
 argument_list|(
-name|entry
+name|listEntry
 argument_list|()
-operator|.
-name|getNext
+operator|->
+name|getNextNode
 argument_list|()
 argument_list|,
 name|getSlot
@@ -1020,7 +993,7 @@ return|;
 block|}
 comment|/// Returns the previous slot in the index list. This could be either the
 comment|/// previous slot for the instruction pointed to by this index or, if this
-comment|/// index is a LOAD, the last slot for the previous instruction.
+comment|/// index is a Slot_Block, the last slot for the previous instruction.
 comment|/// WARNING: This method is considerably more expensive than the methods
 comment|/// that return specific slots (getUseIndex(), etc). If you can - please
 comment|/// use one of those methods.
@@ -1039,31 +1012,26 @@ if|if
 condition|(
 name|s
 operator|==
-name|SlotIndex
-operator|::
-name|LOAD
+name|Slot_Block
 condition|)
 block|{
 return|return
 name|SlotIndex
 argument_list|(
-name|entry
+name|listEntry
 argument_list|()
-operator|.
-name|getPrev
+operator|->
+name|getPrevNode
 argument_list|()
 argument_list|,
-name|SlotIndex
-operator|::
-name|STORE
+name|Slot_Dead
 argument_list|)
 return|;
 block|}
 return|return
 name|SlotIndex
 argument_list|(
-operator|&
-name|entry
+name|listEntry
 argument_list|()
 argument_list|,
 name|s
@@ -1082,10 +1050,10 @@ block|{
 return|return
 name|SlotIndex
 argument_list|(
-name|entry
+name|listEntry
 argument_list|()
-operator|.
-name|getPrev
+operator|->
+name|getPrevNode
 argument_list|()
 argument_list|,
 name|getSlot
@@ -1093,8 +1061,8 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-block|}
-empty_stmt|;
+expr|}
+block|;
 comment|/// DenseMapInfo specialization for SlotIndex.
 name|template
 operator|<
@@ -1194,7 +1162,7 @@ operator|(
 name|raw_ostream
 operator|&
 name|os
-operator|,
+expr|,
 name|SlotIndex
 name|li
 operator|)
@@ -1229,7 +1197,7 @@ operator|<
 operator|(
 name|SlotIndex
 name|V
-operator|,
+block|,
 specifier|const
 name|IdxMBBPair
 operator|&
@@ -1253,7 +1221,7 @@ specifier|const
 name|IdxMBBPair
 operator|&
 name|IM
-operator|,
+expr|,
 name|SlotIndex
 name|V
 operator|)
@@ -1266,7 +1234,7 @@ operator|<
 name|V
 return|;
 block|}
-block|struct
+expr|struct
 name|Idx2MBBCompare
 block|{
 name|bool
@@ -1277,7 +1245,7 @@ specifier|const
 name|IdxMBBPair
 operator|&
 name|LHS
-operator|,
+expr|,
 specifier|const
 name|IdxMBBPair
 operator|&
@@ -1308,13 +1276,19 @@ name|MachineFunctionPass
 block|{
 name|private
 operator|:
+typedef|typedef
+name|ilist
+operator|<
+name|IndexListEntry
+operator|>
+name|IndexList
+expr_stmt|;
+name|IndexList
+name|indexList
+block|;
 name|MachineFunction
 operator|*
 name|mf
-block|;
-name|IndexListEntry
-operator|*
-name|indexListHead
 block|;
 name|unsigned
 name|functionSize
@@ -1415,292 +1389,11 @@ return|return
 name|entry
 return|;
 block|}
-name|void
-name|initList
-argument_list|()
-block|{
-name|assert
-argument_list|(
-name|indexListHead
-operator|==
-literal|0
-operator|&&
-literal|"Zero entry non-null at initialisation."
-argument_list|)
-block|;
-name|indexListHead
-operator|=
-name|createEntry
-argument_list|(
-literal|0
-argument_list|,
-operator|~
-literal|0U
-argument_list|)
-block|;
-name|indexListHead
-operator|->
-name|setNext
-argument_list|(
-literal|0
-argument_list|)
-block|;
-name|indexListHead
-operator|->
-name|setPrev
-argument_list|(
-name|indexListHead
-argument_list|)
-block|;     }
-name|void
-name|clearList
-argument_list|()
-block|{
-name|indexListHead
-operator|=
-literal|0
-block|;
-name|ileAllocator
-operator|.
-name|Reset
-argument_list|()
-block|;     }
-name|IndexListEntry
-operator|*
-name|getTail
-argument_list|()
-block|{
-name|assert
-argument_list|(
-name|indexListHead
-operator|!=
-literal|0
-operator|&&
-literal|"Call to getTail on uninitialized list."
-argument_list|)
-block|;
-return|return
-name|indexListHead
-operator|->
-name|getPrev
-argument_list|()
-return|;
-block|}
-specifier|const
-name|IndexListEntry
-operator|*
-name|getTail
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-name|indexListHead
-operator|!=
-literal|0
-operator|&&
-literal|"Call to getTail on uninitialized list."
-argument_list|)
-block|;
-return|return
-name|indexListHead
-operator|->
-name|getPrev
-argument_list|()
-return|;
-block|}
-comment|// Returns true if the index list is empty.
-name|bool
-name|empty
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|(
-name|indexListHead
-operator|==
-name|getTail
-argument_list|()
-operator|)
-return|;
-block|}
-name|IndexListEntry
-operator|*
-name|front
-argument_list|()
-block|{
-name|assert
-argument_list|(
-operator|!
-name|empty
-argument_list|()
-operator|&&
-literal|"front() called on empty index list."
-argument_list|)
-block|;
-return|return
-name|indexListHead
-return|;
-block|}
-specifier|const
-name|IndexListEntry
-operator|*
-name|front
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-operator|!
-name|empty
-argument_list|()
-operator|&&
-literal|"front() called on empty index list."
-argument_list|)
-block|;
-return|return
-name|indexListHead
-return|;
-block|}
-name|IndexListEntry
-operator|*
-name|back
-argument_list|()
-block|{
-name|assert
-argument_list|(
-operator|!
-name|empty
-argument_list|()
-operator|&&
-literal|"back() called on empty index list."
-argument_list|)
-block|;
-return|return
-name|getTail
-argument_list|()
-operator|->
-name|getPrev
-argument_list|()
-return|;
-block|}
-specifier|const
-name|IndexListEntry
-operator|*
-name|back
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-operator|!
-name|empty
-argument_list|()
-operator|&&
-literal|"back() called on empty index list."
-argument_list|)
-block|;
-return|return
-name|getTail
-argument_list|()
-operator|->
-name|getPrev
-argument_list|()
-return|;
-block|}
-comment|/// Insert a new entry before itr.
-name|void
-name|insert
-argument_list|(
-argument|IndexListEntry *itr
-argument_list|,
-argument|IndexListEntry *val
-argument_list|)
-block|{
-name|assert
-argument_list|(
-name|itr
-operator|!=
-literal|0
-operator|&&
-literal|"itr should not be null."
-argument_list|)
-block|;
-name|IndexListEntry
-operator|*
-name|prev
-operator|=
-name|itr
-operator|->
-name|getPrev
-argument_list|()
-block|;
-name|val
-operator|->
-name|setNext
-argument_list|(
-name|itr
-argument_list|)
-block|;
-name|val
-operator|->
-name|setPrev
-argument_list|(
-name|prev
-argument_list|)
-block|;
-if|if
-condition|(
-name|itr
-operator|!=
-name|indexListHead
-condition|)
-block|{
-name|prev
-operator|->
-name|setNext
-argument_list|(
-name|val
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|indexListHead
-operator|=
-name|val
-expr_stmt|;
-block|}
-name|itr
-operator|->
-name|setPrev
-argument_list|(
-name|val
-argument_list|)
-expr_stmt|;
-block|}
-comment|/// Push a new entry on to the end of the list.
-name|void
-name|push_back
-argument_list|(
-argument|IndexListEntry *val
-argument_list|)
-block|{
-name|insert
-argument_list|(
-name|getTail
-argument_list|()
-argument_list|,
-name|val
-argument_list|)
-block|;     }
-comment|/// Renumber locally after inserting newEntry.
+comment|/// Renumber locally after inserting curItr.
 name|void
 name|renumberIndexes
 argument_list|(
-name|IndexListEntry
-operator|*
-name|newEntry
+argument|IndexList::iterator curItr
 argument_list|)
 block|;
 name|public
@@ -1714,12 +1407,7 @@ argument_list|()
 operator|:
 name|MachineFunctionPass
 argument_list|(
-name|ID
-argument_list|)
-block|,
-name|indexListHead
-argument_list|(
-literal|0
+argument|ID
 argument_list|)
 block|{
 name|initializeSlotIndexesPass
@@ -1771,9 +1459,11 @@ argument_list|()
 block|{
 name|assert
 argument_list|(
+name|indexList
+operator|.
 name|front
 argument_list|()
-operator|->
+operator|.
 name|getIndex
 argument_list|()
 operator|==
@@ -1785,6 +1475,9 @@ block|;
 return|return
 name|SlotIndex
 argument_list|(
+operator|&
+name|indexList
+operator|.
 name|front
 argument_list|()
 argument_list|,
@@ -1800,21 +1493,14 @@ block|{
 return|return
 name|SlotIndex
 argument_list|(
+operator|&
+name|indexList
+operator|.
 name|back
 argument_list|()
 argument_list|,
 literal|0
 argument_list|)
-return|;
-block|}
-comment|/// Returns the invalid index marker for this analysis.
-name|SlotIndex
-name|getInvalidIndex
-argument_list|()
-block|{
-return|return
-name|getZeroIndex
-argument_list|()
 return|;
 block|}
 comment|/// Returns the distance between the highest and lowest indexes allocated
@@ -1826,9 +1512,11 @@ specifier|const
 block|{
 name|assert
 argument_list|(
+name|indexList
+operator|.
 name|front
 argument_list|()
-operator|->
+operator|.
 name|getIndex
 argument_list|()
 operator|==
@@ -1838,9 +1526,11 @@ literal|"Initial index isn't zero?"
 argument_list|)
 block|;
 return|return
+name|indexList
+operator|.
 name|back
 argument_list|()
-operator|->
+operator|.
 name|getIndex
 argument_list|()
 return|;
@@ -1865,29 +1555,23 @@ argument_list|)
 specifier|const
 block|{
 return|return
-operator|(
 name|mi2iMap
 operator|.
-name|find
+name|count
 argument_list|(
 name|instr
 argument_list|)
-operator|!=
-name|mi2iMap
-operator|.
-name|end
-argument_list|()
-operator|)
 return|;
 block|}
 comment|/// Returns the base index for the given instruction.
 name|SlotIndex
 name|getInstructionIndex
 argument_list|(
-argument|const MachineInstr *instr
+argument|const MachineInstr *MI
 argument_list|)
 specifier|const
 block|{
+comment|// Instructions inside a bundle have the same number as the bundle itself.
 name|Mi2IndexMap
 operator|::
 name|const_iterator
@@ -1897,7 +1581,10 @@ name|mi2iMap
 operator|.
 name|find
 argument_list|(
-name|instr
+name|getBundleStart
+argument_list|(
+name|MI
+argument_list|)
 argument_list|)
 block|;
 name|assert
@@ -1936,9 +1623,9 @@ argument_list|()
 operator|?
 name|index
 operator|.
-name|entry
+name|listEntry
 argument_list|()
-operator|.
+operator|->
 name|getInstr
 argument_list|()
 operator|:
@@ -1952,43 +1639,51 @@ argument_list|(
 argument|SlotIndex index
 argument_list|)
 block|{
-name|SlotIndex
-name|nextNonNull
-operator|=
+name|IndexList
+operator|::
+name|iterator
+name|itr
+argument_list|(
 name|index
 operator|.
-name|getNextIndex
+name|listEntry
 argument_list|()
+argument_list|)
+block|;
+operator|++
+name|itr
 block|;
 while|while
 condition|(
-operator|&
-name|nextNonNull
-operator|.
-name|entry
-argument_list|()
+name|itr
 operator|!=
-name|getTail
+name|indexList
+operator|.
+name|end
 argument_list|()
 operator|&&
-name|getInstructionFromIndex
-argument_list|(
-name|nextNonNull
-argument_list|)
+name|itr
+operator|->
+name|getInstr
+argument_list|()
 operator|==
 literal|0
 condition|)
 block|{
-name|nextNonNull
-operator|=
-name|nextNonNull
-operator|.
-name|getNextIndex
-argument_list|()
+operator|++
+name|itr
 expr_stmt|;
 block|}
 return|return
-name|nextNonNull
+name|SlotIndex
+argument_list|(
+name|itr
+argument_list|,
+name|index
+operator|.
+name|getSlot
+argument_list|()
+argument_list|)
 return|;
 block|}
 comment|/// getIndexBefore - Returns the index of the last indexed instruction
@@ -2592,7 +2287,7 @@ name|prior
 argument_list|(
 name|itr
 argument_list|)
-expr_stmt|;
+block|;
 if|if
 condition|(
 name|itr
@@ -2648,6 +2343,17 @@ parameter_list|)
 block|{
 name|assert
 argument_list|(
+operator|!
+name|mi
+operator|->
+name|isInsideBundle
+argument_list|()
+operator|&&
+literal|"Instructions inside bundles should use bundle start's slot."
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
 name|mi2iMap
 operator|.
 name|find
@@ -2689,58 +2395,58 @@ literal|"Instr must be added to function."
 argument_list|)
 expr_stmt|;
 comment|// Get the entries where mi should be inserted.
-name|IndexListEntry
-modifier|*
-name|prevEntry
-decl_stmt|,
-modifier|*
-name|nextEntry
-decl_stmt|;
+name|IndexList
+operator|::
+name|iterator
+name|prevItr
+operator|,
+name|nextItr
+expr_stmt|;
 if|if
 condition|(
 name|Late
 condition|)
 block|{
 comment|// Insert mi's index immediately before the following instruction.
-name|nextEntry
+name|nextItr
 operator|=
-operator|&
 name|getIndexAfter
 argument_list|(
 name|mi
 argument_list|)
 operator|.
-name|entry
+name|listEntry
 argument_list|()
 expr_stmt|;
-name|prevEntry
+name|prevItr
 operator|=
-name|nextEntry
-operator|->
-name|getPrev
-argument_list|()
+name|prior
+argument_list|(
+name|nextItr
+argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
 comment|// Insert mi's index immediately after the preceeding instruction.
-name|prevEntry
+name|prevItr
 operator|=
-operator|&
 name|getIndexBefore
 argument_list|(
 name|mi
 argument_list|)
 operator|.
-name|entry
+name|listEntry
 argument_list|()
 expr_stmt|;
-name|nextEntry
+name|nextItr
 operator|=
-name|prevEntry
-operator|->
-name|getNext
-argument_list|()
+name|llvm
+operator|::
+name|next
+argument_list|(
+name|prevItr
+argument_list|)
 expr_stmt|;
 block|}
 comment|// Get a number for the new instr, or 0 if there's no room currently.
@@ -2750,12 +2456,12 @@ name|dist
 init|=
 operator|(
 operator|(
-name|nextEntry
+name|nextItr
 operator|->
 name|getIndex
 argument_list|()
 operator|-
-name|prevEntry
+name|prevItr
 operator|->
 name|getIndex
 argument_list|()
@@ -2770,7 +2476,7 @@ decl_stmt|;
 name|unsigned
 name|newNumber
 init|=
-name|prevEntry
+name|prevItr
 operator|->
 name|getIndex
 argument_list|()
@@ -2778,22 +2484,23 @@ operator|+
 name|dist
 decl_stmt|;
 comment|// Insert a new list entry for mi.
-name|IndexListEntry
-modifier|*
-name|newEntry
-init|=
+name|IndexList
+operator|::
+name|iterator
+name|newItr
+operator|=
+name|indexList
+operator|.
+name|insert
+argument_list|(
+name|nextItr
+argument_list|,
 name|createEntry
 argument_list|(
 name|mi
 argument_list|,
 name|newNumber
 argument_list|)
-decl_stmt|;
-name|insert
-argument_list|(
-name|nextEntry
-argument_list|,
-name|newEntry
 argument_list|)
 expr_stmt|;
 comment|// Renumber locally if we need to.
@@ -2805,17 +2512,19 @@ literal|0
 condition|)
 name|renumberIndexes
 argument_list|(
-name|newEntry
+name|newItr
 argument_list|)
 expr_stmt|;
 name|SlotIndex
 name|newIndex
 argument_list|(
-name|newEntry
+operator|&
+operator|*
+name|newItr
 argument_list|,
 name|SlotIndex
 operator|::
-name|LOAD
+name|Slot_Block
 argument_list|)
 decl_stmt|;
 name|mi2iMap
@@ -2879,12 +2588,11 @@ name|IndexListEntry
 modifier|*
 name|miEntry
 argument_list|(
-operator|&
 name|mi2iItr
 operator|->
 name|second
 operator|.
-name|entry
+name|listEntry
 argument_list|()
 argument_list|)
 decl_stmt|;
@@ -2973,10 +2681,9 @@ name|IndexListEntry
 modifier|*
 name|miEntry
 argument_list|(
-operator|&
 name|replaceBaseIndex
 operator|.
-name|entry
+name|listEntry
 argument_list|()
 argument_list|)
 decl_stmt|;
@@ -3096,7 +2803,9 @@ condition|)
 block|{
 name|nextEntry
 operator|=
-name|getTail
+name|indexList
+operator|.
+name|end
 argument_list|()
 expr_stmt|;
 block|}
@@ -3104,16 +2813,17 @@ else|else
 block|{
 name|nextEntry
 operator|=
-operator|&
 name|getMBBStartIdx
 argument_list|(
 name|nextMBB
 argument_list|)
 operator|.
-name|entry
+name|listEntry
 argument_list|()
 expr_stmt|;
 block|}
+name|indexList
+operator|.
 name|insert
 argument_list|(
 name|nextEntry
@@ -3121,6 +2831,8 @@ argument_list|,
 name|startEntry
 argument_list|)
 expr_stmt|;
+name|indexList
+operator|.
 name|insert
 argument_list|(
 name|nextEntry
@@ -3135,7 +2847,7 @@ name|startEntry
 argument_list|,
 name|SlotIndex
 operator|::
-name|LOAD
+name|Slot_Block
 argument_list|)
 decl_stmt|;
 name|SlotIndex
@@ -3145,7 +2857,7 @@ name|nextEntry
 argument_list|,
 name|SlotIndex
 operator|::
-name|LOAD
+name|Slot_Block
 argument_list|)
 decl_stmt|;
 name|assert
@@ -3307,7 +3019,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// LLVM_CODEGEN_LIVEINDEX_H
+comment|// LLVM_CODEGEN_SLOTINDEXES_H
 end_comment
 
 end_unit

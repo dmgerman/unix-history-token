@@ -98,13 +98,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/raw_ostream.h"
+file|"clang/AST/Attr.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/raw_ostream.h"
 end_include
 
 begin_include
@@ -154,11 +166,11 @@ decl_stmt|;
 name|class
 name|SwitchStmt
 decl_stmt|;
-comment|//===----------------------------------------------------------------------===//
+comment|//===--------------------------------------------------------------------===//
 comment|// ExprIterator - Iterators for iterating over Stmt* arrays that contain
 comment|//  only Expr*.  This is needed because AST nodes use Stmt* arrays to store
 comment|//  references to children (to be compatible with StmtIterator).
-comment|//===----------------------------------------------------------------------===//
+comment|//===--------------------------------------------------------------------===//
 name|class
 name|Stmt
 decl_stmt|;
@@ -807,6 +819,16 @@ decl_stmt|;
 comment|// ctor
 name|friend
 name|class
+name|ObjCArrayLiteral
+decl_stmt|;
+comment|// ctor
+name|friend
+name|class
+name|ObjCDictionaryLiteral
+decl_stmt|;
+comment|// ctor
+name|friend
+name|class
 name|ShuffleVectorExpr
 decl_stmt|;
 comment|// ctor
@@ -828,6 +850,11 @@ comment|// ctor
 name|friend
 name|class
 name|OverloadExpr
+decl_stmt|;
+comment|// ctor
+name|friend
+name|class
+name|PseudoObjectExpr
 decl_stmt|;
 comment|// ctor
 name|friend
@@ -879,6 +906,72 @@ literal|16
 block|}
 enum|;
 name|class
+name|CharacterLiteralBitfields
+block|{
+name|friend
+name|class
+name|CharacterLiteral
+decl_stmt|;
+name|unsigned
+label|:
+name|NumExprBits
+expr_stmt|;
+name|unsigned
+name|Kind
+range|:
+literal|2
+decl_stmt|;
+block|}
+empty_stmt|;
+name|class
+name|FloatingLiteralBitfields
+block|{
+name|friend
+name|class
+name|FloatingLiteral
+decl_stmt|;
+name|unsigned
+label|:
+name|NumExprBits
+expr_stmt|;
+name|unsigned
+name|IsIEEE
+range|:
+literal|1
+decl_stmt|;
+comment|// Distinguishes between PPC128 and IEEE128.
+name|unsigned
+name|IsExact
+range|:
+literal|1
+decl_stmt|;
+block|}
+empty_stmt|;
+name|class
+name|UnaryExprOrTypeTraitExprBitfields
+block|{
+name|friend
+name|class
+name|UnaryExprOrTypeTraitExpr
+decl_stmt|;
+name|unsigned
+label|:
+name|NumExprBits
+expr_stmt|;
+name|unsigned
+name|Kind
+range|:
+literal|2
+decl_stmt|;
+name|unsigned
+name|IsType
+range|:
+literal|1
+decl_stmt|;
+comment|// true if operand is a type, false if an expression.
+block|}
+empty_stmt|;
+name|class
 name|DeclRefExprBitfields
 block|{
 name|friend
@@ -900,7 +993,7 @@ range|:
 literal|1
 decl_stmt|;
 name|unsigned
-name|HasExplicitTemplateArgs
+name|HasTemplateKWAndArgsInfo
 range|:
 literal|1
 decl_stmt|;
@@ -911,6 +1004,11 @@ literal|1
 decl_stmt|;
 name|unsigned
 name|HadMultipleCandidates
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|RefersToEnclosingLocal
 range|:
 literal|1
 decl_stmt|;
@@ -962,6 +1060,65 @@ decl_stmt|;
 block|}
 empty_stmt|;
 name|class
+name|ExprWithCleanupsBitfields
+block|{
+name|friend
+name|class
+name|ExprWithCleanups
+decl_stmt|;
+name|friend
+name|class
+name|ASTStmtReader
+decl_stmt|;
+comment|// deserialization
+name|unsigned
+label|:
+name|NumExprBits
+expr_stmt|;
+name|unsigned
+name|NumObjects
+range|:
+literal|32
+operator|-
+name|NumExprBits
+decl_stmt|;
+block|}
+empty_stmt|;
+name|class
+name|PseudoObjectExprBitfields
+block|{
+name|friend
+name|class
+name|PseudoObjectExpr
+decl_stmt|;
+name|friend
+name|class
+name|ASTStmtReader
+decl_stmt|;
+comment|// deserialization
+name|unsigned
+label|:
+name|NumExprBits
+expr_stmt|;
+comment|// These don't need to be particularly wide, because they're
+comment|// strictly limited by the forms of expressions we permit.
+name|unsigned
+name|NumSubExprs
+range|:
+literal|8
+decl_stmt|;
+name|unsigned
+name|ResultIndex
+range|:
+literal|32
+operator|-
+literal|8
+operator|-
+name|NumExprBits
+decl_stmt|;
+block|}
+empty_stmt|;
+name|class
 name|ObjCIndirectCopyRestoreExprBitfields
 block|{
 name|friend
@@ -976,6 +1133,79 @@ name|unsigned
 name|ShouldCopy
 range|:
 literal|1
+decl_stmt|;
+block|}
+empty_stmt|;
+name|class
+name|InitListExprBitfields
+block|{
+name|friend
+name|class
+name|InitListExpr
+decl_stmt|;
+name|unsigned
+label|:
+name|NumExprBits
+expr_stmt|;
+comment|/// Whether this initializer list originally had a GNU array-range
+comment|/// designator in it. This is a temporary marker used by CodeGen.
+name|unsigned
+name|HadArrayRangeDesignator
+range|:
+literal|1
+decl_stmt|;
+comment|/// Whether this initializer list initializes a std::initializer_list
+comment|/// object.
+name|unsigned
+name|InitializesStdInitializerList
+range|:
+literal|1
+decl_stmt|;
+block|}
+empty_stmt|;
+name|class
+name|TypeTraitExprBitfields
+block|{
+name|friend
+name|class
+name|TypeTraitExpr
+decl_stmt|;
+name|friend
+name|class
+name|ASTStmtReader
+decl_stmt|;
+name|friend
+name|class
+name|ASTStmtWriter
+decl_stmt|;
+name|unsigned
+label|:
+name|NumExprBits
+expr_stmt|;
+comment|/// \brief The kind of type trait, which is a value of a TypeTrait enumerator.
+name|unsigned
+name|Kind
+range|:
+literal|8
+decl_stmt|;
+comment|/// \brief If this expression is not value-dependent, this indicates whether
+comment|/// the trait evaluated true or false.
+name|unsigned
+name|Value
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief The number of arguments to this type trait.
+name|unsigned
+name|NumArgs
+range|:
+literal|32
+operator|-
+literal|8
+operator|-
+literal|1
+operator|-
+name|NumExprBits
 decl_stmt|;
 block|}
 empty_stmt|;
@@ -995,6 +1225,15 @@ decl_stmt|;
 name|ExprBitfields
 name|ExprBits
 decl_stmt|;
+name|CharacterLiteralBitfields
+name|CharacterLiteralBits
+decl_stmt|;
+name|FloatingLiteralBitfields
+name|FloatingLiteralBits
+decl_stmt|;
+name|UnaryExprOrTypeTraitExprBitfields
+name|UnaryExprOrTypeTraitExprBits
+decl_stmt|;
 name|DeclRefExprBitfields
 name|DeclRefExprBits
 decl_stmt|;
@@ -1004,14 +1243,30 @@ decl_stmt|;
 name|CallExprBitfields
 name|CallExprBits
 decl_stmt|;
+name|ExprWithCleanupsBitfields
+name|ExprWithCleanupsBits
+decl_stmt|;
+name|PseudoObjectExprBitfields
+name|PseudoObjectExprBits
+decl_stmt|;
 name|ObjCIndirectCopyRestoreExprBitfields
 name|ObjCIndirectCopyRestoreExprBits
+decl_stmt|;
+name|InitListExprBitfields
+name|InitListExprBits
+decl_stmt|;
+name|TypeTraitExprBitfields
+name|TypeTraitExprBits
 decl_stmt|;
 block|}
 union|;
 name|friend
 name|class
 name|ASTStmtReader
+decl_stmt|;
+name|friend
+name|class
+name|ASTStmtWriter
 decl_stmt|;
 name|public
 label|:
@@ -1169,6 +1424,13 @@ struct|struct
 name|EmptyShell
 block|{ }
 struct|;
+name|private
+label|:
+comment|/// \brief Whether statistic collection is enabled.
+specifier|static
+name|bool
+name|StatisticsEnabled
+decl_stmt|;
 name|protected
 label|:
 comment|/// \brief Construct an empty statement.
@@ -1189,10 +1451,7 @@ name|SC
 expr_stmt|;
 if|if
 condition|(
-name|Stmt
-operator|::
-name|CollectingStats
-argument_list|()
+name|StatisticsEnabled
 condition|)
 name|Stmt
 operator|::
@@ -1217,10 +1476,7 @@ name|SC
 expr_stmt|;
 if|if
 condition|(
-name|Stmt
-operator|::
-name|CollectingStats
-argument_list|()
+name|StatisticsEnabled
 condition|)
 name|Stmt
 operator|::
@@ -1261,33 +1517,20 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 expr_stmt|;
 name|SourceLocation
 name|getLocStart
 argument_list|()
 specifier|const
-block|{
-return|return
-name|getSourceRange
-argument_list|()
-operator|.
-name|getBegin
-argument_list|()
-return|;
-block|}
+name|LLVM_READONLY
+expr_stmt|;
 name|SourceLocation
 name|getLocEnd
 argument_list|()
 specifier|const
-block|{
-return|return
-name|getSourceRange
-argument_list|()
-operator|.
-name|getEnd
-argument_list|()
-return|;
-block|}
+name|LLVM_READONLY
+expr_stmt|;
 comment|// global temp stats (until we have a per-module visitor)
 specifier|static
 name|void
@@ -1299,14 +1542,9 @@ name|s
 parameter_list|)
 function_decl|;
 specifier|static
-name|bool
-name|CollectingStats
-parameter_list|(
-name|bool
-name|Enable
-init|=
-name|false
-parameter_list|)
+name|void
+name|EnableStatistics
+parameter_list|()
 function_decl|;
 specifier|static
 name|void
@@ -1316,11 +1554,13 @@ function_decl|;
 comment|/// dump - This does a local dump of the specified AST fragment.  It dumps the
 comment|/// specified node and a few nodes underneath it, but not the whole subtree.
 comment|/// This is useful in a debugger.
+name|LLVM_ATTRIBUTE_USED
 name|void
 name|dump
 argument_list|()
 specifier|const
 expr_stmt|;
+name|LLVM_ATTRIBUTE_USED
 name|void
 name|dump
 argument_list|(
@@ -1826,6 +2066,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 block|{
 return|return
 name|SourceRange
@@ -2076,6 +2317,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 block|{
 return|return
 name|SourceRange
@@ -2563,6 +2805,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 block|{
 return|return
 name|SourceRange
@@ -2825,6 +3068,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 block|{
 return|return
 name|SourceRange
@@ -3202,6 +3446,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 block|{
 comment|// Handle deeply nested case statements with iteration instead of recursion.
 specifier|const
@@ -3430,6 +3675,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 block|{
 return|return
 name|SourceRange
@@ -3635,6 +3881,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 block|{
 return|return
 name|SourceRange
@@ -3686,6 +3933,182 @@ name|bool
 name|classof
 argument_list|(
 argument|const LabelStmt *
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief Represents an attribute applied to a statement.
+comment|///
+comment|/// Represents an attribute applied to a statement. For example:
+comment|///   [[omp::for(...)]] for (...) { ... }
+comment|///
+name|class
+name|AttributedStmt
+operator|:
+name|public
+name|Stmt
+block|{
+name|Stmt
+operator|*
+name|SubStmt
+block|;
+name|SourceLocation
+name|AttrLoc
+block|;
+name|AttrVec
+name|Attrs
+block|;
+comment|// TODO: It can be done as Attr *Attrs[1]; and variable size array as in
+comment|// StringLiteral
+name|friend
+name|class
+name|ASTStmtReader
+block|;
+name|public
+operator|:
+name|AttributedStmt
+argument_list|(
+argument|SourceLocation loc
+argument_list|,
+argument|const AttrVec&attrs
+argument_list|,
+argument|Stmt *substmt
+argument_list|)
+operator|:
+name|Stmt
+argument_list|(
+name|AttributedStmtClass
+argument_list|)
+block|,
+name|SubStmt
+argument_list|(
+name|substmt
+argument_list|)
+block|,
+name|AttrLoc
+argument_list|(
+name|loc
+argument_list|)
+block|,
+name|Attrs
+argument_list|(
+argument|attrs
+argument_list|)
+block|{   }
+comment|// \brief Build an empty attributed statement.
+name|explicit
+name|AttributedStmt
+argument_list|(
+argument|EmptyShell Empty
+argument_list|)
+operator|:
+name|Stmt
+argument_list|(
+argument|AttributedStmtClass
+argument_list|,
+argument|Empty
+argument_list|)
+block|{   }
+name|SourceLocation
+name|getAttrLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AttrLoc
+return|;
+block|}
+specifier|const
+name|AttrVec
+operator|&
+name|getAttrs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Attrs
+return|;
+block|}
+name|Stmt
+operator|*
+name|getSubStmt
+argument_list|()
+block|{
+return|return
+name|SubStmt
+return|;
+block|}
+specifier|const
+name|Stmt
+operator|*
+name|getSubStmt
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SubStmt
+return|;
+block|}
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|SourceRange
+argument_list|(
+name|AttrLoc
+argument_list|,
+name|SubStmt
+operator|->
+name|getLocEnd
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|child_range
+name|children
+argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|(
+operator|&
+name|SubStmt
+argument_list|,
+operator|&
+name|SubStmt
+operator|+
+literal|1
+argument_list|)
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|AttributedStmtClass
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const AttributedStmt *
 argument_list|)
 block|{
 return|return
@@ -3990,6 +4413,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 block|{
 if|if
 condition|(
@@ -4431,6 +4855,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 block|{
 return|return
 name|SourceRange
@@ -4728,6 +5153,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 block|{
 return|return
 name|SourceRange
@@ -5060,6 +5486,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 block|{
 return|return
 name|SourceRange
@@ -5508,6 +5935,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 block|{
 return|return
 name|SourceRange
@@ -5702,6 +6130,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 block|{
 return|return
 name|SourceRange
@@ -5936,6 +6365,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 block|{
 return|return
 name|SourceRange
@@ -6061,6 +6491,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 block|{
 return|return
 name|SourceRange
@@ -6173,6 +6604,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 block|{
 return|return
 name|SourceRange
@@ -6399,6 +6831,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 block|;
 specifier|static
 name|bool
@@ -7243,6 +7676,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 block|{
 return|return
 name|SourceRange
@@ -7513,6 +7947,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 block|{
 return|return
 name|SourceRange
@@ -7691,6 +8126,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 block|{
 return|return
 name|SourceRange
@@ -7872,6 +8308,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 block|{
 return|return
 name|SourceRange

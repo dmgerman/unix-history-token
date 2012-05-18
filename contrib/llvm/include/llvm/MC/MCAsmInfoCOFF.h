@@ -59,12 +59,53 @@ range|:
 name|public
 name|MCAsmInfo
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|protected
 operator|:
 name|explicit
 name|MCAsmInfoCOFF
 argument_list|()
-block|;          }
+block|;   }
+decl_stmt|;
+name|class
+name|MCAsmInfoMicrosoft
+range|:
+name|public
+name|MCAsmInfoCOFF
+block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
+name|protected
+operator|:
+name|explicit
+name|MCAsmInfoMicrosoft
+argument_list|()
+block|;   }
+decl_stmt|;
+name|class
+name|MCAsmInfoGNUCOFF
+range|:
+name|public
+name|MCAsmInfoCOFF
+block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
+name|protected
+operator|:
+name|explicit
+name|MCAsmInfoGNUCOFF
+argument_list|()
+block|;   }
 decl_stmt|;
 block|}
 end_decl_stmt

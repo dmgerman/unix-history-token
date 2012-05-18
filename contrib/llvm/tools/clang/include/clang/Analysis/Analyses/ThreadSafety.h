@@ -178,8 +178,6 @@ name|virtual
 operator|~
 name|ThreadSafetyHandler
 argument_list|()
-operator|=
-literal|0
 expr_stmt|;
 comment|/// Warn about lock expressions which fail to resolve to lockable objects.
 comment|/// \param Loc -- the SourceLocation of the unresolved expression.
@@ -229,7 +227,10 @@ comment|/// 2, or a mutex is only held at the start of some loop iterations,
 comment|/// 3. or when a mutex is locked but not unlocked inside a function.
 comment|/// \param LockName -- A StringRef name for the lock expression, to be printed
 comment|/// in the error message.
-comment|/// \param Loc -- The location of the lock expression where the mutex is locked
+comment|/// \param LocLocked -- The location of the lock expression where the mutex is
+comment|///               locked
+comment|/// \param LocEndOfScope -- The location of the end of the scope where the
+comment|///               mutex is no longer held
 comment|/// \param LEK -- which of the three above cases we should warn for
 name|virtual
 name|void
@@ -239,7 +240,10 @@ name|Name
 name|LockName
 parameter_list|,
 name|SourceLocation
-name|Loc
+name|LocLocked
+parameter_list|,
+name|SourceLocation
+name|LocEndOfScope
 parameter_list|,
 name|LockErrorKind
 name|LEK
@@ -350,7 +354,7 @@ comment|/// Each block in the CFG is traversed exactly once.
 name|void
 name|runThreadSafetyAnalysis
 parameter_list|(
-name|AnalysisContext
+name|AnalysisDeclContext
 modifier|&
 name|AC
 parameter_list|,

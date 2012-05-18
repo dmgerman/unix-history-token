@@ -1,0 +1,619 @@
+begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|//===--- ModuleMap.h - Describe the layout of modules -----------*- C++ -*-===//
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//                     The LLVM Compiler Infrastructure
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// This file is distributed under the University of Illinois Open Source
+end_comment
+
+begin_comment
+comment|// License. See LICENSE.TXT for details.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// This file defines the ModuleMap interface, which describes the layout of a
+end_comment
+
+begin_comment
+comment|// module as it relates to headers.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LLVM_CLANG_LEX_MODULEMAP_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LLVM_CLANG_LEX_MODULEMAP_H
+end_define
+
+begin_include
+include|#
+directive|include
+file|"clang/Basic/LangOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Basic/Module.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Basic/SourceManager.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/IntrusiveRefCntPtr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_decl_stmt
+name|namespace
+name|clang
+block|{
+name|class
+name|DirectoryEntry
+decl_stmt|;
+name|class
+name|FileEntry
+decl_stmt|;
+name|class
+name|FileManager
+decl_stmt|;
+name|class
+name|DiagnosticConsumer
+decl_stmt|;
+name|class
+name|DiagnosticsEngine
+decl_stmt|;
+name|class
+name|ModuleMapParser
+decl_stmt|;
+name|class
+name|ModuleMap
+block|{
+name|SourceManager
+modifier|*
+name|SourceMgr
+decl_stmt|;
+name|IntrusiveRefCntPtr
+operator|<
+name|DiagnosticsEngine
+operator|>
+name|Diags
+expr_stmt|;
+specifier|const
+name|LangOptions
+modifier|&
+name|LangOpts
+decl_stmt|;
+specifier|const
+name|TargetInfo
+modifier|*
+name|Target
+decl_stmt|;
+comment|/// \brief The directory used for Clang-supplied, builtin include headers,
+comment|/// such as "stdint.h".
+specifier|const
+name|DirectoryEntry
+modifier|*
+name|BuiltinIncludeDir
+decl_stmt|;
+comment|/// \brief Language options used to parse the module map itself.
+comment|///
+comment|/// These are always simple C language options.
+name|LangOptions
+name|MMapLangOpts
+decl_stmt|;
+comment|/// \brief The top-level modules that are known.
+name|llvm
+operator|::
+name|StringMap
+operator|<
+name|Module
+operator|*
+operator|>
+name|Modules
+expr_stmt|;
+comment|/// \brief Mapping from each header to the module that owns the contents of the
+comment|/// that header.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|FileEntry
+operator|*
+operator|,
+name|Module
+operator|*
+operator|>
+name|Headers
+expr_stmt|;
+comment|/// \brief Mapping from directories with umbrella headers to the module
+comment|/// that is generated from the umbrella header.
+comment|///
+comment|/// This mapping is used to map headers that haven't explicitly been named
+comment|/// in the module map over to the module that includes them via its umbrella
+comment|/// header.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|DirectoryEntry
+operator|*
+operator|,
+name|Module
+operator|*
+operator|>
+name|UmbrellaDirs
+expr_stmt|;
+name|friend
+name|class
+name|ModuleMapParser
+decl_stmt|;
+comment|/// \brief Resolve the given export declaration into an actual export
+comment|/// declaration.
+comment|///
+comment|/// \param Mod The module in which we're resolving the export declaration.
+comment|///
+comment|/// \param Unresolved The export declaration to resolve.
+comment|///
+comment|/// \param Complain Whether this routine should complain about unresolvable
+comment|/// exports.
+comment|///
+comment|/// \returns The resolved export declaration, which will have a NULL pointer
+comment|/// if the export could not be resolved.
+name|Module
+operator|::
+name|ExportDecl
+name|resolveExport
+argument_list|(
+argument|Module *Mod
+argument_list|,
+argument|const Module::UnresolvedExportDecl&Unresolved
+argument_list|,
+argument|bool Complain
+argument_list|)
+expr_stmt|;
+name|public
+label|:
+comment|/// \brief Construct a new module map.
+comment|///
+comment|/// \param FileMgr The file manager used to find module files and headers.
+comment|/// This file manager should be shared with the header-search mechanism, since
+comment|/// they will refer to the same headers.
+comment|///
+comment|/// \param DC A diagnostic consumer that will be cloned for use in generating
+comment|/// diagnostics.
+comment|///
+comment|/// \param LangOpts Language options for this translation unit.
+comment|///
+comment|/// \param Target The target for this translation unit.
+name|ModuleMap
+argument_list|(
+name|FileManager
+operator|&
+name|FileMgr
+argument_list|,
+specifier|const
+name|DiagnosticConsumer
+operator|&
+name|DC
+argument_list|,
+specifier|const
+name|LangOptions
+operator|&
+name|LangOpts
+argument_list|,
+specifier|const
+name|TargetInfo
+operator|*
+name|Target
+argument_list|)
+expr_stmt|;
+comment|/// \brief Destroy the module map.
+comment|///
+operator|~
+name|ModuleMap
+argument_list|()
+expr_stmt|;
+comment|/// \brief Set the target information.
+name|void
+name|setTarget
+parameter_list|(
+specifier|const
+name|TargetInfo
+modifier|&
+name|Target
+parameter_list|)
+function_decl|;
+comment|/// \brief Set the directory that contains Clang-supplied include
+comment|/// files, such as our stdarg.h or tgmath.h.
+name|void
+name|setBuiltinIncludeDir
+parameter_list|(
+specifier|const
+name|DirectoryEntry
+modifier|*
+name|Dir
+parameter_list|)
+block|{
+name|BuiltinIncludeDir
+operator|=
+name|Dir
+expr_stmt|;
+block|}
+comment|/// \brief Retrieve the module that owns the given header file, if any.
+comment|///
+comment|/// \param File The header file that is likely to be included.
+comment|///
+comment|/// \returns The module that owns the given header file, or null to indicate
+comment|/// that no module owns this header file.
+name|Module
+modifier|*
+name|findModuleForHeader
+parameter_list|(
+specifier|const
+name|FileEntry
+modifier|*
+name|File
+parameter_list|)
+function_decl|;
+comment|/// \brief Determine whether the given header is part of a module
+comment|/// marked 'unavailable'.
+name|bool
+name|isHeaderInUnavailableModule
+parameter_list|(
+specifier|const
+name|FileEntry
+modifier|*
+name|Header
+parameter_list|)
+function_decl|;
+comment|/// \brief Retrieve a module with the given name.
+comment|///
+comment|/// \param The name of the module to look up.
+comment|///
+comment|/// \returns The named module, if known; otherwise, returns null.
+name|Module
+modifier|*
+name|findModule
+parameter_list|(
+name|StringRef
+name|Name
+parameter_list|)
+function_decl|;
+comment|/// \brief Retrieve a module with the given name using lexical name lookup,
+comment|/// starting at the given context.
+comment|///
+comment|/// \param The name of the module to look up.
+comment|///
+comment|/// \param Context The module context, from which we will perform lexical
+comment|/// name lookup.
+comment|///
+comment|/// \returns The named module, if known; otherwise, returns null.
+name|Module
+modifier|*
+name|lookupModuleUnqualified
+parameter_list|(
+name|StringRef
+name|Name
+parameter_list|,
+name|Module
+modifier|*
+name|Context
+parameter_list|)
+function_decl|;
+comment|/// \brief Retrieve a module with the given name within the given context,
+comment|/// using direct (qualified) name lookup.
+comment|///
+comment|/// \param The name of the module to look up.
+comment|///
+comment|/// \param Context The module for which we will look for a submodule. If
+comment|/// null, we will look for a top-level module.
+comment|///
+comment|/// \returns The named submodule, if known; otherwose, returns null.
+name|Module
+modifier|*
+name|lookupModuleQualified
+parameter_list|(
+name|StringRef
+name|Name
+parameter_list|,
+name|Module
+modifier|*
+name|Context
+parameter_list|)
+function_decl|;
+comment|/// \brief Find a new module or submodule, or create it if it does not already
+comment|/// exist.
+comment|///
+comment|/// \param Name The name of the module to find or create.
+comment|///
+comment|/// \param Parent The module that will act as the parent of this submodule,
+comment|/// or NULL to indicate that this is a top-level module.
+comment|///
+comment|/// \param IsFramework Whether this is a framework module.
+comment|///
+comment|/// \param IsExplicit Whether this is an explicit submodule.
+comment|///
+comment|/// \returns The found or newly-created module, along with a boolean value
+comment|/// that will be true if the module is newly-created.
+name|std
+operator|::
+name|pair
+operator|<
+name|Module
+operator|*
+operator|,
+name|bool
+operator|>
+name|findOrCreateModule
+argument_list|(
+argument|StringRef Name
+argument_list|,
+argument|Module *Parent
+argument_list|,
+argument|bool IsFramework
+argument_list|,
+argument|bool IsExplicit
+argument_list|)
+expr_stmt|;
+comment|/// \brief Infer the contents of a framework module map from the given
+comment|/// framework directory.
+name|Module
+modifier|*
+name|inferFrameworkModule
+parameter_list|(
+name|StringRef
+name|ModuleName
+parameter_list|,
+specifier|const
+name|DirectoryEntry
+modifier|*
+name|FrameworkDir
+parameter_list|,
+name|bool
+name|IsSystem
+parameter_list|,
+name|Module
+modifier|*
+name|Parent
+parameter_list|)
+function_decl|;
+comment|/// \brief Retrieve the module map file containing the definition of the given
+comment|/// module.
+comment|///
+comment|/// \param Module The module whose module map file will be returned, if known.
+comment|///
+comment|/// \returns The file entry for the module map file containing the given
+comment|/// module, or NULL if the module definition was inferred.
+specifier|const
+name|FileEntry
+modifier|*
+name|getContainingModuleMapFile
+parameter_list|(
+name|Module
+modifier|*
+name|Module
+parameter_list|)
+function_decl|;
+comment|/// \brief Resolve all of the unresolved exports in the given module.
+comment|///
+comment|/// \param Mod The module whose exports should be resolved.
+comment|///
+comment|/// \param Complain Whether to emit diagnostics for failures.
+comment|///
+comment|/// \returns true if any errors were encountered while resolving exports,
+comment|/// false otherwise.
+name|bool
+name|resolveExports
+parameter_list|(
+name|Module
+modifier|*
+name|Mod
+parameter_list|,
+name|bool
+name|Complain
+parameter_list|)
+function_decl|;
+comment|/// \brief Infers the (sub)module based on the given source location and
+comment|/// source manager.
+comment|///
+comment|/// \param Loc The location within the source that we are querying, along
+comment|/// with its source manager.
+comment|///
+comment|/// \returns The module that owns this source location, or null if no
+comment|/// module owns this source location.
+name|Module
+modifier|*
+name|inferModuleFromLocation
+parameter_list|(
+name|FullSourceLoc
+name|Loc
+parameter_list|)
+function_decl|;
+comment|/// \brief Sets the umbrella header of the given module to the given
+comment|/// header.
+name|void
+name|setUmbrellaHeader
+parameter_list|(
+name|Module
+modifier|*
+name|Mod
+parameter_list|,
+specifier|const
+name|FileEntry
+modifier|*
+name|UmbrellaHeader
+parameter_list|)
+function_decl|;
+comment|/// \brief Sets the umbrella directory of the given module to the given
+comment|/// directory.
+name|void
+name|setUmbrellaDir
+parameter_list|(
+name|Module
+modifier|*
+name|Mod
+parameter_list|,
+specifier|const
+name|DirectoryEntry
+modifier|*
+name|UmbrellaDir
+parameter_list|)
+function_decl|;
+comment|/// \brief Adds this header to the given module.
+name|void
+name|addHeader
+parameter_list|(
+name|Module
+modifier|*
+name|Mod
+parameter_list|,
+specifier|const
+name|FileEntry
+modifier|*
+name|Header
+parameter_list|)
+function_decl|;
+comment|/// \brief Parse the given module map file, and record any modules we
+comment|/// encounter.
+comment|///
+comment|/// \param File The file to be parsed.
+comment|///
+comment|/// \returns true if an error occurred, false otherwise.
+name|bool
+name|parseModuleMapFile
+parameter_list|(
+specifier|const
+name|FileEntry
+modifier|*
+name|File
+parameter_list|)
+function_decl|;
+comment|/// \brief Dump the contents of the module map, for debugging purposes.
+name|void
+name|dump
+parameter_list|()
+function_decl|;
+typedef|typedef
+name|llvm
+operator|::
+name|StringMap
+operator|<
+name|Module
+operator|*
+operator|>
+operator|::
+name|const_iterator
+name|module_iterator
+expr_stmt|;
+name|module_iterator
+name|module_begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Modules
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+name|module_iterator
+name|module_end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Modules
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
+block|}
+empty_stmt|;
+block|}
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+end_unit
+

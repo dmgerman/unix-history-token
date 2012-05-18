@@ -84,6 +84,9 @@ name|class
 name|FoldingSetNodeID
 decl_stmt|;
 name|class
+name|MDNode
+decl_stmt|;
+name|class
 name|raw_ostream
 decl_stmt|;
 comment|/// MachinePointerInfo - This class contains a discriminated union of
@@ -266,6 +269,11 @@ name|MDNode
 modifier|*
 name|TBAAInfo
 decl_stmt|;
+specifier|const
+name|MDNode
+modifier|*
+name|Ranges
+decl_stmt|;
 name|public
 label|:
 comment|/// Flags values. These may be or'd together.
@@ -292,10 +300,15 @@ name|MONonTemporal
 init|=
 literal|8
 block|,
+comment|/// The memory access is invariant.
+name|MOInvariant
+init|=
+literal|16
+block|,
 comment|// This is the number of bits we need to represent flags.
 name|MOMaxBits
 init|=
-literal|4
+literal|5
 block|}
 enum|;
 comment|/// MachineMemOperand - Construct an MachineMemOperand object with the
@@ -311,6 +324,9 @@ argument_list|,
 argument|unsigned base_alignment
 argument_list|,
 argument|const MDNode *TBAAInfo =
+literal|0
+argument_list|,
+argument|const MDNode *Ranges =
 literal|0
 argument_list|)
 empty_stmt|;
@@ -430,6 +446,18 @@ return|return
 name|TBAAInfo
 return|;
 block|}
+comment|/// getRanges - Return the range tag for the memory reference.
+specifier|const
+name|MDNode
+operator|*
+name|getRanges
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Ranges
+return|;
+block|}
 name|bool
 name|isLoad
 argument_list|()
@@ -472,6 +500,17 @@ return|return
 name|Flags
 operator|&
 name|MONonTemporal
+return|;
+block|}
+name|bool
+name|isInvariant
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Flags
+operator|&
+name|MOInvariant
 return|;
 block|}
 comment|/// refineAlignment - Update this MachineMemOperand to reflect the alignment

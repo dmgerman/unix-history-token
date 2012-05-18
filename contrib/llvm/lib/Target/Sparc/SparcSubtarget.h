@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//=====-- SparcSubtarget.h - Define Subtarget for the SPARC ----*- C++ -*-====//
+comment|//===-- SparcSubtarget.h - Define Subtarget for the SPARC -------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -96,6 +96,11 @@ range|:
 name|public
 name|SparcGenSubtargetInfo
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|bool
 name|IsV9
 block|;

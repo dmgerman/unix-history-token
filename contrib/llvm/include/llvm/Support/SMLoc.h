@@ -63,11 +63,17 @@ directive|define
 name|SUPPORT_SMLOC_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|// SMLoc - Represents a location in source code.
+comment|/// SMLoc - Represents a location in source code.
 name|class
 name|SMLoc
 block|{
@@ -184,8 +190,74 @@ return|;
 block|}
 block|}
 empty_stmt|;
+comment|/// SMRange - Represents a range in source code.  Note that unlike standard STL
+comment|/// ranges, the locations specified are considered to be *inclusive*.  For
+comment|/// example, [X,X] *does* include X, it isn't an empty range.
+name|class
+name|SMRange
+block|{
+name|public
+label|:
+name|SMLoc
+name|Start
+decl_stmt|,
+name|End
+decl_stmt|;
+name|SMRange
+argument_list|()
+block|{}
+name|SMRange
+argument_list|(
+argument|SMLoc Start
+argument_list|,
+argument|SMLoc End
+argument_list|)
+block|:
+name|Start
+argument_list|(
+name|Start
+argument_list|)
+operator|,
+name|End
+argument_list|(
+argument|End
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|Start
+operator|.
+name|isValid
+argument_list|()
+operator|==
+name|End
+operator|.
+name|isValid
+argument_list|()
+operator|&&
+literal|"Start and end should either both be valid or both be invalid!"
+argument_list|)
+block|;   }
+name|bool
+name|isValid
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Start
+operator|.
+name|isValid
+argument_list|()
+return|;
+block|}
+block|}
+empty_stmt|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// end namespace llvm
+end_comment
 
 begin_endif
 endif|#

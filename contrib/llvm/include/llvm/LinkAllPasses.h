@@ -162,6 +162,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Transforms/Vectorize.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Transforms/Utils/UnifyFunctionExitNodes.h"
 end_include
 
@@ -412,13 +418,7 @@ operator|)
 name|llvm
 operator|::
 name|createGCOVProfilerPass
-argument_list|(
-name|true
-argument_list|,
-name|true
-argument_list|,
-name|false
-argument_list|)
+argument_list|()
 expr_stmt|;
 operator|(
 name|void
@@ -636,6 +636,14 @@ operator|)
 name|llvm
 operator|::
 name|createObjCARCAliasAnalysisPass
+argument_list|()
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|llvm
+operator|::
+name|createObjCARCAPElimPass
 argument_list|()
 expr_stmt|;
 operator|(
@@ -1066,6 +1074,14 @@ operator|)
 name|llvm
 operator|::
 name|createInstructionSimplifierPass
+argument_list|()
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|llvm
+operator|::
+name|createBBVectorizePass
 argument_list|()
 expr_stmt|;
 operator|(

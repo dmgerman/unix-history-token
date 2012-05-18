@@ -247,7 +247,7 @@ name|b
 parameter_list|,
 name|n
 parameter_list|)
-value|(__builtin_ia32_palignr128((a), (b), (n)))
+value|__extension__ ({ \   __m128i __a = (a); \   __m128i __b = (b); \   (__m128i)__builtin_ia32_palignr128((__v16qi)__a, (__v16qi)__b, (n)); })
 end_define
 
 begin_define
@@ -261,7 +261,7 @@ name|b
 parameter_list|,
 name|n
 parameter_list|)
-value|(__builtin_ia32_palignr((a), (b), (n)))
+value|__extension__ ({ \   __m64 __a = (a); \   __m64 __b = (b); \   (__m64)__builtin_ia32_palignr((__v8qi)__a, (__v8qi)__b, (n)); })
 end_define
 
 begin_decl_stmt

@@ -115,8 +115,7 @@ label|:
 comment|/// AllocationOrder - Create a new AllocationOrder for VirtReg.
 comment|/// @param VirtReg      Virtual register to allocate for.
 comment|/// @param VRM          Virtual register map for function.
-comment|/// @param ReservedRegs Set of reserved registers as returned by
-comment|///        TargetRegisterInfo::getReservedRegs().
+comment|/// @param RegClassInfo Information about reserved and allocatable registers.
 name|AllocationOrder
 argument_list|(
 argument|unsigned VirtReg

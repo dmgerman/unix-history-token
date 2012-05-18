@@ -84,7 +84,7 @@ comment|/// translation units).
 name|InternalLinkage
 block|,
 comment|/// \brief External linkage within a unique namespace. From the
-comment|/// langauge perspective, these entities have external
+comment|/// language perspective, these entities have external
 comment|/// linkage. However, since they reside in an anonymous namespace,
 comment|/// their names are unique to this translation unit, which is
 comment|/// equivalent to having internal linkage from the code-generation

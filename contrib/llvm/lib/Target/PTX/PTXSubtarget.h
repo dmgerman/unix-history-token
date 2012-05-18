@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//====-- PTXSubtarget.h - Define Subtarget for the PTX ---------*- C++ -*--===//
+comment|//===-- PTXSubtarget.h - Define Subtarget for the PTX -----------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -90,6 +90,11 @@ range|:
 name|public
 name|PTXGenSubtargetInfo
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 comment|/**        * Enumeration of Shader Models supported by the back-end.        */

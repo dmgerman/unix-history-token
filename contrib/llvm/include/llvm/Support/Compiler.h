@@ -263,21 +263,33 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+operator|(
 name|__GNUC__
-end_ifdef
-
-begin_comment
-comment|// aka 'ATTRIBUTE_CONST' but following LLVM Conventions.
-end_comment
+operator|>=
+literal|4
+operator|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__MINGW32__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+end_if
 
 begin_define
 define|#
 directive|define
-name|LLVM_ATTRIBUTE_READNONE
-value|__attribute__((__const__))
+name|LLVM_ATTRIBUTE_WEAK
+value|__attribute__((__weak__))
 end_define
 
 begin_else
@@ -288,7 +300,7 @@ end_else
 begin_define
 define|#
 directive|define
-name|LLVM_ATTRIBUTE_READNONE
+name|LLVM_ATTRIBUTE_WEAK
 end_define
 
 begin_endif
@@ -303,13 +315,46 @@ name|__GNUC__
 end_ifdef
 
 begin_comment
-comment|// aka 'ATTRIBUTE_PURE' but following LLVM Conventions.
+comment|// aka 'CONST' but following LLVM Conventions.
 end_comment
 
 begin_define
 define|#
 directive|define
-name|LLVM_ATTRIBUTE_READONLY
+name|LLVM_READNONE
+value|__attribute__((__const__))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LLVM_READNONE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUC__
+end_ifdef
+
+begin_comment
+comment|// aka 'PURE' but following LLVM Conventions.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVM_READONLY
 value|__attribute__((__pure__))
 end_define
 
@@ -321,7 +366,7 @@ end_else
 begin_define
 define|#
 directive|define
-name|LLVM_ATTRIBUTE_READONLY
+name|LLVM_READONLY
 end_define
 
 begin_endif
@@ -615,6 +660,43 @@ begin_define
 define|#
 directive|define
 name|LLVM_ATTRIBUTE_NORETURN
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// LLVM_EXTENSION - Support compilers where we have a keyword to suppress
+end_comment
+
+begin_comment
+comment|// pedantic diagnostics.
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUC__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|LLVM_EXTENSION
+value|__extension__
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LLVM_EXTENSION
 end_define
 
 begin_endif
