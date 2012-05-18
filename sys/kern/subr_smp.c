@@ -811,6 +811,11 @@ name|defined
 argument_list|(
 name|__amd64__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
 name|type
 operator|==
 name|IPI_STOP
@@ -1012,6 +1017,11 @@ directive|if
 name|defined
 argument_list|(
 name|__amd64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__i386__
 argument_list|)
 end_if
 

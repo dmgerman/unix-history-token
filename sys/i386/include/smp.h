@@ -243,6 +243,12 @@ decl_stmt|,
 comment|/* CPU stops& waits to be restarted */
 name|IDTVEC
 argument_list|(
+name|cpususpend
+argument_list|)
+decl_stmt|,
+comment|/* CPU suspends& waits to be resumed */
+name|IDTVEC
+argument_list|(
 name|rendezvous
 argument_list|)
 decl_stmt|,
@@ -278,6 +284,15 @@ end_function_decl
 begin_function_decl
 name|void
 name|cpustop_handler
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|cpususpend_handler
 parameter_list|(
 name|void
 parameter_list|)
