@@ -1645,6 +1645,8 @@ name|int
 name|foundfile
 decl_stmt|,
 name|error
+decl_stmt|,
+name|modules
 decl_stmt|;
 comment|/* Refuse to load modules if securelevel raised */
 if|if
@@ -1787,6 +1789,17 @@ name|error
 operator|)
 return|;
 block|}
+name|modules
+operator|=
+operator|!
+name|TAILQ_EMPTY
+argument_list|(
+operator|&
+name|lf
+operator|->
+name|modules
+argument_list|)
+expr_stmt|;
 name|KLD_UNLOCK
 argument_list|()
 expr_stmt|;
@@ -1809,6 +1822,33 @@ name|flags
 operator||=
 name|LINKER_FILE_LINKED
 expr_stmt|;
+comment|/* 			 * If all of the modules in this file failed 			 * to load, unload the file and return an 			 * error of ENOEXEC. 			 */
+if|if
+condition|(
+name|modules
+operator|&&
+name|TAILQ_EMPTY
+argument_list|(
+operator|&
+name|lf
+operator|->
+name|modules
+argument_list|)
+condition|)
+block|{
+name|linker_file_unload
+argument_list|(
+name|lf
+argument_list|,
+name|LINKER_UNLOAD_FORCE
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENOEXEC
+operator|)
+return|;
+block|}
 operator|*
 name|result
 operator|=
@@ -2620,7 +2660,7 @@ block|}
 block|}
 name|MOD_SUNLOCK
 expr_stmt|;
-comment|/* 	 * Inform any modules associated with this file that they are 	 * being be unloaded. 	 */
+comment|/* 	 * Inform any modules associated with this file that they are 	 * being unloaded. 	 */
 name|MOD_XLOCK
 expr_stmt|;
 for|for
