@@ -114,56 +114,31 @@ name|struct
 name|rtprio
 name|rtp
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
-name|p
+name|progname
 decl_stmt|;
 name|pid_t
 name|proc
+init|=
+literal|0
 decl_stmt|;
-comment|/* find basename */
-if|if
-condition|(
-operator|(
-name|p
+name|progname
 operator|=
-name|rindex
-argument_list|(
-name|argv
-index|[
-literal|0
-index|]
-argument_list|,
-literal|'/'
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-name|p
-operator|=
-name|argv
-index|[
-literal|0
-index|]
-expr_stmt|;
-else|else
-operator|++
-name|p
-expr_stmt|;
-name|proc
-operator|=
-literal|0
+name|getprogname
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|strcmp
 argument_list|(
-name|p
+name|progname
 argument_list|,
 literal|"rtprio"
 argument_list|)
+operator|==
+literal|0
 condition|)
 name|rtp
 operator|.
@@ -174,19 +149,28 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-operator|!
 name|strcmp
 argument_list|(
-name|p
+name|progname
 argument_list|,
 literal|"idprio"
 argument_list|)
+operator|==
+literal|0
 condition|)
 name|rtp
 operator|.
 name|type
 operator|=
 name|RTP_PRIO_IDLE
+expr_stmt|;
+else|else
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"invalid progname"
+argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
@@ -240,13 +224,6 @@ argument_list|,
 literal|"RTP_LOOKUP"
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s: "
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|rtp
@@ -260,9 +237,9 @@ case|:
 case|case
 name|RTP_PRIO_FIFO
 case|:
-name|printf
+name|warnx
 argument_list|(
-literal|"realtime priority %d\n"
+literal|"realtime priority %d"
 argument_list|,
 name|rtp
 operator|.
@@ -273,18 +250,18 @@ break|break;
 case|case
 name|RTP_PRIO_NORMAL
 case|:
-name|printf
+name|warnx
 argument_list|(
-literal|"normal priority\n"
+literal|"normal priority"
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|RTP_PRIO_IDLE
 case|:
-name|printf
+name|warnx
 argument_list|(
-literal|"idle priority %d\n"
+literal|"idle priority %d"
 argument_list|,
 name|rtp
 operator|.
@@ -293,9 +270,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|errx
 argument_list|(
-literal|"invalid priority type %d\n"
+literal|1
+argument_list|,
+literal|"invalid priority type %d"
 argument_list|,
 name|rtp
 operator|.
@@ -418,6 +397,7 @@ index|]
 operator|==
 literal|'-'
 condition|)
+block|{
 name|proc
 operator|=
 name|parseint
@@ -426,12 +406,18 @@ name|argv
 index|[
 literal|2
 index|]
-operator|+
-literal|1
 argument_list|,
 literal|"pid"
 argument_list|)
 expr_stmt|;
+name|proc
+operator|=
+name|abs
+argument_list|(
+name|proc
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|rtprio
@@ -478,7 +464,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s"
+literal|"execvp: %s"
 argument_list|,
 name|argv
 index|[
@@ -493,11 +479,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 end_function
 
