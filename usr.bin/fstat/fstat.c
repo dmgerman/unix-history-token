@@ -1128,9 +1128,6 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|unsigned
-operator|)
 name|d
 operator|->
 name|ino
