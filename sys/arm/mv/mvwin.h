@@ -121,37 +121,29 @@ name|MV_PCI_MEM_SIZE
 value|(64 * 1024 * 1024)
 end_define
 
-begin_comment
-comment|/* XXX DEV_BOOT, CSx are board specific, should be defined per platform */
-end_comment
-
-begin_comment
-comment|/* 512KB NOR FLASH */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|MV_DEV_BOOT_PHYS_BASE
-value|(MV_PCI_MEM_PHYS_BASE + MV_PCI_MEM_SIZE)
+name|MV_DEV_BOOT_BASE
+value|0xF9300000
 end_define
 
 begin_define
 define|#
 directive|define
 name|MV_DEV_BOOT_SIZE
-value|(512 * 1024)
+value|(1024 * 1024)
 end_define
 
 begin_comment
-comment|/* CS0: 7-seg LED */
+comment|/* 1 MB */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MV_DEV_CS0_PHYS_BASE
-value|0xFA000000
+name|MV_DEV_CS0_BASE
+value|0xF9400000
 end_define
 
 begin_define
@@ -162,18 +154,14 @@ value|(1024 * 1024)
 end_define
 
 begin_comment
-comment|/* XXX u-boot has 2MB */
-end_comment
-
-begin_comment
-comment|/* CS1: 32MB NOR FLASH */
+comment|/* 1 MB */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MV_DEV_CS1_PHYS_BASE
-value|(MV_DEV_CS0_PHYS_BASE + MV_DEV_CS0_SIZE)
+name|MV_DEV_CS1_BASE
+value|0xF9500000
 end_define
 
 begin_define
@@ -184,25 +172,25 @@ value|(32 * 1024 * 1024)
 end_define
 
 begin_comment
-comment|/* CS2: 32MB NAND FLASH */
+comment|/* 32 MB */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MV_DEV_CS2_PHYS_BASE
-value|(MV_DEV_CS1_PHYS_BASE + MV_DEV_CS1_SIZE)
+name|MV_DEV_CS2_BASE
+value|0xFB500000
 end_define
 
 begin_define
 define|#
 directive|define
 name|MV_DEV_CS2_SIZE
-value|1024
+value|(1024 * 1024)
 end_define
 
 begin_comment
-comment|/* XXX u-boot has 1MB */
+comment|/* 1 MB */
 end_comment
 
 begin_define
@@ -391,13 +379,6 @@ define|#
 directive|define
 name|MV_PCIE13_BASE
 value|(MV_PCIE_BASE + 0x4C000)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MV_DEV_CS0_BASE
-value|MV_DEV_CS0_PHYS_BASE
 end_define
 
 begin_comment

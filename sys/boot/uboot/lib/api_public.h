@@ -357,6 +357,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|DT_STOR_NAND
+value|0x0100
+end_define
+
+begin_define
+define|#
+directive|define
 name|DEV_STA_CLOSED
 value|0x0000
 end_define
