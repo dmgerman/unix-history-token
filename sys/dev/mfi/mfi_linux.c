@@ -59,6 +59,12 @@ directive|include
 file|<sys/proc.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/bus.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -321,7 +327,8 @@ specifier|static
 name|int
 name|mfi_linux_ioctl
 parameter_list|(
-name|d_thread_t
+name|struct
+name|thread
 modifier|*
 name|p
 parameter_list|,
