@@ -2529,7 +2529,8 @@ name|to
 operator|.
 name|to_tsval
 operator|=
-name|ticks
+name|tcp_ts_getticks
+argument_list|()
 operator|+
 name|tp
 operator|->
@@ -2572,7 +2573,8 @@ name|tp
 operator|->
 name|rfbuf_ts
 operator|=
-name|ticks
+name|tcp_ts_getticks
+argument_list|()
 expr_stmt|;
 block|}
 comment|/* Selective ACK's. */
