@@ -438,9 +438,10 @@ if|if
 condition|(
 name|fstat
 argument_list|(
+name|dirfd
+argument_list|(
 name|dirp
-operator|->
-name|dd_fd
+argument_list|)
 argument_list|,
 operator|&
 name|stbuf

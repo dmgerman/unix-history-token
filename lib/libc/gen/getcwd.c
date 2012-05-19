@@ -117,6 +117,12 @@ directive|include
 file|"un-namespace.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"gen-private.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -419,7 +425,7 @@ name|NULL
 condition|?
 name|_fstat
 argument_list|(
-name|dirfd
+name|_dirfd
 argument_list|(
 name|dir
 argument_list|)
@@ -509,7 +515,7 @@ name|dir
 operator|!=
 name|NULL
 condition|?
-name|dirfd
+name|_dirfd
 argument_list|(
 name|dir
 argument_list|)
@@ -557,7 +563,7 @@ operator|)
 operator|||
 name|_fstat
 argument_list|(
-name|dirfd
+name|_dirfd
 argument_list|(
 name|dir
 argument_list|)
@@ -657,7 +663,7 @@ if|if
 condition|(
 name|fstatat
 argument_list|(
-name|dirfd
+name|_dirfd
 argument_list|(
 name|dir
 argument_list|)

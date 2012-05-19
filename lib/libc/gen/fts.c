@@ -125,6 +125,12 @@ directive|include
 file|"un-namespace.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"gen-private.h"
+end_include
+
 begin_function_decl
 specifier|static
 name|FTSENT
@@ -2872,7 +2878,7 @@ name|sp
 argument_list|,
 name|cur
 argument_list|,
-name|dirfd
+name|_dirfd
 argument_list|(
 name|dirp
 argument_list|)

@@ -120,6 +120,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"gen-private.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"telldir.h"
 end_include
 
