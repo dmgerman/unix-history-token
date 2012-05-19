@@ -2103,15 +2103,26 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NET_RT_MAXID
+name|NET_RT_IFLISTL
 value|5
+end_define
+
+begin_comment
+comment|/* Survey interface list, using 'l'en 					 * versions of msghdr structs. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NET_RT_MAXID
+value|6
 end_define
 
 begin_define
 define|#
 directive|define
 name|CTL_NET_RT_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ "dump", CTLTYPE_STRUCT }, \ 	{ "flags", CTLTYPE_STRUCT }, \ 	{ "iflist", CTLTYPE_STRUCT }, \ 	{ "ifmalist", CTLTYPE_STRUCT }, \ }
+value|{ \ 	{ 0, 0 }, \ 	{ "dump", CTLTYPE_STRUCT }, \ 	{ "flags", CTLTYPE_STRUCT }, \ 	{ "iflist", CTLTYPE_STRUCT }, \ 	{ "ifmalist", CTLTYPE_STRUCT }, \ 	{ "iflistl", CTLTYPE_STRUCT }, \ }
 end_define
 
 begin_endif

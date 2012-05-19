@@ -885,7 +885,7 @@ comment|/* granularity is 1 second */
 end_comment
 
 begin_comment
-comment|/*  * Message format for use in obtaining information about interfaces  * from getkerninfo and the routing socket  */
+comment|/*  * Message format for use in obtaining information about interfaces  * from getkerninfo and the routing socket  * For the new, extensible interface see struct if_msghdrl below.  */
 end_comment
 
 begin_struct
@@ -926,7 +926,82 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Message format for use in obtaining information about interface addresses  * from getkerninfo and the routing socket  */
+comment|/*  * The 'l' version shall be used by new interfaces, like NET_RT_IFLISTL.  It is  * extensible after ifm_data_off or within ifm_data.  Both the if_msghdr and  * if_data now have a member field detailing the struct length in addition to  * the routing message length.  Macros are provided to find the start of  * ifm_data and the start of the socket address strucutres immediately following  * struct if_msghdrl given a pointer to struct if_msghdrl.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IF_MSGHDRL_IFM_DATA
+parameter_list|(
+name|_l
+parameter_list|)
+define|\
+value|(struct if_data *)((char *)(_l) + (_l)->ifm_data_off)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IF_MSGHDRL_RTA
+parameter_list|(
+name|_l
+parameter_list|)
+define|\
+value|(void *)((uintptr_t)(_l) + (_l)->ifm_len)
+end_define
+
+begin_struct
+struct|struct
+name|if_msghdrl
+block|{
+name|u_short
+name|ifm_msglen
+decl_stmt|;
+comment|/* to skip over non-understood messages */
+name|u_char
+name|ifm_version
+decl_stmt|;
+comment|/* future binary compatibility */
+name|u_char
+name|ifm_type
+decl_stmt|;
+comment|/* message type */
+name|int
+name|ifm_addrs
+decl_stmt|;
+comment|/* like rtm_addrs */
+name|int
+name|ifm_flags
+decl_stmt|;
+comment|/* value of if_flags */
+name|u_short
+name|ifm_index
+decl_stmt|;
+comment|/* index for associated ifp */
+name|u_short
+name|_ifm_spare1
+decl_stmt|;
+comment|/* spare space to grow if_index, see if_var.h */
+name|u_short
+name|ifm_len
+decl_stmt|;
+comment|/* length of if_msghdrl incl. if_data */
+name|u_short
+name|ifm_data_off
+decl_stmt|;
+comment|/* offset of if_data from beginning */
+name|struct
+name|if_data
+name|ifm_data
+decl_stmt|;
+comment|/* statistics and other data about if */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Message format for use in obtaining information about interface addresses  * from getkerninfo and the routing socket  * For the new, extensible interface see struct ifa_msghdrl below.  */
 end_comment
 
 begin_struct
@@ -961,6 +1036,85 @@ name|int
 name|ifam_metric
 decl_stmt|;
 comment|/* value of ifa_metric */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * The 'l' version shall be used by new interfaces, like NET_RT_IFLISTL.  It is  * extensible after ifam_metric or within ifam_data.  Both the ifa_msghdrl and  * if_data now have a member field detailing the struct length in addition to  * the routing message length.  Macros are provided to find the start of  * ifm_data and the start of the socket address strucutres immediately following  * struct ifa_msghdrl given a pointer to struct ifa_msghdrl.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFA_MSGHDRL_IFAM_DATA
+parameter_list|(
+name|_l
+parameter_list|)
+define|\
+value|(struct if_data *)((char *)(_l) + (_l)->ifam_data_off)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFA_MSGHDRL_RTA
+parameter_list|(
+name|_l
+parameter_list|)
+define|\
+value|(void *)((uintptr_t)(_l) + (_l)->ifam_len)
+end_define
+
+begin_struct
+struct|struct
+name|ifa_msghdrl
+block|{
+name|u_short
+name|ifam_msglen
+decl_stmt|;
+comment|/* to skip over non-understood messages */
+name|u_char
+name|ifam_version
+decl_stmt|;
+comment|/* future binary compatibility */
+name|u_char
+name|ifam_type
+decl_stmt|;
+comment|/* message type */
+name|int
+name|ifam_addrs
+decl_stmt|;
+comment|/* like rtm_addrs */
+name|int
+name|ifam_flags
+decl_stmt|;
+comment|/* value of ifa_flags */
+name|u_short
+name|ifam_index
+decl_stmt|;
+comment|/* index for associated ifp */
+name|u_short
+name|_ifam_spare1
+decl_stmt|;
+comment|/* spare space to grow if_index, see if_var.h */
+name|u_short
+name|ifam_len
+decl_stmt|;
+comment|/* length of ifa_msghdrl incl. if_data */
+name|u_short
+name|ifam_data_off
+decl_stmt|;
+comment|/* offset of if_data from beginning */
+name|int
+name|ifam_metric
+decl_stmt|;
+comment|/* value of ifa_metric */
+name|struct
+name|if_data
+name|ifam_data
+decl_stmt|;
+comment|/* statistics and other data about if or 				 * address */
 block|}
 struct|;
 end_struct
