@@ -3874,7 +3874,8 @@ name|tp
 operator|->
 name|ts_recent_age
 operator|=
-name|ticks
+name|tcp_ts_getticks
+argument_list|()
 expr_stmt|;
 name|tp
 operator|->
@@ -5554,7 +5555,8 @@ name|sc
 operator|->
 name|sc_ts
 operator|=
-name|ticks
+name|tcp_ts_getticks
+argument_list|()
 expr_stmt|;
 name|sc
 operator|->
@@ -7418,7 +7420,8 @@ name|sc_tsoff
 operator|=
 name|data
 operator|-
-name|ticks
+name|tcp_ts_getticks
+argument_list|()
 expr_stmt|;
 comment|/* after XOR */
 block|}
@@ -7892,7 +7895,8 @@ name|to
 operator|->
 name|to_tsecr
 operator|-
-name|ticks
+name|tcp_ts_getticks
+argument_list|()
 expr_stmt|;
 name|sc
 operator|->
