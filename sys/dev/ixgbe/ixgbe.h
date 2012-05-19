@@ -621,7 +621,7 @@ begin_define
 define|#
 directive|define
 name|IXGBE_TSO_SIZE
-value|65535
+value|262140
 end_define
 
 begin_define
