@@ -1932,7 +1932,8 @@ name|to
 operator|.
 name|to_tsval
 operator|=
-name|ticks
+name|tcp_ts_getticks
+argument_list|()
 operator|+
 name|tw
 operator|->
