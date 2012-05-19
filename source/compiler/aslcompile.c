@@ -64,9 +64,9 @@ specifier|static
 name|void
 name|FlConsumeAnsiComment
 parameter_list|(
-name|ASL_FILE_INFO
+name|FILE
 modifier|*
-name|FileInfo
+name|Handle
 parameter_list|,
 name|ASL_FILE_STATUS
 modifier|*
@@ -80,9 +80,9 @@ specifier|static
 name|void
 name|FlConsumeNewComment
 parameter_list|(
-name|ASL_FILE_INFO
+name|FILE
 modifier|*
-name|FileInfo
+name|Handle
 parameter_list|,
 name|ASL_FILE_STATUS
 modifier|*
@@ -440,7 +440,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    FlConsume*  *  * PARAMETERS:  FileInfo        - Points to an open input file  *  * RETURN:      Number of lines consumed  *  * DESCRIPTION: Step over both types of comment during check for ascii chars  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    FlConsume*  *  * PARAMETERS:  Handle              - Open input file  *              Status              - File current status struct  *  * RETURN:      Number of lines consumed  *  * DESCRIPTION: Step over both types of comment during check for ascii chars  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -448,9 +448,9 @@ specifier|static
 name|void
 name|FlConsumeAnsiComment
 parameter_list|(
-name|ASL_FILE_INFO
+name|FILE
 modifier|*
-name|FileInfo
+name|Handle
 parameter_list|,
 name|ASL_FILE_STATUS
 modifier|*
@@ -476,8 +476,6 @@ literal|1
 argument_list|,
 literal|1
 argument_list|,
-name|FileInfo
-operator|->
 name|Handle
 argument_list|)
 condition|)
@@ -552,9 +550,9 @@ specifier|static
 name|void
 name|FlConsumeNewComment
 parameter_list|(
-name|ASL_FILE_INFO
+name|FILE
 modifier|*
-name|FileInfo
+name|Handle
 parameter_list|,
 name|ASL_FILE_STATUS
 modifier|*
@@ -575,8 +573,6 @@ literal|1
 argument_list|,
 literal|1
 argument_list|,
-name|FileInfo
-operator|->
 name|Handle
 argument_list|)
 condition|)
@@ -606,16 +602,23 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    FlCheckForAscii  *  * PARAMETERS:  FileInfo        - Points to an open input file  *  * RETURN:      Status  *  * DESCRIPTION: Verify that the input file is entirely ASCII. Ignores characters  *              within comments. Note: does not handle nested comments and does  *              not handle comment delimiters within string literals. However,  *              on the rare chance this happens and an invalid character is  *              missed, the parser will catch the error by failing in some  *              spectactular manner.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    FlCheckForAscii  *  * PARAMETERS:  Handle              - Open input file  *              Filename            - Input filename  *              DisplayErrors       - TRUE if error messages desired  *  * RETURN:      Status  *  * DESCRIPTION: Verify that the input file is entirely ASCII. Ignores characters  *              within comments. Note: does not handle nested comments and does  *              not handle comment delimiters within string literals. However,  *              on the rare chance this happens and an invalid character is  *              missed, the parser will catch the error by failing in some  *              spectactular manner.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|FlCheckForAscii
 parameter_list|(
-name|ASL_FILE_INFO
+name|FILE
 modifier|*
-name|FileInfo
+name|Handle
+parameter_list|,
+name|char
+modifier|*
+name|Filename
+parameter_list|,
+name|BOOLEAN
+name|DisplayErrors
 parameter_list|)
 block|{
 name|UINT8
@@ -658,8 +661,6 @@ literal|1
 argument_list|,
 literal|1
 argument_list|,
-name|FileInfo
-operator|->
 name|Handle
 argument_list|)
 condition|)
@@ -680,7 +681,7 @@ condition|)
 block|{
 name|FlConsumeAnsiComment
 argument_list|(
-name|FileInfo
+name|Handle
 argument_list|,
 operator|&
 name|Status
@@ -696,7 +697,7 @@ condition|)
 block|{
 name|FlConsumeNewComment
 argument_list|(
-name|FileInfo
+name|Handle
 argument_list|,
 operator|&
 name|Status
@@ -734,9 +735,15 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|BadBytes
 operator|<
 literal|10
+operator|)
+operator|&&
+operator|(
+name|DisplayErrors
+operator|)
 condition|)
 block|{
 name|AcpiOsPrintf
@@ -783,8 +790,6 @@ block|}
 comment|/* Seek back to the beginning of the source file */
 name|fseek
 argument_list|(
-name|FileInfo
-operator|->
 name|Handle
 argument_list|,
 literal|0
@@ -796,6 +801,11 @@ comment|/* Were there any non-ASCII characters in the file? */
 if|if
 condition|(
 name|BadBytes
+condition|)
+block|{
+if|if
+condition|(
+name|DisplayErrors
 condition|)
 block|{
 name|AcpiOsPrintf
@@ -813,18 +823,17 @@ name|ASL_MSG_NON_ASCII
 argument_list|,
 name|NULL
 argument_list|,
-name|FileInfo
-operator|->
 name|Filename
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|AE_BAD_CHARACTER
 operator|)
 return|;
 block|}
-comment|/* File is OK */
+comment|/* File is OK (100% ASCII) */
 return|return
 operator|(
 name|AE_OK

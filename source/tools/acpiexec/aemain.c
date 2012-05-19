@@ -557,21 +557,13 @@ name|AE_NO_MEMORY
 operator|)
 return|;
 block|}
-name|Substring
-operator|=
-name|strrchr
+comment|/* Convert backslashes to slashes in the entire path */
+name|UtConvertBackslashes
 argument_list|(
 name|DirectoryPath
-argument_list|,
-literal|'\\'
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|Substring
-condition|)
-block|{
+comment|/* Backup to last slash or colon */
 name|Substring
 operator|=
 name|strrchr
@@ -597,7 +589,7 @@ literal|':'
 argument_list|)
 expr_stmt|;
 block|}
-block|}
+comment|/* Extract the simple filename */
 if|if
 condition|(
 operator|!

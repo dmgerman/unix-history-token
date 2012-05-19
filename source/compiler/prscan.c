@@ -1484,7 +1484,7 @@ argument_list|(
 name|ASL_DEBUG_OUTPUT
 argument_list|,
 name|PR_PREFIX_ID
-literal|"Start #include file %s\n"
+literal|"Start #include file \"%s\"\n"
 argument_list|,
 name|Gbl_CurrentLineNumber
 argument_list|,

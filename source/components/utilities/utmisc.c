@@ -46,6 +46,54 @@ argument_list|)
 end_macro
 
 begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    UtConvertBackslashes  *  * PARAMETERS:  Pathname        - File pathname string to be converted  *  * RETURN:      Modifies the input Pathname  *  * DESCRIPTION: Convert all backslashes (0x5C) to forward slashes (0x2F) within  *              the entire input file pathname string.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|UtConvertBackslashes
+parameter_list|(
+name|char
+modifier|*
+name|Pathname
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|Pathname
+condition|)
+block|{
+return|return;
+block|}
+while|while
+condition|(
+operator|*
+name|Pathname
+condition|)
+block|{
+if|if
+condition|(
+operator|*
+name|Pathname
+operator|==
+literal|'\\'
+condition|)
+block|{
+operator|*
+name|Pathname
+operator|=
+literal|'/'
+expr_stmt|;
+block|}
+name|Pathname
+operator|++
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtValidateException  *  * PARAMETERS:  Status       - The ACPI_STATUS code to be formatted  *  * RETURN:      A string containing the exception text. NULL if exception is  *              not valid.  *  * DESCRIPTION: This function validates and translates an ACPI exception into  *              an ASCII string.  *  ******************************************************************************/
 end_comment
 

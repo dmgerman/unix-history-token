@@ -3039,6 +3039,18 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
+comment|/* REGIONSPACE_PCC */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_RAW_DATA_BYTE
+argument_list|,
+name|ACPI_ADR_SPACE_PLATFORM_COMM
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
 comment|/* REGIONSPACE_PCI */
 name|OP_TABLE_ENTRY
 argument_list|(

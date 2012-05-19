@@ -2825,5 +2825,20 @@ begin_comment
 comment|/* ACPI_SINGLE_THREADED */
 end_comment
 
+begin_comment
+comment|/******************************************************************************  *  * FUNCTION:    AcpiOsWaitEventsComplete  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Wait for all asynchronous events to complete. This  *              implementation does nothing.  *  *****************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|AcpiOsWaitEventsComplete
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return;
+block|}
+end_function
+
 end_unit
 
