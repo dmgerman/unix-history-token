@@ -268,7 +268,8 @@ name|ifni2
 operator|->
 name|if_index
 operator|=
-operator|(
+name|LLINDEX
+argument_list|(
 operator|(
 expr|struct
 name|sockaddr_dl
@@ -277,9 +278,7 @@ operator|)
 name|ifa
 operator|->
 name|ifa_addr
-operator|)
-operator|->
-name|sdl_index
+argument_list|)
 expr_stmt|;
 name|ifni2
 operator|->
