@@ -11440,6 +11440,20 @@ operator|(
 name|EOPNOTSUPP
 operator|)
 return|;
+comment|/* Wait until sleep is enabled. */
+while|while
+condition|(
+name|sc
+operator|->
+name|acpi_sleep_disabled
+condition|)
+block|{
+name|AcpiOsSleep
+argument_list|(
+literal|1000
+argument_list|)
+expr_stmt|;
+block|}
 name|ACPI_LOCK
 argument_list|(
 name|acpi
@@ -11466,6 +11480,12 @@ literal|0
 operator|)
 return|;
 block|}
+name|sc
+operator|->
+name|acpi_next_sstate
+operator|=
+name|state
+expr_stmt|;
 comment|/* S5 (soft-off) should be entered directly with no waiting. */
 if|if
 condition|(
@@ -11502,12 +11522,6 @@ operator|)
 return|;
 block|}
 comment|/* Record the pending state and notify all apm devices. */
-name|sc
-operator|->
-name|acpi_next_sstate
-operator|=
-name|state
-expr_stmt|;
 name|STAILQ_FOREACH
 argument_list|(
 argument|clone
