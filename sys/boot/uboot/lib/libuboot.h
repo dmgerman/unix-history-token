@@ -160,6 +160,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+name|void
+modifier|*
+name|uboot_vm_translate
+parameter_list|(
+name|vm_offset_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|ssize_t
 name|uboot_copyin
 parameter_list|(
