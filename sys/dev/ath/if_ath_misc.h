@@ -288,24 +288,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|extern
-name|void
-name|ath_beacon_config
-parameter_list|(
-name|struct
-name|ath_softc
-modifier|*
-name|sc
-parameter_list|,
-name|struct
-name|ieee80211vap
-modifier|*
-name|vap
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_endif
 endif|#
 directive|endif

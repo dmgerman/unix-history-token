@@ -369,6 +369,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/ath/if_ath_beacon.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/ath/if_athdfs.h>
 end_include
 
