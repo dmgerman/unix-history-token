@@ -1720,6 +1720,17 @@ operator|)
 name|nd_opt
 expr_stmt|;
 break|break;
+comment|/* What about ND_OPT_ROUTE_INFO? RFC 4191 */
+case|case
+name|ND_OPT_RDNSS
+case|:
+comment|/* RFC 6106 */
+case|case
+name|ND_OPT_DNSSL
+case|:
+comment|/* RFC 6106 */
+comment|/* 			 * Silently ignore options we know and do not care about 			 * in the kernel. 			 */
+break|break;
 default|default:
 comment|/* 			 * Unknown options must be silently ignored, 			 * to accomodate future extension to the protocol. 			 */
 name|nd6log
