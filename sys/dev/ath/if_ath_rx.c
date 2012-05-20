@@ -2920,15 +2920,6 @@ operator|->
 name|sc_ifp
 decl_stmt|;
 name|struct
-name|ieee80211com
-modifier|*
-name|ic
-init|=
-name|ifp
-operator|->
-name|if_l2com
-decl_stmt|;
-name|struct
 name|ath_hal
 modifier|*
 name|ah
