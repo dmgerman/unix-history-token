@@ -7708,9 +7708,9 @@ literal|"defines the amount of time for the duration of the page scan. \n"
 expr|\
 literal|"The Page_Scan_Window can only be less than or equal to the Page_Scan_Interval.\n\n"
 expr|\
-literal|"\t<interval> - Range: 0x0012 - 0x100, Time = N * 0.625 msec\n"
+literal|"\t<interval> - Range: 0x0012 -- 0x100, Time = N * 0.625 msec\n"
 expr|\
-literal|"\t<window>   - Range: 0x0012 - 0x100, Time = N * 0.625 msen"
+literal|"\t<window>   - Range: 0x0012 -- 0x100, Time = N * 0.625 msen"
 block|,
 operator|&
 name|hci_write_page_scan_activity
@@ -7750,9 +7750,9 @@ literal|"parameter defines the amount of time for the duration of the inquiry sc
 expr|\
 literal|"The Inquiry_Scan_Window can only be less than or equal to the Inquiry_Scan_Interval.\n\n"
 expr|\
-literal|"\t<interval> - Range: 0x0012 - 0x100, Time = N * 0.625 msec\n"
+literal|"\t<interval> - Range: 0x0012 -- 0x100, Time = N * 0.625 msec\n"
 expr|\
-literal|"\t<window>   - Range: 0x0012 - 0x100, Time = N * 0.625 msen"
+literal|"\t<window>   - Range: 0x0012 -- 0x100, Time = N * 0.625 msen"
 block|,
 operator|&
 name|hci_write_inquiry_scan_activity
