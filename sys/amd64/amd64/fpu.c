@@ -640,7 +640,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * This requirement is to make it easier for asm code to calculate  * offset of the fpu save area from the pcb address. FPU save area  * must by 64-bytes aligned.  */
+comment|/*  * This requirement is to make it easier for asm code to calculate  * offset of the fpu save area from the pcb address. FPU save area  * must be 64-byte aligned.  */
 end_comment
 
 begin_expr_stmt
