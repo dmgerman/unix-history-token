@@ -10813,11 +10813,19 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX_BAR
 argument_list|,
-literal|"%s: tid=%p, called\n"
+literal|"%s: tid=%p, bar_wait=%d, bar_tx=%d, called\n"
 argument_list|,
 name|__func__
 argument_list|,
 name|tid
+argument_list|,
+name|tid
+operator|->
+name|bar_wait
+argument_list|,
+name|tid
+operator|->
+name|bar_tx
 argument_list|)
 expr_stmt|;
 comment|/* We shouldn't be called when bar_tx is 1 */
@@ -17590,9 +17598,21 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX_BAR
 argument_list|,
-literal|"%s: called; status=%d, attempts=%d\n"
+literal|"%s: called; tap=%p, atid=%p, txa_tid=%d, atid->tid=%d, status=%d, attempts=%d\n"
 argument_list|,
 name|__func__
+argument_list|,
+name|tap
+argument_list|,
+name|atid
+argument_list|,
+name|tap
+operator|->
+name|txa_tid
+argument_list|,
+name|atid
+operator|->
+name|tid
 argument_list|,
 name|status
 argument_list|,
