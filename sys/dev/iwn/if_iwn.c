@@ -16074,11 +16074,6 @@ modifier|*
 name|ni
 decl_stmt|;
 name|struct
-name|ieee80211vap
-modifier|*
-name|vap
-decl_stmt|;
-name|struct
 name|ieee80211_tx_ampdu
 modifier|*
 name|tap
@@ -16462,12 +16457,6 @@ operator|->
 name|ni
 operator|=
 name|NULL
-expr_stmt|;
-name|vap
-operator|=
-name|ni
-operator|->
-name|ni_vap
 expr_stmt|;
 if|if
 condition|(
