@@ -442,7 +442,7 @@ control|)
 block|{
 if|if
 condition|(
-name|strcmp
+name|strcasecmp
 argument_list|(
 name|from
 argument_list|,
@@ -469,7 +469,7 @@ name|from_flag
 expr_stmt|;
 if|if
 condition|(
-name|strcmp
+name|strcasecmp
 argument_list|(
 name|to
 argument_list|,
@@ -497,7 +497,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|strcmp
+name|strcasecmp
 argument_list|(
 name|ENCODING_UNICODE
 argument_list|,
@@ -2233,17 +2233,6 @@ literal|0
 operator|)
 return|;
 block|}
-if|if
-condition|(
-name|w
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 if|if
 condition|(
 name|srclen
