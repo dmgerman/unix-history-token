@@ -2601,7 +2601,7 @@ block|{
 literal|"bpf cdev lock"
 block|,
 operator|&
-name|lock_class_rw
+name|lock_class_mtx_sleep
 block|}
 block|,
 block|{

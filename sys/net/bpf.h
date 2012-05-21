@@ -3014,6 +3014,10 @@ argument_list|)
 name|bif_wlist
 expr_stmt|;
 comment|/* writer-only list */
+name|int
+name|flags
+decl_stmt|;
+comment|/* Interface flags */
 endif|#
 directive|endif
 block|}

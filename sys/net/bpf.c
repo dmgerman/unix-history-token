@@ -1035,8 +1035,16 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|eventhandler_tag
+name|bpf_ifdetach_cookie
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/*  * LOCKING MODEL USED BY BPF:  * Locks:  * 1) global lock (BPF_LOCK). Mutex, used to protect interface addition/removal,  * some global counters and every bpf_if reference.  * 2) Interface lock. Rwlock, used to protect list of BPF descriptors and their filters.  * 3) Descriptor lock. Rwlock, used to protect BPF buffers and various structure fields  *   used by bpf_mtap code.  *  * Lock order:  *  * Global lock, interface lock, descriptor lock  *  * We have to acquire interface lock before descriptor main lock due to BPF_MTAP[2]  * working model. In many places (like bpf_detachd) we start with BPF descriptor  * (and we need to at least rlock it to get reliable interface pointer). This  * gives us potential LOR. As a result, we use global lock to protect from bpf_if  * change in every such place.  *  * Changing d->bd_bif is protected by 1) global lock, 2) interface lock and  * 3) descriptor main wlock.  * Reading bd_bif can be protected by any of these locks, typically global lock.  *  * Changing read/write BPF filter is protected by the same three locks,  * the same applies for reading.  *  * Sleeping in global lock is not allowed due to bpfdetach() using it.  */
+comment|/*  * LOCKING MODEL USED BY BPF:  * Locks:  * 1) global lock (BPF_LOCK). Mutex, used to protect interface addition/removal,  * some global counters and every bpf_if reference.  * 2) Interface lock. Rwlock, used to protect list of BPF descriptors and their filters.  * 3) Descriptor lock. Mutex, used to protect BPF buffers and various structure fields  *   used by bpf_mtap code.  *  * Lock order:  *  * Global lock, interface lock, descriptor lock  *  * We have to acquire interface lock before descriptor main lock due to BPF_MTAP[2]  * working model. In many places (like bpf_detachd) we start with BPF descriptor  * (and we need to at least rlock it to get reliable interface pointer). This  * gives us potential LOR. As a result, we use global lock to protect from bpf_if  * change in every such place.  *  * Changing d->bd_bif is protected by 1) global lock, 2) interface lock and  * 3) descriptor main wlock.  * Reading bd_bif can be protected by any of these locks, typically global lock.  *  * Changing read/write BPF filter is protected by the same three locks,  * the same applies for reading.  *  * Sleeping in global lock is not allowed due to bpfdetach() using it.  */
 end_comment
 
 begin_comment
@@ -1067,7 +1075,7 @@ name|u_int
 name|len
 parameter_list|)
 block|{
-name|BPFD_WLOCK_ASSERT
+name|BPFD_LOCK_ASSERT
 argument_list|(
 name|d
 argument_list|)
@@ -1156,7 +1164,7 @@ name|u_int
 name|len
 parameter_list|)
 block|{
-name|BPFD_WLOCK_ASSERT
+name|BPFD_LOCK_ASSERT
 argument_list|(
 name|d
 argument_list|)
@@ -1236,7 +1244,7 @@ modifier|*
 name|d
 parameter_list|)
 block|{
-name|BPFD_WLOCK_ASSERT
+name|BPFD_LOCK_ASSERT
 argument_list|(
 name|d
 argument_list|)
@@ -1380,7 +1388,7 @@ modifier|*
 name|d
 parameter_list|)
 block|{
-name|BPFD_WLOCK_ASSERT
+name|BPFD_LOCK_ASSERT
 argument_list|(
 name|d
 argument_list|)
@@ -1419,7 +1427,7 @@ modifier|*
 name|d
 parameter_list|)
 block|{
-name|BPFD_WLOCK_ASSERT
+name|BPFD_LOCK_ASSERT
 argument_list|(
 name|d
 argument_list|)
@@ -2375,7 +2383,7 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-name|BPFD_WLOCK
+name|BPFD_LOCK
 argument_list|(
 name|d
 argument_list|)
@@ -2427,7 +2435,7 @@ argument_list|,
 name|bd_next
 argument_list|)
 expr_stmt|;
-name|BPFD_WUNLOCK
+name|BPFD_UNLOCK
 argument_list|(
 name|d
 argument_list|)
@@ -2522,7 +2530,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|BPFD_WLOCK
+name|BPFD_LOCK
 argument_list|(
 name|d
 argument_list|)
@@ -2533,7 +2541,7 @@ name|bd_writer
 operator|=
 literal|0
 expr_stmt|;
-name|BPFD_WUNLOCK
+name|BPFD_UNLOCK
 argument_list|(
 name|d
 argument_list|)
@@ -2545,7 +2553,7 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-name|BPFD_WLOCK
+name|BPFD_LOCK
 argument_list|(
 name|d
 argument_list|)
@@ -2577,7 +2585,7 @@ name|bd_writer
 operator|=
 literal|0
 expr_stmt|;
-name|BPFD_WUNLOCK
+name|BPFD_UNLOCK
 argument_list|(
 name|d
 argument_list|)
@@ -2706,7 +2714,7 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-name|BPFD_WLOCK
+name|BPFD_LOCK
 argument_list|(
 name|d
 argument_list|)
@@ -2738,7 +2746,7 @@ name|bd_bif
 operator|=
 name|NULL
 expr_stmt|;
-name|BPFD_WUNLOCK
+name|BPFD_UNLOCK
 argument_list|(
 name|d
 argument_list|)
@@ -2853,7 +2861,7 @@ name|d
 init|=
 name|data
 decl_stmt|;
-name|BPFD_WLOCK
+name|BPFD_LOCK
 argument_list|(
 name|d
 argument_list|)
@@ -2880,7 +2888,7 @@ name|bd_state
 operator|=
 name|BPF_IDLE
 expr_stmt|;
-name|BPFD_WUNLOCK
+name|BPFD_UNLOCK
 argument_list|(
 name|d
 argument_list|)
@@ -3084,17 +3092,24 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|rw_init
+name|mtx_init
 argument_list|(
 operator|&
 name|d
 operator|->
 name|bd_lock
 argument_list|,
+name|devtoname
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
 literal|"bpf cdev lock"
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
-name|callout_init_rw
+name|callout_init_mtx
 argument_list|(
 operator|&
 name|d
@@ -3109,7 +3124,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|knlist_init_rw_reader
+name|knlist_init_mtx
 argument_list|(
 operator|&
 name|d
@@ -3221,7 +3236,7 @@ operator|!=
 literal|0
 operator|)
 expr_stmt|;
-name|BPFD_WLOCK
+name|BPFD_LOCK
 argument_list|(
 name|d
 argument_list|)
@@ -3240,7 +3255,7 @@ operator|!=
 name|BPF_BUFMODE_BUFFER
 condition|)
 block|{
-name|BPFD_WUNLOCK
+name|BPFD_UNLOCK
 argument_list|(
 name|d
 argument_list|)
@@ -3333,7 +3348,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|BPFD_WUNLOCK
+name|BPFD_UNLOCK
 argument_list|(
 name|d
 argument_list|)
@@ -3349,7 +3364,7 @@ condition|(
 name|non_block
 condition|)
 block|{
-name|BPFD_WUNLOCK
+name|BPFD_UNLOCK
 argument_list|(
 name|d
 argument_list|)
@@ -3362,7 +3377,7 @@ return|;
 block|}
 name|error
 operator|=
-name|rw_sleep
+name|msleep
 argument_list|(
 name|d
 argument_list|,
@@ -3393,7 +3408,7 @@ operator|==
 name|ERESTART
 condition|)
 block|{
-name|BPFD_WUNLOCK
+name|BPFD_UNLOCK
 argument_list|(
 name|d
 argument_list|)
@@ -3429,7 +3444,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|BPFD_WUNLOCK
+name|BPFD_UNLOCK
 argument_list|(
 name|d
 argument_list|)
@@ -3449,7 +3464,7 @@ break|break;
 block|}
 block|}
 comment|/* 	 * At this point, we know we have something in the hold slot. 	 */
-name|BPFD_WUNLOCK
+name|BPFD_UNLOCK
 argument_list|(
 name|d
 argument_list|)
@@ -3472,7 +3487,7 @@ argument_list|,
 name|uio
 argument_list|)
 expr_stmt|;
-name|BPFD_WLOCK
+name|BPFD_LOCK
 argument_list|(
 name|d
 argument_list|)
@@ -3502,7 +3517,7 @@ argument_list|(
 name|d
 argument_list|)
 expr_stmt|;
-name|BPFD_WUNLOCK
+name|BPFD_UNLOCK
 argument_list|(
 name|d
 argument_list|)
@@ -3531,7 +3546,7 @@ modifier|*
 name|d
 parameter_list|)
 block|{
-name|BPFD_WLOCK_ASSERT
+name|BPFD_LOCK_ASSERT
 argument_list|(
 name|d
 argument_list|)
@@ -3640,7 +3655,7 @@ operator|*
 operator|)
 name|arg
 decl_stmt|;
-name|BPFD_WLOCK_ASSERT
+name|BPFD_LOCK_ASSERT
 argument_list|(
 name|d
 argument_list|)
@@ -3708,7 +3723,7 @@ modifier|*
 name|d
 parameter_list|)
 block|{
-name|BPFD_WLOCK_ASSERT
+name|BPFD_LOCK_ASSERT
 argument_list|(
 name|d
 argument_list|)
@@ -4084,7 +4099,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-name|BPFD_WLOCK
+name|BPFD_LOCK
 argument_list|(
 name|d
 argument_list|)
@@ -4109,7 +4124,7 @@ argument_list|,
 name|mc
 argument_list|)
 expr_stmt|;
-name|BPFD_WUNLOCK
+name|BPFD_UNLOCK
 argument_list|(
 name|d
 argument_list|)
@@ -4202,7 +4217,7 @@ modifier|*
 name|d
 parameter_list|)
 block|{
-name|BPFD_WLOCK_ASSERT
+name|BPFD_LOCK_ASSERT
 argument_list|(
 name|d
 argument_list|)
@@ -4382,7 +4397,7 @@ name|error
 operator|)
 return|;
 comment|/* 	 * Refresh PID associated with this descriptor. 	 */
-name|BPFD_WLOCK
+name|BPFD_LOCK
 argument_list|(
 name|d
 argument_list|)
@@ -4416,7 +4431,7 @@ name|bd_state
 operator|=
 name|BPF_IDLE
 expr_stmt|;
-name|BPFD_WUNLOCK
+name|BPFD_UNLOCK
 argument_list|(
 name|d
 argument_list|)
@@ -4603,7 +4618,7 @@ block|{
 name|int
 name|n
 decl_stmt|;
-name|BPFD_WLOCK
+name|BPFD_LOCK
 argument_list|(
 name|d
 argument_list|)
@@ -4626,7 +4641,7 @@ name|d
 operator|->
 name|bd_hlen
 expr_stmt|;
-name|BPFD_WUNLOCK
+name|BPFD_UNLOCK
 argument_list|(
 name|d
 argument_list|)
@@ -4771,7 +4786,7 @@ comment|/* 	 * Flush read packet buffer. 	 */
 case|case
 name|BIOCFLUSH
 case|:
-name|BPFD_WLOCK
+name|BPFD_LOCK
 argument_list|(
 name|d
 argument_list|)
@@ -4781,7 +4796,7 @@ argument_list|(
 name|d
 argument_list|)
 expr_stmt|;
-name|BPFD_WUNLOCK
+name|BPFD_UNLOCK
 argument_list|(
 name|d
 argument_list|)
@@ -5863,7 +5878,7 @@ name|EINVAL
 operator|)
 return|;
 block|}
-name|BPFD_WLOCK
+name|BPFD_LOCK
 argument_list|(
 name|d
 argument_list|)
@@ -5895,7 +5910,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|BPFD_WUNLOCK
+name|BPFD_UNLOCK
 argument_list|(
 name|d
 argument_list|)
@@ -5920,7 +5935,7 @@ operator|*
 operator|)
 name|addr
 expr_stmt|;
-name|BPFD_WUNLOCK
+name|BPFD_UNLOCK
 argument_list|(
 name|d
 argument_list|)
@@ -6284,7 +6299,7 @@ operator|->
 name|bd_bif
 argument_list|)
 expr_stmt|;
-name|BPFD_WLOCK
+name|BPFD_LOCK
 argument_list|(
 name|d
 argument_list|)
@@ -6330,7 +6345,7 @@ name|d
 argument_list|)
 expr_stmt|;
 block|}
-name|BPFD_WUNLOCK
+name|BPFD_UNLOCK
 argument_list|(
 name|d
 argument_list|)
@@ -6439,7 +6454,7 @@ operator|->
 name|bd_bif
 argument_list|)
 expr_stmt|;
-name|BPFD_WLOCK
+name|BPFD_LOCK
 argument_list|(
 name|d
 argument_list|)
@@ -6534,7 +6549,7 @@ name|need_upgrade
 argument_list|)
 expr_stmt|;
 block|}
-name|BPFD_WUNLOCK
+name|BPFD_UNLOCK
 argument_list|(
 name|d
 argument_list|)
@@ -6693,7 +6708,38 @@ name|theywant
 operator|->
 name|if_bpf
 expr_stmt|;
-comment|/* 	 * Behavior here depends on the buffering model.  If we're using 	 * kernel memory buffers, then we can allocate them here.  If we're 	 * using zero-copy, then the user process must have registered 	 * buffers by the time we get here.  If not, return an error. 	 * 	 * XXXRW: There are locking issues here with multi-threaded use: what 	 * if two threads try to set the interface at once? 	 */
+comment|/* Check if interface is not being detached from BPF */
+name|BPFIF_RLOCK
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bp
+operator|->
+name|flags
+operator|&
+name|BPFIF_FLAG_DYING
+condition|)
+block|{
+name|BPFIF_RUNLOCK
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
+name|BPFIF_RUNLOCK
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Behavior here depends on the buffering model.  If we're using 	 * kernel memory buffers, then we can allocate them here.  If we're 	 * using zero-copy, then the user process must have registered 	 * buffers by the time we get here.  If not, return an error. 	 */
 switch|switch
 condition|(
 name|d
@@ -6774,7 +6820,7 @@ argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
-name|BPFD_WLOCK
+name|BPFD_LOCK
 argument_list|(
 name|d
 argument_list|)
@@ -6784,7 +6830,7 @@ argument_list|(
 name|d
 argument_list|)
 expr_stmt|;
-name|BPFD_WUNLOCK
+name|BPFD_UNLOCK
 argument_list|(
 name|d
 argument_list|)
@@ -6877,7 +6923,7 @@ operator||
 name|POLLWRNORM
 operator|)
 expr_stmt|;
-name|BPFD_WLOCK
+name|BPFD_LOCK
 argument_list|(
 name|d
 argument_list|)
@@ -6970,7 +7016,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-name|BPFD_WUNLOCK
+name|BPFD_UNLOCK
 argument_list|(
 name|d
 argument_list|)
@@ -7034,7 +7080,7 @@ literal|1
 operator|)
 return|;
 comment|/* 	 * Refresh PID associated with this descriptor. 	 */
-name|BPFD_WLOCK
+name|BPFD_LOCK
 argument_list|(
 name|d
 argument_list|)
@@ -7071,7 +7117,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|BPFD_WUNLOCK
+name|BPFD_UNLOCK
 argument_list|(
 name|d
 argument_list|)
@@ -7157,7 +7203,7 @@ decl_stmt|;
 name|int
 name|ready
 decl_stmt|;
-name|BPFD_WLOCK_ASSERT
+name|BPFD_LOCK_ASSERT
 argument_list|(
 name|d
 argument_list|)
@@ -7570,7 +7616,7 @@ literal|0
 condition|)
 block|{
 comment|/* 			 * Filter matches. Let's to acquire write lock. 			 */
-name|BPFD_WLOCK
+name|BPFD_LOCK
 argument_list|(
 name|d
 argument_list|)
@@ -7639,7 +7685,7 @@ operator|&
 name|bt
 argument_list|)
 expr_stmt|;
-name|BPFD_WUNLOCK
+name|BPFD_UNLOCK
 argument_list|(
 name|d
 argument_list|)
@@ -7876,7 +7922,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|BPFD_WLOCK
+name|BPFD_LOCK
 argument_list|(
 name|d
 argument_list|)
@@ -7949,7 +7995,7 @@ operator|&
 name|bt
 argument_list|)
 expr_stmt|;
-name|BPFD_WUNLOCK
+name|BPFD_UNLOCK
 argument_list|(
 name|d
 argument_list|)
@@ -8142,7 +8188,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|BPFD_WLOCK
+name|BPFD_LOCK
 argument_list|(
 name|d
 argument_list|)
@@ -8216,7 +8262,7 @@ operator|&
 name|bt
 argument_list|)
 expr_stmt|;
-name|BPFD_WUNLOCK
+name|BPFD_UNLOCK
 argument_list|(
 name|d
 argument_list|)
@@ -8624,7 +8670,7 @@ decl_stmt|;
 name|int
 name|tstype
 decl_stmt|;
-name|BPFD_WLOCK_ASSERT
+name|BPFD_LOCK_ASSERT
 argument_list|(
 name|d
 argument_list|)
@@ -9224,7 +9270,7 @@ argument_list|,
 name|M_BPF
 argument_list|)
 expr_stmt|;
-name|rw_destroy
+name|mtx_destroy
 argument_list|(
 operator|&
 name|d
@@ -9458,12 +9504,12 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Find all bpf_if struct's which reference ifp and detach them. */
-do|do
-block|{
 name|BPF_LOCK
 argument_list|()
 expr_stmt|;
+comment|/* Find all bpf_if struct's which reference ifp and detach them. */
+do|do
+block|{
 name|LIST_FOREACH
 argument_list|(
 argument|bp
@@ -9495,9 +9541,6 @@ name|bp
 argument_list|,
 name|bif_next
 argument_list|)
-expr_stmt|;
-name|BPF_UNLOCK
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -9531,12 +9574,12 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|bpf_detachd
+name|bpf_detachd_locked
 argument_list|(
 name|d
 argument_list|)
 expr_stmt|;
-name|BPFD_WLOCK
+name|BPFD_LOCK
 argument_list|(
 name|d
 argument_list|)
@@ -9546,7 +9589,7 @@ argument_list|(
 name|d
 argument_list|)
 expr_stmt|;
-name|BPFD_WUNLOCK
+name|BPFD_UNLOCK
 argument_list|(
 name|d
 argument_list|)
@@ -9570,12 +9613,12 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|bpf_detachd
+name|bpf_detachd_locked
 argument_list|(
 name|d
 argument_list|)
 expr_stmt|;
-name|BPFD_WLOCK
+name|BPFD_LOCK
 argument_list|(
 name|d
 argument_list|)
@@ -9585,25 +9628,27 @@ argument_list|(
 name|d
 argument_list|)
 expr_stmt|;
-name|BPFD_WUNLOCK
+name|BPFD_UNLOCK
 argument_list|(
 name|d
 argument_list|)
 expr_stmt|;
 block|}
-name|rw_destroy
+comment|/* 			 * Delay freing bp till interface is detached 			 * and all routes through this interface are removed. 			 * Mark bp as detached to restrict new consumers. 			 */
+name|BPFIF_WLOCK
 argument_list|(
-operator|&
 name|bp
-operator|->
-name|bif_lock
 argument_list|)
 expr_stmt|;
-name|free
+name|bp
+operator|->
+name|flags
+operator||=
+name|BPFIF_FLAG_DYING
+expr_stmt|;
+name|BPFIF_WUNLOCK
 argument_list|(
 name|bp
-argument_list|,
-name|M_BPF
 argument_list|)
 expr_stmt|;
 block|}
@@ -9615,6 +9660,9 @@ operator|!=
 name|NULL
 condition|)
 do|;
+name|BPF_UNLOCK
+argument_list|()
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INVARIANTS
@@ -9635,6 +9683,81 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+block|}
+end_function
+
+begin_comment
+comment|/*  * Interface departure handler  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|bpf_ifdetach
+parameter_list|(
+name|void
+modifier|*
+name|arg
+name|__unused
+parameter_list|,
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|)
+block|{
+name|struct
+name|bpf_if
+modifier|*
+name|bp
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|bp
+operator|=
+name|ifp
+operator|->
+name|if_bpf
+operator|)
+operator|==
+name|NULL
+condition|)
+return|return;
+name|CTR3
+argument_list|(
+name|KTR_NET
+argument_list|,
+literal|"%s: freing BPF instance %p for interface %p"
+argument_list|,
+name|__func__
+argument_list|,
+name|bp
+argument_list|,
+name|ifp
+argument_list|)
+expr_stmt|;
+name|ifp
+operator|->
+name|if_bpf
+operator|=
+name|NULL
+expr_stmt|;
+name|rw_destroy
+argument_list|(
+operator|&
+name|bp
+operator|->
+name|bif_lock
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|bp
+argument_list|,
+name|M_BPF
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -9884,7 +10007,7 @@ argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
-name|BPFD_WLOCK
+name|BPFD_LOCK
 argument_list|(
 name|d
 argument_list|)
@@ -9894,7 +10017,7 @@ argument_list|(
 name|d
 argument_list|)
 expr_stmt|;
-name|BPFD_WUNLOCK
+name|BPFD_UNLOCK
 argument_list|(
 name|d
 argument_list|)
@@ -10012,6 +10135,20 @@ argument_list|,
 literal|"bpf0"
 argument_list|)
 expr_stmt|;
+comment|/* Register interface departure handler */
+name|bpf_ifdetach_cookie
+operator|=
+name|EVENTHANDLER_REGISTER
+argument_list|(
+name|ifnet_departure_event
+argument_list|,
+name|bpf_ifdetach
+argument_list|,
+name|NULL
+argument_list|,
+name|EVENTHANDLER_PRI_ANY
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -10063,7 +10200,7 @@ argument_list|,
 argument|bd_next
 argument_list|)
 block|{
-name|BPFD_WLOCK
+name|BPFD_LOCK
 argument_list|(
 name|bd
 argument_list|)
@@ -10104,7 +10241,7 @@ name|bd_zcopy
 operator|=
 literal|0
 expr_stmt|;
-name|BPFD_WUNLOCK
+name|BPFD_UNLOCK
 argument_list|(
 name|bd
 argument_list|)
@@ -10612,7 +10749,7 @@ name|index
 operator|++
 index|]
 expr_stmt|;
-name|BPFD_RLOCK
+name|BPFD_LOCK
 argument_list|(
 name|bd
 argument_list|)
@@ -10624,7 +10761,7 @@ argument_list|,
 name|bd
 argument_list|)
 expr_stmt|;
-name|BPFD_RUNLOCK
+name|BPFD_UNLOCK
 argument_list|(
 name|bd
 argument_list|)
@@ -10648,7 +10785,7 @@ name|index
 operator|++
 index|]
 expr_stmt|;
-name|BPFD_RLOCK
+name|BPFD_LOCK
 argument_list|(
 name|bd
 argument_list|)
@@ -10660,7 +10797,7 @@ argument_list|,
 name|bd
 argument_list|)
 expr_stmt|;
-name|BPFD_RUNLOCK
+name|BPFD_UNLOCK
 argument_list|(
 name|bd
 argument_list|)

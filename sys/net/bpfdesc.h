@@ -178,7 +178,7 @@ name|bd_sel
 decl_stmt|;
 comment|/* bsd select info */
 name|struct
-name|rwlock
+name|mtx
 name|bd_lock
 decl_stmt|;
 comment|/* per-descriptor lock */
@@ -273,51 +273,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BPFD_RLOCK
+name|BPFD_LOCK
 parameter_list|(
 name|bd
 parameter_list|)
-value|rw_rlock(&(bd)->bd_lock)
+value|mtx_lock(&(bd)->bd_lock)
 end_define
 
 begin_define
 define|#
 directive|define
-name|BPFD_RUNLOCK
+name|BPFD_UNLOCK
 parameter_list|(
 name|bd
 parameter_list|)
-value|rw_runlock(&(bd)->bd_lock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BPFD_WLOCK
-parameter_list|(
-name|bd
-parameter_list|)
-value|rw_wlock(&(bd)->bd_lock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BPFD_WUNLOCK
-parameter_list|(
-name|bd
-parameter_list|)
-value|rw_wunlock(&(bd)->bd_lock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BPFD_WLOCK_ASSERT
-parameter_list|(
-name|bd
-parameter_list|)
-value|rw_assert(&(bd)->bd_lock, RA_WLOCKED)
+value|mtx_unlock(&(bd)->bd_lock)
 end_define
 
 begin_define
@@ -327,7 +297,7 @@ name|BPFD_LOCK_ASSERT
 parameter_list|(
 name|bd
 parameter_list|)
-value|rw_assert(&(bd)->bd_lock, RA_LOCKED)
+value|mtx_assert(&(bd)->bd_lock, MA_OWNED)
 end_define
 
 begin_define
@@ -510,6 +480,17 @@ name|bif
 parameter_list|)
 value|rw_wunlock(&(bif)->bif_lock)
 end_define
+
+begin_define
+define|#
+directive|define
+name|BPFIF_FLAG_DYING
+value|1
+end_define
+
+begin_comment
+comment|/* Reject new bpf consumers */
+end_comment
 
 begin_endif
 endif|#
