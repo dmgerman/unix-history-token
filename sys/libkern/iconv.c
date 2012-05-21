@@ -481,6 +481,11 @@ modifier|*
 name|dcp
 parameter_list|)
 block|{
+name|dcp
+operator|->
+name|refs
+operator|--
+expr_stmt|;
 if|if
 condition|(
 name|dcp
