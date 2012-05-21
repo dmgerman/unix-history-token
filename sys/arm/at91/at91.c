@@ -224,7 +224,9 @@ if|if
 condition|(
 name|pa
 operator|>=
-literal|0xfff00000
+name|AT91_PA_BASE
+operator|+
+literal|0xff00000
 condition|)
 block|{
 operator|*
@@ -232,9 +234,9 @@ name|bshp
 operator|=
 name|pa
 operator|-
-literal|0xf0000000
+name|AT91_PA_BASE
 operator|+
-literal|0xd0000000
+name|AT91_BASE
 expr_stmt|;
 return|return
 operator|(
@@ -246,7 +248,9 @@ if|if
 condition|(
 name|pa
 operator|>=
-literal|0xdff00000
+name|AT91_BASE
+operator|+
+literal|0xff00000
 condition|)
 return|return
 operator|(
