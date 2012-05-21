@@ -5682,7 +5682,9 @@ argument_list|)
 expr_stmt|;
 name|printf_filtered
 argument_list|(
-literal|"Destructor %p<%s>\n"
+literal|"Key %d, destructor %p<%s>\n"
+argument_list|,
+name|key
 argument_list|,
 name|destructor
 argument_list|,
