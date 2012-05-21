@@ -12406,7 +12406,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|ath_tx_cleanup
+name|ath_tx_tid_cleanup
 parameter_list|(
 name|struct
 name|ath_softc
@@ -17507,8 +17507,8 @@ argument_list|,
 name|tap
 argument_list|)
 expr_stmt|;
-comment|/* 	 * ath_tx_cleanup will resume the TID if possible, otherwise 	 * it'll set the cleanup flag, and it'll be unpaused once 	 * things have been cleaned up. 	 */
-name|ath_tx_cleanup
+comment|/* 	 * ath_tx_tid_cleanup will resume the TID if possible, otherwise 	 * it'll set the cleanup flag, and it'll be unpaused once 	 * things have been cleaned up. 	 */
+name|ath_tx_tid_cleanup
 argument_list|(
 name|sc
 argument_list|,
