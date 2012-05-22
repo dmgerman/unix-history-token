@@ -77,6 +77,14 @@ end_endif
 
 begin_function_decl
 name|__BEGIN_DECLS
+ifdef|#
+directive|ifdef
+name|_XLOCALE_H_
+include|#
+directive|include
+file|<xlocale/_monetary.h>
+endif|#
+directive|endif
 name|ssize_t
 name|strfmon
 parameter_list|(

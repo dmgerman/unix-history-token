@@ -1544,7 +1544,7 @@ end_function
 
 begin_decl_stmt
 name|int
-name|strtodg
+name|strtodg_l
 ifdef|#
 directive|ifdef
 name|KR_headers
@@ -1558,6 +1558,8 @@ argument_list|,
 name|exp
 argument_list|,
 name|bits
+argument_list|,
+name|loc
 argument_list|)
 name|CONST
 name|char
@@ -1595,6 +1597,12 @@ name|bits
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|locale_t
+name|loc
+decl_stmt|;
+end_decl_stmt
+
 begin_else
 else|#
 directive|else
@@ -1623,6 +1631,9 @@ operator|,
 name|ULong
 operator|*
 name|bits
+operator|,
+name|locale_t
+name|loc
 operator|)
 endif|#
 directive|endif
@@ -1782,8 +1793,10 @@ name|char
 operator|*
 name|decimalpoint
 operator|=
-name|localeconv
-argument_list|()
+name|localeconv_l
+argument_list|(
+name|loc
+argument_list|)
 operator|->
 name|decimal_point
 block|;
@@ -1822,8 +1835,10 @@ condition|)
 block|{
 name|s0
 operator|=
-name|localeconv
-argument_list|()
+name|localeconv_l
+argument_list|(
+name|loc
+argument_list|)
 operator|->
 name|decimal_point
 expr_stmt|;

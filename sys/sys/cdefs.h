@@ -1116,11 +1116,15 @@ parameter_list|)
 value|static_assert(e, s)
 end_define
 
+begin_comment
+comment|/* FIXME: change this to thread_local when clang in base supports it */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|_Thread_local
-value|thread_local
+value|__thread
 end_define
 
 begin_elif
@@ -1927,6 +1931,28 @@ name|fmtarg
 parameter_list|)
 end_define
 
+begin_define
+define|#
+directive|define
+name|__strfmonlike
+parameter_list|(
+name|fmtarg
+parameter_list|,
+name|firstvararg
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__strftimelike
+parameter_list|(
+name|fmtarg
+parameter_list|,
+name|firstvararg
+parameter_list|)
+end_define
+
 begin_else
 else|#
 directive|else
@@ -1966,6 +1992,32 @@ parameter_list|(
 name|fmtarg
 parameter_list|)
 value|__attribute__((__format_arg__ (fmtarg)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__strfmonlike
+parameter_list|(
+name|fmtarg
+parameter_list|,
+name|firstvararg
+parameter_list|)
+define|\
+value|__attribute__((__format__ (__strfmon__, fmtarg, firstvararg)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__strftimelike
+parameter_list|(
+name|fmtarg
+parameter_list|,
+name|firstvararg
+parameter_list|)
+define|\
+value|__attribute__((__format__ (__strftime__, fmtarg, firstvararg)))
 end_define
 
 begin_endif
@@ -3178,6 +3230,37 @@ parameter_list|(
 name|x
 parameter_list|)
 value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__mips
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__powerpc64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|__NO_TLS
+value|1
 end_define
 
 begin_endif

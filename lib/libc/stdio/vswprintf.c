@@ -4,7 +4,7 @@ comment|/*	$OpenBSD: vasprintf.c,v 1.4 1998/06/21 22:13:47 millert Exp $	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1997 Todd C. Miller<Todd.Miller@courtesan.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL  * THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;  * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1997 Todd C. Miller<Todd.Miller@courtesan.com>  * All rights reserved.  *  * Copyright (c) 2011 The FreeBSD Foundation  * All rights reserved.  * Portions of this software were developed by David Chisnall  * under sponsorship from the FreeBSD Foundation.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL  * THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;  * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -63,9 +63,15 @@ directive|include
 file|"local.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"xlocale_private.h"
+end_include
+
 begin_function
 name|int
-name|vswprintf
+name|vswprintf_l
 parameter_list|(
 name|wchar_t
 modifier|*
@@ -74,6 +80,9 @@ name|s
 parameter_list|,
 name|size_t
 name|n
+parameter_list|,
+name|locale_t
+name|locale
 parameter_list|,
 specifier|const
 name|wchar_t
@@ -110,6 +119,11 @@ decl_stmt|;
 name|size_t
 name|nwc
 decl_stmt|;
+name|FIX_LOCALE
+argument_list|(
+name|locale
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|n
@@ -206,6 +220,8 @@ argument_list|(
 operator|&
 name|f
 argument_list|,
+name|locale
+argument_list|,
 name|fmt
 argument_list|,
 name|ap
@@ -270,7 +286,7 @@ name|initial
 expr_stmt|;
 name|nwc
 operator|=
-name|mbsrtowcs
+name|mbsrtowcs_l
 argument_list|(
 name|s
 argument_list|,
@@ -287,6 +303,8 @@ name|n
 argument_list|,
 operator|&
 name|mbs
+argument_list|,
+name|locale
 argument_list|)
 expr_stmt|;
 name|free
@@ -358,6 +376,46 @@ return|return
 operator|(
 name|ret
 operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|vswprintf
+parameter_list|(
+name|wchar_t
+modifier|*
+name|__restrict
+name|s
+parameter_list|,
+name|size_t
+name|n
+parameter_list|,
+specifier|const
+name|wchar_t
+modifier|*
+name|__restrict
+name|fmt
+parameter_list|,
+name|__va_list
+name|ap
+parameter_list|)
+block|{
+return|return
+name|vswprintf_l
+argument_list|(
+name|s
+argument_list|,
+name|n
+argument_list|,
+name|__get_locale
+argument_list|()
+argument_list|,
+name|fmt
+argument_list|,
+name|ap
+argument_list|)
 return|;
 block|}
 end_function

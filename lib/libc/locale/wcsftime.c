@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2002 Tim J. Robbins  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2002 Tim J. Robbins  * All rights reserved.  *  * Copyright (c) 2011 The FreeBSD Foundation  * All rights reserved.  * Portions of this software were developed by David Chisnall  * under sponsorship from the FreeBSD Foundation.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -47,13 +47,19 @@ directive|include
 file|<wchar.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"xlocale_private.h"
+end_include
+
 begin_comment
 comment|/*  * Convert date and time to a wide-character string.  *  * This is the wide-character counterpart of strftime(). So that we do not  * have to duplicate the code of strftime(), we convert the format string to  * multibyte, call strftime(), then convert the result back into wide  * characters.  *  * This technique loses in the presence of stateful multibyte encoding if any  * of the conversions in the format string change conversion state. When  * stateful encoding is implemented, we will need to reset the state between  * format specifications in the format string.  */
 end_comment
 
 begin_function
 name|size_t
-name|wcsftime
+name|wcsftime_l
 parameter_list|(
 name|wchar_t
 modifier|*
@@ -75,6 +81,9 @@ name|tm
 modifier|*
 name|__restrict
 name|timeptr
+parameter_list|,
+name|locale_t
+name|locale
 parameter_list|)
 block|{
 specifier|static
@@ -110,6 +119,11 @@ decl_stmt|;
 name|int
 name|sverrno
 decl_stmt|;
+name|FIX_LOCALE
+argument_list|(
+name|locale
+argument_list|)
+expr_stmt|;
 name|sformat
 operator|=
 name|dst
@@ -127,7 +141,7 @@ name|format
 expr_stmt|;
 name|sflen
 operator|=
-name|wcsrtombs
+name|wcsrtombs_l
 argument_list|(
 name|NULL
 argument_list|,
@@ -138,6 +152,8 @@ literal|0
 argument_list|,
 operator|&
 name|mbs
+argument_list|,
+name|locale
 argument_list|)
 expr_stmt|;
 if|if
@@ -175,7 +191,7 @@ name|mbs
 operator|=
 name|initial
 expr_stmt|;
-name|wcsrtombs
+name|wcsrtombs_l
 argument_list|(
 name|sformat
 argument_list|,
@@ -188,6 +204,8 @@ literal|1
 argument_list|,
 operator|&
 name|mbs
+argument_list|,
+name|locale
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Allocate memory for longest multibyte sequence that will fit 	 * into the caller's buffer and call strftime() to fill it. 	 * Then, copy and convert the result back into wide characters in 	 * the caller's buffer. 	 */
@@ -229,7 +247,7 @@ name|error
 goto|;
 if|if
 condition|(
-name|strftime
+name|strftime_l
 argument_list|(
 name|dst
 argument_list|,
@@ -238,6 +256,8 @@ argument_list|,
 name|sformat
 argument_list|,
 name|timeptr
+argument_list|,
+name|locale
 argument_list|)
 operator|==
 literal|0
@@ -255,7 +275,7 @@ name|initial
 expr_stmt|;
 name|n
 operator|=
-name|mbsrtowcs
+name|mbsrtowcs_l
 argument_list|(
 name|wcs
 argument_list|,
@@ -266,6 +286,8 @@ name|maxsize
 argument_list|,
 operator|&
 name|mbs
+argument_list|,
+name|locale
 argument_list|)
 expr_stmt|;
 if|if
@@ -332,6 +354,50 @@ return|return
 operator|(
 literal|0
 operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|size_t
+name|wcsftime
+parameter_list|(
+name|wchar_t
+modifier|*
+name|__restrict
+name|wcs
+parameter_list|,
+name|size_t
+name|maxsize
+parameter_list|,
+specifier|const
+name|wchar_t
+modifier|*
+name|__restrict
+name|format
+parameter_list|,
+specifier|const
+name|struct
+name|tm
+modifier|*
+name|__restrict
+name|timeptr
+parameter_list|)
+block|{
+return|return
+name|wcsftime_l
+argument_list|(
+name|wcs
+argument_list|,
+name|maxsize
+argument_list|,
+name|format
+argument_list|,
+name|timeptr
+argument_list|,
+name|__get_locale
+argument_list|()
+argument_list|)
 return|;
 block|}
 end_function

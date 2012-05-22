@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley. The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Copyright (c) 2011 The FreeBSD Foundation  * All rights reserved.  * Portions of this software were developed by David Chisnall  * under sponsorship from the FreeBSD Foundation.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley. The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_ifndef
@@ -205,6 +205,8 @@ modifier|*
 parameter_list|,
 name|int
 modifier|*
+parameter_list|,
+name|locale_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -422,7 +424,7 @@ end_decl_stmt
 
 begin_function
 name|size_t
-name|strftime
+name|strftime_l
 parameter_list|(
 name|char
 modifier|*
@@ -444,6 +446,9 @@ name|tm
 modifier|*
 name|__restrict
 name|t
+parameter_list|,
+name|locale_t
+name|loc
 parameter_list|)
 block|{
 name|char
@@ -453,6 +458,11 @@ decl_stmt|;
 name|int
 name|warn
 decl_stmt|;
+name|FIX_LOCALE
+argument_list|(
+name|loc
+argument_list|)
+expr_stmt|;
 name|tzset
 argument_list|()
 expr_stmt|;
@@ -486,6 +496,8 @@ name|maxsize
 argument_list|,
 operator|&
 name|warn
+argument_list|,
+name|loc
 argument_list|)
 expr_stmt|;
 ifndef|#
@@ -508,9 +520,11 @@ block|{
 operator|(
 name|void
 operator|)
-name|fprintf
+name|fprintf_l
 argument_list|(
 name|stderr
+argument_list|,
+name|loc
 argument_list|,
 literal|"\n"
 argument_list|)
@@ -524,9 +538,11 @@ condition|)
 operator|(
 name|void
 operator|)
-name|fprintf
+name|fprintf_l
 argument_list|(
 name|stderr
+argument_list|,
+name|loc
 argument_list|,
 literal|"NULL strftime format "
 argument_list|)
@@ -535,9 +551,11 @@ else|else
 operator|(
 name|void
 operator|)
-name|fprintf
+name|fprintf_l
 argument_list|(
 name|stderr
+argument_list|,
+name|loc
 argument_list|,
 literal|"strftime format \"%s\" "
 argument_list|,
@@ -547,9 +565,11 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|fprintf
+name|fprintf_l
 argument_list|(
 name|stderr
+argument_list|,
+name|loc
 argument_list|,
 literal|"yields only two digits of years in "
 argument_list|)
@@ -563,9 +583,11 @@ condition|)
 operator|(
 name|void
 operator|)
-name|fprintf
+name|fprintf_l
 argument_list|(
 name|stderr
+argument_list|,
+name|loc
 argument_list|,
 literal|"some locales"
 argument_list|)
@@ -580,9 +602,11 @@ condition|)
 operator|(
 name|void
 operator|)
-name|fprintf
+name|fprintf_l
 argument_list|(
 name|stderr
+argument_list|,
+name|loc
 argument_list|,
 literal|"the current locale"
 argument_list|)
@@ -591,9 +615,11 @@ else|else
 operator|(
 name|void
 operator|)
-name|fprintf
+name|fprintf_l
 argument_list|(
 name|stderr
+argument_list|,
+name|loc
 argument_list|,
 literal|"all locales"
 argument_list|)
@@ -601,9 +627,11 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|fprintf
+name|fprintf_l
 argument_list|(
 name|stderr
+argument_list|,
+name|loc
 argument_list|,
 literal|"\n"
 argument_list|)
@@ -637,6 +665,50 @@ block|}
 end_function
 
 begin_function
+name|size_t
+name|strftime
+parameter_list|(
+name|char
+modifier|*
+name|__restrict
+name|s
+parameter_list|,
+name|size_t
+name|maxsize
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|__restrict
+name|format
+parameter_list|,
+specifier|const
+name|struct
+name|tm
+modifier|*
+name|__restrict
+name|t
+parameter_list|)
+block|{
+return|return
+name|strftime_l
+argument_list|(
+name|s
+argument_list|,
+name|maxsize
+argument_list|,
+name|format
+argument_list|,
+name|t
+argument_list|,
+name|__get_locale
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
 specifier|static
 name|char
 modifier|*
@@ -651,6 +723,8 @@ parameter_list|,
 name|ptlim
 parameter_list|,
 name|warnp
+parameter_list|,
+name|loc
 parameter_list|)
 specifier|const
 name|char
@@ -678,6 +752,9 @@ name|int
 modifier|*
 name|warnp
 decl_stmt|;
+name|locale_t
+name|loc
+decl_stmt|;
 block|{
 name|int
 name|Ealternative
@@ -692,7 +769,9 @@ modifier|*
 name|tptr
 init|=
 name|__get_current_time_locale
-argument_list|()
+argument_list|(
+name|loc
+argument_list|)
 decl_stmt|;
 for|for
 control|(
@@ -952,6 +1031,8 @@ name|ptlim
 argument_list|,
 operator|&
 name|warn2
+argument_list|,
+name|loc
 argument_list|)
 expr_stmt|;
 if|if
@@ -994,6 +1075,8 @@ argument_list|,
 name|ptlim
 argument_list|,
 name|warnp
+argument_list|,
+name|loc
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -1096,6 +1179,8 @@ argument_list|,
 name|ptlim
 argument_list|,
 name|warnp
+argument_list|,
+name|loc
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -1394,6 +1479,8 @@ argument_list|,
 name|ptlim
 argument_list|,
 name|warnp
+argument_list|,
+name|loc
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -1415,6 +1502,8 @@ argument_list|,
 name|ptlim
 argument_list|,
 name|warnp
+argument_list|,
+name|loc
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -1546,6 +1635,8 @@ argument_list|,
 name|ptlim
 argument_list|,
 name|warnp
+argument_list|,
+name|loc
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -1938,6 +2029,8 @@ argument_list|,
 name|ptlim
 argument_list|,
 name|warnp
+argument_list|,
+name|loc
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -2029,6 +2122,8 @@ argument_list|,
 name|ptlim
 argument_list|,
 name|warnp
+argument_list|,
+name|loc
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -2057,6 +2152,8 @@ name|ptlim
 argument_list|,
 operator|&
 name|warn2
+argument_list|,
+name|loc
 argument_list|)
 expr_stmt|;
 if|if
@@ -2361,6 +2458,8 @@ argument_list|,
 name|ptlim
 argument_list|,
 name|warnp
+argument_list|,
+name|loc
 argument_list|)
 expr_stmt|;
 continue|continue;

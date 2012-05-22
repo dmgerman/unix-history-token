@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2002-2004 Tim J. Robbins.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2002-2004 Tim J. Robbins.  * All rights reserved.  *  * Copyright (c) 2011 The FreeBSD Foundation  * All rights reserved.  * Portions of this software were developed by David Chisnall  * under sponsorship from the FreeBSD Foundation.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -53,10 +53,16 @@ directive|include
 file|"local.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"xlocale_private.h"
+end_include
+
 begin_function
 name|wchar_t
 modifier|*
-name|fgetwln
+name|fgetwln_l
 parameter_list|(
 name|FILE
 modifier|*
@@ -66,6 +72,9 @@ parameter_list|,
 name|size_t
 modifier|*
 name|lenp
+parameter_list|,
+name|locale_t
+name|locale
 parameter_list|)
 block|{
 name|wint_t
@@ -74,6 +83,11 @@ decl_stmt|;
 name|size_t
 name|len
 decl_stmt|;
+name|FIX_LOCALE
+argument_list|(
+name|locale
+argument_list|)
+expr_stmt|;
 name|FLOCKFILE
 argument_list|(
 name|fp
@@ -98,6 +112,8 @@ operator|=
 name|__fgetwc
 argument_list|(
 name|fp
+argument_list|,
+name|locale
 argument_list|)
 operator|)
 operator|!=
@@ -217,6 +233,35 @@ return|return
 operator|(
 name|NULL
 operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|wchar_t
+modifier|*
+name|fgetwln
+parameter_list|(
+name|FILE
+modifier|*
+name|__restrict
+name|fp
+parameter_list|,
+name|size_t
+modifier|*
+name|lenp
+parameter_list|)
+block|{
+return|return
+name|fgetwln_l
+argument_list|(
+name|fp
+argument_list|,
+name|lenp
+argument_list|,
+name|__get_locale
+argument_list|()
+argument_list|)
 return|;
 block|}
 end_function
