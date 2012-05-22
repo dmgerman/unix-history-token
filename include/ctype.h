@@ -304,6 +304,12 @@ begin_macro
 name|__END_DECLS
 end_macro
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__cplusplus
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -442,6 +448,15 @@ parameter_list|)
 value|__sbtoupper(c)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !__cplusplus */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -503,6 +518,12 @@ directive|if
 name|__ISO_C_VISIBLE
 operator|>=
 literal|1999
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__cplusplus
+argument_list|)
 end_if
 
 begin_define
