@@ -244,8 +244,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IPI_STOP_HARD
+name|IPI_SUSPEND
 value|(APIC_IPI_INTS + 8)
+end_define
+
+begin_comment
+comment|/* Suspend CPU until restarted. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPI_STOP_HARD
+value|(APIC_IPI_INTS + 9)
 end_define
 
 begin_comment
@@ -425,8 +436,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IPI_STOP_HARD
+name|IPI_SUSPEND
 value|(APIC_IPI_INTS + 8)
+end_define
+
+begin_comment
+comment|/* Suspend CPU until restarted. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPI_STOP_HARD
+value|(APIC_IPI_INTS + 9)
 end_define
 
 begin_comment
