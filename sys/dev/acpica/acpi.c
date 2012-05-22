@@ -11440,6 +11440,22 @@ operator|(
 name|EOPNOTSUPP
 operator|)
 return|;
+comment|/* If a suspend request is already in progress, just return. */
+if|if
+condition|(
+name|sc
+operator|->
+name|acpi_next_sstate
+operator|!=
+literal|0
+condition|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 comment|/* Wait until sleep is enabled. */
 while|while
 condition|(
@@ -11459,27 +11475,6 @@ argument_list|(
 name|acpi
 argument_list|)
 expr_stmt|;
-comment|/* If a suspend request is already in progress, just return. */
-if|if
-condition|(
-name|sc
-operator|->
-name|acpi_next_sstate
-operator|!=
-literal|0
-condition|)
-block|{
-name|ACPI_UNLOCK
-argument_list|(
-name|acpi
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
 name|sc
 operator|->
 name|acpi_next_sstate
