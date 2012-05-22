@@ -6302,7 +6302,7 @@ name|DPRINTF
 argument_list|(
 name|sc
 argument_list|,
-name|ATH_DEBUG_SW_TX_CTRL
+name|ATH_DEBUG_SW_TX
 argument_list|,
 literal|"%s: bf=%p: mcastq: TX'ing\n"
 argument_list|,
@@ -6347,7 +6347,7 @@ name|DPRINTF
 argument_list|(
 name|sc
 argument_list|,
-name|ATH_DEBUG_SW_TX_CTRL
+name|ATH_DEBUG_SW_TX
 argument_list|,
 literal|"%s: BAR: TX'ing direct\n"
 argument_list|,
@@ -6381,7 +6381,7 @@ name|DPRINTF
 argument_list|(
 name|sc
 argument_list|,
-name|ATH_DEBUG_SW_TX_CTRL
+name|ATH_DEBUG_SW_TX
 argument_list|,
 literal|"%s: bf=%p: swq: TX'ing\n"
 argument_list|,
@@ -12504,7 +12504,7 @@ name|DPRINTF
 argument_list|(
 name|sc
 argument_list|,
-name|ATH_DEBUG_SW_TX_CTRL
+name|ATH_DEBUG_SW_TX_BAW
 argument_list|,
 literal|"%s: TID %d: called\n"
 argument_list|,
@@ -17184,6 +17184,16 @@ name|ac
 index|]
 argument_list|)
 expr_stmt|;
+comment|/* 	 * This is a bit annoying.  Until net80211 HT code inherits some 	 * (any) locking, we may have this called in parallel BUT only 	 * one response/timeout will be called.  Grr. 	 */
+if|if
+condition|(
+name|atid
+operator|->
+name|addba_tx_pending
+operator|==
+literal|0
+condition|)
+block|{
 name|ath_tx_tid_pause
 argument_list|(
 name|sc
@@ -17191,6 +17201,13 @@ argument_list|,
 name|atid
 argument_list|)
 expr_stmt|;
+name|atid
+operator|->
+name|addba_tx_pending
+operator|=
+literal|1
+expr_stmt|;
+block|}
 name|ATH_TXQ_UNLOCK
 argument_list|(
 name|sc
@@ -17403,6 +17420,12 @@ operator|->
 name|ac
 index|]
 argument_list|)
+expr_stmt|;
+name|atid
+operator|->
+name|addba_tx_pending
+operator|=
+literal|0
 expr_stmt|;
 comment|/* 	 * XXX dirty! 	 * Slide the BAW left edge to wherever net80211 left it for us. 	 * Read above for more information. 	 */
 name|tap
@@ -17799,6 +17822,36 @@ argument_list|,
 literal|"%s: called; resuming\n"
 argument_list|,
 name|__func__
+argument_list|)
+expr_stmt|;
+name|ATH_TXQ_LOCK
+argument_list|(
+name|sc
+operator|->
+name|sc_ac2q
+index|[
+name|atid
+operator|->
+name|ac
+index|]
+argument_list|)
+expr_stmt|;
+name|atid
+operator|->
+name|addba_tx_pending
+operator|=
+literal|0
+expr_stmt|;
+name|ATH_TXQ_UNLOCK
+argument_list|(
+name|sc
+operator|->
+name|sc_ac2q
+index|[
+name|atid
+operator|->
+name|ac
+index|]
 argument_list|)
 expr_stmt|;
 comment|/* Note: This updates the aggregate state to (again) pending */

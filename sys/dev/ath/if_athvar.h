@@ -328,6 +328,10 @@ name|paused
 decl_stmt|;
 comment|/*>0 if the TID has been paused */
 name|int
+name|addba_tx_pending
+decl_stmt|;
+comment|/* TX ADDBA pending */
+name|int
 name|bar_wait
 decl_stmt|;
 comment|/* waiting for BAR */
