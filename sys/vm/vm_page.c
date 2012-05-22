@@ -2403,7 +2403,11 @@ name|pi
 operator|>=
 name|first_page
 operator|&&
+operator|(
 name|pi
+operator|-
+name|first_page
+operator|)
 operator|<
 name|vm_page_array_size
 condition|)
