@@ -3162,7 +3162,7 @@ index|]
 operator|=
 name|strlen
 argument_list|(
-literal|"elf kernel"
+literal|"kernel"
 argument_list|)
 operator|+
 literal|1
@@ -3180,12 +3180,12 @@ name|i
 operator|++
 index|]
 argument_list|,
-literal|"elf kernel"
+literal|"kernel"
 argument_list|)
 expr_stmt|;
 name|i
 operator|+=
-literal|2
+literal|1
 expr_stmt|;
 name|fake_preload
 index|[
