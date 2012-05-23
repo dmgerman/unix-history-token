@@ -333,12 +333,18 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"%08llx-%08llx: %s (%lluKB)\n"
+literal|"%08jx-%08jx: %s (%lluKB)\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|slice
 operator|->
 name|sl_start
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|slice
 operator|->
 name|sl_end
@@ -347,7 +353,10 @@ name|slice
 operator|->
 name|sl_name
 argument_list|,
-operator|(
+call|(
+name|uintmax_t
+call|)
+argument_list|(
 name|slice
 operator|->
 name|sl_end
@@ -355,7 +364,7 @@ operator|-
 name|slice
 operator|->
 name|sl_start
-operator|)
+argument_list|)
 operator|/
 literal|1024
 argument_list|)
