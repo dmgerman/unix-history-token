@@ -7089,7 +7089,7 @@ name|lun
 condition|)
 name|panic
 argument_list|(
-literal|"%s: lun %qx for ecb %p does not exist"
+literal|"%s: lun %llx for ecb %p does not exist"
 argument_list|,
 name|__func__
 argument_list|,
@@ -7187,7 +7187,7 @@ operator|)
 condition|)
 name|panic
 argument_list|(
-literal|"%s: slot %d for lun %qx has %p instead of ecb "
+literal|"%s: slot %d for lun %llx has %p instead of ecb "
 literal|"%p"
 argument_list|,
 name|__func__
