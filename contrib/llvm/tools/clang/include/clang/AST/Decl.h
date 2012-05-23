@@ -218,19 +218,6 @@ argument_list|()
 specifier|const
 expr_stmt|;
 comment|// implemented in TypeLoc.h
-comment|/// \brief Override the type stored in this TypeSourceInfo. Use with caution!
-name|void
-name|overrideType
-parameter_list|(
-name|QualType
-name|T
-parameter_list|)
-block|{
-name|Ty
-operator|=
-name|T
-expr_stmt|;
-block|}
 block|}
 empty_stmt|;
 comment|/// TranslationUnitDecl - The top declaration context.
