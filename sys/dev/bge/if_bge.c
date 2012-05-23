@@ -17680,12 +17680,6 @@ operator||
 name|PCIM_EXP_CTL_NOSNOOP_ENABLE
 operator|)
 expr_stmt|;
-comment|/* Set PCIE max payload size to 128. */
-name|devctl
-operator|&=
-operator|~
-name|PCIM_EXP_CTL_MAX_PAYLOAD
-expr_stmt|;
 name|pci_write_config
 argument_list|(
 name|dev
