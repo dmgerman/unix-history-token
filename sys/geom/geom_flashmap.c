@@ -336,14 +336,14 @@ argument_list|(
 literal|"%08jx-%08jx: %s (%juKB)\n"
 argument_list|,
 operator|(
-name|intmax_t
+name|uintmax_t
 operator|)
 name|slice
 operator|->
 name|sl_start
 argument_list|,
 operator|(
-name|intmax_t
+name|uintmax_t
 operator|)
 name|slice
 operator|->
