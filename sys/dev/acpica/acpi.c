@@ -11177,11 +11177,6 @@ operator|(
 name|EOPNOTSUPP
 operator|)
 return|;
-name|ACPI_LOCK
-argument_list|(
-name|acpi
-argument_list|)
-expr_stmt|;
 comment|/* If a suspend request is already in progress, just return. */
 if|if
 condition|(
@@ -11192,17 +11187,37 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|ACPI_UNLOCK
-argument_list|(
-name|acpi
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
 block|}
+comment|/* Wait until sleep is enabled. */
+while|while
+condition|(
+name|sc
+operator|->
+name|acpi_sleep_disabled
+condition|)
+block|{
+name|AcpiOsSleep
+argument_list|(
+literal|1000
+argument_list|)
+expr_stmt|;
+block|}
+name|ACPI_LOCK
+argument_list|(
+name|acpi
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|acpi_next_sstate
+operator|=
+name|state
+expr_stmt|;
 comment|/* S5 (soft-off) should be entered directly with no waiting. */
 if|if
 condition|(
@@ -11239,12 +11254,6 @@ operator|)
 return|;
 block|}
 comment|/* Record the pending state and notify all apm devices. */
-name|sc
-operator|->
-name|acpi_next_sstate
-operator|=
-name|state
-expr_stmt|;
 name|STAILQ_FOREACH
 argument_list|(
 argument|clone
