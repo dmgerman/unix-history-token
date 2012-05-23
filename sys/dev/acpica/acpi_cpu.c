@@ -2537,7 +2537,15 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"(ACPI ID %u) -> APIC ID %d\n"
+literal|"Processor %s (ACPI ID %u) -> APIC ID %d\n"
+argument_list|,
+name|acpi_name
+argument_list|(
+name|acpi_get_handle
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
 argument_list|,
 operator|*
 name|acpi_id
