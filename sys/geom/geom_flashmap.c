@@ -333,7 +333,7 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"%08jx-%08jx: %s (%lluKB)\n"
+literal|"%08jx-%08jx: %s (%juKB)\n"
 argument_list|,
 operator|(
 name|intmax_t
