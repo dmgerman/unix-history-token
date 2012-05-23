@@ -5371,6 +5371,9 @@ modifier|*
 name|p
 decl_stmt|,
 modifier|*
+name|name
+decl_stmt|,
+modifier|*
 name|nname
 decl_stmt|;
 name|size_t
@@ -5404,14 +5407,18 @@ name|CTL_MAXNAME
 index|]
 decl_stmt|;
 comment|/* The "lastjid" parameter isn't real. */
+name|name
+operator|=
+name|jp
+operator|->
+name|jp_name
+expr_stmt|;
 if|if
 condition|(
 operator|!
 name|strcmp
 argument_list|(
-name|jp
-operator|->
-name|jp_name
+name|name
 argument_list|,
 literal|"lastjid"
 argument_list|)
@@ -5471,9 +5478,7 @@ argument_list|,
 name|SJPARAM
 literal|".%s"
 argument_list|,
-name|jp
-operator|->
-name|jp_name
+name|name
 argument_list|)
 expr_stmt|;
 name|miblen
@@ -5535,9 +5540,7 @@ name|JAIL_ERRMSGLEN
 argument_list|,
 literal|"sysctl(0.3.%s): %s"
 argument_list|,
-name|jp
-operator|->
-name|jp_name
+name|name
 argument_list|,
 name|strerror
 argument_list|(
@@ -5557,9 +5560,7 @@ name|nname
 operator|=
 name|nononame
 argument_list|(
-name|jp
-operator|->
-name|jp_name
+name|name
 argument_list|)
 expr_stmt|;
 if|if
@@ -5595,6 +5596,30 @@ literal|1
 operator|)
 return|;
 block|}
+name|name
+operator|=
+name|alloca
+argument_list|(
+name|strlen
+argument_list|(
+name|nname
+argument_list|)
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|name
+argument_list|,
+name|nname
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|nname
+argument_list|)
+expr_stmt|;
 name|snprintf
 argument_list|(
 name|desc
@@ -5611,12 +5636,7 @@ argument_list|,
 name|SJPARAM
 literal|".%s"
 argument_list|,
-name|nname
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|nname
+name|name
 argument_list|)
 expr_stmt|;
 name|miblen
@@ -5727,9 +5747,7 @@ name|JAIL_ERRMSGLEN
 argument_list|,
 literal|"sysctl(0.4.%s): %s"
 argument_list|,
-name|jp
-operator|->
-name|jp_name
+name|name
 argument_list|,
 name|strerror
 argument_list|(
@@ -6025,9 +6043,7 @@ literal|"sysctl("
 name|SJPARAM
 literal|".%s): %s"
 argument_list|,
-name|jp
-operator|->
-name|jp_name
+name|name
 argument_list|,
 name|strerror
 argument_list|(
@@ -6168,9 +6184,7 @@ literal|"sysctl("
 name|SJPARAM
 literal|".%s): %s"
 argument_list|,
-name|jp
-operator|->
-name|jp_name
+name|name
 argument_list|,
 name|strerror
 argument_list|(
@@ -6329,9 +6343,7 @@ argument_list|)
 operator|+
 name|strlen
 argument_list|(
-name|jp
-operator|->
-name|jp_name
+name|name
 argument_list|)
 operator|+
 literal|2
@@ -6355,9 +6367,7 @@ literal|0
 operator|&&
 name|memcmp
 argument_list|(
-name|jp
-operator|->
-name|jp_name
+name|name
 argument_list|,
 name|desc
 operator|.
