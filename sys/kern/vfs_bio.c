@@ -12145,7 +12145,7 @@ block|{
 name|vm_page_t
 name|m
 decl_stmt|;
-comment|/* 				 * We must allocate system pages since blocking 				 * here could intefere with paging I/O, no 				 * matter which process we are. 				 * 				 * We can only test VPO_BUSY here.  Blocking on 				 * m->busy might lead to a deadlock: 				 *  vm_fault->getpages->cluster_read->allocbuf 				 * Thus, we specify VM_ALLOC_IGN_SBUSY. 				 */
+comment|/* 				 * We must allocate system pages since blocking 				 * here could interfere with paging I/O, no 				 * matter which process we are. 				 * 				 * We can only test VPO_BUSY here.  Blocking on 				 * m->busy might lead to a deadlock: 				 *  vm_fault->getpages->cluster_read->allocbuf 				 * Thus, we specify VM_ALLOC_IGN_SBUSY. 				 */
 name|m
 operator|=
 name|vm_page_grab
