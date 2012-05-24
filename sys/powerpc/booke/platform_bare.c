@@ -172,12 +172,23 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|uint32_t
-name|kernload_ap
+name|bp_kernload
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* Kernel physical load address */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|uint32_t
+name|bp_trace
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* AP boot trace field */
 end_comment
 
 begin_endif
@@ -1123,9 +1134,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: CPU=%d already out of hold-off state!\n"
-argument_list|,
-name|__func__
+literal|"SMP: CPU %d already out of hold-off state!\n"
 argument_list|,
 name|pc
 operator|->
@@ -1155,7 +1164,7 @@ operator|-
 name|KERNBASE
 operator|)
 operator|+
-name|kernload_ap
+name|bp_kernload
 expr_stmt|;
 name|ccsr_write4
 argument_list|(
@@ -1171,6 +1180,10 @@ literal|0x80000000
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Release AP from hold-off state 	 */
+name|bp_trace
+operator|=
+literal|0
+expr_stmt|;
 name|eebpcr
 operator||=
 operator|(
@@ -1213,6 +1226,32 @@ literal|1000
 argument_list|)
 expr_stmt|;
 comment|/* wait 1ms */
+comment|/* 	 * Disable boot page translation so that the 4K page at the default 	 * address (= 0xfffff000) isn't permanently remapped and thus not 	 * usable otherwise. 	 */
+name|ccsr_write4
+argument_list|(
+name|OCP85XX_BPTR
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|pc
+operator|->
+name|pc_awake
+condition|)
+name|printf
+argument_list|(
+literal|"SMP: CPU %d didn't wake up (trace code %#x).\n"
+argument_list|,
+name|pc
+operator|->
+name|pc_awake
+argument_list|,
+name|bp_trace
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|(
