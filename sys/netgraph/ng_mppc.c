@@ -272,17 +272,6 @@ value|(((b)& MPPE_128) ? 16 : 8)
 end_define
 
 begin_comment
-comment|/*  * When packets are lost with MPPE, we may have to re-key arbitrarily  * many times to 'catch up' to the new jumped-ahead sequence number.  * Since this can be expensive, we pose a limit on how many re-keyings  * we will do at one time to avoid a possible D.O.S. vulnerability.  * This should instead be a configurable parameter.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MPPE_MAX_REKEY
-value|1000
-end_define
-
-begin_comment
 comment|/* MPPC packet header bits */
 end_comment
 
@@ -2966,38 +2955,25 @@ if|if
 condition|(
 name|rekey
 operator|>
-name|MPPE_MAX_REKEY
+literal|1000
 condition|)
-block|{
 name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s: too many (%d) packets"
-literal|" dropped, disabling node %p!"
+literal|"%s: %d packets dropped, "
+literal|"node [%x]\n"
 argument_list|,
 name|__func__
 argument_list|,
 name|numLost
 argument_list|,
 name|node
+operator|->
+name|nd_ID
 argument_list|)
 expr_stmt|;
-name|priv
-operator|->
-name|recv
-operator|.
-name|cfg
-operator|.
-name|enable
-operator|=
-literal|0
-expr_stmt|;
-goto|goto
-name|failed
-goto|;
-block|}
-comment|/* Re-key as necessary to catch up to peer */
+comment|/* 			 * When packets are lost or re-ordered with MPPE, 			 * we may have to re-key up to 0xfff times to 'catch 			 * up' to the new jumped-ahead sequence number. Yep, 			 * this is heavy, but what else can we do? 			 */
 while|while
 condition|(
 name|d
