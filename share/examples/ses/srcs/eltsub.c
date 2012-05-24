@@ -16,6 +16,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -34,7 +46,13 @@ end_include
 begin_include
 include|#
 directive|include
-include|SESINC
+file|<cam/scsi/scsi_all.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cam/scsi/scsi_enc.h>
 end_include
 
 begin_include
@@ -65,7 +83,7 @@ name|type
 condition|)
 block|{
 case|case
-name|SESTYP_UNSPECIFIED
+name|ELMTYP_UNSPECIFIED
 case|:
 name|sprintf
 argument_list|(
@@ -76,51 +94,51 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|SESTYP_DEVICE
+name|ELMTYP_DEVICE
 case|:
 name|sprintf
 argument_list|(
 name|rbuf
 argument_list|,
-literal|"Device"
+literal|"Device Slot"
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|SESTYP_POWER
+name|ELMTYP_POWER
 case|:
 name|sprintf
 argument_list|(
 name|rbuf
 argument_list|,
-literal|"Power supply"
+literal|"Power Supply"
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|SESTYP_FAN
+name|ELMTYP_FAN
 case|:
 name|sprintf
 argument_list|(
 name|rbuf
 argument_list|,
-literal|"Cooling element"
+literal|"Cooling"
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|SESTYP_THERM
+name|ELMTYP_THERM
 case|:
 name|sprintf
 argument_list|(
 name|rbuf
 argument_list|,
-literal|"Temperature sensors"
+literal|"Temperature Sensors"
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|SESTYP_DOORLOCK
+name|ELMTYP_DOORLOCK
 case|:
 name|sprintf
 argument_list|(
@@ -131,7 +149,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|SESTYP_ALARM
+name|ELMTYP_ALARM
 case|:
 name|sprintf
 argument_list|(
@@ -142,51 +160,62 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|SESTYP_ESCC
+name|ELMTYP_ESCC
 case|:
 name|sprintf
 argument_list|(
 name|rbuf
 argument_list|,
-literal|"Enclosure services controller electronics"
+literal|"Enclosure Eervices Controller Electronics"
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|SESTYP_SCC
+name|ELMTYP_SCC
 case|:
 name|sprintf
 argument_list|(
 name|rbuf
 argument_list|,
-literal|"SCC controller electronics"
+literal|"SCC Controller Electronics"
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|SESTYP_NVRAM
+name|ELMTYP_NVRAM
 case|:
 name|sprintf
 argument_list|(
 name|rbuf
 argument_list|,
-literal|"Nonvolatile cache"
+literal|"Nonvolatile Cache"
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|SESTYP_UPS
+name|ELMTYP_INV_OP_REASON
 case|:
 name|sprintf
 argument_list|(
 name|rbuf
 argument_list|,
-literal|"Uninterruptible power supply"
+literal|"Invalid Operation Reason"
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|SESTYP_DISPLAY
+name|ELMTYP_UPS
+case|:
+name|sprintf
+argument_list|(
+name|rbuf
+argument_list|,
+literal|"Uninterruptible Power Supply"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ELMTYP_DISPLAY
 case|:
 name|sprintf
 argument_list|(
@@ -197,18 +226,18 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|SESTYP_KEYPAD
+name|ELMTYP_KEYPAD
 case|:
 name|sprintf
 argument_list|(
 name|rbuf
 argument_list|,
-literal|"Key pad entry device"
+literal|"Key Pad Entry"
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|SESTYP_ENCLOSURE
+name|ELMTYP_ENCLOSURE
 case|:
 name|sprintf
 argument_list|(
@@ -219,18 +248,18 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|SESTYP_SCSIXVR
+name|ELMTYP_SCSIXVR
 case|:
 name|sprintf
 argument_list|(
 name|rbuf
 argument_list|,
-literal|"SCSI port/transceiver"
+literal|"SCSI Port/Transceiver"
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|SESTYP_LANGUAGE
+name|ELMTYP_LANGUAGE
 case|:
 name|sprintf
 argument_list|(
@@ -241,7 +270,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|SESTYP_COMPORT
+name|ELMTYP_COMPORT
 case|:
 name|sprintf
 argument_list|(
@@ -252,7 +281,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|SESTYP_VOM
+name|ELMTYP_VOM
 case|:
 name|sprintf
 argument_list|(
@@ -263,7 +292,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|SESTYP_AMMETER
+name|ELMTYP_AMMETER
 case|:
 name|sprintf
 argument_list|(
@@ -274,51 +303,51 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|SESTYP_SCSI_TGT
+name|ELMTYP_SCSI_TGT
 case|:
 name|sprintf
 argument_list|(
 name|rbuf
 argument_list|,
-literal|"SCSI target port"
+literal|"SCSI Target Port"
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|SESTYP_SCSI_INI
+name|ELMTYP_SCSI_INI
 case|:
 name|sprintf
 argument_list|(
 name|rbuf
 argument_list|,
-literal|"SCSI initiator port"
+literal|"SCSI Initiator Port"
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|SESTYP_SUBENC
+name|ELMTYP_SUBENC
 case|:
 name|sprintf
 argument_list|(
 name|rbuf
 argument_list|,
-literal|"Simple sub-enclosure"
+literal|"Simple Subenclosure"
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|SESTYP_ARRAY
+name|ELMTYP_ARRAY_DEV
 case|:
 name|sprintf
 argument_list|(
 name|rbuf
 argument_list|,
-literal|"Array device"
+literal|"Array Device Slot"
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|SESTYP_SASEXPANDER
+name|ELMTYP_SAS_EXP
 case|:
 name|sprintf
 argument_list|(
@@ -329,7 +358,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|SESTYP_SASCONNECTOR
+name|ELMTYP_SAS_CONN
 case|:
 name|sprintf
 argument_list|(
@@ -393,7 +422,7 @@ name|sprintf
 argument_list|(
 name|rbuf
 argument_list|,
-literal|"status not supported"
+literal|"Unsupported"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -404,7 +433,7 @@ name|sprintf
 argument_list|(
 name|rbuf
 argument_list|,
-literal|"ok"
+literal|"OK"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -415,7 +444,7 @@ name|sprintf
 argument_list|(
 name|rbuf
 argument_list|,
-literal|"critical"
+literal|"Critical"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -426,7 +455,7 @@ name|sprintf
 argument_list|(
 name|rbuf
 argument_list|,
-literal|"non-critical"
+literal|"Noncritical"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -437,7 +466,7 @@ name|sprintf
 argument_list|(
 name|rbuf
 argument_list|,
-literal|"unrecoverable"
+literal|"Unrecoverable"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -448,7 +477,7 @@ name|sprintf
 argument_list|(
 name|rbuf
 argument_list|,
-literal|"not installed"
+literal|"Not Installed"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -459,7 +488,7 @@ name|sprintf
 argument_list|(
 name|rbuf
 argument_list|,
-literal|"unknown status"
+literal|"Unknown"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -470,7 +499,18 @@ name|sprintf
 argument_list|(
 name|rbuf
 argument_list|,
-literal|"status not available"
+literal|"Not Available"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|SES_OBJSTAT_NOACCESS
+case|:
+name|sprintf
+argument_list|(
+name|rbuf
+argument_list|,
+literal|"No Access Allowed"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -479,7 +519,7 @@ name|sprintf
 argument_list|(
 name|rbuf
 argument_list|,
-literal|"unknown status code %x"
+literal|"<Status 0x%x>"
 argument_list|,
 name|code
 operator|&
@@ -534,7 +574,7 @@ name|sprintf
 argument_list|(
 name|ebuf
 argument_list|,
-literal|"Status=%s (bytes=0x%02x 0x%02x 0x%02x 0x%02x)"
+literal|"status: %s (0x%02x 0x%02x 0x%02x 0x%02x)"
 argument_list|,
 name|scode
 argument_list|,

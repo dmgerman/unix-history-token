@@ -16,6 +16,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -58,7 +70,13 @@ end_include
 begin_include
 include|#
 directive|include
-include|SESINC
+file|<cam/scsi/scsi_all.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cam/scsi/scsi_enc.h>
 end_include
 
 begin_define
@@ -104,7 +122,7 @@ name|devbase
 decl_stmt|,
 name|nodaemon
 decl_stmt|;
-name|ses_encstat
+name|encioc_enc_status_t
 name|stat
 decl_stmt|,
 modifier|*
@@ -252,7 +270,7 @@ name|dev
 index|]
 operator|=
 operator|(
-name|ses_encstat
+name|encioc_enc_status_t
 operator|)
 operator|-
 literal|1
@@ -311,7 +329,7 @@ name|ioctl
 argument_list|(
 name|fd
 argument_list|,
-name|SESIOC_INIT
+name|ENCIOC_INIT
 argument_list|,
 name|NULL
 argument_list|)
@@ -323,7 +341,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: SESIOC_INIT fails- %s\n"
+literal|"%s: ENCIOC_INIT fails- %s\n"
 argument_list|,
 name|v
 index|[
@@ -465,7 +483,7 @@ name|ioctl
 argument_list|(
 name|fd
 argument_list|,
-name|SESIOC_GETENCSTAT
+name|ENCIOC_GETENCSTAT
 argument_list|,
 operator|(
 name|caddr_t
@@ -481,7 +499,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s: SESIOC_GETENCSTAT- %m"
+literal|"%s: ENCIOC_GETENCSTAT- %m"
 argument_list|,
 name|v
 index|[
