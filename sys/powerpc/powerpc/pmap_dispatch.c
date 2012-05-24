@@ -1798,7 +1798,7 @@ name|void
 modifier|*
 name|pmap_mapdev
 parameter_list|(
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|,
 name|vm_size_t
@@ -1956,7 +1956,7 @@ block|}
 end_function
 
 begin_function
-name|vm_offset_t
+name|vm_paddr_t
 name|pmap_kextract
 parameter_list|(
 name|vm_offset_t
@@ -1994,7 +1994,7 @@ parameter_list|(
 name|vm_offset_t
 name|va
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|)
 block|{
@@ -2070,7 +2070,7 @@ begin_function
 name|boolean_t
 name|pmap_dev_direct_mapped
 parameter_list|(
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|,
 name|vm_size_t

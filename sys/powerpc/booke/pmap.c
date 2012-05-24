@@ -1474,9 +1474,9 @@ parameter_list|,
 name|vm_offset_t
 modifier|*
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 parameter_list|,
 name|int
 parameter_list|)
@@ -1773,7 +1773,7 @@ name|mmu_booke_mapdev
 parameter_list|(
 name|mmu_t
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 parameter_list|,
 name|vm_size_t
 parameter_list|)
@@ -1796,7 +1796,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|vm_offset_t
+name|vm_paddr_t
 name|mmu_booke_kextract
 parameter_list|(
 name|mmu_t
@@ -1815,7 +1815,7 @@ name|mmu_t
 parameter_list|,
 name|vm_offset_t
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1839,7 +1839,7 @@ name|mmu_booke_dev_direct_mapped
 parameter_list|(
 name|mmu_t
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 parameter_list|,
 name|vm_size_t
 parameter_list|)
@@ -6435,7 +6435,7 @@ parameter_list|,
 name|vm_offset_t
 name|va
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|)
 block|{
@@ -8047,10 +8047,10 @@ name|vm_offset_t
 modifier|*
 name|virt
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 name|pa_start
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 name|pa_end
 parameter_list|,
 name|int
@@ -10651,7 +10651,7 @@ parameter_list|(
 name|mmu_t
 name|mmu
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|,
 name|vm_size_t
@@ -11376,7 +11376,7 @@ parameter_list|(
 name|mmu_t
 name|mmu
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|,
 name|vm_size_t

@@ -893,7 +893,7 @@ parameter_list|(
 name|vm_offset_t
 name|va
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|)
 function_decl|;
@@ -928,7 +928,7 @@ name|void
 modifier|*
 name|pmap_mapdev
 parameter_list|(
-name|vm_offset_t
+name|vm_paddr_t
 parameter_list|,
 name|vm_size_t
 parameter_list|)
@@ -983,7 +983,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|vm_offset_t
+name|vm_paddr_t
 name|pmap_kextract
 parameter_list|(
 name|vm_offset_t
@@ -995,7 +995,7 @@ begin_function_decl
 name|int
 name|pmap_dev_direct_mapped
 parameter_list|(
-name|vm_offset_t
+name|vm_paddr_t
 parameter_list|,
 name|vm_size_t
 parameter_list|)
