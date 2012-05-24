@@ -108,7 +108,7 @@ define|#
 directive|define
 name|wmb
 parameter_list|()
-value|__asm __volatile("sync : : : "memory")
+value|__asm __volatile("sync" : : : "memory")
 end_define
 
 begin_define
