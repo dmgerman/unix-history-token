@@ -1477,15 +1477,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|racct_sub
-argument_list|(
-name|p
-argument_list|,
-name|RACCT_NTHR
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Shutting down last thread in the proc.  This will actually 	 * call exit() in the trampoline when it returns. 	 */
 if|if
 condition|(
@@ -1496,6 +1487,15 @@ operator|!=
 literal|1
 condition|)
 block|{
+name|racct_sub
+argument_list|(
+name|p
+argument_list|,
+name|RACCT_NTHR
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|LIST_REMOVE
 argument_list|(
 name|td
