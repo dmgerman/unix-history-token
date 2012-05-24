@@ -1758,7 +1758,7 @@ name|fprintf
 argument_list|(
 name|config
 argument_list|,
-literal|"packagesite: %s"
+literal|"packagesite: %s\n"
 argument_list|,
 name|url
 argument_list|)
