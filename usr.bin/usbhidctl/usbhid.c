@@ -1065,7 +1065,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"usage: %s -f device "
-literal|"[-l] [-n] [-r] [-t tablefile] [-v] [-x] name ...\n"
+literal|"[-l] [-n] [-r] [-t tablefile] [-v] [-x] [-z] name ...\n"
 argument_list|,
 name|getprogname
 argument_list|()
@@ -1076,7 +1076,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"       %s -f device "
-literal|"[-l] [-n] [-r] [-t tablefile] [-v] [-x] -a\n"
+literal|"[-l] [-n] [-r] [-t tablefile] [-v] [-x] [-z] -a\n"
 argument_list|,
 name|getprogname
 argument_list|()
@@ -1715,6 +1715,10 @@ name|kind
 decl_stmt|;
 name|kind
 operator|=
+name|zflag
+condition|?
+literal|3
+else|:
 literal|0
 expr_stmt|;
 name|rid
