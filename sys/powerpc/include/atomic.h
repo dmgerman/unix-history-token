@@ -79,7 +79,7 @@ define|#
 directive|define
 name|__ATOMIC_ACQ
 parameter_list|()
-value|__asm __volatile("lwsync" : : : "memory")
+value|__asm __volatile("isync" : : : "memory")
 end_define
 
 begin_else
