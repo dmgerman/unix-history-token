@@ -634,17 +634,10 @@ name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|_UNDER_DEVELOPMENT
-comment|/* Make sure all deferred tasks are completed */
+comment|/* Make sure all deferred notify tasks are completed */
 name|AcpiOsWaitEventsComplete
-argument_list|(
-name|NULL
-argument_list|)
+argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 name|Status
 operator|=
 name|AcpiUtAcquireMutex
@@ -1912,6 +1905,10 @@ name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Make sure all deferred GPE tasks are completed */
+name|AcpiOsWaitEventsComplete
+argument_list|()
+expr_stmt|;
 name|Status
 operator|=
 name|AcpiUtAcquireMutex

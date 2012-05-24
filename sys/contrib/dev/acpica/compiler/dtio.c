@@ -1010,9 +1010,6 @@ case|:
 case|case
 name|DT_SLASH_ASTERISK_COMMENT
 case|:
-case|case
-name|DT_SLASH_SLASH_COMMENT
-case|:
 name|AcpiOsPrintf
 argument_list|(
 literal|"**** EOF within comment/string %u\n"
@@ -1024,11 +1021,29 @@ break|break;
 default|default:
 break|break;
 block|}
+comment|/* Standalone EOF is OK */
+if|if
+condition|(
+name|i
+operator|==
+literal|0
+condition|)
+block|{
 return|return
 operator|(
 name|ASL_EOF
 operator|)
 return|;
+block|}
+comment|/*              * Received an EOF in the middle of a line. Terminate the              * line with a newline. The next call to this function will              * return a standalone EOF. Thus, the upper parsing software              * never has to deal with an EOF within a valid line (or              * the last line does not get tossed on the floor.)              */
+name|c
+operator|=
+literal|'\n'
+expr_stmt|;
+name|State
+operator|=
+name|DT_NORMAL_TEXT
+expr_stmt|;
 block|}
 switch|switch
 condition|(

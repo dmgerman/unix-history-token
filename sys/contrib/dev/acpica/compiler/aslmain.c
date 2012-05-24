@@ -1839,10 +1839,23 @@ break|break;
 case|case
 literal|'i'
 case|:
-comment|/* Less verbose error messages */
+comment|/*              * Support for integrated development environment(s).              *              * 1) No compiler signon              * 2) Send stderr messages to stdout              * 3) Less verbose error messages (single line only for each)              * 4) Error/warning messages are formatted appropriately to              *    be recognized by MS Visual Studio              */
 name|Gbl_VerboseErrors
 operator|=
 name|FALSE
+expr_stmt|;
+name|Gbl_DoSignon
+operator|=
+name|FALSE
+expr_stmt|;
+name|Gbl_Files
+index|[
+name|ASL_FILE_STDERR
+index|]
+operator|.
+name|Handle
+operator|=
+name|stdout
 expr_stmt|;
 break|break;
 case|case

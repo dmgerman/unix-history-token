@@ -389,7 +389,7 @@ name|ASL_INCLUDE_DIR
 modifier|*
 name|NextDir
 decl_stmt|;
-comment|/*      * start the actual include file on the next line      */
+comment|/* Start the actual include file on the next line */
 name|Gbl_CurrentLineOffset
 operator|++
 expr_stmt|;
@@ -556,31 +556,9 @@ decl_stmt|;
 comment|/* Build the full pathname to the file */
 name|Pathname
 operator|=
-name|ACPI_ALLOCATE
-argument_list|(
-name|strlen
+name|FlMergePathnames
 argument_list|(
 name|PrefixDir
-argument_list|)
-operator|+
-name|strlen
-argument_list|(
-name|Filename
-argument_list|)
-operator|+
-literal|1
-argument_list|)
-expr_stmt|;
-name|strcpy
-argument_list|(
-name|Pathname
-argument_list|,
-name|PrefixDir
-argument_list|)
-expr_stmt|;
-name|strcat
-argument_list|(
-name|Pathname
 argument_list|,
 name|Filename
 argument_list|)
@@ -589,9 +567,8 @@ name|DbgPrint
 argument_list|(
 name|ASL_PARSE_OUTPUT
 argument_list|,
-literal|"\n"
 name|PR_PREFIX_ID
-literal|"Opening include file: path %s\n"
+literal|"Include: Opening file - \"%s\"\n"
 argument_list|,
 name|Gbl_CurrentLineNumber
 argument_list|,

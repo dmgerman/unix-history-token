@@ -495,6 +495,14 @@ operator|=
 name|FlCheckForAscii
 argument_list|(
 name|Info
+operator|->
+name|Handle
+argument_list|,
+name|Info
+operator|->
+name|Filename
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 if|if
