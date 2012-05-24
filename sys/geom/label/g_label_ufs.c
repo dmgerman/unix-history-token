@@ -231,7 +231,7 @@ operator|==
 name|NULL
 condition|)
 continue|continue;
-comment|/* Check for magic and make sure things are the right size */
+comment|/* Check for magic */
 if|if
 condition|(
 name|fs
@@ -245,18 +245,6 @@ operator|->
 name|fs_fsize
 operator|>
 literal|0
-operator|&&
-name|pp
-operator|->
-name|mediasize
-operator|/
-name|fs
-operator|->
-name|fs_fsize
-operator|==
-name|fs
-operator|->
-name|fs_old_size
 condition|)
 block|{
 comment|/* Valid UFS1. */
@@ -275,18 +263,6 @@ operator|->
 name|fs_fsize
 operator|>
 literal|0
-operator|&&
-name|pp
-operator|->
-name|mediasize
-operator|/
-name|fs
-operator|->
-name|fs_fsize
-operator|==
-name|fs
-operator|->
-name|fs_size
 condition|)
 block|{
 comment|/* Valid UFS2. */
