@@ -3373,7 +3373,11 @@ block|}
 name|accmode
 operator|&=
 operator|~
+operator|(
 name|VWRITE
+operator||
+name|VAPPEND
+operator|)
 expr_stmt|;
 name|accmode
 operator||=
