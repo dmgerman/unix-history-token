@@ -1623,6 +1623,8 @@ argument_list|,
 name|c
 argument_list|,
 name|dval
+operator|&
+name|mask
 argument_list|)
 expr_stmt|;
 break|break;
