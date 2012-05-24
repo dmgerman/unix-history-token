@@ -137,6 +137,16 @@ name|G_TYPE_BOOL
 block|}
 block|,
 block|{
+literal|'o'
+block|,
+literal|"fmtopt"
+block|,
+name|G_VAL_OPTIONAL
+block|,
+name|G_TYPE_STRING
+block|}
+block|,
+block|{
 literal|'S'
 block|,
 literal|"size"
@@ -161,7 +171,7 @@ block|}
 block|,
 name|NULL
 block|,
-literal|"[-fv] [-S size] [-s stripsize] format label level prov ..."
+literal|"[-fv] [-o fmtopt] [-S size] [-s stripsize] format label level prov ..."
 block|}
 block|,
 block|{

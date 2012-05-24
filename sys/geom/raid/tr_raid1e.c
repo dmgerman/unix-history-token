@@ -909,7 +909,7 @@ name|tro_volume
 operator|->
 name|v_raid_level_qualifier
 operator|!=
-name|G_RAID_VOLUME_RLQ_NONE
+name|G_RAID_VOLUME_RLQ_R1EA
 condition|)
 return|return
 operator|(
