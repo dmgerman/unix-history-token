@@ -92,7 +92,7 @@ define|#
 directive|define
 name|mb
 parameter_list|()
-value|__asm __volatile("isync" : : : "memory")
+value|__asm __volatile("sync" : : : "memory")
 end_define
 
 begin_define
@@ -100,7 +100,7 @@ define|#
 directive|define
 name|rmb
 parameter_list|()
-value|__asm __volatile("isync" : : : "memory")
+value|__asm __volatile("sync" : : : "memory")
 end_define
 
 begin_define
@@ -108,7 +108,7 @@ define|#
 directive|define
 name|wmb
 parameter_list|()
-value|__asm __volatile("isync" : : : "memory")
+value|__asm __volatile("sync : : : "memory")
 end_define
 
 begin_define
@@ -116,7 +116,7 @@ define|#
 directive|define
 name|__ATOMIC_REL
 parameter_list|()
-value|__asm __volatile("isync" : : : "memory")
+value|__asm __volatile("sync" : : : "memory")
 end_define
 
 begin_define
