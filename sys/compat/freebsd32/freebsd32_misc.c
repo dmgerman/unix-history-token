@@ -8832,6 +8832,10 @@ name|count
 argument_list|,
 operator|&
 name|base
+argument_list|,
+name|NULL
+argument_list|,
+name|UIO_USERSPACE
 argument_list|)
 expr_stmt|;
 if|if
