@@ -37,8 +37,12 @@ name|LBC85XX_BR
 parameter_list|(
 name|n
 parameter_list|)
-value|(8 * n)
+value|(0x0 + (8 * n))
 end_define
+
+begin_comment
+comment|/* Base register 0-7 */
+end_comment
 
 begin_define
 define|#
@@ -47,22 +51,309 @@ name|LBC85XX_OR
 parameter_list|(
 name|n
 parameter_list|)
-value|(4 + (8 * n))
+value|(0x4 + (8 * n))
 end_define
+
+begin_comment
+comment|/* Options register 0-7 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LBC85XX_MAR
+value|0x068
+end_define
+
+begin_comment
+comment|/* UPM address register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LBC85XX_MAMR
+value|0x070
+end_define
+
+begin_comment
+comment|/* UPMA mode register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LBC85XX_MBMR
+value|0x074
+end_define
+
+begin_comment
+comment|/* UPMB mode register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LBC85XX_MCMR
+value|0x078
+end_define
+
+begin_comment
+comment|/* UPMC mode register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LBC85XX_MRTPR
+value|0x084
+end_define
+
+begin_comment
+comment|/* Memory refresh timer prescaler */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LBC85XX_MDR
+value|0x088
+end_define
+
+begin_comment
+comment|/* UPM data register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LBC85XX_LSOR
+value|0x090
+end_define
+
+begin_comment
+comment|/* Special operation initiation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LBC85XX_LURT
+value|0x0a0
+end_define
+
+begin_comment
+comment|/* UPM refresh timer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LBC85XX_LSRT
+value|0x0a4
+end_define
+
+begin_comment
+comment|/* SDRAM refresh timer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LBC85XX_LTESR
+value|0x0b0
+end_define
+
+begin_comment
+comment|/* Transfer error status register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LBC85XX_LTEDR
+value|0x0b4
+end_define
+
+begin_comment
+comment|/* Transfer error disable register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LBC85XX_LTEIR
+value|0x0b8
+end_define
+
+begin_comment
+comment|/* Transfer error interrupt register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LBC85XX_LTEATR
+value|0x0bc
+end_define
+
+begin_comment
+comment|/* Transfer error attributes register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LBC85XX_LTEAR
+value|0x0c0
+end_define
+
+begin_comment
+comment|/* Transfer error address register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LBC85XX_LTECCR
+value|0x0c4
+end_define
+
+begin_comment
+comment|/* Transfer error ECC register */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|LBC85XX_LBCR
-value|(0xd0)
+value|0x0d0
 end_define
+
+begin_comment
+comment|/* Configuration register */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|LBC85XX_LCRR
-value|(0xd4)
+value|0x0d4
 end_define
+
+begin_comment
+comment|/* Clock ratio register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LBC85XX_FMR
+value|0x0e0
+end_define
+
+begin_comment
+comment|/* Flash mode register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LBC85XX_FIR
+value|0x0e4
+end_define
+
+begin_comment
+comment|/* Flash instruction register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LBC85XX_FCR
+value|0x0e8
+end_define
+
+begin_comment
+comment|/* Flash command register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LBC85XX_FBAR
+value|0x0ec
+end_define
+
+begin_comment
+comment|/* Flash block address register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LBC85XX_FPAR
+value|0x0f0
+end_define
+
+begin_comment
+comment|/* Flash page address register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LBC85XX_FBCR
+value|0x0f4
+end_define
+
+begin_comment
+comment|/* Flash byte count register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LBC85XX_FECC0
+value|0x100
+end_define
+
+begin_comment
+comment|/* Flash ECC block 0 register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LBC85XX_FECC1
+value|0x104
+end_define
+
+begin_comment
+comment|/* Flash ECC block 0 register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LBC85XX_FECC2
+value|0x108
+end_define
+
+begin_comment
+comment|/* Flash ECC block 0 register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LBC85XX_FECC3
+value|0x10c
+end_define
+
+begin_comment
+comment|/* Flash ECC block 0 register */
+end_comment
 
 begin_comment
 comment|/* LBC machine select */
@@ -155,18 +446,35 @@ end_define
 
 begin_struct
 struct|struct
+name|lbc_memrange
+block|{
+name|vm_paddr_t
+name|addr
+decl_stmt|;
+name|vm_size_t
+name|size
+decl_stmt|;
+name|vm_offset_t
+name|kva
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|lbc_bank
 block|{
-name|u_long
-name|pa
+name|vm_paddr_t
+name|addr
 decl_stmt|;
 comment|/* physical addr of the bank */
-name|u_long
+name|vm_size_t
 name|size
 decl_stmt|;
 comment|/* bank size */
 name|vm_offset_t
-name|va
+name|kva
 decl_stmt|;
 comment|/* VA of the bank */
 comment|/* 	 * XXX the following bank attributes do not have properties specified 	 * in the LBC DTS bindings yet (11.2009), so they are mainly a 	 * placeholder for future extensions. 	 */
@@ -226,6 +534,13 @@ name|int
 name|sc_size_cells
 decl_stmt|;
 name|struct
+name|lbc_memrange
+name|sc_range
+index|[
+name|LBC_DEV_MAX
+index|]
+decl_stmt|;
+name|struct
 name|lbc_bank
 name|sc_banks
 index|[
@@ -254,6 +569,35 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_function_decl
+name|uint32_t
+name|lbc_read_reg
+parameter_list|(
+name|device_t
+name|child
+parameter_list|,
+name|u_int
+name|off
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|lbc_write_reg
+parameter_list|(
+name|device_t
+name|child
+parameter_list|,
+name|u_int
+name|off
+parameter_list|,
+name|uint32_t
+name|val
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
