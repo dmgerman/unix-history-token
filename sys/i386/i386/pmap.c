@@ -363,12 +363,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|PV_STATS
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef
