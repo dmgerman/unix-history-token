@@ -749,6 +749,9 @@ comment|/* AT Attachment Packetized Interface */
 name|PROTO_SATAPM
 block|,
 comment|/* SATA Port Multiplier */
+name|PROTO_SEMB
+block|,
+comment|/* SATA Enclosure Management Bridge */
 block|}
 name|cam_proto
 typedef|;
