@@ -492,6 +492,47 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|struct
+name|ip6aux
+modifier|*
+name|ip6_addaux
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|struct
+name|ip6aux
+modifier|*
+name|ip6_findaux
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|ip6_delaux
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|int
 name|ip6_hopopts_input
 parameter_list|(
@@ -7111,6 +7152,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|struct
 name|ip6aux
 modifier|*
@@ -7206,6 +7248,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|struct
 name|ip6aux
 modifier|*
@@ -7253,6 +7296,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ip6_delaux
 parameter_list|(
