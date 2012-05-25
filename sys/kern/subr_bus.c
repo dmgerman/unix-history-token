@@ -6865,6 +6865,22 @@ name|unit
 operator|)
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|name
+operator|!=
+name|NULL
+operator|||
+name|unit
+operator|==
+operator|-
+literal|1
+argument_list|,
+operator|(
+literal|"child device with wildcard name and specific unit number"
+operator|)
+argument_list|)
+expr_stmt|;
 name|child
 operator|=
 name|make_device
