@@ -1163,9 +1163,9 @@ parameter_list|,
 name|vm_offset_t
 modifier|*
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 parameter_list|,
 name|int
 parameter_list|)
@@ -1393,7 +1393,7 @@ name|moea64_mapdev
 parameter_list|(
 name|mmu_t
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 parameter_list|,
 name|vm_size_t
 parameter_list|)
@@ -1430,7 +1430,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|vm_offset_t
+name|vm_paddr_t
 name|moea64_kextract
 parameter_list|(
 name|mmu_t
@@ -1479,7 +1479,7 @@ name|mmu_t
 parameter_list|,
 name|vm_offset_t
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1490,7 +1490,7 @@ name|moea64_dev_direct_mapped
 parameter_list|(
 name|mmu_t
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 parameter_list|,
 name|vm_size_t
 parameter_list|)
@@ -7488,7 +7488,7 @@ parameter_list|,
 name|vm_offset_t
 name|va
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|)
 block|{
@@ -7511,7 +7511,7 @@ comment|/*  * Extract the physical page address associated with the given kernel
 end_comment
 
 begin_function
-name|vm_offset_t
+name|vm_paddr_t
 name|moea64_kextract
 parameter_list|(
 name|mmu_t
@@ -7651,10 +7651,10 @@ name|vm_offset_t
 modifier|*
 name|virt
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 name|pa_start
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 name|pa_end
 parameter_list|,
 name|int
@@ -10932,7 +10932,7 @@ parameter_list|(
 name|mmu_t
 name|mmu
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|,
 name|vm_size_t
@@ -11187,7 +11187,7 @@ parameter_list|(
 name|mmu_t
 name|mmu
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|,
 name|vm_size_t
