@@ -4508,6 +4508,34 @@ value|((*(_ah)->ah_gpioSetIntr)((_ah), (_gpio), (_b)))
 end_define
 
 begin_comment
+comment|/*  * PCIe suspend/resume/poweron/poweroff related macros  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ath_hal_enablepcie
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_restore
+parameter_list|)
+define|\
+value|((*(_ah)->ah_configPCIE)((_ah), (_restore)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_disablepcie
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|((*(_ah)->ah_disablePCIE)((_ah)))
+end_define
+
+begin_comment
 comment|/*  * This is badly-named; you need to set the correct parameters  * to begin to receive useful radar events; and even then  * it doesn't "enable" DFS. See the ath_dfs/null/ module for  * more information.  */
 end_comment
 

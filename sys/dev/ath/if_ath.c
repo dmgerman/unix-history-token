@@ -5941,6 +5941,14 @@ name|ic
 argument_list|)
 expr_stmt|;
 comment|/* 	 * NB: don't worry about putting the chip in low power 	 * mode; pci will power off our socket on suspend and 	 * CardBus detaches the device. 	 */
+comment|/* For PCIe, this matters */
+name|ath_hal_disablepcie
+argument_list|(
+name|sc
+operator|->
+name|sc_ah
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -6072,6 +6080,14 @@ argument_list|,
 name|ifp
 operator|->
 name|if_flags
+argument_list|)
+expr_stmt|;
+comment|/* Re-enable PCIe, re-enable the PCIe bus */
+name|ath_hal_enablepcie
+argument_list|(
+name|ah
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Must reset the chip before we reload the 	 * keycache as we were powered down on suspend. 	 */

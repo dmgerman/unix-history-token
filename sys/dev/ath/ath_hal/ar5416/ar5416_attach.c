@@ -76,6 +76,19 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
+name|ar5416DisablePCIE
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
 name|ar5416WriteIni
 parameter_list|(
 name|struct
@@ -459,6 +472,12 @@ operator|->
 name|ah_configPCIE
 operator|=
 name|ar5416ConfigPCIE
+expr_stmt|;
+name|ah
+operator|->
+name|ah_disablePCIE
+operator|=
+name|ar5416DisablePCIE
 expr_stmt|;
 name|ah
 operator|->
@@ -2343,6 +2362,21 @@ name|AR_WA_DEFAULT
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|ar5416DisablePCIE
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|)
+block|{
+comment|/* XXX TODO */
 block|}
 end_function
 
