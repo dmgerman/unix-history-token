@@ -1048,6 +1048,9 @@ block|{
 case|case
 name|AF_INET
 case|:
+case|case
+name|AF_INET6
+case|:
 if|if
 condition|(
 name|ifp
@@ -1083,9 +1086,6 @@ operator|&=
 operator|~
 name|LO_CSUM_FEATURES
 expr_stmt|;
-case|case
-name|AF_INET6
-case|:
 case|case
 name|AF_IPX
 case|:
