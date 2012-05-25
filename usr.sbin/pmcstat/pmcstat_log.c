@@ -1527,6 +1527,14 @@ operator|<
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|args
+operator|.
+name|pa_verbosity
+operator|>=
+literal|2
+condition|)
 name|warn
 argument_list|(
 literal|"WARNING: Cannot determine type of \"%s\""
@@ -2456,6 +2464,14 @@ name|ELF_K_ELF
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|args
+operator|.
+name|pa_verbosity
+operator|>=
+literal|2
+condition|)
 name|warnx
 argument_list|(
 literal|"WARNING: Cannot determine the type of \"%s\"."
@@ -3759,6 +3775,9 @@ name|addr2line_warn
 init|=
 literal|0
 decl_stmt|;
+name|unsigned
+name|l
+decl_stmt|;
 name|char
 modifier|*
 name|sep
@@ -3854,6 +3873,7 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
+comment|/* 		 * New addr2line support recursive inline function with -i 		 * but the format does not add a marker when no more entries 		 * are available. 		 */
 name|snprintf
 argument_list|(
 name|cmdline
@@ -4074,8 +4094,7 @@ name|sep
 operator|=
 literal|'\0'
 expr_stmt|;
-operator|*
-name|sourceline
+name|l
 operator|=
 name|atoi
 argument_list|(
@@ -4086,8 +4105,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|*
-name|sourceline
+name|l
 operator|==
 literal|0
 condition|)
@@ -4096,6 +4114,11 @@ operator|(
 literal|0
 operator|)
 return|;
+operator|*
+name|sourceline
+operator|=
+name|l
+expr_stmt|;
 return|return
 operator|(
 literal|1
