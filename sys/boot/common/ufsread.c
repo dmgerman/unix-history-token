@@ -72,6 +72,13 @@ endif|#
 directive|endif
 end_endif
 
+begin_typedef
+typedef|typedef
+name|uint32_t
+name|ufs_ino_t
+typedef|;
+end_typedef
+
 begin_comment
 comment|/*  * We use 4k `virtual' blocks for filesystem data, whatever the actual  * filesystem block size. FFS blocks are always a multiple of 4k.  */
 end_comment
@@ -230,7 +237,7 @@ end_decl_stmt
 
 begin_function_decl
 specifier|static
-name|ino_t
+name|ufs_ino_t
 name|lookup
 parameter_list|(
 specifier|const
@@ -245,7 +252,7 @@ specifier|static
 name|ssize_t
 name|fsread
 parameter_list|(
-name|ino_t
+name|ufs_ino_t
 parameter_list|,
 name|void
 modifier|*
@@ -282,7 +289,7 @@ name|char
 modifier|*
 name|name
 parameter_list|,
-name|ino_t
+name|ufs_ino_t
 modifier|*
 name|ino
 parameter_list|)
@@ -419,7 +426,7 @@ end_function
 
 begin_function
 specifier|static
-name|ino_t
+name|ufs_ino_t
 name|lookup
 parameter_list|(
 specifier|const
@@ -442,7 +449,7 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
-name|ino_t
+name|ufs_ino_t
 name|ino
 decl_stmt|;
 name|ssize_t
@@ -677,7 +684,7 @@ specifier|static
 name|ssize_t
 name|fsread
 parameter_list|(
-name|ino_t
+name|ufs_ino_t
 name|inode
 parameter_list|,
 name|void
@@ -717,7 +724,7 @@ name|fs
 name|fs
 decl_stmt|;
 specifier|static
-name|ino_t
+name|ufs_ino_t
 name|inomap
 decl_stmt|;
 name|char

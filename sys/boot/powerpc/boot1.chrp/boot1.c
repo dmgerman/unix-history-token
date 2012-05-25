@@ -150,13 +150,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|ino_t
-name|inomap
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|char
 name|blkbuf
 index|[
@@ -2370,7 +2363,7 @@ decl_stmt|;
 name|caddr_t
 name|p
 decl_stmt|;
-name|ino_t
+name|ufs_ino_t
 name|ino
 decl_stmt|;
 name|int

@@ -2028,9 +2028,6 @@ decl_stmt|;
 name|caddr_t
 name|p
 decl_stmt|;
-name|ino_t
-name|ino
-decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -2305,7 +2302,7 @@ decl_stmt|;
 name|caddr_t
 name|p
 decl_stmt|;
-name|ino_t
+name|ufs_ino_t
 name|ino
 decl_stmt|;
 name|int
