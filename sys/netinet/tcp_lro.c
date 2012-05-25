@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/ip_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/tcp.h>
 end_include
 
@@ -111,6 +117,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/tcp_lro.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet6/ip6_var.h>
 end_include
 
 begin_include
@@ -1617,6 +1629,20 @@ name|INET6
 case|case
 name|ETHERTYPE_IPV6
 case|:
+if|if
+condition|(
+name|V_ip6_forwarding
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* XXX-BZ stats but changing lro_ctrl is a problem. */
+return|return
+operator|(
+name|TCP_LRO_CANNOT
+operator|)
+return|;
+block|}
 name|l3hdr
 operator|=
 name|ip6
@@ -1685,6 +1711,20 @@ name|INET
 case|case
 name|ETHERTYPE_IP
 case|:
+if|if
+condition|(
+name|V_ipforwarding
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* XXX-BZ stats but changing lro_ctrl is a problem. */
+return|return
+operator|(
+name|TCP_LRO_CANNOT
+operator|)
+return|;
+block|}
 name|l3hdr
 operator|=
 name|ip4
