@@ -499,30 +499,12 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* Signal and wait for the ses daemon to terminate. */
+comment|/* Signal the ses daemon to terminate. */
 name|wakeup
 argument_list|(
 name|enc
 operator|->
 name|enc_daemon
-argument_list|)
-expr_stmt|;
-comment|/* 		 * We're called with the SIM mutex held, but we're dropping 		 * the update mutex here on sleep.  So we have to manually 		 * drop the SIM mutex. 		 */
-name|cam_periph_sleep
-argument_list|(
-name|enc
-operator|->
-name|periph
-argument_list|,
-name|enc
-operator|->
-name|enc_daemon
-argument_list|,
-name|PUSER
-argument_list|,
-literal|"thtrm"
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -3760,6 +3742,13 @@ operator|->
 name|periph
 argument_list|)
 expr_stmt|;
+name|cam_periph_release
+argument_list|(
+name|enc
+operator|->
+name|periph
+argument_list|)
+expr_stmt|;
 name|kproc_exit
 argument_list|(
 literal|0
@@ -3799,6 +3788,22 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cam_periph_acquire
+argument_list|(
+name|enc
+operator|->
+name|periph
+argument_list|)
+operator|!=
+name|CAM_REQ_CMP
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 name|result
 operator|=
 name|kproc_create
@@ -3859,6 +3864,14 @@ name|periph
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|cam_periph_release
+argument_list|(
+name|enc
+operator|->
+name|periph
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|result
@@ -4177,7 +4190,7 @@ name|periph
 operator|->
 name|path
 argument_list|,
-literal|"error %d string enc_daemon\n"
+literal|"error %d starting enc_daemon\n"
 argument_list|,
 name|err
 argument_list|)
