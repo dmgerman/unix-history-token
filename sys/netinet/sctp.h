@@ -2258,6 +2258,12 @@ begin_comment
 comment|/* smallest pmtu allowed when disabling PMTU 				 * discovery */
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|SCTP_PACKED
+end_undef
+
 begin_include
 include|#
 directive|include
@@ -2504,12 +2510,6 @@ directive|define
 name|SCTP_LOG_TRY_ADVANCE
 value|0x10000000
 end_define
-
-begin_undef
-undef|#
-directive|undef
-name|SCTP_PACKED
-end_undef
 
 begin_endif
 endif|#
