@@ -81,6 +81,13 @@ directive|include
 file|"zfsimpl.c"
 end_include
 
+begin_define
+define|#
+directive|define
+name|MAXBDDEV
+value|31
+end_define
+
 begin_function_decl
 specifier|static
 name|int
@@ -1851,8 +1858,7 @@ literal|0
 init|;
 name|unit
 operator|<
-literal|32
-comment|/* XXX */
+name|MAXBDDEV
 condition|;
 name|unit
 operator|++
