@@ -4440,7 +4440,7 @@ value|(REG_ATTRS (RTX) == 0 ? 0 : REG_ATTRS (RTX)->decl)
 end_define
 
 begin_comment
-comment|/* For a MEM rtx, the offset from the start of MEM_DECL, if known, as a    RTX that is always a CONST_INT.  */
+comment|/* For a REG rtx, the offset from the start of REG_EXPR, if known, as an    HOST_WIDE_INT.  */
 end_comment
 
 begin_define

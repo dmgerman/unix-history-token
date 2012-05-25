@@ -247,7 +247,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* This is an implementation of Tarjan's strongly connected region    finder as reprinted in Aho Hopcraft and Ullman's The Design and    Analysis of Computer Programs (1975) pages 192-193.  This version    has been customized for cgraph_nodes.  The env parameter is because    it is recursive and there are no nested functions here.  This    function should only be called from itself or    cgraph_reduced_inorder.  ENV is a stack env and would be    unnecessary if C had nested functions.  V is the node to start    searching from.  */
+comment|/* This is an implementation of Tarjan's strongly connected region    finder as reprinted in Aho Hopcraft and Ullman's The Design and    Analysis of Computer Programs (1975) pages 192-193.  This version    has been customized for cgraph_nodes.  The env parameter is because    it is recursive and there are no nested functions here.  This    function should only be called from itself or    ipa_utils_reduced_inorder.  ENV is a stack env and would be    unnecessary if C had nested functions.  V is the node to start    searching from.  */
 end_comment
 
 begin_function
