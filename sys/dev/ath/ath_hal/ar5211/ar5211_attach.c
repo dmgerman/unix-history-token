@@ -105,6 +105,9 @@ name|ah
 parameter_list|,
 name|HAL_BOOL
 name|restore
+parameter_list|,
+name|HAL_BOOL
+name|power_off
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2194,6 +2197,9 @@ name|ah
 parameter_list|,
 name|HAL_BOOL
 name|restore
+parameter_list|,
+name|HAL_BOOL
+name|power_off
 parameter_list|)
 block|{ }
 end_function

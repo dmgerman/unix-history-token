@@ -266,6 +266,9 @@ name|ah
 parameter_list|,
 name|HAL_BOOL
 name|restore
+parameter_list|,
+name|HAL_BOOL
+name|power_off
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1683,6 +1686,9 @@ name|ah
 parameter_list|,
 name|HAL_BOOL
 name|restore
+parameter_list|,
+name|HAL_BOOL
+name|power_off
 parameter_list|)
 block|{
 if|if
@@ -1729,6 +1735,7 @@ argument_list|,
 name|AR_PCIE_PM_CTRL_ENA
 argument_list|)
 expr_stmt|;
+comment|/* Yes, Kiwi uses the Kite PCIe PHY WA */
 name|OS_REG_WRITE
 argument_list|(
 name|ah
@@ -1738,7 +1745,6 @@ argument_list|,
 name|AR9285_WA_DEFAULT
 argument_list|)
 expr_stmt|;
-comment|/* Yes, Kiwi uses the Kite PCIe PHY WA */
 block|}
 block|}
 end_function

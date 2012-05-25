@@ -69,6 +69,9 @@ name|ah
 parameter_list|,
 name|HAL_BOOL
 name|restore
+parameter_list|,
+name|HAL_BOOL
+name|power_off
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1877,6 +1880,8 @@ argument_list|(
 name|ah
 argument_list|,
 name|AH_FALSE
+argument_list|,
+name|AH_FALSE
 argument_list|)
 expr_stmt|;
 block|}
@@ -3136,6 +3141,9 @@ name|ah
 parameter_list|,
 name|HAL_BOOL
 name|restore
+parameter_list|,
+name|HAL_BOOL
+name|power_off
 parameter_list|)
 block|{
 name|OS_REG_WRITE
