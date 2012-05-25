@@ -3748,6 +3748,12 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|term
+operator|!=
+name|NULL
+condition|)
 name|setenv
 argument_list|(
 literal|"TERM"
