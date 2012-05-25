@@ -16,7 +16,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdint.h>
+file|"../int_math.h"
 end_include
 
 begin_function
@@ -300,7 +300,7 @@ if|if
 condition|(
 literal|1.0
 operator|>
-name|__builtin_fabs
+name|crt_fabs
 argument_list|(
 name|x
 operator|.

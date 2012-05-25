@@ -1,23 +1,19 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ===-- endianness.h - configuration header for compiler-rt ---------------===  *  *		       The LLVM Compiler Infrastructure  *  * This file is dual licensed under the MIT and the University of Illinois Open  * Source Licenses. See LICENSE.TXT for details.  *  * ===----------------------------------------------------------------------===  *  * This file is a configuration header for compiler-rt.  * This file is not part of the interface of this library.  *  * ===----------------------------------------------------------------------===  */
+comment|/* ===-- int_endianness.h - configuration header for compiler-rt ------------===  *  *		       The LLVM Compiler Infrastructure  *  * This file is dual licensed under the MIT and the University of Illinois Open  * Source Licenses. See LICENSE.TXT for details.  *  * ===----------------------------------------------------------------------===  *  * This file is a configuration header for compiler-rt.  * This file is not part of the interface of this library.  *  * ===----------------------------------------------------------------------===  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|ENDIANNESS_H
+name|INT_ENDIANNESS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|ENDIANNESS_H
+name|INT_ENDIANNESS_H
 end_define
-
-begin_comment
-comment|/*  * Known limitations:  *   Middle endian systems are not handled currently.  */
-end_comment
 
 begin_if
 if|#
@@ -435,7 +431,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ENDIANNESS_H */
+comment|/* INT_ENDIANNESS_H */
 end_comment
 
 end_unit

@@ -3,18 +3,6 @@ begin_comment
 comment|/* ===-- floatundidf.c - Implement __floatundidf ---------------------------===  *  *                     The LLVM Compiler Infrastructure  *  * This file is dual licensed under the MIT and the University of Illinois Open  * Source Licenses. See LICENSE.TXT for details.  *  * ===----------------------------------------------------------------------===  *  * This file implements __floatundidf for the compiler_rt library.  *  * ===----------------------------------------------------------------------===  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"abi.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<float.h>
-end_include
-
 begin_comment
 comment|/* Returns: convert a to a double, rounding toward even. */
 end_comment
@@ -52,12 +40,6 @@ end_ifndef
 begin_comment
 comment|/* Support for systems that have hardware floating-point; we'll set the inexact flag  * as a side-effect of this computation.  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdint.h>
-end_include
 
 begin_function
 name|COMPILER_RT_ABI

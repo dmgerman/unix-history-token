@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*===-- mulvdi3.c - Implement __mulvdi3 -----------------------------------===  *  *                     The LLVM Compiler Infrastructure  *  * This file is dual licensed under the MIT and the University of Illinois Open  * Source Licenses. See LICENSE.TXT for details.  *  * ===----------------------------------------------------------------------===  *  * This file implements __mulvdi3 for the compiler_rt library.  *  * ===----------------------------------------------------------------------===  */
+comment|/*===-- mulodi4.c - Implement __mulodi4 -----------------------------------===  *  *                     The LLVM Compiler Infrastructure  *  * This file is dual licensed under the MIT and the University of Illinois Open  * Source Licenses. See LICENSE.TXT for details.  *  * ===----------------------------------------------------------------------===  *  * This file implements __mulodi4 for the compiler_rt library.  *  * ===----------------------------------------------------------------------===  */
 end_comment
 
 begin_include
@@ -14,18 +14,22 @@ comment|/* Returns: a * b */
 end_comment
 
 begin_comment
-comment|/* Effects: aborts if a * b overflows */
+comment|/* Effects: sets *overflow to 1  if a * b overflows */
 end_comment
 
 begin_function
 name|di_int
-name|__mulvdi3
+name|__mulodi4
 parameter_list|(
 name|di_int
 name|a
 parameter_list|,
 name|di_int
 name|b
+parameter_list|,
+name|int
+modifier|*
+name|overflow
 parameter_list|)
 block|{
 specifier|const
@@ -66,6 +70,18 @@ init|=
 operator|~
 name|MIN
 decl_stmt|;
+operator|*
+name|overflow
+operator|=
+literal|0
+expr_stmt|;
+name|di_int
+name|result
+init|=
+name|a
+operator|*
+name|b
+decl_stmt|;
 if|if
 condition|(
 name|a
@@ -76,21 +92,21 @@ block|{
 if|if
 condition|(
 name|b
-operator|==
+operator|!=
 literal|0
-operator|||
+operator|&&
 name|b
-operator|==
+operator|!=
 literal|1
 condition|)
-return|return
-name|a
 operator|*
-name|b
-return|;
-name|compilerrt_abort
-argument_list|()
+name|overflow
+operator|=
+literal|1
 expr_stmt|;
+return|return
+name|result
+return|;
 block|}
 if|if
 condition|(
@@ -102,21 +118,21 @@ block|{
 if|if
 condition|(
 name|a
-operator|==
+operator|!=
 literal|0
-operator|||
+operator|&&
 name|a
-operator|==
+operator|!=
 literal|1
 condition|)
-return|return
-name|a
 operator|*
-name|b
-return|;
-name|compilerrt_abort
-argument_list|()
+name|overflow
+operator|=
+literal|1
 expr_stmt|;
+return|return
+name|result
+return|;
 block|}
 name|di_int
 name|sa
@@ -173,9 +189,7 @@ operator|<
 literal|2
 condition|)
 return|return
-name|a
-operator|*
-name|b
+name|result
 return|;
 if|if
 condition|(
@@ -192,8 +206,10 @@ name|MAX
 operator|/
 name|abs_b
 condition|)
-name|compilerrt_abort
-argument_list|()
+operator|*
+name|overflow
+operator|=
+literal|1
 expr_stmt|;
 block|}
 else|else
@@ -207,14 +223,14 @@ operator|/
 operator|-
 name|abs_b
 condition|)
-name|compilerrt_abort
-argument_list|()
+operator|*
+name|overflow
+operator|=
+literal|1
 expr_stmt|;
 block|}
 return|return
-name|a
-operator|*
-name|b
+name|result
 return|;
 block|}
 end_function

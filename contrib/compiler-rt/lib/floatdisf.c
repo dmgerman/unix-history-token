@@ -3,18 +3,6 @@ begin_comment
 comment|/*===-- floatdisf.c - Implement __floatdisf -------------------------------===  *  *                     The LLVM Compiler Infrastructure  *  * This file is dual licensed under the MIT and the University of Illinois Open  * Source Licenses. See LICENSE.TXT for details.  *  *===----------------------------------------------------------------------===  *  * This file implements __floatdisf for the compiler_rt library.  *  *===----------------------------------------------------------------------===  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"abi.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<float.h>
-end_include
-
 begin_comment
 comment|/* Returns: convert a to a float, rounding toward even.*/
 end_comment

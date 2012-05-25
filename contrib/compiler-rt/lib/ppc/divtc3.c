@@ -12,7 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<math.h>
+file|"../int_math.h"
 end_include
 
 begin_if
@@ -21,7 +21,7 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|INFINITY
+name|CRT_INFINITY
 argument_list|)
 operator|&&
 name|defined
@@ -33,7 +33,7 @@ end_if
 begin_define
 define|#
 directive|define
-name|INFINITY
+name|CRT_INFINITY
 value|HUGE_VAL
 end_define
 
@@ -43,7 +43,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* INFINITY */
+comment|/* CRT_INFINITY */
 end_comment
 
 begin_define
@@ -53,7 +53,7 @@ name|makeFinite
 parameter_list|(
 name|x
 parameter_list|)
-value|{ \ 							(x).s.hi = __builtin_copysign(isinf((x).s.hi) ? 1.0 : 0.0, (x).s.hi); \ 							(x).s.lo = 0.0; \ 						}
+value|{ \     (x).s.hi = crt_copysign(crt_isinf((x).s.hi) ? 1.0 : 0.0, (x).s.hi); \     (x).s.lo = 0.0;                                                     \   }
 end_define
 
 begin_function_decl
@@ -164,11 +164,11 @@ specifier|const
 name|double
 name|logbw
 init|=
-name|logb
+name|crt_logb
 argument_list|(
-name|__builtin_fmax
+name|crt_fmax
 argument_list|(
-name|__builtin_fabs
+name|crt_fabs
 argument_list|(
 name|cDD
 operator|.
@@ -177,7 +177,7 @@ operator|.
 name|hi
 argument_list|)
 argument_list|,
-name|__builtin_fabs
+name|crt_fabs
 argument_list|(
 name|dDD
 operator|.
@@ -190,7 +190,7 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-name|isfinite
+name|crt_isfinite
 argument_list|(
 name|logbw
 argument_list|)
@@ -209,7 +209,7 @@ name|s
 operator|.
 name|hi
 operator|=
-name|scalbn
+name|crt_scalbn
 argument_list|(
 name|cDD
 operator|.
@@ -227,7 +227,7 @@ name|s
 operator|.
 name|lo
 operator|=
-name|scalbn
+name|crt_scalbn
 argument_list|(
 name|cDD
 operator|.
@@ -245,7 +245,7 @@ name|s
 operator|.
 name|hi
 operator|=
-name|scalbn
+name|crt_scalbn
 argument_list|(
 name|dDD
 operator|.
@@ -263,7 +263,7 @@ name|s
 operator|.
 name|lo
 operator|=
-name|scalbn
+name|crt_scalbn
 argument_list|(
 name|dDD
 operator|.
@@ -394,7 +394,7 @@ name|s
 operator|.
 name|hi
 operator|=
-name|scalbn
+name|crt_scalbn
 argument_list|(
 name|real
 operator|.
@@ -412,7 +412,7 @@ name|s
 operator|.
 name|lo
 operator|=
-name|scalbn
+name|crt_scalbn
 argument_list|(
 name|real
 operator|.
@@ -430,7 +430,7 @@ name|s
 operator|.
 name|hi
 operator|=
-name|scalbn
+name|crt_scalbn
 argument_list|(
 name|imag
 operator|.
@@ -448,7 +448,7 @@ name|s
 operator|.
 name|lo
 operator|=
-name|scalbn
+name|crt_scalbn
 argument_list|(
 name|imag
 operator|.
@@ -462,7 +462,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|isnan
+name|crt_isnan
 argument_list|(
 name|real
 operator|.
@@ -471,7 +471,7 @@ operator|.
 name|hi
 argument_list|)
 operator|&&
-name|isnan
+name|crt_isnan
 argument_list|(
 name|imag
 operator|.
@@ -525,7 +525,7 @@ operator|)
 operator|&&
 operator|(
 operator|!
-name|isnan
+name|crt_isnan
 argument_list|(
 name|aDD
 operator|.
@@ -535,7 +535,7 @@ name|hi
 argument_list|)
 operator|||
 operator|!
-name|isnan
+name|crt_isnan
 argument_list|(
 name|bDD
 operator|.
@@ -552,9 +552,9 @@ name|s
 operator|.
 name|hi
 operator|=
-name|__builtin_copysign
+name|crt_copysign
 argument_list|(
-name|INFINITY
+name|CRT_INFINITY
 argument_list|,
 name|cDD
 operator|.
@@ -583,9 +583,9 @@ name|s
 operator|.
 name|hi
 operator|=
-name|__builtin_copysign
+name|crt_copysign
 argument_list|(
-name|INFINITY
+name|CRT_INFINITY
 argument_list|,
 name|cDD
 operator|.
@@ -613,7 +613,7 @@ elseif|else
 if|if
 condition|(
 operator|(
-name|isinf
+name|crt_isinf
 argument_list|(
 name|aDD
 operator|.
@@ -622,7 +622,7 @@ operator|.
 name|hi
 argument_list|)
 operator|||
-name|isinf
+name|crt_isinf
 argument_list|(
 name|bDD
 operator|.
@@ -632,7 +632,7 @@ name|hi
 argument_list|)
 operator|)
 operator|&&
-name|isfinite
+name|crt_isfinite
 argument_list|(
 name|cDD
 operator|.
@@ -641,7 +641,7 @@ operator|.
 name|hi
 argument_list|)
 operator|&&
-name|isfinite
+name|crt_isfinite
 argument_list|(
 name|dDD
 operator|.
@@ -667,7 +667,7 @@ name|s
 operator|.
 name|hi
 operator|=
-name|INFINITY
+name|CRT_INFINITY
 operator|*
 operator|(
 name|aDD
@@ -709,7 +709,7 @@ name|s
 operator|.
 name|hi
 operator|=
-name|INFINITY
+name|CRT_INFINITY
 operator|*
 operator|(
 name|bDD
@@ -750,7 +750,7 @@ elseif|else
 if|if
 condition|(
 operator|(
-name|isinf
+name|crt_isinf
 argument_list|(
 name|cDD
 operator|.
@@ -759,7 +759,7 @@ operator|.
 name|hi
 argument_list|)
 operator|||
-name|isinf
+name|crt_isinf
 argument_list|(
 name|dDD
 operator|.
@@ -769,7 +769,7 @@ name|hi
 argument_list|)
 operator|)
 operator|&&
-name|isfinite
+name|crt_isfinite
 argument_list|(
 name|aDD
 operator|.
@@ -778,7 +778,7 @@ operator|.
 name|hi
 argument_list|)
 operator|&&
-name|isfinite
+name|crt_isfinite
 argument_list|(
 name|bDD
 operator|.
@@ -804,7 +804,7 @@ name|s
 operator|.
 name|hi
 operator|=
-name|__builtin_copysign
+name|crt_copysign
 argument_list|(
 literal|0.0
 argument_list|,
@@ -849,7 +849,7 @@ name|s
 operator|.
 name|hi
 operator|=
-name|__builtin_copysign
+name|crt_copysign
 argument_list|(
 literal|0.0
 argument_list|,

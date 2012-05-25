@@ -158,19 +158,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdint.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<limits.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"abi.h"
+file|"int_lib.h"
 end_include
 
 begin_typedef
