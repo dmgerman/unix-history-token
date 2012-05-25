@@ -9188,6 +9188,8 @@ name|vm_page_t
 name|free
 decl_stmt|,
 name|m
+decl_stmt|,
+name|m_pc
 decl_stmt|;
 name|uint64_t
 name|inuse
@@ -9222,7 +9224,7 @@ name|NULL
 expr_stmt|;
 name|free
 operator|=
-name|m
+name|m_pc
 operator|=
 name|NULL
 expr_stmt|;
@@ -9745,7 +9747,7 @@ operator|++
 argument_list|)
 expr_stmt|;
 comment|/* Entire chunk is free; return it. */
-name|m
+name|m_pc
 operator|=
 name|PHYS_TO_VM_PAGE
 argument_list|(
@@ -9760,7 +9762,7 @@ argument_list|)
 expr_stmt|;
 name|dump_drop_page
 argument_list|(
-name|m
+name|m_pc
 operator|->
 name|phys_addr
 argument_list|)
@@ -9835,7 +9837,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|m
+name|m_pc
 operator|==
 name|NULL
 operator|&&
@@ -9844,18 +9846,18 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|m
+name|m_pc
 operator|=
 name|free
 expr_stmt|;
 name|free
 operator|=
-name|m
+name|m_pc
 operator|->
 name|right
 expr_stmt|;
 comment|/* Recycle a freed page table page. */
-name|m
+name|m_pc
 operator|->
 name|wire_count
 operator|=
@@ -9879,7 +9881,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|m
+name|m_pc
 operator|)
 return|;
 block|}
