@@ -8,7 +8,7 @@ comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  */
+comment|/*  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -2595,7 +2595,7 @@ name|arg
 parameter_list|)
 function_decl|;
 name|int
-name|dmu_sendbackup
+name|dmu_send
 parameter_list|(
 name|objset_t
 modifier|*
@@ -2607,6 +2607,9 @@ name|fromsnap
 parameter_list|,
 name|boolean_t
 name|fromorigin
+parameter_list|,
+name|int
+name|outfd
 parameter_list|,
 name|struct
 name|file
