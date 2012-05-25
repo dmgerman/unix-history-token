@@ -23168,7 +23168,7 @@ name|local_p
 operator|=
 name|false
 expr_stmt|;
-comment|/* If PIC, then assume that any global name can be overridden by      symbols resolved from other modules.  */
+comment|/* If PIC, then assume that any global name can be overridden by      symbols resolved from other modules, unless we are compiling with      -fwhole-program, which assumes that names are local.  */
 elseif|else
 if|if
 condition|(
@@ -23176,7 +23176,7 @@ name|shlib
 condition|)
 name|local_p
 operator|=
-name|false
+name|flag_whole_program
 expr_stmt|;
 comment|/* Uninitialized COMMON variable may be unified with symbols      resolved from other modules.  */
 elseif|else
