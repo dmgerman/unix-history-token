@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_inet6.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_inet.h"
 end_include
 
@@ -10980,9 +10986,17 @@ name|lock
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|INET
+argument_list|)
 name|tcp_lro_free
 argument_list|(
 operator|&
@@ -14089,9 +14103,17 @@ operator|&
 name|IFCAP_LRO
 operator|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|INET
+argument_list|)
 name|ret
 operator|=
 name|tcp_lro_init
@@ -15775,6 +15797,17 @@ name|sleeping
 init|=
 literal|0
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET
+argument_list|)
 name|int
 name|lro_enabled
 init|=
@@ -15799,6 +15832,8 @@ name|lro
 operator|.
 name|ctrl
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|mbuf
 modifier|*
@@ -16436,6 +16471,17 @@ name|ethpad
 argument_list|)
 expr_stmt|;
 comment|/* 			 * The T304 sends incoming packets on any qset.  If LRO 			 * is also enabled, we could end up sending packet up 			 * lro_ctrl->ifp's input.  That is incorrect. 			 * 			 * The mbuf's rcvif was derived from the cpl header and 			 * is accurate.  Skip LRO and just use that. 			 */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET
+argument_list|)
 name|skip_lro
 operator|=
 name|__predict_false
@@ -16463,9 +16509,6 @@ name|lro_cnt
 operator|&&
 operator|!
 name|skip_lro
-ifdef|#
-directive|ifdef
-name|INET
 operator|&&
 operator|(
 name|tcp_lro_rx
@@ -16479,13 +16522,13 @@ argument_list|)
 operator|==
 literal|0
 operator|)
-endif|#
-directive|endif
 condition|)
 block|{
 comment|/* successfully queue'd for LRO */
 block|}
 else|else
+endif|#
+directive|endif
 block|{
 comment|/* 				 * LRO not enabled, packet unsuitable for LRO, 				 * or unable to queue.  Pass it up right now in 				 * either case. 				 */
 name|struct
@@ -16567,9 +16610,17 @@ argument_list|,
 name|ngathered
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|INET
+argument_list|)
 comment|/* Flush LRO */
 while|while
 condition|(
