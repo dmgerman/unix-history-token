@@ -10576,6 +10576,11 @@ operator|!=
 name|AF_INET6
 condition|)
 block|{
+name|RTFREE_LOCKED
+argument_list|(
+name|rt
+argument_list|)
+expr_stmt|;
 name|nd6log
 argument_list|(
 operator|(
@@ -10596,11 +10601,6 @@ operator|&
 name|redtgt6
 argument_list|)
 operator|)
-argument_list|)
-expr_stmt|;
-name|RTFREE_LOCKED
-argument_list|(
-name|rt
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -10644,6 +10644,11 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|RTFREE_LOCKED
+argument_list|(
+name|rt
+argument_list|)
+expr_stmt|;
 name|nd6log
 argument_list|(
 operator|(
@@ -10672,11 +10677,6 @@ operator|&
 name|redtgt6
 argument_list|)
 operator|)
-argument_list|)
-expr_stmt|;
-name|RTFREE_LOCKED
-argument_list|(
-name|rt
 argument_list|)
 expr_stmt|;
 goto|goto
