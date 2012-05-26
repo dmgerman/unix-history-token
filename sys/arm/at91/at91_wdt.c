@@ -457,6 +457,9 @@ if|if
 condition|(
 name|at91_is_sam9
 argument_list|()
+operator|||
+name|at91_is_sam9xe
+argument_list|()
 condition|)
 block|{
 name|device_set_desc

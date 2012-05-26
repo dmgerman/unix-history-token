@@ -1158,6 +1158,9 @@ name|is_emacb
 operator|=
 name|at91_is_sam9
 argument_list|()
+operator|||
+name|at91_is_sam9xe
+argument_list|()
 expr_stmt|;
 name|sc
 operator|->

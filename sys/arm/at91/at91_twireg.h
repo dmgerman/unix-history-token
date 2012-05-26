@@ -345,7 +345,7 @@ parameter_list|(
 name|rate
 parameter_list|)
 define|\
-value|(at91_is_sam9() ?				\ 	    ((at91_master_clock / (4 * (rate))) - 3) :	\ 	    ((at91_master_clock / (4 * (rate))) - 2))
+value|(at91_is_sam9() || at91_is_sam9xe() ?		\ 	    ((at91_master_clock / (4 * (rate))) - 3) :	\ 	    ((at91_master_clock / (4 * (rate))) - 2))
 end_define
 
 begin_comment
