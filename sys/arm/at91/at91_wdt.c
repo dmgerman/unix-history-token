@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2010 Greg Ansley.  All rights reserved.  *  * Redis
 end_comment
 
 begin_comment
-comment|/*  * The sam9 watchdog hardware can be programed only once. So we set the hardware  * watchdog to 16s in wdt_attach and only reset it in the wdt_tick  * handler. The watchdog is halted in processor debug mode.  */
+comment|/*  * The SAM9 watchdog hardware can be programed only once. So we set the  * hardware watchdog to 16 s in wdt_attach and only reset it in the wdt_tick  * handler.  The watchdog is halted in processor debug mode.  */
 end_comment
 
 begin_include
@@ -671,7 +671,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* This may have been set by Boot ROM so register value 		 * may not be  what we just requested since this is a 		 * write once register. */
+comment|/* 		 * This may have been set by Boot ROM so register value may 		 * not be what we just requested since this is a write once 		 * register. 		 */
 name|wdt_mr
 operator|=
 name|RD4
@@ -866,12 +866,8 @@ argument_list|,
 name|wdt_attach
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
+name|DEVMETHOD_END
 block|}
-block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -912,9 +908,9 @@ name|wdt_driver
 argument_list|,
 name|wdt_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt

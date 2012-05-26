@@ -1458,7 +1458,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* 	 * XXX: Clear the isolate bit, or we won't get up,  	 * at least on the HL201  	 */
+comment|/* 	 * XXX: Clear the isolate bit, or we won't get up, 	 * at least on the HL201 	 */
 name|ate_miibus_writereg
 argument_list|(
 name|dev
@@ -7159,11 +7159,7 @@ argument_list|,
 name|ate_miibus_writereg
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -7198,9 +7194,9 @@ name|ate_driver
 argument_list|,
 name|ate_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -7216,9 +7212,9 @@ name|miibus_driver
 argument_list|,
 name|miibus_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -498,7 +498,7 @@ operator|&
 name|at91pit_timecounter
 argument_list|)
 expr_stmt|;
-comment|//Enable the PIT here.
+comment|/* Enable the PIT here. */
 name|WR4
 argument_list|(
 name|sc
@@ -550,12 +550,8 @@ argument_list|,
 name|at91pit_attach
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
+name|DEVMETHOD_END
 block|}
-block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -596,9 +592,9 @@ name|at91pit_driver
 argument_list|,
 name|at91pit_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -878,7 +874,7 @@ name|cpu_startprofclock
 parameter_list|(
 name|void
 parameter_list|)
-block|{ }
+block|{  }
 end_function
 
 begin_function
@@ -887,7 +883,7 @@ name|cpu_stopprofclock
 parameter_list|(
 name|void
 parameter_list|)
-block|{ }
+block|{  }
 end_function
 
 begin_function
@@ -896,7 +892,7 @@ name|cpu_initclocks
 parameter_list|(
 name|void
 parameter_list|)
-block|{ }
+block|{  }
 end_function
 
 end_unit

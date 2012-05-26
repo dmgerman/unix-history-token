@@ -702,12 +702,8 @@ argument_list|,
 name|at91_rst_attach
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
+name|DEVMETHOD_END
 block|}
-block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -748,9 +744,9 @@ name|at91_rst_driver
 argument_list|,
 name|at91_rst_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
