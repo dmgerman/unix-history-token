@@ -1964,12 +1964,12 @@ name|_NPCM
 index|]
 decl_stmt|;
 comment|/* bitmap; 1 = free */
-name|uint32_t
-name|pc_spare
-index|[
-literal|2
-index|]
-decl_stmt|;
+name|TAILQ_ENTRY
+argument_list|(
+argument|pv_chunk
+argument_list|)
+name|pc_lru
+expr_stmt|;
 name|struct
 name|pv_entry
 name|pc_pventry
