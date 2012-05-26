@@ -1735,10 +1735,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|errno
-operator|=
-name|ENOMEM
-expr_stmt|;
 name|fetch_syserr
 argument_list|()
 expr_stmt|;
