@@ -2038,6 +2038,9 @@ name|HAL_BOOL
 name|power_off
 parameter_list|)
 block|{
+name|uint32_t
+name|val
+decl_stmt|;
 if|if
 condition|(
 name|AH_PRIVATE
@@ -2073,7 +2076,15 @@ argument_list|(
 literal|1000
 argument_list|)
 expr_stmt|;
-name|OS_REG_SET_BIT
+block|}
+comment|/* 	 * Set PCIe workaround bits 	 * 	 * NOTE: 	 * 	 * In Merlin and Kite, bit 14 in WA register (disable L1) should only 	 * be set when device enters D3 and be cleared when device comes back 	 * to D0. 	 */
+if|if
+condition|(
+name|power_off
+condition|)
+block|{
+comment|/* Power-off */
+name|OS_REG_CLR_BIT
 argument_list|(
 name|ah
 argument_list|,
@@ -2082,13 +2093,83 @@ argument_list|,
 name|AR_PCIE_PM_CTRL_ENA
 argument_list|)
 expr_stmt|;
+name|val
+operator|=
+name|OS_REG_READ
+argument_list|(
+name|ah
+argument_list|,
+name|AR_WA
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Disable bit 6 and 7 before entering D3 to prevent 		 * system hang. 		 */
+name|val
+operator|&=
+operator|~
+operator|(
+name|AR_WA_BIT6
+operator||
+name|AR_WA_BIT7
+operator|)
+expr_stmt|;
+comment|/* 		 * XXX Not sure, is specified in the reference HAL. 		 */
+name|val
+operator||=
+name|AR_WA_BIT22
+expr_stmt|;
+comment|/* 		 * See above: set AR_WA_D3_L1_DISABLE when entering D3 state. 		 * 		 * XXX The reference HAL does it this way - it only sets 		 * AR_WA_D3_L1_DISABLE if it's set in AR9280_WA_DEFAULT, 		 * which it (currently) isn't.  So the following statement 		 * is currently a NOP. 		 */
+if|if
+condition|(
+name|AR9280_WA_DEFAULT
+operator|&
+name|AR_WA_D3_L1_DISABLE
+condition|)
+name|val
+operator||=
+name|AR_WA_D3_L1_DISABLE
+expr_stmt|;
 name|OS_REG_WRITE
 argument_list|(
 name|ah
 argument_list|,
 name|AR_WA
 argument_list|,
+name|val
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Power-on */
+name|val
+operator|=
 name|AR9280_WA_DEFAULT
+expr_stmt|;
+comment|/* 		 * See note above: make sure L1_DISABLE is not set. 		 */
+name|val
+operator|&=
+operator|(
+operator|~
+name|AR_WA_D3_L1_DISABLE
+operator|)
+expr_stmt|;
+name|OS_REG_WRITE
+argument_list|(
+name|ah
+argument_list|,
+name|AR_WA
+argument_list|,
+name|val
+argument_list|)
+expr_stmt|;
+comment|/* set bit 19 to allow forcing of pcie core into L1 state */
+name|OS_REG_SET_BIT
+argument_list|(
+name|ah
+argument_list|,
+name|AR_PCIE_PM_CTRL
+argument_list|,
+name|AR_PCIE_PM_CTRL_ENA
 argument_list|)
 expr_stmt|;
 block|}
@@ -2105,9 +2186,7 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|)
-block|{
-comment|/* XXX TODO */
-block|}
+block|{ }
 end_function
 
 begin_function
