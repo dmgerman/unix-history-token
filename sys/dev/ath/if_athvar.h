@@ -783,13 +783,6 @@ name|enum
 name|ieee80211_protmode
 name|bfs_protmode
 decl_stmt|;
-name|HAL_11N_RATE_SERIES
-name|bfs_rc11n
-index|[
-name|ATH_RC_NUM
-index|]
-decl_stmt|;
-comment|/* 11n TX series */
 name|int
 name|bfs_ctsrate
 decl_stmt|;
