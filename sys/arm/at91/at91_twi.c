@@ -1655,6 +1655,15 @@ operator|++
 argument_list|)
 expr_stmt|;
 block|}
+name|WR4
+argument_list|(
+name|sc
+argument_list|,
+name|TWI_CR
+argument_list|,
+name|TWI_CR_STOP
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
