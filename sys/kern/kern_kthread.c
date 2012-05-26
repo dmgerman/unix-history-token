@@ -1036,7 +1036,6 @@ name|td_endzero
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* XXX check if we should zero. */
 name|bcopy
 argument_list|(
 operator|&
@@ -1147,15 +1146,6 @@ name|p_flag
 operator||=
 name|P_HADTHREADS
 expr_stmt|;
-name|newtd
-operator|->
-name|td_sigmask
-operator|=
-name|oldtd
-operator|->
-name|td_sigmask
-expr_stmt|;
-comment|/* XXX dubious */
 name|thread_link
 argument_list|(
 name|newtd

@@ -749,10 +749,6 @@ name|sigset_t
 name|td_oldsigmask
 decl_stmt|;
 comment|/* (k) Saved mask from pre sigpause. */
-name|sigset_t
-name|td_sigmask
-decl_stmt|;
-comment|/* (c) Current signal mask. */
 specifier|volatile
 name|u_int
 name|td_generation
@@ -820,12 +816,16 @@ comment|/* (c) Child pid for debugger. */
 define|#
 directive|define
 name|td_endzero
-value|td_rqindex
-comment|/* Copied during fork1() or thread_sched_upcall(). */
+value|td_sigmask
+comment|/* Copied during fork1() or create_thread(). */
 define|#
 directive|define
 name|td_startcopy
 value|td_endzero
+name|sigset_t
+name|td_sigmask
+decl_stmt|;
+comment|/* (c) Current signal mask. */
 name|u_char
 name|td_rqindex
 decl_stmt|;
@@ -854,7 +854,7 @@ define|#
 directive|define
 name|td_endcopy
 value|td_pcb
-comment|/*  * Fields that must be manually set in fork1() or thread_sched_upcall()  * or already have been set in the allocator, constructor, etc.  */
+comment|/*  * Fields that must be manually set in fork1() or create_thread()  * or already have been set in the allocator, constructor, etc.  */
 name|struct
 name|pcb
 modifier|*
