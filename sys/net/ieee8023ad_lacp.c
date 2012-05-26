@@ -4637,6 +4637,8 @@ name|hash
 operator|=
 name|lagg_hashmbuf
 argument_list|(
+name|sc
+argument_list|,
 name|m
 argument_list|,
 name|lsc
