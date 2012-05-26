@@ -10442,8 +10442,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|m
-operator|=
 name|bstp_input
 argument_list|(
 operator|&
@@ -10456,13 +10454,7 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|m
-operator|==
-name|NULL
-condition|)
-block|{
+comment|/* consumes mbuf */
 name|BRIDGE_UNLOCK
 argument_list|(
 name|sc
@@ -10473,7 +10465,6 @@ operator|(
 name|NULL
 operator|)
 return|;
-block|}
 block|}
 if|if
 condition|(

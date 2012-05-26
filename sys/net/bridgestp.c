@@ -871,7 +871,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|bstp_timer_expired
+name|bstp_timer_dectest
 parameter_list|(
 name|struct
 name|bstp_timer
@@ -2558,9 +2558,7 @@ block|}
 end_function
 
 begin_function
-name|struct
-name|mbuf
-modifier|*
+name|void
 name|bstp_input
 parameter_list|(
 name|struct
@@ -2614,11 +2612,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+return|return;
 block|}
 name|BSTP_LOCK
 argument_list|(
@@ -2894,11 +2888,6 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
 block|}
 end_function
 
@@ -8789,10 +8778,10 @@ operator|->
 name|bs_vnet
 argument_list|)
 expr_stmt|;
-comment|/* slow timer to catch missed link events */
+comment|/* poll link events on interfaces that do not support linkstate */
 if|if
 condition|(
-name|bstp_timer_expired
+name|bstp_timer_dectest
 argument_list|(
 operator|&
 name|bs
@@ -8809,6 +8798,20 @@ argument|&bs->bs_bplist
 argument_list|,
 argument|bp_next
 argument_list|)
+block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|bp
+operator|->
+name|bp_ifp
+operator|->
+name|if_capabilities
+operator|&
+name|IFCAP_LINKSTATE
+operator|)
+condition|)
 name|bstp_ifupdstatus
 argument_list|(
 name|bs
@@ -8816,6 +8819,7 @@ argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
+block|}
 name|bstp_timer_start
 argument_list|(
 operator|&
@@ -8837,7 +8841,7 @@ argument|bp_next
 argument_list|)
 block|{
 comment|/* no events need to happen for these */
-name|bstp_timer_expired
+name|bstp_timer_dectest
 argument_list|(
 operator|&
 name|bp
@@ -8845,7 +8849,7 @@ operator|->
 name|bp_tc_timer
 argument_list|)
 expr_stmt|;
-name|bstp_timer_expired
+name|bstp_timer_dectest
 argument_list|(
 operator|&
 name|bp
@@ -8853,7 +8857,7 @@ operator|->
 name|bp_recent_root_timer
 argument_list|)
 expr_stmt|;
-name|bstp_timer_expired
+name|bstp_timer_dectest
 argument_list|(
 operator|&
 name|bp
@@ -8861,7 +8865,7 @@ operator|->
 name|bp_forward_delay_timer
 argument_list|)
 expr_stmt|;
-name|bstp_timer_expired
+name|bstp_timer_dectest
 argument_list|(
 operator|&
 name|bp
@@ -8871,7 +8875,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|bstp_timer_expired
+name|bstp_timer_dectest
 argument_list|(
 operator|&
 name|bp
@@ -8888,7 +8892,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|bstp_timer_expired
+name|bstp_timer_dectest
 argument_list|(
 operator|&
 name|bp
@@ -8905,7 +8909,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|bstp_timer_expired
+name|bstp_timer_dectest
 argument_list|(
 operator|&
 name|bp
@@ -8922,7 +8926,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|bstp_timer_expired
+name|bstp_timer_dectest
 argument_list|(
 operator|&
 name|bp
@@ -9075,7 +9079,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|bstp_timer_expired
+name|bstp_timer_dectest
 parameter_list|(
 name|struct
 name|bstp_timer
