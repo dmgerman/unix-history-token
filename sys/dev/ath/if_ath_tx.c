@@ -14429,7 +14429,7 @@ name|struct
 name|ath_rc_series
 name|rc
 index|[
-literal|4
+name|ATH_RC_NUM
 index|]
 decl_stmt|;
 name|int
