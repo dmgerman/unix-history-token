@@ -1186,6 +1186,10 @@ name|struct
 name|task
 name|bp_rtagetask
 decl_stmt|;
+name|struct
+name|task
+name|bp_mediatask
+decl_stmt|;
 block|}
 struct|;
 end_struct
