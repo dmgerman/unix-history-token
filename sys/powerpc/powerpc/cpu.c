@@ -108,7 +108,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|cpu_e500_setup
+name|cpu_970_setup
 parameter_list|(
 name|int
 name|cpuid
@@ -122,7 +122,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|cpu_970_setup
+name|cpu_booke_setup
 parameter_list|(
 name|int
 name|cpuid
@@ -166,7 +166,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|cpu_idle_e500
+name|cpu_idle_booke
 parameter_list|(
 name|void
 parameter_list|)
@@ -570,7 +570,7 @@ name|REVFMT_MAJMIN
 block|,
 literal|0
 block|,
-name|cpu_e500_setup
+name|cpu_booke_setup
 block|}
 block|,
 block|{
@@ -582,7 +582,31 @@ name|REVFMT_MAJMIN
 block|,
 literal|0
 block|,
-name|cpu_e500_setup
+name|cpu_booke_setup
+block|}
+block|,
+block|{
+literal|"Freescale e500mc core"
+block|,
+name|FSL_E500mc
+block|,
+name|REVFMT_MAJMIN
+block|,
+literal|0
+block|,
+name|cpu_booke_setup
+block|}
+block|,
+block|{
+literal|"Freescale e5500 core"
+block|,
+name|FSL_E5500
+block|,
+name|REVFMT_MAJMIN
+block|,
+literal|0
+block|,
+name|cpu_booke_setup
 block|}
 block|,
 block|{
@@ -847,6 +871,12 @@ name|FSL_E500v1
 case|:
 case|case
 name|FSL_E500v2
+case|:
+case|case
+name|FSL_E500mc
+case|:
+case|case
+name|FSL_E5500
 case|:
 name|maj
 operator|=
@@ -1870,7 +1900,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|cpu_e500_setup
+name|cpu_booke_setup
 parameter_list|(
 name|int
 name|cpuid
@@ -1934,7 +1964,7 @@ name|NULL
 condition|)
 name|cpu_idle_hook
 operator|=
-name|cpu_idle_e500
+name|cpu_idle_booke
 expr_stmt|;
 block|}
 end_function
@@ -2389,7 +2419,7 @@ end_endif
 begin_function
 unit|}  static
 name|void
-name|cpu_idle_e500
+name|cpu_idle_booke
 parameter_list|(
 name|void
 parameter_list|)

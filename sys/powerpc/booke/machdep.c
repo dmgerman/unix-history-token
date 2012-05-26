@@ -629,7 +629,7 @@ end_decl_stmt
 begin_function_decl
 specifier|static
 name|void
-name|cpu_e500_startup
+name|cpu_booke_startup
 parameter_list|(
 name|void
 modifier|*
@@ -646,7 +646,7 @@ name|SI_SUB_CPU
 argument_list|,
 name|SI_ORDER_FIRST
 argument_list|,
-name|cpu_e500_startup
+name|cpu_booke_startup
 argument_list|,
 name|NULL
 argument_list|)
@@ -692,7 +692,7 @@ end_decl_stmt
 begin_function
 specifier|static
 name|void
-name|cpu_e500_startup
+name|cpu_booke_startup
 parameter_list|(
 name|void
 modifier|*

@@ -331,7 +331,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|e500_reset
+name|booke_reset
 parameter_list|(
 name|platform_t
 parameter_list|)
@@ -398,7 +398,7 @@ name|PLATFORMMETHOD
 argument_list|(
 name|platform_reset
 argument_list|,
-name|e500_reset
+name|booke_reset
 argument_list|)
 block|,
 block|{
@@ -1281,7 +1281,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|e500_reset
+name|booke_reset
 parameter_list|(
 name|platform_t
 name|plat
