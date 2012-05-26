@@ -2077,6 +2077,17 @@ comment|/* share MAC with first bridge member */
 end_comment
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"net.link.bridge.pfil_onlyip"
+argument_list|,
+operator|&
+name|pfil_onlyip
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_net_link_bridge
@@ -2093,6 +2104,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Only pass IP packets when pfil is enabled"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"net.link.bridge.ipfw_arp"
+argument_list|,
+operator|&
+name|pfil_ipfw_arp
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2119,6 +2141,17 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"net.link.bridge.pfil_bridge"
+argument_list|,
+operator|&
+name|pfil_bridge
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_net_link_bridge
@@ -2135,6 +2168,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Packet filter on the bridge interface"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"net.link.bridge.pfil_member"
+argument_list|,
+operator|&
+name|pfil_member
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2161,6 +2205,17 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"net.link.bridge.pfil_local_phys"
+argument_list|,
+operator|&
+name|pfil_local_phys
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_net_link_bridge
@@ -2182,6 +2237,17 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"net.link.bridge.log_stp"
+argument_list|,
+operator|&
+name|log_stp
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_net_link_bridge
@@ -2198,6 +2264,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Log STP state changes"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"net.link.bridge.inherit_mac"
+argument_list|,
+operator|&
+name|bridge_inherit_mac
 argument_list|)
 expr_stmt|;
 end_expr_stmt
