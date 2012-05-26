@@ -657,10 +657,9 @@ name|in_cksum_skip
 argument_list|(
 name|m
 argument_list|,
-name|ntohl
-argument_list|(
+name|offset
+operator|+
 name|plen
-argument_list|)
 argument_list|,
 name|offset
 argument_list|)
@@ -708,7 +707,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: delayed m_pullup, m->len: %d  off: %d\n"
+literal|"%s: delayed m_pullup, m->len: %d off: %d\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -3634,9 +3633,7 @@ name|in6_delayed_cksum
 argument_list|(
 name|m
 argument_list|,
-name|ip6
-operator|->
-name|ip6_plen
+name|plen
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -4117,15 +4114,9 @@ name|in6_delayed_cksum
 argument_list|(
 name|m
 argument_list|,
-name|ip6
-operator|->
-name|ip6_plen
+name|plen
 argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|ip6
-argument_list|)
+name|hlen
 argument_list|)
 expr_stmt|;
 name|m
