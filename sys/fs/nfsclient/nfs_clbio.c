@@ -1118,11 +1118,33 @@ operator|=
 name|curthread
 expr_stmt|;
 comment|/* XXX */
+comment|/* Set the cred to n_writecred for the write rpcs. */
+if|if
+condition|(
+name|np
+operator|->
+name|n_writecred
+operator|!=
+name|NULL
+condition|)
 name|cred
 operator|=
+name|crhold
+argument_list|(
+name|np
+operator|->
+name|n_writecred
+argument_list|)
+expr_stmt|;
+else|else
+name|cred
+operator|=
+name|crhold
+argument_list|(
 name|curthread
 operator|->
 name|td_ucred
+argument_list|)
 expr_stmt|;
 comment|/* XXX */
 name|nmp
@@ -1487,6 +1509,11 @@ operator|&
 name|must_commit
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|crfree
+argument_list|(
+name|cred
 argument_list|)
 expr_stmt|;
 name|pmap_qremove

@@ -361,6 +361,12 @@ name|struct
 name|timespec
 name|n_unused5
 decl_stmt|;
+name|struct
+name|ucred
+modifier|*
+name|n_writecred
+decl_stmt|;
+comment|/* Cred. for putpages */
 block|}
 struct|;
 end_struct
