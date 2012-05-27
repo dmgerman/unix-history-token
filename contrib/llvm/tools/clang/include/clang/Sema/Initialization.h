@@ -723,8 +723,8 @@ name|QualType
 name|Type
 parameter_list|)
 block|{
-return|return
 name|InitializedEntity
+name|Result
 argument_list|(
 name|EK_Temporary
 argument_list|,
@@ -733,6 +733,15 @@ argument_list|()
 argument_list|,
 name|Type
 argument_list|)
+decl_stmt|;
+name|Result
+operator|.
+name|TypeInfo
+operator|=
+literal|0
+expr_stmt|;
+return|return
+name|Result
 return|;
 block|}
 comment|/// \brief Create the initialization entity for a temporary.

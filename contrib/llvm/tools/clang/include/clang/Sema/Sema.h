@@ -1039,6 +1039,18 @@ comment|/// cycle detection at the end of the TU.
 name|DelegatingCtorDeclsType
 name|DelegatingCtorDecls
 decl_stmt|;
+comment|/// \brief All the destructors seen during a class definition that had their
+comment|/// exception spec computation delayed because it depended on an unparsed
+comment|/// exception spec.
+name|SmallVector
+operator|<
+name|CXXDestructorDecl
+operator|*
+operator|,
+literal|2
+operator|>
+name|DelayedDestructorExceptionSpecs
+expr_stmt|;
 comment|/// \brief All the overriding destructors seen during a class definition
 comment|/// (there could be multiple due to nested classes) that had their exception
 comment|/// spec checks delayed, plus the overridden destructor.
@@ -1859,43 +1871,31 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This is basically a wrapper around PointerIntPair. The lowest bit of the
+comment|/// This is basically a wrapper around PointerIntPair. The lowest bits of the
 end_comment
 
 begin_comment
-comment|/// integer is used to determine whether we have a parameter qualification
+comment|/// integer are used to determine whether overload resolution succeeded, and
 end_comment
 
 begin_comment
-comment|/// match, the second-lowest is whether we had success in resolving the
+comment|/// whether, when looking up a copy constructor or assignment operator, we
 end_comment
 
 begin_comment
-comment|/// overload to a unique non-deleted function.
+comment|/// found a potential copy constructor/assignment operator whose first
 end_comment
 
 begin_comment
-comment|///
+comment|/// parameter is const-qualified. This is used for determining parameter types
 end_comment
 
 begin_comment
-comment|/// The ConstParamMatch bit represents whether, when looking up a copy
+comment|/// of other objects and is utterly meaningless on other types of special
 end_comment
 
 begin_comment
-comment|/// constructor or assignment operator, we found a potential copy
-end_comment
-
-begin_comment
-comment|/// constructor/assignment operator whose first parameter is const-qualified.
-end_comment
-
-begin_comment
-comment|/// This is used for determining parameter types of other objects and is
-end_comment
-
-begin_comment
-comment|/// utterly meaningless on other types of special members.
+comment|/// members.
 end_comment
 
 begin_decl_stmt
@@ -1916,9 +1916,7 @@ name|NoMemberOrDeleted
 block|,
 name|Ambiguous
 block|,
-name|SuccessNonConst
-block|,
-name|SuccessConst
+name|Success
 block|}
 block|;
 name|private
@@ -2008,30 +2006,6 @@ argument_list|(
 name|K
 argument_list|)
 block|; }
-name|bool
-name|hasSuccess
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getKind
-argument_list|()
-operator|>=
-name|SuccessNonConst
-return|;
-block|}
-name|bool
-name|hasConstParamMatch
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getKind
-argument_list|()
-operator|==
-name|SuccessConst
-return|;
-block|}
 expr|}
 block|;
 comment|/// \brief A cache of special member function overload resolution results
@@ -8961,12 +8935,6 @@ name|Class
 parameter_list|,
 name|unsigned
 name|Quals
-parameter_list|,
-name|bool
-modifier|*
-name|ConstParam
-init|=
-literal|0
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -8988,12 +8956,6 @@ name|RValueThis
 parameter_list|,
 name|unsigned
 name|ThisQuals
-parameter_list|,
-name|bool
-modifier|*
-name|ConstParam
-init|=
-literal|0
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -15668,51 +15630,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// \brief Add an exception-specification to the given member function
-end_comment
-
-begin_comment
-comment|/// (or member function template). The exception-specification was parsed
-end_comment
-
-begin_comment
-comment|/// after the method itself was declared.
-end_comment
-
-begin_decl_stmt
-name|void
-name|actOnDelayedExceptionSpecification
-argument_list|(
-name|Decl
-operator|*
-name|Method
-argument_list|,
-name|ExceptionSpecificationType
-name|EST
-argument_list|,
-name|SourceRange
-name|SpecificationRange
-argument_list|,
-name|ArrayRef
-operator|<
-name|ParsedType
-operator|>
-name|DynamicExceptions
-argument_list|,
-name|ArrayRef
-operator|<
-name|SourceRange
-operator|>
-name|DynamicExceptionRanges
-argument_list|,
-name|Expr
-operator|*
-name|NoexceptExpr
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Determine if a special member function should have a deleted
 end_comment
 
@@ -15882,6 +15799,11 @@ parameter_list|,
 name|CXXDestructorDecl
 modifier|*
 name|Destructor
+parameter_list|,
+name|bool
+name|WasDelayed
+init|=
+name|false
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -19821,6 +19743,13 @@ name|AttributeList
 modifier|*
 name|AttrList
 parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ActOnFinishCXXMemberDecls
+parameter_list|()
 function_decl|;
 end_function_decl
 
