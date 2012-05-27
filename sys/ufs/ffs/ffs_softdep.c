@@ -50228,6 +50228,7 @@ argument_list|,
 name|D_FREEFRAG
 argument_list|)
 expr_stmt|;
+continue|continue;
 case|case
 name|D_FREEWORK
 case|:
