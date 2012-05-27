@@ -7286,7 +7286,7 @@ name|printf
 argument_list|(
 name|gettext
 argument_list|(
-literal|"   see: http://www.sun.com/msg/%s\n"
+literal|"   see: http://illumos.org/msg/%s\n"
 argument_list|)
 argument_list|,
 name|msgid
@@ -16155,7 +16155,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Display a summary of pool status.  Displays a summary such as:  *  *        pool: tank  *	status: DEGRADED  *	reason: One or more devices ...  *         see: http://www.sun.com/msg/ZFS-xxxx-01  *	config:  *		mirror		DEGRADED  *                c1t0d0	OK  *                c2t0d0	UNAVAIL  *  * When given the '-v' option, we print out the complete config.  If the '-e'  * option is specified, then we print out error rate information as well.  */
+comment|/*  * Display a summary of pool status.  Displays a summary such as:  *  *        pool: tank  *	status: DEGRADED  *	reason: One or more devices ...  *         see: http://illumos.org/msg/ZFS-xxxx-01  *	config:  *		mirror		DEGRADED  *                c1t0d0	OK  *                c2t0d0	UNAVAIL  *  * When given the '-v' option, we print out the complete config.  If the '-e'  * option is specified, then we print out error rate information as well.  */
 end_comment
 
 begin_function
@@ -16905,7 +16905,7 @@ name|printf
 argument_list|(
 name|gettext
 argument_list|(
-literal|"   see: http://www.sun.com/msg/%s\n"
+literal|"   see: http://illumos.org/msg/%s\n"
 argument_list|)
 argument_list|,
 name|msgid

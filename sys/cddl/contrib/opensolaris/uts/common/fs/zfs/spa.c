@@ -9378,7 +9378,7 @@ argument_list|,
 literal|"pool '%s' could not be "
 literal|"loaded as it was last accessed by "
 literal|"another system (host: %s hostid: 0x%lx). "
-literal|"See: http://www.sun.com/msg/ZFS-8000-EY"
+literal|"See: http://illumos.org/msg/ZFS-8000-EY"
 argument_list|,
 name|spa_name
 argument_list|(
