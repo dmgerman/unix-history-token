@@ -291,29 +291,6 @@ name|TODO
 value|panic("%s: not implemented", __func__);
 end_define
 
-begin_include
-include|#
-directive|include
-file|"opt_sched.h"
-end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SCHED_4BSD
-end_ifndef
-
-begin_error
-error|#
-directive|error
-literal|"e500 only works with SCHED_4BSD which uses a global scheduler lock."
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|extern
 name|struct
