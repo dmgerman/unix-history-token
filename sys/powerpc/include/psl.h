@@ -20,7 +20,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|E500
+name|BOOKE_E500
 argument_list|)
 end_if
 
@@ -229,13 +229,183 @@ name|PSL_USERSET
 value|(PSL_KERNSET | PSL_PR)
 end_define
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|BOOKE_PPC4XX
+argument_list|)
+end_elif
+
+begin_comment
+comment|/*  * Machine State Register (MSR) - PPC4xx core  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSL_WE
+value|(0x80000000>> 13)
+end_define
+
+begin_comment
+comment|/* Wait State Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSL_CE
+value|(0x80000000>> 14)
+end_define
+
+begin_comment
+comment|/* Critical Interrupt Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSL_EE
+value|(0x80000000>> 16)
+end_define
+
+begin_comment
+comment|/* External Interrupt Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSL_PR
+value|(0x80000000>> 17)
+end_define
+
+begin_comment
+comment|/* Problem State */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSL_FP
+value|(0x80000000>> 18)
+end_define
+
+begin_comment
+comment|/* Floating Point Available */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSL_ME
+value|(0x80000000>> 19)
+end_define
+
+begin_comment
+comment|/* Machine Check Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSL_FE0
+value|(0x80000000>> 20)
+end_define
+
+begin_comment
+comment|/* Floating-point exception mode 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSL_DWE
+value|(0x80000000>> 21)
+end_define
+
+begin_comment
+comment|/* Debug Wait Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSL_DE
+value|(0x80000000>> 22)
+end_define
+
+begin_comment
+comment|/* Debug interrupt Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSL_FE1
+value|(0x80000000>> 23)
+end_define
+
+begin_comment
+comment|/* Floating-point exception mode 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSL_IS
+value|(0x80000000>> 26)
+end_define
+
+begin_comment
+comment|/* Instruction Address Space */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSL_DS
+value|(0x80000000>> 27)
+end_define
+
+begin_comment
+comment|/* Data Address Space */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSL_KERNSET
+value|(PSL_CE | PSL_ME | PSL_EE | PSL_FP)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PSL_USERSET
+value|(PSL_KERNSET | PSL_PR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PSL_FE_DFLT
+value|0x00000000UL
+end_define
+
+begin_comment
+comment|/* default == none */
+end_comment
+
 begin_else
 else|#
 directive|else
 end_else
 
 begin_comment
-comment|/* if defined(E500) */
+comment|/* if defined(BOOKE_*) */
 end_comment
 
 begin_comment
@@ -596,7 +766,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* if defined(E500) */
+comment|/* if defined(BOOKE_E500) */
 end_comment
 
 begin_endif

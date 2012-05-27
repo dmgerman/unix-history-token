@@ -1909,6 +1909,9 @@ name|uint16_t
 name|vers
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|BOOKE_E500
 name|register_t
 name|hid0
 decl_stmt|;
@@ -1956,6 +1959,8 @@ argument_list|,
 name|HID0_E500_BITMASK
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|cpu_idle_hook

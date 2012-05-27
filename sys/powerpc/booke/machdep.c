@@ -1495,6 +1495,12 @@ name|mfmsr
 argument_list|()
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|BOOKE_E500
+argument_list|)
 name|debugf
 argument_list|(
 literal|" HID0 = 0x%08x\n"
@@ -1540,6 +1546,8 @@ argument_list|,
 name|csr
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|debugf
 argument_list|(
 literal|" dtbp = 0x%08x\n"
@@ -1556,8 +1564,16 @@ expr_stmt|;
 name|print_kenv
 argument_list|()
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|BOOKE_E500
+argument_list|)
 comment|//tlb1_print_entries();
 comment|//tlb1_print_tlbentries();
+endif|#
+directive|endif
 name|kdb_init
 argument_list|()
 expr_stmt|;
@@ -1609,8 +1625,16 @@ name|mfmsr
 argument_list|()
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|BOOKE_E500
+argument_list|)
 comment|//tlb1_print_entries();
 comment|//tlb1_print_tlbentries();
+endif|#
+directive|endif
 comment|/* Initialize params/tunables that are derived from memsize. */
 name|init_param2
 argument_list|(

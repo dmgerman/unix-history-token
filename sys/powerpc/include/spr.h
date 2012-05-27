@@ -3843,7 +3843,7 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|E500
+name|BOOKE
 argument_list|)
 end_elif
 
@@ -5461,7 +5461,7 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|E500
+name|BOOKE
 argument_list|)
 end_elif
 
@@ -5618,6 +5618,66 @@ end_define
 begin_comment
 comment|/* ..8 571 Machine check SRR1 */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_MMUCR
+value|0x3b2
+end_define
+
+begin_comment
+comment|/* 4.. MMU Control Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MMUCR_SWOA
+value|(0x80000000>> 7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MMUCR_U1TE
+value|(0x80000000>> 9)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MMUCR_U2SWOAE
+value|(0x80000000>> 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MMUCR_DULXE
+value|(0x80000000>> 12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MMUCR_IULXE
+value|(0x80000000>> 13)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MMUCR_STS
+value|(0x80000000>> 15)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MMUCR_STID_MASK
+value|(0xFF000000>> 24)
+end_define
 
 begin_define
 define|#
@@ -6502,7 +6562,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* #elif defined(E500) */
+comment|/* BOOKE */
 end_comment
 
 begin_endif

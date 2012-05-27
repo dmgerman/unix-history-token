@@ -233,7 +233,7 @@ argument_list|)
 operator|&&
 name|defined
 argument_list|(
-name|E500
+name|BOOKE_E500
 argument_list|)
 end_if
 
