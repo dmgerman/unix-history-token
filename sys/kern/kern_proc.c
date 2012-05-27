@@ -6305,6 +6305,17 @@ argument_list|,
 operator|*
 name|ki32
 argument_list|,
+name|ki_cow
+argument_list|)
+expr_stmt|;
+name|CP
+argument_list|(
+operator|*
+name|ki
+argument_list|,
+operator|*
+name|ki32
+argument_list|,
 name|ki_runtime
 argument_list|)
 expr_stmt|;
