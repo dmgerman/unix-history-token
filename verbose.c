@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: verbose.c,v 1.9 2010/06/09 08:58:29 tom Exp $ */
+comment|/* $Id: verbose.c,v 1.10 2012/05/26 00:45:17 tom Exp $ */
 end_comment
 
 begin_include
@@ -148,21 +148,11 @@ condition|)
 return|return;
 name|null_rules
 operator|=
-operator|(
-name|short
-operator|*
-operator|)
-name|MALLOC
+name|TMALLOC
 argument_list|(
-operator|(
-name|unsigned
-operator|)
+name|short
+argument_list|,
 name|nrules
-operator|*
-sizeof|sizeof
-argument_list|(
-name|short
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|NO_SPACE

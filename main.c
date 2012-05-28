@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: main.c,v 1.38 2012/01/14 01:01:15 tom Exp $ */
+comment|/* $Id: main.c,v 1.39 2012/05/26 00:50:20 tom Exp $ */
 end_comment
 
 begin_include
@@ -1412,7 +1412,7 @@ parameter_list|,
 name|suffix
 parameter_list|)
 define|\
-value|dest = MALLOC(len + strlen(suffix) + 1); \ 	NO_SPACE(dest); \ 	strcpy(dest, file_prefix); \ 	strcpy(dest + len, suffix)
+value|dest = TMALLOC(char, len + strlen(suffix) + 1); \ 	NO_SPACE(dest); \ 	strcpy(dest, file_prefix); \ 	strcpy(dest + len, suffix)
 end_define
 
 begin_function
@@ -1516,12 +1516,10 @@ argument_list|)
 expr_stmt|;
 name|file_prefix
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|MALLOC
+name|TMALLOC
 argument_list|(
+name|char
+argument_list|,
 name|len
 operator|+
 literal|1

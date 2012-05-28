@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: defs.h,v 1.36 2011/12/20 01:31:16 tom Exp $ */
+comment|/* $Id: defs.h,v 1.37 2012/05/26 15:23:00 tom Exp $ */
 end_comment
 
 begin_ifdef
@@ -55,6 +55,31 @@ include|#
 directive|include
 file|<stdio.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__cplusplus
+argument_list|)
+end_if
+
+begin_comment
+comment|/* __cplusplus, etc. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|class
+value|myClass
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -769,6 +794,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|TMALLOC
+parameter_list|(
+name|t
+parameter_list|,
+name|n
+parameter_list|)
+value|((t*) malloc((size_t)(n) * sizeof(t)))
+end_define
+
+begin_define
+define|#
+directive|define
 name|NEW
 parameter_list|(
 name|t
@@ -798,6 +835,20 @@ parameter_list|,
 name|n
 parameter_list|)
 value|(realloc((char*)(p),(size_t)(n)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|TREALLOC
+parameter_list|(
+name|t
+parameter_list|,
+name|p
+parameter_list|,
+name|n
+parameter_list|)
+value|((t*)realloc((char*)(p), (size_t)(n) * sizeof(t)))
 end_define
 
 begin_define
@@ -1676,13 +1727,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|pure_parser
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|nstates
 decl_stmt|;
 end_decl_stmt
@@ -1953,6 +1997,43 @@ directive|ifndef
 name|GCC_NORETURN
 end_ifndef
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__dead2
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|GCC_NORETURN
+value|__dead2
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__dead
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|GCC_NORETURN
+value|__dead
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -1968,11 +2049,37 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|GCC_UNUSED
 end_ifndef
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__unused
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|GCC_UNUSED
+value|__unused
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -1983,6 +2090,11 @@ end_define
 begin_comment
 comment|/* nothing */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

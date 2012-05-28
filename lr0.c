@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: lr0.c,v 1.12 2010/06/09 08:53:17 tom Exp $ */
+comment|/* $Id: lr0.c,v 1.13 2012/05/26 00:40:47 tom Exp $ */
 end_comment
 
 begin_include
@@ -2409,8 +2409,10 @@ name|done_flag
 decl_stmt|;
 name|nullable
 operator|=
-name|MALLOC
+name|TMALLOC
 argument_list|(
+name|char
+argument_list|,
 name|nsyms
 argument_list|)
 expr_stmt|;
