@@ -7003,11 +7003,9 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|vm_page_sleep_if_busy
+name|vm_page_sleep
 argument_list|(
 name|m
-argument_list|,
-name|false
 argument_list|,
 literal|"915pbs"
 argument_list|)
