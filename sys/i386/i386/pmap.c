@@ -10758,7 +10758,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 	 * Access to the ptelist "pv_vafree" is synchronized by the page 	 * queues lock.  If "pv_vafree" is currently non-empty, it will 	 * remain non-empty until pmap_ptelist_alloc() completes. 	 */
+comment|/* 	 * Access to the ptelist "pv_vafree" is synchronized by the pvh 	 * global lock.  If "pv_vafree" is currently non-empty, it will 	 * remain non-empty until pmap_ptelist_alloc() completes. 	 */
 if|if
 condition|(
 name|pv_vafree
