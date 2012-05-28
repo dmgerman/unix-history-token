@@ -675,6 +675,11 @@ name|conn_t
 modifier|*
 name|conn
 decl_stmt|;
+name|int
+name|opt
+init|=
+literal|1
+decl_stmt|;
 comment|/* allocate and fill connection structure */
 if|if
 condition|(
@@ -707,6 +712,21 @@ argument_list|,
 name|F_SETFD
 argument_list|,
 name|FD_CLOEXEC
+argument_list|)
+expr_stmt|;
+name|setsockopt
+argument_list|(
+name|sd
+argument_list|,
+name|SOL_SOCKET
+argument_list|,
+name|SO_NOSIGPIPE
+argument_list|,
+operator|&
+name|opt
+argument_list|,
+sizeof|sizeof
+name|opt
 argument_list|)
 expr_stmt|;
 name|conn
