@@ -1982,7 +1982,7 @@ name|m_pkthdr
 operator|.
 name|csum_flags
 operator|&
-name|CSUM_DELAY_DATA
+name|CSUM_DELAY_DATA_IPV6
 condition|)
 block|{
 name|m
@@ -1991,7 +1991,7 @@ name|m_pkthdr
 operator|.
 name|csum_flags
 operator||=
-name|CSUM_DATA_VALID
+name|CSUM_DATA_VALID_IPV6
 operator||
 name|CSUM_PSEUDO_HDR
 expr_stmt|;
@@ -2085,7 +2085,7 @@ name|m_pkthdr
 operator|.
 name|csum_flags
 operator|&
-name|CSUM_DELAY_DATA
+name|CSUM_DELAY_DATA_IPV6
 condition|)
 block|{
 name|m
@@ -2094,7 +2094,7 @@ name|m_pkthdr
 operator|.
 name|csum_flags
 operator||=
-name|CSUM_DATA_VALID
+name|CSUM_DATA_VALID_IPV6
 operator||
 name|CSUM_PSEUDO_HDR
 expr_stmt|;

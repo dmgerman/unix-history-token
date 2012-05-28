@@ -1208,6 +1208,10 @@ begin_comment
 comment|/* will csum SCTP */
 end_comment
 
+begin_comment
+comment|/*	CSUM_SCTP_IPV6		0x0080		will csum IPv6/SCTP */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1266,6 +1270,50 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CSUM_UDP_IPV6
+value|0x2000
+end_define
+
+begin_comment
+comment|/* will csum IPv6/UDP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CSUM_TCP_IPV6
+value|0x4000
+end_define
+
+begin_comment
+comment|/* will csum IPv6/TCP */
+end_comment
+
+begin_comment
+comment|/*	CSUM_TSO_IPV6		0x8000		will do IPv6/TSO */
+end_comment
+
+begin_comment
+comment|/*	CSUM_FRAGMENT_IPV6	0x10000		will do IPv6 fragementation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CSUM_DELAY_DATA_IPV6
+value|(CSUM_TCP_IPV6 | CSUM_UDP_IPV6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CSUM_DATA_VALID_IPV6
+value|CSUM_DATA_VALID
+end_define
+
+begin_define
+define|#
+directive|define
 name|CSUM_DELAY_DATA
 value|(CSUM_TCP | CSUM_UDP)
 end_define
@@ -1278,7 +1326,7 @@ value|(CSUM_IP)
 end_define
 
 begin_comment
-comment|/* XXX add ipv6 here too? */
+comment|/* Only v4, no v6 IP hdr csum */
 end_comment
 
 begin_comment

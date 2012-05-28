@@ -819,7 +819,7 @@ name|m_pkthdr
 operator|.
 name|csum_flags
 operator|&
-name|CSUM_DATA_VALID
+name|CSUM_DATA_VALID_IPV6
 condition|)
 block|{
 if|if
@@ -3275,7 +3275,7 @@ name|m_pkthdr
 operator|.
 name|csum_flags
 operator|=
-name|CSUM_UDP
+name|CSUM_UDP_IPV6
 expr_stmt|;
 name|m
 operator|->

@@ -4107,14 +4107,6 @@ name|m
 operator|->
 name|m_pkthdr
 operator|.
-name|csum_flags
-operator|=
-name|CSUM_TCP
-expr_stmt|;
-name|m
-operator|->
-name|m_pkthdr
-operator|.
 name|csum_data
 operator|=
 name|offsetof
@@ -4134,6 +4126,14 @@ name|isipv6
 condition|)
 block|{
 comment|/* 		 * ip6_plen is not need to be filled now, and will be filled 		 * in ip6_output. 		 */
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|csum_flags
+operator|=
+name|CSUM_TCP_IPV6
+expr_stmt|;
 name|th
 operator|->
 name|th_sum
@@ -4178,6 +4178,14 @@ ifdef|#
 directive|ifdef
 name|INET
 block|{
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|csum_flags
+operator|=
+name|CSUM_TCP
+expr_stmt|;
 name|th
 operator|->
 name|th_sum
