@@ -4103,6 +4103,10 @@ argument_list|,
 name|PAT_WRITE_COMBINING
 argument_list|)
 expr_stmt|;
+name|po_r
+operator|&=
+name|PAGE_MASK
+expr_stmt|;
 name|cmd
 operator|=
 operator|*
@@ -4113,11 +4117,7 @@ operator|)
 operator|(
 name|mkva
 operator|+
-operator|(
 name|po_r
-operator|&
-name|PAGE_MASK
-operator|)
 operator|)
 expr_stmt|;
 if|if
@@ -4169,11 +4169,7 @@ operator|)
 operator|(
 name|mkva
 operator|+
-operator|(
 name|po_w
-operator|&
-name|PAGE_MASK
-operator|)
 operator|)
 operator|=
 name|MI_BATCH_BUFFER_END
