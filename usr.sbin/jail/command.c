@@ -1246,6 +1246,7 @@ comment|/*  * Run a single command for a jail, possible inside the jail.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|run_command
 parameter_list|(
@@ -1518,6 +1519,19 @@ return|return
 operator|-
 literal|1
 return|;
+if|if
+condition|(
+name|iflag
+condition|)
+name|printf
+argument_list|(
+literal|"%d\n"
+argument_list|,
+name|j
+operator|->
+name|jid
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|verbose

@@ -1218,6 +1218,13 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
+name|iflag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|note_remove
 decl_stmt|;
 end_decl_stmt
