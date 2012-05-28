@@ -4,14 +4,46 @@ comment|/*-  * Copyright (c) 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997  *	T
 end_comment
 
 begin_comment
-comment|/*  * This is libpcap's cut-down version of bpf.h; it includes only  * the stuff needed for the code generator and the userland BPF  * interpreter, and the libpcap APIs for setting filters, etc..  *  * "pcap-bpf.c" will include the native OS version, as it deals with  * the OS's BPF implementation.  *  * XXX - should this all just be moved to "pcap.h"?  */
+comment|/*  * This is libpcap's cut-down version of bpf.h; it includes only  * the stuff needed for the code generator and the userland BPF  * interpreter, and the libpcap APIs for setting filters, etc..  *  * "pcap-bpf.c" will include the native OS version, as it deals with  * the OS's BPF implementation.  *  * At least two programs found by Google Code Search explicitly includes  *<pcap/bpf.h> (even though<pcap.h>/<pcap/pcap.h> includes it for you),  * so moving that stuff to<pcap/pcap.h> would break the build for some  * programs.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BPF_MAJOR_VERSION
-end_ifndef
+begin_comment
+comment|/*  * If we've already included<net/bpf.h>, don't re-define this stuff.  * We assume BSD-style multiple-include protection in<net/bpf.h>,  * which is true of all but the oldest versions of FreeBSD and NetBSD,  * or Tru64 UNIX-style multiple-include protection (or, at least,  * Tru64 UNIX 5.x-style; I don't have earlier versions available to check),  * or AIX-style multiple-include protection (or, at least, AIX 5.x-style;  * I don't have earlier versions available to check).  *  * We do not check for BPF_MAJOR_VERSION, as that's defined by  *<linux/filter.h>, which is directly or indirectly included in some  * programs that also include pcap.h, and<linux/filter.h> doesn't  * define stuff we need.  *  * This also provides our own multiple-include protection.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_NET_BPF_H_
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_BPF_H_
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_H_BPF
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|lib_pcap_bpf_h
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|lib_pcap_bpf_h
+end_define
 
 begin_ifdef
 ifdef|#
@@ -55,7 +87,7 @@ name|bpf_u_int32
 typedef|;
 endif|#
 directive|endif
-comment|/*  * Alignment macros.  BPF_WORDALIGN rounds up to the next   * even multiple of BPF_ALIGNMENT.   */
+comment|/*  * Alignment macros.  BPF_WORDALIGN rounds up to the next   * even multiple of BPF_ALIGNMENT.  *  * Tcpdump's print-pflog.c uses this, so we define it here.  */
 ifndef|#
 directive|ifndef
 name|__NetBSD__
@@ -78,14 +110,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x)+(BPF_ALIGNMENT-1))&~(BPF_ALIGNMENT-1))
-define|#
-directive|define
-name|BPF_MAXBUFSIZE
-value|0x8000
-define|#
-directive|define
-name|BPF_MINBUFSIZE
-value|32
 comment|/*  * Structure for "pcap_compile()", "pcap_setfilter()", etc..  */
 struct|struct
 name|bpf_program
@@ -100,28 +124,7 @@ name|bf_insns
 decl_stmt|;
 block|}
 struct|;
-comment|/*  * Struct return by BIOCVERSION.  This represents the version number of   * the filter language described by the instruction encodings below.  * bpf understands a program iff kernel_major == filter_major&&  * kernel_minor>= filter_minor, that is, if the value returned by the  * running kernel has the same major number and a minor number equal  * equal to or less than the filter being downloaded.  Otherwise, the  * results are undefined, meaning an error may be returned or packets  * may be accepted haphazardly.  * It has nothing to do with the source code version.  */
-struct|struct
-name|bpf_version
-block|{
-name|u_short
-name|bv_major
-decl_stmt|;
-name|u_short
-name|bv_minor
-decl_stmt|;
-block|}
-struct|;
-comment|/* Current version number of filter architecture. */
-define|#
-directive|define
-name|BPF_MAJOR_VERSION
-value|1
-define|#
-directive|define
-name|BPF_MINOR_VERSION
-value|1
-comment|/*  * Data-link level type codes.  *  * Do *NOT* add new values to this list without asking  * "tcpdump-workers@lists.tcpdump.org" for a value.  Otherwise, you run  * the risk of using a value that's already being used for some other  * purpose, and of having tools that read libpcap-format captures not  * being able to handle captures with your new DLT_ value, with no hope  * that they will ever be changed to do so (as that would destroy their  * ability to read captures using that value for that other purpose).  */
+comment|/*  * Link-layer header type codes.  *  * Do *NOT* add new values to this list without asking  * "tcpdump-workers@lists.tcpdump.org" for a value.  Otherwise, you run  * the risk of using a value that's already being used for some other  * purpose, and of having tools that read libpcap-format captures not  * being able to handle captures with your new DLT_ value, with no hope  * that they will ever be changed to do so (as that would destroy their  * ability to read captures using that value for that other purpose).  *  * See  *  *	http://www.tcpdump.org/linktypes.html  *  * for detailed descriptions of some of these link-layer header types.  */
 comment|/*  * These are the types that are the same on all platforms, and that  * have been defined by<net/bpf.h> for ages.  */
 define|#
 directive|define
@@ -269,7 +272,12 @@ define|#
 directive|define
 name|DLT_SYMANTEC_FIREWALL
 value|99
-comment|/*  * Values between 100 and 103 are used in capture file headers as  * link-layer types corresponding to DLT_ types that differ  * between platforms; don't use those values for new DLT_ new types.  */
+comment|/*  * Values between 100 and 103 are used in capture file headers as  * link-layer header type LINKTYPE_ values corresponding to DLT_ types  * that differ between platforms; don't use those values for new DLT_  * new types.  */
+comment|/*  * Values starting with 104 are used for newly-assigned link-layer  * header type values; for those link-layer header types, the DLT_  * value returned by pcap_datalink() and passed to pcap_open_dead(),  * and the LINKTYPE_ value that appears in capture files, are the  * same.  *  * DLT_MATCHING_MIN is the lowest such value; DLT_MATCHING_MAX is  * the highest such value.  */
+define|#
+directive|define
+name|DLT_MATCHING_MIN
+value|104
 comment|/*  * This value was defined by libpcap 0.5; platforms that have defined  * it with a different value should define it here with that value -  * a link type of 104 in a save file will be mapped to DLT_C_HDLC,  * whatever value that happens to be, so programs will correctly  * handle files with that link type regardless of the value of  * DLT_C_HDLC.  *  * The name DLT_C_HDLC was used by BSD/OS; we use that name for source  * compatibility with programs written for BSD/OS.  *  * libpcap 0.5 defined it as DLT_CHDLC; we define DLT_CHDLC as well,  * for source compatibility with programs written for libpcap 0.5.  */
 define|#
 directive|define
@@ -736,7 +744,7 @@ define|#
 directive|define
 name|DLT_JUNIPER_ISM
 value|194
-comment|/*  * IEEE 802.15.4, exactly as it appears in the spec (no padding, no  * nothing); requested by Mikko Saarnivala<mikko.saarnivala@sensinode.com>.  */
+comment|/*  * IEEE 802.15.4, exactly as it appears in the spec (no padding, no  * nothing); requested by Mikko Saarnivala<mikko.saarnivala@sensinode.com>.  * For this one, we expect the FCS to be present at the end of the frame;  * if the frame has no FCS, DLT_IEEE802_15_4_NOFCS should be used.  */
 define|#
 directive|define
 name|DLT_IEEE802_15_4
@@ -906,6 +914,74 @@ define|#
 directive|define
 name|DLT_IPV6
 value|229
+comment|/*  * IEEE 802.15.4, exactly as it appears in the spec (no padding, no  * nothing), and with no FCS at the end of the frame; requested by  * Jon Smirl<jonsmirl@gmail.com>.  */
+define|#
+directive|define
+name|DLT_IEEE802_15_4_NOFCS
+value|230
+comment|/*  * Raw D-Bus:  *  *	http://www.freedesktop.org/wiki/Software/dbus  *  * messages:  *  *	http://dbus.freedesktop.org/doc/dbus-specification.html#message-protocol-messages  *  * starting with the endianness flag, followed by the message type, etc.,  * but without the authentication handshake before the message sequence:  *  *	http://dbus.freedesktop.org/doc/dbus-specification.html#auth-protocol  *  * Requested by Martin Vidner<martin@vidner.net>.  */
+define|#
+directive|define
+name|DLT_DBUS
+value|231
+comment|/*  * Juniper-private data link type, as per request from  * Hannes Gredler<hannes@juniper.net>.  */
+define|#
+directive|define
+name|DLT_JUNIPER_VS
+value|232
+define|#
+directive|define
+name|DLT_JUNIPER_SRX_E2E
+value|233
+define|#
+directive|define
+name|DLT_JUNIPER_FIBRECHANNEL
+value|234
+comment|/*  * DVB-CI (DVB Common Interface for communication between a PC Card  * module and a DVB receiver).  See  *  *	http://www.kaiser.cx/pcap-dvbci.html  *  * for the specification.  *  * Requested by Martin Kaiser<martin@kaiser.cx>.  */
+define|#
+directive|define
+name|DLT_DVB_CI
+value|235
+comment|/*  * Variant of 3GPP TS 27.010 multiplexing protocol (similar to, but  * *not* the same as, 27.010).  Requested by Hans-Christoph Schemmel  *<hans-christoph.schemmel@cinterion.com>.  */
+define|#
+directive|define
+name|DLT_MUX27010
+value|236
+comment|/*  * STANAG 5066 D_PDUs.  Requested by M. Baris Demiray  *<barisdemiray@gmail.com>.  */
+define|#
+directive|define
+name|DLT_STANAG_5066_D_PDU
+value|237
+comment|/*  * Juniper-private data link type, as per request from  * Hannes Gredler<hannes@juniper.net>.  */
+define|#
+directive|define
+name|DLT_JUNIPER_ATM_CEMIC
+value|238
+comment|/*  * NetFilter LOG messages   * (payload of netlink NFNL_SUBSYS_ULOG/NFULNL_MSG_PACKET packets)  *  * Requested by Jakub Zawadzki<darkjames-ws@darkjames.pl>  */
+define|#
+directive|define
+name|DLT_NFLOG
+value|239
+comment|/*  * Hilscher Gesellschaft fuer Systemautomation mbH link-layer type  * for Ethernet packets with a 4-byte pseudo-header and always  * with the payload including the FCS, as supplied by their  * netANALYZER hardware and software.  *  * Requested by Holger P. Frommer<HPfrommer@hilscher.com>  */
+define|#
+directive|define
+name|DLT_NETANALYZER
+value|240
+comment|/*  * Hilscher Gesellschaft fuer Systemautomation mbH link-layer type  * for Ethernet packets with a 4-byte pseudo-header and FCS and  * with the Ethernet header preceded by 7 bytes of preamble and  * 1 byte of SFD, as supplied by their netANALYZER hardware and  * software.  *  * Requested by Holger P. Frommer<HPfrommer@hilscher.com>  */
+define|#
+directive|define
+name|DLT_NETANALYZER_TRANSPARENT
+value|241
+comment|/*  * IP-over-Infiniband, as specified by RFC 4391.  *  * Requested by Petr Sumbera<petr.sumbera@oracle.com>.  */
+define|#
+directive|define
+name|DLT_IPOIB
+value|242
+define|#
+directive|define
+name|DLT_MATCHING_MAX
+value|242
+comment|/* highest value in the "matching" range */
 comment|/*  * DLT and savefile link type values are split into a class and  * a member of that class.  A class value of 0 indicates a regular  * DLT_/LINKTYPE_ value.  */
 define|#
 directive|define
@@ -1250,6 +1326,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* !defined(_NET_BPF_H_)&& !defined(_BPF_H_)&& !defined(_H_BPF)&& !defined(lib_pcap_bpf_h) */
+end_comment
 
 end_unit
 

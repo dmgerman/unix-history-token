@@ -531,6 +531,12 @@ decl_stmt|;
 name|int
 name|this_instance
 decl_stmt|;
+name|char
+name|open_errbuf
+index|[
+name|PCAP_ERRBUF_SIZE
+index|]
+decl_stmt|;
 comment|/* 	 * Is there already an entry in the list for this interface? 	 */
 for|for
 control|(
@@ -676,7 +682,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-name|errbuf
+name|open_errbuf
 argument_list|)
 expr_stmt|;
 name|free
@@ -701,7 +707,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-name|errbuf
+name|open_errbuf
 argument_list|)
 expr_stmt|;
 if|if
@@ -1393,8 +1399,6 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
-else|else
-break|break;
 endif|#
 directive|endif
 comment|/* __FreeBSD__ */
@@ -3130,22 +3134,24 @@ name|NAdapts
 operator|--
 condition|)
 block|{
-name|strcpy
-argument_list|(
+name|char
+modifier|*
+name|tmp
+init|=
 operator|(
 name|char
 operator|*
 operator|)
 name|tUstr
+decl_stmt|;
+name|strcpy
+argument_list|(
+name|tmp
 argument_list|,
 name|tAstr
 argument_list|)
 expr_stmt|;
-operator|(
-name|char
-operator|*
-operator|)
-name|tUstr
+name|tmp
 operator|+=
 name|strlen
 argument_list|(
@@ -3154,7 +3160,14 @@ argument_list|)
 operator|+
 literal|1
 expr_stmt|;
-empty_stmt|;
+name|tUstr
+operator|=
+operator|(
+name|WCHAR
+operator|*
+operator|)
+name|tmp
+expr_stmt|;
 name|tAstr
 operator|+=
 name|strlen

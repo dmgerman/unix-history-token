@@ -67,6 +67,14 @@ comment|/* #undef HAVE_DAG_STREAMS_API */
 end_comment
 
 begin_comment
+comment|/* define if you have vdag_set_device_info() */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_DAG_VDAG */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the declaration of `ether_hostton', and to 0 if you    don't. */
 end_comment
 
@@ -167,6 +175,14 @@ comment|/* #undef HAVE_LIBNL */
 end_comment
 
 begin_comment
+comment|/* if libnl exists and is version 2.x */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LIBNL_2_x */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<limits.h> header file. */
 end_comment
 
@@ -178,11 +194,51 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the<linux/compiler.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LINUX_COMPILER_H */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<linux/ethtool.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LINUX_ETHTOOL_H */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<linux/if_packet.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LINUX_IF_PACKET_H */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<linux/net_tstamp.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LINUX_NET_TSTAMP_H */
+end_comment
+
+begin_comment
 comment|/* if tp_vlan_tci exists */
 end_comment
 
 begin_comment
 comment|/* #undef HAVE_LINUX_TPACKET_AUXDATA_TP_VLAN_TCI */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<linux/types.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LINUX_TYPES_H */
 end_comment
 
 begin_comment
@@ -230,6 +286,22 @@ directive|define
 name|HAVE_NETINET_IF_ETHER_H
 value|1
 end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<netpacket/if_packet.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_NETPACKET_IF_PACKET_H */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<netpacket/packet.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_NETPACKET_PACKET_H */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<net/if_media.h> header file. */
@@ -707,6 +779,14 @@ comment|/* #undef PCAP_SUPPORT_CAN */
 end_comment
 
 begin_comment
+comment|/* target host supports netfilter sniffing */
+end_comment
+
+begin_comment
+comment|/* #undef PCAP_SUPPORT_NETFILTER */
+end_comment
+
+begin_comment
 comment|/* target host supports USB sniffing */
 end_comment
 
@@ -758,7 +838,7 @@ comment|/* #undef _HPUX_SOURCE */
 end_comment
 
 begin_comment
-comment|/* Define to 1 to make fseeko visible on some hosts (e.g. glibc 2.2).  */
+comment|/* Define to 1 to make fseeko visible on some hosts (e.g. glibc 2.2). */
 end_comment
 
 begin_comment

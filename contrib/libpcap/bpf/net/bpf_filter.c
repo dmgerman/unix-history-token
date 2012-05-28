@@ -2544,7 +2544,7 @@ case|:
 comment|/* 				 * Check for constant division by 0. 				 */
 if|if
 condition|(
-name|BPF_RVAL
+name|BPF_SRC
 argument_list|(
 name|p
 operator|->
