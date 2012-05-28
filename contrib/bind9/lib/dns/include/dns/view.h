@@ -1301,6 +1301,10 @@ begin_comment
 comment|/*%<  * Get the rdatatype statistics counter set for 'view'.  If a statistics set is  * set '*statsp' will be attached to the set; otherwise, '*statsp' will be  * untouched.  *  * Requires:  * \li	'view' is valid and is not frozen.  *  *\li	'statsp' != NULL&& '*statsp' != NULL  */
 end_comment
 
+begin_macro
+name|ISC_LANG_ENDDECLS
+end_macro
+
 begin_endif
 endif|#
 directive|endif

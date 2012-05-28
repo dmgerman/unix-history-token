@@ -201,7 +201,7 @@ begin_define
 define|#
 directive|define
 name|ISC_MUTEX_PROFTABLESIZE
-value|(16 * 1024)
+value|(1024 * 1024)
 end_define
 
 begin_endif
@@ -902,7 +902,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%-12s %4d: %10u  %lu.%06lu %lu.%06lu\n"
+literal|"%-12s %4d: %10u  %lu.%06lu %lu.%06lu %5d\n"
 argument_list|,
 name|stats
 index|[
@@ -960,6 +960,8 @@ operator|.
 name|wait_total
 operator|.
 name|tv_usec
+argument_list|,
+name|i
 argument_list|)
 expr_stmt|;
 for|for
@@ -1002,7 +1004,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|" %-11s %4d: %10u  %lu.%06lu %lu.%06lu\n"
+literal|" %-11s %4d: %10u  %lu.%06lu %lu.%06lu %5d\n"
 argument_list|,
 name|locker
 operator|->
@@ -1039,6 +1041,8 @@ operator|->
 name|wait_total
 operator|.
 name|tv_usec
+argument_list|,
+name|i
 argument_list|)
 expr_stmt|;
 block|}

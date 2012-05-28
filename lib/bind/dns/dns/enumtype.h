@@ -223,6 +223,10 @@ name|dns_rdatatype_nsec3param
 init|=
 literal|51
 block|,
+name|dns_rdatatype_tlsa
+init|=
+literal|52
+block|,
 name|dns_rdatatype_spf
 init|=
 literal|99
@@ -600,6 +604,13 @@ define|#
 directive|define
 name|dns_rdatatype_nsec3param
 value|((dns_rdatatype_t)dns_rdatatype_nsec3param)
+end_define
+
+begin_define
+define|#
+directive|define
+name|dns_rdatatype_tlsa
+value|((dns_rdatatype_t)dns_rdatatype_tlsa)
 end_define
 
 begin_define
