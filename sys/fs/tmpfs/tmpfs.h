@@ -1017,6 +1017,8 @@ name|vnode
 modifier|*
 parameter_list|,
 name|off_t
+parameter_list|,
+name|boolean_t
 parameter_list|)
 function_decl|;
 end_function_decl
