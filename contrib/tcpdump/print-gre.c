@@ -842,6 +842,8 @@ name|ETHERTYPE_IPV6
 case|:
 name|ip6_print
 argument_list|(
+name|gndo
+argument_list|,
 name|bp
 argument_list|,
 name|len
@@ -901,6 +903,8 @@ name|ETHERTYPE_TEB
 case|:
 name|ether_print
 argument_list|(
+name|gndo
+argument_list|,
 name|bp
 argument_list|,
 name|len

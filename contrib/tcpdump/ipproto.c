@@ -232,6 +232,12 @@ literal|"Mobility"
 block|}
 block|,
 block|{
+name|IPPROTO_CARP
+block|,
+literal|"CARP"
+block|}
+block|,
+block|{
 literal|0
 block|,
 name|NULL

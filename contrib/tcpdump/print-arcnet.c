@@ -956,6 +956,8 @@ name|ARCTYPE_INET6
 case|:
 name|ip6_print
 argument_list|(
+name|gndo
+argument_list|,
 name|p
 argument_list|,
 name|length

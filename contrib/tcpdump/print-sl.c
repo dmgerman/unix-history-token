@@ -289,6 +289,8 @@ literal|6
 case|:
 name|ip6_print
 argument_list|(
+name|gndo
+argument_list|,
 operator|(
 name|u_char
 operator|*
