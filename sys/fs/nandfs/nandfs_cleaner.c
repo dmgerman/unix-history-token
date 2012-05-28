@@ -1615,6 +1615,13 @@ goto|goto
 name|retry
 goto|;
 block|}
+if|if
+condition|(
+name|ssegs
+operator|>
+literal|0
+condition|)
+block|{
 name|print_suinfo
 argument_list|(
 name|suinfo
@@ -1670,6 +1677,7 @@ name|nsi_num
 operator|+
 literal|1
 expr_stmt|;
+block|}
 name|out
 label|:
 name|free
