@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_hwpmc_hooks.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_kdtrace.h"
 end_include
 
@@ -129,6 +135,33 @@ include|#
 directive|include
 file|<ddb/ddb.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HWPMC_HOOKS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/pmckern.h>
+end_include
+
+begin_expr_stmt
+name|PMC_SOFT_DECLARE
+argument_list|( , ,
+name|lock
+argument_list|,
+name|failed
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
@@ -2274,6 +2307,18 @@ condition|)
 break|break;
 continue|continue;
 block|}
+ifdef|#
+directive|ifdef
+name|HWPMC_HOOKS
+name|PMC_SOFT_CALL
+argument_list|( , ,
+name|lock
+argument_list|,
+name|failed
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|lock_profile_obtain_lock_failed
 argument_list|(
 operator|&
@@ -3178,6 +3223,18 @@ name|tid
 argument_list|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|HWPMC_HOOKS
+name|PMC_SOFT_CALL
+argument_list|( , ,
+name|lock
+argument_list|,
+name|failed
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|lock_profile_obtain_lock_failed
 argument_list|(
 operator|&
@@ -4401,6 +4458,18 @@ name|tid
 argument_list|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|HWPMC_HOOKS
+name|PMC_SOFT_CALL
+argument_list|( , ,
+name|lock
+argument_list|,
+name|failed
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|lock_profile_obtain_lock_failed
 argument_list|(
 operator|&

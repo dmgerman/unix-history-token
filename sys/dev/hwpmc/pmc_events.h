@@ -353,6 +353,31 @@ name|PMC_EV_TSC_LAST
 value|PMC_EV_TSC_TSC
 end_define
 
+begin_comment
+comment|/*  * Software events are dynamicaly defined.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMC_EV_DYN_COUNT
+value|0x1000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMC_EV_SOFT_FIRST
+value|0x20000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMC_EV_SOFT_LAST
+value|(PMC_EV_SOFT_FIRST + PMC_EV_DYN_COUNT - 1)
+end_define
+
 begin_define
 define|#
 directive|define
@@ -504,7 +529,7 @@ value|PMC_EV_PPC7450_PREFETCH_ENGINE_FULL
 end_define
 
 begin_comment
-comment|/*  * All known PMC events.  *  * PMC event numbers are allocated sparsely to allow new PMC events to  * be added to a PMC class without breaking ABI compatibility.  The  * current allocation scheme is:  *  * START	#EVENTS		DESCRIPTION  * 0		0x1000		Reserved  * 0x1000	0x0001		TSC  * 0x2000	0x0080		AMD K7 events  * 0x2080	0x0100		AMD K8 events  * 0x10000	0x0080		INTEL architectural fixed-function events  * 0x10080	0x0F80		INTEL architectural programmable events  * 0x11000	0x0080		INTEL Pentium 4 events  * 0x11080	0x0080		INTEL Pentium MMX events  * 0x11100	0x0100		INTEL Pentium Pro/P-II/P-III/Pentium-M events  * 0x11200	0x00FF		INTEL XScale events  * 0x11300      0x00FF          MIPS 24K events  */
+comment|/*  * All known PMC events.  *  * PMC event numbers are allocated sparsely to allow new PMC events to  * be added to a PMC class without breaking ABI compatibility.  The  * current allocation scheme is:  *  * START	#EVENTS		DESCRIPTION  * 0		0x1000		Reserved  * 0x1000	0x0001		TSC  * 0x2000	0x0080		AMD K7 events  * 0x2080	0x0100		AMD K8 events  * 0x10000	0x0080		INTEL architectural fixed-function events  * 0x10080	0x0F80		INTEL architectural programmable events  * 0x11000	0x0080		INTEL Pentium 4 events  * 0x11080	0x0080		INTEL Pentium MMX events  * 0x11100	0x0100		INTEL Pentium Pro/P-II/P-III/Pentium-M events  * 0x11200	0x00FF		INTEL XScale events  * 0x11300      0x00FF          MIPS 24K events  * 0x20000	0x1000		Software events  */
 end_comment
 
 begin_define
@@ -520,7 +545,7 @@ begin_define
 define|#
 directive|define
 name|PMC_EVENT_LAST
-value|PMC_EV_UCP_LAST
+value|PMC_EV_SOFT_LAST
 end_define
 
 begin_endif

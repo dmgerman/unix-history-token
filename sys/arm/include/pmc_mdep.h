@@ -19,7 +19,7 @@ begin_define
 define|#
 directive|define
 name|PMC_MDEP_CLASS_INDEX_XSCALE
-value|0
+value|1
 end_define
 
 begin_comment
@@ -110,6 +110,21 @@ parameter_list|(
 name|TF
 parameter_list|)
 value|((TF)->tf_usr_sp)
+end_define
+
+begin_comment
+comment|/* Build a fake kernel trapframe from current instruction pointer. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMC_FAKE_TRAPFRAME
+parameter_list|(
+name|TF
+parameter_list|)
+define|\
+value|do {								\ 	__asm __volatile("mov %0, pc" : "=r" ((TF)->tf_pc));		\ 	} while (0)
 end_define
 
 begin_comment
