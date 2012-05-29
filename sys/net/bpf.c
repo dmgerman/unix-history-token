@@ -6229,6 +6229,20 @@ name|u_long
 name|cmd
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|COMPAT_FREEBSD32
+name|struct
+name|bpf_program
+name|fp_swab
+decl_stmt|;
+name|struct
+name|bpf_program32
+modifier|*
+name|fp32
+decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|bpf_insn
 modifier|*
@@ -6261,15 +6275,6 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|COMPAT_FREEBSD32
-name|struct
-name|bpf_program32
-modifier|*
-name|fp32
-decl_stmt|;
-name|struct
-name|bpf_program
-name|fp_swab
-decl_stmt|;
 switch|switch
 condition|(
 name|cmd
@@ -6363,6 +6368,10 @@ name|NULL
 expr_stmt|;
 endif|#
 directive|endif
+name|need_upgrade
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * Check new filter validness before acquiring any locks. 	 * Allocate memory for new filter, if needed. 	 */
 name|flen
 operator|=
@@ -6372,26 +6381,20 @@ name|bf_len
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|flen
 operator|>
 name|bpf_maxinsns
-operator|)
 operator|||
-operator|(
 operator|(
 name|fp
 operator|->
 name|bf_insns
 operator|==
 name|NULL
-operator|)
 operator|&&
-operator|(
 name|flen
 operator|!=
 literal|0
-operator|)
 operator|)
 condition|)
 return|return
@@ -6399,10 +6402,6 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-name|need_upgrade
-operator|=
-literal|0
-expr_stmt|;
 name|size
 operator|=
 name|flen
@@ -6422,14 +6421,9 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/* We're setting up new filter. Copy and check actual data */
+comment|/* We're setting up new filter.  Copy and check actual data. */
 name|fcode
 operator|=
-operator|(
-expr|struct
-name|bpf_insn
-operator|*
-operator|)
 name|malloc
 argument_list|(
 name|size
@@ -6443,16 +6437,10 @@ if|if
 condition|(
 name|copyin
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|fp
 operator|->
 name|bf_insns
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|fcode
 argument_list|,
 name|size
@@ -6460,17 +6448,13 @@ argument_list|)
 operator|!=
 literal|0
 operator|||
+operator|!
 name|bpf_validate
 argument_list|(
 name|fcode
 argument_list|,
-operator|(
-name|int
-operator|)
 name|flen
 argument_list|)
-operator|==
-literal|0
 condition|)
 block|{
 name|free
@@ -6489,7 +6473,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|BPF_JITTER
-comment|/* Filter is copied inside fcode and is perfectly valid */
+comment|/* Filter is copied inside fcode and is perfectly valid. */
 name|jfunc
 operator|=
 name|bpf_jitter
@@ -6505,7 +6489,7 @@ block|}
 name|BPF_LOCK
 argument_list|()
 expr_stmt|;
-comment|/*  	 * Set up new filter. 	 * Protect filter change by interface lock 	 * Additionally, we are protected by global lock here. 	 */
+comment|/* 	 * Set up new filter. 	 * Protect filter change by interface lock. 	 * Additionally, we are protected by global lock here. 	 */
 if|if
 condition|(
 name|d
@@ -6595,25 +6579,21 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 			 * Do not require upgrade by first BIOCSETF 			 * (used to set snaplen) by pcap_open_live() 			 */
+comment|/* 			 * Do not require upgrade by first BIOCSETF 			 * (used to set snaplen) by pcap_open_live(). 			 */
 if|if
 condition|(
-operator|(
 name|d
 operator|->
 name|bd_writer
 operator|!=
 literal|0
-operator|)
 operator|&&
-operator|(
 operator|--
 name|d
 operator|->
 name|bd_writer
 operator|==
 literal|0
-operator|)
 condition|)
 name|need_upgrade
 operator|=
@@ -6669,9 +6649,6 @@ name|NULL
 condition|)
 name|free
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|old
 argument_list|,
 name|M_BPF
@@ -6693,12 +6670,10 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Move d to active readers list */
+comment|/* Move d to active readers list. */
 if|if
 condition|(
 name|need_upgrade
-operator|!=
-literal|0
 condition|)
 name|bpf_upgraded
 argument_list|(
