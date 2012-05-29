@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/_rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/cache.h>
 end_include
 
@@ -395,6 +401,14 @@ directive|define
 name|kernel_pmap
 value|(&kernel_pmap_store)
 end_define
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|rwlock
+name|tte_list_global_lock
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
