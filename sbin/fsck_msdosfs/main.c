@@ -437,6 +437,11 @@ argument_list|,
 name|ap
 argument_list|)
 expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|alwaysyes
