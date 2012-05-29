@@ -1053,7 +1053,7 @@ operator|->
 name|sm_space
 operator|-
 name|size
-operator|<=
+operator|<
 name|sm
 operator|->
 name|sm_size
