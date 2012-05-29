@@ -1547,6 +1547,9 @@ expr_stmt|;
 name|cninit
 argument_list|()
 expr_stmt|;
+name|at91_pmc_init_clock
+argument_list|()
+expr_stmt|;
 comment|/* Get chip id so device drivers know about differences */
 name|at91_chip_id
 operator|=

@@ -155,35 +155,11 @@ name|at91_chip_id
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|AT91C_MASTER_CLOCK
-end_ifdef
-
-begin_decl_stmt
-name|uint32_t
-name|at91_master_clock
-init|=
-name|AT91C_MASTER_CLOCK
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_decl_stmt
 name|uint32_t
 name|at91_master_clock
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static

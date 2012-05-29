@@ -271,6 +271,15 @@ name|at91_master_clock
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|void
+name|at91_pmc_init_clock
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

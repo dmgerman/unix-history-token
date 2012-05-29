@@ -19,24 +19,6 @@ directive|define
 name|AT91SAM9260REG_H_
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|AT91SAM9260_MASTER_CLOCK
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|AT91SAM9260_MASTER_CLOCK
-value|((18432000 * 43)/6)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* Chip Specific limits */
 end_comment
