@@ -12633,17 +12633,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|INQ_DATA_TQ_ENABLED
-argument_list|(
-operator|&
-name|dev
-operator|->
-name|inq_data
-argument_list|)
-condition|)
-block|{
 comment|/* Don't ever go below one opening */
 if|if
 condition|(
@@ -12672,14 +12661,13 @@ name|xpt_print
 argument_list|(
 name|path
 argument_list|,
-literal|"tagged openings now %d\n"
+literal|"number of openings is now %d\n"
 argument_list|,
 name|crs
 operator|->
 name|openings
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 block|}
