@@ -3891,13 +3891,13 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|fail1
-label|:
 name|racct_proc_exit
 argument_list|(
 name|newproc
 argument_list|)
 expr_stmt|;
+name|fail1
+label|:
 if|if
 condition|(
 name|vm2

@@ -2712,6 +2712,17 @@ argument_list|(
 name|parent
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+name|racct_proc_exit
+argument_list|(
+name|child
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
