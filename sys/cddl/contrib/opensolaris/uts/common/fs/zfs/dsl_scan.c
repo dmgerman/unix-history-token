@@ -337,18 +337,6 @@ name|DDT_CLASS_DUPLICATE
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|dsl_scan_delay_completion
-init|=
-name|B_FALSE
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* set to delay scan completion */
-end_comment
-
 begin_define
 define|#
 directive|define
