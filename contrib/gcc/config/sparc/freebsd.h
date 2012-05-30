@@ -44,7 +44,7 @@ begin_define
 define|#
 directive|define
 name|LINK_SPEC
-value|"%(link_arch)						\   %{!mno-relax:%{!r:-relax}}						\   %{p:%nconsider using `-pg' instead of `-p' with gprof(1)}		\   %{assert*} %{R*} %{rpath*} %{defsym*}					\   %{shared:-Bshareable %{h*} %{soname*}}				\   %{symbolic:-Bsymbolic}						\   %{!shared:								\     %{!static:								\       %{rdynamic:-export-dynamic}					\       %{!dynamic-linker:-dynamic-linker %(fbsd_dynamic_linker) }}	\     %{static:-Bstatic}}"
+value|"%(link_arch)						\   %{!mno-relax:%{!r:-relax}}						\   %{p:%nconsider using `-pg' instead of `-p' with gprof(1)}		\   %{v:-V}								\   %{assert*} %{R*} %{rpath*} %{defsym*}					\   %{shared:-Bshareable %{h*} %{soname*}}				\   %{!shared:								\     %{!static:								\       %{rdynamic:-export-dynamic}					\       %{!dynamic-linker:-dynamic-linker %(fbsd_dynamic_linker) }}	\     %{static:-Bstatic}}							\   %{!static:--hash-style=both}						\   %{symbolic:-Bsymbolic}"
 end_define
 
 begin_comment
