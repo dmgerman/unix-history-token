@@ -2382,30 +2382,6 @@ decl_stmt|;
 name|long
 name|n
 decl_stmt|;
-comment|/* We only allow the client to restart the handshake once per 	 * negotiation. */
-if|if
-condition|(
-name|s
-operator|->
-name|s3
-operator|->
-name|flags
-operator|&
-name|SSL3_FLAGS_SGC_RESTART_DONE
-condition|)
-block|{
-name|SSLerr
-argument_list|(
-name|SSL_F_SSL3_CHECK_CLIENT_HELLO
-argument_list|,
-name|SSL_R_MULTIPLE_SGC_RESTARTS
-argument_list|)
-expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
-block|}
 comment|/* this function is called when we really expect a Certificate message, 	 * so permit appropriate message length */
 name|n
 operator|=
@@ -2468,6 +2444,30 @@ operator|==
 name|SSL3_MT_CLIENT_HELLO
 condition|)
 block|{
+comment|/* We only allow the client to restart the handshake once per 		 * negotiation. */
+if|if
+condition|(
+name|s
+operator|->
+name|s3
+operator|->
+name|flags
+operator|&
+name|SSL3_FLAGS_SGC_RESTART_DONE
+condition|)
+block|{
+name|SSLerr
+argument_list|(
+name|SSL_F_SSL3_CHECK_CLIENT_HELLO
+argument_list|,
+name|SSL_R_MULTIPLE_SGC_RESTARTS
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 comment|/* Throw away what we have done so far in the current handshake, 		 * which will now be aborted. (A full SSL_clear would be too much.) 		 * I hope that tmp.dh is the only thing that may need to be cleared 		 * when a handshake is not completed ... */
 ifndef|#
 directive|ifndef
