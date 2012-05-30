@@ -1041,9 +1041,9 @@ name|pv_entry_t
 name|get_pv_entry
 parameter_list|(
 name|pmap_t
-name|locked_pmap
+name|pmap
 parameter_list|,
-name|int
+name|boolean_t
 name|try
 parameter_list|)
 function_decl|;
@@ -7885,6 +7885,16 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|CTASSERT
+argument_list|(
+name|_NPCPV
+operator|==
+literal|336
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 specifier|static
 name|__inline
 expr|struct
@@ -7956,7 +7966,7 @@ specifier|static
 name|uint32_t
 name|pc_freemask
 index|[
-literal|11
+name|_NPCM
 index|]
 init|=
 block|{
@@ -9158,7 +9168,7 @@ parameter_list|(
 name|pmap_t
 name|pmap
 parameter_list|,
-name|int
+name|boolean_t
 name|try
 parameter_list|)
 block|{

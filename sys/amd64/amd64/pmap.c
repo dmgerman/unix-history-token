@@ -690,7 +690,7 @@ name|pv_entry_t
 name|get_pv_entry
 parameter_list|(
 name|pmap_t
-name|locked_pmap
+name|pmap
 parameter_list|,
 name|boolean_t
 name|try
@@ -8861,6 +8861,7 @@ argument_list|)
 block|{
 return|return
 operator|(
+operator|(
 expr|struct
 name|pv_chunk
 operator|*
@@ -8876,6 +8877,7 @@ operator|(
 name|uintptr_t
 operator|)
 name|PAGE_MASK
+operator|)
 operator|)
 return|;
 block|}
