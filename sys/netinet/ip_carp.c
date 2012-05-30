@@ -5294,7 +5294,7 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|ifnet
+name|carp_softc
 operator|*
 argument_list|)
 argument_list|,
@@ -5322,7 +5322,7 @@ return|;
 name|bcopy
 argument_list|(
 operator|&
-name|ifp
+name|sc
 argument_list|,
 call|(
 name|caddr_t
@@ -5336,7 +5336,7 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|ifnet
+name|carp_softc
 operator|*
 argument_list|)
 argument_list|)
