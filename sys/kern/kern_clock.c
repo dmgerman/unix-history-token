@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_kdtrace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_ntp.h"
 end_include
 
@@ -123,6 +129,12 @@ begin_include
 include|#
 directive|include
 file|<sys/sched.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sdt.h>
 end_include
 
 begin_include
@@ -289,6 +301,30 @@ name|mtx
 name|time_lock
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|SDT_PROVIDER_DECLARE
+argument_list|(
+name|sched
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE2
+argument_list|(
+name|sched
+argument_list|, , ,
+name|tick
+argument_list|,
+name|tick
+argument_list|,
+literal|"struct thread *"
+argument_list|,
+literal|"struct proc *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 specifier|static
@@ -2516,6 +2552,19 @@ condition|?
 name|stathz
 else|:
 name|hz
+argument_list|)
+expr_stmt|;
+name|SDT_PROBE2
+argument_list|(
+name|sched
+argument_list|, , ,
+name|tick
+argument_list|,
+name|td
+argument_list|,
+name|td
+operator|->
+name|td_proc
 argument_list|)
 expr_stmt|;
 name|thread_lock_flags
