@@ -939,8 +939,8 @@ decl_stmt|;
 name|u_int
 name|ki_swtime
 decl_stmt|;
-name|int
-name|ki_spareint1
+name|u_int
+name|ki_cow
 decl_stmt|;
 name|u_int64_t
 name|ki_runtime

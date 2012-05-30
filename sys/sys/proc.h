@@ -664,6 +664,10 @@ name|int
 name|td_blktick
 decl_stmt|;
 comment|/* (t) Time spent blocked. */
+name|u_int
+name|td_cow
+decl_stmt|;
+comment|/* (*) Number of copy-on-write faults */
 name|struct
 name|rusage
 name|td_ru
