@@ -21065,6 +21065,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|type
+operator|==
+name|SYS_RES_MEMORY
+operator|&&
 name|PCIR_IS_BIOS
 argument_list|(
 operator|&
@@ -21201,6 +21205,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|type
+operator|==
+name|SYS_RES_MEMORY
+operator|&&
 name|PCIR_IS_BIOS
 argument_list|(
 operator|&
