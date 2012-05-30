@@ -2465,7 +2465,7 @@ name|rt_use
 operator|++
 expr_stmt|;
 block|}
-comment|/* 	 * The outgoing interface must be in the zone of source and 	 * destination addresses.   	 */
+comment|/* 	 * The outgoing interface must be in the zone of source and 	 * destination addresses. 	 */
 name|origifp
 operator|=
 name|ifp
@@ -2619,7 +2619,7 @@ goto|goto
 name|badscope
 goto|;
 block|}
-comment|/* We should use ia_ifp to support the case of  	 * sending packets to an address of our own. 	 */
+comment|/* We should use ia_ifp to support the case of 	 * sending packets to an address of our own. 	 */
 if|if
 condition|(
 name|ia
@@ -3372,7 +3372,7 @@ name|m_pkthdr
 operator|.
 name|csum_flags
 operator|&
-name|CSUM_SCTP
+name|CSUM_SCTP_IPV6
 condition|)
 name|m
 operator|->
@@ -3475,7 +3475,7 @@ name|m_pkthdr
 operator|.
 name|csum_flags
 operator|&
-name|CSUM_SCTP
+name|CSUM_SCTP_IPV6
 condition|)
 name|m
 operator|->
@@ -3650,13 +3650,13 @@ if|if
 condition|(
 name|sw_csum
 operator|&
-name|CSUM_SCTP
+name|CSUM_SCTP_IPV6
 condition|)
 block|{
 name|sw_csum
 operator|&=
 operator|~
-name|CSUM_SCTP
+name|CSUM_SCTP_IPV6
 expr_stmt|;
 name|sctp_delayed_cksum
 argument_list|(
@@ -4140,7 +4140,7 @@ name|m_pkthdr
 operator|.
 name|csum_flags
 operator|&
-name|CSUM_SCTP
+name|CSUM_SCTP_IPV6
 condition|)
 block|{
 name|sctp_delayed_cksum
@@ -4157,7 +4157,7 @@ operator|.
 name|csum_flags
 operator|&=
 operator|~
-name|CSUM_SCTP
+name|CSUM_SCTP_IPV6
 expr_stmt|;
 block|}
 endif|#

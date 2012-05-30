@@ -313,7 +313,7 @@ comment|/* total packet length */
 name|uint32_t
 name|flowid
 decl_stmt|;
-comment|/* packet's 4-tuple system  					 * flow identifier 					 */
+comment|/* packet's 4-tuple system 					 * flow identifier 					 */
 comment|/* variables for hardware checksum */
 name|int
 name|csum_flags
@@ -1208,8 +1208,15 @@ begin_comment
 comment|/* will csum SCTP */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CSUM_SCTP_IPV6
+value|0x0080
+end_define
+
 begin_comment
-comment|/*	CSUM_SCTP_IPV6		0x0080		will csum IPv6/SCTP */
+comment|/* will csum IPv6/SCTP */
 end_comment
 
 begin_define
