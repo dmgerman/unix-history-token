@@ -2056,6 +2056,9 @@ case|:
 case|case
 name|PTHREAD_MUTEX_NORMAL
 case|:
+case|case
+name|PTHREAD_MUTEX_ADAPTIVE_NP
+case|:
 name|ret
 operator|=
 name|EBUSY
