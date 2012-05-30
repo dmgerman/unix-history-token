@@ -2258,7 +2258,7 @@ expr_stmt|;
 block|}
 name|error
 operator|=
-name|uiomove
+name|vn_io_fault_uiomove
 argument_list|(
 operator|(
 name|char
@@ -3050,7 +3050,7 @@ name|size
 expr_stmt|;
 name|error
 operator|=
-name|uiomove
+name|vn_io_fault_uiomove
 argument_list|(
 operator|(
 name|char
