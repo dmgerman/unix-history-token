@@ -980,6 +980,17 @@ modifier|*
 name|td_rfppwait_p
 decl_stmt|;
 comment|/* (k) The vforked child */
+name|struct
+name|vm_page
+modifier|*
+modifier|*
+name|td_ma
+decl_stmt|;
+comment|/* (k) uio pages held */
+name|int
+name|td_ma_cnt
+decl_stmt|;
+comment|/* (k) size of *td_ma */
 block|}
 struct|;
 end_struct
@@ -1849,6 +1860,17 @@ end_define
 
 begin_comment
 comment|/* Last errno is already in td_errno */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDP_UIOHELD
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* Current uio has pages held in td_ma */
 end_comment
 
 begin_comment

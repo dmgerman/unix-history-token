@@ -3787,6 +3787,25 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|vn_io_fault_uiomove
+parameter_list|(
+name|char
+modifier|*
+name|data
+parameter_list|,
+name|int
+name|xfersize
+parameter_list|,
+name|struct
+name|uio
+modifier|*
+name|uio
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define

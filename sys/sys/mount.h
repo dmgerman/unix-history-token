@@ -1509,6 +1509,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MNTK_NO_IOPF
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* Disallow page faults during reads 					   and writes. Filesystem shall properly 					   handle i/o state on EFAULT. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MNTK_NOASYNC
 value|0x00800000
 end_define
