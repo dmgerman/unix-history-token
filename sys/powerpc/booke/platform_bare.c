@@ -664,7 +664,16 @@ name|rv
 operator|!=
 literal|0
 condition|)
-return|return;
+name|panic
+argument_list|(
+literal|"%s: could not retrieve mem regions from the 'memory' "
+literal|"node, error: %d"
+argument_list|,
+name|__func__
+argument_list|,
+name|rv
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
