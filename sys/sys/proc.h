@@ -703,6 +703,10 @@ name|int
 name|td_swvoltick
 decl_stmt|;
 comment|/* (t) Time at last SW_VOL switch. */
+name|u_int
+name|td_cow
+decl_stmt|;
+comment|/* (*) Number of copy-on-write faults */
 name|struct
 name|rusage
 name|td_ru
