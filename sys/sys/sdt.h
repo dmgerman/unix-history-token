@@ -357,6 +357,21 @@ end_define
 begin_define
 define|#
 directive|define
+name|SDT_PROBE0
+parameter_list|(
+name|prov
+parameter_list|,
+name|mod
+parameter_list|,
+name|func
+parameter_list|,
+name|name
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SDT_PROBE1
 parameter_list|(
 name|prov
@@ -885,6 +900,23 @@ name|arg4
 parameter_list|)
 define|\
 value|SDT_PROBE_DEFINE(prov, mod, func, name, sname);			\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 0, arg0);		\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 1, arg1);		\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 2, arg2);		\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 3, arg3);		\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 4, arg4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDT_PROBE0
+parameter_list|(
+name|prov
+parameter_list|,
+name|mod
+parameter_list|,
+name|func
+parameter_list|,
+name|name
+parameter_list|)
+define|\
+value|SDT_PROBE(prov, mod, func, name, 0, 0, 0, 0, 0)
 end_define
 
 begin_define

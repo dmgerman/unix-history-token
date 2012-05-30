@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_kdtrace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_hwpmc_hooks.h"
 end_include
 
@@ -69,6 +75,12 @@ begin_include
 include|#
 directive|include
 file|<sys/resourcevar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sdt.h>
 end_include
 
 begin_include
@@ -171,6 +183,28 @@ include|#
 directive|include
 file|<sys/eventhandler.h>
 end_include
+
+begin_expr_stmt
+name|SDT_PROVIDER_DECLARE
+argument_list|(
+name|proc
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE
+argument_list|(
+name|proc
+argument_list|, , ,
+name|lwp_exit
+argument_list|,
+name|lwp
+operator|-
+name|exit
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * thread related storage.  */

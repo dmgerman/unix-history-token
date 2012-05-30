@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_kdtrace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_turnstile_profiling.h"
 end_include
 
@@ -97,6 +103,12 @@ begin_include
 include|#
 directive|include
 file|<sys/sched.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sdt.h>
 end_include
 
 begin_include
@@ -558,6 +570,42 @@ name|size
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_expr_stmt
+name|SDT_PROVIDER_DECLARE
+argument_list|(
+name|sched
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE
+argument_list|(
+name|sched
+argument_list|, , ,
+name|sleep
+argument_list|,
+name|sleep
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE2
+argument_list|(
+name|sched
+argument_list|, , ,
+name|wakeup
+argument_list|,
+name|wakeup
+argument_list|,
+literal|"struct thread *"
+argument_list|,
+literal|"struct proc *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Walks the chain of turnstiles and their owners to propagate the priority  * of the thread being blocked to all the threads holding locks that have to  * release their locks before this thread can run again.  */
@@ -3015,6 +3063,13 @@ operator|->
 name|lo_name
 argument_list|)
 expr_stmt|;
+name|SDT_PROBE0
+argument_list|(
+name|sched
+argument_list|, , ,
+name|sleep
+argument_list|)
+expr_stmt|;
 name|THREAD_LOCKPTR_ASSERT
 argument_list|(
 name|td
@@ -3804,6 +3859,19 @@ argument_list|,
 name|td
 argument_list|,
 name|td_lockq
+argument_list|)
+expr_stmt|;
+name|SDT_PROBE2
+argument_list|(
+name|sched
+argument_list|, , ,
+name|wakeup
+argument_list|,
+name|td
+argument_list|,
+name|td
+operator|->
+name|td_proc
 argument_list|)
 expr_stmt|;
 name|thread_lock
