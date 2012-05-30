@@ -4653,11 +4653,9 @@ expr_stmt|;
 if|if
 condition|(
 operator|*
-operator|(
-name|q
-operator|-
-literal|1
-operator|)
+name|key
+operator|!=
+literal|'\0'
 condition|)
 name|key
 operator|++
