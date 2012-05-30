@@ -557,6 +557,12 @@ name|td_turnstile
 decl_stmt|;
 comment|/* (k) Associated turnstile. */
 name|struct
+name|rl_q_entry
+modifier|*
+name|td_rlqe
+decl_stmt|;
+comment|/* (k) Associated range lock entry. */
+name|struct
 name|umtx_q
 modifier|*
 name|td_umtxq

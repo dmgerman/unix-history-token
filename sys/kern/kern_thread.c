@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rangelock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/resourcevar.h>
 end_include
 
@@ -776,6 +782,12 @@ operator|=
 name|turnstile_alloc
 argument_list|()
 expr_stmt|;
+name|td
+operator|->
+name|td_rlqe
+operator|=
+name|NULL
+expr_stmt|;
 name|EVENTHANDLER_INVOKE
 argument_list|(
 name|thread_init
@@ -853,6 +865,13 @@ argument_list|(
 name|thread_fini
 argument_list|,
 name|td
+argument_list|)
+expr_stmt|;
+name|rlqentry_free
+argument_list|(
+name|td
+operator|->
+name|td_rlqe
 argument_list|)
 expr_stmt|;
 name|turnstile_free

@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rangelock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/selinfo.h>
 end_include
 
@@ -348,6 +354,11 @@ modifier|*
 name|v_lockf
 decl_stmt|;
 comment|/* Byte-level advisory lock list */
+name|struct
+name|rangelock
+name|v_rl
+decl_stmt|;
+comment|/* Byte-range lock */
 block|}
 struct|;
 end_struct
@@ -3775,6 +3786,66 @@ name|rvp
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|vn_rangelock_unlock
+parameter_list|(
+name|vp
+parameter_list|,
+name|cookie
+parameter_list|)
+define|\
+value|rangelock_unlock(&(vp)->v_rl, (cookie), VI_MTX(vp))
+end_define
+
+begin_define
+define|#
+directive|define
+name|vn_rangelock_unlock_range
+parameter_list|(
+name|vp
+parameter_list|,
+name|cookie
+parameter_list|,
+name|start
+parameter_list|,
+name|end
+parameter_list|)
+define|\
+value|rangelock_unlock_range(&(vp)->v_rl, (cookie), (start), (end), 	\ 	    VI_MTX(vp))
+end_define
+
+begin_define
+define|#
+directive|define
+name|vn_rangelock_rlock
+parameter_list|(
+name|vp
+parameter_list|,
+name|start
+parameter_list|,
+name|end
+parameter_list|)
+define|\
+value|rangelock_rlock(&(vp)->v_rl, (start), (end), VI_MTX(vp))
+end_define
+
+begin_define
+define|#
+directive|define
+name|vn_rangelock_wlock
+parameter_list|(
+name|vp
+parameter_list|,
+name|start
+parameter_list|,
+name|end
+parameter_list|)
+define|\
+value|rangelock_wlock(&(vp)->v_rl, (start), (end), VI_MTX(vp))
+end_define
 
 begin_function_decl
 name|int
