@@ -520,7 +520,7 @@ condition|)
 block|{
 name|BUFerr
 argument_list|(
-name|BUF_F_BUF_MEM_GROW
+name|BUF_F_BUF_MEM_GROW_CLEAN
 argument_list|,
 name|ERR_R_MALLOC_FAILURE
 argument_list|)
