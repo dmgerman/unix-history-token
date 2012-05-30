@@ -17276,6 +17276,9 @@ name|flags
 operator||=
 name|CTS_SPI_FLAGS_DISC_ENB
 expr_stmt|;
+name|didsettings
+operator|++
+expr_stmt|;
 block|}
 if|if
 condition|(
