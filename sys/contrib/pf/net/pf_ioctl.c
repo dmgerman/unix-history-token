@@ -1740,6 +1740,8 @@ name|V_pfr_ktable_pl
 operator|=
 name|V_pfr_kentry_pl
 operator|=
+name|V_pfr_kcounters_pl
+operator|=
 name|NULL
 expr_stmt|;
 block|}
@@ -1815,6 +1817,11 @@ expr_stmt|;
 name|UMA_DESTROY
 argument_list|(
 name|V_pfr_kentry_pl
+argument_list|)
+expr_stmt|;
+name|UMA_DESTROY
+argument_list|(
+name|V_pfr_kcounters_pl
 argument_list|)
 expr_stmt|;
 name|UMA_DESTROY
@@ -1940,6 +1947,16 @@ expr|struct
 name|pfr_kentry
 argument_list|,
 literal|"pfrkentry"
+argument_list|)
+expr_stmt|;
+name|UMA_CREATE
+argument_list|(
+name|V_pfr_kcounters_pl
+argument_list|,
+expr|struct
+name|pfr_kcounters
+argument_list|,
+literal|"pfrkcounters"
 argument_list|)
 expr_stmt|;
 name|UMA_CREATE
