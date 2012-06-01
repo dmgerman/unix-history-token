@@ -231,6 +231,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|AT91_CPU_SAM9X25
+value|0x819a05a0
+end_define
+
+begin_comment
+comment|/* Same as the SAM9G35 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|AT91_ARCH
 parameter_list|(
 name|chipid
