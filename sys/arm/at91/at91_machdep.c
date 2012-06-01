@@ -627,20 +627,6 @@ name|void
 parameter_list|)
 block|{
 name|uint32_t
-modifier|*
-name|SDRAMC
-init|=
-operator|(
-name|uint32_t
-operator|*
-operator|)
-operator|(
-name|AT91_BASE
-operator|+
-name|AT91RM92_SDRAMC_BASE
-operator|)
-decl_stmt|;
-name|uint32_t
 name|cr
 decl_stmt|,
 name|mr
@@ -660,8 +646,10 @@ name|at91_is_rm92
 argument_list|()
 condition|)
 block|{
+name|uint32_t
+modifier|*
 name|SDRAMC
-operator|=
+init|=
 operator|(
 name|uint32_t
 operator|*
@@ -671,7 +659,7 @@ name|AT91_BASE
 operator|+
 name|AT91RM92_SDRAMC_BASE
 operator|)
-expr_stmt|;
+decl_stmt|;
 name|cr
 operator|=
 name|SDRAMC
@@ -741,9 +729,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* This should be good for the 9260, 9261 and 9G20 as addresses 		 * and registers are the same */
+comment|/* This should be good for the 9260, 9261, 9G20, 9G35 and 9X25 as addresses 		 * and registers are the same */
+name|uint32_t
+modifier|*
 name|SDRAMC
-operator|=
+init|=
 operator|(
 name|uint32_t
 operator|*
@@ -753,7 +743,7 @@ name|AT91_BASE
 operator|+
 name|AT91SAM9G20_SDRAMC_BASE
 operator|)
-expr_stmt|;
+decl_stmt|;
 name|cr
 operator|=
 name|SDRAMC
@@ -1544,7 +1534,8 @@ literal|2
 operator|)
 argument_list|)
 expr_stmt|;
-name|cninit
+comment|/* Initialize all the clocks, so that the console can work */
+name|at91_pmc_init_clock
 argument_list|()
 expr_stmt|;
 comment|/* Get chip id so device drivers know about differences */
@@ -1552,7 +1543,6 @@ name|at91_chip_id
 operator|=
 operator|*
 operator|(
-specifier|volatile
 name|uint32_t
 operator|*
 operator|)
@@ -1563,6 +1553,9 @@ name|AT91_DBGU_BASE
 operator|+
 name|DBGU_C1R
 operator|)
+expr_stmt|;
+name|cninit
+argument_list|()
 expr_stmt|;
 name|memsize
 operator|=

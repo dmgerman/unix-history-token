@@ -51,6 +51,21 @@ parameter_list|)
 value|in_cksum_skip(m, len, 0)
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|IPVERSION
+argument_list|)
+operator|&&
+operator|(
+name|IPVERSION
+operator|==
+literal|4
+operator|)
+end_if
+
 begin_comment
 comment|/*  * It it useful to have an Internet checksum routine which is inlineable  * and optimized specifically for the task of computing IP header checksums  * in the normal case (where there are no options and the header length is  * therefore always exactly five 32-bit words.  */
 end_comment
@@ -129,11 +144,31 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|IPVERSION
+argument_list|)
+operator|&&
+operator|(
+name|IPVERSION
+operator|==
+literal|4
+operator|)
+end_if
 
 begin_function_decl
 name|u_int
@@ -147,6 +182,11 @@ name|ip
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|u_short

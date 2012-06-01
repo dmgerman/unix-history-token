@@ -463,7 +463,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Structure per mounted filesystem.  Each mounted filesystem has an  * array of operations and an instance record.  The filesystems are  * put on a doubly linked list.  *  * Lock reference:  *	m - mountlist_mtx  *	i - interlock  *  * Unmarked fields are considered stable as long as a ref is held.  *  */
+comment|/*  * Structure per mounted filesystem.  Each mounted filesystem has an  * array of operations and an instance record.  The filesystems are  * put on a doubly linked list.  *  * Lock reference:  *	m - mountlist_mtx  *	i - interlock  *	v - vnode freelist mutex  *  * Unmarked fields are considered stable as long as a ref is held.  *  */
 end_comment
 
 begin_struct
@@ -531,11 +531,11 @@ name|struct
 name|vnodelst
 name|mnt_activevnodelist
 decl_stmt|;
-comment|/* (i) list of active vnodes */
+comment|/* (v) list of active vnodes */
 name|int
 name|mnt_activevnodelistsize
 decl_stmt|;
-comment|/* (i) # of active vnodes */
+comment|/* (v) # of active vnodes */
 name|int
 name|mnt_writeopcount
 decl_stmt|;
@@ -1504,6 +1504,17 @@ end_define
 
 begin_comment
 comment|/* Allow shared locking for writes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MNTK_NO_IOPF
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* Disallow page faults during reads 					   and writes. Filesystem shall properly 					   handle i/o state on EFAULT. */
 end_comment
 
 begin_define

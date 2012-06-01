@@ -4470,6 +4470,11 @@ name|sin_family
 operator|=
 literal|0
 expr_stmt|;
+name|INP_RLOCK
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|control
@@ -4485,6 +4490,11 @@ operator|->
 name|m_next
 condition|)
 block|{
+name|INP_RUNLOCK
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 name|m_freem
 argument_list|(
 name|control
@@ -4692,6 +4702,11 @@ condition|(
 name|error
 condition|)
 block|{
+name|INP_RUNLOCK
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 name|m_freem
 argument_list|(
 name|m
@@ -4712,11 +4727,6 @@ name|sockaddr_in
 operator|*
 operator|)
 name|addr
-expr_stmt|;
-name|INP_RLOCK
-argument_list|(
-name|inp
-argument_list|)
 expr_stmt|;
 if|if
 condition|(

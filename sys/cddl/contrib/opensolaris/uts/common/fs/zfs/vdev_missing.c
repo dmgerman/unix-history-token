@@ -8,6 +8,10 @@ comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
+comment|/*  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+end_comment
+
+begin_comment
 comment|/*  * The 'missing' vdev is a special vdev type used only during import.  It  * signifies a placeholder in the root vdev for some vdev that we know is  * missing.  We pass it down to the kernel to allow the rest of the  * configuration to parsed and an attempt made to open all available devices.  * Because its GUID is always 0, we know that the guid sum will mismatch and we  * won't be able to open the pool anyway.  */
 end_comment
 
@@ -60,12 +64,21 @@ name|psize
 parameter_list|,
 name|uint64_t
 modifier|*
+name|max_psize
+parameter_list|,
+name|uint64_t
+modifier|*
 name|ashift
 parameter_list|)
 block|{
 comment|/* 	 * Really this should just fail.  But then the root vdev will be in the 	 * faulted state with VDEV_AUX_NO_REPLICAS, when what we really want is 	 * VDEV_AUX_BAD_GUID_SUM.  So we pretend to succeed, knowing that we 	 * will fail the GUID sum check before ever trying to open the pool. 	 */
 operator|*
 name|psize
+operator|=
+literal|0
+expr_stmt|;
+operator|*
+name|max_psize
 operator|=
 literal|0
 expr_stmt|;

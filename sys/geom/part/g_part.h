@@ -80,6 +80,9 @@ comment|/* A BSD labeled partition entry. */
 name|G_PART_ALIAS_FREEBSD_BOOT
 block|,
 comment|/* A FreeBSD boot partition entry. */
+name|G_PART_ALIAS_FREEBSD_NANDFS
+block|,
+comment|/* A FreeBSD nandfs partition entry. */
 name|G_PART_ALIAS_FREEBSD_SWAP
 block|,
 comment|/* A swap partition entry. */

@@ -5236,6 +5236,55 @@ return|return
 name|EIO
 return|;
 block|}
+comment|/* Check if the TXQ wouldn't match what the hardware TXQ is! */
+if|if
+condition|(
+name|txq
+operator|!=
+name|sc
+operator|->
+name|sc_ac2q
+index|[
+name|pri
+index|]
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"%s: txq=%p (%d), pri=%d, pri txq=%p (%d)\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|txq
+argument_list|,
+name|txq
+operator|->
+name|axq_qnum
+argument_list|,
+name|pri
+argument_list|,
+name|sc
+operator|->
+name|sc_ac2q
+index|[
+name|pri
+index|]
+argument_list|,
+name|sc
+operator|->
+name|sc_ac2q
+index|[
+name|pri
+index|]
+operator|->
+name|axq_qnum
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Calculate miscellaneous flags. 	 */
 if|if
 condition|(
@@ -6253,7 +6302,7 @@ name|DPRINTF
 argument_list|(
 name|sc
 argument_list|,
-name|ATH_DEBUG_SW_TX_CTRL
+name|ATH_DEBUG_SW_TX
 argument_list|,
 literal|"%s: bf=%p: mcastq: TX'ing\n"
 argument_list|,
@@ -6298,7 +6347,7 @@ name|DPRINTF
 argument_list|(
 name|sc
 argument_list|,
-name|ATH_DEBUG_SW_TX_CTRL
+name|ATH_DEBUG_SW_TX
 argument_list|,
 literal|"%s: BAR: TX'ing direct\n"
 argument_list|,
@@ -6332,7 +6381,7 @@ name|DPRINTF
 argument_list|(
 name|sc
 argument_list|,
-name|ATH_DEBUG_SW_TX_CTRL
+name|ATH_DEBUG_SW_TX
 argument_list|,
 literal|"%s: bf=%p: swq: TX'ing\n"
 argument_list|,
@@ -10811,13 +10860,21 @@ name|DPRINTF
 argument_list|(
 name|sc
 argument_list|,
-name|ATH_DEBUG_SW_TX_BAW
+name|ATH_DEBUG_SW_TX_BAR
 argument_list|,
-literal|"%s: tid=%p, called\n"
+literal|"%s: tid=%p, bar_wait=%d, bar_tx=%d, called\n"
 argument_list|,
 name|__func__
 argument_list|,
 name|tid
+argument_list|,
+name|tid
+operator|->
+name|bar_wait
+argument_list|,
+name|tid
+operator|->
+name|bar_tx
 argument_list|)
 expr_stmt|;
 comment|/* We shouldn't be called when bar_tx is 1 */
@@ -10902,7 +10959,7 @@ name|DPRINTF
 argument_list|(
 name|sc
 argument_list|,
-name|ATH_DEBUG_SW_TX_BAW
+name|ATH_DEBUG_SW_TX_BAR
 argument_list|,
 literal|"%s: tid=%p, called\n"
 argument_list|,
@@ -11017,6 +11074,23 @@ operator|(
 literal|0
 operator|)
 return|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|ATH_DEBUG_SW_TX_BAR
+argument_list|,
+literal|"%s: tid=%p (%d), bar ready\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|tid
+argument_list|,
+name|tid
+operator|->
+name|tid
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1
@@ -11066,7 +11140,7 @@ name|DPRINTF
 argument_list|(
 name|sc
 argument_list|,
-name|ATH_DEBUG_SW_TX_BAW
+name|ATH_DEBUG_SW_TX_BAR
 argument_list|,
 literal|"%s: tid=%p, called\n"
 argument_list|,
@@ -11141,7 +11215,7 @@ name|DPRINTF
 argument_list|(
 name|sc
 argument_list|,
-name|ATH_DEBUG_SW_TX_BAW
+name|ATH_DEBUG_SW_TX_BAR
 argument_list|,
 literal|"%s: tid=%p, hwq_depth=%d, waiting\n"
 argument_list|,
@@ -11168,7 +11242,7 @@ name|DPRINTF
 argument_list|(
 name|sc
 argument_list|,
-name|ATH_DEBUG_SW_TX_BAW
+name|ATH_DEBUG_SW_TX_BAR
 argument_list|,
 literal|"%s: tid=%p, new BAW left edge=%d\n"
 argument_list|,
@@ -11452,7 +11526,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"%s: node %p: bf=%p: tid txq_depth=%d hwq_depth=%d\n"
+literal|"%s: node %p: bf=%p: tid txq_depth=%d hwq_depth=%d, bar_wait=%d\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -11467,6 +11541,10 @@ argument_list|,
 name|tid
 operator|->
 name|hwq_depth
+argument_list|,
+name|tid
+operator|->
+name|bar_wait
 argument_list|)
 expr_stmt|;
 name|device_printf
@@ -12377,7 +12455,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|ath_tx_cleanup
+name|ath_tx_tid_cleanup
 parameter_list|(
 name|struct
 name|ath_softc
@@ -12426,7 +12504,7 @@ name|DPRINTF
 argument_list|(
 name|sc
 argument_list|,
-name|ATH_DEBUG_SW_TX_CTRL
+name|ATH_DEBUG_SW_TX_BAW
 argument_list|,
 literal|"%s: TID %d: called\n"
 argument_list|,
@@ -14351,7 +14429,7 @@ name|struct
 name|ath_rc_series
 name|rc
 index|[
-literal|4
+name|ATH_RC_NUM
 index|]
 decl_stmt|;
 name|int
@@ -14460,14 +14538,20 @@ name|bf_state
 operator|.
 name|bfs_pktlen
 expr_stmt|;
-comment|/* 	 * handle errors first 	 */
+comment|/* 	 * Handle errors first! 	 * 	 * Here, handle _any_ error as a "exceeded retries" error. 	 * Later on (when filtered frames are to be specially handled) 	 * it'll have to be expanded. 	 */
+if|#
+directive|if
+literal|0
+block|if (ts.ts_status& HAL_TXERR_XRETRY) {
+endif|#
+directive|endif
 if|if
 condition|(
 name|ts
 operator|.
 name|ts_status
-operator|&
-name|HAL_TXERR_XRETRY
+operator|!=
+literal|0
 condition|)
 block|{
 name|ATH_TXQ_UNLOCK
@@ -15429,6 +15513,12 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* 	 * Don't bother with the retry check if all frames 	 * are being failed (eg during queue deletion.) 	 */
+if|#
+directive|if
+literal|0
+block|if (fail == 0&& ts->ts_status& HAL_TXERR_XRETRY) {
+endif|#
+directive|endif
 if|if
 condition|(
 name|fail
@@ -15438,8 +15528,8 @@ operator|&&
 name|ts
 operator|->
 name|ts_status
-operator|&
-name|HAL_TXERR_XRETRY
+operator|!=
+literal|0
 condition|)
 block|{
 name|ATH_TXQ_UNLOCK
@@ -17094,6 +17184,16 @@ name|ac
 index|]
 argument_list|)
 expr_stmt|;
+comment|/* 	 * This is a bit annoying.  Until net80211 HT code inherits some 	 * (any) locking, we may have this called in parallel BUT only 	 * one response/timeout will be called.  Grr. 	 */
+if|if
+condition|(
+name|atid
+operator|->
+name|addba_tx_pending
+operator|==
+literal|0
+condition|)
+block|{
 name|ath_tx_tid_pause
 argument_list|(
 name|sc
@@ -17101,6 +17201,13 @@ argument_list|,
 name|atid
 argument_list|)
 expr_stmt|;
+name|atid
+operator|->
+name|addba_tx_pending
+operator|=
+literal|1
+expr_stmt|;
+block|}
 name|ATH_TXQ_UNLOCK
 argument_list|(
 name|sc
@@ -17314,6 +17421,12 @@ name|ac
 index|]
 argument_list|)
 expr_stmt|;
+name|atid
+operator|->
+name|addba_tx_pending
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * XXX dirty! 	 * Slide the BAW left edge to wherever net80211 left it for us. 	 * Read above for more information. 	 */
 name|tap
 operator|->
@@ -17466,8 +17579,8 @@ argument_list|,
 name|tap
 argument_list|)
 expr_stmt|;
-comment|/* 	 * ath_tx_cleanup will resume the TID if possible, otherwise 	 * it'll set the cleanup flag, and it'll be unpaused once 	 * things have been cleaned up. 	 */
-name|ath_tx_cleanup
+comment|/* 	 * ath_tx_tid_cleanup will resume the TID if possible, otherwise 	 * it'll set the cleanup flag, and it'll be unpaused once 	 * things have been cleaned up. 	 */
+name|ath_tx_tid_cleanup
 argument_list|(
 name|sc
 argument_list|,
@@ -17555,13 +17668,27 @@ name|DPRINTF
 argument_list|(
 name|sc
 argument_list|,
-name|ATH_DEBUG_SW_TX_CTRL
+name|ATH_DEBUG_SW_TX_BAR
 argument_list|,
-literal|"%s: called; status=%d\n"
+literal|"%s: called; tap=%p, atid=%p, txa_tid=%d, atid->tid=%d, status=%d, attempts=%d\n"
 argument_list|,
 name|__func__
 argument_list|,
+name|tap
+argument_list|,
+name|atid
+argument_list|,
+name|tap
+operator|->
+name|txa_tid
+argument_list|,
+name|atid
+operator|->
+name|tid
+argument_list|,
 name|status
+argument_list|,
+name|attempts
 argument_list|)
 expr_stmt|;
 comment|/* Note: This may update the BAW details */
@@ -17695,6 +17822,36 @@ argument_list|,
 literal|"%s: called; resuming\n"
 argument_list|,
 name|__func__
+argument_list|)
+expr_stmt|;
+name|ATH_TXQ_LOCK
+argument_list|(
+name|sc
+operator|->
+name|sc_ac2q
+index|[
+name|atid
+operator|->
+name|ac
+index|]
+argument_list|)
+expr_stmt|;
+name|atid
+operator|->
+name|addba_tx_pending
+operator|=
+literal|0
+expr_stmt|;
+name|ATH_TXQ_UNLOCK
+argument_list|(
+name|sc
+operator|->
+name|sc_ac2q
+index|[
+name|atid
+operator|->
+name|ac
+index|]
 argument_list|)
 expr_stmt|;
 comment|/* Note: This updates the aggregate state to (again) pending */

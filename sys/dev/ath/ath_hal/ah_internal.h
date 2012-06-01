@@ -1390,9 +1390,11 @@ parameter_list|(
 name|_ah
 parameter_list|,
 name|_reset
+parameter_list|,
+name|_poweroff
 parameter_list|)
 define|\
-value|(_ah)->ah_configPCIE(_ah, _reset)
+value|(_ah)->ah_configPCIE(_ah, _reset, _poweroff)
 end_define
 
 begin_define

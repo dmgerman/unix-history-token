@@ -2910,6 +2910,8 @@ name|U16
 name|IOCStatus
 decl_stmt|;
 name|int
+name|error
+decl_stmt|,
 name|fd
 decl_stmt|,
 name|i

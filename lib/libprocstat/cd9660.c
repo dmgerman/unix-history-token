@@ -259,9 +259,6 @@ name|vn
 operator|->
 name|vn_fileid
 operator|=
-operator|(
-name|long
-operator|)
 name|isonode
 operator|.
 name|i_number
@@ -270,9 +267,6 @@ name|vn
 operator|->
 name|vn_size
 operator|=
-operator|(
-name|u_long
-operator|)
 name|isonode
 operator|.
 name|i_size

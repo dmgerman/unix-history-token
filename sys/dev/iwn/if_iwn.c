@@ -390,6 +390,30 @@ block|,
 block|{
 literal|0x8086
 block|,
+literal|0x0887
+block|,
+literal|"Intel Centrino Wireless-N 130"
+block|}
+block|,
+block|{
+literal|0x8086
+block|,
+literal|0x08ae
+block|,
+literal|"Intel Centrino Wireless-N 100"
+block|}
+block|,
+block|{
+literal|0x8086
+block|,
+literal|0x08af
+block|,
+literal|"Intel Centrino Wireless-N 100"
+block|}
+block|,
+block|{
+literal|0x8086
+block|,
 literal|0x4229
 block|,
 literal|"Intel Wireless WiFi Link 4965"
@@ -16050,11 +16074,6 @@ modifier|*
 name|ni
 decl_stmt|;
 name|struct
-name|ieee80211vap
-modifier|*
-name|vap
-decl_stmt|;
-name|struct
 name|ieee80211_tx_ampdu
 modifier|*
 name|tap
@@ -16438,12 +16457,6 @@ operator|->
 name|ni
 operator|=
 name|NULL
-expr_stmt|;
-name|vap
-operator|=
-name|ni
-operator|->
-name|ni_vap
 expr_stmt|;
 if|if
 condition|(
@@ -19015,6 +19028,24 @@ index|[
 name|ac
 index|]
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|IEEE80211_AMPDU_RUNNING
+argument_list|(
+name|tap
+argument_list|)
+condition|)
+block|{
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+return|return
+name|EINVAL
+return|;
+block|}
 name|ac
 operator|=
 operator|*

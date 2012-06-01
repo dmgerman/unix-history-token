@@ -4721,11 +4721,31 @@ value|(1<< 2)
 define|#
 directive|define
 name|MFI_BBU_STATE_CHARGE_ACTIVE
-value|(1<< 0)
+value|(1<< 3)
 define|#
 directive|define
 name|MFI_BBU_STATE_DISCHARGE_ACTIVE
-value|(1<< 0)
+value|(1<< 4)
+define|#
+directive|define
+name|MFI_BBU_STATE_LEARN_CYC_REQ
+value|(1<< 5)
+define|#
+directive|define
+name|MFI_BBU_STATE_LEARN_CYC_ACTIVE
+value|(1<< 6)
+define|#
+directive|define
+name|MFI_BBU_STATE_LEARN_CYC_FAIL
+value|(1<< 7)
+define|#
+directive|define
+name|MFI_BBU_STATE_LEARN_CYC_TIMEOUT
+value|(1<< 8)
+define|#
+directive|define
+name|MFI_BBU_STATE_I2C_ERR_DETECT
+value|(1<< 9)
 name|uint8_t
 name|pad
 index|[

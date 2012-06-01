@@ -1598,6 +1598,11 @@ argument_list|,
 name|args
 argument_list|)
 expr_stmt|;
+name|va_end
+argument_list|(
+name|args
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|to_log
@@ -1667,6 +1672,11 @@ argument_list|)
 argument_list|,
 name|fmt
 argument_list|,
+name|args
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
 name|args
 argument_list|)
 expr_stmt|;

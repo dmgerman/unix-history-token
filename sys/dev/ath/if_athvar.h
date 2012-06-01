@@ -70,7 +70,7 @@ begin_define
 define|#
 directive|define
 name|ATH_TXBUF
-value|128
+value|512
 end_define
 
 begin_define
@@ -327,6 +327,10 @@ name|int
 name|paused
 decl_stmt|;
 comment|/*>0 if the TID has been paused */
+name|int
+name|addba_tx_pending
+decl_stmt|;
+comment|/* TX ADDBA pending */
 name|int
 name|bar_wait
 decl_stmt|;
@@ -779,13 +783,6 @@ name|enum
 name|ieee80211_protmode
 name|bfs_protmode
 decl_stmt|;
-name|HAL_11N_RATE_SERIES
-name|bfs_rc11n
-index|[
-name|ATH_RC_NUM
-index|]
-decl_stmt|;
-comment|/* 11n TX series */
 name|int
 name|bfs_ctsrate
 decl_stmt|;
@@ -1262,7 +1259,7 @@ name|struct
 name|ath_intr_stats
 name|sc_intr_stats
 decl_stmt|;
-name|int
+name|uint64_t
 name|sc_debug
 decl_stmt|;
 name|int
@@ -4501,6 +4498,36 @@ name|_b
 parameter_list|)
 define|\
 value|((*(_ah)->ah_gpioSetIntr)((_ah), (_gpio), (_b)))
+end_define
+
+begin_comment
+comment|/*  * PCIe suspend/resume/poweron/poweroff related macros  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ath_hal_enablepcie
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_restore
+parameter_list|,
+name|_poweroff
+parameter_list|)
+define|\
+value|((*(_ah)->ah_configPCIE)((_ah), (_restore), (_poweroff)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_disablepcie
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|((*(_ah)->ah_disablePCIE)((_ah)))
 end_define
 
 begin_comment

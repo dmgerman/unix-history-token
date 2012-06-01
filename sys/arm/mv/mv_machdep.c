@@ -1455,6 +1455,10 @@ decl_stmt|,
 name|j
 init|=
 literal|0
+decl_stmt|,
+name|err_devmap
+init|=
+literal|0
 decl_stmt|;
 name|kmdp
 operator|=
@@ -2212,18 +2216,11 @@ name|PTE_CACHE
 argument_list|)
 expr_stmt|;
 comment|/* Map pmap_devmap[] entries */
-if|if
-condition|(
+name|err_devmap
+operator|=
 name|platform_devmap_init
 argument_list|()
-operator|!=
-literal|0
-condition|)
-while|while
-condition|(
-literal|1
-condition|)
-empty_stmt|;
+expr_stmt|;
 name|pmap_devmap_bootstrap
 argument_list|(
 name|l1pagetable
@@ -2334,6 +2331,19 @@ argument_list|()
 expr_stmt|;
 name|print_kenv
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|err_devmap
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"WARNING: could not fully configure devmap, error=%d\n"
+argument_list|,
+name|err_devmap
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Re-initialise decode windows 	 */
 if|if
@@ -3240,7 +3250,7 @@ begin_define
 define|#
 directive|define
 name|FDT_DEVMAP_MAX
-value|(1 + 2 + 1 + 1)
+value|(MV_WIN_CPU_MAX + 1)
 end_define
 
 begin_decl_stmt
@@ -3269,6 +3279,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * XXX: When device entry in devmap has pd_size smaller than section size,  * system will freeze during initialization  */
+end_comment
+
+begin_comment
 comment|/*  * Construct pmap_devmap[] with DT-derived config data.  */
 end_comment
 
@@ -3285,6 +3299,9 @@ name|root
 decl_stmt|,
 name|child
 decl_stmt|;
+name|pcell_t
+name|bank_count
+decl_stmt|;
 name|u_long
 name|base
 decl_stmt|,
@@ -3292,12 +3309,22 @@ name|size
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|num_mapped
 decl_stmt|;
-comment|/* 	 * IMMR range. 	 */
 name|i
 operator|=
 literal|0
 expr_stmt|;
+name|pmap_devmap_bootstrap_table
+operator|=
+operator|&
+name|fdt_devmap
+index|[
+literal|0
+index|]
+expr_stmt|;
+comment|/* 	 * IMMR range. 	 */
 name|fdt_devmap
 index|[
 name|i
@@ -3348,7 +3375,7 @@ expr_stmt|;
 name|i
 operator|++
 expr_stmt|;
-comment|/* 	 * PCI range(s). 	 */
+comment|/* 	 * PCI range(s) and localbus. 	 */
 if|if
 condition|(
 operator|(
@@ -3388,6 +3415,7 @@ argument_list|(
 name|child
 argument_list|)
 control|)
+block|{
 if|if
 condition|(
 name|fdt_is_type
@@ -3413,7 +3441,6 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
-break|break;
 block|}
 comment|/* 			 * XXX this should account for PCI and multiple ranges 			 * of a given kind. 			 */
 if|if
@@ -3444,6 +3471,107 @@ name|i
 operator|+=
 literal|2
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|fdt_is_compatible
+argument_list|(
+name|child
+argument_list|,
+literal|"mrvl,lbc"
+argument_list|)
+condition|)
+block|{
+comment|/* Check available space */
+if|if
+condition|(
+name|OF_getprop
+argument_list|(
+name|child
+argument_list|,
+literal|"bank-count"
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+name|bank_count
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|bank_count
+argument_list|)
+argument_list|)
+operator|<=
+literal|0
+condition|)
+comment|/* If no property, use default value */
+name|bank_count
+operator|=
+literal|1
+expr_stmt|;
+else|else
+name|bank_count
+operator|=
+name|fdt32_to_cpu
+argument_list|(
+name|bank_count
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|i
+operator|+
+name|bank_count
+operator|)
+operator|>=
+name|FDT_DEVMAP_MAX
+condition|)
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
+comment|/* Add all localbus ranges to device map */
+name|num_mapped
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|fdt_localbus_devmap
+argument_list|(
+name|child
+argument_list|,
+operator|&
+name|fdt_devmap
+index|[
+name|i
+index|]
+argument_list|,
+operator|(
+name|int
+operator|)
+name|bank_count
+argument_list|,
+operator|&
+name|num_mapped
+argument_list|)
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+name|i
+operator|+=
+name|num_mapped
+expr_stmt|;
+block|}
 block|}
 comment|/* 	 * CESA SRAM range. 	 */
 if|if
@@ -3490,9 +3618,11 @@ operator|==
 literal|0
 condition|)
 comment|/* No CESA SRAM node. */
-goto|goto
-name|out
-goto|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|moveon
 label|:
 if|if
@@ -3573,16 +3703,6 @@ operator|.
 name|pd_cache
 operator|=
 name|PTE_NOCACHE
-expr_stmt|;
-name|out
-label|:
-name|pmap_devmap_bootstrap_table
-operator|=
-operator|&
-name|fdt_devmap
-index|[
-literal|0
-index|]
 expr_stmt|;
 return|return
 operator|(

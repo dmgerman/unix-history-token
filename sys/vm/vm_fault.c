@@ -2861,6 +2861,11 @@ operator|.
 name|v_cow_faults
 argument_list|)
 expr_stmt|;
+name|curthread
+operator|->
+name|td_cow
+operator|++
+expr_stmt|;
 block|}
 else|else
 block|{

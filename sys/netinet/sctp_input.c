@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001-2008, by Cisco Systems, Inc. All rights reserved.  * Copyright (c) 2008-2011, by Randall Stewart. All rights reserved.  * Copyright (c) 2008-2011, by Michael Tuexen. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *    this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
-end_comment
-
-begin_comment
-comment|/* $KAME: sctp_input.c,v 1.27 2005/03/06 16:04:17 itojun Exp $	 */
+comment|/*-  * Copyright (c) 2001-2008, by Cisco Systems, Inc. All rights reserved.  * Copyright (c) 2008-2012, by Randall Stewart. All rights reserved.  * Copyright (c) 2008-2012, by Michael Tuexen. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *    this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -1364,11 +1360,11 @@ argument_list|)
 expr_stmt|;
 name|sctp_ulp_notify
 argument_list|(
-name|SCTP_NOTIFY_DG_FAIL
+name|SCTP_NOTIFY_UNSENT_DG_FAIL
 argument_list|,
 name|stcb
 argument_list|,
-name|SCTP_NOTIFY_DATAGRAM_UNSENT
+literal|0
 argument_list|,
 name|chk
 argument_list|,
@@ -1476,7 +1472,7 @@ name|SCTP_NOTIFY_SPECIAL_SP_FAIL
 argument_list|,
 name|stcb
 argument_list|,
-name|SCTP_NOTIFY_DATAGRAM_UNSENT
+literal|0
 argument_list|,
 name|sp
 argument_list|,
@@ -2018,8 +2014,6 @@ operator|->
 name|sctp_ep
 argument_list|,
 name|stcb
-argument_list|,
-name|SCTP_CAUSE_PROTOCOL_VIOLATION
 argument_list|,
 name|op_err
 argument_list|,
@@ -3103,7 +3097,7 @@ name|SCTP_NOTIFY_INTERFACE_UP
 argument_list|,
 name|stcb
 argument_list|,
-name|SCTP_HEARTBEAT_SUCCESS
+literal|0
 argument_list|,
 operator|(
 name|void
@@ -3660,7 +3654,7 @@ parameter_list|(
 name|struct
 name|sctp_abort_chunk
 modifier|*
-name|cp
+name|abort
 parameter_list|,
 name|struct
 name|sctp_tcb
@@ -3694,6 +3688,9 @@ directive|endif
 name|uint16_t
 name|len
 decl_stmt|;
+name|uint16_t
+name|error
+decl_stmt|;
 name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_INPUT2
@@ -3712,7 +3709,7 @@ name|len
 operator|=
 name|ntohs
 argument_list|(
-name|cp
+name|abort
 operator|->
 name|ch
 operator|.
@@ -3732,25 +3729,10 @@ condition|)
 block|{
 comment|/* 		 * Need to check the cause codes for our two magic nat 		 * aborts which don't kill the assoc necessarily. 		 */
 name|struct
-name|sctp_abort_chunk
-modifier|*
-name|cpnext
-decl_stmt|;
-name|struct
 name|sctp_missing_nat_state
 modifier|*
 name|natc
 decl_stmt|;
-name|uint16_t
-name|cause
-decl_stmt|;
-name|cpnext
-operator|=
-name|cp
-expr_stmt|;
-name|cpnext
-operator|++
-expr_stmt|;
 name|natc
 operator|=
 operator|(
@@ -3758,9 +3740,13 @@ expr|struct
 name|sctp_missing_nat_state
 operator|*
 operator|)
-name|cpnext
+operator|(
+name|abort
+operator|+
+literal|1
+operator|)
 expr_stmt|;
-name|cause
+name|error
 operator|=
 name|ntohs
 argument_list|(
@@ -3771,7 +3757,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cause
+name|error
 operator|==
 name|SCTP_CAUSE_NAT_COLLIDING_STATE
 condition|)
@@ -3782,7 +3768,7 @@ name|SCTP_DEBUG_INPUT2
 argument_list|,
 literal|"Received Colliding state abort flags:%x\n"
 argument_list|,
-name|cp
+name|abort
 operator|->
 name|ch
 operator|.
@@ -3803,7 +3789,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|cause
+name|error
 operator|==
 name|SCTP_CAUSE_NAT_MISSING_STATE
 condition|)
@@ -3814,7 +3800,7 @@ name|SCTP_DEBUG_INPUT2
 argument_list|,
 literal|"Received missing state abort flags:%x\n"
 argument_list|,
-name|cp
+name|abort
 operator|->
 name|ch
 operator|.
@@ -3834,6 +3820,13 @@ block|{
 return|return;
 block|}
 block|}
+block|}
+else|else
+block|{
+name|error
+operator|=
+literal|0
+expr_stmt|;
 block|}
 comment|/* stop any receive timers */
 name|sctp_timer_stop
@@ -3858,7 +3851,11 @@ name|sctp_abort_notification
 argument_list|(
 name|stcb
 argument_list|,
-literal|0
+literal|1
+argument_list|,
+name|error
+argument_list|,
+name|abort
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
 argument_list|)
@@ -4998,6 +4995,8 @@ name|stcb
 argument_list|,
 literal|0
 argument_list|,
+literal|0
+argument_list|,
 name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
@@ -5466,6 +5465,8 @@ modifier|*
 name|phdr
 decl_stmt|;
 name|uint16_t
+name|error
+decl_stmt|,
 name|error_type
 decl_stmt|;
 name|uint16_t
@@ -5540,6 +5541,10 @@ expr|struct
 name|sctp_chunkhdr
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -5605,6 +5610,19 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* report the first error cause */
+name|error
+operator|=
+name|error_type
+expr_stmt|;
 block|}
 switch|switch
 condition|(
@@ -5764,6 +5782,10 @@ argument_list|(
 name|stcb
 argument_list|,
 literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
 argument_list|)
@@ -6018,6 +6040,19 @@ name|adjust
 operator|)
 expr_stmt|;
 block|}
+name|sctp_ulp_notify
+argument_list|(
+name|SCTP_NOTIFY_REMOTE_ERROR
+argument_list|,
+name|stcb
+argument_list|,
+name|error
+argument_list|,
+name|ch
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -9183,6 +9218,8 @@ expr_stmt|;
 name|sctp_report_all_outbound
 argument_list|(
 name|stcb
+argument_list|,
+literal|0
 argument_list|,
 literal|1
 argument_list|,
@@ -15452,6 +15489,8 @@ block|{
 name|sctp_report_all_outbound
 argument_list|(
 name|stcb
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|,

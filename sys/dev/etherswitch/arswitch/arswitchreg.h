@@ -16,6 +16,38 @@ name|__AR8X16_SWITCHREG_H__
 end_define
 
 begin_comment
+comment|/* XXX doesn't belong here; stolen shamelessly from ath_hal/ah_internal.h */
+end_comment
+
+begin_comment
+comment|/*  * Register manipulation macros that expect bit field defines  * to follow the convention that an _S suffix is appended for  * a shift count, while the field mask has no suffix.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SM
+parameter_list|(
+name|_v
+parameter_list|,
+name|_f
+parameter_list|)
+value|(((_v)<< _f##_S)& (_f))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MS
+parameter_list|(
+name|_v
+parameter_list|,
+name|_f
+parameter_list|)
+value|(((_v)& (_f))>> _f##_S)
+end_define
+
+begin_comment
 comment|/* Atheros specific MII registers */
 end_comment
 
@@ -297,6 +329,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|AR8216_GLOBAL_CTRL_MTU_MASK_S
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
 name|AR8316_GLOBAL_CTRL_MTU_MASK
 value|0x00007fff
 end_define
@@ -304,8 +343,36 @@ end_define
 begin_define
 define|#
 directive|define
+name|AR8316_GLOBAL_CTRL_MTU_MASK_S
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
 name|AR8236_GLOBAL_CTRL_MTU_MASK
 value|0x00007fff
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR8236_GLOBAL_CTRL_MTU_MASK_S
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR7240_GLOBAL_CTRL_MTU_MASK
+value|0x00003fff
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR7240_GLOBAL_CTRL_MTU_MASK_S
+value|0
 end_define
 
 begin_define

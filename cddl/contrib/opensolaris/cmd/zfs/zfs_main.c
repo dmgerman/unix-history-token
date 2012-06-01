@@ -14629,7 +14629,7 @@ name|stderr
 argument_list|,
 name|gettext
 argument_list|(
-literal|"-u and -r options are mutually "
+literal|"-u and -p options are mutually "
 literal|"exclusive\n"
 argument_list|)
 argument_list|)

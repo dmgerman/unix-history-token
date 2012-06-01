@@ -406,11 +406,14 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|E500
-end_ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|BOOKE
+argument_list|)
+end_if
 
 begin_define
 define|#

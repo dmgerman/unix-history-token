@@ -188,6 +188,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Are we using mmap ? */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|use_mmap
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* temporary file dir */
 end_comment
 

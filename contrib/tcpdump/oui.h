@@ -170,6 +170,17 @@ begin_comment
 comment|/* TIA - Telecommunications Industry Association - ANSI/TIA-1057- 2006 */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|OUI_DCBX
+value|0x001B21
+end_define
+
+begin_comment
+comment|/* DCBX */
+end_comment
+
 begin_comment
 comment|/*  * These are SMI Network Management Private Enterprise Codes for  * organizations; see  *  *	http://www.iana.org/assignments/enterprise-numbers  *  * for a list.  *  * List taken from Ethereal's epan/sminmpec.h.  */
 end_comment

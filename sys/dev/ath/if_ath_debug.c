@@ -312,7 +312,7 @@ file|<dev/ath/if_ath_debug.h>
 end_include
 
 begin_decl_stmt
-name|int
+name|uint64_t
 name|ath_debug
 init|=
 literal|0
@@ -328,7 +328,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_QUAD
 argument_list|(
 name|_hw_ath
 argument_list|,
@@ -349,7 +349,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
+name|TUNABLE_QUAD
 argument_list|(
 literal|"hw.ath.debug"
 argument_list|,

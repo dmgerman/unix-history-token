@@ -3764,7 +3764,7 @@ decl_stmt|;
 name|int
 name|dagfd
 decl_stmt|;
-comment|/* Try all the DAGs 0-9 */
+comment|/* Try all the DAGs 0-31 */
 for|for
 control|(
 name|c
@@ -3773,7 +3773,7 @@ literal|0
 init|;
 name|c
 operator|<
-literal|9
+literal|32
 condition|;
 name|c
 operator|++
@@ -3877,7 +3877,7 @@ literal|0
 init|;
 name|stream
 operator|<
-literal|16
+name|DAG_STREAM_MAX
 condition|;
 name|stream
 operator|+=
@@ -3945,6 +3945,18 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+block|}
+name|rxstreams
+operator|--
+expr_stmt|;
+if|if
+condition|(
+name|rxstreams
+operator|<=
+literal|0
+condition|)
+block|{
+break|break;
 block|}
 block|}
 block|}

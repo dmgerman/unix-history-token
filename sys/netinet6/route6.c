@@ -149,6 +149,9 @@ name|offp
 decl_stmt|,
 name|rhlen
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__notyet__
 name|struct
 name|ip6aux
 modifier|*
@@ -191,6 +194,8 @@ name|IPPROTO_DONE
 return|;
 block|}
 block|}
+endif|#
+directive|endif
 ifndef|#
 directive|ifndef
 name|PULLDOWN_TEST

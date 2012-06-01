@@ -518,15 +518,7 @@ specifier|const
 name|bool
 name|config_lazy_lock
 init|=
-ifdef|#
-directive|ifdef
-name|JEMALLOC_LAZY_LOCK
 name|true
-else|#
-directive|else
-name|false
-endif|#
-directive|endif
 decl_stmt|;
 end_decl_stmt
 

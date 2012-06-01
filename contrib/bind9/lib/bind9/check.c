@@ -2342,7 +2342,7 @@ name|acls
 index|[]
 init|=
 block|{
-literal|"client"
+literal|"clients"
 block|,
 literal|"exclude"
 block|,

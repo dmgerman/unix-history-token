@@ -811,6 +811,10 @@ operator|&
 literal|0x20
 condition|)
 return|return;
+name|val
+operator||=
+literal|0x20
+expr_stmt|;
 name|pci_write_config
 argument_list|(
 name|self

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -1291,6 +1291,9 @@ case|:
 case|case
 name|ZPOOL_PROP_FREE
 case|:
+case|case
+name|ZPOOL_PROP_EXPANDSZ
+case|:
 operator|(
 name|void
 operator|)
@@ -1696,9 +1699,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|boolean_t
-name|pool_is_bootable
+name|zpool_is_bootable
 parameter_list|(
 name|zpool_handle_t
 modifier|*
@@ -5010,7 +5012,7 @@ return|;
 block|}
 if|if
 condition|(
-name|pool_is_bootable
+name|zpool_is_bootable
 argument_list|(
 name|zhp
 argument_list|)
@@ -11235,7 +11237,7 @@ decl_stmt|;
 name|boolean_t
 name|rootpool
 init|=
-name|pool_is_bootable
+name|zpool_is_bootable
 argument_list|(
 name|zhp
 argument_list|)
@@ -14487,6 +14489,119 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Reopen the pool.  */
+end_comment
+
+begin_function
+name|int
+name|zpool_reopen
+parameter_list|(
+name|zpool_handle_t
+modifier|*
+name|zhp
+parameter_list|)
+block|{
+name|zfs_cmd_t
+name|zc
+init|=
+block|{
+literal|0
+block|}
+decl_stmt|;
+name|char
+name|msg
+index|[
+literal|1024
+index|]
+decl_stmt|;
+name|libzfs_handle_t
+modifier|*
+name|hdl
+init|=
+name|zhp
+operator|->
+name|zpool_hdl
+decl_stmt|;
+operator|(
+name|void
+operator|)
+name|snprintf
+argument_list|(
+name|msg
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|msg
+argument_list|)
+argument_list|,
+name|dgettext
+argument_list|(
+name|TEXT_DOMAIN
+argument_list|,
+literal|"cannot reopen '%s'"
+argument_list|)
+argument_list|,
+name|zhp
+operator|->
+name|zpool_name
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|strlcpy
+argument_list|(
+name|zc
+operator|.
+name|zc_name
+argument_list|,
+name|zhp
+operator|->
+name|zpool_name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|zc
+operator|.
+name|zc_name
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|zfs_ioctl
+argument_list|(
+name|hdl
+argument_list|,
+name|ZFS_IOC_POOL_REOPEN
+argument_list|,
+operator|&
+name|zc
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+return|return
+operator|(
+name|zpool_standard_error
+argument_list|(
+name|hdl
+argument_list|,
+name|errno
+argument_list|,
+name|msg
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Convert from a devid string to a path.  */
 end_comment
 
@@ -17601,7 +17716,7 @@ name|nvroot
 decl_stmt|;
 if|if
 condition|(
-name|pool_is_bootable
+name|zpool_is_bootable
 argument_list|(
 name|zhp
 argument_list|)

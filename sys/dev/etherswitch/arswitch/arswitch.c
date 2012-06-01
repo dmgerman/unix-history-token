@@ -1076,6 +1076,7 @@ operator|->
 name|is_gmii
 argument_list|)
 expr_stmt|;
+comment|/* 	 * This requires much more setup depending upon each chip, including: 	 * 	 * + Proper reinitialisation of the PHYs; 	 * + Initialising the VLAN table; 	 * + Initialising the port access table and CPU flood/broadcast 	 *   configuration; 	 * + Other things I haven't yet thought of. 	 */
 ifdef|#
 directive|ifdef
 name|NOTYET
@@ -1118,17 +1119,6 @@ name|ENXIO
 operator|)
 return|;
 block|}
-name|arswitch_modifyreg
-argument_list|(
-name|dev
-argument_list|,
-name|AR8X16_REG_GLOBAL_CTRL
-argument_list|,
-name|AR8X16_FLOOD_MASK_BCAST_TO_CPU
-argument_list|,
-name|AR8X16_FLOOD_MASK_BCAST_TO_CPU
-argument_list|)
-expr_stmt|;
 endif|#
 directive|endif
 name|err

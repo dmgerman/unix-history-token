@@ -583,8 +583,13 @@ name|tsb_nenter_u_oc
 argument_list|)
 expr_stmt|;
 block|}
-name|MDPAGE_ASSERT_WLOCKED
-argument_list|()
+name|rw_assert
+argument_list|(
+operator|&
+name|tte_list_global_lock
+argument_list|,
+name|RA_WLOCKED
+argument_list|)
 expr_stmt|;
 name|PMAP_LOCK_ASSERT
 argument_list|(

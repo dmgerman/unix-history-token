@@ -477,7 +477,7 @@ name|p
 operator|->
 name|argp
 expr_stmt|;
-comment|/* u_int32_t * */
+comment|/* uint32_t * */
 name|uarg
 index|[
 literal|2
@@ -490,7 +490,7 @@ name|p
 operator|->
 name|envp
 expr_stmt|;
-comment|/* u_int32_t * */
+comment|/* uint32_t * */
 operator|*
 name|n_args
 operator|=
@@ -10852,7 +10852,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"u_int32_t *"
+literal|"uint32_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -10860,7 +10860,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"u_int32_t *"
+literal|"uint32_t *"
 expr_stmt|;
 break|break;
 default|default:

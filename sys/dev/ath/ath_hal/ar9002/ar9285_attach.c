@@ -276,6 +276,22 @@ name|ah
 parameter_list|,
 name|HAL_BOOL
 name|restore
+parameter_list|,
+name|HAL_BOOL
+name|power_off
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|ar9285DisablePCIE
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -726,6 +742,12 @@ operator|->
 name|ah_configPCIE
 operator|=
 name|ar9285ConfigPCIE
+expr_stmt|;
+name|ah
+operator|->
+name|ah_disablePCIE
+operator|=
+name|ar9285DisablePCIE
 expr_stmt|;
 name|ah
 operator|->
@@ -1745,6 +1767,9 @@ name|ah
 parameter_list|,
 name|HAL_BOOL
 name|restore
+parameter_list|,
+name|HAL_BOOL
+name|power_off
 parameter_list|)
 block|{
 if|if
@@ -1801,6 +1826,21 @@ name|AR9285_WA_DEFAULT
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|ar9285DisablePCIE
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|)
+block|{
+comment|/* XXX TODO */
 block|}
 end_function
 

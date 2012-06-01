@@ -10566,7 +10566,7 @@ block|{
 name|int
 name|lockflags
 decl_stmt|;
-comment|/* 		 * Buffer is in-core.  If the buffer is not busy, it must 		 * be on a queue. 		 */
+comment|/* 		 * Buffer is in-core.  If the buffer is not busy nor managed, 		 * it must be on a queue. 		 */
 name|lockflags
 operator|=
 name|LK_EXCLUSIVE
@@ -10665,6 +10665,25 @@ name|b_flags
 operator||=
 name|B_CACHE
 expr_stmt|;
+if|if
+condition|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_MANAGED
+condition|)
+name|MPASS
+argument_list|(
+name|bp
+operator|->
+name|b_qindex
+operator|==
+name|QUEUE_NONE
+argument_list|)
+expr_stmt|;
+else|else
+block|{
 name|BO_LOCK
 argument_list|(
 name|bo
@@ -10680,6 +10699,7 @@ argument_list|(
 name|bo
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 		 * check for size inconsistancies for non-VMIO case. 		 */
 if|if
 condition|(

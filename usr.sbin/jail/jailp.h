@@ -1182,16 +1182,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|extern
-name|int
-name|yyparse
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -1222,6 +1212,13 @@ specifier|const
 name|char
 modifier|*
 name|cfname
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|iflag
 decl_stmt|;
 end_decl_stmt
 

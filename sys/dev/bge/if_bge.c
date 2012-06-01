@@ -13949,35 +13949,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|bge_dev
-argument_list|,
-literal|"dev : %s%d, bus : %s%d\n"
-argument_list|,
-name|device_get_name
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-name|device_get_unit
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-name|device_get_name
-argument_list|(
-name|bus
-argument_list|)
-argument_list|,
-name|device_get_unit
-argument_list|(
-name|bus
-argument_list|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|device_get_devclass
@@ -14002,36 +13973,6 @@ name|i
 operator|++
 control|)
 block|{
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|bge_dev
-argument_list|,
-literal|"probing dev : %s%d, vendor : 0x%04x "
-literal|"device : 0x%04x\n"
-argument_list|,
-name|device_get_name
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-name|device_get_unit
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-name|pci_get_vendor
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-name|pci_get_device
-argument_list|(
-name|dev
-argument_list|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|pci_get_vendor
@@ -14390,11 +14331,6 @@ operator|->
 name|bge_dev
 operator|=
 name|dev
-expr_stmt|;
-name|bge_add_sysctls
-argument_list|(
-name|sc
-argument_list|)
 expr_stmt|;
 name|TASK_INIT
 argument_list|(
@@ -14906,6 +14842,12 @@ name|BGE_FLAG_5705_PLUS
 expr_stmt|;
 break|break;
 block|}
+comment|/* Add SYSCTLs, requires the chipset family to be set. */
+name|bge_add_sysctls
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* Set various PHY bug flags. */
 if|if
 condition|(
@@ -17679,12 +17621,6 @@ name|PCIM_EXP_CTL_RELAXED_ORD_ENABLE
 operator||
 name|PCIM_EXP_CTL_NOSNOOP_ENABLE
 operator|)
-expr_stmt|;
-comment|/* Set PCIE max payload size to 128. */
-name|devctl
-operator|&=
-operator|~
-name|PCIM_EXP_CTL_MAX_PAYLOAD
 expr_stmt|;
 name|pci_write_config
 argument_list|(

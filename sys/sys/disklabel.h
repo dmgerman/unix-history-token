@@ -976,6 +976,17 @@ begin_comment
 comment|/* Sun's ZFS */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|FS_NANDFS
+value|30
+end_define
+
+begin_comment
+comment|/* FreeBSD nandfs (NiLFS derived) */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1046,6 +1057,12 @@ block|,
 literal|"EFS"
 block|,
 literal|"ZFS"
+block|,
+literal|"?"
+block|,
+literal|"?"
+block|,
+literal|"nandfs"
 block|,
 name|NULL
 block|}

@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"zfsimpl.h"
 end_include
 
@@ -43,6 +49,7 @@ begin_struct
 struct|struct
 name|zfsmount
 block|{
+specifier|const
 name|spa_t
 modifier|*
 name|spa
@@ -149,6 +156,7 @@ specifier|static
 name|int
 name|zio_read
 parameter_list|(
+specifier|const
 name|spa_t
 modifier|*
 name|spa
@@ -1270,8 +1278,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" = 0x%llx\n"
+literal|" = 0x%jx\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|val
 argument_list|)
 expr_stmt|;
@@ -1507,7 +1518,7 @@ operator|=
 name|size
 expr_stmt|;
 block|}
-comment|/*printf("ZFS: reading %d bytes at 0x%llx to %p\n", psize, offset, buf);*/
+comment|/*printf("ZFS: reading %d bytes at 0x%jx to %p\n", psize, (uintmax_t)offset, buf);*/
 name|rc
 operator|=
 name|vdev
@@ -2919,118 +2930,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BOOT2
-end_ifndef
-
-begin_function
-specifier|static
-name|spa_t
-modifier|*
-name|spa_find_by_unit
-parameter_list|(
-name|int
-name|unit
-parameter_list|)
-block|{
-name|spa_t
-modifier|*
-name|spa
-decl_stmt|;
-name|STAILQ_FOREACH
-argument_list|(
-argument|spa
-argument_list|,
-argument|&zfs_pools
-argument_list|,
-argument|spa_link
-argument_list|)
-block|{
-if|if
-condition|(
-name|unit
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-name|spa
-operator|)
-return|;
-name|unit
-operator|--
-expr_stmt|;
-block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
-name|zfs_guid_to_unit
-parameter_list|(
-name|uint64_t
-name|guid
-parameter_list|)
-block|{
-name|spa_t
-modifier|*
-name|spa
-decl_stmt|;
-name|int
-name|unit
-decl_stmt|;
-name|unit
-operator|=
-literal|0
-expr_stmt|;
-name|STAILQ_FOREACH
-argument_list|(
-argument|spa
-argument_list|,
-argument|&zfs_pools
-argument_list|,
-argument|spa_link
-argument_list|)
-block|{
-if|if
-condition|(
-name|spa
-operator|->
-name|spa_guid
-operator|==
-name|guid
-condition|)
-return|return
-operator|(
-name|unit
-operator|)
-return|;
-name|unit
-operator|++
-expr_stmt|;
-block|}
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
@@ -4520,6 +4419,7 @@ specifier|static
 name|int
 name|zio_read_gang
 parameter_list|(
+specifier|const
 name|spa_t
 modifier|*
 name|spa
@@ -4719,6 +4619,7 @@ specifier|static
 name|int
 name|zio_read
 parameter_list|(
+specifier|const
 name|spa_t
 modifier|*
 name|spa
@@ -5069,6 +4970,7 @@ specifier|static
 name|int
 name|dnode_read
 parameter_list|(
+specifier|const
 name|spa_t
 modifier|*
 name|spa
@@ -5343,10 +5245,6 @@ specifier|static
 name|int
 name|mzap_lookup
 parameter_list|(
-name|spa_t
-modifier|*
-name|spa
-parameter_list|,
 specifier|const
 name|dnode_phys_t
 modifier|*
@@ -5707,6 +5605,7 @@ specifier|static
 name|int
 name|fzap_lookup
 parameter_list|(
+specifier|const
 name|spa_t
 modifier|*
 name|spa
@@ -6144,6 +6043,7 @@ specifier|static
 name|int
 name|zap_lookup
 parameter_list|(
+specifier|const
 name|spa_t
 modifier|*
 name|spa
@@ -6220,8 +6120,6 @@ condition|)
 return|return
 name|mzap_lookup
 argument_list|(
-name|spa
-argument_list|,
 name|dnode
 argument_list|,
 name|name
@@ -6281,10 +6179,6 @@ specifier|static
 name|int
 name|mzap_list
 parameter_list|(
-name|spa_t
-modifier|*
-name|spa
-parameter_list|,
 specifier|const
 name|dnode_phys_t
 modifier|*
@@ -6368,7 +6262,7 @@ index|[
 literal|0
 index|]
 condition|)
-comment|//printf("%-32s 0x%llx\n", mze->mze_name, mze->mze_value);
+comment|//printf("%-32s 0x%jx\n", mze->mze_name, (uintmax_t)mze->mze_value);
 name|printf
 argument_list|(
 literal|"%s\n"
@@ -6396,6 +6290,7 @@ specifier|static
 name|int
 name|fzap_list
 parameter_list|(
+specifier|const
 name|spa_t
 modifier|*
 name|spa
@@ -6716,10 +6611,13 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s 0x%llx\n"
+literal|"%s 0x%jx\n"
 argument_list|,
 name|name
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|value
 argument_list|)
 expr_stmt|;
@@ -6742,6 +6640,7 @@ specifier|static
 name|int
 name|zap_list
 parameter_list|(
+specifier|const
 name|spa_t
 modifier|*
 name|spa
@@ -6802,8 +6701,6 @@ condition|)
 return|return
 name|mzap_list
 argument_list|(
-name|spa
-argument_list|,
 name|dnode
 argument_list|)
 return|;
@@ -6829,6 +6726,7 @@ specifier|static
 name|int
 name|objset_get_dnode
 parameter_list|(
+specifier|const
 name|spa_t
 modifier|*
 name|spa
@@ -6886,6 +6784,7 @@ specifier|static
 name|int
 name|mzap_rlookup
 parameter_list|(
+specifier|const
 name|spa_t
 modifier|*
 name|spa
@@ -7135,6 +7034,7 @@ specifier|static
 name|int
 name|fzap_rlookup
 parameter_list|(
+specifier|const
 name|spa_t
 modifier|*
 name|spa
@@ -7565,6 +7465,7 @@ specifier|static
 name|int
 name|zap_rlookup
 parameter_list|(
+specifier|const
 name|spa_t
 modifier|*
 name|spa
@@ -7669,6 +7570,7 @@ specifier|static
 name|int
 name|zfs_rlookup
 parameter_list|(
+specifier|const
 name|spa_t
 modifier|*
 name|spa
@@ -7762,8 +7664,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ZFS: can't find dataset %llu\n"
+literal|"ZFS: can't find dataset %ju\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|objnum
 argument_list|)
 expr_stmt|;
@@ -7995,6 +7900,7 @@ specifier|static
 name|int
 name|zfs_lookup_dataset
 parameter_list|(
+specifier|const
 name|spa_t
 modifier|*
 name|spa
@@ -8277,6 +8183,7 @@ specifier|static
 name|int
 name|zfs_mount_dataset
 parameter_list|(
+specifier|const
 name|spa_t
 modifier|*
 name|spa
@@ -8316,8 +8223,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ZFS: can't find dataset %llu\n"
+literal|"ZFS: can't find dataset %ju\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|objnum
 argument_list|)
 expr_stmt|;
@@ -8355,8 +8265,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ZFS: can't read object set for dataset %llu\n"
+literal|"ZFS: can't read object set for dataset %ju\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|objnum
 argument_list|)
 expr_stmt|;
@@ -8383,6 +8296,7 @@ specifier|static
 name|int
 name|zfs_get_root
 parameter_list|(
+specifier|const
 name|spa_t
 modifier|*
 name|spa
@@ -8582,6 +8496,7 @@ specifier|static
 name|int
 name|zfs_mount
 parameter_list|(
+specifier|const
 name|spa_t
 modifier|*
 name|spa
@@ -8743,6 +8658,7 @@ specifier|static
 name|int
 name|zfs_dnode_stat
 parameter_list|(
+specifier|const
 name|spa_t
 modifier|*
 name|spa
@@ -9084,6 +9000,7 @@ name|rootnum
 decl_stmt|,
 name|parentnum
 decl_stmt|;
+specifier|const
 name|spa_t
 modifier|*
 name|spa
@@ -9139,8 +9056,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ZFS: unexpected object set type %llu\n"
+literal|"ZFS: unexpected object set type %ju\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|mount
 operator|->
 name|objset

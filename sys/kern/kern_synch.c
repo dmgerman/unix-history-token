@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_kdtrace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_ktrace.h"
 end_include
 
@@ -93,6 +99,12 @@ begin_include
 include|#
 directive|include
 file|<sys/sched.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sdt.h>
 end_include
 
 begin_include
@@ -355,6 +367,100 @@ name|arg
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_expr_stmt
+name|SDT_PROVIDER_DECLARE
+argument_list|(
+name|sched
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE
+argument_list|(
+name|sched
+argument_list|, , ,
+name|preempt
+argument_list|,
+name|preempt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/*  * These probes reference Solaris features that are not implemented in FreeBSD.  * Create the probes anyway for compatibility with existing D scripts; they'll  * just never fire.  */
+end_comment
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE
+argument_list|(
+name|sched
+argument_list|, , ,
+name|cpucaps_sleep
+argument_list|,
+name|cpucaps
+operator|-
+name|sleep
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE
+argument_list|(
+name|sched
+argument_list|, , ,
+name|cpucaps_wakeup
+argument_list|,
+name|cpucaps
+operator|-
+name|wakeup
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE
+argument_list|(
+name|sched
+argument_list|, , ,
+name|schedctl_nopreempt
+argument_list|,
+name|schedctl
+operator|-
+name|nopreempt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE
+argument_list|(
+name|sched
+argument_list|, , ,
+name|schedctl_preempt
+argument_list|,
+name|schedctl
+operator|-
+name|preempt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE
+argument_list|(
+name|sched
+argument_list|, , ,
+name|schedctl_yield
+argument_list|,
+name|schedctl
+operator|-
+name|yield
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|void
@@ -1873,6 +1979,13 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|SDT_PROBE0
+argument_list|(
+name|sched
+argument_list|, , ,
+name|preempt
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|XEN

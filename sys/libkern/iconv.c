@@ -481,6 +481,11 @@ modifier|*
 name|dcp
 parameter_list|)
 block|{
+name|dcp
+operator|->
+name|refs
+operator|--
+expr_stmt|;
 if|if
 condition|(
 name|dcp
@@ -2582,7 +2587,6 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-comment|/* XXX ISO variadic								macros cannot 								leave out the 								variadic args */
 return|return
 name|ENOENT
 return|;

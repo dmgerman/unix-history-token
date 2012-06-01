@@ -25,16 +25,18 @@ begin_comment
 comment|/*  * On amd64 (PT_FIRSTMACH + 0) and (PT_FIRSTMACH + 1) are old values for  * PT_GETXSTATE and PT_SETXSTATE.  They should not be (re)used.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|PT_GETXMMREGS
 value|(PT_FIRSTMACH + 0)
 end_define
-
-begin_comment
-comment|/* i386 only */
-end_comment
 
 begin_define
 define|#
@@ -43,9 +45,10 @@ name|PT_SETXMMREGS
 value|(PT_FIRSTMACH + 1)
 end_define
 
-begin_comment
-comment|/* i386 only */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

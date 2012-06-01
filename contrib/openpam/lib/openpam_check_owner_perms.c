@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2011 Dag-Erling SmÃ¸rgrav  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: openpam_check_owner_perms.c 499 2011-11-22 11:51:50Z des $  */
+comment|/*-  * Copyright (c) 2011 Dag-Erling SmÃ¸rgrav  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: openpam_check_owner_perms.c 543 2012-03-31 22:11:34Z des $  */
 end_comment
 
 begin_ifdef
@@ -151,6 +151,37 @@ return|;
 block|}
 if|if
 condition|(
+operator|!
+name|S_ISREG
+argument_list|(
+name|sb
+operator|.
+name|st_mode
+argument_list|)
+condition|)
+block|{
+name|openpam_log
+argument_list|(
+name|PAM_LOG_ERROR
+argument_list|,
+literal|"%s: not a regular file"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+if|if
+condition|(
 operator|(
 name|sb
 operator|.
@@ -209,7 +240,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * OpenPAM internal  *  * Verify that a file or directory and all components of the path leading  * up to it are owned by either root or the arbitrator and that they are  * not writable by group or other.  *  * Note that openpam_check_file_owner_perms() should be used instead if  * possible to avoid a race between the ownership / permission check and  * the actual open().  */
+comment|/*  * OpenPAM internal  *  * Verify that a file or directory and all components of the path leading  * up to it are owned by either root or the arbitrator and that they are  * not writable by group or other.  *  * Note that openpam_check_desc_owner_perms() should be used instead if  * possible to avoid a race between the ownership / permission check and  * the actual open().  */
 end_comment
 
 begin_function
@@ -241,7 +272,13 @@ name|int
 name|len
 decl_stmt|,
 name|serrno
+decl_stmt|,
+name|tip
 decl_stmt|;
+name|tip
+operator|=
+literal|1
+expr_stmt|;
 name|root
 operator|=
 literal|0
@@ -329,6 +366,39 @@ return|;
 block|}
 if|if
 condition|(
+name|tip
+operator|&&
+operator|!
+name|S_ISREG
+argument_list|(
+name|sb
+operator|.
+name|st_mode
+argument_list|)
+condition|)
+block|{
+name|openpam_log
+argument_list|(
+name|PAM_LOG_ERROR
+argument_list|,
+literal|"%s: not a regular file"
+argument_list|,
+name|pathbuf
+argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+if|if
+condition|(
 operator|(
 name|sb
 operator|.
@@ -398,6 +468,10 @@ name|len
 index|]
 operator|=
 literal|'\0'
+expr_stmt|;
+name|tip
+operator|=
+literal|0
 expr_stmt|;
 block|}
 return|return

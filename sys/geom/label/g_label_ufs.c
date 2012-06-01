@@ -231,7 +231,7 @@ operator|==
 name|NULL
 condition|)
 continue|continue;
-comment|/* Check for magic and make sure things are the right size */
+comment|/* Check for magic. We also need to check if file system size is equal 		 * to providers size, because sysinstall(8) used to bogusly put first 		 * partition at offset 0 instead of 16, and glabel/ufs would find file 		 * system on slice instead of partition. 		 */
 if|if
 condition|(
 name|fs

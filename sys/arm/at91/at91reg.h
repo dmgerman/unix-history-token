@@ -37,6 +37,17 @@ value|0xd0000000
 end_define
 
 begin_comment
+comment|/* Where builtin peripherals start PA */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91_PA_BASE
+value|0xf0000000
+end_define
+
+begin_comment
 comment|/* A few things that we count on being the same  * throught the whole family of SOCs */
 end_comment
 

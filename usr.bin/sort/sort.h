@@ -150,6 +150,13 @@ name|SORT_THREADS
 argument_list|)
 end_if
 
+begin_define
+define|#
+directive|define
+name|MT_SORT_THRESHOLD
+value|(10000)
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|size_t

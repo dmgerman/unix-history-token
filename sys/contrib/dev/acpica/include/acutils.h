@@ -2311,6 +2311,17 @@ comment|/*  * utmisc  */
 end_comment
 
 begin_function_decl
+name|void
+name|UtConvertBackslashes
+parameter_list|(
+name|char
+modifier|*
+name|Pathname
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|const
 name|char
 modifier|*

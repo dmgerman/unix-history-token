@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -796,11 +796,22 @@ modifier|*
 name|nvp
 parameter_list|)
 block|{
+name|vdev_t
+modifier|*
+name|rvd
+init|=
+name|spa
+operator|->
+name|spa_root_vdev
+decl_stmt|;
 name|uint64_t
 name|size
 decl_stmt|;
 name|uint64_t
 name|alloc
+decl_stmt|;
+name|uint64_t
+name|space
 decl_stmt|;
 name|uint64_t
 name|cap
@@ -829,9 +840,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|spa
-operator|->
-name|spa_root_vdev
+name|rvd
 operator|!=
 name|NULL
 condition|)
@@ -917,6 +926,63 @@ argument_list|,
 name|src
 argument_list|)
 expr_stmt|;
+name|space
+operator|=
+literal|0
+expr_stmt|;
+for|for
+control|(
+name|int
+name|c
+init|=
+literal|0
+init|;
+name|c
+operator|<
+name|rvd
+operator|->
+name|vdev_children
+condition|;
+name|c
+operator|++
+control|)
+block|{
+name|vdev_t
+modifier|*
+name|tvd
+init|=
+name|rvd
+operator|->
+name|vdev_child
+index|[
+name|c
+index|]
+decl_stmt|;
+name|space
+operator|+=
+name|tvd
+operator|->
+name|vdev_max_asize
+operator|-
+name|tvd
+operator|->
+name|vdev_asize
+expr_stmt|;
+block|}
+name|spa_prop_add_list
+argument_list|(
+operator|*
+name|nvp
+argument_list|,
+name|ZPOOL_PROP_EXPANDSZ
+argument_list|,
+name|NULL
+argument_list|,
+name|space
+argument_list|,
+name|src
+argument_list|)
+expr_stmt|;
 name|spa_prop_add_list
 argument_list|(
 operator|*
@@ -996,9 +1062,7 @@ name|ZPOOL_PROP_HEALTH
 argument_list|,
 name|NULL
 argument_list|,
-name|spa
-operator|->
-name|spa_root_vdev
+name|rvd
 operator|->
 name|vdev_state
 argument_list|,
@@ -9378,7 +9442,7 @@ argument_list|,
 literal|"pool '%s' could not be "
 literal|"loaded as it was last accessed by "
 literal|"another system (host: %s hostid: 0x%lx). "
-literal|"See: http://www.sun.com/msg/ZFS-8000-EY"
+literal|"See: http://illumos.org/msg/ZFS-8000-EY"
 argument_list|,
 name|spa_name
 argument_list|(

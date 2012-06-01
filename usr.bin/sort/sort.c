@@ -191,8 +191,6 @@ begin_decl_stmt
 specifier|static
 name|bool
 name|need_random
-init|=
-name|false
 decl_stmt|;
 end_decl_stmt
 
@@ -213,8 +211,6 @@ specifier|const
 name|void
 modifier|*
 name|random_seed
-init|=
-name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -222,8 +218,6 @@ begin_decl_stmt
 specifier|static
 name|size_t
 name|random_seed_size
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -248,13 +242,13 @@ block|{
 literal|""
 block|,
 comment|/* 1*/
-literal|"you cannot use -%c and -%c together"
+literal|"mutually exclusive flags"
 block|,
 comment|/* 2*/
 literal|"extra argument not allowed with -c"
 block|,
 comment|/* 3*/
-literal|"Unknown feature: %s"
+literal|"Unknown feature"
 block|,
 comment|/* 4*/
 literal|"Wrong memory buffer specification"
@@ -285,6 +279,7 @@ literal|"Usage: %s [-bcCdfigMmnrsuz] [-kPOS1[,POS2] ... ] "
 literal|"[+POS1 [-POS2]] [-S memsize] [-T tmpdir] [-t separator] "
 literal|"[-o outfile] [--batch-size size] [--files0-from file] "
 literal|"[--heapsort] [--mergesort] [--radixsort] [--qsort] "
+literal|"[--mmap] "
 if|#
 directive|if
 name|defined
@@ -311,16 +306,12 @@ end_decl_stmt
 begin_decl_stmt
 name|bool
 name|debug_sort
-init|=
-name|false
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|bool
 name|need_hint
-init|=
-name|false
 decl_stmt|;
 end_decl_stmt
 
@@ -358,8 +349,6 @@ begin_decl_stmt
 specifier|static
 name|bool
 name|gnusort_numeric_compatibility
-init|=
-name|false
 decl_stmt|;
 end_decl_stmt
 
@@ -387,8 +376,6 @@ begin_decl_stmt
 specifier|static
 name|bool
 name|print_symbols_on_debug
-init|=
-name|false
 decl_stmt|;
 end_decl_stmt
 
@@ -412,8 +399,6 @@ name|char
 modifier|*
 modifier|*
 name|argv_from_file0
-init|=
-name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -461,6 +446,8 @@ block|,
 name|HEAPSORT_OPT
 block|,
 name|RADIXSORT_OPT
+block|,
+name|MMAP_OPT
 block|}
 enum|;
 end_enum
@@ -692,6 +679,16 @@ block|,
 name|NULL
 block|,
 name|MERGESORT_OPT
+block|}
+block|,
+block|{
+literal|"mmap"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+name|MMAP_OPT
 block|}
 block|,
 block|{
@@ -1764,6 +1761,8 @@ condition|)
 block|{
 name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|getstr
 argument_list|(
 literal|4
@@ -1909,28 +1908,19 @@ name|sig_handler
 parameter_list|(
 name|int
 name|sig
+name|__unused
 parameter_list|,
 name|siginfo_t
 modifier|*
 name|siginfo
+name|__unused
 parameter_list|,
 name|void
 modifier|*
 name|context
+name|__unused
 parameter_list|)
 block|{
-name|sig
-operator|=
-name|sig
-expr_stmt|;
-name|siginfo
-operator|=
-name|siginfo
-expr_stmt|;
-name|context
-operator|=
-name|context
-expr_stmt|;
 name|clear_tmp_files
 argument_list|()
 expr_stmt|;
@@ -2205,6 +2195,8 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
+literal|"%s: %s"
+argument_list|,
 name|getstr
 argument_list|(
 literal|3
@@ -2298,14 +2290,16 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-name|getstr
-argument_list|(
-literal|1
-argument_list|)
+literal|"%c:%c: %s"
 argument_list|,
 name|c
 argument_list|,
 name|mec
+argument_list|,
+name|getstr
+argument_list|(
+literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|found_others
@@ -2328,10 +2322,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-name|getstr
-argument_list|(
-literal|1
-argument_list|)
+literal|"%c:%c: %s"
 argument_list|,
 name|c
 argument_list|,
@@ -2339,6 +2330,11 @@ name|mutually_exclusive_flags
 index|[
 name|fo_index
 index|]
+argument_list|,
+name|getstr
+argument_list|(
+literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|mef_flags
@@ -2867,6 +2863,8 @@ condition|)
 block|{
 name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|getstr
 argument_list|(
 literal|5
@@ -2929,6 +2927,8 @@ condition|)
 block|{
 name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|getstr
 argument_list|(
 literal|5
@@ -3111,6 +3111,8 @@ condition|)
 block|{
 name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|getstr
 argument_list|(
 literal|6
@@ -3745,6 +3747,8 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
+literal|"%s"
+argument_list|,
 name|getstr
 argument_list|(
 literal|11
@@ -3855,6 +3859,8 @@ condition|)
 name|errx
 argument_list|(
 literal|2
+argument_list|,
+literal|"%s"
 argument_list|,
 name|getstr
 argument_list|(
@@ -4829,11 +4835,6 @@ name|sort_realloc
 argument_list|(
 name|outfile
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|char
-argument_list|)
-operator|*
 operator|(
 name|strlen
 argument_list|(
@@ -4844,20 +4845,11 @@ literal|1
 operator|)
 argument_list|)
 expr_stmt|;
-name|strlcpy
+name|strcpy
 argument_list|(
 name|outfile
 argument_list|,
 name|optarg
-argument_list|,
-operator|(
-name|strlen
-argument_list|(
-name|optarg
-argument_list|)
-operator|+
-literal|1
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4896,7 +4888,7 @@ break|break;
 case|case
 literal|'t'
 case|:
-if|if
+while|while
 condition|(
 name|strlen
 argument_list|(
@@ -4908,12 +4900,12 @@ condition|)
 block|{
 if|if
 condition|(
-name|strcmp
-argument_list|(
 name|optarg
-argument_list|,
-literal|"\\0"
-argument_list|)
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\\'
 condition|)
 block|{
 name|errx
@@ -4931,11 +4923,25 @@ name|optarg
 argument_list|)
 expr_stmt|;
 block|}
+name|optarg
+operator|+=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|optarg
+operator|==
+literal|'0'
+condition|)
+block|{
 operator|*
 name|optarg
 operator|=
 literal|0
 expr_stmt|;
+break|break;
+block|}
 block|}
 name|sort_opts_vals
 operator|.
@@ -5229,6 +5235,14 @@ name|SORT_MERGESORT
 expr_stmt|;
 break|break;
 case|case
+name|MMAP_OPT
+case|:
+name|use_mmap
+operator|=
+name|true
+expr_stmt|;
+break|break;
+case|case
 name|HEAPSORT_OPT
 case|:
 name|sort_opts_vals
@@ -5415,14 +5429,16 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-name|getstr
-argument_list|(
-literal|1
-argument_list|)
+literal|"%c:%c: %s"
 argument_list|,
 literal|'m'
 argument_list|,
 literal|'c'
+argument_list|,
+name|getstr
+argument_list|(
+literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 ifndef|#
@@ -5858,6 +5874,44 @@ expr_stmt|;
 block|}
 block|}
 block|}
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SORT_THREADS
+argument_list|)
+if|if
+condition|(
+operator|(
+name|argc
+operator|<
+literal|1
+operator|)
+operator|||
+operator|(
+name|strcmp
+argument_list|(
+name|outfile
+argument_list|,
+literal|"-"
+argument_list|)
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|*
+name|outfile
+operator|==
+literal|0
+operator|)
+condition|)
+name|nthreads
+operator|=
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!

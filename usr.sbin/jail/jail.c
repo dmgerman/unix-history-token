@@ -141,6 +141,12 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|iflag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|note_remove
 decl_stmt|;
 end_decl_stmt
@@ -535,8 +541,6 @@ decl_stmt|;
 name|int
 name|dflag
 decl_stmt|,
-name|iflag
-decl_stmt|,
 name|Rflag
 decl_stmt|;
 name|char
@@ -587,8 +591,6 @@ operator|=
 literal|0
 expr_stmt|;
 name|dflag
-operator|=
-name|iflag
 operator|=
 name|Rflag
 operator|=
@@ -2098,19 +2100,6 @@ label|:
 name|clear_persist
 argument_list|(
 name|j
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|iflag
-condition|)
-name|printf
-argument_list|(
-literal|"%d\n"
-argument_list|,
-name|j
-operator|->
-name|jid
 argument_list|)
 expr_stmt|;
 if|if

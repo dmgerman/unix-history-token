@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -190,50 +190,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* maximum scrub/resilver I/O queue per leaf vdev */
-end_comment
-
-begin_decl_stmt
-name|int
-name|zfs_scrub_limit
-init|=
-literal|10
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"vfs.zfs.scrub_limit"
-argument_list|,
-operator|&
-name|zfs_scrub_limit
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_vfs_zfs
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|scrub_limit
-argument_list|,
-name|CTLFLAG_RDTUN
-argument_list|,
-operator|&
-name|zfs_scrub_limit
-argument_list|,
-literal|0
-argument_list|,
-literal|"Maximum scrub/resilver I/O queue"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/*  * Given a vdev type, return the appropriate ops vector.  */
 end_comment
 
@@ -402,7 +358,7 @@ name|vd
 operator|->
 name|vdev_parent
 decl_stmt|;
-comment|/* 	 * The our parent is NULL (inactive spare or cache) or is the root, 	 * just return our own asize. 	 */
+comment|/* 	 * If our parent is NULL (inactive spare or cache) or is the root, 	 * just return our own asize. 	 */
 if|if
 condition|(
 name|pvd
@@ -3506,6 +3462,14 @@ name|vdev_min_asize
 expr_stmt|;
 name|mvd
 operator|->
+name|vdev_max_asize
+operator|=
+name|cvd
+operator|->
+name|vdev_max_asize
+expr_stmt|;
+name|mvd
+operator|->
 name|vdev_ashift
 operator|=
 name|cvd
@@ -5276,7 +5240,14 @@ init|=
 literal|0
 decl_stmt|;
 name|uint64_t
+name|max_osize
+init|=
+literal|0
+decl_stmt|;
+name|uint64_t
 name|asize
+decl_stmt|,
+name|max_asize
 decl_stmt|,
 name|psize
 decl_stmt|;
@@ -5457,6 +5428,9 @@ name|vd
 argument_list|,
 operator|&
 name|osize
+argument_list|,
+operator|&
+name|max_osize
 argument_list|,
 operator|&
 name|ashift
@@ -5712,6 +5686,21 @@ name|vdev_label_t
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|max_osize
+operator|=
+name|P2ALIGN
+argument_list|(
+name|max_osize
+argument_list|,
+operator|(
+name|uint64_t
+operator|)
+sizeof|sizeof
+argument_list|(
+name|vdev_label_t
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vd
@@ -5752,6 +5741,16 @@ expr_stmt|;
 name|asize
 operator|=
 name|osize
+operator|-
+operator|(
+name|VDEV_LABEL_START_SIZE
+operator|+
+name|VDEV_LABEL_END_SIZE
+operator|)
+expr_stmt|;
+name|max_asize
+operator|=
+name|max_osize
 operator|-
 operator|(
 name|VDEV_LABEL_START_SIZE
@@ -5806,6 +5805,10 @@ name|asize
 operator|=
 name|osize
 expr_stmt|;
+name|max_asize
+operator|=
+name|max_osize
+expr_stmt|;
 block|}
 name|vd
 operator|->
@@ -5858,6 +5861,12 @@ name|asize
 expr_stmt|;
 name|vd
 operator|->
+name|vdev_max_asize
+operator|=
+name|max_asize
+expr_stmt|;
+name|vd
+operator|->
 name|vdev_ashift
 operator|=
 name|MAX
@@ -5901,6 +5910,12 @@ name|EINVAL
 operator|)
 return|;
 block|}
+name|vd
+operator|->
+name|vdev_max_asize
+operator|=
+name|max_asize
+expr_stmt|;
 block|}
 comment|/* 	 * If all children are healthy and the asize has increased, 	 * then we've experienced dynamic LUN growth.  If automatic 	 * expansion is enabled then use the additional space. 	 */
 if|if
@@ -11330,6 +11345,18 @@ operator|+=
 name|VDEV_LABEL_START_SIZE
 operator|+
 name|VDEV_LABEL_END_SIZE
+expr_stmt|;
+name|vs
+operator|->
+name|vs_esize
+operator|=
+name|vd
+operator|->
+name|vdev_max_asize
+operator|-
+name|vd
+operator|->
+name|vdev_asize
 expr_stmt|;
 name|mutex_exit
 argument_list|(

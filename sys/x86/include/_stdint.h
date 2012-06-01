@@ -93,7 +93,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_LP64
+name|__LP64__
 end_ifdef
 
 begin_define
@@ -260,7 +260,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_LP64
+name|__LP64__
 end_ifdef
 
 begin_define
@@ -522,7 +522,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_LP64
+name|__LP64__
 end_ifdef
 
 begin_define
@@ -609,7 +609,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_LP64
+name|__LP64__
 end_ifdef
 
 begin_comment

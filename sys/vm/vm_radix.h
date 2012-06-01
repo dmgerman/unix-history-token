@@ -201,7 +201,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-modifier|*
 name|vm_radix_remove
 parameter_list|(
 name|struct

@@ -369,6 +369,8 @@ if|if
 condition|(
 name|ethertype_print
 argument_list|(
+name|gndo
+argument_list|,
 name|ether_type
 argument_list|,
 name|p

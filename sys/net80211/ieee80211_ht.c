@@ -10124,6 +10124,23 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_function_decl
+specifier|static
+name|void
+name|bar_start_timer
+parameter_list|(
+name|struct
+name|ieee80211_tx_ampdu
+modifier|*
+name|tap
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 specifier|static
 name|void
@@ -10222,6 +10239,15 @@ operator|>=
 name|ieee80211_bar_maxtries
 condition|)
 block|{
+name|struct
+name|ieee80211com
+modifier|*
+name|ic
+init|=
+name|ni
+operator|->
+name|ni_ic
+decl_stmt|;
 name|ni
 operator|->
 name|ni_vap
@@ -10230,6 +10256,18 @@ name|iv_stats
 operator|.
 name|is_ampdu_bar_tx_fail
 operator|++
+expr_stmt|;
+comment|/* 		 * If (at least) the last BAR TX timeout was due to 		 * an ieee80211_send_bar() failures, then we need 		 * to make sure we notify the driver that a BAR 		 * TX did occur and fail.  This gives the driver 		 * a chance to undo any queue pause that may 		 * have occured. 		 */
+name|ic
+operator|->
+name|ic_bar_response
+argument_list|(
+name|ni
+argument_list|,
+name|tap
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 name|ieee80211_ampdu_stop
 argument_list|(
@@ -10252,6 +10290,8 @@ operator|.
 name|is_ampdu_bar_tx_retry
 operator|++
 expr_stmt|;
+if|if
+condition|(
 name|ieee80211_send_bar
 argument_list|(
 name|ni
@@ -10262,7 +10302,24 @@ name|tap
 operator|->
 name|txa_seqpending
 argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* 			 * If ieee80211_send_bar() fails here, the 			 * timer may have stopped and/or the pending 			 * flag may be clear.  Because of this, 			 * fake the BARPEND and reset the timer. 			 * A retransmission attempt will then occur 			 * during the next timeout. 			 */
+comment|/* XXX locking */
+name|tap
+operator|->
+name|txa_flags
+operator||=
+name|IEEE80211_AGGR_BARPEND
 expr_stmt|;
+name|bar_start_timer
+argument_list|(
+name|tap
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 end_function

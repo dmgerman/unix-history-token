@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001-2007, by Cisco Systems, Inc. All rights reserved.  * Copyright (c) 2008-2011, by Randall Stewart. All rights reserved.  * Copyright (c) 2008-2011, by Michael Tuexen. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *    this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
-end_comment
-
-begin_comment
-comment|/* $KAME: sctp_indata.c,v 1.36 2005/03/06 16:04:17 itojun Exp $	 */
+comment|/*-  * Copyright (c) 2001-2007, by Cisco Systems, Inc. All rights reserved.  * Copyright (c) 2008-2012, by Randall Stewart. All rights reserved.  * Copyright (c) 2008-2012, by Michael Tuexen. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *    this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -2990,8 +2986,6 @@ name|sctp_ep
 argument_list|,
 name|stcb
 argument_list|,
-name|SCTP_PEER_FAULTY
-argument_list|,
 name|oper
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
@@ -4249,8 +4243,6 @@ name|sctp_ep
 argument_list|,
 name|stcb
 argument_list|,
-name|SCTP_PEER_FAULTY
-argument_list|,
 name|oper
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
@@ -4468,8 +4460,6 @@ operator|->
 name|sctp_ep
 argument_list|,
 name|stcb
-argument_list|,
-name|SCTP_PEER_FAULTY
 argument_list|,
 name|oper
 argument_list|,
@@ -4702,8 +4692,6 @@ operator|->
 name|sctp_ep
 argument_list|,
 name|stcb
-argument_list|,
-name|SCTP_PEER_FAULTY
 argument_list|,
 name|oper
 argument_list|,
@@ -4938,8 +4926,6 @@ operator|->
 name|sctp_ep
 argument_list|,
 name|stcb
-argument_list|,
-name|SCTP_PEER_FAULTY
 argument_list|,
 name|oper
 argument_list|,
@@ -5399,8 +5385,6 @@ name|sctp_ep
 argument_list|,
 name|stcb
 argument_list|,
-name|SCTP_PEER_FAULTY
-argument_list|,
 name|oper
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
@@ -5630,8 +5614,6 @@ operator|->
 name|sctp_ep
 argument_list|,
 name|stcb
-argument_list|,
-name|SCTP_PEER_FAULTY
 argument_list|,
 name|oper
 argument_list|,
@@ -5879,8 +5861,6 @@ name|sctp_ep
 argument_list|,
 name|stcb
 argument_list|,
-name|SCTP_PEER_FAULTY
-argument_list|,
 name|oper
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
@@ -6113,8 +6093,6 @@ operator|->
 name|sctp_ep
 argument_list|,
 name|stcb
-argument_list|,
-name|SCTP_PEER_FAULTY
 argument_list|,
 name|oper
 argument_list|,
@@ -6384,8 +6362,6 @@ name|sctp_ep
 argument_list|,
 name|stcb
 argument_list|,
-name|SCTP_PEER_FAULTY
-argument_list|,
 name|oper
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
@@ -6640,8 +6616,6 @@ name|sctp_ep
 argument_list|,
 name|stcb
 argument_list|,
-name|SCTP_PEER_FAULTY
-argument_list|,
 name|oper
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
@@ -6873,8 +6847,6 @@ operator|->
 name|sctp_ep
 argument_list|,
 name|stcb
-argument_list|,
-name|SCTP_PEER_FAULTY
 argument_list|,
 name|oper
 argument_list|,
@@ -7121,8 +7093,6 @@ operator|->
 name|sctp_ep
 argument_list|,
 name|stcb
-argument_list|,
-name|SCTP_PEER_FAULTY
 argument_list|,
 name|oper
 argument_list|,
@@ -7832,8 +7802,6 @@ operator|->
 name|sctp_ep
 argument_list|,
 name|stcb
-argument_list|,
-literal|0
 argument_list|,
 name|op_err
 argument_list|,
@@ -8700,8 +8668,6 @@ operator|->
 name|sctp_ep
 argument_list|,
 name|stcb
-argument_list|,
-name|SCTP_PEER_FAULTY
 argument_list|,
 name|oper
 argument_list|,
@@ -10023,8 +9989,6 @@ name|sctp_ep
 argument_list|,
 name|stcb
 argument_list|,
-name|SCTP_PEER_FAULTY
-argument_list|,
 name|oper
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
@@ -10254,8 +10218,6 @@ operator|->
 name|sctp_ep
 argument_list|,
 name|stcb
-argument_list|,
-name|SCTP_PEER_FAULTY
 argument_list|,
 name|oper
 argument_list|,
@@ -10502,8 +10464,6 @@ operator|->
 name|sctp_ep
 argument_list|,
 name|stcb
-argument_list|,
-name|SCTP_PEER_FAULTY
 argument_list|,
 name|oper
 argument_list|,
@@ -16303,11 +16263,7 @@ name|stcb
 argument_list|,
 name|tp1
 argument_list|,
-operator|(
-name|SCTP_RESPONSE_TO_USER_REQ
-operator||
-name|SCTP_NOTIFY_DATAGRAM_SENT
-operator|)
+literal|1
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
 argument_list|)
@@ -17154,11 +17110,7 @@ name|stcb
 argument_list|,
 name|tp1
 argument_list|,
-operator|(
-name|SCTP_RESPONSE_TO_USER_REQ
-operator||
-name|SCTP_NOTIFY_DATAGRAM_SENT
-operator|)
+literal|1
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
 argument_list|)
@@ -17734,11 +17686,7 @@ name|stcb
 argument_list|,
 name|tp1
 argument_list|,
-operator|(
-name|SCTP_RESPONSE_TO_USER_REQ
-operator||
-name|SCTP_NOTIFY_DATAGRAM_SENT
-operator|)
+literal|1
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
 argument_list|)
@@ -18815,8 +18763,6 @@ name|sctp_ep
 argument_list|,
 name|stcb
 argument_list|,
-name|SCTP_PEER_FAULTY
-argument_list|,
 name|oper
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
@@ -19608,7 +19554,7 @@ name|SCTP_NOTIFY_INTERFACE_UP
 argument_list|,
 name|stcb
 argument_list|,
-name|SCTP_RECEIVED_SACK
+literal|0
 argument_list|,
 operator|(
 name|void
@@ -20607,8 +20553,6 @@ operator|->
 name|sctp_ep
 argument_list|,
 name|stcb
-argument_list|,
-name|SCTP_RESPONSE_TO_USER_REQ
 argument_list|,
 name|oper
 argument_list|,
@@ -21679,8 +21623,6 @@ operator|->
 name|sctp_ep
 argument_list|,
 name|stcb
-argument_list|,
-name|SCTP_PEER_FAULTY
 argument_list|,
 name|oper
 argument_list|,
@@ -23333,7 +23275,7 @@ name|SCTP_NOTIFY_INTERFACE_UP
 argument_list|,
 name|stcb
 argument_list|,
-name|SCTP_RECEIVED_SACK
+literal|0
 argument_list|,
 operator|(
 name|void
@@ -23958,8 +23900,6 @@ operator|->
 name|sctp_ep
 argument_list|,
 name|stcb
-argument_list|,
-name|SCTP_RESPONSE_TO_USER_REQ
 argument_list|,
 name|oper
 argument_list|,
@@ -26005,8 +25945,6 @@ operator|->
 name|sctp_ep
 argument_list|,
 name|stcb
-argument_list|,
-name|SCTP_PEER_FAULTY
 argument_list|,
 name|oper
 argument_list|,

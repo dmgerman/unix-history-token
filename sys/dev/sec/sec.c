@@ -1410,6 +1410,23 @@ operator|=
 literal|3
 expr_stmt|;
 break|break;
+case|case
+name|SEC_31_ID
+case|:
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"Freescale Security Engine 3.1"
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|sc_version
+operator|=
+literal|3
+expr_stmt|;
+break|break;
 default|default:
 name|device_printf
 argument_list|(

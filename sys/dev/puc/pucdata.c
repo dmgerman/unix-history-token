@@ -3205,6 +3205,28 @@ name|puc_config_syba
 block|}
 block|,
 block|{
+literal|0x5372
+block|,
+literal|0x6873
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|"Sun 1040 PCI Quad Serial"
+block|,
+name|DEFAULT_RCLK
+block|,
+name|PUC_PORT_4S
+block|,
+literal|0x10
+block|,
+literal|4
+block|,
+literal|0
+block|, 	}
+block|,
+block|{
 literal|0x6666
 block|,
 literal|0x0001

@@ -503,6 +503,16 @@ directive|define
 name|PCAP_ERROR_IFACE_NOT_UP
 value|-9
 comment|/* interface isn't up */
+define|#
+directive|define
+name|PCAP_ERROR_CANTSET_TSTAMP_TYPE
+value|-10
+comment|/* this device doesn't support setting the time stamp type */
+define|#
+directive|define
+name|PCAP_ERROR_PROMISC_PERM_DENIED
+value|-11
+comment|/* you don't have permission to capture in promiscuous mode */
 comment|/*  * Warning codes for the pcap API.  * These will all be positive and non-zero, so they won't look like  * errors.  */
 define|#
 directive|define
@@ -514,6 +524,11 @@ directive|define
 name|PCAP_WARNING_PROMISC_NOTSUP
 value|2
 comment|/* this device doesn't support promiscuous mode */
+define|#
+directive|define
+name|PCAP_WARNING_TSTAMP_TYPE_NOTSUP
+value|3
+comment|/* the requested time stamp type is not supported */
 comment|/*  * Value to pass to pcap_compile() as the netmask if you don't know what  * the netmask is.  */
 define|#
 directive|define
@@ -600,6 +615,15 @@ name|int
 parameter_list|)
 function_decl|;
 name|int
+name|pcap_set_tstamp_type
+parameter_list|(
+name|pcap_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+name|int
 name|pcap_set_buffer_size
 parameter_list|(
 name|pcap_t
@@ -615,6 +639,74 @@ name|pcap_t
 modifier|*
 parameter_list|)
 function_decl|;
+name|int
+name|pcap_list_tstamp_types
+parameter_list|(
+name|pcap_t
+modifier|*
+parameter_list|,
+name|int
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+name|pcap_free_tstamp_types
+parameter_list|(
+name|int
+modifier|*
+parameter_list|)
+function_decl|;
+name|int
+name|pcap_tstamp_type_name_to_val
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|const
+name|char
+modifier|*
+name|pcap_tstamp_type_val_to_name
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+specifier|const
+name|char
+modifier|*
+name|pcap_tstamp_type_val_to_description
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+comment|/*  * Time stamp types.  * Not all systems and interfaces will necessarily support all of these.  *  * A system that supports PCAP_TSTAMP_HOST is offering time stamps  * provided by the host machine, rather than by the capture device,  * but not committing to any characteristics of the time stamp;  * it will not offer any of the PCAP_TSTAMP_HOST_ subtypes.  *  * PCAP_TSTAMP_HOST_LOWPREC is a time stamp, provided by the host machine,  * that's low-precision but relatively cheap to fetch; it's normally done  * using the system clock, so it's normally synchronized with times you'd  * fetch from system calls.  *  * PCAP_TSTAMP_HOST_HIPREC is a time stamp, provided by the host machine,  * that's high-precision; it might be more expensive to fetch.  It might  * or might not be synchronized with the system clock, and might have  * problems with time stamps for packets received on different CPUs,  * depending on the platform.  *  * PCAP_TSTAMP_ADAPTER is a high-precision time stamp supplied by the  * capture device; it's synchronized with the system clock.  *  * PCAP_TSTAMP_ADAPTER_UNSYNCED is a high-precision time stamp supplied by  * the capture device; it's not synchronized with the system clock.  *  * Note that time stamps synchronized with the system clock can go  * backwards, as the system clock can go backwards.  If a clock is  * not in sync with the system clock, that could be because the  * system clock isn't keeping accurate time, because the other  * clock isn't keeping accurate time, or both.  *  * Note that host-provided time stamps generally correspond to the  * time when the time-stamping code sees the packet; this could  * be some unknown amount of time after the first or last bit of  * the packet is received by the network adapter, due to batching  * of interrupts for packet arrival, queueing delays, etc..  */
+define|#
+directive|define
+name|PCAP_TSTAMP_HOST
+value|0
+comment|/* host-provided, unknown characteristics */
+define|#
+directive|define
+name|PCAP_TSTAMP_HOST_LOWPREC
+value|1
+comment|/* host-provided, low precision */
+define|#
+directive|define
+name|PCAP_TSTAMP_HOST_HIPREC
+value|2
+comment|/* host-provided, high precision */
+define|#
+directive|define
+name|PCAP_TSTAMP_ADAPTER
+value|3
+comment|/* device-provided, synced with the system clock */
+define|#
+directive|define
+name|PCAP_TSTAMP_ADAPTER_UNSYNCED
+value|4
+comment|/* device-provided, not synced with the system clock */
 name|pcap_t
 modifier|*
 name|pcap_open_live
@@ -1174,7 +1266,10 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-comment|/* XXX this guy lives in the bpf tree */
+comment|/*  * On at least some versions of NetBSD, we don't want to declare  * bpf_filter() here, as it's also be declared in<net/bpf.h>, with a  * different signature, but, on other BSD-flavored UN*Xes, it's not  * declared in<net/bpf.h>, so we *do* want to declare it here, so it's  * declared when we build pcap-bpf.c.  */
+ifndef|#
+directive|ifndef
+name|__NetBSD__
 name|u_int
 name|bpf_filter
 parameter_list|(
@@ -1190,6 +1285,8 @@ parameter_list|,
 name|u_int
 parameter_list|)
 function_decl|;
+endif|#
+directive|endif
 name|int
 name|bpf_validate
 parameter_list|(
@@ -1359,6 +1456,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* lib_pcap_pcap_h */
+end_comment
 
 end_unit
 

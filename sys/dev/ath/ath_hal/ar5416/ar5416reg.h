@@ -1723,6 +1723,31 @@ end_define
 begin_define
 define|#
 directive|define
+name|AR_WA_BIT6
+value|0x00000040
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_WA_BIT7
+value|0x00000080
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_WA_D3_L1_DISABLE
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|AR_WA_UNTIE_RESET_EN
 value|0x00008000
 end_define
@@ -1763,13 +1788,16 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AR_WA_D3_L1_DISABLE
-value|0x00800000
+name|AR_WA_BIT22
+value|0x00400000
 end_define
 
-begin_comment
-comment|/* bit 23 */
-end_comment
+begin_define
+define|#
+directive|define
+name|AR_WA_BIT23
+value|0x00800000
+end_define
 
 begin_define
 define|#

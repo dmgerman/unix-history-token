@@ -18,6 +18,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/slicer.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<contrib/libfdt/libfdt_env.h>
 end_include
 

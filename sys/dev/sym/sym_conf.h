@@ -53,6 +53,17 @@ value|(6)
 end_define
 
 begin_comment
+comment|/*  *  DMA boundary  *  We need to ensure 16 MB boundaries not to be crossed during DMA of  *  each segment, due to some chips being flawed.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYM_CONF_DMA_BOUNDARY
+value|(1UL<< 24)
+end_define
+
+begin_comment
 comment|/*  *  Max number of scatter/gather entries for en IO.  *  Each entry costs 8 bytes in the internal CCB data structure.  *  For now 65 should suffice given the BSD O/Ses capabilities.  */
 end_comment
 

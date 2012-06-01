@@ -3,6 +3,18 @@ begin_comment
 comment|/*-  * BSD LICENSE  *  * Copyright(c) 2008 - 2011 Intel Corporation. All rights reserved.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *   * Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in  *     the documentation and/or other materials provided with the  *     distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_ISCI_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_ISCI_H
+end_define
+
 begin_include
 include|#
 directive|include
@@ -245,6 +257,7 @@ decl_stmt|;
 name|SCI_FAST_LIST_ELEMENT_T
 name|pending_device_reset_element
 decl_stmt|;
+comment|/* 	 * This queue maintains CCBs that have been returned with 	 *  SCI_IO_FAILURE_INVALID_STATE from the SCI layer.  These CCBs 	 *  need to be retried, but we cannot return CAM_REQUEUE_REQ because 	 *  this status gets passed all the way back up to users of the pass(4) 	 *  interface and breaks things like smartctl.  So instead, we queue 	 *  these CCBs internally. 	 */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -252,6 +265,16 @@ argument|ccb_hdr
 argument_list|)
 name|queued_ccbs
 expr_stmt|;
+comment|/* 	 * Marker denoting this remote device needs its first queued ccb to 	 *  be retried. 	 */
+name|BOOL
+name|release_queued_ccb
+decl_stmt|;
+comment|/* 	 * Points to a CCB in the queue that is currently being processed by 	 *  SCIL.  This allows us to keep in flight CCBs in the queue so as to 	 *  maintain ordering (i.e. in case we retry an I/O and then find out 	 *  it needs to be retried again - it just keeps its same place in the 	 *  queue. 	 */
+name|union
+name|ccb
+modifier|*
+name|queued_ccb_in_progress
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -367,6 +390,9 @@ name|initial_discovery_mask
 decl_stmt|;
 name|BOOL
 name|is_frozen
+decl_stmt|;
+name|BOOL
+name|release_queued_ccbs
 decl_stmt|;
 name|uint8_t
 modifier|*
@@ -1003,6 +1029,18 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|isci_controller_release_queued_ccbs
+parameter_list|(
+name|struct
+name|ISCI_CONTROLLER
+modifier|*
+name|controller
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|isci_domain_construct
 parameter_list|(
 name|struct
@@ -1071,6 +1109,15 @@ name|uint32_t
 name|g_isci_debug_level
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* #ifndef _ISCI_H */
+end_comment
 
 end_unit
 

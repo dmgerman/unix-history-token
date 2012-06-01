@@ -557,6 +557,12 @@ name|td_turnstile
 decl_stmt|;
 comment|/* (k) Associated turnstile. */
 name|struct
+name|rl_q_entry
+modifier|*
+name|td_rlqe
+decl_stmt|;
+comment|/* (k) Associated range lock entry. */
+name|struct
 name|umtx_q
 modifier|*
 name|td_umtxq
@@ -703,6 +709,10 @@ name|int
 name|td_swvoltick
 decl_stmt|;
 comment|/* (t) Time at last SW_VOL switch. */
+name|u_int
+name|td_cow
+decl_stmt|;
+comment|/* (*) Number of copy-on-write faults */
 name|struct
 name|rusage
 name|td_ru
@@ -745,10 +755,6 @@ name|sigset_t
 name|td_oldsigmask
 decl_stmt|;
 comment|/* (k) Saved mask from pre sigpause. */
-name|sigset_t
-name|td_sigmask
-decl_stmt|;
-comment|/* (c) Current signal mask. */
 specifier|volatile
 name|u_int
 name|td_generation
@@ -816,12 +822,16 @@ comment|/* (c) Child pid for debugger. */
 define|#
 directive|define
 name|td_endzero
-value|td_rqindex
-comment|/* Copied during fork1() or thread_sched_upcall(). */
+value|td_sigmask
+comment|/* Copied during fork1() or create_thread(). */
 define|#
 directive|define
 name|td_startcopy
 value|td_endzero
+name|sigset_t
+name|td_sigmask
+decl_stmt|;
+comment|/* (c) Current signal mask. */
 name|u_char
 name|td_rqindex
 decl_stmt|;
@@ -850,7 +860,7 @@ define|#
 directive|define
 name|td_endcopy
 value|td_pcb
-comment|/*  * Fields that must be manually set in fork1() or thread_sched_upcall()  * or already have been set in the allocator, constructor, etc.  */
+comment|/*  * Fields that must be manually set in fork1() or create_thread()  * or already have been set in the allocator, constructor, etc.  */
 name|struct
 name|pcb
 modifier|*
@@ -970,6 +980,17 @@ modifier|*
 name|td_rfppwait_p
 decl_stmt|;
 comment|/* (k) The vforked child */
+name|struct
+name|vm_page
+modifier|*
+modifier|*
+name|td_ma
+decl_stmt|;
+comment|/* (k) uio pages held */
+name|int
+name|td_ma_cnt
+decl_stmt|;
+comment|/* (k) size of *td_ma */
 block|}
 struct|;
 end_struct
@@ -1839,6 +1860,17 @@ end_define
 
 begin_comment
 comment|/* Last errno is already in td_errno */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDP_UIOHELD
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* Current uio has pages held in td_ma */
 end_comment
 
 begin_comment

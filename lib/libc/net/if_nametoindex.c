@@ -279,7 +279,8 @@ condition|)
 block|{
 name|ni
 operator|=
-operator|(
+name|LLINDEX
+argument_list|(
 operator|(
 expr|struct
 name|sockaddr_dl
@@ -288,9 +289,7 @@ operator|)
 name|ifa
 operator|->
 name|ifa_addr
-operator|)
-operator|->
-name|sdl_index
+argument_list|)
 expr_stmt|;
 break|break;
 block|}

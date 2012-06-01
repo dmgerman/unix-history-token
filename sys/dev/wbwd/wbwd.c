@@ -223,6 +223,17 @@ begin_comment
 comment|/* 1: keyb P20 forces timeout */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|WB_LDN8_CRF5_KBRST
+value|0x02
+end_define
+
+begin_comment
+comment|/* 1: timeout causes pin60 kbd reset */
+end_comment
+
 begin_comment
 comment|/* CRF6: Watchdog Timeout (0 == off). Mapped to reg_timeout. */
 end_comment
@@ -629,6 +640,28 @@ operator|.
 name|descr
 operator|=
 literal|"Winbond 83627DHG IC ver. 5"
+block|,    	}
+block|,
+block|{
+operator|.
+name|vendor_id
+operator|=
+literal|0x5ca3
+block|,
+operator|.
+name|device_id
+operator|=
+literal|0xb0
+block|,
+operator|.
+name|device_rev
+operator|=
+literal|0x73
+block|,
+operator|.
+name|descr
+operator|=
+literal|"Winbond 83627DHG-P"
 block|,    	}
 block|, }
 struct|;
@@ -2493,6 +2526,12 @@ operator|(
 name|WB_LDN8_CRF5_KEYB_P20
 operator|)
 expr_stmt|;
+name|sc
+operator|->
+name|reg_1
+operator||=
+name|WB_LDN8_CRF5_KBRST
+expr_stmt|;
 name|write_efir_1
 argument_list|(
 name|sc
@@ -2500,7 +2539,7 @@ argument_list|,
 name|WB_LDN8_CRF5
 argument_list|)
 expr_stmt|;
-name|write_efir_1
+name|write_efdr_1
 argument_list|(
 name|sc
 argument_list|,

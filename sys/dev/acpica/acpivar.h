@@ -2500,6 +2500,14 @@ name|KTR_ACPI
 value|KTR_DEV
 end_define
 
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_debug_acpi
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_endif
 endif|#
 directive|endif

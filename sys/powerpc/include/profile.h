@@ -178,11 +178,14 @@ begin_comment
 comment|/* AIM */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|E500
-end_ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|BOOKE
+argument_list|)
+end_if
 
 begin_decl_stmt
 specifier|extern
@@ -220,7 +223,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* E500 */
+comment|/* BOOKE_E500 || BOOKE_PPC4XX */
 end_comment
 
 begin_endif

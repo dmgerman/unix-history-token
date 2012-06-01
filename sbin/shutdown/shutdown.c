@@ -1710,14 +1710,6 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sleep
-argument_list|(
-literal|2
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"\r\nSystem shutdown time has arrived\007\007\r\n"

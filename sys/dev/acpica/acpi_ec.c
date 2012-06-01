@@ -475,14 +475,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_DECL
-argument_list|(
-name|_debug_acpi
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 specifier|static
 name|SYSCTL_NODE
 argument_list|(
