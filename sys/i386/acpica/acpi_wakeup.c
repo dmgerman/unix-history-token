@@ -215,6 +215,13 @@ name|susppcbs
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|cpuset_t
+name|suspcpus
+decl_stmt|;
+end_decl_stmt
+
 begin_else
 else|#
 directive|else
@@ -227,24 +234,6 @@ name|pcb
 modifier|*
 modifier|*
 name|susppcbs
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
-begin_decl_stmt
-specifier|static
-name|cpuset_t
-name|suspcpus
 decl_stmt|;
 end_decl_stmt
 
@@ -302,10 +291,6 @@ name|acpi_wakeup_cpus
 parameter_list|(
 name|struct
 name|acpi_softc
-modifier|*
-parameter_list|,
-specifier|const
-name|cpuset_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -656,11 +641,6 @@ name|struct
 name|acpi_softc
 modifier|*
 name|sc
-parameter_list|,
-specifier|const
-name|cpuset_t
-modifier|*
-name|wakeup_cpus
 parameter_list|)
 block|{
 name|uint32_t
@@ -765,7 +745,8 @@ name|CPU_ISSET
 argument_list|(
 name|cpu
 argument_list|,
-name|wakeup_cpus
+operator|&
+name|suspcpus
 argument_list|)
 condition|)
 continue|continue;
@@ -1173,9 +1154,6 @@ condition|)
 name|acpi_wakeup_cpus
 argument_list|(
 name|sc
-argument_list|,
-operator|&
-name|suspcpus
 argument_list|)
 expr_stmt|;
 endif|#
