@@ -1251,9 +1251,8 @@ operator|)
 return|;
 if|if
 condition|(
+operator|!
 name|intr_enabled
-operator|==
-literal|0
 condition|)
 block|{
 comment|/* Wakeup MD procedures in interrupt disabled context */
