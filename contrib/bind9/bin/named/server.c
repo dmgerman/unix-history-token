@@ -6527,7 +6527,7 @@ literal|4
 index|]
 init|=
 block|{
-literal|"_builtin"
+literal|"_dns64"
 block|,
 literal|"dns64"
 block|,

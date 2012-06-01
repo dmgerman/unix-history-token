@@ -14820,6 +14820,16 @@ argument_list|)
 operator|-
 literal|1
 expr_stmt|;
+comment|/* 			 * Sanity check. 			 */
+if|if
+condition|(
+name|labels
+operator|==
+literal|0U
+condition|)
+goto|goto
+name|cleanup
+goto|;
 name|dns_name_split
 argument_list|(
 name|cname
