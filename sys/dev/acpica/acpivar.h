@@ -2178,6 +2178,27 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|acpi_wakeup_machdep
+parameter_list|(
+name|struct
+name|acpi_softc
+modifier|*
+name|sc
+parameter_list|,
+name|int
+name|state
+parameter_list|,
+name|int
+name|sleep_result
+parameter_list|,
+name|int
+name|intr_enabled
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|acpi_table_quirks
 parameter_list|(
 name|int
