@@ -1144,6 +1144,11 @@ name|bool
 name|makeAbsolute
 operator|=
 name|true
+argument_list|,
+name|unsigned
+name|mode
+operator|=
+literal|0600
 argument_list|)
 decl_stmt|;
 comment|/// @brief Canonicalize path.
