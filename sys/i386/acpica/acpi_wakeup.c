@@ -1206,15 +1206,15 @@ expr_stmt|;
 name|intr_resume
 argument_list|()
 expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* Wakeup MD procedures in interrupt enabled context */
 name|AcpiSetFirmwareWakingVector
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Wakeup MD procedures in interrupt enabled context */
 if|if
 condition|(
 name|sleep_result
