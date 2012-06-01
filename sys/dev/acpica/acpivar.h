@@ -925,6 +925,8 @@ operator|)
 return|;
 if|if
 condition|(
+name|ACPI_FAILURE
+argument_list|(
 name|AcpiGetType
 argument_list|(
 name|h
@@ -932,8 +934,7 @@ argument_list|,
 operator|&
 name|t
 argument_list|)
-operator|!=
-name|AE_OK
+argument_list|)
 condition|)
 return|return
 operator|(

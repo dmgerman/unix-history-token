@@ -1020,9 +1020,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|ACPI_FAILURE
+argument_list|(
 name|status
-operator|!=
-name|AE_OK
+argument_list|)
 condition|)
 block|{
 name|device_printf
