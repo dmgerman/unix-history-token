@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/vnet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in_systm.h>
 end_include
 
@@ -1629,6 +1635,16 @@ name|INET6
 case|case
 name|ETHERTYPE_IPV6
 case|:
+block|{
+name|CURVNET_SET
+argument_list|(
+name|lc
+operator|->
+name|ifp
+operator|->
+name|if_vnet
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|V_ip6_forwarding
@@ -1637,12 +1653,18 @@ literal|0
 condition|)
 block|{
 comment|/* XXX-BZ stats but changing lro_ctrl is a problem. */
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|TCP_LRO_CANNOT
 operator|)
 return|;
 block|}
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 name|l3hdr
 operator|=
 name|ip6
@@ -1703,6 +1725,7 @@ operator|+
 name|tcp_data_len
 expr_stmt|;
 break|break;
+block|}
 endif|#
 directive|endif
 ifdef|#
@@ -1711,6 +1734,16 @@ name|INET
 case|case
 name|ETHERTYPE_IP
 case|:
+block|{
+name|CURVNET_SET
+argument_list|(
+name|lc
+operator|->
+name|ifp
+operator|->
+name|if_vnet
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|V_ipforwarding
@@ -1719,12 +1752,18 @@ literal|0
 condition|)
 block|{
 comment|/* XXX-BZ stats but changing lro_ctrl is a problem. */
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|TCP_LRO_CANNOT
 operator|)
 return|;
 block|}
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 name|l3hdr
 operator|=
 name|ip4
@@ -1785,6 +1824,7 @@ name|ip4
 argument_list|)
 expr_stmt|;
 break|break;
+block|}
 endif|#
 directive|endif
 comment|/* XXX-BZ what happens in case of VLAN(s)? */
