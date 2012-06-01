@@ -2842,13 +2842,6 @@ name|idesc
 operator|=
 name|id
 expr_stmt|;
-comment|/* default setting */
-name|iface
-operator|->
-name|parent_iface_index
-operator|=
-name|USB_IFACE_INDEX_ANY
-expr_stmt|;
 comment|/* set alternate index */
 name|iface
 operator|->
@@ -2856,6 +2849,21 @@ name|alt_index
 operator|=
 name|alt_index
 expr_stmt|;
+comment|/* set default interface parent */
+if|if
+condition|(
+name|iface_index
+operator|==
+name|USB_IFACE_INDEX_ANY
+condition|)
+block|{
+name|iface
+operator|->
+name|parent_iface_index
+operator|=
+name|USB_IFACE_INDEX_ANY
+expr_stmt|;
+block|}
 block|}
 name|DPRINTFN
 argument_list|(
@@ -4410,6 +4418,16 @@ name|usb_interface
 modifier|*
 name|iface
 decl_stmt|;
+if|if
+condition|(
+name|udev
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* nothing to do */
+return|return;
+block|}
 name|iface
 operator|=
 name|usbd_get_iface
@@ -4422,15 +4440,15 @@ expr_stmt|;
 if|if
 condition|(
 name|iface
+operator|!=
+name|NULL
 condition|)
-block|{
 name|iface
 operator|->
 name|parent_iface_index
 operator|=
 name|parent_index
 expr_stmt|;
-block|}
 block|}
 end_function
 
