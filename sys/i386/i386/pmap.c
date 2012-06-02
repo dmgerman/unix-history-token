@@ -798,6 +798,46 @@ comment|/* cache mode to PAT index conversion */
 end_comment
 
 begin_comment
+comment|/*  * Isolate the global pv list lock from data and other locks to prevent false  * sharing within the cache.  */
+end_comment
+
+begin_struct
+specifier|static
+struct|struct
+block|{
+name|struct
+name|rwlock
+name|lock
+decl_stmt|;
+name|char
+name|padding
+index|[
+name|CACHE_LINE_SIZE
+operator|-
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|rwlock
+argument_list|)
+index|]
+decl_stmt|;
+block|}
+name|pvh_global
+name|__aligned
+argument_list|(
+name|CACHE_LINE_SIZE
+argument_list|)
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|pvh_global_lock
+value|pvh_global.lock
+end_define
+
+begin_comment
 comment|/*  * Data for the pv entry allocation mechanism  */
 end_comment
 
@@ -841,14 +881,6 @@ name|struct
 name|md_page
 modifier|*
 name|pv_table
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|rwlock
-name|pvh_global_lock
 decl_stmt|;
 end_decl_stmt
 
