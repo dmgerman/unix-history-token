@@ -559,6 +559,8 @@ literal|".tgz"
 block|,
 literal|".tar"
 block|,
+literal|".txz"
+block|,
 name|NULL
 block|}
 decl_stmt|;
