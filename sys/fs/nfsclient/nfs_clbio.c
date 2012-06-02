@@ -5469,7 +5469,7 @@ name|b_dirtyend
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 		 * If the new write will leave a contiguous dirty 		 * area, just update the b_dirtyoff and b_dirtyend, 		 * otherwise force a write rpc of the old dirty area. 		 * 		 * While it is possible to merge discontiguous writes due to 		 * our having a B_CACHE buffer ( and thus valid read data 		 * for the hole), we don't because it could lead to 		 * significant cache coherency problems with multiple clients, 		 * especially if locking is implemented later on. 		 * 		 * as an optimization we could theoretically maintain 		 * a linked list of discontinuous areas, but we would still 		 * have to commit them separately so there isn't much 		 * advantage to it except perhaps a bit of asynchronization. 		 */
+comment|/* 		 * If the new write will leave a contiguous dirty 		 * area, just update the b_dirtyoff and b_dirtyend, 		 * otherwise force a write rpc of the old dirty area. 		 * 		 * While it is possible to merge discontiguous writes due to 		 * our having a B_CACHE buffer ( and thus valid read data 		 * for the hole), we don't because it could lead to 		 * significant cache coherency problems with multiple clients, 		 * especially if locking is implemented later on. 		 * 		 * As an optimization we could theoretically maintain 		 * a linked list of discontinuous areas, but we would still 		 * have to commit them separately so there isn't much 		 * advantage to it except perhaps a bit of asynchronization. 		 */
 if|if
 condition|(
 name|bp
