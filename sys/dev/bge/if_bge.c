@@ -14510,11 +14510,6 @@ name|bge_dev
 operator|=
 name|dev
 expr_stmt|;
-name|bge_add_sysctls
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|TASK_INIT
 argument_list|(
 operator|&
@@ -15025,6 +15020,12 @@ name|BGE_FLAG_5705_PLUS
 expr_stmt|;
 break|break;
 block|}
+comment|/* Add SYSCTLs, requires the chipset family to be set. */
+name|bge_add_sysctls
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* Set various PHY bug flags. */
 if|if
 condition|(
