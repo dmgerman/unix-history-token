@@ -770,7 +770,7 @@ if|if
 condition|(
 name|size
 operator|>=
-name|PAGE_SIZE
+name|USB_PAGE_SIZE
 condition|)
 block|{
 name|n_dma_pc
@@ -788,7 +788,7 @@ comment|/* compute number of objects per page */
 name|n_obj
 operator|=
 operator|(
-name|PAGE_SIZE
+name|USB_PAGE_SIZE
 operator|/
 name|size
 operator|)
