@@ -347,7 +347,7 @@ name|lockf
 modifier|*
 name|v_lockf
 decl_stmt|;
-comment|/* Byte-level lock list */
+comment|/* Byte-level advisory lock list */
 block|}
 struct|;
 end_struct
