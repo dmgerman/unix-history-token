@@ -885,7 +885,7 @@ begin_define
 define|#
 directive|define
 name|PRINT_BUF_VFLAGS
-value|"\20\40infreecnt\3bkrgwait\2bkgrdinprog\1scanned"
+value|"\20\40infreecnt\3bkgrdwait\2bkgrdinprog\1scanned"
 end_define
 
 begin_ifdef

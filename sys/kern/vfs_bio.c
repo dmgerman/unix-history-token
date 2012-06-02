@@ -16268,7 +16268,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"b_flags = 0x%b b_xflags=0x%b b_vflags=0x%b\n"
+literal|"b_flags = 0x%b, b_xflags=0x%b, b_vflags=0x%b\n"
 argument_list|,
 operator|(
 name|u_int
