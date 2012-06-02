@@ -167,16 +167,25 @@ end_function_decl
 begin_define
 define|#
 directive|define
-name|ATOMIC_STORE_LOAD
+name|ATOMIC_LOAD
 parameter_list|(
 name|TYPE
 parameter_list|,
 name|LOP
-parameter_list|,
-name|SOP
 parameter_list|)
 define|\
-value|u_##TYPE	atomic_load_acq_##TYPE(volatile u_##TYPE *p);	\ void		atomic_store_rel_##TYPE(volatile u_##TYPE *p, u_##TYPE v)
+value|u_##TYPE	atomic_load_acq_##TYPE(volatile u_##TYPE *p)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATOMIC_STORE
+parameter_list|(
+name|TYPE
+parameter_list|)
+define|\
+value|void		atomic_store_rel_##TYPE(volatile u_##TYPE *p, u_##TYPE v)
 end_define
 
 begin_else
@@ -531,8 +540,23 @@ operator|)
 return|;
 end_return
 
-begin_if
+begin_comment
 unit|}
+comment|/*  * We assume that a = b will do atomic loads and stores.  Due to the  * IA32 memory model, a simple store guarantees release semantics.  *  * However, loads may pass stores, so for atomic_load_acq we have to  * ensure a Store/Load barrier to do the load in SMP kernels.  We use  * "lock cmpxchg" as recommended by the AMD Software Optimization  * Guide, and not mfence.  For UP kernels, however, the cache of the  * single processor is always consistent, so we only need to take care  * of the compiler.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATOMIC_STORE
+parameter_list|(
+name|TYPE
+parameter_list|)
+define|\
+value|static __inline void					\ atomic_store_rel_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	__asm __volatile("" : : : "memory");		\ 	*p = v;						\ }							\ struct __hack
+end_define
+
+begin_if
 if|#
 directive|if
 name|defined
@@ -547,23 +571,17 @@ name|SMP
 argument_list|)
 end_if
 
-begin_comment
-comment|/*  * We assume that a = b will do atomic loads and stores.  However, on a  * PentiumPro or higher, reads may pass writes, so for that case we have  * to use a serializing instruction (i.e. with LOCK) to do the load in  * SMP kernels.  For UP kernels, however, the cache of the single processor  * is always consistent, so we only need to take care of compiler.  */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|ATOMIC_STORE_LOAD
+name|ATOMIC_LOAD
 parameter_list|(
 name|TYPE
 parameter_list|,
 name|LOP
-parameter_list|,
-name|SOP
 parameter_list|)
 define|\
-value|static __inline u_##TYPE				\ atomic_load_acq_##TYPE(volatile u_##TYPE *p)		\ {							\ 	u_##TYPE tmp;					\ 							\ 	tmp = *p;					\ 	__asm __volatile ("" : : : "memory");		\ 	return (tmp);					\ }							\ 							\ static __inline void					\ atomic_store_rel_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	__asm __volatile ("" : : : "memory");		\ 	*p = v;						\ }							\ struct __hack
+value|static __inline u_##TYPE				\ atomic_load_acq_##TYPE(volatile u_##TYPE *p)		\ {							\ 	u_##TYPE tmp;					\ 							\ 	tmp = *p;					\ 	__asm __volatile("" : : : "memory");		\ 	return (tmp);					\ }							\ struct __hack
 end_define
 
 begin_else
@@ -578,13 +596,11 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ATOMIC_STORE_LOAD
+name|ATOMIC_LOAD
 parameter_list|(
 name|TYPE
 parameter_list|,
 name|LOP
-parameter_list|,
-name|SOP
 parameter_list|)
 define|\
 value|static __inline u_##TYPE				\ atomic_load_acq_##TYPE(volatile u_##TYPE *p)		\ {							\ 	u_##TYPE res;					\ 							\ 	__asm __volatile(MPLOCKED LOP			\ 	: "=a" (res),
@@ -593,15 +609,7 @@ value|\ 	  "=m" (*p)
 comment|/* 1 */
 value|\ 	: "m" (*p)
 comment|/* 2 */
-value|\ 	: "memory", "cc");				\ 							\ 	return (res);					\ }							\ 							\
-comment|/*							\  * The XCHG instruction asserts LOCK automagically.	\  */
-value|\ static __inline void					\ atomic_store_rel_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	__asm __volatile(SOP				\ 	: "=m" (*p),
-comment|/* 0 */
-value|\ 	  "+r" (v)
-comment|/* 1 */
-value|\ 	: "m" (*p)
-comment|/* 2 */
-value|\ 	: "memory");					\ }							\ struct __hack
+value|\ 	: "memory", "cc");				\ 							\ 	return (res);					\ }							\ struct __hack
 end_define
 
 begin_endif
@@ -883,49 +891,73 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|ATOMIC_STORE_LOAD
+name|ATOMIC_LOAD
 argument_list|(
 name|char
 argument_list|,
 literal|"cmpxchgb %b0,%1"
-argument_list|,
-literal|"xchgb %b1,%0"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|ATOMIC_STORE_LOAD
+name|ATOMIC_LOAD
 argument_list|(
 name|short
 argument_list|,
 literal|"cmpxchgw %w0,%1"
-argument_list|,
-literal|"xchgw %w1,%0"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|ATOMIC_STORE_LOAD
+name|ATOMIC_LOAD
 argument_list|(
 name|int
 argument_list|,
 literal|"cmpxchgl %0,%1"
-argument_list|,
-literal|"xchgl %1,%0"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|ATOMIC_STORE_LOAD
+name|ATOMIC_LOAD
 argument_list|(
 name|long
 argument_list|,
 literal|"cmpxchgq %0,%1"
-argument_list|,
-literal|"xchgq %1,%0"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|ATOMIC_STORE
+argument_list|(
+name|char
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|ATOMIC_STORE
+argument_list|(
+name|short
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|ATOMIC_STORE
+argument_list|(
+name|int
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|ATOMIC_STORE
+argument_list|(
+name|long
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -939,7 +971,13 @@ end_undef
 begin_undef
 undef|#
 directive|undef
-name|ATOMIC_STORE_LOAD
+name|ATOMIC_LOAD
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|ATOMIC_STORE
 end_undef
 
 begin_ifndef
