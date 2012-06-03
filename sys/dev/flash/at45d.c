@@ -2096,6 +2096,10 @@ goto|goto
 name|out
 goto|;
 block|}
+ifdef|#
+directive|ifdef
+name|notyet
+comment|/* May cause physwr to hang for reasons unknown. */
 if|if
 condition|(
 name|bp
@@ -2231,6 +2235,8 @@ name|out
 goto|;
 block|}
 block|}
+endif|#
+directive|endif
 name|page
 operator|++
 expr_stmt|;
