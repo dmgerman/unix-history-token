@@ -3368,6 +3368,36 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|int
+name|vn_io_fault_enable
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_debug
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|vn_io_fault_enable
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|vn_io_fault_enable
+argument_list|,
+literal|0
+argument_list|,
+literal|"Enable vn_io_fault lock avoidance"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
 name|unsigned
 name|long
 name|vn_io_faults_cnt
@@ -3557,6 +3587,9 @@ operator|)
 operator|==
 literal|0
 operator|)
+operator|||
+operator|!
+name|vn_io_fault_enable
 condition|)
 return|return
 operator|(
