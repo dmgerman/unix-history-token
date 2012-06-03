@@ -1346,7 +1346,12 @@ name|stderr
 argument_list|,
 literal|"%s, %s\n"
 argument_list|,
-name|SSH_RELEASE
+name|ssh_version_get
+argument_list|(
+name|options
+operator|.
+name|hpn_disabled
+argument_list|)
 argument_list|,
 name|SSLeay_version
 argument_list|(

@@ -1672,7 +1672,12 @@ name|major
 argument_list|,
 name|minor
 argument_list|,
-name|SSH_RELEASE
+name|ssh_version_get
+argument_list|(
+name|options
+operator|.
+name|hpn_disabled
+argument_list|)
 argument_list|,
 name|newline
 argument_list|)
@@ -3534,7 +3539,10 @@ name|stderr
 argument_list|,
 literal|"%s, %s\n"
 argument_list|,
-name|SSH_RELEASE
+name|ssh_version_get
+argument_list|(
+literal|0
+argument_list|)
 argument_list|,
 name|SSLeay_version
 argument_list|(
@@ -6704,7 +6712,12 @@ name|debug
 argument_list|(
 literal|"sshd version %.100s"
 argument_list|,
-name|SSH_RELEASE
+name|ssh_version_get
+argument_list|(
+name|options
+operator|.
+name|hpn_disabled
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Store privilege separation user for later use if required. */
