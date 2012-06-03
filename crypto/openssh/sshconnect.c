@@ -2724,7 +2724,12 @@ name|PROTOCOL_MINOR_2
 else|:
 name|minor1
 argument_list|,
-name|SSH_RELEASE
+name|ssh_version_get
+argument_list|(
+name|options
+operator|.
+name|hpn_disabled
+argument_list|)
 argument_list|,
 name|compat20
 condition|?

@@ -10,8 +10,14 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|SSH_VERSION
+name|_VERSION_H_
 end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_VERSION_H_
+end_define
 
 begin_define
 define|#
@@ -34,27 +40,14 @@ name|SSH_VERSION_HPN
 value|"_hpn13v11"
 end_define
 
-begin_define
-define|#
-directive|define
-name|SSH_VERSION
-value|SSH_VERSION_BASE SSH_VERSION_HPN " " SSH_VERSION_ADDENDUM
-end_define
-
-begin_define
-define|#
-directive|define
-name|SSH_RELEASE
-value|(ssh_version_get())
-end_define
-
 begin_function_decl
 specifier|const
 name|char
 modifier|*
 name|ssh_version_get
 parameter_list|(
-name|void
+name|int
+name|hpn_disabled
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -76,7 +69,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* SSH_VERSION */
+comment|/* _VERSION_H_ */
 end_comment
 
 end_unit
