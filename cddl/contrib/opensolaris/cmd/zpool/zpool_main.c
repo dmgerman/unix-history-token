@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  * Copyright (c) 2011 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  * Copyright (c) 2012 by Frederik Wessels. All rights reserved.  * Copyright (c) 2011 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
 end_comment
 
 begin_include
@@ -7286,7 +7286,7 @@ name|printf
 argument_list|(
 name|gettext
 argument_list|(
-literal|"   see: http://www.sun.com/msg/%s\n"
+literal|"   see: http://illumos.org/msg/%s\n"
 argument_list|)
 argument_list|,
 name|msgid
@@ -10527,7 +10527,9 @@ name|nvroot
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+name|cb
+operator|->
+name|cb_namewidth
 argument_list|)
 expr_stmt|;
 block|}
@@ -16153,7 +16155,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Display a summary of pool status.  Displays a summary such as:  *  *        pool: tank  *	status: DEGRADED  *	reason: One or more devices ...  *         see: http://www.sun.com/msg/ZFS-xxxx-01  *	config:  *		mirror		DEGRADED  *                c1t0d0	OK  *                c2t0d0	UNAVAIL  *  * When given the '-v' option, we print out the complete config.  If the '-e'  * option is specified, then we print out error rate information as well.  */
+comment|/*  * Display a summary of pool status.  Displays a summary such as:  *  *        pool: tank  *	status: DEGRADED  *	reason: One or more devices ...  *         see: http://illumos.org/msg/ZFS-xxxx-01  *	config:  *		mirror		DEGRADED  *                c1t0d0	OK  *                c2t0d0	UNAVAIL  *  * When given the '-v' option, we print out the complete config.  If the '-e'  * option is specified, then we print out error rate information as well.  */
 end_comment
 
 begin_function
@@ -16903,7 +16905,7 @@ name|printf
 argument_list|(
 name|gettext
 argument_list|(
-literal|"   see: http://www.sun.com/msg/%s\n"
+literal|"   see: http://illumos.org/msg/%s\n"
 argument_list|)
 argument_list|,
 name|msgid
