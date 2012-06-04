@@ -6207,7 +6207,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set d's packet filter program to fp.  If this file already has a filter,  * free it and replace it.  Returns EINVAL for bogus requests.  */
+comment|/*  * Set d's packet filter program to fp.  If this file already has a filter,  * free it and replace it.  Returns EINVAL for bogus requests.  *  * Note we need global lock here to serialize bpf_setf() and bpf_setif() calls  * since reading d->bd_bif can't be protected by d or interface lock due to  * lock order.  *  * Additionally, we have to acquire interface write lock due to bpf_mtap() uses  * interface read lock to read all filers.  *  */
 end_comment
 
 begin_function
@@ -9708,7 +9708,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Interface departure handler  */
+comment|/*  * Interface departure handler.  * Note departure event does not guagantee interface is going down.  */
 end_comment
 
 begin_function
@@ -9732,6 +9732,9 @@ name|bpf_if
 modifier|*
 name|bp
 decl_stmt|;
+name|BPF_LOCK
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -9744,7 +9747,31 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|BPF_UNLOCK
+argument_list|()
+expr_stmt|;
 return|return;
+block|}
+comment|/* Check if bpfdetach() was called previously */
+if|if
+condition|(
+operator|(
+name|bp
+operator|->
+name|flags
+operator|&
+name|BPFIF_FLAG_DYING
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|BPF_UNLOCK
+argument_list|()
+expr_stmt|;
+return|return;
+block|}
 name|CTR3
 argument_list|(
 name|KTR_NET
@@ -9763,6 +9790,9 @@ operator|->
 name|if_bpf
 operator|=
 name|NULL
+expr_stmt|;
+name|BPF_UNLOCK
+argument_list|()
 expr_stmt|;
 name|rw_destroy
 argument_list|(
