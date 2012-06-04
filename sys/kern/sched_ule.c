@@ -720,7 +720,8 @@ specifier|static
 name|int
 name|sched_idlespinthresh
 init|=
-literal|16
+operator|-
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -6667,6 +6668,25 @@ name|SCHED_AFFINITY_DEFAULT
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|sched_idlespinthresh
+operator|<
+literal|0
+condition|)
+name|sched_idlespinthresh
+operator|=
+name|max
+argument_list|(
+literal|16
+argument_list|,
+literal|2
+operator|*
+name|hz
+operator|/
+name|realstathz
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
