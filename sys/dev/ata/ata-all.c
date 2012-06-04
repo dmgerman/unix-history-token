@@ -4885,7 +4885,15 @@ name|device_add_child
 argument_list|(
 name|parent
 argument_list|,
+operator|(
+name|unit
+operator|<
+literal|0
+operator|)
+condition|?
 name|NULL
+else|:
+literal|"ad"
 argument_list|,
 name|unit
 argument_list|)
