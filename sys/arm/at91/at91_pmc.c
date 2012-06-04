@@ -1994,7 +1994,7 @@ operator|)
 operator|<<
 literal|11
 expr_stmt|;
-comment|/* 	 * Clocks up to 50MHz can be connected to some models.  If 	 * the frequency is>= 21MHz, assume that the slow clock can 	 * measure it correctly, and that any error can be adequately 	 * compensated for by roudning to the nearest 500Hz.  Users 	 * with fast, or odd-ball clocks will need to set 	 * AT91C_MASTER_CLOCK in the kernel config file. 	 */
+comment|/* 	 * Clocks up to 50MHz can be connected to some models.  If 	 * the frequency is>= 21MHz, assume that the slow clock can 	 * measure it correctly, and that any error can be adequately 	 * compensated for by roudning to the nearest 500Hz.  Users 	 * with fast, or odd-ball clocks will need to set 	 * AT91C_MAIN_CLOCK in the kernel config file. 	 */
 if|if
 condition|(
 name|ckgr_val
