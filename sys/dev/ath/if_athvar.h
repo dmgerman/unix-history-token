@@ -1762,6 +1762,11 @@ name|task
 name|sc_rxtask
 decl_stmt|;
 comment|/* rx int processing */
+name|struct
+name|task
+name|sc_txstarttask
+decl_stmt|;
+comment|/* ath_start() processing */
 name|u_int8_t
 name|sc_defant
 decl_stmt|;
