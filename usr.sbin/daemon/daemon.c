@@ -877,7 +877,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: daemon [-cf] [-p pidfile] [-u user] command "
+literal|"usage: daemon [-cfr] [-p pidfile] [-u user] command "
 literal|"arguments ...\n"
 argument_list|)
 expr_stmt|;
