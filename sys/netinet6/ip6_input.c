@@ -2825,12 +2825,6 @@ comment|/* 	 * record address information into m_tag, if we don't have one yet. 
 if|if
 condition|(
 name|deliverifp
-operator|&&
-operator|!
-name|ip6_getdstifaddr
-argument_list|(
-name|m
-argument_list|)
 condition|)
 block|{
 name|struct
@@ -2838,6 +2832,31 @@ name|in6_ifaddr
 modifier|*
 name|ia6
 decl_stmt|;
+if|if
+condition|(
+operator|(
+name|ia6
+operator|=
+name|ip6_getdstifaddr
+argument_list|(
+name|m
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+name|ifa_free
+argument_list|(
+operator|&
+name|ia6
+operator|->
+name|ia_ifa
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|ia6
 operator|=
 name|in6_ifawithifp
@@ -2866,7 +2885,7 @@ name|ia6
 argument_list|)
 condition|)
 block|{
-comment|/* 				 * XXX maybe we should drop the packet here, 				 * as we could not provide enough information 				 * to the upper layers. 				 */
+comment|/* 					 * XXX maybe we should drop the packet here, 					 * as we could not provide enough information 					 * to the upper layers. 					 */
 block|}
 name|ifa_free
 argument_list|(
@@ -2876,6 +2895,7 @@ operator|->
 name|ia_ifa
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 comment|/* 	 * Process Hop-by-Hop options header if it's contained. 	 * m may be modified in ip6_hopopts_input(). 	 * If a JumboPayload option is included, plen will also be modified. 	 */
