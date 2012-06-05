@@ -10344,14 +10344,12 @@ name|mtail
 operator|!=
 name|NULL
 condition|)
-block|{
 name|mtail
 operator|->
 name|m_next
 operator|=
 name|m0
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
