@@ -319,20 +319,33 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|extern
+begin_function
+specifier|static
+specifier|inline
 name|void
-name|ath_tx_tasklet
+name|ath_tx_kick
 parameter_list|(
-name|void
+name|struct
+name|ath_softc
 modifier|*
-name|arg
-parameter_list|,
-name|int
-name|npending
+name|sc
 parameter_list|)
-function_decl|;
-end_function_decl
+block|{
+comment|/* 	 * Use a taskqueue to schedule a TX completion task, 	 * even if we're in taskqueue context.  That way this can 	 * be called from any context. 	 */
+name|taskqueue_enqueue
+argument_list|(
+name|sc
+operator|->
+name|sc_tq
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_txstarttask
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_endif
 endif|#

@@ -511,6 +511,21 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|void
+name|ath_tx_tasklet
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|,
+name|int
+name|npending
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|int
 name|ath_reset_vap
 parameter_list|(
@@ -9583,6 +9598,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ath_tx_tasklet
 parameter_list|(
@@ -15073,12 +15089,9 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|// ath_start(ifp);
-name|ath_tx_tasklet
+name|ath_tx_kick
 argument_list|(
 name|sc
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -15358,12 +15371,9 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|//ath_start(ifp);
-name|ath_tx_tasklet
+name|ath_tx_kick
 argument_list|(
 name|sc
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -15564,12 +15574,9 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|//ath_start(ifp);
-name|ath_tx_tasklet
+name|ath_tx_kick
 argument_list|(
 name|sc
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 block|}

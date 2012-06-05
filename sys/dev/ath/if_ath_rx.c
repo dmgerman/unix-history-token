@@ -3489,14 +3489,11 @@ operator|->
 name|if_snd
 argument_list|)
 condition|)
-name|ath_tx_tasklet
+name|ath_tx_kick
 argument_list|(
 name|sc
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
-comment|//ath_start(ifp);
 block|}
 undef|#
 directive|undef
