@@ -2163,8 +2163,7 @@ name|cam_periph_runccb
 argument_list|(
 name|ccb
 argument_list|,
-comment|/*error_routine*/
-name|NULL
+name|adaerror
 argument_list|,
 comment|/*cam_flags*/
 literal|0
