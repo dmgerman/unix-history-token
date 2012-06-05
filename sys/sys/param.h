@@ -948,6 +948,16 @@ end_endif
 begin_define
 define|#
 directive|define
+name|nitems
+parameter_list|(
+name|x
+parameter_list|)
+value|(sizeof((x)) / sizeof((x)[0]))
+end_define
+
+begin_define
+define|#
+directive|define
 name|rounddown
 parameter_list|(
 name|x

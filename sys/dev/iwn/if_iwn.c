@@ -11006,16 +11006,6 @@ return|;
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|nitems
-parameter_list|(
-name|_a
-parameter_list|)
-value|(sizeof((_a)) / sizeof((_a)[0]))
-end_define
-
 begin_function
 specifier|static
 name|void
