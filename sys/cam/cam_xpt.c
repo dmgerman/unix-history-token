@@ -14036,27 +14036,20 @@ name|device
 operator|->
 name|drvq
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|CAMDEBUG
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|drvq
 operator|->
 name|entries
-operator|<=
+operator|>
 literal|0
-condition|)
-block|{
-name|panic
-argument_list|(
+argument_list|,
+operator|(
 literal|"xpt_run_dev_allocq: "
 literal|"Device on queue without any work to do"
+operator|)
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
 if|if
 condition|(
 operator|(
