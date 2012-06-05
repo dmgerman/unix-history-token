@@ -331,17 +331,11 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-comment|/* 	 * Use a taskqueue to schedule a TX completion task, 	 * even if we're in taskqueue context.  That way this can 	 * be called from any context. 	 */
-name|taskqueue_enqueue
+name|ath_start
 argument_list|(
 name|sc
 operator|->
-name|sc_tq
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|sc_txstarttask
+name|sc_ifp
 argument_list|)
 expr_stmt|;
 block|}
