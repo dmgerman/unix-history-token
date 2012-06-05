@@ -2117,6 +2117,15 @@ name|pi_symcount
 operator|+=
 name|newsyms
 expr_stmt|;
+if|if
+condition|(
+name|image
+operator|->
+name|pi_symcount
+operator|==
+literal|0
+condition|)
+return|return;
 name|assert
 argument_list|(
 name|newsyms
