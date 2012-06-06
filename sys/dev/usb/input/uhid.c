@@ -787,6 +787,9 @@ condition|(
 operator|(
 name|actlen
 operator|>=
+operator|(
+name|int
+operator|)
 name|sc
 operator|->
 name|sc_isize
@@ -814,6 +817,9 @@ if|if
 condition|(
 name|actlen
 operator|>
+operator|(
+name|int
+operator|)
 name|sc
 operator|->
 name|sc_isize
@@ -3740,7 +3746,6 @@ name|sc_fifo
 argument_list|,
 name|unit
 argument_list|,
-literal|0
 operator|-
 literal|1
 argument_list|,

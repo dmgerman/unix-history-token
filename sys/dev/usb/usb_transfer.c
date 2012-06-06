@@ -9467,7 +9467,13 @@ name|xfer
 argument_list|,
 operator|(
 name|void
+argument_list|(
 operator|*
+argument_list|)
+argument_list|(
+name|void
+operator|*
+argument_list|)
 operator|)
 operator|&
 name|usb_dma_delay_done_cb

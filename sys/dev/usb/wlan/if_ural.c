@@ -4635,11 +4635,14 @@ name|m_pkthdr
 operator|.
 name|len
 operator|>
-operator|(
+call|(
+name|int
+call|)
+argument_list|(
 name|RAL_FRAME_SIZE
 operator|+
 name|RAL_TX_DESC_SIZE
-operator|)
+argument_list|)
 condition|)
 block|{
 name|DPRINTFN
@@ -5046,9 +5049,14 @@ if|if
 condition|(
 name|len
 operator|<
+call|(
+name|int
+call|)
+argument_list|(
 name|RAL_RX_DESC_SIZE
 operator|+
 name|IEEE80211_MIN_LEN
+argument_list|)
 condition|)
 block|{
 name|DPRINTF
@@ -10814,7 +10822,7 @@ name|N
 parameter_list|(
 name|a
 parameter_list|)
-value|(sizeof (a) / sizeof ((a)[0]))
+value|((int)(sizeof (a) / sizeof ((a)[0])))
 name|int
 name|i
 decl_stmt|,
@@ -11186,7 +11194,7 @@ name|N
 parameter_list|(
 name|a
 parameter_list|)
-value|(sizeof (a) / sizeof ((a)[0]))
+value|((int)(sizeof (a) / sizeof ((a)[0])))
 name|struct
 name|ifnet
 modifier|*

@@ -1145,7 +1145,7 @@ parameter_list|,
 name|usb_size_t
 name|size
 parameter_list|,
-name|uint32_t
+name|int32_t
 name|usage
 parameter_list|,
 name|enum
@@ -1246,7 +1246,7 @@ parameter_list|,
 name|usb_size_t
 name|size
 parameter_list|,
-name|uint32_t
+name|int32_t
 name|usage
 parameter_list|)
 function_decl|;

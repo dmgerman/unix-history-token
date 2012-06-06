@@ -2757,6 +2757,9 @@ operator|)
 operator|&&
 name|actlen
 operator|>=
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|pkt

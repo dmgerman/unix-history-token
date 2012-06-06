@@ -4248,6 +4248,9 @@ literal|0
 operator|&&
 name|offset
 operator|<
+operator|(
+name|int64_t
+operator|)
 sizeof|sizeof
 argument_list|(
 name|td
@@ -12653,7 +12656,7 @@ name|ptr
 parameter_list|,
 name|val
 parameter_list|)
-value|ptr[0] = (uint8_t)(val), ptr[1] = (uint8_t)((val)>> 8)
+value|ptr = { (uint8_t)(val), (uint8_t)((val)>> 8) }
 end_define
 
 begin_decl_stmt
@@ -12891,19 +12894,12 @@ block|,
 comment|/* dummy - not used */
 operator|.
 name|wU2DevExitLat
-index|[
-literal|0
-index|]
 operator|=
+block|{
 literal|0x00
 block|,
-operator|.
-name|wU2DevExitLat
-index|[
-literal|1
-index|]
-operator|=
 literal|0x08
+block|}
 block|, 	}
 block|,
 operator|.

@@ -6576,7 +6576,7 @@ specifier|static
 name|uint16_t
 name|urtw_rate2rtl
 parameter_list|(
-name|int
+name|uint32_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -6586,7 +6586,7 @@ specifier|static
 name|uint16_t
 name|urtw_rtl2rate
 parameter_list|(
-name|int
+name|uint32_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -9247,7 +9247,7 @@ name|N
 parameter_list|(
 name|a
 parameter_list|)
-value|(sizeof(a) / sizeof((a)[0]))
+value|((int)(sizeof(a) / sizeof((a)[0])))
 name|uint8_t
 name|data8
 decl_stmt|;
@@ -13726,7 +13726,7 @@ specifier|static
 name|uint16_t
 name|urtw_rate2rtl
 parameter_list|(
-name|int
+name|uint32_t
 name|rate
 parameter_list|)
 block|{
@@ -13736,7 +13736,7 @@ name|N
 parameter_list|(
 name|a
 parameter_list|)
-value|(sizeof(a) / sizeof((a)[0]))
+value|((int)(sizeof(a) / sizeof((a)[0])))
 name|int
 name|i
 decl_stmt|;
@@ -13793,7 +13793,7 @@ specifier|static
 name|uint16_t
 name|urtw_rtl2rate
 parameter_list|(
-name|int
+name|uint32_t
 name|rate
 parameter_list|)
 block|{
@@ -13803,7 +13803,7 @@ name|N
 parameter_list|(
 name|a
 parameter_list|)
-value|(sizeof(a) / sizeof((a)[0]))
+value|((int)(sizeof(a) / sizeof((a)[0])))
 name|int
 name|i
 decl_stmt|;
@@ -16795,7 +16795,7 @@ name|N
 parameter_list|(
 name|a
 parameter_list|)
-value|(sizeof(a) / sizeof((a)[0]))
+value|((int)(sizeof(a) / sizeof((a)[0])))
 name|int
 name|i
 decl_stmt|;
@@ -18989,7 +18989,7 @@ name|N
 parameter_list|(
 name|a
 parameter_list|)
-value|(sizeof(a) / sizeof((a)[0]))
+value|((int)(sizeof(a) / sizeof((a)[0])))
 name|int
 name|i
 decl_stmt|;
@@ -20906,7 +20906,7 @@ name|N
 parameter_list|(
 name|a
 parameter_list|)
-value|(sizeof(a) / sizeof((a)[0]))
+value|((int)(sizeof(a) / sizeof((a)[0])))
 name|int
 name|i
 decl_stmt|;
@@ -24840,6 +24840,9 @@ if|if
 condition|(
 name|actlen
 operator|<
+operator|(
+name|int
+operator|)
 name|URTW_MIN_RXBUFSZ
 condition|)
 block|{
@@ -27411,10 +27414,19 @@ name|driver_t
 name|urtw_driver
 init|=
 block|{
+operator|.
+name|name
+operator|=
 literal|"urtw"
 block|,
+operator|.
+name|methods
+operator|=
 name|urtw_methods
 block|,
+operator|.
+name|size
+operator|=
 expr|sizeof
 operator|(
 expr|struct

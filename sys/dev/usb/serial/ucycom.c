@@ -2404,7 +2404,7 @@ decl_stmt|;
 name|uint32_t
 name|offset
 decl_stmt|;
-name|uint32_t
+name|int
 name|len
 decl_stmt|;
 name|int

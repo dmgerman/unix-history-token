@@ -2814,7 +2814,7 @@ parameter_list|,
 name|uint16_t
 name|unit
 parameter_list|,
-name|uint16_t
+name|int16_t
 name|subunit
 parameter_list|,
 name|uint8_t

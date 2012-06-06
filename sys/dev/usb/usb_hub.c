@@ -5410,7 +5410,9 @@ block|{
 name|usb_size_t
 name|min
 init|=
-literal|0
+operator|(
+name|usb_size_t
+operator|)
 operator|-
 literal|1
 decl_stmt|;
@@ -7931,7 +7933,9 @@ block|}
 comment|/* reset counters */
 name|mintime
 operator|=
-literal|0
+operator|(
+name|usb_ticks_t
+operator|)
 operator|-
 literal|1
 expr_stmt|;
@@ -8108,11 +8112,14 @@ if|if
 condition|(
 name|mintime
 operator|>=
-operator|(
+call|(
+name|usb_ticks_t
+call|)
+argument_list|(
 literal|1
 operator|*
 name|hz
-operator|)
+argument_list|)
 condition|)
 block|{
 comment|/* recompute power masks */

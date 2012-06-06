@@ -2384,7 +2384,10 @@ if|if
 condition|(
 name|actlen
 operator|<=
-operator|(
+call|(
+name|int
+call|)
+argument_list|(
 literal|2
 operator|+
 sizeof|sizeof
@@ -2392,7 +2395,7 @@ argument_list|(
 expr|struct
 name|ether_header
 argument_list|)
-operator|)
+argument_list|)
 condition|)
 block|{
 name|ifp

@@ -10275,7 +10275,10 @@ operator|&&
 operator|(
 name|code
 operator|<
-operator|(
+call|(
+name|int
+call|)
+argument_list|(
 literal|89
 operator|+
 operator|(
@@ -10292,7 +10295,7 @@ literal|0
 index|]
 argument_list|)
 operator|)
-operator|)
+argument_list|)
 operator|)
 condition|)
 block|{
