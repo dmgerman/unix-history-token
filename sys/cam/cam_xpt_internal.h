@@ -402,6 +402,14 @@ name|struct
 name|timeval
 name|last_reset
 decl_stmt|;
+name|u_int
+name|rpl_size
+decl_stmt|;
+name|struct
+name|scsi_report_luns_data
+modifier|*
+name|luns
+decl_stmt|;
 block|}
 struct|;
 end_struct
