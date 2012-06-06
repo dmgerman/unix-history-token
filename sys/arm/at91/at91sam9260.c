@@ -889,7 +889,6 @@ argument_list|(
 name|parent
 argument_list|)
 expr_stmt|;
-break|break;
 block|}
 block|}
 end_function
