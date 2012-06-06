@@ -4179,7 +4179,7 @@ name|O_RDWR
 operator||
 name|O_CREAT
 argument_list|,
-literal|0661
+literal|0664
 argument_list|)
 operator|)
 operator|<
