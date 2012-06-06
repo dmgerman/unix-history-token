@@ -7139,6 +7139,8 @@ if|if
 condition|(
 name|pci_find_cap
 argument_list|(
+name|sc
+operator|->
 name|dev
 argument_list|,
 name|PCIY_PMG
