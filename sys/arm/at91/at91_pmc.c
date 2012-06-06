@@ -2180,7 +2180,7 @@ if|if
 condition|(
 name|at91_cpu_is
 argument_list|(
-name|AT91_CPU_SAM9G45
+name|AT91_T_SAM9G45
 argument_list|)
 operator|&&
 operator|(
@@ -2370,7 +2370,7 @@ if|if
 condition|(
 name|at91_cpu_is
 argument_list|(
-name|AT91_CPU_SAM9G20
+name|AT91_T_SAM9G20
 argument_list|)
 condition|)
 name|cpu
