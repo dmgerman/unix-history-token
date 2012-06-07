@@ -12230,6 +12230,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/*  * Pre-24XX fabric port logout  *  * Note that portid is not used  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -15020,7 +15024,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Complete the synchronization of our Port Database.  *  * At this point, we've scanned the local loop (if any) and the fabric  * and performed fabric logins on all new devices.  *  * Our task here is to go through our port database and remove any entities  * that are still marked probational (issuing PLOGO for ones which we had  * PLOGI'd into) or are dead.  *  * Our task here is to also check policy to decide whether devices which  * have *changed* in some way should still be kept active. For example,  * if a device has just changed PortID, we can either elect to treat it  * as an old device or as a newly arrived device (and notify the outer  * layer appropriately).  *  * We also do initiator map target id assignment here for new initiator  * devices and refresh old ones ot make sure that they point to the corret  * entities.  */
+comment|/*  * Complete the synchronization of our Port Database.  *  * At this point, we've scanned the local loop (if any) and the fabric  * and performed fabric logins on all new devices.  *  * Our task here is to go through our port database and remove any entities  * that are still marked probational (issuing PLOGO for ones which we had  * PLOGI'd into) or are dead.  *  * Our task here is to also check policy to decide whether devices which  * have *changed* in some way should still be kept active. For example,  * if a device has just changed PortID, we can either elect to treat it  * as an old device or as a newly arrived device (and notify the outer  * layer appropriately).  *  * We also do initiator map target id assignment here for new initiator  * devices and refresh old ones ot make sure that they point to the correct  * entities.  */
 end_comment
 
 begin_function

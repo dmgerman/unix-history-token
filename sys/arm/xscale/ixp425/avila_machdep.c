@@ -855,13 +855,10 @@ name|void
 modifier|*
 name|initarm
 parameter_list|(
-name|void
+name|struct
+name|arm_boot_params
 modifier|*
-name|arg
-parameter_list|,
-name|void
-modifier|*
-name|arg2
+name|abp
 parameter_list|)
 block|{
 define|#

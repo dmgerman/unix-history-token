@@ -441,6 +441,8 @@ name|PROBE_INQUIRY_BASIC_DV2
 block|,
 name|PROBE_DV_EXIT
 block|,
+name|PROBE_DONE
+block|,
 name|PROBE_INVALID
 block|}
 name|probe_action
@@ -479,6 +481,8 @@ literal|"PROBE_INQUIRY_BASIC_DV2"
 block|,
 literal|"PROBE_DV_EXIT"
 block|,
+literal|"PROBE_DONE"
+block|,
 literal|"PROBE_INVALID"
 block|}
 decl_stmt|;
@@ -494,7 +498,7 @@ parameter_list|,
 name|newaction
 parameter_list|)
 define|\
-value|do {									\ 	char **text;							\ 	text = probe_action_text;					\ 	CAM_DEBUG((softc)->periph->path, CAM_DEBUG_INFO,		\ 	    ("Probe %s to %s\n", text[(softc)->action],			\ 	    text[(newaction)]));					\ 	(softc)->action = (newaction);					\ } while(0)
+value|do {									\ 	char **text;							\ 	text = probe_action_text;					\ 	CAM_DEBUG((softc)->periph->path, CAM_DEBUG_PROBE,		\ 	    ("Probe %s to %s\n", text[(softc)->action],			\ 	    text[(newaction)]));					\ 	(softc)->action = (newaction);					\ } while(0)
 end_define
 
 begin_typedef
@@ -2266,6 +2270,19 @@ name|status
 operator|)
 return|;
 block|}
+name|CAM_DEBUG
+argument_list|(
+name|periph
+operator|->
+name|path
+argument_list|,
+name|CAM_DEBUG_PROBE
+argument_list|,
+operator|(
+literal|"Probe started\n"
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Ensure we've waited at least a bus settle 	 * delay before attempting to probe the device. 	 * For HBAs that don't do bus resets, this won't make a difference. 	 */
 name|cam_periph_freeze_after_event
 argument_list|(
@@ -3560,26 +3577,16 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-case|case
-name|PROBE_INVALID
-case|:
-name|CAM_DEBUG
+default|default:
+name|panic
 argument_list|(
-name|start_ccb
+literal|"probestart: invalid action state 0x%x\n"
+argument_list|,
+name|softc
 operator|->
-name|ccb_h
-operator|.
-name|path
-argument_list|,
-name|CAM_DEBUG_INFO
-argument_list|,
-operator|(
-literal|"probestart: invalid action state\n"
-operator|)
+name|action
 argument_list|)
 expr_stmt|;
-default|default:
-break|break;
 block|}
 name|xpt_action
 argument_list|(
@@ -3942,7 +3949,7 @@ name|periph
 operator|->
 name|path
 argument_list|,
-name|CAM_DEBUG_INFO
+name|CAM_DEBUG_PROBE
 argument_list|,
 operator|(
 literal|"hit async: giving up on DV\n"
@@ -4002,7 +4009,7 @@ name|periph
 operator|->
 name|path
 argument_list|,
-name|CAM_DEBUG_INFO
+name|CAM_DEBUG_PROBE
 argument_list|,
 operator|(
 literal|"setting to async for DV\n"
@@ -4029,7 +4036,7 @@ name|periph
 operator|->
 name|path
 argument_list|,
-name|CAM_DEBUG_INFO
+name|CAM_DEBUG_PROBE
 argument_list|,
 operator|(
 literal|"DV: period 0x%x\n"
@@ -4098,7 +4105,7 @@ name|periph
 operator|->
 name|path
 argument_list|,
-name|CAM_DEBUG_INFO
+name|CAM_DEBUG_PROBE
 argument_list|,
 operator|(
 literal|"DV: failed to set period 0x%x\n"
@@ -4739,6 +4746,13 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|PROBE_SET_ACTION
+argument_list|(
+name|softc
+argument_list|,
+name|PROBE_INVALID
+argument_list|)
+expr_stmt|;
 name|xpt_release_ccb
 argument_list|(
 name|done_ccb
@@ -4904,14 +4918,14 @@ name|maxlun
 condition|)
 block|{
 comment|/* 			 * Reallocate and retry to cover all luns 			 */
-name|CAM_DEBUG_PATH_PRINT
+name|CAM_DEBUG
 argument_list|(
-name|CAM_DEBUG_PROBE
-argument_list|,
 name|path
 argument_list|,
+name|CAM_DEBUG_PROBE
+argument_list|,
 operator|(
-literal|"reallocating REPORT_LUNS for %u luns\n"
+literal|"Probe: reallocating REPORT_LUNS for %u luns\n"
 operator|,
 name|nlun
 operator|)
@@ -5005,14 +5019,14 @@ decl_stmt|;
 name|int
 name|idx
 decl_stmt|;
-name|CAM_DEBUG_PATH_PRINT
+name|CAM_DEBUG
 argument_list|(
-name|CAM_DEBUG_PROBE
-argument_list|,
 name|path
 argument_list|,
+name|CAM_DEBUG_PROBE
+argument_list|,
 operator|(
-literal|"%u luns reported\n"
+literal|"Probe: %u lun(s) reported\n"
 operator|,
 name|nlun
 operator|)
@@ -5136,11 +5150,11 @@ argument_list|,
 literal|8
 argument_list|)
 expr_stmt|;
-name|CAM_DEBUG_PATH_PRINT
+name|CAM_DEBUG
 argument_list|(
-name|CAM_DEBUG_PROBE
-argument_list|,
 name|path
+argument_list|,
+name|CAM_DEBUG_PROBE
 argument_list|,
 operator|(
 literal|"lun 0 in position %u\n"
@@ -6421,7 +6435,7 @@ name|periph
 operator|->
 name|path
 argument_list|,
-name|CAM_DEBUG_INFO
+name|CAM_DEBUG_PROBE
 argument_list|,
 operator|(
 literal|"Begin Domain Validation\n"
@@ -6472,7 +6486,7 @@ name|periph
 operator|->
 name|path
 argument_list|,
-name|CAM_DEBUG_INFO
+name|CAM_DEBUG_PROBE
 argument_list|,
 operator|(
 literal|"Leave Domain Validation\n"
@@ -6562,6 +6576,13 @@ name|done_ccb
 argument_list|)
 expr_stmt|;
 block|}
+name|PROBE_SET_ACTION
+argument_list|(
+name|softc
+argument_list|,
+name|PROBE_DONE
+argument_list|)
+expr_stmt|;
 name|xpt_release_ccb
 argument_list|(
 name|done_ccb
@@ -6782,7 +6803,7 @@ name|periph
 operator|->
 name|path
 argument_list|,
-name|CAM_DEBUG_INFO
+name|CAM_DEBUG_PROBE
 argument_list|,
 operator|(
 literal|"Leave Domain Validation Successfully\n"
@@ -6872,6 +6893,13 @@ name|done_ccb
 argument_list|)
 expr_stmt|;
 block|}
+name|PROBE_SET_ACTION
+argument_list|(
+name|softc
+argument_list|,
+name|PROBE_DONE
+argument_list|)
+expr_stmt|;
 name|xpt_release_ccb
 argument_list|(
 name|done_ccb
@@ -6879,26 +6907,16 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-case|case
-name|PROBE_INVALID
-case|:
-name|CAM_DEBUG
+default|default:
+name|panic
 argument_list|(
-name|done_ccb
+literal|"probedone: invalid action state 0x%x\n"
+argument_list|,
+name|softc
 operator|->
-name|ccb_h
-operator|.
-name|path
-argument_list|,
-name|CAM_DEBUG_INFO
-argument_list|,
-operator|(
-literal|"probedone: invalid action state\n"
-operator|)
+name|action
 argument_list|)
 expr_stmt|;
-default|default:
-break|break;
 block|}
 name|done_ccb
 operator|=
@@ -6958,6 +6976,19 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|CAM_DEBUG
+argument_list|(
+name|periph
+operator|->
+name|path
+argument_list|,
+name|CAM_DEBUG_PROBE
+argument_list|,
+operator|(
+literal|"Probe completed\n"
+operator|)
+argument_list|)
+expr_stmt|;
 name|cam_periph_invalidate
 argument_list|(
 name|periph
@@ -7975,15 +8006,15 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|CAM_DEBUG_PATH_PRINT
+name|CAM_DEBUG
 argument_list|(
-name|CAM_DEBUG_PROBE
-argument_list|,
 name|request_ccb
 operator|->
 name|ccb_h
 operator|.
 name|path
+argument_list|,
+name|CAM_DEBUG_TRACE
 argument_list|,
 operator|(
 literal|"SCAN start for %p\n"
@@ -8551,15 +8582,15 @@ name|next_target
 operator|=
 literal|0
 expr_stmt|;
-name|CAM_DEBUG_PATH_PRINT
+name|CAM_DEBUG
 argument_list|(
-name|CAM_DEBUG_PROBE
-argument_list|,
 name|request_ccb
 operator|->
 name|ccb_h
 operator|.
 name|path
+argument_list|,
+name|CAM_DEBUG_PROBE
 argument_list|,
 operator|(
 literal|"next lun to try at index %u is %u\n"
@@ -8975,15 +9006,15 @@ name|scan_info
 operator|->
 name|request_ccb
 expr_stmt|;
-name|CAM_DEBUG_PATH_PRINT
+name|CAM_DEBUG
 argument_list|(
-name|CAM_DEBUG_PROBE
-argument_list|,
 name|request_ccb
 operator|->
 name|ccb_h
 operator|.
 name|path
+argument_list|,
+name|CAM_DEBUG_TRACE
 argument_list|,
 operator|(
 literal|"SCAN done for %p\n"

@@ -4317,6 +4317,14 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|800000
+end_if
+
 begin_comment
 comment|/*********************************************************************  *  Transmit entry point  *  *  igb_start is called by the stack to initiate a transmit.  *  The driver will remain in this routine as long as there are  *  packets to transmit and transmit resources are available.  *  In case resources are not available stack is notified and  *  the packet is requeued.  **********************************************************************/
 end_comment
@@ -4574,13 +4582,10 @@ return|return;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
-end_if
+begin_else
+else|#
+directive|else
+end_else
 
 begin_comment
 comment|/* ** Multiqueue Transmit driver ** */
@@ -14364,12 +14369,6 @@ name|if_ioctl
 operator|=
 name|igb_ioctl
 expr_stmt|;
-name|ifp
-operator|->
-name|if_start
-operator|=
-name|igb_start
-expr_stmt|;
 if|#
 directive|if
 name|__FreeBSD_version
@@ -14387,8 +14386,14 @@ name|if_qflush
 operator|=
 name|igb_qflush
 expr_stmt|;
-endif|#
-directive|endif
+else|#
+directive|else
+name|ifp
+operator|->
+name|if_start
+operator|=
+name|igb_start
+expr_stmt|;
 name|IFQ_SET_MAXLEN
 argument_list|(
 operator|&
@@ -14423,6 +14428,8 @@ operator|->
 name|if_snd
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|ether_ifattach
 argument_list|(
 name|ifp

@@ -6506,14 +6506,6 @@ expr_stmt|;
 if|if
 condition|(
 name|more
-operator|||
-operator|(
-name|ifp
-operator|->
-name|if_drv_flags
-operator|&
-name|IFF_DRV_OACTIVE
-operator|)
 condition|)
 block|{
 name|taskqueue_enqueue

@@ -3489,9 +3489,9 @@ operator|->
 name|if_snd
 argument_list|)
 condition|)
-name|ath_start
+name|ath_tx_kick
 argument_list|(
-name|ifp
+name|sc
 argument_list|)
 expr_stmt|;
 block|}

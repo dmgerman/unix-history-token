@@ -151,12 +151,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|uint32_t
-name|at91_chip_id
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|uint32_t
 name|at91_master_clock
 decl_stmt|;
 end_decl_stmt

@@ -33337,11 +33337,6 @@ name|FE_LEDC
 block|}
 block|}
 decl_stmt|;
-define|#
-directive|define
-name|sym_pci_num_devs
-define|\
-value|(sizeof(sym_pci_dev_table) / sizeof(sym_pci_dev_table[0]))
 comment|/*  *  Look up the chip table.  *  *  Return a pointer to the chip entry if found,  *  zero otherwise.  */
 specifier|static
 specifier|const
@@ -33403,7 +33398,10 @@ literal|0
 init|;
 name|i
 operator|<
-name|sym_pci_num_devs
+name|nitems
+argument_list|(
+name|sym_pci_dev_table
+argument_list|)
 condition|;
 name|i
 operator|++

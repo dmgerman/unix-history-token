@@ -15011,9 +15011,9 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|ath_start
+name|ath_tx_kick
 argument_list|(
-name|ifp
+name|sc
 argument_list|)
 expr_stmt|;
 block|}
@@ -15293,9 +15293,9 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|ath_start
+name|ath_tx_kick
 argument_list|(
-name|ifp
+name|sc
 argument_list|)
 expr_stmt|;
 block|}
@@ -15496,9 +15496,9 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|ath_start
+name|ath_tx_kick
 argument_list|(
-name|ifp
+name|sc
 argument_list|)
 expr_stmt|;
 block|}

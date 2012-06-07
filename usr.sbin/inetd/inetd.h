@@ -350,7 +350,7 @@ name|se_count
 decl_stmt|;
 comment|/* number started since se_time */
 name|struct
-name|timeval
+name|timespec
 name|se_time
 decl_stmt|;
 comment|/* start of se_count */
