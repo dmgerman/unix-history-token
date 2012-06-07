@@ -737,12 +737,6 @@ begin_comment
 comment|/* Storage for debugging datastructures */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CAMDEBUG
-end_ifdef
-
 begin_decl_stmt
 name|struct
 name|cam_path
@@ -751,12 +745,6 @@ name|cam_dpath
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CAM_DEBUG_FLAGS
-end_ifdef
-
 begin_decl_stmt
 name|u_int32_t
 name|cam_dflags
@@ -764,24 +752,6 @@ init|=
 name|CAM_DEBUG_FLAGS
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-name|u_int32_t
-name|cam_dflags
-init|=
-name|CAM_DEBUG_NONE
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_expr_stmt
 name|TUNABLE_INT
@@ -810,7 +780,7 @@ name|cam_dflags
 argument_list|,
 literal|0
 argument_list|,
-literal|"Cam Debug Flags"
+literal|"Enabled debug flags"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -818,6 +788,8 @@ end_expr_stmt
 begin_decl_stmt
 name|u_int32_t
 name|cam_debug_delay
+init|=
+name|CAM_DEBUG_DELAY
 decl_stmt|;
 end_decl_stmt
 
@@ -848,15 +820,10 @@ name|cam_debug_delay
 argument_list|,
 literal|0
 argument_list|,
-literal|"Cam Debug Flags"
+literal|"Delay in us after each debug message"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Our boot-time initialization hook */
@@ -10828,9 +10795,6 @@ modifier|*
 name|start_ccb
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|CAMDEBUG
 name|char
 name|cdb_str
 index|[
@@ -10843,8 +10807,6 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-endif|#
-directive|endif
 name|struct
 name|cam_path
 modifier|*
@@ -12948,18 +12910,29 @@ case|case
 name|XPT_DEBUG
 case|:
 block|{
-ifdef|#
-directive|ifdef
-name|CAMDEBUG
-ifdef|#
-directive|ifdef
-name|CAM_DEBUG_DELAY
-name|cam_debug_delay
+comment|/* Check that all request bits are supported. */
+if|if
+condition|(
+name|start_ccb
+operator|->
+name|cdbg
+operator|.
+name|flags
+operator|&
+operator|~
+name|CAM_DEBUG_COMPILE
+condition|)
+block|{
+name|start_ccb
+operator|->
+name|ccb_h
+operator|.
+name|status
 operator|=
-name|CAM_DEBUG_DELAY
+name|CAM_FUNC_NOTAVAIL
 expr_stmt|;
-endif|#
-directive|endif
+break|break;
+block|}
 name|cam_dflags
 operator|=
 name|start_ccb
@@ -13072,20 +13045,6 @@ operator|=
 name|CAM_REQ_CMP
 expr_stmt|;
 block|}
-else|#
-directive|else
-comment|/* !CAMDEBUG */
-name|start_ccb
-operator|->
-name|ccb_h
-operator|.
-name|status
-operator|=
-name|CAM_FUNC_NOTAVAIL
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* CAMDEBUG */
 break|break;
 block|}
 case|case
@@ -21393,13 +21352,7 @@ name|arg
 parameter_list|)
 block|{
 comment|/* 	 * Now that interrupts are enabled, go find our devices 	 */
-ifdef|#
-directive|ifdef
-name|CAMDEBUG
-comment|/* Setup debugging flags and path */
-ifdef|#
-directive|ifdef
-name|CAM_DEBUG_BUS
+comment|/* Setup debugging path */
 if|if
 condition|(
 name|cam_dflags
@@ -21450,19 +21403,6 @@ name|cam_dpath
 operator|=
 name|NULL
 expr_stmt|;
-else|#
-directive|else
-comment|/* !CAM_DEBUG_BUS */
-name|cam_dpath
-operator|=
-name|NULL
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* CAM_DEBUG_BUS */
-endif|#
-directive|endif
-comment|/* CAMDEBUG */
 name|periphdriver_init
 argument_list|(
 literal|1
