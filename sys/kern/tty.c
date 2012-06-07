@@ -8418,11 +8418,9 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|done1
+goto|;
 endif|#
 directive|endif
 comment|/* 	 * Make sure the vnode is bound to a character device. 	 * Unlocked check for the vnode type is ok there, because we 	 * only shall prevent calling devvn_refthread on the file that 	 * never has been opened over a character device. 	 */
