@@ -4987,7 +4987,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|" %10s %6ju"
+literal|" %10s %6zu"
 argument_list|,
 name|mode
 argument_list|,
