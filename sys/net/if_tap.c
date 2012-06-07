@@ -46,6 +46,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -179,6 +185,12 @@ begin_include
 include|#
 directive|include
 file|<net/if_types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/vnet.h>
 end_include
 
 begin_include
@@ -1090,6 +1102,13 @@ name|if_xname
 operator|)
 argument_list|)
 expr_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|ifp
+operator|->
+name|if_vnet
+argument_list|)
+expr_stmt|;
 name|seldrain
 argument_list|(
 operator|&
@@ -1139,6 +1158,9 @@ name|tp
 argument_list|,
 name|M_TAP
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -1729,6 +1751,14 @@ name|append_unit
 operator|=
 literal|1
 expr_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|CRED_TO_VNET
+argument_list|(
+name|cred
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* find any existing device, or allocate new unit number */
 name|i
 operator|=
@@ -1818,6 +1848,9 @@ name|namelen
 argument_list|,
 name|NULL
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -2508,6 +2541,13 @@ operator|->
 name|tap_mtx
 argument_list|)
 expr_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|ifp
+operator|->
+name|if_vnet
+argument_list|)
+expr_stmt|;
 name|IF_DRAIN
 argument_list|(
 operator|&
@@ -2628,6 +2668,9 @@ name|ifp
 argument_list|,
 name|LINK_STATE_DOWN
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 name|funsetown
 argument_list|(
@@ -4533,6 +4576,13 @@ operator|)
 return|;
 block|}
 comment|/* Pass packet up to parent. */
+name|CURVNET_SET
+argument_list|(
+name|ifp
+operator|->
+name|if_vnet
+argument_list|)
+expr_stmt|;
 call|(
 modifier|*
 name|ifp
@@ -4544,6 +4594,9 @@ name|ifp
 argument_list|,
 name|m
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 name|ifp
 operator|->
