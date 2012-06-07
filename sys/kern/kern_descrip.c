@@ -7268,16 +7268,22 @@ literal|"free descriptor isn't"
 operator|)
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
 name|fdp
 operator|->
 name|fd_ofileflags
 index|[
 name|fd
 index|]
-operator|=
+operator|==
 literal|0
+argument_list|,
+operator|(
+literal|"file flags are set"
+operator|)
+argument_list|)
 expr_stmt|;
-comment|/* XXX needed? */
 name|fdused
 argument_list|(
 name|fdp
