@@ -9661,10 +9661,20 @@ decl_stmt|;
 comment|/* XXX force stereo */
 if|if
 condition|(
+operator|(
 name|format
 operator|&
 name|AFMT_PASSTHROUGH
+operator|)
+operator|&&
+name|AFMT_CHANNEL
+argument_list|(
+name|format
+argument_list|)
+operator|<
+literal|2
 condition|)
+block|{
 name|format
 operator|=
 name|SND_FORMAT
@@ -9676,6 +9686,7 @@ argument_list|,
 name|AFMT_PASSTHROUGH_EXTCHANNEL
 argument_list|)
 expr_stmt|;
+block|}
 name|oldformat
 operator|=
 name|c

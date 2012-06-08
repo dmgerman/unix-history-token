@@ -601,6 +601,12 @@ decl_stmt|;
 name|int
 name|running
 decl_stmt|;
+name|int
+name|bw
+decl_stmt|;
+name|int
+name|stripe
+decl_stmt|;
 name|uint16_t
 name|format
 decl_stmt|;
@@ -735,6 +741,9 @@ index|[
 name|HDAC_UNSOLQ_MAX
 index|]
 decl_stmt|;
+name|int
+name|sdo_bw_used
+decl_stmt|;
 name|struct
 name|hdac_stream
 modifier|*
@@ -762,6 +771,9 @@ name|pending
 decl_stmt|;
 name|uint32_t
 name|response
+decl_stmt|;
+name|int
+name|sdi_bw_used
 decl_stmt|;
 block|}
 name|codecs
