@@ -72,16 +72,6 @@ name|VERSION
 value|"2.3-FreeBSD"
 end_define
 
-begin_define
-define|#
-directive|define
-name|UNUSED_ARG
-parameter_list|(
-name|A
-parameter_list|)
-value|do { (void)(A); } while(0)
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef
