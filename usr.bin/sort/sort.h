@@ -79,7 +79,7 @@ name|UNUSED_ARG
 parameter_list|(
 name|A
 parameter_list|)
-value|do { A=A; } while(0)
+value|do { (void)(A); } while(0)
 end_define
 
 begin_ifdef
