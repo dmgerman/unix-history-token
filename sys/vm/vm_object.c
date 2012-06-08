@@ -5209,6 +5209,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|vm_page_lock
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 name|vm_page_rename
 argument_list|(
 name|m
@@ -5216,6 +5221,11 @@ argument_list|,
 name|new_object
 argument_list|,
 name|idx
+argument_list|)
+expr_stmt|;
+name|vm_page_unlock
+argument_list|(
+name|m
 argument_list|)
 expr_stmt|;
 comment|/* 			 * page automatically made dirty by rename and 			 * cache handled 			 */
@@ -5989,6 +5999,11 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 			 * Page does not exist in parent, rename the 			 * page from the backing object to the main object.  			 * 			 * If the page was mapped to a process, it can remain  			 * mapped through the rename. 			 */
+name|vm_page_lock
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|vm_page_rename
 argument_list|(
 name|p
@@ -5996,6 +6011,11 @@ argument_list|,
 name|object
 argument_list|,
 name|new_pindex
+argument_list|)
+expr_stmt|;
+name|vm_page_unlock
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 comment|/* page automatically made dirty by rename */
