@@ -1227,6 +1227,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|LENOVO_B450_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(LENOVO, 0x3a0d)
+end_define
+
+begin_define
+define|#
+directive|define
 name|LENOVO_TCA55_SUBVENDOR
 value|HDA_MODEL_CONSTRUCT(LENOVO, 0x1015)
 end_define
@@ -13112,6 +13119,35 @@ literal|"as=1 seq=15"
 expr_stmt|;
 break|break;
 block|}
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|id
+operator|==
+name|HDA_CODEC_CX20561
+operator|&&
+name|sc
+operator|->
+name|pci_subvendor
+operator|==
+name|LENOVO_B450_SUBVENDOR
+condition|)
+block|{
+switch|switch
+condition|(
+name|nid
+condition|)
+block|{
+case|case
+literal|22
+case|:
+name|patch
+operator|=
+literal|"as=1 seq=15"
+expr_stmt|;
+break|break;
 block|}
 block|}
 if|if
