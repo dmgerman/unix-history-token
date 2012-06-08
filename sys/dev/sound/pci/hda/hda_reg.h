@@ -1667,7 +1667,7 @@ begin_define
 define|#
 directive|define
 name|HDA_CMD_SET_UNSOLICITED_RESPONSE_TAG_MASK
-value|0x1f
+value|0x3f
 end_define
 
 begin_define
@@ -1737,15 +1737,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|HDA_CMD_GET_PIN_SENSE_PRESENCE_DETECT_MASK
+name|HDA_CMD_GET_PIN_SENSE_PRESENCE_DETECT
 value|0x80000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|HDA_CMD_GET_PIN_SENSE_PRESENCE_DETECT_SHIFT
-value|31
 end_define
 
 begin_define
@@ -1760,17 +1753,6 @@ define|#
 directive|define
 name|HDA_CMD_GET_PIN_SENSE_IMP_SENSE_SHIFT
 value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|HDA_CMD_GET_PIN_SENSE_PRESENCE_DETECT
-parameter_list|(
-name|rsp
-parameter_list|)
-define|\
-value|(((rsp)& HDA_CMD_GET_PIN_SENSE_PRESENCE_DETECT_MASK)>>		\     HDA_CMD_GET_PIN_SENSE_PRESENCE_DETECT_SHIFT)
 end_define
 
 begin_define
