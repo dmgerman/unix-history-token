@@ -2854,7 +2854,13 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"*** Completed successfully\n"
+literal|"*** [%s] Completed successfully\n"
+argument_list|,
+name|job
+operator|->
+name|node
+operator|->
+name|name
 argument_list|)
 expr_stmt|;
 block|}
@@ -2892,7 +2898,13 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"*** Error code %d%s\n"
+literal|"*** [%s] Error code %d%s\n"
+argument_list|,
+name|job
+operator|->
+name|node
+operator|->
+name|name
 argument_list|,
 name|WEXITSTATUS
 argument_list|(
@@ -2908,7 +2920,7 @@ operator|&
 name|JOB_IGNERR
 operator|)
 condition|?
-literal|"(ignored)"
+literal|" (ignored)"
 else|:
 literal|""
 argument_list|)
@@ -3073,7 +3085,13 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"*** Continued\n"
+literal|"*** [%s] Continued\n"
+argument_list|,
+name|job
+operator|->
+name|node
+operator|->
+name|name
 argument_list|)
 expr_stmt|;
 block|}
@@ -3205,7 +3223,13 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"*** Signal %d\n"
+literal|"*** [%s] Signal %d\n"
+argument_list|,
+name|job
+operator|->
+name|node
+operator|->
+name|name
 argument_list|,
 name|WTERMSIG
 argument_list|(
@@ -3323,7 +3347,13 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"*** Stopped -- signal %d\n"
+literal|"*** [%s] Stopped -- signal %d\n"
+argument_list|,
+name|job
+operator|->
+name|node
+operator|->
+name|name
 argument_list|,
 name|WSTOPSIG
 argument_list|(
@@ -10224,7 +10254,11 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"*** Error code %d"
+literal|"*** [%s] Error code %d"
+argument_list|,
+name|gn
+operator|->
+name|name
 argument_list|,
 name|status
 argument_list|)
@@ -10259,7 +10293,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"*** Signal %d"
+literal|"*** [%s] Signal %d"
+argument_list|,
+name|gn
+operator|->
+name|name
 argument_list|,
 name|status
 argument_list|)
