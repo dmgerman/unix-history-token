@@ -3205,6 +3205,30 @@ name|puc_config_syba
 block|}
 block|,
 block|{
+literal|0x1fd4
+block|,
+literal|0x1999
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|"Sunix SER5437A"
+block|,
+name|DEFAULT_RCLK
+operator|*
+literal|8
+block|,
+name|PUC_PORT_2S
+block|,
+literal|0x10
+block|,
+literal|0
+block|,
+literal|8
+block|, 	}
+block|,
+block|{
 literal|0x5372
 block|,
 literal|0x6873
