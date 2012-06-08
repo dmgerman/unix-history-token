@@ -7220,7 +7220,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"%s<State>%s</State>"
+literal|"%s<State>%s</State>\n"
 argument_list|,
 name|indent
 argument_list|,
@@ -7295,7 +7295,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"%s<State>%s</State>"
+literal|"%s<State>%s</State>\n"
 argument_list|,
 name|indent
 argument_list|,
@@ -7340,7 +7340,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"%s<UUID>%s</UUID>"
+literal|"%s<UUID>%s</UUID>\n"
 argument_list|,
 name|indent
 argument_list|,
@@ -7353,7 +7353,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"%s<Mode>Active/%s</Mode>"
+literal|"%s<Mode>Active/%s</Mode>\n"
 argument_list|,
 name|indent
 argument_list|,
@@ -7380,7 +7380,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"%s<Type>%s</Type>"
+literal|"%s<Type>%s</Type>\n"
 argument_list|,
 name|indent
 argument_list|,
