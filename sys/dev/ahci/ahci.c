@@ -19143,7 +19143,7 @@ name|cts
 operator|->
 name|protocol
 operator|=
-name|PROTO_ATA
+name|PROTO_UNSPECIFIED
 expr_stmt|;
 name|cts
 operator|->
@@ -19789,7 +19789,7 @@ name|cpi
 operator|->
 name|protocol
 operator|=
-name|PROTO_ATA
+name|PROTO_UNSPECIFIED
 expr_stmt|;
 name|cpi
 operator|->
