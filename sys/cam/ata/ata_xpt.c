@@ -217,6 +217,9 @@ directive|define
 name|CAM_QUIRK_MAXTAGS
 value|0x01
 name|u_int
+name|mintags
+decl_stmt|;
+name|u_int
 name|maxtags
 decl_stmt|;
 block|}
@@ -443,6 +446,9 @@ literal|"*"
 block|}
 block|,
 comment|/*quirks*/
+literal|0
+block|,
+comment|/*mintags*/
 literal|0
 block|,
 comment|/*maxtags*/
@@ -4301,6 +4307,8 @@ name|device
 operator|->
 name|mintags
 operator|=
+literal|2
+expr_stmt|;
 name|path
 operator|->
 name|device
@@ -6124,10 +6132,15 @@ name|quirks
 operator|&
 name|CAM_QUIRK_MAXTAGS
 condition|)
+block|{
 name|device
 operator|->
 name|mintags
 operator|=
+name|quirk
+operator|->
+name|mintags
+expr_stmt|;
 name|device
 operator|->
 name|maxtags
@@ -6136,6 +6149,7 @@ name|quirk
 operator|->
 name|maxtags
 expr_stmt|;
+block|}
 block|}
 end_function
 
