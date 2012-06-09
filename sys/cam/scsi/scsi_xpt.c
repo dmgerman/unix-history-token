@@ -916,6 +916,30 @@ literal|2
 block|}
 block|,
 block|{
+comment|/* 		 * Experiences command timeouts under load with a 		 * tag count higher than 55. 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+name|seagate
+block|,
+literal|"ST3146855LW"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+literal|0
+block|,
+comment|/*mintags*/
+literal|2
+block|,
+comment|/*maxtags*/
+literal|55
+block|}
+block|,
+block|{
 comment|/* 		 * Slow when tagged queueing is enabled.  Write performance 		 * steadily drops off with more and more concurrent 		 * transactions.  Best sequential write performance with 		 * tagged queueing turned off and write caching turned on. 		 * 		 * PR:  kern/10398 		 * Submitted by:  Hideaki Okada<hokada@isl.melco.co.jp> 		 * Drive:  DCAS-34330 w/ "S65A" firmware. 		 * 		 * The drive with the problem had the "S65A" firmware 		 * revision, and has also been reported (by Stephen J. 		 * Roznowski<sjr@home.net>) for a drive with the "S61A" 		 * firmware revision. 		 * 		 * Although no one has reported problems with the 2 gig 		 * version of the DCAS drive, the assumption is that it 		 * has the same problems as the 4 gig version.  Therefore 		 * this quirk entries disables tagged queueing for all 		 * DCAS drives. 		 */
 block|{
 name|T_DIRECT
