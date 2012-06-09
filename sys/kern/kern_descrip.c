@@ -8752,12 +8752,6 @@ name|filedesc
 modifier|*
 name|fdp
 decl_stmt|;
-name|struct
-name|file
-modifier|*
-modifier|*
-name|fpp
-decl_stmt|;
 name|int
 name|i
 decl_stmt|,
