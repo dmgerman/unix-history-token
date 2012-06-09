@@ -7264,7 +7264,7 @@ operator|==
 name|NULL
 argument_list|,
 operator|(
-literal|"free descriptor isn't"
+literal|"file descriptor isn't free"
 operator|)
 argument_list|)
 expr_stmt|;
