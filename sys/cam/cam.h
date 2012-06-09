@@ -241,6 +241,42 @@ name|cam_flags
 typedef|;
 end_typedef
 
+begin_enum
+enum|enum
+block|{
+name|SF_RETRY_UA
+init|=
+literal|0x01
+block|,
+comment|/* Retry UNIT ATTENTION conditions. */
+name|SF_NO_PRINT
+init|=
+literal|0x02
+block|,
+comment|/* Never print error status. */
+name|SF_QUIET_IR
+init|=
+literal|0x04
+block|,
+comment|/* Be quiet about Illegal Request reponses */
+name|SF_PRINT_ALWAYS
+init|=
+literal|0x08
+block|,
+comment|/* Always print error status. */
+name|SF_NO_RECOVERY
+init|=
+literal|0x10
+block|,
+comment|/* Don't do active error recovery. */
+name|SF_NO_RETRY
+init|=
+literal|0x20
+comment|/* Don't do any retries. */
+block|}
+enum|;
+end_enum
+
 begin_comment
 comment|/* CAM  Status field values */
 end_comment
