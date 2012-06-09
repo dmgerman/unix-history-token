@@ -90,6 +90,11 @@ name|vm_radix
 name|rtree
 decl_stmt|;
 comment|/* root of the resident page radix index tree */
+name|struct
+name|vm_radix
+name|cache
+decl_stmt|;
+comment|/* root of the cache page radix index tree */
 name|vm_pindex_t
 name|size
 decl_stmt|;

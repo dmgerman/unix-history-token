@@ -713,6 +713,14 @@ literal|0
 expr_stmt|;
 name|object
 operator|->
+name|cache
+operator|.
+name|rt_root
+operator|=
+literal|0
+expr_stmt|;
+name|object
+operator|->
 name|type
 operator|=
 name|type
@@ -2736,6 +2744,14 @@ operator|&
 name|object
 operator|->
 name|rtree
+argument_list|)
+expr_stmt|;
+name|vm_radix_reclaim_allnodes
+argument_list|(
+operator|&
+name|object
+operator|->
+name|cache
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If the object contained any pages, then reset it to an empty state. 	 * None of the object's fields, including "resident_page_count", were 	 * modified by the preceding loop. 	 */
