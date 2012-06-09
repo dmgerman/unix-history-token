@@ -6654,7 +6654,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Grow the file table to accomodate (at least) nfd descriptors.  This may  * block and drop the filedesc lock, but it will reacquire it before  * returning.  */
+comment|/*  * Grow the file table to accomodate (at least) nfd descriptors.  */
 end_comment
 
 begin_function
@@ -6750,11 +6750,6 @@ condition|)
 comment|/* the table is already large enough */
 return|return;
 comment|/* allocate a new table and (if required) new bitmaps */
-name|FILEDESC_XUNLOCK
-argument_list|(
-name|fdp
-argument_list|)
-expr_stmt|;
 name|ntable
 operator|=
 name|malloc
@@ -6825,48 +6820,6 @@ name|nmap
 operator|=
 name|NULL
 expr_stmt|;
-name|FILEDESC_XLOCK
-argument_list|(
-name|fdp
-argument_list|)
-expr_stmt|;
-comment|/* 	 * We now have new tables ready to go.  Since we dropped the 	 * filedesc lock to call malloc(), watch out for a race. 	 */
-name|onfiles
-operator|=
-name|fdp
-operator|->
-name|fd_nfiles
-expr_stmt|;
-if|if
-condition|(
-name|onfiles
-operator|>=
-name|nnfiles
-condition|)
-block|{
-comment|/* we lost the race, but that's OK */
-name|free
-argument_list|(
-name|ntable
-argument_list|,
-name|M_FILEDESC
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|nmap
-operator|!=
-name|NULL
-condition|)
-name|free
-argument_list|(
-name|nmap
-argument_list|,
-name|M_FILEDESC
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 name|bcopy
 argument_list|(
 name|fdp
