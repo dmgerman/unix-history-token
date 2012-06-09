@@ -6176,7 +6176,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|suspendctx
+name|savectx
 argument_list|(
 name|susppcbs
 index|[
@@ -6194,6 +6194,14 @@ name|cpu
 argument_list|,
 operator|&
 name|stopped_cpus
+argument_list|)
+expr_stmt|;
+name|CPU_SET_ATOMIC
+argument_list|(
+name|cpu
+argument_list|,
+operator|&
+name|suspended_cpus
 argument_list|)
 expr_stmt|;
 block|}
@@ -6216,14 +6224,13 @@ argument_list|,
 name|ticks
 argument_list|)
 expr_stmt|;
-name|susppcbs
-index|[
+name|CPU_CLR_ATOMIC
+argument_list|(
 name|cpu
-index|]
-operator|->
-name|pcb_eip
-operator|=
-literal|0
+argument_list|,
+operator|&
+name|suspended_cpus
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* Wait for resume */

@@ -126,6 +126,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|volatile
+name|cpuset_t
+name|suspended_cpus
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|cpuset_t
 name|hlt_cpus_mask
 decl_stmt|;
