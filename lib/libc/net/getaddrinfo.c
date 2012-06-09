@@ -2445,11 +2445,9 @@ if|if
 condition|(
 name|error
 condition|)
-name|ERR
-argument_list|(
-name|error
-argument_list|)
-expr_stmt|;
+goto|goto
+name|bad
+goto|;
 operator|*
 name|pai
 operator|=
