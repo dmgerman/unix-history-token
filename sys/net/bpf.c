@@ -9708,7 +9708,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Interface departure handler.  * Note departure event does not guagantee interface is going down.  */
+comment|/*  * Interface departure handler.  * Note departure event does not guarantee interface is going down.  */
 end_comment
 
 begin_function
