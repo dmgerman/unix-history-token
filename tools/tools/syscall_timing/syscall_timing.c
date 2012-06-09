@@ -161,6 +161,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|int
+name|error
+decl_stmt|;
 name|alarm_fired
 operator|=
 literal|0
@@ -183,8 +186,8 @@ name|alarm_timeout
 argument_list|)
 expr_stmt|;
 block|}
-name|assert
-argument_list|(
+name|error
+operator|=
 name|clock_gettime
 argument_list|(
 name|CLOCK_REALTIME
@@ -192,6 +195,10 @@ argument_list|,
 operator|&
 name|ts_start
 argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|error
 operator|==
 literal|0
 argument_list|)
@@ -207,8 +214,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|assert
-argument_list|(
+name|int
+name|error
+decl_stmt|;
+name|error
+operator|=
 name|clock_gettime
 argument_list|(
 name|CLOCK_REALTIME
@@ -216,6 +226,10 @@ argument_list|,
 operator|&
 name|ts_end
 argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|error
 operator|==
 literal|0
 argument_list|)
@@ -3494,6 +3508,8 @@ decl_stmt|;
 name|int
 name|ch
 decl_stmt|,
+name|error
+decl_stmt|,
 name|i
 decl_stmt|,
 name|j
@@ -3829,8 +3845,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|assert
-argument_list|(
+name|error
+operator|=
 name|clock_getres
 argument_list|(
 name|CLOCK_REALTIME
@@ -3838,6 +3854,10 @@ argument_list|,
 operator|&
 name|ts_res
 argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|error
 operator|==
 literal|0
 argument_list|)
