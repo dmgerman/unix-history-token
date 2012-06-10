@@ -43,6 +43,16 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|init_proc0
+parameter_list|(
+name|vm_offset_t
+name|kstack
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|halt
 parameter_list|(
 name|void
