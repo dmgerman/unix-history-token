@@ -4422,10 +4422,7 @@ condition|(
 name|delfp
 operator|!=
 name|NULL
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 name|td
 operator|->
 name|td_proc
@@ -4435,7 +4432,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 			 * Ask fdfree() to sleep to ensure that all relevant 			 * process leaders can be traversed in closef(). 			 */
+comment|/* 		 * Ask fdfree() to sleep to ensure that all relevant 		 * process leaders can be traversed in closef(). 		 */
 name|fdp
 operator|->
 name|fd_holdleaderscount
@@ -4446,8 +4443,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-block|}
-comment|/* 	 * Duplicate the source descriptor 	 */
+comment|/* 	 * Duplicate the source descriptor. 	 */
 name|fdp
 operator|->
 name|fd_ofiles
