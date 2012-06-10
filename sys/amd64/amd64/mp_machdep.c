@@ -5861,14 +5861,6 @@ argument_list|(
 name|cpu
 argument_list|,
 operator|&
-name|stopped_cpus
-argument_list|)
-expr_stmt|;
-name|CPU_SET_ATOMIC
-argument_list|(
-name|cpu
-argument_list|,
-operator|&
 name|suspended_cpus
 argument_list|)
 expr_stmt|;
@@ -5901,6 +5893,7 @@ argument_list|,
 name|ticks
 argument_list|)
 expr_stmt|;
+comment|/* Indicate that we are resumed */
 name|CPU_CLR_ATOMIC
 argument_list|(
 name|cpu
@@ -5931,14 +5924,6 @@ name|cpu
 argument_list|,
 operator|&
 name|started_cpus
-argument_list|)
-expr_stmt|;
-name|CPU_CLR_ATOMIC
-argument_list|(
-name|cpu
-argument_list|,
-operator|&
-name|stopped_cpus
 argument_list|)
 expr_stmt|;
 comment|/* Resume MCA and local APIC */
