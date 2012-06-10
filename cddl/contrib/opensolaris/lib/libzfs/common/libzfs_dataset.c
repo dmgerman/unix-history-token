@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2010 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  * Copyright (c) 2011-2012 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  * Copyright (c) 2012 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2010 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  * Copyright (c) 2012 DEY Storage Systems, Inc.  All rights reserved.  * Copyright (c) 2011-2012 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  * Copyright (c) 2012 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
 end_comment
 
 begin_include
@@ -10295,6 +10295,53 @@ endif|#
 directive|endif
 comment|/* !sun */
 block|}
+break|break;
+case|case
+name|ZFS_PROP_GUID
+case|:
+comment|/* 		 * GUIDs are stored as numbers, but they are identifiers. 		 * We don't want them to be pretty printed, because pretty 		 * printing mangles the ID into a truncated and useless value. 		 */
+if|if
+condition|(
+name|get_numeric_property
+argument_list|(
+name|zhp
+argument_list|,
+name|prop
+argument_list|,
+name|src
+argument_list|,
+operator|&
+name|source
+argument_list|,
+operator|&
+name|val
+argument_list|)
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+operator|(
+name|void
+operator|)
+name|snprintf
+argument_list|(
+name|propbuf
+argument_list|,
+name|proplen
+argument_list|,
+literal|"%llu"
+argument_list|,
+operator|(
+name|u_longlong_t
+operator|)
+name|val
+argument_list|)
+expr_stmt|;
 break|break;
 default|default:
 switch|switch
