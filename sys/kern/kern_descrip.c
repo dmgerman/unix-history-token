@@ -4504,9 +4504,23 @@ argument_list|,
 name|new
 argument_list|)
 expr_stmt|;
+comment|/* 		 * When we're closing an fd with a capability, we need to 		 * notify mqueue if the underlying object is of type mqueue. 		 */
+operator|(
+name|void
+operator|)
+name|cap_funwrap
+argument_list|(
+name|delfp
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|fp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|delfp
+name|fp
 operator|->
 name|f_type
 operator|==
@@ -4518,7 +4532,7 @@ name|td
 argument_list|,
 name|new
 argument_list|,
-name|delfp
+name|fp
 argument_list|)
 expr_stmt|;
 name|FILEDESC_XUNLOCK
