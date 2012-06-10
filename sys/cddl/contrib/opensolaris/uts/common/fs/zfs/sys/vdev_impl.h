@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -108,6 +108,10 @@ parameter_list|,
 name|uint64_t
 modifier|*
 name|size
+parameter_list|,
+name|uint64_t
+modifier|*
+name|max_size
 parameter_list|,
 name|uint64_t
 modifier|*
@@ -327,6 +331,10 @@ name|uint64_t
 name|vdev_min_asize
 decl_stmt|;
 comment|/* min acceptable asize		*/
+name|uint64_t
+name|vdev_max_asize
+decl_stmt|;
+comment|/* max acceptable asize		*/
 name|uint64_t
 name|vdev_ashift
 decl_stmt|;

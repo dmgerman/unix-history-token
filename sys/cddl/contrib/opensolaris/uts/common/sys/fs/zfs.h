@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright (c) 2012, Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright (c) 2012, Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -300,6 +300,8 @@ block|,
 name|ZPOOL_PROP_READONLY
 block|,
 name|ZPOOL_PROP_COMMENT
+block|,
+name|ZPOOL_PROP_EXPANDSZ
 block|,
 name|ZPOOL_NUM_PROPS
 block|}
@@ -1769,6 +1771,10 @@ name|vs_rsize
 decl_stmt|;
 comment|/* replaceable dev size */
 name|uint64_t
+name|vs_esize
+decl_stmt|;
+comment|/* expandable dev size */
+name|uint64_t
 name|vs_ops
 index|[
 name|ZIO_TYPES
@@ -2194,6 +2200,10 @@ define|#
 directive|define
 name|ZFS_IOC_SEND_PROGRESS
 value|_IOWR('Z', 63, struct zfs_cmd)
+define|#
+directive|define
+name|ZFS_IOC_POOL_REOPEN
+value|_IOWR('Z', 64, struct zfs_cmd)
 comment|/*  * Internal SPA load state.  Used by FMA diagnosis engine.  */
 typedef|typedef
 enum|enum
