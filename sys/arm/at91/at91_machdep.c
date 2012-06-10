@@ -1656,9 +1656,6 @@ operator|+
 name|KERNPHYSADDR
 expr_stmt|;
 block|}
-name|i
-operator|++
-expr_stmt|;
 block|}
 comment|/* 	 * Allocate a page for the system page mapped to V0x00000000 	 * This page will just contain the system vectors and can be 	 * shared by all processes. 	 */
 name|valloc_pages

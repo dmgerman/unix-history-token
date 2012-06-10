@@ -813,9 +813,6 @@ operator|+
 literal|0x20000000
 expr_stmt|;
 block|}
-name|i
-operator|++
-expr_stmt|;
 block|}
 name|freemem_pt
 operator|=
