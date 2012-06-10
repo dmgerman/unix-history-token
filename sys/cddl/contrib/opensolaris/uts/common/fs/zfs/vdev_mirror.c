@@ -7,6 +7,10 @@ begin_comment
 comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
+begin_comment
+comment|/*  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -539,6 +543,10 @@ name|asize
 parameter_list|,
 name|uint64_t
 modifier|*
+name|max_asize
+parameter_list|,
+name|uint64_t
+modifier|*
 name|ashift
 parameter_list|)
 block|{
@@ -639,6 +647,25 @@ argument_list|,
 name|cvd
 operator|->
 name|vdev_asize
+operator|-
+literal|1
+argument_list|)
+operator|+
+literal|1
+expr_stmt|;
+operator|*
+name|max_asize
+operator|=
+name|MIN
+argument_list|(
+operator|*
+name|max_asize
+operator|-
+literal|1
+argument_list|,
+name|cvd
+operator|->
+name|vdev_max_asize
 operator|-
 literal|1
 argument_list|)

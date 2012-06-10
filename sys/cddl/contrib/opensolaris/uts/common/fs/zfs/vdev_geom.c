@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2006 Pawel Jakub Dawidek<pjd@FreeBSD.org>  * All rights reserved.  */
+comment|/*  * Copyright (c) 2006 Pawel Jakub Dawidek<pjd@FreeBSD.org>  * All rights reserved.  *  * Portions Copyright (c) 2012 Martin Matuska<mm@FreeBSD.org>  */
 end_comment
 
 begin_include
@@ -1922,6 +1922,10 @@ name|psize
 parameter_list|,
 name|uint64_t
 modifier|*
+name|max_psize
+parameter_list|,
+name|uint64_t
+modifier|*
 name|ashift
 parameter_list|)
 block|{
@@ -2275,6 +2279,9 @@ operator|->
 name|provider
 expr_stmt|;
 comment|/* 	 * Determine the actual size of the device. 	 */
+operator|*
+name|max_psize
+operator|=
 operator|*
 name|psize
 operator|=

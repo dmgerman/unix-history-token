@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -7380,6 +7380,10 @@ name|asize
 parameter_list|,
 name|uint64_t
 modifier|*
+name|max_asize
+parameter_list|,
+name|uint64_t
+modifier|*
 name|ashift
 parameter_list|)
 block|{
@@ -7513,6 +7517,25 @@ operator|+
 literal|1
 expr_stmt|;
 operator|*
+name|max_asize
+operator|=
+name|MIN
+argument_list|(
+operator|*
+name|max_asize
+operator|-
+literal|1
+argument_list|,
+name|cvd
+operator|->
+name|vdev_max_asize
+operator|-
+literal|1
+argument_list|)
+operator|+
+literal|1
+expr_stmt|;
+operator|*
 name|ashift
 operator|=
 name|MAX
@@ -7528,6 +7551,13 @@ expr_stmt|;
 block|}
 operator|*
 name|asize
+operator|*=
+name|vd
+operator|->
+name|vdev_children
+expr_stmt|;
+operator|*
+name|max_asize
 operator|*=
 name|vd
 operator|->
