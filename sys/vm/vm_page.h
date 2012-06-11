@@ -1476,6 +1476,22 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|vm_page_initfake
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|,
+name|vm_paddr_t
+name|paddr
+parameter_list|,
+name|vm_memattr_t
+name|memattr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|vm_page_insert
 parameter_list|(
 name|vm_page_t
