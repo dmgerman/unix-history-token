@@ -232,32 +232,24 @@ end_decl_stmt
 begin_decl_stmt
 name|vm_page_t
 name|vm_page_array
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|long
 name|vm_page_array_size
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|long
 name|first_page
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
 name|vm_page_zero_count
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
