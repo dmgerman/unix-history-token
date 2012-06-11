@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -679,6 +679,61 @@ operator|(
 name|ZPOOL_STATUS_VERSION_NEWER
 operator|)
 return|;
+comment|/* 	 * Unsupported feature(s). 	 */
+if|if
+condition|(
+name|vs
+operator|->
+name|vs_state
+operator|==
+name|VDEV_STATE_CANT_OPEN
+operator|&&
+name|vs
+operator|->
+name|vs_aux
+operator|==
+name|VDEV_AUX_UNSUP_FEAT
+condition|)
+block|{
+name|nvlist_t
+modifier|*
+name|nvinfo
+decl_stmt|;
+name|verify
+argument_list|(
+name|nvlist_lookup_nvlist
+argument_list|(
+name|config
+argument_list|,
+name|ZPOOL_CONFIG_LOAD_INFO
+argument_list|,
+operator|&
+name|nvinfo
+argument_list|)
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|nvlist_exists
+argument_list|(
+name|nvinfo
+argument_list|,
+name|ZPOOL_CONFIG_CAN_RDONLY
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ZPOOL_STATUS_UNSUP_FEAT_WRITE
+operator|)
+return|;
+return|return
+operator|(
+name|ZPOOL_STATUS_UNSUP_FEAT_READ
+operator|)
+return|;
+block|}
 comment|/* 	 * Check that the config is complete. 	 */
 if|if
 condition|(
@@ -960,8 +1015,13 @@ return|;
 comment|/* 	 * Outdated, but usable, version 	 */
 if|if
 condition|(
+name|SPA_VERSION_IS_SUPPORTED
+argument_list|(
 name|version
-operator|<
+argument_list|)
+operator|&&
+name|version
+operator|!=
 name|SPA_VERSION
 condition|)
 return|return

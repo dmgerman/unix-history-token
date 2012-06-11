@@ -4,11 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
-end_comment
-
-begin_comment
-comment|/*  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright (c) 2012, Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright (c) 2012, Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
 end_comment
 
 begin_include
@@ -5986,17 +5982,21 @@ name|drr_type
 operator|==
 name|DMU_OT_NONE
 operator|||
+operator|!
+name|DMU_OT_IS_VALID
+argument_list|(
 name|drro
 operator|->
 name|drr_type
-operator|>=
-name|DMU_OT_NUMTYPES
+argument_list|)
 operator|||
+operator|!
+name|DMU_OT_IS_VALID
+argument_list|(
 name|drro
 operator|->
 name|drr_bonustype
-operator|>=
-name|DMU_OT_NUMTYPES
+argument_list|)
 operator|||
 name|drro
 operator|->
@@ -6374,14 +6374,22 @@ operator|->
 name|byteswap
 condition|)
 block|{
-name|dmu_ot
-index|[
+name|dmu_object_byteswap_t
+name|byteswap
+init|=
+name|DMU_OT_BYTESWAP
+argument_list|(
 name|drro
 operator|->
 name|drr_bonustype
+argument_list|)
+decl_stmt|;
+name|dmu_ot_byteswap
+index|[
+name|byteswap
 index|]
 operator|.
-name|ot_byteswap
+name|ob_func
 argument_list|(
 name|db
 operator|->
@@ -6583,11 +6591,13 @@ name|drrw
 operator|->
 name|drr_offset
 operator|||
+operator|!
+name|DMU_OT_IS_VALID
+argument_list|(
 name|drrw
 operator|->
 name|drr_type
-operator|>=
-name|DMU_OT_NUMTYPES
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -6693,14 +6703,23 @@ name|ra
 operator|->
 name|byteswap
 condition|)
-name|dmu_ot
-index|[
+block|{
+name|dmu_object_byteswap_t
+name|byteswap
+init|=
+name|DMU_OT_BYTESWAP
+argument_list|(
 name|drrw
 operator|->
 name|drr_type
+argument_list|)
+decl_stmt|;
+name|dmu_ot_byteswap
+index|[
+name|byteswap
 index|]
 operator|.
-name|ot_byteswap
+name|ob_func
 argument_list|(
 name|data
 argument_list|,
@@ -6709,6 +6728,7 @@ operator|->
 name|drr_length
 argument_list|)
 expr_stmt|;
+block|}
 name|dmu_write
 argument_list|(
 name|os
