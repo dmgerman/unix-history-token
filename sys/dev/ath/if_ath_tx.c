@@ -8775,6 +8775,13 @@ name|ac
 index|]
 argument_list|)
 expr_stmt|;
+name|ATH_TID_LOCK_ASSERT
+argument_list|(
+name|sc
+argument_list|,
+name|tid
+argument_list|)
+expr_stmt|;
 name|tap
 operator|=
 name|ath_tx_get_tx_tid
