@@ -41853,6 +41853,9 @@ operator||
 name|RCX_SW_EXIT
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|_intel_wait_for
 argument_list|(
 name|dev
