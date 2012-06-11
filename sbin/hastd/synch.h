@@ -597,7 +597,7 @@ name|error
 operator|=
 name|clock_gettime
 argument_list|(
-name|CLOCK_MONOTONIC
+name|CLOCK_REALTIME
 argument_list|,
 operator|&
 name|ts
