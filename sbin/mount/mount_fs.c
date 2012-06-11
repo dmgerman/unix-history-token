@@ -238,9 +238,6 @@ decl_stmt|,
 modifier|*
 name|val
 decl_stmt|;
-name|int
-name|ret
-decl_stmt|;
 name|strlcpy
 argument_list|(
 name|fstype
@@ -510,8 +507,8 @@ name|errmsg
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ret
-operator|=
+if|if
+condition|(
 name|nmount
 argument_list|(
 name|iov
@@ -520,18 +517,14 @@ name|iovlen
 argument_list|,
 name|mntflags
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ret
-operator|<
-literal|0
-condition|)
-name|err
-argument_list|(
+operator|==
+operator|-
 literal|1
-argument_list|,
-literal|"%s %s"
+condition|)
+block|{
+name|warn
+argument_list|(
+literal|"%s: %s"
 argument_list|,
 name|dev
 argument_list|,
@@ -540,7 +533,13 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ret
+literal|1
+operator|)
+return|;
+block|}
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 block|}
