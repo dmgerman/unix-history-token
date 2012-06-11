@@ -4425,16 +4425,15 @@ operator|=
 name|new
 expr_stmt|;
 comment|/* 	 * Save info on the descriptor being overwritten.  We cannot close 	 * it without introducing an ownership race for the slot, since we 	 * need to drop the filedesc lock to call closef(). 	 * 	 * XXX this duplicates parts of close(). 	 */
-name|holdleaders
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|delfp
 operator|!=
 name|NULL
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|td
 operator|->
 name|td_proc
@@ -4444,7 +4443,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 		 * Ask fdfree() to sleep to ensure that all relevant 		 * process leaders can be traversed in closef(). 		 */
+comment|/* 			 * Ask fdfree() to sleep to ensure that all relevant 			 * process leaders can be traversed in closef(). 			 */
 name|fdp
 operator|->
 name|fd_holdleaderscount
@@ -4455,14 +4454,14 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* 	 * If we dup'd over a valid file, we now own the reference to it 	 * and must dispose of it using closef() semantics (as if a 	 * close() were performed on it). 	 * 	 * XXX this duplicates parts of close(). 	 */
-if|if
-condition|(
-name|delfp
-operator|!=
-name|NULL
-condition|)
+else|else
 block|{
+name|holdleaders
+operator|=
+literal|0
+expr_stmt|;
+block|}
+comment|/* 		 * If we dup'd over a valid file, we now own the reference to it 		 * and must dispose of it using closef() semantics (as if a 		 * close() were performed on it). 		 * 		 * XXX this duplicates parts of close(). 		 */
 name|knote_fdclose
 argument_list|(
 name|td
