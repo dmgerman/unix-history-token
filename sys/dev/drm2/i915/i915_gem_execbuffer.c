@@ -4194,7 +4194,7 @@ begin_decl_stmt
 name|int
 name|i915_fix_mi_batchbuffer_end
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
