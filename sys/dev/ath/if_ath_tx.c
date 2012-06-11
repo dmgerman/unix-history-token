@@ -9437,7 +9437,7 @@ operator|->
 name|paused
 condition|)
 block|{
-name|ATH_TXQ_INSERT_TAIL
+name|ATH_TXQ_INSERT_HEAD
 argument_list|(
 name|tid
 argument_list|,
