@@ -1951,6 +1951,9 @@ name|NFSUNLOCKV4ROOTMUTEX
 argument_list|()
 expr_stmt|;
 comment|/* 		 * Must wait until any outstanding callback on the old clp 		 * completes. 		 */
+name|NFSLOCKSTATE
+argument_list|()
+expr_stmt|;
 while|while
 condition|(
 name|clp
@@ -1967,12 +1970,11 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|tsleep
+name|mtx_sleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|clp
+argument_list|,
+name|NFSSTATEMUTEXPTR
 argument_list|,
 name|PZERO
 operator|-
@@ -1986,6 +1988,9 @@ name|hz
 argument_list|)
 expr_stmt|;
 block|}
+name|NFSUNLOCKSTATE
+argument_list|()
+expr_stmt|;
 name|nfsrv_zapclient
 argument_list|(
 name|clp
@@ -2297,6 +2302,9 @@ name|NFSUNLOCKV4ROOTMUTEX
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Must wait until any outstanding callback on the old clp 	 * completes. 	 */
+name|NFSLOCKSTATE
+argument_list|()
+expr_stmt|;
 while|while
 condition|(
 name|clp
@@ -2313,12 +2321,11 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|tsleep
+name|mtx_sleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|clp
+argument_list|,
+name|NFSSTATEMUTEXPTR
 argument_list|,
 name|PZERO
 operator|-
@@ -2332,6 +2339,9 @@ name|hz
 argument_list|)
 expr_stmt|;
 block|}
+name|NFSUNLOCKSTATE
+argument_list|()
+expr_stmt|;
 name|nfsrv_zapclient
 argument_list|(
 name|clp
@@ -18068,24 +18078,15 @@ operator|&=
 operator|~
 name|LCL_WAKEUPWANTED
 expr_stmt|;
-name|NFSUNLOCKSTATE
-argument_list|()
-expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|clp
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
 name|NFSUNLOCKSTATE
 argument_list|()
 expr_stmt|;
-block|}
 name|NFSEXITCODE
 argument_list|(
 name|error
