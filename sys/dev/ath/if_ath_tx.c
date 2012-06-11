@@ -6110,6 +6110,7 @@ argument_list|,
 name|m0
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Don't add QoS NULL frames to the BAW. 		 */
 if|if
 condition|(
 name|IEEE80211_QOS_HAS_SEQ
@@ -6136,33 +6137,6 @@ argument_list|(
 name|txq
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* No AMPDU TX, we've been assigned a sequence number. */
-if|if
-condition|(
-name|IEEE80211_QOS_HAS_SEQ
-argument_list|(
-name|wh
-argument_list|)
-condition|)
-block|{
-comment|/* XXX we should store the frag+seqno in bfs_seqno */
-name|bf
-operator|->
-name|bf_state
-operator|.
-name|bfs_seqno
-operator|=
-name|M_SEQNO_GET
-argument_list|(
-name|m0
-argument_list|)
-operator|<<
-name|IEEE80211_SEQ_SEQ_SHIFT
-expr_stmt|;
-block|}
 block|}
 comment|/* 	 * If needed, the sequence number has been assigned. 	 * Squirrel it away somewhere easy to get to. 	 */
 name|bf
