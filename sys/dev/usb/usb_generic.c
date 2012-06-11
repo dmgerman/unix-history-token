@@ -9988,6 +9988,7 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
+comment|/* 		 * Detach the currently attached driver. 		 */
 name|usb_detach_device
 argument_list|(
 name|f
@@ -9997,6 +9998,18 @@ argument_list|,
 name|n
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Set parent to self, this should keep attach away 		 * until the next set configuration event. 		 */
+name|usbd_set_parent_iface
+argument_list|(
+name|f
+operator|->
+name|udev
+argument_list|,
+name|n
+argument_list|,
+name|n
 argument_list|)
 expr_stmt|;
 break|break;
