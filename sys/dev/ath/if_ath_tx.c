@@ -9867,6 +9867,17 @@ argument_list|)
 condition|)
 block|{
 comment|/* AMPDU running, attempt direct dispatch if possible */
+comment|/* 		 * Always queue the frame to the tail of the list. 		 */
+name|ATH_TXQ_INSERT_TAIL
+argument_list|(
+name|atid
+argument_list|,
+name|bf
+argument_list|,
+name|bf_list
+argument_list|)
+expr_stmt|;
+comment|/* 		 * If the hardware queue isn't busy, direct dispatch 		 * the head frame in the list.  Don't schedule the 		 * TID - let it build some more frames first? 		 * 		 * Otherwise, schedule the TID. 		 */
 if|if
 condition|(
 name|txq
@@ -9878,6 +9889,25 @@ operator|->
 name|sc_hwq_limit
 condition|)
 block|{
+name|bf
+operator|=
+name|TAILQ_FIRST
+argument_list|(
+operator|&
+name|atid
+operator|->
+name|axq_q
+argument_list|)
+expr_stmt|;
+name|ATH_TXQ_REMOVE
+argument_list|(
+name|atid
+argument_list|,
+name|bf
+argument_list|,
+name|bf_list
+argument_list|)
+expr_stmt|;
 name|ath_tx_xmit_aggr
 argument_list|(
 name|sc
@@ -9910,15 +9940,6 @@ argument_list|,
 literal|"%s: ampdu; swq'ing\n"
 argument_list|,
 name|__func__
-argument_list|)
-expr_stmt|;
-name|ATH_TXQ_INSERT_TAIL
-argument_list|(
-name|atid
-argument_list|,
-name|bf
-argument_list|,
-name|bf_list
 argument_list|)
 expr_stmt|;
 name|ath_tx_tid_sched
