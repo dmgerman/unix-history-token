@@ -317,6 +317,16 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+name|device_add_child
+argument_list|(
+name|dev
+argument_list|,
+literal|"drmn"
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
 name|bus_generic_attach
 argument_list|(
 name|dev
