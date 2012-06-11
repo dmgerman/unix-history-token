@@ -4666,6 +4666,12 @@ decl_stmt|;
 name|u_int
 name|pri
 decl_stmt|;
+comment|/* 	 * To ensure that both sequence numbers and the CCMP PN handling 	 * is "correct", make sure that the relevant TID queue is locked. 	 * Otherwise the CCMP PN and seqno may appear out of order, causing 	 * re-ordered frames to have out of order CCMP PN's, resulting 	 * in many, many frame drops. 	 */
+name|ATH_TXQ_LOCK_ASSERT
+argument_list|(
+name|txq
+argument_list|)
+expr_stmt|;
 name|wh
 operator|=
 name|mtod
@@ -6083,19 +6089,19 @@ name|bfs_dobaw
 operator|=
 literal|0
 expr_stmt|;
-comment|/* A-MPDU TX? Manually set sequence number */
-comment|/* Don't do it whilst pending; the net80211 layer still assigns them */
-comment|/* XXX do we need locking here? */
-if|if
-condition|(
-name|is_ampdu_tx
-condition|)
-block|{
+comment|/* 	 * Acquire the TXQ lock early, so both the encap and seqno 	 * are allocated together. 	 */
 name|ATH_TXQ_LOCK
 argument_list|(
 name|txq
 argument_list|)
 expr_stmt|;
+comment|/* A-MPDU TX? Manually set sequence number */
+comment|/* 	 * Don't do it whilst pending; the net80211 layer still 	 * assigns them. 	 */
+if|if
+condition|(
+name|is_ampdu_tx
+condition|)
+block|{
 comment|/* 		 * Always call; this function will 		 * handle making sure that null data frames 		 * don't get a sequence number from the current 		 * TID and thus mess with the BAW. 		 */
 name|seqno
 operator|=
@@ -6132,11 +6138,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-name|ATH_TXQ_UNLOCK
-argument_list|(
-name|txq
-argument_list|)
-expr_stmt|;
 block|}
 comment|/* 	 * If needed, the sequence number has been assigned. 	 * Squirrel it away somewhere easy to get to. 	 */
 name|bf
@@ -6197,9 +6198,9 @@ name|r
 operator|!=
 literal|0
 condition|)
-return|return
-name|r
-return|;
+goto|goto
+name|done
+goto|;
 comment|/* At this point m0 could have changed! */
 name|m0
 operator|=
@@ -6235,11 +6236,6 @@ argument_list|,
 name|bf
 argument_list|)
 expr_stmt|;
-name|ATH_TXQ_LOCK
-argument_list|(
-name|txq
-argument_list|)
-expr_stmt|;
 name|ath_tx_xmit_normal
 argument_list|(
 name|sc
@@ -6247,11 +6243,6 @@ argument_list|,
 name|txq
 argument_list|,
 name|bf
-argument_list|)
-expr_stmt|;
-name|ATH_TXQ_UNLOCK
-argument_list|(
-name|txq
 argument_list|)
 expr_stmt|;
 block|}
@@ -6278,11 +6269,6 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-name|ATH_TXQ_LOCK
-argument_list|(
-name|txq
-argument_list|)
-expr_stmt|;
 name|ath_tx_xmit_normal
 argument_list|(
 name|sc
@@ -6290,11 +6276,6 @@ argument_list|,
 name|txq
 argument_list|,
 name|bf
-argument_list|)
-expr_stmt|;
-name|ATH_TXQ_UNLOCK
-argument_list|(
-name|txq
 argument_list|)
 expr_stmt|;
 block|}
@@ -6329,11 +6310,6 @@ block|}
 else|#
 directive|else
 comment|/* 	 * For now, since there's no software queue, 	 * direct-dispatch to the hardware. 	 */
-name|ATH_TXQ_LOCK
-argument_list|(
-name|txq
-argument_list|)
-expr_stmt|;
 name|ath_tx_xmit_normal
 argument_list|(
 name|sc
@@ -6343,13 +6319,15 @@ argument_list|,
 name|bf
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+name|done
+label|:
 name|ATH_TXQ_UNLOCK
 argument_list|(
 name|txq
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 literal|0
 return|;
@@ -6536,6 +6514,77 @@ argument_list|,
 name|__func__
 argument_list|,
 name|ismcast
+argument_list|)
+expr_stmt|;
+name|pri
+operator|=
+name|params
+operator|->
+name|ibp_pri
+operator|&
+literal|3
+expr_stmt|;
+comment|/* Override pri if the frame isn't a QoS one */
+if|if
+condition|(
+operator|!
+name|IEEE80211_QOS_HAS_SEQ
+argument_list|(
+name|wh
+argument_list|)
+condition|)
+name|pri
+operator|=
+name|ath_tx_getac
+argument_list|(
+name|sc
+argument_list|,
+name|m0
+argument_list|)
+expr_stmt|;
+comment|/* XXX If it's an ADDBA, override the correct queue */
+name|do_override
+operator|=
+name|ath_tx_action_frame_override_queue
+argument_list|(
+name|sc
+argument_list|,
+name|ni
+argument_list|,
+name|m0
+argument_list|,
+operator|&
+name|o_tid
+argument_list|)
+expr_stmt|;
+comment|/* Map ADDBA to the correct priority */
+if|if
+condition|(
+name|do_override
+condition|)
+block|{
+if|#
+directive|if
+literal|0
+block|device_printf(sc->sc_dev, 		    "%s: overriding tid %d pri %d -> %d\n", 		    __func__, o_tid, pri, TID_TO_WME_AC(o_tid));
+endif|#
+directive|endif
+name|pri
+operator|=
+name|TID_TO_WME_AC
+argument_list|(
+name|o_tid
+argument_list|)
+expr_stmt|;
+block|}
+name|ATH_TXQ_LOCK
+argument_list|(
+name|sc
+operator|->
+name|sc_ac2q
+index|[
+name|pri
+index|]
 argument_list|)
 expr_stmt|;
 comment|/* Handle encryption twiddling if needed */
@@ -6833,32 +6882,6 @@ operator|=
 name|params
 operator|->
 name|ibp_ctsrate
-expr_stmt|;
-name|pri
-operator|=
-name|params
-operator|->
-name|ibp_pri
-operator|&
-literal|3
-expr_stmt|;
-comment|/* Override pri if the frame isn't a QoS one */
-if|if
-condition|(
-operator|!
-name|IEEE80211_QOS_HAS_SEQ
-argument_list|(
-name|wh
-argument_list|)
-condition|)
-name|pri
-operator|=
-name|ath_tx_getac
-argument_list|(
-name|sc
-argument_list|,
-name|m0
-argument_list|)
 expr_stmt|;
 comment|/* 	 * NB: we mark all packets as type PSPOLL so the h/w won't 	 * set the sequence number, duration, etc. 	 */
 name|atype
@@ -7347,41 +7370,6 @@ name|bf
 argument_list|)
 expr_stmt|;
 comment|/* NB: no buffered multicast in power save support */
-comment|/* XXX If it's an ADDBA, override the correct queue */
-name|do_override
-operator|=
-name|ath_tx_action_frame_override_queue
-argument_list|(
-name|sc
-argument_list|,
-name|ni
-argument_list|,
-name|m0
-argument_list|,
-operator|&
-name|o_tid
-argument_list|)
-expr_stmt|;
-comment|/* Map ADDBA to the correct priority */
-if|if
-condition|(
-name|do_override
-condition|)
-block|{
-if|#
-directive|if
-literal|0
-block|device_printf(sc->sc_dev, 		    "%s: overriding tid %d pri %d -> %d\n", 		    __func__, o_tid, pri, TID_TO_WME_AC(o_tid));
-endif|#
-directive|endif
-name|pri
-operator|=
-name|TID_TO_WME_AC
-argument_list|(
-name|o_tid
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	 * If we're overiding the ADDBA destination, dump directly 	 * into the hardware queue, right after any pending 	 * frames to that node are. 	 */
 name|DPRINTF
 argument_list|(
@@ -7401,16 +7389,6 @@ condition|(
 name|do_override
 condition|)
 block|{
-name|ATH_TXQ_LOCK
-argument_list|(
-name|sc
-operator|->
-name|sc_ac2q
-index|[
-name|pri
-index|]
-argument_list|)
-expr_stmt|;
 name|ath_tx_xmit_normal
 argument_list|(
 name|sc
@@ -7423,16 +7401,6 @@ name|pri
 index|]
 argument_list|,
 name|bf
-argument_list|)
-expr_stmt|;
-name|ATH_TXQ_UNLOCK
-argument_list|(
-name|sc
-operator|->
-name|sc_ac2q
-index|[
-name|pri
-index|]
 argument_list|)
 expr_stmt|;
 block|}
@@ -7456,6 +7424,16 @@ name|bf
 argument_list|)
 expr_stmt|;
 block|}
+name|ATH_TXQ_UNLOCK
+argument_list|(
+name|sc
+operator|->
+name|sc_ac2q
+index|[
+name|pri
+index|]
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -8215,6 +8193,45 @@ operator|.
 name|bfs_isretried
 condition|)
 return|return;
+if|if
+condition|(
+operator|!
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_dobaw
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"%s: dobaw=0, seqno=%d, window %d:%d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|SEQNO
+argument_list|(
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_seqno
+argument_list|)
+argument_list|,
+name|tap
+operator|->
+name|txa_start
+argument_list|,
+name|tap
+operator|->
+name|txa_wnd
+argument_list|)
+expr_stmt|;
+block|}
 name|tap
 operator|=
 name|ath_tx_get_tx_tid
@@ -8275,6 +8292,75 @@ operator|->
 name|baw_tail
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Verify that the given sequence number is not outside of the 	 * BAW.  Complain loudly if that's the case. 	 */
+if|if
+condition|(
+operator|!
+name|BAW_WITHIN
+argument_list|(
+name|tap
+operator|->
+name|txa_start
+argument_list|,
+name|tap
+operator|->
+name|txa_wnd
+argument_list|,
+name|SEQNO
+argument_list|(
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_seqno
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"%s: bf=%p: outside of BAW?? tid=%d, seqno %d; window %d:%d; "
+literal|"baw head=%d tail=%d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|bf
+argument_list|,
+name|tid
+operator|->
+name|tid
+argument_list|,
+name|SEQNO
+argument_list|(
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_seqno
+argument_list|)
+argument_list|,
+name|tap
+operator|->
+name|txa_start
+argument_list|,
+name|tap
+operator|->
+name|txa_wnd
+argument_list|,
+name|tid
+operator|->
+name|baw_head
+argument_list|,
+name|tid
+operator|->
+name|baw_tail
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * ni->ni_txseqs[] is the currently allocated seqno. 	 * the txa state contains the current baw start. 	 */
 name|index
 operator|=
@@ -9242,6 +9328,24 @@ return|return
 operator|-
 literal|1
 return|;
+name|ATH_TID_LOCK_ASSERT
+argument_list|(
+name|sc
+argument_list|,
+operator|&
+operator|(
+name|ATH_NODE
+argument_list|(
+name|ni
+argument_list|)
+operator|->
+name|an_tid
+index|[
+name|tid
+index|]
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Is it a QOS NULL Data frame? Give it a sequence number from 	 * the default TID (IEEE80211_NONQOS_TID.) 	 * 	 * The RX path of everything I've looked at doesn't include the NULL 	 * data frame sequence number in the aggregation state updates, so 	 * assigning it a sequence number there will cause a BAW hole on the 	 * RX side. 	 */
 name|subtype
 operator|=
@@ -9261,6 +9365,7 @@ operator|==
 name|IEEE80211_FC0_SUBTYPE_QOS_NULL
 condition|)
 block|{
+comment|/* XXX no locking for this TID? This is a bit of a problem. */
 name|seqno
 operator|=
 name|ni
@@ -9695,6 +9800,11 @@ name|bf
 operator|->
 name|bf_m
 decl_stmt|;
+name|ATH_TXQ_LOCK_ASSERT
+argument_list|(
+name|txq
+argument_list|)
+expr_stmt|;
 comment|/* Fetch the TID - non-QoS frames get assigned to TID 16 */
 name|wh
 operator|=
@@ -9790,11 +9900,6 @@ operator|=
 name|pri
 expr_stmt|;
 comment|/* 	 * If the hardware queue isn't busy, queue it directly. 	 * If the hardware queue is busy, queue it. 	 * If the TID is paused or the traffic it outside BAW, software 	 * queue it. 	 */
-name|ATH_TXQ_LOCK
-argument_list|(
-name|txq
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|atid
@@ -10023,11 +10128,6 @@ name|atid
 argument_list|)
 expr_stmt|;
 block|}
-name|ATH_TXQ_UNLOCK
-argument_list|(
-name|txq
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
