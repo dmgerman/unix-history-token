@@ -2423,6 +2423,25 @@ argument_list|(
 operator|(
 name|m
 operator|->
+name|oflags
+operator|&
+name|VPO_UNMANAGED
+operator|)
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"managed %p"
+operator|,
+name|m
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|m
+operator|->
 name|flags
 operator|&
 name|PG_FICTITIOUS
