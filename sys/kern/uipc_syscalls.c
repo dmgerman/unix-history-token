@@ -10796,7 +10796,7 @@ operator|=
 name|EOPNOTSUPP
 expr_stmt|;
 goto|goto
-name|done2
+name|done
 goto|;
 block|}
 name|error
@@ -10818,7 +10818,7 @@ condition|(
 name|error
 condition|)
 goto|goto
-name|done2
+name|done
 goto|;
 comment|/* 	 * At this point we know we do have a assoc to pull 	 * we proceed to get the fd setup. This may block 	 * but that is ok. 	 */
 name|error
