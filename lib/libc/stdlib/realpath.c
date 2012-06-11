@@ -145,8 +145,6 @@ decl_stmt|;
 name|int
 name|m
 decl_stmt|,
-name|serrno
-decl_stmt|,
 name|slen
 decl_stmt|;
 name|char
@@ -202,10 +200,6 @@ name|NULL
 operator|)
 return|;
 block|}
-name|serrno
-operator|=
-name|errno
-expr_stmt|;
 if|if
 condition|(
 name|resolved
