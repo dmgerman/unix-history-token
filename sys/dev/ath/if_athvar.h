@@ -718,18 +718,8 @@ comment|/* do RTS/CTS based protection */
 name|bfs_doratelookup
 range|:
 literal|1
-decl_stmt|,
-comment|/* do rate lookup before each TX */
-name|bfs_need_seqno
-range|:
-literal|1
-decl_stmt|,
-comment|/* need to assign a seqno for aggr */
-name|bfs_seqno_assigned
-range|:
-literal|1
 decl_stmt|;
-comment|/* seqno has been assigned */
+comment|/* do rate lookup before each TX */
 name|int
 name|bfs_nfl
 decl_stmt|;

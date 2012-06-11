@@ -509,34 +509,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|extern
-name|int
-name|ath_tx_tid_seqno_assign
-parameter_list|(
-name|struct
-name|ath_softc
-modifier|*
-name|sc
-parameter_list|,
-name|struct
-name|ieee80211_node
-modifier|*
-name|ni
-parameter_list|,
-name|struct
-name|ath_buf
-modifier|*
-name|bf
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-name|m0
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/* TX addba handling */
 end_comment
