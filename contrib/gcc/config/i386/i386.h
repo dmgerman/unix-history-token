@@ -499,6 +499,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|TARGET_AMDFAM10
+value|(ix86_tune == PROCESSOR_AMDFAM10)
+end_define
+
+begin_define
+define|#
+directive|define
 name|TUNEMASK
 value|(1<< ix86_tune)
 end_define
@@ -683,6 +690,14 @@ begin_decl_stmt
 specifier|extern
 specifier|const
 name|int
+name|x86_sse_unaligned_move_optimal
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|int
 name|x86_sse_typeless_stores
 decl_stmt|,
 name|x86_sse_load0_by_pxor
@@ -723,8 +738,6 @@ name|x86_cmpxchg
 decl_stmt|,
 name|x86_cmpxchg8b
 decl_stmt|,
-name|x86_cmpxchg16b
-decl_stmt|,
 name|x86_xadd
 decl_stmt|;
 end_decl_stmt
@@ -757,6 +770,8 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|x86_prefetch_sse
+decl_stmt|,
+name|x86_cmpxchg16b
 decl_stmt|;
 end_decl_stmt
 
@@ -1013,6 +1028,14 @@ end_define
 begin_define
 define|#
 directive|define
+name|TARGET_SSE_UNALIGNED_MOVE_OPTIMAL
+define|\
+value|(x86_sse_unaligned_move_optimal& TUNEMASK)
+end_define
+
+begin_define
+define|#
+directive|define
 name|TARGET_SSE_SPLIT_REGS
 value|(x86_sse_split_regs& TUNEMASK)
 end_define
@@ -1189,7 +1212,7 @@ begin_define
 define|#
 directive|define
 name|TARGET_CMPXCHG16B
-value|(x86_cmpxchg16b& (1<< ix86_arch))
+value|(x86_cmpxchg16b)
 end_define
 
 begin_define
@@ -1439,11 +1462,11 @@ value|\       if (TARGET_386)						\ 	builtin_define ("__tune_i386__");			\     
 comment|/* FALLTHRU */
 value|\ 	    case '2':						\ 	      builtin_define ("__tune_pentium2__");		\ 	      break;						\ 	    }							\ 	}							\       else if (TARGET_GEODE)					\ 	{							\ 	  builtin_define ("__tune_geode__");			\ 	}							\       else if (TARGET_K6)					\ 	{							\ 	  builtin_define ("__tune_k6__");			\ 	  if (last_tune_char == '2')				\ 	    builtin_define ("__tune_k6_2__");			\ 	  else if (last_tune_char == '3')			\ 	    builtin_define ("__tune_k6_3__");			\ 	}							\       else if (TARGET_ATHLON)					\ 	{							\ 	  builtin_define ("__tune_athlon__");			\
 comment|/* Plain "athlon"& "athlon-tbird" lacks SSE.  */
-value|\ 	  if (last_tune_char != 'n'&& last_tune_char != 'd')	\ 	    builtin_define ("__tune_athlon_sse__");		\ 	}							\       else if (TARGET_K8)					\ 	builtin_define ("__tune_k8__");				\       else if (TARGET_PENTIUM4)					\ 	builtin_define ("__tune_pentium4__");			\       else if (TARGET_NOCONA)					\ 	builtin_define ("__tune_nocona__");			\       else if (TARGET_CORE2)					\ 	builtin_define ("__tune_core2__");			\ 								\       if (TARGET_MMX)						\ 	builtin_define ("__MMX__");				\       if (TARGET_3DNOW)						\ 	builtin_define ("__3dNOW__");				\       if (TARGET_3DNOW_A)					\ 	builtin_define ("__3dNOW_A__");				\       if (TARGET_SSE)						\ 	builtin_define ("__SSE__");				\       if (TARGET_SSE2)						\ 	builtin_define ("__SSE2__");				\       if (TARGET_SSE3)						\ 	builtin_define ("__SSE3__");				\       if (TARGET_SSSE3)						\ 	builtin_define ("__SSSE3__");				\       if (TARGET_SSE_MATH&& TARGET_SSE)			\ 	builtin_define ("__SSE_MATH__");			\       if (TARGET_SSE_MATH&& TARGET_SSE2)			\ 	builtin_define ("__SSE2_MATH__");			\ 								\
+value|\ 	  if (last_tune_char != 'n'&& last_tune_char != 'd')	\ 	    builtin_define ("__tune_athlon_sse__");		\ 	}							\       else if (TARGET_K8)					\ 	builtin_define ("__tune_k8__");				\       else if (TARGET_AMDFAM10)					\ 	builtin_define ("__tune_amdfam10__");			\       else if (TARGET_PENTIUM4)					\ 	builtin_define ("__tune_pentium4__");			\       else if (TARGET_NOCONA)					\ 	builtin_define ("__tune_nocona__");			\       else if (TARGET_CORE2)					\ 	builtin_define ("__tune_core2__");			\ 								\       if (TARGET_MMX)						\ 	builtin_define ("__MMX__");				\       if (TARGET_3DNOW)						\ 	builtin_define ("__3dNOW__");				\       if (TARGET_3DNOW_A)					\ 	builtin_define ("__3dNOW_A__");				\       if (TARGET_SSE)						\ 	builtin_define ("__SSE__");				\       if (TARGET_SSE2)						\ 	builtin_define ("__SSE2__");				\       if (TARGET_SSE3)						\ 	builtin_define ("__SSE3__");				\       if (TARGET_SSSE3)						\ 	builtin_define ("__SSSE3__");				\       if (TARGET_SSE4A)					\  	builtin_define ("__SSE4A__");		                \       if (TARGET_SSE_MATH&& TARGET_SSE)			\ 	builtin_define ("__SSE_MATH__");			\       if (TARGET_SSE_MATH&& TARGET_SSE2)			\ 	builtin_define ("__SSE2_MATH__");			\ 								\
 comment|/* Built-ins based on -march=.  */
 value|\       if (ix86_arch == PROCESSOR_I486)				\ 	{							\ 	  builtin_define ("__i486");				\ 	  builtin_define ("__i486__");				\ 	}							\       else if (ix86_arch == PROCESSOR_PENTIUM)			\ 	{							\ 	  builtin_define ("__i586");				\ 	  builtin_define ("__i586__");				\ 	  builtin_define ("__pentium");				\ 	  builtin_define ("__pentium__");			\ 	  if (last_arch_char == 'x')				\ 	    builtin_define ("__pentium_mmx__");			\ 	}							\       else if (ix86_arch == PROCESSOR_PENTIUMPRO)		\ 	{							\ 	  builtin_define ("__i686");				\ 	  builtin_define ("__i686__");				\ 	  builtin_define ("__pentiumpro");			\ 	  builtin_define ("__pentiumpro__");			\ 	}							\       else if (ix86_arch == PROCESSOR_GEODE)			\ 	{							\ 	  builtin_define ("__geode");				\ 	  builtin_define ("__geode__");				\ 	}							\       else if (ix86_arch == PROCESSOR_K6)			\ 	{							\ 								\ 	  builtin_define ("__k6");				\ 	  builtin_define ("__k6__");				\ 	  if (last_arch_char == '2')				\ 	    builtin_define ("__k6_2__");			\ 	  else if (last_arch_char == '3')			\ 	    builtin_define ("__k6_3__");			\ 	}							\       else if (ix86_arch == PROCESSOR_ATHLON)			\ 	{							\ 	  builtin_define ("__athlon");				\ 	  builtin_define ("__athlon__");			\
 comment|/* Plain "athlon"& "athlon-tbird" lacks SSE.  */
-value|\ 	  if (last_tune_char != 'n'&& last_tune_char != 'd')	\ 	    builtin_define ("__athlon_sse__");			\ 	}							\       else if (ix86_arch == PROCESSOR_K8)			\ 	{							\ 	  builtin_define ("__k8");				\ 	  builtin_define ("__k8__");				\ 	}							\       else if (ix86_arch == PROCESSOR_PENTIUM4)			\ 	{							\ 	  builtin_define ("__pentium4");			\ 	  builtin_define ("__pentium4__");			\ 	}							\       else if (ix86_arch == PROCESSOR_NOCONA)			\ 	{							\ 	  builtin_define ("__nocona");				\ 	  builtin_define ("__nocona__");			\ 	}							\       else if (ix86_arch == PROCESSOR_CORE2)			\ 	{							\ 	  builtin_define ("__core2");				\ 	  builtin_define ("__core2__");				\ 	}							\     }								\   while (0)
+value|\ 	  if (last_tune_char != 'n'&& last_tune_char != 'd')	\ 	    builtin_define ("__athlon_sse__");			\ 	}							\       else if (ix86_arch == PROCESSOR_K8)			\ 	{							\ 	  builtin_define ("__k8");				\ 	  builtin_define ("__k8__");				\ 	}							\       else if (ix86_arch == PROCESSOR_AMDFAM10)			\ 	{							\ 	  builtin_define ("__amdfam10");			\ 	  builtin_define ("__amdfam10__");			\ 	}							\       else if (ix86_arch == PROCESSOR_PENTIUM4)			\ 	{							\ 	  builtin_define ("__pentium4");			\ 	  builtin_define ("__pentium4__");			\ 	}							\       else if (ix86_arch == PROCESSOR_NOCONA)			\ 	{							\ 	  builtin_define ("__nocona");				\ 	  builtin_define ("__nocona__");			\ 	}							\       else if (ix86_arch == PROCESSOR_CORE2)			\ 	{							\ 	  builtin_define ("__core2");				\ 	  builtin_define ("__core2__");				\ 	}							\     }								\   while (0)
 end_define
 
 begin_define
@@ -1589,8 +1612,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|TARGET_CPU_DEFAULT_amdfam10
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
 name|TARGET_CPU_DEFAULT_NAMES
-value|{"i386", "i486", "pentium", "pentium-mmx",\ 				  "pentiumpro", "pentium2", "pentium3", \                                   "pentium4", "geode", "k6", "k6-2", "k6-3", \ 				  "athlon", "athlon-4", "k8", \ 				  "pentium-m", "prescott", "nocona", \ 				  "core2", "generic"}
+value|{"i386", "i486", "pentium", "pentium-mmx",\ 				  "pentiumpro", "pentium2", "pentium3", \                                   "pentium4", "geode", "k6", "k6-2", "k6-3", \ 				  "athlon", "athlon-4", "k8", \ 				  "pentium-m", "prescott", "nocona", \ 				  "core2", "generic", "amdfam10"}
 end_define
 
 begin_ifndef
@@ -2138,7 +2168,7 @@ begin_define
 define|#
 directive|define
 name|FIRST_PSEUDO_REGISTER
-value|53
+value|54
 end_define
 
 begin_comment
@@ -2164,8 +2194,8 @@ define|\
 comment|/*ax,dx,cx,bx,si,di,bp,sp,st,st1,st2,st3,st4,st5,st6,st7*/
 define|\
 value|{  0, 0, 0, 0, 0, 0, 0, 1, 0,  0,  0,  0,  0,  0,  0,  0,	\
-comment|/*arg,flags,fpsr,dir,frame*/
-value|\     1,    1,   1,  1,    1,					\
+comment|/*arg,flags,fpsr,fpcr,dir,frame*/
+value|\     1,    1,   1,   1,  1,    1,				\
 comment|/*xmm0,xmm1,xmm2,xmm3,xmm4,xmm5,xmm6,xmm7*/
 value|\      0,   0,   0,   0,   0,   0,   0,   0,			\
 comment|/*mmx0,mmx1,mmx2,mmx3,mmx4,mmx5,mmx6,mmx7*/
@@ -2188,10 +2218,10 @@ define|\
 comment|/*ax,dx,cx,bx,si,di,bp,sp,st,st1,st2,st3,st4,st5,st6,st7*/
 define|\
 value|{  1, 1, 1, 0, 3, 3, 0, 1, 1,  1,  1,  1,  1,  1,  1,  1,	\
-comment|/*arg,flags,fpsr,dir,frame*/
-value|\      1,   1,   1,  1,    1,					\
+comment|/*arg,flags,fpsr,fpcr,dir,frame*/
+value|\     1,   1,    1,   1,  1,    1,				\
 comment|/*xmm0,xmm1,xmm2,xmm3,xmm4,xmm5,xmm6,xmm7*/
-value|\      1,   1,   1,   1,   1,  1,    1,   1,			\
+value|\      1,   1,   1,   1,   1,   1,   1,   1,			\
 comment|/*mmx0,mmx1,mmx2,mmx3,mmx4,mmx5,mmx6,mmx7*/
 value|\      1,   1,   1,   1,   1,   1,   1,   1,			\
 comment|/*  r8,  r9, r10, r11, r12, r13, r14, r15*/
@@ -2210,11 +2240,11 @@ define|#
 directive|define
 name|REG_ALLOC_ORDER
 define|\
-value|{  0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,\    18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32,	\    33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47,  \    48, 49, 50, 51, 52 }
+value|{  0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,\    18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32,	\    33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47,  \    48, 49, 50, 51, 52, 53 }
 end_define
 
 begin_comment
-comment|/* ORDER_REGS_FOR_LOCAL_ALLOC is a macro which permits reg_alloc_order    to be rearranged based on a particular function.  When using sse math,    we want to allocate SSE before x87 registers and vice vera.  */
+comment|/* ORDER_REGS_FOR_LOCAL_ALLOC is a macro which permits reg_alloc_order    to be rearranged based on a particular function.  When using sse math,    we want to allocate SSE before x87 registers and vice versa.  */
 end_comment
 
 begin_define
@@ -2463,7 +2493,7 @@ begin_define
 define|#
 directive|define
 name|FRAME_POINTER_REGNUM
-value|20
+value|21
 end_define
 
 begin_comment
@@ -2685,7 +2715,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Define the classes of registers for register constraints in the    machine description.  Also define ranges of constants.     One of the classes must always be named ALL_REGS and include all hard regs.    If there is more than one class, another class must be named NO_REGS    and contain no registers.     The name GENERAL_REGS must be the name of a class (or an alias for    another name such as ALL_REGS).  This is the class of registers    that is allowed by "g" or "r" in a register constraint.    Also, registers outside this class are allocated only when    instructions express preferences for them.     The classes must be numbered in nondecreasing order; that is,    a larger-numbered class must never be contained completely    in a smaller-numbered class.     For any two classes, it is very desirable that there be another    class that represents their union.     It might seem that class BREG is unnecessary, since no useful 386    opcode needs reg %ebx.  But some systems pass args to the OS in ebx,    and the "b" register constraint is useful in asms for syscalls.     The flags and fpsr registers are in no class.  */
+comment|/* Define the classes of registers for register constraints in the    machine description.  Also define ranges of constants.     One of the classes must always be named ALL_REGS and include all hard regs.    If there is more than one class, another class must be named NO_REGS    and contain no registers.     The name GENERAL_REGS must be the name of a class (or an alias for    another name such as ALL_REGS).  This is the class of registers    that is allowed by "g" or "r" in a register constraint.    Also, registers outside this class are allocated only when    instructions express preferences for them.     The classes must be numbered in nondecreasing order; that is,    a larger-numbered class must never be contained completely    in a smaller-numbered class.     For any two classes, it is very desirable that there be another    class that represents their union.     It might seem that class BREG is unnecessary, since no useful 386    opcode needs reg %ebx.  But some systems pass args to the OS in ebx,    and the "b" register constraint is useful in asms for syscalls.     The flags, fpsr and fpcr registers are in no class.  */
 end_comment
 
 begin_enum
@@ -2891,35 +2921,35 @@ value|\       { 0x03,     0x0 },
 comment|/* AD_REGS */
 value|\       { 0x0f,     0x0 },
 comment|/* Q_REGS */
-value|\   { 0x1100f0,  0x1fe0 },
+value|\   { 0x2100f0,  0x3fc0 },
 comment|/* NON_Q_REGS */
-value|\       { 0x7f,  0x1fe0 },
+value|\       { 0x7f,  0x3fc0 },
 comment|/* INDEX_REGS */
-value|\   { 0x1100ff,  0x0 },
+value|\   { 0x2100ff,     0x0 },
 comment|/* LEGACY_REGS */
-value|\   { 0x1100ff,  0x1fe0 },
+value|\   { 0x2100ff,  0x3fc0 },
 comment|/* GENERAL_REGS */
 value|\      { 0x100,     0x0 }, { 0x0200, 0x0 },
 comment|/* FP_TOP_REG, FP_SECOND_REG */
 value|\     { 0xff00,     0x0 },
 comment|/* FLOAT_REGS */
-value|\ { 0x1fe00000,0x1fe000 },
+value|\ { 0x3fc00000,0x3fc000 },
 comment|/* SSE_REGS */
-value|\ { 0xe0000000,    0x1f },
+value|\ { 0xc0000000,    0x3f },
 comment|/* MMX_REGS */
-value|\ { 0x1fe00100,0x1fe000 },
+value|\ { 0x3fc00100,0x3fc000 },
 comment|/* FP_TOP_SSE_REG */
-value|\ { 0x1fe00200,0x1fe000 },
+value|\ { 0x3fc00200,0x3fc000 },
 comment|/* FP_SECOND_SSE_REG */
-value|\ { 0x1fe0ff00,0x1fe000 },
+value|\ { 0x3fc0ff00,0x3fc000 },
 comment|/* FLOAT_SSE_REGS */
-value|\    { 0x1ffff,  0x1fe0 },
+value|\    { 0x1ffff,  0x3fc0 },
 comment|/* FLOAT_INT_REGS */
-value|\ { 0x1fe100ff,0x1fffe0 },
+value|\ { 0x3fc100ff,0x3fffc0 },
 comment|/* INT_SSE_REGS */
-value|\ { 0x1fe1ffff,0x1fffe0 },
+value|\ { 0x3fc1ffff,0x3fffc0 },
 comment|/* FLOAT_INT_SSE_REGS */
-value|\ { 0xffffffff,0x1fffff }							\ }
+value|\ { 0xffffffff,0x3fffff }							\ }
 end_define
 
 begin_comment
@@ -2954,7 +2984,6 @@ name|QI_REG_P
 parameter_list|(
 name|X
 parameter_list|)
-define|\
 value|(REG_P (X)&& REGNO (X)< 4)
 end_define
 
@@ -2966,7 +2995,7 @@ parameter_list|(
 name|N
 parameter_list|)
 define|\
-value|((N)< 8 || REX_INT_REGNO_P (N))
+value|((N)<= STACK_POINTER_REGNUM || REX_INT_REGNO_P (N))
 end_define
 
 begin_define
@@ -2998,7 +3027,7 @@ parameter_list|(
 name|X
 parameter_list|)
 define|\
-value|(REG_P (X)&& REGNO (X)>= 4&& REGNO (X)< FIRST_PSEUDO_REGISTER)
+value|(REG_P (X)&& IN_RANGE (REGNO (X), 4, FIRST_PSEUDO_REGISTER - 1))
 end_define
 
 begin_define
@@ -3008,7 +3037,8 @@ name|REX_INT_REGNO_P
 parameter_list|(
 name|N
 parameter_list|)
-value|((N)>= FIRST_REX_INT_REG&& (N)<= LAST_REX_INT_REG)
+define|\
+value|IN_RANGE ((N), FIRST_REX_INT_REG, LAST_REX_INT_REG)
 end_define
 
 begin_define
@@ -3038,7 +3068,7 @@ name|FP_REGNO_P
 parameter_list|(
 name|N
 parameter_list|)
-value|((N)>= FIRST_STACK_REG&& (N)<= LAST_STACK_REG)
+value|IN_RANGE ((N), FIRST_STACK_REG, LAST_STACK_REG)
 end_define
 
 begin_define
@@ -3064,12 +3094,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|SSE_REG_P
+parameter_list|(
+name|N
+parameter_list|)
+value|(REG_P (N)&& SSE_REGNO_P (REGNO (N)))
+end_define
+
+begin_define
+define|#
+directive|define
 name|SSE_REGNO_P
 parameter_list|(
 name|N
 parameter_list|)
 define|\
-value|(((N)>= FIRST_SSE_REG&& (N)<= LAST_SSE_REG) \    || ((N)>= FIRST_REX_SSE_REG&& (N)<= LAST_REX_SSE_REG))
+value|(IN_RANGE ((N), FIRST_SSE_REG, LAST_SSE_REG)			\    || REX_SSE_REGNO_P (N))
 end_define
 
 begin_define
@@ -3080,7 +3120,7 @@ parameter_list|(
 name|N
 parameter_list|)
 define|\
-value|((N)>= FIRST_REX_SSE_REG&& (N)<= LAST_REX_SSE_REG)
+value|IN_RANGE ((N), FIRST_REX_SSE_REG, LAST_REX_SSE_REG)
 end_define
 
 begin_define
@@ -3097,32 +3137,12 @@ end_define
 begin_define
 define|#
 directive|define
-name|SSE_REG_P
-parameter_list|(
-name|N
-parameter_list|)
-value|(REG_P (N)&& SSE_REGNO_P (REGNO (N)))
-end_define
-
-begin_define
-define|#
-directive|define
 name|SSE_FLOAT_MODE_P
 parameter_list|(
 name|MODE
 parameter_list|)
 define|\
 value|((TARGET_SSE&& (MODE) == SFmode) || (TARGET_SSE2&& (MODE) == DFmode))
-end_define
-
-begin_define
-define|#
-directive|define
-name|MMX_REGNO_P
-parameter_list|(
-name|N
-parameter_list|)
-value|((N)>= FIRST_MMX_REG&& (N)<= LAST_MMX_REG)
 end_define
 
 begin_define
@@ -3138,12 +3158,21 @@ end_define
 begin_define
 define|#
 directive|define
+name|MMX_REGNO_P
+parameter_list|(
+name|N
+parameter_list|)
+value|IN_RANGE ((N), FIRST_MMX_REG, LAST_MMX_REG)
+end_define
+
+begin_define
+define|#
+directive|define
 name|STACK_REG_P
 parameter_list|(
 name|XOP
 parameter_list|)
-define|\
-value|(REG_P (XOP)&&		       	\    REGNO (XOP)>= FIRST_STACK_REG&&	\    REGNO (XOP)<= LAST_STACK_REG)
+value|(REG_P (XOP)&& STACK_REGNO_P (REGNO (XOP)))
 end_define
 
 begin_define
@@ -3153,7 +3182,18 @@ name|NON_STACK_REG_P
 parameter_list|(
 name|XOP
 parameter_list|)
-value|(REG_P (XOP)&& ! STACK_REG_P (XOP))
+define|\
+value|(REG_P (XOP)&& ! STACK_REGNO_P (REGNO (XOP)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|STACK_REGNO_P
+parameter_list|(
+name|N
+parameter_list|)
+value|IN_RANGE ((N), FIRST_STACK_REG, LAST_STACK_REG)
 end_define
 
 begin_define
@@ -3861,7 +3901,7 @@ parameter_list|(
 name|REGNO
 parameter_list|)
 define|\
-value|((REGNO)< STACK_POINTER_REGNUM 					\    || (REGNO>= FIRST_REX_INT_REG					\&& (REGNO)<= LAST_REX_INT_REG)					\    || ((unsigned) reg_renumber[(REGNO)]>= FIRST_REX_INT_REG		\&& (unsigned) reg_renumber[(REGNO)]<= LAST_REX_INT_REG)		\    || (unsigned) reg_renumber[(REGNO)]< STACK_POINTER_REGNUM)
+value|((REGNO)< STACK_POINTER_REGNUM 					\    || REX_INT_REGNO_P (REGNO)						\    || (unsigned) reg_renumber[(REGNO)]< STACK_POINTER_REGNUM		\    || REX_INT_REGNO_P ((unsigned) reg_renumber[(REGNO)]))
 end_define
 
 begin_define
@@ -3872,7 +3912,7 @@ parameter_list|(
 name|REGNO
 parameter_list|)
 define|\
-value|((REGNO)<= STACK_POINTER_REGNUM 					\    || (REGNO) == ARG_POINTER_REGNUM 					\    || (REGNO) == FRAME_POINTER_REGNUM 					\    || (REGNO>= FIRST_REX_INT_REG					\&& (REGNO)<= LAST_REX_INT_REG)					\    || ((unsigned) reg_renumber[(REGNO)]>= FIRST_REX_INT_REG		\&& (unsigned) reg_renumber[(REGNO)]<= LAST_REX_INT_REG)		\    || (unsigned) reg_renumber[(REGNO)]<= STACK_POINTER_REGNUM)
+value|(GENERAL_REGNO_P (REGNO)						\    || (REGNO) == ARG_POINTER_REGNUM 					\    || (REGNO) == FRAME_POINTER_REGNUM 					\    || GENERAL_REGNO_P ((unsigned) reg_renumber[(REGNO)]))
 end_define
 
 begin_define
@@ -3913,7 +3953,7 @@ parameter_list|(
 name|X
 parameter_list|)
 define|\
-value|(REGNO (X)< STACK_POINTER_REGNUM					\    || (REGNO (X)>= FIRST_REX_INT_REG					\&& REGNO (X)<= LAST_REX_INT_REG)				\    || REGNO (X)>= FIRST_PSEUDO_REGISTER)
+value|(REGNO (X)< STACK_POINTER_REGNUM					\    || REX_INT_REGNO_P (REGNO (X))					\    || REGNO (X)>= FIRST_PSEUDO_REGISTER)
 end_define
 
 begin_define
@@ -3924,7 +3964,7 @@ parameter_list|(
 name|X
 parameter_list|)
 define|\
-value|(REGNO (X)<= STACK_POINTER_REGNUM					\    || REGNO (X) == ARG_POINTER_REGNUM					\    || REGNO (X) == FRAME_POINTER_REGNUM 				\    || (REGNO (X)>= FIRST_REX_INT_REG					\&& REGNO (X)<= LAST_REX_INT_REG)				\    || REGNO (X)>= FIRST_PSEUDO_REGISTER)
+value|(GENERAL_REGNO_P (REGNO (X))						\    || REGNO (X) == ARG_POINTER_REGNUM					\    || REGNO (X) == FRAME_POINTER_REGNUM 				\    || REGNO (X)>= FIRST_PSEUDO_REGISTER)
 end_define
 
 begin_comment
@@ -4526,7 +4566,7 @@ define|#
 directive|define
 name|HI_REGISTER_NAMES
 define|\
-value|{"ax","dx","cx","bx","si","di","bp","sp",				\  "st","st(1)","st(2)","st(3)","st(4)","st(5)","st(6)","st(7)",		\  "argp", "flags", "fpsr", "dirflag", "frame",				\  "xmm0","xmm1","xmm2","xmm3","xmm4","xmm5","xmm6","xmm7",		\  "mm0", "mm1", "mm2", "mm3", "mm4", "mm5", "mm6", "mm7"	,		\  "r8", "r9", "r10", "r11", "r12", "r13", "r14", "r15",			\  "xmm8", "xmm9", "xmm10", "xmm11", "xmm12", "xmm13", "xmm14", "xmm15"}
+value|{"ax","dx","cx","bx","si","di","bp","sp",				\  "st","st(1)","st(2)","st(3)","st(4)","st(5)","st(6)","st(7)",		\  "argp", "flags", "fpsr", "fpcr", "dirflag", "frame",			\  "xmm0","xmm1","xmm2","xmm3","xmm4","xmm5","xmm6","xmm7",		\  "mm0", "mm1", "mm2", "mm3", "mm4", "mm5", "mm6", "mm7",		\  "r8", "r9", "r10", "r11", "r12", "r13", "r14", "r15",			\  "xmm8", "xmm9", "xmm10", "xmm11", "xmm12", "xmm13", "xmm14", "xmm15"}
 end_define
 
 begin_define
@@ -4938,6 +4978,8 @@ name|PROCESSOR_GENERIC32
 block|,
 name|PROCESSOR_GENERIC64
 block|,
+name|PROCESSOR_AMDFAM10
+block|,
 name|PROCESSOR_max
 block|}
 enum|;
@@ -5288,7 +5330,7 @@ parameter_list|,
 name|TARGET
 parameter_list|)
 define|\
-value|((SRC)< FIRST_STACK_REG || (SRC)> LAST_STACK_REG)
+value|(! IN_RANGE ((SRC), FIRST_STACK_REG, LAST_STACK_REG))
 end_define
 
 begin_escape
