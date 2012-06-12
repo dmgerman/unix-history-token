@@ -1806,7 +1806,7 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-comment|/* Now pull back the af in packet that 		 * was saved in the address location. 		 */
+comment|/*  		 * Now pull back the af that we 		 * stashed in the csum_data. 		 */
 name|af
 operator|=
 name|m
@@ -2300,7 +2300,7 @@ name|dst
 operator|->
 name|sa_family
 expr_stmt|;
-comment|/* Now save the af in the inbound pkt csum 	 * data, this is a cheat since really 	 * gif tunnels don't do offload. 	 */
+comment|/*  	 * Now save the af in the inbound pkt csum 	 * data, this is a cheat since we are using 	 * the inbound csum_data field to carry the 	 * af over to the gif_start() routine, avoiding 	 * using yet another mtag.  	 */
 name|m
 operator|->
 name|m_pkthdr
@@ -2349,7 +2349,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|ALTQ
-comment|/* Make altq aware of the bytes we will add  	 * when we actually send it. 	 */
+comment|/* 	 * Make altq aware of the bytes we will add  	 * when we actually send it. 	 */
 ifdef|#
 directive|ifdef
 name|INET
