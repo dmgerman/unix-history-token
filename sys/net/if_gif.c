@@ -1807,22 +1807,13 @@ directive|endif
 endif|#
 directive|endif
 comment|/* Now pull back the af in packet that 		 * was saved in the address location. 		 */
-name|bcopy
-argument_list|(
+name|af
+operator|=
 name|m
 operator|->
 name|m_pkthdr
 operator|.
-name|src_mac_addr
-argument_list|,
-operator|&
-name|af
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|af
-argument_list|)
-argument_list|)
+name|csum_data
 expr_stmt|;
 if|if
 condition|(
@@ -2309,23 +2300,14 @@ name|dst
 operator|->
 name|sa_family
 expr_stmt|;
-comment|/* Now save the af in the inbound pkt mac 	 * address location. 	 */
-name|bcopy
-argument_list|(
-operator|&
-name|af
-argument_list|,
+comment|/* Now save the af in the inbound pkt csum 	 * data, this is a cheat since really 	 * gif tunnels don't do offload. 	 */
 name|m
 operator|->
 name|m_pkthdr
 operator|.
-name|src_mac_addr
-argument_list|,
-sizeof|sizeof
-argument_list|(
+name|csum_data
+operator|=
 name|af
-argument_list|)
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
