@@ -7004,6 +7004,12 @@ name|p
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Search the bitmap for a free descriptor.  If none is found, try 	 * to grow the file table.  Keep at it until we either get a file 	 * descriptor or run into process or system limits. 	 */
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
 name|fd
 operator|=
 name|fd_first_free
@@ -7031,12 +7037,12 @@ return|;
 if|if
 condition|(
 name|fd
-operator|>=
+operator|<
 name|fdp
 operator|->
 name|fd_nfiles
 condition|)
-block|{
+break|break;
 ifdef|#
 directive|ifdef
 name|RACCT
@@ -7099,31 +7105,6 @@ name|maxfd
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Retry... */
-name|fd
-operator|=
-name|fd_first_free
-argument_list|(
-name|fdp
-argument_list|,
-name|minfd
-argument_list|,
-name|fdp
-operator|->
-name|fd_nfiles
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|fd
-operator|>=
-name|maxfd
-condition|)
-return|return
-operator|(
-name|EMFILE
-operator|)
-return|;
 block|}
 comment|/* 	 * Perform some sanity checks, then mark the file descriptor as 	 * used and return it to the caller. 	 */
 name|KASSERT
