@@ -525,6 +525,17 @@ begin_comment
 comment|/* (n) interface is being renamed */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IFF_GIF_WANTED
+value|0x1000000
+end_define
+
+begin_comment
+comment|/* (n) The gif tunnel is wanted */
+end_comment
+
 begin_comment
 comment|/*  * Old names for driver flags so that user space tools can continue to use  * the old (portable) names.  */
 end_comment
