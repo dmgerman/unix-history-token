@@ -12516,7 +12516,7 @@ name|cpi
 operator|->
 name|protocol
 operator|=
-name|PROTO_UNSPECIFIED
+name|PROTO_ATA
 expr_stmt|;
 name|cpi
 operator|->
