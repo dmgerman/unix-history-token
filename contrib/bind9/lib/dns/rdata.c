@@ -1414,6 +1414,12 @@ name|REQUIRE
 argument_list|(
 name|rdata1
 operator|->
+name|length
+operator|==
+literal|0
+operator|||
+name|rdata1
+operator|->
 name|data
 operator|!=
 name|NULL
@@ -1421,6 +1427,12 @@ argument_list|)
 expr_stmt|;
 name|REQUIRE
 argument_list|(
+name|rdata2
+operator|->
+name|length
+operator|==
+literal|0
+operator|||
 name|rdata2
 operator|->
 name|data
