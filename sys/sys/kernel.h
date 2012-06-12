@@ -754,7 +754,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Infrastructure for tunable 'constants'.  Value may be specified at compile  * time or kernel load time.  Rules relating tunables together can be placed  * in a SYSINIT function at SI_SUB_TUNABLES with SI_ORDER_LAST.  *  * WARNING: developers should never use the reserved suffixes specified in  * loader.conf(5) for any tunables or conflicts will result.  */
+comment|/*  * Infrastructure for tunable 'constants'.  Value may be specified at compile  * time or kernel load time.  Rules relating tunables together can be placed  * in a SYSINIT function at SI_SUB_TUNABLES with SI_ORDER_ANY.  *  * WARNING: developers should never use the reserved suffixes specified in  * loader.conf(5) for any tunables or conflicts will result.  */
 end_comment
 
 begin_comment
