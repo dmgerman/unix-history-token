@@ -480,119 +480,13 @@ operator|.
 name|rd_base
 argument_list|)
 expr_stmt|;
-comment|/* do an INIT IPI: assert RESET */
-name|lapic_ipi_raw
+name|ipi_startup
 argument_list|(
-name|APIC_DEST_DESTFLD
-operator||
-name|APIC_TRIGMOD_EDGE
-operator||
-name|APIC_LEVEL_ASSERT
-operator||
-name|APIC_DESTMODE_PHY
-operator||
-name|APIC_DELMODE_INIT
-argument_list|,
 name|apic_id
-argument_list|)
-expr_stmt|;
-comment|/* wait for pending status end */
-name|lapic_ipi_wait
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* do an INIT IPI: deassert RESET */
-name|lapic_ipi_raw
-argument_list|(
-name|APIC_DEST_ALLESELF
-operator||
-name|APIC_TRIGMOD_LEVEL
-operator||
-name|APIC_LEVEL_DEASSERT
-operator||
-name|APIC_DESTMODE_PHY
-operator||
-name|APIC_DELMODE_INIT
 argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* wait for pending status end */
-name|DELAY
-argument_list|(
-literal|10000
-argument_list|)
-expr_stmt|;
-comment|/* wait ~10mS */
-name|lapic_ipi_wait
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* 	 * next we do a STARTUP IPI: the previous INIT IPI might still be 	 * latched, (P5 bug) this 1st STARTUP would then terminate 	 * immediately, and the previously started INIT IPI would continue. OR 	 * the previous INIT IPI has already run. and this STARTUP IPI will 	 * run. OR the previous INIT IPI was ignored. and this STARTUP IPI 	 * will run. 	 */
-comment|/* do a STARTUP IPI */
-name|lapic_ipi_raw
-argument_list|(
-name|APIC_DEST_DESTFLD
-operator||
-name|APIC_TRIGMOD_EDGE
-operator||
-name|APIC_LEVEL_DEASSERT
-operator||
-name|APIC_DESTMODE_PHY
-operator||
-name|APIC_DELMODE_STARTUP
-operator||
 name|vector
-argument_list|,
-name|apic_id
 argument_list|)
 expr_stmt|;
-name|lapic_ipi_wait
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-name|DELAY
-argument_list|(
-literal|200
-argument_list|)
-expr_stmt|;
-comment|/* wait ~200uS */
-comment|/* 	 * finally we do a 2nd STARTUP IPI: this 2nd STARTUP IPI should run IF 	 * the previous STARTUP IPI was cancelled by a latched INIT IPI. OR 	 * this STARTUP IPI will be ignored, as only ONE STARTUP IPI is 	 * recognized after hardware RESET or INIT IPI. 	 */
-name|lapic_ipi_raw
-argument_list|(
-name|APIC_DEST_DESTFLD
-operator||
-name|APIC_TRIGMOD_EDGE
-operator||
-name|APIC_LEVEL_DEASSERT
-operator||
-name|APIC_DESTMODE_PHY
-operator||
-name|APIC_DELMODE_STARTUP
-operator||
-name|vector
-argument_list|,
-name|apic_id
-argument_list|)
-expr_stmt|;
-name|lapic_ipi_wait
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-name|DELAY
-argument_list|(
-literal|200
-argument_list|)
-expr_stmt|;
-comment|/* wait ~200uS */
 comment|/* Wait up to 5 seconds for it to resume. */
 for|for
 control|(

@@ -321,6 +321,19 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|ipi_startup
+parameter_list|(
+name|int
+name|apic_id
+parameter_list|,
+name|int
+name|vector
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|ipi_all_but_self
 parameter_list|(
 name|u_int
