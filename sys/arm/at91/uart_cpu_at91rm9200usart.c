@@ -233,7 +233,7 @@ operator|=
 operator|&
 name|at91_bs_tag
 expr_stmt|;
-comment|/*  	 * XXX: Not pretty, but will work because we map the needed addresses 	 * early. 	 */
+comment|/* 	 * XXX: Not pretty, but will work because we map the needed addresses 	 * early. 	 */
 name|di
 operator|->
 name|bas
