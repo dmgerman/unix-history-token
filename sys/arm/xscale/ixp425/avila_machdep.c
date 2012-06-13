@@ -903,17 +903,15 @@ decl_stmt|;
 name|uint32_t
 name|memsize
 decl_stmt|;
-name|lastaddr
-operator|=
-name|parse_boot_param
-argument_list|(
-name|abp
-argument_list|)
-expr_stmt|;
 name|set_cpufuncs
 argument_list|()
 expr_stmt|;
 comment|/* NB: sets cputype */
+name|lastaddr
+operator|=
+name|fake_preload_metadata
+argument_list|()
+expr_stmt|;
 name|pcpu_init
 argument_list|(
 name|pcpup
