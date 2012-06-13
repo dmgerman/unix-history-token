@@ -504,8 +504,6 @@ name|filedesc
 modifier|*
 parameter_list|,
 name|int
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1031,7 +1029,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Find the highest non-zero bit in the given bitmap, starting at low and  * not exceeding size - 1.  */
+comment|/*  * Find the highest non-zero bit in the given bitmap, starting at 0 and  * not exceeding size - 1. Return -1 if not found.  */
 end_comment
 
 begin_function
@@ -1043,9 +1041,6 @@ name|struct
 name|filedesc
 modifier|*
 name|fdp
-parameter_list|,
-name|int
-name|low
 parameter_list|,
 name|int
 name|size
@@ -1067,18 +1062,6 @@ name|off
 decl_stmt|,
 name|minoff
 decl_stmt|;
-if|if
-condition|(
-name|low
-operator|>=
-name|size
-condition|)
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
 name|off
 operator|=
 name|NDSLOT
@@ -1147,7 +1130,7 @@ name|minoff
 operator|=
 name|NDSLOT
 argument_list|(
-name|low
+literal|0
 argument_list|)
 init|;
 name|off
@@ -1185,7 +1168,6 @@ operator|)
 return|;
 return|return
 operator|(
-name|low
 operator|-
 literal|1
 operator|)
@@ -1446,8 +1428,6 @@ operator|=
 name|fd_last_used
 argument_list|(
 name|fdp
-argument_list|,
-literal|0
 argument_list|,
 name|fd
 argument_list|)
