@@ -1298,7 +1298,7 @@ operator|.
 name|mr_size
 argument_list|)
 expr_stmt|;
-comment|/*  		 * We should not map the page at PA 0x0000000, the VM can't 		 * handle it, as pmap_extract() == 0 means failure. 		 */
+comment|/* 		 * We should not map the page at PA 0x0000000, the VM can't 		 * handle it, as pmap_extract() == 0 means failure. 		 */
 if|if
 condition|(
 name|availmem_regions
