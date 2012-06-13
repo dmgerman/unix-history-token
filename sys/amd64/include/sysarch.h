@@ -90,6 +90,13 @@ name|I386_SET_GSBASE
 value|10
 end_define
 
+begin_define
+define|#
+directive|define
+name|I386_GET_XFPUSTATE
+value|11
+end_define
+
 begin_comment
 comment|/* Leave space for 0-127 for to avoid translating syscalls */
 end_comment
@@ -120,6 +127,13 @@ define|#
 directive|define
 name|AMD64_SET_GSBASE
 value|131
+end_define
+
+begin_define
+define|#
+directive|define
+name|AMD64_GET_XFPUSTATE
+value|132
 end_define
 
 begin_struct
@@ -158,6 +172,36 @@ name|length
 decl_stmt|;
 name|int
 name|enable
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|i386_get_xfpustate
+block|{
+name|unsigned
+name|int
+name|addr
+decl_stmt|;
+name|int
+name|len
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|amd64_get_xfpustate
+block|{
+name|void
+modifier|*
+name|addr
+decl_stmt|;
+name|int
+name|len
 decl_stmt|;
 block|}
 struct|;

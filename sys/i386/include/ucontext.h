@@ -15,6 +15,38 @@ directive|define
 name|_MACHINE_UCONTEXT_H_
 end_define
 
+begin_comment
+comment|/* Keep _MC_* values similar to amd64 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_MC_HASSEGS
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|_MC_HASBASES
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|_MC_HASFPXSTATE
+value|0x4
+end_define
+
+begin_define
+define|#
+directive|define
+name|_MC_FLAG_MASK
+value|(_MC_HASSEGS | _MC_HASBASES | _MC_HASFPXSTATE)
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -121,13 +153,9 @@ comment|/* FP state came from PCB */
 name|int
 name|mc_ownedfp
 decl_stmt|;
-name|int
-name|mc_spare1
-index|[
-literal|1
-index|]
+name|__register_t
+name|mc_flags
 decl_stmt|;
-comment|/* align next field to 16 bytes */
 comment|/* 	 * See<machine/npx.h> for the internals of mc_fpstate[]. 	 */
 name|int
 name|mc_fpstate
@@ -143,10 +171,16 @@ decl_stmt|;
 name|__register_t
 name|mc_gsbase
 decl_stmt|;
+name|__register_t
+name|mc_xfpustate
+decl_stmt|;
+name|__register_t
+name|mc_xfpustate_len
+decl_stmt|;
 name|int
 name|mc_spare2
 index|[
-literal|6
+literal|4
 index|]
 decl_stmt|;
 block|}

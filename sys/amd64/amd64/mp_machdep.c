@@ -432,8 +432,14 @@ name|pcb
 modifier|*
 modifier|*
 name|susppcbs
-init|=
-name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+modifier|*
+modifier|*
+name|suspfpusave
 decl_stmt|;
 end_decl_stmt
 
@@ -5336,6 +5342,14 @@ index|]
 argument_list|)
 condition|)
 block|{
+name|ctx_fpusave
+argument_list|(
+name|suspfpusave
+index|[
+name|cpu
+index|]
+argument_list|)
+expr_stmt|;
 name|wbinvd
 argument_list|()
 expr_stmt|;

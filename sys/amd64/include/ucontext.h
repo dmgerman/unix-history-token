@@ -36,8 +36,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|_MC_HASFPXSTATE
+value|0x4
+end_define
+
+begin_define
+define|#
+directive|define
 name|_MC_FLAG_MASK
-value|(_MC_HASSEGS | _MC_HASBASES)
+value|(_MC_HASSEGS | _MC_HASBASES | _MC_HASFPXSTATE)
 end_define
 
 begin_typedef
@@ -184,10 +191,16 @@ decl_stmt|;
 name|__register_t
 name|mc_gsbase
 decl_stmt|;
+name|__register_t
+name|mc_xfpustate
+decl_stmt|;
+name|__register_t
+name|mc_xfpustate_len
+decl_stmt|;
 name|long
 name|mc_spare
 index|[
-literal|6
+literal|4
 index|]
 decl_stmt|;
 block|}

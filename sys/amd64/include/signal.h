@@ -192,9 +192,15 @@ name|long
 name|sc_gsbase
 decl_stmt|;
 name|long
+name|sc_xfpustate
+decl_stmt|;
+name|long
+name|sc_xfpustate_len
+decl_stmt|;
+name|long
 name|sc_spare
 index|[
-literal|6
+literal|4
 index|]
 decl_stmt|;
 block|}

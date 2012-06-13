@@ -1073,7 +1073,6 @@ name|fpu_kern_enter
 argument_list|(
 name|td
 argument_list|,
-operator|&
 name|ses
 operator|->
 name|fpu_ctx
@@ -1127,7 +1126,6 @@ name|fpu_kern_leave
 argument_list|(
 name|td
 argument_list|,
-operator|&
 name|ses
 operator|->
 name|fpu_ctx
@@ -1220,7 +1218,6 @@ name|fpu_kern_enter
 argument_list|(
 name|td
 argument_list|,
-operator|&
 name|ses
 operator|->
 name|fpu_ctx
@@ -1547,7 +1544,6 @@ name|fpu_kern_leave
 argument_list|(
 name|td
 argument_list|,
-operator|&
 name|ses
 operator|->
 name|fpu_ctx

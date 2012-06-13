@@ -15,6 +15,30 @@ directive|define
 name|_MACHINE_PTRACE_H_
 end_define
 
+begin_define
+define|#
+directive|define
+name|__HAVE_PTRACE_MACHDEP
+end_define
+
+begin_comment
+comment|/*  * On amd64 (PT_FIRSTMACH + 0) and (PT_FIRSTMACH + 1) are old values for  * PT_GETXSTATE and PT_SETXSTATE.  They should not be (re)used.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PT_GETXSTATE
+value|(PT_FIRSTMACH + 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PT_SETXSTATE
+value|(PT_FIRSTMACH + 3)
+end_define
+
 begin_endif
 endif|#
 directive|endif

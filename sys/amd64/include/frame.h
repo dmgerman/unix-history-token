@@ -124,9 +124,19 @@ name|TF_HASSEGS
 value|0x1
 end_define
 
-begin_comment
-comment|/* #define	_MC_HASBASES	0x2 */
-end_comment
+begin_define
+define|#
+directive|define
+name|TF_HASBASES
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|TF_HASFPXSTATE
+value|0x4
+end_define
 
 begin_endif
 endif|#
