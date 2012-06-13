@@ -864,7 +864,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Find the first zero bit in the given bitmap, starting at low and not  * exceeding size - 1.  */
+comment|/*  * If low>= size, just return low. Otherwise find the first zero bit in the  * given bitmap, starting at low and not exceeding size - 1. Return size if  * not found.  */
 end_comment
 
 begin_function
@@ -6948,6 +6948,8 @@ operator|-
 literal|1
 decl_stmt|,
 name|maxfd
+decl_stmt|,
+name|allocfd
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -7003,13 +7005,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Search the bitmap for a free descriptor.  If none is found, try 	 * to grow the file table.  Keep at it until we either get a file 	 * descriptor or run into process or system limits. 	 */
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
+comment|/* 	 * Search the bitmap for a free descriptor starting at minfd. 	 * If none is found, grow the file table. 	 */
 name|fd
 operator|=
 name|fd_first_free
@@ -7037,12 +7033,23 @@ return|;
 if|if
 condition|(
 name|fd
-operator|<
+operator|>=
 name|fdp
 operator|->
 name|fd_nfiles
 condition|)
-break|break;
+block|{
+name|allocfd
+operator|=
+name|min
+argument_list|(
+name|fd
+operator|*
+literal|2
+argument_list|,
+name|maxfd
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|RACCT
@@ -7059,16 +7066,7 @@ name|p
 argument_list|,
 name|RACCT_NOFILE
 argument_list|,
-name|min
-argument_list|(
-name|fdp
-operator|->
-name|fd_nfiles
-operator|*
-literal|2
-argument_list|,
-name|maxfd
-argument_list|)
+name|allocfd
 argument_list|)
 expr_stmt|;
 name|PROC_UNLOCK
@@ -7089,20 +7087,12 @@ operator|)
 return|;
 endif|#
 directive|endif
+comment|/* 		 * fd is already equal to first free descriptor>= minfd, so 		 * we only need to grow the table and we are done. 		 */
 name|fdgrowtable
 argument_list|(
 name|fdp
 argument_list|,
-name|min
-argument_list|(
-name|fdp
-operator|->
-name|fd_nfiles
-operator|*
-literal|2
-argument_list|,
-name|maxfd
-argument_list|)
+name|allocfd
 argument_list|)
 expr_stmt|;
 block|}
