@@ -24,7 +24,7 @@ comment|/* Physical Memory Map */
 end_comment
 
 begin_comment
-comment|/*   * 0x000000000 - 0x07FFFFFFF SDRAM  * 0x090100000 - 0x0901FFFFF ATUe Outbound IO Window  * 0x0F0000000 - 0x0F1FFFFFF Flash  * 0x0F2000000 - 0x0F20FFFFF PCE1  * 0x0F3000000 - 0x0FFCFFFFF Compact Flash  * 0x0FFD00000 - 0x0FFDFFFFF MMR  * 0x0FFFB0000 - 0x0FFFBFFFF ATU-X Outbound I/O Window  * 0x0FFFD0000 - 0x0FFFDFFFF ATUe Outbound I/O Window  * 0x100000000 - 0x1FFFFFFFF ATU-X outbound Memory Translation Window  * 0x2FF000000 - 0x2FFFFFFFF ATUe Outbound Memory Translation Window  */
+comment|/*  * 0x000000000 - 0x07FFFFFFF SDRAM  * 0x090100000 - 0x0901FFFFF ATUe Outbound IO Window  * 0x0F0000000 - 0x0F1FFFFFF Flash  * 0x0F2000000 - 0x0F20FFFFF PCE1  * 0x0F3000000 - 0x0FFCFFFFF Compact Flash  * 0x0FFD00000 - 0x0FFDFFFFF MMR  * 0x0FFFB0000 - 0x0FFFBFFFF ATU-X Outbound I/O Window  * 0x0FFFD0000 - 0x0FFFDFFFF ATUe Outbound I/O Window  * 0x100000000 - 0x1FFFFFFFF ATU-X outbound Memory Translation Window  * 0x2FF000000 - 0x2FFFFFFFF ATUe Outbound Memory Translation Window  */
 end_comment
 
 begin_define
@@ -169,7 +169,7 @@ comment|/* Transfert Direction */
 end_comment
 
 begin_comment
-comment|/*   *               Source                   Destination  *  00         Host I/O Interface	Local Memory  *  01         Local Memory             Host I/O Interface  *  10         Internal Bus             Local Memory  *  11         Local Memory             Internal Bus  */
+comment|/*  *               Source                   Destination  *  00         Host I/O Interface	Local Memory  *  01         Local Memory             Host I/O Interface  *  10         Internal Bus             Local Memory  *  11         Local Memory             Internal Bus  */
 end_comment
 
 begin_define
