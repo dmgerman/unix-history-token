@@ -5248,11 +5248,13 @@ operator|)
 operator|==
 name|O_ACCMODE
 condition|)
+block|{
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
+block|}
 else|else
 name|flags
 operator|=
@@ -5261,7 +5263,14 @@ argument_list|(
 name|flags
 argument_list|)
 expr_stmt|;
-comment|/* 	 * allocate the file descriptor, but don't install a descriptor yet 	 */
+block|}
+end_function
+
+begin_comment
+comment|/* 	 * Allocate the file descriptor, but don't install a descriptor yet. 	 */
+end_comment
+
+begin_expr_stmt
 name|error
 operator|=
 name|falloc_noinstall
@@ -5272,6 +5281,9 @@ operator|&
 name|nfp
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|error
@@ -5281,12 +5293,24 @@ operator|(
 name|error
 operator|)
 return|;
+end_if
+
+begin_comment
 comment|/* An extra reference on `nfp' has been held for us by falloc_noinstall(). */
+end_comment
+
+begin_expr_stmt
 name|fp
 operator|=
 name|nfp
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* Set the flags early so the finit in devfs can pick them up. */
+end_comment
+
+begin_expr_stmt
 name|fp
 operator|->
 name|f_flag
@@ -5295,6 +5319,9 @@ name|flags
 operator|&
 name|FMASK
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|cmode
 operator|=
 operator|(
@@ -5313,6 +5340,9 @@ operator|&
 operator|~
 name|S_ISTXT
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|NDINIT_ATRIGHTS
 argument_list|(
 operator|&
@@ -5337,6 +5367,9 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|td
 operator|->
 name|td_dupfd
@@ -5344,7 +5377,13 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* XXX check for fdopen */
+end_comment
+
+begin_expr_stmt
 name|error
 operator|=
 name|vn_open
@@ -5360,6 +5399,9 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|error
@@ -5382,16 +5424,14 @@ condition|)
 goto|goto
 name|success
 goto|;
-comment|/* 		 * handle special fdopen() case.  bleh.  dupfdopen() is 		 * responsible for dropping the old contents of ofiles[indx] 		 * if it succeeds. 		 * 		 * Don't do this for relative (capability) lookups; we don't 		 * understand exactly what would happen, and we don't think 		 * that it ever should. 		 */
+comment|/* 		 * Handle special fdopen() case. bleh. dupfdopen() is 		 * responsible for dropping the old contents of ofiles[indx] 		 * if it succeeds. 		 * 		 * Don't do this for relative (capability) lookups; we don't 		 * understand exactly what would happen, and we don't think 		 * that it ever should. 		 */
 if|if
 condition|(
-operator|(
 name|nd
 operator|.
 name|ni_strictrelative
 operator|==
 literal|0
-operator|)
 operator|&&
 operator|(
 name|error
@@ -5403,13 +5443,11 @@ operator|==
 name|ENXIO
 operator|)
 operator|&&
-operator|(
 name|td
 operator|->
 name|td_dupfd
 operator|>=
 literal|0
-operator|)
 condition|)
 block|{
 comment|/* XXX from fdopen */
@@ -5511,12 +5549,18 @@ name|error
 operator|)
 return|;
 block|}
+end_if
+
+begin_expr_stmt
 name|td
 operator|->
 name|td_dupfd
 operator|=
 literal|0
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|vfslocked
 operator|=
 name|NDHASGIANT
@@ -5525,6 +5569,9 @@ operator|&
 name|nd
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|NDFREE
 argument_list|(
 operator|&
@@ -5533,20 +5580,35 @@ argument_list|,
 name|NDF_ONLY_PNBUF
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|vp
 operator|=
 name|nd
 operator|.
 name|ni_vp
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* 	 * Store the vnode, for any f_type. Typically, the vnode use 	 * count is decremented by direct call to vn_closefile() for 	 * files that switched type in the cdevsw fdopen() method. 	 */
+end_comment
+
+begin_expr_stmt
 name|fp
 operator|->
 name|f_vnode
 operator|=
 name|vp
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* 	 * If the file wasn't claimed by devfs bind it to the normal 	 * vnode operations here. 	 */
+end_comment
+
+begin_if
 if|if
 condition|(
 name|fp
@@ -5593,6 +5655,9 @@ name|vnops
 argument_list|)
 expr_stmt|;
 block|}
+end_if
+
+begin_expr_stmt
 name|VOP_UNLOCK
 argument_list|(
 name|vp
@@ -5600,6 +5665,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|fp
@@ -5715,6 +5783,9 @@ name|FHASLOCK
 argument_list|)
 expr_stmt|;
 block|}
+end_if
+
+begin_if
 if|if
 condition|(
 name|flags
@@ -5745,14 +5816,26 @@ goto|goto
 name|bad
 goto|;
 block|}
+end_if
+
+begin_expr_stmt
 name|VFS_UNLOCK_GIANT
 argument_list|(
 name|vfslocked
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_label
 name|success
 label|:
+end_label
+
+begin_comment
 comment|/* 	 * If we haven't already installed the FD (for dupfdopen), do so now. 	 */
+end_comment
+
+begin_if
 if|if
 condition|(
 name|indx
@@ -5827,7 +5910,13 @@ goto|goto
 name|bad_unlocked
 goto|;
 block|}
+end_if
+
+begin_comment
 comment|/* 	 * Release our private reference, leaving the one associated with 	 * the descriptor table intact. 	 */
+end_comment
+
+begin_expr_stmt
 name|fdrop
 argument_list|(
 name|fp
@@ -5835,6 +5924,9 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|td
 operator|->
 name|td_retval
@@ -5844,20 +5936,35 @@ index|]
 operator|=
 name|indx
 expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+end_return
+
+begin_label
 name|bad
 label|:
+end_label
+
+begin_expr_stmt
 name|VFS_UNLOCK_GIANT
 argument_list|(
 name|vfslocked
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_label
 name|bad_unlocked
 label|:
+end_label
+
+begin_if
 if|if
 condition|(
 name|indx
@@ -5876,6 +5983,9 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_expr_stmt
 name|fdrop
 argument_list|(
 name|fp
@@ -5883,15 +5993,18 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 operator|(
 name|error
 operator|)
 return|;
-block|}
-end_function
+end_return
 
 begin_ifdef
+unit|}
 ifdef|#
 directive|ifdef
 name|COMPAT_43
@@ -5907,9 +6020,12 @@ directive|ifndef
 name|_SYS_SYSPROTO_H_
 end_ifndef
 
-begin_struct
-struct|struct
+begin_macro
+unit|struct
 name|ocreat_args
+end_macro
+
+begin_block
 block|{
 name|char
 modifier|*
@@ -5919,8 +6035,11 @@ name|int
 name|mode
 decl_stmt|;
 block|}
-struct|;
-end_struct
+end_block
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_endif
 endif|#
