@@ -1965,13 +1965,6 @@ modifier|*
 name|series
 parameter_list|)
 block|{
-define|#
-directive|define
-name|HT_RC_2_STREAMS
-parameter_list|(
-name|_rc
-parameter_list|)
-value|((((_rc)& 0x78)>> 3) + 1)
 name|struct
 name|ieee80211com
 modifier|*
@@ -2378,9 +2371,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-undef|#
-directive|undef
-name|HT_RC_2_STREAMS
 block|}
 end_function
 
