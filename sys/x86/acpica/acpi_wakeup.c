@@ -338,6 +338,7 @@ name|WAKECODE_VADDR
 parameter_list|(
 name|sc
 parameter_list|)
+define|\
 value|((sc)->acpi_wakeaddr + (ACPI_PAGETABLES * PAGE_SIZE))
 end_define
 
@@ -348,6 +349,7 @@ name|WAKECODE_PADDR
 parameter_list|(
 name|sc
 parameter_list|)
+define|\
 value|((sc)->acpi_wakephys + (ACPI_PAGETABLES * PAGE_SIZE))
 end_define
 
@@ -362,7 +364,7 @@ name|type
 parameter_list|,
 name|val
 parameter_list|)
-value|do	{	\ 	type	*addr;					\ 	addr = (type *)(WAKECODE_VADDR(sc) + offset);	\ 	*addr = val;					\ } while (0)
+value|do {	\ 	type	*addr;					\ 	addr = (type *)(WAKECODE_VADDR(sc) + offset);	\ 	*addr = val;					\ } while (0)
 end_define
 
 begin_function
@@ -930,6 +932,9 @@ literal|0
 operator|)
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__amd64__
 name|WAKECODE_FIXUP
 argument_list|(
 name|wakeup_cr4
@@ -944,6 +949,8 @@ operator|->
 name|pcb_cr4
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|WAKECODE_FIXUP
 argument_list|(
 name|wakeup_pcb
@@ -1113,12 +1120,6 @@ block|{
 name|pmap_init_pat
 argument_list|()
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|load_cr3(susppcbs[0]->pcb_cr3);
-endif|#
-directive|endif
 name|initializecpu
 argument_list|()
 expr_stmt|;
@@ -1584,20 +1585,9 @@ argument_list|,
 name|resumectx
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+ifndef|#
+directive|ifndef
 name|__amd64__
-name|WAKECODE_FIXUP
-argument_list|(
-name|wakeup_cr3
-argument_list|,
-name|uint64_t
-argument_list|,
-name|KPML4phys
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 ifdef|#
 directive|ifdef
 name|PAE
@@ -1633,11 +1623,8 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|__amd64__
+else|#
+directive|else
 comment|/* Build temporary page tables below realmode code. */
 name|pt4
 operator|=

@@ -5895,12 +5895,6 @@ block|{
 name|pmap_init_pat
 argument_list|()
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|load_cr3(susppcbs[cpu]->pcb_cr3);
-endif|#
-directive|endif
 name|initializecpu
 argument_list|()
 expr_stmt|;
