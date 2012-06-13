@@ -5883,16 +5883,6 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-name|td
-operator|->
-name|td_retval
-index|[
-literal|0
-index|]
-operator|=
-operator|-
-literal|1
-expr_stmt|;
 return|return
 operator|(
 name|error
