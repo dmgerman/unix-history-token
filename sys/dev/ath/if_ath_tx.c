@@ -12645,7 +12645,7 @@ name|ath_returnbuf_head
 argument_list|(
 name|sc
 argument_list|,
-name|bf
+name|nbf
 argument_list|)
 expr_stmt|;
 name|ATH_TXBUF_UNLOCK
