@@ -57,6 +57,17 @@ value|1000
 end_define
 
 begin_comment
+comment|/*  * There is a separate TX ath_buf pool for management frames.  * This ensures that management frames such as probe responses  * and BAR frames can be transmitted during periods of high  * TX activity.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATH_MGMT_TXBUF
+value|32
+end_define
+
+begin_comment
 comment|/*  * 802.11n requires more TX and RX buffers to do AMPDU.  */
 end_comment
 
@@ -530,6 +541,22 @@ parameter_list|)
 value|ATH_EP_RND(x, HAL_RSSI_EP_MULTIPLIER)
 end_define
 
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|ATH_BUFTYPE_NORMAL
+init|=
+literal|0
+block|,
+name|ATH_BUFTYPE_MGMT
+init|=
+literal|1
+block|, }
+name|ath_buf_type_t
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
 name|ath_buf
@@ -807,6 +834,17 @@ argument_list|)
 name|ath_bufhead
 expr_stmt|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|ATH_BUF_MGMT
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* (tx) desc is a mgmt desc */
+end_comment
 
 begin_define
 define|#
@@ -1803,6 +1841,15 @@ name|ath_bufhead
 name|sc_txbuf
 decl_stmt|;
 comment|/* transmit buffer */
+name|struct
+name|ath_descdma
+name|sc_txdma_mgmt
+decl_stmt|;
+comment|/* mgmt TX descriptors */
+name|ath_bufhead
+name|sc_txbuf_mgmt
+decl_stmt|;
+comment|/* mgmt transmit buffer */
 name|struct
 name|mtx
 name|sc_txbuflock

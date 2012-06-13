@@ -733,11 +733,14 @@ operator|->
 name|m_nextpkt
 control|)
 block|{
+comment|/* XXX non-management? */
 name|bf
 operator|=
 name|_ath_getbuf_locked
 argument_list|(
 name|sc
+argument_list|,
+name|ATH_BUFTYPE_NORMAL
 argument_list|)
 expr_stmt|;
 if|if
@@ -7687,6 +7690,8 @@ operator|=
 name|ath_getbuf
 argument_list|(
 name|sc
+argument_list|,
+name|ATH_BUFTYPE_MGMT
 argument_list|)
 expr_stmt|;
 if|if

@@ -73,6 +73,9 @@ name|struct
 name|ath_softc
 modifier|*
 name|sc
+parameter_list|,
+name|ath_buf_type_t
+name|btype
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -88,6 +91,9 @@ name|struct
 name|ath_softc
 modifier|*
 name|sc
+parameter_list|,
+name|ath_buf_type_t
+name|btype
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -112,6 +118,10 @@ name|bf
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* XXX change this to NULL the buffer pointer? */
+end_comment
 
 begin_function_decl
 specifier|extern
