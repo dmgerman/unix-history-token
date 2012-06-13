@@ -4040,8 +4040,8 @@ operator|)
 return|;
 block|}
 comment|/* Check ZFS features for read */
-name|rc
-operator|=
+if|if
+condition|(
 name|nvlist_find
 argument_list|(
 name|nvlist
@@ -4055,9 +4055,9 @@ argument_list|,
 operator|&
 name|features
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
+operator|==
+literal|0
+operator|&&
 name|nvlist_check_features_for_read
 argument_list|(
 name|features
