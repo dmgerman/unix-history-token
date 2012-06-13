@@ -5166,11 +5166,6 @@ decl_stmt|;
 name|int
 name|cmode
 decl_stmt|;
-name|struct
-name|file
-modifier|*
-name|nfp
-decl_stmt|;
 name|int
 name|type
 decl_stmt|,
@@ -5273,7 +5268,7 @@ argument_list|(
 name|td
 argument_list|,
 operator|&
-name|nfp
+name|fp
 argument_list|)
 expr_stmt|;
 if|if
@@ -5285,11 +5280,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* An extra reference on `nfp' has been held for us by falloc_noinstall(). */
-name|fp
-operator|=
-name|nfp
-expr_stmt|;
+comment|/* 	 * An extra reference on `fp' has been held for us by 	 * falloc_noinstall(). 	 */
 comment|/* Set the flags early so the finit in devfs can pick them up. */
 name|fp
 operator|->
@@ -22179,11 +22170,6 @@ name|error
 decl_stmt|,
 name|type
 decl_stmt|;
-name|struct
-name|file
-modifier|*
-name|nfp
-decl_stmt|;
 name|int
 name|vfslocked
 decl_stmt|;
@@ -22351,7 +22337,7 @@ argument_list|(
 name|td
 argument_list|,
 operator|&
-name|nfp
+name|fp
 argument_list|)
 expr_stmt|;
 if|if
@@ -22375,11 +22361,7 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* An extra reference on `nfp' has been held for us by falloc(). */
-name|fp
-operator|=
-name|nfp
-expr_stmt|;
+comment|/* 	 * An extra reference on `fp' has been held for us by 	 * falloc_noinstall(). 	 */
 ifdef|#
 directive|ifdef
 name|INVARIANTS
