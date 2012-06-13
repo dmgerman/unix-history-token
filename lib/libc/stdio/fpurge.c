@@ -175,6 +175,8 @@ operator|(
 name|__SLBF
 operator||
 name|__SNBF
+operator||
+name|__SRD
 operator|)
 condition|?
 literal|0
