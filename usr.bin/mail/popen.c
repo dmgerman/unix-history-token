@@ -1750,11 +1750,6 @@ name|struct
 name|child
 modifier|*
 name|cp
-init|=
-name|findchild
-argument_list|(
-name|pid
-argument_list|)
 decl_stmt|;
 operator|(
 name|void
@@ -1788,6 +1783,13 @@ name|nset
 argument_list|,
 operator|&
 name|oset
+argument_list|)
+expr_stmt|;
+name|cp
+operator|=
+name|findchild
+argument_list|(
+name|pid
 argument_list|)
 expr_stmt|;
 while|while
