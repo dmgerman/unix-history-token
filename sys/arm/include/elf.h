@@ -449,7 +449,7 @@ value|1
 end_define
 
 begin_comment
-comment|/*   * Magic number for the elf trampoline, chosen wisely to be an immediate   * value.  */
+comment|/*  * Magic number for the elf trampoline, chosen wisely to be an immediate  * value.  */
 end_comment
 
 begin_define

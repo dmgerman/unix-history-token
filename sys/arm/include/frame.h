@@ -342,9 +342,5 @@ begin_comment
 comment|/* _MACHINE_FRAME_H_ */
 end_comment
 
-begin_comment
-comment|/* End of frame.h */
-end_comment
-
 end_unit
 

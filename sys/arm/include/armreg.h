@@ -1870,7 +1870,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * ARM Instructions  *  *       3 3 2 2 2                                *       1 0 9 8 7                                                     0  *      +-------+-------------------------------------------------------+  *      | cond  |              instruction dependant                    |  *      |c c c c|                                                       |  *      +-------+-------------------------------------------------------+  */
+comment|/*  * ARM Instructions  *  *       3 3 2 2 2  *       1 0 9 8 7                                                     0  *      +-------+-------------------------------------------------------+  *      | cond  |              instruction dependant                    |  *      |c c c c|                                                       |  *      +-------+-------------------------------------------------------+  */
 end_comment
 
 begin_define

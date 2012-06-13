@@ -86,7 +86,7 @@ comment|/* Pull the return address */
 end_comment
 
 begin_comment
-comment|/*  * PUSHFRAMEINSVC - macro to push a trap frame on the stack in SVC32 mode  * This should only be used if the processor is not currently in SVC32  * mode. The processor mode is switched to SVC mode and the trap frame is  * stored. The SVC lr field is used to store the previous value of  * lr in SVC mode.    *  * NOTE: r13 and r14 are stored separately as a work around for the  * SA110 rev 2 STM^ bug  */
+comment|/*  * PUSHFRAMEINSVC - macro to push a trap frame on the stack in SVC32 mode  * This should only be used if the processor is not currently in SVC32  * mode. The processor mode is switched to SVC mode and the trap frame is  * stored. The SVC lr field is used to store the previous value of  * lr in SVC mode.  *  * NOTE: r13 and r14 are stored separately as a work around for the  * SA110 rev 2 STM^ bug  */
 end_comment
 
 begin_define
