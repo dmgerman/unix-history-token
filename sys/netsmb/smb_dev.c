@@ -1866,12 +1866,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-operator|(
-name|u_int
-operator|)
 name|fd
-operator|)
+operator|<
+literal|0
+operator|||
+name|fd
 operator|>=
 name|fdp
 operator|->
