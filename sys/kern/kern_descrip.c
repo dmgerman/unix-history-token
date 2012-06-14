@@ -9674,6 +9674,9 @@ name|struct
 name|file
 modifier|*
 name|fp
+decl_stmt|,
+modifier|*
+name|fp_object
 decl_stmt|;
 name|int
 name|i
@@ -9784,9 +9787,23 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+comment|/* 			 * When we're closing an fd with a capability, we need 			 * to notify mqueue if the underlying object is of type 			 * mqueue. 			 */
+operator|(
+name|void
+operator|)
+name|cap_funwrap
+argument_list|(
+name|fp
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|fp_object
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|fp
+name|fp_object
 operator|->
 name|f_type
 operator|==
@@ -9798,7 +9815,7 @@ name|td
 argument_list|,
 name|i
 argument_list|,
-name|fp
+name|fp_object
 argument_list|)
 expr_stmt|;
 name|FILEDESC_XUNLOCK
