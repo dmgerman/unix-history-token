@@ -448,6 +448,9 @@ name|struct
 name|thread
 modifier|*
 name|td
+parameter_list|,
+name|int
+name|holdleaders
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4449,6 +4452,8 @@ argument_list|,
 name|delfp
 argument_list|,
 name|td
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* closefp() drops the FILEDESC lock for us. */
@@ -5335,6 +5340,9 @@ name|struct
 name|thread
 modifier|*
 name|td
+parameter_list|,
+name|int
+name|holdleaders
 parameter_list|)
 block|{
 name|struct
@@ -5344,14 +5352,17 @@ name|fp_object
 decl_stmt|;
 name|int
 name|error
-decl_stmt|,
-name|holdleaders
 decl_stmt|;
 name|FILEDESC_XLOCK_ASSERT
 argument_list|(
 name|fdp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|holdleaders
+condition|)
+block|{
 if|if
 condition|(
 name|td
@@ -5363,15 +5374,11 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 		 * Ask fdfree() to sleep to ensure that all relevant 		 * process leaders can be traversed in closef(). 		 */
+comment|/* 			 * Ask fdfree() to sleep to ensure that all relevant 			 * process leaders can be traversed in closef(). 			 */
 name|fdp
 operator|->
 name|fd_holdleaderscount
 operator|++
-expr_stmt|;
-name|holdleaders
-operator|=
-literal|1
 expr_stmt|;
 block|}
 else|else
@@ -5380,6 +5387,7 @@ name|holdleaders
 operator|=
 literal|0
 expr_stmt|;
+block|}
 block|}
 comment|/* 	 * We now hold the fp reference that used to be owned by the 	 * descriptor array.  We have to unlock the FILEDESC *AFTER* 	 * knote_fdclose to prevent a race of the fd getting opened, a knote 	 * added, and deleteing a knote for the new fd. 	 */
 name|knote_fdclose
@@ -5678,6 +5686,8 @@ argument_list|,
 name|fp
 argument_list|,
 name|td
+argument_list|,
+literal|1
 argument_list|)
 operator|)
 return|;
@@ -9674,9 +9684,6 @@ name|struct
 name|file
 modifier|*
 name|fp
-decl_stmt|,
-modifier|*
-name|fp_object
 decl_stmt|;
 name|int
 name|i
@@ -9754,7 +9761,6 @@ operator|)
 operator|)
 condition|)
 block|{
-comment|/* 			 * NULL-out descriptor prior to close to avoid 			 * a race while close blocks. 			 */
 name|fdp
 operator|->
 name|fd_ofiles
@@ -9780,59 +9786,23 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|knote_fdclose
-argument_list|(
-name|td
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
-comment|/* 			 * When we're closing an fd with a capability, we need 			 * to notify mqueue if the underlying object is of type 			 * mqueue. 			 */
 operator|(
 name|void
 operator|)
-name|cap_funwrap
-argument_list|(
-name|fp
-argument_list|,
-literal|0
-argument_list|,
-operator|&
-name|fp_object
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|fp_object
-operator|->
-name|f_type
-operator|==
-name|DTYPE_MQUEUE
-condition|)
-name|mq_fdclose
-argument_list|(
-name|td
-argument_list|,
-name|i
-argument_list|,
-name|fp_object
-argument_list|)
-expr_stmt|;
-name|FILEDESC_XUNLOCK
+name|closefp
 argument_list|(
 name|fdp
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|closef
-argument_list|(
+argument_list|,
+name|i
+argument_list|,
 name|fp
 argument_list|,
 name|td
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
+comment|/* closefp() drops the FILEDESC lock. */
 name|FILEDESC_XLOCK
 argument_list|(
 name|fdp
