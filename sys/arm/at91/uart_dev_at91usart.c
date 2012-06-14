@@ -1781,7 +1781,6 @@ argument_list|)
 expr_stmt|;
 name|errout
 label|:
-empty_stmt|;
 return|return
 operator|(
 name|err
