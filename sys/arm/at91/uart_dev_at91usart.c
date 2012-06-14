@@ -1716,7 +1716,6 @@ directive|ifndef
 name|SKYEYE_WORKAROUNDS
 name|errout
 label|:
-empty_stmt|;
 comment|// XXX bad
 return|return
 operator|(

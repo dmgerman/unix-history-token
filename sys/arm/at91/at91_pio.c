@@ -681,7 +681,6 @@ name|sc
 expr_stmt|;
 name|out
 label|:
-empty_stmt|;
 if|if
 condition|(
 name|err

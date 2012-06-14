@@ -638,7 +638,6 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
-empty_stmt|;
 if|if
 condition|(
 name|err
@@ -1526,7 +1525,6 @@ operator|)
 return|;
 name|out
 label|:
-empty_stmt|;
 for|for
 control|(
 name|j
