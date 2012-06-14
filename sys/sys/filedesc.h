@@ -694,10 +694,10 @@ argument_list|)
 block|{
 return|return
 operator|(
-operator|(
-name|unsigned
-name|int
-operator|)
+name|fd
+operator|<
+literal|0
+operator|||
 name|fd
 operator|>=
 name|fdp
