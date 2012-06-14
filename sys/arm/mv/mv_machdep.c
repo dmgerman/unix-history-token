@@ -1501,7 +1501,7 @@ operator|~
 name|PAGE_MASK
 operator|)
 expr_stmt|;
-comment|/* Parse metadata and fetch parameters */
+comment|/* Parse metadata and fetch parameters (move to common machdep.c?) */
 if|if
 condition|(
 name|mdp
@@ -1613,7 +1613,9 @@ comment|/* Fall back to hardcoded metadata. */
 name|lastaddr
 operator|=
 name|fake_preload_metadata
-argument_list|()
+argument_list|(
+name|abp
+argument_list|)
 expr_stmt|;
 block|}
 if|#

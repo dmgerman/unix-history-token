@@ -758,15 +758,18 @@ name|RB_VERBOSE
 operator||
 name|RB_SINGLE
 expr_stmt|;
+comment|/* Default value */
+name|lastaddr
+operator|=
+name|parse_boot_param
+argument_list|(
+name|abp
+argument_list|)
+expr_stmt|;
 name|cninit
 argument_list|()
 expr_stmt|;
 name|set_cpufuncs
-argument_list|()
-expr_stmt|;
-name|lastaddr
-operator|=
-name|fake_preload_metadata
 argument_list|()
 expr_stmt|;
 name|physmem

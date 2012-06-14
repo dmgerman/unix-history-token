@@ -883,11 +883,19 @@ decl_stmt|;
 name|uint32_t
 name|memsize
 decl_stmt|;
-name|i
+name|boothowto
 operator|=
 literal|0
 expr_stmt|;
-name|boothowto
+comment|/* Likely not needed */
+name|lastaddr
+operator|=
+name|parse_boot_param
+argument_list|(
+name|abp
+argument_list|)
+expr_stmt|;
+name|i
 operator|=
 literal|0
 expr_stmt|;

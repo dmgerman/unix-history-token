@@ -3122,7 +3122,11 @@ begin_function
 name|vm_offset_t
 name|fake_preload_metadata
 parameter_list|(
-name|void
+name|struct
+name|arm_boot_params
+modifier|*
+name|abp
+name|__unused
 parameter_list|)
 block|{
 ifdef|#
@@ -3467,6 +3471,20 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Stub version of the boot parameter parsing routine.  We are  * called early in initarm, before even VM has been initialized.  * This routine needs to preserve any data that the boot loader  * has passed in before the kernel starts to grow past the end  * of the BSS, traditionally the place boot-loaders put this data.  *  * Since this is called so early, things that depend on the vm system  * being setup (including access to some SoC's serial ports), about  * all that can be done in this routine is to copy the arguments.  *  * This is the default boot parameter parsing routine.  Individual  * kernels/boards can override this weak function with one of their  * own.  We just fake metadata...  */
+end_comment
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|fake_preload_metadata
+argument_list|,
+name|parse_boot_param
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Initialize proc0  */
