@@ -1746,11 +1746,15 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Total TX buffers: %d; Total TX buffers busy: %d\n"
+literal|"Total TX buffers: %d; Total TX buffers busy: %d (%d)\n"
 argument_list|,
 name|t
 argument_list|,
 name|i
+argument_list|,
+name|sc
+operator|->
+name|sc_txbuf_cnt
 argument_list|)
 expr_stmt|;
 name|i
@@ -3265,12 +3269,32 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx
+argument_list|,
+name|SYSCTL_CHILDREN
+argument_list|(
+name|tree
+argument_list|)
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"txq_data_minfree"
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_txq_data_minfree
+argument_list|,
 literal|0
-block|SYSCTL_ADD_INT(ctx, SYSCTL_CHILDREN(tree), OID_AUTO, 		"txq_data_minfree", CTLFLAG_RW,&sc->sc_txq_data_minfree, 		0, "Minimum free buffers before adding a data frame" 		" to the TX queue");
-endif|#
-directive|endif
+argument_list|,
+literal|"Minimum free buffers before adding a data frame"
+literal|" to the TX queue"
+argument_list|)
+expr_stmt|;
 name|SYSCTL_ADD_INT
 argument_list|(
 name|ctx

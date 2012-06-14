@@ -1841,6 +1841,10 @@ name|ath_bufhead
 name|sc_txbuf
 decl_stmt|;
 comment|/* transmit buffer */
+name|int
+name|sc_txbuf_cnt
+decl_stmt|;
+comment|/* how many buffers avail */
 name|struct
 name|ath_descdma
 name|sc_txdma_mgmt
