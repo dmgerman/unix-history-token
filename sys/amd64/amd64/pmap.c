@@ -20100,8 +20100,7 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"pmap_clear_write: found"
-literal|" a 2mpage in page %p's pv list"
+literal|"pmap_remove_write: found a 2mpage in page %p's pv list"
 operator|,
 name|m
 operator|)
