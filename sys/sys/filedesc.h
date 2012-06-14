@@ -702,8 +702,13 @@ argument_list|,
 argument|int fd
 argument_list|)
 block|{
-return|return
-operator|(
+name|FILEDESC_LOCK_ASSERT
+argument_list|(
+name|fdp
+argument_list|)
+block|;
+if|if
+condition|(
 name|fd
 operator|<
 literal|0
@@ -713,9 +718,17 @@ operator|>=
 name|fdp
 operator|->
 name|fd_nfiles
-operator|?
+condition|)
+return|return
+operator|(
 name|NULL
-operator|:
+operator|)
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+operator|(
 name|fdp
 operator|->
 name|fd_ofiles
@@ -724,10 +737,10 @@ name|fd
 index|]
 operator|)
 return|;
-block|}
-end_expr_stmt
+end_return
 
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif
