@@ -1281,7 +1281,9 @@ name|fd
 argument_list|)
 argument_list|,
 operator|(
-literal|"fd already used"
+literal|"fd=%d is already used"
+operator|,
+name|fd
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1373,7 +1375,9 @@ name|fd
 argument_list|)
 argument_list|,
 operator|(
-literal|"fd is already unused"
+literal|"fd=%d is already unused"
+operator|,
+name|fd
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1389,7 +1393,9 @@ operator|==
 name|NULL
 argument_list|,
 operator|(
-literal|"fd is still in use"
+literal|"fd=%d is still in use"
+operator|,
+name|fd
 operator|)
 argument_list|)
 expr_stmt|;
