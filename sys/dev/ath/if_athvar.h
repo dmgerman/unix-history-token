@@ -662,19 +662,27 @@ function_decl|;
 comment|/* This state is kept to support software retries and aggregation */
 struct|struct
 block|{
-name|int
+name|uint16_t
 name|bfs_seqno
 decl_stmt|;
 comment|/* sequence number of this packet */
-name|int
+name|uint16_t
+name|bfs_ndelim
+decl_stmt|;
+comment|/* number of delims for padding */
+name|uint8_t
 name|bfs_retries
 decl_stmt|;
 comment|/* retry count */
-name|uint16_t
+name|uint8_t
 name|bfs_tid
 decl_stmt|;
 comment|/* packet TID (or TID_MAX for no QoS) */
-name|uint16_t
+name|uint8_t
+name|bfs_nframes
+decl_stmt|;
+comment|/* number of frames in aggregate */
+name|uint8_t
 name|bfs_pri
 decl_stmt|;
 comment|/* packet AC priority */
@@ -684,18 +692,6 @@ modifier|*
 name|bfs_txq
 decl_stmt|;
 comment|/* eventual dest hardware TXQ */
-name|uint16_t
-name|bfs_pktdur
-decl_stmt|;
-comment|/* packet duration (at current rate?) */
-name|uint16_t
-name|bfs_nframes
-decl_stmt|;
-comment|/* number of frames in aggregate */
-name|uint16_t
-name|bfs_ndelim
-decl_stmt|;
-comment|/* number of delims for padding */
 name|u_int32_t
 name|bfs_aggr
 range|:
