@@ -2843,9 +2843,14 @@ comment|/* short slot time supported */
 operator||
 name|IEEE80211_C_WPA
 comment|/* capable of WPA1+WPA2 */
+ifndef|#
+directive|ifndef
+name|ATH_ENABLE_11N
 operator||
 name|IEEE80211_C_BGSCAN
 comment|/* capable of bg scanning */
+endif|#
+directive|endif
 operator||
 name|IEEE80211_C_TXFRAG
 comment|/* handle tx frags */
@@ -3388,7 +3393,6 @@ name|tx_chainmask
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * The if_ath 11n support is completely not ready for normal use. 	 * Enabling this option will likely break everything and everything. 	 * Don't think of doing that unless you know what you're doing. 	 */
 ifdef|#
 directive|ifdef
 name|ATH_ENABLE_11N
