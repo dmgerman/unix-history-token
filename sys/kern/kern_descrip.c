@@ -2220,6 +2220,11 @@ modifier|*
 name|fpp
 parameter_list|)
 block|{
+name|FILEDESC_LOCK_ASSERT
+argument_list|(
+name|fdp
+argument_list|)
+expr_stmt|;
 operator|*
 name|fpp
 operator|=
