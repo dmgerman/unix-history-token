@@ -155,19 +155,47 @@ begin_comment
 comment|/* Parallel */
 end_comment
 
-begin_enum
-enum|enum
-name|uftdi_type
-block|{
+begin_comment
+comment|/* Values for driver_info */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UFTDI_TYPE_MASK
+value|0x000000ff
+end_define
+
+begin_define
+define|#
+directive|define
 name|UFTDI_TYPE_SIO
-block|,
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
 name|UFTDI_TYPE_8U232AM
-block|}
-enum|;
-end_enum
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|UFTDI_FLAG_MASK
+value|0x0000ff00
+end_define
+
+begin_define
+define|#
+directive|define
+name|UFTDI_FLAG_JTAG
+value|0x00000100
+end_define
 
 begin_comment
-comment|/*  * BmRequestType:  0100 0000B  * bRequest:       FTDI_SIO_RESET  * wValue:         Control Value  *                   0 = Reset SIO  *                   1 = Purge RX buffer  *                   2 = Purge TX buffer  * wIndex:         Port  * wLength:        0  * Data:           None  *  * The Reset SIO command has this effect:  *  *    Sets flow control set to 'none'  *    Event char = 0x0d  *    Event trigger = disabled  *    Purge RX buffer  *    Purge TX buffer  *    Clear DTR  *    Clear RTS  *    baud and data format not reset  *  * The Purge RX and TX buffer commands affect nothing except the buffers  *  */
+comment|/*  * BmRequestType:  0100 0000B  * bRequest:       FTDI_SIO_RESET  * wValue:         Control Value  *                   0 = Reset SIO  *                   1 = Purge RX buffer  *                   2 = Purge TX buffer  * wIndex:         Port  * wLength:        0  * Data:           None  *  * The Reset SIO command has this effect:  *  *    Sets flow control set to 'none'  *    Event char = 0x0d  *    Event trigger = disabled  *    Purge RX buffer  *    Purge TX buffer  *    Clear DTR  *    Clear RTS  *    baud and data format not reset  *  * The Purge RX and TX buffer commands affect nothing except the buffers  */
 end_comment
 
 begin_comment
@@ -446,7 +474,7 @@ comment|/*  *  BmRequestType:   0100 0000b  *  bRequest:        FTDI_SIO_SET_EVE
 end_comment
 
 begin_comment
-comment|/*  *  BmRequestType:  0100 0000b  *  bRequest:       FTDI_SIO_SET_ERROR_CHAR  *  wValue:         Error Char  *  wIndex:         Port  *  wLength:        0  *  Data:           None  *  *  Error Char  *  B0..7  Error Character  *  B8     Error Character Processing  *           0 = disabled  *           1 = enabled  *  B9..15 Reserved  *  *  * FTDI_SIO_SET_ERROR_CHAR  * Set the parity error replacement character for the specified communications  * port.  */
+comment|/*  *  BmRequestType:  0100 0000b  *  bRequest:       FTDI_SIO_SET_ERROR_CHAR  *  wValue:         Error Char  *  wIndex:         Port  *  wLength:        0  *  Data:           None  *  *  Error Char  *  B0..7  Error Character  *  B8     Error Character Processing  *           0 = disabled  *           1 = enabled  *  B9..15 Reserved  * FTDI_SIO_SET_ERROR_CHAR  * Set the parity error replacement character for the specified communications  * port.  */
 end_comment
 
 begin_comment
@@ -482,7 +510,7 @@ value|0x80
 end_define
 
 begin_comment
-comment|/*  *  * DATA FORMAT  *  * IN Endpoint  *  * The device reserves the first two bytes of data on this endpoint to contain  * the current values of the modem and line status registers. In the absence of  * data, the device generates a message consisting of these two status bytes  * every 40 ms.  *  * Byte 0: Modem Status  *   NOTE: 4 upper bits have same layout as the MSR register in a 16550  *  * Offset	Description  * B0..3	Port  * B4		Clear to Send (CTS)  * B5		Data Set Ready (DSR)  * B6		Ring Indicator (RI)  * B7		Receive Line Signal Detect (RLSD)  *  * Byte 1: Line Status  *   NOTE: same layout as the LSR register in a 16550  *  * Offset	Description  * B0	Data Ready (DR)  * B1	Overrun Error (OE)  * B2	Parity Error (PE)  * B3	Framing Error (FE)  * B4	Break Interrupt (BI)  * B5	Transmitter Holding Register (THRE)  * B6	Transmitter Empty (TEMT)  * B7	Error in RCVR FIFO  *  *  * OUT Endpoint  *  * This device reserves the first bytes of data on this endpoint contain the  * length and port identifier of the message. For the FTDI USB Serial converter  * the port identifier is always 1.  *  * Byte 0: Port& length  *  * Offset	Description  * B0..1	Port  * B2..7	Length of message - (not including Byte 0)  *  */
+comment|/*  *  * DATA FORMAT  *  * IN Endpoint  *  * The device reserves the first two bytes of data on this endpoint to contain  * the current values of the modem and line status registers. In the absence of  * data, the device generates a message consisting of these two status bytes  * every 40 ms.  *  * Byte 0: Modem Status  *   NOTE: 4 upper bits have same layout as the MSR register in a 16550  *  * Offset	Description  * B0..3	Port  * B4		Clear to Send (CTS)  * B5		Data Set Ready (DSR)  * B6		Ring Indicator (RI)  * B7		Receive Line Signal Detect (RLSD)  *  * Byte 1: Line Status  *   NOTE: same layout as the LSR register in a 16550  *  * Offset	Description  * B0	Data Ready (DR)  * B1	Overrun Error (OE)  * B2	Parity Error (PE)  * B3	Framing Error (FE)  * B4	Break Interrupt (BI)  * B5	Transmitter Holding Register (THRE)  * B6	Transmitter Empty (TEMT)  * B7	Error in RCVR FIFO  * OUT Endpoint  *  * This device reserves the first bytes of data on this endpoint contain the  * length and port identifier of the message. For the FTDI USB Serial converter  * the port identifier is always 1.  *  * Byte 0: Port& length  *  * Offset	Description  * B0..1	Port  * B2..7	Length of message - (not including Byte 0)  */
 end_comment
 
 begin_define
