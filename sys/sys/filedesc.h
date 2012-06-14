@@ -303,6 +303,16 @@ parameter_list|)
 value|sx_assert(&(fdp)->fd_sx, SX_XLOCKED | \ 					    SX_NOTRECURSED)
 end_define
 
+begin_define
+define|#
+directive|define
+name|FILEDESC_UNLOCK_ASSERT
+parameter_list|(
+name|fdp
+parameter_list|)
+value|sx_assert(&(fdp)->fd_sx, SX_UNLOCKED)
+end_define
+
 begin_struct_decl
 struct_decl|struct
 name|thread
