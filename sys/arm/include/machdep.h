@@ -89,11 +89,24 @@ end_struct_decl
 
 begin_function_decl
 name|vm_offset_t
+name|default_parse_boot_param
+parameter_list|(
+name|struct
+name|arm_boot_params
+modifier|*
+name|abp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|vm_offset_t
 name|fake_preload_metadata
 parameter_list|(
 name|struct
 name|arm_boot_params
 modifier|*
+name|abp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -105,6 +118,7 @@ parameter_list|(
 name|struct
 name|arm_boot_params
 modifier|*
+name|abp
 parameter_list|)
 function_decl|;
 end_function_decl
