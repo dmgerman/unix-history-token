@@ -5240,55 +5240,13 @@ return|return
 name|EIO
 return|;
 block|}
-comment|/* Check if the TXQ wouldn't match what the hardware TXQ is! */
-if|if
-condition|(
-name|txq
-operator|!=
-name|sc
-operator|->
-name|sc_ac2q
-index|[
-name|pri
-index|]
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|,
-literal|"%s: txq=%p (%d), pri=%d, pri txq=%p (%d)\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|txq
-argument_list|,
-name|txq
-operator|->
-name|axq_qnum
-argument_list|,
-name|pri
-argument_list|,
-name|sc
-operator|->
-name|sc_ac2q
-index|[
-name|pri
-index|]
-argument_list|,
-name|sc
-operator|->
-name|sc_ac2q
-index|[
-name|pri
-index|]
-operator|->
-name|axq_qnum
-argument_list|)
-expr_stmt|;
-block|}
+comment|/* 	 * There are two known scenarios where the frame AC doesn't match 	 * what the destination TXQ is. 	 * 	 * + non-QoS frames (eg management?) that the net80211 stack has 	 *   assigned a higher AC to, but since it's a non-QoS TID, it's 	 *   being thrown into TID 16.  TID 16 gets the AC_BE queue. 	 *   It's quite possible that management frames should just be 	 *   direct dispatched to hardware rather than go via the software 	 *   queue; that should be investigated in the future.  There are 	 *   some specific scenarios where this doesn't make sense, mostly 	 *   surrounding ADDBA request/response - hence why that is special 	 *   cased. 	 * 	 * + Multicast frames going into the VAP mcast queue.  That shows up 	 *   as "TXQ 11". 	 * 	 * This driver should eventually support separate TID and TXQ locking, 	 * allowing for arbitrary AC frames to appear on arbitrary software 	 * queues, being queued to the "correct" hardware queue when needed. 	 */
+if|#
+directive|if
+literal|0
+block|if (txq != sc->sc_ac2q[pri]) { 		device_printf(sc->sc_dev, 		    "%s: txq=%p (%d), pri=%d, pri txq=%p (%d)\n", 		    __func__, 		    txq, 		    txq->axq_qnum, 		    pri, 		    sc->sc_ac2q[pri], 		    sc->sc_ac2q[pri]->axq_qnum); 	}
+endif|#
+directive|endif
 comment|/* 	 * Calculate miscellaneous flags. 	 */
 if|if
 condition|(
