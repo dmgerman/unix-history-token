@@ -81,6 +81,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* Early boot related helper functions */
+end_comment
+
 begin_struct_decl
 struct_decl|struct
 name|arm_boot_params
@@ -143,6 +147,23 @@ name|struct
 name|arm_boot_params
 modifier|*
 name|abp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Setup standard arrays */
+end_comment
+
+begin_function_decl
+name|void
+name|arm_dump_avail_init
+parameter_list|(
+name|vm_offset_t
+name|memsize
+parameter_list|,
+name|size_t
+name|max
 parameter_list|)
 function_decl|;
 end_function_decl
