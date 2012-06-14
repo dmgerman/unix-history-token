@@ -1199,6 +1199,11 @@ name|int
 name|fd
 parameter_list|)
 block|{
+name|FILEDESC_LOCK_ASSERT
+argument_list|(
+name|fdp
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|fd
