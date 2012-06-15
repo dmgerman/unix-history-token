@@ -3222,7 +3222,7 @@ name|void
 name|arm_dump_avail_init
 parameter_list|(
 name|vm_offset_t
-name|memsize
+name|ramsize
 parameter_list|,
 name|size_t
 name|max
@@ -3367,7 +3367,7 @@ name|trunc_page
 argument_list|(
 name|PHYSADDR
 operator|+
-name|memsize
+name|ramsize
 argument_list|)
 expr_stmt|;
 name|dump_avail
