@@ -908,11 +908,6 @@ name|cf_sleep
 operator|=
 name|s3c24x0_sleep
 expr_stmt|;
-name|lastaddr
-operator|=
-name|fake_preload_metadata
-argument_list|()
-expr_stmt|;
 name|pcpu_init
 argument_list|(
 name|pcpup
