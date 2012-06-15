@@ -482,7 +482,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|FREEBSD32_SYS_mprotect
+name|FREEBSD32_SYS_freebsd32_mprotect
 value|74
 end_define
 
