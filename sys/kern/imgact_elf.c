@@ -669,16 +669,42 @@ expr_stmt|;
 end_expr_stmt
 
 begin_function_decl
-specifier|static
 name|int
 name|__elfN
 parameter_list|(
 name|nxstack
 parameter_list|)
 init|=
-literal|0
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__powerpc64__
+argument_list|)
+comment|/* both 64 and 32 bit */
+literal|1
 function_decl|;
 end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_expr_stmt
+literal|0
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|SYSCTL_INT
