@@ -1064,7 +1064,7 @@ return|return
 operator|(
 name|gettext
 argument_list|(
-literal|"\tlist [-H] [-o property[,...]] "
+literal|"\tlist [-Hv] [-o property[,...]] "
 literal|"[-T d|u] [pool] ... [interval [count]]\n"
 argument_list|)
 operator|)
