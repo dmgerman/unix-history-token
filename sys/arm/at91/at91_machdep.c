@@ -2403,5 +2403,36 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * These functions are handled elsewhere, so make them nops here.  */
+end_comment
+
+begin_function
+name|void
+name|cpu_startprofclock
+parameter_list|(
+name|void
+parameter_list|)
+block|{  }
+end_function
+
+begin_function
+name|void
+name|cpu_stopprofclock
+parameter_list|(
+name|void
+parameter_list|)
+block|{  }
+end_function
+
+begin_function
+name|void
+name|cpu_initclocks
+parameter_list|(
+name|void
+parameter_list|)
+block|{  }
+end_function
+
 end_unit
 

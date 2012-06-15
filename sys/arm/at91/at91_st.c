@@ -195,6 +195,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|at91st_initclocks
+parameter_list|(
+name|struct
+name|at91st_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 specifier|static
 specifier|inline
@@ -422,6 +434,11 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"watchdog registered, timeout intervall max. 64 sec\n"
+argument_list|)
+expr_stmt|;
+name|at91st_initclocks
+argument_list|(
+name|timer_softc
 argument_list|)
 expr_stmt|;
 return|return
@@ -670,10 +687,14 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
-name|cpu_initclocks
+name|at91st_initclocks
 parameter_list|(
-name|void
+name|struct
+name|at91st_softc
+modifier|*
+name|sc
 parameter_list|)
 block|{
 name|int
@@ -696,7 +717,7 @@ decl_stmt|;
 name|device_t
 name|dev
 init|=
-name|timer_softc
+name|sc
 operator|->
 name|sc_dev
 decl_stmt|;
@@ -955,24 +976,6 @@ literal|1
 condition|)
 continue|continue;
 block|}
-end_function
-
-begin_function
-name|void
-name|cpu_startprofclock
-parameter_list|(
-name|void
-parameter_list|)
-block|{ }
-end_function
-
-begin_function
-name|void
-name|cpu_stopprofclock
-parameter_list|(
-name|void
-parameter_list|)
-block|{ }
 end_function
 
 end_unit
