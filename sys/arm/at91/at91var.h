@@ -72,6 +72,18 @@ name|at91_master_clock
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|at91_is_rm92
+parameter_list|()
+value|(1)
+end_define
+
+begin_comment
+comment|/* Only support AT91RM9200 atm -- helps with MFCs */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
