@@ -5978,12 +5978,13 @@ name|ic_opmode
 operator|==
 name|IEEE80211_M_STA
 condition|)
-name|ath_stop
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
-else|else
+comment|/* 	 * This has been disabled - see PR kern/169084. 	 */
+if|#
+directive|if
+literal|0
+then|ath_stop(ifp); 	else
+endif|#
+directive|endif
 name|ieee80211_suspend_all
 argument_list|(
 name|ic
@@ -6210,43 +6211,15 @@ operator|->
 name|sc_resume_up
 condition|)
 block|{
-if|if
-condition|(
-name|ic
-operator|->
-name|ic_opmode
-operator|==
-name|IEEE80211_M_STA
-condition|)
-block|{
-name|ath_init
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-name|ath_hal_setledstate
-argument_list|(
-name|ah
-argument_list|,
-name|HAL_LED_RUN
-argument_list|)
-expr_stmt|;
+comment|/* 		 * This particular feature doesn't work at the present, 		 * at least on the 802.11n chips.  It's quite possible 		 * that the STA Beacon timers aren't being configured 		 * properly. 		 * 		 * See PR kern/169084. 		 */
+if|#
+directive|if
+literal|0
+block|if (ic->ic_opmode == IEEE80211_M_STA) { 			ath_init(sc); 			ath_hal_setledstate(ah, HAL_LED_RUN);
 comment|/* 			 * Program the beacon registers using the last rx'd 			 * beacon frame and enable sync on the next beacon 			 * we see.  This should handle the case where we 			 * wakeup and find the same AP and also the case where 			 * we wakeup and need to roam.  For the latter we 			 * should get bmiss events that trigger a roam. 			 */
-name|ath_beacon_config
-argument_list|(
-name|sc
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|sc_syncbeacon
-operator|=
-literal|1
-expr_stmt|;
-block|}
-else|else
+block|ath_beacon_config(sc, NULL); 			sc->sc_syncbeacon = 1; 			ieee80211_resume_all(ic); 		} else
+endif|#
+directive|endif
 name|ieee80211_resume_all
 argument_list|(
 name|ic
