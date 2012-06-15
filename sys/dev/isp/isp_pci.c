@@ -1933,6 +1933,10 @@ operator||
 name|ISP_LOGINFO
 expr_stmt|;
 block|}
+name|tval
+operator|=
+literal|0
+expr_stmt|;
 operator|(
 name|void
 operator|)
