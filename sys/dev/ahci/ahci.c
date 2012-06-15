@@ -1594,6 +1594,40 @@ name|AHCI_Q_NOBSYRES
 block|}
 block|,
 block|{
+literal|0x92201b4b
+block|,
+literal|0x00
+block|,
+literal|"Marvell 88SE9220"
+block|,
+name|AHCI_Q_NOBSYRES
+operator||
+name|AHCI_Q_ALTSIG
+block|}
+block|,
+block|{
+literal|0x92301b4b
+block|,
+literal|0x00
+block|,
+literal|"Marvell 88SE9230"
+block|,
+name|AHCI_Q_NOBSYRES
+operator||
+name|AHCI_Q_ALTSIG
+block|}
+block|,
+block|{
+literal|0x92351b4b
+block|,
+literal|0x00
+block|,
+literal|"Marvell 88SE9235"
+block|,
+name|AHCI_Q_NOBSYRES
+block|}
+block|,
+block|{
 literal|0x06201103
 block|,
 literal|0x00
