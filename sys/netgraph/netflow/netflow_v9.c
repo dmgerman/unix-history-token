@@ -1110,12 +1110,9 @@ name|source_id
 operator|=
 name|htonl
 argument_list|(
-name|NG_NODE_ID
-argument_list|(
-name|priv
+name|fe
 operator|->
-name|node
-argument_list|)
+name|domain_id
 argument_list|)
 expr_stmt|;
 if|if
