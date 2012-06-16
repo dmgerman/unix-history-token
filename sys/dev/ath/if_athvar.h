@@ -743,10 +743,6 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* do rate lookup before each TX */
-name|int
-name|bfs_nfl
-decl_stmt|;
-comment|/* next fragment length */
 comment|/* 		 * These fields are passed into the 		 * descriptor setup functions. 		 */
 name|HAL_PKT_TYPE
 name|bfs_atype
