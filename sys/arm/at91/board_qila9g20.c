@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2009 Greg Ansley.  All rights reserved.  *  * Redis
 end_comment
 
 begin_comment
-comment|/* Calao Systems QIL-9G20-Cxx  * http://www.calao-systems.com   */
+comment|/* Calao Systems QIL-9G20-Cxx  * http://www.calao-systems.com  */
 end_comment
 
 begin_include

@@ -229,7 +229,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
-name|void
+name|int
 name|savectx
 argument_list|(
 expr|struct
@@ -241,27 +241,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|suspendctx
+name|void
+name|resumectx
 argument_list|(
 expr|struct
 name|pcb
 operator|*
 argument_list|)
-name|__returns_twice
+name|__fastcall
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-name|void
-name|resumectx
-parameter_list|(
-name|struct
-name|pcb
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_endif
 endif|#

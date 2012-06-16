@@ -156,12 +156,6 @@ decl_stmt|;
 name|int
 name|acpi_handle_reboot
 decl_stmt|;
-name|bus_dma_tag_t
-name|acpi_waketag
-decl_stmt|;
-name|bus_dmamap_t
-name|acpi_wakemap
-decl_stmt|;
 name|vm_offset_t
 name|acpi_wakeaddr
 decl_stmt|;

@@ -160,6 +160,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"zfeature_common.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"statcommon.h"
 end_include
 
@@ -965,7 +971,7 @@ return|return
 operator|(
 name|gettext
 argument_list|(
-literal|"\tcreate [-fn] [-o property=value] ... \n"
+literal|"\tcreate [-fnd] [-o property=value] ... \n"
 literal|"\t    [-O file-system-property=value] ... \n"
 literal|"\t    [-m mountpoint] [-R root]<pool><vdev> ...\n"
 argument_list|)
@@ -1064,7 +1070,7 @@ return|return
 operator|(
 name|gettext
 argument_list|(
-literal|"\tlist [-H] [-o property[,...]] "
+literal|"\tlist [-Hv] [-o property[,...]] "
 literal|"[-T d|u] [pool] ... [interval [count]]\n"
 argument_list|)
 operator|)
@@ -1565,6 +1571,42 @@ argument_list|,
 name|ZFS_TYPE_POOL
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"\t%-15s   "
+argument_list|,
+literal|"feature@..."
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"YES   disabled | enabled | active\n"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+name|gettext
+argument_list|(
+literal|"\nThe feature@ properties must be "
+literal|"appended with a feature name.\nSee zpool-features(5).\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* 	 * See comments at end of main(). 	 */
 if|if
@@ -1880,6 +1922,12 @@ argument_list|)
 operator|)
 operator|==
 name|ZPROP_INVAL
+operator|&&
+operator|!
+name|zpool_prop_feature
+argument_list|(
+name|propname
+argument_list|)
 condition|)
 block|{
 operator|(
@@ -1904,6 +1952,18 @@ literal|2
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|zpool_prop_feature
+argument_list|(
+name|propname
+argument_list|)
+condition|)
+name|normnm
+operator|=
+name|propname
+expr_stmt|;
+else|else
 name|normnm
 operator|=
 name|zpool_prop_to_name
@@ -3080,7 +3140,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * zpool create [-fn] [-o property=value] ...  *		[-O file-system-property=value] ...  *		[-R root] [-m mountpoint]<pool><dev> ...  *  *	-f	Force creation, even if devices appear in use  *	-n	Do not create the pool, but display the resulting layout if it  *		were to be created.  *      -R	Create a pool under an alternate root  *      -m	Set default mountpoint for the root dataset.  By default it's  *      	'/<pool>'  *	-o	Set property=value.  *	-O	Set fsproperty=value in the pool's root file system  *  * Creates the named pool according to the given vdev specification.  The  * bulk of the vdev processing is done in get_vdev_spec() in zpool_vdev.c.  Once  * we get the nvlist back from get_vdev_spec(), we either print out the contents  * (if '-n' was specified), or pass it to libzfs to do the creation.  */
+comment|/*  * zpool create [-fnd] [-o property=value] ...  *		[-O file-system-property=value] ...  *		[-R root] [-m mountpoint]<pool><dev> ...  *  *	-f	Force creation, even if devices appear in use  *	-n	Do not create the pool, but display the resulting layout if it  *		were to be created.  *      -R	Create a pool under an alternate root  *      -m	Set default mountpoint for the root dataset.  By default it's  *		'/<pool>'  *	-o	Set property=value.  *	-d	Don't automatically enable all supported pool features  *		(individual features can be enabled with -o).  *	-O	Set fsproperty=value in the pool's root file system  *  * Creates the named pool according to the given vdev specification.  The  * bulk of the vdev processing is done in get_vdev_spec() in zpool_vdev.c.  Once  * we get the nvlist back from get_vdev_spec(), we either print out the contents  * (if '-n' was specified), or pass it to libzfs to do the creation.  */
 end_comment
 
 begin_function
@@ -3105,6 +3165,11 @@ name|boolean_t
 name|dryrun
 init|=
 name|B_FALSE
+decl_stmt|;
+name|boolean_t
+name|enable_all_pool_feat
+init|=
+name|B_TRUE
 decl_stmt|;
 name|int
 name|c
@@ -3164,7 +3229,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|":fnR:m:o:O:"
+literal|":fndR:m:o:O:"
 argument_list|)
 operator|)
 operator|!=
@@ -3191,6 +3256,14 @@ case|:
 name|dryrun
 operator|=
 name|B_TRUE
+expr_stmt|;
+break|break;
+case|case
+literal|'d'
+case|:
+name|enable_all_pool_feat
+operator|=
+name|B_FALSE
 expr_stmt|;
 break|break;
 case|case
@@ -3329,6 +3402,54 @@ condition|)
 goto|goto
 name|errout
 goto|;
+comment|/* 			 * If the user is creating a pool that doesn't support 			 * feature flags, don't enable any features. 			 */
+if|if
+condition|(
+name|zpool_name_to_prop
+argument_list|(
+name|optarg
+argument_list|)
+operator|==
+name|ZPOOL_PROP_VERSION
+condition|)
+block|{
+name|char
+modifier|*
+name|end
+decl_stmt|;
+name|u_longlong_t
+name|ver
+decl_stmt|;
+name|ver
+operator|=
+name|strtoull
+argument_list|(
+name|propval
+argument_list|,
+operator|&
+name|end
+argument_list|,
+literal|10
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|end
+operator|==
+literal|'\0'
+operator|&&
+name|ver
+operator|<
+name|SPA_VERSION_FEATURES
+condition|)
+block|{
+name|enable_all_pool_feat
+operator|=
+name|B_FALSE
+expr_stmt|;
+block|}
+block|}
 break|break;
 case|case
 literal|'O'
@@ -4013,6 +4134,95 @@ block|}
 else|else
 block|{
 comment|/* 		 * Hand off to libzfs. 		 */
+if|if
+condition|(
+name|enable_all_pool_feat
+condition|)
+block|{
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|SPA_FEATURES
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|char
+name|propname
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|;
+name|zfeature_info_t
+modifier|*
+name|feat
+init|=
+operator|&
+name|spa_feature_table
+index|[
+name|i
+index|]
+decl_stmt|;
+operator|(
+name|void
+operator|)
+name|snprintf
+argument_list|(
+name|propname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|propname
+argument_list|)
+argument_list|,
+literal|"feature@%s"
+argument_list|,
+name|feat
+operator|->
+name|fi_uname
+argument_list|)
+expr_stmt|;
+comment|/* 				 * Skip feature if user specified it manually 				 * on the command line. 				 */
+if|if
+condition|(
+name|nvlist_exists
+argument_list|(
+name|props
+argument_list|,
+name|propname
+argument_list|)
+condition|)
+continue|continue;
+if|if
+condition|(
+name|add_prop_list
+argument_list|(
+name|propname
+argument_list|,
+name|ZFS_FEATURE_ENABLED
+argument_list|,
+operator|&
+name|props
+argument_list|,
+name|B_TRUE
+argument_list|)
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|errout
+goto|;
+block|}
+block|}
 if|if
 condition|(
 name|zpool_create
@@ -5570,6 +5780,21 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|VDEV_AUX_UNSUP_FEAT
+case|:
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+name|gettext
+argument_list|(
+literal|"unsupported feature(s)"
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|VDEV_AUX_SPARED
 case|:
 name|verify
@@ -6171,6 +6396,21 @@ argument_list|(
 name|gettext
 argument_list|(
 literal|"newer version"
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|VDEV_AUX_UNSUP_FEAT
+case|:
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+name|gettext
+argument_list|(
+literal|"unsupported feature(s)"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -6987,6 +7227,50 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|ZPOOL_STATUS_UNSUP_FEAT_READ
+case|:
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+name|gettext
+argument_list|(
+literal|"status: The pool uses the following "
+literal|"feature(s) not supported on this sytem:\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|zpool_print_unsup_feat
+argument_list|(
+name|config
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ZPOOL_STATUS_UNSUP_FEAT_WRITE
+case|:
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+name|gettext
+argument_list|(
+literal|"status: The pool can only be accessed "
+literal|"in read-only mode on this system. It\n\tcannot be "
+literal|"accessed in read-write mode because it uses the "
+literal|"following\n\tfeature(s) not supported on this system:\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|zpool_print_unsup_feat
+argument_list|(
+name|config
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|ZPOOL_STATUS_HOSTID_MISMATCH
 case|:
 operator|(
@@ -7173,6 +7457,44 @@ literal|" action: The pool cannot be "
 literal|"imported.  Access the pool on a system running "
 literal|"newer\n\tsoftware, or recreate the pool from "
 literal|"backup.\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ZPOOL_STATUS_UNSUP_FEAT_READ
+case|:
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+name|gettext
+argument_list|(
+literal|"action: The pool cannot be "
+literal|"imported. Access the pool on a system that "
+literal|"supports\n\tthe required feature(s), or recreate "
+literal|"the pool from backup.\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ZPOOL_STATUS_UNSUP_FEAT_WRITE
+case|:
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+name|gettext
+argument_list|(
+literal|"action: The pool cannot be "
+literal|"imported in read-write mode. Import the pool "
+literal|"with\n"
+literal|"\t\"-o readonly=on\", access the pool on a system "
+literal|"that supports the\n\trequired feature(s), or "
+literal|"recreate the pool from backup.\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -7512,9 +7834,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|SPA_VERSION_IS_SUPPORTED
+argument_list|(
 name|version
-operator|>
-name|SPA_VERSION
+argument_list|)
 condition|)
 block|{
 operator|(
@@ -7527,7 +7851,7 @@ argument_list|,
 name|gettext
 argument_list|(
 literal|"cannot import '%s': pool "
-literal|"is formatted using a newer ZFS version\n"
+literal|"is formatted using an unsupported ZFS version\n"
 argument_list|)
 argument_list|,
 name|name
@@ -11400,6 +11724,12 @@ name|cb
 operator|->
 name|cb_proplist
 decl_stmt|;
+name|char
+name|headerbuf
+index|[
+name|ZPOOL_MAXPROPLEN
+index|]
+decl_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -11432,15 +11762,6 @@ operator|->
 name|pl_next
 control|)
 block|{
-if|if
-condition|(
-name|pl
-operator|->
-name|pl_prop
-operator|==
-name|ZPROP_INVAL
-condition|)
-continue|continue;
 name|width
 operator|=
 name|pl
@@ -11482,6 +11803,19 @@ name|first
 operator|=
 name|B_FALSE
 expr_stmt|;
+name|right_justify
+operator|=
+name|B_FALSE
+expr_stmt|;
+if|if
+condition|(
+name|pl
+operator|->
+name|pl_prop
+operator|!=
+name|ZPROP_INVAL
+condition|)
+block|{
 name|header
 operator|=
 name|zpool_prop_column_name
@@ -11500,6 +11834,57 @@ operator|->
 name|pl_prop
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|pl
+operator|->
+name|pl_user_prop
+index|[
+name|i
+index|]
+operator|!=
+literal|'\0'
+condition|;
+name|i
+operator|++
+control|)
+name|headerbuf
+index|[
+name|i
+index|]
+operator|=
+name|toupper
+argument_list|(
+name|pl
+operator|->
+name|pl_user_prop
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+name|headerbuf
+index|[
+name|i
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+name|header
+operator|=
+name|headerbuf
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|pl
@@ -11762,6 +12147,49 @@ name|pl
 operator|->
 name|pl_prop
 argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|zpool_prop_feature
+argument_list|(
+name|pl
+operator|->
+name|pl_user_prop
+argument_list|)
+operator|||
+name|zpool_prop_unsupported
+argument_list|(
+name|pl
+operator|->
+name|pl_user_prop
+argument_list|)
+operator|)
+operator|&&
+name|zpool_prop_get_feature
+argument_list|(
+name|zhp
+argument_list|,
+name|pl
+operator|->
+name|pl_user_prop
+argument_list|,
+name|property
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|property
+argument_list|)
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|propstr
+operator|=
+name|property
 expr_stmt|;
 block|}
 else|else
@@ -17649,6 +18077,95 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|ZPOOL_STATUS_UNSUP_FEAT_READ
+case|:
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+name|gettext
+argument_list|(
+literal|"status: The pool cannot be accessed on "
+literal|"this system because it uses the\n\tfollowing feature(s) "
+literal|"not supported on this system:\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|zpool_print_unsup_feat
+argument_list|(
+name|config
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+name|gettext
+argument_list|(
+literal|"action: Access the pool from a system "
+literal|"that supports the required feature(s),\n\tor restore the "
+literal|"pool from backup.\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ZPOOL_STATUS_UNSUP_FEAT_WRITE
+case|:
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+name|gettext
+argument_list|(
+literal|"status: The pool can only be accessed "
+literal|"in read-only mode on this system. It\n\tcannot be "
+literal|"accessed in read-write mode because it uses the "
+literal|"following\n\tfeature(s) not supported on this system:\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|zpool_print_unsup_feat
+argument_list|(
+name|config
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+name|gettext
+argument_list|(
+literal|"action: The pool cannot be accessed in "
+literal|"read-write mode. Import the pool with\n"
+literal|"\t\"-o readonly=on\", access the pool from a system that "
+literal|"supports the\n\trequired feature(s), or restore the "
+literal|"pool from backup.\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|ZPOOL_STATUS_FAULTED_DEV_R
 case|:
 operator|(
@@ -18735,8 +19252,13 @@ name|cbp
 operator|->
 name|cb_newer
 operator|&&
+name|SPA_VERSION_IS_SUPPORTED
+argument_list|(
 name|version
-operator|<
+argument_list|)
+operator|&&
+name|version
+operator|!=
 name|SPA_VERSION
 condition|)
 block|{
@@ -18910,9 +19432,11 @@ name|cbp
 operator|->
 name|cb_newer
 operator|&&
+operator|!
+name|SPA_VERSION_IS_SUPPORTED
+argument_list|(
 name|version
-operator|>
-name|SPA_VERSION
+argument_list|)
 condition|)
 block|{
 name|assert
@@ -18938,8 +19462,9 @@ argument_list|(
 name|gettext
 argument_list|(
 literal|"The following pools are "
-literal|"formatted using a newer software version and\n"
-literal|"cannot be accessed on the current system.\n\n"
+literal|"formatted using an unsupported software version "
+literal|"and\ncannot be accessed on the current "
+literal|"system.\n\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -19350,17 +19875,13 @@ name|end
 operator|!=
 literal|'\0'
 operator|||
+operator|!
+name|SPA_VERSION_IS_SUPPORTED
+argument_list|(
 name|cb
 operator|.
 name|cb_version
-operator|>
-name|SPA_VERSION
-operator|||
-name|cb
-operator|.
-name|cb_version
-operator|<
-name|SPA_VERSION_1
+argument_list|)
 condition|)
 block|{
 operator|(
@@ -19584,11 +20105,9 @@ name|printf
 argument_list|(
 name|gettext
 argument_list|(
-literal|"This system is currently running "
-literal|"ZFS pool version %llu.\n\n"
+literal|"This system supports ZFS pool feature "
+literal|"flags.\n\n"
 argument_list|)
-argument_list|,
-name|SPA_VERSION
 argument_list|)
 expr_stmt|;
 name|cb
@@ -20992,6 +21511,82 @@ condition|)
 continue|continue;
 if|if
 condition|(
+name|pl
+operator|->
+name|pl_prop
+operator|==
+name|ZPROP_INVAL
+operator|&&
+operator|(
+name|zpool_prop_feature
+argument_list|(
+name|pl
+operator|->
+name|pl_user_prop
+argument_list|)
+operator|||
+name|zpool_prop_unsupported
+argument_list|(
+name|pl
+operator|->
+name|pl_user_prop
+argument_list|)
+operator|)
+condition|)
+block|{
+name|srctype
+operator|=
+name|ZPROP_SRC_LOCAL
+expr_stmt|;
+if|if
+condition|(
+name|zpool_prop_get_feature
+argument_list|(
+name|zhp
+argument_list|,
+name|pl
+operator|->
+name|pl_user_prop
+argument_list|,
+name|value
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|value
+argument_list|)
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|zprop_print_one_property
+argument_list|(
+name|zpool_get_name
+argument_list|(
+name|zhp
+argument_list|)
+argument_list|,
+name|cbp
+argument_list|,
+name|pl
+operator|->
+name|pl_user_prop
+argument_list|,
+name|value
+argument_list|,
+name|srctype
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+if|if
+condition|(
 name|zpool_get_prop
 argument_list|(
 name|zhp
@@ -21040,6 +21635,7 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 return|return
 operator|(
 literal|0
@@ -21082,13 +21678,29 @@ if|if
 condition|(
 name|argc
 operator|<
-literal|3
+literal|2
 condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|gettext
+argument_list|(
+literal|"missing property "
+literal|"argument\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|usage
 argument_list|(
 name|B_FALSE
 argument_list|)
 expr_stmt|;
+block|}
 name|cb
 operator|.
 name|cb_first

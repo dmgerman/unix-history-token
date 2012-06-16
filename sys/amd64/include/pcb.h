@@ -169,6 +169,30 @@ name|amd64tss
 modifier|*
 name|pcb_tssp
 decl_stmt|;
+comment|/* model specific registers */
+name|register_t
+name|pcb_efer
+decl_stmt|;
+name|register_t
+name|pcb_star
+decl_stmt|;
+name|register_t
+name|pcb_lstar
+decl_stmt|;
+name|register_t
+name|pcb_cstar
+decl_stmt|;
+name|register_t
+name|pcb_sfmask
+decl_stmt|;
+name|register_t
+name|pcb_xsmask
+decl_stmt|;
+comment|/* fpu context for suspend/resume */
+name|void
+modifier|*
+name|pcb_fpususpend
+decl_stmt|;
 name|struct
 name|savefpu
 modifier|*
@@ -177,7 +201,7 @@ decl_stmt|;
 name|uint64_t
 name|pcb_pad
 index|[
-literal|2
+literal|3
 index|]
 decl_stmt|;
 block|}
@@ -311,6 +335,17 @@ argument_list|)
 name|__returns_twice
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|void
+name|resumectx
+parameter_list|(
+name|struct
+name|pcb
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

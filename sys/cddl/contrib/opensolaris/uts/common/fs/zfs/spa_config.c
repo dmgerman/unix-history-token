@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -65,6 +65,12 @@ begin_include
 include|#
 directive|include
 file|<sys/sunddi.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/zfeature.h>
 end_include
 
 begin_ifdef
@@ -1671,6 +1677,23 @@ expr_stmt|;
 name|nvlist_free
 argument_list|(
 name|nvroot
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Store what's necessary for reading the MOS in the label. 	 */
+name|VERIFY
+argument_list|(
+name|nvlist_add_nvlist
+argument_list|(
+name|config
+argument_list|,
+name|ZPOOL_CONFIG_FEATURES_FOR_READ
+argument_list|,
+name|spa
+operator|->
+name|spa_label_features
+argument_list|)
+operator|==
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

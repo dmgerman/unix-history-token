@@ -4478,8 +4478,6 @@ name|w
 operator|->
 name|res
 argument_list|)
-operator|-
-literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -4490,6 +4488,8 @@ condition|)
 name|end_free
 operator|=
 name|end
+operator|+
+literal|1
 expr_stmt|;
 comment|/* Move end_free down until it is properly aligned. */
 name|end_free
@@ -4541,6 +4541,7 @@ argument_list|)
 expr_stmt|;
 name|front
 operator|&=
+operator|~
 operator|(
 literal|1ul
 operator|<<

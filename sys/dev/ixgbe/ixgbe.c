@@ -5476,7 +5476,7 @@ comment|/* 		 * When the internal queue falls below PTHRESH (32), 		 * start pre
 name|txdctl
 operator||=
 operator|(
-literal|16
+literal|32
 operator|<<
 literal|0
 operator|)

@@ -821,7 +821,7 @@ literal|"at91_attach: failed to set up memory rman"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Our device list will be added automatically by the cpu device 	 * e.g. at91rm9200.c when it is identified. To ensure that the 	 * CPU and PMC are attached first any other "identified" devices  	 * call BUS_ADD_CHILD(9) with an "order" of at least 2. */
+comment|/* Our device list will be added automatically by the cpu device 	 * e.g. at91rm9200.c when it is identified. To ensure that the 	 * CPU and PMC are attached first any other "identified" devices 	 * call BUS_ADD_CHILD(9) with an "order" of at least 2. */
 name|bus_generic_probe
 argument_list|(
 name|dev
@@ -1537,7 +1537,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|u_long p; 	int error; 	 	if (type == SYS_RES_MEMORY) { 		error = bus_space_map(rman_get_bustag(r), 		    rman_get_bushandle(r), rman_get_size(r), 0,&p); 		if (error)  			return (error); 		rman_set_bushandle(r, p); 	}
+block|u_long p; 	int error; 	 	if (type == SYS_RES_MEMORY) { 		error = bus_space_map(rman_get_bustag(r), 		    rman_get_bushandle(r), rman_get_size(r), 0,&p); 		if (error) 			return (error); 		rman_set_bushandle(r, p); 	}
 endif|#
 directive|endif
 return|return

@@ -662,7 +662,7 @@ name|frame
 operator|->
 name|tf_pc
 expr_stmt|;
-comment|/*  	 * Get the current thread/proc structure or thread0/proc0 if there is  	 * none. 	 */
+comment|/* 	 * Get the current thread/proc structure or thread0/proc0 if there is 	 * none. 	 */
 name|td
 operator|=
 name|curthread

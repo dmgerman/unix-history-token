@@ -2974,6 +2974,12 @@ argument_list|(
 expr|struct
 name|ip6_hdr
 argument_list|)
+operator|-
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ip
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ip6

@@ -193,11 +193,6 @@ init|=
 literal|0x040000
 block|,
 comment|/* Send a Test Unit Ready command to the 				 * device, then retry the original command. 				 */
-name|SS_REQSENSE
-init|=
-literal|0x050000
-block|,
-comment|/* Send a RequestSense command to the 				 * device, then retry the original command. 				 */
 name|SS_MASK
 init|=
 literal|0xff0000
@@ -7776,38 +7771,6 @@ end_endif
 begin_comment
 comment|/* _KERNEL */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|SF_RETRY_UA
-value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|SF_NO_PRINT
-value|0x02
-end_define
-
-begin_define
-define|#
-directive|define
-name|SF_QUIET_IR
-value|0x04
-end_define
-
-begin_comment
-comment|/* Be quiet about Illegal Request reponses */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SF_PRINT_ALWAYS
-value|0x08
-end_define
 
 begin_function_decl
 specifier|const

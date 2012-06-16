@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -158,6 +158,29 @@ name|bonustype
 parameter_list|,
 name|int
 name|bonuslen
+parameter_list|,
+name|dmu_tx_t
+modifier|*
+name|tx
+parameter_list|)
+function_decl|;
+name|uint64_t
+name|zap_create_link
+parameter_list|(
+name|objset_t
+modifier|*
+name|os
+parameter_list|,
+name|dmu_object_type_t
+name|ot
+parameter_list|,
+name|uint64_t
+name|parent_obj
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
 parameter_list|,
 name|dmu_tx_t
 modifier|*
@@ -851,28 +874,6 @@ parameter_list|,
 name|uint64_t
 modifier|*
 name|valuep
-parameter_list|)
-function_decl|;
-comment|/*  * They name is a stringified version of key; increment its value by  * delta.  Zero values will be zap_remove()-ed.  */
-name|int
-name|zap_increment_int
-parameter_list|(
-name|objset_t
-modifier|*
-name|os
-parameter_list|,
-name|uint64_t
-name|obj
-parameter_list|,
-name|uint64_t
-name|key
-parameter_list|,
-name|int64_t
-name|delta
-parameter_list|,
-name|dmu_tx_t
-modifier|*
-name|tx
 parameter_list|)
 function_decl|;
 name|int

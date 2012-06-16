@@ -10204,7 +10204,7 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"ZFS filesystem version "
+literal|"ZFS filesystem version: "
 name|ZPL_VERSION_STRING
 literal|"\n"
 argument_list|)

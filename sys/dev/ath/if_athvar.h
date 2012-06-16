@@ -57,6 +57,17 @@ value|1000
 end_define
 
 begin_comment
+comment|/*  * There is a separate TX ath_buf pool for management frames.  * This ensures that management frames such as probe responses  * and BAR frames can be transmitted during periods of high  * TX activity.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATH_MGMT_TXBUF
+value|32
+end_define
+
+begin_comment
 comment|/*  * 802.11n requires more TX and RX buffers to do AMPDU.  */
 end_comment
 
@@ -530,6 +541,22 @@ parameter_list|)
 value|ATH_EP_RND(x, HAL_RSSI_EP_MULTIPLIER)
 end_define
 
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|ATH_BUFTYPE_NORMAL
+init|=
+literal|0
+block|,
+name|ATH_BUFTYPE_MGMT
+init|=
+literal|1
+block|, }
+name|ath_buf_type_t
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
 name|ath_buf
@@ -635,19 +662,27 @@ function_decl|;
 comment|/* This state is kept to support software retries and aggregation */
 struct|struct
 block|{
-name|int
+name|uint16_t
 name|bfs_seqno
 decl_stmt|;
 comment|/* sequence number of this packet */
-name|int
+name|uint16_t
+name|bfs_ndelim
+decl_stmt|;
+comment|/* number of delims for padding */
+name|uint8_t
 name|bfs_retries
 decl_stmt|;
 comment|/* retry count */
-name|uint16_t
+name|uint8_t
 name|bfs_tid
 decl_stmt|;
 comment|/* packet TID (or TID_MAX for no QoS) */
-name|uint16_t
+name|uint8_t
+name|bfs_nframes
+decl_stmt|;
+comment|/* number of frames in aggregate */
+name|uint8_t
 name|bfs_pri
 decl_stmt|;
 comment|/* packet AC priority */
@@ -657,18 +692,6 @@ modifier|*
 name|bfs_txq
 decl_stmt|;
 comment|/* eventual dest hardware TXQ */
-name|uint16_t
-name|bfs_pktdur
-decl_stmt|;
-comment|/* packet duration (at current rate?) */
-name|uint16_t
-name|bfs_nframes
-decl_stmt|;
-comment|/* number of frames in aggregate */
-name|uint16_t
-name|bfs_ndelim
-decl_stmt|;
-comment|/* number of delims for padding */
 name|u_int32_t
 name|bfs_aggr
 range|:
@@ -718,32 +741,19 @@ comment|/* do RTS/CTS based protection */
 name|bfs_doratelookup
 range|:
 literal|1
-decl_stmt|,
+decl_stmt|;
 comment|/* do rate lookup before each TX */
-name|bfs_need_seqno
-range|:
-literal|1
-decl_stmt|,
-comment|/* need to assign a seqno for aggr */
-name|bfs_seqno_assigned
-range|:
-literal|1
-decl_stmt|;
-comment|/* seqno has been assigned */
-name|int
-name|bfs_nfl
-decl_stmt|;
-comment|/* next fragment length */
 comment|/* 		 * These fields are passed into the 		 * descriptor setup functions. 		 */
+comment|/* Make this an 8 bit value? */
 name|HAL_PKT_TYPE
 name|bfs_atype
 decl_stmt|;
 comment|/* packet type */
-name|int
+name|uint32_t
 name|bfs_pktlen
 decl_stmt|;
 comment|/* length of this packet */
-name|int
+name|uint16_t
 name|bfs_hdrlen
 decl_stmt|;
 comment|/* length of this packet header */
@@ -751,43 +761,46 @@ name|uint16_t
 name|bfs_al
 decl_stmt|;
 comment|/* length of aggregate */
-name|int
+name|uint16_t
 name|bfs_txflags
 decl_stmt|;
 comment|/* HAL (tx) descriptor flags */
-name|int
+name|uint8_t
 name|bfs_txrate0
 decl_stmt|;
 comment|/* first TX rate */
-name|int
+name|uint8_t
 name|bfs_try0
 decl_stmt|;
 comment|/* first try count */
+name|uint16_t
+name|bfs_txpower
+decl_stmt|;
+comment|/* tx power */
 name|uint8_t
 name|bfs_ctsrate0
 decl_stmt|;
 comment|/* Non-zero - use this as ctsrate */
-name|int
+name|uint8_t
+name|bfs_ctsrate
+decl_stmt|;
+comment|/* CTS rate */
+comment|/* 16 bit? */
+name|int32_t
 name|bfs_keyix
 decl_stmt|;
 comment|/* crypto key index */
-name|int
-name|bfs_txpower
-decl_stmt|;
-comment|/* tx power */
-name|int
+name|int32_t
 name|bfs_txantenna
 decl_stmt|;
 comment|/* TX antenna config */
+comment|/* Make this an 8 bit value? */
 name|enum
 name|ieee80211_protmode
 name|bfs_protmode
 decl_stmt|;
-name|int
-name|bfs_ctsrate
-decl_stmt|;
-comment|/* CTS rate */
-name|int
+comment|/* 16 bit? */
+name|uint32_t
 name|bfs_ctsduration
 decl_stmt|;
 comment|/* CTS duration (pre-11n NICs) */
@@ -817,6 +830,17 @@ argument_list|)
 name|ath_bufhead
 expr_stmt|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|ATH_BUF_MGMT
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* (tx) desc is a mgmt desc */
+end_comment
 
 begin_define
 define|#
@@ -1053,6 +1077,19 @@ parameter_list|(
 name|_tq
 parameter_list|)
 value|mtx_owned(&(_tq)->axq_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TID_LOCK_ASSERT
+parameter_list|(
+name|_sc
+parameter_list|,
+name|_tid
+parameter_list|)
+define|\
+value|ATH_TXQ_LOCK_ASSERT((_sc)->sc_ac2q[(_tid)->ac])
 end_define
 
 begin_define
@@ -1800,6 +1837,19 @@ name|ath_bufhead
 name|sc_txbuf
 decl_stmt|;
 comment|/* transmit buffer */
+name|int
+name|sc_txbuf_cnt
+decl_stmt|;
+comment|/* how many buffers avail */
+name|struct
+name|ath_descdma
+name|sc_txdma_mgmt
+decl_stmt|;
+comment|/* mgmt TX descriptors */
+name|ath_bufhead
+name|sc_txbuf_mgmt
+decl_stmt|;
+comment|/* mgmt transmit buffer */
 name|struct
 name|mtx
 name|sc_txbuflock

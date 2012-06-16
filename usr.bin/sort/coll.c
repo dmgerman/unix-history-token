@@ -3633,6 +3633,7 @@ name|kv2
 parameter_list|,
 name|size_t
 name|offset
+name|__unused
 parameter_list|,
 name|bool
 name|use_suffix
@@ -3745,11 +3746,6 @@ operator|=
 name|key2_read
 operator|=
 name|false
-expr_stmt|;
-name|UNUSED_ARG
-argument_list|(
-name|offset
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -4714,6 +4710,7 @@ name|kv2
 parameter_list|,
 name|size_t
 name|offset
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -4736,11 +4733,6 @@ decl_stmt|,
 modifier|*
 name|b2
 decl_stmt|;
-name|UNUSED_ARG
-argument_list|(
-name|offset
-argument_list|)
-expr_stmt|;
 name|s1
 operator|=
 name|kv1
@@ -4995,6 +4987,7 @@ name|kv2
 parameter_list|,
 name|size_t
 name|offset
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -5005,11 +4998,6 @@ decl_stmt|,
 modifier|*
 name|s2
 decl_stmt|;
-name|UNUSED_ARG
-argument_list|(
-name|offset
-argument_list|)
-expr_stmt|;
 name|s1
 operator|=
 name|kv1
@@ -5280,6 +5268,7 @@ name|kv2
 parameter_list|,
 name|size_t
 name|offset
+name|__unused
 parameter_list|)
 block|{
 name|double
@@ -5318,11 +5307,6 @@ operator|=
 name|key2_read
 operator|=
 name|false
-expr_stmt|;
-name|UNUSED_ARG
-argument_list|(
-name|offset
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -6186,6 +6170,7 @@ name|kv2
 parameter_list|,
 name|size_t
 name|offset
+name|__unused
 parameter_list|)
 block|{
 name|int
@@ -6209,11 +6194,6 @@ operator|=
 name|key2_read
 operator|=
 name|false
-expr_stmt|;
-name|UNUSED_ARG
-argument_list|(
-name|offset
-argument_list|)
 expr_stmt|;
 if|if
 condition|(

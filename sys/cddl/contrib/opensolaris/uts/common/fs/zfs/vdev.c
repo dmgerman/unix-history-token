@@ -6141,6 +6141,8 @@ operator|=
 name|vdev_label_read_config
 argument_list|(
 name|vd
+argument_list|,
+name|VDEV_BEST_LABEL
 argument_list|)
 operator|)
 operator|==
@@ -9018,6 +9020,8 @@ operator|=
 name|vdev_label_read_config
 argument_list|(
 name|vd
+argument_list|,
+name|VDEV_BEST_LABEL
 argument_list|)
 operator|)
 operator|==
@@ -9056,9 +9060,11 @@ argument_list|)
 operator|!=
 literal|0
 operator|||
+operator|!
+name|SPA_VERSION_IS_SUPPORTED
+argument_list|(
 name|version
-operator|>
-name|SPA_VERSION
+argument_list|)
 operator|||
 name|nvlist_lookup_uint64
 argument_list|(

@@ -11267,7 +11267,7 @@ literal|"pmap_pv_promote_pde: pa is not 2mpage aligned"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Transfer the first page's pv entry for this mapping to the 	 * 2mpage's pv list.  Aside from avoiding the cost of a call 	 * to get_pv_entry(), a transfer avoids the possibility that 	 * get_pv_entry() calls pmap_collect() and that pmap_collect() 	 * removes one of the mappings that is being promoted. 	 */
+comment|/* 	 * Transfer the first page's pv entry for this mapping to the 	 * 2mpage's pv list.  Aside from avoiding the cost of a call 	 * to get_pv_entry(), a transfer avoids the possibility that 	 * get_pv_entry() calls pmap_pv_reclaim() and that pmap_pv_reclaim() 	 * removes one of the mappings that is being promoted. 	 */
 name|m
 operator|=
 name|PHYS_TO_VM_PAGE
@@ -12246,7 +12246,7 @@ name|va
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Demote the pv entry.  This depends on the earlier demotion 	 * of the mapping.  Specifically, the (re)creation of a per- 	 * page pv entry might trigger the execution of pmap_collect(), 	 * which might reclaim a newly (re)created per-page pv entry 	 * and destroy the associated mapping.  In order to destroy 	 * the mapping, the PDE must have already changed from mapping 	 * the 2mpage to referencing the page table page. 	 */
+comment|/* 	 * Demote the pv entry.  This depends on the earlier demotion 	 * of the mapping.  Specifically, the (re)creation of a per- 	 * page pv entry might trigger the execution of pmap_pv_reclaim(), 	 * which might reclaim a newly (re)created per-page pv entry 	 * and destroy the associated mapping.  In order to destroy 	 * the mapping, the PDE must have already changed from mapping 	 * the 2mpage to referencing the page table page. 	 */
 if|if
 condition|(
 operator|(
@@ -19451,6 +19451,16 @@ operator|++
 control|)
 if|if
 condition|(
+operator|(
+name|mt
+operator|->
+name|aflags
+operator|&
+name|PGA_WRITEABLE
+operator|)
+operator|!=
+literal|0
+operator|&&
 name|TAILQ_EMPTY
 argument_list|(
 operator|&
@@ -19567,6 +19577,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|m
+operator|->
+name|aflags
+operator|&
+name|PGA_WRITEABLE
+operator|)
+operator|!=
+literal|0
+operator|&&
 name|TAILQ_EMPTY
 argument_list|(
 operator|&
@@ -20444,8 +20464,7 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"pmap_clear_write: found"
-literal|" a 2mpage in page %p's pv list"
+literal|"pmap_remove_write: found a 2mpage in page %p's pv list"
 operator|,
 name|m
 operator|)

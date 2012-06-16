@@ -762,23 +762,6 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"        SEQNO_ASSIGNED: %d, NEED_SEQNO: %d\n"
-argument_list|,
-name|bf
-operator|->
-name|bf_state
-operator|.
-name|bfs_seqno_assigned
-argument_list|,
-name|bf
-operator|->
-name|bf_state
-operator|.
-name|bfs_need_seqno
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
 literal|"        %08x %08x %08x %08x %08x %08x\n"
 argument_list|,
 name|ds

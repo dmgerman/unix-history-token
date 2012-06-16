@@ -1139,7 +1139,7 @@ name|dev
 operator|=
 name|dev
 expr_stmt|;
-comment|/*  	 * XXX These values work for the RM9200, SAM926[01], and SAM9G20 	 * will have to fix this when we want to support anything else. XXX 	 */
+comment|/* 	 * XXX These values work for the RM9200, SAM926[01], and SAM9G20 	 * will have to fix this when we want to support anything else. XXX 	 */
 if|if
 condition|(
 name|bus_space_subregion

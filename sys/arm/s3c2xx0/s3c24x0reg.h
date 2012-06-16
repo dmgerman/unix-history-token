@@ -8,7 +8,7 @@ comment|/*-  * Copyright (c) 2003  Genetec corporation  All rights reserved.  * 
 end_comment
 
 begin_comment
-comment|/*  * Samsung S3C2410X/2400 processor is ARM920T based integrated CPU  *  * Reference:  *  S3C2410X User's Manual   *  S3C2400 User's Manual  */
+comment|/*  * Samsung S3C2410X/2400 processor is ARM920T based integrated CPU  *  * Reference:  *  S3C2410X User's Manual  *  S3C2400 User's Manual  */
 end_comment
 
 begin_ifndef
