@@ -3393,26 +3393,6 @@ name|tx_chainmask
 argument_list|)
 expr_stmt|;
 block|}
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|,
-literal|"%s: sizeof(ath_buf) = %d bytes\n"
-argument_list|,
-name|__func__
-argument_list|,
-operator|(
-name|int
-operator|)
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ath_buf
-argument_list|)
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|ATH_ENABLE_11N
