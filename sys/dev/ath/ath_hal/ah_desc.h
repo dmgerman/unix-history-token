@@ -795,6 +795,10 @@ begin_comment
 comment|/* flags passed to tx descriptor setup methods */
 end_comment
 
+begin_comment
+comment|/* This is a uint16_t field in ath_buf, just be warned! */
+end_comment
+
 begin_define
 define|#
 directive|define

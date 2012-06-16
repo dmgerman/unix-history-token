@@ -744,15 +744,16 @@ literal|1
 decl_stmt|;
 comment|/* do rate lookup before each TX */
 comment|/* 		 * These fields are passed into the 		 * descriptor setup functions. 		 */
+comment|/* Make this an 8 bit value? */
 name|HAL_PKT_TYPE
 name|bfs_atype
 decl_stmt|;
 comment|/* packet type */
-name|int
+name|uint32_t
 name|bfs_pktlen
 decl_stmt|;
 comment|/* length of this packet */
-name|int
+name|uint16_t
 name|bfs_hdrlen
 decl_stmt|;
 comment|/* length of this packet header */
@@ -760,43 +761,46 @@ name|uint16_t
 name|bfs_al
 decl_stmt|;
 comment|/* length of aggregate */
-name|int
+name|uint16_t
 name|bfs_txflags
 decl_stmt|;
 comment|/* HAL (tx) descriptor flags */
-name|int
+name|uint8_t
 name|bfs_txrate0
 decl_stmt|;
 comment|/* first TX rate */
-name|int
+name|uint8_t
 name|bfs_try0
 decl_stmt|;
 comment|/* first try count */
+name|uint16_t
+name|bfs_txpower
+decl_stmt|;
+comment|/* tx power */
 name|uint8_t
 name|bfs_ctsrate0
 decl_stmt|;
 comment|/* Non-zero - use this as ctsrate */
-name|int
+name|uint8_t
+name|bfs_ctsrate
+decl_stmt|;
+comment|/* CTS rate */
+comment|/* 16 bit? */
+name|int32_t
 name|bfs_keyix
 decl_stmt|;
 comment|/* crypto key index */
-name|int
-name|bfs_txpower
-decl_stmt|;
-comment|/* tx power */
-name|int
+name|int32_t
 name|bfs_txantenna
 decl_stmt|;
 comment|/* TX antenna config */
+comment|/* Make this an 8 bit value? */
 name|enum
 name|ieee80211_protmode
 name|bfs_protmode
 decl_stmt|;
-name|int
-name|bfs_ctsrate
-decl_stmt|;
-comment|/* CTS rate */
-name|int
+comment|/* 16 bit? */
+name|uint32_t
 name|bfs_ctsduration
 decl_stmt|;
 comment|/* CTS duration (pre-11n NICs) */
