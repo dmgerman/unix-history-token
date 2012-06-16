@@ -3545,7 +3545,6 @@ name|PSL_C
 expr_stmt|;
 break|break;
 block|}
-comment|/* 	 * Traced syscall. 	 */
 comment|/* 	 * If the user-supplied value of %rip is not a canonical 	 * address, then some CPUs will trigger a ring 0 #GP during 	 * the sysret instruction.  However, the fault handler would 	 * execute with the user's %gs and %rsp in ring 0 which would 	 * not be safe.  Instead, preemptively kill the thread with a 	 * SIGBUS. 	 */
 if|if
 condition|(
@@ -3605,6 +3604,7 @@ name|ksi
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Traced syscall. 	 */
 if|if
 condition|(
 name|orig_tf_rflags
