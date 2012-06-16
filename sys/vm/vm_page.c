@@ -3367,11 +3367,10 @@ expr_stmt|;
 comment|/* 	 * Since we are inserting a new and possibly dirty page, 	 * update the object's OBJ_MIGHTBEDIRTY flag. 	 */
 if|if
 condition|(
+name|pmap_page_is_write_mapped
+argument_list|(
 name|m
-operator|->
-name|aflags
-operator|&
-name|PGA_WRITEABLE
+argument_list|)
 condition|)
 name|vm_object_set_writeable_dirty
 argument_list|(
@@ -9818,7 +9817,7 @@ name|shift
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * If the object is locked and the page is neither VPO_BUSY nor 	 * PGA_WRITEABLE, then the page's dirty field cannot possibly be 	 * set by a concurrent pmap operation. 	 */
+comment|/* 	 * If the object is locked and the page is neither VPO_BUSY nor 	 * write mapped, then the page's dirty field cannot possibly be 	 * set by a concurrent pmap operation. 	 */
 name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|m
@@ -9840,15 +9839,11 @@ operator|)
 operator|==
 literal|0
 operator|&&
-operator|(
+operator|!
+name|pmap_page_is_write_mapped
+argument_list|(
 name|m
-operator|->
-name|aflags
-operator|&
-name|PGA_WRITEABLE
-operator|)
-operator|==
-literal|0
+argument_list|)
 condition|)
 name|m
 operator|->

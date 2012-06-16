@@ -1226,6 +1226,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|pmap_page_is_write_mapped
+parameter_list|(
+name|m
+parameter_list|)
+value|(((m)->aflags& PGA_WRITEABLE) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|pmap_unmapbios
 parameter_list|(
 name|va

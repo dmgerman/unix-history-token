@@ -1923,15 +1923,11 @@ index|]
 operator|==
 name|VM_PAGER_PEND
 operator|||
-operator|(
+operator|!
+name|pmap_page_is_write_mapped
+argument_list|(
 name|mt
-operator|->
-name|aflags
-operator|&
-name|PGA_WRITEABLE
-operator|)
-operator|==
-literal|0
+argument_list|)
 argument_list|,
 operator|(
 literal|"vm_pageout_flush: page %p is not write protected"
@@ -3373,15 +3369,10 @@ name|dirty
 operator|!=
 name|VM_PAGE_BITS_ALL
 operator|&&
-operator|(
+name|pmap_page_is_write_mapped
+argument_list|(
 name|m
-operator|->
-name|aflags
-operator|&
-name|PGA_WRITEABLE
-operator|)
-operator|!=
-literal|0
+argument_list|)
 condition|)
 block|{
 comment|/* 			 * Avoid a race condition: Unless write access is 			 * removed from the page, another processor could 			 * modify it before all access is removed by the call 			 * to vm_page_cache() below.  If vm_page_cache() finds 			 * that the page has been modified when it removes all 			 * access, it panics because it cannot cache dirty 			 * pages.  In principle, we could eliminate just write 			 * access here rather than all access.  In the expected 			 * case, when there are no last instant modifications 			 * to the page, removing all access will be cheaper 			 * overall. 			 */

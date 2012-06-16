@@ -4824,15 +4824,11 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-operator|(
+operator|!
+name|pmap_page_is_write_mapped
+argument_list|(
 name|m
-operator|->
-name|aflags
-operator|&
-name|PGA_WRITEABLE
-operator|)
-operator|==
-literal|0
+argument_list|)
 argument_list|,
 operator|(
 literal|"vnode_pager_generic_putpages: page %p is not read-only"
