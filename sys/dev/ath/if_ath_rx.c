@@ -2430,16 +2430,6 @@ operator|->
 name|if_ipackets
 operator|++
 expr_stmt|;
-name|ifp
-operator|->
-name|if_ibytes
-operator|+=
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|len
-expr_stmt|;
 name|sc
 operator|->
 name|sc_stats
