@@ -346,7 +346,7 @@ value|4
 end_define
 
 begin_comment
-comment|/* delimiter size   */
+comment|/* delimiter size */
 end_comment
 
 begin_define
@@ -360,16 +360,16 @@ begin_comment
 comment|/* in bytes, minimum packet length */
 end_comment
 
+begin_comment
+comment|/* number of delimiters for encryption padding */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|ATH_AGGR_ENCRYPTDELIM
 value|10
 end_define
-
-begin_comment
-comment|/* number of delimiters for encryption padding */
-end_comment
 
 begin_comment
 comment|/*  * returns delimiter padding required given the packet length  */
@@ -1876,7 +1876,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|4
+name|ATH_RC_NUM
 condition|;
 name|i
 operator|++
@@ -2094,7 +2094,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|4
+name|ATH_RC_NUM
 condition|;
 name|i
 operator|++
@@ -2256,7 +2256,7 @@ index|]
 operator|.
 name|rateCode
 expr_stmt|;
-comment|/* PktDuration doesn't include slot, ACK, RTS, etc timing - it's just the packet duration */
+comment|/* 		 * PktDuration doesn't include slot, ACK, RTS, etc timing - 		 * it's just the packet duration 		 */
 if|if
 condition|(
 name|series
@@ -2381,7 +2381,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static void ath_rateseries_print(HAL_11N_RATE_SERIES *series) { 	int i; 	for (i = 0; i< 4; i++) { 		printf("series %d: rate %x; tries %d; pktDuration %d; chSel %d; rateFlags %x\n", 		    i, 		    series[i].Rate, 		    series[i].Tries, 		    series[i].PktDuration, 		    series[i].ChSel, 		    series[i].RateFlags); 	} }
+unit|static void ath_rateseries_print(struct ath_softc *sc, HAL_11N_RATE_SERIES *series) { 	int i; 	for (i = 0; i< ATH_RC_NUM; i++) { 		device_printf(sc->sc_dev ,"series %d: rate %x; tries %d; " 		    "pktDuration %d; chSel %d; rateFlags %x\n", 		    i, 		    series[i].Rate, 		    series[i].Tries, 		    series[i].PktDuration, 		    series[i].ChSel, 		    series[i].RateFlags); 	} }
 endif|#
 directive|endif
 end_endif
@@ -2509,10 +2509,11 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|printf("pktlen: %d; flags 0x%x\n", pktlen, flags); 	ath_rateseries_print(series);
+block|printf("pktlen: %d; flags 0x%x\n", pktlen, flags); 	ath_rateseries_print(sc, series);
 endif|#
 directive|endif
 comment|/* Set rate scenario */
+comment|/* 	 * Note: Don't allow hardware to override the duration on 	 * ps-poll packets. 	 */
 name|ath_hal_set11nratescenario
 argument_list|(
 name|ah
@@ -2523,7 +2524,6 @@ operator|!
 name|is_pspoll
 argument_list|,
 comment|/* whether to override the duration or not */
-comment|/* don't allow hardware to override the duration on ps-poll packets */
 name|ctsrate
 argument_list|,
 comment|/* rts/cts rate */
@@ -2537,6 +2537,7 @@ name|flags
 argument_list|)
 expr_stmt|;
 comment|/* Setup the last descriptor in the chain */
+comment|/* 	 * XXX Why is this done here, and not in the upper layer? 	 * The rate control code stores a copy of the RC info in 	 * the last descriptor as well as the first, then uses 	 * the shadow copy in the last descriptor to see what the RC 	 * decisions were.  I'm not sure why; perhaps earlier hardware 	 * overwrote the first descriptor contents. 	 * 	 * In the 802.11n case, it also clears the moreaggr/delim 	 * fields.  Again, this should be done by the caller of 	 * ath_buf_set_rate(). 	 */
 name|ath_hal_setuplasttxdesc
 argument_list|(
 name|ah
@@ -2553,7 +2554,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Form an aggregate packet list.  *  * This function enforces the aggregate restrictions/requirements.  *  * These are:  *  * + The aggregate size maximum (64k for AR9160 and later, 8K for  *   AR5416 when doing RTS frame protection.)  * + Maximum number of sub-frames for an aggregate  * + The aggregate delimiter size, giving MACs time to do whatever is  *   needed before each frame  * + Enforce the BAW limit  *  * Each descriptor queued should have the DMA setup.  * The rate series, descriptor setup, linking, etc is all done  * externally. This routine simply chains them together.  * ath_tx_setds_11n() will take care of configuring the per-  * descriptor setup, and ath_buf_set_rate() will configure the  * rate control.  *  * Note that the TID lock is only grabbed when dequeuing packets from  * the TID queue. If some code in another thread adds to the head of this  * list, very strange behaviour will occur. Since retransmission is the  * only reason this will occur, and this routine is designed to be called  * from within the scheduler task, it won't ever clash with the completion  * task.  *  * So if you want to call this from an upper layer context (eg, to direct-  * dispatch aggregate frames to the hardware), please keep this in mind.  */
+comment|/*  * Form an aggregate packet list.  *  * This function enforces the aggregate restrictions/requirements.  *  * These are:  *  * + The aggregate size maximum (64k for AR9160 and later, 8K for  *   AR5416 when doing RTS frame protection.)  * + Maximum number of sub-frames for an aggregate  * + The aggregate delimiter size, giving MACs time to do whatever is  *   needed before each frame  * + Enforce the BAW limit  *  * Each descriptor queued should have the DMA setup.  * The rate series, descriptor setup, linking, etc is all done  * externally. This routine simply chains them together.  * ath_tx_setds_11n() will take care of configuring the per-  * descriptor setup, and ath_buf_set_rate() will configure the  * rate control.  *  * The TID lock is required for the entirety of this function.  *  * If some code in another thread adds to the head of this  * list, very strange behaviour will occur. Since retransmission is the  * only reason this will occur, and this routine is designed to be called  * from within the scheduler task, it won't ever clash with the completion  * task.  *  * So if you want to call this from an upper layer context (eg, to direct-  * dispatch aggregate frames to the hardware), please keep this in mind.  */
 end_comment
 
 begin_function
