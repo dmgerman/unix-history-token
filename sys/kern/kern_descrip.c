@@ -10005,19 +10005,6 @@ name|file
 modifier|*
 name|fp_object
 decl_stmt|;
-name|fdp
-operator|=
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_fd
-expr_stmt|;
-name|FILEDESC_UNLOCK_ASSERT
-argument_list|(
-name|fdp
-argument_list|)
-expr_stmt|;
 comment|/* 	 * POSIX record locking dictates that any close releases ALL 	 * locks owned by this process.  This is handled by setting 	 * a flag in the unlock to free ONLY locks obeying POSIX 	 * semantics, and not to free BSD-style file locks. 	 * If the descriptor was in a message, POSIX-style locks 	 * aren't passed with the descriptor, and the thread pointer 	 * will be NULL.  Callers should be careful only to pass a 	 * NULL thread pointer when there really is no owning 	 * context that might have locks, or the locks will be 	 * leaked. 	 * 	 * If this is a capability, we do lock processing under the underlying 	 * node, not the capability itself. 	 */
 operator|(
 name|void
@@ -10145,6 +10132,14 @@ name|NULL
 condition|)
 block|{
 comment|/* 			 * Handle special case where file descriptor table is 			 * shared between multiple process leaders. 			 */
+name|fdp
+operator|=
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_fd
+expr_stmt|;
 name|FILEDESC_XLOCK
 argument_list|(
 name|fdp
