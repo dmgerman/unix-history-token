@@ -3403,6 +3403,9 @@ literal|"%s: sizeof(ath_buf) = %d bytes\n"
 argument_list|,
 name|__func__
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
