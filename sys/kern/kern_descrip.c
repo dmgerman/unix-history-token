@@ -3372,6 +3372,22 @@ name|vfslocked
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+block|{
+name|fdrop
+argument_list|(
+name|fp
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 comment|/* Check for race with close */
 name|FILEDESC_SLOCK
 argument_list|(
