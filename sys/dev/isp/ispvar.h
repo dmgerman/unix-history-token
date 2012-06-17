@@ -2459,12 +2459,39 @@ directive|ifndef
 name|ISP_DEFAULT_ROLES
 end_ifndef
 
+begin_comment
+comment|/*  * Counterintuitively, we prefer to default to role 'none'  * if we are enable target mode support. This gives us the  * maximum flexibility as to which port will do what.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISP_TARGET_MODE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ISP_DEFAULT_ROLES
+value|ISP_ROLE_NONE
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|ISP_DEFAULT_ROLES
 value|ISP_ROLE_INITIATOR
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
