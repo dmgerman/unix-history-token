@@ -2024,6 +2024,21 @@ define|\
 value|do { OS_REG_WRITE(_a, _r, (OS_REG_READ(_a, _r)&~ (_f)) | (((_v)<< _f##_S)& (_f))) ; OS_DELAY(100); } while (0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|OS_A_REG_WRITE
+parameter_list|(
+name|_a
+parameter_list|,
+name|_r
+parameter_list|,
+name|_v
+parameter_list|)
+define|\
+value|do { OS_REG_WRITE(_a, _r, _v); OS_DELAY(100); } while (0)
+end_define
+
 begin_comment
 comment|/* wait for the register contents to have the specified value */
 end_comment
