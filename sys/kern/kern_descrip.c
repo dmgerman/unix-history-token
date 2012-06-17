@@ -3388,7 +3388,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* Check for race with close */
+comment|/* 		 * Check for a race with close. 		 * 		 * The vnode is now advisory locked (or unlocked, but this case 		 * is not really important) as the caller requested. 		 * We had to drop the filedesc lock, so we need to recheck if 		 * the descriptor is still valid, because if it was closed 		 * in the meantime we need to remove advisory lock from the 		 * vnode - close on any descriptor leading to an advisory 		 * locked vnode, removes that lock. 		 * We will return 0 on purpose in that case, as the result of 		 * successful advisory lock might have been externally visible 		 * already. This is fine - effectively we pretend to the caller 		 * that the closing thread was a bit slower and that the 		 * advisory lock succeeded before the close. 		 */
 name|FILEDESC_SLOCK
 argument_list|(
 name|fdp
