@@ -1775,6 +1775,13 @@ block|{
 name|uint32_t
 name|val
 decl_stmt|;
+comment|/* 	 * This workaround needs some integration work with the HAL 	 * config parameters and the if_ath_pci.c glue. 	 * Specifically, read the value of the PCI register 0x70c 	 * (4 byte PCI config space register) and store it in ath_hal_war70c. 	 * Then if it's non-zero, the below WAR would override register 	 * 0x570c upon suspend/resume. 	 */
+if|#
+directive|if
+literal|0
+block|if (AR_SREV_9285E_20(ah)) { 		val = AH_PRIVATE(ah)->ah_config.ath_hal_war70c; 		if (val) { 			val&= 0xffff00ff; 			val |= 0x6f00; 			OS_REG_WRITE(ah, 0x570c, val); 		} 	}
+endif|#
+directive|endif
 if|if
 condition|(
 name|AH_PRIVATE
