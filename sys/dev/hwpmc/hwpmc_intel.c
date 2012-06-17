@@ -487,10 +487,6 @@ case|case
 literal|0x2A
 case|:
 comment|/* Per Intel document 253669-039US 05/2011. */
-case|case
-literal|0x2D
-case|:
-comment|/* Per Intel document 253669-041US 12/2011. */
 name|cputype
 operator|=
 name|PMC_CPU_INTEL_SANDYBRIDGE
