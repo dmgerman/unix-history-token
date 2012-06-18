@@ -68,6 +68,10 @@ name|size_t
 name|size
 parameter_list|)
 block|{
+name|size
+operator|>>=
+literal|1
+expr_stmt|;
 while|while
 condition|(
 name|size
