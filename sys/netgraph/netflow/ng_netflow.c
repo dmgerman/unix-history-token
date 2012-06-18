@@ -2302,7 +2302,7 @@ name|bypass
 init|=
 literal|0
 decl_stmt|,
-name|is_frag
+name|flags
 init|=
 literal|0
 decl_stmt|,
@@ -2644,6 +2644,17 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* Import configuration flags related to flow creation */
+name|flags
+operator|=
+name|iface
+operator|->
+name|info
+operator|.
+name|conf
+operator|&
+name|NG_NETFLOW_FLOW_FLAGS
+expr_stmt|;
 name|NGI_GET_M
 argument_list|(
 name|item
@@ -3176,9 +3187,9 @@ name|NULL
 condition|)
 block|{
 comment|/* Nothing to save except upper layer proto, since this is packet fragment */
-name|is_frag
-operator|=
-literal|1
+name|flags
+operator||=
+name|NG_NETFLOW_IS_FRAG
 expr_stmt|;
 name|upper_proto
 operator|=
@@ -3495,9 +3506,9 @@ name|off
 operator|+=
 name|hdr_off
 expr_stmt|;
-name|is_frag
-operator|=
-literal|1
+name|flags
+operator||=
+name|NG_NETFLOW_IS_FRAG
 expr_stmt|;
 goto|goto
 name|loopend
@@ -3774,7 +3785,7 @@ name|upper_ptr
 argument_list|,
 name|upper_proto
 argument_list|,
-name|is_frag
+name|flags
 argument_list|,
 name|src_if_index
 argument_list|)
@@ -3803,7 +3814,7 @@ name|upper_ptr
 argument_list|,
 name|upper_proto
 argument_list|,
-name|is_frag
+name|flags
 argument_list|,
 name|src_if_index
 argument_list|)
