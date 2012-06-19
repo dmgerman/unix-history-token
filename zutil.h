@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* zutil.h -- internal interface and configuration of the compression library  * Copyright (C) 1995-2011 Jean-loup Gailly.  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* zutil.h -- internal interface and configuration of the compression library  * Copyright (C) 1995-2012 Jean-loup Gailly.  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_comment
@@ -23,31 +23,11 @@ directive|define
 name|ZUTIL_H
 end_define
 
-begin_if
-if|#
-directive|if
-operator|(
-operator|(
-name|__GNUC__
-operator|-
-literal|0
-operator|)
-operator|*
-literal|10
-operator|+
-name|__GNUC_MINOR__
-operator|-
-literal|0
-operator|>=
-literal|33
-operator|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|NO_VIZ
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_HIDDEN
+end_ifdef
 
 begin_define
 define|#
@@ -1642,6 +1622,20 @@ parameter_list|,
 name|p
 parameter_list|)
 value|{if (p) ZFREE(s, p);}
+end_define
+
+begin_comment
+comment|/* Reverse the bytes in a 32-bit value */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ZSWAP32
+parameter_list|(
+name|q
+parameter_list|)
+value|((((q)>> 24)& 0xff) + (((q)>> 8)& 0xff00) + \                     (((q)& 0xff00)<< 8) + (((q)& 0xff)<< 24))
 end_define
 
 begin_endif

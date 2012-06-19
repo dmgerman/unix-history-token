@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* zconf.h -- configuration of the zlib compression library  * Copyright (C) 1995-2011 Jean-loup Gailly.  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* zconf.h -- configuration of the zlib compression library  * Copyright (C) 1995-2012 Jean-loup Gailly.  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_comment
@@ -371,13 +371,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|gzflags
-value|z_gzflags
-end_define
-
-begin_define
-define|#
-directive|define
 name|gzflush
 value|z_gzflush
 end_define
@@ -430,6 +423,24 @@ directive|define
 name|gzopen64
 value|z_gzopen64
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_WIN32
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|gzopen_w
+value|z_gzopen_w
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -783,6 +794,11 @@ name|gzFile
 value|z_gzFile
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -796,11 +812,6 @@ directive|define
 name|gz_headerp
 value|z_gz_headerp
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -876,23 +887,12 @@ begin_comment
 comment|/* all zlib structs in zlib.h and zconf.h */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|Z_SOLO
-end_ifndef
-
 begin_define
 define|#
 directive|define
 name|gz_header_s
 value|z_gz_header_s
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -2311,14 +2311,157 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* ./configure may #define Z_U4 here */
+end_comment
+
 begin_if
 if|#
 directive|if
-literal|1
+operator|!
+name|defined
+argument_list|(
+name|Z_U4
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|Z_SOLO
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|STDC
+argument_list|)
 end_if
 
+begin_include
+include|#
+directive|include
+file|<limits.h>
+end_include
+
+begin_if
+if|#
+directive|if
+operator|(
+name|UINT_MAX
+operator|==
+literal|0xffffffffUL
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|Z_U4
+value|unsigned
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_if
+if|#
+directive|if
+operator|(
+name|ULONG_MAX
+operator|==
+literal|0xffffffffUL
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|Z_U4
+value|unsigned long
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_if
+if|#
+directive|if
+operator|(
+name|USHRT_MAX
+operator|==
+literal|0xffffffffUL
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|Z_U4
+value|unsigned short
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|Z_U4
+end_ifdef
+
+begin_typedef
+typedef|typedef
+name|Z_U4
+name|z_crc_t
+typedef|;
+end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
+name|z_crc_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_UNISTD_H
+end_ifdef
+
 begin_comment
-comment|/* was set to #if 1 by ./configure */
+comment|/* may be set to #if 1 by ./configure */
 end_comment
 
 begin_define
@@ -2332,14 +2475,14 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-literal|1
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STDARG_H
+end_ifdef
 
 begin_comment
-comment|/* was set to #if 1 by ./configure */
+comment|/* may be set to #if 1 by ./configure */
 end_comment
 
 begin_define
@@ -2385,6 +2528,27 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_WIN32
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
+
+begin_comment
+comment|/* for wchar_t */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* a little trick to accommodate both "#define _LARGEFILE64_SOURCE" and  * "#define _LARGEFILE64_SOURCE 1" as requesting 64-bit operations, (even  * though the former does not conform to the LFS document), but considering  * both "#undef _LARGEFILE64_SOURCE" and "#define _LARGEFILE64_SOURCE 0" as  * equivalently requesting no 64-bit operations  */
 end_comment
@@ -2392,6 +2556,11 @@ end_comment
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
+name|LARGEFILE64_SOURCE
+argument_list|)
+operator|&&
 operator|-
 name|_LARGEFILE64_SOURCE
 operator|-
@@ -2417,18 +2586,20 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|_LARGEFILE64_SOURCE
+name|__WATCOMC__
 argument_list|)
 operator|&&
-name|_LFS64_LARGEFILE
-operator|-
-literal|0
+operator|!
+name|defined
+argument_list|(
+name|Z_HAVE_UNISTD_H
+argument_list|)
 end_if
 
 begin_define
 define|#
 directive|define
-name|Z_LARGE
+name|Z_HAVE_UNISTD_H
 end_define
 
 begin_endif
@@ -2436,10 +2607,15 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|Z_SOLO
+end_ifndef
+
 begin_if
 if|#
 directive|if
-operator|(
 name|defined
 argument_list|(
 name|Z_HAVE_UNISTD_H
@@ -2447,14 +2623,7 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|Z_LARGE
-argument_list|)
-operator|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|Z_SOLO
+name|LARGEFILE64_SOURCE
 argument_list|)
 end_if
 
@@ -2465,7 +2634,7 @@ file|<unistd.h>
 end_include
 
 begin_comment
-comment|/* for SEEK_* and off_t */
+comment|/* for SEEK_*, off_t, and _LFS64_LARGEFILE */
 end_comment
 
 begin_ifdef
@@ -2506,6 +2675,91 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_LFS64_LARGEFILE
+argument_list|)
+operator|&&
+name|_LFS64_LARGEFILE
+operator|-
+literal|0
+end_if
+
+begin_define
+define|#
+directive|define
+name|Z_LFS64
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_LARGEFILE64_SOURCE
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|Z_LFS64
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|Z_LARGE64
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_FILE_OFFSET_BITS
+argument_list|)
+operator|&&
+name|_FILE_OFFSET_BITS
+operator|-
+literal|0
+operator|==
+literal|64
+operator|&&
+name|defined
+argument_list|(
+name|Z_LFS64
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|Z_WANT64
+end_define
 
 begin_endif
 endif|#
@@ -2593,16 +2847,10 @@ argument_list|(
 name|_WIN32
 argument_list|)
 operator|&&
-operator|(
 name|defined
 argument_list|(
-name|_LARGEFILE64_SOURCE
+name|Z_LARGE64
 argument_list|)
-operator|&&
-name|_LFS64_LARGEFILE
-operator|-
-literal|0
-operator|)
 end_if
 
 begin_define
@@ -2623,6 +2871,18 @@ directive|if
 name|defined
 argument_list|(
 name|_WIN32
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|Z_SOLO
 argument_list|)
 end_if
 

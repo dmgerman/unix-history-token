@@ -49,31 +49,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-operator|(
-operator|(
-name|__GNUC__
-operator|-
-literal|0
-operator|)
-operator|*
-literal|10
-operator|+
-name|__GNUC_MINOR__
-operator|-
-literal|0
-operator|>=
-literal|33
-operator|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|NO_VIZ
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_HIDDEN
+end_ifdef
 
 begin_define
 define|#
@@ -148,8 +128,38 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__TURBOC__
+name|_WIN32
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__TURBOC__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -389,12 +399,6 @@ literal|1500
 operator|)
 end_if
 
-begin_include
-include|#
-directive|include
-file|<io.h>
-end_include
-
 begin_define
 define|#
 directive|define
@@ -585,11 +589,11 @@ else|#
 directive|else
 end_else
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|STDC
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_STRERROR
+end_ifndef
 
 begin_include
 include|#

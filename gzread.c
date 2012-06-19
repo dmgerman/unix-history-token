@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* gzread.c -- zlib functions for reading gzip files  * Copyright (C) 2004, 2005, 2010, 2011 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* gzread.c -- zlib functions for reading gzip files  * Copyright (C) 2004, 2005, 2010, 2011, 2012 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_include
@@ -286,21 +286,49 @@ name|strm
 operator|->
 name|avail_in
 condition|)
-name|memmove
-argument_list|(
+block|{
+comment|/* copy what's there to the start */
+name|unsigned
+name|char
+modifier|*
+name|p
+init|=
 name|state
 operator|->
 name|in
-argument_list|,
+decl_stmt|,
+modifier|*
+name|q
+init|=
 name|strm
 operator|->
 name|next_in
-argument_list|,
+decl_stmt|;
+name|unsigned
+name|n
+init|=
 name|strm
 operator|->
 name|avail_in
-argument_list|)
+decl_stmt|;
+do|do
+block|{
+operator|*
+name|p
+operator|++
+operator|=
+operator|*
+name|q
+operator|++
 expr_stmt|;
+block|}
+do|while
+condition|(
+operator|--
+name|n
+condition|)
+do|;
+block|}
 if|if
 condition|(
 name|gz_load
@@ -1605,7 +1633,7 @@ operator|-
 literal|1
 return|;
 continue|continue;
-comment|/* no progress yet -- go back to memcpy() above */
+comment|/* no progress yet -- go back to copy above */
 comment|/* the copy above assures that we will leave with space in the                output buffer, allowing at least one gzungetc() to succeed */
 block|}
 comment|/* large len -- read directly into user buffer */
@@ -1736,10 +1764,16 @@ begin_comment
 comment|/* -- see zlib.h -- */
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|gzgetc
+end_undef
+
 begin_function
 name|int
 name|ZEXPORT
-name|gzgetc_
+name|gzgetc
 parameter_list|(
 name|file
 parameter_list|)
@@ -1869,16 +1903,10 @@ return|;
 block|}
 end_function
 
-begin_undef
-undef|#
-directive|undef
-name|gzgetc
-end_undef
-
 begin_function
 name|int
 name|ZEXPORT
-name|gzgetc
+name|gzgetc_
 parameter_list|(
 name|file
 parameter_list|)
@@ -1887,7 +1915,7 @@ name|file
 decl_stmt|;
 block|{
 return|return
-name|gzgetc_
+name|gzgetc
 argument_list|(
 name|file
 argument_list|)

@@ -23,7 +23,7 @@ name|char
 name|deflate_copyright
 index|[]
 init|=
-literal|" deflate 1.2.6 Copyright 1995-2012 Jean-loup Gailly and Mark Adler "
+literal|" deflate 1.2.7 Copyright 1995-2012 Jean-loup Gailly and Mark Adler "
 decl_stmt|;
 end_decl_stmt
 

@@ -953,7 +953,8 @@ name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|gzFile
+expr|struct
+name|gzFile_s
 argument_list|)
 argument_list|)
 expr_stmt|;

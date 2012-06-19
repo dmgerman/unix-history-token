@@ -6,7 +6,7 @@ end_comment
 begin_decl_stmt
 name|local
 specifier|const
-name|crc_table_t
+name|z_crc_t
 name|FAR
 name|crc_table
 index|[

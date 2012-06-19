@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* zlib.h -- interface of the 'zlib' general purpose compression library   version 1.2.6, January 29th, 2012    Copyright (C) 1995-2012 Jean-loup Gailly and Mark Adler    This software is provided 'as-is', without any express or implied   warranty.  In no event will the authors be held liable for any damages   arising from the use of this software.    Permission is granted to anyone to use this software for any purpose,   including commercial applications, and to alter it and redistribute it   freely, subject to the following restrictions:    1. The origin of this software must not be misrepresented; you must not      claim that you wrote the original software. If you use this software      in a product, an acknowledgment in the product documentation would be      appreciated but is not required.   2. Altered source versions must be plainly marked as such, and must not be      misrepresented as being the original software.   3. This notice may not be removed or altered from any source distribution.    Jean-loup Gailly        Mark Adler   jloup@gzip.org          madler@alumni.caltech.edu     The data format used by the zlib library is described by RFCs (Request for   Comments) 1950 to 1952 in the files http://tools.ietf.org/html/rfc1950   (zlib format), rfc1951 (deflate format) and rfc1952 (gzip format). */
+comment|/* zlib.h -- interface of the 'zlib' general purpose compression library   version 1.2.7, May 2nd, 2012    Copyright (C) 1995-2012 Jean-loup Gailly and Mark Adler    This software is provided 'as-is', without any express or implied   warranty.  In no event will the authors be held liable for any damages   arising from the use of this software.    Permission is granted to anyone to use this software for any purpose,   including commercial applications, and to alter it and redistribute it   freely, subject to the following restrictions:    1. The origin of this software must not be misrepresented; you must not      claim that you wrote the original software. If you use this software      in a product, an acknowledgment in the product documentation would be      appreciated but is not required.   2. Altered source versions must be plainly marked as such, and must not be      misrepresented as being the original software.   3. This notice may not be removed or altered from any source distribution.    Jean-loup Gailly        Mark Adler   jloup@gzip.org          madler@alumni.caltech.edu     The data format used by the zlib library is described by RFCs (Request for   Comments) 1950 to 1952 in the files http://tools.ietf.org/html/rfc1950   (zlib format), rfc1951 (deflate format) and rfc1952 (gzip format). */
 end_comment
 
 begin_ifndef
@@ -36,11 +36,11 @@ directive|endif
 define|#
 directive|define
 name|ZLIB_VERSION
-value|"1.2.6"
+value|"1.2.7"
 define|#
 directive|define
 name|ZLIB_VERNUM
-value|0x1260
+value|0x1270
 define|#
 directive|define
 name|ZLIB_VER_MAJOR
@@ -52,7 +52,7 @@ value|2
 define|#
 directive|define
 name|ZLIB_VER_REVISION
-value|6
+value|7
 define|#
 directive|define
 name|ZLIB_VER_SUBREVISION
@@ -442,7 +442,7 @@ name|flush
 operator|)
 argument_list|)
 decl_stmt|;
-comment|/*     inflate decompresses as much data as possible, and stops when the input   buffer becomes empty or the output buffer becomes full.  It may introduce   some output latency (reading input without producing any output) except when   forced to flush.    The detailed semantics are as follows.  inflate performs one or both of the   following actions:    - Decompress more input starting at next_in and update next_in and avail_in     accordingly.  If not all input can be processed (because there is not     enough room in the output buffer), next_in is updated and processing will     resume at this point for the next call of inflate().    - Provide more output starting at next_out and update next_out and avail_out     accordingly.  inflate() provides as much output as possible, until there is     no more input data or no more space in the output buffer (see below about     the flush parameter).      Before the call of inflate(), the application should ensure that at least   one of the actions is possible, by providing more input and/or consuming more   output, and updating the next_* and avail_* values accordingly.  The   application can consume the uncompressed output when it wants, for example   when the output buffer is full (avail_out == 0), or after each call of   inflate().  If inflate returns Z_OK and with zero avail_out, it must be   called again after making room in the output buffer because there might be   more output pending.      The flush parameter of inflate() can be Z_NO_FLUSH, Z_SYNC_FLUSH, Z_FINISH,   Z_BLOCK, or Z_TREES.  Z_SYNC_FLUSH requests that inflate() flush as much   output as possible to the output buffer.  Z_BLOCK requests that inflate()   stop if and when it gets to the next deflate block boundary.  When decoding   the zlib or gzip format, this will cause inflate() to return immediately   after the header and before the first block.  When doing a raw inflate,   inflate() will go ahead and process the first block, and will return when it   gets to the end of that block, or when it runs out of data.      The Z_BLOCK option assists in appending to or combining deflate streams.   Also to assist in this, on return inflate() will set strm->data_type to the   number of unused bits in the last byte taken from strm->next_in, plus 64 if   inflate() is currently decoding the last block in the deflate stream, plus   128 if inflate() returned immediately after decoding an end-of-block code or   decoding the complete header up to just before the first byte of the deflate   stream.  The end-of-block will not be indicated until all of the uncompressed   data from that block has been written to strm->next_out.  The number of   unused bits may in general be greater than seven, except when bit 7 of   data_type is set, in which case the number of unused bits will be less than   eight.  data_type is set as noted here every time inflate() returns for all   flush options, and so can be used to determine the amount of currently   consumed input in bits.      The Z_TREES option behaves as Z_BLOCK does, but it also returns when the   end of each deflate block header is reached, before any actual data in that   block is decoded.  This allows the caller to determine the length of the   deflate block header for later use in random access within a deflate block.   256 is added to the value of strm->data_type when inflate() returns   immediately after reaching the end of the deflate block header.      inflate() should normally be called until it returns Z_STREAM_END or an   error.  However if all decompression is to be performed in a single step (a   single call of inflate), the parameter flush should be set to Z_FINISH.  In   this case all pending input is processed and all pending output is flushed;   avail_out must be large enough to hold all the uncompressed data.  (The size   of the uncompressed data may have been saved by the compressor for this   purpose.) The next operation on this stream must be inflateEnd to deallocate   the decompression state.  The use of Z_FINISH is not required to perform an   inflation in one step.  However it may be used to inform inflate that a   faster approach can be used for the single inflate() call.  Z_FINISH also   informs inflate to not maintain a sliding window if the stream completes,   which reduces inflate's memory footprint.       In this implementation, inflate() always flushes as much output as   possible to the output buffer, and always uses the faster approach on the   first call.  So the effects of the flush parameter in this implementation are   on the return value of inflate() as noted below, when inflate() returns early   when Z_BLOCK or Z_TREES is used, and when inflate() avoids the allocation of   memory for a sliding window when Z_FINISH is used.       If a preset dictionary is needed after this call (see inflateSetDictionary   below), inflate sets strm->adler to the Adler-32 checksum of the dictionary   chosen by the compressor and returns Z_NEED_DICT; otherwise it sets   strm->adler to the Adler-32 checksum of all output produced so far (that is,   total_out bytes) and returns Z_OK, Z_STREAM_END or an error code as described   below.  At the end of the stream, inflate() checks that its computed adler32   checksum is equal to that saved by the compressor and returns Z_STREAM_END   only if the checksum is correct.      inflate() can decompress and check either zlib-wrapped or gzip-wrapped   deflate data.  The header type is detected automatically, if requested when   initializing with inflateInit2().  Any information contained in the gzip   header is not retained, so applications that need that information should   instead use raw inflate, see inflateInit2() below, or inflateBack() and   perform their own processing of the gzip header and trailer.  When processing   gzip-wrapped deflate data, strm->adler32 is set to the CRC-32 of the output   producted so far.  The CRC-32 is checked against the gzip trailer.      inflate() returns Z_OK if some progress has been made (more input processed   or more output produced), Z_STREAM_END if the end of the compressed data has   been reached and all uncompressed output has been produced, Z_NEED_DICT if a   preset dictionary is needed at this point, Z_DATA_ERROR if the input data was   corrupted (input stream not conforming to the zlib format or incorrect check   value), Z_STREAM_ERROR if the stream structure was inconsistent (for example   next_in or next_out was Z_NULL), Z_MEM_ERROR if there was not enough memory,   Z_BUF_ERROR if no progress is possible or if there was not enough room in the   output buffer when Z_FINISH is used.  Note that Z_BUF_ERROR is not fatal, and   inflate() can be called again with more input and more output space to   continue decompressing.  If Z_DATA_ERROR is returned, the application may   then call inflateSync() to look for a good compression block if a partial   recovery of the data is desired. */
+comment|/*     inflate decompresses as much data as possible, and stops when the input   buffer becomes empty or the output buffer becomes full.  It may introduce   some output latency (reading input without producing any output) except when   forced to flush.    The detailed semantics are as follows.  inflate performs one or both of the   following actions:    - Decompress more input starting at next_in and update next_in and avail_in     accordingly.  If not all input can be processed (because there is not     enough room in the output buffer), next_in is updated and processing will     resume at this point for the next call of inflate().    - Provide more output starting at next_out and update next_out and avail_out     accordingly.  inflate() provides as much output as possible, until there is     no more input data or no more space in the output buffer (see below about     the flush parameter).      Before the call of inflate(), the application should ensure that at least   one of the actions is possible, by providing more input and/or consuming more   output, and updating the next_* and avail_* values accordingly.  The   application can consume the uncompressed output when it wants, for example   when the output buffer is full (avail_out == 0), or after each call of   inflate().  If inflate returns Z_OK and with zero avail_out, it must be   called again after making room in the output buffer because there might be   more output pending.      The flush parameter of inflate() can be Z_NO_FLUSH, Z_SYNC_FLUSH, Z_FINISH,   Z_BLOCK, or Z_TREES.  Z_SYNC_FLUSH requests that inflate() flush as much   output as possible to the output buffer.  Z_BLOCK requests that inflate()   stop if and when it gets to the next deflate block boundary.  When decoding   the zlib or gzip format, this will cause inflate() to return immediately   after the header and before the first block.  When doing a raw inflate,   inflate() will go ahead and process the first block, and will return when it   gets to the end of that block, or when it runs out of data.      The Z_BLOCK option assists in appending to or combining deflate streams.   Also to assist in this, on return inflate() will set strm->data_type to the   number of unused bits in the last byte taken from strm->next_in, plus 64 if   inflate() is currently decoding the last block in the deflate stream, plus   128 if inflate() returned immediately after decoding an end-of-block code or   decoding the complete header up to just before the first byte of the deflate   stream.  The end-of-block will not be indicated until all of the uncompressed   data from that block has been written to strm->next_out.  The number of   unused bits may in general be greater than seven, except when bit 7 of   data_type is set, in which case the number of unused bits will be less than   eight.  data_type is set as noted here every time inflate() returns for all   flush options, and so can be used to determine the amount of currently   consumed input in bits.      The Z_TREES option behaves as Z_BLOCK does, but it also returns when the   end of each deflate block header is reached, before any actual data in that   block is decoded.  This allows the caller to determine the length of the   deflate block header for later use in random access within a deflate block.   256 is added to the value of strm->data_type when inflate() returns   immediately after reaching the end of the deflate block header.      inflate() should normally be called until it returns Z_STREAM_END or an   error.  However if all decompression is to be performed in a single step (a   single call of inflate), the parameter flush should be set to Z_FINISH.  In   this case all pending input is processed and all pending output is flushed;   avail_out must be large enough to hold all of the uncompressed data for the   operation to complete.  (The size of the uncompressed data may have been   saved by the compressor for this purpose.) The use of Z_FINISH is not   required to perform an inflation in one step.  However it may be used to   inform inflate that a faster approach can be used for the single inflate()   call.  Z_FINISH also informs inflate to not maintain a sliding window if the   stream completes, which reduces inflate's memory footprint.  If the stream   does not complete, either because not all of the stream is provided or not   enough output space is provided, then a sliding window will be allocated and   inflate() can be called again to continue the operation as if Z_NO_FLUSH had   been used.       In this implementation, inflate() always flushes as much output as   possible to the output buffer, and always uses the faster approach on the   first call.  So the effects of the flush parameter in this implementation are   on the return value of inflate() as noted below, when inflate() returns early   when Z_BLOCK or Z_TREES is used, and when inflate() avoids the allocation of   memory for a sliding window when Z_FINISH is used.       If a preset dictionary is needed after this call (see inflateSetDictionary   below), inflate sets strm->adler to the Adler-32 checksum of the dictionary   chosen by the compressor and returns Z_NEED_DICT; otherwise it sets   strm->adler to the Adler-32 checksum of all output produced so far (that is,   total_out bytes) and returns Z_OK, Z_STREAM_END or an error code as described   below.  At the end of the stream, inflate() checks that its computed adler32   checksum is equal to that saved by the compressor and returns Z_STREAM_END   only if the checksum is correct.      inflate() can decompress and check either zlib-wrapped or gzip-wrapped   deflate data.  The header type is detected automatically, if requested when   initializing with inflateInit2().  Any information contained in the gzip   header is not retained, so applications that need that information should   instead use raw inflate, see inflateInit2() below, or inflateBack() and   perform their own processing of the gzip header and trailer.  When processing   gzip-wrapped deflate data, strm->adler32 is set to the CRC-32 of the output   producted so far.  The CRC-32 is checked against the gzip trailer.      inflate() returns Z_OK if some progress has been made (more input processed   or more output produced), Z_STREAM_END if the end of the compressed data has   been reached and all uncompressed output has been produced, Z_NEED_DICT if a   preset dictionary is needed at this point, Z_DATA_ERROR if the input data was   corrupted (input stream not conforming to the zlib format or incorrect check   value), Z_STREAM_ERROR if the stream structure was inconsistent (for example   next_in or next_out was Z_NULL), Z_MEM_ERROR if there was not enough memory,   Z_BUF_ERROR if no progress is possible or if there was not enough room in the   output buffer when Z_FINISH is used.  Note that Z_BUF_ERROR is not fatal, and   inflate() can be called again with more input and more output space to   continue decompressing.  If Z_DATA_ERROR is returned, the application may   then call inflateSync() to look for a good compression block if a partial   recovery of the data is desired. */
 name|ZEXTERN
 name|int
 name|ZEXPORT
@@ -958,7 +958,7 @@ modifier|*
 name|gzFile
 typedef|;
 comment|/* semi-opaque gzip file descriptor */
-comment|/* ZEXTERN gzFile ZEXPORT gzopen OF((const char *path, const char *mode));       Opens a gzip (.gz) file for reading or writing.  The mode parameter is as    in fopen ("rb" or "wb") but can also include a compression level ("wb9") or    a strategy: 'f' for filtered data as in "wb6f", 'h' for Huffman-only    compression as in "wb1h", 'R' for run-length encoding as in "wb1R", or 'F'    for fixed code compression as in "wb9F".  (See the description of    deflateInit2 for more information about the strategy parameter.)  'T' will    request transparent writing or appending with no compression and not using    the gzip format.       "a" can be used instead of "w" to request that the gzip stream that will    be written be appended to the file.  "+" will result in an error, since    reading and writing to the same gzip file is not supported.       These functions, as well as gzip, will read and decode a sequence of gzip    streams in a file.  The append function of gzopen() can be used to create    such a file.  (Also see gzflush() for another way to do this.)  When    appending, gzopen does not test whether the file begins with a gzip stream,    nor does it look for the end of the gzip streams to begin appending.  gzopen    will simply append a gzip stream to the existing file.       gzopen can be used to read a file which is not in gzip format; in this    case gzread will directly read from the file without decompression.  When    reading, this will be detected automatically by looking for the magic two-    byte gzip header.       gzopen returns NULL if the file could not be opened, if there was    insufficient memory to allocate the gzFile state, or if an invalid mode was    specified (an 'r', 'w', or 'a' was not provided, or '+' was provided).    errno can be checked to determine if the reason gzopen failed was that the    file could not be opened. */
+comment|/* ZEXTERN gzFile ZEXPORT gzopen OF((const char *path, const char *mode));       Opens a gzip (.gz) file for reading or writing.  The mode parameter is as    in fopen ("rb" or "wb") but can also include a compression level ("wb9") or    a strategy: 'f' for filtered data as in "wb6f", 'h' for Huffman-only    compression as in "wb1h", 'R' for run-length encoding as in "wb1R", or 'F'    for fixed code compression as in "wb9F".  (See the description of    deflateInit2 for more information about the strategy parameter.)  'T' will    request transparent writing or appending with no compression and not using    the gzip format.       "a" can be used instead of "w" to request that the gzip stream that will    be written be appended to the file.  "+" will result in an error, since    reading and writing to the same gzip file is not supported.  The addition of    "x" when writing will create the file exclusively, which fails if the file    already exists.  On systems that support it, the addition of "e" when    reading or writing will set the flag to close the file on an execve() call.       These functions, as well as gzip, will read and decode a sequence of gzip    streams in a file.  The append function of gzopen() can be used to create    such a file.  (Also see gzflush() for another way to do this.)  When    appending, gzopen does not test whether the file begins with a gzip stream,    nor does it look for the end of the gzip streams to begin appending.  gzopen    will simply append a gzip stream to the existing file.       gzopen can be used to read a file which is not in gzip format; in this    case gzread will directly read from the file without decompression.  When    reading, this will be detected automatically by looking for the magic two-    byte gzip header.       gzopen returns NULL if the file could not be opened, if there was    insufficient memory to allocate the gzFile state, or if an invalid mode was    specified (an 'r', 'w', or 'a' was not provided, or '+' was provided).    errno can be checked to determine if the reason gzopen failed was that the    file could not be opened. */
 name|ZEXTERN
 name|gzFile
 name|ZEXPORT
@@ -1329,7 +1329,7 @@ name|len
 operator|)
 argument_list|)
 decl_stmt|;
-comment|/*      Update a running CRC-32 with the bytes buf[0..len-1] and return the    updated CRC-32.  If buf is Z_NULL, this function returns the required    initial value for the for the crc.  Pre- and post-conditioning (one's    complement) is performed within this function so it shouldn't be done by the    application.     Usage example:       uLong crc = crc32(0L, Z_NULL, 0);       while (read_buffer(buffer, length) != EOF) {        crc = crc32(crc, buffer, length);      }      if (crc != original_crc) error(); */
+comment|/*      Update a running CRC-32 with the bytes buf[0..len-1] and return the    updated CRC-32.  If buf is Z_NULL, this function returns the required    initial value for the crc.  Pre- and post-conditioning (one's complement) is    performed within this function so it shouldn't be done by the application.     Usage example:       uLong crc = crc32(0L, Z_NULL, 0);       while (read_buffer(buffer, length) != EOF) {        crc = crc32(crc, buffer, length);      }      if (crc != original_crc) error(); */
 comment|/* ZEXTERN uLong ZEXPORT crc32_combine OF((uLong crc1, uLong crc2, z_off_t len2));       Combine two CRC-32 check values into one.  For two sequences of bytes,    seq1 and seq2 with lengths len1 and len2, CRC-32 check values were    calculated for each, crc1 and crc2.  crc32_combine() returns the CRC-32    check value of seq1 and seq2 concatenated, requiring only crc1, crc2, and    len2. */
 comment|/* various hacks, don't look :) */
 comment|/* deflateInit and inflateInit are macros to allow checking the zlib version  * and the compiler's view of z_stream:  */
@@ -1553,6 +1553,23 @@ name|file
 operator|)
 argument_list|)
 decl_stmt|;
+comment|/* backward compatibility */
+ifdef|#
+directive|ifdef
+name|Z_PREFIX_SET
+undef|#
+directive|undef
+name|z_gzgetc
+define|#
+directive|define
+name|z_gzgetc
+parameter_list|(
+name|g
+parameter_list|)
+define|\
+value|((g)->have ? ((g)->have--, (g)->pos++, *((g)->next)++) : gzgetc(g))
+else|#
+directive|else
 define|#
 directive|define
 name|gzgetc
@@ -1560,18 +1577,13 @@ parameter_list|(
 name|g
 parameter_list|)
 define|\
-value|((g)->have ? ((g)->have--, (g)->pos++, *((g)->next)++) : gzgetc_(g))
+value|((g)->have ? ((g)->have--, (g)->pos++, *((g)->next)++) : gzgetc(g))
+endif|#
+directive|endif
 comment|/* provide 64-bit offset functions if _LARGEFILE64_SOURCE defined, and/or  * change the regular functions to 64 bits if _FILE_OFFSET_BITS is 64 (if  * both are true, the application gets the *64 functions, and the regular  * functions are changed to 64 bits) -- in case these are set on systems  * without large file support, _LFS64_LARGEFILE must also be true  */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_LARGEFILE64_SOURCE
-argument_list|)
-operator|&&
-name|_LFS64_LARGEFILE
-operator|-
-literal|0
+ifdef|#
+directive|ifdef
+name|Z_LARGE64
 name|ZEXTERN
 name|gzFile
 name|ZEXPORT
@@ -1666,15 +1678,10 @@ argument_list|(
 name|ZLIB_INTERNAL
 argument_list|)
 operator|&&
-name|_FILE_OFFSET_BITS
-operator|-
-literal|0
-operator|==
-literal|64
-operator|&&
-name|_LFS64_LARGEFILE
-operator|-
-literal|0
+name|defined
+argument_list|(
+name|Z_WANT64
+argument_list|)
 ifdef|#
 directive|ifdef
 name|Z_PREFIX_SET
@@ -1732,7 +1739,7 @@ endif|#
 directive|endif
 ifndef|#
 directive|ifndef
-name|_LARGEFILE64_SOURCE
+name|Z_LARGE64
 name|ZEXTERN
 name|gzFile
 name|ZEXPORT
@@ -1994,7 +2001,8 @@ argument_list|)
 decl_stmt|;
 name|ZEXTERN
 specifier|const
-name|uLongf
+name|z_crc_t
+name|FAR
 modifier|*
 name|ZEXPORT
 name|get_crc_table
@@ -2040,18 +2048,34 @@ name|z_streamp
 operator|)
 argument_list|)
 decl_stmt|;
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
 name|Z_SOLO
+argument_list|)
 name|ZEXTERN
-name|unsigned
-name|long
+name|gzFile
 name|ZEXPORT
-name|gzflags
+name|gzopen_w
 name|OF
 argument_list|(
 operator|(
-name|void
+specifier|const
+name|wchar_t
+operator|*
+name|path
+operator|,
+specifier|const
+name|char
+operator|*
+name|mode
 operator|)
 argument_list|)
 decl_stmt|;
