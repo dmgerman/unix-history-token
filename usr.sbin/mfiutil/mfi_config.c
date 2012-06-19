@@ -627,11 +627,13 @@ name|clear_config
 parameter_list|(
 name|int
 name|ac
+name|__unused
 parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|av
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -1816,6 +1818,7 @@ name|build_array
 parameter_list|(
 name|int
 name|fd
+name|__unused
 parameter_list|,
 name|char
 modifier|*

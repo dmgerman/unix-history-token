@@ -224,6 +224,7 @@ name|char
 modifier|*
 modifier|*
 name|av
+name|__unused
 parameter_list|)
 block|{
 name|struct
