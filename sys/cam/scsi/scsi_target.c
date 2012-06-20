@@ -1485,9 +1485,6 @@ case|case
 name|TARGIOCDEBUG
 case|:
 block|{
-ifdef|#
-directive|ifdef
-name|CAMDEBUG
 name|struct
 name|ccb_debug
 name|cdbg
@@ -1612,14 +1609,6 @@ name|status
 operator|&
 name|CAM_STATUS_MASK
 expr_stmt|;
-else|#
-directive|else
-name|status
-operator|=
-name|CAM_FUNC_NOTAVAIL
-expr_stmt|;
-endif|#
-directive|endif
 break|break;
 block|}
 default|default:
