@@ -978,7 +978,7 @@ condition|(
 name|Info
 operator|->
 name|Count
-comment|/*+Info->LastLevel*/
+comment|/* +Info->LastLevel */
 operator|>
 literal|10
 condition|)
@@ -1267,6 +1267,12 @@ expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
 literal|")"
+argument_list|)
+expr_stmt|;
+comment|/* Emit description comment for Method() with a predefined ACPI name */
+name|AcpiDmPredefinedDescription
+argument_list|(
+name|Op
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1702,7 +1708,7 @@ operator|==
 name|ACPI_DASM_RESOURCE
 condition|)
 block|{
-comment|/*                  * We have a resource list.  Don't need to output                  * the buffer size Op.  Open up a new block                  */
+comment|/*                  * We have a resource list. Don't need to output                  * the buffer size Op. Open up a new block                  */
 name|NextOp
 operator|->
 name|Common
@@ -1721,7 +1727,22 @@ name|Next
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|")\n"
+literal|")"
+argument_list|)
+expr_stmt|;
+comment|/* Emit description comment for Name() with a predefined ACPI name */
+name|AcpiDmPredefinedDescription
+argument_list|(
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Parent
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|AcpiDmIndent
@@ -1797,7 +1818,7 @@ return|;
 case|case
 name|AML_PACKAGE_OP
 case|:
-comment|/* The next op is the size or predicate parameter */
+comment|/* The next op is the size parameter */
 name|NextOp
 operator|=
 name|AcpiPsGetDepthNext
@@ -1900,6 +1921,10 @@ name|Info
 init|=
 name|Context
 decl_stmt|;
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|ParentOp
+decl_stmt|;
 if|if
 condition|(
 name|Op
@@ -1966,6 +1991,33 @@ argument_list|(
 literal|")"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Op
+operator|->
+name|Common
+operator|.
+name|AmlOpcode
+operator|==
+name|AML_NAME_OP
+condition|)
+block|{
+comment|/* Emit description comment for Name() with a predefined ACPI name */
+name|AcpiDmPredefinedDescription
+argument_list|(
+name|Op
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* For Create* operators, attempt to emit resource tag description */
+name|AcpiDmFieldPredefinedDescription
+argument_list|(
+name|Op
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Could be a nested operator, check if comma required */
 if|if
 condition|(
@@ -2359,7 +2411,54 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|")\n"
+literal|")"
+argument_list|)
+expr_stmt|;
+comment|/* Emit description comment for Name() with a predefined ACPI name */
+name|ParentOp
+operator|=
+name|Op
+operator|->
+name|Common
+operator|.
+name|Parent
+expr_stmt|;
+if|if
+condition|(
+name|ParentOp
+condition|)
+block|{
+name|ParentOp
+operator|=
+name|ParentOp
+operator|->
+name|Common
+operator|.
+name|Parent
+expr_stmt|;
+if|if
+condition|(
+name|ParentOp
+operator|&&
+name|ParentOp
+operator|->
+name|Asl
+operator|.
+name|AmlOpcode
+operator|==
+name|AML_NAME_OP
+condition|)
+block|{
+name|AcpiDmPredefinedDescription
+argument_list|(
+name|ParentOp
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+name|AcpiOsPrintf
+argument_list|(
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|AcpiDmIndent

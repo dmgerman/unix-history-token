@@ -127,6 +127,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*! [End] no source code translation !*/
+end_comment
+
 begin_endif
 endif|#
 directive|endif

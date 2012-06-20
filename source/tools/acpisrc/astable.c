@@ -847,6 +847,12 @@ name|SRC_TYPE_STRUCT
 block|}
 block|,
 block|{
+literal|"ACPI_GPE_NOTIFY_INFO"
+block|,
+name|SRC_TYPE_STRUCT
+block|}
+block|,
+block|{
 literal|"ACPI_GPE_REGISTER_INFO"
 block|,
 name|SRC_TYPE_STRUCT

@@ -296,7 +296,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsCreateBufferField  *  * PARAMETERS:  Op                  - Current parse op (CreateXXField)  *              WalkState           - Current state  *  * RETURN:      Status  *  * DESCRIPTION: Execute the CreateField operators:  *              CreateBitFieldOp,  *              CreateByteFieldOp,  *              CreateWordFieldOp,  *              CreateDWordFieldOp,  *              CreateQWordFieldOp,  *              CreateFieldOp       (all of which define a field in a buffer)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsCreateBufferField  *  * PARAMETERS:  Op                  - Current parse op (CreateXXField)  *              WalkState           - Current state  *  * RETURN:      Status  *  * DESCRIPTION: Execute the CreateField operators:  *              CreateBitFieldOp,  *              CreateByteFieldOp,  *              CreateWordFieldOp,  *              CreateDwordFieldOp,  *              CreateQwordFieldOp,  *              CreateFieldOp       (all of which define a field in a buffer)  *  ******************************************************************************/
 end_comment
 
 begin_function

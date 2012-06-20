@@ -674,6 +674,13 @@ argument_list|,
 name|Gbl_LongLines
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Gbl_WhiteLines
+operator|>
+literal|0
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"%8.1f Ratio of code to whitespace\n"
@@ -691,6 +698,18 @@ name|Gbl_WhiteLines
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+operator|(
+name|Gbl_CommentLines
+operator|+
+name|Gbl_NonAnsiComments
+operator|)
+operator|>
+literal|0
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"%8.1f Ratio of code to comments\n"
@@ -712,6 +731,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!

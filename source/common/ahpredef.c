@@ -10,8 +10,62 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"acpihelp.h"
+file|"acpi.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"accommon.h"
+end_include
+
+begin_comment
+comment|/*  * iASL only needs a partial table (short descriptions only).  * AcpiHelp needs the full table.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_ASL_COMPILER
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|AH_PREDEF
+parameter_list|(
+name|Name
+parameter_list|,
+name|ShortDesc
+parameter_list|,
+name|LongDesc
+parameter_list|)
+value|{Name, ShortDesc}
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|AH_PREDEF
+parameter_list|(
+name|Name
+parameter_list|,
+name|ShortDesc
+parameter_list|,
+name|LongDesc
+parameter_list|)
+value|{Name, ShortDesc, LongDesc}
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Predefined ACPI names, with short description and return value.  * This table was extracted directly from the ACPI specification.  */
@@ -24,2085 +78,2345 @@ name|AslPredefinedInfo
 index|[]
 init|=
 block|{
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_ACx"
-block|,
+argument_list|,
 literal|"Active Cooling"
-block|,
+argument_list|,
 literal|"Returns the active cooling policy threshold values"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_ADR"
-block|,
+argument_list|,
 literal|"Address"
-block|,
+argument_list|,
 literal|"Returns the address of a device on its parent bus"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_AEI"
-block|,
+argument_list|,
 literal|"ACPI Event Interrupts"
-block|,
+argument_list|,
 literal|"Returns a list of GPIO events to be used as ACPI events"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_ALC"
-block|,
+argument_list|,
 literal|"Ambient Light Chromaticity"
-block|,
+argument_list|,
 literal|"Returns the ambient light color chromaticity"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_ALI"
-block|,
+argument_list|,
 literal|"Ambient Light Illuminance"
-block|,
+argument_list|,
 literal|"Returns the ambient light brightness"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_ALN"
-block|,
+argument_list|,
 literal|"Alignment"
-block|,
+argument_list|,
 literal|"Base alignment, Resource Descriptor field"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_ALP"
-block|,
+argument_list|,
 literal|"Ambient Light Polling"
-block|,
+argument_list|,
 literal|"Returns the ambient light sensor polling frequency"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_ALR"
-block|,
+argument_list|,
 literal|"Ambient Light Response"
-block|,
+argument_list|,
 literal|"Returns the ambient light brightness to display brightness mappings"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_ALT"
-block|,
+argument_list|,
 literal|"Ambient Light Temperature"
-block|,
+argument_list|,
 literal|"Returns the ambient light color temperature"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_ALx"
-block|,
+argument_list|,
 literal|"Active List"
-block|,
+argument_list|,
 literal|"Returns a list of active cooling device objects"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_ART"
-block|,
-literal|"Active cooling Relationship Table"
-block|,
+argument_list|,
+literal|"Active Cooling Relationship Table"
+argument_list|,
 literal|"Returns thermal relationship information between platform devices and fan devices"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_ASI"
-block|,
+argument_list|,
 literal|"Address Space Id"
-block|,
+argument_list|,
 literal|"Resource Descriptor field"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_ASZ"
-block|,
+argument_list|,
 literal|"Access Size"
-block|,
+argument_list|,
 literal|"Resource Descriptor field"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_ATT"
-block|,
+argument_list|,
 literal|"Type-Specific Attribute"
-block|,
+argument_list|,
 literal|"Resource Descriptor field"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_BAS"
-block|,
+argument_list|,
 literal|"Base Address"
-block|,
+argument_list|,
 literal|"Range base address, Resource Descriptor field"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_BBN"
-block|,
-literal|"Bios Bus Number"
-block|,
+argument_list|,
+literal|"BIOS Bus Number"
+argument_list|,
 literal|"Returns the PCI bus number returned by the BIOS"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_BCL"
-block|,
+argument_list|,
 literal|"Brightness Control Levels"
-block|,
+argument_list|,
 literal|"Returns a list of supported brightness control levels"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_BCM"
-block|,
+argument_list|,
 literal|"Brightness Control Method"
-block|,
+argument_list|,
 literal|"Sets the brightness level of the display device"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_BCT"
-block|,
+argument_list|,
 literal|"Battery Charge Time"
-block|,
+argument_list|,
 literal|"Returns time remaining to complete charging battery"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_BDN"
-block|,
-literal|"Bios Dock Name"
-block|,
+argument_list|,
+literal|"BIOS Dock Name"
+argument_list|,
 literal|"Returns the Dock ID returned by the BIOS"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_BFS"
-block|,
+argument_list|,
 literal|"Back From Sleep"
-block|,
+argument_list|,
 literal|"Inform AML of a wake event"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_BIF"
-block|,
+argument_list|,
 literal|"Battery Information"
-block|,
+argument_list|,
 literal|"Returns a Control Method Battery information block"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_BIX"
-block|,
+argument_list|,
 literal|"Battery Information Extended"
-block|,
+argument_list|,
 literal|"Returns a Control Method Battery extended information block"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_BLT"
-block|,
+argument_list|,
 literal|"Battery Level Threshold"
-block|,
+argument_list|,
 literal|"Set battery level threshold preferences"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_BM_"
-block|,
+argument_list|,
 literal|"Bus Master"
-block|,
+argument_list|,
 literal|"Resource Descriptor field"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_BMA"
-block|,
+argument_list|,
 literal|"Battery Measurement Averaging Interval"
-block|,
+argument_list|,
 literal|"Sets battery measurement averaging interval"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_BMC"
-block|,
+argument_list|,
 literal|"Battery Maintenance Control"
-block|,
+argument_list|,
 literal|"Sets battery maintenance and control features"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_BMD"
-block|,
+argument_list|,
 literal|"Battery Maintenance Data"
-block|,
+argument_list|,
 literal|"Returns battery maintenance, control, and state data"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_BMS"
-block|,
+argument_list|,
 literal|"Battery Measurement Sampling Time"
-block|,
+argument_list|,
 literal|"Sets the battery measurement sampling time"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_BQC"
-block|,
+argument_list|,
 literal|"Brightness Query Current"
-block|,
+argument_list|,
 literal|"Returns the current display brightness level"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_BST"
-block|,
+argument_list|,
 literal|"Battery Status"
-block|,
+argument_list|,
 literal|"Returns a Control Method Battery status block"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_BTM"
-block|,
+argument_list|,
 literal|"Battery Time"
-block|,
+argument_list|,
 literal|"Returns the battery runtime"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_BTP"
-block|,
+argument_list|,
 literal|"Battery Trip Point"
-block|,
+argument_list|,
 literal|"Sets a Control Method Battery trip point"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_CBA"
-block|,
+argument_list|,
 literal|"Configuration Base Address"
+argument_list|,
+literal|"Sets the base address for a PCI Express host bridge"
+argument_list|)
 block|,
-literal|"Sets the CBA for a PCI Express host bridge"
-block|}
-block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_CDM"
-block|,
+argument_list|,
 literal|"Clock Domain"
-block|,
+argument_list|,
 literal|"Returns a logical processor's clock domain identifier"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_CID"
-block|,
+argument_list|,
 literal|"Compatible ID"
-block|,
+argument_list|,
 literal|"Returns a device's Plug and Play Compatible ID list"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_CLS"
-block|,
+argument_list|,
 literal|"Class Code"
-block|,
+argument_list|,
 literal|"Returns PCI class code and subclass"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_CPC"
-block|,
+argument_list|,
 literal|"Continuous Performance Control"
-block|,
+argument_list|,
 literal|"Returns a list of performance control interfaces"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_CRS"
-block|,
+argument_list|,
 literal|"Current Resource Settings"
-block|,
+argument_list|,
 literal|"Returns the current resource settings for a device"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_CRT"
-block|,
+argument_list|,
 literal|"Critical Temperature"
-block|,
+argument_list|,
 literal|"Returns the shutdown critical temperature"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_CSD"
-block|,
-literal|"C State Dependencies"
-block|,
+argument_list|,
+literal|"C-State Dependencies"
+argument_list|,
 literal|"Returns a list of C-state dependencies"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_CST"
-block|,
-literal|"C States"
-block|,
+argument_list|,
+literal|"C-States"
+argument_list|,
 literal|"Returns a list of supported C-states"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_CWS"
-block|,
+argument_list|,
 literal|"Clear Wake Alarm Status"
-block|,
+argument_list|,
 literal|"Clear the status of wake alarms"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_DBT"
-block|,
+argument_list|,
 literal|"Debounce Timeout"
-block|,
+argument_list|,
 literal|"Timeout value, Resource Descriptor field"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_DCK"
-block|,
-literal|"Dock"
-block|,
+argument_list|,
+literal|"Dock Present"
+argument_list|,
 literal|"Sets docking isolation. Presence indicates device is a docking station"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_DCS"
-block|,
+argument_list|,
 literal|"Display Current Status"
-block|,
+argument_list|,
 literal|"Returns status of the display output device"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_DDC"
-block|,
+argument_list|,
 literal|"Display Data Current"
-block|,
+argument_list|,
 literal|"Returns the EDID for the display output device"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_DDN"
-block|,
-literal|"Dos Device Name"
-block|,
+argument_list|,
+literal|"DOS Device Name"
+argument_list|,
 literal|"Returns a device logical name"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_DEC"
-block|,
+argument_list|,
 literal|"Decode"
-block|,
+argument_list|,
 literal|"Device decoding type, Resource Descriptor field"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_DEP"
-block|,
+argument_list|,
 literal|"Dependencies"
-block|,
+argument_list|,
 literal|"Returns a list of operation region dependencies"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_DGS"
-block|,
+argument_list|,
 literal|"Display Graphics State"
-block|,
+argument_list|,
 literal|"Return the current state of the output device"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_DIS"
-block|,
-literal|"Disable"
-block|,
+argument_list|,
+literal|"Disable Device"
+argument_list|,
 literal|"Disables a device"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_DLM"
-block|,
+argument_list|,
 literal|"Device Lock Mutex"
-block|,
+argument_list|,
 literal|"Defines mutex for OS/AML sharing"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_DMA"
-block|,
+argument_list|,
 literal|"Direct Memory Access"
-block|,
+argument_list|,
 literal|"Returns a device's current resources for DMA transactions"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_DOD"
-block|,
+argument_list|,
 literal|"Display Output Devices"
-block|,
+argument_list|,
 literal|"Enumerate all devices attached to the display adapter"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_DOS"
-block|,
+argument_list|,
 literal|"Disable Output Switching"
-block|,
+argument_list|,
 literal|"Sets the display output switching mode"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_DPL"
-block|,
+argument_list|,
 literal|"Device Selection Polarity"
-block|,
+argument_list|,
 literal|"Polarity of Device Selection signal, Resource Descriptor field"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_DRS"
-block|,
+argument_list|,
 literal|"Drive Strength"
-block|,
+argument_list|,
 literal|"Drive Strength setting for GPIO connection, Resource Descriptor field"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_DSM"
-block|,
-literal|"Device Specific Method"
-block|,
+argument_list|,
+literal|"Device-Specific Method"
+argument_list|,
 literal|"Executes device-specific functions"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_DSS"
-block|,
+argument_list|,
 literal|"Device Set State"
-block|,
+argument_list|,
 literal|"Sets the display device state"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_DSW"
-block|,
+argument_list|,
 literal|"Device Sleep Wake"
-block|,
+argument_list|,
 literal|"Sets the sleep and wake transition states for a device"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_DTI"
-block|,
+argument_list|,
 literal|"Device Temperature Indication"
-block|,
+argument_list|,
 literal|"Conveys native device temperature to the platform"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_Exx"
-block|,
-literal|"Edge GPE"
-block|,
+argument_list|,
+literal|"Edge-Triggered GPE"
+argument_list|,
 literal|"Method executed as a result of a general-purpose event"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_EC_"
-block|,
+argument_list|,
 literal|"Embedded Controller"
-block|,
+argument_list|,
 literal|"returns EC offset and query information"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_EDL"
-block|,
+argument_list|,
 literal|"Eject Device List"
-block|,
+argument_list|,
 literal|"Returns a list of devices that are dependent on a device (docking)"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_EJD"
-block|,
+argument_list|,
 literal|"Ejection Dependent Device"
-block|,
+argument_list|,
 literal|"Returns the name of dependent (parent) device (docking)"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_EJx"
-block|,
-literal|"Eject"
-block|,
+argument_list|,
+literal|"Eject Device"
+argument_list|,
 literal|"Begin or cancel a device ejection request (docking)"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_END"
-block|,
-literal|"Endian-ness"
-block|,
+argument_list|,
+literal|"Endianness"
+argument_list|,
 literal|"Endian orientation, Resource Descriptor field"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_EVT"
-block|,
+argument_list|,
 literal|"Event"
-block|,
+argument_list|,
 literal|"Event method for GPIO events"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_FDE"
-block|,
+argument_list|,
 literal|"Floppy Disk Enumerate"
-block|,
+argument_list|,
 literal|"Returns floppy disk configuration information"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_FDI"
-block|,
+argument_list|,
 literal|"Floppy Drive Information"
-block|,
+argument_list|,
 literal|"Returns a floppy drive information block"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_FDM"
-block|,
+argument_list|,
 literal|"Floppy Drive Mode"
-block|,
+argument_list|,
 literal|"Sets a floppy drive speed"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_FIF"
-block|,
+argument_list|,
 literal|"Fan Information"
-block|,
+argument_list|,
 literal|"Returns fan device information"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_FIX"
-block|,
+argument_list|,
 literal|"Fixed Register Resource Provider"
-block|,
+argument_list|,
 literal|"Returns a list of devices that implement FADT register blocks"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_FLC"
-block|,
+argument_list|,
 literal|"Flow Control"
-block|,
+argument_list|,
 literal|"Flow control, Resource Descriptor field"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_FPS"
-block|,
+argument_list|,
 literal|"Fan Performance States"
-block|,
+argument_list|,
 literal|"Returns a list of supported fan performance states"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_FSL"
-block|,
+argument_list|,
 literal|"Fan Set Level"
-block|,
+argument_list|,
 literal|"Control method that sets the fan device's speed level (performance state)"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_FST"
-block|,
+argument_list|,
 literal|"Fan Status"
-block|,
+argument_list|,
 literal|"Returns current status information for a fan device"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_GAI"
-block|,
+argument_list|,
 literal|"Get Averaging Interval"
-block|,
+argument_list|,
 literal|"Returns the power meter averaging interval"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_GCP"
-block|,
-literal|"Get Capability"
-block|,
+argument_list|,
+literal|"Get Capabilities"
+argument_list|,
 literal|"Get device time capabilities"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_GHL"
-block|,
+argument_list|,
 literal|"Get Hardware Limit"
-block|,
+argument_list|,
 literal|"Returns the hardware limit enforced by the power meter"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_GL_"
-block|,
+argument_list|,
 literal|"Global Lock"
-block|,
+argument_list|,
 literal|"OS-defined Global Lock mutex object"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_GLK"
-block|,
-literal|"Global Lock"
-block|,
+argument_list|,
+literal|"Get Global Lock Requirement"
+argument_list|,
 literal|"Returns a device's Global Lock requirement for device access"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_GPD"
-block|,
+argument_list|,
 literal|"Get Post Data"
-block|,
+argument_list|,
 literal|"Returns the value of the VGA device that will be posted at boot"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_GPE"
-block|,
+argument_list|,
 literal|"General Purpose Events"
+argument_list|,
+literal|"Predefined scope (\\_GPE) or SCI number for EC"
+argument_list|)
 block|,
-literal|"(1) predefined Scope (\\_GPE.)"
-block|}
-block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_GRA"
-block|,
+argument_list|,
 literal|"Granularity"
-block|,
+argument_list|,
 literal|"Address space granularity, Resource Descriptor field"
-block|}
+argument_list|)
 block|,
-block|{
-literal|"_GSB"
-block|,
-literal|"Global System Interrupt Base"
-block|,
-literal|"Returns the GSB for a I/O APIC device"
-block|}
-block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_GRT"
-block|,
+argument_list|,
 literal|"Get Real Time"
+argument_list|,
+literal|"Returns current time-of-day from a time/alarm device"
+argument_list|)
 block|,
-literal|"Returns current time-of-day"
-block|}
+name|AH_PREDEF
+argument_list|(
+literal|"_GSB"
+argument_list|,
+literal|"Global System Interrupt Base"
+argument_list|,
+literal|"Returns the GSB for a I/O APIC device"
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_GTF"
-block|,
+argument_list|,
 literal|"Get Task File"
-block|,
+argument_list|,
 literal|"Returns a list of ATA commands to restore a drive to default state"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_GTM"
-block|,
+argument_list|,
 literal|"Get Timing Mode"
-block|,
+argument_list|,
 literal|"Returns a list of IDE controller timing information"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_GTS"
-block|,
+argument_list|,
 literal|"Going To Sleep"
-block|,
+argument_list|,
 literal|"Inform AML of pending sleep"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_GWS"
-block|,
+argument_list|,
 literal|"Get Wake Status"
-block|,
+argument_list|,
 literal|"Return status of wake alarms"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_HE_"
-block|,
+argument_list|,
 literal|"High-Edge"
-block|,
+argument_list|,
 literal|"Interrupt triggering, Resource Descriptor field"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_HID"
-block|,
+argument_list|,
 literal|"Hardware ID"
-block|,
+argument_list|,
 literal|"Returns a device's Plug and Play Hardware ID"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_HOT"
-block|,
+argument_list|,
 literal|"Hot Temperature"
-block|,
+argument_list|,
 literal|"Returns the critical temperature for sleep (entry to S4)"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_HPP"
-block|,
+argument_list|,
 literal|"Hot Plug Parameters"
-block|,
+argument_list|,
 literal|"Returns a list of hot-plug information for a PCI device"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_HPX"
-block|,
+argument_list|,
 literal|"Hot Plug Parameter Extensions"
-block|,
+argument_list|,
 literal|"Returns a list of hot-plug information for a PCI device. Supersedes _HPP"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_HRV"
-block|,
+argument_list|,
 literal|"Hardware Revision"
-block|,
+argument_list|,
 literal|"Returns a hardware revision value"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_IFT"
-block|,
+argument_list|,
 literal|"IPMI Interface Type"
-block|,
+argument_list|,
 literal|"See the Intelligent Platform Management Interface Specification"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_INI"
-block|,
+argument_list|,
 literal|"Initialize"
-block|,
+argument_list|,
 literal|"Performs device specific initialization"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_INT"
-block|,
+argument_list|,
 literal|"Interrupts"
-block|,
+argument_list|,
 literal|"Interrupt mask bits, Resource Descriptor field"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_IOR"
-block|,
+argument_list|,
 literal|"I/O Restriction"
-block|,
+argument_list|,
 literal|"Restriction type, Resource Descriptor field"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_IRC"
-block|,
+argument_list|,
 literal|"Inrush Current"
-block|,
+argument_list|,
 literal|"Presence indicates that a device has a significant inrush current draw"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_Lxx"
-block|,
-literal|"Level GPE"
-block|,
+argument_list|,
+literal|"Level-Triggered GPE"
+argument_list|,
 literal|"Control method executed as a result of a general-purpose event"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_LCK"
-block|,
-literal|"Lock"
-block|,
+argument_list|,
+literal|"Lock Device"
+argument_list|,
 literal|"Locks or unlocks a device (docking)"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_LEN"
-block|,
+argument_list|,
 literal|"Length"
-block|,
+argument_list|,
 literal|"Range length, Resource Descriptor field"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_LID"
-block|,
-literal|"Lid"
-block|,
+argument_list|,
+literal|"Lid Status"
+argument_list|,
 literal|"Returns the open/closed status of the lid on a mobile system"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_LIN"
-block|,
+argument_list|,
 literal|"Lines In Use"
-block|,
+argument_list|,
 literal|"Handshake lines, Resource Descriptor field"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_LL_"
-block|,
+argument_list|,
 literal|"Low Level"
-block|,
+argument_list|,
 literal|"Interrupt polarity, Resource Descriptor field"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_MAF"
-block|,
+argument_list|,
 literal|"Maximum Address Fixed"
-block|,
+argument_list|,
 literal|"Resource Descriptor field"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_MAT"
-block|,
-literal|"Multiple Apic Table Entry"
-block|,
+argument_list|,
+literal|"Multiple APIC Table Entry"
+argument_list|,
 literal|"Returns a list of MADT APIC structure entries"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_MAX"
-block|,
+argument_list|,
 literal|"Maximum Base Address"
-block|,
+argument_list|,
 literal|"Resource Descriptor field"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_MBM"
-block|,
+argument_list|,
 literal|"Memory Bandwidth Monitoring Data"
-block|,
+argument_list|,
 literal|"Returns bandwidth monitoring data for a memory device"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_MEM"
-block|,
+argument_list|,
 literal|"Memory Attributes"
-block|,
+argument_list|,
 literal|"Resource Descriptor field"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_MIF"
-block|,
+argument_list|,
 literal|"Minimum Address Fixed"
-block|,
+argument_list|,
 literal|"Resource Descriptor field"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_MIN"
-block|,
+argument_list|,
 literal|"Minimum Base Address"
-block|,
+argument_list|,
 literal|"Resource Descriptor field"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_MLS"
-block|,
+argument_list|,
 literal|"Multiple Language String"
-block|,
+argument_list|,
 literal|"Returns a device description in multiple languages"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_MOD"
-block|,
+argument_list|,
 literal|"Mode"
-block|,
+argument_list|,
 literal|"Interrupt mode, Resource Descriptor field"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_MSG"
-block|,
+argument_list|,
 literal|"Message"
-block|,
+argument_list|,
 literal|"Sets the system message waiting status indicator"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_MSM"
-block|,
+argument_list|,
 literal|"Memory Set Monitoring"
-block|,
+argument_list|,
 literal|"Sets bandwidth monitoring parameters for a memory device"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_MTP"
-block|,
+argument_list|,
 literal|"Memory Type"
-block|,
+argument_list|,
 literal|"Resource Descriptor field"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_NTT"
-block|,
+argument_list|,
 literal|"Notification Temperature Threshold"
-block|,
+argument_list|,
 literal|"Returns a threshold for device temperature change that requires platform notification"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_OFF"
-block|,
-literal|"Off"
-block|,
+argument_list|,
+literal|"Power Off"
+argument_list|,
 literal|"Sets a power resource to the off state"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_ON_"
-block|,
-literal|"On"
-block|,
+argument_list|,
+literal|"Power On"
+argument_list|,
 literal|"Sets a power resource to the on state"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_OS_"
-block|,
+argument_list|,
 literal|"Operating System"
-block|,
+argument_list|,
 literal|"Returns a string that identifies the operating system"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_OSC"
-block|,
+argument_list|,
 literal|"Operating System Capabilities"
-block|,
+argument_list|,
 literal|"Inform AML of host features and capabilities"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_OSI"
-block|,
+argument_list|,
 literal|"Operating System Interfaces"
-block|,
+argument_list|,
 literal|"Returns supported interfaces, behaviors, and features"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_OST"
-block|,
-literal|"Ospm Status Indication"
-block|,
+argument_list|,
+literal|"OSPM Status Indication"
+argument_list|,
 literal|"Inform AML of event processing status"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_PAI"
-block|,
+argument_list|,
 literal|"Power Averaging Interval"
-block|,
+argument_list|,
 literal|"Sets the averaging interval for a power meter"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_PAR"
-block|,
+argument_list|,
 literal|"Parity"
-block|,
+argument_list|,
 literal|"Parity bits, Resource Descriptor field"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_PCL"
-block|,
+argument_list|,
 literal|"Power Consumer List"
-block|,
+argument_list|,
 literal|"Returns a list of devices powered by a power source"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_PCT"
-block|,
+argument_list|,
 literal|"Performance Control"
-block|,
+argument_list|,
 literal|"Returns processor performance control and status registers"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_PDC"
-block|,
+argument_list|,
 literal|"Processor Driver Capabilities"
-block|,
+argument_list|,
 literal|"Inform AML of processor driver capabilities"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_PDL"
-block|,
+argument_list|,
 literal|"P-state Depth Limit"
-block|,
+argument_list|,
 literal|"Returns the lowest available performance P-state"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_PHA"
-block|,
-literal|"Phase"
-block|,
+argument_list|,
+literal|"Clock Phase"
+argument_list|,
 literal|"Clock phase, Resource Descriptor field"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_PIC"
-block|,
-literal|"PIC"
-block|,
+argument_list|,
+literal|"Interrupt Model"
+argument_list|,
 literal|"Inform AML of the interrupt model in use"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_PIF"
-block|,
+argument_list|,
 literal|"Power Source Information"
-block|,
+argument_list|,
 literal|"Returns a Power Source information block"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_PIN"
-block|,
-literal|"Pins"
-block|,
+argument_list|,
+literal|"Pin List"
+argument_list|,
 literal|"Pin list, Resource Descriptor field"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_PLD"
-block|,
+argument_list|,
 literal|"Physical Device Location"
-block|,
+argument_list|,
 literal|"Returns a device's physical location information"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_PMC"
-block|,
+argument_list|,
 literal|"Power Meter Capabilities"
-block|,
+argument_list|,
 literal|"Returns a list of Power Meter capabilities info"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_PMD"
-block|,
+argument_list|,
 literal|"Power Metered Devices"
-block|,
+argument_list|,
 literal|"Returns a list of devices that are measured by the power meter device"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_PMM"
-block|,
+argument_list|,
 literal|"Power Meter Measurement"
-block|,
+argument_list|,
 literal|"Returns the current value of the Power Meter"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_POL"
-block|,
+argument_list|,
 literal|"Polarity"
-block|,
+argument_list|,
 literal|"Interrupt polarity, Resource Descriptor field"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_PPC"
-block|,
+argument_list|,
 literal|"Performance Present Capabilites"
-block|,
+argument_list|,
 literal|"Returns a list of the performance states currently supported by the platform"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_PPE"
-block|,
+argument_list|,
 literal|"Polling for Platform Error"
-block|,
+argument_list|,
 literal|"Returns the polling interval to retrieve Corrected Platform Error information"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_PPI"
-block|,
+argument_list|,
 literal|"Pin Configuration"
-block|,
+argument_list|,
 literal|"Resource Descriptor field"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_PR"
-block|,
+argument_list|,
 literal|"Processor"
-block|,
+argument_list|,
 literal|"Predefined scope for processor objects"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_PR0"
-block|,
+argument_list|,
 literal|"Power Resources for D0"
-block|,
+argument_list|,
 literal|"Returns a list of dependent power resources to enter state D0 (fully on)"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_PR1"
-block|,
+argument_list|,
 literal|"Power Resources for D1"
-block|,
+argument_list|,
 literal|"Returns a list of dependent power resources to enter state D1"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_PR2"
-block|,
+argument_list|,
 literal|"Power Resources for D2"
-block|,
+argument_list|,
 literal|"Returns a list of dependent power resources to enter state D2"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_PR3"
-block|,
+argument_list|,
 literal|"Power Resources for D3hot"
-block|,
+argument_list|,
 literal|"Returns a list of dependent power resources to enter state D3hot"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_PRE"
-block|,
+argument_list|,
 literal|"Power Resources for Enumeration"
-block|,
+argument_list|,
 literal|"Returns a list of dependent power resources to enumerate devices on a bus"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_PRL"
-block|,
+argument_list|,
 literal|"Power Source Redundancy List"
-block|,
+argument_list|,
 literal|"Returns a list of power source devices in the same redundancy grouping"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_PRS"
-block|,
+argument_list|,
 literal|"Possible Resource Settings"
-block|,
+argument_list|,
 literal|"Returns a list of a device's possible resource settings"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_PRT"
-block|,
-literal|"Pci Routing Table"
-block|,
+argument_list|,
+literal|"PCI Routing Table"
+argument_list|,
 literal|"Returns a list of PCI interrupt mappings"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_PRW"
-block|,
+argument_list|,
 literal|"Power Resources for Wake"
-block|,
+argument_list|,
 literal|"Returns a list of dependent power resources for waking"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_PS0"
-block|,
+argument_list|,
 literal|"Power State 0"
-block|,
+argument_list|,
 literal|"Sets a device's power state to D0 (device fully on)"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_PS1"
-block|,
+argument_list|,
 literal|"Power State 1"
-block|,
+argument_list|,
 literal|"Sets a device's power state to D1"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_PS2"
-block|,
+argument_list|,
 literal|"Power State 2"
-block|,
+argument_list|,
 literal|"Sets a device's power state to D2"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_PS3"
-block|,
+argument_list|,
 literal|"Power State 3"
-block|,
+argument_list|,
 literal|"Sets a device's power state to D3 (device off)"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_PSC"
-block|,
+argument_list|,
 literal|"Power State Current"
-block|,
+argument_list|,
 literal|"Returns a device's current power state"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_PSD"
-block|,
-literal|"Processor State Dependencies"
-block|,
+argument_list|,
+literal|"Power State Dependencies"
+argument_list|,
 literal|"Returns processor P-State dependencies"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_PSE"
-block|,
+argument_list|,
 literal|"Power State for Enumeration"
-block|,
+argument_list|,
 literal|"Put a bus into enumeration power mode"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_PSL"
-block|,
+argument_list|,
 literal|"Passive List"
-block|,
+argument_list|,
 literal|"Returns a list of passive cooling device objects"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_PSR"
-block|,
+argument_list|,
 literal|"Power Source"
-block|,
+argument_list|,
 literal|"Returns the power source device currently in use"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_PSS"
-block|,
+argument_list|,
 literal|"Performance Supported States"
-block|,
+argument_list|,
 literal|"Returns a list of supported processor performance states"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_PSV"
-block|,
-literal|"Passive"
-block|,
+argument_list|,
+literal|"Passive Temperature"
+argument_list|,
 literal|"Returns the passive trip point temperature"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_PSW"
-block|,
+argument_list|,
 literal|"Power State Wake"
-block|,
+argument_list|,
 literal|"Sets a device's wake function"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_PTC"
-block|,
+argument_list|,
 literal|"Processor Throttling Control"
-block|,
+argument_list|,
 literal|"Returns throttling control and status registers"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_PTP"
-block|,
+argument_list|,
 literal|"Power Trip Points"
-block|,
+argument_list|,
 literal|"Sets trip points for the Power Meter device"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_PTS"
-block|,
+argument_list|,
 literal|"Prepare To Sleep"
-block|,
+argument_list|,
 literal|"Inform the platform of an impending sleep transition"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_PUR"
-block|,
+argument_list|,
 literal|"Processor Utilization Request"
-block|,
+argument_list|,
 literal|"Returns the number of processors that the platform would like to idle"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_PXM"
-block|,
-literal|"Proximity"
-block|,
+argument_list|,
+literal|"Device Proximity"
+argument_list|,
 literal|"Returns a device's proximity domain identifier"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_Qxx"
-block|,
-literal|"Query"
-block|,
+argument_list|,
+literal|"EC Query"
+argument_list|,
 literal|"Embedded Controller query and SMBus Alarm control method"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_RBO"
-block|,
+argument_list|,
 literal|"Register Bit Offset"
-block|,
+argument_list|,
 literal|"Resource Descriptor field"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_RBW"
-block|,
+argument_list|,
 literal|"Register Bit Width"
-block|,
+argument_list|,
 literal|"Resource Descriptor field"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_REG"
-block|,
-literal|"Region"
-block|,
+argument_list|,
+literal|"Region Availability"
+argument_list|,
 literal|"Inform AML code of an operation region availability change"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_REV"
-block|,
-literal|"Revision"
-block|,
+argument_list|,
+literal|"Supported ACPI Revision"
+argument_list|,
 literal|"Returns the revision of the ACPI specification that is implemented"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_RMV"
-block|,
-literal|"Remove"
-block|,
+argument_list|,
+literal|"Removal Status"
+argument_list|,
 literal|"Returns a device's removal ability status (docking)"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_RNG"
-block|,
+argument_list|,
 literal|"Range"
-block|,
+argument_list|,
 literal|"Memory range type, Resource Descriptor field"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_ROM"
-block|,
+argument_list|,
 literal|"Read-Only Memory"
-block|,
+argument_list|,
 literal|"Returns a copy of the ROM data for a display device"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_RT_"
-block|,
+argument_list|,
 literal|"Resource Type"
-block|,
+argument_list|,
 literal|"Resource Descriptor field"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_RTV"
-block|,
+argument_list|,
 literal|"Relative Temperature Values"
-block|,
+argument_list|,
 literal|"Returns temperature value information"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_RW_"
-block|,
+argument_list|,
 literal|"Read-Write Status"
-block|,
+argument_list|,
 literal|"Resource Descriptor field"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_RXL"
-block|,
+argument_list|,
 literal|"Receive Buffer Size"
-block|,
+argument_list|,
 literal|"Serial channel buffer, Resource Descriptor field"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_S0_"
-block|,
+argument_list|,
 literal|"S0 System State"
-block|,
+argument_list|,
 literal|"Returns values to enter the system into the S0 state"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_S1_"
-block|,
+argument_list|,
 literal|"S1 System State"
-block|,
+argument_list|,
 literal|"Returns values to enter the system into the S1 state"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_S2_"
-block|,
+argument_list|,
 literal|"S2 System State"
-block|,
+argument_list|,
 literal|"Returns values to enter the system into the S2 state"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_S3_"
-block|,
+argument_list|,
 literal|"S3 System State"
-block|,
+argument_list|,
 literal|"Returns values to enter the system into the S3 state"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_S4_"
-block|,
+argument_list|,
 literal|"S4 System State"
-block|,
+argument_list|,
 literal|"Returns values to enter the system into the S4 state"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_S5_"
-block|,
+argument_list|,
 literal|"S5 System State"
-block|,
+argument_list|,
 literal|"Returns values to enter the system into the S5 state"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_S1D"
-block|,
+argument_list|,
 literal|"S1 Device State"
-block|,
+argument_list|,
 literal|"Returns the highest D-state supported by a device when in the S1 state"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_S2D"
-block|,
+argument_list|,
 literal|"S2 Device State"
-block|,
+argument_list|,
 literal|"Returns the highest D-state supported by a device when in the S2 state"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_S3D"
-block|,
+argument_list|,
 literal|"S3 Device State"
-block|,
+argument_list|,
 literal|"Returns the highest D-state supported by a device when in the S3 state"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_S4D"
-block|,
+argument_list|,
 literal|"S4 Device State"
-block|,
+argument_list|,
 literal|"Returns the highest D-state supported by a device when in the S4 state"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_S0W"
-block|,
+argument_list|,
 literal|"S0 Device Wake State"
-block|,
+argument_list|,
 literal|"Returns the lowest D-state that the device can wake itself from S0"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_S1W"
-block|,
+argument_list|,
 literal|"S1 Device Wake State"
-block|,
+argument_list|,
 literal|"Returns the lowest D-state for this device that can wake the system from S1"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_S2W"
-block|,
+argument_list|,
 literal|"S2 Device Wake State"
-block|,
+argument_list|,
 literal|"Returns the lowest D-state for this device that can wake the system from S2"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_S3W"
-block|,
+argument_list|,
 literal|"S3 Device Wake State"
-block|,
+argument_list|,
 literal|"Returns the lowest D-state for this device that can wake the system from S3"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_S4W"
-block|,
+argument_list|,
 literal|"S4 Device Wake State"
-block|,
+argument_list|,
 literal|"Returns the lowest D-state for this device that can wake the system from S4"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_SB_"
-block|,
+argument_list|,
 literal|"System Bus"
+argument_list|,
+literal|"Predefined scope for device and bus objects"
+argument_list|)
 block|,
-literal|"Scope for device and bus objects"
-block|}
-block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_SBS"
-block|,
+argument_list|,
 literal|"Smart Battery Subsystem"
-block|,
+argument_list|,
 literal|"Returns the subsystem configuration"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_SCP"
-block|,
+argument_list|,
 literal|"Set Cooling Policy"
-block|,
+argument_list|,
 literal|"Sets the cooling policy (active or passive)"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_SDD"
-block|,
+argument_list|,
 literal|"Set Device Data"
-block|,
+argument_list|,
 literal|"Sets data for a SATA device"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_SEG"
-block|,
-literal|"Segment"
-block|,
+argument_list|,
+literal|"PCI Segment"
+argument_list|,
 literal|"Returns a device's PCI Segment Group number"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_SHL"
-block|,
+argument_list|,
 literal|"Set Hardware Limit"
-block|,
+argument_list|,
 literal|"Sets the hardware limit enforced by the Power Meter"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_SHR"
-block|,
+argument_list|,
 literal|"Sharable"
-block|,
+argument_list|,
 literal|"Interrupt share status, Resource Descriptor field"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_SI_"
-block|,
+argument_list|,
 literal|"System Indicators"
-block|,
+argument_list|,
 literal|"Predefined scope"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_SIZ"
-block|,
+argument_list|,
 literal|"Size"
-block|,
+argument_list|,
 literal|"DMA transfer size, Resource Descriptor field"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_SLI"
-block|,
+argument_list|,
 literal|"System Locality Information"
-block|,
+argument_list|,
 literal|"Returns a list of NUMA system localities"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_SLV"
-block|,
+argument_list|,
 literal|"Slave Mode"
-block|,
+argument_list|,
 literal|"Mode setting, Resource Descriptor field"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_SPD"
-block|,
+argument_list|,
 literal|"Set Post Device"
-block|,
+argument_list|,
 literal|"Sets which video device will be posted at boot"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_SPE"
-block|,
+argument_list|,
 literal|"Speed"
-block|,
+argument_list|,
 literal|"Connection speed, Resource Descriptor field"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_SRS"
-block|,
+argument_list|,
 literal|"Set Resource Settings"
-block|,
+argument_list|,
 literal|"Sets a device's resource allocation"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_SRT"
-block|,
+argument_list|,
 literal|"Set Real Time"
+argument_list|,
+literal|"Sets the current time for a time/alarm device"
+argument_list|)
 block|,
-literal|"Interrupt triggering, Resource Descriptor field"
-block|}
-block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_SRV"
-block|,
+argument_list|,
 literal|"IPMI Spec Revision"
-block|,
+argument_list|,
 literal|"See the Intelligent Platform Management Interface Specification"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_SST"
-block|,
+argument_list|,
 literal|"System Status"
-block|,
+argument_list|,
 literal|"Sets the system status indicator"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_STA"
-block|,
+argument_list|,
 literal|"Status"
+argument_list|,
+literal|"Returns the current status of a Device or Power Resource"
+argument_list|)
 block|,
-literal|" (1) returns the current status of a device"
-block|}
-block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_STB"
-block|,
+argument_list|,
 literal|"Stop Bits"
-block|,
+argument_list|,
 literal|"Serial channel stop bits, Resource Descriptor field"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_STM"
-block|,
+argument_list|,
 literal|"Set Timing Mode"
-block|,
+argument_list|,
 literal|"Sets an IDE controller transfer timings"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_STP"
-block|,
+argument_list|,
 literal|"Set Expired Timer Wake Policy"
-block|,
+argument_list|,
 literal|"Sets expired timer policies of the wake alarm device"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_STR"
-block|,
-literal|"String"
-block|,
+argument_list|,
+literal|"Description String"
+argument_list|,
 literal|"Returns a device's description string"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_STV"
-block|,
+argument_list|,
 literal|"Set Timer Value"
-block|,
+argument_list|,
 literal|"Set timer values of the wake alarm device"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_SUB"
-block|,
+argument_list|,
 literal|"Subsystem ID"
-block|,
+argument_list|,
 literal|"Returns the subsystem ID for a device"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_SUN"
-block|,
+argument_list|,
 literal|"Slot User Number"
-block|,
+argument_list|,
 literal|"Returns the slot unique ID number"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_SWS"
-block|,
+argument_list|,
 literal|"System Wake Source"
-block|,
+argument_list|,
 literal|"Returns the source event that caused the system to wake"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_T_x"
-block|,
-literal|"Temporary"
-block|,
+argument_list|,
+literal|"Emitted by ASL Compiler"
+argument_list|,
 literal|"Reserved for use by ASL compilers"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_TC1"
-block|,
+argument_list|,
 literal|"Thermal Constant 1"
-block|,
+argument_list|,
 literal|"Returns TC1 for the passive cooling formula"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_TC2"
-block|,
+argument_list|,
 literal|"Thermal Constant 2"
-block|,
+argument_list|,
 literal|"Returns TC2 for the passive cooling formula"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_TDL"
-block|,
+argument_list|,
 literal|"T-State Depth Limit"
-block|,
+argument_list|,
 literal|"Returns the _TSS entry number of the lowest power throttling state"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_TIP"
-block|,
+argument_list|,
 literal|"Expired Timer Wake Policy"
-block|,
+argument_list|,
 literal|"Returns timer policies of the wake alarm device"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_TIV"
-block|,
+argument_list|,
 literal|"Timer Values"
-block|,
+argument_list|,
 literal|"Returns remaining time of the wake alarm device"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_TMP"
-block|,
+argument_list|,
 literal|"Temperature"
-block|,
+argument_list|,
 literal|"Returns a thermal zone's current temperature"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_TPC"
-block|,
+argument_list|,
 literal|"Throttling Present Capabilities"
-block|,
+argument_list|,
 literal|"Returns the current number of supported throttling states"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_TPT"
-block|,
+argument_list|,
 literal|"Trip Point Temperature"
-block|,
+argument_list|,
 literal|"Inform AML that a device's embedded temperature sensor has crossed a temperature trip point"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_TRA"
-block|,
+argument_list|,
 literal|"Translation"
-block|,
+argument_list|,
 literal|"Address translation offset, Resource Descriptor field"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_TRS"
-block|,
+argument_list|,
 literal|"Translation Sparse"
-block|,
+argument_list|,
 literal|"Sparse/dense flag, Resource Descriptor field"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_TRT"
-block|,
+argument_list|,
 literal|"Thermal Relationship Table"
-block|,
+argument_list|,
 literal|"Returns thermal relationships between platform devices"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_TSD"
-block|,
+argument_list|,
 literal|"Throttling State Dependencies"
-block|,
+argument_list|,
 literal|"Returns a list of T-state dependencies"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_TSF"
-block|,
+argument_list|,
 literal|"Type-Specific Flags"
-block|,
+argument_list|,
 literal|"Resource Descriptor field"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_TSP"
-block|,
+argument_list|,
 literal|"Thermal Sampling Period"
-block|,
+argument_list|,
 literal|"Returns the thermal sampling period for passive cooling"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_TSS"
-block|,
+argument_list|,
 literal|"Throttling Supported States"
-block|,
+argument_list|,
 literal|"Returns supported throttling state information"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_TST"
-block|,
+argument_list|,
 literal|"Temperature Sensor Threshold"
-block|,
+argument_list|,
 literal|"Returns the minimum separation for a device's temperature trip points"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_TTP"
-block|,
+argument_list|,
 literal|"Translation Type"
-block|,
+argument_list|,
 literal|"Translation/static flag, Resource Descriptor field"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_TTS"
-block|,
+argument_list|,
 literal|"Transition To State"
-block|,
+argument_list|,
 literal|"Inform AML of an S-state transition"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_TXL"
-block|,
+argument_list|,
 literal|"Transmit Buffer Size"
-block|,
+argument_list|,
 literal|"Serial Channel buffer, Resource Descriptor field"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_TYP"
-block|,
+argument_list|,
 literal|"Type"
-block|,
+argument_list|,
 literal|"DMA channel type (speed), Resource Descriptor field"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_TZ_"
-block|,
+argument_list|,
 literal|"Thermal Zone"
-block|,
+argument_list|,
 literal|"Predefined scope: ACPI 1.0"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_TZD"
-block|,
+argument_list|,
 literal|"Thermal Zone Devices"
-block|,
+argument_list|,
 literal|"Returns a list of device names associated with a Thermal Zone"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_TZM"
-block|,
+argument_list|,
 literal|"Thermal Zone Member"
-block|,
+argument_list|,
 literal|"Returns a reference to the thermal zone of which a device is a member"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_TZP"
-block|,
+argument_list|,
 literal|"Thermal Zone Polling"
-block|,
+argument_list|,
 literal|"Returns a Thermal zone's polling frequency"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_UID"
-block|,
+argument_list|,
 literal|"Unique ID"
-block|,
+argument_list|,
 literal|"Return a device's unique persistent ID"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_UPC"
-block|,
+argument_list|,
 literal|"USB Port Capabilities"
-block|,
+argument_list|,
 literal|"Returns a list of USB port capabilities"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_UPD"
-block|,
+argument_list|,
 literal|"User Presence Detect"
-block|,
+argument_list|,
 literal|"Returns user detection information"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_UPP"
-block|,
+argument_list|,
 literal|"User Presence Polling"
-block|,
+argument_list|,
 literal|"Returns the recommended user presence polling interval"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_VEN"
-block|,
+argument_list|,
 literal|"Vendor Data"
-block|,
+argument_list|,
 literal|"Resource Descriptor field"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_VPO"
-block|,
+argument_list|,
 literal|"Video Post Options"
-block|,
+argument_list|,
 literal|"Returns the implemented video post options"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_WAK"
-block|,
+argument_list|,
 literal|"Wake"
-block|,
+argument_list|,
 literal|"Inform AML that the system has just awakened"
-block|}
+argument_list|)
 block|,
-block|{
+name|AH_PREDEF
+argument_list|(
 literal|"_Wxx"
-block|,
+argument_list|,
 literal|"Wake Event"
-block|,
+argument_list|,
 literal|"Method executed as a result of a wake event"
-block|}
+argument_list|)
 block|,
-block|{
-name|NULL
-block|,
-name|NULL
-block|,
-name|NULL
-block|}
+name|AH_PREDEF
+argument_list|(
+argument|NULL
+argument_list|,
+argument|NULL
+argument_list|,
+argument|NULL
+argument_list|)
 block|}
 decl_stmt|;
 end_decl_stmt

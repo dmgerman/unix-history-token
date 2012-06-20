@@ -958,6 +958,10 @@ parameter_list|(
 name|char
 modifier|*
 name|Buffer
+parameter_list|,
+name|char
+modifier|*
+name|Filename
 parameter_list|)
 function_decl|;
 end_function_decl

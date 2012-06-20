@@ -750,12 +750,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbUInt32ToHexString  *  * PARAMETERS:  Value           - The value to be converted to string  *              Buffer          - Buffer for result (not less than 11 bytes)  *  * RETURN:      None  *  * DESCRIPTION: Convert the unsigned 32-bit value to the hexadecimal image  *  * NOTE: It is the caller's responsibility to ensure that the length of buffer  *       is sufficient.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbUint32ToHexString  *  * PARAMETERS:  Value           - The value to be converted to string  *              Buffer          - Buffer for result (not less than 11 bytes)  *  * RETURN:      None  *  * DESCRIPTION: Convert the unsigned 32-bit value to the hexadecimal image  *  * NOTE: It is the caller's responsibility to ensure that the length of buffer  *       is sufficient.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
-name|AcpiDbUInt32ToHexString
+name|AcpiDbUint32ToHexString
 parameter_list|(
 name|UINT32
 name|Value

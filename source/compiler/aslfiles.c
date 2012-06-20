@@ -1527,7 +1527,7 @@ name|ASL_FILE_INPUT
 argument_list|,
 name|InputFilename
 argument_list|,
-literal|"r"
+literal|"rt"
 argument_list|)
 expr_stmt|;
 name|AslCompilerin
@@ -1710,7 +1710,7 @@ name|ASL_FILE_HEX_OUTPUT
 argument_list|,
 name|Filename
 argument_list|,
-literal|"w+"
+literal|"w+t"
 argument_list|)
 expr_stmt|;
 name|AslCompilerSignon
@@ -1897,7 +1897,7 @@ name|ASL_FILE_LISTING_OUTPUT
 argument_list|,
 name|Filename
 argument_list|,
-literal|"w+"
+literal|"w+t"
 argument_list|)
 expr_stmt|;
 name|AslCompilerSignon
@@ -1963,7 +1963,7 @@ name|ASL_FILE_PREPROCESSOR
 argument_list|,
 name|Filename
 argument_list|,
-literal|"w+b"
+literal|"w+t"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2086,7 +2086,7 @@ name|ASL_FILE_ASM_SOURCE_OUTPUT
 argument_list|,
 name|Filename
 argument_list|,
-literal|"w+"
+literal|"w+t"
 argument_list|)
 expr_stmt|;
 name|AslCompilerSignon
@@ -2153,7 +2153,7 @@ name|ASL_FILE_C_SOURCE_OUTPUT
 argument_list|,
 name|Filename
 argument_list|,
-literal|"w+"
+literal|"w+t"
 argument_list|)
 expr_stmt|;
 name|FlPrintFile
@@ -2227,7 +2227,7 @@ name|ASL_FILE_ASM_INCLUDE_OUTPUT
 argument_list|,
 name|Filename
 argument_list|,
-literal|"w+"
+literal|"w+t"
 argument_list|)
 expr_stmt|;
 name|AslCompilerSignon
@@ -2294,7 +2294,7 @@ name|ASL_FILE_C_INCLUDE_OUTPUT
 argument_list|,
 name|Filename
 argument_list|,
-literal|"w+"
+literal|"w+t"
 argument_list|)
 expr_stmt|;
 name|FlPrintFile
@@ -2368,7 +2368,7 @@ name|ASL_FILE_NAMESPACE_OUTPUT
 argument_list|,
 name|Filename
 argument_list|,
-literal|"w+"
+literal|"w+t"
 argument_list|)
 expr_stmt|;
 name|AslCompilerSignon

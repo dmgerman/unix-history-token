@@ -341,7 +341,7 @@ argument_list|(
 name|ExLoadTableOp
 argument_list|)
 expr_stmt|;
-comment|/* Validate lengths for the SignatureString, OEMIDString, OEMTableID */
+comment|/* Validate lengths for the Signature, OemId, and OemTableId strings */
 if|if
 condition|(
 operator|(

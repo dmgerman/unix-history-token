@@ -2668,7 +2668,7 @@ name|sprintf
 argument_list|(
 name|MsgBuffer
 argument_list|,
-literal|"Tag: %u bit%s, Field: %u bit%s"
+literal|"Size mismatch, Tag: %u bit%s, Field: %u bit%s"
 argument_list|,
 name|TagBitLength
 argument_list|,

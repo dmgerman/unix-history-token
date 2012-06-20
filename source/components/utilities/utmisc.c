@@ -45,6 +45,16 @@ literal|"utmisc"
 argument_list|)
 end_macro
 
+begin_if
+if|#
+directive|if
+name|defined
+name|ACPI_ASL_COMPILER
+operator|||
+name|defined
+name|ACPI_EXEC_APP
+end_if
+
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    UtConvertBackslashes  *  * PARAMETERS:  Pathname        - File pathname string to be converted  *  * RETURN:      Modifies the input Pathname  *  * DESCRIPTION: Convert all backslashes (0x5C) to forward slashes (0x2F) within  *              the entire input file pathname string.  *  ******************************************************************************/
 end_comment
@@ -92,6 +102,11 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtValidateException  *  * PARAMETERS:  Status       - The ACPI_STATUS code to be formatted  *  * RETURN:      A string containing the exception text. NULL if exception is  *              not valid.  *  * DESCRIPTION: This function validates and translates an ACPI exception into  *              an ASCII string.  *  ******************************************************************************/
