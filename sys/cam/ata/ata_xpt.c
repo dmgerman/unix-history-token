@@ -299,6 +299,8 @@ name|PROBE_PM_PID
 block|,
 name|PROBE_PM_PRV
 block|,
+name|PROBE_DONE
+block|,
 name|PROBE_INVALID
 block|}
 name|probe_action
@@ -339,6 +341,8 @@ literal|"PROBE_PM_PID"
 block|,
 literal|"PROBE_PM_PRV"
 block|,
+literal|"PROBE_DONE"
+block|,
 literal|"PROBE_INVALID"
 block|}
 decl_stmt|;
@@ -354,7 +358,7 @@ parameter_list|,
 name|newaction
 parameter_list|)
 define|\
-value|do {									\ 	char **text;							\ 	text = probe_action_text;					\ 	CAM_DEBUG((softc)->periph->path, CAM_DEBUG_INFO,		\ 	    ("Probe %s to %s\n", text[(softc)->action],			\ 	    text[(newaction)]));					\ 	(softc)->action = (newaction);					\ } while(0)
+value|do {									\ 	char **text;							\ 	text = probe_action_text;					\ 	CAM_DEBUG((softc)->periph->path, CAM_DEBUG_PROBE,		\ 	    ("Probe %s to %s\n", text[(softc)->action],			\ 	    text[(newaction)]));					\ 	(softc)->action = (newaction);					\ } while(0)
 end_define
 
 begin_typedef
@@ -1049,6 +1053,19 @@ name|status
 operator|)
 return|;
 block|}
+name|CAM_DEBUG
+argument_list|(
+name|periph
+operator|->
+name|path
+argument_list|,
+name|CAM_DEBUG_PROBE
+argument_list|,
+operator|(
+literal|"Probe started\n"
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Ensure nobody slip in until probe finish. 	 */
 name|cam_freeze_devq_arg
 argument_list|(
@@ -3039,22 +3056,16 @@ literal|15
 argument_list|)
 expr_stmt|;
 break|break;
-case|case
-name|PROBE_INVALID
-case|:
-name|CAM_DEBUG
+default|default:
+name|panic
 argument_list|(
-name|path
+literal|"probestart: invalid action state 0x%x\n"
 argument_list|,
-name|CAM_DEBUG_INFO
-argument_list|,
-operator|(
-literal|"probestart: invalid action state\n"
-operator|)
+name|softc
+operator|->
+name|action
 argument_list|)
 expr_stmt|;
-default|default:
-break|break;
 block|}
 name|xpt_action
 argument_list|(
@@ -3517,6 +3528,13 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|PROBE_SET_ACTION
+argument_list|(
+name|softc
+argument_list|,
+name|PROBE_INVALID
+argument_list|)
+expr_stmt|;
 name|found
 operator|=
 literal|0
@@ -3570,17 +3588,17 @@ name|res
 operator|.
 name|lba_mid
 decl_stmt|;
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|xpt_print
+name|CAM_DEBUG
 argument_list|(
 name|path
 argument_list|,
-literal|"SIGNATURE: %04x\n"
+name|CAM_DEBUG_PROBE
 argument_list|,
+operator|(
+literal|"SIGNATURE: %04x\n"
+operator|,
 name|sign
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -5281,6 +5299,13 @@ name|done_ccb
 argument_list|)
 expr_stmt|;
 block|}
+name|PROBE_SET_ACTION
+argument_list|(
+name|softc
+argument_list|,
+name|PROBE_DONE
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|PROBE_INQUIRY
@@ -5442,6 +5467,13 @@ name|done_ccb
 argument_list|)
 expr_stmt|;
 block|}
+name|PROBE_SET_ACTION
+argument_list|(
+name|softc
+argument_list|,
+name|PROBE_DONE
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 case|case
@@ -6010,27 +6042,24 @@ name|done_ccb
 argument_list|)
 expr_stmt|;
 block|}
-break|break;
-case|case
-name|PROBE_INVALID
-case|:
-name|CAM_DEBUG
+name|PROBE_SET_ACTION
 argument_list|(
-name|done_ccb
-operator|->
-name|ccb_h
-operator|.
-name|path
+name|softc
 argument_list|,
-name|CAM_DEBUG_INFO
-argument_list|,
-operator|(
-literal|"probedone: invalid action state\n"
-operator|)
+name|PROBE_DONE
 argument_list|)
 expr_stmt|;
-default|default:
 break|break;
+default|default:
+name|panic
+argument_list|(
+literal|"probedone: invalid action state 0x%x\n"
+argument_list|,
+name|softc
+operator|->
+name|action
+argument_list|)
+expr_stmt|;
 block|}
 name|done
 label|:
@@ -6062,6 +6091,19 @@ block|}
 name|xpt_release_ccb
 argument_list|(
 name|done_ccb
+argument_list|)
+expr_stmt|;
+name|CAM_DEBUG
+argument_list|(
+name|periph
+operator|->
+name|path
+argument_list|,
+name|CAM_DEBUG_PROBE
+argument_list|,
+operator|(
+literal|"Probe completed\n"
+operator|)
 argument_list|)
 expr_stmt|;
 while|while

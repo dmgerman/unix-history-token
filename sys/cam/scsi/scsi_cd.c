@@ -4211,6 +4211,21 @@ name|error
 operator|)
 return|;
 block|}
+name|CAM_DEBUG
+argument_list|(
+name|periph
+operator|->
+name|path
+argument_list|,
+name|CAM_DEBUG_TRACE
+operator||
+name|CAM_DEBUG_PERIPH
+argument_list|,
+operator|(
+literal|"cdopen\n"
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Check for media, and set the appropriate flags.  We don't bail 	 * if we don't have media, but then we don't allow anything but the 	 * CDIOCEJECT/CDIOCCLOSE ioctls if there is no media. 	 */
 name|cdcheckmedia
 argument_list|(
@@ -4346,6 +4361,21 @@ argument_list|(
 name|periph
 argument_list|,
 name|PRIBIO
+argument_list|)
+expr_stmt|;
+name|CAM_DEBUG
+argument_list|(
+name|periph
+operator|->
+name|path
+argument_list|,
+name|CAM_DEBUG_TRACE
+operator||
+name|CAM_DEBUG_PERIPH
+argument_list|,
+operator|(
+literal|"cdclose\n"
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -5691,7 +5721,9 @@ argument_list|,
 name|CAM_DEBUG_TRACE
 argument_list|,
 operator|(
-literal|"entering cdstrategy\n"
+literal|"cdstrategy(%p)\n"
+operator|,
+name|bp
 operator|)
 argument_list|)
 expr_stmt|;
@@ -7497,19 +7529,6 @@ argument_list|(
 name|periph
 argument_list|)
 expr_stmt|;
-name|CAM_DEBUG
-argument_list|(
-name|periph
-operator|->
-name|path
-argument_list|,
-name|CAM_DEBUG_TRACE
-argument_list|,
-operator|(
-literal|"entering cdioctl\n"
-operator|)
-argument_list|)
-expr_stmt|;
 name|softc
 operator|=
 operator|(
@@ -7530,7 +7549,7 @@ argument_list|,
 name|CAM_DEBUG_TRACE
 argument_list|,
 operator|(
-literal|"trying to do ioctl %#lx\n"
+literal|"cdioctl(%#lx)\n"
 operator|,
 name|cmd
 operator|)
