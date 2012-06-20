@@ -380,6 +380,10 @@ block|,
 name|CAM_ARG_DEBUG_PERIPH
 init|=
 literal|0x20000000
+block|,
+name|CAM_ARG_DEBUG_PROBE
+init|=
+literal|0x40000000
 block|, }
 name|cam_argmask
 typedef|;
@@ -694,7 +698,7 @@ name|CAM_CMD_DEBUG
 block|,
 name|CAM_ARG_NONE
 block|,
-literal|"IPTSXc"
+literal|"IPTSXcp"
 block|}
 block|,
 block|{
@@ -12814,6 +12818,22 @@ operator||=
 name|CAM_DEBUG_CDB
 expr_stmt|;
 break|break;
+case|case
+literal|'p'
+case|:
+name|arglist
+operator||=
+name|CAM_ARG_DEBUG_PROBE
+expr_stmt|;
+name|ccb
+operator|.
+name|cdbg
+operator|.
+name|flags
+operator||=
+name|CAM_DEBUG_PROBE
+expr_stmt|;
+break|break;
 default|default:
 break|break;
 block|}
@@ -12948,6 +12968,8 @@ operator||
 name|CAM_ARG_DEBUG_SUBTRACE
 operator||
 name|CAM_ARG_DEBUG_XPT
+operator||
+name|CAM_ARG_DEBUG_PROBE
 operator|)
 expr_stmt|;
 block|}
