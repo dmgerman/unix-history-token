@@ -2500,7 +2500,7 @@ argument_list|,
 name|WB_LDN8_CRF5
 argument_list|)
 expr_stmt|;
-name|write_efir_1
+name|write_efdr_1
 argument_list|(
 name|sc
 argument_list|,
