@@ -2427,6 +2427,13 @@ name|cam_periph_runccb
 argument_list|(
 name|ccb
 argument_list|,
+name|passerror
+argument_list|,
+comment|/* cam_flags */
+name|CAM_RETRY_SELTO
+argument_list|,
+comment|/* sense_flags */
+operator|(
 operator|(
 name|ccb
 operator|->
@@ -2437,15 +2444,12 @@ operator|&
 name|CAM_PASS_ERR_RECOVER
 operator|)
 condition|?
-name|passerror
-else|:
-name|NULL
-argument_list|,
-comment|/* cam_flags */
-name|CAM_RETRY_SELTO
-argument_list|,
-comment|/* sense_flags */
 name|SF_RETRY_UA
+else|:
+name|SF_NO_RECOVERY
+operator|)
+operator||
+name|SF_NO_PRINT
 argument_list|,
 name|softc
 operator|->

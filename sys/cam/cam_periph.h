@@ -330,10 +330,6 @@ name|CAM_PERIPH_RECOVERY_INPROG
 value|0x20
 define|#
 directive|define
-name|CAM_PERIPH_SENSE_INPROG
-value|0x40
-define|#
-directive|define
 name|CAM_PERIPH_FREE
 value|0x80
 name|u_int32_t
