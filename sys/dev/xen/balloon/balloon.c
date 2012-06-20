@@ -1710,6 +1710,13 @@ block|{
 name|int
 name|err
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|is_running_on_xen
+argument_list|()
+condition|)
+return|return;
 name|err
 operator|=
 name|xs_register_watch
