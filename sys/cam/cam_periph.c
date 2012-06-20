@@ -1187,6 +1187,19 @@ goto|;
 name|init_level
 operator|++
 expr_stmt|;
+name|CAM_DEBUG
+argument_list|(
+name|periph
+operator|->
+name|path
+argument_list|,
+name|CAM_DEBUG_INFO
+argument_list|,
+operator|(
+literal|"Periph created\n"
+operator|)
+argument_list|)
+expr_stmt|;
 name|status
 operator|=
 name|periph_ctor
@@ -1220,6 +1233,19 @@ break|break;
 case|case
 literal|3
 case|:
+name|CAM_DEBUG
+argument_list|(
+name|periph
+operator|->
+name|path
+argument_list|,
+name|CAM_DEBUG_INFO
+argument_list|,
+operator|(
+literal|"Periph destroyed\n"
+operator|)
+argument_list|)
+expr_stmt|;
 name|xpt_remove_periph
 argument_list|(
 name|periph
@@ -2339,6 +2365,19 @@ modifier|*
 name|periph
 parameter_list|)
 block|{
+name|CAM_DEBUG
+argument_list|(
+name|periph
+operator|->
+name|path
+argument_list|,
+name|CAM_DEBUG_INFO
+argument_list|,
+operator|(
+literal|"Periph invalidated\n"
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * We only call this routine the first time a peripheral is 	 * invalidated. 	 */
 if|if
 condition|(
@@ -2515,6 +2554,19 @@ expr_stmt|;
 name|xpt_remove_periph
 argument_list|(
 name|periph
+argument_list|)
+expr_stmt|;
+name|CAM_DEBUG
+argument_list|(
+name|periph
+operator|->
+name|path
+argument_list|,
+name|CAM_DEBUG_INFO
+argument_list|,
+operator|(
+literal|"Periph destroyed\n"
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
