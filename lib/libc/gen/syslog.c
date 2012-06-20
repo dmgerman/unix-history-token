@@ -96,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<assert.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -1748,6 +1754,22 @@ block|{
 name|THREAD_LOCK
 argument_list|()
 expr_stmt|;
+name|assert
+argument_list|(
+name|LogFile
+operator|>=
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|LogFile
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -1761,6 +1783,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+block|}
 name|LogTag
 operator|=
 name|NULL
