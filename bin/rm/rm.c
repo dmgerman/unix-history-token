@@ -1241,7 +1241,12 @@ name|fflag
 condition|)
 continue|continue;
 comment|/* FALLTHROUGH */
-default|default:
+case|case
+name|FTS_F
+case|:
+case|case
+name|FTS_NSOK
+case|:
 if|if
 condition|(
 name|Pflag
@@ -1255,10 +1260,22 @@ name|p
 operator|->
 name|fts_accpath
 argument_list|,
+name|p
+operator|->
+name|fts_info
+operator|==
+name|FTS_NSOK
+condition|?
 name|NULL
+else|:
+name|p
+operator|->
+name|fts_statp
 argument_list|)
 condition|)
 continue|continue;
+comment|/* FALLTHROUGH */
+default|default:
 name|rval
 operator|=
 name|unlink
