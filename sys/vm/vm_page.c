@@ -2817,17 +2817,18 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_dirty:  *  *	Set all bits in the page's dirty field.  *  *	The object containing the specified page must be locked if the  *	call is made from the machine-independent layer.  *  *	See vm_page_clear_dirty_mask().  */
+comment|/*  *	vm_page_dirty_KBI:		[ internal use only ]  *  *	Set all bits in the page's dirty field.  *  *	The object containing the specified page must be locked if the  *	call is made from the machine-independent layer.  *  *	See vm_page_clear_dirty_mask().  *  *	This function should only be called by vm_page_dirty().  */
 end_comment
 
 begin_function
 name|void
-name|vm_page_dirty
+name|vm_page_dirty_KBI
 parameter_list|(
 name|vm_page_t
 name|m
 parameter_list|)
 block|{
+comment|/* These assertions refer to this operation by its public name. */
 name|KASSERT
 argument_list|(
 operator|(

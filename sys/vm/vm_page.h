@@ -1232,16 +1232,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|vm_page_dirty
-parameter_list|(
-name|vm_page_t
-name|m
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|vm_page_wakeup
 parameter_list|(
 name|vm_page_t
@@ -1811,6 +1801,16 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|vm_page_dirty_KBI
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|vm_page_lock_KBI
 parameter_list|(
 name|vm_page_t
@@ -1948,6 +1948,50 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  *	vm_page_dirty:  *  *	Set all bits in the page's dirty field.  *  *	The object containing the specified page must be locked if the  *	call is made from the machine-independent layer.  *  *	See vm_page_clear_dirty_mask().  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|vm_page_dirty
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|)
+block|{
+comment|/* Use vm_page_dirty_KBI() under INVARIANTS to save memory. */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|KLD_MODULE
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INVARIANTS
+argument_list|)
+name|vm_page_dirty_KBI
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|m
+operator|->
+name|dirty
+operator|=
+name|VM_PAGE_BITS_ALL
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+end_function
 
 begin_comment
 comment|/*  *	vm_page_sleep_if_busy:  *  *	Sleep and release the page queues lock if VPO_BUSY is set or,  *	if also_m_busy is TRUE, busy is non-zero.  Returns TRUE if the  *	thread slept and the page queues lock was released.  *	Otherwise, retains the page queues lock and returns FALSE.  *  *	The object containing the given page must be locked.  */
