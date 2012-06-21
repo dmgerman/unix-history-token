@@ -4787,6 +4787,43 @@ name|R_ARM_THM_XPC22
 value|16
 end_define
 
+begin_comment
+comment|/* TLS relocations */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_ARM_TLS_DTPMOD32
+value|17
+end_define
+
+begin_comment
+comment|/* ID of module containing symbol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_ARM_TLS_DTPOFF32
+value|18
+end_define
+
+begin_comment
+comment|/* Offset in TLS block */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_ARM_TLS_TPOFF32
+value|19
+end_define
+
+begin_comment
+comment|/* Offset in static TLS block */
+end_comment
+
 begin_define
 define|#
 directive|define
