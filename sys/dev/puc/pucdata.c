@@ -2081,30 +2081,6 @@ block|,
 block|{
 literal|0x1393
 block|,
-literal|0x1322
-block|,
-literal|0xffff
-block|,
-literal|0
-block|,
-literal|"Moxa Technologies, Smartio CP-132EL/PCIe"
-block|,
-name|DEFAULT_RCLK
-operator|*
-literal|8
-block|,
-name|PUC_PORT_2S
-block|,
-literal|0x14
-block|,
-literal|0
-block|,
-literal|0x200
-block|, 	}
-block|,
-block|{
-literal|0x1393
-block|,
 literal|0x1680
 block|,
 literal|0xffff
