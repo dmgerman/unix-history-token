@@ -268,9 +268,15 @@ if|#
 directive|if
 name|defined
 argument_list|(
+name|__arm__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|__ia64__
 argument_list|)
 operator|||
+expr|\
 name|defined
 argument_list|(
 name|__powerpc__
@@ -307,11 +313,6 @@ name|__sparc64__
 argument_list|)
 operator|||
 expr|\
-name|defined
-argument_list|(
-name|__arm__
-argument_list|)
-operator|||
 name|defined
 argument_list|(
 name|__mips__
@@ -1412,6 +1413,16 @@ name|p_vaddr
 expr_stmt|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|TLS_VARIANT_I
+comment|/* 	 * tls_static_space should include space for TLS structure 	 */
+name|tls_static_space
+operator|+=
+name|TLS_TCB_SIZE
+expr_stmt|;
+endif|#
+directive|endif
 name|tls
 operator|=
 name|_rtld_allocate_tls
