@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* crc32.c -- compute the CRC-32 of a data stream  * Copyright (C) 1995-2006, 2010 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  *  * Thanks to Rodney Brown<rbrown64@csc.com.au> for his contribution of faster  * CRC methods: exclusive-oring 32 bits of data at a time, and pre-computing  * tables for updating the shift register in one step with three exclusive-ors  * instead of four steps with four exclusive-ors.  This results in about a  * factor of two increase in speed on a Power PC G4 (PPC7455) using gcc -O3.  */
+comment|/* crc32.c -- compute the CRC-32 of a data stream  * Copyright (C) 1995-2006, 2010, 2011, 2012 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  *  * Thanks to Rodney Brown<rbrown64@csc.com.au> for his contribution of faster  * CRC methods: exclusive-oring 32 bits of data at a time, and pre-computing  * tables for updating the shift register in one step with three exclusive-ors  * instead of four steps with four exclusive-ors.  This results in about a  * factor of two increase in speed on a Power PC G4 (PPC7455) using gcc -O3.  */
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/* @(#) $Id$ */
 end_comment
 
 begin_comment
-comment|/*   Note on the use of DYNAMIC_CRC_TABLE: there is no mutex or semaphore   protection on the static variables used to control the first-use generation   of the crc tables.  Therefore, if you #define DYNAMIC_CRC_TABLE, you should   first call get_crc_table() to initialize the tables before allowing more than   one thread to use crc32().  */
+comment|/*   Note on the use of DYNAMIC_CRC_TABLE: there is no mutex or semaphore   protection on the static variables used to control the first-use generation   of the crc tables.  Therefore, if you #define DYNAMIC_CRC_TABLE, you should   first call get_crc_table() to initialize the tables before allowing more than   one thread to use crc32().    DYNAMIC_CRC_TABLE and MAKECRCH can be #defined to write out crc32.h.  */
 end_comment
 
 begin_ifdef
@@ -71,168 +71,40 @@ value|static
 end_define
 
 begin_comment
-comment|/* Find a four-byte integer type for crc32_little() and crc32_big(). */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NOBYFOUR
-end_ifndef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|STDC
-end_ifdef
-
-begin_comment
-comment|/* need ANSI C limits.h to determine sizes */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<limits.h>
-end_include
-
-begin_define
-define|#
-directive|define
-name|BYFOUR
-end_define
-
-begin_if
-if|#
-directive|if
-operator|(
-name|UINT_MAX
-operator|==
-literal|0xffffffffUL
-operator|)
-end_if
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|int
-name|u4
-typedef|;
-end_typedef
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_if
-if|#
-directive|if
-operator|(
-name|ULONG_MAX
-operator|==
-literal|0xffffffffUL
-operator|)
-end_if
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|long
-name|u4
-typedef|;
-end_typedef
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_if
-if|#
-directive|if
-operator|(
-name|USHRT_MAX
-operator|==
-literal|0xffffffffUL
-operator|)
-end_if
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|short
-name|u4
-typedef|;
-end_typedef
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_undef
-undef|#
-directive|undef
-name|BYFOUR
-end_undef
-
-begin_comment
-comment|/* can't find a four-byte integer type! */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* STDC */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !NOBYFOUR */
-end_comment
-
-begin_comment
 comment|/* Definitions for doing the crc four data bytes at a time. */
 end_comment
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|NOBYFOUR
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|Z_U4
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|BYFOUR
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|BYFOUR
 end_ifdef
-
-begin_define
-define|#
-directive|define
-name|REV
-parameter_list|(
-name|w
-parameter_list|)
-value|((((w)>>24)&0xff)+(((w)>>8)&0xff00)+ \                 (((w)&0xff00)<<8)+(((w)&0xff)<<24))
-end_define
 
 begin_decl_stmt
 name|local
@@ -354,22 +226,25 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|local
 name|uLong
 name|crc32_combine_
-parameter_list|(
+name|OF
+argument_list|(
+operator|(
 name|uLong
 name|crc1
-parameter_list|,
+operator|,
 name|uLong
 name|crc2
-parameter_list|,
+operator|,
 name|z_off64_t
 name|len2
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_ifdef
 ifdef|#
@@ -389,8 +264,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|local
-name|unsigned
-name|long
+name|z_crc_t
 name|FAR
 name|crc_table
 index|[
@@ -432,8 +306,7 @@ name|FILE
 operator|*
 operator|,
 specifier|const
-name|unsigned
-name|long
+name|z_crc_t
 name|FAR
 operator|*
 operator|)
@@ -460,8 +333,7 @@ name|void
 name|make_crc_table
 parameter_list|()
 block|{
-name|unsigned
-name|long
+name|z_crc_t
 name|c
 decl_stmt|;
 name|int
@@ -469,8 +341,7 @@ name|n
 decl_stmt|,
 name|k
 decl_stmt|;
-name|unsigned
-name|long
+name|z_crc_t
 name|poly
 decl_stmt|;
 comment|/* polynomial exclusive-or pattern */
@@ -533,7 +404,7 @@ expr_stmt|;
 comment|/* make exclusive-or pattern from polynomial (0xedb88320UL) */
 name|poly
 operator|=
-literal|0UL
+literal|0
 expr_stmt|;
 for|for
 control|(
@@ -543,6 +414,10 @@ literal|0
 init|;
 name|n
 operator|<
+call|(
+name|int
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 name|p
@@ -553,13 +428,17 @@ operator|(
 name|unsigned
 name|char
 operator|)
+argument_list|)
 condition|;
 name|n
 operator|++
 control|)
 name|poly
 operator||=
-literal|1UL
+operator|(
+name|z_crc_t
+operator|)
+literal|1
 operator|<<
 operator|(
 literal|31
@@ -588,8 +467,7 @@ block|{
 name|c
 operator|=
 operator|(
-name|unsigned
-name|long
+name|z_crc_t
 operator|)
 name|n
 expr_stmt|;
@@ -671,7 +549,7 @@ index|[
 name|n
 index|]
 operator|=
-name|REV
+name|ZSWAP32
 argument_list|(
 name|c
 argument_list|)
@@ -728,7 +606,7 @@ index|[
 name|n
 index|]
 operator|=
-name|REV
+name|ZSWAP32
 argument_list|(
 name|c
 argument_list|)
@@ -796,7 +674,7 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"local const unsigned long FAR "
+literal|"local const z_crc_t FAR "
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -907,8 +785,7 @@ modifier|*
 name|out
 decl_stmt|;
 specifier|const
-name|unsigned
-name|long
+name|z_crc_t
 name|FAR
 modifier|*
 name|table
@@ -944,10 +821,16 @@ literal|""
 else|:
 literal|"    "
 argument_list|,
+call|(
+name|unsigned
+name|long
+call|)
+argument_list|(
 name|table
 index|[
 name|n
 index|]
+argument_list|)
 argument_list|,
 name|n
 operator|==
@@ -1014,8 +897,7 @@ end_comment
 
 begin_function
 specifier|const
-name|unsigned
-name|long
+name|z_crc_t
 name|FAR
 modifier|*
 name|ZEXPORT
@@ -1038,8 +920,7 @@ comment|/* DYNAMIC_CRC_TABLE */
 return|return
 operator|(
 specifier|const
-name|unsigned
-name|long
+name|z_crc_t
 name|FAR
 operator|*
 operator|)
@@ -1136,7 +1017,7 @@ name|ptrdiff_t
 argument_list|)
 condition|)
 block|{
-name|u4
+name|z_crc_t
 name|endian
 decl_stmt|;
 name|endian
@@ -1282,12 +1163,12 @@ name|len
 decl_stmt|;
 block|{
 specifier|register
-name|u4
+name|z_crc_t
 name|c
 decl_stmt|;
 specifier|register
 specifier|const
-name|u4
+name|z_crc_t
 name|FAR
 modifier|*
 name|buf4
@@ -1295,7 +1176,7 @@ decl_stmt|;
 name|c
 operator|=
 operator|(
-name|u4
+name|z_crc_t
 operator|)
 name|crc
 expr_stmt|;
@@ -1350,7 +1231,7 @@ name|buf4
 operator|=
 operator|(
 specifier|const
-name|u4
+name|z_crc_t
 name|FAR
 operator|*
 operator|)
@@ -1503,22 +1384,22 @@ name|len
 decl_stmt|;
 block|{
 specifier|register
-name|u4
+name|z_crc_t
 name|c
 decl_stmt|;
 specifier|register
 specifier|const
-name|u4
+name|z_crc_t
 name|FAR
 modifier|*
 name|buf4
 decl_stmt|;
 name|c
 operator|=
-name|REV
+name|ZSWAP32
 argument_list|(
 operator|(
-name|u4
+name|z_crc_t
 operator|)
 name|crc
 argument_list|)
@@ -1574,7 +1455,7 @@ name|buf4
 operator|=
 operator|(
 specifier|const
-name|u4
+name|z_crc_t
 name|FAR
 operator|*
 operator|)
@@ -1679,7 +1560,7 @@ name|unsigned
 name|long
 call|)
 argument_list|(
-name|REV
+name|ZSWAP32
 argument_list|(
 name|c
 argument_list|)
