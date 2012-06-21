@@ -104,12 +104,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<arm/at91/at91var.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/spibus/spi.h>
 end_include
 
@@ -160,10 +154,6 @@ name|sx
 name|xfer_mtx
 decl_stmt|;
 comment|/* Enforce one transfer at a time */
-name|uint32_t
-name|xfer_mask
-decl_stmt|;
-comment|/* Bits to wait on for completion */
 name|uint32_t
 name|xfer_done
 decl_stmt|;
@@ -446,21 +436,6 @@ goto|goto
 name|out
 goto|;
 comment|/* 	 * Set up the hardware. 	 */
-name|sc
-operator|->
-name|xfer_mask
-operator|=
-name|SPI_SR_RXBUFF
-operator||
-operator|(
-name|at91_is_rm92
-argument_list|()
-condition|?
-literal|0
-else|:
-name|SPI_SR_TXEMPTY
-operator|)
-expr_stmt|;
 name|WR4
 argument_list|(
 name|sc
@@ -1218,9 +1193,6 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-name|uint32_t
-name|mask
-decl_stmt|;
 name|KASSERT
 argument_list|(
 name|cmd
@@ -1768,19 +1740,13 @@ name|xfer_done
 operator|=
 literal|0
 expr_stmt|;
-name|mask
-operator|=
-name|sc
-operator|->
-name|xfer_mask
-expr_stmt|;
 name|WR4
 argument_list|(
 name|sc
 argument_list|,
 name|SPI_IER
 argument_list|,
-name|mask
+name|SPI_SR_RXBUFF
 argument_list|)
 expr_stmt|;
 name|WR4
@@ -1818,8 +1784,8 @@ condition|(
 name|sc
 operator|->
 name|xfer_done
-operator|!=
-name|mask
+operator|==
+literal|0
 operator|&&
 name|err
 operator|!=
@@ -1937,8 +1903,6 @@ modifier|*
 name|sc
 decl_stmt|;
 name|uint32_t
-name|mask
-decl_stmt|,
 name|sr
 decl_stmt|;
 name|sc
@@ -1949,12 +1913,6 @@ name|at91_spi_softc
 operator|*
 operator|)
 name|arg
-expr_stmt|;
-name|mask
-operator|=
-name|sc
-operator|->
-name|xfer_mask
 expr_stmt|;
 name|sr
 operator|=
@@ -1977,7 +1935,7 @@ condition|(
 operator|(
 name|sr
 operator|&
-name|mask
+name|SPI_SR_RXBUFF
 operator|)
 operator|!=
 literal|0
@@ -1986,10 +1944,8 @@ block|{
 name|sc
 operator|->
 name|xfer_done
-operator||=
-name|sr
-operator|&
-name|mask
+operator|=
+literal|1
 expr_stmt|;
 name|WR4
 argument_list|(
@@ -1997,7 +1953,7 @@ name|sc
 argument_list|,
 name|SPI_IDR
 argument_list|,
-name|mask
+name|SPI_SR_RXBUFF
 argument_list|)
 expr_stmt|;
 name|wakeup
@@ -2015,7 +1971,7 @@ operator|(
 name|sr
 operator|&
 operator|~
-name|mask
+name|SPI_SR_RXBUFF
 operator|)
 operator|!=
 literal|0
@@ -2041,7 +1997,7 @@ argument_list|,
 name|sr
 operator|&
 operator|~
-name|mask
+name|SPI_SR_RXBUFF
 argument_list|)
 expr_stmt|;
 block|}
