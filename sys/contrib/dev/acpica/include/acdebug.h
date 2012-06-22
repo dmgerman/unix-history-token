@@ -955,7 +955,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|AcpiDbUInt32ToHexString
+name|AcpiDbUint32ToHexString
 parameter_list|(
 name|UINT32
 name|Value

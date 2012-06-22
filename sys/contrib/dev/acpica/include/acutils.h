@@ -1571,7 +1571,7 @@ name|UINT32
 name|Display
 parameter_list|,
 name|UINT32
-name|componentId
+name|ComponentId
 parameter_list|)
 function_decl|;
 end_function_decl

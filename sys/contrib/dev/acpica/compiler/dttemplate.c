@@ -463,7 +463,7 @@ return|;
 block|}
 block|}
 block|}
-comment|/*      * Create the "special ACPI tables:      * 1) DSDT/SSDT are AML tables, not data tables      * 2) FACS and RSDP have non-standard headers      */
+comment|/*      * Create the special ACPI tables:      * 1) DSDT/SSDT are AML tables, not data tables      * 2) FACS and RSDP have non-standard headers      */
 name|Status
 operator|=
 name|DtCreateOneTemplate
