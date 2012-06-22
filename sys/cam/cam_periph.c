@@ -6094,6 +6094,11 @@ name|error
 operator|=
 name|ERESTART
 expr_stmt|;
+operator|*
+name|print
+operator|=
+literal|0
+expr_stmt|;
 break|break;
 block|}
 comment|/* FALLTHROUGH */
@@ -7200,10 +7205,16 @@ literal|"Retry was blocked"
 expr_stmt|;
 block|}
 else|else
+block|{
 name|error
 operator|=
 name|ERESTART
 expr_stmt|;
+name|print
+operator|=
+literal|0
+expr_stmt|;
+block|}
 break|break;
 case|case
 name|CAM_RESRC_UNAVAIL
