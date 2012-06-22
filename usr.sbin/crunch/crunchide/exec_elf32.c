@@ -993,8 +993,6 @@ decl_stmt|;
 name|Elf_Size
 name|nsyms
 decl_stmt|,
-name|nlocalsyms
-decl_stmt|,
 name|ewi
 decl_stmt|;
 name|ssize_t
@@ -1544,15 +1542,6 @@ argument_list|(
 name|symtabshdr
 operator|->
 name|sh_entsize
-argument_list|)
-expr_stmt|;
-name|nlocalsyms
-operator|=
-name|xe32toh
-argument_list|(
-name|symtabshdr
-operator|->
-name|sh_info
 argument_list|)
 expr_stmt|;
 comment|/* move symbols, making them local */
