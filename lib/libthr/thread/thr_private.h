@@ -175,7 +175,7 @@ begin_define
 define|#
 directive|define
 name|SIGCANCEL
-value|32
+value|SIGTHR
 end_define
 
 begin_comment
