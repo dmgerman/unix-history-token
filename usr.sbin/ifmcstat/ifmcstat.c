@@ -1675,9 +1675,6 @@ name|ifaddr
 modifier|*
 name|ifap0
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
 if|if
 condition|(
 name|af
@@ -1773,8 +1770,6 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|error
-operator|=
 name|getnameinfo
 argument_list|(
 operator|(
@@ -1954,8 +1949,6 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|error
-operator|=
 name|getnameinfo
 argument_list|(
 operator|(
