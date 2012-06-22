@@ -6624,7 +6624,9 @@ if|if
 condition|(
 name|cpl
 operator|->
-name|seq_vld
+name|flags
+operator|&
+name|CPL_FW4_ACK_FLAGS_SEQVAL
 condition|)
 block|{
 name|tcp_seq

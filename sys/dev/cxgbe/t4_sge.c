@@ -6497,7 +6497,7 @@ begin_define
 define|#
 directive|define
 name|TXPKT_LSO_WR_HDR
-value|((\     sizeof(struct fw_eth_tx_pkt_wr) + \     sizeof(struct cpl_tx_pkt_lso) + \     sizeof(struct cpl_tx_pkt_core) \     ) / 8 )
+value|((\     sizeof(struct fw_eth_tx_pkt_wr) + \     sizeof(struct cpl_tx_pkt_lso_core) + \     sizeof(struct cpl_tx_pkt_core) \     ) / 8 )
 end_define
 
 begin_function
@@ -15421,7 +15421,7 @@ operator|+=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|cpl_tx_pkt_lso
+name|cpl_tx_pkt_lso_core
 argument_list|)
 expr_stmt|;
 block|}
@@ -15594,7 +15594,7 @@ name|tso_segsz
 condition|)
 block|{
 name|struct
-name|cpl_tx_pkt_lso
+name|cpl_tx_pkt_lso_core
 modifier|*
 name|lso
 init|=
