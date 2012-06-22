@@ -2392,6 +2392,7 @@ operator|==
 name|NULL
 condition|)
 block|{
+comment|/* XXX-BZ WT.? */
 if|if
 condition|(
 name|ron
