@@ -6532,7 +6532,7 @@ goto|goto
 name|error
 goto|;
 block|}
-comment|/* 	 * If the dataset's canmount property is being set to noauto, 	 * then we want to prevent unmounting& remounting it. 	 */
+comment|/* 	 * If the dataset's canmount property is being set to noauto, 	 * or being set to on and the dataset is already mounted, 	 * then we want to prevent unmounting& remounting it. 	 */
 name|do_prefix
 operator|=
 operator|!
@@ -6563,6 +6563,19 @@ operator|(
 name|idx
 operator|==
 name|ZFS_CANMOUNT_NOAUTO
+operator|||
+operator|(
+name|idx
+operator|==
+name|ZFS_CANMOUNT_ON
+operator|&&
+name|zfs_is_mounted
+argument_list|(
+name|zhp
+argument_list|,
+name|NULL
+argument_list|)
+operator|)
 operator|)
 operator|)
 expr_stmt|;
