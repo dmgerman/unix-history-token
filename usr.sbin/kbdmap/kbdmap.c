@@ -1312,11 +1312,6 @@ index|[]
 init|=
 literal|"/tmp/_kbd_lang.XXXX"
 decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|ext
-decl_stmt|;
 name|int
 name|fd
 decl_stmt|,
@@ -1363,13 +1358,6 @@ literal|"/usr/bin/dialog --clear --title \"Keyboard Menu\" "
 literal|"--menu \"%s\" -1 -1 10"
 argument_list|,
 name|menu
-argument_list|)
-expr_stmt|;
-name|ext
-operator|=
-name|extract_name
-argument_list|(
-name|dir
 argument_list|)
 expr_stmt|;
 comment|/* start right font, assume that current font is equal 	 * to default font in /etc/rc.conf 	 *	 	 * $font is the font which require the language $lang; e.g. 	 * russian *need* a koi8 font 	 * $font_current is the current font from /etc/rc.conf 	 */
