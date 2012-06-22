@@ -5638,11 +5638,10 @@ name|sge_rxq
 modifier|*
 name|rxq
 init|=
-operator|(
-name|void
-operator|*
-operator|)
+name|iq_to_rxq
+argument_list|(
 name|iq
+argument_list|)
 decl_stmt|;
 name|struct
 name|ifnet
