@@ -3463,12 +3463,7 @@ operator|++
 name|outidx
 operator|==
 name|cnt
-condition|)
-goto|goto
-name|out
-goto|;
-if|if
-condition|(
+operator|||
 operator|(
 name|VM_RADIX_MAXVAL
 operator|-
