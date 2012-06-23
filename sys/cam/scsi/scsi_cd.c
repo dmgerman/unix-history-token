@@ -4449,9 +4449,6 @@ name|cd_softc
 modifier|*
 name|softc
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
 name|periph
 operator|=
 operator|(
@@ -4492,16 +4489,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|error
-operator|=
 name|cam_periph_hold
 argument_list|(
 name|periph
 argument_list|,
 name|PRIBIO
 argument_list|)
-operator|)
 operator|!=
 literal|0
 condition|)
