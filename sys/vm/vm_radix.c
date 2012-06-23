@@ -3504,6 +3504,14 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|VM_RADIX_MAXVAL
+operator|-
+name|start
+operator|)
+operator|==
+literal|0
+operator|&&
 name|end
 operator|==
 literal|0
