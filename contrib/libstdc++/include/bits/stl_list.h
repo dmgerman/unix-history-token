@@ -1008,6 +1008,15 @@ name|_List_node_base
 name|_M_node
 block|;
 name|_List_impl
+argument_list|()
+operator|:
+name|_Node_alloc_type
+argument_list|()
+block|,
+name|_M_node
+argument_list|()
+block|{ }
+name|_List_impl
 argument_list|(
 specifier|const
 name|_Node_alloc_type
@@ -1175,6 +1184,15 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
+name|_List_base
+argument_list|()
+operator|:
+name|_M_impl
+argument_list|()
+block|{
+name|_M_init
+argument_list|()
+block|; }
 name|_List_base
 argument_list|(
 specifier|const
@@ -1577,20 +1595,20 @@ begin_comment
 comment|/**        *  @brief  Default constructor creates no elements.        */
 end_comment
 
-begin_macro
-name|explicit
-end_macro
-
 begin_expr_stmt
+name|list
+argument_list|()
+operator|:
+name|_Base
+argument_list|()
+block|{ }
+name|explicit
 name|list
 argument_list|(
 specifier|const
 name|allocator_type
 operator|&
 name|__a
-operator|=
-name|allocator_type
-argument_list|()
 argument_list|)
 operator|:
 name|_Base
