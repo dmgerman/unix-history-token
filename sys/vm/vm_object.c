@@ -6848,7 +6848,9 @@ condition|)
 block|{
 name|start
 operator|=
-literal|0
+name|p
+operator|->
+name|pindex
 expr_stmt|;
 goto|goto
 name|restart
