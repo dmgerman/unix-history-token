@@ -168,6 +168,9 @@ name|int
 parameter_list|,
 name|vm_pindex_t
 modifier|*
+parameter_list|,
+name|u_int
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -241,6 +244,9 @@ name|void
 modifier|*
 name|val
 decl_stmt|;
+name|u_int
+name|dummy
+decl_stmt|;
 if|if
 condition|(
 name|vm_radix_lookupn
@@ -260,6 +266,9 @@ literal|1
 argument_list|,
 operator|&
 name|index
+argument_list|,
+operator|&
+name|dummy
 argument_list|)
 condition|)
 return|return
