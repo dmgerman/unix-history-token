@@ -635,6 +635,8 @@ operator|=
 name|mfi_open
 argument_list|(
 name|mfi_unit
+argument_list|,
+name|O_RDWR
 argument_list|)
 expr_stmt|;
 if|if

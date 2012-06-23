@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|__FBSDID
 argument_list|(
-literal|"$FreeBSD$"
+literal|"$FreeBSD: user/attilio/vmcontention/lib/libz/zopen.c 84228 2001-09-30 22:39:00Z dillon $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -117,6 +117,25 @@ block|}
 end_function
 
 begin_function
+specifier|static
+name|int
+name|xgzclose
+parameter_list|(
+name|void
+modifier|*
+name|cookie
+parameter_list|)
+block|{
+return|return
+name|gzclose
+argument_list|(
+name|cookie
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
 name|FILE
 modifier|*
 name|zopen
@@ -170,7 +189,7 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-name|gzclose
+name|xgzclose
 argument_list|)
 operator|)
 return|;
@@ -187,7 +206,7 @@ name|xgzwrite
 argument_list|,
 name|NULL
 argument_list|,
-name|gzclose
+name|xgzclose
 argument_list|)
 operator|)
 return|;

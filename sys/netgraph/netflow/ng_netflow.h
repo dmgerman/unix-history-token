@@ -327,28 +327,80 @@ begin_define
 define|#
 directive|define
 name|NG_NETFLOW_CONF_INGRESS
-value|1
+value|0x01
 end_define
+
+begin_comment
+comment|/* Account on ingress */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|NG_NETFLOW_CONF_EGRESS
-value|2
+value|0x02
 end_define
+
+begin_comment
+comment|/* Account on egress */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|NG_NETFLOW_CONF_ONCE
-value|4
+value|0x04
 end_define
+
+begin_comment
+comment|/* Add tag to account only once */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|NG_NETFLOW_CONF_THISONCE
-value|8
+value|0x08
+end_define
+
+begin_comment
+comment|/* Account once in current node */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_NETFLOW_CONF_NOSRCLOOKUP
+value|0x10
+end_define
+
+begin_comment
+comment|/* No radix lookup on src */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_NETFLOW_CONF_NODSTLOOKUP
+value|0x20
+end_define
+
+begin_comment
+comment|/* No radix lookup on dst */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_NETFLOW_IS_FRAG
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_NETFLOW_FLOW_FLAGS
+value|(NG_NETFLOW_CONF_NOSRCLOOKUP|\ 					NG_NETFLOW_CONF_NODSTLOOKUP)
 end_define
 
 begin_comment

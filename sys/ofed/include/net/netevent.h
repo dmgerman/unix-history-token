@@ -60,6 +60,10 @@ name|struct
 name|llentry
 modifier|*
 name|lle
+parameter_list|,
+name|int
+name|evt
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -106,7 +110,7 @@ index|]
 operator|=
 name|EVENTHANDLER_REGISTER
 argument_list|(
-name|arp_update_event
+name|lle_event
 argument_list|,
 name|_handle_arp_update_event
 argument_list|,
@@ -137,7 +141,7 @@ parameter_list|)
 block|{
 name|EVENTHANDLER_DEREGISTER
 argument_list|(
-name|arp_update_event
+name|lle_event
 argument_list|,
 name|nb
 operator|->

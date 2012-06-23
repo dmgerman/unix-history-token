@@ -158,6 +158,10 @@ block|,
 name|PASS_FLAG_INVALID
 init|=
 literal|0x04
+block|,
+name|PASS_FLAG_INITIAL_PHYSPATH
+init|=
+literal|0x08
 block|}
 name|pass_flags
 typedef|;
@@ -515,6 +519,49 @@ end_function
 begin_function
 specifier|static
 name|void
+name|passdevgonecb
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
+name|struct
+name|cam_periph
+modifier|*
+name|periph
+decl_stmt|;
+name|periph
+operator|=
+operator|(
+expr|struct
+name|cam_periph
+operator|*
+operator|)
+name|arg
+expr_stmt|;
+name|xpt_print
+argument_list|(
+name|periph
+operator|->
+name|path
+argument_list|,
+literal|"%s: devfs entry is gone\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+name|cam_periph_release
+argument_list|(
+name|periph
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
 name|passoninvalidate
 parameter_list|(
 name|struct
@@ -558,6 +605,18 @@ operator|->
 name|flags
 operator||=
 name|PASS_FLAG_INVALID
+expr_stmt|;
+comment|/* 	 * Tell devfs this device has gone away, and ask for a callback 	 * when it has cleaned up its state. 	 */
+name|destroy_dev_sched_cb
+argument_list|(
+name|softc
+operator|->
+name|dev
+argument_list|,
+name|passdevgonecb
+argument_list|,
+name|periph
+argument_list|)
 expr_stmt|;
 comment|/* 	 * XXX Return all queued I/O with ENXIO. 	 * XXX Handle any transactions queued to the card 	 *     with XPT_ABORT_CCB. 	 */
 if|if
@@ -640,14 +699,6 @@ operator|->
 name|add_physpath_task
 argument_list|)
 expr_stmt|;
-comment|/* 	 * passcleanup() is indirectly a d_close method via passclose, 	 * so using destroy_dev(9) directly can result in deadlock. 	 */
-name|destroy_dev_sched
-argument_list|(
-name|softc
-operator|->
-name|dev
-argument_list|)
-expr_stmt|;
 name|cam_periph_lock
 argument_list|(
 name|periph
@@ -700,6 +751,32 @@ operator|=
 name|periph
 operator|->
 name|softc
+expr_stmt|;
+name|cam_periph_lock
+argument_list|(
+name|periph
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|periph
+operator|->
+name|flags
+operator|&
+name|CAM_PERIPH_INVALID
+condition|)
+block|{
+name|cam_periph_unlock
+argument_list|(
+name|periph
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|cam_periph_unlock
+argument_list|(
+name|periph
+argument_list|)
 expr_stmt|;
 name|physpath
 operator|=
@@ -763,6 +840,50 @@ argument_list|(
 name|physpath
 argument_list|,
 name|M_DEVBUF
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Now that we've made our alias, we no longer have to have a 	 * reference to the device. 	 */
+name|cam_periph_lock
+argument_list|(
+name|periph
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|softc
+operator|->
+name|flags
+operator|&
+name|PASS_FLAG_INITIAL_PHYSPATH
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|softc
+operator|->
+name|flags
+operator||=
+name|PASS_FLAG_INITIAL_PHYSPATH
+expr_stmt|;
+name|cam_periph_unlock
+argument_list|(
+name|periph
+argument_list|)
+expr_stmt|;
+name|dev_rel
+argument_list|(
+name|softc
+operator|->
+name|dev
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|cam_periph_unlock
+argument_list|(
+name|periph
 argument_list|)
 expr_stmt|;
 block|}
@@ -1027,7 +1148,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"passregister: periph was NULL!!\n"
+literal|"%s: periph was NULL!!\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
@@ -1045,7 +1168,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"passregister: no getdev CCB, can't register device\n"
+literal|"%s: no getdev CCB, can't register device\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
@@ -1083,8 +1208,10 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"passregister: Unable to probe new device. "
+literal|"%s: Unable to probe new device. "
 literal|"Unable to allocate softc\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
@@ -1272,6 +1399,44 @@ argument_list|,
 name|DEVSTAT_PRIORITY_PASS
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Acquire a reference to the periph before we create the devfs 	 * instance for it.  We'll release this reference once the devfs 	 * instance has been freed. 	 */
+if|if
+condition|(
+name|cam_periph_acquire
+argument_list|(
+name|periph
+argument_list|)
+operator|!=
+name|CAM_REQ_CMP
+condition|)
+block|{
+name|xpt_print
+argument_list|(
+name|periph
+operator|->
+name|path
+argument_list|,
+literal|"%s: lost periph during "
+literal|"registration!\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+name|periph
+operator|->
+name|sim
+operator|->
+name|mtx
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|CAM_REQ_CMP_ERR
+operator|)
+return|;
+block|}
 comment|/* Register the device */
 name|softc
 operator|->
@@ -1301,6 +1466,14 @@ argument_list|,
 name|periph
 operator|->
 name|unit_number
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Now that we have made the devfs instance, hold a reference to it 	 * until the task queue has run to setup the physical path alias. 	 * That way devfs won't get rid of the device before we add our 	 * alias. 	 */
+name|dev_ref
+argument_list|(
+name|softc
+operator|->
+name|dev
 argument_list|)
 expr_stmt|;
 name|mtx_lock

@@ -3484,7 +3484,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|uiomove
+name|vn_io_fault_uiomove
 argument_list|(
 name|bp
 operator|->
@@ -5661,7 +5661,7 @@ name|uio_resid
 expr_stmt|;
 name|error
 operator|=
-name|uiomove
+name|vn_io_fault_uiomove
 argument_list|(
 operator|(
 name|char

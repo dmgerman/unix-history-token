@@ -359,12 +359,26 @@ directive|include
 file|<sys/eventhandler.h>
 end_include
 
+begin_enum
+enum|enum
+block|{
+name|LLENTRY_RESOLVED
+block|,
+name|LLENTRY_TIMEDOUT
+block|,
+name|LLENTRY_DELETED
+block|,
+name|LLENTRY_EXPIRED
+block|, }
+enum|;
+end_enum
+
 begin_typedef
 typedef|typedef
 name|void
 function_decl|(
 modifier|*
-name|llevent_arp_update_fn
+name|lle_event_fn
 function_decl|)
 parameter_list|(
 name|void
@@ -373,6 +387,8 @@ parameter_list|,
 name|struct
 name|llentry
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_typedef
@@ -380,9 +396,9 @@ end_typedef
 begin_expr_stmt
 name|EVENTHANDLER_DECLARE
 argument_list|(
-name|arp_update_event
+name|lle_event
 argument_list|,
-name|llevent_arp_update_fn
+name|lle_event_fn
 argument_list|)
 expr_stmt|;
 end_expr_stmt

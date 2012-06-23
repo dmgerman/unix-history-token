@@ -33211,12 +33211,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET
-end_ifdef
-
 begin_decl_stmt
 name|struct
 name|pr_usrreqs
@@ -33315,11 +33309,6 @@ name|sctp_soreceive
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

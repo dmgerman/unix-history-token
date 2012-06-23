@@ -2736,9 +2736,6 @@ modifier|*
 name|phdyn
 decl_stmt|,
 modifier|*
-name|phphdr
-decl_stmt|,
-modifier|*
 name|phlimit
 decl_stmt|;
 if|if
@@ -3012,10 +3009,6 @@ name|phdyn
 operator|=
 name|NULL
 expr_stmt|;
-name|phphdr
-operator|=
-name|NULL
-expr_stmt|;
 while|while
 condition|(
 name|phdr
@@ -3074,10 +3067,6 @@ break|break;
 case|case
 name|PT_PHDR
 case|:
-name|phphdr
-operator|=
-name|phdr
-expr_stmt|;
 break|break;
 case|case
 name|PT_DYNAMIC

@@ -26,7 +26,7 @@ comment|/*  * NOTE: all function names beginning like "uftdi_cfg_" can only  * b
 end_comment
 
 begin_comment
-comment|/*  * FTDI FT8U100AX serial adapter driver  */
+comment|/*  * FTDI FT2232x, FT8U100AX and FT8U232AM serial adapter driver  */
 end_comment
 
 begin_include
@@ -1439,8 +1439,14 @@ condition|(
 name|id
 operator|==
 name|NULL
-operator|||
+condition|)
+return|return
 operator|(
+name|ENXIO
+operator|)
+return|;
+if|if
+condition|(
 operator|(
 name|id
 operator|->
@@ -1458,13 +1464,38 @@ operator|.
 name|bIfaceIndex
 operator|==
 name|UFTDI_IFACE_INDEX_JTAG
-operator|)
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: skipping JTAG interface at %u.%u\n"
+argument_list|,
+name|device_get_name
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|usbd_get_bus_index
+argument_list|(
+name|uaa
+operator|->
+name|device
+argument_list|)
+argument_list|,
+name|usbd_get_device_index
+argument_list|(
+name|uaa
+operator|->
+name|device
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
+block|}
 name|uaa
 operator|->
 name|driver_info

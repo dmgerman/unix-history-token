@@ -275,16 +275,16 @@ directive|include
 file|<arm/at91/at91sam9g20reg.h>
 end_include
 
+begin_comment
+comment|/* Page table for mapping proc0 zero page */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|KERNEL_PT_SYS
 value|0
 end_define
-
-begin_comment
-comment|/* Page table for mapping proc0 zero page */
-end_comment
 
 begin_define
 define|#
@@ -300,16 +300,16 @@ name|KERNEL_PT_KERN_NUM
 value|22
 end_define
 
+begin_comment
+comment|/* L2 table for mapping after kernel */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|KERNEL_PT_AFKERNEL
 value|KERNEL_PT_KERN + KERNEL_PT_KERN_NUM
 end_define
-
-begin_comment
-comment|/* L2 table for mapping after kernel */
-end_comment
 
 begin_define
 define|#
@@ -517,7 +517,7 @@ block|,
 name|PTE_NOCACHE
 block|, 	}
 block|,
-comment|/* We can't just map the OHCI registers VA == PA, because 	 * AT91xx_xxx_BASE belongs to the userland address space. 	 * We could just choose a different virtual address, but a better 	 * solution would probably be to just use pmap_mapdev() to allocate 	 * KVA, as we don't need the OHCI controller before the vm 	 * initialization is done. However, the AT91 resource allocation 	 * system doesn't know how to use pmap_mapdev() yet. 	 * Care must be taken to ensure PA and VM address do not overlap 	 * between entries. 	 */
+comment|/* 	 * We can't just map the OHCI registers VA == PA, because 	 * AT91xx_xxx_BASE belongs to the userland address space. 	 * We could just choose a different virtual address, but a better 	 * solution would probably be to just use pmap_mapdev() to allocate 	 * KVA, as we don't need the OHCI controller before the vm 	 * initialization is done. However, the AT91 resource allocation 	 * system doesn't know how to use pmap_mapdev() yet. 	 * Care must be taken to ensure PA and VM address do not overlap 	 * between entries. 	 */
 block|{
 comment|/* 		 * Add the ohci controller, and anything else that might be 		 * on this chip select for a VA/PA mapping. 		 */
 comment|/* Internal Memory 1MB  */
@@ -549,7 +549,7 @@ block|,
 name|PTE_NOCACHE
 block|, 	}
 block|,
-comment|/* The next two should be good for the 9260, 9261 and 9G20 since 	 * addresses mapping is the same. */
+comment|/* 	 * The next two should be good for the 9260, 9261 and 9G20 since 	 * addresses mapping is the same. 	 */
 block|{
 comment|/* Internal Memory 1MB  */
 name|AT91SAM9G20_OHCI_BASE
@@ -640,6 +640,9 @@ name|uint32_t
 name|cr
 decl_stmt|,
 name|mr
+decl_stmt|,
+modifier|*
+name|SDRAMC
 decl_stmt|;
 name|int
 name|banks
@@ -653,7 +656,7 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|LINUX_BOOT_ABI
-comment|// If we found any ATAGs that were for memory, return the first bank.
+comment|/* 	 * If we found any ATAGs that were for memory, return the first bank. 	 */
 if|if
 condition|(
 name|membanks
@@ -661,10 +664,12 @@ operator|>
 literal|0
 condition|)
 return|return
+operator|(
 name|memsize
 index|[
 literal|0
 index|]
+operator|)
 return|;
 endif|#
 directive|endif
@@ -674,10 +679,8 @@ name|at91_is_rm92
 argument_list|()
 condition|)
 block|{
-name|uint32_t
-modifier|*
 name|SDRAMC
-init|=
+operator|=
 operator|(
 name|uint32_t
 operator|*
@@ -687,7 +690,7 @@ name|AT91_BASE
 operator|+
 name|AT91RM92_SDRAMC_BASE
 operator|)
-decl_stmt|;
+expr_stmt|;
 name|cr
 operator|=
 name|SDRAMC
@@ -757,11 +760,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* This should be good for the 9260, 9261, 9G20, 9G35 and 9X25 as addresses 		 * and registers are the same */
-name|uint32_t
-modifier|*
+comment|/* 		 * This should be good for the 9260, 9261, 9G20, 9G35 and 9X25 		 * as addresses and registers are the same. 		 */
 name|SDRAMC
-init|=
+operator|=
 operator|(
 name|uint32_t
 operator|*
@@ -771,7 +772,7 @@ name|AT91_BASE
 operator|+
 name|AT91SAM9G20_SDRAMC_BASE
 operator|)
-decl_stmt|;
+expr_stmt|;
 name|cr
 operator|=
 name|SDRAMC
@@ -858,6 +859,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -941,6 +943,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -1028,28 +1031,6 @@ literal|"at91sam9x35"
 block|, }
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|AT91_DBGU0
-value|0x0ffff200
-end_define
-
-begin_comment
-comment|/* Most */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AT91_DBGU1
-value|0x0fffee00
-end_define
-
-begin_comment
-comment|/* SAM9263, CAP9, and SAM9G45 */
-end_comment
 
 begin_decl_stmt
 name|struct
@@ -1285,7 +1266,9 @@ expr_stmt|;
 break|break;
 default|default:
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 switch|switch
@@ -1461,7 +1444,9 @@ index|]
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -1585,7 +1570,7 @@ parameter_list|,
 name|np
 parameter_list|)
 define|\
-value|alloc_pages((var).pv_va, (np));         \ 	(var).pv_pa = (var).pv_va + (KERNPHYSADDR - KERNVIRTADDR);
+value|alloc_pages((var).pv_va, (np));					\ 	(var).pv_pa = (var).pv_va + (KERNPHYSADDR - KERNVIRTADDR);
 define|#
 directive|define
 name|alloc_pages
@@ -1595,7 +1580,7 @@ parameter_list|,
 name|np
 parameter_list|)
 define|\
-value|(var) = freemempos;		\ 	freemempos += (np * PAGE_SIZE);		\ 	memset((char *)(var), 0, ((np) * PAGE_SIZE));
+value|(var) = freemempos;						\ 	freemempos += (np * PAGE_SIZE);					\ 	memset((char *)(var), 0, ((np) * PAGE_SIZE));
 while|while
 condition|(
 operator|(

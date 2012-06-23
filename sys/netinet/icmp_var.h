@@ -308,8 +308,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|BANDLIM_SCTP_OOTB
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
 name|BANDLIM_MAX
-value|5
+value|6
 end_define
 
 begin_endif
