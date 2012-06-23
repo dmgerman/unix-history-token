@@ -2924,6 +2924,8 @@ argument_list|(
 name|iface
 argument_list|)
 operator|=
+name|KEY_LEN_IFACE
+operator|+
 name|strlcpy
 argument_list|(
 name|iface
