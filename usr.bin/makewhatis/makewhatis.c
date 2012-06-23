@@ -3156,7 +3156,6 @@ name|section_dir
 parameter_list|)
 block|{
 name|gzFile
-modifier|*
 name|in
 decl_stmt|;
 name|char
