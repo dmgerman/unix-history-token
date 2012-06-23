@@ -5964,8 +5964,6 @@ name|ttv
 decl_stmt|;
 name|int
 name|error
-init|=
-literal|0
 decl_stmt|,
 name|timo
 decl_stmt|;
