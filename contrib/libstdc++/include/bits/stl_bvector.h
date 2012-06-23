@@ -1447,6 +1447,23 @@ operator|*
 name|_M_end_of_storage
 block|;
 name|_Bvector_impl
+argument_list|()
+operator|:
+name|_Bit_alloc_type
+argument_list|()
+block|,
+name|_M_start
+argument_list|()
+block|,
+name|_M_finish
+argument_list|()
+block|,
+name|_M_end_of_storage
+argument_list|(
+literal|0
+argument_list|)
+block|{ }
+name|_Bvector_impl
 argument_list|(
 specifier|const
 name|_Bit_alloc_type
@@ -1552,6 +1569,12 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
+name|_Bvector_base
+argument_list|()
+operator|:
+name|_M_impl
+argument_list|()
+block|{ }
 name|_Bvector_base
 argument_list|(
 specifier|const
@@ -1842,20 +1865,20 @@ name|public
 label|:
 end_label
 
-begin_macro
-name|explicit
-end_macro
-
 begin_expr_stmt
+name|vector
+argument_list|()
+operator|:
+name|_Base
+argument_list|()
+block|{ }
+name|explicit
 name|vector
 argument_list|(
 specifier|const
 name|allocator_type
 operator|&
 name|__a
-operator|=
-name|allocator_type
-argument_list|()
 argument_list|)
 operator|:
 name|_Base
@@ -2821,19 +2844,14 @@ expr_stmt|;
 block|}
 end_function
 
-begin_decl_stmt
+begin_function
 name|void
 name|swap
-argument_list|(
+parameter_list|(
 name|vector
-operator|<
-name|bool
-argument_list|,
-name|_Alloc
-operator|>
-operator|&
+modifier|&
 name|__x
-argument_list|)
+parameter_list|)
 block|{
 name|std
 operator|::
@@ -2910,7 +2928,7 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|// [23.2.5]/1, third-to-last entry in synopsis listing
