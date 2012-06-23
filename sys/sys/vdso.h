@@ -24,12 +24,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/eventhandler.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/vdso.h>
 end_include
 
@@ -217,6 +211,15 @@ name|_KERNEL
 end_ifdef
 
 begin_function_decl
+name|void
+name|timekeep_push_vdso
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|uint32_t
 name|tc_fill_vdso_timehands
 parameter_list|(
@@ -243,30 +246,6 @@ name|vdso_th
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_typedef
-typedef|typedef
-name|void
-function_decl|(
-modifier|*
-name|tc_windup_fn
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_expr_stmt
-name|EVENTHANDLER_DECLARE
-argument_list|(
-name|tc_windup
-argument_list|,
-name|tc_windup_fn
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_define
 define|#
