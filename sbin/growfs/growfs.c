@@ -43,10 +43,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/* ********************************************************** INCLUDES ***** */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -160,10 +156,6 @@ include|#
 directive|include
 file|"debug.h"
 end_include
-
-begin_comment
-comment|/* *************************************************** GLOBALS& TYPES ***** */
-end_comment
 
 begin_ifdef
 ifdef|#
@@ -415,7 +407,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* unlabeled partition, e.g. vinum volume etc. */
+comment|/* unlabeled partition, e.g. vinum volume */
 end_comment
 
 begin_comment
@@ -454,10 +446,6 @@ comment|/* how many references were updated */
 block|}
 struct|;
 end_struct
-
-begin_comment
-comment|/* ******************************************************** PROTOTYPES ***** */
-end_comment
 
 begin_function_decl
 specifier|static
@@ -801,10 +789,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* ************************************************************ growfs ***** */
-end_comment
-
-begin_comment
 comment|/*  * Here we actually start growing the file system. We basically read the  * cylinder summary from the first cylinder group as we want to update  * this on the fly during our various operations. First we handle the  * changes in the former last cylinder group. Afterwards we create all new  * cylinder groups.  Now we handle the cylinder group containing the  * cylinder summary which might result in a relocation of the whole  * structure.  In the end we write back the updated cylinder summary, the  * new superblock, and slightly patched versions of the super block  * copies.  */
 end_comment
 
@@ -915,7 +899,6 @@ name|fscs
 operator|==
 name|NULL
 condition|)
-block|{
 name|errx
 argument_list|(
 literal|1
@@ -923,7 +906,6 @@ argument_list|,
 literal|"calloc failed"
 argument_list|)
 expr_stmt|;
-block|}
 for|for
 control|(
 name|i
@@ -1642,10 +1624,6 @@ expr_stmt|;
 return|return;
 block|}
 end_function
-
-begin_comment
-comment|/* ************************************************************ initcg ***** */
-end_comment
 
 begin_comment
 comment|/*  * This creates a new cylinder group structure, for more details please see  * the source of newfs(8), as this function is taken over almost unchanged.  * As this is never called for the first cylinder group, the special  * provisions for that case are removed here.  */
@@ -2936,10 +2914,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* ******************************************************* frag_adjust ***** */
-end_comment
-
-begin_comment
 comment|/*  * Here we add or subtract (sign +1/-1) the available fragments in a given  * block to or from the fragment statistics. By subtracting before and adding  * after an operation on the free frag map we can easy update the fragment  * statistic, which seems to be otherwise a rather complex operation.  */
 end_comment
 
@@ -3105,10 +3079,6 @@ expr_stmt|;
 return|return;
 block|}
 end_function
-
-begin_comment
-comment|/* ******************************************************* cond_bl_upd ***** */
-end_comment
 
 begin_comment
 comment|/*  * Here we conditionally update a pointer to a fragment. We check for all  * relocated blocks if any of its fragments is referenced by the current  * field, and update the pointer to the respective fragment in our new  * block.  If we find a reference we write back the block immediately,  * as there is no easy way for our general block reading engine to figure  * out if a write back operation is needed.  */
@@ -3341,10 +3311,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* ************************************************************ updjcg ***** */
-end_comment
 
 begin_comment
 comment|/*  * Here we do all needed work for the former last cylinder group. It has to be  * changed in any case, even if the file system ended exactly on the end of  * this group, as there is some slightly inconsistent handling of the number  * of cylinders in the cylinder group. We start again by reading the cylinder  * group from disk. If the last block was not fully available, we first handle  * the missing fragments, then we handle all new full blocks in that file  * system and finally we handle the new last fragmented block in the file  * system.  We again have to handle the fragment statistics rotational layout  * tables and cluster summary during all those operations.  */
@@ -3612,7 +3578,6 @@ name|cylno
 operator|==
 literal|0
 condition|)
-block|{
 comment|/* XXX fscs may be relocated */
 name|dupper
 operator|+=
@@ -3627,7 +3592,6 @@ operator|.
 name|fs_fsize
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * Set pointer to the cylinder summary for our cylinder group. 	 */
 name|cs
 operator|=
@@ -3759,7 +3723,6 @@ name|fs_contigsumsize
 operator|>
 literal|0
 condition|)
-block|{
 name|acg
 operator|.
 name|cg_nclusterblks
@@ -3772,7 +3735,6 @@ name|sblock
 operator|.
 name|fs_frag
 expr_stmt|;
-block|}
 comment|/* 	 * Now we have to update the free fragment bitmap for our new free 	 * space.  There again we have to handle the fragmentation and also 	 * the rotational layout tables and the cluster summary.  This is 	 * also done per fragment for the first new block if the old file 	 * system end was not on a block boundary, per fragment for the new 	 * last block if the new file system end is not on a block boundary, 	 * and per block for all space in between. 	 * 	 * Handle the first new block here if it was partially available 	 * before. 	 */
 if|if
 condition|(
@@ -4014,7 +3976,6 @@ if|if
 condition|(
 name|k
 condition|)
-block|{
 name|acg
 operator|.
 name|cg_frsum
@@ -4023,7 +3984,6 @@ name|k
 index|]
 operator|--
 expr_stmt|;
-block|}
 name|acg
 operator|.
 name|cg_frsum
@@ -4132,7 +4092,6 @@ if|if
 condition|(
 name|k
 condition|)
-block|{
 name|acg
 operator|.
 name|cg_frsum
@@ -4141,7 +4100,6 @@ name|k
 index|]
 operator|--
 expr_stmt|;
-block|}
 name|acg
 operator|.
 name|cg_frsum
@@ -4387,10 +4345,6 @@ expr_stmt|;
 return|return;
 block|}
 end_function
-
-begin_comment
-comment|/* ********************************************************** updcsloc ***** */
-end_comment
 
 begin_comment
 comment|/*  * Here we update the location of the cylinder summary. We have two possible  * ways of growing the cylinder summary.  * (1)	We can try to grow the summary in the current location, and relocate  *	possibly used blocks within the current cylinder group.  * (2)	Alternatively we can relocate the whole cylinder summary to the first  *	new completely empty cylinder group. Once the cylinder summary is no  *	longer in the beginning of the first cylinder group you should never  *	use a version of fsck which is not aware of the possibility to have  *	this structure in a non standard place.  * Option (1) is considered to be less intrusive to the structure of the file-  * system. So we try to stick to that whenever possible. If there is not enough  * space in the cylinder group containing the cylinder summary we have to use  * method (2). In case of active snapshots in the file system we probably can  * completely avoid implementing copy on write if we stick to method (2) only.  */
@@ -4652,7 +4606,6 @@ name|fs_ncg
 operator|<
 literal|2
 condition|)
-block|{
 name|errx
 argument_list|(
 literal|2
@@ -4660,7 +4613,6 @@ argument_list|,
 literal|"panic: not enough space"
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 		 * Point "d" to the first fragment not used by the cylinder 		 * summary. 		 */
 name|d
 operator|=
@@ -4735,9 +4687,7 @@ argument_list|,
 name|block
 argument_list|)
 condition|)
-block|{
 break|break;
-block|}
 block|}
 block|}
 comment|/* 		 * Point "d" to the last frag used by the cylinder summary. 		 */
@@ -4968,7 +4918,6 @@ if|if
 condition|(
 name|lcs
 condition|)
-block|{
 name|cg_clustersum
 argument_list|(
 operator|&
@@ -4979,7 +4928,6 @@ name|lcs
 index|]
 operator|--
 expr_stmt|;
-block|}
 name|lcs
 operator|++
 expr_stmt|;
@@ -5131,7 +5079,6 @@ if|if
 condition|(
 name|lcs
 condition|)
-block|{
 name|cg_clustersum
 argument_list|(
 operator|&
@@ -5142,7 +5089,6 @@ name|lcs
 index|]
 operator|--
 expr_stmt|;
-block|}
 name|lcs
 operator|++
 expr_stmt|;
@@ -5557,7 +5503,6 @@ name|fs_contigsumsize
 operator|>
 literal|0
 condition|)
-block|{
 name|clrbit
 argument_list|(
 name|cg_clustersfree
@@ -5579,7 +5524,6 @@ operator|.
 name|fs_frag
 argument_list|)
 expr_stmt|;
-block|}
 name|frag_adjust
 argument_list|(
 name|d
@@ -5588,7 +5532,6 @@ name|sblock
 operator|.
 name|fs_fpg
 argument_list|,
-operator|+
 literal|1
 argument_list|)
 expr_stmt|;
@@ -5755,7 +5698,6 @@ name|bp
 operator|==
 name|NULL
 condition|)
-block|{
 name|errx
 argument_list|(
 literal|1
@@ -5763,7 +5705,6 @@ argument_list|,
 literal|"malloc failed"
 argument_list|)
 expr_stmt|;
-block|}
 name|memset
 argument_list|(
 operator|(
@@ -5899,7 +5840,6 @@ argument_list|)
 operator|>=
 name|dupper
 condition|)
-block|{
 name|bp
 index|[
 name|ind
@@ -5909,7 +5849,6 @@ name|flags
 operator||=
 name|GFS_FL_LAST
 expr_stmt|;
-block|}
 name|ind
 operator|++
 expr_stmt|;
@@ -6188,9 +6127,7 @@ argument_list|,
 name|l
 argument_list|)
 condition|)
-block|{
 break|break;
-block|}
 block|}
 if|if
 condition|(
@@ -6217,7 +6154,6 @@ if|if
 condition|(
 name|lcs
 condition|)
-block|{
 name|cg_clustersum
 argument_list|(
 operator|&
@@ -6228,7 +6164,6 @@ name|lcs
 index|]
 operator|++
 expr_stmt|;
-block|}
 block|}
 block|}
 block|}
@@ -6375,9 +6310,7 @@ argument_list|,
 name|l
 argument_list|)
 condition|)
-block|{
 break|break;
-block|}
 block|}
 if|if
 condition|(
@@ -6404,7 +6337,6 @@ if|if
 condition|(
 name|lcs
 condition|)
-block|{
 name|cg_clustersum
 argument_list|(
 operator|&
@@ -6415,7 +6347,6 @@ name|lcs
 index|]
 operator|++
 expr_stmt|;
-block|}
 block|}
 block|}
 block|}
@@ -6517,12 +6448,10 @@ name|flags
 operator|&
 name|GFS_FL_LAST
 condition|)
-block|{
 comment|/* we have to advance here */
 name|ind
 operator|++
 expr_stmt|;
-block|}
 name|frag_adjust
 argument_list|(
 name|dupper
@@ -6769,7 +6698,6 @@ operator|&
 name|GFS_FL_LAST
 operator|)
 condition|)
-block|{
 name|frag_adjust
 argument_list|(
 name|bp
@@ -6786,7 +6714,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 comment|/* 			 * Special handling is required if this is the last 			 * block to be relocated. 			 */
 if|if
@@ -7099,7 +7026,6 @@ condition|;
 name|inc
 operator|--
 control|)
-block|{
 name|updrefs
 argument_list|(
 name|cylno
@@ -7118,7 +7044,6 @@ argument_list|,
 name|Nflag
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 comment|/* 		 * All inodes are checked, now make sure the number of 		 * references found make sense. 		 */
 for|for
@@ -7254,10 +7179,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* ************************************************************** rdfs ***** */
-end_comment
-
-begin_comment
 comment|/*  * Here we read some block(s) from disk.  */
 end_comment
 
@@ -7295,7 +7216,6 @@ name|bno
 operator|<
 literal|0
 condition|)
-block|{
 name|err
 argument_list|(
 literal|32
@@ -7303,7 +7223,6 @@ argument_list|,
 literal|"rdfs: attempting to read negative block number"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|lseek
@@ -7322,7 +7241,6 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
 name|err
 argument_list|(
 literal|33
@@ -7335,7 +7253,6 @@ operator|)
 name|bno
 argument_list|)
 expr_stmt|;
-block|}
 name|n
 operator|=
 name|read
@@ -7356,7 +7273,6 @@ name|ssize_t
 operator|)
 name|size
 condition|)
-block|{
 name|err
 argument_list|(
 literal|34
@@ -7369,16 +7285,11 @@ operator|)
 name|bno
 argument_list|)
 expr_stmt|;
-block|}
 name|DBG_LEAVE
 expr_stmt|;
 return|return;
 block|}
 end_function
-
-begin_comment
-comment|/* ************************************************************** wtfs ***** */
-end_comment
 
 begin_comment
 comment|/*  * Here we write some block(s) to disk.  */
@@ -7443,7 +7354,6 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
 name|err
 argument_list|(
 literal|35
@@ -7456,7 +7366,6 @@ operator|)
 name|bno
 argument_list|)
 expr_stmt|;
-block|}
 name|n
 operator|=
 name|write
@@ -7477,7 +7386,6 @@ name|ssize_t
 operator|)
 name|size
 condition|)
-block|{
 name|err
 argument_list|(
 literal|36
@@ -7490,16 +7398,11 @@ operator|)
 name|bno
 argument_list|)
 expr_stmt|;
-block|}
 name|DBG_LEAVE
 expr_stmt|;
 return|return;
 block|}
 end_function
-
-begin_comment
-comment|/* ************************************************************* alloc ***** */
-end_comment
 
 begin_comment
 comment|/*  * Here we allocate a free block in the current cylinder group. It is assumed,  * that acg contains the current cylinder group. As we may take a block from  * somewhere in the file system we have to handle cluster summary here.  */
@@ -7664,14 +7567,12 @@ name|sblock
 operator|.
 name|fs_size
 condition|)
-block|{
 name|dmax
 operator|=
 name|sblock
 operator|.
 name|fs_size
 expr_stmt|;
-block|}
 name|dmax
 operator|-=
 name|cgbase
@@ -7770,9 +7671,7 @@ name|d
 operator|<=
 name|csmax
 condition|)
-block|{
 continue|continue;
-block|}
 if|if
 condition|(
 name|isblock
@@ -7990,9 +7889,7 @@ argument_list|,
 name|l
 argument_list|)
 condition|)
-block|{
 break|break;
-block|}
 block|}
 comment|/* 		 * ... and continue with the blocks right after our allocated 		 * block. 		 */
 for|for
@@ -8033,9 +7930,7 @@ argument_list|,
 name|l
 argument_list|)
 condition|)
-block|{
 break|break;
-block|}
 block|}
 comment|/* 		 * Now update all counters. 		 */
 name|cg_clustersum
@@ -8063,7 +7958,6 @@ if|if
 condition|(
 name|lcs1
 condition|)
-block|{
 name|cg_clustersum
 argument_list|(
 operator|&
@@ -8074,12 +7968,10 @@ name|lcs1
 index|]
 operator|++
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|lcs2
 condition|)
-block|{
 name|cg_clustersum
 argument_list|(
 operator|&
@@ -8090,7 +7982,6 @@ name|lcs2
 index|]
 operator|++
 expr_stmt|;
-block|}
 block|}
 comment|/* 	 * Update all statistics based on blocks. 	 */
 name|acg
@@ -8116,10 +8007,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* *********************************************************** isblock ***** */
-end_comment
 
 begin_comment
 comment|/*  * Here we check if all frags of a block are free. For more details again  * please see the source of newfs(8), as this function is taken over almost  * unchanged.  */
@@ -8301,10 +8188,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* ********************************************************** clrblock ***** */
-end_comment
-
-begin_comment
 comment|/*  * Here we allocate a complete block in the block map. For more details again  * please see the source of newfs(8), as this function is taken over almost  * unchanged.  */
 end_comment
 
@@ -8446,10 +8329,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* ********************************************************** setblock ***** */
-end_comment
-
-begin_comment
 comment|/*  * Here we free a complete block in the free block map. For more details again  * please see the source of newfs(8), as this function is taken over almost  * unchanged.  */
 end_comment
 
@@ -8584,10 +8463,6 @@ expr_stmt|;
 return|return;
 block|}
 end_function
-
-begin_comment
-comment|/* ************************************************************ ginode ***** */
-end_comment
 
 begin_comment
 comment|/*  * This function provides access to an individual inode. We find out in which  * block the requested inode is located, read it from disk if needed, and  * return the pointer into that block. We maintain a cache of one block to  * not read the same block again and again if we iterate linearly over all  * inodes.  */
@@ -8827,10 +8702,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* ****************************************************** charsperline ***** */
-end_comment
-
-begin_comment
 comment|/*  * Figure out how many lines our current terminal has. For more details again  * please see the source of newfs(8), as this function is taken over almost  * unchanged.  */
 end_comment
 
@@ -8878,14 +8749,12 @@ operator|!=
 operator|-
 literal|1
 condition|)
-block|{
 name|columns
 operator|=
 name|ws
 operator|.
 name|ws_col
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|columns
@@ -8901,7 +8770,6 @@ literal|"COLUMNS"
 argument_list|)
 operator|)
 condition|)
-block|{
 name|columns
 operator|=
 name|atoi
@@ -8909,20 +8777,17 @@ argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|columns
 operator|==
 literal|0
 condition|)
-block|{
 name|columns
 operator|=
 literal|80
 expr_stmt|;
 comment|/* last resort */
-block|}
 name|DBG_LEAVE
 expr_stmt|;
 return|return
@@ -8930,10 +8795,6 @@ name|columns
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* ****************************************************** get_dev_size ***** */
-end_comment
 
 begin_comment
 comment|/*  * Get the size of the partition if we can't figure it out from the disklabel,  * e.g. from vinum volumes.  */
@@ -9028,11 +8889,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ************************************************************** main ***** */
-end_comment
-
-begin_comment
-comment|/*  * growfs(8)  is a utility which allows to increase the size of an existing  * ufs file system. Currently this can only be done on unmounted file system.  * It recognizes some command line options to specify the new desired size,  * and it does some basic checkings. The old file system size is determined  * and after some more checks like we can really access the new last block  * on the disk etc. we calculate the new parameters for the superblock. After  * having done this we just call growfs() which will do the work.  Before  * we finish the only thing left is to update the disklabel.  * We still have to provide support for snapshots. Therefore we first have to  * understand what data structures are always replicated in the snapshot on  * creation, for all other blocks we touch during our procedure, we have to  * keep the old blocks unchanged somewhere available for the snapshots. If we  * are lucky, then we only have to handle our blocks to be relocated in that  * way.  * Also we have to consider in what order we actually update the critical  * data structures of the file system to make sure, that in case of a disaster  * fsck(8) is still able to restore any lost data.  * The foreseen last step then will be to provide for growing even mounted  * file systems. There we have to extend the mount() system call to provide  * userland access to the file system locking facility.  */
+comment|/*  * growfs(8) is a utility which allows to increase the size of an existing  * ufs file system. Currently this can only be done on unmounted file system.  * It recognizes some command line options to specify the new desired size,  * and it does some basic checkings. The old file system size is determined  * and after some more checks like we can really access the new last block  * on the disk etc. we calculate the new parameters for the superblock. After  * having done this we just call growfs() which will do the work.  Before  * we finish the only thing left is to update the disklabel.  * We still have to provide support for snapshots. Therefore we first have to  * understand what data structures are always replicated in the snapshot on  * creation, for all other blocks we touch during our procedure, we have to  * keep the old blocks unchanged somewhere available for the snapshots. If we  * are lucky, then we only have to handle our blocks to be relocated in that  * way.  * Also we have to consider in what order we actually update the critical  * data structures of the file system to make sure, that in case of a disaster  * fsck(8) is still able to restore any lost data.  * The foreseen last step then will be to provide for growing even mounted  * file systems. There we have to extend the mount() system call to provide  * userland access to the file system locking facility.  */
 end_comment
 
 begin_function
@@ -9177,11 +9034,9 @@ name|size
 operator|<
 literal|1
 condition|)
-block|{
 name|usage
 argument_list|()
 expr_stmt|;
-block|}
 break|break;
 case|case
 literal|'v'
@@ -9220,11 +9075,9 @@ name|argc
 operator|!=
 literal|1
 condition|)
-block|{
 name|usage
 argument_list|()
 expr_stmt|;
-block|}
 name|device
 operator|=
 operator|*
@@ -9280,7 +9133,6 @@ name|special
 operator|==
 name|NULL
 condition|)
-block|{
 name|errx
 argument_list|(
 literal|1
@@ -9288,7 +9140,6 @@ argument_list|,
 literal|"malloc failed"
 argument_list|)
 expr_stmt|;
-block|}
 name|snprintf
 argument_list|(
 name|special
@@ -9421,7 +9272,6 @@ name|fso
 operator|<
 literal|0
 condition|)
-block|{
 name|err
 argument_list|(
 literal|1
@@ -9431,7 +9281,6 @@ argument_list|,
 name|device
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 comment|/* 	 * ... and reading. 	 */
 name|fsi
@@ -9449,7 +9298,6 @@ name|fsi
 operator|<
 literal|0
 condition|)
-block|{
 name|err
 argument_list|(
 literal|1
@@ -9459,7 +9307,6 @@ argument_list|,
 name|device
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * Try to read a label and guess the slice if not specified. This 	 * code should guess the right thing and avoid to bother the user 	 * with the task of specifying the option -v on vinum volumes. 	 */
 name|cp
 operator|=
@@ -9498,7 +9345,6 @@ operator|*
 name|cp
 argument_list|)
 condition|)
-block|{
 name|pp
 operator|=
 operator|&
@@ -9509,7 +9355,6 @@ index|[
 literal|2
 index|]
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -9523,7 +9368,6 @@ name|cp
 operator|<=
 literal|'h'
 condition|)
-block|{
 name|pp
 operator|=
 operator|&
@@ -9537,9 +9381,7 @@ operator|-
 literal|'a'
 index|]
 expr_stmt|;
-block|}
 else|else
-block|{
 name|errx
 argument_list|(
 literal|1
@@ -9547,7 +9389,6 @@ argument_list|,
 literal|"unknown device"
 argument_list|)
 expr_stmt|;
-block|}
 name|p_size
 operator|=
 name|pp
@@ -9573,7 +9414,6 @@ name|p_size
 operator|<
 literal|1
 condition|)
-block|{
 name|errx
 argument_list|(
 literal|1
@@ -9581,7 +9421,6 @@ argument_list|,
 literal|"partition is unavailable"
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * Read the current superblock, and take a backup. 	 */
 for|for
 control|(
@@ -9689,7 +9528,6 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
 name|errx
 argument_list|(
 literal|1
@@ -9697,7 +9535,6 @@ argument_list|,
 literal|"superblock not recognized"
 argument_list|)
 expr_stmt|;
-block|}
 name|memcpy
 argument_list|(
 operator|(
@@ -9770,7 +9607,6 @@ name|size
 operator|>
 name|p_size
 condition|)
-block|{
 name|errx
 argument_list|(
 literal|1
@@ -9782,7 +9618,6 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
-block|}
 name|sblock
 operator|.
 name|fs_size
@@ -9885,10 +9720,8 @@ index|[
 name|j
 index|]
 condition|)
-block|{
 comment|/* list is dense */
 break|break;
-block|}
 block|}
 block|}
 endif|#
@@ -10192,7 +10025,6 @@ name|sblock
 operator|.
 name|fs_size
 condition|)
-block|{
 name|errx
 argument_list|(
 literal|1
@@ -10200,7 +10032,6 @@ argument_list|,
 literal|"not enough new space"
 argument_list|)
 expr_stmt|;
-block|}
 name|DBG_PRINT0
 argument_list|(
 literal|"sblock calculated\n"
@@ -10290,10 +10121,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* ************************************************** return_disklabel ***** */
-end_comment
-
-begin_comment
 comment|/*  * Write the updated disklabel back to disk.  */
 end_comment
 
@@ -10381,14 +10208,12 @@ operator|->
 name|d_npartitions
 index|]
 condition|)
-block|{
 name|sum
 operator|^=
 operator|*
 name|ptr
 operator|++
 expr_stmt|;
-block|}
 name|lp
 operator|->
 name|d_checksum
@@ -10412,7 +10237,6 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
 name|errx
 argument_list|(
 literal|1
@@ -10420,7 +10244,6 @@ argument_list|,
 literal|"DIOCWDINFO failed"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|free
 argument_list|(
@@ -10432,10 +10255,6 @@ expr_stmt|;
 return|return ;
 block|}
 end_function
-
-begin_comment
-comment|/* ***************************************************** get_disklabel ***** */
-end_comment
 
 begin_comment
 comment|/*  * Read the disklabel from disk.  */
@@ -10527,10 +10346,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* ************************************************************* usage ***** */
-end_comment
-
-begin_comment
 comment|/*  * Dump a line of usage.  */
 end_comment
 
@@ -10566,10 +10381,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* *********************************************************** updclst ***** */
-end_comment
-
-begin_comment
 comment|/*  * This updates most parameters and the bitmap related to cluster. We have to  * assume that sblock, osblock, acg are set up.  */
 end_comment
 
@@ -10602,10 +10413,8 @@ name|fs_contigsumsize
 operator|<
 literal|1
 condition|)
-block|{
 comment|/* no clustering */
 return|return;
-block|}
 comment|/* 	 * update cluster allocation map 	 */
 name|setbit
 argument_list|(
@@ -10657,9 +10466,7 @@ argument_list|,
 name|block
 argument_list|)
 condition|)
-block|{
 break|break;
-block|}
 block|}
 block|}
 if|if
@@ -10675,7 +10482,6 @@ if|if
 condition|(
 name|lcs
 condition|)
-block|{
 name|cg_clustersum
 argument_list|(
 operator|&
@@ -10686,7 +10492,6 @@ name|lcs
 index|]
 operator|--
 expr_stmt|;
-block|}
 name|lcs
 operator|++
 expr_stmt|;
@@ -10706,10 +10511,6 @@ expr_stmt|;
 return|return;
 block|}
 end_function
-
-begin_comment
-comment|/* *********************************************************** updrefs ***** */
-end_comment
 
 begin_comment
 comment|/*  * This updates all references to relocated blocks for the given inode.  The  * inode is given as number within the cylinder group, and the number of the  * cylinder group.  */
