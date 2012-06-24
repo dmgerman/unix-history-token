@@ -11635,8 +11635,6 @@ literal|0
 decl_stmt|;
 name|unsigned
 name|int
-name|size_of_pkt
-decl_stmt|,
 name|sig_offset
 decl_stmt|,
 name|cookie_offset
@@ -11825,13 +11823,6 @@ name|ip_dst
 operator|.
 name|s_addr
 expr_stmt|;
-name|size_of_pkt
-operator|=
-name|SCTP_GET_IPV4_LENGTH
-argument_list|(
-name|iph
-argument_list|)
-expr_stmt|;
 break|break;
 block|}
 endif|#
@@ -11923,15 +11914,6 @@ name|ip6
 operator|->
 name|ip6_dst
 expr_stmt|;
-name|size_of_pkt
-operator|=
-name|SCTP_GET_IPV6_LENGTH
-argument_list|(
-name|ip6
-argument_list|)
-operator|+
-name|iphlen
-expr_stmt|;
 break|break;
 block|}
 endif|#
@@ -12014,10 +11996,6 @@ block|}
 if|if
 condition|(
 name|cookie_len
-operator|>
-name|size_of_pkt
-operator|||
-name|cookie_len
 operator|<
 sizeof|sizeof
 argument_list|(
@@ -12040,7 +12018,7 @@ operator|+
 name|SCTP_SIGNATURE_SIZE
 condition|)
 block|{
-comment|/* cookie too long!  or too small */
+comment|/* cookie too small */
 return|return
 operator|(
 name|NULL
@@ -12056,21 +12034,6 @@ name|cookie_len
 operator|-
 name|SCTP_SIGNATURE_SIZE
 expr_stmt|;
-if|if
-condition|(
-name|sig_offset
-operator|>
-name|size_of_pkt
-condition|)
-block|{
-comment|/* packet not correct size! */
-comment|/* XXX this may already be accounted for earlier... */
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
 name|m_sig
 operator|=
 name|m_split
