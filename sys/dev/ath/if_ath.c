@@ -3953,6 +3953,54 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* ATH_ENABLE_11N */
+ifdef|#
+directive|ifdef
+name|ATH_ENABLE_RADIOTAP_VENDOR_EXT
+comment|/* 	 * There's one vendor bitmap entry in the RX radiotap 	 * header; make sure that's taken into account. 	 */
+name|ieee80211_radiotap_attachv
+argument_list|(
+name|ic
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_tx_th
+operator|.
+name|wt_ihdr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sc
+operator|->
+name|sc_tx_th
+argument_list|)
+argument_list|,
+literal|0
+argument_list|,
+name|ATH_TX_RADIOTAP_PRESENT
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_rx_th
+operator|.
+name|wr_ihdr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sc
+operator|->
+name|sc_rx_th
+argument_list|)
+argument_list|,
+literal|1
+argument_list|,
+name|ATH_RX_RADIOTAP_PRESENT
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* 	 * No vendor bitmap/extensions are present. 	 */
 name|ieee80211_radiotap_attach
 argument_list|(
 name|ic
@@ -3990,6 +4038,9 @@ argument_list|,
 name|ATH_RX_RADIOTAP_PRESENT
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* ATH_ENABLE_RADIOTAP_VENDOR_EXT */
 comment|/* 	 * Setup dynamic sysctl's now that country code and 	 * regdomain are available from the hal. 	 */
 name|ath_sysctlattach
 argument_list|(

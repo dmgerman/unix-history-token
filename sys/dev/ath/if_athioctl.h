@@ -616,9 +616,148 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ATH_RX_RADIOTAP_PRESENT
+name|ATH_RX_RADIOTAP_PRESENT_BASE
 value|(		\ 	(1<< IEEE80211_RADIOTAP_TSFT)		| \ 	(1<< IEEE80211_RADIOTAP_FLAGS)		| \ 	(1<< IEEE80211_RADIOTAP_RATE)		| \ 	(1<< IEEE80211_RADIOTAP_ANTENNA)	| \ 	(1<< IEEE80211_RADIOTAP_DBM_ANTSIGNAL)	| \ 	(1<< IEEE80211_RADIOTAP_DBM_ANTNOISE)	| \ 	(1<< IEEE80211_RADIOTAP_XCHANNEL)	| \ 	0)
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ATH_ENABLE_RADIOTAP_VENDOR_EXT
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ATH_RX_RADIOTAP_PRESENT
+define|\
+value|(ATH_RX_RADIOTAP_PRESENT_BASE		| \ 	(1<< IEEE80211_RADIOTAP_VENDOREXT)	| \ 	(1<< IEEE80211_RADIOTAP_EXT)		| \ 	0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ATH_RX_RADIOTAP_PRESENT
+value|ATH_RX_RADIOTAP_PRESENT_BASE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ATH_ENABLE_RADIOTAP_PRESENT */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ATH_ENABLE_RADIOTAP_VENDOR_EXT
+end_ifdef
+
+begin_comment
+comment|/*  * This is higher than the vendor bitmap used inside  * the Atheros reference codebase.  */
+end_comment
+
+begin_comment
+comment|/* Bit 8 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATH_RADIOTAP_VENDOR_HEADER
+value|8
+end_define
+
+begin_comment
+comment|/*  * Using four chains makes all the fields in the  * per-chain info header be 4-byte aligned.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATH_RADIOTAP_MAX_CHAINS
+value|4
+end_define
+
+begin_comment
+comment|/*  * The vendor radiotap header data needs to be:  *  * + Aligned to a 4 byte address  * + .. so all internal fields are 4 bytes aligned;  * + .. and no 64 bit fields are allowed.  *  * So padding is required to ensure this is the case.  *  * Note that because of the lack of alignment with the  * vendor header (6 bytes), the first field must be  * two bytes so it can be accessed by alignment-strict  * platform (eg MIPS.)  */
+end_comment
+
+begin_struct
+struct|struct
+name|ath_radiotap_vendor_hdr
+block|{
+comment|/* 30 bytes */
+name|uint8_t
+name|vh_version
+decl_stmt|;
+comment|/* 1 */
+name|uint8_t
+name|vh_rx_chainmask
+decl_stmt|;
+comment|/* 1 */
+comment|/* At this point it should be 4 byte aligned */
+name|uint32_t
+name|evm
+index|[
+name|ATH_RADIOTAP_MAX_CHAINS
+index|]
+decl_stmt|;
+comment|/* 4 * 4 = 16 */
+name|uint8_t
+name|rssi_ctl
+index|[
+name|ATH_RADIOTAP_MAX_CHAINS
+index|]
+decl_stmt|;
+comment|/* 4 */
+name|uint8_t
+name|rssi_ext
+index|[
+name|ATH_RADIOTAP_MAX_CHAINS
+index|]
+decl_stmt|;
+comment|/* 4 */
+name|uint8_t
+name|vh_phyerr_code
+decl_stmt|;
+comment|/* Phy error code, or 0xff */
+name|uint8_t
+name|vh_rs_status
+decl_stmt|;
+comment|/* RX status */
+name|uint8_t
+name|vh_rssi
+decl_stmt|;
+comment|/* Raw RSSI */
+name|uint8_t
+name|vh_pad1
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* Pad to 4 byte boundary */
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ATH_ENABLE_RADIOTAP_VENDOR_EXT */
+end_comment
 
 begin_struct
 struct|struct
@@ -628,6 +767,22 @@ name|struct
 name|ieee80211_radiotap_header
 name|wr_ihdr
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ATH_ENABLE_RADIOTAP_VENDOR_EXT
+comment|/* Vendor extension header bitmap */
+name|uint32_t
+name|wr_ext_bitmap
+decl_stmt|;
+comment|/* 4 */
+comment|/* 	 * This padding is needed because: 	 * + the radiotap header is 8 bytes; 	 * + the extension bitmap is 4 bytes; 	 * + the tsf is 8 bytes, so it must start on an 8 byte 	 *   boundary. 	 */
+name|uint32_t
+name|wr_pad1
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* ATH_ENABLE_RADIOTAP_VENDOR_EXT */
+comment|/* Normal radiotap fields */
 name|u_int64_t
 name|wr_tsf
 decl_stmt|;
@@ -664,6 +819,23 @@ decl_stmt|;
 name|int8_t
 name|wr_chan_maxpow
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ATH_ENABLE_RADIOTAP_VENDOR_EXT
+comment|/* 	 * Vendor header section, as required by the 	 * presence of the vendor extension bit and bitmap 	 * entry. 	 * 	 * XXX This must be aligned to a 4 byte address? 	 * XXX or 8 byte address? 	 */
+name|struct
+name|ieee80211_radiotap_vendor_header
+name|wr_vh
+decl_stmt|;
+comment|/* 6 bytes */
+comment|/* 	 * Because of the lack of alignment enforced by the above 	 * header, this vendor section won't be aligned in any 	 * useful way.  So, this will include a two-byte version 	 * value which will force the structure to be 4-byte aligned. 	 */
+name|struct
+name|ath_radiotap_vendor_hdr
+name|wr_v
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* ATH_ENABLE_RADIOTAP_VENDOR_EXT */
 block|}
 name|__packed
 struct|;
