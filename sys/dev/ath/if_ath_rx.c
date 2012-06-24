@@ -2313,13 +2313,7 @@ name|ath_dfs_process_phy_err
 argument_list|(
 name|sc
 argument_list|,
-name|mtod
-argument_list|(
 name|m
-argument_list|,
-name|char
-operator|*
-argument_list|)
 argument_list|,
 name|rstamp
 argument_list|,
