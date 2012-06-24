@@ -5528,7 +5528,7 @@ condition|(
 name|exhausted
 operator|!=
 literal|0
-operator|&&
+operator|||
 operator|(
 name|n
 operator|=
