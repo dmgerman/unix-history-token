@@ -29292,8 +29292,6 @@ condition|)
 name|sctp_packet_log
 argument_list|(
 name|m
-argument_list|,
-name|mlen
 argument_list|)
 expr_stmt|;
 endif|#
