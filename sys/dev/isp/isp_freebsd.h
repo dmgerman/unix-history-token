@@ -192,7 +192,7 @@ begin_define
 define|#
 directive|define
 name|ISP_PLATFORM_VERSION_MINOR
-value|0
+value|10
 end_define
 
 begin_comment
@@ -324,6 +324,7 @@ decl_stmt|;
 name|uint32_t
 name|tag
 decl_stmt|;
+comment|/* typically f/w RX_ID */
 name|uint32_t
 name|lun
 decl_stmt|;
@@ -336,11 +337,15 @@ decl_stmt|;
 name|uint32_t
 name|portid
 decl_stmt|;
-name|uint32_t
+name|uint16_t
+name|rxid
+decl_stmt|;
+comment|/* wire rxid */
+name|uint16_t
 name|oxid
-range|:
-literal|16
-decl_stmt|,
+decl_stmt|;
+comment|/* wire oxid */
+name|uint32_t
 name|cdb0
 range|:
 literal|8
