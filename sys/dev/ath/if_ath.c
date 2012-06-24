@@ -3635,6 +3635,25 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* 	 * Initial aggregation settings. 	 */
+name|sc
+operator|->
+name|sc_hwq_limit
+operator|=
+name|ATH_AGGR_MIN_QDEPTH
+expr_stmt|;
+name|sc
+operator|->
+name|sc_tid_hwq_lo
+operator|=
+name|ATH_AGGR_SCHED_LOW
+expr_stmt|;
+name|sc
+operator|->
+name|sc_tid_hwq_hi
+operator|=
+name|ATH_AGGR_SCHED_HIGH
+expr_stmt|;
 comment|/* 	 * Check if the hardware requires PCI register serialisation. 	 * Some of the Owl based MACs require this. 	 */
 if|if
 condition|(
@@ -7914,25 +7933,6 @@ operator|->
 name|sc_beacons
 operator|=
 literal|0
-expr_stmt|;
-comment|/* 	 * Initial aggregation settings. 	 */
-name|sc
-operator|->
-name|sc_hwq_limit
-operator|=
-name|ATH_AGGR_MIN_QDEPTH
-expr_stmt|;
-name|sc
-operator|->
-name|sc_tid_hwq_lo
-operator|=
-name|ATH_AGGR_SCHED_LOW
-expr_stmt|;
-name|sc
-operator|->
-name|sc_tid_hwq_hi
-operator|=
-name|ATH_AGGR_SCHED_HIGH
 expr_stmt|;
 comment|/* 	 * Setup the hardware after reset: the key cache 	 * is filled as needed and the receive engine is 	 * set going.  Frame transmit is handled entirely 	 * in the frame output path; there's nothing to do 	 * here except setup the interrupt mask. 	 */
 if|if
