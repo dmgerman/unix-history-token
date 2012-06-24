@@ -957,7 +957,7 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * These four bits should not be set together.  The 		 * 5416 spec states a Michael error can only occur if 		 * DecryptCRCErr not set (and TKIP is used).  Experience 		 * indicates however that you can also get Michael errors 		 * when a CRC error is detected, but these are specious. 		 * Consequently we filter them out here so we don't 		 * confuse and/or complicate drivers. 		 */
-comment|/* 		 * The AR5416 sometimes sets both AR_CRCErr and AR_PHYErr 		 * when reporting radar pulses.  In this instance, 		 * clear HAL_RXERR_CRC and set HAL_RXERR_PHY. 		 * 		 * See PR kern/169362. 		 */
+comment|/* 		 * The AR5416 sometimes sets both AR_CRCErr and AR_PHYErr 		 * when reporting radar pulses.  In this instance 		 * set HAL_RXERR_PHY as well as HAL_RXERR_CRC and 		 * let the driver layer figure out what to do. 		 * 		 * See PR kern/169362. 		 */
 if|if
 condition|(
 name|ads
@@ -994,7 +994,6 @@ operator|=
 name|phyerr
 expr_stmt|;
 block|}
-elseif|else
 if|if
 condition|(
 name|ads
