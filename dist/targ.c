@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: targ.c,v 1.56 2010/11/25 21:31:09 christos Exp $	*/
+comment|/*	$NetBSD: targ.c,v 1.57 2012/06/12 19:21:51 joerg Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: targ.c,v 1.56 2010/11/25 21:31:09 christos Exp $"
+literal|"$NetBSD: targ.c,v 1.57 2012/06/12 19:21:51 joerg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: targ.c,v 1.56 2010/11/25 21:31:09 christos Exp $"
+literal|"$NetBSD: targ.c,v 1.57 2012/06/12 19:21:51 joerg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1242,7 +1242,7 @@ parameter_list|,
 name|void
 modifier|*
 name|pflags
-name|__unused
+name|MAKE_ATTR_UNUSED
 parameter_list|)
 block|{
 name|GNode
@@ -2147,7 +2147,7 @@ parameter_list|,
 name|void
 modifier|*
 name|dummy
-name|__unused
+name|MAKE_ATTR_UNUSED
 parameter_list|)
 block|{
 name|GNode
@@ -2331,7 +2331,7 @@ parameter_list|,
 name|void
 modifier|*
 name|junk
-name|__unused
+name|MAKE_ATTR_UNUSED
 parameter_list|)
 block|{
 name|GNode

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: dir.c,v 1.64 2012/04/07 18:29:08 christos Exp $	*/
+comment|/*	$NetBSD: dir.c,v 1.65 2012/06/12 19:21:50 joerg Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: dir.c,v 1.64 2012/04/07 18:29:08 christos Exp $"
+literal|"$NetBSD: dir.c,v 1.65 2012/06/12 19:21:50 joerg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: dir.c,v 1.64 2012/04/07 18:29:08 christos Exp $"
+literal|"$NetBSD: dir.c,v 1.65 2012/06/12 19:21:50 joerg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2204,7 +2204,7 @@ specifier|const
 name|char
 modifier|*
 name|name
-name|__unused
+name|MAKE_ATTR_UNUSED
 parameter_list|,
 specifier|const
 name|char
@@ -2213,7 +2213,7 @@ name|cp
 parameter_list|,
 name|Boolean
 name|hasSlash
-name|__unused
+name|MAKE_ATTR_UNUSED
 parameter_list|)
 block|{
 name|char
@@ -2680,7 +2680,7 @@ name|DirFindDot
 parameter_list|(
 name|Boolean
 name|hasSlash
-name|__unused
+name|MAKE_ATTR_UNUSED
 parameter_list|,
 specifier|const
 name|char

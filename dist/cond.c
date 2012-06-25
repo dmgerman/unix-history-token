@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: cond.c,v 1.63 2012/05/21 06:30:02 sjg Exp $	*/
+comment|/*	$NetBSD: cond.c,v 1.64 2012/06/12 19:21:50 joerg Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: cond.c,v 1.63 2012/05/21 06:30:02 sjg Exp $"
+literal|"$NetBSD: cond.c,v 1.64 2012/06/12 19:21:50 joerg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: cond.c,v 1.63 2012/05/21 06:30:02 sjg Exp $"
+literal|"$NetBSD: cond.c,v 1.64 2012/06/12 19:21:50 joerg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -928,7 +928,7 @@ name|CondDoDefined
 parameter_list|(
 name|int
 name|argLen
-name|__unused
+name|MAKE_ATTR_UNUSED
 parameter_list|,
 specifier|const
 name|char
@@ -1038,7 +1038,7 @@ name|CondDoMake
 parameter_list|(
 name|int
 name|argLen
-name|__unused
+name|MAKE_ATTR_UNUSED
 parameter_list|,
 specifier|const
 name|char
@@ -1075,7 +1075,7 @@ name|CondDoExists
 parameter_list|(
 name|int
 name|argLen
-name|__unused
+name|MAKE_ATTR_UNUSED
 parameter_list|,
 specifier|const
 name|char
@@ -1169,7 +1169,7 @@ name|CondDoTarget
 parameter_list|(
 name|int
 name|argLen
-name|__unused
+name|MAKE_ATTR_UNUSED
 parameter_list|,
 specifier|const
 name|char
@@ -1219,7 +1219,7 @@ name|CondDoCommands
 parameter_list|(
 name|int
 name|argLen
-name|__unused
+name|MAKE_ATTR_UNUSED
 parameter_list|,
 specifier|const
 name|char
@@ -2480,7 +2480,7 @@ specifier|const
 name|char
 modifier|*
 name|func
-name|__unused
+name|MAKE_ATTR_UNUSED
 parameter_list|)
 block|{
 comment|/*      * Use Var_Parse to parse the spec in parens and return      * TOK_TRUE if the resulting string is empty.      */
@@ -2608,7 +2608,7 @@ specifier|const
 name|char
 modifier|*
 name|arg
-name|__unused
+name|MAKE_ATTR_UNUSED
 parameter_list|)
 block|{
 return|return

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: make.c,v 1.86 2012/05/10 19:53:26 christos Exp $	*/
+comment|/*	$NetBSD: make.c,v 1.87 2012/06/12 19:21:51 joerg Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: make.c,v 1.86 2012/05/10 19:53:26 christos Exp $"
+literal|"$NetBSD: make.c,v 1.87 2012/06/12 19:21:51 joerg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: make.c,v 1.86 2012/05/10 19:53:26 christos Exp $"
+literal|"$NetBSD: make.c,v 1.87 2012/06/12 19:21:51 joerg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -287,7 +287,7 @@ function_decl|;
 end_function_decl
 
 begin_function
-name|__dead
+name|MAKE_ATTR_DEAD
 specifier|static
 name|void
 name|make_abort
@@ -2628,7 +2628,7 @@ parameter_list|,
 name|void
 modifier|*
 name|pgnp
-name|__unused
+name|MAKE_ATTR_UNUSED
 parameter_list|)
 block|{
 name|GNode
@@ -3089,7 +3089,7 @@ parameter_list|,
 name|void
 modifier|*
 name|ignore
-name|__unused
+name|MAKE_ATTR_UNUSED
 parameter_list|)
 block|{
 name|GNode
