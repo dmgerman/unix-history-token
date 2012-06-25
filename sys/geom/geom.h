@@ -486,10 +486,6 @@ name|g_attrchanged_t
 modifier|*
 name|attrchanged
 decl_stmt|;
-name|g_provgone_t
-modifier|*
-name|providergone
-decl_stmt|;
 name|g_dumpconf_t
 modifier|*
 name|dumpconf
@@ -506,9 +502,9 @@ name|g_ioctl_t
 modifier|*
 name|ioctl
 decl_stmt|;
-name|void
+name|g_provgone_t
 modifier|*
-name|spare1
+name|providergone
 decl_stmt|;
 name|void
 modifier|*
@@ -616,10 +612,6 @@ name|g_attrchanged_t
 modifier|*
 name|attrchanged
 decl_stmt|;
-name|g_provgone_t
-modifier|*
-name|providergone
-decl_stmt|;
 name|g_dumpconf_t
 modifier|*
 name|dumpconf
@@ -636,9 +628,9 @@ name|g_ioctl_t
 modifier|*
 name|ioctl
 decl_stmt|;
-name|void
+name|g_provgone_t
 modifier|*
-name|spare0
+name|providergone
 decl_stmt|;
 name|void
 modifier|*
