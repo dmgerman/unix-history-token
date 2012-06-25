@@ -10114,7 +10114,6 @@ name|sense_data
 argument_list|,
 sizeof|sizeof
 argument_list|(
-operator|&
 name|ccb
 operator|->
 name|csio
