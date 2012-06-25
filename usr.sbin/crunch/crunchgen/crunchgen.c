@@ -318,6 +318,13 @@ comment|/* where are the objects ? */
 end_comment
 
 begin_decl_stmt
+name|char
+modifier|*
+name|path_make
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|linenum
 init|=
@@ -534,6 +541,28 @@ operator|*
 name|execfname
 operator|=
 literal|'\0'
+expr_stmt|;
+name|path_make
+operator|=
+name|getenv
+argument_list|(
+literal|"MAKE"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|path_make
+operator|==
+name|NULL
+operator|||
+operator|*
+name|path_make
+operator|==
+literal|'\0'
+condition|)
+name|path_make
+operator|=
+literal|"make"
 expr_stmt|;
 name|p
 operator|=
@@ -3083,7 +3112,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Run \"make -f %s\" to build crunched binary.\n"
+literal|"Run \"%s -f %s\" to build crunched binary.\n"
+argument_list|,
+name|path_make
 argument_list|,
 name|outmkname
 argument_list|)
@@ -3722,11 +3753,13 @@ argument_list|(
 name|f
 argument_list|,
 literal|"crunchgen_objs:\n"
-literal|"\t@cd %s&& make -f %s $(BUILDOPTS) $(%s_OPTS)"
+literal|"\t@cd %s&& %s -f %s $(BUILDOPTS) $(%s_OPTS)"
 argument_list|,
 name|p
 operator|->
 name|srcdir
+argument_list|,
+name|path_make
 argument_list|,
 name|tempfname
 argument_list|,
@@ -3782,11 +3815,13 @@ name|line
 argument_list|,
 name|MAXLINELEN
 argument_list|,
-literal|"cd %s&& make -f %s -B crunchgen_objs"
+literal|"cd %s&& %s -f %s -B crunchgen_objs"
 argument_list|,
 name|p
 operator|->
 name|srcdir
+argument_list|,
+name|path_make
 argument_list|,
 name|tempfname
 argument_list|)
