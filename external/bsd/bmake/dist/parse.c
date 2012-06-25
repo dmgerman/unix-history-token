@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: parse.c,v 1.184 2012/04/24 20:12:16 sjg Exp $	*/
+comment|/*	$NetBSD: parse.c,v 1.185 2012/06/12 19:21:51 joerg Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: parse.c,v 1.184 2012/04/24 20:12:16 sjg Exp $"
+literal|"$NetBSD: parse.c,v 1.185 2012/06/12 19:21:51 joerg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: parse.c,v 1.184 2012/04/24 20:12:16 sjg Exp $"
+literal|"$NetBSD: parse.c,v 1.185 2012/06/12 19:21:51 joerg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1035,19 +1035,15 @@ modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|__attribute__
+function_decl|MAKE_ATTR_PRINTFLIKE
 parameter_list|(
-function_decl|(__format__
-parameter_list|(
-name|__printf__
-parameter_list|,
 function_decl|4
 operator|,
 function_decl|5
 end_function_decl
 
 begin_empty_stmt
-unit|)))
+unit|)
 empty_stmt|;
 end_empty_stmt
 
@@ -1073,19 +1069,15 @@ modifier|*
 parameter_list|,
 name|va_list
 parameter_list|)
-function_decl|__attribute__
+function_decl|MAKE_ATTR_PRINTFLIKE
 parameter_list|(
-function_decl|(__format__
-parameter_list|(
-name|__printf__
-parameter_list|,
 function_decl|5
 operator|,
 function_decl|0
 end_function_decl
 
 begin_empty_stmt
-unit|)))
+unit|)
 empty_stmt|;
 end_empty_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: var.c,v 1.170 2012/06/04 20:34:20 sjg Exp $	*/
+comment|/*	$NetBSD: var.c,v 1.171 2012/06/12 19:21:51 joerg Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: var.c,v 1.170 2012/06/04 20:34:20 sjg Exp $"
+literal|"$NetBSD: var.c,v 1.171 2012/06/12 19:21:51 joerg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: var.c,v 1.170 2012/06/04 20:34:20 sjg Exp $"
+literal|"$NetBSD: var.c,v 1.171 2012/06/12 19:21:51 joerg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4204,7 +4204,7 @@ parameter_list|(
 name|GNode
 modifier|*
 name|ctx
-name|__unused
+name|MAKE_ATTR_UNUSED
 parameter_list|,
 name|Var_Parse_State
 modifier|*
@@ -4345,7 +4345,7 @@ parameter_list|(
 name|GNode
 modifier|*
 name|ctx
-name|__unused
+name|MAKE_ATTR_UNUSED
 parameter_list|,
 name|Var_Parse_State
 modifier|*
@@ -4472,7 +4472,7 @@ parameter_list|(
 name|GNode
 modifier|*
 name|ctx
-name|__unused
+name|MAKE_ATTR_UNUSED
 parameter_list|,
 name|Var_Parse_State
 modifier|*
@@ -4588,7 +4588,7 @@ parameter_list|(
 name|GNode
 modifier|*
 name|ctx
-name|__unused
+name|MAKE_ATTR_UNUSED
 parameter_list|,
 name|Var_Parse_State
 modifier|*
@@ -4711,7 +4711,7 @@ parameter_list|(
 name|GNode
 modifier|*
 name|ctx
-name|__unused
+name|MAKE_ATTR_UNUSED
 parameter_list|,
 name|Var_Parse_State
 modifier|*
@@ -4987,7 +4987,7 @@ parameter_list|(
 name|GNode
 modifier|*
 name|ctx
-name|__unused
+name|MAKE_ATTR_UNUSED
 parameter_list|,
 name|Var_Parse_State
 modifier|*
@@ -5080,7 +5080,7 @@ parameter_list|(
 name|GNode
 modifier|*
 name|ctx
-name|__unused
+name|MAKE_ATTR_UNUSED
 parameter_list|,
 name|Var_Parse_State
 modifier|*
@@ -5855,12 +5855,12 @@ parameter_list|(
 name|GNode
 modifier|*
 name|ctx
-name|__unused
+name|MAKE_ATTR_UNUSED
 parameter_list|,
 name|Var_Parse_State
 modifier|*
 name|vpstate
-name|__unused
+name|MAKE_ATTR_UNUSED
 parameter_list|,
 name|char
 modifier|*
@@ -6512,12 +6512,12 @@ parameter_list|(
 name|GNode
 modifier|*
 name|ctx
-name|__unused
+name|MAKE_ATTR_UNUSED
 parameter_list|,
 name|Var_Parse_State
 modifier|*
 name|vpstate
-name|__unused
+name|MAKE_ATTR_UNUSED
 parameter_list|,
 name|char
 modifier|*
@@ -6681,7 +6681,7 @@ parameter_list|(
 name|GNode
 modifier|*
 name|ctx
-name|__unused
+name|MAKE_ATTR_UNUSED
 parameter_list|,
 name|Var_Parse_State
 modifier|*
@@ -7049,7 +7049,7 @@ parameter_list|(
 name|GNode
 modifier|*
 name|ctx
-name|__unused
+name|MAKE_ATTR_UNUSED
 parameter_list|,
 name|Var_Parse_State
 modifier|*
@@ -7069,7 +7069,7 @@ parameter_list|,
 name|void
 modifier|*
 name|patternp
-name|__unused
+name|MAKE_ATTR_UNUSED
 parameter_list|)
 block|{
 name|struct
@@ -7884,7 +7884,7 @@ parameter_list|,
 name|Var_Parse_State
 modifier|*
 name|vpstate
-name|__unused
+name|MAKE_ATTR_UNUSED
 parameter_list|,
 name|int
 name|errnum

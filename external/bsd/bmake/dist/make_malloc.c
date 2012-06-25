@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: make_malloc.c,v 1.7 2012/05/18 02:28:16 sjg Exp $	*/
+comment|/*	$NetBSD: make_malloc.c,v 1.10 2012/06/20 17:46:28 sjg Exp $	*/
 end_comment
 
 begin_comment
@@ -22,7 +22,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: make_malloc.c,v 1.7 2012/05/18 02:28:16 sjg Exp $"
+literal|"$NetBSD: make_malloc.c,v 1.10 2012/06/20 17:46:28 sjg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -59,7 +59,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"make_malloc.h"
+file|"make.h"
 end_include
 
 begin_ifndef
@@ -68,17 +68,20 @@ directive|ifndef
 name|USE_EMALLOC
 end_ifndef
 
+begin_decl_stmt
+specifier|static
+name|void
+name|enomem
+argument_list|(
+name|void
+argument_list|)
+name|MAKE_ATTR_DEAD
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * enomem --  *	die when out of memory.  */
 end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|progname
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 specifier|static

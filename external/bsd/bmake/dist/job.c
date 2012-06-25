@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: job.c,v 1.161 2012/04/07 18:29:08 christos Exp $	*/
+comment|/*	$NetBSD: job.c,v 1.162 2012/06/12 19:21:50 joerg Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: job.c,v 1.161 2012/04/07 18:29:08 christos Exp $"
+literal|"$NetBSD: job.c,v 1.162 2012/06/12 19:21:50 joerg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: job.c,v 1.161 2012/04/07 18:29:08 christos Exp $"
+literal|"$NetBSD: job.c,v 1.162 2012/06/12 19:21:50 joerg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1264,7 +1264,7 @@ name|int
 argument_list|,
 name|int
 argument_list|)
-name|__dead
+name|MAKE_ATTR_DEAD
 decl_stmt|;
 end_decl_stmt
 
@@ -1750,7 +1750,7 @@ name|JobChildSig
 parameter_list|(
 name|int
 name|signo
-name|__unused
+name|MAKE_ATTR_UNUSED
 parameter_list|)
 block|{
 name|write
@@ -1778,7 +1778,7 @@ name|JobContinueSig
 parameter_list|(
 name|int
 name|signo
-name|__unused
+name|MAKE_ATTR_UNUSED
 parameter_list|)
 block|{
 comment|/*      * Defer sending to SIGCONT to our stopped children until we return      * from the signal handler.      */
@@ -1801,7 +1801,7 @@ comment|/*-  *------------------------------------------------------------------
 end_comment
 
 begin_function
-name|__dead
+name|MAKE_ATTR_DEAD
 specifier|static
 name|void
 name|JobPassSig_int
@@ -1822,7 +1822,7 @@ block|}
 end_function
 
 begin_function
-name|__dead
+name|MAKE_ATTR_DEAD
 specifier|static
 name|void
 name|JobPassSig_term

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: compat.c,v 1.88 2012/06/05 17:31:04 sjg Exp $	*/
+comment|/*	$NetBSD: compat.c,v 1.89 2012/06/10 21:44:01 wiz Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: compat.c,v 1.88 2012/06/05 17:31:04 sjg Exp $"
+literal|"$NetBSD: compat.c,v 1.89 2012/06/10 21:44:01 wiz Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: compat.c,v 1.88 2012/06/05 17:31:04 sjg Exp $"
+literal|"$NetBSD: compat.c,v 1.89 2012/06/10 21:44:01 wiz Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -208,16 +208,15 @@ name|ENDNode
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|CompatInterrupt
-argument_list|(
+parameter_list|(
 name|int
-argument_list|)
-name|__dead
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static

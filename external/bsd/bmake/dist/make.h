@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: make.h,v 1.88 2012/06/04 20:34:20 sjg Exp $	*/
+comment|/*	$NetBSD: make.h,v 1.89 2012/06/12 19:21:51 joerg Exp $	*/
 end_comment
 
 begin_comment
@@ -117,16 +117,6 @@ end_include
 begin_if
 if|#
 directive|if
-operator|!
-name|defined
-argument_list|(
-name|__GNUC_PREREQ__
-argument_list|)
-end_if
-
-begin_if
-if|#
-directive|if
 name|defined
 argument_list|(
 name|__GNUC__
@@ -136,7 +126,7 @@ end_if
 begin_define
 define|#
 directive|define
-name|__GNUC_PREREQ__
+name|MAKE_GNUC_PREREQ
 parameter_list|(
 name|x
 parameter_list|,
@@ -158,13 +148,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|__GNUC_PREREQ__
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-value|0
+name|MAKE_GNUC_PREREQx
+value|, y)	0
 end_define
 
 begin_endif
@@ -176,29 +161,10 @@ begin_comment
 comment|/* defined(__GNUC__) */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !defined(__GNUC_PREREQ__) */
-end_comment
-
 begin_if
 if|#
 directive|if
-operator|!
-name|defined
-argument_list|(
-name|__unused
-argument_list|)
-end_if
-
-begin_if
-if|#
-directive|if
-name|__GNUC_PREREQ__
+name|MAKE_GNUC_PREREQ
 argument_list|(
 literal|2
 operator|,
@@ -209,7 +175,7 @@ end_if
 begin_define
 define|#
 directive|define
-name|__unused
+name|MAKE_ATTR_UNUSED
 value|__attribute__((__unused__))
 end_define
 
@@ -221,7 +187,7 @@ end_else
 begin_define
 define|#
 directive|define
-name|__unused
+name|MAKE_ATTR_UNUSED
 end_define
 
 begin_comment
@@ -233,6 +199,55 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|MAKE_GNUC_PREREQ
+argument_list|(
+literal|2
+operator|,
+literal|5
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|MAKE_ATTR_DEAD
+value|__attribute__((__noreturn__))
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|MAKE_ATTR_DEAD
+value|__volatile
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|MAKE_ATTR_DEAD
+end_define
+
+begin_comment
+comment|/* delete */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
@@ -241,18 +256,46 @@ end_endif
 begin_if
 if|#
 directive|if
-operator|!
-name|defined
+name|MAKE_GNUC_PREREQ
 argument_list|(
-name|__dead
+literal|2
+operator|,
+literal|7
 argument_list|)
 end_if
 
 begin_define
 define|#
 directive|define
-name|__dead
+name|MAKE_ATTR_PRINTFLIKE
+parameter_list|(
+name|fmtarg
+parameter_list|,
+name|firstvararg
+parameter_list|)
+define|\
+value|__attribute__((__format__ (__printf__, fmtarg, firstvararg)))
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|MAKE_ATTR_PRINTFLIKE
+parameter_list|(
+name|fmtarg
+parameter_list|,
+name|firstvararg
+parameter_list|)
+end_define
+
+begin_comment
+comment|/* delete */
+end_comment
 
 begin_endif
 endif|#

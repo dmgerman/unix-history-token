@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: arch.c,v 1.62 2010/11/27 16:00:09 christos Exp $	*/
+comment|/*	$NetBSD: arch.c,v 1.63 2012/06/12 19:21:50 joerg Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: arch.c,v 1.62 2010/11/27 16:00:09 christos Exp $"
+literal|"$NetBSD: arch.c,v 1.63 2012/06/12 19:21:50 joerg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: arch.c,v 1.62 2010/11/27 16:00:09 christos Exp $"
+literal|"$NetBSD: arch.c,v 1.63 2012/06/12 19:21:50 joerg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3745,7 +3745,7 @@ parameter_list|(
 name|GNode
 modifier|*
 name|gn
-name|__unused
+name|MAKE_ATTR_UNUSED
 parameter_list|)
 else|#
 directive|else
