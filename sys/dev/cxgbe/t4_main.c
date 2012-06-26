@@ -2325,9 +2325,6 @@ block|{
 name|uint16_t
 name|device
 decl_stmt|;
-name|uint8_t
-name|mpf
-decl_stmt|;
 name|char
 modifier|*
 name|desc
@@ -2340,15 +2337,11 @@ block|{
 block|{
 literal|0xa000
 block|,
-literal|0
-block|,
 literal|"Chelsio Terminator 4 FPGA"
 block|}
 block|,
 block|{
 literal|0x4400
-block|,
-literal|4
 block|,
 literal|"Chelsio T440-dbg"
 block|}
@@ -2356,15 +2349,11 @@ block|,
 block|{
 literal|0x4401
 block|,
-literal|4
-block|,
 literal|"Chelsio T420-CR"
 block|}
 block|,
 block|{
 literal|0x4402
-block|,
-literal|4
 block|,
 literal|"Chelsio T422-CR"
 block|}
@@ -2372,15 +2361,11 @@ block|,
 block|{
 literal|0x4403
 block|,
-literal|4
-block|,
 literal|"Chelsio T440-CR"
 block|}
 block|,
 block|{
 literal|0x4404
-block|,
-literal|4
 block|,
 literal|"Chelsio T420-BCH"
 block|}
@@ -2388,15 +2373,11 @@ block|,
 block|{
 literal|0x4405
 block|,
-literal|4
-block|,
 literal|"Chelsio T440-BCH"
 block|}
 block|,
 block|{
 literal|0x4406
-block|,
-literal|4
 block|,
 literal|"Chelsio T440-CH"
 block|}
@@ -2404,15 +2385,11 @@ block|,
 block|{
 literal|0x4407
 block|,
-literal|4
-block|,
 literal|"Chelsio T420-SO"
 block|}
 block|,
 block|{
 literal|0x4408
-block|,
-literal|4
 block|,
 literal|"Chelsio T420-CX"
 block|}
@@ -2420,15 +2397,11 @@ block|,
 block|{
 literal|0x4409
 block|,
-literal|4
-block|,
 literal|"Chelsio T420-BT"
 block|}
 block|,
 block|{
 literal|0x440a
-block|,
-literal|4
 block|,
 literal|"Chelsio T404-BT"
 block|}
@@ -2523,11 +2496,35 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
+name|uint8_t
+name|f
+init|=
+name|pci_get_function
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
 name|v
 operator|!=
 name|PCI_VENDOR_ID_CHELSIO
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+comment|/* Attach only to PF0 of the FPGA */
+if|if
+condition|(
+name|d
+operator|==
+literal|0xa000
+operator|&&
+name|f
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -2561,18 +2558,6 @@ name|i
 index|]
 operator|.
 name|device
-operator|&&
-name|pci_get_function
-argument_list|(
-name|dev
-argument_list|)
-operator|==
-name|t4_pciids
-index|[
-name|i
-index|]
-operator|.
-name|mpf
 condition|)
 block|{
 name|device_set_desc
@@ -2662,23 +2647,6 @@ operator|->
 name|dev
 operator|=
 name|dev
-expr_stmt|;
-name|sc
-operator|->
-name|pf
-operator|=
-name|pci_get_function
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|mbox
-operator|=
-name|sc
-operator|->
-name|pf
 expr_stmt|;
 name|pci_enable_busmaster
 argument_list|(
@@ -2849,6 +2817,29 @@ goto|goto
 name|done
 goto|;
 comment|/* error message displayed already */
+comment|/* 	 * This is the real PF# to which we're attaching.  Works from within PCI 	 * passthrough environments too, where pci_get_function() could return a 	 * different PF# depending on the passthrough configuration.  We need to 	 * use the real PF# in all our communication with the firmware. 	 */
+name|sc
+operator|->
+name|pf
+operator|=
+name|G_SOURCEPF
+argument_list|(
+name|t4_read_reg
+argument_list|(
+name|sc
+argument_list|,
+name|A_PL_WHOAMI
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|mbox
+operator|=
+name|sc
+operator|->
+name|pf
+expr_stmt|;
 name|memset
 argument_list|(
 name|sc
@@ -7058,17 +7049,28 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|u_long
+name|uint32_t
 name|bar0
 decl_stmt|;
+comment|/* 	 * Read low 32b of bar0 indirectly via the hardware backdoor mechanism. 	 * Works from within PCI passthrough environments too, where 	 * rman_get_start() can return a different value.  We need to program 	 * the memory window decoders with the actual addresses that will be 	 * coming across the PCIe link. 	 */
 name|bar0
 operator|=
-name|rman_get_start
+name|t4_hw_pci_read_cfg4
 argument_list|(
 name|sc
-operator|->
-name|regs_res
+argument_list|,
+name|PCIR_BAR
+argument_list|(
+literal|0
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|bar0
+operator|&=
+operator|(
+name|uint32_t
+operator|)
+name|PCIM_BAR_MEM_BASE
 expr_stmt|;
 name|t4_write_reg
 argument_list|(
@@ -7166,6 +7168,19 @@ name|MEMWIN2_APERTURE
 argument_list|)
 operator|-
 literal|10
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* flush */
+name|t4_read_reg
+argument_list|(
+name|sc
+argument_list|,
+name|PCIE_MEM_ACCESS_REG
+argument_list|(
+name|A_PCIE_MEM_ACCESS_BASE_WIN
+argument_list|,
+literal|2
 argument_list|)
 argument_list|)
 expr_stmt|;
