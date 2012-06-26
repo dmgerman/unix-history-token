@@ -3354,7 +3354,7 @@ block|{
 operator|.
 name|devid
 operator|=
-literal|0x01088086
+literal|0x010a8086
 block|,
 operator|.
 name|name
