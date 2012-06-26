@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2011  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2012  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_comment
@@ -124,6 +124,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* Default repeated tabstops */
+end_comment
+
+begin_decl_stmt
+name|public
+name|POSITION
+name|highest_hilite
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Pos of last hilite in file found so far */
 end_comment
 
 begin_decl_stmt
@@ -2328,10 +2339,26 @@ name|a
 operator|!=
 name|AT_ANSI
 condition|)
+block|{
+if|if
+condition|(
+name|highest_hilite
+operator|!=
+name|NULL_POSITION
+operator|&&
+name|pos
+operator|>
+name|highest_hilite
+condition|)
+name|highest_hilite
+operator|=
+name|pos
+expr_stmt|;
 name|a
 operator||=
 name|AT_HILITE
 expr_stmt|;
+block|}
 block|}
 block|}
 endif|#

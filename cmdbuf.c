@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2011  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2012  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_comment
@@ -124,6 +124,20 @@ end_decl_stmt
 
 begin_comment
 comment|/* Next input char should not be interpreted */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|updown_match
+init|=
+operator|-
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Prefix length in up/down movement */
 end_comment
 
 begin_if
@@ -600,6 +614,11 @@ name|cmd_mbc_buf_len
 operator|=
 literal|0
 expr_stmt|;
+name|updown_match
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 block|}
 end_function
 
@@ -622,6 +641,11 @@ expr_stmt|;
 name|cmd_mbc_buf_len
 operator|=
 literal|0
+expr_stmt|;
+name|updown_match
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 block|}
 end_function
@@ -2024,6 +2048,11 @@ name|cs
 operator|++
 expr_stmt|;
 comment|/* 	 * Reprint the tail of the line from the inserted char. 	 */
+name|updown_match
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|cmd_repaint
 argument_list|(
 name|cp
@@ -2120,6 +2149,11 @@ condition|)
 break|break;
 block|}
 comment|/* 	 * Repaint the buffer after the erased char. 	 */
+name|updown_match
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|cmd_repaint
 argument_list|(
 name|cp
@@ -2377,6 +2411,11 @@ name|cp
 operator|=
 literal|'\0'
 expr_stmt|;
+name|updown_match
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|cmd_repaint
 argument_list|(
 name|cp
@@ -2464,7 +2503,7 @@ name|CMD_HISTORY
 end_if
 
 begin_comment
-comment|/*  * Move up or down in the currently selected command history list.  */
+comment|/*  * Move up or down in the currently selected command history list.  * Only consider entries whose first updown_match chars are equal to  * cmdbuf's corresponding chars.  */
 end_comment
 
 begin_function
@@ -2481,6 +2520,11 @@ block|{
 name|char
 modifier|*
 name|s
+decl_stmt|;
+name|struct
+name|mlist
+modifier|*
+name|ml
 decl_stmt|;
 if|if
 condition|(
@@ -2499,46 +2543,84 @@ name|CC_OK
 operator|)
 return|;
 block|}
-name|cmd_home
-argument_list|()
-expr_stmt|;
-name|clear_eol
-argument_list|()
-expr_stmt|;
-comment|/* 	 * Move curr_mp to the next/prev entry. 	 */
 if|if
 condition|(
+name|updown_match
+operator|<
+literal|0
+condition|)
+block|{
+name|updown_match
+operator|=
+name|cp
+operator|-
+name|cmdbuf
+expr_stmt|;
+block|}
+comment|/* 	 * Find the next history entry which matches. 	 */
+for|for
+control|(
+name|ml
+operator|=
+name|curr_mlist
+operator|->
+name|curr_mp
+init|;
+condition|;
+control|)
+block|{
+name|ml
+operator|=
+operator|(
 name|action
 operator|==
 name|EC_UP
-condition|)
-name|curr_mlist
-operator|->
-name|curr_mp
-operator|=
-name|curr_mlist
-operator|->
-name|curr_mp
+operator|)
+condition|?
+name|ml
 operator|->
 name|prev
-expr_stmt|;
-else|else
-name|curr_mlist
-operator|->
-name|curr_mp
-operator|=
-name|curr_mlist
-operator|->
-name|curr_mp
+else|:
+name|ml
 operator|->
 name|next
 expr_stmt|;
-comment|/* 	 * Copy the entry into cmdbuf and echo it on the screen. 	 */
-name|s
-operator|=
+if|if
+condition|(
+name|ml
+operator|==
+name|curr_mlist
+condition|)
+block|{
+comment|/* 			 * We reached the end (or beginning) of the list. 			 */
+break|break;
+block|}
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|cmdbuf
+argument_list|,
+name|ml
+operator|->
+name|string
+argument_list|,
+name|updown_match
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* 			 * This entry matches; stop here. 			 * Copy the entry into cmdbuf and echo it on the screen. 			 */
 name|curr_mlist
 operator|->
 name|curr_mp
+operator|=
+name|ml
+expr_stmt|;
+name|s
+operator|=
+name|ml
 operator|->
 name|string
 expr_stmt|;
@@ -2559,6 +2641,12 @@ argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
+name|cmd_home
+argument_list|()
+expr_stmt|;
+name|clear_eol
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|cp
@@ -2572,6 +2660,17 @@ literal|'\0'
 condition|;
 control|)
 name|cmd_right
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+name|CC_OK
+operator|)
+return|;
+block|}
+block|}
+comment|/* 	 * We didn't find a history entry that matches. 	 */
+name|bell
 argument_list|()
 expr_stmt|;
 return|return
@@ -5072,18 +5171,6 @@ name|modified
 init|=
 literal|0
 decl_stmt|;
-name|filename
-operator|=
-name|histfile_name
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|filename
-operator|==
-name|NULL
-condition|)
-return|return;
 if|if
 condition|(
 name|mlist_search
@@ -5115,6 +5202,18 @@ if|if
 condition|(
 operator|!
 name|modified
+condition|)
+return|return;
+name|filename
+operator|=
+name|histfile_name
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|filename
+operator|==
+name|NULL
 condition|)
 return|return;
 name|f

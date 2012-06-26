@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2011  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2012  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_comment
@@ -1523,6 +1523,7 @@ end_comment
 
 begin_function
 specifier|static
+name|constant
 name|char
 modifier|*
 name|skipcond
@@ -1530,6 +1531,7 @@ parameter_list|(
 name|p
 parameter_list|)
 specifier|register
+name|constant
 name|char
 modifier|*
 name|p
@@ -1627,6 +1629,7 @@ end_comment
 
 begin_function
 specifier|static
+name|constant
 name|char
 modifier|*
 name|wherechar
@@ -1636,6 +1639,7 @@ parameter_list|,
 name|wp
 parameter_list|)
 name|char
+name|constant
 modifier|*
 name|p
 decl_stmt|;
@@ -1754,6 +1758,7 @@ name|proto
 parameter_list|,
 name|maxwidth
 parameter_list|)
+name|constant
 name|char
 modifier|*
 name|proto
@@ -1763,6 +1768,7 @@ name|maxwidth
 decl_stmt|;
 block|{
 specifier|register
+name|constant
 name|char
 modifier|*
 name|p
