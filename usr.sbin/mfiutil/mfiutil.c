@@ -374,16 +374,18 @@ name|version
 parameter_list|(
 name|int
 name|ac
+name|__unused
 parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|av
+name|__unused
 parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"mfiutil version 1.0.13"
+literal|"mfiutil version 1.0.14"
 argument_list|)
 expr_stmt|;
 ifdef|#
