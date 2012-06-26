@@ -255,6 +255,13 @@ name|gpio_shift
 decl_stmt|,
 name|reg
 decl_stmt|;
+define|#
+directive|define
+name|N
+parameter_list|(
+name|a
+parameter_list|)
+value|(sizeof(a) / sizeof(a[0]))
 name|HALASSERT
 argument_list|(
 name|gpio
@@ -269,6 +276,29 @@ operator|.
 name|halNumGpioPins
 argument_list|)
 expr_stmt|;
+comment|/* 	 * This table maps the HAL GPIO pins to the actual hardware 	 * values. 	 */
+specifier|static
+specifier|const
+name|u_int32_t
+name|MuxSignalConversionTable
+index|[]
+init|=
+block|{
+name|AR_GPIO_OUTPUT_MUX_AS_OUTPUT
+block|,
+name|AR_GPIO_OUTPUT_MUX_AS_PCIE_ATTENTION_LED
+block|,
+name|AR_GPIO_OUTPUT_MUX_AS_PCIE_POWER_LED
+block|,
+name|AR_GPIO_OUTPUT_MUX_AS_MAC_NETWORK_LED
+block|,
+name|AR_GPIO_OUTPUT_MUX_AS_PCIE_POWER_LED
+block|,
+name|AR_GPIO_OUTPUT_MUX_AS_RX_CLEAR_EXTERNAL
+block|,
+name|AR_GPIO_OUTPUT_MUX_AS_TX_FRAME
+block|, 	}
+decl_stmt|;
 name|HALDEBUG
 argument_list|(
 name|ah
@@ -284,24 +314,52 @@ argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
-comment|/* NB: type maps directly to hardware */
-comment|/* XXX this may not actually be the case, for anything but output */
+comment|/* 	 * Convert HAL signal type definitions to hardware-specific values. 	 */
+if|if
+condition|(
+name|type
+operator|>=
+name|N
+argument_list|(
+name|MuxSignalConversionTable
+argument_list|)
+condition|)
+block|{
+name|ath_hal_printf
+argument_list|(
+name|ah
+argument_list|,
+literal|"%s: mux %d is invalid!\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|type
+argument_list|)
+expr_stmt|;
+return|return
+name|AH_FALSE
+return|;
+block|}
 name|cfgOutputMux
 argument_list|(
 name|ah
 argument_list|,
 name|gpio
 argument_list|,
+name|MuxSignalConversionTable
+index|[
 name|type
+index|]
 argument_list|)
 expr_stmt|;
+comment|/* 2 bits per output mode */
 name|gpio_shift
 operator|=
 name|gpio
 operator|<<
 literal|1
 expr_stmt|;
-comment|/* 2 bits per output mode */
+comment|/* Always drive, rather than tristate/drive low/drive high */
 name|reg
 operator|=
 name|OS_REG_READ
@@ -320,7 +378,6 @@ operator|<<
 name|gpio_shift
 operator|)
 expr_stmt|;
-comment|/* Always drive, rather than tristate/drive low/drive high */
 name|reg
 operator||=
 name|AR_GPIO_OE_OUT_DRV_ALL
@@ -339,6 +396,9 @@ expr_stmt|;
 return|return
 name|AH_TRUE
 return|;
+undef|#
+directive|undef
+name|N
 block|}
 end_function
 
