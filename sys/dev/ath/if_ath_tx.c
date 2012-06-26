@@ -17011,7 +17011,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Stop ADDBA on a queue.  */
+comment|/*  * Stop ADDBA on a queue.  *  * This can be called whilst BAR TX is currently active on the queue,  * so make sure this is unblocked before continuing.  */
 end_comment
 
 begin_function
@@ -17083,7 +17083,7 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-comment|/* Pause TID traffic early, so there aren't any races */
+comment|/* 	 * Pause TID traffic early, so there aren't any races 	 * Unblock the pending BAR held traffic, if it's currently paused. 	 */
 name|ATH_TXQ_LOCK
 argument_list|(
 name|sc
@@ -17103,6 +17103,28 @@ argument_list|,
 name|atid
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|atid
+operator|->
+name|bar_wait
+condition|)
+block|{
+comment|/* 		 * bar_unsuspend() expects bar_tx == 1, as it should be 		 * called from the TX completion path.  This quietens 		 * the warning.  It's cleared for us anyway. 		 */
+name|atid
+operator|->
+name|bar_tx
+operator|=
+literal|1
+expr_stmt|;
+name|ath_tx_tid_bar_unsuspend
+argument_list|(
+name|sc
+argument_list|,
+name|atid
+argument_list|)
+expr_stmt|;
+block|}
 name|ATH_TXQ_UNLOCK
 argument_list|(
 name|sc
