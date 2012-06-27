@@ -239,6 +239,10 @@ name|i
 decl_stmt|;
 if|if
 condition|(
+name|ilen
+operator|==
+literal|0
+operator|||
 name|olen
 operator|<
 operator|(

@@ -2197,6 +2197,16 @@ condition|)
 return|return
 name|NULL
 return|;
+comment|/* We don't support shrinking the buffer. Note the memcpy that copies 	 * |old_len| bytes to the new buffer, below. */
+if|if
+condition|(
+name|num
+operator|<
+name|old_len
+condition|)
+return|return
+name|NULL
+return|;
 if|if
 condition|(
 name|realloc_debug_func

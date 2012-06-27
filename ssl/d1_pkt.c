@@ -219,18 +219,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_function_decl
-specifier|static
-name|void
-name|dtls1_clear_timeouts
-parameter_list|(
-name|SSL
-modifier|*
-name|s
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/* copy buffered record into SSL structure */
 end_comment
@@ -998,6 +986,18 @@ index|[
 name|EVP_MAX_MD_SIZE
 index|]
 decl_stmt|;
+name|int
+name|decryption_failed_or_bad_record_mac
+init|=
+literal|0
+decl_stmt|;
+name|unsigned
+name|char
+modifier|*
+name|mac
+init|=
+name|NULL
+decl_stmt|;
 name|rr
 operator|=
 operator|&
@@ -1088,20 +1088,11 @@ operator|<=
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|enc_err
-operator|==
-literal|0
-condition|)
-comment|/* SSLerr() and ssl3_send_alert() have been called */
-goto|goto
-name|err
-goto|;
-comment|/* otherwise enc_err == -1 */
-goto|goto
-name|err
-goto|;
+comment|/* To minimize information leaked via timing, we will always 		 * perform all computations before discarding the message. 		 */
+name|decryption_failed_or_bad_record_mac
+operator|=
+literal|1
+expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
@@ -1231,9 +1222,10 @@ comment|/* OK only for stream ciphers (then rr->length is visible from ciphertex
 block|al=SSL_AD_RECORD_OVERFLOW; 			SSLerr(SSL_F_DTLS1_PROCESS_RECORD,SSL_R_PRE_MAC_LENGTH_TOO_LONG); 			goto f_err;
 else|#
 directive|else
-goto|goto
-name|err
-goto|;
+name|decryption_failed_or_bad_record_mac
+operator|=
+literal|1
+expr_stmt|;
 endif|#
 directive|endif
 block|}
@@ -1243,28 +1235,35 @@ condition|(
 name|rr
 operator|->
 name|length
-operator|<
+operator|>=
 name|mac_size
 condition|)
 block|{
-if|#
-directive|if
-literal|0
-comment|/* OK only for stream ciphers */
-block|al=SSL_AD_DECODE_ERROR; 			SSLerr(SSL_F_DTLS1_PROCESS_RECORD,SSL_R_LENGTH_TOO_SHORT); 			goto f_err;
-else|#
-directive|else
-goto|goto
-name|err
-goto|;
-endif|#
-directive|endif
-block|}
 name|rr
 operator|->
 name|length
 operator|-=
 name|mac_size
+expr_stmt|;
+name|mac
+operator|=
+operator|&
+name|rr
+operator|->
+name|data
+index|[
+name|rr
+operator|->
+name|length
+index|]
+expr_stmt|;
+block|}
+else|else
+name|rr
+operator|->
+name|length
+operator|=
+literal|0
 expr_stmt|;
 name|s
 operator|->
@@ -1283,21 +1282,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|mac
+operator|==
+name|NULL
+operator|||
 name|memcmp
 argument_list|(
 name|md
 argument_list|,
-operator|&
-operator|(
-name|rr
-operator|->
-name|data
-index|[
-name|rr
-operator|->
-name|length
-index|]
-operator|)
+name|mac
 argument_list|,
 name|mac_size
 argument_list|)
@@ -1305,10 +1298,33 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|decryption_failed_or_bad_record_mac
+operator|=
+literal|1
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|decryption_failed_or_bad_record_mac
+condition|)
+block|{
+comment|/* decryption failed, silently discard message */
+name|rr
+operator|->
+name|length
+operator|=
+literal|0
+expr_stmt|;
+name|s
+operator|->
+name|packet_length
+operator|=
+literal|0
+expr_stmt|;
 goto|goto
 name|err
 goto|;
-block|}
 block|}
 comment|/* r->length is now just compressed */
 if|if
@@ -1996,7 +2012,7 @@ condition|)
 goto|goto
 name|again
 goto|;
-comment|/* If this record is from the next epoch (either HM or ALERT), 	 * and a handshake is currently in progress, buffer it since it 	 * cannot be processed at this time. */
+comment|/* If this record is from the next epoch (either HM or ALERT), 	 * and a handshake is currently in progress, buffer it since it 	 * cannot be processed at this time. However, do not buffer 	 * anything while listening. 	 */
 if|if
 condition|(
 name|is_next_epoch
@@ -2004,6 +2020,7 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|SSL_in_init
 argument_list|(
 name|s
@@ -2012,6 +2029,14 @@ operator|||
 name|s
 operator|->
 name|in_handshake
+operator|)
+operator|&&
+operator|!
+name|s
+operator|->
+name|d1
+operator|->
+name|listen
 condition|)
 block|{
 name|dtls1_buffer_record
@@ -2077,12 +2102,6 @@ name|again
 goto|;
 comment|/* get another record */
 block|}
-name|dtls1_clear_timeouts
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-comment|/* done waiting */
 return|return
 operator|(
 literal|1
@@ -3833,6 +3852,19 @@ operator|==
 name|SSL3_MT_FINISHED
 condition|)
 block|{
+if|if
+condition|(
+name|dtls1_check_timeout_num
+argument_list|(
+name|s
+argument_list|)
+operator|<
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 name|dtls1_retransmit_buffered_messages
 argument_list|(
 name|s
@@ -6727,39 +6759,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_function
-specifier|static
-name|void
-name|dtls1_clear_timeouts
-parameter_list|(
-name|SSL
-modifier|*
-name|s
-parameter_list|)
-block|{
-name|memset
-argument_list|(
-operator|&
-operator|(
-name|s
-operator|->
-name|d1
-operator|->
-name|timeout
-operator|)
-argument_list|,
-literal|0x00
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|dtls1_timeout_st
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-end_function
 
 end_unit
 

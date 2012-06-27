@@ -2211,6 +2211,15 @@ literal|1
 return|;
 comment|/* Some internal error */
 case|case
+operator|-
+literal|1
+case|:
+return|return
+operator|-
+literal|1
+return|;
+comment|/* Some internal error */
+case|case
 literal|0
 case|:
 return|return
