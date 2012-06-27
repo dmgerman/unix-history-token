@@ -2576,6 +2576,14 @@ name|geom
 operator|->
 name|softc
 expr_stmt|;
+comment|/* 	 * If the softc is already NULL, then we've probably been through 	 * g_disk_destroy already; there is nothing for us to do anyway. 	 */
+if|if
+condition|(
+name|sc
+operator|==
+name|NULL
+condition|)
+return|return;
 name|dp
 operator|=
 name|sc
