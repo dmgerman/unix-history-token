@@ -22133,13 +22133,6 @@ argument_list|(
 name|sim
 argument_list|)
 expr_stmt|;
-name|sim
-operator|->
-name|flags
-operator|&=
-operator|~
-name|CAM_SIM_ON_DONEQ
-expr_stmt|;
 name|camisr_runqueue
 argument_list|(
 operator|&
@@ -22147,6 +22140,13 @@ name|sim
 operator|->
 name|sim_doneq
 argument_list|)
+expr_stmt|;
+name|sim
+operator|->
+name|flags
+operator|&=
+operator|~
+name|CAM_SIM_ON_DONEQ
 expr_stmt|;
 name|CAM_SIM_UNLOCK
 argument_list|(
