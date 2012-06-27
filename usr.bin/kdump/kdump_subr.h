@@ -427,5 +427,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|vmprotname
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vmresultname
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 end_unit
 

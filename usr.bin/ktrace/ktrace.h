@@ -21,7 +21,7 @@ begin_define
 define|#
 directive|define
 name|ALL_POINTS
-value|(DEF_POINTS | KTRFAC_CSW | PROC_ABI_POINTS)
+value|(DEF_POINTS | KTRFAC_CSW | PROC_ABI_POINTS | \ 		    KTRFAC_FAULT | KTRFAC_FAULTEND)
 end_define
 
 begin_define
