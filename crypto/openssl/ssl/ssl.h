@@ -7080,6 +7080,10 @@ name|SSL_F_DTLS1_BUFFER_RECORD
 value|247
 define|#
 directive|define
+name|SSL_F_DTLS1_CHECK_TIMEOUT_NUM
+value|293
+define|#
+directive|define
 name|SSL_F_DTLS1_CLIENT_HELLO
 value|248
 define|#

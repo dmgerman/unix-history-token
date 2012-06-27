@@ -6043,6 +6043,10 @@ argument_list|(
 name|encodedPoint
 argument_list|)
 expr_stmt|;
+name|encodedPoint
+operator|=
+name|NULL
+expr_stmt|;
 name|p
 operator|+=
 name|encodedlen
@@ -7902,6 +7906,11 @@ argument_list|(
 name|SSL_F_SSL3_GET_CLIENT_KEY_EXCHANGE
 argument_list|,
 name|ERR_R_DH_LIB
+argument_list|)
+expr_stmt|;
+name|BN_clear_free
+argument_list|(
+name|pub
 argument_list|)
 expr_stmt|;
 goto|goto

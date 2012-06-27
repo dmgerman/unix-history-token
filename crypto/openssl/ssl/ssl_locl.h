@@ -3964,6 +3964,17 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|dtls1_check_timeout_num
+parameter_list|(
+name|SSL
+modifier|*
+name|s
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|dtls1_handle_timeout
 parameter_list|(
 name|SSL
@@ -4036,6 +4047,16 @@ parameter_list|(
 name|SSL
 modifier|*
 name|s
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|unsigned
+name|int
+name|dtls1_min_mtu
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
