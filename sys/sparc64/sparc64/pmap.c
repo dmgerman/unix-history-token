@@ -3054,13 +3054,13 @@ operator|->
 name|pm_active
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Initialize the global tte list lock. 	 */
+comment|/* 	 * Initialize the global tte list lock, which is more commonly 	 * known as the pmap pv global lock. 	 */
 name|rw_init
 argument_list|(
 operator|&
 name|tte_list_global_lock
 argument_list|,
-literal|"tte list global"
+literal|"pmap pv global"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Flush all non-locked TLB entries possibly left over by the 	 * firmware. 	 */

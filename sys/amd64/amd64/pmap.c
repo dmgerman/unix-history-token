@@ -3177,7 +3177,7 @@ argument_list|(
 operator|&
 name|pvh_global_lock
 argument_list|,
-literal|"pvh global"
+literal|"pmap pv global"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Reserve some special page table entries/VA space for temporary 	 * mapping of pages. 	 */
@@ -3778,7 +3778,7 @@ argument_list|(
 operator|&
 name|pv_chunks_mutex
 argument_list|,
-literal|"pv chunk list"
+literal|"pmap pv chunk list"
 argument_list|,
 name|NULL
 argument_list|,
@@ -3807,7 +3807,7 @@ index|[
 name|i
 index|]
 argument_list|,
-literal|"pv list"
+literal|"pmap pv list"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Calculate the size of the pv head table for superpages. 	 */

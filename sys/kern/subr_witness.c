@@ -2682,14 +2682,14 @@ block|}
 block|,
 comment|/* 	 * CDEV 	 */
 block|{
-literal|"system map"
+literal|"vm map (system)"
 block|,
 operator|&
 name|lock_class_mtx_sleep
 block|}
 block|,
 block|{
-literal|"vm page queue mutex"
+literal|"vm page queue"
 block|,
 operator|&
 name|lock_class_mtx_sleep
@@ -2715,7 +2715,14 @@ block|,
 name|NULL
 block|}
 block|,
-comment|/* 	 * VM 	 *  	 */
+comment|/* 	 * VM 	 */
+block|{
+literal|"vm map (user)"
+block|,
+operator|&
+name|lock_class_sx
+block|}
+block|,
 block|{
 literal|"vm object"
 block|,
@@ -2724,21 +2731,42 @@ name|lock_class_mtx_sleep
 block|}
 block|,
 block|{
-literal|"page lock"
+literal|"vm page"
 block|,
 operator|&
 name|lock_class_mtx_sleep
 block|}
 block|,
 block|{
-literal|"vm page queue mutex"
+literal|"vm page queue"
 block|,
 operator|&
 name|lock_class_mtx_sleep
+block|}
+block|,
+block|{
+literal|"pmap pv global"
+block|,
+operator|&
+name|lock_class_rw
 block|}
 block|,
 block|{
 literal|"pmap"
+block|,
+operator|&
+name|lock_class_mtx_sleep
+block|}
+block|,
+block|{
+literal|"pmap pv list"
+block|,
+operator|&
+name|lock_class_rw
+block|}
+block|,
+block|{
+literal|"vm page free queue"
 block|,
 operator|&
 name|lock_class_mtx_sleep

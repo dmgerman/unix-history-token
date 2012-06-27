@@ -998,13 +998,13 @@ operator|+
 literal|1
 index|]
 expr_stmt|;
-comment|/* 	 * Initialize the locks. 	 */
+comment|/* 	 * Initialize the page and queue locks. 	 */
 name|mtx_init
 argument_list|(
 operator|&
 name|vm_page_queue_mtx
 argument_list|,
-literal|"vm page queue mutex"
+literal|"vm page queue"
 argument_list|,
 name|NULL
 argument_list|,
@@ -1018,14 +1018,13 @@ argument_list|(
 operator|&
 name|vm_page_queue_free_mtx
 argument_list|,
-literal|"vm page queue free mutex"
+literal|"vm page free queue"
 argument_list|,
 name|NULL
 argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
-comment|/* Setup page locks. */
 for|for
 control|(
 name|i
@@ -1049,7 +1048,7 @@ index|]
 operator|.
 name|data
 argument_list|,
-literal|"page lock"
+literal|"vm page"
 argument_list|,
 name|NULL
 argument_list|,

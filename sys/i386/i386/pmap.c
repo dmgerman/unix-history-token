@@ -2038,7 +2038,7 @@ argument_list|(
 operator|&
 name|pvh_global_lock
 argument_list|,
-literal|"pvh global"
+literal|"pmap pv global"
 argument_list|)
 expr_stmt|;
 name|LIST_INIT
