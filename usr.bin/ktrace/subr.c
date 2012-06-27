@@ -170,6 +170,16 @@ name|KTRFAC_SYSRET
 expr_stmt|;
 break|break;
 case|case
+literal|'f'
+case|:
+name|facs
+operator||=
+name|KTRFAC_FAULT
+operator||
+name|KTRFAC_FAULTEND
+expr_stmt|;
+break|break;
+case|case
 literal|'n'
 case|:
 name|facs
