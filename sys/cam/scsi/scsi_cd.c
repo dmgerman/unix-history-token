@@ -1290,6 +1290,24 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|CD_DEFAULT_TIMEOUT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|CD_DEFAULT_TIMEOUT
+value|30000
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|CHANGER_MIN_BUSY_SECONDS
 end_ifndef
 
@@ -1329,6 +1347,15 @@ name|int
 name|cd_retry_count
 init|=
 name|CD_DEFAULT_RETRY
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|cd_timeout
+init|=
+name|CD_DEFAULT_TIMEOUT
 decl_stmt|;
 end_decl_stmt
 
@@ -1416,6 +1443,38 @@ literal|"kern.cam.cd.retry_count"
 argument_list|,
 operator|&
 name|cd_retry_count
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern_cam_cd
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|timeout
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|cd_timeout
+argument_list|,
+literal|0
+argument_list|,
+literal|"Timeout, in us, for read operations"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.cam.cd.timeout"
+argument_list|,
+operator|&
+name|cd_timeout
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -6258,10 +6317,14 @@ operator|->
 name|bio_bcount
 argument_list|,
 comment|/* sense_len */
+name|cd_retry_count
+condition|?
 name|SSD_FULL_SIZE
+else|:
+name|SF_NO_PRINT
 argument_list|,
 comment|/* timeout */
-literal|30000
+name|cd_timeout
 argument_list|)
 expr_stmt|;
 comment|/* Use READ CD command for audio tracks. */
