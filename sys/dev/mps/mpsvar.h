@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2009 Yahoo! Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
-end_comment
-
-begin_comment
-comment|/*-  * Copyright (c) 2011 LSI Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * LSI MPT-Fusion Host Adapter FreeBSD  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2009 Yahoo! Inc.  * Copyright (c) 2011, 2012 LSI Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * LSI MPT-Fusion Host Adapter FreeBSD  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -23,7 +19,7 @@ begin_define
 define|#
 directive|define
 name|MPS_DRIVER_VERSION
-value|"13.00.00.00-fbsd"
+value|"14.00.00.01-fbsd"
 end_define
 
 begin_define
@@ -134,6 +130,12 @@ directive|define
 name|MPS_STRING_LENGTH
 value|64
 end_define
+
+begin_include
+include|#
+directive|include
+file|<sys/endian.h>
+end_include
 
 begin_comment
 comment|/*  * host mapping related macro definitions  */
@@ -808,10 +810,10 @@ name|void
 modifier|*
 name|data
 decl_stmt|;
-name|uint8_t
+name|u32
 name|mask
 index|[
-literal|16
+name|MPI2_EVENT_NOTIFY_EVENTMASK_WORDS
 index|]
 decl_stmt|;
 block|}
@@ -1014,10 +1016,10 @@ name|int
 name|pqdepth
 decl_stmt|;
 comment|/* Post queue */
-name|uint8_t
+name|u32
 name|event_mask
 index|[
-literal|16
+name|MPI2_EVENT_NOTIFY_EVENTMASK_WORDS
 index|]
 decl_stmt|;
 name|TAILQ_HEAD
@@ -1269,7 +1271,13 @@ decl_stmt|;
 name|uint8_t
 name|port_enable_complete
 decl_stmt|;
+name|uint8_t
+name|msleep_fake_chan
+decl_stmt|;
 comment|/* WD controller */
+name|uint8_t
+name|WD_available
+decl_stmt|;
 name|uint8_t
 name|WD_valid_config
 decl_stmt|;
@@ -1452,6 +1460,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* free_queue must have Little Endian address   * TODO- cm_reply_data is unwanted. We can remove it.  * */
+end_comment
+
 begin_function
 specifier|static
 name|__inline
@@ -1493,7 +1505,10 @@ operator|->
 name|replyfreeindex
 index|]
 operator|=
+name|htole32
+argument_list|(
 name|busaddr
+argument_list|)
 expr_stmt|;
 name|mps_regwrite
 argument_list|(
@@ -2346,6 +2361,20 @@ define|\
 value|mps_dprint_field((sc), MPS_EVENT, #attr ": " #fmt "\n", (facts)->attr)
 end_define
 
+begin_define
+define|#
+directive|define
+name|CAN_SLEEP
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|NO_SLEEP
+value|0
+end_define
+
 begin_function
 specifier|static
 name|__inline
@@ -2596,7 +2625,7 @@ name|struct
 name|mps_softc
 modifier|*
 parameter_list|,
-name|uint8_t
+name|u32
 modifier|*
 parameter_list|,
 name|mps_evt_callback_t
@@ -2636,14 +2665,14 @@ name|struct
 name|mps_event_handle
 modifier|*
 parameter_list|,
-name|uint8_t
+name|u32
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|mps_deregister_events
 parameter_list|(
 name|struct
@@ -3523,6 +3552,86 @@ define|#
 directive|define
 name|MPS_PRIORITY_XPT
 value|5
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|800107
+end_if
+
+begin_comment
+comment|// Prior to FreeBSD-8.0 scp3_flags was not defined.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|spc3_flags
+value|reserved
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPC3_SID_PROTECT
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPC3_SID_3PC
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPC3_SID_TPGS_MASK
+value|0x30
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPC3_SID_TPGS_IMPLICIT
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPC3_SID_TPGS_EXPLICIT
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPC3_SID_ACC
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPC3_SID_SCCS
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAM_PRIORITY_NORMAL
+value|CAM_PRIORITY_NONE
 end_define
 
 begin_endif
