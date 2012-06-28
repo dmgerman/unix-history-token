@@ -334,6 +334,16 @@ parameter_list|,
 name|int
 parameter_list|,
 name|struct
+name|sockaddr
+modifier|*
+name|src
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+name|dst
+parameter_list|,
+name|struct
 name|sctphdr
 modifier|*
 parameter_list|,
