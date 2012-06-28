@@ -573,6 +573,8 @@ argument_list|(
 literal|1
 argument_list|,
 literal|0
+argument_list|,
+name|wmesg
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1009,6 +1011,8 @@ argument_list|(
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+name|wmesg
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1272,6 +1276,8 @@ argument_list|(
 literal|1
 argument_list|,
 literal|0
+argument_list|,
+name|wmesg
 argument_list|)
 expr_stmt|;
 name|sleepq_lock
@@ -1354,6 +1360,8 @@ argument_list|(
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+name|wmesg
 argument_list|)
 expr_stmt|;
 endif|#
