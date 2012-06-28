@@ -788,6 +788,8 @@ argument_list|(
 literal|1
 argument_list|,
 literal|1
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 endif|#
@@ -837,6 +839,8 @@ argument_list|(
 literal|0
 argument_list|,
 literal|1
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 endif|#
