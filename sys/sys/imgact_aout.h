@@ -295,6 +295,17 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|a_magic
+value|a_midmag
+end_define
+
+begin_comment
+comment|/* Hack for emulators */
+end_comment
+
 begin_comment
 comment|/* a_magic */
 end_comment
