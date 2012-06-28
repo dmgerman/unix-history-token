@@ -4316,6 +4316,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCIM_AER_UC_SURPRISE_LINK_DOWN
+value|0x00000020
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCIM_AER_UC_POISONED_TLP
 value|0x00001000
 end_define
@@ -4445,6 +4452,13 @@ define|#
 directive|define
 name|PCIM_AER_COR_REPLAY_TIMEOUT
 value|0x00001000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIM_AER_COR_ADVISORY_NF_ERROR
+value|0x00002000
 end_define
 
 begin_define
