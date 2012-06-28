@@ -295,17 +295,6 @@ block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|a_magic
-value|a_midmag
-end_define
-
-begin_comment
-comment|/* XXX Hack to work with imgact_{aout,gzip}.c */
-end_comment
-
 begin_comment
 comment|/* a_magic */
 end_comment
