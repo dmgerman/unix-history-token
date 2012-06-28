@@ -7817,6 +7817,10 @@ name|in6m_state
 operator|=
 name|MLD_NOT_MEMBER
 expr_stmt|;
+name|V_current_state_timers_running6
+operator|=
+literal|1
+expr_stmt|;
 block|}
 elseif|else
 if|if
