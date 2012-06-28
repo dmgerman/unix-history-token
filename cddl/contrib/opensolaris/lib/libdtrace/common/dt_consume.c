@@ -3714,7 +3714,7 @@ argument_list|(
 name|c
 argument_list|)
 argument_list|,
-literal|"< %lld"
+literal|"< %ld"
 argument_list|,
 name|value
 argument_list|)
