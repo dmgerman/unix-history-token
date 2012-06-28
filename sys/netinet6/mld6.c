@@ -3048,7 +3048,7 @@ if|if
 condition|(
 name|maxdelay
 operator|>=
-literal|32678
+literal|32768
 condition|)
 block|{
 name|maxdelay
