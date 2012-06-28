@@ -1476,24 +1476,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-name|SYSCTL_NODE
-argument_list|(
-name|_kern_cam
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|ctl
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-literal|0
-argument_list|,
-literal|"CAM Target Layer"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/*  * XXX KDM move these into the softc.  */
 end_comment
@@ -1532,6 +1514,64 @@ name|int
 name|index_to_aps_page
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ctl_disable
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_kern_cam
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|ctl
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+literal|0
+argument_list|,
+literal|"CAM Target Layer"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern_cam_ctl
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|disable
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|ctl_disable
+argument_list|,
+literal|0
+argument_list|,
+literal|"Disable CTL"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.cam.ctl.disable"
+argument_list|,
+operator|&
+name|ctl_disable
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Serial number (0x80), device id (0x83), and supported pages (0x00)  */
@@ -4810,6 +4850,14 @@ name|rcv_sync_msg
 operator|=
 literal|0
 expr_stmt|;
+comment|/* If we're disabled, don't initialize. */
+if|if
+condition|(
+name|ctl_disable
+operator|!=
+literal|0
+condition|)
+return|return;
 name|control_softc
 operator|=
 name|malloc
