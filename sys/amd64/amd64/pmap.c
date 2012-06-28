@@ -16580,9 +16580,11 @@ block|}
 if|if
 condition|(
 operator|(
-name|origpte
+name|om
+operator|->
+name|aflags
 operator|&
-name|PG_MANAGED
+name|PGA_WRITEABLE
 operator|)
 operator|!=
 literal|0
