@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* deflate.h -- internal compression state  * Copyright (C) 1995-2010 Jean-loup Gailly  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* deflate.h -- internal compression state  * Copyright (C) 1995-2012 Jean-loup Gailly  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_comment
@@ -129,6 +129,17 @@ end_define
 
 begin_comment
 comment|/* All codes must not exceed MAX_BITS bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Buf_size
+value|16
+end_define
+
+begin_comment
+comment|/* size of bit buffer in bi_buf */
 end_comment
 
 begin_define
@@ -477,7 +488,7 @@ name|nice_match
 decl_stmt|;
 comment|/* Stop searching when current match exceeds this */
 comment|/* used by trees.c: */
-comment|/* Didn't use ct_data typedef below to supress compiler warning */
+comment|/* Didn't use ct_data typedef below to suppress compiler warning */
 name|struct
 name|ct_data_s
 name|dyn_ltree
@@ -595,10 +606,10 @@ name|uInt
 name|matches
 decl_stmt|;
 comment|/* number of string matches in current block */
-name|int
-name|last_eob_len
+name|uInt
+name|insert
 decl_stmt|;
-comment|/* bit length of EOB code for last block */
+comment|/* bytes at end of window left to insert */
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -742,6 +753,21 @@ name|stored_len
 operator|,
 name|int
 name|last
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|ZLIB_INTERNAL
+name|_tr_flush_bits
+name|OF
+argument_list|(
+operator|(
+name|deflate_state
+operator|*
+name|s
 operator|)
 argument_list|)
 decl_stmt|;

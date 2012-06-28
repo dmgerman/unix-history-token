@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* inftrees.c -- generate Huffman trees for efficient decoding  * Copyright (C) 1995-2010 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* inftrees.c -- generate Huffman trees for efficient decoding  * Copyright (C) 1995-2012 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_include
@@ -28,7 +28,7 @@ name|char
 name|inflate_copyright
 index|[]
 init|=
-literal|" inflate 1.2.5 Copyright 1995-2010 Mark Adler "
+literal|" inflate 1.2.7 Copyright 1995-2012 Mark Adler "
 decl_stmt|;
 end_decl_stmt
 
@@ -335,9 +335,9 @@ literal|21
 block|,
 literal|16
 block|,
-literal|73
+literal|78
 block|,
-literal|195
+literal|68
 block|}
 decl_stmt|;
 specifier|static
@@ -1397,7 +1397,14 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*        Fill in rest of table for incomplete codes.  This loop is similar to the        loop above in incrementing huff for table indices.  It is assumed that        len is equal to curr + drop, so there is no loop needed to increment        through high index bits.  When the current sub-table is filled, the loop        drops back to the root table to fill in any remaining entries there.      */
+comment|/* fill in remaining table entry if code is incomplete (guaranteed to have        at most one remaining entry, since if the code is incomplete, the        maximum code length that was allowed to get this far is one bit) */
+if|if
+condition|(
+name|huff
+operator|!=
+literal|0
+condition|)
+block|{
 name|here
 operator|.
 name|op
@@ -1433,106 +1440,12 @@ name|short
 operator|)
 literal|0
 expr_stmt|;
-while|while
-condition|(
-name|huff
-operator|!=
-literal|0
-condition|)
-block|{
-comment|/* when done with sub-table, drop back to root table */
-if|if
-condition|(
-name|drop
-operator|!=
-literal|0
-operator|&&
-operator|(
-name|huff
-operator|&
-name|mask
-operator|)
-operator|!=
-name|low
-condition|)
-block|{
-name|drop
-operator|=
-literal|0
-expr_stmt|;
-name|len
-operator|=
-name|root
-expr_stmt|;
-name|next
-operator|=
-operator|*
-name|table
-expr_stmt|;
-name|here
-operator|.
-name|bits
-operator|=
-operator|(
-name|unsigned
-name|char
-operator|)
-name|len
-expr_stmt|;
-block|}
-comment|/* put invalid code marker in table */
 name|next
 index|[
 name|huff
-operator|>>
-name|drop
 index|]
 operator|=
 name|here
-expr_stmt|;
-comment|/* backwards increment the len-bit code huff */
-name|incr
-operator|=
-literal|1U
-operator|<<
-operator|(
-name|len
-operator|-
-literal|1
-operator|)
-expr_stmt|;
-while|while
-condition|(
-name|huff
-operator|&
-name|incr
-condition|)
-name|incr
-operator|>>=
-literal|1
-expr_stmt|;
-if|if
-condition|(
-name|incr
-operator|!=
-literal|0
-condition|)
-block|{
-name|huff
-operator|&=
-name|incr
-operator|-
-literal|1
-expr_stmt|;
-name|huff
-operator|+=
-name|incr
-expr_stmt|;
-block|}
-else|else
-name|huff
-operator|=
-literal|0
 expr_stmt|;
 block|}
 comment|/* set return parameters */
