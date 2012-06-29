@@ -514,6 +514,7 @@ name|resid
 comment|/* out */
 parameter_list|)
 block|{
+specifier|const
 name|spa_t
 modifier|*
 name|spa
@@ -870,6 +871,7 @@ modifier|*
 name|sb
 parameter_list|)
 block|{
+specifier|const
 name|spa_t
 modifier|*
 name|spa
@@ -935,6 +937,7 @@ modifier|*
 name|d
 parameter_list|)
 block|{
+specifier|const
 name|spa_t
 modifier|*
 name|spa

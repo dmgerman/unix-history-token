@@ -49,6 +49,7 @@ begin_struct
 struct|struct
 name|zfsmount
 block|{
+specifier|const
 name|spa_t
 modifier|*
 name|spa
@@ -155,6 +156,7 @@ specifier|static
 name|int
 name|zio_read
 parameter_list|(
+specifier|const
 name|spa_t
 modifier|*
 name|spa
@@ -4417,6 +4419,7 @@ specifier|static
 name|int
 name|zio_read_gang
 parameter_list|(
+specifier|const
 name|spa_t
 modifier|*
 name|spa
@@ -4616,6 +4619,7 @@ specifier|static
 name|int
 name|zio_read
 parameter_list|(
+specifier|const
 name|spa_t
 modifier|*
 name|spa
@@ -4966,6 +4970,7 @@ specifier|static
 name|int
 name|dnode_read
 parameter_list|(
+specifier|const
 name|spa_t
 modifier|*
 name|spa
@@ -5240,10 +5245,6 @@ specifier|static
 name|int
 name|mzap_lookup
 parameter_list|(
-name|spa_t
-modifier|*
-name|spa
-parameter_list|,
 specifier|const
 name|dnode_phys_t
 modifier|*
@@ -5604,6 +5605,7 @@ specifier|static
 name|int
 name|fzap_lookup
 parameter_list|(
+specifier|const
 name|spa_t
 modifier|*
 name|spa
@@ -6041,6 +6043,7 @@ specifier|static
 name|int
 name|zap_lookup
 parameter_list|(
+specifier|const
 name|spa_t
 modifier|*
 name|spa
@@ -6117,8 +6120,6 @@ condition|)
 return|return
 name|mzap_lookup
 argument_list|(
-name|spa
-argument_list|,
 name|dnode
 argument_list|,
 name|name
@@ -6178,10 +6179,6 @@ specifier|static
 name|int
 name|mzap_list
 parameter_list|(
-name|spa_t
-modifier|*
-name|spa
-parameter_list|,
 specifier|const
 name|dnode_phys_t
 modifier|*
@@ -6293,6 +6290,7 @@ specifier|static
 name|int
 name|fzap_list
 parameter_list|(
+specifier|const
 name|spa_t
 modifier|*
 name|spa
@@ -6642,6 +6640,7 @@ specifier|static
 name|int
 name|zap_list
 parameter_list|(
+specifier|const
 name|spa_t
 modifier|*
 name|spa
@@ -6702,8 +6701,6 @@ condition|)
 return|return
 name|mzap_list
 argument_list|(
-name|spa
-argument_list|,
 name|dnode
 argument_list|)
 return|;
@@ -6729,6 +6726,7 @@ specifier|static
 name|int
 name|objset_get_dnode
 parameter_list|(
+specifier|const
 name|spa_t
 modifier|*
 name|spa
@@ -6786,6 +6784,7 @@ specifier|static
 name|int
 name|mzap_rlookup
 parameter_list|(
+specifier|const
 name|spa_t
 modifier|*
 name|spa
@@ -7035,6 +7034,7 @@ specifier|static
 name|int
 name|fzap_rlookup
 parameter_list|(
+specifier|const
 name|spa_t
 modifier|*
 name|spa
@@ -7465,6 +7465,7 @@ specifier|static
 name|int
 name|zap_rlookup
 parameter_list|(
+specifier|const
 name|spa_t
 modifier|*
 name|spa
@@ -7569,6 +7570,7 @@ specifier|static
 name|int
 name|zfs_rlookup
 parameter_list|(
+specifier|const
 name|spa_t
 modifier|*
 name|spa
@@ -7898,6 +7900,7 @@ specifier|static
 name|int
 name|zfs_lookup_dataset
 parameter_list|(
+specifier|const
 name|spa_t
 modifier|*
 name|spa
@@ -8180,6 +8183,7 @@ specifier|static
 name|int
 name|zfs_mount_dataset
 parameter_list|(
+specifier|const
 name|spa_t
 modifier|*
 name|spa
@@ -8292,6 +8296,7 @@ specifier|static
 name|int
 name|zfs_get_root
 parameter_list|(
+specifier|const
 name|spa_t
 modifier|*
 name|spa
@@ -8491,6 +8496,7 @@ specifier|static
 name|int
 name|zfs_mount
 parameter_list|(
+specifier|const
 name|spa_t
 modifier|*
 name|spa
@@ -8652,6 +8658,7 @@ specifier|static
 name|int
 name|zfs_dnode_stat
 parameter_list|(
+specifier|const
 name|spa_t
 modifier|*
 name|spa
@@ -8993,6 +9000,7 @@ name|rootnum
 decl_stmt|,
 name|parentnum
 decl_stmt|;
+specifier|const
 name|spa_t
 modifier|*
 name|spa
