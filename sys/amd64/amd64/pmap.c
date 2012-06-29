@@ -813,8 +813,11 @@ parameter_list|(
 name|pmap_t
 name|pmap
 parameter_list|,
-name|boolean_t
-name|try
+name|struct
+name|rwlock
+modifier|*
+modifier|*
+name|lockp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -9321,7 +9324,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * We are in a serious low memory condition.  Resort to  * drastic measures to free some pages so we can allocate  * another pv entry chunk.  *  * We do not, however, unmap 2mpages because subsequent accesses will  * allocate per-page pv entries until repromotion occurs, thereby  * exacerbating the shortage of free pv entries.  */
+comment|/*  * We are in a serious low memory condition.  Resort to  * drastic measures to free some pages so we can allocate  * another pv entry chunk.  *  * Returns NULL if PV entries were reclaimed from the specified pmap.  *  * We do not, however, unmap 2mpages because subsequent accesses will  * allocate per-page pv entries until repromotion occurs, thereby  * exacerbating the shortage of free pv entries.  */
 end_comment
 
 begin_function
@@ -9402,6 +9405,17 @@ argument_list|(
 name|locked_pmap
 argument_list|,
 name|MA_OWNED
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|lockp
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"reclaim_pv_chunk: lockp is NULL"
+operator|)
 argument_list|)
 expr_stmt|;
 name|pmap
@@ -10469,7 +10483,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * get a new pv_entry, allocating a block from the system  * when needed.  */
+comment|/*  * Returns a new PV entry, allocating a new PV chunk from the system when  * needed.  If this PV chunk allocation fails and a PV list lock pointer was  * given, a PV chunk is reclaimed from an arbitrary pmap.  Otherwise, NULL is  * returned.  *  * The given PV list lock may be released.  */
 end_comment
 
 begin_function
@@ -10480,8 +10494,11 @@ parameter_list|(
 name|pmap_t
 name|pmap
 parameter_list|,
-name|boolean_t
-name|try
+name|struct
+name|rwlock
+modifier|*
+modifier|*
+name|lockp
 parameter_list|)
 block|{
 name|int
@@ -10496,11 +10513,6 @@ name|struct
 name|pv_chunk
 modifier|*
 name|pc
-decl_stmt|;
-name|struct
-name|rwlock
-modifier|*
-name|lock
 decl_stmt|;
 name|vm_page_t
 name|m
@@ -10734,7 +10746,9 @@ condition|)
 block|{
 if|if
 condition|(
-name|try
+name|lockp
+operator|==
+name|NULL
 condition|)
 block|{
 name|PV_STAT
@@ -10749,29 +10763,13 @@ name|NULL
 operator|)
 return|;
 block|}
-name|lock
-operator|=
-name|NULL
-expr_stmt|;
 name|m
 operator|=
 name|reclaim_pv_chunk
 argument_list|(
 name|pmap
 argument_list|,
-operator|&
-name|lock
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|lock
-operator|!=
-name|NULL
-condition|)
-name|rw_wunlock
-argument_list|(
-name|lock
+name|lockp
 argument_list|)
 expr_stmt|;
 if|if
@@ -10985,7 +10983,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Ensure that the number of spare PV entries in the specified pmap meets or  * exceeds the given count, "needed".  */
+comment|/*  * Ensure that the number of spare PV entries in the specified pmap meets or  * exceeds the given count, "needed".  *  * The given PV list lock may be released.  */
 end_comment
 
 begin_function
@@ -11036,6 +11034,17 @@ argument_list|(
 name|pmap
 argument_list|,
 name|MA_OWNED
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|lockp
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"reserve_pv_entries: lockp is NULL"
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Newly allocated PV chunks must be stored in a private list until 	 * the required number of PV chunks have been allocated.  Otherwise, 	 * reclaim_pv_chunk() could recycle one of these chunks.  In 	 * contrast, these chunks must be added to the pmap upon allocation. 	 */
@@ -12080,7 +12089,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Conditionally create a pv entry.  */
+comment|/*  * Conditionally create the PV entry for a 4KB page mapping if the required  * memory can be allocated without resorting to reclamation.  */
 end_comment
 
 begin_function
@@ -12122,6 +12131,7 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
+comment|/* Pass NULL instead of the lock pointer to disable reclamation. */
 if|if
 condition|(
 operator|(
@@ -12131,7 +12141,7 @@ name|get_pv_entry
 argument_list|(
 name|pmap
 argument_list|,
-name|TRUE
+name|NULL
 argument_list|)
 operator|)
 operator|!=
@@ -12181,7 +12191,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Create the pv entry for a 2MB page mapping.  */
+comment|/*  * Conditionally create the PV entry for a 2MB page mapping if the required  * memory can be allocated without resorting to reclamation.  */
 end_comment
 
 begin_function
@@ -12221,6 +12231,14 @@ argument_list|,
 name|RA_LOCKED
 argument_list|)
 expr_stmt|;
+name|PMAP_LOCK_ASSERT
+argument_list|(
+name|pmap
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
+comment|/* Pass NULL instead of the lock pointer to disable reclamation. */
 if|if
 condition|(
 operator|(
@@ -12230,7 +12248,7 @@ name|get_pv_entry
 argument_list|(
 name|pmap
 argument_list|,
-name|TRUE
+name|NULL
 argument_list|)
 operator|)
 operator|!=
@@ -16261,7 +16279,8 @@ name|get_pv_entry
 argument_list|(
 name|pmap
 argument_list|,
-name|FALSE
+operator|&
+name|lock
 argument_list|)
 expr_stmt|;
 name|CHANGE_PV_LIST_LOCK_TO_VM_PAGE
@@ -17569,6 +17588,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* 				 * Pass NULL instead of the PV list lock 				 * pointer, because we don't intend to sleep. 				 */
 name|mpte
 operator|=
 name|_pmap_allocpte
