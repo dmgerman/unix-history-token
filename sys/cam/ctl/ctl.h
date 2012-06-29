@@ -289,6 +289,10 @@ block|,
 name|CTL_UA_ASYM_ACC_CHANGE
 init|=
 literal|0x1000
+block|,
+name|CTL_UA_CAPACITY_CHANGED
+init|=
+literal|0x2000
 block|}
 name|ctl_ua_type
 typedef|;

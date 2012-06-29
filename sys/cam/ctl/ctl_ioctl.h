@@ -954,7 +954,9 @@ block|{
 name|CTL_LUNREQ_CREATE
 block|,
 name|CTL_LUNREQ_RM
-block|}
+block|,
+name|CTL_LUNREQ_MODIFY
+block|, }
 name|ctl_lunreq_type
 typedef|;
 end_typedef
@@ -1014,6 +1016,24 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * LUN modification parameters:  *  * lun_id:		The number of the LUN to modify.  This must be set.  *			The LUN must be backed by the given backend.  *  * lun_size_bytes:	The size of the LUN in bytes.  If zero, update  * 			the size using the backing file size, if possible.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ctl_lun_modify_params
+block|{
+name|uint32_t
+name|lun_id
+decl_stmt|;
+name|uint64_t
+name|lun_size_bytes
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * Union of request type data.  Fill in the appropriate union member for  * the request type.  */
 end_comment
 
@@ -1028,6 +1048,10 @@ decl_stmt|;
 name|struct
 name|ctl_lun_rm_params
 name|rm
+decl_stmt|;
+name|struct
+name|ctl_lun_modify_params
+name|modify
 decl_stmt|;
 block|}
 union|;

@@ -608,6 +608,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * Let the backend notify the initiator about changed capacity.  */
+end_comment
+
+begin_function_decl
+name|void
+name|ctl_lun_capacity_changed
+parameter_list|(
+name|struct
+name|ctl_be_lun
+modifier|*
+name|be_lun
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

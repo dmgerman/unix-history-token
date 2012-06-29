@@ -1529,6 +1529,19 @@ operator|=
 literal|0x06
 expr_stmt|;
 break|break;
+case|case
+name|CTL_UA_CAPACITY_CHANGED
+case|:
+comment|/* 2Ah/09n  CAPACITY DATA HAS CHANGED */
+name|asc
+operator|=
+literal|0x2A
+expr_stmt|;
+name|ascq
+operator|=
+literal|0x09
+expr_stmt|;
+break|break;
 default|default:
 name|ua_to_build
 operator|=
