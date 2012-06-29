@@ -363,6 +363,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AT_TIMEKEEP
+value|22
+end_define
+
+begin_comment
+comment|/* Pointer to timehands. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|AT_STACKPROT
 value|23
 end_define
