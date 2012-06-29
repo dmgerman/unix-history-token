@@ -3646,6 +3646,8 @@ argument_list|)
 expr_stmt|;
 name|term__putc
 argument_list|(
+name|el
+argument_list|,
 literal|'\n'
 argument_list|)
 expr_stmt|;

@@ -550,7 +550,7 @@ value|18
 end_define
 
 begin_comment
-comment|/* , int, FILE **)		*/
+comment|/* , int, FILE **);		*/
 end_comment
 
 begin_define
@@ -561,7 +561,7 @@ value|19
 end_define
 
 begin_comment
-comment|/* , int, FILE *)		*/
+comment|/* , int, FILE *);		*/
 end_comment
 
 begin_define
