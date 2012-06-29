@@ -134,22 +134,19 @@ init|=
 block|{
 literal|7
 block|,
-comment|/* Advanced Interrupt Controller */
+comment|/* Advanced Interrupt Controller (FIQ) */
 literal|7
 block|,
 comment|/* System Peripherals */
 literal|1
 block|,
-comment|/* Parallel IO Controller A */
+comment|/* Parallel IO Controller A and B */
 literal|1
 block|,
-comment|/* Parallel IO Controller B */
-literal|1
+comment|/* Parallel IO Controller C and D */
+literal|4
 block|,
-comment|/* Parallel IO Controller C */
-literal|0
-block|,
-comment|/* Analog-to-Digital Converter */
+comment|/* Soft Modem */
 literal|5
 block|,
 comment|/* USART 0 */
@@ -159,15 +156,21 @@ comment|/* USART 1 */
 literal|5
 block|,
 comment|/* USART 2 */
-literal|0
+literal|5
 block|,
-comment|/* Multimedia Card Interface */
-literal|2
-block|,
-comment|/* USB Device Port */
+comment|/* USART 3 */
 literal|6
 block|,
-comment|/* Two-Wire Interface */
+comment|/* Two-Wire Interface 0 */
+literal|6
+block|,
+comment|/* Two-Wire Interface 1 */
+literal|6
+block|,
+comment|/* Two-Wire Interface 2 */
+literal|0
+block|,
+comment|/* Multimedia Card Interface 0 */
 literal|5
 block|,
 comment|/* Serial Peripheral Interface 0 */
@@ -176,58 +179,55 @@ block|,
 comment|/* Serial Peripheral Interface 1 */
 literal|5
 block|,
-comment|/* Serial Synchronous Controller */
+comment|/* UART 0 */
+literal|5
+block|,
+comment|/* UART 1 */
 literal|0
 block|,
-comment|/* (reserved) */
+comment|/* Timer Counter 0, 1, 2, 3, 4 and 5 */
 literal|0
 block|,
-comment|/* (reserved) */
+comment|/* Pulse Width Modulation Controller */
 literal|0
 block|,
-comment|/* Timer Counter 0 */
+comment|/* ADC Controller */
 literal|0
 block|,
-comment|/* Timer Counter 1 */
+comment|/* DMA Controller 0 */
 literal|0
 block|,
-comment|/* Timer Counter 2 */
+comment|/* DMA Controller 1 */
 literal|2
 block|,
-comment|/* USB Host port */
+comment|/* USB Host High Speed port */
+literal|2
+block|,
+comment|/* USB Device High speed port */
 literal|3
 block|,
-comment|/* Ethernet */
+comment|/* Ethernet MAC 0 */
+literal|3
+block|,
+comment|/* LDC Controller or Image Sensor Interface */
 literal|0
 block|,
-comment|/* Image Sensor Interface */
-literal|5
+comment|/* Multimedia Card Interface 1 */
+literal|3
 block|,
-comment|/* USART 3 */
-literal|5
+comment|/* Ethernet MAC 1 */
+literal|4
 block|,
-comment|/* USART 4 */
-literal|5
+comment|/* Synchronous Serial Interface */
+literal|4
 block|,
-comment|/* USART 5 */
+comment|/* CAN Controller 0 */
+literal|4
+block|,
+comment|/* CAN Controller 1 */
 literal|0
 block|,
-comment|/* Timer Counter 3 */
-literal|0
-block|,
-comment|/* Timer Counter 4 */
-literal|0
-block|,
-comment|/* Timer Counter 5 */
-literal|0
-block|,
-comment|/* Advanced Interrupt Controller IRQ0 */
-literal|0
-block|,
-comment|/* Advanced Interrupt Controller IRQ1 */
-literal|0
-block|,
-comment|/* Advanced Interrupt Controller IRQ2 */
+comment|/* Advanced Interrupt Controller (IRQ0) */
 block|}
 decl_stmt|;
 end_decl_stmt
