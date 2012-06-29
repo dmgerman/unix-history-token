@@ -111,13 +111,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|MAXBDDEV
-value|MAXDEV
-end_define
-
-begin_define
-define|#
-directive|define
 name|DT_ATAPI
 value|0x10
 end_define

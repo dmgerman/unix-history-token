@@ -240,13 +240,6 @@ name|TYPE_FD
 value|2
 end_define
 
-begin_define
-define|#
-directive|define
-name|MAXBDDEV
-value|31
-end_define
-
 begin_decl_stmt
 specifier|extern
 name|uint32_t
