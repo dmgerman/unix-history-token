@@ -321,6 +321,15 @@ argument_list|)
 block|,
 name|DEVICE
 argument_list|(
+literal|"at91_pio"
+argument_list|,
+name|PIOD
+argument_list|,
+literal|3
+argument_list|)
+block|,
+name|DEVICE
+argument_list|(
 literal|"at91_twi"
 argument_list|,
 name|TWI0
