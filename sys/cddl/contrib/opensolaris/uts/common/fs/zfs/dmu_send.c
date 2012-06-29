@@ -407,6 +407,24 @@ operator|.
 name|drr_free
 operator|)
 decl_stmt|;
+if|if
+condition|(
+name|length
+operator|!=
+operator|-
+literal|1ULL
+operator|&&
+name|offset
+operator|+
+name|length
+operator|<
+name|offset
+condition|)
+name|length
+operator|=
+operator|-
+literal|1ULL
+expr_stmt|;
 comment|/* 	 * If there is a pending op, but it's not PENDING_FREE, push it out, 	 * since free block aggregation can only be done for blocks of the 	 * same type (i.e., DRR_FREE records can only be aggregated with 	 * other DRR_FREE records.  DRR_FREEOBJECTS records can only be 	 * aggregated with other DRR_FREEOBJECTS records. 	 */
 if|if
 condition|(
