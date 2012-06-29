@@ -1275,6 +1275,9 @@ expr_stmt|;
 name|xpt_remove_periph
 argument_list|(
 name|periph
+argument_list|,
+comment|/*topology_lock_held*/
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* FALLTHROUGH */
@@ -2760,6 +2763,30 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* 	 * The peripheral destructor semantics dictate calling with only the 	 * SIM mutex held.  Since it might sleep, it should not be called 	 * with the topology lock held. 	 */
+name|xpt_unlock_buses
+argument_list|()
+expr_stmt|;
+comment|/* 	 * We need to call the peripheral destructor prior to removing the 	 * peripheral from the list.  Otherwise, we risk running into a 	 * scenario where the peripheral unit number may get reused 	 * (because it has been removed from the list), but some resources 	 * used by the peripheral are still hanging around.  In particular, 	 * the devfs nodes used by some peripherals like the pass(4) driver 	 * aren't fully cleaned up until the destructor is run.  If the 	 * unit number is reused before the devfs instance is fully gone, 	 * devfs will panic. 	 */
+if|if
+condition|(
+name|periph
+operator|->
+name|periph_dtor
+operator|!=
+name|NULL
+condition|)
+name|periph
+operator|->
+name|periph_dtor
+argument_list|(
+name|periph
+argument_list|)
+expr_stmt|;
+comment|/* 	 * The peripheral list is protected by the topology lock. 	 */
+name|xpt_lock_buses
+argument_list|()
+expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -2783,28 +2810,16 @@ operator|->
 name|generation
 operator|++
 expr_stmt|;
-name|xpt_unlock_buses
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|periph
-operator|->
-name|periph_dtor
-operator|!=
-name|NULL
-condition|)
-name|periph
-operator|->
-name|periph_dtor
-argument_list|(
-name|periph
-argument_list|)
-expr_stmt|;
 name|xpt_remove_periph
 argument_list|(
 name|periph
+argument_list|,
+comment|/*topology_lock_held*/
+literal|1
 argument_list|)
+expr_stmt|;
+name|xpt_unlock_buses
+argument_list|()
 expr_stmt|;
 name|CAM_DEBUG
 argument_list|(

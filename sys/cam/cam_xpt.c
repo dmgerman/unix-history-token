@@ -4547,6 +4547,9 @@ name|struct
 name|cam_periph
 modifier|*
 name|periph
+parameter_list|,
+name|int
+name|topology_lock_held
 parameter_list|)
 block|{
 name|struct
@@ -4626,6 +4629,12 @@ name|periph_links
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|topology_lock_held
+operator|==
+literal|0
+condition|)
 name|mtx_lock
 argument_list|(
 operator|&
@@ -4639,6 +4648,12 @@ operator|.
 name|xpt_generation
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|topology_lock_held
+operator|==
+literal|0
+condition|)
 name|mtx_unlock
 argument_list|(
 operator|&
