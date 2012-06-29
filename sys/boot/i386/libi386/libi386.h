@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All right
 end_comment
 
 begin_comment
-comment|/*  * i386 fully-qualified device descriptor.  * Note, this must match the 'struct devdesc' declaration  * in bootstrap.h.  */
+comment|/*  * i386 fully-qualified device descriptor.  * Note, this must match the 'struct devdesc' declaration  * in bootstrap.h and also with struct zfs_devdesc for zfs  * support.  */
 end_comment
 
 begin_struct
@@ -47,6 +47,21 @@ name|data
 decl_stmt|;
 block|}
 name|bioscd
+struct|;
+struct|struct
+block|{
+name|void
+modifier|*
+name|data
+decl_stmt|;
+name|uint64_t
+name|pool_guid
+decl_stmt|;
+name|uint64_t
+name|root_guid
+decl_stmt|;
+block|}
+name|zfs
 struct|;
 block|}
 name|d_kind

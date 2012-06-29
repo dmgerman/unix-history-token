@@ -1478,6 +1478,16 @@ name|size_t
 name|len
 parameter_list|)
 function_decl|;
+comment|/* Probe ZFS pool(s), if needed. */
+name|void
+function_decl|(
+modifier|*
+name|arch_zfs_probe
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct
