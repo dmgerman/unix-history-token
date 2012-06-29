@@ -136,16 +136,11 @@ directive|include
 file|"cons.h"
 end_include
 
-begin_comment
-comment|/* Hint to loader that we came from ZFS */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KARGS_FLAGS_ZFS
-value|0x4
-end_define
+begin_include
+include|#
+directive|include
+file|"bootargs.h"
+end_include
 
 begin_define
 define|#
