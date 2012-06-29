@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_inet6.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -4795,7 +4801,7 @@ begin_define
 define|#
 directive|define
 name|T4_CAP_ENABLE
-value|(T4_CAP& ~IFCAP_TSO6)
+value|(T4_CAP)
 end_define
 
 begin_function
@@ -6037,9 +6043,17 @@ operator|&
 name|IFCAP_LRO
 condition|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
 name|int
 name|i
 decl_stmt|;

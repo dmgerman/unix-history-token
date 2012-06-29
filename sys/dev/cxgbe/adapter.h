@@ -1508,7 +1508,7 @@ comment|/* # of times hardware assisted with checksum */
 name|uint64_t
 name|tso_wrs
 decl_stmt|;
-comment|/* # of IPv4 TSO work requests */
+comment|/* # of TSO work requests */
 name|uint64_t
 name|vlan_insertion
 decl_stmt|;
@@ -1574,9 +1574,17 @@ modifier|*
 name|ifp
 decl_stmt|;
 comment|/* the interface this rxq belongs to */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
 name|struct
 name|lro_ctrl
 name|lro
