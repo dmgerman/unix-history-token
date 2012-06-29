@@ -1470,6 +1470,12 @@ operator|.
 name|ktr_pid
 operator|==
 name|pid
+operator|||
+name|ktr_header
+operator|.
+name|ktr_tid
+operator|==
+name|pid
 condition|)
 name|dumpheader
 argument_list|(
@@ -1597,6 +1603,12 @@ operator|&&
 name|ktr_header
 operator|.
 name|ktr_pid
+operator|!=
+name|pid
+operator|&&
+name|ktr_header
+operator|.
+name|ktr_tid
 operator|!=
 name|pid
 condition|)
