@@ -486,7 +486,7 @@ begin_decl_stmt
 name|dtrace_optval_t
 name|dtrace_helper_actions_max
 init|=
-literal|32
+literal|128
 decl_stmt|;
 end_decl_stmt
 
