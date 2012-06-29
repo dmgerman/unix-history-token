@@ -600,13 +600,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|V_pfr_kcounters_pl
-value|VNET(pfr_kcounters_pl)
-end_define
-
 begin_expr_stmt
 name|VNET_DEFINE
 argument_list|(
