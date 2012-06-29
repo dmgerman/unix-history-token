@@ -53,6 +53,10 @@ name|coord_t
 name|p_pos
 decl_stmt|;
 comment|/* position in the line after prompt	*/
+name|char
+name|p_ignore
+decl_stmt|;
+comment|/* character to start/end literal  */
 block|}
 name|el_prompt_t
 typedef|;
@@ -81,6 +85,8 @@ modifier|*
 parameter_list|,
 name|el_pfunc_t
 parameter_list|,
+name|char
+parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
@@ -95,6 +101,9 @@ name|EditLine
 modifier|*
 parameter_list|,
 name|el_pfunc_t
+modifier|*
+parameter_list|,
+name|char
 modifier|*
 parameter_list|,
 name|int

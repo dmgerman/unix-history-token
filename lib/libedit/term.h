@@ -261,7 +261,7 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-name|int
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -552,6 +552,9 @@ name|protected
 name|int
 name|term__putc
 parameter_list|(
+name|EditLine
+modifier|*
+parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
@@ -562,7 +565,8 @@ name|protected
 name|void
 name|term__flush
 parameter_list|(
-name|void
+name|EditLine
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
