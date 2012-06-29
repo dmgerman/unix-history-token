@@ -473,8 +473,11 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|" entry %lld"
+literal|" entry %jd"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|sc
 operator|->
 name|entry
@@ -489,8 +492,11 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|" dsize %lld"
+literal|" dsize %jd"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|sc
 operator|->
 name|dsize
@@ -508,10 +514,13 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"%s<entry>%lld</entry>\n"
+literal|"%s<entry>%jd</entry>\n"
 argument_list|,
 name|indent
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|sc
 operator|->
 name|entry
@@ -526,10 +535,13 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"%s<dsize>%lld</dsize>\n"
+literal|"%s<dsize>%jd</dsize>\n"
 argument_list|,
 name|indent
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|sc
 operator|->
 name|dsize
@@ -674,12 +686,18 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"MAP: search key \"%s\" from 0x%llx, step 0x%llx\n"
+literal|"MAP: search key \"%s\" from 0x%jx, step 0x%jx\n"
 argument_list|,
 name|search_key
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|search_start
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|search_step
 argument_list|)
 expr_stmt|;
@@ -1438,15 +1456,27 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"MAP: %llxx%llx, data=%llxx%llx "
+literal|"MAP: %lxx%lx, data=%lxx%lx "
 literal|"\"/dev/map/%s\"\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|start
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|size
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|offset
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|dsize
 argument_list|,
 name|name
