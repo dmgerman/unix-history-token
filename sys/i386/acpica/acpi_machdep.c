@@ -153,14 +153,6 @@ directive|include
 file|<i386/bios/apm.h>
 end_include
 
-begin_expr_stmt
-name|SYSCTL_DECL
-argument_list|(
-name|_debug_acpi
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_decl_stmt
 name|uint32_t
 name|acpi_resume_beep
