@@ -3842,16 +3842,14 @@ parameter_list|,
 name|vm_pindex_t
 name|pindex
 parameter_list|,
-name|int
-name|count
+name|vm_pindex_t
+name|end
 parameter_list|,
 name|int
 name|advise
 parameter_list|)
 block|{
 name|vm_pindex_t
-name|end
-decl_stmt|,
 name|tpindex
 decl_stmt|;
 name|vm_object_t
@@ -3873,12 +3871,6 @@ name|VM_OBJECT_LOCK
 argument_list|(
 name|object
 argument_list|)
-expr_stmt|;
-name|end
-operator|=
-name|pindex
-operator|+
-name|count
 expr_stmt|;
 comment|/* 	 * Locate and adjust resident pages 	 */
 for|for
