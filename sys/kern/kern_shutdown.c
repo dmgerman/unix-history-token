@@ -185,22 +185,11 @@ directive|include
 file|<sys/vnode.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SW_WATCHDOG
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<sys/watchdog.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -1417,16 +1406,11 @@ name|waittime
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SW_WATCHDOG
 name|wdog_kern_pat
 argument_list|(
 name|WD_LASTVAL
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|sync
 argument_list|(
 name|curthread
@@ -1535,16 +1519,11 @@ name|pbusy
 operator|=
 name|nbusy
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SW_WATCHDOG
 name|wdog_kern_pat
 argument_list|(
 name|WD_LASTVAL
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|sync
 argument_list|(
 name|curthread
