@@ -1500,7 +1500,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"userland out of sync with kernel, recompile libkvm etc\n"
+literal|"userland out of sync with kernel\n"
 argument_list|)
 expr_stmt|;
 name|exit
