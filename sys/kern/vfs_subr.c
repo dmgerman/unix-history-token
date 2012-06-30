@@ -207,22 +207,11 @@ directive|include
 file|<sys/vnode.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SW_WATCHDOG
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<sys/watchdog.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -8374,9 +8363,6 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-ifdef|#
-directive|ifdef
-name|SW_WATCHDOG
 if|if
 condition|(
 name|first_printf
@@ -8388,8 +8374,6 @@ argument_list|(
 name|WD_LASTVAL
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 if|if
 condition|(
