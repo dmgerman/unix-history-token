@@ -4794,7 +4794,7 @@ begin_define
 define|#
 directive|define
 name|T4_CAP
-value|(IFCAP_VLAN_HWTAGGING | IFCAP_VLAN_MTU | IFCAP_HWCSUM | \     IFCAP_VLAN_HWCSUM | IFCAP_TSO | IFCAP_JUMBO_MTU | IFCAP_LRO | \     IFCAP_VLAN_HWTSO | IFCAP_HWCSUM_IPV6)
+value|(IFCAP_VLAN_HWTAGGING | IFCAP_VLAN_MTU | IFCAP_HWCSUM | \     IFCAP_VLAN_HWCSUM | IFCAP_TSO | IFCAP_JUMBO_MTU | IFCAP_LRO | \     IFCAP_VLAN_HWTSO | IFCAP_LINKSTATE | IFCAP_HWCSUM_IPV6)
 end_define
 
 begin_define
@@ -5822,7 +5822,7 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-name|IFCAP_TSO
+name|IFCAP_TSO4
 operator|&
 name|ifp
 operator|->
@@ -5849,7 +5849,7 @@ name|if_printf
 argument_list|(
 name|ifp
 argument_list|,
-literal|"tso disabled due to -txcsum.\n"
+literal|"tso4 disabled due to -txcsum.\n"
 argument_list|)
 expr_stmt|;
 block|}

@@ -5845,7 +5845,7 @@ operator|->
 name|m_pkthdr
 operator|.
 name|csum_flags
-operator||=
+operator|=
 operator|(
 name|CSUM_IP_CHECKED
 operator||
@@ -5886,7 +5886,7 @@ operator|->
 name|m_pkthdr
 operator|.
 name|csum_flags
-operator||=
+operator|=
 operator|(
 name|CSUM_DATA_VALID_IPV6
 operator||
