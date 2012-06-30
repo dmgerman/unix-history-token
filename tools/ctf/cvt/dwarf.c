@@ -7,13 +7,6 @@ begin_comment
 comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
-
 begin_comment
 comment|/*  * DWARF to tdata conversion  *  * For the most part, conversion is straightforward, proceeding in two passes.  * On the first pass, we iterate through every die, creating new type nodes as  * necessary.  Referenced tdesc_t's are created in an uninitialized state, thus  * allowing type reference pointers to be filled in.  If the tdesc_t  * corresponding to a given die can be completely filled out (sizes and offsets  * calculated, and so forth) without using any referenced types, the tdesc_t is  * marked as resolved.  Consider an array type.  If the type corresponding to  * the array contents has not yet been processed, we will create a blank tdesc  * for the contents type (only the type ID will be filled in, relying upon the  * later portion of the first pass to encounter and complete the referenced  * type).  We will then attempt to determine the size of the array.  If the  * array has a byte size attribute, we will have completely characterized the  * array type, and will be able to mark it as resolved.  The lack of a byte  * size attribute, on the other hand, will prevent us from fully resolving the  * type, as the size will only be calculable with reference to the contents  * type, which has not, as yet, been encountered.  The array type will thus be  * left without the resolved flag, and the first pass will continue.  *  * When we begin the second pass, we will have created tdesc_t nodes for every  * type in the section.  We will traverse the tree, from the iidescs down,  * processing each unresolved node.  As the referenced nodes will have been  * populated, the array type used in our example above will be able to use the  * size of the referenced types (if available) to determine its own type.  The  * traversal will be repeated until all types have been resolved or we have  * failed to make progress.  When all tdescs have been resolved, the conversion  * is complete.  *  * There are, as always, a few special cases that are handled during the first  * and second passes:  *  *  1. Empty enums - GCC will occasionally emit an enum without any members.  *     Later on in the file, it will emit the same enum type, though this time  *     with the full complement of members.  All references to the memberless  *     enum need to be redirected to the full definition.  During the first  *     pass, each enum is entered in dm_enumhash, along with a pointer to its  *     corresponding tdesc_t.  If, during the second pass, we encounter a  *     memberless enum, we use the hash to locate the full definition.  All  *     tdescs referencing the empty enum are then redirected.  *  *  2. Forward declarations - If the compiler sees a forward declaration for  *     a structure, followed by the definition of that structure, it will emit  *     DWARF data for both the forward declaration and the definition.  We need  *     to resolve the forward declarations when possible, by redirecting  *     forward-referencing tdescs to the actual struct/union definitions.  This  *     redirection is done completely within the first pass.  We begin by  *     recording all forward declarations in dw_fwdhash.  When we define a  *     structure, we check to see if there have been any corresponding forward  *     declarations.  If so, we redirect the tdescs which referenced the forward  *     declarations to the structure or union definition.  *  * XXX see if a post traverser will allow the elimination of repeated pass 2  * traversals.  */
 end_comment
@@ -8364,7 +8357,21 @@ argument_list|)
 operator|)
 operator|!=
 name|DW_DLV_OK
-operator|||
+condition|)
+name|terminate
+argument_list|(
+literal|"file does not contain valid DWARF data: %s\n"
+argument_list|,
+name|dwarf_errmsg
+argument_list|(
+name|dw
+operator|.
+name|dw_err
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|cu
 operator|=

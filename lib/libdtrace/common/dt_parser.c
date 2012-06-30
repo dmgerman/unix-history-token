@@ -1,18 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to the terms of the  * Common Development and Distribution License, Version 1.0 only  * (the "License").  You may not use this file except in compliance  * with the License.  *  * You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE  * or http://www.opensolaris.org/os/licensing.  * See the License for the specific language governing permissions  * and limitations under the License.  *  * When distributing Covered Code, include this CDDL HEADER in each  * file and include the License file at usr/src/OPENSOLARIS.LICENSE.  * If applicable, add the following below this CDDL HEADER, with the  * fields enclosed by brackets "[]" replaced with your own identifying  * information: Portions Copyright [yyyy] [name of copyright owner]  *  * CDDL HEADER END  */
+comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to the terms of the  * Common Development and Distribution License (the "License").  * You may not use this file except in compliance with the License.  *  * You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE  * or http://www.opensolaris.org/os/licensing.  * See the License for the specific language governing permissions  * and limitations under the License.  *  * When distributing Covered Code, include this CDDL HEADER in each  * file and include the License file at usr/src/OPENSOLARIS.LICENSE.  * If applicable, add the following below this CDDL HEADER, with the  * fields enclosed by brackets "[]" replaced with your own identifying  * information: Portions Copyright [yyyy] [name of copyright owner]  *  * CDDL HEADER END  */
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2006 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright (c) 2003, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, Joyent Inc. All rights reserved.  */
 end_comment
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_comment
 comment|/*  * DTrace D Language Parser  *  * The D Parser is a lex/yacc parser consisting of the lexer dt_lex.l, the  * parsing grammar dt_grammar.y, and this file, dt_parser.c, which handles  * the construction of the parse tree nodes and their syntactic validation.  * The parse tree is constructed of dt_node_t structures (see<dt_parser.h>)  * that are built in two passes: (1) the "create" pass, where the parse tree  * nodes are allocated by calls from the grammar to dt_node_*() subroutines,  * and (2) the "cook" pass, where nodes are coalesced, assigned D types, and  * validated according to the syntactic rules of the language.  *  * All node allocations are performed using dt_node_alloc().  All node frees  * during the parsing phase are performed by dt_node_free(), which frees node-  * internal state but does not actually free the nodes.  All final node frees  * are done as part of the end of dt_compile() or as part of destroying  * persistent identifiers or translators which have embedded nodes.  *  * The dt_node_* routines that implement pass (1) may allocate new nodes.  The  * dt_cook_* routines that implement pass (2) may *not* allocate new nodes.  * They may free existing nodes using dt_node_free(), but they may not actually  * deallocate any dt_node_t's.  Currently dt_cook_op2() is an exception to this  * rule: see the comments therein for how this issue is resolved.  *  * The dt_cook_* routines are responsible for (at minimum) setting the final  * node type (dn_ctfp/dn_type) and attributes (dn_attr).  If dn_ctfp/dn_type  * are set manually (i.e. not by one of the type assignment functions), then  * the DT_NF_COOKED flag must be set manually on the node.  *  * The cooking pass can be applied to the same parse tree more than once (used  * in the case of a comma-separated list of probe descriptions).  As such, the  * cook routines must not perform any parse tree transformations which would  * be invalid if the tree were subsequently cooked using a different context.  *  * The dn_ctfp and dn_type fields form the type of the node.  This tuple can  * take on the following set of values, which form our type invariants:  *  * 1. dn_ctfp = NULL, dn_type = CTF_ERR  *  *    In this state, the node has unknown type and is not yet cooked.  The  *    DT_NF_COOKED flag is not yet set on the node.  *  * 2. dn_ctfp = DT_DYN_CTFP(dtp), dn_type = DT_DYN_TYPE(dtp)  *  *    In this state, the node is a dynamic D type.  This means that generic  *    operations are not valid on this node and only code that knows how to  *    examine the inner details of the node can operate on it.  A<DYN> node  *    must have dn_ident set to point to an identifier describing the object  *    and its type.  The DT_NF_REF flag is set for all nodes of type<DYN>.  *    At present, the D compiler uses the<DYN> type for:  *  *    - associative arrays that do not yet have a value type defined  *    - translated data (i.e. the result of the xlate operator)  *    - aggregations  *  * 3. dn_ctfp = DT_STR_CTFP(dtp), dn_type = DT_STR_TYPE(dtp)  *  *    In this state, the node is of type D string.  The string type is really  *    a char[0] typedef, but requires special handling throughout the compiler.  *  * 4. dn_ctfp != NULL, dn_type = any other type ID  *  *    In this state, the node is of some known D/CTF type.  The normal libctf  *    APIs can be used to learn more about the type name or structure.  When  *    the type is assigned, the DT_NF_SIGNED, DT_NF_REF, and DT_NF_BITFIELD  *    flags cache the corresponding attributes of the underlying CTF type.  */
@@ -3575,6 +3568,9 @@ modifier|*
 name|dnp
 parameter_list|)
 block|{
+name|ctf_id_t
+name|base
+decl_stmt|;
 if|if
 condition|(
 name|dnp
@@ -3616,6 +3612,37 @@ name|dnp
 operator|->
 name|dn_ident
 argument_list|)
+operator|)
+return|;
+name|base
+operator|=
+name|ctf_type_resolve
+argument_list|(
+name|dnp
+operator|->
+name|dn_ctfp
+argument_list|,
+name|dnp
+operator|->
+name|dn_type
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ctf_type_kind
+argument_list|(
+name|dnp
+operator|->
+name|dn_ctfp
+argument_list|,
+name|base
+argument_list|)
+operator|==
+name|CTF_K_FORWARD
+condition|)
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 return|return
@@ -8372,23 +8399,8 @@ name|kind
 decl_stmt|;
 name|name
 operator|=
-name|alloca
+name|strdupa
 argument_list|(
-name|strlen
-argument_list|(
-name|s
-argument_list|)
-operator|+
-literal|1
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcpy
-argument_list|(
-name|name
-argument_list|,
 name|s
 argument_list|)
 expr_stmt|;

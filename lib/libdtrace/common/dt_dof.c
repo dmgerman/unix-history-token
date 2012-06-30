@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2003, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2003, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -4416,7 +4416,7 @@ name|dofa_difo
 operator|=
 name|DOF_SECIDX_NONE
 expr_stmt|;
-comment|/* 			 * If the first action in a statement has format data, 			 * add the format string to the global string table. 			 */
+comment|/* 			 * If the first action in a statement has string data, 			 * add the string to the global string table.  This can 			 * be due either to a printf() format string 			 * (dtsd_fmtdata) or a print() type string 			 * (dtsd_strdata). 			 */
 if|if
 condition|(
 name|sdp
@@ -4467,12 +4467,36 @@ name|fmt
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|sdp
+operator|->
+name|dtsd_strdata
+operator|!=
+name|NULL
+condition|)
+block|{
+name|strndx
+operator|=
+name|dof_add_string
+argument_list|(
+name|ddo
+argument_list|,
+name|sdp
+operator|->
+name|dtsd_strdata
+argument_list|)
+expr_stmt|;
+block|}
 else|else
+block|{
 name|strndx
 operator|=
 literal|0
 expr_stmt|;
 comment|/* use dtad_arg instead */
+block|}
 if|if
 condition|(
 operator|(

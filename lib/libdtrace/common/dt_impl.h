@@ -7,6 +7,10 @@ begin_comment
 comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
+begin_comment
+comment|/*  * Copyright (c) 2011, Joyent, Inc. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -907,6 +911,16 @@ modifier|*
 name|dt_formats
 decl_stmt|;
 comment|/* pointer to format array */
+name|int
+name|dt_maxstrdata
+decl_stmt|;
+comment|/* max strdata ID */
+name|char
+modifier|*
+modifier|*
+name|dt_strdata
+decl_stmt|;
+comment|/* pointer to strdata array */
 name|dt_aggregate_t
 name|dt_aggregate
 decl_stmt|;
@@ -1538,6 +1552,11 @@ directive|define
 name|DT_ACT_SETOPT
 value|DT_ACT(28)
 comment|/* setopt() action */
+define|#
+directive|define
+name|DT_ACT_PRINT
+value|DT_ACT(29)
+comment|/* print() action */
 comment|/*  * Sentinel to tell freopen() to restore the saved stdout.  This must not  * be ever valid for opening for write access via freopen(3C), which of  * course, "." never is.  */
 define|#
 directive|define
@@ -2352,6 +2371,26 @@ modifier|*
 parameter_list|)
 function_decl|;
 specifier|extern
+specifier|const
+name|char
+modifier|*
+name|dt_strdata_lookup
+parameter_list|(
+name|dtrace_hdl_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|dt_strdata_destroy
+parameter_list|(
+name|dtrace_hdl_t
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
 name|int
 name|dt_print_quantize
 parameter_list|(
@@ -2373,6 +2412,25 @@ function_decl|;
 specifier|extern
 name|int
 name|dt_print_lquantize
+parameter_list|(
+name|dtrace_hdl_t
+modifier|*
+parameter_list|,
+name|FILE
+modifier|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+name|uint64_t
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|dt_print_llquantize
 parameter_list|(
 name|dtrace_hdl_t
 modifier|*

@@ -7,6 +7,10 @@ begin_comment
 comment|/*  * Copyright 2005 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
+begin_comment
+comment|/*  * Copyright (c) 2011, Joyent, Inc. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -18,13 +22,6 @@ define|#
 directive|define
 name|_DT_ERRTAGS_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_ifdef
 ifdef|#
@@ -480,12 +477,24 @@ comment|/* trace() argument has void type */
 name|D_TRACE_DYN
 block|,
 comment|/* trace() argument has dynamic type */
+name|D_PRINT_VOID
+block|,
+comment|/* print() argument has void type */
+name|D_PRINT_DYN
+block|,
+comment|/* print() argument has dynamic type */
 name|D_TRACEMEM_ADDR
 block|,
 comment|/* tracemem() address bad type */
 name|D_TRACEMEM_SIZE
 block|,
 comment|/* tracemem() size bad type */
+name|D_TRACEMEM_ARGS
+block|,
+comment|/* tracemem() illegal number of args */
+name|D_TRACEMEM_DYNSIZE
+block|,
+comment|/* tracemem() dynamic size bad type */
 name|D_STACK_PROTO
 block|,
 comment|/* stack() prototype mismatch */
@@ -625,7 +634,58 @@ name|D_LQUANT_MATCHLIM
 block|,
 comment|/* lquantize() mismatch on limit */
 name|D_LQUANT_MATCHSTEP
+block|,
 comment|/* lquantize() mismatch on step */
+name|D_LLQUANT_FACTORTYPE
+block|,
+comment|/* llquantize() bad magnitude type */
+name|D_LLQUANT_FACTORVAL
+block|,
+comment|/* llquantize() bad magnitude value */
+name|D_LLQUANT_FACTORMATCH
+block|,
+comment|/* llquantize() mismatch on magnitude */
+name|D_LLQUANT_LOWTYPE
+block|,
+comment|/* llquantize() bad low mag type */
+name|D_LLQUANT_LOWVAL
+block|,
+comment|/* llquantize() bad low mag value */
+name|D_LLQUANT_LOWMATCH
+block|,
+comment|/* llquantize() mismatch on low mag */
+name|D_LLQUANT_HIGHTYPE
+block|,
+comment|/* llquantize() bad high mag type */
+name|D_LLQUANT_HIGHVAL
+block|,
+comment|/* llquantize() bad high mag value */
+name|D_LLQUANT_HIGHMATCH
+block|,
+comment|/* llquantize() mismatch on high mag */
+name|D_LLQUANT_NSTEPTYPE
+block|,
+comment|/* llquantize() bad # steps type */
+name|D_LLQUANT_NSTEPVAL
+block|,
+comment|/* llquantize() bad # steps value */
+name|D_LLQUANT_NSTEPMATCH
+block|,
+comment|/* llquantize() mismatch on # steps */
+name|D_LLQUANT_MAGRANGE
+block|,
+comment|/* llquantize() bad magnitude range */
+name|D_LLQUANT_FACTORNSTEPS
+block|,
+comment|/* llquantize() # steps< factor */
+name|D_LLQUANT_FACTOREVEN
+block|,
+comment|/* llquantize() bad # steps/factor */
+name|D_LLQUANT_FACTORSMALL
+block|,
+comment|/* llquantize() magnitude too small */
+name|D_LLQUANT_MAGTOOBIG
+comment|/* llquantize() high mag too large */
 block|}
 name|dt_errtag_t
 typedef|;
