@@ -9225,15 +9225,6 @@ operator|->
 name|src_port
 expr_stmt|;
 comment|/* Get the scopes in properly to the sin6 addr's */
-comment|/* we probably don't need these operations */
-operator|(
-name|void
-operator|)
-name|sa6_recoverscope
-argument_list|(
-name|from6
-argument_list|)
-expr_stmt|;
 name|sa6_embedscope
 argument_list|(
 name|from6
@@ -9422,15 +9413,6 @@ operator|->
 name|dest_port
 expr_stmt|;
 comment|/* Get the scopes in properly to the sin6 addr's */
-comment|/* we probably don't need these operations */
-operator|(
-name|void
-operator|)
-name|sa6_recoverscope
-argument_list|(
-name|to6
-argument_list|)
-expr_stmt|;
 name|sa6_embedscope
 argument_list|(
 name|to6
