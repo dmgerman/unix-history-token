@@ -1347,7 +1347,7 @@ name|sc
 operator|->
 name|xb_disk
 argument_list|,
-name|DISK_VERSION_00
+name|DISK_VERSION
 argument_list|)
 expr_stmt|;
 return|return
