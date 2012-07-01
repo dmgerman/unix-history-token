@@ -5009,7 +5009,7 @@ begin_define
 define|#
 directive|define
 name|CXGB_CAP_ENABLE
-value|(CXGB_CAP& ~IFCAP_TSO6)
+value|CXGB_CAP
 end_define
 
 begin_function
@@ -10456,14 +10456,14 @@ if|if
 condition|(
 name|mask
 operator|&
-name|IFCAP_TSO4
+name|IFCAP_TSO
 condition|)
 block|{
 name|ifp
 operator|->
 name|if_capenable
 operator|^=
-name|IFCAP_TSO4
+name|IFCAP_TSO
 expr_stmt|;
 if|if
 condition|(
