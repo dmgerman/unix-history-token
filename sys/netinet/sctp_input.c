@@ -22794,8 +22794,6 @@ name|sh
 argument_list|,
 name|inp
 argument_list|,
-name|NULL
-argument_list|,
 name|vrf_id
 argument_list|,
 name|port
@@ -22958,8 +22956,6 @@ argument_list|,
 name|sh
 argument_list|,
 name|inp
-argument_list|,
-name|NULL
 argument_list|,
 name|vrf_id
 argument_list|,
@@ -28033,8 +28029,6 @@ name|sh
 argument_list|,
 name|inp
 argument_list|,
-name|NULL
-argument_list|,
 name|vrf_id
 argument_list|,
 name|port
@@ -28208,8 +28202,6 @@ argument_list|,
 name|sh
 argument_list|,
 name|inp
-argument_list|,
-name|NULL
 argument_list|,
 name|vrf_id
 argument_list|,
@@ -28415,8 +28407,6 @@ argument_list|,
 name|sh
 argument_list|,
 name|inp
-argument_list|,
-name|NULL
 argument_list|,
 name|vrf_id
 argument_list|,
