@@ -212,6 +212,59 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IFCAP_HWCSUM_IPV6
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|IFCAP_HWCSUM_IPV6
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|CSUM_TCP_IPV6
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|CSUM_UDP_IPV6
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFCAP_TXCSUM_IPV6
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFCAP_RXCSUM_IPV6
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|CSUM_DATA_VALID_IPV6
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_enum
 enum|enum
 block|{
@@ -924,28 +977,6 @@ block|}
 struct|;
 end_struct
 
-begin_enum
-enum|enum
-block|{
-name|SGE_PSTAT_TSO
-block|,
-comment|/* # of TSO requests */
-name|SGE_PSTAT_RX_CSUM_GOOD
-block|,
-comment|/* # of successful RX csum offloads */
-name|SGE_PSTAT_TX_CSUM
-block|,
-comment|/* # of TX checksum offloads */
-name|SGE_PSTAT_VLANEX
-block|,
-comment|/* # of VLAN tag extractions */
-name|SGE_PSTAT_VLANINS
-block|,
-comment|/* # of VLAN tag insertions */
-block|}
-enum|;
-end_enum
-
 begin_define
 define|#
 directive|define
@@ -1018,12 +1049,6 @@ name|uint32_t
 name|txq_stopped
 decl_stmt|;
 comment|/* which Tx queues are stopped */
-name|uint64_t
-name|port_stats
-index|[
-name|SGE_PSTAT_MAX
-index|]
-decl_stmt|;
 name|struct
 name|port_info
 modifier|*
@@ -2348,11 +2373,6 @@ name|struct
 name|adapter
 modifier|*
 name|adap
-parameter_list|,
-name|struct
-name|sge_rspq
-modifier|*
-name|rq
 parameter_list|,
 name|struct
 name|mbuf
