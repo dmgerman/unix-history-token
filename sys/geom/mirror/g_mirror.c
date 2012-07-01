@@ -4627,6 +4627,12 @@ operator|->
 name|bio_cmd
 operator|==
 name|BIO_WRITE
+operator|||
+name|pbp
+operator|->
+name|bio_cmd
+operator|==
+name|BIO_DELETE
 condition|)
 block|{
 name|bioq_remove
