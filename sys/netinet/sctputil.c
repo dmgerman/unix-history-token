@@ -34555,25 +34555,7 @@ name|uhdr
 decl_stmt|;
 name|uint16_t
 name|port
-init|=
-literal|0
 decl_stmt|;
-name|int
-name|header_size
-init|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|udphdr
-argument_list|)
-operator|+
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|sctphdr
-argument_list|)
-decl_stmt|;
-comment|/* 	 * Split out the mbuf chain. Leave the IP header in m, place the 	 * rest in the sp. 	 */
 if|if
 condition|(
 operator|(
@@ -34592,7 +34574,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* pull the src port */
+comment|/* Pull the src port */
 name|iph
 operator|=
 name|mtod
@@ -34626,6 +34608,7 @@ name|uhdr
 operator|->
 name|uh_sport
 expr_stmt|;
+comment|/* 	 * Split out the mbuf chain. Leave the IP header in m, place the 	 * rest in the sp. 	 */
 name|sp
 operator|=
 name|m_split
@@ -34657,10 +34640,20 @@ name|m_pkthdr
 operator|.
 name|len
 operator|<
-name|header_size
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|udphdr
+argument_list|)
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sctphdr
+argument_list|)
 condition|)
 block|{
-comment|/* Gak, packet can't have an SCTP header in it - to small */
+comment|/* Gak, packet can't have an SCTP header in it - too small */
 name|m_freem
 argument_list|(
 name|sp
@@ -34670,14 +34663,24 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* ok now pull up the UDP header and SCTP header together */
+comment|/* Now pull up the UDP header and SCTP header together */
 name|sp
 operator|=
 name|m_pullup
 argument_list|(
 name|sp
 argument_list|,
-name|header_size
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|udphdr
+argument_list|)
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sctphdr
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -34692,7 +34695,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* trim out the UDP header */
+comment|/* Trim out the UDP header */
 name|m_adj
 argument_list|(
 name|sp
@@ -34705,27 +34708,23 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Now reconstruct the mbuf chain */
-comment|/* 1) find last one */
+for|for
+control|(
 name|last
 operator|=
 name|m
-expr_stmt|;
-while|while
-condition|(
+init|;
 name|last
 operator|->
 name|m_next
-operator|!=
-name|NULL
-condition|)
-block|{
+condition|;
 name|last
 operator|=
 name|last
 operator|->
 name|m_next
-expr_stmt|;
-block|}
+control|)
+empty_stmt|;
 name|last
 operator|->
 name|m_next
@@ -34744,25 +34743,6 @@ name|m_pkthdr
 operator|.
 name|len
 expr_stmt|;
-name|last
-operator|=
-name|m
-expr_stmt|;
-while|while
-condition|(
-name|last
-operator|!=
-name|NULL
-condition|)
-block|{
-name|last
-operator|=
-name|last
-operator|->
-name|m_next
-expr_stmt|;
-block|}
-comment|/* Now its ready for sctp_input or sctp6_input */
 name|iph
 operator|=
 name|mtod
@@ -34787,32 +34767,15 @@ name|INET
 case|case
 name|IPVERSION
 case|:
-block|{
-name|uint16_t
-name|len
-decl_stmt|;
-comment|/* its IPv4 */
-name|len
-operator|=
-name|SCTP_GET_IPV4_LENGTH
-argument_list|(
 name|iph
-argument_list|)
-expr_stmt|;
-name|len
+operator|->
+name|ip_len
 operator|-=
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|udphdr
 argument_list|)
-expr_stmt|;
-name|SCTP_GET_IPV4_LENGTH
-argument_list|(
-name|iph
-argument_list|)
-operator|=
-name|len
 expr_stmt|;
 name|sctp_input_with_port
 argument_list|(
@@ -34824,7 +34787,6 @@ name|port
 argument_list|)
 expr_stmt|;
 break|break;
-block|}
 endif|#
 directive|endif
 ifdef|#
@@ -34835,24 +34797,18 @@ name|IPV6_VERSION
 operator|>>
 literal|4
 case|:
-block|{
-comment|/* its IPv6 - NOT supported */
+comment|/* Not yet supported. */
 goto|goto
 name|out
 goto|;
 break|break;
-block|}
 endif|#
 directive|endif
 default|default:
-block|{
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
+goto|goto
+name|out
+goto|;
 break|break;
-block|}
 block|}
 return|return;
 name|out
