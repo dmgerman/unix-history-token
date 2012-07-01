@@ -1456,7 +1456,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"MAP: %lxx%lx, data=%lxx%lx "
+literal|"MAP: %jxx%jx, data=%jxx%jx "
 literal|"\"/dev/map/%s\"\n"
 argument_list|,
 operator|(
