@@ -1332,7 +1332,9 @@ break|break;
 default|default:
 name|panic
 argument_list|(
-literal|"cam_periph_alloc: Unkown init level"
+literal|"%s: Unknown init level"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
