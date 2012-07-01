@@ -2753,6 +2753,17 @@ begin_comment
 comment|/* don't fragment packet */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IP_RECVTOS
+value|68
+end_define
+
+begin_comment
+comment|/* bool; receive IP TOS w/dgram */
+end_comment
+
 begin_comment
 comment|/* IPv4 Source Filter Multicast API [RFC3678] */
 end_comment

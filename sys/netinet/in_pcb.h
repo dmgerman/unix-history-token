@@ -1818,6 +1818,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|INP_RECVTOS
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* receive incoming IP TOS */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IN6P_IPV6_V6ONLY
 value|0x00008000
 end_define
@@ -2006,7 +2017,7 @@ begin_define
 define|#
 directive|define
 name|INP_CONTROLOPTS
-value|(INP_RECVOPTS|INP_RECVRETOPTS|INP_RECVDSTADDR|\ 				 INP_RECVIF|INP_RECVTTL|\ 				 IN6P_PKTINFO|IN6P_HOPLIMIT|IN6P_HOPOPTS|\ 				 IN6P_DSTOPTS|IN6P_RTHDR|IN6P_RTHDRDSTOPTS|\ 				 IN6P_TCLASS|IN6P_AUTOFLOWLABEL|IN6P_RFC2292|\ 				 IN6P_MTU)
+value|(INP_RECVOPTS|INP_RECVRETOPTS|INP_RECVDSTADDR|\ 				 INP_RECVIF|INP_RECVTTL|INP_RECVTOS|\ 				 IN6P_PKTINFO|IN6P_HOPLIMIT|IN6P_HOPOPTS|\ 				 IN6P_DSTOPTS|IN6P_RTHDR|IN6P_RTHDRDSTOPTS|\ 				 IN6P_TCLASS|IN6P_AUTOFLOWLABEL|IN6P_RFC2292|\ 				 IN6P_MTU)
 end_define
 
 begin_comment
