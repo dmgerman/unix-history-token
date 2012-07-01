@@ -921,15 +921,12 @@ name|so
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* protection */
-name|int
-name|reason
-decl_stmt|;
 name|struct
 name|icmp
 modifier|*
 name|icmph
 decl_stmt|;
+comment|/* protection */
 if|if
 condition|(
 operator|(
@@ -1182,15 +1179,13 @@ operator|)
 condition|)
 block|{
 comment|/* 		 * Here the peer is either playing tricks on us, including 		 * an address that belongs to someone who does not support 		 * SCTP OR was a userland implementation that shutdown and 		 * now is dead. In either case treat it like a OOTB abort 		 * with no TCB 		 */
-name|reason
-operator|=
-name|SCTP_PEER_FAULTY
-expr_stmt|;
 name|sctp_abort_notification
 argument_list|(
 name|stcb
 argument_list|,
-name|reason
+literal|0
+argument_list|,
+name|NULL
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
 argument_list|)
@@ -5261,8 +5256,6 @@ operator|->
 name|sctp_ep
 argument_list|,
 name|stcb
-argument_list|,
-name|SCTP_RESPONSE_TO_USER_REQ
 argument_list|,
 name|op_err
 argument_list|,
