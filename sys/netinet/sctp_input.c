@@ -29726,15 +29726,11 @@ argument_list|(
 name|sctps_noport
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ICMP_BANDLIM
-comment|/* 		 * we use the bandwidth limiting to protect against sending 		 * too many ABORTS all at once. In this case these count the 		 * same as an ICMP message. 		 */
 if|if
 condition|(
 name|badport_bandlim
 argument_list|(
-literal|0
+name|BANDLIM_SCTP_OOTB
 argument_list|)
 operator|<
 literal|0
@@ -29742,9 +29738,6 @@ condition|)
 goto|goto
 name|bad
 goto|;
-endif|#
-directive|endif
-comment|/* ICMP_BANDLIM */
 name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_INPUT1

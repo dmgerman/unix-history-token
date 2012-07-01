@@ -4624,6 +4624,10 @@ block|,
 block|{
 literal|"icmp6 unreach response"
 block|}
+block|,
+block|{
+literal|"sctp ootb response"
+block|}
 block|}
 struct|;
 comment|/* 	 * Return ok status if feature disabled or argument out of range. 	 */
