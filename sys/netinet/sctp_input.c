@@ -1364,11 +1364,11 @@ argument_list|)
 expr_stmt|;
 name|sctp_ulp_notify
 argument_list|(
-name|SCTP_NOTIFY_DG_FAIL
+name|SCTP_NOTIFY_UNSENT_DG_FAIL
 argument_list|,
 name|stcb
 argument_list|,
-name|SCTP_NOTIFY_DATAGRAM_UNSENT
+literal|0
 argument_list|,
 name|chk
 argument_list|,
@@ -1476,7 +1476,7 @@ name|SCTP_NOTIFY_SPECIAL_SP_FAIL
 argument_list|,
 name|stcb
 argument_list|,
-name|SCTP_NOTIFY_DATAGRAM_UNSENT
+literal|0
 argument_list|,
 name|sp
 argument_list|,
@@ -4996,6 +4996,8 @@ block|{
 name|sctp_report_all_outbound
 argument_list|(
 name|stcb
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|,
@@ -9188,6 +9190,8 @@ expr_stmt|;
 name|sctp_report_all_outbound
 argument_list|(
 name|stcb
+argument_list|,
+literal|0
 argument_list|,
 literal|1
 argument_list|,
@@ -15457,6 +15461,8 @@ block|{
 name|sctp_report_all_outbound
 argument_list|(
 name|stcb
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|,

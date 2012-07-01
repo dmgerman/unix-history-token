@@ -1968,80 +1968,6 @@ value|0xc008
 end_define
 
 begin_comment
-comment|/* Notification error codes */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTP_NOTIFY_DATAGRAM_UNSENT
-value|0x0001
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTP_NOTIFY_DATAGRAM_SENT
-value|0x0002
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTP_FAILED_THRESHOLD
-value|0x0004
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTP_HEARTBEAT_SUCCESS
-value|0x0008
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTP_RESPONSE_TO_USER_REQ
-value|0x0010
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTP_INTERNAL_ERROR
-value|0x0020
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTP_SHUTDOWN_GUARD_EXPIRES
-value|0x0040
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTP_RECEIVED_SACK
-value|0x0080
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTP_PEER_FAULTY
-value|0x0100
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTP_ICMP_REFUSED
-value|0x0200
-end_define
-
-begin_comment
 comment|/* bits for TOS field */
 end_comment
 
@@ -3405,148 +3331,155 @@ end_define
 begin_define
 define|#
 directive|define
-name|SCTP_NOTIFY_DG_FAIL
+name|SCTP_NOTIFY_SENT_DG_FAIL
 value|5
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_NOTIFY_SPECIAL_SP_FAIL
+name|SCTP_NOTIFY_UNSENT_DG_FAIL
 value|6
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_NOTIFY_ASSOC_LOC_ABORTED
+name|SCTP_NOTIFY_SPECIAL_SP_FAIL
 value|7
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_NOTIFY_ASSOC_REM_ABORTED
+name|SCTP_NOTIFY_ASSOC_LOC_ABORTED
 value|8
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_NOTIFY_ASSOC_RESTART
+name|SCTP_NOTIFY_ASSOC_REM_ABORTED
 value|9
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_NOTIFY_PEER_SHUTDOWN
+name|SCTP_NOTIFY_ASSOC_RESTART
 value|10
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_NOTIFY_ASCONF_ADD_IP
+name|SCTP_NOTIFY_PEER_SHUTDOWN
 value|11
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_NOTIFY_ASCONF_DELETE_IP
+name|SCTP_NOTIFY_ASCONF_ADD_IP
 value|12
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_NOTIFY_ASCONF_SET_PRIMARY
+name|SCTP_NOTIFY_ASCONF_DELETE_IP
 value|13
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_NOTIFY_PARTIAL_DELVIERY_INDICATION
+name|SCTP_NOTIFY_ASCONF_SET_PRIMARY
 value|14
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_NOTIFY_INTERFACE_CONFIRMED
+name|SCTP_NOTIFY_PARTIAL_DELVIERY_INDICATION
 value|15
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_NOTIFY_STR_RESET_RECV
+name|SCTP_NOTIFY_INTERFACE_CONFIRMED
 value|16
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_NOTIFY_STR_RESET_SEND
+name|SCTP_NOTIFY_STR_RESET_RECV
 value|17
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_NOTIFY_STR_RESET_FAILED_OUT
+name|SCTP_NOTIFY_STR_RESET_SEND
 value|18
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_NOTIFY_STR_RESET_FAILED_IN
+name|SCTP_NOTIFY_STR_RESET_FAILED_OUT
 value|19
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_NOTIFY_STR_RESET_DENIED_OUT
+name|SCTP_NOTIFY_STR_RESET_FAILED_IN
 value|20
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_NOTIFY_STR_RESET_DENIED_IN
+name|SCTP_NOTIFY_STR_RESET_DENIED_OUT
 value|21
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_NOTIFY_AUTH_NEW_KEY
+name|SCTP_NOTIFY_STR_RESET_DENIED_IN
 value|22
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_NOTIFY_AUTH_FREE_KEY
+name|SCTP_NOTIFY_AUTH_NEW_KEY
 value|23
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_NOTIFY_NO_PEER_AUTH
+name|SCTP_NOTIFY_AUTH_FREE_KEY
 value|24
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_NOTIFY_SENDER_DRY
+name|SCTP_NOTIFY_NO_PEER_AUTH
 value|25
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_NOTIFY_SENDER_DRY
+value|26
 end_define
 
 begin_comment
