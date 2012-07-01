@@ -162,6 +162,11 @@ init|=
 literal|17
 block|,
 comment|/* EEPROM invalid country code */
+name|HAL_INV_PMODE
+init|=
+literal|18
+block|,
+comment|/* Couldn't bring out of sleep state */
 block|}
 name|HAL_STATUS
 typedef|;
@@ -547,7 +552,14 @@ init|=
 literal|5
 block|,
 comment|/* power save poll xmit q */
-block|}
+name|HAL_TX_QUEUE_CFEND
+init|=
+literal|6
+block|,
+name|HAL_TX_QUEUE_PAPRD
+init|=
+literal|7
+block|, }
 name|HAL_TX_QUEUE
 typedef|;
 end_typedef
@@ -557,6 +569,36 @@ define|#
 directive|define
 name|HAL_NUM_TX_QUEUES
 value|10
+end_define
+
+begin_comment
+comment|/* max possible # of queues */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|HAL_RX_QUEUE_HP
+init|=
+literal|0
+block|,
+comment|/* high priority recv queue */
+name|HAL_RX_QUEUE_LP
+init|=
+literal|0
+block|,
+comment|/* low priority recv queue */
+block|}
+name|HAL_RX_QUEUE
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|HAL_NUM_RX_QUEUES
+value|2
 end_define
 
 begin_comment
@@ -1733,8 +1775,9 @@ name|kv_type
 decl_stmt|;
 comment|/* one of HAL_CIPHER */
 name|uint8_t
-name|kv_pad
+name|kv_apsd
 decl_stmt|;
+comment|/* Mask for APSD enabled ACs */
 name|uint16_t
 name|kv_len
 decl_stmt|;
@@ -2118,7 +2161,10 @@ init|=
 literal|7
 block|,
 comment|/* reset phy error stats */
-block|}
+name|HAL_ANI_MRC_CCK
+init|=
+literal|8
+block|, }
 name|HAL_ANI_CMD
 typedef|;
 end_typedef
@@ -2162,6 +2208,10 @@ block|}
 name|HAL_CAP_INTMIT_CMD
 typedef|;
 end_typedef
+
+begin_comment
+comment|/* DFS defines */
+end_comment
 
 begin_typedef
 typedef|typedef
