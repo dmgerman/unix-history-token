@@ -1396,7 +1396,7 @@ name|x
 parameter_list|,
 name|msg
 parameter_list|)
-value|pause((msg), ((int64_t)(x)) * 1000 / hz)
+value|pause((msg), ((int64_t)(x)) * hz / 1000)
 end_define
 
 begin_typedef
