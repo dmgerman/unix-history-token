@@ -1469,8 +1469,7 @@ name|errx
 argument_list|(
 name|EX_SOFTWARE
 argument_list|,
-literal|"ERROR: a.out kernel modules are "
-literal|"unsupported \"%s\""
+literal|"ERROR: a.out kernel modules are unsupported \"%s\""
 argument_list|,
 name|path
 argument_list|)
@@ -2551,8 +2550,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"WARNING: Cannot retrieve the ELF Header for "
-literal|"\"%s\": %s."
+literal|"WARNING: Cannot retrieve the ELF Header for \"%s\": %s."
 argument_list|,
 name|buffer
 argument_list|,
@@ -2646,8 +2644,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"WARNING: Could not determine the number of "
-literal|"program headers in \"%s\": %s."
+literal|"WARNING: Could not determine the number of program headers in \"%s\": %s."
 argument_list|,
 name|buffer
 argument_list|,
@@ -2696,8 +2693,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"WARNING: Retrieval of PHDR entry #%ju "
-literal|"in \"%s\" failed: %s."
+literal|"WARNING: Retrieval of PHDR entry #%ju in \"%s\" failed: %s."
 argument_list|,
 operator|(
 name|uintmax_t
@@ -2755,8 +2751,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"WARNING: Cannot retrieve the "
-literal|"interpreter for \"%s\": %s."
+literal|"WARNING: Cannot retrieve the interpreter for \"%s\": %s."
 argument_list|,
 name|buffer
 argument_list|,
@@ -2824,8 +2819,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"WARNING: Could not determine the number of sections "
-literal|"for \"%s\": %s."
+literal|"WARNING: Could not determine the number of sections for \"%s\": %s."
 argument_list|,
 name|buffer
 argument_list|,
@@ -2883,8 +2877,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"WARNING: Could not retrieve section header "
-literal|"#%ju in \"%s\": %s."
+literal|"WARNING: Could not retrieve section header #%ju in \"%s\": %s."
 argument_list|,
 operator|(
 name|uintmax_t
@@ -3686,8 +3679,7 @@ name|err
 argument_list|(
 name|EX_OSERR
 argument_list|,
-literal|"ERROR: Cannot split a map "
-literal|"entry"
+literal|"ERROR: Cannot split a map entry"
 argument_list|)
 expr_stmt|;
 name|pcmnew
@@ -3972,8 +3964,7 @@ literal|1
 expr_stmt|;
 name|warnx
 argument_list|(
-literal|"WARNING: addr2line is needed"
-literal|"for source code information."
+literal|"WARNING: addr2line is needed for source code information."
 argument_list|)
 expr_stmt|;
 block|}
@@ -5127,8 +5118,7 @@ name|err
 argument_list|(
 name|EX_SOFTWARE
 argument_list|,
-literal|"ERROR: Unsupported executable type for "
-literal|"\"%s\""
+literal|"ERROR: Unsupported executable type for \"%s\""
 argument_list|,
 name|pmcstat_string_unintern
 argument_list|(
@@ -5355,8 +5345,7 @@ literal|0
 condition|)
 name|warnx
 argument_list|(
-literal|"WARNING: Log version 0x%x does not "
-literal|"match compiled version 0x%x."
+literal|"WARNING: Log version 0x%x does not match compiled version 0x%x."
 argument_list|,
 name|ev
 operator|.
@@ -6167,8 +6156,7 @@ name|err
 argument_list|(
 name|EX_DATAERR
 argument_list|,
-literal|"ERROR: event parsing failed (record %jd, "
-literal|"offset 0x%jx)"
+literal|"ERROR: event parsing failed (record %jd, offset 0x%jx)"
 argument_list|,
 operator|(
 name|uintmax_t
@@ -6414,8 +6402,7 @@ literal|0
 condition|)
 name|warnx
 argument_list|(
-literal|"WARNING: Log version 0x%x != expected "
-literal|"version 0x%x."
+literal|"WARNING: Log version 0x%x != expected version 0x%x."
 argument_list|,
 name|ev
 operator|.
@@ -6923,8 +6910,7 @@ name|errx
 argument_list|(
 name|EX_DATAERR
 argument_list|,
-literal|"ERROR: event parsing failed "
-literal|"(record %jd, offset 0x%jx)."
+literal|"ERROR: event parsing failed (record %jd, offset 0x%jx)."
 argument_list|,
 operator|(
 name|uintmax_t

@@ -1440,8 +1440,8 @@ name|errx
 argument_list|(
 name|EX_CANTCREAT
 argument_list|,
-literal|"ERROR: cannot create a "
-literal|"gmon file for \"%s\""
+literal|"ERROR: cannot create a gmon file for"
+literal|" \"%s\""
 argument_list|,
 name|name
 argument_list|)
@@ -2234,8 +2234,7 @@ literal|1
 condition|)
 name|warnx
 argument_list|(
-literal|"WARNING: profile \"%s\" "
-literal|"overflowed."
+literal|"WARNING: profile \"%s\" overflowed."
 argument_list|,
 name|pmcstat_string_unintern
 argument_list|(
