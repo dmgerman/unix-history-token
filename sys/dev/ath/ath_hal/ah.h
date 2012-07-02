@@ -457,7 +457,7 @@ name|HAL_CAP_MFP
 init|=
 literal|70
 block|,
-comment|/* Manangement Frame Protection in hardware */
+comment|/* Management Frame Protection in hardware */
 name|HAL_CAP_TS
 init|=
 literal|72
