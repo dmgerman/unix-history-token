@@ -468,7 +468,7 @@ init|=
 literal|75
 block|,
 comment|/* DMA FIFO support */
-name|HAL_CAP_RX_BUFSIZE
+name|HAL_CAP_RXBUFSIZE
 init|=
 literal|81
 block|,
