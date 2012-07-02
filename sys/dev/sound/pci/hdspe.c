@@ -1635,7 +1635,12 @@ name|sc
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|(
+name|bus_generic_attach
+argument_list|(
+name|dev
+argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -1933,6 +1938,13 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|devclass_t
+name|hdspe_devclass
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
@@ -1942,7 +1954,7 @@ name|pci
 argument_list|,
 name|hdspe_driver
 argument_list|,
-name|pcm_devclass
+name|hdspe_devclass
 argument_list|,
 literal|0
 argument_list|,
