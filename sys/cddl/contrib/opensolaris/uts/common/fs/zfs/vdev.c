@@ -190,50 +190,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* maximum scrub/resilver I/O queue per leaf vdev */
-end_comment
-
-begin_decl_stmt
-name|int
-name|zfs_scrub_limit
-init|=
-literal|10
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"vfs.zfs.scrub_limit"
-argument_list|,
-operator|&
-name|zfs_scrub_limit
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_vfs_zfs
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|scrub_limit
-argument_list|,
-name|CTLFLAG_RDTUN
-argument_list|,
-operator|&
-name|zfs_scrub_limit
-argument_list|,
-literal|0
-argument_list|,
-literal|"Maximum scrub/resilver I/O queue"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/*  * Given a vdev type, return the appropriate ops vector.  */
 end_comment
 
