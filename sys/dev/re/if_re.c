@@ -7344,10 +7344,7 @@ name|as
 argument_list|,
 name|eaddr
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|eaddr
-argument_list|)
+name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
 block|}
