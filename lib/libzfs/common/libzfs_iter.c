@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2010 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2010 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -1228,12 +1228,9 @@ name|arg
 parameter_list|)
 block|{
 name|char
+modifier|*
 name|buf
-index|[
-name|ZFS_MAXNAMELEN
-index|]
-decl_stmt|;
-name|char
+decl_stmt|,
 modifier|*
 name|comma_separated
 decl_stmt|,
@@ -1250,19 +1247,15 @@ name|ret
 init|=
 literal|0
 decl_stmt|;
-operator|(
-name|void
-operator|)
-name|strlcpy
-argument_list|(
 name|buf
+operator|=
+name|zfs_strdup
+argument_list|(
+name|fs_zhp
+operator|->
+name|zfs_hdl
 argument_list|,
 name|spec_orig
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|cp
@@ -1557,6 +1550,11 @@ name|err
 expr_stmt|;
 block|}
 block|}
+name|free
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ret

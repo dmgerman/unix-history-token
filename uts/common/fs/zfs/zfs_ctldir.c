@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -3318,22 +3318,11 @@ condition|)
 block|{
 name|err
 operator|=
-name|dmu_objset_snapshot
+name|dmu_objset_snapshot_one
 argument_list|(
 name|name
 argument_list|,
 name|dirname
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|B_FALSE
-argument_list|,
-name|B_FALSE
-argument_list|,
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 if|if

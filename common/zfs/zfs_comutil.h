@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -78,13 +78,17 @@ name|int
 name|zpl_version
 parameter_list|)
 function_decl|;
+define|#
+directive|define
+name|ZFS_NUM_LEGACY_HISTORY_EVENTS
+value|41
 specifier|extern
 specifier|const
 name|char
 modifier|*
 name|zfs_history_event_names
 index|[
-name|LOG_END
+name|ZFS_NUM_LEGACY_HISTORY_EVENTS
 index|]
 decl_stmt|;
 ifdef|#

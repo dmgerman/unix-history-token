@@ -1079,9 +1079,9 @@ argument_list|)
 expr_stmt|;
 name|spa_history_log_internal
 argument_list|(
-name|LOG_POOL_SCAN
-argument_list|,
 name|spa
+argument_list|,
+literal|"scan setup"
 argument_list|,
 name|tx
 argument_list|,
@@ -1284,9 +1284,9 @@ name|DSS_CANCELED
 expr_stmt|;
 name|spa_history_log_internal
 argument_list|(
-name|LOG_POOL_SCAN_DONE
-argument_list|,
 name|spa
+argument_list|,
+literal|"scan done"
 argument_list|,
 name|tx
 argument_list|,

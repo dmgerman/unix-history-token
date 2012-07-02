@@ -162,6 +162,8 @@ expr_stmt|;
 if|if
 condition|(
 name|dd
+operator|!=
+name|NULL
 condition|)
 name|tx
 operator|->

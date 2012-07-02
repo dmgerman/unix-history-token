@@ -3905,6 +3905,23 @@ block|}
 end_function
 
 begin_function
+name|uid_t
+name|crgetruid
+parameter_list|(
+name|cred_t
+modifier|*
+name|cr
+parameter_list|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
 name|gid_t
 name|crgetgid
 parameter_list|(

@@ -1009,6 +1009,15 @@ name|cr
 parameter_list|)
 function_decl|;
 specifier|extern
+name|uid_t
+name|crgetruid
+parameter_list|(
+name|cred_t
+modifier|*
+name|cr
+parameter_list|)
+function_decl|;
+specifier|extern
 name|gid_t
 name|crgetgid
 parameter_list|(

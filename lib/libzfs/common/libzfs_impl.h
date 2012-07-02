@@ -4,19 +4,19 @@ comment|/*  * CDDL HEADER SART  *  * The contents of this file are subject to th
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_LIBFS_IMPL_H
+name|_LIBZFS_IMPL_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_LIBFS_IMPL_H
+name|_LIBZFS_IMPL_H
 end_define
 
 begin_include
@@ -65,6 +65,12 @@ begin_include
 include|#
 directive|include
 file|<libshare.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<libzfs_core.h>
 end_include
 
 begin_include
@@ -168,10 +174,6 @@ name|libzfs_desc
 index|[
 literal|1024
 index|]
-decl_stmt|;
-name|char
-modifier|*
-name|libzfs_log_str
 decl_stmt|;
 name|int
 name|libzfs_printerr
@@ -917,7 +919,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _LIBFS_IMPL_H */
+comment|/* _LIBZFS_IMPL_H */
 end_comment
 
 end_unit
