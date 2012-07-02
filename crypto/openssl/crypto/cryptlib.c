@@ -1539,11 +1539,6 @@ break|break;
 case|case
 name|DLL_THREAD_DETACH
 case|:
-name|ERR_remove_state
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|DLL_PROCESS_DETACH

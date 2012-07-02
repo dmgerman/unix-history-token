@@ -215,6 +215,10 @@ define|#
 directive|define
 name|CMS_USE_KEYID
 value|0x10000
+define|#
+directive|define
+name|CMS_DEBUG_DECRYPT
+value|0x20000
 specifier|const
 name|ASN1_OBJECT
 modifier|*
