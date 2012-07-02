@@ -1892,7 +1892,12 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* XXX Hardwired to scan the bus for now */
+if|if
+condition|(
+name|targetid
+operator|==
+name|CAM_TARGET_WILDCARD
+condition|)
 name|ccb
 operator|->
 name|ccb_h
@@ -1900,6 +1905,15 @@ operator|.
 name|func_code
 operator|=
 name|XPT_SCAN_BUS
+expr_stmt|;
+else|else
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|func_code
+operator|=
+name|XPT_SCAN_TGT
 expr_stmt|;
 name|mps_dprint
 argument_list|(
