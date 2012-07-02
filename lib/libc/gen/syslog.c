@@ -1145,7 +1145,7 @@ expr_stmt|;
 name|connectlog
 argument_list|()
 expr_stmt|;
-comment|/* 	 * If the send() failed, there are two likely scenarios:  	 *  1) syslogd was restarted 	 *  2) /var/run/log is out of socket buffer space, which 	 *     in most cases means local DoS. 	 * We attempt to reconnect to /var/run/log to take care of 	 * case #1 and keep send()ing data to cover case #2 	 * to give syslogd a chance to empty its socket buffer. 	 * 	 * If we are working with a priveleged socket, then take 	 * only one attempt, because we don't want to freeze a 	 * critical application like su(1) or sshd(8). 	 * 	 */
+comment|/* 	 * If the send() failed, there are two likely scenarios:  	 *  1) syslogd was restarted 	 *  2) /var/run/log is out of socket buffer space, which 	 *     in most cases means local DoS. 	 * We attempt to reconnect to /var/run/log[priv] to take care of 	 * case #1 and keep send()ing data to cover case #2 	 * to give syslogd a chance to empty its socket buffer. 	 * 	 * If we are working with a priveleged socket, then take 	 * only one attempt, because we don't want to freeze a 	 * critical application like su(1) or sshd(8). 	 * 	 */
 if|if
 condition|(
 name|send
@@ -1178,6 +1178,13 @@ expr_stmt|;
 block|}
 do|do
 block|{
+if|if
+condition|(
+name|status
+operator|==
+name|CONNPRIV
+condition|)
+break|break;
 name|_usleep
 argument_list|(
 literal|1
@@ -1204,13 +1211,6 @@ argument_list|()
 expr_stmt|;
 return|return;
 block|}
-if|if
-condition|(
-name|status
-operator|==
-name|CONNPRIV
-condition|)
-break|break;
 block|}
 do|while
 condition|(
