@@ -10588,8 +10588,6 @@ decl_stmt|,
 name|pa_indx
 decl_stmt|,
 name|da_indx
-decl_stmt|,
-name|res
 decl_stmt|;
 name|u_long
 name|physmem_tunable
@@ -10618,6 +10616,8 @@ name|int
 name|hasbrokenint12
 decl_stmt|,
 name|i
+decl_stmt|,
+name|res
 decl_stmt|;
 name|u_int
 name|extmem
