@@ -432,7 +432,7 @@ begin_expr_stmt
 specifier|static
 name|VNET_DEFINE
 argument_list|(
-name|uint8_t
+name|u_int
 argument_list|,
 name|htcp_adaptive_backoff
 argument_list|)
@@ -445,7 +445,7 @@ begin_expr_stmt
 specifier|static
 name|VNET_DEFINE
 argument_list|(
-name|uint8_t
+name|u_int
 argument_list|,
 name|htcp_rtt_scaling
 argument_list|)
