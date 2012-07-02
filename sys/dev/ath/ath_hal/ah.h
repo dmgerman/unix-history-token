@@ -472,7 +472,7 @@ name|HAL_CAP_RXBUFSIZE
 init|=
 literal|81
 block|,
-name|HAL_CAP_NUM_MR_ENTRIES
+name|HAL_CAP_NUM_MR_RETRIES
 init|=
 literal|82
 block|,
