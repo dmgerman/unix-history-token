@@ -5665,10 +5665,6 @@ name|NPGPTD
 operator|+
 literal|1
 decl_stmt|;
-specifier|static
-name|int
-name|color
-decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -5784,8 +5780,7 @@ name|vm_page_alloc
 argument_list|(
 name|NULL
 argument_list|,
-name|color
-operator|++
+literal|0
 argument_list|,
 name|VM_ALLOC_NORMAL
 operator||
@@ -8785,10 +8780,6 @@ name|struct
 name|timeval
 name|lastprint
 decl_stmt|;
-specifier|static
-name|vm_pindex_t
-name|colour
-decl_stmt|;
 name|struct
 name|vpgqueues
 modifier|*
@@ -9045,7 +9036,7 @@ name|vm_page_alloc
 argument_list|(
 name|NULL
 argument_list|,
-name|colour
+literal|0
 argument_list|,
 operator|(
 name|pq
@@ -9168,9 +9159,6 @@ argument_list|(
 name|pc_chunk_allocs
 operator|++
 argument_list|)
-expr_stmt|;
-name|colour
-operator|++
 expr_stmt|;
 name|pc
 operator|=

@@ -1211,11 +1211,6 @@ name|i
 operator|++
 control|)
 block|{
-name|int
-name|color
-init|=
-literal|0
-decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -1225,8 +1220,7 @@ name|vm_page_alloc
 argument_list|(
 name|NULL
 argument_list|,
-name|color
-operator|++
+literal|0
 argument_list|,
 name|VM_ALLOC_NORMAL
 operator||
