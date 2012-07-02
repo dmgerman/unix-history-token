@@ -1174,6 +1174,10 @@ name|y_mem
 operator|=
 literal|3
 expr_stmt|;
+name|y_arc
+operator|=
+literal|4
+expr_stmt|;
 name|y_swap
 operator|=
 literal|4
@@ -1216,7 +1220,13 @@ name|pcpu_stats
 condition|)
 block|{
 name|y_mem
-operator|=
+operator|+=
+name|ncpus
+operator|-
+literal|1
+expr_stmt|;
+name|y_arc
+operator|+=
 name|ncpus
 operator|-
 literal|1
