@@ -3393,7 +3393,7 @@ name|SSL_R_BAD_PACKET_LENGTH
 argument_list|)
 expr_stmt|;
 goto|goto
-name|err
+name|f_err
 goto|;
 block|}
 return|return
@@ -7293,8 +7293,6 @@ block|{
 comment|/* need at least ticket_lifetime_hint + ticket length */
 name|al
 operator|=
-name|SSL3_AL_FATAL
-operator|,
 name|SSL_AD_DECODE_ERROR
 expr_stmt|;
 name|SSLerr
@@ -7351,8 +7349,6 @@ condition|)
 block|{
 name|al
 operator|=
-name|SSL3_AL_FATAL
-operator|,
 name|SSL_AD_DECODE_ERROR
 expr_stmt|;
 name|SSLerr
