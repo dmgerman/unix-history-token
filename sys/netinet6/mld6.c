@@ -3215,35 +3215,9 @@ name|mld_addr
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * General Queries SHOULD be directed to ff02::1. 		 * A general query with a source list has undefined 		 * behaviour; discard it. 		 */
-name|struct
-name|in6_addr
-name|dst
-decl_stmt|;
-name|dst
-operator|=
-name|ip6
-operator|->
-name|ip6_dst
-expr_stmt|;
-name|in6_clearscope
-argument_list|(
-operator|&
-name|dst
-argument_list|)
-expr_stmt|;
+comment|/* 		 * A general query with a source list has undefined 		 * behaviour; discard it. 		 */
 if|if
 condition|(
-operator|!
-name|IN6_ARE_ADDR_EQUAL
-argument_list|(
-operator|&
-name|dst
-argument_list|,
-operator|&
-name|in6addr_linklocal_allnodes
-argument_list|)
-operator|||
 name|nsrc
 operator|>
 literal|0
