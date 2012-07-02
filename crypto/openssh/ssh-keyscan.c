@@ -257,11 +257,13 @@ name|int
 name|get_keytypes
 init|=
 name|KT_RSA
+operator||
+name|KT_ECDSA
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Get only RSA keys by default */
+comment|/* Get RSA and ECDSA keys by default */
 end_comment
 
 begin_decl_stmt
