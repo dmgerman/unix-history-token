@@ -4065,21 +4065,6 @@ name|v_bytes_out
 operator|=
 literal|0
 expr_stmt|;
-name|bzero
-argument_list|(
-operator|&
-name|vifp
-operator|->
-name|v_route
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|vifp
-operator|->
-name|v_route
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* Adjust numvifs up if the vifi is higher than numvifs */
 if|if
 condition|(
@@ -7446,10 +7431,7 @@ name|m
 argument_list|,
 name|NULL
 argument_list|,
-operator|&
-name|vifp
-operator|->
-name|v_route
+name|NULL
 argument_list|,
 name|IP_FORWARDING
 argument_list|,
