@@ -321,6 +321,10 @@ init|=
 literal|28
 block|,
 comment|/* 11d beacon support for changing cc */
+name|HAL_CAP_PCIE_PS
+init|=
+literal|29
+block|,
 name|HAL_CAP_HT
 init|=
 literal|30
@@ -356,6 +360,18 @@ init|=
 literal|38
 block|,
 comment|/* hardware supports carrier sense timeout */
+name|HAL_CAP_RIFS_RX
+init|=
+literal|39
+block|,
+name|HAL_CAP_RIFS_TX
+init|=
+literal|40
+block|,
+name|HAL_CAP_FORCE_PPM
+init|=
+literal|41
+block|,
 name|HAL_CAP_RTS_AGGR_LIMIT
 init|=
 literal|42
@@ -401,11 +417,74 @@ init|=
 literal|51
 block|,
 comment|/* Regulatory domain flags */
+name|HAL_CAP_BB_RIFS_HANG
+init|=
+literal|52
+block|,
+name|HAL_CAP_RIFS_RX_ENABLED
+init|=
+literal|53
+block|,
+name|HAL_CAP_BB_DFS_HANG
+init|=
+literal|54
+block|,
 name|HAL_CAP_BT_COEX
 init|=
 literal|60
 block|,
 comment|/* hardware is capable of bluetooth coexistence */
+name|HAL_CAP_DYNAMIC_SMPS
+init|=
+literal|61
+block|,
+comment|/* Dynamic MIMO Power Save hardware support */
+name|HAL_CAP_DS
+init|=
+literal|67
+block|,
+comment|/* 2 stream */
+name|HAL_CAP_BB_RX_CLEAR_STUCK_HANG
+init|=
+literal|68
+block|,
+name|HAL_CAP_MAC_HANG
+init|=
+literal|69
+block|,
+comment|/* can MAC hang */
+name|HAL_CAP_MFP
+init|=
+literal|70
+block|,
+comment|/* Manangement Frame Protection in hardware */
+name|HAL_CAP_TS
+init|=
+literal|72
+block|,
+comment|/* 3 stream */
+name|HAL_CAP_ENHANCED_DMA_SUPPORT
+init|=
+literal|75
+block|,
+comment|/* DMA FIFO support */
+name|HAL_CAP_RX_BUFSIZE
+init|=
+literal|81
+block|,
+name|HAL_CAP_NUM_MR_ENTRIES
+init|=
+literal|82
+block|,
+name|HAL_CAP_OL_PWRCTRL
+init|=
+literal|84
+block|,
+comment|/* Open loop TX power control */
+name|HAL_CAP_BB_PANIC_WATCHDOG
+init|=
+literal|92
+block|,
 name|HAL_CAP_HT20_SGI
 init|=
 literal|96
@@ -437,11 +516,6 @@ init|=
 literal|235
 block|,
 comment|/* can baseband hang */
-name|HAL_CAP_MAC_HANG
-init|=
-literal|236
-block|,
-comment|/* can MAC hang */
 name|HAL_CAP_INTRMASK
 init|=
 literal|237

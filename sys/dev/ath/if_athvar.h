@@ -4051,6 +4051,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|ath_hal_hasedma
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_ENHANCED_DMA_SUPPORT,	\ 	0, NULL) == HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ath_hal_getchannoise
 parameter_list|(
 name|_ah
