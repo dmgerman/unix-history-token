@@ -366,7 +366,7 @@ block|}
 end_function
 
 begin_comment
-comment|// XXX only for multiples of 32 bytes, non overlapped.
+comment|// XXX only for multiples of 64 bytes, non overlapped.
 end_comment
 
 begin_function
