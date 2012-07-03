@@ -4073,7 +4073,7 @@ name|E2FS_MAGIC
 condition|)
 name|panic
 argument_list|(
-literal|"ext2fs_statvfs"
+literal|"ext2fs_statfs"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Compute the overhead (FS structures) 	 */
