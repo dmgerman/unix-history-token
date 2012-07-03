@@ -8216,14 +8216,7 @@ name|inm_ifma
 operator|->
 name|ifma_ifp
 expr_stmt|;
-if|if
-condition|(
-name|ifp
-operator|!=
-name|NULL
-condition|)
-block|{
-comment|/* 		 * Sanity check that netinet's notion of ifp is the 		 * same as net's. 		 */
+comment|/* 	 * Sanity check that netinet's notion of ifp is the 	 * same as net's. 	 */
 name|KASSERT
 argument_list|(
 name|inm
@@ -8239,7 +8232,6 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-block|}
 name|IGMP_LOCK
 argument_list|()
 expr_stmt|;
