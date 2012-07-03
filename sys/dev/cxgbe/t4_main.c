@@ -4802,7 +4802,7 @@ begin_define
 define|#
 directive|define
 name|T4_CAP_ENABLE
-value|(T4_CAP)
+value|(T4_CAP& ~IFCAP_TSO6)
 end_define
 
 begin_function
