@@ -369,6 +369,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/ath/if_ath_rx_edma.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/ath/if_ath_beacon.h>
 end_include
 
@@ -1876,6 +1882,27 @@ name|ath_debug
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * Setup the DMA/EDMA functions based on the current 	 * hardware support. 	 * 	 * This is required before the descriptors are allocated. 	 */
+if|if
+condition|(
+name|ath_hal_hasedma
+argument_list|(
+name|sc
+operator|->
+name|sc_ah
+argument_list|)
+condition|)
+name|ath_recv_setup_edma
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+else|else
+name|ath_recv_setup_legacy
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Check if the MAC has multi-rate retry support. 	 * We do this by trying to setup a fake extended 	 * descriptor.  MAC's that don't have support will 	 * return false w/o doing anything.  MAC's that do 	 * support it will return true w/o doing anything. 	 */
 name|sc
 operator|->
@@ -2180,7 +2207,11 @@ name|sc_rxtask
 argument_list|,
 literal|0
 argument_list|,
-name|ath_rx_tasklet
+name|sc
+operator|->
+name|sc_rx
+operator|.
+name|recv_tasklet
 argument_list|,
 name|sc
 argument_list|)
@@ -8781,11 +8812,9 @@ name|ATH_RESET_NOLOSS
 operator|)
 argument_list|)
 expr_stmt|;
-name|ath_rx_proc
+name|ath_rx_flush
 argument_list|(
 name|sc
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|ath_settkipmic
@@ -17380,11 +17409,9 @@ argument_list|)
 expr_stmt|;
 comment|/* turn off frame recv */
 comment|/* 		 * First, handle completed TX/RX frames. 		 */
-name|ath_rx_proc
+name|ath_rx_flush
 argument_list|(
 name|sc
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|ath_draintxq
