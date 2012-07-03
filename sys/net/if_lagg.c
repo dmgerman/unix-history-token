@@ -4282,6 +4282,16 @@ operator|==
 name|NULL
 condition|)
 return|return;
+comment|/* If the ifnet is just being renamed, don't do anything. */
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_RENAMING
+condition|)
+return|return;
 name|sc
 operator|=
 name|lp
