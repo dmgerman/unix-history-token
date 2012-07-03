@@ -11772,7 +11772,7 @@ operator|->
 name|ifma_addr
 operator|->
 name|sa_family
-operator|==
+operator|!=
 name|AF_LINK
 condition|)
 continue|continue;
