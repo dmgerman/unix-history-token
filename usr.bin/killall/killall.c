@@ -1533,16 +1533,12 @@ control|)
 block|{
 if|if
 condition|(
-operator|(
 name|procs
 index|[
 name|i
 index|]
 operator|.
 name|ki_stat
-operator|&
-name|SZOMB
-operator|)
 operator|==
 name|SZOMB
 operator|&&
