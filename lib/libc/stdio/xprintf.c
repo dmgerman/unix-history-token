@@ -3346,7 +3346,6 @@ name|int
 name|register_printf_render_std
 parameter_list|(
 specifier|const
-name|unsigned
 name|char
 modifier|*
 name|specs
