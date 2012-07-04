@@ -972,7 +972,7 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-comment|/* 			 * The encryption key is: ekey = HMAC_SHA512(Master-Key, 0x10) 			 */
+comment|/* 			 * The encryption key is: ekey = HMAC_SHA512(Data-Key, 0x10) 			 */
 name|g_eli_crypto_hmac
 argument_list|(
 name|mkey
