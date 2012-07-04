@@ -286,7 +286,7 @@ name|defined
 argument_list|(
 name|SORT_THREADS
 argument_list|)
-literal|"[--nthreads thread_no] "
+literal|"[--parallel thread_no] "
 endif|#
 directive|endif
 literal|"[--human-numeric-sort] "
@@ -431,7 +431,7 @@ name|defined
 argument_list|(
 name|SORT_THREADS
 argument_list|)
-name|NTHREADS_OPT
+name|PARALLEL_OPT
 block|,
 endif|#
 directive|endif
@@ -728,13 +728,13 @@ argument_list|(
 name|SORT_THREADS
 argument_list|)
 block|{
-literal|"nthreads"
+literal|"parallel"
 block|,
 name|required_argument
 block|,
 name|NULL
 block|,
-name|NTHREADS_OPT
+name|PARALLEL_OPT
 block|}
 block|,
 endif|#
@@ -5177,7 +5177,7 @@ argument_list|(
 name|SORT_THREADS
 argument_list|)
 case|case
-name|NTHREADS_OPT
+name|PARALLEL_OPT
 case|:
 name|nthreads
 operator|=

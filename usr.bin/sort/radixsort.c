@@ -112,6 +112,13 @@ end_include
 begin_define
 define|#
 directive|define
+name|DEFAULT_SORT_FUNC_RADIXSORT
+value|mergesort
+end_define
+
+begin_define
+define|#
+directive|define
 name|TINY_NODE
 parameter_list|(
 name|sl
@@ -1518,7 +1525,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|qsort
+name|DEFAULT_SORT_FUNC_RADIXSORT
 argument_list|(
 name|sl
 operator|->
@@ -1770,7 +1777,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|qsort
+name|DEFAULT_SORT_FUNC_RADIXSORT
 argument_list|(
 name|sl
 operator|->
@@ -1820,7 +1827,7 @@ operator|.
 name|complex_sort
 condition|)
 block|{
-name|qsort
+name|DEFAULT_SORT_FUNC_RADIXSORT
 argument_list|(
 name|sl
 operator|->
@@ -2499,7 +2506,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|qsort
+name|DEFAULT_SORT_FUNC_RADIXSORT
 argument_list|(
 name|sl
 operator|->
@@ -2549,7 +2556,7 @@ operator|.
 name|complex_sort
 condition|)
 block|{
-name|qsort
+name|DEFAULT_SORT_FUNC_RADIXSORT
 argument_list|(
 name|sl
 operator|->
