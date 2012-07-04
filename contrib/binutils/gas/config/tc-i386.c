@@ -2627,6 +2627,14 @@ name|PROCESSOR_UNKNOWN
 block|,
 name|CpuABM
 block|}
+block|,
+block|{
+literal|".xsave"
+block|,
+name|PROCESSOR_UNKNOWN
+block|,
+name|CpuXSAVE
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt
