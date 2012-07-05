@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<elf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -136,6 +142,12 @@ end_include
 begin_comment
 comment|/* from ../../../contrib/tzcode/stdtime */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"libc_private.h"
+end_include
 
 begin_define
 define|#
@@ -2358,6 +2370,31 @@ case|:
 case|case
 name|_SC_NPROCESSORS_ONLN
 case|:
+if|if
+condition|(
+name|_elf_aux_info
+argument_list|(
+name|AT_NCPUS
+argument_list|,
+operator|&
+name|value
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|value
+argument_list|)
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+operator|(
+name|long
+operator|)
+name|value
+operator|)
+return|;
 name|mib
 index|[
 literal|0
