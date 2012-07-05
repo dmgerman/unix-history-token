@@ -4069,13 +4069,6 @@ operator|->
 name|vlan_detach
 argument_list|)
 expr_stmt|;
-name|ether_ifdetach
-argument_list|(
-name|adapter
-operator|->
-name|ifp
-argument_list|)
-expr_stmt|;
 name|callout_drain
 argument_list|(
 operator|&
@@ -4885,9 +4878,9 @@ operator|->
 name|tq
 argument_list|,
 operator|&
-name|que
+name|txr
 operator|->
-name|que_task
+name|txq_task
 argument_list|)
 expr_stmt|;
 block|}
