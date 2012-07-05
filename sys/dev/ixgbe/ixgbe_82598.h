@@ -39,9 +39,6 @@ name|struct
 name|ixgbe_hw
 modifier|*
 name|hw
-parameter_list|,
-name|s32
-name|packetbuf_num
 parameter_list|)
 function_decl|;
 end_function_decl

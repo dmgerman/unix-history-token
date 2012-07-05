@@ -45,7 +45,7 @@ name|char
 name|ixv_driver_version
 index|[]
 init|=
-literal|"1.1.2"
+literal|"1.1.4"
 decl_stmt|;
 end_decl_stmt
 
@@ -1989,6 +1989,9 @@ operator|->
 name|fc
 operator|.
 name|low_water
+index|[
+literal|0
+index|]
 operator|=
 name|IXV_FC_LO
 expr_stmt|;
@@ -10393,7 +10396,7 @@ expr_stmt|;
 name|txctrl
 operator|&=
 operator|~
-name|IXGBE_DCA_TXCTRL_TX_WB_RO_EN
+name|IXGBE_DCA_TXCTRL_DESC_WRO_EN
 expr_stmt|;
 name|IXGBE_WRITE_REG
 argument_list|(
@@ -18112,8 +18115,6 @@ operator|&
 name|adapter
 operator|->
 name|hw
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return

@@ -137,6 +137,20 @@ parameter_list|)
 value|if(!(x)) panic("IXGBE: x")
 end_define
 
+begin_define
+define|#
+directive|define
+name|EWARN
+parameter_list|(
+name|H
+parameter_list|,
+name|W
+parameter_list|,
+name|S
+parameter_list|)
+value|printf(W)
+end_define
+
 begin_comment
 comment|/* The happy-fun DELAY macro is defined in /usr/src/sys/i386/include/clock.h */
 end_comment
@@ -584,6 +598,52 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* shared code requires this */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__le16
+value|u16
+end_define
+
+begin_define
+define|#
+directive|define
+name|__le32
+value|u32
+end_define
+
+begin_define
+define|#
+directive|define
+name|__le64
+value|u64
+end_define
+
+begin_define
+define|#
+directive|define
+name|__be16
+value|u16
+end_define
+
+begin_define
+define|#
+directive|define
+name|__be32
+value|u32
+end_define
+
+begin_define
+define|#
+directive|define
+name|__be64
+value|u64
+end_define
 
 begin_define
 define|#
