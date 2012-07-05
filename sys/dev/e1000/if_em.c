@@ -3895,6 +3895,10 @@ literal|"eee_control"
 argument_list|,
 literal|"enable Energy Efficient Ethernet"
 argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
 operator|&
 name|hw
 operator|->
