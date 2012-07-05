@@ -11534,17 +11534,6 @@ literal|"pmap_pv_demote_pde: pa is not 2mpage aligned"
 operator|)
 argument_list|)
 expr_stmt|;
-name|reserve_pv_entries
-argument_list|(
-name|pmap
-argument_list|,
-name|NPTEPG
-operator|-
-literal|1
-argument_list|,
-name|lockp
-argument_list|)
-expr_stmt|;
 name|CHANGE_PV_LIST_LOCK_TO_PHYS
 argument_list|(
 name|lockp
@@ -12859,6 +12848,28 @@ argument_list|,
 name|newpte
 argument_list|)
 expr_stmt|;
+comment|/* 	 * The spare PV entries must be reserved prior to demoting the 	 * mapping, that is, prior to changing the PDE.  Otherwise, the state 	 * of the PDE and the PV lists will be inconsistent, which can result 	 * in reclaim_pv_chunk() attempting to remove a PV entry from the 	 * wrong PV list and pmap_pv_demote_pde() failing to find the expected 	 * PV entry for the 2MB page mapping that is being demoted. 	 */
+if|if
+condition|(
+operator|(
+name|oldpde
+operator|&
+name|PG_MANAGED
+operator|)
+operator|!=
+literal|0
+condition|)
+name|reserve_pv_entries
+argument_list|(
+name|pmap
+argument_list|,
+name|NPTEPG
+operator|-
+literal|1
+argument_list|,
+name|lockp
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Demote the mapping.  This pmap is locked.  The old PDE has 	 * PG_A set.  If the old PDE has PG_RW set, it also has PG_M 	 * set.  Thus, there is no danger of a race with another 	 * processor changing the setting of PG_A and/or PG_M between 	 * the read above and the store below.  	 */
 if|if
 condition|(
@@ -12903,7 +12914,7 @@ name|va
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Demote the pv entry.  This depends on the earlier demotion 	 * of the mapping.  Specifically, the (re)creation of a per- 	 * page pv entry might trigger the execution of reclaim_pv_chunk(), 	 * which might reclaim a newly (re)created per-page pv entry 	 * and destroy the associated mapping.  In order to destroy 	 * the mapping, the PDE must have already changed from mapping 	 * the 2mpage to referencing the page table page. 	 */
+comment|/* 	 * Demote the PV entry. 	 */
 if|if
 condition|(
 operator|(
