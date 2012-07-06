@@ -198,12 +198,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/md_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/rman.h>
 end_include
 
@@ -6611,7 +6605,7 @@ argument_list|(
 operator|(
 name|vm_paddr_t
 operator|)
-name|Maxmem
+name|realmem
 argument_list|)
 operator|>
 operator|(
