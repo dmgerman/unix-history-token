@@ -3259,7 +3259,6 @@ elseif|else
 if|if
 condition|(
 operator|(
-operator|(
 name|m
 operator|->
 name|aflags
@@ -3268,7 +3267,6 @@ name|PGA_REFERENCED
 operator|)
 operator|==
 literal|0
-operator|)
 operator|&&
 operator|(
 name|actcount
@@ -3278,6 +3276,8 @@ argument_list|(
 name|m
 argument_list|)
 operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|vm_page_activate
