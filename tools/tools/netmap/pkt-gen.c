@@ -2202,7 +2202,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|,
-name|n
+name|pkts_per_td
 init|=
 name|targ
 operator|->
@@ -2217,6 +2217,11 @@ operator|->
 name|nthreads
 decl_stmt|,
 name|sent
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|continuous
 init|=
 literal|0
 decl_stmt|;
@@ -2236,6 +2241,22 @@ argument_list|(
 literal|"start"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pkts_per_td
+operator|==
+literal|0
+condition|)
+block|{
+name|continuous
+operator|=
+literal|1
+expr_stmt|;
+name|pkts_per_td
+operator|=
+literal|100000
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|setaffinity
@@ -2341,14 +2362,18 @@ name|i
 operator|=
 literal|0
 init|;
+operator|(
 name|sent
 operator|<
-name|n
+name|pkts_per_td
 operator|&&
 operator|!
 name|targ
 operator|->
 name|cancel
+operator|)
+operator|||
+name|continuous
 condition|;
 name|i
 operator|++
@@ -2397,7 +2422,9 @@ while|while
 condition|(
 name|sent
 operator|<
-name|n
+name|pkts_per_td
+operator|||
+name|continuous
 condition|)
 block|{
 comment|/* 		 * wait for available room in the send queue(s) 		 */
@@ -2486,19 +2513,29 @@ name|m
 decl_stmt|,
 name|limit
 init|=
-name|MIN
-argument_list|(
-name|n
-operator|-
-name|sent
-argument_list|,
 name|targ
 operator|->
 name|g
 operator|->
 name|burst
-argument_list|)
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|continuous
+operator|&&
+name|pkts_per_td
+operator|-
+name|sent
+operator|<
+name|limit
+condition|)
+name|limit
+operator|=
+name|pkts_per_td
+operator|-
+name|sent
+expr_stmt|;
 name|txring
 operator|=
 name|NETMAP_TXRING
@@ -2943,11 +2980,13 @@ name|POLLIN
 operator|)
 expr_stmt|;
 comment|/* unbounded wait for the first packet. */
-for|for
-control|(
-init|;
-condition|;
-control|)
+while|while
+condition|(
+operator|!
+name|targ
+operator|->
+name|cancel
+condition|)
 block|{
 name|i
 operator|=
@@ -3477,7 +3516,7 @@ argument_list|,
 literal|"Usage:\n"
 literal|"%s arguments\n"
 literal|"\t-i interface		interface name\n"
-literal|"\t-t pkts_to_send	also forces send mode\n"
+literal|"\t-t pkts_to_send	also forces send mode, 0 = continuous\n"
 literal|"\t-r pkts_to_receive	also forces receive mode\n"
 literal|"\t-l pkts_size		in bytes excluding CRC\n"
 literal|"\t-d dst-ip		end with %%n to sweep n addresses\n"
