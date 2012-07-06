@@ -6032,11 +6032,11 @@ name|INVALID
 block|,
 name|INVALID
 block|,
-name|TNS
+name|TS
 argument_list|(
 literal|"nopw"
 argument_list|,
-name|M
+name|Mw
 argument_list|)
 block|, }
 block|,
