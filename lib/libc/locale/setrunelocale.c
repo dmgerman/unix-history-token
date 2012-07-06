@@ -168,13 +168,6 @@ end_function_decl
 begin_define
 define|#
 directive|define
-name|__collate_load_error
-value|(table->__collate_load_error)
-end_define
-
-begin_define
-define|#
-directive|define
 name|__collate_substitute_nontrivial
 value|(table->__collate_substitute_nontrivial)
 end_define
