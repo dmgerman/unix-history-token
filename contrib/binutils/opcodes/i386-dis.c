@@ -1273,6 +1273,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|Mo
+value|{ OP_M, o_mode }
+end_define
+
+begin_define
+define|#
+directive|define
 name|Mp
 value|{ OP_M, f_mode }
 end_define
@@ -3490,6 +3497,20 @@ define|#
 directive|define
 name|PREGRP97
 value|NULL, { { NULL, USE_PREFIX_USER_TABLE }, { NULL, 97 } }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PREGRP98
+value|NULL, { { NULL, USE_PREFIX_USER_TABLE }, { NULL, 98 } }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PREGRP99
+value|NULL, { { NULL, USE_PREFIX_USER_TABLE }, { NULL, 99 } }
 end_define
 
 begin_define
@@ -21117,6 +21138,80 @@ name|XX
 block|}
 block|}
 block|,   }
+block|,
+comment|/* PREGRP98 */
+block|{
+block|{
+literal|"(bad)"
+block|,
+block|{
+name|XX
+block|}
+block|}
+block|,
+block|{
+literal|"(bad)"
+block|,
+block|{
+name|XX
+block|}
+block|}
+block|,
+block|{
+literal|"invept"
+block|,
+block|{
+name|Gm
+block|,
+name|Mo
+block|}
+block|}
+block|,
+block|{
+literal|"(bad)"
+block|,
+block|{
+name|XX
+block|}
+block|}
+block|,   }
+block|,
+comment|/* PREGRP99 */
+block|{
+block|{
+literal|"(bad)"
+block|,
+block|{
+name|XX
+block|}
+block|}
+block|,
+block|{
+literal|"(bad)"
+block|,
+block|{
+name|XX
+block|}
+block|}
+block|,
+block|{
+literal|"invvpid"
+block|,
+block|{
+name|Gm
+block|,
+name|Mo
+block|}
+block|}
+block|,
+block|{
+literal|"(bad)"
+block|,
+block|{
+name|XX
+block|}
+block|}
+block|,   }
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -22176,19 +22271,11 @@ block|}
 block|,
 comment|/* 80 */
 block|{
-literal|"(bad)"
-block|,
-block|{
-name|XX
-block|}
+name|PREGRP98
 block|}
 block|,
 block|{
-literal|"(bad)"
-block|,
-block|{
-name|XX
-block|}
+name|PREGRP99
 block|}
 block|,
 block|{
@@ -37078,7 +37165,7 @@ name|mod
 operator|==
 literal|3
 condition|)
-comment|/* bad bound,lea,lds,les,lfs,lgs,lss,cmpxchg8b,vmptrst modrm */
+comment|/* bad bound,lea,lds,les,lfs,lgs,lss,cmpxchg8b,vmptrst,invept,invvpid modrm */
 name|BadOp
 argument_list|()
 expr_stmt|;
