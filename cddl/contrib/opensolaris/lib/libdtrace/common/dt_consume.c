@@ -3924,6 +3924,10 @@ argument_list|)
 argument_list|,
 literal|">= %lld"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|value
 argument_list|)
 expr_stmt|;
