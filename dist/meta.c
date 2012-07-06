@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*      $NetBSD: meta.c,v 1.24 2011/09/21 14:30:47 christos Exp $ */
+comment|/*      $NetBSD: meta.c,v 1.25 2012/06/27 17:22:58 sjg Exp $ */
 end_comment
 
 begin_comment
@@ -268,6 +268,15 @@ begin_decl_stmt
 specifier|extern
 name|Boolean
 name|comatMake
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+modifier|*
+name|environ
 decl_stmt|;
 end_decl_stmt
 
@@ -1602,12 +1611,6 @@ modifier|*
 name|gn
 parameter_list|)
 block|{
-specifier|extern
-name|char
-modifier|*
-modifier|*
-name|environ
-decl_stmt|;
 name|meta_file_t
 name|mf
 decl_stmt|;

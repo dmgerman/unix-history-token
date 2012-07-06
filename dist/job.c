@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: job.c,v 1.162 2012/06/12 19:21:50 joerg Exp $	*/
+comment|/*	$NetBSD: job.c,v 1.163 2012/07/03 21:03:40 sjg Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: job.c,v 1.162 2012/06/12 19:21:50 joerg Exp $"
+literal|"$NetBSD: job.c,v 1.163 2012/07/03 21:03:40 sjg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: job.c,v 1.162 2012/06/12 19:21:50 joerg Exp $"
+literal|"$NetBSD: job.c,v 1.163 2012/07/03 21:03:40 sjg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -8344,7 +8344,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 	 * If no path was given, the user wants one of the pre-defined shells, 	 * yes? So we find the one s/he wants with the help of JobMatchShell 	 * and set things up the right way. shellPath will be set up by 	 * Job_Init. 	 */
+comment|/* 	 * If no path was given, the user wants one of the pre-defined shells, 	 * yes? So we find the one s/he wants with the help of JobMatchShell 	 * and set things up the right way. shellPath will be set up by 	 * Shell_Init. 	 */
 if|if
 condition|(
 name|newShell
@@ -8422,6 +8422,28 @@ name|newShell
 operator|.
 name|name
 expr_stmt|;
+if|if
+condition|(
+name|shellPath
+condition|)
+block|{
+comment|/* Shell_Init has already been called!  Do it again. */
+name|free
+argument_list|(
+name|UNCONST
+argument_list|(
+name|shellPath
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|shellPath
+operator|=
+name|NULL
+expr_stmt|;
+name|Shell_Init
+argument_list|()
+expr_stmt|;
+block|}
 block|}
 block|}
 else|else
