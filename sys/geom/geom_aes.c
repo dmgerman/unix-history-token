@@ -1069,21 +1069,6 @@ expr_stmt|;
 name|g_topology_assert
 argument_list|()
 expr_stmt|;
-name|KASSERT
-argument_list|(
-name|cp
-operator|->
-name|provider
-operator|->
-name|error
-operator|!=
-literal|0
-argument_list|,
-operator|(
-literal|"g_aes_orphan with error == 0"
-operator|)
-argument_list|)
-expr_stmt|;
 name|gp
 operator|=
 name|cp
@@ -1100,11 +1085,7 @@ name|g_wither_geom
 argument_list|(
 name|gp
 argument_list|,
-name|cp
-operator|->
-name|provider
-operator|->
-name|error
+name|ENXIO
 argument_list|)
 expr_stmt|;
 name|bzero
