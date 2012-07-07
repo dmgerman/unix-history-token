@@ -164,6 +164,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/board.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -1474,6 +1480,52 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ARM_MANY_BOARD
+end_ifdef
+
+begin_comment
+comment|/* likely belongs in arm/arm/machdep.c, but since board_init is still at91 only... */
+end_comment
+
+begin_expr_stmt
+name|SET_DECLARE
+argument_list|(
+name|arm_board_set
+argument_list|,
+specifier|const
+expr|struct
+name|arm_board
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* Not yet fully functional, but enough to build ATMEL config */
+end_comment
+
+begin_function
+specifier|static
+name|long
+name|board_init
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|-
+literal|1
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void

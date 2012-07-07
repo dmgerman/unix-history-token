@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/board.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<arm/at91/at91board.h>
 end_include
 
@@ -95,6 +101,7 @@ value|AT91SAM9G20_IRQ_PIOA
 end_define
 
 begin_function
+name|BOARD_INIT
 name|long
 name|board_init
 parameter_list|(
@@ -441,6 +448,16 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|ARM_BOARD
+argument_list|(
+name|QIL_A9G20
+argument_list|,
+literal|"Calico System QIL-9G20-Cxx"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

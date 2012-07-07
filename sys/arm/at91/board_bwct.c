@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/board.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<arm/at91/at91board.h>
 end_include
 
@@ -54,6 +60,7 @@ file|<arm/at91/at91_pio_rm9200.h>
 end_include
 
 begin_function
+name|BOARD_INIT
 name|long
 name|board_init
 parameter_list|(
@@ -131,6 +138,16 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|ARM_BOARD
+argument_list|(
+name|NONE
+argument_list|,
+literal|"BWCT special"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

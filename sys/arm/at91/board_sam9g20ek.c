@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/board.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<arm/at91/at91board.h>
 end_include
 
@@ -74,6 +80,7 @@ comment|//#include<arm/at91/at91_led.h>
 end_comment
 
 begin_function
+name|BOARD_INIT
 name|long
 name|board_init
 parameter_list|(
@@ -558,6 +565,16 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|ARM_BOARD
+argument_list|(
+name|AT91SAM9G20
+argument_list|,
+literal|"Atmel SAM9G20-EK Development Card"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 
