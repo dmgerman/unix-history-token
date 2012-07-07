@@ -147,6 +147,8 @@ name|ATTACH
 block|,
 name|DETACH
 block|,
+name|RESIZE
+block|,
 name|LIST
 block|}
 name|action
@@ -308,6 +310,7 @@ literal|"usage: mdconfig -a -t type [-n] [-o [no]option] ... [-f file]\n"
 literal|"                [-s size] [-S sectorsize] [-u unit]\n"
 literal|"                [-x sectors/track] [-y heads/cylinder]\n"
 literal|"       mdconfig -d -u unit [-o [no]force]\n"
+literal|"       mdconfig -r -u unit -s size [-o [no]force]\n"
 literal|"       mdconfig -l [-v] [-n] [-u unit]\n"
 literal|"       mdconfig file\n"
 argument_list|)
@@ -384,6 +387,11 @@ decl_stmt|;
 name|char
 modifier|*
 name|fflag
+init|=
+name|NULL
+decl_stmt|,
+modifier|*
+name|sflag
 init|=
 name|NULL
 decl_stmt|,
@@ -465,7 +473,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ab:df:lno:s:S:t:u:vx:y:"
+literal|"ab:df:lno:rs:S:t:u:vx:y:"
 argument_list|)
 operator|)
 operator|!=
@@ -495,7 +503,8 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"-a is mutually exclusive with -d and -l"
+literal|"-a is mutually exclusive "
+literal|"with -d, -r, and -l"
 argument_list|)
 expr_stmt|;
 name|action
@@ -520,12 +529,45 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"-d is mutually exclusive with -a and -l"
+literal|"-d is mutually exclusive "
+literal|"with -a, -r, and -l"
 argument_list|)
 expr_stmt|;
 name|action
 operator|=
 name|DETACH
+expr_stmt|;
+name|mdio
+operator|.
+name|md_options
+operator||=
+name|MD_AUTOUNIT
+expr_stmt|;
+break|break;
+case|case
+literal|'r'
+case|:
+if|if
+condition|(
+name|action
+operator|!=
+name|UNSET
+operator|&&
+name|action
+operator|!=
+name|RESIZE
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"-r is mutually exclusive "
+literal|"with -a, -d, and -l"
+argument_list|)
+expr_stmt|;
+name|action
+operator|=
+name|RESIZE
 expr_stmt|;
 name|mdio
 operator|.
@@ -551,7 +593,8 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"-l is mutually exclusive with -a and -d"
+literal|"-l is mutually exclusive "
+literal|"with -a, -r, and -d"
 argument_list|)
 expr_stmt|;
 name|action
@@ -972,6 +1015,23 @@ break|break;
 case|case
 literal|'s'
 case|:
+if|if
+condition|(
+name|sflag
+operator|!=
+name|NULL
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"-s can be passed only once"
+argument_list|)
+expr_stmt|;
+name|sflag
+operator|=
+name|optarg
+expr_stmt|;
 name|mdio
 operator|.
 name|md_mediasize
@@ -1279,11 +1339,9 @@ block|}
 elseif|else
 if|if
 condition|(
-name|mdio
-operator|.
-name|md_mediasize
+name|sflag
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 comment|/* Imply ``-t swap'' */
@@ -1459,11 +1517,9 @@ operator|==
 name|MD_SWAP
 operator|)
 operator|&&
-name|mdio
-operator|.
-name|md_mediasize
+name|sflag
 operator|==
-literal|0
+name|NULL
 condition|)
 name|errx
 argument_list|(
@@ -1516,17 +1572,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|mdio
-operator|.
-name|md_mediasize
+name|action
 operator|!=
-literal|0
+name|RESIZE
+operator|&&
+name|sflag
+operator|!=
+name|NULL
 condition|)
 name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"-s can only be used with -a"
+literal|"-s can only be used with -a and -r"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1600,9 +1658,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|action
 operator|!=
 name|DETACH
+operator|&&
+name|action
+operator|!=
+name|RESIZE
+operator|)
 operator|&&
 operator|(
 name|mdio
@@ -1619,7 +1683,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"-o can only be used with -a and -d"
+literal|"-o can only be used with -a, -d, and -r"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1650,7 +1714,54 @@ argument_list|,
 literal|"only -o [no]force can be used with -d"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|action
+operator|==
+name|RESIZE
+operator|&&
+operator|(
+name|mdio
+operator|.
+name|md_options
+operator|&
+operator|~
+operator|(
+name|MD_FORCE
+operator||
+name|MD_RESERVE
+operator||
+name|MD_AUTOUNIT
+operator|)
+operator|)
+operator|!=
+literal|0
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"only -o [no]force and -o [no]reserve can be used with -r"
+argument_list|)
+expr_stmt|;
 block|}
+if|if
+condition|(
+name|action
+operator|==
+name|RESIZE
+operator|&&
+name|sflag
+operator|==
+name|NULL
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"must specify -s for -r"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|action
@@ -1866,6 +1977,57 @@ argument_list|(
 name|fd
 argument_list|,
 name|MDIOCDETACH
+argument_list|,
+operator|&
+name|mdio
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|<
+literal|0
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"ioctl(/dev/%s)"
+argument_list|,
+name|MDCTL_NAME
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|action
+operator|==
+name|RESIZE
+condition|)
+block|{
+if|if
+condition|(
+name|mdio
+operator|.
+name|md_options
+operator|&
+name|MD_AUTOUNIT
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"-r requires -u"
+argument_list|)
+expr_stmt|;
+name|i
+operator|=
+name|ioctl
+argument_list|(
+name|fd
+argument_list|,
+name|MDIOCRESIZE
 argument_list|,
 operator|&
 name|mdio
