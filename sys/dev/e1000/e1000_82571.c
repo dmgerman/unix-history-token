@@ -6630,7 +6630,13 @@ condition|(
 name|state
 condition|)
 comment|/* 		 * Hold a copy of the LAA in RAR[14] This is done so that 		 * between the time RAR[0] gets clobbered and the time it 		 * gets fixed, the actual LAA is in one of the RARs and no 		 * incoming packets directed to this port are dropped. 		 * Eventually the LAA will be in RAR[0] and RAR[14]. 		 */
-name|e1000_rar_set_generic
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|rar_set
 argument_list|(
 name|hw
 argument_list|,

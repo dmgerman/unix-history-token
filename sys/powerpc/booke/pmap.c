@@ -13102,6 +13102,25 @@ argument_list|,
 name|_TLB_ENTRY_IO
 argument_list|)
 expr_stmt|;
+comment|/* Purge the remaining entries */
+for|for
+control|(
+name|i
+operator|=
+name|tlb1_idx
+init|;
+name|i
+operator|<
+name|TLB1_ENTRIES
+condition|;
+name|i
+operator|++
+control|)
+name|tlb1_write_entry
+argument_list|(
+name|i
+argument_list|)
+expr_stmt|;
 comment|/* Setup TLB miss defaults */
 name|set_mas4_defaults
 argument_list|()

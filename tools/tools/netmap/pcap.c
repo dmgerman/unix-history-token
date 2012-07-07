@@ -912,7 +912,8 @@ name|my_ring
 modifier|*
 name|me
 parameter_list|,
-name|int
+name|unsigned
+name|long
 name|what
 parameter_list|)
 block|{
@@ -1038,7 +1039,7 @@ condition|)
 block|{
 name|D
 argument_list|(
-literal|"ioctl 0x%x error %d"
+literal|"ioctl 0x%lx error %d"
 argument_list|,
 name|what
 argument_list|,

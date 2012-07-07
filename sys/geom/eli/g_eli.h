@@ -166,7 +166,7 @@ value|".eli"
 end_define
 
 begin_comment
-comment|/*  * Version history:  * 0 - Initial version number.  * 1 - Added data authentication support (md_aalgo field and  *     G_ELI_FLAG_AUTH flag).  * 2 - Added G_ELI_FLAG_READONLY.  * 3 - Added 'configure' subcommand.  * 4 - IV is generated from offset converted to little-endian  *     (the G_ELI_FLAG_NATIVE_BYTE_ORDER flag will be set for older versions).  * 5 - Added multiple encrypton keys and AES-XTS support.  * 6 - Fixed usage of multiple keys for authenticated providers (the  *     G_ELI_FLAG_FIRST_KEY flag will be set for older versions).  */
+comment|/*  * Version history:  * 0 - Initial version number.  * 1 - Added data authentication support (md_aalgo field and  *     G_ELI_FLAG_AUTH flag).  * 2 - Added G_ELI_FLAG_READONLY.  * 3 - Added 'configure' subcommand.  * 4 - IV is generated from offset converted to little-endian  *     (the G_ELI_FLAG_NATIVE_BYTE_ORDER flag will be set for older versions).  * 5 - Added multiple encrypton keys and AES-XTS support.  * 6 - Fixed usage of multiple keys for authenticated providers (the  *     G_ELI_FLAG_FIRST_KEY flag will be set for older versions).  * 7 - Encryption keys are now generated from the Data Key and not from the  *     IV Key (the G_ELI_FLAG_ENC_IVKEY flag will be set for older versions).  */
 end_comment
 
 begin_define
@@ -221,8 +221,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|G_ELI_VERSION_07
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
 name|G_ELI_VERSION
-value|G_ELI_VERSION_06
+value|G_ELI_VERSION_07
 end_define
 
 begin_comment
@@ -363,6 +370,17 @@ define|#
 directive|define
 name|G_ELI_FLAG_FIRST_KEY
 value|0x00200000
+end_define
+
+begin_comment
+comment|/* Provider uses IV-Key for encryption key generation. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|G_ELI_FLAG_ENC_IVKEY
+value|0x00400000
 end_define
 
 begin_define
@@ -1016,7 +1034,7 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|eli_metadata_encode_v1v2v3v4v5v6
+name|eli_metadata_encode_v1v2v3v4v5v6v7
 parameter_list|(
 name|struct
 name|g_eli_metadata
@@ -1345,7 +1363,10 @@ case|:
 case|case
 name|G_ELI_VERSION_06
 case|:
-name|eli_metadata_encode_v1v2v3v4v5v6
+case|case
+name|G_ELI_VERSION_07
+case|:
+name|eli_metadata_encode_v1v2v3v4v5v6v7
 argument_list|(
 name|md
 argument_list|,
@@ -1707,7 +1728,7 @@ begin_function
 specifier|static
 name|__inline
 name|int
-name|eli_metadata_decode_v1v2v3v4v5v6
+name|eli_metadata_decode_v1v2v3v4v5v6v7
 parameter_list|(
 specifier|const
 name|u_char
@@ -2102,9 +2123,12 @@ case|:
 case|case
 name|G_ELI_VERSION_06
 case|:
+case|case
+name|G_ELI_VERSION_07
+case|:
 name|error
 operator|=
-name|eli_metadata_decode_v1v2v3v4v5v6
+name|eli_metadata_decode_v1v2v3v4v5v6v7
 argument_list|(
 name|data
 argument_list|,

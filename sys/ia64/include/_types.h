@@ -391,6 +391,35 @@ name|__vm_size_t
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|int
+name|__wchar_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|__WCHAR_MIN
+value|__INT_MIN
+end_define
+
+begin_comment
+comment|/* min value for a wchar_t */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__WCHAR_MAX
+value|__INT_MAX
+end_define
+
+begin_comment
+comment|/* max value for a wchar_t */
+end_comment
+
 begin_comment
 comment|/*  * Unusual type definitions.  */
 end_comment

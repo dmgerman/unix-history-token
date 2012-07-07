@@ -620,6 +620,21 @@ decl_stmt|,
 modifier|*
 name|port
 decl_stmt|;
+operator|*
+name|phost
+operator|=
+name|NULL
+expr_stmt|;
+operator|*
+name|pport
+operator|=
+name|NULL
+expr_stmt|;
+operator|*
+name|ppath
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* dup the buffer since we are going to mess with it */
 name|buf
 operator|=
@@ -636,21 +651,6 @@ condition|)
 goto|goto
 name|mem_err
 goto|;
-operator|*
-name|phost
-operator|=
-name|NULL
-expr_stmt|;
-operator|*
-name|pport
-operator|=
-name|NULL
-expr_stmt|;
-operator|*
-name|ppath
-operator|=
-name|NULL
-expr_stmt|;
 comment|/* Check for initial colon */
 name|p
 operator|=

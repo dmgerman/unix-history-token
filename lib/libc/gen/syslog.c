@@ -96,12 +96,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<assert.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<errno.h>
 end_include
 
@@ -1753,14 +1747,6 @@ parameter_list|)
 block|{
 name|THREAD_LOCK
 argument_list|()
-expr_stmt|;
-name|assert
-argument_list|(
-name|LogFile
-operator|>=
-operator|-
-literal|1
-argument_list|)
 expr_stmt|;
 if|if
 condition|(

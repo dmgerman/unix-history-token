@@ -2558,10 +2558,10 @@ block|}
 break|break;
 block|}
 case|case
-name|XPT_NOTIFY_ACK
+name|XPT_NOTIFY_ACKNOWLEDGE
 case|:
 case|case
-name|XPT_IMMED_NOTIFY
+name|XPT_IMMEDIATE_NOTIFY
 case|:
 block|{
 name|struct
@@ -5980,7 +5980,7 @@ case|case
 name|XPT_ACCEPT_TARGET_IO
 case|:
 case|case
-name|XPT_IMMED_NOTIFY
+name|XPT_IMMEDIATE_NOTIFY
 case|:
 case|case
 name|XPT_CONT_TARGET_IO
@@ -6066,7 +6066,7 @@ name|ccb_h
 operator|.
 name|func_code
 operator|==
-name|XPT_IMMED_NOTIFY
+name|XPT_IMMEDIATE_NOTIFY
 condition|)
 name|list
 operator|=

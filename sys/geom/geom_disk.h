@@ -103,6 +103,18 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|void
+name|disk_gone_t
+parameter_list|(
+name|struct
+name|disk
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|int
 name|disk_ioctl_t
 parameter_list|(
@@ -208,6 +220,10 @@ decl_stmt|;
 name|disk_getattr_t
 modifier|*
 name|d_getattr
+decl_stmt|;
+name|disk_gone_t
+modifier|*
+name|d_gone
 decl_stmt|;
 comment|/* Info fields from driver to geom_disk.c. Valid when open */
 name|u_int
@@ -379,8 +395,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|DISK_VERSION_02
+value|0x5856105b
+end_define
+
+begin_define
+define|#
+directive|define
 name|DISK_VERSION
-value|DISK_VERSION_01
+value|DISK_VERSION_02
 end_define
 
 begin_endif

@@ -15,12 +15,6 @@ directive|define
 name|_VIRTIO_H_
 end_define
 
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
 begin_struct_decl
 struct_decl|struct
 name|vq_alloc_info

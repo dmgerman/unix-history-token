@@ -1576,6 +1576,14 @@ name|attrchanged
 expr_stmt|;
 name|gp
 operator|->
+name|providergone
+operator|=
+name|mp
+operator|->
+name|providergone
+expr_stmt|;
+name|gp
+operator|->
 name|dumpconf
 operator|=
 name|mp
@@ -3083,6 +3091,22 @@ argument_list|(
 name|pp
 operator|->
 name|stat
+argument_list|)
+expr_stmt|;
+comment|/* 	 * If a callback was provided, send notification that the provider 	 * is now gone. 	 */
+if|if
+condition|(
+name|gp
+operator|->
+name|providergone
+operator|!=
+name|NULL
+condition|)
+name|gp
+operator|->
+name|providergone
+argument_list|(
+name|pp
 argument_list|)
 expr_stmt|;
 name|g_free

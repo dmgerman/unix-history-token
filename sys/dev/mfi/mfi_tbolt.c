@@ -5598,6 +5598,7 @@ name|req_desc
 argument_list|,
 sizeof|sizeof
 argument_list|(
+operator|*
 name|req_desc
 argument_list|)
 argument_list|)

@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1984-2011  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2012  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_comment
@@ -944,6 +944,11 @@ operator|=
 name|prev_ifile
 argument_list|(
 name|NULL_IFILE
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|filename
 argument_list|)
 expr_stmt|;
 endif|#

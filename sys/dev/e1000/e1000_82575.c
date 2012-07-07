@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2011, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2012, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -8,13 +8,19 @@ comment|/*$FreeBSD$*/
 end_comment
 
 begin_comment
-comment|/*  * 82575EB Gigabit Network Connection  * 82575EB Gigabit Backplane Connection  * 82575GB Gigabit Network Connection  * 82576 Gigabit Network Connection  * 82576 Quad Port Gigabit Mezzanine Adapter  */
+comment|/*  * 82575EB Gigabit Network Connection  * 82575EB Gigabit Backplane Connection  * 82575GB Gigabit Network Connection  * 82576 Gigabit Network Connection  * 82576 Quad Port Gigabit Mezzanine Adapter  * 82580 Gigabit Network Connection  * I350 Gigabit Network Connection  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"e1000_api.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"e1000_i210.h"
 end_include
 
 begin_function_decl
@@ -1051,6 +1057,22 @@ argument_list|(
 literal|"e1000_init_phy_params_82575"
 argument_list|)
 expr_stmt|;
+name|phy
+operator|->
+name|ops
+operator|.
+name|read_i2c_byte
+operator|=
+name|e1000_read_i2c_byte_generic
+expr_stmt|;
+name|phy
+operator|->
+name|ops
+operator|.
+name|write_i2c_byte
+operator|=
+name|e1000_write_i2c_byte_generic
+expr_stmt|;
 if|if
 condition|(
 name|hw
@@ -1231,18 +1253,23 @@ operator|=
 name|e1000_write_phy_reg_sgmii_82575
 expr_stmt|;
 block|}
-elseif|else
-if|if
+else|else
+block|{
+switch|switch
 condition|(
 name|hw
 operator|->
 name|mac
 operator|.
 name|type
-operator|>=
-name|e1000_82580
 condition|)
 block|{
+case|case
+name|e1000_82580
+case|:
+case|case
+name|e1000_i350
+case|:
 name|phy
 operator|->
 name|ops
@@ -1259,9 +1286,31 @@ name|write_reg
 operator|=
 name|e1000_write_phy_reg_82580
 expr_stmt|;
-block|}
-else|else
-block|{
+break|break;
+case|case
+name|e1000_i210
+case|:
+case|case
+name|e1000_i211
+case|:
+name|phy
+operator|->
+name|ops
+operator|.
+name|read_reg
+operator|=
+name|e1000_read_phy_reg_gs40g
+expr_stmt|;
+name|phy
+operator|->
+name|ops
+operator|.
+name|write_reg
+operator|=
+name|e1000_write_phy_reg_gs40g
+expr_stmt|;
+break|break;
+default|default:
 name|phy
 operator|->
 name|ops
@@ -1278,6 +1327,7 @@ name|write_reg
 operator|=
 name|e1000_write_phy_reg_igp
 expr_stmt|;
+block|}
 block|}
 comment|/* Set phy->phy_addr and phy->id. */
 name|ret_val
@@ -1497,6 +1547,64 @@ operator|=
 name|e1000_set_d3_lplu_state_82580
 expr_stmt|;
 break|break;
+case|case
+name|I210_I_PHY_ID
+case|:
+name|phy
+operator|->
+name|type
+operator|=
+name|e1000_phy_i210
+expr_stmt|;
+name|phy
+operator|->
+name|ops
+operator|.
+name|check_polarity
+operator|=
+name|e1000_check_polarity_m88
+expr_stmt|;
+name|phy
+operator|->
+name|ops
+operator|.
+name|get_info
+operator|=
+name|e1000_get_phy_info_m88
+expr_stmt|;
+name|phy
+operator|->
+name|ops
+operator|.
+name|get_cable_length
+operator|=
+name|e1000_get_cable_length_m88_gen2
+expr_stmt|;
+name|phy
+operator|->
+name|ops
+operator|.
+name|set_d0_lplu_state
+operator|=
+name|e1000_set_d0_lplu_state_82580
+expr_stmt|;
+name|phy
+operator|->
+name|ops
+operator|.
+name|set_d3_lplu_state
+operator|=
+name|e1000_set_d3_lplu_state_82580
+expr_stmt|;
+name|phy
+operator|->
+name|ops
+operator|.
+name|force_speed_duplex
+operator|=
+name|e1000_phy_force_speed_duplex_m88
+expr_stmt|;
+break|break;
 default|default:
 name|ret_val
 operator|=
@@ -1596,6 +1704,17 @@ literal|1
 operator|<<
 name|size
 expr_stmt|;
+if|if
+condition|(
+name|hw
+operator|->
+name|mac
+operator|.
+name|type
+operator|<
+name|e1000_i210
+condition|)
+block|{
 name|nvm
 operator|->
 name|opcode_bits
@@ -1674,12 +1793,6 @@ literal|8
 expr_stmt|;
 break|break;
 block|}
-name|nvm
-operator|->
-name|type
-operator|=
-name|e1000_nvm_eeprom_spi
-expr_stmt|;
 if|if
 condition|(
 name|nvm
@@ -1698,6 +1811,22 @@ name|page_size
 operator|=
 literal|128
 expr_stmt|;
+name|nvm
+operator|->
+name|type
+operator|=
+name|e1000_nvm_eeprom_spi
+expr_stmt|;
+block|}
+else|else
+block|{
+name|nvm
+operator|->
+name|type
+operator|=
+name|e1000_nvm_flash_hw
+expr_stmt|;
+block|}
 comment|/* Function Pointers */
 name|nvm
 operator|->
@@ -1776,7 +1905,7 @@ name|valid_led_default
 operator|=
 name|e1000_valid_led_default_82575
 expr_stmt|;
-comment|/* override genric family function pointers for specific descendants */
+comment|/* override generic family function pointers for specific descendants */
 switch|switch
 condition|(
 name|hw
@@ -1986,6 +2115,8 @@ name|mac
 operator|->
 name|arc_subsystem_valid
 operator|=
+operator|!
+operator|!
 operator|(
 name|E1000_READ_REG
 argument_list|(
@@ -1996,10 +2127,6 @@ argument_list|)
 operator|&
 name|E1000_FWSM_MODE_MASK
 operator|)
-condition|?
-name|TRUE
-else|:
-name|FALSE
 expr_stmt|;
 comment|/* Function pointers */
 comment|/* bus type/speed/width */
@@ -2102,15 +2229,6 @@ operator|.
 name|check_for_link
 operator|=
 name|e1000_check_for_link_82575
-expr_stmt|;
-comment|/* receive address register setting */
-name|mac
-operator|->
-name|ops
-operator|.
-name|rar_set
-operator|=
-name|e1000_rar_set_generic
 expr_stmt|;
 comment|/* read mac address */
 name|mac
@@ -2261,6 +2379,49 @@ name|get_link_up_info
 operator|=
 name|e1000_get_link_up_info_82575
 expr_stmt|;
+comment|/* acquire SW_FW sync */
+name|mac
+operator|->
+name|ops
+operator|.
+name|acquire_swfw_sync
+operator|=
+name|e1000_acquire_swfw_sync_82575
+expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|release_swfw_sync
+operator|=
+name|e1000_release_swfw_sync_82575
+expr_stmt|;
+if|if
+condition|(
+name|mac
+operator|->
+name|type
+operator|>=
+name|e1000_i210
+condition|)
+block|{
+name|mac
+operator|->
+name|ops
+operator|.
+name|acquire_swfw_sync
+operator|=
+name|e1000_acquire_swfw_sync_i210
+expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|release_swfw_sync
+operator|=
+name|e1000_release_swfw_sync_i210
+expr_stmt|;
+block|}
 comment|/* set lan id for port to determine which phy lock to use */
 name|hw
 operator|->
@@ -2411,7 +2572,13 @@ operator|=
 name|E1000_SWFW_PHY3_SM
 expr_stmt|;
 return|return
-name|e1000_acquire_swfw_sync_82575
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|acquire_swfw_sync
 argument_list|(
 name|hw
 argument_list|,
@@ -2490,7 +2657,13 @@ name|mask
 operator|=
 name|E1000_SWFW_PHY3_SM
 expr_stmt|;
-name|e1000_release_swfw_sync_82575
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|release_swfw_sync
 argument_list|(
 name|hw
 argument_list|,
@@ -3456,7 +3629,7 @@ name|ret_val
 init|=
 name|E1000_SUCCESS
 decl_stmt|;
-name|u16
+name|u32
 name|data
 decl_stmt|;
 name|DEBUGFUNC
@@ -3571,7 +3744,7 @@ name|ret_val
 init|=
 name|E1000_SUCCESS
 decl_stmt|;
-name|u16
+name|u32
 name|data
 decl_stmt|;
 name|DEBUGFUNC
@@ -3821,16 +3994,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-switch|switch
-condition|(
-name|hw
-operator|->
-name|mac
-operator|.
-name|type
-condition|)
-block|{
-default|default:
 name|ret_val
 operator|=
 name|e1000_acquire_nvm_generic
@@ -3838,7 +4001,6 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|ret_val
@@ -3878,22 +4040,11 @@ argument_list|(
 literal|"e1000_release_nvm_82575"
 argument_list|)
 expr_stmt|;
-switch|switch
-condition|(
-name|hw
-operator|->
-name|mac
-operator|.
-name|type
-condition|)
-block|{
-default|default:
 name|e1000_release_nvm_generic
 argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-block|}
 name|e1000_release_swfw_sync_82575
 argument_list|(
 name|hw
@@ -4252,7 +4403,7 @@ expr_stmt|;
 comment|/* If EEPROM is not marked present, init the PHY manually */
 if|if
 condition|(
-operator|(
+operator|!
 operator|(
 name|E1000_READ_REG
 argument_list|(
@@ -4262,9 +4413,6 @@ name|E1000_EECD
 argument_list|)
 operator|&
 name|E1000_EECD_PRES
-operator|)
-operator|==
-literal|0
 operator|)
 operator|&&
 operator|(
@@ -4585,23 +4733,6 @@ argument_list|(
 literal|"e1000_get_pcs_speed_and_duplex_82575"
 argument_list|)
 expr_stmt|;
-comment|/* Set up defaults for the return values of this function */
-name|mac
-operator|->
-name|serdes_has_link
-operator|=
-name|FALSE
-expr_stmt|;
-operator|*
-name|speed
-operator|=
-literal|0
-expr_stmt|;
-operator|*
-name|duplex
-operator|=
-literal|0
-expr_stmt|;
 comment|/* 	 * Read the PCS Status register for link state. For non-copper mode, 	 * the status register is not accurate. The PCS status register is 	 * used instead. 	 */
 name|pcs
 operator|=
@@ -4612,20 +4743,12 @@ argument_list|,
 name|E1000_PCS_LSTAT
 argument_list|)
 expr_stmt|;
-comment|/* 	 * The link up bit determines when link is up on autoneg. The sync ok 	 * gets set once both sides sync up and agree upon link. Stable link 	 * can be determined by checking for both link up and link sync ok 	 */
+comment|/* 	 * The link up bit determines when link is up on autoneg. 	 */
 if|if
 condition|(
-operator|(
 name|pcs
 operator|&
 name|E1000_PCS_LSTS_LINK_OK
-operator|)
-operator|&&
-operator|(
-name|pcs
-operator|&
-name|E1000_PCS_LSTS_SYNK_OK
-operator|)
 condition|)
 block|{
 name|mac
@@ -4681,6 +4804,25 @@ operator|*
 name|duplex
 operator|=
 name|HALF_DUPLEX
+expr_stmt|;
+block|}
+else|else
+block|{
+name|mac
+operator|->
+name|serdes_has_link
+operator|=
+name|FALSE
+expr_stmt|;
+operator|*
+name|speed
+operator|=
+literal|0
+expr_stmt|;
+operator|*
+name|duplex
+operator|=
+literal|0
 expr_stmt|;
 block|}
 return|return
@@ -4951,6 +5093,7 @@ block|}
 comment|/* If EEPROM is not present, run manual init scripts */
 if|if
 condition|(
+operator|!
 operator|(
 name|E1000_READ_REG
 argument_list|(
@@ -4961,8 +5104,6 @@ argument_list|)
 operator|&
 name|E1000_EECD_PRES
 operator|)
-operator|==
-literal|0
 condition|)
 name|e1000_reset_init_script_82575
 argument_list|(
@@ -5310,6 +5451,9 @@ operator|.
 name|type
 condition|)
 block|{
+case|case
+name|e1000_phy_i210
+case|:
 case|case
 name|e1000_phy_m88
 case|:
@@ -5959,49 +6103,11 @@ operator|&
 name|init_ctrl_wd_3
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Align link mode bits to 		 * their CTRL_EXT location. 		 */
 name|current_link_mode
 operator|=
 name|init_ctrl_wd_3
 expr_stmt|;
-comment|/* 		 * Switch to CSR for all but internal PHY. 		 */
-if|if
-condition|(
-operator|(
-name|init_ctrl_wd_3
-operator|<<
-operator|(
-name|E1000_CTRL_EXT_LINK_MODE_OFFSET
-operator|-
-name|init_ctrl_wd_3_bit_offset
-operator|)
-operator|)
-operator|!=
-name|E1000_CTRL_EXT_LINK_MODE_GMII
-condition|)
-block|{
-name|current_link_mode
-operator|=
-name|ctrl_ext
-expr_stmt|;
-name|init_ctrl_wd_3_bit_offset
-operator|=
-name|E1000_CTRL_EXT_LINK_MODE_OFFSET
-expr_stmt|;
-block|}
-block|}
-else|else
-block|{
-comment|/* Take link mode from CSR */
-name|current_link_mode
-operator|=
-name|ctrl_ext
-expr_stmt|;
-name|init_ctrl_wd_3_bit_offset
-operator|=
-name|E1000_CTRL_EXT_LINK_MODE_OFFSET
-expr_stmt|;
-block|}
-comment|/* 	 * Align link mode bits to 	 * their CTRL_EXT location. 	 */
 name|current_link_mode
 operator|<<=
 operator|(
@@ -6014,6 +6120,31 @@ name|current_link_mode
 operator|&=
 name|E1000_CTRL_EXT_LINK_MODE_MASK
 expr_stmt|;
+comment|/* 		 * Switch to CSR for all but internal PHY. 		 */
+if|if
+condition|(
+name|current_link_mode
+operator|!=
+name|E1000_CTRL_EXT_LINK_MODE_GMII
+condition|)
+comment|/* Take link mode from CSR */
+name|current_link_mode
+operator|=
+name|ctrl_ext
+operator|&
+name|E1000_CTRL_EXT_LINK_MODE_MASK
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Take link mode from CSR */
+name|current_link_mode
+operator|=
+name|ctrl_ext
+operator|&
+name|E1000_CTRL_EXT_LINK_MODE_MASK
+expr_stmt|;
+block|}
 switch|switch
 condition|(
 name|current_link_mode
@@ -8583,7 +8714,13 @@ if|if
 condition|(
 name|global_device_reset
 operator|&&
-name|e1000_acquire_swfw_sync_82575
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|acquire_swfw_sync
 argument_list|(
 name|hw
 argument_list|,
@@ -8665,6 +8802,7 @@ block|}
 comment|/* If EEPROM is not present, run manual init scripts */
 if|if
 condition|(
+operator|!
 operator|(
 name|E1000_READ_REG
 argument_list|(
@@ -8675,8 +8813,6 @@ argument_list|)
 operator|&
 name|E1000_EECD_PRES
 operator|)
-operator|==
-literal|0
 condition|)
 name|e1000_reset_init_script_82575
 argument_list|(
@@ -8739,7 +8875,13 @@ if|if
 condition|(
 name|global_device_reset
 condition|)
-name|e1000_release_swfw_sync_82575
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|release_swfw_sync
 argument_list|(
 name|hw
 argument_list|,
@@ -9260,13 +9402,12 @@ goto|;
 block|}
 if|if
 condition|(
+operator|!
 operator|(
 name|nvm_data
 operator|&
 name|NVM_COMPATIBILITY_BIT_MASK
 operator|)
-operator|==
-literal|0
 condition|)
 block|{
 comment|/* set compatibility bit to validate checksums appropriately */
@@ -9918,7 +10059,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_read_i2c_byte_generic - Reads 8 bit word over I2C  *  @hw: pointer to hardware structure  *  @byte_offset: byte offset to read  *  @data: value read  *  *  Performs byte read operation over I2C interface at  *  a specified device address.  **/
+comment|/**  *  e1000_read_i2c_byte_generic - Reads 8 bit word over I2C  *  @hw: pointer to hardware structure  *  @byte_offset: byte offset to read  *  @dev_addr: device address  *  @data: value read  *  *  Performs byte read operation over I2C interface at  *  a specified device address.  **/
 end_comment
 
 begin_function
@@ -9964,7 +10105,7 @@ decl_stmt|;
 name|bool
 name|nack
 init|=
-literal|1
+name|TRUE
 decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
@@ -9979,7 +10120,13 @@ do|do
 block|{
 if|if
 condition|(
-name|e1000_acquire_swfw_sync_82575
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|acquire_swfw_sync
 argument_list|(
 name|hw
 argument_list|,
@@ -10159,7 +10306,13 @@ expr_stmt|;
 break|break;
 name|fail
 label|:
-name|e1000_release_swfw_sync_82575
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|release_swfw_sync
 argument_list|(
 name|hw
 argument_list|,
@@ -10204,7 +10357,13 @@ operator|<
 name|max_retry
 condition|)
 do|;
-name|e1000_release_swfw_sync_82575
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|release_swfw_sync
 argument_list|(
 name|hw
 argument_list|,
@@ -10220,7 +10379,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_write_i2c_byte_generic - Writes 8 bit word over I2C  *  @hw: pointer to hardware structure  *  @byte_offset: byte offset to write  *  @data: value to write  *  *  Performs byte write operation over I2C interface at  *  a specified device address.  **/
+comment|/**  *  e1000_write_i2c_byte_generic - Writes 8 bit word over I2C  *  @hw: pointer to hardware structure  *  @byte_offset: byte offset to write  *  @dev_addr: device address  *  @data: value to write  *  *  Performs byte write operation over I2C interface at  *  a specified device address.  **/
 end_comment
 
 begin_function
@@ -10273,7 +10432,13 @@ name|E1000_SWFW_PHY0_SM
 expr_stmt|;
 if|if
 condition|(
-name|e1000_acquire_swfw_sync_82575
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|acquire_swfw_sync
 argument_list|(
 name|hw
 argument_list|,
@@ -10441,7 +10606,13 @@ operator|<
 name|max_retry
 condition|)
 do|;
-name|e1000_release_swfw_sync_82575
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|release_swfw_sync
 argument_list|(
 name|hw
 argument_list|,
@@ -10848,7 +11019,7 @@ decl_stmt|;
 name|bool
 name|ack
 init|=
-literal|1
+name|TRUE
 decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
@@ -10929,8 +11100,6 @@ expr_stmt|;
 if|if
 condition|(
 name|ack
-operator|==
-literal|1
 condition|)
 block|{
 name|DEBUGOUT

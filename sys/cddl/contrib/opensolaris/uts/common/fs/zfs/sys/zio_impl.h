@@ -172,7 +172,7 @@ literal|1
 operator|<<
 literal|17
 block|,
-comment|/* RW--I */
+comment|/* RW--- */
 name|ZIO_STAGE_VDEV_IO_ASSESS
 init|=
 literal|1

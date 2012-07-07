@@ -1454,6 +1454,15 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|isp_nvports
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|int
@@ -1739,10 +1748,6 @@ parameter_list|,
 name|ispsoftc_t
 modifier|*
 name|isp
-parameter_list|,
-name|int
-modifier|*
-name|nvp
 parameter_list|)
 block|{
 name|int
@@ -1935,7 +1940,8 @@ expr_stmt|;
 block|}
 name|tval
 operator|=
-literal|0
+operator|-
+literal|1
 expr_stmt|;
 operator|(
 name|void
@@ -1969,18 +1975,9 @@ operator|<
 literal|127
 condition|)
 block|{
-operator|*
-name|nvp
+name|isp_nvports
 operator|=
 name|tval
-expr_stmt|;
-block|}
-else|else
-block|{
-operator|*
-name|nvp
-operator|=
-literal|0
 expr_stmt|;
 block|}
 name|tval
@@ -2185,6 +2182,8 @@ name|sptr
 decl_stmt|;
 name|int
 name|tval
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -3017,11 +3016,6 @@ name|locksetup
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|isp_nvports
-init|=
-literal|0
-decl_stmt|;
 name|uint32_t
 name|data
 decl_stmt|,
@@ -3117,14 +3111,15 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* 	 * Get Generic Options 	 */
+name|isp_nvports
+operator|=
+literal|0
+expr_stmt|;
 name|isp_get_generic_options
 argument_list|(
 name|dev
 argument_list|,
 name|isp
-argument_list|,
-operator|&
-name|isp_nvports
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Check to see if options have us disabled 	 */

@@ -77,7 +77,7 @@ begin_define
 define|#
 directive|define
 name|G_GATE_VERSION
-value|2
+value|3
 end_define
 
 begin_comment
@@ -151,29 +151,36 @@ end_define
 begin_define
 define|#
 directive|define
+name|G_GATE_CMD_MODIFY
+value|_IOWR('m', 1, struct g_gate_ctl_modify)
+end_define
+
+begin_define
+define|#
+directive|define
 name|G_GATE_CMD_DESTROY
-value|_IOWR('m', 1, struct g_gate_ctl_destroy)
+value|_IOWR('m', 2, struct g_gate_ctl_destroy)
 end_define
 
 begin_define
 define|#
 directive|define
 name|G_GATE_CMD_CANCEL
-value|_IOWR('m', 2, struct g_gate_ctl_cancel)
+value|_IOWR('m', 3, struct g_gate_ctl_cancel)
 end_define
 
 begin_define
 define|#
 directive|define
 name|G_GATE_CMD_START
-value|_IOWR('m', 3, struct g_gate_ctl_io)
+value|_IOWR('m', 4, struct g_gate_ctl_io)
 end_define
 
 begin_define
 define|#
 directive|define
 name|G_GATE_CMD_DONE
-value|_IOWR('m', 4, struct g_gate_ctl_io)
+value|_IOWR('m', 5, struct g_gate_ctl_io)
 end_define
 
 begin_define
@@ -246,6 +253,16 @@ name|u_int
 name|sc_timeout
 decl_stmt|;
 comment|/* P: (read-only) */
+name|struct
+name|g_consumer
+modifier|*
+name|sc_readcons
+decl_stmt|;
+comment|/* P: XXX */
+name|off_t
+name|sc_readoffset
+decl_stmt|;
+comment|/* P: XXX */
 name|struct
 name|callout
 name|sc_callout
@@ -342,10 +359,82 @@ index|[
 name|G_GATE_INFOSIZE
 index|]
 decl_stmt|;
+name|char
+name|gctl_readprov
+index|[
+name|NAME_MAX
+index|]
+decl_stmt|;
+name|off_t
+name|gctl_readoffset
+decl_stmt|;
 name|int
 name|gctl_unit
 decl_stmt|;
 comment|/* in/out */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|GG_MODIFY_MEDIASIZE
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|GG_MODIFY_INFO
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|GG_MODIFY_READPROV
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|GG_MODIFY_READOFFSET
+value|0x08
+end_define
+
+begin_struct
+struct|struct
+name|g_gate_ctl_modify
+block|{
+name|u_int
+name|gctl_version
+decl_stmt|;
+name|int
+name|gctl_unit
+decl_stmt|;
+name|uint32_t
+name|gctl_modify
+decl_stmt|;
+name|off_t
+name|gctl_mediasize
+decl_stmt|;
+name|char
+name|gctl_info
+index|[
+name|G_GATE_INFOSIZE
+index|]
+decl_stmt|;
+name|char
+name|gctl_readprov
+index|[
+name|NAME_MAX
+index|]
+decl_stmt|;
+name|off_t
+name|gctl_readoffset
+decl_stmt|;
 block|}
 struct|;
 end_struct

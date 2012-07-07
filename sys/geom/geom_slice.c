@@ -2848,21 +2848,6 @@ expr_stmt|;
 name|g_topology_assert
 argument_list|()
 expr_stmt|;
-name|KASSERT
-argument_list|(
-name|cp
-operator|->
-name|provider
-operator|->
-name|error
-operator|!=
-literal|0
-argument_list|,
-operator|(
-literal|"g_slice_orphan with error == 0"
-operator|)
-argument_list|)
-expr_stmt|;
 comment|/* XXX: Not good enough we leak the softc and its suballocations */
 name|g_slice_free
 argument_list|(
@@ -2879,11 +2864,7 @@ name|cp
 operator|->
 name|geom
 argument_list|,
-name|cp
-operator|->
-name|provider
-operator|->
-name|error
+name|ENXIO
 argument_list|)
 expr_stmt|;
 block|}

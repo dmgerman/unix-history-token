@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/board.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<arm/at91/at91_pioreg.h>
 end_include
 
@@ -58,6 +64,7 @@ file|<arm/at91/at91sam9260reg.h>
 end_include
 
 begin_function
+name|BOARD_INIT
 name|long
 name|board_init
 parameter_list|(
@@ -439,6 +446,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_macro
+name|ARM_BOARD
+argument_list|(
+argument|NONE
+argument_list|,
+literal|"Ethernut 5"
+argument_list|)
+end_macro
 
 end_unit
 

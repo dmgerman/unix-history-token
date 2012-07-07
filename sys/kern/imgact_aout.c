@@ -759,7 +759,7 @@ operator|(
 operator|(
 name|a_out
 operator|->
-name|a_magic
+name|a_midmag
 operator|>>
 literal|16
 operator|)
@@ -773,7 +773,7 @@ operator|(
 operator|(
 name|a_out
 operator|->
-name|a_magic
+name|a_midmag
 operator|>>
 literal|16
 operator|)
@@ -793,7 +793,7 @@ name|ntohl
 argument_list|(
 name|a_out
 operator|->
-name|a_magic
+name|a_midmag
 argument_list|)
 operator|)
 operator|>>
@@ -818,7 +818,7 @@ call|)
 argument_list|(
 name|a_out
 operator|->
-name|a_magic
+name|a_midmag
 operator|&
 literal|0xffff
 argument_list|)
@@ -895,7 +895,7 @@ name|ntohl
 argument_list|(
 name|a_out
 operator|->
-name|a_magic
+name|a_midmag
 argument_list|)
 operator|&
 literal|0xffff

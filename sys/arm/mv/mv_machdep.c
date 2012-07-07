@@ -2182,12 +2182,12 @@ argument_list|)
 expr_stmt|;
 name|debugf
 argument_list|(
-literal|" arg1 mdp = 0x%08x\n"
+literal|" arg1 kmdp = 0x%08x\n"
 argument_list|,
 operator|(
 name|uint32_t
 operator|)
-name|mdp
+name|kmdp
 argument_list|)
 expr_stmt|;
 name|debugf

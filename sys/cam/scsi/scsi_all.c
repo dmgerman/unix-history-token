@@ -18764,16 +18764,10 @@ parameter_list|)
 block|{
 name|int
 name|i
-decl_stmt|,
-name|found
 decl_stmt|;
 for|for
 control|(
 name|i
-operator|=
-literal|0
-operator|,
-name|found
 operator|=
 literal|0
 init|;

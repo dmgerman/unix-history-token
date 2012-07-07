@@ -627,6 +627,57 @@ comment|/* lquantize() mismatch on limit */
 name|D_LQUANT_MATCHSTEP
 block|,
 comment|/* lquantize() mismatch on step */
+name|D_LLQUANT_FACTORTYPE
+block|,
+comment|/* llquantize() bad magnitude type */
+name|D_LLQUANT_FACTORVAL
+block|,
+comment|/* llquantize() bad magnitude value */
+name|D_LLQUANT_FACTORMATCH
+block|,
+comment|/* llquantize() mismatch on magnitude */
+name|D_LLQUANT_LOWTYPE
+block|,
+comment|/* llquantize() bad low mag type */
+name|D_LLQUANT_LOWVAL
+block|,
+comment|/* llquantize() bad low mag value */
+name|D_LLQUANT_LOWMATCH
+block|,
+comment|/* llquantize() mismatch on low mag */
+name|D_LLQUANT_HIGHTYPE
+block|,
+comment|/* llquantize() bad high mag type */
+name|D_LLQUANT_HIGHVAL
+block|,
+comment|/* llquantize() bad high mag value */
+name|D_LLQUANT_HIGHMATCH
+block|,
+comment|/* llquantize() mismatch on high mag */
+name|D_LLQUANT_NSTEPTYPE
+block|,
+comment|/* llquantize() bad # steps type */
+name|D_LLQUANT_NSTEPVAL
+block|,
+comment|/* llquantize() bad # steps value */
+name|D_LLQUANT_NSTEPMATCH
+block|,
+comment|/* llquantize() mismatch on # steps */
+name|D_LLQUANT_MAGRANGE
+block|,
+comment|/* llquantize() bad magnitude range */
+name|D_LLQUANT_FACTORNSTEPS
+block|,
+comment|/* llquantize() # steps< factor */
+name|D_LLQUANT_FACTOREVEN
+block|,
+comment|/* llquantize() bad # steps/factor */
+name|D_LLQUANT_FACTORSMALL
+block|,
+comment|/* llquantize() magnitude too small */
+name|D_LLQUANT_MAGTOOBIG
+block|,
+comment|/* llquantize() high mag too large */
 name|D_PRINTM_ADDR
 block|,
 comment|/* printm() memref bad type */

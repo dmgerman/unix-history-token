@@ -10616,6 +10616,8 @@ name|int
 name|hasbrokenint12
 decl_stmt|,
 name|i
+decl_stmt|,
+name|res
 decl_stmt|;
 name|u_int
 name|extmem
@@ -10978,6 +10980,8 @@ name|PAGE_SHIFT
 operator|)
 argument_list|)
 expr_stmt|;
+name|res
+operator|=
 name|vm86_getptr
 argument_list|(
 operator|&
@@ -10997,6 +11001,17 @@ operator|&
 name|vmf
 operator|.
 name|vmf_di
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|res
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"vm86_getptr() failed: address not found"
+operator|)
 argument_list|)
 expr_stmt|;
 name|vmf

@@ -68,10 +68,10 @@ name|ath_softc
 modifier|*
 name|sc
 parameter_list|,
-specifier|const
-name|char
+name|struct
+name|mbuf
 modifier|*
-name|buf
+name|m
 parameter_list|,
 name|uint64_t
 name|tsf

@@ -369,6 +369,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/ath/if_ath_rx_edma.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/ath/if_ath_beacon.h>
 end_include
 
@@ -1876,6 +1882,27 @@ name|ath_debug
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * Setup the DMA/EDMA functions based on the current 	 * hardware support. 	 * 	 * This is required before the descriptors are allocated. 	 */
+if|if
+condition|(
+name|ath_hal_hasedma
+argument_list|(
+name|sc
+operator|->
+name|sc_ah
+argument_list|)
+condition|)
+name|ath_recv_setup_edma
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+else|else
+name|ath_recv_setup_legacy
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Check if the MAC has multi-rate retry support. 	 * We do this by trying to setup a fake extended 	 * descriptor.  MAC's that don't have support will 	 * return false w/o doing anything.  MAC's that do 	 * support it will return true w/o doing anything. 	 */
 name|sc
 operator|->
@@ -2180,7 +2207,11 @@ name|sc_rxtask
 argument_list|,
 literal|0
 argument_list|,
-name|ath_rx_tasklet
+name|sc
+operator|->
+name|sc_rx
+operator|.
+name|recv_tasklet
 argument_list|,
 name|sc
 argument_list|)
@@ -3635,6 +3666,25 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* 	 * Initial aggregation settings. 	 */
+name|sc
+operator|->
+name|sc_hwq_limit
+operator|=
+name|ATH_AGGR_MIN_QDEPTH
+expr_stmt|;
+name|sc
+operator|->
+name|sc_tid_hwq_lo
+operator|=
+name|ATH_AGGR_SCHED_LOW
+expr_stmt|;
+name|sc
+operator|->
+name|sc_tid_hwq_hi
+operator|=
+name|ATH_AGGR_SCHED_HIGH
+expr_stmt|;
 comment|/* 	 * Check if the hardware requires PCI register serialisation. 	 * Some of the Owl based MACs require this. 	 */
 if|if
 condition|(
@@ -3953,6 +4003,54 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* ATH_ENABLE_11N */
+ifdef|#
+directive|ifdef
+name|ATH_ENABLE_RADIOTAP_VENDOR_EXT
+comment|/* 	 * There's one vendor bitmap entry in the RX radiotap 	 * header; make sure that's taken into account. 	 */
+name|ieee80211_radiotap_attachv
+argument_list|(
+name|ic
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_tx_th
+operator|.
+name|wt_ihdr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sc
+operator|->
+name|sc_tx_th
+argument_list|)
+argument_list|,
+literal|0
+argument_list|,
+name|ATH_TX_RADIOTAP_PRESENT
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_rx_th
+operator|.
+name|wr_ihdr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sc
+operator|->
+name|sc_rx_th
+argument_list|)
+argument_list|,
+literal|1
+argument_list|,
+name|ATH_RX_RADIOTAP_PRESENT
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* 	 * No vendor bitmap/extensions are present. 	 */
 name|ieee80211_radiotap_attach
 argument_list|(
 name|ic
@@ -3990,6 +4088,9 @@ argument_list|,
 name|ATH_RX_RADIOTAP_PRESENT
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* ATH_ENABLE_RADIOTAP_VENDOR_EXT */
 comment|/* 	 * Setup dynamic sysctl's now that country code and 	 * regdomain are available from the hal. 	 */
 name|ath_sysctlattach
 argument_list|(
@@ -7864,25 +7965,6 @@ name|sc_beacons
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Initial aggregation settings. 	 */
-name|sc
-operator|->
-name|sc_hwq_limit
-operator|=
-name|ATH_AGGR_MIN_QDEPTH
-expr_stmt|;
-name|sc
-operator|->
-name|sc_tid_hwq_lo
-operator|=
-name|ATH_AGGR_SCHED_LOW
-expr_stmt|;
-name|sc
-operator|->
-name|sc_tid_hwq_hi
-operator|=
-name|ATH_AGGR_SCHED_HIGH
-expr_stmt|;
 comment|/* 	 * Setup the hardware after reset: the key cache 	 * is filled as needed and the receive engine is 	 * set going.  Frame transmit is handled entirely 	 * in the frame output path; there's nothing to do 	 * here except setup the interrupt mask. 	 */
 if|if
 condition|(
@@ -8730,11 +8812,9 @@ name|ATH_RESET_NOLOSS
 operator|)
 argument_list|)
 expr_stmt|;
-name|ath_rx_proc
+name|ath_rx_flush
 argument_list|(
 name|sc
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|ath_settkipmic
@@ -17329,11 +17409,9 @@ argument_list|)
 expr_stmt|;
 comment|/* turn off frame recv */
 comment|/* 		 * First, handle completed TX/RX frames. 		 */
-name|ath_rx_proc
+name|ath_rx_flush
 argument_list|(
 name|sc
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|ath_draintxq

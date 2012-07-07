@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/board.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<arm/at91/at91var.h>
 end_include
 
@@ -60,6 +66,7 @@ file|<arm/at91/at91_pio_rm9200.h>
 end_include
 
 begin_function
+name|BOARD_INIT
 name|long
 name|board_init
 parameter_list|(
@@ -191,6 +198,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_macro
+name|ARM_BOARD
+argument_list|(
+argument|KB9200
+argument_list|,
+literal|"Kwikbyte KB920x"
+argument_list|)
+end_macro
 
 end_unit
 
