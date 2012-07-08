@@ -191,6 +191,12 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|pcpu
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|thread
 struct_decl|;
 end_struct_decl
@@ -284,6 +290,21 @@ name|void
 name|cpu_mp_add
 parameter_list|(
 name|u_int
+parameter_list|,
+name|u_int
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|cpu_pcpu_setup
+parameter_list|(
+name|struct
+name|pcpu
+modifier|*
 parameter_list|,
 name|u_int
 parameter_list|,
