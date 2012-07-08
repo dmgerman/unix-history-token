@@ -714,7 +714,7 @@ expr_stmt|;
 comment|/* SLOT A, 1 bit bus */
 else|#
 directive|else
-comment|/* XXX Really should add second "unit" but nobody using using  	 * a two slot card that we know of. XXX */
+comment|/* XXX Really should add second "unit" but nobody using using 	 * a two slot card that we know of. -- except they are... XXX */
 name|WR4
 argument_list|(
 name|sc

@@ -546,6 +546,18 @@ block|{
 ifdef|#
 directive|ifdef
 name|INET
+comment|/* IPv4 case */
+if|if
+condition|(
+name|mlen
+operator|>
+literal|32
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 name|ent
 operator|=
 name|malloc
@@ -2912,6 +2924,8 @@ argument_list|(
 name|iface
 argument_list|)
 operator|=
+name|KEY_LEN_IFACE
+operator|+
 name|strlcpy
 argument_list|(
 name|iface

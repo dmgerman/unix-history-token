@@ -24,6 +24,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_ath.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_inet.h"
 end_include
 
@@ -259,7 +265,9 @@ name|sc
 parameter_list|)
 block|{
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -279,13 +287,15 @@ name|sc
 parameter_list|)
 block|{
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Enable radar check  */
+comment|/*  * Enable radar check.  Return 1 if the driver should  * enable radar PHY errors, or 0 if not.  */
 end_comment
 
 begin_function
@@ -328,7 +338,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Process DFS related PHY errors  */
+comment|/*  * Process DFS related PHY errors  *  * The mbuf is not "ours" and if we want a copy, we have  * to take a copy.  It'll be freed after this function returns.  */
 end_comment
 
 begin_function
@@ -340,10 +350,10 @@ name|ath_softc
 modifier|*
 name|sc
 parameter_list|,
-specifier|const
-name|char
+name|struct
+name|mbuf
 modifier|*
-name|buf
+name|m
 parameter_list|,
 name|uint64_t
 name|tsf
@@ -376,7 +386,9 @@ name|chan
 parameter_list|)
 block|{
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -401,7 +413,9 @@ name|chan
 parameter_list|)
 block|{
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -751,7 +765,9 @@ name|M_TEMP
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -784,7 +800,9 @@ name|param
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 end_function

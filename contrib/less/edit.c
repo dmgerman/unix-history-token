@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2011  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2012  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_include
@@ -1031,6 +1031,29 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+block|}
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|open_filename
+argument_list|,
+name|FAKE_EMPTYFILE
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|f
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|chflags
+operator||=
+name|CH_NODATA
+expr_stmt|;
 block|}
 elseif|else
 if|if

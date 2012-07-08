@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<libutil.h>
 end_include
 
@@ -121,6 +127,7 @@ name|char
 modifier|*
 modifier|*
 name|av
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -163,6 +170,8 @@ operator|=
 name|mfi_open
 argument_list|(
 name|mfi_unit
+argument_list|,
+name|O_RDONLY
 argument_list|)
 expr_stmt|;
 if|if
@@ -621,6 +630,7 @@ name|char
 modifier|*
 modifier|*
 name|av
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -670,6 +680,8 @@ operator|=
 name|mfi_open
 argument_list|(
 name|mfi_unit
+argument_list|,
+name|O_RDONLY
 argument_list|)
 expr_stmt|;
 if|if
@@ -1609,6 +1621,7 @@ name|char
 modifier|*
 modifier|*
 name|av
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -1678,6 +1691,8 @@ operator|=
 name|mfi_open
 argument_list|(
 name|mfi_unit
+argument_list|,
+name|O_RDONLY
 argument_list|)
 expr_stmt|;
 if|if
@@ -2288,6 +2303,7 @@ name|char
 modifier|*
 modifier|*
 name|av
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -2333,6 +2349,8 @@ operator|=
 name|mfi_open
 argument_list|(
 name|mfi_unit
+argument_list|,
+name|O_RDONLY
 argument_list|)
 expr_stmt|;
 if|if
@@ -2755,6 +2773,7 @@ name|char
 modifier|*
 modifier|*
 name|av
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -2801,6 +2820,8 @@ operator|=
 name|mfi_open
 argument_list|(
 name|mfi_unit
+argument_list|,
+name|O_RDONLY
 argument_list|)
 expr_stmt|;
 if|if
@@ -3308,6 +3329,7 @@ name|char
 modifier|*
 modifier|*
 name|av
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -3349,6 +3371,8 @@ operator|=
 name|mfi_open
 argument_list|(
 name|mfi_unit
+argument_list|,
+name|O_RDONLY
 argument_list|)
 expr_stmt|;
 if|if
@@ -3660,6 +3684,7 @@ name|char
 modifier|*
 modifier|*
 name|av
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -3718,6 +3743,8 @@ operator|=
 name|mfi_open
 argument_list|(
 name|mfi_unit
+argument_list|,
+name|O_RDONLY
 argument_list|)
 expr_stmt|;
 if|if

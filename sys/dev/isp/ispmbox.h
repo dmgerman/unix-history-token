@@ -4007,9 +4007,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|ISP2400_FW_ATTR_VP0
+value|0x1000
+end_define
+
+begin_define
+define|#
+directive|define
 name|ISP2400_FW_ATTR_EXPFW
 value|0x2000
 end_define
+
+begin_define
+define|#
+directive|define
+name|ISP2400_FW_ATTR_EXTNDED
+value|0x8000
+end_define
+
+begin_comment
+comment|/*  * These are either manifestly true or are dependent on f/w attributes  */
+end_comment
 
 begin_define
 define|#
@@ -4044,6 +4062,10 @@ define|\
 value|(IS_24XX(isp)? 1 : (isp->isp_fwattr& ISP_FW_ATTR_2KLOGINS))
 end_define
 
+begin_comment
+comment|/*  * This is only true for 24XX cards with this f/w attribute  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -4066,6 +4088,34 @@ name|tag
 parameter_list|)
 define|\
 value|(ISP_CAP_MULTI_ID(isp) ? tag : 0)
+end_define
+
+begin_comment
+comment|/*  * This is true manifestly or is dependent on a f/w attribute  * but may or may not actually be *enabled*. In any case, it  * is enabled on a per-channel basis.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP_CAP_FCTAPE
+parameter_list|(
+name|isp
+parameter_list|)
+define|\
+value|(IS_24XX(isp)? 1 : (isp->isp_fwattr& ISP_FW_ATTR_FCTAPE))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_FCTAPE_ENABLED
+parameter_list|(
+name|isp
+parameter_list|,
+name|chan
+parameter_list|)
+define|\
+value|(IS_24XX(isp)? (FCPARAM(isp, chan)->isp_xfwoptions& ICB2400_OPT2_FCTAPE) != 0 : (FCPARAM(isp, chan)->isp_xfwoptions& ICBXOPT_FCTAPE) != 0)
 end_define
 
 begin_comment
@@ -4671,8 +4721,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|ICB2400_OPT2_TPRLIC
+value|0x00004000
+end_define
+
+begin_define
+define|#
+directive|define
 name|ICB2400_OPT2_FCTAPE
 value|0x00001000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICB2400_OPT2_FCSP
+value|0x00000800
 end_define
 
 begin_define
@@ -4727,15 +4791,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|ICB2400_OPT2_PTP_2_LOOP
-value|0x00000030
-end_define
-
-begin_define
-define|#
-directive|define
 name|ICB2400_OPT2_TIMER_MASK
-value|0x00000007
+value|0x0000000f
 end_define
 
 begin_define
@@ -5301,9 +5358,35 @@ end_define
 begin_define
 define|#
 directive|define
+name|ICB2400_VPGOPT_FCA
+value|0x01
+end_define
+
+begin_comment
+comment|/* Assume Clean Address bit in FLOGI ACC set (works only in static configurations) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ICB2400_VPGOPT_MID_DISABLE
 value|0x02
 end_define
+
+begin_comment
+comment|/* when set, connection mode2 will work with NPIV-capable switched */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICB2400_VPGOPT_VP0_DECOUPLE
+value|0x04
+end_define
+
+begin_comment
+comment|/* Allow VP0 decoupling if firmware supports it */
+end_comment
 
 begin_typedef
 typedef|typedef

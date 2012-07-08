@@ -560,11 +560,7 @@ name|map
 argument_list|()
 operator|:
 name|_M_t
-argument_list|(
-argument|_Compare()
-argument_list|,
-argument|allocator_type()
-argument_list|)
+argument_list|()
 block|{ }
 comment|// for some reason this was made a separate function
 comment|/**        *  @brief  Default constructor creates no elements.        */
@@ -620,11 +616,7 @@ argument|_InputIterator __last
 argument_list|)
 operator|:
 name|_M_t
-argument_list|(
-argument|_Compare()
-argument_list|,
-argument|allocator_type()
-argument_list|)
+argument_list|()
 block|{
 name|_M_t
 operator|.

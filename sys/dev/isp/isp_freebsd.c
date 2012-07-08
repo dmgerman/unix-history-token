@@ -13209,6 +13209,10 @@ name|atp
 init|=
 name|NULL
 decl_stmt|;
+name|atio_private_data_t
+modifier|*
+name|oatp
+decl_stmt|;
 name|inot_private_data_t
 modifier|*
 name|ntp
@@ -13770,6 +13774,17 @@ operator|->
 name|restart_queue
 condition|)
 block|{
+name|isp_prt
+argument_list|(
+name|isp
+argument_list|,
+name|ISP_LOGTDEBUG0
+argument_list|,
+literal|"%s: restart queue refilling"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|restart_queue
@@ -13935,8 +13950,8 @@ goto|goto
 name|noresrc
 goto|;
 block|}
-if|if
-condition|(
+name|oatp
+operator|=
 name|isp_get_atpd
 argument_list|(
 name|isp
@@ -13947,6 +13962,10 @@ name|aep
 operator|->
 name|at_rxid
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|oatp
 condition|)
 block|{
 name|isp_prt
@@ -13955,7 +13974,7 @@ name|isp
 argument_list|,
 name|ISP_LOGTDEBUG0
 argument_list|,
-literal|"[0x%x] tag wraparound in isp_handle_platforms_atio7 (N-Port Handle 0x%04x S_ID 0x%04x OX_ID 0x%04x)\n"
+literal|"[0x%x] tag wraparound in isp_handle_platforms_atio7 (N-Port Handle 0x%04x S_ID 0x%04x OX_ID 0x%04x) oatp state %d\n"
 argument_list|,
 name|aep
 operator|->
@@ -13970,6 +13989,10 @@ operator|->
 name|at_hdr
 operator|.
 name|ox_id
+argument_list|,
+name|oatp
+operator|->
+name|state
 argument_list|)
 expr_stmt|;
 comment|/* 		 * It's not a "no resource" condition- but we can treat it like one 		 */
@@ -14279,6 +14302,16 @@ operator|->
 name|at_hdr
 operator|.
 name|ox_id
+expr_stmt|;
+name|atp
+operator|->
+name|rxid
+operator|=
+name|aep
+operator|->
+name|at_hdr
+operator|.
+name|rx_id
 expr_stmt|;
 name|atp
 operator|->

@@ -37581,7 +37581,7 @@ modifier|*
 name|ccbh
 decl_stmt|;
 name|struct
-name|ccb_immed_notify
+name|ccb_immediate_notify
 modifier|*
 name|inot
 decl_stmt|;
@@ -37643,7 +37643,7 @@ name|inot
 operator|=
 operator|(
 expr|struct
-name|ccb_immed_notify
+name|ccb_immediate_notify
 operator|*
 operator|)
 name|ccbh
@@ -37678,10 +37678,7 @@ name|CAM_DEV_QFRZN
 expr_stmt|;
 name|inot
 operator|->
-name|message_args
-index|[
-literal|0
-index|]
+name|arg
 operator|=
 name|event
 operator|->
@@ -37689,10 +37686,7 @@ name|event_type
 expr_stmt|;
 name|inot
 operator|->
-name|message_args
-index|[
-literal|1
-index|]
+name|seq_id
 operator|=
 name|event
 operator|->
@@ -37707,12 +37701,6 @@ operator|=
 name|event
 operator|->
 name|initiator_id
-expr_stmt|;
-name|inot
-operator|->
-name|sense_len
-operator|=
-literal|0
 expr_stmt|;
 name|xpt_done
 argument_list|(

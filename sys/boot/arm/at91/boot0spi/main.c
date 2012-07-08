@@ -30,26 +30,12 @@ end_include
 begin_define
 define|#
 directive|define
-name|LOADER_OFFSET
+name|OFFSET
 value|0
 end_define
 
-begin_define
-define|#
-directive|define
-name|FPGA_OFFSET
-value|(15 * FLASH_PAGE_SIZE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|OFFSET
-value|FPGA_OFFSET
-end_define
-
 begin_function
-name|int
+name|void
 name|main
 parameter_list|(
 name|void
@@ -100,23 +86,6 @@ literal|20
 operator|)
 decl_stmt|;
 comment|/* readback to + 2MB */
-name|char
-modifier|*
-name|addr3
-init|=
-operator|(
-name|char
-operator|*
-operator|)
-name|SDRAM_BASE
-operator|+
-operator|(
-literal|3
-operator|<<
-literal|20
-operator|)
-decl_stmt|;
-comment|/* extra copy at + 3MB */
 name|SPI_InitFlash
 argument_list|()
 expr_stmt|;
@@ -140,29 +109,9 @@ operator|-
 literal|1
 condition|)
 continue|continue;
-comment|// Need extra copy at addr3
-name|memcpy
-argument_list|(
-name|addr3
-argument_list|,
-name|addr
-argument_list|,
-operator|(
-name|len
-operator|+
-name|FLASH_PAGE_SIZE
-operator|-
-literal|1
-operator|)
-operator|/
-name|FLASH_PAGE_SIZE
-operator|*
-name|FLASH_PAGE_SIZE
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
-literal|"Writing %u bytes to flash at %u\n"
+literal|"Writing %u bytes at %u\n"
 argument_list|,
 name|len
 argument_list|,
@@ -184,6 +133,12 @@ operator|+=
 name|FLASH_PAGE_SIZE
 control|)
 block|{
+name|off
+operator|=
+name|i
+operator|+
+name|OFFSET
+expr_stmt|;
 for|for
 control|(
 name|j
@@ -198,12 +153,6 @@ name|j
 operator|++
 control|)
 block|{
-name|off
-operator|=
-name|i
-operator|+
-name|OFFSET
-expr_stmt|;
 name|SPI_WriteFlash
 argument_list|(
 name|off
@@ -230,7 +179,7 @@ if|if
 condition|(
 name|p_memcmp
 argument_list|(
-name|addr3
+name|addr
 operator|+
 name|i
 argument_list|,
@@ -282,11 +231,6 @@ expr_stmt|;
 name|reset
 argument_list|()
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 block|}
 end_function
 

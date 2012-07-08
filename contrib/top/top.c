@@ -488,6 +488,20 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|i_arc
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|u_arc
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|i_swap
 parameter_list|()
 function_decl|;
@@ -591,6 +605,18 @@ function_decl|)
 parameter_list|()
 init|=
 name|i_memory
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+function_decl|(
+modifier|*
+name|d_arc
+function_decl|)
+parameter_list|()
+init|=
+name|i_arc
 function_decl|;
 end_function_decl
 
@@ -2372,6 +2398,16 @@ operator|.
 name|memory
 argument_list|)
 expr_stmt|;
+call|(
+modifier|*
+name|d_arc
+call|)
+argument_list|(
+name|system_info
+operator|.
+name|arc
+argument_list|)
+expr_stmt|;
 comment|/* display swap stats */
 call|(
 modifier|*
@@ -2553,6 +2589,10 @@ expr_stmt|;
 name|d_memory
 operator|=
 name|u_memory
+expr_stmt|;
+name|d_arc
+operator|=
+name|u_arc
 expr_stmt|;
 name|d_swap
 operator|=
@@ -4088,6 +4128,10 @@ expr_stmt|;
 name|d_memory
 operator|=
 name|i_memory
+expr_stmt|;
+name|d_arc
+operator|=
+name|i_arc
 expr_stmt|;
 name|d_swap
 operator|=

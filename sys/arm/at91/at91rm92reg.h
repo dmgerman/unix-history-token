@@ -172,7 +172,7 @@ value|0xFF
 end_define
 
 begin_comment
-comment|/*   * Memory map, from datasheet :  * 0x00000000 - 0x0ffffffff : Internal Memories  * 0x10000000 - 0x1ffffffff : Chip Select 0  * 0x20000000 - 0x2ffffffff : Chip Select 1  * 0x30000000 - 0x3ffffffff : Chip Select 2  * 0x40000000 - 0x4ffffffff : Chip Select 3  * 0x50000000 - 0x5ffffffff : Chip Select 4  * 0x60000000 - 0x6ffffffff : Chip Select 5  * 0x70000000 - 0x7ffffffff : Chip Select 6  * 0x80000000 - 0x8ffffffff : Chip Select 7  * 0x90000000 - 0xeffffffff : Undefined (Abort)  * 0xf0000000 - 0xfffffffff : Peripherals  */
+comment|/*  * Memory map, from datasheet :  * 0x00000000 - 0x0ffffffff : Internal Memories  * 0x10000000 - 0x1ffffffff : Chip Select 0  * 0x20000000 - 0x2ffffffff : Chip Select 1  * 0x30000000 - 0x3ffffffff : Chip Select 2  * 0x40000000 - 0x4ffffffff : Chip Select 3  * 0x50000000 - 0x5ffffffff : Chip Select 4  * 0x60000000 - 0x6ffffffff : Chip Select 5  * 0x70000000 - 0x7ffffffff : Chip Select 6  * 0x80000000 - 0x8ffffffff : Chip Select 7  * 0x90000000 - 0xeffffffff : Undefined (Abort)  * 0xf0000000 - 0xfffffffff : Peripherals  */
 end_comment
 
 begin_define
@@ -385,7 +385,7 @@ comment|/* IRQs : */
 end_comment
 
 begin_comment
-comment|/*  * 0: AIC   * 1: System peripheral (System timer, RTC, DBGU)  * 2: PIO Controller A  * 3: PIO Controller B  * 4: PIO Controller C  * 5: PIO Controller D  * 6: USART 0  * 7: USART 1  * 8: USART 2  * 9: USART 3  * 10: MMC Interface  * 11: USB device port  * 12: Two-wirte interface  * 13: SPI  * 14: SSC  * 15: SSC  * 16: SSC  * 17: Timer Counter 0  * 18: Timer Counter 1  * 19: Timer Counter 2  * 20: Timer Counter 3  * 21: Timer Counter 4  * 22: Timer Counter 6  * 23: USB Host port  * 24: Ethernet  * 25: AIC  * 26: AIC  * 27: AIC  * 28: AIC  * 29: AIC  * 30: AIC  * 31: AIC  */
+comment|/*  * 0: AIC  * 1: System peripheral (System timer, RTC, DBGU)  * 2: PIO Controller A  * 3: PIO Controller B  * 4: PIO Controller C  * 5: PIO Controller D  * 6: USART 0  * 7: USART 1  * 8: USART 2  * 9: USART 3  * 10: MMC Interface  * 11: USB device port  * 12: Two-wirte interface  * 13: SPI  * 14: SSC  * 15: SSC  * 16: SSC  * 17: Timer Counter 0  * 18: Timer Counter 1  * 19: Timer Counter 2  * 20: Timer Counter 3  * 21: Timer Counter 4  * 22: Timer Counter 6  * 23: USB Host port  * 24: Ethernet  * 25: AIC  * 26: AIC  * 27: AIC  * 28: AIC  * 29: AIC  * 30: AIC  * 31: AIC  */
 end_comment
 
 begin_define

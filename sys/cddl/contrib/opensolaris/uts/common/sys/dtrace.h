@@ -7,6 +7,10 @@ begin_comment
 comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
+begin_comment
+comment|/*  * Copyright (c) 2011, Joyent, Inc. All rights reserved.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1719,6 +1723,10 @@ name|DTRACEAGG_LQUANTIZE
 value|(DTRACEACT_AGGREGATION + 8)
 define|#
 directive|define
+name|DTRACEAGG_LLQUANTIZE
+value|(DTRACEACT_AGGREGATION + 9)
+define|#
+directive|define
 name|DTRACEACT_ISAGG
 parameter_list|(
 name|x
@@ -1790,6 +1798,70 @@ name|x
 parameter_list|)
 define|\
 value|(int32_t)(((x)& DTRACE_LQUANTIZE_BASEMASK)>> \ 	DTRACE_LQUANTIZE_BASESHIFT)
+define|#
+directive|define
+name|DTRACE_LLQUANTIZE_FACTORSHIFT
+value|48
+define|#
+directive|define
+name|DTRACE_LLQUANTIZE_FACTORMASK
+value|((uint64_t)UINT16_MAX<< 48)
+define|#
+directive|define
+name|DTRACE_LLQUANTIZE_LOWSHIFT
+value|32
+define|#
+directive|define
+name|DTRACE_LLQUANTIZE_LOWMASK
+value|((uint64_t)UINT16_MAX<< 32)
+define|#
+directive|define
+name|DTRACE_LLQUANTIZE_HIGHSHIFT
+value|16
+define|#
+directive|define
+name|DTRACE_LLQUANTIZE_HIGHMASK
+value|((uint64_t)UINT16_MAX<< 16)
+define|#
+directive|define
+name|DTRACE_LLQUANTIZE_NSTEPSHIFT
+value|0
+define|#
+directive|define
+name|DTRACE_LLQUANTIZE_NSTEPMASK
+value|UINT16_MAX
+define|#
+directive|define
+name|DTRACE_LLQUANTIZE_FACTOR
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(uint16_t)(((x)& DTRACE_LLQUANTIZE_FACTORMASK)>> \ 	DTRACE_LLQUANTIZE_FACTORSHIFT)
+define|#
+directive|define
+name|DTRACE_LLQUANTIZE_LOW
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(uint16_t)(((x)& DTRACE_LLQUANTIZE_LOWMASK)>> \ 	DTRACE_LLQUANTIZE_LOWSHIFT)
+define|#
+directive|define
+name|DTRACE_LLQUANTIZE_HIGH
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(uint16_t)(((x)& DTRACE_LLQUANTIZE_HIGHMASK)>> \ 	DTRACE_LLQUANTIZE_HIGHSHIFT)
+define|#
+directive|define
+name|DTRACE_LLQUANTIZE_NSTEP
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(uint16_t)(((x)& DTRACE_LLQUANTIZE_NSTEPMASK)>> \ 	DTRACE_LLQUANTIZE_NSTEPSHIFT)
 define|#
 directive|define
 name|DTRACE_USTACK_NFRAMES

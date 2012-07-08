@@ -687,7 +687,7 @@ name|fprintf
 argument_list|(
 name|OutputFile
 argument_list|,
-literal|"%s %4.4d - "
+literal|"%s %4.4d -"
 argument_list|,
 name|AslErrorLevel
 index|[

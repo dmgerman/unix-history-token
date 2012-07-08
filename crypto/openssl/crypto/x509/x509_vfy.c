@@ -4855,7 +4855,6 @@ argument_list|(
 operator|&
 name|atm
 argument_list|,
-operator|-
 name|offset
 operator|*
 literal|60

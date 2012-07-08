@@ -532,6 +532,7 @@ name|frp
 argument_list|,
 sizeof|sizeof
 argument_list|(
+operator|*
 name|frp
 argument_list|)
 argument_list|)

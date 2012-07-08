@@ -1004,13 +1004,13 @@ operator|+
 literal|1
 index|]
 expr_stmt|;
-comment|/* 	 * Initialize the locks. 	 */
+comment|/* 	 * Initialize the page and queue locks. 	 */
 name|mtx_init
 argument_list|(
 operator|&
 name|vm_page_queue_mtx
 argument_list|,
-literal|"vm page queue mutex"
+literal|"vm page queue"
 argument_list|,
 name|NULL
 argument_list|,
@@ -1057,7 +1057,7 @@ index|]
 operator|.
 name|data
 argument_list|,
-literal|"page lock"
+literal|"vm page"
 argument_list|,
 name|NULL
 argument_list|,
@@ -2825,17 +2825,18 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_dirty:  *  *	Set all bits in the page's dirty field.  *  *	The object containing the specified page must be locked if the  *	call is made from the machine-independent layer.  *  *	See vm_page_clear_dirty_mask().  */
+comment|/*  *	vm_page_dirty_KBI:		[ internal use only ]  *  *	Set all bits in the page's dirty field.  *  *	The object containing the specified page must be locked if the  *	call is made from the machine-independent layer.  *  *	See vm_page_clear_dirty_mask().  *  *	This function should only be called by vm_page_dirty().  */
 end_comment
 
 begin_function
 name|void
-name|vm_page_dirty
+name|vm_page_dirty_KBI
 parameter_list|(
 name|vm_page_t
 name|m
 parameter_list|)
 block|{
+comment|/* These assertions refer to this operation by its public name. */
 name|KASSERT
 argument_list|(
 operator|(
@@ -3091,11 +3092,10 @@ expr_stmt|;
 comment|/* 	 * Since we are inserting a new and possibly dirty page, 	 * update the object's OBJ_MIGHTBEDIRTY flag. 	 */
 if|if
 condition|(
+name|pmap_page_is_write_mapped
+argument_list|(
 name|m
-operator|->
-name|aflags
-operator|&
-name|PGA_WRITEABLE
+argument_list|)
 condition|)
 name|vm_object_set_writeable_dirty
 argument_list|(
@@ -8503,7 +8503,7 @@ name|shift
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * If the object is locked and the page is neither VPO_BUSY nor 	 * PGA_WRITEABLE, then the page's dirty field cannot possibly be 	 * set by a concurrent pmap operation. 	 */
+comment|/* 	 * If the object is locked and the page is neither VPO_BUSY nor 	 * write mapped, then the page's dirty field cannot possibly be 	 * set by a concurrent pmap operation. 	 */
 name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|m
@@ -8525,15 +8525,11 @@ operator|)
 operator|==
 literal|0
 operator|&&
-operator|(
+operator|!
+name|pmap_page_is_write_mapped
+argument_list|(
 name|m
-operator|->
-name|aflags
-operator|&
-name|PGA_WRITEABLE
-operator|)
-operator|==
-literal|0
+argument_list|)
 condition|)
 name|m
 operator|->

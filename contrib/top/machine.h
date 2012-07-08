@@ -33,6 +33,11 @@ decl_stmt|;
 name|char
 modifier|*
 modifier|*
+name|arc_names
+decl_stmt|;
+name|char
+modifier|*
+modifier|*
 name|swap_names
 decl_stmt|;
 ifdef|#
@@ -121,6 +126,10 @@ decl_stmt|;
 name|int
 modifier|*
 name|memory
+decl_stmt|;
+name|int
+modifier|*
+name|arc
 decl_stmt|;
 name|int
 modifier|*

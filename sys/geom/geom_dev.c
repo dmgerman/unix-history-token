@@ -2524,7 +2524,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * g_dev_orphan()  *  * Called from below when the provider orphaned us.  * - Clear any dump settings.  * - Destroy the struct cdev *to prevent any more request from coming in.  The  *   provider is already marked with an error, so anything which comes in  *   in the interrim will be returned immediately.  * - Wait for any outstanding I/O to finish.  * - Set our access counts to zero, whatever they were.  * - Detach and self-destruct.  */
+comment|/*  * g_dev_orphan()  *  * Called from below when the provider orphaned us.  * - Clear any dump settings.  * - Destroy the struct cdev to prevent any more request from coming in.  The  *   provider is already marked with an error, so anything which comes in  *   in the interrim will be returned immediately.  * - Wait for any outstanding I/O to finish.  * - Set our access counts to zero, whatever they were.  * - Detach and self-destruct.  */
 end_comment
 
 begin_function

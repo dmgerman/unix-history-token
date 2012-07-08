@@ -12187,7 +12187,7 @@ case|:
 case|case
 name|ARRAY_RANGE_REF
 case|:
-comment|/* Operands 2 and 3 may be null.  */
+comment|/* Operands 2 and 3 may be null. 	     Compare the array index by value if it is constant first as we 	     may have different types but same value here.  */
 return|return
 operator|(
 name|OP_SAME
@@ -12195,10 +12195,29 @@ argument_list|(
 literal|0
 argument_list|)
 operator|&&
+operator|(
+name|tree_int_cst_equal
+argument_list|(
+name|TREE_OPERAND
+argument_list|(
+name|arg0
+argument_list|,
+literal|1
+argument_list|)
+argument_list|,
+name|TREE_OPERAND
+argument_list|(
+name|arg1
+argument_list|,
+literal|1
+argument_list|)
+argument_list|)
+operator|||
 name|OP_SAME
 argument_list|(
 literal|1
 argument_list|)
+operator|)
 operator|&&
 name|OP_SAME_WITH_NULL
 argument_list|(

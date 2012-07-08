@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -166,8 +166,9 @@ name|uint64_t
 name|ds_deadlist_obj
 decl_stmt|;
 comment|/* DMU_OT_DEADLIST */
+comment|/* 	 * ds_referenced_bytes, ds_compressed_bytes, and ds_uncompressed_bytes 	 * include all blocks referenced by this dataset, including those 	 * shared with any other datasets. 	 */
 name|uint64_t
-name|ds_used_bytes
+name|ds_referenced_bytes
 decl_stmt|;
 name|uint64_t
 name|ds_compressed_bytes

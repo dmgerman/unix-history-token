@@ -1877,6 +1877,10 @@ argument_list|(
 name|cnf
 argument_list|)
 expr_stmt|;
+name|cnf
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 operator|!

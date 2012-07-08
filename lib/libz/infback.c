@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* infback.c -- inflate using a call-back interface  * Copyright (C) 1995-2009 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* infback.c -- inflate using a call-back interface  * Copyright (C) 1995-2011 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_comment
@@ -169,6 +169,14 @@ operator|)
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|Z_SOLO
+return|return
+name|Z_STREAM_ERROR
+return|;
+else|#
+directive|else
 name|strm
 operator|->
 name|zalloc
@@ -184,6 +192,8 @@ name|voidpf
 operator|)
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 if|if
 condition|(
@@ -196,12 +206,22 @@ name|free_func
 operator|)
 literal|0
 condition|)
+ifdef|#
+directive|ifdef
+name|Z_SOLO
+return|return
+name|Z_STREAM_ERROR
+return|;
+else|#
+directive|else
 name|strm
 operator|->
 name|zfree
 operator|=
 name|zcfree
 expr_stmt|;
+endif|#
+directive|endif
 name|state
 operator|=
 operator|(
@@ -1624,13 +1644,6 @@ operator|<
 literal|16
 condition|)
 block|{
-name|NEEDBITS
-argument_list|(
-name|here
-operator|.
-name|bits
-argument_list|)
-expr_stmt|;
 name|DROPBITS
 argument_list|(
 name|here

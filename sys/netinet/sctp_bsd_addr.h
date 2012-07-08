@@ -112,9 +112,6 @@ name|struct
 name|mbuf
 modifier|*
 name|m
-parameter_list|,
-name|int
-name|length
 parameter_list|)
 function_decl|;
 end_function_decl

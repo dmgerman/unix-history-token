@@ -305,7 +305,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsDisplayConstantOpcodes  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Print AML opcodes that can be used in constant expressions.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    UtDisplayConstantOpcodes  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Print AML opcodes that can be used in constant expressions.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -375,7 +375,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    UtLocalCalloc  *  * PARAMETERS:  Size        - Bytes to be allocated  *  * RETURN:      Pointer to the allocated memory.  Guaranteed to be valid.  *  * DESCRIPTION: Allocate zero-initialized memory.  Aborts the compile on an  *              allocation failure, on the assumption that nothing more can be  *              accomplished.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    UtLocalCalloc  *  * PARAMETERS:  Size                - Bytes to be allocated  *  * RETURN:      Pointer to the allocated memory. Guaranteed to be valid.  *  * DESCRIPTION: Allocate zero-initialized memory. Aborts the compile on an  *              allocation failure, on the assumption that nothing more can be  *              accomplished.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -453,7 +453,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    UtBeginEvent  *  * PARAMETERS:  Name        - Ascii name of this event  *  * RETURN:      Event       - Event number (integer index)  *  * DESCRIPTION: Saves the current time with this event  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    UtBeginEvent  *  * PARAMETERS:  Name                - Ascii name of this event  *  * RETURN:      Event number (integer index)  *  * DESCRIPTION: Saves the current time with this event  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -522,7 +522,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    UtEndEvent  *  * PARAMETERS:  Event       - Event number (integer index)  *  * RETURN:      None  *  * DESCRIPTION: Saves the current time (end time) with this event  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    UtEndEvent  *  * PARAMETERS:  Event               - Event number (integer index)  *  * RETURN:      None  *  * DESCRIPTION: Saves the current time (end time) with this event  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -557,7 +557,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    UtHexCharToValue  *  * PARAMETERS:  HexChar         - Hex character in Ascii  *  * RETURN:      The binary value of the hex character  *  * DESCRIPTION: Perform ascii-to-hex translation  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    UtHexCharToValue  *  * PARAMETERS:  HexChar             - Hex character in Ascii  *  * RETURN:      The binary value of the hex character  *  * DESCRIPTION: Perform ascii-to-hex translation  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -624,7 +624,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    UtConvertByteToHex  *  * PARAMETERS:  RawByte         - Binary data  *              Buffer          - Pointer to where the hex bytes will be stored  *  * RETURN:      Ascii hex byte is stored in Buffer.  *  * DESCRIPTION: Perform hex-to-ascii translation.  The return data is prefixed  *              with "0x"  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    UtConvertByteToHex  *  * PARAMETERS:  RawByte             - Binary data  *              Buffer              - Pointer to where the hex bytes will be  *                                    stored  *  * RETURN:      Ascii hex byte is stored in Buffer.  *  * DESCRIPTION: Perform hex-to-ascii translation. The return data is prefixed  *              with "0x"  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -691,7 +691,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    UtConvertByteToAsmHex  *  * PARAMETERS:  RawByte         - Binary data  *              Buffer          - Pointer to where the hex bytes will be stored  *  * RETURN:      Ascii hex byte is stored in Buffer.  *  * DESCRIPTION: Perform hex-to-ascii translation.  The return data is prefixed  *              with "0x"  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    UtConvertByteToAsmHex  *  * PARAMETERS:  RawByte             - Binary data  *              Buffer              - Pointer to where the hex bytes will be  *                                    stored  *  * RETURN:      Ascii hex byte is stored in Buffer.  *  * DESCRIPTION: Perform hex-to-ascii translation. The return data is prefixed  *              with "0x"  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -758,7 +758,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    DbgPrint  *  * PARAMETERS:  Type            - Type of output  *              Fmt             - Printf format string  *              ...             - variable printf list  *  * RETURN:      None  *  * DESCRIPTION: Conditional print statement.  Prints to stderr only if the  *              debug flag is set.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    DbgPrint  *  * PARAMETERS:  Type                - Type of output  *              Fmt                 - Printf format string  *              ...                 - variable printf list  *  * RETURN:      None  *  * DESCRIPTION: Conditional print statement. Prints to stderr only if the  *              debug flag is set.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -916,7 +916,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    UtSetParseOpName  *  * PARAMETERS:  Op  *  * RETURN:      None  *  * DESCRIPTION: Insert the ascii name of the parse opcode  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    UtSetParseOpName  *  * PARAMETERS:  Op                  - Parse op to be named.  *  * RETURN:      None  *  * DESCRIPTION: Insert the ascii name of the parse opcode  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -952,7 +952,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    UtDisplaySummary  *  * PARAMETERS:  FileID          - ID of outpout file  *  * RETURN:      None  *  * DESCRIPTION: Display compilation statistics  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    UtDisplaySummary  *  * PARAMETERS:  FileID              - ID of outpout file  *  * RETURN:      None  *  * DESCRIPTION: Display compilation statistics  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1281,7 +1281,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    UtDisplaySummary  *  * PARAMETERS:  Op              - Integer parse node  *              LowValue        - Smallest allowed value  *              HighValue       - Largest allowed value  *  * RETURN:      Op if OK, otherwise NULL  *  * DESCRIPTION: Check integer for an allowable range  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    UtCheckIntegerRange  *  * PARAMETERS:  Op                  - Integer parse node  *              LowValue            - Smallest allowed value  *              HighValue           - Largest allowed value  *  * RETURN:      Op if OK, otherwise NULL  *  * DESCRIPTION: Check integer for an allowable range  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1412,7 +1412,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    UtGetStringBuffer  *  * PARAMETERS:  Length          - Size of buffer requested  *  * RETURN:      Pointer to the buffer.  Aborts on allocation failure  *  * DESCRIPTION: Allocate a string buffer.  Bypass the local  *              dynamic memory manager for performance reasons (This has a  *              major impact on the speed of the compiler.)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    UtGetStringBuffer  *  * PARAMETERS:  Length              - Size of buffer requested  *  * RETURN:      Pointer to the buffer. Aborts on allocation failure  *  * DESCRIPTION: Allocate a string buffer. Bypass the local  *              dynamic memory manager for performance reasons (This has a  *              major impact on the speed of the compiler.)  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1474,7 +1474,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    UtInternalizeName  *  * PARAMETERS:  ExternalName            - Name to convert  *              ConvertedName           - Where the converted name is returned  *  * RETURN:      Status  *  * DESCRIPTION: Convert an external (ASL) name to an internal (AML) name  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    UtInternalizeName  *  * PARAMETERS:  ExternalName        - Name to convert  *              ConvertedName       - Where the converted name is returned  *  * RETURN:      Status  *  * DESCRIPTION: Convert an external (ASL) name to an internal (AML) name  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1587,7 +1587,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    UtPadNameWithUnderscores  *  * PARAMETERS:  NameSeg         - Input nameseg  *              PaddedNameSeg   - Output padded nameseg  *  * RETURN:      Padded nameseg.  *  * DESCRIPTION: Pads a NameSeg with underscores if necessary to form a full  *              ACPI_NAME.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    UtPadNameWithUnderscores  *  * PARAMETERS:  NameSeg             - Input nameseg  *              PaddedNameSeg       - Output padded nameseg  *  * RETURN:      Padded nameseg.  *  * DESCRIPTION: Pads a NameSeg with underscores if necessary to form a full  *              ACPI_NAME.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1655,7 +1655,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    UtAttachNameseg  *  * PARAMETERS:  Op              - Parent parse node  *              Name            - Full ExternalName  *  * RETURN:      None; Sets the NameSeg field in parent node  *  * DESCRIPTION: Extract the last nameseg of the ExternalName and store it  *              in the NameSeg field of the Op.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    UtAttachNameseg  *  * PARAMETERS:  Op                  - Parent parse node  *              Name                - Full ExternalName  *  * RETURN:      None; Sets the NameSeg field in parent node  *  * DESCRIPTION: Extract the last nameseg of the ExternalName and store it  *              in the NameSeg field of the Op.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1768,7 +1768,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    UtAttachNamepathToOwner  *  * PARAMETERS:  Op            - Parent parse node  *              NameOp        - Node that contains the name  *  * RETURN:      Sets the ExternalName and Namepath in the parent node  *  * DESCRIPTION: Store the name in two forms in the parent node:  The original  *              (external) name, and the internalized name that is used within  *              the ACPI namespace manager.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    UtAttachNamepathToOwner  *  * PARAMETERS:  Op                  - Parent parse node  *              NameOp              - Node that contains the name  *  * RETURN:      Sets the ExternalName and Namepath in the parent node  *  * DESCRIPTION: Store the name in two forms in the parent node: The original  *              (external) name, and the internalized name that is used within  *              the ACPI namespace manager.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1862,7 +1862,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    UtDoConstant  *  * PARAMETERS:  String      - Hex, Octal, or Decimal string  *  * RETURN:      Converted Integer  *  * DESCRIPTION: Convert a string to an integer.  With error checking.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    UtDoConstant  *  * PARAMETERS:  String              - Hex, Octal, or Decimal string  *  * RETURN:      Converted Integer  *  * DESCRIPTION: Convert a string to an integer, with error checking.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1939,7 +1939,7 @@ comment|/* TBD: use version in ACPI CA main code base? */
 end_comment
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    UtStrtoul64  *  * PARAMETERS:  String          - Null terminated string  *              Terminater      - Where a pointer to the terminating byte is  *                                returned  *              Base            - Radix of the string  *  * RETURN:      Converted value  *  * DESCRIPTION: Convert a string into an unsigned value.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    UtStrtoul64  *  * PARAMETERS:  String              - Null terminated string  *              Terminater          - Where a pointer to the terminating byte  *                                    is returned  *              Base                - Radix of the string  *  * RETURN:      Converted value  *  * DESCRIPTION: Convert a string into an unsigned value.  *  ******************************************************************************/
 end_comment
 
 begin_function

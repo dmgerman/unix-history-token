@@ -4,11 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
-end_comment
-
-begin_comment
-comment|/*  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -3335,18 +3331,16 @@ return|return;
 block|}
 name|ASSERT3P
 argument_list|(
-name|dmu_ot
-index|[
+name|DMU_OT_BYTESWAP
+argument_list|(
 name|dn
 operator|->
 name|dn_type
-index|]
-operator|.
-name|ot_byteswap
+argument_list|)
 argument_list|,
 operator|==
 argument_list|,
-name|zap_byteswap
+name|DMU_BSWAP_ZAP
 argument_list|)
 expr_stmt|;
 if|if

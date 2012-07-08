@@ -141,7 +141,7 @@ value|(8)
 end_define
 
 begin_comment
-comment|/* XXX: Can't include i81342reg.h because  			       definitions overrides the ones from i80321reg.h 			       */
+comment|/* XXX: Can't include i81342reg.h because 			       definitions overrides the ones from i80321reg.h 			       */
 end_comment
 
 begin_endif

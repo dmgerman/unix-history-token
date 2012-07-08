@@ -301,28 +301,12 @@ name|mask
 operator|>>
 literal|32
 expr_stmt|;
-comment|/* xrstor (%rdi) */
-asm|__asm __volatile(".byte	0x0f,0xae,0x2f" : :
-literal|"a"
-operator|(
-name|low
-operator|)
-operator|,
-literal|"d"
-operator|(
-name|hi
-operator|)
-operator|,
-literal|"D"
-operator|(
-name|addr
-operator|)
-block|)
-function|;
+asm|__asm __volatile("xrstor %0" : : "m" (*addr), "a" (low), "d" (hi));
+block|}
 end_function
 
 begin_function
-unit|}  static
+specifier|static
 name|__inline
 name|void
 name|xsave
@@ -350,71 +334,8 @@ name|mask
 operator|>>
 literal|32
 expr_stmt|;
-comment|/* xsave (%rdi) */
-asm|__asm __volatile(".byte	0x0f,0xae,0x27" : :
-literal|"a"
-operator|(
-name|low
-operator|)
-operator|,
-literal|"d"
-operator|(
-name|hi
-operator|)
-operator|,
-literal|"D"
-operator|(
-name|addr
-operator|)
-operator|:
+asm|__asm __volatile("xsave %0" : "=m" (*addr) : "a" (low), "d" (hi) :
 literal|"memory"
-block|)
-function|;
-end_function
-
-begin_function
-unit|}  static
-name|__inline
-name|void
-name|xsetbv
-parameter_list|(
-name|uint32_t
-name|reg
-parameter_list|,
-name|uint64_t
-name|val
-parameter_list|)
-block|{
-name|uint32_t
-name|low
-decl_stmt|,
-name|hi
-decl_stmt|;
-name|low
-operator|=
-name|val
-expr_stmt|;
-name|hi
-operator|=
-name|val
-operator|>>
-literal|32
-expr_stmt|;
-asm|__asm __volatile(".byte 0x0f,0x01,0xd1" : :
-literal|"c"
-operator|(
-name|reg
-operator|)
-operator|,
-literal|"a"
-operator|(
-name|low
-operator|)
-operator|,
-literal|"d"
-operator|(
-name|hi
-operator|)
 block|)
 function|;
 end_function
@@ -551,19 +472,6 @@ name|addr
 parameter_list|,
 name|uint64_t
 name|mask
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|xsetbv
-parameter_list|(
-name|uint32_t
-name|reg
-parameter_list|,
-name|uint64_t
-name|val
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1034,7 +942,7 @@ operator||
 name|CR4_XSAVE
 argument_list|)
 expr_stmt|;
-name|xsetbv
+name|load_xcr
 argument_list|(
 name|XCR0
 argument_list|,

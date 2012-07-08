@@ -3104,7 +3104,7 @@ value|24
 end_define
 
 begin_comment
-comment|/*   * Queue Manager  */
+comment|/*  * Queue Manager  */
 end_comment
 
 begin_define

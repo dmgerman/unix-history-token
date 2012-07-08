@@ -76,6 +76,28 @@ end_define
 begin_define
 define|#
 directive|define
+name|AT91_DBGU0
+value|0x0ffff200
+end_define
+
+begin_comment
+comment|/* Most */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91_DBGU1
+value|0x0fffee00
+end_define
+
+begin_comment
+comment|/* SAM9263, CAP9, and SAM9G45 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|AT91_DBGU_SIZE
 value|0x200
 end_define

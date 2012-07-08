@@ -415,9 +415,9 @@ name|cpus
 argument_list|,
 name|PWAIT
 argument_list|,
-operator|(
+literal|"%s"
+argument_list|,
 name|name
-operator|)
 argument_list|)
 expr_stmt|;
 return|return

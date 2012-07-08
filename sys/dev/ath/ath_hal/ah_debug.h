@@ -133,7 +133,7 @@ block|,
 comment|/* BB/MAC hang debugging */
 name|HAL_DEBUG_UNMASKABLE
 init|=
-literal|0xf0000000
+literal|0x80000000
 block|,
 comment|/* always printed */
 name|HAL_DEBUG_ANY

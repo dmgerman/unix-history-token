@@ -671,6 +671,9 @@ name|mfi_open
 parameter_list|(
 name|int
 name|unit
+parameter_list|,
+name|int
+name|acs
 parameter_list|)
 function_decl|;
 end_function_decl

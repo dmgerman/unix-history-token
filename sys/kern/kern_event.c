@@ -3133,7 +3133,7 @@ condition|)
 goto|goto
 name|done2
 goto|;
-comment|/* An extra reference on `nfp' has been held for us by falloc(). */
+comment|/* An extra reference on `fp' has been held for us by falloc(). */
 name|kq
 operator|=
 name|malloc

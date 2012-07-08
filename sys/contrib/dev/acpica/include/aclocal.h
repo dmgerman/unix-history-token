@@ -1303,6 +1303,30 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/* Notify info for implicit notify, multiple device objects */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_gpe_notify_info
+block|{
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|DeviceNode
+decl_stmt|;
+comment|/* Device to be notified */
+name|struct
+name|acpi_gpe_notify_info
+modifier|*
+name|Next
+decl_stmt|;
+block|}
+name|ACPI_GPE_NOTIFY_INFO
+typedef|;
+end_typedef
+
+begin_comment
 comment|/*  * GPE dispatch info. At any time, the GPE can have at most one type  * of dispatch - Method, Handler, or Implicit Notify.  */
 end_comment
 
@@ -1316,17 +1340,16 @@ modifier|*
 name|MethodNode
 decl_stmt|;
 comment|/* Method node for this GPE level */
-name|struct
-name|acpi_gpe_handler_info
+name|ACPI_GPE_HANDLER_INFO
 modifier|*
 name|Handler
 decl_stmt|;
 comment|/* Installed GPE handler */
-name|ACPI_NAMESPACE_NODE
+name|ACPI_GPE_NOTIFY_INFO
 modifier|*
-name|DeviceNode
+name|NotifyList
 decl_stmt|;
-comment|/* Parent _PRW device for implicit notify */
+comment|/* List of _PRW devices for implicit notifies */
 block|}
 name|ACPI_GPE_DISPATCH_INFO
 typedef|;
@@ -1345,7 +1368,7 @@ name|union
 name|acpi_gpe_dispatch_info
 name|Dispatch
 decl_stmt|;
-comment|/* Either Method or Handler */
+comment|/* Either Method, Handler, or NotifyList */
 name|struct
 name|acpi_gpe_register_info
 modifier|*
@@ -2671,6 +2694,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_PARSEOP_PREDEF_CHECKED
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_PARSEOP_SPECIAL
 value|0x10
 end_define
@@ -3863,6 +3893,37 @@ directive|define
 name|ACPI_NUM_MEM_LISTS
 value|2
 end_define
+
+begin_comment
+comment|/*****************************************************************************  *  * Info/help support  *  ****************************************************************************/
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|ah_predefined_name
+block|{
+name|char
+modifier|*
+name|Name
+decl_stmt|;
+name|char
+modifier|*
+name|Description
+decl_stmt|;
+ifndef|#
+directive|ifndef
+name|ACPI_ASL_COMPILER
+name|char
+modifier|*
+name|Action
+decl_stmt|;
+endif|#
+directive|endif
+block|}
+name|AH_PREDEFINED_NAME
+typedef|;
+end_typedef
 
 begin_endif
 endif|#

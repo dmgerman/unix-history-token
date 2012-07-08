@@ -859,7 +859,7 @@ name|soc_data
 operator|.
 name|type
 operator|==
-name|AT91_CPU_SAM9260
+name|AT91_T_SAM9260
 condition|)
 block|{
 name|at91_add_child
@@ -1268,7 +1268,7 @@ argument_list|(
 literal|"Enable to map matrix registers"
 argument_list|)
 expr_stmt|;
-comment|/* activate NAND*/
+comment|/* activate NAND */
 name|i
 operator|=
 name|bus_space_read_4

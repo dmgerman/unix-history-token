@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2009 Greg Ansley.  All rights reserved.  *  * Redis
 end_comment
 
 begin_comment
-comment|/*   * This board file can be used for both:  * Atmel SAM9G20-EK Development Card   */
+comment|/*  * This board file can be used for both:  * Atmel SAM9G20-EK Development Card  */
 end_comment
 
 begin_include
@@ -31,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/board.h>
 end_include
 
 begin_include
@@ -74,6 +80,7 @@ comment|//#include<arm/at91/at91_led.h>
 end_comment
 
 begin_function
+name|BOARD_INIT
 name|long
 name|board_init
 parameter_list|(
@@ -231,7 +238,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|1
-comment|/*  	 * Turn off Clock to DataFlash, conflicts with MCI clock. 	 */
+comment|/* 	 * Turn off Clock to DataFlash, conflicts with MCI clock. 	 */
 name|at91_pio_use_gpio
 argument_list|(
 name|AT91SAM9G20_PIOA_BASE
@@ -558,6 +565,16 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|ARM_BOARD
+argument_list|(
+name|AT91SAM9G20
+argument_list|,
+literal|"Atmel SAM9G20-EK Development Card"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

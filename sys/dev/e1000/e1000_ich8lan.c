@@ -3231,7 +3231,13 @@ name|out
 goto|;
 block|}
 comment|/* 	 * Auto-Neg is enabled.  Auto Speed Detection takes care 	 * of MAC speed/duplex configuration.  So we only need to 	 * configure Collision Distance in the MAC. 	 */
-name|e1000_config_collision_dist_generic
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|config_collision_dist
 argument_list|(
 name|hw
 argument_list|)

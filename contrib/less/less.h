@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1984-2011  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2012  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_define
@@ -2260,6 +2260,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|CH_NODATA
+value|020
+end_define
+
+begin_comment
+comment|/* Special case for zero length files */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ch_zero
 parameter_list|()
 value|((POSITION)0)
@@ -2270,6 +2281,13 @@ define|#
 directive|define
 name|FAKE_HELPFILE
 value|"@/\\less/\\help/\\file/\\@"
+end_define
+
+begin_define
+define|#
+directive|define
+name|FAKE_EMPTYFILE
+value|"@/\\less/\\empty/\\file/\\@"
 end_define
 
 begin_comment

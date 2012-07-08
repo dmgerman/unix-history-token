@@ -91,6 +91,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|CmDumpAllEvents
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AslCompilerSignon  *  * PARAMETERS:  FileId      - ID of the output file  *  * RETURN:      None  *  * DESCRIPTION: Display compiler signon  *  ******************************************************************************/
 end_comment
@@ -1585,19 +1595,21 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    CmDumpEvent  *  * PARAMETERS:  Event           - A compiler event struct  *  * RETURN:      None.  *  * DESCRIPTION: Dump a compiler event struct  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    CmDumpAllEvents  *  * PARAMETERS:  None  *  * RETURN:      None.  *  * DESCRIPTION: Dump all compiler events  *  ******************************************************************************/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|CmDumpEvent
+name|CmDumpAllEvents
 parameter_list|(
+name|void
+parameter_list|)
+block|{
 name|ASL_EVENT_INFO
 modifier|*
 name|Event
-parameter_list|)
-block|{
+decl_stmt|;
 name|UINT32
 name|Delta
 decl_stmt|;
@@ -1607,16 +1619,52 @@ decl_stmt|;
 name|UINT32
 name|MSec
 decl_stmt|;
+name|UINT32
+name|i
+decl_stmt|;
+name|Event
+operator|=
+name|AslGbl_Events
+expr_stmt|;
+name|DbgPrint
+argument_list|(
+name|ASL_DEBUG_OUTPUT
+argument_list|,
+literal|"\n\nElapsed time for major events\n\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-operator|!
+name|Gbl_CompileTimesFlag
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"\nElapsed time for major events\n\n"
+argument_list|)
+expr_stmt|;
+block|}
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|AslGbl_NextEvent
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
 name|Event
 operator|->
 name|Valid
 condition|)
 block|{
-return|return;
-block|}
 comment|/* Delta will be in 100-nanosecond units */
 name|Delta
 operator|=
@@ -1680,6 +1728,30 @@ operator|->
 name|EventName
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Gbl_CompileTimesFlag
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%8u usec %8u msec - %s\n"
+argument_list|,
+name|USec
+argument_list|,
+name|MSec
+argument_list|,
+name|Event
+operator|->
+name|EventName
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+name|Event
+operator|++
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -1714,71 +1786,15 @@ name|ASL_FILE_STDOUT
 argument_list|)
 expr_stmt|;
 block|}
-name|DbgPrint
-argument_list|(
-name|ASL_DEBUG_OUTPUT
-argument_list|,
-literal|"\n\nElapsed time for major events\n\n"
-argument_list|)
+comment|/* Emit compile times if enabled */
+name|CmDumpAllEvents
+argument_list|()
 expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|AslGbl_NextEvent
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|CmDumpEvent
-argument_list|(
-operator|&
-name|AslGbl_Events
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|Gbl_CompileTimesFlag
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"\nElapsed time for major events\n\n"
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|AslGbl_NextEvent
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|CmDumpEvent
-argument_list|(
-operator|&
-name|AslGbl_Events
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
-block|}
 name|printf
 argument_list|(
 literal|"\nMiscellaneous compile statistics\n\n"

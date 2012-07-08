@@ -3338,7 +3338,7 @@ name|ACPI_RTYPE_PACKAGE
 block|}
 block|}
 block|,
-comment|/* Variable-length (Pkgs) each 2Ref/6Int */
+comment|/* Variable-length (Pkgs) each 2 Ref/6 Int */
 block|{
 block|{
 block|{
@@ -3367,7 +3367,7 @@ name|ACPI_RTYPE_PACKAGE
 block|}
 block|}
 block|,
-comment|/* Variable-length (Pkgs) each 5Int with count */
+comment|/* Variable-length (Pkgs) each 5 Int with count */
 block|{
 block|{
 block|{
@@ -3406,7 +3406,7 @@ name|ACPI_RTYPE_PACKAGE
 block|}
 block|}
 block|,
-comment|/* Variable-length (Pkgs) each 5Int */
+comment|/* Variable-length (Pkgs) each 5 Int */
 block|{
 block|{
 block|{

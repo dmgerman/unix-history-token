@@ -15,6 +15,34 @@ directive|define
 name|__T4_L2T_H
 end_define
 
+begin_comment
+comment|/* identifies sync vs async L2T_WRITE_REQs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|S_SYNC_WR
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_SYNC_WR
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< S_SYNC_WR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|F_SYNC_WR
+value|V_SYNC_WR(1)
+end_define
+
 begin_enum
 enum|enum
 block|{
@@ -28,6 +56,34 @@ end_enum
 begin_comment
 comment|/* # of L2T entries */
 end_comment
+
+begin_enum
+enum|enum
+block|{
+name|L2T_STATE_VALID
+block|,
+comment|/* entry is up to date */
+name|L2T_STATE_STALE
+block|,
+comment|/* entry may be used but needs revalidation */
+name|L2T_STATE_RESOLVING
+block|,
+comment|/* entry needs address resolution */
+name|L2T_STATE_FAILED
+block|,
+comment|/* failed to resolve */
+name|L2T_STATE_SYNC_WRITE
+block|,
+comment|/* synchronous write of entry underway */
+comment|/* when state is one of the below the entry is not hashed */
+name|L2T_STATE_SWITCHING
+block|,
+comment|/* entry is being used by a switching filter */
+name|L2T_STATE_UNUSED
+comment|/* entry not in use */
+block|}
+enum|;
+end_enum
 
 begin_comment
 comment|/*  * Each L2T entry plays multiple roles.  First of all, it keeps state for the  * corresponding entry of the HW L2 table and maintains a queue of offload  * packets awaiting address resolution.  Second, it is a node of a hash table  * chain, where the nodes of the chain are linked together through their next  * pointer.  Finally, each node is a bucket of a hash table, pointing to the  * first element in its chain through its first pointer.  */
@@ -47,11 +103,8 @@ decl_stmt|;
 comment|/* entry index */
 name|uint32_t
 name|addr
-index|[
-literal|4
-index|]
 decl_stmt|;
-comment|/* next hop IP or IPv6 address */
+comment|/* next hop IP address */
 name|struct
 name|ifnet
 modifier|*
@@ -66,16 +119,6 @@ name|uint16_t
 name|vlan
 decl_stmt|;
 comment|/* VLAN TCI (id: 0-11, prio: 13-15) */
-name|int
-name|ifindex
-decl_stmt|;
-comment|/* interface index */
-name|struct
-name|llentry
-modifier|*
-name|lle
-decl_stmt|;
-comment|/* llentry for next hop */
 name|struct
 name|l2t_entry
 modifier|*
@@ -88,17 +131,14 @@ modifier|*
 name|next
 decl_stmt|;
 comment|/* next l2t_entry on chain */
-name|struct
-name|mbuf
-modifier|*
-name|arpq_head
-decl_stmt|;
-comment|/* list of mbufs awaiting resolution */
-name|struct
-name|mbuf
-modifier|*
-name|arpq_tail
-decl_stmt|;
+name|STAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|wrqe
+argument_list|)
+name|wr_list
+expr_stmt|;
+comment|/* list of WRs awaiting resolution */
 name|struct
 name|mtx
 name|lock
@@ -113,10 +153,6 @@ name|hash
 decl_stmt|;
 comment|/* hash bucket the entry is on */
 name|uint8_t
-name|v6
-decl_stmt|;
-comment|/* whether entry is for IPv6 */
-name|uint8_t
 name|lport
 decl_stmt|;
 comment|/* associated offload logical port */
@@ -127,6 +163,36 @@ name|ETHER_ADDR_LEN
 index|]
 decl_stmt|;
 comment|/* next hop's MAC address */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|l2t_data
+block|{
+name|struct
+name|rwlock
+name|lock
+decl_stmt|;
+specifier|volatile
+name|int
+name|nfree
+decl_stmt|;
+comment|/* number of free entries */
+name|struct
+name|l2t_entry
+modifier|*
+name|rover
+decl_stmt|;
+comment|/* starting point for next allocation */
+name|struct
+name|l2t_entry
+name|l2tab
+index|[
+name|L2T_SIZE
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -147,6 +213,19 @@ end_function_decl
 begin_function_decl
 name|int
 name|t4_free_l2t
+parameter_list|(
+name|struct
+name|l2t_data
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|l2t_entry
+modifier|*
+name|t4_alloc_l2e
 parameter_list|(
 name|struct
 name|l2t_data
@@ -191,15 +270,101 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|t4_write_l2e
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+parameter_list|,
+name|struct
+name|l2t_entry
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|do_l2t_write_rpl
+parameter_list|(
+name|struct
+name|sge_iq
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|rss_header
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+specifier|static
+specifier|inline
 name|void
 name|t4_l2t_release
 parameter_list|(
 name|struct
 name|l2t_entry
 modifier|*
+name|e
 parameter_list|)
-function_decl|;
-end_function_decl
+block|{
+name|struct
+name|l2t_data
+modifier|*
+name|d
+init|=
+name|container_of
+argument_list|(
+name|e
+argument_list|,
+expr|struct
+name|l2t_data
+argument_list|,
+name|l2tab
+index|[
+name|e
+operator|->
+name|idx
+index|]
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|atomic_fetchadd_int
+argument_list|(
+operator|&
+name|e
+operator|->
+name|refcnt
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+operator|==
+literal|1
+condition|)
+name|atomic_add_int
+argument_list|(
+operator|&
+name|d
+operator|->
+name|nfree
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_ifdef
 ifdef|#
@@ -212,72 +377,6 @@ name|int
 name|sysctl_l2t
 parameter_list|(
 name|SYSCTL_HANDLER_ARGS
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|TCP_OFFLOAD_DISABLE
-end_ifndef
-
-begin_function_decl
-name|struct
-name|l2t_entry
-modifier|*
-name|t4_l2t_get
-parameter_list|(
-name|struct
-name|port_info
-modifier|*
-parameter_list|,
-name|struct
-name|ifnet
-modifier|*
-parameter_list|,
-name|struct
-name|sockaddr
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|t4_l2t_send
-parameter_list|(
-name|struct
-name|adapter
-modifier|*
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-parameter_list|,
-name|struct
-name|l2t_entry
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|t4_l2t_update
-parameter_list|(
-name|struct
-name|adapter
-modifier|*
-parameter_list|,
-name|struct
-name|llentry
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

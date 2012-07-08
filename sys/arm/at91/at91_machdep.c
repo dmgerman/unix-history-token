@@ -164,6 +164,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/board.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -275,16 +281,16 @@ directive|include
 file|<arm/at91/at91sam9g20reg.h>
 end_include
 
+begin_comment
+comment|/* Page table for mapping proc0 zero page */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|KERNEL_PT_SYS
 value|0
 end_define
-
-begin_comment
-comment|/* Page table for mapping proc0 zero page */
-end_comment
 
 begin_define
 define|#
@@ -300,16 +306,16 @@ name|KERNEL_PT_KERN_NUM
 value|22
 end_define
 
+begin_comment
+comment|/* L2 table for mapping after kernel */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|KERNEL_PT_AFKERNEL
 value|KERNEL_PT_KERN + KERNEL_PT_KERN_NUM
 end_define
-
-begin_comment
-comment|/* L2 table for mapping after kernel */
-end_comment
 
 begin_define
 define|#
@@ -489,14 +495,6 @@ name|kernelstack
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|trapframe
-name|proc0_tf
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* Static device mappings. */
 end_comment
@@ -525,7 +523,7 @@ block|,
 name|PTE_NOCACHE
 block|, 	}
 block|,
-comment|/* We can't just map the OHCI registers VA == PA, because 	 * AT91xx_xxx_BASE belongs to the userland address space. 	 * We could just choose a different virtual address, but a better 	 * solution would probably be to just use pmap_mapdev() to allocate 	 * KVA, as we don't need the OHCI controller before the vm 	 * initialization is done. However, the AT91 resource allocation 	 * system doesn't know how to use pmap_mapdev() yet. 	 * Care must be taken to ensure PA and VM address do not overlap 	 * between entries. 	 */
+comment|/* 	 * We can't just map the OHCI registers VA == PA, because 	 * AT91xx_xxx_BASE belongs to the userland address space. 	 * We could just choose a different virtual address, but a better 	 * solution would probably be to just use pmap_mapdev() to allocate 	 * KVA, as we don't need the OHCI controller before the vm 	 * initialization is done. However, the AT91 resource allocation 	 * system doesn't know how to use pmap_mapdev() yet. 	 * Care must be taken to ensure PA and VM address do not overlap 	 * between entries. 	 */
 block|{
 comment|/* 		 * Add the ohci controller, and anything else that might be 		 * on this chip select for a VA/PA mapping. 		 */
 comment|/* Internal Memory 1MB  */
@@ -557,7 +555,7 @@ block|,
 name|PTE_NOCACHE
 block|, 	}
 block|,
-comment|/* The next two should be good for the 9260, 9261 and 9G20 since 	 * addresses mapping is the same. */
+comment|/* 	 * The next two should be good for the 9260, 9261 and 9G20 since 	 * addresses mapping is the same. 	 */
 block|{
 comment|/* Internal Memory 1MB  */
 name|AT91SAM9G20_OHCI_BASE
@@ -603,6 +601,40 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LINUX_BOOT_ABI
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|membanks
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|memstart
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|memsize
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|long
 name|at91_ramsize
@@ -614,6 +646,9 @@ name|uint32_t
 name|cr
 decl_stmt|,
 name|mr
+decl_stmt|,
+modifier|*
+name|SDRAMC
 decl_stmt|;
 name|int
 name|banks
@@ -624,16 +659,34 @@ name|cols
 decl_stmt|,
 name|bw
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|LINUX_BOOT_ABI
+comment|/* 	 * If we found any ATAGs that were for memory, return the first bank. 	 */
+if|if
+condition|(
+name|membanks
+operator|>
+literal|0
+condition|)
+return|return
+operator|(
+name|memsize
+index|[
+literal|0
+index|]
+operator|)
+return|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|at91_is_rm92
 argument_list|()
 condition|)
 block|{
-name|uint32_t
-modifier|*
 name|SDRAMC
-init|=
+operator|=
 operator|(
 name|uint32_t
 operator|*
@@ -643,7 +696,7 @@ name|AT91_BASE
 operator|+
 name|AT91RM92_SDRAMC_BASE
 operator|)
-decl_stmt|;
+expr_stmt|;
 name|cr
 operator|=
 name|SDRAMC
@@ -713,11 +766,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* This should be good for the 9260, 9261, 9G20, 9G35 and 9X25 as addresses 		 * and registers are the same */
-name|uint32_t
-modifier|*
+comment|/* 		 * This should be good for the 9260, 9261, 9G20, 9G35 and 9X25 		 * as addresses and registers are the same. 		 */
 name|SDRAMC
-init|=
+operator|=
 operator|(
 name|uint32_t
 operator|*
@@ -727,7 +778,7 @@ name|AT91_BASE
 operator|+
 name|AT91SAM9G20_SDRAMC_BASE
 operator|)
-decl_stmt|;
+expr_stmt|;
 name|cr
 operator|=
 name|SDRAMC
@@ -814,6 +865,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -897,6 +949,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -984,28 +1037,6 @@ literal|"at91sam9x35"
 block|, }
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|AT91_DBGU0
-value|0x0ffff200
-end_define
-
-begin_comment
-comment|/* Most */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AT91_DBGU1
-value|0x0fffee00
-end_define
-
-begin_comment
-comment|/* SAM9263, CAP9, and SAM9G45 */
-end_comment
 
 begin_decl_stmt
 name|struct
@@ -1241,7 +1272,9 @@ expr_stmt|;
 break|break;
 default|default:
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 switch|switch
@@ -1417,7 +1450,9 @@ index|]
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -1445,6 +1480,52 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ARM_MANY_BOARD
+end_ifdef
+
+begin_comment
+comment|/* likely belongs in arm/arm/machdep.c, but since board_init is still at91 only... */
+end_comment
+
+begin_expr_stmt
+name|SET_DECLARE
+argument_list|(
+name|arm_board_set
+argument_list|,
+specifier|const
+expr|struct
+name|arm_board
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* Not yet fully functional, but enough to build ATMEL config */
+end_comment
+
+begin_function
+specifier|static
+name|long
+name|board_init
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|-
+literal|1
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void
@@ -1485,12 +1566,14 @@ decl_stmt|;
 name|vm_offset_t
 name|lastaddr
 decl_stmt|;
-name|set_cpufuncs
-argument_list|()
-expr_stmt|;
 name|lastaddr
 operator|=
-name|fake_preload_metadata
+name|parse_boot_param
+argument_list|(
+name|abp
+argument_list|)
+expr_stmt|;
+name|set_cpufuncs
 argument_list|()
 expr_stmt|;
 name|pcpu_init
@@ -1539,7 +1622,7 @@ parameter_list|,
 name|np
 parameter_list|)
 define|\
-value|alloc_pages((var).pv_va, (np));         \ 	(var).pv_pa = (var).pv_va + (KERNPHYSADDR - KERNVIRTADDR);
+value|alloc_pages((var).pv_va, (np));					\ 	(var).pv_pa = (var).pv_va + (KERNPHYSADDR - KERNVIRTADDR);
 define|#
 directive|define
 name|alloc_pages
@@ -1549,7 +1632,7 @@ parameter_list|,
 name|np
 parameter_list|)
 define|\
-value|(var) = freemempos;		\ 	freemempos += (np * PAGE_SIZE);		\ 	memset((char *)(var), 0, ((np) * PAGE_SIZE));
+value|(var) = freemempos;						\ 	freemempos += (np * PAGE_SIZE);					\ 	memset((char *)(var), 0, ((np) * PAGE_SIZE));
 while|while
 condition|(
 operator|(
@@ -1664,9 +1747,6 @@ operator|+
 name|KERNPHYSADDR
 expr_stmt|;
 block|}
-name|i
-operator|++
-expr_stmt|;
 block|}
 comment|/* 	 * Allocate a page for the system page mapped to V0x00000000 	 * This page will just contain the system vectors and can be 	 * shared by all processes. 	 */
 name|valloc_pages
@@ -2237,66 +2317,12 @@ expr_stmt|;
 name|undefined_init
 argument_list|()
 expr_stmt|;
-name|proc_linkup0
+name|init_proc0
 argument_list|(
-operator|&
-name|proc0
-argument_list|,
-operator|&
-name|thread0
-argument_list|)
-expr_stmt|;
-name|thread0
-operator|.
-name|td_kstack
-operator|=
 name|kernelstack
 operator|.
 name|pv_va
-expr_stmt|;
-name|thread0
-operator|.
-name|td_pcb
-operator|=
-operator|(
-expr|struct
-name|pcb
-operator|*
-operator|)
-operator|(
-name|thread0
-operator|.
-name|td_kstack
-operator|+
-name|KSTACK_PAGES
-operator|*
-name|PAGE_SIZE
-operator|)
-operator|-
-literal|1
-expr_stmt|;
-name|thread0
-operator|.
-name|td_pcb
-operator|->
-name|pcb_flags
-operator|=
-literal|0
-expr_stmt|;
-name|thread0
-operator|.
-name|td_frame
-operator|=
-operator|&
-name|proc0_tf
-expr_stmt|;
-name|pcpup
-operator|->
-name|pc_curpcb
-operator|=
-name|thread0
-operator|.
-name|td_pcb
+argument_list|)
 expr_stmt|;
 name|arm_vector_init
 argument_list|(
@@ -2317,36 +2343,23 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
-comment|/* 	 * ARM_USE_SMALL_ALLOC uses dump_avail, so it must be filled before 	 * calling pmap_bootstrap. 	 */
-name|dump_avail
-index|[
-literal|0
-index|]
-operator|=
-name|PHYSADDR
-expr_stmt|;
-name|dump_avail
-index|[
-literal|1
-index|]
-operator|=
-name|PHYSADDR
-operator|+
+name|arm_dump_avail_init
+argument_list|(
 name|memsize
-expr_stmt|;
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|dump_avail
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
 name|dump_avail
 index|[
-literal|2
-index|]
-operator|=
 literal|0
-expr_stmt|;
-name|dump_avail
-index|[
-literal|3
 index|]
-operator|=
-literal|0
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|pmap_bootstrap
 argument_list|(
@@ -2476,6 +2489,87 @@ argument_list|)
 operator|)
 operator|)
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * These functions are handled elsewhere, so make them nops here.  */
+end_comment
+
+begin_function
+name|void
+name|cpu_startprofclock
+parameter_list|(
+name|void
+parameter_list|)
+block|{  }
+end_function
+
+begin_function
+name|void
+name|cpu_stopprofclock
+parameter_list|(
+name|void
+parameter_list|)
+block|{  }
+end_function
+
+begin_function
+name|void
+name|cpu_initclocks
+parameter_list|(
+name|void
+parameter_list|)
+block|{  }
+end_function
+
+begin_function
+name|void
+name|DELAY
+parameter_list|(
+name|int
+name|n
+parameter_list|)
+block|{
+if|if
+condition|(
+name|soc_data
+operator|.
+name|delay
+condition|)
+name|soc_data
+operator|.
+name|delay
+argument_list|(
+name|n
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|cpu_reset
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+name|soc_data
+operator|.
+name|reset
+condition|)
+name|soc_data
+operator|.
+name|reset
+argument_list|()
+expr_stmt|;
+while|while
+condition|(
+literal|1
+condition|)
+continue|continue;
 block|}
 end_function
 

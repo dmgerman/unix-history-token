@@ -3516,9 +3516,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|options
 operator|&
 name|INFO
+operator|)
+operator|&&
+name|p12
+operator|->
+name|mac
 condition|)
 name|BIO_printf
 argument_list|(

@@ -2255,7 +2255,7 @@ operator|->
 name|InitArgs
 condition|)
 block|{
-name|AcpiDbUInt32ToHexString
+name|AcpiDbUint32ToHexString
 argument_list|(
 name|Info
 operator|->
@@ -2266,7 +2266,7 @@ operator|->
 name|IndexOfThreadStr
 argument_list|)
 expr_stmt|;
-name|AcpiDbUInt32ToHexString
+name|AcpiDbUint32ToHexString
 argument_list|(
 operator|(
 name|UINT32
@@ -2976,7 +2976,7 @@ index|]
 operator|=
 name|ACPI_TYPE_INTEGER
 expr_stmt|;
-name|AcpiDbUInt32ToHexString
+name|AcpiDbUint32ToHexString
 argument_list|(
 name|NumThreads
 argument_list|,

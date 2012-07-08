@@ -8958,6 +8958,11 @@ operator|&
 name|M_NOWAIT
 condition|)
 break|break;
+name|zone
+operator|->
+name|uz_sleeps
+operator|++
+expr_stmt|;
 name|msleep
 argument_list|(
 name|keg
@@ -14046,6 +14051,11 @@ argument_list|,
 name|sleeps
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|db_pager_quit
+condition|)
+return|return;
 block|}
 block|}
 block|}

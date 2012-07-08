@@ -1219,7 +1219,7 @@ argument_list|,
 name|Op
 argument_list|)
 expr_stmt|;
-comment|/*      * This is where we evaluate the SignatureString and OemIDString      * and OemTableIDString of the DataTableRegion declaration      */
+comment|/*      * This is where we evaluate the Signature string, OemId string,      * and OemTableId string of the Data Table Region declaration      */
 name|Node
 operator|=
 name|Op
@@ -1228,7 +1228,7 @@ name|Common
 operator|.
 name|Node
 expr_stmt|;
-comment|/* NextOp points to SignatureString op */
+comment|/* NextOp points to Signature string op */
 name|NextOp
 operator|=
 name|Op
@@ -1239,7 +1239,7 @@ name|Value
 operator|.
 name|Arg
 expr_stmt|;
-comment|/*      * Evaluate/create the SignatureString and OemIDString      * and OemTableIDString operands      */
+comment|/*      * Evaluate/create the Signature string, OemId string,      * and OemTableId string operands      */
 name|Status
 operator|=
 name|AcpiDsCreateOperands
@@ -1263,7 +1263,7 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Resolve the SignatureString and OemIDString      * and OemTableIDString operands      */
+comment|/*      * Resolve the Signature string, OemId string,      * and OemTableId string operands      */
 name|Status
 operator|=
 name|AcpiExResolveOperands
