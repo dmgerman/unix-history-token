@@ -3497,12 +3497,6 @@ name|chlim
 operator|)
 return|;
 block|}
-else|else
-return|return
-operator|(
-name|V_ip6_defhlim
-operator|)
-return|;
 block|}
 return|return
 operator|(
