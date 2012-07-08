@@ -887,6 +887,35 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IFCAP_RXCSUM_IPV6
+value|0x200000
+end_define
+
+begin_comment
+comment|/* can offload checksum on IPv6 RX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFCAP_TXCSUM_IPV6
+value|0x400000
+end_define
+
+begin_comment
+comment|/* can offload checksum on IPv6 TX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFCAP_HWCSUM_IPV6
+value|(IFCAP_RXCSUM_IPV6 | IFCAP_TXCSUM_IPV6)
+end_define
+
+begin_define
+define|#
+directive|define
 name|IFCAP_HWCSUM
 value|(IFCAP_RXCSUM | IFCAP_TXCSUM)
 end_define

@@ -1133,7 +1133,7 @@ name|done
 goto|;
 block|}
 block|}
-comment|/* 		 * Do delayed checksums now because we send before 		 * this is done in the normal processing path. 		 */
+comment|/* 		 * Do delayed checksums now because we send before 		 * this is done in the normal processing path. 		 * XXX-BZ CSUM_DELAY_DATA_IPV6? 		 */
 if|if
 condition|(
 operator|(

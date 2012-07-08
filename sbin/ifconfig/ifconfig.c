@@ -4624,7 +4624,7 @@ define|#
 directive|define
 name|IFCAPBITS
 define|\
-value|"\020\1RXCSUM\2TXCSUM\3NETCONS\4VLAN_MTU\5VLAN_HWTAGGING\6JUMBO_MTU\7POLLING" \ "\10VLAN_HWCSUM\11TSO4\12TSO6\13LRO\14WOL_UCAST\15WOL_MCAST\16WOL_MAGIC" \ "\21VLAN_HWFILTER\23VLAN_HWTSO\24LINKSTATE\25NETMAP"
+value|"\020\1RXCSUM\2TXCSUM\3NETCONS\4VLAN_MTU\5VLAN_HWTAGGING\6JUMBO_MTU\7POLLING" \ "\10VLAN_HWCSUM\11TSO4\12TSO6\13LRO\14WOL_UCAST\15WOL_MCAST\16WOL_MAGIC" \ "\21VLAN_HWFILTER\23VLAN_HWTSO\24LINKSTATE\25NETMAP" \ "\26RXCSUM_IPV6\27TXCSUM_IPV6"
 end_define
 
 begin_comment
@@ -6060,6 +6060,44 @@ operator|-
 name|IFF_STATICARP
 argument_list|,
 name|setifflags
+argument_list|)
+block|,
+name|DEF_CMD
+argument_list|(
+literal|"rxcsum6"
+argument_list|,
+name|IFCAP_RXCSUM_IPV6
+argument_list|,
+name|setifcap
+argument_list|)
+block|,
+name|DEF_CMD
+argument_list|(
+literal|"-rxcsum6"
+argument_list|,
+operator|-
+name|IFCAP_RXCSUM_IPV6
+argument_list|,
+name|setifcap
+argument_list|)
+block|,
+name|DEF_CMD
+argument_list|(
+literal|"txcsum6"
+argument_list|,
+name|IFCAP_TXCSUM_IPV6
+argument_list|,
+name|setifcap
+argument_list|)
+block|,
+name|DEF_CMD
+argument_list|(
+literal|"-txcsum6"
+argument_list|,
+operator|-
+name|IFCAP_TXCSUM_IPV6
+argument_list|,
+name|setifcap
 argument_list|)
 block|,
 name|DEF_CMD
