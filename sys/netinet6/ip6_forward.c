@@ -2004,16 +2004,6 @@ operator|=
 literal|0xffff
 expr_stmt|;
 block|}
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|csum_flags
-operator||=
-name|CSUM_IP_CHECKED
-operator||
-name|CSUM_IP_VALID
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SCTP
