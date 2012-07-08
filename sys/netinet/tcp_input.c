@@ -14319,14 +14319,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|thcmtu
-operator|=
-name|tcp_hc_getmtu
-argument_list|(
-name|inc
-argument_list|)
-expr_stmt|;
-comment|/* IPv4 and IPv6 */
 name|min_protoh
 operator|=
 sizeof|sizeof
@@ -14375,14 +14367,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|thcmtu
-operator|=
-name|tcp_hc_getmtu
-argument_list|(
-name|inc
-argument_list|)
-expr_stmt|;
-comment|/* IPv4 and IPv6 */
 name|min_protoh
 operator|=
 sizeof|sizeof
@@ -14392,6 +14376,27 @@ name|tcpiphdr
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+name|thcmtu
+operator|=
+name|tcp_hc_getmtu
+argument_list|(
+name|inc
+argument_list|)
+expr_stmt|;
+comment|/* IPv4 and IPv6 */
 endif|#
 directive|endif
 if|if
