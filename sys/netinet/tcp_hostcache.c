@@ -2463,7 +2463,7 @@ operator|/
 operator|(
 name|hz
 operator|*
-name|TCP_RTT_SCALE
+name|TCP_RTTVAR_SCALE
 operator|)
 operator|)
 argument_list|)
