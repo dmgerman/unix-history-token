@@ -18,35 +18,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|VM_RADIX_BLACK
-value|0x1
-end_define
-
-begin_comment
-comment|/* Black node. (leaf only) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VM_RADIX_RED
-value|0x2
-end_define
-
-begin_comment
-comment|/* Red node. (leaf only) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VM_RADIX_ANY
-value|(VM_RADIX_RED | VM_RADIX_BLACK)
-end_define
-
-begin_define
-define|#
-directive|define
 name|VM_RADIX_STACK
 value|8
 end_define
@@ -77,10 +48,6 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_comment
-comment|/*  * Initialize the radix tree subsystem.  */
-end_comment
-
 begin_function_decl
 name|void
 name|vm_radix_init
@@ -89,10 +56,6 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/*  * Functions which only work with black nodes. (object lock)  */
-end_comment
 
 begin_function_decl
 name|int
@@ -110,26 +73,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*  * Functions which work on specified colors. (object, vm_page_queue_free locks)  */
-end_comment
-
-begin_function_decl
-name|void
-modifier|*
-name|vm_radix_color
-parameter_list|(
-name|struct
-name|vm_radix
-modifier|*
-parameter_list|,
-name|vm_pindex_t
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function_decl
 name|void
 modifier|*
@@ -140,8 +83,6 @@ name|vm_radix
 modifier|*
 parameter_list|,
 name|vm_pindex_t
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -158,8 +99,6 @@ name|vm_pindex_t
 parameter_list|,
 name|vm_pindex_t
 parameter_list|,
-name|int
-parameter_list|,
 name|void
 modifier|*
 modifier|*
@@ -167,6 +106,9 @@ parameter_list|,
 name|int
 parameter_list|,
 name|vm_pindex_t
+modifier|*
+parameter_list|,
+name|u_int
 modifier|*
 parameter_list|)
 function_decl|;
@@ -182,8 +124,6 @@ name|vm_radix
 modifier|*
 parameter_list|,
 name|vm_pindex_t
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -208,8 +148,6 @@ name|vm_radix
 modifier|*
 parameter_list|,
 name|vm_pindex_t
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -232,14 +170,14 @@ name|rtree
 parameter_list|,
 name|vm_pindex_t
 name|index
-parameter_list|,
-name|int
-name|color
 parameter_list|)
 block|{
 name|void
 modifier|*
 name|val
+decl_stmt|;
+name|u_int
+name|dummy
 decl_stmt|;
 if|if
 condition|(
@@ -251,8 +189,6 @@ name|index
 argument_list|,
 literal|0
 argument_list|,
-name|color
-argument_list|,
 operator|&
 name|val
 argument_list|,
@@ -260,6 +196,9 @@ literal|1
 argument_list|,
 operator|&
 name|index
+argument_list|,
+operator|&
+name|dummy
 argument_list|)
 condition|)
 return|return
@@ -286,9 +225,6 @@ name|struct
 name|vm_radix
 modifier|*
 name|rtree
-parameter_list|,
-name|int
-name|color
 parameter_list|)
 block|{
 return|return
@@ -297,8 +233,6 @@ argument_list|(
 name|rtree
 argument_list|,
 literal|0
-argument_list|,
-name|color
 argument_list|)
 return|;
 block|}
@@ -315,9 +249,6 @@ name|struct
 name|vm_radix
 modifier|*
 name|rtree
-parameter_list|,
-name|int
-name|color
 parameter_list|)
 block|{
 return|return
@@ -326,8 +257,6 @@ argument_list|(
 name|rtree
 argument_list|,
 literal|0
-argument_list|,
-name|color
 argument_list|)
 return|;
 block|}
@@ -347,9 +276,6 @@ name|rtree
 parameter_list|,
 name|vm_pindex_t
 name|index
-parameter_list|,
-name|int
-name|color
 parameter_list|)
 block|{
 if|if
@@ -372,8 +298,6 @@ argument_list|,
 name|index
 operator|+
 literal|1
-argument_list|,
-name|color
 argument_list|)
 return|;
 block|}
@@ -393,9 +317,6 @@ name|rtree
 parameter_list|,
 name|vm_pindex_t
 name|index
-parameter_list|,
-name|int
-name|color
 parameter_list|)
 block|{
 if|if
@@ -417,8 +338,6 @@ argument_list|,
 name|index
 operator|-
 literal|1
-argument_list|,
-name|color
 argument_list|)
 return|;
 block|}

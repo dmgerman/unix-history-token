@@ -135,10 +135,6 @@ name|int
 name|resident_page_count
 decl_stmt|;
 comment|/* number of resident pages */
-name|int
-name|cached_page_count
-decl_stmt|;
-comment|/* number of cached pages */
 name|struct
 name|vm_object
 modifier|*
@@ -693,6 +689,15 @@ parameter_list|,
 name|vm_size_t
 parameter_list|,
 name|boolean_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|vm_object_cache_is_empty
+parameter_list|(
+name|vm_object_t
 parameter_list|)
 function_decl|;
 end_function_decl

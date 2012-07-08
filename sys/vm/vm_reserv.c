@@ -1139,8 +1139,6 @@ operator|->
 name|rtree
 argument_list|,
 name|pindex
-argument_list|,
-name|VM_RADIX_BLACK
 argument_list|)
 expr_stmt|;
 if|if
@@ -1199,8 +1197,6 @@ operator|->
 name|rtree
 argument_list|,
 name|pindex
-argument_list|,
-name|VM_RADIX_BLACK
 argument_list|)
 expr_stmt|;
 if|if
@@ -1920,8 +1916,6 @@ operator|->
 name|rtree
 argument_list|,
 name|pindex
-argument_list|,
-name|VM_RADIX_BLACK
 argument_list|)
 expr_stmt|;
 if|if
@@ -1980,8 +1974,6 @@ operator|->
 name|rtree
 argument_list|,
 name|pindex
-argument_list|,
-name|VM_RADIX_BLACK
 argument_list|)
 expr_stmt|;
 if|if
