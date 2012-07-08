@@ -305,7 +305,7 @@ begin_define
 define|#
 directive|define
 name|LO_CSUM_FEATURES6
-value|(CSUM_TCP_IPV6 | CSUM_UDP_IPV6 | CSUM_SCTP)
+value|(CSUM_TCP_IPV6 | CSUM_UDP_IPV6 | CSUM_SCTP_IPV6)
 end_define
 
 begin_define

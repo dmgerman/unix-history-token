@@ -2015,7 +2015,7 @@ name|m_pkthdr
 operator|.
 name|csum_flags
 operator|&
-name|CSUM_SCTP
+name|CSUM_SCTP_IPV6
 condition|)
 name|m
 operator|->
@@ -2118,7 +2118,7 @@ name|m_pkthdr
 operator|.
 name|csum_flags
 operator|&
-name|CSUM_SCTP
+name|CSUM_SCTP_IPV6
 condition|)
 name|m
 operator|->
