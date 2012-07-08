@@ -430,6 +430,19 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|void
+name|g_resize_t
+parameter_list|(
+name|struct
+name|g_consumer
+modifier|*
+name|cp
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_comment
 comment|/*  * The g_class structure describes a transformation class.  In other words  * all BSD disklabel handlers share one g_class, all MBR handlers share  * one common g_class and so on.  * Certain operations are instantiated on the class, most notably the  * taste and config_geom functions.  */
 end_comment
@@ -506,9 +519,9 @@ name|g_provgone_t
 modifier|*
 name|providergone
 decl_stmt|;
-name|void
+name|g_resize_t
 modifier|*
-name|spare2
+name|resize
 decl_stmt|;
 comment|/* 	 * The remaining elements are private 	 */
 name|LIST_ENTRY
@@ -632,9 +645,9 @@ name|g_provgone_t
 modifier|*
 name|providergone
 decl_stmt|;
-name|void
+name|g_resize_t
 modifier|*
-name|spare1
+name|resize
 decl_stmt|;
 name|void
 modifier|*
@@ -1425,6 +1438,21 @@ modifier|*
 name|fmt
 parameter_list|,
 modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|g_resize_provider
+parameter_list|(
+name|struct
+name|g_provider
+modifier|*
+name|pp
+parameter_list|,
+name|off_t
+name|size
 parameter_list|)
 function_decl|;
 end_function_decl

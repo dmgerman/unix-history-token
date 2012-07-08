@@ -170,6 +170,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MDIOCRESIZE
+value|_IOWR('m', 4, struct md_ioctl)
+end_define
+
+begin_comment
+comment|/* resize disk */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MD_CLUSTER
 value|0x01
 end_define

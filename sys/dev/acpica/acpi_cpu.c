@@ -4382,9 +4382,6 @@ argument_list|,
 literal|"percent usage for each Cx state"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notyet
 comment|/* Signal platform that we can handle _CST notification. */
 if|if
 condition|(
@@ -4416,8 +4413,6 @@ name|acpi
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 block|}
 end_function
 

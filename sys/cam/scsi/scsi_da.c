@@ -10964,6 +10964,13 @@ operator|&=
 operator|~
 name|DISKFLAG_CANDELETE
 expr_stmt|;
+name|disk_resize
+argument_list|(
+name|softc
+operator|->
+name|disk
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
