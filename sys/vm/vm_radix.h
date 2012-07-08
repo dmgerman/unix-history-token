@@ -15,17 +15,6 @@ directive|define
 name|_VM_RADIX_H_
 end_define
 
-begin_define
-define|#
-directive|define
-name|VM_RADIX_STACK
-value|8
-end_define
-
-begin_comment
-comment|/* Nodes to store on stack. */
-end_comment
-
 begin_comment
 comment|/*  * Radix tree root.  The height and pointer are set together to permit  * coherent lookups while the root is modified.  */
 end_comment
