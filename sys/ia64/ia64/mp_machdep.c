@@ -1987,6 +1987,22 @@ expr_stmt|;
 block|}
 end_function
 
+begin_expr_stmt
+name|SYSINIT
+argument_list|(
+name|start_aps
+argument_list|,
+name|SI_SUB_KICK_SCHEDULER
+argument_list|,
+name|SI_ORDER_ANY
+argument_list|,
+name|cpu_mp_unleash
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * send an IPI to a set of cpus.  */
 end_comment
@@ -2194,22 +2210,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_expr_stmt
-name|SYSINIT
-argument_list|(
-name|start_aps
-argument_list|,
-name|SI_SUB_SMP
-argument_list|,
-name|SI_ORDER_FIRST
-argument_list|,
-name|cpu_mp_unleash
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 end_unit
 
