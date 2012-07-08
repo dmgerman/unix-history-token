@@ -3720,9 +3720,6 @@ condition|)
 name|vnodes_skipped
 operator|++
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 goto|goto
 name|unlock_and_continue
 goto|;
@@ -3777,9 +3774,6 @@ name|VM_OBJECT_LOCK
 argument_list|(
 name|object
 argument_list|)
-expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
 expr_stmt|;
 operator|++
 name|pageout_lock_miss
@@ -3899,13 +3893,6 @@ operator|->
 name|hold_count
 condition|)
 block|{
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
-name|queues_locked
-operator|=
-name|TRUE
-expr_stmt|;
 name|vm_page_unlock
 argument_list|(
 name|m
@@ -3931,6 +3918,13 @@ goto|goto
 name|unlock_and_continue
 goto|;
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
+name|queues_locked
+operator|=
+name|FALSE
+expr_stmt|;
 block|}
 comment|/* 			 * If a page is dirty, then it is either being washed 			 * (but not yet cleaned) or it is still in the 			 * laundry.  If it is still in the laundry, then we 			 * start the cleaning operation.  			 * 			 * decrement page_shortage on success to account for 			 * the (future) cleaned page.  Otherwise we could wind 			 * up laundering or cleaning too many pages. 			 */
 if|if
