@@ -9056,6 +9056,8 @@ name|err
 operator|==
 literal|0
 condition|)
+name|err
+operator|=
 name|dst_ifp
 operator|->
 name|if_transmit
