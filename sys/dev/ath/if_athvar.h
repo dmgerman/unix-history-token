@@ -4134,6 +4134,10 @@ define|\
 value|ath_hal_setcapability(_ah, HAL_CAP_INTMIT, \ 	HAL_CAP_INTMIT_ENABLE, _v, NULL)
 end_define
 
+begin_comment
+comment|/* EDMA definitions */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -4148,6 +4152,86 @@ end_define
 begin_define
 define|#
 directive|define
+name|ath_hal_getrxfifodepth
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_qtype
+parameter_list|,
+name|_req
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_RXFIFODEPTH, _qtype, _req)	\ 	== HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_getntxmaps
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_req
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_NUM_TXMAPS, 0, _req)	\ 	== HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_gettxdesclen
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_req
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_TXDESCLEN, 0, _req)		\ 	== HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_gettxstatuslen
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_req
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_TXSTATUSLEN, 0, _req)	\ 	== HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_getrxstatuslen
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_req
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_RXSTATUSLEN, 0, _req)	\ 	== HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_setrxbufsize
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_req
+parameter_list|)
+define|\
+value|(ath_hal_setcapability(_ah, HAL_CAP_RXBUFSIZE, 0, _req, NULL)	\ 	== HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ath_hal_getchannoise
 parameter_list|(
 name|_ah
@@ -4157,6 +4241,10 @@ parameter_list|)
 define|\
 value|((*(_ah)->ah_getChanNoise)((_ah), (_c)))
 end_define
+
+begin_comment
+comment|/* 802.11n HAL methods */
+end_comment
 
 begin_define
 define|#
