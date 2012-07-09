@@ -174,6 +174,11 @@ init|=
 literal|0x100000000ULL
 block|,
 comment|/* BAR TX */
+name|ATH_DEBUG_EDMA_RX
+init|=
+literal|0x200000000ULL
+block|,
+comment|/* RX EDMA state */
 name|ATH_DEBUG_ANY
 init|=
 literal|0xffffffffffffffffULL
