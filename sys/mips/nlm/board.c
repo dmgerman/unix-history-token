@@ -1840,6 +1840,14 @@ operator|=
 literal|"B0"
 expr_stmt|;
 break|break;
+case|case
+literal|4
+case|:
+name|revstr
+operator|=
+literal|"B1"
+expr_stmt|;
+break|break;
 default|default:
 name|revstr
 operator|=
