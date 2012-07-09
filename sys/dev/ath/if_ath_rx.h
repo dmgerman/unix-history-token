@@ -103,6 +103,28 @@ define|\
 value|(_sc)->sc_rx.recv_rxbuf_init((_sc), (_bf))
 end_define
 
+begin_define
+define|#
+directive|define
+name|ath_rxdma_setup
+parameter_list|(
+name|_sc
+parameter_list|)
+define|\
+value|(_sc)->sc_rx.recv_setup(_sc)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_rxdma_teardown
+parameter_list|(
+name|_sc
+parameter_list|)
+define|\
+value|(_sc)->sc_rx.recv_teardown(_sc)
+end_define
+
 begin_if
 if|#
 directive|if
