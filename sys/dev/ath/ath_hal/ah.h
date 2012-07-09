@@ -3553,6 +3553,8 @@ parameter_list|(
 name|struct
 name|ath_hal
 modifier|*
+parameter_list|,
+name|HAL_RX_QUEUE
 parameter_list|)
 function_decl|;
 name|void
@@ -3568,6 +3570,8 @@ modifier|*
 parameter_list|,
 name|uint32_t
 name|rxdp
+parameter_list|,
+name|HAL_RX_QUEUE
 parameter_list|)
 function_decl|;
 name|void

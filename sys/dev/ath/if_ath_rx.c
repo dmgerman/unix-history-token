@@ -3725,6 +3725,8 @@ argument_list|,
 name|bf
 operator|->
 name|bf_daddr
+argument_list|,
+name|HAL_RX_QUEUE_HP
 argument_list|)
 expr_stmt|;
 name|ath_hal_rxena
@@ -4059,6 +4061,8 @@ operator|)
 name|ath_hal_getrxbuf
 argument_list|(
 name|ah
+argument_list|,
+name|HAL_RX_QUEUE_HP
 argument_list|)
 argument_list|,
 name|sc
@@ -4297,6 +4301,8 @@ argument_list|,
 name|bf
 operator|->
 name|bf_daddr
+argument_list|,
+name|HAL_RX_QUEUE_HP
 argument_list|)
 expr_stmt|;
 name|ath_hal_rxena

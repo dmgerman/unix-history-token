@@ -2850,9 +2850,11 @@ parameter_list|(
 name|_ah
 parameter_list|,
 name|_bufaddr
+parameter_list|,
+name|_rxq
 parameter_list|)
 define|\
-value|((*(_ah)->ah_setRxDP)((_ah), (_bufaddr)))
+value|((*(_ah)->ah_setRxDP)((_ah), (_bufaddr), (_rxq)))
 end_define
 
 begin_comment
@@ -2961,9 +2963,11 @@ directive|define
 name|ath_hal_getrxbuf
 parameter_list|(
 name|_ah
+parameter_list|,
+name|_rxq
 parameter_list|)
 define|\
-value|((*(_ah)->ah_getRxDP)((_ah)))
+value|((*(_ah)->ah_getRxDP)((_ah), (_rxq)))
 end_define
 
 begin_define
