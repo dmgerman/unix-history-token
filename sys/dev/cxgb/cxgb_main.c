@@ -5087,7 +5087,7 @@ begin_define
 define|#
 directive|define
 name|CXGB_CAP_ENABLE
-value|(CXGB_CAP& ~IFCAP_TSO6)
+value|(CXGB_CAP)
 end_define
 
 begin_function
