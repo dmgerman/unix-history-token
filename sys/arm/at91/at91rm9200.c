@@ -120,9 +120,6 @@ decl_stmt|;
 name|bus_space_handle_t
 name|sc_aic_sh
 decl_stmt|;
-name|bus_space_handle_t
-name|sc_matrix_sh
-decl_stmt|;
 block|}
 struct|;
 end_struct

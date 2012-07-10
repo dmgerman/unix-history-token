@@ -114,9 +114,6 @@ decl_stmt|;
 name|bus_space_handle_t
 name|sc_aic_sh
 decl_stmt|;
-name|bus_space_handle_t
-name|sc_matrix_sh
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1135,43 +1132,6 @@ argument_list|,
 literal|0xffffffff
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|bus_space_subregion
-argument_list|(
-name|sc
-operator|->
-name|sc_st
-argument_list|,
-name|sc
-operator|->
-name|sc_sh
-argument_list|,
-name|AT91SAM9X25_MATRIX_BASE
-argument_list|,
-name|AT91SAM9X25_MATRIX_SIZE
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|sc_matrix_sh
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"Enable to map matrix registers"
-argument_list|)
-expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* wrong, placeholder */
-comment|/* activate NAND*/
-block|i = bus_space_read_4(sc->sc_st, sc->sc_matrix_sh, 	    AT91SAM9X25_EBICSA); 	bus_space_write_4(sc->sc_st, sc->sc_matrix_sh, 	    AT91SAM9X25_EBICSA,  	    i | AT91_MATRIX_EBI_CS3A_SMC_SMARTMEDIA);
-endif|#
-directive|endif
 comment|/* Update USB device port clock info */
 name|clk
 operator|=
