@@ -9067,6 +9067,12 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+else|else
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
