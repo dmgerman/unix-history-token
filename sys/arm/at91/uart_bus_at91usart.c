@@ -98,12 +98,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<arm/at91/at91rm92reg.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<arm/at91/at91var.h>
 end_include
 
@@ -116,7 +110,7 @@ end_include
 begin_function_decl
 specifier|static
 name|int
-name|usart_at91rm92_probe
+name|usart_at91_probe
 parameter_list|(
 name|device_t
 name|dev
@@ -135,7 +129,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|device_method_t
-name|usart_at91rm92_methods
+name|usart_at91_methods
 index|[]
 init|=
 block|{
@@ -144,7 +138,7 @@ name|DEVMETHOD
 argument_list|(
 name|device_probe
 argument_list|,
-name|usart_at91rm92_probe
+name|usart_at91_probe
 argument_list|)
 block|,
 name|DEVMETHOD
@@ -173,12 +167,12 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|driver_t
-name|usart_at91rm92_driver
+name|usart_at91_driver
 init|=
 block|{
 name|uart_driver_name
 block|,
-name|usart_at91rm92_methods
+name|usart_at91_methods
 block|,
 sizeof|sizeof
 argument_list|(
@@ -204,7 +198,7 @@ end_expr_stmt
 begin_function
 specifier|static
 name|int
-name|usart_at91rm92_probe
+name|usart_at91_probe
 parameter_list|(
 name|device_t
 name|dev
@@ -373,7 +367,7 @@ name|uart
 argument_list|,
 name|atmelarm
 argument_list|,
-name|usart_at91rm92_driver
+name|usart_at91_driver
 argument_list|,
 name|uart_devclass
 argument_list|,
