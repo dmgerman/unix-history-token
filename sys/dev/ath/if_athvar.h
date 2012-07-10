@@ -1953,12 +1953,6 @@ name|ath_bufhead
 name|sc_rxbuf
 decl_stmt|;
 comment|/* receive buffer */
-name|struct
-name|mbuf
-modifier|*
-name|sc_rxpending
-decl_stmt|;
-comment|/* pending receive data */
 name|u_int32_t
 modifier|*
 name|sc_rxlink
