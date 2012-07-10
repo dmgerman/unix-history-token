@@ -1118,6 +1118,21 @@ name|HAL_INT_RXDESC
 init|=
 literal|0x00000002
 block|,
+comment|/* Legacy mapping */
+name|HAL_INT_RXHP
+init|=
+literal|0x00000001
+block|,
+comment|/* EDMA */
+name|HAL_INT_RXLP
+init|=
+literal|0x00000002
+block|,
+comment|/* EDMA */
+name|HAL_INT_RXERR
+init|=
+literal|0x00000004
+block|,
 name|HAL_INT_RXNOFRM
 init|=
 literal|0x00000008
