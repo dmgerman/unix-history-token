@@ -1144,7 +1144,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|boolean_t
+name|int
 name|moea64_ts_referenced
 parameter_list|(
 name|mmu_t
@@ -7147,7 +7147,7 @@ comment|/*  *	moea64_ts_referenced:  *  *	Return a count of reference bits for a
 end_comment
 
 begin_function
-name|boolean_t
+name|int
 name|moea64_ts_referenced
 parameter_list|(
 name|mmu_t
