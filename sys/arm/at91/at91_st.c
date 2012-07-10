@@ -128,7 +128,7 @@ end_include
 begin_struct
 specifier|static
 struct|struct
-name|at91st_softc
+name|at91_st_softc
 block|{
 name|struct
 name|resource
@@ -209,7 +209,7 @@ end_function
 begin_function_decl
 specifier|static
 name|void
-name|at91st_watchdog
+name|at91_st_watchdog
 parameter_list|(
 name|void
 modifier|*
@@ -225,12 +225,12 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|at91st_initclocks
+name|at91_st_initclocks
 parameter_list|(
 name|device_t
 parameter_list|,
 name|struct
-name|at91st_softc
+name|at91_st_softc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -285,7 +285,7 @@ end_function
 begin_function_decl
 specifier|static
 name|unsigned
-name|at91st_get_timecount
+name|at91_st_get_timecount
 parameter_list|(
 name|struct
 name|timecounter
@@ -299,10 +299,10 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|timecounter
-name|at91st_timecounter
+name|at91_st_timecounter
 init|=
 block|{
-name|at91st_get_timecount
+name|at91_st_get_timecount
 block|,
 comment|/* get_timecount */
 name|NULL
@@ -381,7 +381,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|at91st_delay
+name|at91_st_delay
 parameter_list|(
 name|int
 name|n
@@ -476,7 +476,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|at91st_cpu_reset
+name|at91_st_cpu_reset
 parameter_list|(
 name|void
 parameter_list|)
@@ -509,7 +509,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|at91st_probe
+name|at91_st_probe
 parameter_list|(
 name|device_t
 name|dev
@@ -533,14 +533,14 @@ end_function
 begin_function
 specifier|static
 name|void
-name|at91st_deactivate
+name|at91_st_deactivate
 parameter_list|(
 name|device_t
 name|dev
 parameter_list|)
 block|{
 name|struct
-name|at91st_softc
+name|at91_st_softc
 modifier|*
 name|sc
 init|=
@@ -637,7 +637,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|at91st_activate
+name|at91_st_activate
 parameter_list|(
 name|device_t
 name|dev
@@ -650,7 +650,7 @@ name|int
 name|err
 decl_stmt|;
 name|struct
-name|at91st_softc
+name|at91_st_softc
 modifier|*
 name|sc
 init|=
@@ -772,7 +772,7 @@ name|err
 operator|!=
 literal|0
 condition|)
-name|at91st_deactivate
+name|at91_st_deactivate
 argument_list|(
 name|dev
 argument_list|)
@@ -788,7 +788,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|at91st_attach
+name|at91_st_attach
 parameter_list|(
 name|device_t
 name|dev
@@ -806,7 +806,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|at91st_activate
+name|at91_st_activate
 argument_list|(
 name|dev
 argument_list|)
@@ -822,13 +822,13 @@ name|soc_data
 operator|.
 name|delay
 operator|=
-name|at91st_delay
+name|at91_st_delay
 expr_stmt|;
 name|soc_data
 operator|.
 name|reset
 operator|=
-name|at91st_cpu_reset
+name|at91_st_cpu_reset
 expr_stmt|;
 comment|// XXX kinda late to be setting this...
 name|timer_softc
@@ -839,7 +839,7 @@ name|EVENTHANDLER_REGISTER
 argument_list|(
 name|watchdog_list
 argument_list|,
-name|at91st_watchdog
+name|at91_st_watchdog
 argument_list|,
 name|dev
 argument_list|,
@@ -853,7 +853,7 @@ argument_list|,
 literal|"watchdog registered, timeout intervall max. 64 sec\n"
 argument_list|)
 expr_stmt|;
-name|at91st_initclocks
+name|at91_st_initclocks
 argument_list|(
 name|dev
 argument_list|,
@@ -871,7 +871,7 @@ end_function
 begin_decl_stmt
 specifier|static
 name|device_method_t
-name|at91st_methods
+name|at91_st_methods
 index|[]
 init|=
 block|{
@@ -879,14 +879,14 @@ name|DEVMETHOD
 argument_list|(
 name|device_probe
 argument_list|,
-name|at91st_probe
+name|at91_st_probe
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|device_attach
 argument_list|,
-name|at91st_attach
+name|at91_st_attach
 argument_list|)
 block|,
 block|{
@@ -901,17 +901,17 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|driver_t
-name|at91st_driver
+name|at91_st_driver
 init|=
 block|{
 literal|"at91_st"
 block|,
-name|at91st_methods
+name|at91_st_methods
 block|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|at91st_softc
+name|at91_st_softc
 argument_list|)
 block|, }
 decl_stmt|;
@@ -920,7 +920,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|devclass_t
-name|at91st_devclass
+name|at91_st_devclass
 decl_stmt|;
 end_decl_stmt
 
@@ -931,9 +931,9 @@ name|at91_st
 argument_list|,
 name|atmelarm
 argument_list|,
-name|at91st_driver
+name|at91_st_driver
 argument_list|,
-name|at91st_devclass
+name|at91_st_devclass
 argument_list|,
 literal|0
 argument_list|,
@@ -945,7 +945,7 @@ end_expr_stmt
 begin_function
 specifier|static
 name|unsigned
-name|at91st_get_timecount
+name|at91_st_get_timecount
 parameter_list|(
 name|struct
 name|timecounter
@@ -969,7 +969,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|at91st_watchdog
+name|at91_st_watchdog
 parameter_list|(
 name|void
 modifier|*
@@ -1053,13 +1053,13 @@ end_function
 begin_function
 specifier|static
 name|void
-name|at91st_initclocks
+name|at91_st_initclocks
 parameter_list|(
 name|device_t
 name|dev
 parameter_list|,
 name|struct
-name|at91st_softc
+name|at91_st_softc
 modifier|*
 name|sc
 parameter_list|)
@@ -1150,7 +1150,7 @@ expr_stmt|;
 name|tc_init
 argument_list|(
 operator|&
-name|at91st_timecounter
+name|at91_st_timecounter
 argument_list|)
 expr_stmt|;
 block|}
