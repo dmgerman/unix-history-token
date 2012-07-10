@@ -14325,6 +14325,9 @@ name|seq_st
 argument_list|)
 expr_stmt|;
 comment|/* XXX TODO: schedule an interface reset */
+ifdef|#
+directive|ifdef
+name|ATH_DEBUG
 name|ath_printtxbuf
 argument_list|(
 name|sc
@@ -14347,6 +14350,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 comment|/* 	 * Walk the list of frames, figure out which ones were correctly 	 * sent and which weren't. 	 */
 name|bf

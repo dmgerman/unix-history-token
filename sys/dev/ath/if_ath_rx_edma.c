@@ -2187,6 +2187,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|ATH_DEBUG
 name|struct
 name|ath_buf
 modifier|*
@@ -2199,9 +2202,6 @@ index|[
 name|i
 index|]
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ATH_DEBUG
 if|if
 condition|(
 name|sc
