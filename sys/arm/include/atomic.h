@@ -1110,15 +1110,7 @@ begin_define
 define|#
 directive|define
 name|atomic_cmpset_acq_ptr
-parameter_list|(
-name|dst
-parameter_list|,
-name|old
-parameter_list|,
-name|new
-parameter_list|)
-define|\
-value|atomic_cmpset_ptr((volatile uint32_t *)(dst), (volatile uint32_t)(old), \     (volatile uint32_t)(new))
+value|atomic_cmpset_ptr
 end_define
 
 begin_define
