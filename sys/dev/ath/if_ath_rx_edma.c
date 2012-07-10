@@ -711,6 +711,25 @@ index|[
 name|i
 index|]
 expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|ATH_DEBUG_EDMA_RX
+argument_list|,
+literal|"%s: Q%d: pos=%i, addr=0x%x\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|qtype
+argument_list|,
+name|i
+argument_list|,
+name|bf
+operator|->
+name|bf_daddr
+argument_list|)
+expr_stmt|;
 name|ath_hal_putrxbuf
 argument_list|(
 name|sc
@@ -795,7 +814,7 @@ argument_list|(
 name|ah
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Entries should only be written out if the 	 * FIFO is empty. 	 */
+comment|/* 	 * Entries should only be written out if the 	 * FIFO is empty. 	 * 	 * XXX This isn't correct. I should be looking 	 * at the value of AR_RXDP_SIZE (0x0070) to determine 	 * how many entries are in here. 	 * 	 * A warm reset will clear the registers but not the FIFO. 	 * 	 * And I believe this is actually the address of the last 	 * handled buffer rather than the current FIFO pointer. 	 * So if no frames have been (yet) seen, we'll reinit the 	 * FIFO. 	 * 	 * I'll chase that up at some point. 	 */
 if|if
 condition|(
 name|ath_hal_getrxbuf
