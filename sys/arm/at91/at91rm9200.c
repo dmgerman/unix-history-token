@@ -726,11 +726,11 @@ literal|0
 operator|&&
 name|addr
 operator|<
-name|AT91RM92_BASE
+name|AT91_BASE
 condition|)
 name|addr
 operator|+=
-name|AT91RM92_BASE
+name|AT91_BASE
 expr_stmt|;
 if|if
 condition|(

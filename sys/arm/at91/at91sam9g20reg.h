@@ -230,13 +230,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|AT91SAM9G20_BASE
-value|0xd0000000
-end_define
-
-begin_define
-define|#
-directive|define
 name|AT91SAM9G20_EMAC_BASE
 value|0xffc4000
 end_define
