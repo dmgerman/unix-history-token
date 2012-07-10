@@ -416,22 +416,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
-name|void
-modifier|*
-name|_end
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-modifier|*
-name|end
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|pcpu
 name|__pcpu
@@ -468,12 +452,6 @@ name|dump_avail
 index|[
 literal|4
 index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|vm_offset_t
-name|physical_pages
 decl_stmt|;
 end_decl_stmt
 
