@@ -401,20 +401,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|ATH_KTR_INTR
-value|KTR_SPARE4
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATH_KTR_ERR
-value|KTR_SPARE3
-end_define
-
 begin_comment
 comment|/*  * ATH_BCBUF determines the number of vap's that can transmit  * beacons and also (currently) the number of vap's that can  * have unique mac addresses/bssid.  When staggering beacons  * 4 is probably a good max as otherwise the beacons become  * very closely spaced and there is limited time for cab q traffic  * to go out.  You can burst beacons instead but that is not good  * for stations in power save and at some point you really want  * another radio (and channel).  *  * The limit on the number of mac addresses is tied to our use of  * the U/L bit and tracking addresses in a byte; it would be  * worthwhile to allow more for applications like proxy sta.  */
 end_comment

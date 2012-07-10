@@ -186,6 +186,20 @@ block|}
 enum|;
 end_enum
 
+begin_define
+define|#
+directive|define
+name|ATH_KTR_INTR
+value|KTR_SPARE4
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_KTR_ERR
+value|KTR_SPARE3
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|uint64_t
