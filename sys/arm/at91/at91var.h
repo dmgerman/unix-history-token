@@ -61,9 +61,6 @@ name|struct
 name|rman
 name|sc_mem_rman
 decl_stmt|;
-name|uint32_t
-name|sc_irq_system
-decl_stmt|;
 block|}
 struct|;
 end_struct

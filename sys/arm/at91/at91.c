@@ -1366,9 +1366,7 @@ argument_list|(
 name|ires
 argument_list|)
 operator|==
-name|sc
-operator|->
-name|sc_irq_system
+name|AT91_IRQ_SYSTEM
 operator|&&
 name|filt
 operator|==

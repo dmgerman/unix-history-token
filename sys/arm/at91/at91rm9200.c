@@ -862,12 +862,6 @@ name|sc
 operator|->
 name|sc_aic_sh
 expr_stmt|;
-name|at91sc
-operator|->
-name|sc_irq_system
-operator|=
-name|AT91_IRQ_SYSTEM
-expr_stmt|;
 for|for
 control|(
 name|i
