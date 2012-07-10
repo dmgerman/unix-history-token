@@ -6982,11 +6982,18 @@ name|AH_TRUE
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 		 * Handle both the legacy and RX EDMA interrupt bits. 		 * Note that HAL_INT_RXLP is also HAL_INT_RXDESC. 		 */
 if|if
 condition|(
 name|status
 operator|&
+operator|(
 name|HAL_INT_RX
+operator||
+name|HAL_INT_RXHP
+operator||
+name|HAL_INT_RXLP
+operator|)
 condition|)
 block|{
 name|sc
@@ -8014,6 +8021,23 @@ operator||
 name|HAL_INT_FATAL
 operator||
 name|HAL_INT_GLOBAL
+expr_stmt|;
+comment|/* 	 * Enable RX EDMA bits.  Note these overlap with 	 * HAL_INT_RX and HAL_INT_RXDESC respectively. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_isedma
+condition|)
+name|sc
+operator|->
+name|sc_imask
+operator||=
+operator|(
+name|HAL_INT_RXHP
+operator||
+name|HAL_INT_RXLP
+operator|)
 expr_stmt|;
 comment|/* 	 * Enable MIB interrupts when there are hardware phy counters. 	 * Note we only do this (at the moment) for station mode. 	 */
 if|if
