@@ -272,6 +272,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<arm/at91/at91_usartreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<arm/at91/at91rm92reg.h>
 end_include
 
@@ -1379,6 +1385,24 @@ break|break;
 default|default:
 break|break;
 block|}
+comment|/* 	 * Disable interrupts 	 */
+operator|*
+operator|(
+specifier|volatile
+name|uint32_t
+operator|*
+operator|)
+operator|(
+name|AT91_BASE
+operator|+
+name|dbgu_base
+operator|+
+name|USART_IDR
+operator|)
+operator|=
+literal|0xffffffff
+expr_stmt|;
+comment|/* 	 * Save the name for later... 	 */
 name|snprintf
 argument_list|(
 name|soc_data
