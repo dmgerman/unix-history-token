@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<arm/at91/at91reg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<arm/at91/at91_aicreg.h>
 end_include
 
@@ -648,7 +654,7 @@ if|if
 condition|(
 name|irq0
 operator|!=
-name|AT91SAM9X25_IRQ_SYSTEM
+name|AT91_IRQ_SYSTEM
 condition|)
 name|at91_pmc_clock_add
 argument_list|(
@@ -1266,7 +1272,7 @@ name|at91sc
 operator|->
 name|sc_irq_system
 operator|=
-name|AT91SAM9X25_IRQ_SYSTEM
+name|AT91_IRQ_SYSTEM
 expr_stmt|;
 for|for
 control|(
