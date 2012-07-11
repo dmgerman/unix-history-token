@@ -231,6 +231,14 @@ name|sgpagerops
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|pagerops
+name|mgtdevicepagerops
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * get/put return values  * OK	 operation was successful  * BAD	 specified data was out of the accepted range  * FAIL	 specified data was in range, but doesn't exist  * PEND	 operations was initiated but not completed  * ERROR error while accessing data that is in range and exists  * AGAIN temporary resource shortage prevented operation from happening  */
 end_comment

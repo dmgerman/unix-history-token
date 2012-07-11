@@ -1964,12 +1964,12 @@ name|_NPCM
 index|]
 decl_stmt|;
 comment|/* bitmap; 1 = free */
-name|uint32_t
-name|pc_spare
-index|[
-literal|2
-index|]
-decl_stmt|;
+name|TAILQ_ENTRY
+argument_list|(
+argument|pv_chunk
+argument_list|)
+name|pc_lru
+expr_stmt|;
 name|struct
 name|pv_entry
 name|pc_pventry
@@ -2066,6 +2066,16 @@ parameter_list|(
 name|m
 parameter_list|)
 value|((vm_memattr_t)(m)->md.pat_mode)
+end_define
+
+begin_define
+define|#
+directive|define
+name|pmap_page_is_write_mapped
+parameter_list|(
+name|m
+parameter_list|)
+value|(((m)->aflags& PGA_WRITEABLE) != 0)
 end_define
 
 begin_define

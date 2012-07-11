@@ -192,7 +192,7 @@ begin_define
 define|#
 directive|define
 name|ISP_PLATFORM_VERSION_MINOR
-value|0
+value|10
 end_define
 
 begin_comment
@@ -324,6 +324,7 @@ decl_stmt|;
 name|uint32_t
 name|tag
 decl_stmt|;
+comment|/* typically f/w RX_ID */
 name|uint32_t
 name|lun
 decl_stmt|;
@@ -336,11 +337,15 @@ decl_stmt|;
 name|uint32_t
 name|portid
 decl_stmt|;
-name|uint32_t
+name|uint16_t
+name|rxid
+decl_stmt|;
+comment|/* wire rxid */
+name|uint16_t
 name|oxid
-range|:
-literal|16
-decl_stmt|,
+decl_stmt|;
+comment|/* wire oxid */
+name|uint32_t
 name|cdb0
 range|:
 literal|8
@@ -475,11 +480,18 @@ decl_stmt|;
 name|uint32_t
 name|hold
 decl_stmt|;
-name|int
+name|uint32_t
+name|enabled
+range|:
+literal|1
+decl_stmt|,
 name|atio_count
-decl_stmt|;
-name|int
+range|:
+literal|15
+decl_stmt|,
 name|inot_count
+range|:
+literal|15
 decl_stmt|;
 name|inot_private_data_t
 modifier|*
@@ -560,6 +572,10 @@ name|callout
 name|wdog
 decl_stmt|;
 comment|/* watchdog timer */
+name|uint8_t
+name|crn
+decl_stmt|;
+comment|/* command reference number */
 block|}
 struct|;
 end_struct
@@ -743,6 +759,10 @@ endif|#
 directive|endif
 endif|#
 directive|endif
+name|uint8_t
+name|crnseed
+decl_stmt|;
+comment|/* next command reference number */
 block|}
 struct|;
 end_struct
@@ -905,10 +925,6 @@ literal|2
 decl_stmt|,
 endif|#
 directive|endif
-name|forcemulti
-range|:
-literal|1
-decl_stmt|,
 name|timer_active
 range|:
 literal|1
@@ -1062,6 +1078,27 @@ name|val
 parameter_list|)
 define|\
 value|if (IS_SCSI(isp)) {				\ 		ISP_SPI_PC(isp, chan)-> tag = val;	\ 	} else {					\ 		ISP_FC_PC(isp, chan)-> tag = val;	\ 	}
+end_define
+
+begin_define
+define|#
+directive|define
+name|FCP_NEXT_CRN
+parameter_list|(
+name|isp
+parameter_list|,
+name|cmd
+parameter_list|,
+name|rslt
+parameter_list|,
+name|chan
+parameter_list|,
+name|tgt
+parameter_list|,
+name|lun
+parameter_list|)
+define|\
+value|if ((isp)->isp_osinfo.pc.fc[(chan)].crnseed == 0) {			\ 		(isp)->isp_osinfo.pc.fc[(chan)].crnseed = 1;			\ 	}									\ 	if (cmd) {								\ 		PISP_PCMD(cmd)->crn = (isp)->isp_osinfo.pc.fc[(chan)].crnseed;	\ 	}									\ 	(rslt) = (isp)->isp_osinfo.pc.fc[(chan)].crnseed++
 end_define
 
 begin_define

@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001-2007, by Cisco Systems, Inc. All rights reserved.  * Copyright (c) 2008-2011, by Randall Stewart. All rights reserved.  * Copyright (c) 2008-2011, by Michael Tuexen. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *    this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
-end_comment
-
-begin_comment
-comment|/* $KAME: sctp_indata.c,v 1.36 2005/03/06 16:04:17 itojun Exp $	 */
+comment|/*-  * Copyright (c) 2001-2007, by Cisco Systems, Inc. All rights reserved.  * Copyright (c) 2008-2012, by Randall Stewart. All rights reserved.  * Copyright (c) 2008-2012, by Michael Tuexen. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *    this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -1595,7 +1591,7 @@ name|gap
 argument_list|)
 condition|)
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"gap:%x tsn:%x\n"
 argument_list|,
@@ -2990,8 +2986,6 @@ name|sctp_ep
 argument_list|,
 name|stcb
 argument_list|,
-name|SCTP_PEER_FAULTY
-argument_list|,
 name|oper
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
@@ -4249,8 +4243,6 @@ name|sctp_ep
 argument_list|,
 name|stcb
 argument_list|,
-name|SCTP_PEER_FAULTY
-argument_list|,
 name|oper
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
@@ -4468,8 +4460,6 @@ operator|->
 name|sctp_ep
 argument_list|,
 name|stcb
-argument_list|,
-name|SCTP_PEER_FAULTY
 argument_list|,
 name|oper
 argument_list|,
@@ -4702,8 +4692,6 @@ operator|->
 name|sctp_ep
 argument_list|,
 name|stcb
-argument_list|,
-name|SCTP_PEER_FAULTY
 argument_list|,
 name|oper
 argument_list|,
@@ -4938,8 +4926,6 @@ operator|->
 name|sctp_ep
 argument_list|,
 name|stcb
-argument_list|,
-name|SCTP_PEER_FAULTY
 argument_list|,
 name|oper
 argument_list|,
@@ -5399,8 +5385,6 @@ name|sctp_ep
 argument_list|,
 name|stcb
 argument_list|,
-name|SCTP_PEER_FAULTY
-argument_list|,
 name|oper
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
@@ -5630,8 +5614,6 @@ operator|->
 name|sctp_ep
 argument_list|,
 name|stcb
-argument_list|,
-name|SCTP_PEER_FAULTY
 argument_list|,
 name|oper
 argument_list|,
@@ -5879,8 +5861,6 @@ name|sctp_ep
 argument_list|,
 name|stcb
 argument_list|,
-name|SCTP_PEER_FAULTY
-argument_list|,
 name|oper
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
@@ -6113,8 +6093,6 @@ operator|->
 name|sctp_ep
 argument_list|,
 name|stcb
-argument_list|,
-name|SCTP_PEER_FAULTY
 argument_list|,
 name|oper
 argument_list|,
@@ -6384,8 +6362,6 @@ name|sctp_ep
 argument_list|,
 name|stcb
 argument_list|,
-name|SCTP_PEER_FAULTY
-argument_list|,
 name|oper
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
@@ -6640,8 +6616,6 @@ name|sctp_ep
 argument_list|,
 name|stcb
 argument_list|,
-name|SCTP_PEER_FAULTY
-argument_list|,
 name|oper
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
@@ -6873,8 +6847,6 @@ operator|->
 name|sctp_ep
 argument_list|,
 name|stcb
-argument_list|,
-name|SCTP_PEER_FAULTY
 argument_list|,
 name|oper
 argument_list|,
@@ -7121,8 +7093,6 @@ operator|->
 name|sctp_ep
 argument_list|,
 name|stcb
-argument_list|,
-name|SCTP_PEER_FAULTY
 argument_list|,
 name|oper
 argument_list|,
@@ -7832,8 +7802,6 @@ operator|->
 name|sctp_ep
 argument_list|,
 name|stcb
-argument_list|,
-literal|0
 argument_list|,
 name|op_err
 argument_list|,
@@ -8700,8 +8668,6 @@ operator|->
 name|sctp_ep
 argument_list|,
 name|stcb
-argument_list|,
-name|SCTP_PEER_FAULTY
 argument_list|,
 name|oper
 argument_list|,
@@ -10023,8 +9989,6 @@ name|sctp_ep
 argument_list|,
 name|stcb
 argument_list|,
-name|SCTP_PEER_FAULTY
-argument_list|,
 name|oper
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
@@ -10254,8 +10218,6 @@ operator|->
 name|sctp_ep
 argument_list|,
 name|stcb
-argument_list|,
-name|SCTP_PEER_FAULTY
 argument_list|,
 name|oper
 argument_list|,
@@ -10502,8 +10464,6 @@ operator|->
 name|sctp_ep
 argument_list|,
 name|stcb
-argument_list|,
-name|SCTP_PEER_FAULTY
 argument_list|,
 name|oper
 argument_list|,
@@ -12049,7 +12009,7 @@ index|]
 operator|)
 condition|)
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"Error Mapping array's not clean at clear\n"
 argument_list|)
@@ -12138,7 +12098,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"impossible slide lgap:%x slide_end:%x slide_from:%x? at:%d\n"
 argument_list|,
@@ -12174,7 +12134,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"Gak, would have overrun map end:%d slide_end:%d\n"
 argument_list|,
@@ -13166,6 +13126,16 @@ name|int
 name|length
 parameter_list|,
 name|struct
+name|sockaddr
+modifier|*
+name|src
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+name|dst
+parameter_list|,
+name|struct
 name|sctphdr
 modifier|*
 name|sh
@@ -13188,6 +13158,18 @@ parameter_list|,
 name|uint32_t
 modifier|*
 name|high_tsn
+parameter_list|,
+name|uint8_t
+name|use_mflowid
+parameter_list|,
+name|uint32_t
+name|mflowid
+parameter_list|,
+name|uint32_t
+name|vrf_id
+parameter_list|,
+name|uint16_t
+name|port
 parameter_list|)
 block|{
 name|struct
@@ -13717,14 +13699,20 @@ name|m
 argument_list|,
 name|iphlen
 argument_list|,
+name|src
+argument_list|,
+name|dst
+argument_list|,
 name|sh
 argument_list|,
 name|op_err
 argument_list|,
-literal|0
+name|use_mflowid
 argument_list|,
-name|net
-operator|->
+name|mflowid
+argument_list|,
+name|vrf_id
+argument_list|,
 name|port
 argument_list|)
 expr_stmt|;
@@ -13936,14 +13924,20 @@ name|m
 argument_list|,
 name|iphlen
 argument_list|,
+name|src
+argument_list|,
+name|dst
+argument_list|,
 name|sh
 argument_list|,
 name|op_err
 argument_list|,
-literal|0
+name|use_mflowid
 argument_list|,
-name|net
-operator|->
+name|mflowid
+argument_list|,
+name|vrf_id
+argument_list|,
 name|port
 argument_list|)
 expr_stmt|;
@@ -14235,6 +14229,8 @@ name|net
 argument_list|,
 operator|*
 name|mm
+argument_list|,
+name|length
 argument_list|,
 name|iphlen
 argument_list|,
@@ -16303,11 +16299,7 @@ name|stcb
 argument_list|,
 name|tp1
 argument_list|,
-operator|(
-name|SCTP_RESPONSE_TO_USER_REQ
-operator||
-name|SCTP_NOTIFY_DATAGRAM_SENT
-operator|)
+literal|1
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
 argument_list|)
@@ -17154,11 +17146,7 @@ name|stcb
 argument_list|,
 name|tp1
 argument_list|,
-operator|(
-name|SCTP_RESPONSE_TO_USER_REQ
-operator||
-name|SCTP_NOTIFY_DATAGRAM_SENT
-operator|)
+literal|1
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
 argument_list|)
@@ -17175,7 +17163,7 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
-comment|/* printf("OK, we are now ready to FR this guy\n"); */
+comment|/* 			 * SCTP_PRINTF("OK, we are now ready to FR this 			 * guy\n"); 			 */
 if|if
 condition|(
 name|SCTP_BASE_SYSCTL
@@ -17374,7 +17362,7 @@ name|tot_retrans
 operator|++
 expr_stmt|;
 comment|/* mark the sending seq for possible subsequent FR's */
-comment|/* 			 * printf("Marking TSN for FR new value %x\n", 			 * (uint32_t)tpi->rec.data.TSN_seq); 			 */
+comment|/* 			 * SCTP_PRINTF("Marking TSN for FR new value %x\n", 			 * (uint32_t)tpi->rec.data.TSN_seq); 			 */
 if|if
 condition|(
 name|TAILQ_EMPTY
@@ -17734,11 +17722,7 @@ name|stcb
 argument_list|,
 name|tp1
 argument_list|,
-operator|(
-name|SCTP_RESPONSE_TO_USER_REQ
-operator||
-name|SCTP_NOTIFY_DATAGRAM_SENT
-operator|)
+literal|1
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
 argument_list|)
@@ -17927,7 +17911,7 @@ operator|<
 name|SCTP_DATAGRAM_RESEND
 condition|)
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"Chk TSN:%u size:%d inflight cnt:%d\n"
 argument_list|,
@@ -18026,7 +18010,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"asoc->total_flight:%d cnt:%d\n"
 argument_list|,
@@ -18815,8 +18799,6 @@ name|sctp_ep
 argument_list|,
 name|stcb
 argument_list|,
-name|SCTP_PEER_FAULTY
-argument_list|,
 name|oper
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
@@ -18918,7 +18900,7 @@ operator|==
 name|SCTP_DATAGRAM_UNSENT
 condition|)
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"Warning, an unsent is now acked?\n"
 argument_list|)
@@ -19608,7 +19590,7 @@ name|SCTP_NOTIFY_INTERFACE_UP
 argument_list|,
 name|stcb
 argument_list|,
-name|SCTP_RECEIVED_SACK
+literal|0
 argument_list|,
 operator|(
 name|void
@@ -20608,8 +20590,6 @@ name|sctp_ep
 argument_list|,
 name|stcb
 argument_list|,
-name|SCTP_RESPONSE_TO_USER_REQ
-argument_list|,
 name|oper
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
@@ -21513,7 +21493,7 @@ modifier|*
 name|oper
 decl_stmt|;
 comment|/* 			 * no way, we have not even sent this TSN out yet. 			 * Peer is hopelessly messed up with us. 			 */
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"NEW cum_ack:%x send_s:%x is smaller or equal\n"
 argument_list|,
@@ -21527,7 +21507,7 @@ condition|(
 name|tp1
 condition|)
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"Got send_s from tsn:%x + 1 of tp1:%p\n"
 argument_list|,
@@ -21679,8 +21659,6 @@ operator|->
 name|sctp_ep
 argument_list|,
 name|stcb
-argument_list|,
-name|SCTP_PEER_FAULTY
 argument_list|,
 name|oper
 argument_list|,
@@ -22527,7 +22505,7 @@ argument_list|)
 condition|)
 block|{
 comment|/* 				 * peer is either confused or we are under 				 * attack. We must abort. 				 */
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"Hopeless peer! biggest_tsn_acked:%x largest seq:%x\n"
 argument_list|,
@@ -22672,7 +22650,7 @@ name|SCTP_DATAGRAM_UNSENT
 condition|)
 block|{
 comment|/* no more sent on list */
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"Warning, tp1->sent == %d and its now acked?\n"
 argument_list|,
@@ -23333,7 +23311,7 @@ name|SCTP_NOTIFY_INTERFACE_UP
 argument_list|,
 name|stcb
 argument_list|,
-name|SCTP_RECEIVED_SACK
+literal|0
 argument_list|,
 operator|(
 name|void
@@ -23958,8 +23936,6 @@ operator|->
 name|sctp_ep
 argument_list|,
 name|stcb
-argument_list|,
-name|SCTP_RESPONSE_TO_USER_REQ
 argument_list|,
 name|oper
 argument_list|,
@@ -26005,8 +25981,6 @@ operator|->
 name|sctp_ep
 argument_list|,
 name|stcb
-argument_list|,
-name|SCTP_PEER_FAULTY
 argument_list|,
 name|oper
 argument_list|,

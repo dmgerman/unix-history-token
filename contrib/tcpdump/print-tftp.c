@@ -373,10 +373,6 @@ case|:
 case|case
 name|OACK
 case|:
-comment|/* 		 * XXX Not all arpa/tftp.h's specify th_stuff as any 		 * array; use address of th_block instead 		 */
-ifdef|#
-directive|ifdef
-name|notdef
 name|p
 operator|=
 operator|(
@@ -387,21 +383,6 @@ name|tp
 operator|->
 name|th_stuff
 expr_stmt|;
-else|#
-directive|else
-name|p
-operator|=
-operator|(
-name|u_char
-operator|*
-operator|)
-operator|&
-name|tp
-operator|->
-name|th_block
-expr_stmt|;
-endif|#
-directive|endif
 name|putchar
 argument_list|(
 literal|' '

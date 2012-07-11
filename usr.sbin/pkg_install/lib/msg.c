@@ -239,6 +239,11 @@ argument_list|(
 name|tty
 argument_list|)
 expr_stmt|;
+name|va_end
+argument_list|(
+name|args
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ch

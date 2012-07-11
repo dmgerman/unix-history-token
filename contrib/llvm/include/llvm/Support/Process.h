@@ -273,6 +273,15 @@ name|bool
 name|bg
 parameter_list|)
 function_decl|;
+comment|/// This function returns the escape sequence to reverse forground and
+comment|/// background colors.
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|OutputReverse
+parameter_list|()
+function_decl|;
 comment|/// Resets the terminals colors, or returns an escape sequence to do so.
 specifier|static
 specifier|const

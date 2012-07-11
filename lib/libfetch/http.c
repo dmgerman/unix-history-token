@@ -8550,8 +8550,21 @@ goto|goto
 name|ouch
 goto|;
 block|}
+comment|/* Only copy credentials if the host matches */
 if|if
 condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|new
+operator|->
+name|host
+argument_list|,
+name|url
+operator|->
+name|host
+argument_list|)
+operator|&&
 operator|!
 operator|*
 name|new

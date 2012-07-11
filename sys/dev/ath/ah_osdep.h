@@ -171,6 +171,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|OS_MEMCMP
+parameter_list|(
+name|_a
+parameter_list|,
+name|_b
+parameter_list|,
+name|_l
+parameter_list|)
+value|memcmp((_a), (_b), (_l))
+end_define
+
+begin_define
+define|#
+directive|define
 name|abs
 parameter_list|(
 name|_a

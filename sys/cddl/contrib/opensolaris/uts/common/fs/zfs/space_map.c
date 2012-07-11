@@ -901,9 +901,6 @@ name|uint64_t
 name|size
 parameter_list|)
 block|{
-name|avl_index_t
-name|where
-decl_stmt|;
 name|space_seg_t
 name|ssearch
 decl_stmt|,
@@ -998,8 +995,7 @@ argument_list|,
 operator|&
 name|ssearch
 argument_list|,
-operator|&
-name|where
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* Make sure we completely overlap with someone */
@@ -1057,7 +1053,7 @@ operator|->
 name|sm_space
 operator|-
 name|size
-operator|<=
+operator|<
 name|sm
 operator|->
 name|sm_size

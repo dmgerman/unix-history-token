@@ -1678,28 +1678,6 @@ modifier|*
 name|expr
 parameter_list|)
 function_decl|;
-comment|/// \brief Result type of CanThrow().
-enum|enum
-name|CanThrowResult
-block|{
-name|CT_Cannot
-block|,
-name|CT_Dependent
-block|,
-name|CT_Can
-block|}
-enum|;
-comment|/// \brief Test if this expression, if evaluated, might throw, according to
-comment|///        the rules of C++ [expr.unary.noexcept].
-name|CanThrowResult
-name|CanThrow
-argument_list|(
-name|ASTContext
-operator|&
-name|C
-argument_list|)
-decl|const
-decl_stmt|;
 comment|/// IgnoreImpCasts - Skip past any implicit casts which might
 comment|/// surround this expression.  Only skips ImplicitCastExprs.
 name|Expr
@@ -15755,6 +15733,13 @@ name|isValid
 argument_list|()
 return|;
 block|}
+comment|// Is this an initializer for an array of characters, initialized by a string
+comment|// literal or an @encode?
+name|bool
+name|isStringLiteralInit
+argument_list|()
+specifier|const
+block|;
 name|SourceLocation
 name|getLBraceLoc
 argument_list|()

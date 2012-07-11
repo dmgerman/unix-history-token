@@ -475,14 +475,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_DECL
-argument_list|(
-name|_debug_acpi
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 specifier|static
 name|SYSCTL_NODE
 argument_list|(
@@ -2864,6 +2856,8 @@ condition|)
 break|break;
 if|if
 condition|(
+name|ACPI_SUCCESS
+argument_list|(
 name|EcCheckStatus
 argument_list|(
 name|sc
@@ -2872,8 +2866,7 @@ literal|"retr_check"
 argument_list|,
 name|EC_EVENT_INPUT_BUFFER_EMPTY
 argument_list|)
-operator|==
-name|AE_OK
+argument_list|)
 condition|)
 continue|continue;
 else|else
@@ -3726,9 +3719,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|ACPI_SUCCESS
+argument_list|(
 name|Status
-operator|==
-name|AE_OK
+argument_list|)
 condition|)
 break|break;
 name|DELAY
@@ -3824,9 +3818,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|ACPI_SUCCESS
+argument_list|(
 name|Status
-operator|==
-name|AE_OK
+argument_list|)
 condition|)
 block|{
 if|if
@@ -3857,9 +3852,10 @@ block|}
 comment|/* 	 * We finished waiting for the GPE and it never arrived.  Try to 	 * read the register once and trust whatever value we got.  This is 	 * the best we can do at this point. 	 */
 if|if
 condition|(
+name|ACPI_FAILURE
+argument_list|(
 name|Status
-operator|!=
-name|AE_OK
+argument_list|)
 condition|)
 name|Status
 operator|=
@@ -3899,9 +3895,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|ACPI_FAILURE
+argument_list|(
 name|Status
-operator|!=
-name|AE_OK
+argument_list|)
 condition|)
 name|CTR0
 argument_list|(
@@ -4240,6 +4237,8 @@ condition|)
 block|{
 if|if
 condition|(
+name|ACPI_SUCCESS
+argument_list|(
 name|EcCheckStatus
 argument_list|(
 name|sc
@@ -4248,8 +4247,7 @@ literal|"retr_check"
 argument_list|,
 name|EC_EVENT_INPUT_BUFFER_EMPTY
 argument_list|)
-operator|==
-name|AE_OK
+argument_list|)
 condition|)
 continue|continue;
 else|else

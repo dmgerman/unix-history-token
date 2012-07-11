@@ -1039,6 +1039,18 @@ comment|/// cycle detection at the end of the TU.
 name|DelegatingCtorDeclsType
 name|DelegatingCtorDecls
 decl_stmt|;
+comment|/// \brief All the destructors seen during a class definition that had their
+comment|/// exception spec computation delayed because it depended on an unparsed
+comment|/// exception spec.
+name|SmallVector
+operator|<
+name|CXXDestructorDecl
+operator|*
+operator|,
+literal|2
+operator|>
+name|DelayedDestructorExceptionSpecs
+expr_stmt|;
 comment|/// \brief All the overriding destructors seen during a class definition
 comment|/// (there could be multiple due to nested classes) that had their exception
 comment|/// spec checks delayed, plus the overridden destructor.
@@ -1379,6 +1391,9 @@ decl_stmt|;
 name|ProcessingContextState
 name|SavedContextState
 decl_stmt|;
+name|QualType
+name|SavedCXXThisTypeOverride
+decl_stmt|;
 name|public
 label|:
 name|ContextRAII
@@ -1406,7 +1421,17 @@ argument_list|)
 operator|,
 name|SavedContextState
 argument_list|(
-argument|S.DelayedDiagnostics.pushContext()
+name|S
+operator|.
+name|DelayedDiagnostics
+operator|.
+name|pushContext
+argument_list|()
+argument_list|)
+operator|,
+name|SavedCXXThisTypeOverride
+argument_list|(
+argument|S.CXXThisTypeOverride
 argument_list|)
 block|{
 name|assert
@@ -1446,6 +1471,12 @@ name|popContext
 argument_list|(
 name|SavedContextState
 argument_list|)
+expr_stmt|;
+name|S
+operator|.
+name|CXXThisTypeOverride
+operator|=
+name|SavedCXXThisTypeOverride
 expr_stmt|;
 name|SavedContext
 operator|=
@@ -1840,43 +1871,31 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This is basically a wrapper around PointerIntPair. The lowest bit of the
+comment|/// This is basically a wrapper around PointerIntPair. The lowest bits of the
 end_comment
 
 begin_comment
-comment|/// integer is used to determine whether we have a parameter qualification
+comment|/// integer are used to determine whether overload resolution succeeded, and
 end_comment
 
 begin_comment
-comment|/// match, the second-lowest is whether we had success in resolving the
+comment|/// whether, when looking up a copy constructor or assignment operator, we
 end_comment
 
 begin_comment
-comment|/// overload to a unique non-deleted function.
+comment|/// found a potential copy constructor/assignment operator whose first
 end_comment
 
 begin_comment
-comment|///
+comment|/// parameter is const-qualified. This is used for determining parameter types
 end_comment
 
 begin_comment
-comment|/// The ConstParamMatch bit represents whether, when looking up a copy
+comment|/// of other objects and is utterly meaningless on other types of special
 end_comment
 
 begin_comment
-comment|/// constructor or assignment operator, we found a potential copy
-end_comment
-
-begin_comment
-comment|/// constructor/assignment operator whose first parameter is const-qualified.
-end_comment
-
-begin_comment
-comment|/// This is used for determining parameter types of other objects and is
-end_comment
-
-begin_comment
-comment|/// utterly meaningless on other types of special members.
+comment|/// members.
 end_comment
 
 begin_decl_stmt
@@ -1897,9 +1916,7 @@ name|NoMemberOrDeleted
 block|,
 name|Ambiguous
 block|,
-name|SuccessNonConst
-block|,
-name|SuccessConst
+name|Success
 block|}
 block|;
 name|private
@@ -1989,30 +2006,6 @@ argument_list|(
 name|K
 argument_list|)
 block|; }
-name|bool
-name|hasSuccess
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getKind
-argument_list|()
-operator|>=
-name|SuccessNonConst
-return|;
-block|}
-name|bool
-name|hasConstParamMatch
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getKind
-argument_list|()
-operator|==
-name|SuccessConst
-return|;
-block|}
 expr|}
 block|;
 comment|/// \brief A cache of special member function overload resolution results
@@ -3221,6 +3214,35 @@ modifier|*
 name|TInfo
 init|=
 literal|0
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|CanThrowResult
+name|canThrow
+parameter_list|(
+specifier|const
+name|Expr
+modifier|*
+name|E
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|const
+name|FunctionProtoType
+modifier|*
+name|ResolveExceptionSpec
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|,
+specifier|const
+name|FunctionProtoType
+modifier|*
+name|FPT
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -8913,12 +8935,6 @@ name|Class
 parameter_list|,
 name|unsigned
 name|Quals
-parameter_list|,
-name|bool
-modifier|*
-name|ConstParam
-init|=
-literal|0
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -8940,12 +8956,6 @@ name|RValueThis
 parameter_list|,
 name|unsigned
 name|ThisQuals
-parameter_list|,
-name|bool
-modifier|*
-name|ConstParam
-init|=
-literal|0
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -9418,6 +9428,28 @@ specifier|const
 name|AttributeList
 modifier|&
 name|attr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Stmt attributes - this routine is the top level dispatcher.
+end_comment
+
+begin_function_decl
+name|StmtResult
+name|ProcessStmtAttributes
+parameter_list|(
+name|Stmt
+modifier|*
+name|Stmt
+parameter_list|,
+name|AttributeList
+modifier|*
+name|Attrs
+parameter_list|,
+name|SourceRange
+name|Range
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -10801,6 +10833,25 @@ name|TheDecl
 parameter_list|,
 name|SourceLocation
 name|ColonLoc
+parameter_list|,
+name|Stmt
+modifier|*
+name|SubStmt
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|StmtResult
+name|ActOnAttributedStmt
+parameter_list|(
+name|SourceLocation
+name|AttrLoc
+parameter_list|,
+specifier|const
+name|AttrVec
+modifier|&
+name|Attrs
 parameter_list|,
 name|Stmt
 modifier|*
@@ -15177,9 +15228,9 @@ name|class
 name|ImplicitExceptionSpecification
 block|{
 comment|// Pointer to allow copying
-name|ASTContext
+name|Sema
 modifier|*
-name|Context
+name|Self
 decl_stmt|;
 comment|// We order exception specifications thus:
 comment|// noexcept is the most restrictive, but is only used in C++0x.
@@ -15235,15 +15286,15 @@ label|:
 name|explicit
 name|ImplicitExceptionSpecification
 argument_list|(
-name|ASTContext
+name|Sema
 operator|&
-name|Context
+name|Self
 argument_list|)
 operator|:
-name|Context
+name|Self
 argument_list|(
 operator|&
-name|Context
+name|Self
 argument_list|)
 operator|,
 name|ComputedEST
@@ -15254,6 +15305,8 @@ block|{
 if|if
 condition|(
 operator|!
+name|Self
+operator|.
 name|Context
 operator|.
 name|getLangOpts
@@ -15317,6 +15370,9 @@ comment|/// \brief Integrate another called method into the collected data.
 name|void
 name|CalledDecl
 parameter_list|(
+name|SourceLocation
+name|CallLoc
+parameter_list|,
 name|CXXMethodDecl
 modifier|*
 name|Method
@@ -15525,6 +15581,55 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// \brief Check the given exception-specification and update the
+end_comment
+
+begin_comment
+comment|/// extended prototype information with the results.
+end_comment
+
+begin_decl_stmt
+name|void
+name|checkExceptionSpecification
+argument_list|(
+name|ExceptionSpecificationType
+name|EST
+argument_list|,
+name|ArrayRef
+operator|<
+name|ParsedType
+operator|>
+name|DynamicExceptions
+argument_list|,
+name|ArrayRef
+operator|<
+name|SourceRange
+operator|>
+name|DynamicExceptionRanges
+argument_list|,
+name|Expr
+operator|*
+name|NoexceptExpr
+argument_list|,
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|QualType
+operator|>
+operator|&
+name|Exceptions
+argument_list|,
+name|FunctionProtoType
+operator|::
+name|ExtProtoInfo
+operator|&
+name|EPI
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Determine if a special member function should have a deleted
 end_comment
 
@@ -15694,6 +15799,11 @@ parameter_list|,
 name|CXXDestructorDecl
 modifier|*
 name|Destructor
+parameter_list|,
+name|bool
+name|WasDelayed
+init|=
+name|false
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -15991,6 +16101,79 @@ parameter_list|(
 name|FunctionDecl
 modifier|*
 name|FD
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Check whether 'this' shows up in the type of a static member
+end_comment
+
+begin_comment
+comment|/// function after the (naturally empty) cv-qualifier-seq would be.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns true if an error occurred.
+end_comment
+
+begin_function_decl
+name|bool
+name|checkThisInStaticMemberFunctionType
+parameter_list|(
+name|CXXMethodDecl
+modifier|*
+name|Method
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Whether this' shows up in the exception specification of a static
+end_comment
+
+begin_comment
+comment|/// member function.
+end_comment
+
+begin_function_decl
+name|bool
+name|checkThisInStaticMemberFunctionExceptionSpec
+parameter_list|(
+name|CXXMethodDecl
+modifier|*
+name|Method
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Check whether 'this' shows up in the attributes of the given
+end_comment
+
+begin_comment
+comment|/// static member function.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns true if an error occurred.
+end_comment
+
+begin_function_decl
+name|bool
+name|checkThisInStaticMemberFunctionAttributes
+parameter_list|(
+name|CXXMethodDecl
+modifier|*
+name|Method
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -16361,6 +16544,74 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// \brief When non-NULL, the C++ 'this' expression is allowed despite the
+end_comment
+
+begin_comment
+comment|/// current context not being a non-static member function. In such cases,
+end_comment
+
+begin_comment
+comment|/// this provides the type used for 'this'.
+end_comment
+
+begin_decl_stmt
+name|QualType
+name|CXXThisTypeOverride
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief RAII object used to temporarily allow the C++ 'this' expression
+end_comment
+
+begin_comment
+comment|/// to be used, with the given qualifiers on the current class type.
+end_comment
+
+begin_decl_stmt
+name|class
+name|CXXThisScopeRAII
+block|{
+name|Sema
+modifier|&
+name|S
+decl_stmt|;
+name|QualType
+name|OldCXXThisTypeOverride
+decl_stmt|;
+name|bool
+name|Enabled
+decl_stmt|;
+name|public
+label|:
+comment|/// \brief Introduce a new scope where 'this' may be allowed (when enabled),
+comment|/// using the given declaration (which is either a class template or a
+comment|/// class) along with the given qualifiers.
+comment|/// along with the qualifiers placed on '*this'.
+name|CXXThisScopeRAII
+argument_list|(
+argument|Sema&S
+argument_list|,
+argument|Decl *ContextDecl
+argument_list|,
+argument|unsigned CXXThisTypeQuals
+argument_list|,
+argument|bool Enabled = true
+argument_list|)
+empty_stmt|;
+operator|~
+name|CXXThisScopeRAII
+argument_list|()
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// \brief Make sure the value of 'this' is actually available in the current
 end_comment
 
@@ -16399,6 +16650,28 @@ name|bool
 name|Explicit
 init|=
 name|false
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Determine whether the given type is the type of *this that is used
+end_comment
+
+begin_comment
+comment|/// outside of the body of a member function for a type that is currently
+end_comment
+
+begin_comment
+comment|/// being defined.
+end_comment
+
+begin_function_decl
+name|bool
+name|isThisOutsideMemberFunctionBody
+parameter_list|(
+name|QualType
+name|BaseType
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -19470,6 +19743,13 @@ name|AttributeList
 modifier|*
 name|AttrList
 parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ActOnFinishCXXMemberDecls
+parameter_list|()
 function_decl|;
 end_function_decl
 
@@ -24300,6 +24580,10 @@ block|,
 comment|/// We are checking the validity of a default template argument that
 comment|/// has been used when naming a template-id.
 name|DefaultTemplateArgumentChecking
+block|,
+comment|/// We are instantiating the exception specification for a function
+comment|/// template which was deferred until it was needed.
+name|ExceptionSpecInstantiation
 block|}
 name|Kind
 enum|;
@@ -24434,6 +24718,9 @@ condition|)
 block|{
 case|case
 name|TemplateInstantiation
+case|:
+case|case
+name|ExceptionSpecInstantiation
 case|:
 return|return
 name|true
@@ -24857,6 +25144,25 @@ argument_list|,
 argument|SourceLocation PointOfInstantiation
 argument_list|,
 argument|Decl *Entity
+argument_list|,
+argument|SourceRange InstantiationRange = SourceRange()
+argument_list|)
+empty_stmt|;
+struct|struct
+name|ExceptionSpecification
+block|{}
+struct|;
+comment|/// \brief Note that we are instantiating an exception specification
+comment|/// of a function template.
+name|InstantiatingTemplate
+argument_list|(
+argument|Sema&SemaRef
+argument_list|,
+argument|SourceLocation PointOfInstantiation
+argument_list|,
+argument|FunctionDecl *Entity
+argument_list|,
+argument|ExceptionSpecification
 argument_list|,
 argument|SourceRange InstantiationRange = SourceRange()
 argument_list|)
@@ -25522,6 +25828,13 @@ name|Loc
 parameter_list|,
 name|DeclarationName
 name|Entity
+parameter_list|,
+name|CXXRecordDecl
+modifier|*
+name|ThisContext
+parameter_list|,
+name|unsigned
+name|ThisTypeQuals
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -26068,6 +26381,20 @@ specifier|const
 name|MultiLevelTemplateArgumentList
 modifier|&
 name|TemplateArgs
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|InstantiateExceptionSpec
+parameter_list|(
+name|SourceLocation
+name|PointOfInstantiation
+parameter_list|,
+name|FunctionDecl
+modifier|*
+name|Function
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -30097,13 +30424,17 @@ name|APSInt
 operator|*
 name|Result
 argument_list|,
+specifier|const
 name|PartialDiagnostic
+operator|&
 name|Diag
 argument_list|,
 name|bool
 name|AllowFold
 argument_list|,
+specifier|const
 name|PartialDiagnostic
+operator|&
 name|FoldDiag
 argument_list|)
 decl_stmt|;
@@ -30123,7 +30454,9 @@ name|APSInt
 operator|*
 name|Result
 argument_list|,
+specifier|const
 name|PartialDiagnostic
+operator|&
 name|Diag
 argument_list|,
 name|bool

@@ -6655,8 +6655,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: traceroute6 [-dIlnNrUv] [-f firsthop] [-g gateway] [-m hoplimit]\n"
-literal|"       [-p port] [-q probes] [-s src] [-w waittime] target [datalen]\n"
+literal|"usage: traceroute6 [-adIlnNrUv] [-A as_server] [-f firsthop] [-g gateway]\n"
+literal|"       [-m hoplimit] [-p port] [-q probes] [-s src] [-w waittime] target\n"
+literal|"       [datalen]\n"
 argument_list|)
 expr_stmt|;
 name|exit

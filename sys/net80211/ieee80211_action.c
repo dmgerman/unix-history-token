@@ -371,7 +371,7 @@ return|return
 literal|0
 return|;
 case|case
-name|IEEE80211_ACTION_CAT_MESHPEERING
+name|IEEE80211_ACTION_CAT_SELF_PROT
 case|:
 if|if
 condition|(
@@ -584,7 +584,7 @@ index|]
 expr_stmt|;
 break|break;
 case|case
-name|IEEE80211_ACTION_CAT_MESHPEERING
+name|IEEE80211_ACTION_CAT_SELF_PROT
 case|:
 if|if
 condition|(
@@ -965,7 +965,7 @@ return|return
 literal|0
 return|;
 case|case
-name|IEEE80211_ACTION_CAT_MESHPEERING
+name|IEEE80211_ACTION_CAT_SELF_PROT
 case|:
 if|if
 condition|(
@@ -1208,7 +1208,7 @@ index|]
 expr_stmt|;
 break|break;
 case|case
-name|IEEE80211_ACTION_CAT_MESHPEERING
+name|IEEE80211_ACTION_CAT_SELF_PROT
 case|:
 if|if
 condition|(

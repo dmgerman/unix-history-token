@@ -777,7 +777,7 @@ name|map
 operator|->
 name|system_mtx
 argument_list|,
-literal|"system map"
+literal|"vm map (system)"
 argument_list|,
 name|NULL
 argument_list|,
@@ -793,7 +793,7 @@ name|map
 operator|->
 name|lock
 argument_list|,
-literal|"user map"
+literal|"vm map (user)"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1830,6 +1830,8 @@ name|td
 decl_stmt|;
 name|vm_map_entry_t
 name|entry
+decl_stmt|,
+name|next
 decl_stmt|;
 name|vm_object_t
 name|object
@@ -1838,22 +1840,26 @@ name|td
 operator|=
 name|curthread
 expr_stmt|;
-while|while
-condition|(
-operator|(
 name|entry
 operator|=
 name|td
 operator|->
 name|td_map_def_user
-operator|)
+expr_stmt|;
+name|td
+operator|->
+name|td_map_def_user
+operator|=
+name|NULL
+expr_stmt|;
+while|while
+condition|(
+name|entry
 operator|!=
 name|NULL
 condition|)
 block|{
-name|td
-operator|->
-name|td_map_def_user
+name|next
 operator|=
 name|entry
 operator|->
@@ -1929,6 +1935,10 @@ name|entry
 argument_list|,
 name|FALSE
 argument_list|)
+expr_stmt|;
+name|entry
+operator|=
+name|next
 expr_stmt|;
 block|}
 block|}
@@ -5151,6 +5161,21 @@ operator|->
 name|wired_count
 operator|=
 literal|0
+expr_stmt|;
+name|new_entry
+operator|->
+name|read_ahead
+operator|=
+name|VM_FAULT_READ_AHEAD_INIT
+expr_stmt|;
+name|new_entry
+operator|->
+name|next_read
+operator|=
+name|OFF_TO_IDX
+argument_list|(
+name|offset
+argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
@@ -14398,13 +14423,13 @@ name|stack_entry
 operator|->
 name|start
 argument_list|,
-name|p
+name|next_entry
 operator|->
-name|p_sysent
-operator|->
-name|sv_stackprot
+name|protection
 argument_list|,
-name|VM_PROT_ALL
+name|next_entry
+operator|->
+name|max_protection
 argument_list|,
 literal|0
 argument_list|)

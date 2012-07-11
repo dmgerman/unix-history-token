@@ -1173,6 +1173,18 @@ value|QualType Transform##CLASS##Type(TypeLocBuilder&TLB, CLASS##TypeLoc T);
 include|#
 directive|include
 file|"clang/AST/TypeLocNodes.def"
+name|QualType
+name|TransformFunctionProtoType
+argument_list|(
+argument|TypeLocBuilder&TLB
+argument_list|,
+argument|FunctionProtoTypeLoc TL
+argument_list|,
+argument|CXXRecordDecl *ThisContext
+argument_list|,
+argument|unsigned ThisTypeQuals
+argument_list|)
+block|;
 name|StmtResult
 name|TransformSEHHandler
 argument_list|(
@@ -2940,6 +2952,54 @@ argument_list|,
 name|L
 argument_list|,
 name|ColonLoc
+argument_list|,
+name|SubStmt
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Build a new label statement.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// By default, performs semantic analysis to build the new statement.
+end_comment
+
+begin_comment
+comment|/// Subclasses may override this routine to provide different behavior.
+end_comment
+
+begin_function
+name|StmtResult
+name|RebuildAttributedStmt
+parameter_list|(
+name|SourceLocation
+name|AttrLoc
+parameter_list|,
+specifier|const
+name|AttrVec
+modifier|&
+name|Attrs
+parameter_list|,
+name|Stmt
+modifier|*
+name|SubStmt
+parameter_list|)
+block|{
+return|return
+name|SemaRef
+operator|.
+name|ActOnAttributedStmt
+argument_list|(
+name|AttrLoc
+argument_list|,
+name|Attrs
 argument_list|,
 name|SubStmt
 argument_list|)
@@ -18701,12 +18761,50 @@ argument_list|,
 argument|FunctionProtoTypeLoc TL
 argument_list|)
 block|{
+return|return
+name|getDerived
+argument_list|()
+operator|.
+name|TransformFunctionProtoType
+argument_list|(
+name|TLB
+argument_list|,
+name|TL
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|Derived
+operator|>
+name|QualType
+name|TreeTransform
+operator|<
+name|Derived
+operator|>
+operator|::
+name|TransformFunctionProtoType
+argument_list|(
+argument|TypeLocBuilder&TLB
+argument_list|,
+argument|FunctionProtoTypeLoc TL
+argument_list|,
+argument|CXXRecordDecl *ThisContext
+argument_list|,
+argument|unsigned ThisTypeQuals
+argument_list|)
+block|{
 comment|// Transform the parameters and return type.
 comment|//
-comment|// We instantiate in source order, with the return type first followed by
-comment|// the parameters, because users tend to expect this (even if they shouldn't
-comment|// rely on it!).
-comment|//
+comment|// We are required to instantiate the params and return type in source order.
 comment|// When the function has a trailing return type, we instantiate the
 comment|// parameters before the return type,  since the return type can then refer
 comment|// to the parameters themselves (via decltype, sizeof, etc.).
@@ -18789,6 +18887,25 @@ return|return
 name|QualType
 argument_list|()
 return|;
+block|{
+comment|// C++11 [expr.prim.general]p3:
+comment|//   If a declaration declares a member function or member function
+comment|//   template of a class X, the expression this is a prvalue of type
+comment|//   "pointer to cv-qualifier-seq X" between the optional cv-qualifer-seq
+comment|//   and the end of the function-definition, member-declarator, or
+comment|//   declarator.
+name|Sema
+operator|::
+name|CXXThisScopeRAII
+name|ThisScope
+argument_list|(
+name|SemaRef
+argument_list|,
+name|ThisContext
+argument_list|,
+name|ThisTypeQuals
+argument_list|)
+expr_stmt|;
 name|ResultType
 operator|=
 name|getDerived
@@ -18818,8 +18935,8 @@ return|;
 block|}
 end_expr_stmt
 
-begin_else
-else|else
+begin_block
+unit|}   else
 block|{
 name|ResultType
 operator|=
@@ -18888,7 +19005,11 @@ name|QualType
 argument_list|()
 return|;
 block|}
-end_else
+end_block
+
+begin_comment
+comment|// FIXME: Need to transform the exception-specification too.
+end_comment
 
 begin_decl_stmt
 name|QualType
@@ -24756,6 +24877,98 @@ name|LD
 operator|)
 argument_list|,
 name|SourceLocation
+argument_list|()
+argument_list|,
+name|SubStmt
+operator|.
+name|get
+argument_list|()
+argument_list|)
+return|;
+end_return
+
+begin_expr_stmt
+unit|}  template
+operator|<
+name|typename
+name|Derived
+operator|>
+name|StmtResult
+name|TreeTransform
+operator|<
+name|Derived
+operator|>
+operator|::
+name|TransformAttributedStmt
+argument_list|(
+argument|AttributedStmt *S
+argument_list|)
+block|{
+name|StmtResult
+name|SubStmt
+operator|=
+name|getDerived
+argument_list|()
+operator|.
+name|TransformStmt
+argument_list|(
+name|S
+operator|->
+name|getSubStmt
+argument_list|()
+argument_list|)
+block|;
+if|if
+condition|(
+name|SubStmt
+operator|.
+name|isInvalid
+argument_list|()
+condition|)
+return|return
+name|StmtError
+argument_list|()
+return|;
+end_expr_stmt
+
+begin_comment
+comment|// TODO: transform attributes
+end_comment
+
+begin_if
+if|if
+condition|(
+name|SubStmt
+operator|.
+name|get
+argument_list|()
+operator|==
+name|S
+operator|->
+name|getSubStmt
+argument_list|()
+comment|/*&& attrs are the same */
+condition|)
+return|return
+name|S
+return|;
+end_if
+
+begin_return
+return|return
+name|getDerived
+argument_list|()
+operator|.
+name|RebuildAttributedStmt
+argument_list|(
+name|S
+operator|->
+name|getAttrLoc
+argument_list|()
+argument_list|,
+name|S
+operator|->
+name|getAttrs
 argument_list|()
 argument_list|,
 name|SubStmt

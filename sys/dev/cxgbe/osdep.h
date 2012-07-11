@@ -585,6 +585,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCI_DEVICE_ID
+value|PCIR_DEVICE
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCI_CAP_ID_VPD
 value|PCIY_VPD
 end_define

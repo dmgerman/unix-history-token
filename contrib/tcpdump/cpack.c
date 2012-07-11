@@ -51,7 +51,6 @@ file|"extract.h"
 end_include
 
 begin_function
-specifier|static
 name|u_int8_t
 modifier|*
 name|cpack_next_boundary
@@ -108,7 +107,6 @@ comment|/* Advance to the next wordsize boundary. Return NULL if fewer than  * w
 end_comment
 
 begin_function
-specifier|static
 name|u_int8_t
 modifier|*
 name|cpack_align_and_reserve

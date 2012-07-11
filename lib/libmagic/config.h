@@ -133,12 +133,23 @@ begin_comment
 comment|/* Define to 1 if you have the `getline' function. */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HOSTPROG
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|HAVE_GETLINE
 value|1
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Define to 1 if you have the<getopt.h> header file. */

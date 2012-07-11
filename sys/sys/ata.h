@@ -1383,6 +1383,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ATA_SEP_ATTN
+value|0x67
+end_define
+
+begin_comment
+comment|/* SEP request */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ATA_SEEK
 value|0x70
 end_define

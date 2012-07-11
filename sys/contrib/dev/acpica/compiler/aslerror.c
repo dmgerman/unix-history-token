@@ -620,6 +620,7 @@ block|}
 block|}
 else|else
 block|{
+comment|/*              * Less verbose version of the error message, enabled via the              * -vi switch. The format is compatible with MS Visual Studio.              */
 name|fprintf
 argument_list|(
 name|OutputFile
@@ -642,11 +643,7 @@ name|fprintf
 argument_list|(
 name|OutputFile
 argument_list|,
-literal|"(%u) i:%6u : "
-argument_list|,
-name|Enode
-operator|->
-name|LineNumber
+literal|"(%u) : "
 argument_list|,
 name|Enode
 operator|->
@@ -681,11 +678,16 @@ block|}
 else|else
 block|{
 comment|/* Decode the message ID */
+if|if
+condition|(
+name|Gbl_VerboseErrors
+condition|)
+block|{
 name|fprintf
 argument_list|(
 name|OutputFile
 argument_list|,
-literal|"%s %4.4d - "
+literal|"%s %4.4d -"
 argument_list|,
 name|AslErrorLevel
 index|[
@@ -711,6 +713,41 @@ literal|1000
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+comment|/* IDE case */
+block|{
+name|fprintf
+argument_list|(
+name|OutputFile
+argument_list|,
+literal|"%s %4.4d:"
+argument_list|,
+name|AslErrorLevelIde
+index|[
+name|Enode
+operator|->
+name|Level
+index|]
+argument_list|,
+name|Enode
+operator|->
+name|MessageId
+operator|+
+operator|(
+operator|(
+name|Enode
+operator|->
+name|Level
+operator|+
+literal|1
+operator|)
+operator|*
+literal|1000
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
 name|MainMessage
 operator|=
 name|AslMessages

@@ -82,92 +82,13 @@ name|namespace
 name|HexagonII
 block|{
 comment|// *** The code below must match HexagonInstrFormat*.td *** //
-comment|// Insn types.
-comment|// *** Must match HexagonInstrFormat*.td ***
-enum|enum
-name|Type
-block|{
-name|TypePSEUDO
-init|=
-literal|0
-block|,
-name|TypeALU32
-init|=
-literal|1
-block|,
-name|TypeCR
-init|=
-literal|2
-block|,
-name|TypeJR
-init|=
-literal|3
-block|,
-name|TypeJ
-init|=
-literal|4
-block|,
-name|TypeLD
-init|=
-literal|5
-block|,
-name|TypeST
-init|=
-literal|6
-block|,
-name|TypeSYSTEM
-init|=
-literal|7
-block|,
-name|TypeXTYPE
-init|=
-literal|8
-block|,
-name|TypeMEMOP
-init|=
-literal|9
-block|,
-name|TypeNV
-init|=
-literal|10
-block|,
-name|TypePREFIX
-init|=
-literal|30
-block|,
-comment|// Such as extenders.
-name|TypeMARKER
-init|=
-literal|31
-comment|// Such as end of a HW loop.
-block|}
-enum|;
 comment|// MCInstrDesc TSFlags
-comment|// *** Must match HexagonInstrFormat*.td ***
 enum|enum
 block|{
-comment|// This 5-bit field describes the insn type.
-name|TypePos
-init|=
-literal|0
-block|,
-name|TypeMask
-init|=
-literal|0x1f
-block|,
-comment|// Solo instructions.
-name|SoloPos
-init|=
-literal|5
-block|,
-name|SoloMask
-init|=
-literal|0x1
-block|,
 comment|// Predicated instructions.
 name|PredicatedPos
 init|=
-literal|6
+literal|1
 block|,
 name|PredicatedMask
 init|=

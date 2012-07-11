@@ -227,15 +227,13 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|)
-function_decl|__attribute__
-parameter_list|(
-function_decl|nonnull
+function_decl|__nonnull
 parameter_list|(
 function_decl|1
 end_function_decl
 
 begin_empty_stmt
-unit|))
+unit|)
 empty_stmt|;
 end_empty_stmt
 
@@ -261,15 +259,13 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|)
-function_decl|__attribute__
-parameter_list|(
-function_decl|nonnull
+function_decl|__nonnull
 parameter_list|(
 function_decl|1
 end_function_decl
 
 begin_empty_stmt
-unit|))
+unit|)
 empty_stmt|;
 end_empty_stmt
 
@@ -289,15 +285,13 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|)
-function_decl|__attribute__
-parameter_list|(
-function_decl|nonnull
+function_decl|__nonnull
 parameter_list|(
 function_decl|1
 end_function_decl
 
 begin_empty_stmt
-unit|))
+unit|)
 empty_stmt|;
 end_empty_stmt
 
@@ -312,15 +306,13 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|)
-function_decl|__attribute__
-parameter_list|(
-function_decl|nonnull
+function_decl|__nonnull
 parameter_list|(
 function_decl|1
 end_function_decl
 
 begin_empty_stmt
-unit|))
+unit|)
 empty_stmt|;
 end_empty_stmt
 

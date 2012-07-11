@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2012 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  * Copyright (c) 2011-2012 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  * Copyright (c) 2011 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2012 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright 2012 Milan Jurik. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright (c) 2011-2012 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  * Copyright (c) 2012 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
 end_comment
 
 begin_include
@@ -1294,9 +1294,10 @@ return|return
 operator|(
 name|gettext
 argument_list|(
-literal|"\trename<filesystem|volume|snapshot> "
+literal|"\trename [-f]<filesystem|volume|snapshot> "
 literal|"<filesystem|volume|snapshot>\n"
-literal|"\trename -p<filesystem|volume><filesystem|volume>\n"
+literal|"\trename [-f] -p<filesystem|volume> "
+literal|"<filesystem|volume>\n"
 literal|"\trename -r<snapshot><snapshot>\n"
 literal|"\trename -u [-p]<filesystem><filesystem>"
 argument_list|)
@@ -3499,7 +3500,6 @@ expr_stmt|;
 goto|goto
 name|badusage
 goto|;
-break|break;
 case|case
 literal|'?'
 case|:
@@ -14317,7 +14317,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * zfs rename<fs | snap | vol><fs | snap | vol>  * zfs rename -p<fs | vol><fs | vol>  * zfs rename -r<snap><snap>  * zfs rename -u [-p]<fs><fs>  *  * Renames the given dataset to another of the same type.  *  * The '-p' flag creates all the non-existing ancestors of the target first.  */
+comment|/*  * zfs rename [-f]<fs | snap | vol><fs | snap | vol>  * zfs rename [-f] -p<fs | vol><fs | vol>  * zfs rename -r<snap><snap>  * zfs rename -u [-p]<fs><fs>  *  * Renames the given dataset to another of the same type.  *  * The '-p' flag creates all the non-existing ancestors of the target first.  */
 end_comment
 
 begin_comment
@@ -14377,7 +14377,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"pru"
+literal|"fpru"
 argument_list|)
 operator|)
 operator|!=
@@ -14414,6 +14414,16 @@ case|:
 name|flags
 operator|.
 name|nounmount
+operator|=
+name|B_TRUE
+expr_stmt|;
+break|break;
+case|case
+literal|'f'
+case|:
+name|flags
+operator|.
+name|forceunmount
 operator|=
 name|B_TRUE
 expr_stmt|;
@@ -14619,7 +14629,7 @@ name|stderr
 argument_list|,
 name|gettext
 argument_list|(
-literal|"-u and -r options are mutually "
+literal|"-u and -p options are mutually "
 literal|"exclusive\n"
 argument_list|)
 argument_list|)
@@ -16482,6 +16492,12 @@ expr_stmt|;
 name|flags
 operator|.
 name|verbose
+operator|=
+name|B_TRUE
+expr_stmt|;
+name|flags
+operator|.
+name|progress
 operator|=
 name|B_TRUE
 expr_stmt|;

@@ -2874,14 +2874,6 @@ comment|/* Instead of going single user, let's reboot the machine */
 name|sync
 argument_list|()
 expr_stmt|;
-name|alarm
-argument_list|(
-literal|2
-argument_list|)
-expr_stmt|;
-name|pause
-argument_list|()
-expr_stmt|;
 name|reboot
 argument_list|(
 name|howto

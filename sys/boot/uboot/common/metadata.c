@@ -82,7 +82,7 @@ end_if
 
 begin_function_decl
 specifier|extern
-name|int
+name|vm_offset_t
 name|fdt_fixup
 parameter_list|(
 name|void
@@ -204,6 +204,10 @@ block|{
 name|char
 modifier|*
 name|cp
+decl_stmt|;
+name|char
+modifier|*
+name|p
 decl_stmt|;
 name|int
 name|howto
@@ -415,13 +419,22 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
-name|strcmp
-argument_list|(
+operator|(
+name|p
+operator|=
 name|getenv
 argument_list|(
 literal|"console"
 argument_list|)
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|p
 argument_list|,
 literal|"comconsole"
 argument_list|)
@@ -435,10 +448,7 @@ condition|(
 operator|!
 name|strcmp
 argument_list|(
-name|getenv
-argument_list|(
-literal|"console"
-argument_list|)
+name|p
 argument_list|,
 literal|"nullconsole"
 argument_list|)
@@ -447,6 +457,7 @@ name|howto
 operator||=
 name|RB_MUTE
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|howto
@@ -1225,10 +1236,7 @@ if|if
 condition|(
 name|dtbp
 operator|!=
-operator|(
-name|vm_offset_t
-operator|)
-name|NULL
+literal|0
 condition|)
 name|file_addmetadata
 argument_list|(

@@ -279,9 +279,12 @@ name|dummy
 name|__unused
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|E500
+if|#
+directive|if
+name|defined
+argument_list|(
+name|BOOKE
+argument_list|)
 if|if
 condition|(
 name|vector

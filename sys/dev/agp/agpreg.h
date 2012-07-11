@@ -756,6 +756,101 @@ name|AGP_I810_MMADR
 value|0x14
 end_define
 
+begin_define
+define|#
+directive|define
+name|I810_PTE_VALID
+value|0x00000001
+end_define
+
+begin_comment
+comment|/*  * Cache control  *  * Pre-Sandybridge bits  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I810_PTE_MAIN_UNCACHED
+value|0x00000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|I810_PTE_LOCAL
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* Non-snooped main phys memory */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I830_PTE_SYSTEM_CACHED
+value|0x00000006
+end_define
+
+begin_comment
+comment|/* Snooped main phys memory */
+end_comment
+
+begin_comment
+comment|/*  * Sandybridge  * LLC - Last Level Cache  * MMC - Mid Level Cache  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEN6_PTE_RESERVED
+value|0x00000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEN6_PTE_UNCACHED
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* Do not cache */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEN6_PTE_LLC
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* Cache in LLC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEN6_PTE_LLC_MLC
+value|0x00000006
+end_define
+
+begin_comment
+comment|/* Cache in LLC and MLC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEN6_PTE_GFDT
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* Graphics Data Type */
+end_comment
+
 begin_comment
 comment|/*  * Memory mapped register offsets for i810 chipset.  */
 end_comment
@@ -765,6 +860,13 @@ define|#
 directive|define
 name|AGP_I810_PGTBL_CTL
 value|0x2020
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_I810_PGTBL_ENABLED
+value|0x00000001
 end_define
 
 begin_comment
@@ -797,6 +899,99 @@ define|#
 directive|define
 name|AGP_I810_PGTBL_SIZE_128KB
 value|(2<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_I810_PGTBL_SIZE_1MB
+value|(3<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_I810_PGTBL_SIZE_2MB
+value|(4<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_I810_PGTBL_SIZE_1_5MB
+value|(5<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_G33_GCC1_SIZE_MASK
+value|(3<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_G33_GCC1_SIZE_1M
+value|(1<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_G33_GCC1_SIZE_2M
+value|(2<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_G4x_GCC1_SIZE_MASK
+value|(0xf<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_G4x_GCC1_SIZE_1M
+value|(0x1<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_G4x_GCC1_SIZE_2M
+value|(0x3<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_G4x_GCC1_SIZE_VT_EN
+value|(0x8<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_G4x_GCC1_SIZE_VT_1M
+define|\
+value|(AGP_G4x_GCC1_SIZE_1M | AGP_G4x_GCC1_SIZE_VT_EN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_G4x_GCC1_SIZE_VT_1_5M
+value|((0x2<< 8) | AGP_G4x_GCC1_SIZE_VT_EN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_G4x_GCC1_SIZE_VT_2M
+define|\
+value|(AGP_G4x_GCC1_SIZE_2M | AGP_G4x_GCC1_SIZE_VT_EN)
 end_define
 
 begin_define
@@ -910,6 +1105,13 @@ define|#
 directive|define
 name|AGP_I830_GCC1_GMASIZE_128
 value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_I830_HIC
+value|0x70
 end_define
 
 begin_comment
@@ -1099,6 +1301,35 @@ end_define
 begin_define
 define|#
 directive|define
+name|AGP_SB_DEVEN_D2EN
+value|0x10
+end_define
+
+begin_comment
+comment|/* SB+ has IGD enabled bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AGP_SB_DEVEN_D2EN_ENABLED
+value|0x10
+end_define
+
+begin_comment
+comment|/* in different place */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AGP_SB_DEVEN_D2EN_DISABLED
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
 name|AGP_I915_DEVEN_D2F0
 value|0x08
 end_define
@@ -1143,6 +1374,13 @@ define|#
 directive|define
 name|AGP_I915_MSAC_GMASIZE_256
 value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_I915_IFPADDR
+value|0x60
 end_define
 
 begin_comment
@@ -1205,6 +1443,20 @@ name|AGP_I965_PGTBL_SIZE_1_5MB
 value|(5<< 1)
 end_define
 
+begin_define
+define|#
+directive|define
+name|AGP_I965_PGTBL_CTL2
+value|0x20c4
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_I965_IFPADDR
+value|0x70
+end_define
+
 begin_comment
 comment|/*  * G33 registers  */
 end_comment
@@ -1251,6 +1503,27 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AGP_G4X_GMADR
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_G4X_MMADR
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_G4X_GTTADR
+value|0x18
+end_define
+
+begin_define
+define|#
+directive|define
 name|AGP_G4X_GCC1_GMS_STOLEN_96M
 value|0xa0
 end_define
@@ -1274,6 +1547,171 @@ define|#
 directive|define
 name|AGP_G4X_GCC1_GMS_STOLEN_352M
 value|0xd0
+end_define
+
+begin_comment
+comment|/*  * SandyBridge/IvyBridge registers  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AGP_SNB_GCC1
+value|0x50
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_SNB_GMCH_GMS_STOLEN_MASK
+value|0xF8
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_SNB_GMCH_GMS_STOLEN_32M
+value|(1<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_SNB_GMCH_GMS_STOLEN_64M
+value|(2<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_SNB_GMCH_GMS_STOLEN_96M
+value|(3<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_SNB_GMCH_GMS_STOLEN_128M
+value|(4<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_SNB_GMCH_GMS_STOLEN_160M
+value|(5<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_SNB_GMCH_GMS_STOLEN_192M
+value|(6<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_SNB_GMCH_GMS_STOLEN_224M
+value|(7<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_SNB_GMCH_GMS_STOLEN_256M
+value|(8<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_SNB_GMCH_GMS_STOLEN_288M
+value|(9<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_SNB_GMCH_GMS_STOLEN_320M
+value|(0xa<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_SNB_GMCH_GMS_STOLEN_352M
+value|(0xb<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_SNB_GMCH_GMS_STOLEN_384M
+value|(0xc<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_SNB_GMCH_GMS_STOLEN_416M
+value|(0xd<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_SNB_GMCH_GMS_STOLEN_448M
+value|(0xe<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_SNB_GMCH_GMS_STOLEN_480M
+value|(0xf<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_SNB_GMCH_GMS_STOLEN_512M
+value|(0x10<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_SNB_GTT_SIZE_0M
+value|(0<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_SNB_GTT_SIZE_1M
+value|(1<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_SNB_GTT_SIZE_2M
+value|(2<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_SNB_GTT_SIZE_MASK
+value|(3<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_SNB_GFX_MODE
+value|0x02520
 end_define
 
 begin_comment

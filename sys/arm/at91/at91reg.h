@@ -37,6 +37,17 @@ value|0xd0000000
 end_define
 
 begin_comment
+comment|/* Where builtin peripherals start PA */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91_PA_BASE
+value|0xf0000000
+end_define
+
+begin_comment
 comment|/* A few things that we count on being the same  * throught the whole family of SOCs */
 end_comment
 
@@ -62,43 +73,27 @@ name|AT91_SYS_SIZE
 value|0x1000
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|AT91SAM9G45
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|AT91SAM9263
-argument_list|)
-end_if
+begin_define
+define|#
+directive|define
+name|AT91_DBGU0
+value|0x0ffff200
+end_define
+
+begin_comment
+comment|/* Most */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|AT91_DBGU_BASE
-value|0xfffee00
+name|AT91_DBGU1
+value|0x0fffee00
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|AT91_DBGU_BASE
-value|0xffff200
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* SAM9263, CAP9, and SAM9G45 */
+end_comment
 
 begin_define
 define|#
@@ -145,6 +140,13 @@ define|#
 directive|define
 name|AT91_CPU_VERSION_MASK
 value|0x0000001f
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91_CPU_FAMILY_MASK
+value|0x0ff00000
 end_define
 
 begin_define
@@ -199,6 +201,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|AT91_CPU_SAM9N12
+value|0x819a07a0
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91_CPU_SAM9RL64
+value|0x019b03a0
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91_CPU_SAM9X5
+value|0x819a05a0
+end_define
+
+begin_define
+define|#
+directive|define
 name|AT91_CPU_SAM9XE128
 value|0x329973a0
 end_define
@@ -220,42 +243,78 @@ end_define
 begin_define
 define|#
 directive|define
-name|AT91_ARCH
-parameter_list|(
-name|chipid
-parameter_list|)
-value|((chipid>> 20)& 0xff)
+name|AT91_CPU_CAP9
+value|0x039a03a0
 end_define
 
 begin_define
 define|#
 directive|define
-name|AT91_CPU
-parameter_list|(
-name|chipid
-parameter_list|)
-value|(chipid& ~AT91_CPU_VERSION_MASK)
+name|AT91_EXID_SAM9M11
+value|0x00000001
 end_define
 
 begin_define
 define|#
 directive|define
-name|AT91_ARCH_SAM9
-value|(0x19)
+name|AT91_EXID_SAM9M10
+value|0x00000002
 end_define
 
 begin_define
 define|#
 directive|define
-name|AT91_ARCH_SAM9XE
-value|(0x29)
+name|AT91_EXID_SAM9G46
+value|0x00000003
 end_define
 
 begin_define
 define|#
 directive|define
-name|AT91_ARCH_RM92
-value|(0x92)
+name|AT91_EXID_SAM9G45
+value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91_EXID_SAM9G15
+value|0x00000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91_EXID_SAM9G35
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91_EXID_SAM9X35
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91_EXID_SAM9G25
+value|0x00000003
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91_EXID_SAM9X25
+value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91_IRQ_SYSTEM
+value|1
 end_define
 
 begin_endif

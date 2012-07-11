@@ -41,6 +41,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|void
+name|ar71xx_chip_set_mii_if
+parameter_list|(
+name|uint32_t
+name|unit
+parameter_list|,
+name|uint32_t
+name|mii_if
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

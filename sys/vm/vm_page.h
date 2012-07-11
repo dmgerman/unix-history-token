@@ -679,7 +679,7 @@ value|vm_page_queue_free_lock.data
 end_define
 
 begin_comment
-comment|/*  * These are the flags defined for vm_page.  *  * aflags are updated by atomic accesses. Use the vm_page_aflag_set()  * and vm_page_aflag_clear() functions to set and clear the flags.  *  * PGA_REFERENCED may be cleared only if the object containing the page is  * locked.  *  * PGA_WRITEABLE is set exclusively on managed pages by pmap_enter().  When it  * does so, the page must be VPO_BUSY.  *  * PGA_EXECUTABLE may be set by pmap routines, and indicates that a page has  * at least one executable mapping. It is not consumed by the VM layer.  */
+comment|/*  * These are the flags defined for vm_page.  *  * aflags are updated by atomic accesses.  Use the vm_page_aflag_set()  * and vm_page_aflag_clear() functions to set and clear the flags.  *  * PGA_REFERENCED may be cleared only if the object containing the page is  * locked.  It is set by both the MI and MD VM layers.  *  * PGA_WRITEABLE is set exclusively on managed pages by pmap_enter().  When it  * does so, the page must be VPO_BUSY.  The MI VM layer must never access this  * flag directly.  Instead, it should call pmap_page_is_write_mapped().  *  * PGA_EXECUTABLE may be set by pmap routines, and indicates that a page has  * at least one executable mapping.  It is not consumed by the MI VM layer.  */
 end_comment
 
 begin_define
@@ -749,7 +749,7 @@ value|0x04
 end_define
 
 begin_comment
-comment|/* physical page doesn't exist (O) */
+comment|/* physical page doesn't exist */
 end_comment
 
 begin_define
@@ -804,7 +804,7 @@ value|0x80
 end_define
 
 begin_comment
-comment|/* don't include this page in the dump */
+comment|/* don't include this page in a dump */
 end_comment
 
 begin_comment
@@ -881,7 +881,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|long
 name|vm_page_array_size
 decl_stmt|;
 end_decl_stmt
@@ -932,8 +932,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
-name|__inline
 name|vm_page_t
 name|PHYS_TO_VM_PAGE
 parameter_list|(
@@ -942,57 +940,6 @@ name|pa
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_function
-specifier|static
-name|__inline
-name|vm_page_t
-name|PHYS_TO_VM_PAGE
-parameter_list|(
-name|vm_paddr_t
-name|pa
-parameter_list|)
-block|{
-ifdef|#
-directive|ifdef
-name|VM_PHYSSEG_SPARSE
-return|return
-operator|(
-name|vm_phys_paddr_to_vm_page
-argument_list|(
-name|pa
-argument_list|)
-operator|)
-return|;
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|VM_PHYSSEG_DENSE
-argument_list|)
-return|return
-operator|(
-operator|&
-name|vm_page_array
-index|[
-name|atop
-argument_list|(
-name|pa
-argument_list|)
-operator|-
-name|first_page
-index|]
-operator|)
-return|;
-else|#
-directive|else
-error|#
-directive|error
-literal|"Either VM_PHYSSEG_DENSE or VM_PHYSSEG_SPARSE must be defined."
-endif|#
-directive|endif
-block|}
-end_function
 
 begin_decl_stmt
 specifier|extern
@@ -1285,16 +1232,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|vm_page_dirty
-parameter_list|(
-name|vm_page_t
-name|m
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|vm_page_wakeup
 parameter_list|(
 name|vm_page_t
@@ -1479,6 +1416,22 @@ begin_function_decl
 name|vm_page_t
 name|vm_page_getfake
 parameter_list|(
+name|vm_paddr_t
+name|paddr
+parameter_list|,
+name|vm_memattr_t
+name|memattr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vm_page_initfake
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|,
 name|vm_paddr_t
 name|paddr
 parameter_list|,
@@ -1848,6 +1801,16 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|vm_page_dirty_KBI
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|vm_page_lock_KBI
 parameter_list|(
 name|vm_page_t
@@ -1985,6 +1948,50 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  *	vm_page_dirty:  *  *	Set all bits in the page's dirty field.  *  *	The object containing the specified page must be locked if the  *	call is made from the machine-independent layer.  *  *	See vm_page_clear_dirty_mask().  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|vm_page_dirty
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|)
+block|{
+comment|/* Use vm_page_dirty_KBI() under INVARIANTS to save memory. */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|KLD_MODULE
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INVARIANTS
+argument_list|)
+name|vm_page_dirty_KBI
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|m
+operator|->
+name|dirty
+operator|=
+name|VM_PAGE_BITS_ALL
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+end_function
 
 begin_comment
 comment|/*  *	vm_page_sleep_if_busy:  *  *	Sleep and release the page queues lock if VPO_BUSY is set or,  *	if also_m_busy is TRUE, busy is non-zero.  Returns TRUE if the  *	thread slept and the page queues lock was released.  *	Otherwise, retains the page queues lock and returns FALSE.  *  *	The object containing the given page must be locked.  */

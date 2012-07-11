@@ -286,6 +286,10 @@ name|friend
 name|class
 name|ASTDeclWriter
 decl_stmt|;
+name|friend
+name|class
+name|ASTStmtWriter
+decl_stmt|;
 name|private
 label|:
 comment|/// \brief Map that provides the ID numbers of each type within the

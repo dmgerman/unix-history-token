@@ -1111,7 +1111,7 @@ name|format
 parameter_list|,
 modifier|...
 parameter_list|)
-value|printf("%s: "format, __func__ , __VA_ARGS__)
+value|printf("%s: "format, __func__ , ## __VA_ARGS__)
 end_define
 
 begin_else

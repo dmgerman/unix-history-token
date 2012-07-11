@@ -4797,6 +4797,10 @@ modifier|*
 parameter_list|,
 name|int
 name|cg
+parameter_list|,
+name|struct
+name|bmsafemap
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -22731,7 +22735,34 @@ operator||=
 name|NEWBLOCK
 expr_stmt|;
 block|}
-comment|/* 	 * Create a dependency for the newly allocated inode. 	 * Panic if it already exists as something is seriously wrong. 	 * Otherwise add it to the dependency list for the buffer holding 	 * the cylinder group map from which it was allocated. 	 */
+comment|/* 	 * Create a dependency for the newly allocated inode. 	 * Panic if it already exists as something is seriously wrong. 	 * Otherwise add it to the dependency list for the buffer holding 	 * the cylinder group map from which it was allocated. 	 * 	 * We have to preallocate a bmsafemap entry in case it is needed 	 * in bmsafemap_lookup since once we allocate the inodedep, we 	 * have to finish initializing it before we can FREE_LOCK(). 	 * By preallocating, we avoid FREE_LOCK() while doing a malloc 	 * in bmsafemap_lookup. We cannot call bmsafemap_lookup before 	 * creating the inodedep as it can be freed during the time 	 * that we FREE_LOCK() while allocating the inodedep. We must 	 * call workitem_alloc() before entering the locked section as 	 * it also acquires the lock and we must avoid trying doing so 	 * recursively. 	 */
+name|bmsafemap
+operator|=
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|bmsafemap
+argument_list|)
+argument_list|,
+name|M_BMSAFEMAP
+argument_list|,
+name|M_SOFTDEP_FLAGS
+argument_list|)
+expr_stmt|;
+name|workitem_alloc
+argument_list|(
+operator|&
+name|bmsafemap
+operator|->
+name|sm_list
+argument_list|,
+name|D_BMSAFEMAP
+argument_list|,
+name|mp
+argument_list|)
+expr_stmt|;
 name|ACQUIRE_LOCK
 argument_list|(
 operator|&
@@ -22778,6 +22809,8 @@ name|fs
 argument_list|,
 name|newinum
 argument_list|)
+argument_list|,
+name|bmsafemap
 argument_list|)
 expr_stmt|;
 if|if
@@ -23156,6 +23189,8 @@ name|fs
 argument_list|,
 name|newblkno
 argument_list|)
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -23335,7 +23370,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Find the bmsafemap associated with a cylinder group buffer.  * If none exists, create one. The buffer must be locked when  * this routine is called and this routine must be called with  * splbio interrupts blocked.  */
+comment|/*  * Find the bmsafemap associated with a cylinder group buffer.  * If none exists, create one. The buffer must be locked when  * this routine is called and this routine must be called with  * the softdep lock held. To avoid giving up the lock while  * allocating a new bmsafemap, a preallocated bmsafemap may be  * provided. If it is provided but not needed, it is freed.  */
 end_comment
 
 begin_function
@@ -23350,6 +23385,8 @@ parameter_list|,
 name|bp
 parameter_list|,
 name|cg
+parameter_list|,
+name|newbmsafemap
 parameter_list|)
 name|struct
 name|mount
@@ -23363,6 +23400,11 @@ name|bp
 decl_stmt|;
 name|int
 name|cg
+decl_stmt|;
+name|struct
+name|bmsafemap
+modifier|*
+name|newbmsafemap
 decl_stmt|;
 block|{
 name|struct
@@ -23416,6 +23458,18 @@ name|wk_type
 operator|==
 name|D_BMSAFEMAP
 condition|)
+block|{
+if|if
+condition|(
+name|newbmsafemap
+condition|)
+name|WORKITEM_FREE
+argument_list|(
+name|newbmsafemap
+argument_list|,
+name|D_BMSAFEMAP
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|WK_BMSAFEMAP
@@ -23424,6 +23478,7 @@ name|wk
 argument_list|)
 operator|)
 return|;
+block|}
 name|fs
 operator|=
 name|VFSTOUFS
@@ -23458,11 +23513,36 @@ argument_list|)
 operator|==
 literal|1
 condition|)
+block|{
+if|if
+condition|(
+name|newbmsafemap
+condition|)
+name|WORKITEM_FREE
+argument_list|(
+name|newbmsafemap
+argument_list|,
+name|D_BMSAFEMAP
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|bmsafemap
 operator|)
 return|;
+block|}
+if|if
+condition|(
+name|newbmsafemap
+condition|)
+block|{
+name|bmsafemap
+operator|=
+name|newbmsafemap
+expr_stmt|;
+block|}
+else|else
+block|{
 name|FREE_LOCK
 argument_list|(
 operator|&
@@ -23496,6 +23576,13 @@ argument_list|,
 name|mp
 argument_list|)
 expr_stmt|;
+name|ACQUIRE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
+block|}
 name|bmsafemap
 operator|->
 name|sm_buf
@@ -23564,12 +23651,6 @@ operator|&
 name|bmsafemap
 operator|->
 name|sm_freewr
-argument_list|)
-expr_stmt|;
-name|ACQUIRE_LOCK
-argument_list|(
-operator|&
-name|lk
 argument_list|)
 expr_stmt|;
 if|if
@@ -48203,6 +48284,8 @@ name|fs
 argument_list|,
 name|blkno
 argument_list|)
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Detach any jnewblks which have been canceled.  They must linger 	 * until the bitmap is cleared again by ffs_blkfree() to prevent 	 * an unjournaled allocation from hitting the disk. 	 */
@@ -48385,6 +48468,8 @@ name|fs
 argument_list|,
 name|blkno
 argument_list|)
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|end
@@ -50213,6 +50298,7 @@ argument_list|,
 name|D_FREEFRAG
 argument_list|)
 expr_stmt|;
+continue|continue;
 case|case
 name|D_FREEWORK
 case|:

@@ -156,12 +156,6 @@ decl_stmt|;
 name|int
 name|acpi_handle_reboot
 decl_stmt|;
-name|bus_dma_tag_t
-name|acpi_waketag
-decl_stmt|;
-name|bus_dmamap_t
-name|acpi_wakemap
-decl_stmt|;
 name|vm_offset_t
 name|acpi_wakeaddr
 decl_stmt|;
@@ -925,6 +919,8 @@ operator|)
 return|;
 if|if
 condition|(
+name|ACPI_FAILURE
+argument_list|(
 name|AcpiGetType
 argument_list|(
 name|h
@@ -932,8 +928,7 @@ argument_list|,
 operator|&
 name|t
 argument_list|)
-operator|!=
-name|AE_OK
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -2178,6 +2173,27 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|acpi_wakeup_machdep
+parameter_list|(
+name|struct
+name|acpi_softc
+modifier|*
+name|sc
+parameter_list|,
+name|int
+name|state
+parameter_list|,
+name|int
+name|sleep_result
+parameter_list|,
+name|int
+name|intr_enabled
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|acpi_table_quirks
 parameter_list|(
 name|int
@@ -2499,6 +2515,14 @@ directive|define
 name|KTR_ACPI
 value|KTR_DEV
 end_define
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_debug_acpi
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#

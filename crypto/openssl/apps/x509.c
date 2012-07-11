@@ -5023,7 +5023,7 @@ name|bio_err
 argument_list|,
 name|keyfile
 argument_list|,
-name|FORMAT_PEM
+name|keyformat
 argument_list|,
 literal|0
 argument_list|,

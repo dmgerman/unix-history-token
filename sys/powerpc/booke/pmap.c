@@ -291,29 +291,6 @@ name|TODO
 value|panic("%s: not implemented", __func__);
 end_define
 
-begin_include
-include|#
-directive|include
-file|"opt_sched.h"
-end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SCHED_4BSD
-end_ifndef
-
-begin_error
-error|#
-directive|error
-literal|"e500 only works with SCHED_4BSD which uses a global scheduler lock."
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -364,7 +341,7 @@ end_ifdef
 begin_decl_stmt
 specifier|extern
 name|uint32_t
-name|kernload_ap
+name|bp_kernload
 decl_stmt|;
 end_decl_stmt
 
@@ -1454,7 +1431,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|boolean_t
+name|int
 name|mmu_booke_ts_referenced
 parameter_list|(
 name|mmu_t
@@ -1474,9 +1451,9 @@ parameter_list|,
 name|vm_offset_t
 modifier|*
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 parameter_list|,
 name|int
 parameter_list|)
@@ -1773,7 +1750,7 @@ name|mmu_booke_mapdev
 parameter_list|(
 name|mmu_t
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 parameter_list|,
 name|vm_size_t
 parameter_list|)
@@ -1796,7 +1773,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|vm_offset_t
+name|vm_paddr_t
 name|mmu_booke_kextract
 parameter_list|(
 name|mmu_t
@@ -1815,7 +1792,7 @@ name|mmu_t
 parameter_list|,
 name|vm_offset_t
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1839,7 +1816,7 @@ name|mmu_booke_dev_direct_mapped
 parameter_list|(
 name|mmu_t
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 parameter_list|,
 name|vm_size_t
 parameter_list|)
@@ -4659,7 +4636,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
-name|kernload_ap
+name|bp_kernload
 operator|=
 name|kernload
 expr_stmt|;
@@ -4682,12 +4659,14 @@ comment|/* Read TLB0 size and associativity. */
 name|tlb0_get_tlbconf
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Align kernel start and end address (kernel image). 	 * Note that kernel end does not necessarily relate to kernsize. 	 * kernsize is the size of the kernel that is actually mapped. 	 */
+comment|/* 	 * Align kernel start and end address (kernel image). 	 * Note that kernel end does not necessarily relate to kernsize. 	 * kernsize is the size of the kernel that is actually mapped. 	 * Also note that "start - 1" is deliberate. With SMP, the 	 * entry point is exactly a page from the actual load address. 	 * As such, trunc_page() has no effect and we're off by a page. 	 * Since we always have the ELF header between the load address 	 * and the entry point, we can safely subtract 1 to compensate. 	 */
 name|kernstart
 operator|=
 name|trunc_page
 argument_list|(
 name|start
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|data_start
@@ -5876,7 +5855,7 @@ for|for
 control|(
 name|va
 operator|=
-name|KERNBASE
+name|kernstart
 init|;
 name|va
 operator|<
@@ -5917,7 +5896,7 @@ operator|+
 operator|(
 name|va
 operator|-
-name|KERNBASE
+name|kernstart
 operator|)
 expr_stmt|;
 name|pte
@@ -6433,7 +6412,7 @@ parameter_list|,
 name|vm_offset_t
 name|va
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|)
 block|{
@@ -6485,11 +6464,8 @@ argument_list|)
 expr_stmt|;
 name|flags
 operator|=
-literal|0
-expr_stmt|;
-name|flags
-operator||=
-operator|(
+name|PTE_M
+operator||
 name|PTE_SR
 operator||
 name|PTE_SW
@@ -6499,11 +6475,6 @@ operator||
 name|PTE_WIRED
 operator||
 name|PTE_VALID
-operator|)
-expr_stmt|;
-name|flags
-operator||=
-name|PTE_M
 expr_stmt|;
 name|pte
 operator|=
@@ -8053,10 +8024,10 @@ name|vm_offset_t
 modifier|*
 name|virt
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 name|pa_start
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 name|pa_end
 parameter_list|,
 name|int
@@ -10657,7 +10628,7 @@ parameter_list|(
 name|mmu_t
 name|mmu
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|,
 name|vm_size_t
@@ -11382,7 +11353,7 @@ parameter_list|(
 name|mmu_t
 name|mmu
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|,
 name|vm_size_t
@@ -13129,6 +13100,25 @@ argument_list|,
 name|CCSRBAR_SIZE
 argument_list|,
 name|_TLB_ENTRY_IO
+argument_list|)
+expr_stmt|;
+comment|/* Purge the remaining entries */
+for|for
+control|(
+name|i
+operator|=
+name|tlb1_idx
+init|;
+name|i
+operator|<
+name|TLB1_ENTRIES
+condition|;
+name|i
+operator|++
+control|)
+name|tlb1_write_entry
+argument_list|(
+name|i
 argument_list|)
 expr_stmt|;
 comment|/* Setup TLB miss defaults */

@@ -230,6 +230,172 @@ parameter_list|)
 value|do {				\     if (verbose)					\         fprintf(stderr, "--- %s [%d] " format "\n",	\         __FUNCTION__, __LINE__, ##__VA_ARGS__);		\ 	} while (0)
 end_define
 
+begin_function
+specifier|inline
+name|void
+name|prefetch
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|x
+parameter_list|)
+block|{
+asm|__asm volatile("prefetcht0 %0" :: "m" (*(const unsigned long *)x));
+block|}
+end_function
+
+begin_comment
+comment|// XXX only for multiples of 64 bytes, non overlapped.
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|pkt_copy
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|_src
+parameter_list|,
+name|void
+modifier|*
+name|_dst
+parameter_list|,
+name|int
+name|l
+parameter_list|)
+block|{
+specifier|const
+name|uint64_t
+modifier|*
+name|src
+init|=
+name|_src
+decl_stmt|;
+name|uint64_t
+modifier|*
+name|dst
+init|=
+name|_dst
+decl_stmt|;
+define|#
+directive|define
+name|likely
+parameter_list|(
+name|x
+parameter_list|)
+value|__builtin_expect(!!(x), 1)
+define|#
+directive|define
+name|unlikely
+parameter_list|(
+name|x
+parameter_list|)
+value|__builtin_expect(!!(x), 0)
+if|if
+condition|(
+name|unlikely
+argument_list|(
+name|l
+operator|>=
+literal|1024
+argument_list|)
+condition|)
+block|{
+name|bcopy
+argument_list|(
+name|src
+argument_list|,
+name|dst
+argument_list|,
+name|l
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+for|for
+control|(
+init|;
+name|l
+operator|>
+literal|0
+condition|;
+name|l
+operator|-=
+literal|64
+control|)
+block|{
+operator|*
+name|dst
+operator|++
+operator|=
+operator|*
+name|src
+operator|++
+expr_stmt|;
+operator|*
+name|dst
+operator|++
+operator|=
+operator|*
+name|src
+operator|++
+expr_stmt|;
+operator|*
+name|dst
+operator|++
+operator|=
+operator|*
+name|src
+operator|++
+expr_stmt|;
+operator|*
+name|dst
+operator|++
+operator|=
+operator|*
+name|src
+operator|++
+expr_stmt|;
+operator|*
+name|dst
+operator|++
+operator|=
+operator|*
+name|src
+operator|++
+expr_stmt|;
+operator|*
+name|dst
+operator|++
+operator|=
+operator|*
+name|src
+operator|++
+expr_stmt|;
+operator|*
+name|dst
+operator|++
+operator|=
+operator|*
+name|src
+operator|++
+expr_stmt|;
+operator|*
+name|dst
+operator|++
+operator|=
+operator|*
+name|src
+operator|++
+expr_stmt|;
+block|}
+block|}
+end_function
+
 begin_comment
 comment|/*  * We redefine here a number of structures that are in pcap.h  * so we can compile this file without the system header.  */
 end_comment
@@ -604,6 +770,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|pcap_lib_version
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_struct
 struct|struct
 name|eproto
@@ -735,7 +912,8 @@ name|my_ring
 modifier|*
 name|me
 parameter_list|,
-name|int
+name|unsigned
+name|long
 name|what
 parameter_list|)
 block|{
@@ -861,7 +1039,7 @@ condition|)
 block|{
 name|D
 argument_list|(
-literal|"ioctl 0x%x error %d"
+literal|"ioctl 0x%lx error %d"
 argument_list|,
 name|what
 argument_list|,
@@ -1396,6 +1574,21 @@ block|}
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_function
+specifier|const
+name|char
+modifier|*
+name|pcap_lib_version
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+name|pcap_version
+return|;
+block|}
+end_function
 
 begin_function
 name|int
@@ -2343,7 +2536,7 @@ parameter_list|)
 block|{
 name|D
 argument_list|(
-literal|""
+literal|"returns 1"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2365,7 +2558,7 @@ parameter_list|)
 block|{
 name|D
 argument_list|(
-literal|"%d"
+literal|"%d returns DLT_EN10MB"
 argument_list|,
 name|dlt
 argument_list|)
@@ -2388,7 +2581,7 @@ parameter_list|)
 block|{
 name|D
 argument_list|(
-literal|"%d"
+literal|"%d returns Ethernet link"
 argument_list|,
 name|dlt
 argument_list|)
@@ -2431,14 +2624,6 @@ argument_list|(
 literal|""
 argument_list|)
 expr_stmt|;
-name|me
-operator|->
-name|st
-operator|.
-name|ps_recv
-operator|+=
-literal|10
-expr_stmt|;
 operator|*
 name|ps
 operator|=
@@ -2446,19 +2631,10 @@ name|me
 operator|->
 name|st
 expr_stmt|;
-name|sprintf
-argument_list|(
-name|me
-operator|->
-name|msg
-argument_list|,
-literal|"stats not supported"
-argument_list|)
-expr_stmt|;
 return|return
-operator|-
-literal|1
+literal|0
 return|;
+comment|/* accumulate from pcap_dispatch() */
 block|}
 end_function
 
@@ -2529,9 +2705,15 @@ name|me
 decl_stmt|;
 name|D
 argument_list|(
-literal|"request to open %s"
+literal|"request to open %s snaplen %d promisc %d timeout %dms"
 argument_list|,
 name|device
+argument_list|,
+name|snaplen
+argument_list|,
+name|promisc
+argument_list|,
+name|to_ms
 argument_list|)
 expr_stmt|;
 name|me
@@ -2955,6 +3137,17 @@ argument_list|,
 name|cnt
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cnt
+operator|==
+literal|0
+condition|)
+name|cnt
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 comment|/* scan all rings */
 for|for
 control|(
@@ -3016,6 +3209,7 @@ name|ring
 operator|->
 name|ts
 expr_stmt|;
+comment|/* 		 * XXX a proper prefetch should be done as 		 *	prefetch(i); callback(i-1); ... 		 */
 while|while
 condition|(
 operator|(
@@ -3098,6 +3292,11 @@ argument_list|,
 name|idx
 argument_list|)
 decl_stmt|;
+name|prefetch
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
 name|me
 operator|->
 name|hdr
@@ -3153,6 +3352,14 @@ operator|++
 expr_stmt|;
 block|}
 block|}
+name|me
+operator|->
+name|st
+operator|.
+name|ps_recv
+operator|+=
+name|got
+expr_stmt|;
 return|return
 name|got
 return|;
@@ -3317,7 +3524,7 @@ name|len
 operator|=
 name|size
 expr_stmt|;
-name|bcopy
+name|pkt_copy
 argument_list|(
 name|buf
 argument_list|,

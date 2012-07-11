@@ -291,6 +291,14 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|volatile
+name|cpuset_t
+name|suspended_cpus
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|cpuset_t
 name|hlt_cpus_mask
 decl_stmt|;
@@ -586,6 +594,11 @@ directive|if
 name|defined
 argument_list|(
 name|__amd64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__i386__
 argument_list|)
 end_if
 

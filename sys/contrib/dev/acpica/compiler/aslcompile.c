@@ -64,9 +64,9 @@ specifier|static
 name|void
 name|FlConsumeAnsiComment
 parameter_list|(
-name|ASL_FILE_INFO
+name|FILE
 modifier|*
-name|FileInfo
+name|Handle
 parameter_list|,
 name|ASL_FILE_STATUS
 modifier|*
@@ -80,13 +80,23 @@ specifier|static
 name|void
 name|FlConsumeNewComment
 parameter_list|(
-name|ASL_FILE_INFO
+name|FILE
 modifier|*
-name|FileInfo
+name|Handle
 parameter_list|,
 name|ASL_FILE_STATUS
 modifier|*
 name|Status
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|CmDumpAllEvents
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -440,7 +450,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    FlConsume*  *  * PARAMETERS:  FileInfo        - Points to an open input file  *  * RETURN:      Number of lines consumed  *  * DESCRIPTION: Step over both types of comment during check for ascii chars  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    FlConsume*  *  * PARAMETERS:  Handle              - Open input file  *              Status              - File current status struct  *  * RETURN:      Number of lines consumed  *  * DESCRIPTION: Step over both types of comment during check for ascii chars  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -448,9 +458,9 @@ specifier|static
 name|void
 name|FlConsumeAnsiComment
 parameter_list|(
-name|ASL_FILE_INFO
+name|FILE
 modifier|*
-name|FileInfo
+name|Handle
 parameter_list|,
 name|ASL_FILE_STATUS
 modifier|*
@@ -476,8 +486,6 @@ literal|1
 argument_list|,
 literal|1
 argument_list|,
-name|FileInfo
-operator|->
 name|Handle
 argument_list|)
 condition|)
@@ -552,9 +560,9 @@ specifier|static
 name|void
 name|FlConsumeNewComment
 parameter_list|(
-name|ASL_FILE_INFO
+name|FILE
 modifier|*
-name|FileInfo
+name|Handle
 parameter_list|,
 name|ASL_FILE_STATUS
 modifier|*
@@ -575,8 +583,6 @@ literal|1
 argument_list|,
 literal|1
 argument_list|,
-name|FileInfo
-operator|->
 name|Handle
 argument_list|)
 condition|)
@@ -606,16 +612,23 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    FlCheckForAscii  *  * PARAMETERS:  FileInfo        - Points to an open input file  *  * RETURN:      Status  *  * DESCRIPTION: Verify that the input file is entirely ASCII. Ignores characters  *              within comments. Note: does not handle nested comments and does  *              not handle comment delimiters within string literals. However,  *              on the rare chance this happens and an invalid character is  *              missed, the parser will catch the error by failing in some  *              spectactular manner.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    FlCheckForAscii  *  * PARAMETERS:  Handle              - Open input file  *              Filename            - Input filename  *              DisplayErrors       - TRUE if error messages desired  *  * RETURN:      Status  *  * DESCRIPTION: Verify that the input file is entirely ASCII. Ignores characters  *              within comments. Note: does not handle nested comments and does  *              not handle comment delimiters within string literals. However,  *              on the rare chance this happens and an invalid character is  *              missed, the parser will catch the error by failing in some  *              spectactular manner.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|FlCheckForAscii
 parameter_list|(
-name|ASL_FILE_INFO
+name|FILE
 modifier|*
-name|FileInfo
+name|Handle
+parameter_list|,
+name|char
+modifier|*
+name|Filename
+parameter_list|,
+name|BOOLEAN
+name|DisplayErrors
 parameter_list|)
 block|{
 name|UINT8
@@ -658,8 +671,6 @@ literal|1
 argument_list|,
 literal|1
 argument_list|,
-name|FileInfo
-operator|->
 name|Handle
 argument_list|)
 condition|)
@@ -680,7 +691,7 @@ condition|)
 block|{
 name|FlConsumeAnsiComment
 argument_list|(
-name|FileInfo
+name|Handle
 argument_list|,
 operator|&
 name|Status
@@ -696,7 +707,7 @@ condition|)
 block|{
 name|FlConsumeNewComment
 argument_list|(
-name|FileInfo
+name|Handle
 argument_list|,
 operator|&
 name|Status
@@ -734,9 +745,15 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|BadBytes
 operator|<
 literal|10
+operator|)
+operator|&&
+operator|(
+name|DisplayErrors
+operator|)
 condition|)
 block|{
 name|AcpiOsPrintf
@@ -783,8 +800,6 @@ block|}
 comment|/* Seek back to the beginning of the source file */
 name|fseek
 argument_list|(
-name|FileInfo
-operator|->
 name|Handle
 argument_list|,
 literal|0
@@ -796,6 +811,11 @@ comment|/* Were there any non-ASCII characters in the file? */
 if|if
 condition|(
 name|BadBytes
+condition|)
+block|{
+if|if
+condition|(
+name|DisplayErrors
 condition|)
 block|{
 name|AcpiOsPrintf
@@ -813,18 +833,17 @@ name|ASL_MSG_NON_ASCII
 argument_list|,
 name|NULL
 argument_list|,
-name|FileInfo
-operator|->
 name|Filename
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|AE_BAD_CHARACTER
 operator|)
 return|;
 block|}
-comment|/* File is OK */
+comment|/* File is OK (100% ASCII) */
 return|return
 operator|(
 name|AE_OK
@@ -1576,19 +1595,21 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    CmDumpEvent  *  * PARAMETERS:  Event           - A compiler event struct  *  * RETURN:      None.  *  * DESCRIPTION: Dump a compiler event struct  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    CmDumpAllEvents  *  * PARAMETERS:  None  *  * RETURN:      None.  *  * DESCRIPTION: Dump all compiler events  *  ******************************************************************************/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|CmDumpEvent
+name|CmDumpAllEvents
 parameter_list|(
+name|void
+parameter_list|)
+block|{
 name|ASL_EVENT_INFO
 modifier|*
 name|Event
-parameter_list|)
-block|{
+decl_stmt|;
 name|UINT32
 name|Delta
 decl_stmt|;
@@ -1598,16 +1619,52 @@ decl_stmt|;
 name|UINT32
 name|MSec
 decl_stmt|;
+name|UINT32
+name|i
+decl_stmt|;
+name|Event
+operator|=
+name|AslGbl_Events
+expr_stmt|;
+name|DbgPrint
+argument_list|(
+name|ASL_DEBUG_OUTPUT
+argument_list|,
+literal|"\n\nElapsed time for major events\n\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-operator|!
+name|Gbl_CompileTimesFlag
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"\nElapsed time for major events\n\n"
+argument_list|)
+expr_stmt|;
+block|}
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|AslGbl_NextEvent
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
 name|Event
 operator|->
 name|Valid
 condition|)
 block|{
-return|return;
-block|}
 comment|/* Delta will be in 100-nanosecond units */
 name|Delta
 operator|=
@@ -1671,6 +1728,30 @@ operator|->
 name|EventName
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Gbl_CompileTimesFlag
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%8u usec %8u msec - %s\n"
+argument_list|,
+name|USec
+argument_list|,
+name|MSec
+argument_list|,
+name|Event
+operator|->
+name|EventName
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+name|Event
+operator|++
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -1705,71 +1786,15 @@ name|ASL_FILE_STDOUT
 argument_list|)
 expr_stmt|;
 block|}
-name|DbgPrint
-argument_list|(
-name|ASL_DEBUG_OUTPUT
-argument_list|,
-literal|"\n\nElapsed time for major events\n\n"
-argument_list|)
+comment|/* Emit compile times if enabled */
+name|CmDumpAllEvents
+argument_list|()
 expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|AslGbl_NextEvent
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|CmDumpEvent
-argument_list|(
-operator|&
-name|AslGbl_Events
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|Gbl_CompileTimesFlag
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"\nElapsed time for major events\n\n"
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|AslGbl_NextEvent
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|CmDumpEvent
-argument_list|(
-operator|&
-name|AslGbl_Events
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
-block|}
 name|printf
 argument_list|(
 literal|"\nMiscellaneous compile statistics\n\n"

@@ -148,7 +148,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Twine.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/MemoryBuffer.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/SourceMgr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/YAMLParser.h"
 end_include
 
 begin_include
@@ -162,20 +180,6 @@ include|#
 directive|include
 file|<vector>
 end_include
-
-begin_decl_stmt
-name|namespace
-name|llvm
-block|{
-name|class
-name|MemoryBuffer
-decl_stmt|;
-block|}
-end_decl_stmt
-
-begin_comment
-comment|// end namespace llvm
-end_comment
 
 begin_decl_stmt
 name|namespace
@@ -193,7 +197,7 @@ argument_list|()
 block|{}
 name|CompileCommand
 argument_list|(
-argument|StringRef Directory
+argument|Twine Directory
 argument_list|,
 argument|ArrayRef<std::string> CommandLine
 argument_list|)
@@ -201,6 +205,9 @@ block|:
 name|Directory
 argument_list|(
 name|Directory
+operator|.
+name|str
+argument_list|()
 argument_list|)
 operator|,
 name|CommandLine
@@ -296,6 +303,96 @@ literal|0
 expr_stmt|;
 block|}
 empty_stmt|;
+comment|/// \brief A compilation database that returns a single compile command line.
+comment|///
+comment|/// Useful when we want a tool to behave more like a compiler invocation.
+name|class
+name|FixedCompilationDatabase
+range|:
+name|public
+name|CompilationDatabase
+block|{
+name|public
+operator|:
+comment|/// \brief Creates a FixedCompilationDatabase from the arguments after "--".
+comment|///
+comment|/// Parses the given command line for "--". If "--" is found, the rest of
+comment|/// the arguments will make up the command line in the returned
+comment|/// FixedCompilationDatabase.
+comment|/// The arguments after "--" must not include positional parameters or the
+comment|/// argv[0] of the tool. Those will be added by the FixedCompilationDatabase
+comment|/// when a CompileCommand is requested. The argv[0] of the returned command
+comment|/// line will be "clang-tool".
+comment|///
+comment|/// Returns NULL in case "--" is not found.
+comment|///
+comment|/// The argument list is meant to be compatible with normal llvm command line
+comment|/// parsing in main methods.
+comment|/// int main(int argc, char **argv) {
+comment|///   llvm::OwningPtr<FixedCompilationDatabase> Compilations(
+comment|///     FixedCompilationDatabase::loadFromCommandLine(argc, argv));
+comment|///   cl::ParseCommandLineOptions(argc, argv);
+comment|///   ...
+comment|/// }
+comment|///
+comment|/// \param Argc The number of command line arguments - will be changed to
+comment|/// the number of arguments before "--", if "--" was found in the argument
+comment|/// list.
+comment|/// \param Argv Points to the command line arguments.
+comment|/// \param Directory The base directory used in the FixedCompilationDatabase.
+specifier|static
+name|FixedCompilationDatabase
+operator|*
+name|loadFromCommandLine
+argument_list|(
+argument|int&Argc
+argument_list|,
+argument|const char **Argv
+argument_list|,
+argument|Twine Directory =
+literal|"."
+argument_list|)
+block|;
+comment|/// \brief Constructs a compilation data base from a specified directory
+comment|/// and command line.
+name|FixedCompilationDatabase
+argument_list|(
+argument|Twine Directory
+argument_list|,
+argument|ArrayRef<std::string> CommandLine
+argument_list|)
+block|;
+comment|/// \brief Returns the given compile command.
+comment|///
+comment|/// Will always return a vector with one entry that contains the directory
+comment|/// and command line specified at construction with "clang-tool" as argv[0]
+comment|/// and 'FilePath' as positional argument.
+name|virtual
+name|std
+operator|::
+name|vector
+operator|<
+name|CompileCommand
+operator|>
+name|getCompileCommands
+argument_list|(
+argument|StringRef FilePath
+argument_list|)
+specifier|const
+block|;
+name|private
+operator|:
+comment|/// This is built up to contain a single entry vector to be returned from
+comment|/// getCompileCommands after adding the positional argument.
+name|std
+operator|::
+name|vector
+operator|<
+name|CompileCommand
+operator|>
+name|CompileCommands
+block|; }
+decl_stmt|;
 comment|/// \brief A JSON based compilation database.
 comment|///
 comment|/// JSON compilation database files must contain a list of JSON objects which
@@ -380,7 +477,14 @@ argument_list|)
 operator|:
 name|Database
 argument_list|(
-argument|Database
+name|Database
+argument_list|)
+block|,
+name|YAMLStream
+argument_list|(
+argument|Database->getBuffer()
+argument_list|,
+argument|SM
 argument_list|)
 block|{}
 comment|/// \brief Parses the database file and creates the index.
@@ -397,16 +501,26 @@ operator|&
 name|ErrorMessage
 argument_list|)
 block|;
-comment|// Tuple (directory, commandline) where 'commandline' is a JSON escaped bash
-comment|// escaped command line.
+comment|// Tuple (directory, commandline) where 'commandline' pointing to the
+comment|// corresponding nodes in the YAML stream.
 typedef|typedef
 name|std
 operator|::
 name|pair
 operator|<
-name|StringRef
+name|llvm
+operator|::
+name|yaml
+operator|::
+name|ScalarNode
+operator|*
 operator|,
-name|StringRef
+name|llvm
+operator|::
+name|yaml
+operator|::
+name|ScalarNode
+operator|*
 operator|>
 name|CompileCommandRef
 expr_stmt|;
@@ -433,6 +547,18 @@ operator|::
 name|MemoryBuffer
 operator|>
 name|Database
+expr_stmt|;
+name|llvm
+operator|::
+name|SourceMgr
+name|SM
+expr_stmt|;
+name|llvm
+operator|::
+name|yaml
+operator|::
+name|Stream
+name|YAMLStream
 expr_stmt|;
 block|}
 empty_stmt|;

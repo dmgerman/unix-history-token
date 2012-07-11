@@ -232,32 +232,24 @@ end_decl_stmt
 begin_decl_stmt
 name|vm_page_t
 name|vm_page_array
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|long
 name|vm_page_array_size
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|long
 name|first_page
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
 name|vm_page_zero_count
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -303,6 +295,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|pa_tryrelock_restart
 decl_stmt|;
@@ -1005,13 +998,13 @@ operator|+
 literal|1
 index|]
 expr_stmt|;
-comment|/* 	 * Initialize the locks. 	 */
+comment|/* 	 * Initialize the page and queue locks. 	 */
 name|mtx_init
 argument_list|(
 operator|&
 name|vm_page_queue_mtx
 argument_list|,
-literal|"vm page queue mutex"
+literal|"vm page queue"
 argument_list|,
 name|NULL
 argument_list|,
@@ -1025,14 +1018,13 @@ argument_list|(
 operator|&
 name|vm_page_queue_free_mtx
 argument_list|,
-literal|"vm page queue free mutex"
+literal|"vm page free queue"
 argument_list|,
 name|NULL
 argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
-comment|/* Setup page locks. */
 for|for
 control|(
 name|i
@@ -1056,7 +1048,7 @@ index|]
 operator|.
 name|data
 argument_list|,
-literal|"page lock"
+literal|"vm page"
 argument_list|,
 name|NULL
 argument_list|,
@@ -2349,6 +2341,110 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|vm_page_t
+name|PHYS_TO_VM_PAGE
+parameter_list|(
+name|vm_paddr_t
+name|pa
+parameter_list|)
+block|{
+name|vm_page_t
+name|m
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|VM_PHYSSEG_SPARSE
+name|m
+operator|=
+name|vm_phys_paddr_to_vm_page
+argument_list|(
+name|pa
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|m
+operator|==
+name|NULL
+condition|)
+name|m
+operator|=
+name|vm_phys_fictitious_to_vm_page
+argument_list|(
+name|pa
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|m
+operator|)
+return|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|VM_PHYSSEG_DENSE
+argument_list|)
+name|long
+name|pi
+decl_stmt|;
+name|pi
+operator|=
+name|atop
+argument_list|(
+name|pa
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pi
+operator|>=
+name|first_page
+operator|&&
+operator|(
+name|pi
+operator|-
+name|first_page
+operator|)
+operator|<
+name|vm_page_array_size
+condition|)
+block|{
+name|m
+operator|=
+operator|&
+name|vm_page_array
+index|[
+name|pi
+operator|-
+name|first_page
+index|]
+expr_stmt|;
+return|return
+operator|(
+name|m
+operator|)
+return|;
+block|}
+return|return
+operator|(
+name|vm_phys_fictitious_to_vm_page
+argument_list|(
+name|pa
+argument_list|)
+operator|)
+return|;
+else|#
+directive|else
+error|#
+directive|error
+literal|"Either VM_PHYSSEG_DENSE or VM_PHYSSEG_SPARSE must be defined."
+endif|#
+directive|endif
+block|}
+end_function
+
 begin_comment
 comment|/*  *	vm_page_getfake:  *  *	Create a fictitious page with the specified physical address and  *	memory attribute.  The memory attribute is the only the machine-  *	dependent aspect of a fictitious page that must be initialized.  */
 end_comment
@@ -2378,6 +2474,55 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
+name|vm_page_initfake
+argument_list|(
+name|m
+argument_list|,
+name|paddr
+argument_list|,
+name|memattr
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|m
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|vm_page_initfake
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|,
+name|vm_paddr_t
+name|paddr
+parameter_list|,
+name|vm_memattr_t
+name|memattr
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|(
+name|m
+operator|->
+name|flags
+operator|&
+name|PG_FICTITIOUS
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* 		 * The page's memattr might have changed since the 		 * previous initialization.  Update the pmap to the 		 * new memattr. 		 */
+goto|goto
+name|memattr
+goto|;
+block|}
 name|m
 operator|->
 name|phys_addr
@@ -2412,6 +2557,8 @@ name|wire_count
 operator|=
 literal|1
 expr_stmt|;
+name|memattr
+label|:
 name|pmap_page_set_memattr
 argument_list|(
 name|m
@@ -2419,11 +2566,6 @@ argument_list|,
 name|memattr
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|m
-operator|)
-return|;
 block|}
 end_function
 
@@ -2439,6 +2581,25 @@ name|vm_page_t
 name|m
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+operator|(
+name|m
+operator|->
+name|oflags
+operator|&
+name|VPO_UNMANAGED
+operator|)
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"managed %p"
+operator|,
+name|m
+operator|)
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 operator|(
@@ -2655,17 +2816,18 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_dirty:  *  *	Set all bits in the page's dirty field.  *  *	The object containing the specified page must be locked if the  *	call is made from the machine-independent layer.  *  *	See vm_page_clear_dirty_mask().  */
+comment|/*  *	vm_page_dirty_KBI:		[ internal use only ]  *  *	Set all bits in the page's dirty field.  *  *	The object containing the specified page must be locked if the  *	call is made from the machine-independent layer.  *  *	See vm_page_clear_dirty_mask().  *  *	This function should only be called by vm_page_dirty().  */
 end_comment
 
 begin_function
 name|void
-name|vm_page_dirty
+name|vm_page_dirty_KBI
 parameter_list|(
 name|vm_page_t
 name|m
 parameter_list|)
 block|{
+comment|/* These assertions refer to this operation by its public name. */
 name|KASSERT
 argument_list|(
 operator|(
@@ -3205,11 +3367,10 @@ expr_stmt|;
 comment|/* 	 * Since we are inserting a new and possibly dirty page, 	 * update the object's OBJ_MIGHTBEDIRTY flag. 	 */
 if|if
 condition|(
+name|pmap_page_is_write_mapped
+argument_list|(
 name|m
-operator|->
-name|aflags
-operator|&
-name|PGA_WRITEABLE
+argument_list|)
 condition|)
 name|vm_object_set_writeable_dirty
 argument_list|(
@@ -9656,7 +9817,7 @@ name|shift
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * If the object is locked and the page is neither VPO_BUSY nor 	 * PGA_WRITEABLE, then the page's dirty field cannot possibly be 	 * set by a concurrent pmap operation. 	 */
+comment|/* 	 * If the object is locked and the page is neither VPO_BUSY nor 	 * write mapped, then the page's dirty field cannot possibly be 	 * set by a concurrent pmap operation. 	 */
 name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|m
@@ -9678,15 +9839,11 @@ operator|)
 operator|==
 literal|0
 operator|&&
-operator|(
+operator|!
+name|pmap_page_is_write_mapped
+argument_list|(
 name|m
-operator|->
-name|aflags
-operator|&
-name|PGA_WRITEABLE
-operator|)
-operator|==
-literal|0
+argument_list|)
 condition|)
 name|m
 operator|->

@@ -105,6 +105,9 @@ name|ah
 parameter_list|,
 name|HAL_BOOL
 name|restore
+parameter_list|,
+name|HAL_BOOL
+name|power_off
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -560,6 +563,28 @@ name|ah_setCoverageClass
 operator|=
 name|ar5211SetCoverageClass
 block|,
+operator|.
+name|ah_get11nExtBusy
+operator|=
+name|ar5211Get11nExtBusy
+block|,
+operator|.
+name|ah_getMibCycleCounts
+operator|=
+name|ar5211GetMibCycleCounts
+block|,
+operator|.
+name|ah_enableDfs
+operator|=
+name|ar5211EnableDfs
+block|,
+operator|.
+name|ah_getDfsThresh
+operator|=
+name|ar5211GetDfsThresh
+block|,
+comment|/* XXX procRadarEvent */
+comment|/* XXX isFastClockEnabled */
 comment|/* Key Cache Functions */
 operator|.
 name|ah_getKeyCacheSize
@@ -2172,6 +2197,9 @@ name|ah
 parameter_list|,
 name|HAL_BOOL
 name|restore
+parameter_list|,
+name|HAL_BOOL
+name|power_off
 parameter_list|)
 block|{ }
 end_function

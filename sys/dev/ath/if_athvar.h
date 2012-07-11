@@ -57,6 +57,17 @@ value|1000
 end_define
 
 begin_comment
+comment|/*  * There is a separate TX ath_buf pool for management frames.  * This ensures that management frames such as probe responses  * and BAR frames can be transmitted during periods of high  * TX activity.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATH_MGMT_TXBUF
+value|32
+end_define
+
+begin_comment
 comment|/*  * 802.11n requires more TX and RX buffers to do AMPDU.  */
 end_comment
 
@@ -70,7 +81,7 @@ begin_define
 define|#
 directive|define
 name|ATH_TXBUF
-value|128
+value|512
 end_define
 
 begin_define
@@ -328,6 +339,10 @@ name|paused
 decl_stmt|;
 comment|/*>0 if the TID has been paused */
 name|int
+name|addba_tx_pending
+decl_stmt|;
+comment|/* TX ADDBA pending */
+name|int
 name|bar_wait
 decl_stmt|;
 comment|/* waiting for BAR */
@@ -526,6 +541,22 @@ parameter_list|)
 value|ATH_EP_RND(x, HAL_RSSI_EP_MULTIPLIER)
 end_define
 
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|ATH_BUFTYPE_NORMAL
+init|=
+literal|0
+block|,
+name|ATH_BUFTYPE_MGMT
+init|=
+literal|1
+block|, }
+name|ath_buf_type_t
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
 name|ath_buf
@@ -631,19 +662,27 @@ function_decl|;
 comment|/* This state is kept to support software retries and aggregation */
 struct|struct
 block|{
-name|int
+name|uint16_t
 name|bfs_seqno
 decl_stmt|;
 comment|/* sequence number of this packet */
-name|int
+name|uint16_t
+name|bfs_ndelim
+decl_stmt|;
+comment|/* number of delims for padding */
+name|uint8_t
 name|bfs_retries
 decl_stmt|;
 comment|/* retry count */
-name|uint16_t
+name|uint8_t
 name|bfs_tid
 decl_stmt|;
 comment|/* packet TID (or TID_MAX for no QoS) */
-name|uint16_t
+name|uint8_t
+name|bfs_nframes
+decl_stmt|;
+comment|/* number of frames in aggregate */
+name|uint8_t
 name|bfs_pri
 decl_stmt|;
 comment|/* packet AC priority */
@@ -653,18 +692,6 @@ modifier|*
 name|bfs_txq
 decl_stmt|;
 comment|/* eventual dest hardware TXQ */
-name|uint16_t
-name|bfs_pktdur
-decl_stmt|;
-comment|/* packet duration (at current rate?) */
-name|uint16_t
-name|bfs_nframes
-decl_stmt|;
-comment|/* number of frames in aggregate */
-name|uint16_t
-name|bfs_ndelim
-decl_stmt|;
-comment|/* number of delims for padding */
 name|u_int32_t
 name|bfs_aggr
 range|:
@@ -714,32 +741,19 @@ comment|/* do RTS/CTS based protection */
 name|bfs_doratelookup
 range|:
 literal|1
-decl_stmt|,
+decl_stmt|;
 comment|/* do rate lookup before each TX */
-name|bfs_need_seqno
-range|:
-literal|1
-decl_stmt|,
-comment|/* need to assign a seqno for aggr */
-name|bfs_seqno_assigned
-range|:
-literal|1
-decl_stmt|;
-comment|/* seqno has been assigned */
-name|int
-name|bfs_nfl
-decl_stmt|;
-comment|/* next fragment length */
 comment|/* 		 * These fields are passed into the 		 * descriptor setup functions. 		 */
+comment|/* Make this an 8 bit value? */
 name|HAL_PKT_TYPE
 name|bfs_atype
 decl_stmt|;
 comment|/* packet type */
-name|int
+name|uint32_t
 name|bfs_pktlen
 decl_stmt|;
 comment|/* length of this packet */
-name|int
+name|uint16_t
 name|bfs_hdrlen
 decl_stmt|;
 comment|/* length of this packet header */
@@ -747,50 +761,46 @@ name|uint16_t
 name|bfs_al
 decl_stmt|;
 comment|/* length of aggregate */
-name|int
+name|uint16_t
 name|bfs_txflags
 decl_stmt|;
 comment|/* HAL (tx) descriptor flags */
-name|int
+name|uint8_t
 name|bfs_txrate0
 decl_stmt|;
 comment|/* first TX rate */
-name|int
+name|uint8_t
 name|bfs_try0
 decl_stmt|;
 comment|/* first try count */
+name|uint16_t
+name|bfs_txpower
+decl_stmt|;
+comment|/* tx power */
 name|uint8_t
 name|bfs_ctsrate0
 decl_stmt|;
 comment|/* Non-zero - use this as ctsrate */
-name|int
+name|uint8_t
+name|bfs_ctsrate
+decl_stmt|;
+comment|/* CTS rate */
+comment|/* 16 bit? */
+name|int32_t
 name|bfs_keyix
 decl_stmt|;
 comment|/* crypto key index */
-name|int
-name|bfs_txpower
-decl_stmt|;
-comment|/* tx power */
-name|int
+name|int32_t
 name|bfs_txantenna
 decl_stmt|;
 comment|/* TX antenna config */
+comment|/* Make this an 8 bit value? */
 name|enum
 name|ieee80211_protmode
 name|bfs_protmode
 decl_stmt|;
-name|HAL_11N_RATE_SERIES
-name|bfs_rc11n
-index|[
-name|ATH_RC_NUM
-index|]
-decl_stmt|;
-comment|/* 11n TX series */
-name|int
-name|bfs_ctsrate
-decl_stmt|;
-comment|/* CTS rate */
-name|int
+comment|/* 16 bit? */
+name|uint32_t
 name|bfs_ctsduration
 decl_stmt|;
 comment|/* CTS duration (pre-11n NICs) */
@@ -820,6 +830,17 @@ argument_list|)
 name|ath_bufhead
 expr_stmt|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|ATH_BUF_MGMT
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* (tx) desc is a mgmt desc */
+end_comment
 
 begin_define
 define|#
@@ -1061,6 +1082,19 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATH_TID_LOCK_ASSERT
+parameter_list|(
+name|_sc
+parameter_list|,
+name|_tid
+parameter_list|)
+define|\
+value|ATH_TXQ_LOCK_ASSERT((_sc)->sc_ac2q[(_tid)->ac])
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATH_TXQ_INSERT_HEAD
 parameter_list|(
 name|_tq
@@ -1241,6 +1275,143 @@ end_typedef
 
 begin_struct
 struct|struct
+name|ath_rx_methods
+block|{
+name|void
+function_decl|(
+modifier|*
+name|recv_stop
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_softc
+modifier|*
+name|sc
+parameter_list|,
+name|int
+name|dodelay
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|recv_start
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|recv_flush
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|recv_tasklet
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|,
+name|int
+name|npending
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|recv_rxbuf_init
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
+name|ath_buf
+modifier|*
+name|bf
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|recv_setup
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|recv_teardown
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Represent the current state of the RX FIFO.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ath_rx_edma
+block|{
+name|struct
+name|ath_buf
+modifier|*
+modifier|*
+name|m_fifo
+decl_stmt|;
+name|int
+name|m_fifolen
+decl_stmt|;
+name|int
+name|m_fifo_head
+decl_stmt|;
+name|int
+name|m_fifo_tail
+decl_stmt|;
+name|int
+name|m_fifo_depth
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|m_rxpending
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|ath_softc
 block|{
 name|struct
@@ -1262,7 +1433,7 @@ name|struct
 name|ath_intr_stats
 name|sc_intr_stats
 decl_stmt|;
-name|int
+name|uint64_t
 name|sc_debug
 decl_stmt|;
 name|int
@@ -1291,6 +1462,34 @@ name|uint32_t
 name|sc_bssidmask
 decl_stmt|;
 comment|/* bssid mask */
+name|struct
+name|ath_rx_methods
+name|sc_rx
+decl_stmt|;
+name|struct
+name|ath_rx_edma
+name|sc_rxedma
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* HP/LP queues */
+name|int
+name|sc_rx_statuslen
+decl_stmt|;
+name|int
+name|sc_tx_desclen
+decl_stmt|;
+name|int
+name|sc_tx_statuslen
+decl_stmt|;
+name|int
+name|sc_tx_nmaps
+decl_stmt|;
+comment|/* Number of TX maps */
+name|int
+name|sc_edma_bufsize
+decl_stmt|;
 name|void
 function_decl|(
 modifier|*
@@ -1531,8 +1730,13 @@ comment|/* do self-linked final descriptor */
 name|sc_rxtsf32
 range|:
 literal|1
-decl_stmt|;
+decl_stmt|,
 comment|/* RX dec TSF is 32 bits */
+name|sc_isedma
+range|:
+literal|1
+decl_stmt|;
+comment|/* supports EDMA */
 name|uint32_t
 name|sc_eerd
 decl_stmt|;
@@ -1749,12 +1953,6 @@ name|ath_bufhead
 name|sc_rxbuf
 decl_stmt|;
 comment|/* receive buffer */
-name|struct
-name|mbuf
-modifier|*
-name|sc_rxpending
-decl_stmt|;
-comment|/* pending receive data */
 name|u_int32_t
 modifier|*
 name|sc_rxlink
@@ -1803,6 +2001,19 @@ name|ath_bufhead
 name|sc_txbuf
 decl_stmt|;
 comment|/* transmit buffer */
+name|int
+name|sc_txbuf_cnt
+decl_stmt|;
+comment|/* how many buffers avail */
+name|struct
+name|ath_descdma
+name|sc_txdma_mgmt
+decl_stmt|;
+comment|/* mgmt TX descriptors */
+name|ath_bufhead
+name|sc_txbuf_mgmt
+decl_stmt|;
+comment|/* mgmt transmit buffer */
 name|struct
 name|mtx
 name|sc_txbuflock
@@ -2721,9 +2932,11 @@ parameter_list|(
 name|_ah
 parameter_list|,
 name|_bufaddr
+parameter_list|,
+name|_rxq
 parameter_list|)
 define|\
-value|((*(_ah)->ah_setRxDP)((_ah), (_bufaddr)))
+value|((*(_ah)->ah_setRxDP)((_ah), (_bufaddr), (_rxq)))
 end_define
 
 begin_comment
@@ -2832,9 +3045,11 @@ directive|define
 name|ath_hal_getrxbuf
 parameter_list|(
 name|_ah
+parameter_list|,
+name|_rxq
 parameter_list|)
 define|\
-value|((*(_ah)->ah_getRxDP)((_ah)))
+value|((*(_ah)->ah_getRxDP)((_ah), (_rxq)))
 end_define
 
 begin_define
@@ -4001,6 +4216,101 @@ define|\
 value|ath_hal_setcapability(_ah, HAL_CAP_INTMIT, \ 	HAL_CAP_INTMIT_ENABLE, _v, NULL)
 end_define
 
+begin_comment
+comment|/* EDMA definitions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ath_hal_hasedma
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_ENHANCED_DMA_SUPPORT,	\ 	0, NULL) == HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_getrxfifodepth
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_qtype
+parameter_list|,
+name|_req
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_RXFIFODEPTH, _qtype, _req)	\ 	== HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_getntxmaps
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_req
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_NUM_TXMAPS, 0, _req)	\ 	== HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_gettxdesclen
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_req
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_TXDESCLEN, 0, _req)		\ 	== HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_gettxstatuslen
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_req
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_TXSTATUSLEN, 0, _req)	\ 	== HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_getrxstatuslen
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_req
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_RXSTATUSLEN, 0, _req)	\ 	== HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_setrxbufsize
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_req
+parameter_list|)
+define|\
+value|(ath_hal_setcapability(_ah, HAL_CAP_RXBUFSIZE, 0, _req, NULL)	\ 	== HAL_OK)
+end_define
+
 begin_define
 define|#
 directive|define
@@ -4013,6 +4323,10 @@ parameter_list|)
 define|\
 value|((*(_ah)->ah_getChanNoise)((_ah), (_c)))
 end_define
+
+begin_comment
+comment|/* 802.11n HAL methods */
+end_comment
 
 begin_define
 define|#
@@ -4504,6 +4818,36 @@ value|((*(_ah)->ah_gpioSetIntr)((_ah), (_gpio), (_b)))
 end_define
 
 begin_comment
+comment|/*  * PCIe suspend/resume/poweron/poweroff related macros  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ath_hal_enablepcie
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_restore
+parameter_list|,
+name|_poweroff
+parameter_list|)
+define|\
+value|((*(_ah)->ah_configPCIE)((_ah), (_restore), (_poweroff)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_disablepcie
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|((*(_ah)->ah_disablePCIE)((_ah)))
+end_define
+
+begin_comment
 comment|/*  * This is badly-named; you need to set the correct parameters  * to begin to receive useful radar events; and even then  * it doesn't "enable" DFS. See the ath_dfs/null/ module for  * more information.  */
 end_comment
 
@@ -4574,6 +4918,19 @@ name|_chan
 parameter_list|)
 define|\
 value|((*(_ah)->ah_radarWait)((_ah), (_chan)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_get_mib_cycle_counts
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_sample
+parameter_list|)
+define|\
+value|((*(_ah)->ah_getMibCycleCounts)((_ah), (_sample)))
 end_define
 
 begin_define

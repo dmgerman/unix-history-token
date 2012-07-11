@@ -3066,11 +3066,6 @@ operator|(
 literal|0
 operator|)
 return|;
-name|panic
-argument_list|(
-literal|"vm86_getptr: address not found"
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

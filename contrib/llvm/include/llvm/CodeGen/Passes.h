@@ -154,7 +154,7 @@ operator|*
 name|TM
 block|;
 name|PassManagerBase
-operator|&
+operator|*
 name|PM
 block|;
 name|PassConfigImpl

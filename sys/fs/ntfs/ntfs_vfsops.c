@@ -686,9 +686,6 @@ literal|0
 decl_stmt|,
 name|error
 decl_stmt|;
-name|accmode_t
-name|accmode
-decl_stmt|;
 name|struct
 name|vnode
 modifier|*
@@ -727,6 +724,23 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+comment|/* Force mount as read-only. */
+name|MNT_ILOCK
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
+name|mp
+operator|->
+name|mnt_flag
+operator||=
+name|MNT_RDONLY
+expr_stmt|;
+name|MNT_IUNLOCK
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
 name|from
 operator|=
 name|vfs_getopts
@@ -777,9 +791,11 @@ argument_list|)
 condition|)
 block|{
 comment|/* Process export requests in vfs_mount.c */
-goto|goto
-name|success
-goto|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 else|else
 block|{
@@ -788,13 +804,11 @@ argument_list|(
 literal|"ntfs_mount(): MNT_UPDATE not supported\n"
 argument_list|)
 expr_stmt|;
-name|err
-operator|=
+return|return
+operator|(
 name|EINVAL
-expr_stmt|;
-goto|goto
-name|error_1
-goto|;
+operator|)
+return|;
 block|}
 block|}
 comment|/* 	 * Not an update, or updating the name: look up the name 	 * and verify that it refers to a sensible block device. 	 */
@@ -828,12 +842,11 @@ if|if
 condition|(
 name|err
 condition|)
-block|{
-comment|/* can't get devvp!*/
-goto|goto
-name|error_1
-goto|;
-block|}
+return|return
+operator|(
+name|err
+operator|)
+return|;
 name|NDFREE
 argument_list|(
 operator|&
@@ -872,33 +885,13 @@ operator|)
 return|;
 block|}
 comment|/* 	 * If mount by non-root, then verify that user has necessary 	 * permissions on the device. 	 */
-name|accmode
-operator|=
-name|VREAD
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|mp
-operator|->
-name|mnt_flag
-operator|&
-name|MNT_RDONLY
-operator|)
-operator|==
-literal|0
-condition|)
-name|accmode
-operator||=
-name|VWRITE
-expr_stmt|;
 name|err
 operator|=
 name|VOP_ACCESS
 argument_list|(
 name|devvp
 argument_list|,
-name|accmode
+name|VREAD
 argument_list|,
 name|td
 operator|->
@@ -936,37 +929,7 @@ name|err
 operator|)
 return|;
 block|}
-if|if
-condition|(
-name|mp
-operator|->
-name|mnt_flag
-operator|&
-name|MNT_UPDATE
-condition|)
-block|{
-if|#
-directive|if
-literal|0
-comment|/* 		 ******************** 		 * UPDATE 		 ******************** 		 */
-block|if (devvp != ntmp->um_devvp) 			err = EINVAL;
-comment|/* needs translation */
-block|vput(devvp); 		if (err) 			return (err);
-endif|#
-directive|endif
-block|}
-else|else
-block|{
-comment|/* 		 ******************** 		 * NEW MOUNT 		 ******************** 		 */
-comment|/* 		 * Since this is a new mount, we want the names for 		 * the device and the mount point copied in.  If an 		 * error occurs, the mountpoint is discarded by the 		 * upper level code.  Note that vfs_mount() handles 		 * copying the mountpoint f_mntonname for us, so we 		 * don't have to do it here unless we want to set it 		 * to something other than "path" for some rason. 		 */
-comment|/* Save "mounted from" info for mount point (NULL pad)*/
-name|vfs_mountedfrom
-argument_list|(
-name|mp
-argument_list|,
-name|from
-argument_list|)
-expr_stmt|;
+comment|/* 	 * Since this is a new mount, we want the names for the device and 	 * the mount point copied in.  If an error occurs, the mountpoint is 	 * discarded by the upper level code.  Note that vfs_mount() handles 	 * copying the mountpoint f_mntonname for us, so we don't have to do 	 * it here unless we want to set it to something other than "path" 	 * for some rason. 	 */
 name|err
 operator|=
 name|ntfs_mountfs
@@ -978,32 +941,28 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|err
+operator|==
+literal|0
 condition|)
 block|{
+comment|/* Save "mounted from" info for mount point. */
+name|vfs_mountedfrom
+argument_list|(
+name|mp
+argument_list|,
+name|from
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 name|vrele
 argument_list|(
 name|devvp
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|err
-operator|)
-return|;
-block|}
-goto|goto
-name|success
-goto|;
-name|error_1
-label|:
-comment|/* no state to back out*/
-comment|/* XXX: missing NDFREE(&ndp, ...) */
-name|success
-label|:
 return|return
 operator|(
 name|err
@@ -1065,8 +1024,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|,
-name|ronly
-decl_stmt|,
 name|i
 decl_stmt|,
 name|v
@@ -1093,18 +1050,6 @@ decl_stmt|,
 modifier|*
 name|cs_local
 decl_stmt|;
-name|ronly
-operator|=
-operator|(
-name|mp
-operator|->
-name|mnt_flag
-operator|&
-name|MNT_RDONLY
-operator|)
-operator|!=
-literal|0
-expr_stmt|;
 name|DROP_GIANT
 argument_list|()
 expr_stmt|;
@@ -1163,11 +1108,7 @@ name|cp
 argument_list|,
 literal|"ntfs"
 argument_list|,
-name|ronly
-condition|?
 literal|0
-else|:
-literal|1
 argument_list|)
 expr_stmt|;
 name|g_topology_unlock

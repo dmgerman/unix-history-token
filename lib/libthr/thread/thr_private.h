@@ -2052,6 +2052,14 @@ name|__hidden
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|_thr_queuefifo
+name|__hidden
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Garbage thread count. */
 end_comment

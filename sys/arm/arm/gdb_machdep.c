@@ -140,7 +140,7 @@ if|if
 condition|(
 name|regnum
 operator|<
-literal|15
+literal|13
 condition|)
 return|return
 operator|(
@@ -150,6 +150,34 @@ operator|->
 name|tf_r0
 operator|+
 name|regnum
+operator|)
+return|;
+if|if
+condition|(
+name|regnum
+operator|==
+literal|13
+condition|)
+return|return
+operator|(
+operator|&
+name|kdb_frame
+operator|->
+name|tf_svc_sp
+operator|)
+return|;
+if|if
+condition|(
+name|regnum
+operator|==
+literal|14
+condition|)
+return|return
+operator|(
+operator|&
+name|kdb_frame
+operator|->
+name|tf_svc_lr
 operator|)
 return|;
 if|if
@@ -275,7 +303,7 @@ return|;
 case|case
 literal|15
 case|:
-comment|/*  		   * On context switch, the PC is not put in the PCB, but 		   * we can retrieve it from the stack. 		   */
+comment|/* 		   * On context switch, the PC is not put in the PCB, but 		   * we can retrieve it from the stack. 		   */
 if|if
 condition|(
 name|kdb_thrctx

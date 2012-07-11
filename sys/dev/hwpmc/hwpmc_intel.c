@@ -487,10 +487,6 @@ case|case
 literal|0x2A
 case|:
 comment|/* Per Intel document 253669-039US 05/2011. */
-case|case
-literal|0x2D
-case|:
-comment|/* Per Intel document 253669-041US 12/2011. */
 name|cputype
 operator|=
 name|PMC_CPU_INTEL_SANDYBRIDGE
@@ -666,27 +662,6 @@ argument_list|,
 name|ncpus
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
-name|pmc_mdep
-operator|->
-name|pmd_npmc
-operator|==
-name|TSC_NPMCS
-operator|+
-name|P4_NPMCS
-argument_list|,
-operator|(
-literal|"[intel,%d] incorrect npmc count %d"
-operator|,
-name|__LINE__
-operator|,
-name|pmc_mdep
-operator|->
-name|pmd_npmc
-operator|)
-argument_list|)
-expr_stmt|;
 break|break;
 endif|#
 directive|endif
@@ -721,27 +696,6 @@ argument_list|,
 name|ncpus
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
-name|pmc_mdep
-operator|->
-name|pmd_npmc
-operator|==
-name|TSC_NPMCS
-operator|+
-name|P6_NPMCS
-argument_list|,
-operator|(
-literal|"[intel,%d] incorrect npmc count %d"
-operator|,
-name|__LINE__
-operator|,
-name|pmc_mdep
-operator|->
-name|pmd_npmc
-operator|)
-argument_list|)
-expr_stmt|;
 break|break;
 comment|/* 		 * Intel Pentium PMCs. 		 */
 case|case
@@ -754,27 +708,6 @@ argument_list|(
 name|pmc_mdep
 argument_list|,
 name|ncpus
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|pmc_mdep
-operator|->
-name|pmd_npmc
-operator|==
-name|TSC_NPMCS
-operator|+
-name|PENTIUM_NPMCS
-argument_list|,
-operator|(
-literal|"[intel,%d] incorrect npmc count %d"
-operator|,
-name|__LINE__
-operator|,
-name|pmc_mdep
-operator|->
-name|pmd_npmc
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;

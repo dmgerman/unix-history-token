@@ -504,7 +504,7 @@ name|calloc
 argument_list|(
 name|obj
 operator|->
-name|nchains
+name|dynsymcount
 argument_list|,
 sizeof|sizeof
 argument_list|(

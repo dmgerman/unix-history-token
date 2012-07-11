@@ -62,12 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/Index/ASTLocation.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/Serialization/ASTBitCodes.h"
 end_include
 
@@ -246,10 +240,6 @@ name|TargetInfo
 decl_stmt|;
 name|class
 name|ASTFrontendAction
-decl_stmt|;
-name|using
-name|namespace
-name|idx
 decl_stmt|;
 comment|/// \brief Utility class for loading a ASTContext from an AST file.
 comment|///
@@ -438,10 +428,6 @@ operator|::
 name|string
 name|OriginalSourceFile
 expr_stmt|;
-comment|// Critical optimization when using clang_getCursor().
-name|ASTLocation
-name|LastLoc
-decl_stmt|;
 comment|/// \brief The set of diagnostics produced when creating the preamble.
 name|SmallVector
 operator|<
@@ -1877,33 +1863,6 @@ name|val
 expr_stmt|;
 block|}
 end_function
-
-begin_function
-name|void
-name|setLastASTLocation
-parameter_list|(
-name|ASTLocation
-name|ALoc
-parameter_list|)
-block|{
-name|LastLoc
-operator|=
-name|ALoc
-expr_stmt|;
-block|}
-end_function
-
-begin_expr_stmt
-name|ASTLocation
-name|getLastASTLocation
-argument_list|()
-specifier|const
-block|{
-return|return
-name|LastLoc
-return|;
-block|}
-end_expr_stmt
 
 begin_expr_stmt
 name|StringRef

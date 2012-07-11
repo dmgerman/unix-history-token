@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-keyscan.c,v 1.85 2011/03/15 10:36:02 okan Exp $ */
+comment|/* $OpenBSD: ssh-keyscan.c,v 1.86 2012/04/11 13:34:17 djm Exp $ */
 end_comment
 
 begin_comment
@@ -257,11 +257,13 @@ name|int
 name|get_keytypes
 init|=
 name|KT_RSA
+operator||
+name|KT_ECDSA
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Get only RSA keys by default */
+comment|/* Get RSA and ECDSA keys by default */
 end_comment
 
 begin_decl_stmt

@@ -1839,7 +1839,7 @@ literal|"RAID3-PN"
 argument_list|)
 operator|==
 literal|0
-operator|&&
+operator|||
 name|strcasecmp
 argument_list|(
 name|str
@@ -1858,7 +1858,7 @@ expr_stmt|;
 operator|*
 name|qual
 operator|=
-name|G_RAID_VOLUME_RLQ_R3P0
+name|G_RAID_VOLUME_RLQ_R3PN
 expr_stmt|;
 block|}
 elseif|else
@@ -1896,7 +1896,7 @@ literal|"RAID4-PN"
 argument_list|)
 operator|==
 literal|0
-operator|&&
+operator|||
 name|strcasecmp
 argument_list|(
 name|str
@@ -1915,7 +1915,7 @@ expr_stmt|;
 operator|*
 name|qual
 operator|=
-name|G_RAID_VOLUME_RLQ_R4P0
+name|G_RAID_VOLUME_RLQ_R4PN
 expr_stmt|;
 block|}
 elseif|else
@@ -9449,7 +9449,7 @@ name|sc
 operator|->
 name|sc_lock
 argument_list|,
-literal|"gmirror:lock"
+literal|"graid:lock"
 argument_list|)
 expr_stmt|;
 name|mtx_init
@@ -9459,7 +9459,7 @@ name|sc
 operator|->
 name|sc_queue_mtx
 argument_list|,
-literal|"gmirror:queue"
+literal|"graid:queue"
 argument_list|,
 name|NULL
 argument_list|,
@@ -9674,6 +9674,12 @@ operator|->
 name|v_raid_level_qualifier
 operator|=
 name|G_RAID_VOLUME_RLQ_UNKNOWN
+expr_stmt|;
+name|vol
+operator|->
+name|v_rotate_parity
+operator|=
+literal|1
 expr_stmt|;
 name|bioq_init
 argument_list|(
@@ -11258,7 +11264,7 @@ name|g_new_geomf
 argument_list|(
 name|mp
 argument_list|,
-literal|"mirror:taste"
+literal|"raid:taste"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * This orphan function should be never called. 	 */
@@ -11416,6 +11422,11 @@ modifier|*
 name|format
 parameter_list|,
 name|struct
+name|gctl_req
+modifier|*
+name|req
+parameter_list|,
+name|struct
 name|g_geom
 modifier|*
 modifier|*
@@ -11516,12 +11527,14 @@ name|class
 expr_stmt|;
 name|status
 operator|=
-name|G_RAID_MD_CREATE
+name|G_RAID_MD_CREATE_REQ
 argument_list|(
 name|obj
 argument_list|,
 operator|&
 name|g_raid_class
+argument_list|,
+name|req
 argument_list|,
 name|gp
 argument_list|)

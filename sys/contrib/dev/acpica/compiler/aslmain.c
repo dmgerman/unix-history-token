@@ -79,7 +79,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|HelpMessage
+name|FilenameHelp
 parameter_list|(
 name|void
 parameter_list|)
@@ -503,7 +503,7 @@ name|ACPI_OPTION
 argument_list|(
 literal|"-h"
 argument_list|,
-literal|"Additional help and compiler debug options"
+literal|"This message"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
@@ -511,6 +511,13 @@ argument_list|(
 literal|"-hc"
 argument_list|,
 literal|"Display operators allowed in constant expressions"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-hf"
+argument_list|,
+literal|"Display help for output filename generation"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
@@ -527,17 +534,64 @@ argument_list|,
 literal|"Display currently supported ACPI table names"
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"\nDebug Options:\n"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-bf -bt"
+argument_list|,
+literal|"Create debug file (full or parse tree only) (*.txt)"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-f"
+argument_list|,
+literal|"Ignore errors, force creation of AML output file(s)"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-n"
+argument_list|,
+literal|"Parse only, no output generation"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-ot"
+argument_list|,
+literal|"Display compile times and statistics"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-x<level>"
+argument_list|,
+literal|"Set debug level for trace output"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-z"
+argument_list|,
+literal|"Do not insert new compiler ID for DataTables"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    HelpMessage  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Display help message  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    FilenameHelp  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Display help message for output filename generation  *  ******************************************************************************/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|HelpMessage
+name|FilenameHelp
 parameter_list|(
 name|void
 parameter_list|)
@@ -580,63 +634,6 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"\n"
-argument_list|)
-expr_stmt|;
-name|Options
-argument_list|()
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\nCompiler/Disassembler Debug Options:\n"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
-literal|"-bb -bp -bt"
-argument_list|,
-literal|"Create compiler debug/trace file (*.txt)"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
-literal|""
-argument_list|,
-literal|"Types: Parse/Tree/Both"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
-literal|"-f"
-argument_list|,
-literal|"Ignore errors, force creation of AML output file(s)"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
-literal|"-n"
-argument_list|,
-literal|"Parse only, no output generation"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
-literal|"-ot"
-argument_list|,
-literal|"Display compile times"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
-literal|"-x<level>"
-argument_list|,
-literal|"Set debug level for trace output"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
-literal|"-z"
-argument_list|,
-literal|"Do not insert new compiler ID for DataTables"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1105,24 +1102,7 @@ index|]
 condition|)
 block|{
 case|case
-literal|'b'
-case|:
-name|AslCompilerdebug
-operator|=
-literal|1
-expr_stmt|;
-comment|/* same as yydebug */
-name|DtParserdebug
-operator|=
-literal|1
-expr_stmt|;
-name|PrParserdebug
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-case|case
-literal|'p'
+literal|'f'
 case|:
 name|AslCompilerdebug
 operator|=
@@ -1346,7 +1326,7 @@ block|{
 case|case
 literal|'^'
 case|:
-name|HelpMessage
+name|Usage
 argument_list|()
 expr_stmt|;
 name|exit
@@ -1358,6 +1338,17 @@ case|case
 literal|'c'
 case|:
 name|UtDisplayConstantOpcodes
+argument_list|()
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+case|case
+literal|'f'
+case|:
+name|FilenameHelp
 argument_list|()
 expr_stmt|;
 name|exit
@@ -1839,10 +1830,23 @@ break|break;
 case|case
 literal|'i'
 case|:
-comment|/* Less verbose error messages */
+comment|/*              * Support for integrated development environment(s).              *              * 1) No compiler signon              * 2) Send stderr messages to stdout              * 3) Less verbose error messages (single line only for each)              * 4) Error/warning messages are formatted appropriately to              *    be recognized by MS Visual Studio              */
 name|Gbl_VerboseErrors
 operator|=
 name|FALSE
+expr_stmt|;
+name|Gbl_DoSignon
+operator|=
+name|FALSE
+expr_stmt|;
+name|Gbl_Files
+index|[
+name|ASL_FILE_STDERR
+index|]
+operator|.
+name|Handle
+operator|=
+name|stdout
 expr_stmt|;
 break|break;
 case|case

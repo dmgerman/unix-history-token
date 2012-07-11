@@ -1748,6 +1748,7 @@ argument_list|,
 argument|r
 argument_list|)
 block|{}
+comment|/// \brief Get the underlining region.
 specifier|const
 name|MemRegion
 operator|*
@@ -1767,6 +1768,7 @@ name|Data
 operator|)
 return|;
 block|}
+comment|/// \brief Get the underlining region and strip casts.
 specifier|const
 name|MemRegion
 operator|*

@@ -4,7 +4,7 @@ comment|/*	$NetBSD: hpc_machdep.c,v 1.70 2003/09/16 08:18:22 agc Exp $	*/
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1994-1998 Mark Brinicombe.  * Copyright (c) 1994 Brini.  * All rights reserved.  *  * This code is derived from software written for Brini by Mark Brinicombe  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Brini.  * 4. The name of the company nor the name of the author may be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY BRINI ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL BRINI OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * RiscBSD kernel project  *  * machdep.c  *  * Machine dependant functions for kernel setup  *  * This file needs a lot of work.   *  * Created      : 17/09/94  */
+comment|/*-  * Copyright (c) 1994-1998 Mark Brinicombe.  * Copyright (c) 1994 Brini.  * All rights reserved.  *  * This code is derived from software written for Brini by Mark Brinicombe  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Brini.  * 4. The name of the company nor the name of the author may be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY BRINI ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL BRINI OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * RiscBSD kernel project  *  * machdep.c  *  * Machine dependant functions for kernel setup  *  * This file needs a lot of work.  *  * Created      : 17/09/94  */
 end_comment
 
 begin_include
@@ -390,22 +390,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
-name|void
-modifier|*
-name|_end
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-modifier|*
-name|end
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|pcpu
 name|__pcpu
@@ -450,12 +434,6 @@ literal|2
 operator|+
 literal|4
 index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|vm_offset_t
-name|physical_pages
 decl_stmt|;
 end_decl_stmt
 
@@ -508,14 +486,6 @@ name|minidataclean
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|trapframe
-name|proc0_tf
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|void
@@ -547,7 +517,7 @@ name|pxa_devmap
 index|[]
 init|=
 block|{
-comment|/*  	 * Map the on-board devices up into the KVA region so we don't muck 	 * up user-space. 	 */
+comment|/* 	 * Map the on-board devices up into the KVA region so we don't muck 	 * up user-space. 	 */
 block|{
 name|PXA2X0_PERIPH_START
 operator|+
@@ -600,13 +570,10 @@ name|void
 modifier|*
 name|initarm
 parameter_list|(
-name|void
+name|struct
+name|arm_boot_params
 modifier|*
-name|arg
-parameter_list|,
-name|void
-modifier|*
-name|arg2
+name|abp
 parameter_list|)
 block|{
 name|struct
@@ -654,12 +621,14 @@ index|[
 name|PXA2X0_SDRAM_BANKS
 index|]
 decl_stmt|;
-name|set_cpufuncs
-argument_list|()
-expr_stmt|;
 name|lastaddr
 operator|=
-name|fake_preload_metadata
+name|parse_boot_param
+argument_list|(
+name|abp
+argument_list|)
+expr_stmt|;
+name|set_cpufuncs
 argument_list|()
 expr_stmt|;
 name|pcpu_init
@@ -824,9 +793,6 @@ operator|+
 literal|0x20000000
 expr_stmt|;
 block|}
-name|i
-operator|++
-expr_stmt|;
 block|}
 name|freemem_pt
 operator|=
@@ -1500,66 +1466,12 @@ expr_stmt|;
 name|undefined_init
 argument_list|()
 expr_stmt|;
-name|proc_linkup
+name|init_proc0
 argument_list|(
-operator|&
-name|proc0
-argument_list|,
-operator|&
-name|thread0
-argument_list|)
-expr_stmt|;
-name|thread0
-operator|.
-name|td_kstack
-operator|=
 name|kernelstack
 operator|.
 name|pv_va
-expr_stmt|;
-name|thread0
-operator|.
-name|td_pcb
-operator|=
-operator|(
-expr|struct
-name|pcb
-operator|*
-operator|)
-operator|(
-name|thread0
-operator|.
-name|td_kstack
-operator|+
-name|KSTACK_PAGES
-operator|*
-name|PAGE_SIZE
-operator|)
-operator|-
-literal|1
-expr_stmt|;
-name|thread0
-operator|.
-name|td_pcb
-operator|->
-name|pcb_flags
-operator|=
-literal|0
-expr_stmt|;
-name|thread0
-operator|.
-name|td_frame
-operator|=
-operator|&
-name|proc0_tf
-expr_stmt|;
-name|pcpup
-operator|->
-name|pc_curpcb
-operator|=
-name|thread0
-operator|.
-name|td_pcb
+argument_list|)
 expr_stmt|;
 comment|/* Enable MMU, I-cache, D-cache, write buffer. */
 name|arm_vector_init

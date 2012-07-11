@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* gzread.c -- zlib functions for reading gzip files  * Copyright (C) 2004, 2005, 2010 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* gzread.c -- zlib functions for reading gzip files  * Copyright (C) 2004, 2005, 2010, 2011, 2012 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_comment
@@ -61,24 +61,7 @@ end_decl_stmt
 begin_decl_stmt
 name|local
 name|int
-name|gz_next4
-name|OF
-argument_list|(
-operator|(
-name|gz_statep
-operator|,
-name|unsigned
-name|long
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|local
-name|int
-name|gz_head
+name|gz_look
 name|OF
 argument_list|(
 operator|(
@@ -104,7 +87,7 @@ end_decl_stmt
 begin_decl_stmt
 name|local
 name|int
-name|gz_make
+name|gz_fetch
 name|OF
 argument_list|(
 operator|(
@@ -253,7 +236,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Load up input buffer and set eof flag if last data loaded -- return -1 on    error, 0 otherwise.  Note that the eof flag is set when the end of the input    file is reached, even though there may be unused data in the buffer.  Once    that data has been used, no more attempts will be made to read the file.    gz_avail() assumes that strm->avail_in == 0. */
+comment|/* Load up input buffer and set eof flag if last data loaded -- return -1 on    error, 0 otherwise.  Note that the eof flag is set when the end of the input    file is reached, even though there may be unused data in the buffer.  Once    that data has been used, no more attempts will be made to read the file.    If strm->avail_in != 0, then the current data is moved to the beginning of    the input buffer, and then the remainder of the buffer is loaded with the    available data from the input file. */
 end_comment
 
 begin_function
@@ -267,6 +250,9 @@ name|gz_statep
 name|state
 decl_stmt|;
 block|{
+name|unsigned
+name|got
+decl_stmt|;
 name|z_streamp
 name|strm
 init|=
@@ -284,6 +270,12 @@ operator|->
 name|err
 operator|!=
 name|Z_OK
+operator|&&
+name|state
+operator|->
+name|err
+operator|!=
+name|Z_BUF_ERROR
 condition|)
 return|return
 operator|-
@@ -300,6 +292,55 @@ condition|)
 block|{
 if|if
 condition|(
+name|strm
+operator|->
+name|avail_in
+condition|)
+block|{
+comment|/* copy what's there to the start */
+name|unsigned
+name|char
+modifier|*
+name|p
+init|=
+name|state
+operator|->
+name|in
+decl_stmt|,
+modifier|*
+name|q
+init|=
+name|strm
+operator|->
+name|next_in
+decl_stmt|;
+name|unsigned
+name|n
+init|=
+name|strm
+operator|->
+name|avail_in
+decl_stmt|;
+do|do
+block|{
+operator|*
+name|p
+operator|++
+operator|=
+operator|*
+name|q
+operator|++
+expr_stmt|;
+block|}
+do|while
+condition|(
+operator|--
+name|n
+condition|)
+do|;
+block|}
+if|if
+condition|(
 name|gz_load
 argument_list|(
 name|state
@@ -307,21 +348,21 @@ argument_list|,
 name|state
 operator|->
 name|in
+operator|+
+name|strm
+operator|->
+name|avail_in
 argument_list|,
 name|state
 operator|->
 name|size
-argument_list|,
-operator|(
-name|unsigned
-operator|*
-operator|)
-operator|&
-operator|(
+operator|-
 name|strm
 operator|->
 name|avail_in
-operator|)
+argument_list|,
+operator|&
+name|got
 argument_list|)
 operator|==
 operator|-
@@ -331,6 +372,12 @@ return|return
 operator|-
 literal|1
 return|;
+name|strm
+operator|->
+name|avail_in
+operator|+=
+name|got
+expr_stmt|;
 name|strm
 operator|->
 name|next_in
@@ -347,127 +394,13 @@ block|}
 end_function
 
 begin_comment
-comment|/* Get next byte from input, or -1 if end or error. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NEXT
-parameter_list|()
-value|((strm->avail_in == 0&& gz_avail(state) == -1) ? -1 : \                 (strm->avail_in == 0 ? -1 : \                  (strm->avail_in--, *(strm->next_in)++)))
-end_define
-
-begin_comment
-comment|/* Get a four-byte little-endian integer and return 0 on success and the value    in *ret.  Otherwise -1 is returned and *ret is not modified. */
+comment|/* Look for gzip header, set up for inflate or copy.  state->x.have must be 0.    If this is the first time in, allocate required memory.  state->how will be    left unchanged if there is no more input data available, will be set to COPY    if there is no gzip header and direct copying will be performed, or it will    be set to GZIP for decompression.  If direct copying, then leftover input    data from the input buffer will be copied to the output buffer.  In that    case, all further file reads will be directly to either the output buffer or    a user buffer.  If decompressing, the inflate state will be initialized.    gz_look() will return 0 on success or -1 on failure. */
 end_comment
 
 begin_function
 name|local
 name|int
-name|gz_next4
-parameter_list|(
-name|state
-parameter_list|,
-name|ret
-parameter_list|)
-name|gz_statep
-name|state
-decl_stmt|;
-name|unsigned
-name|long
-modifier|*
-name|ret
-decl_stmt|;
-block|{
-name|int
-name|ch
-decl_stmt|;
-name|unsigned
-name|long
-name|val
-decl_stmt|;
-name|z_streamp
-name|strm
-init|=
-operator|&
-operator|(
-name|state
-operator|->
-name|strm
-operator|)
-decl_stmt|;
-name|val
-operator|=
-name|NEXT
-argument_list|()
-expr_stmt|;
-name|val
-operator|+=
-operator|(
-name|unsigned
-operator|)
-name|NEXT
-argument_list|()
-operator|<<
-literal|8
-expr_stmt|;
-name|val
-operator|+=
-operator|(
-name|unsigned
-name|long
-operator|)
-name|NEXT
-argument_list|()
-operator|<<
-literal|16
-expr_stmt|;
-name|ch
-operator|=
-name|NEXT
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|ch
-operator|==
-operator|-
-literal|1
-condition|)
-return|return
-operator|-
-literal|1
-return|;
-name|val
-operator|+=
-operator|(
-name|unsigned
-name|long
-operator|)
-name|ch
-operator|<<
-literal|24
-expr_stmt|;
-operator|*
-name|ret
-operator|=
-name|val
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* Look for gzip header, set up for inflate or copy.  state->have must be zero.    If this is the first time in, allocate required memory.  state->how will be    left unchanged if there is no more input data available, will be set to COPY    if there is no gzip header and direct copying will be performed, or it will    be set to GZIP for decompression, and the gzip header will be skipped so    that the next available input data is the raw deflate stream.  If direct    copying, then leftover input data from the input buffer will be copied to    the output buffer.  In that case, all further file reads will be directly to    either the output buffer or a user buffer.  If decompressing, the inflate    state and the check value will be initialized.  gz_head() will return 0 on    success or -1 on failure.  Failures may include read errors or gzip header    errors.  */
-end_comment
-
-begin_function
-name|local
-name|int
-name|gz_head
+name|gz_look
 parameter_list|(
 name|state
 parameter_list|)
@@ -484,12 +417,6 @@ name|state
 operator|->
 name|strm
 operator|)
-decl_stmt|;
-name|int
-name|flags
-decl_stmt|;
-name|unsigned
-name|len
 decl_stmt|;
 comment|/* allocate read buffers and inflate memory */
 if|if
@@ -645,14 +572,15 @@ operator|->
 name|strm
 operator|)
 argument_list|,
-operator|-
 literal|15
+operator|+
+literal|16
 argument_list|)
 operator|!=
 name|Z_OK
 condition|)
 block|{
-comment|/* raw inflate */
+comment|/* gunzip */
 name|free
 argument_list|(
 name|state
@@ -688,14 +616,14 @@ literal|1
 return|;
 block|}
 block|}
-comment|/* get some data in the input buffer */
+comment|/* get at least the magic bytes in the input buffer */
 if|if
 condition|(
 name|strm
 operator|->
 name|avail_in
-operator|==
-literal|0
+operator|<
+literal|2
 condition|)
 block|{
 if|if
@@ -724,9 +652,15 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* look for the gzip magic header bytes 31 and 139 */
+comment|/* look for gzip magic bytes -- if there, do gzip decoding (note: there is        a logical dilemma here when considering the case of a partially written        gzip file, to wit, if a single 31 byte is written, then we cannot tell        whether this is a single-byte file, or just a partially written gzip        file -- for here we assume that if a gzip file is being written, then        the header will be written in a single operation, so that reading a        single byte is sufficient indication that it is not a gzip file) */
 if|if
 condition|(
+name|strm
+operator|->
+name|avail_in
+operator|>
+literal|1
+operator|&&
 name|strm
 operator|->
 name|next_in
@@ -735,240 +669,20 @@ literal|0
 index|]
 operator|==
 literal|31
-condition|)
-block|{
-name|strm
-operator|->
-name|avail_in
-operator|--
-expr_stmt|;
-name|strm
-operator|->
-name|next_in
-operator|++
-expr_stmt|;
-if|if
-condition|(
-name|strm
-operator|->
-name|avail_in
-operator|==
-literal|0
-operator|&&
-name|gz_avail
-argument_list|(
-name|state
-argument_list|)
-operator|==
-operator|-
-literal|1
-condition|)
-return|return
-operator|-
-literal|1
-return|;
-if|if
-condition|(
-name|strm
-operator|->
-name|avail_in
 operator|&&
 name|strm
 operator|->
 name|next_in
 index|[
-literal|0
+literal|1
 index|]
 operator|==
 literal|139
 condition|)
 block|{
-comment|/* we have a gzip header, woo hoo! */
-name|strm
-operator|->
-name|avail_in
-operator|--
-expr_stmt|;
-name|strm
-operator|->
-name|next_in
-operator|++
-expr_stmt|;
-comment|/* skip rest of header */
-if|if
-condition|(
-name|NEXT
-argument_list|()
-operator|!=
-literal|8
-condition|)
-block|{
-comment|/* compression method */
-name|gz_error
-argument_list|(
-name|state
-argument_list|,
-name|Z_DATA_ERROR
-argument_list|,
-literal|"unknown compression method"
-argument_list|)
-expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
-block|}
-name|flags
-operator|=
-name|NEXT
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|flags
-operator|&
-literal|0xe0
-condition|)
-block|{
-comment|/* reserved flag bits */
-name|gz_error
-argument_list|(
-name|state
-argument_list|,
-name|Z_DATA_ERROR
-argument_list|,
-literal|"unknown header flags set"
-argument_list|)
-expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
-block|}
-name|NEXT
-argument_list|()
-expr_stmt|;
-comment|/* modification time */
-name|NEXT
-argument_list|()
-expr_stmt|;
-name|NEXT
-argument_list|()
-expr_stmt|;
-name|NEXT
-argument_list|()
-expr_stmt|;
-name|NEXT
-argument_list|()
-expr_stmt|;
-comment|/* extra flags */
-name|NEXT
-argument_list|()
-expr_stmt|;
-comment|/* operating system */
-if|if
-condition|(
-name|flags
-operator|&
-literal|4
-condition|)
-block|{
-comment|/* extra field */
-name|len
-operator|=
-operator|(
-name|unsigned
-operator|)
-name|NEXT
-argument_list|()
-expr_stmt|;
-name|len
-operator|+=
-operator|(
-name|unsigned
-operator|)
-name|NEXT
-argument_list|()
-operator|<<
-literal|8
-expr_stmt|;
-while|while
-condition|(
-name|len
-operator|--
-condition|)
-if|if
-condition|(
-name|NEXT
-argument_list|()
-operator|<
-literal|0
-condition|)
-break|break;
-block|}
-if|if
-condition|(
-name|flags
-operator|&
-literal|8
-condition|)
-comment|/* file name */
-while|while
-condition|(
-name|NEXT
-argument_list|()
-operator|>
-literal|0
-condition|)
-empty_stmt|;
-if|if
-condition|(
-name|flags
-operator|&
-literal|16
-condition|)
-comment|/* comment */
-while|while
-condition|(
-name|NEXT
-argument_list|()
-operator|>
-literal|0
-condition|)
-empty_stmt|;
-if|if
-condition|(
-name|flags
-operator|&
-literal|2
-condition|)
-block|{
-comment|/* header crc */
-name|NEXT
-argument_list|()
-expr_stmt|;
-name|NEXT
-argument_list|()
-expr_stmt|;
-block|}
-comment|/* an unexpected end of file is not checked for here -- it will be                noticed on the first request for uncompressed data */
-comment|/* set up for decompression */
 name|inflateReset
 argument_list|(
 name|strm
-argument_list|)
-expr_stmt|;
-name|strm
-operator|->
-name|adler
-operator|=
-name|crc32
-argument_list|(
-literal|0L
-argument_list|,
-name|Z_NULL
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|state
@@ -987,37 +701,45 @@ return|return
 literal|0
 return|;
 block|}
-else|else
-block|{
-comment|/* not a gzip file -- save first byte (31) and fall to raw i/o */
+comment|/* no gzip header -- if we were decoding gzip before, then this is trailing        garbage.  Ignore the trailing garbage and finish. */
+if|if
+condition|(
 name|state
 operator|->
-name|out
-index|[
+name|direct
+operator|==
 literal|0
-index|]
+condition|)
+block|{
+name|strm
+operator|->
+name|avail_in
 operator|=
-literal|31
+literal|0
 expr_stmt|;
 name|state
 operator|->
-name|have
+name|eof
 operator|=
 literal|1
 expr_stmt|;
-block|}
-block|}
-comment|/* doing raw i/o, save start of raw data for seeking, copy any leftover        input to output -- this assumes that the output buffer is larger than        the input buffer, which also assures space for gzungetc() */
 name|state
 operator|->
-name|raw
+name|x
+operator|.
+name|have
 operator|=
-name|state
-operator|->
-name|pos
+literal|0
 expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+comment|/* doing raw i/o, copy any leftover input to output -- this assumes that        the output buffer is larger than the input buffer, which also assures        space for gzungetc() */
 name|state
 operator|->
+name|x
+operator|.
 name|next
 operator|=
 name|state
@@ -1035,11 +757,9 @@ name|memcpy
 argument_list|(
 name|state
 operator|->
+name|x
+operator|.
 name|next
-operator|+
-name|state
-operator|->
-name|have
 argument_list|,
 name|strm
 operator|->
@@ -1052,8 +772,10 @@ argument_list|)
 expr_stmt|;
 name|state
 operator|->
+name|x
+operator|.
 name|have
-operator|+=
+operator|=
 name|strm
 operator|->
 name|avail_in
@@ -1084,7 +806,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Decompress from input to the provided next_out and avail_out in the state.    If the end of the compressed data is reached, then verify the gzip trailer    check value and length (modulo 2^32).  state->have and state->next are set    to point to the just decompressed data, and the crc is updated.  If the    trailer is verified, state->how is reset to LOOK to look for the next gzip    stream or raw data, once state->have is depleted.  Returns 0 on success, -1    on failure.  Failures may include invalid compressed data or a failed gzip    trailer verification. */
+comment|/* Decompress from input to the provided next_out and avail_out in the state.    On return, state->x.have and state->x.next point to the just decompressed    data.  If the gzip stream completes, state->how is reset to LOOK to look for    the next gzip stream or raw data, once state->x.have is depleted.  Returns 0    on success, -1 on failure. */
 end_comment
 
 begin_function
@@ -1100,15 +822,11 @@ decl_stmt|;
 block|{
 name|int
 name|ret
+init|=
+name|Z_OK
 decl_stmt|;
 name|unsigned
 name|had
-decl_stmt|;
-name|unsigned
-name|long
-name|crc
-decl_stmt|,
-name|len
 decl_stmt|;
 name|z_streamp
 name|strm
@@ -1163,15 +881,12 @@ name|gz_error
 argument_list|(
 name|state
 argument_list|,
-name|Z_DATA_ERROR
+name|Z_BUF_ERROR
 argument_list|,
 literal|"unexpected end of file"
 argument_list|)
 expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
+break|break;
 block|}
 comment|/* decompress and handle errors */
 name|ret
@@ -1273,9 +988,11 @@ operator|!=
 name|Z_STREAM_END
 condition|)
 do|;
-comment|/* update available output and crc check value */
+comment|/* update available output */
 name|state
 operator|->
+name|x
+operator|.
 name|have
 operator|=
 name|had
@@ -1286,6 +1003,8 @@ name|avail_out
 expr_stmt|;
 name|state
 operator|->
+name|x
+operator|.
 name|next
 operator|=
 name|strm
@@ -1294,132 +1013,23 @@ name|next_out
 operator|-
 name|state
 operator|->
+name|x
+operator|.
 name|have
 expr_stmt|;
-name|strm
-operator|->
-name|adler
-operator|=
-name|crc32
-argument_list|(
-name|strm
-operator|->
-name|adler
-argument_list|,
-name|state
-operator|->
-name|next
-argument_list|,
-name|state
-operator|->
-name|have
-argument_list|)
-expr_stmt|;
-comment|/* check gzip trailer if at end of deflate stream */
+comment|/* if the gzip stream completed successfully, look for another */
 if|if
 condition|(
 name|ret
 operator|==
 name|Z_STREAM_END
 condition|)
-block|{
-if|if
-condition|(
-name|gz_next4
-argument_list|(
-name|state
-argument_list|,
-operator|&
-name|crc
-argument_list|)
-operator|==
-operator|-
-literal|1
-operator|||
-name|gz_next4
-argument_list|(
-name|state
-argument_list|,
-operator|&
-name|len
-argument_list|)
-operator|==
-operator|-
-literal|1
-condition|)
-block|{
-name|gz_error
-argument_list|(
-name|state
-argument_list|,
-name|Z_DATA_ERROR
-argument_list|,
-literal|"unexpected end of file"
-argument_list|)
-expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
-block|}
-if|if
-condition|(
-name|crc
-operator|!=
-name|strm
-operator|->
-name|adler
-condition|)
-block|{
-name|gz_error
-argument_list|(
-name|state
-argument_list|,
-name|Z_DATA_ERROR
-argument_list|,
-literal|"incorrect data check"
-argument_list|)
-expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
-block|}
-if|if
-condition|(
-name|len
-operator|!=
-operator|(
-name|strm
-operator|->
-name|total_out
-operator|&
-literal|0xffffffffL
-operator|)
-condition|)
-block|{
-name|gz_error
-argument_list|(
-name|state
-argument_list|,
-name|Z_DATA_ERROR
-argument_list|,
-literal|"incorrect length check"
-argument_list|)
-expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
-block|}
 name|state
 operator|->
 name|how
 operator|=
 name|LOOK
 expr_stmt|;
-comment|/* ready for next stream, once have is 0 (leave                                    state->direct unchanged to remember how) */
-block|}
 comment|/* good decompression */
 return|return
 literal|0
@@ -1428,13 +1038,13 @@ block|}
 end_function
 
 begin_comment
-comment|/* Make data and put in the output buffer.  Assumes that state->have == 0.    Data is either copied from the input file or decompressed from the input    file depending on state->how.  If state->how is LOOK, then a gzip header is    looked for (and skipped if found) to determine wither to copy or decompress.    Returns -1 on error, otherwise 0.  gz_make() will leave state->have as COPY    or GZIP unless the end of the input file has been reached and all data has    been processed.  */
+comment|/* Fetch data and put it in the output buffer.  Assumes state->x.have is 0.    Data is either copied from the input file or decompressed from the input    file depending on state->how.  If state->how is LOOK, then a gzip header is    looked for to determine whether to copy or decompress.  Returns -1 on error,    otherwise 0.  gz_fetch() will leave state->how as COPY or GZIP unless the    end of the input file has been reached and all data has been processed.  */
 end_comment
 
 begin_function
 name|local
 name|int
-name|gz_make
+name|gz_fetch
 parameter_list|(
 name|state
 parameter_list|)
@@ -1452,19 +1062,22 @@ operator|->
 name|strm
 operator|)
 decl_stmt|;
-if|if
+do|do
+block|{
+switch|switch
 condition|(
 name|state
 operator|->
 name|how
-operator|==
-name|LOOK
 condition|)
 block|{
-comment|/* look for gzip header */
+case|case
+name|LOOK
+case|:
+comment|/* -> LOOK, COPY (only if never GZIP), or GZIP */
 if|if
 condition|(
-name|gz_head
+name|gz_look
 argument_list|(
 name|state
 argument_list|)
@@ -1480,23 +1093,18 @@ if|if
 condition|(
 name|state
 operator|->
-name|have
+name|how
+operator|==
+name|LOOK
 condition|)
-comment|/* got some data from gz_head() */
 return|return
 literal|0
 return|;
-block|}
-if|if
-condition|(
-name|state
-operator|->
-name|how
-operator|==
+break|break;
+case|case
 name|COPY
-condition|)
-block|{
-comment|/* straight copy */
+case|:
+comment|/* -> COPY */
 if|if
 condition|(
 name|gz_load
@@ -1517,6 +1125,8 @@ operator|&
 operator|(
 name|state
 operator|->
+name|x
+operator|.
 name|have
 operator|)
 argument_list|)
@@ -1530,24 +1140,21 @@ literal|1
 return|;
 name|state
 operator|->
+name|x
+operator|.
 name|next
 operator|=
 name|state
 operator|->
 name|out
 expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|state
-operator|->
-name|how
-operator|==
+return|return
+literal|0
+return|;
+case|case
 name|GZIP
-condition|)
-block|{
-comment|/* decompress */
+case|:
+comment|/* -> GZIP or LOOK (if end of gzip stream) */
 name|strm
 operator|->
 name|avail_out
@@ -1581,6 +1188,29 @@ operator|-
 literal|1
 return|;
 block|}
+block|}
+do|while
+condition|(
+name|state
+operator|->
+name|x
+operator|.
+name|have
+operator|==
+literal|0
+operator|&&
+operator|(
+operator|!
+name|state
+operator|->
+name|eof
+operator|||
+name|strm
+operator|->
+name|avail_in
+operator|)
+condition|)
+do|;
 return|return
 literal|0
 return|;
@@ -1620,6 +1250,8 @@ if|if
 condition|(
 name|state
 operator|->
+name|x
+operator|.
 name|have
 condition|)
 block|{
@@ -1629,6 +1261,8 @@ name|GT_OFF
 argument_list|(
 name|state
 operator|->
+name|x
+operator|.
 name|have
 argument_list|)
 operator|||
@@ -1637,6 +1271,8 @@ name|z_off64_t
 operator|)
 name|state
 operator|->
+name|x
+operator|.
 name|have
 operator|>
 name|len
@@ -1648,22 +1284,30 @@ name|len
 else|:
 name|state
 operator|->
+name|x
+operator|.
 name|have
 expr_stmt|;
 name|state
 operator|->
+name|x
+operator|.
 name|have
 operator|-=
 name|n
 expr_stmt|;
 name|state
 operator|->
+name|x
+operator|.
 name|next
 operator|+=
 name|n
 expr_stmt|;
 name|state
 operator|->
+name|x
+operator|.
 name|pos
 operator|+=
 name|n
@@ -1696,7 +1340,7 @@ block|{
 comment|/* get more output, looking for header if required */
 if|if
 condition|(
-name|gz_make
+name|gz_fetch
 argument_list|(
 name|state
 argument_list|)
@@ -1778,7 +1422,7 @@ operator|->
 name|strm
 operator|)
 expr_stmt|;
-comment|/* check that we're reading and that there's no error */
+comment|/* check that we're reading and that there's no (serious) error */
 if|if
 condition|(
 name|state
@@ -1787,11 +1431,19 @@ name|mode
 operator|!=
 name|GZ_READ
 operator|||
+operator|(
 name|state
 operator|->
 name|err
 operator|!=
 name|Z_OK
+operator|&&
+name|state
+operator|->
+name|err
+operator|!=
+name|Z_BUF_ERROR
+operator|)
 condition|)
 return|return
 operator|-
@@ -1812,7 +1464,7 @@ name|gz_error
 argument_list|(
 name|state
 argument_list|,
-name|Z_BUF_ERROR
+name|Z_DATA_ERROR
 argument_list|,
 literal|"requested length does not fit in int"
 argument_list|)
@@ -1877,6 +1529,8 @@ if|if
 condition|(
 name|state
 operator|->
+name|x
+operator|.
 name|have
 condition|)
 block|{
@@ -1884,6 +1538,8 @@ name|n
 operator|=
 name|state
 operator|->
+name|x
+operator|.
 name|have
 operator|>
 name|len
@@ -1892,6 +1548,8 @@ name|len
 else|:
 name|state
 operator|->
+name|x
+operator|.
 name|have
 expr_stmt|;
 name|memcpy
@@ -1900,6 +1558,8 @@ name|buf
 argument_list|,
 name|state
 operator|->
+name|x
+operator|.
 name|next
 argument_list|,
 name|n
@@ -1907,12 +1567,16 @@ argument_list|)
 expr_stmt|;
 name|state
 operator|->
+name|x
+operator|.
 name|next
 operator|+=
 name|n
 expr_stmt|;
 name|state
 operator|->
+name|x
+operator|.
 name|have
 operator|-=
 name|n
@@ -1932,7 +1596,16 @@ name|avail_in
 operator|==
 literal|0
 condition|)
+block|{
+name|state
+operator|->
+name|past
+operator|=
+literal|1
+expr_stmt|;
+comment|/* tried to read past end */
 break|break;
+block|}
 comment|/* need output data -- for small len or new stream load up our output            buffer */
 elseif|else
 if|if
@@ -1957,7 +1630,7 @@ block|{
 comment|/* get more output, looking for header if required */
 if|if
 condition|(
-name|gz_make
+name|gz_fetch
 argument_list|(
 name|state
 argument_list|)
@@ -1970,7 +1643,7 @@ operator|-
 literal|1
 return|;
 continue|continue;
-comment|/* no progress yet -- go back to memcpy() above */
+comment|/* no progress yet -- go back to copy above */
 comment|/* the copy above assures that we will leave with space in the                output buffer, allowing at least one gzungetc() to succeed */
 block|}
 comment|/* large len -- read directly into user buffer */
@@ -2041,10 +1714,14 @@ name|n
 operator|=
 name|state
 operator|->
+name|x
+operator|.
 name|have
 expr_stmt|;
 name|state
 operator|->
+name|x
+operator|.
 name|have
 operator|=
 literal|0
@@ -2071,6 +1748,8 @@ name|n
 expr_stmt|;
 name|state
 operator|->
+name|x
+operator|.
 name|pos
 operator|+=
 name|n
@@ -2094,6 +1773,12 @@ end_function
 begin_comment
 comment|/* -- see zlib.h -- */
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|gzgetc
+end_undef
 
 begin_function
 name|int
@@ -2137,7 +1822,7 @@ name|gz_statep
 operator|)
 name|file
 expr_stmt|;
-comment|/* check that we're reading and that there's no error */
+comment|/* check that we're reading and that there's no (serious) error */
 if|if
 condition|(
 name|state
@@ -2146,11 +1831,19 @@ name|mode
 operator|!=
 name|GZ_READ
 operator|||
+operator|(
 name|state
 operator|->
 name|err
 operator|!=
 name|Z_OK
+operator|&&
+name|state
+operator|->
+name|err
+operator|!=
+name|Z_BUF_ERROR
+operator|)
 condition|)
 return|return
 operator|-
@@ -2161,16 +1854,22 @@ if|if
 condition|(
 name|state
 operator|->
+name|x
+operator|.
 name|have
 condition|)
 block|{
 name|state
 operator|->
+name|x
+operator|.
 name|have
 operator|--
 expr_stmt|;
 name|state
 operator|->
+name|x
+operator|.
 name|pos
 operator|++
 expr_stmt|;
@@ -2179,6 +1878,8 @@ operator|*
 operator|(
 name|state
 operator|->
+name|x
+operator|.
 name|next
 operator|)
 operator|++
@@ -2208,6 +1909,26 @@ name|buf
 index|[
 literal|0
 index|]
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|ZEXPORT
+name|gzgetc_
+parameter_list|(
+name|file
+parameter_list|)
+name|gzFile
+name|file
+decl_stmt|;
+block|{
+return|return
+name|gzgetc
+argument_list|(
+name|file
+argument_list|)
 return|;
 block|}
 end_function
@@ -2253,7 +1974,7 @@ name|gz_statep
 operator|)
 name|file
 expr_stmt|;
-comment|/* check that we're reading and that there's no error */
+comment|/* check that we're reading and that there's no (serious) error */
 if|if
 condition|(
 name|state
@@ -2262,11 +1983,19 @@ name|mode
 operator|!=
 name|GZ_READ
 operator|||
+operator|(
 name|state
 operator|->
 name|err
 operator|!=
 name|Z_OK
+operator|&&
+name|state
+operator|->
+name|err
+operator|!=
+name|Z_BUF_ERROR
+operator|)
 condition|)
 return|return
 operator|-
@@ -2321,6 +2050,8 @@ if|if
 condition|(
 name|state
 operator|->
+name|x
+operator|.
 name|have
 operator|==
 literal|0
@@ -2328,12 +2059,16 @@ condition|)
 block|{
 name|state
 operator|->
+name|x
+operator|.
 name|have
 operator|=
 literal|1
 expr_stmt|;
 name|state
 operator|->
+name|x
+operator|.
 name|next
 operator|=
 name|state
@@ -2352,6 +2087,8 @@ literal|1
 expr_stmt|;
 name|state
 operator|->
+name|x
+operator|.
 name|next
 index|[
 literal|0
@@ -2361,8 +2098,16 @@ name|c
 expr_stmt|;
 name|state
 operator|->
+name|x
+operator|.
 name|pos
 operator|--
+expr_stmt|;
+name|state
+operator|->
+name|past
+operator|=
+literal|0
 expr_stmt|;
 return|return
 name|c
@@ -2373,6 +2118,8 @@ if|if
 condition|(
 name|state
 operator|->
+name|x
+operator|.
 name|have
 operator|==
 operator|(
@@ -2388,7 +2135,7 @@ name|gz_error
 argument_list|(
 name|state
 argument_list|,
-name|Z_BUF_ERROR
+name|Z_DATA_ERROR
 argument_list|,
 literal|"out of room to push characters"
 argument_list|)
@@ -2403,6 +2150,8 @@ if|if
 condition|(
 name|state
 operator|->
+name|x
+operator|.
 name|next
 operator|==
 name|state
@@ -2421,6 +2170,8 @@ name|out
 operator|+
 name|state
 operator|->
+name|x
+operator|.
 name|have
 decl_stmt|;
 name|unsigned
@@ -2458,6 +2209,8 @@ name|src
 expr_stmt|;
 name|state
 operator|->
+name|x
+operator|.
 name|next
 operator|=
 name|dest
@@ -2465,16 +2218,22 @@ expr_stmt|;
 block|}
 name|state
 operator|->
+name|x
+operator|.
 name|have
 operator|++
 expr_stmt|;
 name|state
 operator|->
+name|x
+operator|.
 name|next
 operator|--
 expr_stmt|;
 name|state
 operator|->
+name|x
+operator|.
 name|next
 index|[
 literal|0
@@ -2484,8 +2243,16 @@ name|c
 expr_stmt|;
 name|state
 operator|->
+name|x
+operator|.
 name|pos
 operator|--
+expr_stmt|;
+name|state
+operator|->
+name|past
+operator|=
+literal|0
 expr_stmt|;
 return|return
 name|c
@@ -2562,7 +2329,7 @@ name|gz_statep
 operator|)
 name|file
 expr_stmt|;
-comment|/* check that we're reading and that there's no error */
+comment|/* check that we're reading and that there's no (serious) error */
 if|if
 condition|(
 name|state
@@ -2571,11 +2338,19 @@ name|mode
 operator|!=
 name|GZ_READ
 operator|||
+operator|(
 name|state
 operator|->
 name|err
 operator|!=
 name|Z_OK
+operator|&&
+name|state
+operator|->
+name|err
+operator|!=
+name|Z_BUF_ERROR
+operator|)
 condition|)
 return|return
 name|NULL
@@ -2637,14 +2412,13 @@ if|if
 condition|(
 name|state
 operator|->
+name|x
+operator|.
 name|have
 operator|==
 literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|gz_make
+operator|&&
+name|gz_fetch
 argument_list|(
 name|state
 argument_list|)
@@ -2660,31 +2434,31 @@ if|if
 condition|(
 name|state
 operator|->
+name|x
+operator|.
 name|have
 operator|==
 literal|0
 condition|)
 block|{
 comment|/* end of file */
-if|if
-condition|(
-name|buf
-operator|==
-name|str
-condition|)
-comment|/* got bupkus */
-return|return
-name|NULL
-return|;
+name|state
+operator|->
+name|past
+operator|=
+literal|1
+expr_stmt|;
+comment|/* read past end */
 break|break;
-comment|/* got something -- return it */
-block|}
+comment|/* return what we have */
 block|}
 comment|/* look for end-of-line in current output buffer */
 name|n
 operator|=
 name|state
 operator|->
+name|x
+operator|.
 name|have
 operator|>
 name|left
@@ -2693,6 +2467,8 @@ name|left
 else|:
 name|state
 operator|->
+name|x
+operator|.
 name|have
 expr_stmt|;
 name|eol
@@ -2701,6 +2477,8 @@ name|memchr
 argument_list|(
 name|state
 operator|->
+name|x
+operator|.
 name|next
 argument_list|,
 literal|'\n'
@@ -2724,6 +2502,8 @@ name|eol
 operator|-
 name|state
 operator|->
+name|x
+operator|.
 name|next
 argument_list|)
 operator|+
@@ -2736,6 +2516,8 @@ name|buf
 argument_list|,
 name|state
 operator|->
+name|x
+operator|.
 name|next
 argument_list|,
 name|n
@@ -2743,18 +2525,24 @@ argument_list|)
 expr_stmt|;
 name|state
 operator|->
+name|x
+operator|.
 name|have
 operator|-=
 name|n
 expr_stmt|;
 name|state
 operator|->
+name|x
+operator|.
 name|next
 operator|+=
 name|n
 expr_stmt|;
 name|state
 operator|->
+name|x
+operator|.
 name|pos
 operator|+=
 name|n
@@ -2777,7 +2565,16 @@ operator|==
 name|NULL
 condition|)
 do|;
-comment|/* found end-of-line or out of space -- terminate string and return it */
+comment|/* return terminated string, or if nothing, end of file */
+if|if
+condition|(
+name|buf
+operator|==
+name|str
+condition|)
+return|return
+name|NULL
+return|;
 name|buf
 index|[
 literal|0
@@ -2826,21 +2623,15 @@ name|gz_statep
 operator|)
 name|file
 expr_stmt|;
-comment|/* check that we're reading */
+comment|/* if the state is not known, but we can find out, then do so (this is        mainly for right after a gzopen() or gzdopen()) */
 if|if
 condition|(
 name|state
 operator|->
 name|mode
-operator|!=
+operator|==
 name|GZ_READ
-condition|)
-return|return
-literal|0
-return|;
-comment|/* if the state is not known, but we can find out, then do so (this is        mainly for right after a gzopen() or gzdopen()) */
-if|if
-condition|(
+operator|&&
 name|state
 operator|->
 name|how
@@ -2849,6 +2640,8 @@ name|LOOK
 operator|&&
 name|state
 operator|->
+name|x
+operator|.
 name|have
 operator|==
 literal|0
@@ -2856,12 +2649,12 @@ condition|)
 operator|(
 name|void
 operator|)
-name|gz_head
+name|gz_look
 argument_list|(
 name|state
 argument_list|)
 expr_stmt|;
-comment|/* return 1 if reading direct, 0 if decompressing a gzip stream */
+comment|/* return 1 if transparent, 0 if processing a gzip stream */
 return|return
 name|state
 operator|->
@@ -2887,6 +2680,8 @@ decl_stmt|;
 block|{
 name|int
 name|ret
+decl_stmt|,
+name|err
 decl_stmt|;
 name|gz_statep
 name|state
@@ -2953,6 +2748,18 @@ name|in
 argument_list|)
 expr_stmt|;
 block|}
+name|err
+operator|=
+name|state
+operator|->
+name|err
+operator|==
+name|Z_BUF_ERROR
+condition|?
+name|Z_BUF_ERROR
+else|:
+name|Z_OK
+expr_stmt|;
 name|gz_error
 argument_list|(
 name|state
@@ -2988,7 +2795,7 @@ name|ret
 condition|?
 name|Z_ERRNO
 else|:
-name|Z_OK
+name|err
 return|;
 block|}
 end_function

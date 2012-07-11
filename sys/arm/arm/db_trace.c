@@ -4,7 +4,7 @@ comment|/*	$NetBSD: db_trace.c,v 1.8 2003/01/17 22:28:48 thorpej Exp $	*/
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 2000, 2001 Ben Harris  * Copyright (c) 1996 Scott K. Stevens  *  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
+comment|/*-  * Copyright (c) 2000, 2001 Ben Harris  * Copyright (c) 1996 Scott K. Stevens  *  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
 end_comment
 
 begin_include
@@ -118,7 +118,7 @@ file|<ddb/db_output.h>
 end_include
 
 begin_comment
-comment|/*  * APCS stack frames are awkward beasts, so I don't think even trying to use  * a structure to represent them is a good idea.  *  * Here's the diagram from the APCS.  Increasing address is _up_ the page.  *   *          save code pointer       [fp]<- fp points to here  *          return link value       [fp, #-4]  *          return sp value         [fp, #-8]  *          return fp value         [fp, #-12]  *          [saved v7 value]  *          [saved v6 value]  *          [saved v5 value]  *          [saved v4 value]  *          [saved v3 value]  *          [saved v2 value]  *          [saved v1 value]  *          [saved a4 value]  *          [saved a3 value]  *          [saved a2 value]  *          [saved a1 value]  *  * The save code pointer points twelve bytes beyond the start of the   * code sequence (usually a single STM) that created the stack frame.    * We have to disassemble it if we want to know which of the optional   * fields are actually present.  */
+comment|/*  * APCS stack frames are awkward beasts, so I don't think even trying to use  * a structure to represent them is a good idea.  *  * Here's the diagram from the APCS.  Increasing address is _up_ the page.  *  *          save code pointer       [fp]<- fp points to here  *          return link value       [fp, #-4]  *          return sp value         [fp, #-8]  *          return fp value         [fp, #-12]  *          [saved v7 value]  *          [saved v6 value]  *          [saved v5 value]  *          [saved v4 value]  *          [saved v3 value]  *          [saved v2 value]  *          [saved v1 value]  *          [saved a4 value]  *          [saved a3 value]  *          [saved a2 value]  *          [saved a1 value]  *  * The save code pointer points twelve bytes beyond the start of the  * code sequence (usually a single STM) that created the stack frame.  * We have to disassemble it if we want to know which of the optional  * fields are actually present.  */
 end_comment
 
 begin_function
@@ -131,6 +131,9 @@ name|addr
 parameter_list|,
 name|db_expr_t
 name|count
+parameter_list|,
+name|boolean_t
+name|kernel_only
 parameter_list|)
 block|{
 name|u_int32_t
@@ -153,11 +156,6 @@ name|value
 decl_stmt|;
 name|db_expr_t
 name|offset
-decl_stmt|;
-name|boolean_t
-name|kernel_only
-init|=
-name|TRUE
 decl_stmt|;
 name|int
 name|scp_offset
@@ -628,6 +626,13 @@ name|pcb
 modifier|*
 name|ctx
 decl_stmt|;
+if|if
+condition|(
+name|thr
+operator|!=
+name|curthread
+condition|)
+block|{
 name|ctx
 operator|=
 name|kdb_thr_ctx
@@ -645,7 +650,14 @@ name|pcb32_r11
 argument_list|,
 operator|-
 literal|1
+argument_list|,
+name|TRUE
 argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|db_trace_self
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -681,6 +693,8 @@ name|addr
 argument_list|,
 operator|-
 literal|1
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 block|}

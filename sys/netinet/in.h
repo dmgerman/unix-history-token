@@ -1668,6 +1668,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IPPROTO_MPLS
+value|137
+end_define
+
+begin_comment
+comment|/* MPLS-in-IP */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IPPROTO_PFSYNC
 value|240
 end_define
@@ -2751,6 +2762,17 @@ end_define
 
 begin_comment
 comment|/* don't fragment packet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_RECVTOS
+value|68
+end_define
+
+begin_comment
+comment|/* bool; receive IP TOS w/dgram */
 end_comment
 
 begin_comment

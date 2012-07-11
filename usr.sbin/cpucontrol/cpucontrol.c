@@ -1253,7 +1253,7 @@ name|dir
 decl_stmt|;
 name|DIR
 modifier|*
-name|dirfd
+name|dirp
 decl_stmt|;
 name|struct
 name|dirent
@@ -1375,7 +1375,7 @@ argument_list|,
 argument|next
 argument_list|)
 block|{
-name|dirfd
+name|dirp
 operator|=
 name|opendir
 argument_list|(
@@ -1386,7 +1386,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|dirfd
+name|dirp
 operator|==
 name|NULL
 condition|)
@@ -1411,7 +1411,7 @@ name|direntry
 operator|=
 name|readdir
 argument_list|(
-name|dirfd
+name|dirp
 argument_list|)
 operator|)
 operator|!=
@@ -1507,7 +1507,7 @@ name|error
 operator|=
 name|closedir
 argument_list|(
-name|dirfd
+name|dirp
 argument_list|)
 expr_stmt|;
 if|if

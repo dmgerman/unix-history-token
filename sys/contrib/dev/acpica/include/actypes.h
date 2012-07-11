@@ -2438,8 +2438,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_ADR_SPACE_PLATFORM_COMM
+value|(ACPI_ADR_SPACE_TYPE) 10
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_NUM_PREDEFINED_REGIONS
-value|10
+value|11
 end_define
 
 begin_comment

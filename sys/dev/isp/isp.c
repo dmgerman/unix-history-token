@@ -1153,6 +1153,13 @@ block|{
 name|mbreg_t
 name|mbs
 decl_stmt|;
+name|char
+modifier|*
+name|buf
+decl_stmt|;
+name|uint64_t
+name|fwt
+decl_stmt|;
 name|uint32_t
 name|code_org
 decl_stmt|,
@@ -3287,31 +3294,17 @@ block|}
 block|}
 comment|/* 	 * Up until this point we've done everything by just reading or 	 * setting registers. From this point on we rely on at least *some* 	 * kind of firmware running in the card. 	 */
 comment|/* 	 * Do some sanity checking by running a NOP command. 	 * If it succeeds, the ROM firmware is now running. 	 */
-name|ISP_MEMZERO
+name|MBSINIT
 argument_list|(
 operator|&
 name|mbs
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|mbs
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|mbs
-operator|.
-name|param
-index|[
-literal|0
-index|]
-operator|=
 name|MBOX_NO_OP
-expr_stmt|;
-name|mbs
-operator|.
-name|logval
-operator|=
+argument_list|,
 name|MBLOGALL
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 name|isp_mboxcmd
 argument_list|(
@@ -3370,95 +3363,138 @@ name|isp
 argument_list|)
 condition|)
 block|{
-name|ISP_MEMZERO
+specifier|static
+specifier|const
+name|uint16_t
+name|patterns
+index|[
+name|MAX_MAILBOX
+index|]
+init|=
+block|{
+literal|0x0000
+block|,
+literal|0xdead
+block|,
+literal|0xbeef
+block|,
+literal|0xffff
+block|,
+literal|0xa5a5
+block|,
+literal|0x5a5a
+block|,
+literal|0x7f7f
+block|,
+literal|0x7ff7
+block|,
+literal|0x3421
+block|,
+literal|0xabcd
+block|,
+literal|0xdcba
+block|,
+literal|0xfeef
+block|,
+literal|0xbead
+block|,
+literal|0xdebe
+block|,
+literal|0x2222
+block|,
+literal|0x3333
+block|,
+literal|0x5555
+block|,
+literal|0x6666
+block|,
+literal|0x7777
+block|,
+literal|0xaaaa
+block|,
+literal|0xffff
+block|,
+literal|0xdddd
+block|,
+literal|0x9999
+block|,
+literal|0x1fbc
+block|,
+literal|0x6666
+block|,
+literal|0x6677
+block|,
+literal|0x1122
+block|,
+literal|0x33ff
+block|,
+literal|0x0000
+block|,
+literal|0x0001
+block|,
+literal|0x1000
+block|,
+literal|0x1010
+block|, 		}
+decl_stmt|;
+name|int
+name|nmbox
+init|=
+name|ISP_NMBOX
+argument_list|(
+name|isp
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|IS_SCSI
+argument_list|(
+name|isp
+argument_list|)
+condition|)
+name|nmbox
+operator|=
+literal|6
+expr_stmt|;
+name|MBSINIT
 argument_list|(
 operator|&
 name|mbs
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|mbs
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|mbs
-operator|.
-name|param
-index|[
-literal|0
-index|]
-operator|=
 name|MBOX_MAILBOX_REG_TEST
-expr_stmt|;
-name|mbs
-operator|.
-name|param
-index|[
-literal|1
-index|]
-operator|=
-literal|0xdead
-expr_stmt|;
-name|mbs
-operator|.
-name|param
-index|[
-literal|2
-index|]
-operator|=
-literal|0xbeef
-expr_stmt|;
-name|mbs
-operator|.
-name|param
-index|[
-literal|3
-index|]
-operator|=
-literal|0xffff
-expr_stmt|;
-name|mbs
-operator|.
-name|param
-index|[
-literal|4
-index|]
-operator|=
-literal|0x1111
-expr_stmt|;
-name|mbs
-operator|.
-name|param
-index|[
-literal|5
-index|]
-operator|=
-literal|0xa5a5
-expr_stmt|;
-name|mbs
-operator|.
-name|param
-index|[
-literal|6
-index|]
-operator|=
-literal|0x0000
-expr_stmt|;
-name|mbs
-operator|.
-name|param
-index|[
-literal|7
-index|]
-operator|=
-literal|0x0000
-expr_stmt|;
-name|mbs
-operator|.
-name|logval
-operator|=
+argument_list|,
 name|MBLOGALL
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|1
+init|;
+name|i
+operator|<
+name|nmbox
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|mbs
+operator|.
+name|param
+index|[
+name|i
+index|]
+operator|=
+name|patterns
+index|[
+name|i
+index|]
+expr_stmt|;
+block|}
 name|isp_mboxcmd
 argument_list|(
 name|isp
@@ -3486,52 +3522,33 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+for|for
+control|(
+name|i
+operator|=
+literal|1
+init|;
+name|i
+operator|<
+name|nmbox
+condition|;
+name|i
+operator|++
+control|)
+block|{
 if|if
 condition|(
 name|mbs
 operator|.
 name|param
 index|[
-literal|1
+name|i
 index|]
 operator|!=
-literal|0xdead
-operator|||
-name|mbs
-operator|.
-name|param
+name|patterns
 index|[
-literal|2
+name|i
 index|]
-operator|!=
-literal|0xbeef
-operator|||
-name|mbs
-operator|.
-name|param
-index|[
-literal|3
-index|]
-operator|!=
-literal|0xffff
-operator|||
-name|mbs
-operator|.
-name|param
-index|[
-literal|4
-index|]
-operator|!=
-literal|0x1111
-operator|||
-name|mbs
-operator|.
-name|param
-index|[
-literal|5
-index|]
-operator|!=
-literal|0xa5a5
 condition|)
 block|{
 name|ISP_RESET0
@@ -3545,45 +3562,25 @@ name|isp
 argument_list|,
 name|ISP_LOGERR
 argument_list|,
-literal|"Register Test Failed (0x%x 0x%x 0x%x 0x%x 0x%x)"
+literal|"Register Test Failed at Register %d: should have 0x%04x but got 0x%04x"
 argument_list|,
-name|mbs
-operator|.
-name|param
+name|i
+argument_list|,
+name|patterns
 index|[
-literal|1
+name|i
 index|]
 argument_list|,
 name|mbs
 operator|.
 name|param
 index|[
-literal|2
-index|]
-argument_list|,
-name|mbs
-operator|.
-name|param
-index|[
-literal|3
-index|]
-argument_list|,
-name|mbs
-operator|.
-name|param
-index|[
-literal|4
-index|]
-argument_list|,
-name|mbs
-operator|.
-name|param
-index|[
-literal|5
+name|i
 index|]
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
 block|}
 block|}
 comment|/* 	 * Download new Firmware, unless requested not to do so. 	 * This is made slightly trickier in some cases where the 	 * firmware of the ROM revision is newer than the revision 	 * compiled into the driver. So, where we used to compare 	 * versions of our f/w and the ROM f/w, now we just see 	 * whether we have f/w at all and whether a config flag 	 * has disabled our download. 	 */
@@ -3838,15 +3835,16 @@ argument_list|)
 expr_stmt|;
 name|again
 label|:
-name|ISP_MEMZERO
+name|MBSINIT
 argument_list|(
 operator|&
 name|mbs
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|mbs
-argument_list|)
+literal|0
+argument_list|,
+name|MBLOGALL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -4222,12 +4220,6 @@ name|la
 argument_list|)
 expr_stmt|;
 block|}
-name|mbs
-operator|.
-name|logval
-operator|=
-name|MBLOGALL
-expr_stmt|;
 name|isp_mboxcmd
 argument_list|(
 name|isp
@@ -4521,15 +4513,16 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-name|ISP_MEMZERO
+name|MBSINIT
 argument_list|(
 operator|&
 name|mbs
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|mbs
-argument_list|)
+literal|0
+argument_list|,
+name|MBLOGALL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -4746,12 +4739,6 @@ name|la
 argument_list|)
 expr_stmt|;
 block|}
-name|mbs
-operator|.
-name|logval
-operator|=
-name|MBLOGALL
-expr_stmt|;
 name|isp_mboxcmd
 argument_list|(
 name|isp
@@ -4921,25 +4908,17 @@ name|code_org
 operator|+
 literal|1
 expr_stmt|;
-name|ISP_MEMZERO
+name|MBSINIT
 argument_list|(
 operator|&
 name|mbs
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|mbs
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|mbs
-operator|.
-name|param
-index|[
-literal|0
-index|]
-operator|=
 name|MBOX_WRITE_RAM_WORD
+argument_list|,
+name|MBLOGNONE
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 name|mbs
 operator|.
@@ -4963,12 +4942,6 @@ name|np
 index|[
 literal|0
 index|]
-expr_stmt|;
-name|mbs
-operator|.
-name|logval
-operator|=
-name|MBLOGNONE
 expr_stmt|;
 name|isp_prt
 argument_list|(
@@ -5057,15 +5030,16 @@ operator|->
 name|isp_loaded_fw
 condition|)
 block|{
-name|ISP_MEMZERO
+name|MBSINIT
 argument_list|(
 operator|&
 name|mbs
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|mbs
-argument_list|)
+name|MBOX_VERIFY_CHECKSUM
+argument_list|,
+name|MBLOGNONE
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|mbs
@@ -5165,7 +5139,7 @@ name|MBOX_EXEC_FIRMWARE
 argument_list|,
 name|MBLOGALL
 argument_list|,
-literal|1000000
+literal|5000000
 argument_list|)
 expr_stmt|;
 if|if
@@ -5603,48 +5577,6 @@ literal|3
 index|]
 expr_stmt|;
 block|}
-name|isp_prt
-argument_list|(
-name|isp
-argument_list|,
-name|ISP_LOGCONFIG
-argument_list|,
-literal|"Board Type %s, Chip Revision 0x%x, %s F/W Revision %d.%d.%d"
-argument_list|,
-name|btype
-argument_list|,
-name|isp
-operator|->
-name|isp_revision
-argument_list|,
-name|dodnld
-condition|?
-literal|"loaded"
-else|:
-literal|"resident"
-argument_list|,
-name|isp
-operator|->
-name|isp_fwrev
-index|[
-literal|0
-index|]
-argument_list|,
-name|isp
-operator|->
-name|isp_fwrev
-index|[
-literal|1
-index|]
-argument_list|,
-name|isp
-operator|->
-name|isp_fwrev
-index|[
-literal|2
-index|]
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|IS_FC
@@ -5703,25 +5635,85 @@ index|[
 literal|6
 index|]
 expr_stmt|;
-name|isp_prt
+block|}
+if|if
+condition|(
+name|IS_24XX
 argument_list|(
 name|isp
-argument_list|,
-name|ISP_LOGDEBUG0
-argument_list|,
-literal|"Firmware Attributes = 0x%x"
-argument_list|,
+argument_list|)
+operator|&&
+operator|(
+name|isp
+operator|->
+name|isp_fwattr
+operator|&
+name|ISP2400_FW_ATTR_EXTNDED
+operator|)
+condition|)
+block|{
+name|isp
+operator|->
+name|isp_fwattr
+operator||=
+operator|(
+operator|(
+operator|(
+name|uint64_t
+operator|)
 name|mbs
 operator|.
 name|param
 index|[
-literal|6
+literal|15
 index|]
-argument_list|)
+operator|)
+operator|<<
+literal|16
+operator|)
+operator||
+operator|(
+operator|(
+operator|(
+name|uint64_t
+operator|)
+name|mbs
+operator|.
+name|param
+index|[
+literal|16
+index|]
+operator|)
+operator|<<
+literal|32
+operator|)
+operator||
+operator|(
+operator|(
+operator|(
+name|uint64_t
+operator|)
+name|mbs
+operator|.
+name|param
+index|[
+literal|17
+index|]
+operator|)
+operator|<<
+literal|48
+operator|)
 expr_stmt|;
 block|}
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|IS_SCSI
+argument_list|(
+name|isp
+argument_list|)
+condition|)
 block|{
 ifndef|#
 directive|ifndef
@@ -5743,14 +5735,765 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+name|isp_prt
+argument_list|(
+name|isp
+argument_list|,
+name|ISP_LOGCONFIG
+argument_list|,
+literal|"Board Type %s, Chip Revision 0x%x, %s F/W Revision %d.%d.%d"
+argument_list|,
+name|btype
+argument_list|,
+name|isp
+operator|->
+name|isp_revision
+argument_list|,
+name|dodnld
+condition|?
+literal|"loaded"
+else|:
+literal|"resident"
+argument_list|,
+name|isp
+operator|->
+name|isp_fwrev
+index|[
+literal|0
+index|]
+argument_list|,
+name|isp
+operator|->
+name|isp_fwrev
+index|[
+literal|1
+index|]
+argument_list|,
+name|isp
+operator|->
+name|isp_fwrev
+index|[
+literal|2
+index|]
+argument_list|)
+expr_stmt|;
+name|fwt
+operator|=
+name|isp
+operator|->
+name|isp_fwattr
+expr_stmt|;
 if|if
 condition|(
-operator|!
 name|IS_24XX
 argument_list|(
 name|isp
 argument_list|)
 condition|)
+block|{
+name|buf
+operator|=
+name|FCPARAM
+argument_list|(
+name|isp
+argument_list|,
+literal|0
+argument_list|)
+operator|->
+name|isp_scratch
+expr_stmt|;
+name|ISP_SNPRINTF
+argument_list|(
+name|buf
+argument_list|,
+name|ISP_FC_SCRLEN
+argument_list|,
+literal|"Attributes:"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fwt
+operator|&
+name|ISP2400_FW_ATTR_CLASS2
+condition|)
+block|{
+name|fwt
+operator|^=
+name|ISP2400_FW_ATTR_CLASS2
+expr_stmt|;
+name|ISP_SNPRINTF
+argument_list|(
+name|buf
+argument_list|,
+name|ISP_FC_SCRLEN
+operator|-
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+literal|"%s Class2"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|fwt
+operator|&
+name|ISP2400_FW_ATTR_IP
+condition|)
+block|{
+name|fwt
+operator|^=
+name|ISP2400_FW_ATTR_IP
+expr_stmt|;
+name|ISP_SNPRINTF
+argument_list|(
+name|buf
+argument_list|,
+name|ISP_FC_SCRLEN
+operator|-
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+literal|"%s IP"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|fwt
+operator|&
+name|ISP2400_FW_ATTR_MULTIID
+condition|)
+block|{
+name|fwt
+operator|^=
+name|ISP2400_FW_ATTR_MULTIID
+expr_stmt|;
+name|ISP_SNPRINTF
+argument_list|(
+name|buf
+argument_list|,
+name|ISP_FC_SCRLEN
+operator|-
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+literal|"%s MultiID"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|fwt
+operator|&
+name|ISP2400_FW_ATTR_SB2
+condition|)
+block|{
+name|fwt
+operator|^=
+name|ISP2400_FW_ATTR_SB2
+expr_stmt|;
+name|ISP_SNPRINTF
+argument_list|(
+name|buf
+argument_list|,
+name|ISP_FC_SCRLEN
+operator|-
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+literal|"%s SB2"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|fwt
+operator|&
+name|ISP2400_FW_ATTR_T10CRC
+condition|)
+block|{
+name|fwt
+operator|^=
+name|ISP2400_FW_ATTR_T10CRC
+expr_stmt|;
+name|ISP_SNPRINTF
+argument_list|(
+name|buf
+argument_list|,
+name|ISP_FC_SCRLEN
+operator|-
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+literal|"%s T10CRC"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|fwt
+operator|&
+name|ISP2400_FW_ATTR_VI
+condition|)
+block|{
+name|fwt
+operator|^=
+name|ISP2400_FW_ATTR_VI
+expr_stmt|;
+name|ISP_SNPRINTF
+argument_list|(
+name|buf
+argument_list|,
+name|ISP_FC_SCRLEN
+operator|-
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+literal|"%s VI"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|fwt
+operator|&
+name|ISP2400_FW_ATTR_VP0
+condition|)
+block|{
+name|fwt
+operator|^=
+name|ISP2400_FW_ATTR_VP0
+expr_stmt|;
+name|ISP_SNPRINTF
+argument_list|(
+name|buf
+argument_list|,
+name|ISP_FC_SCRLEN
+operator|-
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+literal|"%s VP0_Decoupling"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|fwt
+operator|&
+name|ISP2400_FW_ATTR_EXPFW
+condition|)
+block|{
+name|fwt
+operator|^=
+name|ISP2400_FW_ATTR_EXPFW
+expr_stmt|;
+name|ISP_SNPRINTF
+argument_list|(
+name|buf
+argument_list|,
+name|ISP_FC_SCRLEN
+operator|-
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+literal|"%s (Experimental)"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+block|}
+name|fwt
+operator|&=
+operator|~
+name|ISP2400_FW_ATTR_EXTNDED
+expr_stmt|;
+if|if
+condition|(
+name|fwt
+condition|)
+block|{
+name|ISP_SNPRINTF
+argument_list|(
+name|buf
+argument_list|,
+name|ISP_FC_SCRLEN
+operator|-
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+literal|"%s (unknown 0x%08x%08x)"
+argument_list|,
+name|buf
+argument_list|,
+call|(
+name|uint32_t
+call|)
+argument_list|(
+name|fwt
+operator|>>
+literal|32
+argument_list|)
+argument_list|,
+operator|(
+name|uint32_t
+operator|)
+name|fwt
+argument_list|)
+expr_stmt|;
+block|}
+name|isp_prt
+argument_list|(
+name|isp
+argument_list|,
+name|ISP_LOGCONFIG
+argument_list|,
+literal|"%s"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|IS_FC
+argument_list|(
+name|isp
+argument_list|)
+condition|)
+block|{
+name|buf
+operator|=
+name|FCPARAM
+argument_list|(
+name|isp
+argument_list|,
+literal|0
+argument_list|)
+operator|->
+name|isp_scratch
+expr_stmt|;
+name|ISP_SNPRINTF
+argument_list|(
+name|buf
+argument_list|,
+name|ISP_FC_SCRLEN
+argument_list|,
+literal|"Attributes:"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fwt
+operator|&
+name|ISP_FW_ATTR_TMODE
+condition|)
+block|{
+name|fwt
+operator|^=
+name|ISP_FW_ATTR_TMODE
+expr_stmt|;
+name|ISP_SNPRINTF
+argument_list|(
+name|buf
+argument_list|,
+name|ISP_FC_SCRLEN
+operator|-
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+literal|"%s TargetMode"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|fwt
+operator|&
+name|ISP_FW_ATTR_SCCLUN
+condition|)
+block|{
+name|fwt
+operator|^=
+name|ISP_FW_ATTR_SCCLUN
+expr_stmt|;
+name|ISP_SNPRINTF
+argument_list|(
+name|buf
+argument_list|,
+name|ISP_FC_SCRLEN
+operator|-
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+literal|"%s SCC-Lun"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|fwt
+operator|&
+name|ISP_FW_ATTR_FABRIC
+condition|)
+block|{
+name|fwt
+operator|^=
+name|ISP_FW_ATTR_FABRIC
+expr_stmt|;
+name|ISP_SNPRINTF
+argument_list|(
+name|buf
+argument_list|,
+name|ISP_FC_SCRLEN
+operator|-
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+literal|"%s Fabric"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|fwt
+operator|&
+name|ISP_FW_ATTR_CLASS2
+condition|)
+block|{
+name|fwt
+operator|^=
+name|ISP_FW_ATTR_CLASS2
+expr_stmt|;
+name|ISP_SNPRINTF
+argument_list|(
+name|buf
+argument_list|,
+name|ISP_FC_SCRLEN
+operator|-
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+literal|"%s Class2"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|fwt
+operator|&
+name|ISP_FW_ATTR_FCTAPE
+condition|)
+block|{
+name|fwt
+operator|^=
+name|ISP_FW_ATTR_FCTAPE
+expr_stmt|;
+name|ISP_SNPRINTF
+argument_list|(
+name|buf
+argument_list|,
+name|ISP_FC_SCRLEN
+operator|-
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+literal|"%s FC-Tape"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|fwt
+operator|&
+name|ISP_FW_ATTR_IP
+condition|)
+block|{
+name|fwt
+operator|^=
+name|ISP_FW_ATTR_IP
+expr_stmt|;
+name|ISP_SNPRINTF
+argument_list|(
+name|buf
+argument_list|,
+name|ISP_FC_SCRLEN
+operator|-
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+literal|"%s IP"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|fwt
+operator|&
+name|ISP_FW_ATTR_VI
+condition|)
+block|{
+name|fwt
+operator|^=
+name|ISP_FW_ATTR_VI
+expr_stmt|;
+name|ISP_SNPRINTF
+argument_list|(
+name|buf
+argument_list|,
+name|ISP_FC_SCRLEN
+operator|-
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+literal|"%s VI"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|fwt
+operator|&
+name|ISP_FW_ATTR_VI_SOLARIS
+condition|)
+block|{
+name|fwt
+operator|^=
+name|ISP_FW_ATTR_VI_SOLARIS
+expr_stmt|;
+name|ISP_SNPRINTF
+argument_list|(
+name|buf
+argument_list|,
+name|ISP_FC_SCRLEN
+operator|-
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+literal|"%s VI_SOLARIS"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|fwt
+operator|&
+name|ISP_FW_ATTR_2KLOGINS
+condition|)
+block|{
+name|fwt
+operator|^=
+name|ISP_FW_ATTR_2KLOGINS
+expr_stmt|;
+name|ISP_SNPRINTF
+argument_list|(
+name|buf
+argument_list|,
+name|ISP_FC_SCRLEN
+operator|-
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+literal|"%s 2K-Login"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|fwt
+operator|!=
+literal|0
+condition|)
+block|{
+name|ISP_SNPRINTF
+argument_list|(
+name|buf
+argument_list|,
+name|ISP_FC_SCRLEN
+operator|-
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+literal|"%s (unknown 0x%08x%08x)"
+argument_list|,
+name|buf
+argument_list|,
+call|(
+name|uint32_t
+call|)
+argument_list|(
+name|fwt
+operator|>>
+literal|32
+argument_list|)
+argument_list|,
+operator|(
+name|uint32_t
+operator|)
+name|fwt
+argument_list|)
+expr_stmt|;
+block|}
+name|isp_prt
+argument_list|(
+name|isp
+argument_list|,
+name|ISP_LOGCONFIG
+argument_list|,
+literal|"%s"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|IS_24XX
+argument_list|(
+name|isp
+argument_list|)
+condition|)
+block|{
+name|MBSINIT
+argument_list|(
+operator|&
+name|mbs
+argument_list|,
+name|MBOX_GET_RESOURCE_COUNT
+argument_list|,
+name|MBLOGALL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|isp_mboxcmd
+argument_list|(
+name|isp
+argument_list|,
+operator|&
+name|mbs
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mbs
+operator|.
+name|param
+index|[
+literal|0
+index|]
+operator|!=
+name|MBOX_COMMAND_COMPLETE
+condition|)
+block|{
+name|ISP_RESET0
+argument_list|(
+name|isp
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|isp
+operator|->
+name|isp_maxcmds
+operator|>=
+name|mbs
+operator|.
+name|param
+index|[
+literal|3
+index|]
+condition|)
+block|{
+name|isp
+operator|->
+name|isp_maxcmds
+operator|=
+name|mbs
+operator|.
+name|param
+index|[
+literal|3
+index|]
+expr_stmt|;
+block|}
+block|}
+else|else
 block|{
 name|MBSINIT
 argument_list|(
@@ -5839,18 +6582,28 @@ argument_list|(
 name|isp
 argument_list|)
 operator|&&
-name|ISP_CAP_MULTI_ID
-argument_list|(
-name|isp
-argument_list|)
-operator|==
-literal|0
-operator|&&
 name|isp
 operator|->
 name|isp_nchan
 operator|>
 literal|1
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|IS_24XX
+argument_list|(
+name|isp
+argument_list|)
+operator|||
+operator|(
+name|fwt
+operator|&
+name|ISP2400_FW_ATTR_MULTIID
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|isp_prt
@@ -5872,6 +6625,7 @@ name|isp_nchan
 operator|=
 literal|1
 expr_stmt|;
+block|}
 block|}
 for|for
 control|(
@@ -8167,6 +8921,14 @@ name|icb_fwoptions
 operator||=
 name|ICBOPT_EXTENDED
 expr_stmt|;
+name|icbp
+operator|->
+name|icb_xfwoptions
+operator|=
+name|fcp
+operator|->
+name|isp_xfwoptions
+expr_stmt|;
 comment|/* 		 * Prefer or force Point-To-Point instead Loop? 		 */
 switch|switch
 condition|(
@@ -8183,6 +8945,13 @@ case|:
 name|icbp
 operator|->
 name|icb_xfwoptions
+operator|&=
+operator|~
+name|ICBXOPT_TOPO_MASK
+expr_stmt|;
+name|icbp
+operator|->
+name|icb_xfwoptions
 operator||=
 name|ICBXOPT_PTP_2_LOOP
 expr_stmt|;
@@ -8190,6 +8959,13 @@ break|break;
 case|case
 name|ISP_CFG_NPORT_ONLY
 case|:
+name|icbp
+operator|->
+name|icb_xfwoptions
+operator|&=
+operator|~
+name|ICBXOPT_TOPO_MASK
+expr_stmt|;
 name|icbp
 operator|->
 name|icb_xfwoptions
@@ -8203,17 +8979,56 @@ case|:
 name|icbp
 operator|->
 name|icb_xfwoptions
+operator|&=
+operator|~
+name|ICBXOPT_TOPO_MASK
+expr_stmt|;
+name|icbp
+operator|->
+name|icb_xfwoptions
 operator||=
 name|ICBXOPT_LOOP_ONLY
 expr_stmt|;
 break|break;
 default|default:
+comment|/* 			 * Let NVRAM settings define it if they are sane 			 */
+switch|switch
+condition|(
+name|icbp
+operator|->
+name|icb_xfwoptions
+operator|&
+name|ICBXOPT_TOPO_MASK
+condition|)
+block|{
+case|case
+name|ICBXOPT_PTP_2_LOOP
+case|:
+case|case
+name|ICBXOPT_PTP_ONLY
+case|:
+case|case
+name|ICBXOPT_LOOP_ONLY
+case|:
+case|case
+name|ICBXOPT_LOOP_2_PTP
+case|:
+break|break;
+default|default:
+name|icbp
+operator|->
+name|icb_xfwoptions
+operator|&=
+operator|~
+name|ICBXOPT_TOPO_MASK
+expr_stmt|;
 name|icbp
 operator|->
 name|icb_xfwoptions
 operator||=
 name|ICBXOPT_LOOP_2_PTP
 expr_stmt|;
+block|}
 break|break;
 block|}
 if|if
@@ -8276,6 +9091,14 @@ operator|=
 literal|10
 expr_stmt|;
 block|}
+name|icbp
+operator|->
+name|icb_zfwoptions
+operator|=
+name|fcp
+operator|->
+name|isp_zfwoptions
+expr_stmt|;
 if|if
 condition|(
 name|isp
@@ -8285,6 +9108,13 @@ operator|&
 name|ISP_CFG_ONEGB
 condition|)
 block|{
+name|icbp
+operator|->
+name|icb_zfwoptions
+operator|&=
+operator|~
+name|ICBZOPT_RATE_MASK
+expr_stmt|;
 name|icbp
 operator|->
 name|icb_zfwoptions
@@ -8305,34 +9135,54 @@ block|{
 name|icbp
 operator|->
 name|icb_zfwoptions
+operator|&=
+operator|~
+name|ICBZOPT_RATE_MASK
+expr_stmt|;
+name|icbp
+operator|->
+name|icb_zfwoptions
 operator||=
 name|ICBZOPT_RATE_TWOGB
 expr_stmt|;
 block|}
 else|else
 block|{
+switch|switch
+condition|(
+name|icbp
+operator|->
+name|icb_zfwoptions
+operator|&
+name|ICBZOPT_RATE_MASK
+condition|)
+block|{
+case|case
+name|ICBZOPT_RATE_ONEGB
+case|:
+case|case
+name|ICBZOPT_RATE_TWOGB
+case|:
+case|case
+name|ICBZOPT_RATE_AUTO
+case|:
+break|break;
+default|default:
+name|icbp
+operator|->
+name|icb_zfwoptions
+operator|&=
+operator|~
+name|ICBZOPT_RATE_MASK
+expr_stmt|;
 name|icbp
 operator|->
 name|icb_zfwoptions
 operator||=
 name|ICBZOPT_RATE_AUTO
 expr_stmt|;
+break|break;
 block|}
-if|if
-condition|(
-name|fcp
-operator|->
-name|isp_zfwoptions
-operator|&
-name|ICBZOPT_50_OHM
-condition|)
-block|{
-name|icbp
-operator|->
-name|icb_zfwoptions
-operator||=
-name|ICBZOPT_50_OHM
-expr_stmt|;
 block|}
 block|}
 block|}
@@ -9106,6 +9956,11 @@ decl_stmt|;
 name|int
 name|chan
 decl_stmt|;
+name|int
+name|ownloopid
+init|=
+literal|0
+decl_stmt|;
 comment|/* 	 * Check to see whether all channels have *some* kind of role 	 */
 for|for
 control|(
@@ -9391,6 +10246,7 @@ operator|=
 name|ICB_DFLT_THROTTLE
 expr_stmt|;
 block|}
+comment|/* 	 * Set target exchange count. Take half if we are supporting both roles. 	 */
 if|if
 condition|(
 name|icbp
@@ -9400,59 +10256,45 @@ operator|&
 name|ICB2400_OPT1_TGT_ENABLE
 condition|)
 block|{
-comment|/* 		 * Get current resource count 		 */
-name|MBSINIT
-argument_list|(
-operator|&
-name|mbs
-argument_list|,
-name|MBOX_GET_RESOURCE_COUNT
-argument_list|,
-name|MBLOGALL
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|mbs
-operator|.
-name|obits
-operator|=
-literal|0x4cf
-expr_stmt|;
-name|isp_mboxcmd
-argument_list|(
-name|isp
-argument_list|,
-operator|&
-name|mbs
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|mbs
-operator|.
-name|param
-index|[
-literal|0
-index|]
-operator|!=
-name|MBOX_COMMAND_COMPLETE
-condition|)
-block|{
-return|return;
-block|}
 name|icbp
 operator|->
 name|icb_xchgcnt
 operator|=
-name|mbs
-operator|.
-name|param
-index|[
-literal|3
-index|]
+name|isp
+operator|->
+name|isp_maxcmds
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|icbp
+operator|->
+name|icb_fwoptions1
+operator|&
+name|ICB2400_OPT1_INI_DISABLE
+operator|)
+operator|==
+literal|0
+condition|)
+name|icbp
+operator|->
+name|icb_xchgcnt
+operator|>>=
+literal|1
 expr_stmt|;
 block|}
+name|ownloopid
+operator|=
+operator|(
+name|isp
+operator|->
+name|isp_confopts
+operator|&
+name|ISP_CFG_OWNLOOPID
+operator|)
+operator|!=
+literal|0
+expr_stmt|;
 name|icbp
 operator|->
 name|icb_hardaddr
@@ -9476,8 +10318,15 @@ name|icb_hardaddr
 operator|=
 literal|0
 expr_stmt|;
+name|ownloopid
+operator|=
+literal|0
+expr_stmt|;
 block|}
-comment|/* 	 * Force this on. 	 */
+if|if
+condition|(
+name|ownloopid
+condition|)
 name|icbp
 operator|->
 name|icb_fwoptions1
@@ -9501,14 +10350,6 @@ operator|&
 name|ISP_CFG_PORT_PREF
 condition|)
 block|{
-if|#
-directive|if
-literal|0
-block|case ISP_CFG_NPORT:
-comment|/* 		 * XXX: This causes the f/w to crash. 		 */
-block|icbp->icb_fwoptions2&= ~ICB2400_OPT2_TOPO_MASK; 		icbp->icb_fwoptions2 |= ICB2400_OPT2_PTP_2_LOOP; 		break;
-endif|#
-directive|endif
 case|case
 name|ISP_CFG_NPORT_ONLY
 case|:
@@ -9544,6 +10385,7 @@ name|ICB2400_OPT2_LOOP_ONLY
 expr_stmt|;
 break|break;
 default|default:
+comment|/* ISP_CFG_PTP_2_LOOP not available in 24XX/25XX */
 name|icbp
 operator|->
 name|icb_fwoptions2
@@ -9559,13 +10401,6 @@ name|ICB2400_OPT2_LOOP_2_PTP
 expr_stmt|;
 break|break;
 block|}
-comment|/* force this on for now */
-name|icbp
-operator|->
-name|icb_fwoptions2
-operator||=
-name|ICB2400_OPT2_ZIO
-expr_stmt|;
 switch|switch
 condition|(
 name|icbp
@@ -9617,14 +10452,6 @@ name|ICB2400_OPT2_TIMER_MASK
 expr_stmt|;
 break|break;
 block|}
-comment|/* 	 * We don't support FCTAPE, so clear it. 	 */
-name|icbp
-operator|->
-name|icb_fwoptions2
-operator|&=
-operator|~
-name|ICB2400_OPT2_FCTAPE
-expr_stmt|;
 name|icbp
 operator|->
 name|icb_fwoptions3
@@ -9633,6 +10460,26 @@ name|fcp
 operator|->
 name|isp_zfwoptions
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|icbp
+operator|->
+name|icb_fwoptions3
+operator|&
+name|ICB2400_OPT3_RSPSZ_MASK
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|icbp
+operator|->
+name|icb_fwoptions3
+operator||=
+name|ICB2400_OPT3_RSPSZ_24
+expr_stmt|;
+block|}
 name|icbp
 operator|->
 name|icb_fwoptions3
@@ -9690,6 +10537,30 @@ operator||=
 name|ICB2400_OPT3_RATE_FOURGB
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|IS_25XX
+argument_list|(
+name|isp
+argument_list|)
+operator|&&
+operator|(
+name|isp
+operator|->
+name|isp_confopts
+operator|&
+name|ISP_CFG_EIGHTGB
+operator|)
+condition|)
+block|{
+name|icbp
+operator|->
+name|icb_fwoptions3
+operator||=
+name|ICB2400_OPT3_RATE_EIGHTGB
+expr_stmt|;
+block|}
 else|else
 block|{
 name|icbp
@@ -9701,13 +10572,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|(
-name|isp
-operator|->
-name|isp_confopts
-operator|&
-name|ISP_CFG_OWNLOOPID
-operator|)
+name|ownloopid
 operator|==
 literal|0
 condition|)
@@ -12230,6 +13095,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/*  * Pre-24XX fabric port logout  *  * Note that portid is not used  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -13138,16 +14007,6 @@ index|]
 operator|=
 name|loopid
 expr_stmt|;
-name|mbs
-operator|.
-name|ibits
-operator|=
-operator|(
-literal|1
-operator|<<
-literal|10
-operator|)
-expr_stmt|;
 if|if
 condition|(
 name|nodename
@@ -13163,24 +14022,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|ISP_CAP_MULTI_ID
-argument_list|(
-name|isp
-argument_list|)
-condition|)
-block|{
-name|mbs
-operator|.
-name|ibits
-operator||=
-operator|(
-literal|1
-operator|<<
-literal|9
-operator|)
-expr_stmt|;
 name|mbs
 operator|.
 name|param
@@ -13191,9 +14032,14 @@ operator|=
 name|chan
 expr_stmt|;
 block|}
-block|}
 else|else
 block|{
+name|mbs
+operator|.
+name|ibits
+operator|=
+literal|3
+expr_stmt|;
 name|mbs
 operator|.
 name|param
@@ -13974,14 +14820,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ISP_CAP_MULTI_ID
-argument_list|(
-name|isp
-argument_list|)
-condition|)
-block|{
 name|mbs
 operator|.
 name|param
@@ -13991,27 +14829,6 @@ index|]
 operator|=
 name|chan
 expr_stmt|;
-name|mbs
-operator|.
-name|ibits
-operator|=
-operator|(
-literal|1
-operator|<<
-literal|9
-operator|)
-expr_stmt|;
-name|mbs
-operator|.
-name|obits
-operator|=
-operator|(
-literal|1
-operator|<<
-literal|7
-operator|)
-expr_stmt|;
-block|}
 name|isp_mboxcmd
 argument_list|(
 name|isp
@@ -14560,71 +15377,48 @@ name|isp
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|check_for_fabric
+condition|)
+block|{
+comment|/* 				 * The mbs is still hanging out from the MBOX_GET_LOOP_ID above. 				 */
 name|fcp
 operator|->
-name|inorder
+name|isp_fabric_params
 operator|=
-operator|(
 name|mbs
 operator|.
 name|param
 index|[
 literal|7
 index|]
-operator|&
-name|ISP24XX_INORDER
-operator|)
-operator|!=
-literal|0
 expr_stmt|;
-if|if
-condition|(
-name|ISP_FW_NEWER_THAN
-argument_list|(
-name|isp
-argument_list|,
-literal|4
-argument_list|,
-literal|0
-argument_list|,
-literal|27
-argument_list|)
-condition|)
-block|{
-name|fcp
-operator|->
-name|npiv_fabric
-operator|=
-operator|(
-name|mbs
-operator|.
-name|param
-index|[
-literal|7
-index|]
-operator|&
-name|ISP24XX_NPIV_SAN
-operator|)
-operator|!=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|fcp
-operator|->
-name|npiv_fabric
-condition|)
-block|{
 name|isp_prt
 argument_list|(
 name|isp
 argument_list|,
 name|ISP_LOGCONFIG
 argument_list|,
-literal|"fabric supports NP-IV"
+literal|"fabric params 0x%x"
+argument_list|,
+name|mbs
+operator|.
+name|param
+index|[
+literal|7
+index|]
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
+name|fcp
+operator|->
+name|isp_fabric_params
+operator|=
+literal|0
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -15020,7 +15814,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Complete the synchronization of our Port Database.  *  * At this point, we've scanned the local loop (if any) and the fabric  * and performed fabric logins on all new devices.  *  * Our task here is to go through our port database and remove any entities  * that are still marked probational (issuing PLOGO for ones which we had  * PLOGI'd into) or are dead.  *  * Our task here is to also check policy to decide whether devices which  * have *changed* in some way should still be kept active. For example,  * if a device has just changed PortID, we can either elect to treat it  * as an old device or as a newly arrived device (and notify the outer  * layer appropriately).  *  * We also do initiator map target id assignment here for new initiator  * devices and refresh old ones ot make sure that they point to the corret  * entities.  */
+comment|/*  * Complete the synchronization of our Port Database.  *  * At this point, we've scanned the local loop (if any) and the fabric  * and performed fabric logins on all new devices.  *  * Our task here is to go through our port database and remove any entities  * that are still marked probational (issuing PLOGO for ones which we had  * PLOGI'd into) or are dead.  *  * Our task here is to also check policy to decide whether devices which  * have *changed* in some way should still be kept active. For example,  * if a device has just changed PortID, we can either elect to treat it  * as an old device or as a newly arrived device (and notify the outer  * layer appropriately).  *  * We also do initiator map target id assignment here for new initiator  * devices and refresh old ones ot make sure that they point to the correct  * entities.  */
 end_comment
 
 begin_function
@@ -23465,6 +24259,32 @@ argument_list|(
 name|xs
 argument_list|)
 expr_stmt|;
+name|FCP_NEXT_CRN
+argument_list|(
+name|isp
+argument_list|,
+name|xs
+argument_list|,
+name|t7
+operator|->
+name|req_crn
+argument_list|,
+name|XS_CHANNEL
+argument_list|(
+name|xs
+argument_list|)
+argument_list|,
+name|XS_TGT
+argument_list|(
+name|xs
+argument_list|)
+argument_list|,
+name|XS_LUN
+argument_list|(
+name|xs
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|tptr
 operator|=
 operator|&
@@ -26260,7 +27080,7 @@ literal|1
 init|;
 name|i
 operator|<
-name|MAX_MAILBOX
+name|ISP_NMBOX
 argument_list|(
 name|isp
 argument_list|)
@@ -34694,44 +35514,44 @@ end_function
 begin_define
 define|#
 directive|define
-name|HIWRD
+name|ISP_SCSI_IBITS
 parameter_list|(
-name|x
+name|op
 parameter_list|)
-value|((x)>> 16)
+value|(mbpscsi[((op)<<1)])
 end_define
 
 begin_define
 define|#
 directive|define
-name|LOWRD
+name|ISP_SCSI_OBITS
 parameter_list|(
-name|x
+name|op
 parameter_list|)
-value|((x)& 0xffff)
+value|(mbpscsi[((op)<<1) + 1])
 end_define
 
 begin_define
 define|#
 directive|define
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 parameter_list|(
-name|a
+name|in
 parameter_list|,
-name|b
+name|out
 parameter_list|)
-value|(((a)<< 16) | (b))
+value|in, out
 end_define
 
 begin_decl_stmt
 specifier|static
 specifier|const
-name|uint32_t
+name|uint8_t
 name|mbpscsi
 index|[]
 init|=
 block|{
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x01
 argument_list|,
@@ -34739,7 +35559,7 @@ literal|0x01
 argument_list|)
 block|,
 comment|/* 0x00: MBOX_NO_OP */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x1f
 argument_list|,
@@ -34747,7 +35567,7 @@ literal|0x01
 argument_list|)
 block|,
 comment|/* 0x01: MBOX_LOAD_RAM */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x03
 argument_list|,
@@ -34755,7 +35575,7 @@ literal|0x01
 argument_list|)
 block|,
 comment|/* 0x02: MBOX_EXEC_FIRMWARE */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x1f
 argument_list|,
@@ -34763,7 +35583,7 @@ literal|0x01
 argument_list|)
 block|,
 comment|/* 0x03: MBOX_DUMP_RAM */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x07
 argument_list|,
@@ -34771,7 +35591,7 @@ literal|0x07
 argument_list|)
 block|,
 comment|/* 0x04: MBOX_WRITE_RAM_WORD */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x03
 argument_list|,
@@ -34779,7 +35599,7 @@ literal|0x07
 argument_list|)
 block|,
 comment|/* 0x05: MBOX_READ_RAM_WORD */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x3f
 argument_list|,
@@ -34787,7 +35607,7 @@ literal|0x3f
 argument_list|)
 block|,
 comment|/* 0x06: MBOX_MAILBOX_REG_TEST */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x07
 argument_list|,
@@ -34795,7 +35615,7 @@ literal|0x07
 argument_list|)
 block|,
 comment|/* 0x07: MBOX_VERIFY_CHECKSUM	*/
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x01
 argument_list|,
@@ -34803,7 +35623,7 @@ literal|0x0f
 argument_list|)
 block|,
 comment|/* 0x08: MBOX_ABOUT_FIRMWARE */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -34811,7 +35631,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x09: */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -34819,7 +35639,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x0a: */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -34827,7 +35647,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x0b: */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -34835,7 +35655,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x0c: */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -34843,7 +35663,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x0d: */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x01
 argument_list|,
@@ -34851,7 +35671,7 @@ literal|0x05
 argument_list|)
 block|,
 comment|/* 0x0e: MBOX_CHECK_FIRMWARE */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -34859,7 +35679,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x0f: */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x1f
 argument_list|,
@@ -34867,7 +35687,7 @@ literal|0x1f
 argument_list|)
 block|,
 comment|/* 0x10: MBOX_INIT_REQ_QUEUE */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x3f
 argument_list|,
@@ -34875,7 +35695,7 @@ literal|0x3f
 argument_list|)
 block|,
 comment|/* 0x11: MBOX_INIT_RES_QUEUE */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x0f
 argument_list|,
@@ -34883,7 +35703,7 @@ literal|0x0f
 argument_list|)
 block|,
 comment|/* 0x12: MBOX_EXECUTE_IOCB */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x03
 argument_list|,
@@ -34891,7 +35711,7 @@ literal|0x03
 argument_list|)
 block|,
 comment|/* 0x13: MBOX_WAKE_UP	*/
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x01
 argument_list|,
@@ -34899,7 +35719,7 @@ literal|0x3f
 argument_list|)
 block|,
 comment|/* 0x14: MBOX_STOP_FIRMWARE */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x0f
 argument_list|,
@@ -34907,7 +35727,7 @@ literal|0x0f
 argument_list|)
 block|,
 comment|/* 0x15: MBOX_ABORT */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x03
 argument_list|,
@@ -34915,7 +35735,7 @@ literal|0x03
 argument_list|)
 block|,
 comment|/* 0x16: MBOX_ABORT_DEVICE */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x07
 argument_list|,
@@ -34923,7 +35743,7 @@ literal|0x07
 argument_list|)
 block|,
 comment|/* 0x17: MBOX_ABORT_TARGET */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x07
 argument_list|,
@@ -34931,7 +35751,7 @@ literal|0x07
 argument_list|)
 block|,
 comment|/* 0x18: MBOX_BUS_RESET */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x03
 argument_list|,
@@ -34939,7 +35759,7 @@ literal|0x07
 argument_list|)
 block|,
 comment|/* 0x19: MBOX_STOP_QUEUE */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x03
 argument_list|,
@@ -34947,7 +35767,7 @@ literal|0x07
 argument_list|)
 block|,
 comment|/* 0x1a: MBOX_START_QUEUE */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x03
 argument_list|,
@@ -34955,7 +35775,7 @@ literal|0x07
 argument_list|)
 block|,
 comment|/* 0x1b: MBOX_SINGLE_STEP_QUEUE */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x03
 argument_list|,
@@ -34963,7 +35783,7 @@ literal|0x07
 argument_list|)
 block|,
 comment|/* 0x1c: MBOX_ABORT_QUEUE */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x03
 argument_list|,
@@ -34971,7 +35791,7 @@ literal|0x4f
 argument_list|)
 block|,
 comment|/* 0x1d: MBOX_GET_DEV_QUEUE_STATUS */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -34979,7 +35799,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x1e: */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x01
 argument_list|,
@@ -34987,7 +35807,7 @@ literal|0x07
 argument_list|)
 block|,
 comment|/* 0x1f: MBOX_GET_FIRMWARE_STATUS */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x01
 argument_list|,
@@ -34995,7 +35815,7 @@ literal|0x07
 argument_list|)
 block|,
 comment|/* 0x20: MBOX_GET_INIT_SCSI_ID */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x01
 argument_list|,
@@ -35003,7 +35823,7 @@ literal|0x07
 argument_list|)
 block|,
 comment|/* 0x21: MBOX_GET_SELECT_TIMEOUT */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x01
 argument_list|,
@@ -35011,7 +35831,7 @@ literal|0xc7
 argument_list|)
 block|,
 comment|/* 0x22: MBOX_GET_RETRY_COUNT	*/
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x01
 argument_list|,
@@ -35019,7 +35839,7 @@ literal|0x07
 argument_list|)
 block|,
 comment|/* 0x23: MBOX_GET_TAG_AGE_LIMIT */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x01
 argument_list|,
@@ -35027,7 +35847,7 @@ literal|0x03
 argument_list|)
 block|,
 comment|/* 0x24: MBOX_GET_CLOCK_RATE */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x01
 argument_list|,
@@ -35035,7 +35855,7 @@ literal|0x07
 argument_list|)
 block|,
 comment|/* 0x25: MBOX_GET_ACT_NEG_STATE */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x01
 argument_list|,
@@ -35043,7 +35863,7 @@ literal|0x07
 argument_list|)
 block|,
 comment|/* 0x26: MBOX_GET_ASYNC_DATA_SETUP_TIME */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x01
 argument_list|,
@@ -35051,7 +35871,7 @@ literal|0x07
 argument_list|)
 block|,
 comment|/* 0x27: MBOX_GET_PCI_PARAMS */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x03
 argument_list|,
@@ -35059,7 +35879,7 @@ literal|0x4f
 argument_list|)
 block|,
 comment|/* 0x28: MBOX_GET_TARGET_PARAMS */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x03
 argument_list|,
@@ -35067,7 +35887,7 @@ literal|0x0f
 argument_list|)
 block|,
 comment|/* 0x29: MBOX_GET_DEV_QUEUE_PARAMS */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x01
 argument_list|,
@@ -35075,7 +35895,7 @@ literal|0x07
 argument_list|)
 block|,
 comment|/* 0x2a: MBOX_GET_RESET_DELAY_PARAMS */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -35083,7 +35903,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x2b: */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -35091,7 +35911,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x2c: */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -35099,7 +35919,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x2d: */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -35107,7 +35927,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x2e: */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -35115,7 +35935,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x2f: */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x03
 argument_list|,
@@ -35123,7 +35943,7 @@ literal|0x03
 argument_list|)
 block|,
 comment|/* 0x30: MBOX_SET_INIT_SCSI_ID */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x07
 argument_list|,
@@ -35131,7 +35951,7 @@ literal|0x07
 argument_list|)
 block|,
 comment|/* 0x31: MBOX_SET_SELECT_TIMEOUT */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0xc7
 argument_list|,
@@ -35139,7 +35959,7 @@ literal|0xc7
 argument_list|)
 block|,
 comment|/* 0x32: MBOX_SET_RETRY_COUNT	*/
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x07
 argument_list|,
@@ -35147,7 +35967,7 @@ literal|0x07
 argument_list|)
 block|,
 comment|/* 0x33: MBOX_SET_TAG_AGE_LIMIT */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x03
 argument_list|,
@@ -35155,7 +35975,7 @@ literal|0x03
 argument_list|)
 block|,
 comment|/* 0x34: MBOX_SET_CLOCK_RATE */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x07
 argument_list|,
@@ -35163,7 +35983,7 @@ literal|0x07
 argument_list|)
 block|,
 comment|/* 0x35: MBOX_SET_ACT_NEG_STATE */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x07
 argument_list|,
@@ -35171,7 +35991,7 @@ literal|0x07
 argument_list|)
 block|,
 comment|/* 0x36: MBOX_SET_ASYNC_DATA_SETUP_TIME */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x07
 argument_list|,
@@ -35179,7 +35999,7 @@ literal|0x07
 argument_list|)
 block|,
 comment|/* 0x37: MBOX_SET_PCI_CONTROL_PARAMS */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x4f
 argument_list|,
@@ -35187,7 +36007,7 @@ literal|0x4f
 argument_list|)
 block|,
 comment|/* 0x38: MBOX_SET_TARGET_PARAMS */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x0f
 argument_list|,
@@ -35195,7 +36015,7 @@ literal|0x0f
 argument_list|)
 block|,
 comment|/* 0x39: MBOX_SET_DEV_QUEUE_PARAMS */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x07
 argument_list|,
@@ -35203,7 +36023,7 @@ literal|0x07
 argument_list|)
 block|,
 comment|/* 0x3a: MBOX_SET_RESET_DELAY_PARAMS */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -35211,7 +36031,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x3b: */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -35219,7 +36039,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x3c: */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -35227,7 +36047,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x3d: */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -35235,7 +36055,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x3e: */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -35243,7 +36063,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x3f: */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x01
 argument_list|,
@@ -35251,7 +36071,7 @@ literal|0x03
 argument_list|)
 block|,
 comment|/* 0x40: MBOX_RETURN_BIOS_BLOCK_ADDR */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x3f
 argument_list|,
@@ -35259,7 +36079,7 @@ literal|0x01
 argument_list|)
 block|,
 comment|/* 0x41: MBOX_WRITE_FOUR_RAM_WORDS */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x03
 argument_list|,
@@ -35267,7 +36087,7 @@ literal|0x07
 argument_list|)
 block|,
 comment|/* 0x42: MBOX_EXEC_BIOS_IOCB */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -35275,7 +36095,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x43: */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -35283,7 +36103,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x44: */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x03
 argument_list|,
@@ -35291,7 +36111,7 @@ literal|0x03
 argument_list|)
 block|,
 comment|/* 0x45: SET SYSTEM PARAMETER */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x01
 argument_list|,
@@ -35299,7 +36119,7 @@ literal|0x03
 argument_list|)
 block|,
 comment|/* 0x46: GET SYSTEM PARAMETER */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -35307,7 +36127,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x47: */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x01
 argument_list|,
@@ -35315,7 +36135,7 @@ literal|0xcf
 argument_list|)
 block|,
 comment|/* 0x48: GET SCAM CONFIGURATION */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0xcf
 argument_list|,
@@ -35323,7 +36143,7 @@ literal|0xcf
 argument_list|)
 block|,
 comment|/* 0x49: SET SCAM CONFIGURATION */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x03
 argument_list|,
@@ -35331,7 +36151,7 @@ literal|0x03
 argument_list|)
 block|,
 comment|/* 0x4a: MBOX_SET_FIRMWARE_FEATURES */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x01
 argument_list|,
@@ -35339,7 +36159,7 @@ literal|0x03
 argument_list|)
 block|,
 comment|/* 0x4b: MBOX_GET_FIRMWARE_FEATURES */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -35347,7 +36167,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x4c: */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -35355,7 +36175,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x4d: */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -35363,7 +36183,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x4e: */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -35371,7 +36191,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x4f: */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0xdf
 argument_list|,
@@ -35379,7 +36199,7 @@ literal|0xdf
 argument_list|)
 block|,
 comment|/* 0x50: LOAD RAM A64 */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0xdf
 argument_list|,
@@ -35387,7 +36207,7 @@ literal|0xdf
 argument_list|)
 block|,
 comment|/* 0x51: DUMP RAM A64 */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0xdf
 argument_list|,
@@ -35395,7 +36215,7 @@ literal|0xff
 argument_list|)
 block|,
 comment|/* 0x52: INITIALIZE REQUEST QUEUE A64 */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0xef
 argument_list|,
@@ -35403,7 +36223,7 @@ literal|0xff
 argument_list|)
 block|,
 comment|/* 0x53: INITIALIZE RESPONSE QUEUE A64 */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0xcf
 argument_list|,
@@ -35411,7 +36231,7 @@ literal|0x01
 argument_list|)
 block|,
 comment|/* 0x54: EXECUCUTE COMMAND IOCB A64 */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x07
 argument_list|,
@@ -35419,7 +36239,7 @@ literal|0x01
 argument_list|)
 block|,
 comment|/* 0x55: ENABLE TARGET MODE */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x03
 argument_list|,
@@ -35427,7 +36247,7 @@ literal|0x0f
 argument_list|)
 block|,
 comment|/* 0x56: GET TARGET STATUS */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -35435,7 +36255,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x57: */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -35443,7 +36263,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x58: */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -35451,7 +36271,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x59: */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x03
 argument_list|,
@@ -35459,7 +36279,7 @@ literal|0x03
 argument_list|)
 block|,
 comment|/* 0x5a: SET DATA OVERRUN RECOVERY MODE */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x01
 argument_list|,
@@ -35467,7 +36287,7 @@ literal|0x03
 argument_list|)
 block|,
 comment|/* 0x5b: GET DATA OVERRUN RECOVERY MODE */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x0f
 argument_list|,
@@ -35475,7 +36295,7 @@ literal|0x0f
 argument_list|)
 block|,
 comment|/* 0x5c: SET HOST DATA */
-name|ISPOPMAP
+name|ISP_SCSI_OPMAP
 argument_list|(
 literal|0x01
 argument_list|,
@@ -35485,6 +36305,13 @@ comment|/* 0x5d: GET NOST DATA */
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|MAX_SCSI_OPCODE
+value|0x5d
+end_define
 
 begin_decl_stmt
 specifier|static
@@ -35686,6 +36513,78 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|ISP_FC_IBITS
+parameter_list|(
+name|op
+parameter_list|)
+value|((mbpfc[((op)<<3) + 0]<< 24) | (mbpfc[((op)<<3) + 1]<< 16) | (mbpfc[((op)<<3) + 2]<< 8) | (mbpfc[((op)<<3) + 3]))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_FC_OBITS
+parameter_list|(
+name|op
+parameter_list|)
+value|((mbpfc[((op)<<3) + 4]<< 24) | (mbpfc[((op)<<3) + 5]<< 16) | (mbpfc[((op)<<3) + 6]<< 8) | (mbpfc[((op)<<3) + 7]))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_FC_OPMAP
+parameter_list|(
+name|in0
+parameter_list|,
+name|out0
+parameter_list|)
+value|0,   0,   0, in0,    0,    0,    0, out0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_FC_OPMAP_HALF
+parameter_list|(
+name|in1
+parameter_list|,
+name|in0
+parameter_list|,
+name|out1
+parameter_list|,
+name|out0
+parameter_list|)
+value|0,   0, in1, in0,    0,    0, out1, out0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_FC_OPMAP_FULL
+parameter_list|(
+name|in3
+parameter_list|,
+name|in2
+parameter_list|,
+name|in1
+parameter_list|,
+name|in0
+parameter_list|,
+name|out3
+parameter_list|,
+name|out2
+parameter_list|,
+name|out1
+parameter_list|,
+name|out0
+parameter_list|)
+value|in3, in2, in1, in0, out3, out2, out1, out0
+end_define
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -35694,7 +36593,7 @@ name|mbpfc
 index|[]
 init|=
 block|{
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x01
 argument_list|,
@@ -35702,7 +36601,7 @@ literal|0x01
 argument_list|)
 block|,
 comment|/* 0x00: MBOX_NO_OP */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x1f
 argument_list|,
@@ -35710,7 +36609,7 @@ literal|0x01
 argument_list|)
 block|,
 comment|/* 0x01: MBOX_LOAD_RAM */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x0f
 argument_list|,
@@ -35718,7 +36617,7 @@ literal|0x01
 argument_list|)
 block|,
 comment|/* 0x02: MBOX_EXEC_FIRMWARE */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0xdf
 argument_list|,
@@ -35726,7 +36625,7 @@ literal|0x01
 argument_list|)
 block|,
 comment|/* 0x03: MBOX_DUMP_RAM */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x07
 argument_list|,
@@ -35734,7 +36633,7 @@ literal|0x07
 argument_list|)
 block|,
 comment|/* 0x04: MBOX_WRITE_RAM_WORD */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x03
 argument_list|,
@@ -35742,15 +36641,27 @@ literal|0x07
 argument_list|)
 block|,
 comment|/* 0x05: MBOX_READ_RAM_WORD */
-name|ISPOPMAP
+name|ISP_FC_OPMAP_FULL
 argument_list|(
+literal|0xff
+argument_list|,
+literal|0xff
+argument_list|,
+literal|0xff
+argument_list|,
+literal|0xff
+argument_list|,
+literal|0xff
+argument_list|,
+literal|0xff
+argument_list|,
 literal|0xff
 argument_list|,
 literal|0xff
 argument_list|)
 block|,
 comment|/* 0x06: MBOX_MAILBOX_REG_TEST */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x07
 argument_list|,
@@ -35758,15 +36669,27 @@ literal|0x07
 argument_list|)
 block|,
 comment|/* 0x07: MBOX_VERIFY_CHECKSUM	*/
-name|ISPOPMAP
+name|ISP_FC_OPMAP_FULL
 argument_list|(
+literal|0x0
+argument_list|,
+literal|0x0
+argument_list|,
+literal|0x0
+argument_list|,
 literal|0x01
+argument_list|,
+literal|0x0
+argument_list|,
+literal|0x3
+argument_list|,
+literal|0x80
 argument_list|,
 literal|0x4f
 argument_list|)
 block|,
 comment|/* 0x08: MBOX_ABOUT_FIRMWARE */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0xdf
 argument_list|,
@@ -35774,7 +36697,7 @@ literal|0x01
 argument_list|)
 block|,
 comment|/* 0x09: MBOX_LOAD_RISC_RAM_2100 */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0xdf
 argument_list|,
@@ -35782,15 +36705,19 @@ literal|0x01
 argument_list|)
 block|,
 comment|/* 0x0a: DUMP RAM */
-name|ISPOPMAP
+name|ISP_FC_OPMAP_HALF
 argument_list|(
-literal|0x1ff
+literal|0x1
+argument_list|,
+literal|0xff
+argument_list|,
+literal|0x0
 argument_list|,
 literal|0x01
 argument_list|)
 block|,
 comment|/* 0x0b: MBOX_LOAD_RISC_RAM */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -35798,15 +36725,19 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x0c: */
-name|ISPOPMAP
+name|ISP_FC_OPMAP_HALF
 argument_list|(
-literal|0x10f
+literal|0x1
+argument_list|,
+literal|0x0f
+argument_list|,
+literal|0x0
 argument_list|,
 literal|0x01
 argument_list|)
 block|,
 comment|/* 0x0d: MBOX_WRITE_RAM_WORD_EXTENDED */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x01
 argument_list|,
@@ -35814,15 +36745,19 @@ literal|0x05
 argument_list|)
 block|,
 comment|/* 0x0e: MBOX_CHECK_FIRMWARE */
-name|ISPOPMAP
+name|ISP_FC_OPMAP_HALF
 argument_list|(
-literal|0x103
+literal|0x1
+argument_list|,
+literal|0x03
+argument_list|,
+literal|0x0
 argument_list|,
 literal|0x0d
 argument_list|)
 block|,
 comment|/* 0x0f: MBOX_READ_RAM_WORD_EXTENDED */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x1f
 argument_list|,
@@ -35830,7 +36765,7 @@ literal|0x11
 argument_list|)
 block|,
 comment|/* 0x10: MBOX_INIT_REQ_QUEUE */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x2f
 argument_list|,
@@ -35838,7 +36773,7 @@ literal|0x21
 argument_list|)
 block|,
 comment|/* 0x11: MBOX_INIT_RES_QUEUE */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x0f
 argument_list|,
@@ -35846,7 +36781,7 @@ literal|0x01
 argument_list|)
 block|,
 comment|/* 0x12: MBOX_EXECUTE_IOCB */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x03
 argument_list|,
@@ -35854,7 +36789,7 @@ literal|0x03
 argument_list|)
 block|,
 comment|/* 0x13: MBOX_WAKE_UP	*/
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x01
 argument_list|,
@@ -35862,7 +36797,7 @@ literal|0xff
 argument_list|)
 block|,
 comment|/* 0x14: MBOX_STOP_FIRMWARE */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x4f
 argument_list|,
@@ -35870,7 +36805,7 @@ literal|0x01
 argument_list|)
 block|,
 comment|/* 0x15: MBOX_ABORT */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x07
 argument_list|,
@@ -35878,7 +36813,7 @@ literal|0x01
 argument_list|)
 block|,
 comment|/* 0x16: MBOX_ABORT_DEVICE */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x07
 argument_list|,
@@ -35886,7 +36821,7 @@ literal|0x01
 argument_list|)
 block|,
 comment|/* 0x17: MBOX_ABORT_TARGET */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x03
 argument_list|,
@@ -35894,7 +36829,7 @@ literal|0x03
 argument_list|)
 block|,
 comment|/* 0x18: MBOX_BUS_RESET */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x07
 argument_list|,
@@ -35902,7 +36837,7 @@ literal|0x05
 argument_list|)
 block|,
 comment|/* 0x19: MBOX_STOP_QUEUE */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x07
 argument_list|,
@@ -35910,7 +36845,7 @@ literal|0x05
 argument_list|)
 block|,
 comment|/* 0x1a: MBOX_START_QUEUE */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x07
 argument_list|,
@@ -35918,7 +36853,7 @@ literal|0x05
 argument_list|)
 block|,
 comment|/* 0x1b: MBOX_SINGLE_STEP_QUEUE */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x07
 argument_list|,
@@ -35926,7 +36861,7 @@ literal|0x05
 argument_list|)
 block|,
 comment|/* 0x1c: MBOX_ABORT_QUEUE */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x07
 argument_list|,
@@ -35934,7 +36869,7 @@ literal|0x03
 argument_list|)
 block|,
 comment|/* 0x1d: MBOX_GET_DEV_QUEUE_STATUS */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -35942,7 +36877,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x1e: */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x01
 argument_list|,
@@ -35950,15 +36885,19 @@ literal|0x07
 argument_list|)
 block|,
 comment|/* 0x1f: MBOX_GET_FIRMWARE_STATUS */
-name|ISPOPMAP
+name|ISP_FC_OPMAP_HALF
 argument_list|(
+literal|0x2
+argument_list|,
 literal|0x01
 argument_list|,
-literal|0x4f
+literal|0x0
+argument_list|,
+literal|0xcf
 argument_list|)
 block|,
 comment|/* 0x20: MBOX_GET_LOOP_ID */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -35966,7 +36905,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x21: */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x01
 argument_list|,
@@ -35974,7 +36913,7 @@ literal|0x07
 argument_list|)
 block|,
 comment|/* 0x22: MBOX_GET_RETRY_COUNT	*/
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -35982,7 +36921,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x23: */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -35990,7 +36929,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x24: */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -35998,7 +36937,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x25: */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -36006,7 +36945,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x26: */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -36014,7 +36953,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x27: */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x01
 argument_list|,
@@ -36022,7 +36961,7 @@ literal|0x03
 argument_list|)
 block|,
 comment|/* 0x28: MBOX_GET_FIRMWARE_OPTIONS */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x03
 argument_list|,
@@ -36030,7 +36969,7 @@ literal|0x07
 argument_list|)
 block|,
 comment|/* 0x29: MBOX_GET_PORT_QUEUE_PARAMS */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -36038,7 +36977,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x2a: */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -36046,7 +36985,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x2b: */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -36054,7 +36993,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x2c: */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -36062,7 +37001,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x2d: */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -36070,7 +37009,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x2e: */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -36078,7 +37017,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x2f: */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -36086,7 +37025,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x30: */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -36094,7 +37033,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x31: */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x07
 argument_list|,
@@ -36102,7 +37041,7 @@ literal|0x07
 argument_list|)
 block|,
 comment|/* 0x32: MBOX_SET_RETRY_COUNT	*/
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -36110,7 +37049,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x33: */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -36118,7 +37057,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x34: */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -36126,7 +37065,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x35: */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -36134,7 +37073,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x36: */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -36142,7 +37081,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x37: */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x0f
 argument_list|,
@@ -36150,7 +37089,7 @@ literal|0x01
 argument_list|)
 block|,
 comment|/* 0x38: MBOX_SET_FIRMWARE_OPTIONS */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x0f
 argument_list|,
@@ -36158,7 +37097,7 @@ literal|0x07
 argument_list|)
 block|,
 comment|/* 0x39: MBOX_SET_PORT_QUEUE_PARAMS */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -36166,7 +37105,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x3a: */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -36174,7 +37113,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x3b: */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -36182,7 +37121,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x3c: */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -36190,7 +37129,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x3d: */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -36198,7 +37137,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x3e: */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -36206,7 +37145,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x3f: */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x03
 argument_list|,
@@ -36214,7 +37153,7 @@ literal|0x01
 argument_list|)
 block|,
 comment|/* 0x40: MBOX_LOOP_PORT_BYPASS */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x03
 argument_list|,
@@ -36222,15 +37161,19 @@ literal|0x01
 argument_list|)
 block|,
 comment|/* 0x41: MBOX_LOOP_PORT_ENABLE */
-name|ISPOPMAP
+name|ISP_FC_OPMAP_HALF
 argument_list|(
-literal|0x03
+literal|0x0
 argument_list|,
-literal|0x07
+literal|0x01
+argument_list|,
+literal|0x3
+argument_list|,
+literal|0xcf
 argument_list|)
 block|,
 comment|/* 0x42: MBOX_GET_RESOURCE_COUNT */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x01
 argument_list|,
@@ -36238,7 +37181,7 @@ literal|0x01
 argument_list|)
 block|,
 comment|/* 0x43: MBOX_REQUEST_OFFLINE_MODE */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -36246,7 +37189,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x44: */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -36254,7 +37197,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x45: */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -36262,7 +37205,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x46: */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0xcf
 argument_list|,
@@ -36270,7 +37213,7 @@ literal|0x03
 argument_list|)
 block|,
 comment|/* 0x47: GET PORT_DATABASE ENHANCED */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0xcd
 argument_list|,
@@ -36278,7 +37221,7 @@ literal|0x01
 argument_list|)
 block|,
 comment|/* 0x48: MBOX_INIT_FIRMWARE_MULTI_ID */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0xcd
 argument_list|,
@@ -36286,15 +37229,19 @@ literal|0x01
 argument_list|)
 block|,
 comment|/* 0x49: MBOX_GET_VP_DATABASE */
-name|ISPOPMAP
+name|ISP_FC_OPMAP_HALF
 argument_list|(
-literal|0x2cd
+literal|0x2
+argument_list|,
+literal|0xcd
+argument_list|,
+literal|0x0
 argument_list|,
 literal|0x01
 argument_list|)
 block|,
 comment|/* 0x4a: MBOX_GET_VP_DATABASE_ENTRY */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -36302,7 +37249,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x4b: */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -36310,7 +37257,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x4c: */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -36318,7 +37265,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x4d: */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -36326,7 +37273,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x4e: */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -36334,7 +37281,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x4f: */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -36342,7 +37289,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x50: */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -36350,7 +37297,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x51: */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -36358,7 +37305,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x52: */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -36366,7 +37313,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x53: */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0xcf
 argument_list|,
@@ -36374,7 +37321,7 @@ literal|0x01
 argument_list|)
 block|,
 comment|/* 0x54: EXECUTE IOCB A64 */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -36382,7 +37329,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x55: */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -36390,7 +37337,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x56: */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -36398,7 +37345,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x57: */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -36406,7 +37353,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x58: */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -36414,7 +37361,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x59: */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -36422,7 +37369,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x5a: */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x03
 argument_list|,
@@ -36430,7 +37377,7 @@ literal|0x01
 argument_list|)
 block|,
 comment|/* 0x5b: MBOX_DRIVER_HEARTBEAT */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0xcf
 argument_list|,
@@ -36438,7 +37385,7 @@ literal|0x01
 argument_list|)
 block|,
 comment|/* 0x5c: MBOX_FW_HEARTBEAT */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x07
 argument_list|,
@@ -36446,7 +37393,7 @@ literal|0x03
 argument_list|)
 block|,
 comment|/* 0x5d: MBOX_GET_SET_DATA_RATE */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -36454,7 +37401,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x5e: */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -36462,7 +37409,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x5f: */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0xcd
 argument_list|,
@@ -36470,7 +37417,7 @@ literal|0x01
 argument_list|)
 block|,
 comment|/* 0x60: MBOX_INIT_FIRMWARE */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -36478,7 +37425,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x61: */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x01
 argument_list|,
@@ -36486,7 +37433,7 @@ literal|0x01
 argument_list|)
 block|,
 comment|/* 0x62: MBOX_INIT_LIP */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0xcd
 argument_list|,
@@ -36494,7 +37441,7 @@ literal|0x03
 argument_list|)
 block|,
 comment|/* 0x63: MBOX_GET_FC_AL_POSITION_MAP */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0xcf
 argument_list|,
@@ -36502,7 +37449,7 @@ literal|0x01
 argument_list|)
 block|,
 comment|/* 0x64: MBOX_GET_PORT_DB */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x07
 argument_list|,
@@ -36510,7 +37457,7 @@ literal|0x01
 argument_list|)
 block|,
 comment|/* 0x65: MBOX_CLEAR_ACA */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x07
 argument_list|,
@@ -36518,7 +37465,7 @@ literal|0x01
 argument_list|)
 block|,
 comment|/* 0x66: MBOX_TARGET_RESET */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x07
 argument_list|,
@@ -36526,7 +37473,7 @@ literal|0x01
 argument_list|)
 block|,
 comment|/* 0x67: MBOX_CLEAR_TASK_SET */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x07
 argument_list|,
@@ -36534,7 +37481,7 @@ literal|0x01
 argument_list|)
 block|,
 comment|/* 0x68: MBOX_ABORT_TASK_SET */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x01
 argument_list|,
@@ -36542,15 +37489,19 @@ literal|0x07
 argument_list|)
 block|,
 comment|/* 0x69: MBOX_GET_FW_STATE */
-name|ISPOPMAP
+name|ISP_FC_OPMAP_HALF
 argument_list|(
+literal|0x6
+argument_list|,
 literal|0x03
+argument_list|,
+literal|0x0
 argument_list|,
 literal|0xcf
 argument_list|)
 block|,
 comment|/* 0x6a: MBOX_GET_PORT_NAME */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0xcf
 argument_list|,
@@ -36558,7 +37509,7 @@ literal|0x01
 argument_list|)
 block|,
 comment|/* 0x6b: MBOX_GET_LINK_STATUS */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x0f
 argument_list|,
@@ -36566,7 +37517,7 @@ literal|0x01
 argument_list|)
 block|,
 comment|/* 0x6c: MBOX_INIT_LIP_RESET */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -36574,7 +37525,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x6d: */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0xcf
 argument_list|,
@@ -36582,7 +37533,7 @@ literal|0x03
 argument_list|)
 block|,
 comment|/* 0x6e: MBOX_SEND_SNS */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x0f
 argument_list|,
@@ -36590,7 +37541,7 @@ literal|0x07
 argument_list|)
 block|,
 comment|/* 0x6f: MBOX_FABRIC_LOGIN */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x03
 argument_list|,
@@ -36598,7 +37549,7 @@ literal|0x01
 argument_list|)
 block|,
 comment|/* 0x70: MBOX_SEND_CHANGE_REQUEST */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x03
 argument_list|,
@@ -36606,7 +37557,7 @@ literal|0x03
 argument_list|)
 block|,
 comment|/* 0x71: MBOX_FABRIC_LOGOUT */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x0f
 argument_list|,
@@ -36614,7 +37565,7 @@ literal|0x0f
 argument_list|)
 block|,
 comment|/* 0x72: MBOX_INIT_LIP_LOGIN */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -36622,7 +37573,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x73: */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x07
 argument_list|,
@@ -36630,7 +37581,7 @@ literal|0x01
 argument_list|)
 block|,
 comment|/* 0x74: LOGIN LOOP PORT */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0xcf
 argument_list|,
@@ -36638,7 +37589,7 @@ literal|0x03
 argument_list|)
 block|,
 comment|/* 0x75: GET PORT/NODE NAME LIST */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x4f
 argument_list|,
@@ -36646,7 +37597,7 @@ literal|0x01
 argument_list|)
 block|,
 comment|/* 0x76: SET VENDOR ID */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0xcd
 argument_list|,
@@ -36654,7 +37605,7 @@ literal|0x01
 argument_list|)
 block|,
 comment|/* 0x77: INITIALIZE IP MAILBOX */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -36662,7 +37613,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x78: */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -36670,7 +37621,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x79: */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -36678,7 +37629,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x7a: */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
 argument_list|,
@@ -36686,7 +37637,7 @@ literal|0x00
 argument_list|)
 block|,
 comment|/* 0x7b: */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x4f
 argument_list|,
@@ -36694,7 +37645,7 @@ literal|0x03
 argument_list|)
 block|,
 comment|/* 0x7c: Get ID List */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0xcf
 argument_list|,
@@ -36702,7 +37653,7 @@ literal|0x01
 argument_list|)
 block|,
 comment|/* 0x7d: SEND LFA */
-name|ISPOPMAP
+name|ISP_FC_OPMAP
 argument_list|(
 literal|0x0f
 argument_list|,
@@ -36712,6 +37663,13 @@ comment|/* 0x7e: LUN RESET */
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|MAX_FC_OPCODE
+value|0x7e
+end_define
 
 begin_comment
 comment|/*  * Footnotes  *  * (1): this sets bits 21..16 in mailbox register #8, which we nominally  *	do not access at this time in the core driver. The caller is  *	responsible for setting this register first (Gross!). The assumption  *	is that we won't overflow.  */
@@ -37010,31 +37968,6 @@ name|box
 decl_stmt|,
 name|opcode
 decl_stmt|;
-specifier|const
-name|uint32_t
-modifier|*
-name|mcp
-decl_stmt|;
-if|if
-condition|(
-name|IS_FC
-argument_list|(
-name|isp
-argument_list|)
-condition|)
-block|{
-name|mcp
-operator|=
-name|mbpfc
-expr_stmt|;
-block|}
-else|else
-block|{
-name|mcp
-operator|=
-name|mbpscsi
-expr_stmt|;
-block|}
 name|opcode
 operator|=
 name|mbp
@@ -37044,36 +37977,46 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-name|ibits
-operator|=
-name|HIWRD
-argument_list|(
-name|mcp
-index|[
-name|opcode
-index|]
-argument_list|)
-operator|&
-name|NMBOX_BMASK
+if|if
+condition|(
+name|IS_FC
 argument_list|(
 name|isp
+argument_list|)
+condition|)
+block|{
+name|ibits
+operator|=
+name|ISP_FC_IBITS
+argument_list|(
+name|opcode
 argument_list|)
 expr_stmt|;
 name|obits
 operator|=
-name|LOWRD
+name|ISP_FC_OBITS
 argument_list|(
-name|mcp
-index|[
 name|opcode
-index|]
-argument_list|)
-operator|&
-name|NMBOX_BMASK
-argument_list|(
-name|isp
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|ibits
+operator|=
+name|ISP_SCSI_IBITS
+argument_list|(
+name|opcode
+argument_list|)
+expr_stmt|;
+name|obits
+operator|=
+name|ISP_SCSI_OBITS
+argument_list|(
+name|opcode
+argument_list|)
+expr_stmt|;
+block|}
 name|ibits
 operator||=
 name|mbp
@@ -37094,7 +38037,7 @@ literal|0
 init|;
 name|box
 operator|<
-name|MAX_MAILBOX
+name|ISP_NMBOX
 argument_list|(
 name|isp
 argument_list|)
@@ -37263,8 +38206,6 @@ index|]
 decl_stmt|;
 name|unsigned
 name|int
-name|lim
-decl_stmt|,
 name|ibits
 decl_stmt|,
 name|obits
@@ -37273,68 +38214,6 @@ name|box
 decl_stmt|,
 name|opcode
 decl_stmt|;
-specifier|const
-name|uint32_t
-modifier|*
-name|mcp
-decl_stmt|;
-if|if
-condition|(
-name|IS_FC
-argument_list|(
-name|isp
-argument_list|)
-condition|)
-block|{
-name|mcp
-operator|=
-name|mbpfc
-expr_stmt|;
-name|lim
-operator|=
-operator|(
-sizeof|sizeof
-argument_list|(
-name|mbpfc
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|mbpfc
-index|[
-literal|0
-index|]
-argument_list|)
-operator|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|mcp
-operator|=
-name|mbpscsi
-expr_stmt|;
-name|lim
-operator|=
-operator|(
-sizeof|sizeof
-argument_list|(
-name|mbpscsi
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|mbpscsi
-index|[
-literal|0
-index|]
-argument_list|)
-operator|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-operator|(
 name|opcode
 operator|=
 name|mbp
@@ -37343,9 +38222,20 @@ name|param
 index|[
 literal|0
 index|]
-operator|)
-operator|>=
-name|lim
+expr_stmt|;
+if|if
+condition|(
+name|IS_FC
+argument_list|(
+name|isp
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|opcode
+operator|>
+name|MAX_FC_OPCODE
 condition|)
 block|{
 name|mbp
@@ -37372,34 +38262,65 @@ return|return;
 block|}
 name|ibits
 operator|=
-name|HIWRD
+name|ISP_FC_IBITS
 argument_list|(
-name|mcp
-index|[
 name|opcode
-index|]
-argument_list|)
-operator|&
-name|NMBOX_BMASK
-argument_list|(
-name|isp
 argument_list|)
 expr_stmt|;
 name|obits
 operator|=
-name|LOWRD
+name|ISP_FC_OBITS
 argument_list|(
-name|mcp
-index|[
 name|opcode
-index|]
-argument_list|)
-operator|&
-name|NMBOX_BMASK
-argument_list|(
-name|isp
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|opcode
+operator|>
+name|MAX_SCSI_OPCODE
+condition|)
+block|{
+name|mbp
+operator|->
+name|param
+index|[
+literal|0
+index|]
+operator|=
+name|MBOX_INVALID_COMMAND
+expr_stmt|;
+name|isp_prt
+argument_list|(
+name|isp
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"Unknown Command 0x%x"
+argument_list|,
+name|opcode
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|ibits
+operator|=
+name|ISP_SCSI_IBITS
+argument_list|(
+name|opcode
+argument_list|)
+expr_stmt|;
+name|obits
+operator|=
+name|ISP_SCSI_OBITS
+argument_list|(
+name|opcode
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Pick up any additional bits that the caller might have set. 	 */
 name|ibits
 operator||=
@@ -37476,7 +38397,7 @@ literal|0
 init|;
 name|box
 operator|<
-name|MAX_MAILBOX
+name|ISP_NMBOX
 argument_list|(
 name|isp
 argument_list|)
@@ -37644,7 +38565,7 @@ literal|0
 init|;
 name|box
 operator|<
-name|MAX_MAILBOX
+name|ISP_NMBOX
 argument_list|(
 name|isp
 argument_list|)

@@ -57,6 +57,14 @@ value|""
 end_define
 
 begin_comment
+comment|/* Default<path> to all compiler invocations for --sysroot=<path>. */
+end_comment
+
+begin_comment
+comment|/* #undef DEFAULT_SYSROOT */
+end_comment
+
+begin_comment
 comment|/* Define if position independent code is enabled */
 end_comment
 
@@ -2113,7 +2121,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"LLVM 3.1svn"
+value|"LLVM 3.1"
 end_define
 
 begin_comment
@@ -2135,7 +2143,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"3.1svn"
+value|"3.1"
 end_define
 
 begin_comment

@@ -484,6 +484,8 @@ decl_stmt|;
 comment|/// PrintMessage - Emit a message about the specified location with the
 comment|/// specified string.
 comment|///
+comment|/// @param ShowColors - Display colored messages if output is a terminal and
+comment|/// the default error handler is used.
 name|void
 name|PrintMessage
 argument_list|(
@@ -510,6 +512,11 @@ name|SMRange
 operator|>
 operator|(
 operator|)
+argument_list|,
+name|bool
+name|ShowColors
+operator|=
+name|true
 argument_list|)
 decl|const
 decl_stmt|;
@@ -831,6 +838,11 @@ argument_list|,
 name|raw_ostream
 operator|&
 name|S
+argument_list|,
+name|bool
+name|ShowColors
+operator|=
+name|true
 argument_list|)
 decl|const
 decl_stmt|;

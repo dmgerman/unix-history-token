@@ -1614,6 +1614,19 @@ begin_comment
 comment|/* ACPI_DEBUGGER */
 end_comment
 
+begin_comment
+comment|/*****************************************************************************  *  * Info/help support  *  ****************************************************************************/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|AH_PREDEFINED_NAME
+name|AslPredefinedInfo
+index|[]
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif

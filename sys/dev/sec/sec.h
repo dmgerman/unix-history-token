@@ -94,6 +94,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SEC_31_ID
+value|0x0030030100000000ULL
+end_define
+
+begin_define
+define|#
+directive|define
 name|SEC_CHANNELS
 value|4
 end_define

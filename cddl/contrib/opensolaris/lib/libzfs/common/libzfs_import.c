@@ -4883,7 +4883,7 @@ name|char
 modifier|*
 name|default_dir
 init|=
-literal|"/dev/dsk"
+literal|"/dev"
 decl_stmt|;
 name|pool_list_t
 name|pools

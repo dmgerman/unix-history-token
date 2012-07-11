@@ -127,6 +127,9 @@ name|size_t
 name|alignment
 parameter_list|,
 name|bool
+name|base
+parameter_list|,
+name|bool
 modifier|*
 name|zero
 parameter_list|)
@@ -165,6 +168,9 @@ name|size_t
 name|alignment
 parameter_list|,
 name|bool
+name|base
+parameter_list|,
+name|bool
 modifier|*
 name|zero
 parameter_list|)
@@ -187,6 +193,18 @@ name|leadsize
 decl_stmt|,
 name|trailsize
 decl_stmt|;
+if|if
+condition|(
+name|base
+condition|)
+block|{
+comment|/* 		 * This function may need to call base_node_{,de}alloc(), but 		 * the current chunk allocation request is on behalf of the 		 * base allocator.  Avoid deadlock (and if that weren't an 		 * issue, potential for infinite recursion) by returning NULL. 		 */
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 name|alloc_size
 operator|=
 name|size
@@ -278,7 +296,9 @@ name|addr
 expr_stmt|;
 name|assert
 argument_list|(
-name|alloc_size
+name|node
+operator|->
+name|size
 operator|>=
 name|leadsize
 operator|+
@@ -287,7 +307,9 @@ argument_list|)
 expr_stmt|;
 name|trailsize
 operator|=
-name|alloc_size
+name|node
+operator|->
+name|size
 operator|-
 name|leadsize
 operator|-
@@ -572,6 +594,13 @@ argument_list|)
 expr_stmt|;
 name|assert
 argument_list|(
+name|alignment
+operator|!=
+literal|0
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
 operator|(
 name|alignment
 operator|&
@@ -588,6 +617,8 @@ argument_list|(
 name|size
 argument_list|,
 name|alignment
+argument_list|,
+name|base
 argument_list|,
 name|zero
 argument_list|)
@@ -829,6 +860,13 @@ name|uintptr_t
 operator|)
 name|ret
 decl_stmt|;
+name|VALGRIND_MAKE_MEM_DEFINED
+argument_list|(
+name|ret
+argument_list|,
+name|size
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -908,9 +946,11 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Allocate a node before acquiring chunks_mtx even though it might not 	 * be needed, because base_node_alloc() may cause a new base chunk to 	 * be allocated, which could cause deadlock if chunks_mtx were already 	 * held. 	 */
 name|xnode
 operator|=
-name|NULL
+name|base_node_alloc
+argument_list|()
 expr_stmt|;
 name|malloc_mutex_lock
 argument_list|(
@@ -918,11 +958,6 @@ operator|&
 name|chunks_mtx
 argument_list|)
 expr_stmt|;
-while|while
-condition|(
-name|true
-condition|)
-block|{
 name|key
 operator|.
 name|addr
@@ -967,7 +1002,7 @@ operator|.
 name|addr
 condition|)
 block|{
-comment|/* 			 * Coalesce chunk with the following address range. 			 * This does not change the position within chunks_ad, 			 * so only remove/insert from/into chunks_szad. 			 */
+comment|/* 		 * Coalesce chunk with the following address range.  This does 		 * not change the position within chunks_ad, so only 		 * remove/insert from/into chunks_szad. 		 */
 name|extent_tree_szad_remove
 argument_list|(
 operator|&
@@ -996,52 +1031,40 @@ argument_list|,
 name|node
 argument_list|)
 expr_stmt|;
-break|break;
-block|}
-elseif|else
 if|if
 condition|(
 name|xnode
-operator|==
+operator|!=
 name|NULL
 condition|)
-block|{
-comment|/* 			 * It is possible that base_node_alloc() will cause a 			 * new base chunk to be allocated, so take care not to 			 * deadlock on chunks_mtx, and recover if another thread 			 * deallocates an adjacent chunk while this one is busy 			 * allocating xnode. 			 */
-name|malloc_mutex_unlock
+name|base_node_dealloc
 argument_list|(
-operator|&
-name|chunks_mtx
-argument_list|)
-expr_stmt|;
 name|xnode
-operator|=
-name|base_node_alloc
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|xnode
-operator|==
-name|NULL
-condition|)
-return|return;
-name|malloc_mutex_lock
-argument_list|(
-operator|&
-name|chunks_mtx
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
 comment|/* Coalescing forward failed, so insert a new node. */
+if|if
+condition|(
+name|xnode
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* 			 * base_node_alloc() failed, which is an exceedingly 			 * unlikely failure.  Leak chunk; its pages have 			 * already been purged, so this is only a virtual 			 * memory leak. 			 */
+name|malloc_mutex_unlock
+argument_list|(
+operator|&
+name|chunks_mtx
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|node
 operator|=
 name|xnode
-expr_stmt|;
-name|xnode
-operator|=
-name|NULL
 expr_stmt|;
 name|node
 operator|->
@@ -1071,21 +1094,7 @@ argument_list|,
 name|node
 argument_list|)
 expr_stmt|;
-break|break;
 block|}
-block|}
-comment|/* Discard xnode if it ended up unused due to a race. */
-if|if
-condition|(
-name|xnode
-operator|!=
-name|NULL
-condition|)
-name|base_node_dealloc
-argument_list|(
-name|xnode
-argument_list|)
-expr_stmt|;
 comment|/* Try to coalesce backward. */
 name|prev
 operator|=

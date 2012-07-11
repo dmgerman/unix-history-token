@@ -5011,7 +5011,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Transfer any cached pages from orig_object to new_object. 		 */
+comment|/* 		 * Transfer any cached pages from orig_object to new_object. 		 * If swap_pager_copy() found swapped out pages within the 		 * specified range of orig_object, then it changed 		 * new_object's type to OBJT_SWAP when it transferred those 		 * pages to new_object.  Otherwise, new_object's type 		 * should still be OBJT_DEFAULT and orig_object should not 		 * contain any cached pages within the specified range. 		 */
 if|if
 condition|(
 name|__predict_false
@@ -5948,7 +5948,7 @@ operator|==
 name|OBJT_SWAP
 condition|)
 block|{
-comment|/* 				 * swap_pager_copy() can sleep, in which case 				 * the backing_object's and object's locks are 				 * released and reacquired. 				 */
+comment|/* 				 * swap_pager_copy() can sleep, in which case 				 * the backing_object's and object's locks are 				 * released and reacquired. 				 * Since swap_pager_copy() is being asked to 				 * destroy the source, it will change the 				 * backing_object's type to OBJT_DEFAULT. 				 */
 name|swap_pager_copy
 argument_list|(
 name|backing_object

@@ -2733,6 +2733,8 @@ name|JUNIPER_PROTO_IPV6
 case|:
 name|ip6_print
 argument_list|(
+name|gndo
+argument_list|,
 name|p
 argument_list|,
 name|l2info
@@ -3455,6 +3457,8 @@ expr_stmt|;
 comment|/* this DLT contains nothing but raw ethernet frames */
 name|ether_print
 argument_list|(
+name|gndo
+argument_list|,
 name|p
 argument_list|,
 name|l2info
@@ -3544,6 +3548,8 @@ expr_stmt|;
 comment|/* this DLT contains nothing but raw Ethernet frames */
 name|ether_print
 argument_list|(
+name|gndo
+argument_list|,
 name|p
 argument_list|,
 name|l2info
@@ -3888,6 +3894,8 @@ if|if
 condition|(
 name|ethertype_print
 argument_list|(
+name|gndo
+argument_list|,
 name|extracted_ethertype
 argument_list|,
 name|p
@@ -4089,6 +4097,8 @@ name|JUNIPER_LSQ_L3_PROTO_IPV6
 case|:
 name|ip6_print
 argument_list|(
+name|gndo
+argument_list|,
 name|p
 argument_list|,
 name|l2info
@@ -4335,6 +4345,8 @@ name|JUNIPER_LSQ_L3_PROTO_IPV6
 case|:
 name|ip6_print
 argument_list|(
+name|gndo
+argument_list|,
 name|p
 argument_list|,
 name|l2info
@@ -5101,6 +5113,8 @@ condition|)
 block|{
 name|ether_print
 argument_list|(
+name|gndo
+argument_list|,
 name|p
 argument_list|,
 name|l2info
@@ -5420,6 +5434,8 @@ literal|0x6f
 case|:
 name|ip6_print
 argument_list|(
+name|gndo
+argument_list|,
 name|p
 argument_list|,
 name|length

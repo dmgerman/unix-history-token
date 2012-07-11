@@ -600,6 +600,24 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|IPPROTO_CARP
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_CARP
+value|112
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|IPPROTO_PGM
 end_ifndef
 

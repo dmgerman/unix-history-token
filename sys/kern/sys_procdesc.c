@@ -1154,7 +1154,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * procdesc_close() - last close on a process descriptor.  If the process is  * still running, terminate with SIGKILL (unless PD_DAEMON is set) and let  * init(8) clean up the mess; if not, we have to clean up the zombie ourselves.  */
+comment|/*  * procdesc_close() - last close on a process descriptor.  If the process is  * still running, terminate with SIGKILL (unless PDF_DAEMON is set) and let  * init(8) clean up the mess; if not, we have to clean up the zombie ourselves.  */
 end_comment
 
 begin_function
@@ -1318,7 +1318,7 @@ name|pd
 operator|->
 name|pd_flags
 operator|&
-name|PD_DAEMON
+name|PDF_DAEMON
 operator|)
 operator|==
 literal|0

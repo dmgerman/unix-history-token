@@ -759,7 +759,7 @@ name|error
 operator|=
 name|ioctl
 argument_list|(
-name|fd
+name|devfd
 argument_list|,
 name|CPUCTL_UPDATE
 argument_list|,

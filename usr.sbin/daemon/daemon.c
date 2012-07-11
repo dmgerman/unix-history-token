@@ -778,6 +778,33 @@ block|{
 case|case
 name|SIGCHLD
 case|:
+if|if
+condition|(
+name|waitpid
+argument_list|(
+name|pid
+argument_list|,
+name|NULL
+argument_list|,
+name|WNOHANG
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|warn
+argument_list|(
+literal|"waitpid"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 return|return
 operator|(
 name|terminate
@@ -850,7 +877,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: daemon [-cf] [-p pidfile] [-u user] command "
+literal|"usage: daemon [-cfr] [-p pidfile] [-u user] command "
 literal|"arguments ...\n"
 argument_list|)
 expr_stmt|;

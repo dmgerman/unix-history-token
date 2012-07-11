@@ -204,6 +204,9 @@ name|bars
 parameter_list|,
 name|int
 name|caps
+parameter_list|,
+name|int
+name|errors
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -336,7 +339,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: pciconf -l [-bcv]"
+literal|"usage: pciconf -l [-bcev]"
 argument_list|,
 literal|"       pciconf -a selector"
 argument_list|,
@@ -377,10 +380,13 @@ decl_stmt|,
 name|writemode
 decl_stmt|,
 name|attachedmode
-decl_stmt|,
+decl_stmt|;
+name|int
 name|bars
 decl_stmt|,
 name|caps
+decl_stmt|,
+name|errors
 decl_stmt|,
 name|verbose
 decl_stmt|;
@@ -397,9 +403,13 @@ name|writemode
 operator|=
 name|attachedmode
 operator|=
+literal|0
+expr_stmt|;
 name|bars
 operator|=
 name|caps
+operator|=
+name|errors
 operator|=
 name|verbose
 operator|=
@@ -420,7 +430,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"abchlrwv"
+literal|"abcehlrwv"
 argument_list|)
 operator|)
 operator|!=
@@ -457,6 +467,14 @@ case|case
 literal|'c'
 case|:
 name|caps
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'e'
+case|:
+name|errors
 operator|=
 literal|1
 expr_stmt|;
@@ -562,6 +580,8 @@ argument_list|,
 name|bars
 argument_list|,
 name|caps
+argument_list|,
+name|errors
 argument_list|)
 expr_stmt|;
 block|}
@@ -676,6 +696,9 @@ name|bars
 parameter_list|,
 name|int
 name|caps
+parameter_list|,
+name|int
+name|errors
 parameter_list|)
 block|{
 name|int
@@ -713,7 +736,11 @@ name|open
 argument_list|(
 name|_PATH_DEVPCI
 argument_list|,
+operator|(
 name|caps
+operator|||
+name|errors
+operator|)
 condition|?
 name|O_RDWR
 else|:
@@ -1005,6 +1032,17 @@ condition|(
 name|caps
 condition|)
 name|list_caps
+argument_list|(
+name|fd
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|errors
+condition|)
+name|list_errors
 argument_list|(
 name|fd
 argument_list|,

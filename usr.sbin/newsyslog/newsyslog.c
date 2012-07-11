@@ -6763,7 +6763,7 @@ literal|80
 index|]
 decl_stmt|;
 name|int
-name|dirfd
+name|dir_fd
 decl_stmt|,
 name|i
 decl_stmt|,
@@ -6986,7 +6986,7 @@ argument_list|,
 name|dir
 argument_list|)
 expr_stmt|;
-name|dirfd
+name|dir_fd
 operator|=
 name|dirfd
 argument_list|(
@@ -7401,7 +7401,7 @@ if|if
 condition|(
 name|unlinkat
 argument_list|(
-name|dirfd
+name|dir_fd
 argument_list|,
 name|oldlogs
 index|[
@@ -9218,6 +9218,14 @@ operator|->
 name|zw_swork
 operator|!=
 name|NULL
+operator|&&
+name|zwork
+operator|->
+name|zw_swork
+operator|->
+name|run_cmd
+operator|==
+literal|0
 operator|&&
 name|zwork
 operator|->

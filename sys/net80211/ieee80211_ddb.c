@@ -5548,9 +5548,12 @@ name|db_printf
 argument_list|(
 literal|"\tlifetime: %u lastseq: %u priv: %p\n"
 argument_list|,
+name|ieee80211_mesh_rt_update
+argument_list|(
 name|rt
-operator|->
-name|rt_lifetime
+argument_list|,
+literal|0
+argument_list|)
 argument_list|,
 name|rt
 operator|->

@@ -16974,7 +16974,7 @@ name|p
 operator|->
 name|rights
 expr_stmt|;
-comment|/* u_int64_t */
+comment|/* uint64_t */
 operator|*
 name|n_args
 operator|=
@@ -17016,7 +17016,7 @@ name|p
 operator|->
 name|rightsp
 expr_stmt|;
-comment|/* u_int64_t * */
+comment|/* uint64_t * */
 operator|*
 name|n_args
 operator|=
@@ -29891,7 +29891,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"u_int64_t"
+literal|"uint64_t"
 expr_stmt|;
 break|break;
 default|default:
@@ -29921,7 +29921,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"u_int64_t *"
+literal|"uint64_t *"
 expr_stmt|;
 break|break;
 default|default:

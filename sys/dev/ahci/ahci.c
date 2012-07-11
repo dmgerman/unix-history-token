@@ -1575,6 +1575,18 @@ name|AHCI_Q_ALTSIG
 block|}
 block|,
 block|{
+literal|0x91301b4b
+block|,
+literal|0x00
+block|,
+literal|"Marvell 88SE9130"
+block|,
+name|AHCI_Q_NOBSYRES
+operator||
+name|AHCI_Q_ALTSIG
+block|}
+block|,
+block|{
 literal|0x91721b4b
 block|,
 literal|0x00
@@ -1590,6 +1602,40 @@ block|,
 literal|0x00
 block|,
 literal|"Marvell 88SE9182"
+block|,
+name|AHCI_Q_NOBSYRES
+block|}
+block|,
+block|{
+literal|0x92201b4b
+block|,
+literal|0x00
+block|,
+literal|"Marvell 88SE9220"
+block|,
+name|AHCI_Q_NOBSYRES
+operator||
+name|AHCI_Q_ALTSIG
+block|}
+block|,
+block|{
+literal|0x92301b4b
+block|,
+literal|0x00
+block|,
+literal|"Marvell 88SE9230"
+block|,
+name|AHCI_Q_NOBSYRES
+operator||
+name|AHCI_Q_ALTSIG
+block|}
+block|,
+block|{
+literal|0x92351b4b
+block|,
+literal|0x00
+block|,
+literal|"Marvell 88SE9235"
 block|,
 name|AHCI_Q_NOBSYRES
 block|}
@@ -10140,9 +10186,23 @@ operator|->
 name|mtx
 argument_list|)
 expr_stmt|;
+name|xpt_batch_start
+argument_list|(
+name|ch
+operator|->
+name|sim
+argument_list|)
+expr_stmt|;
 name|ahci_ch_intr
 argument_list|(
 name|data
+argument_list|)
+expr_stmt|;
+name|xpt_batch_done
+argument_list|(
+name|ch
+operator|->
+name|sim
 argument_list|)
 expr_stmt|;
 name|mtx_unlock
@@ -19118,7 +19178,7 @@ name|cts
 operator|->
 name|protocol
 operator|=
-name|PROTO_ATA
+name|PROTO_UNSPECIFIED
 expr_stmt|;
 name|cts
 operator|->

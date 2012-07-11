@@ -427,11 +427,7 @@ name|multiset
 argument_list|()
 operator|:
 name|_M_t
-argument_list|(
-argument|_Compare()
-argument_list|,
-argument|allocator_type()
-argument_list|)
+argument_list|()
 block|{ }
 name|explicit
 name|multiset
@@ -471,11 +467,7 @@ argument|_InputIterator __last
 argument_list|)
 operator|:
 name|_M_t
-argument_list|(
-argument|_Compare()
-argument_list|,
-argument|allocator_type()
-argument_list|)
+argument_list|()
 block|{
 name|_M_t
 operator|.
@@ -524,13 +516,6 @@ name|multiset
 argument_list|(
 specifier|const
 name|multiset
-operator|<
-name|_Key
-argument_list|,
-name|_Compare
-argument_list|,
-name|_Alloc
-operator|>
 operator|&
 name|__x
 argument_list|)
@@ -542,26 +527,12 @@ argument_list|)
 block|{ }
 comment|/**        *  @brief  %Multiset assignment operator.        *  @param  x  A %multiset of identical element and allocator types.        *        *  All the elements of @a x are copied, but unlike the copy constructor,        *  the allocator object is not copied.        */
 name|multiset
-operator|<
-name|_Key
-operator|,
-name|_Compare
-operator|,
-name|_Alloc
-operator|>
 operator|&
 name|operator
 operator|=
 operator|(
 specifier|const
 name|multiset
-operator|<
-name|_Key
-operator|,
-name|_Compare
-operator|,
-name|_Alloc
-operator|>
 operator|&
 name|__x
 operator|)
@@ -777,21 +748,14 @@ begin_comment
 comment|/**        *  @brief  Swaps data with another %multiset.        *  @param  x  A %multiset of the same element and allocator types.        *        *  This exchanges the elements between two multisets in constant time.        *  (It is only swapping a pointer, an integer, and an instance of the @c        *  Compare type (which itself is often stateless and empty), so it should        *  be quite fast.)        *  Note that the global std::swap() function is specialized such that        *  std::swap(s1,s2) will feed to this function.        */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|void
 name|swap
-argument_list|(
+parameter_list|(
 name|multiset
-operator|<
-name|_Key
-argument_list|,
-name|_Compare
-argument_list|,
-name|_Alloc
-operator|>
-operator|&
+modifier|&
 name|__x
-argument_list|)
+parameter_list|)
 block|{
 name|_M_t
 operator|.
@@ -803,7 +767,7 @@ name|_M_t
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|// insert/erase

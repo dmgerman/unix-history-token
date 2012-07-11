@@ -92,16 +92,6 @@ name|namespace
 name|clang
 block|{
 name|namespace
-name|idx
-block|{
-name|class
-name|Indexer
-decl_stmt|;
-name|class
-name|TranslationUnit
-decl_stmt|;
-block|}
-name|namespace
 name|ento
 block|{
 name|class
@@ -150,15 +140,6 @@ block|;
 name|CheckerManager
 operator|*
 name|CheckerMgr
-block|;
-comment|/// \brief Provide function definitions in other translation units. This is
-comment|/// NULL if we don't have multiple translation units. AnalysisManager does
-comment|/// not own the Indexer.
-name|idx
-operator|::
-name|Indexer
-operator|*
-name|Idxer
 block|;    enum
 name|AnalysisScope
 block|{
@@ -245,8 +226,6 @@ argument_list|,
 argument|ConstraintManagerCreator constraintmgr
 argument_list|,
 argument|CheckerManager *checkerMgr
-argument_list|,
-argument|idx::Indexer *idxer
 argument_list|,
 argument|unsigned maxnodes
 argument_list|,
@@ -347,18 +326,6 @@ specifier|const
 block|{
 return|return
 name|CheckerMgr
-return|;
-block|}
-name|idx
-operator|::
-name|Indexer
-operator|*
-name|getIndexer
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Idxer
 return|;
 block|}
 name|virtual
@@ -534,27 +501,6 @@ name|Inlining
 operator|)
 return|;
 block|}
-name|bool
-name|hasIndexer
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Idxer
-operator|!=
-literal|0
-return|;
-block|}
-name|AnalysisDeclContext
-operator|*
-name|getAnalysisDeclContextInAnotherTU
-argument_list|(
-specifier|const
-name|Decl
-operator|*
-name|D
-argument_list|)
-block|;
 name|CFG
 operator|*
 name|getCFG

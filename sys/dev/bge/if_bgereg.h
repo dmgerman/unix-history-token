@@ -4537,7 +4537,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|BGE_LEDCTL_TREFLED_BLINK_2
+name|BGE_LEDCTL_TRAFLED_BLINK_2
 value|0x00000040
 end_define
 
@@ -4565,7 +4565,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|BGE_LEDCTL_TRADLED_STS
+name|BGE_LEDCTL_TRAFLED_STS
 value|0x00000400
 end_define
 

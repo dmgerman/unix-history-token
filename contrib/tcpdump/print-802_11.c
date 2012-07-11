@@ -109,6 +109,28 @@ directive|include
 file|"ieee802_11_radio.h"
 end_include
 
+begin_comment
+comment|/* Radiotap state */
+end_comment
+
+begin_comment
+comment|/*  This is used to save state when parsing/processing parameters */
+end_comment
+
+begin_struct
+struct|struct
+name|radiotap_state
+block|{
+name|u_int32_t
+name|present
+decl_stmt|;
+name|u_int8_t
+name|rate
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define
@@ -157,82 +179,1501 @@ define|\
 value|if (p.ds_present) \ 		printf(" CH: %u", p.ds.channel); \ 	printf("%s", \ 	    CAPABILITY_PRIVACY(p.capability_info) ? ", PRIVACY" : "" );
 end_define
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|int
-name|ieee80211_htrates
-index|[
-literal|16
-index|]
-init|=
-block|{
-literal|13
-block|,
-comment|/* IFM_IEEE80211_MCS0 */
-literal|26
-block|,
-comment|/* IFM_IEEE80211_MCS1 */
-literal|39
-block|,
-comment|/* IFM_IEEE80211_MCS2 */
-literal|52
-block|,
-comment|/* IFM_IEEE80211_MCS3 */
-literal|78
-block|,
-comment|/* IFM_IEEE80211_MCS4 */
-literal|104
-block|,
-comment|/* IFM_IEEE80211_MCS5 */
-literal|117
-block|,
-comment|/* IFM_IEEE80211_MCS6 */
-literal|130
-block|,
-comment|/* IFM_IEEE80211_MCS7 */
-literal|26
-block|,
-comment|/* IFM_IEEE80211_MCS8 */
-literal|52
-block|,
-comment|/* IFM_IEEE80211_MCS9 */
-literal|78
-block|,
-comment|/* IFM_IEEE80211_MCS10 */
-literal|104
-block|,
-comment|/* IFM_IEEE80211_MCS11 */
-literal|156
-block|,
-comment|/* IFM_IEEE80211_MCS12 */
-literal|208
-block|,
-comment|/* IFM_IEEE80211_MCS13 */
-literal|234
-block|,
-comment|/* IFM_IEEE80211_MCS14 */
-literal|260
-block|,
-comment|/* IFM_IEEE80211_MCS15 */
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
-name|PRINT_HT_RATE
-parameter_list|(
-name|_sep
-parameter_list|,
-name|_r
-parameter_list|,
-name|_suf
-parameter_list|)
-define|\
-value|printf("%s%.1f%s", _sep, (.5 * ieee80211_htrates[(_r)& 0xf]), _suf)
+name|MAX_MCS_INDEX
+value|76
 end_define
+
+begin_comment
+comment|/*  * Indices are:  *  *	the MCS index (0-76);  *  *	0 for 20 MHz, 1 for 40 MHz;  *  *	0 for a long guard interval, 1 for a short guard interval.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|float
+name|ieee80211_float_htrates
+index|[
+name|MAX_MCS_INDEX
+operator|+
+literal|1
+index|]
+index|[
+literal|2
+index|]
+index|[
+literal|2
+index|]
+init|=
+block|{
+comment|/* MCS  0  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|6.5
+block|,
+comment|/* SGI */
+literal|7.2
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|13.5
+block|,
+comment|/* SGI */
+literal|15.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS  1  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|13.0
+block|,
+comment|/* SGI */
+literal|14.4
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|27.0
+block|,
+comment|/* SGI */
+literal|30.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS  2  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|19.5
+block|,
+comment|/* SGI */
+literal|21.7
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|40.5
+block|,
+comment|/* SGI */
+literal|45.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS  3  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|26.0
+block|,
+comment|/* SGI */
+literal|28.9
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|54.0
+block|,
+comment|/* SGI */
+literal|60.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS  4  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|39.0
+block|,
+comment|/* SGI */
+literal|43.3
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|81.0
+block|,
+comment|/* SGI */
+literal|90.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS  5  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|52.0
+block|,
+comment|/* SGI */
+literal|57.8
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|108.0
+block|,
+comment|/* SGI */
+literal|120.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS  6  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|58.5
+block|,
+comment|/* SGI */
+literal|65.0
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|121.5
+block|,
+comment|/* SGI */
+literal|135.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS  7  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|65.0
+block|,
+comment|/* SGI */
+literal|72.2
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|135.0
+block|,
+comment|/* SGI */
+literal|150.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS  8  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|13.0
+block|,
+comment|/* SGI */
+literal|14.4
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|27.0
+block|,
+comment|/* SGI */
+literal|30.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS  9  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|26.0
+block|,
+comment|/* SGI */
+literal|28.9
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|54.0
+block|,
+comment|/* SGI */
+literal|60.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 10  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|39.0
+block|,
+comment|/* SGI */
+literal|43.3
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|81.0
+block|,
+comment|/* SGI */
+literal|90.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 11  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|52.0
+block|,
+comment|/* SGI */
+literal|57.8
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|108.0
+block|,
+comment|/* SGI */
+literal|120.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 12  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|78.0
+block|,
+comment|/* SGI */
+literal|86.7
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|162.0
+block|,
+comment|/* SGI */
+literal|180.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 13  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|104.0
+block|,
+comment|/* SGI */
+literal|115.6
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|216.0
+block|,
+comment|/* SGI */
+literal|240.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 14  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|117.0
+block|,
+comment|/* SGI */
+literal|130.0
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|243.0
+block|,
+comment|/* SGI */
+literal|270.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 15  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|130.0
+block|,
+comment|/* SGI */
+literal|144.4
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|270.0
+block|,
+comment|/* SGI */
+literal|300.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 16  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|19.5
+block|,
+comment|/* SGI */
+literal|21.7
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|40.5
+block|,
+comment|/* SGI */
+literal|45.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 17  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|39.0
+block|,
+comment|/* SGI */
+literal|43.3
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|81.0
+block|,
+comment|/* SGI */
+literal|90.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 18  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|58.5
+block|,
+comment|/* SGI */
+literal|65.0
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|121.5
+block|,
+comment|/* SGI */
+literal|135.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 19  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|78.0
+block|,
+comment|/* SGI */
+literal|86.7
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|162.0
+block|,
+comment|/* SGI */
+literal|180.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 20  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|117.0
+block|,
+comment|/* SGI */
+literal|130.0
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|243.0
+block|,
+comment|/* SGI */
+literal|270.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 21  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|156.0
+block|,
+comment|/* SGI */
+literal|173.3
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|324.0
+block|,
+comment|/* SGI */
+literal|360.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 22  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|175.5
+block|,
+comment|/* SGI */
+literal|195.0
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|364.5
+block|,
+comment|/* SGI */
+literal|405.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 23  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|195.0
+block|,
+comment|/* SGI */
+literal|216.7
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|405.0
+block|,
+comment|/* SGI */
+literal|450.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 24  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|26.0
+block|,
+comment|/* SGI */
+literal|28.9
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|54.0
+block|,
+comment|/* SGI */
+literal|60.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 25  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|52.0
+block|,
+comment|/* SGI */
+literal|57.8
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|108.0
+block|,
+comment|/* SGI */
+literal|120.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 26  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|78.0
+block|,
+comment|/* SGI */
+literal|86.7
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|162.0
+block|,
+comment|/* SGI */
+literal|180.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 27  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|104.0
+block|,
+comment|/* SGI */
+literal|115.6
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|216.0
+block|,
+comment|/* SGI */
+literal|240.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 28  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|156.0
+block|,
+comment|/* SGI */
+literal|173.3
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|324.0
+block|,
+comment|/* SGI */
+literal|360.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 29  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|208.0
+block|,
+comment|/* SGI */
+literal|231.1
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|432.0
+block|,
+comment|/* SGI */
+literal|480.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 30  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|234.0
+block|,
+comment|/* SGI */
+literal|260.0
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|486.0
+block|,
+comment|/* SGI */
+literal|540.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 31  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|260.0
+block|,
+comment|/* SGI */
+literal|288.9
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|540.0
+block|,
+comment|/* SGI */
+literal|600.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 32  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|0.0
+block|,
+comment|/* SGI */
+literal|0.0
+block|, }
+block|,
+comment|/* not valid */
+comment|/* 40 Mhz */
+block|{
+literal|6.0
+block|,
+comment|/* SGI */
+literal|6.7
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 33  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|39.0
+block|,
+comment|/* SGI */
+literal|43.3
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|81.0
+block|,
+comment|/* SGI */
+literal|90.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 34  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|52.0
+block|,
+comment|/* SGI */
+literal|57.8
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|108.0
+block|,
+comment|/* SGI */
+literal|120.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 35  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|65.0
+block|,
+comment|/* SGI */
+literal|72.2
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|135.0
+block|,
+comment|/* SGI */
+literal|150.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 36  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|58.5
+block|,
+comment|/* SGI */
+literal|65.0
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|121.5
+block|,
+comment|/* SGI */
+literal|135.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 37  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|78.0
+block|,
+comment|/* SGI */
+literal|86.7
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|162.0
+block|,
+comment|/* SGI */
+literal|180.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 38  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|97.5
+block|,
+comment|/* SGI */
+literal|108.3
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|202.5
+block|,
+comment|/* SGI */
+literal|225.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 39  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|52.0
+block|,
+comment|/* SGI */
+literal|57.8
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|108.0
+block|,
+comment|/* SGI */
+literal|120.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 40  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|65.0
+block|,
+comment|/* SGI */
+literal|72.2
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|135.0
+block|,
+comment|/* SGI */
+literal|150.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 41  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|65.0
+block|,
+comment|/* SGI */
+literal|72.2
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|135.0
+block|,
+comment|/* SGI */
+literal|150.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 42  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|78.0
+block|,
+comment|/* SGI */
+literal|86.7
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|162.0
+block|,
+comment|/* SGI */
+literal|180.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 43  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|91.0
+block|,
+comment|/* SGI */
+literal|101.1
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|189.0
+block|,
+comment|/* SGI */
+literal|210.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 44  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|91.0
+block|,
+comment|/* SGI */
+literal|101.1
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|189.0
+block|,
+comment|/* SGI */
+literal|210.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 45  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|104.0
+block|,
+comment|/* SGI */
+literal|115.6
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|216.0
+block|,
+comment|/* SGI */
+literal|240.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 46  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|78.0
+block|,
+comment|/* SGI */
+literal|86.7
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|162.0
+block|,
+comment|/* SGI */
+literal|180.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 47  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|97.5
+block|,
+comment|/* SGI */
+literal|108.3
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|202.5
+block|,
+comment|/* SGI */
+literal|225.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 48  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|97.5
+block|,
+comment|/* SGI */
+literal|108.3
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|202.5
+block|,
+comment|/* SGI */
+literal|225.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 49  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|117.0
+block|,
+comment|/* SGI */
+literal|130.0
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|243.0
+block|,
+comment|/* SGI */
+literal|270.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 50  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|136.5
+block|,
+comment|/* SGI */
+literal|151.7
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|283.5
+block|,
+comment|/* SGI */
+literal|315.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 51  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|136.5
+block|,
+comment|/* SGI */
+literal|151.7
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|283.5
+block|,
+comment|/* SGI */
+literal|315.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 52  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|156.0
+block|,
+comment|/* SGI */
+literal|173.3
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|324.0
+block|,
+comment|/* SGI */
+literal|360.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 53  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|65.0
+block|,
+comment|/* SGI */
+literal|72.2
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|135.0
+block|,
+comment|/* SGI */
+literal|150.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 54  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|78.0
+block|,
+comment|/* SGI */
+literal|86.7
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|162.0
+block|,
+comment|/* SGI */
+literal|180.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 55  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|91.0
+block|,
+comment|/* SGI */
+literal|101.1
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|189.0
+block|,
+comment|/* SGI */
+literal|210.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 56  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|78.0
+block|,
+comment|/* SGI */
+literal|86.7
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|162.0
+block|,
+comment|/* SGI */
+literal|180.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 57  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|91.0
+block|,
+comment|/* SGI */
+literal|101.1
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|189.0
+block|,
+comment|/* SGI */
+literal|210.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 58  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|104.0
+block|,
+comment|/* SGI */
+literal|115.6
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|216.0
+block|,
+comment|/* SGI */
+literal|240.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 59  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|117.0
+block|,
+comment|/* SGI */
+literal|130.0
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|243.0
+block|,
+comment|/* SGI */
+literal|270.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 60  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|104.0
+block|,
+comment|/* SGI */
+literal|115.6
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|216.0
+block|,
+comment|/* SGI */
+literal|240.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 61  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|117.0
+block|,
+comment|/* SGI */
+literal|130.0
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|243.0
+block|,
+comment|/* SGI */
+literal|270.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 62  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|130.0
+block|,
+comment|/* SGI */
+literal|144.4
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|270.0
+block|,
+comment|/* SGI */
+literal|300.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 63  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|130.0
+block|,
+comment|/* SGI */
+literal|144.4
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|270.0
+block|,
+comment|/* SGI */
+literal|300.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 64  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|143.0
+block|,
+comment|/* SGI */
+literal|158.9
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|297.0
+block|,
+comment|/* SGI */
+literal|330.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 65  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|97.5
+block|,
+comment|/* SGI */
+literal|108.3
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|202.5
+block|,
+comment|/* SGI */
+literal|225.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 66  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|117.0
+block|,
+comment|/* SGI */
+literal|130.0
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|243.0
+block|,
+comment|/* SGI */
+literal|270.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 67  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|136.5
+block|,
+comment|/* SGI */
+literal|151.7
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|283.5
+block|,
+comment|/* SGI */
+literal|315.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 68  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|117.0
+block|,
+comment|/* SGI */
+literal|130.0
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|243.0
+block|,
+comment|/* SGI */
+literal|270.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 69  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|136.5
+block|,
+comment|/* SGI */
+literal|151.7
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|283.5
+block|,
+comment|/* SGI */
+literal|315.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 70  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|156.0
+block|,
+comment|/* SGI */
+literal|173.3
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|324.0
+block|,
+comment|/* SGI */
+literal|360.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 71  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|175.5
+block|,
+comment|/* SGI */
+literal|195.0
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|364.5
+block|,
+comment|/* SGI */
+literal|405.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 72  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|156.0
+block|,
+comment|/* SGI */
+literal|173.3
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|324.0
+block|,
+comment|/* SGI */
+literal|360.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 73  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|175.5
+block|,
+comment|/* SGI */
+literal|195.0
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|364.5
+block|,
+comment|/* SGI */
+literal|405.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 74  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|195.0
+block|,
+comment|/* SGI */
+literal|216.7
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|405.0
+block|,
+comment|/* SGI */
+literal|450.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 75  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|195.0
+block|,
+comment|/* SGI */
+literal|216.7
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|405.0
+block|,
+comment|/* SGI */
+literal|450.0
+block|, }
+block|, 	}
+block|,
+comment|/* MCS 76  */
+block|{
+comment|/* 20 Mhz */
+block|{
+literal|214.5
+block|,
+comment|/* SGI */
+literal|238.3
+block|, }
+block|,
+comment|/* 40 Mhz */
+block|{
+literal|445.5
+block|,
+comment|/* SGI */
+literal|495.0
+block|, }
+block|, 	}
+block|, }
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -721,6 +2162,9 @@ name|u_int
 name|length
 parameter_list|)
 block|{
+name|u_int
+name|elementlen
+decl_stmt|;
 name|struct
 name|ssid_t
 name|ssid
@@ -1741,6 +3185,17 @@ condition|)
 return|return
 literal|0
 return|;
+name|elementlen
+operator|=
+operator|*
+operator|(
+name|p
+operator|+
+name|offset
+operator|+
+literal|1
+operator|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1755,14 +3210,7 @@ operator|+
 literal|2
 operator|)
 argument_list|,
-operator|*
-operator|(
-name|p
-operator|+
-name|offset
-operator|+
-literal|1
-operator|)
+name|elementlen
 argument_list|)
 condition|)
 return|return
@@ -1772,48 +3220,22 @@ if|if
 condition|(
 name|length
 operator|<
-call|(
-name|u_int
-call|)
-argument_list|(
-operator|*
-operator|(
-name|p
-operator|+
-name|offset
-operator|+
-literal|1
-operator|)
+name|elementlen
 operator|+
 literal|2
-argument_list|)
 condition|)
 return|return
 literal|0
 return|;
 name|offset
 operator|+=
-operator|*
-operator|(
-name|p
-operator|+
-name|offset
-operator|+
-literal|1
-operator|)
+name|elementlen
 operator|+
 literal|2
 expr_stmt|;
 name|length
 operator|-=
-operator|*
-operator|(
-name|p
-operator|+
-name|offset
-operator|+
-literal|1
-operator|)
+name|elementlen
 operator|+
 literal|2
 expr_stmt|;
@@ -5993,6 +7415,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|Hflag
+operator|&&
 name|FC_TYPE
 argument_list|(
 name|fc
@@ -6623,6 +8047,14 @@ parameter_list|,
 name|u_int8_t
 modifier|*
 name|flags
+parameter_list|,
+name|struct
+name|radiotap_state
+modifier|*
+name|state
+parameter_list|,
+name|u_int32_t
+name|presentflags
 parameter_list|)
 block|{
 union|union
@@ -6677,6 +8109,13 @@ operator|.
 name|u8
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rc
+operator|!=
+literal|0
+condition|)
+break|break;
 operator|*
 name|flags
 operator|=
@@ -6688,6 +8127,35 @@ break|break;
 case|case
 name|IEEE80211_RADIOTAP_RATE
 case|:
+name|rc
+operator|=
+name|cpack_uint8
+argument_list|(
+name|s
+argument_list|,
+operator|&
+name|u
+operator|.
+name|u8
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rc
+operator|!=
+literal|0
+condition|)
+break|break;
+comment|/* Save state rate */
+name|state
+operator|->
+name|rate
+operator|=
+name|u
+operator|.
+name|u8
+expr_stmt|;
+break|break;
 case|case
 name|IEEE80211_RADIOTAP_DB_ANTSIGNAL
 case|:
@@ -6772,6 +8240,9 @@ name|IEEE80211_RADIOTAP_LOCK_QUALITY
 case|:
 case|case
 name|IEEE80211_RADIOTAP_TX_ATTENUATION
+case|:
+case|case
+name|IEEE80211_RADIOTAP_RX_FLAGS
 case|:
 name|rc
 operator|=
@@ -6907,6 +8378,200 @@ name|u8
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|IEEE80211_RADIOTAP_MCS
+case|:
+name|rc
+operator|=
+name|cpack_uint8
+argument_list|(
+name|s
+argument_list|,
+operator|&
+name|u
+operator|.
+name|u8
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rc
+operator|!=
+literal|0
+condition|)
+break|break;
+name|rc
+operator|=
+name|cpack_uint8
+argument_list|(
+name|s
+argument_list|,
+operator|&
+name|u2
+operator|.
+name|u8
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rc
+operator|!=
+literal|0
+condition|)
+break|break;
+name|rc
+operator|=
+name|cpack_uint8
+argument_list|(
+name|s
+argument_list|,
+operator|&
+name|u3
+operator|.
+name|u8
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|IEEE80211_RADIOTAP_VENDOR_NAMESPACE
+case|:
+block|{
+name|u_int8_t
+name|vns
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|u_int16_t
+name|length
+decl_stmt|;
+name|u_int8_t
+name|subspace
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|cpack_align_and_reserve
+argument_list|(
+name|s
+argument_list|,
+literal|2
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|rc
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+break|break;
+block|}
+name|rc
+operator|=
+name|cpack_uint8
+argument_list|(
+name|s
+argument_list|,
+operator|&
+name|vns
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rc
+operator|!=
+literal|0
+condition|)
+break|break;
+name|rc
+operator|=
+name|cpack_uint8
+argument_list|(
+name|s
+argument_list|,
+operator|&
+name|vns
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rc
+operator|!=
+literal|0
+condition|)
+break|break;
+name|rc
+operator|=
+name|cpack_uint8
+argument_list|(
+name|s
+argument_list|,
+operator|&
+name|vns
+index|[
+literal|2
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rc
+operator|!=
+literal|0
+condition|)
+break|break;
+name|rc
+operator|=
+name|cpack_uint8
+argument_list|(
+name|s
+argument_list|,
+operator|&
+name|subspace
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rc
+operator|!=
+literal|0
+condition|)
+break|break;
+name|rc
+operator|=
+name|cpack_uint16
+argument_list|(
+name|s
+argument_list|,
+operator|&
+name|length
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rc
+operator|!=
+literal|0
+condition|)
+break|break;
+comment|/* Skip up to length */
+name|s
+operator|->
+name|c_next
+operator|+=
+name|length
+expr_stmt|;
+break|break;
+block|}
 default|default:
 comment|/* this bit indicates a field whose 		 * size we do not know, so we cannot 		 * proceed.  Just print the bit number. 		 */
 name|printf
@@ -6937,6 +8602,13 @@ return|return
 name|rc
 return|;
 block|}
+comment|/* Preserve the state present flags */
+name|state
+operator|->
+name|present
+operator|=
+name|presentflags
+expr_stmt|;
 switch|switch
 condition|(
 name|bit
@@ -6945,6 +8617,18 @@ block|{
 case|case
 name|IEEE80211_RADIOTAP_CHANNEL
 case|:
+comment|/* 		 * If CHANNEL and XCHANNEL are both present, skip 		 * CHANNEL. 		 */
+if|if
+condition|(
+name|presentflags
+operator|&
+operator|(
+literal|1
+operator|<<
+name|IEEE80211_RADIOTAP_XCHANNEL
+operator|)
+condition|)
+break|break;
 name|print_chaninfo
 argument_list|(
 name|u
@@ -6985,35 +8669,45 @@ break|break;
 case|case
 name|IEEE80211_RADIOTAP_RATE
 case|:
+comment|/* 		 * XXX On FreeBSD rate& 0x80 means we have an MCS. On 		 * Linux and AirPcap it does not.  (What about 		 * Mac OS X, NetBSD, OpenBSD, and DragonFly BSD?) 		 * 		 * This is an issue either for proprietary extensions 		 * to 11a or 11g, which do exist, or for 11n 		 * implementations that stuff a rate value into 		 * this field, which also appear to exist. 		 * 		 * We currently handle that by assuming that 		 * if the 0x80 bit is set *and* the remaining 		 * bits have a value between 0 and 15 it's 		 * an MCS value, otherwise it's a rate.  If 		 * there are cases where systems that use 		 * "0x80 + MCS index" for MCS indices> 15, 		 * or stuff a rate value here between 64 and 		 * 71.5 Mb/s in here, we'll need a preference 		 * setting.  Such rates do exist, e.g. 11n 		 * MCS 7 at 20 MHz with a long guard interval. 		 */
 if|if
 condition|(
 name|u
 operator|.
 name|u8
-operator|&
+operator|>=
 literal|0x80
+operator|&&
+name|u
+operator|.
+name|u8
+operator|<=
+literal|0x8f
 condition|)
-name|PRINT_HT_RATE
+block|{
+comment|/* 			 * XXX - we don't know the channel width 			 * or guard interval length, so we can't 			 * convert this to a data rate. 			 * 			 * If you want us to show a data rate, 			 * use the MCS field, not the Rate field; 			 * the MCS field includes not only the 			 * MCS index, it also includes bandwidth 			 * and guard interval information. 			 * 			 * XXX - can we get the channel width 			 * from XChannel and the guard interval 			 * information from Flags, at least on 			 * FreeBSD? 			 */
+name|printf
 argument_list|(
-literal|""
+literal|"MCS %u "
 argument_list|,
 name|u
 operator|.
 name|u8
-argument_list|,
-literal|" Mb/s "
+operator|&
+literal|0x7f
 argument_list|)
 expr_stmt|;
+block|}
 else|else
-name|PRINT_RATE
+name|printf
 argument_list|(
-literal|""
+literal|"%2.1f Mb/s "
 argument_list|,
+literal|.5
+operator|*
 name|u
 operator|.
 name|u8
-argument_list|,
-literal|" Mb/s "
 argument_list|)
 expr_stmt|;
 break|break;
@@ -7227,6 +8921,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|IEEE80211_RADIOTAP_RX_FLAGS
+case|:
+comment|/* Do nothing for now */
+break|break;
+case|case
 name|IEEE80211_RADIOTAP_XCHANNEL
 case|:
 name|print_chaninfo
@@ -7241,6 +8940,269 @@ name|u32
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|IEEE80211_RADIOTAP_MCS
+case|:
+block|{
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|bandwidth
+index|[
+literal|4
+index|]
+init|=
+block|{
+literal|"20 MHz"
+block|,
+literal|"40 MHz"
+block|,
+literal|"20 MHz (L)"
+block|,
+literal|"20 MHz (U)"
+block|}
+decl_stmt|;
+name|float
+name|htrate
+decl_stmt|;
+if|if
+condition|(
+name|u
+operator|.
+name|u8
+operator|&
+name|IEEE80211_RADIOTAP_MCS_MCS_INDEX_KNOWN
+condition|)
+block|{
+comment|/* 			 * We know the MCS index. 			 */
+if|if
+condition|(
+name|u3
+operator|.
+name|u8
+operator|<=
+name|MAX_MCS_INDEX
+condition|)
+block|{
+comment|/* 				 * And it's in-range. 				 */
+if|if
+condition|(
+name|u
+operator|.
+name|u8
+operator|&
+operator|(
+name|IEEE80211_RADIOTAP_MCS_BANDWIDTH_KNOWN
+operator||
+name|IEEE80211_RADIOTAP_MCS_GUARD_INTERVAL_KNOWN
+operator|)
+condition|)
+block|{
+comment|/* 					 * And we know both the bandwidth and 					 * the guard interval, so we can look 					 * up the rate. 					 */
+name|htrate
+operator|=
+name|ieee80211_float_htrates
+name|\
+index|[
+name|u3
+operator|.
+name|u8
+index|]
+name|\
+index|[
+operator|(
+operator|(
+name|u2
+operator|.
+name|u8
+operator|&
+name|IEEE80211_RADIOTAP_MCS_BANDWIDTH_MASK
+operator|)
+operator|==
+name|IEEE80211_RADIOTAP_MCS_BANDWIDTH_40
+condition|?
+literal|1
+else|:
+literal|0
+operator|)
+index|]
+name|\
+index|[
+operator|(
+operator|(
+name|u2
+operator|.
+name|u8
+operator|&
+name|IEEE80211_RADIOTAP_MCS_SHORT_GI
+operator|)
+condition|?
+literal|1
+else|:
+literal|0
+operator|)
+index|]
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 					 * We don't know both the bandwidth 					 * and the guard interval, so we can 					 * only report the MCS index. 					 */
+name|htrate
+operator|=
+literal|0.0
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+comment|/* 				 * The MCS value is out of range. 				 */
+name|htrate
+operator|=
+literal|0.0
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|htrate
+operator|!=
+literal|0.0
+condition|)
+block|{
+comment|/* 				 * We have the rate. 				 * Print it. 				 */
+name|printf
+argument_list|(
+literal|"%.1f Mb/s MCS %u "
+argument_list|,
+name|htrate
+argument_list|,
+name|u3
+operator|.
+name|u8
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 				 * We at least have the MCS index. 				 * Print it. 				 */
+name|printf
+argument_list|(
+literal|"MCS %u "
+argument_list|,
+name|u3
+operator|.
+name|u8
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|u
+operator|.
+name|u8
+operator|&
+name|IEEE80211_RADIOTAP_MCS_BANDWIDTH_KNOWN
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s "
+argument_list|,
+name|bandwidth
+index|[
+name|u2
+operator|.
+name|u8
+operator|&
+name|IEEE80211_RADIOTAP_MCS_BANDWIDTH_MASK
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|u
+operator|.
+name|u8
+operator|&
+name|IEEE80211_RADIOTAP_MCS_GUARD_INTERVAL_KNOWN
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s GI "
+argument_list|,
+operator|(
+name|u2
+operator|.
+name|u8
+operator|&
+name|IEEE80211_RADIOTAP_MCS_SHORT_GI
+operator|)
+condition|?
+literal|"short"
+else|:
+literal|"lon"
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|u
+operator|.
+name|u8
+operator|&
+name|IEEE80211_RADIOTAP_MCS_HT_FORMAT_KNOWN
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s "
+argument_list|,
+operator|(
+name|u2
+operator|.
+name|u8
+operator|&
+name|IEEE80211_RADIOTAP_MCS_HT_GREENFIELD
+operator|)
+condition|?
+literal|"greenfield"
+else|:
+literal|"mixed"
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|u
+operator|.
+name|u8
+operator|&
+name|IEEE80211_RADIOTAP_MCS_FEC_TYPE_KNOWN
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s FEC "
+argument_list|,
+operator|(
+name|u2
+operator|.
+name|u8
+operator|&
+name|IEEE80211_RADIOTAP_MCS_FEC_LDPC
+operator|)
+condition|?
+literal|"LDPC"
+else|:
+literal|"BCC"
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+block|}
 block|}
 return|return
 literal|0
@@ -7330,6 +9292,11 @@ decl_stmt|,
 name|next_present
 decl_stmt|;
 name|u_int32_t
+name|presentflags
+init|=
+literal|0
+decl_stmt|;
+name|u_int32_t
 modifier|*
 name|presentp
 decl_stmt|,
@@ -7359,6 +9326,10 @@ name|pad
 decl_stmt|;
 name|u_int
 name|fcslen
+decl_stmt|;
+name|struct
+name|radiotap_state
+name|state
 decl_stmt|;
 if|if
 condition|(
@@ -7552,6 +9523,27 @@ operator|+=
 literal|32
 control|)
 block|{
+name|presentflags
+operator|=
+name|EXTRACT_LE_32BITS
+argument_list|(
+name|presentp
+argument_list|)
+expr_stmt|;
+comment|/* Clear state. */
+name|memset
+argument_list|(
+operator|&
+name|state
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|state
+argument_list|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|present
@@ -7608,6 +9600,11 @@ name|bit
 argument_list|,
 operator|&
 name|flags
+argument_list|,
+operator|&
+name|state
+argument_list|,
+name|presentflags
 argument_list|)
 operator|!=
 literal|0
@@ -7617,6 +9614,8 @@ name|out
 goto|;
 block|}
 block|}
+name|out
+label|:
 if|if
 condition|(
 name|flags
@@ -7639,8 +9638,6 @@ operator|=
 literal|4
 expr_stmt|;
 comment|/* FCS at end of packet */
-name|out
-label|:
 return|return
 name|len
 operator|+

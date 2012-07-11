@@ -140,6 +140,31 @@ name|PROF_NCTX_LOCKS
 value|1024
 end_define
 
+begin_comment
+comment|/*  * prof_tdata pointers close to NULL are used to encode state information that  * is used for cleaning up during thread shutdown.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PROF_TDATA_STATE_REINCARNATED
+value|((prof_tdata_t *)(uintptr_t)1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROF_TDATA_STATE_PURGATORY
+value|((prof_tdata_t *)(uintptr_t)2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROF_TDATA_STATE_MAX
+value|PROF_TDATA_STATE_PURGATORY
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -275,10 +300,14 @@ name|prof_bt_t
 modifier|*
 name|bt
 decl_stmt|;
-comment|/* Protects cnt_merged and cnts_ql. */
+comment|/* Protects nlimbo, cnt_merged, and cnts_ql. */
 name|malloc_mutex_t
 modifier|*
 name|lock
+decl_stmt|;
+comment|/* 	 * Number of threads that currently cause this ctx to be in a state of 	 * limbo due to one of: 	 *   - Initializing per thread counters associated with this ctx. 	 *   - Preparing to destroy this ctx. 	 * nlimbo must be 1 (single destroyer) in order to safely destroy the 	 * ctx. 	 */
+name|unsigned
+name|nlimbo
 decl_stmt|;
 comment|/* Temporary storage for summation during dump. */
 name|prof_cnt_t
@@ -329,6 +358,16 @@ name|threshold
 decl_stmt|;
 name|uint64_t
 name|accum
+decl_stmt|;
+comment|/* State used to avoid dumping while operating on prof internals. */
+name|bool
+name|enq
+decl_stmt|;
+name|bool
+name|enq_idump
+decl_stmt|;
+name|bool
+name|enq_gdump
 decl_stmt|;
 block|}
 struct|;
@@ -621,7 +660,7 @@ name|size
 parameter_list|,
 name|ret
 parameter_list|)
-value|do {			\ 	prof_tdata_t *prof_tdata;					\ 	prof_bt_t bt;							\ 									\ 	assert(size == s2u(size));					\ 									\ 	prof_tdata = *prof_tdata_tsd_get();				\ 	if (prof_tdata == NULL) {					\ 		prof_tdata = prof_tdata_init();				\ 		if (prof_tdata == NULL) {				\ 			ret = NULL;					\ 			break;						\ 		}							\ 	}								\ 									\ 	if (opt_prof_active == false) {					\
+value|do {			\ 	prof_tdata_t *prof_tdata;					\ 	prof_bt_t bt;							\ 									\ 	assert(size == s2u(size));					\ 									\ 	prof_tdata = prof_tdata_get();					\ 	if ((uintptr_t)prof_tdata<= (uintptr_t)PROF_TDATA_STATE_MAX) {	\ 		if (prof_tdata != NULL)					\ 			ret = (prof_thr_cnt_t *)(uintptr_t)1U;		\ 		else							\ 			ret = NULL;					\ 		break;							\ 	}								\ 									\ 	if (opt_prof_active == false) {					\
 comment|/* Sampling is currently inactive, so avoid sampling. */
 value|\ 		ret = (prof_thr_cnt_t *)(uintptr_t)1U;			\ 	} else if (opt_lg_prof_sample == 0) {				\
 comment|/* Don't bother with sampling logic, since sampling   */
@@ -668,6 +707,16 @@ argument_list|,
 argument|prof_tdata_t *
 argument_list|)
 end_macro
+
+begin_function_decl
+name|prof_tdata_t
+modifier|*
+name|prof_tdata_get
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
@@ -827,6 +876,63 @@ argument_list|,
 argument|prof_tdata_cleanup
 argument_list|)
 end_macro
+
+begin_function
+name|JEMALLOC_INLINE
+name|prof_tdata_t
+modifier|*
+name|prof_tdata_get
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|prof_tdata_t
+modifier|*
+name|prof_tdata
+decl_stmt|;
+name|cassert
+argument_list|(
+name|config_prof
+argument_list|)
+expr_stmt|;
+name|prof_tdata
+operator|=
+operator|*
+name|prof_tdata_tsd_get
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|uintptr_t
+operator|)
+name|prof_tdata
+operator|<=
+operator|(
+name|uintptr_t
+operator|)
+name|PROF_TDATA_STATE_MAX
+condition|)
+block|{
+if|if
+condition|(
+name|prof_tdata
+operator|==
+name|NULL
+condition|)
+name|prof_tdata
+operator|=
+name|prof_tdata_init
+argument_list|()
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|prof_tdata
+operator|)
+return|;
+block|}
+end_function
 
 begin_function
 name|JEMALLOC_INLINE
@@ -1103,13 +1209,23 @@ operator|*
 name|prof_tdata_tsd_get
 argument_list|()
 expr_stmt|;
-name|assert
-argument_list|(
+if|if
+condition|(
+operator|(
+name|uintptr_t
+operator|)
 name|prof_tdata
-operator|!=
-name|NULL
-argument_list|)
-expr_stmt|;
+operator|<=
+operator|(
+name|uintptr_t
+operator|)
+name|PROF_TDATA_STATE_MAX
+condition|)
+return|return
+operator|(
+name|true
+operator|)
+return|;
 comment|/* Take care to avoid integer overflow. */
 if|if
 condition|(
@@ -1781,6 +1897,10 @@ operator|)
 literal|1
 condition|)
 block|{
+name|prof_thr_cnt_t
+modifier|*
+name|tcnt
+decl_stmt|;
 name|assert
 argument_list|(
 name|size
@@ -1793,17 +1913,15 @@ name|true
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|prof_thr_cnt_t
-modifier|*
 name|tcnt
-init|=
+operator|=
 name|prof_lookup
 argument_list|(
 name|ctx
 operator|->
 name|bt
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|tcnt

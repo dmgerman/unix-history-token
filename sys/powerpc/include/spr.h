@@ -950,6 +950,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|FSL_E500mc
+value|0x8023
+end_define
+
+begin_define
+define|#
+directive|define
+name|FSL_E5500
+value|0x8024
+end_define
+
+begin_define
+define|#
+directive|define
 name|SPR_IBAT0U
 value|0x210
 end_define
@@ -3499,6 +3513,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SPR_HID2
+value|0x3f3
+end_define
+
+begin_comment
+comment|/* ..8 Hardware Implementation Register 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SPR_HID4
 value|0x3f4
 end_define
@@ -3818,7 +3843,7 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|E500
+name|BOOKE
 argument_list|)
 end_elif
 
@@ -5436,9 +5461,20 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|E500
+name|BOOKE
 argument_list|)
 end_elif
+
+begin_define
+define|#
+directive|define
+name|SPR_MCSR
+value|0x23c
+end_define
+
+begin_comment
+comment|/* ..8 Machine Check Syndrome register */
+end_comment
 
 begin_define
 define|#
@@ -5586,6 +5622,99 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SPR_MMUCR
+value|0x3b2
+end_define
+
+begin_comment
+comment|/* 4.. MMU Control Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MMUCR_SWOA
+value|(0x80000000>> 7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MMUCR_U1TE
+value|(0x80000000>> 9)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MMUCR_U2SWOAE
+value|(0x80000000>> 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MMUCR_DULXE
+value|(0x80000000>> 12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MMUCR_IULXE
+value|(0x80000000>> 13)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MMUCR_STS
+value|(0x80000000>> 15)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MMUCR_STID_MASK
+value|(0xFF000000>> 24)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPR_MMUCSR0
+value|0x3f4
+end_define
+
+begin_comment
+comment|/* ..8 1012 MMU Control and Status Register 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MMUCSR0_L2TLB0_FI
+value|0x04
+end_define
+
+begin_comment
+comment|/*  TLB0 flash invalidate */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MMUCSR0_L2TLB1_FI
+value|0x02
+end_define
+
+begin_comment
+comment|/*  TLB1 flash invalidate */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SPR_SVR
 value|0x3ff
 end_define
@@ -5723,6 +5852,34 @@ end_define
 begin_define
 define|#
 directive|define
+name|SVR_P2041
+value|0x8210
+end_define
+
+begin_define
+define|#
+directive|define
+name|SVR_P2041E
+value|0x8218
+end_define
+
+begin_define
+define|#
+directive|define
+name|SVR_P3041
+value|0x8211
+end_define
+
+begin_define
+define|#
+directive|define
+name|SVR_P3041E
+value|0x8219
+end_define
+
+begin_define
+define|#
+directive|define
 name|SVR_P4040
 value|0x8200
 end_define
@@ -5746,6 +5903,20 @@ define|#
 directive|define
 name|SVR_P4080E
 value|0x8209
+end_define
+
+begin_define
+define|#
+directive|define
+name|SVR_P5020
+value|0x8220
+end_define
+
+begin_define
+define|#
+directive|define
+name|SVR_P5020E
+value|0x8228
 end_define
 
 begin_define
@@ -6092,6 +6263,93 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SPR_MAS8
+value|0x155
+end_define
+
+begin_comment
+comment|/* ..8 MMU Assist Register 8 Book-E/e500 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_L1CFG0
+value|0x203
+end_define
+
+begin_comment
+comment|/* ..8 L1 cache configuration register 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_L1CFG1
+value|0x204
+end_define
+
+begin_comment
+comment|/* ..8 L1 cache configuration register 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_CCR1
+value|0x378
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCR1_L2COBE
+value|0x00000040
+end_define
+
+begin_define
+define|#
+directive|define
+name|DCR_L2DCDCRAI
+value|0x0000
+end_define
+
+begin_comment
+comment|/* L2 D-Cache DCR Address Pointer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCR_L2DCDCRDI
+value|0x0001
+end_define
+
+begin_comment
+comment|/* L2 D-Cache DCR Data Indirect */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCR_L2CR0
+value|0x00
+end_define
+
+begin_comment
+comment|/* L2 Cache Configuration Register 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L2CR0_AS
+value|0x30000000
+end_define
+
+begin_define
+define|#
+directive|define
 name|SPR_L1CSR0
 value|0x3F2
 end_define
@@ -6169,6 +6427,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|L1CSR1_ICUL
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* Instr Cache Unable to Lock */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|L1CSR1_ICLFR
 value|0x00000100
 end_define
@@ -6202,6 +6471,61 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SPR_L2CSR0
+value|0x3F9
+end_define
+
+begin_comment
+comment|/* ..8 L2 Cache Control and Status Register 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L2CSR0_L2E
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* L2 Cache Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L2CSR0_L2PE
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* L2 Cache Parity Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L2CSR0_L2FI
+value|0x00200000
+end_define
+
+begin_comment
+comment|/* L2 Cache Flash Invalidate */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L2CSR0_L2LFC
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* L2 Cache Lock Flags Clear */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SPR_BUCSR
 value|0x3F5
 end_define
@@ -6221,13 +6545,24 @@ begin_comment
 comment|/* Branch Prediction Enable */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|BUCSR_BBFI
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* Branch Buffer Flash Invalidate */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* #elif defined(E500) */
+comment|/* BOOKE */
 end_comment
 
 begin_endif

@@ -1204,6 +1204,10 @@ name|sio_devclass
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * XXX Assmues that devclass_get_device, devclass_get_softc and  * device_get_softc are fast interrupt safe.  The current implementation  * of these functions are.  */
+end_comment
+
 begin_define
 define|#
 directive|define

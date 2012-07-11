@@ -1008,6 +1008,21 @@ value|99
 end_define
 
 begin_comment
+comment|/*  * Values between 100 and 103 are used in capture file headers as  * link-layer header type LINKTYPE_ values corresponding to DLT_ types  * that differ between platforms; don't use those values for new DLT_  * new types.  */
+end_comment
+
+begin_comment
+comment|/*  * Values starting with 104 are used for newly-assigned link-layer  * header type values; for those link-layer header types, the DLT_  * value returned by pcap_datalink() and passed to pcap_open_dead(),  * and the LINKTYPE_ value that appears in capture files, are the  * same.  *  * DLT_MATCHING_MIN is the lowest such value; DLT_MATCHING_MAX is  * the highest such value.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_MATCHING_MIN
+value|104
+end_define
+
+begin_comment
 comment|/*  * This value was defined by libpcap 0.5; platforms that have defined  * it with a different value should define it here with that value -  * a link type of 104 in a save file will be mapped to DLT_C_HDLC,  * whatever value that happens to be, so programs will correctly  * handle files with that link type regardless of the value of  * DLT_C_HDLC.  *  * The name DLT_C_HDLC was used by BSD/OS; we use that name for source  * compatibility with programs written for BSD/OS.  *  * libpcap 0.5 defined it as DLT_CHDLC; we define DLT_CHDLC as well,  * for source compatibility with programs written for libpcap 0.5.  */
 end_comment
 
@@ -2306,6 +2321,152 @@ value|229
 end_define
 
 begin_comment
+comment|/*  * IEEE 802.15.4, exactly as it appears in the spec (no padding, no  * nothing), and with no FCS at the end of the frame; requested by  * Jon Smirl<jonsmirl@gmail.com>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_IEEE802_15_4_NOFCS
+value|230
+end_define
+
+begin_comment
+comment|/*  * Raw D-Bus:  *  *	http://www.freedesktop.org/wiki/Software/dbus  *  * messages:  *  *	http://dbus.freedesktop.org/doc/dbus-specification.html#message-protocol-messages  *  * starting with the endianness flag, followed by the message type, etc.,  * but without the authentication handshake before the message sequence:  *  *	http://dbus.freedesktop.org/doc/dbus-specification.html#auth-protocol  *  * Requested by Martin Vidner<martin@vidner.net>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_DBUS
+value|231
+end_define
+
+begin_comment
+comment|/*  * Juniper-private data link type, as per request from  * Hannes Gredler<hannes@juniper.net>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_JUNIPER_VS
+value|232
+end_define
+
+begin_define
+define|#
+directive|define
+name|DLT_JUNIPER_SRX_E2E
+value|233
+end_define
+
+begin_define
+define|#
+directive|define
+name|DLT_JUNIPER_FIBRECHANNEL
+value|234
+end_define
+
+begin_comment
+comment|/*  * DVB-CI (DVB Common Interface for communication between a PC Card  * module and a DVB receiver).  See  *  *	http://www.kaiser.cx/pcap-dvbci.html  *  * for the specification.  *  * Requested by Martin Kaiser<martin@kaiser.cx>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_DVB_CI
+value|235
+end_define
+
+begin_comment
+comment|/*  * Variant of 3GPP TS 27.010 multiplexing protocol (similar to, but  * *not* the same as, 27.010).  Requested by Hans-Christoph Schemmel  *<hans-christoph.schemmel@cinterion.com>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_MUX27010
+value|236
+end_define
+
+begin_comment
+comment|/*  * STANAG 5066 D_PDUs.  Requested by M. Baris Demiray  *<barisdemiray@gmail.com>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_STANAG_5066_D_PDU
+value|237
+end_define
+
+begin_comment
+comment|/*  * Juniper-private data link type, as per request from  * Hannes Gredler<hannes@juniper.net>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_JUNIPER_ATM_CEMIC
+value|238
+end_define
+
+begin_comment
+comment|/*  * NetFilter LOG messages   * (payload of netlink NFNL_SUBSYS_ULOG/NFULNL_MSG_PACKET packets)  *  * Requested by Jakub Zawadzki<darkjames-ws@darkjames.pl>  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_NFLOG
+value|239
+end_define
+
+begin_comment
+comment|/*  * Hilscher Gesellschaft fuer Systemautomation mbH link-layer type  * for Ethernet packets with a 4-byte pseudo-header and always  * with the payload including the FCS, as supplied by their  * netANALYZER hardware and software.  *  * Requested by Holger P. Frommer<HPfrommer@hilscher.com>  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_NETANALYZER
+value|240
+end_define
+
+begin_comment
+comment|/*  * Hilscher Gesellschaft fuer Systemautomation mbH link-layer type  * for Ethernet packets with a 4-byte pseudo-header and FCS and  * with the Ethernet header preceded by 7 bytes of preamble and  * 1 byte of SFD, as supplied by their netANALYZER hardware and  * software.  *  * Requested by Holger P. Frommer<HPfrommer@hilscher.com>  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_NETANALYZER_TRANSPARENT
+value|241
+end_define
+
+begin_comment
+comment|/*  * IP-over-Infiniband, as specified by RFC 4391.  *  * Requested by Petr Sumbera<petr.sumbera@oracle.com>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_IPOIB
+value|242
+end_define
+
+begin_define
+define|#
+directive|define
+name|DLT_MATCHING_MAX
+value|242
+end_define
+
+begin_comment
+comment|/* highest value in the "matching" range */
+end_comment
+
+begin_comment
 comment|/*  * DLT and savefile link type values are split into a class and  * a member of that class.  A class value of 0 indicates a regular  * DLT_/LINKTYPE_ value.  */
 end_comment
 
@@ -2853,6 +3014,10 @@ argument_list|)
 name|bif_wlist
 expr_stmt|;
 comment|/* writer-only list */
+name|int
+name|flags
+decl_stmt|;
+comment|/* Interface flags */
 endif|#
 directive|endif
 block|}

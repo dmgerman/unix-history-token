@@ -335,6 +335,12 @@ return|return
 name|FailureResultFiles
 return|;
 block|}
+comment|/// Returns the sysroot path.
+name|StringRef
+name|getSysRoot
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// getArgsForToolChain - Return the derived argument list for the
 comment|/// tool chain \arg TC (or the default tool chain, if TC is not
 comment|/// specified).

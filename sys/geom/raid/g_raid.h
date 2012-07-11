@@ -1180,9 +1180,25 @@ name|v_disks_count
 decl_stmt|;
 comment|/* Number of disks in array. */
 name|u_int
+name|v_mdf_pdisks
+decl_stmt|;
+comment|/* Number of parity disks 						   in RAIDMDF array. */
+name|uint16_t
+name|v_mdf_polynomial
+decl_stmt|;
+comment|/* Polynomial for RAIDMDF. */
+name|uint8_t
+name|v_mdf_method
+decl_stmt|;
+comment|/* Generation method for RAIDMDF. */
+name|u_int
 name|v_strip_size
 decl_stmt|;
 comment|/* Array strip size. */
+name|u_int
+name|v_rotate_parity
+decl_stmt|;
+comment|/* Rotate RAID5R parity 						   after numer of stripes. */
 name|u_int
 name|v_sectorsize
 decl_stmt|;
@@ -1613,6 +1629,11 @@ specifier|const
 name|char
 modifier|*
 name|format
+parameter_list|,
+name|struct
+name|gctl_req
+modifier|*
+name|req
 parameter_list|,
 name|struct
 name|g_geom

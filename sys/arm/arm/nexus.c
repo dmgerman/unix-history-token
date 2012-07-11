@@ -664,10 +664,9 @@ name|retval
 operator|+=
 name|printf
 argument_list|(
-literal|" on motherboard\n"
+literal|"\n"
 argument_list|)
 expr_stmt|;
-comment|/* XXX "motherboard", ick */
 return|return
 operator|(
 name|retval

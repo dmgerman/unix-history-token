@@ -7369,10 +7369,7 @@ name|as
 argument_list|,
 name|eaddr
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|eaddr
-argument_list|)
+name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
 block|}
@@ -8380,11 +8377,24 @@ name|ifp
 operator|!=
 name|NULL
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|DEV_NETMAP
+name|netmap_detach
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* DEV_NETMAP */
 name|if_free
 argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
@@ -9014,17 +9024,6 @@ name|rl_stag
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|DEV_NETMAP
-name|netmap_detach
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEV_NETMAP */
 if|if
 condition|(
 name|sc

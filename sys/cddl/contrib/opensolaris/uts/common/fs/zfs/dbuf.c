@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -1244,17 +1244,15 @@ argument_list|)
 expr_stmt|;
 name|is_metadata
 operator|=
-name|dmu_ot
-index|[
+name|DMU_OT_IS_METADATA
+argument_list|(
 name|DB_DNODE
 argument_list|(
 name|db
 argument_list|)
 operator|->
 name|dn_type
-index|]
-operator|.
-name|ot_metadata
+argument_list|)
 expr_stmt|;
 name|DB_DNODE_EXIT
 argument_list|(

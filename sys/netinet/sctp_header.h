@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001-2007, by Cisco Systems, Inc. All rights reserved.  * Copyright (c) 2008-2011, by Randall Stewart. All rights reserved.  * Copyright (c) 2008-2011, by Michael Tuexen. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *    this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
-end_comment
-
-begin_comment
-comment|/* $KAME: sctp_header.h,v 1.14 2005/03/06 16:04:17 itojun Exp $	 */
+comment|/*-  * Copyright (c) 2001-2007, by Cisco Systems, Inc. All rights reserved.  * Copyright (c) 2008-2012, by Randall Stewart. All rights reserved.  * Copyright (c) 2008-2012, by Michael Tuexen. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *    this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -24,13 +20,13 @@ end_expr_stmt
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__sctp_header_h__
+name|_NETINET_SCTP_HEADER_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__sctp_header_h__
+name|_NETINET_SCTP_HEADER_H_
 end_define
 
 begin_include
@@ -1514,67 +1510,62 @@ end_struct
 begin_define
 define|#
 directive|define
-name|SCTP_STREAM_RESET_NOTHING
+name|SCTP_STREAM_RESET_RESULT_NOTHING_TO_DO
 value|0x00000000
 end_define
 
 begin_comment
-comment|/* Nothing for me to do */
+comment|/* XXX: unused */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SCTP_STREAM_RESET_PERFORMED
+name|SCTP_STREAM_RESET_RESULT_PERFORMED
 value|0x00000001
 end_define
 
-begin_comment
-comment|/* Did it */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|SCTP_STREAM_RESET_REJECT
+name|SCTP_STREAM_RESET_RESULT_DENIED
 value|0x00000002
 end_define
 
-begin_comment
-comment|/* refused to do it */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|SCTP_STREAM_RESET_ERROR_STR
+name|SCTP_STREAM_RESET_RESULT_ERR__WRONG_SSN
 value|0x00000003
 end_define
 
 begin_comment
-comment|/* bad Stream no */
+comment|/* XXX: unused */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SCTP_STREAM_RESET_TRY_LATER
+name|SCTP_STREAM_RESET_RESULT_ERR_IN_PROGRESS
 value|0x00000004
 end_define
 
-begin_comment
-comment|/* collision, try again */
-end_comment
+begin_define
+define|#
+directive|define
+name|SCTP_STREAM_RESET_RESULT_ERR_BAD_SEQNO
+value|0x00000005
+end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_STREAM_RESET_BAD_SEQNO
-value|0x00000005
+name|SCTP_STREAM_RESET_RESULT_IN_PROGRESS
+value|0x00000006
 end_define
 
 begin_comment
-comment|/* bad str-reset seq no */
+comment|/* XXX: unused */
 end_comment
 
 begin_comment

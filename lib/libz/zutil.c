@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* zutil.c -- target dependent utility functions for the compression library  * Copyright (C) 1995-2005, 2010 Jean-loup Gailly.  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* zutil.c -- target dependent utility functions for the compression library  * Copyright (C) 1995-2005, 2010, 2011, 2012 Jean-loup Gailly.  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_comment
@@ -12,6 +12,23 @@ include|#
 directive|include
 file|"zutil.h"
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|Z_SOLO
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|"gzguts.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -390,9 +407,17 @@ literal|21
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|STDC
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|Z_HAVE_STDARG_H
+argument_list|)
 ifdef|#
 directive|ifdef
 name|NO_vsnprintf
@@ -785,6 +810,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|Z_SOLO
+end_ifndef
 
 begin_ifdef
 ifdef|#
@@ -1443,6 +1474,15 @@ end_endif
 
 begin_comment
 comment|/* MY_ZCALLOC */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !Z_SOLO */
 end_comment
 
 end_unit

@@ -60,7 +60,7 @@ begin_define
 define|#
 directive|define
 name|__FreeBSD_version
-value|1000011
+value|1000014
 end_define
 
 begin_comment
@@ -965,6 +965,16 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|nitems
+parameter_list|(
+name|x
+parameter_list|)
+value|(sizeof((x)) / sizeof((x)[0]))
+end_define
 
 begin_define
 define|#

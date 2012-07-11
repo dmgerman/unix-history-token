@@ -65,6 +65,13 @@ parameter_list|)
 value|"linux(%ld): "fmt"\n", (long)td->td_proc->p_pid
 end_define
 
+begin_define
+define|#
+directive|define
+name|LINUX_DTRACE
+value|linuxulator32
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef

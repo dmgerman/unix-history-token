@@ -213,7 +213,7 @@ value|0x4
 end_define
 
 begin_comment
-comment|/* XXX: not related to ND. */
+comment|/* Not used in FreeBSD. */
 end_comment
 
 begin_define

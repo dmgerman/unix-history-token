@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* adler32.c -- compute the Adler-32 checksum of a data stream  * Copyright (C) 1995-2007 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* adler32.c -- compute the Adler-32 checksum of a data stream  * Copyright (C) 1995-2011 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_comment
@@ -20,28 +20,31 @@ name|local
 value|static
 end_define
 
-begin_function_decl
+begin_decl_stmt
 name|local
 name|uLong
 name|adler32_combine_
-parameter_list|(
+name|OF
+argument_list|(
+operator|(
 name|uLong
 name|adler1
-parameter_list|,
+operator|,
 name|uLong
 name|adler2
-parameter_list|,
+operator|,
 name|z_off64_t
 name|len2
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
 directive|define
 name|BASE
-value|65521UL
+value|65521
 end_define
 
 begin_comment
@@ -118,7 +121,7 @@ value|DO8(buf,0); DO8(buf,8);
 end_define
 
 begin_comment
-comment|/* use NO_DIVIDE if your processor does not do division in hardware */
+comment|/* use NO_DIVIDE if your processor does not do division in hardware --    try it both ways to see which is faster */
 end_comment
 
 begin_ifdef
@@ -126,6 +129,32 @@ ifdef|#
 directive|ifdef
 name|NO_DIVIDE
 end_ifdef
+
+begin_comment
+comment|/* note that this assumes BASE is 65521, where 65536 % 65521 == 15    (thank you to John Reiser for pointing this out) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHOP
+parameter_list|(
+name|a
+parameter_list|)
+define|\
+value|do { \         unsigned long tmp = a>> 16; \         a&= 0xffffUL; \         a += (tmp<< 4) - tmp; \     } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOD28
+parameter_list|(
+name|a
+parameter_list|)
+define|\
+value|do { \         CHOP(a); \         if (a>= BASE) a -= BASE; \     } while (0)
+end_define
 
 begin_define
 define|#
@@ -135,18 +164,20 @@ parameter_list|(
 name|a
 parameter_list|)
 define|\
-value|do { \         if (a>= (BASE<< 16)) a -= (BASE<< 16); \         if (a>= (BASE<< 15)) a -= (BASE<< 15); \         if (a>= (BASE<< 14)) a -= (BASE<< 14); \         if (a>= (BASE<< 13)) a -= (BASE<< 13); \         if (a>= (BASE<< 12)) a -= (BASE<< 12); \         if (a>= (BASE<< 11)) a -= (BASE<< 11); \         if (a>= (BASE<< 10)) a -= (BASE<< 10); \         if (a>= (BASE<< 9)) a -= (BASE<< 9); \         if (a>= (BASE<< 8)) a -= (BASE<< 8); \         if (a>= (BASE<< 7)) a -= (BASE<< 7); \         if (a>= (BASE<< 6)) a -= (BASE<< 6); \         if (a>= (BASE<< 5)) a -= (BASE<< 5); \         if (a>= (BASE<< 4)) a -= (BASE<< 4); \         if (a>= (BASE<< 3)) a -= (BASE<< 3); \         if (a>= (BASE<< 2)) a -= (BASE<< 2); \         if (a>= (BASE<< 1)) a -= (BASE<< 1); \         if (a>= BASE) a -= BASE; \     } while (0)
+value|do { \         CHOP(a); \         MOD28(a); \     } while (0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|MOD4
+name|MOD63
 parameter_list|(
 name|a
 parameter_list|)
 define|\
-value|do { \         if (a>= (BASE<< 4)) a -= (BASE<< 4); \         if (a>= (BASE<< 3)) a -= (BASE<< 3); \         if (a>= (BASE<< 2)) a -= (BASE<< 2); \         if (a>= (BASE<< 1)) a -= (BASE<< 1); \         if (a>= BASE) a -= BASE; \     } while (0)
+value|do {
+comment|/* this assumes a is not negative */
+value|\         z_off64_t tmp = a>> 32; \         a&= 0xffffffffL; \         a += (tmp<< 8) - (tmp<< 5) + tmp; \         tmp = a>> 16; \         a&= 0xffffL; \         a += (tmp<< 4) - tmp; \         tmp = a>> 16; \         a&= 0xffffL; \         a += (tmp<< 4) - tmp; \         if (a>= BASE) a -= BASE; \     } while (0)
 end_define
 
 begin_else
@@ -167,7 +198,17 @@ end_define
 begin_define
 define|#
 directive|define
-name|MOD4
+name|MOD28
+parameter_list|(
+name|a
+parameter_list|)
+value|a %= BASE
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOD63
 parameter_list|(
 name|a
 parameter_list|)
@@ -322,7 +363,7 @@ name|adler
 operator|-=
 name|BASE
 expr_stmt|;
-name|MOD4
+name|MOD28
 argument_list|(
 name|sum2
 argument_list|)
@@ -492,17 +533,29 @@ decl_stmt|;
 name|unsigned
 name|rem
 decl_stmt|;
+comment|/* for negative len, return invalid adler32 as a clue for debugging */
+if|if
+condition|(
+name|len2
+operator|<
+literal|0
+condition|)
+return|return
+literal|0xffffffffUL
+return|;
 comment|/* the derivation of this formula is left as an exercise for the reader */
-name|rem
-operator|=
-call|(
-name|unsigned
-call|)
+name|MOD63
 argument_list|(
 name|len2
-operator|%
-name|BASE
 argument_list|)
+expr_stmt|;
+comment|/* assumes len2>= 0 */
+name|rem
+operator|=
+operator|(
+name|unsigned
+operator|)
+name|len2
 expr_stmt|;
 name|sum1
 operator|=

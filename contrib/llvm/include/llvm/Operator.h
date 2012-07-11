@@ -66,13 +66,19 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/Constants.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Instruction.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Constants.h"
+file|"llvm/Type.h"
 end_include
 
 begin_decl_stmt
@@ -620,6 +626,13 @@ literal|0
 operator|)
 block|}
 block|;
+name|private
+operator|:
+operator|~
+name|PossiblyExactOperator
+argument_list|()
+block|;
+comment|// do not implement
 name|friend
 name|class
 name|BinaryOperator
@@ -649,13 +662,6 @@ operator|*
 name|IsExact
 operator|)
 block|;   }
-name|private
-operator|:
-operator|~
-name|PossiblyExactOperator
-argument_list|()
-block|;
-comment|// do not implement
 name|public
 operator|:
 comment|/// isExact - Test whether this division is known to be exact, with
@@ -790,6 +796,92 @@ name|V
 operator|)
 argument_list|)
 operator|)
+return|;
+block|}
+expr|}
+block|;
+comment|/// FPMathOperator - Utility class for floating point operations which can have
+comment|/// information about relaxed accuracy requirements attached to them.
+name|class
+name|FPMathOperator
+operator|:
+name|public
+name|Operator
+block|{
+name|private
+operator|:
+operator|~
+name|FPMathOperator
+argument_list|()
+block|;
+comment|// do not implement
+name|public
+operator|:
+comment|/// \brief Get the maximum error permitted by this operation in ULPs.  An
+comment|/// accuracy of 0.0 means that the operation should be performed with the
+comment|/// default precision.
+name|float
+name|getFPAccuracy
+argument_list|()
+specifier|const
+block|;
+specifier|static
+specifier|inline
+name|bool
+name|classof
+argument_list|(
+argument|const FPMathOperator *
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+specifier|static
+specifier|inline
+name|bool
+name|classof
+argument_list|(
+argument|const Instruction *I
+argument_list|)
+block|{
+return|return
+name|I
+operator|->
+name|getType
+argument_list|()
+operator|->
+name|isFPOrFPVectorTy
+argument_list|()
+return|;
+block|}
+specifier|static
+specifier|inline
+name|bool
+name|classof
+argument_list|(
+argument|const Value *V
+argument_list|)
+block|{
+return|return
+name|isa
+operator|<
+name|Instruction
+operator|>
+operator|(
+name|V
+operator|)
+operator|&&
+name|classof
+argument_list|(
+name|cast
+operator|<
+name|Instruction
+operator|>
+operator|(
+name|V
+operator|)
+argument_list|)
 return|;
 block|}
 expr|}

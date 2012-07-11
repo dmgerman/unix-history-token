@@ -46,17 +46,6 @@ value|""
 end_define
 
 begin_comment
-comment|/* Directory where gcc is installed. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GCC_INSTALL_PREFIX
-value|""
-end_define
-
-begin_comment
 comment|/* Directories clang will search for headers */
 end_comment
 
@@ -64,6 +53,33 @@ begin_define
 define|#
 directive|define
 name|C_INCLUDE_DIRS
+value|""
+end_define
+
+begin_comment
+comment|/* Linker version detected at compile time. */
+end_comment
+
+begin_comment
+comment|/* #undef HOST_LINK_VERSION */
+end_comment
+
+begin_comment
+comment|/* Default<path> to all compiler invocations for --sysroot=<path>. */
+end_comment
+
+begin_comment
+comment|/* #undef DEFAULT_SYSROOT */
+end_comment
+
+begin_comment
+comment|/* Directory where gcc is installed. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GCC_INSTALL_PREFIX
 value|""
 end_define
 

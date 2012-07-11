@@ -466,6 +466,20 @@ begin_comment
 comment|/*XXX*/
 end_comment
 
+begin_define
+define|#
+directive|define
+name|BABEL_PORT
+value|6696
+end_define
+
+begin_define
+define|#
+directive|define
+name|BABEL_PORT_OLD
+value|6697
+end_define
+
 begin_endif
 endif|#
 directive|endif

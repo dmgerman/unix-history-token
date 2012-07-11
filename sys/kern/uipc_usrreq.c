@@ -8693,9 +8693,10 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|unsigned
-operator|)
+name|fd
+operator|<
+literal|0
+operator|||
 name|fd
 operator|>=
 name|fdescp

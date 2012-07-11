@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001-2007, by Cisco Systems, Inc. All rights reserved.  * Copyright (c) 2008-2011, by Randall Stewart. All rights reserved.  * Copyright (c) 2008-2011, by Michael Tuexen. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *    this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
-end_comment
-
-begin_comment
-comment|/* $KAME: sctp_uio.h,v 1.11 2005/03/06 16:04:18 itojun Exp $	 */
+comment|/*-  * Copyright (c) 2001-2007, by Cisco Systems, Inc. All rights reserved.  * Copyright (c) 2008-2012, by Randall Stewart. All rights reserved.  * Copyright (c) 2008-2012, by Michael Tuexen. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *    this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -24,13 +20,13 @@ end_expr_stmt
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__sctp_uio_h__
+name|_NETINET_SCTP_UIO_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__sctp_uio_h__
+name|_NETINET_SCTP_UIO_H_
 end_define
 
 begin_if
@@ -461,7 +457,7 @@ struct|struct
 name|sctp_authinfo
 block|{
 name|uint16_t
-name|auth_keyid
+name|auth_keynumber
 decl_stmt|;
 block|}
 struct|;
@@ -1020,6 +1016,10 @@ decl_stmt|;
 name|sctp_assoc_t
 name|sac_assoc_id
 decl_stmt|;
+name|uint8_t
+name|sac_info
+index|[]
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1061,6 +1061,52 @@ define|#
 directive|define
 name|SCTP_CANT_STR_ASSOC
 value|0x0005
+end_define
+
+begin_comment
+comment|/* sac_info values */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_ASSOC_SUPPORTS_PR
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_ASSOC_SUPPORTS_AUTH
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_ASSOC_SUPPORTS_ASCONF
+value|0x03
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_ASSOC_SUPPORTS_MULTIBUF
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_ASSOC_SUPPORTS_RE_CONFIG
+value|0x05
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_ASSOC_SUPPORTS_MAX
+value|0x05
 end_define
 
 begin_comment
@@ -1216,7 +1262,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* data send failure event */
+comment|/* data send failure event (deprecated) */
 end_comment
 
 begin_struct
@@ -1244,6 +1290,41 @@ name|ssf_assoc_id
 decl_stmt|;
 name|uint8_t
 name|ssf_data
+index|[]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* data send failure event (not deprecated) */
+end_comment
+
+begin_struct
+struct|struct
+name|sctp_send_failed_event
+block|{
+name|uint16_t
+name|ssfe_type
+decl_stmt|;
+name|uint16_t
+name|ssfe_flags
+decl_stmt|;
+name|uint32_t
+name|ssfe_length
+decl_stmt|;
+name|uint32_t
+name|ssfe_error
+decl_stmt|;
+name|struct
+name|sctp_sndinfo
+name|ssfe_info
+decl_stmt|;
+name|sctp_assoc_t
+name|ssfe_assoc_id
+decl_stmt|;
+name|uint8_t
+name|ssfe_data
 index|[]
 decl_stmt|;
 block|}
@@ -1460,8 +1541,15 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SCTP_AUTH_NEWKEY
+name|SCTP_AUTH_NEW_KEY
 value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_AUTH_NEWKEY
+value|SCTP_AUTH_NEW_KEY
 end_define
 
 begin_define
@@ -1556,13 +1644,6 @@ define|#
 directive|define
 name|SCTP_STREAM_RESET_FAILED
 value|0x0008
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTP_STREAM_CHANGED_DENIED
-value|0x0010
 end_define
 
 begin_comment
@@ -1724,6 +1805,10 @@ name|sctp_sender_dry_event
 name|sn_sender_dry_event
 decl_stmt|;
 name|struct
+name|sctp_send_failed_event
+name|sn_send_failed_event
+decl_stmt|;
+name|struct
 name|sctp_stream_reset_event
 name|sn_strreset_event
 decl_stmt|;
@@ -1847,6 +1932,13 @@ define|#
 directive|define
 name|SCTP_STREAM_CHANGE_EVENT
 value|0x000d
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_SEND_FAILED_EVENT
+value|0x000e
 end_define
 
 begin_comment
@@ -2116,26 +2208,6 @@ end_struct
 
 begin_struct
 struct|struct
-name|sctp_setstrm_timeout
-block|{
-name|sctp_assoc_t
-name|ssto_assoc_id
-decl_stmt|;
-name|uint32_t
-name|ssto_timeout
-decl_stmt|;
-name|uint32_t
-name|ssto_streamid_start
-decl_stmt|;
-name|uint32_t
-name|ssto_streamid_end
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
 name|sctp_status
 block|{
 name|sctp_assoc_t
@@ -2311,6 +2383,9 @@ name|sctp_authchunks
 block|{
 name|sctp_assoc_t
 name|gauth_assoc_id
+decl_stmt|;
+name|uint32_t
+name|gauth_number_of_chunks
 decl_stmt|;
 name|uint8_t
 name|gauth_chunks

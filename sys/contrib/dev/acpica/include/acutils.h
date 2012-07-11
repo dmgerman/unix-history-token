@@ -1571,7 +1571,7 @@ name|UINT32
 name|Display
 parameter_list|,
 name|UINT32
-name|componentId
+name|ComponentId
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2309,6 +2309,17 @@ end_function_decl
 begin_comment
 comment|/*  * utmisc  */
 end_comment
+
+begin_function_decl
+name|void
+name|UtConvertBackslashes
+parameter_list|(
+name|char
+modifier|*
+name|Pathname
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|const

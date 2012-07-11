@@ -897,6 +897,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|AslErrorLevel
@@ -916,6 +917,31 @@ block|,
 literal|"Remark  "
 block|,
 literal|"Optimize"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|AslErrorLevelIde
+index|[
+name|ASL_NUM_REPORT_LEVELS
+index|]
+init|=
+block|{
+literal|"warning "
+block|,
+literal|"warning "
+block|,
+literal|"warning "
+block|,
+literal|"error   "
+block|,
+literal|"remark  "
+block|,
+literal|"optimize"
 block|}
 decl_stmt|;
 end_decl_stmt

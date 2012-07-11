@@ -385,6 +385,10 @@ define|#
 directive|define
 name|CAM_SIM_POLLED
 value|0x08
+define|#
+directive|define
+name|CAM_SIM_BATCH
+value|0x10
 name|struct
 name|callout
 name|callout

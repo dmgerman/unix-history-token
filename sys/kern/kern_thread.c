@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_kdtrace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_hwpmc_hooks.h"
 end_include
 
@@ -68,7 +74,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rangelock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/resourcevar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sdt.h>
 end_include
 
 begin_include
@@ -171,6 +189,28 @@ include|#
 directive|include
 file|<sys/eventhandler.h>
 end_include
+
+begin_expr_stmt
+name|SDT_PROVIDER_DECLARE
+argument_list|(
+name|proc
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE
+argument_list|(
+name|proc
+argument_list|, , ,
+name|lwp_exit
+argument_list|,
+name|lwp
+operator|-
+name|exit
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * thread related storage.  */
@@ -742,6 +782,12 @@ operator|=
 name|turnstile_alloc
 argument_list|()
 expr_stmt|;
+name|td
+operator|->
+name|td_rlqe
+operator|=
+name|NULL
+expr_stmt|;
 name|EVENTHANDLER_INVOKE
 argument_list|(
 name|thread_init
@@ -819,6 +865,13 @@ argument_list|(
 name|thread_fini
 argument_list|,
 name|td
+argument_list|)
+expr_stmt|;
+name|rlqentry_free
+argument_list|(
+name|td
+operator|->
+name|td_rlqe
 argument_list|)
 expr_stmt|;
 name|turnstile_free

@@ -10,13 +10,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|ARM_AT91_AT91PITREG_H
+name|ARM_AT91_AT91_PITREG_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|ARM_AT91_AT91PITREG_H
+name|ARM_AT91_AT91_PITREG_H
 end_define
 
 begin_define
@@ -116,13 +116,23 @@ begin_comment
 comment|/* interrupt done */
 end_comment
 
+begin_function_decl
+name|void
+name|at91_pit_delay
+parameter_list|(
+name|int
+name|us
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* ARM_AT91_AT91PITREG_H */
+comment|/* ARM_AT91_AT91_PITREG_H */
 end_comment
 
 end_unit

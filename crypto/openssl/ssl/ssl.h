@@ -7080,6 +7080,10 @@ name|SSL_F_DTLS1_BUFFER_RECORD
 value|247
 define|#
 directive|define
+name|SSL_F_DTLS1_CHECK_TIMEOUT_NUM
+value|293
+define|#
+directive|define
 name|SSL_F_DTLS1_CLIENT_HELLO
 value|248
 define|#
@@ -7306,6 +7310,10 @@ define|#
 directive|define
 name|SSL_F_SSL3_CHECK_CERT_AND_ALGORITHM
 value|130
+define|#
+directive|define
+name|SSL_F_SSL3_CHECK_CLIENT_HELLO
+value|292
 define|#
 directive|define
 name|SSL_F_SSL3_CLIENT_HELLO
@@ -8239,6 +8247,10 @@ define|#
 directive|define
 name|SSL_R_MISSING_VERIFY_MESSAGE
 value|174
+define|#
+directive|define
+name|SSL_R_MULTIPLE_SGC_RESTARTS
+value|325
 define|#
 directive|define
 name|SSL_R_NON_SSLV2_INITIAL_PACKET

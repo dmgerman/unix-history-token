@@ -154,12 +154,15 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"bread failed specvp %p blkno %qd BBTOB(len) %ld\n"
+literal|"bread failed specvp %p blkno %jd BBTOB(len) %ld\n"
 argument_list|,
 name|target
 operator|->
 name|specvp
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|blkno
 argument_list|,
 operator|(

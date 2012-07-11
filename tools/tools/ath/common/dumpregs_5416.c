@@ -53,7 +53,7 @@ begin_define
 define|#
 directive|define
 name|MAC5416
-value|SREV(13,8), SREV(0xff,0xff)
+value|SREV(13,8), SREV(0xffff,0xffff)
 end_define
 
 begin_comment

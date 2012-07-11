@@ -559,11 +559,11 @@ name|rfbuf_cnt
 decl_stmt|;
 comment|/* recv buffer autoscaling byte count */
 name|struct
-name|toe_usrreqs
+name|toedev
 modifier|*
-name|t_tu
+name|tod
 decl_stmt|;
-comment|/* offload operations vector */
+comment|/* toedev handling this connection */
 name|int
 name|t_sndrexmitpack
 decl_stmt|;

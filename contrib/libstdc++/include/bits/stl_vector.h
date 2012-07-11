@@ -195,6 +195,27 @@ operator|*
 name|_M_end_of_storage
 block|;
 name|_Vector_impl
+argument_list|()
+operator|:
+name|_Tp_alloc_type
+argument_list|()
+block|,
+name|_M_start
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|_M_finish
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|_M_end_of_storage
+argument_list|(
+literal|0
+argument_list|)
+block|{ }
+name|_Vector_impl
 argument_list|(
 name|_Tp_alloc_type
 specifier|const
@@ -304,6 +325,12 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
+name|_Vector_base
+argument_list|()
+operator|:
+name|_M_impl
+argument_list|()
+block|{ }
 name|_Vector_base
 argument_list|(
 specifier|const
@@ -717,20 +744,20 @@ begin_comment
 comment|/**        *  @brief  Default constructor creates no elements.        */
 end_comment
 
-begin_macro
-name|explicit
-end_macro
-
 begin_expr_stmt
+name|vector
+argument_list|()
+operator|:
+name|_Base
+argument_list|()
+block|{ }
+name|explicit
 name|vector
 argument_list|(
 specifier|const
 name|allocator_type
 operator|&
 name|__a
-operator|=
-name|allocator_type
-argument_list|()
 argument_list|)
 operator|:
 name|_Base

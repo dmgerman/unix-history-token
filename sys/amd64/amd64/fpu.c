@@ -291,28 +291,12 @@ name|mask
 operator|>>
 literal|32
 expr_stmt|;
-comment|/* xrstor (%rdi) */
-asm|__asm __volatile(".byte	0x0f,0xae,0x2f" : :
-literal|"a"
-operator|(
-name|low
-operator|)
-operator|,
-literal|"d"
-operator|(
-name|hi
-operator|)
-operator|,
-literal|"D"
-operator|(
-name|addr
-operator|)
-block|)
-function|;
+asm|__asm __volatile("xrstor %0" : : "m" (*addr), "a" (low), "d" (hi));
+block|}
 end_function
 
 begin_function
-unit|}  static
+specifier|static
 name|__inline
 name|void
 name|xsave
@@ -340,71 +324,8 @@ name|mask
 operator|>>
 literal|32
 expr_stmt|;
-comment|/* xsave (%rdi) */
-asm|__asm __volatile(".byte	0x0f,0xae,0x27" : :
-literal|"a"
-operator|(
-name|low
-operator|)
-operator|,
-literal|"d"
-operator|(
-name|hi
-operator|)
-operator|,
-literal|"D"
-operator|(
-name|addr
-operator|)
-operator|:
+asm|__asm __volatile("xsave %0" : "=m" (*addr) : "a" (low), "d" (hi) :
 literal|"memory"
-block|)
-function|;
-end_function
-
-begin_function
-unit|}  static
-name|__inline
-name|void
-name|xsetbv
-parameter_list|(
-name|uint32_t
-name|reg
-parameter_list|,
-name|uint64_t
-name|val
-parameter_list|)
-block|{
-name|uint32_t
-name|low
-decl_stmt|,
-name|hi
-decl_stmt|;
-name|low
-operator|=
-name|val
-expr_stmt|;
-name|hi
-operator|=
-name|val
-operator|>>
-literal|32
-expr_stmt|;
-asm|__asm __volatile(".byte 0x0f,0x01,0xd1" : :
-literal|"c"
-operator|(
-name|reg
-operator|)
-operator|,
-literal|"a"
-operator|(
-name|low
-operator|)
-operator|,
-literal|"d"
-operator|(
-name|hi
-operator|)
 block|)
 function|;
 end_function
@@ -501,24 +422,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|start_emulating
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|stop_emulating
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|xrstor
 parameter_list|(
 name|char
@@ -545,19 +448,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|xsetbv
-parameter_list|(
-name|uint32_t
-name|reg
-parameter_list|,
-name|uint64_t
-name|val
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_endif
 endif|#
 directive|endif
@@ -566,6 +456,22 @@ end_endif
 begin_comment
 comment|/* __GNUCLIKE_ASM&& !lint */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|start_emulating
+parameter_list|()
+value|load_cr0(rcr0() | CR0_TS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|stop_emulating
+parameter_list|()
+value|clts()
+end_define
 
 begin_define
 define|#
@@ -630,7 +536,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * This requirement is to make it easier for asm code to calculate  * offset of the fpu save area from the pcb address. FPU save area  * must by 64-bytes aligned.  */
+comment|/*  * This requirement is to make it easier for asm code to calculate  * offset of the fpu save area from the pcb address. FPU save area  * must be 64-byte aligned.  */
 end_comment
 
 begin_expr_stmt
@@ -1023,7 +929,7 @@ operator||
 name|CR4_XSAVE
 argument_list|)
 expr_stmt|;
-name|xsetbv
+name|load_xcr
 argument_list|(
 name|XCR0
 argument_list|,

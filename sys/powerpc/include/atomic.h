@@ -33,8 +33,14 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* NOTE: lwsync is equivalent to sync on systems without lwsync */
+comment|/*  * The __ATOMIC_REL/ACQ() macros provide memory barriers only in conjunction  * with the atomic lXarx/stXcx. sequences below. They are not exposed outside  * of this file. See also Appendix B.2 of Book II of the architecture manual.  *  * Note that not all Book-E processors accept the light-weight sync variant.  * In particular, early models of E500 cores are known to wedge. Bank on all  * 64-bit capable CPUs to accept lwsync properly and pressimize 32-bit CPUs  * to use the heavier-weight sync.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
 
 begin_define
 define|#
@@ -44,12 +50,6 @@ parameter_list|()
 value|__asm __volatile("lwsync" : : : "memory")
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__powerpc64__
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -65,42 +65,6 @@ name|wmb
 parameter_list|()
 value|__asm __volatile("lwsync" : : : "memory")
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|rmb
-parameter_list|()
-value|__asm __volatile("lwsync" : : : "memory")
-end_define
-
-begin_define
-define|#
-directive|define
-name|wmb
-parameter_list|()
-value|__asm __volatile("eieio" : : : "memory")
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * The __ATOMIC_REL/ACQ() macros provide memory barriers only in conjunction  * with the atomic lXarx/stXcx. sequences below. See Appendix B.2 of Book II  * of the architecture manual.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__powerpc64__
-end_ifdef
 
 begin_define
 define|#
@@ -115,7 +79,7 @@ define|#
 directive|define
 name|__ATOMIC_ACQ
 parameter_list|()
-value|__asm __volatile("lwsync" : : : "memory")
+value|__asm __volatile("isync" : : : "memory")
 end_define
 
 begin_else
@@ -126,9 +90,33 @@ end_else
 begin_define
 define|#
 directive|define
+name|mb
+parameter_list|()
+value|__asm __volatile("sync" : : : "memory")
+end_define
+
+begin_define
+define|#
+directive|define
+name|rmb
+parameter_list|()
+value|__asm __volatile("sync" : : : "memory")
+end_define
+
+begin_define
+define|#
+directive|define
+name|wmb
+parameter_list|()
+value|__asm __volatile("sync" : : : "memory")
+end_define
+
+begin_define
+define|#
+directive|define
 name|__ATOMIC_REL
 parameter_list|()
-value|__asm __volatile("lwsync" : : : "memory")
+value|__asm __volatile("sync" : : : "memory")
 end_define
 
 begin_define
@@ -2113,6 +2101,18 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_undef
+undef|#
+directive|undef
+name|__ATOMIC_REL
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|__ATOMIC_ACQ
+end_undef
 
 begin_endif
 endif|#

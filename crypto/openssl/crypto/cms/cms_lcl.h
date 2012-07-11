@@ -424,6 +424,10 @@ decl_stmt|;
 name|size_t
 name|keylen
 decl_stmt|;
+comment|/* Set to 1 if we are debugging decrypt and don't fake keys for MMA */
+name|int
+name|debug
+decl_stmt|;
 block|}
 struct|;
 struct|struct

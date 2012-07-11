@@ -2483,7 +2483,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|struct ccb_hdr *ccbh; 	struct ccb_immed_notify *inot;  	printf("%s: not implemented yet\n", __func__);
+block|struct ccb_hdr *ccbh; 	struct ccb_immediate_notify *inot;  	printf("%s: not implemented yet\n", __func__);
 endif|#
 directive|endif
 block|}
@@ -4186,7 +4186,7 @@ name|ccb_h
 operator|.
 name|func_code
 operator|==
-name|XPT_IMMED_NOTIFY
+name|XPT_IMMEDIATE_NOTIFY
 condition|)
 name|list
 operator|=
@@ -6106,11 +6106,11 @@ block|}
 block|}
 break|break;
 case|case
-name|XPT_NOTIFY_ACK
+name|XPT_NOTIFY_ACKNOWLEDGE
 case|:
 comment|/* recycle notify ack */
 case|case
-name|XPT_IMMED_NOTIFY
+name|XPT_IMMEDIATE_NOTIFY
 case|:
 comment|/* Add Immediate Notify Resource */
 if|if
@@ -6368,7 +6368,7 @@ case|case
 name|XPT_ACCEPT_TARGET_IO
 case|:
 case|case
-name|XPT_IMMED_NOTIFY
+name|XPT_IMMEDIATE_NOTIFY
 case|:
 name|ccb
 operator|->

@@ -348,8 +348,6 @@ name|int
 name|partlist_height
 decl_stmt|,
 name|partlist_width
-decl_stmt|,
-name|min_partlist_width
 decl_stmt|;
 name|int
 name|cur_scroll
@@ -458,10 +456,6 @@ expr_stmt|;
 name|partlist_height
 operator|=
 literal|10
-expr_stmt|;
-name|min_partlist_width
-operator|=
-literal|0
 expr_stmt|;
 name|dlg_tab_correct_str
 argument_list|(

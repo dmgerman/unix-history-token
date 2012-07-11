@@ -39,6 +39,23 @@ end_struct
 
 begin_struct
 struct|struct
+name|iwch_create_cq_resp_v0
+block|{
+name|__u64
+name|key
+decl_stmt|;
+name|__u32
+name|cqid
+decl_stmt|;
+name|__u32
+name|size_log2
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|iwch_create_cq_resp
 block|{
 name|uint64_t
@@ -49,6 +66,12 @@ name|cqid
 decl_stmt|;
 name|uint32_t
 name|size_log2
+decl_stmt|;
+name|__u32
+name|memsize
+decl_stmt|;
+name|__u32
+name|reserved
 decl_stmt|;
 block|}
 struct|;

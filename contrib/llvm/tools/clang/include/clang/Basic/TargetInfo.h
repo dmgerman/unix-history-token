@@ -456,6 +456,14 @@ name|Int64Type
 block|,
 name|SigAtomicType
 block|;
+comment|/// Flag whether the Objective-C built-in boolean type should be signed char.
+comment|/// Otherwise, when this flag is not set, the normal built-in boolean type is
+comment|/// used.
+name|unsigned
+name|UseSignedCharForObjCBool
+operator|:
+literal|1
+block|;
 comment|/// Control whether the alignment of bit-field types is respected when laying
 comment|/// out structures. If true, then the alignment of the bit-field type will be
 comment|/// used to (a) impact the alignment of the containing structure, and (b)
@@ -1113,6 +1121,26 @@ return|return
 name|MCountName
 return|;
 block|}
+comment|/// useSignedCharForObjCBool - Check if the Objective-C built-in boolean
+comment|/// type should be signed char.  Otherwise, if this returns false, the
+comment|/// normal built-in boolean type should also be used for Objective-C.
+name|bool
+name|useSignedCharForObjCBool
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UseSignedCharForObjCBool
+return|;
+block|}
+name|void
+name|noSignedCharForObjCBool
+argument_list|()
+block|{
+name|UseSignedCharForObjCBool
+operator|=
+name|false
+block|;   }
 comment|/// useBitFieldTypeAlignment() - Check whether the alignment of bit-field
 comment|/// types is respected when laying out structures.
 name|bool

@@ -343,18 +343,6 @@ name|I2C_DFSSR_DIV
 value|0x10
 end_define
 
-begin_define
-define|#
-directive|define
-name|DEBUG
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|DEBUG
-end_undef
-
 begin_ifdef
 ifdef|#
 directive|ifdef

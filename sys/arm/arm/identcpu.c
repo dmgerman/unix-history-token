@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/endian.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/cpuconf.h>
 end_include
 
@@ -590,7 +596,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Steppings for PXA255/26x.  * rev 5: PXA26x B0, rev 6: PXA255 A0    */
+comment|/* Steppings for PXA255/26x.  * rev 5: PXA26x B0, rev 6: PXA255 A0  */
 end_comment
 
 begin_decl_stmt

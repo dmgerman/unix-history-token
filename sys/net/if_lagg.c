@@ -3019,11 +3019,38 @@ name|if_lagg
 operator|!=
 name|NULL
 condition|)
+block|{
+comment|/* Port is already in the current lagg? */
+name|lp
+operator|=
+operator|(
+expr|struct
+name|lagg_port
+operator|*
+operator|)
+name|ifp
+operator|->
+name|if_lagg
+expr_stmt|;
+if|if
+condition|(
+name|lp
+operator|->
+name|lp_softc
+operator|==
+name|sc
+condition|)
+return|return
+operator|(
+name|EEXIST
+operator|)
+return|;
 return|return
 operator|(
 name|EBUSY
 operator|)
 return|;
+block|}
 comment|/* XXX Disallow non-ethernet interfaces (this should be any of 802) */
 if|if
 condition|(
@@ -4121,6 +4148,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * For direct output to child ports.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -4156,16 +4187,6 @@ name|ifp
 operator|->
 name|if_lagg
 decl_stmt|;
-name|struct
-name|ether_header
-modifier|*
-name|eh
-decl_stmt|;
-name|short
-name|type
-init|=
-literal|0
-decl_stmt|;
 switch|switch
 condition|(
 name|dst
@@ -4179,38 +4200,6 @@ case|:
 case|case
 name|AF_UNSPEC
 case|:
-name|eh
-operator|=
-operator|(
-expr|struct
-name|ether_header
-operator|*
-operator|)
-name|dst
-operator|->
-name|sa_data
-expr_stmt|;
-name|type
-operator|=
-name|eh
-operator|->
-name|ether_type
-expr_stmt|;
-break|break;
-block|}
-comment|/* 	 * Only allow ethernet types required to initiate or maintain the link, 	 * aggregated frames take a different path. 	 */
-switch|switch
-condition|(
-name|ntohs
-argument_list|(
-name|type
-argument_list|)
-condition|)
-block|{
-case|case
-name|ETHERTYPE_PAE
-case|:
-comment|/* EAPOL PAE/802.1x */
 return|return
 operator|(
 call|(
@@ -4282,6 +4271,16 @@ name|if_lagg
 operator|)
 operator|==
 name|NULL
+condition|)
+return|return;
+comment|/* If the ifnet is just being renamed, don't do anything. */
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_RENAMING
 condition|)
 return|return;
 name|sc

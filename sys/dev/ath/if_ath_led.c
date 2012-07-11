@@ -376,7 +376,7 @@ name|sc
 operator|->
 name|sc_ledpin
 argument_list|,
-name|HAL_GPIO_MUX_OUTPUT
+name|HAL_GPIO_OUTPUT_MUX_AS_OUTPUT
 argument_list|)
 expr_stmt|;
 name|ath_hal_gpioset
@@ -423,7 +423,7 @@ name|sc
 operator|->
 name|sc_led_pwr_pin
 argument_list|,
-name|HAL_GPIO_MUX_MAC_POWER_LED
+name|HAL_GPIO_OUTPUT_MUX_MAC_POWER_LED
 argument_list|)
 expr_stmt|;
 if|if
@@ -444,7 +444,7 @@ name|sc
 operator|->
 name|sc_led_net_pin
 argument_list|,
-name|HAL_GPIO_MUX_MAC_NETWORK_LED
+name|HAL_GPIO_OUTPUT_MUX_MAC_NETWORK_LED
 argument_list|)
 expr_stmt|;
 block|}

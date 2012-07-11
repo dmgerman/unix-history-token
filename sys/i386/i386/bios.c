@@ -1551,6 +1551,11 @@ literal|2
 expr_stmt|;
 break|break;
 default|default:
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EINVAL
@@ -1558,6 +1563,11 @@ operator|)
 return|;
 block|}
 block|}
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|flags
@@ -1939,6 +1949,11 @@ literal|2
 expr_stmt|;
 break|break;
 default|default:
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EINVAL
@@ -1946,6 +1961,11 @@ operator|)
 return|;
 block|}
 block|}
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
 name|set_bios_selectors
 argument_list|(
 operator|&

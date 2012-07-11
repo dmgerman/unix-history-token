@@ -465,6 +465,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PMP_DEFAULT_HIDE_SPECIAL
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|PMP_DEFAULT_HIDE_SPECIAL
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -480,6 +498,15 @@ name|int
 name|pmp_default_timeout
 init|=
 name|PMP_DEFAULT_TIMEOUT
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|pmp_hide_special
+init|=
+name|PMP_DEFAULT_HIDE_SPECIAL
 decl_stmt|;
 end_decl_stmt
 
@@ -562,6 +589,38 @@ literal|"kern.cam.pmp.default_timeout"
 argument_list|,
 operator|&
 name|pmp_default_timeout
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern_cam_pmp
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|hide_special
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|pmp_hide_special
+argument_list|,
+literal|0
+argument_list|,
+literal|"Hide extra ports"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.cam.pmp.hide_special"
+argument_list|,
+operator|&
+name|pmp_hide_special
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1863,6 +1922,19 @@ name|start_ccb
 operator|->
 name|ataio
 expr_stmt|;
+name|CAM_DEBUG
+argument_list|(
+name|periph
+operator|->
+name|path
+argument_list|,
+name|CAM_DEBUG_TRACE
+argument_list|,
+operator|(
+literal|"pmpstart\n"
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|softc
@@ -2490,10 +2562,8 @@ name|ataio
 expr_stmt|;
 name|CAM_DEBUG
 argument_list|(
-name|done_ccb
+name|periph
 operator|->
-name|ccb_h
-operator|.
 name|path
 argument_list|,
 name|CAM_DEBUG_TRACE
@@ -2678,7 +2748,12 @@ name|res
 operator|.
 name|sector_count
 expr_stmt|;
-comment|/* This PMP declares 6 ports, while only 5 of them are real. 		 * Port 5 is enclosure management bridge port, which has implementation 		 * problems, causing probe faults. Hide it for now. */
+if|if
+condition|(
+name|pmp_hide_special
+condition|)
+block|{
+comment|/* 			 * This PMP declares 6 ports, while only 5 of them 			 * are real. Port 5 is a SEMB port, probing which 			 * causes timeouts if external SEP is not connected 			 * to PMP over I2C. 			 */
 if|if
 condition|(
 name|softc
@@ -2699,7 +2774,7 @@ name|pm_ports
 operator|=
 literal|5
 expr_stmt|;
-comment|/* This PMP declares 7 ports, while only 5 of them are real. 		 * Port 5 is some fake "Config  Disk" with 640 sectors size, 		 * port 6 is enclosure management bridge port. 		 * Both fake ports has implementation problems, causing 		 * probe faults. Hide them for now. */
+comment|/* 			 * This PMP declares 7 ports, while only 5 of them 			 * are real. Port 5 is a fake "Config  Disk" with 			 * 640 sectors size. Port 6 is a SEMB port. 			 */
 if|if
 condition|(
 name|softc
@@ -2720,7 +2795,7 @@ name|pm_ports
 operator|=
 literal|5
 expr_stmt|;
-comment|/* These PMPs declare one more port then actually have, 		 * for configuration purposes. Hide it for now. */
+comment|/* 			 * These PMPs have extra configuration port. 			 */
 if|if
 condition|(
 name|softc
@@ -2752,6 +2827,7 @@ operator|->
 name|pm_ports
 operator|--
 expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"%s%d: %d fan-out ports\n"

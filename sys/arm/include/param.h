@@ -72,12 +72,35 @@ directive|ifndef
 name|MACHINE_ARCH
 end_ifndef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__ARMEB__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|MACHINE_ARCH
+value|"armeb"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|MACHINE_ARCH
 value|"arm"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -162,7 +185,7 @@ value|_ALIGN(p)
 end_define
 
 begin_comment
-comment|/*  * ALIGNED_POINTER is a boolean macro that checks whether an address  * is valid to fetch data elements of type t from on this architecture.  * This does not reflect the optimal alignment, just the possibility  * (within reasonable limits).   */
+comment|/*  * ALIGNED_POINTER is a boolean macro that checks whether an address  * is valid to fetch data elements of type t from on this architecture.  * This does not reflect the optimal alignment, just the possibility  * (within reasonable limits).  */
 end_comment
 
 begin_define

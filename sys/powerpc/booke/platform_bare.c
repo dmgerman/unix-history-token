@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2008-2009 Semihalf, Rafal Jaworowski  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2008-2012 Semihalf.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -172,12 +172,23 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|uint32_t
-name|kernload_ap
+name|bp_kernload
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* Kernel physical load address */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|uint32_t
+name|bp_trace
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* AP boot trace field */
 end_comment
 
 begin_endif
@@ -320,7 +331,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|e500_reset
+name|booke_reset
 parameter_list|(
 name|platform_t
 parameter_list|)
@@ -387,7 +398,7 @@ name|PLATFORMMETHOD
 argument_list|(
 name|platform_reset
 argument_list|,
-name|e500_reset
+name|booke_reset
 argument_list|)
 block|,
 block|{
@@ -431,9 +442,12 @@ name|platform_t
 name|plat
 parameter_list|)
 block|{
-name|uint32_t
-name|ver
+name|phandle_t
+name|cpus
 decl_stmt|,
+name|child
+decl_stmt|;
+name|uint32_t
 name|sr
 decl_stmt|;
 name|int
@@ -443,62 +457,54 @@ name|law_max
 decl_stmt|,
 name|tgt
 decl_stmt|;
-name|ver
-operator|=
-name|SVR_VER
-argument_list|(
-name|mfspr
-argument_list|(
-name|SPR_SVR
-argument_list|)
-argument_list|)
-expr_stmt|;
-switch|switch
+if|if
 condition|(
-name|ver
-operator|&
-operator|~
-literal|0x0008
+operator|(
+name|cpus
+operator|=
+name|OF_finddevice
+argument_list|(
+literal|"/cpus"
+argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
-comment|/* Mask Security Enabled bit */
-case|case
-name|SVR_P4080
-case|:
+for|for
+control|(
 name|maxcpu
 operator|=
-literal|8
-expr_stmt|;
-break|break;
-case|case
-name|SVR_P4040
-case|:
-name|maxcpu
+literal|0
+operator|,
+name|child
 operator|=
-literal|4
-expr_stmt|;
-break|break;
-case|case
-name|SVR_MPC8572
-case|:
-case|case
-name|SVR_P1020
-case|:
-case|case
-name|SVR_P2020
-case|:
-name|maxcpu
+name|OF_child
+argument_list|(
+name|cpus
+argument_list|)
+init|;
+name|child
+operator|!=
+literal|0
+condition|;
+name|child
 operator|=
-literal|2
-expr_stmt|;
-break|break;
-default|default:
+name|OF_peer
+argument_list|(
+name|child
+argument_list|)
+operator|,
+name|maxcpu
+operator|++
+control|)
+empty_stmt|;
+block|}
+else|else
 name|maxcpu
 operator|=
 literal|1
 expr_stmt|;
-break|break;
-block|}
 comment|/* 	 * Clear local access windows. Skip DRAM entries, so we don't shoot 	 * ourselves in the foot. 	 */
 name|law_max
 operator|=
@@ -658,7 +664,16 @@ name|rv
 operator|!=
 literal|0
 condition|)
-return|return;
+name|panic
+argument_list|(
+literal|"%s: could not retrieve mem regions from the 'memory' "
+literal|"node, error: %d"
+argument_list|,
+name|__func__
+argument_list|,
+name|rv
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1123,9 +1138,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: CPU=%d already out of hold-off state!\n"
-argument_list|,
-name|__func__
+literal|"SMP: CPU %d already out of hold-off state!\n"
 argument_list|,
 name|pc
 operator|->
@@ -1155,7 +1168,7 @@ operator|-
 name|KERNBASE
 operator|)
 operator|+
-name|kernload_ap
+name|bp_kernload
 expr_stmt|;
 name|ccsr_write4
 argument_list|(
@@ -1171,6 +1184,10 @@ literal|0x80000000
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Release AP from hold-off state 	 */
+name|bp_trace
+operator|=
+literal|0
+expr_stmt|;
 name|eebpcr
 operator||=
 operator|(
@@ -1213,6 +1230,32 @@ literal|1000
 argument_list|)
 expr_stmt|;
 comment|/* wait 1ms */
+comment|/* 	 * Disable boot page translation so that the 4K page at the default 	 * address (= 0xfffff000) isn't permanently remapped and thus not 	 * usable otherwise. 	 */
+name|ccsr_write4
+argument_list|(
+name|OCP85XX_BPTR
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|pc
+operator|->
+name|pc_awake
+condition|)
+name|printf
+argument_list|(
+literal|"SMP: CPU %d didn't wake up (trace code %#x).\n"
+argument_list|,
+name|pc
+operator|->
+name|pc_awake
+argument_list|,
+name|bp_trace
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|(
@@ -1242,7 +1285,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|e500_reset
+name|booke_reset
 parameter_list|(
 name|platform_t
 name|plat

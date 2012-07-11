@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_kdtrace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_sched.h"
 end_include
 
@@ -91,6 +97,12 @@ begin_include
 include|#
 directive|include
 file|<sys/sched.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sdt.h>
 end_include
 
 begin_include
@@ -537,6 +549,26 @@ name|arg
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_expr_stmt
+name|SDT_PROBE_DECLARE
+argument_list|(
+name|sched
+argument_list|, , ,
+name|sleep
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DECLARE
+argument_list|(
+name|sched
+argument_list|, , ,
+name|wakeup
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Early initialization of sleep queues that is called from the sleepinit()  * SYSINIT.  */
@@ -2192,6 +2224,13 @@ operator|->
 name|sc_lock
 argument_list|)
 expr_stmt|;
+name|SDT_PROBE0
+argument_list|(
+name|sched
+argument_list|, , ,
+name|sleep
+argument_list|)
+expr_stmt|;
 name|TD_SET_SLEEPING
 argument_list|(
 name|td
@@ -2872,6 +2911,19 @@ operator|->
 name|sc_lock
 argument_list|,
 name|MA_OWNED
+argument_list|)
+expr_stmt|;
+name|SDT_PROBE2
+argument_list|(
+name|sched
+argument_list|, , ,
+name|wakeup
+argument_list|,
+name|td
+argument_list|,
+name|td
+operator|->
+name|td_proc
 argument_list|)
 expr_stmt|;
 comment|/* Remove the thread from the queue. */

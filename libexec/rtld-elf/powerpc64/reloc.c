@@ -1092,7 +1092,7 @@ name|bytes
 init|=
 name|obj
 operator|->
-name|nchains
+name|dynsymcount
 operator|*
 sizeof|sizeof
 argument_list|(

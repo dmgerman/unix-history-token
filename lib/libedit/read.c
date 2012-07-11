@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Christos Zoulas of Cornell University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$NetBSD: read.c,v 1.40 2007/03/01 21:41:45 christos Exp $  */
+comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Christos Zoulas of Cornell University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$NetBSD: read.c,v 1.52 2009/07/22 15:57:00 christos Exp $  */
 end_comment
 
 begin_if
@@ -898,7 +898,9 @@ name|el
 argument_list|)
 expr_stmt|;
 name|term__flush
-argument_list|()
+argument_list|(
+name|el
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -1166,7 +1168,7 @@ modifier|*
 name|cp
 parameter_list|)
 block|{
-name|int
+name|ssize_t
 name|num_read
 decl_stmt|;
 name|int
@@ -1230,8 +1232,9 @@ return|;
 block|}
 return|return
 operator|(
-name|num_read
+name|int
 operator|)
+name|num_read
 return|;
 block|}
 end_function
@@ -1267,25 +1270,22 @@ for|for
 control|(
 name|i
 operator|=
+literal|0
+init|;
+name|i
+operator|<
 name|ma
 operator|->
 name|level
-operator|--
-init|;
-name|i
-operator|>
-literal|0
 condition|;
 name|i
-operator|--
+operator|++
 control|)
 name|ma
 operator|->
 name|macro
 index|[
 name|i
-operator|-
-literal|1
 index|]
 operator|=
 name|ma
@@ -1293,7 +1293,14 @@ operator|->
 name|macro
 index|[
 name|i
+operator|+
+literal|1
 index|]
+expr_stmt|;
+name|ma
+operator|->
+name|level
+operator|--
 expr_stmt|;
 name|ma
 operator|->
@@ -1337,7 +1344,9 @@ operator|.
 name|c_macro
 decl_stmt|;
 name|term__flush
-argument_list|()
+argument_list|(
+name|el
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -1628,7 +1637,9 @@ operator|&
 name|UNBUFFERED
 condition|)
 name|term__flush
-argument_list|()
+argument_list|(
+name|el
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -1732,6 +1743,11 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* FIONREAD */
+operator|*
+name|nread
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|el
@@ -1881,6 +1897,10 @@ condition|)
 operator|*
 name|nread
 operator|=
+call|(
+name|int
+call|)
+argument_list|(
 name|el
 operator|->
 name|el_line
@@ -1892,14 +1912,20 @@ operator|->
 name|el_line
 operator|.
 name|buffer
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
+operator|*
+name|nread
+condition|?
 name|el
 operator|->
 name|el_line
 operator|.
 name|buffer
+else|:
+name|NULL
 operator|)
 return|;
 block|}
@@ -2046,7 +2072,9 @@ operator|.
 name|lastchar
 expr_stmt|;
 name|term__flush
-argument_list|()
+argument_list|(
+name|el
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -2117,15 +2145,6 @@ name|idx
 index|]
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|*
-name|cp
-operator|==
-literal|4
-condition|)
-comment|/* ought to be stty eof */
-break|break;
 name|cp
 operator|++
 expr_stmt|;
@@ -2188,6 +2207,10 @@ condition|)
 operator|*
 name|nread
 operator|=
+call|(
+name|int
+call|)
+argument_list|(
 name|el
 operator|->
 name|el_line
@@ -2199,14 +2222,20 @@ operator|->
 name|el_line
 operator|.
 name|buffer
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
+operator|*
+name|nread
+condition|?
 name|el
 operator|->
 name|el_line
 operator|.
 name|buffer
+else|:
+name|NULL
 operator|)
 return|;
 block|}
@@ -2285,6 +2314,10 @@ name|int
 operator|)
 name|cmdnum
 operator|>=
+operator|(
+name|unsigned
+name|int
+operator|)
 name|el
 operator|->
 name|el_map
@@ -2690,6 +2723,10 @@ case|:
 comment|/* normal end of line */
 name|num
 operator|=
+call|(
+name|int
+call|)
+argument_list|(
 name|el
 operator|->
 name|el_line
@@ -2701,6 +2738,7 @@ operator|->
 name|el_line
 operator|.
 name|buffer
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -2776,7 +2814,9 @@ name|el
 argument_list|)
 expr_stmt|;
 name|term__flush
-argument_list|()
+argument_list|(
+name|el
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -2817,7 +2857,9 @@ condition|)
 break|break;
 block|}
 name|term__flush
-argument_list|()
+argument_list|(
+name|el
+argument_list|)
 expr_stmt|;
 comment|/* flush any buffered output */
 comment|/* make sure the tty is set up correctly */
@@ -2858,6 +2900,10 @@ condition|)
 operator|*
 name|nread
 operator|=
+call|(
+name|int
+call|)
+argument_list|(
 name|el
 operator|->
 name|el_line
@@ -2869,6 +2915,7 @@ operator|->
 name|el_line
 operator|.
 name|buffer
+argument_list|)
 expr_stmt|;
 block|}
 return|return

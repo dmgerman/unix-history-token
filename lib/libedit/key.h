@@ -291,7 +291,7 @@ end_function_decl
 
 begin_function_decl
 name|protected
-name|int
+name|size_t
 name|key__decode_str
 parameter_list|(
 specifier|const
@@ -301,7 +301,7 @@ parameter_list|,
 name|char
 modifier|*
 parameter_list|,
-name|int
+name|size_t
 parameter_list|,
 specifier|const
 name|char
@@ -312,15 +312,15 @@ end_function_decl
 
 begin_function_decl
 name|protected
-name|int
+name|size_t
 name|key__decode_char
 parameter_list|(
 name|char
 modifier|*
 parameter_list|,
-name|int
+name|size_t
 parameter_list|,
-name|int
+name|size_t
 parameter_list|,
 name|int
 parameter_list|)

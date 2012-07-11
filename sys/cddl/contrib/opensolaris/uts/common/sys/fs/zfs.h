@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright (c) 2012, Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -301,6 +301,10 @@ name|ZPOOL_PROP_READONLY
 block|,
 name|ZPOOL_PROP_COMMENT
 block|,
+name|ZPOOL_PROP_EXPANDSZ
+block|,
+name|ZPOOL_PROP_FREEING
+block|,
 name|ZPOOL_NUM_PROPS
 block|}
 name|zpool_prop_t
@@ -548,6 +552,23 @@ name|boolean_t
 name|zpool_prop_readonly
 parameter_list|(
 name|zpool_prop_t
+parameter_list|)
+function_decl|;
+name|boolean_t
+name|zpool_prop_feature
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+name|boolean_t
+name|zpool_prop_unsupported
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
 parameter_list|)
 function_decl|;
 name|int
@@ -898,15 +919,19 @@ define|#
 directive|define
 name|SPA_VERSION_28
 value|28ULL
+define|#
+directive|define
+name|SPA_VERSION_5000
+value|5000ULL
 comment|/*  * When bumping up SPA_VERSION, make sure GRUB ZFS understands the on-disk  * format change. Go to usr/src/grub/grub-0.97/stage2/{zfs-include/, fsys_zfs*},  * and do the appropriate changes.  Also bump the version number in  * usr/src/grub/capability.  */
 define|#
 directive|define
 name|SPA_VERSION
-value|SPA_VERSION_28
+value|SPA_VERSION_5000
 define|#
 directive|define
 name|SPA_VERSION_STRING
-value|"28"
+value|"5000"
 comment|/*  * Symbolic names for the changes that caused a SPA_VERSION switch.  * Used in the code when checking for presence or absence of a feature.  * Feel free to define multiple symbolic names for each version if there  * were multiple changes to on-disk structures during that version.  *  * NOTE: When checking the current SPA_VERSION in your code, be sure  *       to use spa_version() since it reports the version of the  *       last synced uberblock.  Checking the in-flight version can  *       be dangerous in some cases.  */
 define|#
 directive|define
@@ -1060,6 +1085,22 @@ define|#
 directive|define
 name|SPA_VERSION_MULTI_REPLACE
 value|SPA_VERSION_28
+define|#
+directive|define
+name|SPA_VERSION_BEFORE_FEATURES
+value|SPA_VERSION_28
+define|#
+directive|define
+name|SPA_VERSION_FEATURES
+value|SPA_VERSION_5000
+define|#
+directive|define
+name|SPA_VERSION_IS_SUPPORTED
+parameter_list|(
+name|v
+parameter_list|)
+define|\
+value|(((v)>= SPA_VERSION_INITIAL&& (v)<= SPA_VERSION_BEFORE_FEATURES) || \ 	((v)>= SPA_VERSION_FEATURES&& (v)<= SPA_VERSION))
 comment|/*  * ZPL version - rev'd whenever an incompatible on-disk format change  * occurs.  This is independent of SPA/DMU/ZAP versioning.  You must  * also update the version_table[] and help message in zfs_prop.c.  *  * When changing, be sure to teach GRUB how to read the new format!  * See usr/src/grub/grub-0.97/stage2/{zfs-include/,fsys_zfs*}  */
 define|#
 directive|define
@@ -1392,6 +1433,30 @@ directive|define
 name|ZPOOL_CONFIG_LOAD_INFO
 value|"load_info"
 comment|/* not stored on disk */
+define|#
+directive|define
+name|ZPOOL_CONFIG_REWIND_INFO
+value|"rewind_info"
+comment|/* not stored on disk */
+define|#
+directive|define
+name|ZPOOL_CONFIG_UNSUP_FEAT
+value|"unsup_feat"
+comment|/* not stored on disk */
+define|#
+directive|define
+name|ZPOOL_CONFIG_CAN_RDONLY
+value|"can_rdonly"
+comment|/* not stored on disk */
+define|#
+directive|define
+name|ZPOOL_CONFIG_FEATURES_FOR_READ
+value|"features_for_read"
+define|#
+directive|define
+name|ZPOOL_CONFIG_FEATURE_STATS
+value|"feature_stats"
+comment|/* not stored on disk */
 comment|/*  * The persistent vdev state is stored as separate values rather than a single  * 'vdev_state' entry.  This is because a device can be in multiple states, such  * as offline and degraded.  */
 define|#
 directive|define
@@ -1574,6 +1639,9 @@ comment|/* on-disk version is too new		*/
 name|VDEV_AUX_VERSION_OLDER
 block|,
 comment|/* on-disk version is too old		*/
+name|VDEV_AUX_UNSUP_FEAT
+block|,
+comment|/* unsupported features			*/
 name|VDEV_AUX_SPARED
 block|,
 comment|/* hot spare used in another pool	*/
@@ -1768,6 +1836,10 @@ name|uint64_t
 name|vs_rsize
 decl_stmt|;
 comment|/* replaceable dev size */
+name|uint64_t
+name|vs_esize
+decl_stmt|;
+comment|/* expandable dev size */
 name|uint64_t
 name|vs_ops
 index|[
@@ -2190,6 +2262,14 @@ define|#
 directive|define
 name|ZFS_IOC_SPACE_SNAPS
 value|_IOWR('Z', 62, struct zfs_cmd)
+define|#
+directive|define
+name|ZFS_IOC_SEND_PROGRESS
+value|_IOWR('Z', 63, struct zfs_cmd)
+define|#
+directive|define
+name|ZFS_IOC_POOL_REOPEN
+value|_IOWR('Z', 64, struct zfs_cmd)
 comment|/*  * Internal SPA load state.  Used by FMA diagnosis engine.  */
 typedef|typedef
 enum|enum

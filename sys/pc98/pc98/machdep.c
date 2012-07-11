@@ -212,6 +212,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/memrange.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/msgbuf.h>
 end_include
 
@@ -643,16 +649,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|extern
-name|void
-name|initializecpu
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_define
 define|#
 directive|define
@@ -1072,6 +1068,13 @@ name|icu_lock
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|mem_range_softc
+name|mem_range_softc
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -1264,17 +1267,12 @@ expr_stmt|;
 name|cpu_setregs
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SMP
 comment|/* 	 * Add BSP as an interrupt target. 	 */
 name|intr_add_cpu
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 

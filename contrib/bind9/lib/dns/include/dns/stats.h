@@ -431,6 +431,7 @@ function_decl|;
 end_typedef
 
 begin_function_decl
+name|ISC_LANG_BEGINDECLS
 name|isc_result_t
 name|dns_generalstats_create
 parameter_list|(

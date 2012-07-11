@@ -116,6 +116,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * DTrace probes for locks should be fired after locking and before releasing  * to prevent races (to provide data/function stability in dtrace, see the  * output of "dtrace -v ..." and the corresponding dtrace docs).  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -123,7 +127,7 @@ name|EMUL_LOCK
 parameter_list|(
 name|l
 parameter_list|)
-value|mtx_lock(l)
+value|do { \ 				    mtx_lock(l); \ 				    LIN_SDT_PROBE1(locks, emul_lock, \ 					locked, l); \ 				} while (0)
 end_define
 
 begin_define
@@ -133,7 +137,7 @@ name|EMUL_UNLOCK
 parameter_list|(
 name|l
 parameter_list|)
-value|mtx_unlock(l)
+value|do { \ 				    LIN_SDT_PROBE1(locks, emul_lock, \ 					unlock, l); \ 				    mtx_unlock(l); \ 				} while (0)
 end_define
 
 begin_define
@@ -143,7 +147,7 @@ name|EMUL_SHARED_RLOCK
 parameter_list|(
 name|l
 parameter_list|)
-value|sx_slock(l)
+value|do { \ 				    sx_slock(l); \ 				    LIN_SDT_PROBE1(locks, emul_shared_rlock, \ 					locked, l); \ 				} while (0)
 end_define
 
 begin_define
@@ -153,7 +157,7 @@ name|EMUL_SHARED_RUNLOCK
 parameter_list|(
 name|l
 parameter_list|)
-value|sx_sunlock(l)
+value|do { \ 				    LIN_SDT_PROBE1(locks, emul_shared_rlock, \ 					unlock, l); \ 				    sx_sunlock(l); \ 				} while (0)
 end_define
 
 begin_define
@@ -163,7 +167,7 @@ name|EMUL_SHARED_WLOCK
 parameter_list|(
 name|l
 parameter_list|)
-value|sx_xlock(l)
+value|do { \ 				    sx_xlock(l); \ 				    LIN_SDT_PROBE1(locks, emul_shared_wlock, \ 					locked, l); \ 				} while (0)
 end_define
 
 begin_define
@@ -173,7 +177,7 @@ name|EMUL_SHARED_WUNLOCK
 parameter_list|(
 name|l
 parameter_list|)
-value|sx_xunlock(l)
+value|do { \ 				    LIN_SDT_PROBE1(locks, emul_shared_wlock, \ 					unlock, l); \ 				    sx_xunlock(l); \ 				} while (0)
 end_define
 
 begin_comment

@@ -87,6 +87,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|IPVERSION
+argument_list|)
+operator|&&
+operator|(
+name|IPVERSION
+operator|==
+literal|4
+operator|)
+end_if
+
 begin_function_decl
 name|u_int
 name|in_cksum_hdr
@@ -98,6 +113,11 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static

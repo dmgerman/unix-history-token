@@ -38,6 +38,21 @@ parameter_list|)
 value|in_cksum_skip(m, len, 0)
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|IPVERSION
+argument_list|)
+operator|&&
+operator|(
+name|IPVERSION
+operator|==
+literal|4
+operator|)
+end_if
+
 begin_function
 specifier|static
 name|__inline
@@ -78,6 +93,11 @@ operator|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -203,8 +223,24 @@ operator|)
 return|;
 end_return
 
+begin_if
+unit|}
+if|#
+directive|if
+name|defined
+argument_list|(
+name|IPVERSION
+argument_list|)
+operator|&&
+operator|(
+name|IPVERSION
+operator|==
+literal|4
+operator|)
+end_if
+
 begin_function
-unit|}  static
+unit|static
 name|__inline
 name|u_int
 name|in_cksum_hdr
@@ -385,8 +421,13 @@ operator|)
 return|;
 end_return
 
-begin_ifdef
+begin_endif
 unit|}
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|_KERNEL

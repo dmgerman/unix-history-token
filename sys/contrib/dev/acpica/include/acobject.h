@@ -125,7 +125,7 @@ value|0x04
 end_define
 
 begin_comment
-comment|/* Object is intialized and data is valid */
+comment|/* Object is initialized and data is valid */
 end_comment
 
 begin_define
@@ -198,7 +198,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Note: The String and Buffer object must be identical through the Pointer  * and length elements.  There is code that depends on this.  *  * Fields common to both Strings and Buffers  */
+comment|/*  * Note: The String and Buffer object must be identical through the Pointer  * and Length elements.  There is code that depends on this.  *  * Fields common to both Strings and Buffers  */
 end_comment
 
 begin_define
@@ -787,7 +787,7 @@ comment|/* Type: Device/System/Both */
 name|ACPI_NOTIFY_HANDLER
 name|Handler
 decl_stmt|;
-comment|/* Handler addess */
+comment|/* Handler address */
 name|void
 modifier|*
 name|Context
@@ -838,7 +838,7 @@ name|acpi_operand_object
 modifier|*
 name|RegionList
 decl_stmt|;
-comment|/* regions using this handler */
+comment|/* Regions using this handler */
 name|union
 name|acpi_operand_object
 modifier|*

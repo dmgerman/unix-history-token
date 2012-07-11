@@ -382,6 +382,13 @@ block|}
 block|,
 comment|/* PNP0303 */
 block|{
+literal|0x0b03d041
+block|,
+literal|"Keyboard controller (i8042)"
+block|}
+block|,
+comment|/* PNP030B */
+block|{
 literal|0x2003d041
 block|,
 literal|"Keyboard controller (i8042)"

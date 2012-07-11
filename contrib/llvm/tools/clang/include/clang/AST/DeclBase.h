@@ -3417,16 +3417,6 @@ name|private
 label|:
 end_label
 
-begin_expr_stmt
-specifier|const
-name|Attr
-operator|*
-name|getAttrsImpl
-argument_list|()
-specifier|const
-expr_stmt|;
-end_expr_stmt
-
 begin_function_decl
 name|void
 name|setAttrsImpl
