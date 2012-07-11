@@ -29,12 +29,6 @@ directive|include
 file|<memory.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<assert.h>
-end_include
-
 begin_comment
 comment|/*  * In the definition, (xa, xb, xc, xd) are Alice's (x1, x2, x3, x4) or  * Bob's (x3, x4, x1, x2). If you see what I mean.  */
 end_comment
@@ -683,7 +677,7 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-name|assert
+name|OPENSSL_assert
 argument_list|(
 name|l
 operator|<=
@@ -880,7 +874,7 @@ argument_list|,
 name|zkpg
 argument_list|)
 expr_stmt|;
-name|assert
+name|OPENSSL_assert
 argument_list|(
 operator|!
 name|BN_is_zero

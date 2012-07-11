@@ -1083,9 +1083,9 @@ expr_stmt|;
 name|ERR_free_strings
 argument_list|()
 expr_stmt|;
-name|ERR_remove_state
+name|ERR_remove_thread_state
 argument_list|(
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|CRYPTO_mem_leaks_fp

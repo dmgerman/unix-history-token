@@ -48,6 +48,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|OPENSSL_gmtime_adj
+parameter_list|(
+name|struct
+name|tm
+modifier|*
+name|tm
+parameter_list|,
+name|int
+name|offset_day
+parameter_list|,
+name|long
+name|offset_sec
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

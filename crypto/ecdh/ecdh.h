@@ -228,6 +228,10 @@ comment|/* Error codes for the ECDH functions. */
 comment|/* Function codes. */
 define|#
 directive|define
+name|ECDH_F_ECDH_CHECK
+value|102
+define|#
+directive|define
 name|ECDH_F_ECDH_COMPUTE_KEY
 value|100
 define|#
@@ -239,6 +243,10 @@ define|#
 directive|define
 name|ECDH_R_KDF_FAILED
 value|102
+define|#
+directive|define
+name|ECDH_R_NON_FIPS_METHOD
+value|103
 define|#
 directive|define
 name|ECDH_R_NO_PRIVATE_VALUE

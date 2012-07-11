@@ -311,7 +311,7 @@ name|X509V3err
 argument_list|(
 name|X509V3_F_PROCESS_PCI_VALUE
 argument_list|,
-name|X509V3_R_POLICY_LANGUAGE_ALREADTY_DEFINED
+name|X509V3_R_POLICY_LANGUAGE_ALREADY_DEFINED
 argument_list|)
 expr_stmt|;
 name|X509V3_conf_err
@@ -383,7 +383,7 @@ name|X509V3err
 argument_list|(
 name|X509V3_F_PROCESS_PCI_VALUE
 argument_list|,
-name|X509V3_R_POLICY_PATH_LENGTH_ALREADTY_DEFINED
+name|X509V3_R_POLICY_PATH_LENGTH_ALREADY_DEFINED
 argument_list|)
 expr_stmt|;
 name|X509V3_conf_err

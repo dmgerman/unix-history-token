@@ -2443,5 +2443,12 @@ argument|X509_POLICY_NODE
 argument_list|)
 end_macro
 
+begin_macro
+name|IMPLEMENT_STACK_OF
+argument_list|(
+argument|X509_POLICY_DATA
+argument_list|)
+end_macro
+
 end_unit
 

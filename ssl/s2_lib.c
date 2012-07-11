@@ -7,6 +7,10 @@ begin_comment
 comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
+begin_comment
+comment|/* ====================================================================  * Copyright (c) 1998-2007 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -67,16 +71,17 @@ end_comment
 
 begin_decl_stmt
 name|OPENSSL_GLOBAL
+specifier|const
 name|SSL_CIPHER
 name|ssl2_ciphers
 index|[]
 init|=
 block|{
-comment|/* NULL_WITH_MD5 v3 */
 if|#
 directive|if
 literal|0
-block|{ 	1, 	SSL2_TXT_NULL_WITH_MD5, 	SSL2_CK_NULL_WITH_MD5, 	SSL_kRSA|SSL_aRSA|SSL_eNULL|SSL_MD5|SSL_SSLV2, 	SSL_EXPORT|SSL_EXP40|SSL_STRONG_NONE, 	0, 	0, 	0, 	SSL_ALL_CIPHERS, 	SSL_ALL_STRENGTHS, 	},
+comment|/* NULL_WITH_MD5 v3 */
+block|{ 	1, 	SSL2_TXT_NULL_WITH_MD5, 	SSL2_CK_NULL_WITH_MD5, 	SSL_kRSA, 	SSL_aRSA, 	SSL_eNULL, 	SSL_MD5, 	SSL_SSLV2, 	SSL_EXPORT|SSL_EXP40|SSL_STRONG_NONE, 	0, 	0, 	0, 	},
 endif|#
 directive|endif
 comment|/* RC4_128_WITH_MD5 */
@@ -88,13 +93,13 @@ block|,
 name|SSL2_CK_RC4_128_WITH_MD5
 block|,
 name|SSL_kRSA
-operator||
+block|,
 name|SSL_aRSA
-operator||
+block|,
 name|SSL_RC4
-operator||
+block|,
 name|SSL_MD5
-operator||
+block|,
 name|SSL_SSLV2
 block|,
 name|SSL_NOT_EXP
@@ -106,10 +111,6 @@ block|,
 literal|128
 block|,
 literal|128
-block|,
-name|SSL_ALL_CIPHERS
-block|,
-name|SSL_ALL_STRENGTHS
 block|, 	}
 block|,
 comment|/* RC4_128_EXPORT40_WITH_MD5 */
@@ -121,13 +122,13 @@ block|,
 name|SSL2_CK_RC4_128_EXPORT40_WITH_MD5
 block|,
 name|SSL_kRSA
-operator||
+block|,
 name|SSL_aRSA
-operator||
+block|,
 name|SSL_RC4
-operator||
+block|,
 name|SSL_MD5
-operator||
+block|,
 name|SSL_SSLV2
 block|,
 name|SSL_EXPORT
@@ -139,10 +140,6 @@ block|,
 literal|40
 block|,
 literal|128
-block|,
-name|SSL_ALL_CIPHERS
-block|,
-name|SSL_ALL_STRENGTHS
 block|, 	}
 block|,
 comment|/* RC2_128_CBC_WITH_MD5 */
@@ -154,13 +151,13 @@ block|,
 name|SSL2_CK_RC2_128_CBC_WITH_MD5
 block|,
 name|SSL_kRSA
-operator||
+block|,
 name|SSL_aRSA
-operator||
+block|,
 name|SSL_RC2
-operator||
+block|,
 name|SSL_MD5
-operator||
+block|,
 name|SSL_SSLV2
 block|,
 name|SSL_NOT_EXP
@@ -172,10 +169,6 @@ block|,
 literal|128
 block|,
 literal|128
-block|,
-name|SSL_ALL_CIPHERS
-block|,
-name|SSL_ALL_STRENGTHS
 block|, 	}
 block|,
 comment|/* RC2_128_CBC_EXPORT40_WITH_MD5 */
@@ -187,13 +180,13 @@ block|,
 name|SSL2_CK_RC2_128_CBC_EXPORT40_WITH_MD5
 block|,
 name|SSL_kRSA
-operator||
+block|,
 name|SSL_aRSA
-operator||
+block|,
 name|SSL_RC2
-operator||
+block|,
 name|SSL_MD5
-operator||
+block|,
 name|SSL_SSLV2
 block|,
 name|SSL_EXPORT
@@ -205,16 +198,12 @@ block|,
 literal|40
 block|,
 literal|128
-block|,
-name|SSL_ALL_CIPHERS
-block|,
-name|SSL_ALL_STRENGTHS
 block|, 	}
 block|,
-comment|/* IDEA_128_CBC_WITH_MD5 */
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_IDEA
+comment|/* IDEA_128_CBC_WITH_MD5 */
 block|{
 literal|1
 block|,
@@ -223,13 +212,13 @@ block|,
 name|SSL2_CK_IDEA_128_CBC_WITH_MD5
 block|,
 name|SSL_kRSA
-operator||
+block|,
 name|SSL_aRSA
-operator||
+block|,
 name|SSL_IDEA
-operator||
+block|,
 name|SSL_MD5
-operator||
+block|,
 name|SSL_SSLV2
 block|,
 name|SSL_NOT_EXP
@@ -241,10 +230,6 @@ block|,
 literal|128
 block|,
 literal|128
-block|,
-name|SSL_ALL_CIPHERS
-block|,
-name|SSL_ALL_STRENGTHS
 block|, 	}
 block|,
 endif|#
@@ -258,13 +243,13 @@ block|,
 name|SSL2_CK_DES_64_CBC_WITH_MD5
 block|,
 name|SSL_kRSA
-operator||
+block|,
 name|SSL_aRSA
-operator||
+block|,
 name|SSL_DES
-operator||
+block|,
 name|SSL_MD5
-operator||
+block|,
 name|SSL_SSLV2
 block|,
 name|SSL_NOT_EXP
@@ -276,10 +261,6 @@ block|,
 literal|56
 block|,
 literal|56
-block|,
-name|SSL_ALL_CIPHERS
-block|,
-name|SSL_ALL_STRENGTHS
 block|, 	}
 block|,
 comment|/* DES_192_EDE3_CBC_WITH_MD5 */
@@ -291,13 +272,13 @@ block|,
 name|SSL2_CK_DES_192_EDE3_CBC_WITH_MD5
 block|,
 name|SSL_kRSA
-operator||
+block|,
 name|SSL_aRSA
-operator||
+block|,
 name|SSL_3DES
-operator||
+block|,
 name|SSL_MD5
-operator||
+block|,
 name|SSL_SSLV2
 block|,
 name|SSL_NOT_EXP
@@ -309,24 +290,20 @@ block|,
 literal|168
 block|,
 literal|168
-block|,
-name|SSL_ALL_CIPHERS
-block|,
-name|SSL_ALL_STRENGTHS
 block|, 	}
 block|,
-comment|/* RC4_64_WITH_MD5 */
 if|#
 directive|if
 literal|0
-block|{ 	1, 	SSL2_TXT_RC4_64_WITH_MD5, 	SSL2_CK_RC4_64_WITH_MD5, 	SSL_kRSA|SSL_aRSA|SSL_RC4|SSL_MD5|SSL_SSLV2, 	SSL_NOT_EXP|SSL_LOW, 	SSL2_CF_8_BYTE_ENC, 	64, 	64, 	SSL_ALL_CIPHERS, 	SSL_ALL_STRENGTHS, 	},
+comment|/* RC4_64_WITH_MD5 */
+block|{ 	1, 	SSL2_TXT_RC4_64_WITH_MD5, 	SSL2_CK_RC4_64_WITH_MD5, 	SSL_kRSA, 	SSL_aRSA, 	SSL_RC4, 	SSL_MD5, 	SSL_SSLV2, 	SSL_NOT_EXP|SSL_LOW, 	SSL2_CF_8_BYTE_ENC, 	64, 	64, 	},
 endif|#
 directive|endif
-comment|/* NULL SSLeay (testing) */
 if|#
 directive|if
 literal|0
-block|{	 	0, 	SSL2_TXT_NULL, 	SSL2_CK_NULL, 	0, 	SSL_STRONG_NONE, 	0, 	0, 	0, 	SSL_ALL_CIPHERS, 	SSL_ALL_STRENGTHS, 	},
+comment|/* NULL SSLeay (testing) */
+block|{	 	0, 	SSL2_TXT_NULL, 	SSL2_CK_NULL, 	0, 	0, 	0, 	0, 	SSL_SSLV2, 	SSL_STRONG_NONE, 	0, 	0, 	0, 	},
 endif|#
 directive|endif
 comment|/* end of list :-) */
@@ -349,19 +326,6 @@ return|;
 block|}
 end_function
 
-begin_macro
-name|IMPLEMENT_ssl2_meth_func
-argument_list|(
-argument|sslv2_base_method
-argument_list|,
-argument|ssl_undefined_function
-argument_list|,
-argument|ssl_undefined_function
-argument_list|,
-argument|ssl_bad_method
-argument_list|)
-end_macro
-
 begin_function
 name|int
 name|ssl2_num_ciphers
@@ -378,6 +342,7 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|SSL_CIPHER
 modifier|*
 name|ssl2_get_cipher
@@ -920,6 +885,7 @@ comment|/* This function needs to check if the ciphers required are actually  * 
 end_comment
 
 begin_function
+specifier|const
 name|SSL_CIPHER
 modifier|*
 name|ssl2_get_cipher_by_char
@@ -933,7 +899,9 @@ parameter_list|)
 block|{
 name|SSL_CIPHER
 name|c
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|SSL_CIPHER
 modifier|*
 name|cp
 decl_stmt|;
@@ -988,21 +956,14 @@ name|id
 expr_stmt|;
 name|cp
 operator|=
-operator|(
-name|SSL_CIPHER
-operator|*
-operator|)
-name|OBJ_bsearch
+name|OBJ_bsearch_ssl_cipher_id
 argument_list|(
-argument|(char *)&c
+operator|&
+name|c
 argument_list|,
-argument|(char *)ssl2_ciphers
+name|ssl2_ciphers
 argument_list|,
-argument|SSL2_NUM_CIPHERS
-argument_list|,
-argument|sizeof(SSL_CIPHER)
-argument_list|,
-argument|FP_ICC ssl_cipher_id_cmp
+name|SSL2_NUM_CIPHERS
 argument_list|)
 expr_stmt|;
 if|if
@@ -1173,6 +1134,9 @@ name|EVP_MD
 modifier|*
 name|md5
 decl_stmt|;
+name|int
+name|md_size
+decl_stmt|;
 name|md5
 operator|=
 name|EVP_md5
@@ -1245,6 +1209,22 @@ return|return
 literal|0
 return|;
 block|}
+name|md_size
+operator|=
+name|EVP_MD_size
+argument_list|(
+name|md5
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|md_size
+operator|<
+literal|0
+condition|)
+return|return
+literal|0
+return|;
 for|for
 control|(
 name|i
@@ -1261,10 +1241,7 @@ name|key_material_length
 condition|;
 name|i
 operator|+=
-name|EVP_MD_size
-argument_list|(
-name|md5
-argument_list|)
+name|md_size
 control|)
 block|{
 if|if
@@ -1280,10 +1257,7 @@ operator|->
 name|key_material
 operator|)
 operator|+
-name|EVP_MD_size
-argument_list|(
-name|md5
-argument_list|)
+name|md_size
 operator|)
 operator|>
 operator|(
@@ -1430,10 +1404,7 @@ argument_list|)
 expr_stmt|;
 name|km
 operator|+=
-name|EVP_MD_size
-argument_list|(
-name|md5
-argument_list|)
+name|md_size
 expr_stmt|;
 block|}
 name|EVP_MD_CTX_cleanup

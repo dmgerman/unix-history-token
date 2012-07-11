@@ -13,6 +13,12 @@ directive|include
 file|<openssl/opensslconf.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_SEED
+end_ifndef
+
 begin_include
 include|#
 directive|include
@@ -36,12 +42,6 @@ include|#
 directive|include
 file|<assert.h>
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|OPENSSL_NO_SEED
-end_ifndef
 
 begin_include
 include|#

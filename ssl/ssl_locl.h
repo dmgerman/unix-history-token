@@ -8,11 +8,15 @@ comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights 
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1998-2001 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1998-2007 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_comment
 comment|/* ====================================================================  * Copyright 2002 Sun Microsystems, Inc. ALL RIGHTS RESERVED.  * ECC cipher suite support in OpenSSL originally developed by   * SUN MICROSYSTEMS, INC., and contributed to the OpenSSL project.  */
+end_comment
+
+begin_comment
+comment|/* ====================================================================  * Copyright 2005 Nokia. All rights reserved.  *  * The portions of the attached software ("Contribution") is developed by  * Nokia Corporation and is licensed pursuant to the OpenSSL open source  * license.  *  * The Contribution, originally written by Mika Kousa and Pasi Eronen of  * Nokia Corporation, consists of the "PSK" (Pre-Shared Key) ciphersuites  * support (see RFC 4279) to OpenSSL.  *  * No patent licenses or other rights except those expressly stated in  * the OpenSSL open source license shall be deemed granted or received  * expressly, by implication, estoppel, or otherwise.  *  * No assurances are provided by Nokia that the Contribution does not  * infringe the patent or other intellectual property rights of any third  * party or that the license provides you with all the necessary rights  * to make use of the Contribution.  *  * THE SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND. IN  * ADDITION TO THE DISCLAIMERS INCLUDED IN THE LICENSE, NOKIA  * SPECIFICALLY DISCLAIMS ANY LIABILITY FOR CLAIMS BROUGHT BY YOU OR ANY  * OTHER ENTITY BASED ON INFRINGEMENT OF INTELLECTUAL PROPERTY RIGHTS OR  * OTHERWISE.  */
 end_comment
 
 begin_ifndef
@@ -168,11 +172,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
+begin_undef
+undef|#
+directive|undef
 name|PKCS1_CHECK
-end_define
+end_undef
 
 begin_define
 define|#
@@ -415,12 +419,9 @@ begin_comment
 comment|/*  * Define the Bitmasks for SSL_CIPHER.algorithms.  * This bits are used packed as dense as possible. If new methods/ciphers  * etc will be added, the bits a likely to change, so this information  * is for internal library use only, even though SSL_CIPHER.algorithms  * can be publicly accessed.  * Use the according functions for cipher management instead.  *  * The bit mask handling in the selection and sorting scheme in  * ssl_create_cipher_list() has only limited capabilities, reflecting  * that the different entities within are mutually exclusive:  * ONLY ONE BIT PER MASK CAN BE SET AT A TIME.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SSL_MKEY_MASK
-value|0x000000FFL
-end_define
+begin_comment
+comment|/* Bits for algorithm_mkey (key exchange algorithm) */
+end_comment
 
 begin_define
 define|#
@@ -441,7 +442,11 @@ value|0x00000002L
 end_define
 
 begin_comment
-comment|/* DH cert RSA CA cert */
+comment|/* DH cert, RSA CA cert */
+end_comment
+
+begin_comment
+comment|/* no such ciphersuites supported! */
 end_comment
 
 begin_define
@@ -452,21 +457,18 @@ value|0x00000004L
 end_define
 
 begin_comment
-comment|/* DH cert DSA CA cert */
+comment|/* DH cert, DSA CA cert */
+end_comment
+
+begin_comment
+comment|/* no such ciphersuite supported! */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SSL_kFZA
-value|0x00000008L
-end_define
-
-begin_define
-define|#
-directive|define
 name|SSL_kEDH
-value|0x00000010L
+value|0x00000008L
 end_define
 
 begin_comment
@@ -477,7 +479,7 @@ begin_define
 define|#
 directive|define
 name|SSL_kKRB5
-value|0x00000020L
+value|0x00000010L
 end_define
 
 begin_comment
@@ -487,18 +489,29 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SSL_kECDH
-value|0x00000040L
+name|SSL_kECDHr
+value|0x00000020L
 end_define
 
 begin_comment
-comment|/* ECDH w/ long-term keys */
+comment|/* ECDH cert, RSA CA cert */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SSL_kECDHE
+name|SSL_kECDHe
+value|0x00000040L
+end_define
+
+begin_comment
+comment|/* ECDH cert, ECDSA CA cert */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSL_kEECDH
 value|0x00000080L
 end_define
 
@@ -509,270 +522,343 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SSL_EDH
-value|(SSL_kEDH|(SSL_AUTH_MASK^SSL_aNULL))
+name|SSL_kPSK
+value|0x00000100L
 end_define
+
+begin_comment
+comment|/* PSK */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|SSL_AUTH_MASK
-value|0x00007F00L
+name|SSL_kGOST
+value|0x00000200L
 end_define
+
+begin_comment
+comment|/* GOST key exchange */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSL_kSRP
+value|0x00000400L
+end_define
+
+begin_comment
+comment|/* SRP */
+end_comment
+
+begin_comment
+comment|/* Bits for algorithm_auth (server authentication) */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SSL_aRSA
-value|0x00000100L
+value|0x00000001L
 end_define
 
 begin_comment
-comment|/* Authenticate with RSA */
+comment|/* RSA auth */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SSL_aDSS
-value|0x00000200L
+value|0x00000002L
 end_define
 
 begin_comment
-comment|/* Authenticate with DSS */
+comment|/* DSS auth */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SSL_DSS
-value|SSL_aDSS
-end_define
-
-begin_define
-define|#
-directive|define
-name|SSL_aFZA
-value|0x00000400L
-end_define
-
-begin_define
-define|#
-directive|define
 name|SSL_aNULL
-value|0x00000800L
+value|0x00000004L
 end_define
 
 begin_comment
-comment|/* no Authenticate, ADH */
+comment|/* no auth (i.e. use ADH or AECDH) */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SSL_aDH
-value|0x00001000L
+value|0x00000008L
 end_define
 
 begin_comment
-comment|/* no Authenticate, ADH */
+comment|/* Fixed DH auth (kDHd or kDHr) */
+end_comment
+
+begin_comment
+comment|/* no such ciphersuites supported! */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSL_aECDH
+value|0x00000010L
+end_define
+
+begin_comment
+comment|/* Fixed ECDH auth (kECDHe or kECDHr) */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SSL_aKRB5
-value|0x00002000L
+value|0x00000020L
 end_define
 
 begin_comment
-comment|/* Authenticate with KRB5 */
+comment|/* KRB5 auth */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SSL_aECDSA
-value|0x00004000L
+value|0x00000040L
 end_define
 
 begin_comment
-comment|/* Authenticate with ECDSA */
+comment|/* ECDSA auth*/
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SSL_NULL
-value|(SSL_eNULL)
+name|SSL_aPSK
+value|0x00000080L
 end_define
+
+begin_comment
+comment|/* PSK auth */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|SSL_ADH
-value|(SSL_kEDH|SSL_aNULL)
+name|SSL_aGOST94
+value|0x00000100L
 end_define
+
+begin_comment
+comment|/* GOST R 34.10-94 signature auth */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|SSL_RSA
-value|(SSL_kRSA|SSL_aRSA)
+name|SSL_aGOST01
+value|0x00000200L
 end_define
 
-begin_define
-define|#
-directive|define
-name|SSL_DH
-value|(SSL_kDHr|SSL_kDHd|SSL_kEDH)
-end_define
+begin_comment
+comment|/* GOST R 34.10-2001 signature auth */
+end_comment
 
-begin_define
-define|#
-directive|define
-name|SSL_ECDH
-value|(SSL_kECDH|SSL_kECDHE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SSL_FZA
-value|(SSL_aFZA|SSL_kFZA|SSL_eFZA)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SSL_KRB5
-value|(SSL_kKRB5|SSL_aKRB5)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SSL_ENC_MASK
-value|0x1C3F8000L
-end_define
+begin_comment
+comment|/* Bits for algorithm_enc (symmetric encryption) */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SSL_DES
-value|0x00008000L
+value|0x00000001L
 end_define
 
 begin_define
 define|#
 directive|define
 name|SSL_3DES
-value|0x00010000L
+value|0x00000002L
 end_define
 
 begin_define
 define|#
 directive|define
 name|SSL_RC4
-value|0x00020000L
+value|0x00000004L
 end_define
 
 begin_define
 define|#
 directive|define
 name|SSL_RC2
-value|0x00040000L
+value|0x00000008L
 end_define
 
 begin_define
 define|#
 directive|define
 name|SSL_IDEA
-value|0x00080000L
-end_define
-
-begin_define
-define|#
-directive|define
-name|SSL_eFZA
-value|0x00100000L
+value|0x00000010L
 end_define
 
 begin_define
 define|#
 directive|define
 name|SSL_eNULL
-value|0x00200000L
+value|0x00000020L
 end_define
 
 begin_define
 define|#
 directive|define
-name|SSL_AES
-value|0x04000000L
+name|SSL_AES128
+value|0x00000040L
 end_define
 
 begin_define
 define|#
 directive|define
-name|SSL_CAMELLIA
-value|0x08000000L
+name|SSL_AES256
+value|0x00000080L
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSL_CAMELLIA128
+value|0x00000100L
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSL_CAMELLIA256
+value|0x00000200L
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSL_eGOST2814789CNT
+value|0x00000400L
 end_define
 
 begin_define
 define|#
 directive|define
 name|SSL_SEED
-value|0x10000000L
+value|0x00000800L
 end_define
 
 begin_define
 define|#
 directive|define
-name|SSL_MAC_MASK
-value|0x00c00000L
+name|SSL_AES128GCM
+value|0x00001000L
 end_define
+
+begin_define
+define|#
+directive|define
+name|SSL_AES256GCM
+value|0x00002000L
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSL_AES
+value|(SSL_AES128|SSL_AES256|SSL_AES128GCM|SSL_AES256GCM)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSL_CAMELLIA
+value|(SSL_CAMELLIA128|SSL_CAMELLIA256)
+end_define
+
+begin_comment
+comment|/* Bits for algorithm_mac (symmetric authentication) */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SSL_MD5
-value|0x00400000L
+value|0x00000001L
 end_define
 
 begin_define
 define|#
 directive|define
 name|SSL_SHA1
-value|0x00800000L
+value|0x00000002L
 end_define
 
 begin_define
 define|#
 directive|define
-name|SSL_SHA
-value|(SSL_SHA1)
+name|SSL_GOST94
+value|0x00000004L
 end_define
 
 begin_define
 define|#
 directive|define
-name|SSL_SSL_MASK
-value|0x03000000L
+name|SSL_GOST89MAC
+value|0x00000008L
 end_define
+
+begin_define
+define|#
+directive|define
+name|SSL_SHA256
+value|0x00000010L
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSL_SHA384
+value|0x00000020L
+end_define
+
+begin_comment
+comment|/* Not a real MAC, just an indication it is part of cipher */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSL_AEAD
+value|0x00000040L
+end_define
+
+begin_comment
+comment|/* Bits for algorithm_ssl (protocol version) */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SSL_SSLV2
-value|0x01000000L
+value|0x00000001L
 end_define
 
 begin_define
 define|#
 directive|define
 name|SSL_SSLV3
-value|0x02000000L
+value|0x00000002L
 end_define
 
 begin_define
@@ -786,9 +872,136 @@ begin_comment
 comment|/* for now */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SSL_TLSV1_2
+value|0x00000004L
+end_define
+
 begin_comment
-comment|/* we have used 1fffffff - 3 bits left to go. */
+comment|/* Bits for algorithm2 (handshake digests and other extra flags) */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|SSL_HANDSHAKE_MAC_MD5
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSL_HANDSHAKE_MAC_SHA
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSL_HANDSHAKE_MAC_GOST94
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSL_HANDSHAKE_MAC_SHA256
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSL_HANDSHAKE_MAC_SHA384
+value|0x100
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSL_HANDSHAKE_MAC_DEFAULT
+value|(SSL_HANDSHAKE_MAC_MD5 | SSL_HANDSHAKE_MAC_SHA)
+end_define
+
+begin_comment
+comment|/* When adding new digest in the ssl_ciph.c and increment SSM_MD_NUM_IDX  * make sure to update this constant too */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSL_MAX_DIGEST
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|TLS1_PRF_DGST_MASK
+value|(0xff<< TLS1_PRF_DGST_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TLS1_PRF_DGST_SHIFT
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|TLS1_PRF_MD5
+value|(SSL_HANDSHAKE_MAC_MD5<< TLS1_PRF_DGST_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TLS1_PRF_SHA1
+value|(SSL_HANDSHAKE_MAC_SHA<< TLS1_PRF_DGST_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TLS1_PRF_SHA256
+value|(SSL_HANDSHAKE_MAC_SHA256<< TLS1_PRF_DGST_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TLS1_PRF_SHA384
+value|(SSL_HANDSHAKE_MAC_SHA384<< TLS1_PRF_DGST_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TLS1_PRF_GOST94
+value|(SSL_HANDSHAKE_MAC_GOST94<< TLS1_PRF_DGST_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TLS1_PRF
+value|(TLS1_PRF_MD5 | TLS1_PRF_SHA1)
+end_define
+
+begin_comment
+comment|/* Stream MAC for GOST ciphersuites from cryptopro draft  * (currently this also goes into algorithm2) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLS1_STREAM_MAC
+value|0x04
+end_define
 
 begin_comment
 comment|/*  * Export and cipher strength information. For each cipher we have to decide  * whether it is exportable or not. This information is likely to change  * over time, since the export control rules are no static technical issue.  *  * Independent of the export flag the cipher strength is sorted into classes.  * SSL_EXP40 was denoting the 40bit US export limit of past times, which now  * is at 56bit (SSL_EXP56). If the exportable cipher class is going to change  * again (eg. to 64bit) the use of "SSL_EXP*" becomes blurred even more,  * since SSL_EXP64 could be similar to SSL_LOW.  * For this reason SSL_MICRO and SSL_MINI macros are included to widen the  * namespace of SSL_LOW-SSL_HIGH to lower values. As development of speed  * and ciphers goes, another extension to SSL_SUPER and/or SSL_ULTRA would  * be possible.  */
@@ -804,6 +1017,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SSL_STRONG_MASK
+value|0x000001fcL
+end_define
+
+begin_define
+define|#
+directive|define
 name|SSL_NOT_EXP
 value|0x00000001L
 end_define
@@ -813,13 +1033,6 @@ define|#
 directive|define
 name|SSL_EXPORT
 value|0x00000002L
-end_define
-
-begin_define
-define|#
-directive|define
-name|SSL_STRONG_MASK
-value|0x000000fcL
 end_define
 
 begin_define
@@ -962,7 +1175,7 @@ name|a
 parameter_list|,
 name|s
 parameter_list|)
-value|(SSL_IS_EXPORT40(s) ? 5 : \ 				 ((a)&SSL_ENC_MASK) == SSL_DES ? 8 : 7)
+value|(SSL_IS_EXPORT40(s) ? 5 : \ 				 (a) == SSL_DES ? 8 : 7)
 end_define
 
 begin_define
@@ -982,7 +1195,7 @@ name|SSL_C_EXPORT_KEYLENGTH
 parameter_list|(
 name|c
 parameter_list|)
-value|SSL_EXPORT_KEYLENGTH((c)->algorithms, \ 				(c)->algo_strength)
+value|SSL_EXPORT_KEYLENGTH((c)->algorithm_enc, \ 				(c)->algo_strength)
 end_define
 
 begin_define
@@ -993,27 +1206,6 @@ parameter_list|(
 name|c
 parameter_list|)
 value|SSL_EXPORT_PKEYLENGTH((c)->algo_strength)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SSL_ALL
-value|0xffffffffL
-end_define
-
-begin_define
-define|#
-directive|define
-name|SSL_ALL_CIPHERS
-value|(SSL_MKEY_MASK|SSL_AUTH_MASK|SSL_ENC_MASK|\ 				SSL_MAC_MASK)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SSL_ALL_STRENGTHS
-value|(SSL_EXP_MASK|SSL_STRONG_MASK)
 end_define
 
 begin_comment
@@ -1065,8 +1257,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|SSL_PKEY_NUM
+name|SSL_PKEY_GOST94
 value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSL_PKEY_GOST01
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSL_PKEY_NUM
+value|8
 end_define
 
 begin_comment
@@ -1130,6 +1336,12 @@ name|EVP_PKEY
 modifier|*
 name|privatekey
 decl_stmt|;
+comment|/* Digest to use when signing */
+specifier|const
+name|EVP_MD
+modifier|*
+name|digest
+decl_stmt|;
 block|}
 name|CERT_PKEY
 typedef|;
@@ -1152,11 +1364,19 @@ name|valid
 decl_stmt|;
 name|unsigned
 name|long
-name|mask
+name|mask_k
 decl_stmt|;
 name|unsigned
 name|long
-name|export_mask
+name|mask_a
+decl_stmt|;
+name|unsigned
+name|long
+name|export_mask_k
+decl_stmt|;
+name|unsigned
+name|long
+name|export_mask_a
 decl_stmt|;
 ifndef|#
 directive|ifndef
@@ -1481,12 +1701,6 @@ parameter_list|(
 name|SSL
 modifier|*
 parameter_list|,
-name|EVP_MD_CTX
-modifier|*
-parameter_list|,
-name|EVP_MD_CTX
-modifier|*
-parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -1510,8 +1724,7 @@ parameter_list|(
 name|SSL
 modifier|*
 parameter_list|,
-name|EVP_MD_CTX
-modifier|*
+name|int
 parameter_list|,
 name|unsigned
 name|char
@@ -1541,6 +1754,38 @@ name|alert_value
 function_decl|)
 parameter_list|(
 name|int
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|export_keying_material
+function_decl|)
+parameter_list|(
+name|SSL
+modifier|*
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+specifier|const
+name|unsigned
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+name|int
+name|use_context
 parameter_list|)
 function_decl|;
 block|}
@@ -1587,6 +1832,54 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_BUF_FREELISTS
+end_ifndef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|ssl3_buf_freelist_st
+block|{
+name|size_t
+name|chunklen
+decl_stmt|;
+name|unsigned
+name|int
+name|len
+decl_stmt|;
+name|struct
+name|ssl3_buf_freelist_entry_st
+modifier|*
+name|head
+decl_stmt|;
+block|}
+name|SSL3_BUF_FREELIST
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|ssl3_buf_freelist_entry_st
+block|{
+name|struct
+name|ssl3_buf_freelist_entry_st
+modifier|*
+name|next
+decl_stmt|;
+block|}
+name|SSL3_BUF_FREELIST_ENTRY
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|extern
 name|SSL3_ENC_METHOD
@@ -1596,6 +1889,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|OPENSSL_EXTERN
+specifier|const
 name|SSL_CIPHER
 name|ssl2_ciphers
 index|[]
@@ -1617,36 +1911,6 @@ name|ssl_bad_method
 parameter_list|(
 name|int
 name|ver
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|SSL_METHOD
-modifier|*
-name|sslv2_base_method
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|SSL_METHOD
-modifier|*
-name|sslv23_base_method
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|SSL_METHOD
-modifier|*
-name|sslv3_base_method
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1675,18 +1939,20 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|IMPLEMENT_tls1_meth_func
+name|IMPLEMENT_tls_meth_func
 parameter_list|(
+name|version
+parameter_list|,
 name|func_name
 parameter_list|,
 name|s_accept
 parameter_list|,
 name|s_connect
-parameter_list|,
+parameter_list|, \
 name|s_get_meth
 parameter_list|)
 define|\
-value|SSL_METHOD *func_name(void)  \ 	{ \ 	static SSL_METHOD func_name##_data= { \ 		TLS1_VERSION, \ 		tls1_new, \ 		tls1_clear, \ 		tls1_free, \ 		s_accept, \ 		s_connect, \ 		ssl3_read, \ 		ssl3_peek, \ 		ssl3_write, \ 		ssl3_shutdown, \ 		ssl3_renegotiate, \ 		ssl3_renegotiate_check, \ 		ssl3_get_message, \ 		ssl3_read_bytes, \ 		ssl3_write_bytes, \ 		ssl3_dispatch_alert, \ 		ssl3_ctrl, \ 		ssl3_ctx_ctrl, \ 		ssl3_get_cipher_by_char, \ 		ssl3_put_cipher_by_char, \ 		ssl3_pending, \ 		ssl3_num_ciphers, \ 		ssl3_get_cipher, \ 		s_get_meth, \ 		tls1_default_timeout, \&TLSv1_enc_data, \ 		ssl_undefined_void_function, \ 		ssl3_callback_ctrl, \ 		ssl3_ctx_callback_ctrl, \ 	}; \ 	return&func_name##_data; \ 	}
+value|const SSL_METHOD *func_name(void)  \ 	{ \ 	static const SSL_METHOD func_name##_data= { \ 		version, \ 		tls1_new, \ 		tls1_clear, \ 		tls1_free, \ 		s_accept, \ 		s_connect, \ 		ssl3_read, \ 		ssl3_peek, \ 		ssl3_write, \ 		ssl3_shutdown, \ 		ssl3_renegotiate, \ 		ssl3_renegotiate_check, \ 		ssl3_get_message, \ 		ssl3_read_bytes, \ 		ssl3_write_bytes, \ 		ssl3_dispatch_alert, \ 		ssl3_ctrl, \ 		ssl3_ctx_ctrl, \ 		ssl3_get_cipher_by_char, \ 		ssl3_put_cipher_by_char, \ 		ssl3_pending, \ 		ssl3_num_ciphers, \ 		ssl3_get_cipher, \ 		s_get_meth, \ 		tls1_default_timeout, \&TLSv1_enc_data, \ 		ssl_undefined_void_function, \ 		ssl3_callback_ctrl, \ 		ssl3_ctx_callback_ctrl, \ 	}; \ 	return&func_name##_data; \ 	}
 end_define
 
 begin_define
@@ -1703,7 +1969,7 @@ parameter_list|,
 name|s_get_meth
 parameter_list|)
 define|\
-value|SSL_METHOD *func_name(void)  \ 	{ \ 	static SSL_METHOD func_name##_data= { \ 		SSL3_VERSION, \ 		ssl3_new, \ 		ssl3_clear, \ 		ssl3_free, \ 		s_accept, \ 		s_connect, \ 		ssl3_read, \ 		ssl3_peek, \ 		ssl3_write, \ 		ssl3_shutdown, \ 		ssl3_renegotiate, \ 		ssl3_renegotiate_check, \ 		ssl3_get_message, \ 		ssl3_read_bytes, \ 		ssl3_write_bytes, \ 		ssl3_dispatch_alert, \ 		ssl3_ctrl, \ 		ssl3_ctx_ctrl, \ 		ssl3_get_cipher_by_char, \ 		ssl3_put_cipher_by_char, \ 		ssl3_pending, \ 		ssl3_num_ciphers, \ 		ssl3_get_cipher, \ 		s_get_meth, \ 		ssl3_default_timeout, \&SSLv3_enc_data, \ 		ssl_undefined_void_function, \ 		ssl3_callback_ctrl, \ 		ssl3_ctx_callback_ctrl, \ 	}; \ 	return&func_name##_data; \ 	}
+value|const SSL_METHOD *func_name(void)  \ 	{ \ 	static const SSL_METHOD func_name##_data= { \ 		SSL3_VERSION, \ 		ssl3_new, \ 		ssl3_clear, \ 		ssl3_free, \ 		s_accept, \ 		s_connect, \ 		ssl3_read, \ 		ssl3_peek, \ 		ssl3_write, \ 		ssl3_shutdown, \ 		ssl3_renegotiate, \ 		ssl3_renegotiate_check, \ 		ssl3_get_message, \ 		ssl3_read_bytes, \ 		ssl3_write_bytes, \ 		ssl3_dispatch_alert, \ 		ssl3_ctrl, \ 		ssl3_ctx_ctrl, \ 		ssl3_get_cipher_by_char, \ 		ssl3_put_cipher_by_char, \ 		ssl3_pending, \ 		ssl3_num_ciphers, \ 		ssl3_get_cipher, \ 		s_get_meth, \ 		ssl3_default_timeout, \&SSLv3_enc_data, \ 		ssl_undefined_void_function, \ 		ssl3_callback_ctrl, \ 		ssl3_ctx_callback_ctrl, \ 	}; \ 	return&func_name##_data; \ 	}
 end_define
 
 begin_define
@@ -1720,7 +1986,7 @@ parameter_list|,
 name|s_get_meth
 parameter_list|)
 define|\
-value|SSL_METHOD *func_name(void)  \ 	{ \ 	static SSL_METHOD func_name##_data= { \ 	TLS1_VERSION, \ 	tls1_new, \ 	tls1_clear, \ 	tls1_free, \ 	s_accept, \ 	s_connect, \ 	ssl23_read, \ 	ssl23_peek, \ 	ssl23_write, \ 	ssl_undefined_function, \ 	ssl_undefined_function, \ 	ssl_ok, \ 	ssl3_get_message, \ 	ssl3_read_bytes, \ 	ssl3_write_bytes, \ 	ssl3_dispatch_alert, \ 	ssl3_ctrl, \ 	ssl3_ctx_ctrl, \ 	ssl23_get_cipher_by_char, \ 	ssl23_put_cipher_by_char, \ 	ssl_undefined_const_function, \ 	ssl23_num_ciphers, \ 	ssl23_get_cipher, \ 	s_get_meth, \ 	ssl23_default_timeout, \&ssl3_undef_enc_method, \ 	ssl_undefined_void_function, \ 	ssl3_callback_ctrl, \ 	ssl3_ctx_callback_ctrl, \ 	}; \ 	return&func_name##_data; \ 	}
+value|const SSL_METHOD *func_name(void)  \ 	{ \ 	static const SSL_METHOD func_name##_data= { \ 	TLS1_2_VERSION, \ 	tls1_new, \ 	tls1_clear, \ 	tls1_free, \ 	s_accept, \ 	s_connect, \ 	ssl23_read, \ 	ssl23_peek, \ 	ssl23_write, \ 	ssl_undefined_function, \ 	ssl_undefined_function, \ 	ssl_ok, \ 	ssl3_get_message, \ 	ssl3_read_bytes, \ 	ssl3_write_bytes, \ 	ssl3_dispatch_alert, \ 	ssl3_ctrl, \ 	ssl3_ctx_ctrl, \ 	ssl23_get_cipher_by_char, \ 	ssl23_put_cipher_by_char, \ 	ssl_undefined_const_function, \ 	ssl23_num_ciphers, \ 	ssl23_get_cipher, \ 	s_get_meth, \ 	ssl23_default_timeout, \&ssl3_undef_enc_method, \ 	ssl_undefined_void_function, \ 	ssl3_callback_ctrl, \ 	ssl3_ctx_callback_ctrl, \ 	}; \ 	return&func_name##_data; \ 	}
 end_define
 
 begin_define
@@ -1737,7 +2003,7 @@ parameter_list|,
 name|s_get_meth
 parameter_list|)
 define|\
-value|SSL_METHOD *func_name(void)  \ 	{ \ 	static SSL_METHOD func_name##_data= { \ 		SSL2_VERSION, \ 		ssl2_new,
+value|const SSL_METHOD *func_name(void)  \ 	{ \ 	static const SSL_METHOD func_name##_data= { \ 		SSL2_VERSION, \ 		ssl2_new,
 comment|/* local */
 value|\ 		ssl2_clear,
 comment|/* local */
@@ -1780,7 +2046,7 @@ parameter_list|,
 name|s_get_meth
 parameter_list|)
 define|\
-value|SSL_METHOD *func_name(void)  \ 	{ \ 	static SSL_METHOD func_name##_data= { \ 		DTLS1_VERSION, \ 		dtls1_new, \ 		dtls1_clear, \ 		dtls1_free, \ 		s_accept, \ 		s_connect, \ 		ssl3_read, \ 		ssl3_peek, \ 		ssl3_write, \ 		ssl3_shutdown, \ 		ssl3_renegotiate, \ 		ssl3_renegotiate_check, \ 		dtls1_get_message, \ 		dtls1_read_bytes, \ 		dtls1_write_app_data_bytes, \ 		dtls1_dispatch_alert, \ 		dtls1_ctrl, \ 		ssl3_ctx_ctrl, \ 		ssl3_get_cipher_by_char, \ 		ssl3_put_cipher_by_char, \ 		ssl3_pending, \ 		ssl3_num_ciphers, \ 		dtls1_get_cipher, \ 		s_get_meth, \ 		dtls1_default_timeout, \&DTLSv1_enc_data, \ 		ssl_undefined_void_function, \ 		ssl3_callback_ctrl, \ 		ssl3_ctx_callback_ctrl, \ 	}; \ 	return&func_name##_data; \ 	}
+value|const SSL_METHOD *func_name(void)  \ 	{ \ 	static const SSL_METHOD func_name##_data= { \ 		DTLS1_VERSION, \ 		dtls1_new, \ 		dtls1_clear, \ 		dtls1_free, \ 		s_accept, \ 		s_connect, \ 		ssl3_read, \ 		ssl3_peek, \ 		ssl3_write, \ 		dtls1_shutdown, \ 		ssl3_renegotiate, \ 		ssl3_renegotiate_check, \ 		dtls1_get_message, \ 		dtls1_read_bytes, \ 		dtls1_write_app_data_bytes, \ 		dtls1_dispatch_alert, \ 		dtls1_ctrl, \ 		ssl3_ctx_ctrl, \ 		ssl3_get_cipher_by_char, \ 		ssl3_put_cipher_by_char, \ 		ssl3_pending, \ 		ssl3_num_ciphers, \ 		dtls1_get_cipher, \ 		s_get_meth, \ 		dtls1_default_timeout, \&DTLSv1_enc_data, \ 		ssl_undefined_void_function, \ 		ssl3_callback_ctrl, \ 		ssl3_ctx_callback_ctrl, \ 	}; \ 	return&func_name##_data; \ 	}
 end_define
 
 begin_function_decl
@@ -1941,6 +2207,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_expr_stmt
+name|DECLARE_OBJ_BSEARCH_GLOBAL_CMP_FN
+argument_list|(
+name|SSL_CIPHER
+argument_list|,
+name|SSL_CIPHER
+argument_list|,
+name|ssl_cipher_id
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function_decl
 name|int
 name|ssl_cipher_ptr_id_cmp
@@ -2090,10 +2368,38 @@ modifier|*
 modifier|*
 name|md
 parameter_list|,
+name|int
+modifier|*
+name|mac_pkey_type
+parameter_list|,
+name|int
+modifier|*
+name|mac_secret_size
+parameter_list|,
 name|SSL_COMP
 modifier|*
 modifier|*
 name|comp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ssl_get_handshake_digest
+parameter_list|(
+name|int
+name|i
+parameter_list|,
+name|long
+modifier|*
+name|mask
+parameter_list|,
+specifier|const
+name|EVP_MD
+modifier|*
+modifier|*
+name|md
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2166,9 +2472,18 @@ name|ssl_get_sign_pkey
 parameter_list|(
 name|SSL
 modifier|*
+name|s
 parameter_list|,
+specifier|const
 name|SSL_CIPHER
 modifier|*
+name|c
+parameter_list|,
+specifier|const
+name|EVP_MD
+modifier|*
+modifier|*
+name|pmd
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2196,6 +2511,7 @@ name|CERT
 modifier|*
 name|c
 parameter_list|,
+specifier|const
 name|SSL_CIPHER
 modifier|*
 name|cipher
@@ -2296,6 +2612,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|SSL_CIPHER
 modifier|*
 name|ssl2_get_cipher_by_char
@@ -2413,6 +2730,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|SSL_CIPHER
 modifier|*
 name|ssl2_get_cipher
@@ -2655,6 +2973,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|SSL_CIPHER
 modifier|*
 name|ssl3_get_cipher_by_char
@@ -2932,6 +3251,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|SSL_CIPHER
 modifier|*
 name|ssl3_get_cipher
@@ -3031,14 +3351,6 @@ name|SSL
 modifier|*
 name|s
 parameter_list|,
-name|EVP_MD_CTX
-modifier|*
-name|ctx1
-parameter_list|,
-name|EVP_MD_CTX
-modifier|*
-name|ctx2
-parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -3063,9 +3375,8 @@ name|SSL
 modifier|*
 name|s
 parameter_list|,
-name|EVP_MD_CTX
-modifier|*
-name|in
+name|int
+name|md_nid
 parameter_list|,
 name|unsigned
 name|char
@@ -3111,7 +3422,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ssl3_mac
+name|n_ssl3_mac
 parameter_list|(
 name|SSL
 modifier|*
@@ -3124,6 +3435,17 @@ name|md
 parameter_list|,
 name|int
 name|send_data
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ssl3_free_digest_list
+parameter_list|(
+name|SSL
+modifier|*
+name|s
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3173,6 +3495,61 @@ end_decl_stmt
 begin_function_decl
 name|int
 name|ssl3_setup_buffers
+parameter_list|(
+name|SSL
+modifier|*
+name|s
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ssl3_setup_read_buffer
+parameter_list|(
+name|SSL
+modifier|*
+name|s
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ssl3_setup_write_buffer
+parameter_list|(
+name|SSL
+modifier|*
+name|s
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ssl3_release_read_buffer
+parameter_list|(
+name|SSL
+modifier|*
+name|s
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ssl3_release_write_buffer
+parameter_list|(
+name|SSL
+modifier|*
+name|s
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ssl3_digest_cached_records
 parameter_list|(
 name|SSL
 modifier|*
@@ -3444,6 +3821,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|SSL_CIPHER
 modifier|*
 name|ssl23_get_cipher
@@ -3528,6 +3906,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|SSL_CIPHER
 modifier|*
 name|ssl23_get_cipher_by_char
@@ -3985,6 +4364,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|SSL_CIPHER
 modifier|*
 name|dtls1_get_cipher
@@ -4144,6 +4524,17 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|ssl3_send_client_certificate
+parameter_list|(
+name|SSL
+modifier|*
+name|s
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|ssl_do_client_cert_cb
 parameter_list|(
 name|SSL
@@ -4159,17 +4550,6 @@ name|EVP_PKEY
 modifier|*
 modifier|*
 name|ppkey
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|ssl3_send_client_certificate
-parameter_list|(
-name|SSL
-modifier|*
-name|s
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4234,6 +4614,28 @@ name|s
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_NEXTPROTONEG
+end_ifndef
+
+begin_function_decl
+name|int
+name|ssl3_send_next_proto
+parameter_list|(
+name|SSL
+modifier|*
+name|s
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -4397,6 +4799,28 @@ name|s
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_NEXTPROTONEG
+end_ifndef
+
+begin_function_decl
+name|int
+name|ssl3_get_next_proto
+parameter_list|(
+name|SSL
+modifier|*
+name|s
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|int
@@ -4589,16 +5013,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|SSL_METHOD
-modifier|*
-name|tlsv1_base_method
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dtls1_new
 parameter_list|(
@@ -4675,11 +5089,12 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|SSL_METHOD
-modifier|*
-name|dtlsv1_base_method
+name|int
+name|dtls1_shutdown
 parameter_list|(
-name|void
+name|SSL
+modifier|*
+name|s
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4846,14 +5261,6 @@ name|SSL
 modifier|*
 name|s
 parameter_list|,
-name|EVP_MD_CTX
-modifier|*
-name|in1_ctx
-parameter_list|,
-name|EVP_MD_CTX
-modifier|*
-name|in2_ctx
-parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -4878,9 +5285,8 @@ name|SSL
 modifier|*
 name|s
 parameter_list|,
-name|EVP_MD_CTX
-modifier|*
-name|in
+name|int
+name|md_nid
 parameter_list|,
 name|unsigned
 name|char
@@ -4935,6 +5341,45 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|tls1_export_keying_material
+parameter_list|(
+name|SSL
+modifier|*
+name|s
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+name|out
+parameter_list|,
+name|size_t
+name|olen
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|label
+parameter_list|,
+name|size_t
+name|llen
+parameter_list|,
+specifier|const
+name|unsigned
+name|char
+modifier|*
+name|p
+parameter_list|,
+name|size_t
+name|plen
+parameter_list|,
+name|int
+name|use_context
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|tls1_alert_code
 parameter_list|(
 name|int
@@ -4964,20 +5409,31 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ECDH
+end_ifndef
+
 begin_function_decl
 name|int
-name|check_srvr_ecc_cert_and_alg
+name|ssl_check_srvr_ecc_cert_and_alg
 parameter_list|(
 name|X509
 modifier|*
 name|x
 parameter_list|,
-name|SSL_CIPHER
+name|SSL
 modifier|*
-name|cs
+name|s
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|SSL_COMP
@@ -4996,6 +5452,41 @@ name|n
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_EC
+end_ifndef
+
+begin_function_decl
+name|int
+name|tls1_ec_curve_id2nid
+parameter_list|(
+name|int
+name|curve_id
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|tls1_ec_nid2curve_id
+parameter_list|(
+name|int
+name|nid
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* OPENSSL_NO_EC */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -5151,6 +5642,61 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_HEARTBEATS
+end_ifndef
+
+begin_function_decl
+name|int
+name|tls1_heartbeat
+parameter_list|(
+name|SSL
+modifier|*
+name|s
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|dtls1_heartbeat
+parameter_list|(
+name|SSL
+modifier|*
+name|s
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|tls1_process_heartbeat
+parameter_list|(
+name|SSL
+modifier|*
+name|s
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|dtls1_process_heartbeat
+parameter_list|(
+name|SSL
+modifier|*
+name|s
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -5210,6 +5756,58 @@ name|ret
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|int
+name|tls12_get_sigandhash
+parameter_list|(
+name|unsigned
+name|char
+modifier|*
+name|p
+parameter_list|,
+specifier|const
+name|EVP_PKEY
+modifier|*
+name|pk
+parameter_list|,
+specifier|const
+name|EVP_MD
+modifier|*
+name|md
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|tls12_get_sigid
+parameter_list|(
+specifier|const
+name|EVP_PKEY
+modifier|*
+name|pk
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|const
+name|EVP_MD
+modifier|*
+name|tls12_get_hash
+parameter_list|(
+name|unsigned
+name|char
+name|hash_alg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|EVP_MD_CTX
@@ -5333,10 +5931,144 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_function_decl
+name|long
+name|ssl_get_algorithm2
+parameter_list|(
+name|SSL
+modifier|*
+name|s
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|tls1_process_sigalgs
+parameter_list|(
+name|SSL
+modifier|*
+name|s
+parameter_list|,
+specifier|const
+name|unsigned
+name|char
+modifier|*
+name|data
+parameter_list|,
+name|int
+name|dsize
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|tls12_get_req_sig_algs
+parameter_list|(
+name|SSL
+modifier|*
+name|s
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+name|p
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ssl_add_clienthello_use_srtp_ext
+parameter_list|(
+name|SSL
+modifier|*
+name|s
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+name|p
+parameter_list|,
+name|int
+modifier|*
+name|len
+parameter_list|,
+name|int
+name|maxlen
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ssl_parse_clienthello_use_srtp_ext
+parameter_list|(
+name|SSL
+modifier|*
+name|s
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+name|d
+parameter_list|,
+name|int
+name|len
+parameter_list|,
+name|int
+modifier|*
+name|al
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ssl_add_serverhello_use_srtp_ext
+parameter_list|(
+name|SSL
+modifier|*
+name|s
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+name|p
+parameter_list|,
+name|int
+modifier|*
+name|len
+parameter_list|,
+name|int
+name|maxlen
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ssl_parse_serverhello_use_srtp_ext
+parameter_list|(
+name|SSL
+modifier|*
+name|s
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+name|d
+parameter_list|,
+name|int
+name|len
+parameter_list|,
+name|int
+modifier|*
+name|al
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

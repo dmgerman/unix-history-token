@@ -32,11 +32,6 @@ name|defined
 argument_list|(
 name|OPENSSL_SYS_WIN32
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|OPENSSL_SYS_WIN16
-argument_list|)
 end_if
 
 begin_ifndef
@@ -905,6 +900,23 @@ name|Eswap1
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OPENSSL_SMALL_FOOTPRINT
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|DES_UNROLL
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

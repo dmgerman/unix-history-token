@@ -310,6 +310,9 @@ name|CERT
 value|char
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_SSL_INTERN
 typedef|typedef
 struct|struct
 name|ssl2_state_st
@@ -525,6 +528,8 @@ struct|;
 block|}
 name|SSL2_STATE
 typedef|;
+endif|#
+directive|endif
 comment|/* SSLv2 */
 comment|/* client */
 define|#

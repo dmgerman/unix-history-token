@@ -22,6 +22,12 @@ end_include
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|OPENSSL_FIPS
+end_ifndef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|OPENSSL_NO_SHA
 end_ifndef
 
@@ -59,12 +65,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|OPENSSL_FIPS
-end_ifndef
 
 begin_function
 specifier|static
@@ -161,7 +161,9 @@ name|NID_sha1WithRSAEncryption
 block|,
 name|SHA_DIGEST_LENGTH
 block|,
-literal|0
+name|EVP_MD_FLAG_PKEY_METHOD_SIGNATURE
+operator||
+name|EVP_MD_FLAG_DIGALGID_ABSENT
 block|,
 name|init
 block|,
@@ -208,6 +210,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -335,7 +342,9 @@ name|NID_sha224WithRSAEncryption
 block|,
 name|SHA224_DIGEST_LENGTH
 block|,
-literal|0
+name|EVP_MD_FLAG_PKEY_METHOD_SIGNATURE
+operator||
+name|EVP_MD_FLAG_DIGALGID_ABSENT
 block|,
 name|init224
 block|,
@@ -396,7 +405,9 @@ name|NID_sha256WithRSAEncryption
 block|,
 name|SHA256_DIGEST_LENGTH
 block|,
-literal|0
+name|EVP_MD_FLAG_PKEY_METHOD_SIGNATURE
+operator||
+name|EVP_MD_FLAG_DIGALGID_ABSENT
 block|,
 name|init256
 block|,
@@ -579,7 +590,9 @@ name|NID_sha384WithRSAEncryption
 block|,
 name|SHA384_DIGEST_LENGTH
 block|,
-literal|0
+name|EVP_MD_FLAG_PKEY_METHOD_SIGNATURE
+operator||
+name|EVP_MD_FLAG_DIGALGID_ABSENT
 block|,
 name|init384
 block|,
@@ -640,7 +653,9 @@ name|NID_sha512WithRSAEncryption
 block|,
 name|SHA512_DIGEST_LENGTH
 block|,
-literal|0
+name|EVP_MD_FLAG_PKEY_METHOD_SIGNATURE
+operator||
+name|EVP_MD_FLAG_DIGALGID_ABSENT
 block|,
 name|init512
 block|,
@@ -696,11 +711,6 @@ end_endif
 begin_comment
 comment|/* ifndef OPENSSL_NO_SHA512 */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

@@ -40,25 +40,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|<openssl/err.h>
+file|<openssl/crypto.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OPENSSL_FIPS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<openssl/fips.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_undef
 undef|#
@@ -118,7 +101,7 @@ function_decl|;
 end_function_decl
 
 begin_macro
-name|FIPS_NON_FIPS_MD_Init
+name|fips_md_init
 argument_list|(
 argument|MDC2
 argument_list|)

@@ -12,14 +12,14 @@ name|HEADER_OPENSSLV_H
 end_define
 
 begin_comment
-comment|/* Numeric release version identifier:  * MNNFFPPS: major minor fix patch status  * The status nibble has one of the values 0 for development, 1 to e for betas  * 1 to 14, and f for release.  The patch level is exactly that.  * For example:  * 0.9.3-dev	  0x00903000  * 0.9.3-beta1	  0x00903001  * 0.9.3-beta2-dev 0x00903002  * 0.9.3-beta2    0x00903002 (same as ...beta2-dev)  * 0.9.3	  0x0090300f  * 0.9.3a	  0x0090301f  * 0.9.4	  0x0090400f  * 1.2.3z	  0x102031af  *  * For continuity reasons (because 0.9.5 is already out, and is coded  * 0x00905100), between 0.9.5 and 0.9.6 the coding of the patch level  * part is slightly different, by setting the highest bit.  This means  * that 0.9.5a looks like this: 0x0090581f.  At 0.9.6, we can start  * with 0x0090600S...  *  * (Prior to 0.9.3-dev a different scheme was used: 0.9.2b is 0x0922.)  * (Prior to 0.9.5a beta1, a different scheme was used: MMNNFFRBB for  *  major minor fix final patch/beta)  */
+comment|/* Numeric release version identifier:  * MNNFFPPS: major minor fix patch status  * The status nibble has one of the values 0 for development, 1 to e for betas  * 1 to 14, and f for release.  The patch level is exactly that.  * For example:  * 0.9.3-dev	  0x00903000  * 0.9.3-beta1	  0x00903001  * 0.9.3-beta2-dev 0x00903002  * 0.9.3-beta2    0x00903002 (same as ...beta2-dev)  * 0.9.3	  0x0090300f  * 0.9.3a	  0x0090301f  * 0.9.4 	  0x0090400f  * 1.2.3z	  0x102031af  *  * For continuity reasons (because 0.9.5 is already out, and is coded  * 0x00905100), between 0.9.5 and 0.9.6 the coding of the patch level  * part is slightly different, by setting the highest bit.  This means  * that 0.9.5a looks like this: 0x0090581f.  At 0.9.6, we can start  * with 0x0090600S...  *  * (Prior to 0.9.3-dev a different scheme was used: 0.9.2b is 0x0922.)  * (Prior to 0.9.5a beta1, a different scheme was used: MMNNFFRBB for  *  major minor fix final patch/beta)  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|OPENSSL_VERSION_NUMBER
-value|0x0090818fL
+value|0x1000103fL
 end_define
 
 begin_ifdef
@@ -32,7 +32,7 @@ begin_define
 define|#
 directive|define
 name|OPENSSL_VERSION_TEXT
-value|"OpenSSL 0.9.8x-fips 10 May 2012"
+value|"OpenSSL 1.0.1c-fips 10 May 2012"
 end_define
 
 begin_else
@@ -44,7 +44,7 @@ begin_define
 define|#
 directive|define
 name|OPENSSL_VERSION_TEXT
-value|"OpenSSL 0.9.8x 10 May 2012"
+value|"OpenSSL 1.0.1c 10 May 2012"
 end_define
 
 begin_endif
@@ -74,7 +74,7 @@ begin_define
 define|#
 directive|define
 name|SHLIB_VERSION_NUMBER
-value|"0.9.8"
+value|"1.0.0"
 end_define
 
 begin_endif

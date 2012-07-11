@@ -1756,6 +1756,7 @@ operator|=
 name|strlen
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)

@@ -1275,6 +1275,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|mdlen
+operator|<
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+if|if
+condition|(
 operator|(
 name|cid
 operator|->
@@ -1345,8 +1355,7 @@ name|X509_pubkey_digest
 argument_list|(
 name|cert
 argument_list|,
-name|EVP_sha1
-argument_list|()
+name|dgst
 argument_list|,
 name|md
 argument_list|,

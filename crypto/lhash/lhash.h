@@ -160,117 +160,117 @@ define|#
 directive|define
 name|DECLARE_LHASH_HASH_FN
 parameter_list|(
-name|f_name
+name|name
 parameter_list|,
 name|o_type
 parameter_list|)
 define|\
-value|unsigned long f_name##_LHASH_HASH(const void *);
+value|unsigned long name##_LHASH_HASH(const void *);
 define|#
 directive|define
 name|IMPLEMENT_LHASH_HASH_FN
 parameter_list|(
-name|f_name
+name|name
 parameter_list|,
 name|o_type
 parameter_list|)
 define|\
-value|unsigned long f_name##_LHASH_HASH(const void *arg) { \ 		o_type a = (o_type)arg; \ 		return f_name(a); }
+value|unsigned long name##_LHASH_HASH(const void *arg) { \ 		const o_type *a = arg; \ 		return name##_hash(a); }
 define|#
 directive|define
 name|LHASH_HASH_FN
 parameter_list|(
-name|f_name
+name|name
 parameter_list|)
-value|f_name##_LHASH_HASH
+value|name##_LHASH_HASH
 comment|/* Second: "compare" functions */
 define|#
 directive|define
 name|DECLARE_LHASH_COMP_FN
 parameter_list|(
-name|f_name
+name|name
 parameter_list|,
 name|o_type
 parameter_list|)
 define|\
-value|int f_name##_LHASH_COMP(const void *, const void *);
+value|int name##_LHASH_COMP(const void *, const void *);
 define|#
 directive|define
 name|IMPLEMENT_LHASH_COMP_FN
 parameter_list|(
-name|f_name
+name|name
 parameter_list|,
 name|o_type
 parameter_list|)
 define|\
-value|int f_name##_LHASH_COMP(const void *arg1, const void *arg2) { \ 		o_type a = (o_type)arg1; \ 		o_type b = (o_type)arg2; \ 		return f_name(a,b); }
+value|int name##_LHASH_COMP(const void *arg1, const void *arg2) { \ 		const o_type *a = arg1;		    \ 		const o_type *b = arg2; \ 		return name##_cmp(a,b); }
 define|#
 directive|define
 name|LHASH_COMP_FN
 parameter_list|(
-name|f_name
+name|name
 parameter_list|)
-value|f_name##_LHASH_COMP
+value|name##_LHASH_COMP
 comment|/* Third: "doall" functions */
 define|#
 directive|define
 name|DECLARE_LHASH_DOALL_FN
 parameter_list|(
-name|f_name
+name|name
 parameter_list|,
 name|o_type
 parameter_list|)
 define|\
-value|void f_name##_LHASH_DOALL(void *);
+value|void name##_LHASH_DOALL(void *);
 define|#
 directive|define
 name|IMPLEMENT_LHASH_DOALL_FN
 parameter_list|(
-name|f_name
+name|name
 parameter_list|,
 name|o_type
 parameter_list|)
 define|\
-value|void f_name##_LHASH_DOALL(void *arg) { \ 		o_type a = (o_type)arg; \ 		f_name(a); }
+value|void name##_LHASH_DOALL(void *arg) { \ 		o_type *a = arg; \ 		name##_doall(a); }
 define|#
 directive|define
 name|LHASH_DOALL_FN
 parameter_list|(
-name|f_name
+name|name
 parameter_list|)
-value|f_name##_LHASH_DOALL
+value|name##_LHASH_DOALL
 comment|/* Fourth: "doall_arg" functions */
 define|#
 directive|define
 name|DECLARE_LHASH_DOALL_ARG_FN
 parameter_list|(
-name|f_name
+name|name
 parameter_list|,
 name|o_type
 parameter_list|,
 name|a_type
 parameter_list|)
 define|\
-value|void f_name##_LHASH_DOALL_ARG(void *, void *);
+value|void name##_LHASH_DOALL_ARG(void *, void *);
 define|#
 directive|define
 name|IMPLEMENT_LHASH_DOALL_ARG_FN
 parameter_list|(
-name|f_name
+name|name
 parameter_list|,
 name|o_type
 parameter_list|,
 name|a_type
 parameter_list|)
 define|\
-value|void f_name##_LHASH_DOALL_ARG(void *arg1, void *arg2) { \ 		o_type a = (o_type)arg1; \ 		a_type b = (a_type)arg2; \ 		f_name(a,b); }
+value|void name##_LHASH_DOALL_ARG(void *arg1, void *arg2) { \ 		o_type *a = arg1; \ 		a_type *b = arg2; \ 		name##_doall_arg(a, b); }
 define|#
 directive|define
 name|LHASH_DOALL_ARG_FN
 parameter_list|(
-name|f_name
+name|name
 parameter_list|)
-value|f_name##_LHASH_DOALL_ARG
+value|name##_LHASH_DOALL_ARG
 typedef|typedef
 struct|struct
 name|lhash_st
@@ -372,8 +372,9 @@ name|int
 name|error
 decl_stmt|;
 block|}
-name|LHASH
+name|_LHASH
 typedef|;
+comment|/* Do not use _LHASH directly, use LHASH_OF 			 * and friends */
 define|#
 directive|define
 name|LH_LOAD_MULT
@@ -386,7 +387,7 @@ parameter_list|(
 name|lh
 parameter_list|)
 value|((lh)->error)
-name|LHASH
+name|_LHASH
 modifier|*
 name|lh_new
 parameter_list|(
@@ -400,7 +401,7 @@ function_decl|;
 name|void
 name|lh_free
 parameter_list|(
-name|LHASH
+name|_LHASH
 modifier|*
 name|lh
 parameter_list|)
@@ -409,7 +410,7 @@ name|void
 modifier|*
 name|lh_insert
 parameter_list|(
-name|LHASH
+name|_LHASH
 modifier|*
 name|lh
 parameter_list|,
@@ -422,7 +423,7 @@ name|void
 modifier|*
 name|lh_delete
 parameter_list|(
-name|LHASH
+name|_LHASH
 modifier|*
 name|lh
 parameter_list|,
@@ -436,7 +437,7 @@ name|void
 modifier|*
 name|lh_retrieve
 parameter_list|(
-name|LHASH
+name|_LHASH
 modifier|*
 name|lh
 parameter_list|,
@@ -449,7 +450,7 @@ function_decl|;
 name|void
 name|lh_doall
 parameter_list|(
-name|LHASH
+name|_LHASH
 modifier|*
 name|lh
 parameter_list|,
@@ -460,7 +461,7 @@ function_decl|;
 name|void
 name|lh_doall_arg
 parameter_list|(
-name|LHASH
+name|_LHASH
 modifier|*
 name|lh
 parameter_list|,
@@ -487,7 +488,7 @@ name|long
 name|lh_num_items
 parameter_list|(
 specifier|const
-name|LHASH
+name|_LHASH
 modifier|*
 name|lh
 parameter_list|)
@@ -499,7 +500,7 @@ name|void
 name|lh_stats
 parameter_list|(
 specifier|const
-name|LHASH
+name|_LHASH
 modifier|*
 name|lh
 parameter_list|,
@@ -512,7 +513,7 @@ name|void
 name|lh_node_stats
 parameter_list|(
 specifier|const
-name|LHASH
+name|_LHASH
 modifier|*
 name|lh
 parameter_list|,
@@ -525,7 +526,7 @@ name|void
 name|lh_node_usage_stats
 parameter_list|(
 specifier|const
-name|LHASH
+name|_LHASH
 modifier|*
 name|lh
 parameter_list|,
@@ -543,7 +544,7 @@ name|void
 name|lh_stats_bio
 parameter_list|(
 specifier|const
-name|LHASH
+name|_LHASH
 modifier|*
 name|lh
 parameter_list|,
@@ -556,7 +557,7 @@ name|void
 name|lh_node_stats_bio
 parameter_list|(
 specifier|const
-name|LHASH
+name|_LHASH
 modifier|*
 name|lh
 parameter_list|,
@@ -569,7 +570,7 @@ name|void
 name|lh_node_usage_stats_bio
 parameter_list|(
 specifier|const
-name|LHASH
+name|_LHASH
 modifier|*
 name|lh
 parameter_list|,
@@ -580,6 +581,188 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
+comment|/* Type checking... */
+define|#
+directive|define
+name|LHASH_OF
+parameter_list|(
+name|type
+parameter_list|)
+value|struct lhash_st_##type
+define|#
+directive|define
+name|DECLARE_LHASH_OF
+parameter_list|(
+name|type
+parameter_list|)
+value|LHASH_OF(type) { int dummy; }
+define|#
+directive|define
+name|CHECKED_LHASH_OF
+parameter_list|(
+name|type
+parameter_list|,
+name|lh
+parameter_list|)
+define|\
+value|((_LHASH *)CHECKED_PTR_OF(LHASH_OF(type),lh))
+comment|/* Define wrapper functions. */
+define|#
+directive|define
+name|LHM_lh_new
+parameter_list|(
+name|type
+parameter_list|,
+name|name
+parameter_list|)
+define|\
+value|((LHASH_OF(type) *)lh_new(LHASH_HASH_FN(name), LHASH_COMP_FN(name)))
+define|#
+directive|define
+name|LHM_lh_error
+parameter_list|(
+name|type
+parameter_list|,
+name|lh
+parameter_list|)
+define|\
+value|lh_error(CHECKED_LHASH_OF(type,lh))
+define|#
+directive|define
+name|LHM_lh_insert
+parameter_list|(
+name|type
+parameter_list|,
+name|lh
+parameter_list|,
+name|inst
+parameter_list|)
+define|\
+value|((type *)lh_insert(CHECKED_LHASH_OF(type, lh), \ 		     CHECKED_PTR_OF(type, inst)))
+define|#
+directive|define
+name|LHM_lh_retrieve
+parameter_list|(
+name|type
+parameter_list|,
+name|lh
+parameter_list|,
+name|inst
+parameter_list|)
+define|\
+value|((type *)lh_retrieve(CHECKED_LHASH_OF(type, lh), \ 		       CHECKED_PTR_OF(type, inst)))
+define|#
+directive|define
+name|LHM_lh_delete
+parameter_list|(
+name|type
+parameter_list|,
+name|lh
+parameter_list|,
+name|inst
+parameter_list|)
+define|\
+value|((type *)lh_delete(CHECKED_LHASH_OF(type, lh),			\ 		     CHECKED_PTR_OF(type, inst)))
+define|#
+directive|define
+name|LHM_lh_doall
+parameter_list|(
+name|type
+parameter_list|,
+name|lh
+parameter_list|,
+name|fn
+parameter_list|)
+value|lh_doall(CHECKED_LHASH_OF(type, lh), fn)
+define|#
+directive|define
+name|LHM_lh_doall_arg
+parameter_list|(
+name|type
+parameter_list|,
+name|lh
+parameter_list|,
+name|fn
+parameter_list|,
+name|arg_type
+parameter_list|,
+name|arg
+parameter_list|)
+define|\
+value|lh_doall_arg(CHECKED_LHASH_OF(type, lh), fn, CHECKED_PTR_OF(arg_type, arg))
+define|#
+directive|define
+name|LHM_lh_num_items
+parameter_list|(
+name|type
+parameter_list|,
+name|lh
+parameter_list|)
+value|lh_num_items(CHECKED_LHASH_OF(type, lh))
+define|#
+directive|define
+name|LHM_lh_down_load
+parameter_list|(
+name|type
+parameter_list|,
+name|lh
+parameter_list|)
+value|(CHECKED_LHASH_OF(type, lh)->down_load)
+define|#
+directive|define
+name|LHM_lh_node_stats_bio
+parameter_list|(
+name|type
+parameter_list|,
+name|lh
+parameter_list|,
+name|out
+parameter_list|)
+define|\
+value|lh_node_stats_bio(CHECKED_LHASH_OF(type, lh), out)
+define|#
+directive|define
+name|LHM_lh_node_usage_stats_bio
+parameter_list|(
+name|type
+parameter_list|,
+name|lh
+parameter_list|,
+name|out
+parameter_list|)
+define|\
+value|lh_node_usage_stats_bio(CHECKED_LHASH_OF(type, lh), out)
+define|#
+directive|define
+name|LHM_lh_stats_bio
+parameter_list|(
+name|type
+parameter_list|,
+name|lh
+parameter_list|,
+name|out
+parameter_list|)
+define|\
+value|lh_stats_bio(CHECKED_LHASH_OF(type, lh), out)
+define|#
+directive|define
+name|LHM_lh_free
+parameter_list|(
+name|type
+parameter_list|,
+name|lh
+parameter_list|)
+value|lh_free(CHECKED_LHASH_OF(type, lh))
+name|DECLARE_LHASH_OF
+argument_list|(
+name|OPENSSL_STRING
+argument_list|)
+expr_stmt|;
+name|DECLARE_LHASH_OF
+argument_list|(
+name|OPENSSL_CSTRING
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__cplusplus

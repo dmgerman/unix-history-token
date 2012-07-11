@@ -200,7 +200,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|Getenv
+name|getenv
 argument_list|(
 name|X509_get_default_cert_file_env
 argument_list|()
