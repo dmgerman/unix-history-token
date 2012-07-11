@@ -180,7 +180,7 @@ begin_define
 define|#
 directive|define
 name|ASL_SUPPORTED_OPTIONS
-value|"@:2b|c|d^D:e:fgh^i|I:l^mno|p:P^r:s|t|T:G^v|w|x:z"
+value|"@:2b|c|d^D:e:fgh^i|I:l^mno|p:P^r:s|t|T:G^v^w|x:z"
 end_define
 
 begin_comment
@@ -212,6 +212,13 @@ argument_list|(
 literal|"-I<dir>"
 argument_list|,
 literal|"Specify additional include directory"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-v"
+argument_list|,
+literal|"Display compiler version"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1809,7 +1816,7 @@ break|break;
 case|case
 literal|'v'
 case|:
-comment|/* Verbosity settings */
+comment|/* Version and verbosity settings */
 switch|switch
 condition|(
 name|AcpiGbl_Optarg
@@ -1818,6 +1825,22 @@ literal|0
 index|]
 condition|)
 block|{
+case|case
+literal|'^'
+case|:
+name|printf
+argument_list|(
+name|ACPI_COMMON_SIGNON
+argument_list|(
+name|ASL_COMPILER_NAME
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 case|case
 literal|'a'
 case|:

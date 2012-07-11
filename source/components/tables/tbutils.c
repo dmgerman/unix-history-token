@@ -576,12 +576,13 @@ condition|(
 name|Checksum
 condition|)
 block|{
-name|ACPI_WARNING
+name|ACPI_BIOS_WARNING
 argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Incorrect checksum in table [%4.4s] - 0x%2.2X, should be 0x%2.2X"
+literal|"Incorrect checksum in table [%4.4s] - 0x%2.2X, "
+literal|"should be 0x%2.2X"
 operator|,
 name|Table
 operator|->
@@ -714,12 +715,13 @@ operator|->
 name|Checksum
 condition|)
 block|{
-name|ACPI_ERROR
+name|ACPI_BIOS_ERROR
 argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"The DSDT has been corrupted or replaced - old, new headers below"
+literal|"The DSDT has been corrupted or replaced - "
+literal|"old, new headers below"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -980,7 +982,7 @@ name|Signature
 argument_list|)
 condition|)
 block|{
-name|ACPI_ERROR
+name|ACPI_BIOS_ERROR
 argument_list|(
 operator|(
 name|AE_INFO
@@ -1205,7 +1207,7 @@ name|ACPI_UINT32_MAX
 condition|)
 block|{
 comment|/* Will truncate 64-bit address to 32 bits, issue warning */
-name|ACPI_WARNING
+name|ACPI_BIOS_WARNING
 argument_list|(
 operator|(
 name|AE_INFO
@@ -1443,12 +1445,12 @@ name|ACPI_TABLE_HEADER
 argument_list|)
 condition|)
 block|{
-name|ACPI_ERROR
+name|ACPI_BIOS_ERROR
 argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Invalid length 0x%X in RSDT/XSDT"
+literal|"Invalid table length 0x%X in RSDT/XSDT"
 operator|,
 name|Length
 operator|)

@@ -738,7 +738,7 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-comment|/*      * Start method evaluation with an implicit return of zero. This is done      * for Windows compatibility.      */
+comment|/*      * Start method evaluation with an implicit return of zero.      * This is done for Windows compatibility.      */
 if|if
 condition|(
 name|AcpiGbl_EnableInterpreterSlack

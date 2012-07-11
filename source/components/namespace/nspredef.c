@@ -1534,8 +1534,7 @@ name|AcpiNsWrapWithPackage
 argument_list|(
 name|Data
 argument_list|,
-operator|*
-name|Elements
+name|ReturnObject
 argument_list|,
 name|ReturnObjectPtr
 argument_list|)

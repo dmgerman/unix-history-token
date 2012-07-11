@@ -457,7 +457,7 @@ value|(sizeof (FadtPmInfoTable) / sizeof (ACPI_FADT_PM_INFO))
 end_define
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbInitGenericAddress  *  * PARAMETERS:  GenericAddress      - GAS struct to be initialized  *              SpaceId             - ACPI Space ID for this register  *              ByteWidth           - Width of this register, in bytes  *              Address             - Address of the register  *  * RETURN:      None  *  * DESCRIPTION: Initialize a Generic Address Structure (GAS)  *              See the ACPI specification for a full description and  *              definition of this structure.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbInitGenericAddress  *  * PARAMETERS:  GenericAddress      - GAS struct to be initialized  *              SpaceId             - ACPI Space ID for this register  *              ByteWidth           - Width of this register  *              Address             - Address of the register  *  * RETURN:      None  *  * DESCRIPTION: Initialize a Generic Address Structure (GAS)  *              See the ACPI specification for a full description and  *              definition of this structure.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -721,7 +721,7 @@ name|ACPI_TABLE_FADT
 argument_list|)
 condition|)
 block|{
-name|ACPI_WARNING
+name|ACPI_BIOS_WARNING
 argument_list|(
 operator|(
 name|AE_INFO
@@ -996,12 +996,13 @@ name|Address32
 operator|)
 condition|)
 block|{
-name|ACPI_ERROR
+name|ACPI_BIOS_ERROR
 argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"32/64X address mismatch in %s: 0x%8.8X/0x%8.8X%8.8X, using 32"
+literal|"32/64X address mismatch in FADT/%s: "
+literal|"0x%8.8X/0x%8.8X%8.8X, using 32"
 operator|,
 name|FadtInfoTable
 index|[
@@ -1116,7 +1117,7 @@ name|Facs
 operator|)
 condition|)
 block|{
-name|ACPI_WARNING
+name|ACPI_BIOS_WARNING
 argument_list|(
 operator|(
 name|AE_INFO
@@ -1169,7 +1170,7 @@ name|Dsdt
 operator|)
 condition|)
 block|{
-name|ACPI_WARNING
+name|ACPI_BIOS_WARNING
 argument_list|(
 operator|(
 name|AE_INFO
@@ -1289,12 +1290,12 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|ACPI_WARNING
+name|ACPI_BIOS_WARNING
 argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"32/64X length mismatch in %s: %u/%u"
+literal|"32/64X length mismatch in FADT/%s: %u/%u"
 operator|,
 name|Name
 operator|,
@@ -1334,13 +1335,13 @@ operator|!
 name|Length
 condition|)
 block|{
-name|ACPI_ERROR
+name|ACPI_BIOS_ERROR
 argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Required field %s has zero address and/or length:"
-literal|" 0x%8.8X%8.8X/0x%X"
+literal|"Required FADT field %s has zero address and/or length: "
+literal|"0x%8.8X%8.8X/0x%X"
 operator|,
 name|Name
 operator|,
@@ -1392,12 +1393,12 @@ name|Length
 operator|)
 condition|)
 block|{
-name|ACPI_WARNING
+name|ACPI_BIOS_WARNING
 argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Optional field %s has zero address or length: "
+literal|"Optional FADT field %s has zero address or length: "
 literal|"0x%8.8X%8.8X/0x%X"
 operator|,
 name|Name
@@ -1516,12 +1517,12 @@ name|BitWidth
 operator|)
 condition|)
 block|{
-name|ACPI_WARNING
+name|ACPI_BIOS_WARNING
 argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Invalid length for %s: %u, using default %u"
+literal|"Invalid length for FADT/%s: %u, using default %u"
 operator|,
 name|FadtInfoTable
 index|[

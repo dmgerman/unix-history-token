@@ -25,6 +25,196 @@ directive|include
 file|"acpredef.h"
 end_include
 
+begin_comment
+comment|/* Device IDs defined in the ACPI specification */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|AH_DEVICE_ID
+name|AhDeviceIds
+index|[]
+init|=
+block|{
+block|{
+literal|"PNP0A05"
+block|,
+literal|"Generic Container Device"
+block|}
+block|,
+block|{
+literal|"PNP0A06"
+block|,
+literal|"Generic Container Device"
+block|}
+block|,
+block|{
+literal|"PNP0C08"
+block|,
+literal|"ACPI core hardware"
+block|}
+block|,
+block|{
+literal|"PNP0C09"
+block|,
+literal|"Embedded Controller Device"
+block|}
+block|,
+block|{
+literal|"PNP0C0A"
+block|,
+literal|"Control Method Battery"
+block|}
+block|,
+block|{
+literal|"PNP0C0B"
+block|,
+literal|"Fan"
+block|}
+block|,
+block|{
+literal|"PNP0C0C"
+block|,
+literal|"Power Button Device"
+block|}
+block|,
+block|{
+literal|"PNP0C0D"
+block|,
+literal|"Lid Device"
+block|}
+block|,
+block|{
+literal|"PNP0C0E"
+block|,
+literal|"Sleep Button Device"
+block|}
+block|,
+block|{
+literal|"PNP0C0F"
+block|,
+literal|"PCI Interrupt Link Device"
+block|}
+block|,
+block|{
+literal|"PNP0C80"
+block|,
+literal|"Memory Device"
+block|}
+block|,
+block|{
+literal|"ACPI0001"
+block|,
+literal|"SMBus 1.0 Host Controller"
+block|}
+block|,
+block|{
+literal|"ACPI0002"
+block|,
+literal|"Smart Battery Subsystem"
+block|}
+block|,
+block|{
+literal|"ACPI0003"
+block|,
+literal|"Power Source Device"
+block|}
+block|,
+block|{
+literal|"ACPI0004"
+block|,
+literal|"Module Device"
+block|}
+block|,
+block|{
+literal|"ACPI0005"
+block|,
+literal|"SMBus 2.0 Host Controller"
+block|}
+block|,
+block|{
+literal|"ACPI0006"
+block|,
+literal|"GPE Block Device"
+block|}
+block|,
+block|{
+literal|"ACPI0007"
+block|,
+literal|"Processor Device"
+block|}
+block|,
+block|{
+literal|"ACPI0008"
+block|,
+literal|"Ambient Light Sensor Device"
+block|}
+block|,
+block|{
+literal|"ACPI0009"
+block|,
+literal|"I/O xAPIC Device"
+block|}
+block|,
+block|{
+literal|"ACPI000A"
+block|,
+literal|"I/O APIC Device"
+block|}
+block|,
+block|{
+literal|"ACPI000B"
+block|,
+literal|"I/O SAPIC Device"
+block|}
+block|,
+block|{
+literal|"ACPI000C"
+block|,
+literal|"Processor Aggregator Device"
+block|}
+block|,
+block|{
+literal|"ACPI000D"
+block|,
+literal|"Power Meter Device"
+block|}
+block|,
+block|{
+literal|"ACPI000E"
+block|,
+literal|"Time/Alarm Device"
+block|}
+block|,
+block|{
+literal|"ACPI000F"
+block|,
+literal|"User Presence Detection Device"
+block|}
+block|,
+block|{
+name|NULL
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|AH_DISPLAY_EXCEPTION
+parameter_list|(
+name|Status
+parameter_list|,
+name|Name
+parameter_list|)
+define|\
+value|printf ("%.4X: %s\n", Status, Name)
+end_define
+
 begin_define
 define|#
 directive|define
@@ -1886,179 +2076,6 @@ begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AhDisplayDeviceIds  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Display all PNP* and ACPI* device IDs defined in the ACPI spec.  *  ******************************************************************************/
 end_comment
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|AH_DEVICE_ID
-name|AhDeviceIds
-index|[]
-init|=
-block|{
-block|{
-literal|"PNP0A05"
-block|,
-literal|"Generic Container Device"
-block|}
-block|,
-block|{
-literal|"PNP0A06"
-block|,
-literal|"Generic Container Device"
-block|}
-block|,
-block|{
-literal|"PNP0C08"
-block|,
-literal|"ACPI core hardware"
-block|}
-block|,
-block|{
-literal|"PNP0C09"
-block|,
-literal|"Embedded Controller Device"
-block|}
-block|,
-block|{
-literal|"PNP0C0A"
-block|,
-literal|"Control Method Battery"
-block|}
-block|,
-block|{
-literal|"PNP0C0B"
-block|,
-literal|"Fan"
-block|}
-block|,
-block|{
-literal|"PNP0C0C"
-block|,
-literal|"Power Button Device"
-block|}
-block|,
-block|{
-literal|"PNP0C0D"
-block|,
-literal|"Lid Device"
-block|}
-block|,
-block|{
-literal|"PNP0C0E"
-block|,
-literal|"Sleep Button Device"
-block|}
-block|,
-block|{
-literal|"PNP0C0F"
-block|,
-literal|"PCI Interrupt Link Device"
-block|}
-block|,
-block|{
-literal|"PNP0C80"
-block|,
-literal|"Memory Device"
-block|}
-block|,
-block|{
-literal|"ACPI0001"
-block|,
-literal|"SMBus 1.0 Host Controller"
-block|}
-block|,
-block|{
-literal|"ACPI0002"
-block|,
-literal|"Smart Battery Subsystem"
-block|}
-block|,
-block|{
-literal|"ACPI0003"
-block|,
-literal|"Power Source Device"
-block|}
-block|,
-block|{
-literal|"ACPI0004"
-block|,
-literal|"Module Device"
-block|}
-block|,
-block|{
-literal|"ACPI0005"
-block|,
-literal|"SMBus 2.0 Host Controller"
-block|}
-block|,
-block|{
-literal|"ACPI0006"
-block|,
-literal|"GPE Block Device"
-block|}
-block|,
-block|{
-literal|"ACPI0007"
-block|,
-literal|"Processor Device"
-block|}
-block|,
-block|{
-literal|"ACPI0008"
-block|,
-literal|"Ambient Light Sensor Device"
-block|}
-block|,
-block|{
-literal|"ACPI0009"
-block|,
-literal|"I/O xAPIC Device"
-block|}
-block|,
-block|{
-literal|"ACPI000A"
-block|,
-literal|"I/O APIC Device"
-block|}
-block|,
-block|{
-literal|"ACPI000B"
-block|,
-literal|"I/O SAPIC Device"
-block|}
-block|,
-block|{
-literal|"ACPI000C"
-block|,
-literal|"Processor Aggregator Device"
-block|}
-block|,
-block|{
-literal|"ACPI000D"
-block|,
-literal|"Power Meter Device"
-block|}
-block|,
-block|{
-literal|"ACPI000E"
-block|,
-literal|"Time/Alarm Device"
-block|}
-block|,
-block|{
-literal|"ACPI000F"
-block|,
-literal|"User Presence Detection Device"
-block|}
-block|,
-block|{
-name|NULL
-block|,
-name|NULL
-block|}
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|void
 name|AhDisplayDeviceIds
@@ -2102,6 +2119,188 @@ name|DeviceId
 operator|++
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AhDecodeException  *  * PARAMETERS:  HexString           - ACPI status string from command line, in  *                                    hex. If null, display all exceptions.  *  * RETURN:      None  *  * DESCRIPTION: Decode and display an ACPI_STATUS exception code.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|AhDecodeException
+parameter_list|(
+name|char
+modifier|*
+name|HexString
+parameter_list|)
+block|{
+specifier|const
+name|char
+modifier|*
+name|ExceptionName
+decl_stmt|;
+name|UINT32
+name|Status
+decl_stmt|;
+name|UINT32
+name|i
+decl_stmt|;
+comment|/*      * A null input string means to decode and display all known      * exception codes.      */
+if|if
+condition|(
+operator|!
+name|HexString
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"All defined ACPI exception codes:\n\n"
+argument_list|)
+expr_stmt|;
+name|AH_DISPLAY_EXCEPTION
+argument_list|(
+literal|0
+argument_list|,
+literal|"AE_OK"
+argument_list|)
+expr_stmt|;
+comment|/* Display codes in each block of exception types */
+for|for
+control|(
+name|i
+operator|=
+literal|1
+init|;
+operator|(
+name|i
+operator|&
+name|AE_CODE_MASK
+operator|)
+operator|<=
+name|AE_CODE_MAX
+condition|;
+name|i
+operator|+=
+literal|0x1000
+control|)
+block|{
+name|Status
+operator|=
+name|i
+expr_stmt|;
+do|do
+block|{
+name|ExceptionName
+operator|=
+name|AcpiUtValidateException
+argument_list|(
+operator|(
+name|ACPI_STATUS
+operator|)
+name|Status
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ExceptionName
+condition|)
+block|{
+name|AH_DISPLAY_EXCEPTION
+argument_list|(
+name|Status
+argument_list|,
+name|ExceptionName
+argument_list|)
+expr_stmt|;
+block|}
+name|Status
+operator|++
+expr_stmt|;
+block|}
+do|while
+condition|(
+name|ExceptionName
+condition|)
+do|;
+block|}
+return|return;
+block|}
+comment|/* Decode a single user-supplied exception code */
+name|Status
+operator|=
+name|ACPI_STRTOUL
+argument_list|(
+name|HexString
+argument_list|,
+name|NULL
+argument_list|,
+literal|16
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Status
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: Invalid hexadecimal exception code\n"
+argument_list|,
+name|HexString
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|Status
+operator|>
+name|ACPI_UINT16_MAX
+condition|)
+block|{
+name|AH_DISPLAY_EXCEPTION
+argument_list|(
+name|Status
+argument_list|,
+literal|"Invalid exception code (more than 16 bits)"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|ExceptionName
+operator|=
+name|AcpiUtValidateException
+argument_list|(
+operator|(
+name|ACPI_STATUS
+operator|)
+name|Status
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ExceptionName
+condition|)
+block|{
+name|AH_DISPLAY_EXCEPTION
+argument_list|(
+name|Status
+argument_list|,
+literal|"Unknown exception code"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|AH_DISPLAY_EXCEPTION
+argument_list|(
+name|Status
+argument_list|,
+name|ExceptionName
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

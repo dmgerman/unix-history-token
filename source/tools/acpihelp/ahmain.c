@@ -51,11 +51,9 @@ argument_list|,
 literal|"Display help"
 argument_list|)
 expr_stmt|;
-name|ACPI_OPTION
+name|printf
 argument_list|(
-literal|"-i"
-argument_list|,
-literal|"Display known ACPI Device IDs (_HID)"
+literal|"\nACPI Names and Symbols:\n"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
@@ -74,13 +72,6 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-o [HexValue]"
-argument_list|,
-literal|"Decode hex AML opcode"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
 literal|"-p [NamePrefix]"
 argument_list|,
 literal|"Find/Display ASL predefined method name(s)"
@@ -91,6 +82,32 @@ argument_list|(
 literal|"-s [NamePrefix]"
 argument_list|,
 literal|"Find/Display ASL operator name(s)"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\nACPI Values:\n"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-e [HexValue]"
+argument_list|,
+literal|"Decode ACPICA exception code"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-i"
+argument_list|,
+literal|"Display known ACPI Device IDs (_HID)"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-o [HexValue]"
+argument_list|,
+literal|"Decode hex AML opcode"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -184,7 +201,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"hikmops"
+literal|"ehikmops"
 argument_list|)
 operator|)
 operator|!=
@@ -195,6 +212,14 @@ condition|(
 name|j
 condition|)
 block|{
+case|case
+literal|'e'
+case|:
+name|DecodeType
+operator|=
+name|AH_DECODE_EXCEPTION
+expr_stmt|;
+break|break;
 case|case
 literal|'i'
 case|:
@@ -320,6 +345,15 @@ name|AH_DISPLAY_DEVICE_IDS
 case|:
 name|AhDisplayDeviceIds
 argument_list|()
+expr_stmt|;
+break|break;
+case|case
+name|AH_DECODE_EXCEPTION
+case|:
+name|AhDecodeException
+argument_list|(
+name|Name
+argument_list|)
 expr_stmt|;
 break|break;
 default|default:

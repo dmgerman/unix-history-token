@@ -493,6 +493,12 @@ index|[]
 init|=
 block|{
 block|{
+literal|"ACPI_ADDRESS_RANGE"
+block|,
+name|SRC_TYPE_STRUCT
+block|}
+block|,
+block|{
 literal|"ACPI_ADR_SPACE_HANDLER"
 block|,
 name|SRC_TYPE_SIMPLE

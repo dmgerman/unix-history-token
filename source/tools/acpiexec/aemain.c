@@ -85,6 +85,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|BOOLEAN
+name|AcpiGbl_DoInterfaceTests
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|UINT8
 name|AcpiGbl_BatchMode
@@ -226,6 +234,13 @@ argument_list|(
 literal|"-ef"
 argument_list|,
 literal|"Enable display of final memory statistics"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-ei"
+argument_list|,
+literal|"Enable additional tests for ACPICA interfaces"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
@@ -1167,6 +1182,14 @@ name|TRUE
 expr_stmt|;
 endif|#
 directive|endif
+break|break;
+case|case
+literal|'i'
+case|:
+name|AcpiGbl_DoInterfaceTests
+operator|=
+name|TRUE
+expr_stmt|;
 break|break;
 case|case
 literal|'m'

@@ -1911,7 +1911,7 @@ goto|goto
 name|ErrorExit
 goto|;
 block|}
-comment|/*      * Create a buffer for the entire file      * Add plenty extra buffer to accomodate string replacements      */
+comment|/*      * Create a buffer for the entire file      * Add plenty extra buffer to accommodate string replacements      */
 name|Size
 operator|=
 name|Gbl_StatBuf

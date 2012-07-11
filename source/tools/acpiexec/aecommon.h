@@ -163,6 +163,13 @@ name|AcpiGbl_DisplayRegionAccess
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|BOOLEAN
+name|AcpiGbl_DoInterfaceTests
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Check for unexpected exceptions */
 end_comment

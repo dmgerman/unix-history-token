@@ -198,7 +198,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Note: The String and Buffer object must be identical through the Pointer  * and Length elements.  There is code that depends on this.  *  * Fields common to both Strings and Buffers  */
+comment|/*  * Note: The String and Buffer object must be identical through the  * pointer and length elements. There is code that depends on this.  *  * Fields common to both Strings and Buffers  */
 end_comment
 
 begin_define

@@ -696,7 +696,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtValidInternalObject  *  * PARAMETERS:  Object              - Object to be validated  *  * RETURN:      TRUE if object is valid, FALSE otherwise  *  * DESCRIPTION: Validate a pointer to be an ACPI_OPERAND_OBJECT  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtValidInternalObject  *  * PARAMETERS:  Object              - Object to be validated  *  * RETURN:      TRUE if object is valid, FALSE otherwise  *  * DESCRIPTION: Validate a pointer to be of type ACPI_OPERAND_OBJECT  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -747,7 +747,7 @@ block|{
 case|case
 name|ACPI_DESC_TYPE_OPERAND
 case|:
-comment|/* The object appears to be a valid ACPI_OPERAND_OBJECT  */
+comment|/* The object appears to be a valid ACPI_OPERAND_OBJECT */
 return|return
 operator|(
 name|TRUE
@@ -895,7 +895,7 @@ argument_list|,
 name|Object
 argument_list|)
 expr_stmt|;
-comment|/* Object must be an ACPI_OPERAND_OBJECT  */
+comment|/* Object must be of type ACPI_OPERAND_OBJECT */
 if|if
 condition|(
 name|ACPI_GET_DESCRIPTOR_TYPE

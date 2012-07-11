@@ -276,12 +276,13 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|ACPI_ERROR
+name|ACPI_BIOS_ERROR
 argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Table has invalid signature [%4.4s] (0x%8.8X), must be SSDT or OEMx"
+literal|"Table has invalid signature [%4.4s] (0x%8.8X), "
+literal|"must be SSDT or OEMx"
 operator|,
 name|AcpiUtValidAcpiName
 argument_list|(

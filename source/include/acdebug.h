@@ -208,11 +208,7 @@ name|AcpiDbUnloadAcpiTable
 parameter_list|(
 name|char
 modifier|*
-name|TableArg
-parameter_list|,
-name|char
-modifier|*
-name|InstanceArg
+name|Name
 parameter_list|)
 function_decl|;
 end_function_decl

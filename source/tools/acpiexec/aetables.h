@@ -205,6 +205,10 @@ begin_comment
 comment|/* Several example SSDTs */
 end_comment
 
+begin_comment
+comment|/* SSDT1 is used by ASLTS; if changed here, must also be changed in dtregions.asl */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|unsigned
@@ -222,7 +226,7 @@ literal|0x44
 block|,
 literal|0x54
 block|,
-literal|0x30
+literal|0x3E
 block|,
 literal|0x00
 block|,
@@ -230,10 +234,10 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-comment|/* 00000000    "SSDT0..." */
-literal|0x01
+comment|/* 00000000    "SSDT>..." */
+literal|0x02
 block|,
-literal|0xB8
+literal|0x08
 block|,
 literal|0x49
 block|,
@@ -248,23 +252,23 @@ block|,
 literal|0x00
 block|,
 comment|/* 00000008    "..Intel." */
-literal|0x4D
+literal|0x73
 block|,
-literal|0x61
+literal|0x73
 block|,
-literal|0x6E
+literal|0x64
 block|,
-literal|0x79
+literal|0x74
 block|,
-literal|0x00
-block|,
-literal|0x00
+literal|0x31
 block|,
 literal|0x00
 block|,
 literal|0x00
 block|,
-comment|/* 00000010    "Many...." */
+literal|0x00
+block|,
+comment|/* 00000010    "ssdt1..." */
 literal|0x01
 block|,
 literal|0x00
@@ -282,46 +286,74 @@ block|,
 literal|0x4C
 block|,
 comment|/* 00000018    "....INTL" */
-literal|0x24
+literal|0x20
 block|,
-literal|0x04
+literal|0x06
 block|,
-literal|0x03
+literal|0x12
 block|,
 literal|0x20
 block|,
 literal|0x14
 block|,
-literal|0x0B
+literal|0x19
 block|,
 literal|0x5F
 block|,
 literal|0x54
 block|,
-comment|/* 00000020    "$.. .._T" */
+comment|/* 00000020    " .. .._T" */
 literal|0x39
 block|,
 literal|0x38
 block|,
-literal|0x00
+literal|0x01
 block|,
 literal|0x70
 block|,
-literal|0x0A
+literal|0x0D
 block|,
-literal|0x04
+literal|0x53
 block|,
-literal|0x60
+literal|0x53
+block|,
+literal|0x44
+block|,
+comment|/* 00000028    "98.p.SSD" */
+literal|0x54
+block|,
+literal|0x31
+block|,
+literal|0x20
+block|,
+literal|0x2D
+block|,
+literal|0x20
+block|,
+literal|0x5F
+block|,
+literal|0x54
+block|,
+literal|0x39
+block|,
+comment|/* 00000030    "T1 - _T9" */
+literal|0x38
+block|,
+literal|0x00
+block|,
+literal|0x5B
+block|,
+literal|0x31
 block|,
 literal|0xA4
 block|,
-comment|/* 00000028    "98.p..`." */
+literal|0x00
+comment|/* 00000038    "8.[1.."   */
 block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|unsigned
 name|char
 name|Ssdt2Code
@@ -337,7 +369,7 @@ literal|0x44
 block|,
 literal|0x54
 block|,
-literal|0x30
+literal|0x3E
 block|,
 literal|0x00
 block|,
@@ -345,10 +377,10 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-comment|/* 00000000    "SSDT0..." */
-literal|0x01
+comment|/* 00000000    "SSDT>..." */
+literal|0x02
 block|,
-literal|0xB7
+literal|0xFE
 block|,
 literal|0x49
 block|,
@@ -363,24 +395,24 @@ block|,
 literal|0x00
 block|,
 comment|/* 00000008    "..Intel." */
-literal|0x4D
+literal|0x73
 block|,
-literal|0x61
+literal|0x73
 block|,
-literal|0x6E
+literal|0x64
 block|,
-literal|0x79
+literal|0x74
 block|,
-literal|0x00
-block|,
-literal|0x00
+literal|0x32
 block|,
 literal|0x00
 block|,
 literal|0x00
 block|,
-comment|/* 00000010    "Many...." */
-literal|0x01
+literal|0x00
+block|,
+comment|/* 00000010    "ssdt2..." */
+literal|0x02
 block|,
 literal|0x00
 block|,
@@ -397,40 +429,69 @@ block|,
 literal|0x4C
 block|,
 comment|/* 00000018    "....INTL" */
-literal|0x24
+literal|0x20
 block|,
-literal|0x04
+literal|0x06
 block|,
-literal|0x03
+literal|0x12
 block|,
 literal|0x20
 block|,
 literal|0x14
 block|,
-literal|0x0B
+literal|0x19
 block|,
 literal|0x5F
 block|,
 literal|0x54
 block|,
-comment|/* 00000020    "$.. .._T" */
+comment|/* 00000020    " .. .._T" */
 literal|0x39
 block|,
+literal|0x39
+block|,
+literal|0x06
+block|,
+literal|0x70
+block|,
+literal|0x0D
+block|,
+literal|0x53
+block|,
+literal|0x53
+block|,
+literal|0x44
+block|,
+comment|/* 00000028    "99.p.SSD" */
+literal|0x54
+block|,
+literal|0x32
+block|,
+literal|0x20
+block|,
+literal|0x2D
+block|,
+literal|0x20
+block|,
+literal|0x5F
+block|,
+literal|0x54
+block|,
+literal|0x39
+block|,
+comment|/* 00000030    "T2 - _T9" */
 literal|0x39
 block|,
 literal|0x00
 block|,
-literal|0x70
+literal|0x5B
 block|,
-literal|0x0A
-block|,
-literal|0x04
-block|,
-literal|0x60
+literal|0x31
 block|,
 literal|0xA4
 block|,
-comment|/* 00000028    "99.p..`." */
+literal|0x00
+comment|/* 00000038    "9.[1.."   */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -545,6 +606,113 @@ block|,
 literal|0xA4
 block|,
 comment|/* 00000028    "97.p..`." */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|unsigned
+name|char
+name|Ssdt4Code
+index|[]
+init|=
+comment|/* Has method _T96 */
+block|{
+literal|0x53
+block|,
+literal|0x53
+block|,
+literal|0x44
+block|,
+literal|0x54
+block|,
+literal|0x2D
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* 00000000    "SSDT-..." */
+literal|0x02
+block|,
+literal|0x2B
+block|,
+literal|0x49
+block|,
+literal|0x6E
+block|,
+literal|0x74
+block|,
+literal|0x65
+block|,
+literal|0x6C
+block|,
+literal|0x00
+block|,
+comment|/* 00000008    ".+Intel." */
+literal|0x73
+block|,
+literal|0x73
+block|,
+literal|0x64
+block|,
+literal|0x74
+block|,
+literal|0x34
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* 00000010    "ssdt4..." */
+literal|0x04
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x49
+block|,
+literal|0x4E
+block|,
+literal|0x54
+block|,
+literal|0x4C
+block|,
+comment|/* 00000018    "....INTL" */
+literal|0x20
+block|,
+literal|0x06
+block|,
+literal|0x12
+block|,
+literal|0x20
+block|,
+literal|0x14
+block|,
+literal|0x08
+block|,
+literal|0x5F
+block|,
+literal|0x54
+block|,
+comment|/* 00000020    " .. .._T" */
+literal|0x39
+block|,
+literal|0x36
+block|,
+literal|0x05
+block|,
+literal|0xA4
+block|,
+literal|0x00
+comment|/* 00000028    "96..."    */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2155,6 +2323,21 @@ end_comment
 
 begin_comment
 unit|})      Name (HNDL, 0)     Method (LD)     {         Load (BUF1, HNDL)         Store ("Load operator, handle:", Debug)         Store (HNDL, Debug)     }      Method (MAIN, 0, NotSerialized)     {         Store ("Loading OEMX table", Debug)         Store (LoadTable ("OEMX", "MyOEM", "Test"), Debug)     }      Scope (\_GPE)     {         Method (_L08) {}         Method (_E08) {}         Method (_L0B) {}     }      Device (DEV0)     {         Name (_PRW, Package() {0x11, 0})     }      Device (\GPE2)     {         Method (_L00) {}     } }
+comment|/* SSDT1 */
+end_comment
+
+begin_comment
+unit|DefinitionBlock ("ssdt1.aml", "SSDT", 2, "Intel", "ssdt1", 0x00000001) {     Method (_T98, 1, NotSerialized)     {         Store ("SSDT1 - _T98", Debug)         Return (Zero)     } }
+comment|/* SSDT2 */
+end_comment
+
+begin_comment
+unit|DefinitionBlock ("ssdt2.aml", "SSDT", 2, "Intel", "ssdt2", 0x00000002) {     Method (_T99, 6, NotSerialized)     {         Store ("SSDT2 - _T99", Debug)         Return (Zero)     } }
+comment|/* SSDT4 */
+end_comment
+
+begin_comment
+unit|DefinitionBlock ("ssdt4.aml", "SSDT", 2, "Intel", "ssdt4", 0x00000004) {     Method (_T96, 5, NotSerialized)     {         Return (Zero)     } }
 comment|/* Example ECDT */
 end_comment
 
