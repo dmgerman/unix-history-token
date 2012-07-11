@@ -1456,7 +1456,7 @@ parameter_list|)
 block|{
 switch|switch
 condition|(
-name|soc_data
+name|soc_info
 operator|.
 name|type
 condition|)

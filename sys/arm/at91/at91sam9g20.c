@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<arm/at91/at91soc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<arm/at91/at91_aicreg.h>
 end_include
 
@@ -92,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<arm/at91/at91_pitreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<arm/at91/at91_pmcreg.h>
 end_include
 
@@ -99,6 +111,12 @@ begin_include
 include|#
 directive|include
 file|<arm/at91/at91_pmcvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arm/at91/at91_rstreg.h>
 end_include
 
 begin_struct
@@ -826,7 +844,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-name|soc_data
+name|soc_info
 operator|.
 name|name
 argument_list|)
@@ -1435,6 +1453,37 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|at91_soc_data
+name|soc_data
+init|=
+block|{
+operator|.
+name|soc_delay
+operator|=
+name|at91_pit_delay
+block|,
+operator|.
+name|soc_reset
+operator|=
+name|at91_rst_cpu_reset
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|AT91_SOC
+argument_list|(
+name|AT91_T_SAM9G20
+argument_list|,
+operator|&
+name|soc_data
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -272,6 +272,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<arm/at91/at91soc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<arm/at91/at91_usartreg.h>
 end_include
 
@@ -1025,7 +1031,7 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|at91_soc_info
-name|soc_data
+name|soc_info
 decl_stmt|;
 end_decl_stmt
 
@@ -1045,7 +1051,7 @@ block|{
 name|uint32_t
 name|socid
 decl_stmt|;
-name|soc_data
+name|soc_info
 operator|.
 name|cidr
 operator|=
@@ -1065,31 +1071,31 @@ operator|)
 expr_stmt|;
 name|socid
 operator|=
-name|soc_data
+name|soc_info
 operator|.
 name|cidr
 operator|&
 operator|~
 name|AT91_CPU_VERSION_MASK
 expr_stmt|;
-name|soc_data
+name|soc_info
 operator|.
 name|type
 operator|=
 name|AT91_T_NONE
 expr_stmt|;
-name|soc_data
+name|soc_info
 operator|.
 name|subtype
 operator|=
 name|AT91_ST_NONE
 expr_stmt|;
-name|soc_data
+name|soc_info
 operator|.
 name|family
 operator|=
 operator|(
-name|soc_data
+name|soc_info
 operator|.
 name|cidr
 operator|&
@@ -1098,7 +1104,7 @@ operator|)
 operator|>>
 literal|20
 expr_stmt|;
-name|soc_data
+name|soc_info
 operator|.
 name|exid
 operator|=
@@ -1124,7 +1130,7 @@ block|{
 case|case
 name|AT91_CPU_CAP9
 case|:
-name|soc_data
+name|soc_info
 operator|.
 name|type
 operator|=
@@ -1134,7 +1140,7 @@ break|break;
 case|case
 name|AT91_CPU_RM9200
 case|:
-name|soc_data
+name|soc_info
 operator|.
 name|type
 operator|=
@@ -1153,7 +1159,7 @@ case|:
 case|case
 name|AT91_CPU_SAM9260
 case|:
-name|soc_data
+name|soc_info
 operator|.
 name|type
 operator|=
@@ -1161,13 +1167,13 @@ name|AT91_T_SAM9260
 expr_stmt|;
 if|if
 condition|(
-name|soc_data
+name|soc_info
 operator|.
 name|family
 operator|==
 name|AT91_FAMILY_SAM9XE
 condition|)
-name|soc_data
+name|soc_info
 operator|.
 name|subtype
 operator|=
@@ -1177,7 +1183,7 @@ break|break;
 case|case
 name|AT91_CPU_SAM9261
 case|:
-name|soc_data
+name|soc_info
 operator|.
 name|type
 operator|=
@@ -1187,7 +1193,7 @@ break|break;
 case|case
 name|AT91_CPU_SAM9263
 case|:
-name|soc_data
+name|soc_info
 operator|.
 name|type
 operator|=
@@ -1197,7 +1203,7 @@ break|break;
 case|case
 name|AT91_CPU_SAM9G10
 case|:
-name|soc_data
+name|soc_info
 operator|.
 name|type
 operator|=
@@ -1207,7 +1213,7 @@ break|break;
 case|case
 name|AT91_CPU_SAM9G20
 case|:
-name|soc_data
+name|soc_info
 operator|.
 name|type
 operator|=
@@ -1217,7 +1223,7 @@ break|break;
 case|case
 name|AT91_CPU_SAM9G45
 case|:
-name|soc_data
+name|soc_info
 operator|.
 name|type
 operator|=
@@ -1227,7 +1233,7 @@ break|break;
 case|case
 name|AT91_CPU_SAM9N12
 case|:
-name|soc_data
+name|soc_info
 operator|.
 name|type
 operator|=
@@ -1237,7 +1243,7 @@ break|break;
 case|case
 name|AT91_CPU_SAM9RL64
 case|:
-name|soc_data
+name|soc_info
 operator|.
 name|type
 operator|=
@@ -1247,7 +1253,7 @@ break|break;
 case|case
 name|AT91_CPU_SAM9X5
 case|:
-name|soc_data
+name|soc_info
 operator|.
 name|type
 operator|=
@@ -1263,7 +1269,7 @@ return|;
 block|}
 switch|switch
 condition|(
-name|soc_data
+name|soc_info
 operator|.
 name|type
 condition|)
@@ -1273,7 +1279,7 @@ name|AT91_T_SAM9G45
 case|:
 switch|switch
 condition|(
-name|soc_data
+name|soc_info
 operator|.
 name|exid
 condition|)
@@ -1281,7 +1287,7 @@ block|{
 case|case
 name|AT91_EXID_SAM9G45
 case|:
-name|soc_data
+name|soc_info
 operator|.
 name|subtype
 operator|=
@@ -1291,7 +1297,7 @@ break|break;
 case|case
 name|AT91_EXID_SAM9G46
 case|:
-name|soc_data
+name|soc_info
 operator|.
 name|subtype
 operator|=
@@ -1301,7 +1307,7 @@ break|break;
 case|case
 name|AT91_EXID_SAM9M10
 case|:
-name|soc_data
+name|soc_info
 operator|.
 name|subtype
 operator|=
@@ -1311,7 +1317,7 @@ break|break;
 case|case
 name|AT91_EXID_SAM9M11
 case|:
-name|soc_data
+name|soc_info
 operator|.
 name|subtype
 operator|=
@@ -1325,7 +1331,7 @@ name|AT91_T_SAM9X5
 case|:
 switch|switch
 condition|(
-name|soc_data
+name|soc_info
 operator|.
 name|exid
 condition|)
@@ -1333,7 +1339,7 @@ block|{
 case|case
 name|AT91_EXID_SAM9G15
 case|:
-name|soc_data
+name|soc_info
 operator|.
 name|subtype
 operator|=
@@ -1343,7 +1349,7 @@ break|break;
 case|case
 name|AT91_EXID_SAM9G25
 case|:
-name|soc_data
+name|soc_info
 operator|.
 name|subtype
 operator|=
@@ -1353,7 +1359,7 @@ break|break;
 case|case
 name|AT91_EXID_SAM9G35
 case|:
-name|soc_data
+name|soc_info
 operator|.
 name|subtype
 operator|=
@@ -1363,7 +1369,7 @@ break|break;
 case|case
 name|AT91_EXID_SAM9X25
 case|:
-name|soc_data
+name|soc_info
 operator|.
 name|subtype
 operator|=
@@ -1373,7 +1379,7 @@ break|break;
 case|case
 name|AT91_EXID_SAM9X35
 case|:
-name|soc_data
+name|soc_info
 operator|.
 name|subtype
 operator|=
@@ -1385,7 +1391,7 @@ break|break;
 default|default:
 break|break;
 block|}
-comment|/* 	 * Disable interrupts 	 */
+comment|/* 	 * Disable interrupts in the DBGU unit... 	 */
 operator|*
 operator|(
 specifier|volatile
@@ -1405,13 +1411,13 @@ expr_stmt|;
 comment|/* 	 * Save the name for later... 	 */
 name|snprintf
 argument_list|(
-name|soc_data
+name|soc_info
 operator|.
 name|name
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|soc_data
+name|soc_info
 operator|.
 name|name
 argument_list|)
@@ -1420,12 +1426,12 @@ literal|"%s%s%s"
 argument_list|,
 name|soc_type_name
 index|[
-name|soc_data
+name|soc_info
 operator|.
 name|type
 index|]
 argument_list|,
-name|soc_data
+name|soc_info
 operator|.
 name|subtype
 operator|==
@@ -1435,7 +1441,7 @@ literal|""
 else|:
 literal|" subtype "
 argument_list|,
-name|soc_data
+name|soc_info
 operator|.
 name|subtype
 operator|==
@@ -1445,10 +1451,26 @@ literal|""
 else|:
 name|soc_subtype_name
 index|[
-name|soc_data
+name|soc_info
 operator|.
 name|subtype
 index|]
+argument_list|)
+expr_stmt|;
+comment|/*          * try to get the matching CPU support.          */
+name|soc_info
+operator|.
+name|soc_data
+operator|=
+name|at91_match_soc
+argument_list|(
+name|soc_info
+operator|.
+name|type
+argument_list|,
+name|soc_info
+operator|.
+name|subtype
 argument_list|)
 expr_stmt|;
 return|return
@@ -2232,6 +2254,23 @@ expr_stmt|;
 name|cninit
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|soc_info
+operator|.
+name|soc_data
+operator|==
+name|NULL
+condition|)
+name|printf
+argument_list|(
+literal|"Warning: No soc support for %s found.\n"
+argument_list|,
+name|soc_info
+operator|.
+name|name
+argument_list|)
+expr_stmt|;
 name|memsize
 operator|=
 name|board_init
@@ -2535,13 +2574,15 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|soc_data
+name|soc_info
 operator|.
-name|delay
+name|soc_data
 condition|)
-name|soc_data
+name|soc_info
 operator|.
-name|delay
+name|soc_data
+operator|->
+name|soc_delay
 argument_list|(
 name|n
 argument_list|)
@@ -2558,13 +2599,15 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|soc_data
+name|soc_info
 operator|.
-name|reset
+name|soc_data
 condition|)
-name|soc_data
+name|soc_info
 operator|.
-name|reset
+name|soc_data
+operator|->
+name|soc_reset
 argument_list|()
 expr_stmt|;
 while|while
