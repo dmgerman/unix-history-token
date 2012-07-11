@@ -1030,7 +1030,7 @@ value|Target = ((Target& (~(Mask))) | (Source& Mask))
 end_define
 
 begin_comment
-comment|/*  * An ACPI_NAMESPACE_NODE can appear in some contexts  * where a pointer to an ACPI_OPERAND_OBJECT can also  * appear. This macro is used to distinguish them.  *  * The "Descriptor" field is the first field in both structures.  */
+comment|/*  * An object of type ACPI_NAMESPACE_NODE can appear in some contexts  * where a pointer to an object of type ACPI_OPERAND_OBJECT can also  * appear. This macro is used to distinguish them.  *  * The "Descriptor" field is the first field in both structures.  */
 end_comment
 
 begin_define

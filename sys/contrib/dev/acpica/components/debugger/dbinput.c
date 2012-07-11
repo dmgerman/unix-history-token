@@ -738,7 +738,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"  Unload<TableSig> [Instance]        Unload an ACPI table\n"
+literal|"  Unload<Namepath>                   Unload an ACPI table via namespace object\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
@@ -2585,11 +2585,6 @@ argument_list|(
 name|AcpiGbl_DbArgs
 index|[
 literal|1
-index|]
-argument_list|,
-name|AcpiGbl_DbArgs
-index|[
-literal|2
 index|]
 argument_list|)
 expr_stmt|;

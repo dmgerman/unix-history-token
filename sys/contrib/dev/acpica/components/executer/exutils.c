@@ -135,7 +135,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExReacquireInterpreter  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Reacquire the interpreter execution region from within the  *              interpreter code. Failure to enter the interpreter region is a  *              fatal system error. Used in  conjuction with  *              RelinquishInterpreter  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExReacquireInterpreter  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Reacquire the interpreter execution region from within the  *              interpreter code. Failure to enter the interpreter region is a  *              fatal system error. Used in conjunction with  *              RelinquishInterpreter  *  ******************************************************************************/
 end_comment
 
 begin_function
