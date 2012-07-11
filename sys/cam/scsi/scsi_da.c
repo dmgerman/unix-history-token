@@ -2805,7 +2805,7 @@ name|_kern_cam_da
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|da_send_ordered
+name|send_ordered
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
@@ -2822,7 +2822,7 @@ end_expr_stmt
 begin_expr_stmt
 name|TUNABLE_INT
 argument_list|(
-literal|"kern.cam.da.da_send_ordered"
+literal|"kern.cam.da.send_ordered"
 argument_list|,
 operator|&
 name|da_send_ordered
