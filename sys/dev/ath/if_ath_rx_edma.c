@@ -717,7 +717,7 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_EDMA_RX
 argument_list|,
-literal|"%s: Q%d: pos=%i, addr=0x%x\n"
+literal|"%s: Q%d: pos=%i, addr=0x%jx\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -725,6 +725,9 @@ name|qtype
 argument_list|,
 name|i
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|bf
 operator|->
 name|bf_daddr
