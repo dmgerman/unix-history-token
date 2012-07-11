@@ -258,6 +258,11 @@ argument_list|(
 name|uint16_t
 argument_list|)
 operator|)
+operator|+
+sizeof|sizeof
+argument_list|(
+name|uint16_t
+argument_list|)
 expr_stmt|;
 name|size
 operator|=
@@ -293,6 +298,11 @@ expr|struct
 name|vring_used_elem
 argument_list|)
 operator|)
+operator|+
+sizeof|sizeof
+argument_list|(
+name|uint16_t
+argument_list|)
 expr_stmt|;
 return|return
 operator|(

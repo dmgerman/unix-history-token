@@ -3624,9 +3624,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|device_t
-name|dev
-decl_stmt|;
 name|struct
 name|ifnet
 modifier|*
@@ -3635,12 +3632,6 @@ decl_stmt|;
 name|int
 name|link
 decl_stmt|;
-name|dev
-operator|=
-name|sc
-operator|->
-name|vtnet_dev
-expr_stmt|;
 name|ifp
 operator|=
 name|sc
