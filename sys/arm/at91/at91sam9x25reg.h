@@ -234,13 +234,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|AT91SAM9X25_BASE
-value|0xd0000000
-end_define
-
-begin_define
-define|#
-directive|define
 name|AT91SAM9X25_EMAC_SIZE
 value|0x4000
 end_define

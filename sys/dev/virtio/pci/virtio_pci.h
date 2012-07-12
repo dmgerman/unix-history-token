@@ -214,7 +214,7 @@ parameter_list|(
 name|sc
 parameter_list|)
 define|\
-value|(((sc)->vtpci_flags& VIRTIO_PCI_FLAG_MSIX) ? 24 : 20)
+value|(((sc)->vtpci_flags& VTPCI_FLAG_MSIX) ? 24 : 20)
 end_define
 
 begin_comment

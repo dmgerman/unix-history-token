@@ -102,7 +102,7 @@ end_comment
 begin_function_decl
 specifier|static
 name|int
-name|at91rst_intr
+name|at91_rst_intr
 parameter_list|(
 name|void
 modifier|*
@@ -114,7 +114,7 @@ end_function_decl
 begin_struct
 specifier|static
 struct|struct
-name|at91rst_softc
+name|at91_rst_softc
 block|{
 name|struct
 name|resource
@@ -147,7 +147,7 @@ decl_stmt|;
 comment|/* Shutdown in progress */
 block|}
 modifier|*
-name|at91rst_sc
+name|at91_rst_sc
 struct|;
 end_struct
 
@@ -158,7 +158,7 @@ name|uint32_t
 name|RD4
 parameter_list|(
 name|struct
-name|at91rst_softc
+name|at91_rst_softc
 modifier|*
 name|sc
 parameter_list|,
@@ -188,7 +188,7 @@ name|void
 name|WR4
 parameter_list|(
 name|struct
-name|at91rst_softc
+name|at91_rst_softc
 modifier|*
 name|sc
 parameter_list|,
@@ -239,16 +239,15 @@ block|{}
 end_function
 
 begin_function
-specifier|static
 name|void
-name|at91rst_cpu_reset
+name|at91_rst_cpu_reset
 parameter_list|(
 name|void
 parameter_list|)
 block|{
 if|if
 condition|(
-name|at91rst_sc
+name|at91_rst_sc
 condition|)
 block|{
 name|cpu_reset_sam9g20
@@ -257,7 +256,7 @@ expr_stmt|;
 comment|/* May be null */
 name|WR4
 argument_list|(
-name|at91rst_sc
+name|at91_rst_sc
 argument_list|,
 name|RST_MR
 argument_list|,
@@ -273,7 +272,7 @@ argument_list|)
 expr_stmt|;
 name|WR4
 argument_list|(
-name|at91rst_sc
+name|at91_rst_sc
 argument_list|,
 name|RST_CR
 argument_list|,
@@ -298,7 +297,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|at91rst_probe
+name|at91_rst_probe
 parameter_list|(
 name|device_t
 name|dev
@@ -322,14 +321,14 @@ end_function
 begin_function
 specifier|static
 name|int
-name|at91rst_attach
+name|at91_rst_attach
 parameter_list|(
 name|device_t
 name|dev
 parameter_list|)
 block|{
 name|struct
-name|at91rst_softc
+name|at91_rst_softc
 modifier|*
 name|sc
 decl_stmt|;
@@ -343,7 +342,7 @@ name|rid
 decl_stmt|,
 name|err
 decl_stmt|;
-name|at91rst_sc
+name|at91_rst_sc
 operator|=
 name|sc
 operator|=
@@ -473,7 +472,7 @@ name|INTR_TYPE_MISC
 operator||
 name|INTR_MPSAFE
 argument_list|,
-name|at91rst_intr
+name|at91_rst_intr
 argument_list|,
 name|NULL
 argument_list|,
@@ -498,7 +497,7 @@ argument_list|)
 expr_stmt|;
 name|WR4
 argument_list|(
-name|at91rst_sc
+name|at91_rst_sc
 argument_list|,
 name|RST_MR
 argument_list|,
@@ -580,12 +579,6 @@ argument_list|,
 name|cause
 argument_list|)
 expr_stmt|;
-name|soc_data
-operator|.
-name|reset
-operator|=
-name|at91rst_cpu_reset
-expr_stmt|;
 name|out
 label|:
 return|return
@@ -599,7 +592,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|at91rst_tick
+name|at91_rst_tick
 parameter_list|(
 name|void
 modifier|*
@@ -607,7 +600,7 @@ name|argp
 parameter_list|)
 block|{
 name|struct
-name|at91rst_softc
+name|at91_rst_softc
 modifier|*
 name|sc
 init|=
@@ -680,7 +673,7 @@ name|hz
 operator|/
 name|RST_TICK
 argument_list|,
-name|at91rst_tick
+name|at91_rst_tick
 argument_list|,
 name|sc
 argument_list|)
@@ -692,7 +685,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|at91rst_intr
+name|at91_rst_intr
 parameter_list|(
 name|void
 modifier|*
@@ -700,7 +693,7 @@ name|argp
 parameter_list|)
 block|{
 name|struct
-name|at91rst_softc
+name|at91_rst_softc
 modifier|*
 name|sc
 init|=
@@ -737,7 +730,7 @@ name|hz
 operator|/
 name|RST_TICK
 argument_list|,
-name|at91rst_tick
+name|at91_rst_tick
 argument_list|,
 name|sc
 argument_list|)
@@ -759,7 +752,7 @@ end_function
 begin_decl_stmt
 specifier|static
 name|device_method_t
-name|at91rst_methods
+name|at91_rst_methods
 index|[]
 init|=
 block|{
@@ -767,14 +760,14 @@ name|DEVMETHOD
 argument_list|(
 name|device_probe
 argument_list|,
-name|at91rst_probe
+name|at91_rst_probe
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|device_attach
 argument_list|,
-name|at91rst_attach
+name|at91_rst_attach
 argument_list|)
 block|,
 name|DEVMETHOD_END
@@ -785,17 +778,17 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|driver_t
-name|at91rst_driver
+name|at91_rst_driver
 init|=
 block|{
 literal|"at91_rst"
 block|,
-name|at91rst_methods
+name|at91_rst_methods
 block|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|at91rst_softc
+name|at91_rst_softc
 argument_list|)
 block|, }
 decl_stmt|;
@@ -804,7 +797,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|devclass_t
-name|at91rst_devclass
+name|at91_rst_devclass
 decl_stmt|;
 end_decl_stmt
 
@@ -815,9 +808,9 @@ name|at91_rst
 argument_list|,
 name|atmelarm
 argument_list|,
-name|at91rst_driver
+name|at91_rst_driver
 argument_list|,
-name|at91rst_devclass
+name|at91_rst_devclass
 argument_list|,
 name|NULL
 argument_list|,

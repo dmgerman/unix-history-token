@@ -174,12 +174,31 @@ init|=
 literal|0x100000000ULL
 block|,
 comment|/* BAR TX */
+name|ATH_DEBUG_EDMA_RX
+init|=
+literal|0x200000000ULL
+block|,
+comment|/* RX EDMA state */
 name|ATH_DEBUG_ANY
 init|=
 literal|0xffffffffffffffffULL
 block|}
 enum|;
 end_enum
+
+begin_define
+define|#
+directive|define
+name|ATH_KTR_INTR
+value|KTR_SPARE4
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_KTR_ERR
+value|KTR_SPARE3
+end_define
 
 begin_decl_stmt
 specifier|extern
@@ -291,6 +310,20 @@ end_else
 begin_comment
 comment|/* ATH_DEBUG */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|ATH_KTR_INTR
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_KTR_ERR
+value|0
+end_define
 
 begin_define
 define|#

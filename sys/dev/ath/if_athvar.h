@@ -1347,6 +1347,65 @@ modifier|*
 name|bf
 parameter_list|)
 function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|recv_setup
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|recv_teardown
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Represent the current state of the RX FIFO.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ath_rx_edma
+block|{
+name|struct
+name|ath_buf
+modifier|*
+modifier|*
+name|m_fifo
+decl_stmt|;
+name|int
+name|m_fifolen
+decl_stmt|;
+name|int
+name|m_fifo_head
+decl_stmt|;
+name|int
+name|m_fifo_tail
+decl_stmt|;
+name|int
+name|m_fifo_depth
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|m_rxpending
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1406,6 +1465,30 @@ comment|/* bssid mask */
 name|struct
 name|ath_rx_methods
 name|sc_rx
+decl_stmt|;
+name|struct
+name|ath_rx_edma
+name|sc_rxedma
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* HP/LP queues */
+name|int
+name|sc_rx_statuslen
+decl_stmt|;
+name|int
+name|sc_tx_desclen
+decl_stmt|;
+name|int
+name|sc_tx_statuslen
+decl_stmt|;
+name|int
+name|sc_tx_nmaps
+decl_stmt|;
+comment|/* Number of TX maps */
+name|int
+name|sc_edma_bufsize
 decl_stmt|;
 name|void
 function_decl|(
@@ -1647,8 +1730,13 @@ comment|/* do self-linked final descriptor */
 name|sc_rxtsf32
 range|:
 literal|1
-decl_stmt|;
+decl_stmt|,
 comment|/* RX dec TSF is 32 bits */
+name|sc_isedma
+range|:
+literal|1
+decl_stmt|;
+comment|/* supports EDMA */
 name|uint32_t
 name|sc_eerd
 decl_stmt|;
@@ -1865,12 +1953,6 @@ name|ath_bufhead
 name|sc_rxbuf
 decl_stmt|;
 comment|/* receive buffer */
-name|struct
-name|mbuf
-modifier|*
-name|sc_rxpending
-decl_stmt|;
-comment|/* pending receive data */
 name|u_int32_t
 modifier|*
 name|sc_rxlink
@@ -2850,9 +2932,11 @@ parameter_list|(
 name|_ah
 parameter_list|,
 name|_bufaddr
+parameter_list|,
+name|_rxq
 parameter_list|)
 define|\
-value|((*(_ah)->ah_setRxDP)((_ah), (_bufaddr)))
+value|((*(_ah)->ah_setRxDP)((_ah), (_bufaddr), (_rxq)))
 end_define
 
 begin_comment
@@ -2961,9 +3045,11 @@ directive|define
 name|ath_hal_getrxbuf
 parameter_list|(
 name|_ah
+parameter_list|,
+name|_rxq
 parameter_list|)
 define|\
-value|((*(_ah)->ah_getRxDP)((_ah)))
+value|((*(_ah)->ah_getRxDP)((_ah), (_rxq)))
 end_define
 
 begin_define
@@ -4130,6 +4216,10 @@ define|\
 value|ath_hal_setcapability(_ah, HAL_CAP_INTMIT, \ 	HAL_CAP_INTMIT_ENABLE, _v, NULL)
 end_define
 
+begin_comment
+comment|/* EDMA definitions */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -4144,6 +4234,86 @@ end_define
 begin_define
 define|#
 directive|define
+name|ath_hal_getrxfifodepth
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_qtype
+parameter_list|,
+name|_req
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_RXFIFODEPTH, _qtype, _req)	\ 	== HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_getntxmaps
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_req
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_NUM_TXMAPS, 0, _req)	\ 	== HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_gettxdesclen
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_req
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_TXDESCLEN, 0, _req)		\ 	== HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_gettxstatuslen
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_req
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_TXSTATUSLEN, 0, _req)	\ 	== HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_getrxstatuslen
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_req
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_RXSTATUSLEN, 0, _req)	\ 	== HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_setrxbufsize
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_req
+parameter_list|)
+define|\
+value|(ath_hal_setcapability(_ah, HAL_CAP_RXBUFSIZE, 0, _req, NULL)	\ 	== HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ath_hal_getchannoise
 parameter_list|(
 name|_ah
@@ -4153,6 +4323,10 @@ parameter_list|)
 define|\
 value|((*(_ah)->ah_getChanNoise)((_ah), (_c)))
 end_define
+
+begin_comment
+comment|/* 802.11n HAL methods */
+end_comment
 
 begin_define
 define|#

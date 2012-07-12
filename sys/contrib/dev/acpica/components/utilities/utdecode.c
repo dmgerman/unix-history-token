@@ -46,81 +46,6 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiFormatException  *  * PARAMETERS:  Status       - The ACPI_STATUS code to be formatted  *  * RETURN:      A string containing the exception text. A valid pointer is  *              always returned.  *  * DESCRIPTION: This function translates an ACPI exception into an ASCII string  *              It is here instead of utxface.c so it is always present.  *  ******************************************************************************/
-end_comment
-
-begin_function
-specifier|const
-name|char
-modifier|*
-name|AcpiFormatException
-parameter_list|(
-name|ACPI_STATUS
-name|Status
-parameter_list|)
-block|{
-specifier|const
-name|char
-modifier|*
-name|Exception
-init|=
-name|NULL
-decl_stmt|;
-name|ACPI_FUNCTION_ENTRY
-argument_list|()
-expr_stmt|;
-name|Exception
-operator|=
-name|AcpiUtValidateException
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|Exception
-condition|)
-block|{
-comment|/* Exception code was not recognized */
-name|ACPI_ERROR
-argument_list|(
-operator|(
-name|AE_INFO
-operator|,
-literal|"Unknown exception code: 0x%8.8X"
-operator|,
-name|Status
-operator|)
-argument_list|)
-expr_stmt|;
-name|Exception
-operator|=
-literal|"UNKNOWN_STATUS_CODE"
-expr_stmt|;
-block|}
-return|return
-operator|(
-name|ACPI_CAST_PTR
-argument_list|(
-specifier|const
-name|char
-argument_list|,
-name|Exception
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_macro
-name|ACPI_EXPORT_SYMBOL
-argument_list|(
-argument|AcpiFormatException
-argument_list|)
-end_macro
-
-begin_comment
 comment|/*  * Properties of the ACPI Object Types, both internal and external.  * The table is indexed by values of ACPI_OBJECT_TYPE  */
 end_comment
 
@@ -332,23 +257,36 @@ init|=
 block|{
 literal|"SystemMemory"
 block|,
+comment|/* 0x00 */
 literal|"SystemIO"
 block|,
+comment|/* 0x01 */
 literal|"PCI_Config"
 block|,
+comment|/* 0x02 */
 literal|"EmbeddedControl"
 block|,
+comment|/* 0x03 */
 literal|"SMBus"
 block|,
+comment|/* 0x04 */
 literal|"SystemCMOS"
 block|,
+comment|/* 0x05 */
 literal|"PCIBARTarget"
 block|,
+comment|/* 0x06 */
 literal|"IPMI"
 block|,
+comment|/* 0x07 */
 literal|"GeneralPurposeIo"
 block|,
+comment|/* 0x08 */
 literal|"GenericSerialBus"
+block|,
+comment|/* 0x09 */
+literal|"PCC"
+comment|/* 0x0A */
 block|}
 decl_stmt|;
 end_decl_stmt

@@ -224,6 +224,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/memrange.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/msgbuf.h>
 end_include
 
@@ -1210,6 +1216,13 @@ begin_decl_stmt
 name|struct
 name|mtx
 name|icu_lock
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|mem_range_softc
+name|mem_range_softc
 decl_stmt|;
 end_decl_stmt
 

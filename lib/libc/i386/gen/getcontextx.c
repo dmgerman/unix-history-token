@@ -171,7 +171,7 @@ operator|)
 operator|:
 literal|"0"
 operator|(
-literal|0x0
+literal|0x1
 operator|)
 block|)
 empty_stmt|;

@@ -131,6 +131,28 @@ init|=
 literal|0x00400000
 block|,
 comment|/* BB/MAC hang debugging */
+name|HAL_DEBUG_CALIBRATE
+init|=
+literal|0x00800000
+block|,
+comment|/* setup calibration */
+name|HAL_DEBUG_POWER_MGMT
+init|=
+literal|0x01000000
+block|,
+comment|/* power calibration */
+name|HAL_DEBUG_CHANNEL
+init|=
+literal|0x02000000
+block|,
+name|HAL_DEBUG_QUEUE
+init|=
+literal|0x04000000
+block|,
+name|HAL_DEBUG_PRINT_REG
+init|=
+literal|0x08000000
+block|,
 name|HAL_DEBUG_UNMASKABLE
 init|=
 literal|0x80000000

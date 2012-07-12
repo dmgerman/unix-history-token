@@ -150,6 +150,7 @@ argument_list|(
 name|AcpiSetFirmwareWakingVector
 argument_list|)
 expr_stmt|;
+comment|/*      * According to the ACPI specification 2.0c and later, the 64-bit      * waking vector should be cleared and the 32-bit waking vector should      * be used, unless we want the wake-up code to be called by the BIOS in      * Protected Mode. Some systems (for example HP dv5-1004nr) are known      * to fail to resume if the 64-bit vector is used.      */
 comment|/* Set the 32-bit vector */
 name|AcpiGbl_FACS
 operator|->

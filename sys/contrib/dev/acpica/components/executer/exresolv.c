@@ -303,7 +303,7 @@ operator|=
 operator|*
 name|StackPtr
 expr_stmt|;
-comment|/* This is an ACPI_OPERAND_OBJECT  */
+comment|/* This is an object of type ACPI_OPERAND_OBJECT */
 switch|switch
 condition|(
 name|StackDesc

@@ -246,7 +246,7 @@ comment|/* Length of the boot error region */
 name|UINT64
 name|Address
 decl_stmt|;
-comment|/* Physical addresss of the error region */
+comment|/* Physical address of the error region */
 block|}
 name|ACPI_TABLE_BERT
 typedef|;

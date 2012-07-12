@@ -1431,7 +1431,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|boolean_t
+name|int
 name|mmu_booke_ts_referenced
 parameter_list|(
 name|mmu_t

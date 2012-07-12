@@ -310,6 +310,13 @@ name|AT91_EXID_SAM9X25
 value|0x00000004
 end_define
 
+begin_define
+define|#
+directive|define
+name|AT91_IRQ_SYSTEM
+value|1
+end_define
+
 begin_endif
 endif|#
 directive|endif
