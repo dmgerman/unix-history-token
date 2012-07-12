@@ -1084,6 +1084,13 @@ operator|->
 name|soc_children
 argument_list|)
 expr_stmt|;
+name|soc_info
+operator|.
+name|soc_data
+operator|->
+name|soc_clock_init
+argument_list|()
+expr_stmt|;
 name|bus_generic_probe
 argument_list|(
 name|dev

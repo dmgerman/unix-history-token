@@ -243,6 +243,19 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|clk_init_t
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_struct
 struct|struct
 name|at91_soc_data
@@ -252,6 +265,9 @@ name|soc_delay
 decl_stmt|;
 name|cpu_reset_t
 name|soc_reset
+decl_stmt|;
+name|clk_init_t
+name|soc_clock_init
 decl_stmt|;
 specifier|const
 name|int
