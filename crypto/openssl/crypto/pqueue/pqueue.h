@@ -41,12 +41,6 @@ directive|include
 file|<string.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<openssl/pq_compat.h>
-end_include
-
 begin_typedef
 typedef|typedef
 name|struct
@@ -61,9 +55,14 @@ typedef|typedef
 struct|struct
 name|_pitem
 block|{
-name|PQ_64BIT
+name|unsigned
+name|char
 name|priority
+index|[
+literal|8
+index|]
 decl_stmt|;
+comment|/* 64-bit value in big-endian encoding */
 name|void
 modifier|*
 name|data
@@ -92,8 +91,10 @@ name|pitem
 modifier|*
 name|pitem_new
 parameter_list|(
-name|PQ_64BIT
-name|priority
+name|unsigned
+name|char
+modifier|*
+name|prio64be
 parameter_list|,
 name|void
 modifier|*
@@ -177,8 +178,10 @@ parameter_list|(
 name|pqueue
 name|pq
 parameter_list|,
-name|PQ_64BIT
-name|priority
+name|unsigned
+name|char
+modifier|*
+name|prio64be
 parameter_list|)
 function_decl|;
 end_function_decl

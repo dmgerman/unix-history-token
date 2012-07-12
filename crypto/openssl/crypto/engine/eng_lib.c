@@ -334,6 +334,17 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* Free up any dynamically allocated public key methods */
+name|engine_pkey_meths_free
+argument_list|(
+name|e
+argument_list|)
+expr_stmt|;
+name|engine_pkey_asn1_meths_free
+argument_list|(
+name|e
+argument_list|)
+expr_stmt|;
 comment|/* Give the ENGINE a chance to do any structural cleanup corresponding 	 * to allocation it did in its constructor (eg. unload error strings) */
 if|if
 condition|(

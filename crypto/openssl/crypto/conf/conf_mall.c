@@ -53,12 +53,6 @@ directive|include
 file|<openssl/asn1.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<openssl/evp.h>
-end_include
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -99,9 +93,6 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-name|EVP_add_alg_module
-argument_list|()
-expr_stmt|;
 block|}
 end_function
 

@@ -36,6 +36,7 @@ name|ASN1_INTEGER
 modifier|*
 name|ASN1_INTEGER_dup
 parameter_list|(
+specifier|const
 name|ASN1_INTEGER
 modifier|*
 name|x
@@ -54,10 +55,12 @@ begin_function
 name|int
 name|ASN1_INTEGER_cmp
 parameter_list|(
+specifier|const
 name|ASN1_INTEGER
 modifier|*
 name|x
 parameter_list|,
+specifier|const
 name|ASN1_INTEGER
 modifier|*
 name|y
@@ -1558,6 +1561,7 @@ begin_function
 name|long
 name|ASN1_INTEGER_get
 parameter_list|(
+specifier|const
 name|ASN1_INTEGER
 modifier|*
 name|a
@@ -1628,11 +1632,10 @@ name|long
 argument_list|)
 condition|)
 block|{
-comment|/* hmm... a bit ugly */
+comment|/* hmm... a bit ugly, return all ones */
 return|return
-operator|(
-literal|0xffffffffL
-operator|)
+operator|-
+literal|1
 return|;
 block|}
 if|if
@@ -1702,6 +1705,7 @@ name|ASN1_INTEGER
 modifier|*
 name|BN_to_ASN1_INTEGER
 parameter_list|(
+specifier|const
 name|BIGNUM
 modifier|*
 name|bn
@@ -1923,6 +1927,7 @@ name|BIGNUM
 modifier|*
 name|ASN1_INTEGER_to_BN
 parameter_list|(
+specifier|const
 name|ASN1_INTEGER
 modifier|*
 name|ai

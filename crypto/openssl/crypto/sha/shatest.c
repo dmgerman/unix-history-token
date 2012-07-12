@@ -362,10 +362,6 @@ name|P
 argument_list|,
 name|strlen
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 operator|*
 name|P
 argument_list|)
@@ -393,10 +389,6 @@ name|strcmp
 argument_list|(
 name|p
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|*
 name|R
 argument_list|)

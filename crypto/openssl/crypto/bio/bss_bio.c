@@ -884,7 +884,7 @@ end_comment
 
 begin_function
 specifier|static
-name|ssize_t
+name|ossl_ssize_t
 name|bio_nread0
 parameter_list|(
 name|BIO
@@ -905,7 +905,7 @@ decl_stmt|,
 modifier|*
 name|peer_b
 decl_stmt|;
-name|ssize_t
+name|ossl_ssize_t
 name|num
 decl_stmt|;
 name|BIO_clear_retry_flags
@@ -1062,7 +1062,7 @@ end_function
 
 begin_function
 specifier|static
-name|ssize_t
+name|ossl_ssize_t
 name|bio_nread
 parameter_list|(
 name|BIO
@@ -1086,7 +1086,7 @@ decl_stmt|,
 modifier|*
 name|peer_b
 decl_stmt|;
-name|ssize_t
+name|ossl_ssize_t
 name|num
 decl_stmt|,
 name|available
@@ -1105,7 +1105,7 @@ else|else
 name|num
 operator|=
 operator|(
-name|ssize_t
+name|ossl_ssize_t
 operator|)
 name|num_
 expr_stmt|;
@@ -1517,7 +1517,7 @@ end_comment
 
 begin_function
 specifier|static
-name|ssize_t
+name|ossl_ssize_t
 name|bio_nwrite0
 parameter_list|(
 name|BIO
@@ -1731,7 +1731,7 @@ end_function
 
 begin_function
 specifier|static
-name|ssize_t
+name|ossl_ssize_t
 name|bio_nwrite
 parameter_list|(
 name|BIO
@@ -1752,7 +1752,7 @@ name|bio_bio_st
 modifier|*
 name|b
 decl_stmt|;
-name|ssize_t
+name|ossl_ssize_t
 name|num
 decl_stmt|,
 name|space
@@ -1771,7 +1771,7 @@ else|else
 name|num
 operator|=
 operator|(
-name|ssize_t
+name|ossl_ssize_t
 operator|)
 name|num_
 expr_stmt|;

@@ -453,6 +453,20 @@ value|if (c) (c)->valid = 0
 end_define
 
 begin_comment
+comment|/* Version to avoid compiler warning about 'c' always non-NULL */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|asn1_tlc_clear_nc
+parameter_list|(
+name|c
+parameter_list|)
+value|(c)->valid = 0
+end_define
+
+begin_comment
 comment|/* Decode an ASN1 item, this currently behaves just   * like a standard 'd2i' function. 'in' points to   * a buffer to read the data from, in future we will  * have more advanced versions that can input data  * a piece at a time and this will simply be a special  * case.  */
 end_comment
 
@@ -501,11 +515,11 @@ operator|=
 operator|&
 name|ptmpval
 expr_stmt|;
+name|asn1_tlc_clear_nc
+argument_list|(
+operator|&
 name|c
-operator|.
-name|valid
-operator|=
-literal|0
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -570,11 +584,11 @@ block|{
 name|ASN1_TLC
 name|c
 decl_stmt|;
+name|asn1_tlc_clear_nc
+argument_list|(
+operator|&
 name|c
-operator|.
-name|valid
-operator|=
-literal|0
+argument_list|)
 expr_stmt|;
 return|return
 name|asn1_template_ex_d2i
@@ -1231,6 +1245,8 @@ argument_list|,
 name|pval
 argument_list|,
 name|it
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 goto|goto
@@ -1421,6 +1437,8 @@ argument_list|,
 name|pval
 argument_list|,
 name|it
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 goto|goto
@@ -1613,6 +1631,8 @@ argument_list|,
 name|pval
 argument_list|,
 name|it
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 goto|goto
@@ -2003,6 +2023,8 @@ argument_list|,
 name|pval
 argument_list|,
 name|it
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 goto|goto
@@ -2602,24 +2624,30 @@ expr_stmt|;
 else|else
 block|{
 comment|/* We've got a valid STACK: free up any items present */
-name|STACK
-modifier|*
+name|STACK_OF
+argument_list|(
+name|ASN1_VALUE
+argument_list|)
+operator|*
 name|sktmp
-init|=
+operator|=
 operator|(
-name|STACK
+name|STACK_OF
+argument_list|(
+name|ASN1_VALUE
+argument_list|)
 operator|*
 operator|)
 operator|*
 name|val
-decl_stmt|;
+expr_stmt|;
 name|ASN1_VALUE
 modifier|*
 name|vtmp
 decl_stmt|;
 while|while
 condition|(
-name|sk_num
+name|sk_ASN1_VALUE_num
 argument_list|(
 name|sktmp
 argument_list|)
@@ -2629,11 +2657,7 @@ condition|)
 block|{
 name|vtmp
 operator|=
-operator|(
-name|ASN1_VALUE
-operator|*
-operator|)
-name|sk_pop
+name|sk_ASN1_VALUE_pop
 argument_list|(
 name|sktmp
 argument_list|)
@@ -2783,19 +2807,18 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|sk_push
+name|sk_ASN1_VALUE_push
 argument_list|(
 operator|(
-name|STACK
+name|STACK_OF
+argument_list|(
+name|ASN1_VALUE
+argument_list|)
 operator|*
 operator|)
 operator|*
 name|val
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|skfield
 argument_list|)
 condition|)

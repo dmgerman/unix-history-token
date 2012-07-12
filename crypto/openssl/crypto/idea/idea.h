@@ -165,7 +165,6 @@ function_decl|;
 name|void
 name|idea_set_decrypt_key
 parameter_list|(
-specifier|const
 name|IDEA_KEY_SCHEDULE
 modifier|*
 name|ek

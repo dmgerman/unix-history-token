@@ -819,15 +819,6 @@ argument_list|,
 name|h
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|dsa
-operator|==
-name|NULL
-condition|)
-goto|goto
-name|end
-goto|;
 name|DSA_print
 argument_list|(
 name|bio_err
@@ -1153,9 +1144,9 @@ expr_stmt|;
 name|CRYPTO_cleanup_all_ex_data
 argument_list|()
 expr_stmt|;
-name|ERR_remove_state
+name|ERR_remove_thread_state
 argument_list|(
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|ERR_free_strings

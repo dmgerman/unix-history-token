@@ -62,6 +62,7 @@ specifier|static
 name|int
 name|i2r_ocsp_crlid
 parameter_list|(
+specifier|const
 name|X509V3_EXT_METHOD
 modifier|*
 name|method
@@ -85,6 +86,7 @@ specifier|static
 name|int
 name|i2r_ocsp_acutoff
 parameter_list|(
+specifier|const
 name|X509V3_EXT_METHOD
 modifier|*
 name|method
@@ -108,6 +110,7 @@ specifier|static
 name|int
 name|i2r_object
 parameter_list|(
+specifier|const
 name|X509V3_EXT_METHOD
 modifier|*
 name|method
@@ -195,6 +198,7 @@ specifier|static
 name|int
 name|i2r_ocsp_nonce
 parameter_list|(
+specifier|const
 name|X509V3_EXT_METHOD
 modifier|*
 name|method
@@ -218,6 +222,7 @@ specifier|static
 name|int
 name|i2r_ocsp_nocheck
 parameter_list|(
+specifier|const
 name|X509V3_EXT_METHOD
 modifier|*
 name|method
@@ -242,6 +247,7 @@ name|void
 modifier|*
 name|s2i_ocsp_nocheck
 parameter_list|(
+specifier|const
 name|X509V3_EXT_METHOD
 modifier|*
 name|method
@@ -263,6 +269,7 @@ specifier|static
 name|int
 name|i2r_ocsp_serviceloc
 parameter_list|(
+specifier|const
 name|X509V3_EXT_METHOD
 modifier|*
 name|method
@@ -563,6 +570,7 @@ specifier|static
 name|int
 name|i2r_ocsp_crlid
 parameter_list|(
+specifier|const
 name|X509V3_EXT_METHOD
 modifier|*
 name|method
@@ -777,6 +785,7 @@ specifier|static
 name|int
 name|i2r_ocsp_acutoff
 parameter_list|(
+specifier|const
 name|X509V3_EXT_METHOD
 modifier|*
 name|method
@@ -835,6 +844,7 @@ specifier|static
 name|int
 name|i2r_object
 parameter_list|(
+specifier|const
 name|X509V3_EXT_METHOD
 modifier|*
 name|method
@@ -1111,6 +1121,7 @@ specifier|static
 name|int
 name|i2r_ocsp_nonce
 parameter_list|(
+specifier|const
 name|X509V3_EXT_METHOD
 modifier|*
 name|method
@@ -1176,6 +1187,7 @@ specifier|static
 name|int
 name|i2r_ocsp_nocheck
 parameter_list|(
+specifier|const
 name|X509V3_EXT_METHOD
 modifier|*
 name|method
@@ -1204,6 +1216,7 @@ name|void
 modifier|*
 name|s2i_ocsp_nocheck
 parameter_list|(
+specifier|const
 name|X509V3_EXT_METHOD
 modifier|*
 name|method
@@ -1230,6 +1243,7 @@ specifier|static
 name|int
 name|i2r_ocsp_serviceloc
 parameter_list|(
+specifier|const
 name|X509V3_EXT_METHOD
 modifier|*
 name|method

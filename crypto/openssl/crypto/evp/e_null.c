@@ -31,6 +31,12 @@ directive|include
 file|<openssl/objects.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_FIPS
+end_ifndef
+
 begin_function_decl
 specifier|static
 name|int
@@ -78,8 +84,7 @@ name|char
 modifier|*
 name|in
 parameter_list|,
-name|unsigned
-name|int
+name|size_t
 name|inl
 parameter_list|)
 function_decl|;
@@ -100,7 +105,7 @@ literal|0
 block|,
 literal|0
 block|,
-name|EVP_CIPH_FLAG_FIPS
+literal|0
 block|,
 name|null_init_key
 block|,
@@ -191,8 +196,7 @@ name|char
 modifier|*
 name|in
 parameter_list|,
-name|unsigned
-name|int
+name|size_t
 name|inl
 parameter_list|)
 block|{
@@ -217,9 +221,6 @@ operator|*
 operator|)
 name|in
 argument_list|,
-operator|(
-name|size_t
-operator|)
 name|inl
 argument_list|)
 expr_stmt|;
@@ -228,6 +229,11 @@ literal|1
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

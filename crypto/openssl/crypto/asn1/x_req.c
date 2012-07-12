@@ -52,6 +52,10 @@ specifier|const
 name|ASN1_ITEM
 modifier|*
 name|it
+parameter_list|,
+name|void
+modifier|*
+name|exarg
 parameter_list|)
 block|{
 name|X509_REQ_INFO

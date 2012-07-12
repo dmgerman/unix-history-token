@@ -37,7 +37,7 @@ index|[]
 init|=
 block|{
 block|{
-literal|0
+name|CRL_REASON_UNSPECIFIED
 block|,
 literal|"Unspecified"
 block|,
@@ -45,7 +45,7 @@ literal|"unspecified"
 block|}
 block|,
 block|{
-literal|1
+name|CRL_REASON_KEY_COMPROMISE
 block|,
 literal|"Key Compromise"
 block|,
@@ -53,7 +53,7 @@ literal|"keyCompromise"
 block|}
 block|,
 block|{
-literal|2
+name|CRL_REASON_CA_COMPROMISE
 block|,
 literal|"CA Compromise"
 block|,
@@ -61,7 +61,7 @@ literal|"CACompromise"
 block|}
 block|,
 block|{
-literal|3
+name|CRL_REASON_AFFILIATION_CHANGED
 block|,
 literal|"Affiliation Changed"
 block|,
@@ -69,7 +69,7 @@ literal|"affiliationChanged"
 block|}
 block|,
 block|{
-literal|4
+name|CRL_REASON_SUPERSEDED
 block|,
 literal|"Superseded"
 block|,
@@ -77,7 +77,7 @@ literal|"superseded"
 block|}
 block|,
 block|{
-literal|5
+name|CRL_REASON_CESSATION_OF_OPERATION
 block|,
 literal|"Cessation Of Operation"
 block|,
@@ -85,7 +85,7 @@ literal|"cessationOfOperation"
 block|}
 block|,
 block|{
-literal|6
+name|CRL_REASON_CERTIFICATE_HOLD
 block|,
 literal|"Certificate Hold"
 block|,
@@ -93,11 +93,27 @@ literal|"certificateHold"
 block|}
 block|,
 block|{
-literal|8
+name|CRL_REASON_REMOVE_FROM_CRL
 block|,
 literal|"Remove From CRL"
 block|,
 literal|"removeFromCRL"
+block|}
+block|,
+block|{
+name|CRL_REASON_PRIVILEGE_WITHDRAWN
+block|,
+literal|"Privilege Withdrawn"
+block|,
+literal|"privilegeWithdrawn"
+block|}
+block|,
+block|{
+name|CRL_REASON_AA_COMPROMISE
+block|,
+literal|"AA Compromise"
+block|,
+literal|"AACompromise"
 block|}
 block|,
 block|{

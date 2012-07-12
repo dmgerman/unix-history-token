@@ -27,6 +27,7 @@ end_include
 
 begin_function_decl
 specifier|static
+specifier|const
 name|SSL_METHOD
 modifier|*
 name|ssl23_get_method
@@ -39,6 +40,7 @@ end_function_decl
 
 begin_function
 specifier|static
+specifier|const
 name|SSL_METHOD
 modifier|*
 name|ssl23_get_method
@@ -95,6 +97,32 @@ condition|)
 return|return
 operator|(
 name|TLSv1_method
+argument_list|()
+operator|)
+return|;
+elseif|else
+if|if
+condition|(
+name|ver
+operator|==
+name|TLS1_1_VERSION
+condition|)
+return|return
+operator|(
+name|TLSv1_1_method
+argument_list|()
+operator|)
+return|;
+elseif|else
+if|if
+condition|(
+name|ver
+operator|==
+name|TLS1_2_VERSION
+condition|)
+return|return
+operator|(
+name|TLSv1_2_method
 argument_list|()
 operator|)
 return|;

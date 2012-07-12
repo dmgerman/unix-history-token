@@ -29,35 +29,6 @@ directive|include
 file|<openssl/pkcs12.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OPENSSL_SYS_NETWARE
-end_ifdef
-
-begin_comment
-comment|/* Rename these functions to avoid name clashes on NetWare OS */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|uni2asc
-value|OPENSSL_uni2asc
-end_define
-
-begin_define
-define|#
-directive|define
-name|asc2uni
-value|OPENSSL_asc2uni
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* Add a local keyid to a safebag */
 end_comment
@@ -461,7 +432,7 @@ return|return
 name|NULL
 return|;
 return|return
-name|uni2asc
+name|OPENSSL_uni2asc
 argument_list|(
 name|atype
 operator|->

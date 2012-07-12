@@ -55,6 +55,7 @@ end_include
 
 begin_function_decl
 specifier|static
+specifier|const
 name|SSL_METHOD
 modifier|*
 name|ssl2_get_client_method
@@ -186,6 +187,7 @@ end_define
 
 begin_function
 specifier|static
+specifier|const
 name|SSL_METHOD
 modifier|*
 name|ssl2_get_client_method
@@ -2586,6 +2588,10 @@ operator|&
 name|md
 argument_list|,
 name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 block|{
@@ -3816,7 +3822,7 @@ operator|)
 name|cert_ch_len
 argument_list|)
 expr_stmt|;
-name|n
+name|i
 operator|=
 name|i2d_X509
 argument_list|(
@@ -3834,6 +3840,13 @@ operator|&
 name|p
 argument_list|)
 expr_stmt|;
+comment|/* Don't update the signature if it fails - FIXME: probably should handle this better */
+if|if
+condition|(
+name|i
+operator|>
+literal|0
+condition|)
 name|EVP_SignUpdate
 argument_list|(
 operator|&
@@ -3845,7 +3858,7 @@ operator|(
 name|unsigned
 name|int
 operator|)
-name|n
+name|i
 argument_list|)
 expr_stmt|;
 name|p

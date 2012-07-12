@@ -1365,6 +1365,9 @@ argument_list|(
 name|out
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_EC2M
 name|message
 argument_list|(
 name|out
@@ -1613,6 +1616,8 @@ argument_list|(
 name|out
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|BN_CTX_free
 argument_list|(
 name|ctx
@@ -2675,7 +2680,7 @@ name|BIO_printf
 argument_list|(
 name|bp
 argument_list|,
-literal|"%lX"
+name|BN_HEX_FMT1
 argument_list|,
 name|w
 argument_list|)
@@ -4074,6 +4079,15 @@ operator|=
 name|BN_MONT_CTX_new
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|mont
+operator|==
+name|NULL
+condition|)
+return|return
+literal|0
+return|;
 name|BN_bntest_rand
 argument_list|(
 operator|&
@@ -5977,6 +5991,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_EC2M
+end_ifndef
+
 begin_function
 name|int
 name|test_gf2m_add
@@ -6233,7 +6253,6 @@ name|ret
 init|=
 literal|0
 decl_stmt|;
-name|unsigned
 name|int
 name|p0
 index|[]
@@ -6248,9 +6267,11 @@ block|,
 literal|3
 block|,
 literal|0
+block|,
+operator|-
+literal|1
 block|}
 decl_stmt|;
-name|unsigned
 name|int
 name|p1
 index|[]
@@ -6261,6 +6282,9 @@ block|,
 literal|15
 block|,
 literal|0
+block|,
+operator|-
+literal|1
 block|}
 decl_stmt|;
 name|a
@@ -6519,7 +6543,6 @@ name|ret
 init|=
 literal|0
 decl_stmt|;
-name|unsigned
 name|int
 name|p0
 index|[]
@@ -6534,9 +6557,11 @@ block|,
 literal|3
 block|,
 literal|0
+block|,
+operator|-
+literal|1
 block|}
 decl_stmt|;
-name|unsigned
 name|int
 name|p1
 index|[]
@@ -6547,6 +6572,9 @@ block|,
 literal|15
 block|,
 literal|0
+block|,
+operator|-
+literal|1
 block|}
 decl_stmt|;
 name|a
@@ -6887,7 +6915,6 @@ name|ret
 init|=
 literal|0
 decl_stmt|;
-name|unsigned
 name|int
 name|p0
 index|[]
@@ -6902,9 +6929,11 @@ block|,
 literal|3
 block|,
 literal|0
+block|,
+operator|-
+literal|1
 block|}
 decl_stmt|;
-name|unsigned
 name|int
 name|p1
 index|[]
@@ -6915,6 +6944,9 @@ block|,
 literal|15
 block|,
 literal|0
+block|,
+operator|-
+literal|1
 block|}
 decl_stmt|;
 name|a
@@ -7164,7 +7196,6 @@ name|ret
 init|=
 literal|0
 decl_stmt|;
-name|unsigned
 name|int
 name|p0
 index|[]
@@ -7179,9 +7210,11 @@ block|,
 literal|3
 block|,
 literal|0
+block|,
+operator|-
+literal|1
 block|}
 decl_stmt|;
-name|unsigned
 name|int
 name|p1
 index|[]
@@ -7192,6 +7225,9 @@ block|,
 literal|15
 block|,
 literal|0
+block|,
+operator|-
+literal|1
 block|}
 decl_stmt|;
 name|a
@@ -7431,7 +7467,6 @@ name|ret
 init|=
 literal|0
 decl_stmt|;
-name|unsigned
 name|int
 name|p0
 index|[]
@@ -7446,9 +7481,11 @@ block|,
 literal|3
 block|,
 literal|0
+block|,
+operator|-
+literal|1
 block|}
 decl_stmt|;
-name|unsigned
 name|int
 name|p1
 index|[]
@@ -7459,6 +7496,9 @@ block|,
 literal|15
 block|,
 literal|0
+block|,
+operator|-
+literal|1
 block|}
 decl_stmt|;
 name|a
@@ -7747,7 +7787,6 @@ name|ret
 init|=
 literal|0
 decl_stmt|;
-name|unsigned
 name|int
 name|p0
 index|[]
@@ -7762,9 +7801,11 @@ block|,
 literal|3
 block|,
 literal|0
+block|,
+operator|-
+literal|1
 block|}
 decl_stmt|;
-name|unsigned
 name|int
 name|p1
 index|[]
@@ -7775,6 +7816,9 @@ block|,
 literal|15
 block|,
 literal|0
+block|,
+operator|-
+literal|1
 block|}
 decl_stmt|;
 name|a
@@ -8108,7 +8152,6 @@ name|ret
 init|=
 literal|0
 decl_stmt|;
-name|unsigned
 name|int
 name|p0
 index|[]
@@ -8123,9 +8166,11 @@ block|,
 literal|3
 block|,
 literal|0
+block|,
+operator|-
+literal|1
 block|}
 decl_stmt|;
-name|unsigned
 name|int
 name|p1
 index|[]
@@ -8136,6 +8181,9 @@ block|,
 literal|15
 block|,
 literal|0
+block|,
+operator|-
+literal|1
 block|}
 decl_stmt|;
 name|a
@@ -8417,7 +8465,6 @@ name|ret
 init|=
 literal|0
 decl_stmt|;
-name|unsigned
 name|int
 name|p0
 index|[]
@@ -8432,9 +8479,11 @@ block|,
 literal|3
 block|,
 literal|0
+block|,
+operator|-
+literal|1
 block|}
 decl_stmt|;
-name|unsigned
 name|int
 name|p1
 index|[]
@@ -8445,6 +8494,9 @@ block|,
 literal|15
 block|,
 literal|0
+block|,
+operator|-
+literal|1
 block|}
 decl_stmt|;
 name|a
@@ -8725,6 +8777,11 @@ name|ret
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static

@@ -213,6 +213,24 @@ block|,
 block|{
 name|ERR_FUNC
 argument_list|(
+name|ENGINE_F_ENGINE_GET_PKEY_ASN1_METH
+argument_list|)
+block|,
+literal|"ENGINE_get_pkey_asn1_meth"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|ENGINE_F_ENGINE_GET_PKEY_METH
+argument_list|)
+block|,
+literal|"ENGINE_get_pkey_meth"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
 name|ENGINE_F_ENGINE_GET_PREV
 argument_list|)
 block|,
@@ -764,6 +782,15 @@ name|ENGINE_R_UNIMPLEMENTED_DIGEST
 argument_list|)
 block|,
 literal|"unimplemented digest"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|ENGINE_R_UNIMPLEMENTED_PUBLIC_KEY_METHOD
+argument_list|)
+block|,
+literal|"unimplemented public key method"
 block|}
 block|,
 block|{
