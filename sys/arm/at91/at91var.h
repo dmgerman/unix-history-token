@@ -258,6 +258,12 @@ name|int
 modifier|*
 name|soc_irq_prio
 decl_stmt|;
+specifier|const
+name|struct
+name|cpu_devs
+modifier|*
+name|soc_children
+decl_stmt|;
 block|}
 struct|;
 end_struct
