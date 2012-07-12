@@ -253,6 +253,11 @@ decl_stmt|;
 name|cpu_reset_t
 name|soc_reset
 decl_stmt|;
+specifier|const
+name|int
+modifier|*
+name|soc_irq_prio
+decl_stmt|;
 block|}
 struct|;
 end_struct
