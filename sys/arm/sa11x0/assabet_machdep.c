@@ -435,14 +435,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|void
-modifier|*
-name|_end
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|vm_offset_t
 name|sa1110_uart_vaddr
 decl_stmt|;
@@ -452,14 +444,6 @@ begin_decl_stmt
 specifier|extern
 name|vm_offset_t
 name|sa1_cache_clean_addr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-modifier|*
-name|end
 decl_stmt|;
 end_decl_stmt
 
@@ -536,12 +520,6 @@ end_decl_stmt
 begin_decl_stmt
 name|vm_paddr_t
 name|physical_freestart
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|vm_offset_t
-name|physical_pages
 decl_stmt|;
 end_decl_stmt
 

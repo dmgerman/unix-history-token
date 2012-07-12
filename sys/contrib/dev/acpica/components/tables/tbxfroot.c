@@ -456,7 +456,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* A valid RSDP was not found */
-name|ACPI_ERROR
+name|ACPI_BIOS_ERROR
 argument_list|(
 operator|(
 name|AE_INFO

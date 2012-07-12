@@ -61,9 +61,6 @@ name|struct
 name|rman
 name|sc_mem_rman
 decl_stmt|;
-name|uint32_t
-name|sc_irq_system
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -153,6 +150,12 @@ begin_enum
 enum|enum
 name|at91_soc_subtype
 block|{
+name|AT91_ST_ANY
+init|=
+operator|-
+literal|1
+block|,
+comment|/* Match any type */
 name|AT91_ST_NONE
 init|=
 literal|0
@@ -242,6 +245,20 @@ end_typedef
 
 begin_struct
 struct|struct
+name|at91_soc_data
+block|{
+name|DELAY_t
+name|soc_delay
+decl_stmt|;
+name|cpu_reset_t
+name|soc_reset
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|at91_soc_info
 block|{
 name|enum
@@ -268,11 +285,10 @@ index|[
 name|AT91_SOC_NAME_MAX
 index|]
 decl_stmt|;
-name|DELAY_t
-name|delay
-decl_stmt|;
-name|cpu_reset_t
-name|reset
+name|struct
+name|at91_soc_data
+modifier|*
+name|soc_data
 decl_stmt|;
 block|}
 struct|;
@@ -282,7 +298,7 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|at91_soc_info
-name|soc_data
+name|soc_info
 decl_stmt|;
 end_decl_stmt
 
@@ -342,7 +358,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|soc_data
+name|soc_info
 operator|.
 name|type
 operator|==
@@ -363,7 +379,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|soc_data
+name|soc_info
 operator|.
 name|family
 operator|==
@@ -384,7 +400,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|soc_data
+name|soc_info
 operator|.
 name|family
 operator|==
@@ -406,7 +422,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|soc_data
+name|soc_info
 operator|.
 name|type
 operator|==
@@ -415,6 +431,42 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_function_decl
+name|void
+name|at91_add_child
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|int
+name|prio
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|int
+name|unit
+parameter_list|,
+name|bus_addr_t
+name|addr
+parameter_list|,
+name|bus_size_t
+name|size
+parameter_list|,
+name|int
+name|irq0
+parameter_list|,
+name|int
+name|irq1
+parameter_list|,
+name|int
+name|irq2
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|extern

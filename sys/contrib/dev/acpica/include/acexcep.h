@@ -61,6 +61,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|AE_CODE_MAX
+value|0x4000
+end_define
+
+begin_define
+define|#
+directive|define
 name|AE_CODE_MASK
 value|0xF000
 end_define
@@ -770,7 +777,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DEFINE_ACPI_GLOBALS
+name|ACPI_DEFINE_EXCEPTION_TABLE
 end_ifdef
 
 begin_comment
@@ -1024,7 +1031,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ACPI GLOBALS */
+comment|/* EXCEPTION_TABLE */
 end_comment
 
 begin_endif

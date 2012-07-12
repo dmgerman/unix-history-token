@@ -180,7 +180,7 @@ end_decl_stmt
 begin_function_decl
 specifier|static
 name|unsigned
-name|at91pit_get_timecount
+name|at91_pit_get_timecount
 parameter_list|(
 name|struct
 name|timecounter
@@ -265,9 +265,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
-name|at91pit_delay
+name|at91_pit_delay
 parameter_list|(
 name|int
 name|us
@@ -391,10 +390,10 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|timecounter
-name|at91pit_timecounter
+name|at91_pit_timecounter
 init|=
 block|{
-name|at91pit_get_timecount
+name|at91_pit_get_timecount
 block|,
 comment|/* get_timecount */
 name|NULL
@@ -420,7 +419,7 @@ end_decl_stmt
 begin_function
 specifier|static
 name|int
-name|at91pit_probe
+name|at91_pit_probe
 parameter_list|(
 name|device_t
 name|dev
@@ -444,7 +443,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|at91pit_attach
+name|at91_pit_attach
 parameter_list|(
 name|device_t
 name|dev
@@ -595,7 +594,7 @@ operator|&
 name|ih
 argument_list|)
 expr_stmt|;
-name|at91pit_timecounter
+name|at91_pit_timecounter
 operator|.
 name|tc_frequency
 operator|=
@@ -606,7 +605,7 @@ expr_stmt|;
 name|tc_init
 argument_list|(
 operator|&
-name|at91pit_timecounter
+name|at91_pit_timecounter
 argument_list|)
 expr_stmt|;
 comment|/* Enable the PIT here. */
@@ -630,12 +629,6 @@ operator||
 name|PIT_IEN
 argument_list|)
 expr_stmt|;
-name|soc_data
-operator|.
-name|delay
-operator|=
-name|at91pit_delay
-expr_stmt|;
 name|out
 label|:
 return|return
@@ -649,7 +642,7 @@ end_function
 begin_decl_stmt
 specifier|static
 name|device_method_t
-name|at91pit_methods
+name|at91_pit_methods
 index|[]
 init|=
 block|{
@@ -657,14 +650,14 @@ name|DEVMETHOD
 argument_list|(
 name|device_probe
 argument_list|,
-name|at91pit_probe
+name|at91_pit_probe
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|device_attach
 argument_list|,
-name|at91pit_attach
+name|at91_pit_attach
 argument_list|)
 block|,
 name|DEVMETHOD_END
@@ -675,12 +668,12 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|driver_t
-name|at91pit_driver
+name|at91_pit_driver
 init|=
 block|{
 literal|"at91_pit"
 block|,
-name|at91pit_methods
+name|at91_pit_methods
 block|,
 sizeof|sizeof
 argument_list|(
@@ -694,7 +687,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|devclass_t
-name|at91pit_devclass
+name|at91_pit_devclass
 decl_stmt|;
 end_decl_stmt
 
@@ -705,9 +698,9 @@ name|at91_pit
 argument_list|,
 name|atmelarm
 argument_list|,
-name|at91pit_driver
+name|at91_pit_driver
 argument_list|,
-name|at91pit_devclass
+name|at91_pit_devclass
 argument_list|,
 name|NULL
 argument_list|,
@@ -804,7 +797,7 @@ end_function
 begin_function
 specifier|static
 name|unsigned
-name|at91pit_get_timecount
+name|at91_pit_get_timecount
 parameter_list|(
 name|struct
 name|timecounter

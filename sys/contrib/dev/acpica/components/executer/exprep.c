@@ -790,7 +790,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExPrepFieldValue  *  * PARAMETERS:  Info    - Contains all field creation info  *  * RETURN:      Status  *  * DESCRIPTION: Construct an ACPI_OPERAND_OBJECT of type DefField and  *              connect it to the parent Node.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExPrepFieldValue  *  * PARAMETERS:  Info    - Contains all field creation info  *  * RETURN:      Status  *  * DESCRIPTION: Construct an object of type ACPI_OPERAND_OBJECT with a  *              subtype of DefField and connect it to the parent Node.  *  ******************************************************************************/
 end_comment
 
 begin_function

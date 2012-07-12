@@ -576,12 +576,13 @@ condition|(
 name|Checksum
 condition|)
 block|{
-name|ACPI_WARNING
+name|ACPI_BIOS_WARNING
 argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Incorrect checksum in table [%4.4s] - 0x%2.2X, should be 0x%2.2X"
+literal|"Incorrect checksum in table [%4.4s] - 0x%2.2X, "
+literal|"should be 0x%2.2X"
 operator|,
 name|Table
 operator|->
@@ -714,12 +715,13 @@ operator|->
 name|Checksum
 condition|)
 block|{
-name|ACPI_ERROR
+name|ACPI_BIOS_ERROR
 argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"The DSDT has been corrupted or replaced - old, new headers below"
+literal|"The DSDT has been corrupted or replaced - "
+literal|"old, new headers below"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -964,75 +966,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Skip SSDT when DSDT is overriden */
-if|if
-condition|(
-name|ACPI_COMPARE_NAME
-argument_list|(
-name|Table
-operator|->
-name|Signature
-argument_list|,
-name|ACPI_SIG_SSDT
-argument_list|)
-operator|&&
-operator|(
-name|AcpiGbl_RootTableList
-operator|.
-name|Tables
-index|[
-name|ACPI_TABLE_INDEX_DSDT
-index|]
-operator|.
-name|Flags
-operator|&
-name|ACPI_TABLE_ORIGIN_OVERRIDE
-operator|)
-condition|)
-block|{
-name|ACPI_INFO
-argument_list|(
-operator|(
-name|AE_INFO
-operator|,
-literal|"%4.4s @ 0x%p Table override, replaced with:"
-operator|,
-name|ACPI_SIG_SSDT
-operator|,
-name|ACPI_CAST_PTR
-argument_list|(
-name|void
-argument_list|,
-name|Address
-argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
-name|AcpiTbPrintTableHeader
-argument_list|(
-name|AcpiGbl_RootTableList
-operator|.
-name|Tables
-index|[
-name|ACPI_TABLE_INDEX_DSDT
-index|]
-operator|.
-name|Address
-argument_list|,
-name|AcpiGbl_RootTableList
-operator|.
-name|Tables
-index|[
-name|ACPI_TABLE_INDEX_DSDT
-index|]
-operator|.
-name|Pointer
-argument_list|)
-expr_stmt|;
-goto|goto
-name|UnmapAndExit
-goto|;
-block|}
 comment|/* If a particular signature is expected (DSDT/FACS), it must match */
 if|if
 condition|(
@@ -1049,7 +982,7 @@ name|Signature
 argument_list|)
 condition|)
 block|{
-name|ACPI_ERROR
+name|ACPI_BIOS_ERROR
 argument_list|(
 operator|(
 name|AE_INFO
@@ -1124,6 +1057,62 @@ operator|->
 name|Signature
 argument_list|)
 expr_stmt|;
+comment|/* When DSDT is overriden, assume SSDT is also overriden with it */
+if|if
+condition|(
+name|ACPI_COMPARE_NAME
+argument_list|(
+name|Table
+operator|->
+name|Signature
+argument_list|,
+name|ACPI_SIG_SSDT
+argument_list|)
+operator|&&
+operator|(
+name|AcpiGbl_RootTableList
+operator|.
+name|Tables
+index|[
+name|ACPI_TABLE_INDEX_DSDT
+index|]
+operator|.
+name|Flags
+operator|&
+name|ACPI_TABLE_ORIGIN_OVERRIDE
+operator|)
+condition|)
+block|{
+name|TableDesc
+operator|->
+name|Flags
+operator|=
+name|ACPI_TABLE_ORIGIN_OVERRIDE
+expr_stmt|;
+name|ACPI_INFO
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+literal|"%4.4s %p Logical table override, replaced with %4.4s"
+operator|,
+name|ACPI_SIG_SSDT
+operator|,
+name|ACPI_CAST_PTR
+argument_list|(
+name|void
+argument_list|,
+name|Address
+argument_list|)
+operator|,
+name|ACPI_SIG_DSDT
+operator|)
+argument_list|)
+expr_stmt|;
+goto|goto
+name|UnmapAndExit
+goto|;
+block|}
 comment|/*      * ACPI Table Override:      *      * Before we install the table, let the host OS override it with a new      * one if desired. Any table within the RSDT/XSDT can be replaced,      * including the DSDT which is pointed to by the FADT.      *      * NOTE: If the table is overridden, then FinalTable will contain a      * mapped pointer to the full new table. If the table is not overridden,      * or if there has been a physical override, then the table will be      * fully mapped later (in verify table). In any case, we must      * unmap the header that was mapped above.      */
 name|FinalTable
 operator|=
@@ -1274,7 +1263,7 @@ name|ACPI_UINT32_MAX
 condition|)
 block|{
 comment|/* Will truncate 64-bit address to 32 bits, issue warning */
-name|ACPI_WARNING
+name|ACPI_BIOS_WARNING
 argument_list|(
 operator|(
 name|AE_INFO
@@ -1512,12 +1501,12 @@ name|ACPI_TABLE_HEADER
 argument_list|)
 condition|)
 block|{
-name|ACPI_ERROR
+name|ACPI_BIOS_ERROR
 argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Invalid length 0x%X in RSDT/XSDT"
+literal|"Invalid table length 0x%X in RSDT/XSDT"
 operator|,
 name|Length
 operator|)

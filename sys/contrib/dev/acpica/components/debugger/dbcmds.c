@@ -530,6 +530,12 @@ decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
+comment|/* Header */
+name|AcpiOsPrintf
+argument_list|(
+literal|"Idx ID Status    Type            Sig  Address  Len   Header\n"
+argument_list|)
+expr_stmt|;
 comment|/* Walk the entire root table list */
 for|for
 control|(
@@ -557,13 +563,98 @@ index|[
 name|i
 index|]
 expr_stmt|;
+comment|/* Index and Table ID */
 name|AcpiOsPrintf
 argument_list|(
-literal|"%u "
+literal|"%3u %.2u "
 argument_list|,
 name|i
+argument_list|,
+name|TableDesc
+operator|->
+name|OwnerId
 argument_list|)
 expr_stmt|;
+comment|/* Decode the table flags */
+if|if
+condition|(
+operator|!
+operator|(
+name|TableDesc
+operator|->
+name|Flags
+operator|&
+name|ACPI_TABLE_IS_LOADED
+operator|)
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"NotLoaded "
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"   Loaded "
+argument_list|)
+expr_stmt|;
+block|}
+switch|switch
+condition|(
+name|TableDesc
+operator|->
+name|Flags
+operator|&
+name|ACPI_TABLE_ORIGIN_MASK
+condition|)
+block|{
+case|case
+name|ACPI_TABLE_ORIGIN_UNKNOWN
+case|:
+name|AcpiOsPrintf
+argument_list|(
+literal|"Unknown   "
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_TABLE_ORIGIN_MAPPED
+case|:
+name|AcpiOsPrintf
+argument_list|(
+literal|"Mapped    "
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_TABLE_ORIGIN_ALLOCATED
+case|:
+name|AcpiOsPrintf
+argument_list|(
+literal|"Allocated "
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_TABLE_ORIGIN_OVERRIDE
+case|:
+name|AcpiOsPrintf
+argument_list|(
+literal|"Override  "
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|AcpiOsPrintf
+argument_list|(
+literal|"INVALID   "
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 comment|/* Make sure that the table is mapped */
 name|Status
 operator|=
@@ -626,7 +717,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbUnloadAcpiTable  *  * PARAMETERS:  TableArg        - Name of the table to be unloaded  *              InstanceArg     - Which instance of the table to unload (if  *                                there are multiple tables of the same type)  *  * RETURN:      Nonde  *  * DESCRIPTION: Unload an ACPI table.  *              Instance is not implemented  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbUnloadAcpiTable  *  * PARAMETERS:  ObjectName          - Namespace pathname for an object that  *                                    is owned by the table to be unloaded  *  * RETURN:      None  *  * DESCRIPTION: Unload an ACPI table, via any namespace node that is owned  *              by the table.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -635,24 +726,84 @@ name|AcpiDbUnloadAcpiTable
 parameter_list|(
 name|char
 modifier|*
-name|TableArg
-parameter_list|,
-name|char
-modifier|*
-name|InstanceArg
+name|ObjectName
 parameter_list|)
 block|{
-comment|/* TBD: Need to reimplement for new data structures */
-if|#
-directive|if
-literal|0
-block|UINT32                  i;     ACPI_STATUS             Status;
-comment|/* Search all tables for the target type */
-block|for (i = 0; i< (ACPI_TABLE_ID_MAX+1); i++)     {         if (!ACPI_STRNCMP (TableArg, AcpiGbl_TableData[i].Signature,                 AcpiGbl_TableData[i].SigLength))         {
-comment|/* Found the table, unload it */
-block|Status = AcpiUnloadTable (i);             if (ACPI_SUCCESS (Status))             {                 AcpiOsPrintf ("[%s] unloaded and uninstalled\n", TableArg);             }             else             {                 AcpiOsPrintf ("%s, while unloading [%s]\n",                     AcpiFormatException (Status), TableArg);             }              return;         }     }      AcpiOsPrintf ("Unknown table type [%s]\n", TableArg);
-endif|#
-directive|endif
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|Node
+decl_stmt|;
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
+comment|/* Translate name to an Named object */
+name|Node
+operator|=
+name|AcpiDbConvertToNode
+argument_list|(
+name|ObjectName
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Node
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"Could not find [%s] in namespace\n"
+argument_list|,
+name|ObjectName
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|Status
+operator|=
+name|AcpiUnloadParentTable
+argument_list|(
+name|ACPI_CAST_PTR
+argument_list|(
+name|ACPI_HANDLE
+argument_list|,
+name|Node
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_SUCCESS
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"Parent of [%s] (%p) unloaded and uninstalled\n"
+argument_list|,
+name|ObjectName
+argument_list|,
+name|Node
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"%s, while unloading parent table of [%s]\n"
+argument_list|,
+name|AcpiFormatException
+argument_list|(
+name|Status
+argument_list|)
+argument_list|,
+name|ObjectName
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 

@@ -6299,7 +6299,7 @@ operator|==
 name|OBJT_SWAP
 condition|)
 block|{
-comment|/* 				 * swap_pager_copy() can sleep, in which case 				 * the backing_object's and object's locks are 				 * released and reacquired. 				 */
+comment|/* 				 * swap_pager_copy() can sleep, in which case 				 * the backing_object's and object's locks are 				 * released and reacquired. 				 * Since swap_pager_copy() is being asked to 				 * destroy the source, it will change the 				 * backing_object's type to OBJT_DEFAULT. 				 */
 name|swap_pager_copy
 argument_list|(
 name|backing_object

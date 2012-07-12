@@ -2529,6 +2529,9 @@ modifier|*
 name|td2
 init|=
 name|NULL
+decl_stmt|,
+modifier|*
+name|td3
 decl_stmt|;
 name|struct
 name|ptrace_io_desc
@@ -3695,18 +3698,12 @@ operator|==
 name|PT_DETACH
 condition|)
 block|{
-name|struct
-name|thread
-modifier|*
-name|td3
-decl_stmt|;
 name|FOREACH_THREAD_IN_PROC
 argument_list|(
 argument|p
 argument_list|,
 argument|td3
 argument_list|)
-block|{
 name|td3
 operator|->
 name|td_dbgflags
@@ -3714,7 +3711,6 @@ operator|&=
 operator|~
 name|TDB_SUSPEND
 expr_stmt|;
-block|}
 block|}
 comment|/* 			 * unsuspend all threads, to not let a thread run, 			 * you should use PT_SUSPEND to suspend it before 			 * continuing process. 			 */
 name|PROC_SLOCK
@@ -3743,6 +3739,19 @@ expr_stmt|;
 name|PROC_SUNLOCK
 argument_list|(
 name|p
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|req
+operator|==
+name|PT_ATTACH
+condition|)
+name|kern_psignal
+argument_list|(
+name|p
+argument_list|,
+name|data
 argument_list|)
 expr_stmt|;
 block|}

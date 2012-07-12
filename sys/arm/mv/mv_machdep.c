@@ -435,26 +435,6 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DDB
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|vm_offset_t
-name|ksym_start
-decl_stmt|,
-name|ksym_end
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|extern
 name|u_int
@@ -480,14 +460,6 @@ begin_decl_stmt
 specifier|extern
 name|vm_offset_t
 name|pmap_bootstrap_lastaddr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-modifier|*
-name|end
 decl_stmt|;
 end_decl_stmt
 
@@ -538,12 +510,6 @@ name|dump_avail
 index|[
 literal|4
 index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|vm_offset_t
-name|physical_pages
 decl_stmt|;
 end_decl_stmt
 

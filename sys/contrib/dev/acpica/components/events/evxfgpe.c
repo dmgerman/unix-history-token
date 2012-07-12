@@ -80,7 +80,7 @@ name|Status
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-name|AcpiUpdateGpes
+name|AcpiUpdateAllGpes
 argument_list|)
 expr_stmt|;
 name|Status
@@ -484,10 +484,11 @@ name|DeviceNode
 decl_stmt|;
 name|ACPI_GPE_NOTIFY_INFO
 modifier|*
-name|NewNotify
-decl_stmt|,
-modifier|*
 name|Notify
+decl_stmt|;
+name|ACPI_GPE_NOTIFY_INFO
+modifier|*
+name|NewNotify
 decl_stmt|;
 name|ACPI_CPU_FLAGS
 name|Flags
@@ -552,6 +553,7 @@ name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
 block|}
+comment|/*      * Allocate a new notify object up front, in case it is needed.      * Memory allocation while holding a spinlock is a big no-no      * on some hosts.      */
 name|NewNotify
 operator|=
 name|ACPI_ALLOCATE_ZEROED
@@ -733,6 +735,7 @@ argument_list|,
 name|Flags
 argument_list|)
 expr_stmt|;
+comment|/* Delete the notify object if it was not used above */
 if|if
 condition|(
 name|NewNotify

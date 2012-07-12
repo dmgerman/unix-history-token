@@ -240,7 +240,7 @@ name|bas
 operator|.
 name|bsh
 operator|=
-name|AT91RM92_BASE
+name|AT91_BASE
 operator|+
 name|AT91RM92_DBGU_BASE
 expr_stmt|;

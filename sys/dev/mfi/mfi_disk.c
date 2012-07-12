@@ -1361,6 +1361,14 @@ operator|&
 name|BIO_ERROR
 condition|)
 block|{
+name|bio
+operator|->
+name|bio_resid
+operator|=
+name|bio
+operator|->
+name|bio_bcount
+expr_stmt|;
 if|if
 condition|(
 name|bio

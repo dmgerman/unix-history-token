@@ -468,14 +468,41 @@ init|=
 literal|75
 block|,
 comment|/* DMA FIFO support */
+name|HAL_CAP_NUM_TXMAPS
+init|=
+literal|76
+block|,
+comment|/* Number of buffers in a transmit descriptor */
+name|HAL_CAP_TXDESCLEN
+init|=
+literal|77
+block|,
+comment|/* Length of transmit descriptor */
+name|HAL_CAP_TXSTATUSLEN
+init|=
+literal|78
+block|,
+comment|/* Length of transmit status descriptor */
+name|HAL_CAP_RXSTATUSLEN
+init|=
+literal|79
+block|,
+comment|/* Length of transmit status descriptor */
+name|HAL_CAP_RXFIFODEPTH
+init|=
+literal|80
+block|,
+comment|/* Receive hardware FIFO depth */
 name|HAL_CAP_RXBUFSIZE
 init|=
 literal|81
 block|,
+comment|/* Receive Buffer Length */
 name|HAL_CAP_NUM_MR_RETRIES
 init|=
 literal|82
 block|,
+comment|/* limit on multirate retries */
 name|HAL_CAP_OL_PWRCTRL
 init|=
 literal|84
@@ -660,7 +687,7 @@ block|,
 comment|/* high priority recv queue */
 name|HAL_RX_QUEUE_LP
 init|=
-literal|0
+literal|1
 block|,
 comment|/* low priority recv queue */
 block|}
@@ -1090,6 +1117,21 @@ comment|/* Non-common mapping */
 name|HAL_INT_RXDESC
 init|=
 literal|0x00000002
+block|,
+comment|/* Legacy mapping */
+name|HAL_INT_RXHP
+init|=
+literal|0x00000001
+block|,
+comment|/* EDMA */
+name|HAL_INT_RXLP
+init|=
+literal|0x00000002
+block|,
+comment|/* EDMA */
+name|HAL_INT_RXERR
+init|=
+literal|0x00000004
 block|,
 name|HAL_INT_RXNOFRM
 init|=
@@ -3553,6 +3595,8 @@ parameter_list|(
 name|struct
 name|ath_hal
 modifier|*
+parameter_list|,
+name|HAL_RX_QUEUE
 parameter_list|)
 function_decl|;
 name|void
@@ -3568,6 +3612,8 @@ modifier|*
 parameter_list|,
 name|uint32_t
 name|rxdp
+parameter_list|,
+name|HAL_RX_QUEUE
 parameter_list|)
 function_decl|;
 name|void

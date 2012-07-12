@@ -243,12 +243,6 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|ACPI_DEBUG_OUTPUT
-end_define
-
-begin_define
-define|#
-directive|define
 name|ACPI_APPLICATION
 end_define
 
@@ -256,6 +250,12 @@ begin_define
 define|#
 directive|define
 name|ACPI_SINGLE_THREADED
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_NO_ERROR_MESSAGES
 end_define
 
 begin_endif

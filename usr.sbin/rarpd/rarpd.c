@@ -45,7 +45,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * rarpd - Reverse ARP Daemon  *  * Usage:	rarpd -a [-dfsv] [-t directory] [hostname]  *		rarpd [-dfsv] [-t directory] interface [hostname]  *  * 'hostname' is optional solely for backwards compatibility with Sun's rarpd.  * Currently, the argument is ignored.  */
+comment|/*  * rarpd - Reverse ARP Daemon  *  * Usage:	rarpd -a [-dfsv] [-t directory] [-P pidfile] [hostname]  *		rarpd [-dfsv] [-t directory] [-P pidfile] interface [hostname]  *  * 'hostname' is optional solely for backwards compatibility with Sun's rarpd.  * Currently, the argument is ignored.  */
 end_comment
 
 begin_include
@@ -190,6 +190,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<libutil.h>
 end_include
 
 begin_comment
@@ -354,6 +360,40 @@ name|zero
 index|[
 literal|6
 index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|pidfile_buf
+index|[
+name|PATH_MAX
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|pidfile
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|RARPD_PIDFILE
+value|"/var/run/rarpd.%s.pid"
+end_define
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|pidfh
+modifier|*
+name|pidfile_fh
 decl_stmt|;
 end_decl_stmt
 
@@ -692,7 +732,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"adfst:v"
+literal|"adfsP:t:v"
 argument_list|)
 operator|)
 operator|!=
@@ -730,6 +770,40 @@ literal|'s'
 case|:
 operator|++
 name|sflag
+expr_stmt|;
+break|break;
+case|case
+literal|'P'
+case|:
+name|strncpy
+argument_list|(
+name|pidfile_buf
+argument_list|,
+name|optarg
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|pidfile_buf
+argument_list|)
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|pidfile_buf
+index|[
+sizeof|sizeof
+argument_list|(
+name|pidfile_buf
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+name|pidfile
+operator|=
+name|pidfile_buf
 expr_stmt|;
 break|break;
 case|case
@@ -809,6 +883,89 @@ condition|)
 block|{
 if|if
 condition|(
+name|pidfile
+operator|==
+name|NULL
+operator|&&
+name|ifname
+operator|!=
+name|NULL
+operator|&&
+name|aflag
+operator|==
+literal|0
+condition|)
+block|{
+name|snprintf
+argument_list|(
+name|pidfile_buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|pidfile_buf
+argument_list|)
+operator|-
+literal|1
+argument_list|,
+name|RARPD_PIDFILE
+argument_list|,
+name|ifname
+argument_list|)
+expr_stmt|;
+name|pidfile_buf
+index|[
+sizeof|sizeof
+argument_list|(
+name|pidfile_buf
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+name|pidfile
+operator|=
+name|pidfile_buf
+expr_stmt|;
+block|}
+comment|/* If pidfile == NULL, /var/run/<progname>.pid will be used. */
+name|pidfile_fh
+operator|=
+name|pidfile_open
+argument_list|(
+name|pidfile
+argument_list|,
+literal|0600
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pidfile_fh
+operator|==
+name|NULL
+condition|)
+name|logmsg
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"Cannot open or create pidfile: %s"
+argument_list|,
+operator|(
+name|pidfile
+operator|==
+name|NULL
+operator|)
+condition|?
+literal|"/var/run/rarpd.pid"
+else|:
+name|pidfile
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|daemon
 argument_list|(
 literal|0
@@ -824,12 +981,22 @@ argument_list|,
 literal|"cannot fork"
 argument_list|)
 expr_stmt|;
+name|pidfile_remove
+argument_list|(
+name|pidfile_fh
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|pidfile_write
+argument_list|(
+name|pidfile_fh
+argument_list|)
+expr_stmt|;
 block|}
 name|rarp_loop
 argument_list|()
@@ -1034,6 +1201,11 @@ argument_list|,
 literal|"malloc: %m"
 argument_list|)
 expr_stmt|;
+name|pidfile_remove
+argument_list|(
+name|pidfile_fh
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 literal|1
@@ -1129,6 +1301,11 @@ argument_list|(
 name|LOG_ERR
 argument_list|,
 literal|"malloc: %m"
+argument_list|)
+expr_stmt|;
+name|pidfile_remove
+argument_list|(
+name|pidfile_fh
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1263,14 +1440,19 @@ name|ifa
 operator|->
 name|ifa_addr
 expr_stmt|;
-if|if
+switch|switch
 condition|(
 name|ll
 operator|->
 name|sdl_type
-operator|==
-name|IFT_ETHER
 condition|)
+block|{
+case|case
+name|IFT_ETHER
+case|:
+case|case
+name|IFT_L2VLAN
+case|:
 name|bcopy
 argument_list|(
 name|LLADDR
@@ -1285,6 +1467,7 @@ argument_list|,
 literal|6
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 block|}
 block|}
@@ -1344,6 +1527,11 @@ argument_list|(
 name|LOG_ERR
 argument_list|,
 literal|"getifaddrs: %m"
+argument_list|)
+expr_stmt|;
+name|pidfile_remove
+argument_list|(
+name|pidfile_fh
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1579,9 +1767,9 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: rarpd -a [-dfsv] [-t directory]"
+literal|"usage: rarpd -a [-dfsv] [-t directory] [-P pidfile]"
 argument_list|,
-literal|"       rarpd [-dfsv] [-t directory] interface"
+literal|"       rarpd [-dfsv] [-t directory] [-P pidfile] interface"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1671,6 +1859,11 @@ argument_list|,
 literal|"%s: %m"
 argument_list|,
 name|device
+argument_list|)
+expr_stmt|;
+name|pidfile_remove
+argument_list|(
+name|pidfile_fh
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1853,11 +2046,9 @@ argument_list|,
 literal|"BIOCIMMEDIATE: %m"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
+goto|goto
+name|rarp_open_err
+goto|;
 block|}
 name|strlcpy
 argument_list|(
@@ -1901,11 +2092,9 @@ argument_list|,
 literal|"BIOCSETIF: %m"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
+goto|goto
+name|rarp_open_err
+goto|;
 block|}
 comment|/* 	 * Check that the data link layer is an Ethernet; this code won't 	 * work with anything else. 	 */
 if|if
@@ -1934,11 +2123,9 @@ argument_list|,
 literal|"BIOCGDLT: %m"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
+goto|goto
+name|rarp_open_err
+goto|;
 block|}
 if|if
 condition|(
@@ -1956,11 +2143,9 @@ argument_list|,
 name|device
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
+goto|goto
+name|rarp_open_err
+goto|;
 block|}
 comment|/* 	 * Set filter program. 	 */
 if|if
@@ -1989,15 +2174,25 @@ argument_list|,
 literal|"BIOCSETF: %m"
 argument_list|)
 expr_stmt|;
+goto|goto
+name|rarp_open_err
+goto|;
+block|}
+return|return
+name|fd
+return|;
+name|rarp_open_err
+label|:
+name|pidfile_remove
+argument_list|(
+name|pidfile_fh
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
-return|return
-name|fd
-return|;
 block|}
 end_function
 
@@ -2302,11 +2497,9 @@ argument_list|,
 literal|"no interfaces"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
+goto|goto
+name|rarpd_loop_err
+goto|;
 block|}
 if|if
 condition|(
@@ -2336,11 +2529,9 @@ argument_list|,
 literal|"BIOCGBLEN: %m"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
+goto|goto
+name|rarpd_loop_err
+goto|;
 block|}
 name|buf
 operator|=
@@ -2363,11 +2554,9 @@ argument_list|,
 literal|"malloc: %m"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
+goto|goto
+name|rarpd_loop_err
+goto|;
 block|}
 while|while
 condition|(
@@ -2464,11 +2653,9 @@ argument_list|,
 literal|"select: %m"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
+goto|goto
+name|rarpd_loop_err
+goto|;
 block|}
 for|for
 control|(
@@ -2617,6 +2804,19 @@ block|}
 undef|#
 directive|undef
 name|bhp
+return|return;
+name|rarpd_loop_err
+label|:
+name|pidfile_remove
+argument_list|(
+name|pidfile_fh
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2711,11 +2911,9 @@ argument_list|,
 name|tftp_dir
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
+goto|goto
+name|rarp_bootable_err
+goto|;
 block|}
 name|d
 operator|=
@@ -2738,11 +2936,9 @@ argument_list|,
 literal|"opendir: %m"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
+goto|goto
+name|rarp_bootable_err
+goto|;
 block|}
 name|dd
 operator|=
@@ -2783,6 +2979,18 @@ return|;
 return|return
 literal|0
 return|;
+name|rarp_bootable_err
+label|:
+name|pidfile_remove
+argument_list|(
+name|pidfile_fh
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -3249,6 +3457,11 @@ argument_list|(
 name|LOG_ERR
 argument_list|,
 literal|"raw route socket: %m"
+argument_list|)
+expr_stmt|;
+name|pidfile_remove
+argument_list|(
+name|pidfile_fh
 argument_list|)
 expr_stmt|;
 name|exit
