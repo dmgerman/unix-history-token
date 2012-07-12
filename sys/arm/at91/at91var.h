@@ -312,6 +312,9 @@ index|[
 name|AT91_SOC_NAME_MAX
 index|]
 decl_stmt|;
+name|uint32_t
+name|dbgu_base
+decl_stmt|;
 name|struct
 name|at91_soc_data
 modifier|*

@@ -233,16 +233,16 @@ operator|=
 operator|&
 name|at91_bs_tag
 expr_stmt|;
-comment|/* 	 * XXX: Not pretty, but will work because we map the needed addresses 	 * early. 	 */
+comment|/* 	 * XXX: Not pretty, but will work because we map the needed addresses 	 * early.  At least we probed this so that the console will work on          * all flavors of Atmel we can detect. 	 */
 name|di
 operator|->
 name|bas
 operator|.
 name|bsh
 operator|=
-name|AT91_BASE
-operator|+
-name|AT91RM92_DBGU_BASE
+name|soc_info
+operator|.
+name|dbgu_base
 expr_stmt|;
 name|di
 operator|->

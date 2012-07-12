@@ -1473,6 +1473,14 @@ operator|.
 name|subtype
 argument_list|)
 expr_stmt|;
+name|soc_info
+operator|.
+name|dbgu_base
+operator|=
+name|AT91_BASE
+operator|+
+name|dbgu_base
+expr_stmt|;
 return|return
 operator|(
 literal|1
