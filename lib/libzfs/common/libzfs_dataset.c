@@ -13702,7 +13702,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Destroys the given dataset.  The caller must make sure that the filesystem  * isn't mounted, and that there are no active dependents.  */
+comment|/*  * Destroys the given dataset.  The caller must make sure that the filesystem  * isn't mounted, and that there are no active dependents. If the file system  * does not exist this function does nothing.  */
 end_comment
 
 begin_function
@@ -13790,6 +13790,10 @@ name|zc
 argument_list|)
 operator|!=
 literal|0
+operator|&&
+name|errno
+operator|!=
+name|ENOENT
 condition|)
 block|{
 return|return

@@ -8,6 +8,10 @@ comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
+comment|/*  * Copyright 2012 Jason King.  All rights reserved.  * Use is subject to license terms.  */
+end_comment
+
+begin_comment
 comment|/*  * DWARF to tdata conversion  *  * For the most part, conversion is straightforward, proceeding in two passes.  * On the first pass, we iterate through every die, creating new type nodes as  * necessary.  Referenced tdesc_t's are created in an uninitialized state, thus  * allowing type reference pointers to be filled in.  If the tdesc_t  * corresponding to a given die can be completely filled out (sizes and offsets  * calculated, and so forth) without using any referenced types, the tdesc_t is  * marked as resolved.  Consider an array type.  If the type corresponding to  * the array contents has not yet been processed, we will create a blank tdesc  * for the contents type (only the type ID will be filled in, relying upon the  * later portion of the first pass to encounter and complete the referenced  * type).  We will then attempt to determine the size of the array.  If the  * array has a byte size attribute, we will have completely characterized the  * array type, and will be able to mark it as resolved.  The lack of a byte  * size attribute, on the other hand, will prevent us from fully resolving the  * type, as the size will only be calculable with reference to the contents  * type, which has not, as yet, been encountered.  The array type will thus be  * left without the resolved flag, and the first pass will continue.  *  * When we begin the second pass, we will have created tdesc_t nodes for every  * type in the section.  We will traverse the tree, from the iidescs down,  * processing each unresolved node.  As the referenced nodes will have been  * populated, the array type used in our example above will be able to use the  * size of the referenced types (if available) to determine its own type.  The  * traversal will be repeated until all types have been resolved or we have  * failed to make progress.  When all tdescs have been resolved, the conversion  * is complete.  *  * There are, as always, a few special cases that are handled during the first  * and second passes:  *  *  1. Empty enums - GCC will occasionally emit an enum without any members.  *     Later on in the file, it will emit the same enum type, though this time  *     with the full complement of members.  All references to the memberless  *     enum need to be redirected to the full definition.  During the first  *     pass, each enum is entered in dm_enumhash, along with a pointer to its  *     corresponding tdesc_t.  If, during the second pass, we encounter a  *     memberless enum, we use the hash to locate the full definition.  All  *     tdescs referencing the empty enum are then redirected.  *  *  2. Forward declarations - If the compiler sees a forward declaration for  *     a structure, followed by the definition of that structure, it will emit  *     DWARF data for both the forward declaration and the definition.  We need  *     to resolve the forward declarations when possible, by redirecting  *     forward-referencing tdescs to the actual struct/union definitions.  This  *     redirection is done completely within the first pass.  We begin by  *     recording all forward declarations in dw_fwdhash.  When we define a  *     structure, we check to see if there have been any corresponding forward  *     declarations.  If so, we redirect the tdescs which referenced the forward  *     declarations to the structure or union definition.  *  * XXX see if a post traverser will allow the elimination of repeated pass 2  * traversals.  */
 end_comment
 
@@ -1136,6 +1140,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * the following functions lookup the value of an attribute in a DIE:  *  * die_signed  * die_unsigned  * die_bool  * die_string  *  * They all take the same parameters (with the exception of valp which is  * a pointer to the type of the attribute we are looking up):  *  * dw - the dwarf object to look in  * die - the DIE we're interested in  * name - the name of the attribute to lookup  * valp - pointer to where the value of the attribute is placed  * req - if the value is required (0 / non-zero)  *  * If the attribute is not found, one of the following happens:  * - program terminates (req is non-zero)  * - function returns 0  *  * If the value is found, and in a form (class) we can handle, the function  * returns 1.  *  * Currently, we can only handle attribute values that are stored as  * constants (immediate value).  If an attribute has a form we cannot  * handle (for example VLAs may store the dimensions of the array  * as a DWARF expression that can compute it at runtime by reading  * values off the stack or other locations in memory), it is treated  * the same as if the attribute does not exist.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -1208,6 +1216,17 @@ operator|!=
 name|DW_DLV_OK
 condition|)
 block|{
+if|if
+condition|(
+name|req
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|terminate
 argument_list|(
 literal|"die %llu: failed to get signed (form 0x%x)\n"
@@ -1324,6 +1343,17 @@ operator|!=
 name|DW_DLV_OK
 condition|)
 block|{
+if|if
+condition|(
+name|req
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|terminate
 argument_list|(
 literal|"die %llu: failed to get unsigned (form 0x%x)\n"
@@ -1440,6 +1470,17 @@ operator|!=
 name|DW_DLV_OK
 condition|)
 block|{
+if|if
+condition|(
+name|req
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|terminate
 argument_list|(
 literal|"die %llu: failed to get bool (form 0x%x)\n"
@@ -1558,6 +1599,17 @@ operator|!=
 name|DW_DLV_OK
 condition|)
 block|{
+if|if
+condition|(
+name|req
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|terminate
 argument_list|(
 literal|"die %llu: failed to get string (form 0x%x)\n"
@@ -8121,6 +8173,85 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Any object containing at least one allocatable section of non-0 size is  * taken to be a file which should contain DWARF type information  */
+end_comment
+
+begin_function
+specifier|static
+name|boolean_t
+name|should_have_dwarf
+parameter_list|(
+name|Elf
+modifier|*
+name|elf
+parameter_list|)
+block|{
+name|Elf_Scn
+modifier|*
+name|scn
+init|=
+name|NULL
+decl_stmt|;
+while|while
+condition|(
+operator|(
+name|scn
+operator|=
+name|elf_nextscn
+argument_list|(
+name|elf
+argument_list|,
+name|scn
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+name|GElf_Shdr
+name|shdr
+decl_stmt|;
+name|gelf_getshdr
+argument_list|(
+name|scn
+argument_list|,
+operator|&
+name|shdr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|shdr
+operator|.
+name|sh_flags
+operator|&
+name|SHF_ALLOC
+operator|)
+operator|&&
+operator|(
+name|shdr
+operator|.
+name|sh_size
+operator|!=
+literal|0
+operator|)
+condition|)
+return|return
+operator|(
+name|B_TRUE
+operator|)
+return|;
+block|}
+return|return
+operator|(
+name|B_FALSE
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*ARGSUSED*/
 end_comment
 
@@ -8272,6 +8403,14 @@ operator|==
 name|DW_DLV_NO_ENTRY
 condition|)
 block|{
+if|if
+condition|(
+name|should_have_dwarf
+argument_list|(
+name|elf
+argument_list|)
+condition|)
+block|{
 name|errno
 operator|=
 name|ENOENT
@@ -8282,6 +8421,15 @@ operator|-
 literal|1
 operator|)
 return|;
+block|}
+else|else
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 block|}
 elseif|else
 if|if
@@ -8370,6 +8518,7 @@ name|dw_err
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Some compilers emit no DWARF for empty files, others emit an empty 	 * compilation unit. 	 */
 if|if
 condition|(
 operator|(
@@ -8387,6 +8536,7 @@ operator|==
 name|NULL
 operator|||
 operator|(
+operator|(
 name|child
 operator|=
 name|die_child
@@ -8399,13 +8549,35 @@ argument_list|)
 operator|)
 operator|==
 name|NULL
+operator|)
+operator|&&
+name|should_have_dwarf
+argument_list|(
+name|elf
+argument_list|)
 condition|)
+block|{
 name|terminate
 argument_list|(
 literal|"file does not contain dwarf type data "
 literal|"(try compiling with -g)\n"
 argument_list|)
 expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|child
+operator|==
+name|NULL
+condition|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|dw
 operator|.
 name|dw_maxoff
