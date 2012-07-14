@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/eventhandler.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
 end_include
 
@@ -678,6 +684,26 @@ name|inactl
 decl_stmt|,
 name|inactmax
 decl_stmt|;
+if|if
+condition|(
+name|tries
+operator|>
+literal|0
+condition|)
+block|{
+comment|/* 		 * Decrease registered cache sizes.  The vm_lowmem handlers 		 * may acquire locks and/or sleep, so they can only be invoked 		 * when "tries" is greater than zero. 		 */
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|vm_lowmem
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* 		 * We do this explicitly after the caches have been drained 		 * above. 		 */
+name|uma_reclaim
+argument_list|()
+expr_stmt|;
+block|}
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
