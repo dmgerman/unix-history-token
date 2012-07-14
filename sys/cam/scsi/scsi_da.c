@@ -10964,6 +10964,10 @@ operator|&=
 operator|~
 name|DISKFLAG_CANDELETE
 expr_stmt|;
+comment|/* Currently as of 6/13/2012, panics if DIAGNOSTIC is set */
+ifndef|#
+directive|ifndef
+name|DIAGNOSTIC
 name|disk_resize
 argument_list|(
 name|softc
@@ -10971,6 +10975,8 @@ operator|->
 name|disk
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
