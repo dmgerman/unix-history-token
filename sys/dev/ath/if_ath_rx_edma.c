@@ -540,6 +540,11 @@ name|sc
 operator|->
 name|sc_ah
 decl_stmt|;
+name|ATH_RX_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ath_hal_stoppcurecv
 argument_list|(
 name|ah
@@ -636,6 +641,11 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|ATH_RX_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -680,6 +690,11 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
+name|ATH_RX_LOCK_ASSERT
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|i
 operator|=
 name|re
@@ -811,6 +826,11 @@ name|sc
 operator|->
 name|sc_ah
 decl_stmt|;
+name|ATH_RX_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* Enable RX FIFO */
 name|ath_hal_rxena
 argument_list|(
@@ -928,6 +948,11 @@ argument_list|(
 name|ah
 argument_list|)
 expr_stmt|;
+name|ATH_RX_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1033,9 +1058,6 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|HAL_STATUS
-name|status
-decl_stmt|;
 name|struct
 name|ath_hal
 modifier|*
@@ -1056,6 +1078,20 @@ name|ngood
 init|=
 literal|0
 decl_stmt|;
+name|ath_bufhead
+name|rxlist
+decl_stmt|;
+name|struct
+name|ath_buf
+modifier|*
+name|next
+decl_stmt|;
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|rxlist
+argument_list|)
+expr_stmt|;
 name|tsf
 operator|=
 name|ath_hal_gettsf64
@@ -1081,6 +1117,11 @@ operator|.
 name|ast_rx_noise
 operator|=
 name|nf
+expr_stmt|;
+name|ATH_RX_LOCK
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
 do|do
 block|{
@@ -1153,7 +1194,9 @@ name|bf_status
 operator|.
 name|ds_rxstat
 expr_stmt|;
-name|status
+name|bf
+operator|->
+name|bf_rxstatus
 operator|=
 name|ath_hal_rxprocdesc
 argument_list|(
@@ -1189,7 +1232,9 @@ name|bf
 argument_list|,
 literal|0
 argument_list|,
-name|status
+name|bf
+operator|->
+name|bf_rxstatus
 operator|==
 name|HAL_OK
 argument_list|)
@@ -1198,7 +1243,9 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|status
+name|bf
+operator|->
+name|bf_rxstatus
 operator|==
 name|HAL_EINPROGRESS
 condition|)
@@ -1217,7 +1264,7 @@ argument_list|,
 name|qtype
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Remove the FIFO entry! 		 */
+comment|/* 		 * Remove the FIFO entry and place it on the completion 		 * queue. 		 */
 name|re
 operator|->
 name|m_fifo
@@ -1229,45 +1276,14 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 		 * Skip the RX descriptor status - start at the data offset 		 */
-name|m_adj
+name|TAILQ_INSERT_TAIL
 argument_list|(
-name|m
-argument_list|,
-name|sc
-operator|->
-name|sc_rx_statuslen
-argument_list|)
-expr_stmt|;
-comment|/* Handle the frame */
-if|if
-condition|(
-name|ath_rx_pkt
-argument_list|(
-name|sc
-argument_list|,
-name|rs
-argument_list|,
-name|status
-argument_list|,
-name|tsf
-argument_list|,
-name|nf
-argument_list|,
-name|qtype
+operator|&
+name|rxlist
 argument_list|,
 name|bf
-argument_list|)
-condition|)
-name|ngood
-operator|++
-expr_stmt|;
-comment|/* Free the buffer/mbuf */
-name|ath_edma_rxbuf_free
-argument_list|(
-name|sc
 argument_list|,
-name|bf
+name|bf_list
 argument_list|)
 expr_stmt|;
 comment|/* Bump the descriptor FIFO stats */
@@ -1298,6 +1314,109 @@ operator|>
 literal|0
 condition|)
 do|;
+comment|/* Append some more fresh frames to the FIFO */
+if|if
+condition|(
+name|dosched
+condition|)
+name|ath_edma_rxfifo_alloc
+argument_list|(
+name|sc
+argument_list|,
+name|qtype
+argument_list|,
+name|re
+operator|->
+name|m_fifolen
+argument_list|)
+expr_stmt|;
+name|ATH_RX_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/* Handle the completed descriptors */
+name|TAILQ_FOREACH_SAFE
+argument_list|(
+argument|bf
+argument_list|,
+argument|&rxlist
+argument_list|,
+argument|bf_list
+argument_list|,
+argument|next
+argument_list|)
+block|{
+comment|/* 		 * Skip the RX descriptor status - start at the data offset 		 */
+name|m_adj
+argument_list|(
+name|bf
+operator|->
+name|bf_m
+argument_list|,
+name|sc
+operator|->
+name|sc_rx_statuslen
+argument_list|)
+expr_stmt|;
+comment|/* Handle the frame */
+comment|/* 		 * Note: this may or may not free bf->bf_m and sync/unmap 		 * the frame. 		 */
+if|if
+condition|(
+name|ath_rx_pkt
+argument_list|(
+name|sc
+argument_list|,
+name|rs
+argument_list|,
+name|bf
+operator|->
+name|bf_rxstatus
+argument_list|,
+name|tsf
+argument_list|,
+name|nf
+argument_list|,
+name|qtype
+argument_list|,
+name|bf
+argument_list|)
+condition|)
+name|ngood
+operator|++
+expr_stmt|;
+block|}
+comment|/* Free in one set, inside the lock */
+name|ATH_RX_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|TAILQ_FOREACH_SAFE
+argument_list|(
+argument|bf
+argument_list|,
+argument|&rxlist
+argument_list|,
+argument|bf_list
+argument_list|,
+argument|next
+argument_list|)
+block|{
+comment|/* Free the buffer/mbuf */
+name|ath_edma_rxbuf_free
+argument_list|(
+name|sc
+argument_list|,
+name|bf
+argument_list|)
+expr_stmt|;
+block|}
+name|ATH_RX_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* Handle resched and kickpcu appropriately */
 name|ATH_PCU_LOCK
 argument_list|(
@@ -1344,22 +1463,6 @@ block|}
 name|ATH_PCU_UNLOCK
 argument_list|(
 name|sc
-argument_list|)
-expr_stmt|;
-comment|/* Append some more fresh frames to the FIFO */
-if|if
-condition|(
-name|dosched
-condition|)
-name|ath_edma_rxfifo_alloc
-argument_list|(
-name|sc
-argument_list|,
-name|qtype
-argument_list|,
-name|re
-operator|->
-name|m_fifolen
 argument_list|)
 expr_stmt|;
 return|return
@@ -1497,6 +1600,11 @@ decl_stmt|;
 name|int
 name|len
 decl_stmt|;
+name|ATH_RX_LOCK_ASSERT
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|//	device_printf(sc->sc_dev, "%s: called; bf=%p\n", __func__, bf);
 name|m
 operator|=
@@ -1706,6 +1814,11 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|ATH_RX_LOCK_ASSERT
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* Allocate buffer */
 name|bf
 operator|=
@@ -1816,6 +1929,12 @@ modifier|*
 name|bf
 parameter_list|)
 block|{
+name|ATH_RX_LOCK_ASSERT
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/* We're doing this multiple times? */
 name|bus_dmamap_unload
 argument_list|(
 name|sc
@@ -1906,6 +2025,11 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|ATH_RX_LOCK_ASSERT
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Allocate buffers until the FIFO is full or nbufs is reached. 	 */
 for|for
 control|(
@@ -2162,6 +2286,11 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|ATH_RX_LOCK_ASSERT
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -2330,6 +2459,11 @@ index|[
 name|qtype
 index|]
 decl_stmt|;
+name|ATH_RX_LOCK_ASSERT
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2572,6 +2706,11 @@ condition|)
 return|return
 name|error
 return|;
+name|ATH_RX_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2590,6 +2729,11 @@ argument_list|(
 name|sc
 argument_list|,
 name|HAL_RX_QUEUE_LP
+argument_list|)
+expr_stmt|;
+name|ATH_RX_UNLOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 return|return
@@ -2622,6 +2766,11 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
+name|ATH_RX_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ath_edma_rxfifo_flush
 argument_list|(
 name|sc
@@ -2648,6 +2797,11 @@ argument_list|(
 name|sc
 argument_list|,
 name|HAL_RX_QUEUE_LP
+argument_list|)
+expr_stmt|;
+name|ATH_RX_UNLOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 comment|/* Free RX ath_buf */

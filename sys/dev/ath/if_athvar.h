@@ -576,6 +576,9 @@ comment|/* next buffer in the aggregate */
 name|int
 name|bf_nseg
 decl_stmt|;
+name|HAL_STATUS
+name|bf_rxstatus
+decl_stmt|;
 name|uint16_t
 name|bf_flags
 decl_stmt|;
