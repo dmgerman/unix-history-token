@@ -12402,6 +12402,15 @@ name|ieee80211_node
 modifier|*
 name|ni
 decl_stmt|;
+if|if
+condition|(
+name|dd
+operator|->
+name|dd_dmamap
+operator|!=
+literal|0
+condition|)
+block|{
 name|bus_dmamap_unload
 argument_list|(
 name|dd
@@ -12446,6 +12455,7 @@ operator|->
 name|dd_dmat
 argument_list|)
 expr_stmt|;
+block|}
 name|TAILQ_FOREACH
 argument_list|(
 argument|bf
