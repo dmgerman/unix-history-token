@@ -1544,6 +1544,17 @@ literal|32
 index|]
 decl_stmt|;
 name|struct
+name|mtx
+name|sc_rx_mtx
+decl_stmt|;
+comment|/* RX access mutex */
+name|char
+name|sc_rx_mtx_name
+index|[
+literal|32
+index|]
+decl_stmt|;
+name|struct
 name|taskqueue
 modifier|*
 name|sc_tq
@@ -2487,6 +2498,70 @@ parameter_list|(
 name|_sc
 parameter_list|)
 value|mtx_assert(&(_sc)->sc_pcu_mtx,	\ 		MA_NOTOWNED)
+end_define
+
+begin_comment
+comment|/*  * The RX lock is primarily a(nother) workaround to ensure that the  * RX FIFO/list isn't modified by various execution paths.  * Even though RX occurs in a single context (the ath taskqueue), the  * RX path can be executed via various reset/channel change paths.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATH_RX_LOCK_INIT
+parameter_list|(
+name|_sc
+parameter_list|)
+value|do {\ 	snprintf((_sc)->sc_rx_mtx_name,					\ 	    sizeof((_sc)->sc_rx_mtx_name),				\ 	    "%s RX lock",						\ 	    device_get_nameunit((_sc)->sc_dev));			\ 	mtx_init(&(_sc)->sc_rx_mtx, (_sc)->sc_rx_mtx_name,		\ 		 NULL, MTX_DEF);					\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_RX_LOCK_DESTROY
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_destroy(&(_sc)->sc_rx_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_RX_LOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_lock(&(_sc)->sc_rx_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_RX_UNLOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_unlock(&(_sc)->sc_rx_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_RX_LOCK_ASSERT
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_assert(&(_sc)->sc_rx_mtx,	\ 		MA_OWNED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_RX_UNLOCK_ASSERT
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_assert(&(_sc)->sc_rx_mtx,	\ 		MA_NOTOWNED)
 end_define
 
 begin_define

@@ -870,6 +870,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|ATH_RX_LOCK_INIT
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|ath_attach
@@ -893,6 +898,11 @@ return|return
 literal|0
 return|;
 name|ATH_PCU_LOCK_DESTROY
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|ATH_RX_LOCK_DESTROY
 argument_list|(
 name|sc
 argument_list|)
@@ -1089,6 +1099,11 @@ name|M_TEMP
 argument_list|)
 expr_stmt|;
 name|ATH_PCU_LOCK_DESTROY
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|ATH_RX_LOCK_DESTROY
 argument_list|(
 name|sc
 argument_list|)
