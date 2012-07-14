@@ -1589,6 +1589,9 @@ name|sc
 operator|->
 name|sc_ifp
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|IEEE80211_SUPPORT_SUPERG
 name|struct
 name|ieee80211com
 modifier|*
@@ -1598,6 +1601,8 @@ name|ifp
 operator|->
 name|if_l2com
 decl_stmt|;
+endif|#
+directive|endif
 name|DPRINTF
 argument_list|(
 name|sc
