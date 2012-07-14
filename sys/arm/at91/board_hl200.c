@@ -84,68 +84,27 @@ argument_list|(
 name|AT91_ST_RM9200_BGA
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Since the USART supports RS-485 multidrop mode, it allows the 	 * TX pins to float.  However, for RS-232 operations, we don't want 	 * these pins to float.  Instead, they should be pulled up to avoid 	 * mismatches.  Linux does something similar when it configures the 	 * TX lines.  This implies that we also allow the RX lines to float 	 * rather than be in the state they are left in by the boot loader. 	 * Since they are input pins, I think that this is the right thing 	 * to do. 	 */
-comment|/* PIOA's A periph: Turn USART 0 and 2's TX/RX pins */
-name|at91_pio_use_periph_a
+comment|/* 	 * Unsure what all is in the HOTe HL200, but I do know there's 	 * one serial port that isn't DBGU.  There's many other peripherals 	 * that need to be configured here. 	 */
+name|at91rm9200_config_uart
 argument_list|(
-name|AT91RM92_PIOA_BASE
+name|AT91_ID_DBGU
 argument_list|,
-name|AT91C_PA18_RXD0
-operator||
-name|AT91C_PA22_RXD2
+literal|0
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|at91_pio_use_periph_a
+comment|/* DBGU just Tx and Rx */
+name|at91rm9200_config_uart
 argument_list|(
-name|AT91RM92_PIOA_BASE
-argument_list|,
-name|AT91C_PA17_TXD0
-operator||
-name|AT91C_PA23_TXD2
+name|AT91RM9200_ID_USART0
 argument_list|,
 literal|1
-argument_list|)
-expr_stmt|;
-comment|/* PIOA's B periph: Turn USART 3's TX/RX pins */
-name|at91_pio_use_periph_b
-argument_list|(
-name|AT91RM92_PIOA_BASE
-argument_list|,
-name|AT91C_PA6_RXD3
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|at91_pio_use_periph_b
-argument_list|(
-name|AT91RM92_PIOA_BASE
-argument_list|,
-name|AT91C_PA5_TXD3
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* PIOB's A periph: Turn USART 1's TX/RX pins */
-name|at91_pio_use_periph_a
-argument_list|(
-name|AT91RM92_PIOB_BASE
-argument_list|,
-name|AT91C_PB21_RXD1
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|at91_pio_use_periph_a
-argument_list|(
-name|AT91RM92_PIOB_BASE
-argument_list|,
-name|AT91C_PB20_TXD1
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
+comment|/* Tx and Rx */
 return|return
 operator|(
 name|at91_ramsize

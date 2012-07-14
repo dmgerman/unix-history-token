@@ -74,7 +74,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<arm/at91/at91board.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arm/at91/at91rm92reg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<arm/at91/at91rm9200var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arm/at91/at91_pioreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arm/at91/at91_piovar.h>
 end_include
 
 begin_comment
@@ -116,6 +140,164 @@ argument_list|,
 name|st
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
+block|}
+end_function
+
+begin_function
+name|void
+name|at91rm9200_config_uart
+parameter_list|(
+name|unsigned
+name|devid
+parameter_list|,
+name|unsigned
+name|unit
+parameter_list|,
+name|unsigned
+name|pinmask
+parameter_list|)
+block|{
+comment|/* 	 * Since the USART supports RS-485 multidrop mode, it allows the 	 * TX pins to float.  However, for RS-232 operations, we don't want 	 * these pins to float.  Instead, they should be pulled up to avoid 	 * mismatches.  Linux does something similar when it configures the 	 * TX lines.  This implies that we also allow the RX lines to float 	 * rather than be in the state they are left in by the boot loader. 	 * Since they are input pins, I think that this is the right thing 	 * to do. 	 */
+switch|switch
+condition|(
+name|devid
+condition|)
+block|{
+case|case
+name|AT91_ID_DBGU
+case|:
+name|at91_pio_use_periph_a
+argument_list|(
+name|AT91RM92_PIOA_BASE
+argument_list|,
+name|AT91C_PIO_PA30
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* DRXD */
+name|at91_pio_use_periph_a
+argument_list|(
+name|AT91RM92_PIOA_BASE
+argument_list|,
+name|AT91C_PIO_PA31
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* DTXD */
+break|break;
+case|case
+name|AT91RM9200_ID_USART0
+case|:
+name|at91_pio_use_periph_a
+argument_list|(
+name|AT91RM92_PIOA_BASE
+argument_list|,
+name|AT91C_PIO_PA17
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* TXD0 */
+name|at91_pio_use_periph_a
+argument_list|(
+name|AT91RM92_PIOA_BASE
+argument_list|,
+name|AT91C_PIO_PA19
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* RXD0 */
+comment|/* CTS PA20 */
+comment|/* RTS -- errata #39 PA21 */
+break|break;
+case|case
+name|AT91RM9200_ID_USART1
+case|:
+name|at91_pio_use_periph_a
+argument_list|(
+name|AT91RM92_PIOB_BASE
+argument_list|,
+name|AT91C_PIO_PB20
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* TXD1 */
+name|at91_pio_use_periph_a
+argument_list|(
+name|AT91RM92_PIOB_BASE
+argument_list|,
+name|AT91C_PIO_PB21
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* RXD1 */
+comment|/* RI - PB18 */
+comment|/* DTR - PB19 */
+comment|/* DCD - PB23 */
+comment|/* CTS - PB24 */
+comment|/* DSR - PB25 */
+comment|/* RTS - PB26 */
+break|break;
+case|case
+name|AT91RM9200_ID_USART2
+case|:
+name|at91_pio_use_periph_a
+argument_list|(
+name|AT91RM92_PIOA_BASE
+argument_list|,
+name|AT91C_PIO_PA22
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* RXD2 */
+name|at91_pio_use_periph_a
+argument_list|(
+name|AT91RM92_PIOA_BASE
+argument_list|,
+name|AT91C_PIO_PA23
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* TXD2 */
+comment|/* CTS - PA30 B periph */
+comment|/* RTS - PA31 B periph */
+break|break;
+case|case
+name|AT91RM9200_ID_USART3
+case|:
+name|at91_pio_use_periph_b
+argument_list|(
+name|AT91RM92_PIOA_BASE
+argument_list|,
+name|AT91C_PIO_PA5
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* TXD3 */
+name|at91_pio_use_periph_b
+argument_list|(
+name|AT91RM92_PIOA_BASE
+argument_list|,
+name|AT91C_PIO_PA6
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* RXD3 */
+comment|/* CTS - PB0 B periph */
+comment|/* RTS - PB1 B periph */
+break|break;
+default|default:
 break|break;
 block|}
 block|}
