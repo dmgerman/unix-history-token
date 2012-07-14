@@ -12236,6 +12236,10 @@ argument_list|,
 name|bsize
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+name|ENOMEM
+expr_stmt|;
 goto|goto
 name|fail3
 goto|;
