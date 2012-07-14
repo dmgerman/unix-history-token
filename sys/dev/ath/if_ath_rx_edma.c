@@ -1361,6 +1361,15 @@ argument_list|)
 expr_stmt|;
 comment|/* Handle the frame */
 comment|/* 		 * Note: this may or may not free bf->bf_m and sync/unmap 		 * the frame. 		 */
+name|rs
+operator|=
+operator|&
+name|bf
+operator|->
+name|bf_status
+operator|.
+name|ds_rxstat
+expr_stmt|;
 if|if
 condition|(
 name|ath_rx_pkt
