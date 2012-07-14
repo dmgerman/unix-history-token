@@ -1220,6 +1220,17 @@ value|2
 end_define
 
 begin_comment
+comment|/*  * CPUID instruction 0xd Processor Extended State Enumeration Sub-leaf 1  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPUID_EXTSTATE_XSAVEOPT
+value|0x00000001
+end_define
+
+begin_comment
 comment|/*  * AMD extended function 8000_0007h edx info  */
 end_comment
 
