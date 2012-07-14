@@ -2537,11 +2537,10 @@ block|{
 name|int
 name|error
 decl_stmt|;
-comment|/* Create RX DMA tag */
-comment|/* Create RX ath_buf array */
+comment|/* 	 * Create RX DMA tag and buffers. 	 */
 name|error
 operator|=
-name|ath_descdma_setup
+name|ath_descdma_setup_rx_edma
 argument_list|(
 name|sc
 argument_list|,
@@ -2559,7 +2558,9 @@ literal|"rx"
 argument_list|,
 name|ath_rxbuf
 argument_list|,
-literal|1
+name|sc
+operator|->
+name|sc_rx_statuslen
 argument_list|)
 expr_stmt|;
 if|if
@@ -2710,21 +2711,6 @@ name|sc_edma_bufsize
 operator|=
 literal|4096
 expr_stmt|;
-comment|/* Configure the hardware with this */
-operator|(
-name|void
-operator|)
-name|ath_hal_setrxbufsize
-argument_list|(
-name|sc
-operator|->
-name|sc_ah
-argument_list|,
-name|sc
-operator|->
-name|sc_edma_bufsize
-argument_list|)
-expr_stmt|;
 comment|/* Fetch EDMA field and buffer sizes */
 operator|(
 name|void
@@ -2784,6 +2770,25 @@ operator|&
 name|sc
 operator|->
 name|sc_tx_nmaps
+argument_list|)
+expr_stmt|;
+comment|/* Configure the hardware with the RX buffer size */
+operator|(
+name|void
+operator|)
+name|ath_hal_setrxbufsize
+argument_list|(
+name|sc
+operator|->
+name|sc_ah
+argument_list|,
+name|sc
+operator|->
+name|sc_edma_bufsize
+operator|-
+name|sc
+operator|->
+name|sc_rx_statuslen
 argument_list|)
 expr_stmt|;
 name|device_printf
