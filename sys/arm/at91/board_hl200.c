@@ -59,18 +59,6 @@ directive|include
 file|<arm/at91/at91rm9200var.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<arm/at91/at91_piovar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<arm/at91/at91_pio_rm9200.h>
-end_include
-
 begin_function
 name|BOARD_INIT
 name|long
@@ -105,6 +93,19 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Tx and Rx */
+name|at91rm9200_config_mci
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* HOTe HL200 unknown 1 vs 4 wire */
+comment|/* Enable CF card slot */
+comment|/* Enable sound thing */
+comment|/* Enable VGA chip */
+comment|/* Enable ethernet */
+comment|/* Enable TWI + RTC */
+comment|/* Enable USB Host */
+comment|/* Enable USB Device (gadget) */
 return|return
 operator|(
 name|at91_ramsize

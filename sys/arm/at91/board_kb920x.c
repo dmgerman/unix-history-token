@@ -50,25 +50,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<arm/at91/at91rm92reg.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<arm/at91/at91rm9200var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<arm/at91/at91_piovar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<arm/at91/at91_pio_rm9200.h>
 end_include
 
 begin_function
@@ -127,61 +109,17 @@ operator||
 name|AT91_UART_RTS
 argument_list|)
 expr_stmt|;
-comment|/*  MMC/SD Interface */
-name|at91_pio_use_periph_a
+name|at91rm9200_config_mci
 argument_list|(
-name|AT91RM92_PIOA_BASE
-argument_list|,
-name|AT91C_PA27_MCCK
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|at91_pio_use_periph_a
-argument_list|(
-name|AT91RM92_PIOA_BASE
-argument_list|,
-name|AT91C_PA28_MCCDA
-argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|at91_pio_use_periph_a
-argument_list|(
-name|AT91RM92_PIOA_BASE
-argument_list|,
-name|AT91C_PA29_MCDA0
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|at91_pio_use_periph_b
-argument_list|(
-name|AT91RM92_PIOB_BASE
-argument_list|,
-name|AT91C_PB3_MCDA1
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|at91_pio_use_periph_b
-argument_list|(
-name|AT91RM92_PIOB_BASE
-argument_list|,
-name|AT91C_PB4_MCDA2
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|at91_pio_use_periph_b
-argument_list|(
-name|AT91RM92_PIOB_BASE
-argument_list|,
-name|AT91C_PB5_MCDA3
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
+comment|/* CFE interface */
+comment|/* ethernet interface */
+comment|/* lcd interface */
+comment|/* USB host */
+comment|/* USB device (gadget) */
+comment|/* TWI */
 return|return
 operator|(
 name|at91_ramsize

@@ -131,6 +131,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * MCI (sd/mmc card support)  */
+end_comment
+
+begin_function_decl
+name|void
+name|at91rm9200_config_mci
+parameter_list|(
+name|int
+name|has_4wire
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

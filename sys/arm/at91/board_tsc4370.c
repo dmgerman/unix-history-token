@@ -68,7 +68,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<arm/at91/at91_pio_rm9200.h>
+file|<arm/at91/at91_pioreg.h>
 end_include
 
 begin_function
@@ -134,6 +134,18 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Tx and Rx */
+name|at91rm9200_config_mci
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* tsc4370 board has only 1 wire */
+comment|/* Newer boards may have 4 wires */
+comment|/* Configure TWI */
+comment|/* Configure SPI + dataflash */
+comment|/* Configure SSC */
+comment|/* Configure USB Host */
+comment|/* Configure FPGA attached to chip selects */
 comment|/* Pin assignment */
 comment|/* Assert PA24 low -- talk to rubidium */
 name|at91_pio_use_gpio

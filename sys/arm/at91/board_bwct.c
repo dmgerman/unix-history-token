@@ -77,6 +77,12 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* DBGU just Tx and Rx */
+name|at91rm9200_config_mci
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Configure ethernet */
 return|return
 operator|(
 name|at91_ramsize

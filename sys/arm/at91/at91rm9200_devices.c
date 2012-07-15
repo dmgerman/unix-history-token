@@ -160,6 +160,7 @@ name|pinmask
 parameter_list|)
 block|{
 comment|/* 	 * Since the USART supports RS-485 multidrop mode, it allows the 	 * TX pins to float.  However, for RS-232 operations, we don't want 	 * these pins to float.  Instead, they should be pulled up to avoid 	 * mismatches.  Linux does something similar when it configures the 	 * TX lines.  This implies that we also allow the RX lines to float 	 * rather than be in the state they are left in by the boot loader. 	 * Since they are input pins, I think that this is the right thing 	 * to do. 	 */
+comment|/* 	 * Current boards supported don't need the extras, but they should be 	 * implemented.  But that should wait until the new pin api goes in. 	 */
 switch|switch
 condition|(
 name|devid
@@ -299,6 +300,84 @@ comment|/* RTS - PB1 B periph */
 break|break;
 default|default:
 break|break;
+block|}
+block|}
+end_function
+
+begin_function
+name|void
+name|at91rm9200_config_mci
+parameter_list|(
+name|int
+name|has_4wire
+parameter_list|)
+block|{
+comment|/* XXX TODO chip changed GPIO, other slots, etc */
+name|at91_pio_use_periph_a
+argument_list|(
+name|AT91RM92_PIOA_BASE
+argument_list|,
+name|AT91C_PIO_PA27
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* MCCK */
+name|at91_pio_use_periph_a
+argument_list|(
+name|AT91RM92_PIOA_BASE
+argument_list|,
+name|AT91C_PIO_PA28
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* MCCDA */
+name|at91_pio_use_periph_a
+argument_list|(
+name|AT91RM92_PIOA_BASE
+argument_list|,
+name|AT91C_PIO_PA29
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* MCDA0 */
+if|if
+condition|(
+name|has_4wire
+condition|)
+block|{
+name|at91_pio_use_periph_b
+argument_list|(
+name|AT91RM92_PIOB_BASE
+argument_list|,
+name|AT91C_PIO_PB3
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* MCDA1 */
+name|at91_pio_use_periph_b
+argument_list|(
+name|AT91RM92_PIOB_BASE
+argument_list|,
+name|AT91C_PIO_PB4
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* MCDA2 */
+name|at91_pio_use_periph_b
+argument_list|(
+name|AT91RM92_PIOB_BASE
+argument_list|,
+name|AT91C_PIO_PB5
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* MCDA3 */
 block|}
 block|}
 end_function
