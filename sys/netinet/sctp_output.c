@@ -18269,6 +18269,20 @@ block|}
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+end_if
+
 begin_function
 specifier|static
 name|void
@@ -18506,6 +18520,11 @@ block|}
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|int
@@ -18610,11 +18629,6 @@ comment|/* Will need ifdefs around this */
 name|struct
 name|mbuf
 modifier|*
-name|o_pak
-decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
 name|newm
 decl_stmt|;
 name|struct
@@ -18631,6 +18645,22 @@ decl_stmt|;
 name|uint32_t
 name|vrf_id
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+name|struct
+name|mbuf
+modifier|*
+name|o_pak
+decl_stmt|;
 name|sctp_route_t
 modifier|*
 name|ro
@@ -18644,6 +18674,8 @@ name|udp
 init|=
 name|NULL
 decl_stmt|;
+endif|#
+directive|endif
 name|uint8_t
 name|tos_value
 decl_stmt|;

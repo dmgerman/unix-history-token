@@ -23,6 +23,12 @@ directive|include
 file|<netinet/sctp_os.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET6
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -6014,6 +6020,11 @@ name|sctp_soreceive
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
