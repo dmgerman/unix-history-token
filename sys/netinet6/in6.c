@@ -5211,6 +5211,8 @@ name|sin6_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
 name|in6_setscope
 argument_list|(
 operator|&
@@ -5225,6 +5227,17 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 name|rt
 operator|=
