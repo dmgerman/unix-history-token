@@ -352,18 +352,6 @@ comment|/* are we in waitcmd()? */
 end_comment
 
 begin_decl_stmt
-name|int
-name|in_dowait
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* are we in dowait()? */
-end_comment
-
-begin_decl_stmt
 specifier|volatile
 name|sig_atomic_t
 name|breakwaitcmd
@@ -5218,9 +5206,6 @@ decl_stmt|;
 name|int
 name|coredump
 decl_stmt|;
-name|in_dowait
-operator|++
-expr_stmt|;
 name|TRACE
 argument_list|(
 operator|(
@@ -5289,9 +5274,6 @@ name|iflag
 operator|)
 condition|)
 do|;
-name|in_dowait
-operator|--
-expr_stmt|;
 if|if
 condition|(
 name|pid
