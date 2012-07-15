@@ -261,11 +261,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|free
-argument_list|(
-name|np_sessionp
-argument_list|)
-expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_ERR
@@ -274,11 +269,9 @@ literal|"rpc: failed to open "
 name|NETCONFIG
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+goto|goto
+name|failed
+goto|;
 block|}
 name|np_sessionp
 operator|->
