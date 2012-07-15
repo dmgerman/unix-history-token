@@ -515,9 +515,12 @@ name|ast_tx_mcastq_overflow
 decl_stmt|;
 comment|/* multicast queue overflow */
 name|u_int32_t
+name|ast_rx_keymiss
+decl_stmt|;
+name|u_int32_t
 name|ast_pad
 index|[
-literal|1
+literal|16
 index|]
 decl_stmt|;
 block|}
