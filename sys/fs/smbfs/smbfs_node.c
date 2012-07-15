@@ -1074,6 +1074,8 @@ argument_list|,
 name|M_SMBNODE
 argument_list|,
 name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 name|error
@@ -1150,17 +1152,6 @@ condition|?
 name|VDIR
 else|:
 name|VREG
-expr_stmt|;
-name|bzero
-argument_list|(
-name|np
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|np
-argument_list|)
-argument_list|)
 expr_stmt|;
 name|vp
 operator|->
