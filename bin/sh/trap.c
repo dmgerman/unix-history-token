@@ -1651,6 +1651,10 @@ init|;
 condition|;
 control|)
 block|{
+name|pendingsigs
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1773,10 +1777,6 @@ break|break;
 block|}
 name|in_dotrap
 operator|--
-expr_stmt|;
-name|pendingsigs
-operator|=
-literal|0
 expr_stmt|;
 block|}
 end_function
