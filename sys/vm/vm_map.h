@@ -541,7 +541,10 @@ name|__inline
 name|vm_offset_t
 name|vm_map_max
 parameter_list|(
-name|vm_map_t
+specifier|const
+name|struct
+name|vm_map
+modifier|*
 name|map
 parameter_list|)
 block|{
@@ -561,7 +564,10 @@ name|__inline
 name|vm_offset_t
 name|vm_map_min
 parameter_list|(
-name|vm_map_t
+specifier|const
+name|struct
+name|vm_map
+modifier|*
 name|map
 parameter_list|)
 block|{
