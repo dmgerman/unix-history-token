@@ -1527,9 +1527,11 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"%s: handled %d descriptors\n"
+literal|"%s: handled npkts %d ngood %d\n"
 argument_list|,
 name|__func__
+argument_list|,
+name|npkts
 argument_list|,
 name|ngood
 argument_list|)
