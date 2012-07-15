@@ -678,7 +678,7 @@ operator||=
 name|MNT_RDONLY
 expr_stmt|;
 block|}
-comment|/* 	 * Resolve the mountpoint with realpath(3) and remove unnecessary  	 * slashes from the devicename if there are any. 	 */
+comment|/* 	 * Resolve the mountpoint with realpath(3) and remove unnecessary 	 * slashes from the devicename if there are any. 	 */
 operator|(
 name|void
 operator|)
