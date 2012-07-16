@@ -9223,6 +9223,14 @@ name|zwork
 operator|->
 name|zw_swork
 operator|->
+name|run_cmd
+operator|==
+literal|0
+operator|&&
+name|zwork
+operator|->
+name|zw_swork
+operator|->
 name|sw_pidok
 operator|<=
 literal|0
