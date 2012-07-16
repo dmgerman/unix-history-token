@@ -1741,12 +1741,18 @@ name|ifname
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Include last \0 into comparison */
+name|mlen
+operator|++
+expr_stmt|;
 comment|/* Set 'total' structure length */
 name|KEY_LEN
 argument_list|(
 name|ifname
 argument_list|)
 operator|=
+name|KEY_LEN_IFACE
+operator|+
 name|mlen
 expr_stmt|;
 name|KEY_LEN
@@ -1754,6 +1760,8 @@ argument_list|(
 name|ifmask
 argument_list|)
 operator|=
+name|KEY_LEN_IFACE
+operator|+
 name|mlen
 expr_stmt|;
 comment|/* Assume direct match */
@@ -2923,6 +2931,8 @@ argument_list|(
 name|iface
 argument_list|)
 operator|=
+name|KEY_LEN_IFACE
+operator|+
 name|strlcpy
 argument_list|(
 name|iface
@@ -2937,6 +2947,8 @@ name|paddr
 argument_list|,
 name|IF_NAMESIZE
 argument_list|)
+operator|+
+literal|1
 expr_stmt|;
 comment|/* Assume direct match */
 comment|/* FIXME: Add interface pattern matching */
