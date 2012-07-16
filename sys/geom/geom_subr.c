@@ -2974,13 +2974,6 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|flag
-operator|==
-name|EV_CANCEL
-condition|)
-return|return;
-if|if
-condition|(
 name|g_shutdown
 condition|)
 return|return;
