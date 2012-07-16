@@ -2497,6 +2497,15 @@ name|U3G_DEV
 argument_list|(
 name|QUALCOMM2
 argument_list|,
+name|GOBI2000_QDL
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|U3G_DEV
+argument_list|(
+name|QUALCOMM2
+argument_list|,
 name|GOBI2000
 argument_list|,
 literal|0
