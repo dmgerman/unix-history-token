@@ -1672,7 +1672,7 @@ name|current_time
 operator|.
 name|tv_sec
 operator|*
-literal|1000000000UL
+literal|1000000000ULL
 operator|+
 name|current_time
 operator|.
