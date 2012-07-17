@@ -19918,6 +19918,18 @@ name|data
 operator|=
 name|NULL
 expr_stmt|;
+name|sp
+operator|->
+name|tail_mbuf
+operator|=
+name|NULL
+expr_stmt|;
+name|sp
+operator|->
+name|length
+operator|=
+literal|0
+expr_stmt|;
 block|}
 block|}
 if|if
@@ -25178,7 +25190,7 @@ operator|->
 name|data
 condition|)
 block|{
-comment|/* 					 * Pull any data to free up the SB 					 * and allow sender to "add more" 					 * whilc we will throw away :-) 					 */
+comment|/* 					 * Pull any data to free up the SB 					 * and allow sender to "add more" 					 * while we will throw away :-) 					 */
 name|sctp_free_spbufspace
 argument_list|(
 name|stcb
@@ -25216,12 +25228,6 @@ argument_list|)
 expr_stmt|;
 name|sp
 operator|->
-name|length
-operator|=
-literal|0
-expr_stmt|;
-name|sp
-operator|->
 name|data
 operator|=
 name|NULL
@@ -25231,6 +25237,12 @@ operator|->
 name|tail_mbuf
 operator|=
 name|NULL
+expr_stmt|;
+name|sp
+operator|->
+name|length
+operator|=
+literal|0
 expr_stmt|;
 block|}
 break|break;
