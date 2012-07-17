@@ -50,6 +50,44 @@ name|__i386__
 argument_list|)
 end_if
 
+begin_function
+specifier|static
+name|__inline
+name|void
+name|copyw
+parameter_list|(
+name|uint16_t
+modifier|*
+name|src
+parameter_list|,
+name|uint16_t
+modifier|*
+name|dst
+parameter_list|,
+name|size_t
+name|size
+parameter_list|)
+block|{
+name|size
+operator|>>=
+literal|1
+expr_stmt|;
+while|while
+condition|(
+name|size
+operator|--
+condition|)
+operator|*
+name|dst
+operator|++
+operator|=
+operator|*
+name|src
+operator|++
+expr_stmt|;
+block|}
+end_function
+
 begin_define
 define|#
 directive|define
@@ -61,7 +99,7 @@ name|d
 parameter_list|,
 name|c
 parameter_list|)
-value|bcopy((void *)(s), (void *)(d), (c))
+value|copyw((void*)(s), (void*)(d), (c))
 end_define
 
 begin_define
@@ -75,7 +113,7 @@ name|d
 parameter_list|,
 name|c
 parameter_list|)
-value|bcopy((void *)(s), (void *)(d), (c))
+value|copyw((void*)(s), (void*)(d), (c))
 end_define
 
 begin_define
@@ -89,7 +127,7 @@ name|d
 parameter_list|,
 name|c
 parameter_list|)
-value|bcopy((void *)(s), (void *)(d), (c))
+value|copyw((void*)(s), (void*)(d), (c))
 end_define
 
 begin_define
