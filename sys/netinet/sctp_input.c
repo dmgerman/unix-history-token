@@ -14162,18 +14162,6 @@ block|}
 block|}
 if|if
 condition|(
-operator|(
-operator|*
-name|inp_p
-operator|)
-operator|->
-name|sctp_flags
-operator|&
-name|SCTP_PCB_FLAGS_UDPTYPE
-condition|)
-block|{
-if|if
-condition|(
 name|notification
 condition|)
 block|{
@@ -14217,7 +14205,6 @@ argument_list|,
 name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 return|return
 operator|(
