@@ -6316,7 +6316,15 @@ expr_stmt|;
 name|m
 operator|->
 name|flags
-operator|&=
+operator|=
+operator|(
+name|m
+operator|->
+name|flags
+operator||
+name|PG_NODUMP
+operator|)
+operator|&
 name|flags
 expr_stmt|;
 if|if
