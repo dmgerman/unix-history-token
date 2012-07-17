@@ -15291,7 +15291,7 @@ name|ssfe
 operator|->
 name|ssfe_type
 operator|=
-name|SCTP_SEND_FAILED
+name|SCTP_SEND_FAILED_EVENT
 expr_stmt|;
 name|ssfe
 operator|->
