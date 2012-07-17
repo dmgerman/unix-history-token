@@ -525,6 +525,10 @@ name|resize
 decl_stmt|;
 name|void
 modifier|*
+name|spare1
+decl_stmt|;
+name|void
+modifier|*
 name|spare2
 decl_stmt|;
 comment|/* 	 * The remaining elements are private 	 */
@@ -652,6 +656,10 @@ decl_stmt|;
 name|g_resize_t
 modifier|*
 name|resize
+decl_stmt|;
+name|void
+modifier|*
+name|spare0
 decl_stmt|;
 name|void
 modifier|*
