@@ -468,6 +468,16 @@ operator|/
 literal|24
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|arraysz
+operator|<
+literal|16
+condition|)
+name|arraysz
+operator|=
+literal|16
+expr_stmt|;
 name|queue
 operator|=
 operator|(
