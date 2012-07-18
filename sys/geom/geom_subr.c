@@ -2993,6 +2993,11 @@ name|hh
 operator|->
 name|size
 expr_stmt|;
+name|g_free
+argument_list|(
+name|hh
+argument_list|)
+expr_stmt|;
 name|G_VALID_PROVIDER
 argument_list|(
 name|pp
