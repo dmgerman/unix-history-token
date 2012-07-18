@@ -904,7 +904,7 @@ literal|0xf5
 case|:
 return|return
 operator|(
-literal|"SECURITY_FREE_LOCK"
+literal|"SECURITY_FREEZE_LOCK"
 operator|)
 return|;
 case|case
@@ -912,7 +912,7 @@ literal|0xf6
 case|:
 return|return
 operator|(
-literal|"SECURITY DISABLE PASSWORD"
+literal|"SECURITY_DISABLE_PASSWORD"
 operator|)
 return|;
 case|case
