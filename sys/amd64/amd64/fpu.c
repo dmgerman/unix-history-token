@@ -256,6 +256,16 @@ parameter_list|)
 value|__asm __volatile("ldmxcsr %0" : : "m" (csr))
 end_define
 
+begin_define
+define|#
+directive|define
+name|stmxcsr
+parameter_list|(
+name|addr
+parameter_list|)
+value|__asm __volatile("stmxcsr %0" : : "m" (*(addr)))
+end_define
+
 begin_function
 specifier|static
 name|__inline
@@ -407,6 +417,16 @@ end_function_decl
 begin_function_decl
 name|void
 name|ldmxcsr
+parameter_list|(
+name|u_int
+name|csr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|stmxcsr
 parameter_list|(
 name|u_int
 name|csr
