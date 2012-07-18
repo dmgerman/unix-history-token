@@ -10639,7 +10639,7 @@ argument_list|,
 argument|SS_RDEF
 argument_list|,
 comment|/* XXX TBD */
-literal|"Insufficient reources to create ROD"
+literal|"Insufficient resources to create ROD"
 argument_list|)
 block|}
 block|,
@@ -10654,7 +10654,7 @@ argument_list|,
 argument|SS_RDEF
 argument_list|,
 comment|/* XXX TBD */
-literal|"Insufficient reources to create ROD token"
+literal|"Insufficient resources to create ROD token"
 argument_list|)
 block|}
 block|,
@@ -12233,7 +12233,7 @@ literal|0x09
 argument_list|,
 argument|SS_RDEF
 argument_list|,
-literal|"Stabdby-Y condition activated by timer"
+literal|"Standby-Y condition activated by timer"
 argument_list|)
 block|}
 block|,
