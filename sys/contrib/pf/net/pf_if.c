@@ -2349,7 +2349,6 @@ return|;
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-comment|/* XXX: revisit! */
 if|if
 condition|(
 operator|(
@@ -2360,7 +2359,7 @@ argument_list|(
 operator|&
 name|V_pfi_addr_pl
 argument_list|,
-name|PR_WAITOK
+name|PR_NOWAIT
 operator||
 name|PR_ZERO
 argument_list|)
