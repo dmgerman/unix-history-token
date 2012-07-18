@@ -3458,6 +3458,17 @@ operator|)
 return|;
 if|if
 condition|(
+name|l
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+if|if
+condition|(
 operator|(
 name|buf
 operator|=
