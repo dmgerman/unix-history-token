@@ -4,15 +4,8 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -1603,7 +1596,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|profile_enable
 parameter_list|(
 name|void
@@ -1764,6 +1757,11 @@ name|omni
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -2341,7 +2339,11 @@ name|NULL
 block|,
 comment|/* bus operations */
 name|nodev
+block|,
 comment|/* dev power */
+name|ddi_quiesce_not_needed
+block|,
+comment|/* quiesce */
 block|}
 decl_stmt|;
 end_decl_stmt

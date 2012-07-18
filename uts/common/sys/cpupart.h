@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright (c) 1996, 2010, Oracle and/or its affiliates. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -18,13 +18,6 @@ define|#
 directive|define
 name|_SYS_CPUPART_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -121,32 +114,6 @@ directive|define
 name|CP_NONEMPTY
 value|1
 comment|/* return only non-empty ones */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_MACHDEP
-argument_list|)
-struct|struct
-name|mach_cpupart
-block|{
-name|cpuset_t
-name|mc_haltset
-decl_stmt|;
-block|}
-struct|;
-specifier|extern
-name|struct
-name|mach_cpupart
-name|cp_default_mach
-decl_stmt|;
-else|#
-directive|else
-struct_decl|struct
-name|mach_cpupart
-struct_decl|;
-endif|#
-directive|endif
 typedef|typedef
 struct|struct
 name|cpupart
@@ -252,12 +219,10 @@ name|bitset_t
 name|cp_cmt_pgs
 decl_stmt|;
 comment|/* CMT PGs represented */
-name|struct
-name|mach_cpupart
-modifier|*
-name|cp_mach
+name|bitset_t
+name|cp_haltset
 decl_stmt|;
-comment|/* mach-specific */
+comment|/* halted CPUs */
 block|}
 name|cpupart_t
 typedef|;
@@ -329,6 +294,11 @@ decl_stmt|;
 specifier|extern
 name|uint_t
 name|cp_numparts_nonempty
+decl_stmt|;
+comment|/*  * Each partition contains a bitset that indicates which CPUs are halted and  * which ones are running. Given the growing number of CPUs in current and  * future platforms, it's important to fanout each CPU within its partition's  * haltset to prevent contention due to false sharing. The fanout factor  * is platform specific, and declared accordingly.  */
+specifier|extern
+name|uint_t
+name|cp_haltset_fanout
 decl_stmt|;
 specifier|extern
 name|void

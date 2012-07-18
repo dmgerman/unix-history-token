@@ -4,15 +4,8 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright (c) 2004, 2010, Oracle and/or its affiliates. All rights reserved.  */
 end_comment
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -111,6 +104,55 @@ block|{
 name|DTRACE_STABILITY_PRIVATE
 block|,
 name|DTRACE_STABILITY_PRIVATE
+block|,
+name|DTRACE_CLASS_ISA
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|dtrace_pattr_t
+name|fc_attr
+init|=
+block|{
+block|{
+name|DTRACE_STABILITY_EVOLVING
+block|,
+name|DTRACE_STABILITY_EVOLVING
+block|,
+name|DTRACE_CLASS_ISA
+block|}
+block|,
+block|{
+name|DTRACE_STABILITY_PRIVATE
+block|,
+name|DTRACE_STABILITY_PRIVATE
+block|,
+name|DTRACE_CLASS_UNKNOWN
+block|}
+block|,
+block|{
+name|DTRACE_STABILITY_PRIVATE
+block|,
+name|DTRACE_STABILITY_PRIVATE
+block|,
+name|DTRACE_CLASS_UNKNOWN
+block|}
+block|,
+block|{
+name|DTRACE_STABILITY_PRIVATE
+block|,
+name|DTRACE_STABILITY_PRIVATE
+block|,
+name|DTRACE_CLASS_ISA
+block|}
+block|,
+block|{
+name|DTRACE_STABILITY_EVOLVING
+block|,
+name|DTRACE_STABILITY_EVOLVING
 block|,
 name|DTRACE_CLASS_ISA
 block|}
@@ -364,6 +406,55 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+name|dtrace_pattr_t
+name|iscsi_attr
+init|=
+block|{
+block|{
+name|DTRACE_STABILITY_EVOLVING
+block|,
+name|DTRACE_STABILITY_EVOLVING
+block|,
+name|DTRACE_CLASS_ISA
+block|}
+block|,
+block|{
+name|DTRACE_STABILITY_PRIVATE
+block|,
+name|DTRACE_STABILITY_PRIVATE
+block|,
+name|DTRACE_CLASS_UNKNOWN
+block|}
+block|,
+block|{
+name|DTRACE_STABILITY_PRIVATE
+block|,
+name|DTRACE_STABILITY_PRIVATE
+block|,
+name|DTRACE_CLASS_UNKNOWN
+block|}
+block|,
+block|{
+name|DTRACE_STABILITY_PRIVATE
+block|,
+name|DTRACE_STABILITY_PRIVATE
+block|,
+name|DTRACE_CLASS_ISA
+block|}
+block|,
+block|{
+name|DTRACE_STABILITY_EVOLVING
+block|,
+name|DTRACE_STABILITY_EVOLVING
+block|,
+name|DTRACE_CLASS_ISA
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|sdt_provider_t
 name|sdt_providers
 index|[]
@@ -447,6 +538,39 @@ literal|0
 block|}
 block|,
 block|{
+literal|"ip"
+block|,
+literal|"__ip_"
+block|,
+operator|&
+name|stab_attr
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"tcp"
+block|,
+literal|"__tcp_"
+block|,
+operator|&
+name|stab_attr
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"udp"
+block|,
+literal|"__udp_"
+block|,
+operator|&
+name|stab_attr
+block|,
+literal|0
+block|}
+block|,
+block|{
 literal|"mib"
 block|,
 literal|"__mib_"
@@ -464,6 +588,17 @@ literal|"__fsinfo_"
 block|,
 operator|&
 name|fsinfo_attr
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"iscsi"
+block|,
+literal|"__iscsi_"
+block|,
+operator|&
+name|iscsi_attr
 block|,
 literal|0
 block|}
@@ -497,6 +632,28 @@ literal|"__xpv_"
 block|,
 operator|&
 name|xpv_attr
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"fc"
+block|,
+literal|"__fc_"
+block|,
+operator|&
+name|fc_attr
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"srp"
+block|,
+literal|"__srp_"
+block|,
+operator|&
+name|fc_attr
 block|,
 literal|0
 block|}
@@ -1366,6 +1523,696 @@ block|,
 literal|1
 block|,
 literal|"int"
+block|,
+literal|"int"
+block|}
+block|,
+block|{
+literal|"iscsi"
+block|,
+literal|"async-send"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"idm_conn_t *"
+block|,
+literal|"conninfo_t *"
+block|}
+block|,
+block|{
+literal|"iscsi"
+block|,
+literal|"async-send"
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|"iscsi_async_evt_hdr_t *"
+block|,
+literal|"iscsiinfo_t *"
+block|}
+block|,
+block|{
+literal|"iscsi"
+block|,
+literal|"login-command"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"idm_conn_t *"
+block|,
+literal|"conninfo_t *"
+block|}
+block|,
+block|{
+literal|"iscsi"
+block|,
+literal|"login-command"
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|"iscsi_login_hdr_t *"
+block|,
+literal|"iscsiinfo_t *"
+block|}
+block|,
+block|{
+literal|"iscsi"
+block|,
+literal|"login-response"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"idm_conn_t *"
+block|,
+literal|"conninfo_t *"
+block|}
+block|,
+block|{
+literal|"iscsi"
+block|,
+literal|"login-response"
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|"iscsi_login_rsp_hdr_t *"
+block|,
+literal|"iscsiinfo_t *"
+block|}
+block|,
+block|{
+literal|"iscsi"
+block|,
+literal|"logout-command"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"idm_conn_t *"
+block|,
+literal|"conninfo_t *"
+block|}
+block|,
+block|{
+literal|"iscsi"
+block|,
+literal|"logout-command"
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|"iscsi_logout_hdr_t *"
+block|,
+literal|"iscsiinfo_t *"
+block|}
+block|,
+block|{
+literal|"iscsi"
+block|,
+literal|"logout-response"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"idm_conn_t *"
+block|,
+literal|"conninfo_t *"
+block|}
+block|,
+block|{
+literal|"iscsi"
+block|,
+literal|"logout-response"
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|"iscsi_logout_rsp_hdr_t *"
+block|,
+literal|"iscsiinfo_t *"
+block|}
+block|,
+block|{
+literal|"iscsi"
+block|,
+literal|"data-request"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"idm_conn_t *"
+block|,
+literal|"conninfo_t *"
+block|}
+block|,
+block|{
+literal|"iscsi"
+block|,
+literal|"data-request"
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|"iscsi_rtt_hdr_t *"
+block|,
+literal|"iscsiinfo_t *"
+block|}
+block|,
+block|{
+literal|"iscsi"
+block|,
+literal|"data-send"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"idm_conn_t *"
+block|,
+literal|"conninfo_t *"
+block|}
+block|,
+block|{
+literal|"iscsi"
+block|,
+literal|"data-send"
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|"iscsi_data_rsp_hdr_t *"
+block|,
+literal|"iscsiinfo_t *"
+block|}
+block|,
+block|{
+literal|"iscsi"
+block|,
+literal|"data-receive"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"idm_conn_t *"
+block|,
+literal|"conninfo_t *"
+block|}
+block|,
+block|{
+literal|"iscsi"
+block|,
+literal|"data-receive"
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|"iscsi_data_hdr_t *"
+block|,
+literal|"iscsiinfo_t *"
+block|}
+block|,
+block|{
+literal|"iscsi"
+block|,
+literal|"nop-send"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"idm_conn_t *"
+block|,
+literal|"conninfo_t *"
+block|}
+block|,
+block|{
+literal|"iscsi"
+block|,
+literal|"nop-send"
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|"iscsi_nop_in_hdr_t *"
+block|,
+literal|"iscsiinfo_t *"
+block|}
+block|,
+block|{
+literal|"iscsi"
+block|,
+literal|"nop-receive"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"idm_conn_t *"
+block|,
+literal|"conninfo_t *"
+block|}
+block|,
+block|{
+literal|"iscsi"
+block|,
+literal|"nop-receive"
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|"iscsi_nop_out_hdr_t *"
+block|,
+literal|"iscsiinfo_t *"
+block|}
+block|,
+block|{
+literal|"iscsi"
+block|,
+literal|"scsi-command"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"idm_conn_t *"
+block|,
+literal|"conninfo_t *"
+block|}
+block|,
+block|{
+literal|"iscsi"
+block|,
+literal|"scsi-command"
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|"iscsi_scsi_cmd_hdr_t *"
+block|,
+literal|"iscsiinfo_t *"
+block|}
+block|,
+block|{
+literal|"iscsi"
+block|,
+literal|"scsi-command"
+block|,
+literal|2
+block|,
+literal|2
+block|,
+literal|"scsi_task_t *"
+block|,
+literal|"scsicmd_t *"
+block|}
+block|,
+block|{
+literal|"iscsi"
+block|,
+literal|"scsi-response"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"idm_conn_t *"
+block|,
+literal|"conninfo_t *"
+block|}
+block|,
+block|{
+literal|"iscsi"
+block|,
+literal|"scsi-response"
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|"iscsi_scsi_rsp_hdr_t *"
+block|,
+literal|"iscsiinfo_t *"
+block|}
+block|,
+block|{
+literal|"iscsi"
+block|,
+literal|"task-command"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"idm_conn_t *"
+block|,
+literal|"conninfo_t *"
+block|}
+block|,
+block|{
+literal|"iscsi"
+block|,
+literal|"task-command"
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|"iscsi_scsi_task_mgt_hdr_t *"
+block|,
+literal|"iscsiinfo_t *"
+block|}
+block|,
+block|{
+literal|"iscsi"
+block|,
+literal|"task-response"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"idm_conn_t *"
+block|,
+literal|"conninfo_t *"
+block|}
+block|,
+block|{
+literal|"iscsi"
+block|,
+literal|"task-response"
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|"iscsi_scsi_task_mgt_rsp_hdr_t *"
+block|,
+literal|"iscsiinfo_t *"
+block|}
+block|,
+block|{
+literal|"iscsi"
+block|,
+literal|"text-command"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"idm_conn_t *"
+block|,
+literal|"conninfo_t *"
+block|}
+block|,
+block|{
+literal|"iscsi"
+block|,
+literal|"text-command"
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|"iscsi_text_hdr_t *"
+block|,
+literal|"iscsiinfo_t *"
+block|}
+block|,
+block|{
+literal|"iscsi"
+block|,
+literal|"text-response"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"idm_conn_t *"
+block|,
+literal|"conninfo_t *"
+block|}
+block|,
+block|{
+literal|"iscsi"
+block|,
+literal|"text-response"
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|"iscsi_text_rsp_hdr_t *"
+block|,
+literal|"iscsiinfo_t *"
+block|}
+block|,
+block|{
+literal|"iscsi"
+block|,
+literal|"xfer-start"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"idm_conn_t *"
+block|,
+literal|"conninfo_t *"
+block|}
+block|,
+block|{
+literal|"iscsi"
+block|,
+literal|"xfer-start"
+block|,
+literal|1
+block|,
+literal|0
+block|,
+literal|"idm_conn_t *"
+block|,
+literal|"iscsiinfo_t *"
+block|}
+block|,
+block|{
+literal|"iscsi"
+block|,
+literal|"xfer-start"
+block|,
+literal|2
+block|,
+literal|1
+block|,
+literal|"uintptr_t"
+block|,
+literal|"xferinfo_t *"
+block|}
+block|,
+block|{
+literal|"iscsi"
+block|,
+literal|"xfer-start"
+block|,
+literal|3
+block|,
+literal|2
+block|,
+literal|"uint32_t"
+block|}
+block|,
+block|{
+literal|"iscsi"
+block|,
+literal|"xfer-start"
+block|,
+literal|4
+block|,
+literal|3
+block|,
+literal|"uintptr_t"
+block|}
+block|,
+block|{
+literal|"iscsi"
+block|,
+literal|"xfer-start"
+block|,
+literal|5
+block|,
+literal|4
+block|,
+literal|"uint32_t"
+block|}
+block|,
+block|{
+literal|"iscsi"
+block|,
+literal|"xfer-start"
+block|,
+literal|6
+block|,
+literal|5
+block|,
+literal|"uint32_t"
+block|}
+block|,
+block|{
+literal|"iscsi"
+block|,
+literal|"xfer-start"
+block|,
+literal|7
+block|,
+literal|6
+block|,
+literal|"uint32_t"
+block|}
+block|,
+block|{
+literal|"iscsi"
+block|,
+literal|"xfer-start"
+block|,
+literal|8
+block|,
+literal|7
+block|,
+literal|"int"
+block|}
+block|,
+block|{
+literal|"iscsi"
+block|,
+literal|"xfer-done"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"idm_conn_t *"
+block|,
+literal|"conninfo_t *"
+block|}
+block|,
+block|{
+literal|"iscsi"
+block|,
+literal|"xfer-done"
+block|,
+literal|1
+block|,
+literal|0
+block|,
+literal|"idm_conn_t *"
+block|,
+literal|"iscsiinfo_t *"
+block|}
+block|,
+block|{
+literal|"iscsi"
+block|,
+literal|"xfer-done"
+block|,
+literal|2
+block|,
+literal|1
+block|,
+literal|"uintptr_t"
+block|,
+literal|"xferinfo_t *"
+block|}
+block|,
+block|{
+literal|"iscsi"
+block|,
+literal|"xfer-done"
+block|,
+literal|3
+block|,
+literal|2
+block|,
+literal|"uint32_t"
+block|}
+block|,
+block|{
+literal|"iscsi"
+block|,
+literal|"xfer-done"
+block|,
+literal|4
+block|,
+literal|3
+block|,
+literal|"uintptr_t"
+block|}
+block|,
+block|{
+literal|"iscsi"
+block|,
+literal|"xfer-done"
+block|,
+literal|5
+block|,
+literal|4
+block|,
+literal|"uint32_t"
+block|}
+block|,
+block|{
+literal|"iscsi"
+block|,
+literal|"xfer-done"
+block|,
+literal|6
+block|,
+literal|5
+block|,
+literal|"uint32_t"
+block|}
+block|,
+block|{
+literal|"iscsi"
+block|,
+literal|"xfer-done"
+block|,
+literal|7
+block|,
+literal|6
+block|,
+literal|"uint32_t"
+block|}
+block|,
+block|{
+literal|"iscsi"
+block|,
+literal|"xfer-done"
+block|,
+literal|8
+block|,
+literal|7
 block|,
 literal|"int"
 block|}
@@ -6251,6 +7098,914 @@ literal|"CB_RECALL4res *"
 block|}
 block|,
 block|{
+literal|"ip"
+block|,
+literal|"send"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"mblk_t *"
+block|,
+literal|"pktinfo_t *"
+block|}
+block|,
+block|{
+literal|"ip"
+block|,
+literal|"send"
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|"conn_t *"
+block|,
+literal|"csinfo_t *"
+block|}
+block|,
+block|{
+literal|"ip"
+block|,
+literal|"send"
+block|,
+literal|2
+block|,
+literal|2
+block|,
+literal|"void_ip_t *"
+block|,
+literal|"ipinfo_t *"
+block|}
+block|,
+block|{
+literal|"ip"
+block|,
+literal|"send"
+block|,
+literal|3
+block|,
+literal|3
+block|,
+literal|"__dtrace_ipsr_ill_t *"
+block|,
+literal|"ifinfo_t *"
+block|}
+block|,
+block|{
+literal|"ip"
+block|,
+literal|"send"
+block|,
+literal|4
+block|,
+literal|4
+block|,
+literal|"ipha_t *"
+block|,
+literal|"ipv4info_t *"
+block|}
+block|,
+block|{
+literal|"ip"
+block|,
+literal|"send"
+block|,
+literal|5
+block|,
+literal|5
+block|,
+literal|"ip6_t *"
+block|,
+literal|"ipv6info_t *"
+block|}
+block|,
+block|{
+literal|"ip"
+block|,
+literal|"send"
+block|,
+literal|6
+block|,
+literal|6
+block|,
+literal|"int"
+block|}
+block|,
+comment|/* used by __dtrace_ipsr_ill_t */
+block|{
+literal|"ip"
+block|,
+literal|"receive"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"mblk_t *"
+block|,
+literal|"pktinfo_t *"
+block|}
+block|,
+block|{
+literal|"ip"
+block|,
+literal|"receive"
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|"conn_t *"
+block|,
+literal|"csinfo_t *"
+block|}
+block|,
+block|{
+literal|"ip"
+block|,
+literal|"receive"
+block|,
+literal|2
+block|,
+literal|2
+block|,
+literal|"void_ip_t *"
+block|,
+literal|"ipinfo_t *"
+block|}
+block|,
+block|{
+literal|"ip"
+block|,
+literal|"receive"
+block|,
+literal|3
+block|,
+literal|3
+block|,
+literal|"__dtrace_ipsr_ill_t *"
+block|,
+literal|"ifinfo_t *"
+block|}
+block|,
+block|{
+literal|"ip"
+block|,
+literal|"receive"
+block|,
+literal|4
+block|,
+literal|4
+block|,
+literal|"ipha_t *"
+block|,
+literal|"ipv4info_t *"
+block|}
+block|,
+block|{
+literal|"ip"
+block|,
+literal|"receive"
+block|,
+literal|5
+block|,
+literal|5
+block|,
+literal|"ip6_t *"
+block|,
+literal|"ipv6info_t *"
+block|}
+block|,
+block|{
+literal|"ip"
+block|,
+literal|"receive"
+block|,
+literal|6
+block|,
+literal|6
+block|,
+literal|"int"
+block|}
+block|,
+comment|/* used by __dtrace_ipsr_ill_t */
+block|{
+literal|"tcp"
+block|,
+literal|"connect-established"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"mblk_t *"
+block|,
+literal|"pktinfo_t *"
+block|}
+block|,
+block|{
+literal|"tcp"
+block|,
+literal|"connect-established"
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|"ip_xmit_attr_t *"
+block|,
+literal|"csinfo_t *"
+block|}
+block|,
+block|{
+literal|"tcp"
+block|,
+literal|"connect-established"
+block|,
+literal|2
+block|,
+literal|2
+block|,
+literal|"void_ip_t *"
+block|,
+literal|"ipinfo_t *"
+block|}
+block|,
+block|{
+literal|"tcp"
+block|,
+literal|"connect-established"
+block|,
+literal|3
+block|,
+literal|3
+block|,
+literal|"tcp_t *"
+block|,
+literal|"tcpsinfo_t *"
+block|}
+block|,
+block|{
+literal|"tcp"
+block|,
+literal|"connect-established"
+block|,
+literal|4
+block|,
+literal|4
+block|,
+literal|"tcph_t *"
+block|,
+literal|"tcpinfo_t *"
+block|}
+block|,
+block|{
+literal|"tcp"
+block|,
+literal|"connect-refused"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"mblk_t *"
+block|,
+literal|"pktinfo_t *"
+block|}
+block|,
+block|{
+literal|"tcp"
+block|,
+literal|"connect-refused"
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|"ip_xmit_attr_t *"
+block|,
+literal|"csinfo_t *"
+block|}
+block|,
+block|{
+literal|"tcp"
+block|,
+literal|"connect-refused"
+block|,
+literal|2
+block|,
+literal|2
+block|,
+literal|"void_ip_t *"
+block|,
+literal|"ipinfo_t *"
+block|}
+block|,
+block|{
+literal|"tcp"
+block|,
+literal|"connect-refused"
+block|,
+literal|3
+block|,
+literal|3
+block|,
+literal|"tcp_t *"
+block|,
+literal|"tcpsinfo_t *"
+block|}
+block|,
+block|{
+literal|"tcp"
+block|,
+literal|"connect-refused"
+block|,
+literal|4
+block|,
+literal|4
+block|,
+literal|"tcph_t *"
+block|,
+literal|"tcpinfo_t *"
+block|}
+block|,
+block|{
+literal|"tcp"
+block|,
+literal|"connect-request"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"mblk_t *"
+block|,
+literal|"pktinfo_t *"
+block|}
+block|,
+block|{
+literal|"tcp"
+block|,
+literal|"connect-request"
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|"ip_xmit_attr_t *"
+block|,
+literal|"csinfo_t *"
+block|}
+block|,
+block|{
+literal|"tcp"
+block|,
+literal|"connect-request"
+block|,
+literal|2
+block|,
+literal|2
+block|,
+literal|"void_ip_t *"
+block|,
+literal|"ipinfo_t *"
+block|}
+block|,
+block|{
+literal|"tcp"
+block|,
+literal|"connect-request"
+block|,
+literal|3
+block|,
+literal|3
+block|,
+literal|"tcp_t *"
+block|,
+literal|"tcpsinfo_t *"
+block|}
+block|,
+block|{
+literal|"tcp"
+block|,
+literal|"connect-request"
+block|,
+literal|4
+block|,
+literal|4
+block|,
+literal|"tcph_t *"
+block|,
+literal|"tcpinfo_t *"
+block|}
+block|,
+block|{
+literal|"tcp"
+block|,
+literal|"accept-established"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"mblk_t *"
+block|,
+literal|"pktinfo_t *"
+block|}
+block|,
+block|{
+literal|"tcp"
+block|,
+literal|"accept-established"
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|"ip_xmit_attr_t *"
+block|,
+literal|"csinfo_t *"
+block|}
+block|,
+block|{
+literal|"tcp"
+block|,
+literal|"accept-established"
+block|,
+literal|2
+block|,
+literal|2
+block|,
+literal|"void_ip_t *"
+block|,
+literal|"ipinfo_t *"
+block|}
+block|,
+block|{
+literal|"tcp"
+block|,
+literal|"accept-established"
+block|,
+literal|3
+block|,
+literal|3
+block|,
+literal|"tcp_t *"
+block|,
+literal|"tcpsinfo_t *"
+block|}
+block|,
+block|{
+literal|"tcp"
+block|,
+literal|"accept-established"
+block|,
+literal|4
+block|,
+literal|4
+block|,
+literal|"tcph_t *"
+block|,
+literal|"tcpinfo_t *"
+block|}
+block|,
+block|{
+literal|"tcp"
+block|,
+literal|"accept-refused"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"mblk_t *"
+block|,
+literal|"pktinfo_t *"
+block|}
+block|,
+block|{
+literal|"tcp"
+block|,
+literal|"accept-refused"
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|"ip_xmit_attr_t *"
+block|,
+literal|"csinfo_t *"
+block|}
+block|,
+block|{
+literal|"tcp"
+block|,
+literal|"accept-refused"
+block|,
+literal|2
+block|,
+literal|2
+block|,
+literal|"void_ip_t *"
+block|,
+literal|"ipinfo_t *"
+block|}
+block|,
+block|{
+literal|"tcp"
+block|,
+literal|"accept-refused"
+block|,
+literal|3
+block|,
+literal|3
+block|,
+literal|"tcp_t *"
+block|,
+literal|"tcpsinfo_t *"
+block|}
+block|,
+block|{
+literal|"tcp"
+block|,
+literal|"accept-refused"
+block|,
+literal|4
+block|,
+literal|4
+block|,
+literal|"tcph_t *"
+block|,
+literal|"tcpinfo_t *"
+block|}
+block|,
+block|{
+literal|"tcp"
+block|,
+literal|"state-change"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"void"
+block|,
+literal|"void"
+block|}
+block|,
+block|{
+literal|"tcp"
+block|,
+literal|"state-change"
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|"ip_xmit_attr_t *"
+block|,
+literal|"csinfo_t *"
+block|}
+block|,
+block|{
+literal|"tcp"
+block|,
+literal|"state-change"
+block|,
+literal|2
+block|,
+literal|2
+block|,
+literal|"void"
+block|,
+literal|"void"
+block|}
+block|,
+block|{
+literal|"tcp"
+block|,
+literal|"state-change"
+block|,
+literal|3
+block|,
+literal|3
+block|,
+literal|"tcp_t *"
+block|,
+literal|"tcpsinfo_t *"
+block|}
+block|,
+block|{
+literal|"tcp"
+block|,
+literal|"state-change"
+block|,
+literal|4
+block|,
+literal|4
+block|,
+literal|"void"
+block|,
+literal|"void"
+block|}
+block|,
+block|{
+literal|"tcp"
+block|,
+literal|"state-change"
+block|,
+literal|5
+block|,
+literal|5
+block|,
+literal|"int32_t"
+block|,
+literal|"tcplsinfo_t *"
+block|}
+block|,
+block|{
+literal|"tcp"
+block|,
+literal|"send"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"mblk_t *"
+block|,
+literal|"pktinfo_t *"
+block|}
+block|,
+block|{
+literal|"tcp"
+block|,
+literal|"send"
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|"ip_xmit_attr_t *"
+block|,
+literal|"csinfo_t *"
+block|}
+block|,
+block|{
+literal|"tcp"
+block|,
+literal|"send"
+block|,
+literal|2
+block|,
+literal|2
+block|,
+literal|"__dtrace_tcp_void_ip_t *"
+block|,
+literal|"ipinfo_t *"
+block|}
+block|,
+block|{
+literal|"tcp"
+block|,
+literal|"send"
+block|,
+literal|3
+block|,
+literal|3
+block|,
+literal|"tcp_t *"
+block|,
+literal|"tcpsinfo_t *"
+block|}
+block|,
+block|{
+literal|"tcp"
+block|,
+literal|"send"
+block|,
+literal|4
+block|,
+literal|4
+block|,
+literal|"__dtrace_tcp_tcph_t *"
+block|,
+literal|"tcpinfo_t *"
+block|}
+block|,
+block|{
+literal|"tcp"
+block|,
+literal|"receive"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"mblk_t *"
+block|,
+literal|"pktinfo_t *"
+block|}
+block|,
+block|{
+literal|"tcp"
+block|,
+literal|"receive"
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|"ip_xmit_attr_t *"
+block|,
+literal|"csinfo_t *"
+block|}
+block|,
+block|{
+literal|"tcp"
+block|,
+literal|"receive"
+block|,
+literal|2
+block|,
+literal|2
+block|,
+literal|"__dtrace_tcp_void_ip_t *"
+block|,
+literal|"ipinfo_t *"
+block|}
+block|,
+block|{
+literal|"tcp"
+block|,
+literal|"receive"
+block|,
+literal|3
+block|,
+literal|3
+block|,
+literal|"tcp_t *"
+block|,
+literal|"tcpsinfo_t *"
+block|}
+block|,
+block|{
+literal|"tcp"
+block|,
+literal|"receive"
+block|,
+literal|4
+block|,
+literal|4
+block|,
+literal|"__dtrace_tcp_tcph_t *"
+block|,
+literal|"tcpinfo_t *"
+block|}
+block|,
+block|{
+literal|"udp"
+block|,
+literal|"send"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"mblk_t *"
+block|,
+literal|"pktinfo_t *"
+block|}
+block|,
+block|{
+literal|"udp"
+block|,
+literal|"send"
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|"ip_xmit_attr_t *"
+block|,
+literal|"csinfo_t *"
+block|}
+block|,
+block|{
+literal|"udp"
+block|,
+literal|"send"
+block|,
+literal|2
+block|,
+literal|2
+block|,
+literal|"void_ip_t *"
+block|,
+literal|"ipinfo_t *"
+block|}
+block|,
+block|{
+literal|"udp"
+block|,
+literal|"send"
+block|,
+literal|3
+block|,
+literal|3
+block|,
+literal|"udp_t *"
+block|,
+literal|"udpsinfo_t *"
+block|}
+block|,
+block|{
+literal|"udp"
+block|,
+literal|"send"
+block|,
+literal|4
+block|,
+literal|4
+block|,
+literal|"udpha_t *"
+block|,
+literal|"udpinfo_t *"
+block|}
+block|,
+block|{
+literal|"udp"
+block|,
+literal|"receive"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"mblk_t *"
+block|,
+literal|"pktinfo_t *"
+block|}
+block|,
+block|{
+literal|"udp"
+block|,
+literal|"receive"
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|"ip_xmit_attr_t *"
+block|,
+literal|"csinfo_t *"
+block|}
+block|,
+block|{
+literal|"udp"
+block|,
+literal|"receive"
+block|,
+literal|2
+block|,
+literal|2
+block|,
+literal|"void_ip_t *"
+block|,
+literal|"ipinfo_t *"
+block|}
+block|,
+block|{
+literal|"udp"
+block|,
+literal|"receive"
+block|,
+literal|3
+block|,
+literal|3
+block|,
+literal|"udp_t *"
+block|,
+literal|"udpsinfo_t *"
+block|}
+block|,
+block|{
+literal|"udp"
+block|,
+literal|"receive"
+block|,
+literal|4
+block|,
+literal|4
+block|,
+literal|"udpha_t *"
+block|,
+literal|"udpinfo_t *"
+block|}
+block|,
+block|{
 literal|"sysevent"
 block|,
 literal|"post"
@@ -6960,6 +8715,1292 @@ block|,
 literal|1
 block|,
 literal|"vcpu_guest_context_t *"
+block|}
+block|,
+block|{
+literal|"srp"
+block|,
+literal|"service-up"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"srpt_session_t *"
+block|,
+literal|"conninfo_t *"
+block|}
+block|,
+block|{
+literal|"srp"
+block|,
+literal|"service-up"
+block|,
+literal|1
+block|,
+literal|0
+block|,
+literal|"srpt_session_t *"
+block|,
+literal|"srp_portinfo_t *"
+block|}
+block|,
+block|{
+literal|"srp"
+block|,
+literal|"service-down"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"srpt_session_t *"
+block|,
+literal|"conninfo_t *"
+block|}
+block|,
+block|{
+literal|"srp"
+block|,
+literal|"service-down"
+block|,
+literal|1
+block|,
+literal|0
+block|,
+literal|"srpt_session_t *"
+block|,
+literal|"srp_portinfo_t *"
+block|}
+block|,
+block|{
+literal|"srp"
+block|,
+literal|"login-command"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"srpt_session_t *"
+block|,
+literal|"conninfo_t *"
+block|}
+block|,
+block|{
+literal|"srp"
+block|,
+literal|"login-command"
+block|,
+literal|1
+block|,
+literal|0
+block|,
+literal|"srpt_session_t *"
+block|,
+literal|"srp_portinfo_t *"
+block|}
+block|,
+block|{
+literal|"srp"
+block|,
+literal|"login-command"
+block|,
+literal|2
+block|,
+literal|1
+block|,
+literal|"srp_login_req_t *"
+block|,
+literal|"srp_logininfo_t *"
+block|}
+block|,
+block|{
+literal|"srp"
+block|,
+literal|"login-response"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"srpt_session_t *"
+block|,
+literal|"conninfo_t *"
+block|}
+block|,
+block|{
+literal|"srp"
+block|,
+literal|"login-response"
+block|,
+literal|1
+block|,
+literal|0
+block|,
+literal|"srpt_session_t *"
+block|,
+literal|"srp_portinfo_t *"
+block|}
+block|,
+block|{
+literal|"srp"
+block|,
+literal|"login-response"
+block|,
+literal|2
+block|,
+literal|1
+block|,
+literal|"srp_login_rsp_t *"
+block|,
+literal|"srp_logininfo_t *"
+block|}
+block|,
+block|{
+literal|"srp"
+block|,
+literal|"login-response"
+block|,
+literal|3
+block|,
+literal|2
+block|,
+literal|"srp_login_rej_t *"
+block|}
+block|,
+block|{
+literal|"srp"
+block|,
+literal|"logout-command"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"srpt_channel_t *"
+block|,
+literal|"conninfo_t *"
+block|}
+block|,
+block|{
+literal|"srp"
+block|,
+literal|"logout-command"
+block|,
+literal|1
+block|,
+literal|0
+block|,
+literal|"srpt_channel_t *"
+block|,
+literal|"srp_portinfo_t *"
+block|}
+block|,
+block|{
+literal|"srp"
+block|,
+literal|"task-command"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"srpt_channel_t *"
+block|,
+literal|"conninfo_t *"
+block|}
+block|,
+block|{
+literal|"srp"
+block|,
+literal|"task-command"
+block|,
+literal|1
+block|,
+literal|0
+block|,
+literal|"srpt_channel_t *"
+block|,
+literal|"srp_portinfo_t *"
+block|}
+block|,
+block|{
+literal|"srp"
+block|,
+literal|"task-command"
+block|,
+literal|2
+block|,
+literal|1
+block|,
+literal|"srp_cmd_req_t *"
+block|,
+literal|"srp_taskinfo_t *"
+block|}
+block|,
+block|{
+literal|"srp"
+block|,
+literal|"task-response"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"srpt_channel_t *"
+block|,
+literal|"conninfo_t *"
+block|}
+block|,
+block|{
+literal|"srp"
+block|,
+literal|"task-response"
+block|,
+literal|1
+block|,
+literal|0
+block|,
+literal|"srpt_channel_t *"
+block|,
+literal|"srp_portinfo_t *"
+block|}
+block|,
+block|{
+literal|"srp"
+block|,
+literal|"task-response"
+block|,
+literal|2
+block|,
+literal|1
+block|,
+literal|"srp_rsp_t *"
+block|,
+literal|"srp_taskinfo_t *"
+block|}
+block|,
+block|{
+literal|"srp"
+block|,
+literal|"task-response"
+block|,
+literal|3
+block|,
+literal|2
+block|,
+literal|"scsi_task_t *"
+block|}
+block|,
+block|{
+literal|"srp"
+block|,
+literal|"task-response"
+block|,
+literal|4
+block|,
+literal|3
+block|,
+literal|"int8_t"
+block|}
+block|,
+block|{
+literal|"srp"
+block|,
+literal|"scsi-command"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"srpt_channel_t *"
+block|,
+literal|"conninfo_t *"
+block|}
+block|,
+block|{
+literal|"srp"
+block|,
+literal|"scsi-command"
+block|,
+literal|1
+block|,
+literal|0
+block|,
+literal|"srpt_channel_t *"
+block|,
+literal|"srp_portinfo_t *"
+block|}
+block|,
+block|{
+literal|"srp"
+block|,
+literal|"scsi-command"
+block|,
+literal|2
+block|,
+literal|1
+block|,
+literal|"scsi_task_t *"
+block|,
+literal|"scsicmd_t *"
+block|}
+block|,
+block|{
+literal|"srp"
+block|,
+literal|"scsi-command"
+block|,
+literal|3
+block|,
+literal|2
+block|,
+literal|"srp_cmd_req_t *"
+block|,
+literal|"srp_taskinfo_t *"
+block|}
+block|,
+block|{
+literal|"srp"
+block|,
+literal|"scsi-response"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"srpt_channel_t *"
+block|,
+literal|"conninfo_t *"
+block|}
+block|,
+block|{
+literal|"srp"
+block|,
+literal|"scsi-response"
+block|,
+literal|1
+block|,
+literal|0
+block|,
+literal|"srpt_channel_t *"
+block|,
+literal|"srp_portinfo_t *"
+block|}
+block|,
+block|{
+literal|"srp"
+block|,
+literal|"scsi-response"
+block|,
+literal|2
+block|,
+literal|1
+block|,
+literal|"srp_rsp_t *"
+block|,
+literal|"srp_taskinfo_t *"
+block|}
+block|,
+block|{
+literal|"srp"
+block|,
+literal|"scsi-response"
+block|,
+literal|3
+block|,
+literal|2
+block|,
+literal|"scsi_task_t *"
+block|}
+block|,
+block|{
+literal|"srp"
+block|,
+literal|"scsi-response"
+block|,
+literal|4
+block|,
+literal|3
+block|,
+literal|"int8_t"
+block|}
+block|,
+block|{
+literal|"srp"
+block|,
+literal|"xfer-start"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"srpt_channel_t *"
+block|,
+literal|"conninfo_t *"
+block|}
+block|,
+block|{
+literal|"srp"
+block|,
+literal|"xfer-start"
+block|,
+literal|1
+block|,
+literal|0
+block|,
+literal|"srpt_channel_t *"
+block|,
+literal|"srp_portinfo_t *"
+block|}
+block|,
+block|{
+literal|"srp"
+block|,
+literal|"xfer-start"
+block|,
+literal|2
+block|,
+literal|1
+block|,
+literal|"ibt_wr_ds_t *"
+block|,
+literal|"xferinfo_t *"
+block|}
+block|,
+block|{
+literal|"srp"
+block|,
+literal|"xfer-start"
+block|,
+literal|3
+block|,
+literal|2
+block|,
+literal|"srpt_iu_t *"
+block|,
+literal|"srp_taskinfo_t *"
+block|}
+block|,
+block|{
+literal|"srp"
+block|,
+literal|"xfer-start"
+block|,
+literal|4
+block|,
+literal|3
+block|,
+literal|"ibt_send_wr_t *"
+block|}
+block|,
+block|{
+literal|"srp"
+block|,
+literal|"xfer-start"
+block|,
+literal|5
+block|,
+literal|4
+block|,
+literal|"uint32_t"
+block|}
+block|,
+block|{
+literal|"srp"
+block|,
+literal|"xfer-start"
+block|,
+literal|6
+block|,
+literal|5
+block|,
+literal|"uint32_t"
+block|}
+block|,
+block|{
+literal|"srp"
+block|,
+literal|"xfer-start"
+block|,
+literal|7
+block|,
+literal|6
+block|,
+literal|"uint32_t"
+block|}
+block|,
+block|{
+literal|"srp"
+block|,
+literal|"xfer-start"
+block|,
+literal|8
+block|,
+literal|7
+block|,
+literal|"uint32_t"
+block|}
+block|,
+block|{
+literal|"srp"
+block|,
+literal|"xfer-done"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"srpt_channel_t *"
+block|,
+literal|"conninfo_t *"
+block|}
+block|,
+block|{
+literal|"srp"
+block|,
+literal|"xfer-done"
+block|,
+literal|1
+block|,
+literal|0
+block|,
+literal|"srpt_channel_t *"
+block|,
+literal|"srp_portinfo_t *"
+block|}
+block|,
+block|{
+literal|"srp"
+block|,
+literal|"xfer-done"
+block|,
+literal|2
+block|,
+literal|1
+block|,
+literal|"ibt_wr_ds_t *"
+block|,
+literal|"xferinfo_t *"
+block|}
+block|,
+block|{
+literal|"srp"
+block|,
+literal|"xfer-done"
+block|,
+literal|3
+block|,
+literal|2
+block|,
+literal|"srpt_iu_t *"
+block|,
+literal|"srp_taskinfo_t *"
+block|}
+block|,
+block|{
+literal|"srp"
+block|,
+literal|"xfer-done"
+block|,
+literal|4
+block|,
+literal|3
+block|,
+literal|"ibt_send_wr_t *"
+block|}
+block|,
+block|{
+literal|"srp"
+block|,
+literal|"xfer-done"
+block|,
+literal|5
+block|,
+literal|4
+block|,
+literal|"uint32_t"
+block|}
+block|,
+block|{
+literal|"srp"
+block|,
+literal|"xfer-done"
+block|,
+literal|6
+block|,
+literal|5
+block|,
+literal|"uint32_t"
+block|}
+block|,
+block|{
+literal|"srp"
+block|,
+literal|"xfer-done"
+block|,
+literal|7
+block|,
+literal|6
+block|,
+literal|"uint32_t"
+block|}
+block|,
+block|{
+literal|"srp"
+block|,
+literal|"xfer-done"
+block|,
+literal|8
+block|,
+literal|7
+block|,
+literal|"uint32_t"
+block|}
+block|,
+block|{
+literal|"fc"
+block|,
+literal|"link-up"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"fct_i_local_port_t *"
+block|,
+literal|"conninfo_t *"
+block|}
+block|,
+block|{
+literal|"fc"
+block|,
+literal|"link-down"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"fct_i_local_port_t *"
+block|,
+literal|"conninfo_t *"
+block|}
+block|,
+block|{
+literal|"fc"
+block|,
+literal|"fabric-login-start"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"fct_i_local_port_t *"
+block|,
+literal|"conninfo_t *"
+block|}
+block|,
+block|{
+literal|"fc"
+block|,
+literal|"fabric-login-start"
+block|,
+literal|1
+block|,
+literal|0
+block|,
+literal|"fct_i_local_port_t *"
+block|,
+literal|"fc_port_info_t *"
+block|}
+block|,
+block|{
+literal|"fc"
+block|,
+literal|"fabric-login-end"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"fct_i_local_port_t *"
+block|,
+literal|"conninfo_t *"
+block|}
+block|,
+block|{
+literal|"fc"
+block|,
+literal|"fabric-login-end"
+block|,
+literal|1
+block|,
+literal|0
+block|,
+literal|"fct_i_local_port_t *"
+block|,
+literal|"fc_port_info_t *"
+block|}
+block|,
+block|{
+literal|"fc"
+block|,
+literal|"rport-login-start"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"fct_cmd_t *"
+block|,
+literal|"conninfo_t *"
+block|}
+block|,
+block|{
+literal|"fc"
+block|,
+literal|"rport-login-start"
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|"fct_local_port_t *"
+block|,
+literal|"fc_port_info_t *"
+block|}
+block|,
+block|{
+literal|"fc"
+block|,
+literal|"rport-login-start"
+block|,
+literal|2
+block|,
+literal|2
+block|,
+literal|"fct_i_remote_port_t *"
+block|,
+literal|"fc_port_info_t *"
+block|}
+block|,
+block|{
+literal|"fc"
+block|,
+literal|"rport-login-start"
+block|,
+literal|3
+block|,
+literal|3
+block|,
+literal|"int"
+block|,
+literal|"int"
+block|}
+block|,
+block|{
+literal|"fc"
+block|,
+literal|"rport-login-end"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"fct_cmd_t *"
+block|,
+literal|"conninfo_t *"
+block|}
+block|,
+block|{
+literal|"fc"
+block|,
+literal|"rport-login-end"
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|"fct_local_port_t *"
+block|,
+literal|"fc_port_info_t *"
+block|}
+block|,
+block|{
+literal|"fc"
+block|,
+literal|"rport-login-end"
+block|,
+literal|2
+block|,
+literal|2
+block|,
+literal|"fct_i_remote_port_t *"
+block|,
+literal|"fc_port_info_t *"
+block|}
+block|,
+block|{
+literal|"fc"
+block|,
+literal|"rport-login-end"
+block|,
+literal|3
+block|,
+literal|3
+block|,
+literal|"int"
+block|,
+literal|"int"
+block|}
+block|,
+block|{
+literal|"fc"
+block|,
+literal|"rport-login-end"
+block|,
+literal|4
+block|,
+literal|4
+block|,
+literal|"int"
+block|,
+literal|"int"
+block|}
+block|,
+block|{
+literal|"fc"
+block|,
+literal|"rport-logout-start"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"fct_cmd_t *"
+block|,
+literal|"conninfo_t *"
+block|}
+block|,
+block|{
+literal|"fc"
+block|,
+literal|"rport-logout-start"
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|"fct_local_port_t *"
+block|,
+literal|"fc_port_info_t *"
+block|}
+block|,
+block|{
+literal|"fc"
+block|,
+literal|"rport-logout-start"
+block|,
+literal|2
+block|,
+literal|2
+block|,
+literal|"fct_i_remote_port_t *"
+block|,
+literal|"fc_port_info_t *"
+block|}
+block|,
+block|{
+literal|"fc"
+block|,
+literal|"rport-logout-start"
+block|,
+literal|3
+block|,
+literal|3
+block|,
+literal|"int"
+block|,
+literal|"int"
+block|}
+block|,
+block|{
+literal|"fc"
+block|,
+literal|"rport-logout-end"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"fct_cmd_t *"
+block|,
+literal|"conninfo_t *"
+block|}
+block|,
+block|{
+literal|"fc"
+block|,
+literal|"rport-logout-end"
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|"fct_local_port_t *"
+block|,
+literal|"fc_port_info_t *"
+block|}
+block|,
+block|{
+literal|"fc"
+block|,
+literal|"rport-logout-end"
+block|,
+literal|2
+block|,
+literal|2
+block|,
+literal|"fct_i_remote_port_t *"
+block|,
+literal|"fc_port_info_t *"
+block|}
+block|,
+block|{
+literal|"fc"
+block|,
+literal|"rport-logout-end"
+block|,
+literal|3
+block|,
+literal|3
+block|,
+literal|"int"
+block|,
+literal|"int"
+block|}
+block|,
+block|{
+literal|"fc"
+block|,
+literal|"scsi-command"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"fct_cmd_t *"
+block|,
+literal|"conninfo_t *"
+block|}
+block|,
+block|{
+literal|"fc"
+block|,
+literal|"scsi-command"
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|"fct_i_local_port_t *"
+block|,
+literal|"fc_port_info_t *"
+block|}
+block|,
+block|{
+literal|"fc"
+block|,
+literal|"scsi-command"
+block|,
+literal|2
+block|,
+literal|2
+block|,
+literal|"scsi_task_t *"
+block|,
+literal|"scsicmd_t *"
+block|}
+block|,
+block|{
+literal|"fc"
+block|,
+literal|"scsi-command"
+block|,
+literal|3
+block|,
+literal|3
+block|,
+literal|"fct_i_remote_port_t *"
+block|,
+literal|"fc_port_info_t *"
+block|}
+block|,
+block|{
+literal|"fc"
+block|,
+literal|"scsi-response"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"fct_cmd_t *"
+block|,
+literal|"conninfo_t *"
+block|}
+block|,
+block|{
+literal|"fc"
+block|,
+literal|"scsi-response"
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|"fct_i_local_port_t *"
+block|,
+literal|"fc_port_info_t *"
+block|}
+block|,
+block|{
+literal|"fc"
+block|,
+literal|"scsi-response"
+block|,
+literal|2
+block|,
+literal|2
+block|,
+literal|"scsi_task_t *"
+block|,
+literal|"scsicmd_t *"
+block|}
+block|,
+block|{
+literal|"fc"
+block|,
+literal|"scsi-response"
+block|,
+literal|3
+block|,
+literal|3
+block|,
+literal|"fct_i_remote_port_t *"
+block|,
+literal|"fc_port_info_t *"
+block|}
+block|,
+block|{
+literal|"fc"
+block|,
+literal|"xfer-start"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"fct_cmd_t *"
+block|,
+literal|"conninfo_t *"
+block|}
+block|,
+block|{
+literal|"fc"
+block|,
+literal|"xfer-start"
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|"fct_i_local_port_t *"
+block|,
+literal|"fc_port_info_t *"
+block|}
+block|,
+block|{
+literal|"fc"
+block|,
+literal|"xfer-start"
+block|,
+literal|2
+block|,
+literal|2
+block|,
+literal|"scsi_task_t *"
+block|,
+literal|"scsicmd_t *"
+block|}
+block|,
+block|{
+literal|"fc"
+block|,
+literal|"xfer-start"
+block|,
+literal|3
+block|,
+literal|3
+block|,
+literal|"fct_i_remote_port_t *"
+block|,
+literal|"fc_port_info_t *"
+block|}
+block|,
+block|{
+literal|"fc"
+block|,
+literal|"xfer-start"
+block|,
+literal|4
+block|,
+literal|4
+block|,
+literal|"stmf_data_buf_t *"
+block|,
+literal|"fc_xferinfo_t *"
+block|}
+block|,
+block|{
+literal|"fc"
+block|,
+literal|"xfer-done"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"fct_cmd_t *"
+block|,
+literal|"conninfo_t *"
+block|}
+block|,
+block|{
+literal|"fc"
+block|,
+literal|"xfer-done"
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|"fct_i_local_port_t *"
+block|,
+literal|"fc_port_info_t *"
+block|}
+block|,
+block|{
+literal|"fc"
+block|,
+literal|"xfer-done"
+block|,
+literal|2
+block|,
+literal|2
+block|,
+literal|"scsi_task_t *"
+block|,
+literal|"scsicmd_t *"
+block|}
+block|,
+block|{
+literal|"fc"
+block|,
+literal|"xfer-done"
+block|,
+literal|3
+block|,
+literal|3
+block|,
+literal|"fct_i_remote_port_t *"
+block|,
+literal|"fc_port_info_t *"
+block|}
+block|,
+block|{
+literal|"fc"
+block|,
+literal|"xfer-done"
+block|,
+literal|4
+block|,
+literal|4
+block|,
+literal|"stmf_data_buf_t *"
+block|,
+literal|"fc_xferinfo_t *"
+block|}
+block|,
+block|{
+literal|"fc"
+block|,
+literal|"rscn-receive"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"fct_i_local_port_t *"
+block|,
+literal|"conninfo_t *"
+block|}
+block|,
+block|{
+literal|"fc"
+block|,
+literal|"rscn-receive"
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|"int"
+block|,
+literal|"int"
+block|}
+block|,
+block|{
+literal|"fc"
+block|,
+literal|"abts-receive"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"fct_cmd_t *"
+block|,
+literal|"conninfo_t *"
+block|}
+block|,
+block|{
+literal|"fc"
+block|,
+literal|"abts-receive"
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|"fct_i_local_port_t *"
+block|,
+literal|"fc_port_info_t *"
+block|}
+block|,
+block|{
+literal|"fc"
+block|,
+literal|"abts-receive"
+block|,
+literal|2
+block|,
+literal|2
+block|,
+literal|"fct_i_remote_port_t *"
+block|,
+literal|"fc_port_info_t *"
 block|}
 block|,
 block|{

@@ -4,15 +4,8 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright (c) 2003, 2010, Oracle and/or its affiliates. All rights reserved.  */
 end_comment
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_comment
 comment|/*  * DTrace - Dynamic Tracing for Solaris  *  * This is the implementation of the Solaris Dynamic Tracing framework  * (DTrace).  The user-visible interface to DTrace is described at length in  * the "Solaris Dynamic Tracing Guide".  The interfaces between the libdtrace  * library, the in-kernel DTrace framework, and the DTrace providers are  * described in the block comments in the<sys/dtrace.h> header file.  The  * internal architecture of DTrace is described in the block comments in the  *<sys/dtrace_impl.h> header file.  The comments contained within the DTrace  * implementation very much assume mastery of all of these sources; if one has  * an unanswered question about the implementation, one should consult them  * first.  *  * The functions here are ordered roughly as follows:  *  *   - Probe context functions  *   - Probe hashing functions  *   - Non-probe context utility functions  *   - Matching functions  *   - Provider-to-Framework API functions  *   - Probe management functions  *   - DIF object functions  *   - Format functions  *   - Predicate functions  *   - ECB functions  *   - Buffer functions  *   - Enabling functions  *   - DOF functions  *   - Anonymous enabling functions  *   - Consumer state functions  *   - Helper functions  *   - Hook functions  *   - Driver cookbook functions  *  * Each group of functions begins with a block comment labelled the "DTrace  * [Group] Functions", allowing one to find each block by searching forward  * on capital-f functions.  */
@@ -857,6 +850,17 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|dtrace_genid_t
+name|dtrace_retained_gen
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* current retained enab gen */
+end_comment
+
+begin_decl_stmt
+specifier|static
 name|dtrace_dynvar_t
 name|dtrace_dynhash_sink
 decl_stmt|;
@@ -864,6 +868,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* end of dynamic hash chains */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|dtrace_dynvar_failclean
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* dynvars failed to clean */
 end_comment
 
 begin_comment
@@ -966,6 +981,22 @@ parameter_list|)
 block|{}
 end_function
 
+begin_function
+specifier|static
+name|int
+name|dtrace_enable_nullop
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
 begin_decl_stmt
 specifier|static
 name|dtrace_pops_t
@@ -1005,7 +1036,7 @@ operator|)
 name|dtrace_nullop
 block|,
 operator|(
-name|void
+name|int
 argument_list|(
 operator|*
 argument_list|)
@@ -1019,7 +1050,7 @@ name|void
 operator|*
 argument_list|)
 operator|)
-name|dtrace_nullop
+name|dtrace_enable_nullop
 block|,
 operator|(
 name|void
@@ -1546,6 +1577,13 @@ define|#
 directive|define
 name|DTRACE_DYNHASH_VALID
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|DTRACE_MATCH_FAIL
+value|-1
 end_define
 
 begin_define
@@ -4438,8 +4476,15 @@ name|dtrace_dstate_percpu_t
 modifier|*
 name|dcpu
 decl_stmt|;
+name|dtrace_dynvar_t
+modifier|*
+modifier|*
+name|rinsep
+decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|j
 decl_stmt|,
 name|work
 init|=
@@ -4469,14 +4514,12 @@ index|[
 name|i
 index|]
 expr_stmt|;
-name|ASSERT
-argument_list|(
+name|rinsep
+operator|=
+operator|&
 name|dcpu
 operator|->
 name|dtdsc_rinsing
-operator|==
-name|NULL
-argument_list|)
 expr_stmt|;
 comment|/* 		 * If the dirty list is NULL, there is no dirty work to do. 		 */
 if|if
@@ -4488,7 +4531,18 @@ operator|==
 name|NULL
 condition|)
 continue|continue;
-comment|/* 		 * If the clean list is non-NULL, then we're not going to do 		 * any work for this CPU -- it means that there has not been 		 * a dtrace_dynvar() allocation on this CPU (or from this CPU) 		 * since the last time we cleaned house. 		 */
+if|if
+condition|(
+name|dcpu
+operator|->
+name|dtdsc_rinsing
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* 			 * If the rinsing list is non-NULL, then it is because 			 * this CPU was selected to accept another CPU's 			 * dirty list -- and since that time, dirty buffers 			 * have accumulated.  This is a highly unlikely 			 * condition, but we choose to ignore the dirty 			 * buffers -- they'll be picked up a future cleanse. 			 */
+continue|continue;
+block|}
 if|if
 condition|(
 name|dcpu
@@ -4497,7 +4551,86 @@ name|dtdsc_clean
 operator|!=
 name|NULL
 condition|)
+block|{
+comment|/* 			 * If the clean list is non-NULL, then we're in a 			 * situation where a CPU has done deallocations (we 			 * have a non-NULL dirty list) but no allocations (we 			 * also have a non-NULL clean list).  We can't simply 			 * move the dirty list into the clean list on this 			 * CPU, yet we also don't want to allow this condition 			 * to persist, lest a short clean list prevent a 			 * massive dirty list from being cleaned (which in 			 * turn could lead to otherwise avoidable dynamic 			 * drops).  To deal with this, we look for some CPU 			 * with a NULL clean list, NULL dirty list, and NULL 			 * rinsing list -- and then we borrow this CPU to 			 * rinse our dirty list. 			 */
+for|for
+control|(
+name|j
+operator|=
+literal|0
+init|;
+name|j
+operator|<
+name|NCPU
+condition|;
+name|j
+operator|++
+control|)
+block|{
+name|dtrace_dstate_percpu_t
+modifier|*
+name|rinser
+decl_stmt|;
+name|rinser
+operator|=
+operator|&
+name|dstate
+operator|->
+name|dtds_percpu
+index|[
+name|j
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|rinser
+operator|->
+name|dtdsc_rinsing
+operator|!=
+name|NULL
+condition|)
 continue|continue;
+if|if
+condition|(
+name|rinser
+operator|->
+name|dtdsc_dirty
+operator|!=
+name|NULL
+condition|)
+continue|continue;
+if|if
+condition|(
+name|rinser
+operator|->
+name|dtdsc_clean
+operator|!=
+name|NULL
+condition|)
+continue|continue;
+name|rinsep
+operator|=
+operator|&
+name|rinser
+operator|->
+name|dtdsc_rinsing
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
+name|j
+operator|==
+name|NCPU
+condition|)
+block|{
+comment|/* 				 * We were unable to find another CPU that 				 * could accept this dirty list -- we are 				 * therefore unable to clean it now. 				 */
+name|dtrace_dynvar_failclean
+operator|++
+expr_stmt|;
+continue|continue;
+block|}
+block|}
 name|work
 operator|=
 literal|1
@@ -4512,9 +4645,8 @@ operator|->
 name|dtdsc_dirty
 expr_stmt|;
 comment|/* 			 * Before we zap the dirty list, set the rinsing list. 			 * (This allows for a potential assertion in 			 * dtrace_dynvar():  if a free dynamic variable appears 			 * on a hash chain, either the dirty list or the 			 * rinsing list for some CPU must be non-NULL.) 			 */
-name|dcpu
-operator|->
-name|dtdsc_rinsing
+operator|*
+name|rinsep
 operator|=
 name|dirty
 expr_stmt|;
@@ -5936,7 +6068,17 @@ operator|==
 name|DTRACE_DYNHASH_FREE
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Now we'll move the clean list to the free list. 			 * It's impossible for this to fail:  the only way 			 * the free list can be updated is through this 			 * code path, and only one CPU can own the clean list. 			 * Thus, it would only be possible for this to fail if 			 * this code were racing with dtrace_dynvar_clean(). 			 * (That is, if dtrace_dynvar_clean() updated the clean 			 * list, and we ended up racing to update the free 			 * list.)  This race is prevented by the dtrace_sync() 			 * in dtrace_dynvar_clean() -- which flushes the 			 * owners of the clean lists out before resetting 			 * the clean lists. 			 */
+comment|/* 			 * Now we'll move the clean list to our free list. 			 * It's impossible for this to fail:  the only way 			 * the free list can be updated is through this 			 * code path, and only one CPU can own the clean list. 			 * Thus, it would only be possible for this to fail if 			 * this code were racing with dtrace_dynvar_clean(). 			 * (That is, if dtrace_dynvar_clean() updated the clean 			 * list, and we ended up racing to update the free 			 * list.)  This race is prevented by the dtrace_sync() 			 * in dtrace_dynvar_clean() -- which flushes the 			 * owners of the clean lists out before resetting 			 * the clean lists. 			 */
+name|dcpu
+operator|=
+operator|&
+name|dstate
+operator|->
+name|dtds_percpu
+index|[
+name|me
+index|]
+expr_stmt|;
 name|rval
 operator|=
 name|dtrace_casptr
@@ -13482,8 +13624,6 @@ argument_list|)
 decl_stmt|;
 name|int64_t
 name|i
-init|=
-literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -26667,6 +26807,8 @@ decl_stmt|;
 name|int
 name|len
 decl_stmt|,
+name|rc
+decl_stmt|,
 name|best
 init|=
 name|INT_MAX
@@ -26728,19 +26870,25 @@ operator|>
 literal|0
 condition|)
 block|{
+if|if
+condition|(
 call|(
-name|void
-call|)
-argument_list|(
-operator|*
+modifier|*
 name|matched
-argument_list|)
+call|)
 argument_list|(
 name|probe
 argument_list|,
 name|arg
 argument_list|)
-expr_stmt|;
+operator|==
+name|DTRACE_MATCH_FAIL
+condition|)
+return|return
+operator|(
+name|DTRACE_MATCH_FAIL
+operator|)
+return|;
 name|nmatched
 operator|++
 expr_stmt|;
@@ -26943,6 +27091,9 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|rc
+operator|=
 call|(
 modifier|*
 name|matched
@@ -26952,10 +27103,24 @@ name|probe
 argument_list|,
 name|arg
 argument_list|)
+operator|)
 operator|!=
 name|DTRACE_MATCH_NEXT
 condition|)
+block|{
+if|if
+condition|(
+name|rc
+operator|==
+name|DTRACE_MATCH_FAIL
+condition|)
+return|return
+operator|(
+name|DTRACE_MATCH_FAIL
+operator|)
+return|;
 break|break;
+block|}
 block|}
 return|return
 operator|(
@@ -27016,6 +27181,9 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|rc
+operator|=
 call|(
 modifier|*
 name|matched
@@ -27025,10 +27193,24 @@ name|probe
 argument_list|,
 name|arg
 argument_list|)
+operator|)
 operator|!=
 name|DTRACE_MATCH_NEXT
 condition|)
+block|{
+if|if
+condition|(
+name|rc
+operator|==
+name|DTRACE_MATCH_FAIL
+condition|)
+return|return
+operator|(
+name|DTRACE_MATCH_FAIL
+operator|)
+return|;
 break|break;
+block|}
 block|}
 return|return
 operator|(
@@ -28034,7 +28216,7 @@ operator|.
 name|dtps_enable
 operator|==
 operator|(
-name|void
+name|int
 argument_list|(
 operator|*
 argument_list|)
@@ -28048,7 +28230,7 @@ name|void
 operator|*
 argument_list|)
 operator|)
-name|dtrace_nullop
+name|dtrace_enable_nullop
 condition|)
 block|{
 comment|/* 		 * If DTrace itself is the provider, we're called with locks 		 * already held. 		 */
@@ -28665,7 +28847,7 @@ operator|.
 name|dtps_enable
 operator|!=
 operator|(
-name|void
+name|int
 argument_list|(
 operator|*
 argument_list|)
@@ -28679,7 +28861,7 @@ name|void
 operator|*
 argument_list|)
 operator|)
-name|dtrace_nullop
+name|dtrace_enable_nullop
 argument_list|)
 expr_stmt|;
 name|mutex_enter
@@ -28776,7 +28958,7 @@ operator|.
 name|dtps_enable
 operator|!=
 operator|(
-name|void
+name|int
 argument_list|(
 operator|*
 argument_list|)
@@ -28790,7 +28972,7 @@ name|void
 operator|*
 argument_list|)
 operator|)
-name|dtrace_nullop
+name|dtrace_enable_nullop
 argument_list|)
 expr_stmt|;
 name|mutex_enter
@@ -33512,7 +33694,7 @@ name|dtdo_len
 operator|-
 literal|1
 argument_list|,
-literal|"bad return size"
+literal|"bad return size\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -37804,7 +37986,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|dtrace_ecb_enable
 parameter_list|(
 name|dtrace_ecb_t
@@ -37855,7 +38037,11 @@ name|NULL
 condition|)
 block|{
 comment|/* 		 * This is the NULL probe -- there's nothing to do. 		 */
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -37903,6 +38089,8 @@ name|dte_predicate
 operator|->
 name|dtp_cacheid
 expr_stmt|;
+return|return
+operator|(
 name|prov
 operator|->
 name|dtpv_pops
@@ -37921,7 +38109,8 @@ name|probe
 operator|->
 name|dtpr_arg
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 else|else
 block|{
@@ -37958,6 +38147,11 @@ expr_stmt|;
 name|dtrace_sync
 argument_list|()
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 block|}
 end_function
@@ -41516,11 +41710,20 @@ operator|(
 name|DTRACE_MATCH_DONE
 operator|)
 return|;
+if|if
+condition|(
 name|dtrace_ecb_enable
 argument_list|(
 name|ecb
 argument_list|)
-expr_stmt|;
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+name|DTRACE_MATCH_FAIL
+operator|)
+return|;
 return|return
 operator|(
 name|DTRACE_MATCH_NEXT
@@ -43922,6 +44125,9 @@ operator|->
 name|dts_nretained
 operator|--
 expr_stmt|;
+name|dtrace_retained_gen
+operator|++
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -44105,6 +44311,9 @@ return|;
 name|state
 operator|->
 name|dts_nretained
+operator|++
+expr_stmt|;
+name|dtrace_retained_gen
 operator|++
 expr_stmt|;
 if|if
@@ -44557,6 +44766,10 @@ init|=
 literal|0
 decl_stmt|;
 name|int
+name|total_matched
+init|=
+literal|0
+decl_stmt|,
 name|matched
 init|=
 literal|0
@@ -44618,8 +44831,12 @@ name|dten_error
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 		 * If a provider failed to enable a probe then get out and 		 * let the consumer know we failed. 		 */
+if|if
+condition|(
+operator|(
 name|matched
-operator|+=
+operator|=
 name|dtrace_probe_enable
 argument_list|(
 operator|&
@@ -44629,6 +44846,18 @@ name|dted_probe
 argument_list|,
 name|enab
 argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+name|EBUSY
+operator|)
+return|;
+name|total_matched
+operator|+=
+name|matched
 expr_stmt|;
 if|if
 condition|(
@@ -44690,7 +44919,7 @@ condition|)
 operator|*
 name|nmatched
 operator|=
-name|matched
+name|total_matched
 expr_stmt|;
 return|return
 operator|(
@@ -44724,7 +44953,7 @@ operator|&
 name|dtrace_lock
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Because we can be called after dtrace_detach() has been called, we 	 * cannot assert that there are retained enablings.  We can safely 	 * load from dtrace_retained, however:  the taskq_destroy() at the 	 * end of dtrace_detach() will block pending our completion. 	 */
+comment|/* 	 * Iterate over all retained enablings to see if any probes match 	 * against them.  We only perform this operation on enablings for which 	 * we have sufficient permissions by virtue of being in the global zone 	 * or in the same zone as the DTrace client.  Because we can be called 	 * after dtrace_detach() has been called, we cannot assert that there 	 * are retained enablings.  We can safely load from dtrace_retained, 	 * however:  the taskq_destroy() at the end of dtrace_detach() will 	 * block pending our completion. 	 */
 for|for
 control|(
 name|enab
@@ -44741,6 +44970,40 @@ name|enab
 operator|->
 name|dten_next
 control|)
+block|{
+name|cred_t
+modifier|*
+name|cr
+init|=
+name|enab
+operator|->
+name|dten_vstate
+operator|->
+name|dtvs_state
+operator|->
+name|dts_cred
+operator|.
+name|dcr_cred
+decl_stmt|;
+if|if
+condition|(
+name|INGLOBALZONE
+argument_list|(
+name|curproc
+argument_list|)
+operator|||
+name|cr
+operator|!=
+name|NULL
+operator|&&
+name|getzoneid
+argument_list|()
+operator|==
+name|crgetzoneid
+argument_list|(
+name|cr
+argument_list|)
+condition|)
 operator|(
 name|void
 operator|)
@@ -44751,6 +45014,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+block|}
 name|mutex_exit
 argument_list|(
 operator|&
@@ -44906,6 +45170,9 @@ decl_stmt|;
 name|dtrace_probedesc_t
 name|desc
 decl_stmt|;
+name|dtrace_genid_t
+name|gen
+decl_stmt|;
 name|ASSERT
 argument_list|(
 name|MUTEX_HELD
@@ -44945,8 +45212,6 @@ block|{
 name|dtrace_enabling_t
 modifier|*
 name|enab
-init|=
-name|dtrace_retained
 decl_stmt|;
 name|void
 modifier|*
@@ -44956,8 +45221,17 @@ name|prv
 operator|->
 name|dtpv_arg
 decl_stmt|;
+name|retry
+label|:
+name|gen
+operator|=
+name|dtrace_retained_gen
+expr_stmt|;
 for|for
 control|(
+name|enab
+operator|=
+name|dtrace_retained
 init|;
 name|enab
 operator|!=
@@ -45021,6 +45295,16 @@ operator|&
 name|dtrace_lock
 argument_list|)
 expr_stmt|;
+comment|/* 				 * Process the retained enablings again if 				 * they have changed while we weren't holding 				 * dtrace_lock. 				 */
+if|if
+condition|(
+name|gen
+operator|!=
+name|dtrace_retained_gen
+condition|)
+goto|goto
+name|retry
+goto|;
 block|}
 block|}
 block|}
@@ -45652,6 +45936,14 @@ name|dofh_loadsz
 argument_list|)
 operator|!=
 literal|0
+operator|||
+name|dof
+operator|->
+name|dofh_loadsz
+operator|!=
+name|hdr
+operator|.
+name|dofh_loadsz
 condition|)
 block|{
 name|kmem_free
@@ -49390,6 +49682,40 @@ literal|1
 operator|)
 return|;
 block|}
+block|}
+if|if
+condition|(
+name|DOF_SEC_ISLOADABLE
+argument_list|(
+name|sec
+operator|->
+name|dofs_type
+argument_list|)
+operator|&&
+operator|!
+operator|(
+name|sec
+operator|->
+name|dofs_flags
+operator|&
+name|DOF_SECF_LOAD
+operator|)
+condition|)
+block|{
+name|dtrace_dof_error
+argument_list|(
+name|dof
+argument_list|,
+literal|"loadable section with load "
+literal|"flag unset"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -60675,17 +61001,21 @@ literal|0
 operator|)
 return|;
 comment|/* 	 * If this wasn't an open with the "helper" minor, then it must be 	 * the "dtrace" minor. 	 */
-name|ASSERT
-argument_list|(
+if|if
+condition|(
 name|getminor
 argument_list|(
 operator|*
 name|devp
 argument_list|)
-operator|==
+operator|!=
 name|DTRACEMNRN_DTRACE
-argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 comment|/* 	 * If no DTRACE_PRIV_* bits are set in the credential, then the 	 * caller lacks sufficient permission to do anything with DTrace. 	 */
 name|dtrace_cred2priv
 argument_list|(
@@ -60810,6 +61140,12 @@ operator|--
 name|dtrace_opens
 operator|==
 literal|0
+operator|&&
+name|dtrace_anon
+operator|.
+name|dta_enabling
+operator|==
+name|NULL
 condition|)
 operator|(
 name|void
@@ -60949,12 +61285,19 @@ operator|>
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Only relinquish control of the kernel debugger interface when there 	 * are no consumers and no anonymous enablings. 	 */
 if|if
 condition|(
 operator|--
 name|dtrace_opens
 operator|==
 literal|0
+operator|&&
+name|dtrace_anon
+operator|.
+name|dta_enabling
+operator|==
+name|NULL
 condition|)
 operator|(
 name|void
@@ -65370,7 +65713,11 @@ name|NULL
 block|,
 comment|/* bus operations */
 name|nodev
+block|,
 comment|/* dev power */
+name|ddi_quiesce_not_needed
+block|,
+comment|/* quiesce */
 block|}
 decl_stmt|;
 end_decl_stmt
