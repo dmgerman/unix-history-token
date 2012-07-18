@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2003, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2003, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -1481,6 +1481,15 @@ argument_list|(
 name|sdp
 operator|->
 name|dtsd_fmtdata
+argument_list|)
+expr_stmt|;
+name|dt_free
+argument_list|(
+name|dtp
+argument_list|,
+name|sdp
+operator|->
+name|dtsd_strdata
 argument_list|)
 expr_stmt|;
 name|dt_ecbdesc_release

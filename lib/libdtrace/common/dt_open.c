@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2003, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2003, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, Joyent, Inc. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -261,15 +261,50 @@ end_define
 begin_define
 define|#
 directive|define
+name|DT_VERS_1_7
+value|DT_VERSION_NUMBER(1, 7, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT_VERS_1_7_1
+value|DT_VERSION_NUMBER(1, 7, 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT_VERS_1_8
+value|DT_VERSION_NUMBER(1, 8, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT_VERS_1_8_1
+value|DT_VERSION_NUMBER(1, 8, 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT_VERS_1_9
+value|DT_VERSION_NUMBER(1, 9, 0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|DT_VERS_LATEST
-value|DT_VERS_1_6_3
+value|DT_VERS_1_9
 end_define
 
 begin_define
 define|#
 directive|define
 name|DT_VERS_STRING
-value|"Sun D 1.6.3"
+value|"Sun D 1.9"
 end_define
 
 begin_decl_stmt
@@ -318,6 +353,21 @@ comment|/* D API 1.6.2 */
 name|DT_VERS_1_6_3
 block|,
 comment|/* D API 1.6.3 */
+name|DT_VERS_1_7
+block|,
+comment|/* D API 1.7 */
+name|DT_VERS_1_7_1
+block|,
+comment|/* D API 1.7.1 */
+name|DT_VERS_1_8
+block|,
+comment|/* D API 1.8 */
+name|DT_VERS_1_8_1
+block|,
+comment|/* D API 1.8.1 */
+name|DT_VERS_1_9
+block|,
+comment|/* D API 1.9 */
 literal|0
 block|}
 decl_stmt|;
@@ -1345,7 +1395,26 @@ block|,
 operator|&
 name|dt_idops_func
 block|,
-literal|"string(int64_t)"
+literal|"string(int64_t, [int])"
+block|}
+block|,
+block|{
+literal|"llquantize"
+block|,
+name|DT_IDENT_AGGFUNC
+block|,
+literal|0
+block|,
+name|DTRACEAGG_LLQUANTIZE
+block|,
+name|DT_ATTR_STABCMN
+block|,
+name|DT_VERS_1_7
+block|,
+operator|&
+name|dt_idops_func
+block|,
+literal|"void(@, int32_t, int32_t, int32_t, int32_t, ...)"
 block|}
 block|,
 block|{
@@ -1669,6 +1738,25 @@ operator|&
 name|dt_idops_type
 block|,
 literal|"pid_t"
+block|}
+block|,
+block|{
+literal|"print"
+block|,
+name|DT_IDENT_ACTFUNC
+block|,
+literal|0
+block|,
+name|DT_ACT_PRINT
+block|,
+name|DT_ATTR_STABCMN
+block|,
+name|DT_VERS_1_9
+block|,
+operator|&
+name|dt_idops_func
+block|,
+literal|"void(@)"
 block|}
 block|,
 block|{
@@ -2337,6 +2425,44 @@ literal|"uint64_t"
 block|}
 block|,
 block|{
+literal|"tolower"
+block|,
+name|DT_IDENT_FUNC
+block|,
+literal|0
+block|,
+name|DIF_SUBR_TOLOWER
+block|,
+name|DT_ATTR_STABCMN
+block|,
+name|DT_VERS_1_8
+block|,
+operator|&
+name|dt_idops_func
+block|,
+literal|"string(const char *)"
+block|}
+block|,
+block|{
+literal|"toupper"
+block|,
+name|DT_IDENT_FUNC
+block|,
+literal|0
+block|,
+name|DIF_SUBR_TOUPPER
+block|,
+name|DT_ATTR_STABCMN
+block|,
+name|DT_VERS_1_8
+block|,
+operator|&
+name|dt_idops_func
+block|,
+literal|"string(const char *)"
+block|}
+block|,
+block|{
 literal|"trace"
 block|,
 name|DT_IDENT_ACTFUNC
@@ -2371,7 +2497,7 @@ block|,
 operator|&
 name|dt_idops_func
 block|,
-literal|"void(@, size_t)"
+literal|"void(@, size_t, ...)"
 block|}
 block|,
 block|{
@@ -2562,6 +2688,25 @@ operator|&
 name|dt_idops_func
 block|,
 literal|"_usymaddr(uintptr_t)"
+block|}
+block|,
+block|{
+literal|"vmregs"
+block|,
+name|DT_IDENT_ARRAY
+block|,
+literal|0
+block|,
+name|DIF_VAR_VMREGS
+block|,
+name|DT_ATTR_STABCMN
+block|,
+name|DT_VERS_1_7
+block|,
+operator|&
+name|dt_idops_regs
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -8203,6 +8348,11 @@ name|dtp
 argument_list|)
 expr_stmt|;
 name|dt_format_destroy
+argument_list|(
+name|dtp
+argument_list|)
+expr_stmt|;
+name|dt_strdata_destroy
 argument_list|(
 name|dtp
 argument_list|)

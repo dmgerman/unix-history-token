@@ -7,13 +7,6 @@ begin_comment
 comment|/*  * Copyright 2003 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
-
 begin_include
 include|#
 directive|include
@@ -81,7 +74,7 @@ name|char
 modifier|*
 name|_libctf_zlib
 init|=
-literal|"/usr/lib/64/libz.so"
+literal|"/usr/lib/64/libz.so.1"
 decl_stmt|;
 end_decl_stmt
 
@@ -97,7 +90,7 @@ name|char
 modifier|*
 name|_libctf_zlib
 init|=
-literal|"/usr/lib/libz.so"
+literal|"/usr/lib/libz.so.1"
 decl_stmt|;
 end_decl_stmt
 

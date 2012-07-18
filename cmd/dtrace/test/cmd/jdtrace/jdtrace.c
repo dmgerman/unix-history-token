@@ -4,15 +4,8 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  *  * Copyright 2011, Richard Lowe  */
 end_comment
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -30,6 +23,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -55,8 +54,6 @@ name|int
 name|i
 decl_stmt|,
 name|ac
-decl_stmt|,
-name|has64
 decl_stmt|;
 name|char
 modifier|*
@@ -66,6 +63,12 @@ decl_stmt|,
 modifier|*
 modifier|*
 name|p
+decl_stmt|;
+name|char
+name|isaname
+index|[
+literal|16
+index|]
 decl_stmt|;
 name|ac
 operator|=
@@ -92,7 +95,7 @@ operator|*
 name|p
 operator|++
 operator|=
-literal|"java"
+literal|"/usr/java/bin/java"
 expr_stmt|;
 operator|*
 name|p
@@ -144,10 +147,36 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+name|sysinfo
+argument_list|(
+name|SI_ARCHITECTURE_64
+argument_list|,
+name|isaname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|isaname
+argument_list|)
+argument_list|)
+operator|!=
+operator|-
+literal|1
+condition|)
+name|asprintf
+argument_list|(
+name|av
+argument_list|,
+literal|"/usr/java/bin/%s/java"
+argument_list|,
+name|isaname
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
-name|execvp
+name|execv
 argument_list|(
 name|av
 index|[
@@ -157,16 +186,13 @@ argument_list|,
 name|av
 argument_list|)
 expr_stmt|;
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"exec failed"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
