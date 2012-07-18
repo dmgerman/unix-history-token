@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2007, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2007, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -567,40 +567,17 @@ condition|)
 block|{
 name|jumpobj
 operator|=
-name|zap_create
+name|zap_create_link
 argument_list|(
 name|mos
 argument_list|,
 name|DMU_OT_DSL_PERMS
 argument_list|,
-name|DMU_OT_NONE
-argument_list|,
-literal|0
-argument_list|,
-name|tx
-argument_list|)
-expr_stmt|;
-name|VERIFY
-argument_list|(
-name|zap_update
-argument_list|(
-name|mos
-argument_list|,
 name|zapobj
 argument_list|,
 name|whokey
 argument_list|,
-literal|8
-argument_list|,
-literal|1
-argument_list|,
-operator|&
-name|jumpobj
-argument_list|,
 name|tx
-argument_list|)
-operator|==
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -2354,7 +2331,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check if user has requested permission.  */
+comment|/*  * Check if user has requested permission.  If descendent is set, must have  * descendent perms.  */
 end_comment
 
 begin_function
@@ -2364,6 +2341,9 @@ parameter_list|(
 name|dsl_dataset_t
 modifier|*
 name|ds
+parameter_list|,
+name|boolean_t
+name|descendent
 parameter_list|,
 specifier|const
 name|char
@@ -2457,6 +2437,8 @@ name|dsl_dataset_is_snapshot
 argument_list|(
 name|ds
 argument_list|)
+operator|||
+name|descendent
 condition|)
 block|{
 comment|/* 		 * Snapshots are treated as descendents only, 		 * local permissions do not apply. 		 */
@@ -2859,6 +2841,8 @@ operator|=
 name|dsl_deleg_access_impl
 argument_list|(
 name|ds
+argument_list|,
+name|B_FALSE
 argument_list|,
 name|perm
 argument_list|,

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -115,6 +115,8 @@ name|vdev_validate
 parameter_list|(
 name|vdev_t
 modifier|*
+parameter_list|,
+name|boolean_t
 parameter_list|)
 function_decl|;
 specifier|extern
@@ -818,24 +820,25 @@ parameter_list|(
 name|vdev_t
 modifier|*
 name|vd
+parameter_list|,
+name|int
+name|label
 parameter_list|)
 function_decl|;
 specifier|extern
 name|void
 name|vdev_uberblock_load
 parameter_list|(
-name|zio_t
-modifier|*
-name|zio
-parameter_list|,
 name|vdev_t
 modifier|*
-name|vd
 parameter_list|,
 name|struct
 name|uberblock
 modifier|*
-name|ub
+parameter_list|,
+name|nvlist_t
+modifier|*
+modifier|*
 parameter_list|)
 function_decl|;
 typedef|typedef

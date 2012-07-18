@@ -12,7 +12,7 @@ comment|/*	  All Rights Reserved  	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2004 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2004 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  *  * Copyright 2012 Nexenta Systems, Inc.  All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -26,13 +26,6 @@ define|#
 directive|define
 name|_SYS_CMN_ERR_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_if
 if|#
@@ -59,6 +52,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/dditypes.h>
+end_include
 
 begin_ifdef
 ifdef|#
@@ -124,15 +123,6 @@ block|)
 empty_stmt|;
 end_extern
 
-begin_pragma
-pragma|#
-directive|pragma
-name|rarely_called
-name|(
-name|cmn_err
-name|)
-end_pragma
-
 begin_function_decl
 specifier|extern
 name|void
@@ -158,14 +148,30 @@ unit|)
 empty_stmt|;
 end_empty_stmt
 
-begin_pragma
-pragma|#
-directive|pragma
-name|rarely_called
-name|(
-name|vzcmn_err
-name|)
-end_pragma
+begin_function_decl
+specifier|extern
+name|void
+name|dev_err
+parameter_list|(
+name|dev_info_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|__KPRINTFLIKE
+parameter_list|(
+function_decl|3
+end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 specifier|extern
@@ -189,15 +195,6 @@ begin_empty_stmt
 unit|)
 empty_stmt|;
 end_empty_stmt
-
-begin_pragma
-pragma|#
-directive|pragma
-name|rarely_called
-name|(
-name|vcmn_err
-name|)
-end_pragma
 
 begin_comment
 comment|/*PRINTFLIKE3*/
@@ -228,15 +225,6 @@ unit|)
 empty_stmt|;
 end_empty_stmt
 
-begin_pragma
-pragma|#
-directive|pragma
-name|rarely_called
-name|(
-name|zcmn_err
-name|)
-end_pragma
-
 begin_comment
 comment|/*PRINTFLIKE1*/
 end_comment
@@ -262,15 +250,6 @@ unit|)
 empty_stmt|;
 end_empty_stmt
 
-begin_pragma
-pragma|#
-directive|pragma
-name|rarely_called
-name|(
-name|printf
-name|)
-end_pragma
-
 begin_function_decl
 specifier|extern
 name|void
@@ -293,15 +272,6 @@ begin_empty_stmt
 unit|)
 empty_stmt|;
 end_empty_stmt
-
-begin_pragma
-pragma|#
-directive|pragma
-name|rarely_called
-name|(
-name|vzprintf
-name|)
-end_pragma
 
 begin_comment
 comment|/*PRINTFLIKE2*/
@@ -330,15 +300,6 @@ unit|)
 empty_stmt|;
 end_empty_stmt
 
-begin_pragma
-pragma|#
-directive|pragma
-name|rarely_called
-name|(
-name|zprintf
-name|)
-end_pragma
-
 begin_function_decl
 specifier|extern
 name|void
@@ -359,15 +320,6 @@ begin_empty_stmt
 unit|)
 empty_stmt|;
 end_empty_stmt
-
-begin_pragma
-pragma|#
-directive|pragma
-name|rarely_called
-name|(
-name|vprintf
-name|)
-end_pragma
 
 begin_comment
 comment|/*PRINTFLIKE1*/
@@ -394,15 +346,6 @@ unit|)
 empty_stmt|;
 end_empty_stmt
 
-begin_pragma
-pragma|#
-directive|pragma
-name|rarely_called
-name|(
-name|uprintf
-name|)
-end_pragma
-
 begin_function_decl
 specifier|extern
 name|void
@@ -423,15 +366,6 @@ begin_empty_stmt
 unit|)
 empty_stmt|;
 end_empty_stmt
-
-begin_pragma
-pragma|#
-directive|pragma
-name|rarely_called
-name|(
-name|vuprintf
-name|)
-end_pragma
 
 begin_comment
 comment|/*PRINTFLIKE3*/
@@ -566,15 +500,6 @@ name|__NORETURN
 decl_stmt|;
 end_decl_stmt
 
-begin_pragma
-pragma|#
-directive|pragma
-name|rarely_called
-name|(
-name|panic
-name|)
-end_pragma
-
 begin_decl_stmt
 specifier|extern
 name|void
@@ -593,15 +518,6 @@ argument_list|)
 name|__NORETURN
 decl_stmt|;
 end_decl_stmt
-
-begin_pragma
-pragma|#
-directive|pragma
-name|rarely_called
-name|(
-name|vpanic
-name|)
-end_pragma
 
 begin_endif
 endif|#

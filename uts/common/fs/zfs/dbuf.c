@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -1244,17 +1244,15 @@ argument_list|)
 expr_stmt|;
 name|is_metadata
 operator|=
-name|dmu_ot
-index|[
+name|DMU_OT_IS_METADATA
+argument_list|(
 name|DB_DNODE
 argument_list|(
 name|db
 argument_list|)
 operator|->
 name|dn_type
-index|]
-operator|.
-name|ot_metadata
+argument_list|)
 expr_stmt|;
 name|DB_DNODE_EXIT
 argument_list|(
@@ -7060,7 +7058,7 @@ argument_list|(
 name|db
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If this buffer is currently held, we cannot undirty 	 * it, since one of the current holders may be in the 	 * middle of an update.  Note that users of dbuf_undirty() 	 * should not place a hold on the dbuf before the call. 	 */
+comment|/* 	 * If this buffer is currently held, we cannot undirty 	 * it, since one of the current holders may be in the 	 * middle of an update.  Note that users of dbuf_undirty() 	 * should not place a hold on the dbuf before the call. 	 * Also note: we can get here with a spill block, so 	 * test for that similar to how dbuf_dirty does. 	 */
 if|if
 condition|(
 name|refcount_count
@@ -7085,6 +7083,15 @@ name|db_mtx
 argument_list|)
 expr_stmt|;
 comment|/* Make sure we don't toss this buffer at sync phase */
+if|if
+condition|(
+name|db
+operator|->
+name|db_blkid
+operator|!=
+name|DMU_SPILL_BLKID
+condition|)
+block|{
 name|mutex_enter
 argument_list|(
 operator|&
@@ -7114,6 +7121,7 @@ operator|->
 name|dn_mtx
 argument_list|)
 expr_stmt|;
+block|}
 name|DB_DNODE_EXIT
 argument_list|(
 name|db
@@ -7160,6 +7168,7 @@ name|dr
 operator|->
 name|dr_next
 expr_stmt|;
+comment|/* 	 * Note that there are three places in dbuf_dirty() 	 * where this dirty record may be put on a list. 	 * Make sure to do a list_remove corresponding to 	 * every one of those list_insert calls. 	 */
 if|if
 condition|(
 name|dr
@@ -7215,6 +7224,12 @@ block|}
 elseif|else
 if|if
 condition|(
+name|db
+operator|->
+name|db_blkid
+operator|==
+name|DMU_SPILL_BLKID
+operator|||
 name|db
 operator|->
 name|db_level

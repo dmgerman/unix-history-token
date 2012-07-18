@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/*  * DVA-based Adjustable Replacement Cache  *  * While much of the the
 end_comment
 
 begin_comment
-comment|/*  * The locking model:  *  * A new reference to a cache buffer can be obtained in two  * ways: 1) via a hash table lookup using the DVA as a key,  * or 2) via one of the ARC lists.  The arc_read() interface  * uses method 1, while the internal arc algorithms for  * adjusting the cache use method 2.  We therefor provide two  * types of locks: 1) the hash table lock array, and 2) the  * arc list locks.  *  * Buffers do not have their own mutexs, rather they rely on the  * hash table mutexs for the bulk of their protection (i.e. most  * fields in the arc_buf_hdr_t are protected by these mutexs).  *  * buf_hash_find() returns the appropriate mutex (held) when it  * locates the requested buffer in the hash table.  It returns  * NULL for the mutex if the buffer was not in the table.  *  * buf_hash_remove() expects the appropriate hash mutex to be  * already held before it is invoked.  *  * Each arc state also has a mutex which is used to protect the  * buffer list associated with the state.  When attempting to  * obtain a hash table lock while holding an arc list lock you  * must use: mutex_tryenter() to avoid deadlock.  Also note that  * the active state mutex must be held before the ghost state mutex.  *  * Arc buffers may have an associated eviction callback function.  * This function will be invoked prior to removing the buffer (e.g.  * in arc_do_user_evicts()).  Note however that the data associated  * with the buffer may be evicted prior to the callback.  The callback  * must be made with *no locks held* (to prevent deadlock).  Additionally,  * the users of callbacks must ensure that their private data is  * protected from simultaneous callbacks from arc_buf_evict()  * and arc_do_user_evicts().  *  * Note that the majority of the performance stats are manipulated  * with atomic operations.  *  * The L2ARC uses the l2arc_buflist_mtx global mutex for the following:  *  *	- L2ARC buflist creation  *	- L2ARC buflist eviction  *	- L2ARC write completion, which walks L2ARC buflists  *	- ARC header destruction, as it removes from L2ARC buflists  *	- ARC header release, as it removes from L2ARC buflists  */
+comment|/*  * The locking model:  *  * A new reference to a cache buffer can be obtained in two  * ways: 1) via a hash table lookup using the DVA as a key,  * or 2) via one of the ARC lists.  The arc_read() interface  * uses method 1, while the internal arc algorithms for  * adjusting the cache use method 2.  We therefor provide two  * types of locks: 1) the hash table lock array, and 2) the  * arc list locks.  *  * Buffers do not have their own mutexes, rather they rely on the  * hash table mutexes for the bulk of their protection (i.e. most  * fields in the arc_buf_hdr_t are protected by these mutexes).  *  * buf_hash_find() returns the appropriate mutex (held) when it  * locates the requested buffer in the hash table.  It returns  * NULL for the mutex if the buffer was not in the table.  *  * buf_hash_remove() expects the appropriate hash mutex to be  * already held before it is invoked.  *  * Each arc state also has a mutex which is used to protect the  * buffer list associated with the state.  When attempting to  * obtain a hash table lock while holding an arc list lock you  * must use: mutex_tryenter() to avoid deadlock.  Also note that  * the active state mutex must be held before the ghost state mutex.  *  * Arc buffers may have an associated eviction callback function.  * This function will be invoked prior to removing the buffer (e.g.  * in arc_do_user_evicts()).  Note however that the data associated  * with the buffer may be evicted prior to the callback.  The callback  * must be made with *no locks held* (to prevent deadlock).  Additionally,  * the users of callbacks must ensure that their private data is  * protected from simultaneous callbacks from arc_buf_evict()  * and arc_do_user_evicts().  *  * Note that the majority of the performance stats are manipulated  * with atomic operations.  *  * The L2ARC uses the l2arc_buflist_mtx global mutex for the following:  *  *	- L2ARC buflist creation  *	- L2ARC buflist eviction  *	- L2ARC write completion, which walks L2ARC buflists  *	- ARC header destruction, as it removes from L2ARC buflists  *	- ARC header release, as it removes from L2ARC buflists  */
 end_comment
 
 begin_include
@@ -5356,7 +5356,7 @@ name|hdr
 operator|->
 name|b_spa
 operator|=
-name|spa_guid
+name|spa_load_guid
 argument_list|(
 name|spa
 argument_list|)
@@ -8920,7 +8920,7 @@ name|spa
 condition|)
 name|guid
 operator|=
-name|spa_guid
+name|spa_load_guid
 argument_list|(
 name|spa
 argument_list|)
@@ -9258,6 +9258,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Determine if the system is under memory pressure and is asking  * to reclaim memory. A return value of 1 indicates that the system  * is under memory pressure and that the arc should adjust accordingly.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -9327,19 +9331,14 @@ argument_list|)
 comment|/* 	 * If we're on an i386 platform, it's possible that we'll exhaust the 	 * kernel heap space before we ever run out of available physical 	 * memory.  Most checks of the size of the heap_area compare against 	 * tune.t_minarmem, which is the minimum available real memory that we 	 * can have in the system.  However, this is generally fixed at 25 pages 	 * which is so low that it's useless.  In this comparison, we seek to 	 * calculate the total heap-size, and reclaim if more than 3/4ths of the 	 * heap is allocated.  (Or, in the calculation, if less than 1/4th is 	 * free) 	 */
 if|if
 condition|(
-name|btop
-argument_list|(
 name|vmem_size
 argument_list|(
 name|heap_arena
 argument_list|,
 name|VMEM_FREE
 argument_list|)
-argument_list|)
 operator|<
 operator|(
-name|btop
-argument_list|(
 name|vmem_size
 argument_list|(
 name|heap_arena
@@ -9347,7 +9346,6 @@ argument_list|,
 name|VMEM_FREE
 operator||
 name|VMEM_ALLOC
-argument_list|)
 argument_list|)
 operator|>>
 literal|2
@@ -9360,6 +9358,36 @@ operator|)
 return|;
 endif|#
 directive|endif
+comment|/* 	 * If zio data pages are being allocated out of a separate heap segment, 	 * then enforce that the size of available vmem for this arena remains 	 * above about 1/16th free. 	 * 	 * Note: The 1/16th arena free requirement was put in place 	 * to aggressively evict memory from the arc in order to avoid 	 * memory fragmentation issues. 	 */
+if|if
+condition|(
+name|zio_arena
+operator|!=
+name|NULL
+operator|&&
+name|vmem_size
+argument_list|(
+name|zio_arena
+argument_list|,
+name|VMEM_FREE
+argument_list|)
+operator|<
+operator|(
+name|vmem_size
+argument_list|(
+name|zio_arena
+argument_list|,
+name|VMEM_ALLOC
+argument_list|)
+operator|>>
+literal|4
+operator|)
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 else|#
 directive|else
 if|if
@@ -9547,6 +9575,22 @@ expr_stmt|;
 name|kmem_cache_reap_now
 argument_list|(
 name|hdr_cache
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Ask the vmem areana to reclaim unused memory from its 	 * quantum caches. 	 */
+if|if
+condition|(
+name|zio_arena
+operator|!=
+name|NULL
+operator|&&
+name|strat
+operator|==
+name|ARC_RECLAIM_AGGR
+condition|)
+name|vmem_qcache_reap
+argument_list|(
+name|zio_arena
 argument_list|)
 expr_stmt|;
 block|}
@@ -10066,45 +10110,6 @@ operator|(
 literal|1
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|_KERNEL
-comment|/* 	 * If zio data pages are being allocated out of a separate heap segment, 	 * then enforce that the size of available vmem for this area remains 	 * above about 1/32nd free. 	 */
-if|if
-condition|(
-name|type
-operator|==
-name|ARC_BUFC_DATA
-operator|&&
-name|zio_arena
-operator|!=
-name|NULL
-operator|&&
-name|vmem_size
-argument_list|(
-name|zio_arena
-argument_list|,
-name|VMEM_FREE
-argument_list|)
-operator|<
-operator|(
-name|vmem_size
-argument_list|(
-name|zio_arena
-argument_list|,
-name|VMEM_ALLOC
-argument_list|)
-operator|>>
-literal|5
-operator|)
-condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|arc_reclaim_needed
@@ -11372,6 +11377,19 @@ operator|==
 literal|0
 condition|)
 block|{
+name|dmu_object_byteswap_t
+name|bswap
+init|=
+name|DMU_OT_BYTESWAP
+argument_list|(
+name|BP_GET_TYPE
+argument_list|(
+name|zio
+operator|->
+name|io_bp
+argument_list|)
+argument_list|)
+decl_stmt|;
 name|arc_byteswap_func_t
 modifier|*
 name|func
@@ -11387,17 +11405,12 @@ literal|0
 condition|?
 name|byteswap_uint64_array
 else|:
-name|dmu_ot
+name|dmu_ot_byteswap
 index|[
-name|BP_GET_TYPE
-argument_list|(
-name|zio
-operator|->
-name|io_bp
-argument_list|)
+name|bswap
 index|]
 operator|.
-name|ot_byteswap
+name|ob_func
 decl_stmt|;
 name|func
 argument_list|(
@@ -11755,7 +11768,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * "Read" the block block at the specified DVA (in bp) via the  * cache.  If the block is found in the cache, invoke the provided  * callback immediately and return.  Note that the `zio' parameter  * in the callback will be NULL in this case, since no IO was  * required.  If the block is not in the cache pass the read request  * on to the spa with a substitute callback function, so that the  * requested block will be added to the cache.  *  * If a read request arrives for a block that has a read in-progress,  * either wait for the in-progress read to complete (and return the  * results); or, if this is a read with a "done" func, add a record  * to the read to invoke the "done" func when the read completes,  * and return; or just return.  *  * arc_read_done() will invoke all the requested "done" functions  * for readers of this block.  *  * Normal callers should use arc_read and pass the arc buffer and offset  * for the bp.  But if you know you don't need locking, you can use  * arc_read_bp.  */
+comment|/*  * "Read" the block at the specified DVA (in bp) via the  * cache.  If the block is found in the cache, invoke the provided  * callback immediately and return.  Note that the `zio' parameter  * in the callback will be NULL in this case, since no IO was  * required.  If the block is not in the cache pass the read request  * on to the spa with a substitute callback function, so that the  * requested block will be added to the cache.  *  * If a read request arrives for a block that has a read in-progress,  * either wait for the in-progress read to complete (and return the  * results); or, if this is a read with a "done" func, add a record  * to the read to invoke the "done" func when the read completes,  * and return; or just return.  *  * arc_read_done() will invoke all the requested "done" functions  * for readers of this block.  *  * Normal callers should use arc_read and pass the arc buffer and offset  * for the bp.  But if you know you don't need locking, you can use  * arc_read_bp.  */
 end_comment
 
 begin_function
@@ -11987,7 +12000,7 @@ decl_stmt|;
 name|uint64_t
 name|guid
 init|=
-name|spa_guid
+name|spa_load_guid
 argument_list|(
 name|spa
 argument_list|)
@@ -18584,7 +18597,7 @@ decl_stmt|;
 name|uint64_t
 name|guid
 init|=
-name|spa_guid
+name|spa_load_guid
 argument_list|(
 name|spa
 argument_list|)

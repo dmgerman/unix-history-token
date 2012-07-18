@@ -7,6 +7,10 @@ begin_comment
 comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
+begin_comment
+comment|/*  * Copyright (c) 2011, Joyent, Inc. All rights reserved.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -18,13 +22,6 @@ define|#
 directive|define
 name|_SYS_DTRACE_IMPL_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_ifdef
 ifdef|#
@@ -597,8 +594,24 @@ name|_LP64
 name|uint64_t
 name|dtb_pad1
 decl_stmt|;
+comment|/* pad out to 64 bytes */
 endif|#
 directive|endif
+name|uint64_t
+name|dtb_switched
+decl_stmt|;
+comment|/* time of last switch */
+name|uint64_t
+name|dtb_interval
+decl_stmt|;
+comment|/* observed switch interval */
+name|uint64_t
+name|dtb_pad2
+index|[
+literal|6
+index|]
+decl_stmt|;
+comment|/* pad to avoid false sharing */
 block|}
 name|dtrace_buffer_t
 typedef|;
@@ -1146,6 +1159,16 @@ directive|define
 name|DTRACE_ACCESS_KERNEL
 value|0x1
 comment|/* the priv to read kmem */
+define|#
+directive|define
+name|DTRACE_ACCESS_PROC
+value|0x2
+comment|/* the priv for proc state */
+define|#
+directive|define
+name|DTRACE_ACCESS_ARGS
+value|0x4
+comment|/* the priv to examine args */
 comment|/*  * DTrace Activity  *  * Each DTrace consumer is in one of several states, which (for purposes of  * avoiding yet-another overloading of the noun "state") we call the current  * _activity_.  The activity transitions on dtrace_go() (from DTRACIOCGO), on  * dtrace_stop() (from DTRACIOCSTOP) and on the exit() action.  Activities may  * only transition in one direction; the activity transition diagram is a  * directed acyclic graph.  The activity transition diagram is as follows:  *  *  * +----------+                   +--------+                   +--------+  * | INACTIVE |------------------>| WARMUP |------------------>| ACTIVE |  * +----------+   dtrace_go(),    +--------+   dtrace_go(),    +--------+  *                before BEGIN        |        after BEGIN       |  |  |  *                                    |                          |  |  |  *                      exit() action |                          |  |  |  *                     from BEGIN ECB |                          |  |  |  *                                    |                          |  |  |  *                                    v                          |  |  |  *                               +----------+     exit() action  |  |  |  * +-----------------------------| DRAINING |<-------------------+  |  |  * |                             +----------+                       |  |  * |                                  |                             |  |  * |                   dtrace_stop(), |                             |  |  * |                     before END   |                             |  |  * |                                  |                             |  |  * |                                  v                             |  |  * | +---------+                 +----------+                       |  |  * | | STOPPED |<----------------| COOLDOWN |<----------------------+  |  * | +---------+  dtrace_stop(), +----------+     dtrace_stop(),       |  * |                after END                       before END         |  * |                                                                   |  * |                              +--------+                           |  * +----------------------------->| KILLED |<--------------------------+  *       deadman timeout or       +--------+     deadman timeout or  *        killed consumer                         killed consumer  *  * Note that once a DTrace consumer has stopped tracing, there is no way to  * restart it; if a DTrace consumer wishes to restart tracing, it must reopen  * the DTrace pseudodevice.  */
 typedef|typedef
 enum|enum
@@ -1586,10 +1609,10 @@ modifier|*
 name|dtpv_arg
 decl_stmt|;
 comment|/* provider argument */
-name|uint_t
+name|hrtime_t
 name|dtpv_defunct
 decl_stmt|;
-comment|/* boolean: defunct provider */
+comment|/* when made defunct */
 name|struct
 name|dtrace_provider
 modifier|*
@@ -1893,6 +1916,17 @@ name|regs
 modifier|*
 parameter_list|,
 name|uint_t
+parameter_list|)
+function_decl|;
+specifier|extern
+name|uint64_t
+name|dtrace_getvmreg
+parameter_list|(
+name|uint_t
+parameter_list|,
+specifier|volatile
+name|uint16_t
+modifier|*
 parameter_list|)
 function_decl|;
 specifier|extern

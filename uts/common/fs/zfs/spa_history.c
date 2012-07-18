@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2006, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2006, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -270,7 +270,7 @@ argument_list|,
 name|tx
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Figure out maximum size of history log.  We set it at 	 * 1% of pool size, with a max of 32MB and min of 128KB. 	 */
+comment|/* 	 * Figure out maximum size of history log.  We set it at 	 * 0.1% of pool size, with a max of 1G and min of 128KB. 	 */
 name|shpp
 operator|->
 name|sh_phys_max_off
@@ -283,7 +283,7 @@ name|spa
 argument_list|)
 argument_list|)
 operator|/
-literal|100
+literal|1000
 expr_stmt|;
 name|shpp
 operator|->
@@ -295,9 +295,9 @@ name|shpp
 operator|->
 name|sh_phys_max_off
 argument_list|,
-literal|32
+literal|1
 operator|<<
-literal|20
+literal|30
 argument_list|)
 expr_stmt|;
 name|shpp

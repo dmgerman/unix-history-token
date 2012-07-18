@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -42,6 +42,10 @@ include|#
 directive|include
 file|<sys/dsl_pool.h>
 end_include
+
+begin_comment
+comment|/*  * Deadlist concurrency:  *  * Deadlists can only be modified from the syncing thread.  *  * Except for dsl_deadlist_insert(), it can only be modified with the  * dp_config_rwlock held with RW_WRITER.  *  * The accessors (dsl_deadlist_space() and dsl_deadlist_space_range()) can  * be called concurrently, from open context, with the dl_config_rwlock held  * with RW_READER.  *  * Therefore, we only need to provide locking between dsl_deadlist_insert() and  * the accessors, protecting:  *     dl_phys->dl_used,comp,uncomp  *     and protecting the dl_tree from being loaded.  * The locking is provided by dl_lock.  Note that locking on the bpobj_t  * provides its own locking, and dl_oldfmt is immutable.  */
+end_comment
 
 begin_function
 specifier|static
@@ -1593,7 +1597,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * return space used in the range (mintxg, maxtxg].  * Includes maxtxg, does not include mintxg.  * mintxg and maxtxg must both be keys in the deadlist (unless maxtxg is  * UINT64_MAX).  */
+comment|/*  * return space used in the range (mintxg, maxtxg].  * Includes maxtxg, does not include mintxg.  * mintxg and maxtxg must both be keys in the deadlist (unless maxtxg is  * larger than any bp in the deadlist (eg. UINT64_MAX)).  */
 end_comment
 
 begin_function
@@ -1624,11 +1628,11 @@ name|uncompp
 parameter_list|)
 block|{
 name|dsl_deadlist_entry_t
-name|dle_tofind
-decl_stmt|;
-name|dsl_deadlist_entry_t
 modifier|*
 name|dle
+decl_stmt|;
+name|dsl_deadlist_entry_t
+name|dle_tofind
 decl_stmt|;
 name|avl_index_t
 name|where
@@ -1667,11 +1671,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|dsl_deadlist_load_tree
-argument_list|(
-name|dl
-argument_list|)
-expr_stmt|;
 operator|*
 name|usedp
 operator|=
@@ -1682,6 +1681,19 @@ operator|*
 name|uncompp
 operator|=
 literal|0
+expr_stmt|;
+name|mutex_enter
+argument_list|(
+operator|&
+name|dl
+operator|->
+name|dl_lock
+argument_list|)
+expr_stmt|;
+name|dsl_deadlist_load_tree
+argument_list|(
+name|dl
+argument_list|)
 expr_stmt|;
 name|dle_tofind
 operator|.
@@ -1798,6 +1810,14 @@ operator|+=
 name|uncomp
 expr_stmt|;
 block|}
+name|mutex_exit
+argument_list|(
+operator|&
+name|dl
+operator|->
+name|dl_lock
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

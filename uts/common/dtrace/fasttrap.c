@@ -7,6 +7,10 @@ begin_comment
 comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
+begin_comment
+comment|/*  * Copyright (c) 2011, Joyent, Inc. All rights reserved.  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -818,6 +822,8 @@ name|int
 name|i
 decl_stmt|,
 name|later
+decl_stmt|,
+name|rval
 decl_stmt|;
 specifier|static
 specifier|volatile
@@ -1014,10 +1020,14 @@ name|ftp_provid
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|rval
+operator|=
 name|dtrace_unregister
 argument_list|(
 name|provid
 argument_list|)
+operator|)
 operator|!=
 literal|0
 condition|)
@@ -1037,6 +1047,18 @@ name|dtrace_condense
 argument_list|(
 name|provid
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rval
+operator|==
+name|EAGAIN
+condition|)
+name|fp
+operator|->
+name|ftp_marked
+operator|=
+literal|1
 expr_stmt|;
 name|later
 operator|+=
@@ -1097,7 +1119,10 @@ condition|(
 name|later
 operator|>
 literal|0
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|fasttrap_timeout
 operator|!=
 operator|(
@@ -1105,6 +1130,7 @@ name|timeout_id_t
 operator|)
 literal|1
 condition|)
+block|{
 name|fasttrap_timeout
 operator|=
 name|timeout
@@ -1117,22 +1143,19 @@ argument_list|,
 name|hz
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|later
-operator|>
-literal|0
-condition|)
+block|}
 name|fasttrap_cleanup_work
 operator|=
 literal|1
 expr_stmt|;
+block|}
 else|else
+block|{
 name|fasttrap_timeout
 operator|=
 literal|0
 expr_stmt|;
+block|}
 name|mutex_exit
 argument_list|(
 operator|&

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -309,7 +309,7 @@ comment|/*  * Size of block to hold the configuration data (a packed nvlist)  */
 define|#
 directive|define
 name|SPA_CONFIG_BLOCKSIZE
-value|(1<< 14)
+value|(1ULL<< 14)
 comment|/*  * The DVA size encodings for LSIZE and PSIZE support blocks up to 32MB.  * The ASIZE encoding should be at least 64 times larger (6 more bits)  * to support up to 4-way RAID-Z mirror mode with worst-case gang block  * overhead, three DVAs per bp, plus one more bit in case we do anything  * else that expands the ASIZE.  */
 define|#
 directive|define
@@ -674,7 +674,7 @@ parameter_list|(
 name|bp
 parameter_list|)
 define|\
-value|((BP_GET_LEVEL(bp)> 0 || dmu_ot[BP_GET_TYPE(bp)].ot_metadata) ? \ 	BP_GET_PSIZE(bp) : BP_GET_LSIZE(bp))
+value|((BP_GET_LEVEL(bp)> 0 || DMU_OT_IS_METADATA(BP_GET_TYPE(bp))) ? \ 	BP_GET_PSIZE(bp) : BP_GET_LSIZE(bp))
 define|#
 directive|define
 name|BP_GET_NDVAS
@@ -839,7 +839,7 @@ parameter_list|(
 name|bp
 parameter_list|)
 define|\
-value|(((BP_GET_LEVEL(bp)> 0) || (dmu_ot[BP_GET_TYPE(bp)].ot_metadata)) ? \ 	ARC_BUFC_METADATA : ARC_BUFC_DATA);
+value|(((BP_GET_LEVEL(bp)> 0) || (DMU_OT_IS_METADATA(BP_GET_TYPE(bp)))) ? \ 	ARC_BUFC_METADATA : ARC_BUFC_DATA)
 typedef|typedef
 enum|enum
 name|spa_import_type
@@ -1900,6 +1900,15 @@ name|spa
 parameter_list|)
 function_decl|;
 specifier|extern
+name|boolean_t
+name|spa_is_initializing
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|)
+function_decl|;
+specifier|extern
 name|blkptr_t
 modifier|*
 name|spa_get_rootblkptr
@@ -1958,6 +1967,15 @@ function_decl|;
 specifier|extern
 name|uint64_t
 name|spa_guid
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|)
+function_decl|;
+specifier|extern
+name|uint64_t
+name|spa_load_guid
 parameter_list|(
 name|spa_t
 modifier|*
@@ -2168,6 +2186,34 @@ parameter_list|)
 function_decl|;
 comment|/* Miscellaneous support routines */
 specifier|extern
+name|void
+name|spa_activate_mos_feature
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|feature
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|spa_deactivate_mos_feature
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|feature
+parameter_list|)
+function_decl|;
+specifier|extern
 name|int
 name|spa_rename
 parameter_list|(
@@ -2257,6 +2303,15 @@ function_decl|;
 specifier|extern
 name|void
 name|spa_freeze
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|spa_change_guid
 parameter_list|(
 name|spa_t
 modifier|*
@@ -2828,6 +2883,25 @@ modifier|...
 parameter_list|)
 endif|#
 directive|endif
+specifier|extern
+name|boolean_t
+name|spa_debug_enabled
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|)
+function_decl|;
+define|#
+directive|define
+name|spa_dbgmsg
+parameter_list|(
+name|spa
+parameter_list|,
+modifier|...
+parameter_list|)
+define|\
+value|{						\ 	if (spa_debug_enabled(spa))		\ 		zfs_dbgmsg(__VA_ARGS__);	\ }
 specifier|extern
 name|int
 name|spa_mode_global

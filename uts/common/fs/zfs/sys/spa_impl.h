@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -265,6 +265,11 @@ name|MAXNAMELEN
 index|]
 decl_stmt|;
 comment|/* pool name */
+name|char
+modifier|*
+name|spa_comment
+decl_stmt|;
+comment|/* comment */
 name|avl_node_t
 name|spa_avl
 decl_stmt|;
@@ -331,6 +336,10 @@ name|dsl_pool_t
 modifier|*
 name|spa_dsl_pool
 decl_stmt|;
+name|boolean_t
+name|spa_is_initializing
+decl_stmt|;
+comment|/* true while opening pool */
 name|metaslab_class_t
 modifier|*
 name|spa_normal_class
@@ -380,9 +389,13 @@ name|spa_root_vdev
 decl_stmt|;
 comment|/* top-level vdev container */
 name|uint64_t
+name|spa_config_guid
+decl_stmt|;
+comment|/* config pool guid */
+name|uint64_t
 name|spa_load_guid
 decl_stmt|;
-comment|/* initial guid for spa_load */
+comment|/* spa_load initialized guid */
 name|list_t
 name|spa_config_dirty_list
 decl_stmt|;
@@ -399,6 +412,11 @@ name|spa_aux_vdev_t
 name|spa_l2cache
 decl_stmt|;
 comment|/* L2ARC cache devices */
+name|nvlist_t
+modifier|*
+name|spa_label_features
+decl_stmt|;
+comment|/* Features for reading MOS */
 name|uint64_t
 name|spa_config_object
 decl_stmt|;
@@ -632,6 +650,10 @@ name|spa_claiming
 decl_stmt|;
 comment|/* pool is doing zil_claim() */
 name|boolean_t
+name|spa_debug
+decl_stmt|;
+comment|/* debug enabled? */
+name|boolean_t
 name|spa_is_root
 decl_stmt|;
 comment|/* pool is root */
@@ -716,6 +738,19 @@ comment|/* version at pool creation */
 name|uint64_t
 name|spa_prev_software_version
 decl_stmt|;
+comment|/* See ub_software_version */
+name|uint64_t
+name|spa_feat_for_write_obj
+decl_stmt|;
+comment|/* required to write to pool */
+name|uint64_t
+name|spa_feat_for_read_obj
+decl_stmt|;
+comment|/* required to read from pool */
+name|uint64_t
+name|spa_feat_desc_obj
+decl_stmt|;
+comment|/* Feature descriptions */
 comment|/* 	 * spa_refcnt& spa_config_lock must be the last elements 	 * because refcount_t changes size based on compilation options. 	 * In order for the MDB module to function correctly, the other 	 * fields must remain in the same location. 	 */
 name|spa_config_lock_t
 name|spa_config_lock

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -133,9 +133,8 @@ name|ZFS_PROP_ZONED
 block|,
 name|ZFS_PROP_SNAPDIR
 block|,
-name|ZFS_PROP_PRIVATE
+name|ZFS_PROP_ACLMODE
 block|,
-comment|/* not exposed to user, temporary */
 name|ZFS_PROP_ACLINHERIT
 block|,
 name|ZFS_PROP_CREATETXG
@@ -212,6 +211,12 @@ name|ZFS_PROP_MLSLABEL
 block|,
 name|ZFS_PROP_SYNC
 block|,
+name|ZFS_PROP_REFRATIO
+block|,
+name|ZFS_PROP_WRITTEN
+block|,
+name|ZFS_PROP_CLONES
+block|,
 name|ZFS_NUM_PROPS
 block|}
 name|zfs_prop_t
@@ -282,10 +287,21 @@ name|ZPOOL_PROP_ALLOCATED
 block|,
 name|ZPOOL_PROP_READONLY
 block|,
+name|ZPOOL_PROP_COMMENT
+block|,
+name|ZPOOL_PROP_EXPANDSZ
+block|,
+name|ZPOOL_PROP_FREEING
+block|,
 name|ZPOOL_NUM_PROPS
 block|}
 name|zpool_prop_t
 typedef|;
+comment|/* Small enough to not hog a whole line of printout in zpool(1M). */
+define|#
+directive|define
+name|ZPROP_MAX_COMMENT
+value|32
 define|#
 directive|define
 name|ZPROP_CONT
@@ -446,6 +462,14 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
+name|boolean_t
+name|zfs_prop_written
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
 name|int
 name|zfs_prop_index_to_string
 parameter_list|(
@@ -524,6 +548,23 @@ name|boolean_t
 name|zpool_prop_readonly
 parameter_list|(
 name|zpool_prop_t
+parameter_list|)
+function_decl|;
+name|boolean_t
+name|zpool_prop_feature
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+name|boolean_t
+name|zpool_prop_unsupported
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
 parameter_list|)
 function_decl|;
 name|int
@@ -874,15 +915,19 @@ define|#
 directive|define
 name|SPA_VERSION_28
 value|28ULL
+define|#
+directive|define
+name|SPA_VERSION_5000
+value|5000ULL
 comment|/*  * When bumping up SPA_VERSION, make sure GRUB ZFS understands the on-disk  * format change. Go to usr/src/grub/grub-0.97/stage2/{zfs-include/, fsys_zfs*},  * and do the appropriate changes.  Also bump the version number in  * usr/src/grub/capability.  */
 define|#
 directive|define
 name|SPA_VERSION
-value|SPA_VERSION_28
+value|SPA_VERSION_5000
 define|#
 directive|define
 name|SPA_VERSION_STRING
-value|"28"
+value|"5000"
 comment|/*  * Symbolic names for the changes that caused a SPA_VERSION switch.  * Used in the code when checking for presence or absence of a feature.  * Feel free to define multiple symbolic names for each version if there  * were multiple changes to on-disk structures during that version.  *  * NOTE: When checking the current SPA_VERSION in your code, be sure  *       to use spa_version() since it reports the version of the  *       last synced uberblock.  Checking the in-flight version can  *       be dangerous in some cases.  */
 define|#
 directive|define
@@ -1036,6 +1081,22 @@ define|#
 directive|define
 name|SPA_VERSION_MULTI_REPLACE
 value|SPA_VERSION_28
+define|#
+directive|define
+name|SPA_VERSION_BEFORE_FEATURES
+value|SPA_VERSION_28
+define|#
+directive|define
+name|SPA_VERSION_FEATURES
+value|SPA_VERSION_5000
+define|#
+directive|define
+name|SPA_VERSION_IS_SUPPORTED
+parameter_list|(
+name|v
+parameter_list|)
+define|\
+value|(((v)>= SPA_VERSION_INITIAL&& (v)<= SPA_VERSION_BEFORE_FEATURES) || \ 	((v)>= SPA_VERSION_FEATURES&& (v)<= SPA_VERSION))
 comment|/*  * ZPL version - rev'd whenever an incompatible on-disk format change  * occurs.  This is independent of SPA/DMU/ZAP versioning.  You must  * also update the version_table[] and help message in zfs_prop.c.  *  * When changing, be sure to teach GRUB how to read the new format!  * See usr/src/grub/grub-0.97/stage2/{zfs-include/,fsys_zfs*}  */
 define|#
 directive|define
@@ -1341,6 +1402,10 @@ name|ZPOOL_CONFIG_RESILVERING
 value|"resilvering"
 define|#
 directive|define
+name|ZPOOL_CONFIG_COMMENT
+value|"comment"
+define|#
+directive|define
 name|ZPOOL_CONFIG_SUSPENDED
 value|"suspended"
 comment|/* not stored on disk */
@@ -1363,6 +1428,30 @@ define|#
 directive|define
 name|ZPOOL_CONFIG_LOAD_INFO
 value|"load_info"
+comment|/* not stored on disk */
+define|#
+directive|define
+name|ZPOOL_CONFIG_REWIND_INFO
+value|"rewind_info"
+comment|/* not stored on disk */
+define|#
+directive|define
+name|ZPOOL_CONFIG_UNSUP_FEAT
+value|"unsup_feat"
+comment|/* not stored on disk */
+define|#
+directive|define
+name|ZPOOL_CONFIG_CAN_RDONLY
+value|"can_rdonly"
+comment|/* not stored on disk */
+define|#
+directive|define
+name|ZPOOL_CONFIG_FEATURES_FOR_READ
+value|"features_for_read"
+define|#
+directive|define
+name|ZPOOL_CONFIG_FEATURE_STATS
+value|"feature_stats"
 comment|/* not stored on disk */
 comment|/*  * The persistent vdev state is stored as separate values rather than a single  * 'vdev_state' entry.  This is because a device can be in multiple states, such  * as offline and degraded.  */
 define|#
@@ -1546,6 +1635,9 @@ comment|/* on-disk version is too new		*/
 name|VDEV_AUX_VERSION_OLDER
 block|,
 comment|/* on-disk version is too old		*/
+name|VDEV_AUX_UNSUP_FEAT
+block|,
+comment|/* unsupported features			*/
 name|VDEV_AUX_SPARED
 block|,
 comment|/* hot spare used in another pool	*/
@@ -1740,6 +1832,10 @@ name|uint64_t
 name|vs_rsize
 decl_stmt|;
 comment|/* replaceable dev size */
+name|uint64_t
+name|vs_esize
+decl_stmt|;
+comment|/* expandable dev size */
 name|uint64_t
 name|vs_ops
 index|[
@@ -1974,8 +2070,6 @@ name|ZFS_IOC_CLEAR
 block|,
 name|ZFS_IOC_PROMOTE
 block|,
-name|ZFS_IOC_DESTROY_SNAPS
-block|,
 name|ZFS_IOC_SNAPSHOT
 block|,
 name|ZFS_IOC_DSOBJ_TO_DSNAME
@@ -2019,6 +2113,18 @@ block|,
 name|ZFS_IOC_TMP_SNAPSHOT
 block|,
 name|ZFS_IOC_OBJ_TO_STATS
+block|,
+name|ZFS_IOC_SPACE_WRITTEN
+block|,
+name|ZFS_IOC_SPACE_SNAPS
+block|,
+name|ZFS_IOC_DESTROY_SNAPS_NVL
+block|,
+name|ZFS_IOC_POOL_REGUID
+block|,
+name|ZFS_IOC_POOL_REOPEN
+block|,
+name|ZFS_IOC_SEND_PROGRESS
 block|}
 name|zfs_ioc_t
 typedef|;
@@ -2142,7 +2248,7 @@ define|#
 directive|define
 name|ZFS_IMPORT_ONLY
 value|0x8
-comment|/*  * Sysevent payload members.  ZFS will generate the following sysevents with the  * given payloads:  *  *	ESC_ZFS_RESILVER_START  *	ESC_ZFS_RESILVER_END  *	ESC_ZFS_POOL_DESTROY  *  *		ZFS_EV_POOL_NAME	DATA_TYPE_STRING  *		ZFS_EV_POOL_GUID	DATA_TYPE_UINT64  *  *	ESC_ZFS_VDEV_REMOVE  *	ESC_ZFS_VDEV_CLEAR  *	ESC_ZFS_VDEV_CHECK  *  *		ZFS_EV_POOL_NAME	DATA_TYPE_STRING  *		ZFS_EV_POOL_GUID	DATA_TYPE_UINT64  *		ZFS_EV_VDEV_PATH	DATA_TYPE_STRING	(optional)  *		ZFS_EV_VDEV_GUID	DATA_TYPE_UINT64  */
+comment|/*  * Sysevent payload members.  ZFS will generate the following sysevents with the  * given payloads:  *  *	ESC_ZFS_RESILVER_START  *	ESC_ZFS_RESILVER_END  *	ESC_ZFS_POOL_DESTROY  *	ESC_ZFS_POOL_REGUID  *  *		ZFS_EV_POOL_NAME	DATA_TYPE_STRING  *		ZFS_EV_POOL_GUID	DATA_TYPE_UINT64  *  *	ESC_ZFS_VDEV_REMOVE  *	ESC_ZFS_VDEV_CLEAR  *	ESC_ZFS_VDEV_CHECK  *  *		ZFS_EV_POOL_NAME	DATA_TYPE_STRING  *		ZFS_EV_POOL_GUID	DATA_TYPE_UINT64  *		ZFS_EV_VDEV_PATH	DATA_TYPE_STRING	(optional)  *		ZFS_EV_VDEV_GUID	DATA_TYPE_UINT64  */
 define|#
 directive|define
 name|ZFS_EV_POOL_NAME

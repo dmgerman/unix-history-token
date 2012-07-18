@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -73,6 +73,12 @@ directive|include
 file|<sys/bpobj.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/bptree.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -110,8 +116,13 @@ name|DMU_OT_DEFERRED
 value|DMU_OT_NONE
 define|#
 directive|define
-name|DMU_OT_TOTAL
+name|DMU_OT_OTHER
 value|DMU_OT_NUMTYPES
+comment|/* place holder for DMU_OT() types */
+define|#
+directive|define
+name|DMU_OT_TOTAL
+value|(DMU_OT_NUMTYPES + 1)
 typedef|typedef
 struct|struct
 name|zfs_blkstat
@@ -228,6 +239,9 @@ decl_stmt|;
 name|bpobj_t
 name|dp_free_bpobj
 decl_stmt|;
+name|uint64_t
+name|dp_bptree_obj
+decl_stmt|;
 name|struct
 name|dsl_scan
 modifier|*
@@ -274,7 +288,7 @@ block|}
 name|dsl_pool_t
 typedef|;
 name|int
-name|dsl_pool_open
+name|dsl_pool_init
 parameter_list|(
 name|spa_t
 modifier|*
@@ -287,6 +301,14 @@ name|dsl_pool_t
 modifier|*
 modifier|*
 name|dpp
+parameter_list|)
+function_decl|;
+name|int
+name|dsl_pool_open
+parameter_list|(
+name|dsl_pool_t
+modifier|*
+name|dp
 parameter_list|)
 function_decl|;
 name|void

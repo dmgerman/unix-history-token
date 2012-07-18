@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -2416,18 +2416,18 @@ operator|&
 name|doi
 argument_list|)
 expr_stmt|;
-name|ASSERT
+name|ASSERT3U
 argument_list|(
-name|dmu_ot
-index|[
+name|DMU_OT_BYTESWAP
+argument_list|(
 name|doi
 operator|.
 name|doi_type
-index|]
-operator|.
-name|ot_byteswap
+argument_list|)
+argument_list|,
 operator|==
-name|zap_byteswap
+argument_list|,
+name|DMU_BSWAP_ZAP
 argument_list|)
 expr_stmt|;
 block|}
@@ -3100,18 +3100,18 @@ operator|&
 name|doi
 argument_list|)
 expr_stmt|;
-name|ASSERT
+name|ASSERT3U
 argument_list|(
-name|dmu_ot
-index|[
+name|DMU_OT_BYTESWAP
+argument_list|(
 name|doi
 operator|.
 name|doi_type
-index|]
-operator|.
-name|ot_byteswap
+argument_list|)
+argument_list|,
 operator|==
-name|zap_byteswap
+argument_list|,
+name|DMU_BSWAP_ZAP
 argument_list|)
 expr_stmt|;
 block|}
@@ -7577,7 +7577,7 @@ name|err
 operator|)
 return|;
 block|}
-comment|/* 	 * We lock the zap with adding ==  FALSE. Because, if we pass 	 * the actual value of add, it could trigger a mzap_upgrade(). 	 * At present we are just evaluating the possibility of this operation 	 * and hence we donot want to trigger an upgrade. 	 */
+comment|/* 	 * We lock the zap with adding == FALSE. Because, if we pass 	 * the actual value of add, it could trigger a mzap_upgrade(). 	 * At present we are just evaluating the possibility of this operation 	 * and hence we donot want to trigger an upgrade. 	 */
 name|err
 operator|=
 name|zap_lockdir

@@ -160,7 +160,7 @@ name|char
 modifier|*
 name|fm_url
 init|=
-literal|"http://www.sun.com/msg"
+literal|"http://illumos.org/msg"
 decl_stmt|;
 end_decl_stmt
 

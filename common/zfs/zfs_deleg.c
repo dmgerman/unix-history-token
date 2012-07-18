@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2007, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2007, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2010 Nexenta Systems, Inc. All rights reserved.  */
 end_comment
 
 begin_if
@@ -181,7 +181,7 @@ block|,
 block|{
 name|ZFS_DELEG_PERM_SEND
 block|,
-name|ZFS_DELEG_NOTE_NONE
+name|ZFS_DELEG_NOTE_SEND
 block|}
 block|,
 block|{

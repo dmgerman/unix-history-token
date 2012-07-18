@@ -7,6 +7,10 @@ begin_comment
 comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
+begin_comment
+comment|/*  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -58,6 +62,9 @@ file|<sys/kmem.h>
 include|#
 directive|include
 file|<sys/taskq.h>
+include|#
+directive|include
+file|<sys/taskq_impl.h>
 include|#
 directive|include
 file|<sys/buf.h>

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -166,8 +166,9 @@ name|uint64_t
 name|ds_deadlist_obj
 decl_stmt|;
 comment|/* DMU_OT_DEADLIST */
+comment|/* 	 * ds_referenced_bytes, ds_compressed_bytes, and ds_uncompressed_bytes 	 * include all blocks referenced by this dataset, including those 	 * shared with any other datasets. 	 */
 name|uint64_t
-name|ds_used_bytes
+name|ds_referenced_bytes
 decl_stmt|;
 name|uint64_t
 name|ds_compressed_bytes
@@ -301,6 +302,12 @@ name|uint64_t
 name|ds_quota
 decl_stmt|;
 comment|/* cached refquota */
+name|kmutex_t
+name|ds_sendstream_lock
+decl_stmt|;
+name|list_t
+name|ds_sendstreams
+decl_stmt|;
 comment|/* Protected by ds_lock; keep at end of struct for better locality */
 name|char
 name|ds_snapname
@@ -980,6 +987,54 @@ parameter_list|(
 name|dsl_dataset_t
 modifier|*
 name|ds
+parameter_list|)
+function_decl|;
+name|int
+name|dsl_dataset_space_written
+parameter_list|(
+name|dsl_dataset_t
+modifier|*
+name|oldsnap
+parameter_list|,
+name|dsl_dataset_t
+modifier|*
+name|new
+parameter_list|,
+name|uint64_t
+modifier|*
+name|usedp
+parameter_list|,
+name|uint64_t
+modifier|*
+name|compp
+parameter_list|,
+name|uint64_t
+modifier|*
+name|uncompp
+parameter_list|)
+function_decl|;
+name|int
+name|dsl_dataset_space_wouldfree
+parameter_list|(
+name|dsl_dataset_t
+modifier|*
+name|firstsnap
+parameter_list|,
+name|dsl_dataset_t
+modifier|*
+name|last
+parameter_list|,
+name|uint64_t
+modifier|*
+name|usedp
+parameter_list|,
+name|uint64_t
+modifier|*
+name|compp
+parameter_list|,
+name|uint64_t
+modifier|*
+name|uncompp
 parameter_list|)
 function_decl|;
 name|int

@@ -19,13 +19,6 @@ directive|define
 name|_SYS_CCOMPILE_H
 end_define
 
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
-
 begin_comment
 comment|/*  * This file contains definitions designed to enable different compilers  * to be used harmoniously on Solaris systems.  */
 end_comment
@@ -130,6 +123,40 @@ define|#
 directive|define
 name|__sun_attr___noreturn__
 value|__attribute__((__noreturn__))
+comment|/*  * The function is 'extern inline' and expects GNU C89 behaviour, not C99  * behaviour.  *  * Should only be used on 'extern inline' definitions for GCC.  */
+if|#
+directive|if
+name|__GNUC_VERSION
+operator|>=
+literal|40200
+define|#
+directive|define
+name|__sun_attr___gnu_inline__
+value|__attribute__((__gnu_inline__))
+else|#
+directive|else
+define|#
+directive|define
+name|__sun_attr___gnu_inline__
+endif|#
+directive|endif
+comment|/*  * The function has control flow such that it may return multiple times (in  * the manner of setjmp or vfork)  */
+if|#
+directive|if
+name|__GNUC_VERSION
+operator|>=
+literal|40100
+define|#
+directive|define
+name|__sun_attr___returns_twice__
+value|__attribute__((__returns_twice__))
+else|#
+directive|else
+define|#
+directive|define
+name|__sun_attr___returns_twice__
+endif|#
+directive|endif
 comment|/*  * This is an appropriate label for functions that do not  * modify their arguments, e.g. strlen()  */
 define|#
 directive|define
@@ -204,6 +231,14 @@ define|#
 directive|define
 name|__NORETURN
 value|__sun_attr__((__noreturn__))
+define|#
+directive|define
+name|__GNU_INLINE
+value|__inline__ __sun_attr__((__gnu_inline__))
+define|#
+directive|define
+name|__RETURNS_TWICE
+value|__sun_attr__((__returns_twice__))
 define|#
 directive|define
 name|__CONST

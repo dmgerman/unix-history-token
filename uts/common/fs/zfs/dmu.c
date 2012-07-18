@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -148,7 +148,7 @@ index|]
 init|=
 block|{
 block|{
-name|byteswap_uint8_array
+name|DMU_BSWAP_UINT8
 block|,
 name|TRUE
 block|,
@@ -156,7 +156,7 @@ literal|"unallocated"
 block|}
 block|,
 block|{
-name|zap_byteswap
+name|DMU_BSWAP_ZAP
 block|,
 name|TRUE
 block|,
@@ -164,7 +164,7 @@ literal|"object directory"
 block|}
 block|,
 block|{
-name|byteswap_uint64_array
+name|DMU_BSWAP_UINT64
 block|,
 name|TRUE
 block|,
@@ -172,7 +172,7 @@ literal|"object array"
 block|}
 block|,
 block|{
-name|byteswap_uint8_array
+name|DMU_BSWAP_UINT8
 block|,
 name|TRUE
 block|,
@@ -180,7 +180,7 @@ literal|"packed nvlist"
 block|}
 block|,
 block|{
-name|byteswap_uint64_array
+name|DMU_BSWAP_UINT64
 block|,
 name|TRUE
 block|,
@@ -188,7 +188,7 @@ literal|"packed nvlist size"
 block|}
 block|,
 block|{
-name|byteswap_uint64_array
+name|DMU_BSWAP_UINT64
 block|,
 name|TRUE
 block|,
@@ -196,7 +196,7 @@ literal|"bpobj"
 block|}
 block|,
 block|{
-name|byteswap_uint64_array
+name|DMU_BSWAP_UINT64
 block|,
 name|TRUE
 block|,
@@ -204,7 +204,7 @@ literal|"bpobj header"
 block|}
 block|,
 block|{
-name|byteswap_uint64_array
+name|DMU_BSWAP_UINT64
 block|,
 name|TRUE
 block|,
@@ -212,7 +212,7 @@ literal|"SPA space map header"
 block|}
 block|,
 block|{
-name|byteswap_uint64_array
+name|DMU_BSWAP_UINT64
 block|,
 name|TRUE
 block|,
@@ -220,7 +220,7 @@ literal|"SPA space map"
 block|}
 block|,
 block|{
-name|byteswap_uint64_array
+name|DMU_BSWAP_UINT64
 block|,
 name|TRUE
 block|,
@@ -228,7 +228,7 @@ literal|"ZIL intent log"
 block|}
 block|,
 block|{
-name|dnode_buf_byteswap
+name|DMU_BSWAP_DNODE
 block|,
 name|TRUE
 block|,
@@ -236,7 +236,7 @@ literal|"DMU dnode"
 block|}
 block|,
 block|{
-name|dmu_objset_byteswap
+name|DMU_BSWAP_OBJSET
 block|,
 name|TRUE
 block|,
@@ -244,7 +244,7 @@ literal|"DMU objset"
 block|}
 block|,
 block|{
-name|byteswap_uint64_array
+name|DMU_BSWAP_UINT64
 block|,
 name|TRUE
 block|,
@@ -252,7 +252,7 @@ literal|"DSL directory"
 block|}
 block|,
 block|{
-name|zap_byteswap
+name|DMU_BSWAP_ZAP
 block|,
 name|TRUE
 block|,
@@ -260,7 +260,7 @@ literal|"DSL directory child map"
 block|}
 block|,
 block|{
-name|zap_byteswap
+name|DMU_BSWAP_ZAP
 block|,
 name|TRUE
 block|,
@@ -268,7 +268,7 @@ literal|"DSL dataset snap map"
 block|}
 block|,
 block|{
-name|zap_byteswap
+name|DMU_BSWAP_ZAP
 block|,
 name|TRUE
 block|,
@@ -276,7 +276,7 @@ literal|"DSL props"
 block|}
 block|,
 block|{
-name|byteswap_uint64_array
+name|DMU_BSWAP_UINT64
 block|,
 name|TRUE
 block|,
@@ -284,7 +284,7 @@ literal|"DSL dataset"
 block|}
 block|,
 block|{
-name|zfs_znode_byteswap
+name|DMU_BSWAP_ZNODE
 block|,
 name|TRUE
 block|,
@@ -292,7 +292,7 @@ literal|"ZFS znode"
 block|}
 block|,
 block|{
-name|zfs_oldacl_byteswap
+name|DMU_BSWAP_OLDACL
 block|,
 name|TRUE
 block|,
@@ -300,7 +300,7 @@ literal|"ZFS V0 ACL"
 block|}
 block|,
 block|{
-name|byteswap_uint8_array
+name|DMU_BSWAP_UINT8
 block|,
 name|FALSE
 block|,
@@ -308,7 +308,7 @@ literal|"ZFS plain file"
 block|}
 block|,
 block|{
-name|zap_byteswap
+name|DMU_BSWAP_ZAP
 block|,
 name|TRUE
 block|,
@@ -316,7 +316,7 @@ literal|"ZFS directory"
 block|}
 block|,
 block|{
-name|zap_byteswap
+name|DMU_BSWAP_ZAP
 block|,
 name|TRUE
 block|,
@@ -324,7 +324,7 @@ literal|"ZFS master node"
 block|}
 block|,
 block|{
-name|zap_byteswap
+name|DMU_BSWAP_ZAP
 block|,
 name|TRUE
 block|,
@@ -332,7 +332,7 @@ literal|"ZFS delete queue"
 block|}
 block|,
 block|{
-name|byteswap_uint8_array
+name|DMU_BSWAP_UINT8
 block|,
 name|FALSE
 block|,
@@ -340,7 +340,7 @@ literal|"zvol object"
 block|}
 block|,
 block|{
-name|zap_byteswap
+name|DMU_BSWAP_ZAP
 block|,
 name|TRUE
 block|,
@@ -348,7 +348,7 @@ literal|"zvol prop"
 block|}
 block|,
 block|{
-name|byteswap_uint8_array
+name|DMU_BSWAP_UINT8
 block|,
 name|FALSE
 block|,
@@ -356,7 +356,7 @@ literal|"other uint8[]"
 block|}
 block|,
 block|{
-name|byteswap_uint64_array
+name|DMU_BSWAP_UINT64
 block|,
 name|FALSE
 block|,
@@ -364,7 +364,7 @@ literal|"other uint64[]"
 block|}
 block|,
 block|{
-name|zap_byteswap
+name|DMU_BSWAP_ZAP
 block|,
 name|TRUE
 block|,
@@ -372,7 +372,7 @@ literal|"other ZAP"
 block|}
 block|,
 block|{
-name|zap_byteswap
+name|DMU_BSWAP_ZAP
 block|,
 name|TRUE
 block|,
@@ -380,7 +380,7 @@ literal|"persistent error log"
 block|}
 block|,
 block|{
-name|byteswap_uint8_array
+name|DMU_BSWAP_UINT8
 block|,
 name|TRUE
 block|,
@@ -388,7 +388,7 @@ literal|"SPA history"
 block|}
 block|,
 block|{
-name|byteswap_uint64_array
+name|DMU_BSWAP_UINT64
 block|,
 name|TRUE
 block|,
@@ -396,7 +396,7 @@ literal|"SPA history offsets"
 block|}
 block|,
 block|{
-name|zap_byteswap
+name|DMU_BSWAP_ZAP
 block|,
 name|TRUE
 block|,
@@ -404,7 +404,7 @@ literal|"Pool properties"
 block|}
 block|,
 block|{
-name|zap_byteswap
+name|DMU_BSWAP_ZAP
 block|,
 name|TRUE
 block|,
@@ -412,7 +412,7 @@ literal|"DSL permissions"
 block|}
 block|,
 block|{
-name|zfs_acl_byteswap
+name|DMU_BSWAP_ACL
 block|,
 name|TRUE
 block|,
@@ -420,7 +420,7 @@ literal|"ZFS ACL"
 block|}
 block|,
 block|{
-name|byteswap_uint8_array
+name|DMU_BSWAP_UINT8
 block|,
 name|TRUE
 block|,
@@ -428,7 +428,7 @@ literal|"ZFS SYSACL"
 block|}
 block|,
 block|{
-name|byteswap_uint8_array
+name|DMU_BSWAP_UINT8
 block|,
 name|TRUE
 block|,
@@ -436,7 +436,7 @@ literal|"FUID table"
 block|}
 block|,
 block|{
-name|byteswap_uint64_array
+name|DMU_BSWAP_UINT64
 block|,
 name|TRUE
 block|,
@@ -444,7 +444,7 @@ literal|"FUID table size"
 block|}
 block|,
 block|{
-name|zap_byteswap
+name|DMU_BSWAP_ZAP
 block|,
 name|TRUE
 block|,
@@ -452,7 +452,7 @@ literal|"DSL dataset next clones"
 block|}
 block|,
 block|{
-name|zap_byteswap
+name|DMU_BSWAP_ZAP
 block|,
 name|TRUE
 block|,
@@ -460,7 +460,7 @@ literal|"scan work queue"
 block|}
 block|,
 block|{
-name|zap_byteswap
+name|DMU_BSWAP_ZAP
 block|,
 name|TRUE
 block|,
@@ -468,7 +468,7 @@ literal|"ZFS user/group used"
 block|}
 block|,
 block|{
-name|zap_byteswap
+name|DMU_BSWAP_ZAP
 block|,
 name|TRUE
 block|,
@@ -476,7 +476,7 @@ literal|"ZFS user/group quota"
 block|}
 block|,
 block|{
-name|zap_byteswap
+name|DMU_BSWAP_ZAP
 block|,
 name|TRUE
 block|,
@@ -484,7 +484,7 @@ literal|"snapshot refcount tags"
 block|}
 block|,
 block|{
-name|zap_byteswap
+name|DMU_BSWAP_ZAP
 block|,
 name|TRUE
 block|,
@@ -492,7 +492,7 @@ literal|"DDT ZAP algorithm"
 block|}
 block|,
 block|{
-name|zap_byteswap
+name|DMU_BSWAP_ZAP
 block|,
 name|TRUE
 block|,
@@ -500,7 +500,7 @@ literal|"DDT statistics"
 block|}
 block|,
 block|{
-name|byteswap_uint8_array
+name|DMU_BSWAP_UINT8
 block|,
 name|TRUE
 block|,
@@ -508,7 +508,7 @@ literal|"System attributes"
 block|}
 block|,
 block|{
-name|zap_byteswap
+name|DMU_BSWAP_ZAP
 block|,
 name|TRUE
 block|,
@@ -516,7 +516,7 @@ literal|"SA master node"
 block|}
 block|,
 block|{
-name|zap_byteswap
+name|DMU_BSWAP_ZAP
 block|,
 name|TRUE
 block|,
@@ -524,7 +524,7 @@ literal|"SA attr registration"
 block|}
 block|,
 block|{
-name|zap_byteswap
+name|DMU_BSWAP_ZAP
 block|,
 name|TRUE
 block|,
@@ -532,7 +532,7 @@ literal|"SA attr layouts"
 block|}
 block|,
 block|{
-name|zap_byteswap
+name|DMU_BSWAP_ZAP
 block|,
 name|TRUE
 block|,
@@ -540,7 +540,7 @@ literal|"scan translations"
 block|}
 block|,
 block|{
-name|byteswap_uint8_array
+name|DMU_BSWAP_UINT8
 block|,
 name|FALSE
 block|,
@@ -548,7 +548,7 @@ literal|"deduplicated block"
 block|}
 block|,
 block|{
-name|zap_byteswap
+name|DMU_BSWAP_ZAP
 block|,
 name|TRUE
 block|,
@@ -556,7 +556,7 @@ literal|"DSL deadlist map"
 block|}
 block|,
 block|{
-name|byteswap_uint64_array
+name|DMU_BSWAP_UINT64
 block|,
 name|TRUE
 block|,
@@ -564,7 +564,7 @@ literal|"DSL deadlist map hdr"
 block|}
 block|,
 block|{
-name|zap_byteswap
+name|DMU_BSWAP_ZAP
 block|,
 name|TRUE
 block|,
@@ -572,13 +572,85 @@ literal|"DSL dir clones"
 block|}
 block|,
 block|{
-name|byteswap_uint64_array
+name|DMU_BSWAP_UINT64
 block|,
 name|TRUE
 block|,
 literal|"bpobj subobj"
 block|}
-block|, }
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|dmu_object_byteswap_info_t
+name|dmu_ot_byteswap
+index|[
+name|DMU_BSWAP_NUMFUNCS
+index|]
+init|=
+block|{
+block|{
+name|byteswap_uint8_array
+block|,
+literal|"uint8"
+block|}
+block|,
+block|{
+name|byteswap_uint16_array
+block|,
+literal|"uint16"
+block|}
+block|,
+block|{
+name|byteswap_uint32_array
+block|,
+literal|"uint32"
+block|}
+block|,
+block|{
+name|byteswap_uint64_array
+block|,
+literal|"uint64"
+block|}
+block|,
+block|{
+name|zap_byteswap
+block|,
+literal|"zap"
+block|}
+block|,
+block|{
+name|dnode_buf_byteswap
+block|,
+literal|"dnode"
+block|}
+block|,
+block|{
+name|dmu_objset_byteswap
+block|,
+literal|"objset"
+block|}
+block|,
+block|{
+name|zfs_znode_byteswap
+block|,
+literal|"znode"
+block|}
+block|,
+block|{
+name|zfs_oldacl_byteswap
+block|,
+literal|"oldacl"
+block|}
+block|,
+block|{
+name|zfs_acl_byteswap
+block|,
+literal|"acl"
+block|}
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -935,9 +1007,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|DMU_OT_IS_VALID
+argument_list|(
 name|type
-operator|>
-name|DMU_OT_NUMTYPES
+argument_list|)
 condition|)
 block|{
 name|error
@@ -7537,12 +7611,10 @@ name|level
 operator|>
 literal|0
 operator|||
-name|dmu_ot
-index|[
+name|DMU_OT_IS_METADATA
+argument_list|(
 name|type
-index|]
-operator|.
-name|ot_metadata
+argument_list|)
 operator|||
 operator|(
 name|wp

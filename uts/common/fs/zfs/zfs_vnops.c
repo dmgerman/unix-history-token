@@ -12588,6 +12588,10 @@ operator|~
 name|S_IFMT
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|err
+operator|=
 name|zfs_acl_chmod_setattr
 argument_list|(
 name|zp
@@ -12597,7 +12601,10 @@ name|aclp
 argument_list|,
 name|new_mode
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|out
+goto|;
 name|mutex_enter
 argument_list|(
 operator|&
@@ -18019,6 +18026,27 @@ argument_list|(
 name|zp
 argument_list|)
 expr_stmt|;
+comment|/* 	 * There's nothing to do if no data is cached. 	 */
+if|if
+condition|(
+operator|!
+name|vn_has_cached_data
+argument_list|(
+name|vp
+argument_list|)
+condition|)
+block|{
+name|ZFS_EXIT
+argument_list|(
+name|zfsvfs
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 comment|/* 	 * Align this request to the file block size in case we kluster. 	 * XXX - this can result in pretty aggresive locking, which can 	 * impact simultanious read/write access.  One option might be 	 * to break up long requests (len == 0) into block-by-block 	 * operations to get narrower locking. 	 */
 name|blksz
 operator|=

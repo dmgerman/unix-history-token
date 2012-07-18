@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2009, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2009, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -5911,7 +5911,7 @@ name|spa
 operator|->
 name|spa_ddt_stat_object
 operator|=
-name|zap_create
+name|zap_create_link
 argument_list|(
 name|ddt
 operator|->
@@ -5919,41 +5919,11 @@ name|ddt_os
 argument_list|,
 name|DMU_OT_DDT_STATS
 argument_list|,
-name|DMU_OT_NONE
-argument_list|,
-literal|0
-argument_list|,
-name|tx
-argument_list|)
-expr_stmt|;
-name|VERIFY
-argument_list|(
-name|zap_add
-argument_list|(
-name|ddt
-operator|->
-name|ddt_os
-argument_list|,
 name|DMU_POOL_DIRECTORY_OBJECT
 argument_list|,
 name|DMU_POOL_DDT_STATS
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|uint64_t
-argument_list|)
-argument_list|,
-literal|1
-argument_list|,
-operator|&
-name|spa
-operator|->
-name|spa_ddt_stat_object
-argument_list|,
 name|tx
-argument_list|)
-operator|==
-literal|0
 argument_list|)
 expr_stmt|;
 block|}

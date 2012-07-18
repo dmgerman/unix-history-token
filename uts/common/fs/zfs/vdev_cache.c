@@ -46,7 +46,7 @@ comment|/*  * These tunables are for performance analysis.  */
 end_comment
 
 begin_comment
-comment|/*  * All i/os smaller than zfs_vdev_cache_max will be turned into  * 1<<zfs_vdev_cache_bshift byte reads by the vdev_cache (aka software  * track buffer).  At most zfs_vdev_cache_size bytes will be kept in each  * vdev's vdev_cache.  */
+comment|/*  * All i/os smaller than zfs_vdev_cache_max will be turned into  * 1<<zfs_vdev_cache_bshift byte reads by the vdev_cache (aka software  * track buffer).  At most zfs_vdev_cache_size bytes will be kept in each  * vdev's vdev_cache.  *  * TODO: Note that with the current ZFS code, it turns out that the  * vdev cache is not helpful, and in some cases actually harmful.  It  * is better if we disable this.  Once some time has passed, we should  * actually remove this to simplify the code.  For now we just disable  * it by setting the zfs_vdev_cache_size to zero.  Note that Solaris 11  * has made these same changes.  */
 end_comment
 
 begin_decl_stmt
@@ -67,15 +67,9 @@ begin_decl_stmt
 name|int
 name|zfs_vdev_cache_size
 init|=
-literal|10ULL
-operator|<<
-literal|20
+literal|0
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* 10MB */
-end_comment
 
 begin_decl_stmt
 name|int

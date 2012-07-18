@@ -12,7 +12,7 @@ comment|/*	  All Rights Reserved  	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  *  * Copyright 2011, 2012 Nexenta Systems, Inc.  All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -921,6 +921,7 @@ error|One of _BIT_FIELDS_LTOH or _BIT_FIELDS_HTOL must be defined
 endif|#
 directive|endif
 comment|/* _BIT_FIELDS_LTOH */
+comment|/* avoid any possibility of clashing with<stddef.h> version */
 if|#
 directive|if
 name|defined
@@ -933,13 +934,13 @@ name|defined
 argument_list|(
 name|_KMEMUSER
 argument_list|)
-operator|&&
+if|#
+directive|if
 operator|!
 name|defined
 argument_list|(
 name|offsetof
 argument_list|)
-comment|/* avoid any possibility of clashing with<stddef.h> version */
 define|#
 directive|define
 name|offsetof
@@ -951,6 +952,29 @@ parameter_list|)
 value|((size_t)(&(((s *)0)->m)))
 endif|#
 directive|endif
+comment|/* !offsetof */
+define|#
+directive|define
+name|container_of
+parameter_list|(
+name|m
+parameter_list|,
+name|s
+parameter_list|,
+name|name
+parameter_list|)
+define|\
+value|(void *)((uintptr_t)(m) - (uintptr_t)offsetof(s, name))
+define|#
+directive|define
+name|ARRAY_SIZE
+parameter_list|(
+name|x
+parameter_list|)
+value|(sizeof (x) / sizeof (x[0]))
+endif|#
+directive|endif
+comment|/* _KERNEL, !_KMEMUSER */
 ifdef|#
 directive|ifdef
 name|__cplusplus

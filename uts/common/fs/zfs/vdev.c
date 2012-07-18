@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -334,7 +334,7 @@ name|vd
 operator|->
 name|vdev_parent
 decl_stmt|;
-comment|/* 	 * The our parent is NULL (inactive spare or cache) or is the root, 	 * just return our own asize. 	 */
+comment|/* 	 * If our parent is NULL (inactive spare or cache) or is the root, 	 * just return our own asize. 	 */
 if|if
 condition|(
 name|pvd
@@ -1231,6 +1231,15 @@ operator|->
 name|spa_root_vdev
 operator|=
 name|vd
+expr_stmt|;
+name|spa
+operator|->
+name|spa_load_guid
+operator|=
+name|spa_generate_guid
+argument_list|(
+name|NULL
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -2204,6 +2213,10 @@ operator|!
 name|parent
 operator|->
 name|vdev_parent
+operator|&&
+name|alloctype
+operator|!=
+name|VDEV_ALLOC_ATTACH
 condition|)
 block|{
 name|ASSERT
@@ -2974,6 +2987,25 @@ name|vdev_ms_count
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|tvd
+operator|->
+name|vdev_mg
+condition|)
+name|ASSERT3P
+argument_list|(
+name|tvd
+operator|->
+name|vdev_mg
+argument_list|,
+operator|==
+argument_list|,
+name|svd
+operator|->
+name|vdev_mg
+argument_list|)
+expr_stmt|;
 name|tvd
 operator|->
 name|vdev_mg
@@ -3403,6 +3435,14 @@ operator|=
 name|cvd
 operator|->
 name|vdev_min_asize
+expr_stmt|;
+name|mvd
+operator|->
+name|vdev_max_asize
+operator|=
+name|cvd
+operator|->
+name|vdev_max_asize
 expr_stmt|;
 name|mvd
 operator|->
@@ -5174,7 +5214,14 @@ init|=
 literal|0
 decl_stmt|;
 name|uint64_t
+name|max_osize
+init|=
+literal|0
+decl_stmt|;
+name|uint64_t
 name|asize
+decl_stmt|,
+name|max_asize
 decl_stmt|,
 name|psize
 decl_stmt|;
@@ -5355,6 +5402,9 @@ name|vd
 argument_list|,
 operator|&
 name|osize
+argument_list|,
+operator|&
+name|max_osize
 argument_list|,
 operator|&
 name|ashift
@@ -5610,6 +5660,21 @@ name|vdev_label_t
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|max_osize
+operator|=
+name|P2ALIGN
+argument_list|(
+name|max_osize
+argument_list|,
+operator|(
+name|uint64_t
+operator|)
+sizeof|sizeof
+argument_list|(
+name|vdev_label_t
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vd
@@ -5650,6 +5715,16 @@ expr_stmt|;
 name|asize
 operator|=
 name|osize
+operator|-
+operator|(
+name|VDEV_LABEL_START_SIZE
+operator|+
+name|VDEV_LABEL_END_SIZE
+operator|)
+expr_stmt|;
+name|max_asize
+operator|=
+name|max_osize
 operator|-
 operator|(
 name|VDEV_LABEL_START_SIZE
@@ -5704,6 +5779,10 @@ name|asize
 operator|=
 name|osize
 expr_stmt|;
+name|max_asize
+operator|=
+name|max_osize
+expr_stmt|;
 block|}
 name|vd
 operator|->
@@ -5756,6 +5835,12 @@ name|asize
 expr_stmt|;
 name|vd
 operator|->
+name|vdev_max_asize
+operator|=
+name|max_asize
+expr_stmt|;
+name|vd
+operator|->
 name|vdev_ashift
 operator|=
 name|MAX
@@ -5770,7 +5855,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * Make sure the alignment requirement hasn't increased. 		 */
+comment|/* 		 * Detect if the alignment requirement has increased. 		 * We don't want to make the pool unavailable, just 		 * issue a warning instead. 		 */
 if|if
 condition|(
 name|ashift
@@ -5780,25 +5865,33 @@ operator|->
 name|vdev_top
 operator|->
 name|vdev_ashift
+operator|&&
+name|vd
+operator|->
+name|vdev_ops
+operator|->
+name|vdev_op_leaf
 condition|)
 block|{
-name|vdev_set_state
+name|cmn_err
 argument_list|(
+name|CE_WARN
+argument_list|,
+literal|"Disk, '%s', has a block alignment that is "
+literal|"larger than the pool's alignment\n"
+argument_list|,
 name|vd
-argument_list|,
-name|B_TRUE
-argument_list|,
-name|VDEV_STATE_CANT_OPEN
-argument_list|,
-name|VDEV_AUX_BAD_LABEL
+operator|->
+name|vdev_path
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
 block|}
+name|vd
+operator|->
+name|vdev_max_asize
+operator|=
+name|max_asize
+expr_stmt|;
 block|}
 comment|/* 	 * If all children are healthy and the asize has increased, 	 * then we've experienced dynamic LUN growth.  If automatic 	 * expansion is enabled then use the additional space. 	 */
 if|if
@@ -5918,7 +6011,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Called once the vdevs are all opened, this routine validates the label  * contents.  This needs to be done before vdev_load() so that we don't  * inadvertently do repair I/Os to the wrong device.  *  * This function will only return failure if one of the vdevs indicates that it  * has since been destroyed or exported.  This is only possible if  * /etc/zfs/zpool.cache was readonly at the time.  Otherwise, the vdev state  * will be updated but the function will return 0.  */
+comment|/*  * Called once the vdevs are all opened, this routine validates the label  * contents.  This needs to be done before vdev_load() so that we don't  * inadvertently do repair I/Os to the wrong device.  *  * If 'strict' is false ignore the spa guid check. This is necessary because  * if the machine crashed during a re-guid the new guid might have been written  * to all of the vdev labels, but not the cached config. The strict check  * will be performed when the pool is opened again using the mos config.  *  * This function will only return failure if one of the vdevs indicates that it  * has since been destroyed or exported.  This is only possible if  * /etc/zfs/zpool.cache was readonly at the time.  Otherwise, the vdev state  * will be updated but the function will return 0.  */
 end_comment
 
 begin_function
@@ -5928,6 +6021,9 @@ parameter_list|(
 name|vdev_t
 modifier|*
 name|vd
+parameter_list|,
+name|boolean_t
+name|strict
 parameter_list|)
 block|{
 name|spa_t
@@ -5978,6 +6074,8 @@ name|vdev_child
 index|[
 name|c
 index|]
+argument_list|,
+name|strict
 argument_list|)
 operator|!=
 literal|0
@@ -6019,6 +6117,8 @@ operator|=
 name|vdev_label_read_config
 argument_list|(
 name|vd
+argument_list|,
+name|VDEV_BEST_LABEL
 argument_list|)
 operator|)
 operator|==
@@ -6089,6 +6189,9 @@ return|;
 block|}
 if|if
 condition|(
+name|strict
+operator|&&
+operator|(
 name|nvlist_lookup_uint64
 argument_list|(
 name|label
@@ -6107,6 +6210,7 @@ name|spa_guid
 argument_list|(
 name|spa
 argument_list|)
+operator|)
 condition|)
 block|{
 name|vdev_set_state
@@ -6723,6 +6827,8 @@ operator|)
 name|vdev_validate
 argument_list|(
 name|vd
+argument_list|,
+name|B_TRUE
 argument_list|)
 expr_stmt|;
 block|}
@@ -8890,6 +8996,8 @@ operator|=
 name|vdev_label_read_config
 argument_list|(
 name|vd
+argument_list|,
+name|VDEV_BEST_LABEL
 argument_list|)
 operator|)
 operator|==
@@ -8928,9 +9036,11 @@ argument_list|)
 operator|!=
 literal|0
 operator|||
+operator|!
+name|SPA_VERSION_IS_SUPPORTED
+argument_list|(
 name|version
-operator|>
-name|SPA_VERSION
+argument_list|)
 operator|||
 name|nvlist_lookup_uint64
 argument_list|(
@@ -11217,6 +11327,18 @@ operator|+=
 name|VDEV_LABEL_START_SIZE
 operator|+
 name|VDEV_LABEL_END_SIZE
+expr_stmt|;
+name|vs
+operator|->
+name|vs_esize
+operator|=
+name|vd
+operator|->
+name|vdev_max_asize
+operator|-
+name|vd
+operator|->
+name|vdev_asize
 expr_stmt|;
 name|mutex_exit
 argument_list|(

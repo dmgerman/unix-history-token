@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -109,6 +109,10 @@ parameter_list|,
 name|uint64_t
 modifier|*
 name|psize
+parameter_list|,
+name|uint64_t
+modifier|*
+name|max_psize
 parameter_list|,
 name|uint64_t
 modifier|*
@@ -360,6 +364,9 @@ name|error
 operator|)
 return|;
 block|}
+operator|*
+name|max_psize
+operator|=
 operator|*
 name|psize
 operator|=
