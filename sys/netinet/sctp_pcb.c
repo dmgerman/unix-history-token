@@ -13790,6 +13790,9 @@ operator|->
 name|sa_family
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|INET
 case|case
 name|AF_INET
 case|:
@@ -13830,6 +13833,11 @@ literal|0
 expr_stmt|;
 break|break;
 block|}
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|INET6
 case|case
 name|AF_INET6
 case|:
@@ -13870,6 +13878,8 @@ literal|0
 expr_stmt|;
 break|break;
 block|}
+endif|#
+directive|endif
 default|default:
 break|break;
 block|}
@@ -24213,6 +24223,9 @@ operator|->
 name|sa_family
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|INET6
 case|case
 name|AF_INET6
 case|:
@@ -24229,6 +24242,11 @@ operator|&
 name|INP_IPV6
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|INET
 case|case
 name|AF_INET
 case|:
@@ -24245,6 +24263,8 @@ operator|&
 name|INP_IPV4
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 default|default:
 comment|/* invalid family, so it's unreachable */
 name|answer
@@ -24567,7 +24587,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|INET6
+name|INET
 case|case
 name|AF_INET
 case|:

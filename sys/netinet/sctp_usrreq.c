@@ -47,14 +47,11 @@ directive|include
 file|<netinet/sctp_var.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|INET6
-argument_list|)
-end_if
+end_ifdef
 
 begin_endif
 endif|#
