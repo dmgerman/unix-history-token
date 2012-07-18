@@ -4,15 +4,8 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -239,7 +232,8 @@ name|calloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|Str_tbl
+operator|*
+name|stp
 argument_list|)
 argument_list|,
 literal|1
@@ -303,7 +297,10 @@ name|calloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|avl_tree_t
+operator|*
+name|stp
+operator|->
+name|st_lentree
 argument_list|)
 argument_list|,
 literal|1
@@ -348,7 +345,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Insert a new string into the Str_tbl.  There are two AVL trees used.  *  *  .	The first LenNode AVL tree maintains a tree of nodes based on string  *	sizes.  *  .	Each LenNode maintains a StrNode AVL tree for each string.  Large  *	applications have been known to contribute thousands of strings of  *	the same size.  Should strings need to be removed (-z ignore), then  *	the string AVL tree makes this removal efficient and scalable.  */
+comment|/*  * Insert a new string into the Str_tbl.  There are two AVL trees used.  *  *  -	The first LenNode AVL tree maintains a tree of nodes based on string  *	sizes.  *  -	Each LenNode maintains a StrNode AVL tree for each string.  Large  *	applications have been known to contribute thousands of strings of  *	the same size.  Should strings need to be removed (-z ignore), then  *	the string AVL tree makes this removal efficient and scalable.  */
 end_comment
 
 begin_function
@@ -492,7 +489,8 @@ name|calloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|LenNode
+operator|*
+name|lnp
 argument_list|)
 argument_list|,
 literal|1
@@ -535,7 +533,10 @@ name|calloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|avl_tree_t
+operator|*
+name|lnp
+operator|->
+name|ln_strtree
 argument_list|)
 argument_list|,
 literal|1
@@ -610,7 +611,8 @@ name|calloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|StrNode
+operator|*
+name|snp
 argument_list|)
 argument_list|,
 literal|1
@@ -1606,7 +1608,8 @@ name|calloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|Str_hash
+operator|*
+name|mstr
 argument_list|)
 argument_list|,
 literal|1
@@ -1676,7 +1679,8 @@ name|calloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|Str_hash
+operator|*
+name|sthash
 argument_list|)
 argument_list|,
 literal|1
@@ -1859,7 +1863,10 @@ name|calloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|Str_hash
+operator|*
+name|stp
+operator|->
+name|st_hashbcks
 argument_list|)
 argument_list|,
 name|stp
@@ -2231,7 +2238,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-comment|/* 	 * for debug builds - start with a stringtable filled in 	 * with '0xff'.  This makes it very easy to find wholes 	 * which we failed to fill in - in the strtab. 	 */
+comment|/* 	 * for debug builds - start with a stringtable filled in 	 * with '0xff'.  This makes it very easy to spot unfilled 	 * holes in the strtab. 	 */
 name|memset
 argument_list|(
 name|stbuf

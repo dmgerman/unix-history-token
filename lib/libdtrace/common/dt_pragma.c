@@ -4,15 +4,8 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright (c) 2003, 2010, Oracle and/or its affiliates. All rights reserved.  */
 end_comment
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -1603,25 +1596,8 @@ expr_stmt|;
 block|}
 name|opt
 operator|=
-name|alloca
+name|strdupa
 argument_list|(
-name|strlen
-argument_list|(
-name|dnp
-operator|->
-name|dn_string
-argument_list|)
-operator|+
-literal|1
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcpy
-argument_list|(
-name|opt
-argument_list|,
 name|dnp
 operator|->
 name|dn_string

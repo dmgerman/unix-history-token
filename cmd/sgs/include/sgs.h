@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  *	Copyright (c) 1988 AT&T  *	  All Rights Reserved  *  *  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  *  * Global include file for all sgs.  */
+comment|/*  *	Copyright (c) 1988 AT&T  *	  All Rights Reserved  *  *  * Copyright (c) 1989, 2010, Oracle and/or its affiliates. All rights reserved.  *  * Global include file for all sgs.  */
 end_comment
 
 begin_ifndef
@@ -18,13 +18,6 @@ define|#
 directive|define
 name|_SGS_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_ifdef
 ifdef|#
@@ -64,6 +57,9 @@ file|<sys/machelf.h>
 include|#
 directive|include
 file|<stdlib.h>
+include|#
+directive|include
+file|<stdarg.h>
 include|#
 directive|include
 file|<libelf.h>
@@ -193,23 +189,46 @@ literal|1
 block|}
 name|Boolean
 typedef|;
-comment|/*  * Types of errors (used by eprintf()), together with a generic error return  * value.  */
+comment|/*  * Types of errors (used by veprintf()), together with a generic error return  * value.  */
 typedef|typedef
 enum|enum
 block|{
 name|ERR_NONE
 block|,
+comment|/* plain message */
+name|ERR_WARNING_NF
+block|,
+comment|/* warning that cannot be promoted to fatal */
 name|ERR_WARNING
 block|,
+comment|/* warning that can be promoted to fatal */
+name|ERR_GUIDANCE
+block|,
+comment|/* guidance warning that can be promoted */
 name|ERR_FATAL
 block|,
+comment|/* fatal error */
 name|ERR_ELF
 block|,
+comment|/* fatal libelf error */
 name|ERR_NUM
-comment|/* Must be last */
+comment|/* # of Error codes. Must be last */
 block|}
 name|Error
 typedef|;
+comment|/*  * Type used to represent line numbers within files, and a corresponding  * printing macro for it.  */
+typedef|typedef
+name|ulong_t
+name|Lineno
+typedef|;
+define|#
+directive|define
+name|EC_LINENO
+parameter_list|(
+name|_x
+parameter_list|)
+value|EC_XWORD(_x)
+comment|/* "llu" */
 if|#
 directive|if
 name|defined
@@ -234,105 +253,28 @@ name|S_ERROR
 value|(~(uintptr_t)0)
 endif|#
 directive|endif
-comment|/*  * LIST_TRAVERSE() is used as the only "argument" of a "for" loop to  * traverse a linked list. The node pointer `node' is set to each node in  * turn and the corresponding data pointer is copied to `data'.  The macro  * is used as in  * 	for (LIST_TRAVERSE(List *list, Listnode *node, void *data)) {  *		process(data);  *	}  */
-define|#
-directive|define
-name|LIST_TRAVERSE
-parameter_list|(
-name|L
-parameter_list|,
-name|N
-parameter_list|,
-name|D
-parameter_list|)
-define|\
-value|(void) (((N) = (L)->head) != NULL&& ((D) = (N)->data) != NULL); \ 	(N) != NULL; \ 	(void) (((N) = (N)->next) != NULL&& ((D) = (N)->data) != NULL)
-typedef|typedef
-name|struct
-name|listnode
-name|Listnode
-typedef|;
-typedef|typedef
-name|struct
-name|list
-name|List
-typedef|;
-struct|struct
-name|listnode
-block|{
-comment|/* a node on a linked list */
-name|void
-modifier|*
-name|data
-decl_stmt|;
-comment|/* the data item */
-name|Listnode
-modifier|*
-name|next
-decl_stmt|;
-comment|/* the next element */
-block|}
-struct|;
-struct|struct
-name|list
-block|{
-comment|/* a linked list */
-name|Listnode
-modifier|*
-name|head
-decl_stmt|;
-comment|/* the first element */
-name|Listnode
-modifier|*
-name|tail
-decl_stmt|;
-comment|/* the last element */
-block|}
-struct|;
+comment|/*  * CTF currently does not handle automatic array variables sized via function  * arguments (VLA arrays) properly, when the code is compiled with gcc.  * Adding 1 to the size is a workaround.  VLA_SIZE, and its use, should be  * pulled when CTF is fixed or replaced.  */
 ifdef|#
 directive|ifdef
-name|_SYSCALL32
-typedef|typedef
-name|struct
-name|listnode32
-name|Listnode32
-typedef|;
-typedef|typedef
-name|struct
-name|list32
-name|List32
-typedef|;
-struct|struct
-name|listnode32
-block|{
-comment|/* a node on a linked list */
-name|Elf32_Addr
-name|data
-decl_stmt|;
-comment|/* the data item */
-name|Elf32_Addr
-name|next
-decl_stmt|;
-comment|/* the next element */
-block|}
-struct|;
-struct|struct
-name|list32
-block|{
-comment|/* a linked list */
-name|Elf32_Addr
-name|head
-decl_stmt|;
-comment|/* the first element */
-name|Elf32_Addr
-name|tail
-decl_stmt|;
-comment|/* the last element */
-block|}
-struct|;
+name|__GNUC__
+define|#
+directive|define
+name|VLA_SIZE
+parameter_list|(
+name|_arg
+parameter_list|)
+value|((_arg) + 1)
+else|#
+directive|else
+define|#
+directive|define
+name|VLA_SIZE
+parameter_list|(
+name|_arg
+parameter_list|)
+value|(_arg)
 endif|#
 directive|endif
-comment|/* _SYSCALL32 */
 comment|/*  * Structure to maintain rejected files elf information.  Files that are not  * applicable to the present link-edit are rejected and a search for an  * appropriate file may be resumed.  The first rejected files information is  * retained so that a better error diagnostic can be given should an appropriate  * file not be located.  */
 typedef|typedef
 struct|struct
@@ -342,7 +284,7 @@ name|rej_type
 decl_stmt|;
 comment|/* SGS_REJ_ value */
 name|ushort_t
-name|rej_flag
+name|rej_flags
 decl_stmt|;
 comment|/* additional information */
 name|uint_t
@@ -427,9 +369,48 @@ value|11
 comment|/* unknown file type */
 define|#
 directive|define
-name|SGS_REJ_HWCAP_1
+name|SGS_REJ_UNKCAP
 value|12
+comment|/* unknown capabilities */
+define|#
+directive|define
+name|SGS_REJ_HWCAP_1
+value|13
 comment|/* hardware capabilities mismatch */
+define|#
+directive|define
+name|SGS_REJ_SFCAP_1
+value|14
+comment|/* software capabilities mismatch */
+define|#
+directive|define
+name|SGS_REJ_MACHCAP
+value|15
+comment|/* machine capability mismatch */
+define|#
+directive|define
+name|SGS_REJ_PLATCAP
+value|16
+comment|/* platform capability mismatch */
+define|#
+directive|define
+name|SGS_REJ_HWCAP_2
+value|17
+comment|/* hardware capabilities mismatch */
+define|#
+directive|define
+name|SGS_REJ_ARCHIVE
+value|18
+comment|/* archive used in invalid context */
+define|#
+directive|define
+name|SGS_REJ_NUM
+value|19
+define|#
+directive|define
+name|FLG_REJ_ALTER
+value|0x01
+comment|/* object name is an alternative */
 comment|/*  * For those source files used both inside and outside of the  * libld source base (tools/common/string_table.c) we can  * automatically switch between the allocation models  * based off of the 'cc -DUSE_LIBLD_MALLOC' flag.  */
 ifdef|#
 directive|ifdef
@@ -496,6 +477,26 @@ directive|endif
 comment|/*  * Data structures (defined in libld.h).  */
 typedef|typedef
 name|struct
+name|audit_desc
+name|Audit_desc
+typedef|;
+typedef|typedef
+name|struct
+name|audit_info
+name|Audit_info
+typedef|;
+typedef|typedef
+name|struct
+name|audit_list
+name|Audit_list
+typedef|;
+typedef|typedef
+name|struct
+name|cap_desc
+name|Cap_desc
+typedef|;
+typedef|typedef
+name|struct
 name|ent_desc
 name|Ent_desc
 typedef|;
@@ -526,8 +527,8 @@ name|Isa_opt
 typedef|;
 typedef|typedef
 name|struct
-name|mv_desc
-name|Mv_desc
+name|os_desc
+name|Os_desc
 typedef|;
 typedef|typedef
 name|struct
@@ -536,13 +537,28 @@ name|Ofl_desc
 typedef|;
 typedef|typedef
 name|struct
-name|os_desc
-name|Os_desc
+name|rel_cache
+name|Rel_cache
 typedef|;
 typedef|typedef
 name|struct
-name|rel_cache
-name|Rel_cache
+name|rel_cachebuf
+name|Rel_cachebuf
+typedef|;
+typedef|typedef
+name|struct
+name|rel_aux_cachebuf
+name|Rel_aux_cachebuf
+typedef|;
+typedef|typedef
+name|struct
+name|rel_aux
+name|Rel_aux
+typedef|;
+typedef|typedef
+name|struct
+name|rel_desc
+name|Rel_desc
 typedef|;
 typedef|typedef
 name|struct
@@ -556,6 +572,11 @@ name|Sdv_desc
 typedef|;
 typedef|typedef
 name|struct
+name|sec_order
+name|Sec_order
+typedef|;
+typedef|typedef
+name|struct
 name|sg_desc
 name|Sg_desc
 typedef|;
@@ -566,13 +587,8 @@ name|Sort_desc
 typedef|;
 typedef|typedef
 name|struct
-name|sec_order
-name|Sec_order
-typedef|;
-typedef|typedef
-name|struct
-name|sym_desc
-name|Sym_desc
+name|sym_avlnode
+name|Sym_avlnode
 typedef|;
 typedef|typedef
 name|struct
@@ -581,8 +597,8 @@ name|Sym_aux
 typedef|;
 typedef|typedef
 name|struct
-name|sym_avlnode
-name|Sym_avlnode
+name|sym_desc
+name|Sym_desc
 typedef|;
 typedef|typedef
 name|struct
@@ -598,27 +614,6 @@ typedef|typedef
 name|struct
 name|ver_index
 name|Ver_index
-typedef|;
-typedef|typedef
-name|struct
-name|audit_desc
-name|Audit_desc
-typedef|;
-typedef|typedef
-name|struct
-name|audit_info
-name|Audit_info
-typedef|;
-typedef|typedef
-name|struct
-name|audit_list
-name|Audit_list
-typedef|;
-comment|/*  * Data structures defined in machrel.h.  */
-typedef|typedef
-name|struct
-name|rel_desc
-name|Rel_desc
 typedef|;
 comment|/*  * Data structures defined in rtld.h.  */
 typedef|typedef
@@ -670,12 +665,19 @@ modifier|...
 parameter_list|)
 function_decl|;
 specifier|extern
-name|char
-modifier|*
-name|sgs_demangle
+name|void
+name|veprintf
 parameter_list|(
+name|Lm_list
+modifier|*
+parameter_list|,
+name|Error
+parameter_list|,
+specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|va_list
 parameter_list|)
 function_decl|;
 specifier|extern

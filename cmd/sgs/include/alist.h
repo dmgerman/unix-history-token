@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  *  * Define an Alist, a list maintained as a reallocable array, and a for() loop  * macro to generalize its traversal.  Note that the array can be reallocated  * as it is being traversed, thus the offset of each element is recomputed from  * the start of the structure.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  *  * Define an Alist, a list maintained as a reallocable array, and a for() loop  * macro to generalize its traversal.  Note that the array can be reallocated  * as it is being traversed, thus the offset of each element is recomputed from  * the start of the structure.  */
 end_comment
 
 begin_ifndef
@@ -18,13 +18,6 @@ define|#
 directive|define
 name|_ALIST_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_ifdef
 ifdef|#
@@ -104,6 +97,31 @@ comment|/* data area: (arrcnt * size) bytes */
 block|}
 name|APlist
 typedef|;
+ifdef|#
+directive|ifdef
+name|_SYSCALL32
+comment|/* required by librtld_db */
+typedef|typedef
+struct|struct
+block|{
+name|Elf32_Word
+name|apl_arritems
+decl_stmt|;
+name|Elf32_Word
+name|apl_nitems
+decl_stmt|;
+name|Elf32_Addr
+name|apl_data
+index|[
+literal|1
+index|]
+decl_stmt|;
+block|}
+name|APlist32
+typedef|;
+endif|#
+directive|endif
+comment|/* _SYSCALL32 */
 comment|/*  * The ALIST_OFF_DATA and APLIST_OFF_DATA macros give the byte offset  * from the start of an array list to the first byte of the data area  * used to hold user data. The same trick used by the standard offsetof()  * macro is used.  */
 define|#
 directive|define
@@ -160,7 +178,7 @@ name|ALE_ALLOCFAIL
 init|=
 literal|0
 block|,
-comment|/* Memory allocation error */
+comment|/* memory allocation error */
 name|ALE_EXISTS
 init|=
 literal|1
@@ -199,7 +217,7 @@ name|_off
 parameter_list|)
 define|\
 value|((void *)((_off) + (char *)(_lp)))
-comment|/*  * # of items currently found in a list. These macros handle the case  * where the list has not been allocated yet.  */
+comment|/*  * The number of items currently found in a list (nitems), and the total number  * of slots in the current data allocation (arritems).  These macros handle the  * case where the list has not been allocated yet.  */
 define|#
 directive|define
 name|alist_nitems
@@ -214,6 +232,20 @@ parameter_list|(
 name|_lp
 parameter_list|)
 value|(((_lp) == NULL) ? 0 : (_lp)->apl_nitems)
+define|#
+directive|define
+name|alist_arritems
+parameter_list|(
+name|_lp
+parameter_list|)
+value|(((_lp) == NULL) ? 0 : (_lp)->al_arritems)
+define|#
+directive|define
+name|aplist_arritems
+parameter_list|(
+name|_lp
+parameter_list|)
+value|(((_lp) == NULL) ? 0 : (_lp)->apl_arritems)
 specifier|extern
 name|void
 modifier|*

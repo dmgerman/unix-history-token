@@ -4,15 +4,8 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  *  * sgsmsg generates several message files from an input template file.  Messages  * are constructed for use with gettext(3i) - the default - or catgets(3c).  The  * files generate are:  *  * msg.h	a header file containing definitions for each message.  The -h  *		option triggers the creation of these definitions and specifies  *		the name to use.  *  * msg.c	a data array of message strings.  The msg.h definitions are  *		offsets into this array.  The -d option triggers the creation of  *		these definitions and specifies the name to use.  *  * messages	a message file suitable for catgets(3c) or gettext(3i) use.  The  *		-m option triggers this output and specifies the filename to be  *		used.  *  * The template file is processed based on the first character of each line:  *  * # or $	entries are copied (as is) to the message file (messages).  *  * @ token(s)	entries are translated.  Two translations are possible dependent  *		on whether one or more tokens are supplied:  *  *		A single token is interpreted as one of two reserved message  *		output indicators, or a message identifier.  The reserved output  *		indicator _START_ enables output to the message file - Note that  *		the occurance of any other @ token will also enable message  *		output.  The reserved output indicator _END_ disables output to  *		the message file.  The use of these two indicators provides for  *		only those message strings that require translation to be output  *		to the message file.  *  *		Besides the reserved output indicators, a single token is taken  *		to be a message identifier which will be subsituted for a  *		`setid' for catgets(3c) output, or a `domain' name for  *		gettext(3i) output.  This value is determine by substituting the  *		token for the associated definition found in the message  *		identifier file (specified with the -i option).  *  *		Multiple tokens are taken to be a message definition followed by  *		the associated message string.  The message string is copied to  *		the data array being built in msg.c.  The index into this array  *		becomes the `message' identifier created in the msg.h file.  */
+comment|/*  * Copyright (c) 1995, 2010, Oracle and/or its affiliates. All rights reserved.  *  * sgsmsg generates several message files from an input template file.  Messages  * are constructed for use with gettext(3i) - the default - or catgets(3c).  The  * files generate are:  *  * msg.h	a header file containing definitions for each message.  The -h  *		option triggers the creation of these definitions and specifies  *		the name to use.  *  * msg.c	a data array of message strings.  The msg.h definitions are  *		offsets into this array.  The -d option triggers the creation of  *		these definitions and specifies the name to use.  *  * messages	a message file suitable for catgets(3c) or gettext(3i) use.  The  *		-m option triggers this output and specifies the filename to be  *		used.  *  * The template file is processed based on the first character of each line:  *  * # or $	entries are copied (as is) to the message file (messages).  *  * @ token(s)	entries are translated.  Two translations are possible dependent  *		on whether one or more tokens are supplied:  *  *		A single token is interpreted as one of two reserved message  *		output indicators, or a message identifier.  The reserved output  *		indicator _START_ enables output to the message file - Note that  *		the occurance of any other @ token will also enable message  *		output.  The reserved output indicator _END_ disables output to  *		the message file.  The use of these two indicators provides for  *		only those message strings that require translation to be output  *		to the message file.  *  *		Besides the reserved output indicators, a single token is taken  *		to be a message identifier which will be subsituted for a  *		`setid' for catgets(3c) output, or a `domain' name for  *		gettext(3i) output.  This value is determine by substituting the  *		token for the associated definition found in the message  *		identifier file (specified with the -i option).  *  *		Multiple tokens are taken to be a message definition followed by  *		the associated message string.  The message string is copied to  *		the data array being built in msg.c.  The index into this array  *		becomes the `message' identifier created in the msg.h file.  */
 end_comment
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -1489,6 +1482,41 @@ name|fprintf
 argument_list|(
 name|fddefs
 argument_list|,
+literal|"#include<sgsmsg.h>\t/* Msg typedef */\n\n"
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|Errmsg_wrte
+argument_list|,
+name|fldefs
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|fprintf
+argument_list|(
+name|fddefs
+argument_list|,
 literal|"#ifndef\t__lint\n\n"
 argument_list|)
 operator|<
@@ -1518,14 +1546,16 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* 	 * add "typedef int	Msg;" 	 */
+comment|/* 	 * The MSG_SGS_ARRAY_NAME macro supplies a generic way to 	 * reference the string table regardless of its name. 	 */
 if|if
 condition|(
 name|fprintf
 argument_list|(
 name|fddefs
 argument_list|,
-literal|"typedef int\tMsg;\n\n"
+literal|"#define\tMSG_SGS_LOCAL_ARRAY\t__%s\n\n"
+argument_list|,
+name|interface
 argument_list|)
 operator|<
 literal|0
@@ -1606,7 +1636,42 @@ name|fprintf
 argument_list|(
 name|fddefs
 argument_list|,
-literal|"#define\tMSG_ORIG(x)\t&__%s[x]\n\n"
+literal|"#define\tMSG_ORIG_STRTAB(_x, _s)\t&_s[_x]\n\n"
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|Errmsg_wrte
+argument_list|,
+name|fldefs
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|fprintf
+argument_list|(
+name|fddefs
+argument_list|,
+literal|"#define\tMSG_ORIG(x)\tMSG_ORIG_STRTAB(x, __%s)\n\n"
 argument_list|,
 name|interface
 argument_list|)
@@ -1767,14 +1832,15 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* 	 * When __lint is defined, Msg is a char *.  This allows lint to 	 * check our format strings against it's arguments. 	 */
 if|if
 condition|(
 name|fprintf
 argument_list|(
 name|fddefs
 argument_list|,
-literal|"\ntypedef char *\tMsg;\n\n"
+literal|"extern\tconst char *\t_%s(Msg);\n\n"
+argument_list|,
+name|interface
 argument_list|)
 operator|<
 literal|0
@@ -1809,9 +1875,8 @@ name|fprintf
 argument_list|(
 name|fddefs
 argument_list|,
-literal|"extern\tconst char *\t_%s(Msg);\n\n"
-argument_list|,
-name|interface
+literal|"#ifndef MSG_SGS_LOCAL_ARRAY\n"
+literal|"#define\tMSG_SGS_LOCAL_ARRAY\t\"\"\n#endif\n\n"
 argument_list|)
 operator|<
 literal|0
@@ -1891,7 +1956,44 @@ name|fprintf
 argument_list|(
 name|fddefs
 argument_list|,
+literal|"#define MSG_ORIG_STRTAB(_x, _s)\t_x\n"
 literal|"#define MSG_ORIG(x)\tx\n#define MSG_INTL(x)\tx\n"
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|Errmsg_wrte
+argument_list|,
+name|fldefs
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+comment|/* 	 * Provide a way to get the array and function declarations above 	 * without also getting the actual messages. This is useful in 	 * our lintsup.c files that include more than one message header. 	 * lintsup doesn't need the actual messages, and this prevents 	 * macro name collisions. 	 */
+if|if
+condition|(
+name|fprintf
+argument_list|(
+name|fddefs
+argument_list|,
+literal|"\n#ifndef LINTSUP_SUPPRESS_STRINGS\n"
 argument_list|)
 operator|<
 literal|0
@@ -2069,6 +2171,41 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|fprintf
+argument_list|(
+name|fddefs
+argument_list|,
+literal|"\n#endif\t/* LINTSUP_SUPPRESS_STRINGS */\n"
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|Errmsg_wrte
+argument_list|,
+name|fldefs
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -4519,7 +4656,7 @@ name|sprintf
 argument_list|(
 name|fllint
 argument_list|,
-literal|"%s.%d"
+literal|"%s.%d.XXXXXX"
 argument_list|,
 name|nmlint
 argument_list|,
@@ -4533,6 +4670,17 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
+name|mkstemp
+argument_list|(
+name|fllint
+argument_list|)
+operator|==
+operator|-
+literal|1
+operator|)
+operator|||
+operator|(
+operator|(
 name|fdlint
 operator|=
 name|fopen
@@ -4544,6 +4692,7 @@ argument_list|)
 operator|)
 operator|==
 name|NULL
+operator|)
 condition|)
 block|{
 operator|(
