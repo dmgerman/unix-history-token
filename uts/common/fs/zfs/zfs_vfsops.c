@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -9937,29 +9937,24 @@ name|zfs_sa_upgrade
 argument_list|)
 expr_stmt|;
 block|}
-name|spa_history_log_internal
+name|spa_history_log_internal_ds
 argument_list|(
-name|LOG_DS_UPGRADE
-argument_list|,
-name|dmu_objset_spa
+name|dmu_objset_ds
 argument_list|(
 name|os
 argument_list|)
 argument_list|,
+literal|"upgrade"
+argument_list|,
 name|tx
 argument_list|,
-literal|"oldver=%llu newver=%llu dataset = %llu"
+literal|"from %llu to %llu"
 argument_list|,
 name|zfsvfs
 operator|->
 name|z_version
 argument_list|,
 name|newvers
-argument_list|,
-name|dmu_objset_id
-argument_list|(
-name|os
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|dmu_tx_commit

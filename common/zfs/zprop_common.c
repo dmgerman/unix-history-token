@@ -8,6 +8,10 @@ comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
+comment|/*  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+end_comment
+
+begin_comment
 comment|/*  * Common routines used by zfs and zpool property management.  */
 end_comment
 
@@ -609,7 +613,9 @@ name|NULL
 argument_list|,
 name|colname
 argument_list|,
-name|B_FALSE
+name|type
+operator|==
+name|PROP_TYPE_NUMBER
 argument_list|,
 name|B_FALSE
 argument_list|,

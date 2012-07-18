@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -298,6 +298,24 @@ name|dstg_err
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ZFS_DEBUG
+comment|/* 	 * Only check half the time, otherwise, the sync-context 	 * check will almost never fail. 	 */
+if|if
+condition|(
+name|spa_get_random
+argument_list|(
+literal|2
+argument_list|)
+operator|==
+literal|0
+condition|)
+goto|goto
+name|skip
+goto|;
+endif|#
+directive|endif
 name|rw_enter
 argument_list|(
 operator|&
@@ -337,22 +355,6 @@ name|dst
 argument_list|)
 control|)
 block|{
-ifdef|#
-directive|ifdef
-name|ZFS_DEBUG
-comment|/* 		 * Only check half the time, otherwise, the sync-context 		 * check will almost never fail. 		 */
-if|if
-condition|(
-name|spa_get_random
-argument_list|(
-literal|2
-argument_list|)
-operator|==
-literal|0
-condition|)
-continue|continue;
-endif|#
-directive|endif
 name|dst
 operator|->
 name|dst_err
@@ -417,6 +419,8 @@ name|dstg_err
 operator|)
 return|;
 block|}
+name|skip
+label|:
 comment|/* 	 * We don't generally have many sync tasks, so pay the price of 	 * add_tail to get the tasks executed in the right order. 	 */
 name|VERIFY
 argument_list|(

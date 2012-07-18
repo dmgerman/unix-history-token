@@ -7,6 +7,10 @@ begin_comment
 comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
+begin_comment
+comment|/*  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -1080,6 +1084,51 @@ operator|(
 name|held
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|rrw_tsd_destroy
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
+name|rrw_node_t
+modifier|*
+name|rn
+init|=
+name|arg
+decl_stmt|;
+if|if
+condition|(
+name|rn
+operator|!=
+name|NULL
+condition|)
+block|{
+name|panic
+argument_list|(
+literal|"thread %p terminating with rrw lock %p held"
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|curthread
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|rn
+operator|->
+name|rn_rrl
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
