@@ -11325,7 +11325,7 @@ name|isp
 argument_list|,
 name|ISP_LOGWARN
 argument_list|,
-literal|"status 0x%x on port login IOCB chanel %d"
+literal|"status 0x%x on port login IOCB channel %d"
 argument_list|,
 name|plp
 operator|->
