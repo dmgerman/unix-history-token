@@ -462,8 +462,6 @@ name|struct
 name|in_ifaddr
 modifier|*
 name|ia
-init|=
-name|NULL
 decl_stmt|;
 name|int
 name|isbroadcast
@@ -748,6 +746,10 @@ name|ro_dst
 expr_stmt|;
 name|again
 label|:
+name|ia
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* 	 * If there is a cached route, 	 * check that it is to the same destination 	 * and is still up.  If not, free it and try again. 	 * The address family should also be checked in case of sharing the 	 * cache with IPv6. 	 */
 name|rte
 operator|=
@@ -2145,10 +2147,26 @@ name|done
 goto|;
 block|}
 else|else
+block|{
+if|if
+condition|(
+name|ia
+operator|!=
+name|NULL
+condition|)
+name|ifa_free
+argument_list|(
+operator|&
+name|ia
+operator|->
+name|ia_ifa
+argument_list|)
+expr_stmt|;
 goto|goto
 name|again
 goto|;
 comment|/* Redo the routing table lookup. */
+block|}
 block|}
 ifdef|#
 directive|ifdef
@@ -2314,6 +2332,20 @@ argument_list|(
 name|m
 argument_list|,
 name|fwd_tag
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ia
+operator|!=
+name|NULL
+condition|)
+name|ifa_free
+argument_list|(
+operator|&
+name|ia
+operator|->
+name|ia_ifa
 argument_list|)
 expr_stmt|;
 goto|goto
