@@ -1163,7 +1163,7 @@ case|:
 comment|/* arithmetic trap */
 name|ucode
 operator|=
-name|fputrap
+name|fputrap_x87
 argument_list|()
 expr_stmt|;
 if|if
@@ -1507,9 +1507,19 @@ case|:
 comment|/* SIMD floating-point exception */
 name|ucode
 operator|=
-literal|0
+name|fputrap_sse
+argument_list|()
 expr_stmt|;
-comment|/* XXX */
+if|if
+condition|(
+name|ucode
+operator|==
+operator|-
+literal|1
+condition|)
+goto|goto
+name|userout
+goto|;
 name|i
 operator|=
 name|SIGFPE
