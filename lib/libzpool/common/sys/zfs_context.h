@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -685,6 +685,10 @@ name|p0
 decl_stmt|;
 define|#
 directive|define
+name|curproc
+value|(&p0)
+define|#
+directive|define
 name|PS_NONE
 value|-1
 specifier|extern
@@ -1278,6 +1282,13 @@ parameter_list|)
 comment|/* nothing */
 define|#
 directive|define
+name|vmem_qcache_reap
+parameter_list|(
+name|_v
+parameter_list|)
+comment|/* nothing */
+define|#
+directive|define
 name|POINTER_INVALIDATE
 parameter_list|(
 name|_pp
@@ -1290,6 +1301,11 @@ parameter_list|(
 name|_p
 parameter_list|)
 value|0
+specifier|extern
+name|vmem_t
+modifier|*
+name|zio_arena
+decl_stmt|;
 typedef|typedef
 name|umem_cache_t
 name|kmem_cache_t
@@ -1330,6 +1346,39 @@ name|void
 modifier|*
 parameter_list|)
 function_decl|;
+typedef|typedef
+struct|struct
+name|taskq_ent
+block|{
+name|struct
+name|taskq_ent
+modifier|*
+name|tqent_next
+decl_stmt|;
+name|struct
+name|taskq_ent
+modifier|*
+name|tqent_prev
+decl_stmt|;
+name|task_func_t
+modifier|*
+name|tqent_func
+decl_stmt|;
+name|void
+modifier|*
+name|tqent_arg
+decl_stmt|;
+name|uintptr_t
+name|tqent_flags
+decl_stmt|;
+block|}
+name|taskq_ent_t
+typedef|;
+define|#
+directive|define
+name|TQENT_FLAG_PREALLOC
+value|0x1
+comment|/* taskq_dispatch_ent used */
 define|#
 directive|define
 name|TASKQ_PREPOPULATE
@@ -1452,6 +1501,24 @@ name|void
 modifier|*
 parameter_list|,
 name|uint_t
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|taskq_dispatch_ent
+parameter_list|(
+name|taskq_t
+modifier|*
+parameter_list|,
+name|task_func_t
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|uint_t
+parameter_list|,
+name|taskq_ent_t
+modifier|*
 parameter_list|)
 function_decl|;
 specifier|extern

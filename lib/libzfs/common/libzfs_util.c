@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -105,6 +105,12 @@ begin_include
 include|#
 directive|include
 file|"zfs_prop.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"zfeature_common.h"
 end_include
 
 begin_function
@@ -469,7 +475,8 @@ name|dgettext
 argument_list|(
 name|TEXT_DOMAIN
 argument_list|,
-literal|"unsupported version"
+literal|"unsupported version or "
+literal|"feature"
 argument_list|)
 operator|)
 return|;
@@ -1691,6 +1698,9 @@ case|:
 case|case
 name|ENODEV
 case|:
+case|case
+name|EPIPE
+case|:
 name|zfs_verror
 argument_list|(
 name|hdl
@@ -2896,6 +2906,9 @@ name|zfs_prop_init
 argument_list|()
 expr_stmt|;
 name|zpool_prop_init
+argument_list|()
+expr_stmt|;
+name|zpool_feature_init
 argument_list|()
 expr_stmt|;
 name|libzfs_mnttab_init
@@ -5777,11 +5790,29 @@ operator|==
 name|ZPROP_INVAL
 operator|&&
 operator|(
+operator|(
 name|type
 operator|==
 name|ZFS_TYPE_POOL
+operator|&&
+operator|!
+name|zpool_prop_feature
+argument_list|(
+name|propname
+argument_list|)
+operator|&&
+operator|!
+name|zpool_prop_unsupported
+argument_list|(
+name|propname
+argument_list|)
+operator|)
 operator|||
 operator|(
+name|type
+operator|==
+name|ZFS_TYPE_DATASET
+operator|&&
 operator|!
 name|zfs_prop_user
 argument_list|(
@@ -5790,6 +5821,12 @@ argument_list|)
 operator|&&
 operator|!
 name|zfs_prop_userquota
+argument_list|(
+name|propname
+argument_list|)
+operator|&&
+operator|!
+name|zfs_prop_written
 argument_list|(
 name|propname
 argument_list|)

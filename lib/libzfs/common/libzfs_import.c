@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -1765,6 +1765,9 @@ name|name
 decl_stmt|,
 modifier|*
 name|hostname
+decl_stmt|,
+modifier|*
+name|comment
 decl_stmt|;
 name|uint64_t
 name|version
@@ -2074,7 +2077,7 @@ operator|!
 name|config_seen
 condition|)
 block|{
-comment|/* 				 * Copy the relevant pieces of data to the pool 				 * configuration: 				 * 				 *	version 				 * 	pool guid 				 * 	name 				 * 	pool state 				 *	hostid (if available) 				 *	hostname (if available) 				 */
+comment|/* 				 * Copy the relevant pieces of data to the pool 				 * configuration: 				 * 				 *	version 				 * 	pool guid 				 * 	name 				 *	comment (if available) 				 * 	pool state 				 *	hostid (if available) 				 *	hostname (if available) 				 */
 name|uint64_t
 name|state
 decl_stmt|;
@@ -2164,6 +2167,42 @@ argument_list|,
 name|ZPOOL_CONFIG_POOL_NAME
 argument_list|,
 name|name
+argument_list|)
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|nomem
+goto|;
+comment|/* 				 * COMMENT is optional, don't bail if it's not 				 * there, instead, set it to NULL. 				 */
+if|if
+condition|(
+name|nvlist_lookup_string
+argument_list|(
+name|tmp
+argument_list|,
+name|ZPOOL_CONFIG_COMMENT
+argument_list|,
+operator|&
+name|comment
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|comment
+operator|=
+name|NULL
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|nvlist_add_string
+argument_list|(
+name|config
+argument_list|,
+name|ZPOOL_CONFIG_COMMENT
+argument_list|,
+name|comment
 argument_list|)
 operator|!=
 literal|0

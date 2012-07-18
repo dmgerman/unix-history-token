@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -199,6 +199,12 @@ directive|include
 file|<sys/ddt.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/zfeature.h>
+end_include
+
 begin_undef
 undef|#
 directive|undef
@@ -244,7 +250,7 @@ name|ZDB_OT_NAME
 parameter_list|(
 name|idx
 parameter_list|)
-value|((idx)< DMU_OT_NUMTYPES ? \     dmu_ot[(idx)].ot_name : "UNKNOWN")
+value|((idx)< DMU_OT_NUMTYPES ? \     dmu_ot[(idx)].ot_name : DMU_OT_IS_VALID(idx) ? \     dmu_ot_byteswap[DMU_OT_BYTESWAP(idx)].ob_name : "UNKNOWN")
 end_define
 
 begin_define
@@ -413,13 +419,16 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [-CumdibcsDvhL] poolname [object...]\n"
-literal|"       %s [-div] dataset [object...]\n"
-literal|"       %s -m [-L] poolname [vdev [metaslab...]]\n"
-literal|"       %s -R poolname vdev:offset:size[:flags]\n"
-literal|"       %s -S poolname\n"
-literal|"       %s -l [-u] device\n"
-literal|"       %s -C\n\n"
+literal|"Usage: %s [-CumdibcsDvhLXFPA] [-t txg] [-e [-p path...]] "
+literal|"poolname [object...]\n"
+literal|"       %s [-divPA] [-e -p path...] dataset [object...]\n"
+literal|"       %s -m [-LXFPA] [-t txg] [-e [-p path...]] "
+literal|"poolname [vdev [metaslab...]]\n"
+literal|"       %s -R [-A] [-e [-p path...]] poolname "
+literal|"vdev:offset:size[:flags]\n"
+literal|"       %s -S [-PA] [-e [-p path...]] poolname\n"
+literal|"       %s -l [-uA] device\n"
+literal|"       %s -C [-A] [-U config]\n\n"
 argument_list|,
 name|cmdname
 argument_list|,
@@ -716,7 +725,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"	-P print numbers parsable\n"
+literal|"        -P print numbers in parseable form\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -6125,7 +6134,7 @@ name|zdb_nicenum
 argument_list|(
 name|ds
 operator|->
-name|ds_used_bytes
+name|ds_referenced_bytes
 argument_list|,
 name|used
 argument_list|)
@@ -6439,6 +6448,218 @@ argument_list|(
 literal|"\t\tbp = %s\n"
 argument_list|,
 name|blkbuf
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|dump_bptree_cb
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|,
+specifier|const
+name|blkptr_t
+modifier|*
+name|bp
+parameter_list|,
+name|dmu_tx_t
+modifier|*
+name|tx
+parameter_list|)
+block|{
+name|char
+name|blkbuf
+index|[
+name|BP_SPRINTF_LEN
+index|]
+decl_stmt|;
+if|if
+condition|(
+name|bp
+operator|->
+name|blk_birth
+operator|!=
+literal|0
+condition|)
+block|{
+name|sprintf_blkptr
+argument_list|(
+name|blkbuf
+argument_list|,
+name|bp
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"\t%s\n"
+argument_list|,
+name|blkbuf
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|dump_bptree
+parameter_list|(
+name|objset_t
+modifier|*
+name|os
+parameter_list|,
+name|uint64_t
+name|obj
+parameter_list|,
+name|char
+modifier|*
+name|name
+parameter_list|)
+block|{
+name|char
+name|bytes
+index|[
+literal|32
+index|]
+decl_stmt|;
+name|bptree_phys_t
+modifier|*
+name|bt
+decl_stmt|;
+name|dmu_buf_t
+modifier|*
+name|db
+decl_stmt|;
+if|if
+condition|(
+name|dump_opt
+index|[
+literal|'d'
+index|]
+operator|<
+literal|3
+condition|)
+return|return;
+name|VERIFY3U
+argument_list|(
+literal|0
+argument_list|,
+operator|==
+argument_list|,
+name|dmu_bonus_hold
+argument_list|(
+name|os
+argument_list|,
+name|obj
+argument_list|,
+name|FTAG
+argument_list|,
+operator|&
+name|db
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|bt
+operator|=
+name|db
+operator|->
+name|db_data
+expr_stmt|;
+name|zdb_nicenum
+argument_list|(
+name|bt
+operator|->
+name|bt_bytes
+argument_list|,
+name|bytes
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"\n    %s: %llu datasets, %s\n"
+argument_list|,
+name|name
+argument_list|,
+call|(
+name|unsigned
+name|long
+name|long
+call|)
+argument_list|(
+name|bt
+operator|->
+name|bt_end
+operator|-
+name|bt
+operator|->
+name|bt_begin
+argument_list|)
+argument_list|,
+name|bytes
+argument_list|)
+expr_stmt|;
+name|dmu_buf_rele
+argument_list|(
+name|db
+argument_list|,
+name|FTAG
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dump_opt
+index|[
+literal|'d'
+index|]
+operator|<
+literal|5
+condition|)
+return|return;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|bptree_iterate
+argument_list|(
+name|os
+argument_list|,
+name|obj
+argument_list|,
+name|B_FALSE
+argument_list|,
+name|dump_bptree_cb
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -10740,8 +10961,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|ZDB_OT_TOTAL
+name|ZDB_OT_OTHER
 value|(DMU_OT_NUMTYPES + 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ZDB_OT_TOTAL
+value|(DMU_OT_NUMTYPES + 3)
 end_define
 
 begin_decl_stmt
@@ -10755,6 +10983,8 @@ block|{
 literal|"deferred free"
 block|,
 literal|"dedup ditto"
+block|,
+literal|"other"
 block|,
 literal|"Total"
 block|, }
@@ -11189,6 +11419,14 @@ name|zilog
 argument_list|,
 name|bp
 argument_list|,
+operator|(
+name|type
+operator|&
+name|DMU_OT_NEWTYPE
+operator|)
+condition|?
+name|ZDB_OT_OTHER
+else|:
 name|type
 argument_list|)
 expr_stmt|;
@@ -11202,12 +11440,10 @@ argument_list|)
 operator|!=
 literal|0
 operator|||
-name|dmu_ot
-index|[
+name|DMU_OT_IS_METADATA
+argument_list|(
 name|type
-index|]
-operator|.
-name|ot_metadata
+argument_list|)
 operator|)
 expr_stmt|;
 if|if
@@ -12391,6 +12627,50 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|spa_feature_is_active
+argument_list|(
+name|spa
+argument_list|,
+operator|&
+name|spa_feature_table
+index|[
+name|SPA_FEATURE_ASYNC_DESTROY
+index|]
+argument_list|)
+condition|)
+block|{
+name|VERIFY3U
+argument_list|(
+literal|0
+argument_list|,
+operator|==
+argument_list|,
+name|bptree_iterate
+argument_list|(
+name|spa
+operator|->
+name|spa_meta_objset
+argument_list|,
+name|spa
+operator|->
+name|spa_dsl_pool
+operator|->
+name|dp_bptree_obj
+argument_list|,
+name|B_FALSE
+argument_list|,
+name|count_block_cb
+argument_list|,
+operator|&
+name|zcb
+argument_list|,
+name|NULL
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|dump_opt
 index|[
 literal|'c'
@@ -13375,15 +13655,13 @@ argument_list|)
 operator|>
 literal|0
 operator|||
-name|dmu_ot
-index|[
+name|DMU_OT_IS_METADATA
+argument_list|(
 name|BP_GET_TYPE
 argument_list|(
 name|bp
 argument_list|)
-index|]
-operator|.
-name|ot_metadata
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -13965,7 +14243,37 @@ name|spa_dsl_pool
 operator|->
 name|dp_free_bpobj
 argument_list|,
-literal|"Pool frees"
+literal|"Pool snapshot frees"
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|spa_feature_is_active
+argument_list|(
+name|spa
+argument_list|,
+operator|&
+name|spa_feature_table
+index|[
+name|SPA_FEATURE_ASYNC_DESTROY
+index|]
+argument_list|)
+condition|)
+block|{
+name|dump_bptree
+argument_list|(
+name|spa
+operator|->
+name|spa_meta_objset
+argument_list|,
+name|spa
+operator|->
+name|spa_dsl_pool
+operator|->
+name|dp_bptree_obj
+argument_list|,
+literal|"Pool dataset frees"
 argument_list|)
 expr_stmt|;
 block|}

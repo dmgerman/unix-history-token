@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2000, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2000, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -3466,6 +3466,27 @@ name|elem
 argument_list|)
 condition|)
 block|{
+case|case
+name|DATA_TYPE_BOOLEAN
+case|:
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%*s%s\n"
+argument_list|,
+name|indent
+argument_list|,
+literal|""
+argument_list|,
+name|nvpair_name
+argument_list|(
+name|elem
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
 case|case
 name|DATA_TYPE_BOOLEAN_VALUE
 case|:

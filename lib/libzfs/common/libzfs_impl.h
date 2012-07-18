@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER SART  *  * The contents of this file are subject to th
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -532,6 +532,17 @@ modifier|*
 modifier|*
 parameter_list|,
 name|size_t
+modifier|*
+parameter_list|)
+function_decl|;
+name|zfs_handle_t
+modifier|*
+name|make_dataset_handle_zc
+parameter_list|(
+name|libzfs_handle_t
+modifier|*
+parameter_list|,
+name|zfs_cmd_t
 modifier|*
 parameter_list|)
 function_decl|;

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -126,6 +126,15 @@ name|hw_serial
 index|[
 name|HW_HOSTID_LEN
 index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vmem_t
+modifier|*
+name|zio_arena
+init|=
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -1883,20 +1892,29 @@ block|}
 else|else
 block|{
 comment|/* 		 * To simulate partial disk writes, we split writes into two 		 * system calls so that the process can be killed in between. 		 */
+name|int
+name|sectors
+init|=
+name|len
+operator|>>
+name|SPA_MINBLOCKSHIFT
+decl_stmt|;
 name|split
 operator|=
 operator|(
-name|len
+name|sectors
 operator|>
 literal|0
 condition|?
 name|rand
 argument_list|()
 operator|%
-name|len
+name|sectors
 else|:
 literal|0
 operator|)
+operator|<<
+name|SPA_MINBLOCKSHIFT
 expr_stmt|;
 name|iolen
 operator|=
