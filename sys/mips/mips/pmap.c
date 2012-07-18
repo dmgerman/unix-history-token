@@ -4383,7 +4383,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|__mips_n64
-name|vm_contig_grow_cache
+name|vm_pageout_grow_cache
 argument_list|(
 literal|3
 argument_list|,
@@ -4394,7 +4394,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|vm_contig_grow_cache
+name|vm_pageout_grow_cache
 argument_list|(
 literal|3
 argument_list|,

@@ -747,7 +747,7 @@ argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
-name|vm_contig_grow_cache
+name|vm_pageout_grow_cache
 argument_list|(
 name|tries
 argument_list|,
@@ -1109,7 +1109,7 @@ argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
-name|vm_contig_grow_cache
+name|vm_pageout_grow_cache
 argument_list|(
 name|tries
 argument_list|,
