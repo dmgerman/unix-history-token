@@ -295,6 +295,21 @@ name|ah_getTxCompletionRates
 operator|=
 name|ar5210GetTxCompletionRates
 block|,
+operator|.
+name|ah_setTxDescLink
+operator|=
+name|ar5210SetTxDescLink
+block|,
+operator|.
+name|ah_getTxDescLink
+operator|=
+name|ar5210GetTxDescLink
+block|,
+operator|.
+name|ah_getTxDescLinkPtr
+operator|=
+name|ar5210GetTxDescLinkPtr
+block|,
 comment|/* RX Functions */
 operator|.
 name|ah_getRxDP
