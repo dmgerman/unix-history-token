@@ -984,6 +984,32 @@ begin_comment
 comment|/* Darwin compatible read ahead */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+operator|||
+name|__POSIX_VISIBLE
+operator|>=
+literal|200809
+end_if
+
+begin_define
+define|#
+directive|define
+name|F_DUPFD_CLOEXEC
+value|17
+end_define
+
+begin_comment
+comment|/* Like F_DUPFD, but FD_CLOEXEC is set */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* file descriptor flags (F_GETFD, F_SETFD) */
 end_comment
