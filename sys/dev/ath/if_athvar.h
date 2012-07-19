@@ -1473,7 +1473,7 @@ name|struct
 name|ath_rx_edma
 name|sc_rxedma
 index|[
-literal|2
+name|HAL_NUM_RX_QUEUES
 index|]
 decl_stmt|;
 comment|/* HP/LP queues */
