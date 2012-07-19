@@ -1814,10 +1814,7 @@ goto|;
 block|}
 if|if
 condition|(
-name|PCPU_GET
-argument_list|(
 name|curpcb
-argument_list|)
 operator|->
 name|pcb_onfault
 operator|!=
@@ -1831,10 +1828,7 @@ operator|=
 operator|(
 name|long
 operator|)
-name|PCPU_GET
-argument_list|(
 name|curpcb
-argument_list|)
 operator|->
 name|pcb_onfault
 expr_stmt|;
@@ -2329,10 +2323,7 @@ name|td_intr_nesting_level
 operator|!=
 literal|0
 operator|||
-name|PCPU_GET
-argument_list|(
 name|curpcb
-argument_list|)
 operator|->
 name|pcb_onfault
 operator|==
@@ -2542,10 +2533,7 @@ name|td_intr_nesting_level
 operator|==
 literal|0
 operator|&&
-name|PCPU_GET
-argument_list|(
 name|curpcb
-argument_list|)
 operator|->
 name|pcb_onfault
 operator|!=
@@ -2559,10 +2547,7 @@ operator|=
 operator|(
 name|long
 operator|)
-name|PCPU_GET
-argument_list|(
 name|curpcb
-argument_list|)
 operator|->
 name|pcb_onfault
 expr_stmt|;

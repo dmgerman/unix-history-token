@@ -1314,10 +1314,7 @@ argument_list|()
 expr_stmt|;
 name|fpusave
 argument_list|(
-name|PCPU_GET
-argument_list|(
 name|curpcb
-argument_list|)
 operator|->
 name|pcb_save
 argument_list|)
@@ -1789,10 +1786,7 @@ condition|)
 block|{
 name|pcb_save
 operator|=
-name|PCPU_GET
-argument_list|(
 name|curpcb
-argument_list|)
 operator|->
 name|pcb_save
 expr_stmt|;
@@ -1880,10 +1874,7 @@ name|curthread
 condition|)
 name|mxcsr
 operator|=
-name|PCPU_GET
-argument_list|(
 name|curpcb
-argument_list|)
 operator|->
 name|pcb_save
 operator|->
@@ -2033,10 +2024,7 @@ argument_list|)
 expr_stmt|;
 name|pcb
 operator|=
-name|PCPU_GET
-argument_list|(
 name|curpcb
-argument_list|)
 expr_stmt|;
 name|fpu_clean_state
 argument_list|()
@@ -3591,10 +3579,7 @@ name|pcb
 decl_stmt|;
 name|pcb
 operator|=
-name|PCPU_GET
-argument_list|(
 name|curpcb
-argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
@@ -3684,10 +3669,7 @@ return|;
 return|return
 operator|(
 operator|(
-name|PCPU_GET
-argument_list|(
 name|curpcb
-argument_list|)
 operator|->
 name|pcb_flags
 operator|&

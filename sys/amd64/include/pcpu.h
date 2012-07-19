@@ -398,6 +398,13 @@ parameter_list|)
 value|__PCPU_SET(pc_ ## member, val)
 end_define
 
+begin_define
+define|#
+directive|define
+name|OFFSETOF_CURTHREAD
+value|0
+end_define
+
 begin_expr_stmt
 specifier|static
 name|__inline
@@ -414,10 +421,64 @@ name|thread
 operator|*
 name|td
 block|;
-asm|__asm("movq %%gs:0,%0" : "=r" (td));
+asm|__asm("movq %%gs:%1,%0" : "=r" (td)
+operator|:
+literal|"m"
+operator|(
+operator|*
+operator|(
+name|char
+operator|*
+operator|)
+name|OFFSETOF_CURTHREAD
+operator|)
+block|)
+expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 operator|(
 name|td
+operator|)
+return|;
+end_return
+
+begin_define
+unit|}
+define|#
+directive|define
+name|curthread
+value|(__curthread())
+end_define
+
+begin_define
+define|#
+directive|define
+name|OFFSETOF_CURPCB
+value|32
+end_define
+
+begin_expr_stmt
+unit|static
+name|__inline
+name|__pure2
+expr|struct
+name|pcb
+operator|*
+name|__curpcb
+argument_list|(
+argument|void
+argument_list|)
+block|{ 	struct
+name|pcb
+operator|*
+name|pcb
+block|;
+asm|__asm("movq %%gs:%1,%0" : "=r" (pcb) : "m" (*(char *)OFFSETOF_CURPCB));
+return|return
+operator|(
+name|pcb
 operator|)
 return|;
 block|}
@@ -426,8 +487,8 @@ end_expr_stmt
 begin_define
 define|#
 directive|define
-name|curthread
-value|(__curthread())
+name|curpcb
+value|(__curpcb())
 end_define
 
 begin_define
