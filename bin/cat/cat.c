@@ -139,6 +139,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -158,12 +164,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stddef.h>
 end_include
 
 begin_decl_stmt
@@ -274,29 +274,29 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Memory strategy threshold, in pages: if physmem is larger then this, use a   * large buffer */
+comment|/*  * Memory strategy threshold, in pages: if physmem is larger than this,  * use a large buffer.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|PHYSPAGES_THRESHOLD
-value|(32*1024)
+value|(32 * 1024)
 end_define
 
 begin_comment
-comment|/* Maximum buffer size in bytes - do not allow it to grow larger than this */
+comment|/* Maximum buffer size in bytes - do not allow it to grow larger than this. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|BUFSIZE_MAX
-value|(2*1024*1024)
+value|(2 * 1024 * 1024)
 end_define
 
 begin_comment
-comment|/* Small (default) buffer size in bytes. It's inefficient for this to be  * smaller than MAXPHYS */
+comment|/*  * Small (default) buffer size in bytes. It's inefficient for this to be  * smaller than MAXPHYS.  */
 end_comment
 
 begin_define
@@ -520,9 +520,9 @@ name|cooked
 parameter_list|)
 block|{
 name|int
+name|fd
+decl_stmt|,
 name|i
-init|=
-literal|0
 decl_stmt|;
 name|char
 modifier|*
@@ -532,6 +532,10 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
+name|i
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -550,9 +554,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|int
-name|fd
-decl_stmt|;
 if|if
 condition|(
 name|path
