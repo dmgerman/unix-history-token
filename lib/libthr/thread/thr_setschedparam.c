@@ -87,17 +87,11 @@ name|pthread
 operator|==
 name|curthread
 condition|)
-block|{
-name|pthread
-operator|=
-name|curthread
-expr_stmt|;
 name|THR_LOCK
 argument_list|(
 name|curthread
 argument_list|)
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
