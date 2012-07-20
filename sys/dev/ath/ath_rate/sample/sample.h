@@ -202,7 +202,7 @@ comment|/* rate index of fixed tx rate */
 define|#
 directive|define
 name|SAMPLE_MAXRATES
-value|32
+value|64
 comment|/* NB: corresponds to hal info[32] */
 name|uint32_t
 name|ratemask
