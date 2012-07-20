@@ -13148,17 +13148,9 @@ index|[
 literal|1
 index|]
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|XEN_PRIVILEGED
-argument_list|)
 name|cpu_probe_amdc1e
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
