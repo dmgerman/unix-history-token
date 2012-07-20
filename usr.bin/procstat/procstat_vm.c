@@ -339,7 +339,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-1s "
+literal|"%-1s"
 argument_list|,
 name|kve
 operator|->
@@ -348,6 +348,29 @@ operator|&
 name|KVME_FLAG_SUPER
 condition|?
 literal|"S"
+else|:
+literal|"-"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%-1s "
+argument_list|,
+name|kve
+operator|->
+name|kve_flags
+operator|&
+name|KVME_FLAG_GROWS_UP
+condition|?
+literal|"U"
+else|:
+name|kve
+operator|->
+name|kve_flags
+operator|&
+name|KVME_FLAG_GROWS_DOWN
+condition|?
+literal|"D"
 else|:
 literal|"-"
 argument_list|)
