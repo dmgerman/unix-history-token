@@ -613,6 +613,89 @@ value|_IOWR('i', 140, struct ath_diag)
 end_define
 
 begin_comment
+comment|/*  * The rate control ioctl has to support multiple potential rate  * control classes.  For now, instead of trying to support an  * abstraction for this in the API, let's just use a TLV  * representation for the payload and let userspace sort it out.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ath_rateioctl_tlv
+block|{
+name|uint16_t
+name|tlv_id
+decl_stmt|;
+name|uint16_t
+name|tlv_len
+decl_stmt|;
+comment|/* length excluding TLV header */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * This is purely the six byte MAC address.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATH_RATE_TLV_MACADDR
+value|0xaab0
+end_define
+
+begin_comment
+comment|/*  * This is the sample node statistics structure.  * More in ath_rate/sample/sample.h.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATH_RATE_TLV_SAMPLENODE
+value|0xaab2
+end_define
+
+begin_struct
+struct|struct
+name|ath_rateioctl
+block|{
+name|char
+name|if_name
+index|[
+name|IFNAMSIZ
+index|]
+decl_stmt|;
+comment|/* if name */
+union|union
+block|{
+name|uint8_t
+name|macaddr
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
+decl_stmt|;
+name|uint64_t
+name|pad
+decl_stmt|;
+block|}
+name|is_u
+union|;
+name|uint32_t
+name|len
+decl_stmt|;
+name|caddr_t
+name|buf
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|SIOCGATHNODERATESTATS
+value|_IOWR('i', 149, struct ath_rateioctl)
+end_define
+
+begin_comment
 comment|/*  * Radio capture format.  */
 end_comment
 
