@@ -82,6 +82,8 @@ argument_list|()
 decl_stmt|;
 name|int
 name|ret
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
