@@ -643,6 +643,47 @@ value|0xaab0
 end_define
 
 begin_comment
+comment|/*  * The rate control modules may decide to push a mapping table  * of rix -> net80211 ratecode as part of the update.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATH_RATE_TLV_RATETABLE_NENTRIES
+value|64
+end_define
+
+begin_struct
+struct|struct
+name|ath_rateioctl_rt
+block|{
+name|uint16_t
+name|nentries
+decl_stmt|;
+name|uint16_t
+name|pad
+index|[
+literal|1
+index|]
+decl_stmt|;
+name|uint8_t
+name|ratecode
+index|[
+name|ATH_RATE_TLV_RATETABLE_NENTRIES
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|ATH_RATE_TLV_RATETABLE
+value|0xaab1
+end_define
+
+begin_comment
 comment|/*  * This is the sample node statistics structure.  * More in ath_rate/sample/sample.h.  */
 end_comment
 
