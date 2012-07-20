@@ -198,7 +198,7 @@ condition|(
 operator|(
 name|ret
 operator|=
-name|_thr_ref_add
+name|_thr_find_thread
 argument_list|(
 name|curthread
 argument_list|,
@@ -212,13 +212,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|THR_THREAD_LOCK
-argument_list|(
-name|curthread
-argument_list|,
-name|pthread
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|pthread
@@ -315,13 +308,6 @@ name|sched_priority
 expr_stmt|;
 block|}
 name|THR_THREAD_UNLOCK
-argument_list|(
-name|curthread
-argument_list|,
-name|pthread
-argument_list|)
-expr_stmt|;
-name|_thr_ref_delete
 argument_list|(
 name|curthread
 argument_list|,
