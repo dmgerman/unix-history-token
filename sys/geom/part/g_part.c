@@ -6862,6 +6862,9 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|off_t
+name|mediasize
+decl_stmt|;
 name|gp
 operator|=
 name|gpp
@@ -7137,6 +7140,24 @@ literal|0
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|entry
+operator|->
+name|gpe_end
+operator|-
+name|entry
+operator|->
+name|gpe_start
+operator|+
+literal|1
+operator|>
+name|gpp
+operator|->
+name|gpp_size
+condition|)
+block|{
+comment|/* Deny shrinking of an opened partition. */
 name|gctl_error
 argument_list|(
 name|req
@@ -7151,6 +7172,7 @@ operator|(
 name|EBUSY
 operator|)
 return|;
+block|}
 block|}
 name|error
 operator|=
@@ -7197,8 +7219,6 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* update mediasize of changed provider */
-name|pp
-operator|->
 name|mediasize
 operator|=
 operator|(
@@ -7216,6 +7236,13 @@ operator|*
 name|pp
 operator|->
 name|sectorsize
+expr_stmt|;
+name|g_resize_provider
+argument_list|(
+name|pp
+argument_list|,
+name|mediasize
+argument_list|)
 expr_stmt|;
 comment|/* Provide feedback if so requested. */
 if|if
