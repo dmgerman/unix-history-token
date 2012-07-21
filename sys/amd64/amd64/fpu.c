@@ -1750,7 +1750,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Read the FP status and control words, then generate si_code value  * for SIGFPE.  The error code chosen will be one of the  * FPE_... macros. It will be sent as the second argument to old  * BSD-style signal handlers and as "siginfo_t->si_code" (second  * argument) to SA_SIGINFO signal handlers.  *  * Some time ago, we cleared the x87 exceptions with FNCLEX there.  * Clearing exceptions was necessary mainly to avoid IRQ13 bugs.  The  * usermode code which understands the FPU hardware enough to enable  * the exceptions, can also handle clearing the exception state in the  * handler. The only consequence of not clearing the exception is the  * rethrow of the SIGFPE on return from the signal handler and  * reexecution of the corresponding instruction.  *  * For XMM traps, the exceptions were never cleared.  */
+comment|/*  * Read the FP status and control words, then generate si_code value  * for SIGFPE.  The error code chosen will be one of the  * FPE_... macros.  It will be sent as the second argument to old  * BSD-style signal handlers and as "siginfo_t->si_code" (second  * argument) to SA_SIGINFO signal handlers.  *  * Some time ago, we cleared the x87 exceptions with FNCLEX there.  * Clearing exceptions was necessary mainly to avoid IRQ13 bugs.  The  * usermode code which understands the FPU hardware enough to enable  * the exceptions, can also handle clearing the exception state in the  * handler.  The only consequence of not clearing the exception is the  * rethrow of the SIGFPE on return from the signal handler and  * reexecution of the corresponding instruction.  *  * For XMM traps, the exceptions were never cleared.  */
 end_comment
 
 begin_function
