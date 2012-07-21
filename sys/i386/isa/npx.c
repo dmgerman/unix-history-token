@@ -1895,7 +1895,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Preserve the FP status word, clear FP exceptions, then generate a SIGFPE.  *  * Clearing exceptions is necessary mainly to avoid IRQ13 bugs.  We now  * depend on longjmp() restoring a usable state.  Restoring the state  * or examining it might fail if we didn't clear exceptions.  *  * The error code chosen will be one of the FPE_... macros. It will be  * sent as the second argument to old BSD-style signal handlers and as  * "siginfo_t->si_code" (second argument) to SA_SIGINFO signal handlers.  *  * XXX the FP state is not preserved across signal handlers.  So signal  * handlers cannot afford to do FP unless they preserve the state or  * longjmp() out.  Both preserving the state and longjmp()ing may be  * destroyed by IRQ13 bugs.  Clearing FP exceptions is not an acceptable  * solution for signals other than SIGFPE.  */
+comment|/*  * Read the FP status and control words, then generate si_code value  * for SIGFPE.  The error code chosen will be one of the  * FPE_... macros.  It will be sent as the second argument to old  * BSD-style signal handlers and as "siginfo_t->si_code" (second  * argument) to SA_SIGINFO signal handlers.  *  * Some time ago, we cleared the x87 exceptions with FNCLEX there.  * Clearing exceptions was necessary mainly to avoid IRQ13 bugs.  The  * usermode code which understands the FPU hardware enough to enable  * the exceptions, can also handle clearing the exception state in the  * handler.  The only consequence of not clearing the exception is the  * rethrow of the SIGFPE on return from the signal handler and  * reexecution of the corresponding instruction.  *  * For XMM traps, the exceptions were never cleared.  */
 end_comment
 
 begin_function
@@ -1978,18 +1978,6 @@ name|status
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|PCPU_GET
-argument_list|(
-name|fpcurthread
-argument_list|)
-operator|==
-name|curthread
-condition|)
-name|fnclex
-argument_list|()
-expr_stmt|;
 name|critical_exit
 argument_list|()
 expr_stmt|;
