@@ -10260,7 +10260,7 @@ decl_stmt|,
 modifier|*
 name|savedcbp
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|struct
 name|thread
@@ -12711,7 +12711,7 @@ decl_stmt|,
 modifier|*
 name|savedcbp
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|struct
 name|thread
@@ -12735,7 +12735,7 @@ name|vnode
 modifier|*
 name|vp
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|ufs2_daddr_t
 name|lbn
