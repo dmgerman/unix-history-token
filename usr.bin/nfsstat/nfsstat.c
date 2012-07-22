@@ -5125,10 +5125,6 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|lastst
-operator|=
-name|nfsstats
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -5287,11 +5283,11 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+block|}
 name|lastst
 operator|=
 name|nfsstats
 expr_stmt|;
-block|}
 name|fflush
 argument_list|(
 name|stdout
