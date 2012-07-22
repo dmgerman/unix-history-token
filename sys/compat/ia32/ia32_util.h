@@ -67,6 +67,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|FREEBSD32_MINUSER
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
 name|FREEBSD32_SHAREDPAGE
 value|0
 end_define
@@ -83,11 +90,22 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* __ia64__ */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|FREEBSD32_MAXUSER
 value|((1ul<< 32) - IA32_PAGE_SIZE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FREEBSD32_MINUSER
+value|0
 end_define
 
 begin_define
@@ -108,6 +126,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* __ia64 */
+end_comment
 
 begin_define
 define|#
@@ -204,6 +226,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _COMPAT_IA32_IA32_UTIL_H */
+end_comment
 
 end_unit
 
