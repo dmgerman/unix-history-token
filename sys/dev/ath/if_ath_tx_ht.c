@@ -2256,30 +2256,6 @@ index|]
 operator|.
 name|rateCode
 expr_stmt|;
-name|series
-index|[
-name|i
-index|]
-operator|.
-name|RateIndex
-operator|=
-name|rc
-index|[
-name|i
-index|]
-operator|.
-name|rix
-expr_stmt|;
-name|series
-index|[
-name|i
-index|]
-operator|.
-name|tx_power_cap
-operator|=
-literal|0x3f
-expr_stmt|;
-comment|/* XXX? */
 comment|/* 		 * PktDuration doesn't include slot, ACK, RTS, etc timing - 		 * it's just the packet duration 		 */
 if|if
 condition|(
