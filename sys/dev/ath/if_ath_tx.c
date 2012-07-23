@@ -17590,6 +17590,30 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+comment|/* 	 * For now, just set the descriptor length to sizeof(ath_desc); 	 * worry about extracting the real length out of the HAL later. 	 */
+name|sc
+operator|->
+name|sc_tx_desclen
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ath_desc
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|sc_tx_statuslen
+operator|=
+literal|0
+expr_stmt|;
+name|sc
+operator|->
+name|sc_tx_nmaps
+operator|=
+literal|1
+expr_stmt|;
+comment|/* only one buffer per TX desc */
 name|sc
 operator|->
 name|sc_tx

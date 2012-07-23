@@ -394,6 +394,9 @@ modifier|*
 name|name
 parameter_list|,
 name|int
+name|ds_size
+parameter_list|,
+name|int
 name|nbuf
 parameter_list|,
 name|int

@@ -11426,6 +11426,9 @@ modifier|*
 name|name
 parameter_list|,
 name|int
+name|ds_size
+parameter_list|,
+name|int
 name|nbuf
 parameter_list|,
 name|int
@@ -11481,11 +11484,7 @@ name|dd
 operator|->
 name|dd_descsize
 operator|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ath_desc
-argument_list|)
+name|ds_size
 expr_stmt|;
 name|DPRINTF
 argument_list|(
@@ -12676,6 +12675,10 @@ name|sc_txbuf
 argument_list|,
 literal|"tx"
 argument_list|,
+name|sc
+operator|->
+name|sc_tx_desclen
+argument_list|,
 name|ath_txbuf
 argument_list|,
 name|ATH_TXDESC
@@ -12715,6 +12718,10 @@ operator|->
 name|sc_txbuf_mgmt
 argument_list|,
 literal|"tx_mgmt"
+argument_list|,
+name|sc
+operator|->
+name|sc_tx_desclen
 argument_list|,
 name|ath_txbuf_mgmt
 argument_list|,
@@ -12765,6 +12772,10 @@ operator|->
 name|sc_bbuf
 argument_list|,
 literal|"beacon"
+argument_list|,
+name|sc
+operator|->
+name|sc_tx_desclen
 argument_list|,
 name|ATH_BCBUF
 argument_list|,

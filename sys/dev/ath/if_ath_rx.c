@@ -4466,6 +4466,12 @@ name|sc_rxbuf
 argument_list|,
 literal|"rx"
 argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ath_desc
+argument_list|)
+argument_list|,
 name|ath_rxbuf
 argument_list|,
 literal|1
@@ -4563,6 +4569,13 @@ name|sc_dev
 argument_list|,
 literal|"DMA setup: legacy\n"
 argument_list|)
+expr_stmt|;
+comment|/* Sensible legacy defaults */
+name|sc
+operator|->
+name|sc_rx_statuslen
+operator|=
+literal|0
 expr_stmt|;
 name|sc
 operator|->
