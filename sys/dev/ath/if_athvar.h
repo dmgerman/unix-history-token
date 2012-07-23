@@ -2078,6 +2078,23 @@ name|task
 name|sc_txqtask
 decl_stmt|;
 comment|/* tx proc processing */
+name|struct
+name|ath_descdma
+name|sc_txcompdma
+decl_stmt|;
+comment|/* TX EDMA completion */
+name|struct
+name|mtx
+name|sc_txcomplock
+decl_stmt|;
+comment|/* TX EDMA completion lock */
+name|char
+name|sc_txcompname
+index|[
+literal|12
+index|]
+decl_stmt|;
+comment|/* eg ath0_txcomp */
 name|int
 name|sc_wd_timer
 decl_stmt|;
@@ -2632,6 +2649,57 @@ name|_sc
 parameter_list|)
 define|\
 value|mtx_assert(&(_sc)->sc_txbuflock, MA_OWNED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TXSTATUS_LOCK_INIT
+parameter_list|(
+name|_sc
+parameter_list|)
+value|do { \ 	snprintf((_sc)->sc_txcompname, sizeof((_sc)->sc_txcompname), \ 		"%s_buf", \ 		device_get_nameunit((_sc)->sc_dev)); \ 	mtx_init(&(_sc)->sc_txcomplock, (_sc)->sc_txcompname, NULL, \ 		MTX_DEF); \ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TXSTATUS_LOCK_DESTROY
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_destroy(&(_sc)->sc_txcomplock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TXSTATUS_LOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_lock(&(_sc)->sc_txcomplock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TXSTATUS_UNLOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_unlock(&(_sc)->sc_txcomplock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TXSTATUS_LOCK_ASSERT
+parameter_list|(
+name|_sc
+parameter_list|)
+define|\
+value|mtx_assert(&(_sc)->sc_txcomplock, MA_OWNED)
 end_define
 
 begin_function_decl
