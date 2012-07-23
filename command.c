@@ -3046,6 +3046,9 @@ name|ignore_eoi
 operator|=
 literal|0
 expr_stmt|;
+name|ch_set_eof
+argument_list|()
+expr_stmt|;
 comment|/* 	 * This gets us back in "F mode" after processing  	 * a non-abort signal (e.g. window-change).   	 */
 if|if
 condition|(
@@ -3057,6 +3060,10 @@ argument_list|()
 condition|)
 return|return
 operator|(
+name|until_hilite
+condition|?
+name|A_F_UNTIL_HILITE
+else|:
 name|A_F_FOREVER
 operator|)
 return|;
