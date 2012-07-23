@@ -9140,7 +9140,7 @@ name|request
 argument_list|,
 sizeof|sizeof
 argument_list|(
-operator|&
+operator|*
 name|request
 argument_list|)
 argument_list|)
