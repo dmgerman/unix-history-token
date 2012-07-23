@@ -375,6 +375,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/ath/if_ath_tx_edma.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/ath/if_ath_beacon.h>
 end_include
 
@@ -1867,13 +1873,25 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|ath_xmit_setup_edma
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 block|}
 else|else
+block|{
 name|ath_recv_setup_legacy
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|ath_xmit_setup_legacy
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Check if the MAC has multi-rate retry support. 	 * We do this by trying to setup a fake extended 	 * descriptor.  MAC's that don't have support will 	 * return false w/o doing anything.  MAC's that do 	 * support it will return true w/o doing anything. 	 */
 name|sc
 operator|->
@@ -2070,7 +2088,7 @@ argument_list|,
 name|IEEE80211_MODE_11A
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Allocate tx+rx descriptors and populate the lists. 	 */
+comment|/* 	 * Allocate TX descriptors and populate the lists. 	 */
 name|error
 operator|=
 name|ath_desc_alloc
@@ -2089,7 +2107,7 @@ name|if_printf
 argument_list|(
 name|ifp
 argument_list|,
-literal|"failed to allocate descriptors: %d\n"
+literal|"failed to allocate TX descriptors: %d\n"
 argument_list|,
 name|error
 argument_list|)
@@ -2098,6 +2116,34 @@ goto|goto
 name|bad
 goto|;
 block|}
+name|error
+operator|=
+name|ath_txdma_setup
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+block|{
+name|if_printf
+argument_list|(
+name|ifp
+argument_list|,
+literal|"failed to allocate TX descriptors: %d\n"
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+goto|goto
+name|bad
+goto|;
+block|}
+comment|/* 	 * Allocate RX descriptors and populate the lists. 	 */
 name|error
 operator|=
 name|ath_rxdma_setup
@@ -4130,6 +4176,11 @@ name|sc
 argument_list|)
 expr_stmt|;
 name|ath_desc_free
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|ath_txdma_teardown
 argument_list|(
 name|sc
 argument_list|)
