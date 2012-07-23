@@ -1232,7 +1232,7 @@ literal|"zhack enable feature"
 argument_list|,
 name|tx
 argument_list|,
-literal|"name=%s can_readonly=%u"
+literal|"guid=%s can_readonly=%u"
 argument_list|,
 name|feature
 operator|->
@@ -1607,7 +1607,7 @@ literal|"zhack feature incr"
 argument_list|,
 name|tx
 argument_list|,
-literal|"name=%s"
+literal|"guid=%s"
 argument_list|,
 name|feature
 operator|->
@@ -1664,7 +1664,7 @@ literal|"zhack feature decr"
 argument_list|,
 name|tx
 argument_list|,
-literal|"name=%s"
+literal|"guid=%s"
 argument_list|,
 name|feature
 operator|->
