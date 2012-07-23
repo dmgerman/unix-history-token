@@ -875,6 +875,10 @@ modifier|*
 name|dd_desc
 decl_stmt|;
 comment|/* descriptors */
+name|int
+name|dd_descsize
+decl_stmt|;
+comment|/* size of single descriptor */
 name|bus_addr_t
 name|dd_desc_paddr
 decl_stmt|;

@@ -1187,6 +1187,17 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+comment|/* 	 * XXX There's txdma and txdma_mgmt; the descriptor 	 * sizes must match. 	 */
+name|struct
+name|ath_descdma
+modifier|*
+name|dd
+init|=
+operator|&
+name|sc
+operator|->
+name|sc_txdma
+decl_stmt|;
 comment|/* 	 * Fillin the remainder of the descriptor info. 	 */
 name|ds0
 operator|=
@@ -1258,11 +1269,9 @@ name|bf
 operator|->
 name|bf_daddr
 operator|+
-sizeof|sizeof
-argument_list|(
-operator|*
-name|ds
-argument_list|)
+name|dd
+operator|->
+name|dd_descsize
 operator|*
 operator|(
 name|i
@@ -1411,6 +1420,17 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+comment|/* 	 * XXX There's txdma and txdma_mgmt; the descriptor 	 * sizes must match. 	 */
+name|struct
+name|ath_descdma
+modifier|*
+name|dd
+init|=
+operator|&
+name|sc
+operator|->
+name|sc_txdma
+decl_stmt|;
 name|ds0
 operator|=
 name|ds
@@ -1482,11 +1502,9 @@ name|bf
 operator|->
 name|bf_daddr
 operator|+
-sizeof|sizeof
-argument_list|(
-operator|*
-name|ds
-argument_list|)
+name|dd
+operator|->
+name|dd_descsize
 operator|*
 operator|(
 name|i

@@ -11426,10 +11426,9 @@ name|bsize
 decl_stmt|,
 name|error
 decl_stmt|;
-name|int
-name|desc_len
-decl_stmt|;
-name|desc_len
+name|dd
+operator|->
+name|dd_descsize
 operator|=
 sizeof|sizeof
 argument_list|(
@@ -11443,7 +11442,7 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_RESET
 argument_list|,
-literal|"%s: %s DMA: %u buffers %u desc/buf\n"
+literal|"%s: %s DMA: %u buffers %u desc/buf, %d bytes per descriptor\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -11452,6 +11451,10 @@ argument_list|,
 name|nbuf
 argument_list|,
 name|ndesc
+argument_list|,
+name|dd
+operator|->
+name|dd_descsize
 argument_list|)
 expr_stmt|;
 name|dd
@@ -11464,7 +11467,9 @@ name|dd
 operator|->
 name|dd_desc_len
 operator|=
-name|desc_len
+name|dd
+operator|->
+name|dd_descsize
 operator|*
 name|nbuf
 operator|*
@@ -11488,7 +11493,9 @@ init|=
 literal|4096
 operator|/
 operator|(
-name|desc_len
+name|dd
+operator|->
+name|dd_descsize
 operator|*
 name|ndesc
 operator|)
@@ -11869,7 +11876,9 @@ operator|+=
 operator|(
 name|ndesc
 operator|*
-name|desc_len
+name|dd
+operator|->
+name|dd_descsize
 operator|)
 control|)
 block|{
@@ -11915,7 +11924,9 @@ name|bf
 operator|->
 name|bf_daddr
 argument_list|,
-name|desc_len
+name|dd
+operator|->
+name|dd_descsize
 operator|*
 name|ndesc
 argument_list|)
@@ -12189,6 +12200,14 @@ comment|/* 	 * This is (mostly) purely for show.  We're not allocating any actua
 name|dd
 operator|->
 name|dd_desc_len
+operator|=
+name|rx_status_len
+operator|*
+name|nbuf
+expr_stmt|;
+name|dd
+operator|->
+name|dd_descsize
 operator|=
 name|rx_status_len
 expr_stmt|;
