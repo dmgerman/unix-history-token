@@ -362,6 +362,16 @@ argument_list|(
 name|jitter
 operator|<
 name|max
+operator|||
+operator|(
+name|jitter
+operator|==
+literal|0
+operator|&&
+name|max
+operator|==
+literal|0
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
