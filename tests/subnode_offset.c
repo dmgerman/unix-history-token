@@ -244,13 +244,9 @@ decl_stmt|,
 name|subsubnode2_offset2
 decl_stmt|;
 name|int
-name|ss11_off
-decl_stmt|,
 name|ss12_off
 decl_stmt|,
 name|ss21_off
-decl_stmt|,
-name|ss22_off
 decl_stmt|;
 name|test_init
 argument_list|(
@@ -400,8 +396,6 @@ argument_list|(
 literal|"Different offsets with and without unit address"
 argument_list|)
 expr_stmt|;
-name|ss11_off
-operator|=
 name|check_subnode
 argument_list|(
 name|fdt
@@ -457,8 +451,6 @@ argument_list|(
 literal|"Incorrectly found ss2 in subnode1"
 argument_list|)
 expr_stmt|;
-name|ss22_off
-operator|=
 name|check_subnode
 argument_list|(
 name|fdt

@@ -145,6 +145,16 @@ argument_list|(
 name|bufsize
 argument_list|)
 expr_stmt|;
+comment|/* don't leak uninitialized memory into our output */
+name|memset
+argument_list|(
+name|buf
+argument_list|,
+literal|0
+argument_list|,
+name|bufsize
+argument_list|)
+expr_stmt|;
 name|fdt1
 operator|=
 name|buf

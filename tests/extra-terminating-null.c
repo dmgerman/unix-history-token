@@ -52,6 +52,7 @@ file|"testdata.h"
 end_include
 
 begin_function
+specifier|static
 name|void
 name|check_extranull
 parameter_list|(

@@ -193,6 +193,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|void
 name|check_prop_labels
 parameter_list|(

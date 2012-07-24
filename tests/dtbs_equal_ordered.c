@@ -51,6 +51,49 @@ directive|include
 file|"testdata.h"
 end_include
 
+begin_decl_stmt
+name|int
+name|notequal
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* = 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MISMATCH
+parameter_list|(
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+define|\
+value|do { \ 		if (notequal) \ 			PASS(); \ 		else \ 			FAIL(fmt, ##__VA_ARGS__);	\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MATCH
+parameter_list|()
+define|\
+value|do { \ 		if (!notequal) \ 			PASS(); \ 		else \ 			FAIL("Trees match which shouldn't");	\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHECK
+parameter_list|(
+name|code
+parameter_list|)
+define|\
+value|{ \ 		err = (code); \ 		if (err) \ 			FAIL(#code ": %s", fdt_strerror(err)); \ 	}
+end_define
+
 begin_function
 specifier|static
 name|void
@@ -94,7 +137,7 @@ argument_list|(
 name|fdt2
 argument_list|)
 condition|)
-name|FAIL
+name|MISMATCH
 argument_list|(
 literal|"Trees have different number of reserve entries"
 argument_list|)
@@ -116,8 +159,8 @@ name|i
 operator|++
 control|)
 block|{
-name|err
-operator|=
+name|CHECK
+argument_list|(
 name|fdt_get_mem_rsv
 argument_list|(
 name|fdt1
@@ -130,25 +173,10 @@ argument_list|,
 operator|&
 name|size1
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|err
-condition|)
-name|FAIL
-argument_list|(
-literal|"fdt_get_mem_rsv(fdt1, %d, ...): %s"
-argument_list|,
-name|i
-argument_list|,
-name|fdt_strerror
-argument_list|(
-name|err
-argument_list|)
 argument_list|)
 expr_stmt|;
-name|err
-operator|=
+name|CHECK
+argument_list|(
 name|fdt_get_mem_rsv
 argument_list|(
 name|fdt2
@@ -160,21 +188,6 @@ name|addr2
 argument_list|,
 operator|&
 name|size2
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|err
-condition|)
-name|FAIL
-argument_list|(
-literal|"fdt_get_mem_rsv(fdt2, %d, ...): %s"
-argument_list|,
-name|i
-argument_list|,
-name|fdt_strerror
-argument_list|(
-name|err
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -192,7 +205,7 @@ operator|!=
 name|size2
 operator|)
 condition|)
-name|FAIL
+name|MISMATCH
 argument_list|(
 literal|"Mismatch in reserve entry %d: "
 literal|"(0x%llx, 0x%llx) != (0x%llx, 0x%llx)"
@@ -355,7 +368,7 @@ name|tag1
 operator|!=
 name|tag2
 condition|)
-name|FAIL
+name|MISMATCH
 argument_list|(
 literal|"Tag mismatch (%d != %d) at (%d, %d)"
 argument_list|,
@@ -443,7 +456,7 @@ argument_list|,
 name|name2
 argument_list|)
 condition|)
-name|FAIL
+name|MISMATCH
 argument_list|(
 literal|"Name mismatch (\"%s\" != \"%s\") at (%d, %d)"
 argument_list|,
@@ -552,7 +565,7 @@ argument_list|,
 name|name2
 argument_list|)
 condition|)
-name|FAIL
+name|MISMATCH
 argument_list|(
 literal|"Property name mismatch \"%s\" != \"%s\" "
 literal|"at (%d, %d)"
@@ -590,7 +603,7 @@ name|len1
 operator|!=
 name|len2
 condition|)
-name|FAIL
+name|MISMATCH
 argument_list|(
 literal|"Property length mismatch %u != %u "
 literal|"at (%d, %d)"
@@ -621,7 +634,7 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|FAIL
+name|MISMATCH
 argument_list|(
 literal|"Property value mismatch at (%d, %d)"
 argument_list|,
@@ -674,13 +687,34 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|argc
 operator|!=
 literal|3
+operator|)
+operator|&&
+operator|(
+operator|(
+name|argc
+operator|!=
+literal|4
+operator|)
+operator|||
+operator|!
+name|streq
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+literal|"-n"
+argument_list|)
+operator|)
 condition|)
 name|CONFIG
 argument_list|(
-literal|"Usage: %s<dtb file><dtb file>"
+literal|"Usage: %s [-n]<dtb file><dtb file>"
 argument_list|,
 name|argv
 index|[
@@ -688,13 +722,25 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|argc
+operator|==
+literal|4
+condition|)
+name|notequal
+operator|=
+literal|1
+expr_stmt|;
 name|fdt1
 operator|=
 name|load_blob
 argument_list|(
 name|argv
 index|[
-literal|1
+name|argc
+operator|-
+literal|2
 index|]
 argument_list|)
 expr_stmt|;
@@ -704,7 +750,9 @@ name|load_blob
 argument_list|(
 name|argv
 index|[
-literal|2
+name|argc
+operator|-
+literal|1
 index|]
 argument_list|)
 expr_stmt|;
@@ -742,7 +790,7 @@ name|cpuid1
 operator|!=
 name|cpuid2
 condition|)
-name|FAIL
+name|MISMATCH
 argument_list|(
 literal|"boot_cpuid_phys mismatch 0x%x != 0x%x"
 argument_list|,
@@ -751,7 +799,7 @@ argument_list|,
 name|cpuid2
 argument_list|)
 expr_stmt|;
-name|PASS
+name|MATCH
 argument_list|()
 expr_stmt|;
 block|}

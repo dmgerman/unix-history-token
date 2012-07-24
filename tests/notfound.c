@@ -100,12 +100,6 @@ name|argv
 index|[]
 parameter_list|)
 block|{
-specifier|const
-name|struct
-name|fdt_property
-modifier|*
-name|prop
-decl_stmt|;
 name|void
 modifier|*
 name|fdt
@@ -115,11 +109,6 @@ name|offset
 decl_stmt|;
 name|int
 name|subnode1_offset
-decl_stmt|;
-specifier|const
-name|void
-modifier|*
-name|val
 decl_stmt|;
 name|int
 name|lenerr
@@ -140,8 +129,6 @@ argument_list|,
 name|argv
 argument_list|)
 expr_stmt|;
-name|prop
-operator|=
 name|fdt_get_property
 argument_list|(
 name|fdt
@@ -161,8 +148,6 @@ argument_list|,
 name|lenerr
 argument_list|)
 expr_stmt|;
-name|val
-operator|=
 name|fdt_getprop
 argument_list|(
 name|fdt
@@ -209,8 +194,6 @@ name|subnode1_offset
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|val
-operator|=
 name|fdt_getprop
 argument_list|(
 name|fdt

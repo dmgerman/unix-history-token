@@ -472,6 +472,21 @@ argument_list|,
 name|subsubnode2_offset_p
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|subsubnode2_offset2
+operator|!=
+name|subsubnode2_offset2_p
+condition|)
+name|FAIL
+argument_list|(
+literal|"Mismatch between subnode_offset (%d) and path_offset (%d)"
+argument_list|,
+name|subsubnode2_offset2
+argument_list|,
+name|subsubnode2_offset2_p
+argument_list|)
+expr_stmt|;
 name|PASS
 argument_list|()
 expr_stmt|;
