@@ -4820,6 +4820,23 @@ end_define
 begin_define
 define|#
 directive|define
+name|ath_hal_setuptxstatusring
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_tsstart
+parameter_list|,
+name|_tspstart
+parameter_list|,
+name|_size
+parameter_list|)
+define|\
+value|((*(_ah)->ah_setupTxStatusRing)((_ah), (_tsstart), (_tspstart), \ 		(_size)))
+end_define
+
+begin_define
+define|#
+directive|define
 name|ath_hal_setupfirsttxdesc
 parameter_list|(
 name|_ah
