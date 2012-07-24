@@ -286,6 +286,13 @@ name|E_USAGE
 value|2
 end_define
 
+begin_define
+define|#
+directive|define
+name|IMPATIENT_LIMIT
+value|2
+end_define
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -5881,6 +5888,8 @@ if|if
 condition|(
 name|g_intr
 operator|++
+operator|>
+name|IMPATIENT_LIMIT
 condition|)
 name|g_impatient
 operator|=
