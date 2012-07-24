@@ -2606,6 +2606,23 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Force EOF to be at the current read position.  * This is used after an ignore_eof read, during which the EOF may change.  */
+end_comment
+
+begin_function
+name|public
+name|void
+name|ch_set_eof
+parameter_list|()
+block|{
+name|ch_fsize
+operator|=
+name|ch_fpos
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Initialize file state for a new file.  */
 end_comment
 
