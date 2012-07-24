@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mman.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mount.h>
 end_include
 
@@ -248,6 +254,12 @@ begin_include
 include|#
 directive|include
 file|<vm/vm_object.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_page.h>
 end_include
 
 begin_include
@@ -9480,6 +9492,8 @@ name|addr
 decl_stmt|;
 name|int
 name|vfslocked
+decl_stmt|,
+name|mincoreinfo
 decl_stmt|;
 if|if
 condition|(
@@ -9565,9 +9579,9 @@ operator|->
 name|end
 condition|)
 block|{
-if|if
-condition|(
-name|pmap_extract
+name|mincoreinfo
+operator|=
+name|pmap_mincore
 argument_list|(
 name|map
 operator|->
@@ -9575,11 +9589,29 @@ name|pmap
 argument_list|,
 name|addr
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mincoreinfo
+operator|&
+name|MINCORE_INCORE
 condition|)
 name|kve
 operator|->
 name|kve_resident
 operator|++
+expr_stmt|;
+if|if
+condition|(
+name|mincoreinfo
+operator|&
+name|MINCORE_SUPER
+condition|)
+name|kve
+operator|->
+name|kve_flags
+operator||=
+name|KVME_FLAG_SUPER
 expr_stmt|;
 name|addr
 operator|+=
