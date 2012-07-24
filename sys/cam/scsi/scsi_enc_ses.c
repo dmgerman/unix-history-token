@@ -5544,9 +5544,11 @@ if|if
 condition|(
 name|err
 condition|)
-name|ses_softc_cleanup
+name|ses_cache_free
 argument_list|(
 name|enc
+argument_list|,
+name|enc_cache
 argument_list|)
 expr_stmt|;
 else|else
