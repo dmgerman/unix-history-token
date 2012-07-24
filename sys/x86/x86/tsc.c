@@ -1529,6 +1529,10 @@ directive|ifdef
 name|SMP
 end_ifdef
 
+begin_comment
+comment|/* rmb is required here because rdtsc is not a serializing instruction. */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1537,7 +1541,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|static void				\ tsc_read_##x(void *arg)			\ {					\ 	uint32_t *tsc = arg;		\ 	u_int cpu = PCPU_GET(cpuid);	\ 					\ 	tsc[cpu * 3 + x] = rdtsc32();	\ }
+value|static void				\ tsc_read_##x(void *arg)			\ {					\ 	uint32_t *tsc = arg;		\ 	u_int cpu = PCPU_GET(cpuid);	\ 					\ 	rmb();				\ 	tsc[cpu * 3 + x] = rdtsc32();	\ }
 end_define
 
 begin_macro
