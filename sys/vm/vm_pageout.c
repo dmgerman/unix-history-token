@@ -3550,8 +3550,6 @@ name|pcount
 decl_stmt|;
 name|int
 name|addl_page_shortage
-decl_stmt|,
-name|addl_page_shortage_init
 decl_stmt|;
 name|vm_object_t
 name|object
@@ -3582,7 +3580,7 @@ comment|/* 	 * We do this explicitly after the caches have been drained above. 	
 name|uma_reclaim
 argument_list|()
 expr_stmt|;
-name|addl_page_shortage_init
+name|addl_page_shortage
 operator|=
 name|atomic_readandclear_int
 argument_list|(
@@ -3596,7 +3594,7 @@ operator|=
 name|vm_paging_target
 argument_list|()
 operator|+
-name|addl_page_shortage_init
+name|addl_page_shortage
 expr_stmt|;
 name|vm_pageout_init_marker
 argument_list|(
@@ -3635,10 +3633,6 @@ expr_stmt|;
 name|queues_locked
 operator|=
 name|TRUE
-expr_stmt|;
-name|addl_page_shortage
-operator|=
-name|addl_page_shortage_init
 expr_stmt|;
 name|maxscan
 operator|=
