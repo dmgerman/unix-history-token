@@ -1469,6 +1469,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MSR_IA32_FEATURE_CONTROL
+value|0x03a
+end_define
+
+begin_define
+define|#
+directive|define
 name|MSR_BIOS_UPDT_TRIG
 value|0x079
 end_define

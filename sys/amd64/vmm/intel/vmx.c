@@ -1666,6 +1666,8 @@ name|uint64_t
 name|fixed0
 decl_stmt|,
 name|fixed1
+decl_stmt|,
+name|feature_control
 decl_stmt|;
 name|uint32_t
 name|tmp
@@ -1684,6 +1686,36 @@ block|{
 name|printf
 argument_list|(
 literal|"vmx_init: processor does not support VMX operation\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
+comment|/* 	 * Verify that MSR_IA32_FEATURE_CONTROL lock and VMXON enable bits 	 * are set (bits 0 and 2 respectively). 	 */
+name|feature_control
+operator|=
+name|rdmsr
+argument_list|(
+name|MSR_IA32_FEATURE_CONTROL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|feature_control
+operator|&
+literal|0x5
+operator|)
+operator|!=
+literal|0x5
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"vmx_init: VMX operation disabled by BIOS\n"
 argument_list|)
 expr_stmt|;
 return|return
