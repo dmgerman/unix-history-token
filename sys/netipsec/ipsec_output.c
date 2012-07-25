@@ -658,23 +658,7 @@ operator|.
 name|ips_out_bundlesa
 operator|++
 expr_stmt|;
-name|sav
-operator|=
-name|isr
-operator|->
-name|next
-operator|->
-name|sav
-expr_stmt|;
-name|saidx
-operator|=
-operator|&
-name|sav
-operator|->
-name|sah
-operator|->
-name|saidx
-expr_stmt|;
+comment|/* XXX-BZ currently only support same AF bundles. */
 switch|switch
 condition|(
 name|saidx
