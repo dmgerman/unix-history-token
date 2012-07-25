@@ -239,6 +239,12 @@ end_decl_stmt
 
 begin_decl_stmt
 name|creat_f
+name|c_ignore_readdir_race
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|creat_f
 name|c_inum
 decl_stmt|;
 end_decl_stmt
@@ -548,12 +554,19 @@ specifier|extern
 name|int
 name|ftsoptions
 decl_stmt|,
+name|ignore_readdir_race
+decl_stmt|,
 name|isdeprecated
 decl_stmt|,
 name|isdepth
 decl_stmt|,
 name|isoutput
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|issort
 decl_stmt|,
 name|isxargs
