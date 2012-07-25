@@ -307,7 +307,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|USLCOM_BAUD_RATE
+name|USLCOM_SET_BAUD_DIV
 value|0x01
 end_define
 
@@ -344,6 +344,13 @@ define|#
 directive|define
 name|USLCOM_SET_FLOWCTRL
 value|0x13
+end_define
+
+begin_define
+define|#
+directive|define
+name|USLCOM_SET_BAUD_RATE
+value|0x1e
 end_define
 
 begin_define
@@ -432,15 +439,19 @@ value|0x0080
 end_define
 
 begin_comment
-comment|/* USLCOM_BAUD_RATE values */
+comment|/* USLCOM_SET_BAUD_DIV values */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|USLCOM_BAUD_REF
-value|0x384000
+value|3686400
 end_define
+
+begin_comment
+comment|/* 3.6864 MHz */
+end_comment
 
 begin_comment
 comment|/* USLCOM_DATA values */
@@ -2835,6 +2846,8 @@ name|usb_device_request
 name|req
 decl_stmt|;
 name|uint32_t
+name|baudrate
+decl_stmt|,
 name|flowctrl
 index|[
 literal|4
@@ -2848,6 +2861,12 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+name|baudrate
+operator|=
+name|t
+operator|->
+name|c_ospeed
+expr_stmt|;
 name|req
 operator|.
 name|bmRequestType
@@ -2858,7 +2877,7 @@ name|req
 operator|.
 name|bRequest
 operator|=
-name|USLCOM_BAUD_RATE
+name|USLCOM_SET_BAUD_RATE
 expr_stmt|;
 name|USETW
 argument_list|(
@@ -2866,11 +2885,7 @@ name|req
 operator|.
 name|wValue
 argument_list|,
-name|USLCOM_BAUD_REF
-operator|/
-name|t
-operator|->
-name|c_ospeed
+literal|0
 argument_list|)
 expr_stmt|;
 name|USETW
@@ -2888,7 +2903,10 @@ name|req
 operator|.
 name|wLength
 argument_list|,
-literal|0
+sizeof|sizeof
+argument_list|(
+name|baudrate
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2907,7 +2925,8 @@ argument_list|,
 operator|&
 name|req
 argument_list|,
-name|NULL
+operator|&
+name|baudrate
 argument_list|,
 literal|0
 argument_list|,
