@@ -263,6 +263,13 @@ argument_list|,
 name|pthread
 argument_list|)
 expr_stmt|;
+name|_thr_ref_delete
+argument_list|(
+name|curthread
+argument_list|,
+name|pthread
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
