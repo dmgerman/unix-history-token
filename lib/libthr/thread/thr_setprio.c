@@ -229,7 +229,7 @@ name|pthread
 operator|->
 name|tid
 argument_list|,
-name|curthread
+name|pthread
 operator|->
 name|attr
 operator|.
