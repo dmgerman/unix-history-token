@@ -2127,7 +2127,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: du [-Aclnx] [-H | -L | -P] [-h | -k | -m ] "
+literal|"usage: du [-Aclnx] [-H | -L | -P] [-g | -h | -k | -m] "
 literal|"[-a | -s | -d depth] [-B blocksize] [-I mask] "
 literal|"[-t threshold] [file ...]\n"
 argument_list|)
