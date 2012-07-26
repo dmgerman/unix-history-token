@@ -1987,7 +1987,7 @@ name|cmd
 operator|.
 name|device
 operator|=
-literal|0x40
+name|ATA_DEV_LBA
 operator||
 operator|(
 operator|(
@@ -2151,7 +2151,7 @@ name|cmd
 operator|.
 name|device
 operator|=
-literal|0x40
+name|ATA_DEV_LBA
 expr_stmt|;
 name|ataio
 operator|->
@@ -2308,7 +2308,7 @@ name|cmd
 operator|.
 name|device
 operator|=
-literal|0x40
+name|ATA_DEV_LBA
 expr_stmt|;
 name|ataio
 operator|->
