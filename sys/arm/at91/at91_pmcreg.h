@@ -93,8 +93,15 @@ begin_comment
 comment|/* Peripheral Clock Status Register */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CKGR_UCKR
+value|0x1c
+end_define
+
 begin_comment
-comment|/*	0x1c		   reserved */
+comment|/* UTMI Clock Configuration Register */
 end_comment
 
 begin_define
@@ -156,8 +163,15 @@ begin_comment
 comment|/*	0x34		   reserved */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PMC_USB
+value|0x38
+end_define
+
 begin_comment
-comment|/*	0x38		   reserved */
+comment|/* USB Clock Register */
 end_comment
 
 begin_comment
@@ -407,6 +421,24 @@ comment|/* Each bit here is 1<< peripheral number  to enable/disable/status */
 end_comment
 
 begin_comment
+comment|/* PMC UTMI Clock Configuration Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CKGR_UCKR_BIASEN
+value|(1UL<< 24)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CKGR_UCKR_UPLLEN
+value|(1UL<< 16)
+end_define
+
+begin_comment
 comment|/* PMC Clock Generator Main Oscillator Register */
 end_comment
 
@@ -520,6 +552,27 @@ value|(7<< 2)
 end_define
 
 begin_comment
+comment|/* PMC USB Clock Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMC_USB_USBDIV
+parameter_list|(
+name|n
+parameter_list|)
+value|(((n)& 0x0F)<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMC_USB_USBS
+value|(1<< 0)
+end_define
+
+begin_comment
 comment|/* PMC Interrupt Enable Register */
 end_comment
 
@@ -577,6 +630,17 @@ end_define
 
 begin_comment
 comment|/* Master Clock Status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMC_IER_LOCKU
+value|(1UL<< 6)
+end_define
+
+begin_comment
+comment|/* UPLL Locked */
 end_comment
 
 begin_define
