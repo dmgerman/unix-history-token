@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2011-2012 Matteo Landi, Luigi Rizzo. All rights rese
 end_comment
 
 begin_comment
-comment|/*  * $FreeBSD$  * $Id: netmap_kern.h 10602 2012-02-21 16:47:55Z luigi $  *  * The header contains the definitions of constants and function  * prototypes used only in kernelspace.  */
+comment|/*  * $FreeBSD$  * $Id: netmap_kern.h 11343 2012-07-03 09:08:38Z luigi $  *  * The header contains the definitions of constants and function  * prototypes used only in kernelspace.  */
 end_comment
 
 begin_ifndef
@@ -37,6 +37,26 @@ argument_list|(
 name|__FreeBSD__
 argument_list|)
 end_if
+
+begin_define
+define|#
+directive|define
+name|likely
+parameter_list|(
+name|x
+parameter_list|)
+value|__builtin_expect(!!(x), 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|unlikely
+parameter_list|(
+name|x
+parameter_list|)
+value|__builtin_expect(!!(x), 0)
+end_define
 
 begin_define
 define|#
@@ -119,6 +139,137 @@ parameter_list|)
 value|netif_rx(m)
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DEV_NETMAP
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|DEV_NETMAP
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * IFCAP_NETMAP goes into net_device's flags (if_capabilities)  * and priv_flags (if_capenable). The latter used to be 16 bits  * up to linux 2.6.36, so we need to use a 16 bit value on older  * platforms and tolerate the clash with IFF_DYNAMIC and IFF_BRIDGE_PORT.  * For the 32-bit value, 0x100000 (bit 20) has no clashes up to 3.3.1  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|LINUX_VERSION_CODE
+operator|<
+name|KERNEL_VERSION
+argument_list|(
+literal|2
+operator|,
+literal|6
+operator|,
+literal|37
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|IFCAP_NETMAP
+value|0x8000
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|IFCAP_NETMAP
+value|0x100000
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__APPLE__
+argument_list|)
+end_elif
+
+begin_warning
+warning|#
+directive|warning
+warning|apple support is experimental
+end_warning
+
+begin_define
+define|#
+directive|define
+name|likely
+parameter_list|(
+name|x
+parameter_list|)
+value|__builtin_expect(!!(x), 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|unlikely
+parameter_list|(
+name|x
+parameter_list|)
+value|__builtin_expect(!!(x), 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NM_LOCK_T
+value|IOLock *
+end_define
+
+begin_define
+define|#
+directive|define
+name|NM_SELINFO_T
+value|struct selinfo
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBUF_LEN
+parameter_list|(
+name|m
+parameter_list|)
+value|((m)->m_pkthdr.len)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NM_SEND_UP
+parameter_list|(
+name|ifp
+parameter_list|,
+name|m
+parameter_list|)
+value|((ifp)->if_input)(ifp, m)
+end_define
+
 begin_else
 else|#
 directive|else
@@ -177,6 +328,28 @@ parameter_list|)
 define|\
 value|do {							\ 		struct timeval __xxts;				\ 		microtime(&__xxts);				\ 		printf("%03d.%06d %s [%d] " format "\n",	\ 		(int)__xxts.tv_sec % 1000, (int)__xxts.tv_usec,	\ 		__FUNCTION__, __LINE__, ##__VA_ARGS__);		\ 	} while (0)
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IFF_NETMAP
+end_ifndef
+
+begin_comment
+comment|/* XXX is it really needed ? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFF_NETMAP
+value|0x20000
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct_decl
 struct_decl|struct
@@ -397,6 +570,9 @@ name|int
 name|lock
 parameter_list|)
 function_decl|;
+name|int
+name|bdg_port
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|linux
@@ -404,6 +580,10 @@ name|struct
 name|net_device_ops
 name|nm_ndo
 decl_stmt|;
+name|int
+name|if_refcount
+decl_stmt|;
+comment|// XXX additions for bridge
 endif|#
 directive|endif
 comment|/* linux */
@@ -696,6 +876,12 @@ parameter_list|)
 value|((struct netmap_adapter *)WNA(_ifp))
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
 begin_comment
 comment|/* Callback invoked by the dma machinery after a successfull dmamap_load */
 end_comment
@@ -824,6 +1010,110 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* linux */
+end_comment
+
+begin_comment
+comment|/*  * XXX How do we redefine these functions:  *  * on linux we need  *     dma_map_single(&pdev->dev, virt_addr, len, direction)  *     dma_unmap_single(&adapter->pdev->dev, phys_addr, len, direction  * The len can be implicit (on netmap it is NETMAP_BUF_SIZE)  * unfortunately the direction is not, so we need to change  * something to have a cross API  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|netmap_load_map
+parameter_list|(
+name|_t
+parameter_list|,
+name|_m
+parameter_list|,
+name|_b
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|netmap_reload_map
+parameter_list|(
+name|_t
+parameter_list|,
+name|_m
+parameter_list|,
+name|_b
+parameter_list|)
+end_define
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+unit|struct e1000_buffer *buffer_info =&tx_ring->buffer_info[l];
+comment|/* set time_stamp *before* dma to help avoid a possible race */
+end_comment
+
+begin_comment
+unit|buffer_info->time_stamp = jiffies; 	buffer_info->mapped_as_page = false; 	buffer_info->length = len;
+comment|//buffer_info->next_to_watch = l;
+end_comment
+
+begin_comment
+comment|/* reload dma map */
+end_comment
+
+begin_comment
+unit|dma_unmap_single(&adapter->pdev->dev, buffer_info->dma, 	       NETMAP_BUF_SIZE, DMA_TO_DEVICE); 	buffer_info->dma = dma_map_single(&adapter->pdev->dev, 	addr, NETMAP_BUF_SIZE, DMA_TO_DEVICE);  	if (dma_mapping_error(&adapter->pdev->dev, buffer_info->dma)) { 		D("dma mapping error");
+comment|/* goto dma_error; See e1000_put_txbuf() */
+end_comment
+
+begin_comment
+comment|/* XXX reset */
+end_comment
+
+begin_comment
+unit|} 	tx_desc->buffer_addr = htole64(buffer_info->dma);
+comment|//XXX
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * The bus_dmamap_sync() can be one of wmb() or rmb() depending on direction.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|bus_dmamap_sync
+parameter_list|(
+name|_a
+parameter_list|,
+name|_b
+parameter_list|,
+name|_c
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* linux */
+end_comment
 
 begin_comment
 comment|/*  * functions to map NIC to KRING indexes (n2k) and vice versa (k2n)  */
@@ -1061,9 +1351,12 @@ name|buf_idx
 decl_stmt|;
 return|return
 operator|(
+name|unlikely
+argument_list|(
 name|i
 operator|>=
 name|netmap_total_buffers
+argument_list|)
 operator|)
 condition|?
 name|NMB_VA
@@ -1194,6 +1487,13 @@ name|_q
 parameter_list|)
 value|netmap_rx_irq(_n, _q, NULL)
 end_define
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|netmap_copy
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

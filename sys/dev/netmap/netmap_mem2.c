@@ -3015,7 +3015,7 @@ argument_list|(
 operator|&
 name|na
 operator|->
-name|rx_rings
+name|tx_rings
 index|[
 name|i
 index|]
@@ -3041,7 +3041,7 @@ argument_list|(
 operator|&
 name|na
 operator|->
-name|tx_rings
+name|rx_rings
 index|[
 name|i
 index|]
@@ -3054,7 +3054,7 @@ argument_list|(
 operator|&
 name|na
 operator|->
-name|rx_si
+name|tx_si
 argument_list|)
 expr_stmt|;
 name|init_waitqueue_head
@@ -3062,7 +3062,7 @@ argument_list|(
 operator|&
 name|na
 operator|->
-name|tx_si
+name|rx_si
 argument_list|)
 expr_stmt|;
 endif|#
