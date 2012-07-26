@@ -48,6 +48,10 @@ name|BIAS
 value|(LDBL_MAX_EXP - 1)
 end_define
 
+begin_comment
+comment|/* XXX Prevent gcc from erroneously constant folding this: */
+end_comment
+
 begin_decl_stmt
 specifier|static
 specifier|volatile
@@ -151,7 +155,7 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|NUM
+name|INTERVALS
 value|128
 end_define
 
@@ -171,7 +175,7 @@ decl_stmt|;
 block|}
 name|s
 index|[
-name|NUM
+name|INTERVALS
 index|]
 init|=
 block|{
@@ -1488,7 +1492,7 @@ name|unsigned
 operator|)
 name|n
 operator|%
-name|NUM
+name|INTERVALS
 expr_stmt|;
 comment|/* Tang's j. */
 name|k
@@ -1499,7 +1503,7 @@ operator|-
 name|n2
 operator|)
 operator|/
-name|NUM
+name|INTERVALS
 expr_stmt|;
 name|r1
 operator|=
