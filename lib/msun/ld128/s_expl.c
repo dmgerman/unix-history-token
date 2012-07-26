@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"fpmath.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"math.h"
 end_include
 
@@ -35,24 +41,11 @@ directive|include
 file|"math_private.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"fpmath.h"
-end_include
-
 begin_define
 define|#
 directive|define
 name|BIAS
 value|(LDBL_MAX_EXP - 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|EXPMASK
-value|(BIAS + LDBL_MAX_EXP)
 end_define
 
 begin_decl_stmt
@@ -1350,7 +1343,7 @@ name|ix
 operator|=
 name|hx
 operator|&
-name|EXPMASK
+literal|0x7fff
 expr_stmt|;
 if|if
 condition|(
