@@ -1718,7 +1718,7 @@ name|USLCOM_DEV
 argument_list|(
 name|SILABS
 argument_list|,
-name|TELEGESYS_ETRX2
+name|TELEGESIS_ETRX2
 argument_list|)
 block|,
 name|USLCOM_DEV
