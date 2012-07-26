@@ -1680,11 +1680,6 @@ name|int
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|term_init_arrow
-argument_list|(
-name|el
-argument_list|)
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1693,6 +1688,11 @@ argument_list|(
 name|el
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|term_init_arrow
+argument_list|(
+name|el
 argument_list|)
 expr_stmt|;
 return|return
