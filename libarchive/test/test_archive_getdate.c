@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|__FBSDID
 argument_list|(
-literal|"$FreeBSD: src/usr.bin/tar/test/test_getdate.c,v 1.2 2008/05/26 17:10:10 kientzle Exp $"
+literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -29,7 +29,7 @@ end_comment
 
 begin_function_decl
 name|time_t
-name|get_date
+name|__archive_get_date
 parameter_list|(
 name|time_t
 parameter_list|,
@@ -40,10 +40,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_define
+define|#
+directive|define
+name|get_date
+value|__archive_get_date
+end_define
+
 begin_macro
 name|DEFINE_TEST
 argument_list|(
-argument|test_getdate
+argument|test_archive_getdate
 argument_list|)
 end_macro
 

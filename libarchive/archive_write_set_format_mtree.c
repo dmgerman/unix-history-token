@@ -2127,6 +2127,9 @@ if|if
 condition|(
 name|l
 operator|==
+operator|(
+name|size_t
+operator|)
 operator|-
 literal|1
 condition|)
@@ -2169,6 +2172,9 @@ if|if
 condition|(
 name|l
 operator|==
+operator|(
+name|size_t
+operator|)
 operator|-
 literal|1
 condition|)
@@ -2221,6 +2227,9 @@ if|if
 condition|(
 name|al
 operator|==
+operator|(
+name|size_t
+operator|)
 operator|-
 literal|1
 condition|)
@@ -6231,6 +6240,9 @@ name|entry_bytes_remaining
 condition|)
 name|n
 operator|=
+operator|(
+name|size_t
+operator|)
 name|mtree
 operator|->
 name|entry_bytes_remaining

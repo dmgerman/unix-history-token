@@ -27,12 +27,6 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"matching.h"
-end_include
-
 begin_comment
 comment|/*  * The internal state for the "cpio" program.  *  * Keeping all of the state in a structure like this simplifies memory  * leak testing (at exit, anything left on the heap is suspect).  A  * pointer to this structure is passed to most cpio internal  * functions.  */
 end_comment
@@ -197,7 +191,7 @@ name|gname_cache
 decl_stmt|;
 comment|/* Work data. */
 name|struct
-name|lafe_matching
+name|archive
 modifier|*
 name|matching
 decl_stmt|;

@@ -608,14 +608,30 @@ operator|!=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|ENOMEM
+condition|)
+name|archive_set_error
+argument_list|(
+name|a
+argument_list|,
+name|errno
+argument_list|,
+literal|"Can't allocate memory"
+argument_list|)
+expr_stmt|;
+else|else
 name|archive_set_error
 argument_list|(
 name|a
 argument_list|,
 name|EINVAL
 argument_list|,
-literal|"Failed to convert a wide-character filename to"
-literal|" a multi-byte filename"
+literal|"Failed to convert a wide-character"
+literal|" filename to a multi-byte filename"
 argument_list|)
 expr_stmt|;
 name|archive_string_free
@@ -1997,7 +2013,7 @@ operator|*
 operator|)
 name|client_data
 decl_stmt|;
-name|off_t
+name|int64_t
 name|r
 decl_stmt|;
 comment|/* We use off_t here because lseek() is declared that way. */

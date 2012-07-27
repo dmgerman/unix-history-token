@@ -1053,6 +1053,8 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
 name|archive_wstring_append_from_mbs
 argument_list|(
 operator|&
@@ -1065,7 +1067,12 @@ argument_list|(
 name|tmpdir
 argument_list|)
 argument_list|)
-expr_stmt|;
+operator|<
+literal|0
+condition|)
+goto|goto
+name|exit_tmpfile
+goto|;
 if|if
 condition|(
 name|temp_name

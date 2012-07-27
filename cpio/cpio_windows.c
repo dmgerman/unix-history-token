@@ -1469,6 +1469,9 @@ literal|0
 init|;
 name|i
 operator|<
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|doserrors

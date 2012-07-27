@@ -64,7 +64,7 @@ name|filetime
 parameter_list|,
 name|time_t
 modifier|*
-name|time
+name|t
 parameter_list|,
 name|long
 modifier|*
@@ -106,7 +106,7 @@ operator|-=
 name|EPOC_TIME
 expr_stmt|;
 operator|*
-name|time
+name|t
 operator|=
 call|(
 name|time_t
@@ -141,7 +141,7 @@ block|}
 else|else
 block|{
 operator|*
-name|time
+name|t
 operator|=
 literal|0
 expr_stmt|;

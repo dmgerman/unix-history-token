@@ -125,24 +125,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PATH_MAX
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|PATH_MAX
-value|4096
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -3138,6 +3120,9 @@ name|bytes_remaining
 condition|)
 name|s
 operator|=
+operator|(
+name|size_t
+operator|)
 name|xar
 operator|->
 name|bytes_remaining
@@ -3684,6 +3669,9 @@ condition|)
 block|{
 name|s
 operator|=
+operator|(
+name|size_t
+operator|)
 name|xar
 operator|->
 name|bytes_remaining
@@ -13280,6 +13268,9 @@ name|strm
 operator|->
 name|total_in
 operator|=
+operator|(
+name|uLong
+operator|)
 name|lastrm
 operator|->
 name|total_in
@@ -13304,6 +13295,9 @@ name|strm
 operator|->
 name|total_out
 operator|=
+operator|(
+name|uLong
+operator|)
 name|lastrm
 operator|->
 name|total_out
@@ -13463,6 +13457,9 @@ name|strm
 operator|->
 name|total_in
 operator|=
+operator|(
+name|uLong
+operator|)
 name|lastrm
 operator|->
 name|total_in
@@ -13487,6 +13484,9 @@ name|strm
 operator|->
 name|total_out
 operator|=
+operator|(
+name|uLong
+operator|)
 name|lastrm
 operator|->
 name|total_out
@@ -14792,6 +14792,11 @@ name|level
 argument_list|)
 condition|)
 block|{
+name|free
+argument_list|(
+name|strm
+argument_list|)
+expr_stmt|;
 name|lastrm
 operator|->
 name|real_stream

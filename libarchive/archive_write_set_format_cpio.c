@@ -806,10 +806,15 @@ literal|2
 condition|)
 block|{
 return|return
+call|(
+name|int
+call|)
+argument_list|(
 operator|++
 name|cpio
 operator|->
 name|ino_next
+argument_list|)
 return|;
 block|}
 comment|/* Look up old ino; if we have it, this is a hardlink 	 * and we reuse the same value. */
@@ -858,10 +863,15 @@ block|}
 comment|/* Assign a new index number. */
 name|ino_new
 operator|=
+call|(
+name|int
+call|)
+argument_list|(
 operator|++
 name|cpio
 operator|->
 name|ino_next
+argument_list|)
 expr_stmt|;
 comment|/* Ensure space for the new mapping. */
 if|if
@@ -2063,6 +2073,9 @@ name|entry_bytes_remaining
 condition|)
 name|s
 operator|=
+operator|(
+name|size_t
+operator|)
 name|cpio
 operator|->
 name|entry_bytes_remaining
@@ -2255,6 +2268,9 @@ operator|=
 literal|'0'
 operator|+
 operator|(
+operator|(
+name|char
+operator|)
 name|v
 operator|&
 literal|7
@@ -2426,6 +2442,9 @@ name|__archive_write_nulls
 argument_list|(
 name|a
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|cpio
 operator|->
 name|entry_bytes_remaining

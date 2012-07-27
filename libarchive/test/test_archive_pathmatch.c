@@ -17,10 +17,16 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_define
+define|#
+directive|define
+name|__LIBARCHIVE_TEST
+end_define
+
 begin_include
 include|#
 directive|include
-file|"pathmatch.h"
+file|"archive_pathmatch.h"
 end_include
 
 begin_comment
@@ -30,7 +36,7 @@ end_comment
 begin_macro
 name|DEFINE_TEST
 argument_list|(
-argument|test_pathmatch
+argument|test_archive_pathmatch
 argument_list|)
 end_macro
 
@@ -40,7 +46,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"a/b/c"
 argument_list|,
@@ -54,7 +60,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"a/b/"
 argument_list|,
@@ -68,7 +74,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"a/b"
 argument_list|,
@@ -82,7 +88,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"a/b/c"
 argument_list|,
@@ -96,7 +102,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"a/b/c"
 argument_list|,
@@ -111,7 +117,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|""
 argument_list|,
@@ -125,7 +131,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|""
 argument_list|,
@@ -139,7 +145,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"*"
 argument_list|,
@@ -153,7 +159,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"*"
 argument_list|,
@@ -167,7 +173,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"*"
 argument_list|,
@@ -182,7 +188,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"*"
 argument_list|,
@@ -196,7 +202,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abcd*efgh/ijkl"
 argument_list|,
@@ -210,7 +216,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abcd***efgh/ijkl"
 argument_list|,
@@ -224,7 +230,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abcd***/efgh/ijkl"
 argument_list|,
@@ -238,7 +244,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"?"
 argument_list|,
@@ -252,7 +258,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"?"
 argument_list|,
@@ -266,7 +272,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"?"
 argument_list|,
@@ -280,7 +286,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"?"
 argument_list|,
@@ -294,7 +300,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"?"
 argument_list|,
@@ -308,7 +314,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"?"
 argument_list|,
@@ -322,7 +328,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"a"
 argument_list|,
@@ -336,7 +342,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"a"
 argument_list|,
@@ -350,7 +356,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"a"
 argument_list|,
@@ -364,7 +370,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"a?c"
 argument_list|,
@@ -379,7 +385,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"a?c"
 argument_list|,
@@ -393,7 +399,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"a?*c*"
 argument_list|,
@@ -407,7 +413,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"*a*"
 argument_list|,
@@ -421,7 +427,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"*a*"
 argument_list|,
@@ -435,7 +441,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"*a*"
 argument_list|,
@@ -449,7 +455,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"a*"
 argument_list|,
@@ -463,7 +469,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"*a*"
 argument_list|,
@@ -478,7 +484,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[def"
 argument_list|,
@@ -492,7 +498,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[def]"
 argument_list|,
@@ -506,7 +512,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[def"
 argument_list|,
@@ -520,7 +526,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[def]"
 argument_list|,
@@ -534,7 +540,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[def]"
 argument_list|,
@@ -548,7 +554,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[def]"
 argument_list|,
@@ -562,7 +568,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[def]"
 argument_list|,
@@ -576,7 +582,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[d*f]"
 argument_list|,
@@ -590,7 +596,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[d*f]"
 argument_list|,
@@ -604,7 +610,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[d*f]"
 argument_list|,
@@ -618,7 +624,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[d*"
 argument_list|,
@@ -632,7 +638,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[d*"
 argument_list|,
@@ -646,7 +652,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[d-f]"
 argument_list|,
@@ -660,7 +666,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[d-f]"
 argument_list|,
@@ -674,7 +680,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[d-f]"
 argument_list|,
@@ -688,7 +694,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[d-f]"
 argument_list|,
@@ -702,7 +708,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[d-fh-k]"
 argument_list|,
@@ -716,7 +722,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[d-fh-k]"
 argument_list|,
@@ -730,7 +736,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[d-fh-k]"
 argument_list|,
@@ -744,7 +750,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[d-fh-k]"
 argument_list|,
@@ -758,7 +764,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[d-fh-k]"
 argument_list|,
@@ -772,7 +778,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[d-fh-k]"
 argument_list|,
@@ -786,7 +792,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[d-fh-k]"
 argument_list|,
@@ -800,7 +806,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[d-fh-k]"
 argument_list|,
@@ -814,7 +820,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[d-fh-k]"
 argument_list|,
@@ -828,7 +834,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[d-fh-k]"
 argument_list|,
@@ -842,7 +848,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[d-fh-k]"
 argument_list|,
@@ -857,7 +863,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[]efg"
 argument_list|,
@@ -871,7 +877,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[]efg"
 argument_list|,
@@ -885,7 +891,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[]efg"
 argument_list|,
@@ -899,7 +905,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[!]efg"
 argument_list|,
@@ -913,7 +919,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[!]efg"
 argument_list|,
@@ -927,7 +933,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[!]efg"
 argument_list|,
@@ -942,7 +948,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[d-fh-]"
 argument_list|,
@@ -956,7 +962,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[d-fh-]"
 argument_list|,
@@ -970,7 +976,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[d-fh-]"
 argument_list|,
@@ -984,7 +990,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[d-fh-]"
 argument_list|,
@@ -999,7 +1005,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[\\]]"
 argument_list|,
@@ -1013,7 +1019,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[\\]d]"
 argument_list|,
@@ -1027,7 +1033,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[\\]d]"
 argument_list|,
@@ -1041,7 +1047,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[d\\]]"
 argument_list|,
@@ -1055,7 +1061,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[d\\]]"
 argument_list|,
@@ -1069,7 +1075,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[d]e]"
 argument_list|,
@@ -1083,7 +1089,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[d\\]e]"
 argument_list|,
@@ -1097,7 +1103,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[d\\]e]"
 argument_list|,
@@ -1111,7 +1117,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[d]e]"
 argument_list|,
@@ -1126,7 +1132,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[\\d-f]gh"
 argument_list|,
@@ -1140,7 +1146,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[\\d-f]gh"
 argument_list|,
@@ -1154,7 +1160,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[\\d-f]gh"
 argument_list|,
@@ -1168,7 +1174,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[d-\\f]gh"
 argument_list|,
@@ -1182,7 +1188,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[\\d-\\f]gh"
 argument_list|,
@@ -1196,7 +1202,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[\\d-\\f]gh"
 argument_list|,
@@ -1211,7 +1217,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[d\\-f]gh"
 argument_list|,
@@ -1225,7 +1231,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[d\\-f]gh"
 argument_list|,
@@ -1240,7 +1246,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[!d]"
 argument_list|,
@@ -1254,7 +1260,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[!d]"
 argument_list|,
@@ -1268,7 +1274,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[!d]"
 argument_list|,
@@ -1282,7 +1288,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[!d-z]"
 argument_list|,
@@ -1296,7 +1302,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[!d-gi-z]"
 argument_list|,
@@ -1310,7 +1316,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[!fgijkl]"
 argument_list|,
@@ -1324,7 +1330,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc[!fghijkl]"
 argument_list|,
@@ -1339,7 +1345,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc\\[def]"
 argument_list|,
@@ -1353,7 +1359,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc\\[def]"
 argument_list|,
@@ -1367,7 +1373,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc\\\\[def]"
 argument_list|,
@@ -1381,7 +1387,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc\\\\[def]"
 argument_list|,
@@ -1395,7 +1401,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc\\\\[def]"
 argument_list|,
@@ -1409,7 +1415,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abcd\\"
 argument_list|,
@@ -1423,7 +1429,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abcd\\"
 argument_list|,
@@ -1437,7 +1443,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abcd\\"
 argument_list|,
@@ -1451,7 +1457,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abcd\\["
 argument_list|,
@@ -1466,7 +1472,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"a/b/"
 argument_list|,
@@ -1480,7 +1486,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"a/./b"
 argument_list|,
@@ -1494,7 +1500,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"a\\/./b"
 argument_list|,
@@ -1508,7 +1514,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"a/\\./b"
 argument_list|,
@@ -1522,7 +1528,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"a/.\\/b"
 argument_list|,
@@ -1536,7 +1542,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"a\\/\\.\\/b"
 argument_list|,
@@ -1550,7 +1556,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"./abc/./def/"
 argument_list|,
@@ -1564,7 +1570,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc/def"
 argument_list|,
@@ -1578,7 +1584,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc/def/././//"
 argument_list|,
@@ -1592,7 +1598,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|".////abc/.//def"
 argument_list|,
@@ -1606,7 +1612,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"./abc?def/"
 argument_list|,
@@ -1625,7 +1631,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"./abc?./def/"
 argument_list|,
@@ -1644,7 +1650,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"./abc/./def/"
 argument_list|,
@@ -1663,7 +1669,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"./abc/./def/./"
 argument_list|,
@@ -1682,7 +1688,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"./abc/./def/."
 argument_list|,
@@ -1696,7 +1702,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"./abc/./def"
 argument_list|,
@@ -1715,7 +1721,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"./abc/./def"
 argument_list|,
@@ -1734,7 +1740,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"./abc*/./def"
 argument_list|,
@@ -1749,7 +1755,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"bcd"
 argument_list|,
@@ -1763,7 +1769,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abcd"
 argument_list|,
@@ -1777,7 +1783,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"^bcd"
 argument_list|,
@@ -1791,7 +1797,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"b/c/d"
 argument_list|,
@@ -1805,7 +1811,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"b/c"
 argument_list|,
@@ -1819,7 +1825,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"^b/c"
 argument_list|,
@@ -1834,7 +1840,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"bcd"
 argument_list|,
@@ -1848,7 +1854,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abcd"
 argument_list|,
@@ -1862,7 +1868,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abcd"
 argument_list|,
@@ -1876,7 +1882,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abcd"
 argument_list|,
@@ -1890,7 +1896,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"abc"
 argument_list|,
@@ -1904,7 +1910,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"a/b/c"
 argument_list|,
@@ -1918,7 +1924,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"a/b/c$"
 argument_list|,
@@ -1932,7 +1938,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"a/b/c$"
 argument_list|,
@@ -1946,7 +1952,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"a/b/c$"
 argument_list|,
@@ -1960,7 +1966,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"a/b/c/"
 argument_list|,
@@ -1974,7 +1980,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"a/b/c/$"
 argument_list|,
@@ -1988,7 +1994,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"a/b/c/$"
 argument_list|,
@@ -2002,7 +2008,7 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"a/b/c/$"
 argument_list|,
@@ -2016,7 +2022,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|lafe_pathmatch
+name|archive_pathmatch
 argument_list|(
 literal|"b/c"
 argument_list|,

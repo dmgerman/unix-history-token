@@ -72,7 +72,7 @@ end_comment
 
 begin_function_decl
 name|time_t
-name|get_date
+name|__archive_get_date
 parameter_list|(
 name|time_t
 name|now
@@ -5931,7 +5931,7 @@ end_comment
 
 begin_function
 name|time_t
-name|get_date
+name|__archive_get_date
 parameter_list|(
 name|time_t
 name|now

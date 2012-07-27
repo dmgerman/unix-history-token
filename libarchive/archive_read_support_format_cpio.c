@@ -2201,6 +2201,9 @@ name|__archive_read_ahead
 argument_list|(
 name|a
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|cpio
 operator|->
 name|entry_bytes_remaining
@@ -2232,6 +2235,9 @@ operator|*
 operator|)
 name|h
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|cpio
 operator|->
 name|entry_bytes_remaining
@@ -2487,6 +2493,9 @@ name|entry_bytes_remaining
 condition|)
 name|bytes_read
 operator|=
+operator|(
+name|ssize_t
+operator|)
 name|cpio
 operator|->
 name|entry_bytes_remaining
@@ -3186,6 +3195,9 @@ name|archive_entry_set_devmajor
 argument_list|(
 name|entry
 argument_list|,
+operator|(
+name|dev_t
+operator|)
 name|atol16
 argument_list|(
 name|header
@@ -3200,6 +3212,9 @@ name|archive_entry_set_devminor
 argument_list|(
 name|entry
 argument_list|,
+operator|(
+name|dev_t
+operator|)
 name|atol16
 argument_list|(
 name|header
@@ -3228,6 +3243,9 @@ name|archive_entry_set_mode
 argument_list|(
 name|entry
 argument_list|,
+operator|(
+name|mode_t
+operator|)
 name|atol16
 argument_list|(
 name|header
@@ -3270,6 +3288,10 @@ name|archive_entry_set_nlink
 argument_list|(
 name|entry
 argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
 name|atol16
 argument_list|(
 name|header
@@ -3284,6 +3306,9 @@ name|archive_entry_set_rdevmajor
 argument_list|(
 name|entry
 argument_list|,
+operator|(
+name|dev_t
+operator|)
 name|atol16
 argument_list|(
 name|header
@@ -3298,6 +3323,9 @@ name|archive_entry_set_rdevminor
 argument_list|(
 name|entry
 argument_list|,
+operator|(
+name|dev_t
+operator|)
 name|atol16
 argument_list|(
 name|header
@@ -3327,6 +3355,9 @@ expr_stmt|;
 operator|*
 name|namelength
 operator|=
+operator|(
+name|size_t
+operator|)
 name|atol16
 argument_list|(
 name|header
@@ -4079,6 +4110,9 @@ name|archive_entry_set_dev
 argument_list|(
 name|entry
 argument_list|,
+operator|(
+name|dev_t
+operator|)
 name|atol8
 argument_list|(
 name|header
@@ -4107,6 +4141,9 @@ name|archive_entry_set_mode
 argument_list|(
 name|entry
 argument_list|,
+operator|(
+name|mode_t
+operator|)
 name|atol8
 argument_list|(
 name|header
@@ -4149,6 +4186,10 @@ name|archive_entry_set_nlink
 argument_list|(
 name|entry
 argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
 name|atol8
 argument_list|(
 name|header
@@ -4163,6 +4204,9 @@ name|archive_entry_set_rdev
 argument_list|(
 name|entry
 argument_list|,
+operator|(
+name|dev_t
+operator|)
 name|atol8
 argument_list|(
 name|header
@@ -4192,6 +4236,9 @@ expr_stmt|;
 operator|*
 name|namelength
 operator|=
+operator|(
+name|size_t
+operator|)
 name|atol8
 argument_list|(
 name|header
@@ -4347,6 +4394,9 @@ name|archive_entry_set_dev
 argument_list|(
 name|entry
 argument_list|,
+operator|(
+name|dev_t
+operator|)
 name|atol16
 argument_list|(
 name|header
@@ -4375,6 +4425,9 @@ name|archive_entry_set_mode
 argument_list|(
 name|entry
 argument_list|,
+operator|(
+name|mode_t
+operator|)
 name|atol8
 argument_list|(
 name|header
@@ -4417,6 +4470,10 @@ name|archive_entry_set_nlink
 argument_list|(
 name|entry
 argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
 name|atol16
 argument_list|(
 name|header
@@ -4431,6 +4488,9 @@ name|archive_entry_set_rdev
 argument_list|(
 name|entry
 argument_list|,
+operator|(
+name|dev_t
+operator|)
 name|atol16
 argument_list|(
 name|header
@@ -4460,6 +4520,9 @@ expr_stmt|;
 operator|*
 name|namelength
 operator|=
+operator|(
+name|size_t
+operator|)
 name|atol16
 argument_list|(
 name|header

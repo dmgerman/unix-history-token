@@ -596,7 +596,7 @@ name|assertA
 argument_list|(
 literal|0
 operator|==
-name|read_open_memory2
+name|read_open_memory_minimal
 argument_list|(
 name|a
 argument_list|,
