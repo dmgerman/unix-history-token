@@ -119,7 +119,7 @@ name|hflag
 condition|)
 name|printf
 argument_list|(
-literal|"%5s %*s %*s %3s %4s %4s %3s %3s %3s %-2s %-s\n"
+literal|"%5s %*s %*s %3s %4s %4s %3s %3s %4s %-2s %-s\n"
 argument_list|,
 literal|"PID"
 argument_list|,
