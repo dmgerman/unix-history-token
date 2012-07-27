@@ -200,7 +200,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<arm/at91/at91_pio_rm9200.h>
+file|<arm/at91/at91_pioreg.h>
 end_include
 
 begin_include
@@ -217,7 +217,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* Pin Definitions - do they belong here or somewhere else ? */
+comment|/* Pin Definitions - do they belong here or somewhere else ? -- YES! */
 end_comment
 
 begin_define
