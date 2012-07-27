@@ -402,7 +402,7 @@ file|<dev/ath/if_ath_tx_edma.h>
 end_include
 
 begin_comment
-comment|/*  * some general macros   */
+comment|/*  * some general macros  */
 end_comment
 
 begin_define
@@ -429,6 +429,17 @@ parameter_list|)
 value|(_l) --; (_l)&= ((_sz) - 1)
 end_define
 
+begin_comment
+comment|/*  * XXX doesn't belong here, and should be tunable  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATH_TXSTATUS_RING_SIZE
+value|512
+end_define
+
 begin_expr_stmt
 name|MALLOC_DECLARE
 argument_list|(
@@ -448,7 +459,67 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-comment|/* XXX placeholder */
+name|int
+name|error
+decl_stmt|;
+name|error
+operator|=
+name|ath_descdma_alloc_desc
+argument_list|(
+name|sc
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_txsdma
+argument_list|,
+name|NULL
+argument_list|,
+literal|"txcomp"
+argument_list|,
+name|sc
+operator|->
+name|sc_tx_statuslen
+argument_list|,
+name|ATH_TXSTATUS_RING_SIZE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+name|ath_hal_setuptxstatusring
+argument_list|(
+name|sc
+operator|->
+name|sc_ah
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|sc
+operator|->
+name|sc_txsdma
+operator|.
+name|dd_desc
+argument_list|,
+name|sc
+operator|->
+name|sc_txsdma
+operator|.
+name|dd_desc_paddr
+argument_list|,
+name|ATH_TXSTATUS_RING_SIZE
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -468,7 +539,18 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-comment|/* XXX placeholder */
+name|ath_descdma_cleanup
+argument_list|(
+name|sc
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_txsdma
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0

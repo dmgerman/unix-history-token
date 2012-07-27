@@ -2069,6 +2069,11 @@ name|sc_txbuf_mgmt
 decl_stmt|;
 comment|/* mgmt transmit buffer */
 name|struct
+name|ath_descdma
+name|sc_txsdma
+decl_stmt|;
+comment|/* EDMA TX status desc's */
+name|struct
 name|mtx
 name|sc_txbuflock
 decl_stmt|;
