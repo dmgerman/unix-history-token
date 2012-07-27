@@ -3839,9 +3839,6 @@ name|ds
 parameter_list|,
 name|u_int
 name|aggrLen
-parameter_list|,
-name|u_int
-name|numDelims
 parameter_list|)
 block|{
 name|struct
@@ -3884,13 +3881,6 @@ argument_list|(
 name|aggrLen
 argument_list|,
 name|AR_AggrLen
-argument_list|)
-operator||
-name|SM
-argument_list|(
-name|numDelims
-argument_list|,
-name|AR_PadDelim
 argument_list|)
 expr_stmt|;
 block|}

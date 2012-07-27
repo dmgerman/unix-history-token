@@ -2861,9 +2861,6 @@ name|ds
 parameter_list|,
 name|u_int
 name|aggrLen
-parameter_list|,
-name|u_int
-name|numDelims
 parameter_list|)
 function_decl|;
 end_function_decl

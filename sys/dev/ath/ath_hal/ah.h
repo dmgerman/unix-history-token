@@ -4954,8 +4954,6 @@ name|ath_desc
 modifier|*
 parameter_list|,
 name|u_int
-parameter_list|,
-name|u_int
 parameter_list|)
 function_decl|;
 name|void
