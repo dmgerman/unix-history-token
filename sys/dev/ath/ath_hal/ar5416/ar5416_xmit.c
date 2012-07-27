@@ -598,7 +598,7 @@ parameter_list|,
 name|_index
 parameter_list|)
 define|\
-value|((_series)[_index].RateFlags& HAL_RATESERIES_2040 ? AR_2040_##_index : 0) \         |((_series)[_index].RateFlags& HAL_RATESERIES_HALFGI ? AR_GI##_index : 0) \         |SM((_series)[_index].ChSel, AR_ChainSel##_index)
+value|((_series)[_index].RateFlags& HAL_RATESERIES_2040 ? AR_2040_##_index : 0) \         |((_series)[_index].RateFlags& HAL_RATESERIES_HALFGI ? AR_GI##_index : 0) \         |((_series)[_index].RateFlags& HAL_RATESERIES_STBC ? AR_STBC##_index : 0) \         |SM((_series)[_index].ChSel, AR_ChainSel##_index)
 end_define
 
 begin_comment
