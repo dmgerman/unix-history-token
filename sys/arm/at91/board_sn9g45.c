@@ -76,6 +76,7 @@ file|<arm/at91/at91_pio_sam9g45.h>
 end_include
 
 begin_function
+name|BOARD_INIT
 name|long
 name|board_init
 parameter_list|(
