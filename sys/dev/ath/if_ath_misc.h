@@ -397,9 +397,6 @@ name|int
 name|ds_size
 parameter_list|,
 name|int
-name|nbuf
-parameter_list|,
-name|int
 name|ndesc
 parameter_list|)
 function_decl|;

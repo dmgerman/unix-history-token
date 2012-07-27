@@ -11433,9 +11433,6 @@ name|int
 name|ds_size
 parameter_list|,
 name|int
-name|nbuf
-parameter_list|,
-name|int
 name|ndesc
 parameter_list|)
 block|{
@@ -11483,13 +11480,11 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_RESET
 argument_list|,
-literal|"%s: %s DMA: %u buffers %u desc/buf, %d bytes per descriptor\n"
+literal|"%s: %s DMA: %u desc, %d bytes per descriptor\n"
 argument_list|,
 name|__func__
 argument_list|,
 name|name
-argument_list|,
-name|nbuf
 argument_list|,
 name|ndesc
 argument_list|,
@@ -11512,8 +11507,6 @@ name|dd
 operator|->
 name|dd_descsize
 operator|*
-name|nbuf
-operator|*
 name|ndesc
 expr_stmt|;
 comment|/* 	 * Merlin work-around: 	 * Descriptors that cross the 4KB boundary can't be used. 	 * Assume one skipped descriptor per 4KB page. 	 */
@@ -11529,31 +11522,21 @@ argument_list|)
 condition|)
 block|{
 name|int
-name|numdescpage
+name|numpages
 init|=
-literal|4096
-operator|/
-operator|(
 name|dd
 operator|->
-name|dd_descsize
-operator|*
-name|ndesc
-operator|)
+name|dd_desc_len
+operator|/
+literal|4096
 decl_stmt|;
 name|dd
 operator|->
 name|dd_desc_len
-operator|=
-operator|(
-name|nbuf
-operator|/
-name|numdescpage
-operator|+
-literal|1
-operator|)
+operator|+=
+name|ds_size
 operator|*
-literal|4096
+name|numpages
 expr_stmt|;
 block|}
 comment|/* 	 * Setup DMA descriptor area. 	 */
@@ -11719,8 +11702,6 @@ argument_list|,
 literal|"unable to alloc memory for %u %s descriptors, "
 literal|"error %u\n"
 argument_list|,
-name|nbuf
-operator|*
 name|ndesc
 argument_list|,
 name|dd
@@ -11996,7 +11977,7 @@ argument_list|,
 name|ds_size
 argument_list|,
 name|nbuf
-argument_list|,
+operator|*
 name|ndesc
 argument_list|)
 expr_stmt|;
