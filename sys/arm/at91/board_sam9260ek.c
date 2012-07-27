@@ -193,23 +193,134 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * MMC 	 */
-comment|/* MCDA0 */
-name|at91_pio_use_periph_a
+comment|/* Not RMII */
+comment|/* ETX2 */
+name|at91_pio_use_periph_b
 argument_list|(
 name|AT91SAM9260_PIOA_BASE
 argument_list|,
-name|AT91C_PIO_PA6
+name|AT91C_PIO_PA10
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* ETX3 */
+name|at91_pio_use_periph_b
+argument_list|(
+name|AT91SAM9260_PIOA_BASE
+argument_list|,
+name|AT91C_PIO_PA11
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* ETXER */
+name|at91_pio_use_periph_b
+argument_list|(
+name|AT91SAM9260_PIOA_BASE
+argument_list|,
+name|AT91C_PIO_PA22
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* ERX2 */
+name|at91_pio_use_periph_b
+argument_list|(
+name|AT91SAM9260_PIOA_BASE
+argument_list|,
+name|AT91C_PIO_PA25
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* ERX3 */
+name|at91_pio_use_periph_b
+argument_list|(
+name|AT91SAM9260_PIOA_BASE
+argument_list|,
+name|AT91C_PIO_PA26
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* ERXCK */
+name|at91_pio_use_periph_b
+argument_list|(
+name|AT91SAM9260_PIOA_BASE
+argument_list|,
+name|AT91C_PIO_PA27
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* ECRS */
+name|at91_pio_use_periph_b
+argument_list|(
+name|AT91SAM9260_PIOA_BASE
+argument_list|,
+name|AT91C_PIO_PA28
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* ECOL */
+name|at91_pio_use_periph_b
+argument_list|(
+name|AT91SAM9260_PIOA_BASE
+argument_list|,
+name|AT91C_PIO_PA29
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* 	 * MMC, wired to socket B. 	 */
+comment|/* MCDB0 */
+name|at91_pio_use_periph_b
+argument_list|(
+name|AT91SAM9260_PIOA_BASE
+argument_list|,
+name|AT91C_PIO_PA0
 argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* MCCDA */
-name|at91_pio_use_periph_a
+comment|/* MCCDB */
+name|at91_pio_use_periph_b
 argument_list|(
 name|AT91SAM9260_PIOA_BASE
 argument_list|,
-name|AT91C_PIO_PA7
+name|AT91C_PIO_PA1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* MCDB3 */
+name|at91_pio_use_periph_b
+argument_list|(
+name|AT91SAM9260_PIOA_BASE
+argument_list|,
+name|AT91C_PIO_PA3
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* MCDB2 */
+name|at91_pio_use_periph_b
+argument_list|(
+name|AT91SAM9260_PIOA_BASE
+argument_list|,
+name|AT91C_PIO_PA4
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* MCDB1 */
+name|at91_pio_use_periph_b
+argument_list|(
+name|AT91SAM9260_PIOA_BASE
+argument_list|,
+name|AT91C_PIO_PA5
 argument_list|,
 literal|1
 argument_list|)
@@ -224,78 +335,9 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* MCDA1 */
-name|at91_pio_use_periph_a
-argument_list|(
-name|AT91SAM9260_PIOA_BASE
-argument_list|,
-name|AT91C_PIO_PA9
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* MCDA2 */
-name|at91_pio_use_periph_a
-argument_list|(
-name|AT91SAM9260_PIOA_BASE
-argument_list|,
-name|AT91C_PIO_PA10
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* MCDA3 */
-name|at91_pio_use_periph_a
-argument_list|(
-name|AT91SAM9260_PIOA_BASE
-argument_list|,
-name|AT91C_PIO_PA11
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* 	 * SPI0 	 */
-comment|/* MISO */
-name|at91_pio_use_periph_a
-argument_list|(
-name|AT91SAM9260_PIOA_BASE
-argument_list|,
-name|AT91C_PIO_PA0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* MOSI */
-name|at91_pio_use_periph_a
-argument_list|(
-name|AT91SAM9260_PIOA_BASE
-argument_list|,
-name|AT91C_PIO_PA1
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* SPCK */
-name|at91_pio_use_periph_a
-argument_list|(
-name|AT91SAM9260_PIOA_BASE
-argument_list|,
-name|AT91C_PIO_PA2
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* NPCS0 */
-name|at91_pio_use_periph_a
-argument_list|(
-name|AT91SAM9260_PIOA_BASE
-argument_list|,
-name|AT91C_PIO_PA3
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* 	 * TWI 	 */
+comment|/* 	 * SPI0 and MMC are wired together, since we don't support sharing 	 * don't support the dataflash.  But if you did, you'd have to 	 * use CS0 and CS1. 	 */
+comment|/* 	 * SPI1 is wired to a audio CODEC that we don't support, so 	 * give it a pass. 	 */
+comment|/* 	 * TWI.  Only one child on the iic bus, which we take care of 	 * via hints. 	 */
 comment|/* TWD */
 name|at91_pio_use_periph_a
 argument_list|(
@@ -397,47 +439,48 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * USART2 	 */
-comment|/* RTS2 */
-name|at91_pio_use_periph_a
-argument_list|(
-name|AT91SAM9260_PIOA_BASE
-argument_list|,
-name|AT91C_PIO_PA4
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* CTS2 */
-name|at91_pio_use_periph_a
-argument_list|(
-name|AT91SAM9260_PIOA_BASE
-argument_list|,
-name|AT91C_PIO_PA5
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* TXD2 */
+comment|/* 	 * USART1 	 */
+comment|/* RTS1 */
 name|at91_pio_use_periph_a
 argument_list|(
 name|AT91SAM9260_PIOB_BASE
 argument_list|,
-name|AT91C_PIO_PB8
+name|AT91C_PIO_PB28
 argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* RXD2 */
+comment|/* CTS1 */
 name|at91_pio_use_periph_a
 argument_list|(
 name|AT91SAM9260_PIOB_BASE
 argument_list|,
-name|AT91C_PIO_PB9
+name|AT91C_PIO_PB29
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* TXD1 */
+name|at91_pio_use_periph_a
+argument_list|(
+name|AT91SAM9260_PIOB_BASE
+argument_list|,
+name|AT91C_PIO_PB6
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* RXD1 */
+name|at91_pio_use_periph_a
+argument_list|(
+name|AT91SAM9260_PIOB_BASE
+argument_list|,
+name|AT91C_PIO_PB7
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* USART2 - USART5 aren't wired up, except via PIO pins, ignore them. */
 return|return
 operator|(
 name|at91_ramsize
