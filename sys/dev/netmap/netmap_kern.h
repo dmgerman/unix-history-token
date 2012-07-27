@@ -329,28 +329,6 @@ define|\
 value|do {							\ 		struct timeval __xxts;				\ 		microtime(&__xxts);				\ 		printf("%03d.%06d %s [%d] " format "\n",	\ 		(int)__xxts.tv_sec % 1000, (int)__xxts.tv_usec,	\ 		__FUNCTION__, __LINE__, ##__VA_ARGS__);		\ 	} while (0)
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|IFF_NETMAP
-end_ifndef
-
-begin_comment
-comment|/* XXX is it really needed ? */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IFF_NETMAP
-value|0x20000
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_struct_decl
 struct_decl|struct
 name|netmap_adapter
@@ -1021,7 +999,7 @@ comment|/* linux */
 end_comment
 
 begin_comment
-comment|/*  * XXX How do we redefine these functions:  *  * on linux we need  *     dma_map_single(&pdev->dev, virt_addr, len, direction)  *     dma_unmap_single(&adapter->pdev->dev, phys_addr, len, direction  * The len can be implicit (on netmap it is NETMAP_BUF_SIZE)  * unfortunately the direction is not, so we need to change  * something to have a cross API  */
+comment|/*  * XXX How do we redefine these functions:  *  * on linux we need  *	dma_map_single(&pdev->dev, virt_addr, len, direction)  *	dma_unmap_single(&adapter->pdev->dev, phys_addr, len, direction  * The len can be implicit (on netmap it is NETMAP_BUF_SIZE)  * unfortunately the direction is not, so we need to change  * something to have a cross API  */
 end_comment
 
 begin_define
@@ -1071,7 +1049,7 @@ comment|/* reload dma map */
 end_comment
 
 begin_comment
-unit|dma_unmap_single(&adapter->pdev->dev, buffer_info->dma, 	       NETMAP_BUF_SIZE, DMA_TO_DEVICE); 	buffer_info->dma = dma_map_single(&adapter->pdev->dev, 	addr, NETMAP_BUF_SIZE, DMA_TO_DEVICE);  	if (dma_mapping_error(&adapter->pdev->dev, buffer_info->dma)) { 		D("dma mapping error");
+unit|dma_unmap_single(&adapter->pdev->dev, buffer_info->dma, 			NETMAP_BUF_SIZE, DMA_TO_DEVICE); 	buffer_info->dma = dma_map_single(&adapter->pdev->dev, 			addr, NETMAP_BUF_SIZE, DMA_TO_DEVICE);  	if (dma_mapping_error(&adapter->pdev->dev, buffer_info->dma)) { 		D("dma mapping error");
 comment|/* goto dma_error; See e1000_put_txbuf() */
 end_comment
 
