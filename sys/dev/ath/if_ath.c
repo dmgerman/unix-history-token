@@ -12683,6 +12683,13 @@ name|dd_dmat
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|head
+operator|!=
+name|NULL
+condition|)
+block|{
 name|TAILQ_FOREACH
 argument_list|(
 argument|bf
@@ -12759,7 +12766,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 			 * Reclaim node reference. 			 */
+comment|/* 				 * Reclaim node reference. 				 */
 name|ieee80211_free_node
 argument_list|(
 name|ni
@@ -12767,11 +12774,26 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+block|}
+if|if
+condition|(
+name|head
+operator|!=
+name|NULL
+condition|)
 name|TAILQ_INIT
 argument_list|(
 name|head
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dd
+operator|->
+name|dd_bufptr
+operator|!=
+name|NULL
+condition|)
 name|free
 argument_list|(
 name|dd
