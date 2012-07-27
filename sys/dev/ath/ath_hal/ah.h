@@ -1750,6 +1750,11 @@ directive|define
 name|HAL_RATESERIES_HALFGI
 value|0x0004
 comment|/* use half-gi for series */
+define|#
+directive|define
+name|HAL_RATESERIES_STBC
+value|0x0008
+comment|/* use STBC for series */
 name|u_int
 name|tx_power_cap
 decl_stmt|;
