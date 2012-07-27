@@ -1032,6 +1032,28 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
+begin_define
+define|#
+directive|define
+name|F_DUP2FD_CLOEXEC
+value|18
+end_define
+
+begin_comment
+comment|/* Like F_DUP2FD, but FD_CLOEXEC is set */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* file descriptor flags (F_GETFD, F_SETFD) */
 end_comment
