@@ -13082,8 +13082,6 @@ operator|=
 name|PTE_V
 operator||
 name|PTE_RO
-operator||
-name|PTE_C_CACHE
 expr_stmt|;
 elseif|else
 if|if
@@ -13118,15 +13116,11 @@ operator|=
 name|PTE_V
 operator||
 name|PTE_D
-operator||
-name|PTE_C_CACHE
 expr_stmt|;
 else|else
 name|rw
 operator|=
 name|PTE_V
-operator||
-name|PTE_C_CACHE
 expr_stmt|;
 name|vm_page_aflag_set
 argument_list|(
@@ -13143,8 +13137,6 @@ operator|=
 name|PTE_V
 operator||
 name|PTE_D
-operator||
-name|PTE_C_CACHE
 expr_stmt|;
 return|return
 operator|(
