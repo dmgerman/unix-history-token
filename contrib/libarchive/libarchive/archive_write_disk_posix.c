@@ -779,10 +779,10 @@ decl_stmt|;
 name|int
 name|skip_file_set
 decl_stmt|;
-name|dev_t
+name|int64_t
 name|skip_file_dev
 decl_stmt|;
-name|ino_t
+name|int64_t
 name|skip_file_ino
 decl_stmt|;
 name|time_t
@@ -5372,6 +5372,9 @@ name|st
 operator|.
 name|st_dev
 operator|==
+operator|(
+name|dev_t
+operator|)
 name|a
 operator|->
 name|skip_file_dev
@@ -5382,6 +5385,9 @@ name|st
 operator|.
 name|st_ino
 operator|==
+operator|(
+name|ino_t
+operator|)
 name|a
 operator|->
 name|skip_file_ino
@@ -5498,7 +5504,7 @@ name|archive
 argument_list|,
 name|errno
 argument_list|,
-literal|"Can't remove already-existing dir"
+literal|"Can't replace existing directory with non-directory"
 argument_list|)
 expr_stmt|;
 return|return
@@ -11223,6 +11229,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|written
 operator|!=
 name|metadata_size
@@ -11489,6 +11498,8 @@ name|acl_permset
 decl_stmt|;
 name|int
 name|ret
+decl_stmt|,
+name|r
 decl_stmt|;
 name|int
 name|ae_type
@@ -11546,6 +11557,9 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
+operator|(
+name|r
+operator|=
 name|archive_acl_next
 argument_list|(
 operator|&
@@ -11572,6 +11586,7 @@ argument_list|,
 operator|&
 name|ae_name
 argument_list|)
+operator|)
 operator|==
 name|ARCHIVE_OK
 condition|)
@@ -11756,6 +11771,36 @@ argument_list|,
 name|ACL_READ
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|r
+operator|==
+name|ARCHIVE_FATAL
+condition|)
+block|{
+name|acl_free
+argument_list|(
+name|acl
+argument_list|)
+expr_stmt|;
+name|archive_set_error
+argument_list|(
+operator|&
+name|a
+operator|->
+name|archive
+argument_list|,
+name|errno
+argument_list|,
+literal|"Failed to archive_acl_next"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|r
+operator|)
+return|;
 block|}
 comment|/* Try restoring the ACL through 'fd' if we can. */
 if|#

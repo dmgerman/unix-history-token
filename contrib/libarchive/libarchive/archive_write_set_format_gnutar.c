@@ -2035,6 +2035,10 @@ name|__archive_write_nulls
 argument_list|(
 name|a
 argument_list|,
+call|(
+name|size_t
+call|)
+argument_list|(
 name|gnutar
 operator|->
 name|entry_bytes_remaining
@@ -2042,6 +2046,7 @@ operator|+
 name|gnutar
 operator|->
 name|entry_padding
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|gnutar
@@ -2110,6 +2115,9 @@ name|entry_bytes_remaining
 condition|)
 name|s
 operator|=
+operator|(
+name|size_t
+operator|)
 name|gnutar
 operator|->
 name|entry_bytes_remaining

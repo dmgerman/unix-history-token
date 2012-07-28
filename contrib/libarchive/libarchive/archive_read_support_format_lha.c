@@ -4927,11 +4927,16 @@ name|NULL
 argument_list|,
 literal|2
 argument_list|,
+call|(
+name|size_t
+call|)
+argument_list|(
 name|lha
 operator|->
 name|compsize
 operator|+
 literal|2
+argument_list|)
 argument_list|,
 operator|&
 name|extdsize
@@ -7238,6 +7243,9 @@ name|entry_bytes_remaining
 condition|)
 name|bytes_avail
 operator|=
+operator|(
+name|ssize_t
+operator|)
 name|lha
 operator|->
 name|entry_bytes_remaining
@@ -7618,6 +7626,9 @@ name|entry_bytes_remaining
 condition|)
 name|bytes_avail
 operator|=
+operator|(
+name|ssize_t
+operator|)
 name|lha
 operator|->
 name|entry_bytes_remaining
@@ -7861,7 +7872,7 @@ name|lha
 modifier|*
 name|lha
 decl_stmt|;
-name|off_t
+name|int64_t
 name|bytes_skipped
 decl_stmt|;
 name|lha
@@ -10143,6 +10154,9 @@ expr_stmt|;
 else|else
 name|copy_bytes
 operator|=
+operator|(
+name|size_t
+operator|)
 name|strm
 operator|->
 name|avail_out
@@ -10192,6 +10206,9 @@ expr_stmt|;
 else|else
 name|copy_bytes
 operator|=
+operator|(
+name|size_t
+operator|)
 name|strm
 operator|->
 name|avail_out

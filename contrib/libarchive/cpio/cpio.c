@@ -314,12 +314,6 @@ directive|include
 file|"line_reader.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"matching.h"
-end_include
-
 begin_comment
 comment|/* Fixed size of uname/gname caches. */
 end_comment
@@ -1030,6 +1024,30 @@ name|filename
 operator|=
 name|NULL
 expr_stmt|;
+name|cpio
+operator|->
+name|matching
+operator|=
+name|archive_match_new
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|cpio
+operator|->
+name|matching
+operator|==
+name|NULL
+condition|)
+name|lafe_errc
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"Out of memory"
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -1158,9 +1176,10 @@ case|case
 literal|'E'
 case|:
 comment|/* NetBSD/OpenBSD */
-name|lafe_include_from_file
+if|if
+condition|(
+name|archive_match_include_pattern_from_file
 argument_list|(
-operator|&
 name|cpio
 operator|->
 name|matching
@@ -1172,6 +1191,24 @@ argument_list|,
 name|cpio
 operator|->
 name|option_null
+argument_list|)
+operator|!=
+name|ARCHIVE_OK
+condition|)
+name|lafe_errc
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"Error : %s"
+argument_list|,
+name|archive_error_string
+argument_list|(
+name|cpio
+operator|->
+name|matching
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1192,9 +1229,10 @@ case|case
 literal|'f'
 case|:
 comment|/* POSIX 1997 */
-name|lafe_exclude
+if|if
+condition|(
+name|archive_match_exclude_pattern
 argument_list|(
-operator|&
 name|cpio
 operator|->
 name|matching
@@ -1202,6 +1240,24 @@ argument_list|,
 name|cpio
 operator|->
 name|argument
+argument_list|)
+operator|!=
+name|ARCHIVE_OK
+condition|)
+name|lafe_errc
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"Error : %s"
+argument_list|,
+name|archive_error_string
+argument_list|(
+name|cpio
+operator|->
+name|matching
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1800,23 +1856,6 @@ name|dot
 operator|=
 literal|0
 expr_stmt|;
-comment|/* -v overrides -V */
-if|if
-condition|(
-name|cpio
-operator|->
-name|dot
-operator|&&
-name|cpio
-operator|->
-name|verbose
-condition|)
-name|cpio
-operator|->
-name|dot
-operator|=
-literal|0
-expr_stmt|;
 comment|/* TODO: Flag other nonsensical combinations. */
 switch|switch
 condition|(
@@ -1863,9 +1902,10 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|lafe_include
+if|if
+condition|(
+name|archive_match_include_pattern
 argument_list|(
-operator|&
 name|cpio
 operator|->
 name|matching
@@ -1874,6 +1914,24 @@ operator|*
 name|cpio
 operator|->
 name|argv
+argument_list|)
+operator|!=
+name|ARCHIVE_OK
+condition|)
+name|lafe_errc
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"Error : %s"
+argument_list|,
+name|archive_error_string
+argument_list|(
+name|cpio
+operator|->
+name|matching
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|--
@@ -1956,6 +2014,13 @@ literal|"Must specify at least one of -i, -o, or -p"
 argument_list|)
 expr_stmt|;
 block|}
+name|archive_match_free
+argument_list|(
+name|cpio
+operator|->
+name|matching
+argument_list|)
+expr_stmt|;
 name|free_cache
 argument_list|(
 name|cpio
@@ -4464,16 +4529,13 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|lafe_excluded
+name|archive_match_path_excluded
 argument_list|(
 name|cpio
 operator|->
 name|matching
 argument_list|,
-name|archive_entry_pathname
-argument_list|(
 name|entry
-argument_list|)
 argument_list|)
 condition|)
 continue|continue;
@@ -5060,16 +5122,13 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|lafe_excluded
+name|archive_match_path_excluded
 argument_list|(
 name|cpio
 operator|->
 name|matching
 argument_list|,
-name|archive_entry_pathname
-argument_list|(
 name|entry
-argument_list|)
 argument_list|)
 condition|)
 continue|continue;
@@ -6738,9 +6797,15 @@ name|lafe_warnc
 argument_list|(
 name|errno
 argument_list|,
-literal|"getpwuid(%d) failed"
+literal|"getpwuid(%s) failed"
 argument_list|,
+name|cpio_i64toa
+argument_list|(
+operator|(
+name|int64_t
+operator|)
 name|id
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -6871,9 +6936,15 @@ name|lafe_warnc
 argument_list|(
 name|errno
 argument_list|,
-literal|"getgrgid(%d) failed"
+literal|"getgrgid(%s) failed"
 argument_list|,
+name|cpio_i64toa
+argument_list|(
+operator|(
+name|int64_t
+operator|)
 name|id
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return

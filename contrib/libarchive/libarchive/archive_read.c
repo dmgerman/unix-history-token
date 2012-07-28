@@ -942,9 +942,6 @@ operator|+=
 name|get
 expr_stmt|;
 block|}
-return|return
-name|total
-return|;
 block|}
 elseif|else
 if|if
@@ -2920,6 +2917,10 @@ condition|)
 block|{
 name|len
 operator|=
+call|(
+name|size_t
+call|)
+argument_list|(
 name|a
 operator|->
 name|read_data_offset
@@ -2927,6 +2928,7 @@ operator|-
 name|a
 operator|->
 name|read_data_output_offset
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -5556,6 +5558,9 @@ condition|)
 block|{
 name|min
 operator|=
+operator|(
+name|size_t
+operator|)
 name|minimum
 argument_list|(
 name|request
@@ -5607,6 +5612,9 @@ condition|)
 block|{
 name|min
 operator|=
+operator|(
+name|size_t
+operator|)
 name|minimum
 argument_list|(
 name|request
@@ -5827,9 +5835,14 @@ name|filter
 operator|->
 name|client_avail
 operator|=
+call|(
+name|size_t
+call|)
+argument_list|(
 name|bytes_read
 operator|-
 name|request
+argument_list|)
 expr_stmt|;
 name|filter
 operator|->
