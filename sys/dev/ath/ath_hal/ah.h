@@ -706,6 +706,17 @@ begin_comment
 comment|/* max possible # of queues */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|HAL_TXFIFO_DEPTH
+value|8
+end_define
+
+begin_comment
+comment|/* transmit fifo depth */
+end_comment
+
 begin_comment
 comment|/*  * Transmit queue subtype.  These map directly to  * WME Access Categories (except for UPSD).  Refer  * to Table 5 of the WME spec.  */
 end_comment
