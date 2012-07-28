@@ -4319,6 +4319,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|ath_txdma_teardown
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ath_rxdma_teardown
 argument_list|(
 name|sc
