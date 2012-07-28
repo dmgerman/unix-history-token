@@ -1630,6 +1630,13 @@ name|AH_FALSE
 expr_stmt|;
 name|pCap
 operator|->
+name|halNumMRRetries
+operator|=
+literal|1
+expr_stmt|;
+comment|/* No hardware MRR support */
+name|pCap
+operator|->
 name|halTotalQueues
 operator|=
 name|HAL_NUM_TX_QUEUES

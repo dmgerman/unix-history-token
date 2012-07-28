@@ -4938,6 +4938,13 @@ expr_stmt|;
 comment|/* XXX fixed in later revs? */
 name|pCap
 operator|->
+name|halNumMRRetries
+operator|=
+literal|4
+expr_stmt|;
+comment|/* Hardware supports 4 MRR */
+name|pCap
+operator|->
 name|halVEOLSupport
 operator|=
 name|AH_TRUE

@@ -904,6 +904,9 @@ decl_stmt|;
 name|int
 name|halRxLpFifoDepth
 decl_stmt|;
+name|int
+name|halNumMRRetries
+decl_stmt|;
 block|}
 name|HAL_CAPABILITIES
 typedef|;
