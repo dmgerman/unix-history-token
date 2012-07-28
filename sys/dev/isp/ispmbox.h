@@ -2255,7 +2255,10 @@ decl_stmt|;
 name|uint16_t
 name|req_flags
 decl_stmt|;
-name|uint16_t
+name|uint8_t
+name|req_crn
+decl_stmt|;
+name|uint8_t
 name|req_reserved
 decl_stmt|;
 name|uint16_t
@@ -2361,7 +2364,10 @@ decl_stmt|;
 name|uint16_t
 name|req_flags
 decl_stmt|;
-name|uint16_t
+name|uint8_t
+name|req_crn
+decl_stmt|;
+name|uint8_t
 name|req_reserved
 decl_stmt|;
 name|uint16_t
@@ -2420,7 +2426,10 @@ decl_stmt|;
 name|uint16_t
 name|req_flags
 decl_stmt|;
-name|uint16_t
+name|uint8_t
+name|req_crn
+decl_stmt|;
+name|uint8_t
 name|req_reserved
 decl_stmt|;
 name|uint16_t
@@ -2615,110 +2624,8 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* 24XX only */
+comment|/*  * ISP24XX structures  */
 end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|uint16_t
-name|fcd_length
-decl_stmt|;
-name|uint16_t
-name|fcd_a1500
-decl_stmt|;
-name|uint16_t
-name|fcd_a3116
-decl_stmt|;
-name|uint16_t
-name|fcd_a4732
-decl_stmt|;
-name|uint16_t
-name|fcd_a6348
-decl_stmt|;
-block|}
-name|fcp_cmnd_ds_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|isphdr_t
-name|req_header
-decl_stmt|;
-name|uint32_t
-name|req_handle
-decl_stmt|;
-name|uint16_t
-name|req_nphdl
-decl_stmt|;
-name|uint16_t
-name|req_time
-decl_stmt|;
-name|uint16_t
-name|req_seg_count
-decl_stmt|;
-name|uint16_t
-name|req_fc_rsp_dsd_length
-decl_stmt|;
-name|uint8_t
-name|req_lun
-index|[
-literal|8
-index|]
-decl_stmt|;
-name|uint16_t
-name|req_flags
-decl_stmt|;
-name|uint16_t
-name|req_fc_cmnd_dsd_length
-decl_stmt|;
-name|uint16_t
-name|req_fc_cmnd_dsd_a1500
-decl_stmt|;
-name|uint16_t
-name|req_fc_cmnd_dsd_a3116
-decl_stmt|;
-name|uint16_t
-name|req_fc_cmnd_dsd_a4732
-decl_stmt|;
-name|uint16_t
-name|req_fc_cmnd_dsd_a6348
-decl_stmt|;
-name|uint16_t
-name|req_fc_rsp_dsd_a1500
-decl_stmt|;
-name|uint16_t
-name|req_fc_rsp_dsd_a3116
-decl_stmt|;
-name|uint16_t
-name|req_fc_rsp_dsd_a4732
-decl_stmt|;
-name|uint16_t
-name|req_fc_rsp_dsd_a6348
-decl_stmt|;
-name|uint32_t
-name|req_totalcnt
-decl_stmt|;
-name|uint16_t
-name|req_tidlo
-decl_stmt|;
-name|uint8_t
-name|req_tidhi
-decl_stmt|;
-name|uint8_t
-name|req_vpidx
-decl_stmt|;
-name|ispds64_t
-name|req_dataseg
-decl_stmt|;
-block|}
-name|ispreqt6_t
-typedef|;
-end_typedef
 
 begin_typedef
 typedef|typedef
@@ -4347,7 +4254,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ICBOPT_INI_TGTTYPE
+name|ICBOPT_TGT_TYPE
 value|0x0080
 end_define
 
@@ -4978,7 +4885,7 @@ begin_define
 define|#
 directive|define
 name|ICB_LUN_ENABLE_TOV
-value|180
+value|15
 end_define
 
 begin_comment
@@ -5844,20 +5751,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|SVC3_TGT_ROLE
-value|0x10
-end_define
-
-begin_define
-define|#
-directive|define
-name|SVC3_INI_ROLE
-value|0x20
-end_define
-
-begin_define
-define|#
-directive|define
 name|SVC3_ROLE_MASK
 value|0x30
 end_define
@@ -6066,17 +5959,16 @@ name|uint16_t
 name|handle
 decl_stmt|;
 name|uint16_t
-name|reserved
+name|prli_word3
 decl_stmt|;
 name|uint32_t
-name|s3_role
-range|:
+label|:
 literal|8
-decl_stmt|,
+operator|,
 name|portid
-range|:
+operator|:
 literal|24
-decl_stmt|;
+expr_stmt|;
 name|uint8_t
 name|portname
 index|[
@@ -8110,6 +8002,17 @@ begin_comment
 comment|/* Nexus not established */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IN_SRR_RCVD
+value|0x45
+end_define
+
+begin_comment
+comment|/* SRR received */
+end_comment
+
 begin_comment
 comment|/*  * Values for the in_task_flags field- should only get one at a time!  */
 end_comment
@@ -8206,17 +8109,20 @@ decl_stmt|;
 name|uint16_t
 name|in_srr_oxid
 decl_stmt|;
-comment|/* 	 * If bit 2 is set in in_flags, the following 	 * two tags are valid. If the received ELS is 	 * a LOGO, then these tags contain the N Port ID 	 * from the LOGO payload. If the received ELS 	 * request is TPRLO, these tags contain the 	 * Third Party Originator N Port ID. 	 */
+comment|/* 	 * If bit 2 is set in in_flags, the N-Port and 	 * handle tags are valid. If the received ELS is 	 * a LOGO, then these tags contain the N Port ID 	 * from the LOGO payload. If the received ELS 	 * request is TPRLO, these tags contain the 	 * Third Party Originator N Port ID. 	 */
 name|uint16_t
 name|in_nport_id_hi
 decl_stmt|;
+define|#
+directive|define
+name|in_prli_options
+value|in_nport_id_hi
 name|uint8_t
 name|in_nport_id_lo
 decl_stmt|;
 name|uint8_t
 name|in_reserved3
 decl_stmt|;
-comment|/* 	 * If bit 2 is set in in_flags, the following 	 * tag is valid. If the received ELS is a LOGO, 	 * then this tag contains the n-port handle 	 * from the LOGO payload. If the received ELS 	 * request is TPRLO, this tag contain the 	 * n-port handle for the Third Party Originator. 	 */
 name|uint16_t
 name|in_np_handle
 decl_stmt|;
@@ -9513,7 +9419,7 @@ name|uint32_t
 name|ct_xfrlen
 decl_stmt|;
 comment|/* transfer length */
-name|int32_t
+name|uint32_t
 name|ct_resid
 decl_stmt|;
 comment|/* residual length */
@@ -9605,7 +9511,7 @@ value|0x00000040
 end_define
 
 begin_comment
-comment|/* bits 6&7, Data direction */
+comment|/* bits 6&7, Data direction - *to* initiator */
 end_comment
 
 begin_define
@@ -9616,7 +9522,7 @@ value|0x00000080
 end_define
 
 begin_comment
-comment|/* bits 6&7, Data direction */
+comment|/* bits 6&7, Data direction - *from* initiator */
 end_comment
 
 begin_define
@@ -10058,7 +9964,7 @@ name|uint32_t
 name|ct_reloff
 decl_stmt|;
 comment|/* relative offset */
-name|int32_t
+name|uint32_t
 name|ct_resid
 decl_stmt|;
 comment|/* residual length */
@@ -10142,9 +10048,17 @@ decl_stmt|;
 name|uint32_t
 name|ct_datalen
 decl_stmt|;
+union|union
+block|{
 name|ispds_t
-name|ct_fcp_rsp_iudata
+name|ct_fcp_rsp_iudata_32
 decl_stmt|;
+name|ispds64_t
+name|ct_fcp_rsp_iudata_64
+decl_stmt|;
+block|}
+name|u
+union|;
 block|}
 name|m2
 struct|;
@@ -10191,7 +10105,7 @@ name|uint32_t
 name|ct_reloff
 decl_stmt|;
 comment|/* relative offset */
-name|int32_t
+name|uint32_t
 name|ct_resid
 decl_stmt|;
 comment|/* residual length */
@@ -10274,9 +10188,17 @@ decl_stmt|;
 name|uint32_t
 name|ct_datalen
 decl_stmt|;
+union|union
+block|{
 name|ispds_t
-name|ct_fcp_rsp_iudata
+name|ct_fcp_rsp_iudata_32
 decl_stmt|;
+name|ispds64_t
+name|ct_fcp_rsp_iudata_64
+decl_stmt|;
+block|}
+name|u
+union|;
 block|}
 name|m2
 struct|;
@@ -10327,12 +10249,20 @@ name|CT2_DATA_IN
 value|0x0040
 end_define
 
+begin_comment
+comment|/* *to* initiator */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|CT2_DATA_OUT
 value|0x0080
 end_define
+
+begin_comment
+comment|/* *from* initiator */
+end_comment
 
 begin_define
 define|#
@@ -10477,7 +10407,7 @@ comment|/* mode 1 only */
 name|uint16_t
 name|ct_flags
 decl_stmt|;
-name|int32_t
+name|uint32_t
 name|ct_resid
 decl_stmt|;
 comment|/* residual length */
@@ -10533,10 +10463,13 @@ name|uint32_t
 name|reserved0
 decl_stmt|;
 name|uint32_t
+name|reserved1
+decl_stmt|;
+name|uint32_t
 name|ct_datalen
 decl_stmt|;
 name|uint32_t
-name|reserved1
+name|reserved2
 decl_stmt|;
 name|ispds64_t
 name|ct_fcp_rsp_iudata
@@ -10559,8 +10492,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CT7_DATA_IN
-value|0x0002
+name|CT7_NO_DATA
+value|0x0000
 end_define
 
 begin_define
@@ -10570,18 +10503,26 @@ name|CT7_DATA_OUT
 value|0x0001
 end_define
 
+begin_comment
+comment|/* *from* initiator */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|CT7_NO_DATA
-value|0x0000
+name|CT7_DATA_IN
+value|0x0002
 end_define
+
+begin_comment
+comment|/* *to* initiator */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|CT7_DATAMASK
-value|0x003
+value|0x3
 end_define
 
 begin_define
