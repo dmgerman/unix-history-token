@@ -1016,7 +1016,7 @@ operator|!=
 name|PACKET_TAG_IPSEC_OUT_CRYPTO_NEEDED
 condition|)
 continue|continue;
-comment|/* 			 * Check if policy has an SA associated with it. 			 * This can happen when an SP has yet to acquire 			 * an SA; e.g. on first reference.  If it occurs, 			 * then we let ipsec4_process_packet do its thing. 			 */
+comment|/* 			 * Check if policy has no SA associated with it. 			 * This can happen when an SP has yet to acquire 			 * an SA; e.g. on first reference.  If it occurs, 			 * then we let ipsec4_process_packet do its thing. 			 */
 if|if
 condition|(
 operator|(
