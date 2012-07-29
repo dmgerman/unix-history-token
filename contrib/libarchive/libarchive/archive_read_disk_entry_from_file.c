@@ -2395,6 +2395,18 @@ block|}
 else|else
 block|{
 comment|/* Skip types that libarchive can't support. */
+name|s
+operator|=
+name|acl_get_entry
+argument_list|(
+name|acl
+argument_list|,
+name|ACL_NEXT_ENTRY
+argument_list|,
+operator|&
+name|acl_entry
+argument_list|)
+expr_stmt|;
 continue|continue;
 block|}
 name|acl_get_permset
