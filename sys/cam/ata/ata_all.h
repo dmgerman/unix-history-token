@@ -43,6 +43,17 @@ end_union_decl
 begin_define
 define|#
 directive|define
+name|SID_AEN
+value|0x04
+end_define
+
+begin_comment
+comment|/* Abuse inq_flags bit to track enabled AEN. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SID_DMA
 value|0x10
 end_define
