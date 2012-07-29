@@ -711,13 +711,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|HAVE_MBSNRTOWCS
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
 name|HAVE_MEMMOVE
 value|1
 end_define
@@ -1244,13 +1237,6 @@ begin_define
 define|#
 directive|define
 name|HAVE_WCSLEN
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_WCSNRTOMBS
 value|1
 end_define
 
