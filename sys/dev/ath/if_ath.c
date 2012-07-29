@@ -12141,8 +12141,6 @@ argument_list|,
 name|dd
 operator|->
 name|dd_descsize
-operator|*
-name|ndesc
 argument_list|)
 condition|)
 block|{
@@ -12254,6 +12252,7 @@ name|bf_list
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * XXX TODO: ensure that ds doesn't overflow the descriptor 	 * allocation otherwise weird stuff will occur and crash your 	 * machine. 	 */
 return|return
 literal|0
 return|;
