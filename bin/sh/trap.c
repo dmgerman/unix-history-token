@@ -1480,6 +1480,34 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|int
+name|issigchldtrapped
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|trap
+index|[
+name|SIGCHLD
+index|]
+operator|!=
+name|NULL
+operator|&&
+operator|*
+name|trap
+index|[
+name|SIGCHLD
+index|]
+operator|!=
+literal|'\0'
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Signal handler.  */
 end_comment
