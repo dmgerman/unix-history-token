@@ -1087,10 +1087,10 @@ name|ip6e_dest2
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * IPSec checking which handles several cases. 	 * FAST IPSEC: We re-injected the packet. 	 */
 ifdef|#
 directive|ifdef
 name|IPSEC
+comment|/* 	 * IPSec checking which handles several cases. 	 * FAST IPSEC: We re-injected the packet. 	 */
 switch|switch
 condition|(
 name|ip6_ipsec_output
