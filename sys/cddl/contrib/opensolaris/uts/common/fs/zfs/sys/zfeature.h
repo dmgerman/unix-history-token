@@ -66,6 +66,10 @@ parameter_list|,
 name|nvlist_t
 modifier|*
 name|unsup_feat
+parameter_list|,
+name|nvlist_t
+modifier|*
+name|enabled_feat
 parameter_list|)
 function_decl|;
 struct_decl|struct
