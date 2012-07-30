@@ -4759,9 +4759,14 @@ name|want
 parameter_list|,
 name|int
 name|cmd
-name|__unused
 parameter_list|)
 block|{
+operator|(
+name|void
+operator|)
+name|cmd
+expr_stmt|;
+comment|/* UNUSED */
 if|if
 condition|(
 name|co
