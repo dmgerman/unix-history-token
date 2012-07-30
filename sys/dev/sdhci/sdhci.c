@@ -1782,7 +1782,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Some SD/MMC cards don't work with the default base 	 * clock frequency of 200MHz. Lower it to 50MHz. 	 */
+comment|/* 	 * Some SD/MMC cards don't work with the default base 	 * clock frequency of 200MHz.  Lower it to 50MHz. 	 */
 name|pci_write_config
 argument_list|(
 name|dev
