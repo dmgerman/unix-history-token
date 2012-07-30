@@ -230,9 +230,8 @@ name|time_t
 name|n_unused1
 decl_stmt|;
 name|int
-name|n_dmtime_ticks
+name|n_unused3
 decl_stmt|;
-comment|/* Tick of -ve cache entry */
 name|time_t
 name|n_unused2
 decl_stmt|;
@@ -351,12 +350,11 @@ name|struct
 name|timespec
 name|n_ctime
 decl_stmt|;
-comment|/* Prev create time. */
+comment|/* NFSv4 only */
 name|struct
 name|timespec
-name|n_dmtime
+name|n_unused5
 decl_stmt|;
-comment|/* Prev dir modify time. */
 block|}
 struct|;
 end_struct

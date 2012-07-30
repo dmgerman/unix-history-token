@@ -6528,7 +6528,7 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Skip wcc data on NFS errors for now. NetApp filers return corrupt 			 * postop attrs in the wcc data for NFS err EROFS. Not sure if they  			 * could return corrupt postop attrs for others errors. 			 */
+comment|/* 			 * Skip wcc data on non-ENOENT NFS errors for 			 * now.  NetApp filers return corrupt postop 			 * attrs in the wcc data for NFS err EROFS. 			 * Not sure if they could return corrupt 			 * postop attrs for others errors.  Blocking 			 * ENOENT post-op attributes breaks negative 			 * name caching, so always allow it through. 			 */
 if|if
 condition|(
 operator|(
@@ -6539,8 +6539,14 @@ operator|&
 name|NFSMNT_NFSV3
 operator|)
 operator|&&
+operator|(
 operator|!
 name|nfs_skip_wcc_data_onerr
+operator|||
+name|error
+operator|==
+name|ENOENT
+operator|)
 condition|)
 block|{
 operator|*

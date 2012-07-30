@@ -2406,9 +2406,24 @@ begin_comment
 comment|/* cache_* may belong in namei.h. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|cache_enter
+parameter_list|(
+name|dvp
+parameter_list|,
+name|vp
+parameter_list|,
+name|cnp
+parameter_list|)
+define|\
+value|cache_enter_time(dvp, vp, cnp, NULL, NULL)
+end_define
+
 begin_function_decl
 name|void
-name|cache_enter
+name|cache_enter_time
 parameter_list|(
 name|struct
 name|vnode
@@ -2424,13 +2439,38 @@ name|struct
 name|componentname
 modifier|*
 name|cnp
+parameter_list|,
+name|struct
+name|timespec
+modifier|*
+name|tsp
+parameter_list|,
+name|struct
+name|timespec
+modifier|*
+name|dtsp
 parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_define
+define|#
+directive|define
+name|cache_lookup
+parameter_list|(
+name|dvp
+parameter_list|,
+name|vpp
+parameter_list|,
+name|cnp
+parameter_list|)
+define|\
+value|cache_lookup_times(dvp, vpp, cnp, NULL, NULL)
+end_define
+
 begin_function_decl
 name|int
-name|cache_lookup
+name|cache_lookup_times
 parameter_list|(
 name|struct
 name|vnode
@@ -2447,6 +2487,15 @@ name|struct
 name|componentname
 modifier|*
 name|cnp
+parameter_list|,
+name|struct
+name|timespec
+modifier|*
+name|tsp
+parameter_list|,
+name|int
+modifier|*
+name|ticksp
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -5043,6 +5043,11 @@ modifier|*
 name|f
 parameter_list|,
 name|struct
+name|vattr
+modifier|*
+name|va
+parameter_list|,
+name|struct
 name|mbuf
 modifier|*
 modifier|*
@@ -5118,7 +5123,7 @@ name|md
 argument_list|,
 name|dpos
 argument_list|,
-name|NULL
+name|va
 argument_list|,
 literal|1
 argument_list|)
@@ -5330,6 +5335,8 @@ name|v
 argument_list|,
 operator|&
 name|ttattrf
+argument_list|,
+name|NULL
 argument_list|,
 name|md
 argument_list|,
