@@ -429,6 +429,7 @@ name|void
 name|stmxcsr
 parameter_list|(
 name|u_int
+modifier|*
 name|csr
 parameter_list|)
 function_decl|;
