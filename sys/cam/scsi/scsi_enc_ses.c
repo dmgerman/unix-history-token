@@ -129,12 +129,6 @@ directive|include
 file|<cam/scsi/scsi_enc_internal.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<opt_enc.h>
-end_include
-
 begin_comment
 comment|/* SES Native Type Device Support */
 end_comment

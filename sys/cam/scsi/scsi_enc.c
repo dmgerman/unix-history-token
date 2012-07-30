@@ -161,12 +161,6 @@ directive|include
 file|<cam/scsi/scsi_enc_internal.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<opt_enc.h>
-end_include
-
 begin_expr_stmt
 name|MALLOC_DEFINE
 argument_list|(
