@@ -10,13 +10,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|AT91SAM9X25REG_H_
+name|AT91SAM9X5REG_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|AT91SAM9X25REG_H_
+name|AT91SAM9X5REG_H_
 end_define
 
 begin_ifndef
@@ -1405,7 +1405,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* AT91SAM9X25REG_H_*/
+comment|/* AT91SAM9X5REG_H_*/
 end_comment
 
 end_unit

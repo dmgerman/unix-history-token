@@ -86,7 +86,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<arm/at91/at91sam9x25reg.h>
+file|<arm/at91/at91sam9x5reg.h>
 end_include
 
 begin_include
