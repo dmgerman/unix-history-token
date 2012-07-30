@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2012 Matteo Landi, Luigi Rizzo. All rights reserved.
 end_comment
 
 begin_comment
-comment|/*  * $FreeBSD$  * $Id: netmap_mem2.c 10830 2012-03-22 18:06:01Z luigi $  *  * New memory allocator for netmap  */
+comment|/*  * $FreeBSD$  * $Id: netmap_mem2.c 11445 2012-07-30 10:49:07Z luigi $  *  * New memory allocator for netmap  */
 end_comment
 
 begin_comment
@@ -1004,7 +1004,6 @@ name|struct
 name|netmap_if
 modifier|*
 name|nifp
-name|__unused
 parameter_list|,
 name|struct
 name|netmap_slot
@@ -1030,6 +1029,12 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* slot counter */
+operator|(
+name|void
+operator|)
+name|nifp
+expr_stmt|;
+comment|/* UNUSED */
 for|for
 control|(
 name|i

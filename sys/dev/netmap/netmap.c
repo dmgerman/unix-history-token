@@ -278,18 +278,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/netmap.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/netmap/netmap_kern.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/bus.h>
 end_include
 
@@ -317,6 +305,18 @@ end_endif
 begin_comment
 comment|/* __FreeBSD__ */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<net/netmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/netmap/netmap_kern.h>
+end_include
 
 begin_comment
 comment|/*  * lock and unlock for the netmap memory allocator  */
@@ -3794,7 +3794,6 @@ specifier|static
 name|int
 name|netmap_ioctl
 parameter_list|(
-name|__unused
 name|struct
 name|cdev
 modifier|*
@@ -3806,7 +3805,6 @@ parameter_list|,
 name|caddr_t
 name|data
 parameter_list|,
-name|__unused
 name|int
 name|fflag
 parameter_list|,
@@ -3858,6 +3856,18 @@ name|netmap_if
 modifier|*
 name|nifp
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|dev
+expr_stmt|;
+comment|/* UNUSED */
+operator|(
+name|void
+operator|)
+name|fflag
+expr_stmt|;
+comment|/* UNUSED */
 ifdef|#
 directive|ifdef
 name|linux
@@ -7325,7 +7335,6 @@ specifier|static
 name|int
 name|netmap_mmap
 parameter_list|(
-name|__unused
 name|struct
 name|file
 modifier|*
@@ -7376,6 +7385,12 @@ name|nm_buf_pool
 block|}
 decl_stmt|;
 comment|/* 	 * vma->vm_start: start of mapping user address space 	 * vma->vm_end: end of the mapping user address space 	 */
+operator|(
+name|void
+operator|)
+name|f
+expr_stmt|;
+comment|/* UNUSED */
 comment|// XXX security checks
 for|for
 control|(
@@ -7532,9 +7547,13 @@ literal|2
 operator|,
 literal|6
 operator|,
-literal|38
+literal|37
 argument_list|)
 end_if
+
+begin_comment
+comment|// XXX was 38
+end_comment
 
 begin_define
 define|#
@@ -7695,7 +7714,6 @@ specifier|static
 name|int
 name|netmap_release
 parameter_list|(
-name|__unused
 name|struct
 name|inode
 modifier|*
@@ -7707,6 +7725,12 @@ modifier|*
 name|file
 parameter_list|)
 block|{
+operator|(
+name|void
+operator|)
+name|inode
+expr_stmt|;
+comment|/* UNUSED */
 if|if
 condition|(
 name|file
