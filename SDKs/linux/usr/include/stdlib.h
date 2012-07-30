@@ -52,6 +52,24 @@ expr_stmt|;
 end_expr_stmt
 
 begin_function_decl
+name|int
+name|atoi
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(__nothrow__
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
 name|void
 name|free
 parameter_list|(

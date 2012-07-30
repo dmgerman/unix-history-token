@@ -63,15 +63,14 @@ directive|include
 file|"fp_lib.h"
 end_include
 
-begin_expr_stmt
+begin_macro
 name|ARM_EABI_FNALIAS
 argument_list|(
-name|fadd
+argument|fadd
 argument_list|,
-name|addsf3
+argument|addsf3
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+end_macro
 
 begin_function
 name|fp_t
@@ -394,6 +393,7 @@ expr_stmt|;
 comment|// Shift the significand of b by the difference in exponents, with a sticky
 comment|// bottom bit to get rounding correct.
 specifier|const
+name|unsigned
 name|int
 name|align
 init|=

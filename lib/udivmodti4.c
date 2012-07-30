@@ -3,17 +3,17 @@ begin_comment
 comment|/* ===-- udivmodti4.c - Implement __udivmodti4 -----------------------------===  *  *                    The LLVM Compiler Infrastructure  *  * This file is dual licensed under the MIT and the University of Illinois Open  * Source Licenses. See LICENSE.TXT for details.  *  * ===----------------------------------------------------------------------===  *  * This file implements __udivmodti4 for the compiler_rt library.  *  * ===----------------------------------------------------------------------===  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|__x86_64
-end_if
-
 begin_include
 include|#
 directive|include
 file|"int_lib.h"
 end_include
+
+begin_if
+if|#
+directive|if
+name|__x86_64
+end_if
 
 begin_comment
 comment|/* Effects: if rem != 0, *rem = a % b   * Returns: a / b   */

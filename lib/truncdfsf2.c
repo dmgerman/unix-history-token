@@ -305,15 +305,14 @@ begin_comment
 comment|// End helper routines.  Conversion implementation follows.
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|ARM_EABI_FNALIAS
 argument_list|(
-name|d2f
+argument|d2f
 argument_list|,
-name|truncdfsf2
+argument|truncdfsf2
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+end_macro
 
 begin_function
 name|COMPILER_RT_ABI

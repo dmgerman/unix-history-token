@@ -116,13 +116,6 @@ parameter_list|(
 name|AsanThread
 modifier|*
 name|thread
-parameter_list|,
-name|int
-name|parent_tid
-parameter_list|,
-name|AsanStackTrace
-modifier|*
-name|stack
 parameter_list|)
 function_decl|;
 name|void
@@ -138,7 +131,7 @@ modifier|*
 name|GetMain
 parameter_list|()
 function_decl|;
-comment|// Get the current thread. May return NULL.
+comment|// Get the current thread. May return 0.
 name|AsanThread
 modifier|*
 name|GetCurrent
@@ -152,18 +145,18 @@ modifier|*
 name|t
 parameter_list|)
 function_decl|;
-name|pthread_key_t
-name|GetTlsKey
-parameter_list|()
-function_decl|;
-name|bool
-name|IsCurrentThreadDying
-parameter_list|()
-function_decl|;
-name|int
-name|GetCurrentTidOrMinusOne
+name|u32
+name|GetCurrentTidOrInvalid
 parameter_list|()
 block|{
+if|if
+condition|(
+operator|!
+name|inited_
+condition|)
+return|return
+literal|0
+return|;
 name|AsanThread
 modifier|*
 name|t
@@ -179,12 +172,11 @@ operator|->
 name|tid
 argument_list|()
 else|:
-operator|-
-literal|1
+name|kInvalidTid
 return|;
 block|}
 comment|// Returns stats for GetCurrent(), or stats for
-comment|// T0 if GetCurrent() returns NULL.
+comment|// T0 if GetCurrent() returns 0.
 name|AsanStats
 modifier|&
 name|GetCurrentThreadStats
@@ -196,15 +188,15 @@ name|AsanStats
 name|GetAccumulatedStats
 parameter_list|()
 function_decl|;
-name|size_t
+name|uptr
 name|GetCurrentAllocatedBytes
 parameter_list|()
 function_decl|;
-name|size_t
+name|uptr
 name|GetHeapSize
 parameter_list|()
 function_decl|;
-name|size_t
+name|uptr
 name|GetFreeBytes
 parameter_list|()
 function_decl|;
@@ -212,7 +204,7 @@ name|AsanThreadSummary
 modifier|*
 name|FindByTid
 parameter_list|(
-name|int
+name|u32
 name|tid
 parameter_list|)
 function_decl|;
@@ -220,7 +212,7 @@ name|AsanThread
 modifier|*
 name|FindThreadByStackAddress
 parameter_list|(
-name|uintptr_t
+name|uptr
 name|addr
 parameter_list|)
 function_decl|;
@@ -242,7 +234,7 @@ parameter_list|)
 function_decl|;
 specifier|static
 specifier|const
-name|int
+name|u32
 name|kMaxNumberOfThreads
 init|=
 operator|(
@@ -268,21 +260,14 @@ decl_stmt|;
 name|AsanStats
 name|accumulated_stats_
 decl_stmt|;
-name|int
+name|u32
 name|n_threads_
 decl_stmt|;
 name|AsanLock
 name|mu_
 decl_stmt|;
-comment|// For each thread tls_key_ stores the pointer to the corresponding
-comment|// AsanThread.
-name|pthread_key_t
-name|tls_key_
-decl_stmt|;
-comment|// This flag is updated only once at program startup, and then read
-comment|// by concurrent threads.
 name|bool
-name|tls_key_created_
+name|inited_
 decl_stmt|;
 block|}
 empty_stmt|;

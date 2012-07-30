@@ -127,6 +127,11 @@ name|defined
 argument_list|(
 name|__DragonflyBSD__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__minix
+argument_list|)
 end_if
 
 begin_include

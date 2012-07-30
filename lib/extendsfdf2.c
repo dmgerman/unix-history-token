@@ -316,15 +316,14 @@ begin_comment
 comment|// End helper routines.  Conversion implementation follows.
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|ARM_EABI_FNALIAS
 argument_list|(
-name|f2d
+argument|f2d
 argument_list|,
-name|extendsfdf2
+argument|extendsfdf2
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+end_macro
 
 begin_function
 name|dst_t

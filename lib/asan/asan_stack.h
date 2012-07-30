@@ -75,7 +75,7 @@ name|__asan
 block|{
 specifier|static
 specifier|const
-name|size_t
+name|uptr
 name|kStackTraceMax
 init|=
 literal|64
@@ -83,13 +83,13 @@ decl_stmt|;
 struct|struct
 name|AsanStackTrace
 block|{
-name|size_t
+name|uptr
 name|size
 decl_stmt|;
-name|size_t
+name|uptr
 name|max_size
 decl_stmt|;
-name|uintptr_t
+name|uptr
 name|trace
 index|[
 name|kStackTraceMax
@@ -99,11 +99,11 @@ specifier|static
 name|void
 name|PrintStack
 parameter_list|(
-name|uintptr_t
+name|uptr
 modifier|*
 name|addr
 parameter_list|,
-name|size_t
+name|uptr
 name|size
 parameter_list|)
 function_decl|;
@@ -126,17 +126,17 @@ block|}
 name|void
 name|CopyTo
 parameter_list|(
-name|uintptr_t
+name|uptr
 modifier|*
 name|dst
 parameter_list|,
-name|size_t
+name|uptr
 name|dst_size
 parameter_list|)
 block|{
 for|for
 control|(
-name|size_t
+name|uptr
 name|i
 init|=
 literal|0
@@ -164,7 +164,7 @@ index|]
 expr_stmt|;
 for|for
 control|(
-name|size_t
+name|uptr
 name|i
 init|=
 name|size
@@ -187,11 +187,11 @@ block|}
 name|void
 name|CopyFrom
 parameter_list|(
-name|uintptr_t
+name|uptr
 modifier|*
 name|src
 parameter_list|,
-name|size_t
+name|uptr
 name|src_size
 parameter_list|)
 block|{
@@ -211,7 +211,7 @@ name|kStackTraceMax
 expr_stmt|;
 for|for
 control|(
-name|size_t
+name|uptr
 name|i
 init|=
 literal|0
@@ -237,35 +237,46 @@ expr_stmt|;
 block|}
 block|}
 name|void
-name|FastUnwindStack
+name|GetStackTrace
 parameter_list|(
-name|uintptr_t
+name|uptr
+name|max_s
+parameter_list|,
+name|uptr
 name|pc
 parameter_list|,
-name|uintptr_t
+name|uptr
 name|bp
 parameter_list|)
 function_decl|;
-comment|//  static _Unwind_Reason_Code Unwind_Trace(
-comment|//      struct _Unwind_Context *ctx, void *param);
+name|void
+name|FastUnwindStack
+parameter_list|(
+name|uptr
+name|pc
+parameter_list|,
+name|uptr
+name|bp
+parameter_list|)
+function_decl|;
 specifier|static
-name|uintptr_t
+name|uptr
 name|GetCurrentPc
 parameter_list|()
 function_decl|;
 specifier|static
-name|size_t
+name|uptr
 name|CompressStack
 parameter_list|(
 name|AsanStackTrace
 modifier|*
 name|stack
 parameter_list|,
-name|uint32_t
+name|u32
 modifier|*
 name|compressed
 parameter_list|,
-name|size_t
+name|uptr
 name|size
 parameter_list|)
 function_decl|;
@@ -277,17 +288,14 @@ name|AsanStackTrace
 modifier|*
 name|stack
 parameter_list|,
-name|uint32_t
+name|u32
 modifier|*
 name|compressed
 parameter_list|,
-name|size_t
+name|uptr
 name|size
 parameter_list|)
 function_decl|;
-name|size_t
-name|full_frame_count
-decl_stmt|;
 block|}
 struct|;
 block|}
@@ -296,6 +304,38 @@ end_decl_stmt
 begin_comment
 comment|// namespace __asan
 end_comment
+
+begin_comment
+comment|// Use this macro if you want to print stack trace with the caller
+end_comment
+
+begin_comment
+comment|// of the current function in the top frame.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GET_CALLER_PC_BP_SP
+define|\
+value|uptr bp = GET_CURRENT_FRAME();              \   uptr pc = GET_CALLER_PC();                  \   uptr local_stack;                           \   uptr sp = (uptr)&local_stack
+end_define
+
+begin_comment
+comment|// Use this macro if you want to print stack trace with the current
+end_comment
+
+begin_comment
+comment|// function in the top frame.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GET_CURRENT_PC_BP_SP
+define|\
+value|uptr bp = GET_CURRENT_FRAME();              \   uptr pc = AsanStackTrace::GetCurrentPc();   \   uptr local_stack;                           \   uptr sp = (uptr)&local_stack
+end_define
 
 begin_comment
 comment|// Get the stack trace with the given pc and bp.
@@ -320,14 +360,43 @@ name|GET_STACK_TRACE_WITH_PC_AND_BP
 parameter_list|(
 name|max_s
 parameter_list|,
-name|fast_unwind
-parameter_list|,
 name|pc
 parameter_list|,
 name|bp
 parameter_list|)
 define|\
-value|AsanStackTrace stack;                             \   {                                                 \     uintptr_t saved_pc = pc;                        \     uintptr_t saved_bp = bp;                        \     stack.size = 0;                                 \     stack.full_frame_count = 0;                     \     stack.trace[0] = saved_pc;                      \     if ((max_s)> 1) {                              \       stack.max_size = max_s;                       \       stack.FastUnwindStack(saved_pc, saved_bp);    \     }                                               \   }                                                 \  #define GET_STACK_TRACE_HERE(max_size, fast_unwind)         \   GET_STACK_TRACE_WITH_PC_AND_BP(max_size, fast_unwind,     \      AsanStackTrace::GetCurrentPc(), GET_CURRENT_FRAME())   \  #define GET_STACK_TRACE_HERE_FOR_MALLOC         \   GET_STACK_TRACE_HERE(FLAG_malloc_context_size, FLAG_fast_unwind)
+value|AsanStackTrace stack;                                             \   stack.GetStackTrace(max_s, pc, bp)
+end_define
+
+begin_comment
+comment|// NOTE: A Rule of thumb is to retrieve stack trace in the interceptors
+end_comment
+
+begin_comment
+comment|// as early as possible (in functions exposed to the user), as we generally
+end_comment
+
+begin_comment
+comment|// don't want stack trace to contain functions from ASan internals.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GET_STACK_TRACE_HERE
+parameter_list|(
+name|max_size
+parameter_list|)
+define|\
+value|GET_STACK_TRACE_WITH_PC_AND_BP(max_size,                    \       AsanStackTrace::GetCurrentPc(), GET_CURRENT_FRAME())
+end_define
+
+begin_define
+define|#
+directive|define
+name|GET_STACK_TRACE_HERE_FOR_MALLOC
+define|\
+value|GET_STACK_TRACE_HERE(flags()->malloc_context_size)
 end_define
 
 begin_define
@@ -338,7 +407,7 @@ parameter_list|(
 name|ptr
 parameter_list|)
 define|\
-value|GET_STACK_TRACE_HERE(FLAG_malloc_context_size, FLAG_fast_unwind)
+value|GET_STACK_TRACE_HERE(flags()->malloc_context_size)
 end_define
 
 begin_define
@@ -347,8 +416,13 @@ directive|define
 name|PRINT_CURRENT_STACK
 parameter_list|()
 define|\
-value|{                                              \     GET_STACK_TRACE_HERE(kStackTraceMax, false); \     stack.PrintStack();                          \   }                                              \  #endif
+value|{                                              \     GET_STACK_TRACE_HERE(kStackTraceMax);        \     stack.PrintStack();                          \   }
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|// ASAN_STACK_H

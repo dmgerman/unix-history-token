@@ -219,15 +219,14 @@ begin_comment
 comment|/* Returns: a * b */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|ARM_EABI_FNALIAS
 argument_list|(
-name|lmul
+argument|lmul
 argument_list|,
-name|muldi3
+argument|muldi3
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+end_macro
 
 begin_function
 name|COMPILER_RT_ABI
