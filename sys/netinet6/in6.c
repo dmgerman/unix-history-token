@@ -6045,7 +6045,7 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/*  		 * If no more IPv6 address exists on this interface then 		 * remove the multicast address route. 		 */
+comment|/* 		 * If no more IPv6 address exists on this interface then 		 * remove the multicast address route. 		 */
 if|if
 condition|(
 name|ifa0
@@ -6280,7 +6280,7 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/*  		 * If no more IPv6 address exists on this interface then 		 * remove the multicast address route. 		 */
+comment|/* 		 * If no more IPv6 address exists on this interface then 		 * remove the multicast address route. 		 */
 if|if
 condition|(
 name|ifa0
@@ -6556,7 +6556,7 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Remove the loopback route to the interface address. 	 * The check for the current setting of "nd6_useloopback"  	 * is not needed. 	 */
+comment|/* 	 * Remove the loopback route to the interface address. 	 * The check for the current setting of "nd6_useloopback" 	 * is not needed. 	 */
 if|if
 condition|(
 name|ia
@@ -8457,7 +8457,7 @@ operator|->
 name|if_metric
 expr_stmt|;
 comment|/* we could do in(6)_socktrim here, but just omit it at this moment. */
-comment|/* 	 * Special case: 	 * If a new destination address is specified for a point-to-point 	 * interface, install a route to the destination as an interface 	 * direct route.  	 * XXX: the logic below rejects assigning multiple addresses on a p2p 	 * interface that share the same destination. 	 */
+comment|/* 	 * Special case: 	 * If a new destination address is specified for a point-to-point 	 * interface, install a route to the destination as an interface 	 * direct route. 	 * XXX: the logic below rejects assigning multiple addresses on a p2p 	 * interface that share the same destination. 	 */
 name|plen
 operator|=
 name|in6_mask2len
@@ -10896,7 +10896,7 @@ argument_list|)
 argument_list|,
 name|M_LLTABLE
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -10968,10 +10968,12 @@ name|CALLOUT_RETURNUNLOCKED
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|&
 name|lle
 operator|->
 name|base
+operator|)
 return|;
 block|}
 end_function
@@ -11038,11 +11040,10 @@ decl_stmt|,
 modifier|*
 name|next
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
-comment|/* 	 * (flags& LLE_STATIC) means deleting all entries  	 * including static ND6 entries 	 */
+comment|/* 	 * (flags& LLE_STATIC) means deleting all entries 	 * including static ND6 entries. 	 */
 for|for
 control|(
 name|i
@@ -11250,7 +11251,7 @@ name|ifaddr
 modifier|*
 name|ifa
 decl_stmt|;
-comment|/*  		 * Create an ND6 cache for an IPv6 neighbor  		 * that is not covered by our own prefix. 		 */
+comment|/* 		 * Create an ND6 cache for an IPv6 neighbor 		 * that is not covered by our own prefix. 		 */
 comment|/* XXX ifaof_ifpforaddr should take a const param */
 name|ifa
 operator|=

@@ -653,6 +653,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|LLE_EXCLUSIVE
+value|0x2000
+end_define
+
+begin_comment
+comment|/* return lle xlocked  */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|LLE_DELETE
 value|0x4000
 end_define
@@ -670,17 +681,6 @@ end_define
 
 begin_comment
 comment|/* create on a lookup miss */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LLE_EXCLUSIVE
-value|0x2000
-end_define
-
-begin_comment
-comment|/* return lle xlocked  */
 end_comment
 
 begin_define

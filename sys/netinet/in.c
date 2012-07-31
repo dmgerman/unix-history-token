@@ -2192,7 +2192,7 @@ operator|.
 name|sin_len
 condition|)
 block|{
-comment|/*  			 * QL: XXX 			 * Need to scrub the prefix here in case 			 * the issued command is SIOCAIFADDR with 			 * the same address, but with a different 			 * prefix length. And if the prefix length 			 * is the same as before, then the call is  			 * un-necessarily executed here. 			 */
+comment|/* 			 * QL: XXX 			 * Need to scrub the prefix here in case 			 * the issued command is SIOCAIFADDR with 			 * the same address, but with a different 			 * prefix length. And if the prefix length 			 * is the same as before, then the call is 			 * un-necessarily executed here. 			 */
 name|in_ifscrub
 argument_list|(
 name|ifp
@@ -4229,7 +4229,7 @@ value|((((x)->ia_ifp->if_flags& (IFF_LOOPBACK | IFF_POINTOPOINT)) != 0) \ 	    ?
 end_define
 
 begin_comment
-comment|/*  * Generate a routing message when inserting or deleting   * an interface address alias.  */
+comment|/*  * Generate a routing message when inserting or deleting  * an interface address alias.  */
 end_comment
 
 begin_function
@@ -4339,7 +4339,7 @@ name|pfx_ro
 operator|.
 name|ro_rt
 expr_stmt|;
-comment|/* QL: XXX 		 * Point the gateway to the new interface 		 * address as if a new prefix route entry has  		 * been added through the new address alias.  		 * All other parts of the rtentry is accurate,  		 * e.g., rt_key, rt_mask, rt_ifp etc. 		 */
+comment|/* QL: XXX 		 * Point the gateway to the new interface 		 * address as if a new prefix route entry has 		 * been added through the new address alias. 		 * All other parts of the rtentry is accurate, 		 * e.g., rt_key, rt_mask, rt_ifp etc. 		 */
 name|msg_rt
 operator|.
 name|rt_gateway
@@ -6022,7 +6022,6 @@ decl_stmt|,
 modifier|*
 name|next
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -6054,19 +6053,17 @@ argument_list|,
 argument|next
 argument_list|)
 block|{
-comment|/*  			 * (flags& LLE_STATIC) means deleting all entries 			 * including static ARP entries 			 */
+comment|/* 			 * (flags& LLE_STATIC) means deleting all entries 			 * including static ARP entries. 			 */
 if|if
 condition|(
 name|IN_ARE_MASKED_ADDR_EQUAL
 argument_list|(
-operator|(
-expr|struct
-name|sockaddr_in
-operator|*
-operator|)
+name|satosin
+argument_list|(
 name|L3_ADDR
 argument_list|(
 name|lle
+argument_list|)
 argument_list|)
 argument_list|,
 name|pfx
@@ -6294,7 +6291,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 	 * Make sure that at least the destination address is covered  	 * by the route. This is for handling the case where 2 or more  	 * interfaces have the same prefix. An incoming packet arrives 	 * on one interface and the corresponding outgoing packet leaves 	 * another interface. 	 */
+comment|/* 	 * Make sure that at least the destination address is covered 	 * by the route. This is for handling the case where 2 or more 	 * interfaces have the same prefix. An incoming packet arrives 	 * on one interface and the corresponding outgoing packet leaves 	 * another interface. 	 */
 if|if
 condition|(
 operator|!
@@ -6607,14 +6604,12 @@ name|sockaddr_in
 modifier|*
 name|sa2
 init|=
-operator|(
-expr|struct
-name|sockaddr_in
-operator|*
-operator|)
+name|satosin
+argument_list|(
 name|L3_ADDR
 argument_list|(
 name|lle
+argument_list|)
 argument_list|)
 decl_stmt|;
 if|if

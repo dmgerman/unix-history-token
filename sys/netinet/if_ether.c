@@ -341,7 +341,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* keep incomplete entries for 					       * 20 seconds */
+comment|/* keep incomplete entries for 						 * 20 seconds */
 end_comment
 
 begin_expr_stmt
@@ -2765,7 +2765,7 @@ name|arphdr
 operator|*
 argument_list|)
 expr_stmt|;
-comment|/*  	 * ARP is only for IPv4 so we can reject packets with 	 * a protocol length not equal to an IPv4 address. 	 */
+comment|/* 	 * ARP is only for IPv4 so we can reject packets with 	 * a protocol length not equal to an IPv4 address. 	 */
 if|if
 condition|(
 name|ah
@@ -3847,7 +3847,7 @@ name|la_preempt
 operator|=
 name|V_arp_maxtries
 expr_stmt|;
-comment|/*  		 * The packets are all freed within the call to the output 		 * routine. 		 * 		 * NB: The lock MUST be released before the call to the 		 * output routine. 		 */
+comment|/* 		 * The packets are all freed within the call to the output 		 * routine. 		 * 		 * NB: The lock MUST be released before the call to the 		 * output routine. 		 */
 if|if
 condition|(
 name|la
@@ -4636,7 +4636,7 @@ name|ifp
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*  		 * interface address is considered static entry 		 * because the output of the arp utility shows 		 * that L2 entry as permanent 		 */
+comment|/* 		 * interface address is considered static entry 		 * because the output of the arp utility shows 		 * that L2 entry as permanent 		 */
 name|IF_AFDATA_LOCK
 argument_list|(
 name|ifp
