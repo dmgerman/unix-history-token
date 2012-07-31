@@ -6390,11 +6390,13 @@ name|FREAD
 operator|&&
 name|levents
 operator|&&
+name|fp
+operator|->
+name|f_seqcount
+operator|==
 name|rpipe
 operator|->
-name|pipe_state
-operator|&
-name|PIPE_SAMEWGEN
+name|pipe_wgen
 condition|)
 name|events
 operator||=
