@@ -6838,9 +6838,7 @@ name|prep_targetaddr
 argument_list|,
 literal|":"
 argument_list|,
-name|prep
-operator|->
-name|prep_metric
+name|metric
 argument_list|,
 name|rt
 operator|->
@@ -6883,6 +6881,8 @@ argument_list|,
 name|prep
 operator|->
 name|prep_hopcount
+operator|+
+literal|1
 argument_list|,
 name|rt
 operator|->
@@ -7207,6 +7207,8 @@ argument_list|,
 name|prep
 operator|->
 name|prep_hopcount
+operator|+
+literal|1
 argument_list|,
 name|rtext
 operator|->
