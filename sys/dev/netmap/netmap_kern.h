@@ -286,25 +286,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MALLOC_DECLARE
-end_ifdef
-
-begin_expr_stmt
-name|MALLOC_DECLARE
-argument_list|(
-name|M_NETMAP
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
