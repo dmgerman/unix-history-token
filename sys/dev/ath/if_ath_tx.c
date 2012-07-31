@@ -1996,22 +1996,6 @@ operator|.
 name|bfs_ctsduration
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Setup the last descriptor in the list. 	 * bf_prev points to the last; bf is NULL here. 	 */
-name|ath_hal_setuplasttxdesc
-argument_list|(
-name|sc
-operator|->
-name|sc_ah
-argument_list|,
-name|bf_prev
-operator|->
-name|bf_desc
-argument_list|,
-name|bf_first
-operator|->
-name|bf_desc
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Set the first descriptor bf_lastds field to point to 	 * the last descriptor in the last subframe, that's where 	 * the status update will occur. 	 */
 name|bf_first
 operator|->
@@ -2038,6 +2022,22 @@ operator|->
 name|bf_node
 argument_list|,
 name|bf_first
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Setup the last descriptor in the list. 	 * bf_prev points to the last; bf is NULL here. 	 */
+name|ath_hal_setuplasttxdesc
+argument_list|(
+name|sc
+operator|->
+name|sc_ah
+argument_list|,
+name|bf_prev
+operator|->
+name|bf_desc
+argument_list|,
+name|bf_first
+operator|->
+name|bf_desc
 argument_list|)
 expr_stmt|;
 name|DPRINTF

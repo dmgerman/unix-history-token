@@ -2450,13 +2450,6 @@ operator|->
 name|bf_desc
 decl_stmt|;
 name|struct
-name|ath_desc
-modifier|*
-name|lastds
-init|=
-name|NULL
-decl_stmt|;
-name|struct
 name|ath_hal
 modifier|*
 name|ah
@@ -2521,15 +2514,6 @@ argument_list|,
 name|series
 argument_list|)
 expr_stmt|;
-comment|/* Enforce AR5416 aggregate limit - can't do RTS w/ an agg frame> 8k */
-comment|/* Enforce RTS and CTS are mutually exclusive */
-comment|/* Get a pointer to the last tx descriptor in the list */
-name|lastds
-operator|=
-name|bf
-operator|->
-name|bf_lastds
-expr_stmt|;
 if|#
 directive|if
 literal|0
@@ -2558,17 +2542,6 @@ literal|4
 argument_list|,
 comment|/* number of series */
 name|flags
-argument_list|)
-expr_stmt|;
-comment|/* Setup the last descriptor in the chain */
-comment|/* 	 * XXX Why is this done here, and not in the upper layer? 	 * The rate control code stores a copy of the RC info in 	 * the last descriptor as well as the first, then uses 	 * the shadow copy in the last descriptor to see what the RC 	 * decisions were.  I'm not sure why; perhaps earlier hardware 	 * overwrote the first descriptor contents. 	 * 	 * In the 802.11n case, it also clears the moreaggr/delim 	 * fields.  Again, this should be done by the caller of 	 * ath_buf_set_rate(). 	 */
-name|ath_hal_setuplasttxdesc
-argument_list|(
-name|ah
-argument_list|,
-name|lastds
-argument_list|,
-name|ds
 argument_list|)
 expr_stmt|;
 comment|/* Set burst duration */
