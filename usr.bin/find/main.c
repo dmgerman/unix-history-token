@@ -181,8 +181,6 @@ end_comment
 begin_decl_stmt
 name|int
 name|ignore_readdir_race
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
