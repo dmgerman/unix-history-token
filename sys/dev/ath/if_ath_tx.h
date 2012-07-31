@@ -660,6 +660,34 @@ define|\
 value|(_sc)->sc_tx.xmit_handoff((_sc), (_txq), (_bf))
 end_define
 
+begin_define
+define|#
+directive|define
+name|ath_tx_draintxq
+parameter_list|(
+name|_sc
+parameter_list|,
+name|_txq
+parameter_list|)
+define|\
+value|(_sc)->sc_tx.xmit_drainq((_sc), (_txq))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_tx_processq
+parameter_list|(
+name|_sc
+parameter_list|,
+name|_txq
+parameter_list|,
+name|_dosched
+parameter_list|)
+define|\
+value|(_sc)->sc_tx.xmit_processq((_sc), (_txq), (_dosched))
+end_define
+
 begin_function_decl
 specifier|extern
 name|void
