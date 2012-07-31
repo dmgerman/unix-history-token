@@ -2519,8 +2519,9 @@ comment|/*  * Restart TX DMA for the given TXQ.  *  * This must be called whethe
 end_comment
 
 begin_function
+specifier|static
 name|void
-name|ath_txq_restart_dma
+name|ath_legacy_tx_dma_restart
 parameter_list|(
 name|struct
 name|ath_softc
@@ -2636,7 +2637,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|ath_tx_handoff
+name|ath_legacy_xmit_handoff
 parameter_list|(
 name|struct
 name|ath_softc
@@ -17629,6 +17630,22 @@ operator|.
 name|xmit_teardown
 operator|=
 name|ath_legacy_dma_txteardown
+expr_stmt|;
+name|sc
+operator|->
+name|sc_tx
+operator|.
+name|xmit_dma_restart
+operator|=
+name|ath_legacy_tx_dma_restart
+expr_stmt|;
+name|sc
+operator|->
+name|sc_tx
+operator|.
+name|xmit_handoff
+operator|=
+name|ath_legacy_xmit_handoff
 expr_stmt|;
 block|}
 end_function
