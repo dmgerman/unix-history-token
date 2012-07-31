@@ -736,6 +736,13 @@ name|SIOCGATHNODERATESTATS
 value|_IOWR('i', 149, struct ath_rateioctl)
 end_define
 
+begin_define
+define|#
+directive|define
+name|SIOCGATHRATESTATS
+value|_IOWR('i', 150, struct ath_rateioctl)
+end_define
+
 begin_comment
 comment|/*  * Radio capture format.  */
 end_comment
