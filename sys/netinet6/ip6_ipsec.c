@@ -1130,7 +1130,10 @@ name|done
 goto|;
 block|}
 block|}
-comment|/* 		 * Do delayed checksums now because we send before 		 * this is done in the normal processing path. 		 * XXX-BZ CSUM_DELAY_DATA_IPV6? 		 */
+comment|/* 		 * Do delayed checksums now because we send before 		 * this is done in the normal processing path. 		 * For IPv6 we do delayed checksums in ip6_output.c. 		 */
+ifdef|#
+directive|ifdef
+name|INET
 if|if
 condition|(
 operator|(
@@ -1156,17 +1159,12 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INET
 name|in_delayed_cksum
 argument_list|(
 operator|*
 name|m
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 operator|(
 operator|*
 name|m
@@ -1180,6 +1178,8 @@ operator|~
 name|CSUM_DELAY_DATA
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 comment|/* 		 * Preserve KAME behaviour: ENOENT can be returned 		 * when an SA acquire is in progress.  Don't propagate 		 * this to user-level; it confuses applications. 		 * 		 * XXX this will go away when the SADB is redone. 		 */
 if|if
 condition|(
