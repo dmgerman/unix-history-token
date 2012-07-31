@@ -539,6 +539,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|pipeselwakeup
+parameter_list|(
+name|struct
+name|pipe
+modifier|*
+name|cpipe
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

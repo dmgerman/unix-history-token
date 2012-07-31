@@ -846,20 +846,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|__inline
-name|void
-name|pipeselwakeup
-parameter_list|(
-name|struct
-name|pipe
-modifier|*
-name|cpipe
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -2789,8 +2775,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
-name|__inline
 name|void
 name|pipeselwakeup
 parameter_list|(
@@ -3443,7 +3427,11 @@ operator|->
 name|pipe_state
 operator|&=
 operator|~
+operator|(
 name|PIPE_DIRECTW
+operator||
+name|PIPE_WANTW
+operator|)
 expr_stmt|;
 name|wakeup
 argument_list|(
@@ -4533,6 +4521,12 @@ name|pipeselwakeup
 argument_list|(
 name|wpipe
 argument_list|)
+expr_stmt|;
+name|wpipe
+operator|->
+name|pipe_state
+operator||=
+name|PIPE_WANTW
 expr_stmt|;
 name|pipeunlock
 argument_list|(
