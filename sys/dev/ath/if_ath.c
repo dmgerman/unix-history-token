@@ -3491,6 +3491,14 @@ name|tx_chainmask
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Disable MRR with protected frames by default. 	 * Only 802.11n series NICs can handle this. 	 */
+name|sc
+operator|->
+name|sc_mrrprot
+operator|=
+literal|0
+expr_stmt|;
+comment|/* XXX should be a capability */
 ifdef|#
 directive|ifdef
 name|ATH_ENABLE_11N
@@ -3535,6 +3543,13 @@ argument_list|,
 literal|"[HT] enabling HT modes\n"
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|sc_mrrprot
+operator|=
+literal|1
+expr_stmt|;
+comment|/* XXX should be a capability */
 name|ic
 operator|->
 name|ic_htcaps

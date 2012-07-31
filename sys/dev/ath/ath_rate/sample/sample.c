@@ -2045,14 +2045,17 @@ goto|goto
 name|done
 goto|;
 block|}
-comment|/* XXX TODO: this doesn't know about 11gn vs 11g protection; teach it */
 name|mrr
 operator|=
 name|sc
 operator|->
 name|sc_mrretry
+expr_stmt|;
+comment|/* XXX check HT protmode too */
+if|if
+condition|(
+name|mrr
 operator|&&
-operator|!
 operator|(
 name|ic
 operator|->
@@ -2060,6 +2063,15 @@ name|ic_flags
 operator|&
 name|IEEE80211_F_USEPROT
 operator|)
+operator|&&
+operator|!
+name|sc
+operator|->
+name|sc_mrrprot
+condition|)
+name|mrr
+operator|=
+literal|0
 expr_stmt|;
 name|best_rix
 operator|=
@@ -4546,8 +4558,12 @@ operator|=
 name|sc
 operator|->
 name|sc_mrretry
+expr_stmt|;
+comment|/* XXX check HT protmode too */
+if|if
+condition|(
+name|mrr
 operator|&&
-operator|!
 operator|(
 name|ic
 operator|->
@@ -4555,6 +4571,15 @@ name|ic_flags
 operator|&
 name|IEEE80211_F_USEPROT
 operator|)
+operator|&&
+operator|!
+name|sc
+operator|->
+name|sc_mrrprot
+condition|)
+name|mrr
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(

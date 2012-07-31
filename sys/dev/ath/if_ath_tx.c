@@ -4089,7 +4089,15 @@ name|bfs_ctsduration
 operator|=
 name|ctsduration
 expr_stmt|;
-comment|/* 	 * Must disable multi-rate retry when using RTS/CTS. 	 * XXX TODO: only for pre-11n NICs. 	 */
+comment|/* 	 * Must disable multi-rate retry when using RTS/CTS. 	 */
+if|if
+condition|(
+operator|!
+name|sc
+operator|->
+name|sc_mrrprot
+condition|)
+block|{
 name|bf
 operator|->
 name|bf_state
@@ -4118,6 +4126,7 @@ operator|=
 name|ATH_TXMGTTRY
 expr_stmt|;
 comment|/* XXX ew */
+block|}
 block|}
 end_function
 

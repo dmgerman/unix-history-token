@@ -1767,6 +1767,11 @@ range|:
 literal|1
 decl_stmt|,
 comment|/* multi-rate retry support */
+name|sc_mrrprot
+range|:
+literal|1
+decl_stmt|,
+comment|/* MRR + protection support */
 name|sc_softled
 range|:
 literal|1
