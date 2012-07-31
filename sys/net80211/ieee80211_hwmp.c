@@ -4976,6 +4976,11 @@ name|ieee80211_hwmp_seq
 name|preqid
 decl_stmt|;
 comment|/* last seen preqid for orig */
+name|uint32_t
+name|metric
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 name|ni
@@ -5303,6 +5308,21 @@ name|preq_id
 argument_list|)
 expr_stmt|;
 comment|/* Data creation and update of forwarding information 	 * according to Table 11C-8 for originator mesh STA. 	 */
+name|metric
+operator|=
+name|preq
+operator|->
+name|preq_metric
+operator|+
+name|ms
+operator|->
+name|ms_pmetric
+operator|->
+name|mpm_metric
+argument_list|(
+name|ni
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|HWMP_SEQ_GT
@@ -5328,9 +5348,7 @@ operator|->
 name|hr_seq
 argument_list|)
 operator|&&
-name|preq
-operator|->
-name|preq_metric
+name|metric
 operator|<
 name|rtorig
 operator|->
@@ -5361,18 +5379,7 @@ name|rtorig
 operator|->
 name|rt_metric
 operator|=
-name|preq
-operator|->
-name|preq_metric
-operator|+
-name|ms
-operator|->
-name|ms_pmetric
-operator|->
-name|mpm_metric
-argument_list|(
-name|ni
-argument_list|)
+name|metric
 expr_stmt|;
 name|rtorig
 operator|->
