@@ -231,7 +231,7 @@ operator|(
 literal|1
 operator|&
 operator|(
-name|int
+name|uintptr_t
 operator|)
 name|w
 operator|)
