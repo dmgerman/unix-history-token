@@ -1360,7 +1360,7 @@ case|:
 case|case
 name|SIOCGETMIFCNT_IN6
 case|:
-comment|/*	 		 * XXX mrt_ioctl has a 3rd, unused, FIB argument in route.c. 		 * We cannot see how that would be needed, so do not adjust the 		 * KPI blindly; more likely should clean up the IPv4 variant. 		 */
+comment|/* 		 * XXX mrt_ioctl has a 3rd, unused, FIB argument in route.c. 		 * We cannot see how that would be needed, so do not adjust the 		 * KPI blindly; more likely should clean up the IPv4 variant. 		 */
 return|return
 operator|(
 name|mrt6_ioctl
