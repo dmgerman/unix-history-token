@@ -1625,7 +1625,7 @@ name|SMP
 end_ifdef
 
 begin_comment
-comment|/*  * RDTSC is not a serializing instruction, and does not drain  * instruction stream, so we need to drain the stream before executing  * it.  It could be fixed by use of RDTSCP, except the instruction is  * not available everywhere.  *  * Use CPUID for draining in the boot-time SMP constistency test.  The  * timecounters use MFENCE for AMD CPUs, and LFENCE for others (Intel  * and VIA) when SSE2 is present, and nothing on older machines which  * also do not issue RDTSC prematurely.  There, testing for SSE2 and  * vendor is too cumbersome, and we learn about TSC presence from  * CPUID.  *  * Do not use do_cpuid(), since we do not need CPUID results, which  * have to be written into memory with do_cpuid().  */
+comment|/*  * RDTSC is not a serializing instruction, and does not drain  * instruction stream, so we need to drain the stream before executing  * it.  It could be fixed by use of RDTSCP, except the instruction is  * not available everywhere.  *  * Use CPUID for draining in the boot-time SMP constistency test.  The  * timecounters use MFENCE for AMD CPUs, and LFENCE for others (Intel  * and VIA) when SSE2 is present, and nothing on older machines which  * also do not issue RDTSC prematurely.  There, testing for SSE2 and  * vendor is too cumbersome, and we learn about TSC presence from CPUID.  *  * Do not use do_cpuid(), since we do not need CPUID results, which  * have to be written into memory with do_cpuid().  */
 end_comment
 
 begin_define
