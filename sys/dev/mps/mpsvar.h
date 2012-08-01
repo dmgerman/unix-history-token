@@ -19,7 +19,7 @@ begin_define
 define|#
 directive|define
 name|MPS_DRIVER_VERSION
-value|"14.00.00.01-fbsd"
+value|"14.00.00.02-fbsd"
 end_define
 
 begin_define
@@ -2395,6 +2395,8 @@ operator|)
 operator|->
 name|High
 operator|=
+name|htole32
+argument_list|(
 call|(
 name|uint32_t
 call|)
@@ -2405,6 +2407,7 @@ operator|)
 operator|>>
 literal|32
 argument_list|)
+argument_list|)
 expr_stmt|;
 operator|(
 name|mps
@@ -2412,6 +2415,8 @@ operator|)
 operator|->
 name|Low
 operator|=
+name|htole32
+argument_list|(
 call|(
 name|uint32_t
 call|)
@@ -2421,6 +2426,7 @@ name|data
 operator|)
 operator|&
 literal|0xffffffff
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2443,16 +2449,22 @@ operator|(
 operator|(
 name|uint64_t
 operator|)
+name|le32toh
+argument_list|(
 name|data
 operator|->
 name|High
+argument_list|)
 operator|<<
 literal|32
 operator|)
 operator||
+name|le32toh
+argument_list|(
 name|data
 operator|->
 name|Low
+argument_list|)
 operator|)
 return|;
 block|}
