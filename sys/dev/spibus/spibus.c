@@ -747,6 +747,17 @@ modifier|*
 name|cmd
 parameter_list|)
 block|{
+comment|/* Maybe set flags too? spi mode? */
+name|spibus_get_cs
+argument_list|(
+name|dev
+argument_list|,
+operator|&
+name|cmd
+operator|->
+name|cs
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|SPIBUS_TRANSFER
