@@ -2062,12 +2062,12 @@ operator|->
 name|ic_flags
 operator|&
 name|IEEE80211_F_USEPROT
-operator|)
 operator|&&
 operator|!
 name|sc
 operator|->
 name|sc_mrrprot
+operator|)
 condition|)
 name|mrr
 operator|=
@@ -4570,12 +4570,12 @@ operator|->
 name|ic_flags
 operator|&
 name|IEEE80211_F_USEPROT
-operator|)
 operator|&&
 operator|!
 name|sc
 operator|->
 name|sc_mrrprot
+operator|)
 condition|)
 name|mrr
 operator|=
