@@ -2024,16 +2024,16 @@ argument_list|,
 name|bf_first
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Setup the last descriptor in the list. 	 * bf_prev points to the last; bf is NULL here. 	 */
+comment|/* 	 * Setup the last descriptor in the list. 	 * 	 * bf_first->bf_lastds already points to it; the rate 	 * control information needs to be squirreled away here 	 * as well ans clearing the moreaggr/paddelim fields. 	 */
 name|ath_hal_setuplasttxdesc
 argument_list|(
 name|sc
 operator|->
 name|sc_ah
 argument_list|,
-name|bf_prev
+name|bf_first
 operator|->
-name|bf_desc
+name|bf_lastds
 argument_list|,
 name|bf_first
 operator|->
