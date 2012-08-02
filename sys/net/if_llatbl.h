@@ -778,12 +778,13 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|llentry_update
-parameter_list|(
 name|struct
 name|llentry
 modifier|*
+name|llentry_alloc
+parameter_list|(
+name|struct
+name|ifnet
 modifier|*
 parameter_list|,
 name|struct
@@ -792,10 +793,6 @@ modifier|*
 parameter_list|,
 name|struct
 name|sockaddr_storage
-modifier|*
-parameter_list|,
-name|struct
-name|ifnet
 modifier|*
 parameter_list|)
 function_decl|;
