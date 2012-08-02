@@ -272,10 +272,15 @@ name|dummynet
 parameter_list|(
 name|void
 modifier|*
-name|__unused
-name|unused
+name|arg
 parameter_list|)
 block|{
+operator|(
+name|void
+operator|)
+name|arg
+expr_stmt|;
+comment|/* UNUSED */
 name|taskqueue_enqueue
 argument_list|(
 name|dn_tq
@@ -7111,6 +7116,10 @@ block|{
 comment|/* make sure we have some buckets */
 name|ipdn_bound_var
 argument_list|(
+operator|(
+name|int
+operator|*
+operator|)
 operator|&
 name|nfs
 operator|->
@@ -7590,6 +7599,10 @@ name|DN_HAVE_MASK
 condition|)
 name|ipdn_bound_var
 argument_list|(
+operator|(
+name|int
+operator|*
+operator|)
 operator|&
 name|a
 operator|.
