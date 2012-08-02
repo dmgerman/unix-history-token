@@ -704,7 +704,7 @@ end_function_decl
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|u_int
 name|netmap_buf_size
 decl_stmt|;
 end_decl_stmt

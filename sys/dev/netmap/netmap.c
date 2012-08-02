@@ -456,7 +456,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|int
+name|u_int
 name|netmap_buf_size
 init|=
 literal|2048
@@ -468,6 +468,10 @@ name|TUNABLE_INT
 argument_list|(
 literal|"hw.netmap.buf_size"
 argument_list|,
+operator|(
+name|u_int
+operator|*
+operator|)
 operator|&
 name|netmap_buf_size
 argument_list|)
@@ -6538,7 +6542,7 @@ argument_list|(
 name|m
 argument_list|)
 decl_stmt|;
-name|int
+name|u_int
 name|error
 init|=
 name|EBUSY
@@ -9692,7 +9696,7 @@ name|kring
 operator|->
 name|ring
 decl_stmt|;
-name|int
+name|u_int
 name|j
 decl_stmt|,
 name|n

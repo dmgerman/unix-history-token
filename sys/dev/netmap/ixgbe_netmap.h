@@ -717,7 +717,7 @@ operator|-
 literal|1
 decl_stmt|;
 comment|/* 	 * ixgbe can generate an interrupt on every tx packet, but it 	 * seems very expensive, so we interrupt once every half ring, 	 * or when requested with NS_REPORT 	 */
-name|int
+name|u_int
 name|report_frequency
 init|=
 name|kring
