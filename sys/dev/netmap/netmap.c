@@ -28,7 +28,7 @@ end_include
 begin_function_decl
 specifier|static
 name|netdev_tx_t
-name|netmap_start_linux
+name|linux_netmap_start
 parameter_list|(
 name|struct
 name|sk_buff
@@ -6278,7 +6278,7 @@ name|nm_ndo
 operator|.
 name|ndo_start_xmit
 operator|=
-name|netmap_start_linux
+name|linux_netmap_start
 expr_stmt|;
 endif|#
 directive|endif
@@ -7333,7 +7333,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|netmap_mmap
+name|linux_netmap_mmap
 parameter_list|(
 name|struct
 name|file
@@ -7508,7 +7508,7 @@ end_function
 begin_function
 specifier|static
 name|netdev_tx_t
-name|netmap_start_linux
+name|linux_netmap_start
 parameter_list|(
 name|struct
 name|sk_buff
@@ -7762,7 +7762,7 @@ block|{
 operator|.
 name|mmap
 operator|=
-name|netmap_mmap
+name|linux_netmap_mmap
 block|,
 name|LIN_IOCTL_NAME
 operator|=
@@ -7819,10 +7819,30 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* Errors have negative values on linux */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|linux_netmap_init
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|-
+name|netmap_init
+argument_list|()
+return|;
+block|}
+end_function
+
 begin_expr_stmt
 name|module_init
 argument_list|(
-name|netmap_init
+name|linux_netmap_init
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -10118,7 +10138,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"netmap: unable to initialize the memory allocator."
+literal|"netmap: unable to initialize the memory allocator.\n"
 argument_list|)
 expr_stmt|;
 return|return
