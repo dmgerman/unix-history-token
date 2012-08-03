@@ -262,6 +262,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_RSA
+end_ifndef
+
 begin_function_decl
 specifier|static
 name|int
@@ -308,12 +314,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|OPENSSL_NO_RSA
-end_ifndef
-
 begin_function_decl
 specifier|static
 name|int
@@ -338,11 +338,6 @@ name|ctx
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|static
@@ -378,6 +373,11 @@ name|m_ctx
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -1285,9 +1285,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* #ifndef OPENSSL_NO_RSA */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_RSA
+end_ifndef
 
 begin_decl_stmt
 specifier|static
@@ -1309,9 +1311,10 @@ name|NULL
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* #endif */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -2924,11 +2927,6 @@ return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 specifier|static
 name|int
@@ -3223,6 +3221,11 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -3434,6 +3437,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_RSA
+end_ifndef
+
 begin_comment
 comment|/*  * This function is aliased to mod_exp (with the mont stuff dropped).  */
 end_comment
@@ -3476,9 +3485,6 @@ name|ret
 init|=
 literal|0
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|OPENSSL_NO_RSA
 comment|/* Do in software if the key is too large for the hardware. */
 if|if
 condition|(
@@ -3522,8 +3528,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-endif|#
-directive|endif
 block|{
 name|ret
 operator|=
@@ -3546,6 +3550,11 @@ name|ret
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#

@@ -3732,15 +3732,6 @@ name|res
 return|;
 name|err
 label|:
-if|if
-condition|(
-name|res
-condition|)
-name|EVP_PKEY_free
-argument_list|(
-name|res
-argument_list|)
-expr_stmt|;
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_RSA

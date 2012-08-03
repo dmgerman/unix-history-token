@@ -15291,7 +15291,7 @@ name|ssfe
 operator|->
 name|ssfe_type
 operator|=
-name|SCTP_SEND_FAILED
+name|SCTP_SEND_FAILED_EVENT
 expr_stmt|;
 name|ssfe
 operator|->
@@ -19917,6 +19917,18 @@ operator|->
 name|data
 operator|=
 name|NULL
+expr_stmt|;
+name|sp
+operator|->
+name|tail_mbuf
+operator|=
+name|NULL
+expr_stmt|;
+name|sp
+operator|->
+name|length
+operator|=
+literal|0
 expr_stmt|;
 block|}
 block|}
@@ -25178,7 +25190,7 @@ operator|->
 name|data
 condition|)
 block|{
-comment|/* 					 * Pull any data to free up the SB 					 * and allow sender to "add more" 					 * whilc we will throw away :-) 					 */
+comment|/* 					 * Pull any data to free up the SB 					 * and allow sender to "add more" 					 * while we will throw away :-) 					 */
 name|sctp_free_spbufspace
 argument_list|(
 name|stcb
@@ -25216,12 +25228,6 @@ argument_list|)
 expr_stmt|;
 name|sp
 operator|->
-name|length
-operator|=
-literal|0
-expr_stmt|;
-name|sp
-operator|->
 name|data
 operator|=
 name|NULL
@@ -25231,6 +25237,12 @@ operator|->
 name|tail_mbuf
 operator|=
 name|NULL
+expr_stmt|;
+name|sp
+operator|->
+name|length
+operator|=
+literal|0
 expr_stmt|;
 block|}
 break|break;
@@ -28909,12 +28921,9 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|INET6
-argument_list|)
 block|{
 name|struct
 name|sockaddr_in6
@@ -33208,12 +33217,9 @@ name|addr_touse
 operator|=
 name|sa
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|INET6
-argument_list|)
 if|if
 condition|(
 name|sa

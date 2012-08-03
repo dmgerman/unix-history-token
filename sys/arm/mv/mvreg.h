@@ -1798,6 +1798,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MV_DEV_88F6282
+value|0x6282
+end_define
+
+begin_define
+define|#
+directive|define
 name|MV_DEV_MV78100_Z0
 value|0x6381
 end_define

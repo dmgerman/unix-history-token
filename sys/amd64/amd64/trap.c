@@ -1163,7 +1163,7 @@ case|:
 comment|/* arithmetic trap */
 name|ucode
 operator|=
-name|fputrap
+name|fputrap_x87
 argument_list|()
 expr_stmt|;
 if|if
@@ -1507,9 +1507,19 @@ case|:
 comment|/* SIMD floating-point exception */
 name|ucode
 operator|=
-literal|0
+name|fputrap_sse
+argument_list|()
 expr_stmt|;
-comment|/* XXX */
+if|if
+condition|(
+name|ucode
+operator|==
+operator|-
+literal|1
+condition|)
+goto|goto
+name|userout
+goto|;
 name|i
 operator|=
 name|SIGFPE
@@ -1804,10 +1814,7 @@ goto|;
 block|}
 if|if
 condition|(
-name|PCPU_GET
-argument_list|(
 name|curpcb
-argument_list|)
 operator|->
 name|pcb_onfault
 operator|!=
@@ -1821,10 +1828,7 @@ operator|=
 operator|(
 name|long
 operator|)
-name|PCPU_GET
-argument_list|(
 name|curpcb
-argument_list|)
 operator|->
 name|pcb_onfault
 expr_stmt|;
@@ -2319,10 +2323,7 @@ name|td_intr_nesting_level
 operator|!=
 literal|0
 operator|||
-name|PCPU_GET
-argument_list|(
 name|curpcb
-argument_list|)
 operator|->
 name|pcb_onfault
 operator|==
@@ -2532,10 +2533,7 @@ name|td_intr_nesting_level
 operator|==
 literal|0
 operator|&&
-name|PCPU_GET
-argument_list|(
 name|curpcb
-argument_list|)
 operator|->
 name|pcb_onfault
 operator|!=
@@ -2549,10 +2547,7 @@ operator|=
 operator|(
 name|long
 operator|)
-name|PCPU_GET
-argument_list|(
 name|curpcb
-argument_list|)
 operator|->
 name|pcb_onfault
 expr_stmt|;

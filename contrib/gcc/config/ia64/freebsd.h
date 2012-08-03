@@ -21,7 +21,7 @@ begin_define
 define|#
 directive|define
 name|LINK_SPEC
-value|"							\   %{p:%nconsider using `-pg' instead of `-p' with gprof(1)}		\   %{assert*} %{R*} %{rpath*} %{defsym*}					\   %{shared:-Bshareable %{h*} %{soname*}}				\   %{symbolic:-Bsymbolic}						\   %{!shared:								\     %{!static:								\       %{rdynamic:-export-dynamic}					\       %{!dynamic-linker:-dynamic-linker %(fbsd_dynamic_linker) }}	\     %{static:-Bstatic}}"
+value|"							\   %{p:%nconsider using `-pg' instead of `-p' with gprof(1)}		\   %{assert*} %{R*} %{rpath*} %{defsym*}					\   %{shared:-Bshareable %{h*} %{soname*}}				\   %{!static:--enable-new-dtags}						\   %{symbolic:-Bsymbolic}						\   %{!shared:								\     %{!static:								\       %{rdynamic:-export-dynamic}					\       %{!dynamic-linker:-dynamic-linker %(fbsd_dynamic_linker) }}	\     %{static:-Bstatic}}"
 end_define
 
 begin_comment

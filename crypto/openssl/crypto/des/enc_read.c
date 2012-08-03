@@ -39,17 +39,16 @@ begin_comment
 comment|/*extern int errno;*/
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|OPENSSL_IMPLEMENT_GLOBAL
 argument_list|(
-name|int
+argument|int
 argument_list|,
-name|DES_rw_mode
+argument|DES_rw_mode
+argument_list|,
+argument|DES_PCBC_MODE
 argument_list|)
-operator|=
-name|DES_PCBC_MODE
-expr_stmt|;
-end_expr_stmt
+end_macro
 
 begin_comment
 comment|/*  * WARNINGS:  *  *  -  The data format used by DES_enc_write() and DES_enc_read()  *     has a cryptographic weakness: When asked to write more  *     than MAXWRITE bytes, DES_enc_write will split the data  *     into several chunks that are all encrypted  *     using the same IV.  So don't use these functions unless you  *     are sure you know what you do (in which case you might  *     not want to use them anyway).  *  *  -  This code cannot handle non-blocking sockets.  *  *  -  This function uses an internal state and thus cannot be  *     used on multiple files.  */
@@ -78,6 +77,19 @@ modifier|*
 name|iv
 parameter_list|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|OPENSSL_NO_POSIX_IO
+argument_list|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+else|#
+directive|else
 comment|/* data to be unencrypted */
 name|int
 name|net_num
@@ -317,7 +329,7 @@ condition|)
 block|{
 ifndef|#
 directive|ifndef
-name|_WIN32
+name|OPENSSL_SYS_WIN32
 name|i
 operator|=
 name|read
@@ -473,6 +485,9 @@ operator|<
 name|rnum
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|OPENSSL_SYS_WIN32
 name|i
 operator|=
 name|read
@@ -496,6 +511,33 @@ operator|-
 name|net_num
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|i
+operator|=
+name|_read
+argument_list|(
+name|fd
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+operator|(
+name|net
+index|[
+name|net_num
+index|]
+operator|)
+argument_list|,
+name|rnum
+operator|-
+name|net_num
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|EINTR
@@ -705,6 +747,9 @@ block|}
 return|return
 name|num
 return|;
+endif|#
+directive|endif
+comment|/* OPENSSL_NO_POSIX_IO */
 block|}
 end_function
 

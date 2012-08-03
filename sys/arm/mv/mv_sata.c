@@ -955,6 +955,9 @@ case|case
 name|MV_DEV_88F6281
 case|:
 case|case
+name|MV_DEV_88F6282
+case|:
+case|case
 name|MV_DEV_MV78100
 case|:
 case|case

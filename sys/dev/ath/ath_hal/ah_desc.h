@@ -103,6 +103,37 @@ name|uint8_t
 name|ts_flags
 decl_stmt|;
 comment|/* misc flags */
+name|uint8_t
+name|ts_queue_id
+decl_stmt|;
+comment|/* AR9300: TX queue id */
+name|uint8_t
+name|ts_desc_id
+decl_stmt|;
+comment|/* AR9300: TX descriptor id */
+name|uint8_t
+name|ts_tid
+decl_stmt|;
+comment|/* TID */
+comment|/* #define ts_rssi ts_rssi_combined */
+name|uint32_t
+name|ts_ba_low
+decl_stmt|;
+comment|/* blockack bitmap low */
+name|uint32_t
+name|ts_ba_high
+decl_stmt|;
+comment|/* blockack bitmap high */
+name|uint32_t
+name|ts_evm0
+decl_stmt|;
+comment|/* evm bytes */
+name|uint32_t
+name|ts_evm1
+decl_stmt|;
+name|uint32_t
+name|ts_evm2
+decl_stmt|;
 name|int8_t
 name|ts_rssi_ctl
 index|[
@@ -117,28 +148,11 @@ literal|3
 index|]
 decl_stmt|;
 comment|/* tx ack RSSI [ext, chain 0-2] */
-comment|/* #define ts_rssi ts_rssi_combined */
-name|uint32_t
-name|ts_ba_low
-decl_stmt|;
-comment|/* blockack bitmap low */
-name|uint32_t
-name|ts_ba_high
-decl_stmt|;
-comment|/* blockack bitmap high */
 name|uint8_t
-name|ts_tid
-decl_stmt|;
-comment|/* TID */
-name|uint32_t
-name|ts_evm0
-decl_stmt|;
-comment|/* evm bytes */
-name|uint32_t
-name|ts_evm1
-decl_stmt|;
-name|uint32_t
-name|ts_evm2
+name|ts_pad
+index|[
+literal|2
+index|]
 decl_stmt|;
 endif|#
 directive|endif
@@ -952,6 +966,24 @@ end_define
 begin_comment
 comment|/* virtual more frag */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|HAL_TXDESC_LOWRXCHAIN
+value|0x0400
+end_define
+
+begin_comment
+comment|/* switch to low RX chain */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAL_TXDESC_LDPC
+value|0x1000
+end_define
 
 begin_comment
 comment|/* flags passed to rx descriptor setup methods */

@@ -2248,7 +2248,7 @@ name|BIO_CTRL_PUSH
 argument_list|,
 literal|0
 argument_list|,
-name|NULL
+name|lb
 argument_list|)
 expr_stmt|;
 return|return
@@ -2302,7 +2302,7 @@ name|BIO_CTRL_POP
 argument_list|,
 literal|0
 argument_list|,
-name|NULL
+name|b
 argument_list|)
 expr_stmt|;
 if|if
@@ -2672,7 +2672,7 @@ modifier|*
 name|bio
 decl_stmt|,
 modifier|*
-name|new
+name|new_bio
 decl_stmt|;
 for|for
 control|(
@@ -2694,7 +2694,7 @@ block|{
 if|if
 condition|(
 operator|(
-name|new
+name|new_bio
 operator|=
 name|BIO_new
 argument_list|(
@@ -2709,7 +2709,7 @@ condition|)
 goto|goto
 name|err
 goto|;
-name|new
+name|new_bio
 operator|->
 name|callback
 operator|=
@@ -2717,7 +2717,7 @@ name|bio
 operator|->
 name|callback
 expr_stmt|;
-name|new
+name|new_bio
 operator|->
 name|cb_arg
 operator|=
@@ -2725,7 +2725,7 @@ name|bio
 operator|->
 name|cb_arg
 expr_stmt|;
-name|new
+name|new_bio
 operator|->
 name|init
 operator|=
@@ -2733,7 +2733,7 @@ name|bio
 operator|->
 name|init
 expr_stmt|;
-name|new
+name|new_bio
 operator|->
 name|shutdown
 operator|=
@@ -2741,7 +2741,7 @@ name|bio
 operator|->
 name|shutdown
 expr_stmt|;
-name|new
+name|new_bio
 operator|->
 name|flags
 operator|=
@@ -2750,7 +2750,7 @@ operator|->
 name|flags
 expr_stmt|;
 comment|/* This will let SSL_s_sock() work with stdin/stdout */
-name|new
+name|new_bio
 operator|->
 name|num
 operator|=
@@ -2769,13 +2769,13 @@ operator|(
 name|char
 operator|*
 operator|)
-name|new
+name|new_bio
 argument_list|)
 condition|)
 block|{
 name|BIO_free
 argument_list|(
-name|new
+name|new_bio
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2791,7 +2791,7 @@ argument_list|(
 name|CRYPTO_EX_INDEX_BIO
 argument_list|,
 operator|&
-name|new
+name|new_bio
 operator|->
 name|ex_data
 argument_list|,
@@ -2813,7 +2813,7 @@ condition|)
 block|{
 name|eoc
 operator|=
-name|new
+name|new_bio
 expr_stmt|;
 name|ret
 operator|=
@@ -2826,12 +2826,12 @@ name|BIO_push
 argument_list|(
 name|eoc
 argument_list|,
-name|new
+name|new_bio
 argument_list|)
 expr_stmt|;
 name|eoc
 operator|=
-name|new
+name|new_bio
 expr_stmt|;
 block|}
 block|}

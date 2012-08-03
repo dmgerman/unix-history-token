@@ -260,6 +260,21 @@ name|ah_getTxCompletionRates
 operator|=
 name|ar5212GetTxCompletionRates
 block|,
+operator|.
+name|ah_setTxDescLink
+operator|=
+name|ar5212SetTxDescLink
+block|,
+operator|.
+name|ah_getTxDescLink
+operator|=
+name|ar5212GetTxDescLink
+block|,
+operator|.
+name|ah_getTxDescLinkPtr
+operator|=
+name|ar5212GetTxDescLinkPtr
+block|,
 comment|/* RX Functions */
 operator|.
 name|ah_getRxDP
@@ -3953,6 +3968,13 @@ operator|=
 name|AH_TRUE
 expr_stmt|;
 comment|/* XXX fixed in later revs? */
+name|pCap
+operator|->
+name|halNumMRRetries
+operator|=
+literal|4
+expr_stmt|;
+comment|/* Hardware supports 4 MRR */
 name|pCap
 operator|->
 name|halVEOLSupport

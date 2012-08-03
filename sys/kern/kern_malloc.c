@@ -3129,7 +3129,7 @@ name|memguard_fudge
 argument_list|(
 name|vm_kmem_size
 argument_list|,
-name|vm_kmem_size_max
+name|kernel_map
 argument_list|)
 expr_stmt|;
 else|#

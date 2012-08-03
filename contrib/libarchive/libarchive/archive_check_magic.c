@@ -351,6 +351,14 @@ operator|(
 literal|"archive_read_disk"
 operator|)
 return|;
+case|case
+name|ARCHIVE_MATCH_MAGIC
+case|:
+return|return
+operator|(
+literal|"archive_match"
+operator|)
+return|;
 default|default:
 return|return
 name|NULL

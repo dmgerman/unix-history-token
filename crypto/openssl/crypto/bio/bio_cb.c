@@ -179,12 +179,16 @@ name|p
 argument_list|,
 name|p_maxlen
 argument_list|,
-literal|"read(%d,%d) - %s fd=%d\n"
+literal|"read(%d,%lu) - %s fd=%d\n"
 argument_list|,
 name|bio
 operator|->
 name|num
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|argi
 argument_list|,
 name|bio
@@ -205,12 +209,16 @@ name|p
 argument_list|,
 name|p_maxlen
 argument_list|,
-literal|"read(%d,%d) - %s\n"
+literal|"read(%d,%lu) - %s\n"
 argument_list|,
 name|bio
 operator|->
 name|num
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|argi
 argument_list|,
 name|bio
@@ -240,12 +248,16 @@ name|p
 argument_list|,
 name|p_maxlen
 argument_list|,
-literal|"write(%d,%d) - %s fd=%d\n"
+literal|"write(%d,%lu) - %s fd=%d\n"
 argument_list|,
 name|bio
 operator|->
 name|num
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|argi
 argument_list|,
 name|bio
@@ -266,12 +278,16 @@ name|p
 argument_list|,
 name|p_maxlen
 argument_list|,
-literal|"write(%d,%d) - %s\n"
+literal|"write(%d,%lu) - %s\n"
 argument_list|,
 name|bio
 operator|->
 name|num
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|argi
 argument_list|,
 name|bio
@@ -310,8 +326,12 @@ name|p
 argument_list|,
 name|p_maxlen
 argument_list|,
-literal|"gets(%d) - %s\n"
+literal|"gets(%lu) - %s\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|argi
 argument_list|,
 name|bio
@@ -331,8 +351,12 @@ name|p
 argument_list|,
 name|p_maxlen
 argument_list|,
-literal|"ctrl(%d) - %s\n"
+literal|"ctrl(%lu) - %s\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|argi
 argument_list|,
 name|bio

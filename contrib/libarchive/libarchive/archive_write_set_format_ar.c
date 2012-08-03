@@ -1645,6 +1645,9 @@ name|entry_bytes_remaining
 condition|)
 name|s
 operator|=
+operator|(
+name|size_t
+operator|)
 name|ar
 operator|->
 name|entry_bytes_remaining

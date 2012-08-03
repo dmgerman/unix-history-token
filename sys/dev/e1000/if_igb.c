@@ -12050,12 +12050,6 @@ argument_list|(
 name|igb_last_bind_cpu
 argument_list|)
 expr_stmt|;
-name|igb_last_bind_cpu
-operator|=
-name|igb_last_bind_cpu
-operator|%
-name|mp_ncpus
-expr_stmt|;
 block|}
 if|#
 directive|if

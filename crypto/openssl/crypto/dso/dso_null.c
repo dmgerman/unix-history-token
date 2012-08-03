@@ -76,7 +76,13 @@ name|NULL
 block|,
 comment|/* init */
 name|NULL
+block|,
 comment|/* finish */
+name|NULL
+block|,
+comment|/* pathbyaddr */
+name|NULL
+comment|/* globallookup */
 block|}
 decl_stmt|;
 end_decl_stmt

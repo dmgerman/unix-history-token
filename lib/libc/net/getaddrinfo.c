@@ -615,11 +615,6 @@ decl_stmt|;
 name|int
 name|e_protocol
 decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|e_protostr
-decl_stmt|;
 name|int
 name|e_wild
 decl_stmt|;
@@ -660,7 +655,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|{ PF_LOCAL, ANY, ANY, NULL, 0x01 },
+block|{ PF_LOCAL, ANY, ANY, 0x01 },
 endif|#
 directive|endif
 ifdef|#
@@ -673,8 +668,6 @@ name|SOCK_DGRAM
 block|,
 name|IPPROTO_UDP
 block|,
-literal|"udp"
-block|,
 literal|0x07
 block|}
 block|,
@@ -685,8 +678,6 @@ name|SOCK_STREAM
 block|,
 name|IPPROTO_TCP
 block|,
-literal|"tcp"
-block|,
 literal|0x07
 block|}
 block|,
@@ -696,8 +687,6 @@ block|,
 name|SOCK_STREAM
 block|,
 name|IPPROTO_SCTP
-block|,
-literal|"sctp"
 block|,
 literal|0x03
 block|}
@@ -709,8 +698,6 @@ name|SOCK_SEQPACKET
 block|,
 name|IPPROTO_SCTP
 block|,
-literal|"sctp"
-block|,
 literal|0x07
 block|}
 block|,
@@ -720,8 +707,6 @@ block|,
 name|SOCK_RAW
 block|,
 name|ANY
-block|,
-name|NULL
 block|,
 literal|0x05
 block|}
@@ -735,8 +720,6 @@ name|SOCK_DGRAM
 block|,
 name|IPPROTO_UDP
 block|,
-literal|"udp"
-block|,
 literal|0x07
 block|}
 block|,
@@ -747,8 +730,6 @@ name|SOCK_STREAM
 block|,
 name|IPPROTO_TCP
 block|,
-literal|"tcp"
-block|,
 literal|0x07
 block|}
 block|,
@@ -758,8 +739,6 @@ block|,
 name|SOCK_STREAM
 block|,
 name|IPPROTO_SCTP
-block|,
-literal|"sctp"
 block|,
 literal|0x03
 block|}
@@ -771,8 +750,6 @@ name|SOCK_SEQPACKET
 block|,
 name|IPPROTO_SCTP
 block|,
-literal|"sctp"
-block|,
 literal|0x07
 block|}
 block|,
@@ -782,8 +759,6 @@ block|,
 name|SOCK_RAW
 block|,
 name|ANY
-block|,
-name|NULL
 block|,
 literal|0x05
 block|}
@@ -795,8 +770,6 @@ block|,
 literal|0
 block|,
 literal|0
-block|,
-name|NULL
 block|,
 literal|0
 block|}
@@ -3476,6 +3449,17 @@ argument_list|,
 literal|0
 argument_list|)
 operator|<
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+if|if
+condition|(
+name|l
+operator|==
 literal|0
 condition|)
 return|return

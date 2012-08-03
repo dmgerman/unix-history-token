@@ -4510,10 +4510,7 @@ if|if
 condition|(
 name|pcb
 operator|==
-name|PCPU_GET
-argument_list|(
 name|curpcb
-argument_list|)
 condition|)
 block|{
 comment|/* 			 * Clear the debug registers on the running 			 * CPU, otherwise they will end up affecting 			 * the next process we switch to. 			 */

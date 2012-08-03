@@ -388,6 +388,10 @@ name|MV_DEV_88F6281
 operator|||
 name|dev_id
 operator|==
+name|MV_DEV_88F6282
+operator|||
+name|dev_id
+operator|==
 name|MV_DEV_MV78100
 operator|||
 name|dev_id

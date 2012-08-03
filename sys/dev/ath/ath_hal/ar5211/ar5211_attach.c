@@ -296,6 +296,21 @@ name|ah_getTxCompletionRates
 operator|=
 name|ar5211GetTxCompletionRates
 block|,
+operator|.
+name|ah_setTxDescLink
+operator|=
+name|ar5211SetTxDescLink
+block|,
+operator|.
+name|ah_getTxDescLink
+operator|=
+name|ar5211GetTxDescLink
+block|,
+operator|.
+name|ah_getTxDescLinkPtr
+operator|=
+name|ar5211GetTxDescLinkPtr
+block|,
 comment|/* RX Functions */
 operator|.
 name|ah_getRxDP
@@ -2354,6 +2369,13 @@ name|halVEOLSupport
 operator|=
 name|AH_TRUE
 expr_stmt|;
+name|pCap
+operator|->
+name|halNumMRRetries
+operator|=
+literal|1
+expr_stmt|;
+comment|/* No hardware MRR support */
 name|pCap
 operator|->
 name|halTotalQueues

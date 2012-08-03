@@ -1287,6 +1287,12 @@ name|c
 init|=
 literal|0
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|ac
+expr_stmt|;
+comment|/* UNUSED */
 while|while
 condition|(
 operator|(
@@ -1611,6 +1617,12 @@ name|c
 init|=
 literal|0
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|ac
+expr_stmt|;
+comment|/* UNUSED */
 while|while
 condition|(
 operator|(

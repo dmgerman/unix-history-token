@@ -164,6 +164,9 @@ operator|&
 name|p
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|EVP_Digest
 argument_list|(
 name|str
@@ -178,7 +181,10 @@ name|type
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 name|OPENSSL_free
 argument_list|(
 name|str
@@ -258,6 +264,9 @@ operator|(
 literal|0
 operator|)
 return|;
+if|if
+condition|(
+operator|!
 name|EVP_Digest
 argument_list|(
 name|str
@@ -272,7 +281,10 @@ name|type
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 name|OPENSSL_free
 argument_list|(
 name|str

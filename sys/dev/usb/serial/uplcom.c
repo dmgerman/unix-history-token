@@ -1218,6 +1218,14 @@ name|UPLCOM_DEV
 argument_list|(
 name|PROLIFIC
 argument_list|,
+name|MOTOROLA
+argument_list|)
+block|,
+comment|/* Motorola cable */
+name|UPLCOM_DEV
+argument_list|(
+name|PROLIFIC
+argument_list|,
 name|PHAROS
 argument_list|)
 block|,

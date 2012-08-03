@@ -1656,14 +1656,6 @@ operator|(
 name|error
 operator|)
 return|;
-name|arm_unmask_irq
-argument_list|(
-name|rman_get_start
-argument_list|(
-name|ires
-argument_list|)
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0

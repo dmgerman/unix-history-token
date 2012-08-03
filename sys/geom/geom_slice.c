@@ -2513,6 +2513,12 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+name|cp
+operator|->
+name|flags
+operator||=
+name|G_CF_ORPHAN
+expr_stmt|;
 name|gsp
 operator|=
 name|gp

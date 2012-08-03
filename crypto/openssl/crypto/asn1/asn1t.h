@@ -8,7 +8,7 @@ comment|/* Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL  *
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 2000 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 2000-2005 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_ifndef
@@ -285,6 +285,16 @@ name|tname
 parameter_list|)
 define|\
 value|;\ 	ASN1_ITEM_start(tname) \ 		ASN1_ITYPE_SEQUENCE,\ 		V_ASN1_SEQUENCE,\ 		tname##_seq_tt,\ 		sizeof(tname##_seq_tt) / sizeof(ASN1_TEMPLATE),\&tname##_aux,\ 		sizeof(stname),\ 		#stname \ 	ASN1_ITEM_end(tname)
+define|#
+directive|define
+name|ASN1_NDEF_SEQUENCE_END_cb
+parameter_list|(
+name|stname
+parameter_list|,
+name|tname
+parameter_list|)
+define|\
+value|;\ 	ASN1_ITEM_start(tname) \ 		ASN1_ITYPE_NDEF_SEQUENCE,\ 		V_ASN1_SEQUENCE,\ 		tname##_seq_tt,\ 		sizeof(tname##_seq_tt) / sizeof(ASN1_TEMPLATE),\&tname##_aux,\ 		sizeof(stname),\ 		#stname \ 	ASN1_ITEM_end(tname)
 comment|/* This pair helps declare a CHOICE type. We can do:  *  * 	ASN1_CHOICE(chname) = {  * 		... CHOICE options ...  * 	ASN1_CHOICE_END(chname)  *  * 	This will produce an ASN1_ITEM called chname_it  *	for a structure called chname. The structure  *	definition must look like this:  *	typedef struct {  *		int type;  *		union {  *			ASN1_SOMETHING *opt1;  *			ASN1_SOMEOTHER *opt2;  *		} value;  *	} chname;  *	  *	the name of the selector must be 'type'.  * 	to use an alternative selector name use the  *      ASN1_CHOICE_END_selector() version.  */
 define|#
 directive|define
@@ -1273,6 +1283,33 @@ parameter_list|)
 function_decl|;
 typedef|typedef
 name|int
+name|ASN1_ex_print_func
+parameter_list|(
+name|BIO
+modifier|*
+name|out
+parameter_list|,
+name|ASN1_VALUE
+modifier|*
+modifier|*
+name|pval
+parameter_list|,
+name|int
+name|indent
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fname
+parameter_list|,
+specifier|const
+name|ASN1_PCTX
+modifier|*
+name|pctx
+parameter_list|)
+function_decl|;
+typedef|typedef
+name|int
 name|ASN1_primitive_i2c
 parameter_list|(
 name|ASN1_VALUE
@@ -1327,6 +1364,33 @@ name|it
 parameter_list|)
 function_decl|;
 typedef|typedef
+name|int
+name|ASN1_primitive_print
+parameter_list|(
+name|BIO
+modifier|*
+name|out
+parameter_list|,
+name|ASN1_VALUE
+modifier|*
+modifier|*
+name|pval
+parameter_list|,
+specifier|const
+name|ASN1_ITEM
+modifier|*
+name|it
+parameter_list|,
+name|int
+name|indent
+parameter_list|,
+specifier|const
+name|ASN1_PCTX
+modifier|*
+name|pctx
+parameter_list|)
+function_decl|;
+typedef|typedef
 struct|struct
 name|ASN1_COMPAT_FUNCS_st
 block|{
@@ -1377,6 +1441,10 @@ name|ASN1_ex_i2d
 modifier|*
 name|asn1_ex_i2d
 decl_stmt|;
+name|ASN1_ex_print_func
+modifier|*
+name|asn1_ex_print
+decl_stmt|;
 block|}
 name|ASN1_EXTERN_FUNCS
 typedef|;
@@ -1412,6 +1480,10 @@ name|ASN1_primitive_i2c
 modifier|*
 name|prim_i2c
 decl_stmt|;
+name|ASN1_primitive_print
+modifier|*
+name|prim_print
+decl_stmt|;
 block|}
 name|ASN1_PRIMITIVE_FUNCS
 typedef|;
@@ -1432,6 +1504,10 @@ specifier|const
 name|ASN1_ITEM
 modifier|*
 name|it
+parameter_list|,
+name|void
+modifier|*
+name|exarg
 parameter_list|)
 function_decl|;
 typedef|typedef
@@ -1463,6 +1539,51 @@ decl_stmt|;
 comment|/* Offset of ASN1_ENCODING structure */
 block|}
 name|ASN1_AUX
+typedef|;
+comment|/* For print related callbacks exarg points to this structure */
+typedef|typedef
+struct|struct
+name|ASN1_PRINT_ARG_st
+block|{
+name|BIO
+modifier|*
+name|out
+decl_stmt|;
+name|int
+name|indent
+decl_stmt|;
+specifier|const
+name|ASN1_PCTX
+modifier|*
+name|pctx
+decl_stmt|;
+block|}
+name|ASN1_PRINT_ARG
+typedef|;
+comment|/* For streaming related callbacks exarg points to this structure */
+typedef|typedef
+struct|struct
+name|ASN1_STREAM_ARG_st
+block|{
+comment|/* BIO to stream through */
+name|BIO
+modifier|*
+name|out
+decl_stmt|;
+comment|/* BIO with filters appended */
+name|BIO
+modifier|*
+name|ndef_bio
+decl_stmt|;
+comment|/* Streaming I/O boundary */
+name|unsigned
+name|char
+modifier|*
+modifier|*
+name|boundary
+decl_stmt|;
+block|}
+name|ASN1_STREAM_ARG
 typedef|;
 comment|/* Flags in ASN1_AUX */
 comment|/* Use a reference count */
@@ -1513,6 +1634,30 @@ define|#
 directive|define
 name|ASN1_OP_I2D_POST
 value|7
+define|#
+directive|define
+name|ASN1_OP_PRINT_PRE
+value|8
+define|#
+directive|define
+name|ASN1_OP_PRINT_POST
+value|9
+define|#
+directive|define
+name|ASN1_OP_STREAM_PRE
+value|10
+define|#
+directive|define
+name|ASN1_OP_STREAM_POST
+value|11
+define|#
+directive|define
+name|ASN1_OP_DETACHED_PRE
+value|12
+define|#
+directive|define
+name|ASN1_OP_DETACHED_POST
+value|13
 comment|/* Macro to implement a primitive type */
 define|#
 directive|define
@@ -1603,12 +1748,34 @@ define|\
 value|IMPLEMENT_ASN1_FUNCTIONS_ENCODE_fname(stname, itname, itname)
 define|#
 directive|define
+name|IMPLEMENT_STATIC_ASN1_ALLOC_FUNCTIONS
+parameter_list|(
+name|stname
+parameter_list|)
+define|\
+value|IMPLEMENT_ASN1_ALLOC_FUNCTIONS_pfname(static, stname, stname, stname)
+define|#
+directive|define
 name|IMPLEMENT_ASN1_ALLOC_FUNCTIONS
 parameter_list|(
 name|stname
 parameter_list|)
 define|\
 value|IMPLEMENT_ASN1_ALLOC_FUNCTIONS_fname(stname, stname, stname)
+define|#
+directive|define
+name|IMPLEMENT_ASN1_ALLOC_FUNCTIONS_pfname
+parameter_list|(
+name|pre
+parameter_list|,
+name|stname
+parameter_list|,
+name|itname
+parameter_list|,
+name|fname
+parameter_list|)
+define|\
+value|pre stname *fname##_new(void) \ 	{ \ 		return (stname *)ASN1_item_new(ASN1_ITEM_rptr(itname)); \ 	} \ 	pre void fname##_free(stname *a) \ 	{ \ 		ASN1_item_free((ASN1_VALUE *)a, ASN1_ITEM_rptr(itname)); \ 	}
 define|#
 directive|define
 name|IMPLEMENT_ASN1_ALLOC_FUNCTIONS_fname
@@ -1674,6 +1841,26 @@ name|stname
 parameter_list|)
 define|\
 value|stname * stname##_dup(stname *x) \         { \         return ASN1_item_dup(ASN1_ITEM_rptr(stname), x); \         }
+define|#
+directive|define
+name|IMPLEMENT_ASN1_PRINT_FUNCTION
+parameter_list|(
+name|stname
+parameter_list|)
+define|\
+value|IMPLEMENT_ASN1_PRINT_FUNCTION_fname(stname, stname, stname)
+define|#
+directive|define
+name|IMPLEMENT_ASN1_PRINT_FUNCTION_fname
+parameter_list|(
+name|stname
+parameter_list|,
+name|itname
+parameter_list|,
+name|fname
+parameter_list|)
+define|\
+value|int fname##_print_ctx(BIO *out, stname *x, int indent, \ 						const ASN1_PCTX *pctx) \ 	{ \ 		return ASN1_item_print(out, (ASN1_VALUE *)x, indent, \ 			ASN1_ITEM_rptr(itname), pctx); \ 	}
 define|#
 directive|define
 name|IMPLEMENT_ASN1_FUNCTIONS_const

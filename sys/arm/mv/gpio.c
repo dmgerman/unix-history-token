@@ -716,6 +716,10 @@ condition|(
 name|dev_id
 operator|==
 name|MV_DEV_88F6281
+operator|||
+name|dev_id
+operator|==
+name|MV_DEV_88F6282
 condition|)
 block|{
 name|sc

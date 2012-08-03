@@ -2462,6 +2462,11 @@ begin_typedef
 typedef|typedef
 enum|enum
 block|{
+name|AC_UNIT_ATTENTION
+init|=
+literal|0x4000
+block|,
+comment|/* Device reported UNIT ATTENTION */
 name|AC_ADVINFO_CHANGED
 init|=
 literal|0x2000

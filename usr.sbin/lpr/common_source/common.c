@@ -457,7 +457,7 @@ argument_list|(
 name|uid
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Estimate the array size by taking the size of the directory file 	 * and dividing it by a multiple of the minimum size entry.  	 */
+comment|/* 	 * Estimate the array size by taking the size of the directory file 	 * and dividing it by a multiple of the minimum size entry. 	 */
 name|arraysz
 operator|=
 operator|(
@@ -467,6 +467,16 @@ name|st_size
 operator|/
 literal|24
 operator|)
+expr_stmt|;
+if|if
+condition|(
+name|arraysz
+operator|<
+literal|16
+condition|)
+name|arraysz
+operator|=
+literal|16
 expr_stmt|;
 name|queue
 operator|=
@@ -2612,7 +2622,7 @@ name|userid
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 	 * Format of statline. 	 * Some of the keywords listed here are not implemented here, but 	 * they are listed to reserve the meaning for a given keyword. 	 * Fields are separated by a blank.  The fields in statline are: 	 *<tstamp>      - time the transfer started 	 *<ptrqueue>    - name of the printer queue (the short-name...) 	 *<hname>       - hostname the file originally came from (the 	 *		     'lpr host'), if known, or  "_na_" if not known. 	 *<xxx>         - id of job from that host (generally three digits) 	 *<n>           - file count (# of file within job) 	 *<rectype>     - 4-byte field indicating the type of transfer 	 *		     statistics record.  "send" means it's from the 	 *		     host sending a datafile, "recv" means it's from 	 *		     a host as it receives a datafile. 	 *   user=<userid> - user who sent the job (if known) 	 *   secs=<n>      - seconds it took to transfer the file 	 *   bytes=<n>     - number of bytes transfered (ie, "bytecount") 	 *   bps=<n.n>e<n> - Bytes/sec (if the transfer was "big enough" 	 *		     for this to be useful)  	 * ! top=<str>     - type of printer (if the type is defined in 	 *		     printcap, and if this statline is for sending 	 *		     a file to that ptr) 	 * ! qls=<n>       - queue-length at start of send/print-ing a job 	 * ! qle=<n>       - queue-length at end of send/print-ing a job 	 *   sip=<addr>    - IP address of sending host, only included when 	 *		     receiving a job. 	 *   shost=<hname> - sending host (if that does != the original host) 	 *   rhost=<hname> - hostname receiving the file (ie, "destination") 	 *   rdev=<dev>    - device receiving the file, when the file is being 	 *		     send to a device instead of a remote host. 	 * 	 * Note: A single print job may be transferred multiple times.  The 	 * original 'lpr' occurs on one host, and that original host might 	 * send to some interim host (or print server).  That interim host 	 * might turn around and send the job to yet another host (most likely 	 * the real printer).  The 'shost=' parameter is only included if the 	 * sending host for this particular transfer is NOT the same as the 	 * host which did the original 'lpr'. 	 * 	 * Many values have 'something=' tags before them, because they are 	 * in some sense "optional", or their order may vary.  "Optional" may 	 * mean in the sense that different SITES might choose to have other 	 * fields in the record, or that some fields are only included under 	 * some circumstances.  Programs processing these records should not 	 * assume the order or existence of any of these keyword fields. 	 */
+comment|/* 	 * Format of statline. 	 * Some of the keywords listed here are not implemented here, but 	 * they are listed to reserve the meaning for a given keyword. 	 * Fields are separated by a blank.  The fields in statline are: 	 *<tstamp>      - time the transfer started 	 *<ptrqueue>    - name of the printer queue (the short-name...) 	 *<hname>       - hostname the file originally came from (the 	 *		     'lpr host'), if known, or  "_na_" if not known. 	 *<xxx>         - id of job from that host (generally three digits) 	 *<n>           - file count (# of file within job) 	 *<rectype>     - 4-byte field indicating the type of transfer 	 *		     statistics record.  "send" means it's from the 	 *		     host sending a datafile, "recv" means it's from 	 *		     a host as it receives a datafile. 	 *   user=<userid> - user who sent the job (if known) 	 *   secs=<n>      - seconds it took to transfer the file 	 *   bytes=<n>     - number of bytes transfered (ie, "bytecount") 	 *   bps=<n.n>e<n> - Bytes/sec (if the transfer was "big enough" 	 *		     for this to be useful) 	 * ! top=<str>     - type of printer (if the type is defined in 	 *		     printcap, and if this statline is for sending 	 *		     a file to that ptr) 	 * ! qls=<n>       - queue-length at start of send/print-ing a job 	 * ! qle=<n>       - queue-length at end of send/print-ing a job 	 *   sip=<addr>    - IP address of sending host, only included when 	 *		     receiving a job. 	 *   shost=<hname> - sending host (if that does != the original host) 	 *   rhost=<hname> - hostname receiving the file (ie, "destination") 	 *   rdev=<dev>    - device receiving the file, when the file is being 	 *		     send to a device instead of a remote host. 	 * 	 * Note: A single print job may be transferred multiple times.  The 	 * original 'lpr' occurs on one host, and that original host might 	 * send to some interim host (or print server).  That interim host 	 * might turn around and send the job to yet another host (most likely 	 * the real printer).  The 'shost=' parameter is only included if the 	 * sending host for this particular transfer is NOT the same as the 	 * host which did the original 'lpr'. 	 * 	 * Many values have 'something=' tags before them, because they are 	 * in some sense "optional", or their order may vary.  "Optional" may 	 * mean in the sense that different SITES might choose to have other 	 * fields in the record, or that some fields are only included under 	 * some circumstances.  Programs processing these records should not 	 * assume the order or existence of any of these keyword fields. 	 */
 name|snprintf
 argument_list|(
 name|statline

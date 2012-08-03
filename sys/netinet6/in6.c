@@ -1360,7 +1360,7 @@ case|:
 case|case
 name|SIOCGETMIFCNT_IN6
 case|:
-comment|/*	 		 * XXX mrt_ioctl has a 3rd, unused, FIB argument in route.c. 		 * We cannot see how that would be needed, so do not adjust the 		 * KPI blindly; more likely should clean up the IPv4 variant. 		 */
+comment|/* 		 * XXX mrt_ioctl has a 3rd, unused, FIB argument in route.c. 		 * We cannot see how that would be needed, so do not adjust the 		 * KPI blindly; more likely should clean up the IPv4 variant. 		 */
 return|return
 operator|(
 name|mrt6_ioctl
@@ -6045,7 +6045,7 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/*  		 * If no more IPv6 address exists on this interface then 		 * remove the multicast address route. 		 */
+comment|/* 		 * If no more IPv6 address exists on this interface then 		 * remove the multicast address route. 		 */
 if|if
 condition|(
 name|ifa0
@@ -6280,7 +6280,7 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/*  		 * If no more IPv6 address exists on this interface then 		 * remove the multicast address route. 		 */
+comment|/* 		 * If no more IPv6 address exists on this interface then 		 * remove the multicast address route. 		 */
 if|if
 condition|(
 name|ifa0
@@ -6556,7 +6556,7 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Remove the loopback route to the interface address. 	 * The check for the current setting of "nd6_useloopback"  	 * is not needed. 	 */
+comment|/* 	 * Remove the loopback route to the interface address. 	 * The check for the current setting of "nd6_useloopback" 	 * is not needed. 	 */
 if|if
 condition|(
 name|ia
@@ -8457,7 +8457,7 @@ operator|->
 name|if_metric
 expr_stmt|;
 comment|/* we could do in(6)_socktrim here, but just omit it at this moment. */
-comment|/* 	 * Special case: 	 * If a new destination address is specified for a point-to-point 	 * interface, install a route to the destination as an interface 	 * direct route.  	 * XXX: the logic below rejects assigning multiple addresses on a p2p 	 * interface that share the same destination. 	 */
+comment|/* 	 * Special case: 	 * If a new destination address is specified for a point-to-point 	 * interface, install a route to the destination as an interface 	 * direct route. 	 * XXX: the logic below rejects assigning multiple addresses on a p2p 	 * interface that share the same destination. 	 */
 name|plen
 operator|=
 name|in6_mask2len
@@ -10896,7 +10896,7 @@ argument_list|)
 argument_list|,
 name|M_LLTABLE
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -10968,10 +10968,12 @@ name|CALLOUT_RETURNUNLOCKED
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|&
 name|lle
 operator|->
 name|base
+operator|)
 return|;
 block|}
 end_function
@@ -11038,11 +11040,17 @@ decl_stmt|,
 modifier|*
 name|next
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
-comment|/* 	 * (flags& LLE_STATIC) means deleting all entries  	 * including static ND6 entries 	 */
+comment|/* 	 * (flags& LLE_STATIC) means deleting all entries 	 * including static ND6 entries. 	 */
+name|IF_AFDATA_WLOCK
+argument_list|(
+name|llt
+operator|->
+name|llt_ifp
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -11073,17 +11081,13 @@ condition|(
 name|IN6_ARE_MASKED_ADDR_EQUAL
 argument_list|(
 operator|&
-operator|(
-operator|(
-expr|struct
-name|sockaddr_in6
-operator|*
-operator|)
+name|satosin6
+argument_list|(
 name|L3_ADDR
 argument_list|(
 name|lle
 argument_list|)
-operator|)
+argument_list|)
 operator|->
 name|sin6_addr
 argument_list|,
@@ -11116,19 +11120,6 @@ operator|)
 operator|)
 condition|)
 block|{
-name|int
-name|canceled
-decl_stmt|;
-name|canceled
-operator|=
-name|callout_drain
-argument_list|(
-operator|&
-name|lle
-operator|->
-name|la_timer
-argument_list|)
-expr_stmt|;
 name|LLE_WLOCK
 argument_list|(
 name|lle
@@ -11136,7 +11127,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|canceled
+name|callout_stop
+argument_list|(
+operator|&
+name|lle
+operator|->
+name|la_timer
+argument_list|)
 condition|)
 name|LLE_REMREF
 argument_list|(
@@ -11151,6 +11148,13 @@ expr_stmt|;
 block|}
 block|}
 block|}
+name|IF_AFDATA_WUNLOCK
+argument_list|(
+name|llt
+operator|->
+name|llt_ifp
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -11250,7 +11254,7 @@ name|ifaddr
 modifier|*
 name|ifa
 decl_stmt|;
-comment|/*  		 * Create an ND6 cache for an IPv6 neighbor  		 * that is not covered by our own prefix. 		 */
+comment|/* 		 * Create an ND6 cache for an IPv6 neighbor 		 * that is not covered by our own prefix. 		 */
 comment|/* XXX ifaof_ifpforaddr should take a const param */
 name|ifa
 operator|=
@@ -11650,6 +11654,12 @@ name|lle_head
 operator|=
 name|lleh
 expr_stmt|;
+name|lle
+operator|->
+name|la_flags
+operator||=
+name|LLE_LINKED
+expr_stmt|;
 name|LIST_INSERT_HEAD
 argument_list|(
 name|lleh
@@ -11694,7 +11704,7 @@ expr_stmt|;
 name|lle
 operator|->
 name|la_flags
-operator|=
+operator||=
 name|LLE_DELETED
 expr_stmt|;
 name|LLE_WUNLOCK

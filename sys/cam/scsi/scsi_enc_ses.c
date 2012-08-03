@@ -129,12 +129,6 @@ directive|include
 file|<cam/scsi/scsi_enc_internal.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<opt_enc.h>
-end_include
-
 begin_comment
 comment|/* SES Native Type Device Support */
 end_comment
@@ -5544,9 +5538,11 @@ if|if
 condition|(
 name|err
 condition|)
-name|ses_softc_cleanup
+name|ses_cache_free
 argument_list|(
 name|enc
+argument_list|,
+name|enc_cache
 argument_list|)
 expr_stmt|;
 else|else

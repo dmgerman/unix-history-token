@@ -598,7 +598,7 @@ parameter_list|,
 name|_index
 parameter_list|)
 define|\
-value|((_series)[_index].RateFlags& HAL_RATESERIES_2040 ? AR_2040_##_index : 0) \         |((_series)[_index].RateFlags& HAL_RATESERIES_HALFGI ? AR_GI##_index : 0) \         |SM((_series)[_index].ChSel, AR_ChainSel##_index)
+value|((_series)[_index].RateFlags& HAL_RATESERIES_2040 ? AR_2040_##_index : 0) \         |((_series)[_index].RateFlags& HAL_RATESERIES_HALFGI ? AR_GI##_index : 0) \         |((_series)[_index].RateFlags& HAL_RATESERIES_STBC ? AR_STBC##_index : 0) \         |SM((_series)[_index].ChSel, AR_ChainSel##_index)
 end_define
 
 begin_comment
@@ -3839,9 +3839,6 @@ name|ds
 parameter_list|,
 name|u_int
 name|aggrLen
-parameter_list|,
-name|u_int
-name|numDelims
 parameter_list|)
 block|{
 name|struct
@@ -3884,13 +3881,6 @@ argument_list|(
 name|aggrLen
 argument_list|,
 name|AR_AggrLen
-argument_list|)
-operator||
-name|SM
-argument_list|(
-name|numDelims
-argument_list|,
-name|AR_PadDelim
 argument_list|)
 expr_stmt|;
 block|}

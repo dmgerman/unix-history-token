@@ -3018,10 +3018,16 @@ case|:
 case|case
 name|HAL_CAP_NUM_MR_RETRIES
 case|:
+operator|*
+name|result
+operator|=
+name|pCap
+operator|->
+name|halNumMRRetries
+expr_stmt|;
 return|return
-name|HAL_EINVAL
+name|HAL_OK
 return|;
-comment|/* XXX not yet */
 case|case
 name|HAL_CAP_BT_COEX
 case|:

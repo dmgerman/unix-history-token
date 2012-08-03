@@ -2192,7 +2192,7 @@ operator|.
 name|sin_len
 condition|)
 block|{
-comment|/*  			 * QL: XXX 			 * Need to scrub the prefix here in case 			 * the issued command is SIOCAIFADDR with 			 * the same address, but with a different 			 * prefix length. And if the prefix length 			 * is the same as before, then the call is  			 * un-necessarily executed here. 			 */
+comment|/* 			 * QL: XXX 			 * Need to scrub the prefix here in case 			 * the issued command is SIOCAIFADDR with 			 * the same address, but with a different 			 * prefix length. And if the prefix length 			 * is the same as before, then the call is 			 * un-necessarily executed here. 			 */
 name|in_ifscrub
 argument_list|(
 name|ifp
@@ -4229,7 +4229,7 @@ value|((((x)->ia_ifp->if_flags& (IFF_LOOPBACK | IFF_POINTOPOINT)) != 0) \ 	    ?
 end_define
 
 begin_comment
-comment|/*  * Generate a routing message when inserting or deleting   * an interface address alias.  */
+comment|/*  * Generate a routing message when inserting or deleting  * an interface address alias.  */
 end_comment
 
 begin_function
@@ -4339,7 +4339,7 @@ name|pfx_ro
 operator|.
 name|ro_rt
 expr_stmt|;
-comment|/* QL: XXX 		 * Point the gateway to the new interface 		 * address as if a new prefix route entry has  		 * been added through the new address alias.  		 * All other parts of the rtentry is accurate,  		 * e.g., rt_key, rt_mask, rt_ifp etc. 		 */
+comment|/* QL: XXX 		 * Point the gateway to the new interface 		 * address as if a new prefix route entry has 		 * been added through the new address alias. 		 * All other parts of the rtentry is accurate, 		 * e.g., rt_key, rt_mask, rt_ifp etc. 		 */
 name|msg_rt
 operator|.
 name|rt_gateway
@@ -5878,18 +5878,6 @@ comment|/* NB: caller generates msg */
 return|return
 name|NULL
 return|;
-name|callout_init
-argument_list|(
-operator|&
-name|lle
-operator|->
-name|base
-operator|.
-name|la_timer
-argument_list|,
-name|CALLOUT_MPSAFE
-argument_list|)
-expr_stmt|;
 comment|/* 	 * For IPv4 this will trigger "arpresolve" to generate 	 * an ARP request. 	 */
 name|lle
 operator|->
@@ -5937,11 +5925,32 @@ operator|->
 name|base
 argument_list|)
 expr_stmt|;
-return|return
+name|callout_init_rw
+argument_list|(
 operator|&
 name|lle
 operator|->
 name|base
+operator|.
+name|la_timer
+argument_list|,
+operator|&
+name|lle
+operator|->
+name|base
+operator|.
+name|lle_lock
+argument_list|,
+name|CALLOUT_RETURNUNLOCKED
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|&
+name|lle
+operator|->
+name|base
+operator|)
 return|;
 block|}
 end_function
@@ -6022,13 +6031,19 @@ decl_stmt|,
 modifier|*
 name|next
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
 name|size_t
 name|pkts_dropped
 decl_stmt|;
+name|IF_AFDATA_WLOCK
+argument_list|(
+name|llt
+operator|->
+name|llt_ifp
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -6054,19 +6069,17 @@ argument_list|,
 argument|next
 argument_list|)
 block|{
-comment|/*  			 * (flags& LLE_STATIC) means deleting all entries 			 * including static ARP entries 			 */
+comment|/* 			 * (flags& LLE_STATIC) means deleting all entries 			 * including static ARP entries. 			 */
 if|if
 condition|(
 name|IN_ARE_MASKED_ADDR_EQUAL
 argument_list|(
-operator|(
-expr|struct
-name|sockaddr_in
-operator|*
-operator|)
+name|satosin
+argument_list|(
 name|L3_ADDR
 argument_list|(
 name|lle
+argument_list|)
 argument_list|)
 argument_list|,
 name|pfx
@@ -6092,19 +6105,6 @@ operator|)
 operator|)
 condition|)
 block|{
-name|int
-name|canceled
-decl_stmt|;
-name|canceled
-operator|=
-name|callout_drain
-argument_list|(
-operator|&
-name|lle
-operator|->
-name|la_timer
-argument_list|)
-expr_stmt|;
 name|LLE_WLOCK
 argument_list|(
 name|lle
@@ -6112,7 +6112,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|canceled
+name|callout_stop
+argument_list|(
+operator|&
+name|lle
+operator|->
+name|la_timer
+argument_list|)
 condition|)
 name|LLE_REMREF
 argument_list|(
@@ -6136,6 +6142,13 @@ expr_stmt|;
 block|}
 block|}
 block|}
+name|IF_AFDATA_WUNLOCK
+argument_list|(
+name|llt
+operator|->
+name|llt_ifp
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -6294,7 +6307,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 	 * Make sure that at least the destination address is covered  	 * by the route. This is for handling the case where 2 or more  	 * interfaces have the same prefix. An incoming packet arrives 	 * on one interface and the corresponding outgoing packet leaves 	 * another interface. 	 */
+comment|/* 	 * Make sure that at least the destination address is covered 	 * by the route. This is for handling the case where 2 or more 	 * interfaces have the same prefix. An incoming packet arrives 	 * on one interface and the corresponding outgoing packet leaves 	 * another interface. 	 */
 if|if
 condition|(
 operator|!
@@ -6607,14 +6620,12 @@ name|sockaddr_in
 modifier|*
 name|sa2
 init|=
-operator|(
-expr|struct
-name|sockaddr_in
-operator|*
-operator|)
+name|satosin
+argument_list|(
 name|L3_ADDR
 argument_list|(
 name|lle
+argument_list|)
 argument_list|)
 decl_stmt|;
 if|if
@@ -6802,6 +6813,12 @@ name|lle_head
 operator|=
 name|lleh
 expr_stmt|;
+name|lle
+operator|->
+name|la_flags
+operator||=
+name|LLE_LINKED
+expr_stmt|;
 name|LIST_INSERT_HEAD
 argument_list|(
 name|lleh
@@ -6846,7 +6863,7 @@ expr_stmt|;
 name|lle
 operator|->
 name|la_flags
-operator|=
+operator||=
 name|LLE_DELETED
 expr_stmt|;
 name|EVENTHANDLER_INVOKE

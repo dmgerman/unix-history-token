@@ -1668,7 +1668,7 @@ do|while
 condition|(
 name|allocpages
 operator|>
-name|VM_LEVEL_0_NPAGES
+literal|0
 condition|)
 do|;
 return|return

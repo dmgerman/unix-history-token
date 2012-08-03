@@ -61,6 +61,8 @@ name|NT_LOGOUT
 block|,
 name|NT_GLOBAL_LOGOUT
 block|,
+name|NT_CHANGED
+block|,
 name|NT_ARRIVED
 block|,
 name|NT_DEPARTED

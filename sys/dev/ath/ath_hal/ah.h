@@ -706,6 +706,17 @@ begin_comment
 comment|/* max possible # of queues */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|HAL_TXFIFO_DEPTH
+value|8
+end_define
+
+begin_comment
+comment|/* transmit fifo depth */
+end_comment
+
 begin_comment
 comment|/*  * Transmit queue subtype.  These map directly to  * WME Access Categories (except for UPSD).  Refer  * to Table 5 of the WME spec.  */
 end_comment
@@ -1721,6 +1732,11 @@ decl_stmt|;
 name|u_int
 name|Rate
 decl_stmt|;
+comment|/* hardware rate code */
+name|u_int
+name|RateIndex
+decl_stmt|;
+comment|/* rate series table index */
 name|u_int
 name|PktDuration
 decl_stmt|;
@@ -1745,6 +1761,14 @@ directive|define
 name|HAL_RATESERIES_HALFGI
 value|0x0004
 comment|/* use half-gi for series */
+define|#
+directive|define
+name|HAL_RATESERIES_STBC
+value|0x0008
+comment|/* use STBC for series */
+name|u_int
+name|tx_power_cap
+decl_stmt|;
 block|}
 name|HAL_11N_RATE_SERIES
 typedef|;
@@ -3584,6 +3608,91 @@ modifier|*
 name|tries
 parameter_list|)
 function_decl|;
+name|void
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_setTxDescLink
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|void
+modifier|*
+name|ds
+parameter_list|,
+name|uint32_t
+name|link
+parameter_list|)
+function_decl|;
+name|void
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_getTxDescLink
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|void
+modifier|*
+name|ds
+parameter_list|,
+name|uint32_t
+modifier|*
+name|link
+parameter_list|)
+function_decl|;
+name|void
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_getTxDescLinkPtr
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|void
+modifier|*
+name|ds
+parameter_list|,
+name|uint32_t
+modifier|*
+modifier|*
+name|linkptr
+parameter_list|)
+function_decl|;
+name|void
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_setupTxStatusRing
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+name|ts_start
+parameter_list|,
+name|uint32_t
+name|ts_paddr_start
+parameter_list|,
+name|uint16_t
+name|size
+parameter_list|)
+function_decl|;
 comment|/* Receive Functions */
 name|uint32_t
 name|__ahdecl
@@ -4867,8 +4976,6 @@ parameter_list|,
 name|struct
 name|ath_desc
 modifier|*
-parameter_list|,
-name|u_int
 parameter_list|,
 name|u_int
 parameter_list|)

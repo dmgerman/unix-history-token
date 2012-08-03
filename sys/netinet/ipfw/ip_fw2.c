@@ -871,6 +871,10 @@ name|TUNABLE_INT
 argument_list|(
 literal|"net.inet.ip.fw.tables_max"
 argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
 operator|&
 name|default_fw_tables
 argument_list|)

@@ -23,6 +23,12 @@ directive|include
 file|<netinet/sctp_os.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET6
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -47,14 +53,11 @@ directive|include
 file|<netinet/sctp_var.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|INET6
-argument_list|)
-end_if
+end_ifdef
 
 begin_include
 include|#
@@ -157,14 +160,11 @@ directive|include
 file|<netipsec/ipsec.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|INET6
-argument_list|)
-end_if
+end_ifdef
 
 begin_include
 include|#
@@ -6020,6 +6020,11 @@ name|sctp_soreceive
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

@@ -4,7 +4,7 @@ comment|/* crypto/asn1/asn1_err.c */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1999-2008 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1999-2011 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_comment
@@ -249,6 +249,15 @@ block|,
 block|{
 name|ERR_FUNC
 argument_list|(
+name|ASN1_F_ASN1_GENERALIZEDTIME_ADJ
+argument_list|)
+block|,
+literal|"ASN1_GENERALIZEDTIME_adj"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
 name|ASN1_F_ASN1_GENERALIZEDTIME_SET
 argument_list|)
 block|,
@@ -279,7 +288,7 @@ argument_list|(
 name|ASN1_F_ASN1_HEADER_NEW
 argument_list|)
 block|,
-literal|"ASN1_HEADER_new"
+literal|"ASN1_HEADER_NEW"
 block|}
 block|,
 block|{
@@ -393,6 +402,15 @@ block|,
 block|{
 name|ERR_FUNC
 argument_list|(
+name|ASN1_F_ASN1_ITEM_SIGN_CTX
+argument_list|)
+block|,
+literal|"ASN1_item_sign_ctx"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
 name|ASN1_F_ASN1_ITEM_UNPACK
 argument_list|)
 block|,
@@ -450,7 +468,7 @@ argument_list|(
 name|ASN1_F_ASN1_PCTX_NEW
 argument_list|)
 block|,
-literal|"ASN1_PCTX_NEW"
+literal|"ASN1_PCTX_new"
 block|}
 block|,
 block|{
@@ -555,6 +573,15 @@ block|,
 block|{
 name|ERR_FUNC
 argument_list|(
+name|ASN1_F_ASN1_TIME_ADJ
+argument_list|)
+block|,
+literal|"ASN1_TIME_adj"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
 name|ASN1_F_ASN1_TIME_SET
 argument_list|)
 block|,
@@ -591,6 +618,15 @@ block|,
 block|{
 name|ERR_FUNC
 argument_list|(
+name|ASN1_F_ASN1_UTCTIME_ADJ
+argument_list|)
+block|,
+literal|"ASN1_UTCTIME_adj"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
 name|ASN1_F_ASN1_UTCTIME_SET
 argument_list|)
 block|,
@@ -622,6 +658,15 @@ name|ASN1_F_B64_WRITE_ASN1
 argument_list|)
 block|,
 literal|"B64_WRITE_ASN1"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|ASN1_F_BIO_NEW_NDEF
+argument_list|)
+block|,
+literal|"BIO_new_NDEF"
 block|}
 block|,
 block|{
@@ -729,7 +774,7 @@ argument_list|(
 name|ASN1_F_D2I_ASN1_HEADER
 argument_list|)
 block|,
-literal|"d2i_ASN1_HEADER"
+literal|"D2I_ASN1_HEADER"
 block|}
 block|,
 block|{
@@ -784,6 +829,15 @@ name|ASN1_F_D2I_ASN1_UTCTIME
 argument_list|)
 block|,
 literal|"D2I_ASN1_UTCTIME"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|ASN1_F_D2I_AUTOPRIVATEKEY
+argument_list|)
+block|,
+literal|"d2i_AutoPrivateKey"
 block|}
 block|,
 block|{
@@ -865,6 +919,15 @@ name|ASN1_F_D2I_X509_PKEY
 argument_list|)
 block|,
 literal|"d2i_X509_PKEY"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|ASN1_F_I2D_ASN1_BIO_STREAM
+argument_list|)
+block|,
+literal|"i2d_ASN1_bio_stream"
 block|}
 block|,
 block|{
@@ -969,10 +1032,10 @@ block|,
 block|{
 name|ERR_FUNC
 argument_list|(
-name|ASN1_F_PKCS5_PBE2_SET
+name|ASN1_F_PKCS5_PBE2_SET_IV
 argument_list|)
 block|,
-literal|"PKCS5_pbe2_set"
+literal|"PKCS5_pbe2_set_iv"
 block|}
 block|,
 block|{
@@ -982,6 +1045,24 @@ name|ASN1_F_PKCS5_PBE_SET
 argument_list|)
 block|,
 literal|"PKCS5_pbe_set"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|ASN1_F_PKCS5_PBE_SET0_ALGOR
+argument_list|)
+block|,
+literal|"PKCS5_pbe_set0_algor"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|ASN1_F_PKCS5_PBKDF2_SET
+argument_list|)
+block|,
+literal|"PKCS5_pbkdf2_set"
 block|}
 block|,
 block|{
@@ -1210,6 +1291,15 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|ASN1_R_CONTEXT_NOT_INITIALISED
+argument_list|)
+block|,
+literal|"context not initialised"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|ASN1_R_DATA_IS_WRONG
 argument_list|)
 block|,
@@ -1241,6 +1331,15 @@ name|ASN1_R_DEPTH_EXCEEDED
 argument_list|)
 block|,
 literal|"depth exceeded"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|ASN1_R_DIGEST_AND_KEY_TYPE_NOT_SUPPORTED
+argument_list|)
+block|,
+literal|"digest and key type not supported"
 block|}
 block|,
 block|{
@@ -1759,6 +1858,15 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|ASN1_R_NO_DEFAULT_DIGEST
+argument_list|)
+block|,
+literal|"no default digest"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|ASN1_R_NO_MATCHING_CHOICE_TYPE
 argument_list|)
 block|,
@@ -2029,6 +2137,15 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|ASN1_R_UNKNOWN_SIGNATURE_ALGORITHM
+argument_list|)
+block|,
+literal|"unknown signature algorithm"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|ASN1_R_UNKNOWN_TAG
 argument_list|)
 block|,
@@ -2087,6 +2204,15 @@ name|ASN1_R_UNSUPPORTED_TYPE
 argument_list|)
 block|,
 literal|"unsupported type"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|ASN1_R_WRONG_PUBLIC_KEY_TYPE
+argument_list|)
+block|,
+literal|"wrong public key type"
 block|}
 block|,
 block|{

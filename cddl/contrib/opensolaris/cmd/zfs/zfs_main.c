@@ -4999,6 +4999,11 @@ operator|!
 name|cb
 operator|->
 name|cb_doclones
+operator|&&
+operator|!
+name|cb
+operator|->
+name|cb_defer_destroy
 condition|)
 block|{
 name|cb

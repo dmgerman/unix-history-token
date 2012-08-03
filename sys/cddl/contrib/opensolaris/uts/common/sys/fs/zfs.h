@@ -1445,6 +1445,11 @@ value|"unsup_feat"
 comment|/* not stored on disk */
 define|#
 directive|define
+name|ZPOOL_CONFIG_ENABLED_FEAT
+value|"enabled_feat"
+comment|/* not stored on disk */
+define|#
+directive|define
 name|ZPOOL_CONFIG_CAN_RDONLY
 value|"can_rdonly"
 comment|/* not stored on disk */

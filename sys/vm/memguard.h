@@ -47,8 +47,10 @@ parameter_list|(
 name|unsigned
 name|long
 parameter_list|,
-name|unsigned
-name|long
+specifier|const
+name|struct
+name|vm_map
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

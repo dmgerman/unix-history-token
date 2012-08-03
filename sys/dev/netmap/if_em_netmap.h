@@ -685,7 +685,7 @@ operator|-
 literal|1
 decl_stmt|;
 comment|/* generate an interrupt approximately every half ring */
-name|int
+name|u_int
 name|report_frequency
 init|=
 name|kring

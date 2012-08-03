@@ -344,7 +344,7 @@ name|vnode
 modifier|*
 name|fvp
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|char
 modifier|*
@@ -819,7 +819,7 @@ name|socket
 modifier|*
 name|so
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|struct
 name|portalnode
@@ -863,7 +863,7 @@ name|mbuf
 modifier|*
 name|cm
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|struct
 name|cmsghdr
@@ -1450,7 +1450,7 @@ name|mbuf
 modifier|*
 name|m
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|int
 name|flags

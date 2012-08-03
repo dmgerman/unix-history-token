@@ -119,12 +119,6 @@ directive|include
 file|<cam/scsi/scsi_message.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<opt_enc.h>
-end_include
-
 begin_comment
 comment|/*  * SAF-TE Type Device Emulation  */
 end_comment

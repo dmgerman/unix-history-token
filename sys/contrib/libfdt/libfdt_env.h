@@ -78,11 +78,49 @@ end_endif
 begin_define
 define|#
 directive|define
-name|_B
+name|EXTRACT_BYTE
 parameter_list|(
 name|n
 parameter_list|)
 value|((unsigned long long)((uint8_t *)&x)[n])
+end_define
+
+begin_function
+specifier|static
+specifier|inline
+name|uint16_t
+name|fdt16_to_cpu
+parameter_list|(
+name|uint16_t
+name|x
+parameter_list|)
+block|{
+return|return
+operator|(
+name|EXTRACT_BYTE
+argument_list|(
+literal|0
+argument_list|)
+operator|<<
+literal|8
+operator|)
+operator||
+name|EXTRACT_BYTE
+argument_list|(
+literal|1
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_define
+define|#
+directive|define
+name|cpu_to_fdt16
+parameter_list|(
+name|x
+parameter_list|)
+value|fdt16_to_cpu(x)
 end_define
 
 begin_function
@@ -97,7 +135,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|_B
+name|EXTRACT_BYTE
 argument_list|(
 literal|0
 argument_list|)
@@ -106,7 +144,7 @@ literal|24
 operator|)
 operator||
 operator|(
-name|_B
+name|EXTRACT_BYTE
 argument_list|(
 literal|1
 argument_list|)
@@ -115,7 +153,7 @@ literal|16
 operator|)
 operator||
 operator|(
-name|_B
+name|EXTRACT_BYTE
 argument_list|(
 literal|2
 argument_list|)
@@ -123,7 +161,7 @@ operator|<<
 literal|8
 operator|)
 operator||
-name|_B
+name|EXTRACT_BYTE
 argument_list|(
 literal|3
 argument_list|)
@@ -153,7 +191,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|_B
+name|EXTRACT_BYTE
 argument_list|(
 literal|0
 argument_list|)
@@ -162,7 +200,7 @@ literal|56
 operator|)
 operator||
 operator|(
-name|_B
+name|EXTRACT_BYTE
 argument_list|(
 literal|1
 argument_list|)
@@ -171,7 +209,7 @@ literal|48
 operator|)
 operator||
 operator|(
-name|_B
+name|EXTRACT_BYTE
 argument_list|(
 literal|2
 argument_list|)
@@ -180,7 +218,7 @@ literal|40
 operator|)
 operator||
 operator|(
-name|_B
+name|EXTRACT_BYTE
 argument_list|(
 literal|3
 argument_list|)
@@ -189,7 +227,7 @@ literal|32
 operator|)
 operator||
 operator|(
-name|_B
+name|EXTRACT_BYTE
 argument_list|(
 literal|4
 argument_list|)
@@ -198,7 +236,7 @@ literal|24
 operator|)
 operator||
 operator|(
-name|_B
+name|EXTRACT_BYTE
 argument_list|(
 literal|5
 argument_list|)
@@ -207,7 +245,7 @@ literal|16
 operator|)
 operator||
 operator|(
-name|_B
+name|EXTRACT_BYTE
 argument_list|(
 literal|6
 argument_list|)
@@ -215,7 +253,7 @@ operator|<<
 literal|8
 operator|)
 operator||
-name|_B
+name|EXTRACT_BYTE
 argument_list|(
 literal|7
 argument_list|)
@@ -236,7 +274,7 @@ end_define
 begin_undef
 undef|#
 directive|undef
-name|_B
+name|EXTRACT_BYTE
 end_undef
 
 begin_endif

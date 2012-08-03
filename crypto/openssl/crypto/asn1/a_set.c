@@ -149,33 +149,36 @@ begin_comment
 comment|/* int is_set:  if TRUE, then sort the contents (i.e. it isn't a SEQUENCE)    */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|int
 name|i2d_ASN1_SET
-parameter_list|(
-name|STACK
-modifier|*
+argument_list|(
+name|STACK_OF
+argument_list|(
+name|OPENSSL_BLOCK
+argument_list|)
+operator|*
 name|a
-parameter_list|,
+argument_list|,
 name|unsigned
 name|char
-modifier|*
-modifier|*
+operator|*
+operator|*
 name|pp
-parameter_list|,
+argument_list|,
 name|i2d_of_void
-modifier|*
+operator|*
 name|i2d
-parameter_list|,
+argument_list|,
 name|int
 name|ex_tag
-parameter_list|,
+argument_list|,
 name|int
 name|ex_class
-parameter_list|,
+argument_list|,
 name|int
 name|is_set
-parameter_list|)
+argument_list|)
 block|{
 name|int
 name|ret
@@ -222,7 +225,7 @@ for|for
 control|(
 name|i
 operator|=
-name|sk_num
+name|sk_OPENSSL_BLOCK_num
 argument_list|(
 name|a
 argument_list|)
@@ -240,7 +243,7 @@ name|ret
 operator|+=
 name|i2d
 argument_list|(
-name|sk_value
+name|sk_OPENSSL_BLOCK_value
 argument_list|(
 name|a
 argument_list|,
@@ -300,7 +303,7 @@ operator|!
 name|is_set
 operator|||
 operator|(
-name|sk_num
+name|sk_OPENSSL_BLOCK_num
 argument_list|(
 name|a
 argument_list|)
@@ -317,7 +320,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|sk_num
+name|sk_OPENSSL_BLOCK_num
 argument_list|(
 name|a
 argument_list|)
@@ -327,7 +330,7 @@ operator|++
 control|)
 name|i2d
 argument_list|(
-name|sk_value
+name|sk_OPENSSL_BLOCK_value
 argument_list|(
 name|a
 argument_list|,
@@ -357,13 +360,9 @@ comment|/* Catch the beg of Setblobs*/
 comment|/* In this array we will store the SET blobs */
 name|rgSetBlob
 operator|=
-operator|(
-name|MYBLOB
-operator|*
-operator|)
 name|OPENSSL_malloc
 argument_list|(
-name|sk_num
+name|sk_OPENSSL_BLOCK_num
 argument_list|(
 name|a
 argument_list|)
@@ -402,7 +401,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|sk_num
+name|sk_OPENSSL_BLOCK_num
 argument_list|(
 name|a
 argument_list|)
@@ -423,7 +422,7 @@ expr_stmt|;
 comment|/* catch each set encode blob */
 name|i2d
 argument_list|(
-name|sk_value
+name|sk_OPENSSL_BLOCK_value
 argument_list|(
 name|a
 argument_list|,
@@ -469,7 +468,7 @@ name|qsort
 argument_list|(
 name|rgSetBlob
 argument_list|,
-name|sk_num
+name|sk_OPENSSL_BLOCK_num
 argument_list|(
 name|a
 argument_list|)
@@ -521,7 +520,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|sk_num
+name|sk_OPENSSL_BLOCK_num
 argument_list|(
 name|a
 argument_list|)
@@ -585,58 +584,43 @@ name|r
 operator|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
-begin_function
-name|STACK
-modifier|*
+begin_expr_stmt
+name|STACK_OF
+argument_list|(
+name|OPENSSL_BLOCK
+argument_list|)
+operator|*
 name|d2i_ASN1_SET
-parameter_list|(
-name|STACK
-modifier|*
-modifier|*
-name|a
-parameter_list|,
-specifier|const
-name|unsigned
-name|char
-modifier|*
-modifier|*
-name|pp
-parameter_list|,
-name|long
-name|length
-parameter_list|,
-name|d2i_of_void
-modifier|*
-name|d2i
-parameter_list|,
-name|void
-function_decl|(
-modifier|*
-name|free_func
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-parameter_list|,
-name|int
-name|ex_tag
-parameter_list|,
-name|int
-name|ex_class
-parameter_list|)
+argument_list|(
+argument|STACK_OF(OPENSSL_BLOCK) **a
+argument_list|,
+argument|const unsigned char **pp
+argument_list|,
+argument|long length
+argument_list|,
+argument|d2i_of_void *d2i
+argument_list|,
+argument|void (*free_func)(OPENSSL_BLOCK)
+argument_list|,
+argument|int ex_tag
+argument_list|,
+argument|int ex_class
+argument_list|)
 block|{
 name|ASN1_const_CTX
 name|c
-decl_stmt|;
-name|STACK
-modifier|*
+block|;
+name|STACK_OF
+argument_list|(
+name|OPENSSL_BLOCK
+argument_list|)
+operator|*
 name|ret
-init|=
+operator|=
 name|NULL
-decl_stmt|;
+block|;
 if|if
 condition|(
 operator|(
@@ -660,7 +644,7 @@ condition|(
 operator|(
 name|ret
 operator|=
-name|sk_new_null
+name|sk_OPENSSL_BLOCK_new_null
 argument_list|()
 operator|)
 operator|==
@@ -678,8 +662,10 @@ goto|goto
 name|err
 goto|;
 block|}
-block|}
-else|else
+end_expr_stmt
+
+begin_expr_stmt
+unit|} 	else
 name|ret
 operator|=
 operator|(
@@ -687,6 +673,9 @@ operator|*
 name|a
 operator|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|c
 operator|.
 name|p
@@ -694,6 +683,9 @@ operator|=
 operator|*
 name|pp
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|c
 operator|.
 name|max
@@ -714,6 +706,9 @@ operator|+
 name|length
 operator|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|c
 operator|.
 name|inf
@@ -749,6 +744,9 @@ operator|.
 name|p
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|c
@@ -760,6 +758,9 @@ condition|)
 goto|goto
 name|err
 goto|;
+end_if
+
+begin_if
 if|if
 condition|(
 name|ex_class
@@ -780,6 +781,9 @@ goto|goto
 name|err
 goto|;
 block|}
+end_if
+
+begin_if
 if|if
 condition|(
 name|ex_tag
@@ -800,6 +804,9 @@ goto|goto
 name|err
 goto|;
 block|}
+end_if
+
+begin_if
 if|if
 condition|(
 operator|(
@@ -828,7 +835,13 @@ goto|goto
 name|err
 goto|;
 block|}
+end_if
+
+begin_comment
 comment|/* check for infinite constructed - it can be as long 	 * as the amount of data passed to us */
+end_comment
+
+begin_if
 if|if
 condition|(
 name|c
@@ -854,6 +867,9 @@ name|c
 operator|.
 name|p
 expr_stmt|;
+end_if
+
+begin_expr_stmt
 name|c
 operator|.
 name|max
@@ -866,6 +882,9 @@ name|c
 operator|.
 name|slen
 expr_stmt|;
+end_expr_stmt
+
+begin_while
 while|while
 condition|(
 name|c
@@ -929,7 +948,7 @@ call|)
 argument_list|(
 name|c
 operator|.
-name|q
+name|p
 operator|-
 operator|*
 name|pp
@@ -943,7 +962,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|sk_push
+name|sk_OPENSSL_BLOCK_push
 argument_list|(
 name|ret
 argument_list|,
@@ -954,6 +973,9 @@ goto|goto
 name|err
 goto|;
 block|}
+end_while
+
+begin_if
 if|if
 condition|(
 name|a
@@ -967,6 +989,9 @@ operator|)
 operator|=
 name|ret
 expr_stmt|;
+end_if
+
+begin_expr_stmt
 operator|*
 name|pp
 operator|=
@@ -974,13 +999,22 @@ name|c
 operator|.
 name|p
 expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 operator|(
 name|ret
 operator|)
 return|;
+end_return
+
+begin_label
 name|err
 label|:
+end_label
+
+begin_if
 if|if
 condition|(
 operator|(
@@ -1011,7 +1045,7 @@ name|free_func
 operator|!=
 name|NULL
 condition|)
-name|sk_pop_free
+name|sk_OPENSSL_BLOCK_pop_free
 argument_list|(
 name|ret
 argument_list|,
@@ -1019,21 +1053,24 @@ name|free_func
 argument_list|)
 expr_stmt|;
 else|else
-name|sk_free
+name|sk_OPENSSL_BLOCK_free
 argument_list|(
 name|ret
 argument_list|)
 expr_stmt|;
 block|}
+end_if
+
+begin_return
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
-block|}
-end_function
+end_return
 
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif

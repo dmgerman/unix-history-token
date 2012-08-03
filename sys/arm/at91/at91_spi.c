@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<arm/at91/at91var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<arm/at91/at91_spireg.h>
 end_include
 
@@ -486,7 +492,7 @@ literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * For now, run the bus at the slowest speed possible as otherwise we 	 * may encounter data corruption on transmit as seen with ETHERNUT5 	 * and AT45DB321D even though both board and slave device can take 	 * more. 	 * This also serves as a work-around for the "NPCSx rises if no data 	 * data is to be transmitted" erratum.  The ideal workaround for the 	 * latter is to take the chip select control away from the peripheral 	 * and manage it directly as a GPIO line.  The easy solution is to 	 * slow down the bus so dramatically that it just never gets starved 	 * as may be seen when the OCHI controller is running and consuming 	 * memory and APB bandwidth. 	 * Also, currently we lack a way for lettting both the board and the 	 * slave devices take their maximum supported SPI clocks into account. 	 */
+comment|/* 	 * For now, run the bus at the slowest speed possible as otherwise we 	 * may encounter data corruption on transmit as seen with ETHERNUT5 	 * and AT45DB321D even though both board and slave device can take 	 * more. 	 * This also serves as a work-around for the "NPCSx rises if no data 	 * data is to be transmitted" erratum.  The ideal workaround for the 	 * latter is to take the chip select control away from the peripheral 	 * and manage it directly as a GPIO line.  The easy solution is to 	 * slow down the bus so dramatically that it just never gets starved 	 * as may be seen when the OCHI controller is running and consuming 	 * memory and APB bandwidth. 	 * Also, currently we lack a way for lettting both the board and the 	 * slave devices take their maximum supported SPI clocks into account. 	 * Also, we hard-wire SPI mode to 3. 	 */
 name|csr
 operator|=
 name|SPI_CSR_CPOL
@@ -1258,9 +1264,7 @@ operator||
 name|PDC_PTCR_RXTDIS
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SPI_CHIPSEL_SUPPORT
+comment|/* 	 * PSCDEC = 0 has a range of 0..3 for chip select.  We 	 * don't support PSCDEC = 1 which has a range of 0..15. 	 */
 if|if
 condition|(
 name|cmd
@@ -1303,6 +1307,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|SPI_CHIP_SELECT_HIGH_SUPPORT
+comment|/* 	 * The AT91RM9200 couldn't do CS high for CS 0.  Other chips can, but we 	 * don't support that yet, or other spi modes. 	 */
 if|if
 condition|(
 name|at91_is_rm92
@@ -1329,7 +1334,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Invalid chip select high requested by %s\n"
+literal|"Invalid chip select high requested by %s for cs 0.\n"
 argument_list|,
 name|device_get_nameunit
 argument_list|(
@@ -1347,12 +1352,8 @@ goto|;
 block|}
 endif|#
 directive|endif
-name|WR4
-argument_list|(
-name|sc
-argument_list|,
-name|SPI_MR
-argument_list|,
+name|err
+operator|=
 operator|(
 name|RD4
 argument_list|(
@@ -1371,10 +1372,16 @@ name|cmd
 operator|->
 name|cs
 argument_list|)
+expr_stmt|;
+name|WR4
+argument_list|(
+name|sc
+argument_list|,
+name|SPI_MR
+argument_list|,
+name|err
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Set up the TX side of the transfer. 	 */
 if|if
 condition|(

@@ -151,6 +151,42 @@ name|NUM_PACKET_SIZE_BINS
 value|2
 end_define
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|int
+name|packet_size_bins
+index|[
+name|NUM_PACKET_SIZE_BINS
+index|]
+init|=
+block|{
+literal|250
+block|,
+literal|1600
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|bin_to_size
+parameter_list|(
+name|int
+name|index
+parameter_list|)
+block|{
+return|return
+name|packet_size_bins
+index|[
+name|index
+index|]
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/* per-node state */
 end_comment
@@ -166,7 +202,7 @@ comment|/* rate index of fixed tx rate */
 define|#
 directive|define
 name|SAMPLE_MAXRATES
-value|32
+value|64
 comment|/* NB: corresponds to hal info[32] */
 name|uint32_t
 name|ratemask
@@ -245,6 +281,12 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
 
 begin_define
 define|#
@@ -855,6 +897,15 @@ name|tt
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_endif
 endif|#

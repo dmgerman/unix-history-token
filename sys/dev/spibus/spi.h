@@ -7,6 +7,9 @@ begin_struct
 struct|struct
 name|spi_command
 block|{
+name|int
+name|cs
+decl_stmt|;
 name|void
 modifier|*
 name|tx_cmd
@@ -38,6 +41,17 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|SPI_CHIP_SELECT_HIGH
+value|0x1
+end_define
+
+begin_comment
+comment|/* Chip select high (else low) */
+end_comment
 
 end_unit
 

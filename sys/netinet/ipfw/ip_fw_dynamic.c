@@ -1203,11 +1203,19 @@ operator|->
 name|src_ip
 argument_list|)
 expr_stmt|;
-name|inet_ntoa_r
+name|inet_ntop
 argument_list|(
+name|AF_INET
+argument_list|,
+operator|&
 name|da
 argument_list|,
 name|src
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|src
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|da
@@ -1221,11 +1229,19 @@ operator|->
 name|dst_ip
 argument_list|)
 expr_stmt|;
-name|inet_ntoa_r
+name|inet_ntop
 argument_list|(
+name|AF_INET
+argument_list|,
+operator|&
 name|da
 argument_list|,
 name|dst
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|dst
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2768,7 +2784,7 @@ name|INET6
 argument|if (IS_IP6_FLOW_ID(&(r->id))) { 			ip6_sprintf(src,&r->id.src_ip6); 			ip6_sprintf(dst,&r->id.dst_ip6); 		} else
 endif|#
 directive|endif
-argument|{ 			da.s_addr = htonl(r->id.src_ip); 			inet_ntoa_r(da, src); 			da.s_addr = htonl(r->id.dst_ip); 			inet_ntoa_r(da, dst); 		} 		printf(
+argument|{ 			da.s_addr = htonl(r->id.src_ip); 			inet_ntop(AF_INET,&da, src, sizeof(src)); 			da.s_addr = htonl(r->id.dst_ip); 			inet_ntop(AF_INET,&da, dst, sizeof(dst)); 		} 		printf(
 literal|"ipfw: add dyn entry ty %d %s %d -> %s %d, total %d\n"
 argument|, 		    dyn_type, src, r->id.src_port, dst, r->id.dst_port, 		    V_dyn_count); 	}
 argument_list|)
@@ -3090,7 +3106,7 @@ name|INET6
 argument|if (IS_IP6_FLOW_ID(&(args->f_id))) { 		ip6_sprintf(src,&args->f_id.src_ip6); 		ip6_sprintf(dst,&args->f_id.dst_ip6); 	} else
 endif|#
 directive|endif
-argument|{ 		da.s_addr = htonl(args->f_id.src_ip); 		inet_ntoa_r(da, src); 		da.s_addr = htonl(args->f_id.dst_ip); 		inet_ntoa_r(da, dst); 	} 	printf(
+argument|{ 		da.s_addr = htonl(args->f_id.src_ip); 		inet_ntop(AF_INET,&da, src, sizeof(src)); 		da.s_addr = htonl(args->f_id.dst_ip); 		inet_ntop(AF_INET,&da, dst, sizeof(dst)); 	} 	printf(
 literal|"ipfw: %s: type %d %s %u -> %s %u\n"
 argument|, 	    __func__, cmd->o.opcode, src, args->f_id.src_port, 	    dst, args->f_id.dst_port); 	src[
 literal|0
@@ -3590,11 +3606,19 @@ operator|.
 name|src_ip
 argument_list|)
 expr_stmt|;
-name|inet_ntoa_r
+name|inet_ntop
 argument_list|(
+name|AF_INET
+argument_list|,
+operator|&
 name|da
 argument_list|,
 name|src
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|src
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|da
@@ -3610,11 +3634,19 @@ operator|.
 name|dst_ip
 argument_list|)
 expr_stmt|;
-name|inet_ntoa_r
+name|inet_ntop
 argument_list|(
+name|AF_INET
+argument_list|,
+operator|&
 name|da
 argument_list|,
 name|dst
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|dst
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

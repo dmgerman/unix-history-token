@@ -58,6 +58,12 @@ directive|include
 file|<openssl/krb5_asn.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"kssl_lcl.h"
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -3648,6 +3654,7 @@ comment|/*	Return true:1 if p "looks like" the start of the real authenticator *
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|kssl_test_confound
 parameter_list|(
@@ -3855,6 +3862,7 @@ comment|/*	Allocate, fill, and return cksumlens array of checksum lengths. **	Th
 end_comment
 
 begin_function
+specifier|static
 name|size_t
 modifier|*
 name|populate_cksumlens
@@ -4506,6 +4514,7 @@ comment|/*	Display contents of krb5_principal_data struct, for debugging **	(krb
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|print_krb5_princ
 parameter_list|(
@@ -5399,6 +5408,7 @@ comment|/*  Given d2i_-decoded asn1ticket, allocate and return a new krb5_ticket
 end_comment
 
 begin_function
+specifier|static
 name|krb5_error_code
 name|kssl_TKT2tkt
 parameter_list|(
@@ -8498,6 +8508,7 @@ comment|/*  Given pointers to KerberosTime and struct tm structs, convert the **
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|tm
 modifier|*
@@ -8774,6 +8785,7 @@ comment|/*  Helper function for kssl_validate_times(). **  We need context->cloc
 end_comment
 
 begin_function
+specifier|static
 name|krb5_deltat
 name|get_rc_clockskew
 parameter_list|(
@@ -9496,6 +9508,10 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KSSL_DEBUG
+block|{
+name|int
+name|padl
+decl_stmt|;
 name|printf
 argument_list|(
 literal|"kssl_check_authent: decrypted authenticator[%d] =\n"
@@ -9531,6 +9547,7 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* KSSL_DEBUG */
@@ -9710,9 +9727,14 @@ expr_stmt|;
 operator|*
 name|atimep
 operator|=
+call|(
+name|krb5_timestamp
+call|)
+argument_list|(
 name|tr
 operator|-
 name|tz_offset
+argument_list|)
 expr_stmt|;
 block|}
 ifdef|#
@@ -10171,6 +10193,71 @@ argument_list|)
 expr_stmt|;
 return|return
 name|ENOMEM
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|SSL_set0_kssl_ctx
+parameter_list|(
+name|SSL
+modifier|*
+name|s
+parameter_list|,
+name|KSSL_CTX
+modifier|*
+name|kctx
+parameter_list|)
+block|{
+name|s
+operator|->
+name|kssl_ctx
+operator|=
+name|kctx
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|KSSL_CTX
+modifier|*
+name|SSL_get0_kssl_ctx
+parameter_list|(
+name|SSL
+modifier|*
+name|s
+parameter_list|)
+block|{
+return|return
+name|s
+operator|->
+name|kssl_ctx
+return|;
+block|}
+end_function
+
+begin_function
+name|char
+modifier|*
+name|kssl_ctx_get0_client_princ
+parameter_list|(
+name|KSSL_CTX
+modifier|*
+name|kctx
+parameter_list|)
+block|{
+if|if
+condition|(
+name|kctx
+condition|)
+return|return
+name|kctx
+operator|->
+name|client_princ
+return|;
+return|return
+name|NULL
 return|;
 block|}
 end_function

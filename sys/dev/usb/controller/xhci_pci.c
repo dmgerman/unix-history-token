@@ -396,6 +396,14 @@ operator|(
 literal|"Intel Panther Point USB 3.0 controller"
 operator|)
 return|;
+case|case
+literal|0x8c318086
+case|:
+return|return
+operator|(
+literal|"Intel Lynx Point USB 3.0 controller"
+operator|)
+return|;
 default|default:
 break|break;
 block|}
@@ -1085,6 +1093,14 @@ name|self
 argument_list|)
 decl_stmt|;
 name|uint32_t
+name|device_id
+init|=
+name|pci_get_devid
+argument_list|(
+name|self
+argument_list|)
+decl_stmt|;
+name|uint32_t
 name|cparams
 decl_stmt|;
 name|uint32_t
@@ -1273,6 +1289,43 @@ argument_list|)
 expr_stmt|;
 comment|/* wait 10ms */
 block|}
+block|}
+comment|/* On Intel chipsets reroute ports from EHCI to XHCI controller. */
+if|if
+condition|(
+name|device_id
+operator|==
+literal|0x1e318086
+comment|/* Panther Point */
+operator|||
+name|device_id
+operator|==
+literal|0x8c318086
+comment|/* Lynx Point */
+condition|)
+block|{
+name|pci_write_config
+argument_list|(
+name|self
+argument_list|,
+name|PCI_XHCI_INTEL_USB3_PSSEN
+argument_list|,
+literal|0xffffffff
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+name|pci_write_config
+argument_list|(
+name|self
+argument_list|,
+name|PCI_XHCI_INTEL_XUSB2PR
+argument_list|,
+literal|0xffffffff
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 operator|(

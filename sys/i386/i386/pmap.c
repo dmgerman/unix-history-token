@@ -8562,10 +8562,7 @@ name|lazyptd
 condition|)
 name|load_cr3
 argument_list|(
-name|PCPU_GET
-argument_list|(
 name|curpcb
-argument_list|)
 operator|->
 name|pcb_cr3
 argument_list|)
@@ -8609,10 +8606,7 @@ name|lazyptd
 condition|)
 name|load_cr3
 argument_list|(
-name|PCPU_GET
-argument_list|(
 name|curpcb
-argument_list|)
 operator|->
 name|pcb_cr3
 argument_list|)
@@ -8895,10 +8889,7 @@ condition|)
 block|{
 name|load_cr3
 argument_list|(
-name|PCPU_GET
-argument_list|(
 name|curpcb
-argument_list|)
 operator|->
 name|pcb_cr3
 argument_list|)

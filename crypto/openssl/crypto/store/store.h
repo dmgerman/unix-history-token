@@ -26,6 +26,29 @@ end_define
 begin_include
 include|#
 directive|include
+file|<openssl/opensslconf.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OPENSSL_NO_STORE
+end_ifdef
+
+begin_error
+error|#
+directive|error
+error|STORE is disabled.
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
 file|<openssl/ossl_typ.h>
 end_include
 
@@ -2128,11 +2151,17 @@ comment|/* Compare on basis of a bit pattern formed by the STORE_ATTR_TYPES valu
 name|int
 name|STORE_ATTR_INFO_compare
 parameter_list|(
+specifier|const
 name|STORE_ATTR_INFO
+modifier|*
+specifier|const
 modifier|*
 name|a
 parameter_list|,
+specifier|const
 name|STORE_ATTR_INFO
+modifier|*
+specifier|const
 modifier|*
 name|b
 parameter_list|)

@@ -416,6 +416,29 @@ define|\
 value|do {								\   union IEEEl2bits se_u;					\   se_u.e = (d);							\   se_u.xbits.expsign = (v);					\   (d) = se_u.e;							\ } while (0)
 end_define
 
+begin_comment
+comment|/* Long double constants are broken on i386.  This workaround is OK always. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LD80C
+parameter_list|(
+name|m
+parameter_list|,
+name|ex
+parameter_list|,
+name|s
+parameter_list|,
+name|v
+parameter_list|)
+value|{					\
+comment|/* .e = v, */
+comment|/* overwritten */
+value|\ 	.xbits.man = __CONCAT(m, ULL),				\ 	.xbits.expsign = (0x3fff + (ex)) | ((s) ? 0x8000 : 0),	\ }
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -480,6 +503,91 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* FLT_EVAL_METHOD */
+end_comment
+
+begin_comment
+comment|/* Support switching the mode to FP_PE if necessary. */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|NO_FPSETPREC
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ENTERI
+parameter_list|()
+define|\
+value|long double __retval;			\ 	fp_prec_t __oprec;			\ 						\ 	if ((__oprec = fpgetprec()) != FP_PE)	\ 		fpsetprec(FP_PE);
+end_define
+
+begin_define
+define|#
+directive|define
+name|RETURNI
+parameter_list|(
+name|x
+parameter_list|)
+value|do {				\ 	__retval = (x);				\ 	if (__oprec != FP_PE)			\ 		fpsetprec(__oprec);		\ 	RETURNF(__retval);			\ } while (0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ENTERI
+parameter_list|(
+name|x
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RETURNI
+parameter_list|(
+name|x
+parameter_list|)
+value|RETURNF(x)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Default return statement if hack*_t() is not used. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RETURNF
+parameter_list|(
+name|v
+parameter_list|)
+value|return (v)
+end_define
 
 begin_comment
 comment|/*  * Common routine to process the arguments to nan(), nanf(), and nanl().  */
@@ -813,6 +921,54 @@ begin_define
 define|#
 directive|define
 name|HAVE_EFFICIENT_IRINT
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+end_if
+
+begin_function
+specifier|static
+name|__inline
+name|int
+name|irintl
+parameter_list|(
+name|long
+name|double
+name|x
+parameter_list|)
+block|{
+name|int
+name|n
+decl_stmt|;
+asm|asm("fistl %0" : "=m" (n) : "t" (x));
+return|return
+operator|(
+name|n
+operator|)
+return|;
+block|}
+end_function
+
+begin_define
+define|#
+directive|define
+name|HAVE_EFFICIENT_IRINTL
 end_define
 
 begin_endif

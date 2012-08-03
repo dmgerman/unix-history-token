@@ -46,6 +46,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_ACL_IS_TRIVIAL_NP
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_ACL_PERMSET_T
 value|1
 end_define
@@ -68,6 +75,13 @@ begin_define
 define|#
 directive|define
 name|HAVE_ACL_SET_FILE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_ACL_SET_LINK_NP
 value|1
 end_define
 
@@ -711,13 +725,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|HAVE_MBSNRTOWCS
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
 name|HAVE_MEMMOVE
 value|1
 end_define
@@ -1244,13 +1251,6 @@ begin_define
 define|#
 directive|define
 name|HAVE_WCSLEN
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_WCSNRTOMBS
 value|1
 end_define
 

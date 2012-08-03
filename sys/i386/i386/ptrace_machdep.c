@@ -145,6 +145,11 @@ block|{
 case|case
 name|PT_GETXMMREGS
 case|:
+name|npxgetregs
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|copyout
@@ -164,6 +169,11 @@ break|break;
 case|case
 name|PT_SETXMMREGS
 case|:
+name|npxgetregs
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|copyin

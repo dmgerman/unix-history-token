@@ -17987,6 +17987,14 @@ operator|(
 literal|"AC_ADVINFO_CHANGED"
 operator|)
 return|;
+case|case
+name|AC_UNIT_ATTENTION
+case|:
+return|return
+operator|(
+literal|"AC_UNIT_ATTENTION"
+operator|)
+return|;
 block|}
 return|return
 operator|(

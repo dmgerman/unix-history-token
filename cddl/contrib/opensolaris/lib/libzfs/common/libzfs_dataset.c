@@ -6532,18 +6532,20 @@ goto|goto
 name|error
 goto|;
 block|}
-comment|/* 	 * If the dataset's canmount property is being set to noauto, 	 * or being set to on and the dataset is already mounted, 	 * then we want to prevent unmounting& remounting it. 	 */
-name|do_prefix
-operator|=
-operator|!
-operator|(
-operator|(
+comment|/* 	 * We don't want to unmount& remount the dataset when changing 	 * its canmount property to 'on' or 'noauto'.  We only use 	 * the changelist logic to unmount when setting canmount=off. 	 */
+if|if
+condition|(
 name|prop
 operator|==
 name|ZFS_PROP_CANMOUNT
-operator|)
-operator|&&
-operator|(
+condition|)
+block|{
+name|uint64_t
+name|idx
+decl_stmt|;
+name|int
+name|err
+init|=
 name|zprop_string_to_index
 argument_list|(
 name|prop
@@ -6555,30 +6557,22 @@ name|idx
 argument_list|,
 name|ZFS_TYPE_DATASET
 argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|err
 operator|==
 literal|0
-operator|)
 operator|&&
-operator|(
 name|idx
-operator|==
-name|ZFS_CANMOUNT_NOAUTO
-operator|||
-operator|(
-name|idx
-operator|==
-name|ZFS_CANMOUNT_ON
-operator|&&
-name|zfs_is_mounted
-argument_list|(
-name|zhp
-argument_list|,
-name|NULL
-argument_list|)
-operator|)
-operator|)
-operator|)
+operator|!=
+name|ZFS_CANMOUNT_OFF
+condition|)
+name|do_prefix
+operator|=
+name|B_FALSE
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|do_prefix
@@ -14125,7 +14119,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Destroys the given dataset.  The caller must make sure that the filesystem  * isn't mounted, and that there are no active dependents.  */
+comment|/*  * Destroys the given dataset.  The caller must make sure that the filesystem  * isn't mounted, and that there are no active dependents. If the file system  * does not exist this function does nothing.  */
 end_comment
 
 begin_function
@@ -14213,6 +14207,10 @@ name|zc
 argument_list|)
 operator|!=
 literal|0
+operator|&&
+name|errno
+operator|!=
+name|ENOENT
 condition|)
 block|{
 return|return

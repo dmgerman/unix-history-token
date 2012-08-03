@@ -802,7 +802,6 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|const
 name|struct
 name|usb_ether_methods
 name|udav_ue_methods
@@ -1021,7 +1020,7 @@ argument|USB_VENDOR_KONTRON
 argument_list|,
 argument|USB_PRODUCT_KONTRON_JP1082
 argument_list|,
-literal|0
+argument|UDAV_FLAG_NO_PHY
 argument_list|)
 block|}
 block|, }
@@ -1274,6 +1273,41 @@ expr_stmt|;
 goto|goto
 name|detach
 goto|;
+block|}
+comment|/* 	 * The JP1082 has an unusable PHY and provides no link information. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+name|UDAV_FLAG_NO_PHY
+condition|)
+block|{
+name|udav_ue_methods
+operator|.
+name|ue_tick
+operator|=
+name|NULL
+expr_stmt|;
+name|udav_ue_methods
+operator|.
+name|ue_mii_upd
+operator|=
+name|NULL
+expr_stmt|;
+name|udav_ue_methods
+operator|.
+name|ue_mii_sts
+operator|=
+name|NULL
+expr_stmt|;
+name|sc
+operator|->
+name|sc_flags
+operator||=
+name|UDAV_FLAG_LINK
+expr_stmt|;
 block|}
 name|ue
 operator|->
@@ -3115,6 +3149,17 @@ operator|&=
 operator|~
 name|IFF_DRV_RUNNING
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+name|UDAV_FLAG_NO_PHY
+operator|)
+condition|)
 name|sc
 operator|->
 name|sc_flags

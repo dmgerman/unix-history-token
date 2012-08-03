@@ -1094,15 +1094,20 @@ operator|->
 name|sc_hasveol
 condition|)
 block|{
-name|ds
+comment|/* self-linked descriptor */
+name|ath_hal_settxdesclink
+argument_list|(
+name|sc
 operator|->
-name|ds_link
-operator|=
+name|sc_ah
+argument_list|,
+name|ds
+argument_list|,
 name|bf
 operator|->
 name|bf_daddr
+argument_list|)
 expr_stmt|;
-comment|/* self-linked */
 name|flags
 operator||=
 name|HAL_TXDESC_VEOL
@@ -1117,11 +1122,16 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|ds
+name|ath_hal_settxdesclink
+argument_list|(
+name|sc
 operator|->
-name|ds_link
-operator|=
+name|sc_ah
+argument_list|,
+name|ds
+argument_list|,
 literal|0
+argument_list|)
 expr_stmt|;
 comment|/* 		 * Switch antenna every 4 beacons. 		 * XXX assumes two antenna 		 */
 if|if
@@ -1712,6 +1722,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* XXX should do this using the ds */
 operator|*
 name|bflink
 operator|=
@@ -1719,14 +1730,19 @@ name|bf
 operator|->
 name|bf_daddr
 expr_stmt|;
-name|bflink
-operator|=
-operator|&
+name|ath_hal_gettxdesclinkptr
+argument_list|(
+name|sc
+operator|->
+name|sc_ah
+argument_list|,
 name|bf
 operator|->
 name|bf_desc
-operator|->
-name|ds_link
+argument_list|,
+operator|&
+name|bflink
+argument_list|)
 expr_stmt|;
 block|}
 block|}

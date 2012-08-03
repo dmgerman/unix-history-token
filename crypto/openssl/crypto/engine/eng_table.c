@@ -62,6 +62,14 @@ name|ENGINE_PILE
 typedef|;
 end_typedef
 
+begin_expr_stmt
+name|DECLARE_LHASH_OF
+argument_list|(
+name|ENGINE_PILE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* The type exposed in eng_int.h */
 end_comment
@@ -70,9 +78,12 @@ begin_struct
 struct|struct
 name|st_engine_table
 block|{
-name|LHASH
+name|LHASH_OF
+argument_list|(
+argument|ENGINE_PILE
+argument_list|)
 name|piles
-decl_stmt|;
+expr_stmt|;
 block|}
 struct|;
 end_struct
@@ -80,6 +91,24 @@ end_struct
 begin_comment
 comment|/* ENGINE_TABLE */
 end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|st_engine_pile_doall
+block|{
+name|engine_table_doall_cb
+modifier|*
+name|cb
+decl_stmt|;
+name|void
+modifier|*
+name|arg
+decl_stmt|;
+block|}
+name|ENGINE_PILE_DOALL
+typedef|;
+end_typedef
 
 begin_comment
 comment|/* Global flags (ENGINE_TABLE_FLAG_***). */
@@ -185,16 +214,16 @@ begin_expr_stmt
 specifier|static
 name|IMPLEMENT_LHASH_HASH_FN
 argument_list|(
-argument|engine_pile_hash
+argument|engine_pile
 argument_list|,
-argument|const ENGINE_PILE *
+argument|ENGINE_PILE
 argument_list|)
 specifier|static
 name|IMPLEMENT_LHASH_COMP_FN
 argument_list|(
-argument|engine_pile_cmp
+argument|engine_pile
 argument_list|,
-argument|const ENGINE_PILE *
+argument|ENGINE_PILE
 argument_list|)
 specifier|static
 name|int
@@ -205,7 +234,10 @@ argument_list|,
 argument|int create
 argument_list|)
 block|{
-name|LHASH
+name|LHASH_OF
+argument_list|(
+name|ENGINE_PILE
+argument_list|)
 operator|*
 name|lh
 block|;
@@ -236,18 +268,8 @@ condition|(
 operator|(
 name|lh
 operator|=
-name|lh_new
-argument_list|(
-name|LHASH_HASH_FN
-argument_list|(
-name|engine_pile_hash
-argument_list|)
-argument_list|,
-name|LHASH_COMP_FN
-argument_list|(
-name|engine_pile_cmp
-argument_list|)
-argument_list|)
+name|lh_ENGINE_PILE_new
+argument_list|()
 operator|)
 operator|==
 name|NULL
@@ -370,7 +392,7 @@ name|nids
 expr_stmt|;
 name|fnd
 operator|=
-name|lh_retrieve
+name|lh_ENGINE_PILE_retrieve
 argument_list|(
 operator|&
 operator|(
@@ -451,7 +473,10 @@ name|funct
 operator|=
 name|NULL
 expr_stmt|;
-name|lh_insert
+operator|(
+name|void
+operator|)
+name|lh_ENGINE_PILE_insert
 argument_list|(
 operator|&
 operator|(
@@ -578,7 +603,7 @@ end_block
 begin_function
 specifier|static
 name|void
-name|int_unregister_cb
+name|int_unregister_cb_doall_arg
 parameter_list|(
 name|ENGINE_PILE
 modifier|*
@@ -662,9 +687,9 @@ name|IMPLEMENT_LHASH_DOALL_ARG_FN
 argument_list|(
 argument|int_unregister_cb
 argument_list|,
-argument|ENGINE_PILE *
+argument|ENGINE_PILE
 argument_list|,
-argument|ENGINE *
+argument|ENGINE
 argument_list|)
 name|void
 name|engine_table_unregister
@@ -688,7 +713,7 @@ argument_list|,
 literal|0
 argument_list|)
 condition|)
-name|lh_doall_arg
+name|lh_ENGINE_PILE_doall_arg
 argument_list|(
 operator|&
 operator|(
@@ -703,6 +728,8 @@ argument_list|(
 name|int_unregister_cb
 argument_list|)
 argument_list|,
+name|ENGINE
+argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
@@ -716,7 +743,7 @@ end_expr_stmt
 begin_function
 unit|}  static
 name|void
-name|int_cleanup_cb
+name|int_cleanup_cb_doall
 parameter_list|(
 name|ENGINE_PILE
 modifier|*
@@ -759,7 +786,7 @@ name|IMPLEMENT_LHASH_DOALL_FN
 argument_list|(
 argument|int_cleanup_cb
 argument_list|,
-argument|ENGINE_PILE *
+argument|ENGINE_PILE
 argument_list|)
 name|void
 name|engine_table_cleanup
@@ -778,7 +805,7 @@ operator|*
 name|table
 condition|)
 block|{
-name|lh_doall
+name|lh_ENGINE_PILE_doall
 argument_list|(
 operator|&
 operator|(
@@ -794,7 +821,7 @@ name|int_cleanup_cb
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|lh_free
+name|lh_ENGINE_PILE_free
 argument_list|(
 operator|&
 operator|(
@@ -953,7 +980,7 @@ end_expr_stmt
 begin_expr_stmt
 name|fnd
 operator|=
-name|lh_retrieve
+name|lh_ENGINE_PILE_retrieve
 argument_list|(
 operator|&
 operator|(
@@ -1341,6 +1368,103 @@ name|ret
 return|;
 end_return
 
+begin_comment
 unit|}
+comment|/* Table enumeration */
+end_comment
+
+begin_function
+unit|static
+name|void
+name|int_cb_doall_arg
+parameter_list|(
+name|ENGINE_PILE
+modifier|*
+name|pile
+parameter_list|,
+name|ENGINE_PILE_DOALL
+modifier|*
+name|dall
+parameter_list|)
+block|{
+name|dall
+operator|->
+name|cb
+argument_list|(
+name|pile
+operator|->
+name|nid
+argument_list|,
+name|pile
+operator|->
+name|sk
+argument_list|,
+name|pile
+operator|->
+name|funct
+argument_list|,
+name|dall
+operator|->
+name|arg
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
+specifier|static
+name|IMPLEMENT_LHASH_DOALL_ARG_FN
+argument_list|(
+argument|int_cb
+argument_list|,
+argument|ENGINE_PILE
+argument_list|,
+argument|ENGINE_PILE_DOALL
+argument_list|)
+name|void
+name|engine_table_doall
+argument_list|(
+argument|ENGINE_TABLE *table
+argument_list|,
+argument|engine_table_doall_cb *cb
+argument_list|,
+argument|void *arg
+argument_list|)
+block|{
+name|ENGINE_PILE_DOALL
+name|dall
+block|;
+name|dall
+operator|.
+name|cb
+operator|=
+name|cb
+block|;
+name|dall
+operator|.
+name|arg
+operator|=
+name|arg
+block|;
+name|lh_ENGINE_PILE_doall_arg
+argument_list|(
+operator|&
+name|table
+operator|->
+name|piles
+argument_list|,
+name|LHASH_DOALL_ARG_FN
+argument_list|(
+name|int_cb
+argument_list|)
+argument_list|,
+name|ENGINE_PILE_DOALL
+argument_list|,
+operator|&
+name|dall
+argument_list|)
+block|; 	}
+end_expr_stmt
+
 end_unit
 

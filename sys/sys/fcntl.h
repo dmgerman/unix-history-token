@@ -874,6 +874,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
 begin_define
 define|#
 directive|define
@@ -918,6 +924,11 @@ begin_comment
 comment|/* duplicate file descriptor to arg */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -951,6 +962,12 @@ begin_comment
 comment|/* F_SETLK; wait if blocked */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
 begin_define
 define|#
 directive|define
@@ -983,6 +1000,59 @@ end_define
 begin_comment
 comment|/* Darwin compatible read ahead */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+operator|||
+name|__POSIX_VISIBLE
+operator|>=
+literal|200809
+end_if
+
+begin_define
+define|#
+directive|define
+name|F_DUPFD_CLOEXEC
+value|17
+end_define
+
+begin_comment
+comment|/* Like F_DUPFD, but FD_CLOEXEC is set */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
+begin_define
+define|#
+directive|define
+name|F_DUP2FD_CLOEXEC
+value|18
+end_define
+
+begin_comment
+comment|/* Like F_DUP2FD, but FD_CLOEXEC is set */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* file descriptor flags (F_GETFD, F_SETFD) */
@@ -1036,6 +1106,12 @@ begin_comment
 comment|/* exclusive or write lock */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
 begin_define
 define|#
 directive|define
@@ -1057,6 +1133,11 @@ end_define
 begin_comment
 comment|/* cancel an async lock request */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -1160,13 +1241,19 @@ block|}
 struct|;
 end_struct
 
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
 begin_comment
 comment|/*  * Old advisory file segment locking data type,  * before adding l_sysid.  */
 end_comment
 
 begin_struct
 struct|struct
-name|oflock
+name|__oflock
 block|{
 name|off_t
 name|l_start
@@ -1191,6 +1278,11 @@ comment|/* type of l_start */
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#

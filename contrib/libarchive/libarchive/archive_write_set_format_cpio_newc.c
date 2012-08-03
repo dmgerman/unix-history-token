@@ -1850,6 +1850,9 @@ name|cpio
 operator|->
 name|padding
 operator|=
+operator|(
+name|int
+operator|)
 name|PAD4
 argument_list|(
 name|cpio
@@ -2003,6 +2006,9 @@ name|entry_bytes_remaining
 condition|)
 name|s
 operator|=
+operator|(
+name|size_t
+operator|)
 name|cpio
 operator|->
 name|entry_bytes_remaining
@@ -2356,6 +2362,9 @@ name|__archive_write_nulls
 argument_list|(
 name|a
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|cpio
 operator|->
 name|entry_bytes_remaining

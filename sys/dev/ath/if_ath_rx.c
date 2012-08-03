@@ -2286,6 +2286,27 @@ name|ast_rx_badcrypt
 operator|++
 expr_stmt|;
 block|}
+comment|/* 		 * Similar as above - if the failure was a keymiss 		 * just punt it up to the upper layers for now. 		 */
+if|if
+condition|(
+name|rs
+operator|->
+name|rs_status
+operator|&
+name|HAL_RXERR_KEYMISS
+condition|)
+block|{
+name|sc
+operator|->
+name|sc_stats
+operator|.
+name|ast_rx_keymiss
+operator|++
+expr_stmt|;
+goto|goto
+name|rx_accept
+goto|;
+block|}
 if|if
 condition|(
 name|rs
@@ -4445,6 +4466,12 @@ name|sc_rxbuf
 argument_list|,
 literal|"rx"
 argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ath_desc
+argument_list|)
+argument_list|,
 name|ath_rxbuf
 argument_list|,
 literal|1
@@ -4542,6 +4569,13 @@ name|sc_dev
 argument_list|,
 literal|"DMA setup: legacy\n"
 argument_list|)
+expr_stmt|;
+comment|/* Sensible legacy defaults */
+name|sc
+operator|->
+name|sc_rx_statuslen
+operator|=
+literal|0
 expr_stmt|;
 name|sc
 operator|->

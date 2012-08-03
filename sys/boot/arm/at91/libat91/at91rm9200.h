@@ -18503,7 +18503,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<at91/at91_pio_rm9200.h>
+file|<at91/at91_pioreg.h>
 end_include
 
 begin_comment

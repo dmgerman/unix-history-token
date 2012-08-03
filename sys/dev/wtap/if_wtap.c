@@ -907,23 +907,26 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|KASSERT
-argument_list|(
+if|if
+condition|(
 name|vap
 operator|->
 name|iv_state
-operator|>=
+operator|<
 name|IEEE80211_S_RUN
+condition|)
+block|{
+name|DWTAP_PRINTF
+argument_list|(
+literal|"Skip beacon, not running, state %d"
 argument_list|,
-operator|(
-literal|"not running, state %d"
-operator|,
 name|vap
 operator|->
 name|iv_state
-operator|)
 argument_list|)
 expr_stmt|;
+return|return ;
+block|}
 name|DWTAP_PRINTF
 argument_list|(
 literal|"[%d] beacon intrp\n"
@@ -1181,6 +1184,23 @@ goto|goto
 name|bad
 goto|;
 block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|nstate
+operator|==
+name|IEEE80211_S_INIT
+condition|)
+block|{
+name|callout_stop
+argument_list|(
+operator|&
+name|avp
+operator|->
+name|av_swba
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 literal|0
