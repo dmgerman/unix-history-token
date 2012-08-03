@@ -2513,7 +2513,7 @@ name|bus_dmamap_t
 name|map
 parameter_list|)
 block|{
-comment|/* 	 * dmamem does not need to be bounced, so the map should be 	 * NULL if malloc() was used and contig_dmamap if 	 * contigmalloc() was used. 	 */
+comment|/* 	 * dmamem does not need to be bounced, so the map should be 	 * NULL if malloc() was used and contig_dmamap if 	 * kmem_alloc_contig() was used. 	 */
 if|if
 condition|(
 operator|!
