@@ -107,24 +107,6 @@ directive|include
 file|"mptable.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|CR4_VMXE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|CR4_VMXE
-value|(1UL<< 13)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -2632,7 +2614,7 @@ name|done
 goto|;
 name|cr4
 operator|=
-name|CR4_VMXE
+literal|0
 expr_stmt|;
 if|if
 condition|(

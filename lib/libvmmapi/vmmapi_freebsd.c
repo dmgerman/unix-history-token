@@ -47,24 +47,6 @@ directive|include
 file|"vmmapi.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|CR4_VMXE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|CR4_VMXE
-value|(1UL<< 13)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -217,8 +199,6 @@ goto|;
 name|cr4
 operator|=
 name|CR4_PAE
-operator||
-name|CR4_VMXE
 expr_stmt|;
 if|if
 condition|(
