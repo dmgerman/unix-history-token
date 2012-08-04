@@ -3508,7 +3508,7 @@ if|if
 condition|(
 name|lirq
 index|[
-name|i
+name|vec
 index|]
 operator|.
 name|li_owner
