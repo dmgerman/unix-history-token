@@ -1446,6 +1446,9 @@ parameter_list|,
 name|int
 name|ncpu
 parameter_list|,
+name|int
+name|ioapic
+parameter_list|,
 name|void
 modifier|*
 name|oemtbl
@@ -1465,6 +1468,8 @@ argument_list|,
 name|BIOS_ROM_SIZE
 argument_list|,
 name|ncpu
+argument_list|,
+name|ioapic
 argument_list|,
 name|oemtbl
 argument_list|,

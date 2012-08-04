@@ -395,13 +395,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MPE_IOAPIC_ID
-value|(2)
-end_define
-
-begin_define
-define|#
-directive|define
 name|MPE_IOAPIC_FLAG_EN
 value|(1)
 end_define
@@ -547,6 +540,9 @@ name|len
 parameter_list|,
 name|int
 name|ncpu
+parameter_list|,
+name|int
+name|ioapic
 parameter_list|,
 name|void
 modifier|*

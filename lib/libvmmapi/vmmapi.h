@@ -300,6 +300,9 @@ parameter_list|,
 name|int
 name|ncpus
 parameter_list|,
+name|int
+name|ioapic
+parameter_list|,
 name|void
 modifier|*
 name|oemtbl
