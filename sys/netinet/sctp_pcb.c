@@ -8612,16 +8612,6 @@ name|sctp_tcb
 modifier|*
 name|stcb
 decl_stmt|;
-operator|*
-name|netp
-operator|=
-name|NULL
-expr_stmt|;
-operator|*
-name|inp_p
-operator|=
-name|NULL
-expr_stmt|;
 name|SCTP_INP_INFO_RLOCK
 argument_list|()
 expr_stmt|;
