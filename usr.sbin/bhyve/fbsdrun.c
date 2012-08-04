@@ -498,13 +498,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [-ehBHP][-g<gdb port>][-z<hz>][-s<pci>][-p pincpu]"
-literal|"[-n<pci>][-m lowmem][-M highmem]<vm>\n"
+literal|"Usage: %s [-ehBHIP][-g<gdb port>][-z<hz>][-s<pci>]"
+literal|"[-S<pci>][-p pincpu][-n<pci>][-m lowmem][-M highmem]<vm>\n"
 literal|"       -g: gdb port (default is %d and 0 means don't open)\n"
 literal|"       -c: # cpus (default 1)\n"
 literal|"       -p: pin vcpu 'n' to host cpu 'pincpu + n'\n"
 literal|"       -B: inject breakpoint exception on vm entry\n"
 literal|"       -H: vmexit from the guest on hlt\n"
+literal|"       -I: present an ioapic to the guest\n"
 literal|"       -P: vmexit from the guest on pause\n"
 literal|"	-e: exit on unhandled i/o access\n"
 literal|"       -h: help\n"
@@ -2245,6 +2246,8 @@ decl_stmt|,
 name|tmp
 decl_stmt|,
 name|err
+decl_stmt|,
+name|ioapic
 decl_stmt|;
 name|struct
 name|vmctx
@@ -2276,6 +2279,10 @@ name|guest_ncpus
 operator|=
 literal|1
 expr_stmt|;
+name|ioapic
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -2287,7 +2294,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ehBHPxp:g:c:z:s:S:n:m:M:"
+literal|"ehBHIPxp:g:c:z:s:S:n:m:M:"
 argument_list|)
 operator|)
 operator|!=
@@ -2440,6 +2447,14 @@ case|case
 literal|'H'
 case|:
 name|guest_vmexit_on_hlt
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'I'
+case|:
+name|ioapic
 operator|=
 literal|1
 expr_stmt|;
@@ -2817,6 +2832,8 @@ argument_list|(
 name|ctx
 argument_list|,
 name|guest_ncpus
+argument_list|,
+name|ioapic
 argument_list|,
 name|oem_tbl_start
 argument_list|,
