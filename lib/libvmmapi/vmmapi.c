@@ -1477,6 +1477,28 @@ end_function
 
 begin_function
 name|int
+name|vm_apicid2vcpu
+parameter_list|(
+name|struct
+name|vmctx
+modifier|*
+name|ctx
+parameter_list|,
+name|int
+name|apicid
+parameter_list|)
+block|{
+comment|/* 	 * The apic id associated with the 'vcpu' has the same numerical value 	 * as the 'vcpu' itself. 	 */
+return|return
+operator|(
+name|apicid
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
 name|vm_lapic_irq
 parameter_list|(
 name|struct
