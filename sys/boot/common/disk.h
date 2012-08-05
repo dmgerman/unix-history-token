@@ -4,15 +4,8 @@ comment|/*-  * Copyright (c) 2011 Google, Inc.  * All rights reserved.  *  * Red
 end_comment
 
 begin_comment
-comment|/*  * Device descriptor for partitioned disks. We assume that all disk addresses  * are 512 byte block offsets from the start of the disk. To use, set the  * d_slice and d_partition variables as follows:  *  * Whole disk access:  *  * 	d_slice = -1  * 	d_partition = -1  *  * Whole MBR slice:  *  * 	d_slice = MBR slice number (typically 1..4)  * 	d_partition = -1  *  * BSD disklabel partition within an MBR slice:  *  * 	d_slice = MBR slice number (typically 1..4)  * 	d_partition = disklabel partition (typically 0..7)  *  * GPT partition:  *  * 	d_slice = GPT partition number (typically 1..N)  * 	d_partition = 255  *  * For both MBR and GPT, to automatically find the 'best' slice or partition,  * set d_slice to zero. This uses the partition type to decide which partition  * to use according to the following list of preferences:  *  * 	FreeBSD (active)  * 	FreeBSD (inactive)  * 	Linux (active)  * 	Linux (inactive)  * 	DOS/Windows (active)  * 	DOS/Windows (inactive)  *  * Active MBR slices (marked as bootable) are preferred over inactive. GPT  * doesn't have the concept of active/inactive partitions. In both MBR and GPT,  * if there are multiple slices/partitions of a given type, the first one  * is chosen.  *  * The low-level disk device will typically call slice_open() from its open  * method to interpret the disk partition tables according to the rules above.  * This will initialize d_offset to the block offset of the start of the  * selected partition - this offset should be added to the offset passed to  * the device's strategy method.  */
+comment|/*  * Device descriptor for partitioned disks. To use, set the  * d_slice and d_partition variables as follows:  *  * Whole disk access:  *  * 	d_slice = -1  * 	d_partition = -1  *  * Whole MBR slice:  *  * 	d_slice = MBR slice number (typically 1..4)  * 	d_partition = -1  *  * BSD disklabel partition within an MBR slice:  *  * 	d_slice = MBR slice number (typically 1..4)  * 	d_partition = disklabel partition (typically 0..7)  *  * GPT partition:  *  * 	d_slice = GPT partition number (typically 1..N)  * 	d_partition = 255  *  * For both MBR and GPT, to automatically find the 'best' slice or partition,  * set d_slice to zero. This uses the partition type to decide which partition  * to use according to the following list of preferences:  *  * 	FreeBSD (active)  * 	FreeBSD (inactive)  * 	Linux (active)  * 	Linux (inactive)  * 	DOS/Windows (active)  * 	DOS/Windows (inactive)  *  * Active MBR slices (marked as bootable) are preferred over inactive. GPT  * doesn't have the concept of active/inactive partitions. In both MBR and GPT,  * if there are multiple slices/partitions of a given type, the first one  * is chosen.  *  * The low-level disk device will typically call slice_open() from its open  * method to interpret the disk partition tables according to the rules above.  * This will initialize d_offset to the block offset of the start of the  * selected partition - this offset should be added to the offset passed to  * the device's strategy method.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|DISK_SECSIZE
-value|512
-end_define
 
 begin_struct
 struct|struct
@@ -39,7 +32,7 @@ decl_stmt|;
 name|int
 name|d_partition
 decl_stmt|;
-name|int
+name|off_t
 name|d_offset
 decl_stmt|;
 block|}
@@ -59,12 +52,31 @@ name|struct
 name|disk_devdesc
 modifier|*
 name|dev
+parameter_list|,
+name|off_t
+name|mediasize
+parameter_list|,
+name|u_int
+name|sectorsize
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|disk_close
+parameter_list|(
+name|struct
+name|disk_devdesc
+modifier|*
+name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Print information about slices on a disk.  For the size calculations we  * assume a 512 byte sector.  */
+comment|/*  * Print information about slices on a disk.  */
 end_comment
 
 begin_function_decl
@@ -83,6 +95,44 @@ name|prefix
 parameter_list|,
 name|int
 name|verbose
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|disk_fmtdev
+parameter_list|(
+name|struct
+name|disk_devdesc
+modifier|*
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|disk_parsedev
+parameter_list|(
+name|struct
+name|disk_devdesc
+modifier|*
+name|dev
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|devspec
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|path
 parameter_list|)
 function_decl|;
 end_function_decl
