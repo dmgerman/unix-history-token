@@ -143,6 +143,12 @@ directive|include
 file|"instruction_emul.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"ioapic.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -2766,6 +2772,15 @@ expr_stmt|;
 name|init_pci
 argument_list|(
 name|ctx
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ioapic
+condition|)
+name|ioapic_init
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

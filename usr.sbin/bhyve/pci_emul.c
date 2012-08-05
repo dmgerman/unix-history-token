@@ -101,6 +101,12 @@ directive|include
 file|"instruction_emul.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"ioapic.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -3619,7 +3625,17 @@ operator|->
 name|pi_lintr_pin
 argument_list|)
 expr_stmt|;
-comment|/* ioapic_assert_pin(pi->pi_vmctx, pi->pi_lintr_pin); */
+name|ioapic_assert_pin
+argument_list|(
+name|pi
+operator|->
+name|pi_vmctx
+argument_list|,
+name|pi
+operator|->
+name|pi_lintr_pin
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -3640,7 +3656,17 @@ operator|->
 name|pi_lintr_pin
 argument_list|)
 expr_stmt|;
-comment|/* ioapic_deassert_pin(pi->pi_vmctx, pi->pi_lintr_pin); */
+name|ioapic_deassert_pin
+argument_list|(
+name|pi
+operator|->
+name|pi_vmctx
+argument_list|,
+name|pi
+operator|->
+name|pi_lintr_pin
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
