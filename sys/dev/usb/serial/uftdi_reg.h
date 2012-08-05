@@ -183,6 +183,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|UFTDI_TYPE_AUTO
+value|(UFTDI_TYPE_SIO | UFTDI_TYPE_8U232AM)
+end_define
+
+begin_define
+define|#
+directive|define
 name|UFTDI_FLAG_MASK
 value|0x0000ff00
 end_define
