@@ -627,7 +627,7 @@ name|uint8_t
 name|sc_lsr
 decl_stmt|;
 name|uint8_t
-name|sc_IfIdx
+name|sc_iface_no
 decl_stmt|;
 block|}
 struct|;
@@ -2231,15 +2231,16 @@ name|uaa
 operator|->
 name|device
 expr_stmt|;
+comment|/* use the interface number from the USB interface descriptor */
 name|sc
 operator|->
-name|sc_IfIdx
+name|sc_iface_no
 operator|=
 name|uaa
 operator|->
 name|info
 operator|.
-name|bIfaceIndex
+name|bIfaceNum
 expr_stmt|;
 name|error
 operator|=
@@ -2520,7 +2521,7 @@ name|wIndex
 argument_list|,
 name|sc
 operator|->
-name|sc_IfIdx
+name|sc_iface_no
 argument_list|)
 expr_stmt|;
 name|USETW
@@ -2633,7 +2634,7 @@ name|wIndex
 argument_list|,
 name|sc
 operator|->
-name|sc_IfIdx
+name|sc_iface_no
 argument_list|)
 expr_stmt|;
 name|USETW
@@ -2756,7 +2757,7 @@ name|wIndex
 argument_list|,
 name|sc
 operator|->
-name|sc_IfIdx
+name|sc_iface_no
 argument_list|)
 expr_stmt|;
 name|USETW
@@ -2879,7 +2880,7 @@ name|wIndex
 argument_list|,
 name|sc
 operator|->
-name|sc_IfIdx
+name|sc_iface_no
 argument_list|)
 expr_stmt|;
 name|USETW
@@ -3047,7 +3048,7 @@ name|wIndex
 argument_list|,
 name|sc
 operator|->
-name|sc_IfIdx
+name|sc_iface_no
 argument_list|)
 expr_stmt|;
 name|USETW
@@ -3225,7 +3226,7 @@ name|wIndex
 argument_list|,
 name|sc
 operator|->
-name|sc_IfIdx
+name|sc_iface_no
 argument_list|)
 expr_stmt|;
 name|USETW
@@ -3379,7 +3380,7 @@ name|wIndex
 argument_list|,
 name|sc
 operator|->
-name|sc_IfIdx
+name|sc_iface_no
 argument_list|)
 expr_stmt|;
 name|USETW
@@ -3542,7 +3543,7 @@ name|wIndex
 argument_list|,
 name|sc
 operator|->
-name|sc_IfIdx
+name|sc_iface_no
 argument_list|)
 expr_stmt|;
 name|USETW
@@ -4275,7 +4276,7 @@ name|wIndex
 argument_list|,
 name|sc
 operator|->
-name|sc_IfIdx
+name|sc_iface_no
 argument_list|)
 expr_stmt|;
 name|USETW
