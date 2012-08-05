@@ -21932,6 +21932,8 @@ name|int
 name|c
 decl_stmt|,
 name|error
+init|=
+literal|0
 decl_stmt|;
 name|union
 name|ccb
