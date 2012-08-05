@@ -362,15 +362,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Global tte list lock  */
+comment|/*  * Isolate the global TTE list lock from data and other locks to prevent  * false sharing within the cache (see also the declaration of struct  * tte_list_lock).  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|struct
-name|rwlock
-name|tte_list_global_lock
-decl_stmt|;
-end_decl_stmt
+name|tte_list_lock
+name|tte_list_global
+name|__aligned
+parameter_list|(
+name|CACHE_LINE_SIZE
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Allocate physical memory for use in pmap_bootstrap.  */
