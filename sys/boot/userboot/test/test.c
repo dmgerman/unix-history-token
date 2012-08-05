@@ -1933,7 +1933,7 @@ name|cb
 argument_list|,
 name|NULL
 argument_list|,
-name|USERBOOT_VERSION_1
+name|USERBOOT_VERSION_2
 argument_list|,
 name|disk_fd
 operator|>=

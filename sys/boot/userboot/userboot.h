@@ -14,6 +14,13 @@ name|USERBOOT_VERSION_1
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|USERBOOT_VERSION_2
+value|2
+end_define
+
 begin_comment
 comment|/*  * Exit codes from the loader  */
 end_comment
