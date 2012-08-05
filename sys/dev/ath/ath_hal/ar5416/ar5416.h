@@ -2693,6 +2693,14 @@ name|ath_desc
 modifier|*
 name|ds
 parameter_list|,
+name|HAL_DMA_ADDR
+modifier|*
+name|bufAddrList
+parameter_list|,
+name|uint32_t
+modifier|*
+name|segLenList
+parameter_list|,
 name|u_int
 name|pktLen
 parameter_list|,
@@ -2710,9 +2718,6 @@ name|cipher
 parameter_list|,
 name|uint8_t
 name|delims
-parameter_list|,
-name|u_int
-name|segLen
 parameter_list|,
 name|HAL_BOOL
 name|firstSeg

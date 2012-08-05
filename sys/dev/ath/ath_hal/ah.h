@@ -4872,6 +4872,14 @@ name|struct
 name|ath_desc
 modifier|*
 parameter_list|,
+name|HAL_DMA_ADDR
+modifier|*
+name|bufAddrList
+parameter_list|,
+name|uint32_t
+modifier|*
+name|segLenList
+parameter_list|,
 name|u_int
 parameter_list|,
 name|u_int
@@ -4883,8 +4891,6 @@ parameter_list|,
 name|HAL_CIPHER
 parameter_list|,
 name|uint8_t
-parameter_list|,
-name|u_int
 parameter_list|,
 name|HAL_BOOL
 parameter_list|,

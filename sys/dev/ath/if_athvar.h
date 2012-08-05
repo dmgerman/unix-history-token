@@ -5009,19 +5009,21 @@ name|_ah
 parameter_list|,
 name|_ds
 parameter_list|,
+name|_bl
+parameter_list|,
+name|_sl
+parameter_list|,
 name|_pktlen
 parameter_list|,
 name|_hdrlen
 parameter_list|,
 name|_type
-parameter_list|,
-name|_keyix
 parameter_list|, \
+name|_keyix
+parameter_list|,
 name|_cipher
 parameter_list|,
 name|_delims
-parameter_list|,
-name|_seglen
 parameter_list|,
 name|_first
 parameter_list|,
@@ -5030,7 +5032,7 @@ parameter_list|,
 name|_lastaggr
 parameter_list|)
 define|\
-value|((*(_ah)->ah_chainTxDesc)((_ah), (_ds), (_pktlen), (_hdrlen), \ 	(_type), (_keyix), (_cipher), (_delims), (_seglen), \ 	(_first), (_last), (_lastaggr)))
+value|((*(_ah)->ah_chainTxDesc)((_ah), (_ds), (_bl), (_sl), \ 	(_pktlen), (_hdrlen), (_type), (_keyix), (_cipher), (_delims), \ 	(_first), (_last), (_lastaggr)))
 end_define
 
 begin_define
