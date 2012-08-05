@@ -4846,7 +4846,13 @@ name|_ah
 parameter_list|,
 name|_ds
 parameter_list|,
+name|_b
+parameter_list|,
 name|_l
+parameter_list|,
+name|_did
+parameter_list|,
+name|_qid
 parameter_list|,
 name|_first
 parameter_list|,
@@ -4855,7 +4861,7 @@ parameter_list|,
 name|_ds0
 parameter_list|)
 define|\
-value|((*(_ah)->ah_fillTxDesc)((_ah), (_ds), (_l), (_first), (_last), (_ds0)))
+value|((*(_ah)->ah_fillTxDesc)((_ah), (_ds), (_b), (_l), (_did), (_qid), \ 		(_first), (_last), (_ds0)))
 end_define
 
 begin_define

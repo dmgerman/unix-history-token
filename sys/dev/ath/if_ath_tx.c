@@ -1187,6 +1187,18 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|HAL_DMA_ADDR
+name|bufAddrList
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|uint32_t
+name|segLenList
+index|[
+literal|4
+index|]
+decl_stmt|;
 comment|/* 	 * XXX There's txdma and txdma_mgmt; the descriptor 	 * sizes must match. 	 */
 name|struct
 name|ath_descdma
@@ -1226,9 +1238,10 @@ name|ds
 operator|++
 control|)
 block|{
-name|ds
-operator|->
-name|ds_data
+name|bufAddrList
+index|[
+literal|0
+index|]
 operator|=
 name|bf
 operator|->
@@ -1238,6 +1251,55 @@ name|i
 index|]
 operator|.
 name|ds_addr
+expr_stmt|;
+name|segLenList
+index|[
+literal|0
+index|]
+operator|=
+name|bf
+operator|->
+name|bf_segs
+index|[
+name|i
+index|]
+operator|.
+name|ds_len
+expr_stmt|;
+comment|/* Blank this out until multi-buf support is added for AR9300 */
+name|bufAddrList
+index|[
+literal|1
+index|]
+operator|=
+name|bufAddrList
+index|[
+literal|2
+index|]
+operator|=
+name|bufAddrList
+index|[
+literal|3
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|segLenList
+index|[
+literal|1
+index|]
+operator|=
+name|segLenList
+index|[
+literal|2
+index|]
+operator|=
+name|segLenList
+index|[
+literal|3
+index|]
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -1280,21 +1342,28 @@ literal|1
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* 		 * XXX this assumes that bfs_txq is the actual destination 		 * hardware queue at this point.  It may not have been assigned, 		 * it may actually be pointing to the multicast software 		 * TXQ id.  These must be fixed! 		 */
 name|ath_hal_filltxdesc
 argument_list|(
 name|ah
 argument_list|,
 name|ds
 argument_list|,
+name|bufAddrList
+argument_list|,
+name|segLenList
+argument_list|,
+literal|0
+comment|/* XXX desc id */
+argument_list|,
 name|bf
 operator|->
-name|bf_segs
-index|[
-name|i
-index|]
+name|bf_state
 operator|.
-name|ds_len
-comment|/* segment length */
+name|bfs_txq
+operator|->
+name|axq_qnum
+comment|/* XXX multicast? */
 argument_list|,
 name|i
 operator|==
@@ -2053,6 +2122,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Hand-off a frame to the multicast TX queue.  *  * This is a software TXQ which will be appended to the CAB queue  * during the beacon setup code.  *  * XXX TODO: since the AR9300 EDMA TX queue support wants the QCU ID  * as part of the TX descriptor, bf_state.bfs_txq must be updated  * with the actual hardware txq, or all of this will fall apart.  *  * XXX It may not be a bad idea to just stuff the QCU ID into bf_state  * and retire bfs_txq; then make sure the CABQ QCU ID is populated  * correctly.  */
+end_comment
 
 begin_function
 specifier|static
@@ -4131,7 +4204,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Setup the descriptor chain for a normal or fast-frame  * frame.  */
+comment|/*  * Setup the descriptor chain for a normal or fast-frame  * frame.  *  * XXX TODO: extend to include the destination hardware QCU ID.  * Make sure that is correct.  Make sure that when being added  * to the mcastq, the CABQ QCUID is set or things will get a bit  * odd.  */
 end_comment
 
 begin_function
@@ -6079,6 +6152,31 @@ argument_list|,
 name|is_ampdu
 argument_list|)
 expr_stmt|;
+comment|/* Set local packet state, used to queue packets to hardware */
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_tid
+operator|=
+name|tid
+expr_stmt|;
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_txq
+operator|=
+name|txq
+expr_stmt|;
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_pri
+operator|=
+name|pri
+expr_stmt|;
 comment|/* 	 * When servicing one or more stations in power-save mode 	 * (or) if there is some mcast data waiting on the mcast 	 * queue (to prevent out of order delivery) multicast frames 	 * must be bufferd until after the beacon. 	 * 	 * TODO: we should lock the mcastq before we check the length. 	 */
 if|if
 condition|(
@@ -6096,6 +6194,7 @@ operator|.
 name|axq_depth
 operator|)
 condition|)
+block|{
 name|txq
 operator|=
 operator|&
@@ -6103,6 +6202,18 @@ name|avp
 operator|->
 name|av_mcastq
 expr_stmt|;
+comment|/* 		 * Mark the frame as eventually belonging on the CAB 		 * queue, so the descriptor setup functions will 		 * correctly initialise the descriptor 'qcuId' field. 		 */
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_txq
+operator|=
+name|sc
+operator|->
+name|sc_cabq
+expr_stmt|;
+block|}
 comment|/* Do the generic frame setup */
 comment|/* XXX should just bzero the bf_state? */
 name|bf
@@ -6113,7 +6224,7 @@ name|bfs_dobaw
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Acquire the TXQ lock early, so both the encap and seqno 	 * are allocated together. 	 */
+comment|/* 	 * Acquire the TXQ lock early, so both the encap and seqno 	 * are allocated together. 	 * 	 * XXX should TXQ for CABQ traffic be the multicast queue, 	 * or the TXQ the given PRI would allocate from? (eg for 	 * sequence number allocation locking.) 	 */
 name|ATH_TXQ_LOCK
 argument_list|(
 name|txq
@@ -7167,6 +7278,39 @@ name|ibp_flags
 operator|&
 name|IEEE80211_BPF_SHORTPRE
 operator|)
+expr_stmt|;
+comment|/* Set local packet state, used to queue packets to hardware */
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_tid
+operator|=
+name|WME_AC_TO_TID
+argument_list|(
+name|pri
+argument_list|)
+expr_stmt|;
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_txq
+operator|=
+name|sc
+operator|->
+name|sc_ac2q
+index|[
+name|pri
+index|]
+expr_stmt|;
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_pri
+operator|=
+name|pri
 expr_stmt|;
 comment|/* XXX this should be done in ath_tx_setrate() */
 name|bf
@@ -9501,6 +9645,11 @@ modifier|*
 name|an
 parameter_list|,
 name|struct
+name|ath_txq
+modifier|*
+name|txq
+parameter_list|,
+name|struct
 name|ath_buf
 modifier|*
 name|bf
@@ -9523,22 +9672,47 @@ operator|.
 name|bfs_tid
 index|]
 decl_stmt|;
-name|struct
-name|ath_txq
-modifier|*
-name|txq
-init|=
-name|bf
-operator|->
-name|bf_state
-operator|.
-name|bfs_txq
-decl_stmt|;
+comment|//	struct ath_txq *txq = bf->bf_state.bfs_txq;
 name|struct
 name|ieee80211_tx_ampdu
 modifier|*
 name|tap
 decl_stmt|;
+if|if
+condition|(
+name|txq
+operator|!=
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_txq
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"%s: txq %d != bfs_txq %d!\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|txq
+operator|->
+name|axq_qnum
+argument_list|,
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_txq
+operator|->
+name|axq_qnum
+argument_list|)
+expr_stmt|;
+block|}
 name|ATH_TXQ_LOCK_ASSERT
 argument_list|(
 name|txq
@@ -9878,6 +10052,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Set local packet state, used to queue packets to hardware */
+comment|/* XXX potentially duplicate info, re-check */
+comment|/* XXX remember, txq must be the hardware queue, not the av_mcastq */
 name|bf
 operator|->
 name|bf_state
@@ -10028,6 +10204,8 @@ argument_list|(
 name|sc
 argument_list|,
 name|an
+argument_list|,
+name|txq
 argument_list|,
 name|bf
 argument_list|)
