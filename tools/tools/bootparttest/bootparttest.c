@@ -135,7 +135,7 @@ name|arg
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s: read %d blocks from the offset %jd\n"
+literal|"%s: read %d blocks from the offset %jd [+%jd]\n"
 argument_list|,
 name|dp
 operator|->
@@ -143,6 +143,10 @@ name|name
 argument_list|,
 name|blocks
 argument_list|,
+name|offset
+argument_list|,
+name|dp
+operator|->
 name|offset
 argument_list|)
 expr_stmt|;
