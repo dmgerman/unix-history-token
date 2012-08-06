@@ -28053,6 +28053,8 @@ name|struct
 name|sctp_inpcb
 modifier|*
 name|inp
+init|=
+name|NULL
 decl_stmt|,
 modifier|*
 name|inp_decr
