@@ -34869,7 +34869,6 @@ end_define
 
 begin_enum
 enum|enum
-name|fw_hdr_intfver
 block|{
 name|FW_HDR_INTFVER_NIC
 init|=
