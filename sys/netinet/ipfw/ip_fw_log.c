@@ -520,7 +520,7 @@ name|m
 operator|!=
 name|NULL
 condition|)
-name|m_freem
+name|FREE_PKT
 argument_list|(
 name|m
 argument_list|)
