@@ -45379,14 +45379,13 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|BCE_CHIP_NUM
 argument_list|(
 name|sc
 argument_list|)
 operator|==
 name|BCE_CHIP_NUM_5709
-operator|)
+condition|)
 name|val
 operator|=
 name|val
@@ -45396,7 +45395,7 @@ name|BCE_HC_STAT_GEN_SEL_0_GEN_SEL_0_RV2PCSQ_VALID_CNT_XI
 operator|<<
 literal|24
 operator|)
-empty_stmt|;
+expr_stmt|;
 name|REG_WR
 argument_list|(
 name|sc
