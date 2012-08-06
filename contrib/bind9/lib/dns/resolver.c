@@ -32987,6 +32987,13 @@ name|hashval
 operator|=
 name|hashval
 expr_stmt|;
+name|bad
+operator|->
+name|expire
+operator|=
+operator|*
+name|expire
+expr_stmt|;
 name|isc_buffer_init
 argument_list|(
 operator|&
@@ -33100,6 +33107,7 @@ name|ISC_FALSE
 argument_list|)
 expr_stmt|;
 block|}
+else|else
 name|bad
 operator|->
 name|expire
