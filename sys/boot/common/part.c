@@ -2257,11 +2257,7 @@ name|part
 operator|.
 name|start
 operator|=
-name|e1
-operator|->
-name|part
-operator|.
-name|start
+name|offset
 operator|+
 name|start
 expr_stmt|;
