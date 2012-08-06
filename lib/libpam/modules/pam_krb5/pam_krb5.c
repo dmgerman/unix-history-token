@@ -1387,13 +1387,6 @@ argument_list|,
 name|princ
 argument_list|)
 expr_stmt|;
-name|PAM_LOG
-argument_list|(
-literal|"Done cleanup2"
-argument_list|)
-expr_stmt|;
-name|cleanup3
-label|:
 if|if
 condition|(
 name|princ_name
@@ -1403,6 +1396,13 @@ argument_list|(
 name|princ_name
 argument_list|)
 expr_stmt|;
+name|PAM_LOG
+argument_list|(
+literal|"Done cleanup2"
+argument_list|)
+expr_stmt|;
+name|cleanup3
+label|:
 name|krb5_free_context
 argument_list|(
 name|pam_context
@@ -3421,13 +3421,6 @@ argument_list|,
 name|princ
 argument_list|)
 expr_stmt|;
-name|PAM_LOG
-argument_list|(
-literal|"Done cleanup2"
-argument_list|)
-expr_stmt|;
-name|cleanup3
-label|:
 if|if
 condition|(
 name|princ_name
@@ -3437,6 +3430,13 @@ argument_list|(
 name|princ_name
 argument_list|)
 expr_stmt|;
+name|PAM_LOG
+argument_list|(
+literal|"Done cleanup2"
+argument_list|)
+expr_stmt|;
+name|cleanup3
+label|:
 name|krb5_free_context
 argument_list|(
 name|pam_context
