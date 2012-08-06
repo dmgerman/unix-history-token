@@ -340,7 +340,7 @@ name|char
 name|igb_driver_version
 index|[]
 init|=
-literal|"version - 2.3.4"
+literal|"version - 2.3.5"
 decl_stmt|;
 end_decl_stmt
 
@@ -4857,6 +4857,33 @@ name|txr
 argument_list|)
 condition|)
 block|{
+name|struct
+name|mbuf
+modifier|*
+name|pm
+init|=
+name|NULL
+decl_stmt|;
+comment|/* 		** Try to queue first to avoid 		** out-of-order delivery, but  		** settle for it if that fails 		*/
+if|if
+condition|(
+name|m
+operator|&&
+name|drbr_enqueue
+argument_list|(
+name|ifp
+argument_list|,
+name|txr
+operator|->
+name|br
+argument_list|,
+name|m
+argument_list|)
+condition|)
+name|pm
+operator|=
+name|m
+expr_stmt|;
 name|err
 operator|=
 name|igb_mq_start_locked
@@ -4865,7 +4892,7 @@ name|ifp
 argument_list|,
 name|txr
 argument_list|,
-name|m
+name|pm
 argument_list|)
 expr_stmt|;
 name|IGB_TX_UNLOCK
@@ -4975,7 +5002,7 @@ operator|(
 name|txr
 operator|->
 name|queue_status
-operator|==
+operator|&
 name|IGB_QUEUE_DEPLETED
 operator|)
 operator|||
