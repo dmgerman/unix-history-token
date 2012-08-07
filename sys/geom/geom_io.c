@@ -630,6 +630,17 @@ name|bp
 operator|->
 name|bio_cmd
 expr_stmt|;
+comment|/* 		 *  BIO_ORDERED flag may be used by disk drivers to enforce 		 *  ordering restrictions, so this flag needs to be cloned. 		 *  Other bio flags are not suitable for cloning. 		 */
+name|bp2
+operator|->
+name|bio_flags
+operator|=
+name|bp
+operator|->
+name|bio_flags
+operator|&
+name|BIO_ORDERED
+expr_stmt|;
 name|bp2
 operator|->
 name|bio_length
