@@ -2727,12 +2727,6 @@ operator|->
 name|p_size
 operator|==
 literal|0
-operator|||
-name|part
-operator|->
-name|p_fstype
-operator|==
-literal|0
 condition|)
 continue|continue;
 name|entry
