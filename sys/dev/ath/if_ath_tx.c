@@ -2881,7 +2881,7 @@ name|ath_hal_gettxdesclinkptr
 argument_list|(
 name|ah
 argument_list|,
-name|bf
+name|bf_last
 operator|->
 name|bf_lastds
 argument_list|,
