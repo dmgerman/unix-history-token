@@ -1058,7 +1058,7 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|allow_unaligned_acc
+name|emulate_fp
 argument_list|,
 literal|0
 argument_list|,
