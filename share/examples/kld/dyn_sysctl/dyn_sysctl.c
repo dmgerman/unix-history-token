@@ -733,7 +733,7 @@ literal|"Ok\n"
 argument_list|)
 expr_stmt|;
 break|break;
-default|default :
+default|default:
 name|error
 operator|=
 name|EOPNOTSUPP
