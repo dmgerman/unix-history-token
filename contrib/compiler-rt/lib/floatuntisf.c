@@ -3,17 +3,17 @@ begin_comment
 comment|/* ===-- floatuntisf.c - Implement __floatuntisf ---------------------------===  *  *                     The LLVM Compiler Infrastructure  *  * This file is dual licensed under the MIT and the University of Illinois Open  * Source Licenses. See LICENSE.TXT for details.  *  * ===----------------------------------------------------------------------===  *  * This file implements __floatuntisf for the compiler_rt library.  *  * ===----------------------------------------------------------------------===  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|__x86_64
-end_if
-
 begin_include
 include|#
 directive|include
 file|"int_lib.h"
 end_include
+
+begin_if
+if|#
+directive|if
+name|__x86_64
+end_if
 
 begin_comment
 comment|/* Returns: convert a to a float, rounding toward even. */

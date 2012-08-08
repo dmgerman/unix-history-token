@@ -777,6 +777,7 @@ name|rep_t
 modifier|*
 name|lo
 parameter_list|,
+name|unsigned
 name|int
 name|count
 parameter_list|)
