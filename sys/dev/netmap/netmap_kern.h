@@ -405,11 +405,11 @@ comment|/* set if the interface suports different 			       locks for rx, tx and
 name|u_int
 name|num_rx_rings
 decl_stmt|;
-comment|/* number of tx/rx ring pairs */
+comment|/* number of adapter receive rings */
 name|u_int
 name|num_tx_rings
 decl_stmt|;
-comment|// if nonzero, overrides num_rx_rings
+comment|/* number of adapter transmit rings */
 name|u_int
 name|num_tx_desc
 decl_stmt|;

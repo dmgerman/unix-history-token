@@ -6015,7 +6015,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Initialize a ``netmap_adapter`` object created by driver on attach.  * We allocate a block of memory with room for a struct netmap_adapter  * plus two sets of N+2 struct netmap_kring (where N is the number  * of hardware rings):  * krings	0..N-1	are for the hardware queues.  * kring	N	is for the host stack queue  * kring	N+1	is only used for the selinfo for all queues.  * Return 0 on success, ENOMEM otherwise.  *  * na->num_tx_rings can be set for cards with different tx/rx setups  */
+comment|/*  * Initialize a ``netmap_adapter`` object created by driver on attach.  * We allocate a block of memory with room for a struct netmap_adapter  * plus two sets of N+2 struct netmap_kring (where N is the number  * of hardware rings):  * krings	0..N-1	are for the hardware queues.  * kring	N	is for the host stack queue  * kring	N+1	is only used for the selinfo for all queues.  * Return 0 on success, ENOMEM otherwise.  *  * By default the receive and transmit adapter ring counts are both initialized  * to num_queues.  na->num_tx_rings can be set for cards with different tx/rx  * setups.  */
 end_comment
 
 begin_function
