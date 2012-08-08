@@ -10419,7 +10419,20 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 		 * SCTP_PRINTF("findassociation_ep_asconf: zero lookup 		 * address finds stcb 0x%x\n", (uint32_t)stcb); 		 */
+if|if
+condition|(
+name|stcb
+operator|!=
+name|NULL
+condition|)
+block|{
+name|SCTP_INP_DECR_REF
+argument_list|(
+operator|*
+name|inp_p
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
