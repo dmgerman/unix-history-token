@@ -2236,6 +2236,9 @@ name|options
 operator||
 name|OPT_COPY
 decl_stmt|;
+name|int
+name|retval
+decl_stmt|;
 name|D
 argument_list|(
 literal|"start"
@@ -2430,6 +2433,9 @@ block|{
 comment|/* 		 * wait for available room in the send queue(s) 		 */
 if|if
 condition|(
+operator|(
+name|retval
+operator|=
 name|poll
 argument_list|(
 name|fds
@@ -2438,6 +2444,7 @@ literal|1
 argument_list|,
 literal|2000
 argument_list|)
+operator|)
 operator|<=
 literal|0
 condition|)
@@ -2449,13 +2456,34 @@ operator|->
 name|cancel
 condition|)
 break|break;
+if|if
+condition|(
+name|retval
+operator|==
+literal|0
+condition|)
 name|D
 argument_list|(
-literal|"poll error/timeout on queue %d\n"
+literal|"poll timeout on queue %d\n"
 argument_list|,
 name|targ
 operator|->
 name|me
+argument_list|)
+expr_stmt|;
+else|else
+name|D
+argument_list|(
+literal|"poll error on queue %d: %s\n"
+argument_list|,
+name|targ
+operator|->
+name|me
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
