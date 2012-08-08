@@ -386,7 +386,7 @@ name|uint32_t
 name|bytes_xfered
 decl_stmt|;
 name|uint32_t
-name|last_xframt
+name|bytes_in_transit
 decl_stmt|;
 name|uint32_t
 name|tag
@@ -420,6 +420,10 @@ name|uint16_t
 name|ctcnt
 decl_stmt|;
 comment|/* number of CTIOs currently active */
+name|uint8_t
+name|seqno
+decl_stmt|;
+comment|/* CTIO sequence number */
 name|uint32_t
 name|srr_notify_rcvd
 range|:
@@ -511,6 +515,59 @@ name|ATPD_STATE_PDON
 value|5
 end_define
 
+begin_define
+define|#
+directive|define
+name|ATPD_CCB_OUTSTANDING
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATPD_SEQ_MASK
+value|0x7f
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATPD_SEQ_NOTIFY_CAM
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATPD_SET_SEQNO
+parameter_list|(
+name|hdrp
+parameter_list|,
+name|atp
+parameter_list|)
+value|((isphdr_t *)hdrp)->rqs_seqno&= ~ATPD_SEQ_MASK, ((isphdr_t *)hdrp)->rqs_seqno |= (atp)->seqno
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATPD_GET_SEQNO
+parameter_list|(
+name|hdrp
+parameter_list|)
+value|(((isphdr_t *)hdrp)->rqs_seqno& ATPD_SEQ_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATPD_GET_NCAM
+parameter_list|(
+name|hdrp
+parameter_list|)
+value|((((isphdr_t *)hdrp)->rqs_seqno& ATPD_SEQ_NOTIFY_CAM) != 0)
+end_define
+
 begin_typedef
 typedef|typedef
 name|union
@@ -577,6 +634,16 @@ name|isp_tna_t
 typedef|;
 end_typedef
 
+begin_expr_stmt
+name|TAILQ_HEAD
+argument_list|(
+name|isp_ccbq
+argument_list|,
+name|ccb_hdr
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -593,6 +660,11 @@ name|cam_path
 modifier|*
 name|owner
 decl_stmt|;
+name|struct
+name|isp_ccbq
+name|waitq
+decl_stmt|;
+comment|/* waiting CCBs */
 name|struct
 name|ccb_hdr_slist
 name|atios
@@ -696,6 +768,10 @@ name|callout
 name|wdog
 decl_stmt|;
 comment|/* watchdog timer */
+name|uint32_t
+name|datalen
+decl_stmt|;
+comment|/* data length for this command (target mode only) */
 name|uint8_t
 name|totslen
 decl_stmt|;
