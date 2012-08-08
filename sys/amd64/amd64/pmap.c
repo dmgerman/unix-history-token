@@ -15966,21 +15966,6 @@ expr_stmt|;
 name|KASSERT
 argument_list|(
 operator|(
-name|prot
-operator|&
-name|access
-operator|)
-operator|==
-name|access
-argument_list|,
-operator|(
-literal|"pmap_enter: access not in prot"
-operator|)
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
-operator|(
 name|m
 operator|->
 name|oflags
@@ -16084,6 +16069,25 @@ condition|)
 name|newpte
 operator||=
 name|PG_RW
+expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|newpte
+operator|&
+operator|(
+name|PG_M
+operator||
+name|PG_RW
+operator|)
+operator|)
+operator|!=
+name|PG_M
+argument_list|,
+operator|(
+literal|"pmap_enter: access includes VM_PROT_WRITE but prot doesn't"
+operator|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
