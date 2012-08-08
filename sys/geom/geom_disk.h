@@ -221,10 +221,6 @@ name|disk_getattr_t
 modifier|*
 name|d_getattr
 decl_stmt|;
-name|disk_gone_t
-modifier|*
-name|d_gone
-decl_stmt|;
 comment|/* Info fields from driver to geom_disk.c. Valid when open */
 name|u_int
 name|d_sectorsize
@@ -276,6 +272,11 @@ name|void
 modifier|*
 name|d_drv1
 decl_stmt|;
+comment|/* new fields in stable - don't use if DISKFLAG_LACKS_GONE is set */
+name|disk_gone_t
+modifier|*
+name|d_gone
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -306,6 +307,13 @@ define|#
 directive|define
 name|DISKFLAG_CANFLUSHCACHE
 value|0x8
+end_define
+
+begin_define
+define|#
+directive|define
+name|DISKFLAG_LACKS_GONE
+value|0x10
 end_define
 
 begin_function_decl
