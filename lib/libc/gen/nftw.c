@@ -261,6 +261,10 @@ name|FTW_D
 expr_stmt|;
 break|break;
 case|case
+name|FTS_DC
+case|:
+continue|continue;
+case|case
 name|FTS_DNR
 case|:
 name|fnflag
@@ -320,14 +324,6 @@ operator|=
 name|FTW_SLN
 expr_stmt|;
 break|break;
-case|case
-name|FTS_DC
-case|:
-name|errno
-operator|=
-name|ELOOP
-expr_stmt|;
-comment|/* FALLTHROUGH */
 default|default:
 name|error
 operator|=
