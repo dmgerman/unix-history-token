@@ -603,6 +603,21 @@ value|(30)
 end_define
 
 begin_comment
+comment|/* Flags kept in td_flags. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDF_SLICEEND
+value|TDF_SCHED2
+end_define
+
+begin_comment
+comment|/* Thread time slice is over. */
+end_comment
+
+begin_comment
 comment|/*  * tickincr:		Converts a stathz tick into a hz domain scaled by  *			the shift factor.  Without the shift the error rate  *			due to rounding would be unacceptably high.  * realstathz:		stathz is sometimes 0 and run off of hz.  * sched_slice:		Runtime of each thread before rescheduling.  * preempt_thresh:	Priority threshold for preemption and remote IPIs.  */
 end_comment
 
@@ -8264,6 +8279,8 @@ name|srqflag
 decl_stmt|;
 name|int
 name|cpuid
+decl_stmt|,
+name|preempted
 decl_stmt|;
 name|THREAD_LOCK_ASSERT
 argument_list|(
@@ -8336,21 +8353,27 @@ name|td_oncpu
 operator|=
 name|NOCPU
 expr_stmt|;
-if|if
-condition|(
+name|preempted
+operator|=
 operator|!
 operator|(
-name|flags
+name|td
+operator|->
+name|td_flags
 operator|&
-name|SW_PREEMPT
+name|TDF_SLICEEND
 operator|)
-condition|)
+expr_stmt|;
 name|td
 operator|->
 name|td_flags
 operator|&=
 operator|~
+operator|(
 name|TDF_NEEDRESCHED
+operator||
+name|TDF_SLICEEND
+operator|)
 expr_stmt|;
 name|td
 operator|->
@@ -8413,11 +8436,7 @@ argument_list|)
 expr_stmt|;
 name|srqflag
 operator|=
-operator|(
-name|flags
-operator|&
-name|SW_PREEMPT
-operator|)
+name|preempted
 condition|?
 name|SRQ_OURSELF
 operator||
@@ -9872,6 +9891,8 @@ operator|->
 name|td_flags
 operator||=
 name|TDF_NEEDRESCHED
+operator||
+name|TDF_SLICEEND
 expr_stmt|;
 block|}
 end_function

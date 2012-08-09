@@ -336,6 +336,17 @@ begin_comment
 comment|/* Bound to one CPU. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TDF_SLICEEND
+value|TDF_SCHED2
+end_define
+
+begin_comment
+comment|/* Thread time slice is over. */
+end_comment
+
 begin_comment
 comment|/* flags kept in ts_flags */
 end_comment
@@ -2598,6 +2609,8 @@ operator|->
 name|td_flags
 operator||=
 name|TDF_NEEDRESCHED
+operator||
+name|TDF_SLICEEND
 expr_stmt|;
 block|}
 name|stat
@@ -3582,6 +3595,9 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
+name|int
+name|preempted
+decl_stmt|;
 name|tmtx
 operator|=
 name|NULL
@@ -3653,21 +3669,27 @@ name|td
 operator|->
 name|td_oncpu
 expr_stmt|;
-if|if
-condition|(
+name|preempted
+operator|=
 operator|!
 operator|(
-name|flags
+name|td
+operator|->
+name|td_flags
 operator|&
-name|SW_PREEMPT
+name|TDF_SLICEEND
 operator|)
-condition|)
+expr_stmt|;
 name|td
 operator|->
 name|td_flags
 operator|&=
 operator|~
+operator|(
 name|TDF_NEEDRESCHED
+operator||
+name|TDF_SLICEEND
+operator|)
 expr_stmt|;
 name|td
 operator|->
@@ -3728,11 +3750,7 @@ name|sched_add
 argument_list|(
 name|td
 argument_list|,
-operator|(
-name|flags
-operator|&
-name|SW_PREEMPT
-operator|)
+name|preempted
 condition|?
 name|SRQ_OURSELF
 operator||
