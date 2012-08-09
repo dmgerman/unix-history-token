@@ -228,12 +228,6 @@ name|pm_stats
 decl_stmt|;
 comment|/* pmap statistics */
 name|struct
-name|vm_page
-modifier|*
-name|pm_ptphint
-decl_stmt|;
-comment|/* pmap ptp hint */
-name|struct
 name|mtx
 name|pm_mtx
 decl_stmt|;
@@ -424,10 +418,6 @@ argument|pv_entry
 argument_list|)
 name|pv_plist
 expr_stmt|;
-name|vm_page_t
-name|pv_ptem
-decl_stmt|;
-comment|/* VM page for pte */
 block|}
 typedef|*
 name|pv_entry_t
