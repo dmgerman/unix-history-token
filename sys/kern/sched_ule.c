@@ -634,6 +634,8 @@ begin_decl_stmt
 specifier|static
 name|int
 name|realstathz
+init|=
+literal|127
 decl_stmt|;
 end_decl_stmt
 
@@ -641,15 +643,23 @@ begin_decl_stmt
 specifier|static
 name|int
 name|tickincr
+init|=
+literal|8
+operator|<<
+name|SCHED_TICK_SHIFT
 decl_stmt|;
 end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_decl_stmt
 specifier|static
 name|int
 name|sched_slice
 init|=
-literal|1
+literal|12
 decl_stmt|;
 end_decl_stmt
 
@@ -6565,26 +6575,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * To avoid divide-by-zero, we set realstathz a dummy value 	 * in case which sched_clock() called before sched_initticks(). 	 */
-name|realstathz
-operator|=
-name|hz
-expr_stmt|;
-name|sched_slice
-operator|=
-operator|(
-name|realstathz
-operator|/
-literal|10
-operator|)
-expr_stmt|;
-comment|/* ~100ms */
-name|tickincr
-operator|=
-literal|1
-operator|<<
-name|SCHED_TICK_SHIFT
-expr_stmt|;
 comment|/* Add thread0's load since it's running. */
 name|TDQ_LOCK
 argument_list|(
@@ -6626,7 +6616,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This routine determines the tickincr after stathz and hz are setup.  */
+comment|/*  * This routine determines time constants after stathz and hz are setup.  */
 end_comment
 
 begin_comment
@@ -6656,13 +6646,26 @@ name|hz
 expr_stmt|;
 name|sched_slice
 operator|=
-operator|(
 name|realstathz
 operator|/
 literal|10
-operator|)
 expr_stmt|;
 comment|/* ~100ms */
+name|hogticks
+operator|=
+name|max
+argument_list|(
+literal|1
+argument_list|,
+literal|2
+operator|*
+name|hz
+operator|*
+name|sched_slice
+operator|/
+name|realstathz
+argument_list|)
+expr_stmt|;
 comment|/* 	 * tickincr is shifted out by 10 to avoid rounding errors due to 	 * hz not being evenly divisible by stathz on all platforms. 	 */
 name|incr
 operator|=
@@ -7367,16 +7370,25 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|/* Convert sched_slice to hz */
+comment|/* Convert sched_slice from stathz to hz. */
 return|return
 operator|(
-name|hz
-operator|/
+name|max
+argument_list|(
+literal|1
+argument_list|,
 operator|(
+name|sched_slice
+operator|*
+name|hz
+operator|+
 name|realstathz
 operator|/
-name|sched_slice
+literal|2
 operator|)
+operator|/
+name|realstathz
+argument_list|)
 operator|)
 return|;
 block|}
@@ -9868,18 +9880,23 @@ name|td
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * We used up one time slice. 	 */
+comment|/* 	 * Force a context switch if the current thread has used up a full 	 * time slice (default is 100ms). 	 */
 if|if
 condition|(
+operator|!
+name|TD_IS_IDLETHREAD
+argument_list|(
+name|td
+argument_list|)
+operator|&&
 operator|--
 name|ts
 operator|->
 name|ts_slice
-operator|>
+operator|<=
 literal|0
 condition|)
-return|return;
-comment|/* 	 * We're out of time, force a requeue at userret(). 	 */
+block|{
 name|ts
 operator|->
 name|ts_slice
@@ -9894,6 +9911,7 @@ name|TDF_NEEDRESCHED
 operator||
 name|TDF_SLICEEND
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -12283,6 +12301,115 @@ endif|#
 directive|endif
 end_endif
 
+begin_function
+specifier|static
+name|int
+name|sysctl_kern_quantum
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+block|{
+name|int
+name|error
+decl_stmt|,
+name|new_val
+decl_stmt|,
+name|period
+decl_stmt|;
+name|period
+operator|=
+literal|1000000
+operator|/
+name|realstathz
+expr_stmt|;
+name|new_val
+operator|=
+name|period
+operator|*
+name|sched_slice
+expr_stmt|;
+name|error
+operator|=
+name|sysctl_handle_int
+argument_list|(
+name|oidp
+argument_list|,
+operator|&
+name|new_val
+argument_list|,
+literal|0
+argument_list|,
+name|req
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+operator|||
+name|req
+operator|->
+name|newptr
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+if|if
+condition|(
+name|new_val
+operator|<=
+literal|0
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+name|sched_slice
+operator|=
+name|max
+argument_list|(
+literal|1
+argument_list|,
+operator|(
+name|new_val
+operator|+
+name|period
+operator|/
+literal|2
+operator|)
+operator|/
+name|period
+argument_list|)
+expr_stmt|;
+name|hogticks
+operator|=
+name|max
+argument_list|(
+literal|1
+argument_list|,
+literal|2
+operator|*
+name|hz
+operator|*
+name|sched_slice
+operator|/
+name|realstathz
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
 begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(
@@ -12322,6 +12449,32 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|SYSCTL_PROC
+argument_list|(
+name|_kern_sched
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|quantum
+argument_list|,
+name|CTLTYPE_INT
+operator||
+name|CTLFLAG_RW
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+name|sysctl_kern_quantum
+argument_list|,
+literal|"I"
+argument_list|,
+literal|"Length of time granted to timeshare threads in microseconds"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_kern_sched
@@ -12337,7 +12490,7 @@ name|sched_slice
 argument_list|,
 literal|0
 argument_list|,
-literal|"Slice size for timeshare threads"
+literal|"Length of time granted to timeshare threads in stathz ticks"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -12421,7 +12574,7 @@ name|sched_idlespins
 argument_list|,
 literal|0
 argument_list|,
-literal|"Number of times idle will spin waiting for new work."
+literal|"Number of times idle thread will spin waiting for new work."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -12442,7 +12595,7 @@ name|sched_idlespinthresh
 argument_list|,
 literal|0
 argument_list|,
-literal|"Threshold before we will permit idle spinning."
+literal|"Threshold before we will permit idle thread spinning."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -12511,7 +12664,7 @@ name|balance_interval
 argument_list|,
 literal|0
 argument_list|,
-literal|"Average frequency in stathz ticks to run the long-term balancer"
+literal|"Average period in stathz ticks to run the long-term balancer"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -12557,10 +12710,6 @@ literal|"Minimum load on remote cpu before we'll steal"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|/* Retrieve SMP topology */
-end_comment
 
 begin_expr_stmt
 name|SYSCTL_PROC
