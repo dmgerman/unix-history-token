@@ -2603,6 +2603,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|device_free_softc
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|void
+modifier|*
+name|softc
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Access functions for devclass.  */
 end_comment
