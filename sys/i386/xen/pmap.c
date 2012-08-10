@@ -3772,9 +3772,6 @@ operator|!=
 name|newpf
 condition|)
 block|{
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|PT_SET_MA
 argument_list|(
 name|PADDR2
@@ -3787,9 +3784,6 @@ name|PG_A
 operator||
 name|PG_M
 argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 name|CTR3
 argument_list|(
