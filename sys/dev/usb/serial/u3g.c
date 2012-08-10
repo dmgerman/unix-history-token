@@ -6250,7 +6250,6 @@ name|U3G_BULK_RD
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6290,7 +6289,6 @@ name|U3G_BULK_RD
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6329,7 +6327,6 @@ name|U3G_BULK_WR
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6368,7 +6365,6 @@ name|U3G_BULK_WR
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6483,7 +6479,6 @@ goto|;
 block|}
 break|break;
 block|}
-return|return;
 block|}
 end_function
 
@@ -6608,7 +6603,6 @@ goto|;
 block|}
 break|break;
 block|}
-return|return;
 block|}
 end_function
 
