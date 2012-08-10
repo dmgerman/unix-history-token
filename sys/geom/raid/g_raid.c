@@ -1125,6 +1125,14 @@ literal|"NEW"
 operator|)
 return|;
 case|case
+name|G_RAID_SUBDISK_E_FAILED
+case|:
+return|return
+operator|(
+literal|"FAILED"
+operator|)
+return|;
+case|case
 name|G_RAID_SUBDISK_E_DISCONNECTED
 case|:
 return|return
