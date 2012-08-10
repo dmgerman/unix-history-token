@@ -2367,6 +2367,9 @@ name|hz
 operator|=
 name|main_clock
 expr_stmt|;
+comment|// Note: this means outa calc code for plla never used since
+comment|// we never change it.  If we did, we'd also have to mind
+comment|// ICPLLA to get the charge pump current right.
 name|at91_pmc_pll_rate
 argument_list|(
 operator|&
@@ -2399,7 +2402,16 @@ name|hz
 operator|/=
 literal|2
 expr_stmt|;
-comment|/* 	 * Initialize the usb clock.  This sets up pllb, but disables the 	 * actual clock. 	 */
+comment|/* 	 * Initialize the usb clock.  This sets up pllb, but disables the 	 * actual clock. XXX except for the if 0 :( 	 */
+if|if
+condition|(
+operator|!
+name|at91_cpu_is
+argument_list|(
+name|AT91_T_SAM9G45
+argument_list|)
+condition|)
+block|{
 name|pllb_init
 operator|=
 name|at91_pmc_pll_calc
@@ -2426,9 +2438,10 @@ if|#
 directive|if
 literal|0
 comment|/* Turn off USB clocks */
-block|at91_pmc_set_periph_mode(&ohci_clk, 0); 	at91_pmc_set_periph_mode(&udc_clk, 0);
+block|at91_pmc_set_periph_mode(&ohci_clk, 0); 		at91_pmc_set_periph_mode(&udc_clk, 0);
 endif|#
 directive|endif
+block|}
 if|if
 condition|(
 name|at91_is_rm92
