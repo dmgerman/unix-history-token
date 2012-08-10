@@ -921,6 +921,8 @@ operator|->
 name|ctrl_ep
 operator|.
 name|edesc
+operator|!=
+name|NULL
 operator|)
 operator|&&
 operator|(
@@ -1378,6 +1380,8 @@ operator|->
 name|ctrl_ep
 operator|.
 name|edesc
+operator|!=
+name|NULL
 operator|)
 operator|&&
 operator|(
