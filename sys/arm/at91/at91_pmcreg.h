@@ -283,6 +283,33 @@ comment|/* Interrupt Mask Register */
 end_comment
 
 begin_comment
+comment|/*	0x70		   reserved */
+end_comment
+
+begin_comment
+comment|/*	0x74		   reserved */
+end_comment
+
+begin_comment
+comment|/*	0x78		   reserved */
+end_comment
+
+begin_comment
+comment|/*	0x7c		   reserved */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMC_PLLICPR
+value|0x80
+end_define
+
+begin_comment
+comment|/* PLL Charge Pump Current Register */
+end_comment
+
+begin_comment
 comment|/* PMC System Clock Enable Register */
 end_comment
 
