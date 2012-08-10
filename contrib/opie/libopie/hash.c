@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/endian.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opie_cfg.h"
 end_include
 
@@ -149,6 +155,33 @@ name|digest
 index|[
 literal|3
 index|]
+expr_stmt|;
+comment|/*        * RFC2289 mandates that we convert SHA1 digest from big-endian to little        * see Appendix A.        */
+name|results
+index|[
+literal|0
+index|]
+operator|=
+name|bswap32
+argument_list|(
+name|results
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+name|results
+index|[
+literal|1
+index|]
+operator|=
+name|bswap32
+argument_list|(
+name|results
+index|[
+literal|1
+index|]
+argument_list|)
 expr_stmt|;
 block|}
 empty_stmt|;
