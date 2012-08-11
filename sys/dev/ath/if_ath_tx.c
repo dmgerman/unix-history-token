@@ -459,6 +459,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
+operator|(
 name|sc
 operator|->
 name|sc_ah
@@ -466,6 +467,17 @@ operator|->
 name|ah_magic
 operator|==
 literal|0x20065416
+operator|)
+operator|||
+operator|(
+name|sc
+operator|->
+name|sc_ah
+operator|->
+name|ah_magic
+operator|==
+literal|0x19741014
+operator|)
 operator|)
 return|;
 block|}
