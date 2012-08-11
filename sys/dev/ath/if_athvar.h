@@ -952,6 +952,10 @@ name|axq_aggr_depth
 decl_stmt|;
 comment|/* how many aggregates are queued */
 name|u_int
+name|axq_fifo_depth
+decl_stmt|;
+comment|/* depth of FIFO frames */
+name|u_int
 name|axq_intrcnt
 decl_stmt|;
 comment|/* interrupt count */
@@ -1139,6 +1143,16 @@ parameter_list|,
 name|_field
 parameter_list|)
 value|do { \ 	TAILQ_REMOVE(&(_tq)->axq_q, _elm, _field); \ 	(_tq)->axq_depth--; \ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TXQ_FIRST
+parameter_list|(
+name|_tq
+parameter_list|)
+value|TAILQ_FIRST(&(_tq)->axq_q)
 end_define
 
 begin_define
