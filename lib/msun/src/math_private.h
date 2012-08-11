@@ -1394,16 +1394,13 @@ begin_comment
 comment|/* double precision kernel functions */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|INLINE_REM_PIO2
-end_ifdef
+end_ifndef
 
 begin_function_decl
-name|__inline
-endif|#
-directive|endif
 name|int
 name|__ieee754_rem_pio2
 parameter_list|(
@@ -1414,6 +1411,11 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|double
@@ -1491,16 +1493,13 @@ begin_comment
 comment|/* float precision kernel functions */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|INLINE_REM_PIO2F
-end_ifdef
+end_ifndef
 
 begin_function_decl
-name|__inline
-endif|#
-directive|endif
 name|int
 name|__ieee754_rem_pio2f
 parameter_list|(
@@ -1512,16 +1511,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INLINE_KERNEL_SINDF
-end_ifdef
-
-begin_function_decl
-name|__inline
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|INLINE_KERNEL_SINDF
+end_ifndef
+
+begin_function_decl
 name|float
 name|__kernel_sindf
 parameter_list|(
@@ -1530,16 +1531,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INLINE_KERNEL_COSDF
-end_ifdef
-
-begin_function_decl
-name|__inline
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|INLINE_KERNEL_COSDF
+end_ifndef
+
+begin_function_decl
 name|float
 name|__kernel_cosdf
 parameter_list|(
@@ -1548,16 +1551,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INLINE_KERNEL_TANDF
-end_ifdef
-
-begin_function_decl
-name|__inline
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|INLINE_KERNEL_TANDF
+end_ifndef
+
+begin_function_decl
 name|float
 name|__kernel_tandf
 parameter_list|(
@@ -1567,6 +1572,11 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|float

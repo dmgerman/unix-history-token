@@ -44,7 +44,7 @@ file|"math_private.h"
 end_include
 
 begin_comment
-comment|/*  * invpio2:  53 bits of 2/pi  * pio2_1:   first  33 bit of pi/2  * pio2_1t:  pi/2 - pio2_1  */
+comment|/*  * invpio2:  53 bits of 2/pi  * pio2_1:   first 25 bits of pi/2  * pio2_1t:  pi/2 - pio2_1  */
 end_comment
 
 begin_decl_stmt
@@ -71,17 +71,17 @@ begin_comment
 comment|/* 0x3E5110b4, 0x611A6263 */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|INLINE_REM_PIO2F
-end_ifndef
+end_ifdef
 
 begin_function
-specifier|extern
+specifier|static
+name|__inline
 endif|#
 directive|endif
-name|__inline
 name|int
 name|__ieee754_rem_pio2f
 parameter_list|(
