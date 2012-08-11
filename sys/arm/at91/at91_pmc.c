@@ -283,7 +283,7 @@ name|name
 operator|=
 literal|"slck"
 block|,
-comment|// 32,768 Hz slow clock
+comment|/* 32,768 Hz slow clock */
 operator|.
 name|hz
 operator|=
@@ -323,7 +323,7 @@ name|name
 operator|=
 literal|"main"
 block|,
-comment|// Main clock
+comment|/* Main clock */
 operator|.
 name|refcnt
 operator|=
@@ -359,7 +359,7 @@ name|name
 operator|=
 literal|"plla"
 block|,
-comment|// PLLA Clock, used for CPU clocking
+comment|/* PLLA Clock, used for CPU clocking */
 operator|.
 name|parent
 operator|=
@@ -406,7 +406,7 @@ name|name
 operator|=
 literal|"pllb"
 block|,
-comment|// PLLB Clock, used for USB functions
+comment|/* PLLB Clock, used for USB functions */
 operator|.
 name|parent
 operator|=
@@ -463,7 +463,7 @@ name|name
 operator|=
 literal|"upll"
 block|,
-comment|// UTMI PLL, used for USB functions on 9G45
+comment|/* UTMI PLL, used for USB functions on 9G45 family */
 operator|.
 name|parent
 operator|=
@@ -582,7 +582,7 @@ name|name
 operator|=
 literal|"mck"
 block|,
-comment|// Master (Peripheral) Clock
+comment|/* Master (Peripheral) Clock */
 operator|.
 name|pmc_mask
 operator|=
@@ -608,7 +608,7 @@ name|name
 operator|=
 literal|"cpu"
 block|,
-comment|// CPU Clock
+comment|/* CPU Clock */
 operator|.
 name|parent
 operator|=
@@ -1579,7 +1579,6 @@ index|]
 operator|)
 return|;
 block|}
-comment|//printf("at91_pmc: Warning - did not find clock '%s'", name);
 return|return
 operator|(
 name|NULL
@@ -2367,9 +2366,7 @@ name|hz
 operator|=
 name|main_clock
 expr_stmt|;
-comment|// Note: this means outa calc code for plla never used since
-comment|// we never change it.  If we did, we'd also have to mind
-comment|// ICPLLA to get the charge pump current right.
+comment|/* 	 * Note: this means outa calc code for plla never used since 	 * we never change it.  If we did, we'd also have to mind 	 * ICPLLA to get the charge pump current right. 	 */
 name|at91_pmc_pll_rate
 argument_list|(
 operator|&
