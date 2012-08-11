@@ -353,6 +353,9 @@ name|pthread_mutex
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|int
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1994,6 +1997,8 @@ argument_list|(
 name|mp
 argument_list|,
 literal|0
+argument_list|,
+name|NULL
 argument_list|)
 operator|)
 return|;
@@ -2059,6 +2064,10 @@ parameter_list|,
 name|int
 modifier|*
 name|count
+parameter_list|,
+name|int
+modifier|*
+name|defer
 parameter_list|)
 block|{
 comment|/* 	 * Clear the count in case this is a recursive mutex. 	 */
@@ -2083,6 +2092,8 @@ argument_list|(
 name|m
 argument_list|,
 literal|1
+argument_list|,
+name|defer
 argument_list|)
 expr_stmt|;
 return|return
@@ -2628,6 +2639,10 @@ name|m
 parameter_list|,
 name|int
 name|cv
+parameter_list|,
+name|int
+modifier|*
+name|mtx_defer
 parameter_list|)
 block|{
 name|struct
@@ -2761,7 +2776,7 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-name|_thr_umutex_unlock
+name|_thr_umutex_unlock2
 argument_list|(
 operator|&
 name|m
@@ -2769,15 +2784,15 @@ operator|->
 name|m_lock
 argument_list|,
 name|id
+argument_list|,
+name|mtx_defer
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|curthread
-operator|->
-name|will_sleep
+name|mtx_defer
 operator|==
-literal|0
+name|NULL
 operator|&&
 name|defered
 condition|)

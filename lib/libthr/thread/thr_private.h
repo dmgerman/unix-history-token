@@ -2150,7 +2150,6 @@ name|pthread_mutex
 operator|*
 argument_list|,
 name|int
-name|count
 argument_list|)
 name|__hidden
 decl_stmt|;
@@ -2166,7 +2165,9 @@ operator|*
 argument_list|,
 name|int
 operator|*
-name|count
+argument_list|,
+name|int
+operator|*
 argument_list|)
 name|__hidden
 decl_stmt|;
@@ -2181,7 +2182,6 @@ name|pthread_mutex
 operator|*
 argument_list|,
 name|int
-name|count
 argument_list|)
 name|__hidden
 decl_stmt|;
@@ -2197,7 +2197,6 @@ operator|*
 argument_list|,
 name|int
 operator|*
-name|count
 argument_list|)
 name|__hidden
 decl_stmt|;
