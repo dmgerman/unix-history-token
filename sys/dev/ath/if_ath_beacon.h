@@ -28,9 +28,9 @@ name|int
 name|ath_beaconq_setup
 parameter_list|(
 name|struct
-name|ath_hal
+name|ath_softc
 modifier|*
-name|ah
+name|sc
 parameter_list|)
 function_decl|;
 end_function_decl

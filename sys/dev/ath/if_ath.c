@@ -2422,7 +2422,7 @@ name|sc_bhalq
 operator|=
 name|ath_beaconq_setup
 argument_list|(
-name|ah
+name|sc
 argument_list|)
 expr_stmt|;
 if|if
