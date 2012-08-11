@@ -80,6 +80,7 @@ end_ifdef
 begin_function
 specifier|static
 name|__inline
+name|__always_inline
 endif|#
 directive|endif
 name|int
