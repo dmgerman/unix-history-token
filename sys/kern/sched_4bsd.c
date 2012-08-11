@@ -872,7 +872,7 @@ operator|)
 return|;
 name|sched_slice
 operator|=
-name|max
+name|imax
 argument_list|(
 literal|1
 argument_list|,
@@ -889,15 +889,21 @@ argument_list|)
 expr_stmt|;
 name|hogticks
 operator|=
-name|max
+name|imax
 argument_list|(
 literal|1
 argument_list|,
+operator|(
 literal|2
 operator|*
 name|hz
 operator|*
 name|sched_slice
+operator|+
+name|realstathz
+operator|/
+literal|2
+operator|)
 operator|/
 name|realstathz
 argument_list|)
@@ -969,7 +975,7 @@ name|sysctl_kern_quantum
 argument_list|,
 literal|"I"
 argument_list|,
-literal|"Length of time granted to timeshare threads in microseconds"
+literal|"Quantum for timeshare threads in microseconds"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -990,7 +996,7 @@ name|sched_slice
 argument_list|,
 literal|0
 argument_list|,
-literal|"Length of time granted to timeshare threads in stathz ticks"
+literal|"Quantum for timeshare threads in stathz ticks"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2499,15 +2505,21 @@ expr_stmt|;
 comment|/* ~100ms */
 name|hogticks
 operator|=
-name|max
+name|imax
 argument_list|(
 literal|1
 argument_list|,
+operator|(
 literal|2
 operator|*
 name|hz
 operator|*
 name|sched_slice
+operator|+
+name|realstathz
+operator|/
+literal|2
+operator|)
 operator|/
 name|realstathz
 argument_list|)
@@ -2628,7 +2640,7 @@ block|{
 comment|/* Convert sched_slice from stathz to hz. */
 return|return
 operator|(
-name|max
+name|imax
 argument_list|(
 literal|1
 argument_list|,

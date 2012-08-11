@@ -6653,15 +6653,21 @@ expr_stmt|;
 comment|/* ~100ms */
 name|hogticks
 operator|=
-name|max
+name|imax
 argument_list|(
 literal|1
 argument_list|,
+operator|(
 literal|2
 operator|*
 name|hz
 operator|*
 name|sched_slice
+operator|+
+name|realstathz
+operator|/
+literal|2
+operator|)
 operator|/
 name|realstathz
 argument_list|)
@@ -6714,7 +6720,7 @@ literal|0
 condition|)
 name|sched_idlespinthresh
 operator|=
-name|max
+name|imax
 argument_list|(
 literal|16
 argument_list|,
@@ -7358,7 +7364,7 @@ block|{
 comment|/* Convert sched_slice from stathz to hz. */
 return|return
 operator|(
-name|max
+name|imax
 argument_list|(
 literal|1
 argument_list|,
@@ -12357,7 +12363,7 @@ operator|)
 return|;
 name|sched_slice
 operator|=
-name|max
+name|imax
 argument_list|(
 literal|1
 argument_list|,
@@ -12374,15 +12380,21 @@ argument_list|)
 expr_stmt|;
 name|hogticks
 operator|=
-name|max
+name|imax
 argument_list|(
 literal|1
 argument_list|,
+operator|(
 literal|2
 operator|*
 name|hz
 operator|*
 name|sched_slice
+operator|+
+name|realstathz
+operator|/
+literal|2
+operator|)
 operator|/
 name|realstathz
 argument_list|)
@@ -12454,7 +12466,7 @@ name|sysctl_kern_quantum
 argument_list|,
 literal|"I"
 argument_list|,
-literal|"Length of time granted to timeshare threads in microseconds"
+literal|"Quantum for timeshare threads in microseconds"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -12475,7 +12487,7 @@ name|sched_slice
 argument_list|,
 literal|0
 argument_list|,
-literal|"Length of time granted to timeshare threads in stathz ticks"
+literal|"Quantum for timeshare threads in stathz ticks"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -12517,7 +12529,7 @@ name|preempt_thresh
 argument_list|,
 literal|0
 argument_list|,
-literal|"Min priority for preemption, lower priorities have greater precedence"
+literal|"Maximal (lowest) priority for preemption"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -12538,7 +12550,7 @@ name|static_boost
 argument_list|,
 literal|0
 argument_list|,
-literal|"Controls whether static kernel priorities are assigned to sleeping threads."
+literal|"Assign static kernel priorities to sleeping threads"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -12559,7 +12571,7 @@ name|sched_idlespins
 argument_list|,
 literal|0
 argument_list|,
-literal|"Number of times idle thread will spin waiting for new work."
+literal|"Number of times idle thread will spin waiting for new work"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -12580,7 +12592,7 @@ name|sched_idlespinthresh
 argument_list|,
 literal|0
 argument_list|,
-literal|"Threshold before we will permit idle thread spinning."
+literal|"Threshold before we will permit idle thread spinning"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -12691,7 +12703,7 @@ name|steal_thresh
 argument_list|,
 literal|0
 argument_list|,
-literal|"Minimum load on remote cpu before we'll steal"
+literal|"Minimum load on remote CPU before we'll steal"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
