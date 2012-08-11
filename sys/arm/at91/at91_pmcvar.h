@@ -181,6 +181,26 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|uint32_t
+name|at91_pmc_800mhz_plla_outb
+parameter_list|(
+name|int
+name|freq
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint32_t
+name|at91_pmc_800mhz_pllb_outb
+parameter_list|(
+name|int
+name|freq
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
