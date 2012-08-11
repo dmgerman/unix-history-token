@@ -927,6 +927,12 @@ operator|->
 name|ah_magic
 operator|==
 literal|0x20065416
+operator|||
+name|ah
+operator|->
+name|ah_magic
+operator|==
+literal|0x19741014
 condition|)
 block|{
 name|printf
