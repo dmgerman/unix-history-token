@@ -1536,24 +1536,6 @@ modifier|*
 name|bf
 parameter_list|)
 function_decl|;
-comment|/* 	 * This is only required by the CABQ code as well as 	 * xmit_drain(). 	 */
-name|void
-function_decl|(
-modifier|*
-name|xmit_drainq
-function_decl|)
-parameter_list|(
-name|struct
-name|ath_softc
-modifier|*
-name|sc
-parameter_list|,
-name|struct
-name|ath_txq
-modifier|*
-name|txq
-parameter_list|)
-function_decl|;
 name|void
 function_decl|(
 modifier|*

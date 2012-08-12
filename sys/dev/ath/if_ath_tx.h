@@ -663,19 +663,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|ath_tx_draintxq
-parameter_list|(
-name|_sc
-parameter_list|,
-name|_txq
-parameter_list|)
-define|\
-value|(_sc)->sc_tx.xmit_drainq((_sc), (_txq))
-end_define
-
-begin_define
-define|#
-directive|define
 name|ath_draintxq
 parameter_list|(
 name|_sc

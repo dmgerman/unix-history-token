@@ -17815,14 +17815,6 @@ name|sc
 operator|->
 name|sc_tx
 operator|.
-name|xmit_drainq
-operator|=
-name|ath_legacy_tx_draintxq
-expr_stmt|;
-name|sc
-operator|->
-name|sc_tx
-operator|.
 name|xmit_drain
 operator|=
 name|ath_legacy_tx_drain

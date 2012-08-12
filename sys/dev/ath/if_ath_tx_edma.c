@@ -1166,40 +1166,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Completely drain the TXQ, completing frames that were completed.  *  * This is only called to _explictly_ drain the frames from a queue  * without caring if they were completed or not.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|ath_edma_tx_draintxq
-parameter_list|(
-name|struct
-name|ath_softc
-modifier|*
-name|sc
-parameter_list|,
-name|struct
-name|ath_txq
-modifier|*
-name|txq
-parameter_list|)
-block|{
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|,
-literal|"%s: called\n"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Process the TX status queue.  */
 end_comment
 
@@ -1495,14 +1461,6 @@ operator|.
 name|xmit_handoff
 operator|=
 name|ath_edma_xmit_handoff
-expr_stmt|;
-name|sc
-operator|->
-name|sc_tx
-operator|.
-name|xmit_drainq
-operator|=
-name|ath_edma_tx_draintxq
 expr_stmt|;
 name|sc
 operator|->

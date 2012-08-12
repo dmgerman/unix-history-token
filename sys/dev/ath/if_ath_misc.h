@@ -491,7 +491,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|ath_legacy_tx_draintxq
+name|ath_tx_draintxq
 parameter_list|(
 name|struct
 name|ath_softc
