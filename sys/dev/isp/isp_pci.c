@@ -9173,6 +9173,15 @@ goto|goto
 name|bad
 goto|;
 block|}
+if|if
+condition|(
+name|isp
+operator|->
+name|isp_type
+operator|>=
+name|ISP_HA_FC_2300
+condition|)
+block|{
 for|for
 control|(
 name|i
@@ -9261,6 +9270,7 @@ name|nexus_free_list
 operator|=
 name|n
 expr_stmt|;
+block|}
 block|}
 block|}
 block|}
