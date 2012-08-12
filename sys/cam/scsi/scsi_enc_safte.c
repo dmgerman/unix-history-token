@@ -745,7 +745,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|if ((r)>= (x)) { \ 		ENC_LOG(enc, safte_2little, x, __LINE__);\ 		return (EIO); \ 	}
+value|if ((r)>= (x)) { \ 		ENC_VLOG(enc, safte_2little, x, __LINE__);\ 		return (EIO); \ 	}
 end_define
 
 begin_decl_stmt
@@ -1019,7 +1019,7 @@ operator|<
 literal|6
 condition|)
 block|{
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -2097,7 +2097,7 @@ index|]
 operator|=
 name|SES_OBJSTAT_UNSUPPORTED
 expr_stmt|;
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -2459,7 +2459,7 @@ name|SES_ENCSTAT_INFO
 expr_stmt|;
 break|break;
 default|default:
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -2730,7 +2730,7 @@ index|]
 operator|=
 name|SES_OBJSTAT_UNSUPPORTED
 expr_stmt|;
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
