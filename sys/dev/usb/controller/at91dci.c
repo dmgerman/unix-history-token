@@ -4714,15 +4714,6 @@ modifier|*
 name|xfer
 parameter_list|)
 block|{
-name|USB_BUS_LOCK_ASSERT
-argument_list|(
-name|udev
-operator|->
-name|bus
-argument_list|,
-name|MA_OWNED
-argument_list|)
-expr_stmt|;
 name|at91dci_device_done
 argument_list|(
 name|xfer
