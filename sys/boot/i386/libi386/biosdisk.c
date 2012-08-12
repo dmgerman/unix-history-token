@@ -1167,6 +1167,27 @@ operator|.
 name|sector_size
 expr_stmt|;
 block|}
+name|DEBUG
+argument_list|(
+literal|"unit 0x%x flags %x, sectors %llu, sectorsize %u"
+argument_list|,
+name|bd
+operator|->
+name|bd_unit
+argument_list|,
+name|bd
+operator|->
+name|bd_flags
+argument_list|,
+name|bd
+operator|->
+name|bd_sectors
+argument_list|,
+name|bd
+operator|->
+name|bd_sectorsize
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1
