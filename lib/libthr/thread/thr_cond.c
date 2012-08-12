@@ -917,6 +917,10 @@ condition|(
 name|defered
 condition|)
 block|{
+name|defered
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|(
