@@ -4949,7 +4949,7 @@ name|isp
 argument_list|,
 name|ISP_LOGDEBUG1
 argument_list|,
-literal|"WRITE RAM %u words at load address 0x%x\n"
+literal|"WRITE RAM %u words at load address 0x%x"
 argument_list|,
 name|ucd
 operator|.
