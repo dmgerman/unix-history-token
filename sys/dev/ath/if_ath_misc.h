@@ -508,21 +508,16 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
-name|ath_legacy_tx_processq
+name|void
+name|ath_legacy_tx_drain
 parameter_list|(
 name|struct
 name|ath_softc
 modifier|*
 name|sc
 parameter_list|,
-name|struct
-name|ath_txq
-modifier|*
-name|txq
-parameter_list|,
-name|int
-name|dosched
+name|ATH_RESET_TYPE
+name|reset_type
 parameter_list|)
 function_decl|;
 end_function_decl

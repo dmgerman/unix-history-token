@@ -856,6 +856,27 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|int
+name|ath_tx_processq
+parameter_list|(
+name|struct
+name|ath_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
+name|ath_txq
+modifier|*
+name|txq
+parameter_list|,
+name|int
+name|dosched
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|void
 name|ath_tx_proc_q0
 parameter_list|(
@@ -918,21 +939,6 @@ parameter_list|,
 name|struct
 name|ieee80211_channel
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|ath_draintxq
-parameter_list|(
-name|struct
-name|ath_softc
-modifier|*
-parameter_list|,
-name|ATH_RESET_TYPE
-name|reset_type
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -15183,8 +15189,9 @@ comment|/*  * Process completed xmit descriptors from the specified queue.  * Ki
 end_comment
 
 begin_function
+specifier|static
 name|int
-name|ath_legacy_tx_processq
+name|ath_tx_processq
 parameter_list|(
 name|struct
 name|ath_softc
@@ -17468,9 +17475,8 @@ comment|/*  * Drain the transmit queues and reclaim resources.  */
 end_comment
 
 begin_function
-specifier|static
 name|void
-name|ath_draintxq
+name|ath_legacy_tx_drain
 parameter_list|(
 name|struct
 name|ath_softc

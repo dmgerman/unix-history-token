@@ -676,16 +676,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|ath_tx_processq
+name|ath_draintxq
 parameter_list|(
 name|_sc
 parameter_list|,
-name|_txq
-parameter_list|,
-name|_dosched
+name|_rtype
 parameter_list|)
 define|\
-value|(_sc)->sc_tx.xmit_processq((_sc), (_txq), (_dosched))
+value|(_sc)->sc_tx.xmit_drain((_sc), (_rtype))
 end_define
 
 begin_function_decl

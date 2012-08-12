@@ -1134,26 +1134,21 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Process frames in the current queue and if necessary, re-schedule the  * software TXQ scheduler for this TXQ.  *  * XXX This is again a pain in the ass to do because the status descriptor  * information is in the TX status FIFO, not with the current descriptor.  */
+comment|/*  * Drain all TXQs, potentially after completing the existing completed  * frames.  */
 end_comment
 
 begin_function
 specifier|static
-name|int
-name|ath_edma_tx_processq
+name|void
+name|ath_edma_tx_drain
 parameter_list|(
 name|struct
 name|ath_softc
 modifier|*
 name|sc
 parameter_list|,
-name|struct
-name|ath_txq
-modifier|*
-name|txq
-parameter_list|,
-name|int
-name|dosched
+name|ATH_RESET_TYPE
+name|reset_type
 parameter_list|)
 block|{
 name|device_printf
@@ -1167,16 +1162,11 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Completely drain the TXQ, completing frames that were completed.  *  * XXX this is going to be a complete pain in the ass because the  * completion status is in the TX status FIFO, not with the descriptor  * itself.  Sigh.  */
+comment|/*  * Completely drain the TXQ, completing frames that were completed.  *  * This is only called to _explictly_ drain the frames from a queue  * without caring if they were completed or not.  */
 end_comment
 
 begin_function
@@ -1510,17 +1500,17 @@ name|sc
 operator|->
 name|sc_tx
 operator|.
-name|xmit_processq
+name|xmit_drainq
 operator|=
-name|ath_edma_tx_processq
+name|ath_edma_tx_draintxq
 expr_stmt|;
 name|sc
 operator|->
 name|sc_tx
 operator|.
-name|xmit_drainq
+name|xmit_drain
 operator|=
-name|ath_edma_tx_draintxq
+name|ath_edma_tx_drain
 expr_stmt|;
 block|}
 end_function
