@@ -579,6 +579,21 @@ end_struct
 
 begin_struct
 struct|struct
+name|usb_fs_open_streams
+block|{
+name|struct
+name|usb_fs_open
+name|fs_open
+decl_stmt|;
+name|uint16_t
+name|stream_id
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|usb_fs_close
 block|{
 name|uint8_t
@@ -1102,6 +1117,13 @@ define|#
 directive|define
 name|USB_FS_CLEAR_STALL_SYNC
 value|_IOW ('U', 199, struct usb_fs_clear_stall_sync)
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_FS_OPEN_STREAMS
+value|_IOWR('U', 200, struct usb_fs_open_streams)
 end_define
 
 begin_comment

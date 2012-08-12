@@ -564,11 +564,14 @@ begin_struct
 struct|struct
 name|usb_endpoint
 block|{
+comment|/* queue of USB transfers */
 name|struct
 name|usb_xfer_queue
 name|endpoint_q
+index|[
+name|USB_MAX_EP_STREAMS
+index|]
 decl_stmt|;
-comment|/* queue of USB transfers */
 name|struct
 name|usb_endpoint_descriptor
 modifier|*
@@ -640,6 +643,10 @@ name|uint8_t
 name|usb_uframe
 decl_stmt|;
 comment|/* USB microframe */
+comment|/* USB endpoint mode, see USB_EP_MODE_XXX */
+name|uint8_t
+name|ep_mode
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -813,6 +820,10 @@ name|usb_xfer_flags
 name|flags
 decl_stmt|;
 comment|/* transfer flags */
+name|usb_stream_t
+name|stream_id
+decl_stmt|;
+comment|/* USB3.0 specific */
 name|enum
 name|usb_hc_mode
 name|usb_mode
@@ -1858,6 +1869,43 @@ name|udev
 parameter_list|,
 name|uint16_t
 name|quirk
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|usb_error_t
+name|usbd_set_endpoint_mode
+parameter_list|(
+name|struct
+name|usb_device
+modifier|*
+name|udev
+parameter_list|,
+name|struct
+name|usb_endpoint
+modifier|*
+name|ep
+parameter_list|,
+name|uint8_t
+name|ep_mode
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint8_t
+name|usbd_get_endpoint_mode
+parameter_list|(
+name|struct
+name|usb_device
+modifier|*
+name|udev
+parameter_list|,
+name|struct
+name|usb_endpoint
+modifier|*
+name|ep
 parameter_list|)
 function_decl|;
 end_function_decl

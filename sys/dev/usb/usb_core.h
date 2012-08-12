@@ -489,6 +489,10 @@ name|usb_frcount_t
 name|aframes
 decl_stmt|;
 comment|/* actual number of USB frames 					 * transferred */
+name|usb_stream_t
+name|stream_id
+decl_stmt|;
+comment|/* USB3.0 specific field */
 name|uint16_t
 name|max_packet_size
 decl_stmt|;
