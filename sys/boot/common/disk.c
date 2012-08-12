@@ -752,7 +752,7 @@ name|sectorsize
 expr_stmt|;
 name|DEBUG
 argument_list|(
-literal|"open '%s', unit %d slice %d partition %d"
+literal|"%s: unit %d, slice %d, partition %d"
 argument_list|,
 name|disk_fmtdev
 argument_list|(
@@ -1040,6 +1040,33 @@ argument_list|(
 name|od
 argument_list|)
 expr_stmt|;
+name|DEBUG
+argument_list|(
+literal|"%s: could not open"
+argument_list|,
+name|disk_fmtdev
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|DEBUG
+argument_list|(
+literal|"%s: offset %lld"
+argument_list|,
+name|disk_fmtdev
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|dev
+operator|->
+name|d_offset
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 operator|(
@@ -1074,6 +1101,16 @@ operator|)
 name|dev
 operator|->
 name|d_opendata
+expr_stmt|;
+name|DEBUG
+argument_list|(
+literal|"%s: closed"
+argument_list|,
+name|disk_fmtdev
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|ptable_close
 argument_list|(
