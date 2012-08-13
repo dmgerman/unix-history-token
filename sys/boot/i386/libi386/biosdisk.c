@@ -997,6 +997,18 @@ expr_stmt|;
 comment|/* Determine if we can use EDD with this device. */
 name|v86
 operator|.
+name|ctl
+operator|=
+name|V86_FLAGS
+expr_stmt|;
+name|v86
+operator|.
+name|addr
+operator|=
+literal|0x13
+expr_stmt|;
+name|v86
+operator|.
 name|eax
 operator|=
 literal|0x4100
