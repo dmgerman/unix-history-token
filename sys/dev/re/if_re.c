@@ -10536,7 +10536,10 @@ name|ifp
 argument_list|)
 operator|->
 name|rx_rings
-operator|->
+index|[
+literal|0
+index|]
+operator|.
 name|nr_kflags
 operator||=
 name|NKR_PENDINTR
@@ -10550,7 +10553,10 @@ name|ifp
 argument_list|)
 operator|->
 name|rx_rings
-operator|->
+index|[
+literal|0
+index|]
+operator|.
 name|si
 argument_list|,
 name|PI_NET
