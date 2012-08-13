@@ -579,7 +579,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|usb_fs_open_streams
+name|usb_fs_open_stream
 block|{
 name|struct
 name|usb_fs_open
@@ -1122,8 +1122,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|USB_FS_OPEN_STREAMS
-value|_IOWR('U', 200, struct usb_fs_open_streams)
+name|USB_FS_OPEN_STREAM
+value|_IOWR('U', 200, struct usb_fs_open_stream)
 end_define
 
 begin_comment

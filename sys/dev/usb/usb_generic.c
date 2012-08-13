@@ -6657,9 +6657,9 @@ modifier|*
 name|popen
 decl_stmt|;
 name|struct
-name|usb_fs_open_streams
+name|usb_fs_open_stream
 modifier|*
-name|popen_streams
+name|popen_stream
 decl_stmt|;
 name|struct
 name|usb_fs_close
@@ -6938,7 +6938,7 @@ case|case
 name|USB_FS_OPEN
 case|:
 case|case
-name|USB_FS_OPEN_STREAMS
+name|USB_FS_OPEN_STREAM
 case|:
 if|if
 condition|(
@@ -7276,7 +7276,7 @@ if|if
 condition|(
 name|cmd
 operator|==
-name|USB_FS_OPEN_STREAMS
+name|USB_FS_OPEN_STREAM
 condition|)
 name|usb_config
 index|[
@@ -7287,7 +7287,7 @@ name|stream_id
 operator|=
 name|u
 operator|.
-name|popen_streams
+name|popen_stream
 operator|->
 name|stream_id
 expr_stmt|;
