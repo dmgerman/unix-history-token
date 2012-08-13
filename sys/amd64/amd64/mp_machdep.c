@@ -4532,6 +4532,12 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+name|DELAY
+argument_list|(
+literal|10000
+argument_list|)
+expr_stmt|;
+comment|/* wait ~10mS */
 comment|/* do an INIT IPI: deassert RESET */
 name|lapic_ipi_raw
 argument_list|(
@@ -4549,18 +4555,18 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* wait for pending status end */
-name|DELAY
-argument_list|(
-literal|10000
-argument_list|)
-expr_stmt|;
-comment|/* wait ~10mS */
 name|lapic_ipi_wait
 argument_list|(
 operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+name|DELAY
+argument_list|(
+literal|10000
+argument_list|)
+expr_stmt|;
+comment|/* wait ~10mS */
 comment|/* 	 * next we do a STARTUP IPI: the previous INIT IPI might still be 	 * latched, (P5 bug) this 1st STARTUP would then terminate 	 * immediately, and the previously started INIT IPI would continue. OR 	 * the previous INIT IPI has already run. and this STARTUP IPI will 	 * run. OR the previous INIT IPI was ignored. and this STARTUP IPI 	 * will run. 	 */
 comment|/* do a STARTUP IPI */
 name|lapic_ipi_raw
