@@ -3176,7 +3176,13 @@ name|F_TUNNELCNGDROP2
 operator||
 name|F_TUNNELCNGDROP3
 argument_list|,
-literal|0
+name|F_TUNNELCNGDROP0
+operator||
+name|F_TUNNELCNGDROP1
+operator||
+name|F_TUNNELCNGDROP2
+operator||
+name|F_TUNNELCNGDROP3
 argument_list|)
 expr_stmt|;
 name|t4_set_reg_field
