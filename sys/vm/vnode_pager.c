@@ -4327,8 +4327,6 @@ condition|)
 name|vm_page_readahead_finish
 argument_list|(
 name|mt
-argument_list|,
-name|error
 argument_list|)
 expr_stmt|;
 block|}

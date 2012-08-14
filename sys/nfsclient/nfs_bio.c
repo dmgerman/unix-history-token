@@ -941,7 +941,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 * Read operation was short.  If no error occured 			 * we may have hit a zero-fill section.   We simply 			 * leave valid set to 0. 			 */
+comment|/* 			 * Read operation was short.  If no error 			 * occured we may have hit a zero-fill 			 * section.  We leave valid set to 0, and page 			 * is freed by vm_page_readahead_finish() if 			 * its index is not equal to requested, or 			 * page is zeroed and set valid by 			 * vm_pager_get_pages() for requested page. 			 */
 empty_stmt|;
 block|}
 if|if
@@ -955,8 +955,6 @@ condition|)
 name|vm_page_readahead_finish
 argument_list|(
 name|m
-argument_list|,
-name|error
 argument_list|)
 expr_stmt|;
 block|}

@@ -1502,9 +1502,6 @@ name|vm_page_readahead_finish
 parameter_list|(
 name|vm_page_t
 name|m
-parameter_list|,
-name|int
-name|error
 parameter_list|)
 function_decl|;
 end_function_decl

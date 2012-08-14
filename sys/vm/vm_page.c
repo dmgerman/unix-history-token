@@ -2521,15 +2521,14 @@ name|vm_page_readahead_finish
 parameter_list|(
 name|vm_page_t
 name|m
-parameter_list|,
-name|int
-name|error
 parameter_list|)
 block|{
 if|if
 condition|(
-name|error
-operator|==
+name|m
+operator|->
+name|valid
+operator|!=
 literal|0
 condition|)
 block|{
@@ -2585,6 +2584,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* 		 * Free the completely invalid page.  Such page state 		 * occurs due to the short read operation which did 		 * not covered our page at all, or in case when a read 		 * error happens. 		 */
 name|vm_page_lock
 argument_list|(
 name|m
