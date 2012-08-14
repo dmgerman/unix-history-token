@@ -1077,7 +1077,19 @@ name|ATH_TXQ_LOCK_ASSERT
 parameter_list|(
 name|_tq
 parameter_list|)
+define|\
 value|mtx_assert(&(_tq)->axq_lock, MA_OWNED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TXQ_UNLOCK_ASSERT
+parameter_list|(
+name|_tq
+parameter_list|)
+define|\
+value|mtx_assert(&(_tq)->axq_lock, MA_NOTOWNED)
 end_define
 
 begin_define
