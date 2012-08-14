@@ -21,6 +21,10 @@ begin_comment
 comment|/*  * Copyright (c) 2006 Jonathan Gray<jsg@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
+begin_comment
+comment|/*  * Driver for Silicon Laboratories CP2101/CP2102/CP2103/CP2104/CP2105  * USB-Serial adapters.  Based on datasheet AN571, publicly available from  * http://www.silabs.com/Support%20Documents/TechnicalDocs/AN571.pdf  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -258,16 +262,6 @@ name|USLCOM_CONFIG_INDEX
 value|0
 end_define
 
-begin_define
-define|#
-directive|define
-name|USLCOM_SET_DATA_BITS
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)<< 8)
-end_define
-
 begin_comment
 comment|/* Request types */
 end_comment
@@ -293,56 +287,56 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USLCOM_UART
+name|USLCOM_IFC_ENABLE
 value|0x00
 end_define
 
 begin_define
 define|#
 directive|define
-name|USLCOM_SET_BAUD_DIV
+name|USLCOM_SET_BAUDDIV
 value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
-name|USLCOM_DATA
+name|USLCOM_SET_LINE_CTL
 value|0x03
 end_define
 
 begin_define
 define|#
 directive|define
-name|USLCOM_BREAK
+name|USLCOM_SET_BREAK
 value|0x05
 end_define
 
 begin_define
 define|#
 directive|define
-name|USLCOM_CTRL
+name|USLCOM_SET_MHS
 value|0x07
 end_define
 
 begin_define
 define|#
 directive|define
-name|USLCOM_RCTRL
+name|USLCOM_GET_MDMSTS
 value|0x08
 end_define
 
 begin_define
 define|#
 directive|define
-name|USLCOM_SET_FLOWCTRL
+name|USLCOM_SET_FLOW
 value|0x13
 end_define
 
 begin_define
 define|#
 directive|define
-name|USLCOM_SET_BAUD_RATE
+name|USLCOM_SET_BAUDRATE
 value|0x1e
 end_define
 
@@ -354,91 +348,91 @@ value|0xff
 end_define
 
 begin_comment
-comment|/* USLCOM_UART values */
+comment|/* USLCOM_IFC_ENABLE values */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|USLCOM_UART_DISABLE
+name|USLCOM_IFC_ENABLE_DIS
 value|0x00
 end_define
 
 begin_define
 define|#
 directive|define
-name|USLCOM_UART_ENABLE
+name|USLCOM_IFC_ENABLE_EN
 value|0x01
 end_define
 
 begin_comment
-comment|/* USLCOM_CTRL/USLCOM_RCTRL values */
+comment|/* USLCOM_SET_MHS/USLCOM_GET_MDMSTS values */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|USLCOM_CTRL_DTR_ON
+name|USLCOM_MHS_DTR_ON
 value|0x0001
 end_define
 
 begin_define
 define|#
 directive|define
-name|USLCOM_CTRL_DTR_SET
+name|USLCOM_MHS_DTR_SET
 value|0x0100
 end_define
 
 begin_define
 define|#
 directive|define
-name|USLCOM_CTRL_RTS_ON
+name|USLCOM_MHS_RTS_ON
 value|0x0002
 end_define
 
 begin_define
 define|#
 directive|define
-name|USLCOM_CTRL_RTS_SET
+name|USLCOM_MHS_RTS_SET
 value|0x0200
 end_define
 
 begin_define
 define|#
 directive|define
-name|USLCOM_CTRL_CTS
+name|USLCOM_MHS_CTS
 value|0x0010
 end_define
 
 begin_define
 define|#
 directive|define
-name|USLCOM_CTRL_DSR
+name|USLCOM_MHS_DSR
 value|0x0020
 end_define
 
 begin_define
 define|#
 directive|define
-name|USLCOM_CTRL_RI
+name|USLCOM_MHS_RI
 value|0x0040
 end_define
 
 begin_define
 define|#
 directive|define
-name|USLCOM_CTRL_DCD
+name|USLCOM_MHS_DCD
 value|0x0080
 end_define
 
 begin_comment
-comment|/* USLCOM_SET_BAUD_DIV values */
+comment|/* USLCOM_SET_BAUDDIV values */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|USLCOM_BAUD_REF
+name|USLCOM_BAUDDIV_REF
 value|3686400
 end_define
 
@@ -447,7 +441,7 @@ comment|/* 3.6864 MHz */
 end_comment
 
 begin_comment
-comment|/* USLCOM_DATA values */
+comment|/* USLCOM_SET_LINE_CTL values */
 end_comment
 
 begin_define
@@ -485,26 +479,36 @@ name|USLCOM_PARITY_EVEN
 value|0x20
 end_define
 
+begin_define
+define|#
+directive|define
+name|USLCOM_SET_DATA_BITS
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< 8)
+end_define
+
 begin_comment
-comment|/* USLCOM_BREAK values */
+comment|/* USLCOM_SET_BREAK values */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|USLCOM_BREAK_OFF
+name|USLCOM_SET_BREAK_OFF
 value|0x00
 end_define
 
 begin_define
 define|#
 directive|define
-name|USLCOM_BREAK_ON
+name|USLCOM_SET_BREAK_ON
 value|0x01
 end_define
 
 begin_comment
-comment|/* USLCOM_SET_FLOWCTRL values - 1st word */
+comment|/* USLCOM_SET_FLOW values - 1st word */
 end_comment
 
 begin_define
@@ -530,7 +534,7 @@ comment|/* CTS handshake */
 end_comment
 
 begin_comment
-comment|/* USLCOM_SET_FLOWCTRL values - 2nd word */
+comment|/* USLCOM_SET_FLOW values - 2nd word */
 end_comment
 
 begin_define
@@ -2621,7 +2625,7 @@ name|req
 operator|.
 name|bRequest
 operator|=
-name|USLCOM_UART
+name|USLCOM_IFC_ENABLE
 expr_stmt|;
 name|USETW
 argument_list|(
@@ -2629,7 +2633,7 @@ name|req
 operator|.
 name|wValue
 argument_list|,
-name|USLCOM_UART_ENABLE
+name|USLCOM_IFC_ENABLE_EN
 argument_list|)
 expr_stmt|;
 name|USETW
@@ -2734,7 +2738,7 @@ name|req
 operator|.
 name|bRequest
 operator|=
-name|USLCOM_UART
+name|USLCOM_IFC_ENABLE
 expr_stmt|;
 name|USETW
 argument_list|(
@@ -2742,7 +2746,7 @@ name|req
 operator|.
 name|wValue
 argument_list|,
-name|USLCOM_UART_DISABLE
+name|USLCOM_IFC_ENABLE_DIS
 argument_list|)
 expr_stmt|;
 name|USETW
@@ -2839,13 +2843,13 @@ name|ctl
 operator|=
 name|onoff
 condition|?
-name|USLCOM_CTRL_DTR_ON
+name|USLCOM_MHS_DTR_ON
 else|:
 literal|0
 expr_stmt|;
 name|ctl
 operator||=
-name|USLCOM_CTRL_DTR_SET
+name|USLCOM_MHS_DTR_SET
 expr_stmt|;
 name|req
 operator|.
@@ -2857,7 +2861,7 @@ name|req
 operator|.
 name|bRequest
 operator|=
-name|USLCOM_CTRL
+name|USLCOM_SET_MHS
 expr_stmt|;
 name|USETW
 argument_list|(
@@ -2962,13 +2966,13 @@ name|ctl
 operator|=
 name|onoff
 condition|?
-name|USLCOM_CTRL_RTS_ON
+name|USLCOM_MHS_RTS_ON
 else|:
 literal|0
 expr_stmt|;
 name|ctl
 operator||=
-name|USLCOM_CTRL_RTS_SET
+name|USLCOM_MHS_RTS_SET
 expr_stmt|;
 name|req
 operator|.
@@ -2980,7 +2984,7 @@ name|req
 operator|.
 name|bRequest
 operator|=
-name|USLCOM_CTRL
+name|USLCOM_SET_MHS
 expr_stmt|;
 name|USETW
 argument_list|(
@@ -3148,7 +3152,7 @@ name|req
 operator|.
 name|bRequest
 operator|=
-name|USLCOM_SET_BAUD_RATE
+name|USLCOM_SET_BAUDRATE
 expr_stmt|;
 name|USETW
 argument_list|(
@@ -3326,7 +3330,7 @@ name|req
 operator|.
 name|bRequest
 operator|=
-name|USLCOM_DATA
+name|USLCOM_SET_LINE_CTL
 expr_stmt|;
 name|USETW
 argument_list|(
@@ -3418,20 +3422,6 @@ argument_list|(
 name|USLCOM_FLOW_RTS_HS
 argument_list|)
 expr_stmt|;
-name|flowctrl
-index|[
-literal|2
-index|]
-operator|=
-literal|0
-expr_stmt|;
-name|flowctrl
-index|[
-literal|3
-index|]
-operator|=
-literal|0
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -3455,6 +3445,7 @@ argument_list|(
 name|USLCOM_FLOW_RTS_ON
 argument_list|)
 expr_stmt|;
+block|}
 name|flowctrl
 index|[
 literal|2
@@ -3469,7 +3460,6 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-block|}
 name|req
 operator|.
 name|bmRequestType
@@ -3480,7 +3470,7 @@ name|req
 operator|.
 name|bRequest
 operator|=
-name|USLCOM_SET_FLOWCTRL
+name|USLCOM_SET_FLOW
 expr_stmt|;
 name|USETW
 argument_list|(
@@ -3629,9 +3619,9 @@ name|brk
 init|=
 name|onoff
 condition|?
-name|USLCOM_BREAK_ON
+name|USLCOM_SET_BREAK_ON
 else|:
-name|USLCOM_BREAK_OFF
+name|USLCOM_SET_BREAK_OFF
 decl_stmt|;
 name|req
 operator|.
@@ -3643,7 +3633,7 @@ name|req
 operator|.
 name|bRequest
 operator|=
-name|USLCOM_BREAK
+name|USLCOM_SET_BREAK
 expr_stmt|;
 name|USETW
 argument_list|(
@@ -4290,7 +4280,7 @@ if|if
 condition|(
 name|buf
 operator|&
-name|USLCOM_CTRL_CTS
+name|USLCOM_MHS_CTS
 condition|)
 name|msr
 operator||=
@@ -4300,7 +4290,7 @@ if|if
 condition|(
 name|buf
 operator|&
-name|USLCOM_CTRL_DSR
+name|USLCOM_MHS_DSR
 condition|)
 name|msr
 operator||=
@@ -4310,7 +4300,7 @@ if|if
 condition|(
 name|buf
 operator|&
-name|USLCOM_CTRL_RI
+name|USLCOM_MHS_RI
 condition|)
 name|msr
 operator||=
@@ -4320,7 +4310,7 @@ if|if
 condition|(
 name|buf
 operator|&
-name|USLCOM_CTRL_DCD
+name|USLCOM_MHS_DCD
 condition|)
 name|msr
 operator||=
@@ -4376,7 +4366,7 @@ name|req
 operator|.
 name|bRequest
 operator|=
-name|USLCOM_RCTRL
+name|USLCOM_GET_MDMSTS
 expr_stmt|;
 name|USETW
 argument_list|(
