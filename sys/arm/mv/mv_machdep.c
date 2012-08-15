@@ -473,24 +473,6 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|struct
-name|pcpu
-name|__pcpu
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|pcpu
-modifier|*
-name|pcpup
-init|=
-operator|&
-name|__pcpu
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* Physical and virtual addresses for some global pages */
 end_comment
@@ -516,6 +498,12 @@ end_decl_stmt
 begin_decl_stmt
 name|vm_offset_t
 name|pmap_bootstrap_lastaddr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vm_paddr_t
+name|pmap_pa
 decl_stmt|;
 end_decl_stmt
 
@@ -569,6 +557,16 @@ name|pv_addr
 name|kernelstack
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|void
+name|set_stackptrs
+parameter_list|(
+name|int
+name|cpu
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|static
@@ -1563,26 +1561,8 @@ name|fdt_immr_va
 operator|-
 name|ARM_NOCACHE_KVA_SIZE
 expr_stmt|;
-name|pcpu_init
-argument_list|(
-name|pcpup
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|pcpu
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|PCPU_SET
-argument_list|(
-name|curthread
-argument_list|,
-operator|&
-name|thread0
-argument_list|)
+name|pcpu0_init
+argument_list|()
 expr_stmt|;
 comment|/* Calculate number of L2 tables needed for mapping vm_page_array */
 name|l2size
@@ -1818,28 +1798,44 @@ name|valloc_pages
 argument_list|(
 name|irqstack
 argument_list|,
+operator|(
 name|IRQ_STACK_SIZE
+operator|*
+name|MAXCPU
+operator|)
 argument_list|)
 expr_stmt|;
 name|valloc_pages
 argument_list|(
 name|abtstack
 argument_list|,
+operator|(
 name|ABT_STACK_SIZE
+operator|*
+name|MAXCPU
+operator|)
 argument_list|)
 expr_stmt|;
 name|valloc_pages
 argument_list|(
 name|undstack
 argument_list|,
+operator|(
 name|UND_STACK_SIZE
+operator|*
+name|MAXCPU
+operator|)
 argument_list|)
 expr_stmt|;
 name|valloc_pages
 argument_list|(
 name|kernelstack
 argument_list|,
+operator|(
 name|KSTACK_PAGES
+operator|*
+name|MAXCPU
+operator|)
 argument_list|)
 expr_stmt|;
 name|init_param1
@@ -2058,6 +2054,8 @@ argument_list|,
 name|VM_PROT_READ
 operator||
 name|VM_PROT_WRITE
+operator||
+name|VM_PROT_EXECUTE
 argument_list|,
 name|PTE_CACHE
 argument_list|)
@@ -2089,6 +2087,12 @@ operator|)
 operator||
 name|DOMAIN_CLIENT
 argument_list|)
+expr_stmt|;
+name|pmap_pa
+operator|=
+name|kernel_l1pt
+operator|.
+name|pv_pa
 expr_stmt|;
 name|setttb
 argument_list|(
@@ -2163,7 +2167,7 @@ argument_list|,
 name|boothowto
 argument_list|)
 expr_stmt|;
-name|printf
+name|debugf
 argument_list|(
 literal|" dtbp = 0x%08x\n"
 argument_list|,
@@ -2193,6 +2197,13 @@ name|err_devmap
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Re-initialise decode windows 	 */
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|SOC_MV_FREY
+argument_list|)
 if|if
 condition|(
 name|soc_decode_win
@@ -2206,6 +2217,20 @@ literal|"WARNING: could not re-initialise decode windows! "
 literal|"Running with existing settings...\n"
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+comment|/* Disable watchdog and timers */
+name|write_cpu_ctrl
+argument_list|(
+name|CPU_TIMERS_BASE
+operator|+
+name|CPU_TIMER_CONTROL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Pages were allocated during the secondary bootstrap for the 	 * stacks for different CPU modes. 	 * We must now set the r13 registers in the different CPU modes to 	 * point to these stacks. 	 * Since the ARM stacks use STMFD etc. we must set r13 to the top end 	 * of the stack memory. 	 */
 name|cpu_control
 argument_list|(
@@ -2214,43 +2239,9 @@ argument_list|,
 name|CPU_CONTROL_MMU_ENABLE
 argument_list|)
 expr_stmt|;
-name|set_stackptr
+name|set_stackptrs
 argument_list|(
-name|PSR_IRQ32_MODE
-argument_list|,
-name|irqstack
-operator|.
-name|pv_va
-operator|+
-name|IRQ_STACK_SIZE
-operator|*
-name|PAGE_SIZE
-argument_list|)
-expr_stmt|;
-name|set_stackptr
-argument_list|(
-name|PSR_ABT32_MODE
-argument_list|,
-name|abtstack
-operator|.
-name|pv_va
-operator|+
-name|ABT_STACK_SIZE
-operator|*
-name|PAGE_SIZE
-argument_list|)
-expr_stmt|;
-name|set_stackptr
-argument_list|(
-name|PSR_UND32_MODE
-argument_list|,
-name|undstack
-operator|.
-name|pv_va
-operator|+
-name|UND_STACK_SIZE
-operator|*
-name|PAGE_SIZE
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We must now clean the cache again.... 	 * Cleaning may be done by reading new data to displace any 	 * dirty data in the cache. This will have happened in setttb() 	 * but since we are boot strapping the addresses used for the read 	 * may have just been remapped and thus the cache could be out 	 * of sync. A re-clean after the switch will cure this. 	 * After booting there are no gross relocations of the kernel thus 	 * this problem will not occur after initarm(). 	 */
@@ -2381,11 +2372,91 @@ return|;
 block|}
 end_function
 
+begin_function
+name|void
+name|set_stackptrs
+parameter_list|(
+name|int
+name|cpu
+parameter_list|)
+block|{
+name|set_stackptr
+argument_list|(
+name|PSR_IRQ32_MODE
+argument_list|,
+name|irqstack
+operator|.
+name|pv_va
+operator|+
+operator|(
+operator|(
+name|IRQ_STACK_SIZE
+operator|*
+name|PAGE_SIZE
+operator|)
+operator|*
+operator|(
+name|cpu
+operator|+
+literal|1
+operator|)
+operator|)
+argument_list|)
+expr_stmt|;
+name|set_stackptr
+argument_list|(
+name|PSR_ABT32_MODE
+argument_list|,
+name|abtstack
+operator|.
+name|pv_va
+operator|+
+operator|(
+operator|(
+name|ABT_STACK_SIZE
+operator|*
+name|PAGE_SIZE
+operator|)
+operator|*
+operator|(
+name|cpu
+operator|+
+literal|1
+operator|)
+operator|)
+argument_list|)
+expr_stmt|;
+name|set_stackptr
+argument_list|(
+name|PSR_UND32_MODE
+argument_list|,
+name|undstack
+operator|.
+name|pv_va
+operator|+
+operator|(
+operator|(
+name|UND_STACK_SIZE
+operator|*
+name|PAGE_SIZE
+operator|)
+operator|*
+operator|(
+name|cpu
+operator|+
+literal|1
+operator|)
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_define
 define|#
 directive|define
 name|MPP_PIN_MAX
-value|50
+value|68
 end_define
 
 begin_define
@@ -2575,9 +2646,10 @@ operator|)
 operator|==
 literal|0
 condition|)
+comment|/* 		 * No MPP node. Fall back to how MPP got set by the 		 * first-stage loader and try to continue booting. 		 */
 return|return
 operator|(
-name|ENXIO
+literal|0
 operator|)
 return|;
 name|moveon
@@ -3027,7 +3099,7 @@ begin_define
 define|#
 directive|define
 name|FDT_DEVMAP_MAX
-value|(MV_WIN_CPU_MAX + 1)
+value|(MV_WIN_CPU_MAX + 2)
 end_define
 
 begin_decl_stmt
@@ -3054,6 +3126,192 @@ block|, }
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_function
+specifier|static
+name|int
+name|platform_sram_devmap
+parameter_list|(
+name|struct
+name|pmap_devmap
+modifier|*
+name|map
+parameter_list|)
+block|{
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|SOC_MV_ARMADAXP
+argument_list|)
+name|phandle_t
+name|child
+decl_stmt|,
+name|root
+decl_stmt|;
+name|u_long
+name|base
+decl_stmt|,
+name|size
+decl_stmt|;
+comment|/* 	 * SRAM range. 	 */
+if|if
+condition|(
+operator|(
+name|child
+operator|=
+name|OF_finddevice
+argument_list|(
+literal|"/sram"
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+if|if
+condition|(
+name|fdt_is_compatible
+argument_list|(
+name|child
+argument_list|,
+literal|"mrvl,cesa-sram"
+argument_list|)
+operator|||
+name|fdt_is_compatible
+argument_list|(
+name|child
+argument_list|,
+literal|"mrvl,scratchpad"
+argument_list|)
+condition|)
+goto|goto
+name|moveon
+goto|;
+if|if
+condition|(
+operator|(
+name|root
+operator|=
+name|OF_finddevice
+argument_list|(
+literal|"/"
+argument_list|)
+operator|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+if|if
+condition|(
+operator|(
+name|child
+operator|=
+name|fdt_find_compatible
+argument_list|(
+name|root
+argument_list|,
+literal|"mrvl,cesa-sram"
+argument_list|,
+literal|0
+argument_list|)
+operator|)
+operator|==
+literal|0
+operator|&&
+operator|(
+name|child
+operator|=
+name|fdt_find_compatible
+argument_list|(
+name|root
+argument_list|,
+literal|"mrvl,scratchpad"
+argument_list|,
+literal|0
+argument_list|)
+operator|)
+operator|==
+literal|0
+condition|)
+goto|goto
+name|out
+goto|;
+name|moveon
+label|:
+if|if
+condition|(
+name|fdt_regsize
+argument_list|(
+name|child
+argument_list|,
+operator|&
+name|base
+argument_list|,
+operator|&
+name|size
+argument_list|)
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+name|map
+operator|->
+name|pd_va
+operator|=
+name|MV_CESA_SRAM_BASE
+expr_stmt|;
+comment|/* XXX */
+name|map
+operator|->
+name|pd_pa
+operator|=
+name|base
+expr_stmt|;
+name|map
+operator|->
+name|pd_size
+operator|=
+name|size
+expr_stmt|;
+name|map
+operator|->
+name|pd_prot
+operator|=
+name|VM_PROT_READ
+operator||
+name|VM_PROT_WRITE
+expr_stmt|;
+name|map
+operator|->
+name|pd_cache
+operator|=
+name|PTE_NOCACHE
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+name|out
+label|:
+endif|#
+directive|endif
+return|return
+operator|(
+name|ENOENT
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * XXX: When device entry in devmap has pd_size smaller than section size,  * system will freeze during initialization  */
@@ -3152,7 +3410,30 @@ expr_stmt|;
 name|i
 operator|++
 expr_stmt|;
-comment|/* 	 * PCI range(s) and localbus. 	 */
+comment|/* 	 * SRAM range. 	 */
+if|if
+condition|(
+name|i
+operator|<
+name|FDT_DEVMAP_MAX
+condition|)
+if|if
+condition|(
+name|platform_sram_devmap
+argument_list|(
+operator|&
+name|fdt_devmap
+index|[
+name|i
+index|]
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|i
+operator|++
+expr_stmt|;
+comment|/* 	 * PCI range(s). 	 * PCI range(s) and localbus. 	 */
 if|if
 condition|(
 operator|(
@@ -3201,6 +3482,13 @@ name|child
 argument_list|,
 literal|"pci"
 argument_list|)
+operator|||
+name|fdt_is_type
+argument_list|(
+name|child
+argument_list|,
+literal|"pciep"
+argument_list|)
 condition|)
 block|{
 comment|/* 			 * Check space: each PCI node will consume 2 devmap 			 * entries. 			 */
@@ -3212,13 +3500,11 @@ literal|1
 operator|>=
 name|FDT_DEVMAP_MAX
 condition|)
-block|{
 return|return
 operator|(
 name|ENOMEM
 operator|)
 return|;
-block|}
 comment|/* 			 * XXX this should account for PCI and multiple ranges 			 * of a given kind. 			 */
 if|if
 condition|(
@@ -3232,9 +3518,9 @@ index|[
 name|i
 index|]
 argument_list|,
-name|MV_PCIE_IO_BASE
+name|MV_PCI_VA_IO_BASE
 argument_list|,
-name|MV_PCIE_MEM_BASE
+name|MV_PCI_VA_MEM_BASE
 argument_list|)
 operator|!=
 literal|0
@@ -3520,6 +3806,220 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CPU_MV_PJ4B
+argument_list|)
+end_if
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DDB
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<ddb/ddb.h>
+end_include
+
+begin_macro
+name|DB_SHOW_COMMAND
+argument_list|(
+argument|cp15
+argument_list|,
+argument|db_show_cp15
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|u_int
+name|reg
+decl_stmt|;
+asm|__asm __volatile("mrc p15, 0, %0, c0, c0, 0" : "=r" (reg));
+name|db_printf
+argument_list|(
+literal|"Cpu ID: 0x%08x\n"
+argument_list|,
+name|reg
+argument_list|)
+expr_stmt|;
+asm|__asm __volatile("mrc p15, 0, %0, c0, c0, 1" : "=r" (reg));
+name|db_printf
+argument_list|(
+literal|"Current Cache Lvl ID: 0x%08x\n"
+argument_list|,
+name|reg
+argument_list|)
+expr_stmt|;
+asm|__asm __volatile("mrc p15, 0, %0, c1, c0, 0" : "=r" (reg));
+name|db_printf
+argument_list|(
+literal|"Ctrl: 0x%08x\n"
+argument_list|,
+name|reg
+argument_list|)
+expr_stmt|;
+asm|__asm __volatile("mrc p15, 0, %0, c1, c0, 1" : "=r" (reg));
+name|db_printf
+argument_list|(
+literal|"Aux Ctrl: 0x%08x\n"
+argument_list|,
+name|reg
+argument_list|)
+expr_stmt|;
+asm|__asm __volatile("mrc p15, 0, %0, c0, c1, 0" : "=r" (reg));
+name|db_printf
+argument_list|(
+literal|"Processor Feat 0: 0x%08x\n"
+argument_list|,
+name|reg
+argument_list|)
+expr_stmt|;
+asm|__asm __volatile("mrc p15, 0, %0, c0, c1, 1" : "=r" (reg));
+name|db_printf
+argument_list|(
+literal|"Processor Feat 1: 0x%08x\n"
+argument_list|,
+name|reg
+argument_list|)
+expr_stmt|;
+asm|__asm __volatile("mrc p15, 0, %0, c0, c1, 2" : "=r" (reg));
+name|db_printf
+argument_list|(
+literal|"Debug Feat 0: 0x%08x\n"
+argument_list|,
+name|reg
+argument_list|)
+expr_stmt|;
+asm|__asm __volatile("mrc p15, 0, %0, c0, c1, 3" : "=r" (reg));
+name|db_printf
+argument_list|(
+literal|"Auxiliary Feat 0: 0x%08x\n"
+argument_list|,
+name|reg
+argument_list|)
+expr_stmt|;
+asm|__asm __volatile("mrc p15, 0, %0, c0, c1, 4" : "=r" (reg));
+name|db_printf
+argument_list|(
+literal|"Memory Model Feat 0: 0x%08x\n"
+argument_list|,
+name|reg
+argument_list|)
+expr_stmt|;
+asm|__asm __volatile("mrc p15, 0, %0, c0, c1, 5" : "=r" (reg));
+name|db_printf
+argument_list|(
+literal|"Memory Model Feat 1: 0x%08x\n"
+argument_list|,
+name|reg
+argument_list|)
+expr_stmt|;
+asm|__asm __volatile("mrc p15, 0, %0, c0, c1, 6" : "=r" (reg));
+name|db_printf
+argument_list|(
+literal|"Memory Model Feat 2: 0x%08x\n"
+argument_list|,
+name|reg
+argument_list|)
+expr_stmt|;
+asm|__asm __volatile("mrc p15, 0, %0, c0, c1, 7" : "=r" (reg));
+name|db_printf
+argument_list|(
+literal|"Memory Model Feat 3: 0x%08x\n"
+argument_list|,
+name|reg
+argument_list|)
+expr_stmt|;
+asm|__asm __volatile("mrc p15, 1, %0, c15, c2, 0" : "=r" (reg));
+name|db_printf
+argument_list|(
+literal|"Aux Func Modes Ctrl 0: 0x%08x\n"
+argument_list|,
+name|reg
+argument_list|)
+expr_stmt|;
+asm|__asm __volatile("mrc p15, 1, %0, c15, c2, 1" : "=r" (reg));
+name|db_printf
+argument_list|(
+literal|"Aux Func Modes Ctrl 1: 0x%08x\n"
+argument_list|,
+name|reg
+argument_list|)
+expr_stmt|;
+asm|__asm __volatile("mrc p15, 1, %0, c15, c12, 0" : "=r" (reg));
+name|db_printf
+argument_list|(
+literal|"CPU ID code extension: 0x%08x\n"
+argument_list|,
+name|reg
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
+name|DB_SHOW_COMMAND
+argument_list|(
+argument|vtop
+argument_list|,
+argument|db_show_vtop
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|u_int
+name|reg
+decl_stmt|;
+if|if
+condition|(
+name|have_addr
+condition|)
+block|{
+asm|__asm __volatile("mcr p15, 0, %0, c7, c8, 0" : : "r" (addr));
+asm|__asm __volatile("mrc p15, 0, %0, c7, c4, 0" : "=r" (reg));
+name|db_printf
+argument_list|(
+literal|"Physical address reg: 0x%08x\n"
+argument_list|,
+name|reg
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|db_printf
+argument_list|(
+literal|"show vtop<virt_addr>\n"
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* DDB */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CPU_MV_PJ4B */
+end_comment
 
 end_unit
 
