@@ -1259,7 +1259,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Calculate the transmit duration of an 11n frame.  * This only works for MCS0->MCS15.  */
+comment|/*  * Calculate the transmit duration of an 11n frame.  */
 end_comment
 
 begin_function
