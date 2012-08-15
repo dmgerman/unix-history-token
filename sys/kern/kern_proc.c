@@ -3736,23 +3736,11 @@ block|}
 block|}
 end_function
 
-begin_include
-include|#
-directive|include
-file|"opt_ddb.h"
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|DDB
 end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<ddb/ddb.h>
-end_include
 
 begin_macro
 name|DB_SHOW_COMMAND
