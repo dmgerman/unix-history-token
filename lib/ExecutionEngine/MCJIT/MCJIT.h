@@ -111,16 +111,18 @@ name|RTDyldMemoryManager
 operator|*
 name|MemMgr
 block|;
-comment|// FIXME: These may need moved to a separate 'jitstate' member like the
-comment|// non-MC JIT does for multithreading and such. Just keep them here for now.
-name|PassManager
-name|PM
+name|RuntimeDyld
+name|Dyld
+block|;
+comment|// FIXME: Add support for multiple modules
+name|bool
+name|isCompiled
 block|;
 name|Module
 operator|*
 name|M
 block|;
-comment|// FIXME: This really doesn't belong here.
+comment|// FIXME: Move these to a single container which manages JITed objects
 name|SmallVector
 operator|<
 name|char
@@ -132,9 +134,6 @@ block|;
 comment|// Working buffer into which we JIT.
 name|raw_svector_ostream
 name|OS
-block|;
-name|RuntimeDyld
-name|Dyld
 block|;
 name|public
 operator|:
@@ -271,7 +270,21 @@ argument|TargetMachine *TM
 argument_list|)
 block|;
 comment|// @}
-block|}
+name|protected
+operator|:
+comment|/// emitObject -- Generate a JITed object in memory from the specified module
+comment|/// Currently, MCJIT only supports a single module and the module passed to
+comment|/// this function call is expected to be the contained module.  The module
+comment|/// is passed as a parameter here to prepare for multiple module support in
+comment|/// the future.
+name|void
+name|emitObject
+argument_list|(
+name|Module
+operator|*
+name|M
+argument_list|)
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

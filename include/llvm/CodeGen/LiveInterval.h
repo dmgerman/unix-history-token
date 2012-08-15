@@ -149,31 +149,6 @@ comment|///
 name|class
 name|VNInfo
 block|{
-name|private
-label|:
-enum|enum
-block|{
-name|HAS_PHI_KILL
-init|=
-literal|1
-block|,
-name|IS_PHI_DEF
-init|=
-literal|1
-operator|<<
-literal|1
-block|,
-name|IS_UNUSED
-init|=
-literal|1
-operator|<<
-literal|2
-block|}
-enum|;
-name|unsigned
-name|char
-name|flags
-decl_stmt|;
 name|public
 label|:
 typedef|typedef
@@ -196,11 +171,6 @@ argument_list|,
 argument|SlotIndex d
 argument_list|)
 block|:
-name|flags
-argument_list|(
-literal|0
-argument_list|)
-operator|,
 name|id
 argument_list|(
 name|i
@@ -219,13 +189,6 @@ argument_list|,
 argument|const VNInfo&orig
 argument_list|)
 operator|:
-name|flags
-argument_list|(
-name|orig
-operator|.
-name|flags
-argument_list|)
-operator|,
 name|id
 argument_list|(
 name|i
@@ -243,137 +206,27 @@ argument_list|(
 argument|VNInfo&src
 argument_list|)
 block|{
-name|flags
-operator|=
-name|src
-operator|.
-name|flags
-block|;
 name|def
 operator|=
 name|src
 operator|.
 name|def
 block|;     }
-comment|/// Used for copying value number info.
-name|unsigned
-name|getFlags
-argument_list|()
-specifier|const
-block|{
-return|return
-name|flags
-return|;
-block|}
-name|void
-name|setFlags
-parameter_list|(
-name|unsigned
-name|flags
-parameter_list|)
-block|{
-name|this
-operator|->
-name|flags
-operator|=
-name|flags
-expr_stmt|;
-block|}
-comment|/// Merge flags from another VNInfo
-name|void
-name|mergeFlags
-parameter_list|(
-specifier|const
-name|VNInfo
-modifier|*
-name|VNI
-parameter_list|)
-block|{
-name|flags
-operator|=
-operator|(
-name|flags
-operator||
-name|VNI
-operator|->
-name|flags
-operator|)
-operator|&
-operator|~
-name|IS_UNUSED
-expr_stmt|;
-block|}
-comment|/// Returns true if one or more kills are PHI nodes.
-comment|/// Obsolete, do not use!
-name|bool
-name|hasPHIKill
-argument_list|()
-specifier|const
-block|{
-return|return
-name|flags
-operator|&
-name|HAS_PHI_KILL
-return|;
-block|}
-comment|/// Set the PHI kill flag on this value.
-name|void
-name|setHasPHIKill
-parameter_list|(
-name|bool
-name|hasKill
-parameter_list|)
-block|{
-if|if
-condition|(
-name|hasKill
-condition|)
-name|flags
-operator||=
-name|HAS_PHI_KILL
-expr_stmt|;
-else|else
-name|flags
-operator|&=
-operator|~
-name|HAS_PHI_KILL
-expr_stmt|;
-block|}
 comment|/// Returns true if this value is defined by a PHI instruction (or was,
 comment|/// PHI instrucions may have been eliminated).
+comment|/// PHI-defs begin at a block boundary, all other defs begin at register or
+comment|/// EC slots.
 name|bool
 name|isPHIDef
 argument_list|()
 specifier|const
 block|{
 return|return
-name|flags
-operator|&
-name|IS_PHI_DEF
+name|def
+operator|.
+name|isBlock
+argument_list|()
 return|;
-block|}
-comment|/// Set the "phi def" flag on this value.
-name|void
-name|setIsPHIDef
-parameter_list|(
-name|bool
-name|phiDef
-parameter_list|)
-block|{
-if|if
-condition|(
-name|phiDef
-condition|)
-name|flags
-operator||=
-name|IS_PHI_DEF
-expr_stmt|;
-else|else
-name|flags
-operator|&=
-operator|~
-name|IS_PHI_DEF
-expr_stmt|;
 block|}
 comment|/// Returns true if this value is unused.
 name|bool
@@ -382,32 +235,22 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|flags
-operator|&
-name|IS_UNUSED
+operator|!
+name|def
+operator|.
+name|isValid
+argument_list|()
 return|;
 block|}
-comment|/// Set the "is unused" flag on this value.
+comment|/// Mark this value as unused.
 name|void
-name|setIsUnused
-parameter_list|(
-name|bool
-name|unused
-parameter_list|)
+name|markUnused
+parameter_list|()
 block|{
-if|if
-condition|(
-name|unused
-condition|)
-name|flags
-operator||=
-name|IS_UNUSED
-expr_stmt|;
-else|else
-name|flags
-operator|&=
-operator|~
-name|IS_UNUSED
+name|def
+operator|=
+name|SlotIndex
+argument_list|()
 expr_stmt|;
 block|}
 block|}
@@ -1149,6 +992,23 @@ return|return
 name|VNI
 return|;
 block|}
+comment|/// createDeadDef - Make sure the interval has a value defined at Def.
+comment|/// If one already exists, return it. Otherwise allocate a new value and
+comment|/// add liveness for a dead def.
+name|VNInfo
+modifier|*
+name|createDeadDef
+argument_list|(
+name|SlotIndex
+name|Def
+argument_list|,
+name|VNInfo
+operator|::
+name|Allocator
+operator|&
+name|VNInfoAllocator
+argument_list|)
+decl_stmt|;
 comment|/// Create a copy of the given value. The new value will be identical except
 comment|/// for the Value number.
 name|VNInfo
@@ -1210,67 +1070,6 @@ modifier|&
 name|lis
 parameter_list|)
 function_decl|;
-comment|/// isOnlyLROfValNo - Return true if the specified live range is the only
-comment|/// one defined by the its val#.
-name|bool
-name|isOnlyLROfValNo
-parameter_list|(
-specifier|const
-name|LiveRange
-modifier|*
-name|LR
-parameter_list|)
-block|{
-for|for
-control|(
-name|const_iterator
-name|I
-init|=
-name|begin
-argument_list|()
-init|,
-name|E
-init|=
-name|end
-argument_list|()
-init|;
-name|I
-operator|!=
-name|E
-condition|;
-operator|++
-name|I
-control|)
-block|{
-specifier|const
-name|LiveRange
-modifier|*
-name|Tmp
-init|=
-name|I
-decl_stmt|;
-if|if
-condition|(
-name|Tmp
-operator|!=
-name|LR
-operator|&&
-name|Tmp
-operator|->
-name|valno
-operator|==
-name|LR
-operator|->
-name|valno
-condition|)
-return|return
-name|false
-return|;
-block|}
-return|return
-name|true
-return|;
-block|}
 comment|/// MergeValueNumberInto - This method is called when two value nubmers
 comment|/// are found to be equivalent.  This eliminates V1, replacing all
 comment|/// LiveRanges with the V1 value number with the V2 value number.  This can
@@ -1571,44 +1370,6 @@ operator|*
 name|I
 return|;
 block|}
-specifier|const
-name|LiveRange
-modifier|*
-name|getLiveRangeBefore
-argument_list|(
-name|SlotIndex
-name|Idx
-argument_list|)
-decl|const
-block|{
-return|return
-name|getLiveRangeContaining
-argument_list|(
-name|Idx
-operator|.
-name|getPrevSlot
-argument_list|()
-argument_list|)
-return|;
-block|}
-name|LiveRange
-modifier|*
-name|getLiveRangeBefore
-parameter_list|(
-name|SlotIndex
-name|Idx
-parameter_list|)
-block|{
-return|return
-name|getLiveRangeContaining
-argument_list|(
-name|Idx
-operator|.
-name|getPrevSlot
-argument_list|()
-argument_list|)
-return|;
-block|}
 comment|/// getVNInfoAt - Return the VNInfo that is live at Idx, or NULL.
 name|VNInfo
 modifier|*
@@ -1745,17 +1506,6 @@ name|end
 argument_list|()
 return|;
 block|}
-comment|/// findDefinedVNInfo - Find the by the specified
-comment|/// index (register interval) or defined
-name|VNInfo
-modifier|*
-name|findDefinedVNInfoForRegInt
-argument_list|(
-name|SlotIndex
-name|Idx
-argument_list|)
-decl|const
-decl_stmt|;
 comment|/// overlaps - Return true if the intersection of the two live intervals is
 comment|/// not empty.
 name|bool
@@ -2067,17 +1817,6 @@ operator|=
 name|HUGE_VALF
 expr_stmt|;
 block|}
-comment|/// ComputeJoinedWeight - Set the weight of a live interval after
-comment|/// Other has been merged into it.
-name|void
-name|ComputeJoinedWeight
-parameter_list|(
-specifier|const
-name|LiveInterval
-modifier|&
-name|Other
-parameter_list|)
-function_decl|;
 name|bool
 name|operator
 operator|<
@@ -2133,13 +1872,6 @@ argument_list|(
 name|raw_ostream
 operator|&
 name|OS
-argument_list|,
-specifier|const
-name|TargetRegisterInfo
-operator|*
-name|TRI
-operator|=
-literal|0
 argument_list|)
 decl|const
 decl_stmt|;
@@ -2148,6 +1880,26 @@ name|dump
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// \brief Walk the interval and assert if any invariants fail to hold.
+comment|///
+comment|/// Note that this is a no-op when asserts are disabled.
+ifdef|#
+directive|ifdef
+name|NDEBUG
+name|void
+name|verify
+argument_list|()
+specifier|const
+block|{}
+else|#
+directive|else
+name|void
+name|verify
+argument_list|()
+specifier|const
+expr_stmt|;
+endif|#
+directive|endif
 name|private
 label|:
 name|Ranges
@@ -2188,6 +1940,28 @@ parameter_list|(
 name|VNInfo
 modifier|*
 name|V
+parameter_list|)
+function_decl|;
+name|void
+name|mergeIntervalRanges
+parameter_list|(
+specifier|const
+name|LiveInterval
+modifier|&
+name|RHS
+parameter_list|,
+name|VNInfo
+modifier|*
+name|LHSValNo
+init|=
+literal|0
+parameter_list|,
+specifier|const
+name|VNInfo
+modifier|*
+name|RHSValNo
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 name|LiveInterval
@@ -2231,18 +2005,319 @@ return|return
 name|OS
 return|;
 block|}
+comment|/// LiveRangeQuery - Query information about a live range around a given
+comment|/// instruction. This class hides the implementation details of live ranges,
+comment|/// and it should be used as the primary interface for examining live ranges
+comment|/// around instructions.
+comment|///
+name|class
+name|LiveRangeQuery
+block|{
+name|VNInfo
+modifier|*
+name|EarlyVal
+decl_stmt|;
+name|VNInfo
+modifier|*
+name|LateVal
+decl_stmt|;
+name|SlotIndex
+name|EndPoint
+decl_stmt|;
+name|bool
+name|Kill
+decl_stmt|;
+name|public
+label|:
+comment|/// Create a LiveRangeQuery for the given live range and instruction index.
+comment|/// The sub-instruction slot of Idx doesn't matter, only the instruction it
+comment|/// refers to is considered.
+name|LiveRangeQuery
+argument_list|(
+argument|const LiveInterval&LI
+argument_list|,
+argument|SlotIndex Idx
+argument_list|)
+block|:
+name|EarlyVal
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|LateVal
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Kill
+argument_list|(
+argument|false
+argument_list|)
+block|{
+comment|// Find the segment that enters the instruction.
+name|LiveInterval
+operator|::
+name|const_iterator
+name|I
+operator|=
+name|LI
+operator|.
+name|find
+argument_list|(
+name|Idx
+operator|.
+name|getBaseIndex
+argument_list|()
+argument_list|)
+block|;
+name|LiveInterval
+operator|::
+name|const_iterator
+name|E
+operator|=
+name|LI
+operator|.
+name|end
+argument_list|()
+block|;
+if|if
+condition|(
+name|I
+operator|==
+name|E
+condition|)
+return|return;
+comment|// Is this an instruction live-in segment?
+if|if
+condition|(
+name|SlotIndex
+operator|::
+name|isEarlierInstr
+argument_list|(
+name|I
+operator|->
+name|start
+argument_list|,
+name|Idx
+argument_list|)
+condition|)
+block|{
+name|EarlyVal
+operator|=
+name|I
+operator|->
+name|valno
+expr_stmt|;
+name|EndPoint
+operator|=
+name|I
+operator|->
+name|end
+expr_stmt|;
+comment|// Move to the potentially live-out segment.
+if|if
+condition|(
+name|SlotIndex
+operator|::
+name|isSameInstr
+argument_list|(
+name|Idx
+argument_list|,
+name|I
+operator|->
+name|end
+argument_list|)
+condition|)
+block|{
+name|Kill
+operator|=
+name|true
+expr_stmt|;
+if|if
+condition|(
+operator|++
+name|I
+operator|==
+name|E
+condition|)
+return|return;
+block|}
+block|}
+comment|// I now points to the segment that may be live-through, or defined by
+comment|// this instr. Ignore segments starting after the current instr.
+if|if
+condition|(
+name|SlotIndex
+operator|::
+name|isEarlierInstr
+argument_list|(
+name|Idx
+argument_list|,
+name|I
+operator|->
+name|start
+argument_list|)
+condition|)
+return|return;
+name|LateVal
+operator|=
+name|I
+operator|->
+name|valno
+expr_stmt|;
+name|EndPoint
+operator|=
+name|I
+operator|->
+name|end
+expr_stmt|;
+block|}
+comment|/// Return the value that is live-in to the instruction. This is the value
+comment|/// that will be read by the instruction's use operands. Return NULL if no
+comment|/// value is live-in.
+name|VNInfo
+operator|*
+name|valueIn
+argument_list|()
+specifier|const
+block|{
+return|return
+name|EarlyVal
+return|;
+block|}
+comment|/// Return true if the live-in value is killed by this instruction. This
+comment|/// means that either the live range ends at the instruction, or it changes
+comment|/// value.
+name|bool
+name|isKill
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kill
+return|;
+block|}
+comment|/// Return true if this instruction has a dead def.
+name|bool
+name|isDeadDef
+argument_list|()
+specifier|const
+block|{
+return|return
+name|EndPoint
+operator|.
+name|isDead
+argument_list|()
+return|;
+block|}
+comment|/// Return the value leaving the instruction, if any. This can be a
+comment|/// live-through value, or a live def. A dead def returns NULL.
+name|VNInfo
+operator|*
+name|valueOut
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isDeadDef
+argument_list|()
+operator|?
+literal|0
+operator|:
+name|LateVal
+return|;
+block|}
+comment|/// Return the value defined by this instruction, if any. This includes
+comment|/// dead defs, it is the value created by the instruction's def operands.
+name|VNInfo
+operator|*
+name|valueDefined
+argument_list|()
+specifier|const
+block|{
+return|return
+name|EarlyVal
+operator|==
+name|LateVal
+operator|?
+literal|0
+operator|:
+name|LateVal
+return|;
+block|}
+comment|/// Return the end point of the last live range segment to interact with
+comment|/// the instruction, if any.
+comment|///
+comment|/// The end point is an invalid SlotIndex only if the live range doesn't
+comment|/// intersect the instruction at all.
+comment|///
+comment|/// The end point may be at or past the end of the instruction's basic
+comment|/// block. That means the value was live out of the block.
+name|SlotIndex
+name|endPoint
+argument_list|()
+specifier|const
+block|{
+return|return
+name|EndPoint
+return|;
+block|}
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// ConnectedVNInfoEqClasses - Helper class that can divide VNInfos in a
+end_comment
+
+begin_comment
 comment|/// LiveInterval into equivalence clases of connected components. A
+end_comment
+
+begin_comment
 comment|/// LiveInterval that has multiple connected components can be broken into
+end_comment
+
+begin_comment
 comment|/// multiple LiveIntervals.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// Given a LiveInterval that may have multiple connected components, run:
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|///   unsigned numComps = ConEQ.Classify(LI);
+end_comment
+
+begin_comment
 comment|///   if (numComps> 1) {
+end_comment
+
+begin_comment
 comment|///     // allocate numComps-1 new LiveIntervals into LIS[1..]
+end_comment
+
+begin_comment
 comment|///     ConEQ.Distribute(LIS);
+end_comment
+
+begin_comment
 comment|/// }
+end_comment
+
+begin_decl_stmt
 name|class
 name|ConnectedVNInfoEqClasses
 block|{
@@ -2333,11 +2408,14 @@ name|MRI
 parameter_list|)
 function_decl|;
 block|}
-empty_stmt|;
-block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif

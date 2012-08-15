@@ -335,6 +335,271 @@ name|available
 decl_stmt|;
 block|}
 struct|;
+enum|enum
+name|perms
+block|{
+name|no_perms
+init|=
+literal|0
+block|,
+name|owner_read
+init|=
+literal|0400
+block|,
+name|owner_write
+init|=
+literal|0200
+block|,
+name|owner_exe
+init|=
+literal|0100
+block|,
+name|owner_all
+init|=
+name|owner_read
+operator||
+name|owner_write
+operator||
+name|owner_exe
+block|,
+name|group_read
+init|=
+literal|040
+block|,
+name|group_write
+init|=
+literal|020
+block|,
+name|group_exe
+init|=
+literal|010
+block|,
+name|group_all
+init|=
+name|group_read
+operator||
+name|group_write
+operator||
+name|group_exe
+block|,
+name|others_read
+init|=
+literal|04
+block|,
+name|others_write
+init|=
+literal|02
+block|,
+name|others_exe
+init|=
+literal|01
+block|,
+name|others_all
+init|=
+name|others_read
+operator||
+name|others_write
+operator||
+name|others_exe
+block|,
+name|all_all
+init|=
+name|owner_all
+operator||
+name|group_all
+operator||
+name|others_all
+block|,
+name|set_uid_on_exe
+init|=
+literal|04000
+block|,
+name|set_gid_on_exe
+init|=
+literal|02000
+block|,
+name|sticky_bit
+init|=
+literal|01000
+block|,
+name|perms_mask
+init|=
+name|all_all
+operator||
+name|set_uid_on_exe
+operator||
+name|set_gid_on_exe
+operator||
+name|sticky_bit
+block|,
+name|perms_not_known
+init|=
+literal|0xFFFF
+block|,
+name|add_perms
+init|=
+literal|0x1000
+block|,
+name|remove_perms
+init|=
+literal|0x2000
+block|,
+name|symlink_perms
+init|=
+literal|0x4000
+block|}
+enum|;
+comment|// Helper functions so that you can use& and | to manipulate perms bits:
+specifier|inline
+name|perms
+name|operator
+operator||
+operator|(
+name|perms
+name|l
+operator|,
+name|perms
+name|r
+operator|)
+block|{
+return|return
+name|static_cast
+operator|<
+name|perms
+operator|>
+operator|(
+name|static_cast
+operator|<
+name|unsigned
+name|short
+operator|>
+operator|(
+name|l
+operator|)
+operator||
+name|static_cast
+operator|<
+name|unsigned
+name|short
+operator|>
+operator|(
+name|r
+operator|)
+operator|)
+return|;
+block|}
+specifier|inline
+name|perms
+name|operator
+function|&(
+name|perms
+name|l
+function|,
+name|perms
+function|r
+block|)
+block|{
+return|return
+name|static_cast
+operator|<
+name|perms
+operator|>
+operator|(
+name|static_cast
+operator|<
+name|unsigned
+name|short
+operator|>
+operator|(
+name|l
+operator|)
+operator|&
+name|static_cast
+operator|<
+name|unsigned
+name|short
+operator|>
+operator|(
+name|r
+operator|)
+operator|)
+return|;
+block|}
+specifier|inline
+name|perms
+operator|&
+name|operator
+operator||=
+operator|(
+name|perms
+operator|&
+name|l
+operator|,
+name|perms
+name|r
+operator|)
+block|{
+name|l
+operator|=
+name|l
+operator||
+name|r
+block|;
+return|return
+name|l
+return|;
+block|}
+specifier|inline
+name|perms
+operator|&
+name|operator
+operator|&=
+operator|(
+name|perms
+operator|&
+name|l
+operator|,
+name|perms
+name|r
+operator|)
+block|{
+name|l
+operator|=
+name|l
+operator|&
+name|r
+block|;
+return|return
+name|l
+return|;
+block|}
+specifier|inline
+name|perms
+name|operator
+operator|~
+operator|(
+name|perms
+name|x
+operator|)
+block|{
+return|return
+name|static_cast
+operator|<
+name|perms
+operator|>
+operator|(
+operator|~
+name|static_cast
+operator|<
+name|unsigned
+name|short
+operator|>
+operator|(
+name|x
+operator|)
+operator|)
+return|;
+block|}
 comment|/// file_status - Represents the result of a call to stat and friends. It has
 comment|///               a platform specific member to store the result.
 name|class
@@ -347,10 +612,10 @@ argument_list|(
 name|LLVM_ON_UNIX
 argument_list|)
 name|dev_t
-name|st_dev
+name|fs_st_dev
 decl_stmt|;
 name|ino_t
-name|st_ino
+name|fs_st_ino
 decl_stmt|;
 elif|#
 directive|elif
@@ -409,19 +674,30 @@ function_decl|;
 name|file_type
 name|Type
 decl_stmt|;
+name|perms
+name|Perms
+decl_stmt|;
 name|public
 label|:
 name|explicit
 name|file_status
 argument_list|(
 argument|file_type v=file_type::status_error
+argument_list|,
+argument|perms prms=perms_not_known
 argument_list|)
 block|:
 name|Type
 argument_list|(
-argument|v
+name|v
+argument_list|)
+operator|,
+name|Perms
+argument_list|(
+argument|prms
 argument_list|)
 block|{}
+comment|// getters
 name|file_type
 name|type
 argument_list|()
@@ -431,6 +707,16 @@ return|return
 name|Type
 return|;
 block|}
+name|perms
+name|permissions
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Perms
+return|;
+block|}
+comment|// setters
 name|void
 name|type
 parameter_list|(
@@ -441,6 +727,18 @@ block|{
 name|Type
 operator|=
 name|v
+expr_stmt|;
+block|}
+name|void
+name|permissions
+parameter_list|(
+name|perms
+name|p
+parameter_list|)
+block|{
+name|Perms
+operator|=
+name|p
 expr_stmt|;
 block|}
 block|}
@@ -907,6 +1205,40 @@ modifier|&
 name|result
 parameter_list|)
 function_decl|;
+comment|/// @brief Simpler version of equivalent for clients that don't need to
+comment|///        differentiate between an error and false.
+specifier|inline
+name|bool
+name|equivalent
+parameter_list|(
+specifier|const
+name|Twine
+modifier|&
+name|A
+parameter_list|,
+specifier|const
+name|Twine
+modifier|&
+name|B
+parameter_list|)
+block|{
+name|bool
+name|result
+decl_stmt|;
+return|return
+operator|!
+name|equivalent
+argument_list|(
+name|A
+argument_list|,
+name|B
+argument_list|,
+name|result
+argument_list|)
+operator|&&
+name|result
+return|;
+block|}
 comment|/// @brief Get file size.
 comment|///
 comment|/// @param path Input path.
@@ -1072,6 +1404,23 @@ modifier|&
 name|result
 parameter_list|)
 function_decl|;
+comment|/// @brief Modifies permission bits on a file
+comment|///
+comment|/// @param path Input path.
+comment|/// @results errc::success if permissions have been changed, otherwise a
+comment|///          platform specific error_code.
+name|error_code
+name|permissions
+parameter_list|(
+specifier|const
+name|Twine
+modifier|&
+name|path
+parameter_list|,
+name|perms
+name|prms
+parameter_list|)
+function_decl|;
 comment|/// @brief Is status available?
 comment|///
 comment|/// @param path Input path.
@@ -1144,6 +1493,11 @@ name|bool
 name|makeAbsolute
 operator|=
 name|true
+argument_list|,
+name|unsigned
+name|mode
+operator|=
+literal|0600
 argument_list|)
 decl_stmt|;
 comment|/// @brief Canonicalize path.
@@ -1342,6 +1696,58 @@ operator|&
 name|result
 argument_list|)
 decl_stmt|;
+comment|/// @brief Memory maps the contents of a file
+comment|///
+comment|/// @param path Path to file to map.
+comment|/// @param file_offset Byte offset in file where mapping should begin.
+comment|/// @param size_t Byte length of range of the file to map.
+comment|/// @param map_writable If true, the file will be mapped in r/w such
+comment|///        that changes to the mapped buffer will be flushed back
+comment|///        to the file.  If false, the file will be mapped read-only
+comment|///        and the buffer will be read-only.
+comment|/// @param result Set to the start address of the mapped buffer.
+comment|/// @results errc::success if result has been successfully set, otherwise a
+comment|///          platform specific error_code.
+name|error_code
+name|map_file_pages
+parameter_list|(
+specifier|const
+name|Twine
+modifier|&
+name|path
+parameter_list|,
+name|off_t
+name|file_offset
+parameter_list|,
+name|size_t
+name|size
+parameter_list|,
+name|bool
+name|map_writable
+parameter_list|,
+name|void
+modifier|*
+modifier|&
+name|result
+parameter_list|)
+function_decl|;
+comment|/// @brief Memory unmaps the contents of a file
+comment|///
+comment|/// @param base Pointer to the start of the buffer.
+comment|/// @param size Byte length of the range to unmmap.
+comment|/// @results errc::success if result has been successfully set, otherwise a
+comment|///          platform specific error_code.
+name|error_code
+name|unmap_file_pages
+parameter_list|(
+name|void
+modifier|*
+name|base
+parameter_list|,
+name|size_t
+name|size
+parameter_list|)
+function_decl|;
 comment|/// @}
 comment|/// @name Iterators
 comment|/// @{
@@ -2305,12 +2711,18 @@ block|}
 comment|// Other members as required by
 comment|// C++ Std, 24.1.1 Input iterators [input.iterators]
 block|}
-empty_stmt|;
-comment|/// @}
-block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
+comment|/// @}
+end_comment
+
+begin_comment
+unit|}
 comment|// end namespace fs
 end_comment
 

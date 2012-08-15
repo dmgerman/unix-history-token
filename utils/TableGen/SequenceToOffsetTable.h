@@ -390,6 +390,21 @@ expr_stmt|;
 block|}
 end_decl_stmt
 
+begin_expr_stmt
+name|bool
+name|empty
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Seqs
+operator|.
+name|empty
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
 begin_comment
 comment|/// layout - Computes the final table layout.
 end_comment

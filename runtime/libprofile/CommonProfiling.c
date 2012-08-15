@@ -334,6 +334,26 @@ argument_list|)
 operator|+
 literal|1
 expr_stmt|;
+comment|/* Defensively check for a zero length, even though this is unlikely    * to happen in practice.  This avoids calling malloc() below with a    * size of 0.    */
+if|if
+condition|(
+name|Length
+operator|==
+literal|0
+condition|)
+block|{
+name|SavedArgs
+operator|=
+literal|0
+expr_stmt|;
+name|SavedArgsLength
+operator|=
+literal|0
+expr_stmt|;
+return|return
+name|argc
+return|;
+block|}
 name|SavedArgs
 operator|=
 operator|(

@@ -125,14 +125,14 @@ name|TargetData
 name|DataLayout
 block|;
 comment|// Calculates type size& alignment
+name|SparcInstrInfo
+name|InstrInfo
+block|;
 name|SparcTargetLowering
 name|TLInfo
 block|;
 name|SparcSelectionDAGInfo
 name|TSInfo
-block|;
-name|SparcInstrInfo
-name|InstrInfo
 block|;
 name|SparcFrameLowering
 name|FrameLowering

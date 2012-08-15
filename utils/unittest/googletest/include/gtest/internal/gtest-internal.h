@@ -438,12 +438,6 @@ name|std
 operator|::
 name|ostream
 block|{
-name|std
-operator|::
-name|ostream
-operator|&
-name|os_
-block|;
 name|raw_os_ostream
 name|ros_
 block|;
@@ -466,11 +460,6 @@ name|os
 operator|.
 name|rdbuf
 argument_list|()
-argument_list|)
-block|,
-name|os_
-argument_list|(
-name|os
 argument_list|)
 block|,
 name|ros_

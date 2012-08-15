@@ -901,9 +901,6 @@ decl_stmt|;
 name|bool
 name|print_time_
 decl_stmt|;
-name|bool
-name|pretty_
-decl_stmt|;
 name|internal
 operator|::
 name|Int32

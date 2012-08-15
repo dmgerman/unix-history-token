@@ -288,10 +288,6 @@ comment|/// \code
 comment|///   using llvm::hash_value;
 comment|///   llvm::hash_code code = hash_value(x);
 comment|/// \endcode
-comment|///
-comment|/// Also note that there are two numerical values which are reserved, and the
-comment|/// implementation ensures will never be produced for real hash_codes. These
-comment|/// can be used as sentinels within hashing data structures.
 name|class
 name|hash_code
 block|{

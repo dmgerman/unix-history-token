@@ -58,6 +58,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Intrinsics.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IntrinsicInst.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Module.h"
 end_include
 
@@ -428,12 +440,10 @@ comment|// handle SPECIFIC instructions.  These functions automatically define
 comment|// visitMul to proxy to visitBinaryOperator for instance in case the user does
 comment|// not need this generality.
 comment|//
-comment|// The one problem case we have to handle here though is that the PHINode
-comment|// class and opcode name are the exact same.  Because of this, we cannot
-comment|// define visitPHINode (the inst version) to forward to visitPHINode (the
-comment|// generic version) without multiply defined symbols and recursion.  To handle
-comment|// this, we do not autoexpand "Other" instructions, we do it manually.
-comment|//
+comment|// These functions can also implement fan-out, when a single opcode and
+comment|// instruction have multiple more specific Instruction subclasses. The Call
+comment|// instruction currently supports this. We implement that by redirecting that
+comment|// instruction to a special delegation helper.
 define|#
 directive|define
 name|HANDLE_INST
@@ -445,7 +455,7 @@ parameter_list|,
 name|CLASS
 parameter_list|)
 define|\
-value|RetTy visit##OPCODE(CLASS&I) { DELEGATE(CLASS); }
+value|RetTy visit##OPCODE(CLASS&I) { \       if (NUM == Instruction::Call) \         return delegateCallInst(I); \       else \         DELEGATE(CLASS); \     }
 include|#
 directive|include
 file|"llvm/Instruction.def"
@@ -848,6 +858,106 @@ argument_list|(
 name|Instruction
 argument_list|)
 block|; }
+comment|// Handle the special instrinsic instruction classes.
+name|RetTy
+name|visitDbgDeclareInst
+argument_list|(
+argument|DbgDeclareInst&I
+argument_list|)
+block|{
+name|DELEGATE
+argument_list|(
+name|DbgInfoIntrinsic
+argument_list|)
+block|;}
+name|RetTy
+name|visitDbgValueInst
+argument_list|(
+argument|DbgValueInst&I
+argument_list|)
+block|{
+name|DELEGATE
+argument_list|(
+name|DbgInfoIntrinsic
+argument_list|)
+block|;}
+name|RetTy
+name|visitDbgInfoIntrinsic
+argument_list|(
+argument|DbgInfoIntrinsic&I
+argument_list|)
+block|{
+name|DELEGATE
+argument_list|(
+name|IntrinsicInst
+argument_list|)
+block|; }
+name|RetTy
+name|visitMemSetInst
+argument_list|(
+argument|MemSetInst&I
+argument_list|)
+block|{
+name|DELEGATE
+argument_list|(
+name|MemIntrinsic
+argument_list|)
+block|; }
+name|RetTy
+name|visitMemCpyInst
+argument_list|(
+argument|MemCpyInst&I
+argument_list|)
+block|{
+name|DELEGATE
+argument_list|(
+name|MemTransferInst
+argument_list|)
+block|; }
+name|RetTy
+name|visitMemMoveInst
+argument_list|(
+argument|MemMoveInst&I
+argument_list|)
+block|{
+name|DELEGATE
+argument_list|(
+name|MemTransferInst
+argument_list|)
+block|; }
+name|RetTy
+name|visitMemTransferInst
+argument_list|(
+argument|MemTransferInst&I
+argument_list|)
+block|{
+name|DELEGATE
+argument_list|(
+name|MemIntrinsic
+argument_list|)
+block|; }
+name|RetTy
+name|visitMemIntrinsic
+argument_list|(
+argument|MemIntrinsic&I
+argument_list|)
+block|{
+name|DELEGATE
+argument_list|(
+name|IntrinsicInst
+argument_list|)
+block|; }
+name|RetTy
+name|visitIntrinsicInst
+argument_list|(
+argument|IntrinsicInst&I
+argument_list|)
+block|{
+name|DELEGATE
+argument_list|(
+name|CallInst
+argument_list|)
+block|; }
 comment|// Call and Invoke are slightly different as they delegate first through
 comment|// a generic CallSite visitor.
 name|RetTy
@@ -1017,6 +1127,127 @@ argument|Instruction&I
 argument_list|)
 block|{}
 comment|// Ignore unhandled instructions
+name|private
+operator|:
+comment|// Special helper function to delegate to CallInst subclass visitors.
+name|RetTy
+name|delegateCallInst
+argument_list|(
+argument|CallInst&I
+argument_list|)
+block|{
+if|if
+condition|(
+specifier|const
+name|Function
+modifier|*
+name|F
+init|=
+name|I
+operator|.
+name|getCalledFunction
+argument_list|()
+condition|)
+block|{
+switch|switch
+condition|(
+operator|(
+name|Intrinsic
+operator|::
+name|ID
+operator|)
+name|F
+operator|->
+name|getIntrinsicID
+argument_list|()
+condition|)
+block|{
+default|default:
+name|DELEGATE
+argument_list|(
+name|IntrinsicInst
+argument_list|)
+expr_stmt|;
+case|case
+name|Intrinsic
+operator|::
+name|dbg_declare
+case|:
+name|DELEGATE
+argument_list|(
+name|DbgDeclareInst
+argument_list|)
+expr_stmt|;
+case|case
+name|Intrinsic
+operator|::
+name|dbg_value
+case|:
+name|DELEGATE
+argument_list|(
+name|DbgValueInst
+argument_list|)
+expr_stmt|;
+case|case
+name|Intrinsic
+operator|::
+name|memcpy
+case|:
+name|DELEGATE
+argument_list|(
+name|MemCpyInst
+argument_list|)
+expr_stmt|;
+case|case
+name|Intrinsic
+operator|::
+name|memmove
+case|:
+name|DELEGATE
+argument_list|(
+name|MemMoveInst
+argument_list|)
+expr_stmt|;
+case|case
+name|Intrinsic
+operator|::
+name|memset
+case|:
+name|DELEGATE
+argument_list|(
+name|MemSetInst
+argument_list|)
+expr_stmt|;
+case|case
+name|Intrinsic
+operator|::
+name|not_intrinsic
+case|:
+break|break;
+block|}
+block|}
+name|DELEGATE
+argument_list|(
+name|CallInst
+argument_list|)
+expr_stmt|;
+block|}
+comment|// An overload that will never actually be called, it is used only from dead
+comment|// code in the dispatching from opcodes to instruction subclasses.
+name|RetTy
+name|delegateCallInst
+parameter_list|(
+name|Instruction
+modifier|&
+name|I
+parameter_list|)
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"delegateCallInst called for non-CallInst"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_decl_stmt
 

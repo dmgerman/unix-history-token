@@ -80,9 +80,6 @@ name|class
 name|DominatorTree
 decl_stmt|;
 name|class
-name|DominanceFrontier
-decl_stmt|;
-name|class
 name|AliasSetTracker
 decl_stmt|;
 comment|/// isAllocaPromotable - Return true if this alloca is legal for promotion.

@@ -131,6 +131,9 @@ name|class
 name|MemoryBuffer
 decl_stmt|;
 name|class
+name|TargetOptions
+decl_stmt|;
+name|class
 name|Value
 decl_stmt|;
 block|}
@@ -561,6 +564,19 @@ return|return
 name|_asm_undefines
 return|;
 block|}
+comment|/// getTargetOptions - Fill the TargetOptions object with the options
+comment|/// specified on the command line.
+specifier|static
+name|void
+name|getTargetOptions
+argument_list|(
+name|llvm
+operator|::
+name|TargetOptions
+operator|&
+name|Options
+argument_list|)
+decl_stmt|;
 name|private
 label|:
 comment|/// parseSymbols - Parse the symbols from the module and model-level ASM and

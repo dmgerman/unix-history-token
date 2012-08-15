@@ -243,33 +243,8 @@ literal|4
 operator|>
 name|SectionStack
 expr_stmt|;
-name|unsigned
-name|UniqueCodeBeginSuffix
-decl_stmt|;
-name|unsigned
-name|UniqueDataBeginSuffix
-decl_stmt|;
 name|protected
 label|:
-comment|/// Indicator of whether the previous data-or-code indicator was for
-comment|/// code or not.  Used to determine when we need to emit a new indicator.
-enum|enum
-name|DataType
-block|{
-name|Data
-block|,
-name|Code
-block|,
-name|JumpTable8
-block|,
-name|JumpTable16
-block|,
-name|JumpTable32
-block|}
-enum|;
-name|DataType
-name|RegionIndicator
-decl_stmt|;
 name|MCStreamer
 argument_list|(
 name|MCContext
@@ -906,146 +881,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/// EmitDataRegion - Emit a label that marks the beginning of a data
-end_comment
-
-begin_comment
-comment|/// region.
-end_comment
-
-begin_comment
-comment|/// On ELF targets, this corresponds to an assembler statement such as:
-end_comment
-
-begin_comment
-comment|///   $d.1:
-end_comment
-
-begin_function_decl
-name|virtual
-name|void
-name|EmitDataRegion
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// EmitJumpTable8Region - Emit a label that marks the beginning of a
-end_comment
-
-begin_comment
-comment|/// jump table composed of 8-bit offsets.
-end_comment
-
-begin_comment
-comment|/// On ELF targets, this corresponds to an assembler statement such as:
-end_comment
-
-begin_comment
-comment|///   $d.1:
-end_comment
-
-begin_function_decl
-name|virtual
-name|void
-name|EmitJumpTable8Region
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// EmitJumpTable16Region - Emit a label that marks the beginning of a
-end_comment
-
-begin_comment
-comment|/// jump table composed of 16-bit offsets.
-end_comment
-
-begin_comment
-comment|/// On ELF targets, this corresponds to an assembler statement such as:
-end_comment
-
-begin_comment
-comment|///   $d.1:
-end_comment
-
-begin_function_decl
-name|virtual
-name|void
-name|EmitJumpTable16Region
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// EmitJumpTable32Region - Emit a label that marks the beginning of a
-end_comment
-
-begin_comment
-comment|/// jump table composed of 32-bit offsets.
-end_comment
-
-begin_comment
-comment|/// On ELF targets, this corresponds to an assembler statement such as:
-end_comment
-
-begin_comment
-comment|///   $d.1:
-end_comment
-
-begin_function_decl
-name|virtual
-name|void
-name|EmitJumpTable32Region
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// EmitCodeRegion - Emit a label that marks the beginning of a code
-end_comment
-
-begin_comment
-comment|/// region.
-end_comment
-
-begin_comment
-comment|/// On ELF targets, this corresponds to an assembler statement such as:
-end_comment
-
-begin_comment
-comment|///   $a.1:
-end_comment
-
-begin_function_decl
-name|virtual
-name|void
-name|EmitCodeRegion
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// ForceCodeRegion - Forcibly sets the current region mode to code.  Used
-end_comment
-
-begin_comment
-comment|/// at function entry points.
-end_comment
-
-begin_function
-name|void
-name|ForceCodeRegion
-parameter_list|()
-block|{
-name|RegionIndicator
-operator|=
-name|Code
-expr_stmt|;
-block|}
-end_function
-
 begin_function_decl
 name|virtual
 name|void
@@ -1064,7 +899,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// EmitAssemblerFlag - Note in the output the specified @p Flag
+comment|/// EmitAssemblerFlag - Note in the output the specified @p Flag.
 end_comment
 
 begin_function_decl
@@ -1079,6 +914,21 @@ init|=
 literal|0
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/// EmitDataRegion - Note in the output the specified region @p Kind.
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|EmitDataRegion
+parameter_list|(
+name|MCDataRegionType
+name|Kind
+parameter_list|)
+block|{}
+end_function
 
 begin_comment
 comment|/// EmitThumbFunc - Note in the output that the specified @p Func is
@@ -1549,7 +1399,7 @@ name|Symbol
 init|=
 literal|0
 parameter_list|,
-name|unsigned
+name|uint64_t
 name|Size
 init|=
 literal|0

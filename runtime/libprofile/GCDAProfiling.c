@@ -109,21 +109,18 @@ parameter_list|)
 block|{
 name|uint32_t
 name|lo
-decl_stmt|,
-name|hi
-decl_stmt|;
-name|lo
-operator|=
+init|=
 name|i
 operator|>>
 literal|0
-expr_stmt|;
+decl_stmt|;
+name|uint32_t
 name|hi
-operator|=
+init|=
 name|i
 operator|>>
 literal|32
-expr_stmt|;
+decl_stmt|;
 name|write_int32
 argument_list|(
 name|lo
@@ -359,10 +356,10 @@ name|filename
 index|[
 name|i
 index|]
-operator|==
+operator|!=
 literal|'/'
 condition|)
-block|{
+continue|continue;
 name|pathname
 operator|=
 name|malloc
@@ -415,7 +412,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-block|}
 end_function
 
 begin_comment
@@ -458,7 +454,7 @@ name|fopen
 argument_list|(
 name|filename
 argument_list|,
-literal|"wb"
+literal|"w+b"
 argument_list|)
 expr_stmt|;
 if|if
@@ -491,7 +487,7 @@ literal|1
 else|:
 name|orig_filename
 argument_list|,
-literal|"wb"
+literal|"w+b"
 argument_list|)
 expr_stmt|;
 if|if
@@ -504,7 +500,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"LLVM profiling runtime: while opening '%s': "
+literal|"LLVM profiling runtime: cannot open '%s': "
 argument_list|,
 name|cptr
 condition|?
@@ -520,11 +516,12 @@ argument_list|(
 literal|""
 argument_list|)
 expr_stmt|;
-name|exit
+name|free
 argument_list|(
-literal|1
+name|filename
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 block|}
 comment|/* gcda file, version 404*, stamp LLVM. */
@@ -674,6 +671,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+operator|!
+name|output_file
+condition|)
+return|return;
 comment|/* function tag */
 name|fwrite
 argument_list|(
@@ -736,7 +739,13 @@ block|{
 name|uint32_t
 name|i
 decl_stmt|;
-comment|/* counter #1 (arcs) tag */
+comment|/* Counter #1 (arcs) tag */
+if|if
+condition|(
+operator|!
+name|output_file
+condition|)
+return|return;
 name|fwrite
 argument_list|(
 literal|"\0\0\xa1\1"
@@ -768,7 +777,6 @@ condition|;
 operator|++
 name|i
 control|)
-block|{
 name|write_int64
 argument_list|(
 name|counters
@@ -777,7 +785,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 ifdef|#
 directive|ifdef
 name|DEBUG_GCDAPROFILING
@@ -801,7 +808,6 @@ condition|;
 operator|++
 name|i
 control|)
-block|{
 name|printf
 argument_list|(
 literal|"llvmgcda:   %llu\n"
@@ -817,7 +823,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 block|}
@@ -829,6 +834,12 @@ name|llvm_gcda_end_file
 parameter_list|()
 block|{
 comment|/* Write out EOF record. */
+if|if
+condition|(
+operator|!
+name|output_file
+condition|)
+return|return;
 name|fwrite
 argument_list|(
 literal|"\0\0\0\0\0\0\0\0"

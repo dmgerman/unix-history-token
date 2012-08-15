@@ -183,7 +183,7 @@ parameter_list|(
 name|TargetName
 parameter_list|)
 define|\
-value|void LLVMInitialize##TargetName##AsmPrinter();
+value|void LLVMInitialize##TargetName##AsmPrinter(void);
 include|#
 directive|include
 file|"llvm/Config/AsmPrinters.def"
@@ -199,7 +199,7 @@ parameter_list|(
 name|TargetName
 parameter_list|)
 define|\
-value|void LLVMInitialize##TargetName##AsmParser();
+value|void LLVMInitialize##TargetName##AsmParser(void);
 include|#
 directive|include
 file|"llvm/Config/AsmParsers.def"
@@ -215,7 +215,7 @@ parameter_list|(
 name|TargetName
 parameter_list|)
 define|\
-value|void LLVMInitialize##TargetName##Disassembler();
+value|void LLVMInitialize##TargetName##Disassembler(void);
 include|#
 directive|include
 file|"llvm/Config/Disassemblers.def"
@@ -300,7 +300,9 @@ specifier|static
 specifier|inline
 name|void
 name|LLVMInitializeAllAsmPrinters
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 define|#
 directive|define
@@ -322,7 +324,9 @@ specifier|static
 specifier|inline
 name|void
 name|LLVMInitializeAllAsmParsers
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 define|#
 directive|define
@@ -344,7 +348,9 @@ specifier|static
 specifier|inline
 name|void
 name|LLVMInitializeAllDisassemblers
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 define|#
 directive|define

@@ -378,9 +378,6 @@ decl_stmt|;
 name|bool
 name|_scopeRestrictionsDone
 decl_stmt|;
-name|bool
-name|_runInternalizePass
-decl_stmt|;
 name|lto_codegen_model
 name|_codeModel
 decl_stmt|;

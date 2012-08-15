@@ -201,11 +201,6 @@ name|Query
 decl_stmt|;
 name|private
 label|:
-specifier|const
-name|unsigned
-name|RepReg
-decl_stmt|;
-comment|// representative register number
 name|unsigned
 name|Tag
 decl_stmt|;
@@ -216,18 +211,14 @@ decl_stmt|;
 comment|// union of virtual reg segments
 name|public
 label|:
+name|explicit
 name|LiveIntervalUnion
 argument_list|(
-argument|unsigned r
-argument_list|,
-argument|Allocator&a
+name|Allocator
+operator|&
+name|a
 argument_list|)
-block|:
-name|RepReg
-argument_list|(
-name|r
-argument_list|)
-operator|,
+operator|:
 name|Tag
 argument_list|(
 literal|0
@@ -726,6 +717,89 @@ operator|&
 operator|)
 decl_stmt|;
 comment|// DO NOT IMPLEMENT
+block|}
+empty_stmt|;
+comment|// Array of LiveIntervalUnions.
+name|class
+name|Array
+block|{
+name|unsigned
+name|Size
+decl_stmt|;
+name|LiveIntervalUnion
+modifier|*
+name|LIUs
+decl_stmt|;
+name|public
+label|:
+name|Array
+argument_list|()
+operator|:
+name|Size
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|LIUs
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+operator|~
+name|Array
+argument_list|()
+block|{
+name|clear
+argument_list|()
+block|; }
+comment|// Initialize the array to have Size entries.
+comment|// Reuse an existing allocation if the size matches.
+name|void
+name|init
+argument_list|(
+argument|LiveIntervalUnion::Allocator&
+argument_list|,
+argument|unsigned Size
+argument_list|)
+expr_stmt|;
+name|unsigned
+name|size
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Size
+return|;
+block|}
+name|void
+name|clear
+parameter_list|()
+function_decl|;
+name|LiveIntervalUnion
+modifier|&
+name|operator
+function|[]
+parameter_list|(
+name|unsigned
+name|idx
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|idx
+operator|<
+name|Size
+operator|&&
+literal|"idx out of bounds"
+argument_list|)
+expr_stmt|;
+return|return
+name|LIUs
+index|[
+name|idx
+index|]
+return|;
+block|}
 block|}
 empty_stmt|;
 block|}

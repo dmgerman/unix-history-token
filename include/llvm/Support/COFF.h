@@ -173,6 +173,11 @@ struct|;
 enum|enum
 name|MachineTypes
 block|{
+name|MT_Invalid
+init|=
+operator|-
+literal|1
+block|,
 name|IMAGE_FILE_MACHINE_UNKNOWN
 init|=
 literal|0x0
@@ -261,6 +266,10 @@ enum|;
 enum|enum
 name|Characteristics
 block|{
+name|C_Invalid
+init|=
+literal|0
+block|,
 comment|/// The file does not contain base relocations and must be loaded at its
 comment|/// preferred base. If this cannot be done, the loader will error.
 name|IMAGE_FILE_RELOCS_STRIPPED
@@ -355,13 +364,13 @@ name|uint32_t
 name|Value
 decl_stmt|;
 name|uint16_t
+name|SectionNumber
+decl_stmt|;
+name|uint16_t
 name|Type
 decl_stmt|;
 name|uint8_t
 name|StorageClass
-decl_stmt|;
-name|uint16_t
-name|SectionNumber
 decl_stmt|;
 name|uint8_t
 name|NumberOfAuxSymbols
@@ -414,6 +423,11 @@ comment|/// Storage class tells where and what the symbol represents
 enum|enum
 name|SymbolStorageClass
 block|{
+name|SSC_Invalid
+init|=
+operator|-
+literal|1
+block|,
 name|IMAGE_SYM_CLASS_END_OF_FUNCTION
 init|=
 operator|-
@@ -705,6 +719,11 @@ struct|;
 enum|enum
 name|SectionCharacteristics
 block|{
+name|SC_Invalid
+init|=
+operator|-
+literal|1
+block|,
 name|IMAGE_SCN_TYPE_NO_PAD
 init|=
 literal|0x00000008

@@ -46,37 +46,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Analysis/DIBuilder.h"
+file|"llvm/DIBuilder.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Analysis/DebugInfo.h"
+file|"llvm/DebugInfo.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineCodeInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Config/config.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ExecutionEngine/JIT.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ExecutionEngine/JITEventListener.h"
+file|"llvm/IRBuilder.h"
 end_include
 
 begin_include
@@ -94,7 +76,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/IRBuilder.h"
+file|"llvm/TypeBuilder.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/MachineCodeInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ExecutionEngine/JIT.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ExecutionEngine/JITEventListener.h"
 end_include
 
 begin_include
@@ -106,13 +106,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/TypeBuilder.h"
+file|"llvm/Support/TargetSelect.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/TargetSelect.h"
+file|"llvm/Config/config.h"
 end_include
 
 begin_include

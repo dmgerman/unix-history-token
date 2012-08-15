@@ -144,7 +144,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseMap.h"
+file|"llvm/ADT/DenseSet.h"
 end_include
 
 begin_include
@@ -784,6 +784,14 @@ comment|/// ValueExprMap - This is a cache of the values we have analyzed so far
 comment|///
 name|ValueExprMapType
 name|ValueExprMap
+block|;
+comment|/// Mark predicate values currently being processed by isImpliedCond.
+name|DenseSet
+operator|<
+name|Value
+operator|*
+operator|>
+name|PendingLoopPredicates
 block|;
 comment|/// ExitLimit - Information about the number of loop iterations for
 comment|/// which a loop exit's branch condition evaluates to the not-taken path.
@@ -2866,23 +2874,14 @@ comment|///
 name|bool
 name|SimplifyICmpOperands
 argument_list|(
-name|ICmpInst
-operator|::
-name|Predicate
-operator|&
-name|Pred
+argument|ICmpInst::Predicate&Pred
 argument_list|,
-specifier|const
-name|SCEV
-operator|*
-operator|&
-name|LHS
+argument|const SCEV *&LHS
 argument_list|,
-specifier|const
-name|SCEV
-operator|*
-operator|&
-name|RHS
+argument|const SCEV *&RHS
+argument_list|,
+argument|unsigned Depth =
+literal|0
 argument_list|)
 block|;
 comment|/// getLoopDisposition - Return the "disposition" of the given SCEV with

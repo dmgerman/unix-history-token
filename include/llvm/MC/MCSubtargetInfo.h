@@ -112,27 +112,27 @@ comment|// Processor descriptions
 specifier|const
 name|SubtargetInfoKV
 modifier|*
-name|ProcItins
+name|ProcSchedModel
 decl_stmt|;
-comment|// Scheduling itineraries
+comment|// Scheduler machine model
 specifier|const
 name|InstrStage
 modifier|*
 name|Stages
 decl_stmt|;
-comment|// Instruction stages
+comment|// Instruction itinerary stages
 specifier|const
 name|unsigned
 modifier|*
 name|OperandCycles
 decl_stmt|;
-comment|// Operand cycles
+comment|// Itinerary operand cycles
 specifier|const
 name|unsigned
 modifier|*
-name|ForwardingPathes
+name|ForwardingPaths
 decl_stmt|;
-comment|// Forwarding pathes
+comment|// Forwarding paths
 name|unsigned
 name|NumFeatures
 decl_stmt|;
@@ -172,7 +172,7 @@ parameter_list|,
 specifier|const
 name|SubtargetInfoKV
 modifier|*
-name|PI
+name|ProcSched
 parameter_list|,
 specifier|const
 name|InstrStage
@@ -247,6 +247,17 @@ name|StringRef
 name|FS
 parameter_list|)
 function_decl|;
+comment|/// getSchedModelForCPU - Get the machine model of a CPU.
+comment|///
+name|MCSchedModel
+modifier|*
+name|getSchedModelForCPU
+argument_list|(
+name|StringRef
+name|CPU
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// getInstrItineraryForCPU - Get scheduling itinerary of a CPU.
 comment|///
 name|InstrItineraryData

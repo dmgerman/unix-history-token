@@ -91,6 +91,9 @@ name|class
 name|MCObjectWriter
 decl_stmt|;
 name|class
+name|MCRegisterInfo
+decl_stmt|;
+name|class
 name|MCSubtargetInfo
 decl_stmt|;
 name|class
@@ -117,6 +120,8 @@ name|string
 name|ParseARMTriple
 argument_list|(
 argument|StringRef TT
+argument_list|,
+argument|StringRef CPU
 argument_list|)
 expr_stmt|;
 comment|/// createARMMCSubtargetInfo - Create a ARM MCSubtargetInfo instance.
@@ -145,6 +150,11 @@ specifier|const
 name|MCInstrInfo
 modifier|&
 name|MCII
+parameter_list|,
+specifier|const
+name|MCRegisterInfo
+modifier|&
+name|MRI
 parameter_list|,
 specifier|const
 name|MCSubtargetInfo

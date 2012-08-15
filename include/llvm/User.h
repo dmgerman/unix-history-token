@@ -36,7 +36,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This class defines the interface that one who 'use's a Value must implement.
+comment|// This class defines the interface that one who uses a Value must implement.
 end_comment
 
 begin_comment
@@ -52,7 +52,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|//  * Instructions are the largest class of User's.
+comment|//  * Instructions are the largest class of Users.
 end_comment
 
 begin_comment

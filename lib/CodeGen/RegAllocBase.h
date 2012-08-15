@@ -154,19 +154,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"LiveIntervalUnion.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"RegisterClassInfo.h"
+file|"llvm/CodeGen/RegisterClassInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/OwningPtr.h"
 end_include
 
 begin_decl_stmt
@@ -191,6 +191,9 @@ name|class
 name|LiveIntervals
 decl_stmt|;
 name|class
+name|LiveRegMatrix
+decl_stmt|;
+name|class
 name|Spiller
 decl_stmt|;
 comment|/// RegAllocBase provides the register allocation driver and interface that can
@@ -202,114 +205,6 @@ comment|/// assignment order.
 name|class
 name|RegAllocBase
 block|{
-name|LiveIntervalUnion
-operator|::
-name|Allocator
-name|UnionAllocator
-expr_stmt|;
-comment|// Cache tag for PhysReg2LiveUnion entries. Increment whenever virtual
-comment|// registers may have changed.
-name|unsigned
-name|UserTag
-decl_stmt|;
-comment|// Array of LiveIntervalUnions indexed by physical register.
-name|class
-name|LiveUnionArray
-block|{
-name|unsigned
-name|NumRegs
-decl_stmt|;
-name|LiveIntervalUnion
-modifier|*
-name|Array
-decl_stmt|;
-name|public
-label|:
-name|LiveUnionArray
-argument_list|()
-operator|:
-name|NumRegs
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|Array
-argument_list|(
-literal|0
-argument_list|)
-block|{}
-operator|~
-name|LiveUnionArray
-argument_list|()
-block|{
-name|clear
-argument_list|()
-block|; }
-name|unsigned
-name|numRegs
-argument_list|()
-specifier|const
-block|{
-return|return
-name|NumRegs
-return|;
-block|}
-name|void
-name|init
-argument_list|(
-name|LiveIntervalUnion
-operator|::
-name|Allocator
-operator|&
-argument_list|,
-name|unsigned
-name|NRegs
-argument_list|)
-decl_stmt|;
-name|void
-name|clear
-parameter_list|()
-function_decl|;
-name|LiveIntervalUnion
-modifier|&
-name|operator
-function|[]
-parameter_list|(
-name|unsigned
-name|PhysReg
-parameter_list|)
-block|{
-name|assert
-argument_list|(
-name|PhysReg
-operator|<
-name|NumRegs
-operator|&&
-literal|"physReg out of bounds"
-argument_list|)
-expr_stmt|;
-return|return
-name|Array
-index|[
-name|PhysReg
-index|]
-return|;
-block|}
-block|}
-empty_stmt|;
-name|LiveUnionArray
-name|PhysReg2LiveUnion
-decl_stmt|;
-comment|// Current queries, one per physreg. They must be reinitialized each time we
-comment|// query on a new live virtual register.
-name|OwningArrayPtr
-operator|<
-name|LiveIntervalUnion
-operator|::
-name|Query
-operator|>
-name|Queries
-expr_stmt|;
 name|protected
 label|:
 specifier|const
@@ -329,17 +224,16 @@ name|LiveIntervals
 modifier|*
 name|LIS
 decl_stmt|;
+name|LiveRegMatrix
+modifier|*
+name|Matrix
+decl_stmt|;
 name|RegisterClassInfo
 name|RegClassInfo
 decl_stmt|;
 name|RegAllocBase
 argument_list|()
 operator|:
-name|UserTag
-argument_list|(
-literal|0
-argument_list|)
-operator|,
 name|TRI
 argument_list|(
 literal|0
@@ -356,6 +250,11 @@ literal|0
 argument_list|)
 operator|,
 name|LIS
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Matrix
 argument_list|(
 literal|0
 argument_list|)
@@ -376,75 +275,12 @@ argument_list|,
 name|LiveIntervals
 operator|&
 name|lis
+argument_list|,
+name|LiveRegMatrix
+operator|&
+name|mat
 argument_list|)
 expr_stmt|;
-comment|// Get an initialized query to check interferences between lvr and preg.  Note
-comment|// that Query::init must be called at least once for each physical register
-comment|// before querying a new live virtual register. This ties Queries and
-comment|// PhysReg2LiveUnion together.
-name|LiveIntervalUnion
-operator|::
-name|Query
-operator|&
-name|query
-argument_list|(
-argument|LiveInterval&VirtReg
-argument_list|,
-argument|unsigned PhysReg
-argument_list|)
-block|{
-name|Queries
-index|[
-name|PhysReg
-index|]
-operator|.
-name|init
-argument_list|(
-name|UserTag
-argument_list|,
-operator|&
-name|VirtReg
-argument_list|,
-operator|&
-name|PhysReg2LiveUnion
-index|[
-name|PhysReg
-index|]
-argument_list|)
-block|;
-return|return
-name|Queries
-index|[
-name|PhysReg
-index|]
-return|;
-block|}
-comment|// Get direct access to the underlying LiveIntervalUnion for PhysReg.
-name|LiveIntervalUnion
-modifier|&
-name|getLiveUnion
-parameter_list|(
-name|unsigned
-name|PhysReg
-parameter_list|)
-block|{
-return|return
-name|PhysReg2LiveUnion
-index|[
-name|PhysReg
-index|]
-return|;
-block|}
-comment|// Invalidate all cached information about virtual registers - live ranges may
-comment|// have changed.
-name|void
-name|invalidateVirtRegs
-parameter_list|()
-block|{
-operator|++
-name|UserTag
-expr_stmt|;
-block|}
 comment|// The top-level driver. The output is a VirtRegMap that us updated with
 comment|// physical register assignments.
 name|void
@@ -504,71 +340,6 @@ argument_list|)
 init|=
 literal|0
 decl_stmt|;
-comment|// A RegAlloc pass should call this when PassManager releases its memory.
-name|virtual
-name|void
-name|releaseMemory
-parameter_list|()
-function_decl|;
-comment|// Helper for checking interference between a live virtual register and a
-comment|// physical register, including all its register aliases. If an interference
-comment|// exists, return the interfering register, which may be preg or an alias.
-name|unsigned
-name|checkPhysRegInterference
-parameter_list|(
-name|LiveInterval
-modifier|&
-name|VirtReg
-parameter_list|,
-name|unsigned
-name|PhysReg
-parameter_list|)
-function_decl|;
-comment|/// assign - Assign VirtReg to PhysReg.
-comment|/// This should not be called from selectOrSplit for the current register.
-name|void
-name|assign
-parameter_list|(
-name|LiveInterval
-modifier|&
-name|VirtReg
-parameter_list|,
-name|unsigned
-name|PhysReg
-parameter_list|)
-function_decl|;
-comment|/// unassign - Undo a previous assignment of VirtReg to PhysReg.
-comment|/// This can be invoked from selectOrSplit, but be careful to guarantee that
-comment|/// allocation is making progress.
-name|void
-name|unassign
-parameter_list|(
-name|LiveInterval
-modifier|&
-name|VirtReg
-parameter_list|,
-name|unsigned
-name|PhysReg
-parameter_list|)
-function_decl|;
-comment|/// addMBBLiveIns - Add physreg liveins to basic blocks.
-name|void
-name|addMBBLiveIns
-parameter_list|(
-name|MachineFunction
-modifier|*
-parameter_list|)
-function_decl|;
-ifndef|#
-directive|ifndef
-name|NDEBUG
-comment|// Verify each LiveIntervalUnion.
-name|void
-name|verify
-parameter_list|()
-function_decl|;
-endif|#
-directive|endif
 comment|// Use this group name for NamedRegionTimer.
 specifier|static
 specifier|const

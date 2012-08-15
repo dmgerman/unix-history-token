@@ -185,39 +185,82 @@ comment|///    SYMBOL_LABEL @PLT
 name|MO_PLT
 block|,
 comment|/// MO_TLSGD - On a symbol operand this indicates that the immediate is
-comment|/// some TLS offset.
+comment|/// the offset of the GOT entry with the TLS index structure that contains
+comment|/// the module number and variable offset for the symbol. Used in the
+comment|/// general dynamic TLS access model.
 comment|///
 comment|/// See 'ELF Handling for Thread-Local Storage' for more details.
 comment|///    SYMBOL_LABEL @TLSGD
 name|MO_TLSGD
 block|,
+comment|/// MO_TLSLD - On a symbol operand this indicates that the immediate is
+comment|/// the offset of the GOT entry with the TLS index for the module that
+comment|/// contains the symbol. When this index is passed to a call to to
+comment|/// __tls_get_addr, the function will return the base address of the TLS
+comment|/// block for the symbol. Used in the x86-64 local dynamic TLS access model.
+comment|///
+comment|/// See 'ELF Handling for Thread-Local Storage' for more details.
+comment|///    SYMBOL_LABEL @TLSLD
+name|MO_TLSLD
+block|,
+comment|/// MO_TLSLDM - On a symbol operand this indicates that the immediate is
+comment|/// the offset of the GOT entry with the TLS index for the module that
+comment|/// contains the symbol. When this index is passed to a call to to
+comment|/// ___tls_get_addr, the function will return the base address of the TLS
+comment|/// block for the symbol. Used in the IA32 local dynamic TLS access model.
+comment|///
+comment|/// See 'ELF Handling for Thread-Local Storage' for more details.
+comment|///    SYMBOL_LABEL @TLSLDM
+name|MO_TLSLDM
+block|,
 comment|/// MO_GOTTPOFF - On a symbol operand this indicates that the immediate is
-comment|/// some TLS offset.
+comment|/// the offset of the GOT entry with the thread-pointer offset for the
+comment|/// symbol. Used in the x86-64 initial exec TLS access model.
 comment|///
 comment|/// See 'ELF Handling for Thread-Local Storage' for more details.
 comment|///    SYMBOL_LABEL @GOTTPOFF
 name|MO_GOTTPOFF
 block|,
 comment|/// MO_INDNTPOFF - On a symbol operand this indicates that the immediate is
-comment|/// some TLS offset.
+comment|/// the absolute address of the GOT entry with the negative thread-pointer
+comment|/// offset for the symbol. Used in the non-PIC IA32 initial exec TLS access
+comment|/// model.
 comment|///
 comment|/// See 'ELF Handling for Thread-Local Storage' for more details.
 comment|///    SYMBOL_LABEL @INDNTPOFF
 name|MO_INDNTPOFF
 block|,
 comment|/// MO_TPOFF - On a symbol operand this indicates that the immediate is
-comment|/// some TLS offset.
+comment|/// the thread-pointer offset for the symbol. Used in the x86-64 local
+comment|/// exec TLS access model.
 comment|///
 comment|/// See 'ELF Handling for Thread-Local Storage' for more details.
 comment|///    SYMBOL_LABEL @TPOFF
 name|MO_TPOFF
 block|,
+comment|/// MO_DTPOFF - On a symbol operand this indicates that the immediate is
+comment|/// the offset of the GOT entry with the TLS offset of the symbol. Used
+comment|/// in the local dynamic TLS access model.
+comment|///
+comment|/// See 'ELF Handling for Thread-Local Storage' for more details.
+comment|///    SYMBOL_LABEL @DTPOFF
+name|MO_DTPOFF
+block|,
 comment|/// MO_NTPOFF - On a symbol operand this indicates that the immediate is
-comment|/// some TLS offset.
+comment|/// the negative thread-pointer offset for the symbol. Used in the IA32
+comment|/// local exec TLS access model.
 comment|///
 comment|/// See 'ELF Handling for Thread-Local Storage' for more details.
 comment|///    SYMBOL_LABEL @NTPOFF
 name|MO_NTPOFF
+block|,
+comment|/// MO_GOTNTPOFF - On a symbol operand this indicates that the immediate is
+comment|/// the offset of the GOT entry with the negative thread-pointer offset for
+comment|/// the symbol. Used in the PIC IA32 initial exec TLS access model.
+comment|///
+comment|/// See 'ELF Handling for Thread-Local Storage' for more details.
+comment|///    SYMBOL_LABEL @GOTNTPOFF
+name|MO_GOTNTPOFF
 block|,
 comment|/// MO_DLLIMPORT - On a symbol operand "FOO", this indicates that the
 comment|/// reference is actually to the "__imp_FOO" symbol.  This is used for
@@ -978,7 +1021,6 @@ enum|;
 comment|// getBaseOpcodeFor - This function returns the "base" X86 opcode for the
 comment|// specified machine instruction.
 comment|//
-specifier|static
 specifier|inline
 name|unsigned
 name|char
@@ -996,7 +1038,6 @@ operator|::
 name|OpcodeShift
 return|;
 block|}
-specifier|static
 specifier|inline
 name|bool
 name|hasImm
@@ -1019,7 +1060,6 @@ return|;
 block|}
 comment|/// getSizeOfImm - Decode the "size of immediate" field from the TSFlags field
 comment|/// of the specified instruction.
-specifier|static
 specifier|inline
 name|unsigned
 name|getSizeOfImm
@@ -1094,7 +1134,6 @@ block|}
 block|}
 comment|/// isImmPCRel - Return true if the immediate of the specified instruction's
 comment|/// TSFlags indicates that it is pc relative.
-specifier|static
 specifier|inline
 name|unsigned
 name|isImmPCRel
@@ -1169,7 +1208,6 @@ comment|/// Note that this ignores tied operands.  If there is a tied register w
 comment|/// is duplicated in the MCInst (e.g. "EAX = addl EAX, [mem]") it is only
 comment|/// counted as one operand.
 comment|///
-specifier|static
 specifier|inline
 name|int
 name|getMemoryOperandNo
@@ -1195,11 +1233,11 @@ name|X86II
 operator|::
 name|MRMInitReg
 case|:
-name|llvm_unreachable
-argument_list|(
-literal|"FIXME: Remove this form"
-argument_list|)
-expr_stmt|;
+comment|// FIXME: Remove this form.
+return|return
+operator|-
+literal|1
+return|;
 default|default:
 name|llvm_unreachable
 argument_list|(
@@ -1547,7 +1585,6 @@ block|}
 block|}
 comment|/// isX86_64ExtendedReg - Is the MachineOperand a x86-64 extended (r8 or
 comment|/// higher) register?  e.g. r8, xmm8, xmm13, etc.
-specifier|static
 specifier|inline
 name|bool
 name|isX86_64ExtendedReg
@@ -1851,7 +1888,6 @@ return|return
 name|false
 return|;
 block|}
-specifier|static
 specifier|inline
 name|bool
 name|isX86_64NonExtLowByteReg

@@ -697,6 +697,12 @@ parameter_list|,
 name|roundingMode
 parameter_list|)
 function_decl|;
+name|opStatus
+name|roundToIntegral
+parameter_list|(
+name|roundingMode
+parameter_list|)
+function_decl|;
 comment|/* Sign operations.  */
 name|void
 name|changeSign

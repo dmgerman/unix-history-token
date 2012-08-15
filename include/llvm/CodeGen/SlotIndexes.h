@@ -323,13 +323,6 @@ block|{
 name|friend
 name|class
 name|SlotIndexes
-block|;
-name|friend
-expr|struct
-name|DenseMapInfo
-operator|<
-name|SlotIndex
-operator|>
 block|;      enum
 name|Slot
 block|{
@@ -437,49 +430,6 @@ argument_list|()
 operator|)
 return|;
 block|}
-specifier|static
-specifier|inline
-name|unsigned
-name|getHashValue
-argument_list|(
-argument|const SlotIndex&v
-argument_list|)
-block|{
-name|void
-operator|*
-name|ptrVal
-operator|=
-name|v
-operator|.
-name|lie
-operator|.
-name|getOpaqueValue
-argument_list|()
-block|;
-return|return
-operator|(
-name|unsigned
-argument_list|(
-operator|(
-name|intptr_t
-operator|)
-name|ptrVal
-argument_list|)
-operator|)
-operator|^
-operator|(
-name|unsigned
-argument_list|(
-operator|(
-name|intptr_t
-operator|)
-name|ptrVal
-argument_list|)
-operator|>>
-literal|9
-operator|)
-return|;
-block|}
 name|public
 operator|:
 expr|enum
@@ -493,36 +443,6 @@ operator|*
 name|Slot_Count
 block|}
 block|;
-specifier|static
-specifier|inline
-name|SlotIndex
-name|getEmptyKey
-argument_list|()
-block|{
-return|return
-name|SlotIndex
-argument_list|(
-literal|0
-argument_list|,
-literal|1
-argument_list|)
-return|;
-block|}
-specifier|static
-specifier|inline
-name|SlotIndex
-name|getTombstoneKey
-argument_list|()
-block|{
-return|return
-name|SlotIndex
-argument_list|(
-literal|0
-argument_list|,
-literal|2
-argument_list|)
-return|;
-block|}
 comment|/// Construct an invalid index.
 name|SlotIndex
 argument_list|()
@@ -1063,79 +983,6 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// DenseMapInfo specialization for SlotIndex.
-name|template
-operator|<
-operator|>
-expr|struct
-name|DenseMapInfo
-operator|<
-name|SlotIndex
-operator|>
-block|{
-specifier|static
-specifier|inline
-name|SlotIndex
-name|getEmptyKey
-argument_list|()
-block|{
-return|return
-name|SlotIndex
-operator|::
-name|getEmptyKey
-argument_list|()
-return|;
-block|}
-specifier|static
-specifier|inline
-name|SlotIndex
-name|getTombstoneKey
-argument_list|()
-block|{
-return|return
-name|SlotIndex
-operator|::
-name|getTombstoneKey
-argument_list|()
-return|;
-block|}
-specifier|static
-specifier|inline
-name|unsigned
-name|getHashValue
-argument_list|(
-argument|const SlotIndex&v
-argument_list|)
-block|{
-return|return
-name|SlotIndex
-operator|::
-name|getHashValue
-argument_list|(
-name|v
-argument_list|)
-return|;
-block|}
-specifier|static
-specifier|inline
-name|bool
-name|isEqual
-argument_list|(
-argument|const SlotIndex&LHS
-argument_list|,
-argument|const SlotIndex&RHS
-argument_list|)
-block|{
-return|return
-operator|(
-name|LHS
-operator|==
-name|RHS
-operator|)
-return|;
-block|}
-expr|}
-block|;
 name|template
 operator|<
 operator|>
@@ -1289,9 +1136,6 @@ block|;
 name|MachineFunction
 operator|*
 name|mf
-block|;
-name|unsigned
-name|functionSize
 block|;
 typedef|typedef
 name|DenseMap
@@ -1503,48 +1347,6 @@ literal|0
 argument_list|)
 return|;
 block|}
-comment|/// Returns the distance between the highest and lowest indexes allocated
-comment|/// so far.
-name|unsigned
-name|getIndexesLength
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-name|indexList
-operator|.
-name|front
-argument_list|()
-operator|.
-name|getIndex
-argument_list|()
-operator|==
-literal|0
-operator|&&
-literal|"Initial index isn't zero?"
-argument_list|)
-block|;
-return|return
-name|indexList
-operator|.
-name|back
-argument_list|()
-operator|.
-name|getIndex
-argument_list|()
-return|;
-block|}
-comment|/// Returns the number of instructions in the function.
-name|unsigned
-name|getFunctionSize
-argument_list|()
-specifier|const
-block|{
-return|return
-name|functionSize
-return|;
-block|}
 comment|/// Returns true if the given machine instr is mapped to an index,
 comment|/// otherwise returns false.
 name|bool
@@ -1687,7 +1489,7 @@ argument_list|)
 return|;
 block|}
 comment|/// getIndexBefore - Returns the index of the last indexed instruction
-comment|/// before MI, or the the start index of its basic block.
+comment|/// before MI, or the start index of its basic block.
 comment|/// MI is not required to have an index.
 name|SlotIndex
 name|getIndexBefore
@@ -2122,13 +1924,21 @@ block|}
 name|bool
 name|findLiveInMBBs
 argument_list|(
-argument|SlotIndex start
+name|SlotIndex
+name|start
 argument_list|,
-argument|SlotIndex end
+name|SlotIndex
+name|end
 argument_list|,
-argument|SmallVectorImpl<MachineBasicBlock*>&mbbs
+name|SmallVectorImpl
+operator|<
+name|MachineBasicBlock
+operator|*
+operator|>
+operator|&
+name|mbbs
 argument_list|)
-specifier|const
+decl|const
 block|{
 name|SmallVectorImpl
 operator|<
@@ -2154,12 +1964,12 @@ argument_list|()
 argument_list|,
 name|start
 argument_list|)
-block|;
+expr_stmt|;
 name|bool
 name|resVal
-operator|=
+init|=
 name|false
-block|;
+decl_stmt|;
 while|while
 condition|(
 name|itr
@@ -2203,14 +2013,16 @@ block|}
 comment|/// Returns the MBB covering the given range, or null if the range covers
 comment|/// more than one basic block.
 name|MachineBasicBlock
-operator|*
+modifier|*
 name|getMBBCoveringRange
 argument_list|(
-argument|SlotIndex start
+name|SlotIndex
+name|start
 argument_list|,
-argument|SlotIndex end
+name|SlotIndex
+name|end
 argument_list|)
-specifier|const
+decl|const
 block|{
 name|assert
 argument_list|(
@@ -2220,7 +2032,7 @@ name|end
 operator|&&
 literal|"Backwards ranges not allowed."
 argument_list|)
-block|;
+expr_stmt|;
 name|SmallVectorImpl
 operator|<
 name|IdxMBBPair
@@ -2245,7 +2057,7 @@ argument_list|()
 argument_list|,
 name|start
 argument_list|)
-block|;
+expr_stmt|;
 if|if
 condition|(
 name|itr
@@ -2287,7 +2099,7 @@ name|prior
 argument_list|(
 name|itr
 argument_list|)
-block|;
+expr_stmt|;
 if|if
 condition|(
 name|itr
@@ -2305,29 +2117,11 @@ return|return
 literal|0
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// Insert the given machine instruction into the mapping. Returns the
-end_comment
-
-begin_comment
 comment|/// assigned index.
-end_comment
-
-begin_comment
 comment|/// If Late is set and there are null indexes between mi's neighboring
-end_comment
-
-begin_comment
 comment|/// instructions, create the new index after the null indexes instead of
-end_comment
-
-begin_comment
 comment|/// before them.
-end_comment
-
-begin_function
 name|SlotIndex
 name|insertMachineInstrInMaps
 parameter_list|(
@@ -2428,7 +2222,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|// Insert mi's index immediately after the preceeding instruction.
+comment|// Insert mi's index immediately after the preceding instruction.
 name|prevItr
 operator|=
 name|getIndexBefore
@@ -2545,13 +2339,7 @@ return|return
 name|newIndex
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// Remove the given machine instruction from the mapping.
-end_comment
-
-begin_function
 name|void
 name|removeMachineInstrFromMaps
 parameter_list|(
@@ -2625,17 +2413,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/// ReplaceMachineInstrInMaps - Replacing a machine instr with a new one in
-end_comment
-
-begin_comment
 comment|/// maps used by register allocator.
-end_comment
-
-begin_function
 name|void
 name|replaceMachineInstrInMaps
 parameter_list|(
@@ -2728,13 +2507,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// Add the given MachineBasicBlock into the maps.
-end_comment
-
-begin_function
 name|void
 name|insertMBBInMaps
 parameter_list|(
@@ -2926,10 +2699,14 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
-unit|};
 comment|// Specialize IntervalMapInfo for half-open slot index intervals.
 end_comment
 

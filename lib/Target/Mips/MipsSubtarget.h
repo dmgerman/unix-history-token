@@ -198,6 +198,10 @@ comment|// HasBitCount - Count leading '1' and '0' bits.
 name|bool
 name|HasBitCount
 block|;
+comment|// InMips16 -- can process Mips16 instructions
+name|bool
+name|InMips16Mode
+block|;
 name|InstrItineraryData
 name|InstrItins
 block|;
@@ -419,12 +423,32 @@ name|HasVFPU
 return|;
 block|}
 name|bool
+name|inMips16Mode
+argument_list|()
+specifier|const
+block|{
+return|return
+name|InMips16Mode
+return|;
+block|}
+name|bool
 name|isLinux
 argument_list|()
 specifier|const
 block|{
 return|return
 name|IsLinux
+return|;
+block|}
+name|bool
+name|hasStandardEncoding
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|inMips16Mode
+argument_list|()
 return|;
 block|}
 comment|/// Features related to the presence of specific instructions.

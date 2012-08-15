@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cassert>
 end_include
 
@@ -183,19 +189,6 @@ argument_list|(
 argument|Val.v
 argument_list|)
 block|{ }
-name|Attributes
-argument_list|(
-specifier|const
-name|Attributes
-operator|&
-name|Attrs
-argument_list|)
-operator|:
-name|Bits
-argument_list|(
-argument|Attrs.Bits
-argument_list|)
-block|{ }
 comment|// This is a "safe bool() operator".
 name|operator
 specifier|const
@@ -230,28 +223,6 @@ operator|)
 operator|)
 operator|==
 literal|0
-return|;
-block|}
-name|Attributes
-modifier|&
-name|operator
-init|=
-operator|(
-specifier|const
-name|Attributes
-operator|&
-name|Attrs
-operator|)
-block|{
-name|Bits
-operator|=
-name|Attrs
-operator|.
-name|Bits
-block|;
-return|return
-operator|*
-name|this
 return|;
 block|}
 name|bool
@@ -717,6 +688,17 @@ argument|<<
 literal|32
 argument_list|)
 comment|///< Address safety checking is on.
+name|DECLARE_LLVM_ATTRIBUTE
+argument_list|(
+argument|IANSDialect
+argument_list|,
+literal|1ULL
+argument|<<
+literal|33
+argument_list|)
+comment|///< Inline asm non-standard dialect.
+comment|/// When not set, ATT dialect assumed.
+comment|/// When set implies the Intel dialect.
 undef|#
 directive|undef
 name|DECLARE_LLVM_ATTRIBUTE
@@ -788,6 +770,8 @@ operator||
 name|ReturnsTwice_i
 operator||
 name|AddressSafety_i
+operator||
+name|IANSDialect_i
 block|}
 decl_stmt|;
 comment|/// @brief Parameter attributes that do not apply to vararg call arguments.
@@ -804,18 +788,24 @@ specifier|const
 name|AttrConst
 name|MutuallyIncompatible
 index|[
-literal|4
+literal|5
 index|]
 init|=
 block|{
 block|{
 name|ByVal_i
 operator||
-name|InReg_i
-operator||
 name|Nest_i
 operator||
 name|StructRet_i
+block|}
+block|,
+block|{
+name|ByVal_i
+operator||
+name|Nest_i
+operator||
+name|InReg_i
 block|}
 block|,
 block|{
@@ -1043,6 +1033,178 @@ literal|1
 operator|)
 return|;
 block|}
+comment|/// This returns an integer containing an encoding of all the
+comment|/// LLVM attributes found in the given attribute bitset.  Any
+comment|/// change to this encoding is a breaking change to bitcode
+comment|/// compatibility.
+specifier|inline
+name|uint64_t
+name|encodeLLVMAttributesForBitcode
+parameter_list|(
+name|Attributes
+name|Attrs
+parameter_list|)
+block|{
+comment|// FIXME: It doesn't make sense to store the alignment information as an
+comment|// expanded out value, we should store it as a log2 value.  However, we can't
+comment|// just change that here without breaking bitcode compatibility.  If this ever
+comment|// becomes a problem in practice, we should introduce new tag numbers in the
+comment|// bitcode file and have those tags use a more efficiently encoded alignment
+comment|// field.
+comment|// Store the alignment in the bitcode as a 16-bit raw value instead of a
+comment|// 5-bit log2 encoded value. Shift the bits above the alignment up by
+comment|// 11 bits.
+name|uint64_t
+name|EncodedAttrs
+init|=
+name|Attrs
+operator|.
+name|Raw
+argument_list|()
+operator|&
+literal|0xffff
+decl_stmt|;
+if|if
+condition|(
+name|Attrs
+operator|&
+name|Attribute
+operator|::
+name|Alignment
+condition|)
+name|EncodedAttrs
+operator||=
+operator|(
+literal|1ull
+operator|<<
+literal|16
+operator|)
+operator|<<
+operator|(
+operator|(
+operator|(
+name|Attrs
+operator|&
+name|Attribute
+operator|::
+name|Alignment
+operator|)
+operator|.
+name|Raw
+argument_list|()
+operator|-
+literal|1
+operator|)
+operator|>>
+literal|16
+operator|)
+expr_stmt|;
+name|EncodedAttrs
+operator||=
+operator|(
+name|Attrs
+operator|.
+name|Raw
+argument_list|()
+operator|&
+operator|(
+literal|0xfffull
+operator|<<
+literal|21
+operator|)
+operator|)
+operator|<<
+literal|11
+expr_stmt|;
+return|return
+name|EncodedAttrs
+return|;
+block|}
+comment|/// This returns an attribute bitset containing the LLVM attributes
+comment|/// that have been decoded from the given integer.  This function
+comment|/// must stay in sync with 'encodeLLVMAttributesForBitcode'.
+specifier|inline
+name|Attributes
+name|decodeLLVMAttributesForBitcode
+parameter_list|(
+name|uint64_t
+name|EncodedAttrs
+parameter_list|)
+block|{
+comment|// The alignment is stored as a 16-bit raw value from bits 31--16.
+comment|// We shift the bits above 31 down by 11 bits.
+name|unsigned
+name|Alignment
+init|=
+operator|(
+name|EncodedAttrs
+operator|&
+operator|(
+literal|0xffffull
+operator|<<
+literal|16
+operator|)
+operator|)
+operator|>>
+literal|16
+decl_stmt|;
+name|assert
+argument_list|(
+operator|(
+operator|!
+name|Alignment
+operator|||
+name|isPowerOf2_32
+argument_list|(
+name|Alignment
+argument_list|)
+operator|)
+operator|&&
+literal|"Alignment must be a power of two."
+argument_list|)
+expr_stmt|;
+name|Attributes
+name|Attrs
+argument_list|(
+name|EncodedAttrs
+operator|&
+literal|0xffff
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|Alignment
+condition|)
+name|Attrs
+operator||=
+name|Attribute
+operator|::
+name|constructAlignmentFromInt
+argument_list|(
+name|Alignment
+argument_list|)
+expr_stmt|;
+name|Attrs
+operator||=
+name|Attributes
+argument_list|(
+operator|(
+name|EncodedAttrs
+operator|&
+operator|(
+literal|0xfffull
+operator|<<
+literal|32
+operator|)
+operator|)
+operator|>>
+literal|11
+argument_list|)
+expr_stmt|;
+return|return
+name|Attrs
+return|;
+block|}
 comment|/// The set of Attributes set in Attributes is converted to a
 comment|/// string of equivalent mnemonics. This is, presumably, for writing out
 comment|/// the mnemonics for the assembly writer.
@@ -1158,66 +1320,18 @@ expr_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Attribute List Construction and Mutation
 comment|//===--------------------------------------------------------------------===//
-comment|/// get - Return a Attributes list with the specified parameter in it.
+comment|/// get - Return a Attributes list with the specified parameters in it.
 specifier|static
 name|AttrListPtr
 name|get
-parameter_list|(
-specifier|const
+argument_list|(
+name|ArrayRef
+operator|<
 name|AttributeWithIndex
-modifier|*
-name|Attr
-parameter_list|,
-name|unsigned
-name|NumAttrs
-parameter_list|)
-function_decl|;
-comment|/// get - Return a Attribute list with the parameters specified by the
-comment|/// consecutive random access iterator range.
-name|template
-operator|<
-name|typename
-name|Iter
 operator|>
-specifier|static
-name|AttrListPtr
-name|get
-argument_list|(
-argument|const Iter&I
-argument_list|,
-argument|const Iter&E
+name|Attrs
 argument_list|)
-block|{
-if|if
-condition|(
-name|I
-operator|==
-name|E
-condition|)
-return|return
-name|AttrListPtr
-argument_list|()
-return|;
-comment|// Empty list.
-return|return
-name|get
-argument_list|(
-operator|&
-operator|*
-name|I
-argument_list|,
-name|static_cast
-operator|<
-name|unsigned
-operator|>
-operator|(
-name|E
-operator|-
-name|I
-operator|)
-argument_list|)
-return|;
-block|}
+decl_stmt|;
 comment|/// addAttr - Add the specified attribute at the specified index to this
 comment|/// attribute list.  Since attribute lists are immutable, this
 comment|/// returns the new list.
@@ -1476,14 +1590,11 @@ argument_list|)
 decl|const
 decl_stmt|;
 block|}
+empty_stmt|;
+block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
 comment|// End llvm namespace
 end_comment
 

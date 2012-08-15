@@ -794,6 +794,18 @@ argument|MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
+comment|/// isFMAFasterThanMulAndAdd - Return true if an FMA operation is faster than
+comment|/// a pair of mul and add instructions. fmuladd intrinsics will be expanded to
+comment|/// FMAs when this method returns true (and FMAs are legal), otherwise fmuladd
+comment|/// is expanded to mul + add.
+name|virtual
+name|bool
+name|isFMAFasterThanMulAndAdd
+argument_list|(
+argument|EVT VT
+argument_list|)
+specifier|const
+block|;
 name|private
 operator|:
 name|SDValue
@@ -873,6 +885,15 @@ specifier|const
 block|;
 name|SDValue
 name|LowerBlockAddress
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerGlobalTLSAddress
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -1160,27 +1181,7 @@ name|virtual
 name|SDValue
 name|LowerCall
 argument_list|(
-argument|SDValue Chain
-argument_list|,
-argument|SDValue Callee
-argument_list|,
-argument|CallingConv::ID CallConv
-argument_list|,
-argument|bool isVarArg
-argument_list|,
-argument|bool doesNotRet
-argument_list|,
-argument|bool&isTailCall
-argument_list|,
-argument|const SmallVectorImpl<ISD::OutputArg>&Outs
-argument_list|,
-argument|const SmallVectorImpl<SDValue>&OutVals
-argument_list|,
-argument|const SmallVectorImpl<ISD::InputArg>&Ins
-argument_list|,
-argument|DebugLoc dl
-argument_list|,
-argument|SelectionDAG&DAG
+argument|TargetLowering::CallLoweringInfo&CLI
 argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)

@@ -179,19 +179,19 @@ name|AlignType
 range|:
 literal|8
 decl_stmt|;
-comment|//< Alignment type (AlignTypeEnum)
+comment|///< Alignment type (AlignTypeEnum)
 name|unsigned
 name|ABIAlign
 decl_stmt|;
-comment|//< ABI alignment for this type/bitw
+comment|///< ABI alignment for this type/bitw
 name|unsigned
 name|PrefAlign
 decl_stmt|;
-comment|//< Pref. alignment for this type/bitw
+comment|///< Pref. alignment for this type/bitw
 name|uint32_t
 name|TypeBitWidth
 decl_stmt|;
-comment|//< Type bit width
+comment|///< Type bit width
 comment|/// Initializer
 specifier|static
 name|TargetAlignElem

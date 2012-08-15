@@ -85,6 +85,9 @@ name|class
 name|MCObjectWriter
 decl_stmt|;
 name|class
+name|MCRegisterInfo
+decl_stmt|;
+name|class
 name|MCSubtargetInfo
 decl_stmt|;
 name|class
@@ -112,6 +115,11 @@ specifier|const
 name|MCInstrInfo
 modifier|&
 name|MCII
+parameter_list|,
+specifier|const
+name|MCRegisterInfo
+modifier|&
+name|MRI
 parameter_list|,
 specifier|const
 name|MCSubtargetInfo

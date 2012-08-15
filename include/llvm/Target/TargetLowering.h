@@ -112,6 +112,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/CallSite.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/SelectionDAGNodes.h"
 end_include
 
@@ -210,6 +216,9 @@ name|TargetData
 decl_stmt|;
 name|class
 name|TargetRegisterClass
+decl_stmt|;
+name|class
+name|TargetLibraryInfo
 decl_stmt|;
 name|class
 name|TargetLoweringObjectFile
@@ -516,6 +525,17 @@ specifier|const
 block|{
 return|return
 name|JumpIsExpensive
+return|;
+block|}
+comment|/// isPredictableSelectExpensive - Return true if selects are only cheaper
+comment|/// than branches if the branch is unlikely to be predicted right.
+name|bool
+name|isPredictableSelectExpensive
+argument_list|()
+specifier|const
+block|{
+return|return
+name|predictableSelectIsExpensive
 return|;
 block|}
 comment|/// getSetCCResultType - Return the ValueType of the result of SETCC
@@ -1222,10 +1242,12 @@ condition|)
 return|return
 name|Expand
 return|;
-name|assert
-argument_list|(
+comment|// If a target-specific SDNode requires legalization, require the target
+comment|// to provide custom legalization for it.
+if|if
+condition|(
 name|Op
-operator|<
+operator|>
 name|array_lengthof
 argument_list|(
 name|OpActions
@@ -1233,10 +1255,10 @@ index|[
 literal|0
 index|]
 argument_list|)
-operator|&&
-literal|"Table isn't big enough!"
-argument_list|)
-expr_stmt|;
+condition|)
+return|return
+name|Custom
+return|;
 name|unsigned
 name|I
 init|=
@@ -2671,6 +2693,17 @@ return|return
 name|UseUnderscoreLongJmp
 return|;
 block|}
+comment|/// supportJumpTables - return whether the target can generate code for
+comment|/// jump tables.
+name|bool
+name|supportJumpTables
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SupportJumpTables
+return|;
+block|}
 comment|/// getStackPointerRegisterToSaveRestore - If a physical register, this
 comment|/// specifies the register that llvm.savestack/llvm.restorestack should save
 comment|/// and restore.
@@ -3609,6 +3642,20 @@ operator|=
 name|Val
 expr_stmt|;
 block|}
+comment|/// setSupportJumpTables - Indicate whether the target can generate code for
+comment|/// jump tables.
+name|void
+name|setSupportJumpTables
+parameter_list|(
+name|bool
+name|Val
+parameter_list|)
+block|{
+name|SupportJumpTables
+operator|=
+name|Val
+expr_stmt|;
+block|}
 comment|/// setStackPointerRegisterToSaveRestore - If set to a physical register, this
 comment|/// specifies the register that llvm.savestack/llvm.restorestack should save
 comment|/// and restore.
@@ -4372,7 +4419,7 @@ operator|=
 name|fold
 expr_stmt|;
 block|}
-comment|/// setInsertFencesForAtomic - Set if the the DAG builder should
+comment|/// setInsertFencesForAtomic - Set if the DAG builder should
 comment|/// automatically insert fences and reduce the order of atomic memory
 comment|/// operations to Monotonic.
 name|void
@@ -4446,11 +4493,6 @@ literal|"Not Implemented"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// LowerCallTo - This function lowers an abstract call to a function into an
-comment|/// actual call.  This returns a pair of operands.  The first element is the
-comment|/// return value for the function (if RetTy is not VoidTy).  The second
-comment|/// element is the outgoing token chain. It calls LowerCall to do the actual
-comment|/// lowering.
 struct|struct
 name|ArgListEntry
 block|{
@@ -4543,6 +4585,380 @@ name|ArgListEntry
 operator|>
 name|ArgListTy
 expr_stmt|;
+comment|/// CallLoweringInfo - This structure contains all information that is
+comment|/// necessary for lowering calls. It is passed to TLI::LowerCallTo when the
+comment|/// SelectionDAG builder needs to lower a call, and targets will see this
+comment|/// struct in their LowerCall implementation.
+struct|struct
+name|CallLoweringInfo
+block|{
+name|SDValue
+name|Chain
+decl_stmt|;
+name|Type
+modifier|*
+name|RetTy
+decl_stmt|;
+name|bool
+name|RetSExt
+range|:
+literal|1
+decl_stmt|;
+name|bool
+name|RetZExt
+range|:
+literal|1
+decl_stmt|;
+name|bool
+name|IsVarArg
+range|:
+literal|1
+decl_stmt|;
+name|bool
+name|IsInReg
+range|:
+literal|1
+decl_stmt|;
+name|bool
+name|DoesNotReturn
+range|:
+literal|1
+decl_stmt|;
+name|bool
+name|IsReturnValueUsed
+range|:
+literal|1
+decl_stmt|;
+comment|// IsTailCall should be modified by implementations of
+comment|// TargetLowering::LowerCall that perform tail call conversions.
+name|bool
+name|IsTailCall
+decl_stmt|;
+name|unsigned
+name|NumFixedArgs
+decl_stmt|;
+name|CallingConv
+operator|::
+name|ID
+name|CallConv
+expr_stmt|;
+name|SDValue
+name|Callee
+decl_stmt|;
+name|ArgListTy
+modifier|&
+name|Args
+decl_stmt|;
+name|SelectionDAG
+modifier|&
+name|DAG
+decl_stmt|;
+name|DebugLoc
+name|DL
+decl_stmt|;
+name|ImmutableCallSite
+modifier|*
+name|CS
+decl_stmt|;
+name|SmallVector
+operator|<
+name|ISD
+operator|::
+name|OutputArg
+operator|,
+literal|32
+operator|>
+name|Outs
+expr_stmt|;
+name|SmallVector
+operator|<
+name|SDValue
+operator|,
+literal|32
+operator|>
+name|OutVals
+expr_stmt|;
+name|SmallVector
+operator|<
+name|ISD
+operator|::
+name|InputArg
+operator|,
+literal|32
+operator|>
+name|Ins
+expr_stmt|;
+comment|/// CallLoweringInfo - Constructs a call lowering context based on the
+comment|/// ImmutableCallSite \p cs.
+name|CallLoweringInfo
+argument_list|(
+argument|SDValue chain
+argument_list|,
+argument|Type *retTy
+argument_list|,
+argument|FunctionType *FTy
+argument_list|,
+argument|bool isTailCall
+argument_list|,
+argument|SDValue callee
+argument_list|,
+argument|ArgListTy&args
+argument_list|,
+argument|SelectionDAG&dag
+argument_list|,
+argument|DebugLoc dl
+argument_list|,
+argument|ImmutableCallSite&cs
+argument_list|)
+block|:
+name|Chain
+argument_list|(
+name|chain
+argument_list|)
+operator|,
+name|RetTy
+argument_list|(
+name|retTy
+argument_list|)
+operator|,
+name|RetSExt
+argument_list|(
+name|cs
+operator|.
+name|paramHasAttr
+argument_list|(
+literal|0
+argument_list|,
+name|Attribute
+operator|::
+name|SExt
+argument_list|)
+argument_list|)
+operator|,
+name|RetZExt
+argument_list|(
+name|cs
+operator|.
+name|paramHasAttr
+argument_list|(
+literal|0
+argument_list|,
+name|Attribute
+operator|::
+name|ZExt
+argument_list|)
+argument_list|)
+operator|,
+name|IsVarArg
+argument_list|(
+name|FTy
+operator|->
+name|isVarArg
+argument_list|()
+argument_list|)
+operator|,
+name|IsInReg
+argument_list|(
+name|cs
+operator|.
+name|paramHasAttr
+argument_list|(
+literal|0
+argument_list|,
+name|Attribute
+operator|::
+name|InReg
+argument_list|)
+argument_list|)
+operator|,
+name|DoesNotReturn
+argument_list|(
+name|cs
+operator|.
+name|doesNotReturn
+argument_list|()
+argument_list|)
+operator|,
+name|IsReturnValueUsed
+argument_list|(
+operator|!
+name|cs
+operator|.
+name|getInstruction
+argument_list|()
+operator|->
+name|use_empty
+argument_list|()
+argument_list|)
+operator|,
+name|IsTailCall
+argument_list|(
+name|isTailCall
+argument_list|)
+operator|,
+name|NumFixedArgs
+argument_list|(
+name|FTy
+operator|->
+name|getNumParams
+argument_list|()
+argument_list|)
+operator|,
+name|CallConv
+argument_list|(
+name|cs
+operator|.
+name|getCallingConv
+argument_list|()
+argument_list|)
+operator|,
+name|Callee
+argument_list|(
+name|callee
+argument_list|)
+operator|,
+name|Args
+argument_list|(
+name|args
+argument_list|)
+operator|,
+name|DAG
+argument_list|(
+name|dag
+argument_list|)
+operator|,
+name|DL
+argument_list|(
+name|dl
+argument_list|)
+operator|,
+name|CS
+argument_list|(
+argument|&cs
+argument_list|)
+block|{}
+comment|/// CallLoweringInfo - Constructs a call lowering context based on the
+comment|/// provided call information.
+name|CallLoweringInfo
+argument_list|(
+argument|SDValue chain
+argument_list|,
+argument|Type *retTy
+argument_list|,
+argument|bool retSExt
+argument_list|,
+argument|bool retZExt
+argument_list|,
+argument|bool isVarArg
+argument_list|,
+argument|bool isInReg
+argument_list|,
+argument|unsigned numFixedArgs
+argument_list|,
+argument|CallingConv::ID callConv
+argument_list|,
+argument|bool isTailCall
+argument_list|,
+argument|bool doesNotReturn
+argument_list|,
+argument|bool isReturnValueUsed
+argument_list|,
+argument|SDValue callee
+argument_list|,
+argument|ArgListTy&args
+argument_list|,
+argument|SelectionDAG&dag
+argument_list|,
+argument|DebugLoc dl
+argument_list|)
+operator|:
+name|Chain
+argument_list|(
+name|chain
+argument_list|)
+operator|,
+name|RetTy
+argument_list|(
+name|retTy
+argument_list|)
+operator|,
+name|RetSExt
+argument_list|(
+name|retSExt
+argument_list|)
+operator|,
+name|RetZExt
+argument_list|(
+name|retZExt
+argument_list|)
+operator|,
+name|IsVarArg
+argument_list|(
+name|isVarArg
+argument_list|)
+operator|,
+name|IsInReg
+argument_list|(
+name|isInReg
+argument_list|)
+operator|,
+name|DoesNotReturn
+argument_list|(
+name|doesNotReturn
+argument_list|)
+operator|,
+name|IsReturnValueUsed
+argument_list|(
+name|isReturnValueUsed
+argument_list|)
+operator|,
+name|IsTailCall
+argument_list|(
+name|isTailCall
+argument_list|)
+operator|,
+name|NumFixedArgs
+argument_list|(
+name|numFixedArgs
+argument_list|)
+operator|,
+name|CallConv
+argument_list|(
+name|callConv
+argument_list|)
+operator|,
+name|Callee
+argument_list|(
+name|callee
+argument_list|)
+operator|,
+name|Args
+argument_list|(
+name|args
+argument_list|)
+operator|,
+name|DAG
+argument_list|(
+name|dag
+argument_list|)
+operator|,
+name|DL
+argument_list|(
+name|dl
+argument_list|)
+operator|,
+name|CS
+argument_list|(
+argument|NULL
+argument_list|)
+block|{}
+block|}
+struct|;
+comment|/// LowerCallTo - This function lowers an abstract call to a function into an
+comment|/// actual call.  This returns a pair of operands.  The first element is the
+comment|/// return value for the function (if RetTy is not VoidTy).  The second
+comment|/// element is the outgoing token chain. It calls LowerCall to do the actual
+comment|/// lowering.
 name|std
 operator|::
 name|pair
@@ -4553,35 +4969,7 @@ name|SDValue
 operator|>
 name|LowerCallTo
 argument_list|(
-argument|SDValue Chain
-argument_list|,
-argument|Type *RetTy
-argument_list|,
-argument|bool RetSExt
-argument_list|,
-argument|bool RetZExt
-argument_list|,
-argument|bool isVarArg
-argument_list|,
-argument|bool isInreg
-argument_list|,
-argument|unsigned NumFixedArgs
-argument_list|,
-argument|CallingConv::ID CallConv
-argument_list|,
-argument|bool isTailCall
-argument_list|,
-argument|bool doesNotRet
-argument_list|,
-argument|bool isReturnValueUsed
-argument_list|,
-argument|SDValue Callee
-argument_list|,
-argument|ArgListTy&Args
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|,
-argument|DebugLoc dl
+argument|CallLoweringInfo&CLI
 argument_list|)
 specifier|const
 expr_stmt|;
@@ -4595,61 +4983,9 @@ name|virtual
 name|SDValue
 name|LowerCall
 argument_list|(
-name|SDValue
-comment|/*Chain*/
-argument_list|,
-name|SDValue
-comment|/*Callee*/
-argument_list|,
-name|CallingConv
-operator|::
-name|ID
-comment|/*CallConv*/
-argument_list|,
-name|bool
-comment|/*isVarArg*/
-argument_list|,
-name|bool
-comment|/*doesNotRet*/
-argument_list|,
-name|bool
+name|CallLoweringInfo
 operator|&
-comment|/*isTailCall*/
-argument_list|,
-specifier|const
-name|SmallVectorImpl
-operator|<
-name|ISD
-operator|::
-name|OutputArg
-operator|>
-operator|&
-comment|/*Outs*/
-argument_list|,
-specifier|const
-name|SmallVectorImpl
-operator|<
-name|SDValue
-operator|>
-operator|&
-comment|/*OutVals*/
-argument_list|,
-specifier|const
-name|SmallVectorImpl
-operator|<
-name|ISD
-operator|::
-name|InputArg
-operator|>
-operator|&
-comment|/*Ins*/
-argument_list|,
-name|DebugLoc
-comment|/*dl*/
-argument_list|,
-name|SelectionDAG
-operator|&
-comment|/*DAG*/
+comment|/*CLI*/
 argument_list|,
 name|SmallVectorImpl
 operator|<
@@ -4969,6 +5305,10 @@ name|createFastISel
 argument_list|(
 name|FunctionLoweringInfo
 operator|&
+argument_list|,
+specifier|const
+name|TargetLibraryInfo
+operator|*
 argument_list|)
 decl|const
 block|{
@@ -5654,6 +5994,22 @@ return|return
 name|false
 return|;
 block|}
+comment|/// isFMAFasterThanMulAndAdd - Return true if an FMA operation is faster than
+comment|/// a pair of mul and add instructions. fmuladd intrinsics will be expanded to
+comment|/// FMAs when this method returns true (and FMAs are legal), otherwise fmuladd
+comment|/// is expanded to mul + add.
+name|virtual
+name|bool
+name|isFMAFasterThanMulAndAdd
+argument_list|(
+name|EVT
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// isNarrowingProfitable - Return true if it's profitable to narrow
 comment|/// operations of type VT1 to VT2. e.g. on x86, it's profitable to narrow
 comment|/// from i32 to i8 but not from i32 to i16.
@@ -5895,14 +6251,6 @@ name|TargetLoweringObjectFile
 modifier|&
 name|TLOF
 decl_stmt|;
-comment|/// We are in the process of implementing a new TypeLegalization action
-comment|/// which is the promotion of vector elements. This feature is under
-comment|/// development. Until this feature is complete, it is only enabled using a
-comment|/// flag. We pass this flag using a member because of circular dep issues.
-comment|/// This member will be removed with the flag once we complete the transition.
-name|bool
-name|mayPromoteElements
-decl_stmt|;
 comment|/// PointerTy - The type to use for pointers, usually i32 or i64.
 comment|///
 name|MVT
@@ -5946,6 +6294,11 @@ comment|/// UseUnderscoreLongJmp - This target prefers to use _longjmp to implem
 comment|/// llvm.longjmp.  Defaults to false.
 name|bool
 name|UseUnderscoreLongJmp
+decl_stmt|;
+comment|/// SupportJumpTables - Whether the target can generate code for jumptables.
+comment|/// If it's not true, then each jumptable must be lowered into if-then-else's.
+name|bool
+name|SupportJumpTables
 decl_stmt|;
 comment|/// BooleanContents - Information about the contents of the high-bits in
 comment|/// boolean values held in a type wider than i1.  See getBooleanContents.
@@ -6441,12 +6794,9 @@ argument_list|,
 name|EltVT
 argument_list|)
 return|;
-comment|// If we allow the promotion of vector elements using a flag,
-comment|// then try to widen vector elements until a legal type is found.
+comment|// Try to widen vector elements until a legal type is found.
 if|if
 condition|(
-name|mayPromoteElements
-operator|&&
 name|EltVT
 operator|.
 name|isInteger
@@ -6924,24 +7274,17 @@ comment|/// optimization.
 name|bool
 name|benefitFromCodePlacementOpt
 decl_stmt|;
+comment|/// predictableSelectIsExpensive - Tells the code generator that select is
+comment|/// more expensive than a branch if the branch is usually predicted right.
+name|bool
+name|predictableSelectIsExpensive
+decl_stmt|;
 name|private
 label|:
 comment|/// isLegalRC - Return true if the value types that can be represented by the
 comment|/// specified register class are all legal.
 name|bool
 name|isLegalRC
-argument_list|(
-specifier|const
-name|TargetRegisterClass
-operator|*
-name|RC
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// hasLegalSuperRegRegClasses - Return true if the specified register class
-comment|/// has one or more super-reg register classes that are legal.
-name|bool
-name|hasLegalSuperRegRegClasses
 argument_list|(
 specifier|const
 name|TargetRegisterClass
@@ -6978,15 +7321,6 @@ specifier|const
 name|TargetLowering
 operator|&
 name|TLI
-argument_list|,
-name|SmallVectorImpl
-operator|<
-name|uint64_t
-operator|>
-operator|*
-name|Offsets
-operator|=
-literal|0
 argument_list|)
 decl_stmt|;
 block|}

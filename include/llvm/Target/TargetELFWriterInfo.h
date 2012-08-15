@@ -156,7 +156,12 @@ comment|// SPARC V9
 name|EM_X86_64
 init|=
 literal|62
+block|,
 comment|// AMD64
+name|EM_HEXAGON
+init|=
+literal|164
+comment|// Qualcomm Hexagon
 block|}
 enum|;
 comment|// ELF File classes

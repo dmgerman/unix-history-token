@@ -1001,9 +1001,11 @@ name|ResultOperand
 block|{
 name|private
 label|:
-name|StringRef
+name|std
+operator|::
+name|string
 name|Name
-decl_stmt|;
+expr_stmt|;
 name|Record
 modifier|*
 name|R
@@ -1025,7 +1027,7 @@ name|Kind
 enum|;
 name|ResultOperand
 argument_list|(
-argument|StringRef N
+argument|std::string N
 argument_list|,
 argument|Record *r
 argument_list|)

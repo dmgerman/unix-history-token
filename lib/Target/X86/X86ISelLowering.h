@@ -244,10 +244,6 @@ comment|/// WrapperRIP - Special wrapper used under X86-64 PIC mode for RIP
 comment|/// relative displacements.
 name|WrapperRIP
 block|,
-comment|/// MOVQ2DQ - Copies a 64-bit value from an MMX vector to the low word
-comment|/// of an XMM vector, with the high word zero filled.
-name|MOVQ2DQ
-block|,
 comment|/// MOVDQ2Q - Copies a 64-bit value from the low word of an XMM vector
 comment|/// to an MMX vector.  If you think this is too close to the previous
 comment|/// mnemonic, so do I; blame Intel.
@@ -322,6 +318,10 @@ block|,
 comment|// TLSADDR - Thread Local Storage.
 name|TLSADDR
 block|,
+comment|// TLSBASEADDR - Thread Local Storage. A call to get the start address
+comment|// of the TLS block for the current module.
+name|TLSBASEADDR
+block|,
 comment|// TLSCALL - Thread Local Storage.  When calling to an OS provided
 comment|// thunk at the address from an earlier relocation.
 name|TLSCALL
@@ -368,11 +368,6 @@ comment|// PCMP* - Vector integer comparisons.
 name|PCMPEQ
 block|,
 name|PCMPGT
-block|,
-comment|// VPCOM, VPCOMU - XOP Vector integer comparisons.
-name|VPCOM
-block|,
-name|VPCOMU
 block|,
 comment|// ADD, SUB, SMUL, etc. - Arithmetic operations with FLAGS results.
 name|ADD
@@ -467,6 +462,19 @@ block|,
 comment|// PMULUDQ - Vector multiply packed unsigned doubleword integers
 name|PMULUDQ
 block|,
+comment|// FMA nodes
+name|FMADD
+block|,
+name|FNMADD
+block|,
+name|FMSUB
+block|,
+name|FNMSUB
+block|,
+name|FMADDSUB
+block|,
+name|FMSUBADD
+block|,
 comment|// VASTART_SAVE_XMM_REGS - Save xmm argument registers to the stack,
 comment|// according to %al. An operator is needed so that this can be expanded
 comment|// with control flow.
@@ -491,6 +499,20 @@ block|,
 name|SFENCE
 block|,
 name|LFENCE
+block|,
+comment|// FNSTSW16r - Store FP status word into i16 register.
+name|FNSTSW16r
+block|,
+comment|// SAHF - Store contents of %ah into %eflags.
+name|SAHF
+block|,
+comment|// RDRAND - Get a random integer and indicate whether it is valid in CF.
+name|RDRAND
+block|,
+comment|// PCMP*STRI
+name|PCMPISTRI
+block|,
+name|PCMPESTRI
 block|,
 comment|// ATOMADD64_DAG, ATOMSUB64_DAG, ATOMOR64_DAG, ATOMAND64_DAG,
 comment|// ATOMXOR64_DAG, ATOMNAND64_DAG, ATOMSWAP64_DAG -
@@ -1048,6 +1070,30 @@ argument|Type *Ty
 argument_list|)
 specifier|const
 block|;
+comment|/// isLegalICmpImmediate - Return true if the specified immediate is legal
+comment|/// icmp immediate, that is the target has icmp instructions which can
+comment|/// compare a register against the immediate without having to materialize
+comment|/// the immediate into a register.
+name|virtual
+name|bool
+name|isLegalICmpImmediate
+argument_list|(
+argument|int64_t Imm
+argument_list|)
+specifier|const
+block|;
+comment|/// isLegalAddImmediate - Return true if the specified immediate is legal
+comment|/// add immediate, that is the target has add instructions which can
+comment|/// add a register and the immediate without having to materialize
+comment|/// the immediate into a register.
+name|virtual
+name|bool
+name|isLegalAddImmediate
+argument_list|(
+argument|int64_t Imm
+argument_list|)
+specifier|const
+block|;
 comment|/// isTruncateFree - Return true if it's free to truncate a value of
 comment|/// type Ty1 to type Ty2. e.g. On x86 it's free to truncate a i32 value in
 comment|/// register EAX to i16 by referencing its sub-register AX.
@@ -1099,6 +1145,22 @@ argument|EVT VT2
 argument_list|)
 specifier|const
 block|;
+comment|/// isFMAFasterThanMulAndAdd - Return true if an FMA operation is faster than
+comment|/// a pair of mul and add instructions. fmuladd intrinsics will be expanded to
+comment|/// FMAs when this method returns true (and FMAs are legal), otherwise fmuladd
+comment|/// is expanded to mul + add.
+name|virtual
+name|bool
+name|isFMAFasterThanMulAndAdd
+argument_list|(
+argument|EVT
+argument_list|)
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
 comment|/// isNarrowingProfitable - Return true if it's profitable to narrow
 comment|/// operations of type VT1 to VT2. e.g. on x86, it's profitable to narrow
 comment|/// from i32 to i8 but not from i32 to i16.
@@ -1270,6 +1332,8 @@ operator|*
 name|createFastISel
 argument_list|(
 argument|FunctionLoweringInfo&funcInfo
+argument_list|,
+argument|const TargetLibraryInfo *libInfo
 argument_list|)
 specifier|const
 block|;
@@ -1904,6 +1968,15 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
+name|LowerINTRINSIC_W_CHAIN
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
 name|LowerRETURNADDR
 argument_list|(
 argument|SDValue Op
@@ -2155,27 +2228,7 @@ name|virtual
 name|SDValue
 name|LowerCall
 argument_list|(
-argument|SDValue Chain
-argument_list|,
-argument|SDValue Callee
-argument_list|,
-argument|CallingConv::ID CallConv
-argument_list|,
-argument|bool isVarArg
-argument_list|,
-argument|bool doesNotRet
-argument_list|,
-argument|bool&isTailCall
-argument_list|,
-argument|const SmallVectorImpl<ISD::OutputArg>&Outs
-argument_list|,
-argument|const SmallVectorImpl<SDValue>&OutVals
-argument_list|,
-argument|const SmallVectorImpl<ISD::InputArg>&Ins
-argument_list|,
-argument|DebugLoc dl
-argument_list|,
-argument|SelectionDAG&DAG
+argument|CallLoweringInfo&CLI
 argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
@@ -2467,6 +2520,16 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
+block|;
+comment|/// Convert a comparison if required by the subtarget.
+name|SDValue
+name|ConvertCmpIfNecessary
+argument_list|(
+argument|SDValue Cmp
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
 block|;   }
 decl_stmt|;
 name|namespace
@@ -2479,6 +2542,11 @@ parameter_list|(
 name|FunctionLoweringInfo
 modifier|&
 name|funcInfo
+parameter_list|,
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|libInfo
 parameter_list|)
 function_decl|;
 block|}

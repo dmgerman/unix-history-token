@@ -63,16 +63,18 @@ directive|define
 name|LLVM_SUPPORT_DEBUGLOC_H
 end_define
 
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/DenseMapInfo.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+expr|struct
+name|DenseMapInfo
+expr_stmt|;
 name|class
 name|MDNode
 decl_stmt|;
@@ -365,12 +367,26 @@ specifier|static
 name|DebugLoc
 name|getEmptyKey
 argument_list|()
-block|;
+block|{
+return|return
+name|DebugLoc
+operator|::
+name|getEmptyKey
+argument_list|()
+return|;
+block|}
 specifier|static
 name|DebugLoc
 name|getTombstoneKey
 argument_list|()
-block|;
+block|{
+return|return
+name|DebugLoc
+operator|::
+name|getTombstoneKey
+argument_list|()
+return|;
+block|}
 specifier|static
 name|unsigned
 name|getHashValue
@@ -385,19 +401,19 @@ specifier|static
 name|bool
 name|isEqual
 argument_list|(
-specifier|const
-name|DebugLoc
-operator|&
-name|LHS
+argument|DebugLoc LHS
 argument_list|,
-specifier|const
-name|DebugLoc
-operator|&
-name|RHS
+argument|DebugLoc RHS
 argument_list|)
-block|;   }
-expr_stmt|;
+block|{
+return|return
+name|LHS
+operator|==
+name|RHS
+return|;
 block|}
+expr|}
+block|; }
 end_decl_stmt
 
 begin_comment
