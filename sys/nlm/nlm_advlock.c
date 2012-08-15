@@ -526,6 +526,7 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
+comment|/* pid_max cannot be greater then PID_MAX */
 name|nlm_svid_allocator
 operator|=
 name|new_unrhdr
