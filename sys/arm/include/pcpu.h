@@ -24,6 +24,12 @@ end_ifdef
 begin_include
 include|#
 directive|include
+file|<machine/cpuconf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/frame.h>
 end_include
 
@@ -49,11 +55,35 @@ begin_comment
 comment|/* _KERNEL */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ARM_VFP_SUPPORT
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|PCPU_MD_FIELDS
+define|\
+value|unsigned int pc_cpu;						\ 	unsigned int pc_vfpsid;						\ 	unsigned int pc_vfpmvfr0;					\ 	unsigned int pc_vfpmvfr1;					\ 	struct thread *pc_vfpcthread;					\ 	struct pmap *pc_curpmap;
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|PCPU_MD_FIELDS
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -82,13 +112,112 @@ name|pcpup
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
+begin_if
+if|#
+directive|if
+name|ARM_ARCH_6
+operator|||
+name|ARM_ARCH_7A
+end_if
+
+begin_comment
+comment|/* or ARM_TP_ADDRESS 	mark REMOVE ME NOTE */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
 name|struct
 name|pcpu
-name|__pcpu
+modifier|*
+name|get_pcpu
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|void
+modifier|*
+name|pcpu
 decl_stmt|;
-end_decl_stmt
+asm|__asm __volatile("mrc p15, 0, %0, c13, c0, 4" : "=r" (pcpu));
+return|return
+operator|(
+name|pcpu
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|set_pcpu
+parameter_list|(
+name|void
+modifier|*
+name|pcpu
+parameter_list|)
+block|{
+asm|__asm __volatile("mcr p15, 0, %0, c13, c0, 4" : : "r" (pcpu));
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+modifier|*
+name|get_tls
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|void
+modifier|*
+name|tls
+decl_stmt|;
+asm|__asm __volatile("mrc p15, 0, %0, c13, c0, 3" : "=r" (tls));
+return|return
+operator|(
+name|tls
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|set_tls
+parameter_list|(
+name|void
+modifier|*
+name|tls
+parameter_list|)
+block|{
+asm|__asm __volatile("mcr p15, 0, %0, c13, c0, 3" : : "r" (tls));
+block|}
+end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|get_pcpu
+parameter_list|()
+value|pcpup
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -97,12 +226,8 @@ name|PCPU_GET
 parameter_list|(
 name|member
 parameter_list|)
-value|(__pcpu.pc_ ## member)
+value|(get_pcpu()->pc_ ## member)
 end_define
-
-begin_comment
-comment|/*  * XXX The implementation of this operation should be made atomic  * with respect to preemption.  */
-end_comment
 
 begin_define
 define|#
@@ -113,7 +238,7 @@ name|member
 parameter_list|,
 name|value
 parameter_list|)
-value|(__pcpu.pc_ ## member += (value))
+value|(get_pcpu()->pc_ ## member += (value))
 end_define
 
 begin_define
@@ -133,7 +258,7 @@ name|PCPU_PTR
 parameter_list|(
 name|member
 parameter_list|)
-value|(&__pcpu.pc_ ## member)
+value|(&pcpup->pc_ ## member)
 end_define
 
 begin_define
@@ -145,8 +270,17 @@ name|member
 parameter_list|,
 name|value
 parameter_list|)
-value|(__pcpu.pc_ ## member = (value))
+value|(pcpup->pc_ ## member = (value))
 end_define
+
+begin_function_decl
+name|void
+name|pcpu0_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

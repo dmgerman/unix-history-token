@@ -31,7 +31,7 @@ begin_define
 define|#
 directive|define
 name|CPU_NTYPES
-value|(defined(CPU_ARM7TDMI) +			\ 			 defined(CPU_ARM8) + defined(CPU_ARM9) +	\ 			 defined(CPU_ARM9E) +				\ 			 defined(CPU_ARM10) +				\ 			 defined(CPU_ARM11) +				\ 			 defined(CPU_SA110) + defined(CPU_SA1100) +	\ 			 defined(CPU_SA1110) +				\ 			 defined(CPU_IXP12X0) +				\ 			 defined(CPU_XSCALE_80200) +			\ 			 defined(CPU_XSCALE_80321) +			\ 			 defined(CPU_XSCALE_PXA2X0) +			\ 			 defined(CPU_FA526) +				\ 			 defined(CPU_FA626TE) +				\ 			 defined(CPU_XSCALE_IXP425))
+value|(defined(CPU_ARM7TDMI) +			\ 			 defined(CPU_ARM8) + defined(CPU_ARM9) +	\ 			 defined(CPU_ARM9E) +				\ 			 defined(CPU_ARM10) +				\ 			 defined(CPU_ARM11) +				\ 			 defined(CPU_SA110) + defined(CPU_SA1100) +	\ 			 defined(CPU_SA1110) +				\ 			 defined(CPU_IXP12X0) +				\ 			 defined(CPU_XSCALE_80200) +			\ 			 defined(CPU_XSCALE_80321) +			\ 			 defined(CPU_XSCALE_PXA2X0) +			\ 			 defined(CPU_FA526) +				\ 			 defined(CPU_FA626TE) +				\ 			 defined(CPU_XSCALE_IXP425)) +			\ 			 defined(CPU_CORTEXA) +				\ 			 defined(CPU_MV_PJ4B)
 end_define
 
 begin_comment
@@ -192,9 +192,24 @@ end_endif
 begin_if
 if|#
 directive|if
+operator|!
+name|defined
+argument_list|(
+name|ARM_ARCH_6
+argument_list|)
+end_if
+
+begin_if
+if|#
+directive|if
 name|defined
 argument_list|(
 name|CPU_ARM11
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_MV_PJ4B
 argument_list|)
 end_if
 
@@ -222,11 +237,49 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CPU_CORTEXA
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ARM_ARCH_7A
+value|1
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ARM_ARCH_7A
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
 name|ARM_NARCH
-value|(ARM_ARCH_4 + ARM_ARCH_5 + ARM_ARCH_6)
+value|(ARM_ARCH_4 + ARM_ARCH_5 + ARM_ARCH_6 | ARM_ARCH_7A)
 end_define
 
 begin_if
@@ -265,6 +318,8 @@ directive|if
 name|ARM_ARCH_5
 operator|||
 name|ARM_ARCH_6
+operator|||
+name|ARM_ARCH_7A
 end_if
 
 begin_comment
@@ -283,7 +338,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Step 3: Define which MMU classes are configured:  *  *	ARM_MMU_MEMC		Prehistoric, external memory controller  *				and MMU for ARMv2 CPUs.  *  *	ARM_MMU_GENERIC		Generic ARM MMU, compatible with ARM6.  *  *	ARM_MMU_SA1		StrongARM SA-1 MMU.  Compatible with generic  *				ARM MMU, but has no write-through cache mode.  *  *	ARM_MMU_XSCALE		XScale MMU.  Compatible with generic ARM  *				MMU, but also has several extensions which  *				require different PTE layout to use.  */
+comment|/*  * Step 3: Define which MMU classes are configured:  *  *	ARM_MMU_MEMC		Prehistoric, external memory controller  *				and MMU for ARMv2 CPUs.  *  *	ARM_MMU_GENERIC		Generic ARM MMU, compatible with ARM6.  *  *	ARM_MMU_V6		ARMv6 MMU.  *  *	ARM_MMU_V7		ARMv7 MMU.  *  *	ARM_MMU_SA1		StrongARM SA-1 MMU.  Compatible with generic  *				ARM MMU, but has no write-through cache mode.  *  *	ARM_MMU_XSCALE		XScale MMU.  Compatible with generic ARM  *				MMU, but also has several extensions which  *				require different PTE layout to use.  */
 end_comment
 
 begin_if
@@ -374,11 +429,6 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|CPU_ARM11
-argument_list|)
-operator|||
-name|defined
-argument_list|(
 name|CPU_FA526
 argument_list|)
 operator|||
@@ -406,6 +456,77 @@ begin_define
 define|#
 directive|define
 name|ARM_MMU_GENERIC
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CPU_ARM11
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_MV_PJ4B
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ARM_MMU_V6
+value|1
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ARM_MMU_V6
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CPU_CORTEXA
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ARM_MMU_V7
+value|1
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ARM_MMU_V7
 value|0
 end_define
 
@@ -531,7 +652,7 @@ begin_define
 define|#
 directive|define
 name|ARM_NMMUS
-value|(ARM_MMU_MEMC + ARM_MMU_GENERIC +	\ 				 ARM_MMU_SA1 + ARM_MMU_XSCALE)
+value|(ARM_MMU_MEMC + ARM_MMU_GENERIC + ARM_MMU_V6 + \ 				 ARM_MMU_V7 + ARM_MMU_SA1 + ARM_MMU_XSCALE)
 end_define
 
 begin_if
