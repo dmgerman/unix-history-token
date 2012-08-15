@@ -1626,7 +1626,7 @@ comment|/* NB: for proper padding */
 name|uint8_t
 name|rateCodeToIndex
 index|[
-literal|144
+literal|256
 index|]
 decl_stmt|;
 comment|/* back mapping */
@@ -1671,7 +1671,7 @@ comment|/* short preamble ACK duration*/
 block|}
 name|info
 index|[
-literal|32
+literal|64
 index|]
 struct|;
 block|}
@@ -1690,7 +1690,7 @@ comment|/* number of valid entries */
 name|uint8_t
 name|rs_rates
 index|[
-literal|32
+literal|64
 index|]
 decl_stmt|;
 comment|/* rates */
