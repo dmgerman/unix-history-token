@@ -919,6 +919,7 @@ goto|goto
 name|out
 goto|;
 comment|/* Nothing more to do */
+comment|/* 		 * If d_partition< 0 and we are looking at a BSD slice, 		 * then try to read BSD label, otherwise return the 		 * whole MBR slice. 		 */
 if|if
 condition|(
 name|dev
@@ -927,28 +928,16 @@ name|d_partition
 operator|==
 operator|-
 literal|1
-condition|)
-block|{
-comment|/* 			 * If we are looking at a BSD slice, and the 			 * partition is< 0, assume the 'a' partition. 			 */
-if|if
-condition|(
+operator|&&
 name|part
 operator|.
 name|type
-operator|==
+operator|!=
 name|PART_FREEBSD
 condition|)
-name|dev
-operator|->
-name|d_partition
-operator|=
-literal|0
-expr_stmt|;
-else|else
 goto|goto
 name|out
 goto|;
-block|}
 comment|/* Try to read BSD label */
 name|table
 operator|=
@@ -992,6 +981,35 @@ expr_stmt|;
 goto|goto
 name|out
 goto|;
+block|}
+comment|/* 		 * If slice contains BSD label and d_partition< 0, then 		 * assume the 'a' partition. Otherwise just return the 		 * whole MBR slice, because it can contain ZFS. 		 */
+if|if
+condition|(
+name|dev
+operator|->
+name|d_partition
+operator|<
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|ptable_gettype
+argument_list|(
+name|table
+argument_list|)
+operator|!=
+name|PTABLE_BSD
+condition|)
+goto|goto
+name|out
+goto|;
+name|dev
+operator|->
+name|d_partition
+operator|=
+literal|0
+expr_stmt|;
 block|}
 name|rc
 operator|=
