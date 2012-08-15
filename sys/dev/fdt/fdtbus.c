@@ -1353,8 +1353,6 @@ operator|&
 name|di
 operator|->
 name|di_res
-argument_list|,
-name|fdt_immr_va
 argument_list|)
 condition|)
 block|{
