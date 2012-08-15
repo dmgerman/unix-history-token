@@ -1086,6 +1086,7 @@ argument_list|(
 literal|26
 argument_list|)
 block|}
+block|,
 comment|/* 130Mb/s */
 comment|/* 3 stream rates */
 block|{
