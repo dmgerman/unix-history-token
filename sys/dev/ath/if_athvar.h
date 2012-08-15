@@ -583,6 +583,10 @@ name|uint16_t
 name|bf_flags
 decl_stmt|;
 comment|/* status flags (below) */
+name|uint16_t
+name|bf_descid
+decl_stmt|;
+comment|/* 16 bit descriptor ID */
 name|struct
 name|ath_desc
 modifier|*
@@ -2181,6 +2185,9 @@ name|ath_descdma
 name|sc_txdma
 decl_stmt|;
 comment|/* TX descriptors */
+name|uint16_t
+name|sc_txbuf_descid
+decl_stmt|;
 name|ath_bufhead
 name|sc_txbuf
 decl_stmt|;
