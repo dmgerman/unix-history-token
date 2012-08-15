@@ -333,7 +333,7 @@ comment|// expected-warning{{incompatible pointer to integer conversion initiali
 literal|5.8
 block|}
 decl_stmt|;
-comment|// expected-warning {{implicit conversion turns literal floating-point number into integer}}
+comment|// expected-warning {{implicit conversion from 'double' to 'long' changes value from 5.8 to 5}}
 block|}
 end_function
 

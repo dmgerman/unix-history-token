@@ -12,6 +12,10 @@ comment|// RUN: %clang_cc1 -ast-merge %t.1.ast -ast-merge %t.2.ast -fsyntax-only
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -ast-merge %t.1.ast -ast-merge %t.2.ast -fsyntax-only -verify %s
+end_comment
+
+begin_comment
 comment|// CHECK: function2.c:3:6: error: external function 'f1' declared with incompatible types in different translation units ('void (Int, double)' vs. 'void (int, float)')
 end_comment
 
@@ -29,6 +33,22 @@ end_comment
 
 begin_comment
 comment|// CHECK: 2 errors generated
+end_comment
+
+begin_comment
+comment|// expected-error@3 {{external function 'f1' declared with incompatible types}}
+end_comment
+
+begin_comment
+comment|// expected-note@2 {{declared here}}
+end_comment
+
+begin_comment
+comment|// expected-error@5 {{external function 'f3' declared with incompatible types}}
+end_comment
+
+begin_comment
+comment|// expected-note@4 {{declared here}}
 end_comment
 
 end_unit

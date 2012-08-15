@@ -271,5 +271,159 @@ begin_comment
 comment|// CHECK-NO: declare x86_fp80 @llvm.fma.f80(x86_fp80, x86_fp80, x86_fp80) nounwind readnone
 end_comment
 
+begin_comment
+comment|// Just checking to make sure these library functions are marked readnone
+end_comment
+
+begin_function
+name|void
+name|test_builtins
+parameter_list|(
+name|double
+name|d
+parameter_list|,
+name|float
+name|f
+parameter_list|,
+name|long
+name|double
+name|ld
+parameter_list|)
+block|{
+comment|// CHEC-NO: @test_builtins
+comment|// CHEC-YES: @test_builtins
+name|double
+name|atan_
+init|=
+name|atan
+argument_list|(
+name|d
+argument_list|)
+decl_stmt|;
+name|long
+name|double
+name|atanl_
+init|=
+name|atanl
+argument_list|(
+name|ld
+argument_list|)
+decl_stmt|;
+name|float
+name|atanf_
+init|=
+name|atanf
+argument_list|(
+name|f
+argument_list|)
+decl_stmt|;
+comment|// CHECK-NO: declare double @atan(double) nounwind readnone
+comment|// CHECK-NO: declare x86_fp80 @atanl(x86_fp80) nounwind readnone
+comment|// CHECK-NO: declare float @atanf(float) nounwind readnone
+comment|// CHECK-YES-NOT: declare double @atan(double) nounwind readnone
+comment|// CHECK-YES-NOT: declare x86_fp80 @atanl(x86_fp80) nounwind readnone
+comment|// CHECK-YES-NOT: declare float @atanf(float) nounwind readnone
+name|double
+name|atan2_
+init|=
+name|atan2
+argument_list|(
+name|d
+argument_list|,
+literal|2
+argument_list|)
+decl_stmt|;
+name|long
+name|double
+name|atan2l_
+init|=
+name|atan2l
+argument_list|(
+name|ld
+argument_list|,
+name|ld
+argument_list|)
+decl_stmt|;
+name|float
+name|atan2f_
+init|=
+name|atan2f
+argument_list|(
+name|f
+argument_list|,
+name|f
+argument_list|)
+decl_stmt|;
+comment|// CHECK-NO: declare double @atan2(double, double) nounwind readnone
+comment|// CHECK-NO: declare x86_fp80 @atan2l(x86_fp80, x86_fp80) nounwind readnone
+comment|// CHECK-NO: declare float @atan2f(float, float) nounwind readnone
+comment|// CHECK-YES-NOT: declare double @atan2(double, double) nounwind readnone
+comment|// CHECK-YES-NOT: declare x86_fp80 @atan2l(x86_fp80, x86_fp80) nounwind readnone
+comment|// CHECK-YES-NOT: declare float @atan2f(float, float) nounwind readnone
+name|double
+name|exp_
+init|=
+name|exp
+argument_list|(
+name|d
+argument_list|)
+decl_stmt|;
+name|long
+name|double
+name|expl_
+init|=
+name|expl
+argument_list|(
+name|ld
+argument_list|)
+decl_stmt|;
+name|float
+name|expf_
+init|=
+name|expf
+argument_list|(
+name|f
+argument_list|)
+decl_stmt|;
+comment|// CHECK-NO: declare double @exp(double) nounwind readnone
+comment|// CHECK-NO: declare x86_fp80 @expl(x86_fp80) nounwind readnone
+comment|// CHECK-NO: declare float @expf(float) nounwind readnone
+comment|// CHECK-YES-NOT: declare double @exp(double) nounwind readnone
+comment|// CHECK-YES-NOT: declare x86_fp80 @expl(x86_fp80) nounwind readnone
+comment|// CHECK-YES-NOT: declare float @expf(float) nounwind readnone
+name|double
+name|log_
+init|=
+name|log
+argument_list|(
+name|d
+argument_list|)
+decl_stmt|;
+name|long
+name|double
+name|logl_
+init|=
+name|logl
+argument_list|(
+name|ld
+argument_list|)
+decl_stmt|;
+name|float
+name|logf_
+init|=
+name|logf
+argument_list|(
+name|f
+argument_list|)
+decl_stmt|;
+comment|// CHECK-NO: declare double @log(double) nounwind readnone
+comment|// CHECK-NO: declare x86_fp80 @logl(x86_fp80) nounwind readnone
+comment|// CHECK-NO: declare float @logf(float) nounwind readnone
+comment|// CHECK-YES-NOT: declare double @log(double) nounwind readnone
+comment|// CHECK-YES-NOT: declare x86_fp80 @logl(x86_fp80) nounwind readnone
+comment|// CHECK-YES-NOT: declare float @logf(float) nounwind readnone
+block|}
+end_function
+
 end_unit
 

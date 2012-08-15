@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -emit-llvm -o - %s
+comment|// RUN: %clang_cc1 -emit-llvm -o - %s | FileCheck %s
 end_comment
 
 begin_comment
@@ -34,6 +34,34 @@ name|pa
 operator|)
 argument_list|,
 name|gdouble
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function_decl
+name|void
+name|vararg
+parameter_list|(
+name|int
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|function_as_vararg
+parameter_list|()
+block|{
+comment|// CHECK: define {{.*}}function_as_vararg
+comment|// CHECK-NOT: llvm.trap
+name|vararg
+argument_list|(
+literal|0
+argument_list|,
+name|focus_changed_cb
 argument_list|)
 expr_stmt|;
 block|}

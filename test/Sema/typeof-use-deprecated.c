@@ -22,7 +22,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|// expected-warning {{'s' is deprecated}}
+comment|// expected-warning {{'s' is deprecated}} expected-note 2 {{'s' declared here}}
 end_comment
 
 begin_macro
@@ -60,7 +60,7 @@ union|;
 end_union
 
 begin_comment
-comment|// expected-warning {{'un' is deprecated}}
+comment|// expected-warning {{'un' is deprecated}} expected-note 2 {{'un' declared here}}
 end_comment
 
 begin_macro
@@ -96,7 +96,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|// expected-warning {{'E' is deprecated}}
+comment|// expected-warning {{'E' is deprecated}} expected-note 2 {{'E' declared here}}
 end_comment
 
 begin_macro
@@ -132,6 +132,10 @@ argument_list|)
 struct|;
 end_struct
 
+begin_comment
+comment|// expected-note {{'foo' declared here}}
+end_comment
+
 begin_typedef
 typedef|typedef
 name|struct
@@ -142,6 +146,10 @@ typedef|((
 name|deprecated
 typedef|));
 end_typedef
+
+begin_comment
+comment|// expected-note {{'bar' declared here}}
+end_comment
 
 begin_decl_stmt
 name|bar
@@ -192,6 +200,10 @@ typedef|((
 name|deprecated
 typedef|));
 end_typedef
+
+begin_comment
+comment|// expected-note {{'T' declared here}}
+end_comment
 
 begin_decl_stmt
 name|T

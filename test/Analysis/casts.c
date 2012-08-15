@@ -379,5 +379,35 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|// PR12511 and radar://11215362 - Test that we support SymCastExpr, which represents symbolic int to float cast.
+end_comment
+
+begin_function
+name|char
+name|ttt
+parameter_list|(
+name|int
+name|intSeconds
+parameter_list|)
+block|{
+name|double
+name|seconds
+init|=
+name|intSeconds
+decl_stmt|;
+if|if
+condition|(
+name|seconds
+condition|)
+return|return
+literal|0
+return|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
 end_unit
 

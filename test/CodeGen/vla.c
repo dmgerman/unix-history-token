@@ -519,5 +519,136 @@ return|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// rdar://11485774
+end_comment
+
+begin_function
+name|void
+name|test5
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+comment|// CHECK: define void @test5(
+name|int
+name|a
+index|[
+literal|5
+index|]
+decl_stmt|,
+name|i
+init|=
+literal|0
+decl_stmt|;
+comment|// CHECK: [[A:%.*]] = alloca [5 x i32], align 4
+comment|// CHECK-NEXT: [[I:%.*]] = alloca i32, align 4
+comment|// CHECK-NEXT: [[CL:%.*]] = alloca i32*, align 4
+comment|// CHECK-NEXT: store i32 0, i32* [[I]], align 4
+operator|(
+name|typeof
+argument_list|(
+operator|++
+name|i
+argument_list|,
+operator|(
+name|int
+argument_list|(
+operator|*
+argument_list|)
+index|[
+name|i
+index|]
+operator|)
+name|a
+argument_list|)
+operator|)
+block|{
+operator|&
+name|a
+block|}
+operator|+=
+literal|0
+expr_stmt|;
+comment|// CHECK-NEXT: [[Z:%.*]] = load i32* [[I]], align 4
+comment|// CHECK-NEXT: [[INC:%.*]]  = add nsw i32 [[Z]], 1
+comment|// CHECK-NEXT: store i32 [[INC]], i32* [[I]], align 4
+comment|// CHECK-NEXT: [[O:%.*]] = load i32* [[I]], align 4
+comment|// CHECK-NEXT: [[AR:%.*]] = getelementptr inbounds [5 x i32]* [[A]], i32 0, i32 0
+comment|// CHECK-NEXT: [[T:%.*]] = bitcast [5 x i32]* [[A]] to i32*
+comment|// CHECK-NEXT: store i32* [[T]], i32** [[CL]]
+comment|// CHECK-NEXT: [[TH:%.*]] = load i32** [[CL]]
+comment|// CHECK-NEXT: [[VLAIX:%.*]] = mul nsw i32 0, [[O]]
+comment|// CHECK-NEXT: [[ADDPTR:%.*]] = getelementptr inbounds i32* [[TH]], i32 [[VLAIX]]
+comment|// CHECK-NEXT: store i32* [[ADDPTR]], i32** [[CL]]
+block|}
+end_function
+
+begin_function
+name|void
+name|test6
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+comment|// CHECK: define void @test6(
+name|int
+name|n
+init|=
+literal|20
+decl_stmt|,
+modifier|*
+modifier|*
+name|a
+decl_stmt|,
+name|i
+init|=
+literal|0
+decl_stmt|;
+comment|// CHECK: [[N:%.*]] = alloca i32, align 4
+comment|// CHECK-NEXT: [[A:%.*]] = alloca i32**, align 4
+comment|// CHECK-NEXT: [[I:%.*]] = alloca i32, align 4
+operator|(
+name|int
+argument_list|(
+operator|*
+operator|*
+argument_list|)
+index|[
+name|i
+index|]
+operator|)
+block|{
+operator|&
+name|a
+block|}
+index|[
+literal|0
+index|]
+index|[
+literal|1
+index|]
+index|[
+literal|5
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|// CHECK-NEXT: [[CL:%.*]] = alloca i32**, align 4
+comment|// CHECK-NEXT: store i32 20, i32* [[N]], align 4
+comment|// CHECK-NEXT: store i32 0, i32* [[I]], align 4
+comment|// CHECK-NEXT: [[Z:%.*]] = load i32* [[I]], align 4
+comment|// CHECK-NEXT: [[O:%.*]] = bitcast i32*** [[A]] to i32**
+comment|// CHECK-NEXT: store i32** [[O]], i32*** [[CL]]
+comment|// CHECK-NEXT: [[T:%.*]] = load i32*** [[CL]]
+comment|// CHECK-NEXT: [[IX:%.*]] = getelementptr inbounds i32** [[T]], i32 0
+comment|// CHECK-NEXT: [[TH:%.*]] = load i32** [[IX]], align 4
+comment|// CHECK-NEXT: [[F:%.*]] = mul nsw i32 1, [[Z]]
+comment|// CHECK-NEXT: [[IX1:%.*]] = getelementptr inbounds i32* [[TH]], i32 [[F]]
+comment|// CHECK-NEXT: [[IX2:%.*]] = getelementptr inbounds i32* [[IX1]], i32 5
+comment|// CHECK-NEXT: store i32 0, i32* [[IX2]], align 4
+block|}
+end_function
+
 end_unit
 

@@ -840,7 +840,7 @@ block|}
 end_function
 
 begin_comment
-comment|// PR6501
+comment|// PR6501& PR11857
 end_comment
 
 begin_function_decl
@@ -855,6 +855,71 @@ end_function_decl
 
 begin_comment
 comment|// expected-note 2 {{'test18_a' declared here}}
+end_comment
+
+begin_function_decl
+name|void
+name|test18_b
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|// expected-note {{'test18_b' declared here}}
+end_comment
+
+begin_function_decl
+name|void
+name|test18_c
+parameter_list|(
+name|int
+name|a
+parameter_list|,
+name|int
+name|b
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|// expected-note 2 {{'test18_c' declared here}}
+end_comment
+
+begin_function_decl
+name|void
+name|test18_d
+parameter_list|(
+name|int
+name|a
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|// expected-note {{'test18_d' declared here}}
+end_comment
+
+begin_function_decl
+name|void
+name|test18_e
+parameter_list|(
+name|int
+name|a
+parameter_list|,
+name|int
+name|b
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|// expected-note {{'test18_e' declared here}}
 end_comment
 
 begin_function
@@ -872,11 +937,39 @@ argument_list|,
 name|b
 argument_list|)
 expr_stmt|;
-comment|// expected-error {{too many arguments to function call, expected 1, have 2}}
+comment|// expected-error {{too many arguments to function call, expected single argument 'a', have 2}}
 name|test18_a
 argument_list|()
 expr_stmt|;
+comment|// expected-error {{too few arguments to function call, single argument 'a' was not specified}}
+name|test18_b
+argument_list|()
+expr_stmt|;
 comment|// expected-error {{too few arguments to function call, expected 1, have 0}}
+name|test18_c
+argument_list|(
+name|b
+argument_list|)
+expr_stmt|;
+comment|// expected-error {{too few arguments to function call, expected 2, have 1}}
+name|test18_c
+argument_list|(
+name|b
+argument_list|,
+name|b
+argument_list|,
+name|b
+argument_list|)
+expr_stmt|;
+comment|// expected-error {{too many arguments to function call, expected 2, have 3}}
+name|test18_d
+argument_list|()
+expr_stmt|;
+comment|// expected-error {{too few arguments to function call, at least argument 'a' must be specified}}
+name|test18_e
+argument_list|()
+expr_stmt|;
+comment|// expected-error {{too few arguments to function call, expected at least 2, have 0}}
 block|}
 end_function
 

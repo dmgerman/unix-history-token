@@ -687,6 +687,50 @@ begin_comment
 comment|// expected-error {{cannot use 'long long' with '__vector bool'}}
 end_comment
 
+begin_typedef
+typedef|typedef
+name|char
+name|i8
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|short
+name|i16
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+name|i32
+typedef|;
+end_typedef
+
+begin_struct
+struct|struct
+name|S
+block|{
+comment|// i8, i16, i32 here are field names, not type names.
+name|vector
+name|bool
+name|i8
+decl_stmt|;
+comment|// expected-error {{requires a specifier or qualifier}}
+name|vector
+name|pixel
+name|i16
+decl_stmt|;
+name|vector
+name|long
+name|i32
+decl_stmt|;
+comment|// expected-warning {{deprecated}}
+block|}
+struct|;
+end_struct
+
 begin_function
 name|void
 name|f

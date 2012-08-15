@@ -200,6 +200,18 @@ comment|// COMMON:#define __GXX_ABI_VERSION
 end_comment
 
 begin_comment
+comment|// COMMON:#define __ORDER_BIG_ENDIAN__ 4321
+end_comment
+
+begin_comment
+comment|// COMMON:#define __ORDER_LITTLE_ENDIAN__ 1234
+end_comment
+
+begin_comment
+comment|// COMMON:#define __ORDER_PDP_ENDIAN__ 3412
+end_comment
+
+begin_comment
 comment|// COMMON:#define __STDC_HOSTED__ 1
 end_comment
 
@@ -260,6 +272,42 @@ comment|//
 end_comment
 
 begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -x c++ -std=gnu++11 -E -dM< /dev/null | FileCheck -check-prefix GXX11 %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// GXX11:#define __GNUG__
+end_comment
+
+begin_comment
+comment|// GXX11:#define __GXX_WEAK__ 1
+end_comment
+
+begin_comment
+comment|// GXX11:#define __cplusplus 201103L
+end_comment
+
+begin_comment
+comment|// GXX11:#define __private_extern__ extern
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cc1 -x c++ -std=gnu++98 -E -dM< /dev/null | FileCheck -check-prefix GXX98 %s
 end_comment
 
@@ -276,7 +324,7 @@ comment|// GXX98:#define __GXX_WEAK__ 1
 end_comment
 
 begin_comment
-comment|// GXX98:#define __cplusplus 1
+comment|// GXX98:#define __cplusplus 199711L
 end_comment
 
 begin_comment
@@ -312,7 +360,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fms-extensions -triple i686-pc-win32 -fobjc-fragile-abi -E -dM< /dev/null | FileCheck -check-prefix MSEXT %s
+comment|// RUN: %clang_cc1 -fms-extensions -triple i686-pc-win32 -fobjc-runtime=gcc -E -dM< /dev/null | FileCheck -check-prefix MSEXT %s
 end_comment
 
 begin_comment
@@ -408,6 +456,62 @@ comment|//
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -O0 -E -dM< /dev/null | FileCheck -check-prefix O0 %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// O0:#define __NO_INLINE__ 1
+end_comment
+
+begin_comment
+comment|// O0-NOT:#define __OPTIMIZE_SIZE__
+end_comment
+
+begin_comment
+comment|// O0-NOT:#define __OPTIMIZE__
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -fno-inline -O3 -E -dM< /dev/null | FileCheck -check-prefix NO_INLINE %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// NO_INLINE:#define __NO_INLINE__ 1
+end_comment
+
+begin_comment
+comment|// NO_INLINE-NOT:#define __OPTIMIZE_SIZE__
+end_comment
+
+begin_comment
+comment|// NO_INLINE:#define __OPTIMIZE__
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cc1 -O1 -E -dM< /dev/null | FileCheck -check-prefix O1 %s
 end_comment
 
@@ -416,7 +520,59 @@ comment|//
 end_comment
 
 begin_comment
+comment|// O1-NOT:#define __OPTIMIZE_SIZE__
+end_comment
+
+begin_comment
 comment|// O1:#define __OPTIMIZE__ 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -Os -E -dM< /dev/null | FileCheck -check-prefix Os %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Os:#define __OPTIMIZE_SIZE__ 1
+end_comment
+
+begin_comment
+comment|// Os:#define __OPTIMIZE__ 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -Oz -E -dM< /dev/null | FileCheck -check-prefix Oz %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Oz:#define __OPTIMIZE_SIZE__ 1
+end_comment
+
+begin_comment
+comment|// Oz:#define __OPTIMIZE__ 1
 end_comment
 
 begin_comment
@@ -508,6 +664,10 @@ comment|//
 end_comment
 
 begin_comment
+comment|// ARM-NOT:#define _LP64
+end_comment
+
+begin_comment
 comment|// ARM:#define __APCS_32__ 1
 end_comment
 
@@ -517,6 +677,10 @@ end_comment
 
 begin_comment
 comment|// ARM:#define __ARM_ARCH_6J__ 1
+end_comment
+
+begin_comment
+comment|// ARM:#define __BYTE_ORDER__ __ORDER_LITTLE_ENDIAN__
 end_comment
 
 begin_comment
@@ -756,7 +920,7 @@ comment|// ARM:#define __LONG_MAX__ 2147483647L
 end_comment
 
 begin_comment
-comment|// ARM:#define __NO_INLINE__ 1
+comment|// ARM-NOT:#define __LP64__
 end_comment
 
 begin_comment
@@ -893,6 +1057,14 @@ end_comment
 
 begin_comment
 comment|//
+end_comment
+
+begin_comment
+comment|// I386-NOT:#define _LP64
+end_comment
+
+begin_comment
+comment|// I386:#define __BYTE_ORDER__ __ORDER_LITTLE_ENDIAN__
 end_comment
 
 begin_comment
@@ -1132,7 +1304,7 @@ comment|// I386:#define __LONG_MAX__ 2147483647L
 end_comment
 
 begin_comment
-comment|// I386:#define __NO_INLINE__ 1
+comment|// I386-NOT:#define __LP64__
 end_comment
 
 begin_comment
@@ -1273,6 +1445,14 @@ end_comment
 
 begin_comment
 comment|//
+end_comment
+
+begin_comment
+comment|// I386-LINUX-NOT:#define _LP64
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __BYTE_ORDER__ __ORDER_LITTLE_ENDIAN__
 end_comment
 
 begin_comment
@@ -1512,7 +1692,7 @@ comment|// I386-LINUX:#define __LONG_MAX__ 2147483647L
 end_comment
 
 begin_comment
-comment|// I386-LINUX:#define __NO_INLINE__ 1
+comment|// I386-LINUX-NOT:#define __LP64__
 end_comment
 
 begin_comment
@@ -1664,6 +1844,10 @@ comment|// MIPS32BE:#define _ABIO32 1
 end_comment
 
 begin_comment
+comment|// MIPS32BE-NOT:#define _LP64
+end_comment
+
+begin_comment
 comment|// MIPS32BE:#define _MIPSEB 1
 end_comment
 
@@ -1681,6 +1865,10 @@ end_comment
 
 begin_comment
 comment|// MIPS32BE:#define _MIPS_SZPTR 32
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __BYTE_ORDER__ __ORDER_BIG_ENDIAN__
 end_comment
 
 begin_comment
@@ -1920,15 +2108,15 @@ comment|// MIPS32BE:#define __LONG_MAX__ 2147483647L
 end_comment
 
 begin_comment
+comment|// MIPS32BE-NOT:#define __LP64__
+end_comment
+
+begin_comment
 comment|// MIPS32BE:#define __MIPSEB 1
 end_comment
 
 begin_comment
 comment|// MIPS32BE:#define __MIPSEB__ 1
-end_comment
-
-begin_comment
-comment|// MIPS32BE:#define __NO_INLINE__ 1
 end_comment
 
 begin_comment
@@ -2112,6 +2300,10 @@ comment|// MIPS32EL:#define _ABIO32 1
 end_comment
 
 begin_comment
+comment|// MIPS32EL-NOT:#define _LP64
+end_comment
+
+begin_comment
 comment|// MIPS32EL:#define _MIPSEL 1
 end_comment
 
@@ -2129,6 +2321,10 @@ end_comment
 
 begin_comment
 comment|// MIPS32EL:#define _MIPS_SZPTR 32
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __BYTE_ORDER__ __ORDER_LITTLE_ENDIAN__
 end_comment
 
 begin_comment
@@ -2368,15 +2564,15 @@ comment|// MIPS32EL:#define __LONG_MAX__ 2147483647L
 end_comment
 
 begin_comment
+comment|// MIPS32EL-NOT:#define __LP64__
+end_comment
+
+begin_comment
 comment|// MIPS32EL:#define __MIPSEL 1
 end_comment
 
 begin_comment
 comment|// MIPS32EL:#define __MIPSEL__ 1
-end_comment
-
-begin_comment
-comment|// MIPS32EL:#define __NO_INLINE__ 1
 end_comment
 
 begin_comment
@@ -2548,6 +2744,10 @@ comment|// MIPS64BE:#define _ABI64 3
 end_comment
 
 begin_comment
+comment|// MIPS64BE:#define _LP64 1
+end_comment
+
+begin_comment
 comment|// MIPS64BE:#define _MIPSEB 1
 end_comment
 
@@ -2565,6 +2765,10 @@ end_comment
 
 begin_comment
 comment|// MIPS64BE:#define _MIPS_SZPTR 64
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __BYTE_ORDER__ __ORDER_BIG_ENDIAN__
 end_comment
 
 begin_comment
@@ -2804,15 +3008,15 @@ comment|// MIPS64BE:#define __LONG_MAX__ 9223372036854775807L
 end_comment
 
 begin_comment
+comment|// MIPS64BE:#define __LP64__ 1
+end_comment
+
+begin_comment
 comment|// MIPS64BE:#define __MIPSEB 1
 end_comment
 
 begin_comment
 comment|// MIPS64BE:#define __MIPSEB__ 1
-end_comment
-
-begin_comment
-comment|// MIPS64BE:#define __NO_INLINE__ 1
 end_comment
 
 begin_comment
@@ -2984,6 +3188,10 @@ comment|// MIPS64EL:#define _ABI64 3
 end_comment
 
 begin_comment
+comment|// MIPS64EL:#define _LP64 1
+end_comment
+
+begin_comment
 comment|// MIPS64EL:#define _MIPSEL 1
 end_comment
 
@@ -3001,6 +3209,10 @@ end_comment
 
 begin_comment
 comment|// MIPS64EL:#define _MIPS_SZPTR 64
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __BYTE_ORDER__ __ORDER_LITTLE_ENDIAN__
 end_comment
 
 begin_comment
@@ -3240,15 +3452,15 @@ comment|// MIPS64EL:#define __LONG_MAX__ 9223372036854775807L
 end_comment
 
 begin_comment
+comment|// MIPS64EL:#define __LP64__ 1
+end_comment
+
+begin_comment
 comment|// MIPS64EL:#define __MIPSEL 1
 end_comment
 
 begin_comment
 comment|// MIPS64EL:#define __MIPSEL__ 1
-end_comment
-
-begin_comment
-comment|// MIPS64EL:#define __NO_INLINE__ 1
 end_comment
 
 begin_comment
@@ -3464,7 +3676,115 @@ comment|// RUN:   | FileCheck -check-prefix MIPS-FABI-SINGLE %s
 end_comment
 
 begin_comment
+comment|// MIPS-FABI-SINGLE:#define __mips_hard_float 1
+end_comment
+
+begin_comment
 comment|// MIPS-FABI-SINGLE:#define __mips_single_float 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Check MIPS features macros
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -target-feature +mips16 \
+end_comment
+
+begin_comment
+comment|// RUN:   -E -dM -triple=mips-none-none< /dev/null \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix MIPS16 %s
+end_comment
+
+begin_comment
+comment|// MIPS16:#define __mips16 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -target-feature -mips16 \
+end_comment
+
+begin_comment
+comment|// RUN:   -E -dM -triple=mips-none-none< /dev/null \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix NOMIPS16 %s
+end_comment
+
+begin_comment
+comment|// NOMIPS16-NOT:#define __mips16 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -target-feature +dsp \
+end_comment
+
+begin_comment
+comment|// RUN:   -E -dM -triple=mips-none-none< /dev/null \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix MIPS-DSP %s
+end_comment
+
+begin_comment
+comment|// MIPS-DSP:#define __mips_dsp 1
+end_comment
+
+begin_comment
+comment|// MIPS-DSP:#define __mips_dsp_rev 1
+end_comment
+
+begin_comment
+comment|// MIPS-DSP-NOT:#define __mips_dspr2 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -target-feature +dspr2 \
+end_comment
+
+begin_comment
+comment|// RUN:   -E -dM -triple=mips-none-none< /dev/null \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix MIPS-DSPR2 %s
+end_comment
+
+begin_comment
+comment|// MIPS-DSPR2:#define __mips_dsp 1
+end_comment
+
+begin_comment
+comment|// MIPS-DSPR2:#define __mips_dsp_rev 2
+end_comment
+
+begin_comment
+comment|// MIPS-DSPR2:#define __mips_dspr2 1
 end_comment
 
 begin_comment
@@ -3481,6 +3801,14 @@ end_comment
 
 begin_comment
 comment|// MSP430:#define MSP430 1
+end_comment
+
+begin_comment
+comment|// MSP430-NOT:#define _LP64
+end_comment
+
+begin_comment
+comment|// MSP430:#define __BYTE_ORDER__ __ORDER_LITTLE_ENDIAN__
 end_comment
 
 begin_comment
@@ -3712,11 +4040,11 @@ comment|// MSP430:#define __LONG_MAX__ 2147483647L
 end_comment
 
 begin_comment
-comment|// MSP430:#define __MSP430__ 1
+comment|// MSP430-NOT:#define __LP64__
 end_comment
 
 begin_comment
-comment|// MSP430:#define __NO_INLINE__ 1
+comment|// MSP430:#define __MSP430__ 1
 end_comment
 
 begin_comment
@@ -3836,7 +4164,1187 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=powerpc64-none-none -fno-signed-char< /dev/null | FileCheck -check-prefix PPC64 %s
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=nvptx-none-none< /dev/null | FileCheck -check-prefix NVPTX32 %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// NVPTX32-NOT:#define _LP64
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __BYTE_ORDER__ __ORDER_LITTLE_ENDIAN__
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __CHAR16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __CHAR32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __CHAR_BIT__ 8
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __CONSTANT_CFSTRINGS__ 1
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __DBL_DENORM_MIN__ 4.9406564584124654e-324
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __DBL_DIG__ 15
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __DBL_EPSILON__ 2.2204460492503131e-16
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __DBL_HAS_DENORM__ 1
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __DBL_HAS_INFINITY__ 1
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __DBL_HAS_QUIET_NAN__ 1
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __DBL_MANT_DIG__ 53
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __DBL_MAX_10_EXP__ 308
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __DBL_MAX_EXP__ 1024
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __DBL_MAX__ 1.7976931348623157e+308
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __DBL_MIN_10_EXP__ (-307)
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __DBL_MIN_EXP__ (-1021)
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __DBL_MIN__ 2.2250738585072014e-308
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __DECIMAL_DIG__ 17
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __FINITE_MATH_ONLY__ 0
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __FLT_DENORM_MIN__ 1.40129846e-45F
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __FLT_DIG__ 6
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __FLT_EPSILON__ 1.19209290e-7F
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __FLT_EVAL_METHOD__ 0
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __FLT_HAS_DENORM__ 1
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __FLT_HAS_INFINITY__ 1
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __FLT_HAS_QUIET_NAN__ 1
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __FLT_MANT_DIG__ 24
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __FLT_MAX_10_EXP__ 38
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __FLT_MAX_EXP__ 128
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __FLT_MAX__ 3.40282347e+38F
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __FLT_MIN_10_EXP__ (-37)
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __FLT_MIN_EXP__ (-125)
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __FLT_MIN__ 1.17549435e-38F
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __FLT_RADIX__ 2
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INT16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INT32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INT64_C_SUFFIX__ LL
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INT64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INT8_TYPE__ char
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INTMAX_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INTMAX_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INTMAX_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INTPTR_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INTPTR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INT_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __LDBL_DENORM_MIN__ 4.9406564584124654e-324
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __LDBL_DIG__ 15
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __LDBL_EPSILON__ 2.2204460492503131e-16
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __LDBL_HAS_DENORM__ 1
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __LDBL_HAS_INFINITY__ 1
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __LDBL_HAS_QUIET_NAN__ 1
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __LDBL_MANT_DIG__ 53
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __LDBL_MAX_10_EXP__ 308
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __LDBL_MAX_EXP__ 1024
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __LDBL_MAX__ 1.7976931348623157e+308
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __LDBL_MIN_10_EXP__ (-307)
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __LDBL_MIN_EXP__ (-1021)
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __LDBL_MIN__ 2.2250738585072014e-308
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __LONG_LONG_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __LONG_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
+comment|// NVPTX32-NOT:#define __LP64__
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __NVPTX__ 1
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __POINTER_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __PRAGMA_REDEFINE_EXTNAME 1
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __PTRDIFF_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __PTRDIFF_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __PTX__ 1
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __SCHAR_MAX__ 127
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __SHRT_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __SIG_ATOMIC_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __SIZEOF_DOUBLE__ 8
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __SIZEOF_FLOAT__ 4
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __SIZEOF_INT__ 4
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __SIZEOF_LONG_DOUBLE__ 8
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __SIZEOF_LONG_LONG__ 8
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __SIZEOF_LONG__ 8
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __SIZEOF_POINTER__ 4
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __SIZEOF_PTRDIFF_T__ 4
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __SIZEOF_SHORT__ 2
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __SIZEOF_SIZE_T__ 4
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __SIZEOF_WCHAR_T__ 4
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __SIZEOF_WINT_T__ 4
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __SIZE_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __SIZE_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __UINTMAX_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __USER_LABEL_PREFIX__ _
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __WCHAR_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __WCHAR_TYPE__ int
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __WCHAR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __WINT_TYPE__ int
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __WINT_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=nvptx64-none-none< /dev/null | FileCheck -check-prefix NVPTX64 %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define _LP64 1
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __BYTE_ORDER__ __ORDER_LITTLE_ENDIAN__
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __CHAR16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __CHAR32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __CHAR_BIT__ 8
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __CONSTANT_CFSTRINGS__ 1
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __DBL_DENORM_MIN__ 4.9406564584124654e-324
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __DBL_DIG__ 15
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __DBL_EPSILON__ 2.2204460492503131e-16
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __DBL_HAS_DENORM__ 1
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __DBL_HAS_INFINITY__ 1
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __DBL_HAS_QUIET_NAN__ 1
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __DBL_MANT_DIG__ 53
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __DBL_MAX_10_EXP__ 308
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __DBL_MAX_EXP__ 1024
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __DBL_MAX__ 1.7976931348623157e+308
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __DBL_MIN_10_EXP__ (-307)
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __DBL_MIN_EXP__ (-1021)
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __DBL_MIN__ 2.2250738585072014e-308
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __DECIMAL_DIG__ 17
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __FINITE_MATH_ONLY__ 0
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __FLT_DENORM_MIN__ 1.40129846e-45F
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __FLT_DIG__ 6
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __FLT_EPSILON__ 1.19209290e-7F
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __FLT_EVAL_METHOD__ 0
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __FLT_HAS_DENORM__ 1
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __FLT_HAS_INFINITY__ 1
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __FLT_HAS_QUIET_NAN__ 1
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __FLT_MANT_DIG__ 24
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __FLT_MAX_10_EXP__ 38
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __FLT_MAX_EXP__ 128
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __FLT_MAX__ 3.40282347e+38F
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __FLT_MIN_10_EXP__ (-37)
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __FLT_MIN_EXP__ (-125)
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __FLT_MIN__ 1.17549435e-38F
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __FLT_RADIX__ 2
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INT16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INT32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INT64_C_SUFFIX__ LL
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INT64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INT8_TYPE__ char
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INTMAX_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INTMAX_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INTMAX_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INTPTR_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INTPTR_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INT_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __LDBL_DENORM_MIN__ 4.9406564584124654e-324
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __LDBL_DIG__ 15
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __LDBL_EPSILON__ 2.2204460492503131e-16
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __LDBL_HAS_DENORM__ 1
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __LDBL_HAS_INFINITY__ 1
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __LDBL_HAS_QUIET_NAN__ 1
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __LDBL_MANT_DIG__ 53
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __LDBL_MAX_10_EXP__ 308
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __LDBL_MAX_EXP__ 1024
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __LDBL_MAX__ 1.7976931348623157e+308
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __LDBL_MIN_10_EXP__ (-307)
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __LDBL_MIN_EXP__ (-1021)
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __LDBL_MIN__ 2.2250738585072014e-308
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __LONG_LONG_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __LONG_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __LP64__ 1
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __NVPTX__ 1
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __POINTER_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __PRAGMA_REDEFINE_EXTNAME 1
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __PTRDIFF_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __PTRDIFF_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __PTX__ 1
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __SCHAR_MAX__ 127
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __SHRT_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __SIG_ATOMIC_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __SIZEOF_DOUBLE__ 8
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __SIZEOF_FLOAT__ 4
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __SIZEOF_INT__ 4
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __SIZEOF_LONG_DOUBLE__ 8
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __SIZEOF_LONG_LONG__ 8
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __SIZEOF_LONG__ 8
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __SIZEOF_POINTER__ 8
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __SIZEOF_PTRDIFF_T__ 8
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __SIZEOF_SHORT__ 2
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __SIZEOF_SIZE_T__ 8
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __SIZEOF_WCHAR_T__ 4
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __SIZEOF_WINT_T__ 4
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __SIZE_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __SIZE_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __UINTMAX_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __USER_LABEL_PREFIX__ _
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __WCHAR_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __WCHAR_TYPE__ int
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __WCHAR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __WINT_TYPE__ int
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __WINT_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=powerpc-none-none -target-cpu 603e< /dev/null | FileCheck -check-prefix PPC603E %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// PPC603E:#define _ARCH_603 1
+end_comment
+
+begin_comment
+comment|// PPC603E:#define _ARCH_603E 1
+end_comment
+
+begin_comment
+comment|// PPC603E:#define _ARCH_PPC 1
+end_comment
+
+begin_comment
+comment|// PPC603E:#define _ARCH_PPCGR 1
+end_comment
+
+begin_comment
+comment|// PPC603E:#define _BIG_ENDIAN 1
+end_comment
+
+begin_comment
+comment|// PPC603E-NOT:#define _LP64
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __BIG_ENDIAN__ 1
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __BYTE_ORDER__ __ORDER_BIG_ENDIAN__
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __CHAR16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __CHAR32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __CHAR_BIT__ 8
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __DBL_DENORM_MIN__ 4.9406564584124654e-324
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __DBL_DIG__ 15
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __DBL_EPSILON__ 2.2204460492503131e-16
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __DBL_HAS_DENORM__ 1
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __DBL_HAS_INFINITY__ 1
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __DBL_HAS_QUIET_NAN__ 1
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __DBL_MANT_DIG__ 53
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __DBL_MAX_10_EXP__ 308
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __DBL_MAX_EXP__ 1024
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __DBL_MAX__ 1.7976931348623157e+308
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __DBL_MIN_10_EXP__ (-307)
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __DBL_MIN_EXP__ (-1021)
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __DBL_MIN__ 2.2250738585072014e-308
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __DECIMAL_DIG__ 33
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __FLT_DENORM_MIN__ 1.40129846e-45F
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __FLT_DIG__ 6
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __FLT_EPSILON__ 1.19209290e-7F
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __FLT_EVAL_METHOD__ 0
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __FLT_HAS_DENORM__ 1
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __FLT_HAS_INFINITY__ 1
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __FLT_HAS_QUIET_NAN__ 1
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __FLT_MANT_DIG__ 24
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __FLT_MAX_10_EXP__ 38
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __FLT_MAX_EXP__ 128
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __FLT_MAX__ 3.40282347e+38F
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __FLT_MIN_10_EXP__ (-37)
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __FLT_MIN_EXP__ (-125)
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __FLT_MIN__ 1.17549435e-38F
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __FLT_RADIX__ 2
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INT16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INT32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INT64_C_SUFFIX__ LL
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INT64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INT8_TYPE__ char
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INTMAX_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INTMAX_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INTMAX_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INTPTR_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INTPTR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INT_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __LDBL_DENORM_MIN__ 4.94065645841246544176568792868221e-324L
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __LDBL_DIG__ 31
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __LDBL_EPSILON__ 4.94065645841246544176568792868221e-324L
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __LDBL_HAS_DENORM__ 1
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __LDBL_HAS_INFINITY__ 1
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __LDBL_HAS_QUIET_NAN__ 1
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __LDBL_MANT_DIG__ 106
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __LDBL_MAX_10_EXP__ 308
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __LDBL_MAX_EXP__ 1024
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __LDBL_MAX__ 1.79769313486231580793728971405301e+308L
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __LDBL_MIN_10_EXP__ (-291)
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __LDBL_MIN_EXP__ (-968)
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __LDBL_MIN__ 2.00416836000897277799610805135016e-292L
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __LONG_DOUBLE_128__ 1
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __LONG_LONG_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __LONG_MAX__ 2147483647L
+end_comment
+
+begin_comment
+comment|// PPC603E-NOT:#define __LP64__
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __NATURAL_ALIGNMENT__ 1
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __POINTER_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __POWERPC__ 1
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __PTRDIFF_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __PTRDIFF_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __REGISTER_PREFIX__
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __SCHAR_MAX__ 127
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __SHRT_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __SIG_ATOMIC_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __SIZEOF_DOUBLE__ 8
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __SIZEOF_FLOAT__ 4
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __SIZEOF_INT__ 4
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __SIZEOF_LONG_DOUBLE__ 16
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __SIZEOF_LONG_LONG__ 8
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __SIZEOF_LONG__ 4
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __SIZEOF_POINTER__ 4
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __SIZEOF_PTRDIFF_T__ 4
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __SIZEOF_SHORT__ 2
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __SIZEOF_SIZE_T__ 4
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __SIZEOF_WCHAR_T__ 4
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __SIZEOF_WINT_T__ 4
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __SIZE_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __SIZE_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __UINTMAX_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __USER_LABEL_PREFIX__ _
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __WCHAR_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __WCHAR_TYPE__ int
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __WCHAR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __WINT_TYPE__ int
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __WINT_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __powerpc__ 1
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __ppc__ 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=powerpc64-none-none -target-cpu pwr7 -fno-signed-char< /dev/null | FileCheck -check-prefix PPC64 %s
 end_comment
 
 begin_comment
@@ -3852,6 +5360,30 @@ comment|// PPC64:#define _ARCH_PPC64 1
 end_comment
 
 begin_comment
+comment|// PPC64:#define _ARCH_PPCGR 1
+end_comment
+
+begin_comment
+comment|// PPC64:#define _ARCH_PPCSQ 1
+end_comment
+
+begin_comment
+comment|// PPC64:#define _ARCH_PWR4 1
+end_comment
+
+begin_comment
+comment|// PPC64:#define _ARCH_PWR5 1
+end_comment
+
+begin_comment
+comment|// PPC64:#define _ARCH_PWR6 1
+end_comment
+
+begin_comment
+comment|// PPC64:#define _ARCH_PWR7 1
+end_comment
+
+begin_comment
 comment|// PPC64:#define _BIG_ENDIAN 1
 end_comment
 
@@ -3861,6 +5393,10 @@ end_comment
 
 begin_comment
 comment|// PPC64:#define __BIG_ENDIAN__ 1
+end_comment
+
+begin_comment
+comment|// PPC64:#define __BYTE_ORDER__ __ORDER_BIG_ENDIAN__
 end_comment
 
 begin_comment
@@ -4112,10 +5648,6 @@ comment|// PPC64:#define __NATURAL_ALIGNMENT__ 1
 end_comment
 
 begin_comment
-comment|// PPC64:#define __NO_INLINE__ 1
-end_comment
-
-begin_comment
 comment|// PPC64:#define __POINTER_WIDTH__ 64
 end_comment
 
@@ -4269,6 +5801,10 @@ end_comment
 
 begin_comment
 comment|// PPC64-LINUX:#define __BIG_ENDIAN__ 1
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __BYTE_ORDER__ __ORDER_BIG_ENDIAN__
 end_comment
 
 begin_comment
@@ -4520,10 +6056,6 @@ comment|// PPC64-LINUX:#define __NATURAL_ALIGNMENT__ 1
 end_comment
 
 begin_comment
-comment|// PPC64-LINUX:#define __NO_INLINE__ 1
-end_comment
-
-begin_comment
 comment|// PPC64-LINUX:#define __POINTER_WIDTH__ 64
 end_comment
 
@@ -4680,7 +6212,15 @@ comment|// PPC:#define _BIG_ENDIAN 1
 end_comment
 
 begin_comment
+comment|// PPC-NOT:#define _LP64
+end_comment
+
+begin_comment
 comment|// PPC:#define __BIG_ENDIAN__ 1
+end_comment
+
+begin_comment
+comment|// PPC:#define __BYTE_ORDER__ __ORDER_BIG_ENDIAN__
 end_comment
 
 begin_comment
@@ -4924,11 +6464,11 @@ comment|// PPC:#define __LONG_MAX__ 2147483647L
 end_comment
 
 begin_comment
-comment|// PPC:#define __NATURAL_ALIGNMENT__ 1
+comment|// PPC-NOT:#define __LP64__
 end_comment
 
 begin_comment
-comment|// PPC:#define __NO_INLINE__ 1
+comment|// PPC:#define __NATURAL_ALIGNMENT__ 1
 end_comment
 
 begin_comment
@@ -5072,7 +6612,15 @@ comment|// PPC-LINUX:#define _BIG_ENDIAN 1
 end_comment
 
 begin_comment
+comment|// PPC-LINUX-NOT:#define _LP64
+end_comment
+
+begin_comment
 comment|// PPC-LINUX:#define __BIG_ENDIAN__ 1
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __BYTE_ORDER__ __ORDER_BIG_ENDIAN__
 end_comment
 
 begin_comment
@@ -5316,11 +6864,11 @@ comment|// PPC-LINUX:#define __LONG_MAX__ 2147483647L
 end_comment
 
 begin_comment
-comment|// PPC-LINUX:#define __NATURAL_ALIGNMENT__ 1
+comment|// PPC-LINUX-NOT:#define __LP64__
 end_comment
 
 begin_comment
-comment|// PPC-LINUX:#define __NO_INLINE__ 1
+comment|// PPC-LINUX:#define __NATURAL_ALIGNMENT__ 1
 end_comment
 
 begin_comment
@@ -5461,6 +7009,14 @@ end_comment
 
 begin_comment
 comment|//
+end_comment
+
+begin_comment
+comment|// SPARC-NOT:#define _LP64
+end_comment
+
+begin_comment
+comment|// SPARC:#define __BYTE_ORDER__ __ORDER_BIG_ENDIAN__
 end_comment
 
 begin_comment
@@ -5696,7 +7252,7 @@ comment|// SPARC:#define __LONG_MAX__ 2147483647L
 end_comment
 
 begin_comment
-comment|// SPARC:#define __NO_INLINE__ 1
+comment|// SPARC-NOT:#define __LP64__
 end_comment
 
 begin_comment
@@ -5841,6 +7397,14 @@ end_comment
 
 begin_comment
 comment|//
+end_comment
+
+begin_comment
+comment|// TCE-NOT:#define _LP64
+end_comment
+
+begin_comment
+comment|// TCE:#define __BYTE_ORDER__ __ORDER_BIG_ENDIAN__
 end_comment
 
 begin_comment
@@ -6068,7 +7632,7 @@ comment|// TCE:#define __LONG_MAX__ 2147483647L
 end_comment
 
 begin_comment
-comment|// TCE:#define __NO_INLINE__ 1
+comment|// TCE-NOT:#define __LP64__
 end_comment
 
 begin_comment
@@ -6213,6 +7777,10 @@ end_comment
 
 begin_comment
 comment|// X86_64:#define _LP64 1
+end_comment
+
+begin_comment
+comment|// X86_64:#define __BYTE_ORDER__ __ORDER_LITTLE_ENDIAN__
 end_comment
 
 begin_comment
@@ -6460,10 +8028,6 @@ comment|// X86_64:#define __MMX__ 1
 end_comment
 
 begin_comment
-comment|// X86_64:#define __NO_INLINE__ 1
-end_comment
-
-begin_comment
 comment|// X86_64:#define __NO_MATH_INLINES 1
 end_comment
 
@@ -6625,6 +8189,10 @@ end_comment
 
 begin_comment
 comment|// X86_64-LINUX:#define _LP64 1
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __BYTE_ORDER__ __ORDER_LITTLE_ENDIAN__
 end_comment
 
 begin_comment
@@ -6872,10 +8440,6 @@ comment|// X86_64-LINUX:#define __MMX__ 1
 end_comment
 
 begin_comment
-comment|// X86_64-LINUX:#define __NO_INLINE__ 1
-end_comment
-
-begin_comment
 comment|// X86_64-LINUX:#define __NO_MATH_INLINES 1
 end_comment
 
@@ -7028,7 +8592,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -x c++ -triple i686-pc-linux-gnu -fobjc-fragile-abi -E -dM< /dev/null | FileCheck -check-prefix GNUSOURCE %s
+comment|// RUN: %clang_cc1 -x c++ -triple i686-pc-linux-gnu -fobjc-runtime=gcc -E -dM< /dev/null | FileCheck -check-prefix GNUSOURCE %s
 end_comment
 
 begin_comment
@@ -7053,6 +8617,18 @@ end_comment
 
 begin_comment
 comment|// NORTTI: __STDC__
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -triple arm-linux-androideabi -E -dM< /dev/null | FileCheck -check-prefix ANDROID %s
+end_comment
+
+begin_comment
+comment|// ANDROID: __ANDROID__ 1
 end_comment
 
 end_unit

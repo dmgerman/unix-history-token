@@ -136,5 +136,13 @@ begin_comment
 comment|// PCH-ERR: error: PCH file contains compiler errors
 end_comment
 
+begin_comment
+comment|// RUN: c-index-test -write-pch %t.pch foobar.c 2>&1 | FileCheck -check-prefix=NONEXISTENT %s
+end_comment
+
+begin_comment
+comment|// NONEXISTENT: Unable to load translation unit
+end_comment
+
 end_unit
 

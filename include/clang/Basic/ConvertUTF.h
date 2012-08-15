@@ -114,6 +114,13 @@ name|UNI_MAX_LEGAL_UTF32
 value|(UTF32)0x0010FFFF
 end_define
 
+begin_define
+define|#
+directive|define
+name|UNI_MAX_UTF8_BYTES_PER_CODE_POINT
+value|4
+end_define
+
 begin_typedef
 typedef|typedef
 enum|enum
@@ -248,6 +255,8 @@ name|ConversionFlags
 name|flags
 parameter_list|)
 function_decl|;
+endif|#
+directive|endif
 name|ConversionResult
 name|ConvertUTF32toUTF8
 parameter_list|(
@@ -275,6 +284,9 @@ name|ConversionFlags
 name|flags
 parameter_list|)
 function_decl|;
+ifdef|#
+directive|ifdef
+name|CLANG_NEEDS_THESE_ONE_DAY
 name|ConversionResult
 name|ConvertUTF16toUTF32
 parameter_list|(
@@ -364,6 +376,58 @@ directive|ifdef
 name|__cplusplus
 block|}
 end_extern
+
+begin_comment
+comment|/*************************************************************************/
+end_comment
+
+begin_comment
+comment|/* Below are LLVM-specific wrappers of the functions above. */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_decl_stmt
+name|namespace
+name|clang
+block|{
+comment|/**  * Convert an UTF8 StringRef to UTF8, UTF16, or UTF32 depending on  * WideCharWidth. The converted data is written to ResultPtr, which needs to  * point to at least WideCharWidth * (Source.Size() + 1) bytes. On success,  * ResultPtr will point one after the end of the copied string.  * \return true on success.  */
+name|bool
+name|ConvertUTF8toWide
+argument_list|(
+name|unsigned
+name|WideCharWidth
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
+name|Source
+argument_list|,
+name|char
+operator|*
+operator|&
+name|ResultPtr
+argument_list|)
+decl_stmt|;
+comment|/**  * Convert an Unicode code point to UTF8 sequence.  *  * \param Source a Unicode code point.  * \param [in,out] ResultPtr pointer to the output buffer, needs to be at least  * \c UNI_MAX_UTF8_BYTES_PER_CODE_POINT bytes.  On success \c ResultPtr is  * updated one past end of the converted sequence.  *  * \returns true on success.  */
+name|bool
+name|ConvertCodePointToUTF8
+parameter_list|(
+name|unsigned
+name|Source
+parameter_list|,
+name|char
+modifier|*
+modifier|&
+name|ResultPtr
+parameter_list|)
+function_decl|;
+block|}
+end_decl_stmt
 
 begin_endif
 endif|#

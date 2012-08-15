@@ -666,6 +666,65 @@ name|isValid
 argument_list|()
 argument_list|)
 block|;   }
+comment|/// Create a location at an explicit offset in the source.
+comment|///
+comment|/// This should only be used if there are no more appropriate constructors.
+name|PathDiagnosticLocation
+argument_list|(
+argument|SourceLocation loc
+argument_list|,
+argument|const SourceManager&sm
+argument_list|)
+operator|:
+name|K
+argument_list|(
+name|SingleLocK
+argument_list|)
+operator|,
+name|S
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|D
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|SM
+argument_list|(
+operator|&
+name|sm
+argument_list|)
+operator|,
+name|Loc
+argument_list|(
+name|loc
+argument_list|,
+name|sm
+argument_list|)
+operator|,
+name|Range
+argument_list|(
+argument|genRange()
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|Loc
+operator|.
+name|isValid
+argument_list|()
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|Range
+operator|.
+name|isValid
+argument_list|()
+argument_list|)
+block|;   }
 comment|/// Create a location corresponding to the given declaration.
 specifier|static
 name|PathDiagnosticLocation
@@ -705,6 +764,29 @@ comment|/// Create a location for the beginning of the statement.
 specifier|static
 name|PathDiagnosticLocation
 name|createBegin
+parameter_list|(
+specifier|const
+name|Stmt
+modifier|*
+name|S
+parameter_list|,
+specifier|const
+name|SourceManager
+modifier|&
+name|SM
+parameter_list|,
+specifier|const
+name|LocationOrAnalysisDeclContext
+name|LAC
+parameter_list|)
+function_decl|;
+comment|/// Create a location for the end of the statement.
+comment|///
+comment|/// If the statement is a CompoundStatement, the location will point to the
+comment|/// closing brace instead of following it.
+specifier|static
+name|PathDiagnosticLocation
+name|createEnd
 parameter_list|(
 specifier|const
 name|Stmt
@@ -1445,19 +1527,51 @@ name|PathDiagnosticPiece
 operator|>
 expr|>
 block|{
+name|void
+name|flattenTo
+argument_list|(
+argument|PathPieces&Primary
+argument_list|,
+argument|PathPieces&Current
+argument_list|,
+argument|bool ShouldFlattenMacros
+argument_list|)
+specifier|const
+block|;
 name|public
 operator|:
 operator|~
 name|PathPieces
 argument_list|()
-block|;   }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
+name|PathPieces
+name|flatten
+argument_list|(
+argument|bool ShouldFlattenMacros
+argument_list|)
+specifier|const
+block|{
+name|PathPieces
+name|Result
+block|;
+name|flattenTo
+argument_list|(
+name|Result
+argument_list|,
+name|Result
+argument_list|,
+name|ShouldFlattenMacros
+argument_list|)
+block|;
+return|return
+name|Result
+return|;
+block|}
+expr|}
+block|;
 name|class
 name|PathDiagnosticSpotPiece
-range|:
+operator|:
 name|public
 name|PathDiagnosticPiece
 block|{
@@ -1554,38 +1668,23 @@ argument|llvm::FoldingSetNodeID&ID
 argument_list|)
 specifier|const
 block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|/// \brief Interface for classes constructing Stack hints.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// If a PathDiagnosticEvent occurs in a different frame than the final
-end_comment
-
-begin_comment
-comment|/// diagnostic the hints can be used to summarise the effect of the call.
-end_comment
-
-begin_decl_stmt
+comment|/// diagnostic the hints can be used to summarize the effect of the call.
 name|class
 name|StackHintGenerator
 block|{
 name|public
-label|:
+operator|:
 name|virtual
 operator|~
 name|StackHintGenerator
 argument_list|()
 operator|=
 literal|0
-expr_stmt|;
+block|;
 comment|/// \brief Construct the Diagnostic message for the given ExplodedNode.
 name|virtual
 name|std
@@ -1600,42 +1699,17 @@ name|N
 argument_list|)
 operator|=
 literal|0
-expr_stmt|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
+block|; }
+block|;
 comment|/// \brief Constructs a Stack hint for the given symbol.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// The class knows how to construct the stack hint message based on
-end_comment
-
-begin_comment
 comment|/// traversing the CallExpr associated with the call and checking if the given
-end_comment
-
-begin_comment
 comment|/// symbol is returned or is one of the arguments.
-end_comment
-
-begin_comment
 comment|/// The hint can be customized by redefining 'getMessageForX()' methods.
-end_comment
-
-begin_decl_stmt
 name|class
 name|StackHintGeneratorForSymbol
-range|:
+operator|:
 name|public
 name|StackHintGenerator
 block|{
@@ -1880,19 +1954,13 @@ return|return
 literal|""
 return|;
 block|}
-end_decl_stmt
-
-begin_function
 specifier|static
 specifier|inline
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|PathDiagnosticPiece
-modifier|*
-name|P
-parameter_list|)
+argument_list|(
+argument|const PathDiagnosticPiece *P
+argument_list|)
 block|{
 return|return
 name|P
@@ -1903,13 +1971,11 @@ operator|==
 name|Event
 return|;
 block|}
-end_function
-
-begin_decl_stmt
-unit|};
+expr|}
+block|;
 name|class
 name|PathDiagnosticCallPiece
-range|:
+operator|:
 name|public
 name|PathDiagnosticPiece
 block|{
@@ -2182,7 +2248,7 @@ operator|*
 name|N
 argument_list|,
 specifier|const
-name|CallExit
+name|CallExitEnd
 operator|&
 name|CE
 argument_list|,
@@ -2511,11 +2577,11 @@ argument_list|(
 argument|llvm::FoldingSetNodeID&ID
 argument_list|)
 specifier|const
+block|; }
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-unit|};
 name|class
 name|PathDiagnosticMacroPiece
 range|:
@@ -2795,6 +2861,22 @@ argument_list|()
 expr_stmt|;
 block|}
 end_function
+
+begin_expr_stmt
+name|bool
+name|isWithinCall
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|pathStack
+operator|.
+name|empty
+argument_list|()
+return|;
+block|}
+end_expr_stmt
 
 begin_comment
 comment|//  PathDiagnostic();

@@ -63,6 +63,10 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
+begin_comment
+comment|/* expected-warning{{__declspec attribute 'novtable' is not supported}} */
+end_comment
+
 begin_extern
 extern|extern __declspec(dllimport
 end_extern
@@ -136,6 +140,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* expected-warning{{__declspec attribute 'noalias' is not supported}} expected-warning{{__declspec attribute 'restrict' is not supported}} */
+end_comment
+
 begin_typedef
 typedef|typedef
 name|__w64
@@ -177,7 +185,6 @@ operator|)
 name|p
 operator|)
 return|;
-comment|// expected-warning {{unknown attribute '__ptr64' ignored}}
 block|}
 end_function
 
@@ -210,7 +217,6 @@ operator|)
 name|p
 operator|)
 return|;
-comment|// expected-warning {{unknown attribute '__ptr32' ignored}}
 block|}
 end_function
 
@@ -228,6 +234,8 @@ name|Bit
 parameter_list|)
 block|{
 asm|__asm {
+comment|//
+asm|expected-warning {{MS-style inline assembly is not supported}}
 asm|mov eax, Bit
 asm|mov ecx, Base
 asm|lock bts [ecx], eax
@@ -245,6 +253,30 @@ block|{
 return|return
 literal|99
 return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|test_ms_alignof_alias
+parameter_list|()
+block|{
+name|unsigned
+name|int
+name|s
+init|=
+name|_alignof
+argument_list|(
+name|int
+argument_list|)
+decl_stmt|;
+name|s
+operator|=
+name|__builtin_alignof
+argument_list|(
+name|int
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -372,6 +404,10 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
+begin_comment
+comment|// expected-note {{declared here}}
+end_comment
+
 begin_expr_stmt
 name|__declspec
 argument_list|(
@@ -389,6 +425,10 @@ block|}
 name|e
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|// expected-note {{declared here}}
+end_comment
 
 begin_function
 name|void
@@ -494,6 +534,160 @@ expr_stmt|;
 name|__debugbreak
 argument_list|()
 expr_stmt|;
+block|}
+end_function
+
+begin_struct
+struct|struct
+name|__declspec
+argument_list|(
+argument|frobble
+argument_list|)
+name|S1
+block|{}
+struct|;
+end_struct
+
+begin_comment
+comment|/* expected-warning {{unknown __declspec attribute 'frobble' ignored}} */
+end_comment
+
+begin_struct
+struct|struct
+name|__declspec
+argument_list|(
+literal|12
+argument_list|)
+name|S2
+block|{}
+struct|;
+end_struct
+
+begin_comment
+comment|/* expected-error {{__declspec attributes must be an identifier or string literal}} */
+end_comment
+
+begin_struct
+struct|struct
+name|__declspec
+argument_list|(
+literal|"testing"
+argument_list|)
+name|S3
+block|{}
+struct|;
+end_struct
+
+begin_comment
+comment|/* expected-warning {{__declspec attribute '"testing"' is not supported}} */
+end_comment
+
+begin_comment
+comment|/* Ensure multiple declspec attributes are supported */
+end_comment
+
+begin_struct
+struct|struct
+name|__declspec
+argument_list|(
+argument|align(
+literal|8
+argument|) deprecated
+argument_list|)
+name|S4
+block|{}
+struct|;
+end_struct
+
+begin_comment
+comment|/* But multiple declspecs must still be legal */
+end_comment
+
+begin_struct
+struct|struct
+name|__declspec
+argument_list|(
+argument|deprecated frobble
+literal|"testing"
+argument_list|)
+name|S5
+block|{}
+struct|;
+end_struct
+
+begin_comment
+comment|/* expected-warning {{unknown __declspec attribute 'frobble' ignored}} expected-warning {{__declspec attribute '"testing"' is not supported}} */
+end_comment
+
+begin_struct
+struct|struct
+name|__declspec
+argument_list|(
+argument|unknown(
+literal|12
+argument|) deprecated
+argument_list|)
+name|S6
+block|{}
+struct|;
+end_struct
+
+begin_comment
+comment|/* expected-warning {{unknown __declspec attribute 'unknown' ignored}}*/
+end_comment
+
+begin_struct
+struct|struct
+name|S7
+block|{
+name|int
+name|foo
+parameter_list|()
+block|{
+return|return
+literal|12
+return|;
+block|}
+name|__declspec
+argument_list|(
+argument|property(get=foo) deprecated
+argument_list|)
+name|int
+name|t
+decl_stmt|;
+comment|// expected-note {{declared here}}
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Technically, this is legal (though it does nothing) */
+end_comment
+
+begin_macro
+name|__declspec
+argument_list|()
+end_macro
+
+begin_function
+name|void
+name|quux
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|struct
+name|S7
+name|s
+decl_stmt|;
+name|int
+name|i
+init|=
+name|s
+operator|.
+name|t
+decl_stmt|;
+comment|/* expected-warning {{'t' is deprecated}} */
 block|}
 end_function
 

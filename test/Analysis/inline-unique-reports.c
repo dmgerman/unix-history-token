@@ -129,7 +129,7 @@ comment|// CHECK:<dict>
 end_comment
 
 begin_comment
-comment|// CHECK:<key>line</key><integer>9</integer>
+comment|// CHECK:<key>line</key><integer>14</integer>
 end_comment
 
 begin_comment
@@ -149,11 +149,11 @@ comment|// CHECK:<dict>
 end_comment
 
 begin_comment
-comment|// CHECK:<key>line</key><integer>9</integer>
+comment|// CHECK:<key>line</key><integer>14</integer>
 end_comment
 
 begin_comment
-comment|// CHECK:<key>col</key><integer>3</integer>
+comment|// CHECK:<key>col</key><integer>5</integer>
 end_comment
 
 begin_comment
@@ -181,7 +181,7 @@ comment|// CHECK:<dict>
 end_comment
 
 begin_comment
-comment|// CHECK:<key>line</key><integer>10</integer>
+comment|// CHECK:<key>line</key><integer>15</integer>
 end_comment
 
 begin_comment
@@ -201,11 +201,11 @@ comment|// CHECK:<dict>
 end_comment
 
 begin_comment
-comment|// CHECK:<key>line</key><integer>10</integer>
+comment|// CHECK:<key>line</key><integer>15</integer>
 end_comment
 
 begin_comment
-comment|// CHECK:<key>col</key><integer>3</integer>
+comment|// CHECK:<key>col</key><integer>5</integer>
 end_comment
 
 begin_comment
@@ -249,7 +249,7 @@ comment|// CHECK:<dict>
 end_comment
 
 begin_comment
-comment|// CHECK:<key>line</key><integer>10</integer>
+comment|// CHECK:<key>line</key><integer>15</integer>
 end_comment
 
 begin_comment
@@ -281,7 +281,7 @@ comment|// CHECK:<dict>
 end_comment
 
 begin_comment
-comment|// CHECK:<key>line</key><integer>10</integer>
+comment|// CHECK:<key>line</key><integer>15</integer>
 end_comment
 
 begin_comment
@@ -301,7 +301,7 @@ comment|// CHECK:<dict>
 end_comment
 
 begin_comment
-comment|// CHECK:<key>line</key><integer>10</integer>
+comment|// CHECK:<key>line</key><integer>15</integer>
 end_comment
 
 begin_comment
@@ -389,7 +389,7 @@ comment|// CHECK:<key>extended_message</key>
 end_comment
 
 begin_comment
-comment|// CHECK:<string>Entered call from&apos;test_bug_1&apos;</string>
+comment|// CHECK:<string>Entered call from&apos;test_bug_2&apos;</string>
 end_comment
 
 begin_comment
@@ -397,7 +397,7 @@ comment|// CHECK:<key>message</key>
 end_comment
 
 begin_comment
-comment|// CHECK:<string>Entered call from&apos;test_bug_1&apos;</string>
+comment|// CHECK:<string>Entered call from&apos;test_bug_2&apos;</string>
 end_comment
 
 begin_comment
@@ -461,7 +461,7 @@ comment|// CHECK:<key>line</key><integer>4</integer>
 end_comment
 
 begin_comment
-comment|// CHECK:<key>col</key><integer>1</integer>
+comment|// CHECK:<key>col</key><integer>6</integer>
 end_comment
 
 begin_comment
@@ -678,6 +678,10 @@ end_comment
 
 begin_comment
 comment|// CHECK:<key>issue_context</key><string>bug</string>
+end_comment
+
+begin_comment
+comment|// CHECK:<key>issue_hash</key><integer>1</integer>
 end_comment
 
 begin_comment

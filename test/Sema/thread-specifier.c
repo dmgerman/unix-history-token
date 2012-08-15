@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple i686-pc-linux-gnu -fsyntax-only -verify %s
+comment|// RUN: %clang_cc1 -triple i686-pc-linux-gnu -fsyntax-only -verify -pedantic %s
 end_comment
 
 begin_decl_stmt
@@ -18,6 +18,10 @@ name|t2
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|// expected-warning {{'__thread' before 'extern'}}
+end_comment
+
 begin_decl_stmt
 name|__thread
 specifier|static
@@ -25,6 +29,10 @@ name|int
 name|t3
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|// expected-warning {{'__thread' before 'static'}}
+end_comment
 
 begin_decl_stmt
 name|__thread
@@ -77,13 +85,13 @@ name|int
 name|t8
 decl_stmt|;
 comment|// expected-error {{'__thread' variables must have global storage}}
-name|__thread
 specifier|extern
+name|__thread
 name|int
 name|t9
 decl_stmt|;
-name|__thread
 specifier|static
+name|__thread
 name|int
 name|t10
 decl_stmt|;

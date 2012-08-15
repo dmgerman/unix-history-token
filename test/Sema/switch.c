@@ -50,7 +50,7 @@ comment|// expected-warning {{overflow}}
 case|case
 literal|42
 case|:
-comment|// expected-error {{duplicate case value}}
+comment|// expected-error {{duplicate case value '42'}}
 empty_stmt|;
 case|case
 literal|100
@@ -995,6 +995,99 @@ comment|// expected-warning {{case value not in enumerated type 'Ints'}}
 break|break;
 default|default:
 comment|// expected-warning {{default label in switch which covers all enumeration values}}
+break|break;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|// PR9243
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TEST19MACRO
+value|5
+end_define
+
+begin_function
+name|void
+name|test19
+parameter_list|(
+name|int
+name|i
+parameter_list|)
+block|{
+enum|enum
+block|{
+name|kTest19Enum1
+init|=
+literal|7
+block|,
+name|kTest19Enum2
+init|=
+name|kTest19Enum1
+block|}
+enum|;
+specifier|const
+name|int
+name|a
+init|=
+literal|3
+decl_stmt|;
+switch|switch
+condition|(
+name|i
+condition|)
+block|{
+case|case
+literal|5
+case|:
+comment|// expected-note {{previous case}}
+case|case
+name|TEST19MACRO
+case|:
+comment|// expected-error {{duplicate case value '5'}}
+case|case
+literal|7
+case|:
+comment|// expected-note {{previous case}}
+case|case
+name|kTest19Enum1
+case|:
+comment|// expected-error {{duplicate case value: '7' and 'kTest19Enum1' both equal '7'}} \
+comment|// expected-note {{previous case}}
+case|case
+name|kTest19Enum1
+case|:
+comment|// expected-error {{duplicate case value 'kTest19Enum1'}} \
+comment|// expected-note {{previous case}}
+case|case
+name|kTest19Enum2
+case|:
+comment|// expected-error {{duplicate case value: 'kTest19Enum1' and 'kTest19Enum2' both equal '7'}} \
+comment|// expected-note {{previous case}}
+case|case
+operator|(
+name|int
+operator|)
+name|kTest19Enum2
+case|:
+comment|//expected-error {{duplicate case value 'kTest19Enum2'}}
+case|case
+literal|3
+case|:
+comment|// expected-note {{previous case}}
+case|case
+name|a
+case|:
+comment|// expected-error {{duplicate case value: '3' and 'a' both equal '3'}} \
+comment|// expected-note {{previous case}}
+case|case
+name|a
+case|:
+comment|// expected-error {{duplicate case value 'a'}}
 break|break;
 block|}
 block|}

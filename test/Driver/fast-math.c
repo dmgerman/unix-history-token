@@ -24,6 +24,18 @@ comment|//
 end_comment
 
 begin_comment
+comment|// Both of them use gcc driver for as.
+end_comment
+
+begin_comment
+comment|// XFAIL: cygwin,mingw32
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// RUN: %clang -### -fno-honor-infinities -c %s 2>&1 \
 end_comment
 
@@ -84,11 +96,71 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -fassociative-math -freciprocal-math -fno-signed-zeros \
+comment|// RUN: %clang -### -fmath-errno -fno-math-errno -c %s 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -fno-trapping-math -c %s 2>&1 \
+comment|// RUN:   | FileCheck --check-prefix=CHECK-NO-MATH-ERRNO %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -target i686-apple-darwin -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-NO-MATH-ERRNO %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -target x86_64-unknown-freebsd -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-NO-MATH-ERRNO %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -target x86_64-unknown-netbsd -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-NO-MATH-ERRNO %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -target x86_64-unknown-openbsd -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-NO-MATH-ERRNO %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -target x86_64-unknown-dragonfly -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-NO-MATH-ERRNO %s
+end_comment
+
+begin_comment
+comment|// CHECK-NO-MATH-ERRNO: "-cc1"
+end_comment
+
+begin_comment
+comment|// CHECK-NO-MATH-ERRNO-NOT: "-fmath-errno"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -fno-math-errno -fassociative-math -freciprocal-math \
+end_comment
+
+begin_comment
+comment|// RUN:     -fno-signed-zeros -fno-trapping-math -c %s 2>&1 \
 end_comment
 
 begin_comment
@@ -152,7 +224,7 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-NO-NANS %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -funsafe-math-optimizations -c %s 2>&1 \
+comment|// RUN: %clang -### -funsafe-math-optimizations -fno-math-errno -c %s 2>&1 \
 end_comment
 
 begin_comment

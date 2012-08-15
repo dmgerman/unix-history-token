@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core,experimental.unix.CString,experimental.deadcode.UnreachableCode -analyzer-store=region -Wno-null-dereference -verify %s
+comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core,unix.cstring,debug.ExprInspection -analyzer-store=region -verify %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -DUSE_BUILTINS -analyzer-checker=core,experimental.unix.CString,experimental.deadcode.UnreachableCode -analyzer-store=region -Wno-null-dereference -verify %s
+comment|// RUN: %clang_cc1 -analyze -DUSE_BUILTINS -analyzer-checker=core,unix.cstring,debug.ExprInspection -analyzer-store=region -verify %s
 end_comment
 
 begin_comment
@@ -136,6 +136,15 @@ name|size_t
 expr_stmt|;
 end_typedef
 
+begin_function_decl
+name|void
+name|clang_analyzer_eval
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|//===----------------------------------------------------------------------===
 end_comment
@@ -192,8 +201,8 @@ operator|<
 literal|5
 condition|)
 return|return;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strnlen
 argument_list|(
 name|x
@@ -202,18 +211,9 @@ literal|10
 argument_list|)
 operator|<
 literal|5
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{FALSE}}
 block|}
 end_function
 
@@ -295,22 +295,15 @@ condition|(
 name|a
 operator|==
 literal|0
-operator|&&
-name|b
-operator|!=
-literal|0
 condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
+name|clang_analyzer_eval
+argument_list|(
+name|b
+operator|==
 literal|0
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{never executed}}
+comment|// expected-warning{{TRUE}}
 name|use_two_stringsn
 argument_list|(
 operator|&
@@ -334,22 +327,15 @@ condition|(
 name|a
 operator|==
 literal|0
-operator|&&
-name|c
-operator|!=
-literal|0
 condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
+name|clang_analyzer_eval
+argument_list|(
+name|c
+operator|==
 literal|0
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{null}}
+comment|// expected-warning{{UNKNOWN}}
 block|}
 end_function
 
@@ -398,22 +384,15 @@ condition|(
 name|a
 operator|==
 literal|0
-operator|&&
-name|b
-operator|!=
-literal|0
 condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
+name|clang_analyzer_eval
+argument_list|(
+name|b
+operator|==
 literal|0
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{never executed}}
+comment|// expected-warning{{TRUE}}
 name|use_stringn
 argument_list|(
 name|x
@@ -434,22 +413,15 @@ condition|(
 name|a
 operator|==
 literal|0
-operator|&&
-name|c
-operator|!=
-literal|0
 condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
+name|clang_analyzer_eval
+argument_list|(
+name|c
+operator|==
 literal|0
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{null}}
+comment|// expected-warning{{UNKNOWN}}
 block|}
 end_function
 
@@ -491,22 +463,15 @@ condition|(
 name|a
 operator|==
 literal|0
-operator|&&
-name|b
-operator|!=
-literal|0
 condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
+name|clang_analyzer_eval
+argument_list|(
+name|b
+operator|==
 literal|0
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{never executed}}
+comment|// expected-warning{{TRUE}}
 comment|// Call a function with unknown effects, which should invalidate globals.
 name|use_stringn
 argument_list|(
@@ -528,22 +493,15 @@ condition|(
 name|a
 operator|==
 literal|0
-operator|&&
-name|c
-operator|!=
-literal|0
 condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
+name|clang_analyzer_eval
+argument_list|(
+name|c
+operator|==
 literal|0
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{null}}
+comment|// expected-warning{{UNKNOWN}}
 block|}
 end_function
 
@@ -595,22 +553,15 @@ condition|(
 name|a
 operator|==
 literal|0
-operator|&&
-name|b
-operator|!=
-literal|0
 condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
+name|clang_analyzer_eval
+argument_list|(
+name|b
+operator|==
 literal|0
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{never executed}}
+comment|// expected-warning{{TRUE}}
 specifier|extern
 name|void
 name|use_stringn_ptr
@@ -641,22 +592,15 @@ condition|(
 name|a
 operator|==
 literal|0
-operator|&&
-name|c
-operator|!=
-literal|0
 condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
+name|clang_analyzer_eval
+argument_list|(
+name|c
+operator|==
 literal|0
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{null}}
+comment|// expected-warning{{UNKNOWN}}
 block|}
 end_function
 

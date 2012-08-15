@@ -1012,6 +1012,13 @@ modifier|&
 name|Tok
 parameter_list|)
 function_decl|;
+name|void
+name|DiagnoseLexingError
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|)
+function_decl|;
 block|}
 empty_stmt|;
 block|}

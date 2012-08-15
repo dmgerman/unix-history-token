@@ -48,7 +48,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* expected-warning {{variadic macros were introduced in C99}} */
+comment|/* expected-warning {{variadic macros are a C99 feature}} */
 end_comment
 
 begin_define
@@ -64,7 +64,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* expected-warning {{variadic macros were introduced in C99}} */
+comment|/* expected-warning {{variadic macros are a C99 feature}} expected-note 2{{macro 'one_dot' defined here}} */
 end_comment
 
 begin_macro
@@ -177,7 +177,7 @@ argument_list|, )
 end_macro
 
 begin_comment
-comment|/* expected-warning {{empty macro arguments were standardized in C99}} */
+comment|/* expected-warning {{empty macro arguments are a C99 feature}} */
 end_comment
 
 begin_macro
@@ -199,9 +199,9 @@ begin_macro
 name|two
 argument_list|(
 argument_list|,
-comment|/* expected-warning {{empty macro arguments were standardized in C99}} */
+comment|/* expected-warning {{empty macro arguments are a C99 feature}} */
 argument_list|,
-comment|/* expected-warning {{empty macro arguments were standardized in C99}}  \              expected-error {{too many arguments provided to function-like macro invocation}} */
+comment|/* expected-warning {{empty macro arguments are a C99 feature}}  \              expected-error {{too many arguments provided to function-like macro invocation}} */
 argument_list|)
 end_macro
 
@@ -212,7 +212,7 @@ argument_list|,)
 end_macro
 
 begin_comment
-comment|/* expected-warning 2 {{empty macro arguments were standardized in C99}} */
+comment|/* expected-warning 2 {{empty macro arguments are a C99 feature}} */
 end_comment
 
 begin_comment
@@ -230,7 +230,7 @@ value|__VA_ARGS__
 end_define
 
 begin_comment
-comment|/* expected-warning {{variadic macros were introduced in C99}} */
+comment|/* expected-warning {{variadic macros are a C99 feature}} */
 end_comment
 
 begin_macro
@@ -258,7 +258,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/* empty ... argument: expected-warning {{varargs argument missing, but tolerated as an extension}}  */
+comment|/* empty ... argument: expected-warning {{must specify at least one argument for '...' parameter of variadic macro}}  */
 end_comment
 
 begin_macro
@@ -267,7 +267,7 @@ argument_list|()
 end_macro
 
 begin_comment
-comment|/* empty first argument, elided ...: expected-warning {{varargs argument missing, but tolerated as an extension}} */
+comment|/* empty first argument, elided ...: expected-warning {{must specify at least one argument for '...' parameter of variadic macro}} */
 end_comment
 
 begin_comment

@@ -37,11 +37,12 @@ operator|=
 name|bar
 argument_list|()
 expr_stmt|;
-comment|//CHECK: store i32
-comment|//CHECK-NOT:  br label %{{%[a-zA-Z0-9\.]+}}, !dbg
 block|}
 else|else
 block|{
+comment|// CHECK: add nsw
+comment|// CHECK-NEXT: store i32 %{{[a-zA-Z0-9]+}}
+comment|// CHECK-NOT:  br label %{{[a-zA-Z0-9\.]+}}, !dbg
 name|j
 operator|=
 name|bar

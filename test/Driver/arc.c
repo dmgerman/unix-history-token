@@ -32,7 +32,7 @@ empty|# foo
 end_empty
 
 begin_comment
-comment|// CHECK: error: -fobjc-arc is not supported with fragile abi
+comment|// CHECK: error: -fobjc-arc is not supported with legacy abi
 end_comment
 
 begin_comment
@@ -40,7 +40,7 @@ comment|// CHECK-NOT: invalid preprocessing directive
 end_comment
 
 begin_comment
-comment|// NOTOBJC-NOT: error: -fobjc-arc is not supported with fragile abi
+comment|// NOTOBJC-NOT: error: -fobjc-arc is not supported with legacy abi
 end_comment
 
 begin_comment

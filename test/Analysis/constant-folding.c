@@ -1,18 +1,16 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core,experimental.deadcode.UnreachableCode -Wno-null-dereference -verify %s
+comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core,debug.ExprInspection -verify %s
 end_comment
 
-begin_comment
-comment|// Trigger a warning if the analyzer reaches this point in the control flow.
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WARN
-value|((void)*(char*)0)
-end_define
+begin_function_decl
+name|void
+name|clang_analyzer_eval
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|// There should be no warnings unless otherwise indicated.
@@ -33,69 +31,54 @@ name|b
 init|=
 name|a
 decl_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
+name|clang_analyzer_eval
+argument_list|(
 name|b
 operator|==
 name|a
-operator|)
-condition|)
-name|WARN
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{never executed}}
-if|if
-condition|(
-operator|!
-operator|(
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
 name|b
 operator|>=
 name|a
-operator|)
-condition|)
-name|WARN
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{never executed}}
-if|if
-condition|(
-operator|!
-operator|(
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
 name|b
 operator|<=
 name|a
-operator|)
-condition|)
-name|WARN
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{never executed}}
-if|if
-condition|(
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
 name|b
 operator|!=
 name|a
-condition|)
-name|WARN
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{never executed}}
-if|if
-condition|(
+comment|// expected-warning{{FALSE}}
+name|clang_analyzer_eval
+argument_list|(
 name|b
 operator|>
 name|a
-condition|)
-name|WARN
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{never executed}}
-if|if
-condition|(
+comment|// expected-warning{{FALSE}}
+name|clang_analyzer_eval
+argument_list|(
 name|b
 operator|<
 name|a
-condition|)
-name|WARN
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{never executed}}
+comment|// expected-warning{{FALSE}}
 block|}
 end_function
 
@@ -107,58 +90,54 @@ name|int
 name|a
 parameter_list|)
 block|{
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 operator|(
 name|a
 operator||
 name|a
 operator|)
-operator|!=
+operator|==
 name|a
-condition|)
-name|WARN
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{never executed}}
-if|if
-condition|(
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
 operator|(
 name|a
 operator|&
 name|a
 operator|)
-operator|!=
+operator|==
 name|a
-condition|)
-name|WARN
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{never executed}}
-if|if
-condition|(
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
 operator|(
 name|a
 operator|^
 name|a
 operator|)
-operator|!=
+operator|==
 literal|0
-condition|)
-name|WARN
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{never executed}}
-if|if
-condition|(
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
 operator|(
 name|a
 operator|-
 name|a
 operator|)
-operator|!=
+operator|==
 literal|0
-condition|)
-name|WARN
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{never executed}}
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -170,99 +149,92 @@ name|int
 name|a
 parameter_list|)
 block|{
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 operator|(
 name|a
 operator|*
 literal|1
 operator|)
-operator|!=
+operator|==
 name|a
-condition|)
-name|WARN
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{never executed}}
-if|if
-condition|(
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
 operator|(
 name|a
 operator|/
 literal|1
 operator|)
-operator|!=
+operator|==
 name|a
-condition|)
-name|WARN
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{never executed}}
-if|if
-condition|(
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
 operator|(
 name|a
 operator|+
 literal|0
 operator|)
-operator|!=
+operator|==
 name|a
-condition|)
-name|WARN
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{never executed}}
-if|if
-condition|(
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
 operator|(
 name|a
 operator|-
 literal|0
 operator|)
-operator|!=
+operator|==
 name|a
-condition|)
-name|WARN
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{never executed}}
-if|if
-condition|(
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
 operator|(
 name|a
 operator|<<
 literal|0
 operator|)
-operator|!=
+operator|==
 name|a
-condition|)
-name|WARN
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{never executed}}
-if|if
-condition|(
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
 operator|(
 name|a
 operator|>>
 literal|0
 operator|)
-operator|!=
+operator|==
 name|a
-condition|)
-name|WARN
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{never executed}}
-if|if
-condition|(
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
 operator|(
 name|a
 operator|^
 literal|0
 operator|)
-operator|!=
+operator|==
 name|a
-condition|)
-name|WARN
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{never executed}}
-if|if
-condition|(
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
 operator|(
 name|a
 operator|&
@@ -271,25 +243,23 @@ operator|~
 literal|0
 operator|)
 operator|)
-operator|!=
+operator|==
 name|a
-condition|)
-name|WARN
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{never executed}}
-if|if
-condition|(
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
 operator|(
 name|a
 operator||
 literal|0
 operator|)
-operator|!=
+operator|==
 name|a
-condition|)
-name|WARN
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{never executed}}
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -301,34 +271,32 @@ name|int
 name|a
 parameter_list|)
 block|{
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 operator|(
 name|a
 operator|*
 literal|0
 operator|)
-operator|!=
+operator|==
 literal|0
-condition|)
-name|WARN
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{never executed}}
-if|if
-condition|(
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
 operator|(
 name|a
 operator|&
 literal|0
 operator|)
-operator|!=
+operator|==
 literal|0
-condition|)
-name|WARN
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{never executed}}
-if|if
-condition|(
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
 operator|(
 name|a
 operator||
@@ -337,15 +305,14 @@ operator|~
 literal|0
 operator|)
 operator|)
-operator|!=
+operator|==
 operator|(
 operator|~
 literal|0
 operator|)
-condition|)
-name|WARN
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{never executed}}
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -357,91 +324,86 @@ name|int
 name|a
 parameter_list|)
 block|{
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 operator|(
 literal|2
 operator|+
 name|a
 operator|)
-operator|!=
+operator|==
 operator|(
 name|a
 operator|+
 literal|2
 operator|)
-condition|)
-name|WARN
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{never executed}}
-if|if
-condition|(
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
 operator|(
 literal|2
 operator|*
 name|a
 operator|)
-operator|!=
+operator|==
 operator|(
 name|a
 operator|*
 literal|2
 operator|)
-condition|)
-name|WARN
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{never executed}}
-if|if
-condition|(
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
 operator|(
 literal|2
 operator|&
 name|a
 operator|)
-operator|!=
+operator|==
 operator|(
 name|a
 operator|&
 literal|2
 operator|)
-condition|)
-name|WARN
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{never executed}}
-if|if
-condition|(
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
 operator|(
 literal|2
 operator|^
 name|a
 operator|)
-operator|!=
+operator|==
 operator|(
 name|a
 operator|^
 literal|2
 operator|)
-condition|)
-name|WARN
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{never executed}}
-if|if
-condition|(
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
 operator|(
 literal|2
 operator||
 name|a
 operator|)
-operator|!=
+operator|==
 operator|(
 name|a
 operator||
 literal|2
 operator|)
-condition|)
-name|WARN
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{never executed}}
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -453,8 +415,8 @@ name|int
 name|a
 parameter_list|)
 block|{
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 operator|(
 operator|(
 operator|~
@@ -463,76 +425,57 @@ operator|)
 operator|>>
 name|a
 operator|)
-operator|!=
+operator|==
 operator|(
 operator|~
 literal|0
 operator|)
-condition|)
-name|WARN
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{never executed}}
-if|if
-condition|(
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
 operator|(
 literal|0
 operator|>>
 name|a
 operator|)
-operator|!=
+operator|==
 literal|0
-condition|)
-name|WARN
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{never executed}}
-if|if
-condition|(
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
 operator|(
 literal|0
 operator|<<
 name|a
 operator|)
-operator|!=
-literal|0
-condition|)
-name|WARN
-expr_stmt|;
-comment|// expected-warning{{never executed}}
-comment|// Unsigned right shift shifts in zeroes.
-if|if
-condition|(
-operator|(
-operator|(
-call|(
-name|unsigned
-call|)
-argument_list|(
-operator|~
+operator|==
 literal|0
 argument_list|)
+expr_stmt|;
+comment|// expected-warning{{TRUE}}
+comment|// Unsigned right shift shifts in zeroes.
+name|clang_analyzer_eval
+argument_list|(
+operator|(
+operator|(
+operator|~
+literal|0U
 operator|)
 operator|>>
-operator|(
-operator|(
-name|unsigned
-operator|)
 name|a
-operator|)
 operator|)
 operator|!=
 operator|(
-call|(
-name|unsigned
-call|)
-argument_list|(
 operator|~
-literal|0
-argument_list|)
+literal|0U
 operator|)
-condition|)
-name|WARN
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{}}
+comment|// expected-warning{{UNKNOWN}}
 block|}
 end_function
 
@@ -551,78 +494,107 @@ name|b
 init|=
 name|a
 decl_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
+name|clang_analyzer_eval
+argument_list|(
 name|b
 operator|==
 name|a
-operator|)
-condition|)
-name|WARN
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{never executed}}
-if|if
-condition|(
-operator|!
-operator|(
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
 name|b
 operator|>=
 name|a
-operator|)
-condition|)
-name|WARN
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{never executed}}
-if|if
-condition|(
-operator|!
-operator|(
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
 name|b
 operator|<=
 name|a
-operator|)
-condition|)
-name|WARN
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{never executed}}
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
+name|b
+operator|!=
+name|a
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{FALSE}}
+name|clang_analyzer_eval
+argument_list|(
+name|b
+operator|>
+name|a
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{FALSE}}
+name|clang_analyzer_eval
+argument_list|(
+name|b
+operator|<
+name|a
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{FALSE}}
+block|}
+end_function
+
+begin_function
+name|void
+name|testMixedTypeComparisons
+parameter_list|(
+name|char
+name|a
+parameter_list|,
+name|unsigned
+name|long
+name|b
+parameter_list|)
+block|{
+if|if
+condition|(
+name|a
+operator|!=
+literal|0
+condition|)
+return|return;
 if|if
 condition|(
 name|b
 operator|!=
-name|a
+literal|0x100
 condition|)
-name|WARN
-expr_stmt|;
-comment|// expected-warning{{never executed}}
-if|if
-condition|(
+return|return;
+name|clang_analyzer_eval
+argument_list|(
+name|a
+operator|<=
 name|b
-operator|>
-name|a
-condition|)
-name|WARN
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{never executed}}
-if|if
-condition|(
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
 name|b
-operator|<
+operator|>=
 name|a
-condition|)
-name|WARN
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{never executed}}
-if|if
-condition|(
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
+name|a
+operator|!=
 name|b
-operator|-
-name|a
-condition|)
-name|WARN
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{never executed}}
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 

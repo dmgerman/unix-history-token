@@ -20,7 +20,7 @@ comment|// CHECK: sw.bb:                                            ; preds = %e
 end_comment
 
 begin_comment
-comment|// CHECK: br label %sw.epilog, !dbg !21
+comment|// CHECK: br label %sw.epilog, !dbg !19
 end_comment
 
 begin_function_decl

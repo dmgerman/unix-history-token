@@ -82,6 +82,10 @@ name|void
 modifier|*
 name|Diagnostics
 decl_stmt|;
+name|void
+modifier|*
+name|OverridenCursorsPool
+decl_stmt|;
 block|}
 struct|;
 block|}

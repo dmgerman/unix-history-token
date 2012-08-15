@@ -297,6 +297,10 @@ name|e1
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|// expected-note {{'e1' declared here}}
+end_comment
+
 begin_struct
 struct|struct
 name|__declspec
@@ -314,6 +318,10 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|// expected-note {{declared here}}
+end_comment
 
 begin_define
 define|#
@@ -337,6 +345,27 @@ name|void
 parameter_list|)
 block|{}
 end_function
+
+begin_comment
+comment|// expected-note {{'Dfunc1' declared here}}
+end_comment
+
+begin_struct
+struct|struct
+name|__declspec
+argument_list|(
+argument|deprecated(
+literal|123
+argument|)
+argument_list|)
+name|DS2
+block|{}
+struct|;
+end_struct
+
+begin_comment
+comment|// expected-error {{argument to deprecated attribute was not a string literal}}
+end_comment
 
 begin_function
 name|void

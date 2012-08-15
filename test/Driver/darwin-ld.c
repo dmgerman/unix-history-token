@@ -423,5 +423,21 @@ begin_comment
 comment|// LINK_NO_CRT1-NOT: crt
 end_comment
 
+begin_comment
+comment|// RUN: %clang -target i386-apple-darwin12 -pg -### %t.o 2> %t.log
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=LINK_PG %s< %t.log
+end_comment
+
+begin_comment
+comment|// LINK_PG: -lgcrt1.o
+end_comment
+
+begin_comment
+comment|// LINK_PG: -no_new_main
+end_comment
+
 end_unit
 

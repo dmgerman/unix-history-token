@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin -emit-llvm %s -o - | FileCheck %s
+comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin -emit-llvm %s -o - 2>&1 | FileCheck %s
 end_comment
 
 begin_define
@@ -238,7 +238,10 @@ block|{
 name|int
 name|i
 decl_stmt|;
-comment|// CHECK:     = call i64 @llvm.objectsize.i64(i8* {{.*}}@gbuf{{.*}}, i1 false)
+comment|// Ensure we only evaluate the side-effect once.
+comment|// CHECK:     = add
+comment|// CHECK-NOT: = add
+comment|// CHECK:     = call i8* @__strcpy_chk(i8* getelementptr inbounds ([63 x i8]* @gbuf, i32 0, i32 0), i8* getelementptr inbounds ([9 x i8]* @.str, i32 0, i32 0), i64 63)
 name|strcpy
 argument_list|(
 operator|(
@@ -485,6 +488,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|// CHECK: @test17
+end_comment
+
 begin_function
 name|void
 name|test17
@@ -534,6 +541,46 @@ argument_list|,
 literal|3
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK: @test18
+end_comment
+
+begin_function
+name|unsigned
+name|test18
+parameter_list|(
+name|int
+name|cond
+parameter_list|)
+block|{
+name|int
+name|a
+index|[
+literal|4
+index|]
+decl_stmt|,
+name|b
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|// CHECK: phi i32*
+comment|// CHECK: call i64 @llvm.objectsize.i64
+return|return
+name|__builtin_object_size
+argument_list|(
+name|cond
+condition|?
+name|a
+else|:
+name|b
+argument_list|,
+literal|0
+argument_list|)
+return|;
 block|}
 end_function
 

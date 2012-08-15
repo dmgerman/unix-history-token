@@ -315,5 +315,65 @@ begin_comment
 comment|// expected-warning {{'foo12' redeclared without dllimport attribute: previous dllimport ignored}}
 end_comment
 
+begin_decl_stmt
+name|void
+name|__attribute__
+argument_list|(
+operator|(
+name|dllimport
+operator|)
+argument_list|)
+name|foo13
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-warning{{dllimport attribute ignored}}
+end_comment
+
+begin_decl_stmt
+name|void
+name|__attribute__
+argument_list|(
+operator|(
+name|dllexport
+operator|)
+argument_list|)
+name|foo13
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|foo14
+name|__attribute__
+argument_list|(
+operator|(
+name|dllexport
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|foo14
+name|__attribute__
+argument_list|(
+operator|(
+name|dllimport
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-warning{{dllimport attribute ignored}}
+end_comment
+
 end_unit
 

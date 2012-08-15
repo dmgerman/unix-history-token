@@ -28,7 +28,7 @@ error|qux
 end_error
 
 begin_comment
-comment|// expected-error {{qux}}
+comment|// expected-error@-1 {{qux}}
 end_comment
 
 begin_comment

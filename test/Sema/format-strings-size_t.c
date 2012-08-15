@@ -73,5 +73,102 @@ comment|// expected-warning {{format specifies type 'ptrdiff_t' (aka 'long') but
 block|}
 end_function
 
+begin_function
+name|void
+name|test_writeback
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|printf
+argument_list|(
+literal|"%jn"
+argument_list|,
+operator|(
+name|long
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|printf
+argument_list|(
+literal|"%jn"
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|printf
+argument_list|(
+literal|"%jn"
+argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{format specifies type 'intmax_t *' (aka 'long *') but the argument has type 'int *'}}
+name|printf
+argument_list|(
+literal|"%zn"
+argument_list|,
+operator|(
+name|long
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+comment|// FIXME: Warn about %zn with non-ssize_t argument.
+name|printf
+argument_list|(
+literal|"%tn"
+argument_list|,
+operator|(
+name|long
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|printf
+argument_list|(
+literal|"%tn"
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|printf
+argument_list|(
+literal|"%tn"
+argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{format specifies type 'ptrdiff_t *' (aka 'long *') but the argument has type 'int *'}}
+block|}
+end_function
+
 end_unit
 

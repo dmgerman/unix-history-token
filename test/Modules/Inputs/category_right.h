@@ -47,7 +47,6 @@ name|Foo
 argument_list|(
 name|Duplicate
 argument_list|)
-comment|// expected-warning {{duplicate definition of category}}
 expr|@
 name|end
 end_expr_stmt

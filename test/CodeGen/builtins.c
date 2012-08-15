@@ -1261,5 +1261,23 @@ comment|// CHECK-NEXT: unreachable
 block|}
 end_function
 
+begin_comment
+comment|// CHECK: define i64 @test_builtin_readcyclecounter
+end_comment
+
+begin_function
+name|long
+name|long
+name|test_builtin_readcyclecounter
+parameter_list|()
+block|{
+comment|// CHECK: call i64 @llvm.readcyclecounter()
+return|return
+name|__builtin_readcyclecounter
+argument_list|()
+return|;
+block|}
+end_function
+
 end_unit
 

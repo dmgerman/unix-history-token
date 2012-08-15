@@ -4,7 +4,7 @@ comment|// RUN: %clang -### -x objective-c -target i386-apple-darwin10 -arch i38
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -x objective-c -target i386-apple-darwin10 -arch i386 -mmacosx-version-min=10.6 -D__IPHONE_OS_VERSION_MIN_REQUIRED=50000 -fobjc-arc -fsyntax-only %s 2>&1 | FileCheck -check-prefix=CHECK-OPTIONS2 %s
+comment|// RUN: %clang -### -x objective-c -target i386-apple-darwin10 -arch i386 -D__IPHONE_OS_VERSION_MIN_REQUIRED=50000 -fobjc-arc -fsyntax-only %s 2>&1 | FileCheck -check-prefix=CHECK-OPTIONS2 %s
 end_comment
 
 begin_comment
@@ -12,11 +12,19 @@ comment|//
 end_comment
 
 begin_comment
-comment|// CHECK-OPTIONS1-NOT: -fobjc-runtime-has-weak
+comment|// CHECK-OPTIONS1: i386-apple-macosx10.6.0
 end_comment
 
 begin_comment
-comment|// CHECK-OPTIONS2: -fobjc-runtime-has-weak
+comment|// CHECK-OPTIONS1: -fobjc-runtime=ios-4.2.1
+end_comment
+
+begin_comment
+comment|// CHECK-OPTIONS2: i386-apple-macosx10.6.0
+end_comment
+
+begin_comment
+comment|// CHECK-OPTIONS2: -fobjc-runtime=ios-5.0.0
 end_comment
 
 end_unit

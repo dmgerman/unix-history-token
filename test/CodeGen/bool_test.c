@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|// REQUIRES: ppc32-registered-target
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cc1 -triple powerpc-apple-darwin -emit-llvm -o - %s| FileCheck -check-prefix=DARWINPPC-CHECK %s
 end_comment
 

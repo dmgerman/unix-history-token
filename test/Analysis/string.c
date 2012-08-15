@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core,unix.cstring,experimental.unix.cstring,experimental.deadcode.UnreachableCode -analyzer-store=region -Wno-null-dereference -verify %s
+comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core,unix.cstring,experimental.unix.cstring,debug.ExprInspection -analyzer-store=region -Wno-null-dereference -verify %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -DUSE_BUILTINS -analyzer-checker=core,unix.cstring,experimental.unix.cstring,experimental.deadcode.UnreachableCode -analyzer-store=region -Wno-null-dereference -verify %s
+comment|// RUN: %clang_cc1 -analyze -DUSE_BUILTINS -analyzer-checker=core,unix.cstring,experimental.unix.cstring,debug.ExprInspection -analyzer-store=region -Wno-null-dereference -verify %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -DVARIANT -analyzer-checker=core,unix.cstring,experimental.unix.cstring,experimental.deadcode.UnreachableCode -analyzer-store=region -Wno-null-dereference -verify %s
+comment|// RUN: %clang_cc1 -analyze -DVARIANT -analyzer-checker=core,unix.cstring,experimental.unix.cstring,debug.ExprInspection -analyzer-store=region -Wno-null-dereference -verify %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -DUSE_BUILTINS -DVARIANT -analyzer-checker=experimental.security.taint,core,unix.cstring,experimental.unix.cstring,experimental.deadcode.UnreachableCode -analyzer-store=region -Wno-null-dereference -verify %s
+comment|// RUN: %clang_cc1 -analyze -DUSE_BUILTINS -DVARIANT -analyzer-checker=experimental.security.taint,core,unix.cstring,experimental.unix.cstring,debug.ExprInspection -analyzer-store=region -Wno-null-dereference -verify %s
 end_comment
 
 begin_comment
@@ -121,6 +121,15 @@ expr_stmt|;
 end_typedef
 
 begin_function_decl
+name|void
+name|clang_analyzer_eval
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|scanf
 parameter_list|(
@@ -171,26 +180,17 @@ name|void
 name|strlen_constant0
 parameter_list|()
 block|{
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strlen
 argument_list|(
 literal|"123"
 argument_list|)
-operator|!=
+operator|==
 literal|3
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -206,26 +206,17 @@ name|a
 init|=
 literal|"123"
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strlen
 argument_list|(
 name|a
 argument_list|)
-operator|!=
+operator|==
 literal|3
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -243,26 +234,17 @@ index|[]
 init|=
 literal|"123"
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strlen
 argument_list|(
 name|a
 argument_list|)
-operator|!=
+operator|==
 literal|3
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 name|a
 index|[
 literal|0
@@ -270,26 +252,17 @@ index|]
 operator|=
 name|x
 expr_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strlen
 argument_list|(
 name|a
 argument_list|)
-operator|!=
+operator|==
 literal|3
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{null}}
+comment|// expected-warning{{UNKNOWN}}
 block|}
 end_function
 
@@ -424,22 +397,15 @@ condition|(
 name|a
 operator|==
 literal|0
-operator|&&
-name|b
-operator|!=
-literal|0
 condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
+name|clang_analyzer_eval
+argument_list|(
+name|b
+operator|==
 literal|0
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{never executed}}
+comment|// expected-warning{{TRUE}}
 name|use_two_strings
 argument_list|(
 operator|&
@@ -461,22 +427,15 @@ condition|(
 name|a
 operator|==
 literal|0
-operator|&&
-name|c
-operator|!=
-literal|0
 condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
+name|clang_analyzer_eval
+argument_list|(
+name|c
+operator|==
 literal|0
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{null}}
+comment|// expected-warning{{UNKNOWN}}
 block|}
 end_function
 
@@ -521,22 +480,15 @@ condition|(
 name|a
 operator|==
 literal|0
-operator|&&
-name|b
-operator|!=
-literal|0
 condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
+name|clang_analyzer_eval
+argument_list|(
+name|b
+operator|==
 literal|0
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{never executed}}
+comment|// expected-warning{{TRUE}}
 name|use_string
 argument_list|(
 name|x
@@ -555,22 +507,15 @@ condition|(
 name|a
 operator|==
 literal|0
-operator|&&
-name|c
-operator|!=
-literal|0
 condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
+name|clang_analyzer_eval
+argument_list|(
+name|c
+operator|==
 literal|0
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{null}}
+comment|// expected-warning{{UNKNOWN}}
 block|}
 end_function
 
@@ -608,22 +553,29 @@ condition|(
 name|a
 operator|==
 literal|0
-operator|&&
-name|b
-operator|!=
-literal|0
 condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
+block|{
+name|clang_analyzer_eval
+argument_list|(
+name|b
+operator|==
 literal|0
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{never executed}}
+comment|// expected-warning{{TRUE}}
+comment|// Make sure clang_analyzer_eval does not invalidate globals.
+name|clang_analyzer_eval
+argument_list|(
+name|strlen
+argument_list|(
+name|global_str
+argument_list|)
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{TRUE}}
+block|}
 comment|// Call a function with unknown effects, which should invalidate globals.
 name|use_string
 argument_list|(
@@ -643,22 +595,15 @@ condition|(
 name|a
 operator|==
 literal|0
-operator|&&
-name|c
-operator|!=
-literal|0
 condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
+name|clang_analyzer_eval
+argument_list|(
+name|c
+operator|==
 literal|0
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{null}}
+comment|// expected-warning{{UNKNOWN}}
 block|}
 end_function
 
@@ -706,22 +651,15 @@ condition|(
 name|a
 operator|==
 literal|0
-operator|&&
-name|b
-operator|!=
-literal|0
 condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
+name|clang_analyzer_eval
+argument_list|(
+name|b
+operator|==
 literal|0
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{never executed}}
+comment|// expected-warning{{TRUE}}
 specifier|extern
 name|void
 name|use_string_ptr
@@ -750,22 +688,15 @@ condition|(
 name|a
 operator|==
 literal|0
-operator|&&
-name|c
-operator|!=
-literal|0
 condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
+name|clang_analyzer_eval
+argument_list|(
+name|c
+operator|==
 literal|0
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{null}}
+comment|// expected-warning{{UNKNOWN}}
 block|}
 end_function
 
@@ -827,22 +758,15 @@ condition|(
 name|a
 operator|==
 literal|0
-operator|&&
-name|c
-operator|!=
-literal|0
 condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
+name|clang_analyzer_eval
+argument_list|(
+name|c
+operator|==
 literal|0
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{null}}
+comment|// expected-warning{{UNKNOWN}}
 block|}
 end_function
 
@@ -866,26 +790,17 @@ operator|<
 literal|5
 condition|)
 return|return;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strlen
 argument_list|(
 name|x
 argument_list|)
 operator|<
 literal|5
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{FALSE}}
 block|}
 end_function
 
@@ -921,28 +836,19 @@ name|void
 name|strnlen_constant0
 parameter_list|()
 block|{
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strnlen
 argument_list|(
 literal|"123"
 argument_list|,
 literal|10
 argument_list|)
-operator|!=
+operator|==
 literal|3
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{never executed}}
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -958,28 +864,19 @@ name|a
 init|=
 literal|"123"
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strnlen
 argument_list|(
 name|a
 argument_list|,
 literal|10
 argument_list|)
-operator|!=
+operator|==
 literal|3
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{never executed}}
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -997,28 +894,19 @@ index|[]
 init|=
 literal|"123"
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strnlen
 argument_list|(
 name|a
 argument_list|,
 literal|10
 argument_list|)
-operator|!=
+operator|==
 literal|3
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{never executed}}
+comment|// expected-warning{{TRUE}}
 name|a
 index|[
 literal|0
@@ -1026,28 +914,19 @@ index|]
 operator|=
 name|x
 expr_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strnlen
 argument_list|(
 name|a
 argument_list|,
 literal|10
 argument_list|)
-operator|!=
+operator|==
 literal|3
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{null}}
+comment|// expected-warning{{UNKNOWN}}
 block|}
 end_function
 
@@ -1056,28 +935,19 @@ name|void
 name|strnlen_constant4
 parameter_list|()
 block|{
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strnlen
 argument_list|(
 literal|"123456"
 argument_list|,
 literal|3
 argument_list|)
-operator|!=
+operator|==
 literal|3
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{never executed}}
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -1093,28 +963,19 @@ name|a
 init|=
 literal|"123456"
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strnlen
 argument_list|(
 name|a
 argument_list|,
 literal|3
 argument_list|)
-operator|!=
+operator|==
 literal|3
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{never executed}}
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -1132,28 +993,19 @@ index|[]
 init|=
 literal|"123456"
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strnlen
 argument_list|(
 name|a
 argument_list|,
 literal|3
 argument_list|)
-operator|!=
+operator|==
 literal|3
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{never executed}}
+comment|// expected-warning{{TRUE}}
 name|a
 index|[
 literal|0
@@ -1161,28 +1013,19 @@ index|]
 operator|=
 name|x
 expr_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strnlen
 argument_list|(
 name|a
 argument_list|,
 literal|3
 argument_list|)
-operator|!=
+operator|==
 literal|3
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{null}}
+comment|// expected-warning{{UNKNOWN}}
 block|}
 end_function
 
@@ -1254,51 +1097,32 @@ name|void
 name|strnlen_zero
 parameter_list|()
 block|{
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strnlen
 argument_list|(
 literal|"abc"
 argument_list|,
 literal|0
 argument_list|)
-operator|!=
+operator|==
 literal|0
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{never executed}}
-if|if
-condition|(
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
 name|strnlen
 argument_list|(
 name|NULL
 argument_list|,
 literal|0
 argument_list|)
-operator|!=
+operator|==
 literal|0
-condition|)
-comment|// no-warning
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -1362,31 +1186,22 @@ modifier|*
 name|x
 parameter_list|)
 block|{
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strnlen
 argument_list|(
 name|x
 argument_list|,
 literal|10
 argument_list|)
-operator|!=
+operator|==
 name|strlen
 argument_list|(
 name|x
 argument_list|)
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{null}}
+comment|// expected-warning{{UNKNOWN}}
 block|}
 end_function
 
@@ -1409,96 +1224,30 @@ argument_list|,
 literal|10
 argument_list|)
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|len
-operator|>
+operator|<=
 literal|10
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{never executed}}
-if|if
-condition|(
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
 name|len
 operator|==
 literal|10
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
-expr_stmt|;
-comment|// expected-warning{{null}}
-block|}
-end_function
-
-begin_function
-name|void
-name|strnlen_less_than_limit
-parameter_list|(
-name|char
-modifier|*
-name|x
-parameter_list|)
-block|{
-name|size_t
-name|len
-init|=
-name|strnlen
-argument_list|(
-name|x
-argument_list|,
-literal|10
 argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|len
-operator|>
-literal|10
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
 expr_stmt|;
-comment|// expected-warning{{never executed}}
-if|if
-condition|(
+comment|// expected-warning{{UNKNOWN}}
+name|clang_analyzer_eval
+argument_list|(
 name|len
 operator|<
 literal|10
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{null}}
+comment|// expected-warning{{UNKNOWN}}
 block|}
 end_function
 
@@ -1520,95 +1269,50 @@ argument_list|,
 name|limit
 argument_list|)
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|len
-operator|>
+operator|<=
 literal|3
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{never executed}}
+comment|// expected-warning{{TRUE}}
+comment|// This is due to eager assertion in strnlen.
 if|if
 condition|(
+name|limit
+operator|==
+literal|0
+condition|)
+block|{
+name|clang_analyzer_eval
+argument_list|(
+name|len
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{TRUE}}
+block|}
+else|else
+block|{
+name|clang_analyzer_eval
+argument_list|(
 name|len
 operator|==
 literal|3
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
-expr_stmt|;
-comment|// expected-warning{{null}}
-block|}
-end_function
-
-begin_function
-name|void
-name|strnlen_less_than_actual
-parameter_list|(
-name|size_t
-name|limit
-parameter_list|)
-block|{
-name|size_t
-name|len
-init|=
-name|strnlen
-argument_list|(
-literal|"abc"
-argument_list|,
-name|limit
 argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|len
-operator|>
-literal|3
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
 expr_stmt|;
-comment|// expected-warning{{never executed}}
-if|if
-condition|(
+comment|// expected-warning{{UNKNOWN}}
+name|clang_analyzer_eval
+argument_list|(
 name|len
 operator|<
 literal|3
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{null}}
+comment|// expected-warning{{UNKNOWN}}
+block|}
 block|}
 end_function
 
@@ -1827,71 +1531,44 @@ index|[
 literal|0
 index|]
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strcpy
 argument_list|(
 name|x
 argument_list|,
 name|y
 argument_list|)
-operator|!=
+operator|==
 name|x
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
-if|if
-condition|(
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
 name|strlen
 argument_list|(
 name|x
 argument_list|)
-operator|!=
+operator|==
 name|strlen
 argument_list|(
 name|y
 argument_list|)
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
-if|if
-condition|(
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
 name|a
-operator|!=
+operator|==
 name|x
 index|[
 literal|0
 index|]
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{null}}
+comment|// expected-warning{{UNKNOWN}}
 block|}
 end_function
 
@@ -2089,15 +1766,15 @@ index|[
 literal|0
 index|]
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|stpcpy
 argument_list|(
 name|x
 argument_list|,
 name|y
 argument_list|)
-operator|!=
+operator|==
 operator|&
 name|x
 index|[
@@ -2106,61 +1783,34 @@ argument_list|(
 name|y
 argument_list|)
 index|]
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
-if|if
-condition|(
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
 name|strlen
 argument_list|(
 name|x
 argument_list|)
-operator|!=
+operator|==
 name|strlen
 argument_list|(
 name|y
 argument_list|)
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
-if|if
-condition|(
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
 name|a
-operator|!=
+operator|==
 name|x
 index|[
 literal|0
 index|]
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{null}}
+comment|// expected-warning{{UNKNOWN}}
 block|}
 end_function
 
@@ -2445,30 +2095,21 @@ operator|!=
 literal|4
 condition|)
 return|return;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strcat
 argument_list|(
 name|x
 argument_list|,
 name|y
 argument_list|)
-operator|!=
+operator|==
 name|x
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
-if|if
-condition|(
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
 operator|(
 name|int
 operator|)
@@ -2476,7 +2117,7 @@ name|strlen
 argument_list|(
 name|x
 argument_list|)
-operator|!=
+operator|==
 operator|(
 name|orig_len
 operator|+
@@ -2485,18 +2126,9 @@ argument_list|(
 name|y
 argument_list|)
 operator|)
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -2664,26 +2296,17 @@ argument_list|,
 literal|"1234"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strlen
 argument_list|(
 name|dst
 argument_list|)
-operator|<
+operator|>=
 literal|4
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -2711,26 +2334,17 @@ argument_list|,
 name|src
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strlen
 argument_list|(
 name|dst
 argument_list|)
-operator|<
+operator|>=
 literal|4
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -2758,26 +2372,17 @@ argument_list|,
 literal|"1234"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strlen
 argument_list|(
 name|dst
 argument_list|)
-operator|<
+operator|>=
 literal|4
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -2812,26 +2417,17 @@ name|offset
 index|]
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strlen
 argument_list|(
 name|dst
 argument_list|)
-operator|<
+operator|>=
 literal|4
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -3099,8 +2695,8 @@ index|[
 literal|0
 index|]
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strncpy
 argument_list|(
 name|x
@@ -3109,63 +2705,36 @@ name|y
 argument_list|,
 literal|5
 argument_list|)
-operator|!=
+operator|==
 name|x
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
-if|if
-condition|(
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
 name|strlen
 argument_list|(
 name|x
 argument_list|)
-operator|!=
+operator|==
 name|strlen
 argument_list|(
 name|y
 argument_list|)
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{null}}
-if|if
-condition|(
+comment|// expected-warning{{UNKNOWN}}
+name|clang_analyzer_eval
+argument_list|(
 name|a
-operator|!=
+operator|==
 name|x
 index|[
 literal|0
 index|]
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{null}}
+comment|// expected-warning{{UNKNOWN}}
 block|}
 end_function
 
@@ -3391,26 +2960,17 @@ expr_stmt|;
 comment|// no-warning
 comment|// strncpy does not null-terminate, so we have no idea what the strlen is
 comment|// after this.
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strlen
 argument_list|(
 name|x
 argument_list|)
 operator|>
 literal|4
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|int
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{null}}
+comment|// expected-warning{{UNKNOWN}}
 block|}
 end_function
 
@@ -3450,24 +3010,73 @@ argument_list|)
 expr_stmt|;
 comment|// no-warning
 comment|// This time, we know that y fits in x anyway.
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strlen
 argument_list|(
 name|x
 argument_list|)
-operator|>
+operator|<=
 literal|3
-condition|)
-operator|(
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{TRUE}}
+block|}
+end_function
+
+begin_function
 name|void
-operator|)
-operator|*
-operator|(
-name|int
-operator|*
-operator|)
+name|strncpy_zero
+parameter_list|(
+name|char
+modifier|*
+name|src
+parameter_list|)
+block|{
+name|char
+name|dst
+index|[]
+init|=
+literal|"123"
+decl_stmt|;
+name|strncpy
+argument_list|(
+name|dst
+argument_list|,
+name|src
+argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+block|}
+end_function
+
+begin_function
+name|void
+name|strncpy_empty
+parameter_list|()
+block|{
+name|char
+name|dst
+index|[]
+init|=
+literal|"123"
+decl_stmt|;
+name|char
+name|src
+index|[]
+init|=
+literal|""
+decl_stmt|;
+name|strncpy
+argument_list|(
+name|dst
+argument_list|,
+name|src
+argument_list|,
+literal|4
+argument_list|)
 expr_stmt|;
 comment|// no-warning
 block|}
@@ -3698,8 +3307,8 @@ operator|!=
 literal|4
 condition|)
 return|return;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strncat
 argument_list|(
 name|x
@@ -3711,45 +3320,29 @@ argument_list|(
 name|y
 argument_list|)
 argument_list|)
-operator|!=
+operator|==
 name|x
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
-if|if
-condition|(
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
 name|strlen
 argument_list|(
 name|x
 argument_list|)
-operator|!=
+operator|==
+operator|(
 name|orig_len
 operator|+
 name|strlen
 argument_list|(
 name|y
 argument_list|)
-condition|)
-operator|(
-name|void
 operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -4017,26 +3610,17 @@ argument_list|,
 literal|5
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strlen
 argument_list|(
 name|dst
 argument_list|)
-operator|<
+operator|>=
 literal|4
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -4066,26 +3650,17 @@ argument_list|,
 literal|3
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strlen
 argument_list|(
 name|dst
 argument_list|)
-operator|<
+operator|>=
 literal|4
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 name|char
 name|dst2
 index|[
@@ -4140,26 +3715,17 @@ argument_list|,
 literal|3
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strlen
 argument_list|(
 name|dst
 argument_list|)
-operator|<
+operator|>=
 literal|4
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 name|char
 name|dst2
 index|[
@@ -4225,46 +3791,28 @@ name|limit
 argument_list|)
 expr_stmt|;
 comment|// no-warning
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strlen
 argument_list|(
 name|dst
 argument_list|)
-operator|<
+operator|>=
 literal|4
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
-if|if
-condition|(
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
 name|strlen
 argument_list|(
 name|dst
 argument_list|)
 operator|==
 literal|4
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{null}}
+comment|// expected-warning{{UNKNOWN}}
 block|}
 end_function
 
@@ -4303,46 +3851,28 @@ name|limit
 argument_list|)
 expr_stmt|;
 comment|// no-warning
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strlen
 argument_list|(
 name|dst
 argument_list|)
-operator|<
+operator|>=
 literal|4
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
-if|if
-condition|(
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
 name|strlen
 argument_list|(
 name|dst
 argument_list|)
 operator|==
 literal|4
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{null}}
+comment|// expected-warning{{UNKNOWN}}
 block|}
 end_function
 
@@ -4401,6 +3931,66 @@ comment|// expected-warning{{This expression will create a string whose length i
 block|}
 end_function
 
+begin_function
+name|void
+name|strncat_zero
+parameter_list|(
+name|char
+modifier|*
+name|src
+parameter_list|)
+block|{
+name|char
+name|dst
+index|[]
+init|=
+literal|"123"
+decl_stmt|;
+name|strncat
+argument_list|(
+name|dst
+argument_list|,
+name|src
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+block|}
+end_function
+
+begin_function
+name|void
+name|strncat_empty
+parameter_list|()
+block|{
+name|char
+name|dst
+index|[
+literal|8
+index|]
+init|=
+literal|"123"
+decl_stmt|;
+name|char
+name|src
+index|[]
+init|=
+literal|""
+decl_stmt|;
+name|strncat
+argument_list|(
+name|dst
+argument_list|,
+name|src
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+block|}
+end_function
+
 begin_comment
 comment|//===----------------------------------------------------------------------===
 end_comment
@@ -4442,28 +4032,19 @@ name|void
 name|strcmp_constant0
 parameter_list|()
 block|{
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strcmp
 argument_list|(
 literal|"123"
 argument_list|,
 literal|"123"
 argument_list|)
-operator|!=
+operator|==
 literal|0
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -4478,28 +4059,19 @@ name|x
 init|=
 literal|"123"
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strcmp
 argument_list|(
 name|x
 argument_list|,
 literal|"123"
 argument_list|)
-operator|!=
+operator|==
 literal|0
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -4514,28 +4086,19 @@ name|x
 init|=
 literal|"123"
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strcmp
 argument_list|(
 literal|"123"
 argument_list|,
 name|x
 argument_list|)
-operator|!=
+operator|==
 literal|0
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -4556,28 +4119,19 @@ name|y
 init|=
 literal|"123"
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strcmp
 argument_list|(
 name|x
 argument_list|,
 name|y
 argument_list|)
-operator|!=
+operator|==
 literal|0
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -4598,28 +4152,19 @@ name|y
 init|=
 literal|"123"
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strcmp
 argument_list|(
 name|x
 argument_list|,
 name|y
 argument_list|)
-operator|!=
+operator|==
 literal|1
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -4640,29 +4185,20 @@ name|y
 init|=
 literal|"234"
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strcmp
 argument_list|(
 name|x
 argument_list|,
 name|y
 argument_list|)
-operator|!=
+operator|==
 operator|-
 literal|1
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -4739,29 +4275,20 @@ name|y
 init|=
 literal|"234"
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strcmp
 argument_list|(
 name|x
 argument_list|,
 name|y
 argument_list|)
-operator|!=
+operator|==
 operator|-
 literal|1
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -4782,29 +4309,20 @@ name|y
 init|=
 literal|"23456"
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strcmp
 argument_list|(
 name|x
 argument_list|,
 name|y
 argument_list|)
-operator|!=
+operator|==
 operator|-
 literal|1
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -4825,28 +4343,19 @@ name|y
 init|=
 literal|"123"
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strcmp
 argument_list|(
 name|x
 argument_list|,
 name|y
 argument_list|)
-operator|!=
+operator|==
 literal|1
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -4867,29 +4376,20 @@ name|y
 init|=
 literal|"12345"
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strcmp
 argument_list|(
 name|x
 argument_list|,
 name|y
 argument_list|)
-operator|!=
+operator|==
 operator|-
 literal|1
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -4898,28 +4398,19 @@ name|void
 name|strcmp_embedded_null
 parameter_list|()
 block|{
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strcmp
 argument_list|(
 literal|"\0z"
 argument_list|,
 literal|"\0y"
 argument_list|)
-operator|!=
+operator|==
 literal|0
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -4932,28 +4423,19 @@ modifier|*
 name|unknown
 parameter_list|)
 block|{
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strcmp
 argument_list|(
 name|unknown
 argument_list|,
 name|unknown
 argument_list|)
-operator|!=
+operator|==
 literal|0
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -5001,8 +4483,8 @@ name|void
 name|strncmp_constant0
 parameter_list|()
 block|{
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strncmp
 argument_list|(
 literal|"123"
@@ -5011,20 +4493,11 @@ literal|"123"
 argument_list|,
 literal|3
 argument_list|)
-operator|!=
+operator|==
 literal|0
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -5039,8 +4512,8 @@ name|x
 init|=
 literal|"123"
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strncmp
 argument_list|(
 name|x
@@ -5049,20 +4522,11 @@ literal|"123"
 argument_list|,
 literal|3
 argument_list|)
-operator|!=
+operator|==
 literal|0
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -5077,8 +4541,8 @@ name|x
 init|=
 literal|"123"
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strncmp
 argument_list|(
 literal|"123"
@@ -5087,20 +4551,11 @@ name|x
 argument_list|,
 literal|3
 argument_list|)
-operator|!=
+operator|==
 literal|0
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -5121,8 +4576,8 @@ name|y
 init|=
 literal|"123"
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strncmp
 argument_list|(
 name|x
@@ -5131,20 +4586,11 @@ name|y
 argument_list|,
 literal|3
 argument_list|)
-operator|!=
+operator|==
 literal|0
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -5165,8 +4611,8 @@ name|y
 init|=
 literal|"123"
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strncmp
 argument_list|(
 name|x
@@ -5175,20 +4621,11 @@ name|y
 argument_list|,
 literal|3
 argument_list|)
-operator|!=
+operator|==
 literal|1
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -5209,8 +4646,8 @@ name|y
 init|=
 literal|"234"
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strncmp
 argument_list|(
 name|x
@@ -5219,21 +4656,12 @@ name|y
 argument_list|,
 literal|3
 argument_list|)
-operator|!=
+operator|==
 operator|-
 literal|1
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -5314,8 +4742,8 @@ name|y
 init|=
 literal|"234"
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strncmp
 argument_list|(
 name|x
@@ -5324,21 +4752,12 @@ name|y
 argument_list|,
 literal|5
 argument_list|)
-operator|!=
+operator|==
 operator|-
 literal|1
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -5359,8 +4778,8 @@ name|y
 init|=
 literal|"23456"
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strncmp
 argument_list|(
 name|x
@@ -5369,21 +4788,12 @@ name|y
 argument_list|,
 literal|5
 argument_list|)
-operator|!=
+operator|==
 operator|-
 literal|1
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -5404,8 +4814,8 @@ name|y
 init|=
 literal|"123"
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strncmp
 argument_list|(
 name|x
@@ -5414,20 +4824,11 @@ name|y
 argument_list|,
 literal|5
 argument_list|)
-operator|!=
+operator|==
 literal|1
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -5448,8 +4849,8 @@ name|y
 init|=
 literal|"12345"
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strncmp
 argument_list|(
 name|x
@@ -5458,21 +4859,12 @@ name|y
 argument_list|,
 literal|5
 argument_list|)
-operator|!=
+operator|==
 operator|-
 literal|1
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -5493,8 +4885,8 @@ name|y
 init|=
 literal|"12345"
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strncmp
 argument_list|(
 name|x
@@ -5503,20 +4895,11 @@ name|y
 argument_list|,
 literal|3
 argument_list|)
-operator|!=
+operator|==
 literal|0
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -5537,8 +4920,8 @@ name|y
 init|=
 literal|"12345"
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strncmp
 argument_list|(
 name|x
@@ -5547,21 +4930,12 @@ name|y
 argument_list|,
 literal|3
 argument_list|)
-operator|!=
+operator|==
 operator|-
 literal|1
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -5582,8 +4956,8 @@ name|y
 init|=
 literal|"12345"
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strncmp
 argument_list|(
 name|x
@@ -5592,20 +4966,11 @@ name|y
 argument_list|,
 literal|3
 argument_list|)
-operator|!=
+operator|==
 literal|1
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -5614,8 +4979,8 @@ name|void
 name|strncmp_embedded_null
 parameter_list|()
 block|{
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strncmp
 argument_list|(
 literal|"ab\0zz"
@@ -5624,20 +4989,11 @@ literal|"ab\0yy"
 argument_list|,
 literal|4
 argument_list|)
-operator|!=
+operator|==
 literal|0
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -5682,28 +5038,19 @@ name|void
 name|strcasecmp_constant0
 parameter_list|()
 block|{
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strcasecmp
 argument_list|(
 literal|"abc"
 argument_list|,
 literal|"Abc"
 argument_list|)
-operator|!=
+operator|==
 literal|0
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -5718,28 +5065,19 @@ name|x
 init|=
 literal|"abc"
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strcasecmp
 argument_list|(
 name|x
 argument_list|,
 literal|"Abc"
 argument_list|)
-operator|!=
+operator|==
 literal|0
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -5754,28 +5092,19 @@ name|x
 init|=
 literal|"abc"
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strcasecmp
 argument_list|(
 literal|"Abc"
 argument_list|,
 name|x
 argument_list|)
-operator|!=
+operator|==
 literal|0
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -5796,28 +5125,19 @@ name|y
 init|=
 literal|"Abc"
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strcasecmp
 argument_list|(
 name|x
 argument_list|,
 name|y
 argument_list|)
-operator|!=
+operator|==
 literal|0
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -5838,28 +5158,19 @@ name|y
 init|=
 literal|"abc"
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strcasecmp
 argument_list|(
 name|x
 argument_list|,
 name|y
 argument_list|)
-operator|!=
+operator|==
 literal|1
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -5880,29 +5191,20 @@ name|y
 init|=
 literal|"Bcd"
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strcasecmp
 argument_list|(
 name|x
 argument_list|,
 name|y
 argument_list|)
-operator|!=
+operator|==
 operator|-
 literal|1
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -5979,29 +5281,20 @@ name|y
 init|=
 literal|"aBd"
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strcasecmp
 argument_list|(
 name|x
 argument_list|,
 name|y
 argument_list|)
-operator|!=
+operator|==
 operator|-
 literal|1
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -6022,29 +5315,20 @@ name|y
 init|=
 literal|"aBdef"
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strcasecmp
 argument_list|(
 name|x
 argument_list|,
 name|y
 argument_list|)
-operator|!=
+operator|==
 operator|-
 literal|1
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -6065,28 +5349,19 @@ name|y
 init|=
 literal|"abc"
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strcasecmp
 argument_list|(
 name|x
 argument_list|,
 name|y
 argument_list|)
-operator|!=
+operator|==
 literal|1
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -6107,29 +5382,20 @@ name|y
 init|=
 literal|"abcde"
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strcasecmp
 argument_list|(
 name|x
 argument_list|,
 name|y
 argument_list|)
-operator|!=
+operator|==
 operator|-
 literal|1
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -6138,28 +5404,19 @@ name|void
 name|strcasecmp_embedded_null
 parameter_list|()
 block|{
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strcasecmp
 argument_list|(
 literal|"ab\0zz"
 argument_list|,
 literal|"ab\0yy"
 argument_list|)
-operator|!=
+operator|==
 literal|0
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -6207,8 +5464,8 @@ name|void
 name|strncasecmp_constant0
 parameter_list|()
 block|{
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strncasecmp
 argument_list|(
 literal|"abc"
@@ -6217,20 +5474,11 @@ literal|"Abc"
 argument_list|,
 literal|3
 argument_list|)
-operator|!=
+operator|==
 literal|0
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -6245,8 +5493,8 @@ name|x
 init|=
 literal|"abc"
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strncasecmp
 argument_list|(
 name|x
@@ -6255,20 +5503,11 @@ literal|"Abc"
 argument_list|,
 literal|3
 argument_list|)
-operator|!=
+operator|==
 literal|0
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -6283,8 +5522,8 @@ name|x
 init|=
 literal|"abc"
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strncasecmp
 argument_list|(
 literal|"Abc"
@@ -6293,20 +5532,11 @@ name|x
 argument_list|,
 literal|3
 argument_list|)
-operator|!=
+operator|==
 literal|0
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -6327,8 +5557,8 @@ name|y
 init|=
 literal|"Abc"
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strncasecmp
 argument_list|(
 name|x
@@ -6337,20 +5567,11 @@ name|y
 argument_list|,
 literal|3
 argument_list|)
-operator|!=
+operator|==
 literal|0
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -6371,8 +5592,8 @@ name|y
 init|=
 literal|"abc"
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strncasecmp
 argument_list|(
 name|x
@@ -6381,20 +5602,11 @@ name|y
 argument_list|,
 literal|3
 argument_list|)
-operator|!=
+operator|==
 literal|1
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -6415,8 +5627,8 @@ name|y
 init|=
 literal|"Bcd"
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strncasecmp
 argument_list|(
 name|x
@@ -6425,21 +5637,12 @@ name|y
 argument_list|,
 literal|3
 argument_list|)
-operator|!=
+operator|==
 operator|-
 literal|1
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -6520,8 +5723,8 @@ name|y
 init|=
 literal|"aBd"
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strncasecmp
 argument_list|(
 name|x
@@ -6530,21 +5733,12 @@ name|y
 argument_list|,
 literal|5
 argument_list|)
-operator|!=
+operator|==
 operator|-
 literal|1
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -6565,8 +5759,8 @@ name|y
 init|=
 literal|"aBdef"
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strncasecmp
 argument_list|(
 name|x
@@ -6575,21 +5769,12 @@ name|y
 argument_list|,
 literal|5
 argument_list|)
-operator|!=
+operator|==
 operator|-
 literal|1
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -6610,8 +5795,8 @@ name|y
 init|=
 literal|"abc"
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strncasecmp
 argument_list|(
 name|x
@@ -6620,20 +5805,11 @@ name|y
 argument_list|,
 literal|5
 argument_list|)
-operator|!=
+operator|==
 literal|1
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -6654,8 +5830,8 @@ name|y
 init|=
 literal|"abcde"
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strncasecmp
 argument_list|(
 name|x
@@ -6664,21 +5840,12 @@ name|y
 argument_list|,
 literal|5
 argument_list|)
-operator|!=
+operator|==
 operator|-
 literal|1
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -6699,8 +5866,8 @@ name|y
 init|=
 literal|"aBc"
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strncasecmp
 argument_list|(
 name|x
@@ -6709,20 +5876,11 @@ name|y
 argument_list|,
 literal|3
 argument_list|)
-operator|!=
+operator|==
 literal|0
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -6743,8 +5901,8 @@ name|y
 init|=
 literal|"aBd"
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strncasecmp
 argument_list|(
 name|x
@@ -6753,21 +5911,12 @@ name|y
 argument_list|,
 literal|3
 argument_list|)
-operator|!=
+operator|==
 operator|-
 literal|1
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -6788,8 +5937,8 @@ name|y
 init|=
 literal|"abc"
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strncasecmp
 argument_list|(
 name|x
@@ -6798,20 +5947,11 @@ name|y
 argument_list|,
 literal|3
 argument_list|)
-operator|!=
+operator|==
 literal|1
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -6820,8 +5960,8 @@ name|void
 name|strncasecmp_embedded_null
 parameter_list|()
 block|{
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|strncasecmp
 argument_list|(
 literal|"ab\0zz"
@@ -6830,20 +5970,11 @@ literal|"ab\0yy"
 argument_list|,
 literal|4
 argument_list|)
-operator|!=
+operator|==
 literal|0
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 

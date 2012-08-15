@@ -1678,6 +1678,11 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* --------------------------------------------------------------------- */
 end_comment
@@ -2013,11 +2018,6 @@ name|result
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* --------------------------------------------------------------------- */

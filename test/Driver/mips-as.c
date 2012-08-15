@@ -20,7 +20,35 @@ comment|// RUN:   | FileCheck -check-prefix=MIPS32-EB-AS %s
 end_comment
 
 begin_comment
-comment|// CHECK-MIPS32-EB-AS: as{{(.exe)?}}" "-march" "mips32" "-mabi" "32" "-EB"
+comment|// MIPS32-EB-AS: as{{(.exe)?}}" "-march" "mips32" "-mabi" "32" "-EB"
+end_comment
+
+begin_comment
+comment|// MIPS32-EB-AS-NOT: "-KPIC"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -### \
+end_comment
+
+begin_comment
+comment|// RUN:   -no-integrated-as -fPIC -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=MIPS32-EB-PIC %s
+end_comment
+
+begin_comment
+comment|// MIPS32-EB-PIC: as{{(.exe)?}}" "-march" "mips32" "-mabi" "32" "-EB"
+end_comment
+
+begin_comment
+comment|// MIPS32-EB-PIC: "-KPIC"
 end_comment
 
 begin_comment
@@ -40,7 +68,7 @@ comment|// RUN:   | FileCheck -check-prefix=MIPS32-EL-AS %s
 end_comment
 
 begin_comment
-comment|// CHECK-MIPS32-EL-AS: as{{(.exe)?}}" "-march" "mips32" "-mabi" "32" "-EL"
+comment|// MIPS32-EL-AS: as{{(.exe)?}}" "-march" "mips32" "-mabi" "32" "-EL"
 end_comment
 
 begin_comment
@@ -60,7 +88,7 @@ comment|// RUN:   | FileCheck -check-prefix=MIPS64-EB-AS %s
 end_comment
 
 begin_comment
-comment|// CHECK-MIPS64-EB-AS: as{{(.exe)?}}" "-march" "mips64" "-mabi" "64" "-EB"
+comment|// MIPS64-EB-AS: as{{(.exe)?}}" "-march" "mips64" "-mabi" "64" "-EB"
 end_comment
 
 begin_comment
@@ -80,7 +108,7 @@ comment|// RUN:   | FileCheck -check-prefix=MIPS64-EL-AS %s
 end_comment
 
 begin_comment
-comment|// CHECK-MIPS64-EL-AS: as{{(.exe)?}}" "-march" "mips64" "-mabi" "64" "-EL"
+comment|// MIPS64-EL-AS: as{{(.exe)?}}" "-march" "mips64" "-mabi" "64" "-EL"
 end_comment
 
 begin_comment
@@ -100,7 +128,7 @@ comment|// RUN:   | FileCheck -check-prefix=MIPS-EABI %s
 end_comment
 
 begin_comment
-comment|// CHECK-MIPS-EABI: as{{(.exe)?}}" "-march" "mips32" "-mabi" "eabi" "-EB"
+comment|// MIPS-EABI: as{{(.exe)?}}" "-march" "mips32" "-mabi" "eabi" "-EB"
 end_comment
 
 begin_comment
@@ -120,7 +148,7 @@ comment|// RUN:   | FileCheck -check-prefix=MIPS-N32 %s
 end_comment
 
 begin_comment
-comment|// CHECK-MIPS-N32: as{{(.exe)?}}" "-march" "mips64" "-mabi" "n32" "-EB"
+comment|// MIPS-N32: as{{(.exe)?}}" "-march" "mips64" "-mabi" "n32" "-EB"
 end_comment
 
 end_unit

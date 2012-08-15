@@ -76,5 +76,60 @@ comment|// expected-warning {{function 'f6' declared 'noreturn' should not retur
 block|}
 end_function
 
+begin_macro
+name|__declspec
+argument_list|(
+argument|align(
+literal|32768
+argument|)
+argument_list|)
+end_macro
+
+begin_struct
+struct|struct
+name|S1
+block|{
+name|int
+name|a
+decl_stmt|;
+block|}
+name|s
+struct|;
+end_struct
+
+begin_comment
+comment|/* expected-error {{requested alignment must be 8192 bytes or smaller}} */
+end_comment
+
+begin_struct
+struct|struct
+name|__declspec
+argument_list|(
+argument|aligned
+argument_list|)
+name|S2
+block|{}
+struct|;
+end_struct
+
+begin_comment
+comment|/* expected-warning {{unknown __declspec attribute 'aligned' ignored}} */
+end_comment
+
+begin_struct
+struct|struct
+name|__declspec
+argument_list|(
+argument|appdomain
+argument_list|)
+name|S3
+block|{}
+struct|;
+end_struct
+
+begin_comment
+comment|/* expected-warning {{__declspec attribute 'appdomain' is not supported}} */
+end_comment
+
 end_unit
 

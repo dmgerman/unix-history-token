@@ -55,6 +55,12 @@ directive|include
 file|"llvm/ADT/ArrayRef.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/Optional.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -728,6 +734,14 @@ operator|>
 operator|&
 name|ARCMTMacroLocs
 expr_stmt|;
+name|llvm
+operator|::
+name|Optional
+operator|<
+name|bool
+operator|>
+name|EnableCFBridgeFns
+expr_stmt|;
 name|MigrationPass
 argument_list|(
 argument|ASTContext&Ctx
@@ -832,6 +846,10 @@ operator|=
 name|val
 expr_stmt|;
 block|}
+name|bool
+name|CFBridgingFunctionsDefined
+parameter_list|()
+function_decl|;
 block|}
 empty_stmt|;
 specifier|static

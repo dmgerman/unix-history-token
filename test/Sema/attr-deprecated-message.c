@@ -17,6 +17,10 @@ name|deprecated
 typedef|("Please avoid INT1")));
 end_typedef
 
+begin_comment
+comment|// expected-note 3 {{'INT1' declared here}}
+end_comment
+
 begin_typedef
 typedef|typedef
 name|INT1
@@ -82,6 +86,10 @@ unit|)))
 empty_stmt|;
 end_empty_stmt
 
+begin_comment
+comment|// expected-note {{'f1' declared here}}
+end_comment
+
 begin_function_decl
 name|INT1
 name|f2
@@ -111,6 +119,10 @@ typedef|((
 name|deprecated
 typedef|("Please avoid Color")));
 end_typedef
+
+begin_comment
+comment|// expected-note {{'Color' declared here}}
+end_comment
 
 begin_decl_stmt
 name|Color
@@ -142,6 +154,10 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|// expected-note {{'g2' declared here}}
+end_comment
 
 begin_function
 name|int

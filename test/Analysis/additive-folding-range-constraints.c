@@ -1,54 +1,36 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core,experimental.core -verify -analyzer-constraints=range %s
+comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core,debug.ExprInspection -verify -analyzer-constraints=range %s
 end_comment
-
-begin_comment
-comment|// These are used to trigger warnings.
-end_comment
-
-begin_typedef
-typedef|typedef
-name|typeof
-argument_list|(
-argument|sizeof(int)
-argument_list|)
-name|size_t
-expr_stmt|;
-end_typedef
 
 begin_function_decl
 name|void
-modifier|*
-name|malloc
+name|clang_analyzer_eval
 parameter_list|(
-name|size_t
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_function_decl
-name|void
-name|free
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_define
-define|#
-directive|define
-name|NULL
-value|((void*)0)
-end_define
 
 begin_define
 define|#
 directive|define
 name|UINT_MAX
-value|(__INT_MAX__  *2U +1U)
+value|(~0U)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INT_MAX
+value|(UINT_MAX& (UINT_MAX>> 1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|INT_MIN
+value|(-INT_MAX - 1)
 end_define
 
 begin_comment
@@ -71,12 +53,6 @@ name|unsigned
 name|a
 parameter_list|)
 block|{
-name|char
-modifier|*
-name|b
-init|=
-name|NULL
-decl_stmt|;
 if|if
 condition|(
 name|a
@@ -85,15 +61,19 @@ literal|2
 operator|>
 literal|1
 condition|)
-name|b
-operator|=
-name|malloc
+name|clang_analyzer_eval
 argument_list|(
+name|a
+operator|<
+name|UINT_MAX
+operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+comment|// expected-warning{{TRUE}}
+else|else
+name|clang_analyzer_eval
+argument_list|(
 name|a
 operator|==
 name|UINT_MAX
@@ -103,25 +83,9 @@ operator|||
 name|a
 operator|==
 name|UINT_MAX
-condition|)
-return|return;
-comment|// no-warning
-elseif|else
-if|if
-condition|(
-name|a
-operator|<
-name|UINT_MAX
-operator|-
-literal|1
-condition|)
-name|free
-argument_list|(
-name|b
 argument_list|)
 expr_stmt|;
-return|return;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -133,12 +97,6 @@ name|unsigned
 name|a
 parameter_list|)
 block|{
-name|char
-modifier|*
-name|b
-init|=
-name|NULL
-decl_stmt|;
 if|if
 condition|(
 name|a
@@ -147,26 +105,8 @@ literal|2
 operator|>=
 literal|1
 condition|)
-name|b
-operator|=
-name|malloc
+name|clang_analyzer_eval
 argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|a
-operator|==
-name|UINT_MAX
-operator|-
-literal|1
-condition|)
-return|return;
-comment|// no-warning
-elseif|else
-if|if
-condition|(
 name|a
 operator|<
 name|UINT_MAX
@@ -176,14 +116,20 @@ operator|||
 name|a
 operator|==
 name|UINT_MAX
-condition|)
-name|free
-argument_list|(
-name|b
 argument_list|)
 expr_stmt|;
-return|return;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
+else|else
+name|clang_analyzer_eval
+argument_list|(
+name|a
+operator|==
+name|UINT_MAX
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -195,12 +141,6 @@ name|unsigned
 name|a
 parameter_list|)
 block|{
-name|char
-modifier|*
-name|b
-init|=
-name|NULL
-decl_stmt|;
 if|if
 condition|(
 name|a
@@ -209,15 +149,8 @@ literal|1
 operator|<
 literal|2
 condition|)
-name|b
-operator|=
-name|malloc
+name|clang_analyzer_eval
 argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|a
 operator|==
 literal|0
@@ -225,14 +158,9 @@ operator|||
 name|a
 operator|==
 name|UINT_MAX
-condition|)
-name|free
-argument_list|(
-name|b
 argument_list|)
 expr_stmt|;
-return|return;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -244,12 +172,6 @@ name|unsigned
 name|a
 parameter_list|)
 block|{
-name|char
-modifier|*
-name|b
-init|=
-name|NULL
-decl_stmt|;
 if|if
 condition|(
 name|a
@@ -258,15 +180,8 @@ literal|1
 operator|<=
 literal|2
 condition|)
-name|b
-operator|=
-name|malloc
+name|clang_analyzer_eval
 argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|a
 operator|==
 literal|0
@@ -278,14 +193,9 @@ operator|||
 name|a
 operator|==
 name|UINT_MAX
-condition|)
-name|free
-argument_list|(
-name|b
 argument_list|)
 expr_stmt|;
-return|return;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -309,12 +219,6 @@ name|unsigned
 name|a
 parameter_list|)
 block|{
-name|char
-modifier|*
-name|b
-init|=
-name|NULL
-decl_stmt|;
 if|if
 condition|(
 name|a
@@ -325,42 +229,23 @@ name|UINT_MAX
 operator|-
 literal|1
 condition|)
-name|b
-operator|=
-name|malloc
+name|clang_analyzer_eval
 argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|a
 operator|==
 literal|1
-operator|||
-name|a
-operator|==
-literal|0
-condition|)
-name|free
-argument_list|(
-name|b
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
+comment|// expected-warning{{TRUE}}
+else|else
+name|clang_analyzer_eval
+argument_list|(
 name|a
-operator|>
+operator|!=
 literal|1
-condition|)
-name|free
-argument_list|(
-name|b
 argument_list|)
 expr_stmt|;
-return|return;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -372,12 +257,6 @@ name|unsigned
 name|a
 parameter_list|)
 block|{
-name|char
-modifier|*
-name|b
-init|=
-name|NULL
-decl_stmt|;
 if|if
 condition|(
 name|a
@@ -388,24 +267,8 @@ name|UINT_MAX
 operator|-
 literal|1
 condition|)
-name|b
-operator|=
-name|malloc
+name|clang_analyzer_eval
 argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|a
-operator|>
-literal|1
-condition|)
-return|return;
-comment|// no-warning
-elseif|else
-if|if
-condition|(
 name|a
 operator|==
 literal|1
@@ -413,14 +276,18 @@ operator|||
 name|a
 operator|==
 literal|0
-condition|)
-name|free
-argument_list|(
-name|b
 argument_list|)
 expr_stmt|;
-return|return;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
+else|else
+name|clang_analyzer_eval
+argument_list|(
+name|a
+operator|>
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -432,12 +299,6 @@ name|unsigned
 name|a
 parameter_list|)
 block|{
-name|char
-modifier|*
-name|b
-init|=
-name|NULL
-decl_stmt|;
 if|if
 condition|(
 name|a
@@ -446,43 +307,27 @@ literal|2
 operator|<
 literal|1
 condition|)
-name|b
-operator|=
-name|malloc
+name|clang_analyzer_eval
 argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|a
 operator|==
 name|UINT_MAX
 operator|-
 literal|1
-operator|||
-name|a
-operator|==
-name|UINT_MAX
-condition|)
-name|free
-argument_list|(
-name|b
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
+comment|// expected-warning{{TRUE}}
+else|else
+name|clang_analyzer_eval
+argument_list|(
 name|a
-operator|<
+operator|!=
 name|UINT_MAX
 operator|-
 literal|1
-condition|)
-return|return;
-comment|// no-warning
-return|return;
-comment|// no-warning
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -494,12 +339,6 @@ name|unsigned
 name|a
 parameter_list|)
 block|{
-name|char
-modifier|*
-name|b
-init|=
-name|NULL
-decl_stmt|;
 if|if
 condition|(
 name|a
@@ -508,26 +347,8 @@ literal|2
 operator|<=
 literal|1
 condition|)
-name|b
-operator|=
-name|malloc
+name|clang_analyzer_eval
 argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|a
-operator|<
-name|UINT_MAX
-operator|-
-literal|1
-condition|)
-return|return;
-comment|// no-warning
-elseif|else
-if|if
-condition|(
 name|a
 operator|==
 name|UINT_MAX
@@ -537,14 +358,604 @@ operator|||
 name|a
 operator|==
 name|UINT_MAX
-condition|)
-name|free
-argument_list|(
-name|b
 argument_list|)
 expr_stmt|;
-return|return;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
+else|else
+name|clang_analyzer_eval
+argument_list|(
+name|a
+operator|<
+name|UINT_MAX
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{TRUE}}
+block|}
+end_function
+
+begin_comment
+comment|// Test the nine cases in RangeConstraintManager's pinning logic.
+end_comment
+
+begin_comment
+comment|// For out-of-range tautologies, it may be the negation that actually
+end_comment
+
+begin_comment
+comment|// triggers the case in question.
+end_comment
+
+begin_function
+name|void
+name|mixedComparisons1
+parameter_list|(
+name|signed
+name|char
+name|a
+parameter_list|)
+block|{
+comment|// Case 1: The range is entirely below the symbol's range.
+name|int
+name|min
+init|=
+name|INT_MIN
+decl_stmt|;
+name|clang_analyzer_eval
+argument_list|(
+operator|(
+name|a
+operator|-
+literal|2
+operator|)
+operator|>=
+operator|(
+name|min
+operator|+
+literal|5LL
+operator|)
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
+name|a
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{UNKNOWN}}
+name|clang_analyzer_eval
+argument_list|(
+name|a
+operator|==
+literal|0x7F
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{UNKNOWN}}
+name|clang_analyzer_eval
+argument_list|(
+name|a
+operator|==
+operator|-
+literal|0x80
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{UNKNOWN}}
+block|}
+end_function
+
+begin_function
+name|void
+name|mixedComparisons2
+parameter_list|(
+name|signed
+name|char
+name|a
+parameter_list|)
+block|{
+comment|// Case 2: Only the lower end of the range is outside.
+name|clang_analyzer_eval
+argument_list|(
+operator|(
+name|a
+operator|-
+literal|5
+operator|)
+operator|<
+operator|(
+operator|-
+literal|0x81LL
+operator|)
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{UNKNOWN}}
+if|if
+condition|(
+operator|(
+name|a
+operator|-
+literal|5
+operator|)
+operator|<
+operator|(
+operator|-
+literal|0x81LL
+operator|)
+condition|)
+block|{
+name|clang_analyzer_eval
+argument_list|(
+name|a
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{FALSE}}
+name|clang_analyzer_eval
+argument_list|(
+name|a
+operator|==
+literal|0x7F
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{FALSE}}
+name|clang_analyzer_eval
+argument_list|(
+name|a
+operator|==
+operator|-
+literal|0x80
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{UNKNOWN}}
+block|}
+block|}
+end_function
+
+begin_function
+name|void
+name|mixedComparisons3
+parameter_list|(
+name|signed
+name|char
+name|a
+parameter_list|)
+block|{
+comment|// Case 3: The entire symbol range is covered.
+name|clang_analyzer_eval
+argument_list|(
+operator|(
+name|a
+operator|-
+literal|0x200
+operator|)
+operator|<
+operator|-
+literal|0x100LL
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
+name|a
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{UNKNOWN}}
+name|clang_analyzer_eval
+argument_list|(
+name|a
+operator|==
+literal|0x7F
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{UNKNOWN}}
+name|clang_analyzer_eval
+argument_list|(
+name|a
+operator|==
+operator|-
+literal|0x80
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{UNKNOWN}}
+block|}
+end_function
+
+begin_function
+name|void
+name|mixedComparisons4
+parameter_list|(
+name|signed
+name|char
+name|a
+parameter_list|)
+block|{
+comment|// Case 4: The range wraps around, but the lower wrap is out-of-range.
+name|clang_analyzer_eval
+argument_list|(
+operator|(
+name|a
+operator|-
+literal|5
+operator|)
+operator|>
+literal|0LL
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{UNKNOWN}}
+if|if
+condition|(
+operator|(
+name|a
+operator|-
+literal|5
+operator|)
+operator|>
+literal|0LL
+condition|)
+block|{
+name|clang_analyzer_eval
+argument_list|(
+name|a
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{FALSE}}
+name|clang_analyzer_eval
+argument_list|(
+name|a
+operator|==
+literal|0x7F
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{UNKNOWN}}
+name|clang_analyzer_eval
+argument_list|(
+name|a
+operator|==
+operator|-
+literal|0x80
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{FALSE}}
+block|}
+block|}
+end_function
+
+begin_function
+name|void
+name|mixedComparisons5
+parameter_list|(
+name|signed
+name|char
+name|a
+parameter_list|)
+block|{
+comment|// Case 5: The range is inside and may or may not wrap.
+name|clang_analyzer_eval
+argument_list|(
+operator|(
+name|a
+operator|+
+literal|5
+operator|)
+operator|==
+literal|0LL
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{UNKNOWN}}
+if|if
+condition|(
+operator|(
+name|a
+operator|+
+literal|5
+operator|)
+operator|==
+literal|0LL
+condition|)
+block|{
+name|clang_analyzer_eval
+argument_list|(
+name|a
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{FALSE}}
+name|clang_analyzer_eval
+argument_list|(
+name|a
+operator|==
+literal|0x7F
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{FALSE}}
+name|clang_analyzer_eval
+argument_list|(
+name|a
+operator|==
+operator|-
+literal|0x80
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{FALSE}}
+block|}
+else|else
+block|{
+name|clang_analyzer_eval
+argument_list|(
+name|a
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{UNKNOWN}}
+name|clang_analyzer_eval
+argument_list|(
+name|a
+operator|==
+literal|0x7F
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{UNKNOWN}}
+name|clang_analyzer_eval
+argument_list|(
+name|a
+operator|==
+operator|-
+literal|0x80
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{UNKNOWN}}
+block|}
+block|}
+end_function
+
+begin_function
+name|void
+name|mixedComparisons6
+parameter_list|(
+name|signed
+name|char
+name|a
+parameter_list|)
+block|{
+comment|// Case 6: Only the upper end of the range is outside.
+name|clang_analyzer_eval
+argument_list|(
+operator|(
+name|a
+operator|+
+literal|5
+operator|)
+operator|>
+literal|0x81LL
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{UNKNOWN}}
+if|if
+condition|(
+operator|(
+name|a
+operator|+
+literal|5
+operator|)
+operator|>
+literal|0x81LL
+condition|)
+block|{
+name|clang_analyzer_eval
+argument_list|(
+name|a
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{FALSE}}
+name|clang_analyzer_eval
+argument_list|(
+name|a
+operator|==
+literal|0x7F
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{UNKNOWN}}
+name|clang_analyzer_eval
+argument_list|(
+name|a
+operator|==
+operator|-
+literal|0x80
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{FALSE}}
+block|}
+block|}
+end_function
+
+begin_function
+name|void
+name|mixedComparisons7
+parameter_list|(
+name|signed
+name|char
+name|a
+parameter_list|)
+block|{
+comment|// Case 7: The range wraps around but is entirely outside the symbol's range.
+name|int
+name|min
+init|=
+name|INT_MIN
+decl_stmt|;
+name|clang_analyzer_eval
+argument_list|(
+operator|(
+name|a
+operator|+
+literal|2
+operator|)
+operator|>=
+operator|(
+name|min
+operator|+
+literal|5LL
+operator|)
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
+name|a
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{UNKNOWN}}
+name|clang_analyzer_eval
+argument_list|(
+name|a
+operator|==
+literal|0x7F
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{UNKNOWN}}
+name|clang_analyzer_eval
+argument_list|(
+name|a
+operator|==
+operator|-
+literal|0x80
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{UNKNOWN}}
+block|}
+end_function
+
+begin_function
+name|void
+name|mixedComparisons8
+parameter_list|(
+name|signed
+name|char
+name|a
+parameter_list|)
+block|{
+comment|// Case 8: The range wraps, but the upper wrap is out of range.
+name|clang_analyzer_eval
+argument_list|(
+operator|(
+name|a
+operator|+
+literal|5
+operator|)
+operator|<
+literal|0LL
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{UNKNOWN}}
+if|if
+condition|(
+operator|(
+name|a
+operator|+
+literal|5
+operator|)
+operator|<
+literal|0LL
+condition|)
+block|{
+name|clang_analyzer_eval
+argument_list|(
+name|a
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{FALSE}}
+name|clang_analyzer_eval
+argument_list|(
+name|a
+operator|==
+literal|0x7F
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{FALSE}}
+name|clang_analyzer_eval
+argument_list|(
+name|a
+operator|==
+operator|-
+literal|0x80
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{UNKNOWN}}
+block|}
+block|}
+end_function
+
+begin_function
+name|void
+name|mixedComparisons9
+parameter_list|(
+name|signed
+name|char
+name|a
+parameter_list|)
+block|{
+comment|// Case 9: The range is entirely above the symbol's range.
+name|int
+name|max
+init|=
+name|INT_MAX
+decl_stmt|;
+name|clang_analyzer_eval
+argument_list|(
+operator|(
+name|a
+operator|+
+literal|2
+operator|)
+operator|<=
+operator|(
+name|max
+operator|-
+literal|5LL
+operator|)
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
+name|a
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{UNKNOWN}}
+name|clang_analyzer_eval
+argument_list|(
+name|a
+operator|==
+literal|0x7F
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{UNKNOWN}}
+name|clang_analyzer_eval
+argument_list|(
+name|a
+operator|==
+operator|-
+literal|0x80
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{UNKNOWN}}
 block|}
 end_function
 

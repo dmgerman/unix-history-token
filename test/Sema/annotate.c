@@ -66,7 +66,7 @@ operator|)
 literal|0
 argument_list|)
 decl_stmt|;
-comment|// expected-error {{__builtin_annotation requires a non wide string constant}}
+comment|// expected-error {{second argument to __builtin_annotation must be a non-wide string constant}}
 name|int
 name|v
 init|=
@@ -81,7 +81,7 @@ operator|)
 literal|L"bar"
 argument_list|)
 decl_stmt|;
-comment|// expected-error {{__builtin_annotation requires a non wide string constant}}
+comment|// expected-error {{second argument to __builtin_annotation must be a non-wide string constant}}
 name|int
 name|w
 init|=
@@ -92,6 +92,18 @@ argument_list|,
 literal|"foo"
 argument_list|)
 decl_stmt|;
+name|float
+name|b
+init|=
+name|__builtin_annotation
+argument_list|(
+operator|*
+name|a
+argument_list|,
+literal|"foo"
+argument_list|)
+decl_stmt|;
+comment|// expected-error {{first argument to __builtin_annotation must be an integer}}
 block|}
 end_decl_stmt
 

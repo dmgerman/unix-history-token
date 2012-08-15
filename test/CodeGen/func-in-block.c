@@ -65,11 +65,11 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: @__func__.__main_block_invoke_0 = private unnamed_addr constant [22 x i8] c"__main_block_invoke_0\00"
+comment|// CHECK: @__func__.__main_block_invoke = private unnamed_addr constant [20 x i8] c"__main_block_invoke\00"
 end_comment
 
 begin_comment
-comment|// CHECK: call void @PRINTF({{.*}}@__func__.__main_block_invoke_
+comment|// CHECK: call void @PRINTF({{.*}}@__func__.__main_block_invoke
 end_comment
 
 end_unit

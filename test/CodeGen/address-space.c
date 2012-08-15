@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -emit-llvm< %s | FileCheck %s
+comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin -emit-llvm< %s | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -emit-llvm< %s | grep 'load.*addrspace(2).. @A'
+comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin -emit-llvm< %s | grep 'load.*addrspace(2).. @A'
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -emit-llvm< %s | grep 'load.*addrspace(2).. @B'
+comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin -emit-llvm< %s | grep 'load.*addrspace(2).. @B'
 end_comment
 
 begin_comment

@@ -140,14 +140,6 @@ block|;
 name|CheckerManager
 operator|*
 name|CheckerMgr
-block|;    enum
-name|AnalysisScope
-block|{
-name|ScopeTU
-block|,
-name|ScopeDecl
-block|}
-name|AScope
 block|;
 comment|/// \brief The maximum number of exploded nodes the analyzer will generate.
 name|unsigned
@@ -244,8 +236,6 @@ argument_list|,
 argument|bool useUnoptimizedCFG
 argument_list|,
 argument|bool addImplicitDtors
-argument_list|,
-argument|bool addInitializers
 argument_list|,
 argument|bool eagerlyTrimEGraph
 argument_list|,
@@ -496,8 +486,8 @@ block|{
 return|return
 operator|(
 name|IPAMode
-operator|==
-name|Inlining
+operator|!=
+name|None
 operator|)
 return|;
 block|}
@@ -580,26 +570,6 @@ operator|.
 name|getContext
 argument_list|(
 name|D
-argument_list|)
-return|;
-block|}
-name|AnalysisDeclContext
-operator|*
-name|getAnalysisDeclContext
-argument_list|(
-argument|const Decl *D
-argument_list|,
-argument|idx::TranslationUnit *TU
-argument_list|)
-block|{
-return|return
-name|AnaCtxMgr
-operator|.
-name|getContext
-argument_list|(
-name|D
-argument_list|,
-name|TU
 argument_list|)
 return|;
 block|}

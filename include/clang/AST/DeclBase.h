@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/DeclarationName.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/Type.h"
 end_include
 
@@ -2465,12 +2471,14 @@ modifier|*
 name|value_type
 typedef|;
 typedef|typedef
-name|Decl
-modifier|*
+specifier|const
+name|value_type
+modifier|&
 name|reference
 typedef|;
 typedef|typedef
-name|Decl
+specifier|const
+name|value_type
 modifier|*
 name|pointer
 typedef|;
@@ -2523,7 +2531,7 @@ return|return
 name|Current
 return|;
 block|}
-name|pointer
+name|value_type
 name|operator
 operator|->
 expr|(
@@ -3382,14 +3390,37 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|// Debuggers don't usually respect default arguments.
+end_comment
+
 begin_expr_stmt
 name|LLVM_ATTRIBUTE_USED
 name|void
 name|dump
 argument_list|()
 specifier|const
+block|{
+name|dump
+argument_list|(
+name|llvm
+operator|::
+name|errs
+argument_list|()
+argument_list|)
+block|; }
+name|void
+name|dump
+argument_list|(
+argument|raw_ostream&Out
+argument_list|)
+specifier|const
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|// Debuggers don't usually respect default arguments.
+end_comment
 
 begin_expr_stmt
 name|LLVM_ATTRIBUTE_USED
@@ -3397,20 +3428,23 @@ name|void
 name|dumpXML
 argument_list|()
 specifier|const
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+block|{
+name|dumpXML
+argument_list|(
+name|llvm
+operator|::
+name|errs
+argument_list|()
+argument_list|)
+block|; }
 name|void
 name|dumpXML
 argument_list|(
-name|raw_ostream
-operator|&
-name|OS
+argument|raw_ostream&OS
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
+specifier|const
+expr_stmt|;
+end_expr_stmt
 
 begin_label
 name|private
@@ -4548,7 +4582,7 @@ name|NS
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// \\brief Collects all of the declaration contexts that are semantically
+comment|/// \brief Collects all of the declaration contexts that are semantically
 comment|/// connected to this declaration context.
 comment|///
 comment|/// For declaration contexts that have multiple semantically connected but
@@ -4603,12 +4637,14 @@ modifier|*
 name|value_type
 typedef|;
 typedef|typedef
-name|Decl
-modifier|*
+specifier|const
+name|value_type
+modifier|&
 name|reference
 typedef|;
 typedef|typedef
-name|Decl
+specifier|const
+name|value_type
 modifier|*
 name|pointer
 typedef|;
@@ -4656,7 +4692,8 @@ return|return
 name|Current
 return|;
 block|}
-name|pointer
+comment|// This doesn't meet the iterator requirements, but it's convenient
+name|value_type
 name|operator
 operator|->
 expr|(
@@ -4782,7 +4819,12 @@ name|decl_iterator
 name|decls_end
 argument_list|()
 specifier|const
-expr_stmt|;
+block|{
+return|return
+name|decl_iterator
+argument_list|()
+return|;
+block|}
 end_expr_stmt
 
 begin_expr_stmt
@@ -4818,7 +4860,12 @@ name|decl_iterator
 name|noload_decls_end
 argument_list|()
 specifier|const
-expr_stmt|;
+block|{
+return|return
+name|decl_iterator
+argument_list|()
+return|;
+block|}
 end_expr_stmt
 
 begin_comment
@@ -4896,18 +4943,24 @@ name|value_type
 typedef|;
 end_typedef
 
+begin_comment
+comment|// TODO: Add reference and pointer typedefs (with some appropriate proxy
+end_comment
+
+begin_comment
+comment|// type) if we ever have a need for them.
+end_comment
+
 begin_typedef
 typedef|typedef
-name|SpecificDecl
-modifier|*
+name|void
 name|reference
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|SpecificDecl
-modifier|*
+name|void
 name|pointer
 typedef|;
 end_typedef
@@ -4966,7 +5019,7 @@ block|{
 name|SkipToNextDecl
 argument_list|()
 block|;     }
-name|reference
+name|value_type
 name|operator
 operator|*
 operator|(
@@ -4986,8 +5039,12 @@ return|;
 block|}
 end_expr_stmt
 
+begin_comment
+comment|// This doesn't meet the iterator requirements, but it's convenient
+end_comment
+
 begin_expr_stmt
-name|pointer
+name|value_type
 name|operator
 operator|->
 expr|(
@@ -4998,14 +5055,9 @@ unit|)
 specifier|const
 block|{
 return|return
-name|cast
-operator|<
-name|SpecificDecl
-operator|>
-operator|(
 operator|*
-name|Current
-operator|)
+operator|*
+name|this
 return|;
 block|}
 end_expr_stmt
@@ -5238,18 +5290,24 @@ name|value_type
 typedef|;
 end_typedef
 
+begin_comment
+comment|// TODO: Add reference and pointer typedefs (with some appropriate proxy
+end_comment
+
+begin_comment
+comment|// type) if we ever have a need for them.
+end_comment
+
 begin_typedef
 typedef|typedef
-name|SpecificDecl
-modifier|*
+name|void
 name|reference
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|SpecificDecl
-modifier|*
+name|void
 name|pointer
 typedef|;
 end_typedef
@@ -5286,7 +5344,7 @@ operator|:
 name|Current
 argument_list|()
 block|{ }
-comment|/// specific_decl_iterator - Construct a new iterator over a
+comment|/// filtered_decl_iterator - Construct a new iterator over a
 comment|/// subset of the declarations the range [C,
 comment|/// end-of-declarations). If A is non-NULL, it is a pointer to a
 comment|/// member function of SpecificDecl that should return true for
@@ -5308,7 +5366,7 @@ block|{
 name|SkipToNextDecl
 argument_list|()
 block|;     }
-name|reference
+name|value_type
 name|operator
 operator|*
 operator|(
@@ -5329,7 +5387,7 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
-name|pointer
+name|value_type
 name|operator
 operator|->
 expr|(
@@ -5698,7 +5756,23 @@ name|DeclarationName
 name|Name
 argument_list|)
 decl|const
-decl_stmt|;
+block|{
+return|return
+name|const_cast
+operator|<
+name|DeclContext
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|lookup
+argument_list|(
+name|Name
+argument_list|)
+return|;
+block|}
 end_decl_stmt
 
 begin_comment

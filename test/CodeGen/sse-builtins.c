@@ -581,5 +581,29 @@ return|;
 block|}
 end_function
 
+begin_function
+name|void
+name|test_storel_epi64
+parameter_list|(
+name|__m128i
+name|x
+parameter_list|,
+name|void
+modifier|*
+name|y
+parameter_list|)
+block|{
+comment|// CHECK: define void @test_storel_epi64
+comment|// CHECK: store {{.*}} i64* {{.*}}, align 1{{$}}
+name|_mm_storel_epi64
+argument_list|(
+name|y
+argument_list|,
+name|x
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 end_unit
 

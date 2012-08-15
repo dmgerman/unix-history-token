@@ -421,7 +421,7 @@ name|fn3
 parameter_list|()
 function_decl|__attribute__
 parameter_list|(
-function_decl|(const
+function_decl|(__const
 end_function_decl
 
 begin_empty_stmt
@@ -490,6 +490,15 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// expected-warning {{ignoring return value of function declared with const attribute}}
+operator|(
+name|void
+operator|)
+literal|0
+operator|,
+name|fn1
+argument_list|()
+expr_stmt|;
+comment|// expected-warning {{ignoring return value of function declared with warn_unused_result attribute}}
 return|return
 literal|0
 return|;

@@ -27,7 +27,7 @@ operator|)
 operator|=
 literal|0
 expr_stmt|;
-comment|// FIXME: GCC doesn't consider the the following two statements to be errors.
+comment|// FIXME: GCC doesn't consider the following two statements to be errors.
 operator|*
 operator|(
 literal|0

@@ -349,11 +349,6 @@ range|:
 literal|1
 decl_stmt|;
 name|unsigned
-name|CFGAddInitializers
-range|:
-literal|1
-decl_stmt|;
-name|unsigned
 name|EagerlyTrimEGraph
 range|:
 literal|1
@@ -439,10 +434,6 @@ operator|=
 literal|0
 expr_stmt|;
 name|CFGAddImplicitDtors
-operator|=
-literal|0
-expr_stmt|;
-name|CFGAddInitializers
 operator|=
 literal|0
 expr_stmt|;

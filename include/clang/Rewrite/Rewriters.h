@@ -72,6 +72,9 @@ block|{
 name|class
 name|Preprocessor
 decl_stmt|;
+name|class
+name|PreprocessorOutputOptions
+decl_stmt|;
 comment|/// RewriteMacrosInInput - Implement -rewrite-macros mode.
 name|void
 name|RewriteMacrosInInput
@@ -96,6 +99,24 @@ parameter_list|,
 name|raw_ostream
 modifier|*
 name|OS
+parameter_list|)
+function_decl|;
+comment|/// RewriteIncludesInInput - Implement -frewrite-includes mode.
+name|void
+name|RewriteIncludesInInput
+parameter_list|(
+name|Preprocessor
+modifier|&
+name|PP
+parameter_list|,
+name|raw_ostream
+modifier|*
+name|OS
+parameter_list|,
+specifier|const
+name|PreprocessorOutputOptions
+modifier|&
+name|Opts
 parameter_list|)
 function_decl|;
 block|}

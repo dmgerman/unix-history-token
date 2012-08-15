@@ -827,5 +827,49 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|// This example tests CFG handling of '||' nested in a ternary expression,
+end_comment
+
+begin_comment
+comment|// and seeing that the analyzer doesn't crash.
+end_comment
+
+begin_function
+name|int
+name|isctype
+parameter_list|(
+name|char
+name|c
+parameter_list|,
+name|unsigned
+name|long
+name|f
+parameter_list|)
+block|{
+return|return
+operator|(
+name|c
+operator|<
+literal|1
+operator|||
+name|c
+operator|>
+literal|10
+operator|)
+condition|?
+literal|0
+else|:
+operator|!
+operator|!
+operator|(
+name|c
+operator|&
+name|f
+operator|)
+return|;
+block|}
+end_function
+
 end_unit
 

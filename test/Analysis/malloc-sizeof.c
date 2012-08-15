@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-checker=experimental.unix.MallocSizeof -verify %s
+comment|// RUN: %clang_cc1 -analyze -analyzer-checker=unix.MallocSizeof -verify %s
 end_comment
 
 begin_include
@@ -49,6 +49,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|free
+parameter_list|(
+name|void
+modifier|*
+name|ptr
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_struct
 struct|struct
 name|A
@@ -66,7 +77,15 @@ end_struct
 begin_function
 name|void
 name|foo
-parameter_list|()
+parameter_list|(
+name|unsigned
+name|int
+name|unsignedInt
+parameter_list|,
+name|unsigned
+name|int
+name|readSize
+parameter_list|)
 block|{
 name|int
 modifier|*
@@ -106,7 +125,7 @@ name|short
 argument_list|)
 argument_list|)
 decl_stmt|;
-comment|// expected-warning {{Result of 'malloc' is converted to type 'long *', whose pointee type 'long' is incompatible with sizeof operand type 'short'}}
+comment|// expected-warning {{Result of 'malloc' is converted to a pointer of type 'long', which is incompatible with sizeof operand type 'short'}}
 name|long
 modifier|*
 name|lp2
@@ -121,10 +140,10 @@ name|double
 argument_list|)
 argument_list|)
 decl_stmt|;
-comment|// expected-warning {{Result of 'malloc' is converted to type 'long *', whose pointee type 'long' is incompatible with sizeof operand type 'double'}}
-name|long
+comment|// expected-warning {{Result of 'malloc' is converted to a pointer of type 'long', which is incompatible with sizeof operand type 'double'}}
+name|char
 modifier|*
-name|lp3
+name|cp3
 init|=
 name|malloc
 argument_list|(
@@ -138,7 +157,23 @@ operator|+
 literal|2
 argument_list|)
 decl_stmt|;
-comment|// expected-warning {{Result of 'malloc' is converted to type 'long *', whose pointee type 'long' is incompatible with sizeof operand type 'char'}}
+comment|// no warning
+name|unsigned
+name|char
+modifier|*
+name|buf
+init|=
+name|malloc
+argument_list|(
+name|readSize
+operator|+
+sizeof|sizeof
+argument_list|(
+name|unsignedInt
+argument_list|)
+argument_list|)
+decl_stmt|;
+comment|// no warning
 name|struct
 name|A
 modifier|*
@@ -186,7 +221,7 @@ name|ap1
 argument_list|)
 argument_list|)
 decl_stmt|;
-comment|// expected-warning {{Result of 'calloc' is converted to type 'struct A *', whose pointee type 'struct A' is incompatible with sizeof operand type 'struct A *'}}
+comment|// expected-warning {{Result of 'calloc' is converted to a pointer of type 'struct A', which is incompatible with sizeof operand type 'struct A *'}}
 name|struct
 name|A
 modifier|*
@@ -204,7 +239,7 @@ operator|*
 argument_list|)
 argument_list|)
 decl_stmt|;
-comment|// expected-warning {{Result of 'calloc' is converted to type 'struct A *', whose pointee type 'struct A' is incompatible with sizeof operand type 'struct A *'}}
+comment|// expected-warning {{Result of 'calloc' is converted to a pointer of type 'struct A', which is incompatible with sizeof operand type 'struct A *'}}
 name|struct
 name|A
 modifier|*
@@ -221,7 +256,7 @@ name|B
 argument_list|)
 argument_list|)
 decl_stmt|;
-comment|// expected-warning {{Result of 'calloc' is converted to type 'struct A *', whose pointee type 'struct A' is incompatible with sizeof operand type 'struct B'}}
+comment|// expected-warning {{Result of 'calloc' is converted to a pointer of type 'struct A', which is incompatible with sizeof operand type 'struct B'}}
 name|struct
 name|A
 modifier|*
@@ -254,7 +289,74 @@ name|B
 argument_list|)
 argument_list|)
 decl_stmt|;
-comment|// expected-warning {{Result of 'realloc' is converted to type 'struct A *', whose pointee type 'struct A' is incompatible with sizeof operand type 'struct B'}}
+comment|// expected-warning {{Result of 'realloc' is converted to a pointer of type 'struct A', which is incompatible with sizeof operand type 'struct B'}}
+block|}
+end_function
+
+begin_comment
+comment|// Don't warn when the types differ only by constness.
+end_comment
+
+begin_function
+name|void
+name|ignore_const
+parameter_list|()
+block|{
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|x
+init|=
+operator|(
+specifier|const
+name|char
+operator|*
+operator|*
+operator|)
+name|malloc
+argument_list|(
+literal|1
+operator|*
+sizeof|sizeof
+argument_list|(
+name|char
+operator|*
+argument_list|)
+argument_list|)
+decl_stmt|;
+comment|// no-warning
+specifier|const
+name|char
+modifier|*
+modifier|*
+modifier|*
+name|y
+init|=
+operator|(
+specifier|const
+name|char
+operator|*
+operator|*
+operator|*
+operator|)
+name|malloc
+argument_list|(
+literal|1
+operator|*
+sizeof|sizeof
+argument_list|(
+name|char
+operator|*
+argument_list|)
+argument_list|)
+decl_stmt|;
+comment|// expected-warning {{Result of 'malloc' is converted to a pointer of type 'const char **', which is incompatible with sizeof operand type 'char *'}}
+name|free
+argument_list|(
+name|x
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

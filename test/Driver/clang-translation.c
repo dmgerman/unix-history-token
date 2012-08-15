@@ -171,5 +171,109 @@ begin_comment
 comment|// ARMV7_HARDFLOAT: "-x" "c"
 end_comment
 
+begin_comment
+comment|// RUN: %clang -target arm-linux -### -S %s 2> %t.log \
+end_comment
+
+begin_comment
+comment|// RUN:   -march=armv5e
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=ARMV5E %s< %t.log
+end_comment
+
+begin_comment
+comment|// ARMV5E: clang
+end_comment
+
+begin_comment
+comment|// ARMV5E: "-cc1"
+end_comment
+
+begin_comment
+comment|// ARMV5E: "-target-cpu" "arm1022e"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -ccc-clang-archs powerpc64 \
+end_comment
+
+begin_comment
+comment|// RUN:   -target powerpc64-unknown-linux-gnu -### -S %s 2> %t.log \
+end_comment
+
+begin_comment
+comment|// RUN:   -mcpu=G5
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=PPCG5 %s< %t.log
+end_comment
+
+begin_comment
+comment|// PPCG5: clang
+end_comment
+
+begin_comment
+comment|// PPCG5: "-cc1"
+end_comment
+
+begin_comment
+comment|// PPCG5: "-target-cpu" "g5"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -ccc-clang-archs powerpc64 \
+end_comment
+
+begin_comment
+comment|// RUN:   -target powerpc64-unknown-linux-gnu -### -S %s 2> %t.log      \
+end_comment
+
+begin_comment
+comment|// RUN:   -mcpu=power7
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=PPCPWR7 %s< %t.log
+end_comment
+
+begin_comment
+comment|// PPCPWR7: clang
+end_comment
+
+begin_comment
+comment|// PPCPWR7: "-cc1"
+end_comment
+
+begin_comment
+comment|// PPCPWR7: "-target-cpu" "pwr7"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -ccc-clang-archs powerpc64 \
+end_comment
+
+begin_comment
+comment|// RUN:   -target powerpc64-unknown-linux-gnu -### -S %s 2> %t.log
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=PPC64NS %s< %t.log
+end_comment
+
+begin_comment
+comment|// PPC64NS: clang
+end_comment
+
+begin_comment
+comment|// PPC64NS: "-cc1"
+end_comment
+
+begin_comment
+comment|// PPC64NS: "-target-cpu" "ppc64"
+end_comment
+
 end_unit
 

@@ -2219,5 +2219,72 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// CHECK: define<2 x i64> @f66
+end_comment
+
+begin_comment
+comment|// CHECK: ptrtoint
+end_comment
+
+begin_comment
+comment|// CHECK: and {{.*}}, -16
+end_comment
+
+begin_comment
+comment|// CHECK: inttoptr
+end_comment
+
+begin_typedef
+typedef|typedef
+name|int
+name|T66
+name|__attribute
+typedef|((
+name|vector_size
+typedef|(16)));
+end_typedef
+
+begin_function
+name|T66
+name|f66
+parameter_list|(
+name|int
+name|i
+parameter_list|,
+modifier|...
+parameter_list|)
+block|{
+name|__builtin_va_list
+name|ap
+decl_stmt|;
+name|__builtin_va_start
+argument_list|(
+name|ap
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+name|T66
+name|v
+init|=
+name|__builtin_va_arg
+argument_list|(
+name|ap
+argument_list|,
+name|T66
+argument_list|)
+decl_stmt|;
+name|__builtin_va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+return|return
+name|v
+return|;
+block|}
+end_function
+
 end_unit
 

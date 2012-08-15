@@ -45,5 +45,37 @@ name|CAKE
 expr_stmt|;
 end_expr_stmt
 
+begin_define
+define|#
+directive|define
+name|DIR
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|FNM
+parameter_list|(
+name|x
+parameter_list|)
+value|x
+end_define
+
+begin_macro
+name|FNM
+argument_list|(
+if|#
+directive|if
+name|DIR
+argument|int a;
+else|#
+directive|else
+argument|int b;
+endif|#
+directive|endif
+argument_list|)
+end_macro
+
 end_unit
 

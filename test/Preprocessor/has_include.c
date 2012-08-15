@@ -360,68 +360,123 @@ comment|// Try badly formed expressions.
 end_comment
 
 begin_comment
-comment|// FIXME: I don't quite know how to avoid preprocessor side effects.
+comment|// FIXME: We can recover better in almost all of these cases. (PR13335)
 end_comment
 
 begin_comment
-comment|// Use FileCheck?
+comment|// expected-error@+1 {{missing '(' after '__has_include'}} expected-error@+1 {{expected end of line}}
 end_comment
 
-begin_comment
-comment|// It also assert due to unterminated #if's.
-end_comment
+begin_if
+if|#
+directive|if
+name|__has_include
+literal|"stdint.h"
+if|)
+end_if
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
+comment|// expected-error@+1 {{expected "FILENAME" or<FILENAME>}} expected-error@+1 {{token is not a valid binary operator in a preprocessor subexpression}}
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__has_include
+argument_list|(
+name|stdint
+operator|.
+name|h
+argument_list|)
+end_if
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// expected-error@+1 {{expected "FILENAME" or<FILENAME>}}
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__has_include
+argument_list|()
+end_if
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// expected-error@+1 {{missing '(' after '__has_include'}}
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__has_include
+if|)
+end_if
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// expected-error@+1 {{missing '(' after '__has_include'}} expected-error@+1 {{token is not a valid binary operator in a preprocessor subexpression}}
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__has_include
+operator|<
+name|stdint
+operator|.
+name|h
+operator|>
+if|)
+end_if
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// expected-error@+1 {{expected "FILENAME" or<FILENAME>}} expected-warning@+1 {{missing terminating '"' character}}
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__has_include
+argument_list|(
+literal|"stdint.h)
+argument|#endif
+comment|// expected-error@+1 {{expected "FILENAME" or<FILENAME>}} expected-warning@+1 {{missing terminating '"' character}} expected-error@+1 {{token is not a valid binary operator in a preprocessor subexpression}}
+argument|#if __has_include(stdint.h
+literal|")
+argument|#endif
+comment|// expected-error@+1 {{expected "FILENAME" or<FILENAME>}} expected-error@+1 {{token is not a valid binary operator in a preprocessor subexpression}}
+argument|#if __has_include(stdint.h>) #endif
+comment|// FIXME: These test cases cause the compiler to crash. (PR13334)
 comment|//#if __has_include("stdint.h"
-end_comment
-
-begin_comment
-comment|//#if __has_include "stdint.h")
-end_comment
-
-begin_comment
-comment|//#if __has_include(stdint.h)
-end_comment
-
-begin_comment
-comment|//#if __has_include()
-end_comment
-
-begin_comment
 comment|//#if __has_include(
-end_comment
-
-begin_comment
-comment|//#if __has_include)
-end_comment
-
-begin_comment
 comment|//#if __has_include
-end_comment
-
-begin_comment
 comment|//#if __has_include(<stdint.h>
-end_comment
-
-begin_comment
-comment|//#if __has_include<stdint.h>)
-end_comment
-
-begin_comment
-comment|//#if __has_include("stdint.h)
-end_comment
-
-begin_comment
-comment|//#if __has_include(stdint.h")
-end_comment
-
-begin_comment
 comment|//#if __has_include(<stdint.h)
-end_comment
-
-begin_comment
-comment|//#if __has_include(stdint.h>)
-end_comment
+end_if
 
 end_unit
 

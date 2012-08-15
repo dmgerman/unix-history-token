@@ -646,6 +646,15 @@ name|ExternalSLocEntrySource
 block|{
 name|public
 label|:
+typedef|typedef
+name|SmallVector
+operator|<
+name|uint64_t
+operator|,
+literal|64
+operator|>
+name|RecordData
+expr_stmt|;
 enum|enum
 name|ASTReadResult
 block|{
@@ -1401,7 +1410,7 @@ literal|16
 operator|>
 name|ExternalDefinitions
 expr_stmt|;
-comment|/// \brief The IDs of all tentative definitions stored in the the chain.
+comment|/// \brief The IDs of all tentative definitions stored in the chain.
 comment|///
 comment|/// Sema keeps track of all tentative definitions in a TU because it has to
 comment|/// complete them and pass them on to CodeGen. Thus, tentative definitions in
@@ -1659,21 +1668,29 @@ comment|/// indicates how many separate module file load operations have occurre
 name|unsigned
 name|CurrentGeneration
 decl_stmt|;
-comment|/// \brief Mapping from switch-case IDs in the chain to switch-case statements
-comment|///
-comment|/// Statements usually don't have IDs, but switch cases need them, so that the
-comment|/// switch statement can refer to them.
-name|std
+typedef|typedef
+name|llvm
 operator|::
-name|map
+name|DenseMap
 operator|<
 name|unsigned
 operator|,
 name|SwitchCase
 operator|*
 operator|>
-name|SwitchCaseStmts
+name|SwitchCaseMapTy
 expr_stmt|;
+comment|/// \brief Mapping from switch-case IDs in the chain to switch-case statements
+comment|///
+comment|/// Statements usually don't have IDs, but switch cases need them, so that the
+comment|/// switch statement can refer to them.
+name|SwitchCaseMapTy
+name|SwitchCaseStmts
+decl_stmt|;
+name|SwitchCaseMapTy
+modifier|*
+name|CurrSwitchCaseStmts
+decl_stmt|;
 comment|/// \brief The number of stat() calls that hit/missed the stat
 comment|/// cache.
 name|unsigned
@@ -2199,16 +2216,13 @@ parameter_list|)
 function_decl|;
 name|bool
 name|ParseLanguageOptions
-argument_list|(
+parameter_list|(
 specifier|const
-name|SmallVectorImpl
-operator|<
-name|uint64_t
-operator|>
-operator|&
+name|RecordData
+modifier|&
 name|Record
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 struct|struct
 name|RecordLocation
 block|{
@@ -2344,7 +2358,7 @@ name|uint32_t
 name|LocalOffset
 parameter_list|)
 function_decl|;
-comment|/// \brief Returns the first preprocessed entity ID that ends after \arg BLoc.
+comment|/// \brief Returns the first preprocessed entity ID that ends after BLoc.
 name|serialization
 operator|::
 name|PreprocessedEntityID
@@ -2354,8 +2368,7 @@ argument|SourceLocation BLoc
 argument_list|)
 specifier|const
 expr_stmt|;
-comment|/// \brief Returns the first preprocessed entity ID that begins after \arg
-comment|/// ELoc.
+comment|/// \brief Returns the first preprocessed entity ID that begins after ELoc.
 name|serialization
 operator|::
 name|PreprocessedEntityID
@@ -2365,10 +2378,11 @@ argument|SourceLocation ELoc
 argument_list|)
 specifier|const
 expr_stmt|;
-comment|/// \brief \arg SLocMapI points at a chunk of a module that contains no
-comment|/// preprocessed entities or the entities it contains are not the ones we are
-comment|/// looking for. Find the next module that contains entities and return the ID
+comment|/// \brief Find the next module that contains entities and return the ID
 comment|/// of the first entry.
+comment|/// \arg SLocMapI points at a chunk of a module that contains no
+comment|/// preprocessed entities or the entities it contains are not the
+comment|/// ones we are looking for.
 name|serialization
 operator|::
 name|PreprocessedEntityID
@@ -2461,15 +2475,6 @@ decl_stmt|;
 comment|// do not implement
 name|public
 label|:
-typedef|typedef
-name|SmallVector
-operator|<
-name|uint64_t
-operator|,
-literal|64
-operator|>
-name|RecordData
-expr_stmt|;
 comment|/// \brief Load the AST file and validate its contents against the given
 comment|/// Preprocessor.
 comment|///
@@ -2556,8 +2561,8 @@ comment|/// submodules visible to name lookup.
 comment|///
 comment|/// \param Mod The module whose names should be made visible.
 comment|///
-comment|/// \param Visibility The level of visibility to give the names in the module.
-comment|/// Visibility can only be increased over time.
+comment|/// \param NameVisibility The level of visibility to give the names in the
+comment|/// module.  Visibility can only be increased over time.
 name|void
 name|makeModuleVisible
 argument_list|(
@@ -4784,6 +4789,32 @@ parameter_list|)
 function_decl|;
 name|void
 name|ClearSwitchCaseIDs
+parameter_list|()
+function_decl|;
+comment|/// \brief Cursors for comments blocks.
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|llvm
+operator|::
+name|BitstreamCursor
+operator|,
+name|serialization
+operator|::
+name|ModuleFile
+operator|*
+operator|>
+operator|,
+literal|8
+operator|>
+name|CommentsCursors
+expr_stmt|;
+comment|/// \brief Loads comments ranges.
+name|void
+name|ReadComments
 parameter_list|()
 function_decl|;
 block|}

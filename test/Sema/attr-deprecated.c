@@ -17,6 +17,10 @@ unit|))
 empty_stmt|;
 end_empty_stmt
 
+begin_comment
+comment|// expected-note 2 {{declared here}}
+end_comment
+
 begin_function_decl
 name|void
 name|g
@@ -38,6 +42,10 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|// expected-note {{declared here}}
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -50,6 +58,10 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|// expected-note {{declared here}}
+end_comment
 
 begin_function
 name|int
@@ -93,6 +105,10 @@ name|var
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|// expected-note {{declared here}}
+end_comment
+
 begin_function
 name|int
 name|w
@@ -125,6 +141,10 @@ name|old_fn
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|// expected-note {{declared here}}
+end_comment
 
 begin_function_decl
 name|int
@@ -170,6 +190,7 @@ name|deprecated
 operator|)
 argument_list|)
 decl_stmt|;
+comment|// expected-note 3 {{declared here}}
 block|}
 struct|;
 end_struct
@@ -225,6 +246,10 @@ name|deprecated
 typedef|));
 end_typedef
 
+begin_comment
+comment|// expected-note 12 {{declared here}}
+end_comment
+
 begin_decl_stmt
 name|foo_dep
 modifier|*
@@ -251,7 +276,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {{unknown attribute 'invalid_attribute' ignored}}
+comment|// expected-warning {{unknown attribute 'invalid_attribute' ignored}} expected-note 2 {{declared here}}
 end_comment
 
 begin_decl_stmt
@@ -622,6 +647,7 @@ operator|)
 argument_list|)
 name|Test20
 block|{
+comment|// expected-note {{declared here}}
 name|test20_a
 name|__attribute__
 argument_list|(
@@ -630,7 +656,9 @@ name|deprecated
 operator|)
 argument_list|)
 decl_stmt|,
+comment|// expected-note {{declared here}}
 name|test20_b
+comment|// expected-note {{declared here}}
 block|}
 end_decl_stmt
 
@@ -677,6 +705,48 @@ literal|1
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_struct
+struct|struct
+name|test22
+block|{
+name|foo_dep
+name|a
+name|__attribute
+argument_list|(
+operator|(
+name|deprecated
+operator|)
+argument_list|)
+decl_stmt|;
+name|foo_dep
+name|b
+decl_stmt|;
+comment|// expected-warning {{'foo_dep' is deprecated}}
+name|foo_dep
+name|c
+decl_stmt|,
+name|d
+name|__attribute
+argument_list|(
+operator|(
+name|deprecated
+operator|)
+argument_list|)
+decl_stmt|;
+comment|// expected-warning {{'foo_dep' is deprecated}}
+name|__attribute
+argument_list|(
+argument|(deprecated)
+argument_list|)
+name|foo_dep
+name|e
+decl_stmt|,
+name|f
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 end_unit
 

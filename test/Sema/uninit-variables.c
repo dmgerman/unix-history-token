@@ -152,6 +152,8 @@ if|if
 condition|(
 name|y
 condition|)
+comment|// expected-warning{{variable 'x' is used uninitialized whenever 'if' condition is false}} \
+comment|// expected-note{{remove the 'if' if its condition is always true}}
 name|x
 operator|=
 literal|1
@@ -159,7 +161,7 @@ expr_stmt|;
 return|return
 name|x
 return|;
-comment|// expected-warning{{variable 'x' may be uninitialized when used here}}
+comment|// expected-note{{uninitialized use occurs here}}
 block|}
 end_function
 
@@ -185,8 +187,9 @@ name|x
 operator|=
 literal|1
 expr_stmt|;
-comment|// Warn with "may be uninitialized" here (not "is uninitialized"), since the
-comment|// self-initialization is intended to suppress a -Wuninitialized warning.
+comment|// Warn with "may be uninitialized" here (not "is sometimes uninitialized"),
+comment|// since the self-initialization is intended to suppress a -Wuninitialized
+comment|// warning.
 return|return
 name|x
 return|;
@@ -649,10 +652,11 @@ operator|&
 name|z
 argument_list|)
 condition|)
+comment|// expected-warning {{variable 'z' is used uninitialized whenever '||' condition is true}} expected-note {{remove the '||' if its condition is always false}}
 return|return
 name|z
 return|;
-comment|// expected-warning{{variable 'z' may be uninitialized when used here}}
+comment|// expected-note {{uninitialized use occurs here}}
 return|return
 literal|0
 return|;
@@ -691,10 +695,11 @@ operator|||
 name|test19_aux2
 argument_list|()
 condition|)
+comment|// expected-warning {{variable 'z' is used uninitialized whenever '||' condition is true}} expected-note {{remove the '||' if its condition is always false}}
 return|return
 name|z
 return|;
-comment|// expected-warning{{variable 'z' may be uninitialized when used here}}
+comment|// expected-note {{uninitialized use occurs here}}
 return|return
 literal|0
 return|;
@@ -1311,11 +1316,12 @@ name|y
 operator|=
 literal|1
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{variable 'y' is used uninitialized whenever 'if' condition is false}} \
+comment|// expected-note{{remove the 'if' if its condition is always true}}
 return|return
 name|y
 return|;
-comment|// expected-warning {{variable 'y' may be uninitialized when used here}}
+comment|// expected-note{{uninitialized use occurs here}}
 block|}
 end_function
 
@@ -1899,6 +1905,476 @@ index|]
 operator|=
 literal|0.0f
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// Test that fixits are not emitted inside macros.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UNINIT
+parameter_list|(
+name|T
+parameter_list|,
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|T x; T y = x;
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASSIGN
+parameter_list|(
+name|T
+parameter_list|,
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|T y = x;
+end_define
+
+begin_function
+name|void
+name|test54
+parameter_list|()
+block|{
+name|UNINIT
+argument_list|(
+name|int
+argument_list|,
+name|a
+argument_list|,
+name|b
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{variable 'a' is uninitialized when used here}} \
+comment|// expected-note {{variable 'a' is declared here}}
+name|int
+name|c
+decl_stmt|;
+comment|// expected-note {{initialize the variable 'c' to silence this warning}}
+name|ASSIGN
+argument_list|(
+name|int
+argument_list|,
+name|c
+argument_list|,
+name|d
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{variable 'c' is uninitialized when used here}}
+block|}
+end_function
+
+begin_comment
+comment|// Taking the address is fine
+end_comment
+
+begin_struct
+struct|struct
+block|{
+struct|struct
+block|{
+name|void
+modifier|*
+name|p
+decl_stmt|;
+block|}
+name|a
+struct|;
+block|}
+name|test55
+init|=
+block|{
+block|{
+operator|&
+name|test55
+operator|.
+name|a
+block|}
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|// no-warning
+end_comment
+
+begin_struct
+struct|struct
+block|{
+struct|struct
+block|{
+name|void
+modifier|*
+name|p
+decl_stmt|;
+block|}
+name|a
+struct|;
+block|}
+name|test56
+init|=
+block|{
+block|{
+operator|&
+operator|(
+name|test56
+operator|.
+name|a
+operator|)
+block|}
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|// no-warning
+end_comment
+
+begin_function
+name|void
+name|uninit_in_loop
+parameter_list|()
+block|{
+name|int
+name|produce
+argument_list|(
+name|void
+argument_list|)
+decl_stmt|;
+name|void
+name|consume
+argument_list|(
+name|int
+argument_list|)
+decl_stmt|;
+for|for
+control|(
+name|int
+name|n
+init|=
+literal|0
+init|;
+name|n
+operator|<
+literal|100
+condition|;
+operator|++
+name|n
+control|)
+block|{
+name|int
+name|k
+decl_stmt|;
+comment|// expected-note {{initialize}}
+name|consume
+argument_list|(
+name|k
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{variable 'k' is uninitialized}}
+name|k
+operator|=
+name|produce
+argument_list|()
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_function
+name|void
+name|uninit_in_loop_goto
+parameter_list|()
+block|{
+name|int
+name|produce
+argument_list|(
+name|void
+argument_list|)
+decl_stmt|;
+name|void
+name|consume
+argument_list|(
+name|int
+argument_list|)
+decl_stmt|;
+for|for
+control|(
+name|int
+name|n
+init|=
+literal|0
+init|;
+name|n
+operator|<
+literal|100
+condition|;
+operator|++
+name|n
+control|)
+block|{
+goto|goto
+name|skip_decl
+goto|;
+name|int
+name|k
+decl_stmt|;
+comment|// expected-note {{initialize}}
+name|skip_decl
+label|:
+comment|// FIXME: This should produce the 'is uninitialized' diagnostic, but we
+comment|// don't have enough information in the CFG to easily tell that the
+comment|// variable's scope has been left and re-entered.
+name|consume
+argument_list|(
+name|k
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{variable 'k' may be uninitialized}}
+name|k
+operator|=
+name|produce
+argument_list|()
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_typedef
+typedef|typedef
+name|char
+name|jmp_buf
+index|[
+literal|256
+index|]
+typedef|;
+end_typedef
+
+begin_function_decl
+specifier|extern
+name|int
+name|setjmp
+parameter_list|(
+name|jmp_buf
+name|env
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|// implicitly returns_twice
+end_comment
+
+begin_function_decl
+name|void
+name|do_stuff_and_longjmp
+parameter_list|(
+name|jmp_buf
+name|env
+parameter_list|,
+name|int
+modifier|*
+name|result
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(noreturn
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
+begin_function
+name|int
+name|returns_twice
+parameter_list|()
+block|{
+name|int
+name|a
+decl_stmt|;
+comment|// expected-note {{initialize}}
+if|if
+condition|(
+operator|!
+name|a
+condition|)
+block|{
+comment|// expected-warning {{variable 'a' is uninitialized}}
+name|jmp_buf
+name|env
+decl_stmt|;
+name|int
+name|b
+decl_stmt|;
+if|if
+condition|(
+name|setjmp
+argument_list|(
+name|env
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|do_stuff_and_longjmp
+argument_list|(
+name|env
+argument_list|,
+operator|&
+name|b
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|a
+operator|=
+name|b
+expr_stmt|;
+comment|// no warning
+block|}
+block|}
+return|return
+name|a
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|compound_assign
+parameter_list|(
+name|int
+modifier|*
+name|arr
+parameter_list|,
+name|int
+name|n
+parameter_list|)
+block|{
+name|int
+name|sum
+decl_stmt|;
+comment|// expected-note {{initialize}}
+for|for
+control|(
+name|int
+name|i
+init|=
+literal|0
+init|;
+name|i
+operator|<
+name|n
+condition|;
+operator|++
+name|i
+control|)
+name|sum
+operator|+=
+name|arr
+index|[
+name|i
+index|]
+expr_stmt|;
+comment|// expected-warning {{variable 'sum' is uninitialized}}
+return|return
+name|sum
+operator|/
+name|n
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|compound_assign_2
+parameter_list|()
+block|{
+name|int
+name|x
+decl_stmt|;
+comment|// expected-note {{initialize}}
+return|return
+name|x
+operator|+=
+literal|1
+return|;
+comment|// expected-warning {{variable 'x' is uninitialized}}
+block|}
+end_function
+
+begin_function
+name|int
+name|compound_assign_3
+parameter_list|()
+block|{
+name|int
+name|x
+decl_stmt|;
+comment|// expected-note {{initialize}}
+name|x
+operator|*=
+literal|0
+expr_stmt|;
+comment|// expected-warning {{variable 'x' is uninitialized}}
+return|return
+name|x
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|self_init_in_cond
+parameter_list|(
+name|int
+modifier|*
+name|p
+parameter_list|)
+block|{
+name|int
+name|n
+init|=
+operator|(
+operator|(
+name|p
+operator|&&
+operator|(
+literal|0
+operator|||
+literal|1
+operator|)
+operator|)
+operator|&&
+operator|(
+name|n
+operator|=
+operator|*
+name|p
+operator|)
+operator|)
+condition|?
+name|n
+else|:
+operator|-
+literal|1
+decl_stmt|;
+comment|// ok
+return|return
+name|n
+return|;
 block|}
 end_function
 

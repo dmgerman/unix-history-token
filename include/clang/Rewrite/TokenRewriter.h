@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Lex/Token.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/OwningPtr.h"
 end_include
 
@@ -91,9 +97,6 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
-name|class
-name|Token
-decl_stmt|;
 name|class
 name|LangOptions
 decl_stmt|;

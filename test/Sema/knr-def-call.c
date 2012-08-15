@@ -223,7 +223,7 @@ argument_list|(
 literal|42.1
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{implicit conversion turns literal floating-point number into integer}}
+comment|// expected-warning{{implicit conversion from 'double' to 'int' changes value from 42.1 to 42}}
 call|(
 modifier|&
 name|proto
@@ -232,7 +232,7 @@ argument_list|(
 literal|42.1
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{implicit conversion turns literal floating-point number into integer}}
+comment|// expected-warning{{implicit conversion from 'double' to 'int' changes value from 42.1 to 42}}
 block|}
 end_function
 

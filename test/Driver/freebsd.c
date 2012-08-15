@@ -119,5 +119,65 @@ begin_comment
 comment|// CHECK-LIB32PATHS: libraries: ={{.*:?}}/usr/lib32
 end_comment
 
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Check that the new linker flags are passed to FreeBSD
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes -target x86_64-pc-freebsd8 -m32 %s \
+end_comment
+
+begin_comment
+comment|// RUN:   --sysroot=%S/Inputs/multiarch_freebsd64_tree -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-LDFLAGS8 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes -target x86_64-pc-freebsd9 -m32 %s \
+end_comment
+
+begin_comment
+comment|// RUN:   --sysroot=%S/Inputs/multiarch_freebsd64_tree -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-LDFLAGS9 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes -target x86_64-pc-freebsd10.0 -m32 %s \
+end_comment
+
+begin_comment
+comment|// RUN:   --sysroot=%S/Inputs/multiarch_freebsd64_tree -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-LDFLAGS9 %s
+end_comment
+
+begin_comment
+comment|// CHECK-LDFLAGS8-NOT: --hash-style=both
+end_comment
+
+begin_comment
+comment|// CHECK-LDFLAGS8: --enable-new-dtags
+end_comment
+
+begin_comment
+comment|// CHECK-LDFLAGS9: --hash-style=both
+end_comment
+
+begin_comment
+comment|// CHECK-LDFLAGS9: --enable-new-dtags
+end_comment
+
 end_unit
 

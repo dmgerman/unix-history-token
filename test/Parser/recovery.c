@@ -160,6 +160,7 @@ argument_list|)
 expr_stmt|;
 else|else
 empty_stmt|;
+comment|// PR12595
 if|if
 condition|(
 name|x
@@ -172,7 +173,7 @@ block|)
 end_block
 
 begin_comment
-comment|// expected-error {{expected expression}}
+comment|// expected-error {{extraneous ')' after condition, expected a statement}}
 end_comment
 
 begin_expr_stmt

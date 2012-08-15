@@ -131,6 +131,15 @@ operator|==
 literal|1
 condition|)
 block|{}
+if|if
+condition|(
+literal|1
+operator|==
+literal|0
+operator|&
+literal|1
+condition|)
+block|{}
 block|}
 end_function
 
@@ -143,6 +152,14 @@ comment|// CHECK-3: {{^   }}        (       )
 end_comment
 
 begin_comment
+comment|// CHECK-3: {{^   }}if (1 == 0& 1)
+end_comment
+
+begin_comment
+comment|// CHECK-3: {{^   }}    (     )
+end_comment
+
+begin_comment
 comment|// CHECK-4: {{^    }}if (0& 1 == 1)
 end_comment
 
@@ -151,11 +168,27 @@ comment|// CHECK-4: {{^    }}          (     )
 end_comment
 
 begin_comment
+comment|// CHECK-4: {{^    }}if (1 == 0& 1)
+end_comment
+
+begin_comment
+comment|// CHECK-4: {{^    }}    (     )
+end_comment
+
+begin_comment
 comment|// CHECK-5: {{^     }}if (0& 1  == 1)
 end_comment
 
 begin_comment
 comment|// CHECK-5: {{^     }}            (      )
+end_comment
+
+begin_comment
+comment|// CHECK-5: {{^     }}if (1 == 0& 1)
+end_comment
+
+begin_comment
+comment|// CHECK-5: {{^     }}    (     )
 end_comment
 
 end_unit

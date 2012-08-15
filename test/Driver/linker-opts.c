@@ -12,7 +12,7 @@ comment|// GCC driver is used as linker on cygming. It should be aware of LIBRAR
 end_comment
 
 begin_comment
-comment|// XFAIL: cygwin,mingw32
+comment|// XFAIL: cygwin,mingw32,win32
 end_comment
 
 end_unit

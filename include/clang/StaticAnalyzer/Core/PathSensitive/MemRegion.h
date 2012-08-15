@@ -70,6 +70,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/AST/ASTContext.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/CharUnits.h"
 end_include
 
@@ -169,20 +175,17 @@ name|Offset
 decl_stmt|;
 name|public
 label|:
+enum|enum
+block|{
+name|Symbolic
+init|=
+name|INT64_MAX
+block|}
+enum|;
 name|RegionOffset
-argument_list|(
-specifier|const
-name|MemRegion
-operator|*
-name|r
-argument_list|)
+argument_list|()
 operator|:
 name|R
-argument_list|(
-name|r
-argument_list|)
-operator|,
-name|Offset
 argument_list|(
 literal|0
 argument_list|)
@@ -215,13 +218,40 @@ return|return
 name|R
 return|;
 block|}
-name|int64_t
-name|getOffset
+name|bool
+name|hasSymbolicOffset
 argument_list|()
 specifier|const
 block|{
 return|return
 name|Offset
+operator|==
+name|Symbolic
+return|;
+block|}
+name|int64_t
+name|getOffset
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+operator|!
+name|hasSymbolicOffset
+argument_list|()
+argument_list|)
+block|;
+return|return
+name|Offset
+return|;
+block|}
+name|bool
+name|isValid
+argument_list|()
+specifier|const
+block|{
+return|return
+name|R
 return|;
 block|}
 block|}
@@ -416,7 +446,9 @@ specifier|const
 name|MemRegion
 operator|*
 name|StripCasts
-argument_list|()
+argument_list|(
+argument|bool StripBaseCasts = true
+argument_list|)
 specifier|const
 block|;
 name|bool
@@ -466,10 +498,17 @@ name|dump
 argument_list|()
 specifier|const
 block|;
+comment|/// \brief Returns true if this region can be printed in a user-friendly way.
+name|virtual
+name|bool
+name|canPrintPretty
+argument_list|()
+specifier|const
+block|;
 comment|/// \brief Print the region for use in diagnostics.
 name|virtual
 name|void
-name|dumpPretty
+name|printPretty
 argument_list|(
 argument|raw_ostream&os
 argument_list|)
@@ -673,8 +712,9 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// \class The region of the static variables within the current CodeTextRegion
+comment|/// \brief The region of the static variables within the current CodeTextRegion
 comment|/// scope.
+comment|///
 comment|/// Currently, only the static locals are placed there, so we know that these
 comment|/// variables do not get invalidated by calls to other functions.
 name|class
@@ -761,7 +801,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// \class The region for all the non-static global variables.
+comment|/// \brief The region for all the non-static global variables.
 comment|///
 comment|/// This class is further split into subclasses for efficient implementation of
 comment|/// invalidating a set of related global values as is done in
@@ -795,13 +835,6 @@ argument_list|)
 block|{}
 name|public
 operator|:
-name|void
-name|dumpToStream
-argument_list|(
-argument|raw_ostream&os
-argument_list|)
-specifier|const
-block|;
 specifier|static
 name|bool
 name|classof
@@ -829,7 +862,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// \class The region containing globals which are defined in system/external
+comment|/// \brief The region containing globals which are defined in system/external
 comment|/// headers and are considered modifiable by system calls (ex: errno).
 name|class
 name|GlobalSystemSpaceRegion
@@ -882,7 +915,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// \class The region containing globals which are considered not to be modified
+comment|/// \brief The region containing globals which are considered not to be modified
 comment|/// or point to data which could be modified as a result of a function call
 comment|/// (system or internal). Ex: Const global scalars would be modeled as part of
 comment|/// this region. This region also includes most system globals since they have
@@ -938,7 +971,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// \class The region containing globals which can be modified by calls to
+comment|/// \brief The region containing globals which can be modified by calls to
 comment|/// "internally" defined functions - (for now just) functions other then system
 comment|/// calls.
 name|class
@@ -1023,6 +1056,13 @@ argument_list|)
 block|{}
 name|public
 operator|:
+name|void
+name|dumpToStream
+argument_list|(
+argument|raw_ostream&os
+argument_list|)
+specifier|const
+block|;
 specifier|static
 name|bool
 name|classof
@@ -1072,6 +1112,13 @@ argument_list|)
 block|{}
 name|public
 operator|:
+name|void
+name|dumpToStream
+argument_list|(
+argument|raw_ostream&os
+argument_list|)
+specifier|const
+block|;
 specifier|static
 name|bool
 name|classof
@@ -1219,6 +1266,13 @@ argument_list|)
 block|{}
 name|public
 operator|:
+name|void
+name|dumpToStream
+argument_list|(
+argument|raw_ostream&os
+argument_list|)
+specifier|const
+block|;
 specifier|static
 name|bool
 name|classof
@@ -1277,6 +1331,13 @@ argument_list|)
 block|{}
 name|public
 operator|:
+name|void
+name|dumpToStream
+argument_list|(
+argument|raw_ostream&os
+argument_list|)
+specifier|const
+block|;
 specifier|static
 name|bool
 name|classof
@@ -1730,6 +1791,13 @@ else|:
 name|T
 return|;
 block|}
+name|DefinedOrUnknownSVal
+name|getExtent
+argument_list|(
+argument|SValBuilder&svalBuilder
+argument_list|)
+specifier|const
+block|;
 specifier|static
 name|bool
 name|classof
@@ -2128,6 +2196,10 @@ name|void
 operator|*
 name|ReferencedVars
 block|;
+name|void
+operator|*
+name|OriginalVars
+block|;
 name|BlockDataRegion
 argument_list|(
 specifier|const
@@ -2164,6 +2236,11 @@ name|lc
 argument_list|)
 block|,
 name|ReferencedVars
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|OriginalVars
 argument_list|(
 literal|0
 argument_list|)
@@ -2205,6 +2282,13 @@ specifier|const
 operator|*
 name|R
 block|;
+specifier|const
+name|MemRegion
+operator|*
+specifier|const
+operator|*
+name|OriginalR
+block|;
 name|public
 operator|:
 name|explicit
@@ -2216,11 +2300,23 @@ operator|*
 specifier|const
 operator|*
 name|r
+argument_list|,
+specifier|const
+name|MemRegion
+operator|*
+specifier|const
+operator|*
+name|originalR
 argument_list|)
 operator|:
 name|R
 argument_list|(
-argument|r
+name|r
+argument_list|)
+block|,
+name|OriginalR
+argument_list|(
+argument|originalR
 argument_list|)
 block|{}
 name|operator
@@ -2235,6 +2331,30 @@ specifier|const
 block|{
 return|return
 name|R
+return|;
+block|}
+specifier|const
+name|MemRegion
+operator|*
+name|getCapturedRegion
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+name|R
+return|;
+block|}
+specifier|const
+name|MemRegion
+operator|*
+name|getOriginalRegion
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+name|OriginalR
 return|;
 block|}
 specifier|const
@@ -2304,6 +2424,9 @@ operator|)
 block|{
 operator|++
 name|R
+block|;
+operator|++
+name|OriginalR
 block|;
 return|return
 operator|*
@@ -2976,13 +3099,6 @@ argument|llvm::FoldingSetNodeID& ID
 argument_list|)
 specifier|const
 block|;
-name|DefinedOrUnknownSVal
-name|getExtent
-argument_list|(
-argument|SValBuilder&svalBuilder
-argument_list|)
-specifier|const
-block|;
 specifier|static
 name|bool
 name|classof
@@ -3137,8 +3253,13 @@ operator|==
 name|VarRegionKind
 return|;
 block|}
+name|bool
+name|canPrintPretty
+argument_list|()
+specifier|const
+block|;
 name|void
-name|dumpPretty
+name|printPretty
 argument_list|(
 argument|raw_ostream&os
 argument_list|)
@@ -3377,8 +3498,13 @@ argument|raw_ostream&os
 argument_list|)
 specifier|const
 block|;
+name|bool
+name|canPrintPretty
+argument_list|()
+specifier|const
+block|;
 name|void
-name|dumpPretty
+name|printPretty
 argument_list|(
 argument|raw_ostream&os
 argument_list|)
@@ -4241,11 +4367,20 @@ argument_list|,
 argument|const LocationContext *LC
 argument_list|)
 block|;
-comment|/// getSymbolicRegion - Retrieve or create a "symbolic" memory region.
+comment|/// \brief Retrieve or create a "symbolic" memory region.
 specifier|const
 name|SymbolicRegion
 operator|*
 name|getSymbolicRegion
+argument_list|(
+argument|SymbolRef Sym
+argument_list|)
+block|;
+comment|/// \brief Return a unique symbolic region belonging to heap memory space.
+specifier|const
+name|SymbolicRegion
+operator|*
+name|getSymbolicHeapRegion
 argument_list|(
 argument|SymbolRef sym
 argument_list|)

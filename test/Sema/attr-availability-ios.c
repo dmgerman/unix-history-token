@@ -30,6 +30,10 @@ unit|))
 empty_stmt|;
 end_empty_stmt
 
+begin_comment
+comment|// expected-note {{'f0' declared here}}
+end_comment
+
 begin_function_decl
 name|void
 name|f1
@@ -79,6 +83,10 @@ begin_empty_stmt
 unit|))
 empty_stmt|;
 end_empty_stmt
+
+begin_comment
+comment|// expected-note {{'f2' declared here}}
+end_comment
 
 begin_function_decl
 name|void
@@ -191,6 +199,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|// expected-note {{'f5' declared here}}
+end_comment
+
 begin_function_decl
 name|void
 name|f6
@@ -236,6 +248,10 @@ begin_empty_stmt
 unit|))
 empty_stmt|;
 end_empty_stmt
+
+begin_comment
+comment|// expected-note {{'f6' declared here}}
+end_comment
 
 begin_function
 name|void

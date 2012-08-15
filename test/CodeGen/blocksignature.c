@@ -32,7 +32,7 @@ comment|// X32: @__block_descriptor_tmp = internal constant [[FULL_DESCRIPTOR_T:
 end_comment
 
 begin_comment
-comment|// X32: @__block_literal_global = internal constant [[GLOBAL_LITERAL_T:.*]] { i8** @_NSConcreteGlobalBlock, i32 1342177280, i32 0, i8* bitcast (void (i8*)* @__block_global_{{.*}} to i8*), [[DESCRIPTOR_T:%.*]]* bitcast ([[FULL_DESCRIPTOR_T]]* @__block_descriptor_tmp to {{%.*}}*) }
+comment|// X32: @__block_literal_global = internal constant [[GLOBAL_LITERAL_T:.*]] { i8** @_NSConcreteGlobalBlock, i32 1342177280, i32 0, i8* bitcast (void (i8*)* @global_block_invoke{{.*}} to i8*), [[DESCRIPTOR_T:%.*]]* bitcast ([[FULL_DESCRIPTOR_T]]* @__block_descriptor_tmp to {{%.*}}*) }
 end_comment
 
 begin_comment

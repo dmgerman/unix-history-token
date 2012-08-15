@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -emit-llvm -o - | FileCheck %s --check-prefix=DEFAULT
+comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin %s -emit-llvm -o - | FileCheck %s --check-prefix=DEFAULT
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 %s -emit-llvm -o - -fwrapv | FileCheck %s --check-prefix=WRAPV
+comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin %s -emit-llvm -o - -fwrapv | FileCheck %s --check-prefix=WRAPV
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 %s -emit-llvm -o - -ftrapv | FileCheck %s --check-prefix=TRAPV
+comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin %s -emit-llvm -o - -ftrapv | FileCheck %s --check-prefix=TRAPV
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 %s -emit-llvm -o - -ftrapv -ftrapv-handler foo | FileCheck %s --check-prefix=TRAPV_HANDLER
+comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin %s -emit-llvm -o - -ftrapv -ftrapv-handler foo | FileCheck %s --check-prefix=TRAPV_HANDLER
 end_comment
 
 begin_comment

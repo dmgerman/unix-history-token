@@ -127,9 +127,7 @@ argument_list|,
 literal|"annotation_a"
 argument_list|)
 decl_stmt|;
-comment|// CHECK: trunc i64 {{.*}} to i32
-comment|// CHECK-NEXT: call i32 @llvm.annotation.i32
-comment|// CHECK-NEXT: zext i32 {{.*}} to i64
+comment|// CHECK: call i64 @llvm.annotation.i64
 name|int
 name|inta
 init|=
@@ -153,9 +151,7 @@ argument_list|,
 literal|"annotation_a"
 argument_list|)
 decl_stmt|;
-comment|// CHECK: sext i16 {{.*}} to i32
-comment|// CHECK-NEXT: call i32 @llvm.annotation.i32
-comment|// CHECK-NEXT: trunc i32 {{.*}} to i16
+comment|// CHECK: call i16 @llvm.annotation.i16
 name|char
 name|chara
 init|=
@@ -166,10 +162,7 @@ argument_list|,
 literal|"annotation_a"
 argument_list|)
 decl_stmt|;
-comment|// CHECK: sext i8 {{.*}} to i32
-comment|// CHECK-NEXT: call i32 @llvm.annotation.i32
-comment|// CHECK-NEXT: trunc i32 {{.*}} to i8
-comment|//
+comment|// CHECK: call i8 @llvm.annotation.i8
 name|char
 modifier|*
 modifier|*

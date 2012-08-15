@@ -525,5 +525,53 @@ begin_comment
 comment|// CHECK-NEXT: call x86_fastcallcc void [[FPTRVAR]](i32 10)
 end_comment
 
+begin_comment
+comment|// PR9356: We might want to err on this, but for now at least make sure we
+end_comment
+
+begin_comment
+comment|// use the section in the definition.
+end_comment
+
+begin_decl_stmt
+name|void
+name|__attribute__
+argument_list|(
+operator|(
+name|section
+argument_list|(
+literal|".foo"
+argument_list|)
+operator|)
+argument_list|)
+name|t22
+argument_list|(
+name|void
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|__attribute__
+argument_list|(
+operator|(
+name|section
+argument_list|(
+literal|".bar"
+argument_list|)
+operator|)
+argument_list|)
+name|t22
+argument_list|(
+name|void
+argument_list|)
+block|{}
+end_decl_stmt
+
+begin_comment
+comment|// CHECK: define void @t22() nounwind section ".bar"
+end_comment
+
 end_unit
 

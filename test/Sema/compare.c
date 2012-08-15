@@ -2731,5 +2731,46 @@ comment|// no-warning
 block|}
 end_function
 
+begin_typedef
+typedef|typedef
+name|char
+name|one_char
+index|[
+literal|1
+index|]
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|char
+name|two_chars
+index|[
+literal|2
+index|]
+typedef|;
+end_typedef
+
+begin_function
+name|void
+name|test12
+parameter_list|(
+name|unsigned
+name|a
+parameter_list|)
+block|{
+if|if
+condition|(
+literal|0
+operator|&&
+operator|-
+literal|1
+operator|>
+name|a
+condition|)
+block|{ }
+block|}
+end_function
+
 end_unit
 

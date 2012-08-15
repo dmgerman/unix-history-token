@@ -38,6 +38,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|// expected-warning@+2 {{Should have -Wparentheses}}
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -52,10 +56,6 @@ warning|#
 directive|warning
 warning|Should have -Wparentheses
 end_warning
-
-begin_comment
-comment|// expected-warning {{Should have -Wparentheses}}
-end_comment
 
 begin_endif
 endif|#
@@ -81,6 +81,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|// expected-warning@+3 {{Not a valid warning flag}}
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -100,10 +104,6 @@ warning|#
 directive|warning
 warning|Not a valid warning flag
 end_warning
-
-begin_comment
-comment|// expected-warning {{Not a valid warning flag}}
-end_comment
 
 begin_endif
 endif|#

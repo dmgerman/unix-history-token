@@ -31,7 +31,7 @@ number|0
 end_line
 
 begin_comment
-comment|// expected-error {{#line directive requires a positive integer argument}}
+comment|// expected-warning {{#line directive with zero argument is a GNU extension}}
 end_comment
 
 begin_line
@@ -41,7 +41,7 @@ number|00
 end_line
 
 begin_comment
-comment|// expected-error {{#line directive requires a positive integer argument}}
+comment|// expected-warning {{#line directive with zero argument is a GNU extension}}
 end_comment
 
 begin_line
@@ -212,10 +212,6 @@ directive|error
 error|ABC
 end_error
 
-begin_comment
-comment|// expected-error {{#error ABC}}
-end_comment
-
 begin_error
 error|#
 directive|error
@@ -223,7 +219,17 @@ error|DEF
 end_error
 
 begin_comment
-comment|// expected-error {{#error DEF}}
+comment|// expected-error@-2 {{ABC}}
+end_comment
+
+begin_line
+line|#
+directive|line
+number|150
+end_line
+
+begin_comment
+comment|// expected-error@-3 {{DEF}}
 end_comment
 
 begin_comment
@@ -530,6 +536,31 @@ end_decl_stmt
 
 begin_comment
 comment|/* line marker is location of first _ */
+end_comment
+
+begin_comment
+comment|// rdar://11550996
+end_comment
+
+begin_line
+line|#
+directive|line
+number|0
+file|"line-directive.c"
+end_line
+
+begin_comment
+comment|// expected-warning {{#line directive with zero argument is a GNU extension}}
+end_comment
+
+begin_decl_stmt
+name|undefined
+name|t
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error {{unknown type name 'undefined'}}
 end_comment
 
 end_unit

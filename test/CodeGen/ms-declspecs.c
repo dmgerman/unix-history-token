@@ -3,6 +3,39 @@ begin_comment
 comment|// RUN: %clang_cc1 -triple i386-pc-win32 %s -emit-llvm -fms-compatibility -o - | FileCheck %s
 end_comment
 
+begin_struct
+struct|struct
+name|__declspec
+argument_list|(
+argument|align(
+literal|16
+argument|)
+argument_list|)
+name|S
+block|{
+name|char
+name|x
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_union
+union|union
+block|{
+name|struct
+name|S
+name|s
+decl_stmt|;
+block|}
+name|u
+union|;
+end_union
+
+begin_comment
+comment|// CHECK: @u = {{.*}}zeroinitializer, align 16
+end_comment
+
 begin_comment
 comment|// CHECK: define void @t3() nounwind noinline naked {
 end_comment

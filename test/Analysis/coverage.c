@@ -551,5 +551,37 @@ comment|// no warning
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|empty_function
+parameter_list|()
+block|{ }
+end_function
+
+begin_function
+name|int
+name|use_empty_function
+parameter_list|(
+name|int
+name|x
+parameter_list|)
+block|{
+name|x
+operator|=
+literal|0
+expr_stmt|;
+name|empty_function
+argument_list|()
+expr_stmt|;
+return|return
+literal|5
+operator|/
+name|x
+return|;
+comment|//expected-warning {{Division by zero}}
+block|}
+end_function
+
 end_unit
 

@@ -1,7 +1,16 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin10 -analyze -disable-free -analyzer-eagerly-assume -analyzer-checker=core,deadcode,experimental.security.taint,debug.TaintTest -verify %s
+comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin10 -analyze -disable-free -analyzer-eagerly-assume -analyzer-checker=core,deadcode,experimental.security.taint,debug.TaintTest,debug.ExprInspection -verify %s
 end_comment
+
+begin_function_decl
+name|void
+name|clang_analyzer_eval
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|// Note, we do need to include headers here, since the analyzer checks if the function declaration is located in a system header.
@@ -401,6 +410,42 @@ block|}
 return|return
 literal|0
 return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|testAnalyzerEvalIsPure
+parameter_list|()
+block|{
+specifier|extern
+name|int
+name|someGlobal
+decl_stmt|;
+if|if
+condition|(
+name|someGlobal
+operator|==
+literal|0
+condition|)
+block|{
+name|clang_analyzer_eval
+argument_list|(
+name|someGlobal
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
+name|someGlobal
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{TRUE}}
+block|}
 block|}
 end_function
 

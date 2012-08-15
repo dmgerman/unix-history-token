@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -verify -std=c1x %s
+comment|// RUN: %clang_cc1 -fsyntax-only -verify -std=c11 -Dalignof=__alignof %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -fsyntax-only -verify -std=c11 -Dalignof=_Alignof %s
 end_comment
 
 begin_decl_stmt
@@ -93,12 +97,12 @@ end_comment
 begin_assert
 assert|_Static_assert
 argument_list|(
-name|__alignof
+name|alignof
 argument_list|(
 name|align_big
 argument_list|)
 operator|==
-name|__alignof
+name|alignof
 argument_list|(
 name|int
 argument_list|)
@@ -111,7 +115,7 @@ end_assert
 begin_assert
 assert|_Static_assert
 argument_list|(
-name|__alignof
+name|alignof
 argument_list|(
 name|align_small
 argument_list|)
@@ -126,7 +130,7 @@ end_assert
 begin_assert
 assert|_Static_assert
 argument_list|(
-name|__alignof
+name|alignof
 argument_list|(
 name|align_multiple
 argument_list|)
@@ -141,7 +145,7 @@ end_assert
 begin_assert
 assert|_Static_assert
 argument_list|(
-name|__alignof
+name|alignof
 argument_list|(
 expr|struct
 name|align_member
@@ -173,7 +177,7 @@ end_assert
 begin_assert
 assert|_Static_assert
 argument_list|(
-name|__alignof
+name|alignof
 argument_list|(
 name|align_typedef
 argument_list|)

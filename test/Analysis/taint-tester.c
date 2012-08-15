@@ -207,6 +207,7 @@ name|_addrDeref
 init|=
 name|addrDeref
 decl_stmt|;
+comment|// expected-warning + {{tainted}}
 comment|// Tainted struct address, casts.
 name|struct
 name|XYStruct

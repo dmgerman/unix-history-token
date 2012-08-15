@@ -24,7 +24,11 @@ comment|// rdar://10383444
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -c -save-temps -g %s 2>&1 | FileCheck -check-prefix=SAVE %s
+comment|// RUN: %clang -### -c -save-temps -integrated-as -g %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=SAVE %s
 end_comment
 
 begin_comment
@@ -52,7 +56,11 @@ comment|// RUN: touch %t.s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -c -g %t.s 2>&1 | FileCheck -check-prefix=S %s
+comment|// RUN: %clang -### -c -integrated-as -g %t.s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=S %s
 end_comment
 
 begin_comment

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -DEXPECTED_STRUCT_SIZE=5 -fpack-struct 1 %s
+comment|// RUN: %clang_cc1 -DEXPECTED_STRUCT_SIZE=5 -fpack-struct=1 %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -DEXPECTED_STRUCT_SIZE=6 -fpack-struct 2 %s
+comment|// RUN: %clang_cc1 -DEXPECTED_STRUCT_SIZE=6 -fpack-struct=2 %s
 end_comment
 
 begin_struct

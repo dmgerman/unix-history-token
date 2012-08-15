@@ -8,7 +8,7 @@ comment|// RUN: %clang_cc1 -emit-llvm -o - %s | not grep readnone
 end_comment
 
 begin_comment
-comment|// XFAIL: arm
+comment|// XFAIL: arm,mips
 end_comment
 
 begin_comment

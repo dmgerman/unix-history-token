@@ -399,7 +399,7 @@ name|z
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{the value of the size argument in 'strncat' is too large, might lead to a buffer overflow}}
+comment|// expected-warning{{the value of the size argument to 'strncat' is wrong}}
 block|}
 end_function
 
@@ -440,6 +440,39 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|// expected-warning {{size argument in 'strncat' call appears to be size of the source}} expected-note {{change the argument to be the free space in the destination buffer minus the terminating null byte}}
+block|}
+end_function
+
+begin_comment
+comment|// Non-array type gets a different error message.
+end_comment
+
+begin_function
+name|void
+name|f
+parameter_list|(
+name|char
+modifier|*
+name|s
+parameter_list|,
+name|char
+modifier|*
+name|d
+parameter_list|)
+block|{
+name|strncat
+argument_list|(
+name|d
+argument_list|,
+name|s
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|d
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{the value of the size argument to 'strncat' is wrong}}
 block|}
 end_function
 

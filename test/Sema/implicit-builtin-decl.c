@@ -259,5 +259,17 @@ begin_comment
 comment|// expected-warning{{declaration of built-in function 'longjmp' requires inclusion of the header<setjmp.h>}}
 end_comment
 
+begin_function_decl
+specifier|extern
+name|float
+name|fmaxf
+parameter_list|(
+name|float
+parameter_list|,
+name|float
+parameter_list|)
+function_decl|;
+end_function_decl
+
 end_unit
 

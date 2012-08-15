@@ -374,7 +374,7 @@ name|member
 name|__attribute__
 argument_list|(
 operator|(
-name|aligned
+name|align
 argument_list|(
 literal|2
 argument_list|)

@@ -58,10 +58,6 @@ unit|))
 empty_stmt|;
 end_empty_stmt
 
-begin_comment
-comment|// expected-note{{previous overload}}
-end_comment
-
 begin_else
 else|#
 directive|else
@@ -78,6 +74,10 @@ end_function_decl
 
 begin_comment
 comment|// expected-error{{overloadable}}
+end_comment
+
+begin_comment
+comment|// expected-note@11{{previous overload}}
 end_comment
 
 begin_endif

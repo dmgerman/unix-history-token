@@ -235,6 +235,11 @@ name|MakeCXCursorInvalid
 parameter_list|(
 name|CXCursorKind
 name|K
+parameter_list|,
+name|CXTranslationUnit
+name|TU
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 comment|/// \brief Create an Objective-C superclass reference at the given location.
@@ -778,6 +783,22 @@ operator|&
 name|overridden
 argument_list|)
 decl_stmt|;
+comment|/// \brief Create an opaque  pool used for fast generation of overriden
+comment|/// CXCursor arrays.
+name|void
+modifier|*
+name|createOverridenCXCursorsPool
+parameter_list|()
+function_decl|;
+comment|/// \brief Dispose of the overriden CXCursors pool.
+name|void
+name|disposeOverridenCXCursorsPool
+parameter_list|(
+name|void
+modifier|*
+name|pool
+parameter_list|)
+function_decl|;
 comment|/// \brief Returns a index/location pair for a selector identifier if the cursor
 comment|/// points to one.
 name|std

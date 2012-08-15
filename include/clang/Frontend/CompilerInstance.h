@@ -1487,11 +1487,7 @@ argument|unsigned Line
 argument_list|,
 argument|unsigned Column
 argument_list|,
-argument|bool ShowMacros
-argument_list|,
-argument|bool ShowCodePatterns
-argument_list|,
-argument|bool ShowGlobals
+argument|const CodeCompleteOptions&Opts
 argument_list|,
 argument|raw_ostream&OS
 argument_list|)

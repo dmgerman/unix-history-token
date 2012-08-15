@@ -54,10 +54,6 @@ name|z
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|// expected-note{{previous}}
-end_comment
-
 begin_decl_stmt
 name|int
 name|z2
@@ -65,10 +61,6 @@ init|=
 literal|17
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|// expected-note{{previous}}
-end_comment
 
 begin_define
 define|#
@@ -88,10 +80,6 @@ name|Very
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|// expected-note{{previous definition is here}}
-end_comment
 
 begin_define
 define|#
@@ -208,7 +196,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error{{redefinition}}
+comment|// expected-error{{redefinition}} expected-note@14{{previous}}
 end_comment
 
 begin_decl_stmt
@@ -220,7 +208,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error{{redefinition}}
+comment|// expected-error{{redefinition}} expected-note@16{{previous}}
 end_comment
 
 begin_decl_stmt
@@ -230,7 +218,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error{{redefinition}}
+comment|// expected-error{{redefinition}} expected-note@19{{previous definition is here}}
 end_comment
 
 begin_decl_stmt

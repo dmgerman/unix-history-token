@@ -450,5 +450,31 @@ return|;
 block|}
 end_function
 
+begin_macro
+unit|struct
+name|noSemiAfterStruct
+end_macro
+
+begin_comment
+comment|// expected-error {{expected ';' after struct}}
+end_comment
+
+begin_struct
+struct|struct
+name|noSemiAfterStruct
+block|{
+name|int
+name|n
+comment|// expected-warning {{';'}}
+block|}
+comment|// expected-error {{expected ';' after struct}}
+decl|enum
+name|noSemiAfterEnum
+block|{
+name|e1
+block|}
+comment|// expected-error {{expected ';' after enum}}
+end_struct
+
 end_unit
 

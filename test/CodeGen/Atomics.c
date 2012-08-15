@@ -8,7 +8,7 @@ comment|// Modified from a gcc testcase.
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -emit-llvm %s -o - | FileCheck %s
+comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin -emit-llvm %s -o - | FileCheck %s
 end_comment
 
 begin_decl_stmt

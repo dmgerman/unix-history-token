@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core,unix.cstring,experimental.unix.cstring -analyzer-store=region -Wno-null-dereference -verify %s
+comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core,unix.cstring,experimental.unix.cstring,debug.ExprInspection -analyzer-store=region -verify %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -DUSE_BUILTINS -analyzer-checker=core,unix.cstring,experimental.unix.cstring -analyzer-store=region -Wno-null-dereference -verify %s
+comment|// RUN: %clang_cc1 -analyze -DUSE_BUILTINS -analyzer-checker=core,unix.cstring,experimental.unix.cstring,debug.ExprInspection -analyzer-store=region -verify %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -DVARIANT -analyzer-checker=core,unix.cstring,experimental.unix.cstring -analyzer-store=region -Wno-null-dereference -verify %s
+comment|// RUN: %clang_cc1 -analyze -DVARIANT -analyzer-checker=core,unix.cstring,experimental.unix.cstring,debug.ExprInspection -analyzer-store=region -verify %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -DUSE_BUILTINS -DVARIANT -analyzer-checker=core,unix.cstring.NullArg,experimental.unix.cstring.OutOfBounds,experimental.unix.cstring.BufferOverlap,experimental.unix.cstring.NotNullTerminated -analyzer-store=region -Wno-null-dereference -verify %s
+comment|// RUN: %clang_cc1 -analyze -DUSE_BUILTINS -DVARIANT -analyzer-checker=core,unix.cstring,experimental.unix.cstring,debug.ExprInspection -analyzer-store=region -verify %s
 end_comment
 
 begin_comment
@@ -112,6 +112,15 @@ argument_list|)
 name|size_t
 expr_stmt|;
 end_typedef
+
+begin_function_decl
+name|void
+name|clang_analyzer_eval
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|//===----------------------------------------------------------------------===
@@ -263,8 +272,8 @@ literal|4
 argument_list|)
 expr_stmt|;
 comment|// no-warning
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|memcpy
 argument_list|(
 name|dst
@@ -273,42 +282,24 @@ name|src
 argument_list|,
 literal|4
 argument_list|)
-operator|!=
+operator|==
 name|dst
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
-block|}
-if|if
-condition|(
+comment|// expected-warning{{TRUE}}
+comment|// If we actually model the copy, we can make this known.
+comment|// The important thing for now is that the old value has been invalidated.
+name|clang_analyzer_eval
+argument_list|(
 name|dst
 index|[
 literal|0
 index|]
 operator|!=
 literal|0
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{null}}
+comment|// expected-warning{{UNKNOWN}}
 block|}
 end_function
 
@@ -787,8 +778,8 @@ block|{
 literal|1
 block|}
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|memcpy
 argument_list|(
 name|a
@@ -797,20 +788,11 @@ name|b
 argument_list|,
 name|n
 argument_list|)
-operator|!=
+operator|==
 name|a
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -828,8 +810,10 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-if|if
-condition|(
+name|void
+modifier|*
+name|result
+init|=
 name|memcpy
 argument_list|(
 name|a
@@ -838,21 +822,16 @@ literal|0
 argument_list|,
 name|n
 argument_list|)
-operator|!=
-name|a
-condition|)
+decl_stmt|;
 comment|// expected-warning{{Null pointer argument in call to memory copy function}}
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+name|clang_analyzer_eval
+argument_list|(
+name|result
+operator|==
+name|a
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// no-warning (above is fatal)
 block|}
 end_function
 
@@ -1006,8 +985,8 @@ literal|4
 argument_list|)
 expr_stmt|;
 comment|// no-warning
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|mempcpy
 argument_list|(
 name|dst
@@ -1016,46 +995,28 @@ name|src
 argument_list|,
 literal|4
 argument_list|)
-operator|!=
+operator|==
 operator|&
 name|dst
 index|[
 literal|4
 index|]
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
-block|}
-if|if
-condition|(
+comment|// expected-warning{{TRUE}}
+comment|// If we actually model the copy, we can make this known.
+comment|// The important thing for now is that the old value has been invalidated.
+name|clang_analyzer_eval
+argument_list|(
 name|dst
 index|[
 literal|0
 index|]
 operator|!=
 literal|0
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{null}}
+comment|// expected-warning{{UNKNOWN}}
 block|}
 end_function
 
@@ -1525,8 +1486,10 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-if|if
-condition|(
+name|void
+modifier|*
+name|result
+init|=
 name|mempcpy
 argument_list|(
 name|a
@@ -1535,21 +1498,16 @@ literal|0
 argument_list|,
 name|n
 argument_list|)
-operator|!=
-name|a
-condition|)
+decl_stmt|;
 comment|// expected-warning{{Null pointer argument in call to memory copy function}}
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+name|clang_analyzer_eval
+argument_list|(
+name|result
+operator|==
+name|a
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// no-warning (above is fatal)
 block|}
 end_function
 
@@ -1733,8 +1691,8 @@ literal|4
 argument_list|)
 expr_stmt|;
 comment|// no-warning
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|memmove
 argument_list|(
 name|dst
@@ -1743,42 +1701,24 @@ name|src
 argument_list|,
 literal|4
 argument_list|)
-operator|!=
+operator|==
 name|dst
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
-block|}
-if|if
-condition|(
+comment|// expected-warning{{TRUE}}
+comment|// If we actually model the copy, we can make this known.
+comment|// The important thing for now is that the old value has been invalidated.
+name|clang_analyzer_eval
+argument_list|(
 name|dst
 index|[
 literal|0
 index|]
 operator|!=
 literal|0
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{null}}
+comment|// expected-warning{{UNKNOWN}}
 block|}
 end_function
 
@@ -1913,6 +1853,10 @@ directive|define
 name|memcmp
 value|bcmp
 end_define
+
+begin_comment
+comment|//
+end_comment
 
 begin_else
 else|#
@@ -2104,8 +2048,8 @@ block|,
 literal|4
 block|}
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|memcmp
 argument_list|(
 name|a
@@ -2114,18 +2058,11 @@ name|a
 argument_list|,
 literal|4
 argument_list|)
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
+operator|==
 literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -2152,8 +2089,8 @@ block|,
 literal|4
 block|}
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|memcmp
 argument_list|(
 name|a
@@ -2162,18 +2099,11 @@ name|input
 argument_list|,
 literal|4
 argument_list|)
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
+operator|==
 literal|0
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{null}}
+comment|// expected-warning{{UNKNOWN}}
 block|}
 end_function
 
@@ -2200,8 +2130,8 @@ block|,
 literal|4
 block|}
 decl_stmt|;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|memcmp
 argument_list|(
 name|a
@@ -2210,21 +2140,13 @@ literal|0
 argument_list|,
 literal|0
 argument_list|)
-condition|)
-comment|// no-warning
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
+operator|==
 literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
-if|if
-condition|(
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
 name|memcmp
 argument_list|(
 literal|0
@@ -2233,21 +2155,13 @@ name|a
 argument_list|,
 literal|0
 argument_list|)
-condition|)
-comment|// no-warning
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
+operator|==
 literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
-if|if
-condition|(
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
 name|memcmp
 argument_list|(
 name|a
@@ -2256,19 +2170,11 @@ name|input
 argument_list|,
 literal|0
 argument_list|)
-condition|)
-comment|// no-warning
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
+operator|==
 literal|0
+argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -2306,24 +2212,18 @@ name|result
 operator|!=
 literal|0
 condition|)
-return|return;
-if|if
-condition|(
+name|clang_analyzer_eval
+argument_list|(
 name|n
-operator|==
+operator|!=
 literal|0
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{null}}
+comment|// expected-warning{{TRUE}}
+comment|// else
+comment|//   analyzer_assert_unknown(n == 0);
+comment|// We can't do the above comparison because n has already been constrained.
+comment|// On one path n == 0, on the other n != 0.
 block|}
 end_function
 
@@ -2461,26 +2361,19 @@ literal|4
 argument_list|)
 expr_stmt|;
 comment|// no-warning
-if|if
-condition|(
+comment|// If we actually model the copy, we can make this known.
+comment|// The important thing for now is that the old value has been invalidated.
+name|clang_analyzer_eval
+argument_list|(
 name|dst
 index|[
 literal|0
 index|]
 operator|!=
 literal|0
-condition|)
-operator|(
-name|void
-operator|)
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
-comment|// expected-warning{{null}}
+comment|// expected-warning{{UNKNOWN}}
 block|}
 end_function
 
@@ -2557,6 +2450,86 @@ literal|4
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{overflow}}
+block|}
+end_function
+
+begin_function_decl
+name|void
+modifier|*
+name|malloc
+parameter_list|(
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|free
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|char
+name|radar_11125445_memcopythenlogfirstbyte
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|input
+parameter_list|,
+name|size_t
+name|length
+parameter_list|)
+block|{
+name|char
+modifier|*
+name|bytes
+init|=
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|char
+argument_list|)
+operator|*
+operator|(
+name|length
+operator|+
+literal|1
+operator|)
+argument_list|)
+decl_stmt|;
+name|memcpy
+argument_list|(
+name|bytes
+argument_list|,
+name|input
+argument_list|,
+name|length
+argument_list|)
+expr_stmt|;
+name|char
+name|x
+init|=
+name|bytes
+index|[
+literal|0
+index|]
+decl_stmt|;
+comment|// no warning
+name|free
+argument_list|(
+name|bytes
+argument_list|)
+expr_stmt|;
+return|return
+name|x
+return|;
 block|}
 end_function
 

@@ -215,6 +215,7 @@ name|a
 init|=
 literal|1
 block|,
+comment|// expected-note {{declared here}}
 name|b
 name|__attribute__
 argument_list|(
@@ -226,6 +227,7 @@ argument_list|)
 init|=
 literal|2
 block|,
+comment|// expected-note {{declared here}}
 name|c
 init|=
 literal|3

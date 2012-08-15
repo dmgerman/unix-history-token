@@ -652,5 +652,30 @@ asm|("vmovaps  %0, %%ymm0" :: "m" (*(__m256i*)p) : "ymm0");
 block|}
 end_function
 
+begin_comment
+comment|// Check to make sure the inline asm non-standard dialect attribute _not_ is
+end_comment
+
+begin_comment
+comment|// emitted.
+end_comment
+
+begin_function
+name|void
+name|t27
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+asm|asm
+specifier|volatile
+asm|("nop");
+comment|// CHECK: @t27
+comment|// CHECK: call void asm sideeffect "nop"
+comment|// CHECK-NOT: ia_nsdialect
+comment|// CHECK: ret void
+block|}
+end_function
+
 end_unit
 

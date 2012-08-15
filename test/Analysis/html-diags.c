@@ -4,7 +4,7 @@ comment|// RUN: mkdir %t.dir
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-output=html -analyzer-checker=core -o %T.dir %s
+comment|// RUN: %clang_cc1 -analyze -analyzer-output=html -analyzer-checker=core -o %t.dir %s
 end_comment
 
 begin_comment

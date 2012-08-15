@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple i386-unknown-unknown -mregparm 4 %s -emit-llvm -o %t
-end_comment
-
-begin_comment
-comment|// RUN: FileCheck< %t %s
+comment|// RUN: %clang_cc1 -triple i386-unknown-unknown -mregparm 4 %s -emit-llvm -o - | FileCheck %s
 end_comment
 
 begin_function_decl

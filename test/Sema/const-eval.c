@@ -1234,5 +1234,20 @@ begin_comment
 comment|// expected-error {{must have a constant size}}
 end_comment
 
+begin_comment
+comment|//<rdar://problem/11874571>
+end_comment
+
+begin_macro
+name|EVAL_EXPR
+argument_list|(
+literal|51
+argument_list|,
+literal|0
+argument|!= (float)
+literal|1e99
+argument_list|)
+end_macro
+
 end_unit
 

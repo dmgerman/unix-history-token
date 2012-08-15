@@ -88,7 +88,7 @@ name|TYPE
 name|TY_LAST
 block|}
 enum|;
-comment|/// getTypeName - Return the name of the type for \arg Id.
+comment|/// getTypeName - Return the name of the type for \p Id.
 specifier|const
 name|char
 modifier|*
@@ -199,7 +199,7 @@ name|Id
 parameter_list|)
 function_decl|;
 comment|/// lookupTypeForExtension - Lookup the type to use for the file
-comment|/// extension \arg Ext.
+comment|/// extension \p Ext.
 name|ID
 name|lookupTypeForExtension
 parameter_list|(
@@ -229,7 +229,7 @@ name|ID
 name|Id
 parameter_list|)
 function_decl|;
-comment|/// getCompilationPhase - Return the \args N th compilation phase to
+comment|/// getCompilationPhase - Return the \p N th compilation phase to
 comment|/// be done for this type.
 name|phases
 operator|::

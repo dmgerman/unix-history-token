@@ -593,5 +593,61 @@ begin_comment
 comment|// expected-error {{expected ';' at end of declaration}}
 end_comment
 
+begin_comment
+comment|// PR12595
+end_comment
+
+begin_function
+name|void
+name|test18
+parameter_list|()
+block|{
+name|int
+name|x
+init|=
+literal|4
+operator|+
+operator|(
+literal|5
+operator|-
+literal|12
+operator|)
+init|)
+decl_stmt|;
+comment|// expected-error {{extraneous ')' before ';'}}
+block|}
+end_function
+
+begin_enum
+enum|enum
+name|E1
+block|{
+name|e1
+block|}
+range|:
+comment|// expected-error {{expected ';'}}
+range|struct
+name|EnumBitfield
+block|{   enum
+name|E2
+block|{
+name|e2
+block|}
+operator|:
+literal|4
+block|;
+comment|// ok
+block|struct
+name|S
+block|{
+name|int
+name|n
+block|; }
+operator|:
+comment|// expected-error {{expected ';'}}
+block|}
+enum|;
+end_enum
+
 end_unit
 

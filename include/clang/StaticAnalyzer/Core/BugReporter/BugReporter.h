@@ -341,6 +341,12 @@ comment|/// since the last time they checked.
 name|unsigned
 name|ConfigurationChangeToken
 decl_stmt|;
+comment|/// When set, this flag disables all callstack pruning from a diagnostic
+comment|/// path.  This is useful for some reports that want maximum fidelty
+comment|/// when reporting an issue.
+name|bool
+name|DoNotPrunePath
+decl_stmt|;
 name|public
 label|:
 name|BugReport
@@ -375,6 +381,11 @@ operator|,
 name|ConfigurationChangeToken
 argument_list|(
 literal|0
+argument_list|)
+operator|,
+name|DoNotPrunePath
+argument_list|(
+argument|false
 argument_list|)
 block|{}
 name|BugReport
@@ -417,6 +428,11 @@ name|ConfigurationChangeToken
 argument_list|(
 literal|0
 argument_list|)
+operator|,
+name|DoNotPrunePath
+argument_list|(
+argument|false
+argument_list|)
 block|{}
 name|BugReport
 argument_list|(
@@ -455,6 +471,11 @@ operator|,
 name|ConfigurationChangeToken
 argument_list|(
 literal|0
+argument_list|)
+operator|,
+name|DoNotPrunePath
+argument_list|(
+argument|false
 argument_list|)
 block|{}
 comment|/// \brief Create a BugReport with a custom uniqueing location.
@@ -567,6 +588,28 @@ name|Description
 operator|:
 name|ShortDescription
 return|;
+block|}
+comment|/// Indicates whether or not any path pruning should take place
+comment|/// when generating a PathDiagnostic from this BugReport.
+name|bool
+name|shouldPrunePath
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|DoNotPrunePath
+return|;
+block|}
+comment|/// Disable all path pruning when generating a PathDiagnostic.
+name|void
+name|disablePathPruning
+parameter_list|()
+block|{
+name|DoNotPrunePath
+operator|=
+name|true
+expr_stmt|;
 block|}
 name|void
 name|markInteresting

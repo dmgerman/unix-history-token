@@ -80,6 +80,10 @@ unit|))
 empty_stmt|;
 end_empty_stmt
 
+begin_comment
+comment|// expected-note {{'f2' declared here}}
+end_comment
+
 begin_function_decl
 name|void
 name|f3

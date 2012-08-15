@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|// REQUIRES: ppc32-registered-target
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cc1 %s -triple powerpc-pc-linux -emit-llvm -o - | grep {i32 32} | count 3
 end_comment
 

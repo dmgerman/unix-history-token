@@ -82,5 +82,42 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|//<rdar://problem/11625964>
+end_comment
+
+begin_comment
+comment|// -emit-html filters out # directives, but not _Pragma (or MS __pragma)
+end_comment
+
+begin_comment
+comment|// Diagnostic push/pop is stateful, so re-lexing a file can cause problems
+end_comment
+
+begin_comment
+comment|// if these pragmas are interpreted normally.
+end_comment
+
+begin_macro
+name|_Pragma
+argument_list|(
+literal|"clang diagnostic push"
+argument_list|)
+end_macro
+
+begin_macro
+name|_Pragma
+argument_list|(
+literal|"clang diagnostic ignored \"-Wformat-extra-args\""
+argument_list|)
+end_macro
+
+begin_macro
+name|_Pragma
+argument_list|(
+literal|"clang diagnostic pop"
+argument_list|)
+end_macro
+
 end_unit
 

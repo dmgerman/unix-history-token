@@ -23,5 +23,13 @@ begin_comment
 comment|// RUN: grep '"-no-implicit-float"' %t.log
 end_comment
 
+begin_comment
+comment|// RUN: %clang -target armv7-apple-darwin10 -### -S -mno-implicit-float %s 2> %t.log
+end_comment
+
+begin_comment
+comment|// RUN: grep '"-no-implicit-float"' %t.log | count 1
+end_comment
+
 end_unit
 

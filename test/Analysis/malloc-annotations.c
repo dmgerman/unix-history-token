@@ -470,10 +470,6 @@ comment|// no-warning
 block|}
 end_function
 
-begin_comment
-comment|// TODO: We will be able to handle this after we add support for tracking allocations stored in struct fields.
-end_comment
-
 begin_function
 name|void
 name|af1_d
@@ -492,7 +488,7 @@ argument_list|(
 literal|12
 argument_list|)
 expr_stmt|;
-comment|// false negative
+comment|// expected-warning{{Memory is never released; potential leak}}
 block|}
 end_function
 
@@ -740,11 +736,7 @@ block|}
 end_function
 
 begin_comment
-comment|// This case would inflict a double-free elsewhere.
-end_comment
-
-begin_comment
-comment|// However, this case is considered an analyzer bug since it causes false-positives.
+comment|// This case inflicts a possible double-free.
 end_comment
 
 begin_function
@@ -771,7 +763,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{Attempt to free non-owned memory}}
 block|}
 end_function
 

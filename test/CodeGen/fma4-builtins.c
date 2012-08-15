@@ -33,7 +33,7 @@ name|__m128
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: @llvm.x86.fma4.vfmadd.ps
+comment|// CHECK: @llvm.x86.fma.vfmadd.ps
 return|return
 name|_mm_macc_ps
 argument_list|(
@@ -61,7 +61,7 @@ name|__m128d
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: @llvm.x86.fma4.vfmadd.pd
+comment|// CHECK: @llvm.x86.fma.vfmadd.pd
 return|return
 name|_mm_macc_pd
 argument_list|(
@@ -89,7 +89,7 @@ name|__m128
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: @llvm.x86.fma4.vfmadd.ss
+comment|// CHECK: @llvm.x86.fma.vfmadd.ss
 return|return
 name|_mm_macc_ss
 argument_list|(
@@ -117,7 +117,7 @@ name|__m128d
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: @llvm.x86.fma4.vfmadd.sd
+comment|// CHECK: @llvm.x86.fma.vfmadd.sd
 return|return
 name|_mm_macc_sd
 argument_list|(
@@ -145,7 +145,7 @@ name|__m128
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: @llvm.x86.fma4.vfmsub.ps
+comment|// CHECK: @llvm.x86.fma.vfmsub.ps
 return|return
 name|_mm_msub_ps
 argument_list|(
@@ -173,7 +173,7 @@ name|__m128d
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: @llvm.x86.fma4.vfmsub.pd
+comment|// CHECK: @llvm.x86.fma.vfmsub.pd
 return|return
 name|_mm_msub_pd
 argument_list|(
@@ -201,7 +201,7 @@ name|__m128
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: @llvm.x86.fma4.vfmsub.ss
+comment|// CHECK: @llvm.x86.fma.vfmsub.ss
 return|return
 name|_mm_msub_ss
 argument_list|(
@@ -229,7 +229,7 @@ name|__m128d
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: @llvm.x86.fma4.vfmsub.sd
+comment|// CHECK: @llvm.x86.fma.vfmsub.sd
 return|return
 name|_mm_msub_sd
 argument_list|(
@@ -257,7 +257,7 @@ name|__m128
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: @llvm.x86.fma4.vfnmadd.ps
+comment|// CHECK: @llvm.x86.fma.vfnmadd.ps
 return|return
 name|_mm_nmacc_ps
 argument_list|(
@@ -285,7 +285,7 @@ name|__m128d
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: @llvm.x86.fma4.vfnmadd.pd
+comment|// CHECK: @llvm.x86.fma.vfnmadd.pd
 return|return
 name|_mm_nmacc_pd
 argument_list|(
@@ -313,7 +313,7 @@ name|__m128
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: @llvm.x86.fma4.vfnmadd.ss
+comment|// CHECK: @llvm.x86.fma.vfnmadd.ss
 return|return
 name|_mm_nmacc_ss
 argument_list|(
@@ -341,7 +341,7 @@ name|__m128d
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: @llvm.x86.fma4.vfnmadd.sd
+comment|// CHECK: @llvm.x86.fma.vfnmadd.sd
 return|return
 name|_mm_nmacc_sd
 argument_list|(
@@ -369,7 +369,7 @@ name|__m128
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: @llvm.x86.fma4.vfnmsub.ps
+comment|// CHECK: @llvm.x86.fma.vfnmsub.ps
 return|return
 name|_mm_nmsub_ps
 argument_list|(
@@ -397,7 +397,7 @@ name|__m128d
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: @llvm.x86.fma4.vfnmsub.pd
+comment|// CHECK: @llvm.x86.fma.vfnmsub.pd
 return|return
 name|_mm_nmsub_pd
 argument_list|(
@@ -425,7 +425,7 @@ name|__m128
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: @llvm.x86.fma4.vfnmsub.ss
+comment|// CHECK: @llvm.x86.fma.vfnmsub.ss
 return|return
 name|_mm_nmsub_ss
 argument_list|(
@@ -453,7 +453,7 @@ name|__m128d
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: @llvm.x86.fma4.vfnmsub.sd
+comment|// CHECK: @llvm.x86.fma.vfnmsub.sd
 return|return
 name|_mm_nmsub_sd
 argument_list|(
@@ -481,7 +481,7 @@ name|__m128
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: @llvm.x86.fma4.vfmaddsub.ps
+comment|// CHECK: @llvm.x86.fma.vfmaddsub.ps
 return|return
 name|_mm_maddsub_ps
 argument_list|(
@@ -509,7 +509,7 @@ name|__m128d
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: @llvm.x86.fma4.vfmaddsub.pd
+comment|// CHECK: @llvm.x86.fma.vfmaddsub.pd
 return|return
 name|_mm_maddsub_pd
 argument_list|(
@@ -537,7 +537,7 @@ name|__m128
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: @llvm.x86.fma4.vfmsubadd.ps
+comment|// CHECK: @llvm.x86.fma.vfmsubadd.ps
 return|return
 name|_mm_msubadd_ps
 argument_list|(
@@ -565,7 +565,7 @@ name|__m128d
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: @llvm.x86.fma4.vfmsubadd.pd
+comment|// CHECK: @llvm.x86.fma.vfmsubadd.pd
 return|return
 name|_mm_msubadd_pd
 argument_list|(
@@ -593,7 +593,7 @@ name|__m256
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: @llvm.x86.fma4.vfmadd.ps.256
+comment|// CHECK: @llvm.x86.fma.vfmadd.ps.256
 return|return
 name|_mm256_macc_ps
 argument_list|(
@@ -621,7 +621,7 @@ name|__m256d
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: @llvm.x86.fma4.vfmadd.pd.256
+comment|// CHECK: @llvm.x86.fma.vfmadd.pd.256
 return|return
 name|_mm256_macc_pd
 argument_list|(
@@ -649,7 +649,7 @@ name|__m256
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: @llvm.x86.fma4.vfmsub.ps.256
+comment|// CHECK: @llvm.x86.fma.vfmsub.ps.256
 return|return
 name|_mm256_msub_ps
 argument_list|(
@@ -677,7 +677,7 @@ name|__m256d
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: @llvm.x86.fma4.vfmsub.pd.256
+comment|// CHECK: @llvm.x86.fma.vfmsub.pd.256
 return|return
 name|_mm256_msub_pd
 argument_list|(
@@ -705,7 +705,7 @@ name|__m256
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: @llvm.x86.fma4.vfnmadd.ps.256
+comment|// CHECK: @llvm.x86.fma.vfnmadd.ps.256
 return|return
 name|_mm256_nmacc_ps
 argument_list|(
@@ -733,7 +733,7 @@ name|__m256d
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: @llvm.x86.fma4.vfnmadd.pd.256
+comment|// CHECK: @llvm.x86.fma.vfnmadd.pd.256
 return|return
 name|_mm256_nmacc_pd
 argument_list|(
@@ -761,7 +761,7 @@ name|__m256
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: @llvm.x86.fma4.vfnmsub.ps.256
+comment|// CHECK: @llvm.x86.fma.vfnmsub.ps.256
 return|return
 name|_mm256_nmsub_ps
 argument_list|(
@@ -789,7 +789,7 @@ name|__m256d
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: @llvm.x86.fma4.vfnmsub.pd.256
+comment|// CHECK: @llvm.x86.fma.vfnmsub.pd.256
 return|return
 name|_mm256_nmsub_pd
 argument_list|(
@@ -817,7 +817,7 @@ name|__m256
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: @llvm.x86.fma4.vfmaddsub.ps.256
+comment|// CHECK: @llvm.x86.fma.vfmaddsub.ps.256
 return|return
 name|_mm256_maddsub_ps
 argument_list|(
@@ -845,7 +845,7 @@ name|__m256d
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: @llvm.x86.fma4.vfmaddsub.pd.256
+comment|// CHECK: @llvm.x86.fma.vfmaddsub.pd.256
 return|return
 name|_mm256_maddsub_pd
 argument_list|(
@@ -873,7 +873,7 @@ name|__m256
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: @llvm.x86.fma4.vfmsubadd.ps.256
+comment|// CHECK: @llvm.x86.fma.vfmsubadd.ps.256
 return|return
 name|_mm256_msubadd_ps
 argument_list|(
@@ -901,7 +901,7 @@ name|__m256d
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: @llvm.x86.fma4.vfmsubadd.pd.256
+comment|// CHECK: @llvm.x86.fma.vfmsubadd.pd.256
 return|return
 name|_mm256_msubadd_pd
 argument_list|(

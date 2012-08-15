@@ -19,5 +19,70 @@ begin_comment
 comment|// CHECK: /* bar */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|FOO
+end_if
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* baz */
+end_comment
+
+begin_comment
+comment|// CHECK: /* baz */
+end_comment
+
+begin_macro
+name|_Pragma
+argument_list|(
+literal|"unknown"
+argument_list|)
+end_macro
+
+begin_comment
+comment|// after unknown pragma
+end_comment
+
+begin_comment
+comment|// CHECK: #pragma unknown
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: #
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: // after unknown pragma
+end_comment
+
+begin_macro
+name|_Pragma
+argument_list|(
+literal|"comment(\"abc\")"
+argument_list|)
+end_macro
+
+begin_comment
+comment|// after known pragma
+end_comment
+
+begin_comment
+comment|// CHECK: #pragma comment("abc")
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: #
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: // after known pragma
+end_comment
+
 end_unit
 

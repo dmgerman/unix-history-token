@@ -18,6 +18,14 @@ name|ww
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|x
+decl_stmt|,
+name|y
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|// RUN: c-index-test -cursor-at=%s:1:9 \
 end_comment
@@ -28,6 +36,14 @@ end_comment
 
 begin_comment
 comment|// RUN:              -cursor-at=%s:5:9 \
+end_comment
+
+begin_comment
+comment|// RUN:              -cursor-at=%s:7:5 \
+end_comment
+
+begin_comment
+comment|// RUN:              -cursor-at=%s:7:8 \
 end_comment
 
 begin_comment
@@ -44,6 +60,14 @@ end_comment
 
 begin_comment
 comment|// CHECK: TypeRef=struct _MyS:1:8
+end_comment
+
+begin_comment
+comment|// CHECK: VarDecl=x:7:5
+end_comment
+
+begin_comment
+comment|// CHECK: VarDecl=y:7:8
 end_comment
 
 end_unit

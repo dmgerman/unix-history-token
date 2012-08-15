@@ -15,9 +15,23 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|// expected-warning {{'nodebug' attribute only applies to functions}}
-end_comment
+begin_function
+name|void
+name|b
+parameter_list|()
+block|{
+name|int
+name|b
+name|__attribute__
+argument_list|(
+operator|(
+name|nodebug
+operator|)
+argument_list|)
+decl_stmt|;
+comment|// expected-warning {{'nodebug' only applies to variables with static storage duration and functions}}
+block|}
+end_function
 
 begin_function_decl
 name|void

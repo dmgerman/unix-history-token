@@ -107,5 +107,33 @@ begin_comment
 comment|// DEPRECATED-OFF-CHECK-NOT: -fdeprecated-macro
 end_comment
 
+begin_comment
+comment|// RUN: %clang -### -S -ffp-contract=fast %s 2>&1 | FileCheck -check-prefix=FP-CONTRACT-FAST-CHECK %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -ffast-math %s 2>&1 | FileCheck -check-prefix=FP-CONTRACT-FAST-CHECK %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -ffp-contract=off %s 2>&1 | FileCheck -check-prefix=FP-CONTRACT-OFF-CHECK %s
+end_comment
+
+begin_comment
+comment|// FP-CONTRACT-FAST-CHECK: -ffp-contract=fast
+end_comment
+
+begin_comment
+comment|// FP-CONTRACT-OFF-CHECK: -ffp-contract=off
+end_comment
+
+begin_comment
+comment|// RUN: %clang -fms-extensions -fenable-experimental-ms-inline-asm %s -### 2>&1 | FileCheck -check-prefix=CHECK-OPTIONS3 %s
+end_comment
+
+begin_comment
+comment|// CHECK-OPTIONS3: -fenable-experimental-ms-inline-asm
+end_comment
+
 end_unit
 

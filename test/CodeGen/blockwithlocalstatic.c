@@ -8,7 +8,7 @@ comment|// pr8707
 end_comment
 
 begin_comment
-comment|// CHECK: @__block_global_0.test = internal global i32
+comment|// CHECK: @block_block_invoke.test = internal global i32
 end_comment
 
 begin_function_decl
@@ -39,7 +39,7 @@ end_return
 
 begin_comment
 unit|};
-comment|// CHECK: @__block_global_1.test = internal global i32
+comment|// CHECK: @block1_block_invoke_2.test = internal global i32
 end_comment
 
 begin_function_decl
@@ -68,7 +68,7 @@ end_return
 
 begin_comment
 unit|};
-comment|// CHECK: @__block_global_2.test = internal global i32
+comment|// CHECK: @block2_block_invoke_3.test = internal global i32
 end_comment
 
 begin_function_decl

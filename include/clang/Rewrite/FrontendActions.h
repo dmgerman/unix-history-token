@@ -224,6 +224,19 @@ name|ExecuteAction
 argument_list|()
 block|; }
 decl_stmt|;
+name|class
+name|RewriteIncludesAction
+range|:
+name|public
+name|PreprocessorFrontendAction
+block|{
+name|protected
+operator|:
+name|void
+name|ExecuteAction
+argument_list|()
+block|; }
+decl_stmt|;
 block|}
 end_decl_stmt
 

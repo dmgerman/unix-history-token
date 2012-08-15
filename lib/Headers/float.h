@@ -22,10 +22,17 @@ end_comment
 begin_if
 if|#
 directive|if
+operator|(
 name|defined
 argument_list|(
 name|__MINGW32__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+operator|)
 operator|&&
 expr|\
 name|defined

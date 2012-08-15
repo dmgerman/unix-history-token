@@ -613,9 +613,6 @@ name|Quals
 argument_list|,
 name|CharUnits
 name|Alignment
-operator|=
-name|CharUnits
-argument_list|()
 argument_list|,
 name|llvm
 operator|::
@@ -1448,6 +1445,9 @@ name|Info
 argument_list|,
 name|QualType
 name|type
+argument_list|,
+name|CharUnits
+name|Alignment
 argument_list|)
 block|{
 name|LValue
@@ -1482,6 +1482,8 @@ name|type
 operator|.
 name|getQualifiers
 argument_list|()
+argument_list|,
+name|Alignment
 argument_list|)
 expr_stmt|;
 return|return
@@ -1726,7 +1728,9 @@ specifier|static
 name|AggValueSlot
 name|forLValue
 parameter_list|(
+specifier|const
 name|LValue
+modifier|&
 name|LV
 parameter_list|,
 name|IsDestructed_t

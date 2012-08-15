@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|// REQUIRES: arm-registered-target
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cc1 -triple thumbv7-apple-darwin9 \
 end_comment
 
@@ -150,6 +154,44 @@ name|void
 name|test_complex
 parameter_list|(
 name|__complex__
+name|double
+name|cd
+parameter_list|)
+block|{
+name|complex_callee
+argument_list|(
+name|cd
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// Long double is the same as double on AAPCS, it should be homogeneous.
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|complex_long_callee
+parameter_list|(
+name|__complex__
+name|long
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|// CHECK: define arm_aapcs_vfpcc void @test_complex_long(double %{{.*}}, double %{{.*}})
+end_comment
+
+begin_function
+name|void
+name|test_complex_long
+parameter_list|(
+name|__complex__
+name|long
 name|double
 name|cd
 parameter_list|)
@@ -371,6 +413,37 @@ name|arg
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
+comment|// CHECK: define arm_aapcs_vfpcc void @f33(%struct.s33* byval %s)
+end_comment
+
+begin_struct
+struct|struct
+name|s33
+block|{
+name|char
+name|buf
+index|[
+literal|32
+operator|*
+literal|32
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_function
+name|void
+name|f33
+parameter_list|(
+name|struct
+name|s33
+name|s
+parameter_list|)
+block|{ }
 end_function
 
 end_unit

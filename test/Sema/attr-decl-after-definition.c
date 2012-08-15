@@ -155,6 +155,31 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|// no warning as it matches the existing
+end_comment
+
+begin_comment
+comment|// attribute.
+end_comment
+
+begin_decl_stmt
+name|int
+name|bar
+name|__attribute__
+argument_list|(
+operator|(
+name|used
+operator|,
+name|visibility
+argument_list|(
+literal|"hidden"
+argument_list|)
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// expected-warning {{must precede definition}}
 end_comment
 
@@ -163,6 +188,129 @@ name|int
 name|bar
 decl_stmt|;
 end_decl_stmt
+
+begin_struct
+struct|struct
+name|zed
+block|{
+comment|// expected-note {{previous definition is here}}
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+name|struct
+name|__attribute__
+argument_list|(
+operator|(
+name|visibility
+argument_list|(
+literal|"hidden"
+argument_list|)
+operator|)
+argument_list|)
+name|zed
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-warning {{must precede definition}}
+end_comment
+
+begin_struct
+struct|struct
+name|__attribute__
+argument_list|(
+argument|(visibility(
+literal|"hidden"
+argument|))
+argument_list|)
+name|zed2
+block|{ }
+struct|;
+end_struct
+
+begin_decl_stmt
+name|struct
+name|__attribute__
+argument_list|(
+operator|(
+name|visibility
+argument_list|(
+literal|"hidden"
+argument_list|)
+operator|)
+argument_list|)
+name|zed2
+decl_stmt|;
+end_decl_stmt
+
+begin_struct
+struct|struct
+name|__attribute__
+argument_list|(
+argument|(visibility(
+literal|"hidden"
+argument|))
+argument_list|)
+name|zed3
+block|{
+comment|// expected-note {{previous definition is here}}
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+name|struct
+name|__attribute__
+argument_list|(
+operator|(
+name|visibility
+argument_list|(
+literal|"hidden"
+argument_list|)
+operator|,
+name|packed
+comment|// expected-warning {{must precede definition}}
+operator|)
+argument_list|)
+name|zed3
+decl_stmt|;
+end_decl_stmt
+
+begin_struct
+struct|struct
+name|__attribute__
+argument_list|(
+argument|(visibility(
+literal|"hidden"
+argument|))
+argument_list|)
+name|zed4
+block|{
+comment|// expected-note {{previous attribute is here}}
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+name|struct
+name|__attribute__
+argument_list|(
+operator|(
+name|visibility
+argument_list|(
+literal|"default"
+argument_list|)
+operator|)
+argument_list|)
+name|zed4
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error {{visibility does not match previous declaration}}
+end_comment
 
 end_unit
 

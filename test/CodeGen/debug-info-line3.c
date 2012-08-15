@@ -27,11 +27,11 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: ret void, !dbg !19
+comment|// CHECK: ret void, !dbg !17
 end_comment
 
 begin_comment
-comment|// CHECK: !19 = metadata !{i32 6,
+comment|// CHECK: !17 = metadata !{i32 6,
 end_comment
 
 end_unit

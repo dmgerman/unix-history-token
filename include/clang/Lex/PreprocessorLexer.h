@@ -32,15 +32,19 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
-comment|//  This file defines the PreprocessorLexer interface.
+comment|/// \file
 end_comment
 
 begin_comment
-comment|//
+comment|/// \brief Defines the PreprocessorLexer interface.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -114,18 +118,19 @@ decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Context-specific lexing flags set by the preprocessor.
 comment|//===--------------------------------------------------------------------===//
-comment|/// ParsingPreprocessorDirective - This is true when parsing #XXX.  This turns
-comment|/// '\n' into a tok::eod token.
+comment|/// \brief True when parsing \#XXX; turns '\\n' into a tok::eod token.
 name|bool
 name|ParsingPreprocessorDirective
 decl_stmt|;
-comment|/// ParsingFilename - True after #include: this turns<xx> into a
-comment|/// tok::angle_string_literal token.
+comment|/// \brief True after \#include; turns \<xx> into a tok::angle_string_literal
+comment|/// token.
 name|bool
 name|ParsingFilename
 decl_stmt|;
-comment|/// LexingRawMode - True if in raw mode:  This flag disables interpretation of
-comment|/// tokens and is a far faster mode to lex in than non-raw-mode.  This flag:
+comment|/// \brief True if in raw mode.
+comment|///
+comment|/// Raw mode disables interpretation of tokens and is a far faster mode to
+comment|/// lex in than non-raw-mode.  This flag:
 comment|///  1. If EOF of the current lexer is found, the include stack isn't popped.
 comment|///  2. Identifier information is not looked up for identifier tokens.  As an
 comment|///     effect of this, implicit macro expansion is naturally disabled.
@@ -138,12 +143,12 @@ comment|/// Note that in raw mode that the PP pointer may be null.
 name|bool
 name|LexingRawMode
 decl_stmt|;
-comment|/// MIOpt - This is a state machine that detects the #ifndef-wrapping a file
+comment|/// \brief A state machine that detects the \#ifndef-wrapping a file
 comment|/// idiom for the multiple-include optimization.
 name|MultipleIncludeOpt
 name|MIOpt
 decl_stmt|;
-comment|/// ConditionalStack - Information about the set of #if/#ifdef/#ifndef blocks
+comment|/// \brief Information about the set of \#if/\#ifdef/\#ifndef blocks
 comment|/// we are currently in.
 name|SmallVector
 operator|<
@@ -226,8 +231,7 @@ argument_list|)
 operator|=
 literal|0
 expr_stmt|;
-comment|/// getSourceLocation - Return the source location for the next observable
-comment|///  location.
+comment|/// \brief Return the source location for the next observable location.
 name|virtual
 name|SourceLocation
 name|getSourceLocation
@@ -237,9 +241,9 @@ literal|0
 function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|// #if directive handling.
-comment|/// pushConditionalLevel - When we enter a #if directive, this keeps track of
-comment|/// what we are currently in for diagnostic emission (e.g. #if with missing
-comment|/// #endif).
+comment|/// pushConditionalLevel - When we enter a \#if directive, this keeps track of
+comment|/// what we are currently in for diagnostic emission (e.g. \#if with missing
+comment|/// \#endif).
 name|void
 name|pushConditionalLevel
 parameter_list|(
@@ -345,8 +349,8 @@ return|return
 name|false
 return|;
 block|}
-comment|/// peekConditionalLevel - Return the top of the conditional stack.  This
-comment|/// requires that there be a conditional active.
+comment|/// \brief Return the top of the conditional stack.
+comment|/// \pre This requires that there be a conditional active.
 name|PPConditionalInfo
 modifier|&
 name|peekConditionalLevel
@@ -386,9 +390,11 @@ name|public
 label|:
 comment|//===--------------------------------------------------------------------===//
 comment|// Misc. lexing methods.
-comment|/// LexIncludeFilename - After the preprocessor has parsed a #include, lex and
-comment|/// (potentially) macro expand the filename.  If the sequence parsed is not
-comment|/// lexically legal, emit a diagnostic and return a result EOD token.
+comment|/// \brief After the preprocessor has parsed a \#include, lex and
+comment|/// (potentially) macro expand the filename.
+comment|///
+comment|/// If the sequence parsed is not lexically legal, emit a diagnostic and
+comment|/// return a result EOD token.
 name|void
 name|LexIncludeFilename
 parameter_list|(
@@ -397,8 +403,8 @@ modifier|&
 name|Result
 parameter_list|)
 function_decl|;
-comment|/// setParsingPreprocessorDirective - Inform the lexer whether or not
-comment|///  we are currently lexing a preprocessor directive.
+comment|/// \brief Inform the lexer whether or not we are currently lexing a
+comment|/// preprocessor directive.
 name|void
 name|setParsingPreprocessorDirective
 parameter_list|(
@@ -411,7 +417,7 @@ operator|=
 name|f
 expr_stmt|;
 block|}
-comment|/// isLexingRawMode - Return true if this lexer is in raw mode or not.
+comment|/// \brief Return true if this lexer is in raw mode or not.
 name|bool
 name|isLexingRawMode
 argument_list|()
@@ -421,7 +427,7 @@ return|return
 name|LexingRawMode
 return|;
 block|}
-comment|/// getPP - Return the preprocessor object for this lexer.
+comment|/// \brief Return the preprocessor object for this lexer.
 name|Preprocessor
 operator|*
 name|getPP
@@ -468,7 +474,7 @@ argument_list|()
 specifier|const
 expr_stmt|;
 comment|/// \brief Iterator that traverses the current stack of preprocessor
-comment|/// conditional directives (#if/#ifdef/#ifndef).
+comment|/// conditional directives (\#if/\#ifdef/\#ifndef).
 typedef|typedef
 name|SmallVectorImpl
 operator|<

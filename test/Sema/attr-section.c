@@ -78,5 +78,53 @@ comment|// ok.
 block|}
 end_function
 
+begin_comment
+comment|// pr9356
+end_comment
+
+begin_decl_stmt
+name|void
+name|__attribute__
+argument_list|(
+operator|(
+name|section
+argument_list|(
+literal|"foo,zed"
+argument_list|)
+operator|)
+argument_list|)
+name|test2
+argument_list|(
+name|void
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-note {{previous attribute is here}}
+end_comment
+
+begin_decl_stmt
+name|void
+name|__attribute__
+argument_list|(
+operator|(
+name|section
+argument_list|(
+literal|"bar,zed"
+argument_list|)
+operator|)
+argument_list|)
+name|test2
+argument_list|(
+name|void
+argument_list|)
+block|{}
+end_decl_stmt
+
+begin_comment
+comment|// expected-warning {{section does not match previous declaration}}
+end_comment
+
 end_unit
 

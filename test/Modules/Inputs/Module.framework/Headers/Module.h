@@ -1,6 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// expected-warning{{umbrella header}}
+comment|// expected-warning 0-1 {{umbrella header}}
+end_comment
+
+begin_comment
+comment|// FIXME: The "umbrella header" warning should be moved to a separate test.
+end_comment
+
+begin_comment
+comment|// This "0-1" is only here because the warning is only emitted when the
+end_comment
+
+begin_comment
+comment|// module is (otherwise) successfully included.
 end_comment
 
 begin_ifndef

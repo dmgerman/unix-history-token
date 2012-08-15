@@ -82,7 +82,7 @@ comment|// CATEGORY_ID: {{.*}}: warning: {{[a-z ]+}} [2]
 comment|// CATEGORY_NAME: {{.*}}: warning: {{[a-z ]+}} [Semantic Issue]
 comment|// OPTION_ERROR_CATEGORY: {{.*}}: error: {{[a-z ]+}} [-Werror,-Wparentheses,Semantic Issue]
 comment|// Leverage the fact that all these '//'s get warned about in C89 pedantic.
-comment|// OPTION_PEDANTIC: {{.*}}: warning: {{[/a-z ]+}} [-pedantic,-Wcomment]
+comment|// OPTION_PEDANTIC: {{.*}}: warning: {{[/a-z ]+}} [-Wcomment]
 block|}
 end_function
 

@@ -651,7 +651,15 @@ block|}
 end_function
 
 begin_comment
-comment|// Testing if solver handles (symbol * constant)< constant
+comment|// *** FIXME ***
+end_comment
+
+begin_comment
+comment|// We don't get a warning here yet because our symbolic constraint solving
+end_comment
+
+begin_comment
+comment|// doesn't handle:  (symbol * constant)< constant
 end_comment
 
 begin_function
@@ -681,7 +689,6 @@ index|]
 operator|=
 literal|1
 expr_stmt|;
-comment|// expected-warning {{Out of bound memory access (accessed memory precedes memory block)}}
 block|}
 end_function
 

@@ -2574,16 +2574,6 @@ argument_list|,
 name|imm_i
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|__builtin_ia32_storelv4si
-argument_list|(
-name|tmp_V2ip
-argument_list|,
-name|tmp_V2LLi
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|USE_SSE4

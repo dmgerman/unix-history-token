@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringMap.h"
 end_include
 
@@ -120,18 +126,18 @@ decl_stmt|;
 name|class
 name|IdentifierInfo
 decl_stmt|;
-comment|/// HeaderFileInfo - The preprocessor keeps track of this information for each
-comment|/// file that is #included.
+comment|/// \brief The preprocessor keeps track of this information for each
+comment|/// file that is \#included.
 struct|struct
 name|HeaderFileInfo
 block|{
-comment|/// isImport - True if this is a #import'd or #pragma once file.
+comment|/// \brief True if this is a \#import'd or \#pragma once file.
 name|unsigned
 name|isImport
 range|:
 literal|1
 decl_stmt|;
-comment|/// isPragmaOnce - True if this is  #pragma once file.
+comment|/// \brief True if this is a \#pragma once file.
 name|unsigned
 name|isPragmaOnce
 range|:
@@ -139,7 +145,7 @@ literal|1
 decl_stmt|;
 comment|/// DirInfo - Keep track of whether this is a system header, and if so,
 comment|/// whether it is C++ clean or not.  This can be set by the include paths or
-comment|/// by #pragma gcc system_header.  This is an instance of
+comment|/// by \#pragma gcc system_header.  This is an instance of
 comment|/// SrcMgr::CharacteristicKind.
 name|unsigned
 name|DirInfo
@@ -171,8 +177,7 @@ name|IndexHeaderMapHeader
 range|:
 literal|1
 decl_stmt|;
-comment|/// NumIncludes - This is the number of times the file has been included
-comment|/// already.
+comment|/// \brief The number of times the file has been included already.
 name|unsigned
 name|short
 name|NumIncludes
@@ -185,8 +190,8 @@ comment|/// external storage.
 name|unsigned
 name|ControllingMacroID
 decl_stmt|;
-comment|/// ControllingMacro - If this file has a #ifndef XXX (or equivalent) guard
-comment|/// that protects the entire contents of the file, this is the identifier
+comment|/// If this file has a \#ifndef XXX (or equivalent) guard that
+comment|/// protects the entire contents of the file, this is the identifier
 comment|/// for the macro that controls whether or not it has any effect.
 comment|///
 comment|/// Note: Most clients should use getControllingMacro() to access
@@ -317,8 +322,8 @@ literal|0
 function_decl|;
 block|}
 empty_stmt|;
-comment|/// HeaderSearch - This class encapsulates the information needed to find the
-comment|/// file referenced by a #include or #include_next, (sub-)framework lookup, etc.
+comment|/// \brief Encapsulates the information needed to find the file referenced
+comment|/// by a \#include or \#include_next, (sub-)framework lookup, etc.
 name|class
 name|HeaderSearch
 block|{
@@ -348,8 +353,8 @@ name|DiagnosticsEngine
 modifier|&
 name|Diags
 decl_stmt|;
-comment|/// #include search path information.  Requests for #include "x" search the
-comment|/// directory of the #including file first, then each directory in SearchDirs
+comment|/// \#include search path information.  Requests for \#include "x" search the
+comment|/// directory of the \#including file first, then each directory in SearchDirs
 comment|/// consecutively. Requests for<x> search the current dir first, then each
 comment|/// directory in SearchDirs, starting at AngledDirIdx, consecutively.  If
 comment|/// NoCurDirSearch is true, then the check for the file in the current
@@ -371,15 +376,37 @@ decl_stmt|;
 name|bool
 name|NoCurDirSearch
 decl_stmt|;
+comment|/// \brief \#include prefixes for which the 'system header' property is
+comment|/// overridden.
+comment|///
+comment|/// For a \#include "x" or \#include \<x> directive, the last string in this
+comment|/// list which is a prefix of 'x' determines whether the file is treated as
+comment|/// a system header.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|std
+operator|::
+name|string
+operator|,
+name|bool
+operator|>
+expr|>
+name|SystemHeaderPrefixes
+expr_stmt|;
 comment|/// \brief The path to the module cache.
 name|std
 operator|::
 name|string
 name|ModuleCachePath
 expr_stmt|;
-comment|/// FileInfo - This contains all of the preprocessor-specific data about files
-comment|/// that are included.  The vector is indexed by the FileEntry's UID.
-comment|///
+comment|/// \brief All of the preprocessor-specific data about files that are
+comment|/// included, indexed by the FileEntry's UID.
 name|std
 operator|::
 name|vector
@@ -388,12 +415,13 @@ name|HeaderFileInfo
 operator|>
 name|FileInfo
 expr_stmt|;
-comment|/// LookupFileCache - This is keeps track of each lookup performed by
-comment|/// LookupFile.  The first part of the value is the starting index in
-comment|/// SearchDirs that the cached search was performed from.  If there is a hit
-comment|/// and this value doesn't match the current query, the cache has to be
-comment|/// ignored.  The second value is the entry in SearchDirs that satisfied the
-comment|/// query.
+comment|/// \brief Keeps track of each lookup performed by LookupFile.
+comment|///
+comment|/// The first part of the value is the starting index in SearchDirs
+comment|/// that the cached search was performed from.  If there is a hit and
+comment|/// this value doesn't match the current query, the cache has to be
+comment|/// ignored.  The second value is the entry in SearchDirs that satisfied
+comment|/// the query.
 name|llvm
 operator|::
 name|StringMap
@@ -413,7 +441,7 @@ name|BumpPtrAllocator
 operator|>
 name|LookupFileCache
 expr_stmt|;
-comment|/// FrameworkMap - This is a collection mapping a framework or subframework
+comment|/// \brief Collection mapping a framework or subframework
 comment|/// name like "Carbon" to the Carbon.framework directory.
 name|llvm
 operator|::
@@ -587,8 +615,7 @@ return|return
 name|FileMgr
 return|;
 block|}
-comment|/// SetSearchPaths - Interface for setting the file search paths.
-comment|///
+comment|/// \brief Interface for setting the file search paths.
 name|void
 name|SetSearchPaths
 argument_list|(
@@ -646,7 +673,7 @@ name|noCurDirSearch
 expr_stmt|;
 comment|//LookupFileCache.clear();
 block|}
-comment|/// AddSearchPath - Add an additional search path.
+comment|/// \brief Add an additional search path.
 name|void
 name|AddSearchPath
 parameter_list|(
@@ -694,7 +721,43 @@ name|SystemDirIdx
 operator|++
 expr_stmt|;
 block|}
-comment|/// HasIncludeAliasMap - Checks whether the map exists or not
+comment|/// \brief Set the list of system header prefixes.
+name|void
+name|SetSystemHeaderPrefixes
+argument_list|(
+name|ArrayRef
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|std
+operator|::
+name|string
+argument_list|,
+name|bool
+operator|>
+expr|>
+name|P
+argument_list|)
+block|{
+name|SystemHeaderPrefixes
+operator|.
+name|assign
+argument_list|(
+name|P
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|P
+operator|.
+name|end
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// \brief Checks whether the map exists or not.
 name|bool
 name|HasIncludeAliasMap
 argument_list|()
@@ -704,7 +767,8 @@ return|return
 name|IncludeAliases
 return|;
 block|}
-comment|/// AddIncludeAlias - Map the source include name to the dest include name.
+comment|/// \brief Map the source include name to the dest include name.
+comment|///
 comment|/// The Source should include the angle brackets or quotes, the dest
 comment|/// should not.  This allows for distinction between<> and "" headers.
 name|void
@@ -813,7 +877,7 @@ return|return
 name|ModuleCachePath
 return|;
 block|}
-comment|/// ClearFileInfo - Forget everything we know about headers so far.
+comment|/// \brief Forget everything we know about headers so far.
 name|void
 name|ClearFileInfo
 parameter_list|()
@@ -872,7 +936,7 @@ modifier|&
 name|Target
 parameter_list|)
 function_decl|;
-comment|/// LookupFile - Given a "foo" or<foo> reference, look up the indicated file,
+comment|/// \brief Given a "foo" or \<foo> reference, look up the indicated file,
 comment|/// return null on failure.
 comment|///
 comment|/// \returns If successful, this returns 'UsedDir', the DirectoryLookup member
@@ -881,9 +945,9 @@ comment|///
 comment|/// \param isAngled indicates whether the file reference is a<> reference.
 comment|///
 comment|/// \param CurDir If non-null, the file was found in the specified directory
-comment|/// search location.  This is used to implement #include_next.
+comment|/// search location.  This is used to implement \#include_next.
 comment|///
-comment|/// \param CurFileEnt If non-null, indicates where the #including file is, in
+comment|/// \param CurFileEnt If non-null, indicates where the \#including file is, in
 comment|/// case a relative search is needed.
 comment|///
 comment|/// \param SearchPath If non-null, will be set to the search path relative
@@ -949,11 +1013,12 @@ operator|=
 name|false
 argument_list|)
 decl_stmt|;
-comment|/// LookupSubframeworkHeader - Look up a subframework for the specified
-comment|/// #include file.  For example, if #include'ing<HIToolbox/HIToolbox.h> from
-comment|/// within ".../Carbon.framework/Headers/Carbon.h", check to see if HIToolbox
-comment|/// is a subframework within Carbon.framework.  If so, return the FileEntry
-comment|/// for the designated file, otherwise return null.
+comment|/// \brief Look up a subframework for the specified \#include file.
+comment|///
+comment|/// For example, if \#include'ing<HIToolbox/HIToolbox.h> from
+comment|/// within ".../Carbon.framework/Headers/Carbon.h", check to see if
+comment|/// HIToolbox is a subframework within Carbon.framework.  If so, return
+comment|/// the FileEntry for the designated file, otherwise return null.
 specifier|const
 name|FileEntry
 modifier|*
@@ -982,9 +1047,8 @@ operator|*
 name|RelativePath
 argument_list|)
 decl_stmt|;
-comment|/// LookupFrameworkCache - Look up the specified framework name in our
-comment|/// framework cache, returning the DirectoryEntry it is in if we know,
-comment|/// otherwise, return null.
+comment|/// \brief Look up the specified framework name in our framework cache.
+comment|/// \returns The DirectoryEntry it is in if we know, null otherwise.
 name|FrameworkCacheEntry
 modifier|&
 name|LookupFrameworkCache
@@ -1005,9 +1069,11 @@ name|getValue
 argument_list|()
 return|;
 block|}
-comment|/// ShouldEnterIncludeFile - Mark the specified file as a target of of a
-comment|/// #include, #include_next, or #import directive.  Return false if #including
-comment|/// the file will have no effect or true if we should include it.
+comment|/// \brief Mark the specified file as a target of of a \#include,
+comment|/// \#include_next, or \#import directive.
+comment|///
+comment|/// \return false if \#including the file will have no effect or true
+comment|/// if we should include it.
 name|bool
 name|ShouldEnterIncludeFile
 parameter_list|(
@@ -1020,7 +1086,7 @@ name|bool
 name|isImport
 parameter_list|)
 function_decl|;
-comment|/// getFileDirFlavor - Return whether the specified file is a normal header,
+comment|/// \brief Return whether the specified file is a normal header,
 comment|/// a system header, or a C++ friendly system header.
 name|SrcMgr
 operator|::
@@ -1044,8 +1110,8 @@ operator|.
 name|DirInfo
 return|;
 block|}
-comment|/// MarkFileIncludeOnce - Mark the specified file as a "once only" file, e.g.
-comment|/// due to #pragma once.
+comment|/// \brief Mark the specified file as a "once only" file, e.g. due to
+comment|/// \#pragma once.
 name|void
 name|MarkFileIncludeOnce
 parameter_list|(
@@ -1077,8 +1143,8 @@ operator|=
 name|true
 expr_stmt|;
 block|}
-comment|/// MarkFileSystemHeader - Mark the specified file as a system header, e.g.
-comment|/// due to #pragma GCC system_header.
+comment|/// \brief Mark the specified file as a system header, e.g. due to
+comment|/// \#pragma GCC system_header.
 name|void
 name|MarkFileSystemHeader
 parameter_list|(
@@ -1100,8 +1166,8 @@ operator|::
 name|C_System
 expr_stmt|;
 block|}
-comment|/// IncrementIncludeCount - Increment the count for the number of times the
-comment|/// specified FileEntry has been entered.
+comment|/// \brief Increment the count for the number of times the specified
+comment|/// FileEntry has been entered.
 name|void
 name|IncrementIncludeCount
 parameter_list|(
@@ -1120,9 +1186,10 @@ operator|.
 name|NumIncludes
 expr_stmt|;
 block|}
-comment|/// SetFileControllingMacro - Mark the specified file as having a controlling
-comment|/// macro.  This is used by the multiple-include optimization to eliminate
-comment|/// no-op #includes.
+comment|/// \brief Mark the specified file as having a controlling macro.
+comment|///
+comment|/// This is used by the multiple-include optimization to eliminate
+comment|/// no-op \#includes.
 name|void
 name|SetFileControllingMacro
 parameter_list|(
@@ -1148,10 +1215,10 @@ name|ControllingMacro
 expr_stmt|;
 block|}
 comment|/// \brief Determine whether this file is intended to be safe from
-comment|/// multiple inclusions, e.g., it has #pragma once or a controlling
+comment|/// multiple inclusions, e.g., it has \#pragma once or a controlling
 comment|/// macro.
 comment|///
-comment|/// This routine does not consider the effect of #import
+comment|/// This routine does not consider the effect of \#import
 name|bool
 name|isFileMultipleIncludeGuarded
 parameter_list|(
@@ -1162,7 +1229,7 @@ name|File
 parameter_list|)
 function_decl|;
 comment|/// CreateHeaderMap - This method returns a HeaderMap for the specified
-comment|/// FileEntry, uniquing them through the the 'HeaderMaps' datastructure.
+comment|/// FileEntry, uniquing them through the 'HeaderMaps' datastructure.
 specifier|const
 name|HeaderMap
 modifier|*
@@ -1194,7 +1261,7 @@ expr_stmt|;
 comment|/// \brief Retrieve the name of the module file that should be used to
 comment|/// load a module with the given name.
 comment|///
-comment|/// \param Module The module whose module file name will be returned.
+comment|/// \param ModuleName The module whose module file name will be returned.
 comment|///
 comment|/// \returns The name of the module file that corresponds to this module,
 comment|/// or an empty string if this module does not correspond to any module file.
@@ -1271,8 +1338,6 @@ function_decl|;
 comment|/// \brief Read the contents of the given module map file.
 comment|///
 comment|/// \param File The module map file.
-comment|///
-comment|/// \param OnlyModule If non-NULL, this will receive the
 comment|///
 comment|/// \returns true if an error occurred, false otherwise.
 name|bool
@@ -1365,8 +1430,7 @@ name|unsigned
 name|UID
 parameter_list|)
 function_decl|;
-comment|/// getFileInfo - Return the HeaderFileInfo structure for the specified
-comment|/// FileEntry.
+comment|/// \brief Return the HeaderFileInfo structure for the specified FileEntry.
 specifier|const
 name|HeaderFileInfo
 modifier|&
@@ -1600,8 +1664,7 @@ modifier|*
 name|Dir
 parameter_list|)
 function_decl|;
-comment|/// getFileInfo - Return the HeaderFileInfo structure for the specified
-comment|/// FileEntry.
+comment|/// \brief Return the HeaderFileInfo structure for the specified FileEntry.
 name|HeaderFileInfo
 modifier|&
 name|getFileInfo

@@ -1,6 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang -cc1 -analyze -analyzer-checker=debug.DumpDominators %s 2>&1 | FileCheck %s
+comment|// RUN: rm -f %t
+end_comment
+
+begin_comment
+comment|// RUN: %clang -cc1 -analyze -analyzer-checker=debug.DumpDominators %s> %t 2>&1
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck --input-file=%t %s
 end_comment
 
 begin_comment
@@ -101,23 +109,23 @@ comment|// CHECK: (0,1)
 end_comment
 
 begin_comment
-comment|// CHECK: (1,2)
+comment|// CHECK: (1,7)
 end_comment
 
 begin_comment
-comment|// CHECK: (2,8)
+comment|// CHECK: (2,3)
 end_comment
 
 begin_comment
-comment|// CHECK: (3,4)
+comment|// CHECK: (3,6)
 end_comment
 
 begin_comment
-comment|// CHECK: (4,7)
+comment|// CHECK: (4,6)
 end_comment
 
 begin_comment
-comment|// CHECK: (5,7)
+comment|// CHECK: (5,6)
 end_comment
 
 begin_comment
@@ -125,7 +133,7 @@ comment|// CHECK: (6,7)
 end_comment
 
 begin_comment
-comment|// CHECK: (7,2)
+comment|// CHECK: (7,8)
 end_comment
 
 begin_comment
@@ -208,7 +216,7 @@ comment|// CHECK: (1,6)
 end_comment
 
 begin_comment
-comment|// CHECK: (2,6)
+comment|// CHECK: (2,3)
 end_comment
 
 begin_comment
@@ -216,7 +224,7 @@ comment|// CHECK: (3,4)
 end_comment
 
 begin_comment
-comment|// CHECK: (4,2)
+comment|// CHECK: (4,6)
 end_comment
 
 begin_comment
@@ -310,7 +318,7 @@ comment|// CHECK: (1,7)
 end_comment
 
 begin_comment
-comment|// CHECK: (2,7)
+comment|// CHECK: (2,5)
 end_comment
 
 begin_comment
@@ -318,7 +326,7 @@ comment|// CHECK: (3,4)
 end_comment
 
 begin_comment
-comment|// CHECK: (4,2)
+comment|// CHECK: (4,5)
 end_comment
 
 begin_comment
@@ -326,7 +334,7 @@ comment|// CHECK: (5,6)
 end_comment
 
 begin_comment
-comment|// CHECK: (6,4)
+comment|// CHECK: (6,7)
 end_comment
 
 begin_comment
@@ -399,31 +407,31 @@ comment|// CHECK: (0,1)
 end_comment
 
 begin_comment
-comment|// CHECK: (1,2)
+comment|// CHECK: (1,10)
 end_comment
 
 begin_comment
-comment|// CHECK: (2,11)
+comment|// CHECK: (2,9)
 end_comment
 
 begin_comment
-comment|// CHECK: (3,10)
+comment|// CHECK: (3,4)
 end_comment
 
 begin_comment
-comment|// CHECK: (4,10)
+comment|// CHECK: (4,5)
 end_comment
 
 begin_comment
-comment|// CHECK: (5,6)
+comment|// CHECK: (5,9)
 end_comment
 
 begin_comment
-comment|// CHECK: (6,4)
+comment|// CHECK: (6,7)
 end_comment
 
 begin_comment
-comment|// CHECK: (7,10)
+comment|// CHECK: (7,8)
 end_comment
 
 begin_comment
@@ -431,11 +439,11 @@ comment|// CHECK: (8,9)
 end_comment
 
 begin_comment
-comment|// CHECK: (9,7)
+comment|// CHECK: (9,10)
 end_comment
 
 begin_comment
-comment|// CHECK: (10,2)
+comment|// CHECK: (10,11)
 end_comment
 
 begin_comment

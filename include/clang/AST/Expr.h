@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/Decl.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/Stmt.h"
 end_include
 
@@ -520,12 +526,14 @@ specifier|const
 name|LLVM_READONLY
 block|;
 comment|/// isUnusedResultAWarning - Return true if this immediate expression should
-comment|/// be warned about if the result is unused.  If so, fill in Loc and Ranges
-comment|/// with location to warn on and the source range[s] to report with the
-comment|/// warning.
+comment|/// be warned about if the result is unused.  If so, fill in expr, location,
+comment|/// and ranges with expr to warn on and source locations/ranges appropriate
+comment|/// for a warning.
 name|bool
 name|isUnusedResultAWarning
 argument_list|(
+argument|const Expr *&WarnExpr
+argument_list|,
 argument|SourceLocation&Loc
 argument_list|,
 argument|SourceRange&R1
@@ -617,6 +625,8 @@ block|,
 name|LV_SubObjCPropertySetting
 block|,
 name|LV_ClassTemporary
+block|,
+name|LV_ArrayTemporary
 block|}
 block|;
 comment|/// Reasons why an expression might not be an l-value.
@@ -633,7 +643,7 @@ comment|/// and if it is a structure or union, does not have any member (includi
 comment|/// recursively, any member or element of all contained aggregates or unions)
 comment|/// with a const-qualified type.
 comment|///
-comment|/// \param Loc [in] [out] - A source location which *may* be filled
+comment|/// \param Loc [in,out] - A source location which *may* be filled
 comment|/// in with the location of the expression making this a
 comment|/// non-modifiable lvalue, if specified.
 block|enum
@@ -669,6 +679,8 @@ block|,
 name|MLV_InvalidMessageExpression
 block|,
 name|MLV_ClassTemporary
+block|,
+name|MLV_ArrayTemporary
 block|}
 block|;
 name|isModifiableLvalueResult
@@ -715,7 +727,10 @@ name|CL_SubObjCPropertySetting
 block|,
 name|CL_ClassTemporary
 block|,
-comment|// A prvalue of class type
+comment|// A temporary of class type, or subobject thereof.
+name|CL_ArrayTemporary
+block|,
+comment|// A temporary of array type.
 name|CL_ObjCMessageRValue
 block|,
 comment|// ObjC message is an rvalue
@@ -1507,9 +1522,8 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// HasSideEffects - This routine returns true for all those expressions
-comment|/// which must be evaluated each time and must not be optimized away
-comment|/// or evaluated at compile time. Example is a function call, volatile
-comment|/// variable read.
+comment|/// which have any effect other than producing a value. Example is a function
+comment|/// call, volatile variable read, or throwing an exception.
 name|bool
 name|HasSideEffects
 argument_list|(
@@ -1600,8 +1614,15 @@ name|NPCK_NotNull
 init|=
 literal|0
 block|,
-comment|/// \brief Expression is a Null pointer constant built from a zero integer.
-name|NPCK_ZeroInteger
+comment|/// \brief Expression is a Null pointer constant built from a zero integer
+comment|/// expression that is not a simple, possibly parenthesized, zero literal.
+comment|/// C++ Core Issue 903 will classify these expressions as "not pointers"
+comment|/// once it is adopted.
+comment|/// http://www.open-std.org/jtc1/sc22/wg21/docs/cwg_active.html#903
+name|NPCK_ZeroExpression
+block|,
+comment|/// \brief Expression is a Null pointer constant built from a literal zero.
+name|NPCK_ZeroLiteral
 block|,
 comment|/// \brief Expression is a C++0X nullptr.
 name|NPCK_CXX0X_nullptr
@@ -1705,6 +1726,28 @@ operator|::
 name|IgnoreImplicit
 argument_list|()
 operator|)
+return|;
+block|}
+specifier|const
+name|Expr
+operator|*
+name|IgnoreImplicit
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|const_cast
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|IgnoreImplicit
+argument_list|()
 return|;
 block|}
 comment|/// IgnoreParens - Ignore parentheses.  If this Expr is a ParenExpr, return
@@ -1828,6 +1871,35 @@ name|Ctx
 argument_list|)
 name|LLVM_READONLY
 decl_stmt|;
+comment|/// Ignore parentheses and derived-to-base casts.
+name|Expr
+operator|*
+name|ignoreParenBaseCasts
+argument_list|()
+name|LLVM_READONLY
+expr_stmt|;
+specifier|const
+name|Expr
+operator|*
+name|ignoreParenBaseCasts
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|const_cast
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|ignoreParenBaseCasts
+argument_list|()
+return|;
+block|}
 comment|/// \brief Determine whether this expression is a default function argument.
 comment|///
 comment|/// Default arguments are implicitly generated in the abstract syntax tree
@@ -1970,6 +2042,20 @@ operator|>
 name|Exprs
 argument_list|)
 decl_stmt|;
+comment|/// \brief For an expression of class type or pointer to class type,
+comment|/// return the most derived class decl the expression is known to refer to.
+comment|///
+comment|/// If this expression is a cast, this method looks through it to find the
+comment|/// most derived decl that can be inferred from the expression.
+comment|/// This is valid because derived-to-base conversions have undefined
+comment|/// behavior if the object isn't dynamically of the derived type.
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|getBestDynamicClassType
+argument_list|()
+specifier|const
+expr_stmt|;
 specifier|static
 name|bool
 name|classof
@@ -3791,6 +3877,9 @@ name|Func
 block|,
 name|Function
 block|,
+name|LFunction
+block|,
+comment|// Same as Function, but as wide string.
 name|PrettyFunction
 block|,
 comment|/// PrettyFunctionNoVirtual - The same as PrettyFunction, except that the
@@ -4241,65 +4330,7 @@ argument|QualType type
 argument_list|,
 argument|SourceLocation l
 argument_list|)
-operator|:
-name|Expr
-argument_list|(
-name|IntegerLiteralClass
-argument_list|,
-name|type
-argument_list|,
-name|VK_RValue
-argument_list|,
-name|OK_Ordinary
-argument_list|,
-name|false
-argument_list|,
-name|false
-argument_list|,
-name|false
-argument_list|,
-name|false
-argument_list|)
-block|,
-name|Loc
-argument_list|(
-argument|l
-argument_list|)
-block|{
-name|assert
-argument_list|(
-name|type
-operator|->
-name|isIntegerType
-argument_list|()
-operator|&&
-literal|"Illegal type in IntegerLiteral"
-argument_list|)
 block|;
-name|assert
-argument_list|(
-name|V
-operator|.
-name|getBitWidth
-argument_list|()
-operator|==
-name|C
-operator|.
-name|getIntWidth
-argument_list|(
-name|type
-argument_list|)
-operator|&&
-literal|"Integer type is not the correct size for constant."
-argument_list|)
-block|;
-name|setValue
-argument_list|(
-name|C
-argument_list|,
-name|V
-argument_list|)
-block|;   }
 comment|/// \brief Returns a new integer literal with value 'V' and type 'type'.
 comment|/// \param type - either IntTy, LongTy, LongLongTy, UnsignedIntTy,
 comment|/// UnsignedLongTy, or UnsignedLongLongTy which should match the size of V
@@ -4634,64 +4665,7 @@ argument|QualType Type
 argument_list|,
 argument|SourceLocation L
 argument_list|)
-operator|:
-name|Expr
-argument_list|(
-name|FloatingLiteralClass
-argument_list|,
-name|Type
-argument_list|,
-name|VK_RValue
-argument_list|,
-name|OK_Ordinary
-argument_list|,
-name|false
-argument_list|,
-name|false
-argument_list|,
-name|false
-argument_list|,
-name|false
-argument_list|)
-block|,
-name|Loc
-argument_list|(
-argument|L
-argument_list|)
-block|{
-name|FloatingLiteralBits
-operator|.
-name|IsIEEE
-operator|=
-operator|&
-name|C
-operator|.
-name|getTargetInfo
-argument_list|()
-operator|.
-name|getLongDoubleFormat
-argument_list|()
-operator|==
-operator|&
-name|llvm
-operator|::
-name|APFloat
-operator|::
-name|IEEEquad
 block|;
-name|FloatingLiteralBits
-operator|.
-name|IsExact
-operator|=
-name|isexact
-block|;
-name|setValue
-argument_list|(
-name|C
-argument_list|,
-name|V
-argument_list|)
-block|;   }
 comment|/// \brief Construct an empty floating-point literal.
 name|explicit
 name|FloatingLiteral
@@ -4700,40 +4674,7 @@ argument|ASTContext&C
 argument_list|,
 argument|EmptyShell Empty
 argument_list|)
-operator|:
-name|Expr
-argument_list|(
-argument|FloatingLiteralClass
-argument_list|,
-argument|Empty
-argument_list|)
-block|{
-name|FloatingLiteralBits
-operator|.
-name|IsIEEE
-operator|=
-operator|&
-name|C
-operator|.
-name|getTargetInfo
-argument_list|()
-operator|.
-name|getLongDoubleFormat
-argument_list|()
-operator|==
-operator|&
-name|llvm
-operator|::
-name|APFloat
-operator|::
-name|IEEEquad
 block|;
-name|FloatingLiteralBits
-operator|.
-name|IsExact
-operator|=
-name|false
-block|;   }
 name|public
 operator|:
 specifier|static
@@ -5286,8 +5227,8 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-comment|/// Allow clients that need the byte representation, such as ASTWriterStmt
-comment|/// ::VisitStringLiteral(), access.
+comment|/// Allow access to clients that need the byte representation, such as
+comment|/// ASTWriterStmt::VisitStringLiteral().
 name|StringRef
 name|getBytes
 argument_list|()
@@ -5365,6 +5306,14 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+name|void
+name|outputString
+argument_list|(
+name|raw_ostream
+operator|&
+name|OS
+argument_list|)
+block|;
 name|uint32_t
 name|getCodeUnit
 argument_list|(

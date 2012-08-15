@@ -1,7 +1,25 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core -analyzer-ipa=inlining -analyzer-store region -verify %s
+comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core,debug.ExprInspection -analyzer-ipa=inlining -analyzer-store region -verify %s
 end_comment
+
+begin_function_decl
+name|void
+name|clang_analyzer_eval
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|clang_analyzer_checkInlined
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|int
@@ -16,6 +34,12 @@ decl_stmt|;
 name|y
 operator|++
 expr_stmt|;
+name|clang_analyzer_checkInlined
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{TRUE}}
 return|return
 name|y
 return|;
@@ -412,6 +436,73 @@ name|v
 argument_list|)
 return|;
 comment|// expected-warning {{Passed-by-value struct argument contains uninitialized data}}
+block|}
+end_function
+
+begin_comment
+comment|// Test inlining a forward-declared function.
+end_comment
+
+begin_comment
+comment|// This regressed when CallEvent was first introduced.
+end_comment
+
+begin_function_decl
+name|int
+name|plus1
+parameter_list|(
+name|int
+name|x
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|test
+parameter_list|()
+block|{
+name|clang_analyzer_eval
+argument_list|(
+name|plus1
+argument_list|(
+literal|2
+argument_list|)
+operator|==
+literal|3
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{TRUE}}
+block|}
+end_function
+
+begin_function
+name|int
+name|plus1
+parameter_list|(
+name|int
+name|x
+parameter_list|)
+block|{
+return|return
+name|x
+operator|+
+literal|1
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|never_called_by_anyone
+parameter_list|()
+block|{
+name|clang_analyzer_checkInlined
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// no-warning
 block|}
 end_function
 

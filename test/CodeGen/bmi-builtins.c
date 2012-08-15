@@ -22,7 +22,7 @@ end_include
 begin_function
 name|unsigned
 name|short
-name|test__tzcnt16
+name|test__tzcnt_u16
 parameter_list|(
 name|unsigned
 name|short
@@ -31,7 +31,7 @@ parameter_list|)
 block|{
 comment|// CHECK: @llvm.cttz.i16
 return|return
-name|__tzcnt16
+name|__tzcnt_u16
 argument_list|(
 name|__X
 argument_list|)
@@ -158,7 +158,7 @@ end_function
 begin_function
 name|unsigned
 name|int
-name|test_tzcnt32
+name|test_tzcnt_u32
 parameter_list|(
 name|unsigned
 name|int
@@ -167,7 +167,7 @@ parameter_list|)
 block|{
 comment|// CHECK: @llvm.cttz.i32
 return|return
-name|__tzcnt32
+name|__tzcnt_u32
 argument_list|(
 name|__X
 argument_list|)
@@ -303,7 +303,7 @@ begin_function
 name|unsigned
 name|long
 name|long
-name|test__tzcnt64
+name|test__tzcnt_u64
 parameter_list|(
 name|unsigned
 name|long
@@ -313,7 +313,7 @@ parameter_list|)
 block|{
 comment|// CHECK: @llvm.cttz.i64
 return|return
-name|__tzcnt64
+name|__tzcnt_u64
 argument_list|(
 name|__X
 argument_list|)

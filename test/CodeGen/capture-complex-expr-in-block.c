@@ -54,7 +54,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define internal void @__main_block_invoke_0
+comment|// CHECK: define internal void @__main_block_invoke
 end_comment
 
 begin_comment

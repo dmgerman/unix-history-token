@@ -3167,6 +3167,9 @@ name|ObjCInterfaceLocInfo
 block|{
 name|SourceLocation
 name|NameLoc
+block|;
+name|SourceLocation
+name|NameEndLoc
 block|; }
 block|;
 comment|/// \brief Wrapper for source info for ObjC interfaces.
@@ -3236,9 +3239,37 @@ name|SourceRange
 argument_list|(
 name|getNameLoc
 argument_list|()
+argument_list|,
+name|getNameEndLoc
+argument_list|()
 argument_list|)
 return|;
 block|}
+name|SourceLocation
+name|getNameEndLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getLocalData
+argument_list|()
+operator|->
+name|NameEndLoc
+return|;
+block|}
+name|void
+name|setNameEndLoc
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+block|{
+name|getLocalData
+argument_list|()
+operator|->
+name|NameEndLoc
+operator|=
+name|Loc
+block|;   }
 name|void
 name|initializeLocal
 argument_list|(

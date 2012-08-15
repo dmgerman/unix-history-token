@@ -95,7 +95,7 @@ operator|==
 name|v2sa
 operator|)
 expr_stmt|;
-comment|// expected-warning{{incompatible vector types assigning to 'v2u' from 'int  __attribute__((ext_vector_type(2)))'}}
+comment|// expected-warning{{incompatible vector types assigning to 'v2u' from 'int __attribute__((ext_vector_type(2)))'}}
 name|v2sa
 operator|=
 operator|(

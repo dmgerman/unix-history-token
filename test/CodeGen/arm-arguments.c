@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|// REQUIRES: arm-registered-target
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cc1 -triple armv7-apple-darwin9 -target-abi apcs-gnu -emit-llvm -w -o - %s | FileCheck -check-prefix=APCS-GNU %s
 end_comment
 
@@ -978,6 +982,79 @@ end_comment
 
 begin_comment
 comment|// APCS-GNU: store [1 x i32] %s.coerce, [1 x i32]*
+end_comment
+
+begin_comment
+comment|// PR13562
+end_comment
+
+begin_struct
+struct|struct
+name|s32
+block|{
+name|double
+name|x
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_function
+name|void
+name|f32
+parameter_list|(
+name|struct
+name|s32
+name|s
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
+comment|// AAPCS: @f32([1 x i64] %s.coerce)
+end_comment
+
+begin_comment
+comment|// APCS-GNU: @f32([2 x i32] %s.coerce)
+end_comment
+
+begin_comment
+comment|// PR13350
+end_comment
+
+begin_struct
+struct|struct
+name|s33
+block|{
+name|char
+name|buf
+index|[
+literal|32
+operator|*
+literal|32
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_function
+name|void
+name|f33
+parameter_list|(
+name|struct
+name|s33
+name|s
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
+comment|// APCS-GNU: define void @f33(%struct.s33* byval %s)
+end_comment
+
+begin_comment
+comment|// AAPCS: define arm_aapcscc void @f33(%struct.s33* byval %s)
 end_comment
 
 end_unit

@@ -59,5 +59,57 @@ begin_comment
 comment|// CHECK-FAST-MATH: #define __FAST_MATH__
 end_comment
 
+begin_comment
+comment|// CHECK-FAST-MATH: #define __FINITE_MATH_ONLY__ 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 %s -E -dM -ffinite-math-only -o - \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s --check-prefix=CHECK-FINITE-MATH-ONLY
+end_comment
+
+begin_comment
+comment|// CHECK-FINITE-MATH-ONLY: #define __FINITE_MATH_ONLY__ 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang %s -E -dM -fno-finite-math-only -o - \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s --check-prefix=CHECK-NO-FINITE-MATH-ONLY
+end_comment
+
+begin_comment
+comment|// CHECK-NO-FINITE-MATH-ONLY: #define __FINITE_MATH_ONLY__ 0
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 %s -E -dM -o - \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s --check-prefix=CHECK-FINITE-MATH-FLAG-UNDEFINED
+end_comment
+
+begin_comment
+comment|// CHECK-FINITE-MATH-FLAG-UNDEFINED: #define __FINITE_MATH_ONLY__ 0
+end_comment
+
 end_unit
 

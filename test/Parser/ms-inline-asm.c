@@ -28,6 +28,10 @@ name|M
 block|}
 end_function
 
+begin_comment
+comment|// expected-warning {{MS-style inline assembly is not supported}}
+end_comment
+
 begin_function
 name|void
 name|t2
@@ -39,6 +43,10 @@ asm|__asm int 0x2c
 block|}
 end_function
 
+begin_comment
+comment|// expected-warning {{MS-style inline assembly is not supported}}
+end_comment
+
 begin_function
 name|void
 name|t3
@@ -49,6 +57,10 @@ block|{
 asm|__asm M2 0x2c
 block|}
 end_function
+
+begin_comment
+comment|// expected-warning {{MS-style inline assembly is not supported}}
+end_comment
 
 begin_function
 name|void
@@ -62,12 +74,18 @@ asm|__asm mov eax, fs:[0x10]
 block|}
 end_function
 
+begin_comment
+comment|// expected-warning {{MS-style inline assembly is not supported}}
+end_comment
+
 begin_function
 name|void
 name|t5
 parameter_list|()
 block|{
 asm|__asm {
+comment|//
+asm|expected-warning {{MS-style inline assembly is not supported}}
 asm|int 0x2c ;
 asm|}
 name|asm
@@ -85,6 +103,10 @@ end_block
 begin_asm
 asm|__asm {}
 end_asm
+
+begin_comment
+comment|// no warning as this gets merged with the previous inline asm
+end_comment
 
 begin_macro
 unit|} int
@@ -104,8 +126,12 @@ end_macro
 
 begin_for
 for|for single-line asm
+comment|// expected-warning {{MS-style inline assembly is not supported}}
 asm|__asm {}
+comment|// no warning as this gets merged with the previous inline asm
 asm|__asm int 4
+comment|//
+asm|no warning as this gets merged with the previous inline asm
 for|return 10
 empty_stmt|;
 end_for
@@ -118,7 +144,48 @@ end_macro
 
 begin_block
 block|{
+asm|__asm {
+comment|//
+asm|expected-warning {{MS-style inline assembly is not supported}}
+asm|push ebx
+asm|mov ebx, 0x07
+asm|pop ebx
+asm|}
+block|}
 end_block
+
+begin_function
+name|void
+name|t8
+parameter_list|()
+block|{
+asm|__asm nop
+asm|__asm nop
+asm|__asm nop
+comment|//
+asm|expected-warning {{MS-style inline assembly is not supported}}
+block|}
+end_function
+
+begin_function
+name|void
+name|t9
+parameter_list|()
+block|{
+asm|__asm nop
+asm|__asm nop ;
+asm|__asm nop
+comment|//
+asm|expected-warning {{MS-style inline assembly is not supported}}
+block|}
+end_function
+
+begin_function
+name|int
+name|t_fail
+parameter_list|()
+block|{
+end_function
 
 begin_comment
 comment|// expected-note {{to match this}}

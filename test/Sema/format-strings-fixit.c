@@ -324,6 +324,77 @@ operator|)
 literal|42
 argument_list|)
 expr_stmt|;
+comment|// Look beyond the first typedef.
+typedef|typedef
+name|size_t
+name|my_size_type
+typedef|;
+typedef|typedef
+name|intmax_t
+name|my_intmax_type
+typedef|;
+typedef|typedef
+name|uintmax_t
+name|my_uintmax_type
+typedef|;
+typedef|typedef
+name|ptrdiff_t
+name|my_ptrdiff_type
+typedef|;
+typedef|typedef
+name|int
+name|my_int_type
+typedef|;
+name|printf
+argument_list|(
+literal|"%f"
+argument_list|,
+operator|(
+name|my_size_type
+operator|)
+literal|42
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%f"
+argument_list|,
+operator|(
+name|my_intmax_type
+operator|)
+literal|42
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%f"
+argument_list|,
+operator|(
+name|my_uintmax_type
+operator|)
+literal|42
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%f"
+argument_list|,
+operator|(
+name|my_ptrdiff_type
+operator|)
+literal|42
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%f"
+argument_list|,
+operator|(
+name|my_int_type
+operator|)
+literal|42
+argument_list|)
+expr_stmt|;
 comment|// string
 name|printf
 argument_list|(
@@ -678,6 +749,87 @@ operator|&
 name|ptrdiffVar
 argument_list|)
 expr_stmt|;
+comment|// Look beyond the first typedef for named integer types.
+typedef|typedef
+name|size_t
+name|my_size_type
+typedef|;
+typedef|typedef
+name|intmax_t
+name|my_intmax_type
+typedef|;
+typedef|typedef
+name|uintmax_t
+name|my_uintmax_type
+typedef|;
+typedef|typedef
+name|ptrdiff_t
+name|my_ptrdiff_type
+typedef|;
+typedef|typedef
+name|int
+name|my_int_type
+typedef|;
+name|scanf
+argument_list|(
+literal|"%f"
+argument_list|,
+operator|(
+name|my_size_type
+operator|*
+operator|)
+operator|&
+name|sizeVar
+argument_list|)
+expr_stmt|;
+name|scanf
+argument_list|(
+literal|"%f"
+argument_list|,
+operator|(
+name|my_intmax_type
+operator|*
+operator|)
+operator|&
+name|intmaxVar
+argument_list|)
+expr_stmt|;
+name|scanf
+argument_list|(
+literal|"%f"
+argument_list|,
+operator|(
+name|my_uintmax_type
+operator|*
+operator|)
+operator|&
+name|uIntmaxVar
+argument_list|)
+expr_stmt|;
+name|scanf
+argument_list|(
+literal|"%f"
+argument_list|,
+operator|(
+name|my_ptrdiff_type
+operator|*
+operator|)
+operator|&
+name|ptrdiffVar
+argument_list|)
+expr_stmt|;
+name|scanf
+argument_list|(
+literal|"%f"
+argument_list|,
+operator|(
+name|my_int_type
+operator|*
+operator|)
+operator|&
+name|intVar
+argument_list|)
+expr_stmt|;
 comment|// Preserve the original formatting.
 name|scanf
 argument_list|(
@@ -883,6 +1035,26 @@ comment|// CHECK: printf("%td", (ptrdiff_t) 42);
 end_comment
 
 begin_comment
+comment|// CHECK: printf("%zu", (my_size_type) 42);
+end_comment
+
+begin_comment
+comment|// CHECK: printf("%jd", (my_intmax_type) 42);
+end_comment
+
+begin_comment
+comment|// CHECK: printf("%ju", (my_uintmax_type) 42);
+end_comment
+
+begin_comment
+comment|// CHECK: printf("%td", (my_ptrdiff_type) 42);
+end_comment
+
+begin_comment
+comment|// CHECK: printf("%d", (my_int_type) 42);
+end_comment
+
+begin_comment
 comment|// CHECK: printf("%s", "foo");
 end_comment
 
@@ -1000,6 +1172,26 @@ end_comment
 
 begin_comment
 comment|// CHECK: scanf("%td",&ptrdiffVar);
+end_comment
+
+begin_comment
+comment|// CHECK: scanf("%zu", (my_size_type*)&sizeVar);
+end_comment
+
+begin_comment
+comment|// CHECK: scanf("%jd", (my_intmax_type*)&intmaxVar);
+end_comment
+
+begin_comment
+comment|// CHECK: scanf("%ju", (my_uintmax_type*)&uIntmaxVar);
+end_comment
+
+begin_comment
+comment|// CHECK: scanf("%td", (my_ptrdiff_type*)&ptrdiffVar);
+end_comment
+
+begin_comment
+comment|// CHECK: scanf("%d", (my_int_type*)&intVar);
 end_comment
 
 begin_comment

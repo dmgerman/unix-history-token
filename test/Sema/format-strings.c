@@ -1,7 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -verify -Wformat-nonliteral %s
+comment|// RUN: %clang_cc1 -fsyntax-only -verify -Wformat-nonliteral -isystem %S/Inputs %s
 end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -fsyntax-only -verify -Wformat-nonliteral -isystem %S/Inputs -fno-signed-char %s
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__need_wint_t
+end_define
 
 begin_include
 include|#
@@ -9,15 +19,15 @@ directive|include
 file|<stdarg.h>
 end_include
 
-begin_typedef
-typedef|typedef
-name|__typeof
-argument_list|(
-argument|sizeof(int)
-argument_list|)
-name|size_t
-expr_stmt|;
-end_typedef
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
+
+begin_comment
+comment|// For wint_t and wchar_t
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -716,24 +726,266 @@ name|printf
 argument_list|(
 literal|"%n"
 argument_list|,
-operator|&
-name|x
-argument_list|)
-expr_stmt|;
-comment|// expected-warning {{'%n' in format string discouraged}}
-name|sprintf
-argument_list|(
 name|b
-argument_list|,
-literal|"%d%%%n"
-argument_list|,
-literal|1
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{format specifies type 'int *' but the argument has type 'char *'}}
+name|printf
+argument_list|(
+literal|"%n"
 argument_list|,
 operator|&
 name|x
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{'%n' in format string dis}}
+comment|// no-warning
+name|printf
+argument_list|(
+literal|"%hhn"
+argument_list|,
+operator|(
+name|signed
+name|char
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|printf
+argument_list|(
+literal|"%hhn"
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|printf
+argument_list|(
+literal|"%hhn"
+argument_list|,
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|printf
+argument_list|(
+literal|"%hhn"
+argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{format specifies type 'signed char *' but the argument has type 'int *'}}
+name|printf
+argument_list|(
+literal|"%hn"
+argument_list|,
+operator|(
+name|short
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|printf
+argument_list|(
+literal|"%hn"
+argument_list|,
+operator|(
+name|unsigned
+name|short
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|printf
+argument_list|(
+literal|"%hn"
+argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{format specifies type 'short *' but the argument has type 'int *'}}
+name|printf
+argument_list|(
+literal|"%n"
+argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|printf
+argument_list|(
+literal|"%n"
+argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|printf
+argument_list|(
+literal|"%n"
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{format specifies type 'int *' but the argument has type 'char *'}}
+name|printf
+argument_list|(
+literal|"%ln"
+argument_list|,
+operator|(
+name|long
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|printf
+argument_list|(
+literal|"%ln"
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|printf
+argument_list|(
+literal|"%ln"
+argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{format specifies type 'long *' but the argument has type 'int *'}}
+name|printf
+argument_list|(
+literal|"%lln"
+argument_list|,
+operator|(
+name|long
+name|long
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|printf
+argument_list|(
+literal|"%lln"
+argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|printf
+argument_list|(
+literal|"%lln"
+argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{format specifies type 'long long *' but the argument has type 'int *'}}
+name|printf
+argument_list|(
+literal|"%qn"
+argument_list|,
+operator|(
+name|long
+name|long
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|printf
+argument_list|(
+literal|"%qn"
+argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|printf
+argument_list|(
+literal|"%qn"
+argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{format specifies type 'long long *' but the argument has type 'int *'}}
+name|printf
+argument_list|(
+literal|"%Ln"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{length modifier 'L' results in undefined behavior or no effect with 'n' conversion specifier}}
 block|}
 end_function
 
@@ -1162,15 +1414,6 @@ argument_list|,
 literal|42
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"%n"
-argument_list|,
-operator|&
-name|x
-argument_list|)
-expr_stmt|;
-comment|// expected-warning {{use of '%n' in format string discouraged }}
 block|}
 end_function
 
@@ -1279,15 +1522,6 @@ literal|"%**\n"
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{invalid conversion specifier '*'}}
-name|printf
-argument_list|(
-literal|"%n"
-argument_list|,
-operator|&
-name|i
-argument_list|)
-expr_stmt|;
-comment|// expected-warning{{use of '%n' in format string discouraged (potentially insecure)}}
 name|printf
 argument_list|(
 literal|"%d%d\n"
@@ -1849,13 +2083,6 @@ begin_comment
 comment|// eventually be moved into a separate test.
 end_comment
 
-begin_typedef
-typedef|typedef
-name|__WCHAR_TYPE__
-name|wchar_t
-typedef|;
-end_typedef
-
 begin_function
 name|void
 name|test_unicode_conversions
@@ -2261,25 +2488,25 @@ argument_list|(
 literal|"%#n"
 argument_list|,
 operator|(
-name|void
+name|int
 operator|*
 operator|)
 literal|0
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{flag '#' results in undefined behavior with 'n' conversion specifier}} expected-warning{{use of '%n' in format string discouraged (potentially insecure)}}
+comment|// expected-warning{{flag '#' results in undefined behavior with 'n' conversion specifier}}
 name|printf
 argument_list|(
 literal|"%-n"
 argument_list|,
 operator|(
-name|void
+name|int
 operator|*
 operator|)
 literal|0
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{flag '-' results in undefined behavior with 'n' conversion specifier}} expected-warning{{use of '%n' in format string discouraged (potentially insecure)}}
+comment|// expected-warning{{flag '-' results in undefined behavior with 'n' conversion specifier}}
 name|printf
 argument_list|(
 literal|"%-p"
@@ -2306,25 +2533,25 @@ argument_list|(
 literal|"%1n"
 argument_list|,
 operator|(
-name|void
+name|int
 operator|*
 operator|)
 literal|0
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{field width used with 'n' conversion specifier, resulting in undefined behavior}} expected-warning{{use of '%n' in format string discouraged (potentially insecure)}}
+comment|// expected-warning{{field width used with 'n' conversion specifier, resulting in undefined behavior}}
 name|printf
 argument_list|(
 literal|"%.9n"
 argument_list|,
 operator|(
-name|void
+name|int
 operator|*
 operator|)
 literal|0
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{precision used with 'n' conversion specifier, resulting in undefined behavior}} expected-warning{{use of '%n' in format string discouraged (potentially insecure)}}
+comment|// expected-warning{{precision used with 'n' conversion specifier, resulting in undefined behavior}}
 comment|// Ignored flags
 name|printf
 argument_list|(
@@ -2373,31 +2600,6 @@ begin_comment
 comment|// PR 7981 - handle '%lc' (wint_t)
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|wint_t
-end_ifndef
-
-begin_typedef
-typedef|typedef
-name|int
-name|__darwin_wint_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|__darwin_wint_t
-name|wint_t
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 name|void
 name|pr7981
@@ -2444,7 +2646,26 @@ operator|&
 name|c
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{the argument has type 'wint_t *' (aka 'int *')}}
+comment|// expected-warning{{the argument has type 'wint_t *'}}
+comment|// If wint_t and wchar_t are the same width and wint_t is signed where
+comment|// wchar_t is unsigned, an implicit conversion isn't possible.
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__WINT_UNSIGNED__
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|__WCHAR_UNSIGNED__
+argument_list|)
+operator|||
+expr|\
+name|__WINT_WIDTH__
+operator|>
+name|__WCHAR_WIDTH__
 name|printf
 argument_list|(
 literal|"%lc"
@@ -2453,6 +2674,8 @@ name|c2
 argument_list|)
 expr_stmt|;
 comment|// no-warning
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -2940,30 +3163,6 @@ expr_stmt|;
 comment|// expected-warning{{data argument position '18' exceeds the number of data arguments (2)}}
 specifier|const
 name|char
-name|kFormat3
-index|[]
-init|=
-literal|"%n"
-decl_stmt|;
-comment|// expected-note{{format string is defined here}}
-name|printf
-argument_list|(
-name|kFormat3
-argument_list|,
-literal|"as"
-argument_list|)
-expr_stmt|;
-comment|// expected-warning{{use of '%n' in format string discouraged}}
-name|printf
-argument_list|(
-literal|"%n"
-argument_list|,
-literal|"as"
-argument_list|)
-expr_stmt|;
-comment|// expected-warning{{use of '%n' in format string discouraged}}
-specifier|const
-name|char
 name|kFormat4
 index|[]
 init|=
@@ -3328,6 +3527,42 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{format specifies type 'double' but the argument has type 'long double'}}
+comment|// Test braced char[] initializers.
+specifier|const
+name|char
+name|kFormat18
+index|[]
+init|=
+block|{
+literal|"%lld"
+block|}
+decl_stmt|;
+comment|// expected-note{{format string is defined here}}
+name|printf
+argument_list|(
+name|kFormat18
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{format specifies type}}
+comment|// Make sure we point at the offending argument rather than the format string.
+specifier|const
+name|char
+name|kFormat19
+index|[]
+init|=
+literal|"%d"
+decl_stmt|;
+comment|// expected-note{{format string is defined here}}
+name|printf
+argument_list|(
+name|kFormat19
+argument_list|,
+literal|0.0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{format specifies}}
 block|}
 end_function
 
@@ -3501,6 +3736,315 @@ name|str
 argument_list|)
 expr_stmt|;
 comment|// no-warning (using strftime non literal is not unsafe)
+block|}
+end_function
+
+begin_comment
+comment|// Do not warn about unused arguments coming from system headers.
+end_comment
+
+begin_comment
+comment|//<rdar://problem/11317765>
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<format-unused-system-args.h>
+end_include
+
+begin_function
+name|void
+name|test_unused_system_args
+parameter_list|(
+name|int
+name|x
+parameter_list|)
+block|{
+name|PRINT1
+argument_list|(
+literal|"%d\n"
+argument_list|,
+name|x
+argument_list|)
+expr_stmt|;
+comment|// no-warning{{extra argument is system header is OK}}
+block|}
+end_function
+
+begin_function
+name|void
+name|pr12761
+parameter_list|(
+name|char
+name|c
+parameter_list|)
+block|{
+comment|// This should not warn even with -fno-signed-char.
+name|printf
+argument_list|(
+literal|"%hhx"
+argument_list|,
+name|c
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// Test that we correctly merge the format in both orders.
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|test14_foo
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(__format__
+parameter_list|(
+name|__printf__
+parameter_list|,
+function_decl|1
+operator|,
+function_decl|3
+end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+specifier|extern
+name|void
+name|test14_foo
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(__format__
+parameter_list|(
+name|__scanf__
+parameter_list|,
+function_decl|2
+operator|,
+function_decl|3
+end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+specifier|extern
+name|void
+name|test14_bar
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(__format__
+parameter_list|(
+name|__scanf__
+parameter_list|,
+function_decl|2
+operator|,
+function_decl|3
+end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+specifier|extern
+name|void
+name|test14_bar
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(__format__
+parameter_list|(
+name|__printf__
+parameter_list|,
+function_decl|1
+operator|,
+function_decl|3
+end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
+
+begin_function
+name|void
+name|test14_zed
+parameter_list|(
+name|int
+modifier|*
+name|p
+parameter_list|)
+block|{
+name|test14_foo
+argument_list|(
+literal|"%"
+argument_list|,
+literal|"%d"
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{incomplete format specifier}}
+name|test14_bar
+argument_list|(
+literal|"%"
+argument_list|,
+literal|"%d"
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{incomplete format specifier}}
+block|}
+end_function
+
+begin_function
+name|void
+name|test_qualifiers
+parameter_list|(
+specifier|volatile
+name|int
+modifier|*
+name|vip
+parameter_list|,
+specifier|const
+name|int
+modifier|*
+name|cip
+parameter_list|,
+specifier|const
+specifier|volatile
+name|int
+modifier|*
+name|cvip
+parameter_list|)
+block|{
+name|printf
+argument_list|(
+literal|"%n"
+argument_list|,
+name|cip
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{format specifies type 'int *' but the argument has type 'const int *'}}
+name|printf
+argument_list|(
+literal|"%n"
+argument_list|,
+name|cvip
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{format specifies type 'int *' but the argument has type 'const volatile int *'}}
+name|printf
+argument_list|(
+literal|"%n"
+argument_list|,
+name|vip
+argument_list|)
+expr_stmt|;
+comment|// No warning.
+name|printf
+argument_list|(
+literal|"%p"
+argument_list|,
+name|cip
+argument_list|)
+expr_stmt|;
+comment|// No warning.
+name|printf
+argument_list|(
+literal|"%p"
+argument_list|,
+name|cvip
+argument_list|)
+expr_stmt|;
+comment|// No warning.
+typedef|typedef
+name|int
+modifier|*
+name|ip_t
+typedef|;
+typedef|typedef
+specifier|const
+name|int
+modifier|*
+name|cip_t
+typedef|;
+name|printf
+argument_list|(
+literal|"%n"
+argument_list|,
+operator|(
+name|ip_t
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// No warning.
+name|printf
+argument_list|(
+literal|"%n"
+argument_list|,
+operator|(
+name|cip_t
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{format specifies type 'int *' but the argument has type 'cip_t' (aka 'const int *')}}
 block|}
 end_function
 
