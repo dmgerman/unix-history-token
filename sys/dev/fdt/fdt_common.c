@@ -1875,7 +1875,7 @@ name|i
 decl_stmt|,
 name|rv
 decl_stmt|;
-name|long
+name|bus_space_handle_t
 name|vaddr
 decl_stmt|;
 name|long
