@@ -2126,15 +2126,12 @@ name|i
 operator|++
 control|)
 block|{
-if|if
-condition|(
-name|offset
-operator|>=
-name|table
-operator|->
-name|sectors
-condition|)
-break|break;
+if|#
+directive|if
+literal|0
+block|if (offset>= table->sectors) 			break;
+endif|#
+directive|endif
 if|if
 condition|(
 name|dread
@@ -3899,18 +3896,13 @@ operator|==
 literal|0
 condition|)
 continue|continue;
-if|if
-condition|(
-name|start
-operator|+
-name|end
-operator|-
-literal|1
-operator|>=
-name|sectors
-condition|)
-continue|continue;
+if|#
+directive|if
+literal|0
+block|if (start + end - 1>= sectors) 			continue;
 comment|/* XXX: ignore */
+endif|#
+directive|endif
 if|if
 condition|(
 name|dp
