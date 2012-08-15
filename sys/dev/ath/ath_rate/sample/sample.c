@@ -6727,7 +6727,7 @@ name|y
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"\n[%s] refcnt %d static_rix (%d %s) ratemask 0x%qx\n"
+literal|"\n[%s] refcnt %d static_rix (%d %s) ratemask 0x%jx\n"
 argument_list|,
 name|ether_sprintf
 argument_list|(
@@ -6759,6 +6759,9 @@ operator|->
 name|static_rix
 argument_list|)
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|sn
 operator|->
 name|ratemask
