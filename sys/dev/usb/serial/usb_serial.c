@@ -1223,6 +1223,14 @@ name|sc_subunits
 operator|=
 name|subunits
 expr_stmt|;
+name|ssc
+operator|->
+name|sc_flag
+operator|=
+name|UCOM_FLAG_ATTACHED
+operator||
+name|UCOM_FLAG_FREE_UNIT
+expr_stmt|;
 if|if
 condition|(
 name|callback
@@ -1231,19 +1239,18 @@ name|ucom_free
 operator|==
 name|NULL
 condition|)
-block|{
 name|ssc
 operator|->
-name|sc_wait_refs
-operator|=
-literal|1
+name|sc_flag
+operator||=
+name|UCOM_FLAG_WAIT_REFS
 expr_stmt|;
+comment|/* increment reference count */
 name|ucom_ref
 argument_list|(
 name|ssc
 argument_list|)
 expr_stmt|;
-block|}
 for|for
 control|(
 name|subunit
@@ -1383,7 +1390,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * NOTE: the following function will do nothing if  * the structure pointed to by "ssc" and "sc" is zero.  */
+comment|/*  * The following function will do nothing if the structure pointed to  * by "ssc" and "sc" is zero or has already been detached.  */
 end_comment
 
 begin_function
@@ -1406,11 +1413,14 @@ name|subunit
 decl_stmt|;
 if|if
 condition|(
+operator|!
+operator|(
 name|ssc
 operator|->
-name|sc_subunits
-operator|==
-literal|0
+name|sc_flag
+operator|&
+name|UCOM_FLAG_ATTACHED
+operator|)
 condition|)
 return|return;
 comment|/* not initialized */
@@ -1536,26 +1546,32 @@ operator|->
 name|sc_tq
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ssc
-operator|->
-name|sc_wait_refs
-operator|!=
-literal|0
-condition|)
-block|{
 name|ucom_unref
 argument_list|(
 name|ssc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ssc
+operator|->
+name|sc_flag
+operator|&
+name|UCOM_FLAG_WAIT_REFS
+condition|)
 name|ucom_drain
 argument_list|(
 name|ssc
 argument_list|)
 expr_stmt|;
-block|}
+comment|/* make sure we don't detach twice */
+name|ssc
+operator|->
+name|sc_flag
+operator|&=
+operator|~
+name|UCOM_FLAG_ATTACHED
+expr_stmt|;
 block|}
 end_function
 
@@ -1580,8 +1596,8 @@ condition|(
 name|ssc
 operator|->
 name|sc_refs
-operator|>=
-literal|2
+operator|>
+literal|0
 condition|)
 block|{
 name|printf
@@ -6369,6 +6385,50 @@ block|}
 end_function
 
 begin_comment
+comment|/*------------------------------------------------------------------------*  *	ucom_free_unit  *  * This function will free the super UCOM's allocated unit  * number. This function can be called on a zero-initialized  * structure. This function can be called multiple times.  *------------------------------------------------------------------------*/
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|ucom_free_unit
+parameter_list|(
+name|struct
+name|ucom_super_softc
+modifier|*
+name|ssc
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|ssc
+operator|->
+name|sc_flag
+operator|&
+name|UCOM_FLAG_FREE_UNIT
+operator|)
+condition|)
+return|return;
+name|ucom_unit_free
+argument_list|(
+name|ssc
+operator|->
+name|sc_unit
+argument_list|)
+expr_stmt|;
+name|ssc
+operator|->
+name|sc_flag
+operator|&=
+operator|~
+name|UCOM_FLAG_FREE_UNIT
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*------------------------------------------------------------------------*  *	ucom_unref  *  * This function will decrement the super UCOM reference count.  *  * Return values:  * 0: UCOM structures are still referenced.  * Else: UCOM structures are no longer referenced.  *------------------------------------------------------------------------*/
 end_comment
 
@@ -6384,9 +6444,6 @@ parameter_list|)
 block|{
 name|int
 name|retval
-decl_stmt|;
-name|int
-name|free_unit
 decl_stmt|;
 name|mtx_lock
 argument_list|(
@@ -6404,16 +6461,6 @@ operator|<
 literal|2
 operator|)
 expr_stmt|;
-name|free_unit
-operator|=
-operator|(
-name|ssc
-operator|->
-name|sc_refs
-operator|==
-literal|1
-operator|)
-expr_stmt|;
 name|ssc
 operator|->
 name|sc_refs
@@ -6425,16 +6472,13 @@ operator|&
 name|ucom_mtx
 argument_list|)
 expr_stmt|;
-comment|/* 	 * This function might be called when the "ssc" is only zero 	 * initialized and in that case the unit number should not be 	 * freed. 	 */
 if|if
 condition|(
-name|free_unit
+name|retval
 condition|)
-name|ucom_unit_free
+name|ucom_free_unit
 argument_list|(
 name|ssc
-operator|->
-name|sc_unit
 argument_list|)
 expr_stmt|;
 return|return

@@ -519,8 +519,9 @@ name|int
 name|sc_refs
 decl_stmt|;
 name|int
-name|sc_wait_refs
+name|sc_flag
 decl_stmt|;
+comment|/* see UCOM_FLAG_XXX */
 name|struct
 name|sysctl_oid
 modifier|*
@@ -663,6 +664,16 @@ directive|define
 name|UCOM_FLAG_CONSOLE
 value|0x80
 comment|/* set if device is a console */
+define|#
+directive|define
+name|UCOM_FLAG_WAIT_REFS
+value|0x0100
+comment|/* set if we must wait for refs */
+define|#
+directive|define
+name|UCOM_FLAG_FREE_UNIT
+value|0x0200
+comment|/* set if we must free the unit */
 name|uint8_t
 name|sc_lsr
 decl_stmt|;
