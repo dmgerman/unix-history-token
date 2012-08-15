@@ -490,7 +490,7 @@ name|best_rate_tt
 decl_stmt|,
 name|best_rate_pct
 decl_stmt|;
-name|uint32_t
+name|uint64_t
 name|mask
 decl_stmt|;
 name|int
@@ -856,7 +856,7 @@ decl_stmt|;
 name|unsigned
 name|current_tt
 decl_stmt|;
-name|uint32_t
+name|uint64_t
 name|mask
 decl_stmt|;
 name|current_rix
@@ -915,6 +915,9 @@ name|ratemask
 operator|&
 operator|~
 operator|(
+operator|(
+name|uint64_t
+operator|)
 literal|1
 operator|<<
 name|current_rix
@@ -934,6 +937,9 @@ operator|(
 name|mask
 operator|&
 operator|(
+operator|(
+name|uint64_t
+operator|)
 literal|1
 operator|<<
 name|rix
@@ -992,6 +998,9 @@ name|mask
 operator|&=
 operator|~
 operator|(
+operator|(
+name|uint64_t
+operator|)
 literal|1
 operator|<<
 name|rix
@@ -1023,6 +1032,9 @@ name|mask
 operator|&=
 operator|~
 operator|(
+operator|(
+name|uint64_t
+operator|)
 literal|1
 operator|<<
 name|rix
@@ -1074,6 +1086,9 @@ name|mask
 operator|&=
 operator|~
 operator|(
+operator|(
+name|uint64_t
+operator|)
 literal|1
 operator|<<
 name|rix
@@ -1152,6 +1167,9 @@ name|mask
 operator|&=
 operator|~
 operator|(
+operator|(
+name|uint64_t
+operator|)
 literal|1
 operator|<<
 name|rix
@@ -1200,6 +1218,9 @@ name|mask
 operator|&=
 operator|~
 operator|(
+operator|(
+name|uint64_t
+operator|)
 literal|1
 operator|<<
 name|rix
@@ -1578,6 +1599,9 @@ operator|->
 name|ratemask
 operator|&
 operator|(
+operator|(
+name|uint64_t
+operator|)
 literal|1
 operator|<<
 name|rix
@@ -1756,6 +1780,9 @@ operator|->
 name|ratemask
 operator|&
 operator|(
+operator|(
+name|uint64_t
+operator|)
 literal|1
 operator|<<
 name|rix
@@ -4604,6 +4631,25 @@ name|final_rix
 argument_list|)
 condition|)
 block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"%s: ts_rate=%d ts_finaltsi=%d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|ts
+operator|->
+name|ts_rate
+argument_list|,
+name|ts
+operator|->
+name|ts_finaltsi
+argument_list|)
+expr_stmt|;
 name|badrate
 argument_list|(
 name|ifp
@@ -5749,6 +5795,9 @@ name|sn
 operator|->
 name|ratemask
 operator||=
+operator|(
+name|uint64_t
+operator|)
 literal|1
 operator|<<
 name|rix
@@ -5829,6 +5878,9 @@ name|sn
 operator|->
 name|ratemask
 operator||=
+operator|(
+name|uint64_t
+operator|)
 literal|1
 operator|<<
 name|rix
@@ -5849,7 +5901,7 @@ name|IEEE80211_MSG_RATECTL
 argument_list|)
 condition|)
 block|{
-name|uint32_t
+name|uint64_t
 name|mask
 decl_stmt|;
 name|ieee80211_note
@@ -5975,7 +6027,7 @@ argument_list|(
 name|y
 argument_list|)
 decl_stmt|;
-name|uint32_t
+name|uint64_t
 name|mask
 decl_stmt|;
 name|sn
@@ -6665,7 +6717,7 @@ name|ni
 argument_list|)
 argument_list|)
 decl_stmt|;
-name|uint32_t
+name|uint64_t
 name|mask
 decl_stmt|;
 name|int
@@ -6675,7 +6727,7 @@ name|y
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"\n[%s] refcnt %d static_rix (%d %s) ratemask 0x%x\n"
+literal|"\n[%s] refcnt %d static_rix (%d %s) ratemask 0x%qx\n"
 argument_list|,
 name|ether_sprintf
 argument_list|(
