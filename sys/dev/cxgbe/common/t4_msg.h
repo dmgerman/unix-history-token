@@ -10539,7 +10539,9 @@ block|,
 name|FW6_TYPE_OFLD_CONNECTION_WR_RPL
 init|=
 literal|3
-block|, }
+block|,
+name|NUM_FW6_TYPES
+block|}
 enum|;
 end_enum
 
