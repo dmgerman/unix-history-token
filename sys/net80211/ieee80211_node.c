@@ -9649,8 +9649,7 @@ modifier|*
 modifier|*
 name|ni_arr
 decl_stmt|;
-name|unsigned
-name|long
+name|size_t
 name|size
 decl_stmt|;
 name|int
@@ -9713,7 +9712,6 @@ return|return;
 comment|/* 	 * If this fails, the node table won't have any 	 * valid entries - ieee80211_iterate_nt() frees 	 * the references to them.  So don't try walking 	 * the table; just skip to the end and free the 	 * temporary memory. 	 */
 if|if
 condition|(
-operator|!
 name|ieee80211_iterate_nt
 argument_list|(
 name|nt
@@ -9722,6 +9720,8 @@ name|ni_arr
 argument_list|,
 name|max_aid
 argument_list|)
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|done
