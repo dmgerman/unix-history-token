@@ -2311,13 +2311,13 @@ literal|2
 expr_stmt|;
 break|break;
 block|}
-comment|/* mprotect */
+comment|/* freebsd32_mprotect */
 case|case
 literal|74
 case|:
 block|{
 name|struct
-name|mprotect_args
+name|freebsd32_mprotect_args
 modifier|*
 name|p
 init|=
@@ -17804,7 +17804,7 @@ break|break;
 block|}
 empty_stmt|;
 break|break;
-comment|/* mprotect */
+comment|/* freebsd32_mprotect */
 case|case
 literal|74
 case|:
@@ -28761,7 +28761,7 @@ operator|=
 literal|"int"
 expr_stmt|;
 break|break;
-comment|/* mprotect */
+comment|/* freebsd32_mprotect */
 case|case
 literal|74
 case|:

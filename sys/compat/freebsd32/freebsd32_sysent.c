@@ -1955,14 +1955,14 @@ comment|/* 73 = munmap */
 block|{
 name|AS
 argument_list|(
-name|mprotect_args
+name|freebsd32_mprotect_args
 argument_list|)
 block|,
 operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|mprotect
+name|freebsd32_mprotect
 block|,
 name|AUE_MPROTECT
 block|,
@@ -1975,7 +1975,7 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* 74 = mprotect */
+comment|/* 74 = freebsd32_mprotect */
 block|{
 name|AS
 argument_list|(

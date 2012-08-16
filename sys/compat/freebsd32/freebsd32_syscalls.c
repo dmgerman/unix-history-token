@@ -250,9 +250,9 @@ comment|/* 72 = vadvise */
 literal|"munmap"
 block|,
 comment|/* 73 = munmap */
-literal|"mprotect"
+literal|"freebsd32_mprotect"
 block|,
-comment|/* 74 = mprotect */
+comment|/* 74 = freebsd32_mprotect */
 literal|"madvise"
 block|,
 comment|/* 75 = madvise */
