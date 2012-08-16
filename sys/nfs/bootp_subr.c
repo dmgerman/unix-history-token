@@ -209,6 +209,28 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*   * Wait 10 seconds for interface appearance  * USB ethernet adapters might reqquire some time to pop up  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BOOTP_IFACE_WAIT_TIMEOUT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|BOOTP_IFACE_WAIT_TIMEOUT
+value|10
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * What is the longest we will wait before re-sending a request?  * Note this is also the frequency of "RPC timeout" messages.  * The re-send loop count sup linearly to this maximum, so the  * first complaint will happen after (1+2+3+4+5)=15 seconds.  */
 end_comment
 
@@ -7665,6 +7687,20 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
+name|int
+name|timeout
+init|=
+name|BOOTP_IFACE_WAIT_TIMEOUT
+operator|*
+name|hz
+decl_stmt|;
+name|int
+name|delay
+init|=
+name|hz
+operator|/
+literal|10
+decl_stmt|;
 name|nd
 operator|=
 operator|&
@@ -7844,6 +7880,8 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|retry
+label|:
 name|ifctx
 operator|=
 name|STAILQ_FIRST
@@ -8071,6 +8109,28 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|timeout
+operator|>
+literal|0
+condition|)
+block|{
+name|pause
+argument_list|(
+literal|"bootpc"
+argument_list|,
+name|delay
+argument_list|)
+expr_stmt|;
+name|timeout
+operator|-=
+name|delay
+expr_stmt|;
+goto|goto
+name|retry
+goto|;
+block|}
 ifdef|#
 directive|ifdef
 name|BOOTP_WIRED_TO
