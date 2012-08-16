@@ -545,6 +545,11 @@ block|,
 comment|/* cluster, jumbo9k, jumbo16k */
 endif|#
 directive|endif
+name|OFLD_BUF_SIZE
+init|=
+name|MJUM16BYTES
+block|,
+comment|/* size of fl buffer for TOE rxq */
 name|CTRL_EQ_QSIZE
 init|=
 literal|128
@@ -565,6 +570,36 @@ literal|8
 block|}
 enum|;
 end_enum
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|T4_PKT_TIMESTAMP
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|RX_COPY_THRESHOLD
+value|(MINCLSIZE - 8)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|RX_COPY_THRESHOLD
+value|MINCLSIZE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_enum
 enum|enum

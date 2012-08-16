@@ -3634,7 +3634,7 @@ name|qsize_rxq
 operator|/
 literal|8
 argument_list|,
-name|MJUM16BYTES
+name|OFLD_BUF_SIZE
 argument_list|,
 name|name
 argument_list|)
@@ -5459,36 +5459,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|T4_PKT_TIMESTAMP
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|RX_COPY_THRESHOLD
-value|(MINCLSIZE - 8)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|RX_COPY_THRESHOLD
-value|MINCLSIZE
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
