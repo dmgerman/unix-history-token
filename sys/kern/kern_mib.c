@@ -2911,9 +2911,13 @@ operator|&
 name|allproc_lock
 argument_list|)
 expr_stmt|;
-comment|/* Only permit the values less then PID_MAX. */
+comment|/* 	 * Only permit the values less then PID_MAX. 	 * As a safety measure, do not allow to limit the pid_max too much. 	 */
 if|if
 condition|(
+name|pm
+operator|<
+literal|300
+operator|||
 name|pm
 operator|>
 name|PID_MAX

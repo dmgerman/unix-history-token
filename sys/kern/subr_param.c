@@ -1211,7 +1211,7 @@ name|ngroups_max
 operator|=
 name|NGROUPS_MAX
 expr_stmt|;
-comment|/* 	 * Only allow to lower the maximal pid. 	 */
+comment|/* 	 * Only allow to lower the maximal pid. 	 * Prevent setting up a non-bootable system if pid_max is too low. 	 */
 name|TUNABLE_INT_FETCH
 argument_list|(
 literal|"kern.pid_max"
@@ -1229,6 +1229,17 @@ condition|)
 name|pid_max
 operator|=
 name|PID_MAX
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|pid_max
+operator|<
+literal|300
+condition|)
+name|pid_max
+operator|=
+literal|300
 expr_stmt|;
 block|}
 end_function
