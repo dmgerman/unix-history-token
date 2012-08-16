@@ -209,7 +209,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*   * Wait 10 seconds for interface appearance  * USB ethernet adapters might reqquire some time to pop up  */
+comment|/*   * Wait 10 seconds for interface appearance  * USB ethernet adapters might require some time to pop up  */
 end_comment
 
 begin_ifndef
@@ -7689,18 +7689,22 @@ name|td
 decl_stmt|;
 name|int
 name|timeout
-init|=
-name|BOOTP_IFACE_WAIT_TIMEOUT
-operator|*
-name|hz
 decl_stmt|;
 name|int
 name|delay
-init|=
+decl_stmt|;
+name|timeout
+operator|=
+name|BOOTP_IFACE_WAIT_TIMEOUT
+operator|*
+name|hz
+expr_stmt|;
+name|delay
+operator|=
 name|hz
 operator|/
 literal|10
-decl_stmt|;
+expr_stmt|;
 name|nd
 operator|=
 operator|&
