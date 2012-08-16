@@ -2251,27 +2251,6 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|filter_rpl
-parameter_list|(
-name|struct
-name|sge_iq
-modifier|*
-parameter_list|,
-specifier|const
-name|struct
-name|rss_header
-modifier|*
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
 name|get_sge_context
 parameter_list|(
 name|struct
@@ -2993,7 +2972,7 @@ name|sc
 argument_list|,
 name|CPL_SET_TCB_RPL
 argument_list|,
-name|filter_rpl
+name|t4_filter_rpl
 argument_list|)
 expr_stmt|;
 comment|/* Prepare the adapter for operation */
@@ -28034,9 +28013,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
-name|filter_rpl
+name|t4_filter_rpl
 parameter_list|(
 name|struct
 name|sge_iq

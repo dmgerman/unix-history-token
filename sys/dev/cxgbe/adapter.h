@@ -3174,6 +3174,26 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|t4_filter_rpl
+parameter_list|(
+name|struct
+name|sge_iq
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|rss_header
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* t4_sge.c */
 end_comment
