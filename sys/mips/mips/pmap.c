@@ -867,9 +867,6 @@ specifier|static
 name|pt_entry_t
 name|init_pte_prot
 parameter_list|(
-name|vm_offset_t
-name|va
-parameter_list|,
 name|vm_page_t
 name|m
 parameter_list|,
@@ -8833,8 +8830,6 @@ name|om
 decl_stmt|;
 name|pt_entry_t
 name|rw
-init|=
-literal|0
 decl_stmt|;
 name|va
 operator|&=
@@ -9306,8 +9301,6 @@ name|rw
 operator|=
 name|init_pte_prot
 argument_list|(
-name|va
-argument_list|,
 name|m
 argument_list|,
 name|prot
@@ -14367,9 +14360,6 @@ specifier|static
 name|pt_entry_t
 name|init_pte_prot
 parameter_list|(
-name|vm_offset_t
-name|va
-parameter_list|,
 name|vm_page_t
 name|m
 parameter_list|,
