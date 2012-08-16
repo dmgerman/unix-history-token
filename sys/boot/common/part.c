@@ -2129,6 +2129,7 @@ block|{
 if|#
 directive|if
 literal|0
+comment|/* Some BIOSes return an incorrect number of sectors */
 block|if (offset>= table->sectors) 			break;
 endif|#
 directive|endif
@@ -3899,6 +3900,7 @@ continue|continue;
 if|#
 directive|if
 literal|0
+comment|/* Some BIOSes return an incorrect number of sectors */
 block|if (start + end - 1>= sectors) 			continue;
 comment|/* XXX: ignore */
 endif|#
