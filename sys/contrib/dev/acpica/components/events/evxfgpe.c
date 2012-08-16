@@ -880,8 +880,6 @@ operator|=
 name|AcpiHwGetGpeRegisterBit
 argument_list|(
 name|GpeEventInfo
-argument_list|,
-name|GpeRegisterInfo
 argument_list|)
 expr_stmt|;
 comment|/* Perform the action */

@@ -346,16 +346,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Optional ACPI methods for suspend and resume, e.g., _GTS and _BFS. */
-end_comment
-
-begin_decl_stmt
-name|int
-name|acpi_sleep_flags
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Supported sleep states. */
 end_comment
 
@@ -1910,44 +1900,6 @@ literal|"debug.acpi.quirks"
 argument_list|,
 operator|&
 name|acpi_quirks
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* Execute optional ACPI methods for suspend and resume. */
-end_comment
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"debug.acpi.sleep_flags"
-argument_list|,
-operator|&
-name|acpi_sleep_flags
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_debug_acpi
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|sleep_flags
-argument_list|,
-name|CTLFLAG_RW
-operator||
-name|CTLFLAG_TUN
-argument_list|,
-operator|&
-name|acpi_sleep_flags
-argument_list|,
-literal|0
-argument_list|,
-literal|"Execute optional ACPI methods for suspend/resume."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -9119,8 +9071,6 @@ operator|=
 name|AcpiEnterSleepState
 argument_list|(
 name|ACPI_STATE_S5
-argument_list|,
-name|acpi_sleep_flags
 argument_list|)
 expr_stmt|;
 if|if
@@ -12188,8 +12138,6 @@ expr_stmt|;
 name|AcpiLeaveSleepStatePrep
 argument_list|(
 name|state
-argument_list|,
-name|acpi_sleep_flags
 argument_list|)
 expr_stmt|;
 name|intr_restore
@@ -12237,15 +12185,11 @@ operator|=
 name|AcpiEnterSleepState
 argument_list|(
 name|state
-argument_list|,
-name|acpi_sleep_flags
 argument_list|)
 expr_stmt|;
 name|AcpiLeaveSleepStatePrep
 argument_list|(
 name|state
-argument_list|,
-name|acpi_sleep_flags
 argument_list|)
 expr_stmt|;
 name|intr_restore

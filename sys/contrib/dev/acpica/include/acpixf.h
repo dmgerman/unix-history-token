@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_CA_VERSION
-value|0x20120711
+value|0x20120816
 end_define
 
 begin_include
@@ -46,6 +46,12 @@ begin_include
 include|#
 directive|include
 file|<contrib/dev/acpica/include/actbl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<contrib/dev/acpica/include/acbuffer.h>
 end_include
 
 begin_comment
@@ -433,6 +439,25 @@ name|Length
 parameter_list|,
 name|BOOLEAN
 name|Warn
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiDecodePldBuffer
+parameter_list|(
+name|UINT8
+modifier|*
+name|InBuffer
+parameter_list|,
+name|ACPI_SIZE
+name|Length
+parameter_list|,
+name|ACPI_PLD_INFO
+modifier|*
+modifier|*
+name|ReturnBuffer
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1485,9 +1510,6 @@ name|AcpiEnterSleepState
 parameter_list|(
 name|UINT8
 name|SleepState
-parameter_list|,
-name|UINT8
-name|Flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1505,9 +1527,6 @@ name|AcpiLeaveSleepStatePrep
 parameter_list|(
 name|UINT8
 name|SleepState
-parameter_list|,
-name|UINT8
-name|Flags
 parameter_list|)
 function_decl|;
 end_function_decl

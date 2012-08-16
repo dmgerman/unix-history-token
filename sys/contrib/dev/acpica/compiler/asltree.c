@@ -73,7 +73,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    TrGetNextNode  *  * PARAMETERS:  None  *  * RETURN:      New parse node.  Aborts on allocation failure  *  * DESCRIPTION: Allocate a new parse node for the parse tree.  Bypass the local  *              dynamic memory manager for performance reasons (This has a  *              major impact on the speed of the compiler.)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    TrGetNextNode  *  * PARAMETERS:  None  *  * RETURN:      New parse node. Aborts on allocation failure  *  * DESCRIPTION: Allocate a new parse node for the parse tree. Bypass the local  *              dynamic memory manager for performance reasons (This has a  *              major impact on the speed of the compiler.)  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -121,7 +121,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    TrAllocateNode  *  * PARAMETERS:  ParseOpcode         - Opcode to be assigned to the node  *  * RETURN:      New parse node.  Aborts on allocation failure  *  * DESCRIPTION: Allocate and initialize a new parse node for the parse tree  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    TrAllocateNode  *  * PARAMETERS:  ParseOpcode         - Opcode to be assigned to the node  *  * RETURN:      New parse node. Aborts on allocation failure  *  * DESCRIPTION: Allocate and initialize a new parse node for the parse tree  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -210,7 +210,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    TrReleaseNode  *  * PARAMETERS:  Op            - Op to be released  *  * RETURN:      None  *  * DESCRIPTION: "release" a node.  In truth, nothing is done since the node  *              is part of a larger buffer  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    TrReleaseNode  *  * PARAMETERS:  Op            - Op to be released  *  * RETURN:      None  *  * DESCRIPTION: "release" a node. In truth, nothing is done since the node  *              is part of a larger buffer  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -227,7 +227,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    TrUpdateNode  *  * PARAMETERS:  ParseOpcode         - New opcode to be assigned to the node  *              Op                - An existing parse node  *  * RETURN:      The updated node  *  * DESCRIPTION: Change the parse opcode assigned to a node.  Usually used to  *              change an opcode to DEFAULT_ARG so that the node is ignored  *              during the code generation.  Also used to set generic integers  *              to a specific size (8, 16, 32, or 64 bits)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    TrUpdateNode  *  * PARAMETERS:  ParseOpcode         - New opcode to be assigned to the node  *              Op                - An existing parse node  *  * RETURN:      The updated node  *  * DESCRIPTION: Change the parse opcode assigned to a node. Usually used to  *              change an opcode to DEFAULT_ARG so that the node is ignored  *              during the code generation. Also used to set generic integers  *              to a specific size (8, 16, 32, or 64 bits)  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -302,7 +302,7 @@ name|Value
 operator|.
 name|Integer
 operator|=
-literal|0xFF
+name|ACPI_UINT8_MAX
 expr_stmt|;
 break|break;
 case|case
@@ -316,7 +316,7 @@ name|Value
 operator|.
 name|Integer
 operator|=
-literal|0xFFFF
+name|ACPI_UINT16_MAX
 expr_stmt|;
 break|break;
 case|case
@@ -330,11 +330,12 @@ name|Value
 operator|.
 name|Integer
 operator|=
-literal|0xFFFFFFFF
+name|ACPI_UINT32_MAX
 expr_stmt|;
 break|break;
+comment|/* Don't need to do the QWORD case */
 default|default:
-comment|/* Don't care about others, don't need to check QWORD */
+comment|/* Don't care about others */
 break|break;
 block|}
 block|}
@@ -363,8 +364,6 @@ block|{
 case|case
 name|PARSEOP_BYTECONST
 case|:
-name|Op
-operator|=
 name|UtCheckIntegerRange
 argument_list|(
 name|Op
@@ -374,12 +373,20 @@ argument_list|,
 name|ACPI_UINT8_MAX
 argument_list|)
 expr_stmt|;
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Value
+operator|.
+name|Integer
+operator|&=
+name|ACPI_UINT8_MAX
+expr_stmt|;
 break|break;
 case|case
 name|PARSEOP_WORDCONST
 case|:
-name|Op
-operator|=
 name|UtCheckIntegerRange
 argument_list|(
 name|Op
@@ -389,12 +396,20 @@ argument_list|,
 name|ACPI_UINT16_MAX
 argument_list|)
 expr_stmt|;
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Value
+operator|.
+name|Integer
+operator|&=
+name|ACPI_UINT16_MAX
+expr_stmt|;
 break|break;
 case|case
 name|PARSEOP_DWORDCONST
 case|:
-name|Op
-operator|=
 name|UtCheckIntegerRange
 argument_list|(
 name|Op
@@ -403,6 +418,16 @@ literal|0x00
 argument_list|,
 name|ACPI_UINT32_MAX
 argument_list|)
+expr_stmt|;
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Value
+operator|.
+name|Integer
+operator|&=
+name|ACPI_UINT32_MAX
 expr_stmt|;
 break|break;
 default|default:
@@ -573,7 +598,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    TrSetNodeFlags  *  * PARAMETERS:  Op                  - An existing parse node  *              Flags               - New flags word  *  * RETURN:      The updated parser op  *  * DESCRIPTION: Set bits in the node flags word.  Will not clear bits, only set  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    TrSetNodeFlags  *  * PARAMETERS:  Op                  - An existing parse node  *              Flags               - New flags word  *  * RETURN:      The updated parser op  *  * DESCRIPTION: Set bits in the node flags word. Will not clear bits, only set  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -624,7 +649,63 @@ operator||=
 name|Flags
 expr_stmt|;
 return|return
+operator|(
 name|Op
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    TrSetNodeAmlLength  *  * PARAMETERS:  Op                  - An existing parse node  *              Length              - AML Length  *  * RETURN:      The updated parser op  *  * DESCRIPTION: Set the AML Length in a node. Used by the parser to indicate  *              the presence of a node that must be reduced to a fixed length  *              constant.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|TrSetNodeAmlLength
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|,
+name|UINT32
+name|Length
+parameter_list|)
+block|{
+name|DbgPrint
+argument_list|(
+name|ASL_PARSE_OUTPUT
+argument_list|,
+literal|"\nSetNodeAmlLength: Op %p, %8.8X\n"
+argument_list|,
+name|Op
+argument_list|,
+name|Length
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Op
+condition|)
+block|{
+return|return
+name|NULL
+return|;
+block|}
+name|Op
+operator|->
+name|Asl
+operator|.
+name|AmlLength
+operator|=
+name|Length
+expr_stmt|;
+return|return
+operator|(
+name|Op
+operator|)
 return|;
 block|}
 end_function
@@ -674,7 +755,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    TrCreateLeafNode  *  * PARAMETERS:  ParseOpcode         - New opcode to be assigned to the node  *  * RETURN:      Pointer to the new node.  Aborts on allocation failure  *  * DESCRIPTION: Create a simple leaf node (no children or peers, and no value  *              assigned to the node)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    TrCreateLeafNode  *  * PARAMETERS:  ParseOpcode         - New opcode to be assigned to the node  *  * RETURN:      Pointer to the new node. Aborts on allocation failure  *  * DESCRIPTION: Create a simple leaf node (no children or peers, and no value  *              assigned to the node)  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -730,7 +811,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    TrCreateConstantLeafNode  *  * PARAMETERS:  ParseOpcode         - The constant opcode  *  * RETURN:      Pointer to the new node.  Aborts on allocation failure  *  * DESCRIPTION: Create a leaf node (no children or peers) for one of the  *              special constants - __LINE__, __FILE__, and __DATE__.  *  * Note: An implemenation of __FUNC__ cannot happen here because we don't  * have a full parse tree at this time and cannot find the parent control  * method. If it is ever needed, __FUNC__ must be implemented later, after  * the parse tree has been fully constructed.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    TrCreateConstantLeafNode  *  * PARAMETERS:  ParseOpcode         - The constant opcode  *  * RETURN:      Pointer to the new node. Aborts on allocation failure  *  * DESCRIPTION: Create a leaf node (no children or peers) for one of the  *              special constants - __LINE__, __FILE__, and __DATE__.  *  * Note: An implemenation of __FUNC__ cannot happen here because we don't  * have a full parse tree at this time and cannot find the parent control  * method. If it is ever needed, __FUNC__ must be implemented later, after  * the parse tree has been fully constructed.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -988,7 +1069,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    TrCreateValuedLeafNode  *  * PARAMETERS:  ParseOpcode         - New opcode to be assigned to the node  *              Value               - Value to be assigned to the node  *  * RETURN:      Pointer to the new node.  Aborts on allocation failure  *  * DESCRIPTION: Create a leaf node (no children or peers) with a value  *              assigned to it  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    TrCreateValuedLeafNode  *  * PARAMETERS:  ParseOpcode         - New opcode to be assigned to the node  *              Value               - Value to be assigned to the node  *  * RETURN:      Pointer to the new node. Aborts on allocation failure  *  * DESCRIPTION: Create a leaf node (no children or peers) with a value  *              assigned to it  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1151,7 +1232,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    TrCreateNode  *  * PARAMETERS:  ParseOpcode         - Opcode to be assigned to the node  *              NumChildren         - Number of children to follow  *              ...                 - A list of child nodes to link to the new  *                                    node.  NumChildren long.  *  * RETURN:      Pointer to the new node.  Aborts on allocation failure  *  * DESCRIPTION: Create a new parse node and link together a list of child  *              nodes underneath the new node.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    TrCreateNode  *  * PARAMETERS:  ParseOpcode         - Opcode to be assigned to the node  *              NumChildren         - Number of children to follow  *              ...                 - A list of child nodes to link to the new  *                                    node. NumChildren long.  *  * RETURN:      Pointer to the new node. Aborts on allocation failure  *  * DESCRIPTION: Create a new parse node and link together a list of child  *              nodes underneath the new node.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1322,7 +1403,7 @@ argument_list|,
 name|Child
 argument_list|)
 expr_stmt|;
-comment|/*          * If child is NULL, this means that an optional argument          * was omitted.  We must create a placeholder with a special          * opcode (DEFAULT_ARG) so that the code generator will know          * that it must emit the correct default for this argument          */
+comment|/*          * If child is NULL, this means that an optional argument          * was omitted. We must create a placeholder with a special          * opcode (DEFAULT_ARG) so that the code generator will know          * that it must emit the correct default for this argument          */
 if|if
 condition|(
 operator|!
@@ -1432,7 +1513,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    TrLinkChildren  *  * PARAMETERS:  Op                - An existing parse node  *              NumChildren         - Number of children to follow  *              ...                 - A list of child nodes to link to the new  *                                    node.  NumChildren long.  *  * RETURN:      The updated (linked) node  *  * DESCRIPTION: Link a group of nodes to an existing parse node  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    TrLinkChildren  *  * PARAMETERS:  Op                - An existing parse node  *              NumChildren         - Number of children to follow  *              ...                 - A list of child nodes to link to the new  *                                    node. NumChildren long.  *  * RETURN:      The updated (linked) node  *  * DESCRIPTION: Link a group of nodes to an existing parse node  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1633,7 +1714,7 @@ argument_list|,
 name|Child
 argument_list|)
 expr_stmt|;
-comment|/*          * If child is NULL, this means that an optional argument          * was omitted.  We must create a placeholder with a special          * opcode (DEFAULT_ARG) so that the code generator will know          * that it must emit the correct default for this argument          */
+comment|/*          * If child is NULL, this means that an optional argument          * was omitted. We must create a placeholder with a special          * opcode (DEFAULT_ARG) so that the code generator will know          * that it must emit the correct default for this argument          */
 if|if
 condition|(
 operator|!
@@ -1743,7 +1824,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    TrLinkPeerNode  *  * PARAMETERS:  Op1           - First peer  *              Op2           - Second peer  *  * RETURN:      Op1 or the non-null node.  *  * DESCRIPTION: Link two nodes as peers.  Handles cases where one peer is null.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    TrLinkPeerNode  *  * PARAMETERS:  Op1           - First peer  *              Op2           - Second peer  *  * RETURN:      Op1 or the non-null node.  *  * DESCRIPTION: Link two nodes as peers. Handles cases where one peer is null.  *  ******************************************************************************/
 end_comment
 
 begin_function

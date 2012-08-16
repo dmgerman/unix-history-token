@@ -1324,7 +1324,7 @@ name|AH_PREDEF
 argument_list|(
 literal|"_PLD"
 argument_list|,
-literal|"Physical Device Location"
+literal|"Physical Location of Device"
 argument_list|,
 literal|"Returns a device's physical location information"
 argument_list|)
