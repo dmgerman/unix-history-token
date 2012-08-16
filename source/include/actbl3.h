@@ -155,17 +155,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ACPI_SIG_DBG2
-value|"DBG2"
-end_define
-
-begin_comment
-comment|/* Debug Port table 2 */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|ACPI_SIG_MATR
 value|"MATR"
 end_define
@@ -210,7 +199,7 @@ name|)
 end_pragma
 
 begin_comment
-comment|/*  * Note about bitfields: The UINT8 type is used for bitfields in ACPI tables.  * This is the only type that is even remotely portable. Anything else is not  * portable, so do not use any other bitfield types.  */
+comment|/*  * Note: C bitfields are not used for this reason:  *  * "Bitfields are great and easy to read, but unfortunately the C language  * does not specify the layout of bitfields in memory, which means they are  * essentially useless for dealing with packed data in on-disk formats or  * binary wire protocols." (Or ACPI tables and buffers.) "If you ask me,  * this decision was a design error in C. Ritchie could have picked an order  * and stuck with it." Norman Ramsey.  * See http://stackoverflow.com/a/1053662/41661  */
 end_comment
 
 begin_comment

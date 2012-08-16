@@ -649,7 +649,7 @@ name|ACPI_TYPE_PROCESSOR
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"ID %X Len %.4X Addr %p\n"
+literal|"ID %02X Len %02X Addr %p\n"
 argument_list|,
 name|ObjDesc
 operator|->

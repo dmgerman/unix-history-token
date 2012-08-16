@@ -172,6 +172,17 @@ name|ACPI_OSI_WIN_7
 block|}
 block|,
 comment|/* Windows 7 and Server 2008 R2 - Added 09/2009 */
+block|{
+literal|"Windows 2012"
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+name|ACPI_OSI_WIN_8
+block|}
+block|,
+comment|/* Windows 8 and Server 2012 - Added 08/2012 */
 comment|/* Feature Group Strings */
 block|{
 literal|"Extended Address Space Descriptor"

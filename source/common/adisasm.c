@@ -93,12 +93,27 @@ literal|"adisasm"
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*  * Older versions of Bison won't emit this external in the generated header.  * Newer versions do emit the external, so we don't need to do it.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ASLCOMPILER_ASLCOMPILERPARSE_H
+end_ifndef
+
 begin_decl_stmt
 specifier|extern
 name|int
 name|AslCompilerdebug
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|ACPI_STATUS

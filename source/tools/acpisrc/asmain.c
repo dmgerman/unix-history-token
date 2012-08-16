@@ -391,7 +391,7 @@ block|{
 name|int
 name|Status
 decl_stmt|;
-name|char
+name|int
 name|Response
 decl_stmt|;
 name|Status
@@ -478,20 +478,14 @@ argument_list|(
 literal|"Target path is the same as the source path, overwrite?\n"
 argument_list|)
 expr_stmt|;
-name|scanf
-argument_list|(
-literal|"%c"
-argument_list|,
-operator|&
 name|Response
-argument_list|)
+operator|=
+name|getchar
+argument_list|()
 expr_stmt|;
 comment|/* Check response */
 if|if
 condition|(
-operator|(
-name|char
-operator|)
 name|Response
 operator|!=
 literal|'y'
@@ -530,20 +524,14 @@ argument_list|(
 literal|"Target path already exists, overwrite?\n"
 argument_list|)
 expr_stmt|;
-name|scanf
-argument_list|(
-literal|"%c"
-argument_list|,
-operator|&
 name|Response
-argument_list|)
+operator|=
+name|getchar
+argument_list|()
 expr_stmt|;
 comment|/* Check response */
 if|if
 condition|(
-operator|(
-name|char
-operator|)
 name|Response
 operator|!=
 literal|'y'

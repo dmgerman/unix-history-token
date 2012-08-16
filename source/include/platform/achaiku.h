@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acnames.h - Global names and strings  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: achaiku.h - OS specific defines, etc. for Haiku (www.haiku-os.org)  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -10,216 +10,131 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__ACNAMES_H__
+name|__ACHAIKU_H__
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__ACNAMES_H__
+name|__ACHAIKU_H__
 end_define
 
+begin_include
+include|#
+directive|include
+file|"acgcc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<KernelExport.h>
+end_include
+
+begin_struct_decl
+struct_decl|struct
+name|mutex
+struct_decl|;
+end_struct_decl
+
 begin_comment
-comment|/* Method names - these methods can appear anywhere in the namespace */
+comment|/* Host-dependent types and defines for user- and kernel-space ACPICA */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|METHOD_NAME__SB_
-value|"_SB_"
+name|ACPI_USE_SYSTEM_CLIBRARY
 end_define
 
 begin_define
 define|#
 directive|define
-name|METHOD_NAME__HID
-value|"_HID"
+name|ACPI_USE_STANDARD_HEADERS
 end_define
 
 begin_define
 define|#
 directive|define
-name|METHOD_NAME__CID
-value|"_CID"
+name|ACPI_MUTEX_TYPE
+value|ACPI_OSL_MUTEX
 end_define
 
 begin_define
 define|#
 directive|define
-name|METHOD_NAME__UID
-value|"_UID"
+name|ACPI_MUTEX
+value|struct mutex *
 end_define
 
 begin_define
 define|#
 directive|define
-name|METHOD_NAME__ADR
-value|"_ADR"
-end_define
-
-begin_define
-define|#
-directive|define
-name|METHOD_NAME__INI
-value|"_INI"
-end_define
-
-begin_define
-define|#
-directive|define
-name|METHOD_NAME__STA
-value|"_STA"
-end_define
-
-begin_define
-define|#
-directive|define
-name|METHOD_NAME__REG
-value|"_REG"
-end_define
-
-begin_define
-define|#
-directive|define
-name|METHOD_NAME__SEG
-value|"_SEG"
-end_define
-
-begin_define
-define|#
-directive|define
-name|METHOD_NAME__BBN
-value|"_BBN"
-end_define
-
-begin_define
-define|#
-directive|define
-name|METHOD_NAME__PRT
-value|"_PRT"
-end_define
-
-begin_define
-define|#
-directive|define
-name|METHOD_NAME__CRS
-value|"_CRS"
-end_define
-
-begin_define
-define|#
-directive|define
-name|METHOD_NAME__PRS
-value|"_PRS"
-end_define
-
-begin_define
-define|#
-directive|define
-name|METHOD_NAME__AEI
-value|"_AEI"
-end_define
-
-begin_define
-define|#
-directive|define
-name|METHOD_NAME__PRW
-value|"_PRW"
-end_define
-
-begin_define
-define|#
-directive|define
-name|METHOD_NAME__SRS
-value|"_SRS"
-end_define
-
-begin_define
-define|#
-directive|define
-name|METHOD_NAME__PLD
-value|"_PLD"
+name|ACPI_USE_NATIVE_DIVIDE
 end_define
 
 begin_comment
-comment|/* Method names - these methods must appear at the namespace root */
+comment|// #define ACPI_THREAD_ID               thread_id
 end_comment
 
 begin_define
 define|#
 directive|define
-name|METHOD_PATHNAME__PTS
-value|"\\_PTS"
+name|ACPI_SEMAPHORE
+value|sem_id
 end_define
 
 begin_define
 define|#
 directive|define
-name|METHOD_PATHNAME__SST
-value|"\\_SI._SST"
+name|ACPI_SPINLOCK
+value|spinlock *
 end_define
 
 begin_define
 define|#
 directive|define
-name|METHOD_PATHNAME__WAK
-value|"\\_WAK"
+name|ACPI_CPU_FLAGS
+value|cpu_status
 end_define
-
-begin_comment
-comment|/* Definitions of the predefined namespace names  */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|ACPI_UNKNOWN_NAME
-value|(UINT32) 0x3F3F3F3F
+name|COMPILER_DEPENDENT_INT64
+value|int64
 end_define
-
-begin_comment
-comment|/* Unknown name is "????" */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|ACPI_ROOT_NAME
-value|(UINT32) 0x5F5F5F5C
+name|COMPILER_DEPENDENT_UINT64
+value|uint64
 end_define
 
-begin_comment
-comment|/* Root name is    "\___" */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|B_HAIKU_64_BIT
+end_ifdef
 
 begin_define
 define|#
 directive|define
-name|ACPI_PREFIX_MIXED
-value|(UINT32) 0x69706341
+name|ACPI_MACHINE_WIDTH
+value|64
 end_define
 
-begin_comment
-comment|/* "Acpi" */
-end_comment
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
 directive|define
-name|ACPI_PREFIX_LOWER
-value|(UINT32) 0x69706361
-end_define
-
-begin_comment
-comment|/* "acpi" */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_NS_ROOT_PATH
-value|"\\"
+name|ACPI_MACHINE_WIDTH
+value|32
 end_define
 
 begin_endif
@@ -227,8 +142,121 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL_MODE
+end_ifdef
+
 begin_comment
-comment|/* __ACNAMES_H__  */
+comment|/* Host-dependent types and defines for in-kernel ACPICA */
+end_comment
+
+begin_comment
+comment|/* ACPICA cache implementation is adequate. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_USE_LOCAL_CACHE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_FLUSH_CPU_CACHE
+parameter_list|()
+value|__asm __volatile("wbinvd");
+end_define
+
+begin_comment
+comment|/* Based on FreeBSD's due to lack of documentation */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|AcpiOsAcquireGlobalLock
+parameter_list|(
+name|uint32
+modifier|*
+name|lock
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|AcpiOsReleaseGlobalLock
+parameter_list|(
+name|uint32
+modifier|*
+name|lock
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|ACPI_ACQUIRE_GLOBAL_LOCK
+parameter_list|(
+name|GLptr
+parameter_list|,
+name|Acq
+parameter_list|)
+value|do {                \         (Acq) = AcpiOsAcquireGlobalLock(&((GLptr)->GlobalLock));    \ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_RELEASE_GLOBAL_LOCK
+parameter_list|(
+name|GLptr
+parameter_list|,
+name|Acq
+parameter_list|)
+value|do {                \         (Acq) = AcpiOsReleaseGlobalLock(&((GLptr)->GlobalLock));    \ } while (0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* _KERNEL_MODE */
+end_comment
+
+begin_comment
+comment|/* Host-dependent types and defines for user-space ACPICA */
+end_comment
+
+begin_error
+error|#
+directive|error
+literal|"We only support kernel mode ACPI atm."
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL_MODE */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __ACHAIKU_H__ */
 end_comment
 
 end_unit

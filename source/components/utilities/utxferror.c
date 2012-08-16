@@ -147,14 +147,14 @@ begin_define
 define|#
 directive|define
 name|ACPI_MSG_BIOS_ERROR
-value|"ACPI Firmware Error: "
+value|"ACPI BIOS Bug: Error: "
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_MSG_BIOS_WARNING
-value|"ACPI Firmware Warning: "
+value|"ACPI BIOS Bug: Warning: "
 end_define
 
 begin_comment

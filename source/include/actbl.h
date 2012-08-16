@@ -140,7 +140,7 @@ name|)
 end_pragma
 
 begin_comment
-comment|/*  * Note about bitfields: The UINT8 type is used for bitfields in ACPI tables.  * This is the only type that is even remotely portable. Anything else is not  * portable, so do not use any other bitfield types.  */
+comment|/*  * Note: C bitfields are not used for this reason:  *  * "Bitfields are great and easy to read, but unfortunately the C language  * does not specify the layout of bitfields in memory, which means they are  * essentially useless for dealing with packed data in on-disk formats or  * binary wire protocols." (Or ACPI tables and buffers.) "If you ask me,  * this decision was a design error in C. Ritchie could have picked an order  * and stuck with it." Norman Ramsey.  * See http://stackoverflow.com/a/1053662/41661  */
 end_comment
 
 begin_comment
@@ -166,7 +166,7 @@ comment|/* Length of table in bytes, including this header */
 name|UINT8
 name|Revision
 decl_stmt|;
-comment|/* ACPI Specification minor version # */
+comment|/* ACPI Specification minor version number */
 name|UINT8
 name|Checksum
 decl_stmt|;
@@ -206,7 +206,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*******************************************************************************  *  * GAS - Generic Address Structure (ACPI 2.0+)  *  * Note: Since this structure is used in the ACPI tables, it is byte aligned.  * If misaliged access is not supported by the hardware, accesses to the  * 64-bit Address field must be performed with care.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * GAS - Generic Address Structure (ACPI 2.0+)  *  * Note: Since this structure is used in the ACPI tables, it is byte aligned.  * If misaligned access is not supported by the hardware, accesses to the  * 64-bit Address field must be performed with care.  *  ******************************************************************************/
 end_comment
 
 begin_typedef
@@ -585,15 +585,15 @@ comment|/* 32-bit Port address of SMI command port */
 name|UINT8
 name|AcpiEnable
 decl_stmt|;
-comment|/* Value to write to smi_cmd to enable ACPI */
+comment|/* Value to write to SMI_CMD to enable ACPI */
 name|UINT8
 name|AcpiDisable
 decl_stmt|;
-comment|/* Value to write to smi_cmd to disable ACPI */
+comment|/* Value to write to SMI_CMD to disable ACPI */
 name|UINT8
 name|S4BiosRequest
 decl_stmt|;
-comment|/* Value to write to SMI CMD to enter S4BIOS state */
+comment|/* Value to write to SMI_CMD to enter S4BIOS state */
 name|UINT8
 name|PstateControl
 decl_stmt|;
@@ -601,35 +601,35 @@ comment|/* Processor performance state control*/
 name|UINT32
 name|Pm1aEventBlock
 decl_stmt|;
-comment|/* 32-bit Port address of Power Mgt 1a Event Reg Blk */
+comment|/* 32-bit port address of Power Mgt 1a Event Reg Blk */
 name|UINT32
 name|Pm1bEventBlock
 decl_stmt|;
-comment|/* 32-bit Port address of Power Mgt 1b Event Reg Blk */
+comment|/* 32-bit port address of Power Mgt 1b Event Reg Blk */
 name|UINT32
 name|Pm1aControlBlock
 decl_stmt|;
-comment|/* 32-bit Port address of Power Mgt 1a Control Reg Blk */
+comment|/* 32-bit port address of Power Mgt 1a Control Reg Blk */
 name|UINT32
 name|Pm1bControlBlock
 decl_stmt|;
-comment|/* 32-bit Port address of Power Mgt 1b Control Reg Blk */
+comment|/* 32-bit port address of Power Mgt 1b Control Reg Blk */
 name|UINT32
 name|Pm2ControlBlock
 decl_stmt|;
-comment|/* 32-bit Port address of Power Mgt 2 Control Reg Blk */
+comment|/* 32-bit port address of Power Mgt 2 Control Reg Blk */
 name|UINT32
 name|PmTimerBlock
 decl_stmt|;
-comment|/* 32-bit Port address of Power Mgt Timer Ctrl Reg Blk */
+comment|/* 32-bit port address of Power Mgt Timer Ctrl Reg Blk */
 name|UINT32
 name|Gpe0Block
 decl_stmt|;
-comment|/* 32-bit Port address of General Purpose Event 0 Reg Blk */
+comment|/* 32-bit port address of General Purpose Event 0 Reg Blk */
 name|UINT32
 name|Gpe1Block
 decl_stmt|;
-comment|/* 32-bit Port address of General Purpose Event 1 Reg Blk */
+comment|/* 32-bit port address of General Purpose Event 1 Reg Blk */
 name|UINT8
 name|Pm1EventLength
 decl_stmt|;
@@ -661,7 +661,7 @@ comment|/* Offset in GPE number space where GPE1 events start */
 name|UINT8
 name|CstControl
 decl_stmt|;
-comment|/* Support for the _CST object and C States change notification */
+comment|/* Support for the _CST object and C-States change notification */
 name|UINT16
 name|C2Latency
 decl_stmt|;
@@ -673,7 +673,7 @@ comment|/* Worst case HW latency to enter/exit C3 state */
 name|UINT16
 name|FlushSize
 decl_stmt|;
-comment|/* Processor's memory cache line width, in bytes */
+comment|/* Processor memory cache line width, in bytes */
 name|UINT16
 name|FlushStride
 decl_stmt|;
@@ -681,7 +681,7 @@ comment|/* Number of flush strides that need to be read */
 name|UINT8
 name|DutyOffset
 decl_stmt|;
-comment|/* Processor duty cycle index in processor's P_CNT reg */
+comment|/* Processor duty cycle index in processor P_CNT reg */
 name|UINT8
 name|DutyWidth
 decl_stmt|;
@@ -768,18 +768,18 @@ comment|/* 64-bit Extended General Purpose Event 1 Reg Blk address */
 name|ACPI_GENERIC_ADDRESS
 name|SleepControl
 decl_stmt|;
-comment|/* 64-bit Sleep Control register */
+comment|/* 64-bit Sleep Control register (ACPI 5.0) */
 name|ACPI_GENERIC_ADDRESS
 name|SleepStatus
 decl_stmt|;
-comment|/* 64-bit Sleep Status register */
+comment|/* 64-bit Sleep Status register (ACPI 5.0) */
 block|}
 name|ACPI_TABLE_FADT
 typedef|;
 end_typedef
 
 begin_comment
-comment|/* Masks for FADT Boot Architecture Flags (BootFlags) */
+comment|/* Masks for FADT Boot Architecture Flags (BootFlags) [Vx]=Introduced in this FADT revision */
 end_comment
 
 begin_define
@@ -860,7 +860,7 @@ value|(1)
 end_define
 
 begin_comment
-comment|/* 00: [V1] The wbinvd instruction works properly */
+comment|/* 00: [V1] The WBINVD instruction works properly */
 end_comment
 
 begin_define
@@ -871,7 +871,7 @@ value|(1<<1)
 end_define
 
 begin_comment
-comment|/* 01: [V1] wbinvd flushes but does not invalidate caches */
+comment|/* 01: [V1] WBINVD flushes but does not invalidate caches */
 end_comment
 
 begin_define
@@ -926,7 +926,7 @@ value|(1<<6)
 end_define
 
 begin_comment
-comment|/* 06: [V1] RTC wakeup status not in fixed register space */
+comment|/* 06: [V1] RTC wakeup status is not in fixed register space */
 end_comment
 
 begin_define
@@ -1095,12 +1095,12 @@ comment|/* 21: [V5] S0 power savings are equal or better than S3 (ACPI 5.0) */
 end_comment
 
 begin_comment
-comment|/* Values for PreferredProfile (Prefered Power Management Profiles) */
+comment|/* Values for PreferredProfile (Preferred Power Management Profiles) */
 end_comment
 
 begin_enum
 enum|enum
-name|AcpiPreferedPmProfiles
+name|AcpiPreferredPmProfiles
 block|{
 name|PM_UNSPECIFIED
 init|=
@@ -1227,7 +1227,7 @@ decl_stmt|;
 name|UINT32
 name|Length
 decl_stmt|;
-comment|/* Length fixed at 32 bits */
+comment|/* Length fixed at 32 bits (fixed in table header) */
 name|ACPI_NAME_UNION
 name|Signature
 decl_stmt|;

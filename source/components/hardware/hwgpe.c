@@ -77,7 +77,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiHwGetGpeRegisterBit  *  * PARAMETERS:  GpeEventInfo        - Info block for the GPE  *              GpeRegisterInfo     - Info block for the GPE register  *  * RETURN:      Register mask with a one in the GPE bit position  *  * DESCRIPTION: Compute the register mask for this GPE. One bit is set in the  *              correct position for the input GPE.  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiHwGetGpeRegisterBit  *  * PARAMETERS:  GpeEventInfo        - Info block for the GPE  *  * RETURN:      Register mask with a one in the GPE bit position  *  * DESCRIPTION: Compute the register mask for this GPE. One bit is set in the  *              correct position for the input GPE.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -87,10 +87,6 @@ parameter_list|(
 name|ACPI_GPE_EVENT_INFO
 modifier|*
 name|GpeEventInfo
-parameter_list|,
-name|ACPI_GPE_REGISTER_INFO
-modifier|*
-name|GpeRegisterInfo
 parameter_list|)
 block|{
 return|return
@@ -105,7 +101,9 @@ name|GpeEventInfo
 operator|->
 name|GpeNumber
 operator|-
-name|GpeRegisterInfo
+name|GpeEventInfo
+operator|->
+name|RegisterInfo
 operator|->
 name|BaseGpeNumber
 operator|)
@@ -199,8 +197,6 @@ operator|=
 name|AcpiHwGetGpeRegisterBit
 argument_list|(
 name|GpeEventInfo
-argument_list|,
-name|GpeRegisterInfo
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -343,8 +339,6 @@ operator|=
 name|AcpiHwGetGpeRegisterBit
 argument_list|(
 name|GpeEventInfo
-argument_list|,
-name|GpeRegisterInfo
 argument_list|)
 expr_stmt|;
 name|Status
@@ -430,8 +424,6 @@ operator|=
 name|AcpiHwGetGpeRegisterBit
 argument_list|(
 name|GpeEventInfo
-argument_list|,
-name|GpeRegisterInfo
 argument_list|)
 expr_stmt|;
 comment|/* GPE currently enabled? (enabled for runtime?) */

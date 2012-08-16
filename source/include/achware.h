@@ -202,9 +202,6 @@ name|AcpiHwLegacySleep
 parameter_list|(
 name|UINT8
 name|SleepState
-parameter_list|,
-name|UINT8
-name|Flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -215,9 +212,6 @@ name|AcpiHwLegacyWakePrep
 parameter_list|(
 name|UINT8
 name|SleepState
-parameter_list|,
-name|UINT8
-name|Flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -228,9 +222,6 @@ name|AcpiHwLegacyWake
 parameter_list|(
 name|UINT8
 name|SleepState
-parameter_list|,
-name|UINT8
-name|Flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -259,9 +250,6 @@ name|AcpiHwExtendedSleep
 parameter_list|(
 name|UINT8
 name|SleepState
-parameter_list|,
-name|UINT8
-name|Flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -272,9 +260,6 @@ name|AcpiHwExtendedWakePrep
 parameter_list|(
 name|UINT8
 name|SleepState
-parameter_list|,
-name|UINT8
-name|Flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -285,9 +270,6 @@ name|AcpiHwExtendedWake
 parameter_list|(
 name|UINT8
 name|SleepState
-parameter_list|,
-name|UINT8
-name|Flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -340,10 +322,6 @@ parameter_list|(
 name|ACPI_GPE_EVENT_INFO
 modifier|*
 name|GpeEventInfo
-parameter_list|,
-name|ACPI_GPE_REGISTER_INFO
-modifier|*
-name|GpeRegisterInfo
 parameter_list|)
 function_decl|;
 end_function_decl

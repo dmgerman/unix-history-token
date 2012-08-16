@@ -184,6 +184,13 @@ begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    UtDisplaySupportedTables  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Print all supported ACPI table names.  *  ******************************************************************************/
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ACPI_TABLE_HELP_FORMAT
+value|"%8u) %s    %s\n"
+end_define
+
 begin_function
 name|void
 name|UtDisplaySupportedTables
@@ -197,16 +204,11 @@ name|TableData
 decl_stmt|;
 name|UINT32
 name|i
-init|=
-literal|6
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"\nACPI tables supported by iASL subsystems in "
-literal|"version %8.8X:\n"
-literal|"  ASL and Data Table compilers\n"
-literal|"  AML and Data Table disassemblers\n"
-literal|"  ACPI table template generator\n\n"
+literal|"\nACPI tables supported by iASL version %8.8X:\n"
+literal|"  (Compiler, Disassembler, Template Generator)\n\n"
 argument_list|,
 name|ACPI_CA_VERSION
 argument_list|)
@@ -214,42 +216,25 @@ expr_stmt|;
 comment|/* Special tables */
 name|printf
 argument_list|(
-literal|"%8u) %s    %s\n"
+literal|"  Special tables and AML tables:\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+name|ACPI_TABLE_HELP_FORMAT
 argument_list|,
 literal|1
 argument_list|,
-name|ACPI_SIG_DSDT
+name|ACPI_RSDP_NAME
 argument_list|,
-literal|"Differentiated System Description Table"
+literal|"Root System Description Pointer"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%8u) %s    %s\n"
+name|ACPI_TABLE_HELP_FORMAT
 argument_list|,
 literal|2
-argument_list|,
-name|ACPI_SIG_SSDT
-argument_list|,
-literal|"Secondary System Description Table"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%8u) %s    %s\n"
-argument_list|,
-literal|3
-argument_list|,
-name|ACPI_SIG_FADT
-argument_list|,
-literal|"Fixed ACPI Description Table (FADT)"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%8u) %s    %s\n"
-argument_list|,
-literal|4
 argument_list|,
 name|ACPI_SIG_FACS
 argument_list|,
@@ -258,21 +243,41 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%8u) %s    %s\n"
+name|ACPI_TABLE_HELP_FORMAT
 argument_list|,
-literal|5
+literal|3
 argument_list|,
-name|ACPI_RSDP_NAME
+name|ACPI_SIG_DSDT
 argument_list|,
-literal|"Root System Description Pointer"
+literal|"Differentiated System Description Table"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+name|ACPI_TABLE_HELP_FORMAT
+argument_list|,
+literal|4
+argument_list|,
+name|ACPI_SIG_SSDT
+argument_list|,
+literal|"Secondary System Description Table"
 argument_list|)
 expr_stmt|;
 comment|/* All data tables with common table header */
+name|printf
+argument_list|(
+literal|"\n  Standard ACPI data tables:\n"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|TableData
 operator|=
 name|AcpiDmTableData
+operator|,
+name|i
+operator|=
+literal|5
 init|;
 name|TableData
 operator|->
@@ -280,11 +285,14 @@ name|Signature
 condition|;
 name|TableData
 operator|++
+operator|,
+name|i
+operator|++
 control|)
 block|{
 name|printf
 argument_list|(
-literal|"%8u) %s    %s\n"
+name|ACPI_TABLE_HELP_FORMAT
 argument_list|,
 name|i
 argument_list|,
@@ -296,9 +304,6 @@ name|TableData
 operator|->
 name|Name
 argument_list|)
-expr_stmt|;
-name|i
-operator|++
 expr_stmt|;
 block|}
 block|}
@@ -1302,18 +1307,6 @@ name|UINT32
 name|HighValue
 parameter_list|)
 block|{
-name|char
-modifier|*
-name|ParseError
-init|=
-name|NULL
-decl_stmt|;
-name|char
-name|Buffer
-index|[
-literal|64
-index|]
-decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -1326,6 +1319,7 @@ return|;
 block|}
 if|if
 condition|(
+operator|(
 name|Op
 operator|->
 name|Asl
@@ -1335,25 +1329,9 @@ operator|.
 name|Integer
 operator|<
 name|LowValue
-condition|)
-block|{
-name|ParseError
-operator|=
-literal|"Value below valid range"
-expr_stmt|;
-name|Op
-operator|->
-name|Asl
-operator|.
-name|Value
-operator|.
-name|Integer
-operator|=
-name|LowValue
-expr_stmt|;
-block|}
-if|if
-condition|(
+operator|)
+operator|||
+operator|(
 name|Op
 operator|->
 name|Asl
@@ -1363,12 +1341,18 @@ operator|.
 name|Integer
 operator|>
 name|HighValue
+operator|)
 condition|)
 block|{
-name|ParseError
-operator|=
-literal|"Value above valid range"
-expr_stmt|;
+name|sprintf
+argument_list|(
+name|MsgBuffer
+argument_list|,
+literal|"0x%X, allowable: 0x%X-0x%X"
+argument_list|,
+operator|(
+name|UINT32
+operator|)
 name|Op
 operator|->
 name|Asl
@@ -1376,39 +1360,33 @@ operator|.
 name|Value
 operator|.
 name|Integer
-operator|=
-name|HighValue
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|ParseError
-condition|)
-block|{
-name|sprintf
-argument_list|(
-name|Buffer
-argument_list|,
-literal|"%s 0x%X-0x%X"
-argument_list|,
-name|ParseError
 argument_list|,
 name|LowValue
 argument_list|,
 name|HighValue
 argument_list|)
 expr_stmt|;
-name|AslCompilererror
+name|AslError
 argument_list|(
-name|Buffer
+name|ASL_ERROR
+argument_list|,
+name|ASL_MSG_RANGE
+argument_list|,
+name|Op
+argument_list|,
+name|MsgBuffer
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 return|return
+operator|(
 name|Op
+operator|)
 return|;
 block|}
 end_function
