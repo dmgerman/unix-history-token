@@ -673,6 +673,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|G_PPOD_TAG
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> S_PPOD_TAG)& M_PPOD_TAG)
+end_define
+
+begin_define
+define|#
+directive|define
 name|S_PPOD_PGSZ
 value|30
 end_define
@@ -692,6 +702,16 @@ parameter_list|(
 name|x
 parameter_list|)
 value|((x)<< S_PPOD_PGSZ)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_PPOD_PGSZ
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> S_PPOD_PGSZ)& M_PPOD_PGSZ)
 end_define
 
 begin_define
