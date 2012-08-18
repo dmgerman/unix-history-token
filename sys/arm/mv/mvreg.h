@@ -2247,15 +2247,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|MV_DEV_88F6781
-value|0x6781
+name|MV_DEV_88F6282
+value|0x6282
 end_define
 
 begin_define
 define|#
 directive|define
-name|MV_DEV_88F6282
-value|0x6282
+name|MV_DEV_88F6781
+value|0x6781
 end_define
 
 begin_define
