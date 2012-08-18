@@ -656,7 +656,7 @@ name|daddr
 condition|)
 name|panic
 argument_list|(
-literal|"ufs_bmaparray: indirect block not in cache"
+literal|"ext2_bmaparray: indirect block not in cache"
 argument_list|)
 expr_stmt|;
 endif|#
