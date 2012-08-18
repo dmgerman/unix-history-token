@@ -16176,9 +16176,9 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|kern_psignal
+name|tdsignal
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|SIGSYS
 argument_list|)
