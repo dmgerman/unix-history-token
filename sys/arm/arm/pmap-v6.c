@@ -218,6 +218,24 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|DEBUG
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|last_fault_code
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|PMAP_DEBUG
 end_ifdef
 
@@ -4397,13 +4415,9 @@ operator|==
 literal|1
 condition|)
 block|{
-specifier|extern
-name|int
-name|last_fault_code
-decl_stmt|;
 name|printf
 argument_list|(
-literal|"fixup: pm %p, va 0x%lx, ftype %d - nothing to do!\n"
+literal|"fixup: pm %p, va 0x%08x, ftype %d - nothing to do!\n"
 argument_list|,
 name|pm
 argument_list|,
