@@ -810,6 +810,27 @@ end_struct
 
 begin_struct
 struct|struct
+name|ath_desc_txedma
+block|{
+name|uint32_t
+name|ds_info
+decl_stmt|;
+name|uint32_t
+name|ds_link
+decl_stmt|;
+name|uint32_t
+name|ds_hw
+index|[
+literal|21
+index|]
+decl_stmt|;
+comment|/* includes buf/len */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|ath_desc_status
 block|{
 union|union
