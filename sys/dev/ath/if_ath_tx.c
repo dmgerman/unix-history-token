@@ -1220,6 +1220,11 @@ name|numTxMaps
 init|=
 literal|1
 decl_stmt|;
+name|int
+name|isFirstDesc
+init|=
+literal|1
+decl_stmt|;
 comment|/* 	 * XXX There's txdma and txdma_mgmt; the descriptor 	 * sizes must match. 	 */
 name|struct
 name|ath_descdma
@@ -1420,9 +1425,7 @@ operator|->
 name|axq_qnum
 comment|/* XXX multicast? */
 argument_list|,
-name|i
-operator|==
-literal|0
+name|isFirstDesc
 comment|/* first segment */
 argument_list|,
 name|i
@@ -1437,6 +1440,10 @@ argument_list|,
 name|ds0
 comment|/* first descriptor */
 argument_list|)
+expr_stmt|;
+name|isFirstDesc
+operator|=
+literal|0
 expr_stmt|;
 name|DPRINTF
 argument_list|(
