@@ -157,6 +157,16 @@ modifier|*
 specifier|const
 name|TheDef
 decl_stmt|;
+name|std
+operator|::
+name|string
+name|Name
+expr_stmt|;
+name|std
+operator|::
+name|string
+name|Namespace
+expr_stmt|;
 name|public
 label|:
 specifier|const
@@ -170,6 +180,15 @@ argument_list|,
 argument|unsigned Enum
 argument_list|)
 empty_stmt|;
+name|CodeGenSubRegIndex
+argument_list|(
+argument|StringRef N
+argument_list|,
+argument|StringRef Nspace
+argument_list|,
+argument|unsigned Enum
+argument_list|)
+empty_stmt|;
 specifier|const
 name|std
 operator|::
@@ -178,14 +197,24 @@ operator|&
 name|getName
 argument_list|()
 specifier|const
-expr_stmt|;
+block|{
+return|return
+name|Name
+return|;
+block|}
+specifier|const
 name|std
 operator|::
 name|string
+operator|&
 name|getNamespace
 argument_list|()
 specifier|const
-expr_stmt|;
+block|{
+return|return
+name|Namespace
+return|;
+block|}
 name|std
 operator|::
 name|string
@@ -1612,10 +1641,6 @@ begin_decl_stmt
 name|class
 name|CodeGenRegBank
 block|{
-name|RecordKeeper
-modifier|&
-name|Records
-decl_stmt|;
 name|SetTheory
 name|Sets
 decl_stmt|;
@@ -1639,9 +1664,17 @@ operator|*
 operator|>
 name|Def2SubRegIdx
 expr_stmt|;
-name|unsigned
-name|NumNamedIndices
-decl_stmt|;
+name|CodeGenSubRegIndex
+modifier|*
+name|createSubRegIndex
+parameter_list|(
+name|StringRef
+name|Name
+parameter_list|,
+name|StringRef
+name|NameSpace
+parameter_list|)
+function_decl|;
 typedef|typedef
 name|std
 operator|::
@@ -1881,14 +1914,6 @@ argument_list|()
 block|{
 return|return
 name|SubRegIndices
-return|;
-block|}
-name|unsigned
-name|getNumNamedIndices
-parameter_list|()
-block|{
-return|return
-name|NumNamedIndices
 return|;
 block|}
 comment|// Find a SubRegIndex form its Record def.

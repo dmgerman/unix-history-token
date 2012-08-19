@@ -676,6 +676,33 @@ argument|const MachineRegisterInfo *MRI
 argument_list|)
 specifier|const
 block|;
+name|virtual
+name|bool
+name|analyzeSelect
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|SmallVectorImpl<MachineOperand>&Cond
+argument_list|,
+argument|unsigned&TrueOp
+argument_list|,
+argument|unsigned&FalseOp
+argument_list|,
+argument|bool&Optimizable
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|MachineInstr
+operator|*
+name|optimizeSelect
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|bool
+argument_list|)
+specifier|const
+block|;
 comment|/// FoldImmediate - 'Reg' is known to be defined by a move immediate
 comment|/// instruction, try to fold the immediate into the use instruction.
 name|virtual
@@ -1247,6 +1274,18 @@ name|int
 name|getMatchingCondBranchOpcode
 argument_list|(
 argument|int Opc
+argument_list|)
+block|;
+comment|/// Determine if MI can be folded into an ARM MOVCC instruction, and return the
+comment|/// opcode of the SSA instruction representing the conditional MI.
+name|unsigned
+name|canFoldARMInstrIntoMOVCC
+argument_list|(
+argument|unsigned Reg
+argument_list|,
+argument|MachineInstr *&MI
+argument_list|,
+argument|const MachineRegisterInfo&MRI
 argument_list|)
 block|;
 comment|/// Map pseudo instructions that imply an 'S' bit onto real opcodes. Whether

@@ -3735,8 +3735,7 @@ comment|/// a large bucket. This union will be discriminated by the 'Small' bit.
 end_comment
 
 begin_expr_stmt
-name|typename
-name|AlignedCharArray
+name|AlignedCharArrayUnion
 operator|<
 name|BucketT
 index|[
@@ -3745,8 +3744,6 @@ index|]
 operator|,
 name|LargeRep
 operator|>
-operator|::
-name|union_type
 name|storage
 expr_stmt|;
 end_expr_stmt
@@ -4653,16 +4650,13 @@ condition|)
 return|return;
 comment|// Nothing to do.
 comment|// First move the inline buckets into a temporary storage.
-name|typename
-name|AlignedCharArray
+name|AlignedCharArrayUnion
 operator|<
 name|BucketT
 index|[
 name|InlineBuckets
 index|]
 operator|>
-operator|::
-name|union_type
 name|TmpStorage
 expr_stmt|;
 name|BucketT

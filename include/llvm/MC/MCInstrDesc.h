@@ -249,6 +249,8 @@ name|MoveImm
 block|,
 name|Bitcast
 block|,
+name|Select
+block|,
 name|DelaySlot
 block|,
 name|FoldableAsLoad
@@ -753,6 +755,25 @@ operator|<<
 name|MCID
 operator|::
 name|Bitcast
+operator|)
+return|;
+block|}
+comment|/// isSelect - Return true if this is a select instruction.
+comment|///
+name|bool
+name|isSelect
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Flags
+operator|&
+operator|(
+literal|1
+operator|<<
+name|MCID
+operator|::
+name|Select
 operator|)
 return|;
 block|}

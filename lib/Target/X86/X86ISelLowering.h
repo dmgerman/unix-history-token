@@ -342,6 +342,9 @@ block|,
 comment|// VSEXT_MOVL - Vector move low and sign extend.
 name|VSEXT_MOVL
 block|,
+comment|// VFPEXT - Vector FP extend.
+name|VFPEXT
+block|,
 comment|// VSHL, VSRL - 128-bit vector logical left / right shift
 name|VSHLDQ
 block|,
@@ -2204,6 +2207,15 @@ argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|;
+name|SDValue
+name|LowerVectorFpExtend
+argument_list|(
+argument|SDValue&Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
 name|virtual
 name|SDValue
 name|LowerFormalArguments
@@ -2297,19 +2309,6 @@ argument_list|,
 argument|const SmallVectorImpl<ISD::OutputArg>&Outs
 argument_list|,
 argument|LLVMContext&Context
-argument_list|)
-specifier|const
-block|;
-name|void
-name|ReplaceATOMIC_BINARY_64
-argument_list|(
-argument|SDNode *N
-argument_list|,
-argument|SmallVectorImpl<SDValue>&Results
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|,
-argument|unsigned NewOp
 argument_list|)
 specifier|const
 block|;

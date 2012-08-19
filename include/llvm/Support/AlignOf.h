@@ -415,8 +415,8 @@ comment|// Any larger and MSVC complains.
 undef|#
 directive|undef
 name|LLVM_ALIGNEDCHARARRAY_TEMPLATE_ALIGNMENT
-comment|/// \brief This class template exposes a typedef for type containing a suitable
-comment|/// aligned character array to hold elements of any of up to four types.
+comment|/// \brief This union template exposes a suitably aligned and sized character
+comment|/// array member which can hold elements of any of up to four types.
 comment|///
 comment|/// These types may be arrays, structs, or any other types. The goal is to
 comment|/// produce a union type containing a character array which, when used, forms
@@ -442,9 +442,11 @@ name|T4
 operator|=
 name|char
 operator|>
-name|class
-name|AlignedCharArray
+expr|union
+name|AlignedCharArrayUnion
 block|{
+name|private
+operator|:
 name|class
 name|AlignerImpl
 block|{
@@ -505,17 +507,10 @@ block|;   }
 block|;
 name|public
 operator|:
-comment|// Sadly, Clang and GCC both fail to align a character array properly even
-comment|// with an explicit alignment attribute. To work around this, we union
-comment|// the character array that will actually be used with a struct that contains
-comment|// a single aligned character member. Tests seem to indicate that both Clang
-comment|// and GCC will properly register the alignment of a struct containing an
-comment|// aligned member, and this alignment should carry over to the character
-comment|// array in the union.
-expr|union
-name|union_type
-block|{
-comment|// This is the only member of the union which should be used by clients:
+comment|/// \brief The character array buffer for use by clients.
+comment|///
+comment|/// No other member of this union should be referenced. The exist purely to
+comment|/// constrain the layout of this character array.
 name|char
 name|buffer
 index|[
@@ -525,7 +520,13 @@ name|SizerImpl
 argument_list|)
 index|]
 block|;
-comment|// This member of the union only exists to force the alignment.
+comment|// Sadly, Clang and GCC both fail to align a character array properly even
+comment|// with an explicit alignment attribute. To work around this, we union
+comment|// the character array that will actually be used with a struct that contains
+comment|// a single aligned character member. Tests seem to indicate that both Clang
+comment|// and GCC will properly register the alignment of a struct containing an
+comment|// aligned member, and this alignment should carry over to the character
+comment|// array in the union.
 block|struct
 block|{
 name|typename
@@ -543,9 +544,8 @@ operator|>
 operator|::
 name|type
 name|nonce_inner_member
-block|;     }
-name|nonce_member
 block|;   }
+name|nonce_member
 block|; }
 expr_stmt|;
 block|}

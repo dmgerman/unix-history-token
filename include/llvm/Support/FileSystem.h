@@ -120,6 +120,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/OwningPtr.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallString.h"
 end_include
 
@@ -1696,6 +1702,190 @@ operator|&
 name|result
 argument_list|)
 decl_stmt|;
+comment|/// This class represents a memory mapped file. It is based on
+comment|/// boost::iostreams::mapped_file.
+name|class
+name|mapped_file_region
+block|{
+name|mapped_file_region
+argument_list|()
+name|LLVM_DELETED_FUNCTION
+expr_stmt|;
+name|mapped_file_region
+argument_list|(
+argument|mapped_file_region&
+argument_list|)
+name|LLVM_DELETED_FUNCTION
+expr_stmt|;
+name|mapped_file_region
+modifier|&
+name|operator
+init|=
+operator|(
+name|mapped_file_region
+operator|&
+operator|)
+name|LLVM_DELETED_FUNCTION
+decl_stmt|;
+name|public
+label|:
+enum|enum
+name|mapmode
+block|{
+name|readonly
+block|,
+comment|//< May only access map via const_data as read only.
+name|readwrite
+block|,
+comment|//< May access map via data and modify it. Written to path.
+name|priv
+comment|//< May modify via data, but changes are lost on destruction.
+block|}
+enum|;
+name|private
+label|:
+comment|/// Platform specific mapping state.
+name|mapmode
+name|Mode
+decl_stmt|;
+name|uint64_t
+name|Size
+decl_stmt|;
+name|void
+modifier|*
+name|Mapping
+decl_stmt|;
+if|#
+directive|if
+name|LLVM_ON_WIN32
+name|int
+name|FileDescriptor
+decl_stmt|;
+name|void
+modifier|*
+name|FileHandle
+decl_stmt|;
+name|void
+modifier|*
+name|FileMappingHandle
+decl_stmt|;
+endif|#
+directive|endif
+name|error_code
+name|init
+parameter_list|(
+name|int
+name|FD
+parameter_list|,
+name|uint64_t
+name|Offset
+parameter_list|)
+function_decl|;
+name|public
+label|:
+typedef|typedef
+name|char
+name|char_type
+typedef|;
+if|#
+directive|if
+name|LLVM_USE_RVALUE_REFERENCES
+name|mapped_file_region
+argument_list|(
+name|mapped_file_region
+operator|&&
+argument_list|)
+expr_stmt|;
+name|mapped_file_region
+modifier|&
+name|operator
+init|=
+operator|(
+name|mapped_file_region
+operator|&&
+operator|)
+decl_stmt|;
+endif|#
+directive|endif
+comment|/// Construct a mapped_file_region at \a path starting at \a offset of length
+comment|/// \a length and with access \a mode.
+comment|///
+comment|/// \param path Path to the file to map. If it does not exist it will be
+comment|///             created.
+comment|/// \param mode How to map the memory.
+comment|/// \param length Number of bytes to map in starting at \a offset. If the file
+comment|///               is shorter than this, it will be extended. If \a length is
+comment|///               0, the entire file will be mapped.
+comment|/// \param offset Byte offset from the beginning of the file where the map
+comment|///               should begin. Must be a multiple of
+comment|///               mapped_file_region::alignment().
+comment|/// \param ec This is set to errc::success if the map was constructed
+comment|///           sucessfully. Otherwise it is set to a platform dependent error.
+name|mapped_file_region
+argument_list|(
+argument|const Twine&path
+argument_list|,
+argument|mapmode mode
+argument_list|,
+argument|uint64_t length
+argument_list|,
+argument|uint64_t offset
+argument_list|,
+argument|error_code&ec
+argument_list|)
+empty_stmt|;
+comment|/// \param fd An open file descriptor to map. mapped_file_region takes
+comment|///           ownership. It must have been opended in the correct mode.
+name|mapped_file_region
+argument_list|(
+argument|int fd
+argument_list|,
+argument|mapmode mode
+argument_list|,
+argument|uint64_t length
+argument_list|,
+argument|uint64_t offset
+argument_list|,
+argument|error_code&ec
+argument_list|)
+empty_stmt|;
+operator|~
+name|mapped_file_region
+argument_list|()
+expr_stmt|;
+name|mapmode
+name|flags
+argument_list|()
+specifier|const
+expr_stmt|;
+name|uint64_t
+name|size
+argument_list|()
+specifier|const
+expr_stmt|;
+name|char
+operator|*
+name|data
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// Get a const view of the data. Modifying this memory has undefined
+comment|/// behaivor.
+specifier|const
+name|char
+operator|*
+name|const_data
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \returns The minimum alignment offset must be.
+specifier|static
+name|int
+name|alignment
+parameter_list|()
+function_decl|;
+block|}
+empty_stmt|;
 comment|/// @brief Memory maps the contents of a file
 comment|///
 comment|/// @param path Path to file to map.

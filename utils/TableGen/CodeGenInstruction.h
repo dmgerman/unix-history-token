@@ -860,6 +860,9 @@ name|bool
 name|isBitcast
 decl_stmt|;
 name|bool
+name|isSelect
+decl_stmt|;
+name|bool
 name|isBarrier
 decl_stmt|;
 name|bool

@@ -175,8 +175,7 @@ name|MachineTypes
 block|{
 name|MT_Invalid
 init|=
-operator|-
-literal|1
+literal|0xffff
 block|,
 name|IMAGE_FILE_MACHINE_UNKNOWN
 init|=
@@ -425,8 +424,7 @@ name|SymbolStorageClass
 block|{
 name|SSC_Invalid
 init|=
-operator|-
-literal|1
+literal|0xff
 block|,
 name|IMAGE_SYM_CLASS_END_OF_FUNCTION
 init|=
@@ -721,8 +719,7 @@ name|SectionCharacteristics
 block|{
 name|SC_Invalid
 init|=
-operator|-
-literal|1
+literal|0xffffffff
 block|,
 name|IMAGE_SCN_TYPE_NO_PAD
 init|=

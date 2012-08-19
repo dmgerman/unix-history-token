@@ -367,6 +367,14 @@ modifier|*
 name|BB
 parameter_list|)
 function_decl|;
+name|bool
+name|calcInvokeHeuristics
+parameter_list|(
+name|BasicBlock
+modifier|*
+name|BB
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

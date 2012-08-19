@@ -901,6 +901,86 @@ argument_list|(
 literal|"Target didn't implement TargetInstrInfo::insertSelect!"
 argument_list|)
 block|;   }
+comment|/// analyzeSelect - Analyze the given select instruction, returning true if
+comment|/// it cannot be understood. It is assumed that MI->isSelect() is true.
+comment|///
+comment|/// When successful, return the controlling condition and the operands that
+comment|/// determine the true and false result values.
+comment|///
+comment|///   Result = SELECT Cond, TrueOp, FalseOp
+comment|///
+comment|/// Some targets can optimize select instructions, for example by predicating
+comment|/// the instruction defining one of the operands. Such targets should set
+comment|/// Optimizable.
+comment|///
+comment|/// @param         MI Select instruction to analyze.
+comment|/// @param Cond    Condition controlling the select.
+comment|/// @param TrueOp  Operand number of the value selected when Cond is true.
+comment|/// @param FalseOp Operand number of the value selected when Cond is false.
+comment|/// @param Optimizable Returned as true if MI is optimizable.
+comment|/// @returns False on success.
+name|virtual
+name|bool
+name|analyzeSelect
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|SmallVectorImpl<MachineOperand>&Cond
+argument_list|,
+argument|unsigned&TrueOp
+argument_list|,
+argument|unsigned&FalseOp
+argument_list|,
+argument|bool&Optimizable
+argument_list|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|MI
+operator|&&
+name|MI
+operator|->
+name|isSelect
+argument_list|()
+operator|&&
+literal|"MI must be a select instruction"
+argument_list|)
+block|;
+return|return
+name|true
+return|;
+block|}
+comment|/// optimizeSelect - Given a select instruction that was understood by
+comment|/// analyzeSelect and returned Optimizable = true, attempt to optimize MI by
+comment|/// merging it with one of its operands. Returns NULL on failure.
+comment|///
+comment|/// When successful, returns the new select instruction. The client is
+comment|/// responsible for deleting MI.
+comment|///
+comment|/// If both sides of the select can be optimized, PreferFalse is used to pick
+comment|/// a side.
+comment|///
+comment|/// @param MI          Optimizable select instruction.
+comment|/// @param PreferFalse Try to optimize FalseOp instead of TrueOp.
+comment|/// @returns Optimized instruction or NULL.
+name|virtual
+name|MachineInstr
+operator|*
+name|optimizeSelect
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|bool PreferFalse = false
+argument_list|)
+specifier|const
+block|{
+comment|// This function must be implemented if Optimizable is ever set.
+name|llvm_unreachable
+argument_list|(
+literal|"Target must implement TargetInstrInfo::optimizeSelect!"
+argument_list|)
+block|;   }
 comment|/// copyPhysReg - Emit instructions to copy a pair of physical registers.
 name|virtual
 name|void

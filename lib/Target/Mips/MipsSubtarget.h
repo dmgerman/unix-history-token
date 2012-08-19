@@ -202,6 +202,10 @@ comment|// InMips16 -- can process Mips16 instructions
 name|bool
 name|InMips16Mode
 block|;
+comment|// IsAndroid -- target is android
+name|bool
+name|IsAndroid
+block|;
 name|InstrItineraryData
 name|InstrItins
 block|;
@@ -429,6 +433,15 @@ specifier|const
 block|{
 return|return
 name|InMips16Mode
+return|;
+block|}
+name|bool
+name|isAndroid
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsAndroid
 return|;
 block|}
 name|bool

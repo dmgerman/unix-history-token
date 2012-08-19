@@ -1338,6 +1338,29 @@ name|Type
 argument_list|)
 return|;
 block|}
+comment|/// isSelect - Return true if this instruction is a select instruction.
+comment|///
+name|bool
+name|isSelect
+argument_list|(
+name|QueryType
+name|Type
+operator|=
+name|IgnoreBundle
+argument_list|)
+decl|const
+block|{
+return|return
+name|hasProperty
+argument_list|(
+name|MCID
+operator|::
+name|Select
+argument_list|,
+name|Type
+argument_list|)
+return|;
+block|}
 comment|/// isNotDuplicable - Return true if this instruction cannot be safely
 comment|/// duplicated.  For example, if the instruction has a unique labels attached
 comment|/// to it, duplicating it would cause multiple definition errors.
