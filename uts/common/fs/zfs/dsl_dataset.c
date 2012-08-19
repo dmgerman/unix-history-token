@@ -20507,6 +20507,26 @@ name|tx
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|spa_history_log_internal_ds
+argument_list|(
+name|ds
+argument_list|,
+literal|"release"
+argument_list|,
+name|tx
+argument_list|,
+literal|"tag = %s refs now = %lld"
+argument_list|,
+name|ra
+operator|->
+name|htag
+argument_list|,
+operator|(
+name|longlong_t
+operator|)
+name|refs
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ds
@@ -20568,26 +20588,6 @@ name|tx
 argument_list|)
 expr_stmt|;
 block|}
-name|spa_history_log_internal_ds
-argument_list|(
-name|ds
-argument_list|,
-literal|"release"
-argument_list|,
-name|tx
-argument_list|,
-literal|"tag = %s refs now = %lld"
-argument_list|,
-name|ra
-operator|->
-name|htag
-argument_list|,
-operator|(
-name|longlong_t
-operator|)
-name|refs
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

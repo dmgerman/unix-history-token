@@ -1904,7 +1904,14 @@ name|tx_txg
 operator|==
 name|TXG_INITIAL
 condition|)
+block|{
+name|fnvlist_free
+argument_list|(
+name|nvl
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 name|msg
 operator|=
 name|kmem_alloc
