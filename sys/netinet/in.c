@@ -2545,6 +2545,15 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+name|ifa_free
+argument_list|(
+operator|&
+name|ia
+operator|->
+name|ia_ifa
+argument_list|)
+expr_stmt|;
+comment|/* if_addrhead */
 name|IN_IFADDR_WLOCK
 argument_list|()
 expr_stmt|;
@@ -2641,15 +2650,6 @@ operator|->
 name|ia_ifa
 argument_list|)
 expr_stmt|;
-name|ifa_free
-argument_list|(
-operator|&
-name|ia
-operator|->
-name|ia_ifa
-argument_list|)
-expr_stmt|;
-comment|/* if_addrhead */
 name|ifa_free
 argument_list|(
 operator|&
