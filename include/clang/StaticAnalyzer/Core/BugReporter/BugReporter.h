@@ -310,18 +310,38 @@ operator|*
 operator|>
 name|Regions
 expr_stmt|;
-comment|/// A set of symbols that are registered with this report as being
-comment|/// "interesting", and thus used to help decide which diagnostics
-comment|/// to include when constructing the final path diagnostic.
+comment|/// A (stack of) a set of symbols that are registered with this
+comment|/// report as being "interesting", and thus used to help decide which
+comment|/// diagnostics to include when constructing the final path diagnostic.
+comment|/// The stack is largely used by BugReporter when generating PathDiagnostics
+comment|/// for multiple PathDiagnosticConsumers.
+name|llvm
+operator|::
+name|SmallVector
+operator|<
 name|Symbols
+operator|*
+operator|,
+literal|2
+operator|>
 name|interestingSymbols
-decl_stmt|;
-comment|/// A set of regions that are registered with this report as being
+expr_stmt|;
+comment|/// A (stack of) set of regions that are registered with this report as being
 comment|/// "interesting", and thus used to help decide which diagnostics
 comment|/// to include when constructing the final path diagnostic.
+comment|/// The stack is largely used by BugReporter when generating PathDiagnostics
+comment|/// for multiple PathDiagnosticConsumers.
+name|llvm
+operator|::
+name|SmallVector
+operator|<
 name|Regions
+operator|*
+operator|,
+literal|2
+operator|>
 name|interestingRegions
-decl_stmt|;
+expr_stmt|;
 comment|/// A set of custom visitors which generate "event" diagnostics at
 comment|/// interesting points in the path.
 name|VisitorList
@@ -347,6 +367,31 @@ comment|/// when reporting an issue.
 name|bool
 name|DoNotPrunePath
 decl_stmt|;
+name|private
+label|:
+comment|// Used internally by BugReporter.
+name|Symbols
+modifier|&
+name|getInterestingSymbols
+parameter_list|()
+function_decl|;
+name|Regions
+modifier|&
+name|getInterestingRegions
+parameter_list|()
+function_decl|;
+name|void
+name|lazyInitializeInterestingSets
+parameter_list|()
+function_decl|;
+name|void
+name|pushInterestingSymbolsAndRegions
+parameter_list|()
+function_decl|;
+name|void
+name|popInterestingSymbolsAndRegions
+parameter_list|()
+function_decl|;
 name|public
 label|:
 name|BugReport
@@ -636,30 +681,27 @@ parameter_list|)
 function_decl|;
 name|bool
 name|isInteresting
-argument_list|(
+parameter_list|(
 name|SymbolRef
 name|sym
-argument_list|)
-decl|const
-decl_stmt|;
+parameter_list|)
+function_decl|;
 name|bool
 name|isInteresting
-argument_list|(
+parameter_list|(
 specifier|const
 name|MemRegion
-operator|*
+modifier|*
 name|R
-argument_list|)
-decl|const
-decl_stmt|;
+parameter_list|)
+function_decl|;
 name|bool
 name|isInteresting
-argument_list|(
+parameter_list|(
 name|SVal
 name|V
-argument_list|)
-decl|const
-decl_stmt|;
+parameter_list|)
+function_decl|;
 name|unsigned
 name|getConfigurationChangeToken
 argument_list|()
@@ -1164,13 +1206,16 @@ init|=
 literal|0
 function_decl|;
 name|virtual
+name|ArrayRef
+operator|<
 name|PathDiagnosticConsumer
-modifier|*
-name|getPathDiagnosticConsumer
-parameter_list|()
-init|=
+operator|*
+operator|>
+name|getPathDiagnosticConsumers
+argument_list|()
+operator|=
 literal|0
-function_decl|;
+expr_stmt|;
 name|virtual
 name|ASTContext
 modifier|&
@@ -1242,6 +1287,27 @@ modifier|&
 name|EQ
 parameter_list|)
 function_decl|;
+comment|/// Generate and flush the diagnostics for the given bug report
+comment|/// and PathDiagnosticConsumer.
+name|void
+name|FlushReport
+argument_list|(
+name|BugReport
+operator|*
+name|exampleReport
+argument_list|,
+name|PathDiagnosticConsumer
+operator|&
+name|PD
+argument_list|,
+name|ArrayRef
+operator|<
+name|BugReport
+operator|*
+operator|>
+name|BugReports
+argument_list|)
+decl_stmt|;
 comment|/// The set of bug reports tracked by the BugReporter.
 name|llvm
 operator|::
@@ -1346,15 +1412,18 @@ name|getDiagnostic
 argument_list|()
 return|;
 block|}
+name|ArrayRef
+operator|<
 name|PathDiagnosticConsumer
-modifier|*
-name|getPathDiagnosticConsumer
-parameter_list|()
+operator|*
+operator|>
+name|getPathDiagnosticConsumers
+argument_list|()
 block|{
 return|return
 name|D
 operator|.
-name|getPathDiagnosticConsumer
+name|getPathDiagnosticConsumers
 argument_list|()
 return|;
 block|}
@@ -1453,7 +1522,11 @@ name|PathDiagnostic
 operator|&
 name|pathDiagnostic
 argument_list|,
-name|SmallVectorImpl
+name|PathDiagnosticConsumer
+operator|&
+name|PC
+argument_list|,
+name|ArrayRef
 operator|<
 name|BugReport
 operator|*
@@ -1707,7 +1780,11 @@ name|PathDiagnostic
 operator|&
 name|pathDiagnostic
 argument_list|,
-name|SmallVectorImpl
+name|PathDiagnosticConsumer
+operator|&
+name|PC
+argument_list|,
+name|ArrayRef
 operator|<
 name|BugReport
 operator|*

@@ -26,7 +26,7 @@ argument_list|(
 name|p
 argument_list|)
 return|;
-comment|// expected-warning{{The code calls sizeof() on a pointer type. This can produce an unexpected result.}}
+comment|// expected-warning{{The code calls sizeof() on a pointer type. This can produce an unexpected result}}
 block|}
 end_function
 

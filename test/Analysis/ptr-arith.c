@@ -186,7 +186,7 @@ operator|-
 operator|&
 name|x
 decl_stmt|;
-comment|// expected-warning{{Subtraction of two pointers that do not point to the same memory chunk may cause incorrect result.}}
+comment|// expected-warning{{Subtraction of two pointers that do not point to the same memory chunk may cause incorrect result}}
 name|int
 name|a
 index|[
@@ -240,7 +240,7 @@ operator|*
 operator|)
 literal|0x10000
 expr_stmt|;
-comment|// expected-warning{{Using a fixed address is not portable because that address will probably not be valid in all environments or platforms.}}
+comment|// expected-warning{{Using a fixed address is not portable because that address will probably not be valid in all environments or platforms}}
 block|}
 end_function
 
@@ -265,7 +265,7 @@ name|x
 operator|+
 literal|1
 expr_stmt|;
-comment|// expected-warning{{Pointer arithmetic done on non-array variables means reliance on memory layout, which is dangerous.}}
+comment|// expected-warning{{Pointer arithmetic done on non-array variables means reliance on memory layout, which is dangerous}}
 name|int
 name|a
 index|[

@@ -197,7 +197,7 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{Stream pointer might be NULL.}}
+comment|// expected-warning {{Stream pointer might be NULL}}
 name|fclose
 argument_list|(
 name|p
@@ -233,7 +233,7 @@ argument_list|,
 name|SEEK_SET
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{Stream pointer might be NULL.}}
+comment|// expected-warning {{Stream pointer might be NULL}}
 name|fclose
 argument_list|(
 name|p
@@ -265,7 +265,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{Stream pointer might be NULL.}}
+comment|// expected-warning {{Stream pointer might be NULL}}
 name|fclose
 argument_list|(
 name|p
@@ -297,7 +297,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{Stream pointer might be NULL.}}
+comment|// expected-warning {{Stream pointer might be NULL}}
 name|fclose
 argument_list|(
 name|p
@@ -349,7 +349,7 @@ argument_list|,
 literal|3
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{The whence argument to fseek() should be SEEK_SET, SEEK_END, or SEEK_CUR.}}
+comment|// expected-warning {{The whence argument to fseek() should be SEEK_SET, SEEK_END, or SEEK_CUR}}
 name|fclose
 argument_list|(
 name|p
@@ -386,7 +386,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{Try to close a file Descriptor already closed. Cause undefined behaviour.}}
+comment|// expected-warning {{Try to close a file Descriptor already closed. Cause undefined behaviour}}
 block|}
 end_function
 
@@ -409,7 +409,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{Stream pointer might be NULL.}}
+comment|// expected-warning {{Stream pointer might be NULL}}
 name|fclose
 argument_list|(
 name|p
@@ -442,7 +442,7 @@ condition|(
 name|c
 condition|)
 return|return;
-comment|// expected-warning {{Opened File never closed. Potential Resource leak.}}
+comment|// expected-warning {{Opened File never closed. Potential Resource leak}}
 name|fclose
 argument_list|(
 name|p

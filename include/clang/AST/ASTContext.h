@@ -1596,6 +1596,32 @@ name|RC
 argument_list|)
 expr_stmt|;
 block|}
+specifier|const
+name|Decl
+operator|*
+name|getOriginalDecl
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|OriginalDecl
+return|;
+block|}
+name|void
+name|setOriginalDecl
+parameter_list|(
+specifier|const
+name|Decl
+modifier|*
+name|Orig
+parameter_list|)
+block|{
+name|OriginalDecl
+operator|=
+name|Orig
+expr_stmt|;
+block|}
 name|private
 label|:
 name|llvm
@@ -1612,6 +1638,11 @@ name|Kind
 operator|>
 name|Data
 expr_stmt|;
+specifier|const
+name|Decl
+modifier|*
+name|OriginalDecl
+decl_stmt|;
 block|}
 empty_stmt|;
 comment|/// \brief Mapping from declarations to comments attached to any
@@ -1631,6 +1662,24 @@ operator|,
 name|RawCommentAndCacheFlags
 operator|>
 name|RedeclComments
+expr_stmt|;
+comment|/// \brief Mapping from declarations to parsed comments attached to any
+comment|/// redeclaration.
+name|mutable
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|Decl
+operator|*
+operator|,
+name|comments
+operator|::
+name|FullComment
+operator|*
+operator|>
+name|ParsedComments
 expr_stmt|;
 comment|/// \brief Return the documentation comment attached to a given declaration,
 comment|/// without looking into cache.
@@ -1677,6 +1726,9 @@ expr_stmt|;
 block|}
 comment|/// \brief Return the documentation comment attached to a given declaration.
 comment|/// Returns NULL if no comment is attached.
+comment|///
+comment|/// \param OriginalDecl if not NULL, is set to declaration AST node that had
+comment|/// the comment, if the comment we found comes from a redeclaration.
 specifier|const
 name|RawComment
 modifier|*
@@ -1686,6 +1738,14 @@ specifier|const
 name|Decl
 operator|*
 name|D
+argument_list|,
+specifier|const
+name|Decl
+operator|*
+operator|*
+name|OriginalDecl
+operator|=
+name|NULL
 argument_list|)
 decl|const
 decl_stmt|;

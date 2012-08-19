@@ -20,7 +20,7 @@ comment|// RUN:   -Wl,two,--no-demangle,three -Xlinker four %s 2> %t
 end_comment
 
 begin_comment
-comment|// RUN: FileCheck< %t %s
+comment|// RUN: FileCheck -check-prefix=DARWIN< %t %s
 end_comment
 
 begin_comment
@@ -28,7 +28,35 @@ comment|//
 end_comment
 
 begin_comment
-comment|// CHECK: "one" "two" "three" "four"
+comment|// RUN: %clang -target x86_64-pc-linux-gnu -### \
+end_comment
+
+begin_comment
+comment|// RUN:   -Xlinker one -Xlinker --no-demangle \
+end_comment
+
+begin_comment
+comment|// RUN:   -Wl,two,--no-demangle,three -Xlinker four %s 2> %t
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=LINUX< %t %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// DARWIN-NOT: --no-demangle
+end_comment
+
+begin_comment
+comment|// DARWIN: "one" "two" "three" "four"
+end_comment
+
+begin_comment
+comment|// LINUX: "--no-demangle" "one" "two" "three" "four"
 end_comment
 
 end_unit

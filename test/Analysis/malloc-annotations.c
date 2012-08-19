@@ -1124,7 +1124,7 @@ argument_list|(
 literal|11
 argument_list|)
 decl_stmt|;
-comment|// expected-warning{{Cast a region whose size is not a multiple of the destination type size.}}
+comment|// expected-warning{{Cast a region whose size is not a multiple of the destination type size}}
 block|}
 end_function
 
@@ -1142,7 +1142,7 @@ argument_list|(
 literal|2
 argument_list|)
 decl_stmt|;
-comment|// expected-warning{{Cast a region whose size is not a multiple of the destination type size.}}
+comment|// expected-warning{{Cast a region whose size is not a multiple of the destination type size}}
 name|buf
 index|[
 literal|1

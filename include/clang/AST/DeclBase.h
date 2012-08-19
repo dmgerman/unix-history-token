@@ -3400,23 +3400,20 @@ name|void
 name|dump
 argument_list|()
 specifier|const
-block|{
-name|dump
-argument_list|(
-name|llvm
-operator|::
-name|errs
-argument_list|()
-argument_list|)
-block|; }
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 name|void
 name|dump
 argument_list|(
-argument|raw_ostream&Out
+name|raw_ostream
+operator|&
+name|Out
 argument_list|)
-specifier|const
-expr_stmt|;
-end_expr_stmt
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|// Debuggers don't usually respect default arguments.
@@ -3428,23 +3425,20 @@ name|void
 name|dumpXML
 argument_list|()
 specifier|const
-block|{
-name|dumpXML
-argument_list|(
-name|llvm
-operator|::
-name|errs
-argument_list|()
-argument_list|)
-block|; }
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 name|void
 name|dumpXML
 argument_list|(
-argument|raw_ostream&OS
+name|raw_ostream
+operator|&
+name|OS
 argument_list|)
-specifier|const
-expr_stmt|;
-end_expr_stmt
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_label
 name|private

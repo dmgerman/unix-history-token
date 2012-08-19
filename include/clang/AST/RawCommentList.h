@@ -176,42 +176,16 @@ specifier|const
 name|LLVM_READONLY
 block|{
 return|return
-operator|!
-name|DeclOrParsedComment
-operator|.
-name|isNull
-argument_list|()
+name|IsAttached
 return|;
 block|}
-comment|/// Return the declaration that this comment is attached to.
-specifier|const
-name|Decl
-operator|*
-name|getDecl
-argument_list|()
-specifier|const
-expr_stmt|;
-comment|/// Set the declaration that this comment is attached to.
 name|void
-name|setDecl
-parameter_list|(
-specifier|const
-name|Decl
-modifier|*
-name|D
-parameter_list|)
+name|setAttached
+parameter_list|()
 block|{
-name|assert
-argument_list|(
-name|DeclOrParsedComment
-operator|.
-name|isNull
-argument_list|()
-argument_list|)
-expr_stmt|;
-name|DeclOrParsedComment
+name|IsAttached
 operator|=
-name|D
+name|true
 expr_stmt|;
 block|}
 comment|/// Returns true if it is a comment that should be put after a member:
@@ -375,47 +349,19 @@ name|Context
 argument_list|)
 return|;
 block|}
-comment|/// Returns a \c FullComment AST node, parsing the comment if needed.
+comment|/// Parse the comment, assuming it is attached to decl \c D.
 name|comments
 operator|::
 name|FullComment
 operator|*
-name|getParsed
-argument_list|(
-argument|const ASTContext&Context
-argument_list|)
-specifier|const
-block|{
-if|if
-condition|(
-name|comments
-operator|::
-name|FullComment
-operator|*
-name|FC
-operator|=
-name|DeclOrParsedComment
-operator|.
-name|dyn_cast
-operator|<
-name|comments
-operator|::
-name|FullComment
-operator|*
-operator|>
-operator|(
-operator|)
-condition|)
-return|return
-name|FC
-return|;
-return|return
 name|parse
 argument_list|(
-name|Context
+argument|const ASTContext&Context
+argument_list|,
+argument|const Decl *D
 argument_list|)
-return|;
-block|}
+specifier|const
+expr_stmt|;
 name|private
 label|:
 name|SourceRange
@@ -431,22 +377,6 @@ name|char
 modifier|*
 name|BriefText
 decl_stmt|;
-name|mutable
-name|llvm
-operator|::
-name|PointerUnion
-operator|<
-specifier|const
-name|Decl
-operator|*
-operator|,
-name|comments
-operator|::
-name|FullComment
-operator|*
-operator|>
-name|DeclOrParsedComment
-expr_stmt|;
 name|mutable
 name|bool
 name|RawTextValid
@@ -465,6 +395,12 @@ name|unsigned
 name|Kind
 range|:
 literal|3
+decl_stmt|;
+comment|/// True if comment is attached to a declaration in ASTContext.
+name|bool
+name|IsAttached
+range|:
+literal|1
 decl_stmt|;
 name|bool
 name|IsTrailingComment
@@ -532,6 +468,11 @@ argument_list|(
 name|K
 argument_list|)
 operator|,
+name|IsAttached
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|IsTrailingComment
 argument_list|(
 name|IsTrailingComment
@@ -571,32 +512,13 @@ name|Context
 argument_list|)
 decl|const
 decl_stmt|;
-name|comments
-operator|::
-name|FullComment
-operator|*
-name|parse
-argument_list|(
-argument|const ASTContext&Context
-argument_list|)
-specifier|const
-expr_stmt|;
 name|friend
 name|class
 name|ASTReader
 decl_stmt|;
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_comment
 comment|/// \brief Compare comments' source locations.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -692,23 +614,15 @@ name|RHS
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
-unit|};
+expr|}
+block|;
 comment|/// \brief This class represents all comments included in the translation unit,
-end_comment
-
-begin_comment
 comment|/// sorted in order of appearance in the translation unit.
-end_comment
-
-begin_decl_stmt
 name|class
 name|RawCommentList
 block|{
 name|public
-label|:
+operator|:
 name|RawCommentList
 argument_list|(
 name|SourceManager
@@ -720,7 +634,7 @@ name|SourceMgr
 argument_list|(
 name|SourceMgr
 argument_list|)
-operator|,
+block|,
 name|OnlyWhitespaceSeen
 argument_list|(
 argument|true
@@ -740,7 +654,7 @@ name|BumpPtrAllocator
 operator|&
 name|Allocator
 argument_list|)
-expr_stmt|;
+block|;
 name|ArrayRef
 operator|<
 name|RawComment
@@ -755,11 +669,11 @@ name|Comments
 return|;
 block|}
 name|private
-label|:
+operator|:
 name|SourceManager
-modifier|&
+operator|&
 name|SourceMgr
-decl_stmt|;
+block|;
 name|std
 operator|::
 name|vector
@@ -768,36 +682,27 @@ name|RawComment
 operator|*
 operator|>
 name|Comments
-expr_stmt|;
+block|;
 name|RawComment
 name|LastComment
-decl_stmt|;
+block|;
 name|bool
 name|OnlyWhitespaceSeen
-decl_stmt|;
+block|;
 name|void
 name|addCommentsToFront
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|vector
-operator|<
-name|RawComment
-operator|*
-operator|>
-operator|&
-name|C
+argument|const std::vector<RawComment *>&C
 argument_list|)
 block|{
 name|size_t
 name|OldSize
-init|=
+operator|=
 name|Comments
 operator|.
 name|size
 argument_list|()
-decl_stmt|;
+block|;
 name|Comments
 operator|.
 name|resize
@@ -809,7 +714,7 @@ argument_list|()
 operator|+
 name|OldSize
 argument_list|)
-expr_stmt|;
+block|;
 name|std
 operator|::
 name|copy_backward
@@ -831,7 +736,7 @@ operator|.
 name|end
 argument_list|()
 argument_list|)
-expr_stmt|;
+block|;
 name|std
 operator|::
 name|copy
@@ -851,21 +756,15 @@ operator|.
 name|begin
 argument_list|()
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 name|friend
 name|class
 name|ASTReader
-decl_stmt|;
-block|}
+block|; }
+block|;  }
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
 comment|// end namespace clang
 end_comment
 

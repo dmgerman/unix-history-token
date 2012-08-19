@@ -1637,52 +1637,6 @@ operator|=
 literal|0
 argument_list|)
 decl|const
-block|{
-name|printPretty
-argument_list|(
-name|OS
-argument_list|,
-operator|*
-operator|(
-name|ASTContext
-operator|*
-operator|)
-literal|0
-argument_list|,
-name|Helper
-argument_list|,
-name|Policy
-argument_list|,
-name|Indentation
-argument_list|)
-expr_stmt|;
-block|}
-name|void
-name|printPretty
-argument_list|(
-name|raw_ostream
-operator|&
-name|OS
-argument_list|,
-name|ASTContext
-operator|&
-name|Context
-argument_list|,
-name|PrinterHelper
-operator|*
-name|Helper
-argument_list|,
-specifier|const
-name|PrintingPolicy
-operator|&
-name|Policy
-argument_list|,
-name|unsigned
-name|Indentation
-operator|=
-literal|0
-argument_list|)
-decl|const
 decl_stmt|;
 comment|/// viewAST - Visualize an AST rooted at this Stmt* using GraphViz.  Only
 comment|///   works on systems with GraphViz (Mac OS X) or dot+gv installed.
@@ -7949,6 +7903,8 @@ block|{
 name|SourceLocation
 name|AsmLoc
 block|,
+name|LBraceLoc
+block|,
 name|EndLoc
 block|;
 name|std
@@ -7966,7 +7922,10 @@ name|unsigned
 name|NumAsmToks
 block|;
 name|unsigned
-name|NumLineEnds
+name|NumInputs
+block|;
+name|unsigned
+name|NumOutputs
 block|;
 name|unsigned
 name|NumClobbers
@@ -7975,9 +7934,10 @@ name|Token
 operator|*
 name|AsmToks
 block|;
-name|unsigned
+name|IdentifierInfo
 operator|*
-name|LineEnds
+operator|*
+name|Names
 block|;
 name|Stmt
 operator|*
@@ -7996,13 +7956,17 @@ argument|ASTContext&C
 argument_list|,
 argument|SourceLocation asmloc
 argument_list|,
+argument|SourceLocation lbraceloc
+argument_list|,
 argument|bool issimple
 argument_list|,
 argument|bool isvolatile
 argument_list|,
 argument|ArrayRef<Token> asmtoks
 argument_list|,
-argument|ArrayRef<unsigned> lineends
+argument|ArrayRef<IdentifierInfo*> inputs
+argument_list|,
+argument|ArrayRef<IdentifierInfo*> outputs
 argument_list|,
 argument|StringRef asmstr
 argument_list|,
@@ -8031,6 +7995,25 @@ operator|=
 name|L
 block|; }
 name|SourceLocation
+name|getLBraceLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LBraceLoc
+return|;
+block|}
+name|void
+name|setLBraceLoc
+argument_list|(
+argument|SourceLocation L
+argument_list|)
+block|{
+name|LBraceLoc
+operator|=
+name|L
+block|; }
+name|SourceLocation
 name|getEndLoc
 argument_list|()
 specifier|const
@@ -8049,6 +8032,18 @@ name|EndLoc
 operator|=
 name|L
 block|; }
+name|bool
+name|hasBraces
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LBraceLoc
+operator|.
+name|isValid
+argument_list|()
+return|;
+block|}
 name|unsigned
 name|getNumAsmToks
 argument_list|()
@@ -8064,23 +8059,6 @@ argument_list|()
 block|{
 return|return
 name|AsmToks
-return|;
-block|}
-name|unsigned
-name|getNumLineEnds
-argument_list|()
-block|{
-return|return
-name|NumLineEnds
-return|;
-block|}
-name|unsigned
-operator|*
-name|getLineEnds
-argument_list|()
-block|{
-return|return
-name|LineEnds
 return|;
 block|}
 name|bool
@@ -8176,6 +8154,7 @@ name|getClobber
 argument_list|(
 argument|unsigned i
 argument_list|)
+specifier|const
 block|{
 return|return
 name|Clobbers

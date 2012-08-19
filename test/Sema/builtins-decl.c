@@ -60,5 +60,40 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|// GCC documents these as unsigned, but they are defined with a signed argument.
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|__builtin_ffs
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|__builtin_ffsl
+parameter_list|(
+name|long
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|__builtin_ffsll
+parameter_list|(
+name|long
+name|long
+parameter_list|)
+function_decl|;
+end_function_decl
+
 end_unit
 

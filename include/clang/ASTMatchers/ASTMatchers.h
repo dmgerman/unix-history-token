@@ -213,6 +213,12 @@ directive|include
 file|"llvm/Support/Regex.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<iterator>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -678,6 +684,145 @@ return|;
 block|}
 return|return
 name|false
+return|;
+block|}
+comment|/// \brief Matches expressions that match InnerMatcher after any implicit casts
+comment|/// are stripped off.
+comment|///
+comment|/// Parentheses and explicit casts are not discarded.
+comment|/// Given
+comment|///   int arr[5];
+comment|///   int a = 0;
+comment|///   char b = 0;
+comment|///   const int c = a;
+comment|///   int *d = arr;
+comment|///   long e = (long) 0l;
+comment|/// The matchers
+comment|///    variable(hasInitializer(ignoringImpCasts(integerLiteral())))
+comment|///    variable(hasInitializer(ignoringImpCasts(declarationReference())))
+comment|/// would match the declarations for a, b, c, and d, but not e.
+comment|/// while
+comment|///    variable(hasInitializer(integerLiteral()))
+comment|///    variable(hasInitializer(declarationReference()))
+comment|/// only match the declarations for b, c, and d.
+name|AST_MATCHER_P
+argument_list|(
+argument|Expr
+argument_list|,
+argument|ignoringImpCasts
+argument_list|,
+argument|internal::Matcher<Expr>
+argument_list|,
+argument|InnerMatcher
+argument_list|)
+block|{
+return|return
+name|InnerMatcher
+operator|.
+name|matches
+argument_list|(
+operator|*
+name|Node
+operator|.
+name|IgnoreImpCasts
+argument_list|()
+argument_list|,
+name|Finder
+argument_list|,
+name|Builder
+argument_list|)
+return|;
+block|}
+comment|/// \brief Matches expressions that match InnerMatcher after parentheses and
+comment|/// casts are stripped off.
+comment|///
+comment|/// Implicit and non-C Style casts are also discarded.
+comment|/// Given
+comment|///   int a = 0;
+comment|///   char b = (0);
+comment|///   void* c = reinterpret_cast<char*>(0);
+comment|///   char d = char(0);
+comment|/// The matcher
+comment|///    variable(hasInitializer(ignoringParenCasts(integerLiteral())))
+comment|/// would match the declarations for a, b, c, and d.
+comment|/// while
+comment|///    variable(hasInitializer(integerLiteral()))
+comment|/// only match the declaration for a.
+name|AST_MATCHER_P
+argument_list|(
+argument|Expr
+argument_list|,
+argument|ignoringParenCasts
+argument_list|,
+argument|internal::Matcher<Expr>
+argument_list|,
+argument|InnerMatcher
+argument_list|)
+block|{
+return|return
+name|InnerMatcher
+operator|.
+name|matches
+argument_list|(
+operator|*
+name|Node
+operator|.
+name|IgnoreParenCasts
+argument_list|()
+argument_list|,
+name|Finder
+argument_list|,
+name|Builder
+argument_list|)
+return|;
+block|}
+comment|/// \brief Matches expressions that match InnerMatcher after implicit casts and
+comment|/// parentheses are stripped off.
+comment|///
+comment|/// Explicit casts are not discarded.
+comment|/// Given
+comment|///   int arr[5];
+comment|///   int a = 0;
+comment|///   char b = (0);
+comment|///   const int c = a;
+comment|///   int *d = (arr);
+comment|///   long e = ((long) 0l);
+comment|/// The matchers
+comment|///    variable(hasInitializer(ignoringParenImpCasts(
+comment|///       integerLiteral())))
+comment|///    variable(hasInitializer(ignoringParenImpCasts(
+comment|///       declarationReference())))
+comment|/// would match the declarations for a, b, c, and d, but not e.
+comment|/// while
+comment|///    variable(hasInitializer(integerLiteral()))
+comment|///    variable(hasInitializer(declarationReference()))
+comment|/// would only match the declaration for a.
+name|AST_MATCHER_P
+argument_list|(
+argument|Expr
+argument_list|,
+argument|ignoringParenImpCasts
+argument_list|,
+argument|internal::Matcher<Expr>
+argument_list|,
+argument|InnerMatcher
+argument_list|)
+block|{
+return|return
+name|InnerMatcher
+operator|.
+name|matches
+argument_list|(
+operator|*
+name|Node
+operator|.
+name|IgnoreParenImpCasts
+argument_list|()
+argument_list|,
+name|Finder
+argument_list|,
+name|Builder
+argument_list|)
 return|;
 block|}
 comment|/// \brief Matches classTemplateSpecializations where the n'th TemplateArgument
@@ -1687,6 +1832,26 @@ operator|,
 name|ImplicitCastExpr
 operator|>
 name|implicitCast
+expr_stmt|;
+comment|/// \brief Matches any cast nodes of Clang's AST.
+comment|///
+comment|/// Example: castExpr() matches each of the following:
+comment|///   (int) 3;
+comment|///   const_cast<Expr *>(SubExpr);
+comment|///   char c = 0;
+comment|/// but does not match
+comment|///   int i = (0);
+comment|///   int k = 0;
+specifier|const
+name|internal
+operator|::
+name|VariadicDynCastAllOfMatcher
+operator|<
+name|Expr
+operator|,
+name|CastExpr
+operator|>
+name|castExpr
 expr_stmt|;
 comment|/// \brief Matches functional cast expressions
 comment|///
@@ -3480,6 +3645,60 @@ return|return
 name|false
 return|;
 block|}
+comment|/// \brief Matches the Decl of a DeclStmt which has a single declaration.
+comment|///
+comment|/// Given
+comment|///   int a, b;
+comment|///   int c;
+comment|/// declarationStatement(hasSingleDecl(anything()))
+comment|///   matches 'int c;' but not 'int a, b;'.
+name|AST_MATCHER_P
+argument_list|(
+argument|DeclStmt
+argument_list|,
+argument|hasSingleDecl
+argument_list|,
+argument|internal::Matcher<Decl>
+argument_list|,
+argument|InnerMatcher
+argument_list|)
+block|{
+if|if
+condition|(
+name|Node
+operator|.
+name|isSingleDecl
+argument_list|()
+condition|)
+block|{
+specifier|const
+name|Decl
+modifier|*
+name|FoundDecl
+init|=
+name|Node
+operator|.
+name|getSingleDecl
+argument_list|()
+decl_stmt|;
+return|return
+name|InnerMatcher
+operator|.
+name|matches
+argument_list|(
+operator|*
+name|FoundDecl
+argument_list|,
+name|Finder
+argument_list|,
+name|Builder
+argument_list|)
+return|;
+block|}
+return|return
+name|false
+return|;
+block|}
 comment|/// \brief Matches a variable declaration that has an initializer expression
 comment|/// that matches the given matcher.
 comment|///
@@ -3657,6 +3876,137 @@ argument_list|,
 name|Builder
 argument_list|)
 operator|)
+return|;
+block|}
+comment|/// \brief Matches declaration statements that contain a specific number of
+comment|/// declarations.
+comment|///
+comment|/// Example: Given
+comment|///   int a, b;
+comment|///   int c;
+comment|///   int d = 2, e;
+comment|/// declCountIs(2)
+comment|///   matches 'int a, b;' and 'int d = 2, e;', but not 'int c;'.
+name|AST_MATCHER_P
+argument_list|(
+argument|DeclStmt
+argument_list|,
+argument|declCountIs
+argument_list|,
+argument|unsigned
+argument_list|,
+argument|N
+argument_list|)
+block|{
+return|return
+name|std
+operator|::
+name|distance
+argument_list|(
+name|Node
+operator|.
+name|decl_begin
+argument_list|()
+argument_list|,
+name|Node
+operator|.
+name|decl_end
+argument_list|()
+argument_list|)
+operator|==
+name|N
+return|;
+block|}
+comment|/// \brief Matches the n'th declaration of a declaration statement.
+comment|///
+comment|/// Note that this does not work for global declarations because the AST
+comment|/// breaks up multiple-declaration DeclStmt's into multiple single-declaration
+comment|/// DeclStmt's.
+comment|/// Example: Given non-global declarations
+comment|///   int a, b = 0;
+comment|///   int c;
+comment|///   int d = 2, e;
+comment|/// declarationStatement(containsDeclaration(
+comment|///       0, variable(hasInitializer(anything()))))
+comment|///   matches only 'int d = 2, e;', and
+comment|/// declarationStatement(containsDeclaration(1, variable()))
+comment|///   matches 'int a, b = 0' as well as 'int d = 2, e;'
+comment|///   but 'int c;' is not matched.
+name|AST_MATCHER_P2
+argument_list|(
+argument|DeclStmt
+argument_list|,
+argument|containsDeclaration
+argument_list|,
+argument|unsigned
+argument_list|,
+argument|N
+argument_list|,
+argument|internal::Matcher<Decl>
+argument_list|,
+argument|InnerMatcher
+argument_list|)
+block|{
+specifier|const
+name|unsigned
+name|NumDecls
+init|=
+name|std
+operator|::
+name|distance
+argument_list|(
+name|Node
+operator|.
+name|decl_begin
+argument_list|()
+argument_list|,
+name|Node
+operator|.
+name|decl_end
+argument_list|()
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|N
+operator|>=
+name|NumDecls
+condition|)
+return|return
+name|false
+return|;
+name|DeclStmt
+operator|::
+name|const_decl_iterator
+name|Iterator
+operator|=
+name|Node
+operator|.
+name|decl_begin
+argument_list|()
+expr_stmt|;
+name|std
+operator|::
+name|advance
+argument_list|(
+name|Iterator
+argument_list|,
+name|N
+argument_list|)
+expr_stmt|;
+return|return
+name|InnerMatcher
+operator|.
+name|matches
+argument_list|(
+operator|*
+operator|*
+name|Iterator
+argument_list|,
+name|Finder
+argument_list|,
+name|Builder
+argument_list|)
 return|;
 block|}
 comment|/// \brief Matches a constructor initializer.
@@ -4119,6 +4469,28 @@ name|Finder
 argument_list|,
 name|Builder
 argument_list|)
+return|;
+block|}
+comment|/// \brief Matches extern "C" function declarations.
+comment|///
+comment|/// Given:
+comment|///   extern "C" void f() {}
+comment|///   extern "C" { void g() {} }
+comment|///   void h() {}
+comment|/// function(isExternC())
+comment|///   matches the declaration of f and g, but not the declaration h
+name|AST_MATCHER
+argument_list|(
+argument|FunctionDecl
+argument_list|,
+argument|isExternC
+argument_list|)
+block|{
+return|return
+name|Node
+operator|.
+name|isExternC
+argument_list|()
 return|;
 block|}
 comment|/// \brief Matches the condition expression of an if statement, for loop,

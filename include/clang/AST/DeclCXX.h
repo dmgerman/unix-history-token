@@ -6366,11 +6366,11 @@ comment|/// Find if RD or one of the classes it inherits from override this meth
 end_comment
 
 begin_comment
-comment|/// If so, return it. RD is assumed to be a base class of the class defining
+comment|/// If so, return it. RD is assumed to be a subclass of the class defining
 end_comment
 
 begin_comment
-comment|/// this method (or be the class itself).
+comment|/// this method (or be the class itself), unless MayBeBase is set to true.
 end_comment
 
 begin_function_decl
@@ -6382,6 +6382,11 @@ specifier|const
 name|CXXRecordDecl
 modifier|*
 name|RD
+parameter_list|,
+name|bool
+name|MayBeBase
+init|=
+name|false
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -6396,6 +6401,11 @@ specifier|const
 name|CXXRecordDecl
 operator|*
 name|RD
+argument_list|,
+name|bool
+name|MayBeBase
+operator|=
+name|false
 argument_list|)
 decl|const
 block|{
@@ -6412,6 +6422,8 @@ operator|->
 name|getCorrespondingMethodInClass
 argument_list|(
 name|RD
+argument_list|,
+name|MayBeBase
 argument_list|)
 return|;
 block|}

@@ -175,13 +175,15 @@ name|Offset
 decl_stmt|;
 name|public
 label|:
-enum|enum
-block|{
+comment|// We're using a const instead of an enumeration due to the size required;
+comment|// Visual Studio will only create enumerations of size int, not long long.
+specifier|static
+specifier|const
+name|int64_t
 name|Symbolic
 init|=
 name|INT64_MAX
-block|}
-enum|;
+decl_stmt|;
 name|RegionOffset
 argument_list|()
 operator|:

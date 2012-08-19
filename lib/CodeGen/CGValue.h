@@ -554,8 +554,7 @@ name|Quals
 decl_stmt|;
 comment|// The alignment to use when accessing this lvalue.  (For vector elements,
 comment|// this is the alignment of the whole vector.)
-name|unsigned
-name|short
+name|int64_t
 name|Alignment
 decl_stmt|;
 comment|// objective-c's ivar

@@ -1354,7 +1354,7 @@ argument_list|(
 literal|11
 argument_list|)
 decl_stmt|;
-comment|// expected-warning{{Cast a region whose size is not a multiple of the destination type size.}}
+comment|// expected-warning{{Cast a region whose size is not a multiple of the destination type size}}
 block|}
 end_function
 
@@ -1372,7 +1372,7 @@ argument_list|(
 literal|2
 argument_list|)
 decl_stmt|;
-comment|// expected-warning{{Cast a region whose size is not a multiple of the destination type size.}}
+comment|// expected-warning{{Cast a region whose size is not a multiple of the destination type size}}
 name|buf
 index|[
 literal|1
@@ -1980,7 +1980,7 @@ argument_list|(
 literal|12
 argument_list|)
 expr_stmt|;
-comment|// expected-warning 2 {{Memory is never released; potential leak}}
+comment|// expected-warning {{Memory is never released; potential leak}}
 block|}
 end_function
 

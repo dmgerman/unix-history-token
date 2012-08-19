@@ -87,6 +87,12 @@ directive|include
 file|"clang/StaticAnalyzer/Core/BugReporter/PathDiagnostic.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"clang/StaticAnalyzer/Core/PathDiagnosticConsumers.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -124,11 +130,8 @@ name|LangOptions
 operator|&
 name|LangOpts
 block|;
-name|OwningPtr
-operator|<
-name|PathDiagnosticConsumer
-operator|>
-name|PD
+name|PathDiagnosticConsumers
+name|PathConsumers
 block|;
 comment|// Configurable components creators.
 name|StoreManagerCreator
@@ -211,7 +214,7 @@ argument|DiagnosticsEngine&diags
 argument_list|,
 argument|const LangOptions&lang
 argument_list|,
-argument|PathDiagnosticConsumer *pd
+argument|const PathDiagnosticConsumers&Consumers
 argument_list|,
 argument|StoreManagerCreator storemgr
 argument_list|,
@@ -250,30 +253,10 @@ argument_list|,
 argument|bool NoRetry
 argument_list|)
 block|;
-comment|/// Construct a clone of the given AnalysisManager with the given ASTContext
-comment|/// and DiagnosticsEngine.
-name|AnalysisManager
-argument_list|(
-name|ASTContext
-operator|&
-name|ctx
-argument_list|,
-name|DiagnosticsEngine
-operator|&
-name|diags
-argument_list|,
-name|AnalysisManager
-operator|&
-name|ParentAM
-argument_list|)
-block|;
 operator|~
 name|AnalysisManager
 argument_list|()
-block|{
-name|FlushDiagnostics
-argument_list|()
-block|; }
+block|;
 name|void
 name|ClearContexts
 argument_list|()
@@ -363,38 +346,22 @@ return|return
 name|LangOpts
 return|;
 block|}
-name|virtual
+name|ArrayRef
+operator|<
 name|PathDiagnosticConsumer
 operator|*
-name|getPathDiagnosticConsumer
+operator|>
+name|getPathDiagnosticConsumers
 argument_list|()
 block|{
 return|return
-name|PD
-operator|.
-name|get
-argument_list|()
+name|PathConsumers
 return|;
 block|}
 name|void
 name|FlushDiagnostics
 argument_list|()
-block|{
-if|if
-condition|(
-name|PD
-operator|.
-name|get
-argument_list|()
-condition|)
-name|PD
-operator|->
-name|FlushDiagnostics
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
+block|;
 name|unsigned
 name|getMaxNodes
 argument_list|()

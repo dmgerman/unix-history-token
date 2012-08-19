@@ -109,7 +109,7 @@ comment|///
 comment|/// A verbatim-like block command eats every character (except line starting
 comment|/// decorations) until matching end command is seen or comment end is hit.
 comment|///
-comment|/// \param BeginName name of the command that starts the verbatim block.
+comment|/// \param StartName name of the command that starts the verbatim block.
 comment|/// \param [out] EndName name of the command that ends the verbatim block.
 comment|///
 comment|/// \returns true if a given command is a verbatim block command.
@@ -130,7 +130,7 @@ name|void
 name|addVerbatimBlockCommand
 parameter_list|(
 name|StringRef
-name|BeginName
+name|StartName
 parameter_list|,
 name|StringRef
 name|EndName
@@ -245,7 +245,7 @@ struct|struct
 name|VerbatimBlockCommand
 block|{
 name|StringRef
-name|BeginName
+name|StartName
 decl_stmt|;
 name|StringRef
 name|EndName

@@ -3922,9 +3922,6 @@ name|LocalRangeBegin
 block|;
 name|SourceLocation
 name|LocalRangeEnd
-block|;
-name|bool
-name|TrailingReturn
 block|; }
 block|;
 comment|/// \brief Wrapper for source info for functions.
@@ -3994,31 +3991,6 @@ operator|->
 name|LocalRangeEnd
 operator|=
 name|L
-block|;   }
-name|bool
-name|getTrailingReturn
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getLocalData
-argument_list|()
-operator|->
-name|TrailingReturn
-return|;
-block|}
-name|void
-name|setTrailingReturn
-argument_list|(
-argument|bool Trailing
-argument_list|)
-block|{
-name|getLocalData
-argument_list|()
-operator|->
-name|TrailingReturn
-operator|=
-name|Trailing
 block|;   }
 name|ArrayRef
 operator|<
@@ -4169,11 +4141,6 @@ block|;
 name|setLocalRangeEnd
 argument_list|(
 name|Loc
-argument_list|)
-block|;
-name|setTrailingReturn
-argument_list|(
-name|false
 argument_list|)
 block|;
 for|for

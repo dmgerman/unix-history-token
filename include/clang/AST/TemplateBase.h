@@ -1973,20 +1973,30 @@ begin_struct
 struct|struct
 name|ASTTemplateArgumentListInfo
 block|{
-comment|/// \brief The source location of the left angle bracket ('<');
+comment|/// \brief The source location of the left angle bracket ('<').
 name|SourceLocation
 name|LAngleLoc
 decl_stmt|;
-comment|/// \brief The source location of the right angle bracket ('>');
+comment|/// \brief The source location of the right angle bracket ('>').
 name|SourceLocation
 name|RAngleLoc
 decl_stmt|;
+union|union
+block|{
 comment|/// \brief The number of template arguments in TemplateArgs.
 comment|/// The actual template arguments (if any) are stored after the
 comment|/// ExplicitTemplateArgumentList structure.
 name|unsigned
 name|NumTemplateArgs
 decl_stmt|;
+comment|/// Force ASTTemplateArgumentListInfo to the right alignment
+comment|/// for the following array of TemplateArgumentLocs.
+name|void
+modifier|*
+name|Aligner
+decl_stmt|;
+block|}
+union|;
 comment|/// \brief Retrieve the template arguments
 name|TemplateArgumentLoc
 modifier|*

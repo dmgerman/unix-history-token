@@ -532,9 +532,10 @@ name|raw_ostream
 operator|&
 name|OS
 argument_list|,
-name|ASTContext
+specifier|const
+name|PrintingPolicy
 operator|&
-name|C
+name|Policy
 argument_list|)
 decl|const
 init|=

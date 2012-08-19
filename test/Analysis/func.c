@@ -1,7 +1,16 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core,experimental.core -analyzer-store=region -verify %s
+comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core,experimental.core,debug.ExprInspection -analyzer-store=region -verify %s
 end_comment
+
+begin_function_decl
+name|void
+name|clang_analyzer_eval
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|void
@@ -66,6 +75,69 @@ argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|f3
+parameter_list|(
+name|void
+function_decl|(
+modifier|*
+name|f
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+name|g
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+parameter_list|)
+block|{
+name|clang_analyzer_eval
+argument_list|(
+operator|!
+name|f
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{UNKNOWN}}
+name|f
+argument_list|()
+expr_stmt|;
+name|clang_analyzer_eval
+argument_list|(
+operator|!
+name|f
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{FALSE}}
+name|clang_analyzer_eval
+argument_list|(
+operator|!
+name|g
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{UNKNOWN}}
+call|(
+modifier|*
+name|g
+call|)
+argument_list|()
+expr_stmt|;
+name|clang_analyzer_eval
+argument_list|(
+operator|!
+name|g
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{FALSE}}
 block|}
 end_function
 

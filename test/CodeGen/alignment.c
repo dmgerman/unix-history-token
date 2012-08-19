@@ -247,7 +247,11 @@ comment|// CHECK: @test3(
 end_comment
 
 begin_comment
-comment|// CHECK: store<3 x float> {{.*}}, align 4
+comment|// CHECK: %{{.*}} = bitcast<3 x float>* %{{.*}} to<4 x float>*
+end_comment
+
+begin_comment
+comment|// CHECK: store<4 x float> {{.*}}, align 4
 end_comment
 
 begin_comment

@@ -719,7 +719,7 @@ index|]
 operator|)
 operator|)
 decl_stmt|;
-comment|// expected-warning{{Casting a non-structure type to a structure type and accessing a field can lead to memory access errors or data corruption.}}
+comment|// expected-warning{{Casting a non-structure type to a structure type and accessing a field can lead to memory access errors or data corruption}}
 block|}
 end_function
 

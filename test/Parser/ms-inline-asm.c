@@ -105,7 +105,7 @@ asm|__asm {}
 end_asm
 
 begin_comment
-comment|// no warning as this gets merged with the previous inline asm
+comment|// expected-warning {{MS-style inline assembly is not supported}}
 end_comment
 
 begin_macro
@@ -128,10 +128,10 @@ begin_for
 for|for single-line asm
 comment|// expected-warning {{MS-style inline assembly is not supported}}
 asm|__asm {}
-comment|// no warning as this gets merged with the previous inline asm
+comment|// expected-warning {{MS-style inline assembly is not supported}}
 asm|__asm int 4
 comment|//
-asm|no warning as this gets merged with the previous inline asm
+asm|expected-warning {{MS-style inline assembly is not supported}}
 for|return 10
 empty_stmt|;
 end_for

@@ -155,7 +155,7 @@ operator|&
 name|x
 argument_list|)
 return|;
-comment|// expected-warning{{An 8 bit integer is used to initialize a CFNumber object that represents a 16 bit integer. 8 bits of the CFNumber value will be garbage.}}
+comment|// expected-warning{{An 8 bit integer is used to initialize a CFNumber object that represents a 16 bit integer. 8 bits of the CFNumber value will be garbage}}
 block|}
 end_function
 
@@ -186,7 +186,7 @@ operator|&
 name|x
 argument_list|)
 return|;
-comment|// expected-warning{{A 16 bit integer is used to initialize a CFNumber object that represents an 8 bit integer. 8 bits of the input integer will be lost.}}
+comment|// expected-warning{{A 16 bit integer is used to initialize a CFNumber object that represents an 8 bit integer. 8 bits of the input integer will be lost}}
 block|}
 end_function
 
@@ -244,7 +244,7 @@ operator|&
 name|i
 argument_list|)
 return|;
-comment|// expected-warning{{A 32 bit integer is used to initialize a CFNumber object that represents a 64 bit integer.}}
+comment|// expected-warning{{A 32 bit integer is used to initialize a CFNumber object that represents a 64 bit integer}}
 block|}
 end_function
 

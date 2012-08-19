@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -fsyntax-only -verify
+comment|// RUN: %clang_cc1 %s -fsyntax-only -Wprivate-extern -verify
 end_comment
 
 begin_comment
@@ -258,12 +258,20 @@ name|i3
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|// rdar://7703982
+end_comment
+
 begin_decl_stmt
 name|__private_extern__
 name|int
 name|pExtern
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|// expected-warning {{Use of __private_extern__ on tentative definition has unexpected behaviour}}
+end_comment
 
 begin_decl_stmt
 name|int

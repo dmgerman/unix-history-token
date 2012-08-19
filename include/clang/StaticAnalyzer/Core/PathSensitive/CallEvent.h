@@ -1199,21 +1199,15 @@ name|void
 name|dump
 argument_list|()
 specifier|const
-block|{
-name|dump
-argument_list|(
-name|llvm
-operator|::
-name|errs
-argument_list|()
-argument_list|)
-block|; }
+expr_stmt|;
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const CallEvent *
-argument_list|)
+parameter_list|(
+specifier|const
+name|CallEvent
+modifier|*
+parameter_list|)
 block|{
 return|return
 name|true
@@ -3129,11 +3123,15 @@ name|getReceiverInterface
 argument_list|()
 return|;
 block|}
+comment|/// Returns how the message was written in the source (property access,
+comment|/// subscript, or explicit message send).
 name|ObjCMessageKind
 name|getMessageKind
 argument_list|()
 specifier|const
 block|;
+comment|/// Returns true if this property access or subscript is a setter (has the
+comment|/// form of an assignment).
 name|bool
 name|isSetter
 argument_list|()
