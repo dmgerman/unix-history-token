@@ -8,7 +8,7 @@ comment|/*  * Copyright 2005 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2011, Joyent, Inc. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2011, Joyent, Inc. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -685,7 +685,10 @@ name|D_LLQUANT_FACTORSMALL
 block|,
 comment|/* llquantize() magnitude too small */
 name|D_LLQUANT_MAGTOOBIG
+block|,
 comment|/* llquantize() high mag too large */
+name|D_NOREG
+comment|/* no available internal registers */
 block|}
 name|dt_errtag_t
 typedef|;

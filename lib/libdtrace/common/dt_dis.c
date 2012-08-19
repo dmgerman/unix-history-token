@@ -7,12 +7,9 @@ begin_comment
 comment|/*  * Copyright 2005 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
+begin_comment
+comment|/*  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+end_comment
 
 begin_include
 include|#
@@ -1191,6 +1188,47 @@ argument_list|(
 name|in
 argument_list|)
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|pad
+decl_stmt|;
+if|if
+condition|(
+name|DIF_INSTR_OP
+argument_list|(
+name|in
+argument_list|)
+operator|==
+name|DIF_OP_PUSHTV
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"%-4s DT_TYPE(%u), %%r%u"
+argument_list|,
+name|name
+argument_list|,
+name|type
+argument_list|,
+name|DIF_INSTR_RS
+argument_list|(
+name|in
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|pad
+operator|=
+literal|"\t\t"
+expr_stmt|;
+block|}
+else|else
+block|{
 operator|(
 name|void
 operator|)
@@ -1215,6 +1253,11 @@ name|in
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|pad
+operator|=
+literal|"\t"
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|type
@@ -1232,6 +1275,7 @@ literal|0
 index|]
 argument_list|)
 condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -1239,7 +1283,9 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"\t! DT_TYPE(%u) = %s"
+literal|"%s! DT_TYPE(%u) = %s"
+argument_list|,
+name|pad
 argument_list|,
 name|type
 argument_list|,
@@ -1249,6 +1295,7 @@ name|type
 index|]
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
