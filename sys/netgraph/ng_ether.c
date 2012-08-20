@@ -143,6 +143,16 @@ directive|include
 file|<netgraph/ng_ether.h>
 end_include
 
+begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|ng_ether
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_define
 define|#
 directive|define
