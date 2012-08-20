@@ -1668,6 +1668,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IPPROTO_MPLS
+value|137
+end_define
+
+begin_comment
+comment|/* MPLS-in-IP */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IPPROTO_PFSYNC
 value|240
 end_define
