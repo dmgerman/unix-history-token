@@ -84,6 +84,10 @@ comment|/// @brief The size of the native vector registers.
 name|unsigned
 name|VectorBits
 decl_stmt|;
+comment|/// @brief Vectorize boolean values.
+name|bool
+name|VectorizeBools
+decl_stmt|;
 comment|/// @brief Vectorize integer values.
 name|bool
 name|VectorizeInts
@@ -111,6 +115,10 @@ decl_stmt|;
 comment|/// @brief Vectorize select instructions.
 name|bool
 name|VectorizeSelect
+decl_stmt|;
+comment|/// @brief Vectorize comparison instructions.
+name|bool
+name|VectorizeCmp
 decl_stmt|;
 comment|/// @brief Vectorize getelementptr instructions.
 name|bool
@@ -150,6 +158,10 @@ decl_stmt|;
 comment|/// @brief The maximum number of pairing iterations.
 name|unsigned
 name|MaxIter
+decl_stmt|;
+comment|/// @brief Don't try to form odd-length vectors.
+name|bool
+name|Pow2LenOnly
 decl_stmt|;
 comment|/// @brief Don't boost the chain-depth contribution of loads and stores.
 name|bool

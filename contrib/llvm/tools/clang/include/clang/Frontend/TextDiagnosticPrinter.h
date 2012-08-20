@@ -105,19 +105,9 @@ operator|&
 name|OS
 block|;
 specifier|const
-name|LangOptions
-operator|*
-name|LangOpts
-block|;
-specifier|const
 name|DiagnosticOptions
 operator|*
 name|DiagOpts
-block|;
-specifier|const
-name|SourceManager
-operator|*
-name|SM
 block|;
 comment|/// \brief Handle to the currently active text diagnostic emitter.
 name|OwningPtr

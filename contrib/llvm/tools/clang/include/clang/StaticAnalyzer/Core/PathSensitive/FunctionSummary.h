@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<deque>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/Decl.h"
 end_include
 
@@ -74,7 +80,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallPtrSet.h"
+file|"llvm/ADT/DenseSet.h"
 end_include
 
 begin_include
@@ -91,27 +97,23 @@ name|namespace
 name|ento
 block|{
 typedef|typedef
-name|llvm
+name|std
 operator|::
-name|SmallPtrSet
+name|deque
 operator|<
 name|Decl
 operator|*
-operator|,
-literal|24
 operator|>
 name|SetOfDecls
 expr_stmt|;
 typedef|typedef
 name|llvm
 operator|::
-name|SmallPtrSet
+name|DenseSet
 operator|<
 specifier|const
 name|Decl
 operator|*
-operator|,
-literal|24
 operator|>
 name|SetOfConstDecls
 expr_stmt|;

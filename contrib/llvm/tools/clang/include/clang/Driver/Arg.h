@@ -31,6 +31,26 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \file
+end_comment
+
+begin_comment
+comment|/// \brief Defines the clang::driver::Arg class for parsed arguments.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|//===----------------------------------------------------------------------===//
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -80,7 +100,7 @@ decl_stmt|;
 name|class
 name|Option
 decl_stmt|;
-comment|/// Arg - A concrete instance of a particular driver option.
+comment|/// \brief A concrete instance of a particular driver option.
 comment|///
 comment|/// The Arg class encodes just enough information to be able to
 comment|/// derive the argument values efficiently. In addition, Arg
@@ -110,40 +130,41 @@ decl_stmt|;
 comment|// DO NOT IMPLEMENT
 name|private
 label|:
-comment|/// The option this argument is an instance of.
+comment|/// \brief The option this argument is an instance of.
 specifier|const
 name|Option
 modifier|*
 name|Opt
 decl_stmt|;
-comment|/// The argument this argument was derived from (during tool chain
+comment|/// \brief The argument this argument was derived from (during tool chain
 comment|/// argument translation), if any.
 specifier|const
 name|Arg
 modifier|*
 name|BaseArg
 decl_stmt|;
-comment|/// The index at which this argument appears in the containing
+comment|/// \brief The index at which this argument appears in the containing
 comment|/// ArgList.
 name|unsigned
 name|Index
 decl_stmt|;
-comment|/// Was this argument used to effect compilation; used for generating
-comment|/// "argument unused" diagnostics.
+comment|/// \brief Was this argument used to effect compilation?
+comment|///
+comment|/// This is used for generating "argument unused" diagnostics.
 name|mutable
 name|unsigned
 name|Claimed
 range|:
 literal|1
 decl_stmt|;
-comment|/// Does this argument own its values.
+comment|/// \brief Does this argument own its values?
 name|mutable
 name|unsigned
 name|OwnsValues
 range|:
 literal|1
 decl_stmt|;
-comment|/// The argument values, as C strings.
+comment|/// \brief The argument values, as C strings.
 name|SmallVector
 operator|<
 specifier|const
@@ -217,8 +238,9 @@ return|return
 name|Index
 return|;
 block|}
-comment|/// getBaseArg - Return the base argument which generated this
-comment|/// arg; this is either the argument itself or the argument it was
+comment|/// \brief Return the base argument which generated this arg.
+comment|///
+comment|/// This is either the argument itself or the argument it was
 comment|/// derived from during tool chain specific argument translation.
 specifier|const
 name|Arg
@@ -285,7 +307,7 @@ operator|.
 name|Claimed
 return|;
 block|}
-comment|/// claim - Set the Arg claimed bit.
+comment|/// \brief Set the Arg claimed bit.
 name|void
 name|claim
 argument_list|()
@@ -391,7 +413,7 @@ return|return
 name|false
 return|;
 block|}
-comment|/// render - Append the argument onto the given array as strings.
+comment|/// \brief Append the argument onto the given array as strings.
 name|void
 name|render
 argument_list|(
@@ -406,10 +428,11 @@ name|Output
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// renderAsInput - Append the argument, render as an input, onto
-comment|/// the given array as strings. The distinction is that some
-comment|/// options only render their values when rendered as a input
-comment|/// (e.g., Xlinker).
+comment|/// \brief Append the argument, render as an input, onto the given
+comment|/// array as strings.
+comment|///
+comment|/// The distinction is that some options only render their values
+comment|/// when rendered as a input (e.g., Xlinker).
 name|void
 name|renderAsInput
 argument_list|(
@@ -442,7 +465,7 @@ name|dump
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// getAsString - Return a formatted version of the argument and
+comment|/// \brief Return a formatted version of the argument and
 comment|/// its values, for debugging and diagnostics.
 name|std
 operator|::

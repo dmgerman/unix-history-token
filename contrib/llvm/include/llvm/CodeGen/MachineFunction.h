@@ -623,9 +623,9 @@ operator|=
 name|A
 expr_stmt|;
 block|}
-comment|/// EnsureAlignment - Make sure the function is at least 1<< A bytes aligned.
+comment|/// ensureAlignment - Make sure the function is at least 1<< A bytes aligned.
 name|void
-name|EnsureAlignment
+name|ensureAlignment
 parameter_list|(
 name|unsigned
 name|A

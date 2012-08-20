@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IRBuilder.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IntrinsicInst.h"
 end_include
 
@@ -71,12 +77,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Analysis/ValueTracking.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/IRBuilder.h"
 end_include
 
 begin_include
@@ -1194,7 +1194,7 @@ parameter_list|)
 function_decl|;
 name|Instruction
 modifier|*
-name|visitMalloc
+name|visitAllocSite
 parameter_list|(
 name|Instruction
 modifier|&

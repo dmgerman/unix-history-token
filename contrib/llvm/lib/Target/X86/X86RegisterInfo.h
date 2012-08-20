@@ -134,6 +134,12 @@ comment|///
 name|unsigned
 name|FramePtr
 block|;
+comment|/// BasePtr - X86 physical register used as a base ptr in complex stack
+comment|/// frames. I.e., when we need a 3rd base, not just SP and FP, due to
+comment|/// variable size stack objects.
+name|unsigned
+name|BasePtr
+block|;
 name|public
 operator|:
 name|X86RegisterInfo
@@ -178,6 +184,14 @@ specifier|const
 block|;
 comment|/// Code Generation virtual methods...
 comment|///
+name|virtual
+name|bool
+name|trackLivenessAfterRegAlloc
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
 comment|/// getMatchingSuperRegClass - Return a subclass of the specified register
 comment|/// class A so that each register in it has a sub-register of the
 comment|/// specified sub-register index which is in the specified register class B.
@@ -223,6 +237,8 @@ name|TargetRegisterClass
 operator|*
 name|getPointerRegClass
 argument_list|(
+argument|const MachineFunction&MF
+argument_list|,
 argument|unsigned Kind =
 literal|0
 argument_list|)
@@ -276,6 +292,13 @@ comment|/// should be considered unavailable at all times, e.g. SP, RA. This is 
 comment|/// register scavenger to determine what registers are free.
 name|BitVector
 name|getReservedRegs
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|hasBasePointer
 argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
@@ -343,6 +366,15 @@ specifier|const
 block|{
 return|return
 name|StackPtr
+return|;
+block|}
+name|unsigned
+name|getBaseRegister
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BasePtr
 return|;
 block|}
 comment|// FIXME: Move to FrameInfok

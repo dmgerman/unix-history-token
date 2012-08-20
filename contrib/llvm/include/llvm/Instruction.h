@@ -814,6 +814,63 @@ name|unsigned
 name|op
 parameter_list|)
 function_decl|;
+comment|/// isIdempotent - Return true if the instruction is idempotent:
+comment|///
+comment|///   Idempotent operators satisfy:  x op x === x
+comment|///
+comment|/// In LLVM, the And and Or operators are idempotent.
+comment|///
+name|bool
+name|isIdempotent
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isIdempotent
+argument_list|(
+name|getOpcode
+argument_list|()
+argument_list|)
+return|;
+block|}
+specifier|static
+name|bool
+name|isIdempotent
+parameter_list|(
+name|unsigned
+name|op
+parameter_list|)
+function_decl|;
+comment|/// isNilpotent - Return true if the instruction is nilpotent:
+comment|///
+comment|///   Nilpotent operators satisfy:  x op x === Id,
+comment|///
+comment|///   where Id is the identity for the operator, i.e. a constant such that
+comment|///     x op Id === x and Id op x === x for all x.
+comment|///
+comment|/// In LLVM, the Xor operator is nilpotent.
+comment|///
+name|bool
+name|isNilpotent
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isNilpotent
+argument_list|(
+name|getOpcode
+argument_list|()
+argument_list|)
+return|;
+block|}
+specifier|static
+name|bool
+name|isNilpotent
+parameter_list|(
+name|unsigned
+name|op
+parameter_list|)
+function_decl|;
 comment|/// mayWriteToMemory - Return true if this instruction may modify memory.
 comment|///
 name|bool
@@ -907,6 +964,27 @@ name|I
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// When checking for operation equivalence (using isSameOperationAs) it is
+comment|/// sometimes useful to ignore certain attributes.
+enum|enum
+name|OperationEquivalenceFlags
+block|{
+comment|/// Check for equivalence ignoring load/store alignment.
+name|CompareIgnoringAlignment
+init|=
+literal|1
+operator|<<
+literal|0
+block|,
+comment|/// Check for equivalence treating a type and a vector of that type
+comment|/// as equivalent.
+name|CompareUsingScalarTypes
+init|=
+literal|1
+operator|<<
+literal|1
+block|}
+enum|;
 comment|/// This function determines if the specified instruction executes the same
 comment|/// operation as the current one. This means that the opcodes, type, operand
 comment|/// types and any other factors affecting the operation must be the same. This
@@ -922,6 +1000,11 @@ specifier|const
 name|Instruction
 operator|*
 name|I
+argument_list|,
+name|unsigned
+name|flags
+operator|=
+literal|0
 argument_list|)
 decl|const
 decl_stmt|;

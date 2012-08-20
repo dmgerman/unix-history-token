@@ -188,8 +188,8 @@ empty_stmt|;
 name|private
 label|:
 name|LiveInterval
-modifier|&
-name|parent_
+modifier|*
+name|Parent
 decl_stmt|;
 name|SmallVectorImpl
 operator|<
@@ -197,7 +197,7 @@ name|LiveInterval
 operator|*
 operator|>
 operator|&
-name|newRegs_
+name|NewRegs
 expr_stmt|;
 name|MachineRegisterInfo
 modifier|&
@@ -219,18 +219,18 @@ decl_stmt|;
 name|Delegate
 modifier|*
 specifier|const
-name|delegate_
+name|TheDelegate
 decl_stmt|;
-comment|/// firstNew_ - Index of the first register added to newRegs_.
+comment|/// FirstNew - Index of the first register added to NewRegs.
 specifier|const
 name|unsigned
-name|firstNew_
+name|FirstNew
 decl_stmt|;
-comment|/// scannedRemattable_ - true when remattable values have been identified.
+comment|/// ScannedRemattable - true when remattable values have been identified.
 name|bool
-name|scannedRemattable_
+name|ScannedRemattable
 decl_stmt|;
-comment|/// remattable_ - Values defined by remattable instructions as identified by
+comment|/// Remattable - Values defined by remattable instructions as identified by
 comment|/// tii.isTriviallyReMaterializable().
 name|SmallPtrSet
 operator|<
@@ -240,9 +240,9 @@ operator|*
 operator|,
 literal|4
 operator|>
-name|remattable_
+name|Remattable
 expr_stmt|;
-comment|/// rematted_ - Values that were actually rematted, and so need to have their
+comment|/// Rematted - Values that were actually rematted, and so need to have their
 comment|/// live range trimmed or entirely removed.
 name|SmallPtrSet
 operator|<
@@ -252,9 +252,9 @@ operator|*
 operator|,
 literal|4
 operator|>
-name|rematted_
+name|Rematted
 expr_stmt|;
-comment|/// scanRemattable - Identify the parent_ values that may rematerialize.
+comment|/// scanRemattable - Identify the Parent values that may rematerialize.
 name|void
 name|scanRemattable
 parameter_list|(
@@ -312,7 +312,7 @@ comment|///            be done.  This could be the case if called before Regallo
 name|LiveRangeEdit
 argument_list|(
 name|LiveInterval
-operator|&
+operator|*
 name|parent
 argument_list|,
 name|SmallVectorImpl
@@ -342,12 +342,12 @@ operator|=
 literal|0
 argument_list|)
 operator|:
-name|parent_
+name|Parent
 argument_list|(
 name|parent
 argument_list|)
 operator|,
-name|newRegs_
+name|NewRegs
 argument_list|(
 name|newRegs
 argument_list|)
@@ -382,12 +382,12 @@ name|getInstrInfo
 argument_list|()
 argument_list|)
 operator|,
-name|delegate_
+name|TheDelegate
 argument_list|(
 name|delegate
 argument_list|)
 operator|,
-name|firstNew_
+name|FirstNew
 argument_list|(
 name|newRegs
 operator|.
@@ -395,7 +395,7 @@ name|size
 argument_list|()
 argument_list|)
 operator|,
-name|scannedRemattable_
+name|ScannedRemattable
 argument_list|(
 argument|false
 argument_list|)
@@ -406,8 +406,16 @@ name|getParent
 argument_list|()
 specifier|const
 block|{
+name|assert
+argument_list|(
+name|Parent
+operator|&&
+literal|"No parent LiveInterval"
+argument_list|)
+block|;
 return|return
-name|parent_
+operator|*
+name|Parent
 return|;
 block|}
 name|unsigned
@@ -416,7 +424,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|parent_
+name|getParent
+argument_list|()
 operator|.
 name|reg
 return|;
@@ -438,12 +447,12 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|newRegs_
+name|NewRegs
 operator|.
 name|begin
 argument_list|()
 operator|+
-name|firstNew_
+name|FirstNew
 return|;
 block|}
 name|iterator
@@ -452,7 +461,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|newRegs_
+name|NewRegs
 operator|.
 name|end
 argument_list|()
@@ -464,12 +473,12 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|newRegs_
+name|NewRegs
 operator|.
 name|size
 argument_list|()
 operator|-
-name|firstNew_
+name|FirstNew
 return|;
 block|}
 name|bool
@@ -494,11 +503,11 @@ argument_list|)
 decl|const
 block|{
 return|return
-name|newRegs_
+name|NewRegs
 index|[
 name|idx
 operator|+
-name|firstNew_
+name|FirstNew
 index|]
 return|;
 block|}
@@ -514,12 +523,12 @@ block|{
 return|return
 name|makeArrayRef
 argument_list|(
-name|newRegs_
+name|NewRegs
 argument_list|)
 operator|.
 name|slice
 argument_list|(
-name|firstNew_
+name|FirstNew
 argument_list|)
 return|;
 block|}
@@ -671,7 +680,7 @@ modifier|*
 name|ParentVNI
 parameter_list|)
 block|{
-name|rematted_
+name|Rematted
 operator|.
 name|insert
 argument_list|(
@@ -691,7 +700,7 @@ argument_list|)
 decl|const
 block|{
 return|return
-name|rematted_
+name|Rematted
 operator|.
 name|count
 argument_list|(

@@ -84,13 +84,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseMap.h"
+file|"llvm/ADT/PointerUnion.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/PointerUnion.h"
+file|"llvm/ADT/DenseMap.h"
 end_include
 
 begin_include
@@ -908,12 +908,12 @@ range|:
 name|public
 name|llvm
 operator|::
-name|DenseMap
+name|SmallDenseMap
 operator|<
 name|DeclarationName
 decl_stmt|,
 name|StoredDeclsList
-decl|>
+decl_stmt|, 4>
 block|{
 name|public
 label|:

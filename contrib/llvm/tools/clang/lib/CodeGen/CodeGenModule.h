@@ -494,6 +494,11 @@ name|unsigned
 name|char
 name|PointerSizeInBytes
 decl_stmt|;
+name|unsigned
+name|char
+name|SizeSizeInBytes
+decl_stmt|;
+comment|// sizeof(size_t)
 block|}
 union|;
 block|}
@@ -1173,6 +1178,9 @@ decl_stmt|;
 block|}
 name|Block
 struct|;
+name|GlobalDecl
+name|initializedGlobalDecl
+decl_stmt|;
 comment|/// @}
 name|public
 label|:
@@ -1821,6 +1829,33 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// setTLSMode - Set the TLS mode for the given LLVM GlobalVariable
+end_comment
+
+begin_comment
+comment|/// for the thread-local variable declaration D.
+end_comment
+
+begin_decl_stmt
+name|void
+name|setTLSMode
+argument_list|(
+name|llvm
+operator|::
+name|GlobalVariable
+operator|*
+name|GV
+argument_list|,
+specifier|const
+name|VarDecl
+operator|&
+name|D
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// TypeVisibilityKind - The kind of global variable that is passed to
 end_comment
 
@@ -2077,6 +2112,37 @@ argument|llvm::GlobalValue::LinkageTypes Linkage
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/// GetGlobalVarAddressSpace - Return the address space of the underlying
+end_comment
+
+begin_comment
+comment|/// global variable for D, as determined by its declaration.  Normally this
+end_comment
+
+begin_comment
+comment|/// is the same as the address space of D's type, but in CUDA, address spaces
+end_comment
+
+begin_comment
+comment|/// are associated with declarations, not types.
+end_comment
+
+begin_function_decl
+name|unsigned
+name|GetGlobalVarAddressSpace
+parameter_list|(
+specifier|const
+name|VarDecl
+modifier|*
+name|D
+parameter_list|,
+name|unsigned
+name|AddrSpace
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// GetAddrOfGlobalVar - Return the llvm::Constant for the address of the

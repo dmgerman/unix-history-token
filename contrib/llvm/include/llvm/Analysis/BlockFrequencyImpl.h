@@ -1156,7 +1156,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// doLoop - Propagate block frequency down throught the loop.
+comment|/// doLoop - Propagate block frequency down through the loop.
 end_comment
 
 begin_function

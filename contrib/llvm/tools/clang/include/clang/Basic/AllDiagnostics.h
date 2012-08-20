@@ -32,19 +32,19 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
-comment|//  This file includes all the separate Diagnostic headers& some related
+comment|/// \file
 end_comment
 
 begin_comment
-comment|//  helpers.
+comment|/// \brief Includes all the separate Diagnostic headers& some related helpers.
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
@@ -67,6 +67,12 @@ begin_include
 include|#
 directive|include
 file|"clang/AST/ASTDiagnostic.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/AST/CommentDiagnostic.h"
 end_include
 
 begin_include

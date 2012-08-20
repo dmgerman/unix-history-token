@@ -62,6 +62,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|"DIE.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/DebugInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/AsmPrinter.h"
 end_include
 
@@ -75,18 +87,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/MC/MachineLocation.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Analysis/DebugInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"DIE.h"
 end_include
 
 begin_include
@@ -1106,6 +1106,10 @@ name|MachineModuleInfo
 modifier|*
 name|MMI
 decl_stmt|;
+comment|/// DIEValueAllocator - All DIEValues are allocated through this allocator.
+name|BumpPtrAllocator
+name|DIEValueAllocator
+decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Attributes used to construct specific Dwarf sections.
 comment|//
@@ -1161,6 +1165,9 @@ comment|/// separated by a zero byte, mapped to a unique id.
 name|StringMap
 operator|<
 name|unsigned
+operator|,
+name|BumpPtrAllocator
+operator|&
 operator|>
 name|SourceIdMap
 expr_stmt|;
@@ -1177,7 +1184,10 @@ operator|*
 operator|,
 name|unsigned
 operator|>
-expr|>
+operator|,
+name|BumpPtrAllocator
+operator|&
+operator|>
 name|StringPool
 expr_stmt|;
 name|unsigned
@@ -1234,7 +1244,7 @@ operator|>
 expr|>
 name|ScopeVariables
 expr_stmt|;
-comment|/// AbstractVariables - Collection on abstract variables.
+comment|/// AbstractVariables - Collection of abstract variables.
 name|DenseMap
 operator|<
 specifier|const
@@ -1446,10 +1456,6 @@ name|FunctionDebugFrameInfo
 operator|>
 name|DebugFrames
 expr_stmt|;
-comment|// DIEValueAllocator - All DIEValues are allocated through this allocator.
-name|BumpPtrAllocator
-name|DIEValueAllocator
-decl_stmt|;
 comment|// Section Symbols: these are assembler temporary labels that are emitted at
 comment|// the beginning of each supported dwarf section.  These are used to form
 comment|// section offsets and are created by EmitSectionLabels.
@@ -1570,20 +1576,6 @@ parameter_list|,
 name|LexicalScope
 modifier|*
 name|Scope
-parameter_list|)
-function_decl|;
-comment|/// constructVariableDIE - Construct a DIE for the given DbgVariable.
-name|DIE
-modifier|*
-name|constructVariableDIE
-parameter_list|(
-name|DbgVariable
-modifier|*
-name|DV
-parameter_list|,
-name|LexicalScope
-modifier|*
-name|S
 parameter_list|)
 function_decl|;
 comment|/// constructScopeDIE - Construct a DIE for this scope.
@@ -2048,15 +2040,6 @@ name|DirName
 parameter_list|,
 name|StringRef
 name|FullName
-parameter_list|)
-function_decl|;
-comment|/// createSubprogramDIE - Create new DIE using SP.
-name|DIE
-modifier|*
-name|createSubprogramDIE
-parameter_list|(
-name|DISubprogram
-name|SP
 parameter_list|)
 function_decl|;
 comment|/// getStringPool - returns the entry into the start of the pool.

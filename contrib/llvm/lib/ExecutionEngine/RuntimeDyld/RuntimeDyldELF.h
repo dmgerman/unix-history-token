@@ -162,7 +162,8 @@ name|ObjSectionToIDMap
 operator|&
 name|ObjSectionToID
 argument_list|,
-name|LocalSymbolMap
+specifier|const
+name|SymbolTableMap
 operator|&
 name|Symbols
 argument_list|,

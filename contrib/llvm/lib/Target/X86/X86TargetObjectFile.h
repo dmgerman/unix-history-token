@@ -65,10 +65,10 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|/// X8664_MachoTargetObjectFile - This TLOF implementation is used for Darwin
+comment|/// X86_64MachoTargetObjectFile - This TLOF implementation is used for Darwin
 comment|/// x86-64.
 name|class
-name|X8664_MachoTargetObjectFile
+name|X86_64MachoTargetObjectFile
 range|:
 name|public
 name|TargetLoweringObjectFileMachO
@@ -107,6 +107,29 @@ argument_list|,
 argument|MachineModuleInfo *MMI
 argument_list|)
 specifier|const
+block|;   }
+decl_stmt|;
+comment|/// X86LinuxTargetObjectFile - This implementation is used for linux x86
+comment|/// and x86-64.
+name|class
+name|X86LinuxTargetObjectFile
+range|:
+name|public
+name|TargetLoweringObjectFileELF
+block|{
+name|virtual
+name|void
+name|Initialize
+argument_list|(
+name|MCContext
+operator|&
+name|Ctx
+argument_list|,
+specifier|const
+name|TargetMachine
+operator|&
+name|TM
+argument_list|)
 block|;   }
 decl_stmt|;
 block|}

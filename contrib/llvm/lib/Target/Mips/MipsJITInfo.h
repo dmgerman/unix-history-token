@@ -184,7 +184,7 @@ argument|MachineRelocation *MR
 argument_list|,
 argument|unsigned NumRelocs
 argument_list|,
-argument|unsigned char* GOTBase
+argument|unsigned char *GOTBase
 argument_list|)
 block|;
 comment|/// Initialize - Initialize internal stage for the function being JITted.

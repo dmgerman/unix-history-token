@@ -297,6 +297,14 @@ name|void
 operator|)
 name|llvm
 operator|::
+name|createBoundsCheckingPass
+argument_list|()
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|llvm
+operator|::
 name|createBreakCriticalEdgesPass
 argument_list|()
 expr_stmt|;

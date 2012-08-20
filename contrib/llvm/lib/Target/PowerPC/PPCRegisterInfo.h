@@ -149,6 +149,8 @@ name|TargetRegisterClass
 operator|*
 name|getPointerRegClass
 argument_list|(
+argument|const MachineFunction&MF
+argument_list|,
 argument|unsigned Kind=
 literal|0
 argument_list|)
@@ -190,10 +192,25 @@ argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
+name|virtual
+name|bool
+name|avoidWriteAfterWrite
+argument_list|(
+argument|const TargetRegisterClass *RC
+argument_list|)
+specifier|const
+block|;
 comment|/// requiresRegisterScavenging - We require a register scavenger.
 comment|/// FIXME (64-bit): Should be inlined.
 name|bool
 name|requiresRegisterScavenging
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|trackLivenessAfterRegAlloc
 argument_list|(
 argument|const MachineFunction&MF
 argument_list|)

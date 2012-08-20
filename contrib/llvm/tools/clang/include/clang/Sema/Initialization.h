@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/ASTContext.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/Type.h"
 end_include
 
@@ -2436,8 +2442,8 @@ comment|/// base cast.
 comment|///
 comment|/// \param BaseType the base type to which we will be casting.
 comment|///
-comment|/// \param IsLValue true if the result of this cast will be treated as
-comment|/// an lvalue.
+comment|/// \param Category Indicates whether the result will be treated as an
+comment|/// rvalue, an xvalue, or an lvalue.
 name|void
 name|AddDerivedToBaseCastStep
 parameter_list|(
@@ -2453,9 +2459,6 @@ comment|///
 comment|/// \param BindingTemporary True if we are binding a reference to a temporary
 comment|/// object (thereby extending its lifetime); false if we are binding to an
 comment|/// lvalue or an lvalue treated as an rvalue.
-comment|///
-comment|/// \param UnnecessaryCopy True if we should check for a copy
-comment|/// constructor for a completely unnecessary but
 name|void
 name|AddReferenceBindingStep
 parameter_list|(

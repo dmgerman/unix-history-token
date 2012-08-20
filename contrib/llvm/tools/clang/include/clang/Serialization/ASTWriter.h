@@ -350,6 +350,11 @@ comment|/// serialization, rather than just queueing updates.
 name|bool
 name|WritingAST
 decl_stmt|;
+comment|/// \brief Indicates that we are done serializing the collection of decls
+comment|/// and types to emit.
+name|bool
+name|DoneWritingDeclsAndTypes
+decl_stmt|;
 comment|/// \brief Indicates that the AST contained compiler errors.
 name|bool
 name|ASTHasCompilerErrors
@@ -869,6 +874,18 @@ literal|16
 operator|>
 name|UpdatedDeclContexts
 expr_stmt|;
+comment|/// \brief Keeps track of visible decls that were added in DeclContexts
+comment|/// coming from another AST file.
+name|SmallVector
+operator|<
+specifier|const
+name|Decl
+operator|*
+operator|,
+literal|16
+operator|>
+name|UpdatingVisibleDecls
+expr_stmt|;
 typedef|typedef
 name|llvm
 operator|::
@@ -1024,9 +1041,9 @@ operator|*
 name|CollectedStmts
 expr_stmt|;
 comment|/// \brief Mapping from SwitchCase statements to IDs.
-name|std
+name|llvm
 operator|::
-name|map
+name|DenseMap
 operator|<
 name|SwitchCase
 operator|*
@@ -1344,6 +1361,10 @@ name|WriteFileDeclIDsMap
 parameter_list|()
 function_decl|;
 name|void
+name|WriteComments
+parameter_list|()
+function_decl|;
+name|void
 name|WriteSelectors
 parameter_list|(
 name|Sema
@@ -1376,17 +1397,20 @@ parameter_list|)
 function_decl|;
 name|void
 name|WriteAttributes
-parameter_list|(
+argument_list|(
+name|ArrayRef
+operator|<
 specifier|const
-name|AttrVec
-modifier|&
+name|Attr
+operator|*
+operator|>
 name|Attrs
-parameter_list|,
+argument_list|,
 name|RecordDataImpl
-modifier|&
+operator|&
 name|Record
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|void
 name|ResolveDeclUpdatesBlocks
 parameter_list|()

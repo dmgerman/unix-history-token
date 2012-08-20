@@ -1012,6 +1012,15 @@ name|end
 argument_list|()
 return|;
 block|}
+comment|/// SaveFiles - Save all changed files to disk.
+comment|///
+comment|/// Returns whether not all changes were saved successfully.
+comment|/// Outputs diagnostics via the source manager's diagnostic engine
+comment|/// in case of an error.
+name|bool
+name|overwriteChangedFiles
+parameter_list|()
+function_decl|;
 name|private
 label|:
 name|unsigned

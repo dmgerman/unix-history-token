@@ -611,6 +611,11 @@ name|BlockDecl
 modifier|*
 name|BD
 parameter_list|,
+specifier|const
+name|NamedDecl
+modifier|*
+name|ID
+parameter_list|,
 name|raw_ostream
 modifier|&
 name|Out
@@ -688,6 +693,13 @@ parameter_list|,
 name|raw_ostream
 modifier|&
 name|Out
+parameter_list|,
+specifier|const
+name|NamedDecl
+modifier|*
+name|ID
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 name|void

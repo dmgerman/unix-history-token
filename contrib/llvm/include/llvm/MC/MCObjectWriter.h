@@ -677,37 +677,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/// @}
-comment|/// Utility function to encode a SLEB128 value.
-specifier|static
-name|void
-name|EncodeSLEB128
-parameter_list|(
-name|int64_t
-name|Value
-parameter_list|,
-name|raw_ostream
-modifier|&
-name|OS
-parameter_list|)
-function_decl|;
-comment|/// Utility function to encode a ULEB128 value.
-specifier|static
-name|void
-name|EncodeULEB128
-parameter_list|(
-name|uint64_t
-name|Value
-parameter_list|,
-name|raw_ostream
-modifier|&
-name|OS
-parameter_list|,
-name|unsigned
-name|Padding
-init|=
-literal|0
-parameter_list|)
-function_decl|;
 block|}
 empty_stmt|;
 block|}

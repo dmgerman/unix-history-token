@@ -32,15 +32,23 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
-comment|// This file defines several types used to describe C++ lambda
+comment|/// \file
 end_comment
 
 begin_comment
-comment|// expressions that are shared between the parser and AST.
+comment|/// \brief  Defines several types used to describe C++ lambda expressions
+end_comment
+
+begin_comment
+comment|/// that are shared between the parser and AST.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -63,8 +71,7 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
-comment|/// LambdaCaptureDefault - The default, if any, capture method for a
-comment|/// lambda expression.
+comment|/// \brief The default, if any, capture method for a lambda expression.
 enum|enum
 name|LambdaCaptureDefault
 block|{
@@ -75,8 +82,8 @@ block|,
 name|LCD_ByRef
 block|}
 enum|;
-comment|/// LambdaCaptureKind - The different capture forms in a lambda
-comment|/// introducer: 'this' or a copied or referenced variable.
+comment|/// \brief The different capture forms in a lambda introducer: 'this' or a
+comment|/// copied or referenced variable.
 enum|enum
 name|LambdaCaptureKind
 block|{

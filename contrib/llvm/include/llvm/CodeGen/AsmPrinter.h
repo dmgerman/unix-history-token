@@ -809,6 +809,27 @@ argument|unsigned Size
 argument_list|)
 specifier|const
 block|;
+comment|/// EmitLabelReference - Emit something like ".long Label"
+comment|/// where the size in bytes of the directive is specified by Size and Label
+comment|/// specifies the label.
+name|void
+name|EmitLabelReference
+argument_list|(
+argument|const MCSymbol *Label
+argument_list|,
+argument|unsigned Size
+argument_list|)
+specifier|const
+block|{
+name|EmitLabelPlusOffset
+argument_list|(
+name|Label
+argument_list|,
+literal|0
+argument_list|,
+name|Size
+argument_list|)
+block|;     }
 comment|//===------------------------------------------------------------------===//
 comment|// Dwarf Emission Helper Routines
 comment|//===------------------------------------------------------------------===//

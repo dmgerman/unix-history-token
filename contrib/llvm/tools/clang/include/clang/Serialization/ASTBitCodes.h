@@ -626,6 +626,9 @@ name|PREPROCESSOR_DETAIL_BLOCK_ID
 block|,
 comment|/// \brief The block containing the submodule structure.
 name|SUBMODULE_BLOCK_ID
+block|,
+comment|/// \brief The block containing comments.
+name|COMMENTS_BLOCK_ID
 block|}
 enum|;
 comment|/// \brief Record types that occur within the AST block itself.
@@ -899,7 +902,7 @@ name|CXX_BASE_SPECIFIER_OFFSETS
 init|=
 literal|37
 block|,
-comment|/// \brief Record code for #pragma diagnostic mappings.
+comment|/// \brief Record code for \#pragma diagnostic mappings.
 name|DIAG_PRAGMA_MAPPINGS
 init|=
 literal|38
@@ -919,7 +922,7 @@ name|ORIGINAL_PCH_DIR
 init|=
 literal|41
 block|,
-comment|/// \brief Record code for floating point #pragma options.
+comment|/// \brief Record code for floating point \#pragma options.
 name|FP_PRAGMA_OPTIONS
 init|=
 literal|42
@@ -955,7 +958,7 @@ init|=
 literal|47
 block|,
 comment|/// \brief Record code for the source manager line table information,
-comment|/// which stores information about #line directives.
+comment|/// which stores information about \#line directives.
 name|SOURCE_MANAGER_LINE_TABLE
 init|=
 literal|48
@@ -996,6 +999,8 @@ comment|///
 comment|/// This array can only be interpreted properly using the Objective-C
 comment|/// categories map.
 name|OBJC_CATEGORIES
+init|=
+literal|54
 block|}
 enum|;
 comment|/// \brief Record types used within a source manager block.
@@ -1042,8 +1047,8 @@ init|=
 literal|1
 block|,
 comment|/// \brief A function-like macro definition.
-comment|/// [PP_MACRO_FUNCTION_LIKE,<ObjectLikeStuff>, IsC99Varargs, IsGNUVarars,
-comment|///  NumArgs, ArgIdentInfoID* ]
+comment|/// [PP_MACRO_FUNCTION_LIKE, \<ObjectLikeStuff>, IsC99Varargs,
+comment|/// IsGNUVarars, NumArgs, ArgIdentInfoID* ]
 name|PP_MACRO_FUNCTION_LIKE
 init|=
 literal|2
@@ -1125,6 +1130,15 @@ init|=
 literal|7
 block|}
 enum|;
+comment|/// \brief Record types used within a comments block.
+enum|enum
+name|CommentRecordTypes
+block|{
+name|COMMENTS_RAW_COMMENT
+init|=
+literal|0
+block|}
+enum|;
 comment|/// \defgroup ASTAST AST file AST constants
 comment|///
 comment|/// The constants in this group describe various components of the
@@ -1135,7 +1149,7 @@ comment|/// \brief Predefined type IDs.
 comment|///
 comment|/// These type IDs correspond to predefined types in the AST
 comment|/// context, such as built-in types (int) and special place-holder
-comment|/// types (the<overload> and<dependent> type markers). Such
+comment|/// types (the \<overload> and \<dependent> type markers). Such
 comment|/// types are never actually serialized, since they will be built
 comment|/// by the AST context when it is created.
 enum|enum
@@ -1320,6 +1334,11 @@ comment|/// \brief The pseudo-object placeholder type.
 name|PREDEF_TYPE_PSEUDO_OBJECT
 init|=
 literal|35
+block|,
+comment|/// \brief The __va_list_tag placeholder type.
+name|PREDEF_TYPE_VA_LIST_TAG
+init|=
+literal|36
 block|}
 enum|;
 comment|/// \brief The number of predefined type IDs that are reserved for
@@ -1553,50 +1572,45 @@ comment|/// SPECIAL_TYPES record.
 enum|enum
 name|SpecialTypeIDs
 block|{
-comment|/// \brief __builtin_va_list
-name|SPECIAL_TYPE_BUILTIN_VA_LIST
-init|=
-literal|0
-block|,
 comment|/// \brief CFConstantString type
 name|SPECIAL_TYPE_CF_CONSTANT_STRING
 init|=
-literal|1
+literal|0
 block|,
 comment|/// \brief C FILE typedef type
 name|SPECIAL_TYPE_FILE
 init|=
-literal|2
+literal|1
 block|,
 comment|/// \brief C jmp_buf typedef type
 name|SPECIAL_TYPE_JMP_BUF
 init|=
-literal|3
+literal|2
 block|,
 comment|/// \brief C sigjmp_buf typedef type
 name|SPECIAL_TYPE_SIGJMP_BUF
 init|=
-literal|4
+literal|3
 block|,
 comment|/// \brief Objective-C "id" redefinition type
 name|SPECIAL_TYPE_OBJC_ID_REDEFINITION
 init|=
-literal|5
+literal|4
 block|,
 comment|/// \brief Objective-C "Class" redefinition type
 name|SPECIAL_TYPE_OBJC_CLASS_REDEFINITION
 init|=
-literal|6
+literal|5
 block|,
 comment|/// \brief Objective-C "SEL" redefinition type
 name|SPECIAL_TYPE_OBJC_SEL_REDEFINITION
 init|=
-literal|7
+literal|6
 block|,
 comment|/// \brief C ucontext_t typedef type
 name|SPECIAL_TYPE_UCONTEXT_T
 init|=
-literal|8
+literal|7
 block|}
 enum|;
 comment|/// \brief The number of special type IDs.
@@ -1604,7 +1618,7 @@ specifier|const
 name|unsigned
 name|NumSpecialTypeIDs
 init|=
-literal|9
+literal|8
 decl_stmt|;
 comment|/// \brief Predefined declaration IDs.
 comment|///
@@ -1659,6 +1673,11 @@ comment|/// \brief The internal 'instancetype' typedef.
 name|PREDEF_DECL_OBJC_INSTANCETYPE_ID
 init|=
 literal|8
+block|,
+comment|/// \brief The internal '__builtin_va_list' typedef.
+name|PREDEF_DECL_BUILTIN_VA_LIST_ID
+init|=
+literal|9
 block|}
 enum|;
 comment|/// \brief The number of declaration IDs that are predefined.
@@ -1670,7 +1689,7 @@ name|unsigned
 name|int
 name|NUM_PREDEF_DECL_IDS
 init|=
-literal|9
+literal|10
 decl_stmt|;
 comment|/// \brief Record codes for each kind of declaration.
 comment|///
@@ -1759,7 +1778,7 @@ comment|/// The record itself is a blob that is an array of declaration IDs,
 comment|/// in the order in which those declarations were added to the
 comment|/// declaration context. This data is used when iterating over
 comment|/// the contents of a DeclContext, e.g., via
-comment|/// DeclContext::decls_begin()/DeclContext::decls_end().
+comment|/// DeclContext::decls_begin() and DeclContext::decls_end().
 name|DECL_CONTEXT_LEXICAL
 block|,
 comment|/// \brief A record that stores the set of declarations that are
@@ -2052,7 +2071,7 @@ comment|// Objective-C
 comment|/// \brief An ObjCStringLiteral record.
 name|EXPR_OBJC_STRING_LITERAL
 block|,
-name|EXPR_OBJC_NUMERIC_LITERAL
+name|EXPR_OBJC_BOXED_EXPRESSION
 block|,
 name|EXPR_OBJC_ARRAY_LITERAL
 block|,
@@ -2085,7 +2104,7 @@ block|,
 comment|/// \brief An ObjCIsa Expr record.
 name|EXPR_OBJC_ISA
 block|,
-comment|/// \breif An ObjCIndirectCopyRestoreExpr record.
+comment|/// \brief An ObjCIndirectCopyRestoreExpr record.
 name|EXPR_OBJC_INDIRECT_COPY_RESTORE
 block|,
 comment|/// \brief An ObjCForCollectionStmt record.

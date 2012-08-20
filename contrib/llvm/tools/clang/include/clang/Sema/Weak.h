@@ -76,7 +76,7 @@ block|{
 name|class
 name|IdentifierInfo
 decl_stmt|;
-comment|/// \brief Captures information about a #pragma weak directive.
+comment|/// \brief Captures information about a \#pragma weak directive.
 name|class
 name|WeakInfo
 block|{

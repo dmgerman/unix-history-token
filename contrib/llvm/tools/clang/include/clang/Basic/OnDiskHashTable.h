@@ -32,19 +32,19 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
-comment|//  This file defines facilities for reading and writing on-disk hash
+comment|/// \file
 end_comment
 
 begin_comment
-comment|//  tables.
+comment|/// \brief Defines facilities for reading and writing on-disk hash tables.
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment

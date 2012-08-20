@@ -124,7 +124,6 @@ parameter_list|)
 function_decl|;
 comment|/// getBundleStart - Returns the first instruction in the bundle containing MI.
 comment|///
-specifier|static
 specifier|inline
 name|MachineInstr
 modifier|*
@@ -156,7 +155,6 @@ return|return
 name|I
 return|;
 block|}
-specifier|static
 specifier|inline
 specifier|const
 name|MachineInstr

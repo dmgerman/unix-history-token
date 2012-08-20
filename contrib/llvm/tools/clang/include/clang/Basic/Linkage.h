@@ -32,19 +32,19 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
-comment|// This file defines the Linkage enumeration and various utility
+comment|/// \file
 end_comment
 
 begin_comment
-comment|// functions.
+comment|/// \brief Defines the Linkage enumeration and various utility functions.
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
@@ -83,8 +83,9 @@ comment|/// be referred to from within the translation unit (but not other
 comment|/// translation units).
 name|InternalLinkage
 block|,
-comment|/// \brief External linkage within a unique namespace. From the
-comment|/// language perspective, these entities have external
+comment|/// \brief External linkage within a unique namespace.
+comment|///
+comment|/// From the language perspective, these entities have external
 comment|/// linkage. However, since they reside in an anonymous namespace,
 comment|/// their names are unique to this translation unit, which is
 comment|/// equivalent to having internal linkage from the code-generation
@@ -96,8 +97,9 @@ comment|/// be referred to from other translation units.
 name|ExternalLinkage
 block|}
 enum|;
-comment|/// \brief A more specific kind of linkage. This is relevant to CodeGen and
-comment|/// AST file reading.
+comment|/// \brief A more specific kind of linkage than enum Linkage.
+comment|///
+comment|/// This is relevant to CodeGen and AST file reading.
 enum|enum
 name|GVALinkage
 block|{
@@ -114,8 +116,7 @@ block|,
 name|GVA_ExplicitTemplateInstantiation
 block|}
 enum|;
-comment|/// \brief Determine whether the given linkage is semantically
-comment|/// external.
+comment|/// \brief Determine whether the given linkage is semantically external.
 specifier|inline
 name|bool
 name|isExternalLinkage
@@ -135,7 +136,6 @@ name|ExternalLinkage
 return|;
 block|}
 comment|/// \brief Compute the minimum linkage given two linages.
-specifier|static
 specifier|inline
 name|Linkage
 name|minLinkage

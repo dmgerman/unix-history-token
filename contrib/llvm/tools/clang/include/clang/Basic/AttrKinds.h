@@ -32,15 +32,19 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
-comment|//  This file defines the attr::Kind enum
+comment|/// \file
 end_comment
 
 begin_comment
-comment|//
+comment|/// \brief Defines the clang::attr::Kind enum.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -66,7 +70,7 @@ block|{
 name|namespace
 name|attr
 block|{
-comment|// Kind - This is a list of all the recognized kinds of attributes.
+comment|// \brief A list of all the recognized kinds of attributes.
 enum|enum
 name|Kind
 block|{

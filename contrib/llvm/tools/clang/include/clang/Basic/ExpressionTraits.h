@@ -32,15 +32,19 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
-comment|//  This file defines enumerations for expression traits intrinsics.
+comment|/// \file
 end_comment
 
 begin_comment
-comment|//
+comment|/// \brief Defines enumerations for expression traits intrinsics.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment

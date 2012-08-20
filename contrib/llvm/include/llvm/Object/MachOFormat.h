@@ -279,6 +279,10 @@ block|,
 name|RelocationInfoSize
 init|=
 literal|8
+block|,
+name|LinkeditLoadCommandSize
+init|=
+literal|16
 block|}
 enum|;
 comment|/// \brief Constants for header magic field.
@@ -388,6 +392,10 @@ block|,
 name|LCT_FunctionStarts
 init|=
 literal|0x26
+block|,
+name|LCT_DataInCode
+init|=
+literal|0x29
 block|}
 enum|;
 comment|/// \brief Load command structure.
@@ -726,6 +734,41 @@ decl_stmt|;
 name|uint64_t
 name|Value
 decl_stmt|;
+block|}
+struct|;
+comment|/// @}
+comment|/// @name Data-in-code Table Entry
+comment|/// @{
+comment|// See<mach-o/loader.h>.
+enum|enum
+name|DataRegionType
+block|{
+name|Data
+init|=
+literal|1
+block|,
+name|JumpTable8
+block|,
+name|JumpTable16
+block|,
+name|JumpTable32
+block|}
+enum|;
+struct|struct
+name|DataInCodeTableEntry
+block|{
+name|uint32_t
+name|Offset
+decl_stmt|;
+comment|/* from mach_header to start of data region */
+name|uint16_t
+name|Length
+decl_stmt|;
+comment|/* number of bytes in data region */
+name|uint16_t
+name|Kind
+decl_stmt|;
+comment|/* a DataRegionType value  */
 block|}
 struct|;
 comment|/// @}

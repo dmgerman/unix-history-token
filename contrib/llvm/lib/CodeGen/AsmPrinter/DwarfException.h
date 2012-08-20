@@ -459,21 +459,6 @@ range|:
 name|public
 name|DwarfException
 block|{
-comment|/// shouldEmitTable - Per-function flag to indicate if EH tables should
-comment|/// be emitted.
-name|bool
-name|shouldEmitTable
-block|;
-comment|/// shouldEmitMoves - Per-function flag to indicate if frame moves info
-comment|/// should be emitted.
-name|bool
-name|shouldEmitMoves
-block|;
-comment|/// shouldEmitTableModule - Per-module flag to indicate if EH tables
-comment|/// should be emitted.
-name|bool
-name|shouldEmitTableModule
-block|;
 name|public
 operator|:
 comment|//===--------------------------------------------------------------------===//

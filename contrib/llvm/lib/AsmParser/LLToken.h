@@ -168,6 +168,12 @@ name|kw_external
 block|,
 name|kw_thread_local
 block|,
+name|kw_localdynamic
+block|,
+name|kw_initialexec
+block|,
+name|kw_localexec
+block|,
 name|kw_zeroinitializer
 block|,
 name|kw_undef
@@ -309,6 +315,8 @@ block|,
 name|kw_nonlazybind
 block|,
 name|kw_address_safety
+block|,
+name|kw_ia_nsdialect
 block|,
 name|kw_type
 block|,

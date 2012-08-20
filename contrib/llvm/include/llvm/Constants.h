@@ -3935,6 +3935,33 @@ name|true
 argument_list|)
 return|;
 block|}
+comment|/// getBinOpIdentity - Return the identity for the given binary operation,
+comment|/// i.e. a constant C such that X op C = X and C op X = X for every X.  It
+comment|/// returns null if the operator doesn't have an identity.
+specifier|static
+name|Constant
+operator|*
+name|getBinOpIdentity
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|Type *Ty
+argument_list|)
+block|;
+comment|/// getBinOpAbsorber - Return the absorbing element for the given binary
+comment|/// operation, i.e. a constant C such that X op C = C and C op X = C for
+comment|/// every X.  For example, this returns zero for integer multiplication.
+comment|/// It returns null if the operator doesn't have an absorbing element.
+specifier|static
+name|Constant
+operator|*
+name|getBinOpAbsorber
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|Type *Ty
+argument_list|)
+block|;
 comment|/// Transparently provide more efficient getOperand methods.
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(

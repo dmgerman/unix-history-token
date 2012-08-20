@@ -111,322 +111,341 @@ init|=
 literal|2
 block|}
 enum|;
+enum|enum
+name|DebugInfoKind
+block|{
+name|NoDebugInfo
+block|,
+comment|// Don't generate debug info.
+name|DebugLineTablesOnly
+block|,
+comment|// Emit only debug info necessary for generating
+comment|// line number tables (-gline-tables-only).
+name|LimitedDebugInfo
+block|,
+comment|// Limit generated debug info to reduce size
+comment|// (-flimit-debug-info).
+name|FullDebugInfo
+comment|// Generate complete debug info.
+block|}
+enum|;
+enum|enum
+name|TLSModel
+block|{
+name|GeneralDynamicTLSModel
+block|,
+name|LocalDynamicTLSModel
+block|,
+name|InitialExecTLSModel
+block|,
+name|LocalExecTLSModel
+block|}
+enum|;
 name|unsigned
 name|AsmVerbose
 range|:
 literal|1
 decl_stmt|;
-comment|/// -dA, -fverbose-asm.
+comment|///< -dA, -fverbose-asm.
 name|unsigned
 name|ObjCAutoRefCountExceptions
 range|:
 literal|1
 decl_stmt|;
-comment|/// Whether ARC should be EH-safe.
+comment|///< Whether ARC should be EH-safe.
 name|unsigned
 name|CUDAIsDevice
 range|:
 literal|1
 decl_stmt|;
-comment|/// Set when compiling for CUDA device.
+comment|///< Set when compiling for CUDA device.
 name|unsigned
 name|CXAAtExit
 range|:
 literal|1
 decl_stmt|;
-comment|/// Use __cxa_atexit for calling destructors.
+comment|///< Use __cxa_atexit for calling destructors.
 name|unsigned
 name|CXXCtorDtorAliases
 range|:
 literal|1
 decl_stmt|;
-comment|/// Emit complete ctors/dtors as linker
-comment|/// aliases to base ctors when possible.
+comment|///< Emit complete ctors/dtors as linker
+comment|///< aliases to base ctors when possible.
 name|unsigned
 name|DataSections
 range|:
 literal|1
 decl_stmt|;
-comment|/// Set when -fdata-sections is enabled
-name|unsigned
-name|DebugInfo
-range|:
-literal|1
-decl_stmt|;
-comment|/// Should generate debug info (-g).
-name|unsigned
-name|LimitDebugInfo
-range|:
-literal|1
-decl_stmt|;
-comment|/// Limit generated debug info to reduce size.
+comment|///< Set when -fdata-sections is enabled.
 name|unsigned
 name|DisableFPElim
 range|:
 literal|1
 decl_stmt|;
-comment|/// Set when -fomit-frame-pointer is enabled.
+comment|///< Set when -fomit-frame-pointer is enabled.
 name|unsigned
 name|DisableLLVMOpts
 range|:
 literal|1
 decl_stmt|;
-comment|/// Don't run any optimizations, for use in
-comment|/// getting .bc files that correspond to the
-comment|/// internal state before optimizations are
-comment|/// done.
+comment|///< Don't run any optimizations, for use in
+comment|///< getting .bc files that correspond to the
+comment|///< internal state before optimizations are
+comment|///< done.
 name|unsigned
 name|DisableRedZone
 range|:
 literal|1
 decl_stmt|;
-comment|/// Set when -mno-red-zone is enabled.
+comment|///< Set when -mno-red-zone is enabled.
 name|unsigned
 name|DisableTailCalls
 range|:
 literal|1
 decl_stmt|;
-comment|/// Do not emit tail calls.
+comment|///< Do not emit tail calls.
 name|unsigned
 name|EmitDeclMetadata
 range|:
 literal|1
 decl_stmt|;
-comment|/// Emit special metadata indicating what
-comment|/// Decl* various IR entities came from.  Only
-comment|/// useful when running CodeGen as a
-comment|/// subroutine.
+comment|///< Emit special metadata indicating what
+comment|///< Decl* various IR entities came from. Only
+comment|///< useful when running CodeGen as a
+comment|///< subroutine.
 name|unsigned
 name|EmitGcovArcs
 range|:
 literal|1
 decl_stmt|;
-comment|/// Emit coverage data files, aka. GCDA.
+comment|///< Emit coverage data files, aka. GCDA.
 name|unsigned
 name|EmitGcovNotes
 range|:
 literal|1
 decl_stmt|;
-comment|/// Emit coverage "notes" files, aka GCNO.
+comment|///< Emit coverage "notes" files, aka GCNO.
+name|unsigned
+name|EmitOpenCLArgMetadata
+range|:
+literal|1
+decl_stmt|;
+comment|///< Emit OpenCL kernel arg metadata.
+name|unsigned
+name|EmitMicrosoftInlineAsm
+range|:
+literal|1
+decl_stmt|;
+comment|///< Enable emission of MS-style inline
+comment|///< assembly.
 name|unsigned
 name|ForbidGuardVariables
 range|:
 literal|1
 decl_stmt|;
-comment|/// Issue errors if C++ guard variables
-comment|/// are required
+comment|///< Issue errors if C++ guard variables
+comment|///< are required.
 name|unsigned
 name|FunctionSections
 range|:
 literal|1
 decl_stmt|;
-comment|/// Set when -ffunction-sections is enabled
+comment|///< Set when -ffunction-sections is enabled.
 name|unsigned
 name|HiddenWeakTemplateVTables
 range|:
 literal|1
 decl_stmt|;
-comment|/// Emit weak vtables and RTTI for
-comment|/// template classes with hidden visibility
+comment|///< Emit weak vtables and RTTI for
+comment|///< template classes with hidden visibility
 name|unsigned
 name|HiddenWeakVTables
 range|:
 literal|1
 decl_stmt|;
-comment|/// Emit weak vtables, RTTI, and thunks with
-comment|/// hidden visibility.
+comment|///< Emit weak vtables, RTTI, and thunks with
+comment|///< hidden visibility.
 name|unsigned
 name|InstrumentFunctions
 range|:
 literal|1
 decl_stmt|;
-comment|/// Set when -finstrument-functions is
-comment|/// enabled.
+comment|///< Set when -finstrument-functions is
+comment|///< enabled.
 name|unsigned
 name|InstrumentForProfiling
 range|:
 literal|1
 decl_stmt|;
-comment|/// Set when -pg is enabled
+comment|///< Set when -pg is enabled.
 name|unsigned
 name|LessPreciseFPMAD
 range|:
 literal|1
 decl_stmt|;
-comment|/// Enable less precise MAD instructions to be
-comment|/// generated.
+comment|///< Enable less precise MAD instructions to
+comment|///< be generated.
 name|unsigned
 name|MergeAllConstants
 range|:
 literal|1
 decl_stmt|;
-comment|/// Merge identical constants.
+comment|///< Merge identical constants.
 name|unsigned
 name|NoCommon
 range|:
 literal|1
 decl_stmt|;
-comment|/// Set when -fno-common or C++ is enabled.
+comment|///< Set when -fno-common or C++ is enabled.
 name|unsigned
 name|NoDwarf2CFIAsm
 range|:
 literal|1
 decl_stmt|;
-comment|/// Set when -fno-dwarf2-cfi-asm is enabled.
+comment|///< Set when -fno-dwarf2-cfi-asm is enabled.
 name|unsigned
 name|NoDwarfDirectoryAsm
 range|:
 literal|1
 decl_stmt|;
-comment|/// Set when -fno-dwarf-directory-asm is
-comment|/// enabled.
+comment|///< Set when -fno-dwarf-directory-asm is
+comment|///< enabled.
 name|unsigned
 name|NoExecStack
 range|:
 literal|1
 decl_stmt|;
-comment|/// Set when -Wa,--noexecstack is enabled.
+comment|///< Set when -Wa,--noexecstack is enabled.
 name|unsigned
 name|NoGlobalMerge
 range|:
 literal|1
 decl_stmt|;
-comment|/// Set when -mno-global-merge is enabled.
+comment|///< Set when -mno-global-merge is enabled.
 name|unsigned
 name|NoImplicitFloat
 range|:
 literal|1
 decl_stmt|;
-comment|/// Set when -mno-implicit-float is enabled.
+comment|///< Set when -mno-implicit-float is enabled.
 name|unsigned
 name|NoInfsFPMath
 range|:
 literal|1
 decl_stmt|;
-comment|/// Assume FP arguments, results not +-Inf.
+comment|///< Assume FP arguments, results not +-Inf.
 name|unsigned
 name|NoInline
 range|:
 literal|1
 decl_stmt|;
-comment|/// Set when -fno-inline is enabled. Disables
-comment|/// use of the inline keyword.
+comment|///< Set when -fno-inline is enabled. Disables
+comment|///< use of the inline keyword.
 name|unsigned
 name|NoNaNsFPMath
 range|:
 literal|1
 decl_stmt|;
-comment|/// Assume FP arguments, results not NaN.
+comment|///< Assume FP arguments, results not NaN.
 name|unsigned
 name|NoZeroInitializedInBSS
 range|:
 literal|1
 decl_stmt|;
-comment|/// -fno-zero-initialized-in-bss
+comment|///< -fno-zero-initialized-in-bss.
 name|unsigned
 name|ObjCDispatchMethod
 range|:
 literal|2
 decl_stmt|;
-comment|/// Method of Objective-C dispatch to use.
-name|unsigned
-name|ObjCRuntimeHasARC
-range|:
-literal|1
-decl_stmt|;
-comment|/// The target runtime supports ARC natively
-name|unsigned
-name|ObjCRuntimeHasTerminate
-range|:
-literal|1
-decl_stmt|;
-comment|/// The ObjC runtime has objc_terminate
+comment|///< Method of Objective-C dispatch to use.
 name|unsigned
 name|OmitLeafFramePointer
 range|:
 literal|1
 decl_stmt|;
-comment|/// Set when -momit-leaf-frame-pointer is
-comment|/// enabled.
+comment|///< Set when -momit-leaf-frame-pointer is
+comment|///< enabled.
 name|unsigned
 name|OptimizationLevel
 range|:
 literal|3
 decl_stmt|;
-comment|/// The -O[0-4] option specified.
+comment|///< The -O[0-4] option specified.
 name|unsigned
 name|OptimizeSize
 range|:
 literal|2
 decl_stmt|;
-comment|/// If -Os (==1) or -Oz (==2) is specified.
+comment|///< If -Os (==1) or -Oz (==2) is specified.
 name|unsigned
 name|RelaxAll
 range|:
 literal|1
 decl_stmt|;
-comment|/// Relax all machine code instructions.
+comment|///< Relax all machine code instructions.
 name|unsigned
 name|RelaxedAliasing
 range|:
 literal|1
 decl_stmt|;
-comment|/// Set when -fno-strict-aliasing is enabled.
+comment|///< Set when -fno-strict-aliasing is enabled.
 name|unsigned
 name|SaveTempLabels
 range|:
 literal|1
 decl_stmt|;
-comment|/// Save temporary labels.
+comment|///< Save temporary labels.
 name|unsigned
 name|SimplifyLibCalls
 range|:
 literal|1
 decl_stmt|;
-comment|/// Set when -fbuiltin is enabled.
+comment|///< Set when -fbuiltin is enabled.
 name|unsigned
 name|SoftFloat
 range|:
 literal|1
 decl_stmt|;
-comment|/// -soft-float.
+comment|///< -soft-float.
 name|unsigned
 name|StrictEnums
 range|:
 literal|1
 decl_stmt|;
-comment|/// Optimize based on strict enum definition.
+comment|///< Optimize based on strict enum definition.
 name|unsigned
 name|TimePasses
 range|:
 literal|1
 decl_stmt|;
-comment|/// Set when -ftime-report is enabled.
+comment|///< Set when -ftime-report is enabled.
 name|unsigned
 name|UnitAtATime
 range|:
 literal|1
 decl_stmt|;
-comment|/// Unused. For mirroring GCC optimization
-comment|/// selection.
+comment|///< Unused. For mirroring GCC optimization
+comment|///< selection.
 name|unsigned
 name|UnrollLoops
 range|:
 literal|1
 decl_stmt|;
-comment|/// Control whether loops are unrolled.
+comment|///< Control whether loops are unrolled.
 name|unsigned
 name|UnsafeFPMath
 range|:
 literal|1
 decl_stmt|;
-comment|/// Allow unsafe floating point optzns.
+comment|///< Allow unsafe floating point optzns.
 name|unsigned
 name|UnwindTables
 range|:
 literal|1
 decl_stmt|;
-comment|/// Emit unwind tables.
+comment|///< Emit unwind tables.
 comment|/// Attempt to use register sized accesses to bit-fields in structures, when
 comment|/// possible.
 name|unsigned
@@ -439,20 +458,27 @@ name|VerifyModule
 range|:
 literal|1
 decl_stmt|;
-comment|/// Control whether the module should be run
-comment|/// through the LLVM Verifier.
+comment|///< Control whether the module should be run
+comment|///< through the LLVM Verifier.
 name|unsigned
 name|StackRealignment
 range|:
 literal|1
 decl_stmt|;
-comment|/// Control whether to permit stack
-comment|/// realignment.
+comment|///< Control whether to permit stack
+comment|///< realignment.
+name|unsigned
+name|UseInitArray
+range|:
+literal|1
+decl_stmt|;
+comment|///< Control whether to use .init_array or
+comment|///< .ctors.
 name|unsigned
 name|StackAlignment
 decl_stmt|;
-comment|/// Overrides default stack alignment,
-comment|/// if not 0.
+comment|///< Overrides default stack alignment,
+comment|///< if not 0.
 comment|/// The code model to use (-mcmodel).
 name|std
 operator|::
@@ -478,6 +504,10 @@ operator|::
 name|string
 name|DebugCompilationDir
 expr_stmt|;
+comment|/// The kind of generated debug info.
+name|DebugInfoKind
+name|DebugInfo
+decl_stmt|;
 comment|/// The string to embed in the debug information for the compile unit, if
 comment|/// non-empty.
 name|std
@@ -544,6 +574,15 @@ comment|/// or 0 if unspecified.
 name|unsigned
 name|NumRegisterParameters
 decl_stmt|;
+comment|/// The run-time penalty for bounds checking, or 0 to disable.
+name|unsigned
+name|char
+name|BoundsChecking
+decl_stmt|;
+comment|/// The default TLS model to use.
+name|TLSModel
+name|DefaultTLSModel
+decl_stmt|;
 name|public
 label|:
 name|CodeGenOptions
@@ -566,14 +605,6 @@ operator|=
 literal|0
 expr_stmt|;
 name|DataSections
-operator|=
-literal|0
-expr_stmt|;
-name|DebugInfo
-operator|=
-literal|0
-expr_stmt|;
-name|LimitDebugInfo
 operator|=
 literal|0
 expr_stmt|;
@@ -602,6 +633,14 @@ operator|=
 literal|0
 expr_stmt|;
 name|EmitGcovNotes
+operator|=
+literal|0
+expr_stmt|;
+name|EmitOpenCLArgMetadata
+operator|=
+literal|0
+expr_stmt|;
+name|EmitMicrosoftInlineAsm
 operator|=
 literal|0
 expr_stmt|;
@@ -677,14 +716,6 @@ name|ObjCDispatchMethod
 operator|=
 name|Legacy
 expr_stmt|;
-name|ObjCRuntimeHasARC
-operator|=
-literal|0
-expr_stmt|;
-name|ObjCRuntimeHasTerminate
-operator|=
-literal|0
-expr_stmt|;
 name|OmitLeafFramePointer
 operator|=
 literal|0
@@ -757,6 +788,18 @@ name|StackAlignment
 operator|=
 literal|0
 expr_stmt|;
+name|BoundsChecking
+operator|=
+literal|0
+expr_stmt|;
+name|UseInitArray
+operator|=
+literal|0
+expr_stmt|;
+name|DebugInfo
+operator|=
+name|NoDebugInfo
+expr_stmt|;
 name|Inlining
 operator|=
 name|NoInlining
@@ -764,6 +807,10 @@ expr_stmt|;
 name|RelocationModel
 operator|=
 literal|"pic"
+expr_stmt|;
+name|DefaultTLSModel
+operator|=
+name|GeneralDynamicTLSModel
 expr_stmt|;
 block|}
 name|ObjCDispatchMethodKind

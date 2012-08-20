@@ -609,9 +609,6 @@ comment|///
 comment|/// \param Unexpanded The set of unexpanded parameter packs within the
 comment|/// pattern.
 comment|///
-comment|/// \param NumUnexpanded The number of unexpanded parameter packs in
-comment|/// \p Unexpanded.
-comment|///
 comment|/// \param ShouldExpand Will be set to \c true if the transformer should
 comment|/// expand the corresponding pack expansions into separate arguments. When
 comment|/// set, \c NumExpansions must also be set.
@@ -1288,6 +1285,19 @@ argument_list|(
 name|CXXNamedCastExpr
 operator|*
 name|E
+argument_list|)
+block|;
+comment|/// \brief Transform the captures and body of a lambda expression.
+name|ExprResult
+name|TransformLambdaScope
+argument_list|(
+name|LambdaExpr
+operator|*
+name|E
+argument_list|,
+name|CXXMethodDecl
+operator|*
+name|CallOperator
 argument_list|)
 block|;
 define|#
@@ -2975,22 +2985,25 @@ begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
 end_comment
 
-begin_function
+begin_decl_stmt
 name|StmtResult
 name|RebuildAttributedStmt
-parameter_list|(
+argument_list|(
 name|SourceLocation
 name|AttrLoc
-parameter_list|,
+argument_list|,
+name|ArrayRef
+operator|<
 specifier|const
-name|AttrVec
-modifier|&
+name|Attr
+operator|*
+operator|>
 name|Attrs
-parameter_list|,
+argument_list|,
 name|Stmt
-modifier|*
+operator|*
 name|SubStmt
-parameter_list|)
+argument_list|)
 block|{
 return|return
 name|SemaRef
@@ -3005,7 +3018,7 @@ name|SubStmt
 argument_list|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/// \brief Build a new "if" statement.
@@ -3665,7 +3678,61 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief Build a new Objective-C @try statement.
+comment|/// \brief Build a new MS style inline asm statement.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// By default, performs semantic analysis to build the new statement.
+end_comment
+
+begin_comment
+comment|/// Subclasses may override this routine to provide different behavior.
+end_comment
+
+begin_decl_stmt
+name|StmtResult
+name|RebuildMSAsmStmt
+argument_list|(
+name|SourceLocation
+name|AsmLoc
+argument_list|,
+name|SourceLocation
+name|LBraceLoc
+argument_list|,
+name|ArrayRef
+operator|<
+name|Token
+operator|>
+name|AsmToks
+argument_list|,
+name|SourceLocation
+name|EndLoc
+argument_list|)
+block|{
+return|return
+name|getSema
+argument_list|()
+operator|.
+name|ActOnMSAsmStmt
+argument_list|(
+name|AsmLoc
+argument_list|,
+name|LBraceLoc
+argument_list|,
+name|AsmToks
+argument_list|,
+name|EndLoc
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Build a new Objective-C \@try statement.
 end_comment
 
 begin_comment
@@ -3783,7 +3850,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief Build a new Objective-C @catch statement.
+comment|/// \brief Build a new Objective-C \@catch statement.
 end_comment
 
 begin_comment
@@ -3836,7 +3903,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief Build a new Objective-C @finally statement.
+comment|/// \brief Build a new Objective-C \@finally statement.
 end_comment
 
 begin_comment
@@ -3878,7 +3945,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief Build a new Objective-C @throw statement.
+comment|/// \brief Build a new Objective-C \@throw statement.
 end_comment
 
 begin_comment
@@ -3920,7 +3987,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief Rebuild the operand to an Objective-C @synchronized statement.
+comment|/// \brief Rebuild the operand to an Objective-C \@synchronized statement.
 end_comment
 
 begin_comment
@@ -3962,7 +4029,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief Build a new Objective-C @synchronized statement.
+comment|/// \brief Build a new Objective-C \@synchronized statement.
 end_comment
 
 begin_comment
@@ -4010,7 +4077,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief Build a new Objective-C @autoreleasepool statement.
+comment|/// \brief Build a new Objective-C \@autoreleasepool statement.
 end_comment
 
 begin_comment
@@ -4052,52 +4119,6 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief Build the collection operand to a new Objective-C fast
-end_comment
-
-begin_comment
-comment|/// enumeration statement.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// By default, performs semantic analysis to build the new statement.
-end_comment
-
-begin_comment
-comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
-name|ExprResult
-name|RebuildObjCForCollectionOperand
-parameter_list|(
-name|SourceLocation
-name|forLoc
-parameter_list|,
-name|Expr
-modifier|*
-name|collection
-parameter_list|)
-block|{
-return|return
-name|getSema
-argument_list|()
-operator|.
-name|ActOnObjCForCollectionOperand
-argument_list|(
-name|forLoc
-argument_list|,
-name|collection
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new Objective-C fast enumeration statement.
 end_comment
 
@@ -4120,9 +4141,6 @@ parameter_list|(
 name|SourceLocation
 name|ForLoc
 parameter_list|,
-name|SourceLocation
-name|LParenLoc
-parameter_list|,
 name|Stmt
 modifier|*
 name|Element
@@ -4139,7 +4157,9 @@ modifier|*
 name|Body
 parameter_list|)
 block|{
-return|return
+name|StmtResult
+name|ForEachStmt
+init|=
 name|getSema
 argument_list|()
 operator|.
@@ -4147,13 +4167,34 @@ name|ActOnObjCForCollectionStmt
 argument_list|(
 name|ForLoc
 argument_list|,
-name|LParenLoc
-argument_list|,
 name|Element
 argument_list|,
 name|Collection
 argument_list|,
 name|RParenLoc
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|ForEachStmt
+operator|.
+name|isInvalid
+argument_list|()
+condition|)
+return|return
+name|StmtError
+argument_list|()
+return|;
+return|return
+name|getSema
+argument_list|()
+operator|.
+name|FinishObjCForCollectionStmt
+argument_list|(
+name|ForEachStmt
+operator|.
+name|take
+argument_list|()
 argument_list|,
 name|Body
 argument_list|)
@@ -8476,6 +8517,48 @@ block|}
 end_decl_stmt
 
 begin_comment
+comment|/// \brief Build a new Objective-C boxed expression.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// By default, performs semantic analysis to build the new expression.
+end_comment
+
+begin_comment
+comment|/// Subclasses may override this routine to provide different behavior.
+end_comment
+
+begin_function
+name|ExprResult
+name|RebuildObjCBoxedExpr
+parameter_list|(
+name|SourceRange
+name|SR
+parameter_list|,
+name|Expr
+modifier|*
+name|ValueExpr
+parameter_list|)
+block|{
+return|return
+name|getSema
+argument_list|()
+operator|.
+name|BuildObjCBoxedExpr
+argument_list|(
+name|SR
+argument_list|,
+name|ValueExpr
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new Objective-C array literal.
 end_comment
 
@@ -8618,7 +8701,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief Build a new Objective-C @encode expression.
+comment|/// \brief Build a new Objective-C \@encode expression.
 end_comment
 
 begin_comment
@@ -10739,7 +10822,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-unit|}      return
+unit|}    return
 name|false
 expr_stmt|;
 end_expr_stmt
@@ -13738,7 +13821,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-unit|}      return
+unit|}    return
 name|false
 expr_stmt|;
 end_expr_stmt
@@ -18841,9 +18924,9 @@ name|ResultType
 block|;
 if|if
 condition|(
-name|TL
-operator|.
-name|getTrailingReturn
+name|T
+operator|->
+name|hasTrailingReturn
 argument_list|()
 condition|)
 block|{
@@ -19171,19 +19254,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|NewTL
-operator|.
-name|setTrailingReturn
-argument_list|(
-name|TL
-operator|.
-name|getTrailingReturn
-argument_list|()
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_for
 for|for
 control|(
@@ -19358,16 +19428,6 @@ name|TL
 operator|.
 name|getLocalRangeEnd
 argument_list|()
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|NewTL
-operator|.
-name|setTrailingReturn
-argument_list|(
-name|false
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -21690,7 +21750,7 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
-unit|}; }       template
+unit|}; }   template
 operator|<
 name|typename
 name|Derived
@@ -27359,7 +27419,72 @@ return|;
 end_return
 
 begin_expr_stmt
-unit|}   template
+unit|}  template
+operator|<
+name|typename
+name|Derived
+operator|>
+name|StmtResult
+name|TreeTransform
+operator|<
+name|Derived
+operator|>
+operator|::
+name|TransformMSAsmStmt
+argument_list|(
+argument|MSAsmStmt *S
+argument_list|)
+block|{
+name|ArrayRef
+operator|<
+name|Token
+operator|>
+name|AsmToks
+operator|=
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
+name|S
+operator|->
+name|getAsmToks
+argument_list|()
+argument_list|,
+name|S
+operator|->
+name|getNumAsmToks
+argument_list|()
+argument_list|)
+block|;
+return|return
+name|getDerived
+argument_list|()
+operator|.
+name|RebuildMSAsmStmt
+argument_list|(
+name|S
+operator|->
+name|getAsmLoc
+argument_list|()
+argument_list|,
+name|S
+operator|->
+name|getLBraceLoc
+argument_list|()
+argument_list|,
+name|AsmToks
+argument_list|,
+name|S
+operator|->
+name|getEndLoc
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|template
 operator|<
 name|typename
 name|Derived
@@ -27779,7 +27904,7 @@ return|;
 end_if
 
 begin_expr_stmt
-unit|}      StmtResult
+unit|}    StmtResult
 name|Body
 operator|=
 name|getDerived
@@ -28407,41 +28532,6 @@ argument_list|()
 return|;
 end_if
 
-begin_expr_stmt
-name|Collection
-operator|=
-name|getDerived
-argument_list|()
-operator|.
-name|RebuildObjCForCollectionOperand
-argument_list|(
-name|S
-operator|->
-name|getForLoc
-argument_list|()
-argument_list|,
-name|Collection
-operator|.
-name|take
-argument_list|()
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_if
-if|if
-condition|(
-name|Collection
-operator|.
-name|isInvalid
-argument_list|()
-condition|)
-return|return
-name|StmtError
-argument_list|()
-return|;
-end_if
-
 begin_comment
 comment|// Transform the body.
 end_comment
@@ -28542,12 +28632,6 @@ argument_list|()
 operator|.
 name|RebuildObjCForCollectionStmt
 argument_list|(
-name|S
-operator|->
-name|getForLoc
-argument_list|()
-argument_list|,
-comment|/*FIXME:*/
 name|S
 operator|->
 name|getForLoc
@@ -39121,7 +39205,7 @@ continue|continue;
 end_continue
 
 begin_expr_stmt
-unit|}          ArgChanged
+unit|}      ArgChanged
 operator|=
 name|true
 expr_stmt|;
@@ -39664,7 +39748,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-unit|}      if
+unit|}    if
 operator|(
 operator|!
 name|getDerived
@@ -40941,14 +41025,6 @@ name|ExprError
 argument_list|()
 return|;
 comment|// Transform lambda parameters.
-name|bool
-name|Invalid
-operator|=
-name|false
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|llvm
 operator|::
 name|SmallVector
@@ -41012,52 +41088,15 @@ operator|&
 name|Params
 argument_list|)
 condition|)
-name|Invalid
-operator|=
-name|true
-expr_stmt|;
+return|return
+name|ExprError
+argument_list|()
+return|;
 end_if
 
 begin_comment
 comment|// Build the call operator.
 end_comment
-
-begin_comment
-comment|// Note: Once a lambda mangling number and context declaration have been
-end_comment
-
-begin_comment
-comment|// assigned, they never change.
-end_comment
-
-begin_decl_stmt
-name|unsigned
-name|ManglingNumber
-init|=
-name|E
-operator|->
-name|getLambdaClass
-argument_list|()
-operator|->
-name|getLambdaManglingNumber
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|Decl
-modifier|*
-name|ContextDecl
-init|=
-name|E
-operator|->
-name|getLambdaClass
-argument_list|()
-operator|->
-name|getLambdaContextDecl
-argument_list|()
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|CXXMethodDecl
@@ -41087,10 +41126,6 @@ name|getLocEnd
 argument_list|()
 argument_list|,
 name|Params
-argument_list|,
-name|ManglingNumber
-argument_list|,
-name|ContextDecl
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -41111,30 +41146,40 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|// FIXME: Instantiation-specific.
-end_comment
-
-begin_expr_stmt
-name|CallOperator
-operator|->
-name|setInstantiationOfMemberFunction
+begin_return
+return|return
+name|getDerived
+argument_list|()
+operator|.
+name|TransformLambdaScope
 argument_list|(
 name|E
-operator|->
-name|getCallOperator
-argument_list|()
 argument_list|,
-name|TSK_ImplicitInstantiation
+name|CallOperator
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|// Introduce the context of the call operator.
-end_comment
+return|;
+end_return
 
 begin_expr_stmt
+unit|}  template
+operator|<
+name|typename
+name|Derived
+operator|>
+name|ExprResult
+name|TreeTransform
+operator|<
+name|Derived
+operator|>
+operator|::
+name|TransformLambdaScope
+argument_list|(
+argument|LambdaExpr *E
+argument_list|,
+argument|CXXMethodDecl *CallOperator
+argument_list|)
+block|{
+comment|// Introduce the context of the call operator.
 name|Sema
 operator|::
 name|ContextRAII
@@ -41145,14 +41190,8 @@ argument_list|()
 argument_list|,
 name|CallOperator
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
+block|;
 comment|// Enter the scope of the lambda.
-end_comment
-
-begin_expr_stmt
 name|sema
 operator|::
 name|LambdaScopeInfo
@@ -41191,22 +41230,18 @@ operator|->
 name|isMutable
 argument_list|()
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
+block|;
 comment|// Transform captures.
-end_comment
-
-begin_decl_stmt
+name|bool
+name|Invalid
+operator|=
+name|false
+block|;
 name|bool
 name|FinishedExplicitCaptures
-init|=
+operator|=
 name|false
-decl_stmt|;
-end_decl_stmt
-
-begin_for
+block|;
 for|for
 control|(
 name|LambdaExpr
@@ -41260,7 +41295,13 @@ operator|=
 name|true
 expr_stmt|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|// Capturing 'this' is trivial.
+end_comment
+
+begin_if
 if|if
 condition|(
 name|C
@@ -41287,7 +41328,13 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+end_if
+
+begin_comment
 comment|// Determine the capture kind for Sema.
+end_comment
+
+begin_expr_stmt
 name|Sema
 operator|::
 name|TryCaptureKind
@@ -41317,9 +41364,15 @@ name|Sema
 operator|::
 name|TryCapture_ExplicitByRef
 expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 name|SourceLocation
 name|EllipsisLoc
 decl_stmt|;
+end_decl_stmt
+
+begin_if
 if|if
 condition|(
 name|C
@@ -41496,7 +41549,13 @@ name|getEllipsisLoc
 argument_list|()
 expr_stmt|;
 block|}
+end_if
+
+begin_comment
 comment|// Transform the captured variable.
+end_comment
+
+begin_decl_stmt
 name|VarDecl
 modifier|*
 name|CapturedVar
@@ -41523,6 +41582,9 @@ argument_list|()
 argument_list|)
 operator|)
 decl_stmt|;
+end_decl_stmt
+
+begin_if
 if|if
 condition|(
 operator|!
@@ -41535,7 +41597,13 @@ name|true
 expr_stmt|;
 continue|continue;
 block|}
+end_if
+
+begin_comment
 comment|// Capture the transformed variable.
+end_comment
+
+begin_expr_stmt
 name|getSema
 argument_list|()
 operator|.
@@ -41551,15 +41619,14 @@ argument_list|,
 name|Kind
 argument_list|)
 expr_stmt|;
-block|}
-end_for
+end_expr_stmt
 
-begin_if
-if|if
-condition|(
+begin_expr_stmt
+unit|}   if
+operator|(
 operator|!
 name|FinishedExplicitCaptures
-condition|)
+operator|)
 name|getSema
 argument_list|()
 operator|.
@@ -41568,7 +41635,7 @@ argument_list|(
 name|LSI
 argument_list|)
 expr_stmt|;
-end_if
+end_expr_stmt
 
 begin_comment
 comment|// Enter a new evaluation context to insulate the lambda from any
@@ -43515,24 +43582,90 @@ operator|<
 name|Derived
 operator|>
 operator|::
-name|TransformObjCNumericLiteral
+name|TransformObjCBoxedExpr
 argument_list|(
-argument|ObjCNumericLiteral *E
+argument|ObjCBoxedExpr *E
 argument_list|)
 block|{
+name|ExprResult
+name|SubExpr
+operator|=
+name|getDerived
+argument_list|()
+operator|.
+name|TransformExpr
+argument_list|(
+name|E
+operator|->
+name|getSubExpr
+argument_list|()
+argument_list|)
+block|;
+if|if
+condition|(
+name|SubExpr
+operator|.
+name|isInvalid
+argument_list|()
+condition|)
+return|return
+name|ExprError
+argument_list|()
+return|;
+end_expr_stmt
+
+begin_if
+if|if
+condition|(
+operator|!
+name|getDerived
+argument_list|()
+operator|.
+name|AlwaysRebuild
+argument_list|()
+operator|&&
+name|SubExpr
+operator|.
+name|get
+argument_list|()
+operator|==
+name|E
+operator|->
+name|getSubExpr
+argument_list|()
+condition|)
 return|return
 name|SemaRef
 operator|.
-name|MaybeBindToTemporary
+name|Owned
 argument_list|(
 name|E
 argument_list|)
 return|;
-block|}
-end_expr_stmt
+end_if
+
+begin_return
+return|return
+name|getDerived
+argument_list|()
+operator|.
+name|RebuildObjCBoxedExpr
+argument_list|(
+name|E
+operator|->
+name|getSourceRange
+argument_list|()
+argument_list|,
+name|SubExpr
+operator|.
+name|get
+argument_list|()
+argument_list|)
+return|;
+end_return
 
 begin_expr_stmt
-name|template
+unit|}  template
 operator|<
 name|typename
 name|Derived
@@ -44273,7 +44406,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-unit|}      if
+unit|}    if
 operator|(
 operator|!
 name|getDerived
@@ -48629,8 +48762,38 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|// FIXME: the ScopeType should be tacked onto SS.
+comment|// The scope type is now known to be a valid nested name specifier
 end_comment
+
+begin_comment
+comment|// component. Tack it on to the end of the nested name specifier.
+end_comment
+
+begin_if
+if|if
+condition|(
+name|ScopeType
+condition|)
+name|SS
+operator|.
+name|Extend
+argument_list|(
+name|SemaRef
+operator|.
+name|Context
+argument_list|,
+name|SourceLocation
+argument_list|()
+argument_list|,
+name|ScopeType
+operator|->
+name|getTypeLoc
+argument_list|()
+argument_list|,
+name|CCLoc
+argument_list|)
+expr_stmt|;
+end_if
 
 begin_decl_stmt
 name|SourceLocation

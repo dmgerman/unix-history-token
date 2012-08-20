@@ -68,7 +68,7 @@ comment|//  It is also possible to run a FrontendAction over a snippet of code b
 end_comment
 
 begin_comment
-comment|//  calling runSyntaxOnlyToolOnCode, which is useful for unit testing.
+comment|//  calling runToolOnCode, which is useful for unit testing.
 end_comment
 
 begin_comment
@@ -156,6 +156,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Frontend/FrontendAction.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Tooling/ArgumentsAdjusters.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Tooling/CompilationDatabase.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -189,9 +207,6 @@ decl_stmt|;
 name|namespace
 name|tooling
 block|{
-name|class
-name|CompilationDatabase
-decl_stmt|;
 comment|/// \brief Interface to generate clang::FrontendActions.
 name|class
 name|FrontendActionFactory
@@ -236,13 +251,13 @@ name|newFrontendActionFactory
 argument_list|()
 expr_stmt|;
 comment|/// \brief Returns a new FrontendActionFactory for any type that provides an
-comment|/// implementation of newFrontendAction().
+comment|/// implementation of newASTConsumer().
 comment|///
-comment|/// FactoryT must implement: FrontendAction *newFrontendAction().
+comment|/// FactoryT must implement: ASTConsumer *newASTConsumer().
 comment|///
 comment|/// Example:
-comment|/// struct ProvidesFrontendActions {
-comment|///   FrontendAction *newFrontendAction();
+comment|/// struct ProvidesASTConsumers {
+comment|///   clang::ASTConsumer *newASTConsumer();
 comment|/// } Factory;
 comment|/// FrontendActionFactory *FactoryAdapter =
 comment|///   newFrontendActionFactory(&Factory);
@@ -251,13 +266,14 @@ operator|<
 name|typename
 name|FactoryT
 operator|>
+specifier|inline
 name|FrontendActionFactory
 operator|*
 name|newFrontendActionFactory
 argument_list|(
 name|FactoryT
 operator|*
-name|ActionFactory
+name|ConsumerFactory
 argument_list|)
 expr_stmt|;
 comment|/// \brief Runs (and deletes) the tool on 'Code' with the -fsyntax-only flag.
@@ -297,7 +313,10 @@ name|public
 label|:
 comment|/// \brief Create a tool invocation.
 comment|///
-comment|/// \param CommandLine The command line arguments to clang.
+comment|/// \param CommandLine The command line arguments to clang. Note that clang
+comment|/// uses its binary name (CommandLine[0]) to locate its builtin headers.
+comment|/// Callers have to ensure that they are installed in a compatible location
+comment|/// (see clang driver implementation) or mapped in via mapVirtualFile.
 comment|/// \param ToolAction The action to be executed. Class takes ownership.
 comment|/// \param Files The FileManager used for the execution. Class does not take
 comment|/// ownership.
@@ -381,12 +400,6 @@ operator|::
 name|ArgStringList
 operator|&
 name|CC1Args
-argument_list|,
-name|clang
-operator|::
-name|FrontendAction
-operator|*
-name|ToolAction
 argument_list|)
 decl_stmt|;
 name|std
@@ -425,6 +438,10 @@ empty_stmt|;
 comment|/// \brief Utility to run a FrontendAction over a set of files.
 comment|///
 comment|/// This class is written to be usable for command line utilities.
+comment|/// By default the class uses ClangSyntaxOnlyAdjuster to modify
+comment|/// command line arguments before the arguments are used to run
+comment|/// a frontend action. One could install another command line
+comment|/// arguments adjuster by call setArgumentsAdjuster() method.
 name|class
 name|ClangTool
 block|{
@@ -466,6 +483,17 @@ name|StringRef
 name|Content
 parameter_list|)
 function_decl|;
+comment|/// \brief Install command line arguments adjuster.
+comment|///
+comment|/// \param Adjuster Command line arguments adjuster.
+name|void
+name|setArgumentsAdjuster
+parameter_list|(
+name|ArgumentsAdjuster
+modifier|*
+name|Adjuster
+parameter_list|)
+function_decl|;
 comment|/// Runs a frontend action over all files specified in the command line.
 comment|///
 comment|/// \param ActionFactory Factory generating the frontend actions. The function
@@ -493,8 +521,11 @@ return|;
 block|}
 name|private
 label|:
-comment|// We store command lines as pair (file name, command line).
-typedef|typedef
+comment|// We store compile commands as pair (file name, compile command).
+name|std
+operator|::
+name|vector
+operator|<
 name|std
 operator|::
 name|pair
@@ -503,24 +534,10 @@ name|std
 operator|::
 name|string
 operator|,
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|string
+name|CompileCommand
 operator|>
 expr|>
-name|CommandLine
-expr_stmt|;
-name|std
-operator|::
-name|vector
-operator|<
-name|CommandLine
-operator|>
-name|CommandLines
+name|CompileCommands
 expr_stmt|;
 name|FileManager
 name|Files
@@ -540,6 +557,14 @@ name|StringRef
 operator|>
 expr|>
 name|MappedFileContents
+expr_stmt|;
+name|llvm
+operator|::
+name|OwningPtr
+operator|<
+name|ArgumentsAdjuster
+operator|>
+name|ArgsAdjuster
 expr_stmt|;
 block|}
 empty_stmt|;
@@ -586,11 +611,12 @@ operator|<
 name|typename
 name|FactoryT
 operator|>
+specifier|inline
 name|FrontendActionFactory
 operator|*
 name|newFrontendActionFactory
 argument_list|(
-argument|FactoryT *ActionFactory
+argument|FactoryT *ConsumerFactory
 argument_list|)
 block|{
 name|class
@@ -606,12 +632,12 @@ name|FrontendActionFactoryAdapter
 argument_list|(
 name|FactoryT
 operator|*
-name|ActionFactory
+name|ConsumerFactory
 argument_list|)
 operator|:
-name|ActionFactory
+name|ConsumerFactory
 argument_list|(
-argument|ActionFactory
+argument|ConsumerFactory
 argument_list|)
 block|{}
 name|virtual
@@ -623,9 +649,52 @@ name|create
 argument_list|()
 block|{
 return|return
-name|ActionFactory
+name|new
+name|ConsumerFactoryAdaptor
+argument_list|(
+name|ConsumerFactory
+argument_list|)
+return|;
+block|}
+name|private
+operator|:
+name|class
+name|ConsumerFactoryAdaptor
+operator|:
+name|public
+name|clang
+operator|::
+name|ASTFrontendAction
+block|{
+name|public
+operator|:
+name|ConsumerFactoryAdaptor
+argument_list|(
+name|FactoryT
+operator|*
+name|ConsumerFactory
+argument_list|)
+operator|:
+name|ConsumerFactory
+argument_list|(
+argument|ConsumerFactory
+argument_list|)
+block|{}
+name|clang
+operator|::
+name|ASTConsumer
+operator|*
+name|CreateASTConsumer
+argument_list|(
+argument|clang::CompilerInstance&
+argument_list|,
+argument|llvm::StringRef
+argument_list|)
+block|{
+return|return
+name|ConsumerFactory
 operator|->
-name|newFrontendAction
+name|newASTConsumer
 argument_list|()
 return|;
 block|}
@@ -633,20 +702,46 @@ name|private
 operator|:
 name|FactoryT
 operator|*
-name|ActionFactory
+name|ConsumerFactory
+block|;     }
+block|;
+name|FactoryT
+operator|*
+name|ConsumerFactory
 block|;   }
 block|;
 return|return
 name|new
 name|FrontendActionFactoryAdapter
 argument_list|(
-name|ActionFactory
+name|ConsumerFactory
 argument_list|)
 return|;
 block|}
-expr|}
+comment|/// \brief Returns the absolute path of \c File, by prepending it with
+comment|/// the current directory if \c File is not absolute.
+comment|///
+comment|/// Otherwise returns \c File.
+comment|/// If 'File' starts with "./", the returned path will not contain the "./".
+comment|/// Otherwise, the returned path will contain the literal path-concatenation of
+comment|/// the current directory and \c File.
+comment|///
+comment|/// The difference to llvm::sys::fs::make_absolute is that we prefer
+comment|/// ::getenv("PWD") if available.
+comment|/// FIXME: Make this functionality available from llvm::sys::fs and delete
+comment|///        this function.
+comment|///
+comment|/// \param File Either an absolute or relative path.
+name|std
+operator|::
+name|string
+name|getAbsolutePath
+argument_list|(
+argument|StringRef File
+argument_list|)
+block|;  }
 comment|// end namespace tooling
-expr|}
+block|}
 end_decl_stmt
 
 begin_comment

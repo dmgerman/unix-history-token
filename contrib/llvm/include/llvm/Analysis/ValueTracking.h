@@ -552,6 +552,37 @@ name|MaxLookup
 argument_list|)
 return|;
 block|}
+comment|/// GetUnderlyingObjects - This method is similar to GetUnderlyingObject
+comment|/// except that it can look through phi and select instructions and return
+comment|/// multiple objects.
+name|void
+name|GetUnderlyingObjects
+argument_list|(
+name|Value
+operator|*
+name|V
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|Value
+operator|*
+operator|>
+operator|&
+name|Objects
+argument_list|,
+specifier|const
+name|TargetData
+operator|*
+name|TD
+operator|=
+literal|0
+argument_list|,
+name|unsigned
+name|MaxLookup
+operator|=
+literal|6
+argument_list|)
+decl_stmt|;
 comment|/// onlyUsedByLifetimeMarkers - Return true if the only users of this pointer
 comment|/// are lifetime markers.
 name|bool

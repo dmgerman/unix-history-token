@@ -308,11 +308,11 @@ argument_list|)
 decl_stmt|;
 comment|/// Emits a try / catch statement.  This function is intended to be called by
 comment|/// subclasses, and provides a generic mechanism for generating these, which
-comment|/// should be usable by all runtimes.  The caller must provide the functions to
-comment|/// call when entering and exiting a @catch() block, and the function used to
-comment|/// rethrow exceptions.  If the begin and end catch functions are NULL, then
-comment|/// the function assumes that the EH personality function provides the
-comment|/// thrown object directly.
+comment|/// should be usable by all runtimes.  The caller must provide the functions
+comment|/// to call when entering and exiting a \@catch() block, and the function
+comment|/// used to rethrow exceptions.  If the begin and end catch functions are
+comment|/// NULL, then the function assumes that the EH personality function provides
+comment|/// the thrown object directly.
 name|void
 name|EmitTryCatchStmt
 argument_list|(
@@ -344,10 +344,10 @@ operator|*
 name|exceptionRethrowFn
 argument_list|)
 decl_stmt|;
-comment|/// Emits an @synchronize() statement, using the syncEnterFn and syncExitFn
-comment|/// arguments as the functions called to lock and unlock the object.  This
-comment|/// function can be called by subclasses that use zero-cost exception
-comment|/// handling.
+comment|/// Emits an \@synchronize() statement, using the \p syncEnterFn and
+comment|/// \p syncExitFn arguments as the functions called to lock and unlock
+comment|/// the object.  This function can be called by subclasses that use
+comment|/// zero-cost exception handling.
 name|void
 name|EmitAtSynchronizedStmt
 argument_list|(
@@ -570,7 +570,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/// Emit the code to return the named protocol as an object, as in a
-comment|/// @protocol expression.
+comment|/// \@protocol expression.
 name|virtual
 name|llvm
 operator|::

@@ -344,10 +344,20 @@ comment|/// lambda expression to a block pointer.
 name|CK_CopyAndAutoreleaseBlockObject
 block|}
 enum|;
-define|#
-directive|define
+specifier|static
+specifier|const
+name|CastKind
 name|CK_Invalid
-value|((CastKind) -1)
+init|=
+name|static_cast
+operator|<
+name|CastKind
+operator|>
+operator|(
+operator|-
+literal|1
+operator|)
+decl_stmt|;
 enum|enum
 name|BinaryOperatorKind
 block|{

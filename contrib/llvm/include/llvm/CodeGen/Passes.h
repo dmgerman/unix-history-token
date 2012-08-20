@@ -95,6 +95,9 @@ name|class
 name|PassInfo
 decl_stmt|;
 name|class
+name|PassManagerBase
+decl_stmt|;
+name|class
 name|TargetLowering
 decl_stmt|;
 name|class
@@ -110,12 +113,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-specifier|extern
-name|char
-modifier|&
-name|NoPassID
-decl_stmt|;
-comment|// Allow targets to choose not to run a pass.
 name|class
 name|PassConfigImpl
 decl_stmt|;
@@ -147,15 +144,29 @@ specifier|static
 name|char
 name|PostRAMachineLICMID
 block|;
+name|private
+operator|:
+name|PassManagerBase
+operator|*
+name|PM
+block|;
+name|AnalysisID
+name|StartAfter
+block|;
+name|AnalysisID
+name|StopAfter
+block|;
+name|bool
+name|Started
+block|;
+name|bool
+name|Stopped
+block|;
 name|protected
 operator|:
 name|TargetMachine
 operator|*
 name|TM
-block|;
-name|PassManagerBase
-operator|*
-name|PM
 block|;
 name|PassConfigImpl
 operator|*
@@ -263,6 +274,36 @@ name|getOptLevel
 argument_list|()
 return|;
 block|}
+comment|/// setStartStopPasses - Set the StartAfter and StopAfter passes to allow
+comment|/// running only a portion of the normal code-gen pass sequence.  If the
+comment|/// Start pass ID is zero, then compilation will begin at the normal point;
+comment|/// otherwise, clear the Started flag to indicate that passes should not be
+comment|/// added until the starting pass is seen.  If the Stop pass ID is zero,
+comment|/// then compilation will continue to the end.
+name|void
+name|setStartStopPasses
+argument_list|(
+argument|AnalysisID Start
+argument_list|,
+argument|AnalysisID Stop
+argument_list|)
+block|{
+name|StartAfter
+operator|=
+name|Start
+block|;
+name|StopAfter
+operator|=
+name|Stop
+block|;
+name|Started
+operator|=
+operator|(
+name|StartAfter
+operator|==
+literal|0
+operator|)
+block|;   }
 name|void
 name|setDisableVerify
 argument_list|(
@@ -300,48 +341,53 @@ argument_list|)
 block|; }
 comment|/// Allow the target to override a specific pass without overriding the pass
 comment|/// pipeline. When passes are added to the standard pipeline at the
-comment|/// point where StadardID is expected, add TargetID in its place.
+comment|/// point where StandardID is expected, add TargetID in its place.
 name|void
 name|substitutePass
 argument_list|(
-name|char
-operator|&
-name|StandardID
+argument|AnalysisID StandardID
 argument_list|,
-name|char
-operator|&
-name|TargetID
+argument|AnalysisID TargetID
+argument_list|)
+block|;
+comment|/// Insert InsertedPassID pass after TargetPassID pass.
+name|void
+name|insertPass
+argument_list|(
+argument|AnalysisID TargetPassID
+argument_list|,
+argument|AnalysisID InsertedPassID
 argument_list|)
 block|;
 comment|/// Allow the target to enable a specific standard pass by default.
 name|void
 name|enablePass
 argument_list|(
-argument|char&ID
+argument|AnalysisID PassID
 argument_list|)
 block|{
 name|substitutePass
 argument_list|(
-name|ID
+name|PassID
 argument_list|,
-name|ID
+name|PassID
 argument_list|)
 block|; }
 comment|/// Allow the target to disable a specific standard pass by default.
 name|void
 name|disablePass
 argument_list|(
-argument|char&ID
+argument|AnalysisID PassID
 argument_list|)
 block|{
 name|substitutePass
 argument_list|(
-name|ID
+name|PassID
 argument_list|,
-name|NoPassID
+literal|0
 argument_list|)
 block|; }
-comment|/// Return the pass ssubtituted for StandardID by the target.
+comment|/// Return the pass substituted for StandardID by the target.
 comment|/// If no substitution exists, return StandardID.
 name|AnalysisID
 name|getPassSubstitution
@@ -361,6 +407,11 @@ comment|/// transforms following machine independent optimization.
 name|virtual
 name|void
 name|addIRPasses
+argument_list|()
+block|;
+comment|/// Add passes to lower exception handling for the code generator.
+name|void
+name|addPassesToHandleExceptions
 argument_list|()
 block|;
 comment|/// Add common passes that perform LLVM IR to IR transforms in preparation for
@@ -467,6 +518,23 @@ operator|*
 name|RegAllocPass
 argument_list|)
 block|;
+comment|/// addPreRewrite - Add passes to the optimized register allocation pipeline
+comment|/// after register allocation is complete, but before virtual registers are
+comment|/// rewritten to physical registers.
+comment|///
+comment|/// These passes must preserve VirtRegMap and LiveIntervals, and when running
+comment|/// after RABasic or RAGreedy, they should take advantage of LiveRegMatrix.
+comment|/// When these passes run, VirtRegMap contains legal physreg assignments for
+comment|/// all virtual registers.
+name|virtual
+name|bool
+name|addPreRewrite
+argument_list|()
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// addFinalizeRegAlloc - This method may be implemented by targets that want
 comment|/// to run passes within the regalloc pipeline, immediately after the register
 comment|/// allocation pass itself. These passes run as soon as virtual regisiters
@@ -536,13 +604,21 @@ block|}
 comment|/// Utilities for targets to add passes to the pass manager.
 comment|///
 comment|/// Add a CodeGen pass at this point in the pipeline after checking overrides.
-comment|/// Return the pass that was added, or NoPassID.
+comment|/// Return the pass that was added, or zero if no pass was added.
 name|AnalysisID
 name|addPass
 argument_list|(
-name|char
-operator|&
-name|ID
+argument|AnalysisID PassID
+argument_list|)
+block|;
+comment|/// Add a pass to the PassManager if that pass is supposed to be run, as
+comment|/// determined by the StartAfter and StopAfter options.
+name|void
+name|addPass
+argument_list|(
+name|Pass
+operator|*
+name|P
 argument_list|)
 block|;
 comment|/// addMachinePasses helper to create the target-selected or overriden
@@ -560,9 +636,11 @@ comment|///
 name|void
 name|printAndVerify
 argument_list|(
-argument|const char *Banner
-argument_list|)
 specifier|const
+name|char
+operator|*
+name|Banner
+argument_list|)
 block|; }
 decl_stmt|;
 block|}
@@ -662,6 +740,13 @@ name|char
 modifier|&
 name|StrongPHIEliminationID
 decl_stmt|;
+comment|/// LiveIntervals - This analysis keeps track of the live ranges of virtual
+comment|/// and physical registers.
+specifier|extern
+name|char
+modifier|&
+name|LiveIntervalsID
+decl_stmt|;
 comment|/// LiveStacks pass. An analysis keeping track of the liveness of stack slots.
 specifier|extern
 name|char
@@ -700,6 +785,13 @@ specifier|extern
 name|char
 modifier|&
 name|SpillPlacementID
+decl_stmt|;
+comment|/// VirtRegRewriter pass. Rewrite virtual registers to physical registers as
+comment|/// assigned in VirtRegMap.
+specifier|extern
+name|char
+modifier|&
+name|VirtRegRewriterID
 decl_stmt|;
 comment|/// UnreachableMachineBlockElimination - This pass removes unreachable
 comment|/// machine basic blocks.
@@ -776,12 +868,32 @@ name|char
 modifier|&
 name|BranchFolderPassID
 decl_stmt|;
+comment|/// MachineFunctionPrinterPass - This pass prints out MachineInstr's.
+specifier|extern
+name|char
+modifier|&
+name|MachineFunctionPrinterPassID
+decl_stmt|;
 comment|/// TailDuplicate - Duplicate blocks with unconditional branches
 comment|/// into tails of their predecessors.
 specifier|extern
 name|char
 modifier|&
 name|TailDuplicateID
+decl_stmt|;
+comment|/// MachineTraceMetrics - This pass computes critical path and CPU resource
+comment|/// usage in an ensemble of traces.
+specifier|extern
+name|char
+modifier|&
+name|MachineTraceMetricsID
+decl_stmt|;
+comment|/// EarlyIfConverter - This pass performs if-conversion on SSA form by
+comment|/// inserting cmov instructions.
+specifier|extern
+name|char
+modifier|&
+name|EarlyIfConverterID
 decl_stmt|;
 comment|/// IfConverter - This pass performs machine code if conversion.
 specifier|extern

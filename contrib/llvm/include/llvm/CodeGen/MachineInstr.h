@@ -1338,6 +1338,29 @@ name|Type
 argument_list|)
 return|;
 block|}
+comment|/// isSelect - Return true if this instruction is a select instruction.
+comment|///
+name|bool
+name|isSelect
+argument_list|(
+name|QueryType
+name|Type
+operator|=
+name|IgnoreBundle
+argument_list|)
+decl|const
+block|{
+return|return
+name|hasProperty
+argument_list|(
+name|MCID
+operator|::
+name|Select
+argument_list|,
+name|Type
+argument_list|)
+return|;
+block|}
 comment|/// isNotDuplicable - Return true if this instruction cannot be safely
 comment|/// duplicated.  For example, if the instruction has a unique labels attached
 comment|/// to it, duplicating it would cause multiple definition errors.
@@ -2047,6 +2070,87 @@ operator|.
 name|getSubReg
 argument_list|()
 return|;
+block|}
+comment|/// isTransient - Return true if this is a transient instruction that is
+comment|/// either very likely to be eliminated during register allocation (such as
+comment|/// copy-like instructions), or if this instruction doesn't have an
+comment|/// execution-time cost.
+name|bool
+name|isTransient
+argument_list|()
+specifier|const
+block|{
+switch|switch
+condition|(
+name|getOpcode
+argument_list|()
+condition|)
+block|{
+default|default:
+return|return
+name|false
+return|;
+comment|// Copy-like instructions are usually eliminated during register allocation.
+case|case
+name|TargetOpcode
+operator|::
+name|PHI
+case|:
+case|case
+name|TargetOpcode
+operator|::
+name|COPY
+case|:
+case|case
+name|TargetOpcode
+operator|::
+name|INSERT_SUBREG
+case|:
+case|case
+name|TargetOpcode
+operator|::
+name|SUBREG_TO_REG
+case|:
+case|case
+name|TargetOpcode
+operator|::
+name|REG_SEQUENCE
+case|:
+comment|// Pseudo-instructions that don't produce any real output.
+case|case
+name|TargetOpcode
+operator|::
+name|IMPLICIT_DEF
+case|:
+case|case
+name|TargetOpcode
+operator|::
+name|KILL
+case|:
+case|case
+name|TargetOpcode
+operator|::
+name|PROLOG_LABEL
+case|:
+case|case
+name|TargetOpcode
+operator|::
+name|EH_LABEL
+case|:
+case|case
+name|TargetOpcode
+operator|::
+name|GC_LABEL
+case|:
+case|case
+name|TargetOpcode
+operator|::
+name|DBG_VALUE
+case|:
+return|return
+name|true
+return|;
+block|}
 block|}
 comment|/// getBundleSize - Return the number of instructions inside the MI bundle.
 name|unsigned
@@ -2896,7 +3000,10 @@ comment|/// this instruction from their respective use lists.  This requires tha
 comment|/// operands already be on their use lists.
 name|void
 name|RemoveRegOperandsFromUseLists
-parameter_list|()
+parameter_list|(
+name|MachineRegisterInfo
+modifier|&
+parameter_list|)
 function_decl|;
 comment|/// AddRegOperandsToUseLists - Add all of the register operands in
 comment|/// this instruction from their respective use lists.  This requires that the
@@ -2906,7 +3013,6 @@ name|AddRegOperandsToUseLists
 parameter_list|(
 name|MachineRegisterInfo
 modifier|&
-name|RegInfo
 parameter_list|)
 function_decl|;
 comment|/// hasPropertyInBundle - Slow path for hasProperty when we're dealing with a

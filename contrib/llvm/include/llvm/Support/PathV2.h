@@ -127,15 +127,15 @@ block|{
 name|StringRef
 name|Path
 decl_stmt|;
-comment|//< The entire path.
+comment|///< The entire path.
 name|StringRef
 name|Component
 decl_stmt|;
-comment|//< The current component. Not necessarily in Path.
+comment|///< The current component. Not necessarily in Path.
 name|size_t
 name|Position
 decl_stmt|;
-comment|//< The iterators current position within Path.
+comment|///< The iterators current position within Path.
 comment|// An end iterator has Position = Path.size() + 1.
 name|friend
 name|const_iterator
