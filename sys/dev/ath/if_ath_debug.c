@@ -761,29 +761,27 @@ decl_stmt|;
 comment|/* 	 * Assume the TX map size is 4 for now and only walk 	 * the appropriate number of segments. 	 */
 name|n
 operator|=
+operator|(
 name|bf
 operator|->
 name|bf_nseg
 operator|/
 literal|4
-expr_stmt|;
-if|if
-condition|(
-name|n
-operator|==
-literal|0
-condition|)
-name|n
-operator|=
+operator|)
+operator|+
 literal|1
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Q%u[%3u]"
+literal|"Q%u[%3u] (nseg=%d)"
 argument_list|,
 name|qnum
 argument_list|,
 name|ix
+argument_list|,
+name|bf
+operator|->
+name|bf_nseg
 argument_list|)
 expr_stmt|;
 while|while
