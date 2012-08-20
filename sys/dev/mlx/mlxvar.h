@@ -79,7 +79,7 @@ begin_define
 define|#
 directive|define
 name|MLX_MAXPHYS
-value|(128 * 124)
+value|(128 * 1024)
 end_define
 
 begin_define
