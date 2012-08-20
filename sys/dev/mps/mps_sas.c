@@ -13812,6 +13812,12 @@ name|cm_complete_data
 operator|=
 name|ccb
 expr_stmt|;
+name|tm
+operator|->
+name|cm_targ
+operator|=
+name|targ
+expr_stmt|;
 name|mps_map_command
 argument_list|(
 name|sc
