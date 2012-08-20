@@ -1226,10 +1226,7 @@ literal|1
 decl_stmt|;
 name|int
 name|qnum
-init|=
-literal|0
 decl_stmt|;
-comment|/* XXX update */
 comment|/* 	 * XXX There's txdma and txdma_mgmt; the descriptor 	 * sizes must match. 	 */
 name|struct
 name|ath_descdma
@@ -1420,6 +1417,16 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 		 * XXX this assumes that bfs_txq is the actual destination 		 * hardware queue at this point.  It may not have been assigned, 		 * it may actually be pointing to the multicast software 		 * TXQ id.  These must be fixed! 		 */
+name|qnum
+operator|=
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_txq
+operator|->
+name|axq_qnum
+expr_stmt|;
 name|ath_hal_filltxdesc
 argument_list|(
 name|ah
@@ -1440,14 +1447,7 @@ operator|->
 name|bf_descid
 comment|/* XXX desc id */
 argument_list|,
-name|bf
-operator|->
-name|bf_state
-operator|.
-name|bfs_txq
-operator|->
-name|axq_qnum
-comment|/* XXX multicast? */
+name|qnum
 argument_list|,
 name|isFirstDesc
 comment|/* first segment */
