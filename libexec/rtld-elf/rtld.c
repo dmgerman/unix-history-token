@@ -14539,6 +14539,12 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	     * Process all no_delete objects here, given them own 	     * DAGs to prevent their dependencies from being unloaded. 	     * This has to be done after we have loaded all of the 	     * dependencies, so that we do not miss any. 	     */
+if|if
+condition|(
+name|obj
+operator|!=
+name|NULL
+condition|)
 name|process_nodelete
 argument_list|(
 name|obj
