@@ -911,6 +911,10 @@ return|;
 comment|/* disallow sampling if we do not have an LAPIC */
 if|if
 condition|(
+name|md
+operator|!=
+name|NULL
+operator|&&
 operator|!
 name|lapic_enable_pmc
 argument_list|()
