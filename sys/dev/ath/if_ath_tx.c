@@ -1474,6 +1474,9 @@ name|isFirstDesc
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ATH_DEBUG
 if|if
 condition|(
 name|sc
@@ -1495,6 +1498,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|bf
 operator|->
 name|bf_lastds
