@@ -3166,17 +3166,6 @@ define|\
 value|cam_sim_alloc(a, b, c, d, e,&(d)->isp_osinfo.lock, f, g, h)
 end_define
 
-begin_comment
-comment|/* Should be BUS_SPACE_MAXSIZE, but MAXPHYS is larger than BUS_SPACE_MAXSIZE */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ISP_NSEGS
-value|((MAXPHYS / PAGE_SIZE) + 1)
-end_define
-
 begin_define
 define|#
 directive|define

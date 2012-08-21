@@ -2557,7 +2557,7 @@ name|NULL
 argument_list|,
 name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
-name|ISP_NSEGS
+name|ISP_NSEG_MAX
 argument_list|,
 name|BUS_SPACE_MAXADDR_24BIT
 argument_list|,
