@@ -5524,12 +5524,16 @@ name|__func__
 argument_list|,
 name|tid
 argument_list|,
+name|tp
+condition|?
 name|tcpstates
 index|[
 name|tp
 operator|->
 name|t_state
 index|]
+else|:
+literal|"no tp"
 argument_list|,
 name|toep
 operator|->
