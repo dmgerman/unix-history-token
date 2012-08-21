@@ -42,7 +42,7 @@ file|<sys/time.h>
 end_include
 
 begin_function
-name|clockid_t
+name|int
 name|clock_getcpuclockid
 parameter_list|(
 name|pid_t
@@ -53,7 +53,8 @@ modifier|*
 name|clock_id
 parameter_list|)
 block|{
-return|return
+if|if
+condition|(
 name|clock_getcpuclockid2
 argument_list|(
 name|pid
@@ -62,6 +63,16 @@ name|CPUCLOCK_WHICH_PID
 argument_list|,
 name|clock_id
 argument_list|)
+condition|)
+return|return
+operator|(
+name|errno
+operator|)
+return|;
+return|return
+operator|(
+literal|0
+operator|)
 return|;
 block|}
 end_function
