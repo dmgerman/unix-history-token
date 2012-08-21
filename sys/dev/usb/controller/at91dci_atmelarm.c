@@ -899,7 +899,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"No VBUS IRQ!"
+literal|"No VBUS IRQ!\n"
 argument_list|)
 expr_stmt|;
 block|}
