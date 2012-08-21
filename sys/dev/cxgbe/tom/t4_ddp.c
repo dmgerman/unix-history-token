@@ -4181,7 +4181,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Reuse, or allocate (and program the page pods for) a new DDP buffer.  */
+comment|/*  * Reuse, or allocate (and program the page pods for) a new DDP buffer.  The  * "pages" array is handed over to this function and should not be used in any  * way by the caller after that.  */
 end_comment
 
 begin_function
@@ -4597,32 +4597,6 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
-name|void
-name|unhold_ddp_buffer
-parameter_list|(
-name|struct
-name|ddp_buffer
-modifier|*
-name|db
-parameter_list|)
-block|{
-name|vm_page_unhold_pages
-argument_list|(
-name|db
-operator|->
-name|pages
-argument_list|,
-name|db
-operator|->
-name|npages
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
 name|int
 name|handle_ddp
 parameter_list|(
@@ -4784,6 +4758,11 @@ goto|goto
 name|no_ddp
 goto|;
 comment|/* 	 * Fault in and then hold the pages of the uio buffers.  We'll wire them 	 * a bit later if everything else works out. 	 */
+name|SOCKBUF_UNLOCK
+argument_list|(
+name|sb
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|hold_uio
@@ -4799,9 +4778,55 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|SOCKBUF_LOCK
+argument_list|(
+name|sb
+argument_list|)
+expr_stmt|;
 goto|goto
 name|no_ddp
 goto|;
+block|}
+name|SOCKBUF_LOCK
+argument_list|(
+name|sb
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|__predict_false
+argument_list|(
+name|so
+operator|->
+name|so_error
+operator|||
+name|sb
+operator|->
+name|sb_state
+operator|&
+name|SBS_CANTRCVMORE
+argument_list|)
+condition|)
+block|{
+name|vm_page_unhold_pages
+argument_list|(
+name|pages
+argument_list|,
+name|npages
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|pages
+argument_list|,
+name|M_CXGBE
+argument_list|)
+expr_stmt|;
+goto|goto
+name|no_ddp
+goto|;
+block|}
 comment|/* 	 * Figure out which one of the two DDP buffers to use this time. 	 */
 name|db_idx
 operator|=
@@ -4835,7 +4860,7 @@ name|pages
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* pages either in use elsewhere or unheld + freed */
+comment|/* handed off to select_ddp_buffer */
 if|if
 condition|(
 name|db_idx
@@ -4900,16 +4925,23 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|unhold_ddp_buffer
+comment|/* 		 * Just unhold the pages.  The DDP buffer's software state is 		 * left as-is in the toep.  The page pods were written 		 * successfully and we may have an opportunity to use it in the 		 * future. 		 */
+name|vm_page_unhold_pages
 argument_list|(
 name|db
+operator|->
+name|pages
+argument_list|,
+name|db
+operator|->
+name|npages
 argument_list|)
 expr_stmt|;
 goto|goto
 name|no_ddp
 goto|;
 block|}
-comment|/* Wire the pages and give the chip the go-ahead. */
+comment|/* Wire (and then unhold) the pages, and give the chip the go-ahead. */
 name|wire_ddp_buffer
 argument_list|(
 name|db
