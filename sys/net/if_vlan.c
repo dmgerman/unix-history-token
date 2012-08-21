@@ -5711,7 +5711,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 			 * If the parent interface is being detached, 			 * all it's multicast addresses have already 			 * been removed.  Warn about errors if 			 * if_delmulti() does fail, but don't abort as 			 * all callers expect vlan destruction to 			 * succeed. 			 */
+comment|/* 			 * If the parent interface is being detached, 			 * all its multicast addresses have already 			 * been removed.  Warn about errors if 			 * if_delmulti() does fail, but don't abort as 			 * all callers expect vlan destruction to 			 * succeed. 			 */
 if|if
 condition|(
 operator|!
