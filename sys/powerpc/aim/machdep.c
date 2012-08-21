@@ -829,7 +829,9 @@ argument|*dlmisssize; extern void	*dsmisstrap
 argument_list|,
 argument|*dsmisssize;  uintptr_t powerpc_init(vm_offset_t startkernel, vm_offset_t endkernel,     vm_offset_t basekernel, void *mdp) { 	struct		pcpu *pc; 	void		*generictrap; 	size_t		trap_offset; 	void		*kmdp;         char		*env; 	register_t	msr
 argument_list|,
-argument|scratch; 	uint8_t		*cache_check; 	int		cacheline_warn;
+argument|scratch
+argument_list|,
+argument|vers; 	uint8_t		*cache_check; 	int		cacheline_warn;
 ifndef|#
 directive|ifndef
 name|__powerpc64__
@@ -841,6 +843,12 @@ literal|0
 argument|; 	cacheline_warn =
 literal|0
 argument|;
+comment|/* 	 * The Wii loader doesn't pass us any environment so, mdp 	 * points to garbage at this point. The Wii CPU is a 750CL. 	 */
+argument|vers = mfpvr(); 	if ((vers&
+literal|0xfffff0e0
+argument|) == (MPC750<<
+literal|16
+argument|| MPC750CL))  		mdp = NULL;
 comment|/* 	 * Parse metadata if present and fetch parameters.  Must be done 	 * before console is inited so cninit gets the right value of 	 * boothowto. 	 */
 argument|if (mdp != NULL) { 		preload_metadata = mdp; 		kmdp = preload_search_by_type(
 literal|"elf kernel"
