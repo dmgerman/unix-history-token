@@ -308,13 +308,10 @@ name|PAM_OPT_AUTH_AS_SELF
 argument_list|)
 condition|)
 block|{
-name|pwd
+name|user
 operator|=
-name|getpwnam
-argument_list|(
 name|getlogin
 argument_list|()
-argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -342,6 +339,7 @@ operator|(
 name|retval
 operator|)
 return|;
+block|}
 name|pwd
 operator|=
 name|getpwnam
@@ -349,7 +347,6 @@ argument_list|(
 name|user
 argument_list|)
 expr_stmt|;
-block|}
 name|PAM_LOG
 argument_list|(
 literal|"Got user: %s"
