@@ -188,6 +188,15 @@ literal|10
 operator|)
 block|,
 comment|/* ulp_mode TCPDDP in toepcb */
+name|TPF_SYNQE_EXPANDED
+init|=
+operator|(
+literal|1
+operator|<<
+literal|11
+operator|)
+block|,
+comment|/* toepcb ready, tid context updated */
 block|}
 enum|;
 end_enum

@@ -117,6 +117,13 @@ name|TP_SEND_FIN
 value|(1<< 11)
 end_define
 
+begin_define
+define|#
+directive|define
+name|TP_SYNQE_EXPANDED
+value|(1<< 12)
+end_define
+
 begin_struct
 struct|struct
 name|toepcb
