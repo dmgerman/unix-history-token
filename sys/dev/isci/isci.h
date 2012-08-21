@@ -490,6 +490,16 @@ argument_list|,
 name|SCI_MAX_TIMERS
 argument_list|)
 expr_stmt|;
+name|SCI_POOL_CREATE
+argument_list|(
+name|unmap_buffer_pool
+argument_list|,
+name|void
+operator|*
+argument_list|,
+name|SCI_MAX_REMOTE_DEVICES
+argument_list|)
+expr_stmt|;
 block|}
 struct|;
 end_struct
