@@ -1453,6 +1453,8 @@ name|ni
 decl_stmt|;
 name|int
 name|nacked
+init|=
+literal|0
 decl_stmt|;
 name|DPRINTF
 argument_list|(
