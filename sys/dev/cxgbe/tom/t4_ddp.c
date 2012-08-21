@@ -2403,12 +2403,13 @@ expr_stmt|;
 name|KASSERT
 argument_list|(
 operator|!
-name|toepcb_flag
-argument_list|(
+operator|(
 name|toep
-argument_list|,
+operator|->
+name|flags
+operator|&
 name|TPF_SYNQE
-argument_list|)
+operator|)
 argument_list|,
 operator|(
 literal|"%s: toep %p claims to be a synq entry"
@@ -2582,12 +2583,13 @@ expr_stmt|;
 name|KASSERT
 argument_list|(
 operator|!
-name|toepcb_flag
-argument_list|(
+operator|(
 name|toep
-argument_list|,
+operator|->
+name|flags
+operator|&
 name|TPF_SYNQE
-argument_list|)
+operator|)
 argument_list|,
 operator|(
 literal|"%s: toep %p claims to be a synq entry"

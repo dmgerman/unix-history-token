@@ -1509,12 +1509,11 @@ name|synqe
 operator|->
 name|tid
 argument_list|,
-name|synqe_flag
-argument_list|(
 name|synqe
-argument_list|,
+operator|->
+name|flags
+operator|&
 name|TPF_ABORT_SHUTDOWN
-argument_list|)
 condition|?
 literal|" (abort already in progress)"
 else|:
@@ -1523,21 +1522,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|synqe_flag
-argument_list|(
 name|synqe
-argument_list|,
+operator|->
+name|flags
+operator|&
 name|TPF_ABORT_SHUTDOWN
-argument_list|)
 condition|)
 return|return;
 comment|/* abort already in progress */
-name|synqe_set_flag
-argument_list|(
 name|synqe
-argument_list|,
+operator|->
+name|flags
+operator||=
 name|TPF_ABORT_SHUTDOWN
-argument_list|)
 expr_stmt|;
 name|get_qids_from_mbuf
 argument_list|(
@@ -1815,12 +1812,11 @@ operator|.
 name|abs_id
 argument_list|)
 expr_stmt|;
-name|synqe_set_flag
-argument_list|(
 name|synqe
-argument_list|,
+operator|->
+name|flags
+operator||=
 name|TPF_FLOWC_WR_SENT
-argument_list|)
 expr_stmt|;
 comment|/* ... then ABORT request */
 name|INIT_TP_WR_MIT_CPL
@@ -2716,12 +2712,11 @@ block|{
 name|int
 name|needfree
 init|=
-name|synqe_flag
-argument_list|(
 name|synqe
-argument_list|,
+operator|->
+name|flags
+operator|&
 name|TPF_SYNQE_NEEDFREE
-argument_list|)
 decl_stmt|;
 name|m_freem
 argument_list|(
@@ -3975,12 +3970,11 @@ expr_stmt|;
 comment|/* 	 * If we'd initiated an abort earlier the reply to it is responsible for 	 * cleaning up resources.  Otherwise we tear everything down right here 	 * right now.  We owe the T4 a CPL_ABORT_RPL no matter what. 	 */
 if|if
 condition|(
-name|synqe_flag
-argument_list|(
 name|synqe
-argument_list|,
+operator|->
+name|flags
+operator|&
 name|TPF_ABORT_SHUTDOWN
-argument_list|)
 condition|)
 block|{
 name|INP_WUNLOCK
@@ -4202,12 +4196,11 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|synqe_flag
-argument_list|(
 name|synqe
-argument_list|,
+operator|->
+name|flags
+operator|&
 name|TPF_ABORT_SHUTDOWN
-argument_list|)
 argument_list|,
 operator|(
 literal|"%s: wasn't expecting abort reply for synqe %p (0x%x)"
@@ -4335,12 +4328,11 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|synqe_flag
-argument_list|(
 name|synqe
-argument_list|,
+operator|->
+name|flags
+operator|&
 name|TPF_SYNQE
-argument_list|)
 argument_list|,
 operator|(
 literal|"%s: %p not a synq_entry?"
@@ -4375,12 +4367,11 @@ operator|->
 name|tcp_opt
 argument_list|)
 expr_stmt|;
-name|toepcb_set_flag
-argument_list|(
 name|toep
-argument_list|,
+operator|->
+name|flags
+operator||=
 name|TPF_CPL_PENDING
-argument_list|)
 expr_stmt|;
 name|update_tid
 argument_list|(
@@ -4601,8 +4592,17 @@ operator|(
 name|NULL
 operator|)
 return|;
+name|synqe
+operator|->
+name|flags
+operator|=
+name|TPF_SYNQE
+operator||
+name|TPF_SYNQE_NEEDFREE
+expr_stmt|;
 block|}
 else|else
+block|{
 name|synqe
 operator|=
 operator|(
@@ -4631,28 +4631,9 @@ name|synqe
 operator|->
 name|flags
 operator|=
-literal|0
-expr_stmt|;
-name|synqe_set_flag
-argument_list|(
-name|synqe
-argument_list|,
 name|TPF_SYNQE
-argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|tspace
-operator|<
-name|len
-condition|)
-name|synqe_set_flag
-argument_list|(
-name|synqe
-argument_list|,
-name|TPF_SYNQE_NEEDFREE
-argument_list|)
-expr_stmt|;
+block|}
 return|return
 operator|(
 name|synqe
@@ -6023,12 +6004,11 @@ name|ulp_mode
 operator|=
 name|ULP_MODE_TCPDDP
 expr_stmt|;
-name|synqe_set_flag
-argument_list|(
 name|synqe
-argument_list|,
+operator|->
+name|flags
+operator||=
 name|TPF_SYNQE_TCPDDP
-argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -6243,12 +6223,11 @@ block|{
 comment|/* listener closed.  synqe must have been aborted. */
 name|KASSERT
 argument_list|(
-name|synqe_flag
-argument_list|(
 name|synqe
-argument_list|,
+operator|->
+name|flags
+operator|&
 name|TPF_ABORT_SHUTDOWN
-argument_list|)
 argument_list|,
 operator|(
 literal|"%s: listener %p closed but synqe %p not aborted"
@@ -6306,12 +6285,13 @@ comment|/* 		 * synqe aborted before TOM replied to PASS_ACCEPT_REQ.  But 		 * t
 name|KASSERT
 argument_list|(
 operator|!
-name|synqe_flag
-argument_list|(
+operator|(
 name|synqe
-argument_list|,
+operator|->
+name|flags
+operator|&
 name|TPF_ABORT_SHUTDOWN
-argument_list|)
+operator|)
 argument_list|,
 operator|(
 literal|"%s: synqe %p aborted, but listener %p not dropped."
@@ -6865,12 +6845,11 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|synqe_flag
-argument_list|(
 name|synqe
-argument_list|,
+operator|->
+name|flags
+operator|&
 name|TPF_SYNQE
-argument_list|)
 argument_list|,
 operator|(
 literal|"%s: tid %u (ctx %p) not a synqe"
@@ -6933,12 +6912,11 @@ block|{
 comment|/* 		 * The listening socket has closed.  The TOM must have aborted 		 * all the embryonic connections (including this one) that were 		 * on the lctx's synq.  do_abort_rpl for the tid is responsible 		 * for cleaning up. 		 */
 name|KASSERT
 argument_list|(
-name|synqe_flag
-argument_list|(
 name|synqe
-argument_list|,
+operator|->
+name|flags
+operator|&
 name|TPF_ABORT_SHUTDOWN
-argument_list|)
 argument_list|,
 operator|(
 literal|"%s: listen socket dropped but tid %u not aborted."
@@ -7136,12 +7114,11 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|synqe_flag
-argument_list|(
 name|synqe
-argument_list|,
+operator|->
+name|flags
+operator|&
 name|TPF_SYNQE_TCPDDP
-argument_list|)
 condition|)
 name|set_tcpddp_ulp_mode
 argument_list|(

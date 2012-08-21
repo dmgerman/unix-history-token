@@ -1825,12 +1825,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|toepcb_set_flag
-argument_list|(
 name|toep
-argument_list|,
+operator|->
+name|flags
+operator||=
 name|TPF_CPL_PENDING
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
