@@ -1679,7 +1679,15 @@ name|at91_pmc_clock
 modifier|*
 name|clk
 parameter_list|)
-block|{  }
+block|{
+if|if
+condition|(
+name|clk
+operator|==
+name|NULL
+condition|)
+return|return;
+block|}
 end_function
 
 begin_function
@@ -1692,6 +1700,13 @@ modifier|*
 name|clk
 parameter_list|)
 block|{
+if|if
+condition|(
+name|clk
+operator|==
+name|NULL
+condition|)
+return|return;
 comment|/* XXX LOCKING? XXX */
 if|if
 condition|(
@@ -1741,6 +1756,13 @@ modifier|*
 name|clk
 parameter_list|)
 block|{
+if|if
+condition|(
+name|clk
+operator|==
+name|NULL
+condition|)
+return|return;
 comment|/* XXX LOCKING? XXX */
 if|if
 condition|(
