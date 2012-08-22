@@ -950,6 +950,7 @@ name|struct
 name|timeval
 name|tv
 decl_stmt|;
+specifier|volatile
 name|unsigned
 name|long
 name|junk
