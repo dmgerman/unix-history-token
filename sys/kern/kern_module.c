@@ -515,7 +515,7 @@ operator|->
 name|file
 condition|)
 block|{
-comment|/* 			 * Once a module is succesfully loaded, move 			 * it to the head of the module list for this 			 * linker file.  This resorts the list so that 			 * when the kernel linker iterates over the 			 * modules to unload them, it will unload them 			 * in the reverse order they were loaded. 			 */
+comment|/* 			 * Once a module is successfully loaded, move 			 * it to the head of the module list for this 			 * linker file.  This resorts the list so that 			 * when the kernel linker iterates over the 			 * modules to unload them, it will unload them 			 * in the reverse order they were loaded. 			 */
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
