@@ -441,7 +441,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"B:b:d:f:F:M:m:N:o:s:S:t:x"
+literal|"B:b:d:f:F:M:m:N:o:ps:S:t:x"
 argument_list|)
 operator|)
 operator|!=
@@ -828,6 +828,16 @@ expr_stmt|;
 block|}
 break|break;
 block|}
+case|case
+literal|'p'
+case|:
+name|fsoptions
+operator|.
+name|sparse
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 case|case
 literal|'s'
 case|:
@@ -1572,7 +1582,7 @@ name|stderr
 argument_list|,
 literal|"usage: %s [-t fs-type] [-o fs-options] [-d debug-mask] [-B endian]\n"
 literal|"\t[-S sector-size] [-M minimum-size] [-m maximum-size] [-s image-size]\n"
-literal|"\t[-b free-blocks] [-f free-files] [-F mtree-specfile] [-x]\n"
+literal|"\t[-b free-blocks] [-f free-files] [-F mtree-specfile] [-x] [-p]\n"
 literal|"\t[-N userdb-dir] image-file directory | manifest [extra-directory ...]\n"
 argument_list|,
 name|prog
