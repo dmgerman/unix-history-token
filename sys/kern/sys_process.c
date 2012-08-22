@@ -4400,6 +4400,12 @@ name|td_tid
 expr_stmt|;
 name|pl
 operator|->
+name|pl_event
+operator|=
+name|PL_EVENT_NONE
+expr_stmt|;
+name|pl
+operator|->
 name|pl_flags
 operator|=
 literal|0
