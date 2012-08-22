@@ -1022,7 +1022,7 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
-comment|/* leave one number for thread0 */
+comment|/* 	 * pid_max cannot be greater than PID_MAX. 	 * leave one number for thread0. 	 */
 name|tid_unrhdr
 operator|=
 name|new_unrhdr

@@ -38,12 +38,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/limits.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -62,13 +56,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sysctl.h>
+file|<sys/limits.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/msgbuf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/proc.h>
 end_include
 
 begin_include
@@ -337,6 +343,14 @@ end_comment
 begin_decl_stmt
 name|int
 name|nswbuf
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|pid_t
+name|pid_max
+init|=
+name|PID_MAX
 decl_stmt|;
 end_decl_stmt
 
@@ -1196,6 +1210,36 @@ condition|)
 name|ngroups_max
 operator|=
 name|NGROUPS_MAX
+expr_stmt|;
+comment|/* 	 * Only allow to lower the maximal pid. 	 * Prevent setting up a non-bootable system if pid_max is too low. 	 */
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"kern.pid_max"
+argument_list|,
+operator|&
+name|pid_max
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pid_max
+operator|>
+name|PID_MAX
+condition|)
+name|pid_max
+operator|=
+name|PID_MAX
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|pid_max
+operator|<
+literal|300
+condition|)
+name|pid_max
+operator|=
+literal|300
 expr_stmt|;
 block|}
 end_function

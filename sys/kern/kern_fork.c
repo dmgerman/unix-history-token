@@ -941,14 +941,14 @@ literal|0
 operator|||
 name|pid
 operator|>
-name|PID_MAX
+name|pid_max
 operator|-
 literal|100
 condition|)
 comment|/* out of range */
 name|pid
 operator|=
-name|PID_MAX
+name|pid_max
 operator|-
 literal|100
 expr_stmt|;
@@ -1107,14 +1107,14 @@ if|if
 condition|(
 name|trypid
 operator|>=
-name|PID_MAX
+name|pid_max
 condition|)
 block|{
 name|trypid
 operator|=
 name|trypid
 operator|%
-name|PID_MAX
+name|pid_max
 expr_stmt|;
 if|if
 condition|(

@@ -3506,7 +3506,7 @@ value|TAILQ_FIRST(&(p)->p_threads)
 end_define
 
 begin_comment
-comment|/*  * We use process IDs<= PID_MAX; PID_MAX + 1 must also fit in a pid_t,  * as it is used to represent "no process group".  */
+comment|/*  * We use process IDs<= pid_max<= PID_MAX; PID_MAX + 1 must also fit  * in a pid_t, as it is used to represent "no process group".  */
 end_comment
 
 begin_define
@@ -3522,6 +3522,13 @@ directive|define
 name|NO_PID
 value|100000
 end_define
+
+begin_decl_stmt
+specifier|extern
+name|pid_t
+name|pid_max
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
