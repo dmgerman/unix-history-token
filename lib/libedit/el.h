@@ -367,6 +367,10 @@ name|int
 name|el_flags
 decl_stmt|;
 comment|/* Various flags.		*/
+name|int
+name|el_errno
+decl_stmt|;
+comment|/* Local copy of errno		*/
 name|coord_t
 name|el_cursor
 decl_stmt|;
