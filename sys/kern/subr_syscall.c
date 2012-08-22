@@ -824,6 +824,28 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|td
+operator|->
+name|td_pinned
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"System call %s returning with pinned thread"
+operator|,
+name|syscallname
+argument_list|(
+name|p
+argument_list|,
+name|sa
+operator|->
+name|code
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Handle reschedule and other end-of-syscall issues 	 */
 name|userret
 argument_list|(
