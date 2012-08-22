@@ -719,7 +719,16 @@ name|fp
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* Make sure mapping fits into numeric range, etc. */
+comment|/* 	 * Enforce the constraints. 	 * Mapping of length 0 is only allowed for old binaries. 	 * Anonymous mapping shall specify -1 as filedescriptor and 	 * zero position for new code. Be nice to ancient a.out 	 * binaries and correct pos for anonymous mapping, since old 	 * ld.so sometimes issues anonymous map requests with non-zero 	 * pos. 	 */
+if|if
+condition|(
+operator|!
+name|SV_CURPROC_FLAG
+argument_list|(
+name|SV_AOUT
+argument_list|)
+condition|)
+block|{
 if|if
 condition|(
 operator|(
@@ -728,12 +737,6 @@ operator|->
 name|len
 operator|==
 literal|0
-operator|&&
-operator|!
-name|SV_CURPROC_FLAG
-argument_list|(
-name|SV_AOUT
-argument_list|)
 operator|&&
 name|curproc
 operator|->
@@ -748,6 +751,8 @@ name|flags
 operator|&
 name|MAP_ANON
 operator|)
+operator|!=
+literal|0
 operator|&&
 operator|(
 name|uap
@@ -768,6 +773,24 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|MAP_ANON
+operator|)
+operator|!=
+literal|0
+condition|)
+name|pos
+operator|=
+literal|0
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|flags
