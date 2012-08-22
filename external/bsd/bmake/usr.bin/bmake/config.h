@@ -799,7 +799,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"bmake 20120606"
+value|"bmake 20120620"
 end_define
 
 begin_comment
@@ -832,7 +832,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"20120606"
+value|"20120620"
 end_define
 
 begin_comment
