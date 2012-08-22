@@ -1582,7 +1582,7 @@ name|stderr
 argument_list|,
 literal|"usage: %s [-t fs-type] [-o fs-options] [-d debug-mask] [-B endian]\n"
 literal|"\t[-S sector-size] [-M minimum-size] [-m maximum-size] [-s image-size]\n"
-literal|"\t[-b free-blocks] [-f free-files] [-F mtree-specfile] [-x] [-p]\n"
+literal|"\t[-b free-blocks] [-f free-files] [-F mtree-specfile] [-px]\n"
 literal|"\t[-N userdb-dir] image-file directory | manifest [extra-directory ...]\n"
 argument_list|,
 name|prog
