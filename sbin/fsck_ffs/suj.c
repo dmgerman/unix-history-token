@@ -11491,15 +11491,6 @@ name|di_size
 argument_list|)
 operator|<
 name|SUJ_MIN
-operator|||
-name|DIP
-argument_list|(
-name|ip
-argument_list|,
-name|di_size
-argument_list|)
-operator|>
-name|SUJ_MAX
 condition|)
 block|{
 name|printf
