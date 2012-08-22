@@ -11308,6 +11308,9 @@ operator|=
 name|TDQ_SELF
 argument_list|()
 expr_stmt|;
+name|THREAD_NO_SLEEPING
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 init|;

@@ -6502,6 +6502,9 @@ name|pcpuidlestat
 modifier|*
 name|stat
 decl_stmt|;
+name|THREAD_NO_SLEEPING
+argument_list|()
+expr_stmt|;
 name|stat
 operator|=
 name|DPCPU_PTR

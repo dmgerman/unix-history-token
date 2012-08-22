@@ -2673,6 +2673,19 @@ operator|==
 name|TS_EXCLUSIVE_QUEUE
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|!
+name|TD_IS_IDLETHREAD
+argument_list|(
+name|td
+argument_list|)
+argument_list|,
+operator|(
+literal|"idle threads cannot block on locks"
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * If the lock does not already have a turnstile, use this thread's 	 * turnstile.  Otherwise insert the current thread into the 	 * turnstile already in use by this lock. 	 */
 name|tc
 operator|=
