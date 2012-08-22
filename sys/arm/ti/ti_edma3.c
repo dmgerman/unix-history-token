@@ -745,7 +745,7 @@ name|ofw_bus_is_compatible
 argument_list|(
 name|dev
 argument_list|,
-literal|"ti,edma"
+literal|"ti,edma3"
 argument_list|)
 condition|)
 return|return
