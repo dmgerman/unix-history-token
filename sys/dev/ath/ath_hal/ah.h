@@ -1130,6 +1130,10 @@ init|=
 literal|0x00000002
 block|,
 comment|/* Legacy mapping */
+name|HAL_INT_RXERR
+init|=
+literal|0x00000004
+block|,
 name|HAL_INT_RXHP
 init|=
 literal|0x00000001
@@ -1140,10 +1144,6 @@ init|=
 literal|0x00000002
 block|,
 comment|/* EDMA */
-name|HAL_INT_RXERR
-init|=
-literal|0x00000004
-block|,
 name|HAL_INT_RXNOFRM
 init|=
 literal|0x00000008
@@ -1169,6 +1169,14 @@ name|HAL_INT_TIM_TIMER
 init|=
 literal|0x00000100
 block|,
+name|HAL_INT_MCI
+init|=
+literal|0x00000200
+block|,
+name|HAL_INT_BBPANIC
+init|=
+literal|0x00000400
+block|,
 name|HAL_INT_TXURN
 init|=
 literal|0x00000800
@@ -1188,6 +1196,10 @@ block|,
 name|HAL_INT_SWBA
 init|=
 literal|0x00010000
+block|,
+name|HAL_INT_BRSSI
+init|=
+literal|0x00020000
 block|,
 name|HAL_INT_BMISS
 init|=
@@ -1227,6 +1239,12 @@ literal|0x04000000
 block|,
 comment|/* Non-common mapping */
 name|HAL_INT_TBTT
+init|=
+literal|0x08000000
+block|,
+comment|/* Non-common mapping */
+comment|/* Atheros ref driver has a generic timer interrupt now..*/
+name|HAL_INT_GENTIMER
 init|=
 literal|0x08000000
 block|,
@@ -1287,6 +1305,8 @@ operator||
 name|HAL_INT_SWBA
 operator||
 name|HAL_INT_BMISS
+operator||
+name|HAL_INT_BRSSI
 operator||
 name|HAL_INT_BNR
 operator||
