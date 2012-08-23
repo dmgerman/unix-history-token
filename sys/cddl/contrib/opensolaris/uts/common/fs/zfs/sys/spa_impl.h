@@ -396,6 +396,10 @@ name|uint64_t
 name|spa_load_guid
 decl_stmt|;
 comment|/* spa_load initialized guid */
+name|uint64_t
+name|spa_last_synced_guid
+decl_stmt|;
+comment|/* last synced guid */
 name|list_t
 name|spa_config_dirty_list
 decl_stmt|;

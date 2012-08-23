@@ -8723,18 +8723,6 @@ name|err
 decl_stmt|,
 name|myerr
 decl_stmt|;
-comment|/* 	 * XXX hack; seems the ds is still dirty and dsl_pool_zil_clean() 	 * expects it to have a ds_user_ptr (and zil), but clone_swap() 	 * can close it. 	 */
-name|txg_wait_synced
-argument_list|(
-name|ds
-operator|->
-name|ds_dir
-operator|->
-name|dd_pool
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|dsl_dataset_tryown
