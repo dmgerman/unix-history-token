@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Portions Copyright 2011 Martin Matuska  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Portions Copyright 2011 Martin Matuska  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -2727,7 +2727,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|boolean_t
 name|txg_list_empty
 parameter_list|(
 name|txg_list_t

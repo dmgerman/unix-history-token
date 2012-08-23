@@ -1049,7 +1049,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Calculate name legnth, avoiding all the strcat calls of dsl_dir_name */
+comment|/* Calculate name length, avoiding all the strcat calls of dsl_dir_name */
 end_comment
 
 begin_function
@@ -3019,15 +3019,6 @@ name|tx
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|dmu_buf_will_dirty
-argument_list|(
-name|dd
-operator|->
-name|dd_dbuf
-argument_list|,
-name|tx
-argument_list|)
-expr_stmt|;
 name|mutex_enter
 argument_list|(
 operator|&
@@ -4666,13 +4657,6 @@ operator|<
 name|DD_USED_NUM
 argument_list|)
 expr_stmt|;
-name|dsl_dir_dirty
-argument_list|(
-name|dd
-argument_list|,
-name|tx
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|needlock
@@ -4746,6 +4730,15 @@ name|dd_uncompressed_bytes
 operator|>=
 operator|-
 name|uncompressed
+argument_list|)
+expr_stmt|;
+name|dmu_buf_will_dirty
+argument_list|(
+name|dd
+operator|->
+name|dd_dbuf
+argument_list|,
+name|tx
 argument_list|)
 expr_stmt|;
 name|dd
@@ -4997,13 +4990,6 @@ name|DD_FLAG_USED_BREAKDOWN
 operator|)
 condition|)
 return|return;
-name|dsl_dir_dirty
-argument_list|(
-name|dd
-argument_list|,
-name|tx
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|needlock
@@ -5058,6 +5044,15 @@ name|ABS
 argument_list|(
 name|delta
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|dmu_buf_will_dirty
+argument_list|(
+name|dd
+operator|->
+name|dd_dbuf
+argument_list|,
+name|tx
 argument_list|)
 expr_stmt|;
 name|dd

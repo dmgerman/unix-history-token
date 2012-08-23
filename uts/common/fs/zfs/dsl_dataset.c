@@ -405,45 +405,17 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 		 * Account for the meta-objset space in its placeholder 		 * dsl_dir. 		 */
-name|ASSERT3U
-argument_list|(
-name|compressed
-argument_list|,
-operator|==
-argument_list|,
-name|uncompressed
-argument_list|)
-expr_stmt|;
-comment|/* it's all metadata */
-name|dsl_dir_diduse_space
+name|dsl_pool_mos_diduse_space
 argument_list|(
 name|tx
 operator|->
 name|tx_pool
-operator|->
-name|dp_mos_dir
-argument_list|,
-name|DD_USED_HEAD
 argument_list|,
 name|used
 argument_list|,
 name|compressed
 argument_list|,
 name|uncompressed
-argument_list|,
-name|tx
-argument_list|)
-expr_stmt|;
-name|dsl_dir_dirty
-argument_list|(
-name|tx
-operator|->
-name|tx_pool
-operator|->
-name|dp_mos_dir
-argument_list|,
-name|tx
 argument_list|)
 expr_stmt|;
 return|return;
@@ -667,7 +639,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 		 * Account for the meta-objset space in its placeholder 		 * dataset. 		 */
 name|dsl_free
 argument_list|(
 name|tx
@@ -681,15 +652,11 @@ argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
-name|dsl_dir_diduse_space
+name|dsl_pool_mos_diduse_space
 argument_list|(
 name|tx
 operator|->
 name|tx_pool
-operator|->
-name|dp_mos_dir
-argument_list|,
-name|DD_USED_HEAD
 argument_list|,
 operator|-
 name|used
@@ -699,19 +666,6 @@ name|compressed
 argument_list|,
 operator|-
 name|uncompressed
-argument_list|,
-name|tx
-argument_list|)
-expr_stmt|;
-name|dsl_dir_dirty
-argument_list|(
-name|tx
-operator|->
-name|tx_pool
-operator|->
-name|dp_mos_dir
-argument_list|,
-name|tx
 argument_list|)
 expr_stmt|;
 return|return
@@ -5674,7 +5628,25 @@ name|ds
 operator|->
 name|ds_dir
 expr_stmt|;
-comment|/* 	 * Check for errors and mark this ds as inconsistent, in 	 * case we crash while freeing the objects. 	 */
+if|if
+condition|(
+operator|!
+name|spa_feature_is_enabled
+argument_list|(
+name|dsl_dataset_get_spa
+argument_list|(
+name|ds
+argument_list|)
+argument_list|,
+operator|&
+name|spa_feature_table
+index|[
+name|SPA_FEATURE_ASYNC_DESTROY
+index|]
+argument_list|)
+condition|)
+block|{
+comment|/* 		 * Check for errors and mark this ds as inconsistent, in 		 * case we crash while freeing the objects. 		 */
 name|err
 operator|=
 name|dsl_sync_task_do
@@ -5718,25 +5690,7 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* 	 * If async destruction is not enabled try to remove all objects 	 * while in the open context so that there is less work to do in 	 * the syncing context. 	 */
-if|if
-condition|(
-operator|!
-name|spa_feature_is_enabled
-argument_list|(
-name|dsl_dataset_get_spa
-argument_list|(
-name|ds
-argument_list|)
-argument_list|,
-operator|&
-name|spa_feature_table
-index|[
-name|SPA_FEATURE_ASYNC_DESTROY
-index|]
-argument_list|)
-condition|)
-block|{
+comment|/* 		 * Remove all objects while in the open context so that 		 * there is less work to do in the syncing context. 		 */
 for|for
 control|(
 name|obj
@@ -5787,19 +5741,7 @@ condition|)
 goto|goto
 name|out
 goto|;
-block|}
-comment|/* 	 * Only the ZIL knows how to free log blocks. 	 */
-name|zil_destroy
-argument_list|(
-name|dmu_objset_zil
-argument_list|(
-name|os
-argument_list|)
-argument_list|,
-name|B_FALSE
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Sync out all in-flight IO. 	 */
+comment|/* 		 * Sync out all in-flight IO. 		 */
 name|txg_wait_synced
 argument_list|(
 name|dd
@@ -5809,7 +5751,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If we managed to free all the objects in open 	 * context, the user space accounting should be zero. 	 */
+comment|/* 		 * If we managed to free all the objects in open 		 * context, the user space accounting should be zero. 		 */
 if|if
 condition|(
 name|ds
@@ -5869,6 +5811,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|rw_enter
 argument_list|(
@@ -9419,6 +9362,10 @@ index|[
 name|SPA_FEATURE_ASYNC_DESTROY
 index|]
 decl_stmt|;
+name|objset_t
+modifier|*
+name|os
+decl_stmt|;
 comment|/* 		 * There's no next snapshot, so this is a head dataset. 		 * Destroy the deadlist.  Unless it's a clone, the 		 * deadlist should be empty.  (If it's a clone, it's 		 * safe to ignore the deadlist contents.) 		 */
 name|dsl_deadlist_close
 argument_list|(
@@ -9448,6 +9395,21 @@ operator|->
 name|ds_deadlist_obj
 operator|=
 literal|0
+expr_stmt|;
+name|VERIFY3U
+argument_list|(
+literal|0
+argument_list|,
+operator|==
+argument_list|,
+name|dmu_objset_from_ds
+argument_list|(
+name|ds
+argument_list|,
+operator|&
+name|os
+argument_list|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -9482,15 +9444,14 @@ name|comp
 decl_stmt|,
 name|uncomp
 decl_stmt|;
-name|ASSERT
+name|zil_destroy_sync
 argument_list|(
-name|err
-operator|==
-literal|0
-operator|||
-name|err
-operator|==
-name|EBUSY
+name|dmu_objset_zil
+argument_list|(
+name|os
+argument_list|)
+argument_list|,
+name|tx
 argument_list|)
 expr_stmt|;
 if|if
@@ -9523,9 +9484,7 @@ name|dp_bptree_obj
 operator|=
 name|bptree_alloc
 argument_list|(
-name|dp
-operator|->
-name|dp_meta_objset
+name|mos
 argument_list|,
 name|tx
 argument_list|)
@@ -9534,9 +9493,7 @@ name|VERIFY
 argument_list|(
 name|zap_add
 argument_list|(
-name|dp
-operator|->
-name|dp_meta_objset
+name|mos
 argument_list|,
 name|DMU_POOL_DIRECTORY_OBJECT
 argument_list|,
@@ -9610,9 +9567,7 @@ argument_list|)
 expr_stmt|;
 name|bptree_add
 argument_list|(
-name|dp
-operator|->
-name|dp_meta_objset
+name|mos
 argument_list|,
 name|dp
 operator|->
@@ -11243,15 +11198,6 @@ operator|=
 name|ds
 operator|->
 name|ds_fsid_guid
-expr_stmt|;
-name|dsl_dir_dirty
-argument_list|(
-name|ds
-operator|->
-name|ds_dir
-argument_list|,
-name|tx
-argument_list|)
 expr_stmt|;
 name|dmu_objset_sync
 argument_list|(

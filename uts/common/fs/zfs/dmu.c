@@ -8709,10 +8709,10 @@ expr_stmt|;
 name|zfetch_init
 argument_list|()
 expr_stmt|;
-name|arc_init
+name|l2arc_init
 argument_list|()
 expr_stmt|;
-name|l2arc_init
+name|arc_init
 argument_list|()
 expr_stmt|;
 block|}
@@ -8725,10 +8725,10 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|l2arc_fini
+name|arc_fini
 argument_list|()
 expr_stmt|;
-name|arc_fini
+name|l2arc_fini
 argument_list|()
 expr_stmt|;
 name|zfetch_fini
