@@ -384,12 +384,14 @@ return|;
 case|case
 name|AR_SREV_2425
 case|:
+comment|/* Swan */
 return|return
 literal|"2425"
 return|;
 case|case
 name|AR_SREV_2417
 case|:
+comment|/* Nala */
 return|return
 literal|"2417"
 return|;
