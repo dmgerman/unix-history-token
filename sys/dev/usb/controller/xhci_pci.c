@@ -1304,13 +1304,19 @@ literal|0x8c318086
 comment|/* Lynx Point */
 condition|)
 block|{
+name|uint32_t
+name|temp
+init|=
+name|xhci_get_port_route
+argument_list|()
+decl_stmt|;
 name|pci_write_config
 argument_list|(
 name|self
 argument_list|,
 name|PCI_XHCI_INTEL_USB3_PSSEN
 argument_list|,
-literal|0xffffffff
+name|temp
 argument_list|,
 literal|4
 argument_list|)
@@ -1321,7 +1327,7 @@ name|self
 argument_list|,
 name|PCI_XHCI_INTEL_XUSB2PR
 argument_list|,
-literal|0xffffffff
+name|temp
 argument_list|,
 literal|4
 argument_list|)

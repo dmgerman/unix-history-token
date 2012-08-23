@@ -2147,6 +2147,15 @@ comment|/* prototypes */
 end_comment
 
 begin_function_decl
+name|uint32_t
+name|xhci_get_port_route
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|usb_error_t
 name|xhci_halt_controller
 parameter_list|(
