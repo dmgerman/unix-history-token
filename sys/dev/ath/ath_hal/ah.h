@@ -2482,6 +2482,29 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/*  * MFP decryption options for initializing the MAC.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|HAL_MFP_QOSDATA
+init|=
+literal|0
+block|,
+comment|/* Decrypt MFP frames like QoS data frames. All chips before Merlin. */
+name|HAL_MFP_PASSTHRU
+block|,
+comment|/* Don't decrypt MFP frames at all. Passthrough */
+name|HAL_MFP_HW_CRYPTO
+comment|/* hardware decryption enabled. Merlin can do it. */
+block|}
+name|HAL_MFP_OPT_T
+typedef|;
+end_typedef
+
+begin_comment
 comment|/*  * Flag for setting QUIET period  */
 end_comment
 
@@ -5657,6 +5680,29 @@ name|data
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*  * For now, simply pass through MFP frames.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|u_int32_t
+name|ath_hal_get_mfp_qos
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|)
+block|{
+comment|//return AH_PRIVATE(ah)->ah_mfp_qos;
+return|return
+name|HAL_MFP_QOSDATA
+return|;
+block|}
+end_function
 
 begin_endif
 endif|#
