@@ -181,6 +181,32 @@ block|}
 struct|;
 end_struct
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|errmsg
+index|[]
+init|=
+block|{
+literal|"None"
+block|,
+literal|"Timeout"
+block|,
+literal|"Bad CRC"
+block|,
+literal|"Fifo"
+block|,
+literal|"Failed"
+block|,
+literal|"Invalid"
+block|,
+literal|"NO MEMORY"
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* bus entry points */
 end_comment
@@ -630,7 +656,7 @@ operator|/=
 literal|1024
 expr_stmt|;
 block|}
-comment|/* 	 * Report the clock speed of the underlying hardware, which might be 	 * different than what the card reports due to hardware limitations. 	 * Report how many blocks the hardware transfers at once, but clip the 	 * number to MAXPHYS since the system won't initiate larger transfers. 	 */
+comment|/* 	 * Report the clock speed of the underlying hardware, which might be 	 * different than what the card reports due to hardware limitations. 	 * Report how many blocks the hardware transfers at once. 	 */
 name|speed
 operator|=
 name|mmcbr_get_clock
@@ -647,16 +673,6 @@ name|mmc_get_max_data
 argument_list|(
 name|dev
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|maxblocks
-operator|>
-name|MAXPHYS
-condition|)
-name|maxblocks
-operator|=
-name|MAXPHYS
 expr_stmt|;
 name|device_printf
 argument_list|(
@@ -1196,6 +1212,39 @@ end_function
 
 begin_function
 specifier|static
+specifier|const
+name|char
+modifier|*
+name|mmcsd_errmsg
+parameter_list|(
+name|int
+name|e
+parameter_list|)
+block|{
+if|if
+condition|(
+name|e
+operator|<
+literal|0
+operator|||
+name|e
+operator|>
+name|MMC_ERR_MAX
+condition|)
+return|return
+literal|"Bad error code"
+return|;
+return|return
+name|errmsg
+index|[
+name|e
+index|]
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
 name|daddr_t
 name|mmcsd_rw
 parameter_list|(
@@ -1522,8 +1571,6 @@ operator|&
 name|stop
 expr_stmt|;
 block|}
-comment|//		printf("Len %d  %lld-%lld flags %#x sz %d\n",
-comment|//		    (int)data.len, (long long)block, (long long)end, data.flags, sz);
 name|MMCBUS_WAIT_FOR_REQUEST
 argument_list|(
 name|device_get_parent
@@ -1547,7 +1594,31 @@ name|error
 operator|!=
 name|MMC_ERR_NONE
 condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Error indicated: %d %s\n"
+argument_list|,
+name|req
+operator|.
+name|cmd
+operator|->
+name|error
+argument_list|,
+name|mmcsd_errmsg
+argument_list|(
+name|req
+operator|.
+name|cmd
+operator|->
+name|error
+argument_list|)
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
 name|block
 operator|+=
 name|numblocks
