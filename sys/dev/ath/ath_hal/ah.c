@@ -47,6 +47,12 @@ begin_comment
 comment|/* NB: includes ar5212reg.h */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"ar9003/ar9300_devid.h"
+end_include
+
 begin_comment
 comment|/* linker set of registered chips */
 end_comment
@@ -460,6 +466,54 @@ literal|"9287"
 return|;
 return|return
 literal|"9227"
+return|;
+case|case
+name|AR_SREV_VERSION_AR9380
+case|:
+if|if
+condition|(
+name|ah
+operator|->
+name|ah_macRev
+operator|>=
+name|AR_SREV_REVISION_AR9580_10
+condition|)
+return|return
+literal|"9580"
+return|;
+return|return
+literal|"9380"
+return|;
+case|case
+name|AR_SREV_VERSION_AR9460
+case|:
+return|return
+literal|"9460"
+return|;
+case|case
+name|AR_SREV_VERSION_AR9330
+case|:
+return|return
+literal|"9330"
+return|;
+case|case
+name|AR_SREV_VERSION_AR9340
+case|:
+return|return
+literal|"9340"
+return|;
+case|case
+name|AR_SREV_VERSION_QCA9550
+case|:
+comment|/* XXX should say QCA, not AR */
+return|return
+literal|"9550"
+return|;
+case|case
+name|AR_SREV_VERSION_AR9485
+case|:
+return|return
+literal|"9485"
 return|;
 block|}
 return|return
