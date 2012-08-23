@@ -3551,76 +3551,82 @@ init|=
 literal|221
 block|,
 comment|/* vendor private */
-comment|/* 	 * 802.11s IEs based on D3.03 spec and were not assigned by 	 * ANA. Beware changing them because some of them are being 	 * kept compatible with Linux. 	 */
+comment|/* 	 * 802.11s IEs 	 * NB: On vanilla Linux still IEEE80211_ELEMID_MESHPEER = 55, 	 * but they defined a new with id 117 called PEER_MGMT. 	 * NB: complies with open80211 	 */
 name|IEEE80211_ELEMID_MESHCONF
 init|=
-literal|51
+literal|113
 block|,
 name|IEEE80211_ELEMID_MESHID
 init|=
-literal|52
+literal|114
 block|,
 name|IEEE80211_ELEMID_MESHLINK
 init|=
-literal|35
+literal|115
 block|,
 name|IEEE80211_ELEMID_MESHCNGST
 init|=
-literal|36
+literal|116
 block|,
 name|IEEE80211_ELEMID_MESHPEER
 init|=
-literal|55
+literal|117
 block|,
 name|IEEE80211_ELEMID_MESHCSA
 init|=
-literal|38
+literal|118
 block|,
 name|IEEE80211_ELEMID_MESHTIM
 init|=
 literal|39
 block|,
+comment|/* XXX: remove */
 name|IEEE80211_ELEMID_MESHAWAKEW
 init|=
-literal|40
+literal|119
 block|,
 name|IEEE80211_ELEMID_MESHBEACONT
 init|=
-literal|41
+literal|120
 block|,
+comment|/* 121-124 MMCAOP not implemented yet */
 name|IEEE80211_ELEMID_MESHPANN
 init|=
-literal|48
+literal|125
 block|,
+comment|/* XXX: is GANN now, not used */
 name|IEEE80211_ELEMID_MESHRANN
 init|=
-literal|49
+literal|126
 block|,
+comment|/* 127 Extended Capabilities */
+comment|/* 128-129 reserved */
 name|IEEE80211_ELEMID_MESHPREQ
 init|=
-literal|68
+literal|130
 block|,
 name|IEEE80211_ELEMID_MESHPREP
 init|=
-literal|69
+literal|131
 block|,
 name|IEEE80211_ELEMID_MESHPERR
 init|=
-literal|70
+literal|132
 block|,
+comment|/* 133-136 reserved */
 name|IEEE80211_ELEMID_MESHPXU
 init|=
-literal|53
+literal|137
 block|,
 name|IEEE80211_ELEMID_MESHPXUC
 init|=
-literal|54
+literal|138
 block|,
 name|IEEE80211_ELEMID_MESHAH
 init|=
 literal|60
 block|,
-comment|/* Abbreviated Handshake */
+comment|/* XXX: remove */
 block|}
 enum|;
 end_enum
