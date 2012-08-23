@@ -7,9 +7,6 @@ begin_struct
 struct|struct
 name|spi_command
 block|{
-name|int
-name|cs
-decl_stmt|;
 name|void
 modifier|*
 name|tx_cmd
