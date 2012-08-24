@@ -564,6 +564,11 @@ operator|=
 name|ar5212GetDfsThresh
 block|,
 operator|.
+name|ah_getDfsDefaultThresh
+operator|=
+name|ar5212GetDfsDefaultThresh
+block|,
+operator|.
 name|ah_procRadarEvent
 operator|=
 name|ar5212ProcessRadarEvent

@@ -4002,6 +4002,23 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|HAL_BOOL
+name|ar5212GetDfsDefaultThresh
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|HAL_PHYERR_PARAM
+modifier|*
+name|pe
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|void
 name|ar5212GetDfsThresh
 parameter_list|(
