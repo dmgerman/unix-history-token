@@ -1530,6 +1530,41 @@ end_define
 begin_define
 define|#
 directive|define
+name|ath_hal_isrfkillenabled
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_RFSILENT, 1, AH_NULL) == HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_enable_rfkill
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_v
+parameter_list|)
+define|\
+value|ath_hal_setcapability(_ah, HAL_CAP_RFSILENT, 1, _v, AH_NULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_hasrfkill_int
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_RFSILENT, 3, AH_NULL) == HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ath_hal_eepromDetach
 parameter_list|(
 name|_ah
