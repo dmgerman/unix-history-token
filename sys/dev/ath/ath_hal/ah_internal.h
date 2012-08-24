@@ -2127,7 +2127,7 @@ parameter_list|,
 name|_v
 parameter_list|)
 define|\
-value|do { OS_REG_WRITE(_a, _r, (OS_REG_READ(_a, _r)&~ (_f)) | (((_v)<< _f##_S)& (_f))) ; OS_DELAY(100); } while (0)
+value|do { OS_REG_WRITE(_a, _r, (OS_REG_READ(_a, _r)&~ (_f)) | \ 	    (((_v)<< _f##_S)& (_f))) ; OS_DELAY(100); } while (0)
 end_define
 
 begin_define
