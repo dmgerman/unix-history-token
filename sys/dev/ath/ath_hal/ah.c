@@ -3342,6 +3342,20 @@ name|HAL_OK
 else|:
 name|HAL_ENOTSUPP
 return|;
+case|case
+name|HAL_CAP_MFP
+case|:
+comment|/* Management frame protection setting */
+operator|*
+name|result
+operator|=
+name|pCap
+operator|->
+name|halMfpSupport
+expr_stmt|;
+return|return
+name|HAL_OK
+return|;
 default|default:
 return|return
 name|HAL_EINVAL
