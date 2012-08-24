@@ -517,16 +517,72 @@ init|=
 literal|96
 block|,
 comment|/* hardware supports HT20 short GI */
+name|HAL_CAP_LDPC
+init|=
+literal|99
+block|,
 name|HAL_CAP_RXTSTAMP_PREC
 init|=
 literal|100
 block|,
 comment|/* rx desc tstamp precision (bits) */
+name|HAL_CAP_PHYRESTART_CLR_WAR
+init|=
+literal|106
+block|,
+comment|/* in some cases, clear phy restart to fix bb hang */
+name|HAL_CAP_ENTERPRISE_MODE
+init|=
+literal|107
+block|,
+comment|/* Enterprise mode features */
+name|HAL_CAP_LDPCWAR
+init|=
+literal|108
+block|,
+name|HAL_CAP_CHANNEL_SWITCH_TIME_USEC
+init|=
+literal|109
+block|,
+comment|/* Channel change time, usec */
+name|HAL_CAP_ENABLE_APM
+init|=
+literal|110
+block|,
+comment|/* APM enabled */
+name|HAL_CAP_PCIE_LCR_EXTSYNC_EN
+init|=
+literal|111
+block|,
+name|HAL_CAP_PCIE_LCR_OFFSET
+init|=
+literal|112
+block|,
 name|HAL_CAP_ENHANCED_DFS_SUPPORT
 init|=
 literal|117
 block|,
 comment|/* hardware supports enhanced DFS */
+name|HAL_CAP_MCI
+init|=
+literal|118
+block|,
+name|HAL_CAP_SMARTANTENNA
+init|=
+literal|119
+block|,
+name|HAL_CAP_TRAFFIC_FAST_RECOVER
+init|=
+literal|120
+block|,
+name|HAL_CAP_TX_DIVERSITY
+init|=
+literal|121
+block|,
+name|HAL_CAP_CRDC
+init|=
+literal|122
+block|,
 comment|/* The following are private to the FreeBSD HAL (224 onward) */
 name|HAL_CAP_INTMIT
 init|=
