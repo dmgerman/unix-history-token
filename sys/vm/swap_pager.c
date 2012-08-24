@@ -5976,6 +5976,11 @@ name|daddr_t
 name|swapblk
 parameter_list|)
 block|{
+specifier|static
+specifier|volatile
+name|int
+name|exhausted
+decl_stmt|;
 name|struct
 name|swblock
 modifier|*
@@ -6140,9 +6145,22 @@ name|swap_zone
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|atomic_cmpset_rel_int
+argument_list|(
+operator|&
+name|exhausted
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|)
+condition|)
 name|printf
 argument_list|(
-literal|"swap zone exhausted, increase kern.maxswzone\n"
+literal|"swap zone exhausted, "
+literal|"increase kern.maxswzone\n"
 argument_list|)
 expr_stmt|;
 name|vm_pageout_oom
@@ -6170,6 +6188,23 @@ goto|goto
 name|retry
 goto|;
 block|}
+if|if
+condition|(
+name|atomic_cmpset_rel_int
+argument_list|(
+operator|&
+name|exhausted
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"swap zone ok\n"
+argument_list|)
+expr_stmt|;
 name|swap
 operator|->
 name|swb_hnext
@@ -7168,6 +7203,75 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Check that the total amount of swap currently configured does not  * exceed half the theoretical maximum.  If it does, print a warning  * message and return -1; otherwise, return 0.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|swapon_check_swzone
+parameter_list|(
+name|unsigned
+name|long
+name|npages
+parameter_list|)
+block|{
+name|unsigned
+name|long
+name|maxpages
+decl_stmt|;
+comment|/* absolute maximum we can handle assuming 100% efficiency */
+name|maxpages
+operator|=
+name|uma_zone_get_max
+argument_list|(
+name|swap_zone
+argument_list|)
+operator|*
+name|SWAP_META_PAGES
+expr_stmt|;
+comment|/* recommend using no more than half that amount */
+if|if
+condition|(
+name|npages
+operator|>
+name|maxpages
+operator|/
+literal|2
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"warning: total configured swap (%lu pages) "
+literal|"exceeds maximum recommended amount (%lu pages).\n"
+argument_list|,
+name|npages
+argument_list|,
+name|maxpages
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"warning: increase kern.maxswzone "
+literal|"or reduce amount of swap.\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
 begin_function
 specifier|static
 name|void
@@ -7429,6 +7533,13 @@ operator|)
 name|nblks
 operator|*
 name|PAGE_SIZE
+expr_stmt|;
+name|swapon_check_swzone
+argument_list|(
+name|swap_total
+operator|/
+name|PAGE_SIZE
+argument_list|)
 expr_stmt|;
 name|swp_sizecheck
 argument_list|()
