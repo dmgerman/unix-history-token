@@ -3982,6 +3982,13 @@ expr_stmt|;
 comment|/* Hardware supports 4 MRR */
 name|pCap
 operator|->
+name|halNumTxMaps
+operator|=
+literal|1
+expr_stmt|;
+comment|/* Single TX ptr per descr */
+name|pCap
+operator|->
 name|halVEOLSupport
 operator|=
 name|AH_TRUE
