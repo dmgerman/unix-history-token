@@ -5562,6 +5562,29 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * Get the HAL wireless mode for the given channel.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|ath_hal_get_curmode
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_channel
+modifier|*
+name|chan
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Calculate the packet TX time for a legacy or 11n frame  */
 end_comment
 
