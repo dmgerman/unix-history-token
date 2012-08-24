@@ -7407,7 +7407,7 @@ condition|)
 do|;
 name|scsi_ulto2b
 argument_list|(
-name|count
+name|ranges
 operator|*
 literal|16
 operator|+
@@ -7422,7 +7422,7 @@ argument_list|)
 expr_stmt|;
 name|scsi_ulto2b
 argument_list|(
-name|count
+name|ranges
 operator|*
 literal|16
 argument_list|,
@@ -7456,7 +7456,7 @@ comment|/*data_ptr*/
 name|buf
 argument_list|,
 comment|/*dxfer_len*/
-name|count
+name|ranges
 operator|*
 literal|16
 operator|+
