@@ -5278,6 +5278,19 @@ end_define
 begin_define
 define|#
 directive|define
+name|ath_hal_getdfsdefaultthresh
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_param
+parameter_list|)
+define|\
+value|((*(_ah)->ah_getDfsDefaultThresh)((_ah), (_param)))
+end_define
+
+begin_define
+define|#
+directive|define
 name|ath_hal_procradarevent
 parameter_list|(
 name|_ah
