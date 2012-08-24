@@ -1569,6 +1569,23 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|HAL_BOOL
+name|ar5416GetDfsDefaultThresh
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|HAL_PHYERR_PARAM
+modifier|*
+name|pe
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|void
 name|ar5416GetDfsThresh
 parameter_list|(

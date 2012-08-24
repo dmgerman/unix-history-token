@@ -758,6 +758,12 @@ name|ar5416GetDfsThresh
 expr_stmt|;
 name|ah
 operator|->
+name|ah_getDfsDefaultThresh
+operator|=
+name|ar5416GetDfsDefaultThresh
+expr_stmt|;
+name|ah
+operator|->
 name|ah_procRadarEvent
 operator|=
 name|ar5416ProcessRadarEvent
