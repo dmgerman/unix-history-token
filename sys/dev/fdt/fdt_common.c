@@ -2363,6 +2363,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+else|else
 name|intr_cells
 operator|=
 name|fdt32_to_cpu
