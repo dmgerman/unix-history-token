@@ -144,17 +144,6 @@ end_struct
 begin_define
 define|#
 directive|define
-name|PV_TABLE_MOD
-value|0x01
-end_define
-
-begin_comment
-comment|/* modified */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|PV_TABLE_REF
 value|0x02
 end_define
