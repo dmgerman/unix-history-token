@@ -6851,7 +6851,7 @@ break|break;
 default|default:
 name|read_or_write
 operator|=
-literal|""
+literal|"unknown"
 expr_stmt|;
 block|}
 name|pc
@@ -6877,7 +6877,8 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s: pid %d tid %ld (%s), uid %d: pc %#jx got a %s fault at %#jx\n"
+literal|"%s: pid %d tid %ld (%s), uid %d: pc %#jx got a %s fault "
+literal|"(type %#x) at %#jx\n"
 argument_list|,
 name|msg
 argument_list|,
@@ -6915,6 +6916,8 @@ operator|)
 name|pc
 argument_list|,
 name|read_or_write
+argument_list|,
+name|trap_type
 argument_list|,
 operator|(
 name|intmax_t
