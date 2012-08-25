@@ -1538,8 +1538,6 @@ condition|(
 literal|1
 condition|)
 empty_stmt|;
-comment|//	if (fdt_immr_addr(OMAP44XX_L4_PERIPH_VBASE) != 0)
-comment|//		while (1);
 comment|/* Platform-specific initialisation */
 name|pmap_bootstrap_lastaddr
 operator|=
