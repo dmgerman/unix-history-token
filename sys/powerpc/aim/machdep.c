@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_platform.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -843,12 +849,17 @@ literal|0
 argument|; 	cacheline_warn =
 literal|0
 argument|;
+ifdef|#
+directive|ifdef
+name|WII
 comment|/* 	 * The Wii loader doesn't pass us any environment so, mdp 	 * points to garbage at this point. The Wii CPU is a 750CL. 	 */
 argument|vers = mfpvr(); 	if ((vers&
 literal|0xfffff0e0
 argument|) == (MPC750<<
 literal|16
 argument|| MPC750CL))  		mdp = NULL;
+endif|#
+directive|endif
 comment|/* 	 * Parse metadata if present and fetch parameters.  Must be done 	 * before console is inited so cninit gets the right value of 	 * boothowto. 	 */
 argument|if (mdp != NULL) { 		preload_metadata = mdp; 		kmdp = preload_search_by_type(
 literal|"elf kernel"
