@@ -835,9 +835,14 @@ argument|*dlmisssize; extern void	*dsmisstrap
 argument_list|,
 argument|*dsmisssize;  uintptr_t powerpc_init(vm_offset_t startkernel, vm_offset_t endkernel,     vm_offset_t basekernel, void *mdp) { 	struct		pcpu *pc; 	void		*generictrap; 	size_t		trap_offset; 	void		*kmdp;         char		*env; 	register_t	msr
 argument_list|,
-argument|scratch
-argument_list|,
-argument|vers; 	uint8_t		*cache_check; 	int		cacheline_warn;
+argument|scratch;
+ifdef|#
+directive|ifdef
+name|WII
+argument|register_t 	vers;
+endif|#
+directive|endif
+argument|uint8_t		*cache_check; 	int		cacheline_warn;
 ifndef|#
 directive|ifndef
 name|__powerpc64__
