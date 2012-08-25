@@ -578,6 +578,11 @@ name|defined
 argument_list|(
 name|__mips__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
 end_elif
 
 begin_comment
@@ -696,6 +701,42 @@ name|c
 parameter_list|)
 value|fillw((p), (void *)(d), (c))
 end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|readw
+parameter_list|(
+name|a
+parameter_list|)
+value|(*(uint16_t*)(a))
+end_define
+
+begin_define
+define|#
+directive|define
+name|writew
+parameter_list|(
+name|a
+parameter_list|,
+name|v
+parameter_list|)
+value|(*(uint16_t*)(a) = (v))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#
