@@ -579,7 +579,7 @@ name|cp
 operator|->
 name|cn_name
 argument_list|,
-literal|"gxcons"
+literal|"ttyu0"
 argument_list|)
 expr_stmt|;
 name|cp
@@ -760,7 +760,7 @@ name|NULL
 argument_list|,
 literal|"%s"
 argument_list|,
-literal|"gxcons"
+literal|"ttyu0"
 argument_list|)
 expr_stmt|;
 name|callout_init
