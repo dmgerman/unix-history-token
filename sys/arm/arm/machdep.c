@@ -3830,6 +3830,8 @@ parameter_list|)
 block|{
 if|#
 directive|if
+name|ARM_ARCH_6
+operator|||
 name|ARM_ARCH_7A
 operator|||
 name|defined
