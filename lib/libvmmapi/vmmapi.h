@@ -60,6 +60,24 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|size_t
+name|vmm_get_mem_total
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|size_t
+name|vmm_get_mem_free
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|vm_get_memory_seg
 parameter_list|(
