@@ -127,6 +127,28 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
+name|x_arc
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 5 */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|y_arc
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 4 */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|x_swap
 decl_stmt|;
 end_decl_stmt
