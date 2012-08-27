@@ -4196,7 +4196,7 @@ name|__func__
 argument_list|,
 name|aniState
 operator|->
-name|ofdmPhyErrCount
+name|cckPhyErrCount
 argument_list|,
 name|aniState
 operator|->
