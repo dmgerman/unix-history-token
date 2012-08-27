@@ -152,6 +152,8 @@ name|TargetRegisterClass
 operator|*
 name|getPointerRegClass
 argument_list|(
+argument|const MachineFunction&MF
+argument_list|,
 argument|unsigned Kind =
 literal|0
 argument_list|)
@@ -189,6 +191,20 @@ comment|//! Allow for scavenging, so we can get scratch registers when needed.
 name|virtual
 name|bool
 name|requiresRegisterScavenging
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+comment|//! Enable tracking of liveness after register allocation, since register
+comment|// scavenging is enabled.
+name|virtual
+name|bool
+name|trackLivenessAfterRegAlloc
 argument_list|(
 argument|const MachineFunction&MF
 argument_list|)

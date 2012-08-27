@@ -216,7 +216,7 @@ name|uint64_t
 name|Addr
 argument_list|)
 block|{}
-comment|// Subclasses can override this method to provide JIT debugging support
+comment|// Subclasses can override these methods to provide JIT debugging support
 name|virtual
 name|void
 name|registerWithDebugger

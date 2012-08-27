@@ -283,7 +283,7 @@ name|name
 operator|=
 literal|"slck"
 block|,
-comment|// 32,768 Hz slow clock
+comment|/* 32,768 Hz slow clock */
 operator|.
 name|hz
 operator|=
@@ -323,7 +323,7 @@ name|name
 operator|=
 literal|"main"
 block|,
-comment|// Main clock
+comment|/* Main clock */
 operator|.
 name|refcnt
 operator|=
@@ -359,7 +359,7 @@ name|name
 operator|=
 literal|"plla"
 block|,
-comment|// PLLA Clock, used for CPU clocking
+comment|/* PLLA Clock, used for CPU clocking */
 operator|.
 name|parent
 operator|=
@@ -406,7 +406,7 @@ name|name
 operator|=
 literal|"pllb"
 block|,
-comment|// PLLB Clock, used for USB functions
+comment|/* PLLB Clock, used for USB functions */
 operator|.
 name|parent
 operator|=
@@ -463,7 +463,7 @@ name|name
 operator|=
 literal|"upll"
 block|,
-comment|// UTMI PLL, used for USB functions on 9G45
+comment|/* UTMI PLL, used for USB functions on 9G45 family */
 operator|.
 name|parent
 operator|=
@@ -582,7 +582,7 @@ name|name
 operator|=
 literal|"mck"
 block|,
-comment|// Master (Peripheral) Clock
+comment|/* Master (Peripheral) Clock */
 operator|.
 name|pmc_mask
 operator|=
@@ -608,7 +608,7 @@ name|name
 operator|=
 literal|"cpu"
 block|,
-comment|// CPU Clock
+comment|/* CPU Clock */
 operator|.
 name|parent
 operator|=
@@ -792,6 +792,89 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * The following is unused currently since we don't ever set the PLLA  * frequency of the device.  If we did, we'd have to also pay attention  * to the ICPLLA bit in the PMC_PLLICPR register for frequencies lower  * than ~600MHz, which the PMC code doesn't do right now.  */
+end_comment
+
+begin_function
+name|uint32_t
+name|at91_pmc_800mhz_plla_outb
+parameter_list|(
+name|int
+name|freq
+parameter_list|)
+block|{
+name|uint32_t
+name|outa
+decl_stmt|;
+comment|/* 	 * Set OUTA, per the data sheet.  See Table 46-16 titled 	 * PLLA Frequency Regarding ICPLLA and OUTA in the SAM9X25 doc, 	 * Table 46-17 in the SAM9G20 doc, or Table 46-16 in the SAM9G45 doc. 	 * Note: the frequencies overlap by 5MHz, so we add 3 here to 	 * center shoot the transition. 	 */
+name|freq
+operator|/=
+literal|1000000
+expr_stmt|;
+comment|/* MHz */
+if|if
+condition|(
+name|freq
+operator|>=
+literal|800
+condition|)
+name|freq
+operator|=
+literal|800
+expr_stmt|;
+name|freq
+operator|+=
+literal|3
+expr_stmt|;
+comment|/* Allow for overlap. */
+name|outa
+operator|=
+literal|3
+operator|-
+operator|(
+operator|(
+name|freq
+operator|/
+literal|50
+operator|)
+operator|&
+literal|3
+operator|)
+expr_stmt|;
+comment|/* 750 / 50 = 7, see table */
+return|return
+operator|(
+literal|1
+operator|<<
+literal|29
+operator|)
+operator||
+operator|(
+name|outa
+operator|<<
+literal|14
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|uint32_t
+name|at91_pmc_800mhz_pllb_outb
+parameter_list|(
+name|int
+name|freq
+parameter_list|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -1579,7 +1662,6 @@ index|]
 operator|)
 return|;
 block|}
-comment|//printf("at91_pmc: Warning - did not find clock '%s'", name);
 return|return
 operator|(
 name|NULL
@@ -1597,7 +1679,15 @@ name|at91_pmc_clock
 modifier|*
 name|clk
 parameter_list|)
-block|{  }
+block|{
+if|if
+condition|(
+name|clk
+operator|==
+name|NULL
+condition|)
+return|return;
+block|}
 end_function
 
 begin_function
@@ -1610,6 +1700,13 @@ modifier|*
 name|clk
 parameter_list|)
 block|{
+if|if
+condition|(
+name|clk
+operator|==
+name|NULL
+condition|)
+return|return;
 comment|/* XXX LOCKING? XXX */
 if|if
 condition|(
@@ -1659,6 +1756,13 @@ modifier|*
 name|clk
 parameter_list|)
 block|{
+if|if
+condition|(
+name|clk
+operator|==
+name|NULL
+condition|)
+return|return;
 comment|/* XXX LOCKING? XXX */
 if|if
 condition|(
@@ -2367,6 +2471,7 @@ name|hz
 operator|=
 name|main_clock
 expr_stmt|;
+comment|/* 	 * Note: this means outa calc code for plla never used since 	 * we never change it.  If we did, we'd also have to mind 	 * ICPLLA to get the charge pump current right. 	 */
 name|at91_pmc_pll_rate
 argument_list|(
 operator|&
@@ -2399,7 +2504,16 @@ name|hz
 operator|/=
 literal|2
 expr_stmt|;
-comment|/* 	 * Initialize the usb clock.  This sets up pllb, but disables the 	 * actual clock. 	 */
+comment|/* 	 * Initialize the usb clock.  This sets up pllb, but disables the 	 * actual clock. XXX except for the if 0 :( 	 */
+if|if
+condition|(
+operator|!
+name|at91_cpu_is
+argument_list|(
+name|AT91_T_SAM9G45
+argument_list|)
+condition|)
+block|{
 name|pllb_init
 operator|=
 name|at91_pmc_pll_calc
@@ -2426,9 +2540,10 @@ if|#
 directive|if
 literal|0
 comment|/* Turn off USB clocks */
-block|at91_pmc_set_periph_mode(&ohci_clk, 0); 	at91_pmc_set_periph_mode(&udc_clk, 0);
+block|at91_pmc_set_periph_mode(&ohci_clk, 0); 		at91_pmc_set_periph_mode(&udc_clk, 0);
 endif|#
 directive|endif
+block|}
 if|if
 condition|(
 name|at91_is_rm92

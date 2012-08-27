@@ -4816,7 +4816,7 @@ specifier|static
 name|int
 name|get_struct
 parameter_list|(
-name|int
+name|pid_t
 name|pid
 parameter_list|,
 name|void
@@ -5172,7 +5172,7 @@ name|tmp
 init|=
 name|NULL
 decl_stmt|;
-name|int
+name|pid_t
 name|pid
 init|=
 name|trussinfo

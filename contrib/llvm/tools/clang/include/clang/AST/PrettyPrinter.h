@@ -125,14 +125,14 @@ operator|&
 name|LO
 argument_list|)
 operator|:
-name|Indentation
-argument_list|(
-literal|2
-argument_list|)
-operator|,
 name|LangOpts
 argument_list|(
 name|LO
+argument_list|)
+operator|,
+name|Indentation
+argument_list|(
+literal|2
 argument_list|)
 operator|,
 name|SuppressSpecifiers
@@ -165,11 +165,6 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
-name|Dump
-argument_list|(
-name|false
-argument_list|)
-operator|,
 name|ConstantArraySizeAsWritten
 argument_list|(
 name|false
@@ -187,18 +182,25 @@ argument_list|)
 operator|,
 name|Bool
 argument_list|(
-argument|LO.Bool
+name|LO
+operator|.
+name|Bool
+argument_list|)
+operator|,
+name|DumpSourceManager
+argument_list|(
+literal|0
 argument_list|)
 block|{ }
-comment|/// \brief The number of spaces to use to indent each line.
-name|unsigned
-name|Indentation
-operator|:
-literal|8
-expr_stmt|;
 comment|/// \brief What language we're printing.
 name|LangOptions
 name|LangOpts
+expr_stmt|;
+comment|/// \brief The number of spaces to use to indent each line.
+name|unsigned
+name|Indentation
+range|:
+literal|8
 decl_stmt|;
 comment|/// \brief Whether we should suppress printing of the actual specifiers for
 comment|/// the given type or declaration.
@@ -274,15 +276,6 @@ name|SuppressInitializers
 range|:
 literal|1
 decl_stmt|;
-comment|/// \brief True when we are "dumping" rather than "pretty-printing",
-comment|/// where dumping involves printing the internal details of the AST
-comment|/// and pretty-printing involves printing something similar to
-comment|/// source code.
-name|bool
-name|Dump
-range|:
-literal|1
-decl_stmt|;
 comment|/// \brief Whether we should print the sizes of constant array expressions
 comment|/// as written in the sources.
 comment|///
@@ -325,6 +318,14 @@ name|unsigned
 name|Bool
 range|:
 literal|1
+decl_stmt|;
+comment|/// \brief If we are "dumping" rather than "pretty-printing", this points to
+comment|/// a SourceManager which will be used to dump SourceLocations. Dumping
+comment|/// involves printing the internal details of the AST and pretty-printing
+comment|/// involves printing something similar to source code.
+name|SourceManager
+modifier|*
+name|DumpSourceManager
 decl_stmt|;
 block|}
 struct|;

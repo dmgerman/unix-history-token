@@ -116,6 +116,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/spibus/spibusvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"spibus_if.h"
 end_include
 
@@ -1198,6 +1204,8 @@ name|mode
 index|[
 literal|4
 index|]
+decl_stmt|,
+name|cs
 decl_stmt|;
 name|KASSERT
 argument_list|(
@@ -1231,6 +1239,15 @@ literal|"%s: TX/RX data sizes should be equal"
 operator|,
 name|__func__
 operator|)
+argument_list|)
+expr_stmt|;
+comment|/* get the proper chip select */
+name|spibus_get_cs
+argument_list|(
+name|child
+argument_list|,
+operator|&
+name|cs
 argument_list|)
 expr_stmt|;
 name|sc
@@ -1267,14 +1284,10 @@ expr_stmt|;
 comment|/* 	 * PSCDEC = 0 has a range of 0..3 for chip select.  We 	 * don't support PSCDEC = 1 which has a range of 0..15. 	 */
 if|if
 condition|(
-name|cmd
-operator|->
 name|cs
 operator|<
 literal|0
 operator|||
-name|cmd
-operator|->
 name|cs
 operator|>
 literal|3
@@ -1286,8 +1299,6 @@ name|dev
 argument_list|,
 literal|"Invalid chip select %d requested by %s\n"
 argument_list|,
-name|cmd
-operator|->
 name|cs
 argument_list|,
 name|device_get_nameunit
@@ -1313,8 +1324,6 @@ condition|(
 name|at91_is_rm92
 argument_list|()
 operator|&&
-name|cmd
-operator|->
 name|cs
 operator|==
 literal|0
@@ -1368,8 +1377,6 @@ operator|)
 operator||
 name|CS_TO_MR
 argument_list|(
-name|cmd
-operator|->
 name|cs
 argument_list|)
 expr_stmt|;

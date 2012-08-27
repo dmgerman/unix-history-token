@@ -87,28 +87,28 @@ comment|///
 enum|enum
 name|NodeType
 block|{
-comment|// DELETED_NODE - This is an illegal value that is used to catch
-comment|// errors.  This opcode is not a legal opcode for any node.
+comment|/// DELETED_NODE - This is an illegal value that is used to catch
+comment|/// errors.  This opcode is not a legal opcode for any node.
 name|DELETED_NODE
 block|,
-comment|// EntryToken - This is the marker used to indicate the start of the region.
+comment|/// EntryToken - This is the marker used to indicate the start of a region.
 name|EntryToken
 block|,
-comment|// TokenFactor - This node takes multiple tokens as input and produces a
-comment|// single token result.  This is used to represent the fact that the operand
-comment|// operators are independent of each other.
+comment|/// TokenFactor - This node takes multiple tokens as input and produces a
+comment|/// single token result. This is used to represent the fact that the operand
+comment|/// operators are independent of each other.
 name|TokenFactor
 block|,
-comment|// AssertSext, AssertZext - These nodes record if a register contains a
-comment|// value that has already been zero or sign extended from a narrower type.
-comment|// These nodes take two operands.  The first is the node that has already
-comment|// been extended, and the second is a value type node indicating the width
-comment|// of the extension
+comment|/// AssertSext, AssertZext - These nodes record if a register contains a
+comment|/// value that has already been zero or sign extended from a narrower type.
+comment|/// These nodes take two operands.  The first is the node that has already
+comment|/// been extended, and the second is a value type node indicating the width
+comment|/// of the extension
 name|AssertSext
 block|,
 name|AssertZext
 block|,
-comment|// Various leaf nodes.
+comment|/// Various leaf nodes.
 name|BasicBlock
 block|,
 name|VALUETYPE
@@ -137,65 +137,65 @@ name|ExternalSymbol
 block|,
 name|BlockAddress
 block|,
-comment|// The address of the GOT
+comment|/// The address of the GOT
 name|GLOBAL_OFFSET_TABLE
 block|,
-comment|// FRAMEADDR, RETURNADDR - These nodes represent llvm.frameaddress and
-comment|// llvm.returnaddress on the DAG.  These nodes take one operand, the index
-comment|// of the frame or return address to return.  An index of zero corresponds
-comment|// to the current function's frame or return address, an index of one to the
-comment|// parent's frame or return address, and so on.
+comment|/// FRAMEADDR, RETURNADDR - These nodes represent llvm.frameaddress and
+comment|/// llvm.returnaddress on the DAG.  These nodes take one operand, the index
+comment|/// of the frame or return address to return.  An index of zero corresponds
+comment|/// to the current function's frame or return address, an index of one to
+comment|/// the parent's frame or return address, and so on.
 name|FRAMEADDR
 block|,
 name|RETURNADDR
 block|,
-comment|// FRAME_TO_ARGS_OFFSET - This node represents offset from frame pointer to
-comment|// first (possible) on-stack argument. This is needed for correct stack
-comment|// adjustment during unwind.
+comment|/// FRAME_TO_ARGS_OFFSET - This node represents offset from frame pointer to
+comment|/// first (possible) on-stack argument. This is needed for correct stack
+comment|/// adjustment during unwind.
 name|FRAME_TO_ARGS_OFFSET
 block|,
-comment|// RESULT, OUTCHAIN = EXCEPTIONADDR(INCHAIN) - This node represents the
-comment|// address of the exception block on entry to an landing pad block.
+comment|/// RESULT, OUTCHAIN = EXCEPTIONADDR(INCHAIN) - This node represents the
+comment|/// address of the exception block on entry to an landing pad block.
 name|EXCEPTIONADDR
 block|,
-comment|// RESULT, OUTCHAIN = LSDAADDR(INCHAIN) - This node represents the
-comment|// address of the Language Specific Data Area for the enclosing function.
+comment|/// RESULT, OUTCHAIN = LSDAADDR(INCHAIN) - This node represents the
+comment|/// address of the Language Specific Data Area for the enclosing function.
 name|LSDAADDR
 block|,
-comment|// RESULT, OUTCHAIN = EHSELECTION(INCHAIN, EXCEPTION) - This node represents
-comment|// the selection index of the exception thrown.
+comment|/// RESULT, OUTCHAIN = EHSELECTION(INCHAIN, EXCEPTION) - This node
+comment|/// represents the selection index of the exception thrown.
 name|EHSELECTION
 block|,
-comment|// OUTCHAIN = EH_RETURN(INCHAIN, OFFSET, HANDLER) - This node represents
-comment|// 'eh_return' gcc dwarf builtin, which is used to return from
-comment|// exception. The general meaning is: adjust stack by OFFSET and pass
-comment|// execution to HANDLER. Many platform-related details also :)
+comment|/// OUTCHAIN = EH_RETURN(INCHAIN, OFFSET, HANDLER) - This node represents
+comment|/// 'eh_return' gcc dwarf builtin, which is used to return from
+comment|/// exception. The general meaning is: adjust stack by OFFSET and pass
+comment|/// execution to HANDLER. Many platform-related details also :)
 name|EH_RETURN
 block|,
-comment|// RESULT, OUTCHAIN = EH_SJLJ_SETJMP(INCHAIN, buffer)
-comment|// This corresponds to the eh.sjlj.setjmp intrinsic.
-comment|// It takes an input chain and a pointer to the jump buffer as inputs
-comment|// and returns an outchain.
+comment|/// RESULT, OUTCHAIN = EH_SJLJ_SETJMP(INCHAIN, buffer)
+comment|/// This corresponds to the eh.sjlj.setjmp intrinsic.
+comment|/// It takes an input chain and a pointer to the jump buffer as inputs
+comment|/// and returns an outchain.
 name|EH_SJLJ_SETJMP
 block|,
-comment|// OUTCHAIN = EH_SJLJ_LONGJMP(INCHAIN, buffer)
-comment|// This corresponds to the eh.sjlj.longjmp intrinsic.
-comment|// It takes an input chain and a pointer to the jump buffer as inputs
-comment|// and returns an outchain.
+comment|/// OUTCHAIN = EH_SJLJ_LONGJMP(INCHAIN, buffer)
+comment|/// This corresponds to the eh.sjlj.longjmp intrinsic.
+comment|/// It takes an input chain and a pointer to the jump buffer as inputs
+comment|/// and returns an outchain.
 name|EH_SJLJ_LONGJMP
 block|,
-comment|// TargetConstant* - Like Constant*, but the DAG does not do any folding,
-comment|// simplification, or lowering of the constant. They are used for constants
-comment|// which are known to fit in the immediate fields of their users, or for
-comment|// carrying magic numbers which are not values which need to be materialized
-comment|// in registers.
+comment|/// TargetConstant* - Like Constant*, but the DAG does not do any folding,
+comment|/// simplification, or lowering of the constant. They are used for constants
+comment|/// which are known to fit in the immediate fields of their users, or for
+comment|/// carrying magic numbers which are not values which need to be
+comment|/// materialized in registers.
 name|TargetConstant
 block|,
 name|TargetConstantFP
 block|,
-comment|// TargetGlobalAddress - Like GlobalAddress, but the DAG does no folding or
-comment|// anything else with this node, and this is valid in the target-specific
-comment|// dag, turning into a GlobalAddress operand.
+comment|/// TargetGlobalAddress - Like GlobalAddress, but the DAG does no folding or
+comment|/// anything else with this node, and this is valid in the target-specific
+comment|/// dag, turning into a GlobalAddress operand.
 name|TargetGlobalAddress
 block|,
 name|TargetGlobalTLSAddress
@@ -209,6 +209,11 @@ block|,
 name|TargetExternalSymbol
 block|,
 name|TargetBlockAddress
+block|,
+comment|/// TargetIndex - Like a constant pool entry, but with completely
+comment|/// target-dependent semantics. Holds target flags, a 32-bit index, and a
+comment|/// 64-bit index. Targets can use this however they like.
+name|TargetIndex
 block|,
 comment|/// RESULT = INTRINSIC_WO_CHAIN(INTRINSICID, arg1, arg2, ...)
 comment|/// This node represents a target intrinsic function with no side effects.
@@ -232,37 +237,38 @@ comment|/// second is the ID number of the intrinsic from the llvm::Intrinsic
 comment|/// namespace.  The operands to the intrinsic follow.
 name|INTRINSIC_VOID
 block|,
-comment|// CopyToReg - This node has three operands: a chain, a register number to
-comment|// set to this value, and a value.
+comment|/// CopyToReg - This node has three operands: a chain, a register number to
+comment|/// set to this value, and a value.
 name|CopyToReg
 block|,
-comment|// CopyFromReg - This node indicates that the input value is a virtual or
-comment|// physical register that is defined outside of the scope of this
-comment|// SelectionDAG.  The register is available from the RegisterSDNode object.
+comment|/// CopyFromReg - This node indicates that the input value is a virtual or
+comment|/// physical register that is defined outside of the scope of this
+comment|/// SelectionDAG.  The register is available from the RegisterSDNode object.
 name|CopyFromReg
 block|,
-comment|// UNDEF - An undefined node
+comment|/// UNDEF - An undefined node.
 name|UNDEF
 block|,
-comment|// EXTRACT_ELEMENT - This is used to get the lower or upper (determined by
-comment|// a Constant, which is required to be operand #1) half of the integer or
-comment|// float value specified as operand #0.  This is only for use before
-comment|// legalization, for values that will be broken into multiple registers.
+comment|/// EXTRACT_ELEMENT - This is used to get the lower or upper (determined by
+comment|/// a Constant, which is required to be operand #1) half of the integer or
+comment|/// float value specified as operand #0.  This is only for use before
+comment|/// legalization, for values that will be broken into multiple registers.
 name|EXTRACT_ELEMENT
 block|,
-comment|// BUILD_PAIR - This is the opposite of EXTRACT_ELEMENT in some ways.  Given
-comment|// two values of the same integer value type, this produces a value twice as
-comment|// big.  Like EXTRACT_ELEMENT, this can only be used before legalization.
+comment|/// BUILD_PAIR - This is the opposite of EXTRACT_ELEMENT in some ways.
+comment|/// Given two values of the same integer value type, this produces a value
+comment|/// twice as big.  Like EXTRACT_ELEMENT, this can only be used before
+comment|/// legalization.
 name|BUILD_PAIR
 block|,
-comment|// MERGE_VALUES - This node takes multiple discrete operands and returns
-comment|// them all as its individual results.  This nodes has exactly the same
-comment|// number of inputs and outputs. This node is useful for some pieces of the
-comment|// code generator that want to think about a single node with multiple
-comment|// results, not multiple nodes.
+comment|/// MERGE_VALUES - This node takes multiple discrete operands and returns
+comment|/// them all as its individual results.  This nodes has exactly the same
+comment|/// number of inputs and outputs. This node is useful for some pieces of the
+comment|/// code generator that want to think about a single node with multiple
+comment|/// results, not multiple nodes.
 name|MERGE_VALUES
 block|,
-comment|// Simple integer binary arithmetic operators.
+comment|/// Simple integer binary arithmetic operators.
 name|ADD
 block|,
 name|SUB
@@ -277,64 +283,64 @@ name|SREM
 block|,
 name|UREM
 block|,
-comment|// SMUL_LOHI/UMUL_LOHI - Multiply two integers of type iN, producing
-comment|// a signed/unsigned value of type i[2*N], and return the full value as
-comment|// two results, each of type iN.
+comment|/// SMUL_LOHI/UMUL_LOHI - Multiply two integers of type iN, producing
+comment|/// a signed/unsigned value of type i[2*N], and return the full value as
+comment|/// two results, each of type iN.
 name|SMUL_LOHI
 block|,
 name|UMUL_LOHI
 block|,
-comment|// SDIVREM/UDIVREM - Divide two integers and produce both a quotient and
-comment|// remainder result.
+comment|/// SDIVREM/UDIVREM - Divide two integers and produce both a quotient and
+comment|/// remainder result.
 name|SDIVREM
 block|,
 name|UDIVREM
 block|,
-comment|// CARRY_FALSE - This node is used when folding other nodes,
-comment|// like ADDC/SUBC, which indicate the carry result is always false.
+comment|/// CARRY_FALSE - This node is used when folding other nodes,
+comment|/// like ADDC/SUBC, which indicate the carry result is always false.
 name|CARRY_FALSE
 block|,
-comment|// Carry-setting nodes for multiple precision addition and subtraction.
-comment|// These nodes take two operands of the same value type, and produce two
-comment|// results.  The first result is the normal add or sub result, the second
-comment|// result is the carry flag result.
+comment|/// Carry-setting nodes for multiple precision addition and subtraction.
+comment|/// These nodes take two operands of the same value type, and produce two
+comment|/// results.  The first result is the normal add or sub result, the second
+comment|/// result is the carry flag result.
 name|ADDC
 block|,
 name|SUBC
 block|,
-comment|// Carry-using nodes for multiple precision addition and subtraction.  These
-comment|// nodes take three operands: The first two are the normal lhs and rhs to
-comment|// the add or sub, and the third is the input carry flag.  These nodes
-comment|// produce two results; the normal result of the add or sub, and the output
-comment|// carry flag.  These nodes both read and write a carry flag to allow them
-comment|// to them to be chained together for add and sub of arbitrarily large
-comment|// values.
+comment|/// Carry-using nodes for multiple precision addition and subtraction. These
+comment|/// nodes take three operands: The first two are the normal lhs and rhs to
+comment|/// the add or sub, and the third is the input carry flag.  These nodes
+comment|/// produce two results; the normal result of the add or sub, and the output
+comment|/// carry flag.  These nodes both read and write a carry flag to allow them
+comment|/// to them to be chained together for add and sub of arbitrarily large
+comment|/// values.
 name|ADDE
 block|,
 name|SUBE
 block|,
-comment|// RESULT, BOOL = [SU]ADDO(LHS, RHS) - Overflow-aware nodes for addition.
-comment|// These nodes take two operands: the normal LHS and RHS to the add. They
-comment|// produce two results: the normal result of the add, and a boolean that
-comment|// indicates if an overflow occurred (*not* a flag, because it may be stored
-comment|// to memory, etc.).  If the type of the boolean is not i1 then the high
-comment|// bits conform to getBooleanContents.
-comment|// These nodes are generated from the llvm.[su]add.with.overflow intrinsics.
+comment|/// RESULT, BOOL = [SU]ADDO(LHS, RHS) - Overflow-aware nodes for addition.
+comment|/// These nodes take two operands: the normal LHS and RHS to the add. They
+comment|/// produce two results: the normal result of the add, and a boolean that
+comment|/// indicates if an overflow occurred (*not* a flag, because it may be store
+comment|/// to memory, etc.).  If the type of the boolean is not i1 then the high
+comment|/// bits conform to getBooleanContents.
+comment|/// These nodes are generated from llvm.[su]add.with.overflow intrinsics.
 name|SADDO
 block|,
 name|UADDO
 block|,
-comment|// Same for subtraction
+comment|/// Same for subtraction.
 name|SSUBO
 block|,
 name|USUBO
 block|,
-comment|// Same for multiplication
+comment|/// Same for multiplication.
 name|SMULO
 block|,
 name|UMULO
 block|,
-comment|// Simple binary floating point operators.
+comment|/// Simple binary floating point operators.
 name|FADD
 block|,
 name|FSUB
@@ -347,14 +353,14 @@ name|FDIV
 block|,
 name|FREM
 block|,
-comment|// FCOPYSIGN(X, Y) - Return the value of X with the sign of Y.  NOTE: This
-comment|// DAG node does not require that X and Y have the same type, just that they
-comment|// are both floating point.  X and the result must have the same type.
-comment|// FCOPYSIGN(f32, f64) is allowed.
+comment|/// FCOPYSIGN(X, Y) - Return the value of X with the sign of Y.  NOTE: This
+comment|/// DAG node does not require that X and Y have the same type, just that the
+comment|/// are both floating point.  X and the result must have the same type.
+comment|/// FCOPYSIGN(f32, f64) is allowed.
 name|FCOPYSIGN
 block|,
-comment|// INT = FGETSIGN(FP) - Return the sign bit of the specified floating point
-comment|// value as an integer 0/1 value.
+comment|/// INT = FGETSIGN(FP) - Return the sign bit of the specified floating point
+comment|/// value as an integer 0/1 value.
 name|FGETSIGN
 block|,
 comment|/// BUILD_VECTOR(ELT0, ELT1, ELT2, ELT3,...) - Return a vector with the
@@ -412,8 +418,9 @@ comment|/// are integer types.  In this case the operand is allowed to be wider
 comment|/// than the vector element type, and is implicitly truncated to it.
 name|SCALAR_TO_VECTOR
 block|,
-comment|// MULHU/MULHS - Multiply high - Multiply two integers of type iN, producing
-comment|// an unsigned/signed value of type i[2*N], then return the top part.
+comment|/// MULHU/MULHS - Multiply high - Multiply two integers of type iN,
+comment|/// producing an unsigned/signed value of type i[2*N], then return the top
+comment|/// part.
 name|MULHU
 block|,
 name|MULHS
@@ -432,7 +439,6 @@ comment|/// large enough.  TLI.getShiftAmountTy() is i8 on some targets, but bef
 comment|/// legalization, types like i1024 can occur and i8 doesn't have enough bits
 comment|/// to represent the shift amount.  By convention, DAGCombine and
 comment|/// SelectionDAGBuilder forces these shift amounts to i32 for simplicity.
-comment|///
 name|SHL
 block|,
 name|SRA
@@ -457,71 +463,71 @@ name|CTTZ_ZERO_UNDEF
 block|,
 name|CTLZ_ZERO_UNDEF
 block|,
-comment|// Select(COND, TRUEVAL, FALSEVAL).  If the type of the boolean COND is not
-comment|// i1 then the high bits must conform to getBooleanContents.
+comment|/// Select(COND, TRUEVAL, FALSEVAL).  If the type of the boolean COND is not
+comment|/// i1 then the high bits must conform to getBooleanContents.
 name|SELECT
 block|,
-comment|// Select with a vector condition (op #0) and two vector operands (ops #1
-comment|// and #2), returning a vector result.  All vectors have the same length.
-comment|// Much like the scalar select and setcc, each bit in the condition selects
-comment|// whether the corresponding result element is taken from op #1 or op #2.
-comment|// At first, the VSELECT condition is of vXi1 type. Later, targets may change
-comment|// the condition type in order to match the VSELECT node using a a pattern.
-comment|// The condition follows the BooleanContent format of the target.
+comment|/// Select with a vector condition (op #0) and two vector operands (ops #1
+comment|/// and #2), returning a vector result.  All vectors have the same length.
+comment|/// Much like the scalar select and setcc, each bit in the condition selects
+comment|/// whether the corresponding result element is taken from op #1 or op #2.
+comment|/// At first, the VSELECT condition is of vXi1 type. Later, targets may
+comment|/// change the condition type in order to match the VSELECT node using a
+comment|/// pattern. The condition follows the BooleanContent format of the target.
 name|VSELECT
 block|,
-comment|// Select with condition operator - This selects between a true value and
-comment|// a false value (ops #2 and #3) based on the boolean result of comparing
-comment|// the lhs and rhs (ops #0 and #1) of a conditional expression with the
-comment|// condition code in op #4, a CondCodeSDNode.
+comment|/// Select with condition operator - This selects between a true value and
+comment|/// a false value (ops #2 and #3) based on the boolean result of comparing
+comment|/// the lhs and rhs (ops #0 and #1) of a conditional expression with the
+comment|/// condition code in op #4, a CondCodeSDNode.
 name|SELECT_CC
 block|,
-comment|// SetCC operator - This evaluates to a true value iff the condition is
-comment|// true.  If the result value type is not i1 then the high bits conform
-comment|// to getBooleanContents.  The operands to this are the left and right
-comment|// operands to compare (ops #0, and #1) and the condition code to compare
-comment|// them with (op #2) as a CondCodeSDNode. If the operands are vector types
-comment|// then the result type must also be a vector type.
+comment|/// SetCC operator - This evaluates to a true value iff the condition is
+comment|/// true.  If the result value type is not i1 then the high bits conform
+comment|/// to getBooleanContents.  The operands to this are the left and right
+comment|/// operands to compare (ops #0, and #1) and the condition code to compare
+comment|/// them with (op #2) as a CondCodeSDNode. If the operands are vector types
+comment|/// then the result type must also be a vector type.
 name|SETCC
 block|,
-comment|// SHL_PARTS/SRA_PARTS/SRL_PARTS - These operators are used for expanded
-comment|// integer shift operations, just like ADD/SUB_PARTS.  The operation
-comment|// ordering is:
-comment|//       [Lo,Hi] = op [LoLHS,HiLHS], Amt
+comment|/// SHL_PARTS/SRA_PARTS/SRL_PARTS - These operators are used for expanded
+comment|/// integer shift operations, just like ADD/SUB_PARTS.  The operation
+comment|/// ordering is:
+comment|///       [Lo,Hi] = op [LoLHS,HiLHS], Amt
 name|SHL_PARTS
 block|,
 name|SRA_PARTS
 block|,
 name|SRL_PARTS
 block|,
-comment|// Conversion operators.  These are all single input single output
-comment|// operations.  For all of these, the result type must be strictly
-comment|// wider or narrower (depending on the operation) than the source
-comment|// type.
-comment|// SIGN_EXTEND - Used for integer types, replicating the sign bit
-comment|// into new bits.
+comment|/// Conversion operators.  These are all single input single output
+comment|/// operations.  For all of these, the result type must be strictly
+comment|/// wider or narrower (depending on the operation) than the source
+comment|/// type.
+comment|/// SIGN_EXTEND - Used for integer types, replicating the sign bit
+comment|/// into new bits.
 name|SIGN_EXTEND
 block|,
-comment|// ZERO_EXTEND - Used for integer types, zeroing the new bits.
+comment|/// ZERO_EXTEND - Used for integer types, zeroing the new bits.
 name|ZERO_EXTEND
 block|,
-comment|// ANY_EXTEND - Used for integer types.  The high bits are undefined.
+comment|/// ANY_EXTEND - Used for integer types.  The high bits are undefined.
 name|ANY_EXTEND
 block|,
-comment|// TRUNCATE - Completely drop the high bits.
+comment|/// TRUNCATE - Completely drop the high bits.
 name|TRUNCATE
 block|,
-comment|// [SU]INT_TO_FP - These operators convert integers (whose interpreted sign
-comment|// depends on the first letter) to floating point.
+comment|/// [SU]INT_TO_FP - These operators convert integers (whose interpreted sign
+comment|/// depends on the first letter) to floating point.
 name|SINT_TO_FP
 block|,
 name|UINT_TO_FP
 block|,
-comment|// SIGN_EXTEND_INREG - This operator atomically performs a SHL/SRA pair to
-comment|// sign extend a small value in a large integer register (e.g. sign
-comment|// extending the low 8 bits of a 32-bit register to fill the top 24 bits
-comment|// with the 7th bit).  The size of the smaller type is indicated by the 1th
-comment|// operand, a ValueType node.
+comment|/// SIGN_EXTEND_INREG - This operator atomically performs a SHL/SRA pair to
+comment|/// sign extend a small value in a large integer register (e.g. sign
+comment|/// extending the low 8 bits of a 32-bit register to fill the top 24 bits
+comment|/// with the 7th bit).  The size of the smaller type is indicated by the 1th
+comment|/// operand, a ValueType node.
 name|SIGN_EXTEND_INREG
 block|,
 comment|/// FP_TO_[US]INT - Convert a floating point value to a signed or unsigned
@@ -543,12 +549,12 @@ comment|/// FP_EXTEND(FP_ROUND(X,1)) -> X which are not safe for
 comment|/// FP_EXTEND(FP_ROUND(X,0)) because the extra bits aren't removed.
 name|FP_ROUND
 block|,
-comment|// FLT_ROUNDS_ - Returns current rounding mode:
-comment|// -1 Undefined
-comment|//  0 Round to 0
-comment|//  1 Round to nearest
-comment|//  2 Round to +inf
-comment|//  3 Round to -inf
+comment|/// FLT_ROUNDS_ - Returns current rounding mode:
+comment|/// -1 Undefined
+comment|///  0 Round to 0
+comment|///  1 Round to nearest
+comment|///  2 Round to +inf
+comment|///  3 Round to -inf
 name|FLT_ROUNDS_
 block|,
 comment|/// X = FP_ROUND_INREG(Y, VT) - This operator takes an FP register, and
@@ -561,40 +567,40 @@ block|,
 comment|/// X = FP_EXTEND(Y) - Extend a smaller FP type into a larger FP type.
 name|FP_EXTEND
 block|,
-comment|// BITCAST - This operator converts between integer, vector and FP
-comment|// values, as if the value was stored to memory with one type and loaded
-comment|// from the same address with the other type (or equivalently for vector
-comment|// format conversions, etc).  The source and result are required to have
-comment|// the same bit size (e.g.  f32<-> i32).  This can also be used for
-comment|// int-to-int or fp-to-fp conversions, but that is a noop, deleted by
-comment|// getNode().
+comment|/// BITCAST - This operator converts between integer, vector and FP
+comment|/// values, as if the value was stored to memory with one type and loaded
+comment|/// from the same address with the other type (or equivalently for vector
+comment|/// format conversions, etc).  The source and result are required to have
+comment|/// the same bit size (e.g.  f32<-> i32).  This can also be used for
+comment|/// int-to-int or fp-to-fp conversions, but that is a noop, deleted by
+comment|/// getNode().
 name|BITCAST
 block|,
-comment|// CONVERT_RNDSAT - This operator is used to support various conversions
-comment|// between various types (float, signed, unsigned and vectors of those
-comment|// types) with rounding and saturation. NOTE: Avoid using this operator as
-comment|// most target don't support it and the operator might be removed in the
-comment|// future. It takes the following arguments:
-comment|//   0) value
-comment|//   1) dest type (type to convert to)
-comment|//   2) src type (type to convert from)
-comment|//   3) rounding imm
-comment|//   4) saturation imm
-comment|//   5) ISD::CvtCode indicating the type of conversion to do
+comment|/// CONVERT_RNDSAT - This operator is used to support various conversions
+comment|/// between various types (float, signed, unsigned and vectors of those
+comment|/// types) with rounding and saturation. NOTE: Avoid using this operator as
+comment|/// most target don't support it and the operator might be removed in the
+comment|/// future. It takes the following arguments:
+comment|///   0) value
+comment|///   1) dest type (type to convert to)
+comment|///   2) src type (type to convert from)
+comment|///   3) rounding imm
+comment|///   4) saturation imm
+comment|///   5) ISD::CvtCode indicating the type of conversion to do
 name|CONVERT_RNDSAT
 block|,
-comment|// FP16_TO_FP32, FP32_TO_FP16 - These operators are used to perform
-comment|// promotions and truncation for half-precision (16 bit) floating
-comment|// numbers. We need special nodes since FP16 is a storage-only type with
-comment|// special semantics of operations.
+comment|/// FP16_TO_FP32, FP32_TO_FP16 - These operators are used to perform
+comment|/// promotions and truncation for half-precision (16 bit) floating
+comment|/// numbers. We need special nodes since FP16 is a storage-only type with
+comment|/// special semantics of operations.
 name|FP16_TO_FP32
 block|,
 name|FP32_TO_FP16
 block|,
-comment|// FNEG, FABS, FSQRT, FSIN, FCOS, FPOWI, FPOW,
-comment|// FLOG, FLOG2, FLOG10, FEXP, FEXP2,
-comment|// FCEIL, FTRUNC, FRINT, FNEARBYINT, FFLOOR - Perform various unary floating
-comment|// point operations. These are inspired by libm.
+comment|/// FNEG, FABS, FSQRT, FSIN, FCOS, FPOWI, FPOW,
+comment|/// FLOG, FLOG2, FLOG10, FEXP, FEXP2,
+comment|/// FCEIL, FTRUNC, FRINT, FNEARBYINT, FFLOOR - Perform various unary
+comment|/// floating point operations. These are inspired by libm.
 name|FNEG
 block|,
 name|FABS
@@ -629,178 +635,181 @@ name|FNEARBYINT
 block|,
 name|FFLOOR
 block|,
-comment|// LOAD and STORE have token chains as their first operand, then the same
-comment|// operands as an LLVM load/store instruction, then an offset node that
-comment|// is added / subtracted from the base pointer to form the address (for
-comment|// indexed memory ops).
+comment|/// LOAD and STORE have token chains as their first operand, then the same
+comment|/// operands as an LLVM load/store instruction, then an offset node that
+comment|/// is added / subtracted from the base pointer to form the address (for
+comment|/// indexed memory ops).
 name|LOAD
 block|,
 name|STORE
 block|,
-comment|// DYNAMIC_STACKALLOC - Allocate some number of bytes on the stack aligned
-comment|// to a specified boundary.  This node always has two return values: a new
-comment|// stack pointer value and a chain. The first operand is the token chain,
-comment|// the second is the number of bytes to allocate, and the third is the
-comment|// alignment boundary.  The size is guaranteed to be a multiple of the stack
-comment|// alignment, and the alignment is guaranteed to be bigger than the stack
-comment|// alignment (if required) or 0 to get standard stack alignment.
+comment|/// DYNAMIC_STACKALLOC - Allocate some number of bytes on the stack aligned
+comment|/// to a specified boundary.  This node always has two return values: a new
+comment|/// stack pointer value and a chain. The first operand is the token chain,
+comment|/// the second is the number of bytes to allocate, and the third is the
+comment|/// alignment boundary.  The size is guaranteed to be a multiple of the
+comment|/// stack alignment, and the alignment is guaranteed to be bigger than the
+comment|/// stack alignment (if required) or 0 to get standard stack alignment.
 name|DYNAMIC_STACKALLOC
 block|,
-comment|// Control flow instructions.  These all have token chains.
-comment|// BR - Unconditional branch.  The first operand is the chain
-comment|// operand, the second is the MBB to branch to.
+comment|/// Control flow instructions.  These all have token chains.
+comment|/// BR - Unconditional branch.  The first operand is the chain
+comment|/// operand, the second is the MBB to branch to.
 name|BR
 block|,
-comment|// BRIND - Indirect branch.  The first operand is the chain, the second
-comment|// is the value to branch to, which must be of the same type as the target's
-comment|// pointer type.
+comment|/// BRIND - Indirect branch.  The first operand is the chain, the second
+comment|/// is the value to branch to, which must be of the same type as the
+comment|/// target's pointer type.
 name|BRIND
 block|,
-comment|// BR_JT - Jumptable branch. The first operand is the chain, the second
-comment|// is the jumptable index, the last one is the jumptable entry index.
+comment|/// BR_JT - Jumptable branch. The first operand is the chain, the second
+comment|/// is the jumptable index, the last one is the jumptable entry index.
 name|BR_JT
 block|,
-comment|// BRCOND - Conditional branch.  The first operand is the chain, the
-comment|// second is the condition, the third is the block to branch to if the
-comment|// condition is true.  If the type of the condition is not i1, then the
-comment|// high bits must conform to getBooleanContents.
+comment|/// BRCOND - Conditional branch.  The first operand is the chain, the
+comment|/// second is the condition, the third is the block to branch to if the
+comment|/// condition is true.  If the type of the condition is not i1, then the
+comment|/// high bits must conform to getBooleanContents.
 name|BRCOND
 block|,
-comment|// BR_CC - Conditional branch.  The behavior is like that of SELECT_CC, in
-comment|// that the condition is represented as condition code, and two nodes to
-comment|// compare, rather than as a combined SetCC node.  The operands in order are
-comment|// chain, cc, lhs, rhs, block to branch to if condition is true.
+comment|/// BR_CC - Conditional branch.  The behavior is like that of SELECT_CC, in
+comment|/// that the condition is represented as condition code, and two nodes to
+comment|/// compare, rather than as a combined SetCC node.  The operands in order
+comment|/// are chain, cc, lhs, rhs, block to branch to if condition is true.
 name|BR_CC
 block|,
-comment|// INLINEASM - Represents an inline asm block.  This node always has two
-comment|// return values: a chain and a flag result.  The inputs are as follows:
-comment|//   Operand #0   : Input chain.
-comment|//   Operand #1   : a ExternalSymbolSDNode with a pointer to the asm string.
-comment|//   Operand #2   : a MDNodeSDNode with the !srcloc metadata.
-comment|//   Operand #3   : HasSideEffect, IsAlignStack bits.
-comment|//   After this, it is followed by a list of operands with this format:
-comment|//     ConstantSDNode: Flags that encode whether it is a mem or not, the
-comment|//                     of operands that follow, etc.  See InlineAsm.h.
-comment|//     ... however many operands ...
-comment|//   Operand #last: Optional, an incoming flag.
-comment|//
-comment|// The variable width operands are required to represent target addressing
-comment|// modes as a single "operand", even though they may have multiple
-comment|// SDOperands.
+comment|/// INLINEASM - Represents an inline asm block.  This node always has two
+comment|/// return values: a chain and a flag result.  The inputs are as follows:
+comment|///   Operand #0  : Input chain.
+comment|///   Operand #1  : a ExternalSymbolSDNode with a pointer to the asm string.
+comment|///   Operand #2  : a MDNodeSDNode with the !srcloc metadata.
+comment|///   Operand #3  : HasSideEffect, IsAlignStack bits.
+comment|///   After this, it is followed by a list of operands with this format:
+comment|///     ConstantSDNode: Flags that encode whether it is a mem or not, the
+comment|///                     of operands that follow, etc.  See InlineAsm.h.
+comment|///     ... however many operands ...
+comment|///   Operand #last: Optional, an incoming flag.
+comment|///
+comment|/// The variable width operands are required to represent target addressing
+comment|/// modes as a single "operand", even though they may have multiple
+comment|/// SDOperands.
 name|INLINEASM
 block|,
-comment|// EH_LABEL - Represents a label in mid basic block used to track
-comment|// locations needed for debug and exception handling tables.  These nodes
-comment|// take a chain as input and return a chain.
+comment|/// EH_LABEL - Represents a label in mid basic block used to track
+comment|/// locations needed for debug and exception handling tables.  These nodes
+comment|/// take a chain as input and return a chain.
 name|EH_LABEL
 block|,
-comment|// STACKSAVE - STACKSAVE has one operand, an input chain.  It produces a
-comment|// value, the same type as the pointer type for the system, and an output
-comment|// chain.
+comment|/// STACKSAVE - STACKSAVE has one operand, an input chain.  It produces a
+comment|/// value, the same type as the pointer type for the system, and an output
+comment|/// chain.
 name|STACKSAVE
 block|,
-comment|// STACKRESTORE has two operands, an input chain and a pointer to restore to
-comment|// it returns an output chain.
+comment|/// STACKRESTORE has two operands, an input chain and a pointer to restore
+comment|/// to it returns an output chain.
 name|STACKRESTORE
 block|,
-comment|// CALLSEQ_START/CALLSEQ_END - These operators mark the beginning and end of
-comment|// a call sequence, and carry arbitrary information that target might want
-comment|// to know.  The first operand is a chain, the rest are specified by the
-comment|// target and not touched by the DAG optimizers.
-comment|// CALLSEQ_START..CALLSEQ_END pairs may not be nested.
+comment|/// CALLSEQ_START/CALLSEQ_END - These operators mark the beginning and end
+comment|/// of a call sequence, and carry arbitrary information that target might
+comment|/// want to know.  The first operand is a chain, the rest are specified by
+comment|/// the target and not touched by the DAG optimizers.
+comment|/// CALLSEQ_START..CALLSEQ_END pairs may not be nested.
 name|CALLSEQ_START
 block|,
 comment|// Beginning of a call sequence
 name|CALLSEQ_END
 block|,
 comment|// End of a call sequence
-comment|// VAARG - VAARG has four operands: an input chain, a pointer, a SRCVALUE,
-comment|// and the alignment. It returns a pair of values: the vaarg value and a
-comment|// new chain.
+comment|/// VAARG - VAARG has four operands: an input chain, a pointer, a SRCVALUE,
+comment|/// and the alignment. It returns a pair of values: the vaarg value and a
+comment|/// new chain.
 name|VAARG
 block|,
-comment|// VACOPY - VACOPY has five operands: an input chain, a destination pointer,
-comment|// a source pointer, a SRCVALUE for the destination, and a SRCVALUE for the
-comment|// source.
+comment|/// VACOPY - VACOPY has 5 operands: an input chain, a destination pointer,
+comment|/// a source pointer, a SRCVALUE for the destination, and a SRCVALUE for the
+comment|/// source.
 name|VACOPY
 block|,
-comment|// VAEND, VASTART - VAEND and VASTART have three operands: an input chain, a
-comment|// pointer, and a SRCVALUE.
+comment|/// VAEND, VASTART - VAEND and VASTART have three operands: an input chain,
+comment|/// pointer, and a SRCVALUE.
 name|VAEND
 block|,
 name|VASTART
 block|,
-comment|// SRCVALUE - This is a node type that holds a Value* that is used to
-comment|// make reference to a value in the LLVM IR.
+comment|/// SRCVALUE - This is a node type that holds a Value* that is used to
+comment|/// make reference to a value in the LLVM IR.
 name|SRCVALUE
 block|,
-comment|// MDNODE_SDNODE - This is a node that holdes an MDNode*, which is used to
-comment|// reference metadata in the IR.
+comment|/// MDNODE_SDNODE - This is a node that holdes an MDNode*, which is used to
+comment|/// reference metadata in the IR.
 name|MDNODE_SDNODE
 block|,
-comment|// PCMARKER - This corresponds to the pcmarker intrinsic.
+comment|/// PCMARKER - This corresponds to the pcmarker intrinsic.
 name|PCMARKER
 block|,
-comment|// READCYCLECOUNTER - This corresponds to the readcyclecounter intrinsic.
-comment|// The only operand is a chain and a value and a chain are produced.  The
-comment|// value is the contents of the architecture specific cycle counter like
-comment|// register (or other high accuracy low latency clock source)
+comment|/// READCYCLECOUNTER - This corresponds to the readcyclecounter intrinsic.
+comment|/// The only operand is a chain and a value and a chain are produced.  The
+comment|/// value is the contents of the architecture specific cycle counter like
+comment|/// register (or other high accuracy low latency clock source)
 name|READCYCLECOUNTER
 block|,
-comment|// HANDLENODE node - Used as a handle for various purposes.
+comment|/// HANDLENODE node - Used as a handle for various purposes.
 name|HANDLENODE
 block|,
-comment|// INIT_TRAMPOLINE - This corresponds to the init_trampoline intrinsic.  It
-comment|// takes as input a token chain, the pointer to the trampoline, the pointer
-comment|// to the nested function, the pointer to pass for the 'nest' parameter, a
-comment|// SRCVALUE for the trampoline and another for the nested function (allowing
-comment|// targets to access the original Function*).  It produces a token chain as
-comment|// output.
+comment|/// INIT_TRAMPOLINE - This corresponds to the init_trampoline intrinsic.  It
+comment|/// takes as input a token chain, the pointer to the trampoline, the pointer
+comment|/// to the nested function, the pointer to pass for the 'nest' parameter, a
+comment|/// SRCVALUE for the trampoline and another for the nested function
+comment|/// (allowing targets to access the original Function*).
+comment|/// It produces a token chain as output.
 name|INIT_TRAMPOLINE
 block|,
-comment|// ADJUST_TRAMPOLINE - This corresponds to the adjust_trampoline intrinsic.
-comment|// It takes a pointer to the trampoline and produces a (possibly) new
-comment|// pointer to the same trampoline with platform-specific adjustments
-comment|// applied.  The pointer it returns points to an executable block of code.
+comment|/// ADJUST_TRAMPOLINE - This corresponds to the adjust_trampoline intrinsic.
+comment|/// It takes a pointer to the trampoline and produces a (possibly) new
+comment|/// pointer to the same trampoline with platform-specific adjustments
+comment|/// applied.  The pointer it returns points to an executable block of code.
 name|ADJUST_TRAMPOLINE
 block|,
-comment|// TRAP - Trapping instruction
+comment|/// TRAP - Trapping instruction
 name|TRAP
 block|,
-comment|// PREFETCH - This corresponds to a prefetch intrinsic. It takes chains are
-comment|// their first operand. The other operands are the address to prefetch,
-comment|// read / write specifier, locality specifier and instruction / data cache
-comment|// specifier.
+comment|/// DEBUGTRAP - Trap intended to get the attention of a debugger.
+name|DEBUGTRAP
+block|,
+comment|/// PREFETCH - This corresponds to a prefetch intrinsic. The first operand
+comment|/// is the chain.  The other operands are the address to prefetch,
+comment|/// read / write specifier, locality specifier and instruction / data cache
+comment|/// specifier.
 name|PREFETCH
 block|,
-comment|// OUTCHAIN = MEMBARRIER(INCHAIN, load-load, load-store, store-load,
-comment|//                       store-store, device)
-comment|// This corresponds to the memory.barrier intrinsic.
-comment|// it takes an input chain, 4 operands to specify the type of barrier, an
-comment|// operand specifying if the barrier applies to device and uncached memory
-comment|// and produces an output chain.
+comment|/// OUTCHAIN = MEMBARRIER(INCHAIN, load-load, load-store, store-load,
+comment|///                       store-store, device)
+comment|/// This corresponds to the memory.barrier intrinsic.
+comment|/// it takes an input chain, 4 operands to specify the type of barrier, an
+comment|/// operand specifying if the barrier applies to device and uncached memory
+comment|/// and produces an output chain.
 name|MEMBARRIER
 block|,
-comment|// OUTCHAIN = ATOMIC_FENCE(INCHAIN, ordering, scope)
-comment|// This corresponds to the fence instruction. It takes an input chain, and
-comment|// two integer constants: an AtomicOrdering and a SynchronizationScope.
+comment|/// OUTCHAIN = ATOMIC_FENCE(INCHAIN, ordering, scope)
+comment|/// This corresponds to the fence instruction. It takes an input chain, and
+comment|/// two integer constants: an AtomicOrdering and a SynchronizationScope.
 name|ATOMIC_FENCE
 block|,
-comment|// Val, OUTCHAIN = ATOMIC_LOAD(INCHAIN, ptr)
-comment|// This corresponds to "load atomic" instruction.
+comment|/// Val, OUTCHAIN = ATOMIC_LOAD(INCHAIN, ptr)
+comment|/// This corresponds to "load atomic" instruction.
 name|ATOMIC_LOAD
 block|,
-comment|// OUTCHAIN = ATOMIC_LOAD(INCHAIN, ptr, val)
-comment|// This corresponds to "store atomic" instruction.
+comment|/// OUTCHAIN = ATOMIC_LOAD(INCHAIN, ptr, val)
+comment|/// This corresponds to "store atomic" instruction.
 name|ATOMIC_STORE
 block|,
-comment|// Val, OUTCHAIN = ATOMIC_CMP_SWAP(INCHAIN, ptr, cmp, swap)
-comment|// This corresponds to the cmpxchg instruction.
+comment|/// Val, OUTCHAIN = ATOMIC_CMP_SWAP(INCHAIN, ptr, cmp, swap)
+comment|/// This corresponds to the cmpxchg instruction.
 name|ATOMIC_CMP_SWAP
 block|,
-comment|// Val, OUTCHAIN = ATOMIC_SWAP(INCHAIN, ptr, amt)
-comment|// Val, OUTCHAIN = ATOMIC_LOAD_[OpName](INCHAIN, ptr, amt)
-comment|// These correspond to the atomicrmw instruction.
+comment|/// Val, OUTCHAIN = ATOMIC_SWAP(INCHAIN, ptr, amt)
+comment|/// Val, OUTCHAIN = ATOMIC_LOAD_[OpName](INCHAIN, ptr, amt)
+comment|/// These correspond to the atomicrmw instruction.
 name|ATOMIC_SWAP
 block|,
 name|ATOMIC_LOAD_ADD
@@ -1176,33 +1185,33 @@ name|CvtCode
 block|{
 name|CVT_FF
 block|,
-comment|// Float from Float
+comment|/// Float from Float
 name|CVT_FS
 block|,
-comment|// Float from Signed
+comment|/// Float from Signed
 name|CVT_FU
 block|,
-comment|// Float from Unsigned
+comment|/// Float from Unsigned
 name|CVT_SF
 block|,
-comment|// Signed from Float
+comment|/// Signed from Float
 name|CVT_UF
 block|,
-comment|// Unsigned from Float
+comment|/// Unsigned from Float
 name|CVT_SS
 block|,
-comment|// Signed from Signed
+comment|/// Signed from Signed
 name|CVT_SU
 block|,
-comment|// Signed from Unsigned
+comment|/// Signed from Unsigned
 name|CVT_US
 block|,
-comment|// Unsigned from Signed
+comment|/// Unsigned from Signed
 name|CVT_UU
 block|,
-comment|// Unsigned from Unsigned
+comment|/// Unsigned from Unsigned
 name|CVT_INVALID
-comment|// Marker - Invalid opcode
+comment|/// Marker - Invalid opcode
 block|}
 enum|;
 block|}

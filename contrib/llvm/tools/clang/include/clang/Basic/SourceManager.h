@@ -32,15 +32,99 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
-comment|//  This file defines the SourceManager interface.
+comment|/// \file
 end_comment
 
 begin_comment
-comment|//
+comment|/// \brief Defines the SourceManager interface.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// There are three different types of locations in a file: a spelling
+end_comment
+
+begin_comment
+comment|/// location, an expansion location, and a presumed location.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Given an example of:
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// #define min(x, y) x< y ? x : y
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// and then later on a use of min:
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// #line 17
+end_comment
+
+begin_comment
+comment|/// return min(a, b);
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// The expansion location is the line in the source code where the macro
+end_comment
+
+begin_comment
+comment|/// was expanded (the return statement), the spelling location is the
+end_comment
+
+begin_comment
+comment|/// location in the source where the macro was originally defined,
+end_comment
+
+begin_comment
+comment|/// and the presumed location is where the line directive states that
+end_comment
+
+begin_comment
+comment|/// the line is 17, or any other line.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -63,6 +147,12 @@ begin_include
 include|#
 directive|include
 file|"clang/Basic/LLVM.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Basic/FileManager.h"
 end_include
 
 begin_include
@@ -104,7 +194,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/OwningPtr.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/DenseSet.h"
 end_include
 
 begin_include
@@ -159,32 +261,19 @@ decl_stmt|;
 name|class
 name|ASTReader
 decl_stmt|;
-comment|/// There are three different types of locations in a file: a spelling
-comment|/// location, an expansion location, and a presumed location.
-comment|///
-comment|/// Given an example of:
-comment|/// #define min(x, y) x< y ? x : y
-comment|///
-comment|/// and then later on a use of min:
-comment|/// #line 17
-comment|/// return min(a, b);
-comment|///
-comment|/// The expansion location is the line in the source code where the macro
-comment|/// was expanded (the return statement), the spelling location is the
-comment|/// location in the source where the macro was originally defined,
-comment|/// and the presumed location is where the line directive states that
-comment|/// the line is 17, or any other line.
-comment|/// SrcMgr - Public enums and private classes that are part of the
+comment|/// \namespace
+comment|/// \brief Public enums and private classes that are part of the
 comment|/// SourceManager implementation.
 comment|///
 name|namespace
 name|SrcMgr
 block|{
-comment|/// CharacteristicKind - This is used to represent whether a file or directory
-comment|/// holds normal user code, system code, or system code which is implicitly
-comment|/// 'extern "C"' in C++ mode.  Entire directories can be tagged with this
-comment|/// (this is maintained by DirectoryLookup and friends) as can specific
-comment|/// FileInfos when a #pragma system_header is seen or various other cases.
+comment|/// \brief Indicates whether a file or directory holds normal user code,
+comment|/// system code, or system code which is implicitly 'extern "C"' in C++ mode.
+comment|///
+comment|/// Entire directories can be tagged with this (this is maintained by
+comment|/// DirectoryLookup and friends) as can specific FileInfos when a \#pragma
+comment|/// system_header is seen or in various other cases.
 comment|///
 enum|enum
 name|CharacteristicKind
@@ -196,8 +285,9 @@ block|,
 name|C_ExternCSystem
 block|}
 enum|;
-comment|/// ContentCache - One instance of this struct is kept for every file
-comment|/// loaded or used.  This object owns the MemoryBuffer object.
+comment|/// \brief One instance of this struct is kept for every file loaded or used.
+comment|////
+comment|/// This object owns the MemoryBuffer object.
 name|class
 name|ContentCache
 block|{
@@ -215,9 +305,11 @@ init|=
 literal|0x02
 block|}
 enum|;
-comment|/// Buffer - The actual buffer containing the characters from the input
-comment|/// file.  This is owned by the ContentCache object.
-comment|/// The bits indicate indicates whether the buffer is invalid.
+comment|/// \brief The actual buffer containing the characters from the input
+comment|/// file.
+comment|///
+comment|/// This is owned by the ContentCache object.  The bits indicate
+comment|/// whether the buffer is invalid.
 name|mutable
 name|llvm
 operator|::
@@ -235,16 +327,19 @@ name|Buffer
 expr_stmt|;
 name|public
 label|:
-comment|/// Reference to the file entry representing this ContentCache.
+comment|/// \brief Reference to the file entry representing this ContentCache.
+comment|///
 comment|/// This reference does not own the FileEntry object.
-comment|/// It is possible for this to be NULL if
-comment|/// the ContentCache encapsulates an imaginary text buffer.
+comment|///
+comment|/// It is possible for this to be NULL if the ContentCache encapsulates
+comment|/// an imaginary text buffer.
 specifier|const
 name|FileEntry
 modifier|*
 name|OrigEntry
 decl_stmt|;
 comment|/// \brief References the file which the contents were actually loaded from.
+comment|///
 comment|/// Can be different from 'Entry' if we overridden the contents of one file
 comment|/// with the contents of another file.
 specifier|const
@@ -252,15 +347,17 @@ name|FileEntry
 modifier|*
 name|ContentsEntry
 decl_stmt|;
-comment|/// SourceLineCache - A bump pointer allocated array of offsets for each
-comment|/// source line.  This is lazily computed.  This is owned by the
-comment|/// SourceManager BumpPointerAllocator object.
+comment|/// \brief A bump pointer allocated array of offsets for each source line.
+comment|///
+comment|/// This is lazily computed.  This is owned by the SourceManager
+comment|/// BumpPointerAllocator object.
 name|unsigned
 modifier|*
 name|SourceLineCache
 decl_stmt|;
-comment|/// NumLines - The number of lines in this ContentCache.  This is only valid
-comment|/// if SourceLineCache is non-null.
+comment|/// \brief The number of lines in this ContentCache.
+comment|///
+comment|/// This is only valid if SourceLineCache is non-null.
 name|unsigned
 name|NumLines
 range|:
@@ -273,6 +370,13 @@ comment|/// When true, the original entry may be a virtual file that does not
 comment|/// exist.
 name|unsigned
 name|BufferOverridden
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief True if this content cache was initially created for a source
+comment|/// file considered as a system one.
+name|unsigned
+name|IsSystemFile
 range|:
 literal|1
 decl_stmt|;
@@ -315,6 +419,11 @@ argument_list|)
 operator|,
 name|BufferOverridden
 argument_list|(
+name|false
+argument_list|)
+operator|,
+name|IsSystemFile
+argument_list|(
 argument|false
 argument_list|)
 block|{}
@@ -360,6 +469,11 @@ argument_list|)
 operator|,
 name|BufferOverridden
 argument_list|(
+name|false
+argument_list|)
+operator|,
+name|IsSystemFile
+argument_list|(
 argument|false
 argument_list|)
 block|{}
@@ -368,8 +482,8 @@ name|ContentCache
 argument_list|()
 expr_stmt|;
 comment|/// The copy ctor does not allow copies where source object has either
-comment|///  a non-NULL Buffer or SourceLineCache.  Ownership of allocated memory
-comment|///  is not transferred, so this is a logical error.
+comment|/// a non-NULL Buffer or SourceLineCache.  Ownership of allocated memory
+comment|/// is not transferred, so this is a logical error.
 name|ContentCache
 argument_list|(
 specifier|const
@@ -391,6 +505,11 @@ literal|0
 argument_list|)
 operator|,
 name|BufferOverridden
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|IsSystemFile
 argument_list|(
 argument|false
 argument_list|)
@@ -433,13 +552,13 @@ name|RHS
 operator|.
 name|NumLines
 block|;     }
-comment|/// getBuffer - Returns the memory buffer for the associated content.
+comment|/// \brief Returns the memory buffer for the associated content.
 comment|///
 comment|/// \param Diag Object through which diagnostics will be emitted if the
-comment|/// buffer cannot be retrieved.
+comment|///   buffer cannot be retrieved.
 comment|///
 comment|/// \param Loc If specified, is the location that invalid file diagnostics
-comment|///     will be emitted at.
+comment|///   will be emitted at.
 comment|///
 comment|/// \param Invalid If non-NULL, will be set \c true if an error occurred.
 specifier|const
@@ -460,18 +579,21 @@ literal|0
 argument_list|)
 specifier|const
 expr_stmt|;
-comment|/// getSize - Returns the size of the content encapsulated by this
-comment|///  ContentCache. This can be the size of the source file or the size of an
-comment|///  arbitrary scratch buffer.  If the ContentCache encapsulates a source
-comment|///  file this size is retrieved from the file's FileEntry.
+comment|/// \brief Returns the size of the content encapsulated by this
+comment|/// ContentCache.
+comment|///
+comment|/// This can be the size of the source file or the size of an
+comment|/// arbitrary scratch buffer.  If the ContentCache encapsulates a source
+comment|/// file this size is retrieved from the file's FileEntry.
 name|unsigned
 name|getSize
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// getSizeBytesMapped - Returns the number of bytes actually mapped for
-comment|/// this ContentCache. This can be 0 if the MemBuffer was not actually
-comment|/// expanded.
+comment|/// \brief Returns the number of bytes actually mapped for this
+comment|/// ContentCache.
+comment|///
+comment|/// This can be 0 if the MemBuffer was not actually expanded.
 name|unsigned
 name|getSizeBytesMapped
 argument_list|()
@@ -611,11 +733,11 @@ operator|)
 decl_stmt|;
 block|}
 empty_stmt|;
-comment|/// FileInfo - Information about a FileID, basically just the logical file
+comment|/// \brief Information about a FileID, basically just the logical file
 comment|/// that it represents and include stack information.
 comment|///
 comment|/// Each FileInfo has include stack information, indicating where it came
-comment|/// from. This information encodes the #include chain that a token was
+comment|/// from. This information encodes the \#include chain that a token was
 comment|/// expanded from. The main include file has an invalid IncludeLoc.
 comment|///
 comment|/// FileInfos contain a "ContentCache *", with the contents of the file.
@@ -623,21 +745,23 @@ comment|///
 name|class
 name|FileInfo
 block|{
-comment|/// IncludeLoc - The location of the #include that brought in this file.
-comment|/// This is an invalid SLOC for the main file (top of the #include chain).
+comment|/// \brief The location of the \#include that brought in this file.
+comment|///
+comment|/// This is an invalid SLOC for the main file (top of the \#include chain).
 name|unsigned
 name|IncludeLoc
 decl_stmt|;
 comment|// Really a SourceLocation
 comment|/// \brief Number of FileIDs (files and macros) that were created during
-comment|/// preprocessing of this #include, including this SLocEntry.
+comment|/// preprocessing of this \#include, including this SLocEntry.
+comment|///
 comment|/// Zero means the preprocessor didn't provide such info for this SLocEntry.
 name|unsigned
 name|NumCreatedFIDs
 decl_stmt|;
-comment|/// Data - This contains the ContentCache* and the bits indicating the
-comment|/// characteristic of the file and whether it has #line info, all bitmangled
-comment|/// together.
+comment|/// \brief Contains the ContentCache* and the bits indicating the
+comment|/// characteristic of the file and whether it has \#line info, all
+comment|/// bitmangled together.
 name|uintptr_t
 name|Data
 decl_stmt|;
@@ -661,7 +785,7 @@ name|ASTReader
 expr_stmt|;
 name|public
 label|:
-comment|/// get - Return a FileInfo object.
+comment|/// \brief Return a FileInfo object.
 specifier|static
 name|FileInfo
 name|get
@@ -781,7 +905,7 @@ literal|7UL
 operator|)
 return|;
 block|}
-comment|/// getCharacteristic - Return whether this is a system header or not.
+comment|/// \brief Return whether this is a system header or not.
 name|CharacteristicKind
 name|getFileCharacteristic
 argument_list|()
@@ -798,8 +922,7 @@ literal|3
 argument_list|)
 return|;
 block|}
-comment|/// hasLineDirectives - Return true if this FileID has #line directives in
-comment|/// it.
+comment|/// \brief Return true if this FileID has \#line directives in it.
 name|bool
 name|hasLineDirectives
 argument_list|()
@@ -815,7 +938,7 @@ operator|!=
 literal|0
 return|;
 block|}
-comment|/// setHasLineDirectives - Set the flag that indicates that this FileID has
+comment|/// \brief Set the flag that indicates that this FileID has
 comment|/// line table entries associated with it.
 name|void
 name|setHasLineDirectives
@@ -828,22 +951,22 @@ expr_stmt|;
 block|}
 block|}
 empty_stmt|;
-comment|/// ExpansionInfo - Each ExpansionInfo encodes the expansion location - where
+comment|/// \brief Each ExpansionInfo encodes the expansion location - where
 comment|/// the token was ultimately expanded, and the SpellingLoc - where the actual
 comment|/// character data for the token came from.
 name|class
 name|ExpansionInfo
 block|{
 comment|// Really these are all SourceLocations.
-comment|/// SpellingLoc - Where the spelling for the token can be found.
+comment|/// \brief Where the spelling for the token can be found.
 name|unsigned
 name|SpellingLoc
 decl_stmt|;
-comment|/// ExpansionLocStart/ExpansionLocEnd - In a macro expansion, these
+comment|/// In a macro expansion, ExpansionLocStart and ExpansionLocEnd
 comment|/// indicate the start and end of the expansion. In object-like macros,
-comment|/// these will be the same. In a function-like macro expansion, the start
+comment|/// they will be the same. In a function-like macro expansion, the start
 comment|/// will be the identifier and the end will be the ')'. Finally, in
-comment|/// macro-argument instantitions, the end will be 'SourceLocation()', an
+comment|/// macro-argument instantiations, the end will be 'SourceLocation()', an
 comment|/// invalid location.
 name|unsigned
 name|ExpansionLocStart
@@ -975,11 +1098,12 @@ name|getExpansionLocEnd
 argument_list|()
 return|;
 block|}
-comment|/// create - Return a ExpansionInfo for an expansion. Start and End specify
-comment|/// the expansion range (where the macro is expanded), and SpellingLoc
-comment|/// specifies the spelling location (where the characters from the token
-comment|/// come from). All three can refer to normal File SLocs or expansion
-comment|/// locations.
+comment|/// \brief Return a ExpansionInfo for an expansion.
+comment|///
+comment|/// Start and End specify the expansion range (where the macro is
+comment|/// expanded), and SpellingLoc specifies the spelling location (where
+comment|/// the characters from the token come from). All three can refer to
+comment|/// normal File SLocs or expansion locations.
 specifier|static
 name|ExpansionInfo
 name|create
@@ -1028,14 +1152,15 @@ return|return
 name|X
 return|;
 block|}
-comment|/// createForMacroArg - Return a special ExpansionInfo for the expansion of
-comment|/// a macro argument into a function-like macro's body. ExpansionLoc
-comment|/// specifies the expansion location (where the macro is expanded). This
-comment|/// doesn't need to be a range because a macro is always expanded at
-comment|/// a macro parameter reference, and macro parameters are always exactly
-comment|/// one token. SpellingLoc specifies the spelling location (where the
-comment|/// characters from the token come from). ExpansionLoc and SpellingLoc can
-comment|/// both refer to normal File SLocs or expansion locations.
+comment|/// \brief Return a special ExpansionInfo for the expansion of
+comment|/// a macro argument into a function-like macro's body.
+comment|///
+comment|/// ExpansionLoc specifies the expansion location (where the macro is
+comment|/// expanded). This doesn't need to be a range because a macro is always
+comment|/// expanded at a macro parameter reference, and macro parameters are
+comment|/// always exactly one token. SpellingLoc specifies the spelling location
+comment|/// (where the characters from the token come from). ExpansionLoc and
+comment|/// SpellingLoc can both refer to normal File SLocs or expansion locations.
 comment|///
 comment|/// Given the code:
 comment|/// \code
@@ -1044,7 +1169,7 @@ comment|///   F(42);
 comment|/// \endcode
 comment|///
 comment|/// When expanding '\c F(42)', the '\c x' would call this with an
-comment|/// SpellingLoc pointing at '\c 42' anad an ExpansionLoc pointing at its
+comment|/// SpellingLoc pointing at '\c 42' and an ExpansionLoc pointing at its
 comment|/// location in the definition of '\c F'.
 specifier|static
 name|ExpansionInfo
@@ -1074,9 +1199,10 @@ return|;
 block|}
 block|}
 empty_stmt|;
-comment|/// SLocEntry - This is a discriminated union of FileInfo and
-comment|/// ExpansionInfo.  SourceManager keeps an array of these objects, and
-comment|/// they are uniquely identified by the FileID datatype.
+comment|/// \brief This is a discriminated union of FileInfo and ExpansionInfo.
+comment|///
+comment|/// SourceManager keeps an array of these objects, and they are uniquely
+comment|/// identified by the FileID datatype.
 name|class
 name|SLocEntry
 block|{
@@ -1271,32 +1397,36 @@ literal|0
 function_decl|;
 block|}
 empty_stmt|;
-comment|/// IsBeforeInTranslationUnitCache - This class holds the cache used by
-comment|/// isBeforeInTranslationUnit.  The cache structure is complex enough to be
-comment|/// worth breaking out of SourceManager.
+comment|/// \brief Holds the cache used by isBeforeInTranslationUnit.
+comment|///
+comment|/// The cache structure is complex enough to be worth breaking out of
+comment|/// SourceManager.
 name|class
 name|IsBeforeInTranslationUnitCache
 block|{
-comment|/// L/R QueryFID - These are the FID's of the cached query.  If these match up
-comment|/// with a subsequent query, the result can be reused.
+comment|/// \brief The FileID's of the cached query.
+comment|///
+comment|/// If these match up with a subsequent query, the result can be reused.
 name|FileID
 name|LQueryFID
 decl_stmt|,
 name|RQueryFID
 decl_stmt|;
-comment|/// \brief True if LQueryFID was created before RQueryFID. This is used
-comment|/// to compare macro expansion locations.
+comment|/// \brief True if LQueryFID was created before RQueryFID.
+comment|///
+comment|/// This is used to compare macro expansion locations.
 name|bool
 name|IsLQFIDBeforeRQFID
 decl_stmt|;
-comment|/// CommonFID - This is the file found in common between the two #include
-comment|/// traces.  It is the nearest common ancestor of the #include tree.
+comment|/// \brief The file found in common between the two \#include traces, i.e.,
+comment|/// the nearest common ancestor of the \#include tree.
 name|FileID
 name|CommonFID
 decl_stmt|;
-comment|/// L/R CommonOffset - This is the offset of the previous query in CommonFID.
-comment|/// Usually, this represents the location of the #include for QueryFID, but if
-comment|/// LQueryFID is a parent of RQueryFID (or vise versa) then these can be a
+comment|/// \brief The offset of the previous query in CommonFID.
+comment|///
+comment|/// Usually, this represents the location of the \#include for QueryFID, but
+comment|/// if LQueryFID is a parent of RQueryFID (or vice versa) then these can be a
 comment|/// random token in the parent.
 name|unsigned
 name|LCommonOffset
@@ -1305,8 +1435,10 @@ name|RCommonOffset
 decl_stmt|;
 name|public
 label|:
-comment|/// isCacheValid - Return true if the currently cached values match up with
-comment|/// the specified LHS/RHS query.  If not, we can't use the cache.
+comment|/// \brief Return true if the currently cached values match up with
+comment|/// the specified LHS/RHS query.
+comment|///
+comment|/// If not, we can't use the cache.
 name|bool
 name|isCacheValid
 argument_list|(
@@ -1328,8 +1460,8 @@ operator|==
 name|RHS
 return|;
 block|}
-comment|/// getCachedResult - If the cache is valid, compute the result given the
-comment|/// specified offsets in the LHS/RHS FID's.
+comment|/// \brief If the cache is valid, compute the result given the
+comment|/// specified offsets in the LHS/RHS FileID's.
 name|bool
 name|getCachedResult
 argument_list|(
@@ -1383,7 +1515,7 @@ operator|<
 name|ROffset
 return|;
 block|}
-comment|// Set up a new query.
+comment|/// \brief Set up a new query.
 name|void
 name|setQueryFIDs
 parameter_list|(
@@ -1464,7 +1596,7 @@ empty_stmt|;
 comment|/// \brief This class handles loading and caching of source files into memory.
 comment|///
 comment|/// This object owns the MemoryBuffer objects for all of the loaded
-comment|/// files and assigns unique FileID's for each unique #include chain.
+comment|/// files and assigns unique FileID's for each unique \#include chain.
 comment|///
 comment|/// The SourceManager can be queried for information about SourceLocation
 comment|/// objects, turning them into either spelling or expansion locations. Spelling
@@ -1497,8 +1629,10 @@ operator|::
 name|BumpPtrAllocator
 name|ContentCacheAlloc
 block|;
-comment|/// FileInfos - Memoized information about all of the files tracked by this
-comment|/// SourceManager.  This set allows us to merge ContentCache entries based
+comment|/// \brief Memoized information about all of the files tracked by this
+comment|/// SourceManager.
+comment|///
+comment|/// This map allows us to merge ContentCache entries based
 comment|/// on their FileEntry*.  All ContentCache objects will thus have unique,
 comment|/// non-null, FileEntry pointers.
 name|llvm
@@ -1521,7 +1655,15 @@ comment|/// files, should report the original file name. Defaults to true.
 name|bool
 name|OverridenFilesKeepOriginalName
 block|;
-comment|/// \brief Files that have been overriden with the contents from another file.
+comment|/// \brief True if non-system source files should be treated as volatile
+comment|/// (likely to change while trying to use them). Defaults to false.
+name|bool
+name|UserFilesAreVolatile
+block|;    struct
+name|OverriddenFilesInfoTy
+block|{
+comment|/// \brief Files that have been overriden with the contents from another
+comment|/// file.
 name|llvm
 operator|::
 name|DenseMap
@@ -1536,8 +1678,51 @@ operator|*
 operator|>
 name|OverriddenFiles
 block|;
-comment|/// MemBufferInfos - Information about various memory buffers that we have
-comment|/// read in.  All FileEntry* within the stored ContentCache objects are NULL,
+comment|/// \brief Files that were overridden with a memory buffer.
+name|llvm
+operator|::
+name|DenseSet
+operator|<
+specifier|const
+name|FileEntry
+operator|*
+operator|>
+name|OverriddenFilesWithBuffer
+block|;   }
+block|;
+comment|/// \brief Lazily create the object keeping overridden files info, since
+comment|/// it is uncommonly used.
+name|OwningPtr
+operator|<
+name|OverriddenFilesInfoTy
+operator|>
+name|OverriddenFilesInfo
+block|;
+name|OverriddenFilesInfoTy
+operator|&
+name|getOverriddenFilesInfo
+argument_list|()
+block|{
+if|if
+condition|(
+operator|!
+name|OverriddenFilesInfo
+condition|)
+name|OverriddenFilesInfo
+operator|.
+name|reset
+argument_list|(
+argument|new OverriddenFilesInfoTy
+argument_list|)
+expr_stmt|;
+return|return
+operator|*
+name|OverriddenFilesInfo
+return|;
+block|}
+comment|/// \brief Information about various memory buffers that we have read in.
+comment|///
+comment|/// All FileEntry* within the stored ContentCache objects are NULL,
 comment|/// as they do not refer to a file.
 name|std
 operator|::
@@ -1549,7 +1734,7 @@ name|ContentCache
 operator|*
 operator|>
 name|MemBufferInfos
-block|;
+expr_stmt|;
 comment|/// \brief The table of SLocEntries that are local to this module.
 comment|///
 comment|/// Positive FileIDs are indexes into this table. Entry 0 indicates an invalid
@@ -1563,7 +1748,7 @@ operator|::
 name|SLocEntry
 operator|>
 name|LocalSLocEntryTable
-block|;
+expr_stmt|;
 comment|/// \brief The table of SLocEntries that are loaded from other modules.
 comment|///
 comment|/// Negative FileIDs are indexes into this table. To get from ID to an index,
@@ -1578,31 +1763,31 @@ operator|::
 name|SLocEntry
 operator|>
 name|LoadedSLocEntryTable
-block|;
+expr_stmt|;
 comment|/// \brief The starting offset of the next local SLocEntry.
 comment|///
 comment|/// This is LocalSLocEntryTable.back().Offset + the size of that entry.
 name|unsigned
 name|NextLocalOffset
-block|;
+decl_stmt|;
 comment|/// \brief The starting offset of the latest batch of loaded SLocEntries.
 comment|///
 comment|/// This is LoadedSLocEntryTable.back().Offset, except that that entry might
 comment|/// not have been loaded, so that value would be unknown.
 name|unsigned
 name|CurrentLoadedOffset
-block|;
+decl_stmt|;
 comment|/// \brief The highest possible offset is 2^31-1, so CurrentLoadedOffset
 comment|/// starts at 2^31.
 specifier|static
 specifier|const
 name|unsigned
 name|MaxLoadedOffset
-operator|=
+init|=
 literal|1U
 operator|<<
 literal|31U
-block|;
+decl_stmt|;
 comment|/// \brief A bitmap that indicates whether the entries of LoadedSLocEntryTable
 comment|/// have already been loaded from the external source.
 comment|///
@@ -1614,66 +1799,68 @@ operator|<
 name|bool
 operator|>
 name|SLocEntryLoaded
-block|;
+expr_stmt|;
 comment|/// \brief An external source for source location entries.
 name|ExternalSLocEntrySource
-operator|*
+modifier|*
 name|ExternalSLocEntries
-block|;
-comment|/// LastFileIDLookup - This is a one-entry cache to speed up getFileID.
+decl_stmt|;
+comment|/// \brief A one-entry cache to speed up getFileID.
+comment|///
 comment|/// LastFileIDLookup records the last FileID looked up or created, because it
 comment|/// is very common to look up many tokens from the same file.
 name|mutable
 name|FileID
 name|LastFileIDLookup
-block|;
-comment|/// LineTable - This holds information for #line directives.  It is referenced
-comment|/// by indices from SLocEntryTable.
+decl_stmt|;
+comment|/// \brief Holds information for \#line directives.
+comment|///
+comment|/// This is referenced by indices from SLocEntryTable.
 name|LineTableInfo
-operator|*
+modifier|*
 name|LineTable
-block|;
-comment|/// LastLineNo - These ivars serve as a cache used in the getLineNumber
+decl_stmt|;
+comment|/// \brief These ivars serve as a cache used in the getLineNumber
 comment|/// method which is used to speedup getLineNumber calls to nearby locations.
 name|mutable
 name|FileID
 name|LastLineNoFileIDQuery
-block|;
+decl_stmt|;
 name|mutable
 name|SrcMgr
 operator|::
 name|ContentCache
 operator|*
 name|LastLineNoContentCache
-block|;
+expr_stmt|;
 name|mutable
 name|unsigned
 name|LastLineNoFilePos
-block|;
+decl_stmt|;
 name|mutable
 name|unsigned
 name|LastLineNoResult
-block|;
-comment|/// MainFileID - The file ID for the main source file of the translation unit.
+decl_stmt|;
+comment|/// \brief The file ID for the main source file of the translation unit.
 name|FileID
 name|MainFileID
-block|;
+decl_stmt|;
 comment|/// \brief The file ID for the precompiled preamble there is one.
 name|FileID
 name|PreambleFileID
-block|;
+decl_stmt|;
 comment|// Statistics for -print-stats.
 name|mutable
 name|unsigned
 name|NumLinearScans
-block|,
+decl_stmt|,
 name|NumBinaryProbes
-block|;
+decl_stmt|;
 comment|// Cache results for the isBeforeInTranslationUnit method.
 name|mutable
 name|IsBeforeInTranslationUnitCache
 name|IsBeforeInTUCache
-block|;
+decl_stmt|;
 comment|// Cache for the "fake" buffer used for error-recovery purposes.
 name|mutable
 name|llvm
@@ -1681,14 +1868,14 @@ operator|::
 name|MemoryBuffer
 operator|*
 name|FakeBufferForRecovery
-block|;
+expr_stmt|;
 name|mutable
 name|SrcMgr
 operator|::
 name|ContentCache
 operator|*
 name|FakeContentCacheForRecovery
-block|;
+expr_stmt|;
 comment|/// \brief Lazily computed map of macro argument chunks to their expanded
 comment|/// source location.
 typedef|typedef
@@ -1708,12 +1895,12 @@ operator|::
 name|DenseMap
 operator|<
 name|FileID
-block|,
+operator|,
 name|MacroArgsMap
 operator|*
 operator|>
 name|MacroArgsCacheMap
-decl_stmt|;
+expr_stmt|;
 comment|// SourceManager doesn't support copy construction.
 name|explicit
 name|SourceManager
@@ -1736,15 +1923,13 @@ name|public
 label|:
 name|SourceManager
 argument_list|(
-name|DiagnosticsEngine
-operator|&
-name|Diag
+argument|DiagnosticsEngine&Diag
 argument_list|,
-name|FileManager
-operator|&
-name|FileMgr
+argument|FileManager&FileMgr
+argument_list|,
+argument|bool UserFilesAreVolatile = false
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 operator|~
 name|SourceManager
 argument_list|()
@@ -1787,9 +1972,22 @@ operator|=
 name|value
 expr_stmt|;
 block|}
-comment|/// createMainFileIDForMembuffer - Create the FileID for a memory buffer
-comment|///  that will represent the FileID for the main source.  One example
-comment|///  of when this would be used is when the main source is read from STDIN.
+comment|/// \brief True if non-system source files should be treated as volatile
+comment|/// (likely to change while trying to use them).
+name|bool
+name|userFilesAreVolatile
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UserFilesAreVolatile
+return|;
+block|}
+comment|/// \brief Create the FileID for a memory buffer that will represent the
+comment|/// FileID for the main source.
+comment|///
+comment|/// One example of when this would be used is when the main source is read
+comment|/// from STDIN.
 name|FileID
 name|createMainFileIDForMemBuffer
 argument_list|(
@@ -1825,7 +2023,7 @@ block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// MainFileID creation and querying methods.
 comment|//===--------------------------------------------------------------------===//
-comment|/// getMainFileID - Returns the FileID of the main source file.
+comment|/// \brief Returns the FileID of the main source file.
 name|FileID
 name|getMainFileID
 argument_list|()
@@ -1835,7 +2033,7 @@ return|return
 name|MainFileID
 return|;
 block|}
-comment|/// createMainFileID - Create the FileID for the main source file.
+comment|/// \brief Create the FileID for the main source file.
 name|FileID
 name|createMainFileID
 argument_list|(
@@ -1939,9 +2137,10 @@ block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// Methods to create new FileID's and macro expansions.
 comment|//===--------------------------------------------------------------------===//
-comment|/// createFileID - Create a new FileID that represents the specified file
-comment|/// being #included from the specified IncludePosition.  This translates NULL
-comment|/// into standard input.
+comment|/// \brief Create a new FileID that represents the specified file
+comment|/// being \#included from the specified IncludePosition.
+comment|///
+comment|/// This translates NULL into standard input.
 name|FileID
 name|createFileID
 argument_list|(
@@ -1979,6 +2178,13 @@ operator|=
 name|getOrCreateContentCache
 argument_list|(
 name|SourceFile
+argument_list|,
+comment|/*isSystemFile=*/
+name|FileCharacter
+operator|!=
+name|SrcMgr
+operator|::
+name|C_User
 argument_list|)
 expr_stmt|;
 name|assert
@@ -2003,9 +2209,10 @@ name|LoadedOffset
 argument_list|)
 return|;
 block|}
-comment|/// createFileIDForMemBuffer - Create a new FileID that represents the
-comment|/// specified memory buffer.  This does no caching of the buffer and takes
-comment|/// ownership of the MemoryBuffer, so only pass a MemoryBuffer to this once.
+comment|/// \brief Create a new FileID that represents the specified memory buffer.
+comment|///
+comment|/// This does no caching of the buffer and takes ownership of the
+comment|/// MemoryBuffer, so only pass a MemoryBuffer to this once.
 name|FileID
 name|createFileIDForMemBuffer
 argument_list|(
@@ -2053,7 +2260,7 @@ name|LoadedOffset
 argument_list|)
 return|;
 block|}
-comment|/// createMacroArgExpansionLoc - Return a new SourceLocation that encodes the
+comment|/// \brief Return a new SourceLocation that encodes the
 comment|/// fact that a token from SpellingLoc should actually be referenced from
 comment|/// ExpansionLoc, and that it represents the expansion of a macro argument
 comment|/// into the function-like macro body.
@@ -2070,7 +2277,7 @@ name|unsigned
 name|TokLength
 parameter_list|)
 function_decl|;
-comment|/// createExpansionLoc - Return a new SourceLocation that encodes the fact
+comment|/// \brief Return a new SourceLocation that encodes the fact
 comment|/// that a token from SpellingLoc should actually be referenced from
 comment|/// ExpansionLoc.
 name|SourceLocation
@@ -2153,7 +2360,7 @@ operator|=
 name|false
 argument_list|)
 decl_stmt|;
-comment|/// \brief Override the the given source file with another one.
+comment|/// \brief Override the given source file with another one.
 comment|///
 comment|/// \param SourceFile the source file which will be overriden.
 comment|///
@@ -2173,12 +2380,81 @@ modifier|*
 name|NewFile
 parameter_list|)
 function_decl|;
+comment|/// \brief Returns true if the file contents have been overridden.
+name|bool
+name|isFileOverridden
+parameter_list|(
+specifier|const
+name|FileEntry
+modifier|*
+name|File
+parameter_list|)
+block|{
+if|if
+condition|(
+name|OverriddenFilesInfo
+condition|)
+block|{
+if|if
+condition|(
+name|OverriddenFilesInfo
+operator|->
+name|OverriddenFilesWithBuffer
+operator|.
+name|count
+argument_list|(
+name|File
+argument_list|)
+condition|)
+return|return
+name|true
+return|;
+if|if
+condition|(
+name|OverriddenFilesInfo
+operator|->
+name|OverriddenFiles
+operator|.
+name|find
+argument_list|(
+name|File
+argument_list|)
+operator|!=
+name|OverriddenFilesInfo
+operator|->
+name|OverriddenFiles
+operator|.
+name|end
+argument_list|()
+condition|)
+return|return
+name|true
+return|;
+block|}
+return|return
+name|false
+return|;
+block|}
+comment|/// \brief Disable overridding the contents of a file, previously enabled
+comment|/// with #overrideFileContents.
+comment|///
+comment|/// This should be called before parsing has begun.
+name|void
+name|disableFileContentsOverride
+parameter_list|(
+specifier|const
+name|FileEntry
+modifier|*
+name|File
+parameter_list|)
+function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|// FileID manipulation methods.
 comment|//===--------------------------------------------------------------------===//
-comment|/// getBuffer - Return the buffer for the specified FileID. If there is an
-comment|/// error opening this buffer the first time, this manufactures a temporary
-comment|/// buffer and returns a non-empty error string.
+comment|/// \brief Return the buffer for the specified FileID.
+comment|///
+comment|/// If there is an error opening this buffer the first time, this
+comment|/// manufactures a temporary buffer and returns a non-empty error string.
 specifier|const
 name|llvm
 operator|::
@@ -2344,7 +2620,7 @@ name|Invalid
 argument_list|)
 return|;
 block|}
-comment|/// getFileEntryForID - Returns the FileEntry record for the provided FileID.
+comment|/// \brief Returns the FileEntry record for the provided FileID.
 specifier|const
 name|FileEntry
 modifier|*
@@ -2417,7 +2693,7 @@ operator|->
 name|OrigEntry
 return|;
 block|}
-comment|/// Returns the FileEntry record for the provided SLocEntry.
+comment|/// \brief Returns the FileEntry record for the provided SLocEntry.
 specifier|const
 name|FileEntry
 modifier|*
@@ -2461,7 +2737,7 @@ operator|->
 name|OrigEntry
 return|;
 block|}
-comment|/// getBufferData - Return a StringRef to the source buffer data for the
+comment|/// \brief Return a StringRef to the source buffer data for the
 comment|/// specified FileID.
 comment|///
 comment|/// \param FID The file ID whose contents will be returned.
@@ -2612,10 +2888,11 @@ block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// SourceLocation manipulation methods.
 comment|//===--------------------------------------------------------------------===//
-comment|/// getFileID - Return the FileID for a SourceLocation.  This is a very
-comment|/// hot method that is used for all SourceManager queries that start with a
-comment|/// SourceLocation object.  It is responsible for finding the entry in
-comment|/// SLocEntryTable which contains the specified location.
+comment|/// \brief Return the FileID for a SourceLocation.
+comment|///
+comment|/// This is a very hot method that is used for all SourceManager queries
+comment|/// that start with a SourceLocation object.  It is responsible for finding
+comment|/// the entry in SLocEntryTable which contains the specified location.
 comment|///
 name|FileID
 name|getFileID
@@ -2653,8 +2930,43 @@ name|SLocOffset
 argument_list|)
 return|;
 block|}
-comment|/// getLocForStartOfFile - Return the source location corresponding to the
-comment|/// first byte of the specified file.
+comment|/// \brief Return the filename of the file containing a SourceLocation.
+name|StringRef
+name|getFilename
+argument_list|(
+name|SourceLocation
+name|SpellingLoc
+argument_list|)
+decl|const
+block|{
+if|if
+condition|(
+specifier|const
+name|FileEntry
+modifier|*
+name|F
+init|=
+name|getFileEntryForID
+argument_list|(
+name|getFileID
+argument_list|(
+name|SpellingLoc
+argument_list|)
+argument_list|)
+condition|)
+return|return
+name|F
+operator|->
+name|getName
+argument_list|()
+return|;
+return|return
+name|StringRef
+argument_list|()
+return|;
+block|}
+comment|/// \brief Return the source location corresponding to the first byte of
+comment|/// the specified file.
 name|SourceLocation
 name|getLocForStartOfFile
 argument_list|(
@@ -2782,7 +3094,7 @@ literal|1
 argument_list|)
 return|;
 block|}
-comment|/// \brief Returns the include location if \p FID is a #include'd file
+comment|/// \brief Returns the include location if \p FID is a \#include'd file
 comment|/// otherwise it returns an invalid location.
 name|SourceLocation
 name|getIncludeLoc
@@ -2836,7 +3148,7 @@ name|getIncludeLoc
 argument_list|()
 return|;
 block|}
-comment|/// getExpansionLoc - Given a SourceLocation object, return the expansion
+comment|/// \brief Given a SourceLocation object \p Loc, return the expansion
 comment|/// location referenced by the ID.
 name|SourceLocation
 name|getExpansionLoc
@@ -2893,8 +3205,10 @@ name|Loc
 argument_list|)
 return|;
 block|}
-comment|/// getImmediateExpansionRange - Loc is required to be an expansion location.
-comment|/// Return the start/end of the expansion information.
+comment|/// \brief Return the start/end of the expansion information for an
+comment|/// expansion location.
+comment|///
+comment|/// \pre \p Loc is required to be an expansion location.
 name|std
 operator|::
 name|pair
@@ -2909,7 +3223,7 @@ argument|SourceLocation Loc
 argument_list|)
 specifier|const
 expr_stmt|;
-comment|/// getExpansionRange - Given a SourceLocation object, return the range of
+comment|/// \brief Given a SourceLocation object, return the range of
 comment|/// tokens covered by the expansion the ultimate file.
 name|std
 operator|::
@@ -2925,9 +3239,11 @@ argument|SourceLocation Loc
 argument_list|)
 specifier|const
 expr_stmt|;
-comment|/// getSpellingLoc - Given a SourceLocation object, return the spelling
-comment|/// location referenced by the ID.  This is the place where the characters
-comment|/// that make up the lexed token can be found.
+comment|/// \brief Given a SourceLocation object, return the spelling
+comment|/// location referenced by the ID.
+comment|///
+comment|/// This is the place where the characters that make up the lexed token
+comment|/// can be found.
 name|SourceLocation
 name|getSpellingLoc
 argument_list|(
@@ -2955,10 +3271,12 @@ name|Loc
 argument_list|)
 return|;
 block|}
-comment|/// getImmediateSpellingLoc - Given a SourceLocation object, return the
-comment|/// spelling location referenced by the ID.  This is the first level down
-comment|/// towards the place where the characters that make up the lexed token can be
-comment|/// found.  This should not generally be used by clients.
+comment|/// \brief Given a SourceLocation object, return the spelling location
+comment|/// referenced by the ID.
+comment|///
+comment|/// This is the first level down towards the place where the characters
+comment|/// that make up the lexed token can be found.  This should not generally
+comment|/// be used by clients.
 name|SourceLocation
 name|getImmediateSpellingLoc
 argument_list|(
@@ -2967,9 +3285,10 @@ name|Loc
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getDecomposedLoc - Decompose the specified location into a raw FileID +
-comment|/// Offset pair.  The first element is the FileID, the second is the
-comment|/// offset from the start of the buffer of the location.
+comment|/// \brief Decompose the specified location into a raw FileID + Offset pair.
+comment|///
+comment|/// The first element is the FileID, the second is the offset from the
+comment|/// start of the buffer of the location.
 name|std
 operator|::
 name|pair
@@ -3049,15 +3368,19 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// getDecomposedExpansionLoc - Decompose the specified location into a raw
+comment|/// \brief Decompose the specified location into a raw FileID + Offset pair.
 end_comment
 
 begin_comment
-comment|/// FileID + Offset pair. If the location is an expansion record, walk
+comment|///
 end_comment
 
 begin_comment
-comment|/// through it until we find the final location expanded.
+comment|/// If the location is an expansion record, walk through it until we find
+end_comment
+
+begin_comment
+comment|/// the final location expanded.
 end_comment
 
 begin_expr_stmt
@@ -3165,15 +3488,19 @@ end_return
 
 begin_comment
 unit|}
-comment|/// getDecomposedSpellingLoc - Decompose the specified location into a raw
+comment|/// \brief Decompose the specified location into a raw FileID + Offset pair.
 end_comment
 
 begin_comment
-comment|/// FileID + Offset pair.  If the location is an expansion record, walk
+comment|///
 end_comment
 
 begin_comment
-comment|/// through it until we find its spelling record.
+comment|/// If the location is an expansion record, walk through it until we find
+end_comment
+
+begin_comment
+comment|/// its spelling record.
 end_comment
 
 begin_expr_stmt
@@ -3283,15 +3610,19 @@ end_return
 
 begin_comment
 unit|}
-comment|/// getFileOffset - This method returns the offset from the start
+comment|/// \brief Returns the offset from the start of the file that the
 end_comment
 
 begin_comment
-comment|/// of the file that the specified SourceLocation represents. This is not very
+comment|/// specified SourceLocation represents.
 end_comment
 
 begin_comment
-comment|/// meaningful for a macro ID.
+comment|///
+end_comment
+
+begin_comment
+comment|/// This is not very meaningful for a macro ID.
 end_comment
 
 begin_macro
@@ -3317,15 +3648,19 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// isMacroArgExpansion - This method tests whether the given source location
+comment|/// \brief Tests whether the given source location represents a macro
 end_comment
 
 begin_comment
-comment|/// represents a macro argument's expansion into the function-like macro
+comment|/// argument's expansion into the function-like macro definition.
 end_comment
 
 begin_comment
-comment|/// definition. Such source locations only appear inside of the expansion
+comment|///
+end_comment
+
+begin_comment
+comment|/// Such source locations only appear inside of the expansion
 end_comment
 
 begin_comment
@@ -3353,6 +3688,10 @@ end_comment
 
 begin_comment
 comment|/// chunk of the source location address space.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -3487,15 +3826,19 @@ comment|/// \brief Return true if both \p LHS and \p RHS are in the local source
 end_comment
 
 begin_comment
-comment|/// location address space or the loaded one. If it's true and \p
+comment|/// location address space or the loaded one.
 end_comment
 
 begin_comment
-comment|/// RelativeOffset is non-null, it will be set to the offset of \p RHS
+comment|///
 end_comment
 
 begin_comment
-comment|/// relative to \p LHS.
+comment|/// If it's true and \p RelativeOffset is non-null, it will be set to the
+end_comment
+
+begin_comment
+comment|/// offset of \p RHS relative to \p LHS.
 end_comment
 
 begin_decl_stmt
@@ -3584,7 +3927,7 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|/// getCharacterData - Return a pointer to the start of the specified location
+comment|/// \brief Return a pointer to the start of the specified location
 end_comment
 
 begin_comment
@@ -3619,7 +3962,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getColumnNumber - Return the column # for the specified file position.
+comment|/// \brief Return the column # for the specified file position.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -3710,19 +4057,27 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getLineNumber - Given a SourceLocation, return the spelling line number
+comment|/// \brief Given a SourceLocation, return the spelling line number
 end_comment
 
 begin_comment
-comment|/// for the position indicated.  This requires building and caching a table of
+comment|/// for the position indicated.
 end_comment
 
 begin_comment
-comment|/// line offsets for the MemoryBuffer, so this is not cheap: use only when
+comment|///
 end_comment
 
 begin_comment
-comment|/// about to emit a diagnostic.
+comment|/// This requires building and caching a table of line offsets for the
+end_comment
+
+begin_comment
+comment|/// MemoryBuffer, so this is not cheap: use only when about to emit a
+end_comment
+
+begin_comment
+comment|/// diagnostic.
 end_comment
 
 begin_decl_stmt
@@ -3797,15 +4152,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// Return the filename or buffer identifier of the buffer the location is in.
+comment|/// \brief Return the filename or buffer identifier of the buffer the
 end_comment
 
 begin_comment
-comment|/// Note that this name does not respect #line directives.  Use getPresumedLoc
+comment|/// location is in.
 end_comment
 
 begin_comment
-comment|/// for normal clients.
+comment|///
+end_comment
+
+begin_comment
+comment|/// Note that this name does not respect \#line directives.  Use
+end_comment
+
+begin_comment
+comment|/// getPresumedLoc for normal clients.
 end_comment
 
 begin_decl_stmt
@@ -3828,11 +4191,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getFileCharacteristic - return the file characteristic of the specified
+comment|/// \brief Return the file characteristic of the specified source
 end_comment
 
 begin_comment
-comment|/// source location, indicating whether this is a normal file, a system
+comment|/// location, indicating whether this is a normal file, a system
 end_comment
 
 begin_comment
@@ -3848,7 +4211,15 @@ comment|/// This state can be modified with flags on GNU linemarker directives l
 end_comment
 
 begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
 comment|///   # 4 "foo.h" 3
+end_comment
+
+begin_comment
+comment|/// \endcode
 end_comment
 
 begin_comment
@@ -3872,19 +4243,23 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// getPresumedLoc - This method returns the "presumed" location of a
+comment|/// \brief Returns the "presumed" location of a SourceLocation specifies.
 end_comment
 
 begin_comment
-comment|/// SourceLocation specifies.  A "presumed location" can be modified by #line
+comment|///
 end_comment
 
 begin_comment
-comment|/// or GNU line marker directives.  This provides a view on the data that a
+comment|/// A "presumed location" can be modified by \#line or GNU line marker
 end_comment
 
 begin_comment
-comment|/// user should see in diagnostics, for example.
+comment|/// directives.  This provides a view on the data that a user should see
+end_comment
+
+begin_comment
+comment|/// in diagnostics, for example.
 end_comment
 
 begin_comment
@@ -3931,11 +4306,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// isFromSameFile - Returns true if both SourceLocations correspond to
-end_comment
-
-begin_comment
-comment|///  the same file.
+comment|/// \brief Returns true if both SourceLocations correspond to the same file.
 end_comment
 
 begin_decl_stmt
@@ -3965,11 +4336,11 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// isFromMainFile - Returns true if the file of provided SourceLocation is
+comment|/// \brief Returns true if the file of provided SourceLocation is the main
 end_comment
 
 begin_comment
-comment|///   the main file.
+comment|/// file.
 end_comment
 
 begin_decl_stmt
@@ -3994,7 +4365,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// isInSystemHeader - Returns if a SourceLocation is in a system header.
+comment|/// \brief Returns if a SourceLocation is in a system header.
 end_comment
 
 begin_decl_stmt
@@ -4020,11 +4391,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// isInExternCSystemHeader - Returns if a SourceLocation is in an "extern C"
-end_comment
-
-begin_comment
-comment|/// system header.
+comment|/// \brief Returns if a SourceLocation is in an "extern C" system header.
 end_comment
 
 begin_decl_stmt
@@ -4181,7 +4548,7 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|/// getLineTableFilenameID - Return the uniqued ID for the specified filename.
+comment|/// \brief Return the uniqued ID for the specified filename.
 end_comment
 
 begin_comment
@@ -4199,15 +4566,19 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// AddLineNote - Add a line note to the line table for the FileID and offset
+comment|/// \brief Add a line note to the line table for the FileID and offset
 end_comment
 
 begin_comment
-comment|/// specified by Loc.  If FilenameID is -1, it is considered to be
+comment|/// specified by Loc.
 end_comment
 
 begin_comment
-comment|/// unspecified.
+comment|///
+end_comment
+
+begin_comment
+comment|/// If FilenameID is -1, it is considered to be unspecified.
 end_comment
 
 begin_function_decl
@@ -4297,7 +4668,7 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|/// Return the total amount of physical memory allocated by the
+comment|/// \brief Return the total amount of physical memory allocated by the
 end_comment
 
 begin_comment
@@ -4353,7 +4724,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/// Return the amount of memory used by memory buffers, breaking down
+comment|/// \brief Return the amount of memory used by memory buffers, breaking down
 end_comment
 
 begin_comment
@@ -4369,11 +4740,11 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|// Return the amount of memory used for various side tables and
+comment|/// \brief Return the amount of memory used for various side tables and
 end_comment
 
 begin_comment
-comment|// data structures in the SourceManager.
+comment|/// data structures in the SourceManager.
 end_comment
 
 begin_expr_stmt
@@ -4559,75 +4930,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// \brief Comparison function class.
-end_comment
-
-begin_decl_stmt
-name|class
-name|LocBeforeThanCompare
-range|:
-name|public
-name|std
-operator|::
-name|binary_function
-operator|<
-name|SourceLocation
-decl_stmt|,
-name|SourceLocation
-decl_stmt|,
-name|bool
-decl|>
-block|{
-name|SourceManager
-modifier|&
-name|SM
-decl_stmt|;
-name|public
-label|:
-name|explicit
-name|LocBeforeThanCompare
-argument_list|(
-name|SourceManager
-operator|&
-name|SM
-argument_list|)
-operator|:
-name|SM
-argument_list|(
-argument|SM
-argument_list|)
-block|{ }
-name|bool
-name|operator
-argument_list|()
-operator|(
-name|SourceLocation
-name|LHS
-operator|,
-name|SourceLocation
-name|RHS
-operator|)
-specifier|const
-block|{
-return|return
-name|SM
-operator|.
-name|isBeforeInTranslationUnit
-argument_list|(
-name|LHS
-argument_list|,
-name|RHS
-argument_list|)
-return|;
-block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
 comment|/// \brief Determines the order of 2 source locations in the "source location
 end_comment
 
@@ -4811,7 +5113,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// PrintStats - Print statistics to stderr.
+comment|/// \brief Print statistics to stderr.
 end_comment
 
 begin_comment
@@ -5210,6 +5512,234 @@ return|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|/// Get a presumed location suitable for displaying in a diagnostic message,
+end_comment
+
+begin_comment
+comment|/// taking into account macro arguments and expansions.
+end_comment
+
+begin_decl_stmt
+name|PresumedLoc
+name|getPresumedLocForDisplay
+argument_list|(
+name|SourceLocation
+name|Loc
+argument_list|)
+decl|const
+block|{
+comment|// This is a condensed form of the algorithm used by emitCaretDiagnostic to
+comment|// walk to the top of the macro call stack.
+while|while
+condition|(
+name|Loc
+operator|.
+name|isMacroID
+argument_list|()
+condition|)
+block|{
+name|Loc
+operator|=
+name|skipToMacroArgExpansion
+argument_list|(
+name|Loc
+argument_list|)
+expr_stmt|;
+name|Loc
+operator|=
+name|getImmediateMacroCallerLoc
+argument_list|(
+name|Loc
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+name|getPresumedLoc
+argument_list|(
+name|Loc
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// Look through spelling locations for a macro argument expansion, and if
+end_comment
+
+begin_comment
+comment|/// found skip to it so that we can trace the argument rather than the macros
+end_comment
+
+begin_comment
+comment|/// in which that argument is used. If no macro argument expansion is found,
+end_comment
+
+begin_comment
+comment|/// don't skip anything and return the starting location.
+end_comment
+
+begin_decl_stmt
+name|SourceLocation
+name|skipToMacroArgExpansion
+argument_list|(
+name|SourceLocation
+name|StartLoc
+argument_list|)
+decl|const
+block|{
+for|for
+control|(
+name|SourceLocation
+name|L
+init|=
+name|StartLoc
+init|;
+name|L
+operator|.
+name|isMacroID
+argument_list|()
+condition|;
+name|L
+operator|=
+name|getImmediateSpellingLoc
+argument_list|(
+name|L
+argument_list|)
+control|)
+block|{
+if|if
+condition|(
+name|isMacroArgExpansion
+argument_list|(
+name|L
+argument_list|)
+condition|)
+return|return
+name|L
+return|;
+block|}
+comment|// Otherwise just return initial location, there's nothing to skip.
+return|return
+name|StartLoc
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// Gets the location of the immediate macro caller, one level up the stack
+end_comment
+
+begin_comment
+comment|/// toward the initial macro typed into the source.
+end_comment
+
+begin_decl_stmt
+name|SourceLocation
+name|getImmediateMacroCallerLoc
+argument_list|(
+name|SourceLocation
+name|Loc
+argument_list|)
+decl|const
+block|{
+if|if
+condition|(
+operator|!
+name|Loc
+operator|.
+name|isMacroID
+argument_list|()
+condition|)
+return|return
+name|Loc
+return|;
+comment|// When we have the location of (part of) an expanded parameter, its
+comment|// spelling location points to the argument as typed into the macro call,
+comment|// and therefore is used to locate the macro caller.
+if|if
+condition|(
+name|isMacroArgExpansion
+argument_list|(
+name|Loc
+argument_list|)
+condition|)
+return|return
+name|getImmediateSpellingLoc
+argument_list|(
+name|Loc
+argument_list|)
+return|;
+comment|// Otherwise, the caller of the macro is located where this macro is
+comment|// expanded (while the spelling is part of the macro definition).
+return|return
+name|getImmediateExpansionRange
+argument_list|(
+name|Loc
+argument_list|)
+operator|.
+name|first
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// Gets the location of the immediate macro callee, one level down the stack
+end_comment
+
+begin_comment
+comment|/// toward the leaf macro.
+end_comment
+
+begin_decl_stmt
+name|SourceLocation
+name|getImmediateMacroCalleeLoc
+argument_list|(
+name|SourceLocation
+name|Loc
+argument_list|)
+decl|const
+block|{
+if|if
+condition|(
+operator|!
+name|Loc
+operator|.
+name|isMacroID
+argument_list|()
+condition|)
+return|return
+name|Loc
+return|;
+comment|// When we have the location of (part of) an expanded parameter, its
+comment|// expansion location points to the unexpanded parameter reference within
+comment|// the macro definition (or callee).
+if|if
+condition|(
+name|isMacroArgExpansion
+argument_list|(
+name|Loc
+argument_list|)
+condition|)
+return|return
+name|getImmediateExpansionRange
+argument_list|(
+name|Loc
+argument_list|)
+operator|.
+name|first
+return|;
+comment|// Otherwise, the callee of the macro is located where this location was
+comment|// spelled inside the macro definition.
+return|return
+name|getImmediateSpellingLoc
+argument_list|(
+name|Loc
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
 begin_label
 name|private
 label|:
@@ -5346,15 +5876,11 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// createExpansionLoc - Implements the common elements of storing an
+comment|/// Implements the common elements of storing an expansion info struct into
 end_comment
 
 begin_comment
-comment|/// expansion info struct into the SLocEntry table and producing a source
-end_comment
-
-begin_comment
-comment|/// location that refers to it.
+comment|/// the SLocEntry table and producing a source location that refers to it.
 end_comment
 
 begin_decl_stmt
@@ -5385,7 +5911,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// isOffsetInFileID - Return true if the specified FileID contains the
+comment|/// \brief Return true if the specified FileID contains the
 end_comment
 
 begin_comment
@@ -5446,47 +5972,40 @@ return|;
 comment|// If it is the last local entry, then it does if the location is local.
 if|if
 condition|(
-name|static_cast
-operator|<
-name|unsigned
-operator|>
-operator|(
 name|FID
 operator|.
 name|ID
 operator|+
 literal|1
-operator|)
 operator|==
+name|static_cast
+operator|<
+name|int
+operator|>
+operator|(
 name|LocalSLocEntryTable
 operator|.
 name|size
 argument_list|()
+operator|)
 condition|)
-block|{
 return|return
 name|SLocOffset
 operator|<
 name|NextLocalOffset
 return|;
-block|}
 comment|// Otherwise, the entry after it has to not include it. This works for both
 comment|// local and loaded entries.
 return|return
 name|SLocOffset
 operator|<
-name|getSLocEntry
-argument_list|(
-name|FileID
-operator|::
-name|get
+name|getSLocEntryByID
 argument_list|(
 name|FID
 operator|.
 name|ID
 operator|+
 literal|1
-argument_list|)
 argument_list|)
 operator|.
 name|getOffset
@@ -5496,15 +6015,23 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// createFileID - Create a new fileID for the specified ContentCache and
+comment|/// \brief Create a new fileID for the specified ContentCache and
 end_comment
 
 begin_comment
-comment|///  include position.  This works regardless of whether the ContentCache
+comment|/// include position.
 end_comment
 
 begin_comment
-comment|///  corresponds to a file or some other input source.
+comment|///
+end_comment
+
+begin_comment
+comment|/// This works regardless of whether the ContentCache corresponds to a
+end_comment
+
+begin_comment
+comment|/// file or some other input source.
 end_comment
 
 begin_decl_stmt
@@ -5543,20 +6070,15 @@ name|ContentCache
 operator|*
 name|getOrCreateContentCache
 argument_list|(
-specifier|const
-name|FileEntry
-operator|*
-name|SourceFile
+argument|const FileEntry *SourceFile
+argument_list|,
+argument|bool isSystemFile = false
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// createMemBufferContentCache - Create a new ContentCache for the specified
-end_comment
-
-begin_comment
-comment|///  memory buffer.
+comment|/// \brief Create a new ContentCache for the specified  memory buffer.
 end_comment
 
 begin_expr_stmt
@@ -5710,7 +6232,145 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-unit|};   }
+unit|};
+comment|/// \brief Comparison function object.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|class
+name|BeforeThanCompare
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Compare two source locations.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+operator|>
+name|class
+name|BeforeThanCompare
+operator|<
+name|SourceLocation
+operator|>
+block|{
+name|SourceManager
+operator|&
+name|SM
+block|;
+name|public
+operator|:
+name|explicit
+name|BeforeThanCompare
+argument_list|(
+name|SourceManager
+operator|&
+name|SM
+argument_list|)
+operator|:
+name|SM
+argument_list|(
+argument|SM
+argument_list|)
+block|{ }
+name|bool
+name|operator
+argument_list|()
+operator|(
+name|SourceLocation
+name|LHS
+operator|,
+name|SourceLocation
+name|RHS
+operator|)
+specifier|const
+block|{
+return|return
+name|SM
+operator|.
+name|isBeforeInTranslationUnit
+argument_list|(
+name|LHS
+argument_list|,
+name|RHS
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+unit|};
+comment|/// \brief Compare two non-overlapping source ranges.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+operator|>
+name|class
+name|BeforeThanCompare
+operator|<
+name|SourceRange
+operator|>
+block|{
+name|SourceManager
+operator|&
+name|SM
+block|;
+name|public
+operator|:
+name|explicit
+name|BeforeThanCompare
+argument_list|(
+name|SourceManager
+operator|&
+name|SM
+argument_list|)
+operator|:
+name|SM
+argument_list|(
+argument|SM
+argument_list|)
+block|{ }
+name|bool
+name|operator
+argument_list|()
+operator|(
+name|SourceRange
+name|LHS
+operator|,
+name|SourceRange
+name|RHS
+operator|)
+block|{
+return|return
+name|SM
+operator|.
+name|isBeforeInTranslationUnit
+argument_list|(
+name|LHS
+operator|.
+name|getBegin
+argument_list|()
+argument_list|,
+name|RHS
+operator|.
+name|getBegin
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+unit|};  }
 comment|// end namespace clang
 end_comment
 

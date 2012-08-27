@@ -72,13 +72,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseMap.h"
+file|"llvm/MDBuilder.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/MDBuilder.h"
+file|"llvm/ADT/DenseMap.h"
 end_include
 
 begin_decl_stmt
@@ -100,6 +100,9 @@ name|clang
 block|{
 name|class
 name|ASTContext
+decl_stmt|;
+name|class
+name|CodeGenOptions
 decl_stmt|;
 name|class
 name|LangOptions
@@ -128,12 +131,11 @@ name|ASTContext
 modifier|&
 name|Context
 decl_stmt|;
-name|llvm
-operator|::
-name|LLVMContext
-operator|&
-name|VMContext
-expr_stmt|;
+specifier|const
+name|CodeGenOptions
+modifier|&
+name|CodeGenOpts
+decl_stmt|;
 specifier|const
 name|LangOptions
 modifier|&
@@ -208,6 +210,11 @@ operator|::
 name|LLVMContext
 operator|&
 name|VMContext
+argument_list|,
+specifier|const
+name|CodeGenOptions
+operator|&
+name|CGO
 argument_list|,
 specifier|const
 name|LangOptions

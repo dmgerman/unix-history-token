@@ -395,24 +395,6 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|struct
-name|pcpu
-name|__pcpu
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|pcpu
-modifier|*
-name|pcpup
-init|=
-operator|&
-name|__pcpu
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* Physical and virtual addresses for some global pages */
 end_comment

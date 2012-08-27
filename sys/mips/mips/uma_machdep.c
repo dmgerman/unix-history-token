@@ -102,10 +102,6 @@ name|int
 name|wait
 parameter_list|)
 block|{
-specifier|static
-name|vm_pindex_t
-name|color
-decl_stmt|;
 name|vm_paddr_t
 name|pa
 decl_stmt|;
@@ -157,8 +153,7 @@ name|m
 operator|=
 name|pmap_alloc_direct_page
 argument_list|(
-name|color
-operator|++
+literal|0
 argument_list|,
 name|pflags
 argument_list|)

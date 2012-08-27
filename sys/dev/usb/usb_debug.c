@@ -378,6 +378,9 @@ name|usb_xfer
 modifier|*
 name|xfer
 decl_stmt|;
+name|usb_stream_t
+name|x
+decl_stmt|;
 name|printf
 argument_list|(
 literal|"usb_dump_queue: endpoint=%p xfer: "
@@ -385,15 +388,28 @@ argument_list|,
 name|ep
 argument_list|)
 expr_stmt|;
+for|for
+control|(
+name|x
+operator|=
+literal|0
+init|;
+name|x
+operator|!=
+name|USB_MAX_EP_STREAMS
+condition|;
+name|x
+operator|++
+control|)
+block|{
 name|TAILQ_FOREACH
 argument_list|(
 argument|xfer
 argument_list|,
-argument|&ep->endpoint_q.head
+argument|&ep->endpoint_q[x].head
 argument_list|,
 argument|wait_entry
 argument_list|)
-block|{
 name|printf
 argument_list|(
 literal|" %p"

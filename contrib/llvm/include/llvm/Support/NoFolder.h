@@ -1187,6 +1187,34 @@ name|IdxList
 argument_list|)
 return|;
 block|}
+name|Constant
+modifier|*
+name|CreateGetElementPtr
+argument_list|(
+name|Constant
+operator|*
+name|C
+argument_list|,
+name|Constant
+operator|*
+name|Idx
+argument_list|)
+decl|const
+block|{
+comment|// This form of the function only exists to avoid ambiguous overload
+comment|// warnings about whether to convert Idx to ArrayRef<Constant *> or
+comment|// ArrayRef<Value *>.
+return|return
+name|ConstantExpr
+operator|::
+name|getGetElementPtr
+argument_list|(
+name|C
+argument_list|,
+name|Idx
+argument_list|)
+return|;
+block|}
 name|Instruction
 modifier|*
 name|CreateGetElementPtr
@@ -1240,6 +1268,34 @@ argument_list|(
 name|C
 argument_list|,
 name|IdxList
+argument_list|)
+return|;
+block|}
+name|Constant
+modifier|*
+name|CreateInBoundsGetElementPtr
+argument_list|(
+name|Constant
+operator|*
+name|C
+argument_list|,
+name|Constant
+operator|*
+name|Idx
+argument_list|)
+decl|const
+block|{
+comment|// This form of the function only exists to avoid ambiguous overload
+comment|// warnings about whether to convert Idx to ArrayRef<Constant *> or
+comment|// ArrayRef<Value *>.
+return|return
+name|ConstantExpr
+operator|::
+name|getInBoundsGetElementPtr
+argument_list|(
+name|C
+argument_list|,
+name|Idx
 argument_list|)
 return|;
 block|}

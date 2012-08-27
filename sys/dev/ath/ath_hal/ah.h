@@ -517,16 +517,72 @@ init|=
 literal|96
 block|,
 comment|/* hardware supports HT20 short GI */
+name|HAL_CAP_LDPC
+init|=
+literal|99
+block|,
 name|HAL_CAP_RXTSTAMP_PREC
 init|=
 literal|100
 block|,
 comment|/* rx desc tstamp precision (bits) */
+name|HAL_CAP_PHYRESTART_CLR_WAR
+init|=
+literal|106
+block|,
+comment|/* in some cases, clear phy restart to fix bb hang */
+name|HAL_CAP_ENTERPRISE_MODE
+init|=
+literal|107
+block|,
+comment|/* Enterprise mode features */
+name|HAL_CAP_LDPCWAR
+init|=
+literal|108
+block|,
+name|HAL_CAP_CHANNEL_SWITCH_TIME_USEC
+init|=
+literal|109
+block|,
+comment|/* Channel change time, usec */
+name|HAL_CAP_ENABLE_APM
+init|=
+literal|110
+block|,
+comment|/* APM enabled */
+name|HAL_CAP_PCIE_LCR_EXTSYNC_EN
+init|=
+literal|111
+block|,
+name|HAL_CAP_PCIE_LCR_OFFSET
+init|=
+literal|112
+block|,
 name|HAL_CAP_ENHANCED_DFS_SUPPORT
 init|=
 literal|117
 block|,
 comment|/* hardware supports enhanced DFS */
+name|HAL_CAP_MCI
+init|=
+literal|118
+block|,
+name|HAL_CAP_SMARTANTENNA
+init|=
+literal|119
+block|,
+name|HAL_CAP_TRAFFIC_FAST_RECOVER
+init|=
+literal|120
+block|,
+name|HAL_CAP_TX_DIVERSITY
+init|=
+literal|121
+block|,
+name|HAL_CAP_CRDC
+init|=
+literal|122
+block|,
 comment|/* The following are private to the FreeBSD HAL (224 onward) */
 name|HAL_CAP_INTMIT
 init|=
@@ -1130,6 +1186,10 @@ init|=
 literal|0x00000002
 block|,
 comment|/* Legacy mapping */
+name|HAL_INT_RXERR
+init|=
+literal|0x00000004
+block|,
 name|HAL_INT_RXHP
 init|=
 literal|0x00000001
@@ -1140,10 +1200,6 @@ init|=
 literal|0x00000002
 block|,
 comment|/* EDMA */
-name|HAL_INT_RXERR
-init|=
-literal|0x00000004
-block|,
 name|HAL_INT_RXNOFRM
 init|=
 literal|0x00000008
@@ -1169,6 +1225,14 @@ name|HAL_INT_TIM_TIMER
 init|=
 literal|0x00000100
 block|,
+name|HAL_INT_MCI
+init|=
+literal|0x00000200
+block|,
+name|HAL_INT_BBPANIC
+init|=
+literal|0x00000400
+block|,
 name|HAL_INT_TXURN
 init|=
 literal|0x00000800
@@ -1188,6 +1252,10 @@ block|,
 name|HAL_INT_SWBA
 init|=
 literal|0x00010000
+block|,
+name|HAL_INT_BRSSI
+init|=
+literal|0x00020000
 block|,
 name|HAL_INT_BMISS
 init|=
@@ -1227,6 +1295,12 @@ literal|0x04000000
 block|,
 comment|/* Non-common mapping */
 name|HAL_INT_TBTT
+init|=
+literal|0x08000000
+block|,
+comment|/* Non-common mapping */
+comment|/* Atheros ref driver has a generic timer interrupt now..*/
+name|HAL_INT_GENTIMER
 init|=
 literal|0x08000000
 block|,
@@ -1287,6 +1361,8 @@ operator||
 name|HAL_INT_SWBA
 operator||
 name|HAL_INT_BMISS
+operator||
+name|HAL_INT_BRSSI
 operator||
 name|HAL_INT_BNR
 operator||
@@ -1626,7 +1702,7 @@ comment|/* NB: for proper padding */
 name|uint8_t
 name|rateCodeToIndex
 index|[
-literal|144
+literal|256
 index|]
 decl_stmt|;
 comment|/* back mapping */
@@ -1671,7 +1747,7 @@ comment|/* short preamble ACK duration*/
 block|}
 name|info
 index|[
-literal|32
+literal|64
 index|]
 struct|;
 block|}
@@ -1690,7 +1766,7 @@ comment|/* number of valid entries */
 name|uint8_t
 name|rs_rates
 index|[
-literal|32
+literal|64
 index|]
 decl_stmt|;
 comment|/* rates */
@@ -2458,6 +2534,29 @@ block|,
 comment|/* Japan dfs domain */
 block|}
 name|HAL_DFS_DOMAIN
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * MFP decryption options for initializing the MAC.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|HAL_MFP_QOSDATA
+init|=
+literal|0
+block|,
+comment|/* Decrypt MFP frames like QoS data frames. All chips before Merlin. */
+name|HAL_MFP_PASSTHRU
+block|,
+comment|/* Don't decrypt MFP frames at all. Passthrough */
+name|HAL_MFP_HW_CRYPTO
+comment|/* hardware decryption enabled. Merlin can do it. */
+block|}
+name|HAL_MFP_OPT_T
 typedef|;
 end_typedef
 
@@ -3516,8 +3615,19 @@ name|struct
 name|ath_desc
 modifier|*
 parameter_list|,
+name|HAL_DMA_ADDR
+modifier|*
+name|bufAddrList
+parameter_list|,
+name|uint32_t
+modifier|*
+name|segLenList
+parameter_list|,
 name|u_int
-name|segLen
+name|descId
+parameter_list|,
+name|u_int
+name|qcuId
 parameter_list|,
 name|HAL_BOOL
 name|firstSeg
@@ -4599,6 +4709,23 @@ name|HAL_BOOL
 name|__ahdecl
 function_decl|(
 modifier|*
+name|ah_getDfsDefaultThresh
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|HAL_PHYERR_PARAM
+modifier|*
+name|pe
+parameter_list|)
+function_decl|;
+name|HAL_BOOL
+name|__ahdecl
+function_decl|(
+modifier|*
 name|ah_procRadarEvent
 function_decl|)
 parameter_list|(
@@ -4861,6 +4988,14 @@ name|struct
 name|ath_desc
 modifier|*
 parameter_list|,
+name|HAL_DMA_ADDR
+modifier|*
+name|bufAddrList
+parameter_list|,
+name|uint32_t
+modifier|*
+name|segLenList
+parameter_list|,
 name|u_int
 parameter_list|,
 name|u_int
@@ -4872,8 +5007,6 @@ parameter_list|,
 name|HAL_CIPHER
 parameter_list|,
 name|uint8_t
-parameter_list|,
-name|u_int
 parameter_list|,
 name|HAL_BOOL
 parameter_list|,
@@ -5446,6 +5579,29 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * Get the HAL wireless mode for the given channel.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|ath_hal_get_curmode
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_channel
+modifier|*
+name|chan
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Calculate the packet TX time for a legacy or 11n frame  */
 end_comment
 
@@ -5620,6 +5776,29 @@ name|data
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*  * For now, simply pass through MFP frames.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|u_int32_t
+name|ath_hal_get_mfp_qos
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|)
+block|{
+comment|//return AH_PRIVATE(ah)->ah_mfp_qos;
+return|return
+name|HAL_MFP_QOSDATA
+return|;
+block|}
+end_function
 
 begin_endif
 endif|#

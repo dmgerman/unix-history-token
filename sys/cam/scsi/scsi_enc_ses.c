@@ -4147,7 +4147,7 @@ operator|!=
 name|CAM_REQ_CMP
 condition|)
 block|{
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -4275,7 +4275,7 @@ operator|!=
 name|CAM_REQ_CMP
 condition|)
 block|{
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -4467,7 +4467,7 @@ name|page
 argument_list|)
 condition|)
 block|{
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -4516,7 +4516,7 @@ operator|>
 name|xfer_len
 condition|)
 block|{
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -4809,7 +4809,7 @@ name|hdr
 argument_list|)
 condition|)
 block|{
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -4850,7 +4850,7 @@ operator|>
 name|xfer_len
 condition|)
 block|{
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -5032,7 +5032,7 @@ name|last_valid_byte
 argument_list|)
 condition|)
 block|{
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -5227,7 +5227,7 @@ operator|>
 name|last_valid_byte
 condition|)
 block|{
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -5264,7 +5264,7 @@ name|cur_buf_type
 operator|->
 name|etype_txt_len
 expr_stmt|;
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -5767,7 +5767,7 @@ operator|>
 name|xfer_len
 condition|)
 block|{
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -5800,7 +5800,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -6016,7 +6016,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -6033,7 +6033,7 @@ name|cur_stat
 operator|<=
 name|last_stat
 condition|)
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -6419,7 +6419,7 @@ name|ses_elm_addlstatus_base_hdr
 argument_list|)
 condition|)
 block|{
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -6437,7 +6437,7 @@ operator|>
 name|xfer_len
 condition|)
 block|{
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -6676,7 +6676,7 @@ operator|==
 name|TYPE_ADDLSTATUS_MANDATORY
 condition|)
 block|{
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -6777,7 +6777,7 @@ operator|>
 name|length
 condition|)
 block|{
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -6910,7 +6910,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -7414,7 +7414,7 @@ name|ses_page_hdr
 argument_list|)
 condition|)
 block|{
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -7432,7 +7432,7 @@ operator|>
 name|xfer_len
 condition|)
 block|{
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -7528,7 +7528,7 @@ operator|>
 name|plength
 condition|)
 block|{
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -7608,7 +7608,7 @@ operator|>
 name|plength
 condition|)
 block|{
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -8467,7 +8467,7 @@ name|int
 name|bufsiz
 parameter_list|)
 block|{
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -9642,7 +9642,7 @@ literal|4
 operator|)
 condition|)
 block|{
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -9870,7 +9870,7 @@ name|offset
 operator|)
 condition|)
 block|{
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -9947,7 +9947,7 @@ literal|4
 operator|)
 condition|)
 block|{
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -10113,7 +10113,7 @@ name|ELMTYP_ARRAY_DEV
 case|:
 break|break;
 default|default:
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -10191,7 +10191,7 @@ name|ELMTYP_ESCC
 case|:
 break|break;
 default|default:
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -10239,7 +10239,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,

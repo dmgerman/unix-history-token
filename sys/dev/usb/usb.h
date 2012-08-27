@@ -2860,6 +2860,20 @@ decl_stmt|;
 name|uByte
 name|bmAttributes
 decl_stmt|;
+define|#
+directive|define
+name|UE_GET_BULK_STREAMS
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& 0x0F)
+define|#
+directive|define
+name|UE_GET_SS_ISO_MULT
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& 0x03)
 name|uWord
 name|wBytesPerInterval
 decl_stmt|;
@@ -3562,7 +3576,7 @@ value|(USB_REV_3_0+1)
 end_define
 
 begin_comment
-comment|/*  * Supported host contoller modes.  */
+comment|/*  * Supported host controller modes.  */
 end_comment
 
 begin_enum
@@ -3589,7 +3603,7 @@ value|(USB_MODE_DUAL+1)
 end_define
 
 begin_comment
-comment|/*  * The "USB_MODE" macros defines all the supported device states.  */
+comment|/*  * The "USB_STATE" enums define all the supported device states.  */
 end_comment
 
 begin_enum
@@ -3615,6 +3629,32 @@ directive|define
 name|USB_STATE_MAX
 value|(USB_STATE_CONFIGURED+1)
 end_define
+
+begin_comment
+comment|/*  * The "USB_EP_MODE" macros define all the currently supported  * endpoint modes.  */
+end_comment
+
+begin_enum
+enum|enum
+name|usb_ep_mode
+block|{
+name|USB_EP_MODE_DEFAULT
+block|,
+name|USB_EP_MODE_STREAMS
+block|,
+comment|/* USB3.0 specific */
+name|USB_EP_MODE_HW_MASS_STORAGE
+block|,
+name|USB_EP_MODE_HW_SERIAL
+block|,
+name|USB_EP_MODE_HW_ETHERNET_CDC
+block|,
+name|USB_EP_MODE_HW_ETHERNET_NCM
+block|,
+name|USB_EP_MODE_MAX
+block|}
+enum|;
+end_enum
 
 begin_endif
 endif|#

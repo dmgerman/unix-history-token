@@ -2084,6 +2084,8 @@ operator|!=
 name|NULL
 condition|)
 return|return;
+name|sc
+operator|=
 name|g_gate_hold
 argument_list|(
 name|sc
@@ -2093,6 +2095,13 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|==
+name|NULL
+condition|)
+return|return;
 if|if
 condition|(
 operator|(

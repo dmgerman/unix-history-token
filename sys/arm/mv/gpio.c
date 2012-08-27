@@ -2345,14 +2345,13 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|OF_getproplen
+operator|!
+name|OF_hasprop
 argument_list|(
 name|ctrl
 argument_list|,
 literal|"gpio-controller"
 argument_list|)
-operator|<=
-literal|0
 condition|)
 comment|/* Node is not a GPIO controller. */
 return|return

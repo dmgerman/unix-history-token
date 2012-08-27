@@ -1775,17 +1775,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|buf_maxio
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* nominal maximum I/O for buffer */
-end_comment
-
-begin_decl_stmt
-specifier|extern
 name|struct
 name|buf
 modifier|*
@@ -1795,29 +1784,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* The buffer headers. */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|buffers
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* The buffer contents. */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|bufpages
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Number of memory pages in the buffer pool. */
 end_comment
 
 begin_decl_stmt

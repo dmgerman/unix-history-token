@@ -117,13 +117,16 @@ name|pv_entry
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|pv_chunk
+struct_decl|;
+end_struct_decl
+
 begin_struct
 struct|struct
 name|md_page
 block|{
-name|int
-name|pv_list_count
-decl_stmt|;
 name|int
 name|pv_flags
 decl_stmt|;
@@ -137,17 +140,6 @@ expr_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|PV_TABLE_MOD
-value|0x01
-end_define
-
-begin_comment
-comment|/* modified */
-end_comment
 
 begin_define
 define|#
@@ -193,11 +185,11 @@ comment|/* KVA of segment table */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|pv_entry
+argument|pv_chunk
 argument_list|)
-name|pm_pvlist
+name|pm_pvchunk
 expr_stmt|;
-comment|/* list of mappings in 						 * pmap */
+comment|/* list of mappings in pmap */
 name|cpuset_t
 name|pm_active
 decl_stmt|;
@@ -227,12 +219,6 @@ name|pmap_statistics
 name|pm_stats
 decl_stmt|;
 comment|/* pmap statistics */
-name|struct
-name|vm_page
-modifier|*
-name|pm_ptphint
-decl_stmt|;
-comment|/* pmap ptp hint */
 name|struct
 name|mtx
 name|pm_mtx
@@ -404,10 +390,6 @@ typedef|typedef
 struct|struct
 name|pv_entry
 block|{
-name|pmap_t
-name|pv_pmap
-decl_stmt|;
-comment|/* pmap where mapping lies */
 name|vm_offset_t
 name|pv_va
 decl_stmt|;
@@ -418,21 +400,96 @@ argument|pv_entry
 argument_list|)
 name|pv_list
 expr_stmt|;
-name|TAILQ_ENTRY
-argument_list|(
-argument|pv_entry
-argument_list|)
-name|pv_plist
-expr_stmt|;
-name|vm_page_t
-name|pv_ptem
-decl_stmt|;
-comment|/* VM page for pte */
 block|}
 typedef|*
 name|pv_entry_t
 typedef|;
 end_typedef
+
+begin_comment
+comment|/*  * pv_entries are allocated in chunks per-process.  This avoids the  * need to track per-pmap assignments.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__mips_n64
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_NPCM
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|_NPCPV
+value|168
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|_NPCM
+value|11
+end_define
+
+begin_define
+define|#
+directive|define
+name|_NPCPV
+value|336
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_struct
+struct|struct
+name|pv_chunk
+block|{
+name|pmap_t
+name|pc_pmap
+decl_stmt|;
+name|TAILQ_ENTRY
+argument_list|(
+argument|pv_chunk
+argument_list|)
+name|pc_list
+expr_stmt|;
+name|u_long
+name|pc_map
+index|[
+name|_NPCM
+index|]
+decl_stmt|;
+comment|/* bitmap; 1 = free */
+name|TAILQ_ENTRY
+argument_list|(
+argument|pv_chunk
+argument_list|)
+name|pc_lru
+expr_stmt|;
+name|struct
+name|pv_entry
+name|pc_pventry
+index|[
+name|_NPCPV
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * physmem_desc[] is a superset of phys_avail[] and describes all the  * memory present in the system.  *  * phys_avail[] is similar but does not include the memory stolen by  * pmap_steal_memory().  *  * Each memory region is described by a pair of elements in the array  * so we can describe up to (PHYS_AVAIL_ENTRIES / 2) distinct memory  * regions.  */

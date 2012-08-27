@@ -13074,7 +13074,10 @@ operator|->
 name|bindas
 operator|<
 literal|0
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|pdevinfo
 operator|->
 name|index
@@ -13082,6 +13085,9 @@ operator|!=
 literal|0
 condition|)
 continue|continue;
+block|}
+else|else
+block|{
 if|if
 condition|(
 name|w
@@ -13101,6 +13107,7 @@ operator|->
 name|recas
 condition|)
 continue|continue;
+block|}
 if|if
 condition|(
 name|dev
@@ -18142,12 +18149,6 @@ name|w
 operator|->
 name|nid
 expr_stmt|;
-if|if
-condition|(
-name|length
-operator|!=
-name|NULL
-condition|)
 operator|*
 name|length
 operator|=
@@ -18302,10 +18303,6 @@ name|ret
 operator|==
 name|m
 operator|&&
-name|length
-operator|!=
-name|NULL
-operator|&&
 operator|*
 name|length
 operator|<
@@ -18327,6 +18324,12 @@ operator|*
 name|length
 expr_stmt|;
 block|}
+else|else
+operator|*
+name|length
+operator|=
+name|lm
+expr_stmt|;
 if|if
 condition|(
 name|only

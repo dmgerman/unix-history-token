@@ -1062,14 +1062,8 @@ name|Alignment
 operator|=
 name|Align
 expr_stmt|;
-name|MaxAlignment
-operator|=
-name|std
-operator|::
-name|max
+name|ensureMaxAlignment
 argument_list|(
-name|MaxAlignment
-argument_list|,
 name|Align
 argument_list|)
 expr_stmt|;
@@ -1280,15 +1274,21 @@ return|return
 name|MaxAlignment
 return|;
 block|}
-comment|/// setMaxAlignment - Set the preferred alignment.
-comment|///
+comment|/// ensureMaxAlignment - Make sure the function is at least Align bytes
+comment|/// aligned.
 name|void
-name|setMaxAlignment
+name|ensureMaxAlignment
 parameter_list|(
 name|unsigned
 name|Align
 parameter_list|)
 block|{
+if|if
+condition|(
+name|MaxAlignment
+operator|<
+name|Align
+condition|)
 name|MaxAlignment
 operator|=
 name|Align
@@ -1601,14 +1601,8 @@ operator|&&
 literal|"Bad frame index!"
 argument_list|)
 expr_stmt|;
-name|MaxAlignment
-operator|=
-name|std
-operator|::
-name|max
+name|ensureMaxAlignment
 argument_list|(
-name|MaxAlignment
-argument_list|,
 name|Alignment
 argument_list|)
 expr_stmt|;
@@ -1656,14 +1650,8 @@ name|NumFixedObjects
 operator|-
 literal|1
 decl_stmt|;
-name|MaxAlignment
-operator|=
-name|std
-operator|::
-name|max
+name|ensureMaxAlignment
 argument_list|(
-name|MaxAlignment
-argument_list|,
 name|Alignment
 argument_list|)
 expr_stmt|;
@@ -1730,14 +1718,8 @@ name|true
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|MaxAlignment
-operator|=
-name|std
-operator|::
-name|max
+name|ensureMaxAlignment
 argument_list|(
-name|MaxAlignment
-argument_list|,
 name|Alignment
 argument_list|)
 expr_stmt|;

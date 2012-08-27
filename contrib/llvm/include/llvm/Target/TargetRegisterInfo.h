@@ -177,17 +177,18 @@ name|vt_iterator
 name|VTs
 decl_stmt|;
 specifier|const
-name|unsigned
+name|uint32_t
 modifier|*
 name|SubClassMask
 decl_stmt|;
 specifier|const
-name|sc_iterator
-name|SuperClasses
+name|uint16_t
+modifier|*
+name|SuperRegIndices
 decl_stmt|;
 specifier|const
 name|sc_iterator
-name|SuperRegClasses
+name|SuperClasses
 decl_stmt|;
 name|ArrayRef
 operator|<
@@ -476,52 +477,8 @@ return|return
 name|I
 return|;
 block|}
-comment|/// superregclasses_begin / superregclasses_end - Loop over all of
-comment|/// the superreg register classes of this register class.
-name|sc_iterator
-name|superregclasses_begin
-argument_list|()
-specifier|const
-block|{
-return|return
-name|SuperRegClasses
-return|;
-block|}
-name|sc_iterator
-name|superregclasses_end
-argument_list|()
-specifier|const
-block|{
-name|sc_iterator
-name|I
-operator|=
-name|SuperRegClasses
-block|;
-while|while
-condition|(
-operator|*
-name|I
-operator|!=
-name|NULL
-condition|)
-operator|++
-name|I
-expr_stmt|;
-return|return
-name|I
-return|;
-block|}
-end_decl_stmt
-
-begin_comment
 comment|/// hasSubClass - return true if the specified TargetRegisterClass
-end_comment
-
-begin_comment
 comment|/// is a proper sub-class of this TargetRegisterClass.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|hasSubClass
 argument_list|(
@@ -543,17 +500,8 @@ name|RC
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// hasSubClassEq - Returns true if RC is a sub-class of or equal to this
-end_comment
-
-begin_comment
 comment|/// class.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|hasSubClassEq
 argument_list|(
@@ -591,17 +539,8 @@ operator|&
 literal|1
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// hasSuperClass - return true if the specified TargetRegisterClass is a
-end_comment
-
-begin_comment
 comment|/// proper super-class of this TargetRegisterClass.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|hasSuperClass
 argument_list|(
@@ -621,17 +560,8 @@ name|this
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// hasSuperClassEq - Returns true if RC is a super-class of or equal to this
-end_comment
-
-begin_comment
 comment|/// class.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|hasSuperClassEq
 argument_list|(
@@ -651,21 +581,9 @@ name|this
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// getSubClassMask - Returns a bit vector of subclasses, including this one.
-end_comment
-
-begin_comment
 comment|/// The vector is indexed by class IDs, see hasSubClassEq() above for how to
-end_comment
-
-begin_comment
 comment|/// use it.
-end_comment
-
-begin_expr_stmt
 specifier|const
 name|uint32_t
 operator|*
@@ -677,21 +595,28 @@ return|return
 name|SubClassMask
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
+comment|/// getSuperRegIndices - Returns a 0-terminated list of sub-register indices
+comment|/// that project some super-register class into this register class. The list
+comment|/// has an entry for each Idx such that:
+comment|///
+comment|///   There exists SuperRC where:
+comment|///     For all Reg in SuperRC:
+comment|///       this->contains(Reg:Idx)
+comment|///
+specifier|const
+name|uint16_t
+operator|*
+name|getSuperRegIndices
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SuperRegIndices
+return|;
+block|}
 comment|/// getSuperClasses - Returns a NULL terminated list of super-classes.  The
-end_comment
-
-begin_comment
 comment|/// classes are ordered by ID which is also a topological ordering from large
-end_comment
-
-begin_comment
 comment|/// to small classes.  The list does NOT include the current class.
-end_comment
-
-begin_expr_stmt
 name|sc_iterator
 name|getSuperClasses
 argument_list|()
@@ -701,17 +626,8 @@ return|return
 name|SuperClasses
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// isASubClass - return true if this TargetRegisterClass is a subset
-end_comment
-
-begin_comment
 comment|/// class of at least one other TargetRegisterClass.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|isASubClass
 argument_list|()
@@ -726,65 +642,20 @@ operator|!=
 literal|0
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// getRawAllocationOrder - Returns the preferred order for allocating
-end_comment
-
-begin_comment
 comment|/// registers from this register class in MF. The raw order comes directly
-end_comment
-
-begin_comment
 comment|/// from the .td file and may include reserved registers that are not
-end_comment
-
-begin_comment
 comment|/// allocatable. Register allocators should also make sure to allocate
-end_comment
-
-begin_comment
 comment|/// callee-saved registers only after all the volatiles are used. The
-end_comment
-
-begin_comment
 comment|/// RegisterClassInfo class provides filtered allocation orders with
-end_comment
-
-begin_comment
 comment|/// callee-saved registers moved to the end.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// The MachineFunction argument can be used to tune the allocatable
-end_comment
-
-begin_comment
 comment|/// registers based on the characteristics of the function, subtarget, or
-end_comment
-
-begin_comment
 comment|/// other criteria.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, this method returns all registers in the class.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_expr_stmt
 name|ArrayRef
 operator|<
 name|uint16_t
@@ -813,10 +684,14 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_expr_stmt
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
-unit|};
 comment|/// TargetRegisterInfoDesc - Extra information, not in MCRegisterDesc, about
 end_comment
 
@@ -1333,6 +1208,29 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// getAllocatableClass - Return the maximal subclass of the given register
+end_comment
+
+begin_comment
+comment|/// class that is alloctable, or NULL.
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|TargetRegisterClass
+modifier|*
+name|getAllocatableClass
+argument_list|(
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|RC
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// getAllocatableSet - Returns a bitset indexed by register number
 end_comment
 
@@ -1501,38 +1399,115 @@ condition|)
 return|return
 name|false
 return|;
-for|for
-control|(
-specifier|const
-name|uint16_t
-modifier|*
-name|regList
-init|=
-name|getOverlaps
-argument_list|(
+comment|// Regunits are numerically ordered. Find a common unit.
+name|MCRegUnitIterator
+name|RUA
+parameter_list|(
 name|regA
-argument_list|)
-operator|+
-literal|1
-init|;
-operator|*
-name|regList
-condition|;
-operator|++
-name|regList
-control|)
+parameter_list|,
+name|this
+parameter_list|)
+function_decl|;
+name|MCRegUnitIterator
+name|RUB
+parameter_list|(
+name|regB
+parameter_list|,
+name|this
+parameter_list|)
+function_decl|;
+do|do
 block|{
 if|if
 condition|(
 operator|*
-name|regList
+name|RUA
 operator|==
-name|regB
+operator|*
+name|RUB
 condition|)
 return|return
 name|true
 return|;
+if|if
+condition|(
+operator|*
+name|RUA
+operator|<
+operator|*
+name|RUB
+condition|)
+operator|++
+name|RUA
+expr_stmt|;
+else|else
+operator|++
+name|RUB
+expr_stmt|;
 block|}
+do|while
+condition|(
+name|RUA
+operator|.
+name|isValid
+argument_list|()
+operator|&&
+name|RUB
+operator|.
+name|isValid
+argument_list|()
+condition|)
+do|;
+return|return
+name|false
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// hasRegUnit - Returns true if Reg contains RegUnit.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|hasRegUnit
+argument_list|(
+name|unsigned
+name|Reg
+argument_list|,
+name|unsigned
+name|RegUnit
+argument_list|)
+decl|const
+block|{
+for|for
+control|(
+name|MCRegUnitIterator
+name|Units
+argument_list|(
+name|Reg
+argument_list|,
+name|this
+argument_list|)
+init|;
+name|Units
+operator|.
+name|isValid
+argument_list|()
+condition|;
+operator|++
+name|Units
+control|)
+if|if
+condition|(
+operator|*
+name|Units
+operator|==
+name|RegUnit
+condition|)
+return|return
+name|true
+return|;
 return|return
 name|false
 return|;
@@ -1583,43 +1558,41 @@ name|bool
 name|isSuperRegister
 argument_list|(
 name|unsigned
-name|regA
+name|RegA
 argument_list|,
 name|unsigned
-name|regB
+name|RegB
 argument_list|)
 decl|const
 block|{
 for|for
 control|(
-specifier|const
-name|uint16_t
-modifier|*
-name|regList
-init|=
-name|getSuperRegisters
+name|MCSuperRegIterator
+name|I
 argument_list|(
-name|regA
+name|RegA
+argument_list|,
+name|this
 argument_list|)
 init|;
-operator|*
-name|regList
+name|I
+operator|.
+name|isValid
+argument_list|()
 condition|;
 operator|++
-name|regList
+name|I
 control|)
-block|{
 if|if
 condition|(
 operator|*
-name|regList
+name|I
 operator|==
-name|regB
+name|RegB
 condition|)
 return|return
 name|true
 return|;
-block|}
 return|return
 name|false
 return|;
@@ -1926,8 +1899,6 @@ name|unsigned
 name|Idx
 argument_list|)
 decl|const
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1995,9 +1966,20 @@ name|unsigned
 name|Idx
 argument_list|)
 decl|const
-init|=
+block|{
+name|assert
+argument_list|(
+name|Idx
+operator|==
 literal|0
-decl_stmt|;
+operator|&&
+literal|"Target has no sub-registers"
+argument_list|)
+expr_stmt|;
+return|return
+name|RC
+return|;
+block|}
 end_decl_stmt
 
 begin_comment
@@ -2066,6 +2048,132 @@ return|return
 name|b
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
+comment|/// getCommonSuperRegClass - Find a common super-register class if it exists.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Find a register class, SuperRC and two sub-register indices, PreA and
+end_comment
+
+begin_comment
+comment|/// PreB, such that:
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///   1. PreA + SubA == PreB + SubB  (using composeSubRegIndices()), and
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///   2. For all Reg in SuperRC: Reg:PreA in RCA and Reg:PreB in RCB, and
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///   3. SuperRC->getSize()>= max(RCA->getSize(), RCB->getSize()).
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// SuperRC will be chosen such that no super-class of SuperRC satisfies the
+end_comment
+
+begin_comment
+comment|/// requirements, and there is no register class with a smaller spill size
+end_comment
+
+begin_comment
+comment|/// that satisfies the requirements.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// SubA and SubB must not be 0. Use getMatchingSuperRegClass() instead.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Either of the PreA and PreB sub-register indices may be returned as 0. In
+end_comment
+
+begin_comment
+comment|/// that case, the returned register class will be a sub-class of the
+end_comment
+
+begin_comment
+comment|/// corresponding argument register class.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// The function returns NULL if no register class can be found.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|TargetRegisterClass
+modifier|*
+name|getCommonSuperRegClass
+argument_list|(
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|RCA
+argument_list|,
+name|unsigned
+name|SubA
+argument_list|,
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|RCB
+argument_list|,
+name|unsigned
+name|SubB
+argument_list|,
+name|unsigned
+operator|&
+name|PreA
+argument_list|,
+name|unsigned
+operator|&
+name|PreB
+argument_list|)
+decl|const
+decl_stmt|;
 end_decl_stmt
 
 begin_comment
@@ -2218,6 +2326,11 @@ name|TargetRegisterClass
 modifier|*
 name|getPointerRegClass
 argument_list|(
+specifier|const
+name|MachineFunction
+operator|&
+name|MF
+argument_list|,
 name|unsigned
 name|Kind
 operator|=
@@ -2358,7 +2471,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// Get the weight in units of pressure for this register class.
+comment|// Get the weight in units of pressure for this register class.
 end_comment
 
 begin_decl_stmt
@@ -2393,6 +2506,26 @@ operator|=
 literal|0
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/// Get the name of this register unit pressure set.
+end_comment
+
+begin_decl_stmt
+name|virtual
+specifier|const
+name|char
+modifier|*
+name|getRegPressureSetName
+argument_list|(
+name|unsigned
+name|Idx
+argument_list|)
+decl|const
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// Get the register unit pressure limit for this dimension.
@@ -2774,6 +2907,32 @@ argument_list|,
 name|int
 operator|&
 name|FrameIdx
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// trackLivenessAfterRegAlloc - returns true if the live-ins should be tracked
+end_comment
+
+begin_comment
+comment|/// after register allocation.
+end_comment
+
+begin_decl_stmt
+name|virtual
+name|bool
+name|trackLivenessAfterRegAlloc
+argument_list|(
+specifier|const
+name|MachineFunction
+operator|&
+name|MF
 argument_list|)
 decl|const
 block|{
@@ -3206,6 +3365,221 @@ end_decl_stmt
 
 begin_comment
 unit|};
+comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_comment
+comment|//                           SuperRegClassIterator
+end_comment
+
+begin_comment
+comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Iterate over the possible super-registers for a given register class. The
+end_comment
+
+begin_comment
+comment|// iterator will visit a list of pairs (Idx, Mask) corresponding to the
+end_comment
+
+begin_comment
+comment|// possible classes of super-registers.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Each bit mask will have at least one set bit, and each set bit in Mask
+end_comment
+
+begin_comment
+comment|// corresponds to a SuperRC such that:
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//   For all Reg in SuperRC: Reg:Idx is in RC.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// The iterator can include (O, RC->getSubClassMask()) as the first entry which
+end_comment
+
+begin_comment
+comment|// also satisfies the above requirement, assuming Reg:0 == Reg.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_decl_stmt
+name|class
+name|SuperRegClassIterator
+block|{
+specifier|const
+name|unsigned
+name|RCMaskWords
+decl_stmt|;
+name|unsigned
+name|SubReg
+decl_stmt|;
+specifier|const
+name|uint16_t
+modifier|*
+name|Idx
+decl_stmt|;
+specifier|const
+name|uint32_t
+modifier|*
+name|Mask
+decl_stmt|;
+name|public
+label|:
+comment|/// Create a SuperRegClassIterator that visits all the super-register classes
+comment|/// of RC. When IncludeSelf is set, also include the (0, sub-classes) entry.
+name|SuperRegClassIterator
+argument_list|(
+argument|const TargetRegisterClass *RC
+argument_list|,
+argument|const TargetRegisterInfo *TRI
+argument_list|,
+argument|bool IncludeSelf = false
+argument_list|)
+block|:
+name|RCMaskWords
+argument_list|(
+operator|(
+name|TRI
+operator|->
+name|getNumRegClasses
+argument_list|()
+operator|+
+literal|31
+operator|)
+operator|/
+literal|32
+argument_list|)
+operator|,
+name|SubReg
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Idx
+argument_list|(
+name|RC
+operator|->
+name|getSuperRegIndices
+argument_list|()
+argument_list|)
+operator|,
+name|Mask
+argument_list|(
+argument|RC->getSubClassMask()
+argument_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|IncludeSelf
+condition|)
+operator|++
+operator|*
+name|this
+expr_stmt|;
+block|}
+comment|/// Returns true if this iterator is still pointing at a valid entry.
+name|bool
+name|isValid
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Idx
+return|;
+block|}
+comment|/// Returns the current sub-register index.
+name|unsigned
+name|getSubReg
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SubReg
+return|;
+block|}
+comment|/// Returns the bit mask if register classes that getSubReg() projects into
+comment|/// RC.
+specifier|const
+name|uint32_t
+operator|*
+name|getMask
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Mask
+return|;
+block|}
+comment|/// Advance iterator to the next entry.
+name|void
+name|operator
+operator|++
+operator|(
+operator|)
+block|{
+name|assert
+argument_list|(
+name|isValid
+argument_list|()
+operator|&&
+literal|"Cannot move iterator past end."
+argument_list|)
+block|;
+name|Mask
+operator|+=
+name|RCMaskWords
+block|;
+name|SubReg
+operator|=
+operator|*
+name|Idx
+operator|++
+block|;
+if|if
+condition|(
+operator|!
+name|SubReg
+condition|)
+name|Idx
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|// This is useful when building IndexedMaps keyed on virtual registers
 end_comment
 
@@ -3367,6 +3741,118 @@ name|OS
 operator|,
 specifier|const
 name|PrintReg
+operator|&
+name|PR
+operator|)
+block|{
+name|PR
+operator|.
+name|print
+argument_list|(
+name|OS
+argument_list|)
+block|;
+return|return
+name|OS
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// PrintRegUnit - Helper class for printing register units on a raw_ostream.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Register units are named after their root registers:
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///   AL      - Single root.
+end_comment
+
+begin_comment
+comment|///   FP0~ST7 - Dual roots.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Usage: OS<< PrintRegUnit(Unit, TRI)<< '\n';
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_decl_stmt
+name|class
+name|PrintRegUnit
+block|{
+specifier|const
+name|TargetRegisterInfo
+modifier|*
+name|TRI
+decl_stmt|;
+name|unsigned
+name|Unit
+decl_stmt|;
+name|public
+label|:
+name|PrintRegUnit
+argument_list|(
+argument|unsigned unit
+argument_list|,
+argument|const TargetRegisterInfo *tri
+argument_list|)
+block|:
+name|TRI
+argument_list|(
+name|tri
+argument_list|)
+operator|,
+name|Unit
+argument_list|(
+argument|unit
+argument_list|)
+block|{}
+name|void
+name|print
+argument_list|(
+argument|raw_ostream&
+argument_list|)
+specifier|const
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
+specifier|static
+specifier|inline
+name|raw_ostream
+operator|&
+name|operator
+operator|<<
+operator|(
+name|raw_ostream
+operator|&
+name|OS
+operator|,
+specifier|const
+name|PrintRegUnit
 operator|&
 name|PR
 operator|)

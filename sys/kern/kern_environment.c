@@ -570,6 +570,8 @@ operator|=
 name|malloc
 argument_list|(
 name|KENV_MNAMELEN
+operator|+
+literal|1
 argument_list|,
 name|M_TEMP
 argument_list|,
@@ -587,6 +589,8 @@ argument_list|,
 name|name
 argument_list|,
 name|KENV_MNAMELEN
+operator|+
+literal|1
 argument_list|,
 name|NULL
 argument_list|)
@@ -740,10 +744,14 @@ condition|(
 name|len
 operator|>
 name|KENV_MVALLEN
+operator|+
+literal|1
 condition|)
 name|len
 operator|=
 name|KENV_MVALLEN
+operator|+
+literal|1
 expr_stmt|;
 name|value
 operator|=
@@ -1757,6 +1765,8 @@ condition|(
 name|namelen
 operator|>
 name|KENV_MNAMELEN
+operator|+
+literal|1
 condition|)
 return|return
 operator|(
@@ -1778,6 +1788,8 @@ condition|(
 name|vallen
 operator|>
 name|KENV_MVALLEN
+operator|+
+literal|1
 condition|)
 return|return
 operator|(

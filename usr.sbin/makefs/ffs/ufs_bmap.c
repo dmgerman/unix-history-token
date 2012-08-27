@@ -302,12 +302,6 @@ operator|-
 name|i
 expr_stmt|;
 name|ap
-operator|->
-name|in_exists
-operator|=
-literal|0
-expr_stmt|;
-name|ap
 operator|++
 expr_stmt|;
 for|for
@@ -377,12 +371,6 @@ operator|->
 name|in_off
 operator|=
 name|off
-expr_stmt|;
-name|ap
-operator|->
-name|in_exists
-operator|=
-literal|0
 expr_stmt|;
 operator|++
 name|ap

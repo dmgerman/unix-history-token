@@ -586,12 +586,16 @@ name|DFSOut
 argument_list|(
 literal|0
 argument_list|)
-operator|,
-name|IndentLevel
-argument_list|(
-literal|0
-argument_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|NDEBUG
+name|IndentLevel
+operator|=
+literal|0
+block|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|Parent
@@ -998,11 +1002,16 @@ name|DFSOut
 decl_stmt|;
 comment|// In& Out Depth use to determine
 comment|// scope nesting.
+ifndef|#
+directive|ifndef
+name|NDEBUG
 name|mutable
 name|unsigned
 name|IndentLevel
 decl_stmt|;
 comment|// Private state for dump()
+endif|#
+directive|endif
 block|}
 empty_stmt|;
 block|}

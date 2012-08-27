@@ -587,10 +587,10 @@ decl_stmt|;
 name|unsigned
 name|sec
 decl_stmt|;
-name|unsigned
+name|uint8_t
 name|slice
 decl_stmt|;
-name|unsigned
+name|uint8_t
 name|part
 decl_stmt|;
 name|unsigned
@@ -627,8 +627,6 @@ specifier|const
 name|char
 modifier|*
 name|kname
-init|=
-name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -636,8 +634,6 @@ begin_decl_stmt
 specifier|static
 name|uint32_t
 name|opts
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -3470,9 +3466,10 @@ modifier|*
 name|sec
 decl_stmt|;
 name|unsigned
-name|sl
-decl_stmt|,
 name|i
+decl_stmt|;
+name|uint8_t
+name|sl
 decl_stmt|;
 name|u_char
 modifier|*

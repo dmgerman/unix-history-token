@@ -92,7 +92,7 @@ struct_decl|struct
 name|HMapHeader
 struct_decl|;
 comment|/// This class represents an Apple concept known as a 'header map'.  To the
-comment|/// #include file resolution process, it basically acts like a directory of
+comment|/// \#include file resolution process, it basically acts like a directory of
 comment|/// symlinks to files.  Its advantages are that it is dense and more efficient
 comment|/// to create and process than a directory of symlinks.
 name|class

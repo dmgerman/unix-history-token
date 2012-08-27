@@ -616,12 +616,6 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-name|ap
-operator|->
-name|in_exists
-operator|=
-literal|1
-expr_stmt|;
 name|bp
 operator|=
 name|getblk
@@ -662,7 +656,7 @@ name|daddr
 condition|)
 name|panic
 argument_list|(
-literal|"ufs_bmaparray: indirect block not in cache"
+literal|"ext2_bmaparray: indirect block not in cache"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1214,12 +1208,6 @@ operator|-
 name|i
 expr_stmt|;
 name|ap
-operator|->
-name|in_exists
-operator|=
-literal|0
-expr_stmt|;
-name|ap
 operator|++
 expr_stmt|;
 for|for
@@ -1270,12 +1258,6 @@ operator|->
 name|in_off
 operator|=
 name|off
-expr_stmt|;
-name|ap
-operator|->
-name|in_exists
-operator|=
-literal|0
 expr_stmt|;
 operator|++
 name|ap

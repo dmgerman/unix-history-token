@@ -32,15 +32,19 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
-comment|//  This file defines the LangOptions interface.
+comment|/// \file
 end_comment
 
 begin_comment
-comment|//
+comment|/// \brief Defines the clang::LangOptions interface.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -69,6 +73,12 @@ begin_include
 include|#
 directive|include
 file|"clang/Basic/LLVM.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Basic/ObjCRuntime.h"
 end_include
 
 begin_include
@@ -162,8 +172,8 @@ directive|include
 file|"clang/Basic/LangOptions.def"
 block|}
 empty_stmt|;
-comment|/// LangOptions - This class keeps track of the various options that can be
-comment|/// enabled, which controls the dialect of C that is accepted.
+comment|/// \brief Keeps track of the various options that can be
+comment|/// enabled, which controls the dialect of C or C++ that is accepted.
 name|class
 name|LangOptions
 range|:
@@ -217,14 +227,34 @@ name|SOB_Trapping
 comment|// -ftrapv
 block|}
 enum|;
+enum|enum
+name|FPContractModeKind
+block|{
+name|FPC_Off
+block|,
+comment|// Form fused FP ops only where result will not be affected.
+name|FPC_On
+block|,
+comment|// Form fused FP ops according to FP_CONTRACT rules.
+name|FPC_Fast
+comment|// Aggressively fuse FP ops (E.g. FMA).
+block|}
+enum|;
 name|public
 label|:
+name|clang
+operator|::
+name|ObjCRuntime
+name|ObjCRuntime
+expr_stmt|;
 name|std
 operator|::
 name|string
 name|ObjCConstantStringClass
 expr_stmt|;
-comment|/// The name of the handler function to be called when -ftrapv is specified.
+comment|/// \brief The name of the handler function to be called when -ftrapv is
+comment|/// specified.
+comment|///
 comment|/// If none is specified, abort (GCC-compatible behaviour).
 name|std
 operator|::
@@ -292,7 +322,7 @@ parameter_list|()
 function_decl|;
 block|}
 empty_stmt|;
-comment|/// Floating point control options
+comment|/// \brief Floating point control options
 name|class
 name|FPOptions
 block|{
@@ -326,7 +356,7 @@ argument_list|)
 block|{}
 block|}
 empty_stmt|;
-comment|/// OpenCL volatile options
+comment|/// \brief OpenCL volatile options
 name|class
 name|OpenCLOptions
 block|{
@@ -373,7 +403,6 @@ comment|/// \brief The translation unit is a module.
 name|TU_Module
 block|}
 enum|;
-comment|/// \brief
 block|}
 end_decl_stmt
 

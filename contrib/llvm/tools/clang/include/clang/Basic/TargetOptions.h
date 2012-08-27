@@ -31,6 +31,26 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \file
+end_comment
+
+begin_comment
+comment|/// \brief Defines the clang::TargetOptions class.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|//===----------------------------------------------------------------------===//
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -59,7 +79,7 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
-comment|/// TargetOptions - Options for controlling the target.
+comment|/// \brief Options for controlling the target.
 name|class
 name|TargetOptions
 block|{

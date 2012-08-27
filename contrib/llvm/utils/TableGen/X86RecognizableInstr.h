@@ -488,6 +488,7 @@ name|unsigned
 operator|&
 name|numPhysicalOperands
 argument_list|,
+specifier|const
 name|unsigned
 operator|*
 name|operandMapping

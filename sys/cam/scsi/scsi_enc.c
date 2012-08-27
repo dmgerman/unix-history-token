@@ -177,20 +177,6 @@ begin_comment
 comment|/* Enclosure type independent driver */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SEN_ID
-value|"UNISYS           SUN_SEN"
-end_define
-
-begin_define
-define|#
-directive|define
-name|SEN_ID_LEN
-value|24
-end_define
-
 begin_decl_stmt
 specifier|static
 name|d_open_t
@@ -2810,7 +2796,7 @@ comment|/*  * The code after this point runs on many platforms,  * so forgive th
 end_comment
 
 begin_comment
-comment|/*  * Is this a device that supports enclosure services?  *  * It's a a pretty simple ruleset- if it is device type 0x0D (13), it's  * an ENC device. If it happens to be an old UNISYS SEN device, we can  * handle that too.  */
+comment|/*  * Is this a device that supports enclosure services?  *  * It's a a pretty simple ruleset- if it is device type  * 0x0D (13), it's an ENCLOSURE device.  */
 end_comment
 
 begin_define
@@ -2969,19 +2955,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|buflen
-operator|<
-literal|8
-operator|+
-name|SEN_ID_LEN
-condition|)
-return|return
-operator|(
-name|ENC_NONE
-operator|)
-return|;
-if|if
-condition|(
 operator|(
 name|iqd
 index|[
@@ -2994,31 +2967,6 @@ operator|==
 name|T_ENCLOSURE
 condition|)
 block|{
-if|if
-condition|(
-name|STRNCMP
-argument_list|(
-operator|&
-name|iqd
-index|[
-literal|8
-index|]
-argument_list|,
-name|SEN_ID
-argument_list|,
-name|SEN_ID_LEN
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-return|return
-operator|(
-name|ENC_SEN
-operator|)
-return|;
-block|}
-elseif|else
 if|if
 condition|(
 operator|(
@@ -4069,9 +4017,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|ENC_SEN
-case|:
-case|case
 name|ENC_NONE
 case|:
 default|default:
@@ -4328,14 +4273,6 @@ case|:
 name|tname
 operator|=
 literal|"ENC Passthrough Device"
-expr_stmt|;
-break|break;
-case|case
-name|ENC_SEN
-case|:
-name|tname
-operator|=
-literal|"UNISYS SEN Device (NOT HANDLED YET)"
 expr_stmt|;
 break|break;
 case|case

@@ -457,6 +457,12 @@ modifier|*
 name|Class
 parameter_list|)
 block|{ }
+comment|/// \brief Loads comment ranges.
+name|virtual
+name|void
+name|ReadComments
+parameter_list|()
+block|{ }
 comment|/// \brief Notify ExternalASTSource that we started deserialization of
 comment|/// a decl or type so until FinishedDeserializing is called there may be
 comment|/// decls that are initializing. Must be paired with FinishedDeserializing.

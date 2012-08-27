@@ -373,24 +373,6 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|struct
-name|pcpu
-name|__pcpu
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|pcpu
-modifier|*
-name|pcpup
-init|=
-operator|&
-name|__pcpu
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* Physical and virtual addresses for some global pages */
 end_comment
@@ -618,26 +600,8 @@ expr_stmt|;
 name|set_cpufuncs
 argument_list|()
 expr_stmt|;
-name|pcpu_init
-argument_list|(
-name|pcpup
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|pcpu
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|PCPU_SET
-argument_list|(
-name|curthread
-argument_list|,
-operator|&
-name|thread0
-argument_list|)
+name|pcpu0_init
+argument_list|()
 expr_stmt|;
 comment|/* Do basic tuning, hz etc */
 name|init_param1

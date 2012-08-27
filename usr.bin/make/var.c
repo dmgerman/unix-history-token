@@ -6574,6 +6574,8 @@ specifier|const
 name|char
 modifier|*
 name|error
+init|=
+name|NULL
 decl_stmt|;
 if|if
 condition|(

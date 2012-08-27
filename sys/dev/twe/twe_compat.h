@@ -56,13 +56,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/module.h>
 end_include
 
 begin_include
 include|#
 directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sx.h>
 end_include
 
 begin_include
@@ -153,7 +171,7 @@ name|sc
 parameter_list|,
 name|val
 parameter_list|)
-value|bus_space_write_4((sc)->twe_btag, (sc)->twe_bhandle, 0x0, (u_int32_t)val)
+value|bus_write_4((sc)->twe_io, 0x0, (u_int32_t)val)
 end_define
 
 begin_define
@@ -163,7 +181,7 @@ name|TWE_STATUS
 parameter_list|(
 name|sc
 parameter_list|)
-value|(u_int32_t)bus_space_read_4((sc)->twe_btag, (sc)->twe_bhandle, 0x4)
+value|(u_int32_t)bus_read_4((sc)->twe_io, 0x4)
 end_define
 
 begin_define
@@ -175,7 +193,7 @@ name|sc
 parameter_list|,
 name|val
 parameter_list|)
-value|bus_space_write_4((sc)->twe_btag, (sc)->twe_bhandle, 0x8, (u_int32_t)val)
+value|bus_write_4((sc)->twe_io, 0x8, (u_int32_t)val)
 end_define
 
 begin_define
@@ -185,7 +203,7 @@ name|TWE_RESPONSE_QUEUE
 parameter_list|(
 name|sc
 parameter_list|)
-value|(TWE_Response_Queue)bus_space_read_4((sc)->twe_btag, (sc)->twe_bhandle, 0xc)
+value|(TWE_Response_Queue)bus_read_4((sc)->twe_io, 0xc)
 end_define
 
 begin_comment
@@ -207,10 +225,6 @@ value|\     struct cdev *twe_dev_t;
 comment|/* control device */
 value|\     struct resource		*twe_io;
 comment|/* register interface window */
-value|\     bus_space_handle_t		twe_bhandle;
-comment|/* bus space handle */
-value|\     bus_space_tag_t		twe_btag;
-comment|/* bus space tag */
 value|\     bus_dma_tag_t		twe_parent_dmat;
 comment|/* parent DMA tag */
 value|\     bus_dma_tag_t		twe_buffer_dmat;
@@ -229,7 +243,7 @@ value|\     void			*twe_cmd;
 comment|/* command structures */
 value|\     void			*twe_immediate;
 comment|/* immediate commands */
-value|\     bus_dmamap_t		twe_immediate_map;					\     struct sysctl_ctx_list	sysctl_ctx;						\     struct sysctl_oid		*sysctl_tree;
+value|\     bus_dmamap_t		twe_immediate_map;					\     struct mtx			twe_io_lock;						\     struct sx			twe_config_lock;
 end_define
 
 begin_comment
@@ -283,230 +297,6 @@ modifier|...
 parameter_list|)
 value|device_printf(twed->twed_dev, fmt , ##args)
 end_define
-
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|500003
-end_if
-
-begin_include
-include|#
-directive|include
-file|<machine/clock.h>
-end_include
-
-begin_define
-define|#
-directive|define
-name|INTR_ENTROPY
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|FREEBSD_4
-end_define
-
-begin_include
-include|#
-directive|include
-file|<sys/buf.h>
-end_include
-
-begin_comment
-comment|/* old buf style */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|struct
-name|buf
-name|twe_bio
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|struct
-name|buf_queue_head
-name|twe_bioq
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|TWE_BIO_QINIT
-parameter_list|(
-name|bq
-parameter_list|)
-value|bufq_init(&bq);
-end_define
-
-begin_define
-define|#
-directive|define
-name|TWE_BIO_QINSERT
-parameter_list|(
-name|bq
-parameter_list|,
-name|bp
-parameter_list|)
-value|bufq_insert_tail(&bq, bp)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TWE_BIO_QFIRST
-parameter_list|(
-name|bq
-parameter_list|)
-value|bufq_first(&bq)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TWE_BIO_QREMOVE
-parameter_list|(
-name|bq
-parameter_list|,
-name|bp
-parameter_list|)
-value|bufq_remove(&bq, bp)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TWE_BIO_IS_READ
-parameter_list|(
-name|bp
-parameter_list|)
-value|((bp)->b_flags& B_READ)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TWE_BIO_DATA
-parameter_list|(
-name|bp
-parameter_list|)
-value|(bp)->b_data
-end_define
-
-begin_define
-define|#
-directive|define
-name|TWE_BIO_LENGTH
-parameter_list|(
-name|bp
-parameter_list|)
-value|(bp)->b_bcount
-end_define
-
-begin_define
-define|#
-directive|define
-name|TWE_BIO_LBA
-parameter_list|(
-name|bp
-parameter_list|)
-value|(bp)->b_pblkno
-end_define
-
-begin_define
-define|#
-directive|define
-name|TWE_BIO_SOFTC
-parameter_list|(
-name|bp
-parameter_list|)
-value|(bp)->b_dev->si_drv1
-end_define
-
-begin_define
-define|#
-directive|define
-name|TWE_BIO_UNIT
-parameter_list|(
-name|bp
-parameter_list|)
-value|*(int *)((bp)->b_dev->si_drv2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TWE_BIO_SET_ERROR
-parameter_list|(
-name|bp
-parameter_list|,
-name|err
-parameter_list|)
-value|do { (bp)->b_error = err; (bp)->b_flags |= B_ERROR;} while(0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TWE_BIO_HAS_ERROR
-parameter_list|(
-name|bp
-parameter_list|)
-value|((bp)->b_flags& B_ERROR)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TWE_BIO_RESID
-parameter_list|(
-name|bp
-parameter_list|)
-value|(bp)->b_resid
-end_define
-
-begin_define
-define|#
-directive|define
-name|TWE_BIO_DONE
-parameter_list|(
-name|bp
-parameter_list|)
-value|biodone(bp)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TWE_BIO_STATS_START
-parameter_list|(
-name|bp
-parameter_list|)
-value|devstat_start_transaction(&((struct twed_softc *)TWE_BIO_SOFTC(bp))->twed_stats)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TWE_BIO_STATS_END
-parameter_list|(
-name|bp
-parameter_list|)
-value|devstat_end_transaction_buf(&((struct twed_softc *)TWE_BIO_SOFTC(bp))->twed_stats, bp)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_include
 include|#
@@ -700,10 +490,65 @@ name|bp
 parameter_list|)
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|TWE_IO_LOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_lock(&(sc)->twe_io_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TWE_IO_UNLOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_unlock(&(sc)->twe_io_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TWE_IO_ASSERT_LOCKED
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_assert(&(sc)->twe_io_lock, MA_OWNED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TWE_CONFIG_LOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|sx_xlock(&(sc)->twe_config_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TWE_CONFIG_UNLOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|sx_xunlock(&(sc)->twe_config_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TWE_CONFIG_ASSERT_LOCKED
+parameter_list|(
+name|sc
+parameter_list|)
+value|sx_assert(&(sc)->twe_config_lock, SA_XLOCKED)
+end_define
 
 begin_endif
 endif|#

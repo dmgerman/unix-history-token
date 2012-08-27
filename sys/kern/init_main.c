@@ -1948,6 +1948,7 @@ name|p_nice
 operator|=
 name|NZERO
 expr_stmt|;
+comment|/* pid_max cannot be greater than PID_MAX */
 name|td
 operator|->
 name|td_tid

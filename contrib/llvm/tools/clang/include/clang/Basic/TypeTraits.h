@@ -32,15 +32,19 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
-comment|//  This file defines enumerations for the type traits support.
+comment|/// \file
 end_comment
 
 begin_comment
-comment|//
+comment|/// \brief Defines enumerations for the type traits support.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -63,7 +67,7 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
-comment|/// UnaryTypeTrait - Names for the unary type traits.
+comment|/// \brief Names for the unary type traits.
 enum|enum
 name|UnaryTypeTrait
 block|{
@@ -152,7 +156,7 @@ block|,
 name|UTT_IsVolatile
 block|}
 enum|;
-comment|/// BinaryTypeTrait - Names for the binary type traits.
+comment|/// \brief Names for the binary type traits.
 enum|enum
 name|BinaryTypeTrait
 block|{
@@ -169,7 +173,7 @@ block|,
 name|BTT_IsTriviallyAssignable
 block|}
 enum|;
-comment|/// ArrayTypeTrait - Names for the array type traits.
+comment|/// \brief Names for the array type traits.
 enum|enum
 name|ArrayTypeTrait
 block|{
@@ -178,7 +182,7 @@ block|,
 name|ATT_ArrayExtent
 block|}
 enum|;
-comment|/// UnaryExprOrTypeTrait - Names for the "expression or type" traits.
+comment|/// \brief Names for the "expression or type" traits.
 enum|enum
 name|UnaryExprOrTypeTrait
 block|{

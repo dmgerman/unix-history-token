@@ -136,8 +136,6 @@ operator|=
 name|AcpiHwGetGpeRegisterBit
 argument_list|(
 name|GpeEventInfo
-argument_list|,
-name|GpeRegisterInfo
 argument_list|)
 expr_stmt|;
 comment|/* Clear the run bit up front */
@@ -795,6 +793,38 @@ name|EnableForWake
 operator|)
 condition|)
 block|{
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_INTERRUPTS
+operator|,
+literal|"Ignore disabled registers for GPE%02X-GPE%02X: "
+literal|"RunEnable=%02X, WakeEnable=%02X\n"
+operator|,
+name|GpeRegisterInfo
+operator|->
+name|BaseGpeNumber
+operator|,
+name|GpeRegisterInfo
+operator|->
+name|BaseGpeNumber
+operator|+
+operator|(
+name|ACPI_GPE_REGISTER_WIDTH
+operator|-
+literal|1
+operator|)
+operator|,
+name|GpeRegisterInfo
+operator|->
+name|EnableForRun
+operator|,
+name|GpeRegisterInfo
+operator|->
+name|EnableForWake
+operator|)
+argument_list|)
+expr_stmt|;
 continue|continue;
 block|}
 comment|/* Read the Status Register */
@@ -854,15 +884,34 @@ argument_list|(
 operator|(
 name|ACPI_DB_INTERRUPTS
 operator|,
-literal|"Read GPE Register at GPE%02X: Status=%02X, Enable=%02X\n"
+literal|"Read registers for GPE%02X-GPE%02X: Status=%02X, Enable=%02X, "
+literal|"RunEnable=%02X, WakeEnable=%02X\n"
 operator|,
 name|GpeRegisterInfo
 operator|->
 name|BaseGpeNumber
 operator|,
+name|GpeRegisterInfo
+operator|->
+name|BaseGpeNumber
+operator|+
+operator|(
+name|ACPI_GPE_REGISTER_WIDTH
+operator|-
+literal|1
+operator|)
+operator|,
 name|StatusReg
 operator|,
 name|EnableReg
+operator|,
+name|GpeRegisterInfo
+operator|->
+name|EnableForRun
+operator|,
+name|GpeRegisterInfo
+operator|->
+name|EnableForWake
 operator|)
 argument_list|)
 expr_stmt|;

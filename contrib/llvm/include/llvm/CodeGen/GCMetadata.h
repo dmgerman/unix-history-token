@@ -185,15 +185,15 @@ name|PointKind
 block|{
 name|Loop
 block|,
-comment|//< Instr is a loop (backwards branch).
+comment|///< Instr is a loop (backwards branch).
 name|Return
 block|,
-comment|//< Instr is a return instruction.
+comment|///< Instr is a return instruction.
 name|PreCall
 block|,
-comment|//< Instr is a call instruction.
+comment|///< Instr is a call instruction.
 name|PostCall
-comment|//< Instr is the return address of a call.
+comment|///< Instr is the return address of a call.
 block|}
 enum|;
 block|}
@@ -207,12 +207,12 @@ operator|::
 name|PointKind
 name|Kind
 expr_stmt|;
-comment|//< The kind of the safe point.
+comment|///< The kind of the safe point.
 name|MCSymbol
 modifier|*
 name|Label
 decl_stmt|;
-comment|//< A label.
+comment|///< A label.
 name|DebugLoc
 name|Loc
 decl_stmt|;
@@ -250,17 +250,18 @@ block|{
 name|int
 name|Num
 decl_stmt|;
-comment|//< Usually a frame index.
+comment|///< Usually a frame index.
 name|int
 name|StackOffset
 decl_stmt|;
-comment|//< Offset from the stack pointer.
+comment|///< Offset from the stack pointer.
 specifier|const
 name|Constant
 modifier|*
 name|Metadata
 decl_stmt|;
-comment|//< Metadata straight from the call to llvm.gcroot.
+comment|///< Metadata straight from the call
+comment|///< to llvm.gcroot.
 name|GCRoot
 argument_list|(
 argument|int N

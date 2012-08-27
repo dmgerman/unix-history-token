@@ -97,6 +97,23 @@ comment|// Hard float.
 block|}
 enum|;
 block|}
+name|namespace
+name|FPOpFusion
+block|{
+enum|enum
+name|FPOpFusionMode
+block|{
+name|Fast
+block|,
+comment|// Enable fusion of FP ops wherever it's profitable.
+name|Standard
+block|,
+comment|// Only allow fusion of 'blessed' ops (currently just fmuladd).
+name|Strict
+comment|// Never fuse FP-ops.
+block|}
+enum|;
+block|}
 name|class
 name|TargetOptions
 block|{
@@ -121,11 +138,6 @@ name|false
 argument_list|)
 operator|,
 name|LessPreciseFPMADOption
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|NoExcessFPPrecision
 argument_list|(
 name|false
 argument_list|)
@@ -195,11 +207,6 @@ argument_list|(
 name|true
 argument_list|)
 operator|,
-name|DisableJumpTables
-argument_list|(
-name|false
-argument_list|)
-operator|,
 name|EnableFastISel
 argument_list|(
 name|false
@@ -215,6 +222,11 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
+name|UseInitArray
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|TrapFuncName
 argument_list|(
 literal|""
@@ -222,7 +234,14 @@ argument_list|)
 operator|,
 name|FloatABIType
 argument_list|(
-argument|FloatABI::Default
+name|FloatABI
+operator|::
+name|Default
+argument_list|)
+operator|,
+name|AllowFPOpFusion
+argument_list|(
+argument|FPOpFusion::Standard
 argument_list|)
 block|{}
 comment|/// PrintMachineCode - This flag is enabled when the -print-machineinstrs
@@ -277,17 +296,6 @@ name|LessPreciseFPMAD
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// NoExcessFPPrecision - This flag is enabled when the
-comment|/// -disable-excess-fp-precision flag is specified on the command line.
-comment|/// When this flag is off (the default), the code generator is allowed to
-comment|/// produce results that are "more precise" than IEEE allows.  This includes
-comment|/// use of FMA-like operations and use of the X86 FP registers without
-comment|/// rounding all over the place.
-name|unsigned
-name|NoExcessFPPrecision
-range|:
-literal|1
-decl_stmt|;
 comment|/// UnsafeFPMath - This flag is enabled when the
 comment|/// -enable-unsafe-fp-math flag is specified on the command line.  When
 comment|/// this flag is off (the default), the code generator is not allowed to
@@ -402,13 +410,6 @@ name|RealignStack
 range|:
 literal|1
 decl_stmt|;
-comment|/// DisableJumpTables - This flag indicates jump tables should not be
-comment|/// generated.
-name|unsigned
-name|DisableJumpTables
-range|:
-literal|1
-decl_stmt|;
 comment|/// EnableFastISel - This flag enables fast-path instruction selection
 comment|/// which trades away generated code quality in favor of reducing
 comment|/// compile time.
@@ -428,6 +429,13 @@ literal|1
 decl_stmt|;
 name|unsigned
 name|EnableSegmentedStacks
+range|:
+literal|1
+decl_stmt|;
+comment|/// UseInitArray - Use .init_array instead of .ctors for static
+comment|/// constructors.
+name|unsigned
+name|UseInitArray
 range|:
 literal|1
 decl_stmt|;
@@ -454,6 +462,27 @@ name|FloatABI
 operator|::
 name|ABIType
 name|FloatABIType
+expr_stmt|;
+comment|/// AllowFPOpFusion - This flag is set by the -fuse-fp-ops=xxx option.
+comment|/// This controls the creation of fused FP ops that store intermediate
+comment|/// results in higher precision than IEEE allows (E.g. FMAs).
+comment|///
+comment|/// Fast mode - allows formation of fused FP ops whenever they're
+comment|/// profitable.
+comment|/// Standard mode - allow fusion only for 'blessed' FP ops. At present the
+comment|/// only blessed op is the fmuladd intrinsic. In the future more blessed ops
+comment|/// may be added.
+comment|/// Strict mode - allow fusion only if/when it can be proven that the excess
+comment|/// precision won't effect the result.
+comment|///
+comment|/// Note: This option only controls formation of fused ops by the optimizers.
+comment|/// Fused operations that are explicitly specified (e.g. FMA via the
+comment|/// llvm.fma.* intrinsic) will always be honored, regardless of the value of
+comment|/// this option.
+name|FPOpFusion
+operator|::
+name|FPOpFusionMode
+name|AllowFPOpFusion
 expr_stmt|;
 block|}
 empty_stmt|;

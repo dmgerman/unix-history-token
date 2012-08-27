@@ -1340,7 +1340,7 @@ operator|.
 name|f_iosize
 argument_list|,
 operator|(
-literal|"cluster_rbuild: size %ld != filesize %jd\n"
+literal|"cluster_rbuild: size %ld != f_iosize %jd\n"
 operator|,
 name|size
 operator|,

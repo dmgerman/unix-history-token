@@ -533,6 +533,30 @@ operator|=
 name|ACPI_TYPE_ANY
 expr_stmt|;
 break|break;
+case|case
+name|ACPI_TYPE_METHOD
+case|:
+comment|/*              * Allow scope change to root during execution of module-level              * code. Root is typed METHOD during this time.              */
+if|if
+condition|(
+operator|(
+name|Node
+operator|==
+name|AcpiGbl_RootNode
+operator|)
+operator|&&
+operator|(
+name|WalkState
+operator|->
+name|ParseFlags
+operator|&
+name|ACPI_PARSE_MODULE_LEVEL
+operator|)
+condition|)
+block|{
+break|break;
+block|}
+comment|/*lint -fallthrough */
 default|default:
 comment|/* All other types are an error */
 name|ACPI_ERROR

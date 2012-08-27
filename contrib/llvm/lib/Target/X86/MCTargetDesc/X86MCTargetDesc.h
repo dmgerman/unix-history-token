@@ -306,6 +306,11 @@ modifier|&
 name|MCII
 parameter_list|,
 specifier|const
+name|MCRegisterInfo
+modifier|&
+name|MRI
+parameter_list|,
+specifier|const
 name|MCSubtargetInfo
 modifier|&
 name|STI

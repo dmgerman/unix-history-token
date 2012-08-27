@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/fdt/fdt_common.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/iicbus/iicbus.h>
 end_include
 
@@ -390,6 +396,9 @@ decl_stmt|;
 name|phandle_t
 name|child
 decl_stmt|;
+name|pcell_t
+name|paddr
+decl_stmt|;
 name|device_t
 name|childdev
 decl_stmt|;
@@ -472,11 +481,11 @@ argument_list|,
 literal|"i2c-address"
 argument_list|,
 operator|&
-name|addr
+name|paddr
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|addr
+name|paddr
 argument_list|)
 argument_list|)
 operator|==
@@ -492,11 +501,11 @@ argument_list|,
 literal|"reg"
 argument_list|,
 operator|&
-name|addr
+name|paddr
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|addr
+name|paddr
 argument_list|)
 argument_list|)
 operator|==
@@ -504,6 +513,13 @@ operator|-
 literal|1
 condition|)
 continue|continue;
+name|addr
+operator|=
+name|fdt32_to_cpu
+argument_list|(
+name|paddr
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Now set up the I2C and OFW bus layer devinfo and add it 		 * to the bus. 		 */
 name|dinfo
 operator|=

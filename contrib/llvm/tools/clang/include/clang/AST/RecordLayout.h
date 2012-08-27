@@ -62,18 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/DenseMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/AST/CharUnits.h"
 end_include
 
@@ -81,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|"clang/AST/DeclCXX.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/DenseMap.h"
 end_include
 
 begin_decl_stmt
@@ -109,6 +103,77 @@ comment|/// These objects are managed by ASTContext.
 name|class
 name|ASTRecordLayout
 block|{
+name|public
+label|:
+struct|struct
+name|VBaseInfo
+block|{
+comment|/// The offset to this virtual base in the complete-object layout
+comment|/// of this class.
+name|CharUnits
+name|VBaseOffset
+decl_stmt|;
+name|private
+label|:
+comment|/// Whether this virtual base requires a vtordisp field in the
+comment|/// Microsoft ABI.  These fields are required for certain operations
+comment|/// in constructors and destructors.
+name|bool
+name|HasVtorDisp
+decl_stmt|;
+name|public
+label|:
+name|bool
+name|hasVtorDisp
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasVtorDisp
+return|;
+block|}
+name|VBaseInfo
+argument_list|()
+operator|:
+name|HasVtorDisp
+argument_list|(
+argument|false
+argument_list|)
+block|{}
+name|VBaseInfo
+argument_list|(
+argument|CharUnits VBaseOffset
+argument_list|,
+argument|bool hasVtorDisp
+argument_list|)
+operator|:
+name|VBaseOffset
+argument_list|(
+name|VBaseOffset
+argument_list|)
+operator|,
+name|HasVtorDisp
+argument_list|(
+argument|hasVtorDisp
+argument_list|)
+block|{}
+block|}
+struct|;
+typedef|typedef
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|CXXRecordDecl
+operator|*
+operator|,
+name|VBaseInfo
+operator|>
+name|VBaseOffsetsMapTy
+expr_stmt|;
+name|private
+label|:
 comment|/// Size - Size of record in characters.
 name|CharUnits
 name|Size
@@ -117,14 +182,14 @@ comment|/// DataSize - Size of record in characters without tail padding.
 name|CharUnits
 name|DataSize
 decl_stmt|;
+comment|// Alignment - Alignment of record in characters.
+name|CharUnits
+name|Alignment
+decl_stmt|;
 comment|/// FieldOffsets - Array of field offsets in bits.
 name|uint64_t
 modifier|*
 name|FieldOffsets
-decl_stmt|;
-comment|// Alignment - Alignment of record in characters.
-name|CharUnits
-name|Alignment
 decl_stmt|;
 comment|// FieldCount - Number of fields.
 name|unsigned
@@ -150,14 +215,17 @@ comment|/// any empty subobjects.
 name|CharUnits
 name|SizeOfLargestEmptySubobject
 decl_stmt|;
-comment|/// VFPtrOffset - Virtual function table offset (Microsoft-only).
-name|CharUnits
-name|VFPtrOffset
-decl_stmt|;
 comment|/// VBPtrOffset - Virtual base table offset (Microsoft-only).
 name|CharUnits
 name|VBPtrOffset
 decl_stmt|;
+comment|/// HasOwnVFPtr - Does this class provide a virtual function table
+comment|/// (vtable in Itanium, vftbl in Microsoft) that is independent from
+comment|/// its base classes?
+name|bool
+name|HasOwnVFPtr
+decl_stmt|;
+comment|// TODO: stash this somewhere more efficient
 comment|/// PrimaryBase - The primary base info for this record.
 name|llvm
 operator|::
@@ -192,7 +260,7 @@ name|BaseOffsetsMapTy
 name|BaseOffsets
 decl_stmt|;
 comment|/// VBaseOffsets - Contains a map from vbase classes to their offset.
-name|BaseOffsetsMapTy
+name|VBaseOffsetsMapTy
 name|VBaseOffsets
 decl_stmt|;
 block|}
@@ -237,7 +305,7 @@ argument|CharUnits size
 argument_list|,
 argument|CharUnits alignment
 argument_list|,
-argument|CharUnits vfptroffset
+argument|bool hasOwnVFPtr
 argument_list|,
 argument|CharUnits vbptroffset
 argument_list|,
@@ -259,7 +327,7 @@ argument|bool IsPrimaryBaseVirtual
 argument_list|,
 argument|const BaseOffsetsMapTy& BaseOffsets
 argument_list|,
-argument|const BaseOffsetsMapTy& VBaseOffsets
+argument|const VBaseOffsetsMapTy& VBaseOffsets
 argument_list|)
 empty_stmt|;
 operator|~
@@ -528,108 +596,8 @@ name|VBaseOffsets
 index|[
 name|VBase
 index|]
-return|;
-block|}
-comment|/// getBaseClassOffsetInBits - Get the offset, in bits, for the given
-comment|/// base class.
-name|uint64_t
-name|getBaseClassOffsetInBits
-argument_list|(
-specifier|const
-name|CXXRecordDecl
-operator|*
-name|Base
-argument_list|)
-decl|const
-block|{
-name|assert
-argument_list|(
-name|CXXInfo
-operator|&&
-literal|"Record layout does not have C++ specific info!"
-argument_list|)
-expr_stmt|;
-name|assert
-argument_list|(
-name|CXXInfo
-operator|->
-name|BaseOffsets
 operator|.
-name|count
-argument_list|(
-name|Base
-argument_list|)
-operator|&&
-literal|"Did not find base!"
-argument_list|)
-expr_stmt|;
-return|return
-name|getBaseClassOffset
-argument_list|(
-name|Base
-argument_list|)
-operator|.
-name|getQuantity
-argument_list|()
-operator|*
-name|Base
-operator|->
-name|getASTContext
-argument_list|()
-operator|.
-name|getCharWidth
-argument_list|()
-return|;
-block|}
-comment|/// getVBaseClassOffsetInBits - Get the offset, in bits, for the given
-comment|/// base class.
-name|uint64_t
-name|getVBaseClassOffsetInBits
-argument_list|(
-specifier|const
-name|CXXRecordDecl
-operator|*
-name|VBase
-argument_list|)
-decl|const
-block|{
-name|assert
-argument_list|(
-name|CXXInfo
-operator|&&
-literal|"Record layout does not have C++ specific info!"
-argument_list|)
-expr_stmt|;
-name|assert
-argument_list|(
-name|CXXInfo
-operator|->
-name|VBaseOffsets
-operator|.
-name|count
-argument_list|(
-name|VBase
-argument_list|)
-operator|&&
-literal|"Did not find base!"
-argument_list|)
-expr_stmt|;
-return|return
-name|getVBaseClassOffset
-argument_list|(
-name|VBase
-argument_list|)
-operator|.
-name|getQuantity
-argument_list|()
-operator|*
-name|VBase
-operator|->
-name|getASTContext
-argument_list|()
-operator|.
-name|getCharWidth
-argument_list|()
+name|VBaseOffset
 return|;
 block|}
 name|CharUnits
@@ -650,10 +618,15 @@ operator|->
 name|SizeOfLargestEmptySubobject
 return|;
 block|}
-comment|/// getVFPtrOffset - Get the offset for virtual function table pointer.
-comment|/// This is only meaningful with the Microsoft ABI.
-name|CharUnits
-name|getVFPtrOffset
+comment|/// hasOwnVFPtr - Does this class provide its own virtual-function
+comment|/// table pointer, rather than inheriting one from a primary base
+comment|/// class?  If so, it is at offset zero.
+comment|///
+comment|/// This implies that the ABI has no primary base class, meaning
+comment|/// that it has no base classes that are suitable under the conditions
+comment|/// of the ABI.
+name|bool
+name|hasOwnVFPtr
 argument_list|()
 specifier|const
 block|{
@@ -667,7 +640,7 @@ block|;
 return|return
 name|CXXInfo
 operator|->
-name|VFPtrOffset
+name|HasOwnVFPtr
 return|;
 block|}
 comment|/// getVBPtrOffset - Get the offset for virtual base table pointer.
@@ -688,6 +661,26 @@ return|return
 name|CXXInfo
 operator|->
 name|VBPtrOffset
+return|;
+block|}
+specifier|const
+name|VBaseOffsetsMapTy
+operator|&
+name|getVBaseOffsetsMap
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|CXXInfo
+operator|&&
+literal|"Record layout does not have C++ specific info!"
+argument_list|)
+block|;
+return|return
+name|CXXInfo
+operator|->
+name|VBaseOffsets
 return|;
 block|}
 block|}

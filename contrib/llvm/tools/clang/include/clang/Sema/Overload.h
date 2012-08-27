@@ -1878,9 +1878,17 @@ comment|/// template argument deduction.
 struct|struct
 name|DeductionFailureInfo
 block|{
-comment|// A Sema::TemplateDeductionResult.
+comment|/// A Sema::TemplateDeductionResult.
 name|unsigned
 name|Result
+range|:
+literal|8
+decl_stmt|;
+comment|/// \brief Indicates whether a diagnostic is stored in Diagnostic.
+name|unsigned
+name|HasDiagnostic
+range|:
+literal|1
 decl_stmt|;
 comment|/// \brief Opaque pointer containing additional data about
 comment|/// this deduction failure.
@@ -1888,6 +1896,31 @@ name|void
 modifier|*
 name|Data
 decl_stmt|;
+comment|/// \brief A diagnostic indicating why deduction failed.
+union|union
+block|{
+name|void
+modifier|*
+name|Align
+decl_stmt|;
+name|char
+name|Diagnostic
+index|[
+sizeof|sizeof
+argument_list|(
+name|PartialDiagnosticAt
+argument_list|)
+index|]
+decl_stmt|;
+block|}
+union|;
+comment|/// \brief Retrieve the diagnostic which caused this deduction failure,
+comment|/// if any.
+name|PartialDiagnosticAt
+modifier|*
+name|getSFINAEDiagnostic
+parameter_list|()
+function_decl|;
 comment|/// \brief Retrieve the template parameter this deduction failure
 comment|/// refers to, if any.
 name|TemplateParameter
@@ -2149,58 +2182,9 @@ operator|~
 name|OverloadCandidateSet
 argument_list|()
 block|{
-for|for
-control|(
-name|iterator
-name|i
-init|=
-name|begin
+name|clear
 argument_list|()
-init|,
-name|e
-init|=
-name|end
-argument_list|()
-init|;
-name|i
-operator|!=
-name|e
-condition|;
-operator|++
-name|i
-control|)
-for|for
-control|(
-name|unsigned
-name|ii
-init|=
-literal|0
-init|,
-name|ie
-init|=
-name|i
-operator|->
-name|NumConversions
-init|;
-name|ii
-operator|!=
-name|ie
-condition|;
-operator|++
-name|ii
-control|)
-name|i
-operator|->
-name|Conversions
-index|[
-name|ii
-index|]
-operator|.
-operator|~
-name|ImplicitConversionSequence
-argument_list|()
-expr_stmt|;
-block|}
+block|; }
 name|SourceLocation
 name|getLocation
 argument_list|()

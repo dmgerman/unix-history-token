@@ -88,11 +88,6 @@ range|:
 name|public
 name|TargetFrameLowering
 block|{
-specifier|const
-name|XCoreSubtarget
-operator|&
-name|STI
-block|;
 name|public
 operator|:
 name|XCoreFrameLowering
@@ -160,13 +155,6 @@ argument_list|(
 argument|MachineFunction&MF
 argument_list|,
 argument|RegScavenger *RS = NULL
-argument_list|)
-specifier|const
-block|;
-name|void
-name|processFunctionBeforeFrameFinalized
-argument_list|(
-argument|MachineFunction&MF
 argument_list|)
 specifier|const
 block|;

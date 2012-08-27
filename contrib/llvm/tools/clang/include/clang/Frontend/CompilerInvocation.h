@@ -168,10 +168,13 @@ name|class
 name|ArgList
 decl_stmt|;
 block|}
-comment|/// CompilerInvocation - Fill out Opts based on the options given in Args.
+comment|/// \brief Fill out Opts based on the options given in Args.
+comment|///
 comment|/// Args must have been created from the OptTable returned by
-comment|/// createCC1OptTable(). When errors are encountered, return false and,
-comment|/// if Diags is non-null, report the error(s).
+comment|/// createCC1OptTable().
+comment|///
+comment|/// When errors are encountered, return false and, if Diags is non-null,
+comment|/// report the error(s).
 name|bool
 name|ParseDiagnosticArgs
 argument_list|(
@@ -251,8 +254,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// CompilerInvocation - Helper class for holding the data necessary to invoke
-comment|/// the compiler.
+comment|/// \brief Helper class for holding the data necessary to invoke the compiler.
 comment|///
 comment|/// This class is designed to represent an abstract "invocation" of the
 comment|/// compiler, including data such as the include paths, the code generation
@@ -290,11 +292,11 @@ comment|/// Options controlling the frontend itself.
 name|FrontendOptions
 name|FrontendOpts
 block|;
-comment|/// Options controlling the #include directive.
+comment|/// Options controlling the \#include directive.
 name|HeaderSearchOptions
 name|HeaderSearchOpts
 block|;
-comment|/// Options controlling the preprocessor (aside from #include handling).
+comment|/// Options controlling the preprocessor (aside from \#include handling).
 name|PreprocessorOptions
 name|PreprocessorOpts
 block|;
@@ -313,10 +315,10 @@ argument_list|()
 block|{}
 comment|/// @name Utility Methods
 comment|/// @{
-comment|/// CreateFromArgs - Create a compiler invocation from a list of input
-comment|/// options. Returns true on success.
+comment|/// \brief Create a compiler invocation from a list of input options.
+comment|/// \returns true on success.
 comment|///
-comment|/// \param Res [out] - The resulting invocation.
+comment|/// \param [out] Res - The resulting invocation.
 comment|/// \param ArgBegin - The first element in the argument vector.
 comment|/// \param ArgEnd - The last element in the argument vector.
 comment|/// \param Diags - The diagnostic engine to use for errors.
@@ -347,7 +349,7 @@ operator|&
 name|Diags
 argument_list|)
 block|;
-comment|/// GetBuiltinIncludePath - Get the directory where the compiler headers
+comment|/// \brief Get the directory where the compiler headers
 comment|/// reside, relative to the compiler binary (found by the passed in
 comment|/// arguments).
 comment|///
@@ -371,51 +373,19 @@ operator|*
 name|MainAddr
 argument_list|)
 block|;
-comment|/// toArgs - Convert the CompilerInvocation to a list of strings suitable for
+comment|/// \brief Convert the CompilerInvocation to a list of strings suitable for
 comment|/// passing to CreateFromArgs.
 name|void
 name|toArgs
 argument_list|(
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|string
-operator|>
-operator|&
-name|Res
+argument|std::vector<std::string>&Res
 argument_list|)
+specifier|const
 block|;
-comment|/// setLangDefaults - Set language defaults for the given input language and
-comment|/// language standard in this CompilerInvocation.
-comment|///
-comment|/// \param IK - The input language.
-comment|/// \param LangStd - The input language standard.
-name|void
-name|setLangDefaults
-argument_list|(
-argument|InputKind IK
-argument_list|,
-argument|LangStandard::Kind LangStd = LangStandard::lang_unspecified
-argument_list|)
-block|{
-name|setLangDefaults
-argument_list|(
-operator|*
-name|getLangOpts
-argument_list|()
-argument_list|,
-name|IK
-argument_list|,
-name|LangStd
-argument_list|)
-block|;   }
-comment|/// setLangDefaults - Set language defaults for the given input language and
+comment|/// \brief Set language defaults for the given input language and
 comment|/// language standard in the given LangOptions object.
 comment|///
-comment|/// \param LangOpts - The LangOptions object to set up.
+comment|/// \param Opts - The LangOptions object to set up.
 comment|/// \param IK - The input language.
 comment|/// \param LangStd - The input language standard.
 specifier|static

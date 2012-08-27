@@ -641,6 +641,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|EXT2F_COMPAT_HTREE
+value|0x0020
+end_define
+
+begin_define
+define|#
+directive|define
 name|EXT2F_ROCOMPAT_SPARSESUPER
 value|0x0001
 end_define

@@ -85,7 +85,7 @@ begin_struct
 struct|struct
 name|trussinfo
 block|{
-name|int
+name|pid_t
 name|pid
 decl_stmt|;
 name|int

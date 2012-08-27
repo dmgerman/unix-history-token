@@ -133,6 +133,11 @@ name|MachineConstantPool
 operator|*
 name|MCP
 block|;
+comment|/// InConstantPool - Maintain state when emitting a sequence of constant
+comment|/// pool entries so we can properly mark them as data regions.
+name|bool
+name|InConstantPool
+block|;
 name|public
 operator|:
 name|explicit
@@ -161,7 +166,12 @@ argument_list|)
 block|,
 name|MCP
 argument_list|(
-argument|NULL
+name|NULL
+argument_list|)
+block|,
+name|InConstantPool
+argument_list|(
+argument|false
 argument_list|)
 block|{
 name|Subtarget
@@ -273,6 +283,11 @@ name|EmitConstantPool
 argument_list|()
 block|{}
 comment|// we emit constant pools customly!
+name|virtual
+name|void
+name|EmitFunctionBodyEnd
+argument_list|()
+block|;
 name|virtual
 name|void
 name|EmitFunctionEntryLabel

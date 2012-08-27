@@ -344,7 +344,7 @@ parameter_list|)
 function_decl|;
 comment|/// \brief Retrieve a module with the given name.
 comment|///
-comment|/// \param The name of the module to look up.
+comment|/// \param Name The name of the module to look up.
 comment|///
 comment|/// \returns The named module, if known; otherwise, returns null.
 name|Module
@@ -358,7 +358,7 @@ function_decl|;
 comment|/// \brief Retrieve a module with the given name using lexical name lookup,
 comment|/// starting at the given context.
 comment|///
-comment|/// \param The name of the module to look up.
+comment|/// \param Name The name of the module to look up.
 comment|///
 comment|/// \param Context The module context, from which we will perform lexical
 comment|/// name lookup.
@@ -379,7 +379,7 @@ function_decl|;
 comment|/// \brief Retrieve a module with the given name within the given context,
 comment|/// using direct (qualified) name lookup.
 comment|///
-comment|/// \param The name of the module to look up.
+comment|/// \param Name The name of the module to look up.
 comment|///
 comment|/// \param Context The module for which we will look for a submodule. If
 comment|/// null, we will look for a top-level module.

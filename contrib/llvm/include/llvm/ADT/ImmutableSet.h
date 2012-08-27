@@ -3628,10 +3628,11 @@ return|;
 block|}
 end_expr_stmt
 
-begin_function
+begin_expr_stmt
 name|uintptr_t
 name|getVisitState
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 name|assert
 argument_list|(
@@ -3641,7 +3642,7 @@ operator|.
 name|empty
 argument_list|()
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|stack
 operator|.
@@ -3651,7 +3652,7 @@ operator|&
 name|Flags
 return|;
 block|}
-end_function
+end_expr_stmt
 
 begin_expr_stmt
 name|bool

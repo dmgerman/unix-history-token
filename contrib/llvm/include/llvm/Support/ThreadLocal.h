@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/DataTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cassert>
 end_include
 
@@ -83,10 +89,30 @@ comment|// YOU SHOULD NEVER USE THIS DIRECTLY.
 name|class
 name|ThreadLocalImpl
 block|{
-name|void
-modifier|*
+typedef|typedef
+name|uint64_t
+name|ThreadLocalDataTy
+typedef|;
+comment|/// \brief Platform-specific thread local data.
+comment|///
+comment|/// This is embedded in the class and we avoid malloc'ing/free'ing it,
+comment|/// to make this class more safe for use along with CrashRecoveryContext.
+union|union
+block|{
+name|char
 name|data
+index|[
+sizeof|sizeof
+argument_list|(
+name|ThreadLocalDataTy
+argument_list|)
+index|]
 decl_stmt|;
+name|ThreadLocalDataTy
+name|align_data
+decl_stmt|;
+block|}
+union|;
 name|public
 label|:
 name|ThreadLocalImpl

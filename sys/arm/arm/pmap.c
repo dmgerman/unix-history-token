@@ -122,6 +122,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm_param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/uma.h>
 end_include
 
@@ -183,12 +189,6 @@ begin_include
 include|#
 directive|include
 file|<machine/md_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/vmparam.h>
 end_include
 
 begin_include
@@ -12205,13 +12205,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pg
-operator|!=
-name|NULL
-condition|)
-block|{
-if|if
-condition|(
 operator|!
 operator|(
 name|pg
@@ -12237,6 +12230,12 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|f
+operator|&
+name|PVF_WRITE
+condition|)
 name|vm_page_dirty
 argument_list|(
 name|pg
@@ -12247,14 +12246,6 @@ else|else
 name|f
 operator|=
 literal|0
-expr_stmt|;
-block|}
-else|else
-name|f
-operator|=
-name|PVF_REF
-operator||
-name|PVF_EXEC
 expr_stmt|;
 if|if
 condition|(

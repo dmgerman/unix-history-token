@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cassert>
 end_include
 
@@ -1070,6 +1076,38 @@ name|npos
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// find_last_not_of - Find the last character in the string that is not
+comment|/// \arg C, or npos if not found.
+name|size_type
+name|find_last_not_of
+argument_list|(
+name|char
+name|C
+argument_list|,
+name|size_t
+name|From
+operator|=
+name|npos
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// find_last_not_of - Find the last character in the string that is not in
+comment|/// \arg Chars, or npos if not found.
+comment|///
+comment|/// Note: O(size() + Chars.size())
+name|size_type
+name|find_last_not_of
+argument_list|(
+name|StringRef
+name|Chars
+argument_list|,
+name|size_t
+name|From
+operator|=
+name|npos
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// @}
 comment|/// @name Helpful Algorithms
 comment|/// @{
@@ -2053,15 +2091,125 @@ end_return
 
 begin_comment
 unit|}
+comment|/// ltrim - Return string with consecutive characters in \arg Chars starting
+end_comment
+
+begin_comment
+comment|/// from the left removed.
+end_comment
+
+begin_macro
+unit|StringRef
+name|ltrim
+argument_list|(
+argument|StringRef Chars =
+literal|" \t\n\v\f\r"
+argument_list|)
+end_macro
+
+begin_expr_stmt
+specifier|const
+block|{
+return|return
+name|drop_front
+argument_list|(
+name|std
+operator|::
+name|min
+argument_list|(
+name|Length
+argument_list|,
+name|find_first_not_of
+argument_list|(
+name|Chars
+argument_list|)
+argument_list|)
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// rtrim - Return string with consecutive characters in \arg Chars starting
+end_comment
+
+begin_comment
+comment|/// from the right removed.
+end_comment
+
+begin_decl_stmt
+name|StringRef
+name|rtrim
+argument_list|(
+name|StringRef
+name|Chars
+operator|=
+literal|" \t\n\v\f\r"
+argument_list|)
+decl|const
+block|{
+return|return
+name|drop_back
+argument_list|(
+name|Length
+operator|-
+name|std
+operator|::
+name|min
+argument_list|(
+name|Length
+argument_list|,
+name|find_last_not_of
+argument_list|(
+name|Chars
+argument_list|)
+operator|+
+literal|1
+argument_list|)
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// trim - Return string with consecutive characters in \arg Chars starting
+end_comment
+
+begin_comment
+comment|/// from the left and right removed.
+end_comment
+
+begin_decl_stmt
+name|StringRef
+name|trim
+argument_list|(
+name|StringRef
+name|Chars
+operator|=
+literal|" \t\n\v\f\r"
+argument_list|)
+decl|const
+block|{
+return|return
+name|ltrim
+argument_list|(
+name|Chars
+argument_list|)
+operator|.
+name|rtrim
+argument_list|(
+name|Chars
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
 comment|/// @}
 end_comment
 
-begin_empty_stmt
-unit|}
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
+unit|};
 comment|/// @name StringRef Comparison Operators
 end_comment
 

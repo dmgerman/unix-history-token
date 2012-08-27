@@ -1637,6 +1637,13 @@ expr_stmt|;
 comment|/* No hardware MRR support */
 name|pCap
 operator|->
+name|halNumTxMaps
+operator|=
+literal|1
+expr_stmt|;
+comment|/* Single TX ptr per descr */
+name|pCap
+operator|->
 name|halTotalQueues
 operator|=
 name|HAL_NUM_TX_QUEUES

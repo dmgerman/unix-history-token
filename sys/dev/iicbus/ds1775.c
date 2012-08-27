@@ -674,6 +674,9 @@ decl_stmt|;
 name|struct
 name|sysctl_oid
 modifier|*
+name|oid
+decl_stmt|,
+modifier|*
 name|sensroot_oid
 decl_stmt|;
 name|struct
@@ -697,11 +700,6 @@ name|sysctl_desc
 index|[
 literal|40
 index|]
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|units
 decl_stmt|;
 name|device_t
 name|dev
@@ -734,9 +732,27 @@ argument_list|)
 expr_stmt|;
 name|sensroot_oid
 operator|=
+name|SYSCTL_ADD_NODE
+argument_list|(
+name|ctx
+argument_list|,
+name|SYSCTL_CHILDREN
+argument_list|(
 name|device_get_sysctl_tree
 argument_list|(
 name|dev
+argument_list|)
+argument_list|)
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"sensor"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+literal|0
+argument_list|,
+literal|"DS1775 Sensor Information"
 argument_list|)
 expr_stmt|;
 if|if
@@ -793,10 +809,6 @@ operator|.
 name|name
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|units
-operator|=
-literal|"C"
 expr_stmt|;
 if|if
 condition|(
@@ -970,7 +982,7 @@ name|sprintf
 argument_list|(
 name|sysctl_desc
 argument_list|,
-literal|"%s (%s)"
+literal|"%s %s"
 argument_list|,
 name|sc
 operator|->
@@ -978,10 +990,12 @@ name|sc_sensor
 operator|.
 name|name
 argument_list|,
-name|units
+literal|"(C)"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_PROC
+name|oid
+operator|=
+name|SYSCTL_ADD_NODE
 argument_list|(
 name|ctx
 argument_list|,
@@ -993,6 +1007,26 @@ argument_list|,
 name|OID_AUTO
 argument_list|,
 name|sysctl_name
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+literal|0
+argument_list|,
+literal|"Sensor Information"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_PROC
+argument_list|(
+name|ctx
+argument_list|,
+name|SYSCTL_CHILDREN
+argument_list|(
+name|oid
+argument_list|)
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"temp"
 argument_list|,
 name|CTLTYPE_INT
 operator||

@@ -564,6 +564,11 @@ operator|=
 name|ar5212GetDfsThresh
 block|,
 operator|.
+name|ah_getDfsDefaultThresh
+operator|=
+name|ar5212GetDfsDefaultThresh
+block|,
+operator|.
 name|ah_procRadarEvent
 operator|=
 name|ar5212ProcessRadarEvent
@@ -3975,6 +3980,13 @@ operator|=
 literal|4
 expr_stmt|;
 comment|/* Hardware supports 4 MRR */
+name|pCap
+operator|->
+name|halNumTxMaps
+operator|=
+literal|1
+expr_stmt|;
+comment|/* Single TX ptr per descr */
 name|pCap
 operator|->
 name|halVEOLSupport

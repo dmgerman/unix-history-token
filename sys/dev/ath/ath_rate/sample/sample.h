@@ -204,7 +204,7 @@ directive|define
 name|SAMPLE_MAXRATES
 value|64
 comment|/* NB: corresponds to hal info[32] */
-name|uint32_t
+name|uint64_t
 name|ratemask
 decl_stmt|;
 comment|/* bit mask of valid rate indices */

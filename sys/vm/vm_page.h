@@ -842,12 +842,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_param.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/atomic.h>
 end_include
 
@@ -1466,6 +1460,16 @@ end_function_decl
 begin_function_decl
 name|void
 name|vm_page_putfake
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vm_page_readahead_finish
 parameter_list|(
 name|vm_page_t
 name|m

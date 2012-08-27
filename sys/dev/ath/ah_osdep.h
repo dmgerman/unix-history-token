@@ -82,6 +82,17 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/*  * Although the underlying hardware may support 64 bit DMA, the  * current Atheros hardware only supports 32 bit addressing.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|uint32_t
+name|HAL_DMA_ADDR
+typedef|;
+end_typedef
+
+begin_comment
 comment|/*  * Linker set writearounds for chip and RF backend registration.  */
 end_comment
 

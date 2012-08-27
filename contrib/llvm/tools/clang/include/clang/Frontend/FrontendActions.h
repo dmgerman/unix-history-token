@@ -150,6 +150,25 @@ argument_list|)
 block|; }
 block|;
 name|class
+name|ASTDeclListAction
+operator|:
+name|public
+name|ASTFrontendAction
+block|{
+name|protected
+operator|:
+name|virtual
+name|ASTConsumer
+operator|*
+name|CreateASTConsumer
+argument_list|(
+argument|CompilerInstance&CI
+argument_list|,
+argument|StringRef InFile
+argument_list|)
+block|; }
+block|;
+name|class
 name|ASTDumpXMLAction
 operator|:
 name|public

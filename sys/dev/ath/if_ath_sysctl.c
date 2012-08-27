@@ -1670,7 +1670,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"HW TXQ %d: axq_depth=%d, axq_aggr_depth=%d\n"
+literal|"HW TXQ %d: axq_depth=%d, axq_aggr_depth=%d, axq_fifo_depth=%d\n"
 argument_list|,
 name|i
 argument_list|,
@@ -1691,6 +1691,15 @@ name|i
 index|]
 operator|.
 name|axq_aggr_depth
+argument_list|,
+name|sc
+operator|->
+name|sc_txq
+index|[
+name|i
+index|]
+operator|.
+name|axq_fifo_depth
 argument_list|)
 expr_stmt|;
 block|}

@@ -142,6 +142,10 @@ comment|/// being passed on the stack.
 name|unsigned
 name|ArgumentStackSize
 block|;
+comment|/// NumLocalDynamics - Number of local-dynamic TLS accesses.
+name|unsigned
+name|NumLocalDynamics
+block|;
 name|public
 operator|:
 name|X86MachineFunctionInfo
@@ -203,6 +207,11 @@ literal|0
 argument_list|)
 block|,
 name|ArgumentStackSize
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|NumLocalDynamics
 argument_list|(
 literal|0
 argument_list|)
@@ -271,6 +280,11 @@ literal|0
 argument_list|)
 block|,
 name|ArgumentStackSize
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|NumLocalDynamics
 argument_list|(
 literal|0
 argument_list|)
@@ -502,6 +516,22 @@ block|{
 name|ArgumentStackSize
 operator|=
 name|size
+block|; }
+name|unsigned
+name|getNumLocalDynamicTLSAccesses
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NumLocalDynamics
+return|;
+block|}
+name|void
+name|incNumLocalDynamicTLSAccesses
+argument_list|()
+block|{
+operator|++
+name|NumLocalDynamics
 block|; }
 expr|}
 block|;  }

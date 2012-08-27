@@ -340,7 +340,7 @@ name|char
 name|igb_driver_version
 index|[]
 init|=
-literal|"version - 2.3.4"
+literal|"version - 2.3.5"
 decl_stmt|;
 end_decl_stmt
 
@@ -4857,6 +4857,33 @@ name|txr
 argument_list|)
 condition|)
 block|{
+name|struct
+name|mbuf
+modifier|*
+name|pm
+init|=
+name|NULL
+decl_stmt|;
+comment|/* 		** Try to queue first to avoid 		** out-of-order delivery, but  		** settle for it if that fails 		*/
+if|if
+condition|(
+name|m
+operator|&&
+name|drbr_enqueue
+argument_list|(
+name|ifp
+argument_list|,
+name|txr
+operator|->
+name|br
+argument_list|,
+name|m
+argument_list|)
+condition|)
+name|pm
+operator|=
+name|m
+expr_stmt|;
 name|err
 operator|=
 name|igb_mq_start_locked
@@ -4865,7 +4892,7 @@ name|ifp
 argument_list|,
 name|txr
 argument_list|,
-name|m
+name|pm
 argument_list|)
 expr_stmt|;
 name|IGB_TX_UNLOCK
@@ -4975,7 +5002,7 @@ operator|(
 name|txr
 operator|->
 name|queue_status
-operator|==
+operator|&
 name|IGB_QUEUE_DEPLETED
 operator|)
 operator|||
@@ -7205,10 +7232,6 @@ directive|ifdef
 name|DEVICE_POLLING
 end_ifdef
 
-begin_comment
-comment|/*********************************************************************  *  *  Legacy polling routine : if using this code you MUST be sure that  *  multiqueue is not defined, ie, set igb_num_queues to 1.  *  *********************************************************************/
-end_comment
-
 begin_if
 if|#
 directive|if
@@ -7270,19 +7293,11 @@ name|struct
 name|igb_queue
 modifier|*
 name|que
-init|=
-name|adapter
-operator|->
-name|queues
 decl_stmt|;
 name|struct
 name|tx_ring
 modifier|*
 name|txr
-init|=
-name|adapter
-operator|->
-name|tx_rings
 decl_stmt|;
 name|u32
 name|reg_icr
@@ -7381,6 +7396,39 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
+for|for
+control|(
+name|int
+name|i
+init|=
+literal|0
+init|;
+name|i
+operator|<
+name|adapter
+operator|->
+name|num_queues
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|que
+operator|=
+operator|&
+name|adapter
+operator|->
+name|queues
+index|[
+name|i
+index|]
+expr_stmt|;
+name|txr
+operator|=
+name|que
+operator|->
+name|txr
+expr_stmt|;
 name|igb_rxeof
 argument_list|(
 name|que
@@ -7467,6 +7515,7 @@ argument_list|(
 name|txr
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|POLL_RETURN_COUNT
 argument_list|(
@@ -23325,7 +23374,7 @@ name|NULL
 condition|)
 operator|*
 name|done
-operator|=
+operator|+=
 name|rxdone
 expr_stmt|;
 name|IGB_RX_UNLOCK

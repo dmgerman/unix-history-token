@@ -615,20 +615,6 @@ literal|"Alert Standard Format table"
 block|}
 block|,
 block|{
-name|ACPI_SIG_BOOT
-block|,
-name|AcpiDmTableInfoBoot
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-name|TemplateBoot
-block|,
-literal|"Simple Boot Flag Table"
-block|}
-block|,
-block|{
 name|ACPI_SIG_BERT
 block|,
 name|AcpiDmTableInfoBert
@@ -657,6 +643,20 @@ literal|"Boot Graphics Resource Table"
 block|}
 block|,
 block|{
+name|ACPI_SIG_BOOT
+block|,
+name|AcpiDmTableInfoBoot
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|TemplateBoot
+block|,
+literal|"Simple Boot Flag Table"
+block|}
+block|,
+block|{
 name|ACPI_SIG_CPEP
 block|,
 name|NULL
@@ -668,6 +668,34 @@ block|,
 name|TemplateCpep
 block|,
 literal|"Corrected Platform Error Polling table"
+block|}
+block|,
+block|{
+name|ACPI_SIG_CSRT
+block|,
+name|NULL
+block|,
+name|AcpiDmDumpCsrt
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|"Core System Resource Table"
+block|}
+block|,
+block|{
+name|ACPI_SIG_DBG2
+block|,
+name|NULL
+block|,
+name|AcpiDmDumpDbg2
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|"Debug Port table type 2"
 block|}
 block|,
 block|{
@@ -751,7 +779,7 @@ name|DtCompileFadt
 block|,
 name|TemplateFadt
 block|,
-literal|"Fixed ACPI Description Table"
+literal|"Fixed ACPI Description Table (FADT)"
 block|}
 block|,
 block|{
@@ -835,7 +863,7 @@ name|DtCompileMadt
 block|,
 name|TemplateMadt
 block|,
-literal|"Multiple APIC Description Table"
+literal|"Multiple APIC Description Table (MADT)"
 block|}
 block|,
 block|{

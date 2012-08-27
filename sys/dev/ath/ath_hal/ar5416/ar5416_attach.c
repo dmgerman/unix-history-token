@@ -758,6 +758,12 @@ name|ar5416GetDfsThresh
 expr_stmt|;
 name|ah
 operator|->
+name|ah_getDfsDefaultThresh
+operator|=
+name|ar5416GetDfsDefaultThresh
+expr_stmt|;
+name|ah
+operator|->
 name|ah_procRadarEvent
 operator|=
 name|ar5416ProcessRadarEvent
@@ -4943,6 +4949,13 @@ operator|=
 literal|4
 expr_stmt|;
 comment|/* Hardware supports 4 MRR */
+name|pCap
+operator|->
+name|halNumTxMaps
+operator|=
+literal|1
+expr_stmt|;
+comment|/* Single TX ptr per descr */
 name|pCap
 operator|->
 name|halVEOLSupport

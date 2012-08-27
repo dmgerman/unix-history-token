@@ -338,11 +338,11 @@ decl_stmt|;
 name|uint32_t
 name|length
 decl_stmt|;
-comment|/* Queue lenght, in packets */
+comment|/* Queue length, in packets */
 name|uint32_t
 name|len_bytes
 decl_stmt|;
-comment|/* Queue lenght, in bytes */
+comment|/* Queue length, in bytes */
 name|uint32_t
 name|drops
 decl_stmt|;

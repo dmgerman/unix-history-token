@@ -158,7 +158,7 @@ init|=
 literal|0x100
 block|,
 comment|/// AtCatchScope - This is a scope that corresponds to the Objective-C
-comment|/// @catch statement.
+comment|/// \@catch statement.
 name|AtCatchScope
 init|=
 literal|0x200
@@ -789,7 +789,7 @@ operator|::
 name|FunctionPrototypeScope
 return|;
 block|}
-comment|/// isAtCatchScope - Return true if this scope is @catch.
+comment|/// isAtCatchScope - Return true if this scope is \@catch.
 name|bool
 name|isAtCatchScope
 argument_list|()

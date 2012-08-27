@@ -639,6 +639,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|MPC750CL
+value|0x7000
+end_define
+
+begin_comment
+comment|/* Nintendo Wii's Broadway */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MPC604ev
 value|0x0009
 end_define

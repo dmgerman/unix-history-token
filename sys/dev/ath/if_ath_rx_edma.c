@@ -1798,7 +1798,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|//	device_printf(sc->sc_dev, "%s: called; bf=%p\n", __func__, bf);
 name|m
 operator|=
 name|m_getm
@@ -2948,17 +2947,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|,
-literal|"%s: called\n"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
 name|ATH_RX_LOCK
 argument_list|(
 name|sc

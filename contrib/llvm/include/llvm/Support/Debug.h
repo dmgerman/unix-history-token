@@ -84,7 +84,7 @@ comment|// When compiling without assertions, the -debug-* options and all code 
 end_comment
 
 begin_comment
-comment|// DEBUG() statements disappears, so it does not effect the runtime of the code.
+comment|// DEBUG() statements disappears, so it does not affect the runtime of the code.
 end_comment
 
 begin_comment
@@ -149,12 +149,12 @@ modifier|*
 name|Type
 parameter_list|)
 function_decl|;
-comment|/// SetCurrentDebugType - Set the current debug type, as if the -debug-only=X
+comment|/// setCurrentDebugType - Set the current debug type, as if the -debug-only=X
 comment|/// option were specified.  Note that DebugFlag also needs to be set to true for
 comment|/// debug output to be produced.
 comment|///
 name|void
-name|SetCurrentDebugType
+name|setCurrentDebugType
 parameter_list|(
 specifier|const
 name|char
@@ -192,7 +192,7 @@ parameter_list|)
 value|(false)
 define|#
 directive|define
-name|SetCurrentDebugType
+name|setCurrentDebugType
 parameter_list|(
 name|X
 parameter_list|)

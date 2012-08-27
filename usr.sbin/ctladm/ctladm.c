@@ -5225,6 +5225,8 @@ parameter_list|)
 block|{
 name|int
 name|retval
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|ctl_error_desc

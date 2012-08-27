@@ -379,6 +379,11 @@ directive|define
 name|TWE_STATE_CTLR_BUSY
 value|(1<<5)
 comment|/* controller cmd queue full */
+define|#
+directive|define
+name|TWE_STATE_DETACHING
+value|(1<<6)
+comment|/* controller is being shut down */
 name|int
 name|twe_host_id
 decl_stmt|;
@@ -819,7 +824,7 @@ parameter_list|,
 name|index
 parameter_list|)
 define|\
-value|static __inline void							\ twe_initq_ ## name (struct twe_softc *sc)				\ {									\     TAILQ_INIT(&sc->twe_ ## name);					\     TWEQ_INIT(sc, index);						\ }									\ static __inline void							\ twe_enqueue_ ## name (struct twe_request *tr)				\ {									\     int		s;							\ 									\     s = splbio();							\     TAILQ_INSERT_TAIL(&tr->tr_sc->twe_ ## name, tr, tr_link);		\     TWEQ_ADD(tr->tr_sc, index);						\     splx(s);								\ }									\ static __inline void							\ twe_requeue_ ## name (struct twe_request *tr)				\ {									\     int		s;							\ 									\     s = splbio();							\     TAILQ_INSERT_HEAD(&tr->tr_sc->twe_ ## name, tr, tr_link);		\     TWEQ_ADD(tr->tr_sc, index);						\     splx(s);								\ }									\ static __inline struct twe_request *					\ twe_dequeue_ ## name (struct twe_softc *sc)				\ {									\     struct twe_request	*tr;						\     int			s;						\ 									\     s = splbio();							\     if ((tr = TAILQ_FIRST(&sc->twe_ ## name)) != NULL) {		\ 	TAILQ_REMOVE(&sc->twe_ ## name, tr, tr_link);			\ 	TWEQ_REMOVE(sc, index);						\     }									\     splx(s);								\     return(tr);								\ }									\ static __inline void							\ twe_remove_ ## name (struct twe_request *tr)				\ {									\     int			s;						\ 									\     s = splbio();							\     TAILQ_REMOVE(&tr->tr_sc->twe_ ## name, tr, tr_link);		\     TWEQ_REMOVE(tr->tr_sc, index);					\     splx(s);								\ }
+value|static __inline void							\ twe_initq_ ## name (struct twe_softc *sc)				\ {									\     TAILQ_INIT(&sc->twe_ ## name);					\     TWEQ_INIT(sc, index);						\ }									\ static __inline void							\ twe_enqueue_ ## name (struct twe_request *tr)				\ {									\     TAILQ_INSERT_TAIL(&tr->tr_sc->twe_ ## name, tr, tr_link);		\     TWEQ_ADD(tr->tr_sc, index);						\ }									\ static __inline void							\ twe_requeue_ ## name (struct twe_request *tr)				\ {									\     TAILQ_INSERT_HEAD(&tr->tr_sc->twe_ ## name, tr, tr_link);		\     TWEQ_ADD(tr->tr_sc, index);						\ }									\ static __inline struct twe_request *					\ twe_dequeue_ ## name (struct twe_softc *sc)				\ {									\     struct twe_request	*tr;						\ 									\     if ((tr = TAILQ_FIRST(&sc->twe_ ## name)) != NULL) {		\ 	TAILQ_REMOVE(&sc->twe_ ## name, tr, tr_link);			\ 	TWEQ_REMOVE(sc, index);						\     }									\     return(tr);								\ }									\ static __inline void							\ twe_remove_ ## name (struct twe_request *tr)				\ {									\     TAILQ_REMOVE(&tr->tr_sc->twe_ ## name, tr, tr_link);		\     TWEQ_REMOVE(tr->tr_sc, index);					\ }
 end_define
 
 begin_macro
@@ -907,14 +912,6 @@ modifier|*
 name|bp
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
 name|TWE_BIO_QINSERT
 argument_list|(
 name|sc
@@ -929,11 +926,6 @@ argument_list|(
 name|sc
 argument_list|,
 name|TWEQ_BIO
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 block|}
@@ -952,18 +944,10 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|;
 name|twe_bio
 modifier|*
 name|bp
 decl_stmt|;
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -997,11 +981,6 @@ name|TWEQ_BIO
 argument_list|)
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|bp

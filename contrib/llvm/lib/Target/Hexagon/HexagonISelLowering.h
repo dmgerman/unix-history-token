@@ -107,6 +107,8 @@ block|,
 name|CONST32_GP
 block|,
 comment|// For marking data present in GP.
+name|FCONST32
+block|,
 name|SETCC
 block|,
 name|ADJDYNALLOC
@@ -155,6 +157,8 @@ name|BARRIER
 block|,
 comment|// Memory barrier.
 name|WrapperJT
+block|,
+name|WrapperCP
 block|,
 name|TC_RETURN
 block|}
@@ -326,27 +330,7 @@ block|;
 name|SDValue
 name|LowerCall
 argument_list|(
-argument|SDValue Chain
-argument_list|,
-argument|SDValue Callee
-argument_list|,
-argument|CallingConv::ID CallConv
-argument_list|,
-argument|bool isVarArg
-argument_list|,
-argument|bool doesNotRet
-argument_list|,
-argument|bool&isTailCall
-argument_list|,
-argument|const SmallVectorImpl<ISD::OutputArg>&Outs
-argument_list|,
-argument|const SmallVectorImpl<SDValue>&OutVals
-argument_list|,
-argument|const SmallVectorImpl<ISD::InputArg>&Ins
-argument_list|,
-argument|DebugLoc dl
-argument_list|,
-argument|SelectionDAG&DAG
+argument|TargetLowering::CallLoweringInfo&CLI
 argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
@@ -461,6 +445,15 @@ argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|;
+name|SDValue
+name|LowerConstantPool
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
 name|virtual
 name|EVT
 name|getSetCCResultType
@@ -534,6 +527,16 @@ argument_list|(
 argument|const AddrMode&AM
 argument_list|,
 argument|Type *Ty
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|isFPImmLegal
+argument_list|(
+argument|const APFloat&Imm
+argument_list|,
+argument|EVT VT
 argument_list|)
 specifier|const
 block|;

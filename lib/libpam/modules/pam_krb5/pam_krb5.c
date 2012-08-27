@@ -269,6 +269,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PAM_OPT_NO_USER_CHECK
+value|"no_user_check"
+end_define
+
+begin_define
+define|#
+directive|define
 name|PAM_LOG_KRB5_ERR
 parameter_list|(
 name|ctx
@@ -825,6 +832,17 @@ literal|"PAM_USER Redone"
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|openpam_get_option
+argument_list|(
+name|pamh
+argument_list|,
+name|PAM_OPT_NO_USER_CHECK
+argument_list|)
+condition|)
+block|{
 name|pwd
 operator|=
 name|getpwnam
@@ -846,6 +864,7 @@ expr_stmt|;
 goto|goto
 name|cleanup2
 goto|;
+block|}
 block|}
 name|PAM_LOG
 argument_list|(
@@ -1368,13 +1387,6 @@ argument_list|,
 name|princ
 argument_list|)
 expr_stmt|;
-name|PAM_LOG
-argument_list|(
-literal|"Done cleanup2"
-argument_list|)
-expr_stmt|;
-name|cleanup3
-label|:
 if|if
 condition|(
 name|princ_name
@@ -1384,6 +1396,13 @@ argument_list|(
 name|princ_name
 argument_list|)
 expr_stmt|;
+name|PAM_LOG
+argument_list|(
+literal|"Done cleanup2"
+argument_list|)
+expr_stmt|;
+name|cleanup3
+label|:
 name|krb5_free_context
 argument_list|(
 name|pam_context
@@ -3402,13 +3421,6 @@ argument_list|,
 name|princ
 argument_list|)
 expr_stmt|;
-name|PAM_LOG
-argument_list|(
-literal|"Done cleanup2"
-argument_list|)
-expr_stmt|;
-name|cleanup3
-label|:
 if|if
 condition|(
 name|princ_name
@@ -3418,6 +3430,13 @@ argument_list|(
 name|princ_name
 argument_list|)
 expr_stmt|;
+name|PAM_LOG
+argument_list|(
+literal|"Done cleanup2"
+argument_list|)
+expr_stmt|;
+name|cleanup3
+label|:
 name|krb5_free_context
 argument_list|(
 name|pam_context

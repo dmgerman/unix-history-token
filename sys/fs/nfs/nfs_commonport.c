@@ -81,12 +81,6 @@ directive|include
 file|<vm/uma.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<vm/uma_int.h>
-end_include
-
 begin_decl_stmt
 specifier|extern
 name|int

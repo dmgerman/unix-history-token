@@ -213,6 +213,14 @@ operator|*
 name|getNextFriend
 argument_list|()
 block|{
+if|if
+condition|(
+operator|!
+name|NextFriend
+operator|.
+name|isOffset
+argument_list|()
+condition|)
 return|return
 name|cast_or_null
 operator|<
@@ -223,17 +231,31 @@ name|NextFriend
 operator|.
 name|get
 argument_list|(
-name|getASTContext
-argument_list|()
-operator|.
-name|getExternalSource
-argument_list|()
+literal|0
 argument_list|)
 operator|)
 return|;
+return|return
+name|getNextFriendSlowCase
+argument_list|()
+return|;
 block|}
+end_decl_stmt
+
+begin_function_decl
+name|FriendDecl
+modifier|*
+name|getNextFriendSlowCase
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_label
 name|public
 label|:
+end_label
+
+begin_function_decl
 specifier|static
 name|FriendDecl
 modifier|*
@@ -257,6 +279,9 @@ name|SourceLocation
 name|FriendL
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|static
 name|FriendDecl
 modifier|*
@@ -270,10 +295,25 @@ name|unsigned
 name|ID
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// If this friend declaration names an (untemplated but possibly
+end_comment
+
+begin_comment
 comment|/// dependent) type, return the type; otherwise return null.  This
+end_comment
+
+begin_comment
 comment|/// is used for elaborated-type-specifiers and, in C++0x, for
+end_comment
+
+begin_comment
 comment|/// arbitrary friend type declarations.
+end_comment
+
+begin_expr_stmt
 name|TypeSourceInfo
 operator|*
 name|getFriendType
@@ -292,8 +332,17 @@ operator|(
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// If this friend declaration doesn't name a type, return the inner
+end_comment
+
+begin_comment
 comment|/// declaration.
+end_comment
+
+begin_expr_stmt
 name|NamedDecl
 operator|*
 name|getFriendDecl
@@ -312,7 +361,13 @@ operator|(
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// Retrieves the location of the 'friend' keyword.
+end_comment
+
+begin_expr_stmt
 name|SourceLocation
 name|getFriendLoc
 argument_list|()
@@ -322,7 +377,13 @@ return|return
 name|FriendLoc
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// Retrieves the source range for the friend declaration.
+end_comment
+
+begin_expr_stmt
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -388,7 +449,13 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// Determines if this friend kind is unsupported.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isUnsupportedFriend
 argument_list|()
@@ -398,6 +465,9 @@ return|return
 name|UnsupportedFriend
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setUnsupportedFriend
 parameter_list|(
@@ -410,7 +480,13 @@ operator|=
 name|Unsupported
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|// Implement isa/cast/dyncast/etc.
+end_comment
+
+begin_function
 specifier|static
 name|bool
 name|classof
@@ -431,6 +507,9 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|classof
@@ -445,6 +524,9 @@ return|return
 name|true
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|classofKind
@@ -461,22 +543,24 @@ operator|::
 name|Friend
 return|;
 block|}
+end_function
+
+begin_decl_stmt
 name|friend
 name|class
 name|ASTDeclReader
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|friend
 name|class
 name|ASTDeclWriter
 decl_stmt|;
-block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
+unit|};
 comment|/// An iterator over the friend declarations of a class.
 end_comment
 

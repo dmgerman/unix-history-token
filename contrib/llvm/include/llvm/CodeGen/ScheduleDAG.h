@@ -381,15 +381,12 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+comment|/// Return true if the specified SDep is equivalent except for latency.
 name|bool
-name|operator
-operator|==
-operator|(
-specifier|const
-name|SDep
-operator|&
-name|Other
-operator|)
+name|overlaps
+argument_list|(
+argument|const SDep&Other
+argument_list|)
 specifier|const
 block|{
 if|if
@@ -399,12 +396,6 @@ operator|!=
 name|Other
 operator|.
 name|Dep
-operator|||
-name|Latency
-operator|!=
-name|Other
-operator|.
-name|Latency
 condition|)
 return|return
 name|false
@@ -489,6 +480,30 @@ argument_list|(
 literal|"Invalid dependency kind!"
 argument_list|)
 expr_stmt|;
+block|}
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|SDep
+operator|&
+name|Other
+operator|)
+specifier|const
+block|{
+return|return
+name|overlaps
+argument_list|(
+name|Other
+argument_list|)
+operator|&&
+name|Latency
+operator|==
+name|Other
+operator|.
+name|Latency
+return|;
 block|}
 name|bool
 name|operator
@@ -1045,6 +1060,14 @@ decl_stmt|;
 comment|// Node height.
 name|public
 label|:
+name|unsigned
+name|TopReadyCycle
+decl_stmt|;
+comment|// Cycle relative to start when node is ready.
+name|unsigned
+name|BotReadyCycle
+decl_stmt|;
+comment|// Cycle relative to end when node is ready.
 specifier|const
 name|TargetRegisterClass
 modifier|*
@@ -1208,6 +1231,16 @@ literal|0
 argument_list|)
 operator|,
 name|Height
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|TopReadyCycle
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|BotReadyCycle
 argument_list|(
 literal|0
 argument_list|)
@@ -1378,6 +1411,16 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
+name|TopReadyCycle
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|BotReadyCycle
+argument_list|(
+literal|0
+argument_list|)
+operator|,
 name|CopyDstRC
 argument_list|(
 name|NULL
@@ -1536,6 +1579,16 @@ literal|0
 argument_list|)
 operator|,
 name|Height
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|TopReadyCycle
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|BotReadyCycle
 argument_list|(
 literal|0
 argument_list|)
@@ -2572,24 +2625,6 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|/// ComputeOperandLatency - Override dependence edge latency using
-comment|/// operand use/def information
-comment|///
-name|virtual
-name|void
-name|computeOperandLatency
-argument_list|(
-name|SUnit
-operator|*
-argument_list|,
-name|SUnit
-operator|*
-argument_list|,
-name|SDep
-operator|&
-argument_list|)
-decl|const
-block|{ }
 comment|/// ForceUnitLatencies - Return true if all scheduling edges should be given
 comment|/// a latency value of one.  The default is to return false; schedulers may
 comment|/// override this as needed.

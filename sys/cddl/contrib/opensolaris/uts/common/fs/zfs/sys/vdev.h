@@ -821,8 +821,8 @@ name|vdev_t
 modifier|*
 name|vd
 parameter_list|,
-name|int
-name|label
+name|uint64_t
+name|txg
 parameter_list|)
 function_decl|;
 specifier|extern

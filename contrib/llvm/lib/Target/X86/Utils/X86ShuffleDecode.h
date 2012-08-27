@@ -146,7 +146,7 @@ decl_stmt|;
 name|void
 name|DecodePSHUFMask
 argument_list|(
-name|EVT
+name|MVT
 name|VT
 argument_list|,
 name|unsigned
@@ -163,6 +163,9 @@ decl_stmt|;
 name|void
 name|DecodePSHUFHWMask
 argument_list|(
+name|MVT
+name|VT
+argument_list|,
 name|unsigned
 name|Imm
 argument_list|,
@@ -177,6 +180,8 @@ decl_stmt|;
 name|void
 name|DecodePSHUFLWMask
 argument_list|(
+name|MVT
+argument_list|,
 name|unsigned
 name|Imm
 argument_list|,
@@ -194,7 +199,7 @@ comment|/// widths.
 name|void
 name|DecodeSHUFPMask
 argument_list|(
-name|EVT
+name|MVT
 name|VT
 argument_list|,
 name|unsigned
@@ -214,7 +219,7 @@ comment|/// different datatypes and vector widths.
 name|void
 name|DecodeUNPCKHMask
 argument_list|(
-name|EVT
+name|MVT
 name|VT
 argument_list|,
 name|SmallVectorImpl
@@ -231,7 +236,7 @@ comment|/// different datatypes and vector widths.
 name|void
 name|DecodeUNPCKLMask
 argument_list|(
-name|EVT
+name|MVT
 name|VT
 argument_list|,
 name|SmallVectorImpl
@@ -245,9 +250,25 @@ decl_stmt|;
 name|void
 name|DecodeVPERM2X128Mask
 argument_list|(
-name|EVT
+name|MVT
 name|VT
 argument_list|,
+name|unsigned
+name|Imm
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|int
+operator|>
+operator|&
+name|ShuffleMask
+argument_list|)
+decl_stmt|;
+comment|/// DecodeVPERMMask - this decodes the shuffle masks for VPERMQ/VPERMPD.
+comment|/// No VT provided since it only works on 256-bit, 4 element vectors.
+name|void
+name|DecodeVPERMMask
+argument_list|(
 name|unsigned
 name|Imm
 argument_list|,

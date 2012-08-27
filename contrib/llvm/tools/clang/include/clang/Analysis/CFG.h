@@ -102,12 +102,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/BitVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/AST/Stmt.h"
 end_include
 
@@ -121,6 +115,12 @@ begin_include
 include|#
 directive|include
 file|"clang/Basic/SourceLocation.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<bitset>
 end_include
 
 begin_include
@@ -1157,6 +1157,12 @@ operator|::
 name|const_iterator
 name|const_reverse_iterator
 expr_stmt|;
+typedef|typedef
+name|ImplTy
+operator|::
+name|const_reference
+name|const_reference
+expr_stmt|;
 name|void
 name|push_back
 argument_list|(
@@ -1201,7 +1207,7 @@ name|C
 argument_list|)
 return|;
 block|}
-name|CFGElement
+name|const_reference
 name|front
 argument_list|()
 specifier|const
@@ -1213,7 +1219,7 @@ name|back
 argument_list|()
 return|;
 block|}
-name|CFGElement
+name|const_reference
 name|back
 argument_list|()
 specifier|const
@@ -1513,13 +1519,16 @@ operator|::
 name|iterator
 name|iterator
 expr_stmt|;
+end_decl_stmt
+
+begin_typedef
 typedef|typedef
 name|ElementList
 operator|::
 name|const_iterator
 name|const_iterator
 expr_stmt|;
-end_decl_stmt
+end_typedef
 
 begin_typedef
 typedef|typedef
@@ -3013,9 +3022,14 @@ comment|//===-------------------------------------------------------------------
 name|class
 name|BuildOptions
 block|{
-name|llvm
+name|std
 operator|::
-name|BitVector
+name|bitset
+operator|<
+name|Stmt
+operator|::
+name|lastStmtConstant
+operator|>
 name|alwaysAddMask
 expr_stmt|;
 name|public
@@ -3117,15 +3131,6 @@ block|}
 name|BuildOptions
 argument_list|()
 operator|:
-name|alwaysAddMask
-argument_list|(
-name|Stmt
-operator|::
-name|lastStmtConstant
-argument_list|,
-name|false
-argument_list|)
-operator|,
 name|forcedBlkExprs
 argument_list|(
 literal|0

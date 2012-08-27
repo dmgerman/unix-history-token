@@ -192,12 +192,13 @@ range|:
 literal|1
 decl_stmt|;
 comment|// Is this a global constant?
-name|bool
-name|isThreadLocalSymbol
+name|unsigned
+name|threadLocalMode
 range|:
-literal|1
+literal|3
 decl_stmt|;
-comment|// Is this symbol "Thread Local"?
+comment|// Is this symbol "Thread Local",
+comment|// if so, what is the desired model?
 name|public
 label|:
 comment|// allocate space for exactly one operand
@@ -222,6 +223,22 @@ literal|1
 argument_list|)
 return|;
 block|}
+enum|enum
+name|ThreadLocalMode
+block|{
+name|NotThreadLocal
+init|=
+literal|0
+block|,
+name|GeneralDynamicTLSModel
+block|,
+name|LocalDynamicTLSModel
+block|,
+name|InitialExecTLSModel
+block|,
+name|LocalExecTLSModel
+block|}
+enum|;
 comment|/// GlobalVariable ctor - If a parent module is specified, the global is
 comment|/// automatically inserted into the end of the specified modules global list.
 name|GlobalVariable
@@ -238,7 +255,7 @@ argument_list|,
 argument|const Twine&Name =
 literal|""
 argument_list|,
-argument|bool ThreadLocal = false
+argument|ThreadLocalMode = NotThreadLocal
 argument_list|,
 argument|unsigned AddressSpace =
 literal|0
@@ -258,12 +275,13 @@ argument|LinkageTypes Linkage
 argument_list|,
 argument|Constant *Initializer
 argument_list|,
-argument|const Twine&Name
+argument|const Twine&Name =
+literal|""
 argument_list|,
 argument|GlobalVariable *InsertBefore =
 literal|0
 argument_list|,
-argument|bool ThreadLocal = false
+argument|ThreadLocalMode = NotThreadLocal
 argument_list|,
 argument|unsigned AddressSpace =
 literal|0
@@ -472,7 +490,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|isThreadLocalSymbol
+name|threadLocalMode
+operator|!=
+name|NotThreadLocal
 return|;
 block|}
 name|void
@@ -482,10 +502,41 @@ name|bool
 name|Val
 parameter_list|)
 block|{
-name|isThreadLocalSymbol
+name|threadLocalMode
+operator|=
+name|Val
+condition|?
+name|GeneralDynamicTLSModel
+else|:
+name|NotThreadLocal
+expr_stmt|;
+block|}
+name|void
+name|setThreadLocalMode
+parameter_list|(
+name|ThreadLocalMode
+name|Val
+parameter_list|)
+block|{
+name|threadLocalMode
 operator|=
 name|Val
 expr_stmt|;
+block|}
+name|ThreadLocalMode
+name|getThreadLocalMode
+argument_list|()
+specifier|const
+block|{
+return|return
+name|static_cast
+operator|<
+name|ThreadLocalMode
+operator|>
+operator|(
+name|threadLocalMode
+operator|)
+return|;
 block|}
 comment|/// copyAttributesFrom - copy all additional attributes (those not needed to
 comment|/// create a GlobalVariable) from the GlobalVariable Src to this one.

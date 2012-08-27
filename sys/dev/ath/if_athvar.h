@@ -583,6 +583,10 @@ name|uint16_t
 name|bf_flags
 decl_stmt|;
 comment|/* status flags (below) */
+name|uint16_t
+name|bf_descid
+decl_stmt|;
+comment|/* 16 bit descriptor ID */
 name|struct
 name|ath_desc
 modifier|*
@@ -952,6 +956,10 @@ name|axq_aggr_depth
 decl_stmt|;
 comment|/* how many aggregates are queued */
 name|u_int
+name|axq_fifo_depth
+decl_stmt|;
+comment|/* depth of FIFO frames */
+name|u_int
 name|axq_intrcnt
 decl_stmt|;
 comment|/* interrupt count */
@@ -1073,7 +1081,19 @@ name|ATH_TXQ_LOCK_ASSERT
 parameter_list|(
 name|_tq
 parameter_list|)
+define|\
 value|mtx_assert(&(_tq)->axq_lock, MA_OWNED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TXQ_UNLOCK_ASSERT
+parameter_list|(
+name|_tq
+parameter_list|)
+define|\
+value|mtx_assert(&(_tq)->axq_lock, MA_NOTOWNED)
 end_define
 
 begin_define
@@ -1139,6 +1159,16 @@ parameter_list|,
 name|_field
 parameter_list|)
 value|do { \ 	TAILQ_REMOVE(&(_tq)->axq_q, _elm, _field); \ 	(_tq)->axq_depth--; \ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TXQ_FIRST
+parameter_list|(
+name|_tq
+parameter_list|)
+value|TAILQ_FIRST(&(_tq)->axq_q)
 end_define
 
 begin_define
@@ -1525,7 +1555,7 @@ function_decl|;
 name|void
 function_decl|(
 modifier|*
-name|xmit_drainq
+name|xmit_drain
 function_decl|)
 parameter_list|(
 name|struct
@@ -1533,30 +1563,8 @@ name|ath_softc
 modifier|*
 name|sc
 parameter_list|,
-name|struct
-name|ath_txq
-modifier|*
-name|txq
-parameter_list|)
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|xmit_processq
-function_decl|)
-parameter_list|(
-name|struct
-name|ath_softc
-modifier|*
-name|sc
-parameter_list|,
-name|struct
-name|ath_txq
-modifier|*
-name|txq
-parameter_list|,
-name|int
-name|dosched
+name|ATH_RESET_TYPE
+name|reset_type
 parameter_list|)
 function_decl|;
 block|}
@@ -2177,6 +2185,9 @@ name|ath_descdma
 name|sc_txdma
 decl_stmt|;
 comment|/* TX descriptors */
+name|uint16_t
+name|sc_txbuf_descid
+decl_stmt|;
 name|ath_bufhead
 name|sc_txbuf
 decl_stmt|;
@@ -4846,7 +4857,13 @@ name|_ah
 parameter_list|,
 name|_ds
 parameter_list|,
+name|_b
+parameter_list|,
 name|_l
+parameter_list|,
+name|_did
+parameter_list|,
+name|_qid
 parameter_list|,
 name|_first
 parameter_list|,
@@ -4855,7 +4872,7 @@ parameter_list|,
 name|_ds0
 parameter_list|)
 define|\
-value|((*(_ah)->ah_fillTxDesc)((_ah), (_ds), (_l), (_first), (_last), (_ds0)))
+value|((*(_ah)->ah_fillTxDesc)((_ah), (_ds), (_b), (_l), (_did), (_qid), \ 		(_first), (_last), (_ds0)))
 end_define
 
 begin_define
@@ -5003,19 +5020,21 @@ name|_ah
 parameter_list|,
 name|_ds
 parameter_list|,
+name|_bl
+parameter_list|,
+name|_sl
+parameter_list|,
 name|_pktlen
 parameter_list|,
 name|_hdrlen
 parameter_list|,
 name|_type
-parameter_list|,
-name|_keyix
 parameter_list|, \
+name|_keyix
+parameter_list|,
 name|_cipher
 parameter_list|,
 name|_delims
-parameter_list|,
-name|_seglen
 parameter_list|,
 name|_first
 parameter_list|,
@@ -5024,7 +5043,7 @@ parameter_list|,
 name|_lastaggr
 parameter_list|)
 define|\
-value|((*(_ah)->ah_chainTxDesc)((_ah), (_ds), (_pktlen), (_hdrlen), \ 	(_type), (_keyix), (_cipher), (_delims), (_seglen), \ 	(_first), (_last), (_lastaggr)))
+value|((*(_ah)->ah_chainTxDesc)((_ah), (_ds), (_bl), (_sl), \ 	(_pktlen), (_hdrlen), (_type), (_keyix), (_cipher), (_delims), \ 	(_first), (_last), (_lastaggr)))
 end_define
 
 begin_define
@@ -5254,6 +5273,19 @@ name|_param
 parameter_list|)
 define|\
 value|((*(_ah)->ah_getDfsThresh)((_ah), (_param)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_getdfsdefaultthresh
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_param
+parameter_list|)
+define|\
+value|((*(_ah)->ah_getDfsDefaultThresh)((_ah), (_param)))
 end_define
 
 begin_define

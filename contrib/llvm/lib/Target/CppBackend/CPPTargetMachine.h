@@ -127,6 +127,10 @@ argument_list|,
 argument|CodeGenFileType FileType
 argument_list|,
 argument|bool DisableVerify
+argument_list|,
+argument|AnalysisID StartAfter
+argument_list|,
+argument|AnalysisID StopAfter
 argument_list|)
 block|;
 name|virtual

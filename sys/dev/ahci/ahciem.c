@@ -2323,6 +2323,30 @@ operator|=
 literal|64
 expr_stmt|;
 comment|/* Valid bytes. */
+name|buf
+index|[
+literal|2
+index|]
+operator|=
+literal|0x30
+expr_stmt|;
+comment|/* NAA Locally Assigned. */
+name|strncpy
+argument_list|(
+operator|&
+name|buf
+index|[
+literal|3
+index|]
+argument_list|,
+name|device_get_nameunit
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+literal|7
+argument_list|)
+expr_stmt|;
 name|strncpy
 argument_list|(
 operator|&

@@ -470,6 +470,10 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * The following is unused currently since we don't ever set the PLLA  * frequency of the device.  */
+end_comment
+
 begin_function
 specifier|static
 name|uint32_t
@@ -479,21 +483,33 @@ name|int
 name|freq
 parameter_list|)
 block|{
+name|uint32_t
+name|outa
+init|=
+literal|0
+decl_stmt|;
+comment|/* 	 * Set OUTA, per the data sheet.  See Table 40-15 titled 	 * PLLA Characteristics in the SAM9260 doc. 	 */
 if|if
 condition|(
 name|freq
 operator|>
-literal|195000000
+literal|155000000
 condition|)
+name|outa
+operator|=
+literal|2
+operator|<<
+literal|14
+expr_stmt|;
 return|return
 operator|(
-literal|0x20000000
+operator|(
+literal|1
+operator|<<
+literal|29
 operator|)
-return|;
-else|else
-return|return
-operator|(
-literal|0x20008000
+operator||
+name|outa
 operator|)
 return|;
 block|}
@@ -510,7 +526,9 @@ parameter_list|)
 block|{
 return|return
 operator|(
-literal|0x4000
+literal|1
+operator|<<
+literal|14
 operator|)
 return|;
 block|}
@@ -638,7 +656,7 @@ argument_list|(
 name|clk
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Fudge MAX pll in frequence down below 3.0 MHz to ensure 	 * PMC alogrithm choose the divisor that causes the input clock 	 * to be near the optimal 2 MHz per datasheet.  We know 	 * we are going to be using this for the USB clock at 96 MHz. 	 * Causes no extra frequency deviation for all recomended crystal 	 * values. 	 */
+comment|/* 	 * Fudge MAX pll in frequence down below 3.0 MHz to ensure 	 * PMC alogrithm choose the divisor that causes the input clock 	 * to be near the optimal 2 MHz per datasheet.  We know 	 * we are going to be using this for the USB clock at 96 MHz. 	 * Causes no extra frequency deviation for all recomended crystal 	 * values.  See Note 1, table 40-16 SAM9260 doc. 	 */
 name|clk
 operator|=
 name|at91_pmc_clock_ref

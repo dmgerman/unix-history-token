@@ -6552,12 +6552,14 @@ operator|+=
 name|len
 expr_stmt|;
 block|}
-comment|/* check double buffered transfers */
+comment|/* 		 * Check double buffered transfers. Only stream ID 		 * equal to zero is valid here! 		 */
 name|TAILQ_FOREACH
 argument_list|(
 argument|pipe_xfer
 argument_list|,
-argument|&xfer->endpoint->endpoint_q.head
+argument|&xfer->endpoint->endpoint_q[
+literal|0
+argument|].head
 argument_list|,
 argument|wait_entry
 argument_list|)

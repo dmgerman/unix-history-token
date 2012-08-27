@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- llvm/TableGen/TableGenBackend.h - Backend base class -----*- C++ -*-===//
+comment|//===- llvm/TableGen/TableGenBackend.h - Backend utilities ------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -36,11 +36,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// The TableGenBackend class is provided as a common interface for all TableGen
-end_comment
-
-begin_comment
-comment|// backends.  It provides useful services and an standardized interface.
+comment|// Useful utilities for TableGen backends.
 end_comment
 
 begin_comment
@@ -66,7 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/raw_ostream.h"
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_decl_stmt
@@ -74,56 +70,21 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|Record
-decl_stmt|;
-name|class
-name|RecordKeeper
-decl_stmt|;
-struct|struct
-name|TableGenBackend
-block|{
-name|virtual
-name|void
-name|anchor
-parameter_list|()
-function_decl|;
-name|virtual
-operator|~
-name|TableGenBackend
-argument_list|()
-block|{}
-comment|// run - All TableGen backends should implement the run method, which should
-comment|// be the main entry point.
-name|virtual
-name|void
-name|run
-argument_list|(
 name|raw_ostream
-operator|&
-name|OS
-argument_list|)
-operator|=
-literal|0
-expr_stmt|;
-name|public
-label|:
-comment|// Useful helper routines...
-comment|/// EmitSourceFileHeader - Output a LLVM style file header to the specified
-comment|/// ostream.
+decl_stmt|;
+comment|/// emitSourceFileHeader - Output a LLVM style file header to the specified
+comment|/// raw_ostream.
 name|void
-name|EmitSourceFileHeader
-argument_list|(
+name|emitSourceFileHeader
+parameter_list|(
 name|StringRef
 name|Desc
-argument_list|,
+parameter_list|,
 name|raw_ostream
-operator|&
+modifier|&
 name|OS
-argument_list|)
-decl|const
-decl_stmt|;
-block|}
-struct|;
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

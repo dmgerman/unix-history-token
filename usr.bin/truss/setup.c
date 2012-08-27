@@ -119,7 +119,7 @@ end_include
 
 begin_decl_stmt
 specifier|static
-name|int
+name|pid_t
 name|child_pid
 decl_stmt|;
 end_decl_stmt
@@ -138,7 +138,7 @@ name|command
 index|[]
 parameter_list|)
 block|{
-name|int
+name|pid_t
 name|pid
 decl_stmt|;
 name|int
@@ -254,7 +254,7 @@ begin_function
 name|int
 name|start_tracing
 parameter_list|(
-name|int
+name|pid_t
 name|pid
 parameter_list|)
 block|{

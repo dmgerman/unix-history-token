@@ -6571,7 +6571,7 @@ parameter_list|(
 name|bit
 parameter_list|)
 define|\
-value|do { \ 	if (optval) \ 		in6p->inp_flags |= (bit); \ 	else \ 		in6p->inp_flags&= ~(bit); \ } while (
+value|do { \ 	INP_WLOCK(in6p); \ 	if (optval) \ 		in6p->inp_flags |= (bit); \ 	else \ 		in6p->inp_flags&= ~(bit); \ 	INP_WUNLOCK(in6p); \ } while (
 comment|/*CONSTCOND*/
 value|0)
 define|#
@@ -6581,7 +6581,7 @@ parameter_list|(
 name|bit
 parameter_list|)
 define|\
-value|do { \ 	in6p->inp_flags |= IN6P_RFC2292; \ 	if (optval) \ 		in6p->inp_flags |= (bit); \ 	else \ 		in6p->inp_flags&= ~(bit); \ } while (
+value|do { \ 	INP_WLOCK(in6p); \ 	in6p->inp_flags |= IN6P_RFC2292; \ 	if (optval) \ 		in6p->inp_flags |= (bit); \ 	else \ 		in6p->inp_flags&= ~(bit); \ 	INP_WUNLOCK(in6p); \ } while (
 comment|/*CONSTCOND*/
 value|0)
 define|#
@@ -7379,6 +7379,11 @@ condition|(
 name|error
 condition|)
 break|break;
+name|INP_WLOCK
+argument_list|(
+name|in6p
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|optval
@@ -7451,6 +7456,11 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
+name|INP_WUNLOCK
+argument_list|(
+name|in6p
+argument_list|)
+expr_stmt|;
 break|break;
 ifdef|#
 directive|ifdef

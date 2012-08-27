@@ -76,7 +76,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* Define if timestamp information (e.g., __DATE___) is allowed */
+comment|/* Define if timestamp information (e.g., __DATE__) is allowed */
 end_comment
 
 begin_define
@@ -95,6 +95,17 @@ define|#
 directive|define
 name|GCC_INSTALL_PREFIX
 value|""
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `arc4random' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_ARC4RANDOM
+value|1
 end_define
 
 begin_comment
@@ -1769,6 +1780,14 @@ value|0
 end_define
 
 begin_comment
+comment|/* Host triple LLVM will be executed on */
+end_comment
+
+begin_comment
+comment|/* #undef LLVM_HOSTTRIPLE */
+end_comment
+
+begin_comment
 comment|/* Installation directory for include files */
 end_comment
 
@@ -2017,7 +2036,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_VERSION_MINOR
-value|1
+value|2
 end_define
 
 begin_comment
@@ -2121,7 +2140,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"LLVM 3.1"
+value|"LLVM 3.2svn"
 end_define
 
 begin_comment
@@ -2143,7 +2162,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"3.1"
+value|"3.2svn"
 end_define
 
 begin_comment

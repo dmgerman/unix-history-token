@@ -135,23 +135,16 @@ name|METHOD_NAME__SRS
 value|"_SRS"
 end_define
 
+begin_define
+define|#
+directive|define
+name|METHOD_NAME__PLD
+value|"_PLD"
+end_define
+
 begin_comment
 comment|/* Method names - these methods must appear at the namespace root */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|METHOD_PATHNAME__BFS
-value|"\\_BFS"
-end_define
-
-begin_define
-define|#
-directive|define
-name|METHOD_PATHNAME__GTS
-value|"\\_GTS"
-end_define
 
 begin_define
 define|#

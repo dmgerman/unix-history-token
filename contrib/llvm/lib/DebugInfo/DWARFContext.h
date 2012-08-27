@@ -258,6 +258,12 @@ name|getLineInfoForAddress
 parameter_list|(
 name|uint64_t
 name|address
+parameter_list|,
+name|DILineInfoSpecifier
+name|specifier
+init|=
+name|DILineInfoSpecifier
+argument_list|()
 parameter_list|)
 function_decl|;
 name|bool

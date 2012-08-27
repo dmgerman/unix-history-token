@@ -836,6 +836,10 @@ decl_stmt|,
 name|halIntrMitigation
 range|:
 literal|1
+decl_stmt|,
+name|hal49GhzSupport
+range|:
+literal|1
 decl_stmt|;
 name|uint32_t
 name|halWirelessModes
@@ -886,6 +890,9 @@ decl_stmt|;
 name|uint8_t
 name|halRxStreams
 decl_stmt|;
+name|HAL_MFP_OPT_T
+name|halMfpSupport
+decl_stmt|;
 name|int
 name|halNumTxMaps
 decl_stmt|;
@@ -917,6 +924,24 @@ struct_decl|struct
 name|regDomain
 struct_decl|;
 end_struct_decl
+
+begin_comment
+comment|/*  * Definitions for ah_flags in ath_hal_private  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AH_USE_EEPROM
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|AH_IS_HB63
+value|0x2
+end_define
 
 begin_comment
 comment|/*  * The ``private area'' follows immediately after the ``public area''  * in the data structure returned by ath_hal_attach.  Private data are  * used by device-independent code such as the regulatory domain support.  * In general, code within the HAL should never depend on data in the  * public area.  Instead any public data needed internally should be  * shadowed here.  *  * When declaring a device-specific ath_hal data structure this structure  * is assumed to at the front; e.g.  *  *	struct ath_hal_5212 {  *		struct ath_hal_private	ah_priv;  *		...  *	};  *  * It might be better to manage the method pointers in this structure  * using an indirect pointer to a read-only data structure but this would  * disallow class-style method overriding.  */
@@ -1171,10 +1196,18 @@ name|uint16_t
 name|ah_analog2GhzRev
 decl_stmt|;
 comment|/* 5GHz radio revision */
+name|uint32_t
+name|ah_flags
+decl_stmt|;
+comment|/* misc flags */
 name|uint8_t
 name|ah_ispcie
 decl_stmt|;
 comment|/* PCIE, special treatment */
+name|uint8_t
+name|ah_devType
+decl_stmt|;
+comment|/* card type - CB, PCI, PCIe */
 name|HAL_OPMODE
 name|ah_opmode
 decl_stmt|;
@@ -1492,6 +1525,41 @@ name|_mask
 parameter_list|)
 define|\
 value|(_ah)->ah_setInterrupts(_ah, _mask)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_isrfkillenabled
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_RFSILENT, 1, AH_NULL) == HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_enable_rfkill
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_v
+parameter_list|)
+define|\
+value|ath_hal_setcapability(_ah, HAL_CAP_RFSILENT, 1, _v, AH_NULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_hasrfkill_int
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_RFSILENT, 3, AH_NULL) == HAL_OK)
 end_define
 
 begin_define
@@ -2094,7 +2162,7 @@ parameter_list|,
 name|_v
 parameter_list|)
 define|\
-value|do { OS_REG_WRITE(_a, _r, (OS_REG_READ(_a, _r)&~ (_f)) | (((_v)<< _f##_S)& (_f))) ; OS_DELAY(100); } while (0)
+value|do { OS_REG_WRITE(_a, _r, (OS_REG_READ(_a, _r)&~ (_f)) | \ 	    (((_v)<< _f##_S)& (_f))) ; OS_DELAY(100); } while (0)
 end_define
 
 begin_define
