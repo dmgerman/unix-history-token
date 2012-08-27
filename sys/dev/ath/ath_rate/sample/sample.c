@@ -4683,7 +4683,7 @@ name|an
 operator|->
 name|an_node
 argument_list|,
-literal|"%s: size %d (%d bytes) %s rate/try %d %s/%d/%d nframes/nbad [%d/%d]"
+literal|"%s: size %d (%d bytes) %s rate/short/long %d %s/%d/%d nframes/nbad [%d/%d]"
 argument_list|,
 name|__func__
 argument_list|,
@@ -4825,7 +4825,7 @@ name|an
 operator|->
 name|an_node
 argument_list|,
-literal|"%s: size %d (%d bytes) finaltsidx %d tries %d %s rate/try [%d %s/%d %d %s/%d %d %s/%d %d %s/%d] nframes/nbad [%d/%d]"
+literal|"%s: size %d (%d bytes) finaltsidx %d short %d long %d %s rate/try [%d %s/%d %d %s/%d %d %s/%d %d %s/%d] nframes/nbad [%d/%d]"
 argument_list|,
 name|__func__
 argument_list|,
@@ -4840,6 +4840,8 @@ argument_list|,
 name|frame_size
 argument_list|,
 name|finalTSIdx
+argument_list|,
+name|short_tries
 argument_list|,
 name|long_tries
 argument_list|,
