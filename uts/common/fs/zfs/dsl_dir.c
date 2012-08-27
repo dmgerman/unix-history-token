@@ -5347,22 +5347,6 @@ operator|->
 name|dd_lock
 argument_list|)
 expr_stmt|;
-name|spa_history_log_internal_dd
-argument_list|(
-name|dd
-argument_list|,
-literal|"set quota"
-argument_list|,
-name|tx
-argument_list|,
-literal|"quota=%lld"
-argument_list|,
-operator|(
-name|longlong_t
-operator|)
-name|effective_value
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -5944,22 +5928,6 @@ argument_list|,
 name|value
 argument_list|,
 name|tx
-argument_list|)
-expr_stmt|;
-name|spa_history_log_internal_dd
-argument_list|(
-name|dd
-argument_list|,
-literal|"set reservation"
-argument_list|,
-name|tx
-argument_list|,
-literal|"reservation=%lld"
-argument_list|,
-operator|(
-name|longlong_t
-operator|)
-name|value
 argument_list|)
 expr_stmt|;
 block|}

@@ -115,6 +115,8 @@ name|spa_feature
 block|{
 name|SPA_FEATURE_ASYNC_DESTROY
 block|,
+name|SPA_FEATURE_EMPTY_BPOBJ
+block|,
 name|SPA_FEATURES
 block|}
 name|spa_feature_t

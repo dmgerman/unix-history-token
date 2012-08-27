@@ -1049,6 +1049,14 @@ modifier|*
 name|uncompp
 parameter_list|)
 function_decl|;
+name|boolean_t
+name|dsl_dataset_is_dirty
+parameter_list|(
+name|dsl_dataset_t
+modifier|*
+name|ds
+parameter_list|)
+function_decl|;
 name|int
 name|dsl_dsobj_to_dsname
 parameter_list|(

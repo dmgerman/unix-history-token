@@ -597,6 +597,23 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|zfeature_register
+argument_list|(
+name|SPA_FEATURE_EMPTY_BPOBJ
+argument_list|,
+literal|"com.delphix:empty_bpobj"
+argument_list|,
+literal|"empty_bpobj"
+argument_list|,
+literal|"Snapshots use less space."
+argument_list|,
+name|B_TRUE
+argument_list|,
+name|B_FALSE
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

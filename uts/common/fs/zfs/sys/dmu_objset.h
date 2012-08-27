@@ -564,14 +564,6 @@ name|uint64_t
 name|txg
 parameter_list|)
 function_decl|;
-name|boolean_t
-name|dmu_objset_is_dirty_anywhere
-parameter_list|(
-name|objset_t
-modifier|*
-name|os
-parameter_list|)
-function_decl|;
 name|objset_t
 modifier|*
 name|dmu_objset_create_impl

@@ -3171,7 +3171,7 @@ literal|"guid change"
 argument_list|,
 name|tx
 argument_list|,
-literal|"old=%lld new=%lld"
+literal|"old=%llu new=%llu"
 argument_list|,
 name|oldguid
 argument_list|,
