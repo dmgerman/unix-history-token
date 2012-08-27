@@ -4248,7 +4248,7 @@ name|if_baudrate
 operator|=
 name|IF_Gbps
 argument_list|(
-literal|10LL
+literal|10UL
 argument_list|)
 expr_stmt|;
 name|dev

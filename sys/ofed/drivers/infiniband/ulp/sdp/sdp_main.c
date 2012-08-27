@@ -3554,8 +3554,9 @@ argument_list|)
 expr_stmt|;
 name|SBLASTRECORDCHK
 argument_list|(
-argument|sb
+name|sb
 argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|mb
