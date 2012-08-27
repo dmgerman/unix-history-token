@@ -1155,7 +1155,7 @@ argument_list|,
 literal|"use 30mhz clock for 25mhz request"
 argument_list|)
 expr_stmt|;
-comment|/* Our real min freq is master_clock/512, but upper driver layers are 	 * going to set the min speed during card discovery, and the right speed 	 * for that is 400khz, so advertise a safe value just under that. 	 * 	 * For max speed, while the rm9200 manual says the max is 50mhz, it also 	 * says it supports only the SD v1.0 spec, which means the real limit is 	 * 25mhz. On the other hand, historical use has been to slightly violate 	 * the standard by running the bus at 30mhz.  For more information on 	 * that, see the comments at the top of this file. 	 */
+comment|/* 	 * Our real min freq is master_clock/512, but upper driver layers are 	 * going to set the min speed during card discovery, and the right speed 	 * for that is 400khz, so advertise a safe value just under that. 	 * 	 * For max speed, while the rm9200 manual says the max is 50mhz, it also 	 * says it supports only the SD v1.0 spec, which means the real limit is 	 * 25mhz. On the other hand, historical use has been to slightly violate 	 * the standard by running the bus at 30mhz.  For more information on 	 * that, see the comments at the top of this file. 	 */
 name|sc
 operator|->
 name|host
