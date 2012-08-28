@@ -645,6 +645,14 @@ name|off_t
 name|fa_end
 decl_stmt|;
 comment|/* (f) Region end. */
+name|off_t
+name|fa_prevstart
+decl_stmt|;
+comment|/* (f) Previous NOREUSE start. */
+name|off_t
+name|fa_prevend
+decl_stmt|;
+comment|/* (f) Previous NOREUSE end. */
 block|}
 struct|;
 end_struct
