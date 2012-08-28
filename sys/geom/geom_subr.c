@@ -6088,15 +6088,6 @@ name|ADDFLAG
 argument_list|(
 name|pp
 argument_list|,
-name|G_PF_CANDELETE
-argument_list|,
-literal|"G_PF_CANDELETE"
-argument_list|)
-expr_stmt|;
-name|ADDFLAG
-argument_list|(
-name|pp
-argument_list|,
 name|G_PF_WITHER
 argument_list|,
 literal|"G_PF_WITHER"

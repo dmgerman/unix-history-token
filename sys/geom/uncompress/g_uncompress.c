@@ -2980,16 +2980,6 @@ name|sc
 operator|->
 name|blksz
 expr_stmt|;
-name|pp2
-operator|->
-name|flags
-operator|=
-name|pp
-operator|->
-name|flags
-operator|&
-name|G_PF_CANDELETE
-expr_stmt|;
 if|if
 condition|(
 name|pp
