@@ -536,6 +536,20 @@ argument_list|(
 literal|"madvise failed"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mlockall
+argument_list|(
+name|MCL_FUTURE
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|warn
+argument_list|(
+literal|"mlockall failed"
+argument_list|)
+expr_stmt|;
 name|watchdog_loop
 argument_list|()
 expr_stmt|;
