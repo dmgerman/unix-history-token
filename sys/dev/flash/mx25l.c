@@ -494,6 +494,22 @@ literal|128
 block|,
 name|FL_ERASE_4K
 block|}
+block|,
+block|{
+literal|"w25x32"
+block|,
+literal|0xef
+block|,
+literal|0x3016
+block|,
+literal|64
+operator|*
+literal|1024
+block|,
+literal|64
+block|,
+name|FL_ERASE_4K
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
