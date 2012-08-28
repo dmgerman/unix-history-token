@@ -298,7 +298,7 @@ name|int8_t
 name|d_rid
 decl_stmt|;
 comment|/* Delta rid of next ports */
-name|int16_t
+name|int8_t
 name|d_ofs
 decl_stmt|;
 comment|/* Delta offset of next ports */
