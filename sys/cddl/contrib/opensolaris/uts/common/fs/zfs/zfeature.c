@@ -324,13 +324,18 @@ name|write_obj
 else|:
 name|read_obj
 decl_stmt|;
-name|ASSERT
-argument_list|(
-literal|0
-operator|!=
+comment|/* 	 * If the pool is currently being created, the feature objects may not 	 * have been allocated yet.  Act as though all features are disabled. 	 */
+if|if
+condition|(
 name|zapobj
-argument_list|)
-expr_stmt|;
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|ENOTSUP
+operator|)
+return|;
 name|err
 operator|=
 name|zap_lookup

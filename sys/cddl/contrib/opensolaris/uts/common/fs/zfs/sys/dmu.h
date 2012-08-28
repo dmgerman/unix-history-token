@@ -1036,6 +1036,10 @@ define|#
 directive|define
 name|DMU_POOL_BPTREE_OBJ
 value|"bptree_obj"
+define|#
+directive|define
+name|DMU_POOL_EMPTY_BPOBJ
+value|"empty_bpobj"
 comment|/*  * Allocate an object from this objset.  The range of object numbers  * available is (0, DN_MAX_OBJECT).  Object 0 is the meta-dnode.  *  * The transaction must be assigned to a txg.  The newly allocated  * object will be "held" in the transaction (ie. you can modify the  * newly allocated object in this transaction).  *  * dmu_object_alloc() chooses an object and returns it in *objectp.  *  * dmu_object_claim() allocates a specific object number.  If that  * number is already allocated, it fails and returns EEXIST.  *  * Return 0 on success, or ENOSPC or EEXIST as specified above.  */
 name|uint64_t
 name|dmu_object_alloc

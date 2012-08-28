@@ -239,6 +239,9 @@ decl_stmt|;
 name|uint64_t
 name|dp_bptree_obj
 decl_stmt|;
+name|uint64_t
+name|dp_empty_bpobj
+decl_stmt|;
 name|struct
 name|dsl_scan
 modifier|*

@@ -16145,7 +16145,7 @@ operator|==
 name|ZFS_TYPE_VOLUME
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Destroy all recent snapshots and its dependends. 	 */
+comment|/* 	 * Destroy all recent snapshots and their dependents. 	 */
 name|cb
 operator|.
 name|cb_force
