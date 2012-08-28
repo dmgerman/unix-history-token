@@ -216,19 +216,19 @@ file|"opt_at91.h"
 end_include
 
 begin_comment
-comment|/*  * About running the MCI bus at 30mhz...  *  * Historically, the MCI bus has been run at 30mhz on systems with a 60mhz  * master clock, due to a bug in the mantissa table in dev/mmc.c making it  * appear that the card's max speed was always 30mhz.  Fixing that bug causes  * the mmc driver to request a 25mhz clock (as it should) and the logic in  * at91_mci_update_ios() picks the highest speed that doesn't exceed that limit.  * With a 60mhz MCK that would be 15mhz, and that's a real performance buzzkill  * when you've been getting away with 30mhz all along.  *  * By defining AT91_MCI_USE_30MHZ (or setting the 30mhz=1 device hint or  * sysctl) you can enable logic in at91_mci_update_ios() to overlcock the SD  * bus a little by running it at MCK / 2 when MCK is between greater than  * 50MHz and the requested speed is 25mhz.  This appears to work on virtually  * all SD cards, since it is what this driver has been doing prior to the  * introduction of this option, where the overclocking vs underclocking  * decision was automaticly "overclock".  Modern SD cards can run at  * 45mhz/1-bit in standard mode (high speed mode enable commands not sent)  * without problems.  *  * Speaking of high-speed mode, the rm9200 manual says the MCI device supports  * the SD v1.0 specification and can run up to 50mhz.  This is interesting in  * that the SD v1.0 spec caps the speed at 25mhz; high speed mode was added in  * the v1.10 spec.  Furthermore, high speed mode doesn't just crank up the  * clock, it alters the signal timing.  The rm9200 MCI device doesn't support  * these altered timings.  So while speeds over 25mhz may work, they only work  * in what the SD spec calls "default" speed mode, and it amounts to violating  * the spec by overclocking the bus.  *  * If you also enable 4-wire mode it's possible the 30mhz transfers will fail.  * On the AT91RM9200, due to bugs in the bus contention logic, if you have the  * USB host device and OHCI driver enabled will fail.  Even underclocking to  * 15MHz, intermittant overrun and underrun errors occur.  Note that you don't  * even need to have usb devices attached to the system, the errors begin to  * occur as soon as the OHCI driver sets the register bit to enable periodic  * transfers.  It appears (based on brief investigation) that the usb host  * controller uses so much ASB bandwidth that sometimes the DMA for MCI  * transfers doesn't get a bus grant in time and data gets dropped.  Adding  * even a modicum of network activity changes the symptom from intermittant to  * very frequent.  Members of the AT91SAM9 family have corrected this problem, or  * are at least better about their use of the bus.  */
+comment|/*  * About running the MCI bus above 25MHz  *  * Historically, the MCI bus has been run at 30MHz on systems with a 60MHz  * master clock, in part due to a bug in dev/mmc.c making always request  * 30MHz, and in part over clocking the bus because 15MHz was too slow.  * Fixing that bug causes the mmc driver to request a 25MHz clock (as it  * should) and the logic in at91_mci_update_ios() picks the highest speed that  * doesn't exceed that limit.  With a 60MHz MCK that would be 15MHz, and  * that's a real performance buzzkill when you've been getting away with 30MHz  * all along.  *  * By defining AT91_MCI_ALLOW_OVERCLOCK (or setting the allow_overclock=1  * device hint or sysctl) you can enable logic in at91_mci_update_ios() to  * overlcock the SD bus a little by running it at MCK / 2 when the requested  * speed is 25MHz and the next highest speed is 15MHz or less.  This appears  * to work on virtually all SD cards, since it is what this driver has been  * doing prior to the introduction of this option, where the overclocking vs  * underclocking decision was automaticly "overclock".  Modern SD cards can  * run at 45mhz/1-bit in standard mode (high speed mode enable commands not  * sent) without problems.  *  * Speaking of high-speed mode, the rm9200 manual says the MCI device supports  * the SD v1.0 specification and can run up to 50MHz.  This is interesting in  * that the SD v1.0 spec caps the speed at 25MHz; high speed mode was added in  * the v1.10 spec.  Furthermore, high speed mode doesn't just crank up the  * clock, it alters the signal timing.  The rm9200 MCI device doesn't support  * these altered timings.  So while speeds over 25MHz may work, they only work  * in what the SD spec calls "default" speed mode, and it amounts to violating  * the spec by overclocking the bus.  *  * If you also enable 4-wire mode it's possible transfers faster than 25MHz  * will fail.  On the AT91RM9200, due to bugs in the bus contention logic, if  * you have the USB host device and OHCI driver enabled will fail.  Even  * underclocking to 15MHz, intermittant overrun and underrun errors occur.  * Note that you don't even need to have usb devices attached to the system,  * the errors begin to occur as soon as the OHCI driver sets the register bit  * to enable periodic transfers.  It appears (based on brief investigation)  * that the usb host controller uses so much ASB bandwidth that sometimes the  * DMA for MCI transfers doesn't get a bus grant in time and data gets  * dropped.  Adding even a modicum of network activity changes the symptom  * from intermittant to very frequent.  Members of the AT91SAM9 family have  * corrected this problem, or are at least better about their use of the bus.  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|AT91_MCI_USE_30MHZ
+name|AT91_MCI_ALLOW_OVERCLOCK
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|AT91_MCI_USE_30MHZ
+name|AT91_MCI_ALLOW_OVERCLOCK
 value|1
 end_define
 
@@ -322,7 +322,7 @@ name|int
 name|has_4wire
 decl_stmt|;
 name|int
-name|use_30mhz
+name|allow_overclock
 decl_stmt|;
 name|struct
 name|resource
@@ -1159,7 +1159,7 @@ expr_stmt|;
 comment|/* SLOT A, 1 bit bus */
 else|#
 directive|else
-comment|/* 	 * XXX Really should add second "unit" but nobody using using  	 * a two slot card that we know of. XXX 	 */
+comment|/* 	 * XXX Really should add second "unit" but nobody using using 	 * a two slot card that we know of. XXX 	 */
 name|WR4
 argument_list|(
 name|sc
@@ -1597,24 +1597,12 @@ name|sc_cap
 operator||=
 name|CAP_HAS_4WIRE
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|AT91_MCI_USE_30MHZ
-argument_list|)
-operator|&&
-name|AT91_MCI_USE_30MHZ
-operator|!=
-literal|0
 name|sc
 operator|->
-name|use_30mhz
+name|allow_overclock
 operator|=
-literal|1
+name|AT91_MCI_ALLOW_OVERCLOCK
 expr_stmt|;
-endif|#
-directive|endif
 name|resource_int_value
 argument_list|(
 name|device_get_name
@@ -1627,12 +1615,12 @@ argument_list|(
 name|dev
 argument_list|)
 argument_list|,
-literal|"30mhz"
+literal|"allow_overclock"
 argument_list|,
 operator|&
 name|sc
 operator|->
-name|use_30mhz
+name|allow_overclock
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_UINT
@@ -1646,21 +1634,21 @@ argument_list|)
 argument_list|,
 name|OID_AUTO
 argument_list|,
-literal|"30mhz"
+literal|"allow_overclock"
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|sc
 operator|->
-name|use_30mhz
+name|allow_overclock
 argument_list|,
 literal|0
 argument_list|,
-literal|"use 30mhz clock for 25mhz request"
+literal|"Allow up to 30MHz clock for 25MHz request when next highest speed 15MHz or less."
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Our real min freq is master_clock/512, but upper driver layers are 	 * going to set the min speed during card discovery, and the right speed 	 * for that is 400khz, so advertise a safe value just under that. 	 * 	 * For max speed, while the rm9200 manual says the max is 50mhz, it also 	 * says it supports only the SD v1.0 spec, which means the real limit is 	 * 25mhz. On the other hand, historical use has been to slightly violate 	 * the standard by running the bus at 30mhz.  For more information on 	 * that, see the comments at the top of this file. 	 */
+comment|/* 	 * Our real min freq is master_clock/512, but upper driver layers are 	 * going to set the min speed during card discovery, and the right speed 	 * for that is 400kHz, so advertise a safe value just under that. 	 * 	 * For max speed, while the rm9200 manual says the max is 50mhz, it also 	 * says it supports only the SD v1.0 spec, which means the real limit is 	 * 25mhz. On the other hand, historical use has been to slightly violate 	 * the standard by running the bus at 30MHz.  For more information on 	 * that, see the comments at the top of this file. 	 */
 name|sc
 operator|->
 name|host
@@ -1697,7 +1685,6 @@ name|f_max
 operator|=
 literal|25000000
 expr_stmt|;
-comment|/* Limit to 25MHz */
 name|sc
 operator|->
 name|host
@@ -2162,6 +2149,9 @@ decl_stmt|;
 name|uint32_t
 name|clkdiv
 decl_stmt|;
+name|uint32_t
+name|freq
+decl_stmt|;
 name|sc
 operator|=
 name|device_get_softc
@@ -2178,7 +2168,7 @@ name|host
 operator|.
 name|ios
 expr_stmt|;
-comment|/* 	 * Calculate our closest available clock speed that doesn't exceed the 	 * requested speed. 	 * 	 * If the master clock is 50MHz-62MHz and the requested bus speed is 	 * 25mhz and the use_30mhz flag is on, set clkdiv to zero to get a 	 * master_clock / 2 (25-31MHz) MMC/SD clock rather than settle for the 	 * next lower click (12.5-15.5MHz). See comments near the top of the 	 * file for more info. 	 * 	 * Whatever we come up with, store it back into ios->clock so that the 	 * upper layer drivers can report the actual speed of the bus. 	 */
+comment|/* 	 * Calculate our closest available clock speed that doesn't exceed the 	 * requested speed. 	 * 	 * When overclocking is allowed, the requested clock is 25MHz, the 	 * computed frequency is 15MHz or smaller and clockdiv is 1, use 	 * clockdiv of 0 to double that.  If less than 12.5MHz, double 	 * regardless of the overclocking setting. 	 * 	 * Whatever we come up with, store it back into ios->clock so that the 	 * upper layer drivers can report the actual speed of the bus. 	 */
 if|if
 condition|(
 name|ios
@@ -2215,31 +2205,6 @@ operator||
 name|MCI_CR_PWSEN
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|use_30mhz
-operator|&&
-name|ios
-operator|->
-name|clock
-operator|==
-literal|25000000
-operator|&&
-name|at91_master_clock
-operator|>
-literal|50000000
-operator|&&
-name|at91_master_clock
-operator|<
-literal|62000000
-condition|)
-name|clkdiv
-operator|=
-literal|0
-expr_stmt|;
-elseif|else
 if|if
 condition|(
 operator|(
@@ -2285,9 +2250,7 @@ operator|)
 operator|/
 literal|2
 expr_stmt|;
-name|ios
-operator|->
-name|clock
+name|freq
 operator|=
 name|at91_master_clock
 operator|/
@@ -2300,6 +2263,60 @@ operator|)
 operator|*
 literal|2
 operator|)
+expr_stmt|;
+if|if
+condition|(
+name|clkdiv
+operator|==
+literal|1
+operator|&&
+name|ios
+operator|->
+name|clock
+operator|==
+literal|25000000
+operator|&&
+name|freq
+operator|<=
+literal|15000000
+condition|)
+block|{
+if|if
+condition|(
+name|sc
+operator|->
+name|allow_overclock
+operator|||
+name|freq
+operator|<=
+literal|12500000
+condition|)
+block|{
+name|clkdiv
+operator|=
+literal|0
+expr_stmt|;
+name|freq
+operator|=
+name|at91_master_clock
+operator|/
+operator|(
+operator|(
+name|clkdiv
+operator|+
+literal|1
+operator|)
+operator|*
+literal|2
+operator|)
+expr_stmt|;
+block|}
+block|}
+name|ios
+operator|->
+name|clock
+operator|=
+name|freq
 expr_stmt|;
 block|}
 if|if
@@ -4130,7 +4147,7 @@ operator|->
 name|curcmd
 decl_stmt|;
 comment|/* 	 * We arrive here after receiving CMDRDY for a MMC_STOP_TRANSMISSION 	 * command.  Depending on the operation being stopped, we may have to 	 * do some unusual things to work around hardware bugs. 	 */
-comment|/* 	 * This is known to be true of at91rm9200 hardware; it may or may not 	 * apply to more recent chips:  	 * 	 * After stopping a multi-block write, the NOTBUSY bit in MCI_SR does 	 * not properly reflect the actual busy state of the card as signaled 	 * on the DAT0 line; it always claims the card is not-busy.  If we 	 * believe that and let operations continue, following commands will 	 * fail with response timeouts (except of course MMC_SEND_STATUS -- it 	 * indicates the card is busy in the PRG state, which was the smoking 	 * gun that showed MCI_SR NOTBUSY was not tracking DAT0 correctly). 	 * 	 * The atmel docs are emphatic: "This flag [NOTBUSY] must be used only 	 * for Write Operations."  I guess technically since we sent a stop 	 * it's not a write operation anymore.  But then just what did they 	 * think it meant for the stop command to have "...an optional busy 	 * signal transmitted on the data line" according to the SD spec? 	 * 	 * I tried a variety of things to un-wedge the MCI and get the status 	 * register to reflect NOTBUSY correctly again, but the only thing 	 * that worked was a full device reset.  It feels like an awfully big 	 * hammer, but doing a full reset after every multiblock write is 	 * still faster than doing single-block IO (by almost two orders of 	 * magnitude: 20KB/sec improves to about 1.8MB/sec best case). 	 * 	 * After doing the reset, wait for a NOTBUSY interrupt before 	 * continuing with the next operation. 	 */
+comment|/* 	 * This is known to be true of at91rm9200 hardware; it may or may not 	 * apply to more recent chips: 	 * 	 * After stopping a multi-block write, the NOTBUSY bit in MCI_SR does 	 * not properly reflect the actual busy state of the card as signaled 	 * on the DAT0 line; it always claims the card is not-busy.  If we 	 * believe that and let operations continue, following commands will 	 * fail with response timeouts (except of course MMC_SEND_STATUS -- it 	 * indicates the card is busy in the PRG state, which was the smoking 	 * gun that showed MCI_SR NOTBUSY was not tracking DAT0 correctly). 	 * 	 * The atmel docs are emphatic: "This flag [NOTBUSY] must be used only 	 * for Write Operations."  I guess technically since we sent a stop 	 * it's not a write operation anymore.  But then just what did they 	 * think it meant for the stop command to have "...an optional busy 	 * signal transmitted on the data line" according to the SD spec? 	 * 	 * I tried a variety of things to un-wedge the MCI and get the status 	 * register to reflect NOTBUSY correctly again, but the only thing 	 * that worked was a full device reset.  It feels like an awfully big 	 * hammer, but doing a full reset after every multiblock write is 	 * still faster than doing single-block IO (by almost two orders of 	 * magnitude: 20KB/sec improves to about 1.8MB/sec best case). 	 * 	 * After doing the reset, wait for a NOTBUSY interrupt before 	 * continuing with the next operation. 	 */
 if|if
 condition|(
 name|sc
