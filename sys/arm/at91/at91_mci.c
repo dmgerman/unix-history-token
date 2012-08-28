@@ -294,6 +294,11 @@ directive|define
 name|CAP_NEEDS_BYTESWAP
 value|2
 comment|/* broken hardware needing bounce */
+define|#
+directive|define
+name|CAP_MCI1_REV2XX
+value|4
+comment|/* MCI 1 rev 2.x */
 name|int
 name|flags
 decl_stmt|;
@@ -1118,8 +1123,11 @@ expr_stmt|;
 comment|/* PWSDIV = 3; CLKDIV = 74 */
 if|if
 condition|(
-name|at91_mci_is_mci1rev2xx
-argument_list|()
+name|sc
+operator|->
+name|sc_cap
+operator|&
+name|CAP_MCI1_REV2XX
 condition|)
 name|val
 operator||=
@@ -1501,6 +1509,18 @@ goto|goto
 name|out
 goto|;
 block|}
+comment|/* 	 * MCI1 Rev 2 controllers need some workarounds, flag if so. 	 */
+if|if
+condition|(
+name|at91_mci_is_mci1rev2xx
+argument_list|()
+condition|)
+name|sc
+operator|->
+name|sc_cap
+operator||=
+name|CAP_MCI1_REV2XX
+expr_stmt|;
 comment|/* 	 * Allow 4-wire to be initially set via #define. 	 * Allow a device hint to override that. 	 * Allow a sysctl to override that. 	 */
 if|#
 directive|if
@@ -3018,8 +3038,13 @@ expr_stmt|;
 comment|/* 			 * If this is MCI1 revision 2xx controller, apply 			 * a work-around for the "Data Write Operation and 			 * number of bytes" erratum. 			 */
 if|if
 condition|(
-name|at91_mci_is_mci1rev2xx
-argument_list|()
+operator|(
+name|sc
+operator|->
+name|sc_cap
+operator|&
+name|CAP_MCI1_REV2XX
+operator|)
 operator|&&
 name|data
 operator|->
