@@ -2178,7 +2178,7 @@ name|host
 operator|.
 name|ios
 expr_stmt|;
-comment|/* 	 * Calculate our closest available clock speed that doesn't exceed the 	 * requested speed. 	 * 	 * If the master clock is greater than 50MHz and the requested bus 	 * speed is 25mhz and the use_30mhz flag is on, set clkdiv to zero to 	 * get a master_clock / 2 (25-30MHz) MMC/SD clock rather than settle for 	 * the next lower click (12-15MHz). See comments near the top of the 	 * file for more info. 	 * 	 * Whatever we come up with, store it back into ios->clock so that the 	 * upper layer drivers can report the actual speed of the bus. 	 */
+comment|/* 	 * Calculate our closest available clock speed that doesn't exceed the 	 * requested speed. 	 * 	 * If the master clock is 50MHz-62MHz and the requested bus speed is 	 * 25mhz and the use_30mhz flag is on, set clkdiv to zero to get a 	 * master_clock / 2 (25-31MHz) MMC/SD clock rather than settle for the 	 * next lower click (12.5-15.5MHz). See comments near the top of the 	 * file for more info. 	 * 	 * Whatever we come up with, store it back into ios->clock so that the 	 * upper layer drivers can report the actual speed of the bus. 	 */
 if|if
 condition|(
 name|ios
@@ -2230,6 +2230,10 @@ operator|&&
 name|at91_master_clock
 operator|>
 literal|50000000
+operator|&&
+name|at91_master_clock
+operator|<
+literal|62000000
 condition|)
 name|clkdiv
 operator|=
