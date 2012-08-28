@@ -7249,6 +7249,8 @@ argument_list|,
 name|npages
 argument_list|,
 name|maxpages
+operator|/
+literal|2
 argument_list|)
 expr_stmt|;
 name|printf
