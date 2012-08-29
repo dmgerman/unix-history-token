@@ -271,6 +271,17 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/*  * Enable/disable strong signal fast diversity  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAL_CAP_STRONG_DIV
+value|2
+end_define
+
+begin_comment
 comment|/*  * Each chip or class of chips registers to offer support.  */
 end_comment
 
