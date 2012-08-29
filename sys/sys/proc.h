@@ -974,6 +974,12 @@ modifier|*
 name|td_rfppwait_p
 decl_stmt|;
 comment|/* (k) The vforked child */
+name|struct
+name|rl_q_entry
+modifier|*
+name|td_rlqe
+decl_stmt|;
+comment|/* (k) Associated range lock entry. */
 block|}
 struct|;
 end_struct
