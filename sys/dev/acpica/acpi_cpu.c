@@ -3632,7 +3632,9 @@ name|sc
 operator|->
 name|cpu_non_c3
 operator|=
-name|i
+name|sc
+operator|->
+name|cpu_cx_count
 expr_stmt|;
 name|cx_ptr
 operator|++
@@ -3651,7 +3653,9 @@ name|sc
 operator|->
 name|cpu_non_c3
 operator|=
-name|i
+name|sc
+operator|->
+name|cpu_cx_count
 expr_stmt|;
 break|break;
 case|case
