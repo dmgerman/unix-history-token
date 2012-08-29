@@ -183,6 +183,9 @@ name|rlim_max
 operator|=
 literal|0
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|SANDBOX_SKIP_RLIMIT_FSIZE
 if|if
 condition|(
 name|setrlimit
@@ -208,6 +211,8 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|setrlimit

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sftp-client.c,v 1.96 2011/09/12 08:46:15 markus Exp $ */
+comment|/* $OpenBSD: sftp-client.c,v 1.97 2012/07/02 12:13:26 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -3956,11 +3956,19 @@ argument_list|)
 expr_stmt|;
 name|debug3
 argument_list|(
-literal|"SSH_FXP_REALPATH %s -> %s"
+literal|"SSH_FXP_REALPATH %s -> %s size %lu"
 argument_list|,
 name|path
 argument_list|,
 name|filename
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
+name|a
+operator|->
+name|size
 argument_list|)
 expr_stmt|;
 name|xfree

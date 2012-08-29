@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: channels.h,v 1.109 2011/09/23 07:45:05 markus Exp $ */
+comment|/* $OpenBSD: channels.h,v 1.111 2012/04/11 13:16:19 djm Exp $ */
 end_comment
 
 begin_comment
@@ -480,6 +480,10 @@ name|int
 name|force_drain
 decl_stmt|;
 comment|/* force close on iEOF */
+name|time_t
+name|notbefore
+decl_stmt|;
+comment|/* Pause IO until deadline (time_t) */
 name|int
 name|delayed
 decl_stmt|;
@@ -1212,6 +1216,9 @@ parameter_list|,
 name|u_int
 modifier|*
 parameter_list|,
+name|time_t
+modifier|*
+parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
@@ -1328,6 +1335,15 @@ name|char
 modifier|*
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|channel_disable_adm_local_opens
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

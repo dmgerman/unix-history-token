@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: moduli.c,v 1.25 2011/10/19 00:06:10 djm Exp $ */
+comment|/* $OpenBSD: moduli.c,v 1.26 2012/07/06 00:41:59 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -422,6 +422,12 @@ name|u_int32_t
 parameter_list|,
 name|char
 modifier|*
+parameter_list|,
+name|unsigned
+name|long
+parameter_list|,
+name|unsigned
+name|long
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1958,6 +1964,14 @@ parameter_list|,
 name|char
 modifier|*
 name|checkpoint_file
+parameter_list|,
+name|unsigned
+name|long
+name|start_lineno
+parameter_list|,
+name|unsigned
+name|long
+name|num_lines
 parameter_list|)
 block|{
 name|BIGNUM
@@ -2010,6 +2024,8 @@ name|long
 name|last_processed
 init|=
 literal|0
+decl_stmt|,
+name|end_lineno
 decl_stmt|;
 name|time_t
 name|time_start
@@ -2122,6 +2138,42 @@ argument_list|(
 name|checkpoint_file
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|start_lineno
+operator|>
+name|last_processed
+condition|)
+name|last_processed
+operator|=
+name|start_lineno
+expr_stmt|;
+if|if
+condition|(
+name|num_lines
+operator|==
+literal|0
+condition|)
+name|end_lineno
+operator|=
+name|ULONG_MAX
+expr_stmt|;
+else|else
+name|end_lineno
+operator|=
+name|last_processed
+operator|+
+name|num_lines
+expr_stmt|;
+name|debug2
+argument_list|(
+literal|"process line %lu to line %lu"
+argument_list|,
+name|last_processed
+argument_list|,
+name|end_lineno
+argument_list|)
+expr_stmt|;
 name|res
 operator|=
 literal|0
@@ -2149,6 +2201,10 @@ name|in
 argument_list|)
 operator|!=
 name|NULL
+operator|&&
+name|count_in
+operator|<
+name|end_lineno
 condition|)
 block|{
 name|count_in

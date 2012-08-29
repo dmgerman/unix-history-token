@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sftp.c,v 1.134 2011/11/16 12:24:28 oga Exp $ */
+comment|/* $OpenBSD: sftp.c,v 1.136 2012/06/22 14:36:33 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -4083,12 +4083,6 @@ name|int
 name|lflag
 parameter_list|)
 block|{
-name|Attrib
-modifier|*
-name|a
-init|=
-name|NULL
-decl_stmt|;
 name|char
 modifier|*
 name|fname
@@ -4380,10 +4374,6 @@ name|interrupted
 condition|;
 name|i
 operator|++
-operator|,
-name|a
-operator|=
-name|NULL
 control|)
 block|{
 name|fname
@@ -10583,42 +10573,6 @@ name|dir
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_SETVBUF
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|BROKEN_SETVBUF
-argument_list|)
-name|setvbuf
-argument_list|(
-name|stdout
-argument_list|,
-name|NULL
-argument_list|,
-name|_IOLBF
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|setvbuf
-argument_list|(
-name|infile
-argument_list|,
-name|NULL
-argument_list|,
-name|_IOLBF
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|setlinebuf
 argument_list|(
 name|stdout
@@ -10629,8 +10583,6 @@ argument_list|(
 name|infile
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|interactive
 operator|=
 operator|!

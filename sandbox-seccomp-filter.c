@@ -781,6 +781,11 @@ name|struct
 name|rlimit
 name|rl_zero
 decl_stmt|;
+name|int
+name|nnp_failed
+init|=
+literal|0
+decl_stmt|;
 comment|/* Set rlimits for completeness if possible. */
 name|rl_zero
 operator|.
@@ -901,7 +906,8 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|fatal
+block|{
+name|debug
 argument_list|(
 literal|"%s: prctl(PR_SET_NO_NEW_PRIVS): %s"
 argument_list|,
@@ -913,6 +919,11 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|nnp_failed
+operator|=
+literal|1
+expr_stmt|;
+block|}
 name|debug3
 argument_list|(
 literal|"%s: attaching seccomp filter program"
@@ -935,7 +946,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|fatal
+name|debug
 argument_list|(
 literal|"%s: prctl(PR_SET_SECCOMP): %s"
 argument_list|,
@@ -945,6 +956,19 @@ name|strerror
 argument_list|(
 name|errno
 argument_list|)
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|nnp_failed
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: SECCOMP_MODE_FILTER activated but "
+literal|"PR_SET_NO_NEW_PRIVS failed"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}

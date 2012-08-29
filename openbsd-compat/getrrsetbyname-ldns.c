@@ -800,6 +800,10 @@ operator|->
 name|_rr_type
 operator|==
 name|LDNS_RR_TYPE_RRSIG
+operator|&&
+name|rrset
+operator|->
+name|rri_sigs
 condition|)
 block|{
 name|rdata

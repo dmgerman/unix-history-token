@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: mac.c,v 1.17 2011/12/02 00:43:57 djm Exp $ */
+comment|/* $OpenBSD: mac.c,v 1.18 2012/06/28 05:07:45 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -215,22 +215,6 @@ literal|1
 block|}
 block|,
 block|{
-literal|"hmac-sha2-256-96"
-block|,
-name|SSH_EVP
-block|,
-name|EVP_sha256
-block|,
-literal|96
-block|,
-operator|-
-literal|1
-block|,
-operator|-
-literal|1
-block|}
-block|,
-block|{
 literal|"hmac-sha2-512"
 block|,
 name|SSH_EVP
@@ -238,22 +222,6 @@ block|,
 name|EVP_sha512
 block|,
 literal|0
-block|,
-operator|-
-literal|1
-block|,
-operator|-
-literal|1
-block|}
-block|,
-block|{
-literal|"hmac-sha2-512-96"
-block|,
-name|SSH_EVP
-block|,
-name|EVP_sha512
-block|,
-literal|96
 block|,
 operator|-
 literal|1

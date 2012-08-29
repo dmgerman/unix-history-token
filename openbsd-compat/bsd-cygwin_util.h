@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: bsd-cygwin_util.h,v 1.14 2012/03/30 03:07:07 djm Exp $ */
+comment|/* $Id: bsd-cygwin_util.h,v 1.15 2012/08/28 09:57:19 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -30,6 +30,12 @@ undef|#
 directive|undef
 name|ERROR
 end_undef
+
+begin_define
+define|#
+directive|define
+name|WIN32_LEAN_AND_MEAN
+end_define
 
 begin_include
 include|#

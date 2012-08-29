@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: clientloop.c,v 1.238 2012/01/18 21:46:43 dtucker Exp $ */
+comment|/* $OpenBSD: clientloop.c,v 1.240 2012/06/20 04:42:58 djm Exp $ */
 end_comment
 
 begin_comment
@@ -2215,6 +2215,11 @@ decl_stmt|;
 name|int
 name|timeout_secs
 decl_stmt|;
+name|time_t
+name|minwait_secs
+init|=
+literal|0
+decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
@@ -2228,6 +2233,9 @@ argument_list|,
 name|maxfdp
 argument_list|,
 name|nallocp
+argument_list|,
+operator|&
+name|minwait_secs
 argument_list|,
 name|rekeying
 argument_list|)
@@ -2456,6 +2464,24 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|minwait_secs
+operator|!=
+literal|0
+condition|)
+name|timeout_secs
+operator|=
+name|MIN
+argument_list|(
+name|timeout_secs
+argument_list|,
+operator|(
+name|int
+operator|)
+name|minwait_secs
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|timeout_secs

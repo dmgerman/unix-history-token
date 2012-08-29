@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: session.c,v 1.259 2011/10/24 02:13:13 djm Exp $ */
+comment|/* $OpenBSD: session.c,v 1.260 2012/03/15 03:10:27 guenther Exp $ */
 end_comment
 
 begin_comment
@@ -6361,10 +6361,12 @@ literal|"ignorenologin"
 argument_list|,
 literal|0
 argument_list|)
-operator|&&
+operator|||
 name|pw
 operator|->
 name|pw_uid
+operator|==
+literal|0
 condition|)
 return|return;
 name|nl

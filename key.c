@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: key.c,v 1.98 2011/10/18 04:58:26 djm Exp $ */
+comment|/* $OpenBSD: key.c,v 1.99 2012/05/23 03:28:28 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1613,6 +1613,20 @@ name|EVP_sha1
 argument_list|()
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|HAVE_EVP_SHA256
+case|case
+name|SSH_FP_SHA256
+case|:
+name|md
+operator|=
+name|EVP_sha256
+argument_list|()
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
 default|default:
 name|fatal
 argument_list|(
