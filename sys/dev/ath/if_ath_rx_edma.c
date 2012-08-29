@@ -3030,15 +3030,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|,
-literal|"DMA setup: EDMA\n"
-argument_list|)
-expr_stmt|;
 comment|/* Set buffer size to 4k */
 name|sc
 operator|->
