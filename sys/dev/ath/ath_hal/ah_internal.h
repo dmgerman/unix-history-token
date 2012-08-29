@@ -851,6 +851,10 @@ decl_stmt|,
 name|hal49GhzSupport
 range|:
 literal|1
+decl_stmt|,
+name|halAntDivCombSupport
+range|:
+literal|1
 decl_stmt|;
 name|uint32_t
 name|halWirelessModes
