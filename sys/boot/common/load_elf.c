@@ -3370,7 +3370,7 @@ operator|!=
 literal|0
 condition|)
 return|return
-name|ENOENT
+literal|0
 return|;
 name|p
 operator|=
