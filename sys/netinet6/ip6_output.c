@@ -707,7 +707,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: delayed m_pullup, m->len: %d off: %d\n"
+literal|"%s: delayed m_pullup, m->len: %d plen %u off %u "
+literal|"csum_flags=0x%04x\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -715,7 +716,15 @@ name|m
 operator|->
 name|m_len
 argument_list|,
+name|plen
+argument_list|,
 name|offset
+argument_list|,
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|csum_flags
 argument_list|)
 expr_stmt|;
 comment|/* 		 * XXX this should not happen, but if it does, the correct 		 * behavior may be to insert the checksum in the appropriate 		 * next mbuf in the chain. 		 */
