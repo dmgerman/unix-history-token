@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: mac.c,v 1.16 2011/08/02 01:22:11 djm Exp $ */
+comment|/* $OpenBSD: mac.c,v 1.17 2011/12/02 00:43:57 djm Exp $ */
 end_comment
 
 begin_comment
@@ -95,6 +95,12 @@ begin_include
 include|#
 directive|include
 file|"umac.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"openbsd-compat/openssl-compat.h"
 end_include
 
 begin_define
@@ -646,6 +652,14 @@ return|return
 operator|-
 literal|1
 return|;
+name|HMAC_CTX_init
+argument_list|(
+operator|&
+name|mac
+operator|->
+name|evp_ctx
+argument_list|)
+expr_stmt|;
 name|HMAC_Init
 argument_list|(
 operator|&

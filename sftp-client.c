@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sftp-client.c,v 1.94 2010/12/04 00:18:01 djm Exp $ */
+comment|/* $OpenBSD: sftp-client.c,v 1.96 2011/09/12 08:46:15 markus Exp $ */
 end_comment
 
 begin_comment
@@ -2429,12 +2429,6 @@ operator|&
 name|msg
 argument_list|)
 expr_stmt|;
-name|buffer_clear
-argument_list|(
-operator|&
-name|msg
-argument_list|)
-expr_stmt|;
 name|handle
 operator|=
 name|get_handle
@@ -2457,10 +2451,18 @@ name|handle
 operator|==
 name|NULL
 condition|)
+block|{
+name|buffer_free
+argument_list|(
+operator|&
+name|msg
+argument_list|)
+expr_stmt|;
 return|return
 operator|-
 literal|1
 return|;
+block|}
 if|if
 condition|(
 name|dir
@@ -2668,6 +2670,12 @@ expr_stmt|;
 name|xfree
 argument_list|(
 name|handle
+argument_list|)
+expr_stmt|;
+name|buffer_free
+argument_list|(
+operator|&
+name|msg
 argument_list|)
 expr_stmt|;
 return|return
@@ -4183,20 +4191,6 @@ name|status
 decl_stmt|,
 name|id
 decl_stmt|;
-name|buffer_init
-argument_list|(
-operator|&
-name|msg
-argument_list|)
-expr_stmt|;
-comment|/* Send link request */
-name|id
-operator|=
-name|conn
-operator|->
-name|msg_id
-operator|++
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -4220,6 +4214,20 @@ operator|-
 literal|1
 return|;
 block|}
+name|buffer_init
+argument_list|(
+operator|&
+name|msg
+argument_list|)
+expr_stmt|;
+comment|/* Send link request */
+name|id
+operator|=
+name|conn
+operator|->
+name|msg_id
+operator|++
+expr_stmt|;
 name|buffer_put_char
 argument_list|(
 operator|&
@@ -4610,6 +4618,12 @@ name|fx2txt
 argument_list|(
 name|status
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|buffer_free
+argument_list|(
+operator|&
+name|msg
 argument_list|)
 expr_stmt|;
 return|return

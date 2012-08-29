@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-keygen.c,v 1.210 2011/04/18 00:46:05 djm Exp $ */
+comment|/* $OpenBSD: ssh-keygen.c,v 1.212 2011/10/16 15:02:41 jmc Exp $ */
 end_comment
 
 begin_comment
@@ -696,6 +696,9 @@ parameter_list|,
 name|u_int32_t
 parameter_list|,
 name|u_int32_t
+parameter_list|,
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4567,6 +4570,9 @@ block|,
 name|_PATH_HOST_DSA_KEY_FILE
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|OPENSSL_HAS_ECC
 block|{
 literal|"ecdsa"
 block|,
@@ -4575,6 +4581,8 @@ block|,
 name|_PATH_HOST_ECDSA_KEY_FILE
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 name|NULL
 block|,
@@ -10623,6 +10631,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+literal|"  -K checkpt  Write checkpoints to this file.\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
 literal|"  -L          Print the contents of a certificate.\n"
 argument_list|)
 expr_stmt|;
@@ -10809,6 +10824,12 @@ modifier|*
 name|passphrase2
 decl_stmt|;
 name|char
+modifier|*
+name|checkpoint
+init|=
+name|NULL
+decl_stmt|;
+name|char
 name|out_file
 index|[
 name|MAXPATHLEN
@@ -10990,7 +11011,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"AegiqpclBHLhvxXyF:b:f:t:D:I:P:m:N:n:"
+literal|"AegiqpclBHLhvxXyF:b:f:t:D:I:K:P:m:N:n:"
 literal|"O:C:r:g:R:T:G:M:S:s:a:V:W:z:"
 argument_list|)
 operator|)
@@ -11561,6 +11582,31 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'K'
+case|:
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|optarg
+argument_list|)
+operator|>=
+name|MAXPATHLEN
+condition|)
+name|fatal
+argument_list|(
+literal|"Checkpoint filename too long"
+argument_list|)
+expr_stmt|;
+name|checkpoint
+operator|=
+name|xstrdup
+argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'S'
 case|:
 comment|/* XXX - also compare length against bits */
@@ -12121,6 +12167,8 @@ argument_list|,
 name|trials
 argument_list|,
 name|generator_wanted
+argument_list|,
+name|checkpoint
 argument_list|)
 operator|!=
 literal|0

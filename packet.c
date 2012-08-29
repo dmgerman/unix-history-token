@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: packet.c,v 1.173 2011/05/06 21:14:05 djm Exp $ */
+comment|/* $OpenBSD: packet.c,v 1.176 2012/01/25 19:40:09 markus Exp $ */
 end_comment
 
 begin_comment
@@ -739,11 +739,11 @@ block|{
 if|if
 condition|(
 name|timeout
-operator|==
+operator|<=
 literal|0
 operator|||
 name|count
-operator|==
+operator|<=
 literal|0
 condition|)
 block|{
@@ -1638,17 +1638,6 @@ literal|0
 condition|)
 return|return
 literal|0
-return|;
-if|if
-condition|(
-name|to
-operator|.
-name|ss_family
-operator|==
-name|AF_INET
-condition|)
-return|return
-literal|1
 return|;
 ifdef|#
 directive|ifdef
@@ -4298,19 +4287,28 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
-operator|(
 operator|(
 name|type
-operator|>=
+operator|<
 name|SSH2_MSG_TRANSPORT_MIN
 operator|)
-operator|&&
+operator|||
 operator|(
 name|type
-operator|<=
+operator|>
 name|SSH2_MSG_TRANSPORT_MAX
 operator|)
+operator|||
+operator|(
+name|type
+operator|==
+name|SSH2_MSG_SERVICE_REQUEST
+operator|)
+operator|||
+operator|(
+name|type
+operator|==
+name|SSH2_MSG_SERVICE_ACCEPT
 operator|)
 condition|)
 block|{
@@ -6608,22 +6606,6 @@ return|;
 block|}
 block|}
 block|}
-block|}
-end_function
-
-begin_function
-name|int
-name|packet_read_poll
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return
-name|packet_read_poll_seqnr
-argument_list|(
-name|NULL
-argument_list|)
-return|;
 block|}
 end_function
 

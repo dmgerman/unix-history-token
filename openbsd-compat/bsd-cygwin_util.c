@@ -244,6 +244,13 @@ block|,
 block|{
 name|NL
 argument_list|(
+literal|"PROGRAMFILES="
+argument_list|)
+block|}
+block|,
+block|{
+name|NL
+argument_list|(
 literal|"SYSTEMDRIVE="
 argument_list|)
 block|}

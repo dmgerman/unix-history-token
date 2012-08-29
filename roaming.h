@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: roaming.h,v 1.5 2009/10/24 11:11:58 andreas Exp $ */
+comment|/* $OpenBSD: roaming.h,v 1.6 2011/12/07 05:44:38 djm Exp $ */
 end_comment
 
 begin_comment
@@ -25,6 +25,17 @@ directive|define
 name|DEFAULT_ROAMBUF
 value|65536
 end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_ROAMBUF
+value|(2*1024*1024)
+end_define
+
+begin_comment
+comment|/* XXX arbitrary */
+end_comment
 
 begin_define
 define|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: channels.h,v 1.105 2011/06/22 22:08:42 djm Exp $ */
+comment|/* $OpenBSD: channels.h,v 1.109 2011/09/23 07:45:05 markus Exp $ */
 end_comment
 
 begin_comment
@@ -200,6 +200,13 @@ define|#
 directive|define
 name|SSH_CHANNEL_MAX_TYPE
 value|17
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHANNEL_CANCEL_PORT_STATIC
+value|-1
 end_define
 
 begin_struct_decl
@@ -497,6 +504,11 @@ name|int
 name|listening_port
 decl_stmt|;
 comment|/* port being listened for forwards */
+name|char
+modifier|*
+name|listening_addr
+decl_stmt|;
+comment|/* addr being listened for forwards */
 name|int
 name|host_port
 decl_stmt|;
@@ -1322,6 +1334,17 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|channel_update_permitted_opens
+parameter_list|(
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|channel_clear_permitted_opens
 parameter_list|(
 name|void
@@ -1453,7 +1476,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|channel_request_rforward_cancel
 parameter_list|(
 specifier|const
@@ -1494,6 +1517,34 @@ name|char
 modifier|*
 parameter_list|,
 name|u_short
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|channel_cancel_lport_listener
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|u_short
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|permitopen_port
+parameter_list|(
+specifier|const
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

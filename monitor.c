@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: monitor.c,v 1.115 2011/06/23 23:35:42 djm Exp $ */
+comment|/* $OpenBSD: monitor.c,v 1.116 2012/01/05 00:16:56 djm Exp $ */
 end_comment
 
 begin_comment
@@ -2753,6 +2753,12 @@ operator|==
 name|EPIPE
 condition|)
 block|{
+name|buffer_free
+argument_list|(
+operator|&
+name|logmsg
+argument_list|)
+expr_stmt|;
 name|debug
 argument_list|(
 literal|"%s: child log fd closed"

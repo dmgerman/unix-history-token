@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: servconf.c,v 1.222 2011/06/22 21:57:01 djm Exp $ */
+comment|/* $OpenBSD: servconf.c,v 1.223 2011/09/23 00:22:04 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -7279,15 +7279,17 @@ operator|==
 name|NULL
 operator|||
 operator|(
+operator|(
 name|port
 operator|=
-name|a2port
+name|permitopen_port
 argument_list|(
 name|arg
 argument_list|)
 operator|)
-operator|<=
+operator|<
 literal|0
+operator|)
 condition|)
 name|fatal
 argument_list|(

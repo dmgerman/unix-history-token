@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: compat.c,v 1.78 2008/09/11 14:22:37 markus Exp $ */
+comment|/* $OpenBSD: compat.c,v 1.79 2011/09/23 07:45:05 markus Exp $ */
 end_comment
 
 begin_comment
@@ -283,6 +283,14 @@ block|{
 literal|"OpenSSH_4*"
 block|,
 literal|0
+block|}
+block|,
+block|{
+literal|"OpenSSH_5*"
+block|,
+name|SSH_NEW_OPENSSH
+operator||
+name|SSH_BUG_DYNAMIC_RPORT
 block|}
 block|,
 block|{

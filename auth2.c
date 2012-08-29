@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth2.c,v 1.123 2011/03/10 02:52:57 djm Exp $ */
+comment|/* $OpenBSD: auth2.c,v 1.124 2011/12/07 05:44:38 djm Exp $ */
 end_comment
 
 begin_comment
@@ -457,6 +457,12 @@ return|;
 block|}
 if|if
 condition|(
+name|st
+operator|.
+name|st_size
+operator|<=
+literal|0
+operator|||
 name|st
 operator|.
 name|st_size

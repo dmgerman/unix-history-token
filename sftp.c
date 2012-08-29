@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sftp.c,v 1.132 2010/12/04 00:18:01 djm Exp $ */
+comment|/* $OpenBSD: sftp.c,v 1.134 2011/11/16 12:24:28 oga Exp $ */
 end_comment
 
 begin_comment
@@ -4157,6 +4157,8 @@ operator||
 name|GLOB_BRACE
 operator||
 name|GLOB_KEEPSTAT
+operator||
+name|GLOB_NOSORT
 argument_list|,
 name|NULL
 argument_list|,
@@ -8809,9 +8811,16 @@ name|count
 operator|==
 literal|0
 condition|)
+block|{
+name|xfree
+argument_list|(
+name|list
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
+block|}
 comment|/* Complete ambigious command */
 name|tmp
 operator|=

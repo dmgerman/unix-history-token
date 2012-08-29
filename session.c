@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: session.c,v 1.258 2010/11/25 04:10:09 djm Exp $ */
+comment|/* $OpenBSD: session.c,v 1.259 2011/10/24 02:13:13 djm Exp $ */
 end_comment
 
 begin_comment
@@ -9978,7 +9978,7 @@ if|if
 condition|(
 name|s
 operator|->
-name|ttyfd
+name|ptymaster
 operator|==
 operator|-
 literal|1
@@ -9987,7 +9987,7 @@ name|tcsendbreak
 argument_list|(
 name|s
 operator|->
-name|ttyfd
+name|ptymaster
 argument_list|,
 literal|0
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh.c,v 1.364 2011/08/02 23:15:03 djm Exp $ */
+comment|/* $OpenBSD: ssh.c,v 1.368 2011/10/24 02:10:46 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1351,6 +1351,22 @@ condition|)
 name|muxclient_command
 operator|=
 name|SSHMUX_COMMAND_STOP
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|optarg
+argument_list|,
+literal|"cancel"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|muxclient_command
+operator|=
+name|SSHMUX_COMMAND_CANCEL_FWD
 expr_stmt|;
 else|else
 name|fatal
@@ -3799,6 +3815,13 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Now that we are back to our own permissions, create ~/.ssh 	 * directory if it doesn't already exist. 	 */
+if|if
+condition|(
+name|config
+operator|==
+name|NULL
+condition|)
+block|{
 name|r
 operator|=
 name|snprintf
@@ -3895,6 +3918,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+block|}
 block|}
 comment|/* load options.identity_files */
 name|load_public_identity_files
@@ -4499,15 +4523,18 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|type
-operator|==
-name|SSH2_MSG_REQUEST_SUCCESS
-operator|&&
 name|rfwd
 operator|->
 name|listen_port
 operator|==
 literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|type
+operator|==
+name|SSH2_MSG_REQUEST_SUCCESS
 condition|)
 block|{
 name|rfwd
@@ -4534,6 +4561,31 @@ operator|->
 name|connect_port
 argument_list|)
 expr_stmt|;
+name|channel_update_permitted_opens
+argument_list|(
+name|rfwd
+operator|->
+name|handle
+argument_list|,
+name|rfwd
+operator|->
+name|allocated_port
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|channel_update_permitted_opens
+argument_list|(
+name|rfwd
+operator|->
+name|handle
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -4624,16 +4676,10 @@ end_function
 
 begin_function
 specifier|static
-name|int
-name|client_setup_stdio_fwd
+name|void
+name|ssh_init_stdio_forwarding
 parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|host_to_connect
-parameter_list|,
-name|u_short
-name|port_to_connect
+name|void
 parameter_list|)
 block|{
 name|Channel
@@ -4645,36 +4691,55 @@ name|in
 decl_stmt|,
 name|out
 decl_stmt|;
-name|debug3
+if|if
+condition|(
+name|stdio_forward_host
+operator|==
+name|NULL
+condition|)
+return|return;
+if|if
+condition|(
+operator|!
+name|compat20
+condition|)
+name|fatal
 argument_list|(
-literal|"client_setup_stdio_fwd %s:%d"
-argument_list|,
-name|host_to_connect
-argument_list|,
-name|port_to_connect
+literal|"stdio forwarding require Protocol 2"
 argument_list|)
 expr_stmt|;
+name|debug3
+argument_list|(
+literal|"%s: %s:%d"
+argument_list|,
+name|__func__
+argument_list|,
+name|stdio_forward_host
+argument_list|,
+name|stdio_forward_port
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
 name|in
 operator|=
 name|dup
 argument_list|(
 name|STDIN_FILENO
 argument_list|)
-expr_stmt|;
+operator|)
+operator|<
+literal|0
+operator|||
+operator|(
 name|out
 operator|=
 name|dup
 argument_list|(
 name|STDOUT_FILENO
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|in
-operator|<
-literal|0
-operator|||
-name|out
+operator|)
 operator|<
 literal|0
 condition|)
@@ -4690,9 +4755,9 @@ name|c
 operator|=
 name|channel_connect_stdio_fwd
 argument_list|(
-name|host_to_connect
+name|stdio_forward_host
 argument_list|,
-name|port_to_connect
+name|stdio_forward_port
 argument_list|,
 name|in
 argument_list|,
@@ -4702,9 +4767,13 @@ operator|)
 operator|==
 name|NULL
 condition|)
-return|return
-literal|0
-return|;
+name|fatal
+argument_list|(
+literal|"%s: channel_connect_stdio_fwd failed"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|channel_register_cleanup
 argument_list|(
 name|c
@@ -4716,9 +4785,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-return|return
-literal|1
-return|;
 block|}
 end_function
 
@@ -4738,41 +4804,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-if|if
-condition|(
-name|stdio_forward_host
-operator|!=
-name|NULL
-condition|)
-block|{
-if|if
-condition|(
-operator|!
-name|compat20
-condition|)
-block|{
-name|fatal
-argument_list|(
-literal|"stdio forwarding require Protocol 2"
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-operator|!
-name|client_setup_stdio_fwd
-argument_list|(
-name|stdio_forward_host
-argument_list|,
-name|stdio_forward_port
-argument_list|)
-condition|)
-name|fatal
-argument_list|(
-literal|"Failed to connect in stdio forward mode."
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Initiate local TCP/IP port forwardings. */
 for|for
 control|(
@@ -5009,8 +5040,15 @@ operator|.
 name|connect_port
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|options
+operator|.
+name|remote_forwards
+index|[
+name|i
+index|]
+operator|.
+name|handle
+operator|=
 name|channel_request_remote_forwarding
 argument_list|(
 name|options
@@ -5049,6 +5087,17 @@ index|]
 operator|.
 name|connect_port
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|options
+operator|.
+name|remote_forwards
+index|[
+name|i
+index|]
+operator|.
+name|handle
 operator|<
 literal|0
 condition|)
@@ -5072,6 +5121,8 @@ literal|"forwarding."
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
 name|client_register_global_confirm
 argument_list|(
 name|ssh_confirm_remote_forward
@@ -5085,6 +5136,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* Initiate tunnel forwarding. */
 if|if
@@ -5637,6 +5689,9 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Initiate port forwardings. */
+name|ssh_init_stdio_forwarding
+argument_list|()
+expr_stmt|;
 name|ssh_init_forwarding
 argument_list|()
 expr_stmt|;
@@ -6217,6 +6272,16 @@ operator|-
 literal|1
 decl_stmt|;
 comment|/* XXX should be pre-session */
+if|if
+condition|(
+operator|!
+name|options
+operator|.
+name|control_persist
+condition|)
+name|ssh_init_stdio_forwarding
+argument_list|()
+expr_stmt|;
 name|ssh_init_forwarding
 argument_list|()
 expr_stmt|;
@@ -6224,7 +6289,7 @@ comment|/* Start listening for multiplex clients */
 name|muxserver_listen
 argument_list|()
 expr_stmt|;
-comment|/* 	 * If we are in control persist mode, then prepare to background 	 * ourselves and have a foreground client attach as a control 	 * slave. NB. we must save copies of the flags that we override for 	 * the backgrounding, since we defer attachment of the slave until 	 * after the connection is fully established (in particular, 	 * async rfwd replies have been received for ExitOnForwardFailure). 	 */
+comment|/* 	 * If we are in control persist mode and have a working mux listen 	 * socket, then prepare to background ourselves and have a foreground 	 * client attach as a control slave. 	 * NB. we must save copies of the flags that we override for 	 * the backgrounding, since we defer attachment of the slave until 	 * after the connection is fully established (in particular, 	 * async rfwd replies have been received for ExitOnForwardFailure). 	 */
 if|if
 condition|(
 name|options
@@ -6281,6 +6346,21 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+comment|/* 	 * ControlPersist mux listen socket setup failed, attempt the 	 * stdio forward setup that we skipped earlier. 	 */
+if|if
+condition|(
+name|options
+operator|.
+name|control_persist
+operator|&&
+name|muxserver_sock
+operator|==
+operator|-
+literal|1
+condition|)
+name|ssh_init_stdio_forwarding
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!

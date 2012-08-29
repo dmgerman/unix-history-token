@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: bsd-cygwin_util.h,v 1.13 2011/08/17 01:31:09 djm Exp $ */
+comment|/* $Id: bsd-cygwin_util.h,v 1.14 2012/03/30 03:07:07 djm Exp $ */
 end_comment
 
 begin_comment
@@ -48,6 +48,27 @@ include|#
 directive|include
 file|<io.h>
 end_include
+
+begin_comment
+comment|/* Make sure _WIN32 isn't defined later in the code, otherwise headers from    other packages might get the wrong idea about the target system. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_WIN32
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|_WIN32
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|int

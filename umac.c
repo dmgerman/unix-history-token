@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: umac.c,v 1.3 2008/05/12 20:52:20 pvalchev Exp $ */
+comment|/* $OpenBSD: umac.c,v 1.4 2011/10/19 10:39:48 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1442,7 +1442,7 @@ index|[
 name|HASH_BUF_BYTES
 index|]
 decl_stmt|;
-comment|/* Incomming data buffer           */
+comment|/* Incoming data buffer           */
 name|int
 name|next_data_empty
 decl_stmt|;

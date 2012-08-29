@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-ecdsa.c,v 1.4 2010/09/10 01:04:10 djm Exp $ */
+comment|/* $OpenBSD: ssh-ecdsa.c,v 1.5 2012/01/08 13:17:11 miod Exp $ */
 end_comment
 
 begin_comment
@@ -732,6 +732,12 @@ argument_list|(
 literal|"%s: remaining bytes in inner sigblob"
 argument_list|,
 name|__func__
+argument_list|)
+expr_stmt|;
+name|buffer_free
+argument_list|(
+operator|&
+name|bb
 argument_list|)
 expr_stmt|;
 comment|/* clean up */

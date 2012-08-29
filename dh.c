@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: dh.c,v 1.48 2009/10/01 11:37:33 grunk Exp $ */
+comment|/* $OpenBSD: dh.c,v 1.49 2011/12/07 05:44:38 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1211,6 +1211,17 @@ name|tries
 init|=
 literal|0
 decl_stmt|;
+if|if
+condition|(
+name|need
+operator|<
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"dh_gen_key: need< 0"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|dh

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: readconf.c,v 1.193 2011/05/24 07:15:47 djm Exp $ */
+comment|/* $OpenBSD: readconf.c,v 1.194 2011/09/23 07:45:05 markus Exp $ */
 end_comment
 
 begin_comment
@@ -1170,6 +1170,14 @@ operator|=
 name|newfwd
 operator|->
 name|connect_port
+expr_stmt|;
+name|fwd
+operator|->
+name|handle
+operator|=
+name|newfwd
+operator|->
+name|handle
 expr_stmt|;
 name|fwd
 operator|->

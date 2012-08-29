@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: bsd-misc.h,v 1.19 2010/11/08 22:26:23 tim Exp $ */
+comment|/* $Id: bsd-misc.h,v 1.20 2012/02/14 18:03:31 tim Exp $ */
 end_comment
 
 begin_comment
@@ -444,7 +444,7 @@ name|HAVE_UNSETENV
 end_ifndef
 
 begin_function_decl
-name|void
+name|int
 name|unsetenv
 parameter_list|(
 specifier|const

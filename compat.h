@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: compat.h,v 1.42 2008/09/11 14:22:37 markus Exp $ */
+comment|/* $OpenBSD: compat.h,v 1.43 2011/09/23 07:45:05 markus Exp $ */
 end_comment
 
 begin_comment
@@ -227,6 +227,13 @@ define|#
 directive|define
 name|SSH_NEW_OPENSSH
 value|0x04000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH_BUG_DYNAMIC_RPORT
+value|0x08000000
 end_define
 
 begin_function_decl
