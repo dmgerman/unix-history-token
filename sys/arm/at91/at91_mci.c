@@ -658,7 +658,7 @@ name|CAP_NEEDS_BYTESWAP
 operator|)
 condition|)
 block|{
-name|bcopy
+name|memcpy
 argument_list|(
 name|dptr
 argument_list|,
@@ -1334,6 +1334,18 @@ name|sc_cap
 operator||=
 name|CAP_NEEDS_BYTESWAP
 expr_stmt|;
+comment|/* 	 * MCI1 Rev 2 controllers need some workarounds, flag if so. 	 */
+if|if
+condition|(
+name|at91_mci_is_mci1rev2xx
+argument_list|()
+condition|)
+name|sc
+operator|->
+name|sc_cap
+operator||=
+name|CAP_MCI1_REV2XX
+expr_stmt|;
 name|err
 operator|=
 name|at91_mci_activate
@@ -1509,18 +1521,6 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* 	 * MCI1 Rev 2 controllers need some workarounds, flag if so. 	 */
-if|if
-condition|(
-name|at91_mci_is_mci1rev2xx
-argument_list|()
-condition|)
-name|sc
-operator|->
-name|sc_cap
-operator||=
-name|CAP_MCI1_REV2XX
-expr_stmt|;
 comment|/* 	 * Allow 4-wire to be initially set via #define. 	 * Allow a device hint to override that. 	 * Allow a sysctl to override that. 	 */
 if|#
 directive|if
