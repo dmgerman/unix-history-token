@@ -13918,6 +13918,11 @@ operator|)
 name|allocs
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|db_pager_quit
+condition|)
+return|return;
 block|}
 block|}
 block|}
