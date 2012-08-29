@@ -4318,6 +4318,11 @@ argument_list|,
 name|allocs
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|db_pager_quit
+condition|)
+break|break;
 block|}
 block|}
 end_block
@@ -4450,6 +4455,11 @@ operator|->
 name|ks_shortdesc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|db_pager_quit
+condition|)
+break|break;
 block|}
 block|}
 end_block

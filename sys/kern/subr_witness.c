@@ -4392,6 +4392,11 @@ control|)
 block|{
 if|if
 condition|(
+name|db_pager_quit
+condition|)
+return|return;
+if|if
+condition|(
 name|w_rmatrix
 index|[
 name|w
@@ -4485,6 +4490,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|db_pager_quit
+condition|)
+return|return;
 block|}
 block|}
 end_function
@@ -4559,6 +4569,11 @@ operator|&
 name|w_sleep
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|db_pager_quit
+condition|)
+return|return;
 comment|/* 	 * Now do spin locks which have been acquired at least once. 	 */
 name|prnt
 argument_list|(
@@ -4573,6 +4588,11 @@ operator|&
 name|w_spin
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|db_pager_quit
+condition|)
+return|return;
 comment|/* 	 * Finally, any locks which have not been acquired yet. 	 */
 name|prnt
 argument_list|(
@@ -4622,6 +4642,11 @@ operator|->
 name|w_ddb_level
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|db_pager_quit
+condition|)
+return|return;
 block|}
 block|}
 end_function
@@ -11315,6 +11340,11 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|db_pager_quit
+condition|)
+return|return;
 block|}
 block|}
 block|}
