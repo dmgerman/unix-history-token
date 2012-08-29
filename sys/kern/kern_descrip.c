@@ -2351,6 +2351,9 @@ decl_stmt|;
 name|uint64_t
 name|bsize
 decl_stmt|;
+name|off_t
+name|foffset
+decl_stmt|;
 name|vfslocked
 operator|=
 literal|0
@@ -3116,11 +3119,16 @@ operator|==
 name|SEEK_CUR
 condition|)
 block|{
+name|foffset
+operator|=
+name|foffset_get
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|fp
-operator|->
-name|f_offset
+name|foffset
 operator|<
 literal|0
 operator|||
@@ -3131,9 +3139,7 @@ name|l_start
 operator|>
 literal|0
 operator|&&
-name|fp
-operator|->
-name|f_offset
+name|foffset
 operator|>
 name|OFF_MAX
 operator|-
@@ -3158,9 +3164,7 @@ name|flp
 operator|->
 name|l_start
 operator|+=
-name|fp
-operator|->
-name|f_offset
+name|foffset
 expr_stmt|;
 block|}
 comment|/* 		 * VOP_ADVLOCK() may block. 		 */
@@ -3620,6 +3624,13 @@ operator|==
 name|SEEK_CUR
 condition|)
 block|{
+name|foffset
+operator|=
+name|foffset_get
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3629,9 +3640,7 @@ name|l_start
 operator|>
 literal|0
 operator|&&
-name|fp
-operator|->
-name|f_offset
+name|foffset
 operator|>
 name|OFF_MAX
 operator|-
@@ -3647,9 +3656,7 @@ name|l_start
 operator|<
 literal|0
 operator|&&
-name|fp
-operator|->
-name|f_offset
+name|foffset
 operator|<
 name|OFF_MIN
 operator|-
@@ -3674,9 +3681,7 @@ name|flp
 operator|->
 name|l_start
 operator|+=
-name|fp
-operator|->
-name|f_offset
+name|foffset
 expr_stmt|;
 block|}
 comment|/* 		 * VOP_ADVLOCK() may block. 		 */
@@ -13496,9 +13501,10 @@ name|xf
 operator|.
 name|xf_offset
 operator|=
+name|foffset_get
+argument_list|(
 name|fp
-operator|->
-name|f_offset
+argument_list|)
 expr_stmt|;
 name|xf
 operator|.
@@ -14489,9 +14495,10 @@ name|kif
 operator|->
 name|kf_offset
 operator|=
+name|foffset_get
+argument_list|(
 name|fp
-operator|->
-name|f_offset
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -16257,9 +16264,10 @@ name|f_flag
 expr_stmt|;
 name|offset
 operator|=
+name|foffset_get
+argument_list|(
 name|fp
-operator|->
-name|f_offset
+argument_list|)
 expr_stmt|;
 comment|/* 		 * Create sysctl entry. 		 * It is OK to drop the filedesc lock here as we will 		 * re-validate and re-evaluate its properties when 		 * the loop continues. 		 */
 name|oldidx
