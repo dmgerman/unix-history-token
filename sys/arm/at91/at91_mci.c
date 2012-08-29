@@ -1121,20 +1121,8 @@ operator||=
 literal|0x34a
 expr_stmt|;
 comment|/* PWSDIV = 3; CLKDIV = 74 */
-if|if
-condition|(
-name|sc
-operator|->
-name|sc_cap
-operator|&
-name|CAP_MCI1_REV2XX
-condition|)
-name|val
-operator||=
-name|MCI_MR_RDPROOF
-operator||
-name|MCI_MR_WRPROOF
-expr_stmt|;
+comment|//	if (sc->sc_cap& CAP_MCI1_REV2XX)
+comment|//		val |= MCI_MR_RDPROOF | MCI_MR_WRPROOF;
 name|WR4
 argument_list|(
 name|sc
@@ -3067,8 +3055,6 @@ operator|&
 name|CAP_MCI1_REV2XX
 operator|)
 operator|&&
-name|data
-operator|->
 name|len
 operator|<
 literal|12
@@ -3080,9 +3066,12 @@ literal|12
 expr_stmt|;
 name|memset
 argument_list|(
-name|data
+name|sc
 operator|->
-name|data
+name|bbuf_vaddr
+index|[
+literal|0
+index|]
 argument_list|,
 literal|0
 argument_list|,
@@ -4147,14 +4136,24 @@ operator|->
 name|curcmd
 decl_stmt|;
 comment|/* 	 * We arrive here after receiving CMDRDY for a MMC_STOP_TRANSMISSION 	 * command.  Depending on the operation being stopped, we may have to 	 * do some unusual things to work around hardware bugs. 	 */
-comment|/* 	 * This is known to be true of at91rm9200 hardware; it may or may not 	 * apply to more recent chips: 	 * 	 * After stopping a multi-block write, the NOTBUSY bit in MCI_SR does 	 * not properly reflect the actual busy state of the card as signaled 	 * on the DAT0 line; it always claims the card is not-busy.  If we 	 * believe that and let operations continue, following commands will 	 * fail with response timeouts (except of course MMC_SEND_STATUS -- it 	 * indicates the card is busy in the PRG state, which was the smoking 	 * gun that showed MCI_SR NOTBUSY was not tracking DAT0 correctly). 	 * 	 * The atmel docs are emphatic: "This flag [NOTBUSY] must be used only 	 * for Write Operations."  I guess technically since we sent a stop 	 * it's not a write operation anymore.  But then just what did they 	 * think it meant for the stop command to have "...an optional busy 	 * signal transmitted on the data line" according to the SD spec? 	 * 	 * I tried a variety of things to un-wedge the MCI and get the status 	 * register to reflect NOTBUSY correctly again, but the only thing 	 * that worked was a full device reset.  It feels like an awfully big 	 * hammer, but doing a full reset after every multiblock write is 	 * still faster than doing single-block IO (by almost two orders of 	 * magnitude: 20KB/sec improves to about 1.8MB/sec best case). 	 * 	 * After doing the reset, wait for a NOTBUSY interrupt before 	 * continuing with the next operation. 	 */
+comment|/* 	 * This is known to be true of at91rm9200 hardware; it may or may not 	 * apply to more recent chips: 	 * 	 * After stopping a multi-block write, the NOTBUSY bit in MCI_SR does 	 * not properly reflect the actual busy state of the card as signaled 	 * on the DAT0 line; it always claims the card is not-busy.  If we 	 * believe that and let operations continue, following commands will 	 * fail with response timeouts (except of course MMC_SEND_STATUS -- it 	 * indicates the card is busy in the PRG state, which was the smoking 	 * gun that showed MCI_SR NOTBUSY was not tracking DAT0 correctly). 	 * 	 * The atmel docs are emphatic: "This flag [NOTBUSY] must be used only 	 * for Write Operations."  I guess technically since we sent a stop 	 * it's not a write operation anymore.  But then just what did they 	 * think it meant for the stop command to have "...an optional busy 	 * signal transmitted on the data line" according to the SD spec? 	 * 	 * I tried a variety of things to un-wedge the MCI and get the status 	 * register to reflect NOTBUSY correctly again, but the only thing 	 * that worked was a full device reset.  It feels like an awfully big 	 * hammer, but doing a full reset after every multiblock write is 	 * still faster than doing single-block IO (by almost two orders of 	 * magnitude: 20KB/sec improves to about 1.8MB/sec best case). 	 * 	 * After doing the reset, wait for a NOTBUSY interrupt before 	 * continuing with the next operation. 	 * 	 * This workaround breaks multiwrite on the rev2xx parts, but some other 	 * workaround is needed. 	 */
 if|if
 condition|(
+operator|(
 name|sc
 operator|->
 name|flags
 operator|&
 name|CMD_MULTIWRITE
+operator|)
+operator|&&
+operator|(
+name|sc
+operator|->
+name|sc_cap
+operator|&
+name|CAP_NEEDS_BYTESWAP
+operator|)
 condition|)
 block|{
 name|at91_mci_reset
@@ -4175,14 +4174,24 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * This is known to be true of at91rm9200 hardware; it may or may not 	 * apply to more recent chips: 	 * 	 * After stopping a multi-block read, loop to read and discard any 	 * data that coasts in after we sent the stop command.  The docs don't 	 * say anything about it, but empirical testing shows that 1-3 	 * additional words of data get buffered up in some unmentioned 	 * internal fifo and if we don't read and discard them here they end 	 * up on the front of the next read DMA transfer we do. 	 */
+comment|/* 	 * This is known to be true of at91rm9200 hardware; it may or may not 	 * apply to more recent chips: 	 * 	 * After stopping a multi-block read, loop to read and discard any 	 * data that coasts in after we sent the stop command.  The docs don't 	 * say anything about it, but empirical testing shows that 1-3 	 * additional words of data get buffered up in some unmentioned 	 * internal fifo and if we don't read and discard them here they end 	 * up on the front of the next read DMA transfer we do. 	 * 	 * This appears to be unnecessary for rev2xx parts. 	 */
 if|if
 condition|(
+operator|(
 name|sc
 operator|->
 name|flags
 operator|&
 name|CMD_MULTIREAD
+operator|)
+operator|&&
+operator|(
+name|sc
+operator|->
+name|sc_cap
+operator|&
+name|CAP_NEEDS_BYTESWAP
+operator|)
 condition|)
 block|{
 name|uint32_t
@@ -4235,8 +4244,19 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|//              if (count != 0)
-comment|//                      printf("Had to soak up %d words after read\n", count);
+if|if
+condition|(
+name|count
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"Had to soak up %d words after read\n"
+argument_list|,
+name|count
+argument_list|)
+expr_stmt|;
 block|}
 name|cmd
 operator|->
@@ -5131,6 +5151,25 @@ break|break;
 case|case
 name|MMCBR_IVAR_MAX_DATA
 case|:
+comment|/* 		 * Something is wrong with the 2x parts and multiblock, so 		 * just do 1 block at a time for now, which really kills 		 * performance. 		 */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_cap
+operator|&
+name|CAP_MCI1_REV2XX
+condition|)
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|result
+operator|=
+literal|1
+expr_stmt|;
+else|else
 operator|*
 operator|(
 name|int
