@@ -553,7 +553,7 @@ parameter_list|(
 name|p
 parameter_list|)
 define|\
-value|(__predict_false(atomic_load_acq_int(&(p)->p_flag)&	\ 	    P_HWPMC))
+value|(__predict_false(p->p_flag& P_HWPMC))
 end_define
 
 begin_comment
