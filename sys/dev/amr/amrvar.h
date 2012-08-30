@@ -734,7 +734,7 @@ name|amr_ich
 decl_stmt|;
 comment|/* wait-for-interrupts probe hook */
 name|struct
-name|callout_handle
+name|callout
 name|amr_timeout
 decl_stmt|;
 comment|/* periodic status check */

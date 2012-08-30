@@ -1414,6 +1414,16 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
+name|callout_init
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|amr_timeout
+argument_list|,
+name|CALLOUT_MPSAFE
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(

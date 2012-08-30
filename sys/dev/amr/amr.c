@@ -1477,7 +1477,7 @@ operator||=
 name|AMR_STATE_INTEN
 expr_stmt|;
 comment|/*      * Start the timeout routine.      */
-comment|/*    sc->amr_timeout = timeout(amr_periodic, sc, hz);*/
+comment|/*    callout_reset(&sc->amr_timeout, hz, amr_periodic, sc);*/
 return|return;
 block|}
 end_function
@@ -1676,12 +1676,9 @@ name|amr_pass
 argument_list|)
 expr_stmt|;
 comment|/* cancel status timeout */
-name|untimeout
+name|callout_drain
 argument_list|(
-name|amr_periodic
-argument_list|,
-name|sc
-argument_list|,
+operator|&
 name|sc
 operator|->
 name|amr_timeout
@@ -4650,17 +4647,18 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* reschedule */
+name|callout_reset
+argument_list|(
+operator|&
 name|sc
 operator|->
 name|amr_timeout
-operator|=
-name|timeout
-argument_list|(
+argument_list|,
+name|hz
+argument_list|,
 name|amr_periodic
 argument_list|,
 name|sc
-argument_list|,
-name|hz
 argument_list|)
 expr_stmt|;
 block|}
