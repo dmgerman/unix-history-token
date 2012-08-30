@@ -540,6 +540,8 @@ if|if
 condition|(
 name|mlockall
 argument_list|(
+name|MCL_CURRENT
+operator||
 name|MCL_FUTURE
 argument_list|)
 operator|!=
