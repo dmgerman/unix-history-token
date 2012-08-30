@@ -401,8 +401,9 @@ expr_stmt|;
 if|if
 condition|(
 name|handle
-operator|<=
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 return|return
 operator|(
@@ -453,7 +454,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"PowerBook backlight"
+literal|"PowerBook backlight for ATI graphics"
 argument_list|)
 expr_stmt|;
 return|return

@@ -366,8 +366,9 @@ expr_stmt|;
 if|if
 condition|(
 name|handle
-operator|<=
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 return|return
 operator|(
