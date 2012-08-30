@@ -1774,7 +1774,7 @@ name|flock
 name|fl
 decl_stmt|;
 name|struct
-name|oflock
+name|__oflock
 name|ofl
 decl_stmt|;
 name|intptr_t
