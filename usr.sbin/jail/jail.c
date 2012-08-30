@@ -619,7 +619,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"cdf:hiJ:lmn:p:qrRs:U:v"
+literal|"cdf:hiJ:lmn:p:qrRs:u:U:v"
 argument_list|)
 operator|)
 operator|!=
