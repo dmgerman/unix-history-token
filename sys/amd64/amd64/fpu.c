@@ -256,22 +256,6 @@ parameter_list|)
 value|__asm __volatile("ldmxcsr %0" : : "m" (csr))
 end_define
 
-begin_define
-define|#
-directive|define
-name|start_emulating
-parameter_list|()
-value|__asm __volatile( \ 				    "smsw %%ax; orb %0,%%al; lmsw %%ax" \ 				    : : "n" (CR0_TS) : "ax")
-end_define
-
-begin_define
-define|#
-directive|define
-name|stop_emulating
-parameter_list|()
-value|__asm __volatile("clts")
-end_define
-
 begin_function
 specifier|static
 name|__inline
@@ -432,24 +416,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|start_emulating
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|stop_emulating
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|xrstor
 parameter_list|(
 name|char
@@ -484,6 +450,22 @@ end_endif
 begin_comment
 comment|/* __GNUCLIKE_ASM&& !lint */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|start_emulating
+parameter_list|()
+value|load_cr0(rcr0() | CR0_TS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|stop_emulating
+parameter_list|()
+value|clts()
+end_define
 
 begin_define
 define|#
