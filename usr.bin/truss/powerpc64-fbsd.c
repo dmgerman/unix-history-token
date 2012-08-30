@@ -326,12 +326,6 @@ name|int
 name|nargs
 parameter_list|)
 block|{
-name|char
-name|buf
-index|[
-literal|32
-index|]
-decl_stmt|;
 name|struct
 name|reg
 name|regs
@@ -346,7 +340,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|unsigned
 name|int
 name|regargs
 decl_stmt|;
