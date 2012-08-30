@@ -727,7 +727,7 @@ parameter_list|(
 name|a
 parameter_list|)
 define|\
-value|((*(const u_int32_t *)(const void *)(&(a)->s6_addr[0]) == 0)&&	\ 	 (*(const u_int32_t *)(const void *)(&(a)->s6_addr[4]) == 0)&&	\ 	 (*(const u_int32_t *)(const void *)(&(a)->s6_addr[8]) == 0)&&	\ 	 (*(const u_int32_t *)(const void *)(&(a)->s6_addr[12]) == 0))
+value|((a)->__u6_addr.__u6_addr32[0] == 0&&	\ 	 (a)->__u6_addr.__u6_addr32[1] == 0&&	\ 	 (a)->__u6_addr.__u6_addr32[2] == 0&&	\ 	 (a)->__u6_addr.__u6_addr32[3] == 0)
 end_define
 
 begin_comment
@@ -742,7 +742,7 @@ parameter_list|(
 name|a
 parameter_list|)
 define|\
-value|((*(const u_int32_t *)(const void *)(&(a)->s6_addr[0]) == 0)&&	\ 	 (*(const u_int32_t *)(const void *)(&(a)->s6_addr[4]) == 0)&&	\ 	 (*(const u_int32_t *)(const void *)(&(a)->s6_addr[8]) == 0)&&	\ 	 (*(const u_int32_t *)(const void *)(&(a)->s6_addr[12]) == ntohl(1)))
+value|((a)->__u6_addr.__u6_addr32[0] == 0&&	\ 	 (a)->__u6_addr.__u6_addr32[1] == 0&&	\ 	 (a)->__u6_addr.__u6_addr32[2] == 0&&	\ 	 (a)->__u6_addr.__u6_addr32[3] == ntohl(1))
 end_define
 
 begin_comment
@@ -757,7 +757,7 @@ parameter_list|(
 name|a
 parameter_list|)
 define|\
-value|((*(const u_int32_t *)(const void *)(&(a)->s6_addr[0]) == 0)&&	\ 	 (*(const u_int32_t *)(const void *)(&(a)->s6_addr[4]) == 0)&&	\ 	 (*(const u_int32_t *)(const void *)(&(a)->s6_addr[8]) == 0)&&	\ 	 (*(const u_int32_t *)(const void *)(&(a)->s6_addr[12]) != 0)&&	\ 	 (*(const u_int32_t *)(const void *)(&(a)->s6_addr[12]) != ntohl(1)))
+value|((a)->__u6_addr.__u6_addr32[0] == 0&&	\ 	 (a)->__u6_addr.__u6_addr32[1] == 0&&	\ 	 (a)->__u6_addr.__u6_addr32[2] == 0&&	\ 	 (a)->__u6_addr.__u6_addr32[3] != 0&&	\ 	 (a)->__u6_addr.__u6_addr32[3] != ntohl(1))
 end_define
 
 begin_comment
@@ -772,7 +772,7 @@ parameter_list|(
 name|a
 parameter_list|)
 define|\
-value|((*(const u_int32_t *)(const void *)(&(a)->s6_addr[0]) == 0)&&	\ 	 (*(const u_int32_t *)(const void *)(&(a)->s6_addr[4]) == 0)&&	\ 	 (*(const u_int32_t *)(const void *)(&(a)->s6_addr[8]) == ntohl(0x0000ffff)))
+value|((a)->__u6_addr.__u6_addr32[0] == 0&&	\ 	 (a)->__u6_addr.__u6_addr32[1] == 0&&	\ 	 (a)->__u6_addr.__u6_addr32[2] == ntohl(0x0000ffff))
 end_define
 
 begin_comment
