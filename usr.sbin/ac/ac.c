@@ -1343,6 +1343,16 @@ index|]
 decl_stmt|;
 name|struct
 name|timeval
+name|diff
+decl_stmt|,
+name|total
+init|=
+block|{
+literal|0
+block|,
+literal|0
+block|}
+decl_stmt|,
 name|usec
 init|=
 block|{
@@ -1350,9 +1360,7 @@ literal|0
 block|,
 literal|1
 block|}
-decl_stmt|;
-name|struct
-name|timeval
+decl_stmt|,
 name|yesterday
 decl_stmt|;
 specifier|static
@@ -1419,19 +1427,6 @@ name|tv_sec
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* restore the missing second */
-name|timeradd
-argument_list|(
-operator|&
-name|today
-argument_list|,
-operator|&
-name|usec
-argument_list|,
-operator|&
-name|yesterday
-argument_list|)
-expr_stmt|;
 name|SLIST_FOREACH
 argument_list|(
 argument|lp
@@ -1444,7 +1439,7 @@ block|{
 name|timersub
 argument_list|(
 operator|&
-name|yesterday
+name|today
 argument_list|,
 operator|&
 name|lp
@@ -1452,7 +1447,7 @@ operator|->
 name|time
 argument_list|,
 operator|&
-name|today
+name|diff
 argument_list|)
 expr_stmt|;
 name|update_user
@@ -1461,7 +1456,7 @@ name|lp
 operator|->
 name|user
 argument_list|,
-name|today
+name|diff
 argument_list|)
 expr_stmt|;
 comment|/* As if they just logged in. */
@@ -1469,15 +1464,9 @@ name|lp
 operator|->
 name|time
 operator|=
-name|yesterday
+name|today
 expr_stmt|;
 block|}
-name|timerclear
-argument_list|(
-operator|&
-name|today
-argument_list|)
-expr_stmt|;
 name|SLIST_FOREACH
 argument_list|(
 argument|up
@@ -1490,7 +1479,7 @@ block|{
 name|timeradd
 argument_list|(
 operator|&
-name|today
+name|total
 argument_list|,
 operator|&
 name|up
@@ -1498,7 +1487,7 @@ operator|->
 name|time
 argument_list|,
 operator|&
-name|today
+name|total
 argument_list|)
 expr_stmt|;
 comment|/* For next day. */
@@ -1516,7 +1505,7 @@ condition|(
 name|timerisset
 argument_list|(
 operator|&
-name|today
+name|total
 argument_list|)
 condition|)
 operator|(
@@ -1531,7 +1520,7 @@ argument_list|,
 operator|(
 name|double
 operator|)
-name|today
+name|total
 operator|.
 name|tv_sec
 operator|/
