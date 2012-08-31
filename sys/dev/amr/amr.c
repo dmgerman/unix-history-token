@@ -529,22 +529,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Status monitoring  */
-end_comment
-
-begin_function_decl
-specifier|static
-name|void
-name|amr_periodic
-parameter_list|(
-name|void
-modifier|*
-name|data
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/*  * Interface-specific shims  */
 end_comment
 
@@ -1476,8 +1460,6 @@ name|amr_state
 operator||=
 name|AMR_STATE_INTEN
 expr_stmt|;
-comment|/*      * Start the timeout routine.      */
-comment|/*    callout_reset(&sc->amr_timeout, hz, amr_periodic, sc);*/
 return|return;
 block|}
 end_function
@@ -1673,15 +1655,6 @@ argument_list|,
 name|sc
 operator|->
 name|amr_pass
-argument_list|)
-expr_stmt|;
-comment|/* cancel status timeout */
-name|callout_drain
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|amr_timeout
 argument_list|)
 expr_stmt|;
 comment|/* throw away any command buffers */
@@ -4601,66 +4574,6 @@ operator|(
 name|error
 operator|)
 return|;
-block|}
-end_function
-
-begin_comment
-comment|/********************************************************************************  ********************************************************************************                                                                 Status Monitoring  ********************************************************************************  ********************************************************************************/
-end_comment
-
-begin_comment
-comment|/********************************************************************************  * Perform a periodic check of the controller status  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|amr_periodic
-parameter_list|(
-name|void
-modifier|*
-name|data
-parameter_list|)
-block|{
-name|struct
-name|amr_softc
-modifier|*
-name|sc
-init|=
-operator|(
-expr|struct
-name|amr_softc
-operator|*
-operator|)
-name|data
-decl_stmt|;
-name|debug_called
-argument_list|(
-literal|2
-argument_list|)
-expr_stmt|;
-comment|/* XXX perform periodic status checks here */
-comment|/* compensate for missed interrupts */
-name|amr_done
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-comment|/* reschedule */
-name|callout_reset
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|amr_timeout
-argument_list|,
-name|hz
-argument_list|,
-name|amr_periodic
-argument_list|,
-name|sc
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
