@@ -637,16 +637,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|page_is_managed
-parameter_list|(
-name|vm_paddr_t
-name|pa
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|pmap_kenter
 parameter_list|(
