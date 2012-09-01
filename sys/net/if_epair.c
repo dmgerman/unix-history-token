@@ -4023,24 +4023,23 @@ operator|&=
 operator|~
 name|IFF_DRV_RUNNING
 expr_stmt|;
+comment|/* 	 * Get rid of our second half. As the other of the two 	 * interfaces may reside in a different vnet, we need to 	 * switch before freeing them. 	 */
+name|CURVNET_SET_QUIET
+argument_list|(
+name|oifp
+operator|->
+name|if_vnet
+argument_list|)
+expr_stmt|;
 name|ether_ifdetach
 argument_list|(
 name|oifp
 argument_list|)
 expr_stmt|;
-name|ether_ifdetach
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Wait for all packets to be dispatched to if_input. 	 * The numbers can only go down as the interfaces are 	 * detached so there is no need to use atomics. 	 */
+comment|/* 	 * Wait for all packets to be dispatched to if_input. 	 * The numbers can only go down as the interface is 	 * detached so there is no need to use atomics. 	 */
 name|DPRINTF
 argument_list|(
-literal|"sca refcnt=%u scb refcnt=%u\n"
-argument_list|,
-name|sca
-operator|->
-name|refcount
+literal|"scb refcnt=%u\n"
 argument_list|,
 name|scb
 operator|->
@@ -4049,12 +4048,6 @@ argument_list|)
 expr_stmt|;
 name|EPAIR_REFCOUNT_ASSERT
 argument_list|(
-name|sca
-operator|->
-name|refcount
-operator|==
-literal|1
-operator|&&
 name|scb
 operator|->
 name|refcount
@@ -4062,15 +4055,9 @@ operator|==
 literal|1
 argument_list|,
 operator|(
-literal|"%s: ifp=%p sca->refcount!=1: %d || ifp=%p scb->refcount!=1: %d"
+literal|"%s: ifp=%p scb->refcount!=1: %d"
 operator|,
 name|__func__
-operator|,
-name|ifp
-operator|,
-name|sca
-operator|->
-name|refcount
 operator|,
 name|oifp
 operator|,
@@ -4080,7 +4067,6 @@ name|refcount
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Get rid of our second half. 	 */
 name|oifp
 operator|->
 name|if_softc
@@ -4109,33 +4095,9 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Finish cleaning up. Free them and release the unit. 	 * As the other of the two interfaces my reside in a different vnet, 	 * we need to switch before freeing them. 	 */
-name|CURVNET_SET_QUIET
-argument_list|(
-name|oifp
-operator|->
-name|if_vnet
-argument_list|)
-expr_stmt|;
 name|if_free
 argument_list|(
 name|oifp
-argument_list|)
-expr_stmt|;
-name|CURVNET_RESTORE
-argument_list|()
-expr_stmt|;
-name|if_free
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
-name|ifmedia_removeall
-argument_list|(
-operator|&
-name|sca
-operator|->
-name|media
 argument_list|)
 expr_stmt|;
 name|ifmedia_removeall
@@ -4151,6 +4113,58 @@ argument_list|(
 name|scb
 argument_list|,
 name|M_EPAIR
+argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
+name|ether_ifdetach
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Wait for all packets to be dispatched to if_input. 	 */
+name|DPRINTF
+argument_list|(
+literal|"sca refcnt=%u\n"
+argument_list|,
+name|sca
+operator|->
+name|refcount
+argument_list|)
+expr_stmt|;
+name|EPAIR_REFCOUNT_ASSERT
+argument_list|(
+name|sca
+operator|->
+name|refcount
+operator|==
+literal|1
+argument_list|,
+operator|(
+literal|"%s: ifp=%p sca->refcount!=1: %d"
+operator|,
+name|__func__
+operator|,
+name|ifp
+operator|,
+name|sca
+operator|->
+name|refcount
+operator|)
+argument_list|)
+expr_stmt|;
+name|if_free
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+name|ifmedia_removeall
+argument_list|(
+operator|&
+name|sca
+operator|->
+name|media
 argument_list|)
 expr_stmt|;
 name|free
