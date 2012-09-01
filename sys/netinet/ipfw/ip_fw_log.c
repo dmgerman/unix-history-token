@@ -149,7 +149,7 @@ file|<net/if_types.h>
 end_include
 
 begin_comment
-comment|/* for IFT_ETHER */
+comment|/* for IFT_PFLOG */
 end_comment
 
 begin_include
@@ -687,7 +687,7 @@ name|ifp
 operator|=
 name|if_alloc
 argument_list|(
-name|IFT_ETHER
+name|IFT_PFLOG
 argument_list|)
 expr_stmt|;
 if|if
