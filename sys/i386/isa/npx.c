@@ -1388,10 +1388,7 @@ argument_list|)
 condition|)
 name|npxsave
 argument_list|(
-name|PCPU_GET
-argument_list|(
 name|curpcb
-argument_list|)
 operator|->
 name|pcb_save
 argument_list|)
@@ -2131,11 +2128,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|struct
-name|pcb
-modifier|*
-name|pcb
-decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -2233,13 +2225,6 @@ argument_list|,
 name|curthread
 argument_list|)
 expr_stmt|;
-name|pcb
-operator|=
-name|PCPU_GET
-argument_list|(
-name|curpcb
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|CPU_ENABLE_SSE
@@ -2255,7 +2240,7 @@ directive|endif
 if|if
 condition|(
 operator|(
-name|pcb
+name|curpcb
 operator|->
 name|pcb_flags
 operator|&
@@ -2274,7 +2259,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pcb
+name|curpcb
 operator|->
 name|pcb_initial_npxcw
 operator|!=
@@ -2282,12 +2267,12 @@ name|__INITIAL_NPXCW__
 condition|)
 name|fldcw
 argument_list|(
-name|pcb
+name|curpcb
 operator|->
 name|pcb_initial_npxcw
 argument_list|)
 expr_stmt|;
-name|pcb
+name|curpcb
 operator|->
 name|pcb_flags
 operator||=
@@ -2297,10 +2282,10 @@ if|if
 condition|(
 name|PCB_USER_FPU
 argument_list|(
-name|pcb
+name|curpcb
 argument_list|)
 condition|)
-name|pcb
+name|curpcb
 operator|->
 name|pcb_flags
 operator||=
@@ -2312,7 +2297,7 @@ block|{
 comment|/* 		 * The following fpurstor() may cause an IRQ13 when the 		 * state being restored has a pending error.  The error will 		 * appear to have been triggered by the current (npx) user 		 * instruction even when that instruction is a no-wait 		 * instruction that should not trigger an error (e.g., 		 * fnclex).  On at least one 486 system all of the no-wait 		 * instructions are broken the same as frstor, so our 		 * treatment does not amplify the breakage.  On at least 		 * one 386/Cyrix 387 system, fnclex works correctly while 		 * frstor and fnsave are broken, so our treatment breaks 		 * fnclex if it is the first FPU instruction after a context 		 * switch. 		 */
 name|fpurstor
 argument_list|(
-name|pcb
+name|curpcb
 operator|->
 name|pcb_save
 argument_list|)
@@ -3712,10 +3697,7 @@ name|pcb
 decl_stmt|;
 name|pcb
 operator|=
-name|PCPU_GET
-argument_list|(
 name|curpcb
-argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
@@ -3736,12 +3718,12 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|pcb
+name|curpcb
 operator|->
 name|pcb_save
 operator|==
 operator|&
-name|pcb
+name|curpcb
 operator|->
 name|pcb_user_save
 argument_list|,
@@ -3754,7 +3736,7 @@ name|KASSERT
 argument_list|(
 name|PCB_USER_FPU
 argument_list|(
-name|pcb
+name|curpcb
 argument_list|)
 argument_list|,
 operator|(
@@ -3762,7 +3744,7 @@ literal|"recursive call"
 operator|)
 argument_list|)
 expr_stmt|;
-name|pcb
+name|curpcb
 operator|->
 name|pcb_flags
 operator||=
@@ -3804,10 +3786,7 @@ return|;
 return|return
 operator|(
 operator|(
-name|PCPU_GET
-argument_list|(
 name|curpcb
-argument_list|)
 operator|->
 name|pcb_flags
 operator|&
