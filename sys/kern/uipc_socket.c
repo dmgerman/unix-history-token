@@ -2796,7 +2796,7 @@ argument_list|)
 operator|)
 argument_list|,
 operator|(
-literal|"sofree: so_comp populated"
+literal|"sofree: so_incomp populated"
 operator|)
 argument_list|)
 expr_stmt|;
