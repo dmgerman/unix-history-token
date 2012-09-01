@@ -1203,11 +1203,6 @@ argument_list|(
 operator|&
 name|current
 argument_list|,
-operator|(
-expr|struct
-name|timezone
-operator|*
-operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
