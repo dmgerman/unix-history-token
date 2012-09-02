@@ -611,6 +611,8 @@ argument_list|,
 name|maxtsiz
 argument_list|,
 name|CTLFLAG_RDTUN
+operator||
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|maxtsiz
@@ -632,6 +634,8 @@ argument_list|,
 name|dfldsiz
 argument_list|,
 name|CTLFLAG_RDTUN
+operator||
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|dfldsiz
@@ -653,6 +657,8 @@ argument_list|,
 name|maxdsiz
 argument_list|,
 name|CTLFLAG_RDTUN
+operator||
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|maxdsiz
@@ -674,6 +680,8 @@ argument_list|,
 name|dflssiz
 argument_list|,
 name|CTLFLAG_RDTUN
+operator||
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|dflssiz
@@ -695,6 +703,8 @@ argument_list|,
 name|maxssiz
 argument_list|,
 name|CTLFLAG_RDTUN
+operator||
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|maxssiz
@@ -716,6 +726,8 @@ argument_list|,
 name|sgrowsiz
 argument_list|,
 name|CTLFLAG_RDTUN
+operator||
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|sgrowsiz
