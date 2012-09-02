@@ -39,71 +39,120 @@ directive|include
 file|<rpc/rpc.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__cplusplus
-end_ifdef
-
-begin_extern
-extern|extern
-literal|"C"
-block|{
-endif|#
-directive|endif
+begin_define
 define|#
 directive|define
 name|DES_MAXDATA
 value|8192
+end_define
+
+begin_comment
 comment|/* max bytes encrypted in one call */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|DES_DIRMASK
 value|(1<< 0)
+end_define
+
+begin_define
 define|#
 directive|define
 name|DES_ENCRYPT
 value|(0*DES_DIRMASK)
+end_define
+
+begin_comment
 comment|/* Encrypt */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|DES_DECRYPT
 value|(1*DES_DIRMASK)
+end_define
+
+begin_comment
 comment|/* Decrypt */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|DES_DEVMASK
 value|(1<< 1)
+end_define
+
+begin_define
 define|#
 directive|define
 name|DES_HW
 value|(0*DES_DEVMASK)
+end_define
+
+begin_comment
 comment|/* Use hardware device */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|DES_SW
 value|(1*DES_DEVMASK)
+end_define
+
+begin_comment
 comment|/* Use software device */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|DESERR_NONE
 value|0
+end_define
+
+begin_comment
 comment|/* succeeded */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|DESERR_NOHWDEVICE
 value|1
+end_define
+
+begin_comment
 comment|/* succeeded, but hw device not available */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|DESERR_HWERROR
 value|2
+end_define
+
+begin_comment
 comment|/* failed, hardware/driver error */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|DESERR_BADPARAM
 value|3
+end_define
+
+begin_comment
 comment|/* failed, bad parameter to call */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|DES_FAILED
@@ -112,8 +161,17 @@ name|err
 parameter_list|)
 define|\
 value|((err)> DESERR_NOHWDEVICE)
+end_define
+
+begin_comment
 comment|/*  * cbc_crypt()  * ecb_crypt()  *  * Encrypt (or decrypt) len bytes of a buffer buf.  * The length must be a multiple of eight.  * The key should have odd parity in the low bit of each byte.  * ivec is the input vector, and is updated to the new one (cbc only).  * The mode is created by oring together the appropriate parameters.  * DESERR_NOHWDEVICE is returned if DES_HW was specified but  * there was no hardware to do it on (the data will still be  * encrypted though, in software).  */
+end_comment
+
+begin_comment
 comment|/*  * Cipher Block Chaining mode  */
+end_comment
+
+begin_function_decl
 name|__BEGIN_DECLS
 name|int
 name|cbc_crypt
@@ -134,6 +192,9 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|__END_DECLS
 comment|/*  * Electronic Code Book mode  */
 name|__BEGIN_DECLS
@@ -153,6 +214,9 @@ name|unsigned
 name|int
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|__END_DECLS
 comment|/*   * Set des parity for a key.  * DES parity is odd and in the low bit of each byte  */
 name|__BEGIN_DECLS
@@ -163,17 +227,11 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
-name|__END_DECLS
-ifdef|#
-directive|ifdef
-name|__cplusplus
-block|}
-end_extern
+end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_endif
 endif|#

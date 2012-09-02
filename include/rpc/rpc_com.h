@@ -31,37 +31,35 @@ directive|define
 name|_RPC_RPCCOM_H
 end_define
 
-begin_comment
-comment|/* #pragma ident	"@(#)rpc_com.h	1.11	93/07/05 SMI" */
-end_comment
-
 begin_include
 include|#
 directive|include
 file|<sys/cdefs.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__cplusplus
-end_ifdef
+begin_comment
+comment|/* #pragma ident	"@(#)rpc_com.h	1.11	93/07/05 SMI" */
+end_comment
 
-begin_extern
-extern|extern
-literal|"C"
-block|{
-endif|#
-directive|endif
+begin_comment
 comment|/*  * The max size of the transport, if the size cannot be determined  * by other means.  */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|RPC_MAXDATASIZE
 value|9000
+end_define
+
+begin_define
 define|#
 directive|define
 name|RPC_MAXADDRSIZE
 value|1024
+end_define
+
+begin_define
 define|#
 directive|define
 name|__RPC_GETXID
@@ -69,6 +67,9 @@ parameter_list|(
 name|now
 parameter_list|)
 value|((u_int32_t)getpid() ^ (u_int32_t)(now)->tv_sec ^ \     (u_int32_t)(now)->tv_usec)
+end_define
+
+begin_function_decl
 name|__BEGIN_DECLS
 specifier|extern
 name|u_int
@@ -77,6 +78,9 @@ parameter_list|(
 name|int
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|extern
 name|int
 name|__rpc_dtbsize
@@ -84,6 +88,9 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|extern
 name|int
 name|_rpc_dtablesize
@@ -91,6 +98,9 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|extern
 name|struct
 name|netconfig
@@ -100,6 +110,9 @@ parameter_list|(
 name|int
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|extern
 name|int
 name|__rpc_get_default_domain
@@ -109,6 +122,9 @@ modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|char
 modifier|*
 name|__rpc_taddr2uaddr_af
@@ -121,6 +137,9 @@ name|netbuf
 modifier|*
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|netbuf
 modifier|*
@@ -133,6 +152,9 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|__rpc_fixup_addr
 parameter_list|(
@@ -146,6 +168,9 @@ name|netbuf
 modifier|*
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|__rpc_sockinfo2netid
 parameter_list|(
@@ -159,18 +184,27 @@ modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|__rpc_seman2socktype
 parameter_list|(
 name|int
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|__rpc_socktype2seman
 parameter_list|(
 name|int
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 modifier|*
 name|rpc_nullproc
@@ -179,12 +213,18 @@ name|CLIENT
 modifier|*
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|__rpc_sockisbound
 parameter_list|(
 name|int
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|netbuf
 modifier|*
@@ -208,6 +248,9 @@ modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|bool_t
 name|rpc_control
 parameter_list|(
@@ -217,6 +260,9 @@ name|void
 modifier|*
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|char
 modifier|*
 name|_get_next_token
@@ -227,17 +273,11 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
-name|__END_DECLS
-ifdef|#
-directive|ifdef
-name|__cplusplus
-block|}
-end_extern
+end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_endif
 endif|#

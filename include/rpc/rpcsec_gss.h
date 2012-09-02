@@ -15,31 +15,35 @@ directive|define
 name|_RPCSEC_GSS_H
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__cplusplus
-end_ifdef
-
-begin_extern
-extern|extern
-literal|"C"
-block|{
-endif|#
-directive|endif
+begin_include
 include|#
 directive|include
 file|<gssapi/gssapi.h>
+end_include
+
+begin_ifndef
 ifndef|#
 directive|ifndef
 name|MAX_GSS_MECH
+end_ifndef
+
+begin_define
 define|#
 directive|define
 name|MAX_GSS_MECH
 value|64
+end_define
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/*  * Define the types of security service required for rpc_gss_seccreate().  */
+end_comment
+
+begin_typedef
 typedef|typedef
 enum|enum
 block|{
@@ -61,7 +65,13 @@ literal|3
 block|}
 name|rpc_gss_service_t
 typedef|;
+end_typedef
+
+begin_comment
 comment|/*  * Structure containing options for rpc_gss_seccreate().  */
+end_comment
+
+begin_typedef
 typedef|typedef
 struct|struct
 block|{
@@ -83,7 +93,13 @@ decl_stmt|;
 block|}
 name|rpc_gss_options_req_t
 typedef|;
+end_typedef
+
+begin_comment
 comment|/*  * Structure containing options returned by rpc_gss_seccreate().  */
+end_comment
+
+begin_typedef
 typedef|typedef
 struct|struct
 block|{
@@ -114,7 +130,13 @@ decl_stmt|;
 block|}
 name|rpc_gss_options_ret_t
 typedef|;
+end_typedef
+
+begin_comment
 comment|/*  * Client principal type. Used as an argument to  * rpc_gss_get_principal_name(). Also referenced by the  * rpc_gss_rawcred_t structure.  */
+end_comment
+
+begin_typedef
 typedef|typedef
 struct|struct
 block|{
@@ -131,7 +153,13 @@ block|}
 typedef|*
 name|rpc_gss_principal_t
 typedef|;
+end_typedef
+
+begin_comment
 comment|/*  * Structure for raw credentials used by rpc_gss_getcred() and  * rpc_gss_set_callback().  */
+end_comment
+
+begin_typedef
 typedef|typedef
 struct|struct
 block|{
@@ -168,7 +196,13 @@ comment|/* service type */
 block|}
 name|rpc_gss_rawcred_t
 typedef|;
+end_typedef
+
+begin_comment
 comment|/*  * Unix credentials derived from raw credentials. Returned by  * rpc_gss_getcred().  */
+end_comment
+
+begin_typedef
 typedef|typedef
 struct|struct
 block|{
@@ -191,7 +225,13 @@ comment|/* list of groups */
 block|}
 name|rpc_gss_ucred_t
 typedef|;
+end_typedef
+
+begin_comment
 comment|/*  * Structure used to enforce a particular QOP and service.  */
+end_comment
+
+begin_typedef
 typedef|typedef
 struct|struct
 block|{
@@ -205,7 +245,13 @@ decl_stmt|;
 block|}
 name|rpc_gss_lock_t
 typedef|;
+end_typedef
+
+begin_comment
 comment|/*  * Callback structure used by rpc_gss_set_callback().  */
+end_comment
+
+begin_typedef
 typedef|typedef
 struct|struct
 block|{
@@ -248,7 +294,13 @@ function_decl|;
 block|}
 name|rpc_gss_callback_t
 typedef|;
+end_typedef
+
+begin_comment
 comment|/*  * Structure used to return error information by rpc_gss_get_error()  */
+end_comment
+
+begin_typedef
 typedef|typedef
 struct|struct
 block|{
@@ -262,17 +314,35 @@ comment|/* same as errno */
 block|}
 name|rpc_gss_error_t
 typedef|;
+end_typedef
+
+begin_comment
 comment|/*  * Values for rpc_gss_error  */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|RPC_GSS_ER_SUCCESS
 value|0
+end_define
+
+begin_comment
 comment|/* no error */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|RPC_GSS_ER_SYSTEMERROR
 value|1
+end_define
+
+begin_comment
 comment|/* system error */
+end_comment
+
+begin_function_decl
 name|__BEGIN_DECLS
 name|AUTH
 modifier|*
@@ -309,6 +379,9 @@ modifier|*
 name|options_ret
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|bool_t
 name|rpc_gss_set_defaults
 parameter_list|(
@@ -325,6 +398,9 @@ modifier|*
 name|qop
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|rpc_gss_max_data_length
 parameter_list|(
@@ -336,6 +412,9 @@ name|int
 name|max_tp_unit_len
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|rpc_gss_get_error
 parameter_list|(
@@ -344,6 +423,9 @@ modifier|*
 name|error
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|bool_t
 name|rpc_gss_mech_to_oid
 parameter_list|(
@@ -357,6 +439,9 @@ modifier|*
 name|oid_ret
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|bool_t
 name|rpc_gss_oid_to_mech
 parameter_list|(
@@ -370,6 +455,9 @@ modifier|*
 name|mech_ret
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|bool_t
 name|rpc_gss_qop_to_num
 parameter_list|(
@@ -388,6 +476,9 @@ modifier|*
 name|num_ret
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|const
 name|char
 modifier|*
@@ -397,6 +488,9 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|const
 name|char
 modifier|*
@@ -413,6 +507,9 @@ modifier|*
 name|service
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|bool_t
 name|rpc_gss_get_versions
 parameter_list|(
@@ -425,6 +522,9 @@ modifier|*
 name|vers_lo
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|bool_t
 name|rpc_gss_is_installed
 parameter_list|(
@@ -434,6 +534,9 @@ modifier|*
 name|mech
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|bool_t
 name|rpc_gss_set_svc_name
 parameter_list|(
@@ -457,6 +560,9 @@ name|u_int
 name|version
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|bool_t
 name|rpc_gss_getcred
 parameter_list|(
@@ -481,6 +587,9 @@ modifier|*
 name|cookie
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|bool_t
 name|rpc_gss_set_callback
 parameter_list|(
@@ -489,6 +598,9 @@ modifier|*
 name|cb
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|bool_t
 name|rpc_gss_get_principal_name
 parameter_list|(
@@ -517,6 +629,9 @@ modifier|*
 name|domain
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|rpc_gss_svc_max_data_length
 parameter_list|(
@@ -529,7 +644,13 @@ name|int
 name|max_tp_unit_len
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Internal interface from the RPC implementation.  */
+end_comment
+
+begin_function_decl
 name|bool_t
 name|__rpc_gss_wrap
 parameter_list|(
@@ -556,6 +677,9 @@ modifier|*
 name|args_ptr
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|bool_t
 name|__rpc_gss_unwrap
 parameter_list|(
@@ -575,6 +699,9 @@ modifier|*
 name|args_ptr
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|bool_t
 name|__rpc_gss_set_error
 parameter_list|(
@@ -585,17 +712,11 @@ name|int
 name|system_error
 parameter_list|)
 function_decl|;
-name|__END_DECLS
-ifdef|#
-directive|ifdef
-name|__cplusplus
-block|}
-end_extern
+end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_endif
 endif|#

@@ -45,24 +45,22 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__cplusplus
-end_ifdef
-
-begin_extern
-extern|extern
-literal|"C"
-block|{
-endif|#
-directive|endif
+begin_define
 define|#
 directive|define
 name|UDPMSGSIZE
 value|8800
+end_define
+
+begin_comment
 comment|/* rpc imposed limit on udp msg size */
+end_comment
+
+begin_comment
 comment|/*  * TCP based rpc  * CLIENT *  * clnttcp_create(raddr, prog, vers, sockp, sendsz, recvsz)  *	struct sockaddr_in *raddr;  *	u_long prog;  *	u_long version;  *	register int *sockp;  *	u_int sendsz;  *	u_int recvsz;  */
+end_comment
+
+begin_function_decl
 name|__BEGIN_DECLS
 specifier|extern
 name|CLIENT
@@ -85,6 +83,9 @@ parameter_list|,
 name|u_int
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|__END_DECLS
 comment|/*  * Raw (memory) rpc.  */
 name|__BEGIN_DECLS
@@ -98,6 +99,9 @@ parameter_list|,
 name|u_long
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|__END_DECLS
 comment|/*  * UDP based rpc.  * CLIENT *  * clntudp_create(raddr, program, version, wait, sockp)  *	struct sockaddr_in *raddr;  *	u_long program;  *	u_long version;  *	struct timeval wait;  *	int *sockp;  *  * Same as above, but you specify max packet sizes.  * CLIENT *  * clntudp_bufcreate(raddr, program, version, wait, sockp, sendsz, recvsz)  *	struct sockaddr_in *raddr;  *	u_long program;  *	u_long version;  *	struct timeval wait;  *	int *sockp;  *	u_int sendsz;  *	u_int recvsz;  */
 name|__BEGIN_DECLS
@@ -121,6 +125,9 @@ name|int
 modifier|*
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|extern
 name|CLIENT
 modifier|*
@@ -145,17 +152,11 @@ parameter_list|,
 name|u_int
 parameter_list|)
 function_decl|;
-name|__END_DECLS
-ifdef|#
-directive|ifdef
-name|__cplusplus
-block|}
-end_extern
+end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_endif
 endif|#

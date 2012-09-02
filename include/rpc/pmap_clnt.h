@@ -33,18 +33,7 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__cplusplus
-end_ifdef
-
-begin_extern
-extern|extern
-literal|"C"
-block|{
-endif|#
-directive|endif
+begin_function_decl
 name|__BEGIN_DECLS
 specifier|extern
 name|bool_t
@@ -59,6 +48,9 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|extern
 name|bool_t
 name|pmap_unset
@@ -68,6 +60,9 @@ parameter_list|,
 name|u_long
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|extern
 name|struct
 name|pmaplist
@@ -79,6 +74,9 @@ name|sockaddr_in
 modifier|*
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|extern
 name|enum
 name|clnt_stat
@@ -109,6 +107,9 @@ name|u_long
 modifier|*
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|extern
 name|enum
 name|clnt_stat
@@ -133,6 +134,9 @@ parameter_list|,
 name|resultproc_t
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|extern
 name|u_short
 name|pmap_getport
@@ -148,17 +152,11 @@ parameter_list|,
 name|u_int
 parameter_list|)
 function_decl|;
-name|__END_DECLS
-ifdef|#
-directive|ifdef
-name|__cplusplus
-block|}
-end_extern
+end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_endif
 endif|#

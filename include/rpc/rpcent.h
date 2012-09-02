@@ -39,18 +39,7 @@ begin_comment
 comment|/*      @(#)rpcent.h 1.1 88/12/06 SMI   */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__cplusplus
-end_ifdef
-
-begin_extern
-extern|extern
-literal|"C"
-block|{
-endif|#
-directive|endif
+begin_struct
 struct|struct
 name|rpcent
 block|{
@@ -71,6 +60,9 @@ decl_stmt|;
 comment|/* rpc program number */
 block|}
 struct|;
+end_struct
+
+begin_expr_stmt
 name|__BEGIN_DECLS
 comment|/*  * These interfaces are currently implemented through nsswitch and are  * MT-safe.  */
 specifier|extern
@@ -83,6 +75,9 @@ name|char
 operator|*
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_function_decl
 specifier|extern
 name|struct
 name|rpcent
@@ -92,6 +87,9 @@ parameter_list|(
 name|int
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|extern
 name|struct
 name|rpcent
@@ -101,6 +99,9 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|extern
 name|void
 name|setrpcent
@@ -108,6 +109,9 @@ parameter_list|(
 name|int
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|extern
 name|void
 name|endrpcent
@@ -115,17 +119,11 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-name|__END_DECLS
-ifdef|#
-directive|ifdef
-name|__cplusplus
-block|}
-end_extern
+end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_endif
 endif|#

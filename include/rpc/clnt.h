@@ -47,24 +47,22 @@ directive|include
 file|<sys/un.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__cplusplus
-end_ifdef
-
-begin_extern
-extern|extern
-literal|"C"
-block|{
-endif|#
-directive|endif
+begin_comment
 comment|/*  * Well-known IPV6 RPC broadcast address.  */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|RPCB_MULTICAST_ADDR
 value|"ff02::202"
+end_define
+
+begin_comment
 comment|/*  * the following errors are in general unrecoverable.  The caller  * should give up rather than retry.  */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|IS_UNRECOVERABLE_RPC
@@ -72,7 +70,13 @@ parameter_list|(
 name|s
 parameter_list|)
 value|(((s) == RPC_AUTHERROR) || \ 	((s) == RPC_CANTENCODEARGS) || \ 	((s) == RPC_CANTDECODERES) || \ 	((s) == RPC_VERSMISMATCH) || \ 	((s) == RPC_PROCUNAVAIL) || \ 	((s) == RPC_PROGUNAVAIL) || \ 	((s) == RPC_PROGVERSMISMATCH) || \ 	((s) == RPC_CANTDECODEARGS))
+end_define
+
+begin_comment
 comment|/*  * Error info.  */
+end_comment
+
+begin_struct
 struct|struct
 name|rpc_err
 block|{
@@ -138,7 +142,13 @@ name|re_lb
 value|ru.RE_lb
 block|}
 struct|;
+end_struct
+
+begin_comment
 comment|/*  * Client rpc handle.  * Created by individual implementations  * Client is responsible for initializing auth, see e.g. auth_none.c.  */
+end_comment
+
+begin_typedef
 typedef|typedef
 struct|struct
 name|__rpc_client
@@ -275,7 +285,13 @@ comment|/* device name */
 block|}
 name|CLIENT
 typedef|;
+end_typedef
+
+begin_comment
 comment|/*  * Timers used for the pseudo-transport protocol when using datagrams  */
+end_comment
+
+begin_struct
 struct|struct
 name|rpc_timers
 block|{
@@ -293,33 +309,72 @@ decl_stmt|;
 comment|/* current (backed-off) rto */
 block|}
 struct|;
+end_struct
+
+begin_comment
 comment|/*        * Feedback values used for possible congestion and rate control  */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|FEEDBACK_REXMIT1
 value|1
+end_define
+
+begin_comment
 comment|/* first retransmit */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|FEEDBACK_OK
 value|2
+end_define
+
+begin_comment
 comment|/* no retransmits */
+end_comment
+
+begin_comment
 comment|/* Used to set version of portmapper used in broadcast */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|CLCR_SET_LOWVERS
 value|3
+end_define
+
+begin_define
 define|#
 directive|define
 name|CLCR_GET_LOWVERS
 value|4
+end_define
+
+begin_define
 define|#
 directive|define
 name|RPCSMALLMSGSIZE
 value|400
+end_define
+
+begin_comment
 comment|/* a more reasonable packet size */
+end_comment
+
+begin_comment
 comment|/*  * client side rpc interface ops  *  * Parameter types are:  *  */
+end_comment
+
+begin_comment
 comment|/*  * enum clnt_stat  * CLNT_CALL(rh, proc, xargs, argsp, xres, resp, timeout)  * 	CLIENT *rh;  *	rpcproc_t proc;  *	xdrproc_t xargs;  *	void *argsp;  *	xdrproc_t xres;  *	void *resp;  *	struct timeval timeout;  */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|CLNT_CALL
@@ -340,6 +395,9 @@ name|secs
 parameter_list|)
 define|\
 value|((*(rh)->cl_ops->cl_call)(rh, proc, xargs, \ 		argsp, xres, resp, secs))
+end_define
+
+begin_define
 define|#
 directive|define
 name|clnt_call
@@ -360,7 +418,13 @@ name|secs
 parameter_list|)
 define|\
 value|((*(rh)->cl_ops->cl_call)(rh, proc, xargs, \ 		argsp, xres, resp, secs))
+end_define
+
+begin_comment
 comment|/*  * void  * CLNT_ABORT(rh);  * 	CLIENT *rh;  */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|CLNT_ABORT
@@ -368,6 +432,9 @@ parameter_list|(
 name|rh
 parameter_list|)
 value|((*(rh)->cl_ops->cl_abort)(rh))
+end_define
+
+begin_define
 define|#
 directive|define
 name|clnt_abort
@@ -375,7 +442,13 @@ parameter_list|(
 name|rh
 parameter_list|)
 value|((*(rh)->cl_ops->cl_abort)(rh))
+end_define
+
+begin_comment
 comment|/*  * struct rpc_err  * CLNT_GETERR(rh);  * 	CLIENT *rh;  */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|CLNT_GETERR
@@ -385,6 +458,9 @@ parameter_list|,
 name|errp
 parameter_list|)
 value|((*(rh)->cl_ops->cl_geterr)(rh, errp))
+end_define
+
+begin_define
 define|#
 directive|define
 name|clnt_geterr
@@ -394,7 +470,13 @@ parameter_list|,
 name|errp
 parameter_list|)
 value|((*(rh)->cl_ops->cl_geterr)(rh, errp))
+end_define
+
+begin_comment
 comment|/*  * bool_t  * CLNT_FREERES(rh, xres, resp);  * 	CLIENT *rh;  *	xdrproc_t xres;  *	void *resp;  */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|CLNT_FREERES
@@ -406,6 +488,9 @@ parameter_list|,
 name|resp
 parameter_list|)
 value|((*(rh)->cl_ops->cl_freeres)(rh,xres,resp))
+end_define
+
+begin_define
 define|#
 directive|define
 name|clnt_freeres
@@ -417,7 +502,13 @@ parameter_list|,
 name|resp
 parameter_list|)
 value|((*(rh)->cl_ops->cl_freeres)(rh,xres,resp))
+end_define
+
+begin_comment
 comment|/*  * bool_t  * CLNT_CONTROL(cl, request, info)  *      CLIENT *cl;  *      u_int request;  *      char *info;  */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|CLNT_CONTROL
@@ -429,6 +520,9 @@ parameter_list|,
 name|in
 parameter_list|)
 value|((*(cl)->cl_ops->cl_control)(cl,rq,in))
+end_define
+
+begin_define
 define|#
 directive|define
 name|clnt_control
@@ -440,108 +534,237 @@ parameter_list|,
 name|in
 parameter_list|)
 value|((*(cl)->cl_ops->cl_control)(cl,rq,in))
+end_define
+
+begin_comment
 comment|/*  * control operations that apply to both udp and tcp transports  */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|CLSET_TIMEOUT
 value|1
+end_define
+
+begin_comment
 comment|/* set timeout (timeval) */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|CLGET_TIMEOUT
 value|2
+end_define
+
+begin_comment
 comment|/* get timeout (timeval) */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|CLGET_SERVER_ADDR
 value|3
+end_define
+
+begin_comment
 comment|/* get server's address (sockaddr) */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|CLGET_FD
 value|6
+end_define
+
+begin_comment
 comment|/* get connections file descriptor */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|CLGET_SVC_ADDR
 value|7
+end_define
+
+begin_comment
 comment|/* get server's address (netbuf) */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|CLSET_FD_CLOSE
 value|8
+end_define
+
+begin_comment
 comment|/* close fd while clnt_destroy */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|CLSET_FD_NCLOSE
 value|9
+end_define
+
+begin_comment
 comment|/* Do not close fd while clnt_destroy */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|CLGET_XID
 value|10
+end_define
+
+begin_comment
 comment|/* Get xid */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|CLSET_XID
 value|11
+end_define
+
+begin_comment
 comment|/* Set xid */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|CLGET_VERS
 value|12
+end_define
+
+begin_comment
 comment|/* Get version number */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|CLSET_VERS
 value|13
+end_define
+
+begin_comment
 comment|/* Set version number */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|CLGET_PROG
 value|14
+end_define
+
+begin_comment
 comment|/* Get program number */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|CLSET_PROG
 value|15
+end_define
+
+begin_comment
 comment|/* Set program number */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|CLSET_SVC_ADDR
 value|16
+end_define
+
+begin_comment
 comment|/* get server's address (netbuf) */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|CLSET_PUSH_TIMOD
 value|17
+end_define
+
+begin_comment
 comment|/* push timod if not already present */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|CLSET_POP_TIMOD
 value|18
+end_define
+
+begin_comment
 comment|/* pop timod */
+end_comment
+
+begin_comment
 comment|/*  * Connectionless only control operations  */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|CLSET_RETRY_TIMEOUT
 value|4
+end_define
+
+begin_comment
 comment|/* set retry timeout (timeval) */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|CLGET_RETRY_TIMEOUT
 value|5
+end_define
+
+begin_comment
 comment|/* get retry timeout (timeval) */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|CLSET_ASYNC
 value|19
+end_define
+
+begin_define
 define|#
 directive|define
 name|CLSET_CONNECT
 value|20
+end_define
+
+begin_comment
 comment|/* Use connect() for UDP. (int) */
+end_comment
+
+begin_comment
 comment|/*  * void  * CLNT_DESTROY(rh);  * 	CLIENT *rh;  */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|CLNT_DESTROY
@@ -549,6 +772,9 @@ parameter_list|(
 name|rh
 parameter_list|)
 value|((*(rh)->cl_ops->cl_destroy)(rh))
+end_define
+
+begin_define
 define|#
 directive|define
 name|clnt_destroy
@@ -556,30 +782,60 @@ parameter_list|(
 name|rh
 parameter_list|)
 value|((*(rh)->cl_ops->cl_destroy)(rh))
+end_define
+
+begin_comment
 comment|/*  * RPCTEST is a test program which is accessible on every rpc  * transport/port.  It is used for testing, performance evaluation,  * and network administration.  */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|RPCTEST_PROGRAM
 value|((rpcprog_t)1)
+end_define
+
+begin_define
 define|#
 directive|define
 name|RPCTEST_VERSION
 value|((rpcvers_t)1)
+end_define
+
+begin_define
 define|#
 directive|define
 name|RPCTEST_NULL_PROC
 value|((rpcproc_t)2)
+end_define
+
+begin_define
 define|#
 directive|define
 name|RPCTEST_NULL_BATCH_PROC
 value|((rpcproc_t)3)
+end_define
+
+begin_comment
 comment|/*  * By convention, procedure 0 takes null arguments and returns them  */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|NULLPROC
 value|((rpcproc_t)0)
+end_define
+
+begin_comment
 comment|/*  * Below are the client handle creation routines for the various  * implementations of client side rpc.  They can return NULL if a  * creation failure occurs.  */
+end_comment
+
+begin_comment
 comment|/*  * Generic client creation routine. Supported protocols are those that  * belong to the nettype namespace (/etc/netconfig).  */
+end_comment
+
+begin_function_decl
 name|__BEGIN_DECLS
 specifier|extern
 name|CLIENT
@@ -601,8 +857,17 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  *  * 	const char *hostname;			-- hostname  *	const rpcprog_t prog;			-- program number  *	const rpcvers_t vers;			-- version number  *	const char *nettype;			-- network type  */
+end_comment
+
+begin_comment
 comment|/*  * Generic client creation routine. Just like clnt_create(), except  * it takes an additional timeout parameter.  */
+end_comment
+
+begin_function_decl
 specifier|extern
 name|CLIENT
 modifier|*
@@ -628,8 +893,17 @@ name|timeval
 modifier|*
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  *  *	const char *hostname;			-- hostname  *	const rpcprog_t prog;			-- program number  *	const rpcvers_t vers;			-- version number  *	const char *nettype;			-- network type  *	const struct timeval *tp;		-- timeout  */
+end_comment
+
+begin_comment
 comment|/*  * Generic client creation routine. Supported protocols are which belong  * to the nettype name space.  */
+end_comment
+
+begin_function_decl
 specifier|extern
 name|CLIENT
 modifier|*
@@ -656,8 +930,17 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  *	const char *host;		-- hostname  *	const rpcprog_t prog;		-- program number  *	rpcvers_t *vers_out;		-- servers highest available version  *	const rpcvers_t vers_low;	-- low version number  *	const rpcvers_t vers_high;	-- high version number  *	const char *nettype;		-- network type  */
+end_comment
+
+begin_comment
 comment|/*  * Generic client creation routine. Supported protocols are which belong  * to the nettype name space.  */
+end_comment
+
+begin_function_decl
 specifier|extern
 name|CLIENT
 modifier|*
@@ -689,8 +972,17 @@ name|timeval
 modifier|*
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  *	const char *host;		-- hostname  *	const rpcprog_t prog;		-- program number  *	rpcvers_t *vers_out;		-- servers highest available version  *	const rpcvers_t vers_low;	-- low version number  *	const rpcvers_t vers_high;	-- high version number  *	const char *nettype;		-- network type  *	const struct timeval *tp	-- timeout  */
+end_comment
+
+begin_comment
 comment|/*  * Generic client creation routine. It takes a netconfig structure  * instead of nettype  */
+end_comment
+
+begin_function_decl
 specifier|extern
 name|CLIENT
 modifier|*
@@ -712,8 +1004,17 @@ name|netconfig
 modifier|*
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  *	const char *hostname;			-- hostname  *	const rpcprog_t prog;			-- program number  *	const rpcvers_t vers;			-- version number  *	const struct netconfig *netconf; 	-- network config structure  */
+end_comment
+
+begin_comment
 comment|/*  * Generic client creation routine. Just like clnt_tp_create(), except  * it takes an additional timeout parameter.  */
+end_comment
+
+begin_function_decl
 specifier|extern
 name|CLIENT
 modifier|*
@@ -740,8 +1041,17 @@ name|timeval
 modifier|*
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  *	const char *hostname;			-- hostname  *	const rpcprog_t prog;			-- program number  *	const rpcvers_t vers;			-- version number  *	const struct netconfig *netconf; 	-- network config structure  *	const struct timeval *tp		-- timeout  */
+end_comment
+
+begin_comment
 comment|/*  * Generic TLI create routine. Only provided for compatibility.  */
+end_comment
+
+begin_function_decl
 specifier|extern
 name|CLIENT
 modifier|*
@@ -772,8 +1082,17 @@ specifier|const
 name|u_int
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  *	const register int fd;		-- fd  *	const struct netconfig *nconf;	-- netconfig structure  *	struct netbuf *svcaddr;		-- servers address  *	const u_long prog;			-- program number  *	const u_long vers;			-- version number  *	const u_int sendsz;			-- send size  *	const u_int recvsz;			-- recv size  */
+end_comment
+
+begin_comment
 comment|/*  * Low level clnt create routine for connectionful transports, e.g. tcp.  */
+end_comment
+
+begin_function_decl
 specifier|extern
 name|CLIENT
 modifier|*
@@ -798,7 +1117,13 @@ parameter_list|,
 name|u_int
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Added for compatibility to old rpc 4.0. Obsoleted by clnt_vc_create().  */
+end_comment
+
+begin_function_decl
 specifier|extern
 name|CLIENT
 modifier|*
@@ -820,8 +1145,17 @@ parameter_list|,
 name|u_int
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  *	const int fd;				-- open file descriptor  *	const struct netbuf *svcaddr;		-- servers address  *	const rpcprog_t prog;			-- program number  *	const rpcvers_t vers;			-- version number  *	const u_int sendsz;			-- buffer recv size  *	const u_int recvsz;			-- buffer send size  */
+end_comment
+
+begin_comment
 comment|/*  * Low level clnt create routine for connectionless transports, e.g. udp.  */
+end_comment
+
+begin_function_decl
 specifier|extern
 name|CLIENT
 modifier|*
@@ -848,8 +1182,17 @@ specifier|const
 name|u_int
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  *	const int fd;				-- open file descriptor  *	const struct netbuf *svcaddr;		-- servers address  *	const rpcprog_t program;		-- program number  *	const rpcvers_t version;		-- version number  *	const u_int sendsz;			-- buffer recv size  *	const u_int recvsz;			-- buffer send size  */
+end_comment
+
+begin_comment
 comment|/*  * Memory based rpc (for speed check and testing)  * CLIENT *  * clnt_raw_create(prog, vers)  *	u_long prog;  *	u_long vers;  */
+end_comment
+
+begin_function_decl
 specifier|extern
 name|CLIENT
 modifier|*
@@ -860,6 +1203,9 @@ parameter_list|,
 name|rpcvers_t
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|__END_DECLS
 comment|/*  * Print why creation failed  */
 name|__BEGIN_DECLS
@@ -872,7 +1218,13 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* stderr */
+end_comment
+
+begin_function_decl
 specifier|extern
 name|char
 modifier|*
@@ -883,7 +1235,13 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* string */
+end_comment
+
+begin_function_decl
 name|__END_DECLS
 comment|/*  * Like clnt_perror(), but is more verbose in its output  */
 name|__BEGIN_DECLS
@@ -895,7 +1253,13 @@ name|enum
 name|clnt_stat
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* stderr */
+end_comment
+
+begin_function_decl
 specifier|extern
 name|char
 modifier|*
@@ -905,7 +1269,13 @@ name|enum
 name|clnt_stat
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* string */
+end_comment
+
+begin_function_decl
 name|__END_DECLS
 comment|/*  * Print an English error message, given the client error code  */
 name|__BEGIN_DECLS
@@ -921,7 +1291,13 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* stderr */
+end_comment
+
+begin_function_decl
 specifier|extern
 name|char
 modifier|*
@@ -935,9 +1311,21 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* string */
+end_comment
+
+begin_macro
 name|__END_DECLS
+end_macro
+
+begin_comment
 comment|/*  * If a creation fails, the following allows the user to figure out why.  */
+end_comment
+
+begin_struct
 struct|struct
 name|rpc_createerr
 block|{
@@ -952,6 +1340,9 @@ decl_stmt|;
 comment|/* useful when cf_stat == RPC_PMAPFAILURE */
 block|}
 struct|;
+end_struct
+
+begin_expr_stmt
 name|__BEGIN_DECLS
 specifier|extern
 expr|struct
@@ -962,6 +1353,9 @@ argument_list|(
 name|void
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_function_decl
 name|__END_DECLS
 define|#
 directive|define
@@ -1005,8 +1399,17 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_macro
 name|__END_DECLS
+end_macro
+
+begin_comment
 comment|/*  * RPC broadcast interface  * The call is broadcasted to all locally connected nets.  *  * extern enum clnt_stat  * rpc_broadcast(prog, vers, proc, xargs, argsp, xresults, resultsp,  *			eachresult, nettype)  *	const rpcprog_t		prog;		-- program number  *	const rpcvers_t		vers;		-- version number  *	const rpcproc_t		proc;		-- procedure number  *	const xdrproc_t	xargs;		-- xdr routine for args  *	caddr_t		argsp;		-- pointer to args  *	const xdrproc_t	xresults;	-- xdr routine for results  *	caddr_t		resultsp;	-- pointer to results  *	const resultproc_t	eachresult;	-- call with each result  *	const char		*nettype;	-- Transport type  *  * For each valid response received, the procedure eachresult is called.  * Its form is:  *		done = eachresult(resp, raddr, nconf)  *			bool_t done;  *			caddr_t resp;  *			struct netbuf *raddr;  *			struct netconfig *nconf;  * where resp points to the results of the call and raddr is the  * address if the responder to the broadcast.  nconf is the transport  * on which the response was received.  *  * extern enum clnt_stat  * rpc_broadcast_exp(prog, vers, proc, xargs, argsp, xresults, resultsp,  *			eachresult, inittime, waittime, nettype)  *	const rpcprog_t		prog;		-- program number  *	const rpcvers_t		vers;		-- version number  *	const rpcproc_t		proc;		-- procedure number  *	const xdrproc_t	xargs;		-- xdr routine for args  *	caddr_t		argsp;		-- pointer to args  *	const xdrproc_t	xresults;	-- xdr routine for results  *	caddr_t		resultsp;	-- pointer to results  *	const resultproc_t	eachresult;	-- call with each result  *	const int 		inittime;	-- how long to wait initially  *	const int 		waittime;	-- maximum time to wait  *	const char		*nettype;	-- Transport type  */
+end_comment
+
+begin_typedef
 typedef|typedef
 name|bool_t
 function_decl|(
@@ -1019,6 +1422,9 @@ parameter_list|,
 modifier|...
 parameter_list|)
 function_decl|;
+end_typedef
+
+begin_function_decl
 name|__BEGIN_DECLS
 specifier|extern
 name|enum
@@ -1052,6 +1458,9 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|extern
 name|enum
 name|clnt_stat
@@ -1090,17 +1499,11 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
-name|__END_DECLS
-ifdef|#
-directive|ifdef
-name|__cplusplus
-block|}
-end_extern
+end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_comment
 comment|/* For backward compatibility */

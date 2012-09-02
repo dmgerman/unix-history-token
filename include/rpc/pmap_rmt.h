@@ -29,18 +29,7 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__cplusplus
-end_ifdef
-
-begin_extern
-extern|extern
-literal|"C"
-block|{
-endif|#
-directive|endif
+begin_struct
 struct|struct
 name|rmtcallargs
 block|{
@@ -61,6 +50,9 @@ name|xdr_args
 decl_stmt|;
 block|}
 struct|;
+end_struct
+
+begin_struct
 struct|struct
 name|rmtcallres
 block|{
@@ -79,6 +71,9 @@ name|xdr_results
 decl_stmt|;
 block|}
 struct|;
+end_struct
+
+begin_function_decl
 name|__BEGIN_DECLS
 specifier|extern
 name|bool_t
@@ -92,6 +87,9 @@ name|rmtcallargs
 modifier|*
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|extern
 name|bool_t
 name|xdr_rmtcallres
@@ -104,17 +102,11 @@ name|rmtcallres
 modifier|*
 parameter_list|)
 function_decl|;
-name|__END_DECLS
-ifdef|#
-directive|ifdef
-name|__cplusplus
-block|}
-end_extern
+end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_endif
 endif|#

@@ -55,18 +55,7 @@ directive|include
 file|<rpc/rpcb_prot.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__cplusplus
-end_ifdef
-
-begin_extern
-extern|extern
-literal|"C"
-block|{
-endif|#
-directive|endif
+begin_function_decl
 name|__BEGIN_DECLS
 specifier|extern
 name|bool_t
@@ -89,6 +78,9 @@ name|netbuf
 modifier|*
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|extern
 name|bool_t
 name|rpcb_unset
@@ -105,6 +97,9 @@ name|netconfig
 modifier|*
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|extern
 name|rpcblist
 modifier|*
@@ -120,6 +115,9 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|extern
 name|enum
 name|clnt_stat
@@ -165,6 +163,9 @@ name|netbuf
 modifier|*
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|extern
 name|bool_t
 name|rpcb_getaddr
@@ -189,6 +190,9 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|extern
 name|bool_t
 name|rpcb_gettime
@@ -201,6 +205,9 @@ name|time_t
 modifier|*
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|extern
 name|char
 modifier|*
@@ -215,6 +222,9 @@ name|netbuf
 modifier|*
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|extern
 name|struct
 name|netbuf
@@ -229,17 +239,11 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
-name|__END_DECLS
-ifdef|#
-directive|ifdef
-name|__cplusplus
-block|}
-end_extern
+end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_endif
 endif|#
