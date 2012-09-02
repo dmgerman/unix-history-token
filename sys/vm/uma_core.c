@@ -8793,11 +8793,6 @@ operator|&
 name|M_NOWAIT
 condition|)
 break|break;
-name|zone
-operator|->
-name|uz_sleeps
-operator|++
-expr_stmt|;
 name|msleep
 argument_list|(
 name|keg
