@@ -188,6 +188,8 @@ name|buffer
 operator|+
 name|len
 argument_list|,
+literal|"%s"
+argument_list|,
 name|xstats
 index|[
 name|i
