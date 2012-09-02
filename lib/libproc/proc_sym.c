@@ -1266,7 +1266,7 @@ literal|"ERROR: elf_getdata() failed"
 argument_list|)
 expr_stmt|;
 goto|goto
-name|err2
+name|symtab
 goto|;
 block|}
 name|i
@@ -1364,16 +1364,14 @@ name|st_value
 operator|=
 name|rsym
 expr_stmt|;
-name|error
-operator|=
-literal|0
-expr_stmt|;
 goto|goto
 name|out
 goto|;
 block|}
 block|}
 block|}
+name|symtab
+label|:
 comment|/* 	 * Iterate over the Symbols Table to find the symbol. 	 * Then look up the string name in STRTAB (.dynstr) 	 */
 if|if
 condition|(
@@ -2119,8 +2117,6 @@ argument_list|,
 name|NULL
 argument_list|)
 operator|)
-operator|==
-name|NULL
 condition|)
 block|{
 name|DPRINTF
@@ -2128,10 +2124,6 @@ argument_list|(
 literal|"ERROR: elf_getdata() failed"
 argument_list|)
 expr_stmt|;
-goto|goto
-name|err2
-goto|;
-block|}
 name|i
 operator|=
 literal|0
@@ -2213,6 +2205,7 @@ name|out
 goto|;
 block|}
 block|}
+block|}
 comment|/* 	 * Iterate over the Symbols Table to find the symbol. 	 * Then look up the string name in STRTAB (.dynstr) 	 */
 if|if
 condition|(
@@ -2235,19 +2228,8 @@ argument_list|,
 name|NULL
 argument_list|)
 operator|)
-operator|==
-name|NULL
 condition|)
 block|{
-name|DPRINTF
-argument_list|(
-literal|"ERROR: elf_getdata() failed"
-argument_list|)
-expr_stmt|;
-goto|goto
-name|err2
-goto|;
-block|}
 name|i
 operator|=
 literal|0
@@ -2315,6 +2297,7 @@ expr_stmt|;
 goto|goto
 name|out
 goto|;
+block|}
 block|}
 block|}
 name|out
