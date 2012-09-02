@@ -4312,7 +4312,7 @@ name|capability
 operator|==
 name|HAL_CAP_STRONG_DIV
 condition|)
-block|{ 							}
+block|{
 name|v
 operator|=
 name|OS_REG_READ
@@ -4345,6 +4345,7 @@ argument_list|,
 name|v
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|ahp
 operator|->
@@ -5599,35 +5600,35 @@ begin_define
 define|#
 directive|define
 name|AR5212_DFS_FIRPWR
-value|-41
+value|-35
 end_define
 
 begin_define
 define|#
 directive|define
 name|AR5212_DFS_RRSSI
-value|12
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR5212_DFS_HEIGHT
 value|20
 end_define
 
 begin_define
 define|#
 directive|define
+name|AR5212_DFS_HEIGHT
+value|14
+end_define
+
+begin_define
+define|#
+directive|define
 name|AR5212_DFS_PRSSI
-value|22
+value|6
 end_define
 
 begin_define
 define|#
 directive|define
 name|AR5212_DFS_INBAND
-value|6
+value|4
 end_define
 
 begin_comment
