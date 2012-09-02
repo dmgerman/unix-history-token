@@ -3329,6 +3329,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|VERIFY_10
+value|0x2F
+end_define
+
+begin_define
+define|#
+directive|define
 name|SYNCHRONIZE_CACHE
 value|0x35
 end_define
