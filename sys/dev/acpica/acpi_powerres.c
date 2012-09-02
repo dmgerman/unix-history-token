@@ -1242,9 +1242,6 @@ decl_stmt|,
 modifier|*
 name|reslist_name
 decl_stmt|;
-name|int
-name|res_changed
-decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 operator|(
@@ -1763,8 +1760,6 @@ goto|;
 block|}
 block|}
 comment|/*      * Now we are ready to switch, so kill off any current power      * resource references.      */
-name|res_changed
-operator|=
 name|acpi_pwr_dereference_resource
 argument_list|(
 name|pc
@@ -1801,10 +1796,6 @@ name|acpi_pwr_reference_resource
 argument_list|,
 name|pc
 argument_list|)
-expr_stmt|;
-name|res_changed
-operator|=
-literal|1
 expr_stmt|;
 block|}
 comment|/*      * If we changed anything in the resource list, we need to run a switch      * pass now.      */
