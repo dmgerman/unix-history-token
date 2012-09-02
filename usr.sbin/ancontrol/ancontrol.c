@@ -7858,11 +7858,13 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
+operator|(
 name|caps
 operator|->
 name|an_softcaps
 operator|&
 name|AN_AUTHTYPE_LEAP
+operator|)
 condition|)
 block|{
 name|fprintf
