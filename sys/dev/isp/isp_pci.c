@@ -2041,46 +2041,6 @@ name|isp_quickboot_time
 operator|=
 name|tval
 expr_stmt|;
-name|tval
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|resource_int_value
-argument_list|(
-name|device_get_name
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-name|device_get_unit
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-literal|"forcemulti"
-argument_list|,
-operator|&
-name|tval
-argument_list|)
-operator|==
-literal|0
-operator|&&
-name|tval
-operator|!=
-literal|0
-condition|)
-block|{
-name|isp
-operator|->
-name|isp_osinfo
-operator|.
-name|forcemulti
-operator|=
-literal|1
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -4221,20 +4181,6 @@ name|IS_24XX
 argument_list|(
 name|isp
 argument_list|)
-operator|&&
-operator|(
-name|isp
-operator|->
-name|isp_nchan
-operator|>
-literal|1
-operator|||
-name|isp
-operator|->
-name|isp_osinfo
-operator|.
-name|forcemulti
-operator|)
 condition|)
 block|{
 name|snprintf
@@ -4311,6 +4257,17 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|isp_prt
+argument_list|(
+name|isp
+argument_list|,
+name|ISP_LOGCONFIG
+argument_list|,
+literal|"loaded firmware %s"
+argument_list|,
+name|fwname
+argument_list|)
+expr_stmt|;
 name|isp
 operator|->
 name|isp_mdvec
@@ -4326,7 +4283,7 @@ operator|->
 name|data
 expr_stmt|;
 block|}
-comment|/* 	 * Make sure that SERR, PERR, WRITE INVALIDATE and BUSMASTER 	 * are set. 	 */
+comment|/* 	 * Make sure that SERR, PERR, WRITE INVALIDATE and BUSMASTER are set. 	 */
 name|cmd
 operator||=
 name|PCIM_CMD_SEREN
@@ -4431,7 +4388,7 @@ name|isp_prt
 argument_list|(
 name|isp
 argument_list|,
-name|ISP_LOGCONFIG
+name|ISP_LOGDEBUG0
 argument_list|,
 literal|"set PCI line size to %d from %d"
 argument_list|,
@@ -4483,7 +4440,7 @@ name|isp_prt
 argument_list|(
 name|isp
 argument_list|,
-name|ISP_LOGCONFIG
+name|ISP_LOGDEBUG0
 argument_list|,
 literal|"set PCI latency to %d"
 argument_list|,

@@ -519,6 +519,10 @@ name|callout
 name|wdog
 decl_stmt|;
 comment|/* watchdog timer */
+name|uint8_t
+name|crn
+decl_stmt|;
+comment|/* command reference number */
 block|}
 struct|;
 end_struct
@@ -702,6 +706,10 @@ endif|#
 directive|endif
 endif|#
 directive|endif
+name|uint8_t
+name|crnseed
+decl_stmt|;
+comment|/* next command reference number */
 block|}
 struct|;
 end_struct
@@ -864,10 +872,6 @@ literal|2
 decl_stmt|,
 endif|#
 directive|endif
-name|forcemulti
-range|:
-literal|1
-decl_stmt|,
 name|timer_active
 range|:
 literal|1
@@ -1021,6 +1025,27 @@ name|val
 parameter_list|)
 define|\
 value|if (IS_SCSI(isp)) {				\ 		ISP_SPI_PC(isp, chan)-> tag = val;	\ 	} else {					\ 		ISP_FC_PC(isp, chan)-> tag = val;	\ 	}
+end_define
+
+begin_define
+define|#
+directive|define
+name|FCP_NEXT_CRN
+parameter_list|(
+name|isp
+parameter_list|,
+name|cmd
+parameter_list|,
+name|rslt
+parameter_list|,
+name|chan
+parameter_list|,
+name|tgt
+parameter_list|,
+name|lun
+parameter_list|)
+define|\
+value|if ((isp)->isp_osinfo.pc.fc[(chan)].crnseed == 0) {			\ 		(isp)->isp_osinfo.pc.fc[(chan)].crnseed = 1;			\ 	}									\ 	if (cmd) {								\ 		PISP_PCMD(cmd)->crn = (isp)->isp_osinfo.pc.fc[(chan)].crnseed;	\ 	}									\ 	(rslt) = (isp)->isp_osinfo.pc.fc[(chan)].crnseed++
 end_define
 
 begin_define
