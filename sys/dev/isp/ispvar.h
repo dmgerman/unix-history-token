@@ -2252,7 +2252,7 @@ value|4
 end_define
 
 begin_comment
-comment|/*  * ISP Configuration Options  */
+comment|/*  * ISP Runtime Configuration Options  */
 end_comment
 
 begin_define
