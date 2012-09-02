@@ -238,13 +238,15 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|int
+name|i
+decl_stmt|;
 if|if
 condition|(
 name|fsc
 operator|.
 name|args
 condition|)
-block|{
 name|free
 argument_list|(
 name|fsc
@@ -252,7 +254,6 @@ operator|.
 name|args
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|fsc
@@ -260,9 +261,6 @@ operator|.
 name|s_args
 condition|)
 block|{
-name|int
-name|i
-decl_stmt|;
 for|for
 control|(
 name|i
@@ -339,14 +337,12 @@ name|nargs
 parameter_list|)
 block|{
 name|struct
+name|ptrace_io_desc
+name|iorequest
+decl_stmt|;
+name|struct
 name|reg
 name|regs
-decl_stmt|;
-name|int
-name|syscall_num
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 name|struct
 name|syscall
@@ -354,15 +350,17 @@ modifier|*
 name|sc
 decl_stmt|;
 name|int
+name|i
+decl_stmt|,
+name|syscall_num
+decl_stmt|;
+name|int
 name|indir
-init|=
-literal|0
 decl_stmt|;
 comment|/* indirect system call */
-name|struct
-name|ptrace_io_desc
-name|iorequest
-decl_stmt|;
+name|clear_fsc
+argument_list|()
+expr_stmt|;
 name|cpid
 operator|=
 name|trussinfo
@@ -370,9 +368,6 @@ operator|->
 name|curthread
 operator|->
 name|tid
-expr_stmt|;
-name|clear_fsc
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -405,7 +400,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/*    * FreeBSD has two special kinds of system call redirctions --    * SYS_syscall, and SYS___syscall.  The former is the old syscall()    * routine, basically; the latter is for quad-aligned arguments.    */
+comment|/* 	 * FreeBSD has two special kinds of system call redirctions -- 	 * SYS_syscall, and SYS___syscall.  The former is the old syscall() 	 * routine, basically; the latter is for quad-aligned arguments. 	 */
+name|indir
+operator|=
+literal|0
+expr_stmt|;
 name|syscall_num
 operator|=
 name|regs
@@ -502,8 +501,6 @@ name|FOLLOWFORKS
 operator|)
 operator|&&
 operator|(
-operator|(
-operator|!
 name|strcmp
 argument_list|(
 name|fsc
@@ -512,8 +509,9 @@ name|name
 argument_list|,
 literal|"fork"
 argument_list|)
+operator|==
+literal|0
 operator|||
-operator|!
 name|strcmp
 argument_list|(
 name|fsc
@@ -522,8 +520,9 @@ name|name
 argument_list|,
 literal|"rfork"
 argument_list|)
+operator|==
+literal|0
 operator|||
-operator|!
 name|strcmp
 argument_list|(
 name|fsc
@@ -532,10 +531,10 @@ name|name
 argument_list|,
 literal|"vfork"
 argument_list|)
-operator|)
+operator|==
+literal|0
 operator|)
 condition|)
-block|{
 name|trussinfo
 operator|->
 name|curthread
@@ -544,7 +543,6 @@ name|in_fork
 operator|=
 literal|1
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|nargs
@@ -577,7 +575,7 @@ name|nargs
 condition|)
 block|{
 default|default:
-comment|/* 	 * The OS doesn't seem to allow more than 10 words of 	 * parameters (yay!).  So we shouldn't be here. 	 */
+comment|/* 		 * The OS doesn't seem to allow more than 10 words of 		 * parameters (yay!).	So we shouldn't be here. 		 */
 name|warn
 argument_list|(
 literal|"More than 10 words (%d) of arguments!\n"
@@ -598,7 +596,7 @@ case|:
 case|case
 literal|7
 case|:
-comment|/* 	 * If there are 7-10 words of arguments, they are placed 	 * on the stack, as is normal for other processors. 	 * The fall-through for all of these is deliberate!!! 	 */
+comment|/* 		 * If there are 7-10 words of arguments, they are placed 		 * on the stack, as is normal for other processors. 		 * The fall-through for all of these is deliberate!!! 		 */
 name|iorequest
 operator|.
 name|piod_op
@@ -802,7 +800,6 @@ if|if
 condition|(
 name|indir
 condition|)
-block|{
 name|memmove
 argument_list|(
 operator|&
@@ -838,7 +835,6 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 name|sc
 operator|=
 name|get_syscall
@@ -852,7 +848,6 @@ if|if
 condition|(
 name|sc
 condition|)
-block|{
 name|fsc
 operator|.
 name|nargs
@@ -861,7 +856,6 @@ name|sc
 operator|->
 name|nargs
 expr_stmt|;
-block|}
 else|else
 block|{
 if|#
@@ -873,7 +867,8 @@ name|trussinfo
 operator|->
 name|outfile
 argument_list|,
-literal|"unknown syscall %s -- setting args to %d\n"
+literal|"unknown syscall %s -- setting "
+literal|"args to %d\n"
 argument_list|,
 name|fsc
 operator|.
@@ -920,7 +915,7 @@ name|sc
 operator|=
 name|sc
 expr_stmt|;
-comment|/*    * At this point, we set up the system call arguments.    * We ignore any OUT ones, however -- those are arguments that    * are set by the system call, and so are probably meaningless    * now.  This doesn't currently support arguments that are    * passed in *and* out, however.    */
+comment|/* 	 * At this point, we set up the system call arguments. 	 * We ignore any OUT ones, however -- those are arguments that 	 * are set by the system call, and so are probably meaningless 	 * now.	This doesn't currently support arguments that are 	 * passed in *and* out, however. 	 */
 if|if
 condition|(
 name|fsc
@@ -1092,7 +1087,6 @@ operator|!=
 name|NULL
 operator|&&
 operator|(
-operator|!
 name|strcmp
 argument_list|(
 name|fsc
@@ -1101,8 +1095,9 @@ name|name
 argument_list|,
 literal|"execve"
 argument_list|)
+operator|==
+literal|0
 operator|||
-operator|!
 name|strcmp
 argument_list|(
 name|fsc
@@ -1111,13 +1106,14 @@ name|name
 argument_list|,
 literal|"exit"
 argument_list|)
+operator|==
+literal|0
 operator|)
 condition|)
 block|{
-comment|/* XXX      * This could be done in a more general      * manner but it still wouldn't be very pretty.      */
+comment|/* 		 * XXX 		 * This could be done in a more general 		 * manner but it still wouldn't be very pretty. 		 */
 if|if
 condition|(
-operator|!
 name|strcmp
 argument_list|(
 name|fsc
@@ -1126,6 +1122,8 @@ name|name
 argument_list|,
 literal|"execve"
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 if|if
@@ -1140,6 +1138,7 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
 if|if
 condition|(
 name|fsc
@@ -1170,6 +1169,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+block|}
 if|if
 condition|(
 operator|(
@@ -1182,6 +1182,7 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
 if|if
 condition|(
 name|fsc
@@ -1211,6 +1212,7 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 block|}
 block|}
 block|}
@@ -1240,19 +1242,18 @@ name|struct
 name|reg
 name|regs
 decl_stmt|;
-name|long
-name|retval
-decl_stmt|;
-name|int
-name|i
-decl_stmt|;
-name|int
-name|errorp
-decl_stmt|;
 name|struct
 name|syscall
 modifier|*
 name|sc
+decl_stmt|;
+name|long
+name|retval
+decl_stmt|;
+name|int
+name|errorp
+decl_stmt|,
+name|i
 decl_stmt|;
 if|if
 condition|(
@@ -1333,7 +1334,7 @@ operator|&
 name|TSTATE_XCC_C
 operator|)
 expr_stmt|;
-comment|/*    * This code, while simpler than the initial versions I used, could    * stand some significant cleaning.    */
+comment|/* 	 * This code, while simpler than the initial versions I used, could 	 * stand some significant cleaning. 	 */
 name|sc
 operator|=
 name|fsc
@@ -1384,7 +1385,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*      * Here, we only look for arguments that have OUT masked in --      * otherwise, they were handled in the syscall_entry function.      */
+comment|/* 		 * Here, we only look for arguments that have OUT masked in -- 		 * otherwise, they were handled in the syscall_entry function. 		 */
 for|for
 control|(
 name|i
@@ -1419,11 +1420,12 @@ operator|&
 name|OUT
 condition|)
 block|{
-comment|/* 	 * If an error occurred, than don't bothe getting the data; 	 * it may not be valid. 	 */
+comment|/* 				 * If an error occurred, then don't bother 				 * getting the data; it may not be valid. 				 */
 if|if
 condition|(
 name|errorp
 condition|)
+block|{
 name|asprintf
 argument_list|(
 operator|&
@@ -1446,7 +1448,9 @@ name|offset
 index|]
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
 name|temp
 operator|=
 name|print_arg
@@ -1468,6 +1472,7 @@ argument_list|,
 name|trussinfo
 argument_list|)
 expr_stmt|;
+block|}
 name|fsc
 operator|.
 name|s_args
@@ -1489,7 +1494,6 @@ operator|!=
 name|NULL
 operator|&&
 operator|(
-operator|!
 name|strcmp
 argument_list|(
 name|fsc
@@ -1498,8 +1502,9 @@ name|name
 argument_list|,
 literal|"execve"
 argument_list|)
+operator|==
+literal|0
 operator|||
-operator|!
 name|strcmp
 argument_list|(
 name|fsc
@@ -1508,9 +1513,10 @@ name|name
 argument_list|,
 literal|"exit"
 argument_list|)
+operator|==
+literal|0
 operator|)
 condition|)
-block|{
 name|trussinfo
 operator|->
 name|curthread
@@ -1519,8 +1525,7 @@ name|in_syscall
 operator|=
 literal|1
 expr_stmt|;
-block|}
-comment|/*    * It would probably be a good idea to merge the error handling,    * but that complicates things considerably.    */
+comment|/* 	 * It would probably be a good idea to merge the error handling, 	 * but that complicates things considerably. 	 */
 name|print_syscall_ret
 argument_list|(
 name|trussinfo
