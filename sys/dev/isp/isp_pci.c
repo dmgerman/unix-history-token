@@ -7732,6 +7732,17 @@ name|isp
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|imushp
+operator|->
+name|isp
+operator|->
+name|isp_type
+operator|>=
+name|ISP_HA_FC_2300
+condition|)
+block|{
 name|imushp
 operator|->
 name|isp
@@ -7842,6 +7853,7 @@ name|ecmd
 operator|+
 literal|1
 expr_stmt|;
+block|}
 block|}
 block|}
 ifdef|#
