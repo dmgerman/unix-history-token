@@ -49,11 +49,19 @@ begin_comment
 comment|/*  * All the following declarations are only for backward compatibility  * with TS-RPC  */
 end_comment
 
-begin_comment
-comment|/*  *  Approved way of getting address of caller  */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__cplusplus
+end_ifdef
 
-begin_define
+begin_extern
+extern|extern
+literal|"C"
+block|{
+endif|#
+directive|endif
+comment|/*  *  Approved way of getting address of caller  */
 define|#
 directive|define
 name|svc_getcaller
@@ -61,13 +69,7 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(&(x)->xp_raddr)
-end_define
-
-begin_comment
 comment|/*  * Service registration  *  * svc_register(xprt, prog, vers, dispatch, protocol)  *	SVCXPRT *xprt;  *	u_long prog;  *	u_long vers;  *	void (*dispatch)();  *	int protocol;    like TCP or UDP, zero means do not register   */
-end_comment
-
-begin_function_decl
 name|__BEGIN_DECLS
 specifier|extern
 name|bool_t
@@ -96,9 +98,6 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|__END_DECLS
 comment|/*  * Service un-registration  *  * svc_unregister(prog, vers)  *	u_long prog;  *	u_long vers;  */
 name|__BEGIN_DECLS
@@ -111,9 +110,6 @@ parameter_list|,
 name|u_long
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|__END_DECLS
 comment|/*  * Memory based rpc for testing and timing.  */
 name|__BEGIN_DECLS
@@ -125,9 +121,6 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|__END_DECLS
 comment|/*  * Udp based rpc.  */
 name|__BEGIN_DECLS
@@ -139,9 +132,6 @@ parameter_list|(
 name|int
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|extern
 name|SVCXPRT
 modifier|*
@@ -154,9 +144,6 @@ parameter_list|,
 name|u_int
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|extern
 name|int
 name|svcudp_enablecache
@@ -167,9 +154,6 @@ parameter_list|,
 name|u_long
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|__END_DECLS
 comment|/*  * Tcp based rpc.  */
 name|__BEGIN_DECLS
@@ -185,9 +169,6 @@ parameter_list|,
 name|u_int
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|__END_DECLS
 comment|/*  * Fd based rpc.  */
 name|__BEGIN_DECLS
@@ -203,11 +184,17 @@ parameter_list|,
 name|u_int
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_macro
 name|__END_DECLS
-end_macro
+ifdef|#
+directive|ifdef
+name|__cplusplus
+block|}
+end_extern
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

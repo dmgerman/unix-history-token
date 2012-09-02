@@ -23,25 +23,27 @@ directive|define
 name|_RPC_RPC_MSG_H
 end_define
 
-begin_define
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__cplusplus
+end_ifdef
+
+begin_extern
+extern|extern
+literal|"C"
+block|{
+endif|#
+directive|endif
 define|#
 directive|define
 name|RPC_MSG_VERSION
 value|((u_int32_t) 2)
-end_define
-
-begin_define
 define|#
 directive|define
 name|RPC_SERVICE_PORT
 value|((u_short) 2048)
-end_define
-
-begin_comment
 comment|/*  * Bottom up definition of an rpc message.  * NOTE: call and reply use the same overall stuct but  * different parts of unions within it.  */
-end_comment
-
-begin_enum
 enum|enum
 name|msg_type
 block|{
@@ -54,9 +56,6 @@ init|=
 literal|1
 block|}
 enum|;
-end_enum
-
-begin_enum
 enum|enum
 name|reply_stat
 block|{
@@ -69,9 +68,6 @@ init|=
 literal|1
 block|}
 enum|;
-end_enum
-
-begin_enum
 enum|enum
 name|accept_stat
 block|{
@@ -100,9 +96,6 @@ init|=
 literal|5
 block|}
 enum|;
-end_enum
-
-begin_enum
 enum|enum
 name|reject_stat
 block|{
@@ -115,17 +108,8 @@ init|=
 literal|1
 block|}
 enum|;
-end_enum
-
-begin_comment
 comment|/*  * Reply part of an rpc exchange  */
-end_comment
-
-begin_comment
 comment|/*  * Reply to an rpc request that was accepted by the server.  * Note: there could be an error even though the request was  * accepted.  */
-end_comment
-
-begin_struct
 struct|struct
 name|accepted_reply
 block|{
@@ -175,13 +159,7 @@ name|ar_vers
 value|ru.AR_versions
 block|}
 struct|;
-end_struct
-
-begin_comment
 comment|/*  * Reply to an rpc request that was rejected by the server.  */
-end_comment
-
-begin_struct
 struct|struct
 name|rejected_reply
 block|{
@@ -220,13 +198,7 @@ name|rj_why
 value|ru.RJ_why
 block|}
 struct|;
-end_struct
-
-begin_comment
 comment|/*  * Body of a reply to an rpc request.  */
-end_comment
-
-begin_struct
 struct|struct
 name|reply_body
 block|{
@@ -257,13 +229,7 @@ name|rp_rjct
 value|ru.RP_dr
 block|}
 struct|;
-end_struct
-
-begin_comment
 comment|/*  * Body of an rpc request call.  */
-end_comment
-
-begin_struct
 struct|struct
 name|call_body
 block|{
@@ -291,13 +257,7 @@ decl_stmt|;
 comment|/* protocol specific - provided by client */
 block|}
 struct|;
-end_struct
-
-begin_comment
 comment|/*  * The rpc message  */
-end_comment
-
-begin_struct
 struct|struct
 name|rpc_msg
 block|{
@@ -331,23 +291,14 @@ name|rm_reply
 value|ru.RM_rmb
 block|}
 struct|;
-end_struct
-
-begin_define
 define|#
 directive|define
 name|acpted_rply
 value|ru.RM_rmb.ru.RP_ar
-end_define
-
-begin_define
 define|#
 directive|define
 name|rjcted_rply
 value|ru.RM_rmb.ru.RP_dr
-end_define
-
-begin_function_decl
 name|__BEGIN_DECLS
 comment|/*  * XDR routine to handle a rpc message.  * xdr_callmsg(xdrs, cmsg)  * 	XDR *xdrs;  * 	struct rpc_msg *cmsg;  */
 specifier|extern
@@ -362,13 +313,7 @@ name|rpc_msg
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/*  * XDR routine to pre-serialize the static part of a rpc message.  * xdr_callhdr(xdrs, cmsg)  * 	XDR *xdrs;  * 	struct rpc_msg *cmsg;  */
-end_comment
-
-begin_function_decl
 specifier|extern
 name|bool_t
 name|xdr_callhdr
@@ -381,13 +326,7 @@ name|rpc_msg
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/*  * XDR routine to handle a rpc reply.  * xdr_replymsg(xdrs, rmsg)  * 	XDR *xdrs;  * 	struct rpc_msg *rmsg;  */
-end_comment
-
-begin_function_decl
 specifier|extern
 name|bool_t
 name|xdr_replymsg
@@ -400,13 +339,7 @@ name|rpc_msg
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/*  * XDR routine to handle an accepted rpc reply.  * xdr_accepted_reply(xdrs, rej)  * 	XDR *xdrs;  * 	struct accepted_reply *rej;  */
-end_comment
-
-begin_function_decl
 specifier|extern
 name|bool_t
 name|xdr_accepted_reply
@@ -419,13 +352,7 @@ name|accepted_reply
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/*  * XDR routine to handle a rejected rpc reply.  * xdr_rejected_reply(xdrs, rej)  * 	XDR *xdrs;  * 	struct rejected_reply *rej;  */
-end_comment
-
-begin_function_decl
 specifier|extern
 name|bool_t
 name|xdr_rejected_reply
@@ -438,13 +365,7 @@ name|rejected_reply
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/*  * Fills in the error part of a reply message.  * _seterr_reply(msg, error)  * 	struct rpc_msg *msg;  * 	struct rpc_err *error;  */
-end_comment
-
-begin_function_decl
 specifier|extern
 name|void
 name|_seterr_reply
@@ -458,11 +379,17 @@ name|rpc_err
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_macro
 name|__END_DECLS
-end_macro
+ifdef|#
+directive|ifdef
+name|__cplusplus
+block|}
+end_extern
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

@@ -29,33 +29,29 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
-begin_comment
-comment|/* The machine name is part of a credential; it may not exceed 255 bytes */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__cplusplus
+end_ifdef
 
-begin_define
+begin_extern
+extern|extern
+literal|"C"
+block|{
+endif|#
+directive|endif
+comment|/* The machine name is part of a credential; it may not exceed 255 bytes */
 define|#
 directive|define
 name|MAX_MACHINE_NAME
 value|255
-end_define
-
-begin_comment
 comment|/* gids compose part of a credential; there may not be more than 16 of them */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|NGRPS
 value|16
-end_define
-
-begin_comment
 comment|/*  * Unix style credentials.  */
-end_comment
-
-begin_struct
 struct|struct
 name|authunix_parms
 block|{
@@ -81,16 +77,10 @@ name|aup_gids
 decl_stmt|;
 block|}
 struct|;
-end_struct
-
-begin_define
 define|#
 directive|define
 name|authsys_parms
 value|authunix_parms
-end_define
-
-begin_function_decl
 name|__BEGIN_DECLS
 specifier|extern
 name|bool_t
@@ -104,17 +94,8 @@ name|authunix_parms
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_macro
 name|__END_DECLS
-end_macro
-
-begin_comment
 comment|/*  * If a response verifier has flavor AUTH_SHORT,  * then the body of the response verifier encapsulates the following structure;  * again it is serialized in the obvious fashion.  */
-end_comment
-
-begin_struct
 struct|struct
 name|short_hand_verf
 block|{
@@ -124,7 +105,16 @@ name|new_cred
 decl_stmt|;
 block|}
 struct|;
-end_struct
+ifdef|#
+directive|ifdef
+name|__cplusplus
+block|}
+end_extern
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
