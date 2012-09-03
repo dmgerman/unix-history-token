@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sftp.c,v 1.132 2010/12/04 00:18:01 djm Exp $ */
+comment|/* $OpenBSD: sftp.c,v 1.136 2012/06/22 14:36:33 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -4087,12 +4087,6 @@ name|int
 name|lflag
 parameter_list|)
 block|{
-name|Attrib
-modifier|*
-name|a
-init|=
-name|NULL
-decl_stmt|;
 name|char
 modifier|*
 name|fname
@@ -4161,6 +4155,8 @@ operator||
 name|GLOB_BRACE
 operator||
 name|GLOB_KEEPSTAT
+operator||
+name|GLOB_NOSORT
 argument_list|,
 name|NULL
 argument_list|,
@@ -4382,10 +4378,6 @@ name|interrupted
 condition|;
 name|i
 operator|++
-operator|,
-name|a
-operator|=
-name|NULL
 control|)
 block|{
 name|fname
@@ -8813,9 +8805,16 @@ name|count
 operator|==
 literal|0
 condition|)
+block|{
+name|xfree
+argument_list|(
+name|list
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
+block|}
 comment|/* Complete ambigious command */
 name|tmp
 operator|=
@@ -10578,42 +10577,6 @@ name|dir
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_SETVBUF
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|BROKEN_SETVBUF
-argument_list|)
-name|setvbuf
-argument_list|(
-name|stdout
-argument_list|,
-name|NULL
-argument_list|,
-name|_IOLBF
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|setvbuf
-argument_list|(
-name|infile
-argument_list|,
-name|NULL
-argument_list|,
-name|_IOLBF
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|setlinebuf
 argument_list|(
 name|stdout
@@ -10624,8 +10587,6 @@ argument_list|(
 name|infile
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|interactive
 operator|=
 operator|!

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: setenv.c,v 1.9 2005/08/08 08:05:37 espie Exp $ */
+comment|/*	$OpenBSD: setenv.c,v 1.13 2010/08/23 22:31:50 millert Exp $ */
 end_comment
 
 begin_comment
@@ -36,6 +36,12 @@ end_if
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -54,12 +60,25 @@ name|environ
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+modifier|*
+name|lastenv
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* last value of environ */
+end_comment
+
 begin_comment
 comment|/* OpenSSH Portable: __findenv is from getenv.c rev 1.8, made static */
 end_comment
 
 begin_comment
-comment|/*  * __findenv --  *	Returns pointer to value associated with name, if any, else NULL.  *	Sets offset to be the offset of the name/value combination in the  *	environmental array, for use by setenv(3) and unsetenv(3).  *	Explicitly removes '=' in argument name.  */
+comment|/*  * __findenv --  *	Returns pointer to value associated with name, if any, else NULL.  *	Starts searching within the environmental array at offset.  *	Sets offset to be the offset of the name/value combination in the  *	environmental array, for use by putenv(3), setenv(3) and unsetenv(3).  *	Explicitly removes '=' in argument name.  *  *	This routine *should* be a static; don't use it.  */
 end_comment
 
 begin_function
@@ -73,7 +92,10 @@ name|char
 modifier|*
 name|name
 parameter_list|,
-name|size_t
+name|int
+name|len
+parameter_list|,
+name|int
 modifier|*
 name|offset
 parameter_list|)
@@ -85,8 +107,6 @@ modifier|*
 name|environ
 decl_stmt|;
 name|int
-name|len
-decl_stmt|,
 name|i
 decl_stmt|;
 specifier|const
@@ -119,33 +139,12 @@ operator|)
 return|;
 for|for
 control|(
-name|np
-operator|=
-name|name
-init|;
-operator|*
-name|np
-operator|&&
-operator|*
-name|np
-operator|!=
-literal|'='
-condition|;
-operator|++
-name|np
-control|)
-empty_stmt|;
-name|len
-operator|=
-name|np
-operator|-
-name|name
-expr_stmt|;
-for|for
-control|(
 name|p
 operator|=
 name|environ
+operator|+
+operator|*
+name|offset
 init|;
 operator|(
 name|cp
@@ -224,6 +223,41 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* nothing uses putenv */
+end_comment
+
+begin_comment
+comment|/*  * putenv --  *	Add a name=value string directly to the environmental, replacing  *	any current value.  */
+end_comment
+
+begin_comment
+unit|int putenv(char *str) { 	char **P, *cp; 	size_t cnt; 	int offset = 0;  	for (cp = str; *cp&& *cp != '='; ++cp) 		; 	if (*cp != '=') { 		errno = EINVAL; 		return (-1);
+comment|/* missing `=' in string */
+end_comment
+
+begin_comment
+unit|}  	if (__findenv(str, (int)(cp - str),&offset) != NULL) { 		environ[offset++] = str;
+comment|/* could be set multiple times */
+end_comment
+
+begin_comment
+unit|while (__findenv(str, (int)(cp - str),&offset)) { 			for (P =&environ[offset];; ++P) 				if (!(*P = *(P + 1))) 					break; 		} 		return (0); 	}
+comment|/* create new slot for string */
+end_comment
+
+begin_endif
+unit|for (P = environ; *P != NULL; P++) 		; 	cnt = P - environ; 	P = (char **)realloc(lastenv, sizeof(char *) * (cnt + 2)); 	if (!P) 		return (-1); 	if (lastenv != environ) 		memcpy(P, environ, cnt * sizeof(char *)); 	lastenv = environ = P; 	environ[cnt] = str; 	environ[cnt + 1] = NULL; 	return (0); }
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -252,33 +286,67 @@ name|int
 name|rewrite
 parameter_list|)
 block|{
-specifier|static
-name|char
-modifier|*
-modifier|*
-name|lastenv
-decl_stmt|;
-comment|/* last value of environ */
 name|char
 modifier|*
 name|C
+decl_stmt|,
+modifier|*
+modifier|*
+name|P
 decl_stmt|;
-name|size_t
+specifier|const
+name|char
+modifier|*
+name|np
+decl_stmt|;
+name|int
 name|l_value
 decl_stmt|,
 name|offset
+init|=
+literal|0
 decl_stmt|;
+for|for
+control|(
+name|np
+operator|=
+name|name
+init|;
+operator|*
+name|np
+operator|&&
+operator|*
+name|np
+operator|!=
+literal|'='
+condition|;
+operator|++
+name|np
+control|)
+empty_stmt|;
+ifdef|#
+directive|ifdef
+name|notyet
 if|if
 condition|(
 operator|*
-name|value
-operator|==
-literal|'='
+name|np
 condition|)
-comment|/* no `=' in value */
-operator|++
-name|value
+block|{
+name|errno
+operator|=
+name|EINVAL
 expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+comment|/* has `=' in name */
+block|}
+endif|#
+directive|endif
 name|l_value
 operator|=
 name|strlen
@@ -295,13 +363,30 @@ name|__findenv
 argument_list|(
 name|name
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
+name|np
+operator|-
+name|name
+argument_list|)
+argument_list|,
 operator|&
 name|offset
 argument_list|)
 operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
-comment|/* find if already exists */
+name|int
+name|tmpoff
+init|=
+name|offset
+operator|+
+literal|1
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -312,35 +397,66 @@ operator|(
 literal|0
 operator|)
 return|;
-if|if
-condition|(
-name|strlen
-argument_list|(
-name|C
-argument_list|)
-operator|>=
-name|l_value
-condition|)
-block|{
+if|#
+directive|if
+literal|0
+comment|/* XXX - existing entry may not be writable */
+block|if (strlen(C)>= l_value) {
 comment|/* old larger; copy over */
+block|while ((*C++ = *value++)) 				; 			return (0); 		}
+endif|#
+directive|endif
+comment|/* could be set multiple times */
 while|while
 condition|(
+name|__findenv
+argument_list|(
+name|name
+argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
+name|np
+operator|-
+name|name
+argument_list|)
+argument_list|,
+operator|&
+name|tmpoff
+argument_list|)
+condition|)
+block|{
+for|for
+control|(
+name|P
+operator|=
+operator|&
+name|environ
+index|[
+name|tmpoff
+index|]
+init|;
+condition|;
+operator|++
+name|P
+control|)
+if|if
+condition|(
+operator|!
 operator|(
 operator|*
-name|C
-operator|++
+name|P
 operator|=
 operator|*
-name|value
-operator|++
+operator|(
+name|P
+operator|+
+literal|1
+operator|)
 operator|)
 condition|)
-empty_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+break|break;
 block|}
 block|}
 else|else
@@ -348,11 +464,6 @@ block|{
 comment|/* create new slot */
 name|size_t
 name|cnt
-decl_stmt|;
-name|char
-modifier|*
-modifier|*
-name|P
 decl_stmt|;
 for|for
 control|(
@@ -451,29 +562,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-for|for
-control|(
-name|C
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|name
-init|;
-operator|*
-name|C
-operator|&&
-operator|*
-name|C
-operator|!=
-literal|'='
-condition|;
-operator|++
-name|C
-control|)
-empty_stmt|;
-comment|/* no `=' in name */
 if|if
 condition|(
 operator|!
@@ -494,7 +582,7 @@ call|(
 name|int
 call|)
 argument_list|(
-name|C
+name|np
 operator|-
 name|name
 argument_list|)
@@ -587,7 +675,7 @@ comment|/*  * unsetenv(name) --  *	Delete environmental variable "name".  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|unsetenv
 parameter_list|(
 specifier|const
@@ -601,20 +689,94 @@ modifier|*
 modifier|*
 name|P
 decl_stmt|;
-name|size_t
-name|offset
+specifier|const
+name|char
+modifier|*
+name|np
 decl_stmt|;
+name|int
+name|offset
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|name
+operator|||
+operator|!
+operator|*
+name|name
+condition|)
+block|{
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+for|for
+control|(
+name|np
+operator|=
+name|name
+init|;
+operator|*
+name|np
+operator|&&
+operator|*
+name|np
+operator|!=
+literal|'='
+condition|;
+operator|++
+name|np
+control|)
+empty_stmt|;
+if|if
+condition|(
+operator|*
+name|np
+condition|)
+block|{
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+comment|/* has `=' in name */
+block|}
+comment|/* could be set multiple times */
 while|while
 condition|(
 name|__findenv
 argument_list|(
 name|name
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
+name|np
+operator|-
+name|name
+argument_list|)
+argument_list|,
 operator|&
 name|offset
 argument_list|)
 condition|)
-comment|/* if set multiple times */
+block|{
 for|for
 control|(
 name|P
@@ -645,6 +807,12 @@ operator|)
 operator|)
 condition|)
 break|break;
+block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

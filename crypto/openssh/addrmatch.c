@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: addrmatch.c,v 1.5 2010/02/26 20:29:54 djm Exp $ */
+comment|/*	$OpenBSD: addrmatch.c,v 1.6 2012/06/21 00:16:07 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -1479,7 +1479,7 @@ argument_list|(
 name|addrbuf
 argument_list|)
 argument_list|)
-operator|>
+operator|>=
 sizeof|sizeof
 argument_list|(
 name|addrbuf
