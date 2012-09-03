@@ -188,6 +188,7 @@ if|if
 condition|(
 name|dynamic_kenv
 condition|)
+block|{
 comment|/* Already here */
 name|hintmode
 operator|=
@@ -199,6 +200,7 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
 name|from_kenv
 operator|=
 literal|1
