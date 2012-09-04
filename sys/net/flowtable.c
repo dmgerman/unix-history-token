@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/hash.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -248,12 +254,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/sctp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<libkern/jenkins.h>
 end_include
 
 begin_include
@@ -2768,7 +2768,7 @@ name|proto
 expr_stmt|;
 return|return
 operator|(
-name|jenkins_hashword
+name|jenkins_hash32
 argument_list|(
 name|key
 argument_list|,
@@ -3951,7 +3951,7 @@ name|proto
 expr_stmt|;
 return|return
 operator|(
-name|jenkins_hashword
+name|jenkins_hash32
 argument_list|(
 name|key
 argument_list|,
