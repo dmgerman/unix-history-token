@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2011  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2012  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_comment
@@ -1945,6 +1945,17 @@ operator|(
 name|size_helpdata
 operator|)
 return|;
+if|if
+condition|(
+name|ch_flags
+operator|&
+name|CH_NODATA
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 return|return
 operator|(
 name|ch_fsize
@@ -2591,6 +2602,23 @@ operator|!=
 name|BAD_LSEEK
 operator|)
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Force EOF to be at the current read position.  * This is used after an ignore_eof read, during which the EOF may change.  */
+end_comment
+
+begin_function
+name|public
+name|void
+name|ch_set_eof
+parameter_list|()
+block|{
+name|ch_fsize
+operator|=
+name|ch_fpos
+expr_stmt|;
 block|}
 end_function
 
