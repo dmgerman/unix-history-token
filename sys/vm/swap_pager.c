@@ -6143,7 +6143,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|atomic_cmpset_rel_int
+name|atomic_cmpset_int
 argument_list|(
 operator|&
 name|exhausted
@@ -6186,7 +6186,7 @@ goto|;
 block|}
 if|if
 condition|(
-name|atomic_cmpset_rel_int
+name|atomic_cmpset_int
 argument_list|(
 operator|&
 name|exhausted
