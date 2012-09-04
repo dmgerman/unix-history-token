@@ -4212,7 +4212,11 @@ argument_list|(
 literal|"Unable to open /dev/netmap"
 argument_list|)
 expr_stmt|;
-comment|// fail later
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
