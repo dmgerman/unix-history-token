@@ -10996,14 +10996,10 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* Open for business */
-comment|/* 	 * Hook the sockopt handler, and the layer2 (V_ip_fw_chk_ptr) 	 * and pfil hooks for ipv4 and ipv6. Even if the latter two fail 	 * we still keep the module alive because the sockopt and 	 * layer2 paths are still useful. 	 * ipfw[6]_hook return 0 on success, ENOENT on failure, 	 * so we can ignore the exact return value and just set a flag. 	 * 	 * Note that V_fw[6]_enable are manipulated by a SYSCTL_PROC so 	 * changes in the underlying (per-vnet) variables trigger 	 * immediate hook()/unhook() calls. 	 * In layer2 we have the same behaviour, except that V_ether_ipfw 	 * is checked on each packet because there are no pfil hooks. 	 */
+comment|/* 	 * Hook the sockopt handler and pfil hooks for ipv4 and ipv6. 	 * Even if the latter two fail we still keep the module alive 	 * because the sockopt and layer2 paths are still useful. 	 * ipfw[6]_hook return 0 on success, ENOENT on failure, 	 * so we can ignore the exact return value and just set a flag. 	 * 	 * Note that V_fw[6]_enable are manipulated by a SYSCTL_PROC so 	 * changes in the underlying (per-vnet) variables trigger 	 * immediate hook()/unhook() calls. 	 * In layer2 we have the same behaviour, except that V_ether_ipfw 	 * is checked on each packet because there are no pfil hooks. 	 */
 name|V_ip_fw_ctl_ptr
 operator|=
 name|ipfw_ctl
-expr_stmt|;
-name|V_ip_fw_chk_ptr
-operator|=
-name|ipfw_chk
 expr_stmt|;
 name|error
 operator|=
@@ -11068,10 +11064,6 @@ argument_list|(
 literal|0
 comment|/* detach */
 argument_list|)
-expr_stmt|;
-name|V_ip_fw_chk_ptr
-operator|=
-name|NULL
 expr_stmt|;
 name|V_ip_fw_ctl_ptr
 operator|=

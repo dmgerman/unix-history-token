@@ -1083,40 +1083,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* In ip_fw_pfil */
-end_comment
-
-begin_function_decl
-name|int
-name|ipfw_check_hook
-parameter_list|(
-name|void
-modifier|*
-name|arg
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-modifier|*
-name|m0
-parameter_list|,
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-parameter_list|,
-name|int
-name|dir
-parameter_list|,
-name|struct
-name|inpcb
-modifier|*
-name|inp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* In ip_fw_table.c */
 end_comment
 
