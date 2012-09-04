@@ -2263,9 +2263,14 @@ decl_stmt|;
 name|uint64_t
 name|count
 decl_stmt|;
-comment|/* 	 * There should be exactly two holds, both from 	 * dsl_dataset_destroy: one on the dd directory, and one on its 	 * head ds.  Otherwise, someone is trying to lookup something 	 * inside this dir while we want to destroy it.  The 	 * config_rwlock ensures that nobody else opens it after we 	 * check. 	 */
+comment|/* 	 * There should be exactly two holds, both from 	 * dsl_dataset_destroy: one on the dd directory, and one on its 	 * head ds.  If there are more holds, then a concurrent thread is 	 * performing a lookup inside this dir while we're trying to destroy 	 * it.  To minimize this possibility, we perform this check only 	 * in syncing context and fail the operation if we encounter 	 * additional holds.  The dp_config_rwlock ensures that nobody else 	 * opens it after we check. 	 */
 if|if
 condition|(
+name|dmu_tx_is_syncing
+argument_list|(
+name|tx
+argument_list|)
+operator|&&
 name|dmu_buf_refcount
 argument_list|(
 name|dd
