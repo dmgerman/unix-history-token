@@ -117,6 +117,9 @@ directive|include
 file|<time.h>
 include|#
 directive|include
+file|<procfs.h>
+include|#
+directive|include
 file|<libsysevent.h>
 include|#
 directive|include
