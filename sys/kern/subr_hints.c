@@ -44,13 +44,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
+file|<sys/sysctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/sysctl.h>
+file|<sys/systm.h>
 end_include
 
 begin_include
@@ -99,17 +99,6 @@ parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
-name|int
-name|error
-decl_stmt|,
-name|i
-decl_stmt|,
-name|from_kenv
-decl_stmt|,
-name|value
-decl_stmt|,
-name|eqidx
-decl_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -121,6 +110,17 @@ name|line
 decl_stmt|,
 modifier|*
 name|eq
+decl_stmt|;
+name|int
+name|eqidx
+decl_stmt|,
+name|error
+decl_stmt|,
+name|from_kenv
+decl_stmt|,
+name|i
+decl_stmt|,
+name|value
 decl_stmt|;
 name|from_kenv
 operator|=
@@ -153,10 +153,11 @@ if|if
 condition|(
 name|error
 operator|||
-operator|!
 name|req
 operator|->
 name|newptr
+operator|==
+name|NULL
 condition|)
 return|return
 operator|(
@@ -189,12 +190,11 @@ condition|(
 name|dynamic_kenv
 condition|)
 block|{
-comment|/* Already here */
+comment|/* 			 * Already here. But assign hintmode to 2, to not 			 * check it in the future. 			 */
 name|hintmode
 operator|=
-name|value
+literal|2
 expr_stmt|;
-comment|/* XXX: Need we switch or not ? */
 return|return
 operator|(
 literal|0
@@ -279,8 +279,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|eq
+operator|==
+name|NULL
 condition|)
 comment|/* Bad hint value */
 continue|continue;
