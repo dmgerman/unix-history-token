@@ -131,7 +131,7 @@ comment|/* (p) total pages cached */
 name|u_int
 name|v_dfree
 decl_stmt|;
-comment|/* (q) pages freed by daemon */
+comment|/* (p) pages freed by daemon */
 name|u_int
 name|v_pfree
 decl_stmt|;
