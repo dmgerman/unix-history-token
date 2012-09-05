@@ -290,6 +290,10 @@ name|SCTP_DEBUG_INPUT2
 argument_list|,
 literal|"sctp_handle_init: handling INIT tcb:%p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|stcb
 argument_list|)
 expr_stmt|;
@@ -12933,12 +12937,20 @@ argument_list|(
 literal|"Huh? ep:%p diff then l_inp:%p?\n"
 argument_list|,
 operator|(
+name|void
+operator|*
+operator|)
+operator|(
 operator|*
 name|stcb
 operator|)
 operator|->
 name|sctp_ep
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|l_inp
 argument_list|)
 expr_stmt|;
@@ -22295,6 +22307,10 @@ name|offset
 argument_list|,
 name|length
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|stcb
 argument_list|)
 expr_stmt|;
@@ -25268,6 +25284,10 @@ name|SCTP_DEBUG_INPUT3
 argument_list|,
 literal|"SCTP_ABORT, stcb %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|stcb
 argument_list|)
 expr_stmt|;
@@ -25317,6 +25337,10 @@ name|SCTP_DEBUG_INPUT3
 argument_list|,
 literal|"SCTP_SHUTDOWN, stcb %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|stcb
 argument_list|)
 expr_stmt|;
@@ -25419,6 +25443,10 @@ name|SCTP_DEBUG_INPUT3
 argument_list|,
 literal|"SCTP_SHUTDOWN-ACK, stcb %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|stcb
 argument_list|)
 expr_stmt|;
@@ -25518,6 +25546,10 @@ name|SCTP_DEBUG_INPUT3
 argument_list|,
 literal|"SCTP_COOKIE-ECHO, stcb %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|stcb
 argument_list|)
 expr_stmt|;
@@ -25920,6 +25952,10 @@ name|SCTP_DEBUG_INPUT3
 argument_list|,
 literal|"SCTP_COOKIE-ACK, stcb %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|stcb
 argument_list|)
 expr_stmt|;
@@ -26397,6 +26433,10 @@ name|SCTP_DEBUG_INPUT3
 argument_list|,
 literal|"SCTP_SHUTDOWN-COMPLETE, stcb %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|stcb
 argument_list|)
 expr_stmt|;
@@ -28166,6 +28206,10 @@ name|calc_check
 argument_list|,
 name|check
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|m
 argument_list|,
 name|length
@@ -28747,6 +28791,10 @@ name|SCTP_DEBUG_INPUT1
 argument_list|,
 literal|"Ok, Common input processing called, m:%p iphlen:%d offset:%d length:%d stcb:%p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|m
 argument_list|,
 name|iphlen
@@ -28755,6 +28803,10 @@ name|offset
 argument_list|,
 name|length
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|stcb
 argument_list|)
 expr_stmt|;
@@ -28786,6 +28838,10 @@ name|SCTP_DEBUG_INPUT1
 argument_list|,
 literal|"stcb:%p state:%x\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|stcb
 argument_list|,
 name|stcb
@@ -29738,7 +29794,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static void sctp_print_mbuf_chain(struct mbuf *m) { 	for (; m; m = SCTP_BUF_NEXT(m)) { 		SCTP_PRINTF("%p: m_len = %ld\n", m, SCTP_BUF_LEN(m)); 		if (SCTP_BUF_IS_EXTENDED(m)) 			SCTP_PRINTF("%p: extend_size = %d\n", m, SCTP_BUF_EXTEND_SIZE(m)); 	} }
+unit|static void sctp_print_mbuf_chain(struct mbuf *m) { 	for (; m; m = SCTP_BUF_NEXT(m)) { 		SCTP_PRINTF("%p: m_len = %ld\n", (void *)m, SCTP_BUF_LEN(m)); 		if (SCTP_BUF_IS_EXTENDED(m)) 			SCTP_PRINTF("%p: extend_size = %d\n", (void *)m, SCTP_BUF_EXTEND_SIZE(m)); 	} }
 endif|#
 directive|endif
 end_endif
