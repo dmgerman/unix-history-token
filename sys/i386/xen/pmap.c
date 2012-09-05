@@ -1280,8 +1280,8 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
-name|_pmap_unwire_pte_hold
+name|void
+name|_pmap_unwire_ptp
 parameter_list|(
 name|pmap_t
 name|pmap
@@ -5333,14 +5333,14 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This routine unholds page table pages, and if the hold count  * drops to zero, then it decrements the wire count.  */
+comment|/*  * Decrements a page table page's wire count, which is used to record the  * number of valid page table entries within the page.  If the wire count  * drops to zero, then the page table page is unmapped.  Returns TRUE if the  * page table page was unmapped and FALSE otherwise.  */
 end_comment
 
 begin_function
 specifier|static
-name|__inline
-name|int
-name|pmap_unwire_pte_hold
+specifier|inline
+name|boolean_t
+name|pmap_unwire_ptp
 parameter_list|(
 name|pmap_t
 name|pmap
@@ -5366,9 +5366,8 @@ name|wire_count
 operator|==
 literal|0
 condition|)
-return|return
-operator|(
-name|_pmap_unwire_pte_hold
+block|{
+name|_pmap_unwire_ptp
 argument_list|(
 name|pmap
 argument_list|,
@@ -5376,12 +5375,17 @@ name|m
 argument_list|,
 name|free
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|TRUE
 operator|)
 return|;
+block|}
 else|else
 return|return
 operator|(
-literal|0
+name|FALSE
 operator|)
 return|;
 block|}
@@ -5389,8 +5393,8 @@ end_function
 
 begin_function
 specifier|static
-name|int
-name|_pmap_unwire_pte_hold
+name|void
+name|_pmap_unwire_ptp
 parameter_list|(
 name|pmap_t
 name|pmap
@@ -5489,11 +5493,6 @@ name|free
 operator|=
 name|m
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 block|}
 end_function
 
@@ -5557,7 +5556,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|pmap_unwire_pte_hold
+name|pmap_unwire_ptp
 argument_list|(
 name|pmap
 argument_list|,
@@ -13105,7 +13104,7 @@ name|NULL
 expr_stmt|;
 if|if
 condition|(
-name|pmap_unwire_pte_hold
+name|pmap_unwire_ptp
 argument_list|(
 name|pmap
 argument_list|,
@@ -14322,7 +14321,7 @@ name|NULL
 expr_stmt|;
 if|if
 condition|(
-name|pmap_unwire_pte_hold
+name|pmap_unwire_ptp
 argument_list|(
 name|dst_pmap
 argument_list|,

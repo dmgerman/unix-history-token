@@ -777,7 +777,7 @@ name|map
 operator|->
 name|system_mtx
 argument_list|,
-literal|"system map"
+literal|"vm map (system)"
 argument_list|,
 name|NULL
 argument_list|,
@@ -793,7 +793,7 @@ name|map
 operator|->
 name|lock
 argument_list|,
-literal|"user map"
+literal|"vm map (user)"
 argument_list|)
 expr_stmt|;
 return|return
