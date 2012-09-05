@@ -4351,7 +4351,7 @@ condition|(
 operator|*
 name|argp
 operator|==
-literal|0
+literal|'\0'
 condition|)
 name|inf
 operator|->
@@ -4359,7 +4359,7 @@ name|addelem
 argument_list|(
 name|inf
 argument_list|,
-name|elemcopy
+name|argp
 argument_list|)
 expr_stmt|;
 while|while
