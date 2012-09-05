@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2011  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2012  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_comment
@@ -174,6 +174,12 @@ block|{
 name|char
 modifier|*
 name|dst
+decl_stmt|;
+name|char
+modifier|*
+name|edst
+init|=
+name|odst
 decl_stmt|;
 name|char
 modifier|*
@@ -368,19 +374,12 @@ argument_list|,
 name|ch
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Record the original position of the char. 			 * But if we've already recorded a position 			 * for this char (due to a backspace), leave 			 * it alone; if multiple source chars map to 			 * one destination char, we want the position 			 * of the first one. 			 */
+comment|/* Record the original position of the char. */
 if|if
 condition|(
 name|chpos
 operator|!=
 name|NULL
-operator|&&
-name|chpos
-index|[
-name|dst_pos
-index|]
-operator|<
-literal|0
 condition|)
 name|chpos
 index|[
@@ -390,6 +389,16 @@ operator|=
 name|src_pos
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|dst
+operator|>
+name|edst
+condition|)
+name|edst
+operator|=
+name|dst
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -399,11 +408,11 @@ operator|&
 name|CVT_CRLF
 operator|)
 operator|&&
-name|dst
+name|edst
 operator|>
 name|odst
 operator|&&
-name|dst
+name|edst
 index|[
 operator|-
 literal|1
@@ -411,11 +420,11 @@ index|]
 operator|==
 literal|'\r'
 condition|)
-name|dst
+name|edst
 operator|--
 expr_stmt|;
 operator|*
-name|dst
+name|edst
 operator|=
 literal|'\0'
 expr_stmt|;
@@ -428,27 +437,11 @@ condition|)
 operator|*
 name|lenp
 operator|=
-name|dst
+name|edst
 operator|-
 name|odst
 expr_stmt|;
-if|if
-condition|(
-name|chpos
-operator|!=
-name|NULL
-condition|)
-name|chpos
-index|[
-name|dst
-operator|-
-name|odst
-index|]
-operator|=
-name|src
-operator|-
-name|osrc
-expr_stmt|;
+comment|/* FIXME: why was this here?  if (chpos != NULL) chpos[dst - odst] = src - osrc; */
 block|}
 end_function
 

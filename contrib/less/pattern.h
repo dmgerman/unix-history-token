@@ -1,7 +1,51 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2011  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2012  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|HAVE_GNU_REGEX
+end_if
+
+begin_define
+define|#
+directive|define
+name|__USE_GNU
+value|1
+end_define
+
+begin_include
+include|#
+directive|include
+file|<regex.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|DEFINE_PATTERN
+parameter_list|(
+name|name
+parameter_list|)
+value|struct re_pattern_buffer *name
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLEAR_PATTERN
+parameter_list|(
+name|name
+parameter_list|)
+value|name = NULL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -245,6 +289,35 @@ parameter_list|(
 name|name
 parameter_list|)
 value|name = NULL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|NO_REGEX
+end_if
+
+begin_define
+define|#
+directive|define
+name|DEFINE_PATTERN
+parameter_list|(
+name|name
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLEAR_PATTERN
+parameter_list|(
+name|name
+parameter_list|)
 end_define
 
 begin_endif

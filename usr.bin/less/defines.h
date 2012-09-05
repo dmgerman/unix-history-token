@@ -574,6 +574,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* GNU regex library */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_GNU_REGEX */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<inttypes.h> header file. */
 end_comment
 
@@ -583,30 +591,6 @@ directive|define
 name|HAVE_INTTYPES_H
 value|1
 end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `gen' library (-lgen). */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_LIBGEN */
-end_comment
-
-begin_comment
-comment|/* Define to 1 if you have the `intl' library (-lintl). */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_LIBINTL */
-end_comment
-
-begin_comment
-comment|/* Define to 1 if you have the `PW' library (-lPW). */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_LIBPW */
-end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<limits.h> header file. */
