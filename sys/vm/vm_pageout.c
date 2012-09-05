@@ -2934,6 +2934,7 @@ comment|/* 	 * We do this explicitly after the caches have been drained above. 	
 name|uma_reclaim
 argument_list|()
 expr_stmt|;
+comment|/* 	 * The addl_page_shortage is the the number of temporarily 	 * stuck pages in the inactive queue.  In other words, the 	 * number of pages from cnt.v_inactive_count that should be 	 * discounted in setting the target for the active queue scan. 	 */
 name|addl_page_shortage
 operator|=
 name|atomic_readandclear_int
@@ -3121,7 +3122,7 @@ name|m
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Lock the page. 		 */
+comment|/* 		 * The page or object lock acquisitions fail if the 		 * page was removed from the queue or moved to a 		 * different position within the queue.  In either 		 * case, addl_page_shortage should not be incremented. 		 */
 if|if
 condition|(
 operator|!
@@ -3139,35 +3140,8 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|addl_page_shortage
-operator|++
-expr_stmt|;
 continue|continue;
 block|}
-comment|/* 		 * A held page may be undergoing I/O, so skip it. 		 */
-if|if
-condition|(
-name|m
-operator|->
-name|hold_count
-condition|)
-block|{
-name|vm_page_unlock
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-name|vm_page_requeue
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-name|addl_page_shortage
-operator|++
-expr_stmt|;
-continue|continue;
-block|}
-comment|/* 		 * Don't mess with busy pages, keep in the front of the 		 * queue, most likely are being paged out. 		 */
 name|object
 operator|=
 name|m
@@ -3182,7 +3156,6 @@ argument_list|(
 name|object
 argument_list|)
 operator|&&
-operator|(
 operator|!
 name|vm_pageout_fallback_object_lock
 argument_list|(
@@ -3191,35 +3164,28 @@ argument_list|,
 operator|&
 name|next
 argument_list|)
-operator|||
-name|m
-operator|->
-name|hold_count
-operator|!=
-literal|0
-operator|)
 condition|)
 block|{
-name|VM_OBJECT_UNLOCK
-argument_list|(
-name|object
-argument_list|)
-expr_stmt|;
 name|vm_page_unlock
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|addl_page_shortage
-operator|++
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|object
+argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* 		 * Don't mess with busy pages, keep them at at the 		 * front of the queue, most likely they are being 		 * paged out.  Increment addl_page_shortage for busy 		 * pages, because they may leave the inactive queue 		 * shortly after page scan is finished. 		 */
 if|if
 condition|(
 name|m
 operator|->
 name|busy
+operator|!=
+literal|0
 operator|||
 operator|(
 name|m
@@ -3228,6 +3194,8 @@ name|oflags
 operator|&
 name|VPO_BUSY
 operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|vm_page_unlock
@@ -3409,6 +3377,33 @@ name|VM_OBJECT_UNLOCK
 argument_list|(
 name|object
 argument_list|)
+expr_stmt|;
+goto|goto
+name|relock_queues
+goto|;
+block|}
+if|if
+condition|(
+name|m
+operator|->
+name|hold_count
+operator|!=
+literal|0
+condition|)
+block|{
+name|vm_page_unlock
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
+comment|/* 			 * Held pages are essentially stuck in the 			 * queue.  So, they ought to be discounted 			 * from cnt.v_inactive_count.  See the 			 * calculation of the page_shortage for the 			 * loop over the active queue below. 			 */
+name|addl_page_shortage
+operator|++
 expr_stmt|;
 goto|goto
 name|relock_queues
