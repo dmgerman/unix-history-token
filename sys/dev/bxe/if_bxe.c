@@ -16064,11 +16064,21 @@ operator||
 name|BXE_INFO_UNLOAD
 argument_list|)
 expr_stmt|;
+comment|/* Stop the controller, but only if it was ever started. 	 * Stopping an uninitialized controller can cause 	 * IPMI bus errors on some systems. 	 */
 name|BXE_CORE_LOCK
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|state
+operator|!=
+name|BXE_STATE_CLOSED
+condition|)
+block|{
 name|bxe_stop_locked
 argument_list|(
 name|sc
@@ -16076,6 +16086,7 @@ argument_list|,
 name|UNLOAD_NORMAL
 argument_list|)
 expr_stmt|;
+block|}
 name|BXE_CORE_UNLOCK
 argument_list|(
 name|sc
