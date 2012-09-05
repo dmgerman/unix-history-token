@@ -345,6 +345,13 @@ name|int
 name|twe_wait_aen
 decl_stmt|;
 comment|/* wait-for-aen notification */
+name|char
+name|twe_aen_buf
+index|[
+literal|80
+index|]
+decl_stmt|;
+comment|/* AEN format buffer */
 comment|/* controller status */
 name|int
 name|twe_state
