@@ -12159,7 +12159,7 @@ operator|=
 operator|(
 name|uint64_t
 operator|)
-literal|10000000
+literal|1000000
 operator|*
 operator|(
 name|uint64_t
