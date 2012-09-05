@@ -29393,6 +29393,14 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|dprintf_setup
+argument_list|(
+operator|&
+name|argc
+argument_list|,
+name|argv
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!

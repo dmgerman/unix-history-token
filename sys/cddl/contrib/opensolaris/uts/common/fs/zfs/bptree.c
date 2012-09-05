@@ -877,6 +877,8 @@ name|bte
 operator|.
 name|be_zb
 argument_list|,
+name|TRAVERSE_PREFETCH_METADATA
+operator||
 name|TRAVERSE_POST
 argument_list|,
 name|bptree_visit_cb
