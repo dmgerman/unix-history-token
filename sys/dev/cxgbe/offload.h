@@ -18,6 +18,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|INIT_ULPTX_WRH
+parameter_list|(
+name|w
+parameter_list|,
+name|wrlen
+parameter_list|,
+name|atomic
+parameter_list|,
+name|tid
+parameter_list|)
+value|do { \ 	(w)->wr_hi = htonl(V_FW_WR_OP(FW_ULPTX_WR) | V_FW_WR_ATOMIC(atomic)); \ 	(w)->wr_mid = htonl(V_FW_WR_LEN16(DIV_ROUND_UP(wrlen, 16)) | \ 			       V_FW_WR_FLOWID(tid)); \ 	(w)->wr_lo = cpu_to_be64(0); \ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|INIT_ULPTX_WR
 parameter_list|(
 name|w
@@ -28,7 +44,8 @@ name|atomic
 parameter_list|,
 name|tid
 parameter_list|)
-value|do { \ 	(w)->wr.wr_hi = htonl(V_FW_WR_OP(FW_ULPTX_WR) | V_FW_WR_ATOMIC(atomic)); \ 	(w)->wr.wr_mid = htonl(V_FW_WR_LEN16(DIV_ROUND_UP(wrlen, 16)) | \ 			       V_FW_WR_FLOWID(tid)); \ 	(w)->wr.wr_lo = cpu_to_be64(0); \ } while (0)
+define|\
+value|INIT_ULPTX_WRH(&((w)->wr), wrlen, atomic, tid)
 end_define
 
 begin_define
