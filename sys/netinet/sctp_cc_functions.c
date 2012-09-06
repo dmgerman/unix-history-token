@@ -10569,6 +10569,7 @@ name|net_ack
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|net
 operator|->
 name|cc_mod
@@ -10583,6 +10584,7 @@ name|cwnd
 operator|-
 operator|(
 operator|(
+operator|(
 name|net
 operator|->
 name|cc_mod
@@ -10592,7 +10594,19 @@ operator|.
 name|alpha
 operator|>>
 literal|7
+operator|)
 condition|?
+operator|(
+name|net
+operator|->
+name|cc_mod
+operator|.
+name|htcp_ca
+operator|.
+name|alpha
+operator|>>
+literal|7
+operator|)
 else|:
 literal|1
 operator|)
@@ -10601,7 +10615,9 @@ name|net
 operator|->
 name|mtu
 operator|)
+operator|)
 operator|&&
+operator|(
 name|now
 operator|-
 name|net
@@ -10619,7 +10635,9 @@ operator|.
 name|htcp_ca
 operator|.
 name|minRTT
+operator|)
 operator|&&
+operator|(
 name|net
 operator|->
 name|cc_mod
@@ -10629,6 +10647,7 @@ operator|.
 name|minRTT
 operator|>
 literal|0
+operator|)
 condition|)
 block|{
 name|uint32_t
