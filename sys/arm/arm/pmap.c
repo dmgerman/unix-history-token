@@ -5388,11 +5388,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * main pv_entry manipulation functions:  *   pmap_enter_pv: enter a mapping onto a vm_page list  *   pmap_remove_pv: remove a mappiing from a vm_page list  *  * NOTE: pmap_enter_pv expects to lock the pvh itself  *       pmap_remove_pv expects te caller to lock the pvh before calling  */
+comment|/*  * main pv_entry manipulation functions:  *   pmap_enter_pv: enter a mapping onto a vm_page list  *   pmap_remove_pv: remove a mappiing from a vm_page list  *  * NOTE: pmap_enter_pv expects to lock the pvh itself  *       pmap_remove_pv expects the caller to lock the pvh before calling  */
 end_comment
 
 begin_comment
-comment|/*  * pmap_enter_pv: enter a mapping onto a vm_page lst  *  * => caller should hold the proper lock on pmap_main_lock  * => caller should have pmap locked  * => we will gain the lock on the vm_page and allocate the new pv_entry  * => caller should adjust ptp's wire_count before calling  * => caller should not adjust pmap's wire_count  */
+comment|/*  * pmap_enter_pv: enter a mapping onto a vm_page lst  *  * => caller should hold the proper lock on pvh_global_lock  * => caller should have pmap locked  * => we will gain the lock on the vm_page and allocate the new pv_entry  * => caller should adjust ptp's wire_count before calling  * => caller should not adjust pmap's wire_count  */
 end_comment
 
 begin_function
@@ -5438,6 +5438,8 @@ operator|->
 name|md
 operator|.
 name|pv_kva
+operator|!=
+literal|0
 condition|)
 block|{
 comment|/* PMAP_ASSERT_LOCKED(pmap_kernel()); */
@@ -5527,12 +5529,6 @@ name|pmap_kernel
 argument_list|()
 argument_list|)
 expr_stmt|;
-name|rw_wunlock
-argument_list|(
-operator|&
-name|pvh_global_lock
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -5546,13 +5542,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"pmap_kenter_internal: no pv entries"
-argument_list|)
-expr_stmt|;
-name|rw_wlock
-argument_list|(
-operator|&
-name|pvh_global_lock
+literal|"pmap_kenter_pv: no pv entries"
 argument_list|)
 expr_stmt|;
 if|if
@@ -10607,7 +10597,7 @@ argument_list|(
 name|pte
 argument_list|)
 expr_stmt|;
-comment|/* kernel direct mappings can be shared, so use a pv_entry 		 * to ensure proper caching. 		 * 		 * The pvzone is used to delay the recording of kernel 		 * mappings until the VM is running. 		 * 		 * This expects the physical memory to have vm_page_array entry. 		 */
+comment|/* 	 * A kernel mapping may not be the page's only mapping, so create a PV 	 * entry to ensure proper caching.  	 * 	 * The existence test for the pvzone is used to delay the recording of 	 * kernel mappings until the VM system is fully initialized. 	 * 	 * This expects the physical memory to have a vm_page_array entry. 	 */
 if|if
 condition|(
 name|pvzone
@@ -10622,6 +10612,8 @@ argument_list|(
 name|pa
 argument_list|)
 operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 name|rw_wlock
@@ -10648,15 +10640,10 @@ operator|->
 name|md
 operator|.
 name|pv_kva
+operator|!=
+literal|0
 condition|)
 block|{
-comment|/* release vm_page lock for pv_entry UMA */
-name|rw_wunlock
-argument_list|(
-operator|&
-name|pvh_global_lock
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -10671,12 +10658,6 @@ condition|)
 name|panic
 argument_list|(
 literal|"pmap_kenter_internal: no pv entries"
-argument_list|)
-expr_stmt|;
-name|rw_wlock
-argument_list|(
-operator|&
-name|pvh_global_lock
 argument_list|)
 expr_stmt|;
 name|PMAP_LOCK
