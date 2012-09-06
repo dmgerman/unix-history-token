@@ -76,7 +76,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/device_port.h>
+file|<sys/bus.h>
 end_include
 
 begin_include

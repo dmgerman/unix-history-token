@@ -40,31 +40,6 @@ name|scsi_low_softc
 name|sc_sclow
 decl_stmt|;
 comment|/* generic data */
-ifdef|#
-directive|ifdef
-name|__NetBSD__
-name|bus_space_tag_t
-name|sc_iot
-decl_stmt|;
-name|bus_space_handle_t
-name|sc_ioh
-decl_stmt|;
-name|bus_space_tag_t
-name|sc_memt
-decl_stmt|;
-name|bus_space_handle_t
-name|sc_memh
-decl_stmt|;
-name|void
-modifier|*
-name|sc_ih
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* __NetBSD__ */
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 name|bus_space_tag_t
 name|sc_iot
 decl_stmt|;
@@ -105,9 +80,6 @@ name|void
 modifier|*
 name|nsp_intrhand
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* __FreeBSD__ */
 name|int
 name|sc_tmaxcnt
 decl_stmt|;
