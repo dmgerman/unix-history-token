@@ -474,9 +474,7 @@ begin_decl_stmt
 name|bfd_vma
 name|dynamic_info
 index|[
-name|DT_JMPREL
-operator|+
-literal|1
+name|DT_ENCODING
 index|]
 decl_stmt|;
 end_decl_stmt
