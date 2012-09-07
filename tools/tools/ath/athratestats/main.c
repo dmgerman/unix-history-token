@@ -466,6 +466,12 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+name|printf
+argument_list|(
+literal|"   TX Rate     TXTOTAL:TXOK       EWMA          T/   F"
+literal|"     avg last xmit\n"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|mask
@@ -534,8 +540,8 @@ condition|)
 continue|continue;
 name|printf
 argument_list|(
-literal|"[%2u %s:%4u] %8ju:%-8ju (%3d%%) "
-literal|"(EWMA %3d.%1d%%) T %8ju F %4d avg %5u last %u\n"
+literal|"[%2u %s:%4u] %8ju:%-8ju "
+literal|"(%3d.%1d%%) %8ju/%4d %5ums %u\n"
 argument_list|,
 name|dot11rate
 argument_list|(
@@ -585,39 +591,6 @@ name|rix
 index|]
 operator|.
 name|packets_acked
-argument_list|,
-call|(
-name|int
-call|)
-argument_list|(
-operator|(
-name|sn
-operator|->
-name|stats
-index|[
-name|y
-index|]
-index|[
-name|rix
-index|]
-operator|.
-name|packets_acked
-operator|*
-literal|100ULL
-operator|)
-operator|/
-name|sn
-operator|->
-name|stats
-index|[
-name|y
-index|]
-index|[
-name|rix
-index|]
-operator|.
-name|total_packets
-argument_list|)
 argument_list|,
 name|sn
 operator|->
