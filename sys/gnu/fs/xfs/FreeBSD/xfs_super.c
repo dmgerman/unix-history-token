@@ -943,6 +943,7 @@ name|void
 parameter_list|)
 block|{
 specifier|static
+specifier|const
 name|char
 name|message
 index|[]
