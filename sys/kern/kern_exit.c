@@ -574,7 +574,7 @@ operator|&
 name|P_HADTHREADS
 condition|)
 block|{
-comment|/* 		 * First check if some other thread got here before us.. 		 * if so, act apropriatly, (exit or suspend); 		 */
+comment|/* 		 * First check if some other thread got here before us. 		 * If so, act appropriately: exit or suspend. 		 */
 name|thread_suspend_check
 argument_list|(
 literal|0

@@ -2782,7 +2782,7 @@ operator|==
 name|SINGLE_EXIT
 condition|)
 block|{
-comment|/* 		 * We have gotten rid of all the other threads and we 		 * are about to either exit or exec. In either case, 		 * we try our utmost  to revert to being a non-threaded 		 * process. 		 */
+comment|/* 		 * We have gotten rid of all the other threads and we 		 * are about to either exit or exec. In either case, 		 * we try our utmost to revert to being a non-threaded 		 * process. 		 */
 name|p
 operator|->
 name|p_singlethread
