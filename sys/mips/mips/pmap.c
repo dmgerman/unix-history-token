@@ -1579,10 +1579,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pdpe
-operator|==
-name|NULL
-operator|||
 operator|*
 name|pdpe
 operator|==
@@ -8588,10 +8584,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pde
-operator|==
-name|NULL
-operator|||
 operator|*
 name|pde
 operator|==
