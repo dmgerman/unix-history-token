@@ -519,6 +519,69 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_ATI_RV870
+value|HDA_MODEL_CONSTRUCT(ATI, 0xaa50)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_ATI_RV840
+value|HDA_MODEL_CONSTRUCT(ATI, 0xaa58)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_ATI_RV830
+value|HDA_MODEL_CONSTRUCT(ATI, 0xaa60)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_ATI_RV810
+value|HDA_MODEL_CONSTRUCT(ATI, 0xaa68)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_ATI_RV970
+value|HDA_MODEL_CONSTRUCT(ATI, 0xaa80)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_ATI_RV940
+value|HDA_MODEL_CONSTRUCT(ATI, 0xaa88)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_ATI_RV930
+value|HDA_MODEL_CONSTRUCT(ATI, 0xaa90)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_ATI_RV910
+value|HDA_MODEL_CONSTRUCT(ATI, 0xaa98)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_ATI_R1000
+value|HDA_MODEL_CONSTRUCT(ATI, 0xaaa0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_ATI_ALL
 value|HDA_MODEL_CONSTRUCT(ATI, 0xffff)
 end_define

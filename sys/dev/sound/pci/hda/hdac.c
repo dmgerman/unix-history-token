@@ -836,6 +836,96 @@ literal|0
 block|}
 block|,
 block|{
+name|HDA_ATI_RV810
+block|,
+literal|"ATI RV810"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_ATI_RV830
+block|,
+literal|"ATI RV830"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_ATI_RV840
+block|,
+literal|"ATI RV840"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_ATI_RV870
+block|,
+literal|"ATI RV870"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_ATI_RV910
+block|,
+literal|"ATI RV910"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_ATI_RV930
+block|,
+literal|"ATI RV930"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_ATI_RV940
+block|,
+literal|"ATI RV940"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_ATI_RV970
+block|,
+literal|"ATI RV970"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_ATI_R1000
+block|,
+literal|"ATI R1000"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
 name|HDA_RDC_M3010
 block|,
 literal|"RDC M3010"
