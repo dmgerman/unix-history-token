@@ -102,6 +102,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<curses.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ah.h"
 end_include
 
@@ -141,6 +147,15 @@ directive|include
 file|"ath_rate/sample/sample.h"
 end_include
 
+begin_decl_stmt
+specifier|static
+name|int
+name|do_loop
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * This needs to be big enough to fit the two TLVs, the rate table  * and the rate statistics table for a single node.  */
 end_comment
@@ -150,6 +165,16 @@ define|#
 directive|define
 name|STATS_BUF_SIZE
 value|8192
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRINTMSG
+parameter_list|(
+modifier|...
+parameter_list|)
+value|do {			\ 	if (do_loop == 0)			\ 		printf(__VA_ARGS__);		\ 	else					\ 		printw(__VA_ARGS__);		\ 	} while (0)
 end_define
 
 begin_struct
@@ -299,7 +324,7 @@ name|rix
 decl_stmt|,
 name|y
 decl_stmt|;
-name|printf
+name|PRINTMSG
 argument_list|(
 literal|"static_rix (%d) ratemask 0x%x\n"
 argument_list|,
@@ -326,7 +351,7 @@ name|y
 operator|++
 control|)
 block|{
-name|printf
+name|PRINTMSG
 argument_list|(
 literal|"[%4u] cur rate %d %s since switch: "
 literal|"packets %d ticks %u\n"
@@ -375,7 +400,7 @@ name|y
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|PRINTMSG
 argument_list|(
 literal|"[%4u] last sample (%d %s) cur sample (%d %s) "
 literal|"packets sent %d\n"
@@ -441,7 +466,7 @@ name|y
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|PRINTMSG
 argument_list|(
 literal|"[%4u] packets since sample %d sample tt %u\n"
 argument_list|,
@@ -466,7 +491,7 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|PRINTMSG
 argument_list|(
 literal|"   TX Rate     TXTOTAL:TXOK       EWMA          T/   F"
 literal|"     avg last xmit\n"
@@ -538,10 +563,10 @@ operator|==
 literal|0
 condition|)
 continue|continue;
-name|printf
+name|PRINTMSG
 argument_list|(
 literal|"[%2u %s:%4u] %8ju:%-8ju "
-literal|"(%3d.%1d%%) %8ju/%4d %5ums %u\n"
+literal|"(%3d.%1d%%) %8ju/%4d %5uuS %u\n"
 argument_list|,
 name|dot11rate
 argument_list|(
@@ -1071,6 +1096,63 @@ block|}
 end_function
 
 begin_function
+specifier|static
+name|void
+name|fetch_and_print_stats
+parameter_list|(
+name|struct
+name|ath_ratestats
+modifier|*
+name|r
+parameter_list|,
+name|struct
+name|ether_addr
+modifier|*
+name|e
+parameter_list|,
+name|uint8_t
+modifier|*
+name|buf
+parameter_list|)
+block|{
+comment|/* Zero the buffer before it's passed in */
+name|memset
+argument_list|(
+name|buf
+argument_list|,
+literal|'\0'
+argument_list|,
+name|STATS_BUF_SIZE
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Set the station address for this lookup. 	 */
+name|ath_setsta
+argument_list|(
+name|r
+argument_list|,
+name|e
+operator|->
+name|octet
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Fetch the data from the driver. 	 */
+name|ath_rate_ioctl
+argument_list|(
+name|r
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Decode and parse statistics. 	 */
+name|rate_node_stats
+argument_list|(
+name|r
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|int
 name|main
 parameter_list|(
@@ -1116,6 +1198,12 @@ name|uint8_t
 modifier|*
 name|buf
 decl_stmt|;
+name|useconds_t
+name|sleep_period
+decl_stmt|;
+name|float
+name|f
+decl_stmt|;
 name|ifname
 operator|=
 name|getenv
@@ -1144,7 +1232,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ahi:m:"
+literal|"ahi:m:s:"
 argument_list|)
 operator|)
 operator|!=
@@ -1181,12 +1269,41 @@ operator|=
 name|optarg
 expr_stmt|;
 break|break;
+case|case
+literal|'s'
+case|:
+name|sscanf
+argument_list|(
+name|optarg
+argument_list|,
+literal|"%f"
+argument_list|,
+operator|&
+name|f
+argument_list|)
+expr_stmt|;
+name|do_loop
+operator|=
+literal|1
+expr_stmt|;
+name|sleep_period
+operator|=
+call|(
+name|useconds_t
+call|)
+argument_list|(
+name|f
+operator|*
+literal|1000000.0
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"usage: %s [-h] [-i ifname] [-a] [-m macaddr]\n"
+literal|"usage: %s [-h] [-i ifname] [-a] [-m macaddr] [-s sleep period]\n"
 argument_list|,
 name|argv
 index|[
@@ -1325,41 +1442,99 @@ argument_list|,
 name|ifname
 argument_list|)
 expr_stmt|;
-comment|/* Zero the buffer before it's passed in */
-name|memset
+if|if
+condition|(
+name|do_loop
+condition|)
+block|{
+name|initscr
+argument_list|()
+expr_stmt|;
+name|start_color
+argument_list|()
+expr_stmt|;
+name|use_default_colors
+argument_list|()
+expr_stmt|;
+name|cbreak
+argument_list|()
+expr_stmt|;
+name|noecho
+argument_list|()
+expr_stmt|;
+name|nonl
+argument_list|()
+expr_stmt|;
+name|nodelay
 argument_list|(
+name|stdscr
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|intrflush
+argument_list|(
+name|stdscr
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+name|keypad
+argument_list|(
+name|stdscr
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+literal|1
+condition|)
+block|{
+name|clear
+argument_list|()
+expr_stmt|;
+name|move
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|fetch_and_print_stats
+argument_list|(
+operator|&
+name|r
+argument_list|,
+name|e
+argument_list|,
 name|buf
-argument_list|,
-literal|'\0'
-argument_list|,
-name|STATS_BUF_SIZE
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Set the station address for this lookup. 	 */
-name|ath_setsta
+name|refresh
+argument_list|()
+expr_stmt|;
+name|usleep
+argument_list|(
+name|sleep_period
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+name|fetch_and_print_stats
 argument_list|(
 operator|&
 name|r
 argument_list|,
 name|e
-operator|->
-name|octet
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Fetch the data from the driver. 	 */
-name|ath_rate_ioctl
-argument_list|(
-operator|&
-name|r
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Decode and parse statistics. 	 */
-name|rate_node_stats
-argument_list|(
-operator|&
-name|r
 argument_list|,
-name|e
+name|buf
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
