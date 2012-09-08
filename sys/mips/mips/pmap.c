@@ -7559,6 +7559,14 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Write back all cache lines from the page being unmapped. 	 */
+name|mips_dcache_wbinv_range_index
+argument_list|(
+name|va
+argument_list|,
+name|PAGE_SIZE
+argument_list|)
+expr_stmt|;
 name|oldpte
 operator|=
 operator|*
@@ -7801,7 +7809,7 @@ argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
-comment|/* 	 * if there is no pte for this address, just skip it!!! 	 */
+comment|/* 	 * If there is no pte for this address, just skip it! 	 */
 if|if
 condition|(
 operator|!
@@ -7812,18 +7820,7 @@ argument_list|,
 name|PTE_V
 argument_list|)
 condition|)
-block|{
 return|return;
-block|}
-comment|/* 	 * Write back all caches from the page being destroyed 	 */
-name|mips_dcache_wbinv_range_index
-argument_list|(
-name|va
-argument_list|,
-name|PAGE_SIZE
-argument_list|)
-expr_stmt|;
-comment|/* 	 * get a local va for mappings for this pmap. 	 */
 operator|(
 name|void
 operator|)
@@ -7846,7 +7843,6 @@ argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -8057,7 +8053,30 @@ operator|+=
 name|PAGE_SIZE
 control|)
 block|{
-name|pmap_remove_page
+if|if
+condition|(
+operator|!
+name|pte_test
+argument_list|(
+name|pte
+argument_list|,
+name|PTE_V
+argument_list|)
+condition|)
+continue|continue;
+name|pmap_remove_pte
+argument_list|(
+name|pmap
+argument_list|,
+name|pte
+argument_list|,
+name|sva
+argument_list|,
+operator|*
+name|pde
+argument_list|)
+expr_stmt|;
+name|pmap_invalidate_page
 argument_list|(
 name|pmap
 argument_list|,
@@ -9101,6 +9120,14 @@ name|PTE_MANAGED
 argument_list|)
 condition|)
 block|{
+name|m
+operator|->
+name|md
+operator|.
+name|pv_flags
+operator||=
+name|PV_TABLE_REF
+expr_stmt|;
 name|om
 operator|=
 name|m
@@ -9248,6 +9275,14 @@ operator|==
 literal|0
 condition|)
 block|{
+name|m
+operator|->
+name|md
+operator|.
+name|pv_flags
+operator||=
+name|PV_TABLE_REF
+expr_stmt|;
 if|if
 condition|(
 name|pv
@@ -9334,24 +9369,6 @@ operator|++
 expr_stmt|;
 name|validate
 label|:
-if|if
-condition|(
-operator|(
-name|access
-operator|&
-name|VM_PROT_WRITE
-operator|)
-operator|!=
-literal|0
-condition|)
-name|m
-operator|->
-name|md
-operator|.
-name|pv_flags
-operator||=
-name|PV_TABLE_REF
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|PMAP_DEBUG
@@ -9382,6 +9399,11 @@ operator|!=
 name|newpte
 condition|)
 block|{
+operator|*
+name|pte
+operator|=
+name|newpte
+expr_stmt|;
 if|if
 condition|(
 name|pte_test
@@ -9393,11 +9415,6 @@ name|PTE_V
 argument_list|)
 condition|)
 block|{
-operator|*
-name|pte
-operator|=
-name|newpte
-expr_stmt|;
 if|if
 condition|(
 name|pte_test
@@ -9522,16 +9539,6 @@ argument_list|,
 name|PGA_WRITEABLE
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-operator|*
-name|pte
-operator|=
-name|newpte
-expr_stmt|;
-block|}
-block|}
 name|pmap_update_page
 argument_list|(
 name|pmap
@@ -9541,6 +9548,8 @@ argument_list|,
 name|newpte
 argument_list|)
 expr_stmt|;
+block|}
+block|}
 comment|/* 	 * Sync I& D caches for executable pages.  Do this only if the 	 * target pmap belongs to the current process.  Otherwise, an 	 * unresolvable TLB miss may occur. 	 */
 if|if
 condition|(
@@ -9961,6 +9970,8 @@ comment|/* 	 * Now validate mapping with RO protection 	 */
 operator|*
 name|pte
 operator|=
+name|PTE_RO
+operator||
 name|TLBLO_PA_TO_PFN
 argument_list|(
 name|pa
@@ -10017,11 +10028,6 @@ name|PTE_G
 expr_stmt|;
 else|else
 block|{
-operator|*
-name|pte
-operator||=
-name|PTE_RO
-expr_stmt|;
 comment|/* 		 * Sync I& D caches.  Do this only if the target pmap 		 * belongs to the current process.  Otherwise, an 		 * unresolvable TLB miss may occur. */
 if|if
 condition|(
@@ -14228,15 +14234,9 @@ name|vm_offset_t
 name|va
 parameter_list|)
 block|{
-name|vm_page_t
-name|m
-decl_stmt|;
 name|pt_entry_t
 modifier|*
 name|pte
-decl_stmt|;
-name|vm_paddr_t
-name|pa
 decl_stmt|;
 name|PMAP_LOCK
 argument_list|(
@@ -14342,7 +14342,6 @@ name|PTE_RO
 argument_list|)
 condition|)
 block|{
-comment|/* write to read only page in the kernel */
 name|PMAP_UNLOCK
 argument_list|(
 name|pmap
@@ -14385,29 +14384,6 @@ name|panic
 argument_list|(
 literal|"pmap_emulate_modified: unmanaged page"
 argument_list|)
-expr_stmt|;
-name|pa
-operator|=
-name|TLBLO_PTE_TO_PA
-argument_list|(
-operator|*
-name|pte
-argument_list|)
-expr_stmt|;
-name|m
-operator|=
-name|PHYS_TO_VM_PAGE
-argument_list|(
-name|pa
-argument_list|)
-expr_stmt|;
-name|m
-operator|->
-name|md
-operator|.
-name|pv_flags
-operator||=
-name|PV_TABLE_REF
 expr_stmt|;
 name|PMAP_UNLOCK
 argument_list|(
