@@ -4691,14 +4691,6 @@ argument_list|,
 name|trapframe
 argument_list|)
 expr_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|Giant
-argument_list|,
-name|MA_NOTOWNED
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|trapframe
