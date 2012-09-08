@@ -3975,15 +3975,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tReferences:  [ States:  %-18d Rules: %-18d ]\n"
+literal|"\tReferences:  %-18d\n"
 argument_list|,
 name|p
 operator|->
-name|pfik_states
-argument_list|,
-name|p
-operator|->
-name|pfik_rules
+name|pfik_rulerefs
 argument_list|)
 expr_stmt|;
 for|for

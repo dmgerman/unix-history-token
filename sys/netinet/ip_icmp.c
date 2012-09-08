@@ -3332,11 +3332,6 @@ name|done
 goto|;
 comment|/* Ip_output() will check for broadcast */
 block|}
-name|m_addr_changed
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 name|t
 operator|=
 name|ip

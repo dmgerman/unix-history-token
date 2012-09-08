@@ -510,21 +510,6 @@ literal|"urpf-failed"
 argument_list|)
 expr_stmt|;
 return|return;
-case|case
-name|PF_ADDR_RTLABEL
-case|:
-name|printf
-argument_list|(
-literal|"route \"%s\""
-argument_list|,
-name|addr
-operator|->
-name|v
-operator|.
-name|rtlabelname
-argument_list|)
-expr_stmt|;
-return|return;
 default|default:
 name|printf
 argument_list|(
@@ -2125,19 +2110,6 @@ condition|)
 name|printf
 argument_list|(
 literal|", sloppy"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|s
-operator|->
-name|state_flags
-operator|&
-name|PFSTATE_PFLOW
-condition|)
-name|printf
-argument_list|(
-literal|", pflow"
 argument_list|)
 expr_stmt|;
 if|if
