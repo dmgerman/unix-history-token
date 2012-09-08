@@ -845,12 +845,6 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_include
-include|#
-directive|include
-file|<vm/vm_param.h>
-end_include
-
 begin_comment
 comment|/*  * Each pageable resident page falls into one of five lists:  *  *	free  *		Available for allocation now.  *  *	cache  *		Almost available for allocation. Still associated with  *		an object, but clean and immediately freeable.  *  *	hold  *		Will become free after a pending I/O operation  *		completes.  *  * The following lists are LRU sorted:  *  *	inactive  *		Low activity, candidates for reclamation.  *		This is the list of pages that should be  *		paged out next.  *  *	active  *		Pages that are "active" i.e. they have been  *		recently referenced.  *  */
 end_comment
