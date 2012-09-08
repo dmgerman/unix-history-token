@@ -394,6 +394,29 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * Check for misbehavior. 	 */
+name|WITNESS_WARN
+argument_list|(
+name|WARN_PANIC
+argument_list|,
+name|NULL
+argument_list|,
+literal|"userret: returning"
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|td
+operator|->
+name|td_critnest
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"userret: Returning in a critical section"
+operator|)
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|td
@@ -403,11 +426,58 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"userret: Returning with %d locks held."
+literal|"userret: Returning with %d locks held"
 operator|,
 name|td
 operator|->
 name|td_locks
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|td
+operator|->
+name|td_pflags
+operator|&
+name|TDP_NOFAULTING
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"userret: Returning with pagefaults disabled"
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|td
+operator|->
+name|td_pflags
+operator|&
+name|TDP_NOSLEEPING
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"userret: Returning with sleep disabled"
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|td
+operator|->
+name|td_pinned
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"userret: Returning with with pinned thread"
 operator|)
 argument_list|)
 expr_stmt|;
