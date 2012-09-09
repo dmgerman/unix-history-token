@@ -23,7 +23,7 @@ begin_define
 define|#
 directive|define
 name|DWC_OTG_MAX_DEVICES
-value|(USB_MIN_DEVICES + 1)
+value|MIN(USB_MAX_DEVICES, 32)
 end_define
 
 begin_define
@@ -45,6 +45,20 @@ define|#
 directive|define
 name|DWC_OTG_MAX_TXN
 value|(0x200 * DWC_OTG_MAX_TXP)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DWC_OTG_MAX_CHANNELS
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|DWC_OTG_MAX_ENDPOINTS
+value|16
 end_define
 
 begin_define
@@ -129,6 +143,14 @@ decl_stmt|;
 name|uint32_t
 name|remainder
 decl_stmt|;
+name|uint32_t
+name|hcchar
+decl_stmt|;
+comment|/* HOST CFG */
+name|uint32_t
+name|hcsplt
+decl_stmt|;
+comment|/* HOST CFG */
 name|uint16_t
 name|max_packet_size
 decl_stmt|;
@@ -137,10 +159,29 @@ name|uint16_t
 name|npkt
 decl_stmt|;
 name|uint8_t
+name|sof_res
+decl_stmt|;
+name|uint8_t
+name|sof_val
+decl_stmt|;
+name|uint8_t
 name|ep_no
 decl_stmt|;
 name|uint8_t
+name|channel
+decl_stmt|;
+name|uint8_t
 name|error
+range|:
+literal|1
+decl_stmt|;
+name|uint8_t
+name|error_any
+range|:
+literal|1
+decl_stmt|;
+name|uint8_t
+name|error_stall
 range|:
 literal|1
 decl_stmt|;
@@ -156,6 +197,21 @@ literal|1
 decl_stmt|;
 name|uint8_t
 name|did_stall
+range|:
+literal|1
+decl_stmt|;
+name|uint8_t
+name|did_ping
+range|:
+literal|1
+decl_stmt|;
+name|uint8_t
+name|toggle
+range|:
+literal|1
+decl_stmt|;
+name|uint8_t
+name|set_toggle
 range|:
 literal|1
 decl_stmt|;
@@ -263,6 +319,21 @@ range|:
 literal|1
 decl_stmt|;
 name|uint8_t
+name|change_reset
+range|:
+literal|1
+decl_stmt|;
+name|uint8_t
+name|change_enabled
+range|:
+literal|1
+decl_stmt|;
+name|uint8_t
+name|change_over_current
+range|:
+literal|1
+decl_stmt|;
+name|uint8_t
 name|status_suspend
 range|:
 literal|1
@@ -287,10 +358,17 @@ literal|1
 decl_stmt|;
 comment|/* set if High Speed is selected */
 name|uint8_t
-name|remote_wakeup
+name|status_low_speed
 range|:
 literal|1
 decl_stmt|;
+comment|/* set if Low Speed is selected */
+name|uint8_t
+name|status_device_mode
+range|:
+literal|1
+decl_stmt|;
+comment|/* set if device mode */
 name|uint8_t
 name|self_powered
 range|:
@@ -308,6 +386,11 @@ literal|1
 decl_stmt|;
 name|uint8_t
 name|port_enabled
+range|:
+literal|1
+decl_stmt|;
+name|uint8_t
+name|port_over_current
 range|:
 literal|1
 decl_stmt|;
@@ -351,7 +434,7 @@ name|struct
 name|dwc_otg_profile
 name|sc_hw_ep_profile
 index|[
-literal|16
+name|DWC_OTG_MAX_ENDPOINTS
 index|]
 decl_stmt|;
 name|struct
@@ -417,23 +500,44 @@ decl_stmt|;
 name|uint32_t
 name|sc_out_ctl
 index|[
-literal|16
+name|DWC_OTG_MAX_ENDPOINTS
 index|]
 decl_stmt|;
 name|uint32_t
 name|sc_in_ctl
 index|[
-literal|16
+name|DWC_OTG_MAX_ENDPOINTS
 index|]
 decl_stmt|;
+name|uint32_t
+name|sc_hcchar
+index|[
+name|DWC_OTG_MAX_CHANNELS
+index|]
+decl_stmt|;
+name|uint32_t
+name|sc_sof_refs
+decl_stmt|;
+name|uint32_t
+name|sc_sof_val
+decl_stmt|;
+name|uint32_t
+name|sc_hprt_val
+decl_stmt|;
+name|uint32_t
+name|sc_haint_mask
+decl_stmt|;
 name|uint16_t
-name|sc_active_out_ep
+name|sc_active_rx_ep
 decl_stmt|;
 name|uint8_t
 name|sc_dev_ep_max
 decl_stmt|;
 name|uint8_t
 name|sc_dev_in_ep_max
+decl_stmt|;
+name|uint8_t
+name|sc_host_ch_max
 decl_stmt|;
 name|uint8_t
 name|sc_rt_addr
@@ -443,6 +547,25 @@ name|uint8_t
 name|sc_conf
 decl_stmt|;
 comment|/* root HUB config */
+name|uint8_t
+name|sc_mode
+decl_stmt|;
+comment|/* mode of operation */
+define|#
+directive|define
+name|DWC_MODE_OTG
+value|0
+comment|/* both modes */
+define|#
+directive|define
+name|DWC_MODE_DEVICE
+value|1
+comment|/* device only */
+define|#
+directive|define
+name|DWC_MODE_HOST
+value|2
+comment|/* host only */
 name|uint8_t
 name|sc_hub_idata
 index|[

@@ -3129,28 +3129,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|HCCHAR_MC_EC_SHIFT
+name|HCCHAR_MC_SHIFT
 value|20
 end_define
 
 begin_define
 define|#
 directive|define
-name|HCCHAR_MC_EC_MASK
-value|0x00300000
-end_define
-
-begin_define
-define|#
-directive|define
-name|HCCHAR_EC_SHIFT
-value|20
-end_define
-
-begin_define
-define|#
-directive|define
-name|HCCHAR_EC_MASK
+name|HCCHAR_MC_MASK
 value|0x00300000
 end_define
 
