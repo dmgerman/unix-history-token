@@ -166,6 +166,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|nfscl_debuglevel
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 name|nfsv4_callbackaddr
 index|[
@@ -304,6 +312,27 @@ name|nfsv4_callbackaddr
 argument_list|)
 argument_list|,
 literal|"NFSv4 callback addr for server to use"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vfs_nfs
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|debuglevel
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|nfscl_debuglevel
+argument_list|,
+literal|0
+argument_list|,
+literal|"Debug level for new nfs client"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
