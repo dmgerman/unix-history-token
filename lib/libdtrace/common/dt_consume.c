@@ -12088,6 +12088,7 @@ name|dtrace_rechdr_t
 modifier|*
 name|dtrh
 init|=
+comment|/* LINTED - alignment */
 operator|(
 name|dtrace_rechdr_t
 operator|*
