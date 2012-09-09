@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -3622,13 +3622,9 @@ argument_list|,
 name|tx
 argument_list|)
 expr_stmt|;
-name|ASSERT3U
+name|ASSERT0
 argument_list|(
 name|err
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -3687,13 +3683,9 @@ argument_list|,
 name|tx
 argument_list|)
 expr_stmt|;
-name|ASSERT3U
+name|ASSERT0
 argument_list|(
 name|err
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -4815,13 +4807,9 @@ argument_list|,
 name|tx
 argument_list|)
 expr_stmt|;
-name|ASSERT3P
+name|ASSERT0
 argument_list|(
 name|err
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -6903,13 +6891,9 @@ operator|==
 name|ENOTSUP
 condition|)
 return|return;
-name|ASSERT3U
+name|ASSERT0
 argument_list|(
 name|error
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 comment|/* What blocksize did we actually get? */

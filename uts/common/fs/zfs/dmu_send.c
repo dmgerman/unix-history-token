@@ -186,15 +186,11 @@ name|ssize_t
 name|resid
 decl_stmt|;
 comment|/* have to get resid to get detailed errno */
-name|ASSERT3U
+name|ASSERT0
 argument_list|(
 name|len
 operator|%
 literal|8
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|fletcher_4_incremental_native
@@ -5000,15 +4996,11 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* some things will require 8-byte alignment, so everything must */
-name|ASSERT3U
+name|ASSERT0
 argument_list|(
 name|len
 operator|%
 literal|8
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 while|while
@@ -8650,13 +8642,9 @@ argument_list|,
 name|B_FALSE
 argument_list|)
 expr_stmt|;
-name|ASSERT3U
+name|ASSERT0
 argument_list|(
 name|myerr
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return

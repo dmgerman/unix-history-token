@@ -112,15 +112,11 @@ name|empty_bpobj_feat
 argument_list|)
 condition|)
 block|{
-name|ASSERT3U
+name|ASSERT0
 argument_list|(
 name|dp
 operator|->
 name|dp_empty_bpobj
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|dp

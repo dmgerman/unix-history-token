@@ -631,15 +631,11 @@ name|quota
 decl_stmt|,
 name|used
 decl_stmt|;
-name|ASSERT3U
+name|ASSERT0
 argument_list|(
 name|dstg
 operator|->
 name|dstg_err
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Check for sufficient space.  We just check against what's 	 * on-disk; we don't want any in-flight accounting to get in our 	 * way, because open context may have already used up various 	 * in-core limits (arc_tempreserve, dsl_pool_tempreserve). 	 */

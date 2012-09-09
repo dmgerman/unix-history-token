@@ -4540,15 +4540,11 @@ name|b_state
 argument_list|)
 condition|)
 block|{
-name|ASSERT3U
+name|ASSERT0
 argument_list|(
 name|ab
 operator|->
 name|b_datacnt
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|ASSERT3P
@@ -7790,7 +7786,7 @@ name|hash_lock
 argument_list|)
 condition|)
 block|{
-name|ASSERT3U
+name|ASSERT0
 argument_list|(
 name|refcount_count
 argument_list|(
@@ -7799,10 +7795,6 @@ name|ab
 operator|->
 name|b_refcnt
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|ASSERT
@@ -11225,7 +11217,7 @@ name|ARC_PREFETCH
 condition|)
 block|{
 comment|/* 			 * This is a prefetch access... 			 * move this block back to the MRU state. 			 */
-name|ASSERT3U
+name|ASSERT0
 argument_list|(
 name|refcount_count
 argument_list|(
@@ -11234,10 +11226,6 @@ name|buf
 operator|->
 name|b_refcnt
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|new_state
@@ -12888,7 +12876,7 @@ name|hdr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ASSERT3U
+name|ASSERT0
 argument_list|(
 name|refcount_count
 argument_list|(
@@ -12897,10 +12885,6 @@ name|hdr
 operator|->
 name|b_refcnt
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|ASSERT
@@ -19355,13 +19339,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|ASSERT3U
+name|ASSERT0
 argument_list|(
 name|write_sz
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|kmem_cache_free

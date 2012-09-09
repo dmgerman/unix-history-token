@@ -689,15 +689,11 @@ name|zt_nextblk
 operator|=
 name|newblk
 expr_stmt|;
-name|ASSERT3U
+name|ASSERT0
 argument_list|(
 name|tbl
 operator|->
 name|zt_blks_copied
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|dmu_prefetch
@@ -1715,7 +1711,7 @@ name|zap
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ASSERT3U
+name|ASSERT0
 argument_list|(
 name|zap
 operator|->
@@ -1726,10 +1722,6 @@ operator|->
 name|zap_ptrtbl
 operator|.
 name|zt_blk
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|newblk
@@ -2520,7 +2512,7 @@ name|winner
 expr_stmt|;
 block|}
 comment|/* 	 * lhr_pad was previously used for the next leaf in the leaf 	 * chain.  There should be no chained leafs (as we have removed 	 * support for them). 	 */
-name|ASSERT3U
+name|ASSERT0
 argument_list|(
 name|l
 operator|->
@@ -2529,10 +2521,6 @@ operator|->
 name|l_hdr
 operator|.
 name|lh_pad1
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * There should be more hash entries than there can be 	 * chunks to put in the hash table 	 */
@@ -3738,13 +3726,9 @@ argument_list|,
 name|tx
 argument_list|)
 expr_stmt|;
-name|ASSERT3U
+name|ASSERT0
 argument_list|(
 name|err
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 comment|/* we checked for i/o errors above */

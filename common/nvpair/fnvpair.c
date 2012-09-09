@@ -58,7 +58,7 @@ name|nvlist_t
 modifier|*
 name|nvl
 decl_stmt|;
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvlist_alloc
 argument_list|(
@@ -69,10 +69,6 @@ name|NV_UNIQUE_NAME
 argument_list|,
 name|KM_SLEEP
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -112,7 +108,7 @@ block|{
 name|size_t
 name|size
 decl_stmt|;
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvlist_size
 argument_list|(
@@ -123,10 +119,6 @@ name|size
 argument_list|,
 name|NV_ENCODE_NATIVE
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -245,7 +237,7 @@ name|nvlist_t
 modifier|*
 name|rv
 decl_stmt|;
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvlist_unpack
 argument_list|(
@@ -258,10 +250,6 @@ name|rv
 argument_list|,
 name|KM_SLEEP
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -286,7 +274,7 @@ name|nvlist_t
 modifier|*
 name|rv
 decl_stmt|;
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvlist_dup
 argument_list|(
@@ -297,10 +285,6 @@ name|rv
 argument_list|,
 name|KM_SLEEP
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -324,7 +308,7 @@ modifier|*
 name|src
 parameter_list|)
 block|{
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvlist_merge
 argument_list|(
@@ -334,10 +318,6 @@ name|src
 argument_list|,
 name|KM_SLEEP
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -357,7 +337,7 @@ modifier|*
 name|name
 parameter_list|)
 block|{
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvlist_add_boolean
 argument_list|(
@@ -365,10 +345,6 @@ name|nvl
 argument_list|,
 name|name
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -391,7 +367,7 @@ name|boolean_t
 name|val
 parameter_list|)
 block|{
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvlist_add_boolean_value
 argument_list|(
@@ -401,10 +377,6 @@ name|name
 argument_list|,
 name|val
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -427,7 +399,7 @@ name|uchar_t
 name|val
 parameter_list|)
 block|{
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvlist_add_byte
 argument_list|(
@@ -437,10 +409,6 @@ name|name
 argument_list|,
 name|val
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -463,7 +431,7 @@ name|int8_t
 name|val
 parameter_list|)
 block|{
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvlist_add_int8
 argument_list|(
@@ -473,10 +441,6 @@ name|name
 argument_list|,
 name|val
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -499,7 +463,7 @@ name|uint8_t
 name|val
 parameter_list|)
 block|{
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvlist_add_uint8
 argument_list|(
@@ -509,10 +473,6 @@ name|name
 argument_list|,
 name|val
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -535,7 +495,7 @@ name|int16_t
 name|val
 parameter_list|)
 block|{
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvlist_add_int16
 argument_list|(
@@ -545,10 +505,6 @@ name|name
 argument_list|,
 name|val
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -571,7 +527,7 @@ name|uint16_t
 name|val
 parameter_list|)
 block|{
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvlist_add_uint16
 argument_list|(
@@ -581,10 +537,6 @@ name|name
 argument_list|,
 name|val
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -607,7 +559,7 @@ name|int32_t
 name|val
 parameter_list|)
 block|{
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvlist_add_int32
 argument_list|(
@@ -617,10 +569,6 @@ name|name
 argument_list|,
 name|val
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -643,7 +591,7 @@ name|uint32_t
 name|val
 parameter_list|)
 block|{
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvlist_add_uint32
 argument_list|(
@@ -653,10 +601,6 @@ name|name
 argument_list|,
 name|val
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -679,7 +623,7 @@ name|int64_t
 name|val
 parameter_list|)
 block|{
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvlist_add_int64
 argument_list|(
@@ -689,10 +633,6 @@ name|name
 argument_list|,
 name|val
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -715,7 +655,7 @@ name|uint64_t
 name|val
 parameter_list|)
 block|{
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvlist_add_uint64
 argument_list|(
@@ -725,10 +665,6 @@ name|name
 argument_list|,
 name|val
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -753,7 +689,7 @@ modifier|*
 name|val
 parameter_list|)
 block|{
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvlist_add_string
 argument_list|(
@@ -763,10 +699,6 @@ name|name
 argument_list|,
 name|val
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -790,7 +722,7 @@ modifier|*
 name|val
 parameter_list|)
 block|{
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvlist_add_nvlist
 argument_list|(
@@ -800,10 +732,6 @@ name|name
 argument_list|,
 name|val
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -822,7 +750,7 @@ modifier|*
 name|pair
 parameter_list|)
 block|{
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvlist_add_nvpair
 argument_list|(
@@ -830,10 +758,6 @@ name|nvl
 argument_list|,
 name|pair
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -860,7 +784,7 @@ name|uint_t
 name|n
 parameter_list|)
 block|{
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvlist_add_boolean_array
 argument_list|(
@@ -872,10 +796,6 @@ name|val
 argument_list|,
 name|n
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -902,7 +822,7 @@ name|uint_t
 name|n
 parameter_list|)
 block|{
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvlist_add_byte_array
 argument_list|(
@@ -914,10 +834,6 @@ name|val
 argument_list|,
 name|n
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -944,7 +860,7 @@ name|uint_t
 name|n
 parameter_list|)
 block|{
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvlist_add_int8_array
 argument_list|(
@@ -956,10 +872,6 @@ name|val
 argument_list|,
 name|n
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -986,7 +898,7 @@ name|uint_t
 name|n
 parameter_list|)
 block|{
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvlist_add_uint8_array
 argument_list|(
@@ -998,10 +910,6 @@ name|val
 argument_list|,
 name|n
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1028,7 +936,7 @@ name|uint_t
 name|n
 parameter_list|)
 block|{
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvlist_add_int16_array
 argument_list|(
@@ -1040,10 +948,6 @@ name|val
 argument_list|,
 name|n
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1070,7 +974,7 @@ name|uint_t
 name|n
 parameter_list|)
 block|{
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvlist_add_uint16_array
 argument_list|(
@@ -1082,10 +986,6 @@ name|val
 argument_list|,
 name|n
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1112,7 +1012,7 @@ name|uint_t
 name|n
 parameter_list|)
 block|{
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvlist_add_int32_array
 argument_list|(
@@ -1124,10 +1024,6 @@ name|val
 argument_list|,
 name|n
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1154,7 +1050,7 @@ name|uint_t
 name|n
 parameter_list|)
 block|{
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvlist_add_uint32_array
 argument_list|(
@@ -1166,10 +1062,6 @@ name|val
 argument_list|,
 name|n
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1196,7 +1088,7 @@ name|uint_t
 name|n
 parameter_list|)
 block|{
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvlist_add_int64_array
 argument_list|(
@@ -1208,10 +1100,6 @@ name|val
 argument_list|,
 name|n
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1238,7 +1126,7 @@ name|uint_t
 name|n
 parameter_list|)
 block|{
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvlist_add_uint64_array
 argument_list|(
@@ -1250,10 +1138,6 @@ name|val
 argument_list|,
 name|n
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1282,7 +1166,7 @@ name|uint_t
 name|n
 parameter_list|)
 block|{
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvlist_add_string_array
 argument_list|(
@@ -1294,10 +1178,6 @@ name|val
 argument_list|,
 name|n
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1325,7 +1205,7 @@ name|uint_t
 name|n
 parameter_list|)
 block|{
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvlist_add_nvlist_array
 argument_list|(
@@ -1337,10 +1217,6 @@ name|val
 argument_list|,
 name|n
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1360,7 +1236,7 @@ modifier|*
 name|name
 parameter_list|)
 block|{
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvlist_remove_all
 argument_list|(
@@ -1368,10 +1244,6 @@ name|nvl
 argument_list|,
 name|name
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1390,7 +1262,7 @@ modifier|*
 name|pair
 parameter_list|)
 block|{
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvlist_remove_nvpair
 argument_list|(
@@ -1398,10 +1270,6 @@ name|nvl
 argument_list|,
 name|pair
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1426,7 +1294,7 @@ name|nvpair_t
 modifier|*
 name|rv
 decl_stmt|;
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvlist_lookup_nvpair
 argument_list|(
@@ -1437,10 +1305,6 @@ argument_list|,
 operator|&
 name|rv
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -1501,7 +1365,7 @@ block|{
 name|boolean_t
 name|rv
 decl_stmt|;
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvlist_lookup_boolean_value
 argument_list|(
@@ -1512,10 +1376,6 @@ argument_list|,
 operator|&
 name|rv
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -1543,7 +1403,7 @@ block|{
 name|uchar_t
 name|rv
 decl_stmt|;
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvlist_lookup_byte
 argument_list|(
@@ -1554,10 +1414,6 @@ argument_list|,
 operator|&
 name|rv
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -1585,7 +1441,7 @@ block|{
 name|int8_t
 name|rv
 decl_stmt|;
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvlist_lookup_int8
 argument_list|(
@@ -1596,10 +1452,6 @@ argument_list|,
 operator|&
 name|rv
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -1627,7 +1479,7 @@ block|{
 name|int16_t
 name|rv
 decl_stmt|;
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvlist_lookup_int16
 argument_list|(
@@ -1638,10 +1490,6 @@ argument_list|,
 operator|&
 name|rv
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -1669,7 +1517,7 @@ block|{
 name|int32_t
 name|rv
 decl_stmt|;
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvlist_lookup_int32
 argument_list|(
@@ -1680,10 +1528,6 @@ argument_list|,
 operator|&
 name|rv
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -1711,7 +1555,7 @@ block|{
 name|int64_t
 name|rv
 decl_stmt|;
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvlist_lookup_int64
 argument_list|(
@@ -1722,10 +1566,6 @@ argument_list|,
 operator|&
 name|rv
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -1753,7 +1593,7 @@ block|{
 name|uint8_t
 name|rv
 decl_stmt|;
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvlist_lookup_uint8
 argument_list|(
@@ -1764,10 +1604,6 @@ argument_list|,
 operator|&
 name|rv
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -1795,7 +1631,7 @@ block|{
 name|uint16_t
 name|rv
 decl_stmt|;
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvlist_lookup_uint16
 argument_list|(
@@ -1806,10 +1642,6 @@ argument_list|,
 operator|&
 name|rv
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -1837,7 +1669,7 @@ block|{
 name|uint32_t
 name|rv
 decl_stmt|;
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvlist_lookup_uint32
 argument_list|(
@@ -1848,10 +1680,6 @@ argument_list|,
 operator|&
 name|rv
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -1879,7 +1707,7 @@ block|{
 name|uint64_t
 name|rv
 decl_stmt|;
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvlist_lookup_uint64
 argument_list|(
@@ -1890,10 +1718,6 @@ argument_list|,
 operator|&
 name|rv
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -1923,7 +1747,7 @@ name|char
 modifier|*
 name|rv
 decl_stmt|;
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvlist_lookup_string
 argument_list|(
@@ -1934,10 +1758,6 @@ argument_list|,
 operator|&
 name|rv
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -1967,7 +1787,7 @@ name|nvlist_t
 modifier|*
 name|rv
 decl_stmt|;
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvlist_lookup_nvlist
 argument_list|(
@@ -1978,10 +1798,6 @@ argument_list|,
 operator|&
 name|rv
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -2004,7 +1820,7 @@ block|{
 name|boolean_t
 name|rv
 decl_stmt|;
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvpair_value_boolean_value
 argument_list|(
@@ -2013,10 +1829,6 @@ argument_list|,
 operator|&
 name|rv
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -2039,7 +1851,7 @@ block|{
 name|uchar_t
 name|rv
 decl_stmt|;
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvpair_value_byte
 argument_list|(
@@ -2048,10 +1860,6 @@ argument_list|,
 operator|&
 name|rv
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -2074,7 +1882,7 @@ block|{
 name|int8_t
 name|rv
 decl_stmt|;
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvpair_value_int8
 argument_list|(
@@ -2083,10 +1891,6 @@ argument_list|,
 operator|&
 name|rv
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -2109,7 +1913,7 @@ block|{
 name|int16_t
 name|rv
 decl_stmt|;
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvpair_value_int16
 argument_list|(
@@ -2118,10 +1922,6 @@ argument_list|,
 operator|&
 name|rv
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -2144,7 +1944,7 @@ block|{
 name|int32_t
 name|rv
 decl_stmt|;
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvpair_value_int32
 argument_list|(
@@ -2153,10 +1953,6 @@ argument_list|,
 operator|&
 name|rv
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -2179,7 +1975,7 @@ block|{
 name|int64_t
 name|rv
 decl_stmt|;
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvpair_value_int64
 argument_list|(
@@ -2188,10 +1984,6 @@ argument_list|,
 operator|&
 name|rv
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -2214,7 +2006,7 @@ block|{
 name|uint8_t
 name|rv
 decl_stmt|;
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvpair_value_uint8
 argument_list|(
@@ -2223,10 +2015,6 @@ argument_list|,
 operator|&
 name|rv
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -2249,7 +2037,7 @@ block|{
 name|uint16_t
 name|rv
 decl_stmt|;
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvpair_value_uint16
 argument_list|(
@@ -2258,10 +2046,6 @@ argument_list|,
 operator|&
 name|rv
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -2284,7 +2068,7 @@ block|{
 name|uint32_t
 name|rv
 decl_stmt|;
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvpair_value_uint32
 argument_list|(
@@ -2293,10 +2077,6 @@ argument_list|,
 operator|&
 name|rv
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -2319,7 +2099,7 @@ block|{
 name|uint64_t
 name|rv
 decl_stmt|;
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvpair_value_uint64
 argument_list|(
@@ -2328,10 +2108,6 @@ argument_list|,
 operator|&
 name|rv
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -2356,7 +2132,7 @@ name|char
 modifier|*
 name|rv
 decl_stmt|;
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvpair_value_string
 argument_list|(
@@ -2365,10 +2141,6 @@ argument_list|,
 operator|&
 name|rv
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -2393,7 +2165,7 @@ name|nvlist_t
 modifier|*
 name|rv
 decl_stmt|;
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|nvpair_value_nvlist
 argument_list|(
@@ -2402,10 +2174,6 @@ argument_list|,
 operator|&
 name|rv
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return
