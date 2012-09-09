@@ -1470,6 +1470,25 @@ name|ds0
 comment|/* first descriptor */
 argument_list|)
 expr_stmt|;
+comment|/* Make sure the 11n aggregate fields are cleared */
+if|if
+condition|(
+name|ath_tx_is_11n
+argument_list|(
+name|sc
+argument_list|)
+condition|)
+name|ath_hal_clr11n_aggr
+argument_list|(
+name|sc
+operator|->
+name|sc_ah
+argument_list|,
+name|bf
+operator|->
+name|bf_desc
+argument_list|)
+expr_stmt|;
 name|isFirstDesc
 operator|=
 literal|0
@@ -13553,6 +13572,7 @@ name|ac
 index|]
 argument_list|)
 expr_stmt|;
+comment|/* XXX clr11naggr should be done for all subframes */
 name|ath_hal_clr11n_aggr
 argument_list|(
 name|sc
@@ -13743,6 +13763,32 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* Just to make sure */
+comment|/* Clear the aggregate state */
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_aggr
+operator|=
+literal|0
+expr_stmt|;
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_ndelim
+operator|=
+literal|0
+expr_stmt|;
+comment|/* ??? needed? */
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_nframes
+operator|=
+literal|1
+expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 name|bf_q
@@ -16207,6 +16253,14 @@ operator|->
 name|bf_state
 operator|.
 name|bfs_aggr
+operator|=
+literal|0
+expr_stmt|;
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_ndelim
 operator|=
 literal|0
 expr_stmt|;
