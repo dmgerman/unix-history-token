@@ -6641,10 +6641,11 @@ name|ro
 operator|->
 name|ro_dst
 expr_stmt|;
-name|llentry_update
-argument_list|(
-operator|&
 name|lle
+operator|=
+name|llentry_alloc
+argument_list|(
+name|ifp
 argument_list|,
 name|LLTABLE6
 argument_list|(
@@ -6652,8 +6653,6 @@ name|ifp
 argument_list|)
 argument_list|,
 name|l3addr
-argument_list|,
-name|ifp
 argument_list|)
 expr_stmt|;
 block|}
@@ -6703,10 +6702,11 @@ name|ro
 operator|->
 name|ro_dst
 expr_stmt|;
-name|llentry_update
-argument_list|(
-operator|&
 name|lle
+operator|=
+name|llentry_alloc
+argument_list|(
+name|ifp
 argument_list|,
 name|LLTABLE
 argument_list|(
@@ -6714,8 +6714,6 @@ name|ifp
 argument_list|)
 argument_list|,
 name|l3addr
-argument_list|,
-name|ifp
 argument_list|)
 expr_stmt|;
 block|}
