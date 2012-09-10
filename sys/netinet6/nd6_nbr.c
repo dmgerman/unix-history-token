@@ -2718,22 +2718,13 @@ name|ND_NEIGHBOR_SOLICIT
 index|]
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ro
-operator|.
-name|ro_rt
-condition|)
-block|{
-comment|/* we don't cache this route. */
-name|RTFREE
+comment|/* We don't cache this route. */
+name|RO_RTFREE
 argument_list|(
+operator|&
 name|ro
-operator|.
-name|ro_rt
 argument_list|)
 expr_stmt|;
-block|}
 return|return;
 name|bad
 label|:
@@ -4996,22 +4987,13 @@ name|ND_NEIGHBOR_ADVERT
 index|]
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ro
-operator|.
-name|ro_rt
-condition|)
-block|{
-comment|/* we don't cache this route. */
-name|RTFREE
+comment|/* We don't cache this route. */
+name|RO_RTFREE
 argument_list|(
+operator|&
 name|ro
-operator|.
-name|ro_rt
 argument_list|)
 expr_stmt|;
-block|}
 return|return;
 name|bad
 label|:

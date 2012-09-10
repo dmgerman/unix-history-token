@@ -3020,6 +3020,12 @@ operator|->
 name|f_lle
 argument_list|)
 expr_stmt|;
+name|ro
+operator|->
+name|ro_flags
+operator||=
+name|RT_NORTREF
+expr_stmt|;
 block|}
 end_function
 
@@ -4205,6 +4211,12 @@ name|fle
 operator|->
 name|f_lle
 argument_list|)
+expr_stmt|;
+name|ro
+operator|->
+name|ro_flags
+operator||=
+name|RT_NORTREF
 expr_stmt|;
 block|}
 end_function
