@@ -2845,14 +2845,6 @@ argument_list|,
 name|is_on
 argument_list|)
 expr_stmt|;
-name|USB_BUS_LOCK
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_bus
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|is_on
@@ -2943,14 +2935,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|USB_BUS_UNLOCK
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_bus
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
