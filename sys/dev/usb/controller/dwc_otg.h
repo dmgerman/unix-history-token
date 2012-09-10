@@ -524,9 +524,6 @@ decl_stmt|;
 name|uint32_t
 name|sc_hprt_val
 decl_stmt|;
-name|uint32_t
-name|sc_haint_mask
-decl_stmt|;
 name|uint16_t
 name|sc_active_rx_ep
 decl_stmt|;
