@@ -833,7 +833,7 @@ name|ti
 parameter_list|,
 name|s
 parameter_list|)
-value|printf("%s: %s\n", (slp)->sl_xname, (s))
+value|device_printf((slp)->sl_dev, "%s\n", (s))
 end_define
 
 begin_endif
@@ -2376,13 +2376,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: cam_action: func code 0x%x target: %d, lun: %d\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"cam_action: func code 0x%x target: %d, lun: %d\n"
 argument_list|,
 name|ccb
 operator|->
@@ -2426,13 +2426,13 @@ operator|==
 name|CAM_LUN_WILDCARD
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: invalid target/lun\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"invalid target/lun\n"
 argument_list|)
 expr_stmt|;
 name|ccb
@@ -2665,13 +2665,13 @@ operator|==
 name|CAM_LUN_WILDCARD
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: invalid target/lun\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"invalid target/lun\n"
 argument_list|)
 expr_stmt|;
 name|ccb
@@ -2789,13 +2789,13 @@ operator|==
 name|CAM_TARGET_WILDCARD
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: invalid target\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"invalid target\n"
 argument_list|)
 expr_stmt|;
 name|ccb
@@ -3167,13 +3167,13 @@ operator|==
 name|CAM_TARGET_WILDCARD
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: invalid target\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"invalid target\n"
 argument_list|)
 expr_stmt|;
 name|ccb
@@ -3286,13 +3286,13 @@ name|status
 operator|=
 name|CAM_FUNC_NOTAVAIL
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: invalid GET_TRANS_CURRENT_SETTINGS call\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"invalid GET_TRANS_CURRENT_SETTINGS call\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3567,13 +3567,13 @@ operator|==
 name|CAM_TARGET_WILDCARD
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: invalid target\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"invalid target\n"
 argument_list|)
 expr_stmt|;
 name|ccb
@@ -4007,29 +4007,6 @@ decl_stmt|;
 name|int
 name|tagged_openings
 decl_stmt|;
-name|sprintf
-argument_list|(
-name|slp
-operator|->
-name|sl_xname
-argument_list|,
-literal|"%s%d"
-argument_list|,
-name|device_get_name
-argument_list|(
-name|slp
-operator|->
-name|sl_dev
-argument_list|)
-argument_list|,
-name|device_get_unit
-argument_list|(
-name|slp
-operator|->
-name|sl_dev
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|devq
 operator|=
 name|cam_simq_alloc
@@ -4673,13 +4650,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: WARNING: scsi_low IO abort\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"WARNING: scsi_low IO abort\n"
 argument_list|)
 expr_stmt|;
 name|scsi_low_print
@@ -6039,9 +6016,12 @@ name|panic
 argument_list|(
 literal|"%s short of memory"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -6539,9 +6519,12 @@ name|panic
 argument_list|(
 literal|"%s: ccb not finished"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -6913,13 +6896,13 @@ name|ccb_error
 operator||=
 name|TIMEOUTIO
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: slccb (0x%lx) timeout!\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"slccb (0x%lx) timeout!\n"
 argument_list|,
 operator|(
 name|u_long
@@ -7115,9 +7098,12 @@ name|panic
 argument_list|(
 literal|"%s: revoked ccb done"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|cb
@@ -7171,9 +7157,12 @@ name|panic
 argument_list|(
 literal|"%s: revoked ccb retried"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -7472,13 +7461,13 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: scsi_low_attach: osdep attach failed\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"scsi_low_attach: osdep attach failed\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -7509,13 +7498,13 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: scsi_low_attach: initialization failed\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"scsi_low_attach: initialization failed\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -8633,9 +8622,12 @@ name|panic
 argument_list|(
 literal|"%s: no setup phase"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -8864,9 +8856,12 @@ name|panic
 argument_list|(
 literal|"%s: inconsistent"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -9464,13 +9459,13 @@ block|{
 ifdef|#
 directive|ifdef
 name|SCSI_LOW_DIAGNOSTIC
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: try selection again\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"try selection again\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -11249,13 +11244,13 @@ argument_list|(
 name|slp
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: try to reset scsi bus  "
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"try to reset scsi bus  "
 argument_list|)
 expr_stmt|;
 for|for
@@ -11321,13 +11316,13 @@ name|s
 operator|!=
 name|NULL
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: scsi bus restart. reason: %s\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"scsi bus restart. reason: %s\n"
 argument_list|,
 name|s
 argument_list|)
@@ -11485,13 +11480,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: nexus(0x%lx) abort check start\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"nexus(0x%lx) abort check start\n"
 argument_list|,
 operator|(
 name|u_long
@@ -11833,13 +11828,13 @@ name|ti
 return|;
 name|world_restart
 label|:
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: reselect(%x:unknown) %s\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"reselect(%x:unknown) %s\n"
 argument_list|,
 name|targ
 argument_list|,
@@ -13919,13 +13914,13 @@ name|sl_Lnexus
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: scsi_low: qtag msg rejected\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"scsi_low: qtag msg rejected\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -14011,13 +14006,13 @@ operator|>
 name|SCSI_LOW_MAX_PHCHANGES
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: too many phase changes\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"too many phase changes\n"
 argument_list|)
 expr_stmt|;
 name|slp
@@ -14091,13 +14086,13 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SCSI_LOW_DIAGNOSTIC
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: scsi_low_msgout: retry msgout\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"scsi_low_msgout: retry msgout\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -14402,13 +14397,13 @@ index|[
 literal|0
 index|]
 decl_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: MSGIN: msg 0x%x rejected\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"MSGIN: msg 0x%x rejected\n"
 argument_list|,
 operator|(
 name|u_int
@@ -14869,9 +14864,12 @@ name|panic
 argument_list|(
 literal|"%s: linked ccb retried"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|slp
@@ -15283,13 +15281,13 @@ name|offset
 operator|=
 literal|0
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: target brain damaged. async transfer\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"target brain damaged. async transfer\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -15338,13 +15336,13 @@ literal|0
 condition|)
 block|{
 comment|/* XXX: 		 * Current period and offset are not acceptable  		 * for our adapter. 		 * The adapter changes max synch and max offset. 		 */
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: synch neg failed. retry synch msg neg ...\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"synch neg failed. retry synch msg neg ...\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -15421,13 +15419,13 @@ return|;
 endif|#
 directive|endif
 comment|/* SCSI_LOW_NEGOTIATE_BEFORE_SENSE */
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s(%d:*):<%s> offset %d period %dns "
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"(%d:*):<%s> offset %d period %dns "
 argument_list|,
 name|ti
 operator|->
@@ -15547,13 +15545,13 @@ literal|0
 condition|)
 block|{
 comment|/* XXX: 		 * Current width is not acceptable for our adapter. 		 * The adapter changes max width. 		 */
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: wide neg failed. retry wide msg neg ...\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"wide neg failed. retry wide msg neg ...\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -15636,13 +15634,13 @@ return|;
 endif|#
 directive|endif
 comment|/* SCSI_LOW_NEGOTIATE_BEFORE_SENSE */
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s(%d:*): transfer width %d bits\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"(%d:*): transfer width %d bits\n"
 argument_list|,
 name|ti
 operator|->
@@ -16365,13 +16363,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: msg flags [0x%x] rejected\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"msg flags [0x%x] rejected\n"
 argument_list|,
 name|ti
 operator|->
@@ -16580,13 +16578,13 @@ operator|>
 name|SCSI_LOW_MAX_PHCHANGES
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: too many phase changes\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"too many phase changes\n"
 argument_list|)
 expr_stmt|;
 name|slp
@@ -17800,9 +17798,12 @@ name|panic
 argument_list|(
 literal|"%s: ccb in both queue"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -17949,9 +17950,12 @@ name|panic
 argument_list|(
 literal|"%s: done ccb retried"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -18713,13 +18717,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s(%d:*): max period(%dns) offset(%d) width(%d)\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"(%d:*): max period(%dns) offset(%d) width(%d)\n"
 argument_list|,
 name|ti
 operator|->
@@ -18782,13 +18786,13 @@ name|ti
 operator|->
 name|ti_sc
 decl_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s(%d:%d): period(%d ns) offset(%d) width(%d) flags 0x%b\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"(%d:%d): period(%d ns) offset(%d) width(%d) flags 0x%b\n"
 argument_list|,
 name|ti
 operator|->
@@ -18885,13 +18889,13 @@ name|target
 decl_stmt|,
 name|lun
 decl_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: scsi_low: probing all devices ....\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"scsi_low: probing all devices ....\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -18932,13 +18936,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: scsi_low: target %d (host card)\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"scsi_low: target %d (host card)\n"
 argument_list|,
 name|target
 argument_list|)
@@ -18959,13 +18963,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: scsi_low: target %d lun "
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"scsi_low: target %d lun "
 argument_list|,
 name|target
 argument_list|)
@@ -19281,13 +19285,13 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: aborting ccb(0x%lx) start\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"aborting ccb(0x%lx) start\n"
 argument_list|,
 operator|(
 name|u_long
@@ -19345,13 +19349,13 @@ literal|0
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: atten check OK\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"atten check OK\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -19701,13 +19705,13 @@ name|slp
 operator|->
 name|sl_scp
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: === NEXUS T(0x%lx) L(0x%lx) Q(0x%lx) NIO(%d) ===\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"=== NEXUS T(0x%lx) L(0x%lx) Q(0x%lx) NIO(%d) ===\n"
 argument_list|,
 operator|(
 name|u_long
@@ -19788,13 +19792,13 @@ operator|->
 name|li_nqio
 expr_stmt|;
 block|}
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s(%d:%d) ph<%s> => ph<%s> DISC(%d) QIO(%d:%d)\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"(%d:%d) ph<%s> => ph<%s> DISC(%d) QIO(%d:%d)\n"
 argument_list|,
 name|ti
 operator|->

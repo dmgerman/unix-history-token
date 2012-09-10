@@ -107,18 +107,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<compat/netbsd/dvcfg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<compat/netbsd/physio_proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<cam/scsi/scsi_low.h>
 end_include
 
@@ -1587,11 +1575,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|SOFT_INTR_REQUIRED
-argument_list|(
-name|slp
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
@@ -1903,43 +1886,6 @@ block|}
 end_function
 
 begin_function
-name|int
-name|stgprint
-parameter_list|(
-name|aux
-parameter_list|,
-name|name
-parameter_list|)
-name|void
-modifier|*
-name|aux
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|name
-decl_stmt|;
-block|{
-if|if
-condition|(
-name|name
-operator|!=
-name|NULL
-condition|)
-name|printf
-argument_list|(
-literal|"%s: scsibus "
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-return|return
-literal|1
-return|;
-block|}
-end_function
-
-begin_function
 name|void
 name|stgattachsubr
 parameter_list|(
@@ -2221,13 +2167,13 @@ name|sl_error
 operator||=
 name|PDMAERR
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s len %x>= datalen %x\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"len %x>= datalen %x\n"
 argument_list|,
 name|len
 argument_list|,
@@ -2266,13 +2212,13 @@ name|sl_error
 operator||=
 name|PDMAERR
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: len %x left in fifo\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"len %x left in fifo\n"
 argument_list|,
 name|len
 argument_list|)
@@ -2287,13 +2233,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s data phase miss\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"data phase miss\n"
 argument_list|)
 expr_stmt|;
 name|slp
@@ -2595,13 +2541,13 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: read padding required\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"read padding required\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2715,13 +2661,13 @@ name|tout
 operator|<=
 literal|0
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: pio read timeout\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"pio read timeout\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3108,13 +3054,13 @@ name|tout
 operator|<=
 literal|0
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: pio write timeout\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"pio write timeout\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3228,13 +3174,13 @@ name|STG_DELAY_INTERVAL
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: %s stg_negate_signal timeout\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"%s stg_negate_signal timeout\n"
 argument_list|,
 name|s
 argument_list|)
@@ -3370,13 +3316,13 @@ name|STG_DELAY_INTERVAL
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: stg_expect_signal timeout\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"stg_expect_signal timeout\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3705,13 +3651,13 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: unexpected termination\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"unexpected termination\n"
 argument_list|)
 expr_stmt|;
 name|stg_disconnected
@@ -3815,13 +3761,13 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: reselction timeout I\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"reselction timeout I\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3944,13 +3890,13 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: reselction timeout II\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"reselction timeout II\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4548,11 +4494,6 @@ modifier|*
 name|ti
 decl_stmt|;
 name|struct
-name|physio_proc
-modifier|*
-name|pp
-decl_stmt|;
-name|struct
 name|buf
 modifier|*
 name|bp
@@ -4715,13 +4656,13 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: st %x ist %x\n\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"st %x ist %x\n\n"
 argument_list|,
 name|status
 argument_list|,
@@ -5218,13 +5159,13 @@ operator|!=
 name|MESSAGE_IN_PHASE
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: unexpected phase after reselect\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"unexpected phase after reselect\n"
 argument_list|)
 expr_stmt|;
 name|slp
@@ -5372,13 +5313,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: CMDOUT short\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"CMDOUT short\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5416,13 +5357,6 @@ name|slp
 argument_list|)
 expr_stmt|;
 block|}
-name|pp
-operator|=
-name|physio_proc_enter
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -5454,11 +5388,6 @@ argument_list|,
 name|ti
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-name|physio_proc_leave
-argument_list|(
-name|pp
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5495,13 +5424,6 @@ name|slp
 argument_list|)
 expr_stmt|;
 block|}
-name|pp
-operator|=
-name|physio_proc_enter
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -5533,11 +5455,6 @@ argument_list|,
 name|ti
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-name|physio_proc_leave
-argument_list|(
-name|pp
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5616,13 +5533,13 @@ name|tmc_rdata
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: STATIN: data mismatch\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"STATIN: data mismatch\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5728,13 +5645,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: MSGOUT short\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"MSGOUT short\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5846,13 +5763,13 @@ name|tmc_rdata
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: MSGIN: data mismatch\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"MSGIN: data mismatch\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5893,13 +5810,13 @@ break|break;
 case|case
 name|BUSFREE_PHASE
 case|:
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: unexpected disconnect\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"unexpected disconnect\n"
 argument_list|)
 expr_stmt|;
 name|stg_disconnected
@@ -5917,13 +5834,13 @@ name|sl_error
 operator||=
 name|FATALIO
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: unknown phase bus %x intr %x\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"unknown phase bus %x intr %x\n"
 argument_list|,
 name|status
 argument_list|,
@@ -6043,13 +5960,13 @@ condition|)
 return|return
 literal|0
 return|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: unexpected bus free detected\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"unexpected bus free detected\n"
 argument_list|)
 expr_stmt|;
 name|slp
@@ -6155,13 +6072,13 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: write padding required\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"write padding required\n"
 argument_list|)
 expr_stmt|;
 break|break;

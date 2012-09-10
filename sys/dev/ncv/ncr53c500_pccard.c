@@ -106,12 +106,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<cam/scsi/scsi_low_pisa.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/ncv/ncr53c500reg.h>
 end_include
 

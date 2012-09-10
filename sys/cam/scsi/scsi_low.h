@@ -164,20 +164,6 @@ block|}
 struct|;
 end_struct
 
-begin_struct
-struct|struct
-name|scsi_low_osdep_targ_interface
-block|{ }
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|scsi_low_osdep_lun_interface
-block|{ }
-struct|;
-end_struct
-
 begin_comment
 comment|/******** os depend interface functions *************/
 end_comment
@@ -814,10 +800,6 @@ begin_struct
 struct|struct
 name|lun_info
 block|{
-name|struct
-name|scsi_low_osdep_lun_interface
-name|li_sloi
-decl_stmt|;
 name|int
 name|li_lun
 decl_stmt|;
@@ -1049,10 +1031,6 @@ begin_struct
 struct|struct
 name|targ_info
 block|{
-name|struct
-name|scsi_low_osdep_targ_interface
-name|ti_slti
-decl_stmt|;
 name|TAILQ_ENTRY
 argument_list|(
 argument|targ_info
@@ -1673,12 +1651,6 @@ name|scsi_low_osdep_funcs
 modifier|*
 name|sl_osdep_fp
 decl_stmt|;
-name|u_char
-name|sl_xname
-index|[
-literal|16
-index|]
-decl_stmt|;
 comment|/* our chain */
 name|LIST_ENTRY
 argument_list|(
@@ -2001,24 +1973,6 @@ comment|/* targinfo size */
 name|int
 name|sl_targsize
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|i386
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
-name|u_int
-name|sl_irq
-decl_stmt|;
-comment|/* XXX */
-endif|#
-directive|endif
-comment|/* i386 */
 block|}
 struct|;
 end_struct

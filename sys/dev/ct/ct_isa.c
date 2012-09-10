@@ -148,12 +148,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<compat/netbsd/physio_proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<cam/scsi/scsi_low.h>
 end_include
 
@@ -1404,15 +1398,6 @@ operator|=
 name|bs
 operator|->
 name|sc_hostid
-expr_stmt|;
-name|slp
-operator|->
-name|sl_irq
-operator|=
-name|isa_get_irq
-argument_list|(
-name|dev
-argument_list|)
 expr_stmt|;
 name|slp
 operator|->

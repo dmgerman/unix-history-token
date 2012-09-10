@@ -367,20 +367,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ctprint
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|ctintr
 parameter_list|(
 name|void

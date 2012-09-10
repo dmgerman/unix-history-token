@@ -95,18 +95,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<compat/netbsd/dvcfg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<compat/netbsd/physio_proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<cam/scsi/scsi_low.h>
 end_include
 
@@ -1932,43 +1920,6 @@ block|}
 end_function
 
 begin_function
-name|int
-name|ctprint
-parameter_list|(
-name|aux
-parameter_list|,
-name|name
-parameter_list|)
-name|void
-modifier|*
-name|aux
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|name
-decl_stmt|;
-block|{
-if|if
-condition|(
-name|name
-operator|!=
-name|NULL
-condition|)
-name|printf
-argument_list|(
-literal|"%s: scsibus "
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-return|return
-literal|1
-return|;
-block|}
-end_function
-
-begin_function
 name|void
 name|ctattachsubr
 parameter_list|(
@@ -2506,11 +2457,6 @@ argument_list|,
 name|slp
 operator|->
 name|sl_hostid
-argument_list|)
-expr_stmt|;
-name|SOFT_INTR_REQUIRED
-argument_list|(
-name|slp
 argument_list|)
 expr_stmt|;
 return|return
@@ -3840,13 +3786,13 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: phase error: %s"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"phase error: %s"
 argument_list|,
 name|pep
 operator|->
@@ -4609,13 +4555,13 @@ name|CT_DELAY_INTERVAL
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: unbusy timeout\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"unbusy timeout\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4750,11 +4696,6 @@ name|struct
 name|targ_info
 modifier|*
 name|ti
-decl_stmt|;
-name|struct
-name|physio_proc
-modifier|*
-name|pp
 decl_stmt|;
 name|struct
 name|buf
@@ -4892,13 +4833,13 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: scsi_status 0x%x\n\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"scsi_status 0x%x\n\n"
 argument_list|,
 operator|(
 name|u_int
@@ -5273,13 +5214,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|pp
-operator|=
-name|physio_proc_enter
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 call|(
@@ -5290,11 +5224,6 @@ name|ct_pio_xfer_start
 call|)
 argument_list|(
 name|ct
-argument_list|)
-expr_stmt|;
-name|physio_proc_leave
-argument_list|(
-name|pp
 argument_list|)
 expr_stmt|;
 if|if
@@ -5384,13 +5313,13 @@ name|HW_READ_PADDING
 operator|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: read padding required\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"read padding required\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -5412,13 +5341,13 @@ name|HW_WRITE_PADDING
 operator|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: write padding required\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"write padding required\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -5496,13 +5425,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: scsi cmd xfer short\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"scsi cmd xfer short\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5637,13 +5566,13 @@ case|:
 case|case
 name|BSR_UNSPINFO1
 case|:
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: illegal bus phase (0x%x)\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"illegal bus phase (0x%x)\n"
 argument_list|,
 operator|(
 name|u_int
@@ -5740,13 +5669,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: scsi msgout xfer short\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"scsi msgout xfer short\n"
 argument_list|)
 expr_stmt|;
 block|}

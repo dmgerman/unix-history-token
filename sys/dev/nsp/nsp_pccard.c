@@ -88,12 +88,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<compat/netbsd/dvcfg.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/bus.h>
 end_include
 
@@ -107,12 +101,6 @@ begin_include
 include|#
 directive|include
 file|<cam/scsi/scsi_low.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<cam/scsi/scsi_low_pisa.h>
 end_include
 
 begin_include

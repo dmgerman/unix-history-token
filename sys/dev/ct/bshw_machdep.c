@@ -106,22 +106,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<compat/netbsd/physio_proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/module.h>
-end_include
-
-begin_comment
-comment|/* XXX: Hack */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<cam/scsi/scsi_low.h>
 end_include
 
@@ -401,13 +385,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: change mode using external DMA (%x)\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"change mode using external DMA (%x)\n"
 argument_list|,
 operator|(
 name|u_int
@@ -1036,15 +1020,15 @@ literal|0
 return|;
 block|}
 block|}
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: SMIT fifo status timeout\n"
-argument_list|,
 name|ct
 operator|->
 name|sc_sclow
 operator|.
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"SMIT fifo status timeout\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1212,13 +1196,13 @@ condition|)
 block|{
 name|bad
 label|:
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: smit_xfer_end: cnt error\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"smit_xfer_end: cnt error\n"
 argument_list|)
 expr_stmt|;
 name|slp
@@ -1236,13 +1220,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: smit_xfer_end: phase miss\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"smit_xfer_end: phase miss\n"
 argument_list|)
 expr_stmt|;
 name|slp
@@ -2264,13 +2248,13 @@ operator|->
 name|sc_seglen
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: port data %x != seglen %x\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"port data %x != seglen %x\n"
 argument_list|,
 name|count
 argument_list|,
@@ -2294,13 +2278,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: extra DMA interrupt\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"extra DMA interrupt\n"
 argument_list|)
 expr_stmt|;
 name|slp
