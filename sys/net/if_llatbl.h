@@ -387,7 +387,7 @@ name|LLE_FREE_LOCKED
 parameter_list|(
 name|lle
 parameter_list|)
-value|do {				\ 	if ((lle)->lle_refcnt<= 1)				\ 		(lle)->lle_tbl->llt_free((lle)->lle_tbl, (lle));\ 	else {							\ 		(lle)->lle_refcnt--;				\ 		LLE_WUNLOCK(lle);				\ 	}							\
+value|do {				\ 	if ((lle)->lle_refcnt<= 1)				\ 		(lle)->lle_free((lle)->lle_tbl, (lle));\ 	else {							\ 		(lle)->lle_refcnt--;				\ 		LLE_WUNLOCK(lle);				\ 	}							\
 comment|/* guard against invalid refs */
 value|\ 	lle = NULL;						\ } while (0)
 end_define
@@ -505,21 +505,6 @@ name|ifnet
 modifier|*
 name|llt_ifp
 decl_stmt|;
-name|void
-function_decl|(
-modifier|*
-name|llt_free
-function_decl|)
-parameter_list|(
-name|struct
-name|lltable
-modifier|*
-parameter_list|,
-name|struct
-name|llentry
-modifier|*
-parameter_list|)
-function_decl|;
 name|void
 function_decl|(
 modifier|*
