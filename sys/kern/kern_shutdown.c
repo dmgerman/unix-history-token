@@ -660,7 +660,6 @@ comment|/* Registers. */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|lwpid_t
 name|dumptid
 decl_stmt|;
