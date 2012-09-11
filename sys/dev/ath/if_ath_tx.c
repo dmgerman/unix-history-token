@@ -1484,9 +1484,12 @@ name|sc
 operator|->
 name|sc_ah
 argument_list|,
-name|bf
-operator|->
-name|bf_desc
+operator|(
+expr|struct
+name|ath_desc
+operator|*
+operator|)
+name|ds
 argument_list|)
 expr_stmt|;
 name|isFirstDesc
