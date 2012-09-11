@@ -8191,7 +8191,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * add/remove/replace a single attribute and then rewrite the entire set  * of attributes.  */
+comment|/*  * Add/remove a single attribute or replace a variable-sized attribute value  * with a value of a different size, and then rewrite the entire set  * of attributes.  * Same-length attribute value replacement (including fixed-length attributes)  * is handled more efficiently by the upper layers.  */
 end_comment
 
 begin_function
@@ -8634,18 +8634,26 @@ operator|==
 name|newattr
 condition|)
 block|{
+comment|/* duplicate attributes are not allowed */
+name|ASSERT
+argument_list|(
+name|action
+operator|==
+name|SA_REPLACE
+operator|||
+name|action
+operator|==
+name|SA_REMOVE
+argument_list|)
+expr_stmt|;
+comment|/* must be variable-sized to be replaced here */
 if|if
 condition|(
 name|action
 operator|==
-name|SA_REMOVE
+name|SA_REPLACE
 condition|)
 block|{
-name|j
-operator|++
-expr_stmt|;
-continue|continue;
-block|}
 name|ASSERT
 argument_list|(
 name|SA_REGISTERED_LEN
@@ -8656,13 +8664,6 @@ name|attr
 argument_list|)
 operator|==
 literal|0
-argument_list|)
-expr_stmt|;
-name|ASSERT
-argument_list|(
-name|action
-operator|==
-name|SA_REPLACE
 argument_list|)
 expr_stmt|;
 name|SA_ADD_BULK_ATTR
@@ -8680,6 +8681,7 @@ argument_list|,
 name|buflen
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -8706,7 +8708,6 @@ operator|->
 name|sa_lengths
 index|[
 name|length_idx
-operator|++
 index|]
 expr_stmt|;
 block|}
@@ -8748,6 +8749,20 @@ name|length
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|SA_REGISTERED_LEN
+argument_list|(
+name|sa
+argument_list|,
+name|attr
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|length_idx
+operator|++
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -8832,6 +8847,15 @@ name|buflen
 argument_list|)
 expr_stmt|;
 block|}
+name|ASSERT3U
+argument_list|(
+name|j
+argument_list|,
+operator|==
+argument_list|,
+name|attr_count
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|sa_build_layouts
