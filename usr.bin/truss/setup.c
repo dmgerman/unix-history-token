@@ -141,9 +141,6 @@ block|{
 name|pid_t
 name|pid
 decl_stmt|;
-name|int
-name|waitval
-decl_stmt|;
 name|pid
 operator|=
 name|vfork
@@ -212,15 +209,13 @@ name|waitpid
 argument_list|(
 name|pid
 argument_list|,
-operator|&
-name|waitval
+name|NULL
 argument_list|,
 literal|0
 argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
 name|err
 argument_list|(
 literal|1
@@ -228,10 +223,6 @@ argument_list|,
 literal|"unexpect stop in waitpid"
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
 name|child_pid
 operator|=
 name|pid
@@ -260,8 +251,6 @@ name|int
 name|ret
 decl_stmt|,
 name|retry
-decl_stmt|,
-name|waitval
 decl_stmt|;
 name|retry
 operator|=
@@ -319,8 +308,7 @@ name|waitpid
 argument_list|(
 name|pid
 argument_list|,
-operator|&
-name|waitval
+name|NULL
 argument_list|,
 literal|0
 argument_list|)
