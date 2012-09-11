@@ -6903,16 +6903,12 @@ argument_list|,
 name|zc
 argument_list|)
 expr_stmt|;
+comment|//printf("%s 0x%jx\n", name, (uintmax_t)value);
 name|printf
 argument_list|(
-literal|"%s 0x%jx\n"
+literal|"%s\n"
 argument_list|,
 name|name
-argument_list|,
-operator|(
-name|uintmax_t
-operator|)
-name|value
 argument_list|)
 expr_stmt|;
 block|}
