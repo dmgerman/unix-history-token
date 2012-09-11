@@ -4085,13 +4085,6 @@ name|cpu_idle_hook
 operator|=
 name|acpi_cpu_idle
 expr_stmt|;
-name|free
-argument_list|(
-name|cpu_devices
-argument_list|,
-name|M_TEMP
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
