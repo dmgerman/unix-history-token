@@ -14421,7 +14421,7 @@ name|stderr
 argument_list|,
 name|gettext
 argument_list|(
-literal|"Split was succssful, but "
+literal|"Split was successful, but "
 literal|"the datasets could not all be mounted\n"
 argument_list|)
 argument_list|)
