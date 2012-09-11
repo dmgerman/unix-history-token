@@ -21222,13 +21222,6 @@ operator|<=
 name|IXGBE_RX_COPY_LEN
 condition|)
 block|{
-name|prefetch
-argument_list|(
-name|mp
-operator|->
-name|m_data
-argument_list|)
-expr_stmt|;
 name|sendmp
 operator|=
 name|m_gethdr
