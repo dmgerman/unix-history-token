@@ -177,11 +177,6 @@ name|ret
 init|=
 name|NULL
 decl_stmt|;
-name|int
-name|sverrno
-init|=
-name|errno
-decl_stmt|;
 comment|/* Make sure fildes points to a master device. */
 if|if
 condition|(
@@ -229,11 +224,6 @@ name|pt_slave
 expr_stmt|;
 name|done
 label|:
-comment|/* Make sure ptsname() does not overwrite errno. */
-name|errno
-operator|=
-name|sverrno
-expr_stmt|;
 return|return
 operator|(
 name|ret
