@@ -1153,9 +1153,7 @@ else|else
 block|{
 name|pfatal
 argument_list|(
-literal|"UNEXPECTED INCONSISTENCY, %s\n"
-argument_list|,
-literal|"CANNOT RUN FAST FSCK\n"
+literal|"UNEXPECTED INCONSISTENCY, CANNOT RUN FAST FSCK\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1204,9 +1202,7 @@ literal|0
 expr_stmt|;
 name|pfatal
 argument_list|(
-literal|"NOT USING SOFT UPDATES, %s\n"
-argument_list|,
-literal|"CANNOT RUN IN BACKGROUND"
+literal|"NOT USING SOFT UPDATES, CANNOT RUN IN BACKGROUND\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1280,9 +1276,7 @@ literal|0
 expr_stmt|;
 name|pfatal
 argument_list|(
-literal|"UNEXPECTED INCONSISTENCY, %s\n"
-argument_list|,
-literal|"CANNOT RUN IN BACKGROUND\n"
+literal|"UNEXPECTED INCONSISTENCY, CANNOT RUN IN BACKGROUND\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1306,9 +1300,7 @@ block|{
 comment|/* 					 * file system is clean; 					 * skip snapshot and report it clean 					 */
 name|pwarn
 argument_list|(
-literal|"FILE SYSTEM CLEAN; %s\n"
-argument_list|,
-literal|"SKIPPING CHECKS"
+literal|"FILE SYSTEM CLEAN; SKIPPING CHECKS\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1367,9 +1359,7 @@ literal|0
 expr_stmt|;
 name|pfatal
 argument_list|(
-literal|"CANNOT FIND %s %s: %s, %s\n"
-argument_list|,
-literal|"SNAPSHOT DIRECTORY"
+literal|"CANNOT FIND SNAPSHOT DIRECTORY %s: %s, CANNOT RUN IN BACKGROUND\n"
 argument_list|,
 name|snapname
 argument_list|,
@@ -1377,8 +1367,6 @@ name|strerror
 argument_list|(
 name|errno
 argument_list|)
-argument_list|,
-literal|"CANNOT RUN IN BACKGROUND"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1435,9 +1423,7 @@ literal|0
 expr_stmt|;
 name|pfatal
 argument_list|(
-literal|"CANNOT CREATE %s %s: %s, %s\n"
-argument_list|,
-literal|"SNAPSHOT DIRECTORY"
+literal|"CANNOT CREATE SNAPSHOT DIRECTORY %s: %s, CANNOT RUN IN BACKGROUND\n"
 argument_list|,
 name|snapname
 argument_list|,
@@ -1445,8 +1431,6 @@ name|strerror
 argument_list|(
 name|errno
 argument_list|)
-argument_list|,
-literal|"CANNOT RUN IN BACKGROUND"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1469,11 +1453,9 @@ literal|0
 expr_stmt|;
 name|pfatal
 argument_list|(
-literal|"%s IS NOT A DIRECTORY, %s\n"
+literal|"%s IS NOT A DIRECTORY, CANNOT RUN IN BACKGROUND\n"
 argument_list|,
 name|snapname
-argument_list|,
-literal|"CANNOT RUN IN BACKGROUND"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3026,8 +3008,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-BEFfnpry] [-b block] [-c level] [-m mode] "
-literal|"filesystem ...\n"
+literal|"usage: %s [-BEFfnpry] [-b block] [-c level] [-m mode] filesystem ...\n"
 argument_list|,
 name|getprogname
 argument_list|()
