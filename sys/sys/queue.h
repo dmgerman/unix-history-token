@@ -563,7 +563,7 @@ parameter_list|,
 name|field
 parameter_list|)
 define|\
-value|(STAILQ_EMPTY((head)) ?						\ 		NULL :							\ 		__member2struct(type, field, (head)->stqh_last))
+value|(STAILQ_EMPTY((head)) ?						\ 		NULL :							\ 		__member2struct(type, field.stqe_next, (head)->stqh_last))
 end_define
 
 begin_define
@@ -912,7 +912,7 @@ parameter_list|,
 name|field
 parameter_list|)
 define|\
-value|((elm)->field.le_prev ==&LIST_FIRST((head)) ?			\ 		NULL :							\ 		__member2struct(type, field, (elm)->field.le_prev))
+value|((elm)->field.le_prev ==&LIST_FIRST((head)) ?			\ 		NULL :							\ 		__member2struct(type, field.le_next, (elm)->field.le_prev))
 end_define
 
 begin_define
