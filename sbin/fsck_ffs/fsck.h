@@ -1549,7 +1549,7 @@ parameter_list|,
 name|ufs2_daddr_t
 name|blk
 parameter_list|,
-name|long
+name|ssize_t
 name|size
 parameter_list|)
 function_decl|;
