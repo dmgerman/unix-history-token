@@ -760,6 +760,10 @@ block|,
 name|DW_FORM_indirect
 init|=
 literal|0x16
+block|,
+name|DW_FORM_flag_present
+init|=
+literal|0x19
 block|}
 enum|;
 end_enum
