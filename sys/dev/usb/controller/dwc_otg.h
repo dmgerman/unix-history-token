@@ -220,6 +220,11 @@ name|did_complete
 range|:
 literal|1
 decl_stmt|;
+name|uint8_t
+name|got_short
+range|:
+literal|1
+decl_stmt|;
 block|}
 struct|;
 end_struct
