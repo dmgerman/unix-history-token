@@ -321,6 +321,9 @@ block|{
 case|case
 name|DW_FORM_flag
 case|:
+case|case
+name|DW_FORM_flag_present
+case|:
 operator|*
 name|valp
 operator|=
