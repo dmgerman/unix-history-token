@@ -2968,12 +2968,6 @@ condition|)
 block|{
 return|return;
 block|}
-else|else
-block|{
-goto|goto
-name|tr_setup
-goto|;
-block|}
 goto|goto
 name|tr_transferred
 goto|;
@@ -3033,8 +3027,6 @@ label|:
 case|case
 name|USB_ST_SETUP
 case|:
-name|tr_setup
-label|:
 name|pc
 operator|=
 name|usbd_xfer_get_frame
@@ -3184,12 +3176,6 @@ name|USB_ERR_CANCELLED
 condition|)
 block|{
 return|return;
-block|}
-else|else
-block|{
-goto|goto
-name|tr_setup
-goto|;
 block|}
 goto|goto
 name|tr_transferred
