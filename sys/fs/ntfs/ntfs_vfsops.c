@@ -3796,7 +3796,7 @@ name|ntfs_vfsops
 argument_list|,
 name|ntfs
 argument_list|,
-literal|0
+name|VFCF_READONLY
 argument_list|)
 expr_stmt|;
 end_expr_stmt
