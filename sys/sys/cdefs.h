@@ -1974,6 +1974,21 @@ define|\
 value|(__offsetof(type, end) - __offsetof(type, start))
 end_define
 
+begin_define
+define|#
+directive|define
+name|__member2struct
+parameter_list|(
+name|s
+parameter_list|,
+name|m
+parameter_list|,
+name|x
+parameter_list|)
+define|\
+value|((struct s *)(void *)((char *)(x) - __offsetof(struct s, m)))
+end_define
+
 begin_comment
 comment|/*  * Compiler-dependent macros to declare that functions take printf-like  * or scanf-like arguments.  They are null except for versions of gcc  * that are known to support the features properly (old versions of gcc-2  * didn't permit keeping the keywords out of the application namespace).  */
 end_comment

@@ -1283,8 +1283,7 @@ name|m
 parameter_list|,
 name|x
 parameter_list|)
-define|\
-value|((struct s *)(void *)((char *)(x) - offsetof(struct s, m)))
+value|__member2struct(s, m, x)
 end_define
 
 begin_comment
