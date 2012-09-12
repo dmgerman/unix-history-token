@@ -204,5 +204,12 @@ name|S_EXEC
 value|5
 end_define
 
+begin_define
+define|#
+directive|define
+name|S_DETACHED
+value|6
+end_define
+
 end_unit
 

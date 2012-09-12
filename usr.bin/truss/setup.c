@@ -119,8 +119,8 @@ end_include
 
 begin_decl_stmt
 specifier|static
-name|pid_t
-name|child_pid
+name|sig_atomic_t
+name|detaching
 decl_stmt|;
 end_decl_stmt
 
@@ -223,10 +223,6 @@ argument_list|,
 literal|"unexpect stop in waitpid"
 argument_list|)
 expr_stmt|;
-name|child_pid
-operator|=
-name|pid
-expr_stmt|;
 return|return
 operator|(
 name|pid
@@ -298,10 +294,6 @@ argument_list|,
 literal|"can not attach to target process"
 argument_list|)
 expr_stmt|;
-name|child_pid
-operator|=
-name|pid
-expr_stmt|;
 if|if
 condition|(
 name|waitpid
@@ -343,13 +335,29 @@ name|signo
 name|__unused
 parameter_list|)
 block|{
+name|detaching
+operator|=
+literal|1
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|detach_proc
+parameter_list|(
+name|pid_t
+name|pid
+parameter_list|)
+block|{
 name|int
 name|waitval
 decl_stmt|;
 comment|/* stop the child so that we can detach */
 name|kill
 argument_list|(
-name|child_pid
+name|pid
 argument_list|,
 name|SIGSTOP
 argument_list|)
@@ -358,7 +366,7 @@ if|if
 condition|(
 name|waitpid
 argument_list|(
-name|child_pid
+name|pid
 argument_list|,
 operator|&
 name|waitval
@@ -381,7 +389,7 @@ name|ptrace
 argument_list|(
 name|PT_DETACH
 argument_list|,
-name|child_pid
+name|pid
 argument_list|,
 operator|(
 name|caddr_t
@@ -402,16 +410,16 @@ argument_list|)
 expr_stmt|;
 name|kill
 argument_list|(
-name|child_pid
+name|pid
 argument_list|,
 name|SIGCONT
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
+return|return
+operator|(
+name|waitval
+operator|)
+return|;
 block|}
 end_function
 
@@ -586,6 +594,39 @@ name|pending_signal
 operator|=
 literal|0
 expr_stmt|;
+name|detach
+label|:
+if|if
+condition|(
+name|detaching
+condition|)
+block|{
+name|waitval
+operator|=
+name|detach_proc
+argument_list|(
+name|info
+operator|->
+name|pid
+argument_list|)
+expr_stmt|;
+name|info
+operator|->
+name|pr_why
+operator|=
+name|S_DETACHED
+expr_stmt|;
+name|info
+operator|->
+name|pr_data
+operator|=
+name|WEXITSTATUS
+argument_list|(
+name|waitval
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|waitpid
@@ -599,9 +640,20 @@ name|waitval
 argument_list|,
 literal|0
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|EINTR
+condition|)
+goto|goto
+name|detach
+goto|;
 name|err
 argument_list|(
 literal|1
@@ -609,6 +661,7 @@ argument_list|,
 literal|"Unexpected stop in waitpid"
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|WIFCONTINUED
