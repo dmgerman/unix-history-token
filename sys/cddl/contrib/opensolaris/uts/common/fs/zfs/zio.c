@@ -10733,16 +10733,12 @@ name|bp
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ASSERT3U
+name|ASSERT0
 argument_list|(
 name|BP_GET_NDVAS
 argument_list|(
 name|bp
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|ASSERT3U

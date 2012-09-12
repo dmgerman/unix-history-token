@@ -4338,15 +4338,11 @@ name|tohold
 decl_stmt|,
 name|fudge
 decl_stmt|;
-name|ASSERT3U
+name|ASSERT0
 argument_list|(
 name|tx
 operator|->
 name|tx_txg
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if

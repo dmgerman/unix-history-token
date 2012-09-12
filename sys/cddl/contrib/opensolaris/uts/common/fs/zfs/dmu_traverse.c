@@ -743,15 +743,11 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-name|ASSERT3U
+name|ASSERT0
 argument_list|(
 name|zb
 operator|->
 name|zb_level
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|bcopy

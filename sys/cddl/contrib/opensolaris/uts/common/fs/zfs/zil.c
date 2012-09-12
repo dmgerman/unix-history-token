@@ -5160,7 +5160,7 @@ operator|->
 name|lwb_sz
 argument_list|)
 expr_stmt|;
-name|ASSERT3U
+name|ASSERT0
 argument_list|(
 name|P2PHASE
 argument_list|(
@@ -5173,10 +5173,6 @@ argument_list|(
 name|uint64_t
 argument_list|)
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return

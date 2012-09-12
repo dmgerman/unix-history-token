@@ -4,7 +4,11 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  * Copyright 2012 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
+comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+end_comment
+
+begin_comment
+comment|/*  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -38,23 +42,6 @@ include|#
 directive|include
 file|<sys/note.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/systm.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -310,6 +297,13 @@ parameter_list|,
 name|z
 parameter_list|)
 value|VERIFY3_IMPL(x, y, z, uintptr_t)
+define|#
+directive|define
+name|VERIFY0
+parameter_list|(
+name|x
+parameter_list|)
+value|VERIFY3_IMPL(x, ==, 0, uintmax_t)
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -346,6 +340,13 @@ parameter_list|,
 name|z
 parameter_list|)
 value|VERIFY3_IMPL(x, y, z, uintptr_t)
+define|#
+directive|define
+name|ASSERT0
+parameter_list|(
+name|x
+parameter_list|)
+value|VERIFY3_IMPL(x, ==, 0, uintmax_t)
 else|#
 directive|else
 define|#
@@ -379,6 +380,13 @@ parameter_list|,
 name|y
 parameter_list|,
 name|z
+parameter_list|)
+value|((void)0)
+define|#
+directive|define
+name|ASSERT0
+parameter_list|(
+name|x
 parameter_list|)
 value|((void)0)
 endif|#

@@ -8017,13 +8017,9 @@ operator|(
 name|error
 operator|)
 return|;
-name|VERIFY3S
+name|VERIFY0
 argument_list|(
 name|error
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
