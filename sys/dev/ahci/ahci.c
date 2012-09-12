@@ -3247,7 +3247,7 @@ if|if
 condition|(
 name|version
 operator|>=
-literal|0x00010020
+literal|0x00010200
 condition|)
 name|ctlr
 operator|->
@@ -3945,7 +3945,7 @@ name|bootverbose
 operator|&&
 name|version
 operator|>=
-literal|0x00010020
+literal|0x00010200
 condition|)
 block|{
 name|device_printf
@@ -7062,7 +7062,7 @@ if|if
 condition|(
 name|version
 operator|<
-literal|0x00010020
+literal|0x00010200
 operator|&&
 operator|(
 name|ctlr
