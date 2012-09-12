@@ -527,12 +527,6 @@ name|uint32_t
 name|sc_sof_val
 decl_stmt|;
 name|uint32_t
-name|sc_interrupt_refs
-decl_stmt|;
-name|uint32_t
-name|sc_interrupt_val
-decl_stmt|;
-name|uint32_t
 name|sc_hprt_val
 decl_stmt|;
 name|uint16_t
