@@ -385,6 +385,24 @@ block|{
 case|case
 literal|0
 case|:
+comment|/* 			 * Enable fractional mode for half/quarter rate 			 * channels. 			 * 			 * This is from the Linux ath9k code, rather than 			 * the Atheros HAL code. 			 */
+if|if
+condition|(
+name|IEEE80211_IS_CHAN_QUARTER
+argument_list|(
+name|chan
+argument_list|)
+operator|||
+name|IEEE80211_IS_CHAN_HALF
+argument_list|(
+name|chan
+argument_list|)
+condition|)
+name|aModeRefSel
+operator|=
+literal|0
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 operator|(
