@@ -359,7 +359,7 @@ name|ARRAY_SIZE
 parameter_list|(
 name|x
 parameter_list|)
-value|(sizeof(x) / sizeof((x)[0]))
+value|nitems(x)
 end_define
 
 begin_define
