@@ -205,7 +205,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|IVY_RNG
+name|RDRAND_RNG
 end_ifdef
 
 begin_decl_stmt
@@ -301,7 +301,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|IVY_RNG
+name|RDRAND_RNG
 if|if
 condition|(
 name|cpu_feature2

@@ -26,7 +26,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|IVY_RNG
+name|RDRAND_RNG
 end_ifdef
 
 begin_include
