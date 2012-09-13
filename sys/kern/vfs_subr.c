@@ -15667,17 +15667,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|KASSERT
-argument_list|(
-name|curthread
-operator|!=
-name|NULL
-argument_list|,
-operator|(
-literal|"vfs_unmountall: NULL curthread"
-operator|)
-argument_list|)
-expr_stmt|;
 name|CTR1
 argument_list|(
 name|KTR_VFS

@@ -2365,19 +2365,6 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
-operator|(
-name|td
-operator|!=
-name|NULL
-operator|)
-argument_list|,
-operator|(
-literal|"curthread is NULL"
-operator|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(

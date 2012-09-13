@@ -540,6 +540,10 @@ name|__LINE__
 operator|)
 argument_list|)
 expr_stmt|;
+name|td
+operator|=
+name|curthread
+expr_stmt|;
 name|pc
 operator|=
 name|PMC_TRAPFRAME_TO_PC
@@ -577,21 +581,6 @@ name|uintptr_t
 argument_list|)
 expr_stmt|;
 comment|/* points to return address */
-if|if
-condition|(
-operator|(
-name|td
-operator|=
-name|curthread
-operator|)
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 if|if
 condition|(
 name|nframes
