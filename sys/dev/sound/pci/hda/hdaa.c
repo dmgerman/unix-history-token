@@ -18142,12 +18142,6 @@ name|w
 operator|->
 name|nid
 expr_stmt|;
-if|if
-condition|(
-name|length
-operator|!=
-name|NULL
-condition|)
 operator|*
 name|length
 operator|=
@@ -18302,10 +18296,6 @@ name|ret
 operator|==
 name|m
 operator|&&
-name|length
-operator|!=
-name|NULL
-operator|&&
 operator|*
 name|length
 operator|<
@@ -18327,6 +18317,12 @@ operator|*
 name|length
 expr_stmt|;
 block|}
+else|else
+operator|*
+name|length
+operator|=
+name|lm
+expr_stmt|;
 if|if
 condition|(
 name|only
