@@ -630,6 +630,27 @@ argument_list|,
 name|rv
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Ignore any pending request to stop due to a stop signal. 	 * Once P_WEXIT is set, future requests will be ignored as 	 * well. 	 */
+name|p
+operator|->
+name|p_flag
+operator|&=
+operator|~
+name|P_STOPPED_SIG
+expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|!
+name|P_SHOULDSTOP
+argument_list|(
+name|p
+argument_list|)
+argument_list|,
+operator|(
+literal|"exiting process is stopped"
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Note that we are exiting and do another wakeup of anyone in 	 * PIOCWAIT in case they aren't listening for S_EXIT stops or 	 * decided to wait again after we told them we are exiting. 	 */
 name|p
 operator|->
