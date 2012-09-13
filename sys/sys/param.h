@@ -1269,7 +1269,7 @@ value|((db)<< (PAGE_SHIFT - DEV_BSHIFT))
 end_define
 
 begin_comment
-comment|/*  * Given the pointer x to the member m of the struct s, return  * a pointer to the containing structure.  */
+comment|/*  * Old spelling of __containerof().  */
 end_comment
 
 begin_define
@@ -1283,7 +1283,8 @@ name|m
 parameter_list|,
 name|x
 parameter_list|)
-value|__member2struct(s, m, x)
+define|\
+value|((struct s *)(void *)((char *)(x) - offsetof(struct s, m)))
 end_define
 
 begin_comment
