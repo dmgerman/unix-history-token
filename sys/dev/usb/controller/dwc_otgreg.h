@@ -3269,6 +3269,28 @@ end_define
 begin_define
 define|#
 directive|define
+name|HCINT_SUSPEND_ONLY
+value|(1<<21)
+end_define
+
+begin_comment
+comment|/* BSD only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HCINT_SOFTWARE_ONLY
+value|(1<<20)
+end_define
+
+begin_comment
+comment|/* BSD only */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|HCINT_DATATGLERR
 value|(1<<10)
 end_define
