@@ -714,32 +714,5 @@ return|;
 block|}
 end_function
 
-begin_function
-name|int
-name|fdt_pci_devmap
-parameter_list|(
-name|phandle_t
-name|node
-parameter_list|,
-name|struct
-name|pmap_devmap
-modifier|*
-name|devmap
-parameter_list|,
-name|vm_offset_t
-name|io_va
-parameter_list|,
-name|vm_offset_t
-name|mem_va
-parameter_list|)
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
 end_unit
 
