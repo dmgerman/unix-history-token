@@ -4300,6 +4300,10 @@ name|CPU_ID_MV88SV581X_V7
 operator|||
 name|cputype
 operator|==
+name|CPU_ID_MV88SV584X_V7
+operator|||
+name|cputype
+operator|==
 name|CPU_ID_ARM_88SV581X_V6
 operator|||
 name|cputype
@@ -4340,11 +4344,11 @@ if|if
 condition|(
 name|cputype
 operator|==
-name|CPU_ID_ARM_88SV584X
+name|CPU_ID_ARM_88SV584X_V6
 operator|||
 name|cputype
 operator|==
-name|CPU_ID_MV88SV584X
+name|CPU_ID_MV88SV584X_V6
 condition|)
 block|{
 name|cpufuncs
