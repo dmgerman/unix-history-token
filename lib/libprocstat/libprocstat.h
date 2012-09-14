@@ -557,6 +557,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_function_decl
+name|__BEGIN_DECLS
 name|void
 name|procstat_close
 parameter_list|(
@@ -808,6 +809,10 @@ name|memf
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_endif
 endif|#
