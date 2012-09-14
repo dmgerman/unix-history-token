@@ -2348,7 +2348,7 @@ name|cm_reply
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* Ensures the the reply won't get re-freed */
+comment|/* Ensures the reply won't get re-freed */
 name|mps_printf
 argument_list|(
 name|sc
@@ -3120,7 +3120,7 @@ name|cm_reply
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* Ensures the the reply won't get re-freed */
+comment|/* Ensures the reply won't get re-freed */
 comment|/* Reuse the existing command */
 name|req
 operator|=

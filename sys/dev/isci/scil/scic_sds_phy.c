@@ -2042,7 +2042,7 @@ name|error_counter
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|// Initialize the the substate machines
+comment|// Initialize the substate machines
 name|sci_base_state_machine_construct
 argument_list|(
 operator|&

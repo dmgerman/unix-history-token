@@ -3410,7 +3410,7 @@ name|ata_io
 parameter_list|)
 block|{
 comment|// Decode the sequence type to determine how to handle the termination
-comment|// of the the translation method.
+comment|// of the translation method.
 switch|switch
 condition|(
 name|sequence

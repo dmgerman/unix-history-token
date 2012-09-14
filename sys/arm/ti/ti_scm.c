@@ -539,7 +539,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *	ti_scm_padconf_get - gets the muxmode and state for a pad/pin  *	@padname: the name of the pad, i.e. "c12"  *	@muxmode: upon return will contain the name of the muxmode of the pin  *	@state: upon return will contain the state of the the pad/pin  *	  *  *	LOCKING:  *	Internally locks it's own context.  *  *	RETURNS:  *	0 on success.  *	EINVAL if pin requested is outside valid range or already in use.  */
+comment|/**  *	ti_scm_padconf_get - gets the muxmode and state for a pad/pin  *	@padname: the name of the pad, i.e. "c12"  *	@muxmode: upon return will contain the name of the muxmode of the pin  *	@state: upon return will contain the state of the pad/pin  *	  *  *	LOCKING:  *	Internally locks it's own context.  *  *	RETURNS:  *	0 on success.  *	EINVAL if pin requested is outside valid range or already in use.  */
 end_comment
 
 begin_function

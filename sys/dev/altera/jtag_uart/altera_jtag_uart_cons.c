@@ -189,7 +189,7 @@ value|10000
 end_define
 
 begin_comment
-comment|/*  * I/O routines lifted from Deimos.  This is not only MIPS-specific, but also  * BERI-specific, as we're hard coding the the address at which we expect to  * find the Altera JTAG UART and using it unconditionally.  We use these  * low-level routines so that we can perform console I/O long before newbus  * has initialised and devices have attached.  The TTY layer of the driver  * knows about this, and uses the console-layer spinlock instead of the  * TTY-layer lock to avoid confusion between layers for the console UART.  *  * XXXRW: The only place this inter-layer behaviour breaks down is if the  * low-level console is used for polled read while the TTY driver is also  * looking for input.  Probably we should also share buffers between layers.  */
+comment|/*  * I/O routines lifted from Deimos.  This is not only MIPS-specific, but also  * BERI-specific, as we're hard coding the address at which we expect to  * find the Altera JTAG UART and using it unconditionally.  We use these  * low-level routines so that we can perform console I/O long before newbus  * has initialised and devices have attached.  The TTY layer of the driver  * knows about this, and uses the console-layer spinlock instead of the  * TTY-layer lock to avoid confusion between layers for the console UART.  *  * XXXRW: The only place this inter-layer behaviour breaks down is if the  * low-level console is used for polled read while the TTY driver is also  * looking for input.  Probably we should also share buffers between layers.  */
 end_comment
 
 begin_define

@@ -8762,7 +8762,7 @@ argument_list|,
 name|opcode
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Wait for up to 1sec for each byte of the the 	 * parameter list sent to be sent. 	 */
+comment|/* 	 * Wait for up to 1sec for each byte of the 	 * parameter list sent to be sent. 	 */
 name|timeout
 operator|=
 literal|10000

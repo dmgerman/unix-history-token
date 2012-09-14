@@ -370,7 +370,7 @@ name|void
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/**    * Function pointer to get the function in the the smp request    */
+comment|/**    * Function pointer to get the function in the smp request    */
 name|U8
 function_decl|(
 modifier|*
@@ -381,7 +381,7 @@ name|void
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/**    * Function pointer to get the "allocated response length" in the the smp request    */
+comment|/**    * Function pointer to get the "allocated response length" in the smp request    */
 name|U8
 function_decl|(
 modifier|*
