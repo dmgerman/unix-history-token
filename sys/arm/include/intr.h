@@ -133,6 +133,22 @@ name|NIRQ
 value|128
 end_define
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|SOC_MV_ARMADAXP
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|NIRQ
+value|148
+end_define
+
 begin_else
 else|#
 directive|else
