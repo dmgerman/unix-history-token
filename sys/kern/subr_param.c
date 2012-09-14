@@ -610,7 +610,9 @@ name|OID_AUTO
 argument_list|,
 name|maxtsiz
 argument_list|,
-name|CTLFLAG_RDTUN
+name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|maxtsiz
@@ -631,7 +633,9 @@ name|OID_AUTO
 argument_list|,
 name|dfldsiz
 argument_list|,
-name|CTLFLAG_RDTUN
+name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|dfldsiz
@@ -652,7 +656,9 @@ name|OID_AUTO
 argument_list|,
 name|maxdsiz
 argument_list|,
-name|CTLFLAG_RDTUN
+name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|maxdsiz
@@ -673,7 +679,9 @@ name|OID_AUTO
 argument_list|,
 name|dflssiz
 argument_list|,
-name|CTLFLAG_RDTUN
+name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|dflssiz
@@ -694,7 +702,9 @@ name|OID_AUTO
 argument_list|,
 name|maxssiz
 argument_list|,
-name|CTLFLAG_RDTUN
+name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|maxssiz
@@ -715,7 +725,9 @@ name|OID_AUTO
 argument_list|,
 name|sgrowsiz
 argument_list|,
-name|CTLFLAG_RDTUN
+name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|sgrowsiz
