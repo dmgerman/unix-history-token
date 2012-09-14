@@ -57,93 +57,6 @@ literal|"aslutils"
 argument_list|)
 end_macro
 
-begin_decl_stmt
-name|char
-name|AslHexLookup
-index|[]
-init|=
-block|{
-literal|'0'
-block|,
-literal|'1'
-block|,
-literal|'2'
-block|,
-literal|'3'
-block|,
-literal|'4'
-block|,
-literal|'5'
-block|,
-literal|'6'
-block|,
-literal|'7'
-block|,
-literal|'8'
-block|,
-literal|'9'
-block|,
-literal|'A'
-block|,
-literal|'B'
-block|,
-literal|'C'
-block|,
-literal|'D'
-block|,
-literal|'E'
-block|,
-literal|'F'
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Table below must match ASL_FILE_TYPES in asltypes.h */
-end_comment
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-modifier|*
-name|AslFileTypeNames
-index|[
-name|ASL_NUM_FILES
-index|]
-init|=
-block|{
-literal|"stdout:       "
-block|,
-literal|"stderr:       "
-block|,
-literal|"Table Input:  "
-block|,
-literal|"Binary Output:"
-block|,
-literal|"Source Output:"
-block|,
-literal|"Preprocessor: "
-block|,
-literal|"Listing File: "
-block|,
-literal|"Hex Dump:     "
-block|,
-literal|"Namespace:    "
-block|,
-literal|"Debug File:   "
-block|,
-literal|"ASM Source:   "
-block|,
-literal|"C Source:     "
-block|,
-literal|"ASM Include:  "
-block|,
-literal|"C Include:    "
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* Local prototypes */
 end_comment
@@ -1205,10 +1118,12 @@ name|FileId
 argument_list|,
 literal|"%14s %s - %u bytes\n"
 argument_list|,
-name|AslFileTypeNames
+name|Gbl_Files
 index|[
 name|i
 index|]
+operator|.
+name|ShortDescription
 argument_list|,
 name|Gbl_Files
 index|[
@@ -1450,6 +1365,160 @@ operator|(
 name|Buffer
 operator|)
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/******************************************************************************  *  * FUNCTION:    UtExpandLineBuffers  *  * PARAMETERS:  None. Updates global line buffer pointers.  *  * RETURN:      None. Reallocates the global line buffers  *  * DESCRIPTION: Called if the current line buffer becomes filled. Reallocates  *              all global line buffers and updates Gbl_LineBufferSize. NOTE:  *              Also used for the initial allocation of the buffers, when  *              all of the buffer pointers are NULL. Initial allocations are  *              of size ASL_DEFAULT_LINE_BUFFER_SIZE  *  *****************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|UtExpandLineBuffers
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|UINT32
+name|NewSize
+decl_stmt|;
+comment|/* Attempt to double the size of all line buffers */
+name|NewSize
+operator|=
+name|Gbl_LineBufferSize
+operator|*
+literal|2
+expr_stmt|;
+if|if
+condition|(
+name|Gbl_CurrentLineBuffer
+condition|)
+block|{
+name|DbgPrint
+argument_list|(
+name|ASL_DEBUG_OUTPUT
+argument_list|,
+literal|"Increasing line buffer size from %u to %u\n"
+argument_list|,
+name|Gbl_LineBufferSize
+argument_list|,
+name|NewSize
+argument_list|)
+expr_stmt|;
+block|}
+name|Gbl_CurrentLineBuffer
+operator|=
+name|realloc
+argument_list|(
+name|Gbl_CurrentLineBuffer
+argument_list|,
+name|NewSize
+argument_list|)
+expr_stmt|;
+name|Gbl_LineBufPtr
+operator|=
+name|Gbl_CurrentLineBuffer
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Gbl_CurrentLineBuffer
+condition|)
+block|{
+goto|goto
+name|ErrorExit
+goto|;
+block|}
+name|Gbl_MainTokenBuffer
+operator|=
+name|realloc
+argument_list|(
+name|Gbl_MainTokenBuffer
+argument_list|,
+name|NewSize
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Gbl_MainTokenBuffer
+condition|)
+block|{
+goto|goto
+name|ErrorExit
+goto|;
+block|}
+name|Gbl_MacroTokenBuffer
+operator|=
+name|realloc
+argument_list|(
+name|Gbl_MacroTokenBuffer
+argument_list|,
+name|NewSize
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Gbl_MacroTokenBuffer
+condition|)
+block|{
+goto|goto
+name|ErrorExit
+goto|;
+block|}
+name|Gbl_ExpressionTokenBuffer
+operator|=
+name|realloc
+argument_list|(
+name|Gbl_ExpressionTokenBuffer
+argument_list|,
+name|NewSize
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Gbl_ExpressionTokenBuffer
+condition|)
+block|{
+goto|goto
+name|ErrorExit
+goto|;
+block|}
+name|Gbl_LineBufferSize
+operator|=
+name|NewSize
+expr_stmt|;
+return|return;
+comment|/* On error above, simply issue error messages and abort, cannot continue */
+name|ErrorExit
+label|:
+name|printf
+argument_list|(
+literal|"Could not increase line buffer size from %u to %u\n"
+argument_list|,
+name|Gbl_LineBufferSize
+argument_list|,
+name|Gbl_LineBufferSize
+operator|*
+literal|2
+argument_list|)
+expr_stmt|;
+name|AslError
+argument_list|(
+name|ASL_ERROR
+argument_list|,
+name|ASL_MSG_BUFFER_ALLOCATION
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|AslAbort
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 

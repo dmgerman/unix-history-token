@@ -663,6 +663,77 @@ block|}
 end_function
 
 begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    FlDeleteFile  *  * PARAMETERS:  FileId              - Index into file info array  *  * RETURN:      None  *  * DESCRIPTION: Delete a file.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|FlDeleteFile
+parameter_list|(
+name|UINT32
+name|FileId
+parameter_list|)
+block|{
+name|ASL_FILE_INFO
+modifier|*
+name|Info
+init|=
+operator|&
+name|Gbl_Files
+index|[
+name|FileId
+index|]
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|Info
+operator|->
+name|Filename
+condition|)
+block|{
+return|return;
+block|}
+if|if
+condition|(
+name|remove
+argument_list|(
+name|Info
+operator|->
+name|Filename
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s (%s file) "
+argument_list|,
+name|Info
+operator|->
+name|Filename
+argument_list|,
+name|Info
+operator|->
+name|Description
+argument_list|)
+expr_stmt|;
+name|perror
+argument_list|(
+literal|"Could not delete"
+argument_list|)
+expr_stmt|;
+block|}
+name|Info
+operator|->
+name|Filename
+operator|=
+name|NULL
+expr_stmt|;
+return|return;
+block|}
+end_function
+
+begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    FlSetLineNumber  *  * PARAMETERS:  Op        - Parse node for the LINE asl statement  *  * RETURN:      None.  *  * DESCRIPTION: Set the current line number  *  ******************************************************************************/
 end_comment
 

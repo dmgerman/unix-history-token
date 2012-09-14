@@ -2104,6 +2104,15 @@ name|Common
 operator|.
 name|Next
 expr_stmt|;
+comment|/* Major cheat: The Node field is also used for the Tag ptr. Clear it now */
+name|IndexOp
+operator|->
+name|Common
+operator|.
+name|Node
+operator|=
+name|NULL
+expr_stmt|;
 name|OpInfo
 operator|=
 name|AcpiPsGetOpcodeInfo

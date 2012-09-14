@@ -869,12 +869,12 @@ operator|*
 operator|)
 name|ObjHandle
 decl_stmt|;
-name|ACPI_EXECUTE_WALK
+name|ACPI_DB_EXECUTE_WALK
 modifier|*
 name|Info
 init|=
 operator|(
-name|ACPI_EXECUTE_WALK
+name|ACPI_DB_EXECUTE_WALK
 operator|*
 operator|)
 name|Context
@@ -1168,7 +1168,7 @@ modifier|*
 name|CountArg
 parameter_list|)
 block|{
-name|ACPI_EXECUTE_WALK
+name|ACPI_DB_EXECUTE_WALK
 name|Info
 decl_stmt|;
 name|Info
@@ -1230,7 +1230,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Executed %u predefined names in the namespace\n"
+literal|"Evaluated %u predefined names in the namespace\n"
 argument_list|,
 name|Info
 operator|.

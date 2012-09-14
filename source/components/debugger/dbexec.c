@@ -1607,7 +1607,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Executing %s\n"
+literal|"Evaluating %s\n"
 argument_list|,
 name|Info
 operator|->
@@ -1824,7 +1824,7 @@ name|AcpiNsPrintNodePathname
 argument_list|(
 name|Node
 argument_list|,
-literal|"Execute"
+literal|"Evaluating"
 argument_list|)
 expr_stmt|;
 comment|/* Do the actual method execution */
@@ -1853,7 +1853,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"[%4.4s] returned %s\n"
+literal|"Evaluation of [%4.4s] returned %s\n"
 argument_list|,
 name|AcpiUtGetNodeName
 argument_list|(
@@ -2989,9 +2989,13 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"Outstanding: 0x%X allocations after execution\n"
+literal|"0x%X Outstanding allocations after evaluation of %s\n"
 argument_list|,
 name|Allocations
+argument_list|,
+name|AcpiGbl_DbMethodInfo
+operator|.
+name|Pathname
 argument_list|)
 expr_stmt|;
 block|}
@@ -3007,7 +3011,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"Execution of %s failed with status %s\n"
+literal|"Evaluation of %s failed with status %s\n"
 argument_list|,
 name|AcpiGbl_DbMethodInfo
 operator|.
@@ -3032,7 +3036,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"Execution of %s returned object %p Buflen %X\n"
+literal|"Evaluation of %s returned object %p, external buffer length %X\n"
 argument_list|,
 name|AcpiGbl_DbMethodInfo
 operator|.
@@ -3096,7 +3100,7 @@ else|else
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"No return object from execution of %s\n"
+literal|"No object was returned from evaluation of %s\n"
 argument_list|,
 name|AcpiGbl_DbMethodInfo
 operator|.
@@ -3339,7 +3343,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"%s During execution of %s at iteration %X\n"
+literal|"%s During evaluation of %s at iteration %X\n"
 argument_list|,
 name|AcpiFormatException
 argument_list|(
@@ -3366,7 +3370,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|if ((i % 100) == 0)         {             AcpiOsPrintf ("%u executions, Thread 0x%x\n", i, AcpiOsGetThreadId ());         }          if (ReturnObj.Length)         {             AcpiOsPrintf ("Execution of %s returned object %p Buflen %X\n",                 Info->Pathname, ReturnObj.Pointer, (UINT32) ReturnObj.Length);             AcpiDbDumpExternalObject (ReturnObj.Pointer, 1);         }
+block|if ((i % 100) == 0)         {             AcpiOsPrintf ("%u loops, Thread 0x%x\n", i, AcpiOsGetThreadId ());         }          if (ReturnObj.Length)         {             AcpiOsPrintf ("Evaluation of %s returned object %p Buflen %X\n",                 Info->Pathname, ReturnObj.Pointer, (UINT32) ReturnObj.Length);             AcpiDbDumpExternalObject (ReturnObj.Pointer, 1);         }
 endif|#
 directive|endif
 block|}

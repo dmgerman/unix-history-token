@@ -199,7 +199,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|ARGUMENT_INFO
+name|ACPI_DB_ARGUMENT_INFO
 name|AcpiDbObjectTypes
 index|[]
 init|=

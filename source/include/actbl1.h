@@ -1403,10 +1403,20 @@ name|ACPI_HEST_NOTIFY_NMI
 init|=
 literal|4
 block|,
-name|ACPI_HEST_NOTIFY_RESERVED
+name|ACPI_HEST_NOTIFY_CMCI
 init|=
 literal|5
-comment|/* 5 and greater are reserved */
+block|,
+comment|/* ACPI 5.0 */
+name|ACPI_HEST_NOTIFY_MCE
+init|=
+literal|6
+block|,
+comment|/* ACPI 5.0 */
+name|ACPI_HEST_NOTIFY_RESERVED
+init|=
+literal|7
+comment|/* 7 and greater are reserved */
 block|}
 enum|;
 end_enum
