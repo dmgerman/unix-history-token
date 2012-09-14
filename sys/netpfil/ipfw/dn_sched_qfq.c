@@ -94,19 +94,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/ipfw/dn_heap.h>
+file|<netpfil/ipfw/dn_heap.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netinet/ipfw/ip_dn_private.h>
+file|<netpfil/ipfw/ip_dn_private.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netinet/ipfw/dn_sched.h>
+file|<netpfil/ipfw/dn_sched.h>
 end_include
 
 begin_else

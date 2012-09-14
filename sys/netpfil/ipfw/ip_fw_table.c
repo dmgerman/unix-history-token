@@ -105,6 +105,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -155,17 +161,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/queue.h>
-end_include
-
-begin_comment
-comment|/* LIST_HEAD */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<netinet/ipfw/ip_fw_private.h>
+file|<netpfil/ipfw/ip_fw_private.h>
 end_include
 
 begin_ifdef

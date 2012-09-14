@@ -54,7 +54,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/ipfw/dn_heap.h>
+file|<netpfil/ipfw/dn_heap.h>
 end_include
 
 begin_ifndef
