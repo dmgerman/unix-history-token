@@ -237,12 +237,6 @@ decl_stmt|;
 name|bus_space_handle_t
 name|cpu_bsh
 decl_stmt|;
-name|int
-name|mpic_high_regs
-decl_stmt|;
-name|int
-name|mpic_error_regs
-decl_stmt|;
 block|}
 struct|;
 end_struct
