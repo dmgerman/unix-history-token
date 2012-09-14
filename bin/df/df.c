@@ -1289,6 +1289,11 @@ operator|&
 name|maxwidths
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|mntbuf
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|rv
