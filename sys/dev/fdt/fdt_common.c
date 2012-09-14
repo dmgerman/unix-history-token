@@ -1906,6 +1906,8 @@ operator|(
 name|ENXIO
 operator|)
 return|;
+if|if
+condition|(
 name|fdt_get_range
 argument_list|(
 name|OF_parent
@@ -1921,7 +1923,17 @@ argument_list|,
 operator|&
 name|bussize
 argument_list|)
+condition|)
+block|{
+name|busaddr
+operator|=
+literal|0
 expr_stmt|;
+name|bussize
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|tuple_size
 operator|=
 sizeof|sizeof
