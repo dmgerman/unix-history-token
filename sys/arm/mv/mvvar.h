@@ -779,6 +779,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|mv_msi_data
+parameter_list|(
+name|int
+name|irq
+parameter_list|,
+name|uint64_t
+modifier|*
+name|addr
+parameter_list|,
+name|uint32_t
+modifier|*
+name|data
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

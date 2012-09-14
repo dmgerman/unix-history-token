@@ -145,8 +145,43 @@ end_elif
 begin_define
 define|#
 directive|define
+name|MAIN_IRQ_NUM
+value|116
+end_define
+
+begin_define
+define|#
+directive|define
+name|ERR_IRQ_NUM
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|ERR_IRQ
+value|(MAIN_IRQ_NUM)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSI_IRQ_NUM
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSI_IRQ
+value|(ERR_IRQ + ERR_IRQ_NUM)
+end_define
+
+begin_define
+define|#
+directive|define
 name|NIRQ
-value|148
+value|(MAIN_IRQ_NUM + ERR_IRQ_NUM + MSI_IRQ_NUM)
 end_define
 
 begin_else
