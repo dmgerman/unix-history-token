@@ -2467,19 +2467,6 @@ name|smallalloc_mtx
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-specifier|static
-name|MALLOC_DEFINE
-argument_list|(
-name|M_VMSMALLALLOC
-argument_list|,
-literal|"vm_small_alloc"
-argument_list|,
-literal|"VM Small alloc data"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_decl_stmt
 name|vm_offset_t
 name|alloc_firstaddr
