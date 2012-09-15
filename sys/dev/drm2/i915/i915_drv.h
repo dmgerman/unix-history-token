@@ -2503,7 +2503,7 @@ name|to_intel_bo
 parameter_list|(
 name|x
 parameter_list|)
-value|member2struct(drm_i915_gem_object, base, (x))
+value|__containerof(x, struct drm_i915_gem_object, base)
 end_define
 
 begin_comment

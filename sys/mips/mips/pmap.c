@@ -7333,13 +7333,14 @@ name|u_long
 operator|)
 name|VM_PAGE_TO_PHYS
 argument_list|(
-name|member2struct
+name|__containerof
 argument_list|(
+name|pvh
+argument_list|,
+expr|struct
 name|vm_page
 argument_list|,
 name|md
-argument_list|,
-name|pvh
 argument_list|)
 argument_list|)
 operator|,
