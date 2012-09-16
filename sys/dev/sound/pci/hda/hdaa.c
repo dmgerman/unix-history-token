@@ -13074,7 +13074,10 @@ operator|->
 name|bindas
 operator|<
 literal|0
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|pdevinfo
 operator|->
 name|index
@@ -13082,6 +13085,9 @@ operator|!=
 literal|0
 condition|)
 continue|continue;
+block|}
+else|else
+block|{
 if|if
 condition|(
 name|w
@@ -13101,6 +13107,7 @@ operator|->
 name|recas
 condition|)
 continue|continue;
+block|}
 if|if
 condition|(
 name|dev
