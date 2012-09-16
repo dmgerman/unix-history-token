@@ -84,7 +84,7 @@ end_comment
 begin_typedef
 typedef|typedef
 struct|struct
-name|__rpc_xdr
+name|XDR
 block|{
 name|enum
 name|xdr_op
@@ -103,7 +103,7 @@ name|x_getlong
 function_decl|)
 parameter_list|(
 name|struct
-name|__rpc_xdr
+name|XDR
 modifier|*
 parameter_list|,
 name|long
@@ -118,7 +118,7 @@ name|x_putlong
 function_decl|)
 parameter_list|(
 name|struct
-name|__rpc_xdr
+name|XDR
 modifier|*
 parameter_list|,
 specifier|const
@@ -134,7 +134,7 @@ name|x_getbytes
 function_decl|)
 parameter_list|(
 name|struct
-name|__rpc_xdr
+name|XDR
 modifier|*
 parameter_list|,
 name|char
@@ -151,7 +151,7 @@ name|x_putbytes
 function_decl|)
 parameter_list|(
 name|struct
-name|__rpc_xdr
+name|XDR
 modifier|*
 parameter_list|,
 specifier|const
@@ -169,7 +169,7 @@ name|x_getpostn
 function_decl|)
 parameter_list|(
 name|struct
-name|__rpc_xdr
+name|XDR
 modifier|*
 parameter_list|)
 function_decl|;
@@ -181,7 +181,7 @@ name|x_setpostn
 function_decl|)
 parameter_list|(
 name|struct
-name|__rpc_xdr
+name|XDR
 modifier|*
 parameter_list|,
 name|u_int
@@ -196,7 +196,7 @@ name|x_inline
 function_decl|)
 parameter_list|(
 name|struct
-name|__rpc_xdr
+name|XDR
 modifier|*
 parameter_list|,
 name|u_int
@@ -210,7 +210,7 @@ name|x_destroy
 function_decl|)
 parameter_list|(
 name|struct
-name|__rpc_xdr
+name|XDR
 modifier|*
 parameter_list|)
 function_decl|;
@@ -221,7 +221,7 @@ name|x_control
 function_decl|)
 parameter_list|(
 name|struct
-name|__rpc_xdr
+name|XDR
 modifier|*
 parameter_list|,
 name|int
