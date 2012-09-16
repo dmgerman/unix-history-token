@@ -762,6 +762,17 @@ argument_list|,
 literal|0
 argument_list|)
 block|}
+block|,
+block|{
+name|USB_VPI
+argument_list|(
+argument|USB_VENDOR_WCH2
+argument_list|,
+argument|USB_PRODUCT_WCH2_CH341SER_2
+argument_list|,
+literal|0
+argument_list|)
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
