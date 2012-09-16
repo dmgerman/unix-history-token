@@ -141,16 +141,6 @@ directive|include
 file|"extern.h"
 end_include
 
-begin_decl_stmt
-specifier|static
-name|int
-name|cpid
-init|=
-operator|-
-literal|1
-decl_stmt|;
-end_decl_stmt
-
 begin_include
 include|#
 directive|include
@@ -182,7 +172,6 @@ comment|/*  * This is what this particular file uses to keep track of a system c
 end_comment
 
 begin_struct
-specifier|static
 struct|struct
 name|freebsd_syscall
 block|{
@@ -215,9 +204,33 @@ name|s_args
 decl_stmt|;
 comment|/* the printable arguments */
 block|}
-name|fsc
 struct|;
 end_struct
+
+begin_function
+specifier|static
+name|struct
+name|freebsd_syscall
+modifier|*
+name|alloc_fsc
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|freebsd_syscall
+argument_list|)
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/* Clear up and free parts of the fsc structure. */
@@ -225,33 +238,29 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline
 name|void
-name|clear_fsc
+name|free_fsc
 parameter_list|(
-name|void
+name|struct
+name|freebsd_syscall
+modifier|*
+name|fsc
 parameter_list|)
 block|{
 name|int
 name|i
 decl_stmt|;
-if|if
-condition|(
-name|fsc
-operator|.
-name|args
-condition|)
 name|free
 argument_list|(
 name|fsc
-operator|.
+operator|->
 name|args
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|fsc
-operator|.
+operator|->
 name|s_args
 condition|)
 block|{
@@ -264,25 +273,16 @@ init|;
 name|i
 operator|<
 name|fsc
-operator|.
+operator|->
 name|nargs
 condition|;
 name|i
 operator|++
 control|)
-if|if
-condition|(
-name|fsc
-operator|.
-name|s_args
-index|[
-name|i
-index|]
-condition|)
 name|free
 argument_list|(
 name|fsc
-operator|.
+operator|->
 name|s_args
 index|[
 name|i
@@ -292,22 +292,14 @@ expr_stmt|;
 name|free
 argument_list|(
 name|fsc
-operator|.
+operator|->
 name|s_args
 argument_list|)
 expr_stmt|;
 block|}
-name|memset
-argument_list|(
-operator|&
-name|fsc
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
+name|free
 argument_list|(
 name|fsc
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -339,9 +331,17 @@ name|reg
 name|regs
 decl_stmt|;
 name|struct
+name|freebsd_syscall
+modifier|*
+name|fsc
+decl_stmt|;
+name|struct
 name|syscall
 modifier|*
 name|sc
+decl_stmt|;
+name|lwpid_t
+name|tid
 decl_stmt|;
 name|int
 name|i
@@ -352,10 +352,7 @@ name|int
 name|indir
 decl_stmt|;
 comment|/* indirect system call */
-name|clear_fsc
-argument_list|()
-expr_stmt|;
-name|cpid
+name|tid
 operator|=
 name|trussinfo
 operator|->
@@ -369,7 +366,7 @@ name|ptrace
 argument_list|(
 name|PT_GETREGS
 argument_list|,
-name|cpid
+name|tid
 argument_list|,
 operator|(
 name|caddr_t
@@ -429,13 +426,25 @@ index|]
 expr_stmt|;
 block|}
 name|fsc
-operator|.
+operator|=
+name|alloc_fsc
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|fsc
+operator|==
+name|NULL
+condition|)
+return|return;
+name|fsc
+operator|->
 name|number
 operator|=
 name|syscall_num
 expr_stmt|;
 name|fsc
-operator|.
+operator|->
 name|name
 operator|=
 operator|(
@@ -459,7 +468,7 @@ if|if
 condition|(
 operator|!
 name|fsc
-operator|.
+operator|->
 name|name
 condition|)
 block|{
@@ -478,7 +487,7 @@ block|}
 if|if
 condition|(
 name|fsc
-operator|.
+operator|->
 name|name
 operator|&&
 operator|(
@@ -493,7 +502,7 @@ operator|(
 name|strcmp
 argument_list|(
 name|fsc
-operator|.
+operator|->
 name|name
 argument_list|,
 literal|"fork"
@@ -504,7 +513,7 @@ operator|||
 name|strcmp
 argument_list|(
 name|fsc
-operator|.
+operator|->
 name|name
 argument_list|,
 literal|"rfork"
@@ -515,7 +524,7 @@ operator|||
 name|strcmp
 argument_list|(
 name|fsc
-operator|.
+operator|->
 name|name
 argument_list|,
 literal|"vfork"
@@ -540,7 +549,7 @@ literal|0
 condition|)
 return|return;
 name|fsc
-operator|.
+operator|->
 name|args
 operator|=
 name|malloc
@@ -562,7 +571,7 @@ if|#
 directive|if
 literal|0
 comment|// XXX
-block|iorequest.piod_op = PIOD_READ_D; 	iorequest.piod_offs = (void *)parm_offset; 	iorequest.piod_addr = fsc.args; 	iorequest.piod_len = (1 + nargs) * sizeof(unsigned long); 	ptrace(PT_IO, cpid, (caddr_t)&iorequest, 0); 	if (iorequest.piod_len == 0) 		return;
+block|iorequest.piod_op = PIOD_READ_D; 	iorequest.piod_offs = (void *)parm_offset; 	iorequest.piod_addr = fsc->args; 	iorequest.piod_len = (1 + nargs) * sizeof(unsigned long); 	ptrace(PT_IO, tid, (caddr_t)&iorequest, 0); 	if (iorequest.piod_len == 0) 		return;
 else|#
 directive|else
 name|iorequest
@@ -644,7 +653,7 @@ name|piod_addr
 operator|=
 operator|&
 name|fsc
-operator|.
+operator|->
 name|args
 index|[
 literal|4
@@ -663,7 +672,7 @@ operator|*
 sizeof|sizeof
 argument_list|(
 name|fsc
-operator|.
+operator|->
 name|args
 index|[
 literal|0
@@ -674,7 +683,7 @@ name|ptrace
 argument_list|(
 name|PT_IO
 argument_list|,
-name|cpid
+name|tid
 argument_list|,
 operator|(
 name|caddr_t
@@ -698,7 +707,7 @@ case|case
 literal|4
 case|:
 name|fsc
-operator|.
+operator|->
 name|args
 index|[
 literal|3
@@ -715,7 +724,7 @@ case|case
 literal|3
 case|:
 name|fsc
-operator|.
+operator|->
 name|args
 index|[
 literal|2
@@ -732,7 +741,7 @@ case|case
 literal|2
 case|:
 name|fsc
-operator|.
+operator|->
 name|args
 index|[
 literal|1
@@ -749,7 +758,7 @@ case|case
 literal|1
 case|:
 name|fsc
-operator|.
+operator|->
 name|args
 index|[
 literal|0
@@ -776,7 +785,7 @@ name|memmove
 argument_list|(
 operator|&
 name|fsc
-operator|.
+operator|->
 name|args
 index|[
 literal|0
@@ -784,7 +793,7 @@ index|]
 argument_list|,
 operator|&
 name|fsc
-operator|.
+operator|->
 name|args
 index|[
 literal|1
@@ -799,7 +808,7 @@ operator|*
 sizeof|sizeof
 argument_list|(
 name|fsc
-operator|.
+operator|->
 name|args
 index|[
 literal|0
@@ -813,7 +822,7 @@ operator|=
 name|get_syscall
 argument_list|(
 name|fsc
-operator|.
+operator|->
 name|name
 argument_list|)
 expr_stmt|;
@@ -822,7 +831,7 @@ condition|(
 name|sc
 condition|)
 name|fsc
-operator|.
+operator|->
 name|nargs
 operator|=
 name|sc
@@ -844,7 +853,7 @@ literal|"unknown syscall %s -- setting "
 literal|"args to %d\n"
 argument_list|,
 name|fsc
-operator|.
+operator|->
 name|name
 argument_list|,
 name|nargs
@@ -853,14 +862,14 @@ expr_stmt|;
 endif|#
 directive|endif
 name|fsc
-operator|.
+operator|->
 name|nargs
 operator|=
 name|nargs
 expr_stmt|;
 block|}
 name|fsc
-operator|.
+operator|->
 name|s_args
 operator|=
 name|calloc
@@ -871,7 +880,7 @@ operator|(
 literal|1
 operator|+
 name|fsc
-operator|.
+operator|->
 name|nargs
 operator|)
 operator|*
@@ -883,7 +892,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 name|fsc
-operator|.
+operator|->
 name|sc
 operator|=
 name|sc
@@ -892,7 +901,7 @@ comment|/* 	 * At this point, we set up the system call arguments. 	 * We ignore
 if|if
 condition|(
 name|fsc
-operator|.
+operator|->
 name|name
 condition|)
 block|{
@@ -906,7 +915,7 @@ argument_list|,
 literal|"syscall %s("
 argument_list|,
 name|fsc
-operator|.
+operator|->
 name|name
 argument_list|)
 expr_stmt|;
@@ -921,7 +930,7 @@ init|;
 name|i
 operator|<
 name|fsc
-operator|.
+operator|->
 name|nargs
 condition|;
 name|i
@@ -940,7 +949,7 @@ argument_list|,
 name|sc
 condition|?
 name|fsc
-operator|.
+operator|->
 name|args
 index|[
 name|sc
@@ -954,7 +963,7 @@ name|offset
 index|]
 else|:
 name|fsc
-operator|.
+operator|->
 name|args
 index|[
 name|i
@@ -964,7 +973,7 @@ name|i
 operator|<
 operator|(
 name|fsc
-operator|.
+operator|->
 name|nargs
 operator|-
 literal|1
@@ -997,7 +1006,7 @@ operator|)
 condition|)
 block|{
 name|fsc
-operator|.
+operator|->
 name|s_args
 index|[
 name|i
@@ -1014,7 +1023,7 @@ name|i
 index|]
 argument_list|,
 name|fsc
-operator|.
+operator|->
 name|args
 argument_list|,
 literal|0
@@ -1054,7 +1063,7 @@ directive|endif
 if|if
 condition|(
 name|fsc
-operator|.
+operator|->
 name|name
 operator|!=
 name|NULL
@@ -1063,7 +1072,7 @@ operator|(
 name|strcmp
 argument_list|(
 name|fsc
-operator|.
+operator|->
 name|name
 argument_list|,
 literal|"execve"
@@ -1074,7 +1083,7 @@ operator|||
 name|strcmp
 argument_list|(
 name|fsc
-operator|.
+operator|->
 name|name
 argument_list|,
 literal|"exit"
@@ -1090,7 +1099,7 @@ condition|(
 name|strcmp
 argument_list|(
 name|fsc
-operator|.
+operator|->
 name|name
 argument_list|,
 literal|"execve"
@@ -1115,7 +1124,7 @@ block|{
 if|if
 condition|(
 name|fsc
-operator|.
+operator|->
 name|s_args
 index|[
 literal|1
@@ -1125,7 +1134,7 @@ block|{
 name|free
 argument_list|(
 name|fsc
-operator|.
+operator|->
 name|s_args
 index|[
 literal|1
@@ -1133,7 +1142,7 @@ index|]
 argument_list|)
 expr_stmt|;
 name|fsc
-operator|.
+operator|->
 name|s_args
 index|[
 literal|1
@@ -1159,7 +1168,7 @@ block|{
 if|if
 condition|(
 name|fsc
-operator|.
+operator|->
 name|s_args
 index|[
 literal|2
@@ -1169,7 +1178,7 @@ block|{
 name|free
 argument_list|(
 name|fsc
-operator|.
+operator|->
 name|s_args
 index|[
 literal|2
@@ -1177,7 +1186,7 @@ index|]
 argument_list|)
 expr_stmt|;
 name|fsc
-operator|.
+operator|->
 name|s_args
 index|[
 literal|2
@@ -1189,7 +1198,14 @@ block|}
 block|}
 block|}
 block|}
-return|return;
+name|trussinfo
+operator|->
+name|curthread
+operator|->
+name|fsc
+operator|=
+name|fsc
+expr_stmt|;
 block|}
 end_function
 
@@ -1216,9 +1232,17 @@ name|reg
 name|regs
 decl_stmt|;
 name|struct
+name|freebsd_syscall
+modifier|*
+name|fsc
+decl_stmt|;
+name|struct
 name|syscall
 modifier|*
 name|sc
+decl_stmt|;
+name|lwpid_t
+name|tid
 decl_stmt|;
 name|long
 name|retval
@@ -1230,9 +1254,11 @@ name|i
 decl_stmt|;
 if|if
 condition|(
+name|trussinfo
+operator|->
+name|curthread
+operator|->
 name|fsc
-operator|.
-name|name
 operator|==
 name|NULL
 condition|)
@@ -1242,7 +1268,7 @@ operator|-
 literal|1
 operator|)
 return|;
-name|cpid
+name|tid
 operator|=
 name|trussinfo
 operator|->
@@ -1256,7 +1282,7 @@ name|ptrace
 argument_list|(
 name|PT_GETREGS
 argument_list|,
-name|cpid
+name|tid
 argument_list|,
 operator|(
 name|caddr_t
@@ -1307,10 +1333,18 @@ name|A3
 index|]
 expr_stmt|;
 comment|/* 	 * This code, while simpler than the initial versions I used, could 	 * stand some significant cleaning. 	 */
+name|fsc
+operator|=
+name|trussinfo
+operator|->
+name|curthread
+operator|->
+name|fsc
+expr_stmt|;
 name|sc
 operator|=
 name|fsc
-operator|.
+operator|->
 name|sc
 expr_stmt|;
 if|if
@@ -1328,7 +1362,7 @@ init|;
 name|i
 operator|<
 name|fsc
-operator|.
+operator|->
 name|nargs
 condition|;
 name|i
@@ -1338,7 +1372,7 @@ name|asprintf
 argument_list|(
 operator|&
 name|fsc
-operator|.
+operator|->
 name|s_args
 index|[
 name|i
@@ -1347,7 +1381,7 @@ argument_list|,
 literal|"0x%lx"
 argument_list|,
 name|fsc
-operator|.
+operator|->
 name|args
 index|[
 name|i
@@ -1406,7 +1440,7 @@ argument_list|,
 literal|"0x%lx"
 argument_list|,
 name|fsc
-operator|.
+operator|->
 name|args
 index|[
 name|sc
@@ -1436,7 +1470,7 @@ name|i
 index|]
 argument_list|,
 name|fsc
-operator|.
+operator|->
 name|args
 argument_list|,
 name|retval
@@ -1446,7 +1480,7 @@ argument_list|)
 expr_stmt|;
 block|}
 name|fsc
-operator|.
+operator|->
 name|s_args
 index|[
 name|i
@@ -1460,7 +1494,7 @@ block|}
 if|if
 condition|(
 name|fsc
-operator|.
+operator|->
 name|name
 operator|!=
 name|NULL
@@ -1469,7 +1503,7 @@ operator|(
 name|strcmp
 argument_list|(
 name|fsc
-operator|.
+operator|->
 name|name
 argument_list|,
 literal|"execve"
@@ -1480,7 +1514,7 @@ operator|||
 name|strcmp
 argument_list|(
 name|fsc
-operator|.
+operator|->
 name|name
 argument_list|,
 literal|"exit"
@@ -1503,15 +1537,15 @@ argument_list|(
 name|trussinfo
 argument_list|,
 name|fsc
-operator|.
+operator|->
 name|name
 argument_list|,
 name|fsc
-operator|.
+operator|->
 name|nargs
 argument_list|,
 name|fsc
-operator|.
+operator|->
 name|s_args
 argument_list|,
 name|errorp
@@ -1519,12 +1553,14 @@ argument_list|,
 name|retval
 argument_list|,
 name|fsc
-operator|.
+operator|->
 name|sc
 argument_list|)
 expr_stmt|;
-name|clear_fsc
-argument_list|()
+name|free_fsc
+argument_list|(
+name|fsc
+argument_list|)
 expr_stmt|;
 return|return
 operator|(

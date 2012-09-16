@@ -486,8 +486,10 @@ expr|struct
 name|threadinfo
 operator|*
 operator|)
-name|malloc
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -501,11 +503,11 @@ name|np
 operator|==
 name|NULL
 condition|)
-name|errx
+name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"malloc() failed"
+literal|"calloc() failed"
 argument_list|)
 expr_stmt|;
 name|np
@@ -513,18 +515,6 @@ operator|->
 name|tid
 operator|=
 name|lwpid
-expr_stmt|;
-name|np
-operator|->
-name|in_fork
-operator|=
-literal|0
-expr_stmt|;
-name|np
-operator|->
-name|in_syscall
-operator|=
-literal|0
 expr_stmt|;
 name|SLIST_INSERT_HEAD
 argument_list|(

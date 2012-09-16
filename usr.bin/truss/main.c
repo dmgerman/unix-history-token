@@ -622,6 +622,10 @@ name|av
 parameter_list|)
 block|{
 name|struct
+name|timespec
+name|timediff
+decl_stmt|;
+name|struct
 name|sigaction
 name|sa
 decl_stmt|;
@@ -653,8 +657,6 @@ name|childpid
 decl_stmt|;
 name|int
 name|c
-decl_stmt|,
-name|i
 decl_stmt|,
 name|initial_open
 decl_stmt|,
@@ -1130,10 +1132,6 @@ argument_list|)
 expr_stmt|;
 do|do
 block|{
-name|struct
-name|timespec
-name|timediff
-decl_stmt|;
 name|waitevent
 argument_list|(
 name|trussinfo
@@ -1141,8 +1139,6 @@ argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
-name|i
-operator|=
 name|trussinfo
 operator|->
 name|pr_why
@@ -1167,6 +1163,8 @@ argument_list|,
 operator|&
 name|trussinfo
 operator|->
+name|curthread
+operator|->
 name|before
 argument_list|)
 expr_stmt|;
@@ -1180,6 +1178,8 @@ name|CLOCK_REALTIME
 argument_list|,
 operator|&
 name|trussinfo
+operator|->
+name|curthread
 operator|->
 name|after
 argument_list|)
@@ -1307,6 +1307,8 @@ argument_list|(
 operator|&
 name|trussinfo
 operator|->
+name|curthread
+operator|->
 name|after
 argument_list|,
 operator|&
@@ -1353,10 +1355,14 @@ argument_list|(
 operator|&
 name|trussinfo
 operator|->
+name|curthread
+operator|->
 name|after
 argument_list|,
 operator|&
 name|trussinfo
+operator|->
+name|curthread
 operator|->
 name|before
 argument_list|,
@@ -1468,6 +1474,8 @@ argument_list|(
 operator|&
 name|trussinfo
 operator|->
+name|curthread
+operator|->
 name|after
 argument_list|,
 operator|&
@@ -1514,10 +1522,14 @@ argument_list|(
 operator|&
 name|trussinfo
 operator|->
+name|curthread
+operator|->
 name|after
 argument_list|,
 operator|&
 name|trussinfo
+operator|->
+name|curthread
 operator|->
 name|before
 argument_list|,

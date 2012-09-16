@@ -123,16 +123,6 @@ directive|include
 file|"extern.h"
 end_include
 
-begin_decl_stmt
-specifier|static
-name|int
-name|cpid
-init|=
-operator|-
-literal|1
-decl_stmt|;
-end_decl_stmt
-
 begin_include
 include|#
 directive|include
@@ -164,7 +154,6 @@ comment|/*  * This is what this particular file uses to keep track of a system c
 end_comment
 
 begin_struct
-specifier|static
 struct|struct
 name|linux_syscall
 block|{
@@ -199,9 +188,33 @@ name|s_args
 decl_stmt|;
 comment|/* the printable arguments */
 block|}
-name|fsc
 struct|;
 end_struct
+
+begin_function
+specifier|static
+name|struct
+name|linux_syscall
+modifier|*
+name|alloc_fsc
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|linux_syscall
+argument_list|)
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/* Clear up and free parts of the fsc structure. */
@@ -209,11 +222,13 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline
 name|void
-name|clear_fsc
+name|free_fsc
 parameter_list|(
-name|void
+name|struct
+name|linux_syscall
+modifier|*
+name|fsc
 parameter_list|)
 block|{
 name|int
@@ -222,7 +237,7 @@ decl_stmt|;
 if|if
 condition|(
 name|fsc
-operator|.
+operator|->
 name|s_args
 condition|)
 block|{
@@ -235,25 +250,16 @@ init|;
 name|i
 operator|<
 name|fsc
-operator|.
+operator|->
 name|nargs
 condition|;
 name|i
 operator|++
 control|)
-if|if
-condition|(
-name|fsc
-operator|.
-name|s_args
-index|[
-name|i
-index|]
-condition|)
 name|free
 argument_list|(
 name|fsc
-operator|.
+operator|->
 name|s_args
 index|[
 name|i
@@ -263,22 +269,14 @@ expr_stmt|;
 name|free
 argument_list|(
 name|fsc
-operator|.
+operator|->
 name|s_args
 argument_list|)
 expr_stmt|;
 block|}
-name|memset
-argument_list|(
-operator|&
-name|fsc
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
+name|free
 argument_list|(
 name|fsc
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -306,19 +304,24 @@ name|reg
 name|regs
 decl_stmt|;
 name|struct
+name|linux_syscall
+modifier|*
+name|fsc
+decl_stmt|;
+name|struct
 name|syscall
 modifier|*
 name|sc
+decl_stmt|;
+name|lwpid_t
+name|tid
 decl_stmt|;
 name|int
 name|i
 decl_stmt|,
 name|syscall_num
 decl_stmt|;
-name|clear_fsc
-argument_list|()
-expr_stmt|;
-name|cpid
+name|tid
 operator|=
 name|trussinfo
 operator|->
@@ -332,7 +335,7 @@ name|ptrace
 argument_list|(
 name|PT_GETREGS
 argument_list|,
-name|cpid
+name|tid
 argument_list|,
 operator|(
 name|caddr_t
@@ -364,13 +367,25 @@ operator|.
 name|r_rax
 expr_stmt|;
 name|fsc
-operator|.
+operator|=
+name|alloc_fsc
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|fsc
+operator|==
+name|NULL
+condition|)
+return|return;
+name|fsc
+operator|->
 name|number
 operator|=
 name|syscall_num
 expr_stmt|;
 name|fsc
-operator|.
+operator|->
 name|name
 operator|=
 operator|(
@@ -394,7 +409,7 @@ if|if
 condition|(
 operator|!
 name|fsc
-operator|.
+operator|->
 name|name
 condition|)
 block|{
@@ -413,7 +428,7 @@ block|}
 if|if
 condition|(
 name|fsc
-operator|.
+operator|->
 name|name
 operator|&&
 operator|(
@@ -428,7 +443,7 @@ operator|(
 name|strcmp
 argument_list|(
 name|fsc
-operator|.
+operator|->
 name|name
 argument_list|,
 literal|"linux_fork"
@@ -439,7 +454,7 @@ operator|||
 name|strcmp
 argument_list|(
 name|fsc
-operator|.
+operator|->
 name|name
 argument_list|,
 literal|"linux_vfork"
@@ -465,7 +480,7 @@ condition|)
 return|return;
 comment|/* 	 * Linux passes syscall arguments in registers, not 	 * on the stack.  Fortunately, we've got access to the 	 * register set.  Note that we don't bother checking the 	 * number of arguments.	And what does linux do for syscalls 	 * that have more than five arguments? 	 */
 name|fsc
-operator|.
+operator|->
 name|args
 index|[
 literal|0
@@ -476,7 +491,7 @@ operator|.
 name|r_rbx
 expr_stmt|;
 name|fsc
-operator|.
+operator|->
 name|args
 index|[
 literal|1
@@ -487,7 +502,7 @@ operator|.
 name|r_rcx
 expr_stmt|;
 name|fsc
-operator|.
+operator|->
 name|args
 index|[
 literal|2
@@ -498,7 +513,7 @@ operator|.
 name|r_rdx
 expr_stmt|;
 name|fsc
-operator|.
+operator|->
 name|args
 index|[
 literal|3
@@ -509,7 +524,7 @@ operator|.
 name|r_rsi
 expr_stmt|;
 name|fsc
-operator|.
+operator|->
 name|args
 index|[
 literal|4
@@ -524,7 +539,7 @@ operator|=
 name|get_syscall
 argument_list|(
 name|fsc
-operator|.
+operator|->
 name|name
 argument_list|)
 expr_stmt|;
@@ -533,7 +548,7 @@ condition|(
 name|sc
 condition|)
 name|fsc
-operator|.
+operator|->
 name|nargs
 operator|=
 name|sc
@@ -555,7 +570,7 @@ literal|"unknown syscall %s -- setting "
 literal|"args to %d\n"
 argument_list|,
 name|fsc
-operator|.
+operator|->
 name|name
 argument_list|,
 name|nargs
@@ -564,14 +579,14 @@ expr_stmt|;
 endif|#
 directive|endif
 name|fsc
-operator|.
+operator|->
 name|nargs
 operator|=
 name|nargs
 expr_stmt|;
 block|}
 name|fsc
-operator|.
+operator|->
 name|s_args
 operator|=
 name|calloc
@@ -582,7 +597,7 @@ operator|(
 literal|1
 operator|+
 name|fsc
-operator|.
+operator|->
 name|nargs
 operator|)
 operator|*
@@ -594,7 +609,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 name|fsc
-operator|.
+operator|->
 name|sc
 operator|=
 name|sc
@@ -603,7 +618,7 @@ comment|/* 	 * At this point, we set up the system call arguments. 	 * We ignore
 if|if
 condition|(
 name|fsc
-operator|.
+operator|->
 name|name
 condition|)
 block|{
@@ -617,7 +632,7 @@ argument_list|,
 literal|"syscall %s("
 argument_list|,
 name|fsc
-operator|.
+operator|->
 name|name
 argument_list|)
 expr_stmt|;
@@ -632,7 +647,7 @@ init|;
 name|i
 operator|<
 name|fsc
-operator|.
+operator|->
 name|nargs
 condition|;
 name|i
@@ -651,7 +666,7 @@ argument_list|,
 name|sc
 condition|?
 name|fsc
-operator|.
+operator|->
 name|args
 index|[
 name|sc
@@ -665,7 +680,7 @@ name|offset
 index|]
 else|:
 name|fsc
-operator|.
+operator|->
 name|args
 index|[
 name|i
@@ -675,7 +690,7 @@ name|i
 operator|<
 operator|(
 name|fsc
-operator|.
+operator|->
 name|nargs
 operator|-
 literal|1
@@ -708,7 +723,7 @@ operator|)
 condition|)
 block|{
 name|fsc
-operator|.
+operator|->
 name|s_args
 index|[
 name|i
@@ -725,7 +740,7 @@ name|i
 index|]
 argument_list|,
 name|fsc
-operator|.
+operator|->
 name|args
 argument_list|,
 literal|0
@@ -765,7 +780,7 @@ directive|endif
 if|if
 condition|(
 name|fsc
-operator|.
+operator|->
 name|name
 operator|!=
 name|NULL
@@ -774,7 +789,7 @@ operator|(
 name|strcmp
 argument_list|(
 name|fsc
-operator|.
+operator|->
 name|name
 argument_list|,
 literal|"linux_execve"
@@ -785,7 +800,7 @@ operator|||
 name|strcmp
 argument_list|(
 name|fsc
-operator|.
+operator|->
 name|name
 argument_list|,
 literal|"exit"
@@ -801,7 +816,7 @@ condition|(
 name|strcmp
 argument_list|(
 name|fsc
-operator|.
+operator|->
 name|name
 argument_list|,
 literal|"linux_execve"
@@ -826,7 +841,7 @@ block|{
 if|if
 condition|(
 name|fsc
-operator|.
+operator|->
 name|s_args
 index|[
 literal|1
@@ -836,7 +851,7 @@ block|{
 name|free
 argument_list|(
 name|fsc
-operator|.
+operator|->
 name|s_args
 index|[
 literal|1
@@ -844,7 +859,7 @@ index|]
 argument_list|)
 expr_stmt|;
 name|fsc
-operator|.
+operator|->
 name|s_args
 index|[
 literal|1
@@ -870,7 +885,7 @@ block|{
 if|if
 condition|(
 name|fsc
-operator|.
+operator|->
 name|s_args
 index|[
 literal|2
@@ -880,7 +895,7 @@ block|{
 name|free
 argument_list|(
 name|fsc
-operator|.
+operator|->
 name|s_args
 index|[
 literal|2
@@ -888,7 +903,7 @@ index|]
 argument_list|)
 expr_stmt|;
 name|fsc
-operator|.
+operator|->
 name|s_args
 index|[
 literal|2
@@ -900,7 +915,14 @@ block|}
 block|}
 block|}
 block|}
-return|return;
+name|trussinfo
+operator|->
+name|curthread
+operator|->
+name|fsc
+operator|=
+name|fsc
+expr_stmt|;
 block|}
 end_function
 
@@ -1181,9 +1203,17 @@ name|reg
 name|regs
 decl_stmt|;
 name|struct
+name|linux_syscall
+modifier|*
+name|fsc
+decl_stmt|;
+name|struct
 name|syscall
 modifier|*
 name|sc
+decl_stmt|;
+name|lwpid_t
+name|tid
 decl_stmt|;
 name|long
 name|retval
@@ -1195,9 +1225,11 @@ name|i
 decl_stmt|;
 if|if
 condition|(
+name|trussinfo
+operator|->
+name|curthread
+operator|->
 name|fsc
-operator|.
-name|name
 operator|==
 name|NULL
 condition|)
@@ -1207,7 +1239,7 @@ operator|-
 literal|1
 operator|)
 return|;
-name|cpid
+name|tid
 operator|=
 name|trussinfo
 operator|->
@@ -1221,7 +1253,7 @@ name|ptrace
 argument_list|(
 name|PT_GETREGS
 argument_list|,
-name|cpid
+name|tid
 argument_list|,
 operator|(
 name|caddr_t
@@ -1270,10 +1302,18 @@ name|PSL_C
 operator|)
 expr_stmt|;
 comment|/* 	 * This code, while simpler than the initial versions I used, could 	 * stand some significant cleaning. 	 */
+name|fsc
+operator|=
+name|trussinfo
+operator|->
+name|curthread
+operator|->
+name|fsc
+expr_stmt|;
 name|sc
 operator|=
 name|fsc
-operator|.
+operator|->
 name|sc
 expr_stmt|;
 if|if
@@ -1291,7 +1331,7 @@ init|;
 name|i
 operator|<
 name|fsc
-operator|.
+operator|->
 name|nargs
 condition|;
 name|i
@@ -1301,7 +1341,7 @@ name|asprintf
 argument_list|(
 operator|&
 name|fsc
-operator|.
+operator|->
 name|s_args
 index|[
 name|i
@@ -1310,7 +1350,7 @@ argument_list|,
 literal|"0x%lx"
 argument_list|,
 name|fsc
-operator|.
+operator|->
 name|args
 index|[
 name|i
@@ -1369,7 +1409,7 @@ argument_list|,
 literal|"0x%lx"
 argument_list|,
 name|fsc
-operator|.
+operator|->
 name|args
 index|[
 name|sc
@@ -1399,7 +1439,7 @@ name|i
 index|]
 argument_list|,
 name|fsc
-operator|.
+operator|->
 name|args
 argument_list|,
 name|retval
@@ -1409,7 +1449,7 @@ argument_list|)
 expr_stmt|;
 block|}
 name|fsc
-operator|.
+operator|->
 name|s_args
 index|[
 name|i
@@ -1466,7 +1506,7 @@ block|}
 if|if
 condition|(
 name|fsc
-operator|.
+operator|->
 name|name
 operator|!=
 name|NULL
@@ -1475,7 +1515,7 @@ operator|(
 name|strcmp
 argument_list|(
 name|fsc
-operator|.
+operator|->
 name|name
 argument_list|,
 literal|"linux_execve"
@@ -1486,7 +1526,7 @@ operator|||
 name|strcmp
 argument_list|(
 name|fsc
-operator|.
+operator|->
 name|name
 argument_list|,
 literal|"exit"
@@ -1508,15 +1548,15 @@ argument_list|(
 name|trussinfo
 argument_list|,
 name|fsc
-operator|.
+operator|->
 name|name
 argument_list|,
 name|fsc
-operator|.
+operator|->
 name|nargs
 argument_list|,
 name|fsc
-operator|.
+operator|->
 name|s_args
 argument_list|,
 name|errorp
@@ -1528,12 +1568,14 @@ else|:
 name|retval
 argument_list|,
 name|fsc
-operator|.
+operator|->
 name|sc
 argument_list|)
 expr_stmt|;
-name|clear_fsc
-argument_list|()
+name|free_fsc
+argument_list|(
+name|fsc
+argument_list|)
 expr_stmt|;
 return|return
 operator|(

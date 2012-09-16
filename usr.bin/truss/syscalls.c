@@ -8821,6 +8821,8 @@ argument_list|,
 operator|&
 name|trussinfo
 operator|->
+name|curthread
+operator|->
 name|after
 argument_list|)
 expr_stmt|;
@@ -8838,6 +8840,8 @@ name|timespecsubt
 argument_list|(
 operator|&
 name|trussinfo
+operator|->
+name|curthread
 operator|->
 name|after
 argument_list|,
@@ -8887,10 +8891,14 @@ argument_list|(
 operator|&
 name|trussinfo
 operator|->
+name|curthread
+operator|->
 name|after
 argument_list|,
 operator|&
 name|trussinfo
+operator|->
+name|curthread
 operator|->
 name|before
 argument_list|,
@@ -9109,6 +9117,8 @@ argument_list|,
 operator|&
 name|trussinfo
 operator|->
+name|curthread
+operator|->
 name|after
 argument_list|)
 expr_stmt|;
@@ -9117,10 +9127,14 @@ argument_list|(
 operator|&
 name|trussinfo
 operator|->
+name|curthread
+operator|->
 name|after
 argument_list|,
 operator|&
 name|trussinfo
+operator|->
+name|curthread
 operator|->
 name|before
 argument_list|,
