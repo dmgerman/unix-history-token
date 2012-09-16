@@ -497,6 +497,11 @@ name|g_raid_md_ddf_object
 argument_list|)
 block|,
 operator|.
+name|mdc_enable
+operator|=
+literal|1
+block|,
+operator|.
 name|mdc_priority
 operator|=
 literal|100
@@ -20192,7 +20197,9 @@ end_function
 begin_expr_stmt
 name|G_RAID_MD_DECLARE
 argument_list|(
-name|g_raid_md_ddf
+name|ddf
+argument_list|,
+literal|"DDF"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
