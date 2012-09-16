@@ -1870,6 +1870,17 @@ if|if
 condition|(
 name|flags
 operator|&
+name|PCIM_EXP_FLAGS_SLOT
+condition|)
+name|printf
+argument_list|(
+literal|" slot"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
 name|PCIM_EXP_FLAGS_IRQ
 condition|)
 name|printf
@@ -1882,7 +1893,7 @@ operator|&
 name|PCIM_EXP_FLAGS_IRQ
 operator|)
 operator|>>
-literal|8
+literal|9
 argument_list|)
 expr_stmt|;
 name|val
