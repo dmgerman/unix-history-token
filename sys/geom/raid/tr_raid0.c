@@ -266,6 +266,11 @@ name|g_raid_tr_raid0_object
 argument_list|)
 block|,
 operator|.
+name|trc_enable
+operator|=
+literal|1
+block|,
+operator|.
 name|trc_priority
 operator|=
 literal|100
@@ -1514,7 +1519,9 @@ end_function
 begin_expr_stmt
 name|G_RAID_TR_DECLARE
 argument_list|(
-name|g_raid_tr_raid0
+name|raid0
+argument_list|,
+literal|"RAID0"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

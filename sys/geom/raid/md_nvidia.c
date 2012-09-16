@@ -509,6 +509,11 @@ name|g_raid_md_nvidia_object
 argument_list|)
 block|,
 operator|.
+name|mdc_enable
+operator|=
+literal|1
+block|,
+operator|.
 name|mdc_priority
 operator|=
 literal|100
@@ -8457,7 +8462,9 @@ end_function
 begin_expr_stmt
 name|G_RAID_MD_DECLARE
 argument_list|(
-name|g_raid_md_nvidia
+name|nvidia
+argument_list|,
+literal|"NVIDIA"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
