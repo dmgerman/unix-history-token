@@ -85,7 +85,7 @@ comment|/**  * @enum SCIC_SDS_STP_REMOTE_DEVICE_READY_SUBSTATES  *  * This is th
 enum|enum
 name|SCIC_SDS_STP_REMOTE_DEVICE_READY_SUBSTATES
 block|{
-comment|/**     * This is the idle substate for the stp remote device.  When there are no     * active IO for the device it is is in this state.     */
+comment|/**     * This is the idle substate for the stp remote device.  When there are no     * active IO for the device it is in this state.     */
 name|SCIC_SDS_STP_REMOTE_DEVICE_READY_SUBSTATE_IDLE
 block|,
 comment|/**     * This is the command state for for the STP remote device.  This state is     * entered when the device is processing a non-NCQ command.  The device object     * will fail any new start IO requests until this command is complete.     */
