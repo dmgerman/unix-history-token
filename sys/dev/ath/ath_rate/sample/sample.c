@@ -1098,7 +1098,7 @@ goto|goto
 name|nextrate
 goto|;
 block|}
-comment|/* 		 * When doing aggregation, successive failures don't happen 		 * as often, as sometimes some of the sub-frames get through. 		 * 		 * If the sample rix average tx time is greater than the 		 * average tx time of the current rix, don't immediately use 		 * the rate for sampling. 		 */
+comment|/* 		 * For HT, only sample a few rates on either side of the 		 * current rix; there's quite likely a lot of them. 		 */
 if|if
 condition|(
 name|an
@@ -1112,54 +1112,20 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
-name|sn
-operator|->
-name|stats
-index|[
-name|size_bin
-index|]
-index|[
 name|rix
-index|]
-operator|.
-name|average_tx_time
-operator|*
-literal|10
-operator|>
-name|sn
-operator|->
-name|stats
-index|[
-name|size_bin
-index|]
-index|[
-name|current_rix
-index|]
-operator|.
-name|average_tx_time
-operator|*
-literal|9
-operator|)
-operator|&&
-operator|(
-name|ticks
-operator|-
-name|sn
-operator|->
-name|stats
-index|[
-name|size_bin
-index|]
-index|[
-name|rix
-index|]
-operator|.
-name|last_tx
 operator|<
-name|ssc
-operator|->
-name|stale_failure_timeout
+operator|(
+name|current_rix
+operator|-
+literal|3
+operator|)
+operator|||
+name|rix
+operator|>
+operator|(
+name|current_rix
+operator|+
+literal|3
 operator|)
 condition|)
 block|{
@@ -1180,7 +1146,6 @@ name|nextrate
 goto|;
 block|}
 block|}
-comment|/* 		 * XXX TODO 		 * For HT, limit sample somehow? 		 */
 comment|/* Don't sample more than 2 rates higher for rates> 11M for non-HT rates */
 if|if
 condition|(
@@ -7612,7 +7577,7 @@ name|ssc
 operator|->
 name|smoothing_rate
 operator|=
-literal|95
+literal|75
 expr_stmt|;
 comment|/* ewma percentage ([0..99]) */
 name|ssc
