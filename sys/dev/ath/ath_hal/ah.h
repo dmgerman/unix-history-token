@@ -32,7 +32,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AH_MIMO_MAX_CHAINS
+name|AH_MAX_CHAINS
 value|3
 end_define
 

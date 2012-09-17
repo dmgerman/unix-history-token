@@ -5004,7 +5004,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Fetch the current setup of ctl/ext noise floor values.  *  * If the CHANNEL_MIMO_NF_VALID flag isn't set, the array is simply  * populated with values from NOISE_FLOOR[] + ath_hal_getNfAdjust().  *  * The caller must supply ctl/ext NF arrays which are at least  * AH_MIMO_MAX_CHAINS entries long.  */
+comment|/*  * Fetch the current setup of ctl/ext noise floor values.  *  * If the CHANNEL_MIMO_NF_VALID flag isn't set, the array is simply  * populated with values from NOISE_FLOOR[] + ath_hal_getNfAdjust().  *  * The caller must supply ctl/ext NF arrays which are at least  * AH_MAX_CHAINS entries long.  */
 end_comment
 
 begin_function
@@ -5084,7 +5084,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|AH_MIMO_MAX_CHAINS
+name|AH_MAX_CHAINS
 condition|;
 name|i
 operator|++
@@ -5128,7 +5128,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|AH_MIMO_MAX_CHAINS
+name|AH_MAX_CHAINS
 condition|;
 name|i
 operator|++
@@ -5186,7 +5186,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|AH_MIMO_MAX_CHAINS
+name|AH_MAX_CHAINS
 condition|;
 name|i
 operator|++
@@ -5230,7 +5230,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|AH_MIMO_MAX_CHAINS
+name|AH_MAX_CHAINS
 condition|;
 name|i
 operator|++
