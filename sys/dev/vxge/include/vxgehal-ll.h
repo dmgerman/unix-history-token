@@ -4763,7 +4763,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * struct vxge_hal_device_hw_info_t - Device information  * @host_type: Host Type  * @function_mode: PCI Function Mode  * @func_id: Function Id  * @vpath_mask: vpath bit mask  * @fw_version: Firmware version  * @fw_date: Firmware Date  * @flash_version: Firmware version  * @flash_date: Firmware Date  * @serial_number: Card Serial Number  * @part_number: Card Part Number  * @product_description: Card Product Description  * @unused: For Solaris alignment purpose  * @ports: Number of ports present  * @pmd_port0: Port 0 PMD Info  * @pmd_port1: Port 1 PMD Info  * @mac_addrs: Mac addresses for each vpath  * @mac_addr_masks: Mac address masks for each vpath  *  * Returns the vpath mask that has the bits set for each vpath allocated  * for the driver and teh first mac addresse for each vpath  */
+comment|/*  * struct vxge_hal_device_hw_info_t - Device information  * @host_type: Host Type  * @function_mode: PCI Function Mode  * @func_id: Function Id  * @vpath_mask: vpath bit mask  * @fw_version: Firmware version  * @fw_date: Firmware Date  * @flash_version: Firmware version  * @flash_date: Firmware Date  * @serial_number: Card Serial Number  * @part_number: Card Part Number  * @product_description: Card Product Description  * @unused: For Solaris alignment purpose  * @ports: Number of ports present  * @pmd_port0: Port 0 PMD Info  * @pmd_port1: Port 1 PMD Info  * @mac_addrs: Mac addresses for each vpath  * @mac_addr_masks: Mac address masks for each vpath  *  * Returns the vpath mask that has the bits set for each vpath allocated  * for the driver and the first mac addresse for each vpath  */
 end_comment
 
 begin_typedef

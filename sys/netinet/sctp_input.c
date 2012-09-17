@@ -15280,7 +15280,7 @@ modifier|*
 name|net
 parameter_list|)
 block|{
-comment|/* 	 * Here we get a CWR from the peer. We must look in the outqueue and 	 * make sure that we have a covered ECNE in teh control chunk part. 	 * If so remove it. 	 */
+comment|/* 	 * Here we get a CWR from the peer. We must look in the outqueue and 	 * make sure that we have a covered ECNE in the control chunk part. 	 * If so remove it. 	 */
 name|struct
 name|sctp_tmit_chunk
 modifier|*
