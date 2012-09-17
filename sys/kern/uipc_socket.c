@@ -6649,7 +6649,7 @@ name|so_rcv
 operator|.
 name|sb_mb
 expr_stmt|;
-comment|/* 	 * If we have less data than requested, block awaiting more (subject 	 * to any timeout) if: 	 *   1. the current count is less than the low water mark, or 	 *   2. MSG_WAITALL is set, and it is possible to do the entire 	 *	receive operation at once if we block (resid<= hiwat). 	 *   3. MSG_DONTWAIT is not set 	 * If MSG_WAITALL is set but resid is larger than the receive buffer, 	 * we have to do the receive in sections, and thus risk returning a 	 * short count if a timeout or signal occurs after we start. 	 */
+comment|/* 	 * If we have less data than requested, block awaiting more (subject 	 * to any timeout) if: 	 *   1. the current count is less than the low water mark, or 	 *   2. MSG_DONTWAIT is not set 	 */
 if|if
 condition|(
 name|m
@@ -6677,7 +6677,6 @@ operator|->
 name|uio_resid
 operator|)
 operator|&&
-operator|(
 name|so
 operator|->
 name|so_rcv
@@ -6689,25 +6688,6 @@ operator|->
 name|so_rcv
 operator|.
 name|sb_lowat
-operator|||
-operator|(
-operator|(
-name|flags
-operator|&
-name|MSG_WAITALL
-operator|)
-operator|&&
-name|uio
-operator|->
-name|uio_resid
-operator|<=
-name|so
-operator|->
-name|so_rcv
-operator|.
-name|sb_hiwat
-operator|)
-operator|)
 operator|&&
 name|m
 operator|->
@@ -7734,13 +7714,21 @@ operator|->
 name|m_type
 operator|==
 name|MT_OOBDATA
+operator|||
+name|m
+operator|->
+name|m_type
+operator|==
+name|MT_CONTROL
 condition|)
 block|{
 if|if
 condition|(
 name|type
 operator|!=
-name|MT_OOBDATA
+name|m
+operator|->
+name|m_type
 condition|)
 break|break;
 block|}
