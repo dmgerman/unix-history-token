@@ -40,6 +40,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|UAUDIO_VERSION_30
+value|0x0300
+end_define
+
+begin_define
+define|#
+directive|define
 name|UAUDIO_PROTOCOL_20
 value|0x20
 end_define
@@ -143,7 +150,7 @@ value|8
 end_define
 
 begin_comment
-comment|/* ==== USB audio 2.0 ==== */
+comment|/* ==== USB audio v2.0 ==== */
 end_comment
 
 begin_define
@@ -1472,7 +1479,7 @@ value|0x0a
 end_define
 
 begin_comment
-comment|/* ==== USB audio 2.0 ==== */
+comment|/* ==== USB audio v2.0 ==== */
 end_comment
 
 begin_define
@@ -1556,7 +1563,7 @@ value|3
 end_define
 
 begin_comment
-comment|/* ==== USB audio 2.0 ==== */
+comment|/* ==== USB audio v2.0 ==== */
 end_comment
 
 begin_define
@@ -1876,7 +1883,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|usb_audio20_as_iface_descriptor
+name|usb_audio20_streaming_interface_descriptor
 block|{
 name|uByte
 name|bLength
@@ -2043,42 +2050,21 @@ end_struct
 begin_define
 define|#
 directive|define
-name|UA20_GET_CUR
-value|0x81
-end_define
-
-begin_define
-define|#
-directive|define
-name|UA20_SET_CUR
+name|UA20_CS_CUR
 value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
-name|UA20_GET_RANGE
-value|0x82
-end_define
-
-begin_define
-define|#
-directive|define
-name|UA20_SET_RANGE
+name|UA20_CS_RANGE
 value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
-name|UA20_GET_MEM
-value|0x83
-end_define
-
-begin_define
-define|#
-directive|define
-name|UA20_SET_MEM
+name|UA20_CS_MEM
 value|0x03
 end_define
 
@@ -2451,7 +2437,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|usb_audio20_clock_selector_unit
+name|usb_audio20_clock_selector_unit_0
 block|{
 name|uByte
 name|bLength
@@ -2467,6 +2453,27 @@ name|bClockId
 decl_stmt|;
 name|uByte
 name|bNrInPins
+decl_stmt|;
+name|uByte
+name|baCSourceId
+index|[
+literal|0
+index|]
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|usb_audio20_clock_selector_unit_1
+block|{
+name|uByte
+name|bmControls
+decl_stmt|;
+name|uByte
+name|iClockSelector
 decl_stmt|;
 block|}
 name|__packed
@@ -3043,13 +3050,6 @@ define|#
 directive|define
 name|UA20_TF_OTHER
 value|0xFF
-end_define
-
-begin_define
-define|#
-directive|define
-name|UA20_EP_GENERAL
-value|0x01
 end_define
 
 begin_define
