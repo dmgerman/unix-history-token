@@ -281,14 +281,6 @@ decl_stmt|;
 name|int
 name|mlx_mem_type
 decl_stmt|;
-name|bus_space_handle_t
-name|mlx_bhandle
-decl_stmt|;
-comment|/* bus space handle */
-name|bus_space_tag_t
-name|mlx_btag
-decl_stmt|;
-comment|/* bus space tag */
 name|bus_dma_tag_t
 name|mlx_parent_dmat
 decl_stmt|;
@@ -424,8 +416,21 @@ directive|define
 name|MLX_STATE_SUSPEND
 value|(1<<3)
 comment|/* controller is suspended */
+define|#
+directive|define
+name|MLX_STATE_QFROZEN
+value|(1<<4)
+comment|/* bio queue frozen */
 name|struct
-name|callout_handle
+name|mtx
+name|mlx_io_lock
+decl_stmt|;
+name|struct
+name|sx
+name|mlx_config_lock
+decl_stmt|;
+name|struct
+name|callout
 name|mlx_timeout
 decl_stmt|;
 comment|/* periodic status monitor */
@@ -470,10 +475,6 @@ name|mlx_pause
 name|mlx_pause
 decl_stmt|;
 comment|/* pending pause operation details */
-name|int
-name|mlx_locks
-decl_stmt|;
-comment|/* reentrancy avoidance */
 name|int
 name|mlx_flags
 decl_stmt|;
@@ -582,6 +583,9 @@ parameter_list|,
 name|int
 modifier|*
 name|param2
+parameter_list|,
+name|int
+name|first
 parameter_list|)
 function_decl|;
 define|#
@@ -596,101 +600,65 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/*  * Simple (stupid) locks.  *  * Note that these are designed to avoid reentrancy, not concurrency, and will  * need to be replaced with something better.  */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|MLX_LOCK_COMPLETING
-value|(1<<0)
+name|MLX_IO_LOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_lock(&(sc)->mlx_io_lock)
 end_define
 
 begin_define
 define|#
 directive|define
-name|MLX_LOCK_STARTING
-value|(1<<1)
+name|MLX_IO_UNLOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_unlock(&(sc)->mlx_io_lock)
 end_define
 
-begin_function
-specifier|static
-name|__inline
-name|int
-name|mlx_lock_tas
+begin_define
+define|#
+directive|define
+name|MLX_IO_ASSERT_LOCKED
 parameter_list|(
-name|struct
-name|mlx_softc
-modifier|*
 name|sc
-parameter_list|,
-name|int
-name|lock
 parameter_list|)
-block|{
-if|if
-condition|(
-operator|(
-name|sc
-operator|)
-operator|->
-name|mlx_locks
-operator|&
-operator|(
-name|lock
-operator|)
-condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-name|atomic_set_int
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|mlx_locks
-argument_list|,
-name|lock
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
+value|mtx_assert(&(sc)->mlx_io_lock, MA_OWNED)
+end_define
 
-begin_function
-specifier|static
-name|__inline
-name|void
-name|mlx_lock_clr
+begin_define
+define|#
+directive|define
+name|MLX_CONFIG_LOCK
 parameter_list|(
-name|struct
-name|mlx_softc
-modifier|*
 name|sc
-parameter_list|,
-name|int
-name|lock
 parameter_list|)
-block|{
-name|atomic_clear_int
-argument_list|(
-operator|&
+value|sx_xlock(&(sc)->mlx_config_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MLX_CONFIG_UNLOCK
+parameter_list|(
 name|sc
-operator|->
-name|mlx_locks
-argument_list|,
-name|lock
-argument_list|)
-expr_stmt|;
-block|}
-end_function
+parameter_list|)
+value|sx_xunlock(&(sc)->mlx_config_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MLX_CONFIG_ASSERT_LOCKED
+parameter_list|(
+name|sc
+parameter_list|)
+value|sx_assert(&(sc)->mlx_config_lock, SA_XLOCKED)
+end_define
 
 begin_comment
 comment|/*  * Interface between bus connections and driver core.  */
