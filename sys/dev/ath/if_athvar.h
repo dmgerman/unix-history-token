@@ -324,6 +324,30 @@ name|int
 name|hwq_depth
 decl_stmt|;
 comment|/* how many buffers are on HW */
+struct|struct
+block|{
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|ath_buf
+argument_list|)
+name|axq_q
+expr_stmt|;
+comment|/* filtered queue */
+name|u_int
+name|axq_depth
+decl_stmt|;
+comment|/* SW queue depth */
+name|char
+name|axq_name
+index|[
+literal|48
+index|]
+decl_stmt|;
+comment|/* lock name */
+block|}
+name|filtq
+struct|;
 comment|/* 	 * Entry on the ath_txq; when there's traffic 	 * to send 	 */
 name|TAILQ_ENTRY
 argument_list|(
@@ -338,6 +362,7 @@ name|int
 name|paused
 decl_stmt|;
 comment|/*>0 if the TID has been paused */
+comment|/* 	 * These are flags - perhaps later collapse 	 * down to a single uint32_t ? 	 */
 name|int
 name|addba_tx_pending
 decl_stmt|;
@@ -350,6 +375,14 @@ name|int
 name|bar_tx
 decl_stmt|;
 comment|/* BAR TXed */
+name|int
+name|isfiltered
+decl_stmt|;
+comment|/* is this node currently filtered */
+name|int
+name|clrdmask
+decl_stmt|;
+comment|/* has clrdmask been set */
 comment|/* 	 * Is the TID being cleaned up after a transition 	 * from aggregation to non-aggregation? 	 * When this is set to 1, this TID will be paused 	 * and no further traffic will be queued until all 	 * the hardware packets pending for this TID have been 	 * TXed/completed; at which point (non-aggregation) 	 * traffic will resume being TXed. 	 */
 name|int
 name|cleanup_inprogress
@@ -1117,6 +1150,19 @@ name|_tid
 parameter_list|)
 define|\
 value|ATH_TXQ_LOCK_ASSERT((_sc)->sc_ac2q[(_tid)->ac])
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TID_UNLOCK_ASSERT
+parameter_list|(
+name|_sc
+parameter_list|,
+name|_tid
+parameter_list|)
+define|\
+value|ATH_TXQ_UNLOCK_ASSERT((_sc)->sc_ac2q[(_tid)->ac])
 end_define
 
 begin_define
