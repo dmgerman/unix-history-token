@@ -2934,7 +2934,7 @@ comment|/* 	 * We do this explicitly after the caches have been drained above. 	
 name|uma_reclaim
 argument_list|()
 expr_stmt|;
-comment|/* 	 * The addl_page_shortage is the the number of temporarily 	 * stuck pages in the inactive queue.  In other words, the 	 * number of pages from cnt.v_inactive_count that should be 	 * discounted in setting the target for the active queue scan. 	 */
+comment|/* 	 * The addl_page_shortage is the number of temporarily 	 * stuck pages in the inactive queue.  In other words, the 	 * number of pages from cnt.v_inactive_count that should be 	 * discounted in setting the target for the active queue scan. 	 */
 name|addl_page_shortage
 operator|=
 name|atomic_readandclear_int

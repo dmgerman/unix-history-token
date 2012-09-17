@@ -11348,7 +11348,7 @@ name|cso
 operator|->
 name|tag_id
 expr_stmt|;
-comment|/* 			 * Mode 1, status, no data. Only possible when we are sending status, have 			 * no data to transfer, and the sense length can fit in the ct7_entry. 			 * 			 * Mode 2, status, no data. We have to use this in the case the the response 			 * length won't fit into a ct2_entry_t. 			 * 			 * We'll fill out this structure with information as if this were a 			 * Mode 1. The hardware layer will create the Mode 2 FCP RSP IU as 			 * needed based upon this. 			 */
+comment|/* 			 * Mode 1, status, no data. Only possible when we are sending status, have 			 * no data to transfer, and the sense length can fit in the ct7_entry. 			 * 			 * Mode 2, status, no data. We have to use this in the case the response 			 * length won't fit into a ct2_entry_t. 			 * 			 * We'll fill out this structure with information as if this were a 			 * Mode 1. The hardware layer will create the Mode 2 FCP RSP IU as 			 * needed based upon this. 			 */
 if|if
 condition|(
 name|sendstatus
