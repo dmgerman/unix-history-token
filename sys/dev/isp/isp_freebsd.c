@@ -10221,7 +10221,7 @@ name|tattr
 operator|<<
 name|CT7_TASK_ATTR_SHIFT
 expr_stmt|;
-comment|/* 			 * Mode 1, status, no data. Only possible when we are sending status, have 			 * no data to transfer, and any sense length can fit in the ct7_entry. 			 * 			 * Mode 2, status, no data. We have to use this in the case sense data 			 * won't fit into a ct7_entry_t. 			 * 			 */
+comment|/* 			 * Mode 1, status, no data. Only possible when we are sending status, have 			 * no data to transfer, and any sense data can fit in the ct7_entry. 			 * 			 * Mode 2, status, no data. We have to use this in the case that 			 * the sense data won't fit into a ct7_entry_t. 			 * 			 */
 if|if
 condition|(
 name|sendstatus
