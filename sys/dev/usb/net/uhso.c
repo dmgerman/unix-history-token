@@ -2586,11 +2586,6 @@ name|self
 argument_list|)
 decl_stmt|;
 name|struct
-name|usb_config_descriptor
-modifier|*
-name|cd
-decl_stmt|;
-name|struct
 name|usb_interface_descriptor
 modifier|*
 name|id
@@ -2696,15 +2691,6 @@ operator|->
 name|sc_radio
 operator|=
 literal|1
-expr_stmt|;
-name|cd
-operator|=
-name|usbd_get_config_descriptor
-argument_list|(
-name|uaa
-operator|->
-name|device
-argument_list|)
 expr_stmt|;
 name|id
 operator|=
