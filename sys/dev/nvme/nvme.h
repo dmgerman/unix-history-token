@@ -1314,6 +1314,10 @@ index|]
 decl_stmt|;
 block|}
 name|__packed
+name|__aligned
+argument_list|(
+literal|4
+argument_list|)
 struct|;
 end_struct
 
@@ -1515,6 +1519,11 @@ literal|3712
 index|]
 decl_stmt|;
 block|}
+name|__packed
+name|__aligned
+argument_list|(
+literal|4
+argument_list|)
 struct|;
 end_struct
 
@@ -1689,6 +1698,10 @@ index|]
 decl_stmt|;
 block|}
 name|__packed
+name|__aligned
+argument_list|(
+literal|4
+argument_list|)
 struct|;
 end_struct
 
