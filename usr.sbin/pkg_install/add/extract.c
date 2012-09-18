@@ -1095,6 +1095,8 @@ argument_list|(
 name|p
 operator|->
 name|name
+argument_list|,
+name|TRUE
 argument_list|)
 operator|==
 name|FAIL
