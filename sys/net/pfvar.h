@@ -3916,6 +3916,7 @@ comment|/* anchor rules */
 name|int
 name|match
 decl_stmt|;
+comment|/* XXX: used for pfctl black magic */
 block|}
 struct|;
 end_struct
@@ -4028,6 +4029,12 @@ directive|define
 name|PFR_TFLAG_ALLMASK
 value|(PFR_TFLAG_PERSIST	| \ 				 PFR_TFLAG_CONST	| \ 				 PFR_TFLAG_ACTIVE	| \ 				 PFR_TFLAG_INACTIVE	| \ 				 PFR_TFLAG_REFERENCED	| \ 				 PFR_TFLAG_REFDANCHOR	| \ 				 PFR_TFLAG_COUNTERS)
 end_define
+
+begin_struct_decl
+struct_decl|struct
+name|pf_anchor_stackframe
+struct_decl|;
+end_struct_decl
 
 begin_struct
 struct|struct
@@ -9279,6 +9286,10 @@ begin_function_decl
 name|void
 name|pf_step_into_anchor
 parameter_list|(
+name|struct
+name|pf_anchor_stackframe
+modifier|*
+parameter_list|,
 name|int
 modifier|*
 parameter_list|,
@@ -9309,6 +9320,10 @@ begin_function_decl
 name|int
 name|pf_step_out_of_anchor
 parameter_list|(
+name|struct
+name|pf_anchor_stackframe
+modifier|*
+parameter_list|,
 name|int
 modifier|*
 parameter_list|,
@@ -9410,9 +9425,13 @@ name|struct
 name|pf_addr
 modifier|*
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 parameter_list|,
-name|u_int16_t
+name|uint16_t
+parameter_list|,
+name|struct
+name|pf_anchor_stackframe
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
