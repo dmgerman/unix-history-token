@@ -9942,6 +9942,17 @@ name|EINVAL
 expr_stmt|;
 else|else
 block|{
+name|bzero
+argument_list|(
+operator|&
+name|key
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|key
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|key
 operator|.
 name|af
