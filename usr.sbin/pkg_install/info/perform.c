@@ -1112,6 +1112,8 @@ operator|)
 operator|&&
 name|installed
 condition|)
+name|code
+operator|+=
 name|show_cksum
 argument_list|(
 literal|"Mismatched Checksums:\n"
@@ -1180,7 +1182,13 @@ name|fname
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|code
+condition|?
+literal|1
+else|:
+literal|0
+operator|)
 return|;
 block|}
 end_function
