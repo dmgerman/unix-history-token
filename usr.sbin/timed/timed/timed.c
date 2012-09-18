@@ -2001,6 +2001,7 @@ name|status
 operator|==
 name|MASTER
 condition|)
+block|{
 name|rmnetmachs
 argument_list|(
 name|ntp
@@ -2012,6 +2013,7 @@ name|status
 operator|=
 name|NOMASTER
 expr_stmt|;
+block|}
 block|}
 name|checkignorednets
 argument_list|()
