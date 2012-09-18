@@ -446,11 +446,6 @@ condition|(
 name|path
 operator|!=
 name|NULL
-operator|&&
-operator|*
-name|s
-operator|!=
-literal|'\0'
 condition|)
 operator|*
 name|path
