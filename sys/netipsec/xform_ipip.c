@@ -2398,6 +2398,7 @@ name|ip6_nxt
 operator|=
 name|IPPROTO_IPV6
 expr_stmt|;
+break|break;
 block|}
 default|default:
 goto|goto
