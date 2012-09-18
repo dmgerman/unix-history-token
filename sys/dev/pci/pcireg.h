@@ -3914,259 +3914,259 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCIR_EXPRESS_FLAGS
+name|PCIER_FLAGS
 value|0x2
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_FLAGS_VERSION
+name|PCIEM_FLAGS_VERSION
 value|0x000F
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_FLAGS_TYPE
+name|PCIEM_FLAGS_TYPE
 value|0x00F0
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_TYPE_ENDPOINT
+name|PCIEM_TYPE_ENDPOINT
 value|0x0000
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_TYPE_LEGACY_ENDPOINT
+name|PCIEM_TYPE_LEGACY_ENDPOINT
 value|0x0010
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_TYPE_ROOT_PORT
+name|PCIEM_TYPE_ROOT_PORT
 value|0x0040
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_TYPE_UPSTREAM_PORT
+name|PCIEM_TYPE_UPSTREAM_PORT
 value|0x0050
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_TYPE_DOWNSTREAM_PORT
+name|PCIEM_TYPE_DOWNSTREAM_PORT
 value|0x0060
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_TYPE_PCI_BRIDGE
+name|PCIEM_TYPE_PCI_BRIDGE
 value|0x0070
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_TYPE_PCIE_BRIDGE
+name|PCIEM_TYPE_PCIE_BRIDGE
 value|0x0080
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_TYPE_ROOT_INT_EP
+name|PCIEM_TYPE_ROOT_INT_EP
 value|0x0090
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_TYPE_ROOT_EC
+name|PCIEM_TYPE_ROOT_EC
 value|0x00a0
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_FLAGS_SLOT
+name|PCIEM_FLAGS_SLOT
 value|0x0100
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_FLAGS_IRQ
+name|PCIEM_FLAGS_IRQ
 value|0x3e00
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIR_EXPRESS_DEVICE_CAP
+name|PCIER_DEVICE_CAP
 value|0x4
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_CAP_MAX_PAYLOAD
+name|PCIEM_CAP_MAX_PAYLOAD
 value|0x00000007
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_CAP_PHANTHOM_FUNCS
+name|PCIEM_CAP_PHANTHOM_FUNCS
 value|0x00000018
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_CAP_EXT_TAG_FIELD
+name|PCIEM_CAP_EXT_TAG_FIELD
 value|0x00000020
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_CAP_L0S_LATENCY
+name|PCIEM_CAP_L0S_LATENCY
 value|0x000001c0
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_CAP_L1_LATENCY
+name|PCIEM_CAP_L1_LATENCY
 value|0x00000e00
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_CAP_ROLE_ERR_RPT
+name|PCIEM_CAP_ROLE_ERR_RPT
 value|0x00008000
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_CAP_SLOT_PWR_LIM_VAL
+name|PCIEM_CAP_SLOT_PWR_LIM_VAL
 value|0x03fc0000
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_CAP_SLOT_PWR_LIM_SCALE
+name|PCIEM_CAP_SLOT_PWR_LIM_SCALE
 value|0x0c000000
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_CAP_FLR
+name|PCIEM_CAP_FLR
 value|0x10000000
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIR_EXPRESS_DEVICE_CTL
+name|PCIER_DEVICE_CTL
 value|0x8
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_CTL_COR_ENABLE
+name|PCIEM_CTL_COR_ENABLE
 value|0x0001
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_CTL_NFER_ENABLE
+name|PCIEM_CTL_NFER_ENABLE
 value|0x0002
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_CTL_FER_ENABLE
+name|PCIEM_CTL_FER_ENABLE
 value|0x0004
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_CTL_URR_ENABLE
+name|PCIEM_CTL_URR_ENABLE
 value|0x0008
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_CTL_RELAXED_ORD_ENABLE
+name|PCIEM_CTL_RELAXED_ORD_ENABLE
 value|0x0010
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_CTL_MAX_PAYLOAD
+name|PCIEM_CTL_MAX_PAYLOAD
 value|0x00e0
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_CTL_EXT_TAG_FIELD
+name|PCIEM_CTL_EXT_TAG_FIELD
 value|0x0100
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_CTL_PHANTHOM_FUNCS
+name|PCIEM_CTL_PHANTHOM_FUNCS
 value|0x0200
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_CTL_AUX_POWER_PM
+name|PCIEM_CTL_AUX_POWER_PM
 value|0x0400
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_CTL_NOSNOOP_ENABLE
+name|PCIEM_CTL_NOSNOOP_ENABLE
 value|0x0800
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_CTL_MAX_READ_REQUEST
+name|PCIEM_CTL_MAX_READ_REQUEST
 value|0x7000
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_CTL_BRDG_CFG_RETRY
+name|PCIEM_CTL_BRDG_CFG_RETRY
 value|0x8000
 end_define
 
@@ -4177,7 +4177,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_CTL_INITIATE_FLR
+name|PCIEM_CTL_INITIATE_FLR
 value|0x8000
 end_define
 
@@ -4188,721 +4188,721 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCIR_EXPRESS_DEVICE_STA
+name|PCIER_DEVICE_STA
 value|0xa
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_STA_CORRECTABLE_ERROR
+name|PCIEM_STA_CORRECTABLE_ERROR
 value|0x0001
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_STA_NON_FATAL_ERROR
+name|PCIEM_STA_NON_FATAL_ERROR
 value|0x0002
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_STA_FATAL_ERROR
+name|PCIEM_STA_FATAL_ERROR
 value|0x0004
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_STA_UNSUPPORTED_REQ
+name|PCIEM_STA_UNSUPPORTED_REQ
 value|0x0008
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_STA_AUX_POWER
+name|PCIEM_STA_AUX_POWER
 value|0x0010
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_STA_TRANSACTION_PND
+name|PCIEM_STA_TRANSACTION_PND
 value|0x0020
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIR_EXPRESS_LINK_CAP
+name|PCIER_LINK_CAP
 value|0xc
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_LINK_CAP_MAX_SPEED
+name|PCIEM_LINK_CAP_MAX_SPEED
 value|0x0000000f
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_LINK_CAP_MAX_WIDTH
+name|PCIEM_LINK_CAP_MAX_WIDTH
 value|0x000003f0
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_LINK_CAP_ASPM
+name|PCIEM_LINK_CAP_ASPM
 value|0x00000c00
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_LINK_CAP_L0S_EXIT
+name|PCIEM_LINK_CAP_L0S_EXIT
 value|0x00007000
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_LINK_CAP_L1_EXIT
+name|PCIEM_LINK_CAP_L1_EXIT
 value|0x00038000
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_LINK_CAP_CLOCK_PM
+name|PCIEM_LINK_CAP_CLOCK_PM
 value|0x00040000
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_LINK_CAP_SURPRISE_DOWN
+name|PCIEM_LINK_CAP_SURPRISE_DOWN
 value|0x00080000
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_LINK_CAP_DL_ACTIVE
+name|PCIEM_LINK_CAP_DL_ACTIVE
 value|0x00100000
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_LINK_CAP_LINK_BW_NOTIFY
+name|PCIEM_LINK_CAP_LINK_BW_NOTIFY
 value|0x00200000
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_LINK_CAP_ASPM_COMPLIANCE
+name|PCIEM_LINK_CAP_ASPM_COMPLIANCE
 value|0x00400000
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_LINK_CAP_PORT
+name|PCIEM_LINK_CAP_PORT
 value|0xff000000
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIR_EXPRESS_LINK_CTL
+name|PCIER_LINK_CTL
 value|0x10
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_LINK_CTL_ASPMC_DIS
+name|PCIEM_LINK_CTL_ASPMC_DIS
 value|0x0000
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_LINK_CTL_ASPMC_L0S
+name|PCIEM_LINK_CTL_ASPMC_L0S
 value|0x0001
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_LINK_CTL_ASPMC_L1
+name|PCIEM_LINK_CTL_ASPMC_L1
 value|0x0002
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_LINK_CTL_ASPMC
+name|PCIEM_LINK_CTL_ASPMC
 value|0x0003
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_LINK_CTL_RCB
+name|PCIEM_LINK_CTL_RCB
 value|0x0008
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_LINK_CTL_LINK_DIS
+name|PCIEM_LINK_CTL_LINK_DIS
 value|0x0010
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_LINK_CTL_RETRAIN_LINK
+name|PCIEM_LINK_CTL_RETRAIN_LINK
 value|0x0020
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_LINK_CTL_COMMON_CLOCK
+name|PCIEM_LINK_CTL_COMMON_CLOCK
 value|0x0040
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_LINK_CTL_EXTENDED_SYNC
+name|PCIEM_LINK_CTL_EXTENDED_SYNC
 value|0x0080
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_LINK_CTL_ECPM
+name|PCIEM_LINK_CTL_ECPM
 value|0x0100
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_LINK_CTL_HAWD
+name|PCIEM_LINK_CTL_HAWD
 value|0x0200
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_LINK_CTL_LBMIE
+name|PCIEM_LINK_CTL_LBMIE
 value|0x0400
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_LINK_CTL_LABIE
+name|PCIEM_LINK_CTL_LABIE
 value|0x0800
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIR_EXPRESS_LINK_STA
+name|PCIER_LINK_STA
 value|0x12
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_LINK_STA_SPEED
+name|PCIEM_LINK_STA_SPEED
 value|0x000f
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_LINK_STA_WIDTH
+name|PCIEM_LINK_STA_WIDTH
 value|0x03f0
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_LINK_STA_TRAINING_ERROR
+name|PCIEM_LINK_STA_TRAINING_ERROR
 value|0x0400
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_LINK_STA_TRAINING
+name|PCIEM_LINK_STA_TRAINING
 value|0x0800
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_LINK_STA_SLOT_CLOCK
+name|PCIEM_LINK_STA_SLOT_CLOCK
 value|0x1000
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_LINK_STA_DL_ACTIVE
+name|PCIEM_LINK_STA_DL_ACTIVE
 value|0x2000
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_LINK_STA_LINK_BW_MGMT
+name|PCIEM_LINK_STA_LINK_BW_MGMT
 value|0x4000
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_LINK_STA_LINK_AUTO_BW
+name|PCIEM_LINK_STA_LINK_AUTO_BW
 value|0x8000
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIR_EXPRESS_SLOT_CAP
+name|PCIER_SLOT_CAP
 value|0x14
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_SLOT_CAP_APB
+name|PCIEM_SLOT_CAP_APB
 value|0x00000001
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_SLOT_CAP_PCP
+name|PCIEM_SLOT_CAP_PCP
 value|0x00000002
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_SLOT_CAP_MRLSP
+name|PCIEM_SLOT_CAP_MRLSP
 value|0x00000004
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_SLOT_CAP_AIP
+name|PCIEM_SLOT_CAP_AIP
 value|0x00000008
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_SLOT_CAP_PIP
+name|PCIEM_SLOT_CAP_PIP
 value|0x00000010
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_SLOT_CAP_HPS
+name|PCIEM_SLOT_CAP_HPS
 value|0x00000020
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_SLOT_CAP_HPC
+name|PCIEM_SLOT_CAP_HPC
 value|0x00000040
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_SLOT_CAP_SPLV
+name|PCIEM_SLOT_CAP_SPLV
 value|0x00007f80
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_SLOT_CAP_SPLS
+name|PCIEM_SLOT_CAP_SPLS
 value|0x00018000
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_SLOT_CAP_EIP
+name|PCIEM_SLOT_CAP_EIP
 value|0x00020000
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_SLOT_CAP_NCCS
+name|PCIEM_SLOT_CAP_NCCS
 value|0x00040000
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_SLOT_CAP_PSN
+name|PCIEM_SLOT_CAP_PSN
 value|0xfff80000
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIR_EXPRESS_SLOT_CTL
+name|PCIER_SLOT_CTL
 value|0x18
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_SLOT_CTL_ABPE
+name|PCIEM_SLOT_CTL_ABPE
 value|0x0001
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_SLOT_CTL_PFDE
+name|PCIEM_SLOT_CTL_PFDE
 value|0x0002
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_SLOT_CTL_MRLSCE
+name|PCIEM_SLOT_CTL_MRLSCE
 value|0x0004
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_SLOT_CTL_PDCE
+name|PCIEM_SLOT_CTL_PDCE
 value|0x0008
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_SLOT_CTL_CCIE
+name|PCIEM_SLOT_CTL_CCIE
 value|0x0010
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_SLOT_CTL_HPIE
+name|PCIEM_SLOT_CTL_HPIE
 value|0x0020
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_SLOT_CTL_AIC
+name|PCIEM_SLOT_CTL_AIC
 value|0x00c0
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_SLOT_CTL_PIC
+name|PCIEM_SLOT_CTL_PIC
 value|0x0300
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_SLOT_CTL_PCC
+name|PCIEM_SLOT_CTL_PCC
 value|0x0400
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_SLOT_CTL_EIC
+name|PCIEM_SLOT_CTL_EIC
 value|0x0800
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_SLOT_CTL_DLLSCE
+name|PCIEM_SLOT_CTL_DLLSCE
 value|0x1000
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIR_EXPRESS_SLOT_STA
+name|PCIER_SLOT_STA
 value|0x1a
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_SLOT_STA_ABP
+name|PCIEM_SLOT_STA_ABP
 value|0x0001
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_SLOT_STA_PFD
+name|PCIEM_SLOT_STA_PFD
 value|0x0002
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_SLOT_STA_MRLSC
+name|PCIEM_SLOT_STA_MRLSC
 value|0x0004
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_SLOT_STA_PDC
+name|PCIEM_SLOT_STA_PDC
 value|0x0008
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_SLOT_STA_CC
+name|PCIEM_SLOT_STA_CC
 value|0x0010
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_SLOT_STA_MRLSS
+name|PCIEM_SLOT_STA_MRLSS
 value|0x0020
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_SLOT_STA_PDS
+name|PCIEM_SLOT_STA_PDS
 value|0x0040
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_SLOT_STA_EIS
+name|PCIEM_SLOT_STA_EIS
 value|0x0080
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_SLOT_STA_DLLSC
+name|PCIEM_SLOT_STA_DLLSC
 value|0x0100
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIR_EXPRESS_ROOT_CTL
+name|PCIER_ROOT_CTL
 value|0x1c
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIR_EXPRESS_ROOT_CAP
+name|PCIER_ROOT_CAP
 value|0x1e
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIR_EXPRESS_ROOT_STA
+name|PCIER_ROOT_STA
 value|0x20
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIR_EXPRESS_DEVICE_CAP2
+name|PCIER_DEVICE_CAP2
 value|0x24
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIR_EXPRESS_DEVICE_CTL2
+name|PCIER_DEVICE_CTL2
 value|0x28
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_CTL2_COMP_TIMEOUT_VAL
+name|PCIEM_CTL2_COMP_TIMEOUT_VAL
 value|0x000f
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_CTL2_COMP_TIMEOUT_DIS
+name|PCIEM_CTL2_COMP_TIMEOUT_DIS
 value|0x0010
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_CTL2_ARI
+name|PCIEM_CTL2_ARI
 value|0x0020
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_CTL2_ATOMIC_REQ_ENABLE
+name|PCIEM_CTL2_ATOMIC_REQ_ENABLE
 value|0x0040
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_CTL2_ATOMIC_EGR_BLOCK
+name|PCIEM_CTL2_ATOMIC_EGR_BLOCK
 value|0x0080
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_CTL2_ID_ORDERED_REQ_EN
+name|PCIEM_CTL2_ID_ORDERED_REQ_EN
 value|0x0100
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_CTL2_ID_ORDERED_CMP_EN
+name|PCIEM_CTL2_ID_ORDERED_CMP_EN
 value|0x0200
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_CTL2_LTR_ENABLE
+name|PCIEM_CTL2_LTR_ENABLE
 value|0x0400
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_CTL2_OBFF
+name|PCIEM_CTL2_OBFF
 value|0x6000
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_OBFF_DISABLE
+name|PCIEM_OBFF_DISABLE
 value|0x0000
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_OBFF_MSGA_ENABLE
+name|PCIEM_OBFF_MSGA_ENABLE
 value|0x2000
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_OBFF_MSGB_ENABLE
+name|PCIEM_OBFF_MSGB_ENABLE
 value|0x4000
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_OBFF_WAKE_ENABLE
+name|PCIEM_OBFF_WAKE_ENABLE
 value|0x6000
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_EXP_CTL2_END2END_TLP
+name|PCIEM_CTL2_END2END_TLP
 value|0x8000
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIR_EXPRESS_DEVICE_STA2
+name|PCIER_DEVICE_STA2
 value|0x2a
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIR_EXPRESS_LINK_CAP2
+name|PCIER_LINK_CAP2
 value|0x2c
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIR_EXPRESS_LINK_CTL2
+name|PCIER_LINK_CTL2
 value|0x30
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIR_EXPRESS_LINK_STA2
+name|PCIER_LINK_STA2
 value|0x32
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIR_EXPRESS_SLOT_CAP2
+name|PCIER_SLOT_CAP2
 value|0x34
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIR_EXPRESS_SLOT_CTL2
+name|PCIER_SLOT_CTL2
 value|0x38
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIR_EXPRESS_SLOT_STA2
+name|PCIER_SLOT_STA2
 value|0x3a
 end_define
 

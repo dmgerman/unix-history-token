@@ -2748,14 +2748,14 @@ name|dev
 argument_list|,
 name|i
 operator|+
-name|PCIR_EXPRESS_DEVICE_CTL
+name|PCIER_DEVICE_CTL
 argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
 name|v
 operator||=
-name|PCIM_EXP_CTL_RELAXED_ORD_ENABLE
+name|PCIEM_CTL_RELAXED_ORD_ENABLE
 expr_stmt|;
 name|pci_write_config
 argument_list|(
@@ -2763,7 +2763,7 @@ name|dev
 argument_list|,
 name|i
 operator|+
-name|PCIR_EXPRESS_DEVICE_CTL
+name|PCIER_DEVICE_CTL
 argument_list|,
 name|v
 argument_list|,

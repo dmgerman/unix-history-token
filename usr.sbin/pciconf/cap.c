@@ -1748,7 +1748,7 @@ name|pc_sel
 argument_list|,
 name|ptr
 operator|+
-name|PCIR_EXPRESS_FLAGS
+name|PCIER_FLAGS
 argument_list|,
 literal|2
 argument_list|)
@@ -1759,18 +1759,18 @@ literal|"PCI-Express %d "
 argument_list|,
 name|flags
 operator|&
-name|PCIM_EXP_FLAGS_VERSION
+name|PCIEM_FLAGS_VERSION
 argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
 name|flags
 operator|&
-name|PCIM_EXP_FLAGS_TYPE
+name|PCIEM_FLAGS_TYPE
 condition|)
 block|{
 case|case
-name|PCIM_EXP_TYPE_ENDPOINT
+name|PCIEM_TYPE_ENDPOINT
 case|:
 name|printf
 argument_list|(
@@ -1779,7 +1779,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|PCIM_EXP_TYPE_LEGACY_ENDPOINT
+name|PCIEM_TYPE_LEGACY_ENDPOINT
 case|:
 name|printf
 argument_list|(
@@ -1788,7 +1788,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|PCIM_EXP_TYPE_ROOT_PORT
+name|PCIEM_TYPE_ROOT_PORT
 case|:
 name|printf
 argument_list|(
@@ -1797,7 +1797,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|PCIM_EXP_TYPE_UPSTREAM_PORT
+name|PCIEM_TYPE_UPSTREAM_PORT
 case|:
 name|printf
 argument_list|(
@@ -1806,7 +1806,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|PCIM_EXP_TYPE_DOWNSTREAM_PORT
+name|PCIEM_TYPE_DOWNSTREAM_PORT
 case|:
 name|printf
 argument_list|(
@@ -1815,7 +1815,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|PCIM_EXP_TYPE_PCI_BRIDGE
+name|PCIEM_TYPE_PCI_BRIDGE
 case|:
 name|printf
 argument_list|(
@@ -1824,7 +1824,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|PCIM_EXP_TYPE_PCIE_BRIDGE
+name|PCIEM_TYPE_PCIE_BRIDGE
 case|:
 name|printf
 argument_list|(
@@ -1833,7 +1833,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|PCIM_EXP_TYPE_ROOT_INT_EP
+name|PCIEM_TYPE_ROOT_INT_EP
 case|:
 name|printf
 argument_list|(
@@ -1842,7 +1842,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|PCIM_EXP_TYPE_ROOT_EC
+name|PCIEM_TYPE_ROOT_EC
 case|:
 name|printf
 argument_list|(
@@ -1858,7 +1858,7 @@ argument_list|,
 operator|(
 name|flags
 operator|&
-name|PCIM_EXP_FLAGS_TYPE
+name|PCIEM_FLAGS_TYPE
 operator|)
 operator|>>
 literal|4
@@ -1870,7 +1870,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|PCIM_EXP_FLAGS_SLOT
+name|PCIEM_FLAGS_SLOT
 condition|)
 name|printf
 argument_list|(
@@ -1881,7 +1881,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|PCIM_EXP_FLAGS_IRQ
+name|PCIEM_FLAGS_IRQ
 condition|)
 name|printf
 argument_list|(
@@ -1890,7 +1890,7 @@ argument_list|,
 operator|(
 name|flags
 operator|&
-name|PCIM_EXP_FLAGS_IRQ
+name|PCIEM_FLAGS_IRQ
 operator|)
 operator|>>
 literal|9
@@ -1909,7 +1909,7 @@ name|pc_sel
 argument_list|,
 name|ptr
 operator|+
-name|PCIR_EXPRESS_DEVICE_CAP
+name|PCIER_DEVICE_CAP
 argument_list|,
 literal|4
 argument_list|)
@@ -1927,7 +1927,7 @@ name|pc_sel
 argument_list|,
 name|ptr
 operator|+
-name|PCIR_EXPRESS_DEVICE_CTL
+name|PCIER_DEVICE_CTL
 argument_list|,
 literal|2
 argument_list|)
@@ -1941,7 +1941,7 @@ argument_list|(
 operator|(
 name|flags
 operator|&
-name|PCIM_EXP_CTL_MAX_PAYLOAD
+name|PCIEM_CTL_MAX_PAYLOAD
 operator|)
 operator|>>
 literal|5
@@ -1951,7 +1951,7 @@ name|MAX_PAYLOAD
 argument_list|(
 name|val
 operator|&
-name|PCIM_EXP_CAP_MAX_PAYLOAD
+name|PCIEM_CAP_MAX_PAYLOAD
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1959,7 +1959,7 @@ if|if
 condition|(
 name|val
 operator|&
-name|PCIM_EXP_CAP_FLR
+name|PCIEM_CAP_FLR
 condition|)
 name|printf
 argument_list|(
@@ -1979,7 +1979,7 @@ name|pc_sel
 argument_list|,
 name|ptr
 operator|+
-name|PCIR_EXPRESS_LINK_CAP
+name|PCIER_LINK_CAP
 argument_list|,
 literal|4
 argument_list|)
@@ -1997,7 +1997,7 @@ name|pc_sel
 argument_list|,
 name|ptr
 operator|+
-name|PCIR_EXPRESS_LINK_STA
+name|PCIER_LINK_STA
 argument_list|,
 literal|2
 argument_list|)
@@ -2009,7 +2009,7 @@ argument_list|,
 operator|(
 name|flags
 operator|&
-name|PCIM_LINK_STA_WIDTH
+name|PCIEM_LINK_STA_WIDTH
 operator|)
 operator|>>
 literal|4
@@ -2017,7 +2017,7 @@ argument_list|,
 operator|(
 name|val
 operator|&
-name|PCIM_LINK_CAP_MAX_WIDTH
+name|PCIEM_LINK_CAP_MAX_WIDTH
 operator|)
 operator|>>
 literal|4

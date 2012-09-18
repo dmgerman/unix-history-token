@@ -162,25 +162,25 @@ index|[]
 init|=
 block|{
 block|{
-name|PCIM_EXP_STA_CORRECTABLE_ERROR
+name|PCIEM_STA_CORRECTABLE_ERROR
 block|,
 literal|"Correctable Error Detected"
 block|}
 block|,
 block|{
-name|PCIM_EXP_STA_NON_FATAL_ERROR
+name|PCIEM_STA_NON_FATAL_ERROR
 block|,
 literal|"Non-Fatal Error Detected"
 block|}
 block|,
 block|{
-name|PCIM_EXP_STA_FATAL_ERROR
+name|PCIEM_STA_FATAL_ERROR
 block|,
 literal|"Fatal Error Detected"
 block|}
 block|,
 block|{
-name|PCIM_EXP_STA_UNSUPPORTED_REQ
+name|PCIEM_STA_UNSUPPORTED_REQ
 block|,
 literal|"Unsupported Request Detected"
 block|}
@@ -202,7 +202,7 @@ begin_define
 define|#
 directive|define
 name|PCIE_ERRORS
-value|(PCIM_EXP_STA_CORRECTABLE_ERROR |		\ 			 PCIM_EXP_STA_NON_FATAL_ERROR |			\ 			 PCIM_EXP_STA_FATAL_ERROR |			\ 			 PCIM_EXP_STA_UNSUPPORTED_REQ)
+value|(PCIEM_STA_CORRECTABLE_ERROR |		\ 			 PCIEM_STA_NON_FATAL_ERROR |			\ 			 PCIEM_STA_FATAL_ERROR |			\ 			 PCIEM_STA_UNSUPPORTED_REQ)
 end_define
 
 begin_comment
@@ -606,7 +606,7 @@ name|pc_sel
 argument_list|,
 name|pcie
 operator|+
-name|PCIR_EXPRESS_DEVICE_STA
+name|PCIER_DEVICE_STA
 argument_list|,
 literal|2
 argument_list|)
