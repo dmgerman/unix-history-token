@@ -119,6 +119,11 @@ argument_list|(
 literal|"vsystem args are too long"
 argument_list|)
 expr_stmt|;
+name|va_end
+argument_list|(
+name|args
+argument_list|)
+expr_stmt|;
 return|return
 literal|1
 return|;
@@ -270,6 +275,11 @@ block|{
 name|warnx
 argument_list|(
 literal|"vsystem args are too long"
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|args
 argument_list|)
 expr_stmt|;
 return|return
