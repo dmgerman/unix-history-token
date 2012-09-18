@@ -509,6 +509,18 @@ name|u3g_detach
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|static
+name|void
+name|u3g_free_softc
+parameter_list|(
+name|struct
+name|u3g_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|static
 name|usb_callback_t
@@ -522,6 +534,19 @@ name|usb_callback_t
 name|u3g_read_callback
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+specifier|static
+name|void
+name|u3g_free
+parameter_list|(
+name|struct
+name|ucom_softc
+modifier|*
+name|ucom
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
@@ -762,6 +787,12 @@ name|ucom_stop_write
 operator|=
 operator|&
 name|u3g_stop_write
+block|,
+operator|.
+name|ucom_free
+operator|=
+operator|&
+name|u3g_free
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -794,11 +825,7 @@ argument_list|,
 name|u3g_detach
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -5571,6 +5598,14 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
+name|ucom_ref
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_super_ucom
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|sc_udev
@@ -6023,6 +6058,54 @@ argument_list|,
 name|U3G_N_TRANSFER
 argument_list|)
 expr_stmt|;
+name|device_claim_softc
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+name|u3g_free_softc
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_expr_stmt
+name|UCOM_UNLOAD_DRAIN
+argument_list|(
+name|u3g
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_function
+specifier|static
+name|void
+name|u3g_free_softc
+parameter_list|(
+name|struct
+name|u3g_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+if|if
+condition|(
+name|ucom_unref
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_super_ucom
+argument_list|)
+condition|)
+block|{
 name|mtx_destroy
 argument_list|(
 operator|&
@@ -6031,11 +6114,33 @@ operator|->
 name|sc_mtx
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+name|device_free_softc
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|u3g_free
+parameter_list|(
+name|struct
+name|ucom_softc
+modifier|*
+name|ucom
+parameter_list|)
+block|{
+name|u3g_free_softc
+argument_list|(
+name|ucom
+operator|->
+name|sc_parent
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -6075,7 +6180,6 @@ name|U3G_BULK_RD
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6115,7 +6219,6 @@ name|U3G_BULK_RD
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6154,7 +6257,6 @@ name|U3G_BULK_WR
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6193,7 +6295,6 @@ name|U3G_BULK_WR
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6308,7 +6409,6 @@ goto|;
 block|}
 break|break;
 block|}
-return|return;
 block|}
 end_function
 
@@ -6433,7 +6533,6 @@ goto|;
 block|}
 break|break;
 block|}
-return|return;
 block|}
 end_function
 

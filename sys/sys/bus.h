@@ -2557,6 +2557,27 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|device_free_softc
+parameter_list|(
+name|void
+modifier|*
+name|softc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|device_claim_softc
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|device_set_unit
 parameter_list|(
