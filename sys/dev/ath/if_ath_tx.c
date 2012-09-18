@@ -15553,6 +15553,15 @@ operator|->
 name|hwq_depth
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Take a copy; this may be needed -after- bf_first 	 * has been completed and freed. 	 */
+name|ts
+operator|=
+name|bf_first
+operator|->
+name|bf_status
+operator|.
+name|ds_txstat
+expr_stmt|;
 name|TAILQ_INIT
 argument_list|(
 operator|&
@@ -15606,7 +15615,7 @@ operator|->
 name|hwq_depth
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If the TID is filtered, handle completing the filter 	 * transition before potentially kicking it to the cleanup 	 * function. 	 */
+comment|/* 	 * If the TID is filtered, handle completing the filter 	 * transition before potentially kicking it to the cleanup 	 * function. 	 * 	 * XXX this is duplicate work, ew. 	 */
 if|if
 condition|(
 name|atid
@@ -15820,15 +15829,6 @@ goto|goto
 name|finish_send_bar
 goto|;
 block|}
-comment|/* 	 * Take a copy; this may be needed -after- bf_first 	 * has been completed and freed. 	 */
-name|ts
-operator|=
-name|bf_first
-operator|->
-name|bf_status
-operator|.
-name|ds_txstat
-expr_stmt|;
 comment|/* 	 * XXX for now, use the first frame in the aggregate for 	 * XXX rate control completion; it's at least consistent. 	 */
 name|pktlen
 operator|=
@@ -16642,21 +16642,22 @@ index|]
 decl_stmt|;
 name|struct
 name|ath_tx_status
-modifier|*
 name|ts
-init|=
-operator|&
-name|bf
-operator|->
-name|bf_status
-operator|.
-name|ds_txstat
 decl_stmt|;
 name|int
 name|drops
 init|=
 literal|0
 decl_stmt|;
+comment|/* 	 * Take a copy of this; filtering/cloning the frame may free the 	 * bf pointer. 	 */
+name|ts
+operator|=
+name|bf
+operator|->
+name|bf_status
+operator|.
+name|ds_txstat
+expr_stmt|;
 comment|/* 	 * Update rate control status here, before we possibly 	 * punt to retry or cleanup. 	 * 	 * Do it outside of the TXQ lock. 	 */
 if|if
 condition|(
@@ -16707,7 +16708,7 @@ literal|1
 argument_list|,
 operator|(
 name|ts
-operator|->
+operator|.
 name|ts_status
 operator|==
 literal|0
@@ -16884,7 +16885,7 @@ if|if
 condition|(
 operator|(
 name|ts
-operator|->
+operator|.
 name|ts_status
 operator|&
 name|HAL_TXERR_FILT
@@ -16892,7 +16893,7 @@ operator|)
 operator|||
 operator|(
 name|ts
-operator|->
+operator|.
 name|ts_status
 operator|!=
 literal|0
@@ -17085,7 +17086,7 @@ operator|==
 literal|0
 operator|&&
 name|ts
-operator|->
+operator|.
 name|ts_status
 operator|!=
 literal|0
