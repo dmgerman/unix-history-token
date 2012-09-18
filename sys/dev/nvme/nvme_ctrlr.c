@@ -1700,48 +1700,34 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|void
-name|nvme_async_event_cb
-parameter_list|(
-name|void
-modifier|*
-name|arg
-parameter_list|,
-specifier|const
-name|struct
-name|nvme_completion
-modifier|*
-name|status
-parameter_list|)
-block|{
-name|struct
-name|nvme_controller
-modifier|*
-name|ctrlr
-init|=
-name|arg
-decl_stmt|;
-name|printf
-argument_list|(
-literal|"Asynchronous event occurred.\n"
-argument_list|)
-expr_stmt|;
+begin_comment
+comment|/*  * Disable this code for now, since Chatham doesn't support  *  AERs so I have no good way to test them.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+unit|static void nvme_async_event_cb(void *arg, const struct nvme_completion *status) { 	struct nvme_controller *ctrlr = arg;  	printf("Asynchronous event occurred.\n");
 comment|/* TODO: decode async event type based on status */
+end_comment
+
+begin_comment
 comment|/* TODO: check status for any error bits */
+end_comment
+
+begin_comment
 comment|/* 	 * Repost an asynchronous event request so that it can be 	 *  used again by the controller. 	 */
-name|nvme_ctrlr_cmd_asynchronous_event_request
-argument_list|(
-name|ctrlr
-argument_list|,
-name|nvme_async_event_cb
-argument_list|,
-name|ctrlr
-argument_list|)
-expr_stmt|;
-block|}
-end_function
+end_comment
+
+begin_endif
+unit|nvme_ctrlr_cmd_asynchronous_event_request(ctrlr, nvme_async_event_cb, 	    ctrlr); }
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
