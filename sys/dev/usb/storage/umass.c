@@ -4662,6 +4662,12 @@ operator|->
 name|sc_mtx
 argument_list|)
 expr_stmt|;
+comment|/* cancel any leftover CCB's */
+name|umass_cancel_ccb
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|umass_cam_detach_sim
 argument_list|(
 name|sc
@@ -7080,17 +7086,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|ccb
-operator|->
-name|ccb_h
-operator|.
-name|status
-operator|=
-name|CAM_TID_INVALID
-expr_stmt|;
-name|xpt_done
+name|umass_cancel_ccb
 argument_list|(
-name|ccb
+name|sc
 argument_list|)
 expr_stmt|;
 block|}
