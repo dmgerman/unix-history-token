@@ -518,9 +518,12 @@ name|u_int32_t
 name|ast_rx_keymiss
 decl_stmt|;
 name|u_int32_t
+name|ast_tx_swfiltered
+decl_stmt|;
+name|u_int32_t
 name|ast_pad
 index|[
-literal|16
+literal|15
 index|]
 decl_stmt|;
 block|}
