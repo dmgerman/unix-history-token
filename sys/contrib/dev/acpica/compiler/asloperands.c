@@ -393,6 +393,16 @@ operator|!=
 name|PARSEOP_DEFAULT_ARG
 condition|)
 block|{
+comment|/* This is a ByteConstExpr, so eval the constant now */
+name|OpcAmlConstantWalk
+argument_list|(
+name|Next
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|Next

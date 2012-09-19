@@ -352,6 +352,8 @@ name|ASL_MSG_WRITE
 block|,
 name|ASL_MSG_RANGE
 block|,
+name|ASL_MSG_BUFFER_ALLOCATION
+block|,
 comment|/* These messages are used by the Preprocessor only */
 name|ASL_MSG_DIRECTIVE_SYNTAX
 block|,
@@ -829,6 +831,9 @@ literal|"Could not write file"
 block|,
 comment|/*    ASL_MSG_RANGE */
 literal|"Constant out of range"
+block|,
+comment|/*    ASL_MSG_BUFFER_ALLOCATION */
+literal|"Could not allocate line buffer"
 block|,
 comment|/* Preprocessor */
 comment|/*    ASL_MSG_DIRECTIVE_SYNTAX */

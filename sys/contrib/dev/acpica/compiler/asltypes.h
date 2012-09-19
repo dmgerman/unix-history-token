@@ -315,6 +315,16 @@ name|char
 modifier|*
 name|Filename
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|ShortDescription
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|Description
+decl_stmt|;
 block|}
 name|ASL_FILE_INFO
 typedef|;
@@ -337,7 +347,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * File types. Note: Any changes to this table must also be reflected  * in the AslFileTypeNames array.  */
+comment|/*  * File types. Note: Any changes to this table must also be reflected  * in the Gbl_Files array.  */
 end_comment
 
 begin_typedef
@@ -352,9 +362,9 @@ name|ASL_FILE_STDERR
 block|,
 name|ASL_FILE_INPUT
 block|,
-comment|/* Don't move these first 3 file types */
 name|ASL_FILE_AML_OUTPUT
 block|,
+comment|/* Don't move these first 4 file types */
 name|ASL_FILE_SOURCE_OUTPUT
 block|,
 name|ASL_FILE_PREPROCESSOR
