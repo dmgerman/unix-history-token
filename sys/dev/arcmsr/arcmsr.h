@@ -128,6 +128,17 @@ begin_comment
 comment|/* (ARCMSR_MAX_OUTSTANDING_CMD+8) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ARCMSR_TIMEOUT_DELAY
+value|60
+end_define
+
+begin_comment
+comment|/* in sec */
+end_comment
+
 begin_comment
 comment|/* ********************************************************************* */
 end_comment
@@ -469,6 +480,72 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ARECA_SUB_DEV_ID_1880
+value|0x1880
+end_define
+
+begin_comment
+comment|/* Subsystem Device ID	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARECA_SUB_DEV_ID_1882
+value|0x1882
+end_define
+
+begin_comment
+comment|/* Subsystem Device ID	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARECA_SUB_DEV_ID_1212
+value|0x1212
+end_define
+
+begin_comment
+comment|/* Subsystem Device ID	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARECA_SUB_DEV_ID_1213
+value|0x1213
+end_define
+
+begin_comment
+comment|/* Subsystem Device ID	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARECA_SUB_DEV_ID_1222
+value|0x1222
+end_define
+
+begin_comment
+comment|/* Subsystem Device ID	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARECA_SUB_DEV_ID_1223
+value|0x1223
+end_define
+
+begin_comment
+comment|/* Subsystem Device ID	*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCIDevVenIDARC1110
 value|0x111017D3
 end_define
@@ -568,6 +645,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCIDevVenIDARC1213
+value|0x121317D3
+end_define
+
+begin_comment
+comment|/* Vendor Device ID	*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCIDevVenIDARC1220
 value|0x122017D3
 end_define
@@ -581,6 +669,17 @@ define|#
 directive|define
 name|PCIDevVenIDARC1222
 value|0x122217D3
+end_define
+
+begin_comment
+comment|/* Vendor Device ID	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIDevVenIDARC1223
+value|0x122317D3
 end_define
 
 begin_comment
@@ -702,6 +801,17 @@ define|#
 directive|define
 name|PCIDevVenIDARC1880
 value|0x188017D3
+end_define
+
+begin_comment
+comment|/* Vendor Device ID	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIDevVenIDARC1882
+value|0x188217D3
 end_define
 
 begin_comment
@@ -2831,6 +2941,12 @@ name|pktReturnCount
 decl_stmt|;
 endif|#
 directive|endif
+name|u_int32_t
+name|vendor_device_id
+decl_stmt|;
+name|u_int32_t
+name|adapter_bus_speed
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -2982,6 +3098,31 @@ define|#
 directive|define
 name|ARECA_RAID_GOOD
 value|0xaa
+end_define
+
+begin_comment
+comment|/* adapter_bus_speed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACB_BUS_SPEED_3G
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACB_BUS_SPEED_6G
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACB_BUS_SPEED_12G
+value|2
 end_define
 
 begin_comment
