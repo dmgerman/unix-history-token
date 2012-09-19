@@ -29557,7 +29557,7 @@ expr_stmt|;
 block|}
 name|jailid
 operator|=
-name|atoi
+name|jail_getid
 argument_list|(
 name|argv
 index|[
@@ -29568,7 +29568,7 @@ expr_stmt|;
 if|if
 condition|(
 name|jailid
-operator|==
+operator|<
 literal|0
 condition|)
 block|{
@@ -29581,7 +29581,7 @@ name|stderr
 argument_list|,
 name|gettext
 argument_list|(
-literal|"invalid jailid\n"
+literal|"invalid jail id or name\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
