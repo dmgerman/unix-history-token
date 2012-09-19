@@ -6519,7 +6519,7 @@ condition|(
 operator|(
 name|ctl
 operator|&
-literal|0x0003
+name|PCIEM_LINK_CTL_ASPMC
 operator|)
 operator|!=
 literal|0
@@ -6528,7 +6528,7 @@ block|{
 name|ctl
 operator|&=
 operator|~
-literal|0x0003
+name|PCIEM_LINK_CTL_ASPMC
 expr_stmt|;
 name|pci_write_config
 argument_list|(

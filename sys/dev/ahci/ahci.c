@@ -4313,7 +4313,7 @@ name|pci_read_config
 argument_list|(
 name|dev
 argument_list|,
-literal|0x00
+name|PCIR_DEVVENDOR
 argument_list|,
 literal|4
 argument_list|)

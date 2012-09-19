@@ -24409,9 +24409,9 @@ argument_list|)
 expr_stmt|;
 name|link_ctrl
 operator|&=
-literal|0xFFFC
+operator|~
+name|PCIEM_LINK_CTL_ASPMC
 expr_stmt|;
-comment|/* turn off bit 1 and 2 */
 name|pci_write_config
 argument_list|(
 name|dev

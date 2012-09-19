@@ -3934,7 +3934,7 @@ comment|/* Disable extended sync except AR8152 B v1.0 */
 name|linkcfg
 operator|&=
 operator|~
-literal|0x80
+name|PCIEM_LINK_CTL_EXTENDED_SYNC
 expr_stmt|;
 if|if
 condition|(
@@ -3954,7 +3954,7 @@ name|ATHEROS_AR8152_B_V10
 condition|)
 name|linkcfg
 operator||=
-literal|0x80
+name|PCIEM_LINK_CTL_EXTENDED_SYNC
 expr_stmt|;
 name|CSR_WRITE_2
 argument_list|(
@@ -4724,7 +4724,7 @@ condition|(
 operator|(
 name|ctl
 operator|&
-literal|0x08
+name|PCIEM_LINK_CTL_RCB
 operator|)
 operator|!=
 literal|0
@@ -4760,13 +4760,13 @@ name|state
 operator|=
 name|ctl
 operator|&
-literal|0x03
+name|PCIEM_LINK_CTL_ASPMC
 expr_stmt|;
 if|if
 condition|(
 name|state
 operator|&
-literal|0x01
+name|PCIEM_LINK_CTL_ASPMC_L0S
 condition|)
 name|sc
 operator|->
@@ -4778,7 +4778,7 @@ if|if
 condition|(
 name|state
 operator|&
-literal|0x02
+name|PCIEM_LINK_CTL_ASPMC_L1
 condition|)
 name|sc
 operator|->

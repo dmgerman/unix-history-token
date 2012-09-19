@@ -677,7 +677,7 @@ begin_define
 define|#
 directive|define
 name|PCI_EXP_DEVCTL2
-value|0x28
+value|PCIER_DEVICE_CTL2
 end_define
 
 begin_function
