@@ -8643,6 +8643,11 @@ name|error
 operator|=
 name|EINVAL
 expr_stmt|;
+name|cam_periph_unlock
+argument_list|(
+name|periph
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 name|sentry
