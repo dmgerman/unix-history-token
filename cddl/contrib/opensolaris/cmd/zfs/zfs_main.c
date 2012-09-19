@@ -1222,7 +1222,7 @@ return|return
 operator|(
 name|gettext
 argument_list|(
-literal|"\tjail<jailid><filesystem>\n"
+literal|"\tjail<jailid|jailname><filesystem>\n"
 argument_list|)
 operator|)
 return|;
@@ -1233,7 +1233,7 @@ return|return
 operator|(
 name|gettext
 argument_list|(
-literal|"\tunjail<jailid><filesystem>\n"
+literal|"\tunjail<jailid|jailname><filesystem>\n"
 argument_list|)
 operator|)
 return|;
