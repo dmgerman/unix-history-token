@@ -1634,6 +1634,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCIS_STORAGE_NVM
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCIS_STORAGE_OTHER
 value|0x80
 end_define
