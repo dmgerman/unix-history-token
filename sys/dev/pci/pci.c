@@ -18443,7 +18443,7 @@ name|PCIC_STORAGE
 block|,
 name|PCIS_STORAGE_NVM
 block|,
-literal|"NVM Express"
+literal|"NVM"
 block|}
 block|,
 block|{
