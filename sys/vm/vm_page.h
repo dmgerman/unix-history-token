@@ -679,7 +679,7 @@ value|vm_page_queue_free_lock.data
 end_define
 
 begin_comment
-comment|/*  * These are the flags defined for vm_page.  *  * aflags are updated by atomic accesses. Use the vm_page_aflag_set()  * and vm_page_aflag_clear() functions to set and clear the flags.  *  * PGA_REFERENCED may be cleared only if the object containing the page is  * locked.  *  * PGA_WRITEABLE is set exclusively on managed pages by pmap_enter().  When it  * does so, the page must be VPO_BUSY.  *  * PGA_EXECUTABLE may be set by pmap routines, and indicates that a page has  * at least one executable mapping. It is not consumed by the VM layer.  */
+comment|/*  * These are the flags defined for vm_page.  *  * aflags are updated by atomic accesses.  Use the vm_page_aflag_set()  * and vm_page_aflag_clear() functions to set and clear the flags.  *  * PGA_REFERENCED may be cleared only if the object containing the page is  * locked.  It is set by both the MI and MD VM layers.  *  * PGA_WRITEABLE is set exclusively on managed pages by pmap_enter().  When it  * does so, the page must be VPO_BUSY.  The MI VM layer must never access this  * flag directly.  Instead, it should call pmap_page_is_write_mapped().  *  * PGA_EXECUTABLE may be set by pmap routines, and indicates that a page has  * at least one executable mapping.  It is not consumed by the MI VM layer.  */
 end_comment
 
 begin_define
@@ -749,7 +749,7 @@ value|0x04
 end_define
 
 begin_comment
-comment|/* physical page doesn't exist (O) */
+comment|/* physical page doesn't exist */
 end_comment
 
 begin_define
@@ -804,7 +804,7 @@ value|0x80
 end_define
 
 begin_comment
-comment|/* don't include this page in the dump */
+comment|/* don't include this page in a dump */
 end_comment
 
 begin_comment

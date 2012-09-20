@@ -5292,15 +5292,11 @@ block|{
 comment|/* 			 * For write success, clear the dirty 			 * status, then finish the I/O ( which decrements the  			 * busy count and possibly wakes waiter's up ). 			 */
 name|KASSERT
 argument_list|(
-operator|(
+operator|!
+name|pmap_page_is_write_mapped
+argument_list|(
 name|m
-operator|->
-name|aflags
-operator|&
-name|PGA_WRITEABLE
-operator|)
-operator|==
-literal|0
+argument_list|)
 argument_list|,
 operator|(
 literal|"swp_pager_async_iodone: page %p is not write"
