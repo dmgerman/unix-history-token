@@ -4937,6 +4937,8 @@ argument_list|,
 name|bf
 argument_list|)
 expr_stmt|;
+comment|/* XXX Bump TID HWQ counter */
+comment|/* XXX Assign a completion handler */
 comment|/* Hand off to hardware */
 name|ath_tx_handoff
 argument_list|(
@@ -5338,11 +5340,11 @@ argument_list|(
 name|ni
 argument_list|)
 expr_stmt|;
+comment|//flags = HAL_TXDESC_CLRDMASK;		/* XXX needed for crypto errs */
 name|flags
 operator|=
-name|HAL_TXDESC_CLRDMASK
+literal|0
 expr_stmt|;
-comment|/* XXX needed for crypto errs */
 name|ismrr
 operator|=
 literal|0
@@ -6170,7 +6172,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Direct-dispatch the current frame to the hardware.  *  * This can be called by the net80211 code.  *  * XXX what about locking? Or, push the seqno assign into the  * XXX aggregate scheduler so its serialised?  */
+comment|/*  * Queue a frame to the hardware or software queue.  *  * This can be called by the net80211 code.  *  * XXX what about locking? Or, push the seqno assign into the  * XXX aggregate scheduler so its serialised?  *  * XXX When sending management frames via ath_raw_xmit(),  *     should CLRDMASK be set unconditionally?  */
 end_comment
 
 begin_function
@@ -6665,6 +6667,14 @@ argument_list|,
 name|bf
 argument_list|)
 expr_stmt|;
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_txflags
+operator||=
+name|HAL_TXDESC_CLRDMASK
+expr_stmt|;
 name|ath_tx_xmit_normal
 argument_list|(
 name|sc
@@ -6697,6 +6707,14 @@ literal|"%s: BAR: TX'ing direct\n"
 argument_list|,
 name|__func__
 argument_list|)
+expr_stmt|;
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_txflags
+operator||=
+name|HAL_TXDESC_CLRDMASK
 expr_stmt|;
 name|ath_tx_xmit_normal
 argument_list|(
@@ -6739,6 +6757,14 @@ block|}
 else|#
 directive|else
 comment|/* 	 * For now, since there's no software queue, 	 * direct-dispatch to the hardware. 	 */
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_txflags
+operator||=
+name|HAL_TXDESC_CLRDMASK
+expr_stmt|;
 name|ath_tx_xmit_normal
 argument_list|(
 name|sc
@@ -7123,6 +7149,7 @@ operator|=
 name|ni
 expr_stmt|;
 comment|/* NB: held reference */
+comment|/* Always enable CLRDMASK for raw frames for now.. */
 name|flags
 operator|=
 name|HAL_TXDESC_CLRDMASK
@@ -7851,6 +7878,14 @@ condition|(
 name|do_override
 condition|)
 block|{
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_txflags
+operator||=
+name|HAL_TXDESC_CLRDMASK
+expr_stmt|;
 name|ath_tx_xmit_normal
 argument_list|(
 name|sc
@@ -9681,6 +9716,65 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Update the CLRDMASK bit in the ath_buf if it needs to be set.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|ath_tx_update_clrdmask
+parameter_list|(
+name|struct
+name|ath_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
+name|ath_tid
+modifier|*
+name|tid
+parameter_list|,
+name|struct
+name|ath_buf
+modifier|*
+name|bf
+parameter_list|)
+block|{
+name|ATH_TID_LOCK_ASSERT
+argument_list|(
+name|sc
+argument_list|,
+name|tid
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tid
+operator|->
+name|clrdmask
+operator|==
+literal|1
+condition|)
+block|{
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_txflags
+operator||=
+name|HAL_TXDESC_CLRDMASK
+expr_stmt|;
+name|tid
+operator|->
+name|clrdmask
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
 comment|/*  * Assign a sequence number manually to the given frame.  *  * This should only be called for A-MPDU TX frames.  */
 end_comment
 
@@ -10161,6 +10255,16 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+comment|/* Update CLRDMASK just before this frame is queued */
+name|ath_tx_update_clrdmask
+argument_list|(
+name|sc
+argument_list|,
+name|tid
+argument_list|,
+name|bf
+argument_list|)
+expr_stmt|;
 comment|/* Direct dispatch to hardware */
 name|ath_tx_do_ratelookup
 argument_list|(
@@ -10640,6 +10744,15 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
+name|ath_tx_update_clrdmask
+argument_list|(
+name|sc
+argument_list|,
+name|atid
+argument_list|,
+name|bf
+argument_list|)
+expr_stmt|;
 name|ath_tx_xmit_normal
 argument_list|(
 name|sc
@@ -11013,6 +11126,13 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* 	 * Override the clrdmask configuration for the next frame, 	 * just to get the ball rolling. 	 */
+name|tid
+operator|->
+name|clrdmask
+operator|=
+literal|1
+expr_stmt|;
 name|ath_tx_tid_sched
 argument_list|(
 name|sc
@@ -12136,6 +12256,13 @@ name|bar_tx
 operator|=
 literal|1
 expr_stmt|;
+comment|/* 	 * Override the clrdmask configuration for the next frame, 	 * just to get the ball rolling. 	 */
+name|tid
+operator|->
+name|clrdmask
+operator|=
+literal|1
+expr_stmt|;
 comment|/* 	 * Calculate new BAW left edge, now that all frames have either 	 * succeeded or failed. 	 * 	 * XXX verify this is _actually_ the valid value to begin at! 	 */
 name|DPRINTF
 argument_list|(
@@ -12488,6 +12615,29 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
+literal|"%s: node %p: bf=%p: txq axq_depth=%d, axq_aggr_depth=%d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|ni
+argument_list|,
+name|bf
+argument_list|,
+name|txq
+operator|->
+name|axq_depth
+argument_list|,
+name|txq
+operator|->
+name|axq_aggr_depth
+argument_list|)
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
 literal|"%s: node %p: bf=%p: tid txq_depth=%d hwq_depth=%d, bar_wait=%d, isfiltered=%d\n"
 argument_list|,
 name|__func__
@@ -12519,9 +12669,9 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"%s: node %p: tid %d: txq_depth=%d, "
-literal|"txq_aggr_depth=%d, sched=%d, paused=%d, "
-literal|"hwq_depth=%d, incomp=%d, baw_head=%d, "
+literal|"%s: node %p: tid %d: "
+literal|"sched=%d, paused=%d, "
+literal|"incomp=%d, baw_head=%d, "
 literal|"baw_tail=%d txa_start=%d, ni_txseqs=%d\n"
 argument_list|,
 name|__func__
@@ -12532,14 +12682,6 @@ name|tid
 operator|->
 name|tid
 argument_list|,
-name|txq
-operator|->
-name|axq_depth
-argument_list|,
-name|txq
-operator|->
-name|axq_aggr_depth
-argument_list|,
 name|tid
 operator|->
 name|sched
@@ -12547,10 +12689,6 @@ argument_list|,
 name|tid
 operator|->
 name|paused
-argument_list|,
-name|tid
-operator|->
-name|hwq_depth
 argument_list|,
 name|tid
 operator|->
@@ -12843,6 +12981,13 @@ name|bf
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Override the clrdmask configuration for the next frame 	 * in case there is some future transmission, just to get 	 * the ball rolling. 	 * 	 * This won't hurt things if the TID is about to be freed. 	 */
+name|tid
+operator|->
+name|clrdmask
+operator|=
+literal|1
+expr_stmt|;
 comment|/* 	 * Now that it's completed, grab the TID lock and update 	 * the sequence number and BAW window. 	 * Because sequence numbers have been assigned to frames 	 * that haven't been sent yet, it's entirely possible 	 * we'll be called with some pending frames that have not 	 * been transmitted. 	 * 	 * The cleaner solution is to do the sequence number allocation 	 * when the packet is first transmitted - and thus the "retries" 	 * check above would be enough to update the BAW/seqno. 	 */
 comment|/* But don't do it for non-QoS TIDs */
 if|if
@@ -17531,6 +17676,16 @@ name|bfs_nframes
 operator|=
 literal|1
 expr_stmt|;
+comment|/* Update CLRDMASK just before this frame is queued */
+name|ath_tx_update_clrdmask
+argument_list|(
+name|sc
+argument_list|,
+name|tid
+argument_list|,
+name|bf
+argument_list|)
+expr_stmt|;
 name|ath_tx_do_ratelookup
 argument_list|(
 name|sc
@@ -17746,6 +17901,16 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
+comment|/* Update CLRDMASK just before this frame is queued */
+name|ath_tx_update_clrdmask
+argument_list|(
+name|sc
+argument_list|,
+name|tid
+argument_list|,
+name|bf
+argument_list|)
+expr_stmt|;
 name|bf
 operator|->
 name|bf_state
@@ -17856,6 +18021,16 @@ name|sc_aggr_stats
 operator|.
 name|aggr_aggr_pkt
 operator|++
+expr_stmt|;
+comment|/* Update CLRDMASK just before this frame is queued */
+name|ath_tx_update_clrdmask
+argument_list|(
+name|sc
+argument_list|,
+name|tid
+argument_list|,
+name|bf
+argument_list|)
 expr_stmt|;
 comment|/* 			 * Calculate the duration/protection as required. 			 */
 name|ath_tx_calc_duration
@@ -18017,9 +18192,11 @@ operator|->
 name|tid
 argument_list|)
 expr_stmt|;
-name|ATH_TXQ_LOCK_ASSERT
+name|ATH_TID_LOCK_ASSERT
 argument_list|(
-name|txq
+name|sc
+argument_list|,
+name|tid
 argument_list|)
 expr_stmt|;
 comment|/* Check - is AMPDU pending or running? then print out something */
@@ -18179,6 +18356,16 @@ operator|->
 name|bf_comp
 operator|=
 name|ath_tx_normal_comp
+expr_stmt|;
+comment|/* Update CLRDMASK just before this frame is queued */
+name|ath_tx_update_clrdmask
+argument_list|(
+name|sc
+argument_list|,
+name|tid
+argument_list|,
+name|bf
+argument_list|)
 expr_stmt|;
 comment|/* Program descriptors + rate control */
 name|ath_tx_do_ratelookup
