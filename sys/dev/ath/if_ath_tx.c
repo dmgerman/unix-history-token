@@ -19272,7 +19272,7 @@ name|status
 argument_list|)
 expr_stmt|;
 comment|/* Unpause the TID */
-comment|/* 	 * XXX if this is attempt=50, the TID will be downgraded 	 * XXX to a non-aggregate session. So we must unpause the 	 * XXX TID here or it'll never be done. 	 */
+comment|/* 	 * XXX if this is attempt=50, the TID will be downgraded 	 * XXX to a non-aggregate session. So we must unpause the 	 * XXX TID here or it'll never be done. 	 * 	 * Also, don't call it if bar_tx/bar_wait are 0; something 	 * has beaten us to the punch? (XXX figure out what?) 	 */
 if|if
 condition|(
 name|status
@@ -19296,6 +19296,40 @@ name|ac
 index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|atid
+operator|->
+name|bar_tx
+operator|==
+literal|0
+operator|||
+name|atid
+operator|->
+name|bar_wait
+operator|==
+literal|0
+condition|)
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"%s: huh? bar_tx=%d, bar_wait=%d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|atid
+operator|->
+name|bar_tx
+argument_list|,
+name|atid
+operator|->
+name|bar_wait
+argument_list|)
+expr_stmt|;
+else|else
 name|ath_tx_tid_bar_unsuspend
 argument_list|(
 name|sc
