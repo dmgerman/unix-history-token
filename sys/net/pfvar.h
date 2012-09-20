@@ -7436,6 +7436,7 @@ literal|3
 index|]
 argument_list|)
 expr_stmt|;
+break|break;
 default|default:
 name|panic
 argument_list|(
