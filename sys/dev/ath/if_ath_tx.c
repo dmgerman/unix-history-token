@@ -4950,6 +4950,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Do the basic frame setup stuff that's required before the frame  * is added to a software queue.  *  * All frames get mostly the same treatment and it's done once.  * Retransmits fiddle with things like the rate control setup,  * setting the retransmit bit in the packet; doing relevant DMA/bus  * syncing and relinking it (back) into the hardware TX queue.  *  * Note that this may cause the mbuf to be reallocated, so  * m0 may not be valid.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -10679,10 +10683,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_comment
-comment|/*  * Do the basic frame setup stuff that's required before the frame  * is added to a software queue.  *  * All frames get mostly the same treatment and it's done once.  * Retransmits fiddle with things like the rate control setup,  * setting the retransmit bit in the packet; doing relevant DMA/bus  * syncing and relinking it (back) into the hardware TX queue.  *  * Note that this may cause the mbuf to be reallocated, so  * m0 may not be valid.  */
-end_comment
 
 begin_comment
 comment|/*  * Configure the per-TID node state.  *  * This likely belongs in if_ath_node.c but I can't think of anywhere  * else to put it just yet.  *  * This sets up the SLISTs and the mutex as appropriate.  */
