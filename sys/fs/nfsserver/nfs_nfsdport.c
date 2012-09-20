@@ -12392,6 +12392,8 @@ name|nd_repstat
 operator|=
 name|nfsv4_strtouid
 argument_list|(
+name|nd
+argument_list|,
 name|cp
 argument_list|,
 name|j
@@ -12550,6 +12552,8 @@ name|nd_repstat
 operator|=
 name|nfsv4_strtogid
 argument_list|(
+name|nd
+argument_list|,
 name|cp
 argument_list|,
 name|j
