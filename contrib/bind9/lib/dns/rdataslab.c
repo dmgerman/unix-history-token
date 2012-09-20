@@ -1059,6 +1059,13 @@ condition|)
 name|length
 operator|++
 expr_stmt|;
+name|INSIST
+argument_list|(
+name|length
+operator|<=
+literal|0xffff
+argument_list|)
+expr_stmt|;
 operator|*
 name|rawbuf
 operator|++

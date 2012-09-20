@@ -866,7 +866,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
-name|ISC_PLATFORM_NORETURN_POST
+name|ISC_PLATFORM_NORETURN_PRE
 specifier|static
 name|void
 name|fatal
