@@ -8237,15 +8237,16 @@ expr_stmt|;
 comment|/* 	 * Evict cached data 	 */
 if|if
 condition|(
-name|dmu_objset_is_dirty_anywhere
+name|dsl_dataset_is_dirty
+argument_list|(
+name|dmu_objset_ds
 argument_list|(
 name|zfsvfs
 operator|->
 name|z_os
 argument_list|)
-condition|)
-if|if
-condition|(
+argument_list|)
+operator|&&
 operator|!
 operator|(
 name|zfsvfs
@@ -10525,13 +10526,9 @@ argument_list|,
 name|tx
 argument_list|)
 expr_stmt|;
-name|ASSERT3U
+name|ASSERT0
 argument_list|(
 name|error
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|VERIFY

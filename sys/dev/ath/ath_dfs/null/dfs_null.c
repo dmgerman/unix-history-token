@@ -269,7 +269,9 @@ block|sc->sc_dodfs = 1;
 comment|/* Tell the hardware to enable radar reporting */
 block|pe.pe_enabled = 1;
 comment|/* Flip on extension channel events only if doing HT40 */
-block|if (IEEE80211_IS_CHAN_HT40(chan)) 		pe.pe_extchannel = 1; 	else 		pe.pe_extchannel = 0;  	ath_hal_enabledfs(sc->sc_ah,&pe);  	return (1);
+block|if (IEEE80211_IS_CHAN_HT40(chan)) 		pe.pe_extchannel = 1; 	else 		pe.pe_extchannel = 0;  	ath_hal_enabledfs(sc->sc_ah,&pe);
+comment|/* 	 * Disable strong signal fast diversity - needed for 	 * AR5212 and similar PHYs for reliable short pulse 	 * duration. 	 */
+block|(void) ath_hal_setcapability(sc->sc_ah, HAL_CAP_DIVERSITY, 2, 0, NULL);  	return (1);
 else|#
 directive|else
 return|return

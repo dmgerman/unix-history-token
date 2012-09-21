@@ -2796,7 +2796,7 @@ comment|/*  * The code after this point runs on many platforms,  * so forgive th
 end_comment
 
 begin_comment
-comment|/*  * Is this a device that supports enclosure services?  *  * It's a a pretty simple ruleset- if it is device type  * 0x0D (13), it's an ENCLOSURE device.  */
+comment|/*  * Is this a device that supports enclosure services?  *  * It's a pretty simple ruleset- if it is device type  * 0x0D (13), it's an ENCLOSURE device.  */
 end_comment
 
 begin_define

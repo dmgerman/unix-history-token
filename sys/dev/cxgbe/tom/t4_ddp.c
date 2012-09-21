@@ -812,7 +812,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|ARRAY_SIZE
+name|nitems
 argument_list|(
 name|toep
 operator|->
@@ -3470,7 +3470,7 @@ for|for
 control|(
 name|idx
 operator|=
-name|ARRAY_SIZE
+name|nitems
 argument_list|(
 name|t4_ddp_pgsz
 argument_list|)
@@ -4100,7 +4100,7 @@ literal|0
 init|;
 name|k
 operator|<
-name|ARRAY_SIZE
+name|nitems
 argument_list|(
 name|ppod
 operator|->
@@ -4244,7 +4244,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|ARRAY_SIZE
+name|nitems
 argument_list|(
 name|toep
 operator|->
@@ -4408,7 +4408,7 @@ operator|=
 name|arc4random
 argument_list|()
 operator|%
-name|ARRAY_SIZE
+name|nitems
 argument_list|(
 name|toep
 operator|->

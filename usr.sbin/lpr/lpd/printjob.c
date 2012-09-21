@@ -9041,9 +9041,6 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
-name|cp
-operator|=
 name|strchr
 argument_list|(
 name|pp
@@ -9052,7 +9049,6 @@ name|lp
 argument_list|,
 literal|'@'
 argument_list|)
-operator|)
 operator|!=
 name|NULL
 condition|)

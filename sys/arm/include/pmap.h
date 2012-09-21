@@ -325,19 +325,6 @@ block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|VM_MDPAGE_INIT
-parameter_list|(
-name|pg
-parameter_list|)
-define|\
-value|do {									\ 	TAILQ_INIT(&pg->pv_list);					\ 	mtx_init(&(pg)->md_page.pvh_mtx, "MDPAGE Mutex", NULL, MTX_DEV);\ 	(pg)->mdpage.pvh_attrs = 0;					\ } while (
-comment|/*CONSTCOND*/
-value|0)
-end_define
-
 begin_struct_decl
 struct_decl|struct
 name|l1_ttable

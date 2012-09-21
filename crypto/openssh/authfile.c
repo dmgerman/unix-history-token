@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: authfile.c,v 1.92 2011/06/14 22:49:18 markus Exp $ */
+comment|/* $OpenBSD: authfile.c,v 1.93 2012/01/25 19:36:31 markus Exp $ */
 end_comment
 
 begin_comment
@@ -1572,7 +1572,7 @@ return|return
 literal|0
 return|;
 block|}
-name|buffer_init
+name|buffer_clear
 argument_list|(
 name|blob
 argument_list|)

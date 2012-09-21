@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: symtab.c,v 1.9 2010/11/24 15:12:29 tom Exp $ */
+comment|/* $Id: symtab.c,v 1.10 2012/05/26 15:16:12 tom Exp $ */
 end_comment
 
 begin_include
@@ -147,16 +147,11 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|=
-operator|(
-name|bucket
-operator|*
-operator|)
-name|MALLOC
-argument_list|(
-sizeof|sizeof
+name|TMALLOC
 argument_list|(
 name|bucket
-argument_list|)
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|NO_SPACE
@@ -180,8 +175,10 @@ name|bp
 operator|->
 name|name
 operator|=
-name|MALLOC
+name|TMALLOC
 argument_list|(
+name|char
+argument_list|,
 name|strlen
 argument_list|(
 name|name
@@ -363,20 +360,12 @@ name|bp
 decl_stmt|;
 name|symbol_table
 operator|=
-operator|(
+name|TMALLOC
+argument_list|(
 name|bucket
 operator|*
-operator|*
-operator|)
-name|MALLOC
-argument_list|(
+argument_list|,
 name|TABLE_SIZE
-operator|*
-sizeof|sizeof
-argument_list|(
-name|bucket
-operator|*
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|NO_SPACE

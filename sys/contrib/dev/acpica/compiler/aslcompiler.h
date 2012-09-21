@@ -1651,6 +1651,16 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|FlDeleteFile
+parameter_list|(
+name|UINT32
+name|FileId
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|FlSetLineNumber
 parameter_list|(
 name|UINT32
@@ -1945,6 +1955,15 @@ name|UtGetStringBuffer
 parameter_list|(
 name|UINT32
 name|Length
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|UtExpandLineBuffers
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

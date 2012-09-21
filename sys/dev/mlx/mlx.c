@@ -22,13 +22,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
 begin_include
 include|#
 directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sx.h>
 end_include
 
 begin_include
@@ -114,11 +132,6 @@ operator|.
 name|d_version
 operator|=
 name|D_VERSION
-block|,
-operator|.
-name|d_flags
-operator|=
-name|D_NEEDGIANT
 block|,
 operator|.
 name|d_open
@@ -229,6 +242,9 @@ parameter_list|,
 name|int
 modifier|*
 name|param2
+parameter_list|,
+name|int
+name|first
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -309,6 +325,9 @@ parameter_list|,
 name|int
 modifier|*
 name|param2
+parameter_list|,
+name|int
+name|first
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -389,6 +408,9 @@ parameter_list|,
 name|int
 modifier|*
 name|param2
+parameter_list|,
+name|int
+name|first
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -788,6 +810,19 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
+name|mlx_shutdown_locked
+parameter_list|(
+name|struct
+name|mlx_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
 name|mlx_start
 parameter_list|(
 name|struct
@@ -807,6 +842,9 @@ name|struct
 name|mlx_softc
 modifier|*
 name|sc
+parameter_list|,
+name|int
+name|startio
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -927,13 +965,52 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* cancel status timeout */
-name|untimeout
+comment|/* destroy control device */
+if|if
+condition|(
+name|sc
+operator|->
+name|mlx_dev_t
+operator|!=
+name|NULL
+condition|)
+name|destroy_dev
 argument_list|(
-name|mlx_periodic
+name|sc
+operator|->
+name|mlx_dev_t
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|mlx_intr
+condition|)
+name|bus_teardown_intr
+argument_list|(
+name|sc
+operator|->
+name|mlx_dev
 argument_list|,
 name|sc
+operator|->
+name|mlx_irq
 argument_list|,
+name|sc
+operator|->
+name|mlx_intr
+argument_list|)
+expr_stmt|;
+comment|/* cancel status timeout */
+name|MLX_IO_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|callout_stop
+argument_list|(
+operator|&
 name|sc
 operator|->
 name|mlx_timeout
@@ -975,6 +1052,19 @@ name|mc
 argument_list|)
 expr_stmt|;
 block|}
+name|MLX_IO_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|callout_drain
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|mlx_timeout
+argument_list|)
+expr_stmt|;
 comment|/* destroy data-transfer DMA tag */
 if|if
 condition|(
@@ -1025,27 +1115,6 @@ name|mlx_sg_dmat
 argument_list|)
 expr_stmt|;
 comment|/* disconnect the interrupt handler */
-if|if
-condition|(
-name|sc
-operator|->
-name|mlx_intr
-condition|)
-name|bus_teardown_intr
-argument_list|(
-name|sc
-operator|->
-name|mlx_dev
-argument_list|,
-name|sc
-operator|->
-name|mlx_irq
-argument_list|,
-name|sc
-operator|->
-name|mlx_intr
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -1129,25 +1198,20 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-comment|/* destroy control device */
-if|if
-condition|(
-name|sc
-operator|->
-name|mlx_dev_t
-operator|!=
-operator|(
-expr|struct
-name|cdev
-operator|*
-operator|)
-name|NULL
-condition|)
-name|destroy_dev
+name|sx_destroy
 argument_list|(
+operator|&
 name|sc
 operator|->
-name|mlx_dev_t
+name|mlx_config_lock
+argument_list|)
+expr_stmt|;
+name|mtx_destroy
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|mlx_io_lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -1622,6 +1686,11 @@ return|;
 comment|/* should never happen */
 block|}
 comment|/* disable interrupts before we start talking to the controller */
+name|MLX_IO_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|mlx_intaction
@@ -1629,6 +1698,11 @@ argument_list|(
 name|sc
 argument_list|,
 name|MLX_INTACTION_DISABLE
+argument_list|)
+expr_stmt|;
+name|MLX_IO_UNLOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 comment|/*       * Wait for the controller to come ready, handshake with the firmware if required.      * This is typically only necessary on platforms where the controller BIOS does not      * run.      */
@@ -1660,6 +1734,10 @@ name|hsparam1
 argument_list|,
 operator|&
 name|hsparam2
+argument_list|,
+name|hsmsg
+operator|==
+literal|0
 argument_list|)
 operator|)
 operator|!=
@@ -1804,6 +1882,8 @@ argument_list|,
 name|INTR_TYPE_BIO
 operator||
 name|INTR_ENTROPY
+operator||
+name|INTR_MPSAFE
 argument_list|,
 name|NULL
 argument_list|,
@@ -1878,7 +1958,9 @@ name|busdma_lock_mutex
 argument_list|,
 comment|/* lockfunc */
 operator|&
-name|Giant
+name|sc
+operator|->
+name|mlx_io_lock
 argument_list|,
 comment|/* lockarg */
 operator|&
@@ -1948,6 +2030,11 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/*       * Obtain controller feature information      */
+name|MLX_IO_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1974,6 +2061,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|MLX_IO_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|device_printf
 argument_list|(
 name|sc
@@ -2039,6 +2131,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|MLX_IO_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|device_printf
 argument_list|(
 name|sc
@@ -2214,6 +2311,11 @@ expr_stmt|;
 block|}
 break|break;
 default|default:
+name|MLX_IO_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENXIO
@@ -2221,6 +2323,11 @@ operator|)
 return|;
 comment|/* should never happen */
 block|}
+name|MLX_IO_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/*      * Create the final scatter/gather mappings now that we have characterised the controller.      */
 name|error
 operator|=
@@ -2305,17 +2412,18 @@ operator|=
 name|sc
 expr_stmt|;
 comment|/*      * Start the timeout routine.      */
+name|callout_reset
+argument_list|(
+operator|&
 name|sc
 operator|->
 name|mlx_timeout
-operator|=
-name|timeout
-argument_list|(
+argument_list|,
+name|hz
+argument_list|,
 name|mlx_periodic
 argument_list|,
 name|sc
-argument_list|,
-name|hz
 argument_list|)
 expr_stmt|;
 comment|/* print a little information about the controller */
@@ -2367,6 +2475,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/*      * Scan all the system drives and attach children for those that      * don't currently have them.      */
+name|MLX_IO_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|mes
 operator|=
 name|mlx_enquire
@@ -2384,6 +2497,11 @@ operator|*
 name|MLX_MAXDRIVES
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|MLX_IO_UNLOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 if|if
@@ -2405,6 +2523,11 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* iterate over drives returned */
+name|MLX_CONFIG_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -2637,6 +2760,11 @@ name|error
 argument_list|)
 expr_stmt|;
 comment|/* mark controller back up */
+name|MLX_IO_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|mlx_state
@@ -2652,6 +2780,16 @@ argument_list|(
 name|sc
 argument_list|,
 name|MLX_INTACTION_ENABLE
+argument_list|)
+expr_stmt|;
+name|MLX_IO_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|MLX_CONFIG_UNLOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 block|}
@@ -2687,8 +2825,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|,
-name|s
-decl_stmt|,
 name|error
 decl_stmt|;
 name|debug_called
@@ -2700,10 +2836,10 @@ name|error
 operator|=
 name|EBUSY
 expr_stmt|;
-name|s
-operator|=
-name|splbio
-argument_list|()
+name|MLX_CONFIG_LOCK
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2802,20 +2938,26 @@ condition|)
 goto|goto
 name|out
 goto|;
+name|MLX_CONFIG_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|mlx_free
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
+return|return
+operator|(
 literal|0
-expr_stmt|;
+operator|)
+return|;
 name|out
 label|:
-name|splx
+name|MLX_CONFIG_UNLOCK
 argument_list|(
-name|s
+name|sc
 argument_list|)
 expr_stmt|;
 return|return
@@ -2849,9 +2991,46 @@ name|dev
 argument_list|)
 decl_stmt|;
 name|int
+name|error
+decl_stmt|;
+name|MLX_CONFIG_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|mlx_shutdown_locked
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|MLX_CONFIG_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|mlx_shutdown_locked
+parameter_list|(
+name|struct
+name|mlx_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+name|int
 name|i
-decl_stmt|,
-name|s
 decl_stmt|,
 name|error
 decl_stmt|;
@@ -2860,14 +3039,15 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-name|s
-operator|=
-name|splbio
-argument_list|()
+name|MLX_CONFIG_ASSERT_LOCKED
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
-name|error
-operator|=
-literal|0
+name|MLX_IO_LOCK
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
 name|sc
 operator|->
@@ -2916,6 +3096,11 @@ literal|"done\n"
 argument_list|)
 expr_stmt|;
 block|}
+name|MLX_IO_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* delete all our child devices */
 for|for
 control|(
@@ -2969,9 +3154,11 @@ operator|)
 operator|!=
 literal|0
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 name|sc
 operator|->
 name|mlx_sysdrive
@@ -2985,16 +3172,9 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-name|out
-label|:
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
-name|error
+literal|0
 operator|)
 return|;
 block|}
@@ -3022,18 +3202,15 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 name|debug_called
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-name|s
-operator|=
-name|splbio
-argument_list|()
+name|MLX_IO_LOCK
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
 name|sc
 operator|->
@@ -3074,9 +3251,9 @@ argument_list|,
 name|MLX_INTACTION_DISABLE
 argument_list|)
 expr_stmt|;
-name|splx
+name|MLX_IO_UNLOCK
 argument_list|(
-name|s
+name|sc
 argument_list|)
 expr_stmt|;
 return|return
@@ -3114,6 +3291,11 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+name|MLX_IO_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|mlx_state
@@ -3128,6 +3310,11 @@ argument_list|(
 name|sc
 argument_list|,
 name|MLX_INTACTION_ENABLE
+argument_list|)
+expr_stmt|;
+name|MLX_IO_UNLOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 return|return
@@ -3169,7 +3356,19 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* collect finished commands, queue anything waiting */
+name|MLX_IO_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|mlx_done
+argument_list|(
+name|sc
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|MLX_IO_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -3199,18 +3398,15 @@ modifier|*
 name|bp
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|;
 name|debug_called
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-name|s
-operator|=
-name|splbio
-argument_list|()
+name|MLX_IO_ASSERT_LOCKED
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
 name|MLX_BIO_QINSERT
 argument_list|(
@@ -3225,11 +3421,6 @@ name|sc
 operator|->
 name|mlx_waitbufs
 operator|++
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 name|mlx_startio
 argument_list|(
@@ -3278,11 +3469,31 @@ name|dev
 operator|->
 name|si_drv1
 decl_stmt|;
+name|MLX_CONFIG_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|MLX_IO_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|mlx_state
 operator||=
 name|MLX_STATE_OPEN
+expr_stmt|;
+name|MLX_IO_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|MLX_CONFIG_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -3326,12 +3537,32 @@ name|dev
 operator|->
 name|si_drv1
 decl_stmt|;
+name|MLX_CONFIG_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|MLX_IO_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|mlx_state
 operator|&=
 operator|~
 name|MLX_STATE_OPEN
+expr_stmt|;
+name|MLX_IO_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|MLX_CONFIG_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -3442,6 +3673,11 @@ case|case
 name|MLX_NEXT_CHILD
 case|:
 comment|/* search system drives */
+name|MLX_CONFIG_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -3496,6 +3732,11 @@ operator|.
 name|ms_disk
 argument_list|)
 expr_stmt|;
+name|MLX_CONFIG_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -3528,6 +3769,11 @@ literal|1
 expr_stmt|;
 block|}
 block|}
+name|MLX_CONFIG_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOENT
@@ -3537,9 +3783,21 @@ comment|/* 	 * Scan the controller to see whether new drives have appeared. 	 */
 case|case
 name|MLX_RESCAN_DRIVES
 case|:
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|mlx_startup
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 return|return
@@ -3552,6 +3810,11 @@ case|case
 name|MLX_DETACH_DRIVE
 case|:
 comment|/* detach one drive */
+name|MLX_CONFIG_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3585,11 +3848,18 @@ operator|==
 name|NULL
 operator|)
 condition|)
+block|{
+name|MLX_CONFIG_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOENT
 operator|)
 return|;
+block|}
 name|device_printf
 argument_list|(
 name|dr
@@ -3621,6 +3891,11 @@ name|detach_out
 goto|;
 block|}
 comment|/* flush controller */
+name|MLX_IO_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|mlx_flush
@@ -3629,6 +3904,11 @@ name|sc
 argument_list|)
 condition|)
 block|{
+name|MLX_IO_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|EBUSY
@@ -3637,6 +3917,11 @@ goto|goto
 name|detach_out
 goto|;
 block|}
+name|MLX_IO_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* nuke drive */
 if|if
 condition|(
@@ -3668,6 +3953,11 @@ literal|0
 expr_stmt|;
 name|detach_out
 label|:
+name|MLX_CONFIG_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|error
@@ -3714,6 +4004,7 @@ operator|(
 name|EOPNOTSUPP
 operator|)
 return|;
+comment|/* check time values */
 name|mp
 operator|=
 operator|(
@@ -3722,6 +4013,61 @@ name|mlx_pause
 operator|*
 operator|)
 name|addr
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|mp
+operator|->
+name|mp_when
+operator|<
+literal|0
+operator|)
+operator|||
+operator|(
+name|mp
+operator|->
+name|mp_when
+operator|>
+literal|3600
+operator|)
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+if|if
+condition|(
+operator|(
+name|mp
+operator|->
+name|mp_howlong
+operator|<
+literal|1
+operator|)
+operator|||
+operator|(
+name|mp
+operator|->
+name|mp_howlong
+operator|>
+operator|(
+literal|0xf
+operator|*
+literal|30
+operator|)
+operator|)
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+name|MLX_IO_LOCK
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3775,57 +4121,6 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
-comment|/* check time values */
-if|if
-condition|(
-operator|(
-name|mp
-operator|->
-name|mp_when
-operator|<
-literal|0
-operator|)
-operator|||
-operator|(
-name|mp
-operator|->
-name|mp_when
-operator|>
-literal|3600
-operator|)
-condition|)
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
-if|if
-condition|(
-operator|(
-name|mp
-operator|->
-name|mp_howlong
-operator|<
-literal|1
-operator|)
-operator|||
-operator|(
-name|mp
-operator|->
-name|mp_howlong
-operator|>
-operator|(
-literal|0xf
-operator|*
-literal|30
-operator|)
-operator|)
-condition|)
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
 comment|/* check for a pause currently running */
 if|if
 condition|(
@@ -3849,11 +4144,18 @@ operator|==
 literal|0
 operator|)
 condition|)
+block|{
+name|MLX_IO_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EBUSY
 operator|)
 return|;
+block|}
 comment|/* looks ok, go with it */
 name|sc
 operator|->
@@ -3894,6 +4196,11 @@ operator|->
 name|mp_howlong
 expr_stmt|;
 block|}
+name|MLX_IO_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -3922,6 +4229,11 @@ comment|/* 	 * Start a rebuild on a given SCSI disk 	 */
 case|case
 name|MLX_REBUILDASYNC
 case|:
+name|MLX_IO_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -3931,6 +4243,11 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|MLX_IO_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|rb
 operator|->
 name|rr_status
@@ -4035,6 +4352,11 @@ name|mlx_background
 operator|=
 name|MLX_BACKGROUND_REBUILD
 expr_stmt|;
+name|MLX_IO_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -4044,12 +4366,22 @@ comment|/* 	 * Get the status of the current rebuild or consistency check. 	 */
 case|case
 name|MLX_REBUILDSTAT
 case|:
+name|MLX_IO_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 operator|*
 name|rs
 operator|=
 name|sc
 operator|->
 name|mlx_rebuildstat
+expr_stmt|;
+name|MLX_IO_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -4064,6 +4396,17 @@ name|error
 operator|=
 name|ENOENT
 expr_stmt|;
+name|MLX_CONFIG_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|mlxd
 operator|=
 operator|(
@@ -4077,6 +4420,12 @@ name|mlxd_devclass
 argument_list|,
 operator|*
 name|arg
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 if|if
@@ -4128,6 +4477,11 @@ operator|->
 name|mlx_sysdrive
 expr_stmt|;
 block|}
+name|MLX_CONFIG_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -4200,12 +4554,22 @@ comment|/* 	 * Return the current status of this drive. 	 */
 case|case
 name|MLXD_STATUS
 case|:
+name|MLX_IO_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 operator|*
 name|arg
 operator|=
 name|drive
 operator|->
 name|ms_state
+expr_stmt|;
+name|MLX_IO_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -4217,6 +4581,11 @@ case|case
 name|MLXD_CHECKASYNC
 case|:
 comment|/* start a background consistency check */
+name|MLX_IO_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -4226,6 +4595,11 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|MLX_IO_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 operator|*
 name|arg
 operator|=
@@ -4319,6 +4693,11 @@ name|mlx_background
 operator|=
 name|MLX_BACKGROUND_CHECK
 expr_stmt|;
+name|MLX_IO_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 operator|*
 name|arg
 operator|=
@@ -4371,6 +4750,11 @@ decl_stmt|;
 name|debug_called
 argument_list|(
 literal|1
+argument_list|)
+expr_stmt|;
+name|MLX_IO_ASSERT_LOCKED
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 comment|/*      * Run a bus pause?       */
@@ -4605,20 +4989,23 @@ comment|/* deal with possibly-missed interrupts and timed-out commands */
 name|mlx_done
 argument_list|(
 name|sc
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* reschedule another poll next second or so */
+name|callout_reset
+argument_list|(
+operator|&
 name|sc
 operator|->
 name|mlx_timeout
-operator|=
-name|timeout
-argument_list|(
+argument_list|,
+name|hz
+argument_list|,
 name|mlx_periodic
 argument_list|,
 name|sc
-argument_list|,
-name|hz
 argument_list|)
 expr_stmt|;
 block|}
@@ -4651,6 +5038,11 @@ decl_stmt|;
 name|debug_called
 argument_list|(
 literal|1
+argument_list|)
+expr_stmt|;
+name|MLX_IO_ASSERT_LOCKED
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 comment|/* Command completed OK? */
@@ -5082,15 +5474,11 @@ name|mlx_currevent
 argument_list|)
 expr_stmt|;
 comment|/* mark the event log as busy */
-name|atomic_set_int
-argument_list|(
-operator|&
 name|sc
 operator|->
 name|mlx_flags
-argument_list|,
+operator||=
 name|MLX_EVENTLOG_BUSY
-argument_list|)
 expr_stmt|;
 comment|/* drain new eventlog entries */
 name|mlx_periodic_eventlog_poll
@@ -5441,6 +5829,11 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+name|MLX_IO_ASSERT_LOCKED
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* get ourselves a command buffer */
 name|error
 operator|=
@@ -5665,6 +6058,11 @@ decl_stmt|;
 name|debug_called
 argument_list|(
 literal|1
+argument_list|)
+expr_stmt|;
+name|MLX_IO_ASSERT_LOCKED
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 name|sc
@@ -5994,15 +6392,12 @@ block|}
 else|else
 block|{
 comment|/* clear log-busy status */
-name|atomic_clear_int
-argument_list|(
-operator|&
 name|sc
 operator|->
 name|mlx_flags
-argument_list|,
+operator|&=
+operator|~
 name|MLX_EVENTLOG_BUSY
-argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -6046,6 +6441,11 @@ name|mc
 operator|->
 name|mc_data
 decl_stmt|;
+name|MLX_IO_ASSERT_LOCKED
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|mc
@@ -6221,6 +6621,11 @@ name|i
 decl_stmt|,
 name|command
 decl_stmt|;
+name|MLX_IO_ASSERT_LOCKED
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* What are we doing here? */
 if|if
 condition|(
@@ -6498,6 +6903,11 @@ index|]
 operator|&
 literal|0xf
 decl_stmt|;
+name|MLX_IO_ASSERT_LOCKED
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|mc
@@ -6808,6 +7218,11 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+name|MLX_IO_ASSERT_LOCKED
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* get ourselves a command buffer */
 name|error
 operator|=
@@ -7027,6 +7442,11 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+name|MLX_IO_ASSERT_LOCKED
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* get ourselves a command buffer */
 name|error
 operator|=
@@ -7177,6 +7597,11 @@ decl_stmt|;
 name|debug_called
 argument_list|(
 literal|1
+argument_list|)
+expr_stmt|;
+name|MLX_IO_ASSERT_LOCKED
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 comment|/* get ourselves a command buffer */
@@ -7351,6 +7776,11 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+name|MLX_IO_ASSERT_LOCKED
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* get ourselves a command buffer */
 name|error
 operator|=
@@ -7520,6 +7950,11 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+name|MLX_IO_ASSERT_LOCKED
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|mc
 operator|->
 name|mc_complete
@@ -7573,11 +8008,16 @@ literal|30
 operator|)
 condition|)
 block|{
-name|tsleep
+name|mtx_sleep
 argument_list|(
 name|mc
 operator|->
 name|mc_private
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|mlx_io_lock
 argument_list|,
 name|PRIBIO
 operator||
@@ -7654,12 +8094,15 @@ name|int
 name|error
 decl_stmt|,
 name|count
-decl_stmt|,
-name|s
 decl_stmt|;
 name|debug_called
 argument_list|(
 literal|1
+argument_list|)
+expr_stmt|;
+name|MLX_IO_ASSERT_LOCKED
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 name|mc
@@ -7705,6 +8148,8 @@ argument_list|(
 name|mc
 operator|->
 name|mc_sc
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -7735,11 +8180,6 @@ operator|!=
 name|MLX_STATUS_BUSY
 condition|)
 block|{
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -7750,11 +8190,6 @@ argument_list|,
 name|mc
 argument_list|,
 name|mc_link
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 return|return
@@ -8112,11 +8547,18 @@ name|mc
 argument_list|)
 expr_stmt|;
 block|}
+name|sc
+operator|->
+name|mlx_state
+operator|&=
+operator|~
+name|MLX_STATE_QFROZEN
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Pull as much work off the softc's work queue as possible and give it to the  * controller.  Leave a couple of slots free for emergencies.  *  * Must be called at splbio or in an equivalent fashion that prevents   * reentry or activity on the bioq.  */
+comment|/********************************************************************************  * Pull as much work off the softc's work queue as possible and give it to the  * controller.  Leave a couple of slots free for emergencies.  */
 end_comment
 
 begin_function
@@ -8140,34 +8582,29 @@ modifier|*
 name|bp
 decl_stmt|;
 name|int
-name|s
-decl_stmt|;
-name|int
 name|error
 decl_stmt|;
-comment|/* avoid reentrancy */
-if|if
-condition|(
-name|mlx_lock_tas
+name|MLX_IO_ASSERT_LOCKED
 argument_list|(
 name|sc
-argument_list|,
-name|MLX_LOCK_STARTING
 argument_list|)
-condition|)
-return|return;
-comment|/* spin until something prevents us from doing any work */
-name|s
-operator|=
-name|splbio
-argument_list|()
 expr_stmt|;
+comment|/* spin until something prevents us from doing any work */
 for|for
 control|(
 init|;
 condition|;
 control|)
 block|{
+if|if
+condition|(
+name|sc
+operator|->
+name|mlx_state
+operator|&
+name|MLX_STATE_QFROZEN
+condition|)
+break|break;
 comment|/* see if there's work to be done */
 if|if
 condition|(
@@ -8232,11 +8669,6 @@ name|sc
 operator|->
 name|mlx_waitbufs
 operator|--
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 comment|/* connect the buf to the command */
 name|mc
@@ -8304,26 +8736,15 @@ operator|==
 name|EINPROGRESS
 condition|)
 block|{
+name|sc
+operator|->
+name|mlx_state
+operator||=
+name|MLX_STATE_QFROZEN
+expr_stmt|;
 break|break;
 block|}
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-name|mlx_lock_clr
-argument_list|(
-name|sc
-argument_list|,
-name|MLX_LOCK_STARTING
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -8378,6 +8799,11 @@ argument_list|(
 name|bp
 argument_list|)
 decl_stmt|;
+name|MLX_IO_ASSERT_LOCKED
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|mc
@@ -8742,6 +9168,11 @@ operator|=
 name|ENOMEM
 expr_stmt|;
 comment|/* get ourselves a command and copy in from user space */
+name|MLX_IO_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -8755,11 +9186,18 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|MLX_IO_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 name|bcopy
 argument_list|(
 name|mu
@@ -8812,6 +9250,11 @@ goto|goto
 name|out
 goto|;
 block|}
+name|MLX_IO_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -8850,9 +9293,21 @@ name|mu_datasize
 argument_list|)
 operator|)
 condition|)
+block|{
+name|MLX_IO_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 goto|goto
 name|out
 goto|;
+block|}
+name|MLX_IO_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|debug
 argument_list|(
 literal|0
@@ -8977,6 +9432,13 @@ argument_list|,
 name|BUS_DMA_NOWAIT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+goto|goto
+name|out
+goto|;
 comment|/* copy out status and data */
 name|mu
 operator|->
@@ -8988,16 +9450,18 @@ name|mc_status
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|mu
 operator|->
 name|mu_datasize
 operator|>
 literal|0
-operator|)
-operator|&&
-operator|(
-operator|(
+condition|)
+block|{
+name|MLX_IO_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|copyout
@@ -9012,21 +9476,23 @@ name|mu
 operator|->
 name|mu_datasize
 argument_list|)
-operator|)
-operator|)
-condition|)
-goto|goto
-name|out
-goto|;
-name|error
-operator|=
-literal|0
 expr_stmt|;
+name|MLX_IO_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
 name|out
 label|:
 name|mlx_releasecmd
 argument_list|(
 name|mc
+argument_list|)
+expr_stmt|;
+name|MLX_IO_UNLOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 if|if
@@ -9079,8 +9545,6 @@ operator|->
 name|mc_sc
 decl_stmt|;
 name|int
-name|s
-decl_stmt|,
 name|slot
 decl_stmt|,
 name|limit
@@ -9088,6 +9552,11 @@ decl_stmt|;
 name|debug_called
 argument_list|(
 literal|1
+argument_list|)
+expr_stmt|;
+name|MLX_IO_ASSERT_LOCKED
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 comment|/*       * Enforce slot-usage limit, if we have the required information.      */
@@ -9144,11 +9613,6 @@ name|EBUSY
 operator|)
 return|;
 comment|/*       * Allocate an outstanding command slot       *      * XXX linear search is slow      */
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
 for|for
 control|(
 name|slot
@@ -9207,11 +9671,6 @@ name|mlx_busycmds
 operator|++
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 comment|/* out of slots? */
 if|if
 condition|(
@@ -9584,10 +10043,6 @@ name|mc_sc
 decl_stmt|;
 name|int
 name|i
-decl_stmt|,
-name|s
-decl_stmt|,
-name|done
 decl_stmt|;
 name|debug_called
 argument_list|(
@@ -9628,29 +10083,15 @@ control|(
 name|i
 operator|=
 literal|100000
-operator|,
-name|done
-operator|=
-literal|0
 init|;
-operator|(
 name|i
 operator|>
 literal|0
-operator|)
-operator|&&
-operator|!
-name|done
 condition|;
 name|i
 operator|--
 control|)
 block|{
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -9663,10 +10104,6 @@ name|mc
 argument_list|)
 condition|)
 block|{
-name|done
-operator|=
-literal|1
-expr_stmt|;
 comment|/* move command to work queue */
 name|TAILQ_INSERT_TAIL
 argument_list|(
@@ -9680,24 +10117,27 @@ argument_list|,
 name|mc_link
 argument_list|)
 expr_stmt|;
-block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-comment|/* drop spl to allow completion interrupts */
-block|}
-comment|/* command is enqueued */
-if|if
-condition|(
-name|done
-condition|)
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|i
+operator|>
+literal|1
+condition|)
+name|mlx_done
+argument_list|(
+name|sc
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 comment|/*       * We couldn't get the controller to take the command.  Revoke the slot      * that the command was given and return it with a bad status.      */
 name|sc
 operator|->
@@ -9751,6 +10191,9 @@ name|struct
 name|mlx_softc
 modifier|*
 name|sc
+parameter_list|,
+name|int
+name|startio
 parameter_list|)
 block|{
 name|struct
@@ -9759,8 +10202,6 @@ modifier|*
 name|mc
 decl_stmt|;
 name|int
-name|s
-decl_stmt|,
 name|result
 decl_stmt|;
 name|u_int8_t
@@ -9774,16 +10215,16 @@ argument_list|(
 literal|2
 argument_list|)
 expr_stmt|;
+name|MLX_IO_ASSERT_LOCKED
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|result
 operator|=
 literal|0
 expr_stmt|;
 comment|/* loop collecting completed commands */
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
 for|for
 control|(
 init|;
@@ -9896,15 +10337,12 @@ block|{
 break|break;
 block|}
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 comment|/* if we've completed any commands, try posting some more */
 if|if
 condition|(
 name|result
+operator|&&
+name|startio
 condition|)
 name|mlx_startio
 argument_list|(
@@ -9948,29 +10386,15 @@ decl_stmt|,
 modifier|*
 name|nc
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 name|debug_called
 argument_list|(
 literal|2
 argument_list|)
 expr_stmt|;
-comment|/* avoid reentrancy  XXX might want to signal and request a restart */
-if|if
-condition|(
-name|mlx_lock_tas
+name|MLX_IO_ASSERT_LOCKED
 argument_list|(
 name|sc
-argument_list|,
-name|MLX_LOCK_COMPLETING
 argument_list|)
-condition|)
-return|return;
-name|s
-operator|=
-name|splbio
-argument_list|()
 expr_stmt|;
 comment|/* scan the list of busy/done commands */
 name|mc
@@ -10088,18 +10512,6 @@ operator|=
 name|nc
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-name|mlx_lock_clr
-argument_list|(
-name|sc
-argument_list|,
-name|MLX_LOCK_COMPLETING
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -10132,18 +10544,15 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 name|debug_called
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-name|s
-operator|=
-name|splbio
-argument_list|()
+name|MLX_IO_ASSERT_LOCKED
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -10171,11 +10580,6 @@ argument_list|,
 name|mc
 argument_list|,
 name|mc_link
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 comment|/* allocate a new command buffer? */
@@ -10280,18 +10684,17 @@ modifier|*
 name|mc
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|;
 name|debug_called
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-name|s
-operator|=
-name|splbio
-argument_list|()
+name|MLX_IO_ASSERT_LOCKED
+argument_list|(
+name|mc
+operator|->
+name|mc_sc
+argument_list|)
 expr_stmt|;
 name|TAILQ_INSERT_HEAD
 argument_list|(
@@ -10305,11 +10708,6 @@ argument_list|,
 name|mc
 argument_list|,
 name|mc_link
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 block|}
@@ -10370,7 +10768,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/********************************************************************************  * Try to give (mc) to the controller.  Returns 1 if successful, 0 on failure  * (the controller is not ready to take a command).  *  * Must be called at splbio or in a fashion that prevents reentry.  */
+comment|/********************************************************************************  * Try to give (mc) to the controller.  Returns 1 if successful, 0 on failure  * (the controller is not ready to take a command).  */
 end_comment
 
 begin_function
@@ -10395,6 +10793,11 @@ decl_stmt|;
 name|debug_called
 argument_list|(
 literal|2
+argument_list|)
+expr_stmt|;
+name|MLX_IO_ASSERT_LOCKED
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 comment|/* ready for our command? */
@@ -10462,7 +10865,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * See if a command has been completed, if so acknowledge its completion  * and recover the slot number and status code.  *  * Must be called at splbio or in a fashion that prevents reentry.  */
+comment|/********************************************************************************  * See if a command has been completed, if so acknowledge its completion  * and recover the slot number and status code.  */
 end_comment
 
 begin_function
@@ -10487,6 +10890,11 @@ block|{
 name|debug_called
 argument_list|(
 literal|2
+argument_list|)
+expr_stmt|;
+name|MLX_IO_ASSERT_LOCKED
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 comment|/* status available? */
@@ -10548,7 +10956,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Enable/disable interrupts as requested. (No acknowledge required)  *  * Must be called at splbio or in a fashion that prevents reentry.  */
+comment|/********************************************************************************  * Enable/disable interrupts as requested. (No acknowledge required)  */
 end_comment
 
 begin_function
@@ -10568,6 +10976,11 @@ block|{
 name|debug_called
 argument_list|(
 literal|1
+argument_list|)
+expr_stmt|;
+name|MLX_IO_ASSERT_LOCKED
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -10639,16 +11052,13 @@ parameter_list|,
 name|int
 modifier|*
 name|param2
+parameter_list|,
+name|int
+name|first
 parameter_list|)
 block|{
 name|u_int8_t
 name|fwerror
-decl_stmt|;
-specifier|static
-name|int
-name|initted
-init|=
-literal|0
 decl_stmt|;
 name|debug_called
 argument_list|(
@@ -10658,8 +11068,7 @@ expr_stmt|;
 comment|/* first time around, clear any hardware completion status */
 if|if
 condition|(
-operator|!
-name|initted
+name|first
 condition|)
 block|{
 name|MLX_V3_PUT_IDBR
@@ -10673,10 +11082,6 @@ name|DELAY
 argument_list|(
 literal|1000
 argument_list|)
-expr_stmt|;
-name|initted
-operator|=
-literal|1
 expr_stmt|;
 block|}
 comment|/* init in progress? */
@@ -10765,7 +11170,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/********************************************************************************  * Try to give (mc) to the controller.  Returns 1 if successful, 0 on failure  * (the controller is not ready to take a command).  *  * Must be called at splbio or in a fashion that prevents reentry.  */
+comment|/********************************************************************************  * Try to give (mc) to the controller.  Returns 1 if successful, 0 on failure  * (the controller is not ready to take a command).  */
 end_comment
 
 begin_function
@@ -10790,6 +11195,11 @@ decl_stmt|;
 name|debug_called
 argument_list|(
 literal|2
+argument_list|)
+expr_stmt|;
+name|MLX_IO_ASSERT_LOCKED
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 comment|/* ready for our command? */
@@ -10835,15 +11245,11 @@ index|]
 argument_list|)
 expr_stmt|;
 comment|/* memory-mapped controller, so issue a write barrier to ensure the mailbox is filled */
-name|bus_space_barrier
+name|bus_barrier
 argument_list|(
 name|sc
 operator|->
-name|mlx_btag
-argument_list|,
-name|sc
-operator|->
-name|mlx_bhandle
+name|mlx_mem
 argument_list|,
 name|MLX_V4_MAILBOX
 argument_list|,
@@ -10875,7 +11281,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * See if a command has been completed, if so acknowledge its completion  * and recover the slot number and status code.  *  * Must be called at splbio or in a fashion that prevents reentry.  */
+comment|/********************************************************************************  * See if a command has been completed, if so acknowledge its completion  * and recover the slot number and status code.  */
 end_comment
 
 begin_function
@@ -10900,6 +11306,11 @@ block|{
 name|debug_called
 argument_list|(
 literal|2
+argument_list|)
+expr_stmt|;
+name|MLX_IO_ASSERT_LOCKED
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 comment|/* status available? */
@@ -10961,7 +11372,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Enable/disable interrupts as requested.  *  * Must be called at splbio or in a fashion that prevents reentry.  */
+comment|/********************************************************************************  * Enable/disable interrupts as requested.  */
 end_comment
 
 begin_function
@@ -10981,6 +11392,11 @@ block|{
 name|debug_called
 argument_list|(
 literal|1
+argument_list|)
+expr_stmt|;
+name|MLX_IO_ASSERT_LOCKED
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -11057,16 +11473,13 @@ parameter_list|,
 name|int
 modifier|*
 name|param2
+parameter_list|,
+name|int
+name|first
 parameter_list|)
 block|{
 name|u_int8_t
 name|fwerror
-decl_stmt|;
-specifier|static
-name|int
-name|initted
-init|=
-literal|0
 decl_stmt|;
 name|debug_called
 argument_list|(
@@ -11076,8 +11489,7 @@ expr_stmt|;
 comment|/* first time around, clear any hardware completion status */
 if|if
 condition|(
-operator|!
-name|initted
+name|first
 condition|)
 block|{
 name|MLX_V4_PUT_IDBR
@@ -11091,10 +11503,6 @@ name|DELAY
 argument_list|(
 literal|1000
 argument_list|)
-expr_stmt|;
-name|initted
-operator|=
-literal|1
 expr_stmt|;
 block|}
 comment|/* init in progress? */
@@ -11183,7 +11591,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/********************************************************************************  * Try to give (mc) to the controller.  Returns 1 if successful, 0 on failure  * (the controller is not ready to take a command).  *  * Must be called at splbio or in a fashion that prevents reentry.  */
+comment|/********************************************************************************  * Try to give (mc) to the controller.  Returns 1 if successful, 0 on failure  * (the controller is not ready to take a command).  */
 end_comment
 
 begin_function
@@ -11208,6 +11616,11 @@ decl_stmt|;
 name|debug_called
 argument_list|(
 literal|2
+argument_list|)
+expr_stmt|;
+name|MLX_IO_ASSERT_LOCKED
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 comment|/* ready for our command? */
@@ -11272,7 +11685,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * See if a command has been completed, if so acknowledge its completion  * and recover the slot number and status code.  *  * Must be called at splbio or in a fashion that prevents reentry.  */
+comment|/********************************************************************************  * See if a command has been completed, if so acknowledge its completion  * and recover the slot number and status code.  */
 end_comment
 
 begin_function
@@ -11297,6 +11710,11 @@ block|{
 name|debug_called
 argument_list|(
 literal|2
+argument_list|)
+expr_stmt|;
+name|MLX_IO_ASSERT_LOCKED
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 comment|/* status available? */
@@ -11358,7 +11776,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Enable/disable interrupts as requested.  *  * Must be called at splbio or in a fashion that prevents reentry.  */
+comment|/********************************************************************************  * Enable/disable interrupts as requested.  */
 end_comment
 
 begin_function
@@ -11378,6 +11796,11 @@ block|{
 name|debug_called
 argument_list|(
 literal|1
+argument_list|)
+expr_stmt|;
+name|MLX_IO_ASSERT_LOCKED
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -11454,16 +11877,13 @@ parameter_list|,
 name|int
 modifier|*
 name|param2
+parameter_list|,
+name|int
+name|first
 parameter_list|)
 block|{
 name|u_int8_t
 name|fwerror
-decl_stmt|;
-specifier|static
-name|int
-name|initted
-init|=
-literal|0
 decl_stmt|;
 name|debug_called
 argument_list|(
@@ -11473,8 +11893,7 @@ expr_stmt|;
 comment|/* first time around, clear any hardware completion status */
 if|if
 condition|(
-operator|!
-name|initted
+name|first
 condition|)
 block|{
 name|MLX_V5_PUT_IDBR
@@ -11488,10 +11907,6 @@ name|DELAY
 argument_list|(
 literal|1000
 argument_list|)
-expr_stmt|;
-name|initted
-operator|=
-literal|1
 expr_stmt|;
 block|}
 comment|/* init in progress? */
@@ -13094,6 +13509,11 @@ name|int
 name|i
 decl_stmt|;
 comment|/* search system drives */
+name|MLX_CONFIG_ASSERT_LOCKED
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i

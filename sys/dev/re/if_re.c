@@ -6483,7 +6483,7 @@ name|sc
 operator|->
 name|rl_expcap
 operator|+
-name|PCIR_EXPRESS_LINK_CAP
+name|PCIER_LINK_CAP
 argument_list|,
 literal|2
 argument_list|)
@@ -6493,7 +6493,7 @@ condition|(
 operator|(
 name|cap
 operator|&
-name|PCIM_LINK_CAP_ASPM
+name|PCIEM_LINK_CAP_ASPM
 operator|)
 operator|!=
 literal|0
@@ -6509,7 +6509,7 @@ name|sc
 operator|->
 name|rl_expcap
 operator|+
-name|PCIR_EXPRESS_LINK_CTL
+name|PCIER_LINK_CTL
 argument_list|,
 literal|2
 argument_list|)
@@ -6519,7 +6519,7 @@ condition|(
 operator|(
 name|ctl
 operator|&
-literal|0x0003
+name|PCIEM_LINK_CTL_ASPMC
 operator|)
 operator|!=
 literal|0
@@ -6528,7 +6528,7 @@ block|{
 name|ctl
 operator|&=
 operator|~
-literal|0x0003
+name|PCIEM_LINK_CTL_ASPMC
 expr_stmt|;
 name|pci_write_config
 argument_list|(
@@ -6538,7 +6538,7 @@ name|sc
 operator|->
 name|rl_expcap
 operator|+
-name|PCIR_EXPRESS_LINK_CTL
+name|PCIER_LINK_CTL
 argument_list|,
 name|ctl
 argument_list|,

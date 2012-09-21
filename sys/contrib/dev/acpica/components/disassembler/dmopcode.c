@@ -546,6 +546,14 @@ operator|.
 name|Node
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Tag
+condition|)
+block|{
+return|return;
+block|}
 comment|/* Match the name in the info table */
 for|for
 control|(

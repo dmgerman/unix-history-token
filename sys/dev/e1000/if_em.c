@@ -24366,7 +24366,7 @@ name|reg
 operator|=
 name|base
 operator|+
-name|PCIR_EXPRESS_LINK_CAP
+name|PCIER_LINK_CAP
 expr_stmt|;
 name|link_cap
 operator|=
@@ -24384,7 +24384,7 @@ condition|(
 operator|(
 name|link_cap
 operator|&
-name|PCIM_LINK_CAP_ASPM
+name|PCIEM_LINK_CAP_ASPM
 operator|)
 operator|==
 literal|0
@@ -24394,7 +24394,7 @@ name|reg
 operator|=
 name|base
 operator|+
-name|PCIR_EXPRESS_LINK_CTL
+name|PCIER_LINK_CTL
 expr_stmt|;
 name|link_ctrl
 operator|=
@@ -24409,9 +24409,9 @@ argument_list|)
 expr_stmt|;
 name|link_ctrl
 operator|&=
-literal|0xFFFC
+operator|~
+name|PCIEM_LINK_CTL_ASPMC
 expr_stmt|;
-comment|/* turn off bit 1 and 2 */
 name|pci_write_config
 argument_list|(
 name|dev

@@ -22650,17 +22650,13 @@ name|error
 operator|)
 return|;
 comment|/* 	 * The evacuation succeeded.  Remove any remaining MOS metadata 	 * associated with this vdev, and wait for these changes to sync. 	 */
-name|ASSERT3U
+name|ASSERT0
 argument_list|(
 name|vd
 operator|->
 name|vdev_stat
 operator|.
 name|vs_alloc
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|txg
@@ -27159,16 +27155,12 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|zio_wait
 argument_list|(
 name|zio
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}

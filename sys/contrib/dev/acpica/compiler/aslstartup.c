@@ -537,7 +537,7 @@ name|fgets
 argument_list|(
 name|Gbl_CurrentLineBuffer
 argument_list|,
-name|ASL_LINE_BUFFER_SIZE
+name|Gbl_LineBufferSize
 argument_list|,
 name|Info
 operator|->

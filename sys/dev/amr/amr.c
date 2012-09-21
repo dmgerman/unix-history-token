@@ -529,22 +529,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Status monitoring  */
-end_comment
-
-begin_function_decl
-specifier|static
-name|void
-name|amr_periodic
-parameter_list|(
-name|void
-modifier|*
-name|data
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/*  * Interface-specific shims  */
 end_comment
 
@@ -1476,8 +1460,6 @@ name|amr_state
 operator||=
 name|AMR_STATE_INTEN
 expr_stmt|;
-comment|/*      * Start the timeout routine.      */
-comment|/*    sc->amr_timeout = timeout(amr_periodic, sc, hz);*/
 return|return;
 block|}
 end_function
@@ -1673,18 +1655,6 @@ argument_list|,
 name|sc
 operator|->
 name|amr_pass
-argument_list|)
-expr_stmt|;
-comment|/* cancel status timeout */
-name|untimeout
-argument_list|(
-name|amr_periodic
-argument_list|,
-name|sc
-argument_list|,
-name|sc
-operator|->
-name|amr_timeout
 argument_list|)
 expr_stmt|;
 comment|/* throw away any command buffers */
@@ -4068,6 +4038,19 @@ argument_list|(
 name|au_length
 argument_list|)
 expr_stmt|;
+name|dp
+operator|=
+name|malloc
+argument_list|(
+name|real_length
+argument_list|,
+name|M_AMR
+argument_list|,
+name|M_WAITOK
+operator||
+name|M_ZERO
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|au_length
@@ -4082,34 +4065,6 @@ operator|!=
 literal|0x06
 condition|)
 block|{
-if|if
-condition|(
-operator|(
-name|dp
-operator|=
-name|malloc
-argument_list|(
-name|real_length
-argument_list|,
-name|M_AMR
-argument_list|,
-name|M_WAITOK
-operator||
-name|M_ZERO
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-block|{
-name|error
-operator|=
-name|ENOMEM
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
 if|if
 condition|(
 operator|(
@@ -4516,12 +4471,6 @@ argument_list|,
 name|au_buffer
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|dp
-operator|!=
-name|NULL
-condition|)
 name|debug
 argument_list|(
 literal|2
@@ -4604,65 +4553,6 @@ operator|(
 name|error
 operator|)
 return|;
-block|}
-end_function
-
-begin_comment
-comment|/********************************************************************************  ********************************************************************************                                                                 Status Monitoring  ********************************************************************************  ********************************************************************************/
-end_comment
-
-begin_comment
-comment|/********************************************************************************  * Perform a periodic check of the controller status  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|amr_periodic
-parameter_list|(
-name|void
-modifier|*
-name|data
-parameter_list|)
-block|{
-name|struct
-name|amr_softc
-modifier|*
-name|sc
-init|=
-operator|(
-expr|struct
-name|amr_softc
-operator|*
-operator|)
-name|data
-decl_stmt|;
-name|debug_called
-argument_list|(
-literal|2
-argument_list|)
-expr_stmt|;
-comment|/* XXX perform periodic status checks here */
-comment|/* compensate for missed interrupts */
-name|amr_done
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-comment|/* reschedule */
-name|sc
-operator|->
-name|amr_timeout
-operator|=
-name|timeout
-argument_list|(
-name|amr_periodic
-argument_list|,
-name|sc
-argument_list|,
-name|hz
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

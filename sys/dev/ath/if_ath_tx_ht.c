@@ -2874,6 +2874,7 @@ name|bf_state
 operator|.
 name|bfs_txflags
 operator|&=
+operator|~
 operator|(
 name|HAL_TXDESC_RTSENA
 operator||

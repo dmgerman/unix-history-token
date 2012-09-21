@@ -2365,19 +2365,6 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
-operator|(
-name|td
-operator|!=
-name|NULL
-operator|)
-argument_list|,
-operator|(
-literal|"curthread is NULL"
-operator|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2782,7 +2769,7 @@ operator|==
 name|SINGLE_EXIT
 condition|)
 block|{
-comment|/* 		 * We have gotten rid of all the other threads and we 		 * are about to either exit or exec. In either case, 		 * we try our utmost  to revert to being a non-threaded 		 * process. 		 */
+comment|/* 		 * We have gotten rid of all the other threads and we 		 * are about to either exit or exec. In either case, 		 * we try our utmost to revert to being a non-threaded 		 * process. 		 */
 name|p
 operator|->
 name|p_singlethread

@@ -2441,16 +2441,18 @@ for|for
 control|(
 name|i
 operator|=
+literal|0
+init|;
+name|i
+operator|<
+operator|(
 name|_NCPUWORDS
 operator|-
 literal|1
-init|;
-name|i
-operator|>
-literal|0
+operator|)
 condition|;
 name|i
-operator|--
+operator|++
 control|)
 block|{
 name|bytesp
@@ -2461,7 +2463,7 @@ name|tbuf
 argument_list|,
 name|bufsiz
 argument_list|,
-literal|"%lx, "
+literal|"%lx,"
 argument_list|,
 name|set
 operator|->
@@ -2492,7 +2494,9 @@ name|set
 operator|->
 name|__bits
 index|[
-literal|0
+name|_NCPUWORDS
+operator|-
+literal|1
 index|]
 argument_list|)
 expr_stmt|;
@@ -2601,16 +2605,18 @@ for|for
 control|(
 name|i
 operator|=
+literal|0
+init|;
+name|i
+operator|<
+operator|(
 name|nwords
 operator|-
 literal|1
-init|;
-name|i
-operator|>
-literal|0
+operator|)
 condition|;
 name|i
-operator|--
+operator|++
 control|)
 block|{
 name|ret
@@ -2619,7 +2625,7 @@ name|sscanf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%lx, "
+literal|"%lx,"
 argument_list|,
 operator|&
 name|set
@@ -2653,7 +2659,7 @@ name|strstr
 argument_list|(
 name|buf
 argument_list|,
-literal|" "
+literal|","
 argument_list|)
 expr_stmt|;
 if|if
@@ -2685,7 +2691,9 @@ name|set
 operator|->
 name|__bits
 index|[
-literal|0
+name|nwords
+operator|-
+literal|1
 index|]
 argument_list|)
 expr_stmt|;

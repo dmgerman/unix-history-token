@@ -3874,7 +3874,7 @@ name|sc
 operator|->
 name|alc_expcap
 operator|+
-name|PCIR_EXPRESS_LINK_CTL
+name|PCIER_LINK_CTL
 argument_list|)
 expr_stmt|;
 else|else
@@ -3934,7 +3934,7 @@ comment|/* Disable extended sync except AR8152 B v1.0 */
 name|linkcfg
 operator|&=
 operator|~
-literal|0x80
+name|PCIEM_LINK_CTL_EXTENDED_SYNC
 expr_stmt|;
 if|if
 condition|(
@@ -3954,7 +3954,7 @@ name|ATHEROS_AR8152_B_V10
 condition|)
 name|linkcfg
 operator||=
-literal|0x80
+name|PCIEM_LINK_CTL_EXTENDED_SYNC
 expr_stmt|;
 name|CSR_WRITE_2
 argument_list|(
@@ -3964,7 +3964,7 @@ name|sc
 operator|->
 name|alc_expcap
 operator|+
-name|PCIR_EXPRESS_LINK_CTL
+name|PCIER_LINK_CTL
 argument_list|,
 name|linkcfg
 argument_list|)
@@ -4471,7 +4471,7 @@ name|sc
 argument_list|,
 name|base
 operator|+
-name|PCIR_EXPRESS_DEVICE_CTL
+name|PCIER_DEVICE_CTL
 argument_list|)
 expr_stmt|;
 name|sc
@@ -4481,7 +4481,7 @@ operator|=
 operator|(
 name|burst
 operator|&
-name|PCIM_EXP_CTL_MAX_READ_REQUEST
+name|PCIEM_CTL_MAX_READ_REQUEST
 operator|)
 operator|>>
 literal|12
@@ -4493,7 +4493,7 @@ operator|=
 operator|(
 name|burst
 operator|&
-name|PCIM_EXP_CTL_MAX_PAYLOAD
+name|PCIEM_CTL_MAX_PAYLOAD
 operator|)
 operator|>>
 literal|5
@@ -4694,7 +4694,7 @@ name|sc
 argument_list|,
 name|base
 operator|+
-name|PCIR_EXPRESS_LINK_CAP
+name|PCIER_LINK_CAP
 argument_list|)
 expr_stmt|;
 if|if
@@ -4702,7 +4702,7 @@ condition|(
 operator|(
 name|cap
 operator|&
-name|PCIM_LINK_CAP_ASPM
+name|PCIEM_LINK_CAP_ASPM
 operator|)
 operator|!=
 literal|0
@@ -4716,7 +4716,7 @@ name|sc
 argument_list|,
 name|base
 operator|+
-name|PCIR_EXPRESS_LINK_CTL
+name|PCIER_LINK_CTL
 argument_list|)
 expr_stmt|;
 if|if
@@ -4724,7 +4724,7 @@ condition|(
 operator|(
 name|ctl
 operator|&
-literal|0x08
+name|PCIEM_LINK_CTL_RCB
 operator|)
 operator|!=
 literal|0
@@ -4760,13 +4760,13 @@ name|state
 operator|=
 name|ctl
 operator|&
-literal|0x03
+name|PCIEM_LINK_CTL_ASPMC
 expr_stmt|;
 if|if
 condition|(
 name|state
 operator|&
-literal|0x01
+name|PCIEM_LINK_CTL_ASPMC_L0S
 condition|)
 name|sc
 operator|->
@@ -4778,7 +4778,7 @@ if|if
 condition|(
 name|state
 operator|&
-literal|0x02
+name|PCIEM_LINK_CTL_ASPMC_L1
 condition|)
 name|sc
 operator|->

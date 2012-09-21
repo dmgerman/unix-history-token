@@ -18739,14 +18739,30 @@ block|}
 ifdef|#
 directive|ifdef
 name|IPSEC_NAT_T
-comment|/* 		 * If NAT-T is enabled, check ports for tunnel mode. 		 * Do not check ports if they are set to zero in the SPD. 		 * Also do not do it for transport mode, as there is no 		 * port information available in the SP. 		 */
+comment|/* 		 * If NAT-T is enabled, check ports for tunnel mode. 		 * Do not check ports if they are set to zero in the SPD. 		 * Also do not do it for native transport mode, as there 		 * is no port information available in the SP. 		 */
 if|if
 condition|(
+operator|(
 name|saidx1
 operator|->
 name|mode
 operator|==
 name|IPSEC_MODE_TUNNEL
+operator|||
+operator|(
+name|saidx1
+operator|->
+name|mode
+operator|==
+name|IPSEC_MODE_TRANSPORT
+operator|&&
+name|saidx1
+operator|->
+name|proto
+operator|==
+name|IPPROTO_ESP
+operator|)
+operator|)
 operator|&&
 name|saidx1
 operator|->

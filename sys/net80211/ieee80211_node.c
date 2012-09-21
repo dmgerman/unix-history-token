@@ -9658,7 +9658,18 @@ decl_stmt|;
 name|uint16_t
 name|max_aid
 decl_stmt|;
+name|struct
+name|ieee80211vap
+modifier|*
+name|vap
+decl_stmt|;
+comment|/* Overdoing it default */
 name|max_aid
+operator|=
+name|IEEE80211_AID_MAX
+expr_stmt|;
+comment|/* Handle the case of there being no vaps just yet */
+name|vap
 operator|=
 name|TAILQ_FIRST
 argument_list|(
@@ -9669,6 +9680,16 @@ name|nt_ic
 operator|->
 name|ic_vaps
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vap
+operator|!=
+name|NULL
+condition|)
+name|max_aid
+operator|=
+name|vap
 operator|->
 name|iv_max_aid
 expr_stmt|;

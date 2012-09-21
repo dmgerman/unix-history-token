@@ -31,6 +31,12 @@ directive|include
 file|<contrib/dev/acpica/include/acdisasm.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -92,6 +98,18 @@ name|void
 name|Usage
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|ACPI_SYSTEM_XFACE
+name|AslSignalHandler
+parameter_list|(
+name|int
+name|Sig
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -180,7 +198,7 @@ begin_define
 define|#
 directive|define
 name|ASL_SUPPORTED_OPTIONS
-value|"@:2b|c|d^D:e:fgh^i|I:l^mno|p:P^r:s|t|T:G^v^w|x:z"
+value|"@:2b|c|d^D:e:fgh^i|I:l^m:no|p:P^r:s|t|T:G^v^w|x:z"
 end_define
 
 begin_comment
@@ -461,6 +479,13 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
+literal|"-db"
+argument_list|,
+literal|"Do not translate Buffers to Resource Templates"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
 literal|"-dc [file]"
 argument_list|,
 literal|"Disassemble AML and immediately compile it"
@@ -478,13 +503,6 @@ argument_list|(
 literal|"-e  [f1,f2]"
 argument_list|,
 literal|"Include ACPI table(s) for external symbol resolution"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
-literal|"-m"
-argument_list|,
-literal|"Do not translate Buffers to Resource Templates"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
@@ -677,6 +695,95 @@ block|}
 end_function
 
 begin_comment
+comment|/******************************************************************************  *  * FUNCTION:    AslSignalHandler  *  * PARAMETERS:  Sig                 - Signal that invoked this handler  *  * RETURN:      None  *  * DESCRIPTION: Control-C handler. Delete any intermediate files and any  *              output files that may be left in an indeterminate state.  *  *****************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|ACPI_SYSTEM_XFACE
+name|AslSignalHandler
+parameter_list|(
+name|int
+name|Sig
+parameter_list|)
+block|{
+name|UINT32
+name|i
+decl_stmt|;
+name|signal
+argument_list|(
+name|Sig
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Aborting\n\n"
+argument_list|)
+expr_stmt|;
+comment|/* Close all open files */
+name|Gbl_Files
+index|[
+name|ASL_FILE_PREPROCESSOR
+index|]
+operator|.
+name|Handle
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* the .i file is same as source file */
+for|for
+control|(
+name|i
+operator|=
+name|ASL_FILE_INPUT
+init|;
+name|i
+operator|<
+name|ASL_MAX_FILE_TYPE
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|FlCloseFile
+argument_list|(
+name|i
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Delete any output files */
+for|for
+control|(
+name|i
+operator|=
+name|ASL_FILE_AML_OUTPUT
+init|;
+name|i
+operator|<
+name|ASL_MAX_FILE_TYPE
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|FlDeleteFile
+argument_list|(
+name|i
+argument_list|)
+expr_stmt|;
+block|}
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AslInitialize  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Initialize compiler globals  *  ******************************************************************************/
 end_comment
 
@@ -706,10 +813,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|AcpiDbgLevel
-operator|=
-literal|0
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -778,6 +881,14 @@ operator|.
 name|Filename
 operator|=
 literal|"STDERR"
+expr_stmt|;
+comment|/* Allocate the line buffer(s) */
+name|Gbl_LineBufferSize
+operator|/=
+literal|2
+expr_stmt|;
+name|UtExpandLineBuffers
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -1218,6 +1329,15 @@ name|TRUE
 expr_stmt|;
 break|break;
 case|case
+literal|'b'
+case|:
+comment|/* Do not convert buffers to resource descriptors */
+name|AcpiGbl_NoResourceDisassembly
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
 literal|'c'
 case|:
 break|break;
@@ -1524,10 +1644,41 @@ break|break;
 case|case
 literal|'m'
 case|:
-comment|/* Do not convert buffers to resource descriptors */
-name|AcpiGbl_NoResourceDisassembly
+comment|/* Set line buffer size */
+name|Gbl_LineBufferSize
 operator|=
-name|TRUE
+operator|(
+name|UINT32
+operator|)
+name|strtoul
+argument_list|(
+name|AcpiGbl_Optarg
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+operator|*
+literal|1024
+expr_stmt|;
+if|if
+condition|(
+name|Gbl_LineBufferSize
+operator|<
+name|ASL_DEFAULT_LINE_BUFFER_SIZE
+condition|)
+block|{
+name|Gbl_LineBufferSize
+operator|=
+name|ASL_DEFAULT_LINE_BUFFER_SIZE
+expr_stmt|;
+block|}
+name|printf
+argument_list|(
+literal|"Line Buffer Size: %u\n"
+argument_list|,
+name|Gbl_LineBufferSize
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -2222,9 +2373,20 @@ decl_stmt|;
 name|int
 name|Index2
 decl_stmt|;
+name|signal
+argument_list|(
+name|SIGINT
+argument_list|,
+name|AslSignalHandler
+argument_list|)
+expr_stmt|;
 name|AcpiGbl_ExternalFileList
 operator|=
 name|NULL
+expr_stmt|;
+name|AcpiDbgLevel
+operator|=
+literal|0
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -2244,12 +2406,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* Init and command line */
-name|AslInitialize
-argument_list|()
-expr_stmt|;
-name|PrInitializePreprocessor
-argument_list|()
-expr_stmt|;
 name|Index1
 operator|=
 name|Index2
@@ -2260,6 +2416,12 @@ name|argc
 argument_list|,
 name|argv
 argument_list|)
+expr_stmt|;
+name|AslInitialize
+argument_list|()
+expr_stmt|;
+name|PrInitializePreprocessor
+argument_list|()
 expr_stmt|;
 comment|/* Options that have no additional parameters or pathnames */
 if|if

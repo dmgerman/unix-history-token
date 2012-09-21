@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: dns.h,v 1.11 2010/02/26 20:29:54 djm Exp $ */
+comment|/* $OpenBSD: dns.h,v 1.12 2012/05/23 03:28:28 djm Exp $ */
 end_comment
 
 begin_comment
@@ -24,10 +24,20 @@ enum|enum
 name|sshfp_types
 block|{
 name|SSHFP_KEY_RESERVED
+init|=
+literal|0
 block|,
 name|SSHFP_KEY_RSA
+init|=
+literal|1
 block|,
 name|SSHFP_KEY_DSA
+init|=
+literal|2
+block|,
+name|SSHFP_KEY_ECDSA
+init|=
+literal|3
 block|}
 enum|;
 end_enum
@@ -37,8 +47,20 @@ enum|enum
 name|sshfp_hashes
 block|{
 name|SSHFP_HASH_RESERVED
+init|=
+literal|0
 block|,
 name|SSHFP_HASH_SHA1
+init|=
+literal|1
+block|,
+name|SSHFP_HASH_SHA256
+init|=
+literal|2
+block|,
+name|SSHFP_HASH_MAX
+init|=
+literal|3
 block|}
 enum|;
 end_enum

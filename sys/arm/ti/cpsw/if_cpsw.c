@@ -3625,14 +3625,6 @@ name|sc
 argument_list|)
 expr_stmt|;
 break|break;
-name|printf
-argument_list|(
-literal|"%s: SIOCSIFFLAGS\n"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-break|break;
 case|case
 name|SIOCADDMULTI
 case|:
@@ -3669,14 +3661,6 @@ break|break;
 case|case
 name|SIOCGIFMEDIA
 case|:
-comment|/* fall through */
-name|printf
-argument_list|(
-literal|"%s: SIOCGIFMEDIA\n"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|ifmedia_ioctl
@@ -3699,13 +3683,6 @@ break|break;
 case|case
 name|SIOCSIFMEDIA
 case|:
-name|printf
-argument_list|(
-literal|"%s: SIOCSIFMEDIA\n"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|ifmedia_ioctl

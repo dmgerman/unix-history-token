@@ -179,6 +179,11 @@ init|=
 literal|0x200000000ULL
 block|,
 comment|/* RX EDMA state */
+name|ATH_DEBUG_SW_TX_FILT
+init|=
+literal|0x400000000ULL
+block|,
+comment|/* SW TX FF */
 name|ATH_DEBUG_ANY
 init|=
 literal|0xffffffffffffffffULL

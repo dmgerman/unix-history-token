@@ -2092,16 +2092,6 @@ name|provider
 expr_stmt|;
 name|pp
 operator|->
-name|flags
-operator|=
-name|pp2
-operator|->
-name|flags
-operator|&
-name|G_PF_CANDELETE
-expr_stmt|;
-name|pp
-operator|->
 name|stripesize
 operator|=
 name|pp2

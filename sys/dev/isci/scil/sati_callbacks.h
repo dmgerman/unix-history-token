@@ -131,7 +131,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * @brief This callback method gets the the task type for the SCSI task  *        request.  *  * @param[in] scsi_task This parameter specifies the user's SCSI Task request.  *            It is a cookie that allows the user to provide the necessary  *            information for this callback.  *  * @return This method returns one of the enumeration values for  *         SCSI_TASK_MGMT_REQUEST_CODES  */
+comment|/**  * @brief This callback method gets the task type for the SCSI task  *        request.  *  * @param[in] scsi_task This parameter specifies the user's SCSI Task request.  *            It is a cookie that allows the user to provide the necessary  *            information for this callback.  *  * @return This method returns one of the enumeration values for  *         SCSI_TASK_MGMT_REQUEST_CODES  */
 end_comment
 
 begin_function_decl

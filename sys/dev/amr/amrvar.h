@@ -733,11 +733,6 @@ name|intr_config_hook
 name|amr_ich
 decl_stmt|;
 comment|/* wait-for-interrupts probe hook */
-name|struct
-name|callout_handle
-name|amr_timeout
-decl_stmt|;
-comment|/* periodic status check */
 name|int
 name|amr_allow_vol_config
 decl_stmt|;

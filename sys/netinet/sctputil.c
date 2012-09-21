@@ -4268,6 +4268,10 @@ name|SCTP_PRINTF
 argument_list|(
 literal|"net:%p flight was %d corrected to %d\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|lnet
 argument_list|,
 name|lnet
@@ -8100,7 +8104,7 @@ operator|)
 name|tmr
 condition|)
 block|{
-comment|/* 		 * SCTP_PRINTF("Stale SCTP timer fired (%p), ignoring...\n", 		 * tmr); 		 */
+comment|/* 		 * SCTP_PRINTF("Stale SCTP timer fired (%p), ignoring...\n", 		 * (void *)tmr); 		 */
 name|CURVNET_RESTORE
 argument_list|()
 expr_stmt|;
@@ -11106,6 +11110,10 @@ name|t_type
 argument_list|,
 name|to_ticks
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|tmr
 argument_list|)
 expr_stmt|;
@@ -12159,7 +12167,7 @@ operator|=
 operator|(
 name|uint64_t
 operator|)
-literal|10000000
+literal|1000000
 operator|*
 operator|(
 name|uint64_t
@@ -22200,13 +22208,6 @@ index|[
 name|INET6_ADDRSTRLEN
 index|]
 decl_stmt|;
-name|ip6buf
-index|[
-literal|0
-index|]
-operator|=
-literal|0
-expr_stmt|;
 endif|#
 directive|endif
 switch|switch

@@ -1859,8 +1859,6 @@ condition|(
 name|aniState
 operator|->
 name|firstepLevel
-operator|+
-literal|1
 operator|<
 name|params
 operator|->
@@ -1916,8 +1914,6 @@ condition|(
 name|aniState
 operator|->
 name|firstepLevel
-operator|+
-literal|1
 operator|<
 name|params
 operator|->
@@ -2141,8 +2137,6 @@ condition|(
 name|aniState
 operator|->
 name|firstepLevel
-operator|+
-literal|1
 operator|<
 name|params
 operator|->
@@ -4001,6 +3995,17 @@ name|ast_ani_lneg
 operator|++
 expr_stmt|;
 comment|/* restart ANI period if listenTime is invalid */
+name|HALDEBUG
+argument_list|(
+name|ah
+argument_list|,
+name|HAL_DEBUG_ANI
+argument_list|,
+literal|"%s: invalid listenTime\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|ar5416AniRestart
 argument_list|(
 name|ah
@@ -4087,6 +4092,17 @@ condition|)
 name|ar5416AniLowerImmunity
 argument_list|(
 name|ah
+argument_list|)
+expr_stmt|;
+name|HALDEBUG
+argument_list|(
+name|ah
+argument_list|,
+name|HAL_DEBUG_ANI
+argument_list|,
+literal|"%s: lower immunity\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|ar5416AniRestart
@@ -4196,7 +4212,7 @@ name|__func__
 argument_list|,
 name|aniState
 operator|->
-name|ofdmPhyErrCount
+name|cckPhyErrCount
 argument_list|,
 name|aniState
 operator|->

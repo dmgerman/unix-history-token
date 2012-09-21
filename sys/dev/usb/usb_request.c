@@ -347,7 +347,7 @@ comment|/* fail data stage */
 name|int
 name|ss_fail
 decl_stmt|;
-comment|/* fail data stage */
+comment|/* fail status stage */
 name|int
 name|ds_delay
 decl_stmt|;

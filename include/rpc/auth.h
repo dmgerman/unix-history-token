@@ -695,7 +695,7 @@ end_expr_stmt
 begin_function_decl
 name|__END_DECLS
 comment|/*  * These are the various implementations of client side authenticators.  */
-comment|/*  * System style authentication  * AUTH *authunix_create(machname, uid, gid, len, aup_gids)  *	char *machname;  *	int uid;  *	int gid;  *	int len;  *	int *aup_gids;  */
+comment|/*  * System style authentication  * AUTH *authunix_create(machname, uid, gid, len, aup_gids)  *	char *machname;  *	uid_t uid;  *	gid_t gid;  *	int len;  *	gid_t *aup_gids;  */
 name|__BEGIN_DECLS
 specifier|extern
 name|AUTH
@@ -705,13 +705,13 @@ parameter_list|(
 name|char
 modifier|*
 parameter_list|,
-name|int
+name|uid_t
+parameter_list|,
+name|gid_t
 parameter_list|,
 name|int
 parameter_list|,
-name|int
-parameter_list|,
-name|int
+name|gid_t
 modifier|*
 parameter_list|)
 function_decl|;

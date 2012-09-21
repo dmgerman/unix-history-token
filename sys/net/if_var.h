@@ -266,6 +266,43 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
+expr|struct
+name|pfil_head
+argument_list|,
+name|link_pfil_hook
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* packet filter hooks */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|V_link_pfil_hook
+value|VNET(link_pfil_hook)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
+
 begin_comment
 comment|/*  * Structure defining a queue for a network interface.  */
 end_comment

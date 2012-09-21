@@ -310,45 +310,76 @@ begin_comment
 comment|/*  * Globals  */
 end_comment
 
-begin_decl_stmt
-name|PR_EXTERN
-name|char
-name|XXXEvalBuffer
-index|[
-name|ASL_LINE_BUFFER_SIZE
-index|]
-decl_stmt|;
-end_decl_stmt
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* TBD for macros */
+end_comment
+
+begin_comment
+unit|PR_EXTERN char                  PR_INIT_GLOBAL (*XXXEvalBuffer, NULL);
+comment|/* [ASL_LINE_BUFFER_SIZE]; */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|PR_EXTERN
 name|char
+name|PR_INIT_GLOBAL
+argument_list|(
+operator|*
 name|Gbl_MainTokenBuffer
-index|[
-name|ASL_LINE_BUFFER_SIZE
-index|]
+argument_list|,
+name|NULL
+argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* [ASL_LINE_BUFFER_SIZE]; */
+end_comment
 
 begin_decl_stmt
 name|PR_EXTERN
 name|char
+name|PR_INIT_GLOBAL
+argument_list|(
+operator|*
 name|Gbl_MacroTokenBuffer
-index|[
-name|ASL_LINE_BUFFER_SIZE
-index|]
+argument_list|,
+name|NULL
+argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* [ASL_LINE_BUFFER_SIZE]; */
+end_comment
 
 begin_decl_stmt
 name|PR_EXTERN
 name|char
+name|PR_INIT_GLOBAL
+argument_list|(
+operator|*
 name|Gbl_ExpressionTokenBuffer
-index|[
-name|ASL_LINE_BUFFER_SIZE
-index|]
+argument_list|,
+name|NULL
+argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* [ASL_LINE_BUFFER_SIZE]; */
+end_comment
 
 begin_decl_stmt
 name|PR_EXTERN

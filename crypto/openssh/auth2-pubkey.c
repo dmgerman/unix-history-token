@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth2-pubkey.c,v 1.29 2011/05/23 03:30:07 djm Exp $ */
+comment|/* $OpenBSD: auth2-pubkey.c,v 1.30 2011/09/25 05:44:47 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1151,7 +1151,8 @@ condition|)
 block|{
 name|debug3
 argument_list|(
-literal|"matched principal from file \"%.100s\""
+literal|"matched principal \"%.100s\" "
+literal|"from file \"%s\" on line %lu"
 argument_list|,
 name|cert
 operator|->
@@ -1159,6 +1160,10 @@ name|principals
 index|[
 name|i
 index|]
+argument_list|,
+name|file
+argument_list|,
+name|linenum
 argument_list|)
 expr_stmt|;
 if|if

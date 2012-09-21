@@ -315,6 +315,14 @@ name|bool
 typedef|;
 define|#
 directive|define
+name|false
+value|0
+define|#
+directive|define
+name|true
+value|1
+define|#
+directive|define
 name|__bool_true_false_are_defined
 value|1
 endif|#

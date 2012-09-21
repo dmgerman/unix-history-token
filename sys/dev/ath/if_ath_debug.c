@@ -1027,7 +1027,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"        %08x %08x %08x %08x %08x %08x %08x %08x\n"
+literal|"        %08x %08x %08x %08x %08x %08x %08x\n"
 argument_list|,
 name|eds
 operator|->
@@ -1076,13 +1076,6 @@ operator|->
 name|ds_hw
 index|[
 literal|20
-index|]
-argument_list|,
-name|eds
-operator|->
-name|ds_hw
-index|[
-literal|21
 index|]
 argument_list|)
 expr_stmt|;

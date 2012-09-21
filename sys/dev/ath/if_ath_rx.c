@@ -4539,15 +4539,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|,
-literal|"DMA setup: legacy\n"
-argument_list|)
-expr_stmt|;
 comment|/* Sensible legacy defaults */
 name|sc
 operator|->

@@ -173,6 +173,12 @@ directive|include
 file|"error.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"options.h"
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -344,8 +350,6 @@ name|size_t
 name|len
 decl_stmt|;
 name|int
-name|ch
-decl_stmt|,
 name|chopped
 decl_stmt|,
 name|end
@@ -365,6 +369,9 @@ decl_stmt|;
 ifndef|#
 directive|ifndef
 name|SHELL
+name|int
+name|ch
+decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -380,21 +387,23 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|SHELL
-name|optreset
-operator|=
-literal|1
+name|nextopt
+argument_list|(
+literal|""
+argument_list|)
 expr_stmt|;
-name|optind
-operator|=
-literal|1
+name|argc
+operator|-=
+name|argptr
+operator|-
+name|argv
 expr_stmt|;
-name|opterr
+name|argv
 operator|=
-literal|0
+name|argptr
 expr_stmt|;
-comment|/* initialize getopt */
-endif|#
-directive|endif
+else|#
+directive|else
 while|while
 condition|(
 operator|(
@@ -439,6 +448,8 @@ name|argv
 operator|+=
 name|optind
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|argc

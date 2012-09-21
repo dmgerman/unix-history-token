@@ -5042,21 +5042,19 @@ name|halKeyCacheSize
 operator|=
 name|AR5416_KEYTABLE_SIZE
 expr_stmt|;
-comment|/* XXX not needed */
+comment|/* XXX Which chips? */
 name|pCap
 operator|->
 name|halChanHalfRate
 operator|=
-name|AH_FALSE
+name|AH_TRUE
 expr_stmt|;
-comment|/* XXX ? */
 name|pCap
 operator|->
 name|halChanQuarterRate
 operator|=
-name|AH_FALSE
+name|AH_TRUE
 expr_stmt|;
-comment|/* XXX ? */
 name|pCap
 operator|->
 name|halTstampPrecision

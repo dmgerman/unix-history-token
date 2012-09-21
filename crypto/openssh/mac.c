@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: mac.c,v 1.16 2011/08/02 01:22:11 djm Exp $ */
+comment|/* $OpenBSD: mac.c,v 1.18 2012/06/28 05:07:45 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -95,6 +95,12 @@ begin_include
 include|#
 directive|include
 file|"umac.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"openbsd-compat/openssl-compat.h"
 end_include
 
 begin_define
@@ -209,22 +215,6 @@ literal|1
 block|}
 block|,
 block|{
-literal|"hmac-sha2-256-96"
-block|,
-name|SSH_EVP
-block|,
-name|EVP_sha256
-block|,
-literal|96
-block|,
-operator|-
-literal|1
-block|,
-operator|-
-literal|1
-block|}
-block|,
-block|{
 literal|"hmac-sha2-512"
 block|,
 name|SSH_EVP
@@ -232,22 +222,6 @@ block|,
 name|EVP_sha512
 block|,
 literal|0
-block|,
-operator|-
-literal|1
-block|,
-operator|-
-literal|1
-block|}
-block|,
-block|{
-literal|"hmac-sha2-512-96"
-block|,
-name|SSH_EVP
-block|,
-name|EVP_sha512
-block|,
-literal|96
 block|,
 operator|-
 literal|1
@@ -646,6 +620,14 @@ return|return
 operator|-
 literal|1
 return|;
+name|HMAC_CTX_init
+argument_list|(
+operator|&
+name|mac
+operator|->
+name|evp_ctx
+argument_list|)
+expr_stmt|;
 name|HMAC_Init
 argument_list|(
 operator|&

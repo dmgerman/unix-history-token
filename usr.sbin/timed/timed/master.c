@@ -265,7 +265,7 @@ argument_list|(
 operator|&
 name|ntime
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|pollingtime
@@ -302,7 +302,7 @@ argument_list|(
 operator|&
 name|ntime
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|wait
@@ -363,7 +363,7 @@ argument_list|(
 operator|&
 name|ntime
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -714,7 +714,7 @@ argument_list|(
 operator|&
 name|ntime
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|pollingtime
@@ -852,7 +852,7 @@ argument_list|(
 operator|&
 name|ntime
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|pollingtime
@@ -1201,12 +1201,7 @@ argument_list|(
 operator|&
 name|ntime
 argument_list|,
-operator|(
-expr|struct
-name|timezone
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|pollingtime
@@ -1498,7 +1493,7 @@ argument_list|(
 operator|&
 name|otime
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|adj_msg_time
@@ -1579,6 +1574,9 @@ name|ut_type
 operator|=
 name|OLD_TIME
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|gettimeofday
 argument_list|(
 operator|&
@@ -1612,6 +1610,9 @@ name|ut_type
 operator|=
 name|NEW_TIME
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|gettimeofday
 argument_list|(
 operator|&
@@ -1705,7 +1706,7 @@ argument_list|(
 operator|&
 name|check
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 for|for
@@ -1856,7 +1857,7 @@ argument_list|(
 operator|&
 name|stop
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|timevalsub
@@ -1932,7 +1933,7 @@ argument_list|(
 operator|&
 name|check
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -2092,7 +2093,7 @@ argument_list|(
 operator|&
 name|tmptv
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|to
@@ -3306,7 +3307,7 @@ name|net
 operator|->
 name|slvwait
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -3394,7 +3395,7 @@ argument_list|(
 operator|&
 name|now
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -3448,7 +3449,7 @@ argument_list|(
 operator|&
 name|tmptv
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|to

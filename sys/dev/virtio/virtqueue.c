@@ -2263,7 +2263,7 @@ index|[
 name|used_idx
 index|]
 expr_stmt|;
-name|mb
+name|rmb
 argument_list|()
 expr_stmt|;
 name|desc_idx
@@ -2718,7 +2718,7 @@ index|]
 operator|=
 name|desc_idx
 expr_stmt|;
-name|mb
+name|wmb
 argument_list|()
 expr_stmt|;
 name|vq

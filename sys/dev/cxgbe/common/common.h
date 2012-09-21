@@ -161,7 +161,7 @@ begin_define
 define|#
 directive|define
 name|FW_VERSION_MINOR
-value|5
+value|6
 end_define
 
 begin_define

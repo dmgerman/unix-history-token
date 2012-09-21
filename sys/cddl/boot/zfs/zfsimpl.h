@@ -3973,7 +3973,7 @@ name|le_type
 decl_stmt|;
 comment|/* always ZAP_CHUNK_ENTRY */
 name|uint8_t
-name|le_int_size
+name|le_value_intlen
 decl_stmt|;
 comment|/* size of ints */
 name|uint16_t
@@ -3985,7 +3985,7 @@ name|le_name_chunk
 decl_stmt|;
 comment|/* first chunk of the name */
 name|uint16_t
-name|le_name_length
+name|le_name_numints
 decl_stmt|;
 comment|/* bytes in name, incl null */
 name|uint16_t
@@ -3993,7 +3993,7 @@ name|le_value_chunk
 decl_stmt|;
 comment|/* first chunk of the value */
 name|uint16_t
-name|le_value_length
+name|le_value_numints
 decl_stmt|;
 comment|/* value length in ints */
 name|uint32_t

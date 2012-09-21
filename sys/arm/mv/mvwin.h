@@ -517,6 +517,13 @@ end_if
 begin_define
 define|#
 directive|define
+name|MV_MISC_BASE
+value|(MV_BASE + 0x18200)
+end_define
+
+begin_define
+define|#
+directive|define
 name|MV_MBUS_BRIDGE_BASE
 value|(MV_BASE + 0x20000)
 end_define
@@ -526,6 +533,13 @@ define|#
 directive|define
 name|MV_INTREGS_BASE
 value|(MV_MBUS_BRIDGE_BASE + 0x80)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_MP_CLOCKS_BASE
+value|(MV_MBUS_BRIDGE_BASE + 0x700)
 end_define
 
 begin_define
@@ -1421,27 +1435,6 @@ parameter_list|)
 value|0x51
 end_define
 
-begin_define
-define|#
-directive|define
-name|MV_WIN_PCI_TARGET
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|MV_WIN_PCI_MEM_ATTR
-value|0x59
-end_define
-
-begin_define
-define|#
-directive|define
-name|MV_WIN_PCI_IO_ATTR
-value|0x51
-end_define
-
 begin_elif
 elif|#
 directive|elif
@@ -1485,6 +1478,27 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_PCI_TARGET
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_PCI_MEM_ATTR
+value|0x59
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_PCI_IO_ATTR
+value|0x51
+end_define
 
 begin_define
 define|#

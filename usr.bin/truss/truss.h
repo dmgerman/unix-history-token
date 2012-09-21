@@ -77,6 +77,18 @@ decl_stmt|;
 name|int
 name|in_fork
 decl_stmt|;
+name|void
+modifier|*
+name|fsc
+decl_stmt|;
+name|struct
+name|timespec
+name|before
+decl_stmt|;
+name|struct
+name|timespec
+name|after
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -107,14 +119,6 @@ decl_stmt|;
 name|struct
 name|timespec
 name|start_time
-decl_stmt|;
-name|struct
-name|timespec
-name|before
-decl_stmt|;
-name|struct
-name|timespec
-name|after
 decl_stmt|;
 name|struct
 name|threadinfo
@@ -202,6 +206,13 @@ define|#
 directive|define
 name|S_EXEC
 value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_DETACHED
+value|6
 end_define
 
 end_unit

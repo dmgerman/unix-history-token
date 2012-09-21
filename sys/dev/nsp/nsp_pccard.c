@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
 end_include
 
@@ -82,13 +88,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<compat/netbsd/dvcfg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/device_port.h>
+file|<sys/bus.h>
 end_include
 
 begin_include
@@ -101,12 +101,6 @@ begin_include
 include|#
 directive|include
 file|<cam/scsi/scsi_low.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<cam/scsi/scsi_low_pisa.h>
 end_include
 
 begin_include
@@ -150,7 +144,7 @@ specifier|static
 name|int
 name|nspprobe
 parameter_list|(
-name|DEVPORT_PDEVICE
+name|device_t
 name|devi
 parameter_list|)
 function_decl|;
@@ -161,7 +155,7 @@ specifier|static
 name|int
 name|nspattach
 parameter_list|(
-name|DEVPORT_PDEVICE
+name|device_t
 name|devi
 parameter_list|)
 function_decl|;
@@ -172,7 +166,7 @@ specifier|static
 name|void
 name|nsp_card_unload
 parameter_list|(
-name|DEVPORT_PDEVICE
+name|device_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -544,7 +538,7 @@ block|{
 if|if
 condition|(
 operator|(
-name|DEVPORT_PDEVFLAGS
+name|device_get_flags
 argument_list|(
 name|dev
 argument_list|)
@@ -964,7 +958,7 @@ specifier|static
 name|void
 name|nsp_card_unload
 parameter_list|(
-name|DEVPORT_PDEVICE
+name|device_t
 name|devi
 parameter_list|)
 block|{
@@ -973,7 +967,7 @@ name|nsp_softc
 modifier|*
 name|sc
 init|=
-name|DEVPORT_PDEVGET_SOFTC
+name|device_get_softc
 argument_list|(
 name|devi
 argument_list|)
@@ -1017,7 +1011,7 @@ specifier|static
 name|int
 name|nspprobe
 parameter_list|(
-name|DEVPORT_PDEVICE
+name|device_t
 name|devi
 parameter_list|)
 block|{
@@ -1052,7 +1046,7 @@ operator|->
 name|port_res
 argument_list|)
 argument_list|,
-name|DEVPORT_PDEVFLAGS
+name|device_get_flags
 argument_list|(
 name|devi
 argument_list|)
@@ -1069,7 +1063,7 @@ specifier|static
 name|int
 name|nspattach
 parameter_list|(
-name|DEVPORT_PDEVICE
+name|device_t
 name|devi
 parameter_list|)
 block|{
@@ -1086,7 +1080,7 @@ decl_stmt|;
 name|u_int32_t
 name|flags
 init|=
-name|DEVPORT_PDEVFLAGS
+name|device_get_flags
 argument_list|(
 name|devi
 argument_list|)
@@ -1094,9 +1088,13 @@ decl_stmt|;
 name|u_int
 name|iobase
 init|=
-name|DEVPORT_PDEVIOBASE
+name|bus_get_resource_start
 argument_list|(
 name|devi
+argument_list|,
+name|SYS_RES_IOPORT
+argument_list|,
+literal|0
 argument_list|)
 decl_stmt|;
 name|intrmask_t
@@ -1137,7 +1135,7 @@ return|;
 block|}
 name|sc
 operator|=
-name|DEVPORT_PDEVALLOC_SOFTC
+name|device_get_softc
 argument_list|(
 name|devi
 argument_list|)

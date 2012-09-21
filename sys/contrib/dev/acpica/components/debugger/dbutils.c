@@ -115,7 +115,7 @@ name|char
 modifier|*
 name|UserArgument
 parameter_list|,
-name|ARGUMENT_INFO
+name|ACPI_DB_ARGUMENT_INFO
 modifier|*
 name|Arguments
 parameter_list|)

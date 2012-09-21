@@ -13220,6 +13220,8 @@ decl_stmt|,
 name|top
 decl_stmt|;
 name|vm_size_t
+name|growsize
+decl_stmt|,
 name|init_ssize
 decl_stmt|;
 name|int
@@ -13284,17 +13286,21 @@ operator|(
 name|KERN_NO_SPACE
 operator|)
 return|;
+name|growsize
+operator|=
+name|sgrowsiz
+expr_stmt|;
 name|init_ssize
 operator|=
 operator|(
 name|max_ssize
 operator|<
-name|sgrowsiz
+name|growsize
 operator|)
 condition|?
 name|max_ssize
 else|:
-name|sgrowsiz
+name|growsize
 expr_stmt|;
 name|PROC_LOCK
 argument_list|(
@@ -13665,6 +13671,9 @@ name|vm_map
 decl_stmt|;
 name|vm_offset_t
 name|end
+decl_stmt|;
+name|vm_size_t
+name|growsize
 decl_stmt|;
 name|size_t
 name|grow_amount
@@ -14167,14 +14176,18 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Round up the grow amount modulo SGROWSIZ */
+comment|/* Round up the grow amount modulo sgrowsiz */
+name|growsize
+operator|=
+name|sgrowsiz
+expr_stmt|;
 name|grow_amount
 operator|=
 name|roundup
 argument_list|(
 name|grow_amount
 argument_list|,
-name|sgrowsiz
+name|growsize
 argument_list|)
 expr_stmt|;
 if|if

@@ -2431,6 +2431,15 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|allow_multicast
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
@@ -2490,6 +2499,27 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"log arp replies from MACs different than the one in the permanent arp entry"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_link_ether_inet
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|allow_multicast
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|allow_multicast
+argument_list|,
+literal|0
+argument_list|,
+literal|"accept multicast addresses"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2719,6 +2749,10 @@ return|return;
 block|}
 if|if
 condition|(
+name|allow_multicast
+operator|==
+literal|0
+operator|&&
 name|ETHER_IS_MULTICAST
 argument_list|(
 name|ar_sha
@@ -2732,7 +2766,7 @@ name|log
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"in_arp: %*D is multicast\n"
+literal|"arp: %*D is multicast\n"
 argument_list|,
 name|ifp
 operator|->

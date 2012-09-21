@@ -2635,7 +2635,7 @@ name|swi_add
 argument_list|(
 name|NULL
 argument_list|,
-literal|"Fast task queue"
+literal|"fast taskq"
 argument_list|,
 name|taskqueue_fast_run
 argument_list|,

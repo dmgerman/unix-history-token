@@ -699,6 +699,28 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/* Dual Mode Drivers */
+end_comment
+
+begin_expr_stmt
+name|DRIVER_MODULE
+argument_list|(
+name|usbus
+argument_list|,
+name|dwcotg
+argument_list|,
+name|usb_driver
+argument_list|,
+name|usb_devclass
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/*------------------------------------------------------------------------*  *	usb_probe  *  * This function is called from "{ehci,ohci,uhci}_pci_attach()".  *------------------------------------------------------------------------*/
 end_comment
 

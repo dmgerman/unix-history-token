@@ -1317,6 +1317,12 @@ operator||
 name|PR_RIGHTS
 block|,
 operator|.
+name|pr_ctloutput
+operator|=
+operator|&
+name|uipc_ctloutput
+block|,
+operator|.
 name|pr_usrreqs
 operator|=
 operator|&

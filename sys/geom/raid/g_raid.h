@@ -39,6 +39,23 @@ directive|include
 file|<sys/time.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -110,6 +127,13 @@ begin_decl_stmt
 specifier|extern
 name|u_int
 name|g_raid_debug
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|g_raid_enable
 decl_stmt|;
 end_decl_stmt
 
@@ -1380,6 +1404,14 @@ name|sc_name
 value|sc_geom->name
 end_define
 
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_kern_geom_raid
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * KOBJ parent class of metadata processing modules.  */
 end_comment
@@ -1390,6 +1422,9 @@ name|g_raid_md_class
 block|{
 name|KOBJ_CLASS_FIELDS
 expr_stmt|;
+name|int
+name|mdc_enable
+decl_stmt|;
 name|int
 name|mdc_priority
 decl_stmt|;
@@ -1448,9 +1483,11 @@ directive|define
 name|G_RAID_MD_DECLARE
 parameter_list|(
 name|name
+parameter_list|,
+name|label
 parameter_list|)
 define|\
-value|static moduledata_t name##_mod = {				\ 	#name,							\ 	g_raid_md_modevent,					\&name##_class						\     };								\     DECLARE_MODULE(name, name##_mod, SI_SUB_DRIVERS, SI_ORDER_SECOND);	\     MODULE_DEPEND(name, geom_raid, 0, 0, 0)
+value|static moduledata_t g_raid_md_##name##_mod = {		\ 	"g_raid_md_" __XSTRING(name),				\ 	g_raid_md_modevent,					\&g_raid_md_##name##_class				\     };								\     DECLARE_MODULE(g_raid_md_##name, g_raid_md_##name##_mod,	\ 	SI_SUB_DRIVERS, SI_ORDER_SECOND);			\     MODULE_DEPEND(g_raid_md_##name, geom_raid, 0, 0, 0);	\     SYSCTL_NODE(_kern_geom_raid, OID_AUTO, name, CTLFLAG_RD,	\ 	NULL, label " metadata module");			\     SYSCTL_INT(_kern_geom_raid_##name, OID_AUTO, enable,	\ 	CTLFLAG_RW,&g_raid_md_##name##_class.mdc_enable, 0,	\ 	"Enable " label " metadata format taste");		\     TUNABLE_INT("kern.geom.raid." __XSTRING(name) ".enable",	\&g_raid_md_##name##_class.mdc_enable)
 end_define
 
 begin_comment
@@ -1463,6 +1500,9 @@ name|g_raid_tr_class
 block|{
 name|KOBJ_CLASS_FIELDS
 expr_stmt|;
+name|int
+name|trc_enable
+decl_stmt|;
 name|int
 name|trc_priority
 decl_stmt|;
@@ -1521,9 +1561,11 @@ directive|define
 name|G_RAID_TR_DECLARE
 parameter_list|(
 name|name
+parameter_list|,
+name|label
 parameter_list|)
 define|\
-value|static moduledata_t name##_mod = {				\ 	#name,							\ 	g_raid_tr_modevent,					\&name##_class						\     };								\     DECLARE_MODULE(name, name##_mod, SI_SUB_DRIVERS, SI_ORDER_FIRST);	\     MODULE_DEPEND(name, geom_raid, 0, 0, 0)
+value|static moduledata_t g_raid_tr_##name##_mod = {		\ 	"g_raid_tr_" __XSTRING(name),				\ 	g_raid_tr_modevent,					\&g_raid_tr_##name##_class				\     };								\     DECLARE_MODULE(g_raid_tr_##name, g_raid_tr_##name##_mod,	\ 	SI_SUB_DRIVERS, SI_ORDER_FIRST);			\     MODULE_DEPEND(g_raid_tr_##name, geom_raid, 0, 0, 0);	\     SYSCTL_NODE(_kern_geom_raid, OID_AUTO, name, CTLFLAG_RD,	\ 	NULL, label " transformation module");			\     SYSCTL_INT(_kern_geom_raid_##name, OID_AUTO, enable,	\ 	CTLFLAG_RW,&g_raid_tr_##name##_class.trc_enable, 0,	\ 	"Enable " label " transformation module taste");	\     TUNABLE_INT("kern.geom.raid." __XSTRING(name) ".enable",	\&g_raid_tr_##name##_class.trc_enable)
 end_define
 
 begin_function_decl

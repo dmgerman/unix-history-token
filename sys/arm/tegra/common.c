@@ -88,7 +88,7 @@ name|bsh
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"Restetting...\n"
+literal|"Resetting...\n"
 argument_list|)
 expr_stmt|;
 name|bus_space_map
@@ -116,6 +116,11 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
+while|while
+condition|(
+literal|1
+condition|)
+empty_stmt|;
 block|}
 end_function
 

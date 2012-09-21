@@ -1731,7 +1731,6 @@ expr_stmt|;
 goto|goto
 name|end_finished
 goto|;
-break|break;
 block|}
 name|ata_pio_write
 argument_list|(

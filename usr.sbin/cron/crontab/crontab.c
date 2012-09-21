@@ -3048,10 +3048,6 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-name|struct
-name|timezone
-name|tz
-decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -3063,8 +3059,7 @@ index|[
 literal|0
 index|]
 argument_list|,
-operator|&
-name|tz
+name|NULL
 argument_list|)
 expr_stmt|;
 name|tvs

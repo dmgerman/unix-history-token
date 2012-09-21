@@ -2772,6 +2772,10 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|nump
+condition|)
 operator|*
 name|nump
 operator|=

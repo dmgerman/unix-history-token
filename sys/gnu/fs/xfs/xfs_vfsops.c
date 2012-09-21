@@ -7555,6 +7555,8 @@ name|sbuf_printf
 argument_list|(
 name|m
 argument_list|,
+literal|"%s"
+argument_list|,
 name|xfs_infop
 operator|->
 name|str

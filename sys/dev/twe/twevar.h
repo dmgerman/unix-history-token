@@ -282,7 +282,8 @@ argument_list|)
 name|twe_free
 expr_stmt|;
 comment|/* command structures available for reuse */
-name|twe_bioq
+name|struct
+name|bio_queue_head
 name|twe_bioq
 decl_stmt|;
 comment|/* outstanding I/O operations */
@@ -345,6 +346,13 @@ name|int
 name|twe_wait_aen
 decl_stmt|;
 comment|/* wait-for-aen notification */
+name|char
+name|twe_aen_buf
+index|[
+literal|80
+index|]
+decl_stmt|;
+comment|/* AEN format buffer */
 comment|/* controller status */
 name|int
 name|twe_state
@@ -687,7 +695,8 @@ specifier|extern
 name|void
 name|twed_intr
 parameter_list|(
-name|twe_bio
+name|struct
+name|bio
 modifier|*
 name|bp
 parameter_list|)
@@ -879,8 +888,9 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|TWE_BIO_QINIT
+name|bioq_init
 argument_list|(
+operator|&
 name|sc
 operator|->
 name|twe_bioq
@@ -907,13 +917,15 @@ name|twe_softc
 modifier|*
 name|sc
 parameter_list|,
-name|twe_bio
+name|struct
+name|bio
 modifier|*
 name|bp
 parameter_list|)
 block|{
-name|TWE_BIO_QINSERT
+name|bioq_insert_tail
 argument_list|(
+operator|&
 name|sc
 operator|->
 name|twe_bioq
@@ -931,30 +943,29 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
+begin_expr_stmt
 specifier|static
 name|__inline
-name|twe_bio
-modifier|*
+expr|struct
+name|bio
+operator|*
 name|twe_dequeue_bio
-parameter_list|(
-name|struct
-name|twe_softc
-modifier|*
-name|sc
-parameter_list|)
-block|{
-name|twe_bio
-modifier|*
+argument_list|(
+argument|struct twe_softc *sc
+argument_list|)
+block|{     struct
+name|bio
+operator|*
 name|bp
-decl_stmt|;
+block|;
 if|if
 condition|(
 operator|(
 name|bp
 operator|=
-name|TWE_BIO_QFIRST
+name|bioq_first
 argument_list|(
+operator|&
 name|sc
 operator|->
 name|twe_bioq
@@ -964,8 +975,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|TWE_BIO_QREMOVE
+name|bioq_remove
 argument_list|(
+operator|&
 name|sc
 operator|->
 name|twe_bioq
@@ -981,13 +993,16 @@ name|TWEQ_BIO
 argument_list|)
 expr_stmt|;
 block|}
+end_expr_stmt
+
+begin_return
 return|return
 operator|(
 name|bp
 operator|)
 return|;
-block|}
-end_function
+end_return
 
+unit|}
 end_unit
 

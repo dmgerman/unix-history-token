@@ -290,6 +290,10 @@ name|SCTP_DEBUG_INPUT2
 argument_list|,
 literal|"sctp_handle_init: handling INIT tcb:%p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|stcb
 argument_list|)
 expr_stmt|;
@@ -12933,12 +12937,20 @@ argument_list|(
 literal|"Huh? ep:%p diff then l_inp:%p?\n"
 argument_list|,
 operator|(
+name|void
+operator|*
+operator|)
+operator|(
 operator|*
 name|stcb
 operator|)
 operator|->
 name|sctp_ep
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|l_inp
 argument_list|)
 expr_stmt|;
@@ -15203,7 +15215,7 @@ modifier|*
 name|net
 parameter_list|)
 block|{
-comment|/* 	 * Here we get a CWR from the peer. We must look in the outqueue and 	 * make sure that we have a covered ECNE in teh control chunk part. 	 * If so remove it. 	 */
+comment|/* 	 * Here we get a CWR from the peer. We must look in the outqueue and 	 * make sure that we have a covered ECNE in the control chunk part. 	 * If so remove it. 	 */
 name|struct
 name|sctp_tmit_chunk
 modifier|*
@@ -16694,7 +16706,7 @@ name|sctp_tcb
 modifier|*
 name|stcb
 parameter_list|,
-name|int
+name|uint32_t
 name|number_entries
 parameter_list|,
 name|uint16_t
@@ -16702,7 +16714,7 @@ modifier|*
 name|list
 parameter_list|)
 block|{
-name|int
+name|uint32_t
 name|i
 decl_stmt|;
 name|uint16_t
@@ -16995,9 +17007,9 @@ modifier|*
 name|asoc
 decl_stmt|;
 name|struct
-name|sctp_stream_reset_out_req
+name|sctp_chunkhdr
 modifier|*
-name|req
+name|ch
 decl_stmt|;
 name|struct
 name|sctp_stream_reset_out_request
@@ -17110,7 +17122,7 @@ name|chk
 operator|->
 name|send_size
 expr_stmt|;
-name|req
+name|ch
 operator|=
 name|mtod
 argument_list|(
@@ -17119,16 +17131,22 @@ operator|->
 name|data
 argument_list|,
 expr|struct
-name|sctp_stream_reset_out_req
+name|sctp_chunkhdr
 operator|*
 argument_list|)
 expr_stmt|;
 name|r
 operator|=
-operator|&
-name|req
-operator|->
-name|sr_req
+operator|(
+expr|struct
+name|sctp_stream_reset_out_request
+operator|*
+operator|)
+operator|(
+name|ch
+operator|+
+literal|1
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -19465,26 +19483,18 @@ argument_list|(
 operator|&
 name|liste
 operator|->
-name|req
+name|list_of_streams
 argument_list|,
 name|req
+operator|->
+name|list_of_streams
 argument_list|,
-operator|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|sctp_stream_reset_out_request
-argument_list|)
-operator|+
-operator|(
 name|number_entries
 operator|*
 sizeof|sizeof
 argument_list|(
 name|uint16_t
 argument_list|)
-operator|)
-operator|)
 argument_list|)
 expr_stmt|;
 name|TAILQ_INSERT_TAIL
@@ -20530,9 +20540,9 @@ name|int
 name|offset
 parameter_list|,
 name|struct
-name|sctp_stream_reset_out_req
+name|sctp_chunkhdr
 modifier|*
-name|sr_req
+name|ch_req
 parameter_list|)
 block|{
 name|int
@@ -20597,10 +20607,8 @@ name|chk_length
 operator|=
 name|ntohs
 argument_list|(
-name|sr_req
+name|ch_req
 operator|->
-name|ch
-operator|.
 name|chunk_length
 argument_list|)
 expr_stmt|;
@@ -22295,6 +22303,10 @@ name|offset
 argument_list|,
 name|length
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|stcb
 argument_list|)
 expr_stmt|;
@@ -25268,6 +25280,10 @@ name|SCTP_DEBUG_INPUT3
 argument_list|,
 literal|"SCTP_ABORT, stcb %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|stcb
 argument_list|)
 expr_stmt|;
@@ -25317,6 +25333,10 @@ name|SCTP_DEBUG_INPUT3
 argument_list|,
 literal|"SCTP_SHUTDOWN, stcb %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|stcb
 argument_list|)
 expr_stmt|;
@@ -25419,6 +25439,10 @@ name|SCTP_DEBUG_INPUT3
 argument_list|,
 literal|"SCTP_SHUTDOWN-ACK, stcb %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|stcb
 argument_list|)
 expr_stmt|;
@@ -25518,6 +25542,10 @@ name|SCTP_DEBUG_INPUT3
 argument_list|,
 literal|"SCTP_COOKIE-ECHO, stcb %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|stcb
 argument_list|)
 expr_stmt|;
@@ -25920,6 +25948,10 @@ name|SCTP_DEBUG_INPUT3
 argument_list|,
 literal|"SCTP_COOKIE-ACK, stcb %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|stcb
 argument_list|)
 expr_stmt|;
@@ -26397,6 +26429,10 @@ name|SCTP_DEBUG_INPUT3
 argument_list|,
 literal|"SCTP_SHUTDOWN-COMPLETE, stcb %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|stcb
 argument_list|)
 expr_stmt|;
@@ -27194,11 +27230,6 @@ argument_list|,
 operator|*
 name|offset
 argument_list|,
-operator|(
-expr|struct
-name|sctp_stream_reset_out_req
-operator|*
-operator|)
 name|ch
 argument_list|)
 condition|)
@@ -28166,6 +28197,10 @@ name|calc_check
 argument_list|,
 name|check
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|m
 argument_list|,
 name|length
@@ -28747,6 +28782,10 @@ name|SCTP_DEBUG_INPUT1
 argument_list|,
 literal|"Ok, Common input processing called, m:%p iphlen:%d offset:%d length:%d stcb:%p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|m
 argument_list|,
 name|iphlen
@@ -28755,6 +28794,10 @@ name|offset
 argument_list|,
 name|length
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|stcb
 argument_list|)
 expr_stmt|;
@@ -28786,6 +28829,10 @@ name|SCTP_DEBUG_INPUT1
 argument_list|,
 literal|"stcb:%p state:%x\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|stcb
 argument_list|,
 name|stcb
@@ -29738,7 +29785,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static void sctp_print_mbuf_chain(struct mbuf *m) { 	for (; m; m = SCTP_BUF_NEXT(m)) { 		SCTP_PRINTF("%p: m_len = %ld\n", m, SCTP_BUF_LEN(m)); 		if (SCTP_BUF_IS_EXTENDED(m)) 			SCTP_PRINTF("%p: extend_size = %d\n", m, SCTP_BUF_EXTEND_SIZE(m)); 	} }
+unit|static void sctp_print_mbuf_chain(struct mbuf *m) { 	for (; m; m = SCTP_BUF_NEXT(m)) { 		SCTP_PRINTF("%p: m_len = %ld\n", (void *)m, SCTP_BUF_LEN(m)); 		if (SCTP_BUF_IS_EXTENDED(m)) 			SCTP_PRINTF("%p: extend_size = %d\n", (void *)m, SCTP_BUF_EXTEND_SIZE(m)); 	} }
 endif|#
 directive|endif
 end_endif

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -144,20 +144,16 @@ operator|&
 name|zfs_dbgmsgs_lock
 argument_list|)
 expr_stmt|;
-name|ASSERT3U
+name|ASSERT0
 argument_list|(
 name|zfs_dbgmsg_size
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Print these messages by running:  * 	echo ::zfs_dbgmsg | mdb -k  *  * Monitor these messages by running:  * 	dtrace -q -n 'zfs-dbgmsg{printf("%s\n", stringof(arg0))}'  */
+comment|/*  * Print these messages by running:  * echo ::zfs_dbgmsg | mdb -k  *  * Monitor these messages by running:  * 	dtrace -q -n 'zfs-dbgmsg{printf("%s\n", stringof(arg0))}'  */
 end_comment
 
 begin_function

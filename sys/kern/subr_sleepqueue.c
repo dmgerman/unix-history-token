@@ -1118,7 +1118,13 @@ name|TDP_NOSLEEPING
 operator|)
 argument_list|,
 operator|(
-literal|"Trying sleep, but thread marked as sleeping prohibited"
+literal|"%s: td %p to sleep on wchan %p with TDP_NOSLEEPING on"
+operator|,
+name|__func__
+operator|,
+name|td
+operator|,
+name|wchan
 operator|)
 argument_list|)
 expr_stmt|;

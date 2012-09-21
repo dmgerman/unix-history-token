@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/cpufunc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/psl.h>
 end_include
 
@@ -1433,7 +1439,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ISA bus access functions for PnP, derived from<machine/cpufunc.h> */
+comment|/* ISA bus access functions for PnP. */
 end_comment
 
 begin_function
@@ -1445,46 +1451,12 @@ name|int
 name|port
 parameter_list|)
 block|{
-name|u_char
-name|data
-decl_stmt|;
-if|if
-condition|(
-name|__builtin_constant_p
+return|return
+operator|(
+name|inb
 argument_list|(
 name|port
 argument_list|)
-operator|&&
-operator|(
-operator|(
-operator|(
-name|port
-operator|)
-operator|&
-literal|0xffff
-operator|)
-operator|<
-literal|0x100
-operator|)
-operator|&&
-operator|(
-operator|(
-name|port
-operator|)
-operator|<
-literal|0x10000
-operator|)
-condition|)
-block|{
-asm|__asm __volatile("inb %1,%0" : "=a" (data) : "id" ((u_short)(port)));
-block|}
-else|else
-block|{
-asm|__asm __volatile("inb %%dx,%0" : "=a" (data) : "d" (port));
-block|}
-return|return
-operator|(
-name|data
 operator|)
 return|;
 block|}
@@ -1502,45 +1474,13 @@ name|int
 name|value
 parameter_list|)
 block|{
-name|u_char
-name|al
-init|=
-name|value
-decl_stmt|;
-if|if
-condition|(
-name|__builtin_constant_p
+name|outb
 argument_list|(
 name|port
+argument_list|,
+name|value
 argument_list|)
-operator|&&
-operator|(
-operator|(
-operator|(
-name|port
-operator|)
-operator|&
-literal|0xffff
-operator|)
-operator|<
-literal|0x100
-operator|)
-operator|&&
-operator|(
-operator|(
-name|port
-operator|)
-operator|<
-literal|0x10000
-operator|)
-condition|)
-block|{
-asm|__asm __volatile("outb %0,%1" : : "a" (al), "id" ((u_short)(port)));
-block|}
-else|else
-block|{
-asm|__asm __volatile("outb %0,%%dx" : : "a" (al), "d" (port));
-block|}
+expr_stmt|;
 block|}
 end_function
 

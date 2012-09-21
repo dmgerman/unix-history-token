@@ -323,11 +323,8 @@ name|l2t_data
 modifier|*
 name|d
 init|=
-name|container_of
+name|member2struct
 argument_list|(
-name|e
-argument_list|,
-expr|struct
 name|l2t_data
 argument_list|,
 name|l2tab
@@ -336,6 +333,8 @@ name|e
 operator|->
 name|idx
 index|]
+argument_list|,
+name|e
 argument_list|)
 decl_stmt|;
 if|if

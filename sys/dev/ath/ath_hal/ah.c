@@ -2275,6 +2275,42 @@ index|[
 name|WIRELESS_MODE_11b
 index|]
 expr_stmt|;
+comment|/* Compensate for half/quarter rate */
+if|if
+condition|(
+name|c
+operator|!=
+name|AH_NULL
+operator|&&
+name|IEEE80211_IS_CHAN_HALF
+argument_list|(
+name|c
+argument_list|)
+condition|)
+name|clks
+operator|=
+name|clks
+operator|/
+literal|2
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|c
+operator|!=
+name|AH_NULL
+operator|&&
+name|IEEE80211_IS_CHAN_QUARTER
+argument_list|(
+name|c
+argument_list|)
+condition|)
+name|clks
+operator|=
+name|clks
+operator|/
+literal|4
+expr_stmt|;
 return|return
 name|clks
 return|;
@@ -4968,7 +5004,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Fetch the current setup of ctl/ext noise floor values.  *  * If the CHANNEL_MIMO_NF_VALID flag isn't set, the array is simply  * populated with values from NOISE_FLOOR[] + ath_hal_getNfAdjust().  *  * The caller must supply ctl/ext NF arrays which are at least  * AH_MIMO_MAX_CHAINS entries long.  */
+comment|/*  * Fetch the current setup of ctl/ext noise floor values.  *  * If the CHANNEL_MIMO_NF_VALID flag isn't set, the array is simply  * populated with values from NOISE_FLOOR[] + ath_hal_getNfAdjust().  *  * The caller must supply ctl/ext NF arrays which are at least  * AH_MAX_CHAINS entries long.  */
 end_comment
 
 begin_function
@@ -5048,7 +5084,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|AH_MIMO_MAX_CHAINS
+name|AH_MAX_CHAINS
 condition|;
 name|i
 operator|++
@@ -5092,7 +5128,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|AH_MIMO_MAX_CHAINS
+name|AH_MAX_CHAINS
 condition|;
 name|i
 operator|++
@@ -5150,7 +5186,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|AH_MIMO_MAX_CHAINS
+name|AH_MAX_CHAINS
 condition|;
 name|i
 operator|++
@@ -5194,7 +5230,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|AH_MIMO_MAX_CHAINS
+name|AH_MAX_CHAINS
 condition|;
 name|i
 operator|++

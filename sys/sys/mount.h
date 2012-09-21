@@ -636,6 +636,21 @@ name|lock
 name|mnt_explock
 decl_stmt|;
 comment|/* vfs_export walkers lock */
+name|TAILQ_ENTRY
+argument_list|(
+argument|mount
+argument_list|)
+name|mnt_upper_link
+expr_stmt|;
+comment|/* (m) we in the all uppers */
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|mount
+argument_list|)
+name|mnt_uppers
+expr_stmt|;
+comment|/* (m) upper mounts over us*/
 block|}
 struct|;
 end_struct
@@ -1516,6 +1531,34 @@ end_define
 begin_comment
 comment|/* Disallow page faults during reads 					   and writes. Filesystem shall properly 					   handle i/o state on EFAULT. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MNTK_VGONE_UPPER
+value|0x00000200
+end_define
+
+begin_define
+define|#
+directive|define
+name|MNTK_VGONE_WAITER
+value|0x00000200
+end_define
+
+begin_define
+define|#
+directive|define
+name|MNTK_MARKER
+value|0x00000400
+end_define
+
+begin_define
+define|#
+directive|define
+name|MNTK_LOOKUP_EXCL_DOTDOT
+value|0x00000800
+end_define
 
 begin_define
 define|#
@@ -2888,6 +2931,24 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|void
+name|vfs_reclaim_lowervp_t
+parameter_list|(
+name|struct
+name|mount
+modifier|*
+name|mp
+parameter_list|,
+name|struct
+name|vnode
+modifier|*
+name|lowervp
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_struct
 struct|struct
 name|vfsops
@@ -2951,6 +3012,10 @@ decl_stmt|;
 name|vfs_susp_clean_t
 modifier|*
 name|vfs_susp_clean
+decl_stmt|;
+name|vfs_reclaim_lowervp_t
+modifier|*
+name|vfs_reclaim_lowervp
 decl_stmt|;
 block|}
 struct|;
@@ -3138,6 +3203,19 @@ name|MP
 parameter_list|)
 define|\
 value|({if (*(MP)->mnt_op->vfs_susp_clean != NULL)		\ 	       (*(MP)->mnt_op->vfs_susp_clean)(MP); })
+end_define
+
+begin_define
+define|#
+directive|define
+name|VFS_RECLAIM_LOWERVP
+parameter_list|(
+name|MP
+parameter_list|,
+name|VP
+parameter_list|)
+define|\
+value|({if (*(MP)->mnt_op->vfs_reclaim_lowervp != NULL)	\ 		(*(MP)->mnt_op->vfs_reclaim_lowervp)((MP), (VP)); })
 end_define
 
 begin_define

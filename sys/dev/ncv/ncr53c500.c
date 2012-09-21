@@ -62,33 +62,11 @@ directive|include
 file|<sys/kernel.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-name|__FreeBSD_version
-operator|>=
-literal|500001
-end_if
-
 begin_include
 include|#
 directive|include
 file|<sys/bio.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __FreeBSD__ */
-end_comment
 
 begin_include
 include|#
@@ -114,111 +92,6 @@ directive|include
 file|<sys/errno.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__NetBSD__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/device.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/intr.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/scsipi/scsi_all.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/scsipi/scsipi_all.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/scsipi/scsiconf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/scsipi/scsi_disk.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/dvcfg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/physio_proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/Cbus/dev/scsi_low.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/Cbus/dev/ncr53c500reg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/Cbus/dev/ncr53c500hw.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/Cbus/dev/ncr53c500var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/Cbus/dev/ncr53c500hwtab.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __NetBSD__ */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -235,12 +108,6 @@ begin_include
 include|#
 directive|include
 file|<compat/netbsd/dvcfg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<compat/netbsd/physio_proc.h>
 end_include
 
 begin_include
@@ -272,15 +139,6 @@ include|#
 directive|include
 file|<dev/ncv/ncr53c500hwtab.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __FreeBSD__ */
-end_comment
 
 begin_define
 define|#
@@ -1368,7 +1226,7 @@ operator||
 name|CMD_DMA
 argument_list|)
 expr_stmt|;
-name|SCSI_LOW_DELAY
+name|DELAY
 argument_list|(
 literal|100
 operator|*
@@ -1396,7 +1254,7 @@ argument_list|,
 name|cr0_istat
 argument_list|)
 expr_stmt|;
-name|SCSI_LOW_DELAY
+name|DELAY
 argument_list|(
 literal|1000
 argument_list|)
@@ -1778,13 +1636,13 @@ operator|==
 name|SCSI_LOW_POWDOWN
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s power down\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"power down\n"
 argument_list|)
 expr_stmt|;
 name|ncvhw_select_register_1
@@ -1823,13 +1681,13 @@ block|{
 case|case
 literal|0
 case|:
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s resume step O\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"resume step O\n"
 argument_list|)
 expr_stmt|;
 name|ncvhw_select_register_1
@@ -1859,13 +1717,13 @@ break|break;
 case|case
 literal|1
 case|:
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s resume step I\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"resume step I\n"
 argument_list|)
 expr_stmt|;
 name|ncvhw_reset
@@ -1942,7 +1800,7 @@ argument_list|,
 name|CMD_SETATN
 argument_list|)
 expr_stmt|;
-name|SCSI_LOW_DELAY
+name|DELAY
 argument_list|(
 literal|10
 argument_list|)
@@ -2521,7 +2379,7 @@ argument_list|,
 name|cr0_istat
 argument_list|)
 expr_stmt|;
-name|SCSI_LOW_DELAY
+name|DELAY
 argument_list|(
 literal|1000
 argument_list|)
@@ -2558,11 +2416,6 @@ condition|)
 return|return
 name|ENODEV
 return|;
-name|SOFT_INTR_REQUIRED
-argument_list|(
-name|slp
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
@@ -3222,43 +3075,6 @@ block|}
 end_function
 
 begin_function
-name|int
-name|ncvprint
-parameter_list|(
-name|aux
-parameter_list|,
-name|name
-parameter_list|)
-name|void
-modifier|*
-name|aux
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|name
-decl_stmt|;
-block|{
-if|if
-condition|(
-name|name
-operator|!=
-name|NULL
-condition|)
-name|printf
-argument_list|(
-literal|"%s: scsibus "
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-return|return
-name|UNCONF
-return|;
-block|}
-end_function
-
-begin_function
 name|void
 name|ncvattachsubr
 parameter_list|(
@@ -3674,13 +3490,13 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: stragne cnt hw 0x%x soft 0x%x\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"strange cnt hw 0x%x soft 0x%x\n"
 argument_list|,
 name|len
 argument_list|,
@@ -3707,13 +3523,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: data phase miss\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"data phase miss\n"
 argument_list|)
 expr_stmt|;
 name|slp
@@ -3954,7 +3770,7 @@ operator|&
 name|FIFO_BRK
 condition|)
 break|break;
-name|SCSI_LOW_DELAY
+name|DELAY
 argument_list|(
 literal|1
 argument_list|)
@@ -4021,7 +3837,7 @@ operator|&
 name|FIFO_BRK
 condition|)
 break|break;
-name|SCSI_LOW_DELAY
+name|DELAY
 argument_list|(
 literal|1
 argument_list|)
@@ -4232,7 +4048,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|SCSI_LOW_DELAY
+name|DELAY
 argument_list|(
 literal|1
 argument_list|)
@@ -4300,7 +4116,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|SCSI_LOW_DELAY
+name|DELAY
 argument_list|(
 literal|1
 argument_list|)
@@ -4391,13 +4207,13 @@ operator|!=
 literal|2
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s illegal fifo bytes\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"illegal fifo bytes\n"
 argument_list|)
 expr_stmt|;
 name|scsi_low_restart
@@ -4837,7 +4653,7 @@ condition|)
 return|return
 literal|0
 return|;
-name|SCSI_LOW_DELAY
+name|DELAY
 argument_list|(
 name|NCV_DELAY_INTERVAL
 argument_list|)
@@ -4895,11 +4711,6 @@ name|struct
 name|targ_info
 modifier|*
 name|ti
-decl_stmt|;
-name|struct
-name|physio_proc
-modifier|*
-name|pp
 decl_stmt|;
 name|struct
 name|buf
@@ -5059,13 +4870,13 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s st %x ist %x\n\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"st %x ist %x\n\n"
 argument_list|,
 name|status
 argument_list|,
@@ -5081,8 +4892,10 @@ name|ncv_debug
 operator|>
 literal|1
 condition|)
-name|SCSI_LOW_DEBUGGER
+name|kdb_enter
 argument_list|(
+name|KDB_WHY_CAM
+argument_list|,
 literal|"ncv"
 argument_list|)
 expr_stmt|;
@@ -5349,13 +5162,13 @@ operator|!=
 name|MESSAGE_IN_PHASE
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: unexpected phase after reselect\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"unexpected phase after reselect\n"
 argument_list|)
 expr_stmt|;
 name|slp
@@ -5446,13 +5259,6 @@ name|slp
 argument_list|)
 expr_stmt|;
 block|}
-name|pp
-operator|=
-name|physio_proc_enter
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|slp
@@ -5487,13 +5293,13 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: data underrun\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"data underrun\n"
 argument_list|)
 expr_stmt|;
 name|slp
@@ -5521,7 +5327,7 @@ index|[
 name|NCV_PADDING_SIZE
 index|]
 decl_stmt|;
-name|SCSI_LOW_BZERO
+name|bzero
 argument_list|(
 name|padding
 argument_list|,
@@ -5546,13 +5352,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: write padding required\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"write padding required\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5603,11 +5409,6 @@ name|len
 argument_list|)
 expr_stmt|;
 block|}
-name|physio_proc_leave
-argument_list|(
-name|pp
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|DATA_IN_PHASE
@@ -5643,13 +5444,6 @@ name|slp
 argument_list|)
 expr_stmt|;
 block|}
-name|pp
-operator|=
-name|physio_proc_enter
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|slp
@@ -5684,13 +5478,13 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: data overrun\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"data overrun\n"
 argument_list|)
 expr_stmt|;
 name|slp
@@ -5733,13 +5527,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: read padding required\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"read padding required\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5791,11 +5585,6 @@ name|len
 argument_list|)
 expr_stmt|;
 block|}
-name|physio_proc_leave
-argument_list|(
-name|pp
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|COMMAND_PHASE

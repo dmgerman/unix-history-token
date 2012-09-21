@@ -152,7 +152,7 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-name|int
+name|gid_t
 name|area_gids
 index|[
 name|NGRPS

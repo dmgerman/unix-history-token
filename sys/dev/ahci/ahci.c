@@ -1352,6 +1352,16 @@ literal|0
 block|}
 block|,
 block|{
+literal|0x2360197b
+block|,
+literal|0x00
+block|,
+literal|"JMicron JMB360"
+block|,
+literal|0
+block|}
+block|,
+block|{
 literal|0x2361197b
 block|,
 literal|0x00
@@ -1359,6 +1369,16 @@ block|,
 literal|"JMicron JMB361"
 block|,
 name|AHCI_Q_NOFORCE
+block|}
+block|,
+block|{
+literal|0x2362197b
+block|,
+literal|0x00
+block|,
+literal|"JMicron JMB362"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -3227,7 +3247,7 @@ if|if
 condition|(
 name|version
 operator|>=
-literal|0x00010020
+literal|0x00010200
 condition|)
 name|ctlr
 operator|->
@@ -3925,7 +3945,7 @@ name|bootverbose
 operator|&&
 name|version
 operator|>=
-literal|0x00010020
+literal|0x00010200
 condition|)
 block|{
 name|device_printf
@@ -4293,7 +4313,7 @@ name|pci_read_config
 argument_list|(
 name|dev
 argument_list|,
-literal|0x00
+name|PCIR_DEVVENDOR
 argument_list|,
 literal|4
 argument_list|)
@@ -7042,7 +7062,7 @@ if|if
 condition|(
 name|version
 operator|<
-literal|0x00010020
+literal|0x00010200
 operator|&&
 operator|(
 name|ctlr
