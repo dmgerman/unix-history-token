@@ -1065,6 +1065,7 @@ block|{
 name|usb_ticks_t
 name|start_ticks
 decl_stmt|;
+specifier|const
 name|usb_ticks_t
 name|max_ticks
 init|=
@@ -1148,9 +1149,14 @@ block|}
 do|while
 condition|(
 operator|(
+call|(
+name|usb_ticks_t
+call|)
+argument_list|(
 name|ticks
 operator|-
 name|start_ticks
+argument_list|)
 operator|)
 operator|<
 name|max_ticks
