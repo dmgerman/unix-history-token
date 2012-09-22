@@ -12382,7 +12382,7 @@ case|:
 comment|/* 		 * Module should not be unloaded due to race conditions. 		 */
 name|error
 operator|=
-name|EPERM
+name|EBUSY
 expr_stmt|;
 break|break;
 case|case
