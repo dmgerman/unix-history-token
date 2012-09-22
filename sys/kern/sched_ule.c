@@ -7580,7 +7580,7 @@ operator|!=
 name|curthread
 operator|&&
 name|prio
-operator|>
+operator|<
 name|td
 operator|->
 name|td_priority
