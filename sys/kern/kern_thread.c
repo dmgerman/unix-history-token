@@ -477,13 +477,7 @@ operator|++
 index|]
 expr_stmt|;
 name|tid_head
-operator|=
-operator|(
-name|tid_head
-operator|+
-literal|1
-operator|)
-operator|%
+operator|%=
 name|TID_BUFFER_SIZE
 expr_stmt|;
 block|}
