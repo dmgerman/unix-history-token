@@ -3248,6 +3248,9 @@ name|g_provider
 modifier|*
 name|pp
 decl_stmt|;
+name|g_topology_lock
+argument_list|()
+expr_stmt|;
 name|gp
 operator|=
 name|dp
@@ -3260,6 +3263,7 @@ name|gp
 operator|!=
 name|NULL
 condition|)
+block|{
 name|LIST_FOREACH
 argument_list|(
 argument|pp
@@ -3274,6 +3278,10 @@ name|pp
 argument_list|,
 name|ENXIO
 argument_list|)
+expr_stmt|;
+block|}
+name|g_topology_unlock
+argument_list|()
 expr_stmt|;
 block|}
 end_function
