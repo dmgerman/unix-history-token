@@ -4246,6 +4246,9 @@ name|pfr_kentry
 modifier|*
 name|ke
 decl_stmt|;
+name|PF_RULES_ASSERT
+argument_list|()
+expr_stmt|;
 name|bzero
 argument_list|(
 operator|&
@@ -5256,6 +5259,9 @@ name|head
 init|=
 name|NULL
 decl_stmt|;
+name|PF_RULES_WASSERT
+argument_list|()
+expr_stmt|;
 name|bzero
 argument_list|(
 name|ke
