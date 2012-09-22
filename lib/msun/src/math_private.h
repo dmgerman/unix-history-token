@@ -491,7 +491,7 @@ name|lval
 parameter_list|,
 name|rval
 parameter_list|)
-value|do {	\ 	volatile type __lval;			\ 						\ 	if (sizeof(type)>= sizeof(double))	\ 		(lval) = (rval);		\ 	else {					\ 		__lval = (rval);		\ 		(lval) = __lval;		\ 	}					\ } while (0)
+value|do {	\ 	volatile type __lval;			\ 						\ 	if (sizeof(type)>= sizeof(long double))	\ 		(lval) = (rval);		\ 	else {					\ 		__lval = (rval);		\ 		(lval) = __lval;		\ 	}					\ } while (0)
 end_define
 
 begin_endif
@@ -533,7 +533,7 @@ directive|define
 name|ENTERI
 parameter_list|()
 define|\
-value|long double __retval;			\ 	fp_prec_t __oprec;			\ 						\ 	if ((__oprec = fpgetprec()) != FP_PE)	\ 		fpsetprec(FP_PE);
+value|long double __retval;			\ 	fp_prec_t __oprec;			\ 						\ 	if ((__oprec = fpgetprec()) != FP_PE)	\ 		fpsetprec(FP_PE)
 end_define
 
 begin_define
