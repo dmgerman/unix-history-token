@@ -1490,7 +1490,7 @@ name|zc
 operator|->
 name|l_entry
 operator|.
-name|le_name_length
+name|le_name_numints
 expr_stmt|;
 if|if
 condition|(
