@@ -20,6 +20,59 @@ name|_MACHDEP_BOOT_MACHDEP_H_
 end_define
 
 begin_comment
+comment|/* Structs that need to be initialised by initarm */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|pv_addr
+name|irqstack
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|pv_addr
+name|undstack
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|pv_addr
+name|abtstack
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Define various stack sizes in pages */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IRQ_STACK_SIZE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ABT_STACK_SIZE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|UND_STACK_SIZE
+value|1
+end_define
+
+begin_comment
 comment|/* misc prototypes used by the many arm machdeps */
 end_comment
 
@@ -67,6 +120,16 @@ name|prefetch_abort_handler
 parameter_list|(
 name|trapframe_t
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|set_stackptrs
+parameter_list|(
+name|int
+name|cpu
 parameter_list|)
 function_decl|;
 end_function_decl
