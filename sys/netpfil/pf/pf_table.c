@@ -4772,7 +4772,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-name|EINVAL
+name|ENOMEM
 operator|)
 return|;
 name|rv
