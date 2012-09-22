@@ -1370,6 +1370,7 @@ expr_stmt|;
 name|set_cpufuncs
 argument_list|()
 expr_stmt|;
+comment|/* 	 * Find the dtb passed in by the boot loader. 	 */
 name|kmdp
 operator|=
 name|preload_search_by_type
