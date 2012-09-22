@@ -905,30 +905,6 @@ value|(((va)& L1_S_FRAME) + L1_S_SIZE)
 end_define
 
 begin_comment
-comment|/*  * L2 allocation.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|pmap_alloc_l2_dtable
-parameter_list|()
-define|\
-value|(void*)uma_zalloc(l2table_zone, M_NOWAIT|M_USE_RESERVE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|pmap_free_l2_dtable
-parameter_list|(
-name|l2
-parameter_list|)
-define|\
-value|uma_zfree(l2table_zone, l2)
-end_define
-
-begin_comment
 comment|/*  * We try to map the page tables write-through, if possible.  However, not  * all CPUs have a write-through cache mode, so on those we have to sync  * the cache when we frob page tables.  *  * We try to evaluate this at compile time, if possible.  However, it's  * not always possible to do that, hence this run-time var.  */
 end_comment
 
@@ -1793,8 +1769,6 @@ name|NULL
 condition|)
 block|{
 comment|/* 		 * No mapping at this address, as there is 		 * no entry in the L1 table. 		 * Need to allocate a new l2_dtable. 		 */
-name|again_l2table
-label|:
 name|PMAP_UNLOCK
 argument_list|(
 name|pm
@@ -1811,8 +1785,12 @@ condition|(
 operator|(
 name|l2
 operator|=
-name|pmap_alloc_l2_dtable
-argument_list|()
+name|uma_zalloc
+argument_list|(
+name|l2table_zone
+argument_list|,
+name|M_NOWAIT
+argument_list|)
 operator|)
 operator|==
 name|NULL
@@ -1861,33 +1839,12 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|PMAP_UNLOCK
-argument_list|(
-name|pm
-argument_list|)
-expr_stmt|;
-name|rw_wunlock
-argument_list|(
-operator|&
-name|pvh_global_lock
-argument_list|)
-expr_stmt|;
+comment|/* 			 * Someone already allocated the l2_dtable while 			 * we were doing the same. 			 */
 name|uma_zfree
 argument_list|(
 name|l2table_zone
 argument_list|,
 name|l2
-argument_list|)
-expr_stmt|;
-name|rw_wlock
-argument_list|(
-operator|&
-name|pvh_global_lock
-argument_list|)
-expr_stmt|;
-name|PMAP_LOCK
-argument_list|(
-name|pm
 argument_list|)
 expr_stmt|;
 name|l2
@@ -1902,16 +1859,6 @@ name|l1idx
 argument_list|)
 index|]
 expr_stmt|;
-if|if
-condition|(
-name|l2
-operator|==
-name|NULL
-condition|)
-goto|goto
-name|again_l2table
-goto|;
-comment|/* 			 * Someone already allocated the l2_dtable while 			 * we were doing the same. 			 */
 block|}
 else|else
 block|{
@@ -1969,8 +1916,6 @@ modifier|*
 name|ptep
 decl_stmt|;
 comment|/* 		 * No L2 page table has been allocated. Chances are, this 		 * is because we just allocated the l2_dtable, above. 		 */
-name|again_ptep
-label|:
 name|PMAP_UNLOCK
 argument_list|(
 name|pm
@@ -1984,17 +1929,11 @@ argument_list|)
 expr_stmt|;
 name|ptep
 operator|=
-operator|(
-name|void
-operator|*
-operator|)
 name|uma_zalloc
 argument_list|(
 name|l2zone
 argument_list|,
 name|M_NOWAIT
-operator||
-name|M_USE_RESERVE
 argument_list|)
 expr_stmt|;
 name|rw_wlock
@@ -2018,17 +1957,6 @@ literal|0
 condition|)
 block|{
 comment|/* We lost the race. */
-name|PMAP_UNLOCK
-argument_list|(
-name|pm
-argument_list|)
-expr_stmt|;
-name|rw_wunlock
-argument_list|(
-operator|&
-name|pvh_global_lock
-argument_list|)
-expr_stmt|;
 name|uma_zfree
 argument_list|(
 name|l2zone
@@ -2036,28 +1964,6 @@ argument_list|,
 name|ptep
 argument_list|)
 expr_stmt|;
-name|rw_wlock
-argument_list|(
-operator|&
-name|pvh_global_lock
-argument_list|)
-expr_stmt|;
-name|PMAP_LOCK
-argument_list|(
-name|pm
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|l2b
-operator|->
-name|l2b_kva
-operator|==
-literal|0
-condition|)
-goto|goto
-name|again_ptep
-goto|;
 return|return
 operator|(
 name|l2b
@@ -2102,8 +2008,10 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
-name|pmap_free_l2_dtable
+name|uma_zfree
 argument_list|(
+name|l2table_zone
+argument_list|,
 name|l2
 argument_list|)
 expr_stmt|;
@@ -2334,8 +2242,10 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
-name|pmap_free_l2_dtable
+name|uma_zfree
 argument_list|(
+name|l2table_zone
+argument_list|,
 name|l2
 argument_list|)
 expr_stmt|;
@@ -3816,73 +3726,6 @@ name|PHYSADDR
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * init the pv free list 	 */
-name|pvzone
-operator|=
-name|uma_zcreate
-argument_list|(
-literal|"PV ENTRY"
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|pv_entry
-argument_list|)
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|UMA_ALIGN_PTR
-argument_list|,
-name|UMA_ZONE_VM
-operator||
-name|UMA_ZONE_NOFREE
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Now it is safe to enable pv_table recording. 	 */
-name|PDEBUG
-argument_list|(
-literal|1
-argument_list|,
-name|printf
-argument_list|(
-literal|"pmap_init: done!\n"
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|TUNABLE_INT_FETCH
-argument_list|(
-literal|"vm.pmap.shpgperproc"
-argument_list|,
-operator|&
-name|shpgperproc
-argument_list|)
-expr_stmt|;
-name|pv_entry_max
-operator|=
-name|shpgperproc
-operator|*
-name|maxproc
-operator|+
-name|cnt
-operator|.
-name|v_page_count
-expr_stmt|;
-name|pv_entry_high_water
-operator|=
-literal|9
-operator|*
-operator|(
-name|pv_entry_max
-operator|/
-literal|10
-operator|)
-expr_stmt|;
 name|l2zone
 operator|=
 name|uma_zcreate
@@ -3933,6 +3776,52 @@ operator||
 name|UMA_ZONE_NOFREE
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Initialize the PV entry allocator. 	 */
+name|pvzone
+operator|=
+name|uma_zcreate
+argument_list|(
+literal|"PV ENTRY"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|pv_entry
+argument_list|)
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|UMA_ALIGN_PTR
+argument_list|,
+name|UMA_ZONE_VM
+operator||
+name|UMA_ZONE_NOFREE
+argument_list|)
+expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"vm.pmap.shpgperproc"
+argument_list|,
+operator|&
+name|shpgperproc
+argument_list|)
+expr_stmt|;
+name|pv_entry_max
+operator|=
+name|shpgperproc
+operator|*
+name|maxproc
+operator|+
+name|cnt
+operator|.
+name|v_page_count
+expr_stmt|;
 name|uma_zone_set_obj
 argument_list|(
 name|pvzone
@@ -3941,6 +3830,27 @@ operator|&
 name|pvzone_obj
 argument_list|,
 name|pv_entry_max
+argument_list|)
+expr_stmt|;
+name|pv_entry_high_water
+operator|=
+literal|9
+operator|*
+operator|(
+name|pv_entry_max
+operator|/
+literal|10
+operator|)
+expr_stmt|;
+comment|/* 	 * Now it is safe to enable pv_table recording. 	 */
+name|PDEBUG
+argument_list|(
+literal|1
+argument_list|,
+name|printf
+argument_list|(
+literal|"pmap_init: done!\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -9231,7 +9141,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	The page queues and pmap must be locked.  */
+comment|/*  *	The pvh global and pmap locks must be held.  */
 end_comment
 
 begin_function
