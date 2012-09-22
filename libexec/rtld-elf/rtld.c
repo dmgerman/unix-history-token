@@ -7871,6 +7871,8 @@ modifier|*
 name|name
 decl_stmt|;
 name|bool
+name|nodeflib
+decl_stmt|,
 name|objgiven
 decl_stmt|;
 name|objgiven
@@ -8066,6 +8068,16 @@ return|;
 block|}
 else|else
 block|{
+name|nodeflib
+operator|=
+name|objgiven
+condition|?
+name|refobj
+operator|->
+name|z_nodeflib
+else|:
+name|false
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -8157,9 +8169,7 @@ name|name
 argument_list|,
 name|gethints
 argument_list|(
-name|refobj
-operator|->
-name|z_nodeflib
+name|nodeflib
 argument_list|)
 argument_list|)
 operator|)
@@ -8170,9 +8180,7 @@ operator|(
 name|objgiven
 operator|&&
 operator|!
-name|refobj
-operator|->
-name|z_nodeflib
+name|nodeflib
 operator|&&
 operator|(
 name|pathname
