@@ -11306,6 +11306,17 @@ name|struct
 name|sockaddr_in
 name|sin
 decl_stmt|;
+name|bzero
+argument_list|(
+operator|&
+name|sin
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sin
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|sin
 operator|.
 name|sin_len
@@ -11380,6 +11391,17 @@ name|struct
 name|sockaddr_in6
 name|sin6
 decl_stmt|;
+name|bzero
+argument_list|(
+operator|&
+name|sin6
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sin6
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|sin6
 operator|.
 name|sin6_len
@@ -11448,7 +11470,15 @@ endif|#
 directive|endif
 comment|/* INET6 */
 default|default:
-empty_stmt|;
+name|panic
+argument_list|(
+literal|"%s: unknown address family %u"
+argument_list|,
+name|__func__
+argument_list|,
+name|af
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
