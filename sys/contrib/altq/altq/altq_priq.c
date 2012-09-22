@@ -1923,9 +1923,12 @@ condition|(
 name|cl
 operator|->
 name|cl_red
-operator|!=
+operator|==
 name|NULL
 condition|)
+goto|goto
+name|err_ret
+goto|;
 name|qtype
 argument_list|(
 name|cl
@@ -1988,9 +1991,12 @@ condition|(
 name|cl
 operator|->
 name|cl_red
-operator|!=
+operator|==
 name|NULL
 condition|)
+goto|goto
+name|err_ret
+goto|;
 name|qtype
 argument_list|(
 name|cl
