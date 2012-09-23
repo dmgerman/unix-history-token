@@ -1399,10 +1399,14 @@ decl_stmt|,
 name|j
 init|=
 literal|0
+decl_stmt|,
+name|err_devmap
+init|=
+literal|0
 decl_stmt|;
 name|lastaddr
 operator|=
-name|fake_preload_metadata
+name|parse_boot_param
 argument_list|(
 name|abp
 argument_list|)
@@ -1998,24 +2002,6 @@ argument_list|,
 name|PTE_CACHE
 argument_list|)
 expr_stmt|;
-comment|/* Map allocated DPCPU, stacks and msgbuf */
-name|pmap_map_chunk
-argument_list|(
-name|l1pagetable
-argument_list|,
-literal|0xf2200000
-argument_list|,
-literal|0x20200000
-argument_list|,
-literal|0x00100000
-argument_list|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-argument_list|,
-name|PTE_CACHE
-argument_list|)
-expr_stmt|;
 comment|/* Link and map the vector page */
 name|pmap_link_l2pt
 argument_list|(
@@ -2052,18 +2038,11 @@ name|PTE_CACHE
 argument_list|)
 expr_stmt|;
 comment|/* Map pmap_devmap[] entries */
-if|if
-condition|(
+name|err_devmap
+operator|=
 name|platform_devmap_init
 argument_list|()
-operator|!=
-literal|0
-condition|)
-while|while
-condition|(
-literal|1
-condition|)
-empty_stmt|;
+expr_stmt|;
 name|pmap_devmap_bootstrap
 argument_list|(
 name|l1pagetable
@@ -2170,6 +2149,19 @@ argument_list|()
 expr_stmt|;
 name|print_kenv
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|err_devmap
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"WARNING: could not fully configure devmap, error=%d\n"
+argument_list|,
+name|err_devmap
+argument_list|)
 expr_stmt|;
 name|initarm_late_init
 argument_list|()
