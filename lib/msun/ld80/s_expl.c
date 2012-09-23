@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Compute the exponential of x for Intel 80-bit format.  This is based on:  *  *   PTP Tang, "Table-driven implementation of the exponential function  *   in IEEE floating-point arithmetic," ACM Trans. Math. Soft., 15,  *   144-157 (1989).  *  * where the 32 table entries have been expanded to INTERVALS (see below).  */
+comment|/*-  * Compute the exponential of x for Intel 80-bit format.  This is based on:  *  *   PTP Tang, "Table-driven implementation of the exponential function  *   in IEEE floating-point arithmetic," ACM Trans. Math. Soft., 15,  *   144-157 (1989).  *  * where the 32 table entries have been expanded to INTERVALS (see below).  */
 end_comment
 
 begin_include
@@ -156,6 +156,11 @@ argument_list|(
 literal|64
 argument_list|)
 comment|/*  * ln2/INTERVALS = L1+L2 (hi+lo decomposition for multiplication).  L1 must  * have at least 22 (= log2(|LDBL_MIN_EXP-extras|) + log2(INTERVALS)) lowest  * bits zero so that multiplication of it by n is exact.  */
+name|INV_L
+init|=
+literal|1.8466496523378731e+2
+decl_stmt|,
+comment|/*  0x171547652b82fe.0p-45 */
 name|L1
 init|=
 literal|5.4152123484527692e-3
@@ -167,11 +172,6 @@ operator|-
 literal|3.2819649005320973e-13
 decl_stmt|,
 comment|/* -0x1718432a1b0e26.0p-94 */
-name|INV_L
-init|=
-literal|1.8466496523378731e+2
-decl_stmt|,
-comment|/*  0x171547652b82fe.0p-45 */
 comment|/*  * Domain [-0.002708, 0.002708], range ~[-5.7136e-24, 5.7110e-24]:  * |exp(x) - p(x)|< 2**-77.2  * (0.002708 is ln2/(2*INTERVALS) rounded up a little).  */
 name|P2
 init|=
@@ -1603,13 +1603,13 @@ name|long
 name|double
 name|fn
 decl_stmt|,
+name|q
+decl_stmt|,
 name|r
 decl_stmt|,
 name|r1
 decl_stmt|,
 name|r2
-decl_stmt|,
-name|q
 decl_stmt|,
 name|t
 decl_stmt|,
@@ -1842,7 +1842,6 @@ name|n
 operator|%
 name|INTERVALS
 expr_stmt|;
-comment|/* Tang's j. */
 name|k
 operator|=
 operator|(

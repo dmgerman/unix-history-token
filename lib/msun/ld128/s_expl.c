@@ -17,6 +17,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * ld128 version of s_expl.c.  See ../ld80/s_expl.c for most comments.  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -44,13 +48,16 @@ end_include
 begin_define
 define|#
 directive|define
+name|INTERVALS
+value|128
+end_define
+
+begin_define
+define|#
+directive|define
 name|BIAS
 value|(LDBL_MAX_EXP - 1)
 end_define
-
-begin_comment
-comment|/* XXX Prevent gcc from erroneously constant folding this: */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -58,12 +65,6 @@ specifier|volatile
 specifier|const
 name|long
 name|double
-name|twom10000
-init|=
-literal|0x1p
-operator|-
-literal|10000L
-decl_stmt|,
 name|tiny
 init|=
 literal|0x1p
@@ -77,18 +78,9 @@ specifier|static
 specifier|const
 name|long
 name|double
-name|huge
+name|INV_L
 init|=
-literal|0x1p10000L
-decl_stmt|,
-name|o_threshold
-init|=
-literal|11356.523406294143949491931077970763428L
-decl_stmt|,
-name|u_threshold
-init|=
-operator|-
-literal|11433.462743336297878837243843452621503L
+literal|1.84664965233787316142070359168242182e+02L
 decl_stmt|,
 name|L1
 init|=
@@ -99,9 +91,24 @@ init|=
 operator|-
 literal|1.02536706388947310094527932552595546e-29L
 decl_stmt|,
-name|INV_L
+name|huge
 init|=
-literal|1.84664965233787316142070359168242182e+02L
+literal|0x1p10000L
+decl_stmt|,
+name|o_threshold
+init|=
+literal|11356.523406294143949491931077970763428L
+decl_stmt|,
+name|twom10000
+init|=
+literal|0x1p
+operator|-
+literal|10000L
+decl_stmt|,
+name|u_threshold
+init|=
+operator|-
+literal|11433.462743336297878837243843452621503L
 decl_stmt|;
 end_decl_stmt
 
@@ -151,13 +158,6 @@ init|=
 literal|2.50517544183909126492878226167697856e-8L
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|INTERVALS
-value|128
-end_define
 
 begin_struct
 specifier|static
@@ -1466,6 +1466,7 @@ name|x
 operator|)
 return|;
 block|}
+comment|/* Reduce x to (k*ln2 + midpoint[n2] + r1 + r2). */
 name|fn
 operator|=
 name|x
@@ -1494,7 +1495,6 @@ name|n
 operator|%
 name|INTERVALS
 expr_stmt|;
-comment|/* Tang's j. */
 name|k
 operator|=
 operator|(
