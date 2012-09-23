@@ -3269,7 +3269,23 @@ end_define
 begin_define
 define|#
 directive|define
-name|HCINT_SUSPEND_ONLY
+name|HCINT_ERRORS
+define|\
+value|(HCINT_BBLERR | HCINT_XACTERR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HCINT_RETRY
+define|\
+value|(HCINT_DATATGLERR | HCINT_FRMOVRUN | HCINT_NAK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HCINT_HALTED_ONLY
 value|(1<<21)
 end_define
 
