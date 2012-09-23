@@ -215,6 +215,37 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Called by initarm */
+end_comment
+
+begin_function_decl
+name|vm_offset_t
+name|initarm_lastaddr
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|initarm_gpio_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|initarm_late_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Setup standard arrays */
 end_comment
 

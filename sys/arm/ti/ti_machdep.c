@@ -1547,13 +1547,8 @@ empty_stmt|;
 comment|/* Platform-specific initialisation */
 name|pmap_bootstrap_lastaddr
 operator|=
-name|DEVMAP_BOOTSTRAP_MAP_START
-operator|-
-name|ARM_NOCACHE_KVA_SIZE
-expr_stmt|;
-name|ti_cpu_reset
-operator|=
-name|NULL
+name|initarm_lastaddr
+argument_list|()
 expr_stmt|;
 name|pcpu0_init
 argument_list|()
@@ -2117,6 +2112,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|initarm_gpio_init
+argument_list|()
+expr_stmt|;
 name|cninit
 argument_list|()
 expr_stmt|;
@@ -2176,6 +2174,9 @@ literal|"WARNING: could not fully configure devmap, error=%d\n"
 argument_list|,
 name|err_devmap
 argument_list|)
+expr_stmt|;
+name|initarm_late_init
+argument_list|()
 expr_stmt|;
 comment|/* 	 * Pages were allocated during the secondary bootstrap for the 	 * stacks for different CPU modes. 	 * We must now set the r13 registers in the different CPU modes to 	 * point to these stacks. 	 * Since the ARM stacks use STMFD etc. we must set r13 to the top end 	 * of the stack memory. 	 */
 name|cpu_control
@@ -2316,6 +2317,45 @@ operator|)
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
+name|vm_offset_t
+name|initarm_lastaddr
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|ti_cpu_reset
+operator|=
+name|NULL
+expr_stmt|;
+return|return
+operator|(
+name|DEVMAP_BOOTSTRAP_MAP_START
+operator|-
+name|ARM_NOCACHE_KVA_SIZE
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|initarm_gpio_init
+parameter_list|(
+name|void
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+name|void
+name|initarm_late_init
+parameter_list|(
+name|void
+parameter_list|)
+block|{ }
 end_function
 
 begin_define
