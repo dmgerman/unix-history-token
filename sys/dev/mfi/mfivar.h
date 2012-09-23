@@ -57,6 +57,12 @@ directive|include
 file|<sys/taskqueue.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"opt_mfi.h"
+end_include
+
 begin_comment
 comment|/*  * SCSI structures and definitions are used from here, but no linking  * requirements are made to CAM.  */
 end_comment
