@@ -1370,30 +1370,32 @@ condition|)
 block|{
 if|if
 condition|(
+name|hx
+operator|&
+literal|0x8000
+operator|&&
 name|u
 operator|.
 name|xbits
 operator|.
 name|manh
-operator|!=
+operator|==
 literal|0
-operator|||
+operator|&&
 name|u
 operator|.
 name|xbits
 operator|.
 name|manl
-operator|!=
-literal|0
-operator|||
-operator|(
-name|hx
-operator|&
-literal|0x8000
-operator|)
 operator|==
 literal|0
 condition|)
+return|return
+operator|(
+literal|0.0L
+operator|)
+return|;
+comment|/* x is -Inf */
 return|return
 operator|(
 name|x
@@ -1401,14 +1403,7 @@ operator|+
 name|x
 operator|)
 return|;
-comment|/* x is NaN or +Inf */
-else|else
-return|return
-operator|(
-literal|0.0
-operator|)
-return|;
-comment|/* x is -Inf */
+comment|/* x is +Inf or NaN */
 block|}
 if|if
 condition|(
@@ -1441,14 +1436,13 @@ elseif|else
 if|if
 condition|(
 name|ix
-operator|<=
+operator|<
 name|BIAS
 operator|-
 literal|115
 condition|)
 block|{
-comment|/* |x|< 0x1p-33 */
-comment|/* includes pseudo-denormals */
+comment|/* |x|< 0x1p-115 */
 if|if
 condition|(
 name|huge

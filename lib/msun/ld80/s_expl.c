@@ -1741,13 +1741,13 @@ elseif|else
 if|if
 condition|(
 name|ix
-operator|<=
+operator|<
 name|BIAS
 operator|-
-literal|34
+literal|66
 condition|)
 block|{
-comment|/* |x|< 0x1p-33 */
+comment|/* |x|< 0x1p-66 */
 comment|/* includes pseudo-denormals */
 if|if
 condition|(
