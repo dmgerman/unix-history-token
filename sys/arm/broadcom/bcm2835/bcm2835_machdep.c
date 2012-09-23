@@ -2140,7 +2140,7 @@ argument_list|)
 expr_stmt|;
 name|debugf
 argument_list|(
-literal|" arg1 mmdp = 0x%08x\n"
+literal|" arg1 kmdp = 0x%08x\n"
 argument_list|,
 operator|(
 name|uint32_t
