@@ -336,11 +336,6 @@ name|mii_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|struct
-name|mii_attach_args
-modifier|*
-name|ma
-decl_stmt|;
 specifier|const
 name|struct
 name|mii_phy_funcs
@@ -350,13 +345,6 @@ decl_stmt|;
 name|sc
 operator|=
 name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-name|ma
-operator|=
-name|device_get_ivars
 argument_list|(
 name|dev
 argument_list|)
