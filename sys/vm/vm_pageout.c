@@ -4237,6 +4237,9 @@ name|OBJ_DEAD
 operator|)
 condition|)
 block|{
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_page_unlock
 argument_list|(
 name|m
@@ -4246,9 +4249,6 @@ name|VM_OBJECT_UNLOCK
 argument_list|(
 name|object
 argument_list|)
-expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
 expr_stmt|;
 name|queues_locked
 operator|=
