@@ -1388,6 +1388,15 @@ name|bio_flags
 operator|&
 name|BIO_ERROR
 condition|)
+block|{
+name|bp
+operator|->
+name|bio_resid
+operator|=
+name|bp
+operator|->
+name|bio_bcount
+expr_stmt|;
 name|disk_err
 argument_list|(
 name|bp
@@ -1400,6 +1409,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 name|biodone
 argument_list|(
 name|bp
