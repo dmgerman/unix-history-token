@@ -727,6 +727,19 @@ name|uint64_t
 name|spa_did
 decl_stmt|;
 comment|/* if procp != p0, did of t1 */
+name|kthread_t
+modifier|*
+name|spa_trim_thread
+decl_stmt|;
+comment|/* thread sending TRIM I/Os */
+name|kmutex_t
+name|spa_trim_lock
+decl_stmt|;
+comment|/* protects spa_trim_cv */
+name|kcondvar_t
+name|spa_trim_cv
+decl_stmt|;
+comment|/* used to notify TRIM thread */
 name|boolean_t
 name|spa_autoreplace
 decl_stmt|;
