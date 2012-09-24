@@ -6574,9 +6574,13 @@ argument_list|,
 name|status
 argument_list|)
 expr_stmt|;
-name|CTR1
+name|ATH_KTR
 argument_list|(
-name|ATH_KTR_INTR
+name|sc
+argument_list|,
+name|ATH_KTR_INTERRUPTS
+argument_list|,
+literal|1
 argument_list|,
 literal|"ath_intr: mask=0x%.8x"
 argument_list|,
@@ -6586,9 +6590,13 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|ATH_KTR_INTR_DEBUG
-name|CTR5
+name|ATH_KTR
 argument_list|(
-name|ATH_KTR_INTR
+name|sc
+argument_list|,
+name|ATH_KTR_INTERRUPTS
+argument_list|,
+literal|5
 argument_list|,
 literal|"ath_intr: ISR=0x%.8x, ISR_S0=0x%.8x, ISR_S1=0x%.8x, ISR_S2=0x%.8x, ISR_S5=0x%.8x"
 argument_list|,
@@ -6865,9 +6873,13 @@ block|{
 name|int
 name|imask
 decl_stmt|;
-name|CTR0
+name|ATH_KTR
 argument_list|(
-name|ATH_KTR_ERR
+name|sc
+argument_list|,
+name|ATH_KTR_ERROR
+argument_list|,
+literal|0
 argument_list|,
 literal|"ath_intr: RXEOL"
 argument_list|)
@@ -7046,6 +7058,29 @@ operator|&
 name|txqs
 argument_list|)
 expr_stmt|;
+name|ATH_KTR
+argument_list|(
+name|sc
+argument_list|,
+name|ATH_KTR_INTERRUPTS
+argument_list|,
+literal|3
+argument_list|,
+literal|"ath_intr: TX; txqs=0x%08x, txq_active was 0x%08x, now 0x%08x"
+argument_list|,
+name|txqs
+argument_list|,
+name|sc
+operator|->
+name|sc_txq_active
+argument_list|,
+name|sc
+operator|->
+name|sc_txq_active
+operator||
+name|txqs
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|sc_txq_active
@@ -7194,9 +7229,13 @@ name|HAL_INT_RXORN
 condition|)
 block|{
 comment|/* NB: hal marks HAL_INT_FATAL when RXORN is fatal */
-name|CTR0
+name|ATH_KTR
 argument_list|(
-name|ATH_KTR_ERR
+name|sc
+argument_list|,
+name|ATH_KTR_ERROR
+argument_list|,
+literal|0
 argument_list|,
 literal|"ath_intr: RXORN"
 argument_list|)
@@ -15311,6 +15350,46 @@ operator|->
 name|axq_link
 argument_list|)
 expr_stmt|;
+name|ATH_KTR
+argument_list|(
+name|sc
+argument_list|,
+name|ATH_KTR_TXCOMP
+argument_list|,
+literal|4
+argument_list|,
+literal|"ath_tx_processq: txq=%u head %p link %p depth %p"
+argument_list|,
+name|txq
+operator|->
+name|axq_qnum
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+operator|(
+name|uintptr_t
+operator|)
+name|ath_hal_gettxbuf
+argument_list|(
+name|sc
+operator|->
+name|sc_ah
+argument_list|,
+name|txq
+operator|->
+name|axq_qnum
+argument_list|)
+argument_list|,
+name|txq
+operator|->
+name|axq_link
+argument_list|,
+name|txq
+operator|->
+name|axq_depth
+argument_list|)
+expr_stmt|;
 name|nacked
 operator|=
 literal|0
@@ -15429,7 +15508,6 @@ operator|==
 literal|0
 operator|)
 condition|)
-block|{
 name|ath_printtxbuf
 argument_list|(
 name|sc
@@ -15447,7 +15525,6 @@ operator|==
 name|HAL_OK
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 if|if
@@ -15457,6 +15534,25 @@ operator|==
 name|HAL_EINPROGRESS
 condition|)
 block|{
+name|ATH_KTR
+argument_list|(
+name|sc
+argument_list|,
+name|ATH_KTR_TXCOMP
+argument_list|,
+literal|3
+argument_list|,
+literal|"ath_tx_processq: txq=%u, bf=%p ds=%p, HAL_EINPROGRESS"
+argument_list|,
+name|txq
+operator|->
+name|axq_qnum
+argument_list|,
+name|bf
+argument_list|,
+name|ds
+argument_list|)
+expr_stmt|;
 name|ATH_TXQ_UNLOCK
 argument_list|(
 name|txq
@@ -15532,6 +15628,31 @@ operator|=
 name|bf
 operator|->
 name|bf_node
+expr_stmt|;
+name|ATH_KTR
+argument_list|(
+name|sc
+argument_list|,
+name|ATH_KTR_TXCOMP
+argument_list|,
+literal|5
+argument_list|,
+literal|"ath_tx_processq: txq=%u, bf=%p, ds=%p, ni=%p, ts_status=0x%08x"
+argument_list|,
+name|txq
+operator|->
+name|axq_qnum
+argument_list|,
+name|bf
+argument_list|,
+name|ds
+argument_list|,
+name|ni
+argument_list|,
+name|ts
+operator|->
+name|ts_status
+argument_list|)
 expr_stmt|;
 comment|/* 		 * If unicast frame was ack'd update RSSI, 		 * including the last rx time used to 		 * workaround phantom bmiss interrupts. 		 */
 if|if
@@ -15653,6 +15774,21 @@ name|txq
 argument_list|)
 expr_stmt|;
 block|}
+name|ATH_KTR
+argument_list|(
+name|sc
+argument_list|,
+name|ATH_KTR_TXCOMP
+argument_list|,
+literal|1
+argument_list|,
+literal|"ath_tx_processq: txq=%u: done"
+argument_list|,
+name|txq
+operator|->
+name|axq_qnum
+argument_list|)
+expr_stmt|;
 return|return
 name|nacked
 return|;
@@ -15733,6 +15869,19 @@ expr_stmt|;
 name|ATH_PCU_UNLOCK
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+name|ATH_KTR
+argument_list|(
+name|sc
+argument_list|,
+name|ATH_KTR_TXCOMP
+argument_list|,
+literal|1
+argument_list|,
+literal|"ath_tx_proc_q0: txqs=0x%08x"
+argument_list|,
+name|txqs
 argument_list|)
 expr_stmt|;
 if|if
@@ -15927,6 +16076,19 @@ expr_stmt|;
 name|ATH_PCU_UNLOCK
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+name|ATH_KTR
+argument_list|(
+name|sc
+argument_list|,
+name|ATH_KTR_TXCOMP
+argument_list|,
+literal|1
+argument_list|,
+literal|"ath_tx_proc_q0123: txqs=0x%08x"
+argument_list|,
+name|txqs
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Process each active queue. 	 */
@@ -16211,6 +16373,19 @@ expr_stmt|;
 name|ATH_PCU_UNLOCK
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+name|ATH_KTR
+argument_list|(
+name|sc
+argument_list|,
+name|ATH_KTR_TXCOMP
+argument_list|,
+literal|1
+argument_list|,
+literal|"ath_tx_proc: txqs=0x%08x"
+argument_list|,
+name|txqs
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Process each active queue. 	 */

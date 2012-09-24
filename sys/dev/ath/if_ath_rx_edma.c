@@ -1488,9 +1488,13 @@ name|sc_lastrx
 operator|=
 name|tsf
 expr_stmt|;
-name|CTR2
+name|ATH_KTR
 argument_list|(
-name|ATH_KTR_INTR
+name|sc
+argument_list|,
+name|ATH_KTR_INTERRUPTS
+argument_list|,
+literal|2
 argument_list|,
 literal|"ath edma rx proc: npkts=%d, ngood=%d"
 argument_list|,
@@ -1514,9 +1518,13 @@ operator|->
 name|sc_kickpcu
 condition|)
 block|{
-name|CTR0
+name|ATH_KTR
 argument_list|(
-name|ATH_KTR_ERR
+name|sc
+argument_list|,
+name|ATH_KTR_ERROR
+argument_list|,
+literal|0
 argument_list|,
 literal|"ath_edma_recv_proc_queue(): kickpcu"
 argument_list|)

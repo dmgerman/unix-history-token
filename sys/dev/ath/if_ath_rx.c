@@ -3658,9 +3658,13 @@ name|sc_lastrx
 operator|=
 name|tsf
 expr_stmt|;
-name|CTR2
+name|ATH_KTR
 argument_list|(
-name|ATH_KTR_INTR
+name|sc
+argument_list|,
+name|ATH_KTR_RXPROC
+argument_list|,
+literal|2
 argument_list|,
 literal|"ath_rx_proc: npkts=%d, ngood=%d"
 argument_list|,
@@ -3710,9 +3714,13 @@ operator|->
 name|sc_kickpcu
 condition|)
 block|{
-name|CTR0
+name|ATH_KTR
 argument_list|(
-name|ATH_KTR_ERR
+name|sc
+argument_list|,
+name|ATH_KTR_ERROR
+argument_list|,
+literal|0
 argument_list|,
 literal|"ath_rx_proc: kickpcu"
 argument_list|)
@@ -3882,9 +3890,13 @@ name|sc
 init|=
 name|arg
 decl_stmt|;
-name|CTR1
+name|ATH_KTR
 argument_list|(
-name|ATH_KTR_INTR
+name|sc
+argument_list|,
+name|ATH_KTR_RXPROC
+argument_list|,
+literal|1
 argument_list|,
 literal|"ath_rx_proc: pending=%d"
 argument_list|,

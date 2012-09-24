@@ -2470,6 +2470,29 @@ argument_list|,
 literal|"control debugging printfs"
 argument_list|)
 expr_stmt|;
+name|SYSCTL_ADD_QUAD
+argument_list|(
+name|ctx
+argument_list|,
+name|SYSCTL_CHILDREN
+argument_list|(
+name|tree
+argument_list|)
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"ktrdebug"
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_ktrdebug
+argument_list|,
+literal|"control debugging KTR"
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 name|SYSCTL_ADD_PROC

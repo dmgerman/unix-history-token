@@ -1643,6 +1643,9 @@ decl_stmt|;
 name|uint64_t
 name|sc_debug
 decl_stmt|;
+name|uint64_t
+name|sc_ktrdebug
+decl_stmt|;
 name|int
 name|sc_nvaps
 decl_stmt|;
