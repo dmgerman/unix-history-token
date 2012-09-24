@@ -258,23 +258,10 @@ define|\
 value|(GINTSTS_ENUMDONE |			\    GINTSTS_USBRST |			\    GINTSTS_USBSUSP |			\    GINTSTS_IEPINT |			\    GINTSTS_RXFLVL |			\    GINTSTS_SESSREQINT |			\    GINTMSK_OTGINTMSK |			\    GINTMSK_HCHINTMSK |			\    GINTSTS_PRTINT)
 end_define
 
-begin_define
-define|#
-directive|define
-name|DWC_OTG_USE_HSIC
-value|0
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USB_DEBUG
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 name|int
-name|dwc_otg_debug
+name|dwc_otg_use_hsic
 decl_stmt|;
 end_decl_stmt
 
@@ -296,6 +283,51 @@ literal|"USB DWC OTG"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_usb_dwc_otg
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|use_hsic
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|dwc_otg_use_hsic
+argument_list|,
+literal|0
+argument_list|,
+literal|"DWC OTG uses HSIC interface"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.usb.dwc_otg.use_hsic"
+argument_list|,
+operator|&
+name|dwc_otg_use_hsic
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USB_DEBUG
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|int
+name|dwc_otg_debug
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -2870,6 +2902,43 @@ return|;
 comment|/* complete */
 block|}
 block|}
+comment|/* treat NYET like NAK, if SPLIT transactions are used */
+if|if
+condition|(
+name|hcint
+operator|&
+name|HCINT_NYET
+condition|)
+block|{
+if|if
+condition|(
+name|td
+operator|->
+name|hcsplt
+operator|!=
+literal|0
+condition|)
+block|{
+name|DPRINTF
+argument_list|(
+literal|"CH=%d NYET+SPLIT\n"
+argument_list|,
+name|td
+operator|->
+name|channel
+argument_list|)
+expr_stmt|;
+name|hcint
+operator|&=
+operator|~
+name|HCINT_NYET
+expr_stmt|;
+name|hcint
+operator||=
+name|HCINT_NAK
+expr_stmt|;
+block|}
+block|}
 comment|/* channel must be disabled before we can complete the transfer */
 if|if
 condition|(
@@ -4378,6 +4447,43 @@ return|;
 comment|/* complete */
 block|}
 block|}
+comment|/* treat NYET like NAK, if SPLIT transactions are used */
+if|if
+condition|(
+name|hcint
+operator|&
+name|HCINT_NYET
+condition|)
+block|{
+if|if
+condition|(
+name|td
+operator|->
+name|hcsplt
+operator|!=
+literal|0
+condition|)
+block|{
+name|DPRINTF
+argument_list|(
+literal|"CH=%d NYET+SPLIT\n"
+argument_list|,
+name|td
+operator|->
+name|channel
+argument_list|)
+expr_stmt|;
+name|hcint
+operator|&=
+operator|~
+name|HCINT_NYET
+expr_stmt|;
+name|hcint
+operator||=
+name|HCINT_NAK
+expr_stmt|;
+block|}
+block|}
 comment|/* channel must be disabled before we can complete the transfer */
 if|if
 condition|(
@@ -5767,6 +5873,43 @@ literal|0
 operator|)
 return|;
 comment|/* complete */
+block|}
+block|}
+comment|/* treat NYET like NAK, if SPLIT transactions are used */
+if|if
+condition|(
+name|hcint
+operator|&
+name|HCINT_NYET
+condition|)
+block|{
+if|if
+condition|(
+name|td
+operator|->
+name|hcsplt
+operator|!=
+literal|0
+condition|)
+block|{
+name|DPRINTF
+argument_list|(
+literal|"CH=%d NYET+SPLIT\n"
+argument_list|,
+name|td
+operator|->
+name|channel
+argument_list|)
+expr_stmt|;
+name|hcint
+operator|&=
+operator|~
+name|HCINT_NYET
+expr_stmt|;
+name|hcint
+operator||=
+name|HCINT_NAK
+expr_stmt|;
 block|}
 block|}
 comment|/* channel must be disabled before we can complete the transfer */
@@ -12090,7 +12233,7 @@ block|}
 comment|/* select HSIC or non-HSIC mode */
 if|if
 condition|(
-name|DWC_OTG_USE_HSIC
+name|dwc_otg_use_hsic
 condition|)
 block|{
 name|DWC_OTG_WRITE_4
