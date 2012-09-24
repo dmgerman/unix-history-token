@@ -4865,6 +4865,65 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Update the CLRDMASK bit in the ath_buf if it needs to be set.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|ath_tx_update_clrdmask
+parameter_list|(
+name|struct
+name|ath_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
+name|ath_tid
+modifier|*
+name|tid
+parameter_list|,
+name|struct
+name|ath_buf
+modifier|*
+name|bf
+parameter_list|)
+block|{
+name|ATH_TID_LOCK_ASSERT
+argument_list|(
+name|sc
+argument_list|,
+name|tid
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tid
+operator|->
+name|clrdmask
+operator|==
+literal|1
+condition|)
+block|{
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_txflags
+operator||=
+name|HAL_TXDESC_CLRDMASK
+expr_stmt|;
+name|tid
+operator|->
+name|clrdmask
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
 comment|/*  * Transmit the given frame to the hardware.  *  * The frame must already be setup; rate control must already have  * been done.  *  * XXX since the TXQ lock is being held here (and I dislike holding  * it for this long when not doing software aggregation), later on  * break this function into "setup_normal" and "xmit_normal". The  * lock only needs to be held for the ath_tx_handoff call.  */
 end_comment
 
@@ -4889,9 +4948,57 @@ modifier|*
 name|bf
 parameter_list|)
 block|{
+name|struct
+name|ath_node
+modifier|*
+name|an
+init|=
+name|ATH_NODE
+argument_list|(
+name|bf
+operator|->
+name|bf_node
+argument_list|)
+decl_stmt|;
+name|struct
+name|ath_tid
+modifier|*
+name|tid
+init|=
+operator|&
+name|an
+operator|->
+name|an_tid
+index|[
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_tid
+index|]
+decl_stmt|;
 name|ATH_TXQ_LOCK_ASSERT
 argument_list|(
 name|txq
+argument_list|)
+expr_stmt|;
+comment|/* 	 * For now, just enable CLRDMASK. ath_tx_xmit_normal() does 	 * set a completion handler however it doesn't (yet) properly 	 * handle the strict ordering requirements needed for normal, 	 * non-aggregate session frames. 	 * 	 * Once this is implemented, only set CLRDMASK like this for 	 * frames that must go out - eg management/raw frames. 	 */
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_txflags
+operator||=
+name|HAL_TXDESC_CLRDMASK
+expr_stmt|;
+comment|/* See if clrdmask needs to be set */
+name|ath_tx_update_clrdmask
+argument_list|(
+name|sc
+argument_list|,
+name|tid
+argument_list|,
+name|bf
 argument_list|)
 expr_stmt|;
 comment|/* Setup the descriptor before handoff */
@@ -4937,8 +5044,19 @@ argument_list|,
 name|bf
 argument_list|)
 expr_stmt|;
-comment|/* XXX Bump TID HWQ counter */
-comment|/* XXX Assign a completion handler */
+comment|/* Track per-TID hardware queue depth correctly */
+name|tid
+operator|->
+name|hwq_depth
+operator|++
+expr_stmt|;
+comment|/* Assign the completion handler */
+name|bf
+operator|->
+name|bf_comp
+operator|=
+name|ath_tx_normal_comp
+expr_stmt|;
 comment|/* Hand off to hardware */
 name|ath_tx_handoff
 argument_list|(
@@ -9746,65 +9864,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Update the CLRDMASK bit in the ath_buf if it needs to be set.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|ath_tx_update_clrdmask
-parameter_list|(
-name|struct
-name|ath_softc
-modifier|*
-name|sc
-parameter_list|,
-name|struct
-name|ath_tid
-modifier|*
-name|tid
-parameter_list|,
-name|struct
-name|ath_buf
-modifier|*
-name|bf
-parameter_list|)
-block|{
-name|ATH_TID_LOCK_ASSERT
-argument_list|(
-name|sc
-argument_list|,
-name|tid
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|tid
-operator|->
-name|clrdmask
-operator|==
-literal|1
-condition|)
-block|{
-name|bf
-operator|->
-name|bf_state
-operator|.
-name|bfs_txflags
-operator||=
-name|HAL_TXDESC_CLRDMASK
-expr_stmt|;
-name|tid
-operator|->
-name|clrdmask
-operator|=
-literal|0
-expr_stmt|;
-block|}
-block|}
-end_function
-
-begin_comment
 comment|/*  * Assign a sequence number manually to the given frame.  *  * This should only be called for A-MPDU TX frames.  */
 end_comment
 
@@ -10772,15 +10831,6 @@ argument_list|,
 literal|"%s: xmit_normal\n"
 argument_list|,
 name|__func__
-argument_list|)
-expr_stmt|;
-name|ath_tx_update_clrdmask
-argument_list|(
-name|sc
-argument_list|,
-name|atid
-argument_list|,
-name|bf
 argument_list|)
 expr_stmt|;
 name|ath_tx_xmit_normal
@@ -13336,7 +13386,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Handle completion of non-aggregate session frames.  */
+comment|/*  * Handle completion of non-aggregate session frames.  *  * This (currently) doesn't implement software retransmission of  * non-aggregate frames!  *  * Software retransmission of non-aggregate frames needs to obey  * the strict sequence number ordering, and drop any frames that  * will fail this.  *  * For now, filtered frames and frame transmission will cause  * all kinds of issues.  So we don't support them.  *  * So anyone queuing frames via ath_tx_normal_xmit() or  * ath_tx_hw_queue_norm() must override and set CLRDMASK.  */
 end_comment
 
 begin_function
@@ -13449,6 +13499,13 @@ operator|->
 name|hwq_depth
 operator|--
 expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* 	 * If the frame was filtered, stick it on the filter frame 	 * queue and complain about it.  It shouldn't happen! 	 */
+block|if ((ts->ts_status& HAL_TXERR_FILT) || 	    (ts->ts_status != 0&& atid->isfiltered)) { 		device_printf(sc->sc_dev, 		    "%s: isfiltered=%d, ts_status=%d: huh?\n", 		    __func__, 		    atid->isfiltered, 		    ts->ts_status); 		ath_tx_tid_filt_comp_buf(sc, atid, bf); 	}
+endif|#
+directive|endif
 if|if
 condition|(
 name|atid
@@ -13461,7 +13518,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"%s: isfiltered=1, normal_comp?\n"
+literal|"%s: filtered?!\n"
 argument_list|,
 name|__func__
 argument_list|)
@@ -18386,6 +18443,15 @@ operator|->
 name|bf_comp
 operator|=
 name|ath_tx_normal_comp
+expr_stmt|;
+comment|/* 		 * Override this for now, until the non-aggregate 		 * completion handler correctly handles software retransmits. 		 */
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_txflags
+operator||=
+name|HAL_TXDESC_CLRDMASK
 expr_stmt|;
 comment|/* Update CLRDMASK just before this frame is queued */
 name|ath_tx_update_clrdmask
