@@ -134,11 +134,6 @@ name|vcpu
 parameter_list|,
 name|register_t
 name|rip
-parameter_list|,
-name|struct
-name|vm_exit
-modifier|*
-name|vmexit
 parameter_list|)
 block|{
 name|printf

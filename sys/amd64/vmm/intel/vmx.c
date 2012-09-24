@@ -4902,11 +4902,6 @@ name|vcpu
 parameter_list|,
 name|register_t
 name|rip
-parameter_list|,
-name|struct
-name|vm_exit
-modifier|*
-name|vmexit
 parameter_list|)
 block|{
 name|int
@@ -4938,6 +4933,11 @@ name|vmcs
 modifier|*
 name|vmcs
 decl_stmt|;
+name|struct
+name|vm_exit
+modifier|*
+name|vmexit
+decl_stmt|;
 name|vmx
 operator|=
 name|arg
@@ -4967,6 +4967,17 @@ operator|->
 name|launched
 operator|=
 literal|0
+expr_stmt|;
+name|vmexit
+operator|=
+name|vm_exitinfo
+argument_list|(
+name|vmx
+operator|->
+name|vm
+argument_list|,
+name|vcpu
+argument_list|)
 expr_stmt|;
 comment|/* 	 * XXX Can we avoid doing this every time we do a vm run? 	 */
 name|VMPTRLD
