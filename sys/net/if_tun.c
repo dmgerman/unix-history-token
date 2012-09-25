@@ -1238,7 +1238,6 @@ name|cdev
 modifier|*
 name|dev
 decl_stmt|;
-comment|/* Unlocked read. */
 name|mtx_lock
 argument_list|(
 operator|&
