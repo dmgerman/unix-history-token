@@ -99,11 +99,6 @@ name|mtx
 name|tap_mtx
 decl_stmt|;
 comment|/* per-softc mutex */
-name|struct
-name|cv
-name|tap_cv
-decl_stmt|;
-comment|/* protect ref'd dev destroy */
 block|}
 struct|;
 end_struct
