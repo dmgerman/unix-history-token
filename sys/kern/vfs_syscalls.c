@@ -9138,7 +9138,7 @@ label|:
 name|bwillwrite
 argument_list|()
 expr_stmt|;
-name|NDINIT_AT
+name|NDINIT_ATRIGHTS
 argument_list|(
 operator|&
 name|nd
@@ -9158,6 +9158,8 @@ argument_list|,
 name|path
 argument_list|,
 name|fd
+argument_list|,
+name|CAP_DELETE
 argument_list|,
 name|td
 argument_list|)
