@@ -5236,16 +5236,6 @@ name|bfs_txflags
 operator||=
 name|HAL_TXDESC_CLRDMASK
 expr_stmt|;
-comment|/* See if clrdmask needs to be set */
-name|ath_tx_update_clrdmask
-argument_list|(
-name|sc
-argument_list|,
-name|tid
-argument_list|,
-name|bf
-argument_list|)
-expr_stmt|;
 comment|/* Setup the descriptor before handoff */
 name|ath_tx_do_ratelookup
 argument_list|(
@@ -11141,6 +11131,16 @@ argument_list|,
 literal|"%s: xmit_normal\n"
 argument_list|,
 name|__func__
+argument_list|)
+expr_stmt|;
+comment|/* See if clrdmask needs to be set */
+name|ath_tx_update_clrdmask
+argument_list|(
+name|sc
+argument_list|,
+name|atid
+argument_list|,
+name|bf
 argument_list|)
 expr_stmt|;
 name|ath_tx_xmit_normal
