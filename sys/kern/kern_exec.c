@@ -2000,7 +2000,7 @@ operator|->
 name|fd
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Some might argue that CAP_READ and/or CAP_MMAP should also 		 * be required here; such arguments will be entertained. 		 * 		 * Descriptors opened only with O_EXEC or O_RDONLY are allowed. 		 */
+comment|/* 		 * Some might argue that CAP_MMAP should also be required here; 		 * such arguments will be entertained. 		 * 		 * Descriptors opened only with O_EXEC are allowed. 		 */
 name|error
 operator|=
 name|fgetvp_exec
