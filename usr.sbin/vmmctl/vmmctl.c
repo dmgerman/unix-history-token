@@ -299,6 +299,8 @@ literal|"       [--get-vmcs-exit-interruption-error]\n"
 literal|"       [--get-vmcs-interruptibility]\n"
 literal|"       [--set-pinning=<host_cpuid>]\n"
 literal|"       [--get-pinning]\n"
+literal|"       [--set-x2apic-state=<state>]\n"
+literal|"       [--get-x2apic-state]\n"
 literal|"       [--set-lowmem=<memory below 4GB in units of MB>]\n"
 literal|"       [--get-lowmem]\n"
 literal|"       [--set-highmem=<memory above 4GB in units of MB>]\n"
@@ -598,6 +600,22 @@ decl_stmt|,
 name|get_pinning
 decl_stmt|,
 name|pincpu
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|set_x2apic_state
+decl_stmt|,
+name|get_x2apic_state
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|enum
+name|x2apic_state
+name|x2apic_state
 decl_stmt|;
 end_decl_stmt
 
@@ -1473,6 +1491,8 @@ name|SET_LDTR
 block|,
 name|SET_PINNING
 block|,
+name|SET_X2APIC_STATE
+block|,
 name|SET_VMCS_EXCEPTION_BITMAP
 block|,
 name|SET_VMCS_ENTRY_INTERRUPTION_INFO
@@ -1856,6 +1876,16 @@ block|,
 literal|0
 block|,
 name|SET_PINNING
+block|}
+block|,
+block|{
+literal|"set-x2apic-state"
+block|,
+name|REQ_ARG
+block|,
+literal|0
+block|,
+name|SET_X2APIC_STATE
 block|}
 block|,
 block|{
@@ -2955,6 +2985,17 @@ literal|1
 block|}
 block|,
 block|{
+literal|"get-x2apic-state"
+block|,
+name|NO_ARG
+block|,
+operator|&
+name|get_x2apic_state
+block|,
+literal|1
+block|}
+block|,
+block|{
 literal|"get-all"
 block|,
 name|NO_ARG
@@ -3505,6 +3546,25 @@ literal|0
 argument_list|)
 expr_stmt|;
 name|set_pinning
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+name|SET_X2APIC_STATE
+case|:
+name|x2apic_state
+operator|=
+name|strtol
+argument_list|(
+name|optarg
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|set_x2apic_state
 operator|=
 literal|1
 expr_stmt|;
@@ -4300,6 +4360,24 @@ argument_list|,
 name|vcpu
 argument_list|,
 name|pincpu
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|error
+operator|&&
+name|set_x2apic_state
+condition|)
+name|error
+operator|=
+name|vm_set_x2apic_state
+argument_list|(
+name|ctx
+argument_list|,
+name|vcpu
+argument_list|,
+name|x2apic_state
 argument_list|)
 expr_stmt|;
 if|if
@@ -6424,6 +6502,46 @@ name|pincpu
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+if|if
+condition|(
+operator|!
+name|error
+operator|&&
+operator|(
+name|get_x2apic_state
+operator|||
+name|get_all
+operator|)
+condition|)
+block|{
+name|error
+operator|=
+name|vm_get_x2apic_state
+argument_list|(
+name|ctx
+argument_list|,
+name|vcpu
+argument_list|,
+operator|&
+name|x2apic_state
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"x2apic_state[%d]\t%d\n"
+argument_list|,
+name|vcpu
+argument_list|,
+name|x2apic_state
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(

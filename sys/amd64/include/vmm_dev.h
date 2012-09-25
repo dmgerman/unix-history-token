@@ -363,6 +363,21 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|vm_x2apic
+block|{
+name|int
+name|cpuid
+decl_stmt|;
+name|enum
+name|x2apic_state
+name|state
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_enum
 enum|enum
 block|{
@@ -407,6 +422,10 @@ block|,
 name|IOCNUM_VM_STATS
 block|,
 name|IOCNUM_VM_STAT_DESC
+block|,
+name|IOCNUM_SET_X2APIC_STATE
+block|,
+name|IOCNUM_GET_X2APIC_STATE
 block|, }
 enum|;
 end_enum
@@ -577,6 +596,22 @@ directive|define
 name|VM_STAT_DESC
 define|\
 value|_IOWR('v', IOCNUM_VM_STAT_DESC, struct vm_stat_desc)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_SET_X2APIC_STATE
+define|\
+value|_IOW('v', IOCNUM_SET_X2APIC_STATE, struct vm_x2apic)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_GET_X2APIC_STATE
+define|\
+value|_IOWR('v', IOCNUM_GET_X2APIC_STATE, struct vm_x2apic)
 end_define
 
 begin_endif
