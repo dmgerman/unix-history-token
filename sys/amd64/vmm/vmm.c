@@ -698,6 +698,12 @@ name|vcpu_id
 expr_stmt|;
 name|vcpu
 operator|->
+name|x2apic_state
+operator|=
+name|X2APIC_ENABLED
+expr_stmt|;
+name|vcpu
+operator|->
 name|vlapic
 operator|=
 name|vlapic_init
@@ -727,12 +733,6 @@ name|stats
 operator|=
 name|vmm_stat_alloc
 argument_list|()
-expr_stmt|;
-name|vcpu
-operator|->
-name|x2apic_state
-operator|=
-name|X2APIC_ENABLED
 expr_stmt|;
 block|}
 end_function

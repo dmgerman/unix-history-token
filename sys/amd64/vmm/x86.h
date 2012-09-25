@@ -160,6 +160,14 @@ begin_function_decl
 name|int
 name|x86_emulate_cpuid
 parameter_list|(
+name|struct
+name|vm
+modifier|*
+name|vm
+parameter_list|,
+name|int
+name|vcpu_id
+parameter_list|,
 name|uint32_t
 modifier|*
 name|eax
@@ -175,9 +183,6 @@ parameter_list|,
 name|uint32_t
 modifier|*
 name|edx
-parameter_list|,
-name|uint32_t
-name|vcpu_id
 parameter_list|)
 function_decl|;
 end_function_decl

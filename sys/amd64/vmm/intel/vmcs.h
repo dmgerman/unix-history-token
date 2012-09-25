@@ -278,6 +278,14 @@ parameter_list|()
 value|vmcs_read(VMCS_GUEST_CR3)
 end_define
 
+begin_define
+define|#
+directive|define
+name|vmcs_gpa
+parameter_list|()
+value|vmcs_read(VMCS_GUEST_PHYSICAL_ADDRESS)
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -1772,6 +1780,45 @@ define|#
 directive|define
 name|EXIT_QUAL_NMI_WHILE_STI_BLOCKING
 value|3
+end_define
+
+begin_comment
+comment|/*  * Exit qualification for EPT violation  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EPT_VIOLATION_DATA_READ
+value|(1UL<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EPT_VIOLATION_DATA_WRITE
+value|(1UL<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EPT_VIOLATION_INST_FETCH
+value|(1UL<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EPT_VIOLATION_GLA_VALID
+value|(1UL<< 7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EPT_VIOLATION_XLAT_VALID
+value|(1UL<< 8)
 end_define
 
 begin_endif

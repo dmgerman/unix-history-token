@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -27,6 +33,12 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/cpuset.h>
 end_include
 
 begin_include
@@ -45,6 +57,12 @@ begin_include
 include|#
 directive|include
 file|<machine/specialreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/vmm.h>
 end_include
 
 begin_include
@@ -77,6 +95,14 @@ begin_function
 name|int
 name|x86_emulate_cpuid
 parameter_list|(
+name|struct
+name|vm
+modifier|*
+name|vm
+parameter_list|,
+name|int
+name|vcpu_id
+parameter_list|,
 name|uint32_t
 modifier|*
 name|eax
@@ -92,11 +118,11 @@ parameter_list|,
 name|uint32_t
 modifier|*
 name|edx
-parameter_list|,
-name|uint32_t
-name|vcpu_id
 parameter_list|)
 block|{
+name|int
+name|error
+decl_stmt|;
 name|unsigned
 name|int
 name|func
@@ -105,6 +131,10 @@ name|regs
 index|[
 literal|4
 index|]
+decl_stmt|;
+name|enum
+name|x2apic_state
+name|x2apic_state
 decl_stmt|;
 name|func
 operator|=
@@ -250,6 +280,32 @@ argument_list|,
 name|regs
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+name|vm_get_x2apic_state
+argument_list|(
+name|vm
+argument_list|,
+name|vcpu_id
+argument_list|,
+operator|&
+name|x2apic_state
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+block|{
+name|panic
+argument_list|(
+literal|"x86_emulate_cpuid: error %d "
+literal|"fetching x2apic state"
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 			 * Override the APIC ID only in ebx 			 */
 name|regs
 index|[
@@ -292,9 +348,20 @@ index|[
 literal|2
 index|]
 operator||=
-name|CPUID2_X2APIC
-operator||
 name|CPUID2_HV
+expr_stmt|;
+if|if
+condition|(
+name|x2apic_state
+operator|!=
+name|X2APIC_DISABLED
+condition|)
+name|regs
+index|[
+literal|2
+index|]
+operator||=
+name|CPUID2_X2APIC
 expr_stmt|;
 comment|/* 			 * Hide xsave/osxsave/avx until the FPU save/restore 			 * issues are resolved 			 */
 name|regs
