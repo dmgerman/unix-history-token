@@ -7735,7 +7735,7 @@ name|error
 operator|)
 return|;
 block|}
-name|NDINIT_AT
+name|NDINIT_ATRIGHTS
 argument_list|(
 operator|&
 name|nd
@@ -7755,6 +7755,8 @@ argument_list|,
 name|path2
 argument_list|,
 name|fd2
+argument_list|,
+name|CAP_CREATE
 argument_list|,
 name|td
 argument_list|)
