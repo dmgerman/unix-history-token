@@ -4820,6 +4820,20 @@ name|rights
 init|=
 literal|0
 decl_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|O_EXEC
+condition|)
+block|{
+name|rights
+operator||=
+name|CAP_FEXECVE
+expr_stmt|;
+block|}
+else|else
+block|{
 switch|switch
 condition|(
 operator|(
@@ -4844,7 +4858,7 @@ name|rights
 operator||=
 name|CAP_READ
 expr_stmt|;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 name|O_WRONLY
 case|:
@@ -4853,14 +4867,7 @@ operator||=
 name|CAP_WRITE
 expr_stmt|;
 break|break;
-case|case
-name|O_EXEC
-case|:
-name|rights
-operator||=
-name|CAP_FEXECVE
-expr_stmt|;
-break|break;
+block|}
 block|}
 if|if
 condition|(
