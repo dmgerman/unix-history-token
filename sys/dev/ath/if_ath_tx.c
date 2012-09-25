@@ -13524,17 +13524,9 @@ operator|->
 name|ac
 index|]
 decl_stmt|;
-comment|/* Remove this tid from the list of active tids */
 name|ATH_TXQ_LOCK
 argument_list|(
 name|txq
-argument_list|)
-expr_stmt|;
-name|ath_tx_tid_unsched
-argument_list|(
-name|sc
-argument_list|,
-name|atid
 argument_list|)
 expr_stmt|;
 comment|/* Free packets */
@@ -13548,6 +13540,14 @@ name|atid
 argument_list|,
 operator|&
 name|bf_cq
+argument_list|)
+expr_stmt|;
+comment|/* Remove this tid from the list of active tids */
+name|ath_tx_tid_unsched
+argument_list|(
+name|sc
+argument_list|,
+name|atid
 argument_list|)
 expr_stmt|;
 name|ATH_TXQ_UNLOCK
