@@ -13737,7 +13737,7 @@ name|waitok
 decl_stmt|;
 name|error
 operator|=
-name|getmq_read
+name|getmq_write
 argument_list|(
 name|td
 argument_list|,
@@ -13921,7 +13921,7 @@ name|waitok
 decl_stmt|;
 name|error
 operator|=
-name|getmq_write
+name|getmq_read
 argument_list|(
 name|td
 argument_list|,
