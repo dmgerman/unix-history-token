@@ -1216,6 +1216,8 @@ name|VM_EXITCODE_PAUSE
 block|,
 name|VM_EXITCODE_PAGING
 block|,
+name|VM_EXITCODE_SPINUP_AP
+block|,
 name|VM_EXITCODE_MAX
 block|}
 enum|;
@@ -1307,6 +1309,17 @@ name|wval
 decl_stmt|;
 block|}
 name|msr
+struct|;
+struct|struct
+block|{
+name|int
+name|vcpu
+decl_stmt|;
+name|uint64_t
+name|rip
+decl_stmt|;
+block|}
+name|spinup_ap
 struct|;
 block|}
 name|u

@@ -4845,6 +4845,19 @@ name|inst_length
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 		 * Special case for spinning up an AP - exit to userspace to 		 * give the controlling process a chance to intercept and 		 * spin up a thread for the AP. 		 */
+if|if
+condition|(
+name|vmexit
+operator|->
+name|exitcode
+operator|==
+name|VM_EXITCODE_SPINUP_AP
+condition|)
+name|handled
+operator|=
+literal|0
+expr_stmt|;
 block|}
 else|else
 block|{
