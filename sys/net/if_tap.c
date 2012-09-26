@@ -4464,7 +4464,7 @@ name|m
 decl_stmt|;
 name|TAPDEBUG
 argument_list|(
-literal|"%s writting, minor = %#x\n"
+literal|"%s writing, minor = %#x\n"
 argument_list|,
 name|ifp
 operator|->
