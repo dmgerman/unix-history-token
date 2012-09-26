@@ -4815,6 +4815,14 @@ name|q_lock
 argument_list|)
 expr_stmt|;
 block|}
+name|mtx_destroy
+argument_list|(
+operator|&
+name|na
+operator|->
+name|core_lock
+argument_list|)
+expr_stmt|;
 name|knlist_destroy
 argument_list|(
 operator|&
