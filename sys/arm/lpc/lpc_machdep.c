@@ -521,6 +521,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|vm_paddr_t
+name|pmap_pa
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|const
 name|struct
 name|pmap_devmap
@@ -1400,6 +1406,10 @@ decl_stmt|,
 name|j
 init|=
 literal|0
+decl_stmt|,
+name|err_devmap
+init|=
+literal|0
 decl_stmt|;
 name|lastaddr
 operator|=
@@ -1415,6 +1425,7 @@ expr_stmt|;
 name|set_cpufuncs
 argument_list|()
 expr_stmt|;
+comment|/* 	 * Find the dtb passed in by the boot loader. 	 */
 name|kmdp
 operator|=
 name|preload_search_by_type
@@ -1549,26 +1560,8 @@ name|fdt_immr_va
 operator|-
 name|ARM_NOCACHE_KVA_SIZE
 expr_stmt|;
-name|pcpu_init
-argument_list|(
-name|pcpup
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|pcpu
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|PCPU_SET
-argument_list|(
-name|curthread
-argument_list|,
-operator|&
-name|thread0
-argument_list|)
+name|pcpu0_init
+argument_list|()
 expr_stmt|;
 comment|/* Calculate number of L2 tables needed for mapping vm_page_array */
 name|l2size
@@ -1804,28 +1797,44 @@ name|valloc_pages
 argument_list|(
 name|irqstack
 argument_list|,
+operator|(
 name|IRQ_STACK_SIZE
+operator|*
+name|MAXCPU
+operator|)
 argument_list|)
 expr_stmt|;
 name|valloc_pages
 argument_list|(
 name|abtstack
 argument_list|,
+operator|(
 name|ABT_STACK_SIZE
+operator|*
+name|MAXCPU
+operator|)
 argument_list|)
 expr_stmt|;
 name|valloc_pages
 argument_list|(
 name|undstack
 argument_list|,
+operator|(
 name|UND_STACK_SIZE
+operator|*
+name|MAXCPU
+operator|)
 argument_list|)
 expr_stmt|;
 name|valloc_pages
 argument_list|(
 name|kernelstack
 argument_list|,
+operator|(
 name|KSTACK_PAGES
+operator|*
+name|MAXCPU
+operator|)
 argument_list|)
 expr_stmt|;
 name|init_param1
@@ -2049,18 +2058,11 @@ name|PTE_CACHE
 argument_list|)
 expr_stmt|;
 comment|/* Map pmap_devmap[] entries */
-if|if
-condition|(
+name|err_devmap
+operator|=
 name|platform_devmap_init
 argument_list|()
-operator|!=
-literal|0
-condition|)
-while|while
-condition|(
-literal|1
-condition|)
-empty_stmt|;
+expr_stmt|;
 name|pmap_devmap_bootstrap
 argument_list|(
 name|l1pagetable
@@ -2082,6 +2084,12 @@ operator|)
 operator||
 name|DOMAIN_CLIENT
 argument_list|)
+expr_stmt|;
+name|pmap_pa
+operator|=
+name|kernel_l1pt
+operator|.
+name|pv_pa
 expr_stmt|;
 name|setttb
 argument_list|(
@@ -2135,12 +2143,12 @@ argument_list|)
 expr_stmt|;
 name|debugf
 argument_list|(
-literal|" arg1 mdp = 0x%08x\n"
+literal|" arg1 kmdp = 0x%08x\n"
 argument_list|,
 operator|(
 name|uint32_t
 operator|)
-name|mdp
+name|kmdp
 argument_list|)
 expr_stmt|;
 name|debugf
@@ -2150,7 +2158,7 @@ argument_list|,
 name|boothowto
 argument_list|)
 expr_stmt|;
-name|printf
+name|debugf
 argument_list|(
 literal|" dtbp = 0x%08x\n"
 argument_list|,
@@ -2165,6 +2173,19 @@ argument_list|()
 expr_stmt|;
 name|print_kenv
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|err_devmap
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"WARNING: could not fully configure devmap, error=%d\n"
+argument_list|,
+name|err_devmap
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Pages were allocated during the secondary bootstrap for the 	 * stacks for different CPU modes. 	 * We must now set the r13 registers in the different CPU modes to 	 * point to these stacks. 	 * Since the ARM stacks use STMFD etc. we must set r13 to the top end 	 * of the stack memory. 	 */
 name|cpu_control
