@@ -4739,21 +4739,7 @@ name|i
 operator|++
 control|)
 block|{
-name|knlist_destroy
-argument_list|(
-operator|&
-name|na
-operator|->
-name|tx_rings
-index|[
-name|i
-index|]
-operator|.
-name|si
-operator|.
-name|si_note
-argument_list|)
-expr_stmt|;
+comment|/* knlist_destroy(&na->tx_rings[i].si.si_note); */
 name|mtx_destroy
 argument_list|(
 operator|&
@@ -4786,21 +4772,7 @@ name|i
 operator|++
 control|)
 block|{
-name|knlist_destroy
-argument_list|(
-operator|&
-name|na
-operator|->
-name|rx_rings
-index|[
-name|i
-index|]
-operator|.
-name|si
-operator|.
-name|si_note
-argument_list|)
-expr_stmt|;
+comment|/* knlist_destroy(&na->rx_rings[i].si.si_note); */
 name|mtx_destroy
 argument_list|(
 operator|&
@@ -4823,26 +4795,9 @@ operator|->
 name|core_lock
 argument_list|)
 expr_stmt|;
-name|knlist_destroy
-argument_list|(
-operator|&
-name|na
-operator|->
-name|tx_si
-operator|.
-name|si_note
-argument_list|)
-expr_stmt|;
-name|knlist_destroy
-argument_list|(
-operator|&
-name|na
-operator|->
-name|rx_si
-operator|.
-name|si_note
-argument_list|)
-expr_stmt|;
+comment|/* XXX kqueue(9) needed; these will mirror knlist_init. */
+comment|/* knlist_destroy(&na->tx_si.si_note); */
+comment|/* knlist_destroy(&na->rx_si.si_note); */
 name|bzero
 argument_list|(
 name|na
