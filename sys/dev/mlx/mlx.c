@@ -22,6 +22,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
 end_include
 
@@ -95,12 +101,6 @@ begin_include
 include|#
 directive|include
 file|<geom/geom_disk.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/mlx/mlx_compat.h>
 end_include
 
 begin_include
@@ -1575,8 +1575,9 @@ operator|->
 name|mlx_freecmds
 argument_list|)
 expr_stmt|;
-name|MLX_BIO_QINIT
+name|bioq_init
 argument_list|(
+operator|&
 name|sc
 operator|->
 name|mlx_bioq
@@ -3393,7 +3394,8 @@ name|mlx_softc
 modifier|*
 name|sc
 parameter_list|,
-name|mlx_bio
+name|struct
+name|bio
 modifier|*
 name|bp
 parameter_list|)
@@ -3408,8 +3410,9 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|MLX_BIO_QINSERT
+name|bioq_insert_tail
 argument_list|(
+operator|&
 name|sc
 operator|->
 name|mlx_bioq
@@ -8254,7 +8257,8 @@ name|mlx_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|mlx_bio
+name|struct
+name|bio
 modifier|*
 name|bp
 decl_stmt|;
@@ -8301,10 +8305,11 @@ name|mc_private
 expr_stmt|;
 if|if
 condition|(
-name|MLX_BIO_IS_READ
-argument_list|(
 name|bp
-argument_list|)
+operator|->
+name|bio_cmd
+operator|==
+name|BIO_READ
 condition|)
 block|{
 name|mc
@@ -8334,15 +8339,11 @@ block|}
 comment|/* build a suitable I/O command (assumes 512-byte rounded transfers) */
 name|mlxd
 operator|=
-operator|(
-expr|struct
-name|mlxd_softc
-operator|*
-operator|)
-name|MLX_BIO_SOFTC
-argument_list|(
 name|bp
-argument_list|)
+operator|->
+name|bio_disk
+operator|->
+name|d_drv1
 expr_stmt|;
 name|driveno
 operator|=
@@ -8357,10 +8358,9 @@ expr_stmt|;
 name|blkcount
 operator|=
 operator|(
-name|MLX_BIO_LENGTH
-argument_list|(
 name|bp
-argument_list|)
+operator|->
+name|bio_bcount
 operator|+
 name|MLX_BLKSIZE
 operator|-
@@ -8372,10 +8372,9 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|MLX_BIO_LBA
-argument_list|(
 name|bp
-argument_list|)
+operator|->
+name|bio_pblkno
 operator|+
 name|blkcount
 operator|)
@@ -8401,10 +8400,9 @@ operator|(
 name|long
 name|long
 operator|)
-name|MLX_BIO_LBA
-argument_list|(
 name|bp
-argument_list|)
+operator|->
+name|bio_pblkno
 argument_list|,
 name|blkcount
 argument_list|,
@@ -8450,10 +8448,9 @@ operator|&
 literal|0xff
 argument_list|,
 comment|/* xfer length low byte */
-name|MLX_BIO_LBA
-argument_list|(
 name|bp
-argument_list|)
+operator|->
+name|bio_pblkno
 argument_list|,
 comment|/* physical block number */
 name|driveno
@@ -8503,10 +8500,9 @@ literal|0x07
 operator|)
 argument_list|,
 comment|/* target+length high 3 bits */
-name|MLX_BIO_LBA
-argument_list|(
 name|bp
-argument_list|)
+operator|->
+name|bio_pblkno
 argument_list|,
 comment|/* physical block number */
 name|mc
@@ -8577,7 +8573,8 @@ name|mlx_command
 modifier|*
 name|mc
 decl_stmt|;
-name|mlx_bio
+name|struct
+name|bio
 modifier|*
 name|bp
 decl_stmt|;
@@ -8611,8 +8608,9 @@ condition|(
 operator|(
 name|bp
 operator|=
-name|MLX_BIO_QFIRST
+name|bioq_first
 argument_list|(
+operator|&
 name|sc
 operator|->
 name|mlx_bioq
@@ -8656,8 +8654,9 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* get the buf containing our work */
-name|MLX_BIO_QREMOVE
+name|bioq_remove
 argument_list|(
+operator|&
 name|sc
 operator|->
 name|mlx_bioq
@@ -8687,19 +8686,17 @@ name|mc
 operator|->
 name|mc_data
 operator|=
-name|MLX_BIO_DATA
-argument_list|(
 name|bp
-argument_list|)
+operator|->
+name|bio_data
 expr_stmt|;
 name|mc
 operator|->
 name|mc_length
 operator|=
-name|MLX_BIO_LENGTH
-argument_list|(
 name|bp
-argument_list|)
+operator|->
+name|bio_bcount
 expr_stmt|;
 comment|/* map the command so the controller can work with it */
 name|error
@@ -8772,14 +8769,11 @@ name|mc
 operator|->
 name|mc_sc
 decl_stmt|;
-name|mlx_bio
+name|struct
+name|bio
 modifier|*
 name|bp
 init|=
-operator|(
-name|mlx_bio
-operator|*
-operator|)
 name|mc
 operator|->
 name|mc_private
@@ -8789,15 +8783,11 @@ name|mlxd_softc
 modifier|*
 name|mlxd
 init|=
-operator|(
-expr|struct
-name|mlxd_softc
-operator|*
-operator|)
-name|MLX_BIO_SOFTC
-argument_list|(
 name|bp
-argument_list|)
+operator|->
+name|bio_disk
+operator|->
+name|d_drv1
 decl_stmt|;
 name|MLX_IO_ASSERT_LOCKED
 argument_list|(
@@ -8814,12 +8804,17 @@ name|MLX_STATUS_OK
 condition|)
 block|{
 comment|/* could be more verbose here? */
-name|MLX_BIO_SET_ERROR
-argument_list|(
 name|bp
-argument_list|,
+operator|->
+name|bio_error
+operator|=
 name|EIO
-argument_list|)
+expr_stmt|;
+name|bp
+operator|->
+name|bio_flags
+operator||=
+name|BIO_ERROR
 expr_stmt|;
 switch|switch
 condition|(
@@ -8870,7 +8865,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|device_printf(sc->mlx_dev, "  b_bcount %ld  blkcount %ld  b_pblkno %d\n",  			  MLX_BIO_LENGTH(bp), MLX_BIO_LENGTH(bp) / MLX_BLKSIZE, MLX_BIO_LBA(bp)); 	    device_printf(sc->mlx_dev, "  %13D\n", mc->mc_mailbox, " ");
+block|device_printf(sc->mlx_dev, "  b_bcount %ld  blkcount %ld  b_pblkno %d\n",  			  bp->bio_bcount, bp->bio_bcount / MLX_BLKSIZE, bp->bio_pblkno); 	    device_printf(sc->mlx_dev, "  %13D\n", mc->mc_mailbox, " ");
 endif|#
 directive|endif
 break|break;

@@ -372,7 +372,8 @@ name|MLX_MAXDRIVES
 index|]
 decl_stmt|;
 comment|/* system drives */
-name|mlx_bioq
+name|struct
+name|bio_queue_head
 name|mlx_bioq
 decl_stmt|;
 comment|/* outstanding I/O operations */
@@ -849,7 +850,8 @@ name|mlx_softc
 modifier|*
 name|sc
 parameter_list|,
-name|mlx_bio
+name|struct
+name|bio
 modifier|*
 name|bp
 parameter_list|)
@@ -893,9 +895,10 @@ specifier|extern
 name|void
 name|mlxd_intr
 parameter_list|(
-name|void
+name|struct
+name|bio
 modifier|*
-name|data
+name|bp
 parameter_list|)
 function_decl|;
 end_function_decl
