@@ -8927,20 +8927,6 @@ name|mbuf
 modifier|*
 name|m0
 decl_stmt|;
-name|len
-operator|=
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|len
-expr_stmt|;
-name|mflags
-operator|=
-name|m
-operator|->
-name|m_flags
-expr_stmt|;
 comment|/* We may be sending a fragment so traverse the mbuf */
 for|for
 control|(
@@ -8963,6 +8949,20 @@ operator|->
 name|m_nextpkt
 operator|=
 name|NULL
+expr_stmt|;
+name|len
+operator|=
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+expr_stmt|;
+name|mflags
+operator|=
+name|m
+operator|->
+name|m_flags
 expr_stmt|;
 comment|/* 		 * If underlying interface can not do VLAN tag insertion itself 		 * then attach a packet tag that holds it. 		 */
 if|if
@@ -9049,16 +9049,15 @@ argument_list|(
 name|m0
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|sc_ifp
+operator|->
+name|if_oerrors
+operator|++
+expr_stmt|;
 break|break;
 block|}
-block|}
-if|if
-condition|(
-name|err
-operator|==
-literal|0
-condition|)
-block|{
 name|sc
 operator|->
 name|sc_ifp
@@ -10833,7 +10832,7 @@ parameter_list|)
 define|\
 value|if ((iface)->if_type == IFT_GIF) \ 		continue; \
 comment|/* It is destined for us. */
-value|\ 	if (memcmp(IF_LLADDR((iface)), eh->ether_dhost,  ETHER_ADDR_LEN) == 0 \ 	    OR_CARP_CHECK_WE_ARE_DST((iface))				\ 	    ) {								\ 		if ((iface)->if_type == IFT_BRIDGE) {			\ 			ETHER_BPF_MTAP(iface, m);			\ 			iface->if_ipackets++;				\
+value|\ 	if (memcmp(IF_LLADDR((iface)), eh->ether_dhost,  ETHER_ADDR_LEN) == 0 \ 	    OR_CARP_CHECK_WE_ARE_DST((iface))				\ 	    ) {								\ 		if ((iface)->if_type == IFT_BRIDGE) {			\ 			ETHER_BPF_MTAP(iface, m);			\ 			iface->if_ipackets++;				\ 			iface->if_ibytes += m->m_pkthdr.len;		\
 comment|/* Filter on the physical interface. */
 value|\ 			if (pfil_local_phys&&				\ 			    (PFIL_HOOKED(&V_inet_pfil_hook)		\ 			     OR_PFIL_HOOKED_INET6)) {			\ 				if (bridge_pfil(&m, NULL, ifp,		\ 				    PFIL_IN) != 0 || m == NULL) {	\ 					BRIDGE_UNLOCK(sc);		\ 					return (NULL);			\ 				}					\ 			}						\ 		}							\ 		if (bif->bif_flags& IFBIF_LEARNING) {			\ 			error = bridge_rtupdate(sc, eh->ether_shost,	\ 			    vlan, bif, 0, IFBAF_DYNAMIC);		\ 			if (error&& bif->bif_addrmax) {		\ 				BRIDGE_UNLOCK(sc);			\ 				m_freem(m);				\ 				return (NULL);				\ 			}						\ 		}							\ 		m->m_pkthdr.rcvif = iface;				\ 		BRIDGE_UNLOCK(sc);					\ 		return (m);						\ 	}								\ 									\
 comment|/* We just received a packet that we sent out. */
