@@ -336,6 +336,8 @@ name|int
 name|guest_vmexit_on_hlt
 decl_stmt|,
 name|guest_vmexit_on_pause
+decl_stmt|,
+name|disable_x2apic
 decl_stmt|;
 end_decl_stmt
 
@@ -510,8 +512,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [-ehBHIP][-g<gdb port>][-z<hz>][-s<pci>]"
+literal|"Usage: %s [-aehBHIP][-g<gdb port>][-z<hz>][-s<pci>]"
 literal|"[-S<pci>][-p pincpu][-n<pci>][-m lowmem][-M highmem]<vm>\n"
+literal|"       -a: local apic is in XAPIC mode (default is X2APIC)\n"
 literal|"       -g: gdb port (default is %d and 0 means don't open)\n"
 literal|"       -c: # cpus (default 1)\n"
 literal|"       -p: pin vcpu 'n' to host cpu 'pincpu + n'\n"
@@ -655,6 +658,21 @@ name|oem_tbl_size
 operator|=
 name|tblsz
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|int
+name|fbsdrun_disable_x2apic
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|disable_x2apic
+operator|)
+return|;
 block|}
 end_function
 
@@ -2394,7 +2412,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ehBHIPxp:g:c:z:s:S:n:m:M:"
+literal|"aehBHIPxp:g:c:z:s:S:n:m:M:"
 argument_list|)
 operator|)
 operator|!=
@@ -2407,6 +2425,14 @@ condition|(
 name|c
 condition|)
 block|{
+case|case
+literal|'a'
+case|:
+name|disable_x2apic
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 case|case
 literal|'B'
 case|:
@@ -2781,6 +2807,52 @@ name|VM_EXITCODE_PAUSE
 index|]
 operator|=
 name|vmexit_pause
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|fbsdrun_disable_x2apic
+argument_list|()
+condition|)
+name|err
+operator|=
+name|vm_set_x2apic_state
+argument_list|(
+name|ctx
+argument_list|,
+name|BSP
+argument_list|,
+name|X2APIC_DISABLED
+argument_list|)
+expr_stmt|;
+else|else
+name|err
+operator|=
+name|vm_set_x2apic_state
+argument_list|(
+name|ctx
+argument_list|,
+name|BSP
+argument_list|,
+name|X2APIC_ENABLED
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Unable to set x2apic state (%d)\n"
+argument_list|,
+name|err
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 if|if

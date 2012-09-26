@@ -548,6 +548,12 @@ name|ISRVEC_STK_SIZE
 value|(16 + 1)
 end_define
 
+begin_enum_decl
+enum_decl|enum
+name|x2apic_state
+enum_decl|;
+end_enum_decl
+
 begin_function_decl
 name|struct
 name|vlapic
@@ -695,6 +701,25 @@ name|vlapic
 parameter_list|,
 name|uint64_t
 name|val
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vlapic_set_x2apic_state
+parameter_list|(
+name|struct
+name|vm
+modifier|*
+name|vm
+parameter_list|,
+name|int
+name|vcpuid
+parameter_list|,
+name|enum
+name|x2apic_state
+name|s
 parameter_list|)
 function_decl|;
 end_function_decl
