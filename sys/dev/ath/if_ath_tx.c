@@ -344,6 +344,17 @@ name|SWMAX_RETRIES
 value|10
 end_define
 
+begin_comment
+comment|/*  * What queue to throw the non-QoS TID traffic into  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATH_NONQOS_TID_AC
+value|WME_AC_VO
+end_define
+
 begin_function_decl
 specifier|static
 name|int
@@ -726,7 +737,7 @@ return|return
 name|pri
 return|;
 return|return
-name|WME_AC_BE
+name|ATH_NONQOS_TID_AC
 return|;
 block|}
 end_function
@@ -11355,7 +11366,7 @@ name|atid
 operator|->
 name|ac
 operator|=
-name|WME_AC_BE
+name|ATH_NONQOS_TID_AC
 expr_stmt|;
 else|else
 name|atid
