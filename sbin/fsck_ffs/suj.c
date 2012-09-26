@@ -4381,7 +4381,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"Directory %d zero inode\n"
+literal|"Directory %d has zero mode\n"
 argument_list|,
 name|parent
 argument_list|)
