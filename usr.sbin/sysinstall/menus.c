@@ -5956,6 +5956,29 @@ block|,
 endif|#
 directive|endif
 block|{
+literal|" DEBUG"
+block|,
+literal|"DEBUG kernel configuration"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|KernelDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_KERNEL_DEBUG
+block|}
+block|,
+block|{
 name|NULL
 block|}
 block|}

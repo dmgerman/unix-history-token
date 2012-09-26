@@ -466,6 +466,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|DIST_KERNEL_DEBUG
+value|0x00004
+end_define
+
+begin_define
+define|#
+directive|define
 name|DIST_KERNEL_ALL
 value|0xFFFFF
 end_define

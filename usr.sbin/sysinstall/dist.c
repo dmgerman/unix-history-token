@@ -453,6 +453,18 @@ argument_list|)
 block|,
 endif|#
 directive|endif
+name|DTE_TARBALL
+argument_list|(
+literal|"DEBUG"
+argument_list|,
+operator|&
+name|KernelDists
+argument_list|,
+name|KERNEL_DEBUG
+argument_list|,
+literal|"/boot"
+argument_list|)
+block|,
 name|DTE_END
 block|, }
 decl_stmt|;
