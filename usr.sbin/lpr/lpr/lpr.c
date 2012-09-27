@@ -169,6 +169,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -1930,12 +1936,15 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"%u %u"
+literal|"%u %ju"
 argument_list|,
 name|statb
 operator|.
 name|st_dev
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|statb
 operator|.
 name|st_ino
