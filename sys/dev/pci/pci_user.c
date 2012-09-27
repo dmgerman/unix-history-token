@@ -979,39 +979,39 @@ name|pcisel_old
 name|pc_sel
 decl_stmt|;
 comment|/* bus+slot+function */
-name|u_int8_t
+name|uint8_t
 name|pc_hdr
 decl_stmt|;
 comment|/* PCI header type */
-name|u_int16_t
+name|uint16_t
 name|pc_subvendor
 decl_stmt|;
 comment|/* card vendor ID */
-name|u_int16_t
+name|uint16_t
 name|pc_subdevice
 decl_stmt|;
-comment|/* card device ID, assigned by                                           card vendor */
-name|u_int16_t
+comment|/* card device ID, assigned by 					   card vendor */
+name|uint16_t
 name|pc_vendor
 decl_stmt|;
 comment|/* chip vendor ID */
-name|u_int16_t
+name|uint16_t
 name|pc_device
 decl_stmt|;
-comment|/* chip device ID, assigned by                                           chip vendor */
-name|u_int8_t
+comment|/* chip device ID, assigned by 					   chip vendor */
+name|uint8_t
 name|pc_class
 decl_stmt|;
 comment|/* chip PCI class */
-name|u_int8_t
+name|uint8_t
 name|pc_subclass
 decl_stmt|;
 comment|/* chip PCI subclass */
-name|u_int8_t
+name|uint8_t
 name|pc_progif
 decl_stmt|;
 comment|/* chip PCI programming interface */
-name|u_int8_t
+name|uint8_t
 name|pc_revid
 decl_stmt|;
 comment|/* chip revision ID */
@@ -1024,7 +1024,7 @@ literal|1
 index|]
 decl_stmt|;
 comment|/* device name */
-name|u_int32_t
+name|uint32_t
 name|pd_unit
 decl_stmt|;
 comment|/* device unit number (u_long) */
@@ -1050,19 +1050,19 @@ literal|1
 index|]
 decl_stmt|;
 comment|/* device name */
-name|u_int32_t
+name|uint32_t
 name|pd_unit
 decl_stmt|;
 comment|/* Unit number (u_long) */
-name|u_int16_t
+name|uint16_t
 name|pc_vendor
 decl_stmt|;
 comment|/* PCI Vendor ID */
-name|u_int16_t
+name|uint16_t
 name|pc_device
 decl_stmt|;
 comment|/* PCI Device ID */
-name|u_int8_t
+name|uint8_t
 name|pc_class
 decl_stmt|;
 comment|/* PCI class */
@@ -1078,35 +1078,35 @@ begin_struct
 struct|struct
 name|pci_conf_io32
 block|{
-name|u_int32_t
+name|uint32_t
 name|pat_buf_len
 decl_stmt|;
 comment|/* pattern buffer length */
-name|u_int32_t
+name|uint32_t
 name|num_patterns
 decl_stmt|;
 comment|/* number of patterns */
-name|u_int32_t
+name|uint32_t
 name|patterns
 decl_stmt|;
-comment|/* pattern buffer (struct pci_match_conf_old32 *) */
-name|u_int32_t
+comment|/* pattern buffer 					   (struct pci_match_conf_old32 *) */
+name|uint32_t
 name|match_buf_len
 decl_stmt|;
 comment|/* match buffer length */
-name|u_int32_t
+name|uint32_t
 name|num_matches
 decl_stmt|;
 comment|/* number of matches returned */
-name|u_int32_t
+name|uint32_t
 name|matches
 decl_stmt|;
-comment|/* match buffer (struct pci_conf_old32 *) */
-name|u_int32_t
+comment|/* match buffer 					   (struct pci_conf_old32 *) */
+name|uint32_t
 name|offset
 decl_stmt|;
 comment|/* offset into device list */
-name|u_int32_t
+name|uint32_t
 name|generation
 decl_stmt|;
 comment|/* device list generation */
@@ -1626,7 +1626,7 @@ operator|!=
 literal|0
 condition|)
 continue|continue;
-comment|/*                 * I'm not sure why someone would do this...but...                 */
+comment|/* 		 * I'm not sure why someone would do this...but... 		 */
 if|if
 condition|(
 name|matches
@@ -1639,7 +1639,7 @@ operator|==
 name|PCI_GETCONF_NO_MATCH_OLD
 condition|)
 continue|continue;
-comment|/*                 * Look at each of the match flags.  If it's set, do the                 * comparison.  If the comparison fails, we don't have a                 * match, go on to the next item if there is one.                 */
+comment|/* 		 * Look at each of the match flags.  If it's set, do the 		 * comparison.  If the comparison fails, we don't have a 		 * match, go on to the next item if there is one. 		 */
 if|if
 condition|(
 operator|(
@@ -3233,7 +3233,7 @@ operator|.
 name|pd_unit
 operator|=
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|dinfo
 operator|->
