@@ -9567,6 +9567,9 @@ name|printf
 argument_list|(
 literal|"Freeing unlinked ino %ju mode %o\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ino
 argument_list|,
 name|mode

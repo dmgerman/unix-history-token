@@ -6277,8 +6277,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"fsinit: inode value out of range (%d).\n"
+literal|"fsinit: inode value out of range (%ju).\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ino
 argument_list|)
 expr_stmt|;

@@ -3258,8 +3258,11 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"cannot find directory inode %d\n"
+literal|"cannot find directory inode %ju\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|node
 operator|.
 name|ino
@@ -3486,8 +3489,11 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"Cannot find directory inode %d named %s\n"
+literal|"Cannot find directory inode %ju named %s\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ino
 argument_list|,
 name|name
@@ -3621,8 +3627,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"write error extracting inode %d, name %s\n"
+literal|"write error extracting inode %ju, name %s\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|curfile
 operator|.
 name|ino
@@ -3675,8 +3684,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"write error extracting inode %d, name %s\n"
+literal|"write error extracting inode %ju, name %s\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|curfile
 operator|.
 name|ino
