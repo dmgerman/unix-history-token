@@ -1597,8 +1597,11 @@ name|errx
 argument_list|(
 name|EEXIT
 argument_list|,
-literal|"bad inode number %d to ginode"
+literal|"bad inode number %ju to ginode"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|inumber
 argument_list|)
 expr_stmt|;
@@ -1825,8 +1828,11 @@ name|errx
 argument_list|(
 name|EEXIT
 argument_list|,
-literal|"bad inode number %d to nextinode"
+literal|"bad inode number %ju to nextinode"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|inumber
 argument_list|)
 expr_stmt|;
@@ -2289,8 +2295,11 @@ name|errx
 argument_list|(
 name|EEXIT
 argument_list|,
-literal|"bad inode number %d to setinodebuf"
+literal|"bad inode number %ju to setinodebuf"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|inum
 argument_list|)
 expr_stmt|;
@@ -2862,8 +2871,11 @@ name|errx
 argument_list|(
 name|EEXIT
 argument_list|,
-literal|"cannot find inode %d"
+literal|"cannot find inode %ju"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|inumber
 argument_list|)
 expr_stmt|;

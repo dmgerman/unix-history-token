@@ -556,8 +556,11 @@ name|errx
 argument_list|(
 name|EEXIT
 argument_list|,
-literal|"inoinfo: inumber %d out of range"
+literal|"inoinfo: inumber %ju out of range"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|inum
 argument_list|)
 expr_stmt|;

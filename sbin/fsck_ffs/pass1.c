@@ -420,10 +420,13 @@ condition|)
 block|{
 name|pfatal
 argument_list|(
-literal|"%s (%d> %d) %s %d\nReset to %d\n"
+literal|"%s (%ju> %d) %s %d\nReset to %d\n"
 argument_list|,
 literal|"Too many initialized inodes"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|inosused
 argument_list|,
 name|sblock

@@ -2207,8 +2207,11 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"%d inodes missing\n"
+literal|"%jd inodes missing\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 operator|-
 name|files
 argument_list|)
