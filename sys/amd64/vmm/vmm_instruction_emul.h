@@ -210,7 +210,7 @@ struct_decl|;
 end_struct_decl
 
 begin_function_decl
-name|void
+name|int
 name|vmm_fetch_instruction
 parameter_list|(
 name|struct
@@ -220,6 +220,9 @@ name|vm
 parameter_list|,
 name|uint64_t
 name|rip
+parameter_list|,
+name|int
+name|inst_length
 parameter_list|,
 name|uint64_t
 name|cr3

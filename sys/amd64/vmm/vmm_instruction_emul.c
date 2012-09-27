@@ -399,7 +399,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|vmm_fetch_instruction
 parameter_list|(
 name|struct
@@ -409,6 +409,9 @@ name|vm
 parameter_list|,
 name|uint64_t
 name|rip
+parameter_list|,
+name|int
+name|inst_length
 parameter_list|,
 name|uint64_t
 name|cr3
@@ -432,19 +435,32 @@ decl_stmt|,
 name|gpaend
 decl_stmt|;
 comment|/* 	 * XXX cache previously fetched instructions using 'rip' as the tag 	 */
+if|if
+condition|(
+name|inst_length
+operator|>
+name|VIE_INST_SIZE
+condition|)
+name|panic
+argument_list|(
+literal|"vmm_fetch_instruction: invalid length %d"
+argument_list|,
+name|inst_length
+argument_list|)
+expr_stmt|;
 name|vie_init
 argument_list|(
 name|vie
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Copy up to 15 bytes of the instruction stream into 'vie' 	 */
+comment|/* Copy the instruction into 'vie' */
 while|while
 condition|(
 name|vie
 operator|->
 name|num_valid
 operator|<
-name|VIE_INST_SIZE
+name|inst_length
 condition|)
 block|{
 name|err
@@ -473,7 +489,7 @@ name|n
 operator|=
 name|min
 argument_list|(
-name|VIE_INST_SIZE
+name|inst_length
 operator|-
 name|vie
 operator|->
@@ -538,6 +554,26 @@ operator|+=
 name|n
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|vie
+operator|->
+name|num_valid
+operator|==
+name|inst_length
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+else|else
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 block|}
 end_function
 

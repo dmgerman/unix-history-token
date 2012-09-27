@@ -21,6 +21,12 @@ name|vm
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|vie
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|boolean_t
 name|lapic_msr
@@ -90,13 +96,11 @@ name|u_int
 name|offset
 parameter_list|,
 name|int
-name|read
+name|rd
 parameter_list|,
-name|uint64_t
-name|rip
-parameter_list|,
-name|uint64_t
-name|cr3
+name|struct
+name|vie
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
