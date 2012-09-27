@@ -98,8 +98,11 @@ name|i
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"Inode: %5d"
+literal|"Inode: %5ju"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|in
 operator|->
 name|i_number

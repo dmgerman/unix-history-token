@@ -2970,8 +2970,11 @@ name|prtrealloc
 condition|)
 name|printf
 argument_list|(
-literal|"realloc: ino %d, lbns %jd-%jd\n\told:"
+literal|"realloc: ino %ju, lbns %jd-%jd\n\told:"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ip
 operator|->
 name|i_number
@@ -11791,7 +11794,7 @@ name|fs_ncg
 condition|)
 name|panic
 argument_list|(
-literal|"ffs_freefile: range: dev = %s, ino = %lu, fs = %s"
+literal|"ffs_freefile: range: dev = %s, ino = %ju, fs = %s"
 argument_list|,
 name|devtoname
 argument_list|(
@@ -11799,7 +11802,7 @@ name|dev
 argument_list|)
 argument_list|,
 operator|(
-name|u_long
+name|uintmax_t
 operator|)
 name|ino
 argument_list|,
@@ -11917,13 +11920,17 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"dev = %s, ino = %u, fs = %s\n"
+literal|"dev = %s, ino = %ju, fs = %s\n"
 argument_list|,
 name|devtoname
 argument_list|(
 name|dev
 argument_list|)
 argument_list|,
+call|(
+name|uintmax_t
+call|)
+argument_list|(
 name|ino
 operator|+
 name|cg
@@ -11931,6 +11938,7 @@ operator|*
 name|fs
 operator|->
 name|fs_ipg
+argument_list|)
 argument_list|,
 name|fs
 operator|->
@@ -12760,7 +12768,7 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"pid %d (%s), uid %d inumber %d on %s: %s\n"
+literal|"pid %d (%s), uid %d inumber %ju on %s: %s\n"
 argument_list|,
 name|p
 operator|->
@@ -12776,6 +12784,9 @@ name|td_ucred
 operator|->
 name|cr_uid
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|inum
 argument_list|,
 name|fs
@@ -13851,7 +13862,7 @@ literal|1
 condition|)
 name|printf
 argument_list|(
-literal|"%s: free %s inode %d\n"
+literal|"%s: free %s inode %ju\n"
 argument_list|,
 name|mp
 operator|->
@@ -13868,7 +13879,7 @@ else|:
 literal|"file"
 argument_list|,
 operator|(
-name|ino_t
+name|uintmax_t
 operator|)
 name|cmd
 operator|.
@@ -13878,7 +13889,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"%s: free %s inodes %d-%d\n"
+literal|"%s: free %s inodes %ju-%ju\n"
 argument_list|,
 name|mp
 operator|->
@@ -13895,14 +13906,14 @@ else|:
 literal|"file"
 argument_list|,
 operator|(
-name|ino_t
+name|uintmax_t
 operator|)
 name|cmd
 operator|.
 name|value
 argument_list|,
 call|(
-name|ino_t
+name|uintmax_t
 call|)
 argument_list|(
 name|cmd

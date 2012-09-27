@@ -11271,8 +11271,11 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"unp_ino: %d   unp_conn: %p\n"
+literal|"unp_ino: %ju   unp_conn: %p\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|unp
 operator|->
 name|unp_ino
