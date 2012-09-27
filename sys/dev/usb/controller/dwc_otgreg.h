@@ -3285,17 +3285,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|HCINT_HALTED_ONLY
-value|(1<<21)
-end_define
-
-begin_comment
-comment|/* BSD only */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|HCINT_SOFTWARE_ONLY
 value|(1<<20)
 end_define

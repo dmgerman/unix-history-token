@@ -479,8 +479,8 @@ block|{
 name|uint32_t
 name|hcint
 decl_stmt|;
-name|uint16_t
-name|last_frame
+name|uint8_t
+name|wait_sof
 decl_stmt|;
 name|uint8_t
 name|allocated
