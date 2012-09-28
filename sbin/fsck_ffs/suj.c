@@ -6964,14 +6964,12 @@ name|LINK_MAX
 condition|)
 name|err_suj
 argument_list|(
-literal|"ino %ju %s, new link %d, old link %d\n"
+literal|"ino %ju nlink manipulation error, new %d, old %d\n"
 argument_list|,
 operator|(
 name|uintmax_t
 operator|)
 name|ino
-argument_list|,
-literal|"nlink manipulation error"
 argument_list|,
 name|nlink
 argument_list|,
