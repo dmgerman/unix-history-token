@@ -1763,9 +1763,11 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|u_int
 name|pf_purge_expired_states
 parameter_list|(
+name|u_int
+parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
@@ -7382,8 +7384,10 @@ modifier|*
 name|v
 parameter_list|)
 block|{
-name|int
-name|fullrun
+name|u_int
+name|idx
+init|=
+literal|0
 decl_stmt|;
 name|CURVNET_SET
 argument_list|(
@@ -7438,9 +7442,9 @@ expr_stmt|;
 comment|/* 			 * Now purge everything. 			 */
 name|pf_purge_expired_states
 argument_list|(
+literal|0
+argument_list|,
 name|V_pf_hashmask
-operator|+
-literal|1
 argument_list|)
 expr_stmt|;
 name|pf_purge_expired_fragments
@@ -7481,10 +7485,12 @@ name|PF_RULES_RUNLOCK
 argument_list|()
 expr_stmt|;
 comment|/* Process 1/interval fraction of the state table every run. */
-name|fullrun
+name|idx
 operator|=
 name|pf_purge_expired_states
 argument_list|(
+name|idx
+argument_list|,
 name|V_pf_hashmask
 operator|/
 operator|(
@@ -7502,7 +7508,9 @@ expr_stmt|;
 comment|/* Purge other expired types every PFTM_INTERVAL seconds. */
 if|if
 condition|(
-name|fullrun
+name|idx
+operator|==
+literal|0
 condition|)
 block|{
 comment|/* 			 * Order is important: 			 * - states and src nodes reference rules 			 * - states and rules reference kifs 			 */
@@ -8453,19 +8461,16 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|u_int
 name|pf_purge_expired_states
 parameter_list|(
+name|u_int
+name|i
+parameter_list|,
 name|int
 name|maxcheck
 parameter_list|)
 block|{
-specifier|static
-name|u_int
-name|i
-init|=
-literal|0
-decl_stmt|;
 name|struct
 name|pf_idhash
 modifier|*
@@ -8475,11 +8480,6 @@ name|struct
 name|pf_state
 modifier|*
 name|s
-decl_stmt|;
-name|int
-name|rv
-init|=
-literal|0
 decl_stmt|;
 name|V_pf_status
 operator|.
@@ -8498,23 +8498,6 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/* Wrap to start of hash when we hit the end. */
-if|if
-condition|(
-name|i
-operator|>
-name|V_pf_hashmask
-condition|)
-block|{
-name|i
-operator|=
-literal|0
-expr_stmt|;
-name|rv
-operator|=
-literal|1
-expr_stmt|;
-block|}
 name|ih
 operator|=
 operator|&
@@ -8642,9 +8625,30 @@ argument_list|(
 name|ih
 argument_list|)
 expr_stmt|;
-name|i
+comment|/* Return when we hit end of hash. */
+if|if
+condition|(
 operator|++
+name|i
+operator|>
+name|V_pf_hashmask
+condition|)
+block|{
+name|V_pf_status
+operator|.
+name|states
+operator|=
+name|uma_zone_get_cur
+argument_list|(
+name|V_pf_state_z
+argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|maxcheck
 operator|--
 expr_stmt|;
@@ -8660,7 +8664,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|rv
+name|i
 operator|)
 return|;
 block|}
