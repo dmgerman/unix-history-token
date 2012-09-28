@@ -326,6 +326,11 @@ argument_list|(
 literal|"popen() failed"
 argument_list|)
 expr_stmt|;
+name|va_end
+argument_list|(
+name|args
+argument_list|)
+expr_stmt|;
 return|return
 name|NULL
 return|;
