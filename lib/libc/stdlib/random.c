@@ -632,28 +632,15 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-specifier|static
-specifier|inline
-name|uint32_t
-name|good_rand
-parameter_list|(
-name|int32_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 specifier|static
 specifier|inline
 name|uint32_t
 name|good_rand
 parameter_list|(
-name|x
-parameter_list|)
 name|int32_t
 name|x
-decl_stmt|;
+parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
@@ -739,12 +726,10 @@ begin_function
 name|void
 name|srandom
 parameter_list|(
-name|x
-parameter_list|)
 name|unsigned
 name|long
 name|x
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -853,7 +838,9 @@ end_comment
 begin_function
 name|void
 name|srandomdev
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|fd
@@ -1021,26 +1008,17 @@ name|char
 modifier|*
 name|initstate
 parameter_list|(
-name|seed
-parameter_list|,
-name|arg_state
-parameter_list|,
-name|n
-parameter_list|)
 name|unsigned
 name|long
 name|seed
-decl_stmt|;
-comment|/* seed for R.N.G. */
+parameter_list|,
 name|char
 modifier|*
 name|arg_state
-decl_stmt|;
-comment|/* pointer to state array */
+parameter_list|,
 name|long
 name|n
-decl_stmt|;
-comment|/* # bytes of state info */
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -1290,13 +1268,10 @@ name|char
 modifier|*
 name|setstate
 parameter_list|(
-name|arg_state
-parameter_list|)
 name|char
 modifier|*
 name|arg_state
-decl_stmt|;
-comment|/* pointer to state array */
+parameter_list|)
 block|{
 name|uint32_t
 modifier|*
@@ -1487,7 +1462,9 @@ end_comment
 begin_function
 name|long
 name|random
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|uint32_t
 name|i
