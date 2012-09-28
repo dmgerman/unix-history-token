@@ -1673,12 +1673,10 @@ name|ref_count
 operator|==
 literal|0
 condition|)
+name|VOP_UNSET_TEXT
+argument_list|(
 name|vp
-operator|->
-name|v_vflag
-operator|&=
-operator|~
-name|VV_TEXT
+argument_list|)
 expr_stmt|;
 name|VM_OBJECT_UNLOCK
 argument_list|(
