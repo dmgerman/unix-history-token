@@ -40222,6 +40222,30 @@ comment|/* The transmit frame was enqueued successfully. */
 name|tx_count
 operator|++
 expr_stmt|;
+comment|/* Update stats */
+name|ifp
+operator|->
+name|if_obytes
+operator|+=
+name|next
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+expr_stmt|;
+if|if
+condition|(
+name|next
+operator|->
+name|m_flags
+operator|&
+name|M_MCAST
+condition|)
+name|ifp
+operator|->
+name|if_omcasts
+operator|++
+expr_stmt|;
 comment|/* Send a copy of the frame to any BPF listeners. */
 name|BPF_MTAP
 argument_list|(
