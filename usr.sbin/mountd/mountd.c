@@ -12521,18 +12521,22 @@ name|debug
 condition|)
 name|warnx
 argument_list|(
-literal|"can't change attributes for %s"
+literal|"can't change attributes for %s: %s"
 argument_list|,
 name|dirp
+argument_list|,
+name|errmsg
 argument_list|)
 expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"can't change attributes for %s"
+literal|"can't change attributes for %s: %s"
 argument_list|,
 name|dirp
+argument_list|,
+name|errmsg
 argument_list|)
 expr_stmt|;
 name|ret
