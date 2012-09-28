@@ -3772,6 +3772,17 @@ literal|2
 expr_stmt|;
 block|}
 comment|/* Finally enqueue the mbuf on the receive queue */
+comment|/* Remove 4 trailing bytes */
+if|if
+condition|(
+name|pktlen
+operator|>=
+operator|(
+literal|4
+operator|+
+name|ETHER_HDR_LEN
+operator|)
+condition|)
 name|uether_rxmbuf
 argument_list|(
 name|ue
@@ -3779,6 +3790,8 @@ argument_list|,
 name|m
 argument_list|,
 name|pktlen
+operator|-
+literal|4
 argument_list|)
 expr_stmt|;
 block|}
