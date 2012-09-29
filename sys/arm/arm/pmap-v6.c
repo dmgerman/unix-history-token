@@ -640,18 +640,6 @@ name|pte_l2_s_cache_mode_pt
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  * Which pmap is currently 'live' in the cache  *  * XXXSCW: Fix for SMP ...  */
-end_comment
-
-begin_decl_stmt
-name|union
-name|pmap_cache_state
-modifier|*
-name|pmap_cache_state
-decl_stmt|;
-end_decl_stmt
-
 begin_decl_stmt
 name|struct
 name|msgbuf
@@ -694,13 +682,6 @@ name|vm_offset_t
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|vm_offset_t
-name|alloc_firstaddr
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|char
