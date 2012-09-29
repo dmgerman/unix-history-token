@@ -467,6 +467,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|bd_cleanup
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|struct
 name|devsw
@@ -489,7 +499,7 @@ name|bd_ioctl
 block|,
 name|bd_print
 block|,
-name|NULL
+name|bd_cleanup
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -776,6 +786,23 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|bd_cleanup
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|disk_cleanup
+argument_list|(
+operator|&
+name|biosdisk
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

@@ -384,6 +384,12 @@ argument_list|(
 name|ud_info
 argument_list|)
 expr_stmt|;
+name|disk_cleanup
+argument_list|(
+operator|&
+name|userboot_disk
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

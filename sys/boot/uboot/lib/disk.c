@@ -585,6 +585,12 @@ operator|.
 name|handle
 argument_list|)
 expr_stmt|;
+name|disk_cleanup
+argument_list|(
+operator|&
+name|uboot_storage
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

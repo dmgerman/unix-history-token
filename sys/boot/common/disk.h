@@ -75,6 +75,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|void
+name|disk_cleanup
+parameter_list|(
+specifier|const
+name|struct
+name|devsw
+modifier|*
+name|d_dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Print information about slices on a disk.  */
 end_comment
