@@ -509,6 +509,13 @@ name|ifp
 argument_list|)
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|devlp
+argument_list|,
+name|M_TEMP
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
