@@ -886,6 +886,8 @@ argument_list|(
 literal|"/dev/random"
 argument_list|,
 name|O_RDONLY
+operator||
+name|O_CLOEXEC
 argument_list|,
 literal|0
 argument_list|)

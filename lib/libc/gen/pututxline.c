@@ -123,6 +123,8 @@ operator||
 name|O_RDWR
 operator||
 name|O_EXLOCK
+operator||
+name|O_CLOEXEC
 argument_list|,
 literal|0644
 argument_list|)
@@ -946,6 +948,8 @@ argument_list|(
 name|_PATH_UTX_LASTLOGIN
 argument_list|,
 name|O_RDWR
+operator||
+name|O_CLOEXEC
 argument_list|,
 literal|0644
 argument_list|)
@@ -1124,6 +1128,8 @@ operator||
 name|O_WRONLY
 operator||
 name|O_APPEND
+operator||
+name|O_CLOEXEC
 argument_list|,
 literal|0644
 argument_list|)
