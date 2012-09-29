@@ -506,10 +506,6 @@ name|gpa
 parameter_list|,
 name|size_t
 name|len
-parameter_list|,
-name|vm_paddr_t
-modifier|*
-name|ret_hpa
 parameter_list|)
 function_decl|;
 end_function_decl

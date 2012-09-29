@@ -1348,11 +1348,6 @@ argument_list|,
 name|seg
 operator|->
 name|len
-argument_list|,
-operator|&
-name|seg
-operator|->
-name|hpa
 argument_list|)
 expr_stmt|;
 break|break;
