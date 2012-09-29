@@ -2883,15 +2883,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|pmap_update
-parameter_list|(
-name|pmap_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * This structure is used by machine-dependent code to describe  * static mappings of devices, created at bootstrap time.  */
 end_comment
