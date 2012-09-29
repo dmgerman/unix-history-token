@@ -125,8 +125,6 @@ literal|0xb17217f7d1cf79ab
 argument_list|,
 literal|13
 argument_list|,
-literal|0
-argument_list|,
 literal|11356.5234062941439488L
 argument_list|)
 decl_stmt|,
@@ -138,8 +136,6 @@ argument_list|(
 literal|0xb21dfe7f09e2baa9
 argument_list|,
 literal|13
-argument_list|,
-literal|1
 argument_list|,
 operator|-
 literal|11399.4985314888605581L
