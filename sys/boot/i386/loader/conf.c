@@ -209,9 +209,14 @@ name|nandfs_fsops
 block|,
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|LOADER_SPLIT_SUPPORT
 operator|&
 name|splitfs_fsops
 block|,
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|LOADER_GZIP_SUPPORT
