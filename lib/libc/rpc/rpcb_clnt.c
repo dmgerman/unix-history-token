@@ -3446,21 +3446,6 @@ name|r_addr
 operator|=
 name|NULL
 expr_stmt|;
-name|parms
-operator|.
-name|r_netid
-operator|=
-name|nconf
-operator|->
-name|nc_netid
-expr_stmt|;
-comment|/* 	* According to wire captures, the reference implementation 	* (OpenSolaris) sends a blank string here too. 	*/
-name|parms
-operator|.
-name|r_owner
-operator|=
-literal|""
-expr_stmt|;
 comment|/* 	 * Use default total timeout if no timeout is specified. 	 */
 if|if
 condition|(
