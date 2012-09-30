@@ -8133,12 +8133,6 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|ivar
-condition|)
-return|return;
 name|memcpy
 argument_list|(
 name|ivar
