@@ -1268,6 +1268,12 @@ modifier|*
 name|result
 parameter_list|)
 block|{
+specifier|static
+name|int
+name|last_file_format
+init|=
+literal|0
+decl_stmt|;
 name|struct
 name|preloaded_file
 modifier|*
@@ -1308,7 +1314,7 @@ for|for
 control|(
 name|i
 operator|=
-literal|0
+name|last_file_format
 operator|,
 name|fp
 operator|=
@@ -1357,6 +1363,8 @@ name|fp
 operator|->
 name|f_loader
 operator|=
+name|last_file_format
+operator|=
 name|i
 expr_stmt|;
 comment|/* remember the loader */
@@ -1366,6 +1374,31 @@ operator|=
 name|fp
 expr_stmt|;
 break|break;
+block|}
+elseif|else
+if|if
+condition|(
+name|last_file_format
+operator|==
+name|i
+operator|&&
+name|i
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* Restart from the beginning */
+name|last_file_format
+operator|=
+name|i
+operator|=
+literal|0
+expr_stmt|;
+name|fp
+operator|=
+name|NULL
+expr_stmt|;
+continue|continue;
 block|}
 if|if
 condition|(
