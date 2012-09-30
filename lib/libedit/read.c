@@ -1845,6 +1845,9 @@ name|idx
 decl_stmt|;
 while|while
 condition|(
+operator|(
+name|num
+operator|=
 call|(
 modifier|*
 name|el
@@ -1858,6 +1861,7 @@ name|el
 argument_list|,
 name|cp
 argument_list|)
+operator|)
 operator|==
 literal|1
 condition|)
@@ -2149,6 +2153,9 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
+operator|(
+name|num
+operator|=
 call|(
 modifier|*
 name|el
@@ -2162,6 +2169,7 @@ name|el
 argument_list|,
 name|cp
 argument_list|)
+operator|)
 operator|==
 literal|1
 condition|)
