@@ -65069,11 +65069,6 @@ name|si_drv1
 operator|=
 name|NULL
 expr_stmt|;
-else|#
-directive|else
-name|devfs_clear_cdevpriv
-argument_list|()
-expr_stmt|;
 endif|#
 directive|endif
 endif|#
