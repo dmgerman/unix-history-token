@@ -3869,7 +3869,7 @@ block|{
 operator|.
 name|name
 operator|=
-literal|"ucom"
+literal|"uchcom"
 block|,
 operator|.
 name|methods
