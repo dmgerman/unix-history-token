@@ -16975,6 +16975,14 @@ literal|"SAS"
 block|}
 block|,
 block|{
+name|PCIC_STORAGE
+block|,
+name|PCIS_STORAGE_NVM
+block|,
+literal|"NVM"
+block|}
+block|,
+block|{
 name|PCIC_NETWORK
 block|,
 operator|-
