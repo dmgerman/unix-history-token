@@ -1888,6 +1888,11 @@ name|a_name
 operator|->
 name|val
 argument_list|)
+operator|&&
+operator|*
+name|a_name
+operator|->
+name|val
 condition|)
 block|{
 operator|(
