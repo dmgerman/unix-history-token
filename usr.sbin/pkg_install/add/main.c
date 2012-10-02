@@ -1678,9 +1678,25 @@ condition|)
 block|{
 if|if
 condition|(
-name|chroot
+name|chdir
 argument_list|(
 name|Chroot
+argument_list|)
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"chdir to %s failed"
+argument_list|,
+name|Chroot
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|chroot
+argument_list|(
+literal|"."
 argument_list|)
 condition|)
 name|errx

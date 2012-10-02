@@ -170,7 +170,7 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"%s(): failed to determine uname information"
+literal|"%s: failed to determine uname information"
 argument_list|,
 name|__func__
 argument_list|)
@@ -202,7 +202,22 @@ operator|)
 operator|<=
 literal|0
 condition|)
-block|{      }
+block|{
+name|warnx
+argument_list|(
+literal|"%s: bad release version specified: %s"
+argument_list|,
+name|__func__
+argument_list|,
+name|u
+operator|.
+name|release
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
 comment|/*      * Try to find and open the INDEX. We only check IndexFile != NULL      * later, if we actually need the INDEX.      */
 if|if
 condition|(
@@ -1709,17 +1724,24 @@ literal|'<'
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|Quiet
+condition|)
 name|printf
 argument_list|(
-literal|"%-34s  %c"
+literal|"%s"
 argument_list|,
 name|tmp
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"%-34s<"
 argument_list|,
-name|Quiet
-condition|?
-literal|'\0'
-else|:
-literal|'<'
+name|tmp
 argument_list|)
 expr_stmt|;
 if|if
@@ -1735,6 +1757,7 @@ argument_list|,
 name|ver
 argument_list|)
 expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"\n"
@@ -1754,17 +1777,24 @@ literal|'='
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|Quiet
+condition|)
 name|printf
 argument_list|(
-literal|"%-34s  %c"
+literal|"%s"
 argument_list|,
 name|tmp
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"%-34s  ="
 argument_list|,
-name|Quiet
-condition|?
-literal|'\0'
-else|:
-literal|'='
+name|tmp
 argument_list|)
 expr_stmt|;
 if|if
@@ -1778,6 +1808,7 @@ argument_list|,
 name|source
 argument_list|)
 expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"\n"
@@ -1797,17 +1828,24 @@ literal|'>'
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|Quiet
+condition|)
 name|printf
 argument_list|(
-literal|"%-34s  %c"
+literal|"%s"
 argument_list|,
 name|tmp
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"%-34s>"
 argument_list|,
-name|Quiet
-condition|?
-literal|'\0'
-else|:
-literal|'>'
+name|tmp
 argument_list|)
 expr_stmt|;
 if|if
@@ -1825,6 +1863,7 @@ argument_list|,
 name|ver
 argument_list|)
 expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"\n"
