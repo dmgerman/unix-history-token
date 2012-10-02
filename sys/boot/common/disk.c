@@ -754,6 +754,10 @@ argument_list|(
 literal|"no slice table/MBR (no magic)"
 argument_list|)
 expr_stmt|;
+name|rc
+operator|=
+name|EEXIST
+expr_stmt|;
 return|return
 operator|(
 name|rc
