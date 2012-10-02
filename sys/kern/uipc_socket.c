@@ -4503,7 +4503,7 @@ operator|==
 name|SOCK_DGRAM
 argument_list|,
 operator|(
-literal|"sodgram_send: !SOCK_DGRAM"
+literal|"sosend_dgram: !SOCK_DGRAM"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -4518,7 +4518,7 @@ operator|&
 name|PR_ATOMIC
 argument_list|,
 operator|(
-literal|"sodgram_send: !PR_ATOMIC"
+literal|"sosend_dgram: !PR_ATOMIC"
 operator|)
 argument_list|)
 expr_stmt|;
