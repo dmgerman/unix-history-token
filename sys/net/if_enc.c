@@ -845,7 +845,7 @@ name|moduledata_t
 name|enc_mod
 init|=
 block|{
-literal|"enc"
+literal|"if_enc"
 block|,
 name|enc_modevent
 block|,
@@ -857,7 +857,7 @@ end_decl_stmt
 begin_expr_stmt
 name|DECLARE_MODULE
 argument_list|(
-name|enc
+name|if_enc
 argument_list|,
 name|enc_mod
 argument_list|,
