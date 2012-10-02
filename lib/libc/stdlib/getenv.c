@@ -2615,7 +2615,8 @@ name|envVarsTotal
 operator|-
 literal|1
 expr_stmt|;
-if|if
+comment|/* Remove all occurrences. */
+while|while
 condition|(
 name|__findenv
 argument_list|(
@@ -2661,6 +2662,12 @@ name|envActive
 operator|-
 literal|1
 argument_list|)
+expr_stmt|;
+name|envNdx
+operator|=
+name|envVarsTotal
+operator|-
+literal|1
 expr_stmt|;
 block|}
 return|return
