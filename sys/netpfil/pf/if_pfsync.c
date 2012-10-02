@@ -9940,7 +9940,34 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * This code does nothing to prevent multiple update requests for the 	 * same state being generated. 	 */
+comment|/* 	 * This code does a bit to prevent multiple update requests for the 	 * same state being generated. It searches current subheader queue, 	 * but it doesn't lookup into queue of already packed datagrams. 	 */
+name|TAILQ_FOREACH
+argument_list|(
+argument|item
+argument_list|,
+argument|&sc->sc_upd_req_list
+argument_list|,
+argument|ur_entry
+argument_list|)
+if|if
+condition|(
+name|item
+operator|->
+name|ur_msg
+operator|.
+name|id
+operator|==
+name|id
+operator|&&
+name|item
+operator|->
+name|ur_msg
+operator|.
+name|creatorid
+operator|==
+name|creatorid
+condition|)
+return|return;
 name|item
 operator|=
 name|malloc
@@ -10050,11 +10077,6 @@ operator|->
 name|sc_len
 operator|+=
 name|nlen
-expr_stmt|;
-name|pfsync_push
-argument_list|(
-name|sc
-argument_list|)
 expr_stmt|;
 block|}
 end_function
