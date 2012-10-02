@@ -12750,6 +12750,9 @@ operator|(
 name|uint8_t
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|req_sg
 index|[
 literal|0
@@ -12799,6 +12802,9 @@ operator|=
 operator|(
 name|uint8_t
 operator|*
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|rsp_sg
 index|[
