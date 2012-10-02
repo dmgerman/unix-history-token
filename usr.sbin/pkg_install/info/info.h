@@ -392,7 +392,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
+name|int
 name|show_cksum
 parameter_list|(
 specifier|const
