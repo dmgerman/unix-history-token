@@ -116,6 +116,28 @@ value|100
 end_define
 
 begin_comment
+comment|/*  * Default dictionary size, ~4000 cells  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BF_DICTSIZE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|BF_DICTSIZE
+value|10000
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * BootForth   Interface to Ficl Forth interpreter.  */
 end_comment
 
@@ -643,10 +665,9 @@ name|bf_sys
 operator|=
 name|ficlInitSystem
 argument_list|(
-literal|10000
+name|BF_DICTSIZE
 argument_list|)
 expr_stmt|;
-comment|/* Default dictionary ~4000 cells */
 name|bf_vm
 operator|=
 name|ficlNewVM
