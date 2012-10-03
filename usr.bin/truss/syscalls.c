@@ -4597,6 +4597,11 @@ name|int
 name|val
 parameter_list|)
 block|{
+name|int
+name|len
+decl_stmt|,
+name|rem
+decl_stmt|;
 specifier|static
 name|char
 name|str
@@ -4604,16 +4609,14 @@ index|[
 literal|512
 index|]
 decl_stmt|;
-name|int
 name|len
-init|=
+operator|=
 literal|0
-decl_stmt|;
-name|int
+expr_stmt|;
 name|rem
-init|=
+operator|=
 name|val
-decl_stmt|;
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -4755,9 +4758,11 @@ name|struct
 name|syscall
 modifier|*
 name|sc
-init|=
-name|syscalls
 decl_stmt|;
+name|sc
+operator|=
+name|syscalls
+expr_stmt|;
 if|if
 condition|(
 name|name
@@ -4778,7 +4783,6 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
 name|strcmp
 argument_list|(
 name|name
@@ -4787,6 +4791,8 @@ name|sc
 operator|->
 name|name
 argument_list|)
+operator|==
+literal|0
 condition|)
 return|return
 operator|(
@@ -4814,7 +4820,7 @@ specifier|static
 name|int
 name|get_struct
 parameter_list|(
-name|int
+name|pid_t
 name|pid
 parameter_list|,
 name|void
@@ -4925,27 +4931,27 @@ name|int
 name|max
 parameter_list|)
 block|{
-name|char
-modifier|*
-name|buf
-decl_stmt|;
 name|struct
 name|ptrace_io_desc
 name|iorequest
 decl_stmt|;
-name|int
-name|totalsize
-decl_stmt|,
-name|size
+name|char
+modifier|*
+name|buf
 decl_stmt|;
 name|int
 name|diff
-init|=
-literal|0
-decl_stmt|;
-name|int
+decl_stmt|,
 name|i
+decl_stmt|,
+name|size
+decl_stmt|,
+name|totalsize
 decl_stmt|;
+name|diff
+operator|=
+literal|0
+expr_stmt|;
 name|totalsize
 operator|=
 name|size
@@ -5167,16 +5173,20 @@ block|{
 name|char
 modifier|*
 name|tmp
-init|=
-name|NULL
 decl_stmt|;
-name|int
+name|pid_t
 name|pid
-init|=
+decl_stmt|;
+name|tmp
+operator|=
+name|NULL
+expr_stmt|;
+name|pid
+operator|=
 name|trussinfo
 operator|->
 name|pid
-decl_stmt|;
+expr_stmt|;
 switch|switch
 condition|(
 name|sc
@@ -5546,7 +5556,6 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
 name|err
 argument_list|(
 literal|1
@@ -5565,7 +5574,6 @@ name|offset
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 name|num
 operator|=
 literal|0
@@ -5893,7 +5901,6 @@ if|if
 condition|(
 name|temp
 condition|)
-block|{
 name|tmp
 operator|=
 name|strdup
@@ -5901,7 +5908,6 @@ argument_list|(
 name|temp
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 block|{
 name|unsigned
@@ -6391,7 +6397,7 @@ case|case
 name|Pollfd
 case|:
 block|{
-comment|/* 		 * XXX: A Pollfd argument expects the /next/ syscall argument to be 		 * the number of fds in the array. This matches the poll syscall. 		 */
+comment|/* 		 * XXX: A Pollfd argument expects the /next/ syscall argument 		 * to be the number of fds in the array. This matches the poll 		 * syscall. 		 */
 name|struct
 name|pollfd
 modifier|*
@@ -6644,7 +6650,7 @@ case|case
 name|Fd_set
 case|:
 block|{
-comment|/* 		 * XXX: A Fd_set argument expects the /first/ syscall argument to be 		 * the number of fds in the array.  This matches the select syscall. 		 */
+comment|/* 		 * XXX: A Fd_set argument expects the /first/ syscall argument 		 * to be the number of fds in the array.  This matches the 		 * select syscall. 		 */
 name|fd_set
 modifier|*
 name|fds
@@ -6763,7 +6769,8 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"Cannot alloc %d bytes for fd_set output"
+literal|"Cannot alloc %d bytes for fd_set "
+literal|"output"
 argument_list|,
 name|tmpsize
 argument_list|)
@@ -6865,7 +6872,6 @@ literal|'\0'
 expr_stmt|;
 block|}
 else|else
-block|{
 name|asprintf
 argument_list|(
 operator|&
@@ -6881,7 +6887,6 @@ name|offset
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 name|free
 argument_list|(
 name|fds
@@ -7043,7 +7048,6 @@ argument_list|,
 name|i
 argument_list|)
 condition|)
-block|{
 name|used
 operator|+=
 name|sprintf
@@ -7060,7 +7064,6 @@ name|i
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -7831,7 +7834,8 @@ argument_list|(
 operator|&
 name|tmp
 argument_list|,
-literal|"{ sa_len = %d, sa_family = %d, sa_data = {%n%*s } }"
+literal|"{ sa_len = %d, sa_family = %d, sa_data "
+literal|"= {%n%*s } }"
 argument_list|,
 operator|(
 name|int
@@ -8053,7 +8057,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
 name|asprintf
 argument_list|(
 operator|&
@@ -8069,7 +8072,6 @@ name|offset
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 block|}
 case|case
@@ -8244,7 +8246,8 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"Cannot alloc %d bytes for kevent output"
+literal|"Cannot alloc %d bytes for kevent "
+literal|"output"
 argument_list|,
 name|tmpsize
 argument_list|)
@@ -8606,7 +8609,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
 name|asprintf
 argument_list|(
 operator|&
@@ -8622,7 +8624,6 @@ name|offset
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 block|}
 case|case
@@ -8681,7 +8682,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
 name|asprintf
 argument_list|(
 operator|&
@@ -8697,7 +8697,6 @@ name|offset
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 block|}
 default|default:
@@ -8750,18 +8749,19 @@ modifier|*
 name|s_args
 parameter_list|)
 block|{
-name|int
-name|i
-decl_stmt|;
-name|int
-name|len
-init|=
-literal|0
-decl_stmt|;
 name|struct
 name|timespec
 name|timediff
 decl_stmt|;
+name|int
+name|i
+decl_stmt|,
+name|len
+decl_stmt|;
+name|len
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|trussinfo
@@ -8792,21 +8792,23 @@ operator|!=
 name|NULL
 operator|&&
 operator|(
-operator|!
 name|strcmp
 argument_list|(
 name|name
 argument_list|,
 literal|"execve"
 argument_list|)
+operator|==
+literal|0
 operator|||
-operator|!
 name|strcmp
 argument_list|(
 name|name
 argument_list|,
 literal|"exit"
 argument_list|)
+operator|==
+literal|0
 operator|)
 condition|)
 block|{
@@ -8816,6 +8818,8 @@ name|CLOCK_REALTIME
 argument_list|,
 operator|&
 name|trussinfo
+operator|->
+name|curthread
 operator|->
 name|after
 argument_list|)
@@ -8834,6 +8838,8 @@ name|timespecsubt
 argument_list|(
 operator|&
 name|trussinfo
+operator|->
+name|curthread
 operator|->
 name|after
 argument_list|,
@@ -8883,10 +8889,14 @@ argument_list|(
 operator|&
 name|trussinfo
 operator|->
+name|curthread
+operator|->
 name|after
 argument_list|,
 operator|&
 name|trussinfo
+operator|->
+name|curthread
 operator|->
 name|before
 argument_list|,
@@ -9105,6 +9115,8 @@ argument_list|,
 operator|&
 name|trussinfo
 operator|->
+name|curthread
+operator|->
 name|after
 argument_list|)
 expr_stmt|;
@@ -9113,10 +9125,14 @@ argument_list|(
 operator|&
 name|trussinfo
 operator|->
+name|curthread
+operator|->
 name|after
 argument_list|,
 operator|&
 name|trussinfo
+operator|->
+name|curthread
 operator|->
 name|before
 argument_list|,
@@ -9178,7 +9194,6 @@ if|if
 condition|(
 name|errorp
 condition|)
-block|{
 name|fprintf
 argument_list|(
 name|trussinfo
@@ -9195,7 +9210,6 @@ name|retval
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 block|{
 comment|/* 		 * Because pipe(2) has a special assembly glue to provide the 		 * libc API, we have to adjust retval. 		 */
@@ -9205,13 +9219,14 @@ name|name
 operator|!=
 name|NULL
 operator|&&
-operator|!
 name|strcmp
 argument_list|(
 name|name
 argument_list|,
 literal|"pipe"
 argument_list|)
+operator|==
+literal|0
 condition|)
 name|retval
 operator|=
@@ -9245,11 +9260,6 @@ name|trussinfo
 parameter_list|)
 block|{
 name|struct
-name|syscall
-modifier|*
-name|sc
-decl_stmt|;
-name|struct
 name|timespec
 name|total
 init|=
@@ -9258,6 +9268,11 @@ literal|0
 block|,
 literal|0
 block|}
+decl_stmt|;
+name|struct
+name|syscall
+modifier|*
+name|sc
 decl_stmt|;
 name|int
 name|ncall
