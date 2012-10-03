@@ -433,6 +433,8 @@ decl_stmt|,
 name|gpa
 decl_stmt|,
 name|gpaend
+decl_stmt|,
+name|off
 decl_stmt|;
 comment|/* 	 * XXX cache previously fetched instructions using 'rip' as the tag 	 */
 if|if
@@ -485,6 +487,12 @@ condition|(
 name|err
 condition|)
 break|break;
+name|off
+operator|=
+name|gpa
+operator|&
+name|PAGE_MASK
+expr_stmt|;
 name|n
 operator|=
 name|min
@@ -495,9 +503,9 @@ name|vie
 operator|->
 name|num_valid
 argument_list|,
-name|gpaend
+name|PAGE_SIZE
 operator|-
-name|gpa
+name|off
 argument_list|)
 expr_stmt|;
 name|hpa
