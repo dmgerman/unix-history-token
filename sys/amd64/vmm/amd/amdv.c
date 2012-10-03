@@ -171,7 +171,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|amdv_vmmmap
+name|amdv_vmmmap_set
 parameter_list|(
 name|void
 modifier|*
@@ -198,7 +198,33 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"amdv_vmmmap: not implemented\n"
+literal|"amdv_vmmmap_set: not implemented\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|vm_paddr_t
+name|amdv_vmmmap_get
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|,
+name|vm_paddr_t
+name|gpa
+parameter_list|)
+block|{
+name|printf
+argument_list|(
+literal|"amdv_vmmmap_get: not implemented\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -487,7 +513,9 @@ name|amdv_vmrun
 block|,
 name|amdv_vmcleanup
 block|,
-name|amdv_vmmmap
+name|amdv_vmmmap_set
+block|,
+name|amdv_vmmmap_get
 block|,
 name|amdv_getreg
 block|,

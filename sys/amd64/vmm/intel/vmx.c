@@ -7185,7 +7185,9 @@ name|vmx_run
 block|,
 name|vmx_vmcleanup
 block|,
-name|ept_vmmmap
+name|ept_vmmmap_set
+block|,
+name|ept_vmmmap_get
 block|,
 name|vmx_getreg
 block|,

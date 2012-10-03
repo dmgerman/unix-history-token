@@ -53,7 +53,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ept_vmmmap
+name|ept_vmmmap_set
 parameter_list|(
 name|void
 modifier|*
@@ -76,6 +76,20 @@ name|prot
 parameter_list|,
 name|boolean_t
 name|allow_superpage_mappings
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|vm_paddr_t
+name|ept_vmmmap_get
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|,
+name|vm_paddr_t
+name|gpa
 parameter_list|)
 function_decl|;
 end_function_decl
