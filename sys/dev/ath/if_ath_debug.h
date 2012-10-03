@@ -184,6 +184,11 @@ init|=
 literal|0x400000000ULL
 block|,
 comment|/* SW TX FF */
+name|ATH_DEBUG_NODE_PWRSAVE
+init|=
+literal|0x800000000ULL
+block|,
+comment|/* node powersave */
 name|ATH_DEBUG_ANY
 init|=
 literal|0xffffffffffffffffULL

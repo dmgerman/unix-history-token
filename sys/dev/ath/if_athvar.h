@@ -434,6 +434,10 @@ name|u_int8_t
 name|an_mcastrix
 decl_stmt|;
 comment|/* mcast h/w rate index */
+name|uint32_t
+name|an_is_powersave
+decl_stmt|;
+comment|/* node is sleeping */
 name|struct
 name|ath_buf
 modifier|*
@@ -1068,6 +1072,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATH_NODE_UNLOCK_ASSERT
+parameter_list|(
+name|_an
+parameter_list|)
+value|mtx_assert(&(_an)->an_mtx,	\ 					    MA_NOTOWNED)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATH_TXQ_LOCK_INIT
 parameter_list|(
 name|_sc
@@ -1304,6 +1318,19 @@ parameter_list|(
 name|struct
 name|ieee80211vap
 modifier|*
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|av_node_ps
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211_node
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 block|}
