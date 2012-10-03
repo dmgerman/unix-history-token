@@ -62,7 +62,7 @@ end_define
 
 begin_decl_stmt
 name|struct
-name|loader_callbacks_v1
+name|loader_callbacks
 modifier|*
 name|callbacks
 decl_stmt|;
@@ -183,7 +183,7 @@ name|void
 name|loader_main
 parameter_list|(
 name|struct
-name|loader_callbacks_v1
+name|loader_callbacks
 modifier|*
 name|cb
 parameter_list|,
