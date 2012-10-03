@@ -734,6 +734,9 @@ name|val
 decl_stmt|,
 name|val1
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ATA_CAM
 name|sata_rev
 operator|=
 name|ch
@@ -761,6 +764,14 @@ name|quick
 operator|=
 literal|0
 expr_stmt|;
+else|#
+directive|else
+name|sata_rev
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|quick
