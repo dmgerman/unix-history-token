@@ -1365,10 +1365,6 @@ name|data
 expr_stmt|;
 name|seg
 operator|->
-name|hpa
-operator|=
-name|seg
-operator|->
 name|len
 operator|=
 literal|0

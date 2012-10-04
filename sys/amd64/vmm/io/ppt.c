@@ -1629,12 +1629,6 @@ name|len
 operator|=
 name|len
 expr_stmt|;
-name|seg
-operator|->
-name|hpa
-operator|=
-name|hpa
-expr_stmt|;
 block|}
 return|return
 operator|(

@@ -49,10 +49,6 @@ struct|struct
 name|vm_memory_segment
 block|{
 name|vm_paddr_t
-name|hpa
-decl_stmt|;
-comment|/* out */
-name|vm_paddr_t
 name|gpa
 decl_stmt|;
 comment|/* in */

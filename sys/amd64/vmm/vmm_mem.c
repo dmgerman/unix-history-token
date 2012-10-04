@@ -1166,7 +1166,7 @@ condition|(
 operator|(
 name|size
 operator|&
-name|PDRMASK
+name|PAGE_MASK
 operator|)
 operator|!=
 literal|0
@@ -1179,7 +1179,7 @@ literal|"aligned on a 0x%0x boundary\n"
 argument_list|,
 name|size
 argument_list|,
-name|NBPDR
+name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 block|}
@@ -1406,7 +1406,7 @@ condition|(
 operator|(
 name|base
 operator|&
-name|PDRMASK
+name|PAGE_MASK
 operator|)
 operator|!=
 literal|0
@@ -1414,7 +1414,7 @@ operator|||
 operator|(
 name|length
 operator|&
-name|PDRMASK
+name|PAGE_MASK
 operator|)
 operator|!=
 literal|0
@@ -1429,7 +1429,7 @@ name|base
 argument_list|,
 name|length
 argument_list|,
-name|NBPDR
+name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 block|}
