@@ -116,7 +116,7 @@ value|100
 end_define
 
 begin_comment
-comment|/*  * Default dictionary size, ~4000 cells  */
+comment|/*  * FreeBSD loader default dictionary cells  */
 end_comment
 
 begin_ifndef
