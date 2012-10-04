@@ -812,9 +812,6 @@ expr_stmt|;
 name|_initialize_svr4_solib
 argument_list|()
 expr_stmt|;
-name|_initialize_svr4_lm
-argument_list|()
-expr_stmt|;
 name|_initialize_ser_hardwire
 argument_list|()
 expr_stmt|;
@@ -845,9 +842,12 @@ expr_stmt|;
 name|_initialize_thread_db
 argument_list|()
 expr_stmt|;
-name|_initialize_svr4_lm
-argument_list|()
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|_initialize_svr4_lm ();
+endif|#
+directive|endif
 endif|#
 directive|endif
 name|_initialize_remote

@@ -83,13 +83,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|initialize_file_ftype
-name|_initialize_svr4_lm
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|initialize_file_ftype
 name|_initialize_ser_hardwire
 decl_stmt|;
 end_decl_stmt
@@ -848,9 +841,6 @@ name|_initialize_solib
 argument_list|()
 expr_stmt|;
 name|_initialize_svr4_solib
-argument_list|()
-expr_stmt|;
-name|_initialize_svr4_lm
 argument_list|()
 expr_stmt|;
 name|_initialize_ser_hardwire

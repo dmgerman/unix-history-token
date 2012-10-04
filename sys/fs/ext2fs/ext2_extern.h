@@ -181,9 +181,9 @@ name|struct
 name|vnode
 modifier|*
 parameter_list|,
-name|daddr_t
+name|int32_t
 parameter_list|,
-name|daddr_t
+name|int32_t
 modifier|*
 parameter_list|,
 name|int

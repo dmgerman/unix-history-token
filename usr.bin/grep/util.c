@@ -1587,6 +1587,23 @@ name|c
 expr_stmt|;
 break|break;
 block|}
+comment|/* One pass if we are not recording matches */
+if|if
+condition|(
+operator|(
+name|color
+operator|==
+name|NULL
+operator|&&
+operator|!
+name|oflag
+operator|)
+operator|||
+name|qflag
+operator|||
+name|lflag
+condition|)
+break|break;
 if|if
 condition|(
 name|st
