@@ -7070,6 +7070,16 @@ operator|->
 name|fin_ip
 operator|->
 name|ip_len
+operator|-
+operator|(
+name|fin
+operator|->
+name|fin_ip
+operator|->
+name|ip_hl
+operator|<<
+literal|2
+operator|)
 operator|+
 name|fin
 operator|->
