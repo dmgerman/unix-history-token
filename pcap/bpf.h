@@ -245,7 +245,35 @@ value|16
 comment|/* BSD/OS Point-to-point Protocol */
 endif|#
 directive|endif
-comment|/*  * 17 is used for DLT_OLD_PFLOG in OpenBSD;  *     OBSOLETE: DLT_PFLOG is 117 in OpenBSD now as well. See below.  * 18 is used for DLT_PFSYNC in OpenBSD; don't use it for anything else.  */
+comment|/*  * 17 was used for DLT_PFLOG in OpenBSD; it no longer is.  *  * It was DLT_LANE8023 in SuSE 6.3, so we defined LINKTYPE_PFLOG  * as 117 so that pflog captures would use a link-layer header type  * value that didn't collide with any other values.  On all  * platforms other than OpenBSD, we defined DLT_PFLOG as 117,  * and we mapped between LINKTYPE_PFLOG and DLT_PFLOG.  *  * OpenBSD eventually switched to using 117 for DLT_PFLOG as well.  *  * Don't use 17 for anything else.  */
+comment|/*  * 18 is used for DLT_PFSYNC in OpenBSD, NetBSD, DragonFly BSD and  * Mac OS X; don't use it for anything else.  (FreeBSD uses 121,  * which collides with DLT_HHDLC, even though it doesn't use 18  * for anything and doesn't appear to have ever used it for anything.)  *  * We define it as 18 on those platforms; it is, unfortunately, used  * for DLT_CIP in Suse 6.3, so we don't define it as DLT_PFSYNC  * in general.  As the packet format for it, like that for  * DLT_PFLOG, is not only OS-dependent but OS-version-dependent,  * we don't support printing it in tcpdump except on OSes that  * have the relevant header files, so it's not that useful on  * other platforms.  */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__DragonFly__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__APPLE__
+argument_list|)
+define|#
+directive|define
+name|DLT_PFSYNC
+value|18
+endif|#
+directive|endif
 define|#
 directive|define
 name|DLT_ATM_CLIP
@@ -352,20 +380,7 @@ define|#
 directive|define
 name|DLT_IPFILTER
 value|116
-comment|/*  * OpenBSD DLT_PFLOG; DLT_PFLOG is 17 in OpenBSD, but that's DLT_LANE8023  * in SuSE 6.3, so we can't use 17 for it in capture-file headers.  *  * XXX: is there a conflict with DLT_PFSYNC 18 as well?  */
-ifdef|#
-directive|ifdef
-name|__OpenBSD__
-define|#
-directive|define
-name|DLT_OLD_PFLOG
-value|17
-define|#
-directive|define
-name|DLT_PFSYNC
-value|18
-endif|#
-directive|endif
+comment|/*  * OpenBSD DLT_PFLOG.  */
 define|#
 directive|define
 name|DLT_PFLOG
@@ -385,11 +400,22 @@ define|#
 directive|define
 name|DLT_AIRONET_HEADER
 value|120
-comment|/*  * Reserved for Siemens HiPath HDLC.  */
+comment|/*  * Sigh.  *  * This was reserved for Siemens HiPath HDLC on 2002-01-25, as  * requested by Tomas Kukosa.  *  * On 2004-02-25, a FreeBSD checkin to sys/net/bpf.h was made that  * assigned 121 as DLT_PFSYNC.  Its libpcap does DLT_<-> LINKTYPE_  * mapping, so it probably supports capturing on the pfsync device  * but not saving the captured data to a pcap file.  *  * OpenBSD, from which pf came, however, uses 18 for DLT_PFSYNC;  * their libpcap does no DLT_<-> LINKTYPE_ mapping, so it would  * use 18 in pcap files as well.  *  * NetBSD and DragonFly BSD also use 18 for DLT_PFSYNC; their  * libpcaps do DLT_<-> LINKTYPE_ mapping, and neither has an entry  * for DLT_PFSYNC, so it might not be able to write out dump files  * with 18 as the link-layer header type.  (Earlier versions might  * not have done mapping, in which case they'd work the same way  * OpenBSD does.)  *  * Mac OS X defines it as 18, but doesn't appear to use it as of  * Mac OS X 10.7.3.  Its libpcap does DLT_<-> LINKTYPE_ mapping.  *  * We'll define DLT_PFSYNC as 121 on FreeBSD and define it as 18 on  * all other platforms.  We'll define DLT_HHDLC as 121 on everything  * except for FreeBSD; anybody who wants to compile, on FreeBSD, code  * that uses DLT_HHDLC is out of luck.  *  * We'll define LINKTYPE_PFSYNC as 18, *even on FreeBSD*, and map  * it, so that savefiles won't use 121 for PFSYNC - they'll all  * use 18.  Code that uses pcap_datalink() to determine the link-layer  * header type of a savefile won't, when built and run on FreeBSD,  * be able to distinguish between LINKTYPE_PFSYNC and LINKTYPE_HHDLC  * capture files; code that doesn't, such as the code in Wireshark,  * will be able to distinguish between them.  */
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+define|#
+directive|define
+name|DLT_PFSYNC
+value|121
+else|#
+directive|else
 define|#
 directive|define
 name|DLT_HHDLC
 value|121
+endif|#
+directive|endif
 comment|/*  * This is for RFC 2625 IP-over-Fibre Channel.  *  * This is not for use with raw Fibre Channel, where the link-layer  * header starts with a Fibre Channel frame header; it's for IP-over-FC,  * where the link-layer header starts with an RFC 2625 Network_Header  * field.  */
 define|#
 directive|define
@@ -589,7 +615,7 @@ define|#
 directive|define
 name|DLT_JUNIPER_MONITOR
 value|164
-comment|/*  * Reserved for BACnet MS/TP.  */
+comment|/*  * BACnet MS/TP frames.  */
 define|#
 directive|define
 name|DLT_BACNET_MS_TP
@@ -977,10 +1003,63 @@ define|#
 directive|define
 name|DLT_IPOIB
 value|242
+comment|/*  * MPEG-2 transport stream (ISO 13818-1/ITU-T H.222.0).  *  * Requested by Guy Martin<gmsoft@tuxicoman.be>.  */
+define|#
+directive|define
+name|DLT_MPEG_2_TS
+value|243
+comment|/*  * ng4T GmbH's UMTS Iub/Iur-over-ATM and Iub/Iur-over-IP format as  * used by their ng40 protocol tester.  *  * Requested by Jens Grimmer<jens.grimmer@ng4t.com>.  */
+define|#
+directive|define
+name|DLT_NG40
+value|244
+comment|/*  * Pseudo-header giving adapter number and flags, followed by an NFC  * (Near-Field Communications) Logical Link Control Protocol (LLCP) PDU,  * as specified by NFC Forum Logical Link Control Protocol Technical  * Specification LLCP 1.1.  *  * Requested by Mike Wakerly<mikey@google.com>.  */
+define|#
+directive|define
+name|DLT_NFC_LLCP
+value|245
+comment|/*  * 245 is used as LINKTYPE_PFSYNC; do not use it for any other purpose.  *  * DLT_PFSYNC has different values on different platforms, and all of  * them collide with something used elsewhere.  On platforms that  * don't already define it, define it as 245.  */
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__DragonFly__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__APPLE__
+argument_list|)
+define|#
+directive|define
+name|DLT_PFSYNC
+value|246
+endif|#
+directive|endif
 define|#
 directive|define
 name|DLT_MATCHING_MAX
-value|242
+value|246
 comment|/* highest value in the "matching" range */
 comment|/*  * DLT and savefile link type values are split into a class and  * a member of that class.  A class value of 0 indicates a regular  * DLT_/LINKTYPE_ value.  */
 define|#
