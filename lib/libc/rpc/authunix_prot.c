@@ -129,7 +129,7 @@ modifier|*
 name|p
 decl_stmt|;
 block|{
-name|gid_t
+name|u_int
 modifier|*
 modifier|*
 name|paup_gids
@@ -229,13 +229,13 @@ name|NGRPS
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|gid_t
+name|u_int
 argument_list|)
 argument_list|,
 operator|(
 name|xdrproc_t
 operator|)
-name|xdr_int
+name|xdr_u_int
 argument_list|)
 condition|)
 block|{

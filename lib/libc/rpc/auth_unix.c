@@ -316,16 +316,16 @@ name|char
 modifier|*
 name|machname
 decl_stmt|;
-name|uid_t
+name|u_int
 name|uid
 decl_stmt|;
-name|gid_t
+name|u_int
 name|gid
 decl_stmt|;
 name|int
 name|len
 decl_stmt|;
-name|gid_t
+name|u_int
 modifier|*
 name|aup_gids
 decl_stmt|;
@@ -859,6 +859,7 @@ name|ngids
 operator|=
 name|NGRPS
 expr_stmt|;
+comment|/* XXX: interface problem; we should translate from uid_t and gid_t */
 name|auth
 operator|=
 name|authunix_create
