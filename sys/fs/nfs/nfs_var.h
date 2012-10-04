@@ -2668,6 +2668,10 @@ begin_function_decl
 name|int
 name|nfsv4_strtouid
 parameter_list|(
+name|struct
+name|nfsrv_descript
+modifier|*
+parameter_list|,
 name|u_char
 modifier|*
 parameter_list|,
@@ -2705,6 +2709,10 @@ begin_function_decl
 name|int
 name|nfsv4_strtogid
 parameter_list|(
+name|struct
+name|nfsrv_descript
+modifier|*
+parameter_list|,
 name|u_char
 modifier|*
 parameter_list|,
