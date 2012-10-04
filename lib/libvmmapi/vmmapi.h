@@ -95,10 +95,6 @@ parameter_list|,
 name|vm_paddr_t
 name|gpa
 parameter_list|,
-name|vm_paddr_t
-modifier|*
-name|ret_hpa
-parameter_list|,
 name|size_t
 modifier|*
 name|ret_len
