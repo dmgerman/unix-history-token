@@ -1133,7 +1133,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|bridge_rtable_init
 parameter_list|(
 name|struct
@@ -12341,7 +12341,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|bridge_rtable_init
 parameter_list|(
 name|struct
@@ -12371,22 +12371,9 @@ name|BRIDGE_RTHASH_SIZE
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_NOWAIT
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|sc_rthash
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
 for|for
 control|(
 name|i
@@ -12426,11 +12413,6 @@ operator|->
 name|sc_rtlist
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
