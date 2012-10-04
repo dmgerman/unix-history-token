@@ -3254,7 +3254,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"ERROR: Option Lenght != 4 Bytes (%u)"
+literal|"ERROR: Option Length != 4 Bytes (%u)"
 argument_list|,
 name|olen
 argument_list|)
@@ -3356,7 +3356,7 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"ERROR: Option Lenght != 4 Bytes (%u)"
+literal|"ERROR: Option Length != 4 Bytes (%u)"
 argument_list|,
 name|olen
 argument_list|)
