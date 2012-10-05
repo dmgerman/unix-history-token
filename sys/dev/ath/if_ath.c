@@ -18368,6 +18368,8 @@ name|HAL_BOOL
 name|longCal
 decl_stmt|,
 name|isCalDone
+init|=
+name|AH_TRUE
 decl_stmt|;
 name|HAL_BOOL
 name|aniCal
@@ -18629,6 +18631,10 @@ operator|||
 name|longCal
 condition|)
 block|{
+name|isCalDone
+operator|=
+name|AH_FALSE
+expr_stmt|;
 if|if
 condition|(
 name|ath_hal_calibrateN
