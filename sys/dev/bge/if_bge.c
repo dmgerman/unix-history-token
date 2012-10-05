@@ -5098,6 +5098,11 @@ argument_list|,
 name|mac_mode
 argument_list|)
 expr_stmt|;
+name|DELAY
+argument_list|(
+literal|40
+argument_list|)
+expr_stmt|;
 name|CSR_WRITE_4
 argument_list|(
 name|sc
@@ -7770,6 +7775,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|DELAY
+argument_list|(
+literal|40
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Clear the MAC statistics block in the NIC's 	 * internal memory. 	 */
 for|for
 control|(
@@ -10389,6 +10399,11 @@ argument_list|,
 name|BGE_MAC_MODE
 argument_list|,
 name|val
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|40
 argument_list|)
 expr_stmt|;
 comment|/* Set misc. local control, enable interrupts on attentions */
@@ -18122,6 +18137,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|DELAY
+argument_list|(
+literal|40
+argument_list|)
+expr_stmt|;
 comment|/* 	 * The 5704 in TBI mode apparently needs some special 	 * adjustment to insure the SERDES drive level is set 	 * to 1.2V. 	 */
 if|if
 condition|(
@@ -24540,6 +24560,11 @@ name|BGE_MACMODE_HALF_DUPLEX
 argument_list|)
 expr_stmt|;
 block|}
+name|DELAY
+argument_list|(
+literal|40
+argument_list|)
+expr_stmt|;
 break|break;
 default|default:
 return|return
@@ -26575,6 +26600,7 @@ name|bge_asicrev
 operator|==
 name|BGE_ASICREV_BCM5704
 condition|)
+block|{
 name|BGE_CLRBIT
 argument_list|(
 name|sc
@@ -26584,6 +26610,12 @@ argument_list|,
 name|BGE_MACMODE_TBI_SEND_CFGS
 argument_list|)
 expr_stmt|;
+name|DELAY
+argument_list|(
+literal|40
+argument_list|)
+expr_stmt|;
+block|}
 name|CSR_WRITE_4
 argument_list|(
 name|sc
