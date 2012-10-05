@@ -1543,13 +1543,6 @@ begin_define
 define|#
 directive|define
 name|MNTK_VGONE_WAITER
-value|0x00000200
-end_define
-
-begin_define
-define|#
-directive|define
-name|MNTK_MARKER
 value|0x00000400
 end_define
 
@@ -1558,6 +1551,13 @@ define|#
 directive|define
 name|MNTK_LOOKUP_EXCL_DOTDOT
 value|0x00000800
+end_define
+
+begin_define
+define|#
+directive|define
+name|MNTK_MARKER
+value|0x00001000
 end_define
 
 begin_define
