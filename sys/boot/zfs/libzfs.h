@@ -71,6 +71,12 @@ decl_stmt|;
 name|uint64_t
 name|root
 decl_stmt|;
+name|uint64_t
+name|primary_pool
+decl_stmt|;
+name|uint64_t
+name|primary_vdev
+decl_stmt|;
 block|}
 struct|;
 end_struct
