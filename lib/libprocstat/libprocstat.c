@@ -979,6 +979,9 @@ literal|4
 index|]
 decl_stmt|;
 name|int
+name|cnt
+decl_stmt|;
+name|int
 name|error
 decl_stmt|;
 name|assert
@@ -1004,6 +1007,11 @@ operator|==
 name|PROCSTAT_KVM
 condition|)
 block|{
+operator|*
+name|count
+operator|=
+literal|0
+expr_stmt|;
 name|p0
 operator|=
 name|kvm_getprocs
@@ -1016,7 +1024,8 @@ name|what
 argument_list|,
 name|arg
 argument_list|,
-name|count
+operator|&
+name|cnt
 argument_list|)
 expr_stmt|;
 if|if
@@ -1025,8 +1034,8 @@ name|p0
 operator|==
 name|NULL
 operator|||
-name|count
-operator|==
+name|cnt
+operator|<=
 literal|0
 condition|)
 return|return
@@ -1034,6 +1043,11 @@ operator|(
 name|NULL
 operator|)
 return|;
+operator|*
+name|count
+operator|=
+name|cnt
+expr_stmt|;
 name|len
 operator|=
 operator|*
