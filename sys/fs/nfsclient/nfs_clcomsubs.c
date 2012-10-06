@@ -709,6 +709,8 @@ operator|->
 name|nd_flag
 operator|=
 name|ND_NFSV4
+operator||
+name|ND_NFSCL
 expr_stmt|;
 elseif|else
 if|if
@@ -723,6 +725,8 @@ operator|->
 name|nd_flag
 operator|=
 name|ND_NFSV3
+operator||
+name|ND_NFSCL
 expr_stmt|;
 else|else
 name|nd
@@ -730,6 +734,8 @@ operator|->
 name|nd_flag
 operator|=
 name|ND_NFSV2
+operator||
+name|ND_NFSCL
 expr_stmt|;
 name|nd
 operator|->

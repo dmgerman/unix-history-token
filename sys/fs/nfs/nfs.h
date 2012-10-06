@@ -2511,6 +2511,13 @@ name|ND_INCRSEQID
 value|0x00800000
 end_define
 
+begin_define
+define|#
+directive|define
+name|ND_NFSCL
+value|0x01000000
+end_define
+
 begin_comment
 comment|/*  * ND_GSS should be the "or" of all GSS type authentications.  */
 end_comment
