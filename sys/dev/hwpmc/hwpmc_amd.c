@@ -3912,11 +3912,7 @@ name|AMD_PMC_IS_STOPPED
 argument_list|(
 name|AMD_PMC_EVSEL_0
 operator|+
-operator|(
 name|i
-operator|-
-literal|1
-operator|)
 argument_list|)
 argument_list|,
 operator|(
