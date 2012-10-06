@@ -1875,7 +1875,10 @@ name|fp
 operator|->
 name|f_name
 operator|=
+name|strdup
+argument_list|(
 name|name
+argument_list|)
 expr_stmt|;
 name|fp
 operator|->
