@@ -1944,7 +1944,7 @@ name|BIO_FLUSH
 case|:
 name|g_trace
 argument_list|(
-name|G_T_TOPOLOGY
+name|G_T_BIO
 argument_list|,
 literal|"g_disk_flushcache(%s)"
 argument_list|,
