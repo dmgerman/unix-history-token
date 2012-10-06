@@ -1828,8 +1828,10 @@ name|hlen
 init|=
 literal|0
 decl_stmt|;
-name|u_short
+name|uint16_t
 name|sum
+decl_stmt|,
+name|ip_len
 decl_stmt|;
 name|int
 name|dchg
@@ -1856,7 +1858,6 @@ operator|&
 name|M_FASTFWD_OURS
 condition|)
 block|{
-comment|/* 		 * Firewall or NAT changed destination to local. 		 * We expect ip_len and ip_off to be in host byte order. 		 */
 name|m
 operator|->
 name|m_flags
@@ -1874,6 +1875,28 @@ argument_list|,
 expr|struct
 name|ip
 operator|*
+argument_list|)
+expr_stmt|;
+name|ip
+operator|->
+name|ip_len
+operator|=
+name|ntohs
+argument_list|(
+name|ip
+operator|->
+name|ip_len
+argument_list|)
+expr_stmt|;
+name|ip
+operator|->
+name|ip_off
+operator|=
+name|ntohs
+argument_list|(
+name|ip
+operator|->
+name|ip_off
 argument_list|)
 expr_stmt|;
 name|hlen
@@ -2212,9 +2235,6 @@ comment|/* packet is dropped by traffic conditioner */
 return|return;
 endif|#
 directive|endif
-comment|/* 	 * Convert fields to host representation. 	 */
-name|ip
-operator|->
 name|ip_len
 operator|=
 name|ntohs
@@ -2226,8 +2246,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ip
-operator|->
 name|ip_len
 operator|<
 name|hlen
@@ -2242,17 +2260,6 @@ goto|goto
 name|bad
 goto|;
 block|}
-name|ip
-operator|->
-name|ip_off
-operator|=
-name|ntohs
-argument_list|(
-name|ip
-operator|->
-name|ip_off
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Check that the amount of data in the buffers 	 * is as at least much as the IP header would have us expect. 	 * Trim mbufs if longer than we expect. 	 * Drop packet if shorter than we expect. 	 */
 if|if
 condition|(
@@ -2262,8 +2269,6 @@ name|m_pkthdr
 operator|.
 name|len
 operator|<
-name|ip
-operator|->
 name|ip_len
 condition|)
 block|{
@@ -2286,8 +2291,6 @@ name|m_pkthdr
 operator|.
 name|len
 operator|>
-name|ip
-operator|->
 name|ip_len
 condition|)
 block|{
@@ -2308,8 +2311,6 @@ name|m
 operator|->
 name|m_len
 operator|=
-name|ip
-operator|->
 name|ip_len
 expr_stmt|;
 name|m
@@ -2318,8 +2319,6 @@ name|m_pkthdr
 operator|.
 name|len
 operator|=
-name|ip
-operator|->
 name|ip_len
 expr_stmt|;
 block|}
@@ -2328,8 +2327,6 @@ name|m_adj
 argument_list|(
 name|m
 argument_list|,
-name|ip
-operator|->
 name|ip_len
 operator|-
 name|m
@@ -2457,6 +2454,28 @@ operator|&=
 operator|~
 name|M_FASTFWD_OURS
 expr_stmt|;
+name|ip
+operator|->
+name|ip_len
+operator|=
+name|ntohs
+argument_list|(
+name|ip
+operator|->
+name|ip_len
+argument_list|)
+expr_stmt|;
+name|ip
+operator|->
+name|ip_off
+operator|=
+name|ntohs
+argument_list|(
+name|ip
+operator|->
+name|ip_off
+argument_list|)
+expr_stmt|;
 goto|goto
 name|ours
 goto|;
@@ -2484,6 +2503,28 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * Directly ship the packet on.  This allows forwarding 		 * packets originally destined to us to some other directly 		 * connected host. 		 */
+name|ip
+operator|->
+name|ip_len
+operator|=
+name|ntohs
+argument_list|(
+name|ip
+operator|->
+name|ip_len
+argument_list|)
+expr_stmt|;
+name|ip
+operator|->
+name|ip_off
+operator|=
+name|ntohs
+argument_list|(
+name|ip
+operator|->
+name|ip_off
+argument_list|)
+expr_stmt|;
 name|ip_forward
 argument_list|(
 name|m
@@ -2498,6 +2539,29 @@ directive|endif
 comment|/* IPFIREWALL_FORWARD */
 name|passin
 label|:
+comment|/* 	 *  From now and up to output pfil(9) processing in ip_output() 	 *  the header is in host byte order. 	 */
+name|ip
+operator|->
+name|ip_len
+operator|=
+name|ntohs
+argument_list|(
+name|ip
+operator|->
+name|ip_len
+argument_list|)
+expr_stmt|;
+name|ip
+operator|->
+name|ip_off
+operator|=
+name|ntohs
+argument_list|(
+name|ip
+operator|->
+name|ip_off
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Process options and, if not destined for us, 	 * ship it on.  ip_dooptions returns 1 when an 	 * error was detected (causing an icmp message 	 * to be sent and the original packet to be freed). 	 */
 if|if
 condition|(
@@ -5597,7 +5661,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Forward a packet.  If some error occurs return the sender  * an icmp packet.  Note we can't always generate a meaningful  * icmp message because icmp doesn't have a large enough repertoire  * of codes and types.  *  * If not forwarding, just drop the packet.  This could be confusing  * if ipforwarding was zero but some routing protocol was advancing  * us as a gateway to somewhere.  However, we must let the routing  * protocol deal with that.  *  * The srcrt parameter indicates whether the packet is being forwarded  * via a source route.  */
+comment|/*  * Forward a packet.  If some error occurs return the sender  * an icmp packet.  Note we can't always generate a meaningful  * icmp message because icmp doesn't have a large enough repertoire  * of codes and types.  *  * If not forwarding, just drop the packet.  This could be confusing  * if ipforwarding was zero but some routing protocol was advancing  * us as a gateway to somewhere.  However, we must let the routing  * protocol deal with that.  *  * The srcrt parameter indicates whether the packet is being forwarded  * via a source route.  *  * IP header in host byte order.  */
 end_comment
 
 begin_function
