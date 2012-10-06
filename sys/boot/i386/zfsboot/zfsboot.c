@@ -1643,11 +1643,6 @@ name|struct
 name|dsk
 modifier|*
 name|dsk
-parameter_list|,
-name|spa_t
-modifier|*
-modifier|*
-name|spap
 parameter_list|)
 block|{
 ifdef|#
@@ -1686,7 +1681,7 @@ decl_stmt|;
 name|unsigned
 name|i
 decl_stmt|;
-comment|/*      * If we find a vdev on the whole disk, stop here. Otherwise dig      * out the MBR and probe each slice in turn for a vdev.      */
+comment|/*      * If we find a vdev on the whole disk, stop here. Otherwise dig      * out the partition table and probe each slice/partition      * in turn for a vdev.      */
 if|if
 condition|(
 name|vdev_probe
@@ -1695,7 +1690,7 @@ name|vdev_read
 argument_list|,
 name|dsk
 argument_list|,
-name|spap
+name|NULL
 argument_list|)
 operator|==
 literal|0
@@ -1921,17 +1916,12 @@ name|vdev_read
 argument_list|,
 name|dsk
 argument_list|,
-name|spap
+name|NULL
 argument_list|)
 operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		     * We record the first pool we find (we will try 		     * to boot from that one). 		     */
-name|spap
-operator|=
-name|NULL
-expr_stmt|;
 comment|/* 		     * This slice had a vdev. We need a new dsk 		     * structure now since the vdev now owns this one. 		     */
 name|dsk
 operator|=
@@ -2022,17 +2012,12 @@ name|vdev_read
 argument_list|,
 name|dsk
 argument_list|,
-name|spap
+name|NULL
 argument_list|)
 operator|==
 literal|0
 condition|)
 block|{
-comment|/* 	     * We record the first pool we find (we will try to boot 	     * from that one. 	     */
-name|spap
-operator|=
-literal|0
-expr_stmt|;
 comment|/* 	     * This slice had a vdev. We need a new dsk structure now 	     * since the vdev now owns this one. 	     */
 name|dsk
 operator|=
@@ -2312,9 +2297,6 @@ comment|/*      * Probe the boot drive first - we will try to boot from whatever
 name|probe_drive
 argument_list|(
 name|dsk
-argument_list|,
-operator|&
-name|spa
 argument_list|)
 expr_stmt|;
 comment|/*      * Probe the rest of the drives that the bios knows about. This      * will find any other available pools and it may fill in missing      * vdevs for the boot pool.      */
@@ -2453,18 +2435,10 @@ expr_stmt|;
 name|probe_drive
 argument_list|(
 name|dsk
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * If we didn't find a pool on the boot drive, default to the      * first pool we found, if any.      */
-if|if
-condition|(
-operator|!
-name|spa
-condition|)
-block|{
+comment|/*      * The first discovered pool, if any, is the pool.      */
 name|spa
 operator|=
 name|spa_get_primary
@@ -2489,7 +2463,6 @@ init|;
 condition|;
 control|)
 empty_stmt|;
-block|}
 block|}
 name|primary_spa
 operator|=
