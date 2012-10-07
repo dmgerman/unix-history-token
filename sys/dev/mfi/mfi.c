@@ -13978,6 +13978,9 @@ case|:
 case|case
 name|MFI_DCMD_CFG_CLEAR
 case|:
+case|case
+name|MFI_DCMD_CFG_FOREIGN_IMPORT
+case|:
 name|sx_xlock
 argument_list|(
 operator|&
