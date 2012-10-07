@@ -186,8 +186,11 @@ value|127
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|fflg
+decl_stmt|,
+name|hflg
 decl_stmt|,
 name|iflg
 decl_stmt|,
@@ -335,7 +338,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"finv"
+literal|"fhinv"
 argument_list|)
 operator|)
 operator|!=
@@ -347,6 +350,14 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'h'
+case|:
+name|hflg
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 case|case
 literal|'i'
 case|:
@@ -453,6 +464,60 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
+name|exit
+argument_list|(
+name|do_move
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+name|argv
+index|[
+literal|1
+index|]
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 	 * If -h was specified, treat the target as a symlink instead of 	 * directory. 	 */
+if|if
+condition|(
+name|hflg
+condition|)
+block|{
+if|if
+condition|(
+name|argc
+operator|>
+literal|2
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|lstat
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+operator|&
+name|sb
+argument_list|)
+operator|==
+literal|0
+operator|&&
+name|S_ISLNK
+argument_list|(
+name|sb
+operator|.
+name|st_mode
+argument_list|)
+condition|)
 name|exit
 argument_list|(
 name|do_move
@@ -2446,7 +2511,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: mv [-f | -i | -n] [-v] source target"
+literal|"usage: mv [-f | -i | -n] [-hv] source target"
 argument_list|,
 literal|"       mv [-f | -i | -n] [-v] source ... directory"
 argument_list|)
