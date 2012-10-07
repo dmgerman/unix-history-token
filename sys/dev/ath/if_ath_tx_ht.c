@@ -2692,12 +2692,9 @@ control|)
 block|{
 name|bf
 operator|=
-name|TAILQ_FIRST
+name|ATH_TID_FIRST
 argument_list|(
-operator|&
 name|tid
-operator|->
-name|axq_q
 argument_list|)
 expr_stmt|;
 if|if
@@ -2931,7 +2928,7 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* 		 * this packet is part of an aggregate. 		 */
-name|ATH_TXQ_REMOVE
+name|ATH_TID_REMOVE
 argument_list|(
 name|tid
 argument_list|,

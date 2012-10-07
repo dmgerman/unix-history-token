@@ -10544,7 +10544,7 @@ operator|->
 name|paused
 condition|)
 block|{
-name|ATH_TXQ_INSERT_HEAD
+name|ATH_TID_INSERT_HEAD
 argument_list|(
 name|tid
 argument_list|,
@@ -10589,7 +10589,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|ATH_TXQ_INSERT_HEAD
+name|ATH_TID_INSERT_HEAD
 argument_list|(
 name|tid
 argument_list|,
@@ -10968,7 +10968,7 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-name|ATH_TXQ_INSERT_TAIL
+name|ATH_TID_INSERT_TAIL
 argument_list|(
 name|atid
 argument_list|,
@@ -11003,7 +11003,7 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-name|ATH_TXQ_INSERT_TAIL
+name|ATH_TID_INSERT_TAIL
 argument_list|(
 name|atid
 argument_list|,
@@ -11029,7 +11029,7 @@ condition|)
 block|{
 comment|/* AMPDU running, attempt direct dispatch if possible */
 comment|/* 		 * Always queue the frame to the tail of the list. 		 */
-name|ATH_TXQ_INSERT_TAIL
+name|ATH_TID_INSERT_TAIL
 argument_list|(
 name|atid
 argument_list|,
@@ -11052,15 +11052,12 @@ condition|)
 block|{
 name|bf
 operator|=
-name|TAILQ_FIRST
+name|ATH_TID_FIRST
 argument_list|(
-operator|&
 name|atid
-operator|->
-name|axq_q
 argument_list|)
 expr_stmt|;
-name|ATH_TXQ_REMOVE
+name|ATH_TID_REMOVE
 argument_list|(
 name|atid
 argument_list|,
@@ -11190,7 +11187,7 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-name|ATH_TXQ_INSERT_TAIL
+name|ATH_TID_INSERT_TAIL
 argument_list|(
 name|atid
 argument_list|,
@@ -11280,7 +11277,7 @@ argument_list|(
 operator|&
 name|atid
 operator|->
-name|axq_q
+name|tid_q
 argument_list|)
 expr_stmt|;
 name|TAILQ_INIT
@@ -11290,7 +11287,7 @@ name|atid
 operator|->
 name|filtq
 operator|.
-name|axq_q
+name|tid_q
 argument_list|)
 expr_stmt|;
 name|atid
@@ -11649,7 +11646,7 @@ operator|.
 name|ast_tx_swfiltered
 operator|++
 expr_stmt|;
-name|ATH_TXQ_INSERT_TAIL
+name|ATH_TID_INSERT_TAIL
 argument_list|(
 operator|&
 name|tid
@@ -11812,14 +11809,12 @@ condition|(
 operator|(
 name|bf
 operator|=
-name|TAILQ_LAST
+name|ATH_TID_LAST
 argument_list|(
 operator|&
 name|tid
 operator|->
 name|filtq
-operator|.
-name|axq_q
 argument_list|,
 name|ath_bufhead_s
 argument_list|)
@@ -11828,7 +11823,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|ATH_TXQ_REMOVE
+name|ATH_TID_REMOVE
 argument_list|(
 operator|&
 name|tid
@@ -11840,7 +11835,7 @@ argument_list|,
 name|bf_list
 argument_list|)
 expr_stmt|;
-name|ATH_TXQ_INSERT_HEAD
+name|ATH_TID_INSERT_HEAD
 argument_list|(
 name|tid
 argument_list|,
@@ -13278,12 +13273,9 @@ control|)
 block|{
 name|bf
 operator|=
-name|TAILQ_FIRST
+name|ATH_TID_FIRST
 argument_list|(
-operator|&
 name|tid
-operator|->
-name|axq_q
 argument_list|)
 expr_stmt|;
 if|if
@@ -13320,7 +13312,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-name|ATH_TXQ_REMOVE
+name|ATH_TID_REMOVE
 argument_list|(
 name|tid
 argument_list|,
@@ -13356,14 +13348,12 @@ control|)
 block|{
 name|bf
 operator|=
-name|TAILQ_FIRST
+name|ATH_TID_FIRST
 argument_list|(
 operator|&
 name|tid
 operator|->
 name|filtq
-operator|.
-name|axq_q
 argument_list|)
 expr_stmt|;
 if|if
@@ -13398,7 +13388,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-name|ATH_TXQ_REMOVE
+name|ATH_TID_REMOVE
 argument_list|(
 operator|&
 name|tid
@@ -14264,14 +14254,12 @@ condition|(
 operator|(
 name|bf
 operator|=
-name|TAILQ_LAST
+name|ATH_TID_LAST
 argument_list|(
 operator|&
 name|atid
 operator|->
 name|filtq
-operator|.
-name|axq_q
 argument_list|,
 name|ath_bufhead_s
 argument_list|)
@@ -14280,7 +14268,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|ATH_TXQ_REMOVE
+name|ATH_TID_REMOVE
 argument_list|(
 operator|&
 name|atid
@@ -14292,7 +14280,7 @@ argument_list|,
 name|bf_list
 argument_list|)
 expr_stmt|;
-name|ATH_TXQ_INSERT_HEAD
+name|ATH_TID_INSERT_HEAD
 argument_list|(
 name|atid
 argument_list|,
@@ -14305,12 +14293,9 @@ block|}
 comment|/* 	 * Update the frames in the software TX queue: 	 * 	 * + Discard retry frames in the queue 	 * + Fix the completion function to be non-aggregate 	 */
 name|bf
 operator|=
-name|TAILQ_FIRST
+name|ATH_TID_FIRST
 argument_list|(
-operator|&
 name|atid
-operator|->
-name|axq_q
 argument_list|)
 expr_stmt|;
 while|while
@@ -14336,12 +14321,9 @@ argument_list|,
 name|bf_list
 argument_list|)
 expr_stmt|;
-name|TAILQ_REMOVE
+name|ATH_TID_REMOVE
 argument_list|(
-operator|&
 name|atid
-operator|->
-name|axq_q
 argument_list|,
 name|bf
 argument_list|,
@@ -15104,7 +15086,7 @@ name|ast_tx_swretries
 operator|++
 expr_stmt|;
 comment|/* 	 * Insert this at the head of the queue, so it's 	 * retried before any current/subsequent frames. 	 */
-name|ATH_TXQ_INSERT_HEAD
+name|ATH_TID_INSERT_HEAD
 argument_list|(
 name|atid
 argument_list|,
@@ -15713,7 +15695,7 @@ argument_list|,
 name|bf_list
 argument_list|)
 expr_stmt|;
-name|ATH_TXQ_INSERT_HEAD
+name|ATH_TID_INSERT_HEAD
 argument_list|(
 name|tid
 argument_list|,
@@ -17085,7 +17067,7 @@ argument_list|,
 name|bf_list
 argument_list|)
 expr_stmt|;
-name|ATH_TXQ_INSERT_HEAD
+name|ATH_TID_INSERT_HEAD
 argument_list|(
 name|atid
 argument_list|,
@@ -18044,12 +18026,9 @@ condition|)
 break|break;
 name|bf
 operator|=
-name|TAILQ_FIRST
+name|ATH_TID_FIRST
 argument_list|(
-operator|&
 name|tid
-operator|->
-name|axq_q
 argument_list|)
 expr_stmt|;
 if|if
@@ -18083,7 +18062,7 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-name|ATH_TXQ_REMOVE
+name|ATH_TID_REMOVE
 argument_list|(
 name|tid
 argument_list|,
@@ -18738,12 +18717,9 @@ condition|)
 break|break;
 name|bf
 operator|=
-name|TAILQ_FIRST
+name|ATH_TID_FIRST
 argument_list|(
-operator|&
 name|tid
-operator|->
-name|axq_q
 argument_list|)
 expr_stmt|;
 if|if
@@ -18755,7 +18731,7 @@ condition|)
 block|{
 break|break;
 block|}
-name|ATH_TXQ_REMOVE
+name|ATH_TID_REMOVE
 argument_list|(
 name|tid
 argument_list|,

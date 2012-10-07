@@ -292,7 +292,7 @@ argument_list|(
 argument_list|,
 argument|ath_buf
 argument_list|)
-name|axq_q
+name|tid_q
 expr_stmt|;
 comment|/* pending buffers */
 name|u_int
@@ -331,7 +331,7 @@ argument_list|(
 argument_list|,
 argument|ath_buf
 argument_list|)
-name|axq_q
+name|tid_q
 expr_stmt|;
 comment|/* filtered queue */
 name|u_int
@@ -1179,6 +1179,10 @@ define|\
 value|ATH_TXQ_UNLOCK_ASSERT((_sc)->sc_ac2q[(_tid)->ac])
 end_define
 
+begin_comment
+comment|/*  * These are for the hardware queue.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1241,6 +1245,74 @@ parameter_list|,
 name|_field
 parameter_list|)
 value|TAILQ_LAST(&(_tq)->axq_q, _field)
+end_define
+
+begin_comment
+comment|/*  * These are for the TID software queue and filtered frames queues.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATH_TID_INSERT_HEAD
+parameter_list|(
+name|_tq
+parameter_list|,
+name|_elm
+parameter_list|,
+name|_field
+parameter_list|)
+value|do { \ 	TAILQ_INSERT_HEAD(&(_tq)->tid_q, (_elm), _field); \ 	(_tq)->axq_depth++; \ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TID_INSERT_TAIL
+parameter_list|(
+name|_tq
+parameter_list|,
+name|_elm
+parameter_list|,
+name|_field
+parameter_list|)
+value|do { \ 	TAILQ_INSERT_TAIL(&(_tq)->tid_q, (_elm), _field); \ 	(_tq)->axq_depth++; \ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TID_REMOVE
+parameter_list|(
+name|_tq
+parameter_list|,
+name|_elm
+parameter_list|,
+name|_field
+parameter_list|)
+value|do { \ 	TAILQ_REMOVE(&(_tq)->tid_q, _elm, _field); \ 	(_tq)->axq_depth--; \ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TID_FIRST
+parameter_list|(
+name|_tq
+parameter_list|)
+value|TAILQ_FIRST(&(_tq)->tid_q)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TID_LAST
+parameter_list|(
+name|_tq
+parameter_list|,
+name|_field
+parameter_list|)
+value|TAILQ_LAST(&(_tq)->tid_q, _field)
 end_define
 
 begin_struct
