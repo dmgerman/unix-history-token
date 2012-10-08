@@ -18887,13 +18887,6 @@ block|{
 name|int
 name|chk
 decl_stmt|;
-name|CURVNET_SET
-argument_list|(
-name|ifp
-operator|->
-name|if_vnet
-argument_list|)
-expr_stmt|;
 name|chk
 operator|=
 name|pf_test
@@ -18906,9 +18899,6 @@ name|m
 argument_list|,
 name|inp
 argument_list|)
-expr_stmt|;
-name|CURVNET_RESTORE
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -19004,13 +18994,6 @@ operator|~
 name|CSUM_DELAY_DATA
 expr_stmt|;
 block|}
-name|CURVNET_SET
-argument_list|(
-name|ifp
-operator|->
-name|if_vnet
-argument_list|)
-expr_stmt|;
 name|chk
 operator|=
 name|pf_test
@@ -19023,9 +19006,6 @@ name|m
 argument_list|,
 name|inp
 argument_list|)
-expr_stmt|;
-name|CURVNET_RESTORE
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
