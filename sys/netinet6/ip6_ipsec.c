@@ -1169,6 +1169,7 @@ name|ip
 operator|=
 name|mtod
 argument_list|(
+operator|*
 name|m
 argument_list|,
 expr|struct
