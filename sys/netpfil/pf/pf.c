@@ -32319,7 +32319,11 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|int
+name|uint16_t
+name|ip_len
+decl_stmt|,
+name|ip_off
+decl_stmt|,
 name|sw_csum
 decl_stmt|;
 name|KASSERT
@@ -32898,9 +32902,6 @@ name|m_flags
 operator||=
 name|M_SKIP_FIREWALL
 expr_stmt|;
-comment|/* Back to host byte order. */
-name|ip
-operator|->
 name|ip_len
 operator|=
 name|ntohs
@@ -32910,8 +32911,6 @@ operator|->
 name|ip_len
 argument_list|)
 expr_stmt|;
-name|ip
-operator|->
 name|ip_off
 operator|=
 name|ntohs
@@ -33008,8 +33007,6 @@ expr_stmt|;
 comment|/* 	 * If small enough for interface, or the interface will take 	 * care of the fragmentation for us, we can just send directly. 	 */
 if|if
 condition|(
-name|ip
-operator|->
 name|ip_len
 operator|<=
 name|ifp
@@ -33034,8 +33031,6 @@ literal|0
 operator|||
 operator|(
 operator|(
-name|ip
-operator|->
 name|ip_off
 operator|&
 name|IP_DF
@@ -33053,28 +33048,6 @@ operator|)
 operator|)
 condition|)
 block|{
-name|ip
-operator|->
-name|ip_len
-operator|=
-name|htons
-argument_list|(
-name|ip
-operator|->
-name|ip_len
-argument_list|)
-expr_stmt|;
-name|ip
-operator|->
-name|ip_off
-operator|=
-name|htons
-argument_list|(
-name|ip
-operator|->
-name|ip_off
-argument_list|)
-expr_stmt|;
 name|ip
 operator|->
 name|ip_sum
@@ -33141,8 +33114,6 @@ comment|/* Balk when DF bit is set or the interface didn't support TSO. */
 if|if
 condition|(
 operator|(
-name|ip
-operator|->
 name|ip_off
 operator|&
 name|IP_DF
