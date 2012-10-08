@@ -10691,12 +10691,12 @@ operator|->
 name|bge_asicrev
 operator|==
 name|BGE_ASICREV_BCM5719
-operator|||
+operator|&&
 name|sc
 operator|->
-name|bge_asicrev
+name|bge_chipid
 operator|==
-name|BGE_ASICREV_BCM5720
+name|BGE_CHIPID_BCM5719_A0
 condition|)
 block|{
 name|dmactl
