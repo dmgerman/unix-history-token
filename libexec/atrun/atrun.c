@@ -537,7 +537,7 @@ index|]
 decl_stmt|,
 name|fmt
 index|[
-literal|49
+literal|64
 index|]
 decl_stmt|;
 name|char
