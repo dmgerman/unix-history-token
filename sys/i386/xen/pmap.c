@@ -1813,7 +1813,7 @@ argument|msgbufp
 argument_list|,
 argument|atop(round_page(msgbufsize))
 argument_list|)
-comment|/* 	 * ptemap is used for pmap_pte_quick 	 */
+comment|/* 	 * PADDR1 and PADDR2 are used by pmap_pte_quick() and pmap_pte(), 	 * respectively. 	 */
 name|SYSMAP
 argument_list|(
 argument|pt_entry_t *
@@ -8287,9 +8287,6 @@ operator|&
 name|newtail
 argument_list|)
 expr_stmt|;
-name|sched_pin
-argument_list|()
-expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -8486,25 +8483,28 @@ name|pv_va
 expr_stmt|;
 name|pte
 operator|=
-name|pmap_pte_quick
+name|pmap_pte
 argument_list|(
 name|pmap
 argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
+name|tpte
+operator|=
+operator|*
+name|pte
+expr_stmt|;
 if|if
 condition|(
 operator|(
-operator|*
-name|pte
+name|tpte
 operator|&
 name|PG_W
 operator|)
-operator|!=
+operator|==
 literal|0
 condition|)
-continue|continue;
 name|tpte
 operator|=
 name|pte_load_clear
@@ -8512,6 +8512,22 @@ argument_list|(
 name|pte
 argument_list|)
 expr_stmt|;
+name|pmap_pte_release
+argument_list|(
+name|pte
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|tpte
+operator|&
+name|PG_W
+operator|)
+operator|!=
+literal|0
+condition|)
+continue|continue;
 if|if
 condition|(
 operator|(
@@ -8823,9 +8839,6 @@ block|}
 block|}
 name|out
 label|:
-name|sched_unpin
-argument_list|()
-expr_stmt|;
 name|TAILQ_CONCAT
 argument_list|(
 operator|&
