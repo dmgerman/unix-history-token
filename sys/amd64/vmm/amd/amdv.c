@@ -680,6 +680,35 @@ end_function
 
 begin_function
 specifier|static
+name|uint64_t
+name|amd_iommu_remove_mapping
+parameter_list|(
+name|void
+modifier|*
+name|domain
+parameter_list|,
+name|vm_paddr_t
+name|gpa
+parameter_list|,
+name|uint64_t
+name|len
+parameter_list|)
+block|{
+name|printf
+argument_list|(
+literal|"amd_iommu_remove_mapping: not implemented\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
 name|void
 name|amd_iommu_add_device
 parameter_list|(
@@ -732,6 +761,24 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|amd_iommu_invalidate_tlb
+parameter_list|(
+name|void
+modifier|*
+name|domain
+parameter_list|)
+block|{
+name|printf
+argument_list|(
+literal|"amd_iommu_invalidate_tlb: not implemented\n"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_decl_stmt
 name|struct
 name|iommu_ops
@@ -752,9 +799,13 @@ name|amd_iommu_destroy_domain
 block|,
 name|amd_iommu_create_mapping
 block|,
+name|amd_iommu_remove_mapping
+block|,
 name|amd_iommu_add_device
 block|,
 name|amd_iommu_remove_device
+block|,
+name|amd_iommu_invalidate_tlb
 block|, }
 decl_stmt|;
 end_decl_stmt
