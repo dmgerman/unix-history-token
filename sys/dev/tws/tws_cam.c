@@ -3152,7 +3152,7 @@ name|ccb_h
 operator|.
 name|status
 operator||=
-name|CAM_LUN_INVALID
+name|CAM_DEV_NOT_THERE
 expr_stmt|;
 block|}
 else|else
@@ -3174,7 +3174,7 @@ name|ccb_h
 operator|.
 name|status
 operator||=
-name|CAM_TID_INVALID
+name|CAM_SEL_TIMEOUT
 expr_stmt|;
 block|}
 block|}
