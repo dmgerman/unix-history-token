@@ -1313,7 +1313,7 @@ literal|"if_gif"
 block|,
 name|gifmodevent
 block|,
-literal|0
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt

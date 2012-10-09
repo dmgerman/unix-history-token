@@ -4238,7 +4238,7 @@ literal|"rdma_iwcm"
 block|,
 name|iw_cm_load
 block|,
-literal|0
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt

@@ -1704,7 +1704,7 @@ literal|"test_wep"
 block|,
 name|test_wep_modevent
 block|,
-literal|0
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt

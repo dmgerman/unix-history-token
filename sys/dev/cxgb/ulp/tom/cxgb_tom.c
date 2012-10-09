@@ -1951,7 +1951,7 @@ literal|"t3_tom"
 block|,
 name|t3_tom_modevent
 block|,
-literal|0
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt

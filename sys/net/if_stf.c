@@ -1237,7 +1237,7 @@ literal|"if_stf"
 block|,
 name|stfmodevent
 block|,
-literal|0
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt

@@ -5895,7 +5895,7 @@ literal|"cryptodev"
 block|,
 name|cryptodev_modevent
 block|,
-literal|0
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt

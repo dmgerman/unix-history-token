@@ -12415,7 +12415,7 @@ literal|"ip_mroute"
 block|,
 name|ip_mroute_modevent
 block|,
-literal|0
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt

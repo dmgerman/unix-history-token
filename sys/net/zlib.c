@@ -25513,7 +25513,7 @@ literal|"zlib"
 block|,
 name|zlib_modevent
 block|,
-literal|0
+name|NULL
 block|}
 decl_stmt|;
 name|DECLARE_MODULE

@@ -178,7 +178,7 @@ literal|"mxge_rss_ethp_z8e_fw"
 block|,
 name|mxge_rss_ethp_z8e_fw_modevent
 block|,
-literal|0
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt

@@ -3358,7 +3358,7 @@ comment|/* module name */
 name|NULL
 block|,
 comment|/* event handler */
-literal|0
+name|NULL
 comment|/* extra data */
 block|}
 decl_stmt|;

@@ -202,7 +202,7 @@ literal|"cxgb_t3fw"
 block|,
 name|cxgb_t3fw_modevent
 block|,
-literal|0
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -360,7 +360,7 @@ literal|"cxgb_t3b_protocol_sram"
 block|,
 name|cxgb_t3b_protocol_sram_modevent
 block|,
-literal|0
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -518,7 +518,7 @@ literal|"cxgb_t3b_tp_eeprom"
 block|,
 name|cxgb_t3b_tp_eeprom_modevent
 block|,
-literal|0
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -676,7 +676,7 @@ literal|"cxgb_t3c_protocol_sram"
 block|,
 name|cxgb_t3c_protocol_sram_modevent
 block|,
-literal|0
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -834,7 +834,7 @@ literal|"cxgb_t3c_tp_eeprom"
 block|,
 name|cxgb_t3c_tp_eeprom_modevent
 block|,
-literal|0
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt

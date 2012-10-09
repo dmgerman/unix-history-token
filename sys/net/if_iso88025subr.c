@@ -3493,7 +3493,7 @@ literal|"iso88025"
 block|,
 name|iso88025_modevent
 block|,
-literal|0
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt

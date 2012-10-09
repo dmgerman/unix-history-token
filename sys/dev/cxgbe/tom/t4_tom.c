@@ -3837,7 +3837,7 @@ literal|"t4_tom"
 block|,
 name|t4_tom_modevent
 block|,
-literal|0
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt

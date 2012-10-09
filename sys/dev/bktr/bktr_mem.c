@@ -554,7 +554,7 @@ literal|"bktr_mem"
 block|,
 name|bktr_mem_modevent
 block|,
-literal|0
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt

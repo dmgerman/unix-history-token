@@ -4232,7 +4232,7 @@ name|modeventhand_t
 operator|)
 name|iscsi_modevent
 block|,
-literal|0
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt

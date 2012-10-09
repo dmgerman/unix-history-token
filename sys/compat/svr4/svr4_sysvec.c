@@ -1170,7 +1170,7 @@ literal|"svr4elf"
 block|,
 name|svr4_elf_modevent
 block|,
-literal|0
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt

@@ -233,7 +233,7 @@ literal|"fw_consumer"
 block|,
 name|fw_consumer_modevent
 block|,
-literal|0
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt

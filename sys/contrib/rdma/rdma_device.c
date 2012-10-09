@@ -2781,7 +2781,7 @@ literal|"rdma_core"
 block|,
 name|rdma_core_load
 block|,
-literal|0
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt

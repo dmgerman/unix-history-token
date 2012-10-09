@@ -710,7 +710,7 @@ literal|"kthrdlk"
 block|,
 name|kthrdlk_handler
 block|,
-literal|0
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt
