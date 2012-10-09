@@ -2040,6 +2040,11 @@ begin_decl_stmt
 specifier|static
 name|cpuset_t
 name|intr_cpus
+init|=
+name|CPUSET_T_INITIALIZER
+argument_list|(
+literal|0x1
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -2428,21 +2433,6 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
-comment|/* Use an empty stub for compatibility. */
-end_comment
-
-begin_function
-name|void
-name|intr_add_cpu
-parameter_list|(
-name|u_int
-name|cpu
-name|__unused
-parameter_list|)
-block|{  }
 end_function
 
 begin_endif
