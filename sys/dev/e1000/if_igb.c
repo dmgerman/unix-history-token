@@ -19019,9 +19019,9 @@ name|discard
 operator|)
 condition|)
 block|{
-name|ifp
+name|adapter
 operator|->
-name|if_ierrors
+name|dropped_pkts
 operator|++
 expr_stmt|;
 operator|++
