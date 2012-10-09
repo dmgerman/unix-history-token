@@ -3519,7 +3519,7 @@ literal|0
 block|case IPPROTO_NONE: 				goto loopend;
 endif|#
 directive|endif
-comment|/* 			 * Any unknow header (new extension or IPv6/IPv4 			 * header for tunnels) ends loop. 			 */
+comment|/* 			 * Any unknown header (new extension or IPv6/IPv4 			 * header for tunnels) ends loop. 			 */
 default|default:
 goto|goto
 name|loopend

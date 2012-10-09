@@ -3625,7 +3625,7 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"arcmsr%d: scsi id=%d lun=%d isr got command error done,but got unknow DeviceStatus=0x%x \n"
+literal|"arcmsr%d: scsi id=%d lun=%d isr got command error done,but got unknown DeviceStatus=0x%x \n"
 argument_list|,
 name|acb
 operator|->
@@ -3664,7 +3664,7 @@ name|status
 operator||=
 name|CAM_UNCOR_PARITY
 expr_stmt|;
-comment|/*unknow error or crc error just for retry*/
+comment|/*unknown error or crc error just for retry*/
 name|arcmsr_srb_complete
 argument_list|(
 name|srb
@@ -8385,7 +8385,7 @@ default|default:
 name|printf
 argument_list|(
 literal|"arcmsr%d: interrupt service,"
-literal|" unknow adapter type =%d\n"
+literal|" unknown adapter type =%d\n"
 argument_list|,
 name|acb
 operator|->
