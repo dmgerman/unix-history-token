@@ -748,6 +748,16 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
+name|int
+argument_list|,
+name|drop_redirect
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -821,6 +831,13 @@ define|#
 directive|define
 name|V_rsvp_on
 value|VNET(rsvp_on)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_drop_redirect
+value|VNET(drop_redirect)
 end_define
 
 begin_function_decl
