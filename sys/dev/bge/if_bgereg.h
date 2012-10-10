@@ -14906,6 +14906,9 @@ name|int
 name|bge_expcap
 decl_stmt|;
 name|int
+name|bge_expmrq
+decl_stmt|;
+name|int
 name|bge_msicap
 decl_stmt|;
 name|int
@@ -15067,6 +15070,9 @@ name|bge_asf_mode
 decl_stmt|;
 name|uint8_t
 name|bge_asf_count
+decl_stmt|;
+name|uint16_t
+name|bge_mps
 decl_stmt|;
 name|struct
 name|bge_ring_data
