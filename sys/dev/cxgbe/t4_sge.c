@@ -2631,24 +2631,11 @@ name|rc
 operator|!=
 literal|0
 condition|)
-block|{
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|dev
-argument_list|,
-literal|"failed to create firmware event queue: %d\n"
-argument_list|,
-name|rc
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|rc
 operator|)
 return|;
-block|}
 comment|/* 	 * Management queue.  This is just a control queue that uses the fwq as 	 * its associated iq. 	 */
 name|rc
 operator|=
@@ -2657,30 +2644,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|rc
-operator|!=
-literal|0
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|dev
-argument_list|,
-literal|"failed to create management queue: %d\n"
-argument_list|,
-name|rc
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|rc
-operator|)
-return|;
-block|}
 return|return
 operator|(
 name|rc
