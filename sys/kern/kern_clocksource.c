@@ -3095,9 +3095,14 @@ name|sec
 operator|>
 literal|0
 condition|)
-name|freq
-operator|=
-literal|0
+name|panic
+argument_list|(
+literal|"Event timer \"%s\" doesn't support sub-second periods!"
+argument_list|,
+name|et
+operator|->
+name|et_name
+argument_list|)
 expr_stmt|;
 elseif|else
 if|if
