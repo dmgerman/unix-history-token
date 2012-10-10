@@ -246,6 +246,24 @@ name|NVME_TIMEOUT_IN_SEC
 value|(30)
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CACHE_LINE_SIZE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|CACHE_LINE_SIZE
+value|(64)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|nvme_prp_list
@@ -375,10 +393,6 @@ name|int64_t
 name|num_cmds
 decl_stmt|;
 name|struct
-name|mtx
-name|lock
-decl_stmt|;
-name|struct
 name|nvme_command
 modifier|*
 name|cmd
@@ -429,7 +443,19 @@ argument|nvme_prp_list
 argument_list|)
 name|free_prp_list
 expr_stmt|;
+name|struct
+name|mtx
+name|lock
+name|__aligned
+parameter_list|(
+name|CACHE_LINE_SIZE
+parameter_list|)
+function_decl|;
 block|}
+name|__aligned
+argument_list|(
+name|CACHE_LINE_SIZE
+argument_list|)
 struct|;
 end_struct
 
