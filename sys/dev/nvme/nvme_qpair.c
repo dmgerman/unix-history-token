@@ -413,6 +413,11 @@ name|retry
 decl_stmt|,
 name|error
 decl_stmt|;
+name|qpair
+operator|->
+name|num_intr_handler_calls
+operator|++
+expr_stmt|;
 while|while
 condition|(
 literal|1
@@ -926,6 +931,12 @@ expr_stmt|;
 name|qpair
 operator|->
 name|num_cmds
+operator|=
+literal|0
+expr_stmt|;
+name|qpair
+operator|->
+name|num_intr_handler_calls
 operator|=
 literal|0
 expr_stmt|;

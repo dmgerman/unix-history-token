@@ -392,6 +392,9 @@ decl_stmt|;
 name|int64_t
 name|num_cmds
 decl_stmt|;
+name|int64_t
+name|num_intr_handler_calls
+decl_stmt|;
 name|struct
 name|nvme_command
 modifier|*
