@@ -2128,24 +2128,6 @@ name|arg
 expr_stmt|;
 if|if
 condition|(
-name|periph
-operator|==
-name|NULL
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"proberegister: periph was NULL!!\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|CAM_REQ_CMP_ERR
-operator|)
-return|;
-block|}
-if|if
-condition|(
 name|request_ccb
 operator|==
 name|NULL
