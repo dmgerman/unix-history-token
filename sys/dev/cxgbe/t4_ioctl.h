@@ -72,6 +72,9 @@ comment|/* read memory */
 name|T4_GET_I2C
 block|,
 comment|/* read from i2c addressible device */
+name|T4_CLEAR_STATS
+block|,
+comment|/* clear a port's MAC statistics */
 block|}
 enum|;
 end_enum
@@ -824,6 +827,13 @@ define|#
 directive|define
 name|CHELSIO_T4_GET_I2C
 value|_IOWR('f', T4_GET_I2C, struct t4_i2c_data)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHELSIO_T4_CLEAR_STATS
+value|_IOW('f', T4_CLEAR_STATS, uint32_t)
 end_define
 
 begin_endif
