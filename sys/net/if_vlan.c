@@ -3420,7 +3420,7 @@ literal|"if_vlan"
 block|,
 name|vlan_modevent
 block|,
-name|NULL
+literal|0
 block|}
 decl_stmt|;
 name|DECLARE_MODULE

@@ -274,7 +274,7 @@ literal|"tdfx_linux"
 block|,
 name|tdfx_linux_modevent
 block|,
-name|NULL
+literal|0
 block|}
 decl_stmt|;
 end_decl_stmt

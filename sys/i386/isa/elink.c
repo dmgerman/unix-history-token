@@ -189,7 +189,7 @@ comment|/* module name */
 name|NULL
 block|,
 comment|/* event handler */
-name|NULL
+literal|0
 comment|/* extra data */
 block|}
 decl_stmt|;

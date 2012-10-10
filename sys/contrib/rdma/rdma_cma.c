@@ -15796,7 +15796,7 @@ literal|"rdma_cma"
 block|,
 name|cma_load
 block|,
-name|NULL
+literal|0
 block|}
 decl_stmt|;
 end_decl_stmt

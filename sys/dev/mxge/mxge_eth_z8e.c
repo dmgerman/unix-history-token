@@ -178,7 +178,7 @@ literal|"mxge_eth_z8e_fw"
 block|,
 name|mxge_eth_z8e_fw_modevent
 block|,
-name|NULL
+literal|0
 block|}
 decl_stmt|;
 end_decl_stmt

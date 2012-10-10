@@ -6212,7 +6212,7 @@ literal|"linuxelf"
 block|,
 name|linux_elf_modevent
 block|,
-name|NULL
+literal|0
 block|}
 decl_stmt|;
 end_decl_stmt

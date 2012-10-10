@@ -3681,7 +3681,7 @@ literal|"arcnet"
 block|,
 name|arc_modevent
 block|,
-name|NULL
+literal|0
 block|}
 decl_stmt|;
 end_decl_stmt

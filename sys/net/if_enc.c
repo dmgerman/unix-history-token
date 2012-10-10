@@ -849,7 +849,7 @@ literal|"if_enc"
 block|,
 name|enc_modevent
 block|,
-name|NULL
+literal|0
 block|}
 decl_stmt|;
 end_decl_stmt

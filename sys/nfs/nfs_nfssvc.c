@@ -609,7 +609,7 @@ block|,
 name|nfssvc_modevent
 block|,
 name|NULL
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

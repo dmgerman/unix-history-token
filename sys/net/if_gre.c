@@ -4772,7 +4772,7 @@ literal|"if_gre"
 block|,
 name|gremodevent
 block|,
-name|NULL
+literal|0
 block|}
 decl_stmt|;
 end_decl_stmt

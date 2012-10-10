@@ -2064,7 +2064,7 @@ literal|"rdma_addr"
 block|,
 name|addr_load
 block|,
-name|NULL
+literal|0
 block|}
 decl_stmt|;
 end_decl_stmt

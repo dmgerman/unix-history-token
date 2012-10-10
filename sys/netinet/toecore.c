@@ -2294,7 +2294,7 @@ literal|"toecore"
 block|,
 name|toecore_mod_handler
 block|,
-name|NULL
+literal|0
 block|}
 decl_stmt|;
 end_decl_stmt

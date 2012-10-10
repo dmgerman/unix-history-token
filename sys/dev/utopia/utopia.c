@@ -3050,7 +3050,7 @@ literal|"utopia"
 block|,
 name|utopia_mod_init
 block|,
-name|NULL
+literal|0
 block|}
 decl_stmt|;
 end_decl_stmt

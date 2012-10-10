@@ -1612,7 +1612,7 @@ literal|"if_tun"
 block|,
 name|tunmodevent
 block|,
-name|NULL
+literal|0
 block|}
 decl_stmt|;
 end_decl_stmt
