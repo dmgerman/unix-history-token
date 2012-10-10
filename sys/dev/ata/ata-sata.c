@@ -157,6 +157,8 @@ name|error
 decl_stmt|,
 name|status
 decl_stmt|;
+if|if
+condition|(
 name|ata_sata_scr_read
 argument_list|(
 name|ch
@@ -168,7 +170,8 @@ argument_list|,
 operator|&
 name|error
 argument_list|)
-expr_stmt|;
+condition|)
+return|return;
 comment|/* Check that SError value is sane. */
 if|if
 condition|(
@@ -216,6 +219,8 @@ condition|(
 name|bootverbose
 condition|)
 block|{
+if|if
+condition|(
 name|ata_sata_scr_read
 argument_list|(
 name|ch
@@ -227,7 +232,17 @@ argument_list|,
 operator|&
 name|status
 argument_list|)
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"PHYRDY change\n"
+argument_list|)
 expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 operator|(
