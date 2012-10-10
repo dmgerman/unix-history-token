@@ -16457,7 +16457,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|BGE_IS_5714_FAMILY
+name|BGE_IS_5705_PLUS
 argument_list|(
 name|sc
 argument_list|)
