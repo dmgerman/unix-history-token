@@ -1104,12 +1104,6 @@ name|bus_addr_t
 name|ba
 decl_stmt|;
 comment|/* bus address of descriptor ring */
-name|char
-name|lockname
-index|[
-literal|16
-index|]
-decl_stmt|;
 name|uint32_t
 name|flags
 decl_stmt|;
