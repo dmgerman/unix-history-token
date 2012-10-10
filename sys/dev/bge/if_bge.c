@@ -18310,11 +18310,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|DELAY
-argument_list|(
-literal|10000
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sc
