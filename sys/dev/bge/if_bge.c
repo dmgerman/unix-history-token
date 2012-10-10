@@ -4780,7 +4780,7 @@ name|sc
 operator|->
 name|bge_dev
 argument_list|,
-literal|"PHY write timed out (phy %d, reg %d, val %d)\n"
+literal|"PHY write timed out (phy %d, reg %d, val 0x%04x)\n"
 argument_list|,
 name|phy
 argument_list|,
@@ -10360,6 +10360,7 @@ argument_list|,
 name|BGE_RXLSMODE_ENABLE
 argument_list|)
 expr_stmt|;
+comment|/* Turn on DMA, clear stats. */
 name|val
 operator|=
 name|BGE_MACMODE_TXDMA_ENB
@@ -10406,7 +10407,6 @@ name|val
 operator||=
 name|BGE_PORTMODE_MII
 expr_stmt|;
-comment|/* Turn on DMA, clear stats */
 name|CSR_WRITE_4
 argument_list|(
 name|sc
@@ -19751,6 +19751,7 @@ operator||
 name|BUS_DMASYNC_POSTWRITE
 argument_list|)
 expr_stmt|;
+comment|/* Fetch updates from the status block. */
 name|rx_prod
 operator|=
 name|sc
@@ -19791,6 +19792,7 @@ name|bge_status_block
 operator|->
 name|bge_status
 expr_stmt|;
+comment|/* Clear the status so the next pass only sees the changes. */
 name|sc
 operator|->
 name|bge_ldata
@@ -20094,7 +20096,7 @@ operator||
 name|BUS_DMASYNC_POSTWRITE
 argument_list|)
 expr_stmt|;
-comment|/* Save producer/consumer indexess. */
+comment|/* Save producer/consumer indices. */
 name|rx_prod
 operator|=
 name|sc
@@ -20147,6 +20149,7 @@ name|bge_status_tag
 operator|<<
 literal|24
 expr_stmt|;
+comment|/* Dirty the status flag. */
 name|sc
 operator|->
 name|bge_ldata
@@ -26923,7 +26926,7 @@ name|bge_dev
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Clear the attention. */
+comment|/* Disable MAC attention when link is up. */
 name|CSR_WRITE_4
 argument_list|(
 name|sc
