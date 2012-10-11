@@ -206,12 +206,6 @@ name|num_msgs
 decl_stmt|;
 comment|/* guest state */
 name|int
-name|vector
-decl_stmt|;
-name|int
-name|vcpu
-decl_stmt|;
-name|int
 name|startrid
 decl_stmt|;
 comment|/* host state */
@@ -2083,22 +2077,6 @@ name|ppt
 operator|->
 name|msi
 operator|.
-name|vector
-operator|=
-name|vector
-expr_stmt|;
-name|ppt
-operator|->
-name|msi
-operator|.
-name|vcpu
-operator|=
-name|destcpu
-expr_stmt|;
-name|ppt
-operator|->
-name|msi
-operator|.
 name|startrid
 operator|=
 name|startrid
@@ -2209,6 +2187,19 @@ operator|=
 name|vector
 operator|+
 name|i
+expr_stmt|;
+name|ppt
+operator|->
+name|msi
+operator|.
+name|arg
+index|[
+name|i
+index|]
+operator|.
+name|vcpu
+operator|=
+name|destcpu
 expr_stmt|;
 name|error
 operator|=
