@@ -920,9 +920,18 @@ break|break;
 case|case
 name|MOD_UNLOAD
 case|:
+name|error
+operator|=
 name|vmmdev_cleanup
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+block|{
 name|iommu_cleanup
 argument_list|()
 expr_stmt|;
@@ -934,6 +943,7 @@ operator|=
 name|VMM_CLEANUP
 argument_list|()
 expr_stmt|;
+block|}
 break|break;
 default|default:
 name|error
