@@ -4272,17 +4272,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* 	 * If the dns_name_t we're looking up is already in the message, 	 * we don't want to trigger the caller's name replacement logic. 	 */
-if|if
-condition|(
-name|name
-operator|==
-name|mname
-condition|)
-name|mname
-operator|=
-name|NULL
-expr_stmt|;
 if|if
 condition|(
 name|mnamep
@@ -5049,6 +5038,13 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|INSIST
+argument_list|(
+name|mname
+operator|!=
+name|fname
+argument_list|)
+expr_stmt|;
 name|query_releasename
 argument_list|(
 name|client
@@ -5321,6 +5317,13 @@ if|if
 condition|(
 name|mname
 operator|!=
+name|fname
+condition|)
+block|{
+if|if
+condition|(
+name|mname
+operator|!=
 name|NULL
 condition|)
 block|{
@@ -5342,6 +5345,7 @@ name|need_addname
 operator|=
 name|ISC_TRUE
 expr_stmt|;
+block|}
 name|ISC_LIST_APPEND
 argument_list|(
 name|fname
@@ -5554,6 +5558,13 @@ if|if
 condition|(
 name|mname
 operator|!=
+name|fname
+condition|)
+block|{
+if|if
+condition|(
+name|mname
+operator|!=
 name|NULL
 condition|)
 block|{
@@ -5575,6 +5586,7 @@ name|need_addname
 operator|=
 name|ISC_TRUE
 expr_stmt|;
+block|}
 name|ISC_LIST_APPEND
 argument_list|(
 name|fname
@@ -7777,10 +7789,17 @@ if|if
 condition|(
 name|mname
 operator|!=
+name|fname
+condition|)
+block|{
+if|if
+condition|(
+name|mname
+operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 					 * A different type of this name is 					 * already stored in the additional 					 * section.  We'll reuse the name. 					 * Note that this should happen at most 					 * once.  Otherwise, fname->link could 					 * leak below. 					 */
+comment|/* 						 * A different type of this name is 						 * already stored in the additional 						 * section.  We'll reuse the name. 						 * Note that this should happen at most 						 * once.  Otherwise, fname->link could 						 * leak below. 						 */
 name|INSIST
 argument_list|(
 name|mname0
@@ -7810,6 +7829,7 @@ name|need_addname
 operator|=
 name|ISC_TRUE
 expr_stmt|;
+block|}
 name|ISC_LIST_UNLINK
 argument_list|(
 name|cfname
