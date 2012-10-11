@@ -232,6 +232,7 @@ value|do {				\     if (verbose)					\         fprintf(stderr, "--- %s [%d] " fo
 end_define
 
 begin_function
+specifier|static
 specifier|inline
 name|void
 name|prefetch
