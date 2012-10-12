@@ -4576,6 +4576,9 @@ argument_list|,
 operator|(
 name|vm_paddr_t
 operator|)
+operator|(
+name|vm_offset_t
+operator|)
 name|csio
 operator|->
 name|data_ptr
@@ -4646,6 +4649,9 @@ argument_list|,
 operator|(
 name|void
 operator|*
+operator|)
+operator|(
+name|vm_offset_t
 operator|)
 name|dseg
 operator|->
