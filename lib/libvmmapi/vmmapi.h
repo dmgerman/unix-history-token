@@ -441,6 +441,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|vm_capability_type2name
+parameter_list|(
+name|int
+name|type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|vm_get_capability
 parameter_list|(
