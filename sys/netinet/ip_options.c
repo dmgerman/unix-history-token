@@ -2193,7 +2193,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Strip out IP options, at higher level protocol in the kernel.  Second  * argument is buffer to which options will be moved, and return value is  * their length.  *  * XXX should be deleted; last arg currently ignored.  */
+comment|/*  * Strip out IP options, at higher level protocol in the kernel.  */
 end_comment
 
 begin_function
@@ -2204,11 +2204,6 @@ name|struct
 name|mbuf
 modifier|*
 name|m
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-name|mopt
 parameter_list|)
 block|{
 name|int
@@ -2330,6 +2325,12 @@ name|ip
 argument_list|)
 operator|>>
 literal|2
+expr_stmt|;
+name|ip
+operator|->
+name|ip_len
+operator|-=
+name|olen
 expr_stmt|;
 block|}
 end_function

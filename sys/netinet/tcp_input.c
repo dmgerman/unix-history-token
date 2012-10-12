@@ -3193,13 +3193,6 @@ block|{
 name|ip_stripoptions
 argument_list|(
 name|m
-argument_list|,
-operator|(
-expr|struct
-name|mbuf
-operator|*
-operator|)
-literal|0
 argument_list|)
 expr_stmt|;
 name|off0
