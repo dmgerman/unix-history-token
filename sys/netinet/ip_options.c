@@ -2326,12 +2326,6 @@ argument_list|)
 operator|>>
 literal|2
 expr_stmt|;
-name|ip
-operator|->
-name|ip_len
-operator|-=
-name|olen
-expr_stmt|;
 block|}
 end_function
 
