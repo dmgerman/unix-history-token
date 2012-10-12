@@ -10342,6 +10342,11 @@ name|char
 modifier|*
 name|tp
 decl_stmt|;
+name|char
+name|endkey
+init|=
+literal|':'
+decl_stmt|;
 comment|/* 			 * scan forward to see if there is a port defined. 			 * so we can't use strlcpy.. 			 */
 name|i
 operator|=
@@ -10369,6 +10374,23 @@ expr_stmt|;
 name|p
 operator|++
 expr_stmt|;
+comment|/* 			 * an ipv6 address should start with a '[' in that case 			 * we should scan for a ']' 			 */
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+literal|'['
+condition|)
+block|{
+name|p
+operator|++
+expr_stmt|;
+name|endkey
+operator|=
+literal|']'
+expr_stmt|;
+block|}
 while|while
 condition|(
 operator|*
@@ -10378,7 +10400,7 @@ operator|(
 operator|*
 name|p
 operator|!=
-literal|':'
+name|endkey
 operator|)
 operator|&&
 operator|(
@@ -10398,6 +10420,20 @@ name|p
 operator|++
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|endkey
+operator|==
+literal|']'
+operator|&&
+operator|*
+name|p
+operator|==
+name|endkey
+condition|)
+name|p
+operator|++
+expr_stmt|;
 operator|*
 name|tp
 operator|=
