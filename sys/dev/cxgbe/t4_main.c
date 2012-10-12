@@ -15992,6 +15992,12 @@ condition|(
 name|arg
 operator|!=
 name|ifp
+operator|||
+name|ifp
+operator|->
+name|if_type
+operator|!=
+name|IFT_ETHER
 condition|)
 return|return;
 name|vlan
