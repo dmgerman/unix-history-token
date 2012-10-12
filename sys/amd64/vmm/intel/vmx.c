@@ -6165,8 +6165,6 @@ operator|->
 name|vm
 argument_list|,
 name|vcpu
-argument_list|,
-name|NULL
 argument_list|)
 condition|)
 name|panic
@@ -6271,8 +6269,6 @@ operator|->
 name|vm
 argument_list|,
 name|vcpu
-argument_list|,
-name|NULL
 argument_list|)
 condition|)
 name|panic

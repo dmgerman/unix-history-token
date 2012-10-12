@@ -125,6 +125,10 @@ directive|include
 file|"ppt.h"
 end_include
 
+begin_comment
+comment|/* XXX locking */
+end_comment
+
 begin_define
 define|#
 directive|define

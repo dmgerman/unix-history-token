@@ -21,6 +21,13 @@ name|vm
 struct_decl|;
 end_struct_decl
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|vmm_ipinum
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|void
 name|vmm_ipi_init
@@ -35,21 +42,6 @@ name|void
 name|vmm_ipi_cleanup
 parameter_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|vm_interrupt_hostcpu
-parameter_list|(
-name|struct
-name|vm
-modifier|*
-name|vm
-parameter_list|,
-name|int
-name|vcpu
 parameter_list|)
 function_decl|;
 end_function_decl
