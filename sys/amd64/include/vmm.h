@@ -1362,6 +1362,12 @@ block|{
 name|uint64_t
 name|cr3
 decl_stmt|;
+name|uint64_t
+name|gpa
+decl_stmt|;
+name|int
+name|rwx
+decl_stmt|;
 block|}
 name|paging
 struct|;
