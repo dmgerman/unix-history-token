@@ -147,10 +147,6 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|double
-name|__aligned
-argument_list|(
-literal|64
-argument_list|)
 comment|/*  * ln2/INTERVALS = L1+L2 (hi+lo decomposition for multiplication).  L1 must  * have at least 22 (= log2(|LDBL_MIN_EXP-extras|) + log2(INTERVALS)) lowest  * bits zero so that multiplication of it by n is exact.  */
 name|INV_L
 init|=
@@ -199,7 +195,7 @@ comment|/*  0x16c16c651633ae.0p-62 */
 end_comment
 
 begin_comment
-comment|/*  * 2^(i/INTERVALS) for i in [0,INTERVALS] is represented by two values where  * the first 53 bits of the significand is stored in hi and the next 53  * bits are in lo.  Tang's paper states that the trailing 6 bits of hi should  * be zero for his algorithm in both single and double precision, because  * the table is re-used in the implementation of expm1() where a floating  * point addition involving hi must be exact.  The conversion of a 53-bit  * double into a 64-bit long double gives 11 trailing bit, which are zero.  */
+comment|/*  * 2^(i/INTERVALS) for i in [0,INTERVALS] is represented by two values where  * the first 53 bits of the significand are stored in hi and the next 53  * bits are in lo.  Tang's paper states that the trailing 6 bits of hi must  * be zero for his algorithm in both single and double precision, because  * the table is re-used in the implementation of expm1() where a floating  * point addition involving hi must be exact.  Here hi is double, so  * converting it to long double gives 11 trailing zero bits.  */
 end_comment
 
 begin_struct
@@ -213,15 +209,12 @@ decl_stmt|;
 name|double
 name|lo
 decl_stmt|;
+comment|/* XXX should rename 's'. */
 block|}
 name|s
 index|[
 name|INTERVALS
 index|]
-name|__aligned
-argument_list|(
-literal|16
-argument_list|)
 init|=
 block|{
 literal|0x1p
