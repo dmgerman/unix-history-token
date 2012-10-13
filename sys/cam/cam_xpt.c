@@ -15089,11 +15089,6 @@ decl_stmt|;
 name|cam_status
 name|status
 decl_stmt|;
-name|int
-name|need_unlock
-init|=
-literal|0
-decl_stmt|;
 name|path
 operator|=
 operator|(
@@ -15114,13 +15109,6 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|path_id
-operator|!=
-name|CAM_BUS_WILDCARD
-condition|)
-block|{
 name|bus
 operator|=
 name|xpt_find_bus
@@ -15134,11 +15122,6 @@ name|bus
 operator|!=
 name|NULL
 condition|)
-block|{
-name|need_unlock
-operator|=
-literal|1
-expr_stmt|;
 name|CAM_SIM_LOCK
 argument_list|(
 name|bus
@@ -15146,8 +15129,6 @@ operator|->
 name|sim
 argument_list|)
 expr_stmt|;
-block|}
-block|}
 name|status
 operator|=
 name|xpt_compile_path
@@ -15165,7 +15146,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|need_unlock
+name|bus
+operator|!=
+name|NULL
 condition|)
 block|{
 name|CAM_SIM_UNLOCK
