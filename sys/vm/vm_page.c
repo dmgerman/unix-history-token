@@ -2605,7 +2605,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_sleep:  *  *	Sleep and release the page and page queues locks.  *  *	The object containing the given page must be locked.  */
+comment|/*  *	vm_page_sleep:  *  *	Sleep and release the page lock.  *  *	The object containing the given page must be locked.  */
 end_comment
 
 begin_function
@@ -2629,17 +2629,6 @@ name|object
 argument_list|,
 name|MA_OWNED
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|mtx_owned
-argument_list|(
-operator|&
-name|vm_page_queue_mtx
-argument_list|)
-condition|)
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -10590,14 +10579,6 @@ decl_stmt|;
 name|vm_pindex_t
 name|pindex
 decl_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|vm_page_queue_mtx
-argument_list|,
-name|MA_NOTOWNED
-argument_list|)
-expr_stmt|;
 name|vm_page_lock_assert
 argument_list|(
 name|m
