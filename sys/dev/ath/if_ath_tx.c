@@ -3059,9 +3059,9 @@ name|sc
 argument_list|,
 name|ATH_KTR_TX
 argument_list|,
-literal|4
+literal|3
 argument_list|,
-literal|"ath_tx_handoff: non-tdma: txq=%u, add bf=%p, qbusy=%d, "
+literal|"ath_tx_handoff: non-tdma: txq=%u, add bf=%p "
 literal|"depth=%d"
 argument_list|,
 name|txq
@@ -3069,8 +3069,6 @@ operator|->
 name|axq_qnum
 argument_list|,
 name|bf
-argument_list|,
-name|qbusy
 argument_list|,
 name|txq
 operator|->
