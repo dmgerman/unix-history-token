@@ -979,6 +979,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|vm_pageout_requeue
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Initialize a dummy page for marking the caller's place in the specified  * paging queue.  In principle, this function only needs to set the flag  * PG_MARKER.  Nonetheless, it sets the flag VPO_BUSY and initializes the hold  * count to one as safety precautions.  */
 end_comment
@@ -3033,7 +3044,7 @@ block|{
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
-name|vm_page_requeue
+name|vm_pageout_requeue
 argument_list|(
 name|p
 argument_list|)
@@ -3069,7 +3080,7 @@ expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
-name|vm_page_requeue
+name|vm_pageout_requeue
 argument_list|(
 name|p
 argument_list|)
@@ -3472,6 +3483,84 @@ end_endif
 begin_comment
 comment|/* !defined(NO_SWAPPING) */
 end_comment
+
+begin_comment
+comment|/*  *	vm_pageout_requeue:  *  *	Move the specified page to the tail of its present page queue.  *  *	The page queues must be locked.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|vm_pageout_requeue
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|)
+block|{
+name|struct
+name|vpgqueues
+modifier|*
+name|vpq
+decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_page_queue_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|m
+operator|->
+name|queue
+operator|!=
+name|PQ_NONE
+argument_list|,
+operator|(
+literal|"vm_pageout_requeue: page %p is not queued"
+operator|,
+name|m
+operator|)
+argument_list|)
+expr_stmt|;
+name|vpq
+operator|=
+operator|&
+name|vm_page_queues
+index|[
+name|m
+operator|->
+name|queue
+index|]
+expr_stmt|;
+name|TAILQ_REMOVE
+argument_list|(
+operator|&
+name|vpq
+operator|->
+name|pl
+argument_list|,
+name|m
+argument_list|,
+name|pageq
+argument_list|)
+expr_stmt|;
+name|TAILQ_INSERT_TAIL
+argument_list|(
+operator|&
+name|vpq
+operator|->
+name|pl
+argument_list|,
+name|m
+argument_list|,
+name|pageq
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/*  *	vm_pageout_scan does the dirty work for the pageout daemon.  */
@@ -4130,7 +4219,7 @@ name|queues_locked
 operator|=
 name|TRUE
 expr_stmt|;
-name|vm_page_requeue
+name|vm_pageout_requeue
 argument_list|(
 name|m
 argument_list|)
@@ -4246,7 +4335,7 @@ name|queues_locked
 operator|=
 name|TRUE
 expr_stmt|;
-name|vm_page_requeue
+name|vm_pageout_requeue
 argument_list|(
 name|m
 argument_list|)
@@ -4493,7 +4582,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|vm_page_requeue
+name|vm_pageout_requeue
 argument_list|(
 name|m
 argument_list|)
@@ -4914,7 +5003,7 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-name|vm_page_requeue
+name|vm_pageout_requeue
 argument_list|(
 name|m
 argument_list|)
@@ -5017,7 +5106,7 @@ literal|0
 operator|)
 condition|)
 block|{
-name|vm_page_requeue
+name|vm_pageout_requeue
 argument_list|(
 name|m
 argument_list|)
@@ -5113,7 +5202,7 @@ block|}
 block|}
 else|else
 block|{
-name|vm_page_requeue
+name|vm_pageout_requeue
 argument_list|(
 name|m
 argument_list|)
@@ -5915,7 +6004,7 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-name|vm_page_requeue
+name|vm_pageout_requeue
 argument_list|(
 name|m
 argument_list|)
@@ -5985,7 +6074,7 @@ name|act_count
 operator|=
 name|ACT_MAX
 expr_stmt|;
-name|vm_page_requeue
+name|vm_pageout_requeue
 argument_list|(
 name|m
 argument_list|)
@@ -6029,7 +6118,7 @@ argument_list|,
 name|ACT_DECLINE
 argument_list|)
 expr_stmt|;
-name|vm_page_requeue
+name|vm_pageout_requeue
 argument_list|(
 name|m
 argument_list|)
