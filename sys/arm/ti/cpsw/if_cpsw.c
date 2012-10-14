@@ -418,7 +418,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|cpsw_stop
+name|cpsw_stop_locked
 parameter_list|(
 name|struct
 name|cpsw_softc
@@ -2050,7 +2050,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|cpsw_stop
+name|cpsw_stop_locked
 argument_list|(
 name|sc
 argument_list|)
@@ -3403,7 +3403,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|cpsw_stop
+name|cpsw_stop_locked
 parameter_list|(
 name|struct
 name|cpsw_softc
@@ -3416,6 +3416,10 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
+name|CPSW_GLOBAL_LOCK_ASSERT
+argument_list|(
+argument|sc
+argument_list|)
 name|ifp
 operator|=
 name|sc
@@ -3606,7 +3610,7 @@ name|if_drv_flags
 operator|&
 name|IFF_DRV_RUNNING
 condition|)
-name|cpsw_stop
+name|cpsw_stop_locked
 argument_list|(
 name|sc
 argument_list|)
@@ -4676,7 +4680,7 @@ argument_list|,
 literal|"watchdog timeout\n"
 argument_list|)
 expr_stmt|;
-name|cpsw_stop
+name|cpsw_stop_locked
 argument_list|(
 name|sc
 argument_list|)
