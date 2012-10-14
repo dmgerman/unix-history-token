@@ -3219,6 +3219,13 @@ return|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|ATH_RX_MAX
+value|128
+end_define
+
 begin_function
 specifier|static
 name|void
@@ -3381,6 +3388,14 @@ argument_list|)
 expr_stmt|;
 do|do
 block|{
+comment|/* 		 * Don't process too many packets at a time; give the 		 * TX thread time to also run - otherwise the TX 		 * latency can jump by quite a bit, causing throughput 		 * degredation. 		 */
+if|if
+condition|(
+name|npkts
+operator|>=
+name|ATH_RX_MAX
+condition|)
+break|break;
 name|bf
 operator|=
 name|TAILQ_FIRST
@@ -3848,6 +3863,25 @@ block|}
 undef|#
 directive|undef
 name|PA2DESC
+comment|/* 	 * If we hit the maximum number of frames in this round, 	 * reschedule for another immediate pass.  This gives 	 * the TX and TX completion routines time to run, which 	 * will reduce latency. 	 */
+if|if
+condition|(
+name|npkts
+operator|>=
+name|ATH_RX_MAX
+condition|)
+name|taskqueue_enqueue
+argument_list|(
+name|sc
+operator|->
+name|sc_tq
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_rxtask
+argument_list|)
+expr_stmt|;
 name|ATH_PCU_LOCK
 argument_list|(
 name|sc
@@ -3865,6 +3899,12 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_undef
+undef|#
+directive|undef
+name|ATH_RX_MAX
+end_undef
 
 begin_comment
 comment|/*  * Only run the RX proc if it's not already running.  * Since this may get run as part of the reset/flush path,  * the task can't clash with an existing, running tasklet.  */
