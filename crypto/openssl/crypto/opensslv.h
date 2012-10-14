@@ -74,7 +74,7 @@ begin_define
 define|#
 directive|define
 name|SHLIB_VERSION_NUMBER
-value|"0.9.8"
+value|"6"
 end_define
 
 begin_endif
