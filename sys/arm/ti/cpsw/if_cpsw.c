@@ -4018,7 +4018,9 @@ name|m_hdr
 operator|.
 name|mh_data
 operator|+=
-literal|2
+name|bd
+operator|.
+name|bufoff
 expr_stmt|;
 name|sc
 operator|->
@@ -4027,13 +4029,15 @@ index|[
 name|i
 index|]
 operator|->
-name|m_len
+name|m_hdr
+operator|.
+name|mh_len
 operator|=
 name|bd
 operator|.
 name|pktlen
 operator|-
-literal|2
+literal|4
 expr_stmt|;
 name|sc
 operator|->
@@ -4050,7 +4054,7 @@ name|bd
 operator|.
 name|pktlen
 operator|-
-literal|2
+literal|4
 expr_stmt|;
 name|sc
 operator|->
