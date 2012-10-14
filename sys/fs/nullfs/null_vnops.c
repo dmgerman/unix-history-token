@@ -1969,7 +1969,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Do not allow the VOP_INACTIVE to be bypassed to the lower layer,  * since the reference count on the lower vnode is not related with  * our.  */
+comment|/*  * Do not allow the VOP_INACTIVE to be passed to the lower layer,  * since the reference count on the lower vnode is not related to  * ours.  */
 end_comment
 
 begin_function
