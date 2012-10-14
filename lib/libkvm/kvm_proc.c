@@ -487,6 +487,15 @@ condition|(
 name|proc
 operator|.
 name|p_state
+operator|==
+name|PRS_NEW
+condition|)
+continue|continue;
+if|if
+condition|(
+name|proc
+operator|.
+name|p_state
 operator|!=
 name|PRS_ZOMBIE
 condition|)
