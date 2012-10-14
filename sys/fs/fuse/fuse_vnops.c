@@ -846,7 +846,7 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
-name|DEBUG2G
+name|FS_DEBUG2G
 argument_list|(
 literal|"inode=%ju\n"
 argument_list|,
@@ -980,7 +980,7 @@ operator|->
 name|a_cred
 argument_list|)
 expr_stmt|;
-name|DEBUG2G
+name|FS_DEBUG2G
 argument_list|(
 literal|"err=%d accmode=0x%x\n"
 argument_list|,
@@ -2041,7 +2041,7 @@ name|struct
 name|fuse_dispatcher
 name|fdi
 decl_stmt|;
-name|DEBUG2G
+name|FS_DEBUG2G
 argument_list|(
 literal|"inode=%ju\n"
 argument_list|,
@@ -2498,7 +2498,7 @@ name|need_flush
 init|=
 literal|1
 decl_stmt|;
-name|DEBUG
+name|FS_DEBUG
 argument_list|(
 literal|"inode=%ju\n"
 argument_list|,
@@ -3007,7 +3007,7 @@ name|struct
 name|fuse_access_param
 name|facp
 decl_stmt|;
-name|DEBUG2G
+name|FS_DEBUG2G
 argument_list|(
 literal|"parent_inode=%ju - %*s\n"
 argument_list|,
@@ -3517,7 +3517,7 @@ comment|/* 	         * No we can't use negative caching, as the fs 	         * c
 if|#
 directive|if
 literal|0
-block|if ((cnp->cn_flags& MAKEENTRY)&& nameiop != CREATE) { 			DEBUG("inserting NULL into cache\n"); 			cache_enter(dvp, NULL, cnp); 		}
+block|if ((cnp->cn_flags& MAKEENTRY)&& nameiop != CREATE) { 			FS_DEBUG("inserting NULL into cache\n"); 			cache_enter(dvp, NULL, cnp); 		}
 endif|#
 directive|endif
 name|err
@@ -4286,7 +4286,7 @@ name|tmpvtype
 operator|==
 name|VLNK
 condition|)
-name|DEBUG
+name|FS_DEBUG
 argument_list|(
 literal|"weird, permission error with a symlink?\n"
 argument_list|)
@@ -4540,7 +4540,7 @@ name|isdir
 init|=
 literal|0
 decl_stmt|;
-name|DEBUG2G
+name|FS_DEBUG2G
 argument_list|(
 literal|"inode=%ju mode=0x%x\n"
 argument_list|,
@@ -4700,7 +4700,7 @@ name|ap
 operator|->
 name|a_cred
 decl_stmt|;
-name|DEBUG2G
+name|FS_DEBUG2G
 argument_list|(
 literal|"inode=%ju offset=%jd resid=%zd\n"
 argument_list|,
@@ -4816,7 +4816,7 @@ name|freefufh
 init|=
 literal|0
 decl_stmt|;
-name|DEBUG2G
+name|FS_DEBUG2G
 argument_list|(
 literal|"inode=%ju\n"
 argument_list|,
@@ -4880,7 +4880,7 @@ name|FUFH_RDONLY
 argument_list|)
 condition|)
 block|{
-name|DEBUG
+name|FS_DEBUG
 argument_list|(
 literal|"calling readdir() before open()"
 argument_list|)
@@ -5036,7 +5036,7 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
-name|DEBUG2G
+name|FS_DEBUG2G
 argument_list|(
 literal|"inode=%ju\n"
 argument_list|,
@@ -5266,7 +5266,7 @@ literal|"FUSE: no vnode data during recycling"
 argument_list|)
 expr_stmt|;
 block|}
-name|DEBUG
+name|FS_DEBUG
 argument_list|(
 literal|"inode=%ju\n"
 argument_list|,
@@ -5450,7 +5450,7 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
-name|DEBUG2G
+name|FS_DEBUG2G
 argument_list|(
 literal|"inode=%ju name=%*s\n"
 argument_list|,
@@ -5619,7 +5619,7 @@ name|err
 init|=
 literal|0
 decl_stmt|;
-name|DEBUG2G
+name|FS_DEBUG2G
 argument_list|(
 literal|"from: inode=%ju name=%*s -> to: inode=%ju name=%*s\n"
 argument_list|,
@@ -5706,7 +5706,7 @@ name|v_mount
 operator|)
 condition|)
 block|{
-name|DEBUG
+name|FS_DEBUG
 argument_list|(
 literal|"cross-device rename: %s -> %s\n"
 argument_list|,
@@ -5965,7 +5965,7 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
-name|DEBUG2G
+name|FS_DEBUG2G
 argument_list|(
 literal|"inode=%ju\n"
 argument_list|,
@@ -6127,7 +6127,7 @@ name|newsize
 init|=
 literal|0
 decl_stmt|;
-name|DEBUG2G
+name|FS_DEBUG2G
 argument_list|(
 literal|"inode=%ju\n"
 argument_list|,
@@ -6930,7 +6930,7 @@ decl_stmt|;
 name|size_t
 name|len
 decl_stmt|;
-name|DEBUG2G
+name|FS_DEBUG2G
 argument_list|(
 literal|"inode=%ju name=%*s\n"
 argument_list|,
@@ -7249,7 +7249,7 @@ name|vm_page_t
 modifier|*
 name|pages
 decl_stmt|;
-name|DEBUG2G
+name|FS_DEBUG2G
 argument_list|(
 literal|"heh\n"
 argument_list|)
@@ -7307,7 +7307,7 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-name|DEBUG
+name|FS_DEBUG
 argument_list|(
 literal|"called on non-cacheable vnode??\n"
 argument_list|)
@@ -7574,7 +7574,7 @@ name|count
 operator|)
 condition|)
 block|{
-name|DEBUG
+name|FS_DEBUG
 argument_list|(
 literal|"error %d\n"
 argument_list|,
@@ -7959,7 +7959,7 @@ decl_stmt|;
 name|vm_ooffset_t
 name|fsize
 decl_stmt|;
-name|DEBUG2G
+name|FS_DEBUG2G
 argument_list|(
 literal|"heh\n"
 argument_list|)
@@ -8054,7 +8054,7 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-name|DEBUG
+name|FS_DEBUG
 argument_list|(
 literal|"called on non-cacheable vnode??\n"
 argument_list|)

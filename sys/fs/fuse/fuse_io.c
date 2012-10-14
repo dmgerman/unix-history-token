@@ -487,7 +487,7 @@ condition|(
 name|directio
 condition|)
 block|{
-name|DEBUG
+name|FS_DEBUG
 argument_list|(
 literal|"direct read of vnode %ju via file handle %ju\n"
 argument_list|,
@@ -523,7 +523,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|DEBUG
+name|FS_DEBUG
 argument_list|(
 literal|"buffered read of vnode %ju\n"
 argument_list|,
@@ -559,7 +559,7 @@ condition|(
 name|directio
 condition|)
 block|{
-name|DEBUG
+name|FS_DEBUG
 argument_list|(
 literal|"direct write of vnode %ju via file handle %ju\n"
 argument_list|,
@@ -600,7 +600,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|DEBUG
+name|FS_DEBUG
 argument_list|(
 literal|"buffered write of vnode %ju\n"
 argument_list|,
@@ -705,7 +705,7 @@ argument_list|(
 name|vp
 argument_list|)
 decl_stmt|;
-name|DEBUG
+name|FS_DEBUG
 argument_list|(
 literal|"resid=%zx offset=%jx fsize=%jx\n"
 argument_list|,
@@ -805,7 +805,7 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
-name|DEBUG2G
+name|FS_DEBUG2G
 argument_list|(
 literal|"biosize %d, lbn %d, on %d\n"
 argument_list|,
@@ -982,7 +982,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|DEBUG2G
+name|FS_DEBUG2G
 argument_list|(
 literal|"feeding buffeater with %d bytes of buffer %p,"
 literal|" saying %d was asked for\n"
@@ -1026,7 +1026,7 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-name|DEBUG2G
+name|FS_DEBUG2G
 argument_list|(
 literal|"end of turn, err %d, uio->uio_resid %zd, n %d\n"
 argument_list|,
@@ -1204,7 +1204,7 @@ operator|->
 name|max_read
 argument_list|)
 expr_stmt|;
-name|DEBUG2G
+name|FS_DEBUG2G
 argument_list|(
 literal|"fri->fh %ju, fri->offset %ju, fri->size %ju\n"
 argument_list|,
@@ -1245,7 +1245,7 @@ condition|)
 goto|goto
 name|out
 goto|;
-name|DEBUG2G
+name|FS_DEBUG2G
 argument_list|(
 literal|"complete: got iosize=%d, requested fri.size=%zd; "
 literal|"resid=%zd offset=%ju\n"
@@ -1681,7 +1681,7 @@ literal|"ncl_write mode"
 operator|)
 argument_list|)
 expr_stmt|;
-name|DEBUG
+name|FS_DEBUG
 argument_list|(
 literal|"resid=%zx offset=%jx fsize=%jx\n"
 argument_list|,
@@ -1792,7 +1792,7 @@ operator|->
 name|uio_resid
 argument_list|)
 expr_stmt|;
-name|DEBUG2G
+name|FS_DEBUG2G
 argument_list|(
 literal|"lbn %ju, on %d, n %d, uio offset %ju, uio resid %zd\n"
 argument_list|,
@@ -1838,7 +1838,7 @@ name|bcount
 operator|=
 name|on
 expr_stmt|;
-name|DEBUG
+name|FS_DEBUG
 argument_list|(
 literal|"getting block from OS, bcount %d\n"
 argument_list|,
@@ -1987,7 +1987,7 @@ operator|*
 name|biosize
 expr_stmt|;
 block|}
-name|DEBUG
+name|FS_DEBUG
 argument_list|(
 literal|"getting block from OS, bcount %d\n"
 argument_list|,
@@ -2179,7 +2179,7 @@ operator|>
 name|bcount
 condition|)
 block|{
-name|DEBUG
+name|FS_DEBUG
 argument_list|(
 literal|"FUSE append race @%lx:%d\n"
 argument_list|,
@@ -2548,7 +2548,7 @@ operator|==
 name|BIO_WRITE
 argument_list|)
 expr_stmt|;
-name|DEBUG
+name|FS_DEBUG
 argument_list|(
 literal|"inode=%ju offset=%jd resid=%ld\n"
 argument_list|,
@@ -2940,7 +2940,7 @@ operator|&
 name|B_NEEDCOMMIT
 condition|)
 block|{
-name|DEBUG
+name|FS_DEBUG
 argument_list|(
 literal|"write: B_NEEDCOMMIT flags set\n"
 argument_list|)

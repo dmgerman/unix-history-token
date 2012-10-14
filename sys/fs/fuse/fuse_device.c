@@ -321,7 +321,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|DEBUG
+name|FS_DEBUG
 argument_list|(
 literal|"device %p\n"
 argument_list|,
@@ -360,7 +360,7 @@ name|fdata
 argument_list|)
 expr_stmt|;
 else|else
-name|DEBUG
+name|FS_DEBUG
 argument_list|(
 literal|"%s: device opened by thread %d.\n"
 argument_list|,
@@ -542,7 +542,7 @@ expr_stmt|;
 name|FUSE_UNLOCK
 argument_list|()
 expr_stmt|;
-name|DEBUG
+name|FS_DEBUG
 argument_list|(
 literal|"%s: device closed by thread %d.\n"
 argument_list|,
@@ -778,7 +778,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|DEBUG
+name|FS_DEBUG
 argument_list|(
 literal|"fuse device being read on thread %d\n"
 argument_list|,
@@ -830,7 +830,7 @@ name|data
 argument_list|)
 condition|)
 block|{
-name|DEBUG2G
+name|FS_DEBUG2G
 argument_list|(
 literal|"we know early on that reader should be kicked so we don't wait for news\n"
 argument_list|)
@@ -946,7 +946,7 @@ name|tick
 condition|)
 block|{
 comment|/* 		 * We can get here if fuse daemon suddenly terminates, 		 * eg, by being hit by a SIGKILL 		 * -- and some other cases, too, tho not totally clear, when 		 * (cv_signal/wakeup_one signals the whole process ?) 		 */
-name|DEBUG
+name|FS_DEBUG
 argument_list|(
 literal|"no message on thread #%d\n"
 argument_list|,
@@ -977,7 +977,7 @@ argument_list|)
 condition|)
 block|{
 comment|/* 		 * somebody somewhere -- eg., umount routine -- 		 * wants this liaison finished off 		 */
-name|DEBUG2G
+name|FS_DEBUG2G
 argument_list|(
 literal|"reader is to be sacked\n"
 argument_list|)
@@ -987,7 +987,7 @@ condition|(
 name|tick
 condition|)
 block|{
-name|DEBUG2G
+name|FS_DEBUG2G
 argument_list|(
 literal|"weird -- \"kick\" is set tho there is message\n"
 argument_list|)
@@ -1010,7 +1010,7 @@ operator|)
 return|;
 comment|/* This should make the daemon get off 					 * of us */
 block|}
-name|DEBUG
+name|FS_DEBUG
 argument_list|(
 literal|"message got on thread #%d\n"
 argument_list|,
@@ -1158,7 +1158,7 @@ argument_list|(
 name|data
 argument_list|)
 expr_stmt|;
-name|DEBUG2G
+name|FS_DEBUG2G
 argument_list|(
 literal|"daemon is stupid, kick it off...\n"
 argument_list|)
@@ -1227,7 +1227,7 @@ modifier|*
 name|uio
 parameter_list|)
 block|{
-name|DEBUG
+name|FS_DEBUG
 argument_list|(
 literal|"Out header -- len: %i, error: %i, unique: %llu; iovecs: %d\n"
 argument_list|,
@@ -1270,7 +1270,7 @@ operator|->
 name|len
 condition|)
 block|{
-name|DEBUG
+name|FS_DEBUG
 argument_list|(
 literal|"Format error: body size differs from size claimed by header\n"
 argument_list|)
@@ -1292,7 +1292,7 @@ operator|->
 name|error
 condition|)
 block|{
-name|DEBUG
+name|FS_DEBUG
 argument_list|(
 literal|"Format error: non zero error but message had a body\n"
 argument_list|)
@@ -1373,7 +1373,7 @@ name|found
 init|=
 literal|0
 decl_stmt|;
-name|DEBUG
+name|FS_DEBUG
 argument_list|(
 literal|"resid: %zd, iovcnt: %d, thread: %d\n"
 argument_list|,
@@ -1429,7 +1429,7 @@ name|fuse_out_header
 argument_list|)
 condition|)
 block|{
-name|DEBUG
+name|FS_DEBUG
 argument_list|(
 literal|"got less than a header!\n"
 argument_list|)
@@ -1519,7 +1519,7 @@ argument_list|,
 argument|x_tick
 argument_list|)
 block|{
-name|DEBUG
+name|FS_DEBUG
 argument_list|(
 literal|"bumped into callback #%llu\n"
 argument_list|,
@@ -1576,7 +1576,7 @@ name|tk_aw_handler
 condition|)
 block|{
 comment|/* 			 * We found a callback with proper handler. In this 			 * case the out header will be 0wnd by the callback, 			 * so the fun of freeing that is left for her. 			 * (Then, by all chance, she'll just get that's done 			 * via ticket_drop(), so no manual mucking 			 * around...) 			 */
-name|DEBUG
+name|FS_DEBUG
 argument_list|(
 literal|"pass ticket to a callback\n"
 argument_list|)
@@ -1612,7 +1612,7 @@ block|}
 else|else
 block|{
 comment|/* pretender doesn't wanna do anything with answer */
-name|DEBUG
+name|FS_DEBUG
 argument_list|(
 literal|"stuff devalidated, so we drop it\n"
 argument_list|)
@@ -1628,7 +1628,7 @@ block|}
 else|else
 block|{
 comment|/* no callback at all! */
-name|DEBUG
+name|FS_DEBUG
 argument_list|(
 literal|"erhm, no handler for this response\n"
 argument_list|)

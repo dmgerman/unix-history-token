@@ -45,7 +45,7 @@ end_endif
 begin_define
 define|#
 directive|define
-name|DEBUG
+name|FS_DEBUG
 parameter_list|(
 name|fmt
 parameter_list|,
@@ -57,7 +57,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|DEBUG2G
+name|FS_DEBUG2G
 parameter_list|(
 name|fmt
 parameter_list|,
@@ -75,7 +75,7 @@ name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-value|DEBUG(fmt, ## __VA_ARGS__)
+value|FS_DEBUG(fmt, ## __VA_ARGS__)
 end_define
 
 begin_define
@@ -87,7 +87,7 @@ name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-value|DEBUG(fmt, ## __VA_ARGS__)
+value|FS_DEBUG(fmt, ## __VA_ARGS__)
 end_define
 
 begin_define

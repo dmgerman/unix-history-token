@@ -909,7 +909,7 @@ name|fuse_filehandle
 modifier|*
 name|fufh
 decl_stmt|;
-name|DEBUG
+name|FS_DEBUG
 argument_list|(
 literal|"id=%jd type=%d\n"
 argument_list|,

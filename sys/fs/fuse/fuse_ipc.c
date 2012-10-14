@@ -1005,7 +1005,7 @@ name|ftick
 init|=
 name|mem
 decl_stmt|;
-name|DEBUG
+name|FS_DEBUG
 argument_list|(
 literal|"ftick=%p\n"
 argument_list|,
@@ -1099,7 +1099,7 @@ name|ftick
 init|=
 name|mem
 decl_stmt|;
-name|DEBUG
+name|FS_DEBUG
 argument_list|(
 literal|"ftick=%p\n"
 argument_list|,
@@ -1864,7 +1864,7 @@ modifier|*
 name|data
 parameter_list|)
 block|{
-name|DEBUG
+name|FS_DEBUG
 argument_list|(
 literal|"data=%p data.mp=%p data.fdev=%p data.flags=%04x\n"
 argument_list|,
@@ -1883,7 +1883,7 @@ operator|->
 name|dataflags
 argument_list|)
 expr_stmt|;
-name|DEBUG
+name|FS_DEBUG
 argument_list|(
 literal|"destroy: data=%p\n"
 argument_list|,

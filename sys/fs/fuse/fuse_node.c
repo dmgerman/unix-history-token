@@ -664,7 +664,7 @@ name|err
 init|=
 literal|0
 decl_stmt|;
-name|DEBUG
+name|FS_DEBUG
 argument_list|(
 literal|"been asked for vno #%ju\n"
 argument_list|,
@@ -749,7 +749,7 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-name|DEBUG
+name|FS_DEBUG
 argument_list|(
 literal|"vnode taken from hash\n"
 argument_list|)
@@ -1321,7 +1321,7 @@ name|err
 init|=
 literal|0
 decl_stmt|;
-name|DEBUG
+name|FS_DEBUG
 argument_list|(
 literal|"inode=%ju size=%ju\n"
 argument_list|,
@@ -1593,7 +1593,7 @@ argument_list|,
 name|cred
 argument_list|)
 expr_stmt|;
-name|DEBUG
+name|FS_DEBUG
 argument_list|(
 literal|"refreshed file size: %jd\n"
 argument_list|,
@@ -1647,7 +1647,7 @@ name|err
 init|=
 literal|0
 decl_stmt|;
-name|DEBUG
+name|FS_DEBUG
 argument_list|(
 literal|"inode=%ju oldsize=%ju newsize=%ju\n"
 argument_list|,

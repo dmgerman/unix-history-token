@@ -996,7 +996,7 @@ operator|&
 name|err
 argument_list|)
 expr_stmt|;
-name|DEBUG2G
+name|FS_DEBUG2G
 argument_list|(
 literal|"mntopts 0x%jx\n"
 argument_list|,
@@ -1027,7 +1027,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|DEBUG
+name|FS_DEBUG
 argument_list|(
 literal|"invalid or not opened device: data=%p\n"
 argument_list|,
@@ -1096,7 +1096,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|DEBUG
+name|FS_DEBUG
 argument_list|(
 literal|"invalid or not opened device: data=%p data.mp=%p\n"
 argument_list|,
@@ -1132,7 +1132,7 @@ name|data
 argument_list|)
 condition|)
 block|{
-name|DEBUG
+name|FS_DEBUG
 argument_list|(
 literal|"device is dead during mount: data=%p\n"
 argument_list|,
@@ -1368,7 +1368,7 @@ operator|-
 name|len
 argument_list|)
 expr_stmt|;
-name|DEBUG2G
+name|FS_DEBUG2G
 argument_list|(
 literal|"mp %p: %s\n"
 argument_list|,
@@ -1409,7 +1409,7 @@ name|mp
 condition|)
 block|{
 comment|/* 			 * Destroy device only if we acquired reference to 			 * it 			 */
-name|DEBUG
+name|FS_DEBUG
 argument_list|(
 literal|"mount failed, destroy device: data=%p mp=%p"
 literal|" err=%d\n"
@@ -1834,7 +1834,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|DEBUG
+name|FS_DEBUG
 argument_list|(
 literal|"new root vnode\n"
 argument_list|)
@@ -1867,7 +1867,7 @@ operator|*
 name|vpp
 condition|)
 block|{
-name|DEBUG
+name|FS_DEBUG
 argument_list|(
 literal|"root vnode race\n"
 argument_list|)
@@ -1950,7 +1950,7 @@ name|fuse_data
 modifier|*
 name|data
 decl_stmt|;
-name|DEBUG2G
+name|FS_DEBUG2G
 argument_list|(
 literal|"mp %p: %s\n"
 argument_list|,
@@ -2121,7 +2121,7 @@ operator|.
 name|frsize
 expr_stmt|;
 comment|/* cast from uint32_t to uint64_t */
-name|DEBUG
+name|FS_DEBUG
 argument_list|(
 literal|"fuse_statfs_out -- blocks: %llu, bfree: %llu, bavail: %llu, "
 literal|"fil	es: %llu, ffree: %llu, bsize: %i, namelen: %i\n"
