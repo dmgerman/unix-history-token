@@ -2405,6 +2405,11 @@ name|sc_txqtask
 decl_stmt|;
 comment|/* tx proc processing */
 name|struct
+name|task
+name|sc_txsndtask
+decl_stmt|;
+comment|/* tx send processing */
+name|struct
 name|ath_descdma
 name|sc_txcompdma
 decl_stmt|;
