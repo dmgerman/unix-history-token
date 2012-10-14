@@ -3418,8 +3418,9 @@ name|ifp
 decl_stmt|;
 name|CPSW_GLOBAL_LOCK_ASSERT
 argument_list|(
-argument|sc
+name|sc
 argument_list|)
+expr_stmt|;
 name|ifp
 operator|=
 name|sc
