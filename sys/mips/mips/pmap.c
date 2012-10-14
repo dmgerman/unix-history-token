@@ -6291,9 +6291,8 @@ operator|=
 operator|*
 name|pte
 expr_stmt|;
-name|KASSERT
-argument_list|(
-operator|!
+if|if
+condition|(
 name|pte_test
 argument_list|(
 operator|&
@@ -6301,12 +6300,8 @@ name|oldpte
 argument_list|,
 name|PTE_W
 argument_list|)
-argument_list|,
-operator|(
-literal|"wired pte for unwired page"
-operator|)
-argument_list|)
-expr_stmt|;
+condition|)
+continue|continue;
 if|if
 condition|(
 name|is_kernel_pmap
