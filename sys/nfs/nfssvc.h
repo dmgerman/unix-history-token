@@ -199,6 +199,20 @@ begin_comment
 comment|/* modifier for GETSTATS */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NFSSVC_SUSPENDNFSD
+value|0x04000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFSSVC_RESUMENFSD
+value|0x08000000
+end_define
+
 begin_endif
 endif|#
 directive|endif
