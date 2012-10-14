@@ -1248,7 +1248,7 @@ value|TAILQ_LAST(&(_tq)->axq_q, _field)
 end_define
 
 begin_comment
-comment|/*  * These are for the TID software queue and filtered frames queues.  */
+comment|/*  * These are for the TID software queue.  */
 end_comment
 
 begin_define
@@ -1313,6 +1313,74 @@ parameter_list|,
 name|_field
 parameter_list|)
 value|TAILQ_LAST(&(_tq)->tid_q, _field)
+end_define
+
+begin_comment
+comment|/*  * These are for the TID filtered frame queue  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATH_TID_FILT_INSERT_HEAD
+parameter_list|(
+name|_tq
+parameter_list|,
+name|_elm
+parameter_list|,
+name|_field
+parameter_list|)
+value|do { \ 	TAILQ_INSERT_HEAD(&(_tq)->filtq.tid_q, (_elm), _field); \ 	(_tq)->axq_depth++; \ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TID_FILT_INSERT_TAIL
+parameter_list|(
+name|_tq
+parameter_list|,
+name|_elm
+parameter_list|,
+name|_field
+parameter_list|)
+value|do { \ 	TAILQ_INSERT_TAIL(&(_tq)->filtq.tid_q, (_elm), _field); \ 	(_tq)->axq_depth++; \ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TID_FILT_REMOVE
+parameter_list|(
+name|_tq
+parameter_list|,
+name|_elm
+parameter_list|,
+name|_field
+parameter_list|)
+value|do { \ 	TAILQ_REMOVE(&(_tq)->filtq.tid_q, _elm, _field); \ 	(_tq)->axq_depth--; \ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TID_FILT_FIRST
+parameter_list|(
+name|_tq
+parameter_list|)
+value|TAILQ_FIRST(&(_tq)->filtq.tid_q)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TID_FILT_LAST
+parameter_list|(
+name|_tq
+parameter_list|,
+name|_field
+parameter_list|)
+value|TAILQ_LAST(&(_tq)->filtq.tid_q,_field)
 end_define
 
 begin_struct
