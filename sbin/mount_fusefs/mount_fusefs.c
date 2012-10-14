@@ -460,11 +460,6 @@ name|iovec
 modifier|*
 name|iov
 decl_stmt|;
-name|char
-name|ch
-init|=
-literal|'\0'
-decl_stmt|;
 name|int
 name|mntflags
 decl_stmt|,
@@ -536,6 +531,11 @@ name|int
 name|__altflags
 init|=
 name|DEFAULT_MOUNT_FLAGS
+decl_stmt|;
+name|int
+name|ch
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|mntopt
