@@ -4773,6 +4773,17 @@ argument_list|(
 name|cpu
 argument_list|)
 expr_stmt|;
+name|acpi_UserNotify
+argument_list|(
+literal|"PROCESSOR"
+argument_list|,
+name|sc
+operator|->
+name|cpu_handle
+argument_list|,
+name|notify
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
