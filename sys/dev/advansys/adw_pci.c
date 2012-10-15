@@ -942,20 +942,9 @@ name|error
 operator|)
 return|;
 comment|/* Ensure busmastering is enabled */
-name|command
-operator||=
-name|PCIM_CMD_BUSMASTEREN
-expr_stmt|;
-name|pci_write_config
+name|pci_enable_busmaster
 argument_list|(
 name|dev
-argument_list|,
-name|PCIR_COMMAND
-argument_list|,
-name|command
-argument_list|,
-comment|/*bytes*/
-literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Allocate a dmatag for our transfer DMA maps */
@@ -1001,11 +990,10 @@ comment|/* flags	*/
 literal|0
 argument_list|,
 comment|/* lockfunc	*/
-name|busdma_lock_mutex
+name|NULL
 argument_list|,
 comment|/* lockarg	*/
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 operator|&
 name|adw
@@ -1025,14 +1013,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: Could not allocate DMA tag - error %d\n"
+name|dev
 argument_list|,
-name|adw_name
-argument_list|(
-name|adw
-argument_list|)
+literal|"Could not allocate DMA tag - error %d\n"
 argument_list|,
 name|error
 argument_list|)
