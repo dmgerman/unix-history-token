@@ -417,6 +417,10 @@ name|sc_switchtype
 operator|=
 name|AR8X16_SWITCH_AR7240
 expr_stmt|;
+name|id
+operator|=
+literal|0
+expr_stmt|;
 goto|goto
 name|done
 goto|;
