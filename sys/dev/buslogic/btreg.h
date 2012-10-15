@@ -2048,6 +2048,10 @@ decl_stmt|;
 name|bus_dmamap_t
 name|dmamap
 decl_stmt|;
+name|struct
+name|callout
+name|timer
+decl_stmt|;
 name|bt_sg_t
 modifier|*
 name|sg_list
@@ -2111,11 +2115,9 @@ name|void
 modifier|*
 name|ih
 decl_stmt|;
-name|bus_space_tag_t
-name|tag
-decl_stmt|;
-name|bus_space_handle_t
-name|bsh
+name|struct
+name|mtx
+name|lock
 decl_stmt|;
 name|struct
 name|cam_sim
@@ -2250,9 +2252,6 @@ name|u_int
 name|max_sg
 decl_stmt|;
 name|u_int
-name|unit
-decl_stmt|;
-name|u_int
 name|scsi_id
 decl_stmt|;
 name|u_int32_t
@@ -2346,13 +2345,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_decl_stmt
-specifier|extern
-name|u_long
-name|bt_unit
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#
@@ -2584,10 +2576,10 @@ name|bt_inb
 parameter_list|(
 name|bt
 parameter_list|,
-name|port
+name|reg
 parameter_list|)
 define|\
-value|bus_space_read_1((bt)->tag, (bt)->bsh, port)
+value|bus_read_1((bt)->port, reg)
 end_define
 
 begin_define
@@ -2597,12 +2589,12 @@ name|bt_outb
 parameter_list|(
 name|bt
 parameter_list|,
-name|port
+name|reg
 parameter_list|,
 name|value
 parameter_list|)
 define|\
-value|bus_space_write_1((bt)->tag, (bt)->bsh, port, value)
+value|bus_write_1((bt)->port, reg, value)
 end_define
 
 begin_endif
