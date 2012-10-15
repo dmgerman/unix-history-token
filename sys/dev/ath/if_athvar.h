@@ -22,6 +22,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<machine/atomic.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/ath/ath_hal/ah.h>
 end_include
 
@@ -467,6 +473,10 @@ name|mtx
 name|an_mtx
 decl_stmt|;
 comment|/* protecting the ath_node state */
+name|uint32_t
+name|an_swq_depth
+decl_stmt|;
+comment|/* how many SWQ packets for this 					   node */
 comment|/* variable-length rate control state follows */
 block|}
 struct|;
@@ -1262,7 +1272,7 @@ name|_elm
 parameter_list|,
 name|_field
 parameter_list|)
-value|do { \ 	TAILQ_INSERT_HEAD(&(_tq)->tid_q, (_elm), _field); \ 	(_tq)->axq_depth++; \ } while (0)
+value|do { \ 	TAILQ_INSERT_HEAD(&(_tq)->tid_q, (_elm), _field); \ 	(_tq)->axq_depth++; \ 	atomic_add_rel_32(&((_tq)->an)->an_swq_depth, 1); \ } while (0)
 end_define
 
 begin_define
@@ -1276,7 +1286,7 @@ name|_elm
 parameter_list|,
 name|_field
 parameter_list|)
-value|do { \ 	TAILQ_INSERT_TAIL(&(_tq)->tid_q, (_elm), _field); \ 	(_tq)->axq_depth++; \ } while (0)
+value|do { \ 	TAILQ_INSERT_TAIL(&(_tq)->tid_q, (_elm), _field); \ 	(_tq)->axq_depth++; \ 	atomic_add_rel_32(&((_tq)->an)->an_swq_depth, 1); \ } while (0)
 end_define
 
 begin_define
@@ -1290,7 +1300,7 @@ name|_elm
 parameter_list|,
 name|_field
 parameter_list|)
-value|do { \ 	TAILQ_REMOVE(&(_tq)->tid_q, _elm, _field); \ 	(_tq)->axq_depth--; \ } while (0)
+value|do { \ 	TAILQ_REMOVE(&(_tq)->tid_q, _elm, _field); \ 	(_tq)->axq_depth--; \ 	atomic_subtract_rel_32(&((_tq)->an)->an_swq_depth, 1); \ } while (0)
 end_define
 
 begin_define
@@ -1330,7 +1340,7 @@ name|_elm
 parameter_list|,
 name|_field
 parameter_list|)
-value|do { \ 	TAILQ_INSERT_HEAD(&(_tq)->filtq.tid_q, (_elm), _field); \ 	(_tq)->axq_depth++; \ } while (0)
+value|do { \ 	TAILQ_INSERT_HEAD(&(_tq)->filtq.tid_q, (_elm), _field); \ 	(_tq)->axq_depth++; \ 	atomic_add_rel_32(&((_tq)->an)->an_swq_depth, 1); \ } while (0)
 end_define
 
 begin_define
@@ -1344,7 +1354,7 @@ name|_elm
 parameter_list|,
 name|_field
 parameter_list|)
-value|do { \ 	TAILQ_INSERT_TAIL(&(_tq)->filtq.tid_q, (_elm), _field); \ 	(_tq)->axq_depth++; \ } while (0)
+value|do { \ 	TAILQ_INSERT_TAIL(&(_tq)->filtq.tid_q, (_elm), _field); \ 	(_tq)->axq_depth++; \ 	atomic_add_rel_32(&((_tq)->an)->an_swq_depth, 1); \ } while (0)
 end_define
 
 begin_define
@@ -1358,7 +1368,7 @@ name|_elm
 parameter_list|,
 name|_field
 parameter_list|)
-value|do { \ 	TAILQ_REMOVE(&(_tq)->filtq.tid_q, _elm, _field); \ 	(_tq)->axq_depth--; \ } while (0)
+value|do { \ 	TAILQ_REMOVE(&(_tq)->filtq.tid_q, _elm, _field); \ 	(_tq)->axq_depth--; \ 	atomic_subtract_rel_32(&((_tq)->an)->an_swq_depth, 1); \ } while (0)
 end_define
 
 begin_define
