@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/conf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/eventhandler.h>
 end_include
 
@@ -158,12 +164,6 @@ comment|/* dpt_isa.c, dpt_eisa.c, and dpt_pci.c need this in a central place */
 end_comment
 
 begin_decl_stmt
-name|int
-name|dpt_controllers_present
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|devclass_t
 name|dpt_devclass
 decl_stmt|;
@@ -186,7 +186,7 @@ parameter_list|,
 name|port
 parameter_list|)
 define|\
-value|bus_space_read_4((dpt)->tag, (dpt)->bsh, port)
+value|bus_read_4((dpt)->io_res, (dpt)->io_offset + port)
 end_define
 
 begin_define
@@ -199,7 +199,7 @@ parameter_list|,
 name|port
 parameter_list|)
 define|\
-value|bus_space_read_1((dpt)->tag, (dpt)->bsh, port)
+value|bus_read_1((dpt)->io_res, (dpt)->io_offset + port)
 end_define
 
 begin_define
@@ -214,7 +214,7 @@ parameter_list|,
 name|value
 parameter_list|)
 define|\
-value|bus_space_write_4((dpt)->tag, (dpt)->bsh, port, value)
+value|bus_write_4((dpt)->io_res, (dpt)->io_offset + port, value)
 end_define
 
 begin_define
@@ -229,7 +229,7 @@ parameter_list|,
 name|value
 parameter_list|)
 define|\
-value|bus_space_write_1((dpt)->tag, (dpt)->bsh, port, value)
+value|bus_write_1((dpt)->io_res, (dpt)->io_offset + port, value)
 end_define
 
 begin_comment
@@ -547,6 +547,18 @@ name|struct
 name|cam_sim
 modifier|*
 name|sim
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|dpt_intr_locked
+parameter_list|(
+name|dpt_softc_t
+modifier|*
+name|dpt
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1000,14 +1012,24 @@ name|dpt_ccb
 operator|*
 name|dccb
 block|;
-name|int
-name|s
-block|;
-name|s
-operator|=
-name|splcam
-argument_list|()
-block|;
+if|if
+condition|(
+operator|!
+name|dumping
+condition|)
+name|mtx_assert
+argument_list|(
+operator|&
+name|dpt
+operator|->
+name|lock
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 operator|(
@@ -1041,9 +1063,6 @@ name|free_dccbs
 operator|--
 expr_stmt|;
 block|}
-end_expr_stmt
-
-begin_elseif
 elseif|else
 if|if
 condition|(
@@ -1077,13 +1096,13 @@ name|dccb
 operator|==
 name|NULL
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"dpt%d: Can't malloc DCCB\n"
-argument_list|,
 name|dpt
 operator|->
-name|unit
+name|dev
+argument_list|,
+literal|"Can't malloc DCCB\n"
 argument_list|)
 expr_stmt|;
 else|else
@@ -1105,15 +1124,7 @@ operator|--
 expr_stmt|;
 block|}
 block|}
-end_elseif
-
-begin_expr_stmt
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+end_if
 
 begin_return
 return|return
@@ -1140,13 +1151,20 @@ modifier|*
 name|dccb
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splcam
-argument_list|()
+if|if
+condition|(
+operator|!
+name|dumping
+condition|)
+name|mtx_assert
+argument_list|(
+operator|&
+name|dpt
+operator|->
+name|lock
+argument_list|,
+name|MA_OWNED
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1259,11 +1277,6 @@ operator|++
 name|dpt
 operator|->
 name|free_dccbs
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -1596,7 +1609,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Allocate another chunk of CCB's. Return count of entries added.  * Assumed to be called at splcam().  */
+comment|/*  * Allocate another chunk of CCB's. Return count of entries added.  */
 end_comment
 
 begin_function
@@ -1632,6 +1645,21 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|dumping
+condition|)
+name|mtx_assert
+argument_list|(
+operator|&
+name|dpt
+operator|->
+name|lock
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|next_ccb
 operator|=
 operator|&
@@ -1764,6 +1792,21 @@ operator|!=
 literal|0
 condition|)
 break|break;
+name|callout_init_mtx
+argument_list|(
+operator|&
+name|next_ccb
+operator|->
+name|timer
+argument_list|,
+operator|&
+name|dpt
+operator|->
+name|lock
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|next_ccb
 operator|->
 name|sg_list
@@ -1959,6 +2002,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 block|}
@@ -1980,17 +2025,6 @@ name|NULL
 operator|)
 return|;
 block|}
-comment|/* 	 * If we have one, clean it up. 	 */
-name|bzero
-argument_list|(
-name|conf
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|dpt_conf_t
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Reset the controller. 	 */
 name|outb
 argument_list|(
@@ -2279,11 +2313,18 @@ name|int
 name|ndx
 decl_stmt|;
 name|int
-name|ospl
-decl_stmt|;
-name|int
 name|result
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|dpt
+operator|->
+name|lock
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|cp
 operator|=
 operator|&
@@ -2412,11 +2453,6 @@ argument_list|(
 name|size
 argument_list|)
 expr_stmt|;
-name|ospl
-operator|=
-name|splcam
-argument_list|()
-expr_stmt|;
 comment|/* 	 * This could be a simple for loop, but we suspected the compiler To 	 * have optimized it a bit too much. Wait for the controller to 	 * become ready 	 */
 while|while
 condition|(
@@ -2484,18 +2520,13 @@ name|dpt
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"dpt%d WARNING: Get_conf() RSUS failed.\n"
-argument_list|,
 name|dpt
 operator|->
-name|unit
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|ospl
+name|dev
+argument_list|,
+literal|"WARNING: Get_conf() RSUS failed.\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2541,21 +2572,16 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"dpt%d WARNING: Get_conf() failed (%d) to send "
-literal|"EATA_CMD_DMA_READ_CONFIG\n"
-argument_list|,
 name|dpt
 operator|->
-name|unit
+name|dev
+argument_list|,
+literal|"WARNING: Get_conf() failed (%d) to send "
+literal|"EATA_CMD_DMA_READ_CONFIG\n"
 argument_list|,
 name|result
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|ospl
 argument_list|)
 expr_stmt|;
 return|return
@@ -2611,11 +2637,6 @@ argument_list|(
 name|dpt
 argument_list|,
 name|HA_RSTATUS
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|ospl
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Check the status carefully.  Return only if the 	 * command was successful. 	 */
@@ -2729,14 +2750,21 @@ name|int
 name|result
 decl_stmt|;
 name|int
-name|ospl
-decl_stmt|;
-name|int
 name|ndx
 decl_stmt|;
 name|u_int8_t
 name|status
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|dpt
+operator|->
+name|lock
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Default setting, for best perfromance.. 	 * This is what virtually all cards default to.. 	 */
 name|dpt
 operator|->
@@ -2930,11 +2958,6 @@ argument_list|(
 literal|512
 argument_list|)
 expr_stmt|;
-name|ospl
-operator|=
-name|splcam
-argument_list|()
-expr_stmt|;
 name|result
 operator|=
 name|dpt_send_eata_command
@@ -2963,21 +2986,16 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"dpt%d WARNING: detect_cache() failed (%d) to send "
-literal|"EATA_CMD_DMA_SEND_CP\n"
-argument_list|,
 name|dpt
 operator|->
-name|unit
+name|dev
+argument_list|,
+literal|"WARNING: detect_cache() failed (%d) to send "
+literal|"EATA_CMD_DMA_SEND_CP\n"
 argument_list|,
 name|result
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|ospl
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3031,11 +3049,6 @@ argument_list|,
 name|HA_RSTATUS
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|ospl
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Sanity check 	 */
 if|if
 condition|(
@@ -3074,13 +3087,13 @@ literal|1
 condition|)
 block|{
 comment|/* 		 * DPT Log Page layout error 		 */
-name|printf
+name|device_printf
 argument_list|(
-literal|"dpt%d: NOTICE: Log Page (1) layout error\n"
-argument_list|,
 name|dpt
 operator|->
-name|unit
+name|dev
+argument_list|,
+literal|"NOTICE: Log Page (1) layout error\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3202,7 +3215,7 @@ modifier|*
 name|sim
 parameter_list|)
 block|{
-name|dpt_intr
+name|dpt_intr_locked
 argument_list|(
 name|cam_sim_softc
 argument_list|(
@@ -3248,9 +3261,21 @@ name|dpt_softc
 modifier|*
 name|dpt
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
+if|if
+condition|(
+operator|!
+name|dumping
+condition|)
+name|mtx_assert
+argument_list|(
+operator|&
+name|dpt
+operator|->
+name|lock
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|dccb
 operator|=
 operator|(
@@ -3292,14 +3317,14 @@ name|error
 operator|!=
 name|EFBIG
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"dpt%d: Unexepected error 0x%x returned from "
-literal|"bus_dmamap_load\n"
-argument_list|,
 name|dpt
 operator|->
-name|unit
+name|dev
+argument_list|,
+literal|"Unexepected error 0x%x returned from "
+literal|"bus_dmamap_load\n"
 argument_list|,
 name|error
 argument_list|)
@@ -3550,11 +3575,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|s
-operator|=
-name|splcam
-argument_list|()
-expr_stmt|;
 comment|/* 	 * Last time we need to check if this CCB needs to 	 * be aborted. 	 */
 if|if
 condition|(
@@ -3596,11 +3616,6 @@ argument_list|(
 name|ccb
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
 name|dccb
@@ -3634,20 +3649,12 @@ operator|.
 name|le
 argument_list|)
 expr_stmt|;
-name|ccb
-operator|->
-name|ccb_h
-operator|.
-name|timeout_ch
-operator|=
-name|timeout
+name|callout_reset
 argument_list|(
-name|dpttimeout
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
+operator|&
 name|dccb
+operator|->
+name|timer
 argument_list|,
 operator|(
 name|ccb
@@ -3660,6 +3667,10 @@ name|hz
 operator|)
 operator|/
 literal|1000
+argument_list|,
+name|dpttimeout
+argument_list|,
+name|dccb
 argument_list|)
 expr_stmt|;
 if|if
@@ -3732,11 +3743,6 @@ name|ccb
 argument_list|)
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -3786,6 +3792,16 @@ operator|)
 name|cam_sim_softc
 argument_list|(
 name|sim
+argument_list|)
+expr_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|dpt
+operator|->
+name|lock
+argument_list|,
+name|MA_OWNED
 argument_list|)
 expr_stmt|;
 if|if
@@ -3918,24 +3934,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splcam
-argument_list|()
-expr_stmt|;
 name|dpt
 operator|->
 name|resource_shortage
 operator|=
 literal|1
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 name|xpt_freeze_simq
 argument_list|(
@@ -4371,16 +4374,8 @@ literal|0
 condition|)
 block|{
 name|int
-name|s
-decl_stmt|;
-name|int
 name|error
 decl_stmt|;
-name|s
-operator|=
-name|splsoftvm
-argument_list|()
-expr_stmt|;
 name|error
 operator|=
 name|bus_dmamap_load
@@ -4431,11 +4426,6 @@ operator||=
 name|CAM_RELEASE_SIMQ
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -5059,7 +5049,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This routine will try to send an EATA command to the DPT HBA.  * It will, by default, try 20,000 times, waiting 50us between tries.  * It returns 0 on success and 1 on failure.  * It is assumed to be called at splcam().  */
+comment|/*  * This routine will try to send an EATA command to the DPT HBA.  * It will, by default, try 20,000 times, waiting 50us between tries.  * It returns 0 on success and 1 on failure.  */
 end_comment
 
 begin_function
@@ -5379,39 +5369,18 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|dpt
-operator|->
-name|tag
-operator|=
-name|rman_get_bustag
+name|mtx_init
 argument_list|(
+operator|&
 name|dpt
 operator|->
-name|io_res
-argument_list|)
-expr_stmt|;
-name|dpt
-operator|->
-name|bsh
-operator|=
-name|rman_get_bushandle
-argument_list|(
-name|dpt
-operator|->
-name|io_res
-argument_list|)
-operator|+
-name|dpt
-operator|->
-name|io_offset
-expr_stmt|;
-name|dpt
-operator|->
-name|unit
-operator|=
-name|device_get_unit
-argument_list|(
-name|dev
+name|lock
+argument_list|,
+literal|"dpt"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|SLIST_INIT
@@ -5631,6 +5600,14 @@ literal|0
 case|:
 break|break;
 block|}
+name|mtx_destroy
+argument_list|(
+operator|&
+name|dpt
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -5976,16 +5953,24 @@ operator|->
 name|sg_maps
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|dpt
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DPT_RESET_BOARD
-name|printf
+name|device_printf
 argument_list|(
-literal|"dpt%d: resetting HBA\n"
-argument_list|,
 name|dpt
 operator|->
-name|unit
+name|dev
+argument_list|,
+literal|"resetting HBA\n"
 argument_list|)
 expr_stmt|;
 name|dpt_outb
@@ -6046,11 +6031,10 @@ comment|/* flags	*/
 literal|0
 argument_list|,
 comment|/* lockfunc	*/
-name|busdma_lock_mutex
+name|NULL
 argument_list|,
 comment|/* lockarg	*/
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 operator|&
 name|dpt
@@ -6267,20 +6251,18 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"dpt%d: Failed to get board configuration\n"
-argument_list|,
 name|dpt
 operator|->
-name|unit
+name|dev
+argument_list|,
+literal|"Failed to get board configuration\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|retval
-operator|)
-return|;
+goto|goto
+name|error_exit
+goto|;
 block|}
 name|bcopy
 argument_list|(
@@ -6355,20 +6337,18 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"dpt%d: Failed to get inquiry information\n"
-argument_list|,
 name|dpt
 operator|->
-name|unit
+name|dev
+argument_list|,
+literal|"Failed to get inquiry information\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|retval
-operator|)
-return|;
+goto|goto
+name|error_exit
+goto|;
 block|}
 name|bcopy
 argument_list|(
@@ -6634,14 +6614,14 @@ operator|>
 literal|256
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"dpt%d: Max CCBs reduced from %d to "
-literal|"256 due to tag algorithm\n"
-argument_list|,
 name|dpt
 operator|->
-name|unit
+name|dev
+argument_list|,
+literal|"Max CCBs reduced from %d to "
+literal|"256 due to tag algorithm\n"
 argument_list|,
 name|dpt
 operator|->
@@ -6794,7 +6774,9 @@ name|busdma_lock_mutex
 argument_list|,
 comment|/* lockarg	*/
 operator|&
-name|Giant
+name|dpt
+operator|->
+name|lock
 argument_list|,
 operator|&
 name|dpt
@@ -6805,9 +6787,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"dpt: bus_dma_tag_create(...,dpt->buffer_dmat) failed\n"
+name|dpt
+operator|->
+name|dev
+argument_list|,
+literal|"bus_dma_tag_create(...,dpt->buffer_dmat) failed\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -6875,11 +6861,10 @@ comment|/* flags	*/
 literal|0
 argument_list|,
 comment|/* lockfunc	*/
-name|busdma_lock_mutex
+name|NULL
 argument_list|,
 comment|/* lockarg	*/
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 operator|&
 name|dpt
@@ -6890,9 +6875,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"dpt: bus_dma_tag_create(...,dpt->dccb_dmat) failed\n"
+name|dpt
+operator|->
+name|dev
+argument_list|,
+literal|"bus_dma_tag_create(...,dpt->dccb_dmat) failed\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -6934,9 +6923,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"dpt: bus_dmamem_alloc(dpt->dccb_dmat,...) failed\n"
+name|dpt
+operator|->
+name|dev
+argument_list|,
+literal|"bus_dmamem_alloc(dpt->dccb_dmat,...) failed\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -7077,9 +7070,21 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"dpt: dptallocccbs(dpt) == 0\n"
+name|dpt
+operator|->
+name|dev
+argument_list|,
+literal|"dptallocccbs(dpt) == 0\n"
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|dpt
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -7159,13 +7164,13 @@ name|i
 index|]
 expr_stmt|;
 block|}
-name|printf
+name|device_printf
 argument_list|(
-literal|"dpt%d: %.8s %.16s FW Rev. %.4s, "
-argument_list|,
 name|dpt
 operator|->
-name|unit
+name|dev
+argument_list|,
+literal|"%.8s %.16s FW Rev. %.4s, "
 argument_list|,
 name|dpt
 operator|->
@@ -7245,6 +7250,14 @@ operator|->
 name|max_dccbs
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|dpt
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -7252,6 +7265,14 @@ operator|)
 return|;
 name|error_exit
 label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|dpt
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1
@@ -7298,6 +7319,14 @@ operator|(
 literal|0
 operator|)
 return|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|dpt
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -7332,12 +7361,17 @@ literal|"dpt"
 argument_list|,
 name|dpt
 argument_list|,
+name|device_get_unit
+argument_list|(
 name|dpt
 operator|->
-name|unit
+name|dev
+argument_list|)
 argument_list|,
 operator|&
-name|Giant
+name|dpt
+operator|->
+name|lock
 argument_list|,
 comment|/*untagged*/
 literal|2
@@ -7506,6 +7540,14 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|dpt
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|i
@@ -7552,6 +7594,14 @@ operator|=
 name|device_get_softc
 argument_list|(
 name|dev
+argument_list|)
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|dpt
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 for|for
@@ -7613,6 +7663,14 @@ name|TRUE
 argument_list|)
 expr_stmt|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|dpt
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 name|dptshutdown
 argument_list|(
 operator|(
@@ -7659,6 +7717,43 @@ name|dpt_softc_t
 modifier|*
 name|dpt
 decl_stmt|;
+name|dpt
+operator|=
+name|arg
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|dpt
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+name|dpt_intr_locked
+argument_list|(
+name|dpt
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|dpt
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|dpt_intr_locked
+parameter_list|(
+name|dpt_softc_t
+modifier|*
+name|dpt
+parameter_list|)
+block|{
 name|dpt_ccb_t
 modifier|*
 name|dccb
@@ -7684,14 +7779,6 @@ name|u_int32_t
 name|residue_len
 decl_stmt|;
 comment|/* Number of bytes not transferred */
-name|dpt
-operator|=
-operator|(
-name|dpt_softc_t
-operator|*
-operator|)
-name|arg
-expr_stmt|;
 comment|/* First order of business is to check if this interrupt is for us */
 while|while
 condition|(
@@ -7737,8 +7824,12 @@ operator|->
 name|dpt_ccb_busend
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
+name|dpt
+operator|->
+name|dev
+argument_list|,
 literal|"Encountered bogus status packet\n"
 argument_list|)
 expr_stmt|;
@@ -7787,14 +7878,14 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"dpt%d ERROR: Request %d received with "
-literal|"clear EOC.\n     Marking as LOST.\n"
-argument_list|,
 name|dpt
 operator|->
-name|unit
+name|dev
+argument_list|,
+literal|"ERROR: Request %d received with "
+literal|"clear EOC.\n     Marking as LOST.\n"
 argument_list|,
 name|dccb
 operator|->
@@ -7884,25 +7975,25 @@ name|dpt
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"dpt%d: HBA rebooted.\n"
+name|dpt
+operator|->
+name|dev
+argument_list|,
+literal|"HBA rebooted.\n"
 literal|"      All transactions should be "
 literal|"resubmitted\n"
-argument_list|,
-name|dpt
-operator|->
-name|unit
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"dpt%d:>>---->>  This is incomplete, "
-literal|"fix me....<<----<<"
-argument_list|,
 name|dpt
 operator|->
-name|unit
+name|dev
+argument_list|,
+literal|">>---->>  This is incomplete, "
+literal|"fix me....<<----<<"
 argument_list|)
 expr_stmt|;
 name|panic
@@ -7919,17 +8010,12 @@ name|dccb
 operator|->
 name|ccb
 expr_stmt|;
-name|untimeout
+name|callout_stop
 argument_list|(
-name|dpttimeout
-argument_list|,
+operator|&
 name|dccb
-argument_list|,
-name|ccb
 operator|->
-name|ccb_h
-operator|.
-name|timeout_ch
+name|timer
 argument_list|)
 expr_stmt|;
 if|if
@@ -8344,13 +8430,13 @@ name|CAM_AUTOSENSE_FAIL
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|device_printf
 argument_list|(
-literal|"dpt%d: Undocumented Error %x\n"
-argument_list|,
 name|dpt
 operator|->
-name|unit
+name|dev
+argument_list|,
+literal|"Undocumented Error %x\n"
 argument_list|,
 name|hba_stat
 argument_list|)
@@ -8410,9 +8496,6 @@ name|dpt_softc
 modifier|*
 name|dpt
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 name|dccb
 operator|=
 operator|(
@@ -8441,6 +8524,16 @@ name|ccb_h
 operator|.
 name|ccb_dpt_ptr
 expr_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|dpt
+operator|->
+name|lock
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|xpt_print_path
 argument_list|(
 name|ccb
@@ -8461,13 +8554,8 @@ operator|)
 name|dccb
 argument_list|)
 expr_stmt|;
-name|s
-operator|=
-name|splcam
-argument_list|()
-expr_stmt|;
 comment|/* 	 * Try to clear any pending jobs.  FreeBSD will lose interrupts, 	 * leaving the controller suspended, and commands timed-out. 	 * By calling the interrupt handler, any command thus stuck will be 	 * completed. 	 */
-name|dpt_intr
+name|dpt_intr_locked
 argument_list|(
 name|dpt
 argument_list|)
@@ -8503,11 +8591,6 @@ name|void
 operator|*
 operator|)
 name|dccb
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 return|return;
@@ -8546,11 +8629,6 @@ name|status
 operator|=
 name|CAM_CMD_TIMEOUT
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -8583,18 +8661,26 @@ operator|*
 operator|)
 name|arg
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"dpt%d: Shutting down (mode %x) HBA.	Please wait...\n"
-argument_list|,
 name|dpt
 operator|->
-name|unit
+name|dev
+argument_list|,
+literal|"Shutting down (mode %x) HBA.	Please wait...\n"
 argument_list|,
 name|howto
 argument_list|)
 expr_stmt|;
 comment|/* 	 * What we do for a shutdown, is give the DPT early power loss warning 	 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|dpt
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 name|dpt_send_immediate
 argument_list|(
 name|dpt
@@ -8612,6 +8698,14 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|dpt
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 name|DELAY
 argument_list|(
 literal|1000
@@ -8621,14 +8715,14 @@ operator|*
 literal|5
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"dpt%d: Controller was warned of shutdown and is now "
-literal|"disabled\n"
-argument_list|,
 name|dpt
 operator|->
-name|unit
+name|dev
+argument_list|,
+literal|"Controller was warned of shutdown and is now "
+literal|"disabled\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -8655,7 +8749,7 @@ comment|/* **	Function name : dpt_reset_hba ** **	Description : Reset the HBA an
 end_comment
 
 begin_comment
-unit|static void dpt_reset_hba(dpt_softc_t *dpt) { 	eata_ccb_t       *ccb; 	int               ospl; 	dpt_ccb_t         dccb, *dccbp; 	int               result; 	struct scsi_xfer *xs;
+unit|static void dpt_reset_hba(dpt_softc_t *dpt) { 	eata_ccb_t       *ccb; 	dpt_ccb_t         dccb, *dccbp; 	int               result; 	struct scsi_xfer *xs;  	mtx_assert(&dpt->lock, MA_OWNED);
 comment|/* Prepare a control block.  The SCSI command part is immaterial */
 end_comment
 
@@ -8674,12 +8768,12 @@ comment|/* Lock up the submitted queue.  We are very persistant here */
 end_comment
 
 begin_comment
-unit|ospl = splcam(); 	while (dpt->queue_status& DPT_SUBMITTED_QUEUE_ACTIVE) { 		DELAY(100); 	} 	 	dpt->queue_status |= DPT_SUBMITTED_QUEUE_ACTIVE; 	splx(ospl);
+unit|while (dpt->queue_status& DPT_SUBMITTED_QUEUE_ACTIVE) { 		DELAY(100); 	} 	 	dpt->queue_status |= DPT_SUBMITTED_QUEUE_ACTIVE;
 comment|/* Send the RESET message */
 end_comment
 
 begin_ifdef
-unit|if ((result = dpt_send_eata_command(dpt,&dccb.eata_ccb, 					    EATA_CMD_RESET, 0, 0, 0, 0)) != 0) { 		printf("dpt%d: Failed to send the RESET message.\n" 		       "      Trying cold boot (ouch!)\n", dpt->unit); 	 	 		if ((result = dpt_send_eata_command(dpt,&dccb.eata_ccb, 						    EATA_COLD_BOOT, 0, 0, 						    0, 0)) != 0) { 			panic("dpt%d:  Faild to cold boot the HBA\n", 			      dpt->unit); 		}
+unit|if ((result = dpt_send_eata_command(dpt,&dccb.eata_ccb, 					    EATA_CMD_RESET, 0, 0, 0, 0)) != 0) { 		device_printf(dpt->dev, "Failed to send the RESET message.\n" 		       "     Trying cold boot (ouch!)\n"); 	 	 		if ((result = dpt_send_eata_command(dpt,&dccb.eata_ccb, 						    EATA_COLD_BOOT, 0, 0, 						    0, 0)) != 0) { 			panic("%s:  Faild to cold boot the HBA\n", 			    device_get_nameunit(dpt->dev)); 		}
 ifdef|#
 directive|ifdef
 name|DPT_MEASURE_PERFORMANCE
@@ -8713,7 +8807,7 @@ comment|/* DPT_MEASURE_PERFORMANCE */
 end_comment
 
 begin_comment
-unit|printf("dpt%d:  Aborting pending requests.  O/S should re-submit\n", 	       dpt->unit);  	while ((dccbp = TAILQ_FIRST(&dpt->completed_ccbs)) != NULL) { 		struct scsi_xfer *xs = dccbp->xs;
+unit|device_printf(dpt->dev, 	    "Aborting pending requests.  O/S should re-submit\n");  	while ((dccbp = TAILQ_FIRST(&dpt->completed_ccbs)) != NULL) { 		struct scsi_xfer *xs = dccbp->xs;
 comment|/* Not all transactions have xs structs */
 end_comment
 
@@ -8728,7 +8822,7 @@ comment|/* Remember, Callbacks are NOT in the standard queue */
 end_comment
 
 begin_endif
-unit|if (dccbp->std_callback != NULL) { 			(dccbp->std_callback)(dpt, dccbp->eata_ccb.cp_channel, 					       dccbp); 		} else { 			ospl = splcam(); 			dpt_Qpush_free(dpt, dccbp); 			splx(ospl); 		} 	}  	printf("dpt%d: reset done aborting all pending commands\n", dpt->unit); 	dpt->queue_status&= ~DPT_SUBMITTED_QUEUE_ACTIVE; }
+unit|if (dccbp->std_callback != NULL) { 			(dccbp->std_callback)(dpt, dccbp->eata_ccb.cp_channel, 					       dccbp); 		} else { 			dpt_Qpush_free(dpt, dccbp); 		} 	}  	device_printf(dpt->dev, "reset done aborting all pending commands\n"); 	dpt->queue_status&= ~DPT_SUBMITTED_QUEUE_ACTIVE; }
 endif|#
 directive|endif
 end_endif
@@ -8742,7 +8836,7 @@ comment|/*  * Build a Command Block for target mode READ/WRITE BUFFER,  * with t
 end_comment
 
 begin_comment
-unit|static void dpt_target_ccb(dpt_softc_t * dpt, int bus, u_int8_t target, u_int8_t lun, 	       dpt_ccb_t * ccb, int mode, u_int8_t command, 	       u_int16_t length, u_int16_t offset) { 	eata_ccb_t     *cp; 	int             ospl;  	if ((length + offset)> DPT_MAX_TARGET_MODE_BUFFER_SIZE) { 		printf("dpt%d:  Length of %d, and offset of %d are wrong\n", 		       dpt->unit, length, offset); 		length = DPT_MAX_TARGET_MODE_BUFFER_SIZE; 		offset = 0; 	} 	ccb->xs = NULL; 	ccb->flags = 0; 	ccb->state = DPT_CCB_STATE_NEW; 	ccb->std_callback = (ccb_callback) dpt_target_done; 	ccb->wrbuff_callback = NULL;  	cp =&ccb->eata_ccb; 	cp->CP_OpCode = EATA_CMD_DMA_SEND_CP; 	cp->SCSI_Reset = 0; 	cp->HBA_Init = 0; 	cp->Auto_Req_Sen = 1; 	cp->cp_id = target; 	cp->DataIn = 1; 	cp->DataOut = 0; 	cp->Interpret = 0; 	cp->reqlen = htonl(sizeof(struct scsi_sense_data)); 	cp->cp_statDMA = htonl(vtophys(&cp->cp_statDMA)); 	cp->cp_reqDMA = htonl(vtophys(&cp->cp_reqDMA)); 	cp->cp_viraddr = (u_int32_t)& ccb;  	cp->cp_msg[0] = HA_IDENTIFY_MSG | HA_DISCO_RECO;  	cp->cp_scsi_cmd = command; 	cp->cp_cdb[1] = (u_int8_t) (mode& SCSI_TM_MODE_MASK); 	cp->cp_lun = lun;
+unit|static void dpt_target_ccb(dpt_softc_t * dpt, int bus, u_int8_t target, u_int8_t lun, 	       dpt_ccb_t * ccb, int mode, u_int8_t command, 	       u_int16_t length, u_int16_t offset) { 	eata_ccb_t     *cp;  	mtx_assert(&dpt->lock, MA_OWNED); 	if ((length + offset)> DPT_MAX_TARGET_MODE_BUFFER_SIZE) { 		device_printf(dpt->dev, 		    "Length of %d, and offset of %d are wrong\n", 		    length, offset); 		length = DPT_MAX_TARGET_MODE_BUFFER_SIZE; 		offset = 0; 	} 	ccb->xs = NULL; 	ccb->flags = 0; 	ccb->state = DPT_CCB_STATE_NEW; 	ccb->std_callback = (ccb_callback) dpt_target_done; 	ccb->wrbuff_callback = NULL;  	cp =&ccb->eata_ccb; 	cp->CP_OpCode = EATA_CMD_DMA_SEND_CP; 	cp->SCSI_Reset = 0; 	cp->HBA_Init = 0; 	cp->Auto_Req_Sen = 1; 	cp->cp_id = target; 	cp->DataIn = 1; 	cp->DataOut = 0; 	cp->Interpret = 0; 	cp->reqlen = htonl(sizeof(struct scsi_sense_data)); 	cp->cp_statDMA = htonl(vtophys(&cp->cp_statDMA)); 	cp->cp_reqDMA = htonl(vtophys(&cp->cp_reqDMA)); 	cp->cp_viraddr = (u_int32_t)& ccb;  	cp->cp_msg[0] = HA_IDENTIFY_MSG | HA_DISCO_RECO;  	cp->cp_scsi_cmd = command; 	cp->cp_cdb[1] = (u_int8_t) (mode& SCSI_TM_MODE_MASK); 	cp->cp_lun = lun;
 comment|/* Order is important here! */
 end_comment
 
@@ -8776,12 +8870,12 @@ comment|/* 	 * This could be optimized to live in dpt_register_buffer. 	 * We ke
 end_comment
 
 begin_comment
-unit|if (dpt_scatter_gather(dpt, ccb, DPT_RW_BUFFER_SIZE, 			       dpt->rw_buffer[bus][target][lun])) { 		printf("dpt%d: Failed to setup Scatter/Gather for " 		       "Target-Mode buffer\n", dpt->unit); 	} }
+unit|if (dpt_scatter_gather(dpt, ccb, DPT_RW_BUFFER_SIZE, 			       dpt->rw_buffer[bus][target][lun])) { 		device_printf(dpt->dev, "Failed to setup Scatter/Gather for " 		       "Target-Mode buffer\n"); 	} }
 comment|/* Setup a target mode READ command */
 end_comment
 
 begin_ifdef
-unit|static void dpt_set_target(int redo, dpt_softc_t * dpt, 	       u_int8_t bus, u_int8_t target, u_int8_t lun, int mode, 	       u_int16_t length, u_int16_t offset, dpt_ccb_t * ccb) { 	int ospl;  	if (dpt->target_mode_enabled) { 		ospl = splcam();  		if (!redo) 			dpt_target_ccb(dpt, bus, target, lun, ccb, mode, 				       SCSI_TM_READ_BUFFER, length, offset);  		ccb->transaction_id = ++dpt->commands_processed;
+unit|static void dpt_set_target(int redo, dpt_softc_t * dpt, 	       u_int8_t bus, u_int8_t target, u_int8_t lun, int mode, 	       u_int16_t length, u_int16_t offset, dpt_ccb_t * ccb) {  	mtx_assert(&dpt->lock, MA_OWNED); 	if (dpt->target_mode_enabled) { 		if (!redo) 			dpt_target_ccb(dpt, bus, target, lun, ccb, mode, 				       SCSI_TM_READ_BUFFER, length, offset);  		ccb->transaction_id = ++dpt->commands_processed;
 ifdef|#
 directive|ifdef
 name|DPT_MEASURE_PERFORMANCE
@@ -8794,32 +8888,32 @@ directive|endif
 end_endif
 
 begin_comment
-unit|dpt_Qadd_waiting(dpt, ccb); 		dpt_sched_queue(dpt);  		splx(ospl); 	} else { 		printf("dpt%d:  Target Mode Request, but Target Mode is OFF\n", 		       dpt->unit); 	} }
+unit|dpt_Qadd_waiting(dpt, ccb); 		dpt_sched_queue(dpt); 	} else { 		device_printf(dpt->dev, 		    "Target Mode Request, but Target Mode is OFF\n"); 	} }
 comment|/*  * Schedule a buffer to be sent to another target.  * The work will be scheduled and the callback provided will be called when  * the work is actually done.  *  * Please NOTE:  ``Anyone'' can send a buffer, but only registered clients  * get notified of receipt of buffers.  */
 end_comment
 
 begin_comment
-unit|int dpt_send_buffer(int unit, u_int8_t channel, u_int8_t target, u_int8_t lun, 		u_int8_t mode, u_int16_t length, u_int16_t offset, void *data, 		buff_wr_done callback) { 	dpt_softc_t    *dpt; 	dpt_ccb_t      *ccb = NULL; 	int             ospl;
+unit|int dpt_send_buffer(int unit, u_int8_t channel, u_int8_t target, u_int8_t lun, 		u_int8_t mode, u_int16_t length, u_int16_t offset, void *data, 		buff_wr_done callback) { 	dpt_softc_t    *dpt; 	dpt_ccb_t      *ccb = NULL;
 comment|/* This is an external call.  Be a bit paranoid */
 end_comment
 
 begin_comment
-unit|for (dpt = TAILQ_FIRST(&dpt_softc_list); 	     dpt != NULL; 	     dpt = TAILQ_NEXT(dpt, links)) { 		if (dpt->unit == unit) 			goto valid_unit; 	}  	return (INVALID_UNIT);  valid_unit:  	if (dpt->target_mode_enabled) { 		if ((channel>= dpt->channels) || (target> dpt->max_id) || 		    (lun> dpt->max_lun)) { 			return (INVALID_SENDER); 		} 		if ((dpt->rw_buffer[channel][target][lun] == NULL) || 		    (dpt->buffer_receiver[channel][target][lun] == NULL)) 			return (NOT_REGISTERED);  		ospl = splsoftcam();
+unit|dpt = devclass_get_device(dpt_devclass, unit); 	if (dpt == NULL) 		return (INVALID_UNIT);  	mtx_lock(&dpt->lock); 	if (dpt->target_mode_enabled) { 		if ((channel>= dpt->channels) || (target> dpt->max_id) || 		    (lun> dpt->max_lun)) { 			mtx_unlock(&dpt->lock); 			return (INVALID_SENDER); 		} 		if ((dpt->rw_buffer[channel][target][lun] == NULL) || 		    (dpt->buffer_receiver[channel][target][lun] == NULL)) { 			mtx_unlock(&dpt->lock); 			return (NOT_REGISTERED); 		}
 comment|/* Process the free list */
 end_comment
 
 begin_comment
-unit|if ((TAILQ_EMPTY(&dpt->free_ccbs))&& dpt_alloc_freelist(dpt)) { 			printf("dpt%d ERROR: Cannot allocate any more free CCB's.\n" 			       "             Please try later\n", 			       dpt->unit); 			splx(ospl); 			return (NO_RESOURCES); 		}
+unit|if ((TAILQ_EMPTY(&dpt->free_ccbs))&& dpt_alloc_freelist(dpt)) { 			device_printf(dpt->dev, 			    "ERROR: Cannot allocate any more free CCB's.\n" 			    "             Please try later\n"); 			mtx_unlock(&dpt->lock); 			return (NO_RESOURCES); 		}
 comment|/* Now grab the newest CCB */
 end_comment
 
 begin_comment
-unit|if ((ccb = dpt_Qpop_free(dpt)) == NULL) { 			splx(ospl); 			panic("dpt%d: Got a NULL CCB from pop_free()\n", dpt->unit); 		} 		splx(ospl);  		bcopy(dpt->rw_buffer[channel][target][lun] + offset, data, length); 		dpt_target_ccb(dpt, channel, target, lun, ccb, mode,  					   SCSI_TM_WRITE_BUFFER, 					   length, offset); 		ccb->std_callback = (ccb_callback) callback;
+unit|if ((ccb = dpt_Qpop_free(dpt)) == NULL) { 			mtx_unlock(&dpt->lock); 			panic("%s: Got a NULL CCB from pop_free()\n", 			    device_get_nameunit(dpt->dev)); 		}  		bcopy(dpt->rw_buffer[channel][target][lun] + offset, data, length); 		dpt_target_ccb(dpt, channel, target, lun, ccb, mode,  					   SCSI_TM_WRITE_BUFFER, 					   length, offset); 		ccb->std_callback = (ccb_callback) callback;
 comment|/* Potential trouble */
 end_comment
 
 begin_ifdef
-unit|ospl = splcam(); 		ccb->transaction_id = ++dpt->commands_processed;
+unit|ccb->transaction_id = ++dpt->commands_processed;
 ifdef|#
 directive|ifdef
 name|DPT_MEASURE_PERFORMANCE
@@ -8832,12 +8926,12 @@ directive|endif
 end_endif
 
 begin_comment
-unit|dpt_Qadd_waiting(dpt, ccb); 		dpt_sched_queue(dpt);  		splx(ospl); 		return (0); 	} 	return (DRIVER_DOWN); }  static void dpt_target_done(dpt_softc_t * dpt, int bus, dpt_ccb_t * ccb) { 	int             ospl; 	eata_ccb_t     *cp;  	cp =&ccb->eata_ccb;
+unit|dpt_Qadd_waiting(dpt, ccb); 		dpt_sched_queue(dpt);  		mtx_unlock(&dpt->lock); 		return (0); 	} 	mtx_unlock(&dpt->lock); 	return (DRIVER_DOWN); }  static void dpt_target_done(dpt_softc_t * dpt, int bus, dpt_ccb_t * ccb) { 	eata_ccb_t     *cp;  	cp =&ccb->eata_ccb;
 comment|/* 	 * Remove the CCB from the waiting queue. 	 *  We do NOT put it back on the free, etc., queues as it is a special 	 * ccb, owned by the dpt_softc of this unit. 	 */
 end_comment
 
 begin_define
-unit|ospl = splsoftcam(); 	dpt_Qremove_completed(dpt, ccb); 	splx(ospl);
+unit|dpt_Qremove_completed(dpt, ccb);
 define|#
 directive|define
 name|br_channel
@@ -8913,7 +9007,7 @@ comment|/* This is a buffer generated by a kernel process */
 end_comment
 
 begin_comment
-unit|read_buffer_callback(dpt->unit, br_channel, 					     br_target, br_lun, 					     read_buffer, 					     br_offset, br_length); 		} else {
+unit|read_buffer_callback(device_get_unit(dpt->dev), 					     br_channel, br_target, br_lun, 					     read_buffer, 					     br_offset, br_length); 		} else {
 comment|/* 			 * This is a buffer waited for by a user (sleeping) 			 * command 			 */
 end_comment
 
@@ -8923,12 +9017,12 @@ comment|/* We ALWAYS re-issue the same command; args are don't-care  */
 end_comment
 
 begin_comment
-unit|dpt_set_target(1, 0, 0, 0, 0, 0, 0, 0, 0); 		break;  	case SCSI_TM_WRITE_BUFFER: 		(ccb->wrbuff_callback) (dpt->unit, br_channel, br_target, 					br_offset, br_length, 					br_lun, ccb->status_packet.hba_stat); 		break; 	default: 		printf("dpt%d:  %s is an unsupported command for target mode\n", 		       dpt->unit, scsi_cmd_name(ccb->eata_ccb.cp_scsi_cmd)); 	} 	ospl = splsoftcam(); 	dpt->target_ccb[br_channel][br_target][br_lun] = NULL; 	dpt_Qpush_free(dpt, ccb); 	splx(ospl); }
+unit|dpt_set_target(1, 0, 0, 0, 0, 0, 0, 0, 0); 		break;  	case SCSI_TM_WRITE_BUFFER: 		(ccb->wrbuff_callback) (device_get_unit(dpt->dev), br_channel, 					br_target, br_offset, br_length, 					br_lun, ccb->status_packet.hba_stat); 		break; 	default: 		device_printf(dpt->dev, 		    "%s is an unsupported command for target mode\n", 		    scsi_cmd_name(ccb->eata_ccb.cp_scsi_cmd)); 	} 	dpt->target_ccb[br_channel][br_target][br_lun] = NULL; 	dpt_Qpush_free(dpt, ccb); }
 comment|/*  * Use this function to register a client for a buffer read target operation.  * The function you register will be called every time a buffer is received  * by the target mode code.  */
 end_comment
 
 begin_comment
-unit|dpt_rb_t dpt_register_buffer(int unit, u_int8_t channel, u_int8_t target, u_int8_t lun, 		    u_int8_t mode, u_int16_t length, u_int16_t offset, 		    dpt_rec_buff callback, dpt_rb_op_t op) { 	dpt_softc_t    *dpt; 	dpt_ccb_t      *ccb = NULL; 	int             ospl;  	for (dpt = TAILQ_FIRST(&dpt_softc_list); 	     dpt != NULL; 	     dpt = TAILQ_NEXT(dpt, links)) { 		if (dpt->unit == unit) 			goto valid_unit; 	}  	return (INVALID_UNIT);  valid_unit:  	if (dpt->state& DPT_HA_SHUTDOWN_ACTIVE) 		return (DRIVER_DOWN);  	if ((channel> (dpt->channels - 1)) || (target> (dpt->max_id - 1)) || 	    (lun> (dpt->max_lun - 1))) 		return (INVALID_SENDER);  	if (dpt->buffer_receiver[channel][target][lun] == NULL) { 		if (op == REGISTER_BUFFER) {
+unit|dpt_rb_t dpt_register_buffer(int unit, u_int8_t channel, u_int8_t target, u_int8_t lun, 		    u_int8_t mode, u_int16_t length, u_int16_t offset, 		    dpt_rec_buff callback, dpt_rb_op_t op) { 	dpt_softc_t    *dpt; 	dpt_ccb_t      *ccb = NULL; 	int             ospl;  	dpt = devclass_get_device(dpt_devclass, unit); 	if (dpt == NULL) 		return (INVALID_UNIT); 	mtx_lock(&dpt->lock);  	if (dpt->state& DPT_HA_SHUTDOWN_ACTIVE) { 		mtx_unlock(&dpt->lock); 		return (DRIVER_DOWN); 	}  	if ((channel> (dpt->channels - 1)) || (target> (dpt->max_id - 1)) || 	    (lun> (dpt->max_lun - 1))) { 		mtx_unlock(&dpt->lock); 		return (INVALID_SENDER); 	}  	if (dpt->buffer_receiver[channel][target][lun] == NULL) { 		if (op == REGISTER_BUFFER) {
 comment|/* Assign the requested callback */
 end_comment
 
@@ -8938,32 +9032,31 @@ comment|/* Get a CCB */
 end_comment
 
 begin_comment
-unit|ospl = splsoftcam();
 comment|/* Process the free list */
 end_comment
 
 begin_comment
-unit|if ((TAILQ_EMPTY(&dpt->free_ccbs))&& dpt_alloc_freelist(dpt)) { 				printf("dpt%d ERROR: Cannot allocate any more free CCB's.\n" 				       "             Please try later\n", 				       dpt->unit); 				splx(ospl); 				return (NO_RESOURCES); 			}
+unit|if ((TAILQ_EMPTY(&dpt->free_ccbs))&& dpt_alloc_freelist(dpt)) { 				device_printf(dpt->dev, 				    "ERROR: Cannot allocate any more free CCB's.\n" 				    "             Please try later\n"); 				mtx_unlock(&dpt->lock); 				return (NO_RESOURCES); 			}
 comment|/* Now grab the newest CCB */
 end_comment
 
 begin_comment
-unit|if ((ccb = dpt_Qpop_free(dpt)) == NULL) { 				splx(ospl); 				panic("dpt%d: Got a NULL CCB from pop_free()\n", 				      dpt->unit); 			} 			splx(ospl);
+unit|if ((ccb = dpt_Qpop_free(dpt)) == NULL) { 				mtx_unlock(&dpt->lock); 				panic("%s: Got a NULL CCB from pop_free()\n", 				    device_get_nameunit(dpt->dev)); 			}
 comment|/* Clean up the leftover of the previous tenant */
 end_comment
 
 begin_comment
-unit|ccb->status = DPT_CCB_STATE_NEW; 			dpt->target_ccb[channel][target][lun] = ccb;  			dpt->rw_buffer[channel][target][lun] = 				malloc(DPT_RW_BUFFER_SIZE, M_DEVBUF, M_NOWAIT); 			if (dpt->rw_buffer[channel][target][lun] == NULL) { 				printf("dpt%d: Failed to allocate " 				       "Target-Mode buffer\n", dpt->unit); 				ospl = splsoftcam(); 				dpt_Qpush_free(dpt, ccb); 				splx(ospl); 				return (NO_RESOURCES); 			} 			dpt_set_target(0, dpt, channel, target, lun, mode, 				       length, offset, ccb); 			return (SUCCESSFULLY_REGISTERED); 		} else 			return (NOT_REGISTERED); 	} else { 		if (op == REGISTER_BUFFER) { 			if (dpt->buffer_receiver[channel][target][lun] == callback) 				return (ALREADY_REGISTERED); 			else 				return (REGISTERED_TO_ANOTHER); 		} else { 			if (dpt->buffer_receiver[channel][target][lun] == callback) { 				dpt->buffer_receiver[channel][target][lun] = NULL; 				ospl = splsoftcam(); 				dpt_Qpush_free(dpt, ccb); 				splx(ospl); 				free(dpt->rw_buffer[channel][target][lun], M_DEVBUF); 				return (SUCCESSFULLY_REGISTERED); 			} else 				return (INVALID_CALLBACK); 		}  	} }
+unit|ccb->status = DPT_CCB_STATE_NEW; 			dpt->target_ccb[channel][target][lun] = ccb;  			dpt->rw_buffer[channel][target][lun] = 				malloc(DPT_RW_BUFFER_SIZE, M_DEVBUF, M_NOWAIT); 			if (dpt->rw_buffer[channel][target][lun] == NULL) { 				device_printf(dpt->dev, "Failed to allocate " 				       "Target-Mode buffer\n"); 				dpt_Qpush_free(dpt, ccb); 				mtx_unlock(&dpt->lock); 				return (NO_RESOURCES); 			} 			dpt_set_target(0, dpt, channel, target, lun, mode, 				       length, offset, ccb); 			mtx_unlock(&dpt->lock); 			return (SUCCESSFULLY_REGISTERED); 		} else { 			mtx_unlock(&dpt->lock); 			return (NOT_REGISTERED); 		} 	} else { 		if (op == REGISTER_BUFFER) { 			if (dpt->buffer_receiver[channel][target][lun] == callback) { 				mtx_unlock(&dpt->lock); 				return (ALREADY_REGISTERED); 			} else { 				mtx_unlock(&dpt->lock); 				return (REGISTERED_TO_ANOTHER); 			} 		} else { 			if (dpt->buffer_receiver[channel][target][lun] == callback) { 				dpt->buffer_receiver[channel][target][lun] = NULL; 				dpt_Qpush_free(dpt, ccb); 				free(dpt->rw_buffer[channel][target][lun], M_DEVBUF); 				mtx_unlock(&dpt->lock); 				return (SUCCESSFULLY_REGISTERED); 			} else { 				mtx_unlock(&dpt->lock); 				return (INVALID_CALLBACK); 			} 		}  	} 	mtx_unlock(&dpt->lock); }
 comment|/* Return the state of the blinking DPT LED's */
 end_comment
 
 begin_comment
-unit|u_int8_t dpt_blinking_led(dpt_softc_t * dpt) { 	int             ndx; 	int             ospl; 	u_int32_t       state; 	u_int32_t       previous; 	u_int8_t        result;  	ospl = splcam();  	result = 0;  	for (ndx = 0, state = 0, previous = 0; 	     (ndx< 10)&& (state != previous); 	     ndx++) { 		previous = state; 		state = dpt_inl(dpt, 1); 	}  	if ((state == previous)&& (state == DPT_BLINK_INDICATOR)) 		result = dpt_inb(dpt, 5);  	splx(ospl); 	return (result); }
+unit|u_int8_t dpt_blinking_led(dpt_softc_t * dpt) { 	int             ndx; 	u_int32_t       state; 	u_int32_t       previous; 	u_int8_t        result;  	mtx_assert(&dpt->lock, MA_OWNED); 	result = 0;  	for (ndx = 0, state = 0, previous = 0; 	     (ndx< 10)&& (state != previous); 	     ndx++) { 		previous = state; 		state = dpt_inl(dpt, 1); 	}  	if ((state == previous)&& (state == DPT_BLINK_INDICATOR)) 		result = dpt_inb(dpt, 5);  	return (result); }
 comment|/*  * Execute a command which did not come from the kernel's SCSI layer.  * The only way to map user commands to bus and target is to comply with the  * standard DPT wire-down scheme:  */
 end_comment
 
 begin_comment
-unit|int dpt_user_cmd(dpt_softc_t * dpt, eata_pt_t * user_cmd, 	     caddr_t cmdarg, int minor_no) { 	dpt_ccb_t *ccb; 	void	  *data; 	int	   channel, target, lun; 	int	   huh; 	int	   result; 	int	   ospl; 	int	   submitted;  	data = NULL; 	channel = minor2hba(minor_no); 	target = minor2target(minor_no); 	lun = minor2lun(minor_no);  	if ((channel> (dpt->channels - 1)) 	 || (target> dpt->max_id) 	 || (lun> dpt->max_lun)) 		return (ENXIO);  	if (target == dpt->sc_scsi_link[channel].adapter_targ) {
+unit|int dpt_user_cmd(dpt_softc_t * dpt, eata_pt_t * user_cmd, 	     caddr_t cmdarg, int minor_no) { 	dpt_ccb_t *ccb; 	void	  *data; 	int	   channel, target, lun; 	int	   huh; 	int	   result; 	int	   submitted;  	mtx_assert(&dpt->lock, MA_OWNED); 	data = NULL; 	channel = minor2hba(minor_no); 	target = minor2target(minor_no); 	lun = minor2lun(minor_no);  	if ((channel> (dpt->channels - 1)) 	 || (target> dpt->max_id) 	 || (lun> dpt->max_lun)) 		return (ENXIO);  	if (target == dpt->sc_scsi_link[channel].adapter_targ) {
 comment|/* This one is for the controller itself */
 end_comment
 
@@ -8973,17 +9066,16 @@ comment|/* Get a DPT CCB, so we can prepare a command */
 end_comment
 
 begin_comment
-unit|ospl = splsoftcam();
 comment|/* Process the free list */
 end_comment
 
 begin_comment
-unit|if ((TAILQ_EMPTY(&dpt->free_ccbs))&& dpt_alloc_freelist(dpt)) { 		printf("dpt%d ERROR: Cannot allocate any more free CCB's.\n" 		       "             Please try later\n", 		       dpt->unit); 		splx(ospl); 		return (EFAULT); 	}
+unit|if ((TAILQ_EMPTY(&dpt->free_ccbs))&& dpt_alloc_freelist(dpt)) { 		device_printf(dpt->dev, 		    "ERROR: Cannot allocate any more free CCB's.\n" 		    "             Please try later\n"); 		return (EFAULT); 	}
 comment|/* Now grab the newest CCB */
 end_comment
 
 begin_comment
-unit|if ((ccb = dpt_Qpop_free(dpt)) == NULL) { 		splx(ospl); 		panic("dpt%d: Got a NULL CCB from pop_free()\n", dpt->unit); 	} else { 		splx(ospl);
+unit|if ((ccb = dpt_Qpop_free(dpt)) == NULL) { 		panic("%s: Got a NULL CCB from pop_free()\n", 		    device_get_nameunit(dpt->dev)); 	} else {
 comment|/* Clean up the leftover of the previous tenant */
 end_comment
 
@@ -8998,7 +9090,7 @@ comment|/* Data I/O is involved in this command.  Alocate buffer */
 end_comment
 
 begin_define
-unit|if (ccb->eata_ccb.cp_datalen> PAGE_SIZE) { 			data = contigmalloc(ccb->eata_ccb.cp_datalen, 					    M_TEMP, M_WAITOK, 0, ~0, 					    ccb->eata_ccb.cp_datalen, 					    0x10000); 		} else { 			data = malloc(ccb->eata_ccb.cp_datalen, M_TEMP, 				      M_WAITOK); 		}  		if (data == NULL) { 			printf("dpt%d: Cannot allocate %d bytes " 			       "for EATA command\n", dpt->unit, 			       ccb->eata_ccb.cp_datalen); 			return (EFAULT); 		}
+unit|if (ccb->eata_ccb.cp_datalen> PAGE_SIZE) { 			data = contigmalloc(ccb->eata_ccb.cp_datalen, 					    M_TEMP, M_WAITOK, 0, ~0, 					    ccb->eata_ccb.cp_datalen, 					    0x10000); 		} else { 			data = malloc(ccb->eata_ccb.cp_datalen, M_TEMP, 				      M_WAITOK); 		}  		if (data == NULL) { 			device_printf(dpt->dev, "Cannot allocate %d bytes " 			       "for EATA command\n", 			       ccb->eata_ccb.cp_datalen); 			return (EFAULT); 		}
 define|#
 directive|define
 name|usr_cmd_DMA
@@ -9021,7 +9113,7 @@ comment|/* We wait for ALL traffic for this HBa to subside */
 end_comment
 
 begin_comment
-unit|ospl = splsoftcam(); 		dpt->state |= DPT_HA_QUIET; 		splx(ospl);  		while ((submitted = dpt->submitted_ccbs_count) != 0) { 			huh = tsleep((void *) dpt, PCATCH | PRIBIO, "dptqt", 				     100 * hz); 			switch (huh) { 			case 0:
+unit|dpt->state |= DPT_HA_QUIET;  		while ((submitted = dpt->submitted_ccbs_count) != 0) { 			huh = mtx_sleep((void *) dpt,&dpt->lock, 			    PCATCH | PRIBIO, "dptqt", 100 * hz); 			switch (huh) { 			case 0:
 comment|/* Wakeup call received */
 end_comment
 
@@ -9041,7 +9133,7 @@ comment|/* Resume normal operation */
 end_comment
 
 begin_comment
-unit|if ((ccb->eata_ccb.cp_cdb[0] == MULTIFUNCTION_CMD)&& (ccb->eata_ccb.cp_cdb[2] == BUS_UNQUIET)) { 		ospl = splsoftcam(); 		dpt->state&= ~DPT_HA_QUIET; 		splx(ospl); 	}
+unit|if ((ccb->eata_ccb.cp_cdb[0] == MULTIFUNCTION_CMD)&& (ccb->eata_ccb.cp_cdb[2] == BUS_UNQUIET)) { 		dpt->state&= ~DPT_HA_QUIET; 	}
 comment|/** 	 * Schedule the command and submit it. 	 * We bypass dpt_sched_queue, as it will block on DPT_HA_QUIET 	 */
 end_comment
 
@@ -9064,17 +9156,17 @@ directive|endif
 end_endif
 
 begin_comment
-unit|ospl = splcam(); 	dpt_Qadd_waiting(dpt, ccb); 	splx(ospl);  	dpt_sched_queue(dpt);
+unit|dpt_Qadd_waiting(dpt, ccb);  	dpt_sched_queue(dpt);
 comment|/* Wait for the command to complete */
 end_comment
 
 begin_comment
-unit|(void) tsleep((void *) ccb, PCATCH | PRIBIO, "dptucw", 100 * hz);
+unit|(void) mtx_sleep((void *) ccb,&dpt->lock, PCATCH | PRIBIO, "dptucw", 	    100 * hz);
 comment|/* Free allocated memory */
 end_comment
 
 begin_comment
-unit|if (data != NULL) 		free(data, M_TEMP);  	return (0); }  static void dpt_user_cmd_done(dpt_softc_t * dpt, int bus, dpt_ccb_t * ccb) { 	int             ospl = splsoftcam(); 	u_int32_t       result; 	caddr_t         cmd_arg;
+unit|if (data != NULL) 		free(data, M_TEMP);  	return (0); }  static void dpt_user_cmd_done(dpt_softc_t * dpt, int bus, dpt_ccb_t * ccb) { 	u_int32_t       result; 	caddr_t         cmd_arg;  	mtx_unlock(&dpt->lock);
 comment|/** 	 * If Auto Request Sense is on, copyout the sense struct 	 */
 end_comment
 
@@ -9093,17 +9185,17 @@ value|ntohl(ccb->eata_ccb.cp_datalen)
 end_define
 
 begin_comment
-unit|if (ccb->eata_ccb.Auto_Req_Sen == 1) { 		if (copyout((caddr_t)& ccb->sense_data, usr_pckt_DMA, 			    sizeof(struct scsi_sense_data))) { 			ccb->result = EFAULT; 			dpt_Qpush_free(dpt, ccb); 			splx(ospl); 			wakeup(ccb); 			return; 		} 	}
+unit|if (ccb->eata_ccb.Auto_Req_Sen == 1) { 		if (copyout((caddr_t)& ccb->sense_data, usr_pckt_DMA, 			    sizeof(struct scsi_sense_data))) { 			mtx_lock(&dpt->lock); 			ccb->result = EFAULT; 			dpt_Qpush_free(dpt, ccb); 			wakeup(ccb); 			return; 		} 	}
 comment|/* If DataIn is on, copyout the data */
 end_comment
 
 begin_comment
-unit|if ((ccb->eata_ccb.DataIn == 1)&& (ccb->status_packet.hba_stat == HA_NO_ERROR)) { 		if (copyout(ccb->data, usr_pckt_DMA, usr_pckt_len)) { 			dpt_Qpush_free(dpt, ccb); 			ccb->result = EFAULT;  			splx(ospl); 			wakeup(ccb); 			return; 		} 	}
+unit|if ((ccb->eata_ccb.DataIn == 1)&& (ccb->status_packet.hba_stat == HA_NO_ERROR)) { 		if (copyout(ccb->data, usr_pckt_DMA, usr_pckt_len)) { 			mtx_lock(&dpt->lock); 			dpt_Qpush_free(dpt, ccb); 			ccb->result = EFAULT;  			wakeup(ccb); 			return; 		} 	}
 comment|/* Copyout the status */
 end_comment
 
 begin_comment
-unit|result = ccb->status_packet.hba_stat; 	cmd_arg = (caddr_t) ccb->result;  	if (copyout((caddr_t)& result, cmd_arg, sizeof(result))) { 		dpt_Qpush_free(dpt, ccb); 		ccb->result = EFAULT; 		splx(ospl); 		wakeup(ccb); 		return; 	}
+unit|result = ccb->status_packet.hba_stat; 	cmd_arg = (caddr_t) ccb->result;  	if (copyout((caddr_t)& result, cmd_arg, sizeof(result))) { 		mtx_lock(&dpt->lock); 		dpt_Qpush_free(dpt, ccb); 		ccb->result = EFAULT; 		wakeup(ccb); 		return; 	} 	mtx_lock(&dpt->lock);
 comment|/* Put the CCB back in the freelist */
 end_comment
 
@@ -9113,7 +9205,7 @@ comment|/* Free allocated memory */
 end_comment
 
 begin_ifdef
-unit|splx(ospl); 	return; }
+unit|return; }
 ifdef|#
 directive|ifdef
 name|DPT_HANDLE_TIMEOUTS
@@ -9124,12 +9216,12 @@ comment|/**  * This function walks down the SUBMITTED queue.  * Every request th
 end_comment
 
 begin_comment
-unit|static void dpt_handle_timeouts(dpt_softc_t * dpt) { 	dpt_ccb_t      *ccb; 	int             ospl;  	ospl = splcam();  	if (dpt->state& DPT_HA_TIMEOUTS_ACTIVE) { 		printf("dpt%d WARNING: Timeout Handling Collision\n", 		       dpt->unit); 		splx(ospl); 		return; 	} 	dpt->state |= DPT_HA_TIMEOUTS_ACTIVE;
+unit|static void dpt_handle_timeouts(dpt_softc_t * dpt) { 	dpt_ccb_t      *ccb;  	if (dpt->state& DPT_HA_TIMEOUTS_ACTIVE) { 		device_printf(dpt->dev, "WARNING: Timeout Handling Collision\n"); 		return; 	} 	dpt->state |= DPT_HA_TIMEOUTS_ACTIVE;
 comment|/* Loop through the entire submitted queue, looking for lost souls */
 end_comment
 
 begin_define
-unit|for (ccb = TAILQ_FIRST(&dpt->submitted_ccbs); 	     ccb != NULL; 	     ccb = TAILQ_NEXT(ccb, links)) { 		struct scsi_xfer *xs; 		u_int32_t       age, max_age;  		xs = ccb->xs; 		age = dpt_time_delta(ccb->command_started, microtime_now);
+unit|TAILQ_FIRST(ccb,&&dpt->submitted_ccbs, links) { 		struct scsi_xfer *xs; 		u_int32_t       age, max_age;  		xs = ccb->xs; 		age = dpt_time_delta(ccb->command_started, microtime_now);
 define|#
 directive|define
 name|TenSec
@@ -9160,7 +9252,7 @@ value|scsi_cmd_name(ccb->eata_ccb.cp_scsi_cmd)
 end_define
 
 begin_define
-unit|if (ccb->retries++> DPT_RETRIES) { 					printf("dpt%d ERROR: Destroying stale " 					       "%d (%s)\n" 					       "		on " 					       "c%db%dt%du%d (%d/%d)\n", 					     dpt->unit, ccb->transaction_id, 					       cmd_name, 					       dpt->unit, 					       ccb->eata_ccb.cp_channel, 					       ccb->eata_ccb.cp_id, 					       ccb->eata_ccb.cp_LUN, age, 					       ccb->retries);
+unit|if (ccb->retries++> DPT_RETRIES) { 					device_printf(dpt->dev, 					       "ERROR: Destroying stale " 					       "%d (%s)\n" 					       "		on " 					       "c%db%dt%du%d (%d/%d)\n", 					       ccb->transaction_id, 					       cmd_name, 					       device_get_unit(dpt->dev), 					       ccb->eata_ccb.cp_channel, 					       ccb->eata_ccb.cp_id, 					       ccb->eata_ccb.cp_LUN, age, 					       ccb->retries);
 define|#
 directive|define
 name|send_ccb
@@ -9180,12 +9272,12 @@ comment|/* The SCSI layer should re-try */
 end_comment
 
 begin_comment
-unit|xs->error |= XS_TIMEOUT; 					xs->flags |= SCSI_ITSDONE; 					scsi_done(xs); 				} else { 					printf("dpt%d ERROR: Stale %d (%s) on " 					       "c%db%dt%du%d (%d)\n" 					     "		gets another " 					       "chance(%d/%d)\n", 					     dpt->unit, ccb->transaction_id, 					       cmd_name, 					       dpt->unit, 					       ccb->eata_ccb.cp_channel, 					       ccb->eata_ccb.cp_id, 					       ccb->eata_ccb.cp_LUN, 					    age, ccb->retries, DPT_RETRIES);  					dpt_Qpush_waiting(dpt, ccb); 					dpt_sched_queue(dpt); 				} 			} 		} else {
+unit|xs->error |= XS_TIMEOUT; 					xs->flags |= SCSI_ITSDONE; 					scsi_done(xs); 				} else { 					device_printf(dpt->dev, 					       "ERROR: Stale %d (%s) on " 					       "c%db%dt%du%d (%d)\n" 					     "		gets another " 					       "chance(%d/%d)\n", 					       ccb->transaction_id, 					       cmd_name, 					       device_get_unit(dpt->dev), 					       ccb->eata_ccb.cp_channel, 					       ccb->eata_ccb.cp_id, 					       ccb->eata_ccb.cp_LUN, 					    age, ccb->retries, DPT_RETRIES);  					dpt_Qpush_waiting(dpt, ccb); 					dpt_sched_queue(dpt); 				} 			} 		} else {
 comment|/* 			 * This is a transaction that is not to be destroyed 			 * (yet) But it is too old for our liking. We wait as 			 * long as the upper layer thinks. Not really, we 			 * multiply that by the number of commands in the 			 * submitted queue + 1. 			 */
 end_comment
 
 begin_endif
-unit|if (!(ccb->state& DPT_CCB_STATE_MARKED_LOST)&& 			    (age != ~0)&& (age> max_age)) { 				printf("dpt%d ERROR: Marking %d (%s) on " 				       "c%db%dt%du%d \n" 				       "            as late after %dusec\n", 				       dpt->unit, ccb->transaction_id, 				       cmd_name, 				       dpt->unit, ccb->eata_ccb.cp_channel, 				       ccb->eata_ccb.cp_id, 				       ccb->eata_ccb.cp_LUN, age); 				ccb->state |= DPT_CCB_STATE_MARKED_LOST; 			} 		} 	}  	dpt->state&= ~DPT_HA_TIMEOUTS_ACTIVE; 	splx(ospl); }  static void dpt_timeout(void *arg) { 	dpt_softc_t    *dpt = (dpt_softc_t *) arg;  	if (!(dpt->state& DPT_HA_TIMEOUTS_ACTIVE)) 		dpt_handle_timeouts(dpt);  	timeout(dpt_timeout, (caddr_t) dpt, hz * 10); }
+unit|if (!(ccb->state& DPT_CCB_STATE_MARKED_LOST)&& 			    (age != ~0)&& (age> max_age)) { 				device_printf(dpt->dev, 				       "ERROR: Marking %d (%s) on " 				       "c%db%dt%du%d \n" 				       "            as late after %dusec\n", 				       ccb->transaction_id, 				       cmd_name, 				       device_get_unit(dpt->dev), 				       ccb->eata_ccb.cp_channel, 				       ccb->eata_ccb.cp_id, 				       ccb->eata_ccb.cp_LUN, age); 				ccb->state |= DPT_CCB_STATE_MARKED_LOST; 			} 		} 	}  	dpt->state&= ~DPT_HA_TIMEOUTS_ACTIVE; }  static void dpt_timeout(void *arg) { 	dpt_softc_t    *dpt = (dpt_softc_t *) arg;  	mtx_assert(&dpt->lock, MA_OWNED); 	if (!(dpt->state& DPT_HA_TIMEOUTS_ACTIVE)) 		dpt_handle_timeouts(dpt);  	callout_reset(&dpt->timer, hz * 10, dpt_timeout, dpt); }
 endif|#
 directive|endif
 end_endif
