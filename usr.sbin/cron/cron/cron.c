@@ -401,6 +401,9 @@ block|{
 name|cron_db
 name|database
 decl_stmt|;
+name|int
+name|runnum
+decl_stmt|;
 name|ProgramName
 operator|=
 name|argv
@@ -633,6 +636,10 @@ expr_stmt|;
 name|cron_sync
 argument_list|()
 expr_stmt|;
+name|runnum
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 name|TRUE
@@ -651,6 +658,14 @@ operator|&
 name|database
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|runnum
+operator|%
+literal|60
+operator|==
+literal|0
+condition|)
 name|load_database
 argument_list|(
 operator|&
@@ -664,10 +679,14 @@ operator|&
 name|database
 argument_list|)
 expr_stmt|;
-comment|/* sleep 1 minute 		 */
+comment|/* sleep 1 second 		 */
 name|TargetTime
 operator|+=
-literal|60
+literal|1
+expr_stmt|;
+name|runnum
+operator|+=
+literal|1
 expr_stmt|;
 block|}
 block|}
@@ -790,6 +809,8 @@ name|otztm
 decl_stmt|;
 comment|/* time in the old time zone */
 name|int
+name|otzsecond
+decl_stmt|,
 name|otzminute
 decl_stmt|,
 name|otzhour
@@ -814,6 +835,8 @@ argument_list|)
 decl_stmt|;
 specifier|register
 name|int
+name|second
+decl_stmt|,
 name|minute
 decl_stmt|,
 name|hour
@@ -835,6 +858,14 @@ modifier|*
 name|e
 decl_stmt|;
 comment|/* make 0-based values out of these so we can use them as indicies 	 */
+name|second
+operator|=
+name|tm
+operator|->
+name|tm_sec
+operator|-
+name|FIRST_SECOND
+expr_stmt|;
 name|minute
 operator|=
 name|tm
@@ -883,8 +914,8 @@ argument_list|(
 argument|DSCH
 argument_list|,
 argument|(
-literal|"[%d] tick(%d,%d,%d,%d,%d)\n"
-argument|, 		getpid(), minute, hour, dom, month, dow)
+literal|"[%d] tick(%d,%d,%d,%d,%d,%d)\n"
+argument|, 		getpid(), second, minute, hour, dom, month, dow)
 argument_list|)
 if|if
 condition|(
@@ -1189,6 +1220,14 @@ name|otztm
 argument_list|)
 expr_stmt|;
 comment|/* make 0-based values out of these so we can use them as indicies 			 */
+name|otzsecond
+operator|=
+name|otztm
+operator|.
+name|tm_sec
+operator|-
+name|FIRST_SECOND
+expr_stmt|;
 name|otzminute
 operator|=
 name|otztm
@@ -1304,6 +1343,15 @@ condition|)
 block|{
 if|if
 condition|(
+name|bit_test
+argument_list|(
+name|e
+operator|->
+name|second
+argument_list|,
+name|otzsecond
+argument_list|)
+operator|&&
 name|bit_test
 argument_list|(
 name|e
@@ -1445,6 +1493,15 @@ continue|continue;
 block|}
 if|if
 condition|(
+name|bit_test
+argument_list|(
+name|e
+operator|->
+name|second
+argument_list|,
+name|second
+argument_list|)
+operator|&&
 name|bit_test
 argument_list|(
 name|e
