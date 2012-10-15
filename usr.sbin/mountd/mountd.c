@@ -1486,6 +1486,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+name|int
+name|suspend_nfsd
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|opt_flags
 decl_stmt|;
@@ -1831,7 +1840,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"2deh:lnop:r"
+literal|"2deh:lnop:rS"
 argument_list|)
 operator|)
 operator|!=
@@ -2084,6 +2093,14 @@ name|out_of_mem
 argument_list|()
 expr_stmt|;
 block|}
+break|break;
+case|case
+literal|'S'
+case|:
+name|suspend_nfsd
+operator|=
+literal|1
+expr_stmt|;
 break|break;
 default|default:
 name|usage
@@ -4576,7 +4593,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"usage: mountd [-2] [-d] [-e] [-l] [-n] [-p<port>] [-r] "
-literal|"[-h<bindip>] [export_file ...]\n"
+literal|"[-S] [-h<bindip>] [export_file ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -8364,6 +8381,22 @@ name|struct
 name|nfsex_args
 name|eargs
 decl_stmt|;
+if|if
+condition|(
+name|suspend_nfsd
+operator|!=
+literal|0
+condition|)
+operator|(
+name|void
+operator|)
+name|nfssvc
+argument_list|(
+name|NFSSVC_SUSPENDNFSD
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|v4root_dirpath
 index|[
 literal|0
@@ -9029,6 +9062,17 @@ operator|)
 name|nfssvc
 argument_list|(
 name|NFSSVC_NOPUBLICFH
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+comment|/* Resume the nfsd. If they weren't suspended, this is harmless. */
+operator|(
+name|void
+operator|)
+name|nfssvc
+argument_list|(
+name|NFSSVC_RESUMENFSD
 argument_list|,
 name|NULL
 argument_list|)
