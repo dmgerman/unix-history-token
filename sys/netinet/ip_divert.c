@@ -1483,17 +1483,6 @@ goto|goto
 name|cantsend
 goto|;
 block|}
-name|ip6
-operator|->
-name|ip6_plen
-operator|=
-name|ntohs
-argument_list|(
-name|ip6
-operator|->
-name|ip6_plen
-argument_list|)
-expr_stmt|;
 break|break;
 block|}
 endif|#
