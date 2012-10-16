@@ -289,7 +289,9 @@ name|port_start
 operator|=
 name|rman_get_start
 argument_list|(
-name|port_res
+name|aha
+operator|->
+name|port
 argument_list|)
 expr_stmt|;
 name|aha_alloc
@@ -1172,7 +1174,7 @@ operator|=
 literal|0
 expr_stmt|;
 name|aha
-operator|->
+operator|.
 name|port
 operator|=
 name|bus_alloc_resource
@@ -1196,7 +1198,7 @@ expr_stmt|;
 if|if
 condition|(
 name|aha
-operator|->
+operator|.
 name|port
 operator|==
 name|NULL
@@ -1256,7 +1258,6 @@ expr_stmt|;
 comment|/* 		 * Could query the board and set IRQ/DRQ, but probe does 		 * that. 		 */
 name|not_this_one
 label|:
-empty_stmt|;
 name|bus_release_resource
 argument_list|(
 name|parent
@@ -1266,7 +1267,7 @@ argument_list|,
 name|rid
 argument_list|,
 name|aha
-operator|->
+operator|.
 name|port
 argument_list|)
 expr_stmt|;

@@ -1339,7 +1339,6 @@ name|drqrid
 decl_stmt|;
 name|void
 modifier|*
-modifier|*
 name|ih
 decl_stmt|;
 name|device_t
@@ -1360,12 +1359,6 @@ parameter_list|(
 name|struct
 name|aha_softc
 modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|bus_space_tag_t
-parameter_list|,
-name|bus_space_handle_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1504,10 +1497,10 @@ name|aha_inb
 parameter_list|(
 name|aha
 parameter_list|,
-name|port
+name|reg
 parameter_list|)
 define|\
-value|bus_read_1((aha)->port, port)
+value|bus_read_1((aha)->port, reg)
 end_define
 
 begin_define
@@ -1517,12 +1510,12 @@ name|aha_outb
 parameter_list|(
 name|aha
 parameter_list|,
-name|port
+name|reg
 parameter_list|,
 name|value
 parameter_list|)
 define|\
-value|bus_write_1((aha)->port, port, value)
+value|bus_write_1((aha)->port, reg, value)
 end_define
 
 begin_define

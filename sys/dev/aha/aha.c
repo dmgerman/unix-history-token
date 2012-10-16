@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/conf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/bus.h>
 end_include
 
@@ -67,6 +73,12 @@ begin_include
 include|#
 directive|include
 file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/rman.h>
 end_include
 
 begin_include
@@ -660,15 +672,6 @@ name|struct
 name|aha_softc
 modifier|*
 name|aha
-parameter_list|,
-name|int
-name|unit
-parameter_list|,
-name|bus_space_tag_t
-name|tag
-parameter_list|,
-name|bus_space_handle_t
-name|bsh
 parameter_list|)
 block|{
 name|SLIST_INIT
@@ -5013,7 +5016,7 @@ expr_stmt|;
 name|callout_stop
 argument_list|(
 operator|&
-name|aacb
+name|accb
 operator|->
 name|timer
 argument_list|)
@@ -8182,7 +8185,7 @@ expr_stmt|;
 name|callout_reset
 argument_list|(
 operator|&
-name|aacb
+name|accb
 operator|->
 name|timer
 argument_list|,
