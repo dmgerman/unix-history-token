@@ -1881,6 +1881,38 @@ argument_list|,
 literal|"Use flow id for load sharing"
 argument_list|)
 expr_stmt|;
+name|SYSCTL_ADD_INT
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|ctx
+argument_list|,
+name|SYSCTL_CHILDREN
+argument_list|(
+name|oid
+argument_list|)
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"count"
+argument_list|,
+name|CTLTYPE_INT
+operator||
+name|CTLFLAG_RO
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_count
+argument_list|,
+name|sc
+operator|->
+name|sc_count
+argument_list|,
+literal|"Total number of ports"
+argument_list|)
+expr_stmt|;
 comment|/* Hash all layers by default */
 name|sc
 operator|->
