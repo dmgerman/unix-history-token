@@ -1284,6 +1284,15 @@ argument|(
 literal|"load_entry()...about to parse numerics\n"
 argument|)
 argument_list|)
+name|bit_set
+argument_list|(
+name|e
+operator|->
+name|second
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|ch
 operator|=
 name|get_list
