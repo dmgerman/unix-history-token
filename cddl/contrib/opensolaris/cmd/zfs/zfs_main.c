@@ -1321,7 +1321,7 @@ return|return
 operator|(
 name|gettext
 argument_list|(
-literal|"\tsend [-DnPpRrv] "
+literal|"\tsend [-DnPpRv] "
 literal|"[-i snapshot | -I snapshot]<snapshot>\n"
 argument_list|)
 operator|)
