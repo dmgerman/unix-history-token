@@ -10654,7 +10654,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|mmc
 argument_list|,
-name|sdhci
+name|sdhci_pci
 argument_list|,
 name|mmc_driver
 argument_list|,
