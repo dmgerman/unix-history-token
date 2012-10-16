@@ -145,13 +145,6 @@ directive|include
 file|<net/vnet.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|EPAIRNAME
-value|"epair"
-end_define
-
 begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(
@@ -383,6 +376,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|epairname
+index|[]
+init|=
+literal|"epair"
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Netisr realted definitions and sysctl. */
 end_comment
@@ -397,7 +401,7 @@ block|{
 operator|.
 name|nh_name
 operator|=
-name|EPAIRNAME
+name|epairname
 block|,
 operator|.
 name|nh_proto
@@ -762,7 +766,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_EPAIR
 argument_list|,
-name|EPAIRNAME
+name|epairname
 argument_list|,
 literal|"Pair of virtual cross-over connected Ethernet-like interfaces"
 argument_list|)
@@ -773,24 +777,8 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|if_clone
+modifier|*
 name|epair_cloner
-init|=
-name|IFC_CLONE_INITIALIZER
-argument_list|(
-name|EPAIRNAME
-argument_list|,
-name|NULL
-argument_list|,
-name|IF_MAXUNIT
-argument_list|,
-name|NULL
-argument_list|,
-name|epair_clone_match
-argument_list|,
-name|epair_clone_create
-argument_list|,
-name|epair_clone_destroy
-argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -2859,13 +2847,13 @@ if|if
 condition|(
 name|strncmp
 argument_list|(
-name|EPAIRNAME
+name|epairname
 argument_list|,
 name|name
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|EPAIRNAME
+name|epairname
 argument_list|)
 operator|-
 literal|1
@@ -2886,7 +2874,7 @@ name|name
 operator|+
 sizeof|sizeof
 argument_list|(
-name|EPAIRNAME
+name|epairname
 argument_list|)
 operator|-
 literal|1
@@ -2978,7 +2966,7 @@ name|ETHER_ADDR_LEN
 index|]
 decl_stmt|;
 comment|/* 00:00:00:00:00:00 */
-comment|/* 	 * We are abusing params to create our second interface. 	 * Actually we already created it and called if_clone_createif() 	 * for it to do the official insertion procedure the moment we knew 	 * it cannot fail anymore. So just do attach it here. 	 */
+comment|/* 	 * We are abusing params to create our second interface. 	 * Actually we already created it and called if_clone_create() 	 * for it to do the official insertion procedure the moment we knew 	 * it cannot fail anymore. So just do attach it here. 	 */
 if|if
 condition|(
 name|params
@@ -3459,9 +3447,7 @@ name|ifp
 operator|->
 name|if_dname
 operator|=
-name|ifc
-operator|->
-name|ifc_name
+name|epairname
 expr_stmt|;
 name|ifp
 operator|->
@@ -3628,9 +3614,7 @@ name|ifp
 operator|->
 name|if_dname
 operator|=
-name|ifc
-operator|->
-name|ifc_name
+name|epairname
 expr_stmt|;
 name|ifp
 operator|->
@@ -3691,7 +3675,7 @@ name|strlcpy
 argument_list|(
 name|name
 argument_list|,
-name|EPAIRNAME
+name|epairname
 argument_list|,
 name|len
 argument_list|)
@@ -3716,7 +3700,7 @@ name|error
 condition|)
 name|panic
 argument_list|(
-literal|"%s: if_clone_createif() for our 2nd iface failed: %d"
+literal|"%s: if_clone_create() for our 2nd iface failed: %d"
 argument_list|,
 name|__func__
 argument_list|,
@@ -4252,10 +4236,19 @@ operator|&
 name|epair_nh
 argument_list|)
 expr_stmt|;
-name|if_clone_attach
-argument_list|(
-operator|&
 name|epair_cloner
+operator|=
+name|if_clone_advanced
+argument_list|(
+name|epairname
+argument_list|,
+literal|0
+argument_list|,
+name|epair_clone_match
+argument_list|,
+name|epair_clone_create
+argument_list|,
+name|epair_clone_destroy
 argument_list|)
 expr_stmt|;
 if|if
@@ -4266,7 +4259,7 @@ name|printf
 argument_list|(
 literal|"%s initialized.\n"
 argument_list|,
-name|EPAIRNAME
+name|epairname
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4275,7 +4268,6 @@ name|MOD_UNLOAD
 case|:
 name|if_clone_detach
 argument_list|(
-operator|&
 name|epair_cloner
 argument_list|)
 expr_stmt|;
@@ -4296,7 +4288,7 @@ name|printf
 argument_list|(
 literal|"%s unloaded.\n"
 argument_list|,
-name|EPAIRNAME
+name|epairname
 argument_list|)
 expr_stmt|;
 break|break;

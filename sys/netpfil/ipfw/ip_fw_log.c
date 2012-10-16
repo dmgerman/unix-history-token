@@ -454,12 +454,16 @@ parameter_list|)
 value|rw_wunlock(&log_if_lock)
 end_define
 
-begin_define
-define|#
-directive|define
-name|IPFWNAME
-value|"ipfw"
-end_define
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|ipfwname
+index|[]
+init|=
+literal|"ipfw"
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* we use this dummy function for all ifnet callbacks */
@@ -597,11 +601,11 @@ name|strncmp
 argument_list|(
 name|name
 argument_list|,
-name|IPFWNAME
+name|ipfwname
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|IPFWNAME
+name|ipfwname
 argument_list|)
 operator|-
 literal|1
@@ -714,7 +718,7 @@ name|ifp
 operator|->
 name|if_dname
 operator|=
-name|IPFWNAME
+name|ipfwname
 expr_stmt|;
 name|ifp
 operator|->
@@ -732,7 +736,7 @@ name|IFNAMSIZ
 argument_list|,
 literal|"%s%d"
 argument_list|,
-name|IPFWNAME
+name|ipfwname
 argument_list|,
 name|unit
 argument_list|)
@@ -981,24 +985,8 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|if_clone
+modifier|*
 name|ipfw_log_cloner
-init|=
-name|IFC_CLONE_INITIALIZER
-argument_list|(
-name|IPFWNAME
-argument_list|,
-name|NULL
-argument_list|,
-name|IF_MAXUNIT
-argument_list|,
-name|NULL
-argument_list|,
-name|ipfw_log_clone_match
-argument_list|,
-name|ipfw_log_clone_create
-argument_list|,
-name|ipfw_log_clone_destroy
-argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -1018,10 +1006,19 @@ block|{
 name|LOGIF_LOCK_INIT
 argument_list|()
 expr_stmt|;
-name|if_clone_attach
-argument_list|(
-operator|&
 name|ipfw_log_cloner
+operator|=
+name|if_clone_advanced
+argument_list|(
+name|ipfwname
+argument_list|,
+literal|0
+argument_list|,
+name|ipfw_log_clone_match
+argument_list|,
+name|ipfw_log_clone_create
+argument_list|,
+name|ipfw_log_clone_destroy
 argument_list|)
 expr_stmt|;
 block|}
@@ -1029,7 +1026,6 @@ else|else
 block|{
 name|if_clone_detach
 argument_list|(
-operator|&
 name|ipfw_log_cloner
 argument_list|)
 expr_stmt|;

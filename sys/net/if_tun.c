@@ -362,13 +362,6 @@ name|TUNDEBUG
 value|if (tundebug) if_printf
 end_define
 
-begin_define
-define|#
-directive|define
-name|TUNNAME
-value|"tun"
-end_define
-
 begin_comment
 comment|/*  * All mutable global variables in if_tun are locked using tunmtx, with  * the exception of tundebug, which is used unlocked, and tunclones,  * which is static after setup.  */
 end_comment
@@ -381,13 +374,24 @@ name|tunmtx
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|tunname
+index|[]
+init|=
+literal|"tun"
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_TUN
 argument_list|,
-name|TUNNAME
+name|tunname
 argument_list|,
 literal|"Tunnel Interface"
 argument_list|)
@@ -673,15 +677,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_expr_stmt
-name|IFC_SIMPLE_DECLARE
-argument_list|(
-name|tun
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_decl_stmt
+specifier|static
+name|struct
+name|if_clone
+modifier|*
+name|tun_cloner
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -887,7 +890,7 @@ block|,
 operator|.
 name|d_name
 operator|=
-name|TUNNAME
+name|tunname
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -960,9 +963,7 @@ literal|0600
 argument_list|,
 literal|"%s%d"
 argument_list|,
-name|ifc
-operator|->
-name|ifc_name
+name|tunname
 argument_list|,
 name|unit
 argument_list|)
@@ -970,9 +971,7 @@ expr_stmt|;
 block|}
 name|tuncreate
 argument_list|(
-name|ifc
-operator|->
-name|ifc_name
+name|tunname
 argument_list|,
 name|dev
 argument_list|)
@@ -1060,7 +1059,7 @@ name|strcmp
 argument_list|(
 name|name
 argument_list|,
-name|TUNNAME
+name|tunname
 argument_list|)
 operator|==
 literal|0
@@ -1081,7 +1080,7 @@ name|name
 argument_list|,
 name|NULL
 argument_list|,
-name|TUNNAME
+name|tunname
 argument_list|,
 operator|&
 name|u
@@ -1497,10 +1496,17 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
-name|if_clone_attach
-argument_list|(
-operator|&
 name|tun_cloner
+operator|=
+name|if_clone_simple
+argument_list|(
+name|tunname
+argument_list|,
+name|tun_clone_create
+argument_list|,
+name|tun_clone_destroy
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1509,7 +1515,6 @@ name|MOD_UNLOAD
 case|:
 name|if_clone_detach
 argument_list|(
-operator|&
 name|tun_cloner
 argument_list|)
 expr_stmt|;
@@ -2155,7 +2160,7 @@ condition|)
 block|{
 name|tuncreate
 argument_list|(
-name|TUNNAME
+name|tunname
 argument_list|,
 name|dev
 argument_list|)

@@ -396,6 +396,26 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|if_clone
+modifier|*
+name|lagg_cloner
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|laggname
+index|[]
+init|=
+literal|"lagg"
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|void
@@ -824,16 +844,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_expr_stmt
-name|IFC_SIMPLE_DECLARE
-argument_list|(
-name|lagg
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/* Simple round robin */
@@ -1366,10 +1376,17 @@ operator|&
 name|lagg_list
 argument_list|)
 expr_stmt|;
-name|if_clone_attach
-argument_list|(
-operator|&
 name|lagg_cloner
+operator|=
+name|if_clone_simple
+argument_list|(
+name|laggname
+argument_list|,
+name|lagg_clone_create
+argument_list|,
+name|lagg_clone_destroy
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|lagg_input_p
@@ -1406,7 +1423,6 @@ argument_list|)
 expr_stmt|;
 name|if_clone_detach
 argument_list|(
-operator|&
 name|lagg_cloner
 argument_list|)
 expr_stmt|;
@@ -2038,9 +2054,7 @@ name|if_initname
 argument_list|(
 name|ifp
 argument_list|,
-name|ifc
-operator|->
-name|ifc_name
+name|laggname
 argument_list|,
 name|unit
 argument_list|)

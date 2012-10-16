@@ -291,13 +291,6 @@ end_expr_stmt
 begin_define
 define|#
 directive|define
-name|STFNAME
-value|"stf"
-end_define
-
-begin_define
-define|#
-directive|define
 name|STFUNIT
 value|0
 end_define
@@ -380,6 +373,17 @@ parameter_list|)
 value|((sc)->sc_ifp)
 end_define
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|stfname
+index|[]
+init|=
+literal|"stf"
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Note that mutable fields in the softc are not currently locked.  * We do lock sc_ro in stf_output though.  */
 end_comment
@@ -390,7 +394,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_STF
 argument_list|,
-name|STFNAME
+name|stfname
 argument_list|,
 literal|"6to4 Tunnel Interface"
 argument_list|)
@@ -702,26 +706,11 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|if_clone
+modifier|*
 name|stf_cloner
-init|=
-name|IFC_CLONE_INITIALIZER
-argument_list|(
-name|STFNAME
-argument_list|,
-name|NULL
-argument_list|,
-literal|0
-argument_list|,
-name|NULL
-argument_list|,
-name|stf_clone_match
-argument_list|,
-name|stf_clone_create
-argument_list|,
-name|stf_clone_destroy
-argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -939,9 +928,7 @@ name|ifp
 operator|->
 name|if_dname
 operator|=
-name|ifc
-operator|->
-name|ifc_name
+name|stfname
 expr_stmt|;
 name|ifp
 operator|->
@@ -1195,10 +1182,19 @@ block|{
 case|case
 name|MOD_LOAD
 case|:
-name|if_clone_attach
-argument_list|(
-operator|&
 name|stf_cloner
+operator|=
+name|if_clone_advanced
+argument_list|(
+name|stfname
+argument_list|,
+literal|0
+argument_list|,
+name|stf_clone_match
+argument_list|,
+name|stf_clone_create
+argument_list|,
+name|stf_clone_destroy
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1207,7 +1203,6 @@ name|MOD_UNLOAD
 case|:
 name|if_clone_detach
 argument_list|(
-operator|&
 name|stf_cloner
 argument_list|)
 expr_stmt|;
