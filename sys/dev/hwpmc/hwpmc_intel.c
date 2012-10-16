@@ -496,6 +496,19 @@ operator|=
 literal|5
 expr_stmt|;
 break|break;
+case|case
+literal|0x3A
+case|:
+comment|/* Per Intel document 253669-043US 05/2012. */
+name|cputype
+operator|=
+name|PMC_CPU_INTEL_IVYBRIDGE
+expr_stmt|;
+name|nclasses
+operator|=
+literal|3
+expr_stmt|;
+break|break;
 block|}
 break|break;
 if|#
@@ -632,6 +645,9 @@ name|PMC_CPU_INTEL_CORE2EXTREME
 case|:
 case|case
 name|PMC_CPU_INTEL_COREI7
+case|:
+case|case
+name|PMC_CPU_INTEL_IVYBRIDGE
 case|:
 case|case
 name|PMC_CPU_INTEL_SANDYBRIDGE
@@ -842,6 +858,9 @@ name|PMC_CPU_INTEL_CORE2EXTREME
 case|:
 case|case
 name|PMC_CPU_INTEL_COREI7
+case|:
+case|case
+name|PMC_CPU_INTEL_IVYBRIDGE
 case|:
 case|case
 name|PMC_CPU_INTEL_SANDYBRIDGE

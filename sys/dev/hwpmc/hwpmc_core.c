@@ -2722,7 +2722,7 @@ name|char
 name|iap_umask
 decl_stmt|;
 name|unsigned
-name|char
+name|int
 name|iap_flags
 decl_stmt|;
 block|}
@@ -2814,14 +2814,25 @@ value|(1<< 6)
 end_define
 
 begin_comment
-comment|/* CPU: Sandy Brdige */
+comment|/* CPU: Sandy Bridge */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IAP_F_IB
+value|(1<< 7)
+end_define
+
+begin_comment
+comment|/* CPU: Ivy Bridge */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|IAP_F_FM
-value|(1<< 7)
+value|(1<< 8)
 end_define
 
 begin_comment
@@ -3117,6 +3128,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -3286,6 +3299,8 @@ operator||
 name|IAP_F_I7O
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -3303,6 +3318,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -3438,6 +3455,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -3682,6 +3701,45 @@ argument_list|)
 block|,
 name|IAPDESCR
 argument_list|(
+literal|08H_81H
+argument_list|,
+literal|0x08
+argument_list|,
+literal|0x81
+argument_list|,
+name|IAP_F_FM
+operator||
+name|IAP_F_IB
+argument_list|)
+block|,
+name|IAPDESCR
+argument_list|(
+literal|08H_82H
+argument_list|,
+literal|0x08
+argument_list|,
+literal|0x82
+argument_list|,
+name|IAP_F_FM
+operator||
+name|IAP_F_IB
+argument_list|)
+block|,
+name|IAPDESCR
+argument_list|(
+literal|08H_84H
+argument_list|,
+literal|0x08
+argument_list|,
+literal|0x84
+argument_list|,
+name|IAP_F_FM
+operator||
+name|IAP_F_IB
+argument_list|)
+block|,
+name|IAPDESCR
+argument_list|(
 literal|09H_01H
 argument_list|,
 literal|0x09
@@ -3869,6 +3927,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -3884,6 +3944,45 @@ operator||
 name|IAP_F_I7
 operator||
 name|IAP_F_WM
+argument_list|)
+block|,
+name|IAPDESCR
+argument_list|(
+literal|0EH_10H
+argument_list|,
+literal|0x0E
+argument_list|,
+literal|0x10
+argument_list|,
+name|IAP_F_FM
+operator||
+name|IAP_F_IB
+argument_list|)
+block|,
+name|IAPDESCR
+argument_list|(
+literal|0EH_20H
+argument_list|,
+literal|0x0E
+argument_list|,
+literal|0x20
+argument_list|,
+name|IAP_F_FM
+operator||
+name|IAP_F_IB
+argument_list|)
+block|,
+name|IAPDESCR
+argument_list|(
+literal|0EH_40H
+argument_list|,
+literal|0x0E
+argument_list|,
+literal|0x40
+argument_list|,
+name|IAP_F_FM
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -4441,6 +4540,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -4684,6 +4785,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -4716,6 +4819,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -4733,6 +4838,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -4750,6 +4857,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -4767,6 +4876,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -4784,6 +4895,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -4801,6 +4914,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -4818,6 +4933,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -4835,6 +4952,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -4852,6 +4971,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -4869,6 +4990,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -5118,6 +5241,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -5165,6 +5290,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -5197,6 +5324,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -5315,6 +5444,8 @@ operator||
 name|IAP_F_I7
 operator||
 name|IAP_F_WM
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -5347,6 +5478,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -5364,6 +5497,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -5379,6 +5514,8 @@ operator||
 name|IAP_F_I7
 operator||
 name|IAP_F_WM
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -5495,6 +5632,8 @@ operator||
 name|IAP_F_I7
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -5512,6 +5651,8 @@ operator||
 name|IAP_F_I7
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -5613,6 +5754,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -5632,6 +5775,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -6028,6 +6173,8 @@ argument_list|,
 name|IAP_F_FM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -6075,6 +6222,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -6096,6 +6245,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -6111,6 +6262,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -6128,6 +6281,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -6268,6 +6423,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -6281,6 +6438,8 @@ argument_list|,
 name|IAP_F_FM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -6438,6 +6597,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -6519,6 +6680,58 @@ operator||
 name|IAP_F_I7
 operator||
 name|IAP_F_WM
+argument_list|)
+block|,
+name|IAPDESCR
+argument_list|(
+literal|58H_01H
+argument_list|,
+literal|0x58
+argument_list|,
+literal|0x01
+argument_list|,
+name|IAP_F_FM
+operator||
+name|IAP_F_IB
+argument_list|)
+block|,
+name|IAPDESCR
+argument_list|(
+literal|58H_02H
+argument_list|,
+literal|0x58
+argument_list|,
+literal|0x02
+argument_list|,
+name|IAP_F_FM
+operator||
+name|IAP_F_IB
+argument_list|)
+block|,
+name|IAPDESCR
+argument_list|(
+literal|58H_04H
+argument_list|,
+literal|0x58
+argument_list|,
+literal|0x04
+argument_list|,
+name|IAP_F_FM
+operator||
+name|IAP_F_IB
+argument_list|)
+block|,
+name|IAPDESCR
+argument_list|(
+literal|58H_08H
+argument_list|,
+literal|0x58
+argument_list|,
+literal|0x08
+argument_list|,
+name|IAP_F_FM
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -6623,6 +6836,8 @@ argument_list|,
 name|IAP_F_FM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -6636,6 +6851,8 @@ argument_list|,
 name|IAP_F_FM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -6649,6 +6866,21 @@ argument_list|,
 name|IAP_F_FM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
+argument_list|)
+block|,
+name|IAPDESCR
+argument_list|(
+literal|5FH_01H
+argument_list|,
+literal|0x5F
+argument_list|,
+literal|0x01
+argument_list|,
+name|IAP_F_FM
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -6679,6 +6911,8 @@ operator||
 name|IAP_F_I7O
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -6694,6 +6928,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_I7O
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -6711,6 +6947,8 @@ operator||
 name|IAP_F_I7O
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -6728,6 +6966,8 @@ operator||
 name|IAP_F_I7O
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -6821,6 +7061,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -6838,6 +7080,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -7180,6 +7424,8 @@ argument_list|,
 name|IAP_F_FM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -7193,6 +7439,8 @@ argument_list|,
 name|IAP_F_FM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -7206,6 +7454,8 @@ argument_list|,
 name|IAP_F_FM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -7219,6 +7469,8 @@ argument_list|,
 name|IAP_F_FM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -7232,6 +7484,8 @@ argument_list|,
 name|IAP_F_FM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -7245,6 +7499,47 @@ argument_list|,
 name|IAP_F_FM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
+argument_list|)
+block|,
+name|IAPDESCR
+argument_list|(
+literal|79H_18H
+argument_list|,
+literal|0x79
+argument_list|,
+literal|0x18
+argument_list|,
+name|IAP_F_FM
+operator||
+name|IAP_F_IB
+argument_list|)
+block|,
+name|IAPDESCR
+argument_list|(
+literal|79H_24H
+argument_list|,
+literal|0x79
+argument_list|,
+literal|0x24
+argument_list|,
+name|IAP_F_FM
+operator||
+name|IAP_F_IB
+argument_list|)
+block|,
+name|IAPDESCR
+argument_list|(
+literal|79H_3CH
+argument_list|,
+literal|0x79
+argument_list|,
+literal|0x3C
+argument_list|,
+name|IAP_F_FM
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -7370,6 +7665,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -7583,6 +7880,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -7600,6 +7899,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -7617,6 +7918,8 @@ operator||
 name|IAP_F_I7O
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -7632,6 +7935,8 @@ operator||
 name|IAP_F_I7O
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -7716,6 +8021,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -7748,6 +8055,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -7808,6 +8117,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -7825,6 +8136,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -7842,6 +8155,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -7874,6 +8189,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -7891,6 +8208,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -7908,6 +8227,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -7940,6 +8261,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -7968,6 +8291,8 @@ argument_list|,
 name|IAP_F_FM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -7981,6 +8306,8 @@ argument_list|,
 name|IAP_F_FM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -8011,6 +8338,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -8043,6 +8372,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -8075,6 +8406,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -8092,6 +8425,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -8109,6 +8444,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -8141,6 +8478,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -8169,6 +8508,8 @@ argument_list|,
 name|IAP_F_FM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -8182,6 +8523,8 @@ argument_list|,
 name|IAP_F_FM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -8338,6 +8681,8 @@ argument_list|,
 name|IAP_F_FM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -8400,6 +8745,8 @@ operator||
 name|IAP_F_CC2
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -8417,6 +8764,8 @@ operator||
 name|IAP_F_CC2
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -8434,6 +8783,8 @@ operator||
 name|IAP_F_CC2
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -8451,6 +8802,8 @@ operator||
 name|IAP_F_CC2
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -8464,6 +8817,8 @@ argument_list|,
 name|IAP_F_FM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -8481,6 +8836,8 @@ operator||
 name|IAP_F_CC2
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -8498,6 +8855,8 @@ operator||
 name|IAP_F_CC2
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -8511,6 +8870,8 @@ argument_list|,
 name|IAP_F_FM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -8524,6 +8885,8 @@ argument_list|,
 name|IAP_F_FM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -8537,6 +8900,8 @@ argument_list|,
 name|IAP_F_FM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -8567,6 +8932,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -8601,6 +8968,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -8618,6 +8987,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -8635,6 +9006,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -8800,6 +9173,8 @@ operator||
 name|IAP_F_CC2
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -8817,6 +9192,8 @@ operator||
 name|IAP_F_CC2
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -8843,6 +9220,8 @@ argument_list|,
 name|IAP_F_FM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -8873,6 +9252,10 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -8903,6 +9286,8 @@ operator||
 name|IAP_F_I7O
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -8918,6 +9303,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_I7O
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -8935,6 +9322,8 @@ operator||
 name|IAP_F_I7O
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -8952,6 +9341,8 @@ operator||
 name|IAP_F_I7O
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -9042,6 +9433,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -9059,6 +9452,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -9435,6 +9830,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -9523,6 +9920,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -9536,6 +9935,8 @@ argument_list|,
 name|IAP_F_FM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -9549,6 +9950,8 @@ argument_list|,
 name|IAP_F_FM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -9577,6 +9980,8 @@ operator||
 name|IAP_F_ALLCPUSCORE2
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -9598,6 +10003,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -9705,6 +10112,8 @@ argument_list|,
 name|IAP_F_FM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -9718,6 +10127,8 @@ argument_list|,
 name|IAP_F_FM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -9731,6 +10142,8 @@ argument_list|,
 name|IAP_F_FM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -9780,6 +10193,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -9801,6 +10216,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -9925,6 +10342,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -9946,6 +10365,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -9972,6 +10393,8 @@ argument_list|,
 name|IAP_F_FM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -9991,6 +10414,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -10012,6 +10437,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -10033,6 +10460,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -10054,6 +10483,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -10071,6 +10502,8 @@ operator||
 name|IAP_F_CC2
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -10112,6 +10545,8 @@ argument_list|,
 name|IAP_F_FM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -10125,6 +10560,8 @@ argument_list|,
 name|IAP_F_FM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -10138,6 +10575,8 @@ argument_list|,
 name|IAP_F_FM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -10157,6 +10596,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -10172,6 +10613,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -10189,6 +10632,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -10204,6 +10649,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -10217,6 +10664,8 @@ argument_list|,
 name|IAP_F_FM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -10230,6 +10679,8 @@ argument_list|,
 name|IAP_F_FM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -10482,6 +10933,8 @@ operator||
 name|IAP_F_CC2
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -10499,6 +10952,8 @@ operator||
 name|IAP_F_CC2
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -10516,6 +10971,8 @@ operator||
 name|IAP_F_CC2
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -10529,6 +10986,8 @@ argument_list|,
 name|IAP_F_FM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -10542,6 +11001,8 @@ argument_list|,
 name|IAP_F_FM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -10742,6 +11203,8 @@ argument_list|,
 name|IAP_F_FM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -10768,6 +11231,8 @@ argument_list|,
 name|IAP_F_FM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -10781,6 +11246,8 @@ argument_list|,
 name|IAP_F_FM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -10839,6 +11306,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -10852,6 +11321,8 @@ argument_list|,
 name|IAP_F_FM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -10865,6 +11336,8 @@ argument_list|,
 name|IAP_F_FM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -10878,6 +11351,8 @@ argument_list|,
 name|IAP_F_FM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -10891,6 +11366,8 @@ argument_list|,
 name|IAP_F_FM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -10904,6 +11381,8 @@ argument_list|,
 name|IAP_F_FM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -10919,6 +11398,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -10936,6 +11417,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -10953,6 +11436,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -10981,6 +11466,8 @@ argument_list|,
 name|IAP_F_FM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -11002,6 +11489,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -11023,6 +11512,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -11044,6 +11535,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -11065,6 +11558,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -11097,6 +11592,19 @@ argument_list|,
 name|IAP_F_FM
 operator||
 name|IAP_F_CC2E
+argument_list|)
+block|,
+name|IAPDESCR
+argument_list|(
+name|D3H_01H
+argument_list|,
+literal|0xD3
+argument_list|,
+literal|0x01
+argument_list|,
+name|IAP_F_FM
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -11763,6 +12271,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -11780,6 +12290,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -11797,6 +12309,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -11814,6 +12328,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -11831,6 +12347,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -11848,6 +12366,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -11865,6 +12385,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -11882,6 +12404,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -11895,6 +12419,8 @@ argument_list|,
 name|IAP_F_FM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -11912,6 +12438,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -11929,6 +12457,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -11946,6 +12476,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -11963,6 +12495,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -11980,6 +12514,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -11997,6 +12533,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -12014,6 +12552,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_IB
 argument_list|)
 block|,
 name|IAPDESCR
@@ -12825,7 +13365,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|iap_event_sandybridge_ok_on_counter
+name|iap_event_sb_ib_ok_on_counter
 parameter_list|(
 name|enum
 name|pmc_event
@@ -12843,13 +13383,46 @@ condition|(
 name|pe
 condition|)
 block|{
-comment|/* 		 * Events valid only on counter 2. 		 */
+comment|/* Events valid only on counter 0. */
+case|case
+name|PMC_EV_IAP_EVENT_B7H_01H
+case|:
+name|mask
+operator|=
+literal|0x1
+expr_stmt|;
+break|break;
+comment|/* Events valid only on counter 1. */
+case|case
+name|PMC_EV_IAP_EVENT_C0H_01H
+case|:
+name|mask
+operator|=
+literal|0x1
+expr_stmt|;
+break|break;
+comment|/* Events valid only on counter 2. */
 case|case
 name|PMC_EV_IAP_EVENT_48H_01H
 case|:
 name|mask
 operator|=
-literal|0x2
+literal|0x4
+expr_stmt|;
+break|break;
+comment|/* Events valid only on counter 3. */
+case|case
+name|PMC_EV_IAP_EVENT_BBH_01H
+case|:
+case|case
+name|PMC_EV_IAP_EVENT_CDH_01H
+case|:
+case|case
+name|PMC_EV_IAP_EVENT_CDH_02H
+case|:
+name|mask
+operator|=
+literal|0x8
 expr_stmt|;
 break|break;
 default|default:
@@ -13180,9 +13753,12 @@ break|break;
 case|case
 name|PMC_CPU_INTEL_SANDYBRIDGE
 case|:
+case|case
+name|PMC_CPU_INTEL_IVYBRIDGE
+case|:
 if|if
 condition|(
-name|iap_event_sandybridge_ok_on_counter
+name|iap_event_sb_ib_ok_on_counter
 argument_list|(
 name|ev
 argument_list|,
@@ -13282,6 +13858,14 @@ case|:
 name|cpuflag
 operator|=
 name|IAP_F_I7
+expr_stmt|;
+break|break;
+case|case
+name|PMC_CPU_INTEL_IVYBRIDGE
+case|:
+name|cpuflag
+operator|=
+name|IAP_F_IB
 expr_stmt|;
 break|break;
 case|case
@@ -13638,6 +14222,16 @@ operator|)
 return|;
 if|if
 condition|(
+operator|(
+name|core_cputype
+operator|==
+name|PMC_CPU_INTEL_COREI7
+operator|||
+name|core_cputype
+operator|==
+name|PMC_CPU_INTEL_WESTMERE
+operator|)
+operator|&&
 name|a
 operator|->
 name|pm_md
@@ -13647,7 +14241,36 @@ operator|.
 name|pm_iap_rsp
 operator|&
 operator|~
-name|IA_OFFCORE_RSP_MASK
+name|IA_OFFCORE_RSP_MASK_I7WM
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+elseif|else
+if|if
+condition|(
+operator|(
+name|core_cputype
+operator|==
+name|PMC_CPU_INTEL_SANDYBRIDGE
+operator|||
+name|core_cputype
+operator|==
+name|PMC_CPU_INTEL_IVYBRIDGE
+operator|)
+operator|&&
+name|a
+operator|->
+name|pm_md
+operator|.
+name|pm_iap
+operator|.
+name|pm_iap_rsp
+operator|&
+operator|~
+name|IA_OFFCORE_RSP_MASK_SBIB
 condition|)
 return|return
 operator|(
@@ -13669,8 +14292,6 @@ operator|.
 name|pm_iap
 operator|.
 name|pm_iap_rsp
-operator|&
-name|IA_OFFCORE_RSP_MASK
 expr_stmt|;
 block|}
 if|if
