@@ -820,6 +820,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|if_baudrate_pf
+value|if_data.ifi_baudrate_pf
+end_define
+
+begin_define
+define|#
+directive|define
 name|if_hwassist
 value|if_data.ifi_hwassist
 end_define

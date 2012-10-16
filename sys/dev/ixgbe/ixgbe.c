@@ -11976,8 +11976,18 @@ name|ifp
 operator|->
 name|if_baudrate
 operator|=
-literal|1000000000
+name|IF_Gbps
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
+name|ifp
+operator|->
+name|if_baudrate_pf
+operator|=
+literal|1
+expr_stmt|;
+comment|/* 1Gbps * 10^1 = 10Gbps */
 name|ifp
 operator|->
 name|if_init

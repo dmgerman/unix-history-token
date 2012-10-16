@@ -187,9 +187,9 @@ name|ifi_vhid
 decl_stmt|;
 comment|/* carp vhid */
 name|u_char
-name|ifi_spare_char2
+name|ifi_baudrate_pf
 decl_stmt|;
-comment|/* spare byte */
+comment|/* baudrate power factor */
 name|u_char
 name|ifi_datalen
 decl_stmt|;
