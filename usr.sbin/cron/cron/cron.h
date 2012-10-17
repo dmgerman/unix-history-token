@@ -819,10 +819,6 @@ define|#
 directive|define
 name|NOT_UNTIL
 value|0x10
-define|#
-directive|define
-name|SECONDS_COUNT
-value|0x20
 name|time_t
 name|lastrun
 decl_stmt|;
