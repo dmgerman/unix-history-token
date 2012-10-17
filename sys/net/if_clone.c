@@ -995,7 +995,7 @@ if|if
 condition|(
 name|ifc
 operator|->
-name|type
+name|ifc_type
 operator|==
 name|SIMPLE
 condition|)
