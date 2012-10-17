@@ -6373,6 +6373,8 @@ name|prop
 decl_stmt|;
 name|boolean_t
 name|do_prefix
+init|=
+name|B_TRUE
 decl_stmt|;
 name|uint64_t
 name|idx
