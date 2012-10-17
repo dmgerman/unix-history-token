@@ -648,8 +648,6 @@ literal|"nfs"
 block|,
 literal|"ntfs"
 block|,
-literal|"nwfs"
-block|,
 literal|"nullfs"
 block|,
 literal|"oldnfs"

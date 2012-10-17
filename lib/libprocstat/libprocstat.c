@@ -5353,16 +5353,6 @@ argument_list|(
 name|ntfs
 argument_list|)
 block|,
-ifdef|#
-directive|ifdef
-name|LIBPROCSTAT_NWFS
-name|FSTYPE
-argument_list|(
-name|nwfs
-argument_list|)
-block|,
-endif|#
-directive|endif
 name|FSTYPE
 argument_list|(
 name|smbfs
