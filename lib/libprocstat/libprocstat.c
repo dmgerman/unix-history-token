@@ -5350,11 +5350,6 @@ argument_list|)
 block|,
 name|FSTYPE
 argument_list|(
-name|ntfs
-argument_list|)
-block|,
-name|FSTYPE
-argument_list|(
 name|smbfs
 argument_list|)
 block|,

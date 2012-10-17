@@ -646,8 +646,6 @@ literal|"msdosfs"
 block|,
 literal|"nfs"
 block|,
-literal|"ntfs"
-block|,
 literal|"nullfs"
 block|,
 literal|"oldnfs"

@@ -162,27 +162,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ntfs_filestat
-parameter_list|(
-name|kvm_t
-modifier|*
-name|kd
-parameter_list|,
-name|struct
-name|vnode
-modifier|*
-name|vp
-parameter_list|,
-name|struct
-name|vnstat
-modifier|*
-name|vn
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|smbfs_filestat
 parameter_list|(
 name|kvm_t
