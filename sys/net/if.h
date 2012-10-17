@@ -614,7 +614,7 @@ name|IF_Kbps
 parameter_list|(
 name|x
 parameter_list|)
-value|((x) * 1000)
+value|((uintmax_t)(x) * 1000)
 end_define
 
 begin_comment
