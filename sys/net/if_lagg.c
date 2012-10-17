@@ -1899,7 +1899,7 @@ literal|"count"
 argument_list|,
 name|CTLTYPE_INT
 operator||
-name|CTLFLAG_RO
+name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|sc
