@@ -3368,9 +3368,12 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|printf
+name|log
 argument_list|(
-literal|"if_attachdomain called more than once on %s\n"
+name|LOG_WARNING
+argument_list|,
+literal|"if_attachdomain called more than once "
+literal|"on %s\n"
 argument_list|,
 name|ifp
 operator|->
