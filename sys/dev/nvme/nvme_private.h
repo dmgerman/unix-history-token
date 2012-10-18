@@ -325,11 +325,11 @@ name|void
 modifier|*
 name|cb_arg
 decl_stmt|;
-name|SLIST_ENTRY
+name|STAILQ_ENTRY
 argument_list|(
 argument|nvme_request
 argument_list|)
-name|slist
+name|stailq
 expr_stmt|;
 block|}
 struct|;
@@ -472,6 +472,13 @@ argument_list|,
 argument|nvme_tracker
 argument_list|)
 name|free_tr
+expr_stmt|;
+name|STAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|nvme_request
+argument_list|)
+name|queued_req
 expr_stmt|;
 name|struct
 name|nvme_tracker
