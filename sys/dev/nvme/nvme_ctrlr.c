@@ -3473,6 +3473,14 @@ name|ctrlr
 operator|->
 name|adminq
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|qpair
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 name|tr
 operator|=
 name|nvme_qpair_allocate_tracker
@@ -3546,6 +3554,14 @@ argument_list|,
 name|tr
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|qpair
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -3603,6 +3619,14 @@ name|ioq
 index|[
 literal|0
 index|]
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|qpair
+operator|->
+name|lock
+argument_list|)
 expr_stmt|;
 name|tr
 operator|=
@@ -3726,6 +3750,14 @@ literal|"bus_dmamap_load returned non-zero!\n"
 argument_list|)
 expr_stmt|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|qpair
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

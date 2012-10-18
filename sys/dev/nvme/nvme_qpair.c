@@ -170,14 +170,6 @@ name|nvme_tracker
 modifier|*
 name|tr
 decl_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|qpair
-operator|->
-name|lock
-argument_list|)
-expr_stmt|;
 name|tr
 operator|=
 name|SLIST_FIRST
@@ -207,14 +199,6 @@ operator|->
 name|num_entries
 condition|)
 block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|qpair
-operator|->
-name|lock
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|NULL
@@ -245,14 +229,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|qpair
-operator|->
-name|lock
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|NULL
@@ -573,7 +549,6 @@ if|if
 condition|(
 name|retry
 condition|)
-comment|/* nvme_qpair_submit_cmd() will release the lock. */
 name|nvme_qpair_submit_cmd
 argument_list|(
 name|qpair
@@ -625,6 +600,7 @@ argument_list|,
 name|slist
 argument_list|)
 expr_stmt|;
+block|}
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -633,7 +609,6 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|++
@@ -1873,14 +1848,6 @@ name|qpair
 operator|->
 name|num_cmds
 operator|++
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|qpair
-operator|->
-name|lock
-argument_list|)
 expr_stmt|;
 block|}
 end_function
