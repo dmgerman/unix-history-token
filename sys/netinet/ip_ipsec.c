@@ -394,8 +394,6 @@ modifier|*
 name|sp
 decl_stmt|;
 name|int
-name|s
-decl_stmt|,
 name|error
 decl_stmt|;
 name|mtag
@@ -408,11 +406,6 @@ name|PACKET_TAG_IPSEC_IN_DONE
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|splnet
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -469,11 +462,6 @@ name|NULL
 condition|)
 block|{
 comment|/* NB: can happen if error */
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 comment|/*XXX error stat???*/
 name|DPRINTF
 argument_list|(
@@ -501,11 +489,6 @@ name|KEY_FREESP
 argument_list|(
 operator|&
 name|sp
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 if|if
@@ -578,8 +561,6 @@ modifier|*
 name|sp
 decl_stmt|;
 name|int
-name|s
-decl_stmt|,
 name|error
 decl_stmt|;
 comment|/* 	 * enforce IPsec policy checking if we are seeing last header. 	 * note that we do not visit this with protocols with pcb layer 	 * code - like udp/tcp/raw ip. 	 */
@@ -615,11 +596,6 @@ name|PACKET_TAG_IPSEC_IN_DONE
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|splnet
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -711,11 +687,6 @@ return|return
 literal|1
 return|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|error
@@ -966,9 +937,6 @@ name|m_tag
 modifier|*
 name|mtag
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 comment|/* 	 * Check the security policy (SP) for the packet and, if 	 * required, do IPsec-related processing.  There are two 	 * cases here; the first time a packet is sent through 	 * it will be untagged and handled by ipsec4_checkpolicy. 	 * If the packet is resubmitted to ip_output (e.g. after 	 * AH, ESP, etc. processing), there will be a tag to bypass 	 * the lookup and related policy checking. 	 */
 name|mtag
 operator|=
@@ -981,11 +949,6 @@ name|PACKET_TAG_IPSEC_PENDING_TDB
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|splnet
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -1225,11 +1188,6 @@ name|sp
 operator|=
 name|NULL
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 goto|goto
 name|done
 goto|;
@@ -1412,11 +1370,6 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 goto|goto
 name|reinjected
 goto|;
@@ -1424,11 +1377,6 @@ block|}
 else|else
 block|{
 comment|/* sp == NULL */
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|*

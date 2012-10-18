@@ -4373,7 +4373,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Update parameters of an IPv6 interface address.  * If necessary, a new entry is created and linked into address chains.  * This function is separated from in6_control().  * XXX: should this be performed under splnet()?  */
+comment|/*  * Update parameters of an IPv6 interface address.  * If necessary, a new entry is created and linked into address chains.  * This function is separated from in6_control().  */
 end_comment
 
 begin_function
@@ -6751,12 +6751,6 @@ modifier|*
 name|ifp
 parameter_list|)
 block|{
-name|int
-name|s
-init|=
-name|splnet
-argument_list|()
-decl_stmt|;
 name|IF_ADDR_WLOCK
 argument_list|(
 name|ifp
@@ -6872,11 +6866,6 @@ name|ia_ifa
 argument_list|)
 expr_stmt|;
 comment|/* in6_ifaddrhead */
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -8341,12 +8330,6 @@ name|ifacount
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|s
-init|=
-name|splimp
-argument_list|()
-decl_stmt|;
 name|struct
 name|ifaddr
 modifier|*
@@ -8428,24 +8411,12 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
 block|}
-block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|ia
 operator|->
 name|ia_ifa

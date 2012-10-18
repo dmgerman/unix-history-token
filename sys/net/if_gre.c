@@ -2579,9 +2579,6 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 name|struct
 name|sockaddr_in
 name|si
@@ -2618,11 +2615,6 @@ expr_stmt|;
 name|adj
 operator|=
 literal|0
-expr_stmt|;
-name|s
-operator|=
-name|splnet
-argument_list|()
 expr_stmt|;
 switch|switch
 condition|(
@@ -4284,11 +4276,6 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
