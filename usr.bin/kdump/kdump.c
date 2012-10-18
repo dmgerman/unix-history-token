@@ -7003,7 +7003,7 @@ modifier|*
 name|sa
 parameter_list|)
 block|{
-comment|/*  TODO: Support additional address families 	#include<netnatm/natm.h> 	struct sockaddr_natm	*natm; 	#include<netsmb/netbios.h> 	struct sockaddr_nb	*nb; */
+comment|/*  TODO: Support additional address families 	#include<netnatm/natm.h> 	struct sockaddr_natm	*natm; */
 name|char
 name|addr
 index|[

@@ -650,8 +650,6 @@ literal|"nullfs"
 block|,
 literal|"oldnfs"
 block|,
-literal|"smbfs"
-block|,
 literal|"udf"
 block|,
 literal|"unionfs"
