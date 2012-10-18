@@ -1130,6 +1130,17 @@ argument_list|,
 name|alloc_prp_list
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tr
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 name|memset
 argument_list|(
 operator|&

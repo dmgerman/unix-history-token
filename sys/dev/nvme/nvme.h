@@ -1847,7 +1847,7 @@ comment|/* NVM I/O functions */
 end_comment
 
 begin_function_decl
-name|void
+name|int
 name|nvme_ns_cmd_write
 parameter_list|(
 name|struct
@@ -1876,7 +1876,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|nvme_ns_cmd_read
 parameter_list|(
 name|struct
@@ -1905,7 +1905,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|nvme_ns_cmd_deallocate
 parameter_list|(
 name|struct
@@ -1931,7 +1931,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|nvme_ns_cmd_flush
 parameter_list|(
 name|struct

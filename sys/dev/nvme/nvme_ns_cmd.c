@@ -24,7 +24,7 @@ file|"nvme_private.h"
 end_include
 
 begin_function
-name|void
+name|int
 name|nvme_ns_cmd_read
 parameter_list|(
 name|struct
@@ -84,6 +84,17 @@ argument_list|,
 name|payload
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tr
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
 name|cmd
 operator|=
 operator|&
@@ -164,11 +175,16 @@ literal|"bus_dmamap_load returned non-zero!\n"
 operator|)
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|nvme_ns_cmd_write
 parameter_list|(
 name|struct
@@ -228,6 +244,17 @@ argument_list|,
 name|payload
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tr
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
 name|cmd
 operator|=
 operator|&
@@ -308,11 +335,16 @@ literal|"bus_dmamap_load returned non-zero!\n"
 operator|)
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|nvme_ns_cmd_deallocate
 parameter_list|(
 name|struct
@@ -373,6 +405,17 @@ argument_list|,
 name|payload
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tr
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
 name|cmd
 operator|=
 operator|&
@@ -445,11 +488,16 @@ literal|"bus_dmamap_load returned non-zero!\n"
 operator|)
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|nvme_ns_cmd_flush
 parameter_list|(
 name|struct
@@ -494,6 +542,17 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tr
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
 name|cmd
 operator|=
 operator|&
@@ -524,6 +583,11 @@ argument_list|,
 name|tr
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

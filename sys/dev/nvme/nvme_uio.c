@@ -162,6 +162,17 @@ name|TRUE
 comment|/* alloc_prp_list */
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tr
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 name|memset
 argument_list|(
 operator|&
@@ -244,7 +255,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|nvme_read_uio
 parameter_list|(
 name|struct
@@ -291,6 +302,17 @@ argument_list|,
 name|uio
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tr
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
 name|cmd
 operator|=
 operator|&
@@ -412,12 +434,17 @@ literal|"bus_dmamap_load_uio returned non-zero!\n"
 operator|)
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|nvme_write_uio
 parameter_list|(
 name|struct
@@ -464,6 +491,17 @@ argument_list|,
 name|uio
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tr
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
 name|cmd
 operator|=
 operator|&
@@ -585,6 +623,11 @@ literal|"bus_dmamap_load_uio returned non-zero!\n"
 operator|)
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -615,6 +658,9 @@ name|struct
 name|mtx
 modifier|*
 name|mtx
+decl_stmt|;
+name|int
+name|err
 decl_stmt|;
 if|#
 directive|if
@@ -681,6 +727,8 @@ name|uio_rw
 operator|==
 name|UIO_READ
 condition|)
+name|err
+operator|=
 name|nvme_read_uio
 argument_list|(
 name|ns
@@ -689,6 +737,8 @@ name|uio
 argument_list|)
 expr_stmt|;
 else|else
+name|err
+operator|=
 name|nvme_write_uio
 argument_list|(
 name|ns
@@ -696,6 +746,12 @@ argument_list|,
 name|uio
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|err
+operator|==
+literal|0
+condition|)
 name|msleep
 argument_list|(
 name|uio
@@ -735,6 +791,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|err
+operator|==
+literal|0
+condition|)
 name|uio
 operator|->
 name|uio_resid

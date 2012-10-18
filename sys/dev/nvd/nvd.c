@@ -809,6 +809,35 @@ argument_list|,
 name|nvd_done
 argument_list|)
 expr_stmt|;
+comment|/* 		 * TODO: remove this loop and rely on GEOM's pacing once 		 *  nvme(4) returns ENOMEM only for malloc() failures. 		 *  Currently nvme(4) returns ENOMEM also for cases when 		 *  the submission queue is completely full, and that case 		 *  will be handled more elegantly in a future update. 		 */
+while|while
+condition|(
+name|err
+operator|==
+name|ENOMEM
+condition|)
+block|{
+name|pause
+argument_list|(
+literal|"nvd enomem"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|err
+operator|=
+name|nvme_ns_bio_process
+argument_list|(
+name|ndisk
+operator|->
+name|ns
+argument_list|,
+name|bp
+argument_list|,
+name|nvd_done
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|err
@@ -829,7 +858,7 @@ name|bp
 operator|->
 name|bio_error
 operator|=
-name|EIO
+name|err
 expr_stmt|;
 name|bp
 operator|->
