@@ -151,15 +151,11 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-comment|/* 	 * For uio, always allocate a PRP list, rather than walking 	 *  the iovecs. 	 */
 name|tr
 operator|=
 name|nvme_qpair_allocate_tracker
 argument_list|(
 name|qpair
-argument_list|,
-name|TRUE
-comment|/* alloc_prp_list */
 argument_list|)
 expr_stmt|;
 if|if
@@ -412,7 +408,7 @@ name|dma_tag
 argument_list|,
 name|tr
 operator|->
-name|dma_map
+name|payload_dma_map
 argument_list|,
 name|uio
 argument_list|,
@@ -601,7 +597,7 @@ name|dma_tag
 argument_list|,
 name|tr
 operator|->
-name|dma_map
+name|payload_dma_map
 argument_list|,
 name|uio
 argument_list|,

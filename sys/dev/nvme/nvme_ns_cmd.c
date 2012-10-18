@@ -149,7 +149,7 @@ name|dma_tag
 argument_list|,
 name|tr
 operator|->
-name|dma_map
+name|payload_dma_map
 argument_list|,
 name|payload
 argument_list|,
@@ -309,7 +309,7 @@ name|dma_tag
 argument_list|,
 name|tr
 operator|->
-name|dma_map
+name|payload_dma_map
 argument_list|,
 name|payload
 argument_list|,
@@ -462,7 +462,7 @@ name|dma_tag
 argument_list|,
 name|tr
 operator|->
-name|dma_map
+name|payload_dma_map
 argument_list|,
 name|payload
 argument_list|,

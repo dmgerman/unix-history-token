@@ -135,11 +135,11 @@ begin_define
 define|#
 directive|define
 name|NVME_MAX_PRP_LIST_ENTRIES
-value|(128)
+value|(32)
 end_define
 
 begin_comment
-comment|/*  * For commands requiring more than 2 PRP entries, one PRP will be  *  embedded in the command (prp1), and the rest of the PRP entries  *  will be in a list pointed to by the command (prp2).  This means  *  that real max number of PRP entries we support is 128+1, which  *  results in a max xfer size of 128*PAGE_SIZE.  */
+comment|/*  * For commands requiring more than 2 PRP entries, one PRP will be  *  embedded in the command (prp1), and the rest of the PRP entries  *  will be in a list pointed to by the command (prp2).  This means  *  that real max number of PRP entries we support is 32+1, which  *  results in a max xfer size of 32*PAGE_SIZE.  */
 end_comment
 
 begin_define
@@ -266,32 +266,6 @@ end_endif
 
 begin_struct
 struct|struct
-name|nvme_prp_list
-block|{
-name|uint64_t
-name|prp
-index|[
-name|NVME_MAX_PRP_LIST_ENTRIES
-index|]
-decl_stmt|;
-name|SLIST_ENTRY
-argument_list|(
-argument|nvme_prp_list
-argument_list|)
-name|slist
-expr_stmt|;
-name|bus_addr_t
-name|bus_addr
-decl_stmt|;
-name|bus_dmamap_t
-name|dma_map
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
 name|nvme_tracker
 block|{
 name|SLIST_ENTRY
@@ -314,7 +288,7 @@ name|callout
 name|timer
 decl_stmt|;
 name|bus_dmamap_t
-name|dma_map
+name|payload_dma_map
 decl_stmt|;
 name|nvme_cb_fn_t
 name|cb_fn
@@ -326,13 +300,20 @@ decl_stmt|;
 name|uint32_t
 name|payload_size
 decl_stmt|;
-name|struct
-name|nvme_prp_list
-modifier|*
-name|prp_list
-decl_stmt|;
 name|uint16_t
 name|cid
+decl_stmt|;
+name|uint64_t
+name|prp
+index|[
+name|NVME_MAX_PRP_LIST_ENTRIES
+index|]
+decl_stmt|;
+name|bus_addr_t
+name|prp_bus_addr
+decl_stmt|;
+name|bus_dmamap_t
+name|prp_dma_map
 decl_stmt|;
 block|}
 struct|;
@@ -423,9 +404,6 @@ decl_stmt|;
 name|uint32_t
 name|num_tr
 decl_stmt|;
-name|uint32_t
-name|num_prp_list
-decl_stmt|;
 name|SLIST_HEAD
 argument_list|(
 argument_list|,
@@ -439,13 +417,6 @@ modifier|*
 modifier|*
 name|act_tr
 decl_stmt|;
-name|SLIST_HEAD
-argument_list|(
-argument_list|,
-argument|nvme_prp_list
-argument_list|)
-name|free_prp_list
-expr_stmt|;
 name|struct
 name|mtx
 name|lock
@@ -1282,9 +1253,6 @@ name|struct
 name|nvme_qpair
 modifier|*
 name|qpair
-parameter_list|,
-name|boolean_t
-name|alloc_prp_list
 parameter_list|)
 function_decl|;
 end_function_decl
