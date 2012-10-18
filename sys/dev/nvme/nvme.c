@@ -909,11 +909,8 @@ name|struct
 name|nvme_tracker
 modifier|*
 name|tr
-decl_stmt|;
-name|struct
-name|nvme_qpair
-modifier|*
-name|qpair
+init|=
+name|arg
 decl_stmt|;
 name|uint32_t
 name|cur_nseg
@@ -928,21 +925,6 @@ operator|(
 literal|"nvme_payload_map error != 0\n"
 operator|)
 argument_list|)
-expr_stmt|;
-name|tr
-operator|=
-operator|(
-expr|struct
-name|nvme_tracker
-operator|*
-operator|)
-name|arg
-expr_stmt|;
-name|qpair
-operator|=
-name|tr
-operator|->
-name|qpair
 expr_stmt|;
 comment|/* 	 * Note that we specified PAGE_SIZE for alignment and max 	 *  segment size when creating the bus dma tags.  So here 	 *  we can safely just transfer each segment to its 	 *  associated PRP entry. 	 */
 name|tr
@@ -1043,6 +1025,8 @@ block|}
 block|}
 name|nvme_qpair_submit_cmd
 argument_list|(
+name|tr
+operator|->
 name|qpair
 argument_list|,
 name|tr

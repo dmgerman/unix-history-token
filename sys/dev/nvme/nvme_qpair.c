@@ -590,6 +590,12 @@ operator|->
 name|payload_size
 operator|>
 literal|0
+operator|||
+name|req
+operator|->
+name|uio
+operator|!=
+name|NULL
 condition|)
 name|bus_dmamap_unload
 argument_list|(
