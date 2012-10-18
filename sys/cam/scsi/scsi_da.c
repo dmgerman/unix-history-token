@@ -986,6 +986,24 @@ name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
 block|{
+comment|/* 		 * USB DISK Pro PMAP 		 * Reported by: jhs 		 * PR: usb/96381 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|" "
+block|,
+literal|"USB DISK Pro"
+block|,
+literal|"PMAP"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_SYNC_CACHE
+block|}
+block|,
+block|{
 comment|/* 		 * Motorola E398 Mobile Phone (TransFlash memory card). 		 * Reported by: Wojciech A. Koszek<dunstan@FreeBSD.czest.pl> 		 * PR: usb/89889 		 */
 block|{
 name|T_DIRECT
