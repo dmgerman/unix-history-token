@@ -3927,14 +3927,9 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ZERO_COPY_SOCKETS
 name|int
 name|cow_send
 decl_stmt|;
-endif|#
-directive|endif
 operator|*
 name|retmp
 operator|=
@@ -3963,16 +3958,10 @@ literal|0
 expr_stmt|;
 do|do
 block|{
-ifdef|#
-directive|ifdef
-name|ZERO_COPY_SOCKETS
 name|cow_send
 operator|=
 literal|0
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* ZERO_COPY_SOCKETS */
 if|if
 condition|(
 name|resid
@@ -3980,9 +3969,6 @@ operator|>=
 name|MINCLSIZE
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|ZERO_COPY_SOCKETS
 if|if
 condition|(
 name|top
@@ -4101,74 +4087,6 @@ name|space
 argument_list|)
 expr_stmt|;
 block|}
-else|#
-directive|else
-comment|/* ZERO_COPY_SOCKETS */
-if|if
-condition|(
-name|top
-operator|==
-name|NULL
-condition|)
-block|{
-name|m
-operator|=
-name|m_getcl
-argument_list|(
-name|M_WAIT
-argument_list|,
-name|MT_DATA
-argument_list|,
-name|M_PKTHDR
-argument_list|)
-expr_stmt|;
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|len
-operator|=
-literal|0
-expr_stmt|;
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|rcvif
-operator|=
-name|NULL
-expr_stmt|;
-block|}
-else|else
-name|m
-operator|=
-name|m_getcl
-argument_list|(
-name|M_WAIT
-argument_list|,
-name|MT_DATA
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|len
-operator|=
-name|min
-argument_list|(
-name|min
-argument_list|(
-name|MCLBYTES
-argument_list|,
-name|resid
-argument_list|)
-argument_list|,
-operator|*
-name|space
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* ZERO_COPY_SOCKETS */
 block|}
 else|else
 block|{
@@ -4286,9 +4204,6 @@ name|space
 operator|-=
 name|len
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ZERO_COPY_SOCKETS
 if|if
 condition|(
 name|cow_send
@@ -4298,9 +4213,6 @@ operator|=
 literal|0
 expr_stmt|;
 else|else
-endif|#
-directive|endif
-comment|/* ZERO_COPY_SOCKETS */
 name|error
 operator|=
 name|uiomove
@@ -4413,7 +4325,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*ZERO_COPY_SOCKETS*/
+comment|/* ZERO_COPY_SOCKETS */
 end_comment
 
 begin_define
