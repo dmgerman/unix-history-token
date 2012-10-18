@@ -342,6 +342,12 @@ operator|->
 name|num_tr
 operator|++
 expr_stmt|;
+name|tr
+operator|->
+name|qpair
+operator|=
+name|qpair
+expr_stmt|;
 block|}
 else|else
 name|SLIST_REMOVE_HEAD
