@@ -307,13 +307,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|mtx
-name|ipi_mtx
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|cpu_ipi_selected_t
 modifier|*
 name|cpu_ipi_selected
@@ -1198,18 +1191,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|mtx_init
-argument_list|(
-operator|&
-name|ipi_mtx
-argument_list|,
-literal|"ipi"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_SPIN
-argument_list|)
-expr_stmt|;
 name|intr_setup
 argument_list|(
 name|PIL_AST
@@ -2214,6 +2195,7 @@ name|struct
 name|trapframe
 modifier|*
 name|tf
+name|__unused
 parameter_list|)
 block|{  }
 end_function
@@ -2227,6 +2209,7 @@ name|struct
 name|trapframe
 modifier|*
 name|tf
+name|__unused
 parameter_list|)
 block|{
 name|CTR2
