@@ -158,6 +158,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|NVME_ADMIN_TRACKERS
+value|(16)
+end_define
+
+begin_define
+define|#
+directive|define
 name|NVME_ADMIN_ENTRIES
 value|(128)
 end_define
@@ -180,22 +187,36 @@ name|NVME_MAX_ADMIN_ENTRIES
 value|(4096)
 end_define
 
-begin_define
-define|#
-directive|define
-name|NVME_IO_ENTRIES
-value|(1024)
-end_define
-
 begin_comment
-comment|/* min is a reasonable value picked for the nvme(4) driver */
+comment|/*  * NVME_IO_ENTRIES defines the size of an I/O qpair's submission and completion  *  queues, while NVME_IO_TRACKERS defines the maximum number of I/O that we  *  will allow outstanding on an I/O qpair at any time.  The only advantage in  *  having IO_ENTRIES> IO_TRACKERS is for debugging purposes - when dumping  *  the contents of the submission and completion queues, it will show a longer  *  history of data.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|NVME_MIN_IO_ENTRIES
+name|NVME_IO_ENTRIES
+value|(256)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NVME_IO_TRACKERS
 value|(128)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NVME_MIN_IO_TRACKERS
+value|(16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NVME_MAX_IO_TRACKERS
+value|(1024)
 end_define
 
 begin_comment
@@ -397,6 +418,9 @@ name|uint32_t
 name|num_entries
 decl_stmt|;
 name|uint32_t
+name|num_trackers
+decl_stmt|;
+name|uint32_t
 name|sq_tdbl_off
 decl_stmt|;
 name|uint32_t
@@ -441,9 +465,6 @@ name|cpl_dma_map
 decl_stmt|;
 name|uint64_t
 name|cpl_bus_addr
-decl_stmt|;
-name|uint32_t
-name|num_tr
 decl_stmt|;
 name|SLIST_HEAD
 argument_list|(
@@ -1272,6 +1293,9 @@ name|uint32_t
 name|num_entries
 parameter_list|,
 name|uint32_t
+name|num_trackers
+parameter_list|,
+name|uint32_t
 name|max_xfer_size
 parameter_list|,
 name|struct
@@ -1302,20 +1326,6 @@ end_function_decl
 begin_function_decl
 name|void
 name|nvme_qpair_process_completions
-parameter_list|(
-name|struct
-name|nvme_qpair
-modifier|*
-name|qpair
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|nvme_tracker
-modifier|*
-name|nvme_qpair_allocate_tracker
 parameter_list|(
 name|struct
 name|nvme_qpair

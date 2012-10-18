@@ -756,18 +756,18 @@ name|que_list
 argument_list|,
 name|OID_AUTO
 argument_list|,
-literal|"num_tr"
+literal|"num_trackers"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|qpair
 operator|->
-name|num_tr
+name|num_trackers
 argument_list|,
 literal|0
 argument_list|,
-literal|"Number of trackers allocated"
+literal|"Number of trackers pre-allocated for this queue pair"
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_UINT

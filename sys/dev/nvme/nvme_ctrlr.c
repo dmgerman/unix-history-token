@@ -941,14 +941,19 @@ name|qpair
 argument_list|,
 literal|0
 argument_list|,
+comment|/* qpair ID */
 literal|0
 argument_list|,
+comment|/* vector */
 name|num_entries
+argument_list|,
+name|NVME_ADMIN_TRACKERS
 argument_list|,
 literal|16
 operator|*
 literal|1024
 argument_list|,
+comment|/* max xfer size */
 name|ctrlr
 argument_list|)
 expr_stmt|;
@@ -979,6 +984,8 @@ name|int
 name|i
 decl_stmt|,
 name|num_entries
+decl_stmt|,
+name|num_trackers
 decl_stmt|;
 name|num_entries
 operator|=
@@ -990,15 +997,6 @@ literal|"hw.nvme.io_entries"
 argument_list|,
 operator|&
 name|num_entries
-argument_list|)
-expr_stmt|;
-name|num_entries
-operator|=
-name|max
-argument_list|(
-name|num_entries
-argument_list|,
-name|NVME_MIN_IO_ENTRIES
 argument_list|)
 expr_stmt|;
 comment|/* 	 * NVMe spec sets a hard limit of 64K max entries, but 	 *  devices may specify a smaller limit, so we need to check 	 *  the MQES field in the capabilities register. 	 */
@@ -1026,6 +1024,50 @@ operator|.
 name|mqes
 operator|+
 literal|1
+argument_list|)
+expr_stmt|;
+name|num_trackers
+operator|=
+name|NVME_IO_TRACKERS
+expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"hw.nvme.io_trackers"
+argument_list|,
+operator|&
+name|num_trackers
+argument_list|)
+expr_stmt|;
+name|num_trackers
+operator|=
+name|max
+argument_list|(
+name|num_trackers
+argument_list|,
+name|NVME_MIN_IO_TRACKERS
+argument_list|)
+expr_stmt|;
+name|num_trackers
+operator|=
+name|min
+argument_list|(
+name|num_trackers
+argument_list|,
+name|NVME_MAX_IO_TRACKERS
+argument_list|)
+expr_stmt|;
+comment|/* 	 * No need to have more trackers than entries in the submit queue. 	 *  Note also that for a queue size of N, we can only have (N-1) 	 *  commands outstanding, hence the "-1" here. 	 */
+name|num_trackers
+operator|=
+name|min
+argument_list|(
+name|num_trackers
+argument_list|,
+operator|(
+name|num_entries
+operator|-
+literal|1
+operator|)
 argument_list|)
 expr_stmt|;
 name|ctrlr
@@ -1149,6 +1191,8 @@ literal|0
 argument_list|,
 comment|/* vector */
 name|num_entries
+argument_list|,
+name|num_trackers
 argument_list|,
 name|ctrlr
 operator|->
