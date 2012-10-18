@@ -1327,6 +1327,23 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|nvme_qpair_submit_request
+parameter_list|(
+name|struct
+name|nvme_qpair
+modifier|*
+name|qpair
+parameter_list|,
+name|struct
+name|nvme_request
+modifier|*
+name|req
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|nvme_admin_qpair_destroy
 parameter_list|(
 name|struct
