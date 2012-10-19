@@ -2407,13 +2407,19 @@ name|obj
 decl_stmt|;
 name|D
 argument_list|(
-literal|"cdev %p foff %d size %d objp %p prot %d"
+literal|"cdev %p foff %jd size %jd objp %p prot %d"
 argument_list|,
 name|cdev
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 operator|*
 name|foff
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|objsize
 argument_list|,
 name|objp
