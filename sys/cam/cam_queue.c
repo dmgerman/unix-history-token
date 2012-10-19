@@ -1331,6 +1331,12 @@ operator|->
 name|queue
 argument_list|,
 name|new_size
+operator|+
+operator|(
+name|CAM_RL_VALUES
+operator|-
+literal|1
+operator|)
 argument_list|)
 operator|==
 name|CAM_REQ_CMP
@@ -1399,6 +1405,12 @@ operator|->
 name|queue
 argument_list|,
 name|openings
+operator|+
+operator|(
+name|CAM_RL_VALUES
+operator|-
+literal|1
+operator|)
 argument_list|)
 operator|!=
 literal|0
