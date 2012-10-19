@@ -1594,24 +1594,22 @@ argument_list|,
 name|VIRTIO_TYPE_BLOCK
 argument_list|)
 expr_stmt|;
+name|pci_emul_add_msicap
+argument_list|(
+name|pi
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|pci_emul_alloc_bar
 argument_list|(
 name|pi
 argument_list|,
 literal|0
 argument_list|,
-literal|0
-argument_list|,
 name|PCIBAR_IO
 argument_list|,
 name|VTBLK_REGSZ
-argument_list|)
-expr_stmt|;
-name|pci_emul_add_msicap
-argument_list|(
-name|pi
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 return|return
@@ -1628,6 +1626,14 @@ name|void
 name|pci_vtblk_write
 parameter_list|(
 name|struct
+name|vmctx
+modifier|*
+name|ctx
+parameter_list|,
+name|int
+name|vcpu
+parameter_list|,
+name|struct
 name|pci_devinst
 modifier|*
 name|pi
@@ -1635,13 +1641,13 @@ parameter_list|,
 name|int
 name|baridx
 parameter_list|,
-name|int
+name|uint64_t
 name|offset
 parameter_list|,
 name|int
 name|size
 parameter_list|,
-name|uint32_t
+name|uint64_t
 name|value
 parameter_list|)
 block|{
@@ -1654,6 +1660,13 @@ name|pi
 operator|->
 name|pi_arg
 decl_stmt|;
+name|assert
+argument_list|(
+name|baridx
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|offset
@@ -1666,7 +1679,7 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"vtblk_write: 2big, offset %d size %d\n"
+literal|"vtblk_write: 2big, offset %ld size %d\n"
 operator|,
 name|offset
 operator|,
@@ -1793,7 +1806,7 @@ case|:
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"vtblk: write to readonly reg %d\n\r"
+literal|"vtblk: write to readonly reg %ld\n\r"
 operator|,
 name|offset
 operator|)
@@ -1804,7 +1817,7 @@ default|default:
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"vtblk: unknown i/o write offset %d\n\r"
+literal|"vtblk: unknown i/o write offset %ld\n\r"
 operator|,
 name|offset
 operator|)
@@ -1820,9 +1833,17 @@ block|}
 end_function
 
 begin_function
-name|uint32_t
+name|uint64_t
 name|pci_vtblk_read
 parameter_list|(
+name|struct
+name|vmctx
+modifier|*
+name|ctx
+parameter_list|,
+name|int
+name|vcpu
+parameter_list|,
 name|struct
 name|pci_devinst
 modifier|*
@@ -1831,7 +1852,7 @@ parameter_list|,
 name|int
 name|baridx
 parameter_list|,
-name|int
+name|uint64_t
 name|offset
 parameter_list|,
 name|int
@@ -1854,6 +1875,13 @@ decl_stmt|;
 name|uint32_t
 name|value
 decl_stmt|;
+name|assert
+argument_list|(
+name|baridx
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|offset
@@ -1866,7 +1894,7 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"vtblk_read: 2big, offset %d size %d\n"
+literal|"vtblk_read: 2big, offset %ld size %d\n"
 operator|,
 name|offset
 operator|,
@@ -2115,7 +2143,7 @@ default|default:
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"vtblk: unknown i/o read offset %d\n\r"
+literal|"vtblk: unknown i/o read offset %ld\n\r"
 operator|,
 name|offset
 operator|)
@@ -2152,15 +2180,15 @@ operator|=
 name|pci_vtblk_init
 block|,
 operator|.
-name|pe_iow
+name|pe_barwrite
 operator|=
 name|pci_vtblk_write
 block|,
 operator|.
-name|pe_ior
+name|pe_barread
 operator|=
 name|pci_vtblk_read
-block|, }
+block|}
 decl_stmt|;
 end_decl_stmt
 
