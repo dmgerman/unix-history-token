@@ -2276,7 +2276,7 @@ name|n
 argument_list|,
 name|M_NETMAP
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -2335,7 +2335,7 @@ name|n
 argument_list|,
 name|M_NETMAP
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
