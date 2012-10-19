@@ -5050,6 +5050,7 @@ name|char
 modifier|*
 name|end
 decl_stmt|;
+specifier|const
 name|CODE
 modifier|*
 name|fac_record
