@@ -355,6 +355,7 @@ typedef|;
 end_typedef
 
 begin_decl_stmt
+specifier|static
 name|FILE
 modifier|*
 name|msgsrc
@@ -362,6 +363,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|FILE
 modifier|*
 name|newmsg
@@ -369,6 +371,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -379,6 +382,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|inbuf
 index|[
@@ -388,6 +392,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|fname
 index|[
@@ -397,6 +402,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|cmdbuf
 index|[
@@ -408,6 +414,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|subj
 index|[
@@ -417,6 +424,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|from
 index|[
@@ -426,6 +434,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|date
 index|[
@@ -435,6 +444,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|ptr
@@ -442,6 +452,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|in
@@ -449,42 +460,49 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|bool
 name|local
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|bool
 name|ruptible
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|bool
 name|totty
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|bool
 name|seenfrom
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|bool
 name|seensubj
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|bool
 name|blankline
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|bool
 name|printing
 init|=
@@ -493,6 +511,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|bool
 name|mailing
 init|=
@@ -501,6 +520,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|bool
 name|quitit
 init|=
@@ -509,6 +529,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|bool
 name|sending
 init|=
@@ -517,6 +538,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|bool
 name|intrpflg
 init|=
@@ -525,36 +547,42 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|uid_t
 name|uid
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|msg
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|prevmsg
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|lct
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|nlines
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|Lpp
 init|=
@@ -563,12 +591,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|time_t
 name|t
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|time_t
 name|keep
 decl_stmt|;
@@ -579,6 +609,7 @@ comment|/* option initialization */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|bool
 name|hdrs
 init|=
@@ -587,6 +618,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|bool
 name|qopt
 init|=
@@ -595,6 +627,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|bool
 name|hush
 init|=
@@ -603,6 +636,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|bool
 name|send_msg
 init|=
@@ -611,6 +645,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|bool
 name|locomode
 init|=
@@ -619,6 +654,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|bool
 name|use_pager
 init|=
@@ -627,6 +663,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|bool
 name|clean
 init|=
@@ -635,6 +672,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|bool
 name|lastcmd
 init|=
@@ -643,6 +681,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|jmp_buf
 name|tstpbuf
 decl_stmt|;

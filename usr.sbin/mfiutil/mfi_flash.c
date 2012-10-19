@@ -70,18 +70,6 @@ name|FLASH_BUF_SIZE
 value|(64 * 1024)
 end_define
 
-begin_decl_stmt
-name|int
-name|fw_name_width
-decl_stmt|,
-name|fw_version_width
-decl_stmt|,
-name|fw_date_width
-decl_stmt|,
-name|fw_time_width
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|void

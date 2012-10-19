@@ -60,6 +60,7 @@ file|"calendar.h"
 end_include
 
 begin_decl_stmt
+specifier|static
 name|time_t
 name|time1
 decl_stmt|,

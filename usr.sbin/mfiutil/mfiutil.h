@@ -422,6 +422,19 @@ name|mfi_opts
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|fw_name_width
+decl_stmt|,
+name|fw_version_width
+decl_stmt|,
+name|fw_date_width
+decl_stmt|,
+name|fw_time_width
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|void
 name|mbox_store_ldref

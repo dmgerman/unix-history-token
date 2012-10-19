@@ -48,6 +48,7 @@ file|<signal.h>
 end_include
 
 begin_decl_stmt
+specifier|static
 name|FILE
 modifier|*
 name|IndexFile
@@ -55,6 +56,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|IndexPath
 index|[
@@ -66,6 +68,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|index_head
 name|Index

@@ -282,6 +282,7 @@ comment|/* statistics */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ps_samples_period
 decl_stmt|;
@@ -328,6 +329,7 @@ file|"pmcpl_calltree.h"
 end_include
 
 begin_struct
+specifier|static
 struct|struct
 name|pmc_plugins
 block|{
@@ -603,6 +605,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|int
 name|pmcstat_mergepmc
 decl_stmt|;
@@ -903,6 +906,7 @@ comment|/*  * PMC Top mode pause state.  */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|pmcstat_pause
 decl_stmt|;

@@ -489,6 +489,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|ctladm_opts
 name|option_table
@@ -3156,6 +3157,7 @@ typedef|;
 end_typedef
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|ctladm_opts
 name|cctl_fe_table
@@ -5041,6 +5043,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|ctladm_opts
 name|cctl_err_types
@@ -5101,6 +5104,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|ctladm_opts
 name|cctl_err_patterns

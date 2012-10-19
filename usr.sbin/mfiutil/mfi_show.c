@@ -3162,18 +3162,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-name|int
-name|fw_name_width
-decl_stmt|,
-name|fw_version_width
-decl_stmt|,
-name|fw_date_width
-decl_stmt|,
-name|fw_time_width
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|void

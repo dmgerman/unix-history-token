@@ -1535,6 +1535,7 @@ value|printf("%s %jd s %ju frac\n", prefix, (intmax_t)(bt).sec, \ 	       (uintm
 end_define
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*

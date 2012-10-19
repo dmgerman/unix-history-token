@@ -219,14 +219,6 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|pmcstat_interrupt
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|pmcstat_displayheight
 init|=
 name|DEFAULT_DISPLAY_HEIGHT
@@ -242,6 +234,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|pmcstat_sockpair
 index|[
@@ -251,12 +244,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|pmcstat_kq
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|kvm_t
 modifier|*
 name|pmcstat_kvm
@@ -264,6 +259,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|kinfo_proc
 modifier|*

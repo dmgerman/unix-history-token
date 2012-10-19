@@ -794,13 +794,6 @@ block|}
 end_function
 
 begin_decl_stmt
-specifier|extern
-name|int
-name|newline_added
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|char
 name|sfn
