@@ -1336,6 +1336,51 @@ name|Table
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|Gbl_VerboseTemplates
+condition|)
+block|{
+comment|/* Dump the raw table data */
+name|Length
+operator|=
+name|Table
+operator|->
+name|Length
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"\n/*\n%s: Length %d (0x%X)\n\n"
+argument_list|,
+name|ACPI_RAW_TABLE_DATA_HEADER
+argument_list|,
+name|Length
+argument_list|,
+name|Length
+argument_list|)
+expr_stmt|;
+name|AcpiUtDumpBuffer
+argument_list|(
+name|ACPI_CAST_PTR
+argument_list|(
+name|UINT8
+argument_list|,
+name|Table
+argument_list|)
+argument_list|,
+name|Length
+argument_list|,
+name|DB_BYTE_DISPLAY
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|" */\n"
+argument_list|)
+expr_stmt|;
+block|}
 return|return;
 block|}
 comment|/*      * Handle tables that don't use the common ACPI table header structure.      * Currently, these are the FACS, RSDP, and S3PT.      */
@@ -1569,7 +1614,7 @@ argument_list|,
 name|Length
 argument_list|)
 expr_stmt|;
-name|AcpiUtDumpBuffer2
+name|AcpiUtDumpBuffer
 argument_list|(
 name|ACPI_CAST_PTR
 argument_list|(
@@ -1581,6 +1626,8 @@ argument_list|,
 name|Length
 argument_list|,
 name|DB_BYTE_DISPLAY
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

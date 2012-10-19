@@ -85,7 +85,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsInitOneObject  *  * PARAMETERS:  ObjHandle       - Node for the object  *              Level           - Current nesting level  *              Context         - Points to a init info struct  *              ReturnValue     - Not used  *  * RETURN:      Status  *  * DESCRIPTION: Callback from AcpiWalkNamespace.  Invoked for every object  *              within the namespace.  *  *              Currently, the only objects that require initialization are:  *              1) Methods  *              2) Operation Regions  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsInitOneObject  *  * PARAMETERS:  ObjHandle       - Node for the object  *              Level           - Current nesting level  *              Context         - Points to a init info struct  *              ReturnValue     - Not used  *  * RETURN:      Status  *  * DESCRIPTION: Callback from AcpiWalkNamespace. Invoked for every object  *              within the namespace.  *  *              Currently, the only objects that require initialization are:  *              1) Methods  *              2) Operation Regions  *  ******************************************************************************/
 end_comment
 
 begin_function

@@ -301,7 +301,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AsProcessTree  *  * DESCRIPTION: Process the directory tree.  Files with the extension ".C" and  *              ".H" are processed as the tree is traversed.  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AsProcessTree  *  * DESCRIPTION: Process the directory tree. Files with the extension ".C" and  *              ".H" are processed as the tree is traversed.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -396,8 +396,10 @@ literal|"Could not create target directory\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 block|}
@@ -499,7 +501,9 @@ literal|"*"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -546,7 +550,9 @@ index|]
 condition|)
 block|{
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 block|}
 while|while
@@ -633,7 +639,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|TRUE
+operator|)
 return|;
 block|}
 return|return
@@ -815,6 +823,26 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Gbl_Cleanup
+condition|)
+block|{
+name|AsRemoveExtraLines
+argument_list|(
+name|FileBuffer
+argument_list|,
+name|Filename
+argument_list|)
+expr_stmt|;
+name|AsRemoveSpacesAfterPeriod
+argument_list|(
+name|FileBuffer
+argument_list|,
+name|Filename
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|ConversionTable
@@ -1286,7 +1314,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AsProcessOneFile  *  * DESCRIPTION: Process one source file.  The file is opened, read entirely  *              into a buffer, converted, then written to a new file.  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AsProcessOneFile  *  * DESCRIPTION: Process one source file. The file is opened, read entirely  *              into a buffer, converted, then written to a new file.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1355,8 +1383,10 @@ literal|"Could not allocate buffer for file pathnames\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 name|Gbl_FileType
@@ -1406,8 +1436,10 @@ argument_list|)
 condition|)
 block|{
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 name|Gbl_HeaderSize
@@ -1556,8 +1588,10 @@ literal|"Could not allocate buffer for file pathnames\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 name|strcpy
@@ -1622,13 +1656,15 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AsCheckForDirectory  *  * DESCRIPTION: Check if the current file is a valid directory.  If not,  *              construct the full pathname for the source and target paths.  *              Checks for the dot and dot-dot files (they are ignored)  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AsCheckForDirectory  *  * DESCRIPTION: Check if the current file is a valid directory. If not,  *              construct the full pathname for the source and target paths.  *              Checks for the dot and dot-dot files (they are ignored)  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1690,8 +1726,10 @@ operator|)
 condition|)
 block|{
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 name|SrcPath
@@ -1725,8 +1763,10 @@ literal|"Could not allocate buffer for directory source pathname\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 name|TgtPath
@@ -1765,8 +1805,10 @@ name|SrcPath
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 name|strcpy
@@ -1822,7 +1864,9 @@ operator|=
 name|TgtPath
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1885,8 +1929,10 @@ name|Filename
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 if|if
@@ -2006,7 +2052,7 @@ argument_list|,
 name|Buffer
 argument_list|)
 expr_stmt|;
-comment|/*      * Convert all CR/LF pairs to LF only.  We do this locally so that      * this code is portable across operating systems.      */
+comment|/*      * Convert all CR/LF pairs to LF only. We do this locally so that      * this code is portable across operating systems.      */
 name|AsConvertToLineFeeds
 argument_list|(
 name|Buffer
@@ -2023,7 +2069,9 @@ operator|=
 name|Size
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|ErrorExit
 label|:
@@ -2033,14 +2081,16 @@ name|FileHandle
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AsPutFile  *  * DESCRIPTION: Create a new output file and write the entire contents of the  *              buffer to the new file.  Buffer must be a zero terminated string  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AsPutFile  *  * DESCRIPTION: Create a new output file and write the entire contents of the  *              buffer to the new file. Buffer must be a zero terminated string  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -2130,8 +2180,10 @@ name|Pathname
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 comment|/* Write the buffer to the file */
@@ -2157,7 +2209,9 @@ name|DestHandle
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function

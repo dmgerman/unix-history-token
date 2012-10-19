@@ -405,7 +405,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbDecodeAndDisplayObject  *  * PARAMETERS:  Target          - String with object to be displayed.  Names  *                                and hex pointers are supported.  *              OutputType      - Byte, Word, Dword, or Qword (B|W|D|Q)  *  * RETURN:      None  *  * DESCRIPTION: Display a formatted ACPI object  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbDecodeAndDisplayObject  *  * PARAMETERS:  Target          - String with object to be displayed. Names  *                                and hex pointers are supported.  *              OutputType      - Byte, Word, Dword, or Qword (B|W|D|Q)  *  * RETURN:      None  *  * DESCRIPTION: Display a formatted ACPI object  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -654,7 +654,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|AcpiUtDumpBuffer
+name|AcpiUtDebugDumpBuffer
 argument_list|(
 name|ObjPtr
 argument_list|,
@@ -703,7 +703,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|AcpiUtDumpBuffer
+name|AcpiUtDebugDumpBuffer
 argument_list|(
 name|ObjPtr
 argument_list|,
@@ -749,7 +749,7 @@ literal|64
 expr_stmt|;
 block|}
 comment|/* Just dump some memory */
-name|AcpiUtDumpBuffer
+name|AcpiUtDebugDumpBuffer
 argument_list|(
 name|ObjPtr
 argument_list|,
@@ -850,7 +850,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|AcpiUtDumpBuffer
+name|AcpiUtDebugDumpBuffer
 argument_list|(
 operator|(
 name|void
@@ -917,7 +917,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|AcpiUtDumpBuffer
+name|AcpiUtDebugDumpBuffer
 argument_list|(
 operator|(
 name|void
@@ -1577,7 +1577,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbDisplayObjectType  *  * PARAMETERS:  ObjectArg       - User entered NS node handle  *  * RETURN:      None  *  * DESCRIPTION: Display type of an arbitrary NS node  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbDisplayObjectType  *  * PARAMETERS:  Name            - User entered NS node handle or name  *  * RETURN:      None  *  * DESCRIPTION: Display type of an arbitrary NS node  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1586,11 +1586,12 @@ name|AcpiDbDisplayObjectType
 parameter_list|(
 name|char
 modifier|*
-name|ObjectArg
+name|Name
 parameter_list|)
 block|{
-name|ACPI_HANDLE
-name|Handle
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|Node
 decl_stmt|;
 name|ACPI_DEVICE_INFO
 modifier|*
@@ -1602,25 +1603,31 @@ decl_stmt|;
 name|UINT32
 name|i
 decl_stmt|;
-name|Handle
+name|Node
 operator|=
-name|ACPI_TO_POINTER
+name|AcpiDbConvertToNode
 argument_list|(
-name|ACPI_STRTOUL
-argument_list|(
-name|ObjectArg
-argument_list|,
-name|NULL
-argument_list|,
-literal|16
-argument_list|)
+name|Name
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Node
+condition|)
+block|{
+return|return;
+block|}
 name|Status
 operator|=
 name|AcpiGetObjectInfo
 argument_list|(
-name|Handle
+name|ACPI_CAST_PTR
+argument_list|(
+name|ACPI_HANDLE
+argument_list|,
+name|Node
+argument_list|)
 argument_list|,
 operator|&
 name|Info
@@ -1646,6 +1653,15 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|Info
+operator|->
+name|Valid
+operator|&
+name|ACPI_VALID_ADR
+condition|)
+block|{
 name|AcpiOsPrintf
 argument_list|(
 literal|"ADR: %8.8X%8.8X, STA: %8.8X, Flags: %X\n"
@@ -1666,6 +1682,16 @@ operator|->
 name|Flags
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|Info
+operator|->
+name|Valid
+operator|&
+name|ACPI_VALID_SXDS
+condition|)
+block|{
 name|AcpiOsPrintf
 argument_list|(
 literal|"S1D-%2.2X S2D-%2.2X S3D-%2.2X S4D-%2.2X\n"
@@ -1699,6 +1725,16 @@ literal|3
 index|]
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|Info
+operator|->
+name|Valid
+operator|&
+name|ACPI_VALID_SXWS
+condition|)
+block|{
 name|AcpiOsPrintf
 argument_list|(
 literal|"S0W-%2.2X S1W-%2.2X S2W-%2.2X S3W-%2.2X S4W-%2.2X\n"
@@ -1739,6 +1775,7 @@ literal|4
 index|]
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|Info
@@ -1776,6 +1813,27 @@ argument_list|,
 name|Info
 operator|->
 name|UniqueId
+operator|.
+name|String
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|Info
+operator|->
+name|Valid
+operator|&
+name|ACPI_VALID_SUB
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"SUB: %s\n"
+argument_list|,
+name|Info
+operator|->
+name|SubsystemId
 operator|.
 name|String
 argument_list|)

@@ -1229,7 +1229,9 @@ name|Op
 condition|)
 block|{
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 if|if
@@ -1791,7 +1793,7 @@ name|Name
 operator|++
 expr_stmt|;
 block|}
-comment|/* Remaing string should be one single nameseg */
+comment|/* Remaining string should be one single nameseg */
 name|UtPadNameWithUnderscores
 argument_list|(
 name|Name
@@ -1800,7 +1802,7 @@ name|PaddedNameSeg
 argument_list|)
 expr_stmt|;
 block|}
-name|strncpy
+name|ACPI_MOVE_NAME
 argument_list|(
 name|Op
 operator|->
@@ -1809,8 +1811,6 @@ operator|.
 name|NameSeg
 argument_list|,
 name|PaddedNameSeg
-argument_list|,
-literal|4
 argument_list|)
 expr_stmt|;
 block|}

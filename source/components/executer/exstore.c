@@ -764,7 +764,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExStoreObjectToNode  *  * PARAMETERS:  SourceDesc              - Value to be stored  *              Node                    - Named object to receive the value  *              WalkState               - Current walk state  *              ImplicitConversion      - Perform implicit conversion (yes/no)  *  * RETURN:      Status  *  * DESCRIPTION: Store the object to the named object.  *  *              The Assignment of an object to a named object is handled here  *              The value passed in will replace the current value (if any)  *              with the input value.  *  *              When storing into an object the data is converted to the  *              target object type then stored in the object.  This means  *              that the target object type (for an initialized target) will  *              not be changed by a store operation.  *  *              Assumes parameters are already validated.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExStoreObjectToNode  *  * PARAMETERS:  SourceDesc              - Value to be stored  *              Node                    - Named object to receive the value  *              WalkState               - Current walk state  *              ImplicitConversion      - Perform implicit conversion (yes/no)  *  * RETURN:      Status  *  * DESCRIPTION: Store the object to the named object.  *  *              The Assignment of an object to a named object is handled here  *              The value passed in will replace the current value (if any)  *              with the input value.  *  *              When storing into an object the data is converted to the  *              target object type then stored in the object. This means  *              that the target object type (for an initialized target) will  *              not be changed by a store operation.  *  *              Assumes parameters are already validated.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1053,7 +1053,7 @@ name|Node
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* No conversions for all other types.  Just attach the source object */
+comment|/* No conversions for all other types. Just attach the source object */
 name|Status
 operator|=
 name|AcpiNsAttachObject

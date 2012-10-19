@@ -46,7 +46,9 @@ name|Buffer
 condition|)
 block|{
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 name|Buffer
@@ -94,7 +96,9 @@ name|Buffer
 condition|)
 block|{
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 name|Buffer
@@ -113,7 +117,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AsReplaceData  *  * DESCRIPTION: This function inserts and removes data from the file buffer.  *              if more data is inserted than is removed, the data in the buffer  *              is moved to make room.  If less data is inserted than is removed,  *              the remaining data is moved to close the hole.  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AsReplaceData  *  * DESCRIPTION: This function inserts and removes data from the file buffer.  *              if more data is inserted than is removed, the data in the buffer  *              is moved to make room. If less data is inserted than is removed,  *              the remaining data is moved to close the hole.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -224,7 +228,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AsInsertData  *  * DESCRIPTION: This function inserts and removes data from the file buffer.  *              if more data is inserted than is removed, the data in the buffer  *              is moved to make room.  If less data is inserted than is removed,  *              the remaining data is moved to close the hole.  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AsInsertData  *  * DESCRIPTION: This function inserts and removes data from the file buffer.  *              if more data is inserted than is removed, the data in the buffer  *              is moved to make room. If less data is inserted than is removed,  *              the remaining data is moved to close the hole.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -304,7 +308,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AsRemoveData  *  * DESCRIPTION: This function inserts and removes data from the file buffer.  *              if more data is inserted than is removed, the data in the buffer  *              is moved to make room.  If less data is inserted than is removed,  *              the remaining data is moved to close the hole.  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AsRemoveData  *  * DESCRIPTION: This function inserts and removes data from the file buffer.  *              if more data is inserted than is removed, the data in the buffer  *              is moved to make room. If less data is inserted than is removed,  *              the remaining data is moved to close the hole.  *  ******************************************************************************/
 end_comment
 
 begin_function

@@ -165,7 +165,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsAllocOp  *  * PARAMETERS:  Opcode          - Opcode that will be stored in the new Op  *  * RETURN:      Pointer to the new Op, null on failure  *  * DESCRIPTION: Allocate an acpi_op, choose op type (and thus size) based on  *              opcode.  A cache of opcodes is available for the pure  *              GENERIC_OP, since this is by far the most commonly used.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsAllocOp  *  * PARAMETERS:  Opcode          - Opcode that will be stored in the new Op  *  * RETURN:      Pointer to the new Op, null on failure  *  * DESCRIPTION: Allocate an acpi_op, choose op type (and thus size) based on  *              opcode. A cache of opcodes is available for the pure  *              GENERIC_OP, since this is by far the most commonly used.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -303,7 +303,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsFreeOp  *  * PARAMETERS:  Op              - Op to be freed  *  * RETURN:      None.  *  * DESCRIPTION: Free an Op object.  Either put it on the GENERIC_OP cache list  *              or actually free it.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsFreeOp  *  * PARAMETERS:  Op              - Op to be freed  *  * RETURN:      None.  *  * DESCRIPTION: Free an Op object. Either put it on the GENERIC_OP cache list  *              or actually free it.  *  ******************************************************************************/
 end_comment
 
 begin_function

@@ -354,7 +354,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiOsReleaseObject  *  * PARAMETERS:  Cache       - Handle to cache object  *              Object      - The object to be released  *  * RETURN:      None  *  * DESCRIPTION: Release an object to the specified cache.  If cache is full,  *              the object is deleted.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiOsReleaseObject  *  * PARAMETERS:  Cache       - Handle to cache object  *              Object      - The object to be released  *  * RETURN:      None  *  * DESCRIPTION: Release an object to the specified cache. If cache is full,  *              the object is deleted.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -518,7 +518,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiOsAcquireObject  *  * PARAMETERS:  Cache           - Handle to cache object  *  * RETURN:      the acquired object.  NULL on error  *  * DESCRIPTION: Get an object from the specified cache.  If cache is empty,  *              the object is allocated.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiOsAcquireObject  *  * PARAMETERS:  Cache           - Handle to cache object  *  * RETURN:      the acquired object. NULL on error  *  * DESCRIPTION: Get an object from the specified cache. If cache is empty,  *              the object is allocated.  *  ******************************************************************************/
 end_comment
 
 begin_function

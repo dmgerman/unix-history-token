@@ -120,7 +120,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExSetupRegion  *  * PARAMETERS:  ObjDesc                 - Field to be read or written  *              FieldDatumByteOffset    - Byte offset of this datum within the  *                                        parent field  *  * RETURN:      Status  *  * DESCRIPTION: Common processing for AcpiExExtractFromField and  *              AcpiExInsertIntoField.  Initialize the Region if necessary and  *              validate the request.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExSetupRegion  *  * PARAMETERS:  ObjDesc                 - Field to be read or written  *              FieldDatumByteOffset    - Byte offset of this datum within the  *                                        parent field  *  * RETURN:      Status  *  * DESCRIPTION: Common processing for AcpiExExtractFromField and  *              AcpiExInsertIntoField. Initialize the Region if necessary and  *              validate the request.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -331,7 +331,7 @@ block|}
 block|}
 endif|#
 directive|endif
-comment|/*      * Validate the request.  The entire request from the byte offset for a      * length of one field datum (access width) must fit within the region.      * (Region length is specified in bytes)      */
+comment|/*      * Validate the request. The entire request from the byte offset for a      * length of one field datum (access width) must fit within the region.      * (Region length is specified in bytes)      */
 if|if
 condition|(
 name|RgnDesc
@@ -422,7 +422,7 @@ operator|.
 name|AccessByteWidth
 condition|)
 block|{
-comment|/*              * This is the case where the AccessType (AccWord, etc.) is wider              * than the region itself.  For example, a region of length one              * byte, and a field with Dword access specified.              */
+comment|/*              * This is the case where the AccessType (AccWord, etc.) is wider              * than the region itself. For example, a region of length one              * byte, and a field with Dword access specified.              */
 name|ACPI_ERROR
 argument_list|(
 operator|(
@@ -800,7 +800,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExRegisterOverflow  *  * PARAMETERS:  ObjDesc                 - Register(Field) to be written  *              Value                   - Value to be stored  *  * RETURN:      TRUE if value overflows the field, FALSE otherwise  *  * DESCRIPTION: Check if a value is out of range of the field being written.  *              Used to check if the values written to Index and Bank registers  *              are out of range.  Normally, the value is simply truncated  *              to fit the field, but this case is most likely a serious  *              coding error in the ASL.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExRegisterOverflow  *  * PARAMETERS:  ObjDesc                 - Register(Field) to be written  *              Value                   - Value to be stored  *  * RETURN:      TRUE if value overflows the field, FALSE otherwise  *  * DESCRIPTION: Check if a value is out of range of the field being written.  *              Used to check if the values written to Index and Bank registers  *              are out of range. Normally, the value is simply truncated  *              to fit the field, but this case is most likely a serious  *              coding error in the ASL.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -889,7 +889,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExFieldDatumIo  *  * PARAMETERS:  ObjDesc                 - Field to be read  *              FieldDatumByteOffset    - Byte offset of this datum within the  *                                        parent field  *              Value                   - Where to store value (must be 64 bits)  *              ReadWrite               - Read or Write flag  *  * RETURN:      Status  *  * DESCRIPTION: Read or Write a single datum of a field.  The FieldType is  *              demultiplexed here to handle the different types of fields  *              (BufferField, RegionField, IndexField, BankField)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExFieldDatumIo  *  * PARAMETERS:  ObjDesc                 - Field to be read  *              FieldDatumByteOffset    - Byte offset of this datum within the  *                                        parent field  *              Value                   - Where to store value (must be 64 bits)  *              ReadWrite               - Read or Write flag  *  * RETURN:      Status  *  * DESCRIPTION: Read or Write a single datum of a field. The FieldType is  *              demultiplexed here to handle the different types of fields  *              (BufferField, RegionField, IndexField, BankField)  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -2228,7 +2228,7 @@ operator|.
 name|BitLength
 argument_list|)
 expr_stmt|;
-comment|/*      * We must have a buffer that is at least as long as the field      * we are writing to.  This is because individual fields are      * indivisible and partial writes are not supported -- as per      * the ACPI specification.      */
+comment|/*      * We must have a buffer that is at least as long as the field      * we are writing to. This is because individual fields are      * indivisible and partial writes are not supported -- as per      * the ACPI specification.      */
 if|if
 condition|(
 name|BufferLength
@@ -2256,7 +2256,7 @@ name|AE_NO_MEMORY
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          * Copy the original data to the new buffer, starting          * at Byte zero.  All unused (upper) bytes of the          * buffer will be 0.          */
+comment|/*          * Copy the original data to the new buffer, starting          * at Byte zero. All unused (upper) bytes of the          * buffer will be 0.          */
 name|ACPI_MEMCPY
 argument_list|(
 operator|(

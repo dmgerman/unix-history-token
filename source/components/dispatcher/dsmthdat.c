@@ -130,7 +130,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsMethodDataInit  *  * PARAMETERS:  WalkState           - Current walk state object  *  * RETURN:      Status  *  * DESCRIPTION: Initialize the data structures that hold the method's arguments  *              and locals.  The data struct is an array of namespace nodes for  *              each - this allows RefOf and DeRefOf to work properly for these  *              special data types.  *  * NOTES:       WalkState fields are initialized to zero by the  *              ACPI_ALLOCATE_ZEROED().  *  *              A pseudo-Namespace Node is assigned to each argument and local  *              so that RefOf() can return a pointer to the Node.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsMethodDataInit  *  * PARAMETERS:  WalkState           - Current walk state object  *  * RETURN:      Status  *  * DESCRIPTION: Initialize the data structures that hold the method's arguments  *              and locals. The data struct is an array of namespace nodes for  *              each - this allows RefOf and DeRefOf to work properly for these  *              special data types.  *  * NOTES:       WalkState fields are initialized to zero by the  *              ACPI_ALLOCATE_ZEROED().  *  *              A pseudo-Namespace Node is assigned to each argument and local  *              so that RefOf() can return a pointer to the Node.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -318,7 +318,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsMethodDataDeleteAll  *  * PARAMETERS:  WalkState           - Current walk state object  *  * RETURN:      None  *  * DESCRIPTION: Delete method locals and arguments.  Arguments are only  *              deleted if this method was called from another method.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsMethodDataDeleteAll  *  * PARAMETERS:  WalkState           - Current walk state object  *  * RETURN:      None  *  * DESCRIPTION: Delete method locals and arguments. Arguments are only  *              deleted if this method was called from another method.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -466,7 +466,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsMethodDataInitArgs  *  * PARAMETERS:  *Params         - Pointer to a parameter list for the method  *              MaxParamCount   - The arg count for this method  *              WalkState       - Current walk state object  *  * RETURN:      Status  *  * DESCRIPTION: Initialize arguments for a method.  The parameter list is a list  *              of ACPI operand objects, either null terminated or whose length  *              is defined by MaxParamCount.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsMethodDataInitArgs  *  * PARAMETERS:  *Params         - Pointer to a parameter list for the method  *              MaxParamCount   - The arg count for this method  *              WalkState       - Current walk state object  *  * RETURN:      Status  *  * DESCRIPTION: Initialize arguments for a method. The parameter list is a list  *              of ACPI operand objects, either null terminated or whose length  *              is defined by MaxParamCount.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -961,7 +961,7 @@ operator|!
 name|Object
 condition|)
 block|{
-comment|/*          * Index points to uninitialized object.          * This means that either 1) The expected argument was          * not passed to the method, or 2) A local variable          * was referenced by the method (via the ASL)          * before it was initialized.  Either case is an error.          */
+comment|/*          * Index points to uninitialized object.          * This means that either 1) The expected argument was          * not passed to the method, or 2) A local variable          * was referenced by the method (via the ASL)          * before it was initialized. Either case is an error.          */
 comment|/* If slack enabled, init the LocalX/ArgX to an Integer of value zero */
 if|if
 condition|(
@@ -1073,7 +1073,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsMethodDataDeleteValue  *  * PARAMETERS:  Type                - Either ACPI_REFCLASS_LOCAL or  *                                    ACPI_REFCLASS_ARG  *              Index               - Which localVar or argument to delete  *              WalkState           - Current walk state object  *  * RETURN:      None  *  * DESCRIPTION: Delete the entry at Opcode:Index.  Inserts  *              a null into the stack slot after the object is deleted.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsMethodDataDeleteValue  *  * PARAMETERS:  Type                - Either ACPI_REFCLASS_LOCAL or  *                                    ACPI_REFCLASS_ARG  *              Index               - Which localVar or argument to delete  *              WalkState           - Current walk state object  *  * RETURN:      None  *  * DESCRIPTION: Delete the entry at Opcode:Index. Inserts  *              a null into the stack slot after the object is deleted.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1178,7 +1178,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsStoreObjectToLocal  *  * PARAMETERS:  Type                - Either ACPI_REFCLASS_LOCAL or  *                                    ACPI_REFCLASS_ARG  *              Index               - Which Local or Arg to set  *              ObjDesc             - Value to be stored  *              WalkState           - Current walk state  *  * RETURN:      Status  *  * DESCRIPTION: Store a value in an Arg or Local.  The ObjDesc is installed  *              as the new value for the Arg or Local and the reference count  *              for ObjDesc is incremented.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsStoreObjectToLocal  *  * PARAMETERS:  Type                - Either ACPI_REFCLASS_LOCAL or  *                                    ACPI_REFCLASS_ARG  *              Index               - Which Local or Arg to set  *              ObjDesc             - Value to be stored  *              WalkState           - Current walk state  *  * RETURN:      Status  *  * DESCRIPTION: Store a value in an Arg or Local. The ObjDesc is installed  *              as the new value for the Arg or Local and the reference count  *              for ObjDesc is incremented.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1308,7 +1308,7 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * If the reference count on the object is more than one, we must      * take a copy of the object before we store.  A reference count      * of exactly 1 means that the object was just created during the      * evaluation of an expression, and we can safely use it since it      * is not used anywhere else.      */
+comment|/*      * If the reference count on the object is more than one, we must      * take a copy of the object before we store. A reference count      * of exactly 1 means that the object was just created during the      * evaluation of an expression, and we can safely use it since it      * is not used anywhere else.      */
 name|NewObjDesc
 operator|=
 name|ObjDesc

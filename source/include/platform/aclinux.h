@@ -63,12 +63,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<linux/module.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<linux/ctype.h>
 end_include
 
@@ -81,13 +75,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<asm/system.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<asm/atomic.h>
+file|<linux/atomic.h>
 end_include
 
 begin_include
@@ -219,6 +207,16 @@ name|ACPI_FLUSH_CPU_CACHE
 parameter_list|()
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACPI_CAST_PTHREAD_T
+parameter_list|(
+name|pthread
+parameter_list|)
+value|((ACPI_THREAD_ID) (pthread))
+end_define
+
 begin_if
 if|#
 directive|if
@@ -254,16 +252,6 @@ name|COMPILER_DEPENDENT_UINT64
 value|unsigned long
 end_define
 
-begin_define
-define|#
-directive|define
-name|ACPI_CAST_PTHREAD_T
-parameter_list|(
-name|pthread
-parameter_list|)
-value|((ACPI_THREAD_ID) (pthread))
-end_define
-
 begin_else
 else|#
 directive|else
@@ -294,16 +282,6 @@ begin_define
 define|#
 directive|define
 name|ACPI_USE_NATIVE_DIVIDE
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_CAST_PTHREAD_T
-parameter_list|(
-name|pthread
-parameter_list|)
-value|((ACPI_THREAD_ID) (UINT32) (void *) (pthread))
 end_define
 
 begin_endif
@@ -353,6 +331,12 @@ directive|ifdef
 name|__KERNEL__
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<acpi/actypes.h>
+end_include
+
 begin_comment
 comment|/*  * Overrides for in-kernel ACPICA  */
 end_comment
@@ -367,6 +351,13 @@ name|void
 parameter_list|)
 block|{
 return|return
+operator|(
+name|ACPI_THREAD_ID
+operator|)
+operator|(
+name|unsigned
+name|long
+operator|)
 name|current
 return|;
 block|}
@@ -375,12 +366,6 @@ end_function
 begin_comment
 comment|/*  * The irqs_disabled() check is for resume from RAM.  * Interrupts are off during resume, just like they are for boot.  * However, boot has  (system_state != SYSTEM_RUNNING)  * to quiet __might_sleep() in kmalloc() and resume does not.  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<acpi/actypes.h>
-end_include
 
 begin_function
 specifier|static
@@ -494,8 +479,14 @@ parameter_list|)
 value|kfree(a)
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CONFIG_PREEMPT
+end_ifndef
+
 begin_comment
-comment|/* Used within ACPICA to show where it is safe to preempt execution */
+comment|/*  * Used within ACPICA to show where it is safe to preempt execution  * when CONFIG_PREEMPT=n  */
 end_comment
 
 begin_define
@@ -505,6 +496,26 @@ name|ACPI_PREEMPTION_POINT
 parameter_list|()
 define|\
 value|do { \         if (!irqs_disabled()) \             cond_resched(); \     } while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * When lockdep is enabled, the spin_lock_init() macro stringifies it's  * argument and uses that as a name for the lock in debugging.  * By executing spin_lock_init() in a macro the key changes from "lock" for  * all locks to the name of the argument of acpi_os_create_lock(), which  * prevents lockdep from reporting false positives for ACPICA locks.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AcpiOsCreateLock
+parameter_list|(
+name|__handle
+parameter_list|)
+define|\
+value|({								\ 	spinlock_t *lock = ACPI_ALLOCATE(sizeof(*lock));	\ 								\ 	if (lock) {						\ 		*(__handle) = lock;				\ 		spin_lock_init(*(__handle));			\ 	}							\ 	lock ? AE_OK : AE_NO_MEMORY;				\ })
 end_define
 
 begin_endif

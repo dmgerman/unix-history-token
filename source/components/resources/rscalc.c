@@ -859,6 +859,16 @@ name|ExtraStructBytes
 operator|=
 name|ResourceLength
 expr_stmt|;
+comment|/*              * There is already one byte included in the minimum              * descriptor size. If there are extra struct bytes,              * subtract one from the count.              */
+if|if
+condition|(
+name|ExtraStructBytes
+condition|)
+block|{
+name|ExtraStructBytes
+operator|--
+expr_stmt|;
+block|}
 break|break;
 case|case
 name|ACPI_RESOURCE_NAME_END_TAG
@@ -1159,7 +1169,7 @@ name|Package
 operator|.
 name|Count
 expr_stmt|;
-comment|/*      * Calculate the size of the return buffer.      * The base size is the number of elements * the sizes of the      * structures.  Additional space for the strings is added below.      * The minus one is to subtract the size of the UINT8 Source[1]      * member because it is added below.      *      * But each PRT_ENTRY structure has a pointer to a string and      * the size of that string must be found.      */
+comment|/*      * Calculate the size of the return buffer.      * The base size is the number of elements * the sizes of the      * structures. Additional space for the strings is added below.      * The minus one is to subtract the size of the UINT8 Source[1]      * member because it is added below.      *      * But each PRT_ENTRY structure has a pointer to a string and      * the size of that string must be found.      */
 name|TopObjectList
 operator|=
 name|PackageObject

@@ -401,6 +401,8 @@ name|ThreadId
 operator|=
 name|ACPI_MUTEX_NOT_ACQUIRED
 expr_stmt|;
+name|return_VOID
+expr_stmt|;
 block|}
 end_function
 
@@ -452,7 +454,7 @@ block|{
 name|UINT32
 name|i
 decl_stmt|;
-comment|/*          * Mutex debug code, for internal debugging only.          *          * Deadlock prevention.  Check if this thread owns any mutexes of value          * greater than or equal to this one.  If so, the thread has violated          * the mutex ordering rule.  This indicates a coding error somewhere in          * the ACPI subsystem code.          */
+comment|/*          * Mutex debug code, for internal debugging only.          *          * Deadlock prevention. Check if this thread owns any mutexes of value          * greater than or equal to this one. If so, the thread has violated          * the mutex ordering rule. This indicates a coding error somewhere in          * the ACPI subsystem code.          */
 for|for
 control|(
 name|i
@@ -739,7 +741,7 @@ block|{
 name|UINT32
 name|i
 decl_stmt|;
-comment|/*          * Mutex debug code, for internal debugging only.          *          * Deadlock prevention.  Check if this thread owns any mutexes of value          * greater than this one.  If so, the thread has violated the mutex          * ordering rule.  This indicates a coding error somewhere in          * the ACPI subsystem code.          */
+comment|/*          * Mutex debug code, for internal debugging only.          *          * Deadlock prevention. Check if this thread owns any mutexes of value          * greater than this one. If so, the thread has violated the mutex          * ordering rule. This indicates a coding error somewhere in          * the ACPI subsystem code.          */
 for|for
 control|(
 name|i

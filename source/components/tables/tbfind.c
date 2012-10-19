@@ -98,15 +98,13 @@ name|ACPI_TABLE_HEADER
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ACPI_STRNCPY
+name|ACPI_MOVE_NAME
 argument_list|(
 name|Header
 operator|.
 name|Signature
 argument_list|,
 name|Signature
-argument_list|,
-name|ACPI_NAME_SIZE
 argument_list|)
 expr_stmt|;
 name|ACPI_STRNCPY

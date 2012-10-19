@@ -340,7 +340,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AeCtrlCHandler  *  * PARAMETERS:  Sig  *  * RETURN:      none  *  * DESCRIPTION: Control-C handler.  Abort running control method if any.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AeCtrlCHandler  *  * PARAMETERS:  Sig  *  * RETURN:      none  *  * DESCRIPTION: Control-C handler. Abort running control method if any.  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -570,7 +570,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AeSystemNotifyHandler  *  * PARAMETERS:  Standard notify handler parameters  *  * RETURN:      Status  *  * DESCRIPTION: System notify handler for AcpiExec utility.  Used by the ASL  *              test suite(s) to communicate errors and other information to  *              this utility via the Notify() operator.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AeSystemNotifyHandler  *  * PARAMETERS:  Standard notify handler parameters  *  * RETURN:      Status  *  * DESCRIPTION: System notify handler for AcpiExec utility. Used by the ASL  *              test suite(s) to communicate errors and other information to  *              this utility via the Notify() operator.  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -639,7 +639,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AeDeviceNotifyHandler  *  * PARAMETERS:  Standard notify handler parameters  *  * RETURN:      Status  *  * DESCRIPTION: Device notify handler for AcpiExec utility.  Used by the ASL  *              test suite(s) to communicate errors and other information to  *              this utility via the Notify() operator.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AeDeviceNotifyHandler  *  * PARAMETERS:  Standard notify handler parameters  *  * RETURN:      Status  *  * DESCRIPTION: Device notify handler for AcpiExec utility. Used by the ASL  *              test suite(s) to communicate errors and other information to  *              this utility via the Notify() operator.  *  *****************************************************************************/
 end_comment
 
 begin_function

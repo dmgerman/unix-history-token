@@ -489,7 +489,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiDsExecBeginOp  *  * PARAMETERS:  WalkState       - Current state of the parse tree walk  *              OutOp           - Where to return op if a new one is created  *  * RETURN:      Status  *  * DESCRIPTION: Descending callback used during the execution of control  *              methods.  This is where most operators and operands are  *              dispatched to the interpreter.  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiDsExecBeginOp  *  * PARAMETERS:  WalkState       - Current state of the parse tree walk  *              OutOp           - Where to return op if a new one is created  *  * RETURN:      Status  *  * DESCRIPTION: Descending callback used during the execution of control  *              methods. This is where most operators and operands are  *              dispatched to the interpreter.  *  ****************************************************************************/
 end_comment
 
 begin_function
@@ -784,7 +784,7 @@ operator|&
 name|ACPI_WALK_METHOD
 condition|)
 block|{
-comment|/*              * Found a named object declaration during method execution;              * we must enter this object into the namespace.  The created              * object is temporary and will be deleted upon completion of              * the execution of this method.              *              * Note 10/2010: Except for the Scope() op. This opcode does              * not actually create a new object, it refers to an existing              * object. However, for Scope(), we want to indeed open a              * new scope.              */
+comment|/*              * Found a named object declaration during method execution;              * we must enter this object into the namespace. The created              * object is temporary and will be deleted upon completion of              * the execution of this method.              *              * Note 10/2010: Except for the Scope() op. This opcode does              * not actually create a new object, it refers to an existing              * object. However, for Scope(), we want to indeed open a              * new scope.              */
 if|if
 condition|(
 name|Op
@@ -882,7 +882,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiDsExecEndOp  *  * PARAMETERS:  WalkState       - Current state of the parse tree walk  *  * RETURN:      Status  *  * DESCRIPTION: Ascending callback used during the execution of control  *              methods.  The only thing we really need to do here is to  *              notice the beginning of IF, ELSE, and WHILE blocks.  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiDsExecEndOp  *  * PARAMETERS:  WalkState       - Current state of the parse tree walk  *  * RETURN:      Status  *  * DESCRIPTION: Ascending callback used during the execution of control  *              methods. The only thing we really need to do here is to  *              notice the beginning of IF, ELSE, and WHILE blocks.  *  ****************************************************************************/
 end_comment
 
 begin_function
@@ -1145,7 +1145,7 @@ name|Status
 argument_list|)
 condition|)
 block|{
-comment|/*              * Dispatch the request to the appropriate interpreter handler              * routine.  There is one routine per opcode "type" based upon the              * number of opcode arguments and return type.              */
+comment|/*              * Dispatch the request to the appropriate interpreter handler              * routine. There is one routine per opcode "type" based upon the              * number of opcode arguments and return type.              */
 name|Status
 operator|=
 name|AcpiGbl_OpTypeDispatch

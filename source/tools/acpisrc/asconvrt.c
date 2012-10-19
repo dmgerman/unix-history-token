@@ -62,6 +62,232 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/******************************************************************************  *  * FUNCTION:    AsRemoveExtraLines  *  * DESCRIPTION: Remove all extra lines at the start and end of the file.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|AsRemoveExtraLines
+parameter_list|(
+name|char
+modifier|*
+name|FileBuffer
+parameter_list|,
+name|char
+modifier|*
+name|Filename
+parameter_list|)
+block|{
+name|char
+modifier|*
+name|FileEnd
+decl_stmt|;
+name|int
+name|Length
+decl_stmt|;
+comment|/* Remove any extra lines at the start of the file */
+while|while
+condition|(
+operator|*
+name|FileBuffer
+operator|==
+literal|'\n'
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Removing extra line at start of file: %s\n"
+argument_list|,
+name|Filename
+argument_list|)
+expr_stmt|;
+name|AsRemoveData
+argument_list|(
+name|FileBuffer
+argument_list|,
+name|FileBuffer
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Remove any extra lines at the end of the file */
+name|Length
+operator|=
+name|strlen
+argument_list|(
+name|FileBuffer
+argument_list|)
+expr_stmt|;
+name|FileEnd
+operator|=
+name|FileBuffer
+operator|+
+operator|(
+name|Length
+operator|-
+literal|2
+operator|)
+expr_stmt|;
+while|while
+condition|(
+operator|*
+name|FileEnd
+operator|==
+literal|'\n'
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Removing extra line at end of file: %s\n"
+argument_list|,
+name|Filename
+argument_list|)
+expr_stmt|;
+name|AsRemoveData
+argument_list|(
+name|FileEnd
+argument_list|,
+name|FileEnd
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+name|FileEnd
+operator|--
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/******************************************************************************  *  * FUNCTION:    AsRemoveSpacesAfterPeriod  *  * DESCRIPTION: Remove an extra space after a period.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|AsRemoveSpacesAfterPeriod
+parameter_list|(
+name|char
+modifier|*
+name|FileBuffer
+parameter_list|,
+name|char
+modifier|*
+name|Filename
+parameter_list|)
+block|{
+name|int
+name|ReplaceCount
+init|=
+literal|0
+decl_stmt|;
+name|char
+modifier|*
+name|Possible
+decl_stmt|;
+name|Possible
+operator|=
+name|FileBuffer
+expr_stmt|;
+while|while
+condition|(
+name|Possible
+condition|)
+block|{
+name|Possible
+operator|=
+name|strstr
+argument_list|(
+name|Possible
+argument_list|,
+literal|".  "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Possible
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+operator|*
+operator|(
+name|Possible
+operator|-
+literal|1
+operator|)
+operator|==
+literal|'.'
+operator|)
+operator|||
+operator|(
+operator|*
+operator|(
+name|Possible
+operator|-
+literal|1
+operator|)
+operator|==
+literal|'\"'
+operator|)
+operator|||
+operator|(
+operator|*
+operator|(
+name|Possible
+operator|-
+literal|1
+operator|)
+operator|==
+literal|'\n'
+operator|)
+condition|)
+block|{
+name|Possible
+operator|+=
+literal|3
+expr_stmt|;
+continue|continue;
+block|}
+name|Possible
+operator|=
+name|AsReplaceData
+argument_list|(
+name|Possible
+argument_list|,
+literal|3
+argument_list|,
+literal|". "
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+name|ReplaceCount
+operator|++
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|ReplaceCount
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Removed %d extra blanks after a period: %s\n"
+argument_list|,
+name|ReplaceCount
+argument_list|,
+name|Filename
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
 comment|/******************************************************************************  *  * FUNCTION:    AsMatchExactWord  *  * DESCRIPTION: Check previous and next characters for whitespace  *  ******************************************************************************/
 end_comment
 
@@ -261,7 +487,9 @@ name|LiteralEnd
 condition|)
 block|{
 return|return
+operator|(
 name|SubBuffer
+operator|)
 return|;
 block|}
 while|while
@@ -322,7 +550,9 @@ name|LiteralEnd
 condition|)
 block|{
 return|return
+operator|(
 name|SubBuffer
+operator|)
 return|;
 block|}
 block|}
@@ -340,7 +570,9 @@ name|NewLines
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|SubBuffer
+operator|)
 return|;
 block|}
 end_function
@@ -709,7 +941,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AsTrimLines  *  * DESCRIPTION: Remove extra blanks from the end of source lines.  Does not  *              check for tabs.  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AsTrimLines  *  * DESCRIPTION: Remove extra blanks from the end of source lines. Does not  *              check for tabs.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -977,7 +1209,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AsReplaceString  *  * DESCRIPTION: Replace all instances of a target string with a replacement  *              string.  Returns count of the strings replaced.  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AsReplaceString  *  * DESCRIPTION: Replace all instances of a target string with a replacement  *              string. Returns count of the strings replaced.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1067,7 +1299,9 @@ name|SubString1
 condition|)
 block|{
 return|return
+operator|(
 name|ReplaceCount
+operator|)
 return|;
 block|}
 comment|/*          * Check for translation escape string -- means to ignore          * blocks of code while replacing          */
@@ -1111,7 +1345,9 @@ condition|)
 block|{
 comment|/* Didn't find terminator */
 return|return
+operator|(
 name|ReplaceCount
+operator|)
 return|;
 block|}
 comment|/* Move buffer to end of escape block and continue */
@@ -1199,7 +1435,9 @@ expr_stmt|;
 block|}
 block|}
 return|return
+operator|(
 name|ReplaceCount
+operator|)
 return|;
 block|}
 end_function
@@ -1795,7 +2033,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AsTabify4  *  * DESCRIPTION: Convert the text to tabbed text.  Alignment of text is  *              preserved.  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AsTabify4  *  * DESCRIPTION: Convert the text to tabbed text. Alignment of text is  *              preserved.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -2016,7 +2254,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AsTabify8  *  * DESCRIPTION: Convert the text to tabbed text.  Alignment of text is  *              preserved.  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AsTabify8  *  * DESCRIPTION: Convert the text to tabbed text. Alignment of text is  *              preserved.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -2144,7 +2382,7 @@ name|FirstNonBlank
 operator|++
 expr_stmt|;
 block|}
-comment|/*              * This mechanism limits the difference in tab counts from              * line to line.  It helps avoid the situation where a second              * continuation line (which was indented correctly for tabs=4) would              * get indented off the screen if we just blindly converted to tabs.              */
+comment|/*              * This mechanism limits the difference in tab counts from              * line to line. It helps avoid the situation where a second              * continuation line (which was indented correctly for tabs=4) would              * get indented off the screen if we just blindly converted to tabs.              */
 name|ThisColumnStart
 operator|=
 name|FirstNonBlank
@@ -2534,7 +2772,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AsCountLines  *  * DESCRIPTION: Count the number of lines in the input buffer.  Also count  *              the number of long lines (lines longer than 80 chars).  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AsCountLines  *  * DESCRIPTION: Count the number of lines in the input buffer. Also count  *              the number of long lines (lines longer than 80 chars).  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -2596,7 +2834,9 @@ operator|+=
 name|LineCount
 expr_stmt|;
 return|return
+operator|(
 name|LineCount
+operator|)
 return|;
 block|}
 if|if
@@ -2659,7 +2899,9 @@ operator|+=
 name|LineCount
 expr_stmt|;
 return|return
+operator|(
 name|LineCount
+operator|)
 return|;
 block|}
 end_function
@@ -2749,7 +2991,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AsCountNonAnsiComments  *  * DESCRIPTION: Count the number of "//" comments.  This type of comment is  *              non-ANSI C.  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AsCountNonAnsiComments  *  * DESCRIPTION: Count the number of "//" comments. This type of comment is  *              non-ANSI C.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -2827,7 +3069,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AsCountSourceLines  *  * DESCRIPTION: Count the number of C source lines.  Defined by 1) not a  *              comment, and 2) not a blank line.  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AsCountSourceLines  *  * DESCRIPTION: Count the number of C source lines. Defined by 1) not a  *              comment, and 2) not a blank line.  *  ******************************************************************************/
 end_comment
 
 begin_function

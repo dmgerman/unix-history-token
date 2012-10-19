@@ -679,7 +679,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|Sum
+operator|)
 return|;
 block|}
 end_function

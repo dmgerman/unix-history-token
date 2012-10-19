@@ -447,7 +447,9 @@ name|Header
 condition|)
 block|{
 return|return
+operator|(
 name|AE_NO_MEMORY
+operator|)
 return|;
 block|}
 name|ACPI_MEMCPY
@@ -476,7 +478,9 @@ block|}
 else|else
 block|{
 return|return
+operator|(
 name|AE_NOT_FOUND
+operator|)
 return|;
 block|}
 block|}

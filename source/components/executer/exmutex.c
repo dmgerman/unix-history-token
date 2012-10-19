@@ -668,11 +668,11 @@ operator|==
 literal|0
 condition|)
 block|{
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_NOT_ACQUIRED
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* Match multiple Acquires with multiple Releases */
 name|ObjDesc
@@ -1081,8 +1081,10 @@ name|ACPI_OPERAND_OBJECT
 modifier|*
 name|ObjDesc
 decl_stmt|;
-name|ACPI_FUNCTION_ENTRY
-argument_list|()
+name|ACPI_FUNCTION_NAME
+argument_list|(
+name|ExReleaseAllMutexes
+argument_list|)
 expr_stmt|;
 comment|/* Traverse the list of owned mutexes, releasing each one */
 while|while
@@ -1125,6 +1127,17 @@ operator|.
 name|AcquisitionDepth
 operator|=
 literal|0
+expr_stmt|;
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_EXEC
+operator|,
+literal|"Force-releasing held mutex: %p\n"
+operator|,
+name|ObjDesc
+operator|)
+argument_list|)
 expr_stmt|;
 comment|/* Release the mutex, special case for Global Lock */
 if|if

@@ -75,7 +75,7 @@ decl_stmt|;
 name|char
 name|temp_buffer
 index|[
-literal|128
+literal|256
 index|]
 decl_stmt|;
 name|char
@@ -124,12 +124,12 @@ name|ExternalInfo
 operator|=
 name|calloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|EXTERNAL_FIND_INFO
 argument_list|)
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 if|if

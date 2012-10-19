@@ -3187,7 +3187,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExOut* functions  *  * PARAMETERS:  Title               - Descriptive text  *              Value               - Value to be displayed  *  * DESCRIPTION: Object dump output formatting functions.  These functions  *              reduce the number of format strings required and keeps them  *              all in one place for easy modification.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExOut* functions  *  * PARAMETERS:  Title               - Descriptive text  *              Value               - Value to be displayed  *  * DESCRIPTION: Object dump output formatting functions. These functions  *              reduce the number of format strings required and keeps them  *              all in one place for easy modification.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -3708,7 +3708,7 @@ operator|.
 name|Length
 condition|)
 block|{
-name|AcpiUtDumpBuffer
+name|AcpiUtDebugDumpBuffer
 argument_list|(
 name|ACPI_CAST_PTR
 argument_list|(

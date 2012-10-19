@@ -52,7 +52,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExReadDataFromField  *  * PARAMETERS:  WalkState           - Current execution state  *              ObjDesc             - The named field  *              RetBufferDesc       - Where the return data object is stored  *  * RETURN:      Status  *  * DESCRIPTION: Read from a named field.  Returns either an Integer or a  *              Buffer, depending on the size of the field.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExReadDataFromField  *  * PARAMETERS:  WalkState           - Current execution state  *              ObjDesc             - The named field  *              RetBufferDesc       - Where the return data object is stored  *  * RETURN:      Status  *  * DESCRIPTION: Read from a named field. Returns either an Integer or a  *              Buffer, depending on the size of the field.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -370,7 +370,7 @@ goto|goto
 name|Exit
 goto|;
 block|}
-comment|/*      * Allocate a buffer for the contents of the field.      *      * If the field is larger than the current integer width, create      * a BUFFER to hold it.  Otherwise, use an INTEGER.  This allows      * the use of arithmetic operators on the returned value if the      * field size is equal or smaller than an Integer.      *      * Note: Field.length is in bits.      */
+comment|/*      * Allocate a buffer for the contents of the field.      *      * If the field is larger than the current integer width, create      * a BUFFER to hold it. Otherwise, use an INTEGER. This allows      * the use of arithmetic operators on the returned value if the      * field size is equal or smaller than an Integer.      *      * Note: Field.length is in bits.      */
 name|Length
 operator|=
 operator|(

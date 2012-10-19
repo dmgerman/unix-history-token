@@ -36,7 +36,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AsRemoveStatement  *  * DESCRIPTION: Remove all statements that contain the given keyword.  *              Limitations:  Removes text from the start of the line that  *              contains the keyword to the next semicolon.  Currently  *              doesn't ignore comments.  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AsRemoveStatement  *  * DESCRIPTION: Remove all statements that contain the given keyword.  *              Limitations:  Removes text from the start of the line that  *              contains the keyword to the next semicolon. Currently  *              doesn't ignore comments.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -586,7 +586,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AsRemoveMacro  *  * DESCRIPTION: Remove every line that contains the keyword.  Does not  *              skip comments.  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AsRemoveMacro  *  * DESCRIPTION: Remove every line that contains the keyword. Does not  *              skip comments.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -736,7 +736,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AsRemoveLine  *  * DESCRIPTION: Remove every line that contains the keyword.  Does not  *              skip comments.  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AsRemoveLine  *  * DESCRIPTION: Remove every line that contains the keyword. Does not  *              skip comments.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -932,7 +932,7 @@ block|}
 name|SubString
 operator|++
 expr_stmt|;
-comment|/* Find the closing brace.  Handles nested braces */
+comment|/* Find the closing brace. Handles nested braces */
 name|NestLevel
 operator|=
 literal|1
@@ -1036,7 +1036,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AsRemoveEmptyBlocks  *  * DESCRIPTION: Remove any C blocks (e.g., if {}) that contain no code.  This  *              can happen as a result of removing lines such as DEBUG_PRINT.  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AsRemoveEmptyBlocks  *  * DESCRIPTION: Remove any C blocks (e.g., if {}) that contain no code. This  *              can happen as a result of removing lines such as DEBUG_PRINT.  *  ******************************************************************************/
 end_comment
 
 begin_function

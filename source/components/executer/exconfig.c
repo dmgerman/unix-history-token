@@ -511,7 +511,7 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/*          * Find the node referenced by the RootPathString.  This is the          * location within the namespace where the table will be loaded.          */
+comment|/*          * Find the node referenced by the RootPathString. This is the          * location within the namespace where the table will be loaded.          */
 name|Status
 operator|=
 name|AcpiNsGetNode

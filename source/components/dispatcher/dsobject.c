@@ -651,7 +651,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*      * Second arg is the buffer data (optional) ByteList can be either      * individual bytes or a string initializer.  In either case, a      * ByteList appears in the AML.      */
+comment|/*      * Second arg is the buffer data (optional) ByteList can be either      * individual bytes or a string initializer. In either case, a      * ByteList appears in the AML.      */
 name|Arg
 operator|=
 name|Op
@@ -1444,7 +1444,7 @@ argument_list|,
 name|Op
 argument_list|)
 expr_stmt|;
-comment|/*      * Because of the execution pass through the non-control-method      * parts of the table, we can arrive here twice.  Only init      * the named object node the first time through      */
+comment|/*      * Because of the execution pass through the non-control-method      * parts of the table, we can arrive here twice. Only init      * the named object node the first time through      */
 if|if
 condition|(
 name|AcpiNsGetAttachedObject
@@ -1560,7 +1560,7 @@ comment|/* ACPI_NO_METHOD_EXECUTION */
 end_comment
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsInitObjectFromOp  *  * PARAMETERS:  WalkState       - Current walk state  *              Op              - Parser op used to init the internal object  *              Opcode          - AML opcode associated with the object  *              RetObjDesc      - Namespace object to be initialized  *  * RETURN:      Status  *  * DESCRIPTION: Initialize a namespace object from a parser Op and its  *              associated arguments.  The namespace object is a more compact  *              representation of the Op and its arguments.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsInitObjectFromOp  *  * PARAMETERS:  WalkState       - Current walk state  *              Op              - Parser op used to init the internal object  *              Opcode          - AML opcode associated with the object  *              RetObjDesc      - Namespace object to be initialized  *  * RETURN:      Status  *  * DESCRIPTION: Initialize a namespace object from a parser Op and its  *              associated arguments. The namespace object is a more compact  *              representation of the Op and its arguments.  *  ******************************************************************************/
 end_comment
 
 begin_function

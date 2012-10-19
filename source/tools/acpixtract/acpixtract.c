@@ -880,14 +880,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|strncmp
+name|ACPI_COMPARE_NAME
 argument_list|(
 name|InstanceBuffer
 argument_list|,
 name|Signature
-argument_list|,
-literal|4
 argument_list|)
 condition|)
 block|{
@@ -1302,13 +1299,11 @@ argument_list|(
 name|LineBuffer
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|ACPI_MOVE_NAME
 argument_list|(
 name|ThisSignature
 argument_list|,
 name|LineBuffer
-argument_list|,
-literal|4
 argument_list|)
 expr_stmt|;
 if|if
@@ -1319,13 +1314,12 @@ block|{
 comment|/* Ignore signatures that don't match */
 if|if
 condition|(
-name|strncmp
+operator|!
+name|ACPI_COMPARE_NAME
 argument_list|(
 name|ThisSignature
 argument_list|,
 name|Signature
-argument_list|,
-literal|4
 argument_list|)
 condition|)
 block|{
@@ -1836,16 +1830,13 @@ expr_stmt|;
 comment|/* FACS has only signature and length */
 if|if
 condition|(
-operator|!
-name|strncmp
+name|ACPI_COMPARE_NAME
 argument_list|(
 name|TableHeader
 operator|->
 name|Signature
 argument_list|,
 literal|"FACS"
-argument_list|,
-literal|4
 argument_list|)
 condition|)
 block|{

@@ -522,6 +522,12 @@ operator|->
 name|Filename
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Gbl_IgnoreErrors
+condition|)
+block|{
 name|Type
 operator|=
 name|ASL_INPUT_TYPE_BINARY
@@ -529,6 +535,7 @@ expr_stmt|;
 goto|goto
 name|Cleanup
 goto|;
+block|}
 block|}
 comment|/*      * File is ASCII. Determine if this is an ASL file or an ACPI data      * table file.      */
 while|while

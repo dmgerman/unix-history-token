@@ -88,7 +88,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExAllocateNameString  *  * PARAMETERS:  PrefixCount         - Count of parent levels. Special cases:  *                                    (-1)==root,  0==none  *              NumNameSegs         - count of 4-character name segments  *  * RETURN:      A pointer to the allocated string segment.  This segment must  *              be deleted by the caller.  *  * DESCRIPTION: Allocate a buffer for a name string. Ensure allocated name  *              string is long enough, and set up prefix if any.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExAllocateNameString  *  * PARAMETERS:  PrefixCount         - Count of parent levels. Special cases:  *                                    (-1)==root,  0==none  *              NumNameSegs         - count of 4-character name segments  *  * RETURN:      A pointer to the allocated string segment. This segment must  *              be deleted by the caller.  *  * DESCRIPTION: Allocate a buffer for a name string. Ensure allocated name  *              string is long enough, and set up prefix if any.  *  ******************************************************************************/
 end_comment
 
 begin_function

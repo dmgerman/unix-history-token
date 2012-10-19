@@ -214,7 +214,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsGetNextPackageEnd  *  * PARAMETERS:  ParserState         - Current parser state object  *  * RETURN:      Pointer to end-of-package +1  *  * DESCRIPTION: Get next package length and return a pointer past the end of  *              the package.  Consumes the package length field  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsGetNextPackageEnd  *  * PARAMETERS:  ParserState         - Current parser state object  *  * RETURN:      Pointer to end-of-package +1  *  * DESCRIPTION: Get next package length and return a pointer past the end of  *              the package. Consumes the package length field  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -263,7 +263,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsGetNextNamestring  *  * PARAMETERS:  ParserState         - Current parser state object  *  * RETURN:      Pointer to the start of the name string (pointer points into  *              the AML.  *  * DESCRIPTION: Get next raw namestring within the AML stream.  Handles all name  *              prefix characters.  Set parser state to point past the string.  *              (Name is consumed from the AML.)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsGetNextNamestring  *  * PARAMETERS:  ParserState         - Current parser state object  *  * RETURN:      Pointer to the start of the name string (pointer points into  *              the AML.  *  * DESCRIPTION: Get next raw namestring within the AML stream. Handles all name  *              prefix characters. Set parser state to point past the string.  *              (Name is consumed from the AML.)  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -400,7 +400,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsGetNextNamepath  *  * PARAMETERS:  ParserState         - Current parser state object  *              Arg                 - Where the namepath will be stored  *              ArgCount            - If the namepath points to a control method  *                                    the method's argument is returned here.  *              PossibleMethodCall  - Whether the namepath can possibly be the  *                                    start of a method call  *  * RETURN:      Status  *  * DESCRIPTION: Get next name (if method call, return # of required args).  *              Names are looked up in the internal namespace to determine  *              if the name represents a control method.  If a method  *              is found, the number of arguments to the method is returned.  *              This information is critical for parsing to continue correctly.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsGetNextNamepath  *  * PARAMETERS:  ParserState         - Current parser state object  *              Arg                 - Where the namepath will be stored  *              ArgCount            - If the namepath points to a control method  *                                    the method's argument is returned here.  *              PossibleMethodCall  - Whether the namepath can possibly be the  *                                    start of a method call  *  * RETURN:      Status  *  * DESCRIPTION: Get next name (if method call, return # of required args).  *              Names are looked up in the internal namespace to determine  *              if the name represents a control method. If a method  *              is found, the number of arguments to the method is returned.  *              This information is critical for parsing to continue correctly.  *  ******************************************************************************/
 end_comment
 
 begin_function

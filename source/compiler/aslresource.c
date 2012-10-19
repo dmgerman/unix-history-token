@@ -717,7 +717,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -775,7 +777,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    RsCreateResourceField  *  * PARAMETERS:  Op              - Resource field node  *              Name            - Name of the field (Used only to reference  *                                the field in the ASL, not in the AML)  *              ByteOffset      - Offset from the field start  *              BitOffset       - Additional bit offset  *              BitLength       - Number of bits in the field  *  * RETURN:      None, sets fields within the input node  *  * DESCRIPTION: Utility function to generate a named bit field within a  *              resource descriptor.  Mark a node as 1) a field in a resource  *              descriptor, and 2) set the value to be a BIT offset  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    RsCreateResourceField  *  * PARAMETERS:  Op              - Resource field node  *              Name            - Name of the field (Used only to reference  *                                the field in the ASL, not in the AML)  *              ByteOffset      - Offset from the field start  *              BitOffset       - Additional bit offset  *              BitLength       - Number of bits in the field  *  * RETURN:      None, sets fields within the input node  *  * DESCRIPTION: Utility function to generate a named bit field within a  *              resource descriptor. Mark a node as 1) a field in a resource  *              descriptor, and 2) set the value to be a BIT offset  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -850,7 +852,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    RsSetFlagBits  *  * PARAMETERS:  *Flags          - Pointer to the flag byte  *              Op              - Flag initialization node  *              Position        - Bit position within the flag byte  *              Default         - Used if the node is DEFAULT.  *  * RETURN:      Sets bits within the *Flags output byte.  *  * DESCRIPTION: Set a bit in a cumulative flags word from an initialization  *              node.  Will use a default value if the node is DEFAULT, meaning  *              that no value was specified in the ASL.  Used to merge multiple  *              keywords into a single flags byte.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    RsSetFlagBits  *  * PARAMETERS:  *Flags          - Pointer to the flag byte  *              Op              - Flag initialization node  *              Position        - Bit position within the flag byte  *              Default         - Used if the node is DEFAULT.  *  * RETURN:      Sets bits within the *Flags output byte.  *  * DESCRIPTION: Set a bit in a cumulative flags word from an initialization  *              node. Will use a default value if the node is DEFAULT, meaning  *              that no value was specified in the ASL. Used to merge multiple  *              keywords into a single flags byte.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1883,7 +1885,9 @@ name|Rnode
 condition|)
 block|{
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 comment|/* Point the previous node to the new node */
@@ -1934,13 +1938,15 @@ operator|=
 name|LastRnode
 expr_stmt|;
 return|return
+operator|(
 name|CurrentByteOffset
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    RsDoResourceTemplate  *  * PARAMETERS:  Op        - Parent of a resource template list  *  * RETURN:      None.  Sets input node to point to a list of AML code  *  * DESCRIPTION: Merge a list of resource descriptors into a single AML buffer,  *              in preparation for output to the AML output file.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    RsDoResourceTemplate  *  * PARAMETERS:  Op        - Parent of a resource template list  *  * RETURN:      None. Sets input node to point to a list of AML code  *  * DESCRIPTION: Merge a list of resource descriptors into a single AML buffer,  *              in preparation for output to the AML output file.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -2072,7 +2078,7 @@ operator|&
 name|State
 argument_list|)
 expr_stmt|;
-comment|/*          * Update current byte offset to indicate the number of bytes from the          * start of the buffer.  Buffer can include multiple descriptors, we          * must keep track of the offset of not only each descriptor, but each          * element (field) within each descriptor as well.          */
+comment|/*          * Update current byte offset to indicate the number of bytes from the          * start of the buffer. Buffer can include multiple descriptors, we          * must keep track of the offset of not only each descriptor, but each          * element (field) within each descriptor as well.          */
 name|CurrentByteOffset
 operator|+=
 name|RsLinkDescriptorChain

@@ -26,7 +26,7 @@ file|"accommon.h"
 end_include
 
 begin_comment
-comment|/*  * These implementations of standard C Library routines can optionally be  * used if a C library is not available.  In general, they are less efficient  * than an inline or assembly implementation  */
+comment|/*  * These implementations of standard C Library routines can optionally be  * used if a C library is not available. In general, they are less efficient  * than an inline or assembly implementation  */
 end_comment
 
 begin_define
@@ -1445,444 +1445,444 @@ init|=
 block|{
 name|_ACPI_CN
 block|,
-comment|/* 0x0      0.     */
+comment|/* 0x00     0 NUL */
 name|_ACPI_CN
 block|,
-comment|/* 0x1      1.     */
+comment|/* 0x01     1 SOH */
 name|_ACPI_CN
 block|,
-comment|/* 0x2      2.     */
+comment|/* 0x02     2 STX */
 name|_ACPI_CN
 block|,
-comment|/* 0x3      3.     */
+comment|/* 0x03     3 ETX */
 name|_ACPI_CN
 block|,
-comment|/* 0x4      4.     */
+comment|/* 0x04     4 EOT */
 name|_ACPI_CN
 block|,
-comment|/* 0x5      5.     */
+comment|/* 0x05     5 ENQ */
 name|_ACPI_CN
 block|,
-comment|/* 0x6      6.     */
+comment|/* 0x06     6 ACK */
 name|_ACPI_CN
 block|,
-comment|/* 0x7      7.     */
+comment|/* 0x07     7 BEL */
 name|_ACPI_CN
 block|,
-comment|/* 0x8      8.     */
-name|_ACPI_CN
-operator||
-name|_ACPI_SP
-block|,
-comment|/* 0x9      9.     */
+comment|/* 0x08     8 BS  */
 name|_ACPI_CN
 operator||
 name|_ACPI_SP
 block|,
-comment|/* 0xA     10.     */
+comment|/* 0x09     9 TAB */
 name|_ACPI_CN
 operator||
 name|_ACPI_SP
 block|,
-comment|/* 0xB     11.     */
+comment|/* 0x0A    10 LF  */
 name|_ACPI_CN
 operator||
 name|_ACPI_SP
 block|,
-comment|/* 0xC     12.     */
+comment|/* 0x0B    11 VT  */
 name|_ACPI_CN
 operator||
 name|_ACPI_SP
 block|,
-comment|/* 0xD     13.     */
+comment|/* 0x0C    12 FF  */
+name|_ACPI_CN
+operator||
+name|_ACPI_SP
+block|,
+comment|/* 0x0D    13 CR  */
 name|_ACPI_CN
 block|,
-comment|/* 0xE     14.     */
+comment|/* 0x0E    14 SO  */
 name|_ACPI_CN
 block|,
-comment|/* 0xF     15.     */
+comment|/* 0x0F    15 SI  */
 name|_ACPI_CN
 block|,
-comment|/* 0x10    16.     */
+comment|/* 0x10    16 DLE */
 name|_ACPI_CN
 block|,
-comment|/* 0x11    17.     */
+comment|/* 0x11    17 DC1 */
 name|_ACPI_CN
 block|,
-comment|/* 0x12    18.     */
+comment|/* 0x12    18 DC2 */
 name|_ACPI_CN
 block|,
-comment|/* 0x13    19.     */
+comment|/* 0x13    19 DC3 */
 name|_ACPI_CN
 block|,
-comment|/* 0x14    20.     */
+comment|/* 0x14    20 DC4 */
 name|_ACPI_CN
 block|,
-comment|/* 0x15    21.     */
+comment|/* 0x15    21 NAK */
 name|_ACPI_CN
 block|,
-comment|/* 0x16    22.     */
+comment|/* 0x16    22 SYN */
 name|_ACPI_CN
 block|,
-comment|/* 0x17    23.     */
+comment|/* 0x17    23 ETB */
 name|_ACPI_CN
 block|,
-comment|/* 0x18    24.     */
+comment|/* 0x18    24 CAN */
 name|_ACPI_CN
 block|,
-comment|/* 0x19    25.     */
+comment|/* 0x19    25 EM  */
 name|_ACPI_CN
 block|,
-comment|/* 0x1A    26.     */
+comment|/* 0x1A    26 SUB */
 name|_ACPI_CN
 block|,
-comment|/* 0x1B    27.     */
+comment|/* 0x1B    27 ESC */
 name|_ACPI_CN
 block|,
-comment|/* 0x1C    28.     */
+comment|/* 0x1C    28 FS  */
 name|_ACPI_CN
 block|,
-comment|/* 0x1D    29.     */
+comment|/* 0x1D    29 GS  */
 name|_ACPI_CN
 block|,
-comment|/* 0x1E    30.     */
+comment|/* 0x1E    30 RS  */
 name|_ACPI_CN
 block|,
-comment|/* 0x1F    31.     */
+comment|/* 0x1F    31 US  */
 name|_ACPI_XS
 operator||
 name|_ACPI_SP
 block|,
-comment|/* 0x20    32. ' ' */
+comment|/* 0x20    32 ' ' */
 name|_ACPI_PU
 block|,
-comment|/* 0x21    33. '!' */
+comment|/* 0x21    33 '!' */
 name|_ACPI_PU
 block|,
-comment|/* 0x22    34. '"' */
+comment|/* 0x22    34 '"' */
 name|_ACPI_PU
 block|,
-comment|/* 0x23    35. '#' */
+comment|/* 0x23    35 '#' */
 name|_ACPI_PU
 block|,
-comment|/* 0x24    36. '$' */
+comment|/* 0x24    36 '$' */
 name|_ACPI_PU
 block|,
-comment|/* 0x25    37. '%' */
+comment|/* 0x25    37 '%' */
 name|_ACPI_PU
 block|,
-comment|/* 0x26    38. '&' */
+comment|/* 0x26    38 '&' */
 name|_ACPI_PU
 block|,
-comment|/* 0x27    39. ''' */
+comment|/* 0x27    39 ''' */
 name|_ACPI_PU
 block|,
-comment|/* 0x28    40. '(' */
+comment|/* 0x28    40 '(' */
 name|_ACPI_PU
 block|,
-comment|/* 0x29    41. ')' */
+comment|/* 0x29    41 ')' */
 name|_ACPI_PU
 block|,
-comment|/* 0x2A    42. '*' */
+comment|/* 0x2A    42 '*' */
 name|_ACPI_PU
 block|,
-comment|/* 0x2B    43. '+' */
+comment|/* 0x2B    43 '+' */
 name|_ACPI_PU
 block|,
-comment|/* 0x2C    44. ',' */
+comment|/* 0x2C    44 ',' */
 name|_ACPI_PU
 block|,
-comment|/* 0x2D    45. '-' */
+comment|/* 0x2D    45 '-' */
 name|_ACPI_PU
 block|,
-comment|/* 0x2E    46. '.' */
+comment|/* 0x2E    46 '.' */
 name|_ACPI_PU
 block|,
-comment|/* 0x2F    47. '/' */
+comment|/* 0x2F    47 '/' */
 name|_ACPI_XD
 operator||
 name|_ACPI_DI
 block|,
-comment|/* 0x30    48. '0' */
+comment|/* 0x30    48 '0' */
 name|_ACPI_XD
 operator||
 name|_ACPI_DI
 block|,
-comment|/* 0x31    49. '1' */
+comment|/* 0x31    49 '1' */
 name|_ACPI_XD
 operator||
 name|_ACPI_DI
 block|,
-comment|/* 0x32    50. '2' */
+comment|/* 0x32    50 '2' */
 name|_ACPI_XD
 operator||
 name|_ACPI_DI
 block|,
-comment|/* 0x33    51. '3' */
+comment|/* 0x33    51 '3' */
 name|_ACPI_XD
 operator||
 name|_ACPI_DI
 block|,
-comment|/* 0x34    52. '4' */
+comment|/* 0x34    52 '4' */
 name|_ACPI_XD
 operator||
 name|_ACPI_DI
 block|,
-comment|/* 0x35    53. '5' */
+comment|/* 0x35    53 '5' */
 name|_ACPI_XD
 operator||
 name|_ACPI_DI
 block|,
-comment|/* 0x36    54. '6' */
+comment|/* 0x36    54 '6' */
 name|_ACPI_XD
 operator||
 name|_ACPI_DI
 block|,
-comment|/* 0x37    55. '7' */
+comment|/* 0x37    55 '7' */
 name|_ACPI_XD
 operator||
 name|_ACPI_DI
 block|,
-comment|/* 0x38    56. '8' */
+comment|/* 0x38    56 '8' */
 name|_ACPI_XD
 operator||
 name|_ACPI_DI
 block|,
-comment|/* 0x39    57. '9' */
+comment|/* 0x39    57 '9' */
 name|_ACPI_PU
 block|,
-comment|/* 0x3A    58. ':' */
+comment|/* 0x3A    58 ':' */
 name|_ACPI_PU
 block|,
-comment|/* 0x3B    59. ';' */
+comment|/* 0x3B    59 ';' */
 name|_ACPI_PU
 block|,
-comment|/* 0x3C    60. '<' */
+comment|/* 0x3C    60 '<' */
 name|_ACPI_PU
 block|,
-comment|/* 0x3D    61. '=' */
+comment|/* 0x3D    61 '=' */
 name|_ACPI_PU
 block|,
-comment|/* 0x3E    62. '>' */
+comment|/* 0x3E    62 '>' */
 name|_ACPI_PU
 block|,
-comment|/* 0x3F    63. '?' */
+comment|/* 0x3F    63 '?' */
 name|_ACPI_PU
 block|,
-comment|/* 0x40    64. '@' */
+comment|/* 0x40    64 '@' */
 name|_ACPI_XD
 operator||
 name|_ACPI_UP
 block|,
-comment|/* 0x41    65. 'A' */
+comment|/* 0x41    65 'A' */
 name|_ACPI_XD
 operator||
 name|_ACPI_UP
 block|,
-comment|/* 0x42    66. 'B' */
+comment|/* 0x42    66 'B' */
 name|_ACPI_XD
 operator||
 name|_ACPI_UP
 block|,
-comment|/* 0x43    67. 'C' */
+comment|/* 0x43    67 'C' */
 name|_ACPI_XD
 operator||
 name|_ACPI_UP
 block|,
-comment|/* 0x44    68. 'D' */
+comment|/* 0x44    68 'D' */
 name|_ACPI_XD
 operator||
 name|_ACPI_UP
 block|,
-comment|/* 0x45    69. 'E' */
+comment|/* 0x45    69 'E' */
 name|_ACPI_XD
 operator||
 name|_ACPI_UP
 block|,
-comment|/* 0x46    70. 'F' */
+comment|/* 0x46    70 'F' */
 name|_ACPI_UP
 block|,
-comment|/* 0x47    71. 'G' */
+comment|/* 0x47    71 'G' */
 name|_ACPI_UP
 block|,
-comment|/* 0x48    72. 'H' */
+comment|/* 0x48    72 'H' */
 name|_ACPI_UP
 block|,
-comment|/* 0x49    73. 'I' */
+comment|/* 0x49    73 'I' */
 name|_ACPI_UP
 block|,
-comment|/* 0x4A    74. 'J' */
+comment|/* 0x4A    74 'J' */
 name|_ACPI_UP
 block|,
-comment|/* 0x4B    75. 'K' */
+comment|/* 0x4B    75 'K' */
 name|_ACPI_UP
 block|,
-comment|/* 0x4C    76. 'L' */
+comment|/* 0x4C    76 'L' */
 name|_ACPI_UP
 block|,
-comment|/* 0x4D    77. 'M' */
+comment|/* 0x4D    77 'M' */
 name|_ACPI_UP
 block|,
-comment|/* 0x4E    78. 'N' */
+comment|/* 0x4E    78 'N' */
 name|_ACPI_UP
 block|,
-comment|/* 0x4F    79. 'O' */
+comment|/* 0x4F    79 'O' */
 name|_ACPI_UP
 block|,
-comment|/* 0x50    80. 'P' */
+comment|/* 0x50    80 'P' */
 name|_ACPI_UP
 block|,
-comment|/* 0x51    81. 'Q' */
+comment|/* 0x51    81 'Q' */
 name|_ACPI_UP
 block|,
-comment|/* 0x52    82. 'R' */
+comment|/* 0x52    82 'R' */
 name|_ACPI_UP
 block|,
-comment|/* 0x53    83. 'S' */
+comment|/* 0x53    83 'S' */
 name|_ACPI_UP
 block|,
-comment|/* 0x54    84. 'T' */
+comment|/* 0x54    84 'T' */
 name|_ACPI_UP
 block|,
-comment|/* 0x55    85. 'U' */
+comment|/* 0x55    85 'U' */
 name|_ACPI_UP
 block|,
-comment|/* 0x56    86. 'V' */
+comment|/* 0x56    86 'V' */
 name|_ACPI_UP
 block|,
-comment|/* 0x57    87. 'W' */
+comment|/* 0x57    87 'W' */
 name|_ACPI_UP
 block|,
-comment|/* 0x58    88. 'X' */
+comment|/* 0x58    88 'X' */
 name|_ACPI_UP
 block|,
-comment|/* 0x59    89. 'Y' */
+comment|/* 0x59    89 'Y' */
 name|_ACPI_UP
 block|,
-comment|/* 0x5A    90. 'Z' */
+comment|/* 0x5A    90 'Z' */
 name|_ACPI_PU
 block|,
-comment|/* 0x5B    91. '[' */
+comment|/* 0x5B    91 '[' */
 name|_ACPI_PU
 block|,
-comment|/* 0x5C    92. '\' */
+comment|/* 0x5C    92 '\' */
 name|_ACPI_PU
 block|,
-comment|/* 0x5D    93. ']' */
+comment|/* 0x5D    93 ']' */
 name|_ACPI_PU
 block|,
-comment|/* 0x5E    94. '^' */
+comment|/* 0x5E    94 '^' */
 name|_ACPI_PU
 block|,
-comment|/* 0x5F    95. '_' */
+comment|/* 0x5F    95 '_' */
 name|_ACPI_PU
 block|,
-comment|/* 0x60    96. '`' */
+comment|/* 0x60    96 '`' */
 name|_ACPI_XD
 operator||
 name|_ACPI_LO
 block|,
-comment|/* 0x61    97. 'a' */
+comment|/* 0x61    97 'a' */
 name|_ACPI_XD
 operator||
 name|_ACPI_LO
 block|,
-comment|/* 0x62    98. 'b' */
+comment|/* 0x62    98 'b' */
 name|_ACPI_XD
 operator||
 name|_ACPI_LO
 block|,
-comment|/* 0x63    99. 'c' */
+comment|/* 0x63    99 'c' */
 name|_ACPI_XD
 operator||
 name|_ACPI_LO
 block|,
-comment|/* 0x64   100. 'd' */
+comment|/* 0x64   100 'd' */
 name|_ACPI_XD
 operator||
 name|_ACPI_LO
 block|,
-comment|/* 0x65   101. 'e' */
+comment|/* 0x65   101 'e' */
 name|_ACPI_XD
 operator||
 name|_ACPI_LO
 block|,
-comment|/* 0x66   102. 'f' */
+comment|/* 0x66   102 'f' */
 name|_ACPI_LO
 block|,
-comment|/* 0x67   103. 'g' */
+comment|/* 0x67   103 'g' */
 name|_ACPI_LO
 block|,
-comment|/* 0x68   104. 'h' */
+comment|/* 0x68   104 'h' */
 name|_ACPI_LO
 block|,
-comment|/* 0x69   105. 'i' */
+comment|/* 0x69   105 'i' */
 name|_ACPI_LO
 block|,
-comment|/* 0x6A   106. 'j' */
+comment|/* 0x6A   106 'j' */
 name|_ACPI_LO
 block|,
-comment|/* 0x6B   107. 'k' */
+comment|/* 0x6B   107 'k' */
 name|_ACPI_LO
 block|,
-comment|/* 0x6C   108. 'l' */
+comment|/* 0x6C   108 'l' */
 name|_ACPI_LO
 block|,
-comment|/* 0x6D   109. 'm' */
+comment|/* 0x6D   109 'm' */
 name|_ACPI_LO
 block|,
-comment|/* 0x6E   110. 'n' */
+comment|/* 0x6E   110 'n' */
 name|_ACPI_LO
 block|,
-comment|/* 0x6F   111. 'o' */
+comment|/* 0x6F   111 'o' */
 name|_ACPI_LO
 block|,
-comment|/* 0x70   112. 'p' */
+comment|/* 0x70   112 'p' */
 name|_ACPI_LO
 block|,
-comment|/* 0x71   113. 'q' */
+comment|/* 0x71   113 'q' */
 name|_ACPI_LO
 block|,
-comment|/* 0x72   114. 'r' */
+comment|/* 0x72   114 'r' */
 name|_ACPI_LO
 block|,
-comment|/* 0x73   115. 's' */
+comment|/* 0x73   115 's' */
 name|_ACPI_LO
 block|,
-comment|/* 0x74   116. 't' */
+comment|/* 0x74   116 't' */
 name|_ACPI_LO
 block|,
-comment|/* 0x75   117. 'u' */
+comment|/* 0x75   117 'u' */
 name|_ACPI_LO
 block|,
-comment|/* 0x76   118. 'v' */
+comment|/* 0x76   118 'v' */
 name|_ACPI_LO
 block|,
-comment|/* 0x77   119. 'w' */
+comment|/* 0x77   119 'w' */
 name|_ACPI_LO
 block|,
-comment|/* 0x78   120. 'x' */
+comment|/* 0x78   120 'x' */
 name|_ACPI_LO
 block|,
-comment|/* 0x79   121. 'y' */
+comment|/* 0x79   121 'y' */
 name|_ACPI_LO
 block|,
-comment|/* 0x7A   122. 'z' */
+comment|/* 0x7A   122 'z' */
 name|_ACPI_PU
 block|,
-comment|/* 0x7B   123. '{' */
+comment|/* 0x7B   123 '{' */
 name|_ACPI_PU
 block|,
-comment|/* 0x7C   124. '|' */
+comment|/* 0x7C   124 '|' */
 name|_ACPI_PU
 block|,
-comment|/* 0x7D   125. '}' */
+comment|/* 0x7D   125 '}' */
 name|_ACPI_PU
 block|,
-comment|/* 0x7E   126. '~' */
+comment|/* 0x7E   126 '~' */
 name|_ACPI_CN
 block|,
-comment|/* 0x7F   127.     */
+comment|/* 0x7F   127 DEL */
 literal|0
 block|,
 literal|0
@@ -2146,8 +2146,9 @@ literal|0
 block|,
 literal|0
 block|,
+comment|/* 0xF0 to 0xFF    */
 literal|0
-comment|/* 0xF0 to 0x100   */
+comment|/* 0x100 */
 block|}
 decl_stmt|;
 end_decl_stmt

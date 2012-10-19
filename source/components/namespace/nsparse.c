@@ -400,7 +400,7 @@ argument_list|(
 name|NsParseTable
 argument_list|)
 expr_stmt|;
-comment|/*      * AML Parse, pass 1      *      * In this pass, we load most of the namespace.  Control methods      * are not parsed until later.  A parse tree is not created.  Instead,      * each Parser Op subtree is deleted when it is finished.  This saves      * a great deal of memory, and allows a small cache of parse objects      * to service the entire parse.  The second pass of the parse then      * performs another complete parse of the AML.      */
+comment|/*      * AML Parse, pass 1      *      * In this pass, we load most of the namespace. Control methods      * are not parsed until later. A parse tree is not created. Instead,      * each Parser Op subtree is deleted when it is finished. This saves      * a great deal of memory, and allows a small cache of parse objects      * to service the entire parse. The second pass of the parse then      * performs another complete parse of the AML.      */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(

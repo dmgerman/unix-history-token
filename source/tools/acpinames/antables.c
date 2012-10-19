@@ -229,7 +229,7 @@ argument_list|,
 name|XsdtSize
 argument_list|)
 expr_stmt|;
-name|ACPI_STRNCPY
+name|ACPI_MOVE_NAME
 argument_list|(
 name|LocalXSDT
 operator|->
@@ -238,8 +238,6 @@ operator|.
 name|Signature
 argument_list|,
 name|ACPI_SIG_XSDT
-argument_list|,
-literal|4
 argument_list|)
 expr_stmt|;
 name|LocalXSDT
@@ -623,7 +621,7 @@ name|ACPI_TABLE_FADT
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ACPI_STRNCPY
+name|ACPI_MOVE_NAME
 argument_list|(
 name|LocalFADT
 operator|.
@@ -632,8 +630,6 @@ operator|.
 name|Signature
 argument_list|,
 name|ACPI_SIG_FADT
-argument_list|,
-literal|4
 argument_list|)
 expr_stmt|;
 comment|/* Setup FADT header and DSDT/FACS addresses */
@@ -854,15 +850,13 @@ name|ACPI_TABLE_FACS
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ACPI_STRNCPY
+name|ACPI_MOVE_NAME
 argument_list|(
 name|LocalFACS
 operator|.
 name|Signature
 argument_list|,
 name|ACPI_SIG_FACS
-argument_list|,
-literal|4
 argument_list|)
 expr_stmt|;
 name|LocalFACS

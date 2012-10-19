@@ -195,7 +195,9 @@ name|WalkState
 condition|)
 block|{
 return|return
+operator|(
 name|AE_NO_MEMORY
+operator|)
 return|;
 block|}
 comment|/* Walk the entire parse tree, first pass */
@@ -235,7 +237,9 @@ name|ACPI_UINT32_MAX
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|AE_OK
+operator|)
 return|;
 block|}
 end_function

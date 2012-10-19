@@ -174,7 +174,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 comment|/* Command line options */
@@ -217,8 +219,10 @@ literal|2
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 name|Status
@@ -251,8 +255,10 @@ literal|2
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 name|Status
@@ -285,8 +291,10 @@ literal|3
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 name|Status
@@ -326,8 +334,10 @@ literal|1
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 name|AbDisplayHeader
@@ -357,8 +367,10 @@ literal|1
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 name|AbComputeChecksum
@@ -387,8 +399,10 @@ literal|0
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 return|return

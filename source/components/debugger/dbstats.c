@@ -795,7 +795,9 @@ operator|++
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|AE_OK
+operator|)
 return|;
 ifdef|#
 directive|ifdef

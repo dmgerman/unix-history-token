@@ -308,27 +308,40 @@ break|break;
 case|case
 name|AML_CLASS_UNKNOWN
 case|:
-comment|/* The opcode is unrecognized. Just skip unknown opcodes */
+comment|/* The opcode is unrecognized. Complain and skip unknown opcodes */
+if|if
+condition|(
+name|WalkState
+operator|->
+name|PassNumber
+operator|==
+literal|2
+condition|)
+block|{
 name|ACPI_ERROR
 argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Found unknown opcode 0x%X at AML address %p offset 0x%X, ignoring"
+literal|"Unknown opcode 0x%.2X at table offset 0x%.4X, ignoring"
 operator|,
 name|WalkState
 operator|->
 name|Opcode
 operator|,
-name|WalkState
-operator|->
-name|ParserState
-operator|.
-name|Aml
-operator|,
+call|(
+name|UINT32
+call|)
+argument_list|(
 name|WalkState
 operator|->
 name|AmlOffset
+operator|+
+sizeof|sizeof
+argument_list|(
+name|ACPI_TABLE_HEADER
+argument_list|)
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -339,11 +352,81 @@ operator|->
 name|ParserState
 operator|.
 name|Aml
+operator|-
+literal|16
 argument_list|,
-literal|128
+literal|48
 argument_list|)
 expr_stmt|;
-comment|/* Assume one-byte bad opcode */
+ifdef|#
+directive|ifdef
+name|ACPI_ASL_COMPILER
+comment|/*              * This is executed for the disassembler only. Output goes              * to the disassembled ASL output file.              */
+name|AcpiOsPrintf
+argument_list|(
+literal|"/*\nError: Unknown opcode 0x%.2X at table offset 0x%.4X, context:\n"
+argument_list|,
+name|WalkState
+operator|->
+name|Opcode
+argument_list|,
+call|(
+name|UINT32
+call|)
+argument_list|(
+name|WalkState
+operator|->
+name|AmlOffset
+operator|+
+sizeof|sizeof
+argument_list|(
+name|ACPI_TABLE_HEADER
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Dump the context surrounding the invalid opcode */
+name|AcpiUtDumpBuffer
+argument_list|(
+operator|(
+operator|(
+name|UINT8
+operator|*
+operator|)
+name|WalkState
+operator|->
+name|ParserState
+operator|.
+name|Aml
+operator|-
+literal|16
+operator|)
+argument_list|,
+literal|48
+argument_list|,
+name|DB_BYTE_DISPLAY
+argument_list|,
+name|WalkState
+operator|->
+name|AmlOffset
+operator|+
+sizeof|sizeof
+argument_list|(
+name|ACPI_TABLE_HEADER
+argument_list|)
+operator|-
+literal|16
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|" */\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+comment|/* Increment past one-byte or two-byte opcode */
 name|WalkState
 operator|->
 name|ParserState
@@ -351,6 +434,24 @@ operator|.
 name|Aml
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|WalkState
+operator|->
+name|Opcode
+operator|>
+literal|0xFF
+condition|)
+comment|/* Can only happen if first byte is 0x5B */
+block|{
+name|WalkState
+operator|->
+name|ParserState
+operator|.
+name|Aml
+operator|++
+expr_stmt|;
+block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_CTRL_PARSE_CONTINUE
@@ -1531,8 +1632,8 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Detected an unsupported executable opcode "
-literal|"at module-level: [0x%.4X] at table offset 0x%.4X"
+literal|"Unsupported module-level executable opcode "
+literal|"0x%.2X at table offset 0x%.4X"
 operator|,
 name|Op
 operator|->

@@ -272,7 +272,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    OpcSetOptimalIntegerSize  *  * PARAMETERS:  Op        - A parse tree node  *  * RETURN:      Integer width, in bytes.  Also sets the node AML opcode to the  *              optimal integer AML prefix opcode.  *  * DESCRIPTION: Determine the optimal AML encoding of an integer.  All leading  *              zeros can be truncated to squeeze the integer into the  *              minimal number of AML bytes.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    OpcSetOptimalIntegerSize  *  * PARAMETERS:  Op        - A parse tree node  *  * RETURN:      Integer width, in bytes. Also sets the node AML opcode to the  *              optimal integer AML prefix opcode.  *  * DESCRIPTION: Determine the optimal AML encoding of an integer. All leading  *              zeros can be truncated to squeeze the integer into the  *              minimal number of AML bytes.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -288,7 +288,7 @@ if|#
 directive|if
 literal|0
 comment|/*      * TBD: - we don't want to optimize integers in the block header, but the      * code below does not work correctly.      */
-block|if (Op->Asl.Parent&&         Op->Asl.Parent->Asl.Parent&&        (Op->Asl.Parent->Asl.Parent->Asl.ParseOpcode == PARSEOP_DEFINITIONBLOCK))     {         return 0;     }
+block|if (Op->Asl.Parent&&         Op->Asl.Parent->Asl.Parent&&        (Op->Asl.Parent->Asl.Parent->Asl.ParseOpcode == PARSEOP_DEFINITIONBLOCK))     {         return (0);     }
 endif|#
 directive|endif
 comment|/*      * Check for the special AML integers first - Zero, One, Ones.      * These are single-byte opcodes that are the smallest possible      * representation of an integer.      *      * This optimization is optional.      */
@@ -331,7 +331,9 @@ literal|"Zero"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 case|case
 literal|1
@@ -356,7 +358,9 @@ literal|"One"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 case|case
 name|ACPI_UINT32_MAX
@@ -389,7 +393,9 @@ literal|"Ones"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 break|break;
@@ -424,7 +430,9 @@ literal|"Ones"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 break|break;
@@ -455,7 +463,9 @@ operator|=
 name|AML_BYTE_OP
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 if|if
@@ -480,7 +490,9 @@ operator|=
 name|AML_WORD_OP
 expr_stmt|;
 return|return
+operator|(
 literal|2
+operator|)
 return|;
 block|}
 if|if
@@ -505,7 +517,9 @@ operator|=
 name|AML_DWORD_OP
 expr_stmt|;
 return|return
+operator|(
 literal|4
+operator|)
 return|;
 block|}
 else|else
@@ -544,7 +558,9 @@ operator|=
 name|AML_DWORD_OP
 expr_stmt|;
 return|return
+operator|(
 literal|4
+operator|)
 return|;
 block|}
 block|}
@@ -557,7 +573,9 @@ operator|=
 name|AML_QWORD_OP
 expr_stmt|;
 return|return
+operator|(
 literal|8
+operator|)
 return|;
 block|}
 block|}
@@ -1009,7 +1027,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    OpcDoUnicode  *  * PARAMETERS:  Op        - Parse node  *  * RETURN:      None  *  * DESCRIPTION: Implement the UNICODE ASL "macro".  Convert the input string  *              to a unicode buffer.  There is no Unicode AML opcode.  *  * Note:  The Unicode string is 16 bits per character, no leading signature,  *        with a 16-bit terminating NULL.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    OpcDoUnicode  *  * PARAMETERS:  Op        - Parse node  *  * RETURN:      None  *  * DESCRIPTION: Implement the UNICODE ASL "macro".  Convert the input string  *              to a unicode buffer. There is no Unicode AML opcode.  *  * Note:  The Unicode string is 16 bits per character, no leading signature,  *        with a 16-bit terminating NULL.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1258,7 +1276,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    OpcDoEisaId  *  * PARAMETERS:  Op        - Parse node  *  * RETURN:      None  *  * DESCRIPTION: Convert a string EISA ID to numeric representation.  See the  *              Pnp BIOS Specification for details.  Here is an excerpt:  *  *              A seven character ASCII representation of the product  *              identifier compressed into a 32-bit identifier.  The seven  *              character ID consists of a three character manufacturer code,  *              a three character hexadecimal product identifier, and a one  *              character hexadecimal revision number.  The manufacturer code  *              is a 3 uppercase character code that is compressed into 3 5-bit  *              values as follows:  *                  1) Find hex ASCII value for each letter  *                  2) Subtract 40h from each ASCII value  *                  3) Retain 5 least signficant bits for each letter by  *                     discarding upper 3 bits because they are always 0.  *                  4) Compressed code = concatenate 0 and the 3 5-bit values  *  *              The format of the compressed product identifier is as follows:  *              Byte 0: Bit 7       - Reserved (0)  *                      Bits 6-2:   - 1st character of compressed mfg code  *                      Bits 1-0    - Upper 2 bits of 2nd character of mfg code  *              Byte 1: Bits 7-5    - Lower 3 bits of 2nd character of mfg code  *                      Bits 4-0    - 3rd character of mfg code  *              Byte 2: Bits 7-4    - 1st hex digit of product number  *                      Bits 3-0    - 2nd hex digit of product number  *              Byte 3: Bits 7-4    - 3st hex digit of product number  *                      Bits 3-0    - Hex digit of the revision number  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    OpcDoEisaId  *  * PARAMETERS:  Op        - Parse node  *  * RETURN:      None  *  * DESCRIPTION: Convert a string EISA ID to numeric representation. See the  *              Pnp BIOS Specification for details. Here is an excerpt:  *  *              A seven character ASCII representation of the product  *              identifier compressed into a 32-bit identifier. The seven  *              character ID consists of a three character manufacturer code,  *              a three character hexadecimal product identifier, and a one  *              character hexadecimal revision number. The manufacturer code  *              is a 3 uppercase character code that is compressed into 3 5-bit  *              values as follows:  *                  1) Find hex ASCII value for each letter  *                  2) Subtract 40h from each ASCII value  *                  3) Retain 5 least significant bits for each letter by  *                     discarding upper 3 bits because they are always 0.  *                  4) Compressed code = concatenate 0 and the 3 5-bit values  *  *              The format of the compressed product identifier is as follows:  *              Byte 0: Bit 7       - Reserved (0)  *                      Bits 6-2:   - 1st character of compressed mfg code  *                      Bits 1-0    - Upper 2 bits of 2nd character of mfg code  *              Byte 1: Bits 7-5    - Lower 3 bits of 2nd character of mfg code  *                      Bits 4-0    - 3rd character of mfg code  *              Byte 2: Bits 7-4    - 1st hex digit of product number  *                      Bits 3-0    - 2nd hex digit of product number  *              Byte 3: Bits 7-4    - 3st hex digit of product number  *                      Bits 3-0    - Hex digit of the revision number  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1815,7 +1833,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    OpcGenerateAmlOpcode  *  * PARAMETERS:  Op        - Parse node  *  * RETURN:      None  *  * DESCRIPTION: Generate the AML opcode associated with the node and its  *              parse (lex/flex) keyword opcode.  Essentially implements  *              a mapping between the parse opcodes and the actual AML opcodes.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    OpcGenerateAmlOpcode  *  * PARAMETERS:  Op        - Parse node  *  * RETURN:      None  *  * DESCRIPTION: Generate the AML opcode associated with the node and its  *              parse (lex/flex) keyword opcode. Essentially implements  *              a mapping between the parse opcodes and the actual AML opcodes.  *  ******************************************************************************/
 end_comment
 
 begin_function

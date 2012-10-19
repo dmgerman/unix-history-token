@@ -312,7 +312,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmDecodeInternalObject  *  * PARAMETERS:  ObjDesc         - Object to be displayed  *  * RETURN:      None  *  * DESCRIPTION: Short display of an internal object.  Numbers/Strings/Buffers.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmDecodeInternalObject  *  * PARAMETERS:  ObjDesc         - Object to be displayed  *  * RETURN:      None  *  * DESCRIPTION: Short display of an internal object. Numbers/Strings/Buffers.  *  ******************************************************************************/
 end_comment
 
 begin_function

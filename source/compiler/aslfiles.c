@@ -76,7 +76,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AslAbort  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Dump the error log and abort the compiler.  Used for serious  *              I/O errors  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AslAbort  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Dump the error log and abort the compiler. Used for serious  *              I/O errors  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -314,7 +314,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    FlReadFile  *  * PARAMETERS:  FileId              - Index into file info array  *              Buffer              - Where to place the data  *              Length              - Amount to read  *  * RETURN:      Status.  AE_ERROR indicates EOF.  *  * DESCRIPTION: Read data from an open file.  *              NOTE: Aborts compiler on any error.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    FlReadFile  *  * PARAMETERS:  FileId              - Index into file info array  *              Buffer              - Where to place the data  *              Length              - Amount to read  *  * RETURN:      Status. AE_ERROR indicates EOF.  *  * DESCRIPTION: Read data from an open file.  *              NOTE: Aborts compiler on any error.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -594,7 +594,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    FlCloseFile  *  * PARAMETERS:  FileId              - Index into file info array  *  * RETURN:      None  *  * DESCRIPTION: Close an open file.  Aborts compiler on error  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    FlCloseFile  *  * PARAMETERS:  FileId              - Index into file info array  *  * RETURN:      None  *  * DESCRIPTION: Close an open file. Aborts compiler on error  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1619,7 +1619,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    FlOpenAmlOutputFile  *  * PARAMETERS:  FilenamePrefix       - The user-specified ASL source file  *  * RETURN:      Status  *  * DESCRIPTION: Create the output filename (*.AML) and open the file.  The file  *              is created in the same directory as the parent input file.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    FlOpenAmlOutputFile  *  * PARAMETERS:  FilenamePrefix       - The user-specified ASL source file  *  * RETURN:      Status  *  * DESCRIPTION: Create the output filename (*.AML) and open the file. The file  *              is created in the same directory as the parent input file.  *  ******************************************************************************/
 end_comment
 
 begin_function

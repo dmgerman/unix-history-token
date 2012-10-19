@@ -86,7 +86,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtShortDivide  *  * PARAMETERS:  Dividend            - 64-bit dividend  *              Divisor             - 32-bit divisor  *              OutQuotient         - Pointer to where the quotient is returned  *              OutRemainder        - Pointer to where the remainder is returned  *  * RETURN:      Status (Checks for divide-by-zero)  *  * DESCRIPTION: Perform a short (maximum 64 bits divided by 32 bits)  *              divide and modulo.  The result is a 64-bit quotient and a  *              32-bit remainder.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtShortDivide  *  * PARAMETERS:  Dividend            - 64-bit dividend  *              Divisor             - 32-bit divisor  *              OutQuotient         - Pointer to where the quotient is returned  *              OutRemainder        - Pointer to where the remainder is returned  *  * RETURN:      Status (Checks for divide-by-zero)  *  * DESCRIPTION: Perform a short (maximum 64 bits divided by 32 bits)  *              divide and modulo. The result is a 64-bit quotient and a  *              32-bit remainder.  *  ******************************************************************************/
 end_comment
 
 begin_function

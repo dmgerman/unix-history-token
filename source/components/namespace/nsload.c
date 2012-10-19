@@ -123,7 +123,7 @@ argument_list|(
 name|NsLoadTable
 argument_list|)
 expr_stmt|;
-comment|/*      * Parse the table and load the namespace with all named      * objects found within.  Control methods are NOT parsed      * at this time.  In fact, the control methods cannot be      * parsed until the entire namespace is loaded, because      * if a control method makes a forward reference (call)      * to another control method, we can't continue parsing      * because we don't know how many arguments to parse next!      */
+comment|/*      * Parse the table and load the namespace with all named      * objects found within. Control methods are NOT parsed      * at this time. In fact, the control methods cannot be      * parsed until the entire namespace is loaded, because      * if a control method makes a forward reference (call)      * to another control method, we can't continue parsing      * because we don't know how many arguments to parse next!      */
 name|Status
 operator|=
 name|AcpiUtAcquireMutex
@@ -250,7 +250,7 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Now we can parse the control methods.  We always parse      * them here for a sanity check, and if configured for      * just-in-time parsing, we delete the control method      * parse trees.      */
+comment|/*      * Now we can parse the control methods. We always parse      * them here for a sanity check, and if configured for      * just-in-time parsing, we delete the control method      * parse trees.      */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -334,7 +334,7 @@ name|AE_NO_ACPI_TABLES
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Load the namespace.  The DSDT is required,      * but the SSDT and PSDT tables are optional.      */
+comment|/*      * Load the namespace. The DSDT is required,      * but the SSDT and PSDT tables are optional.      */
 name|Status
 operator|=
 name|AcpiNsLoadTableByType
@@ -577,7 +577,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  *  FUNCTION:       AcpiNsUnloadNameSpace  *  *  PARAMETERS:     Handle          - Root of namespace subtree to be deleted  *  *  RETURN:         Status  *  *  DESCRIPTION:    Shrinks the namespace, typically in response to an undocking  *                  event.  Deletes an entire subtree starting from (and  *                  including) the given handle.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  *  FUNCTION:       AcpiNsUnloadNameSpace  *  *  PARAMETERS:     Handle          - Root of namespace subtree to be deleted  *  *  RETURN:         Status  *  *  DESCRIPTION:    Shrinks the namespace, typically in response to an undocking  *                  event. Deletes an entire subtree starting from (and  *                  including) the given handle.  *  ******************************************************************************/
 end_comment
 
 begin_function

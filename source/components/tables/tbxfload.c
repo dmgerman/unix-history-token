@@ -429,7 +429,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiLoadTable  *  * PARAMETERS:  Table               - Pointer to a buffer containing the ACPI  *                                    table to be loaded.  *  * RETURN:      Status  *  * DESCRIPTION: Dynamically load an ACPI table from the caller's buffer. Must  *              be a valid ACPI table with a valid ACPI table header.  *              Note1: Mainly intended to support hotplug addition of SSDTs.  *              Note2: Does not copy the incoming table. User is reponsible  *              to ensure that the table is not deleted or unmapped.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiLoadTable  *  * PARAMETERS:  Table               - Pointer to a buffer containing the ACPI  *                                    table to be loaded.  *  * RETURN:      Status  *  * DESCRIPTION: Dynamically load an ACPI table from the caller's buffer. Must  *              be a valid ACPI table with a valid ACPI table header.  *              Note1: Mainly intended to support hotplug addition of SSDTs.  *              Note2: Does not copy the incoming table. User is responsible  *              to ensure that the table is not deleted or unmapped.  *  ******************************************************************************/
 end_comment
 
 begin_function

@@ -121,7 +121,7 @@ value|0x01
 end_define
 
 begin_comment
-comment|/*  * Global variables.  Defined in main.c only, externed in all other files  */
+comment|/*  * Global variables. Defined in main.c only, externed in all other files  */
 end_comment
 
 begin_ifdef

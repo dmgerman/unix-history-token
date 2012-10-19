@@ -560,7 +560,7 @@ name|Status
 operator|)
 return|;
 block|}
-comment|/*              * Get the return value and save as the last result              * value.  This is the only place where WalkState->ReturnDesc              * is set to anything other than zero!              */
+comment|/*              * Get the return value and save as the last result              * value. This is the only place where WalkState->ReturnDesc              * is set to anything other than zero!              */
 name|WalkState
 operator|->
 name|ReturnDesc

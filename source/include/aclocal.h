@@ -811,7 +811,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * Bitmapped ACPI types.  Used internally only  */
+comment|/*  * Bitmapped ACPI types. Used internally only  */
 end_comment
 
 begin_define
@@ -1880,7 +1880,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Thread state - one per thread across multiple walk states.  Multiple walk  * states are created when there are nested control methods executing.  */
+comment|/*  * Thread state - one per thread across multiple walk states. Multiple walk  * states are created when there are nested control methods executing.  */
 end_comment
 
 begin_typedef

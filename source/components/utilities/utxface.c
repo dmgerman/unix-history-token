@@ -198,7 +198,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiGetSystemInfo  *  * PARAMETERS:  OutBuffer       - A buffer to receive the resources for the  *                                device  *  * RETURN:      Status          - the status of the call  *  * DESCRIPTION: This function is called to get information about the current  *              state of the ACPI subsystem.  It will return system information  *              in the OutBuffer.  *  *              If the function fails an appropriate status will be returned  *              and the value of OutBuffer is undefined.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiGetSystemInfo  *  * PARAMETERS:  OutBuffer       - A buffer to receive the resources for the  *                                device  *  * RETURN:      Status          - the status of the call  *  * DESCRIPTION: This function is called to get information about the current  *              state of the ACPI subsystem. It will return system information  *              in the OutBuffer.  *  *              If the function fails an appropriate status will be returned  *              and the value of OutBuffer is undefined.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -485,7 +485,9 @@ operator|=
 name|Handler
 expr_stmt|;
 return|return
+operator|(
 name|AE_OK
+operator|)
 return|;
 block|}
 end_function

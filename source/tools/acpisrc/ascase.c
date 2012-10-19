@@ -33,7 +33,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AsLowerCaseString  *  * DESCRIPTION: LowerCase all instances of a target string with a replacement  *              string.  Returns count of the strings replaced.  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AsLowerCaseString  *  * DESCRIPTION: LowerCase all instances of a target string with a replacement  *              string. Returns count of the strings replaced.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -109,7 +109,9 @@ name|SubString1
 condition|)
 block|{
 return|return
+operator|(
 name|LowerCaseCount
+operator|)
 return|;
 block|}
 comment|/*          * Check for translation escape string -- means to ignore          * blocks of code while replacing          */
@@ -153,7 +155,9 @@ condition|)
 block|{
 comment|/* Didn't find terminator */
 return|return
+operator|(
 name|LowerCaseCount
+operator|)
 return|;
 block|}
 comment|/* Move buffer to end of escape block and continue */
@@ -274,7 +278,9 @@ expr_stmt|;
 block|}
 block|}
 return|return
+operator|(
 name|LowerCaseCount
+operator|)
 return|;
 block|}
 end_function
@@ -1110,7 +1116,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AsLowerCaseIdentifiers  *  * DESCRIPTION: Converts mixed case identifiers to lower case.  Leaves comments,  *              quoted strings, and all-upper-case macros alone.  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AsLowerCaseIdentifiers  *  * DESCRIPTION: Converts mixed case identifiers to lower case. Leaves comments,  *              quoted strings, and all-upper-case macros alone.  *  ******************************************************************************/
 end_comment
 
 begin_function

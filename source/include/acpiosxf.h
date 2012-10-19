@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acpiosxf.h - All interfaces to the OS Services Layer (OSL).  These  *                    interfaces must be implemented by OSL to interface the  *                    ACPI components to the host operating system.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acpiosxf.h - All interfaces to the OS Services Layer (OSL). These  *                    interfaces must be implemented by OSL to interface the  *                    ACPI components to the host operating system.  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -196,6 +196,12 @@ begin_comment
 comment|/*  * Spinlock primitives  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|AcpiOsCreateLock
+end_ifndef
+
 begin_function_decl
 name|ACPI_STATUS
 name|AcpiOsCreateLock
@@ -206,6 +212,11 @@ name|OutHandle
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|void

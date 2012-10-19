@@ -76,7 +76,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsClearImplicitReturn  *  * PARAMETERS:  WalkState           - Current State  *  * RETURN:      None.  *  * DESCRIPTION: Clear and remove a reference on an implicit return value.  Used  *              to delete "stale" return values (if enabled, the return value  *              from every operator is saved at least momentarily, in case the  *              parent method exits.)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsClearImplicitReturn  *  * PARAMETERS:  WalkState           - Current State  *  * RETURN:      None.  *  * DESCRIPTION: Clear and remove a reference on an implicit return value. Used  *              to delete "stale" return values (if enabled, the return value  *              from every operator is saved at least momentarily, in case the  *              parent method exits.)  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -147,7 +147,7 @@ name|ACPI_NO_METHOD_EXECUTION
 end_ifndef
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsDoImplicitReturn  *  * PARAMETERS:  ReturnDesc          - The return value  *              WalkState           - Current State  *              AddReference        - True if a reference should be added to the  *                                    return object  *  * RETURN:      TRUE if implicit return enabled, FALSE otherwise  *  * DESCRIPTION: Implements the optional "implicit return".  We save the result  *              of every ASL operator and control method invocation in case the  *              parent method exit.  Before storing a new return value, we  *              delete the previous return value.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsDoImplicitReturn  *  * PARAMETERS:  ReturnDesc          - The return value  *              WalkState           - Current State  *              AddReference        - True if a reference should be added to the  *                                    return object  *  * RETURN:      TRUE if implicit return enabled, FALSE otherwise  *  * DESCRIPTION: Implements the optional "implicit return".  We save the result  *              of every ASL operator and control method invocation in case the  *              parent method exit. Before storing a new return value, we  *              delete the previous return value.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -327,7 +327,7 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
-comment|/*      * Now determine if the parent will use the result      *      * If there is no parent, or the parent is a ScopeOp, we are executing      * at the method level. An executing method typically has no parent,      * since each method is parsed separately.  A method invoked externally      * via ExecuteControlMethod has a ScopeOp as the parent.      */
+comment|/*      * Now determine if the parent will use the result      *      * If there is no parent, or the parent is a ScopeOp, we are executing      * at the method level. An executing method typically has no parent,      * since each method is parsed separately. A method invoked externally      * via ExecuteControlMethod has a ScopeOp as the parent.      */
 if|if
 condition|(
 operator|(
@@ -421,7 +421,7 @@ name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Decide what to do with the result based on the parent.  If      * the parent opcode will not use the result, delete the object.      * Otherwise leave it as is, it will be deleted when it is used      * as an operand later.      */
+comment|/*      * Decide what to do with the result based on the parent. If      * the parent opcode will not use the result, delete the object.      * Otherwise leave it as is, it will be deleted when it is used      * as an operand later.      */
 switch|switch
 condition|(
 name|ParentInfo
@@ -502,7 +502,7 @@ goto|;
 case|case
 name|AML_CLASS_CREATE
 case|:
-comment|/*          * These opcodes allow TermArg(s) as operands and therefore          * the operands can be method calls.  The result is used.          */
+comment|/*          * These opcodes allow TermArg(s) as operands and therefore          * the operands can be method calls. The result is used.          */
 goto|goto
 name|ResultUsed
 goto|;
@@ -610,7 +610,7 @@ name|AML_BANK_FIELD_OP
 operator|)
 condition|)
 block|{
-comment|/*              * These opcodes allow TermArg(s) as operands and therefore              * the operands can be method calls.  The result is used.              */
+comment|/*              * These opcodes allow TermArg(s) as operands and therefore              * the operands can be method calls. The result is used.              */
 goto|goto
 name|ResultUsed
 goto|;
@@ -708,7 +708,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsDeleteResultIfNotUsed  *  * PARAMETERS:  Op              - Current parse Op  *              ResultObj       - Result of the operation  *              WalkState       - Current state  *  * RETURN:      Status  *  * DESCRIPTION: Used after interpretation of an opcode.  If there is an internal  *              result descriptor, check if the parent opcode will actually use  *              this result.  If not, delete the result now so that it will  *              not become orphaned.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsDeleteResultIfNotUsed  *  * PARAMETERS:  Op              - Current parse Op  *              ResultObj       - Result of the operation  *              WalkState       - Current state  *  * RETURN:      Status  *  * DESCRIPTION: Used after interpretation of an opcode. If there is an internal  *              result descriptor, check if the parent opcode will actually use  *              this result. If not, delete the result now so that it will  *              not become orphaned.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -812,7 +812,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsResolveOperands  *  * PARAMETERS:  WalkState           - Current walk state with operands on stack  *  * RETURN:      Status  *  * DESCRIPTION: Resolve all operands to their values.  Used to prepare  *              arguments to a control method invocation (a call from one  *              method to another.)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsResolveOperands  *  * PARAMETERS:  WalkState           - Current walk state with operands on stack  *  * RETURN:      Status  *  * DESCRIPTION: Resolve all operands to their values. Used to prepare  *              arguments to a control method invocation (a call from one  *              method to another.)  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -839,7 +839,7 @@ argument_list|,
 name|WalkState
 argument_list|)
 expr_stmt|;
-comment|/*      * Attempt to resolve each of the valid operands      * Method arguments are passed by reference, not by value.  This means      * that the actual objects are passed, not copies of the objects.      */
+comment|/*      * Attempt to resolve each of the valid operands      * Method arguments are passed by reference, not by value. This means      * that the actual objects are passed, not copies of the objects.      */
 for|for
 control|(
 name|i
@@ -968,7 +968,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsCreateOperand  *  * PARAMETERS:  WalkState       - Current walk state  *              Arg             - Parse object for the argument  *              ArgIndex        - Which argument (zero based)  *  * RETURN:      Status  *  * DESCRIPTION: Translate a parse tree object that is an argument to an AML  *              opcode to the equivalent interpreter object.  This may include  *              looking up a name or entering a new name into the internal  *              namespace.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsCreateOperand  *  * PARAMETERS:  WalkState       - Current walk state  *              Arg             - Parse object for the argument  *              ArgIndex        - Which argument (zero based)  *  * RETURN:      Status  *  * DESCRIPTION: Translate a parse tree object that is an argument to an AML  *              opcode to the equivalent interpreter object. This may include  *              looking up a name or entering a new name into the internal  *              namespace.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1108,7 +1108,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* All prefixes have been handled, and the name is in NameString */
-comment|/*          * Special handling for BufferField declarations.  This is a deferred          * opcode that unfortunately defines the field name as the last          * parameter instead of the first.  We get here when we are performing          * the deferred execution, so the actual name of the field is already          * in the namespace.  We don't want to attempt to look it up again          * because we may be executing in a different scope than where the          * actual opcode exists.          */
+comment|/*          * Special handling for BufferField declarations. This is a deferred          * opcode that unfortunately defines the field name as the last          * parameter instead of the first. We get here when we are performing          * the deferred execution, so the actual name of the field is already          * in the namespace. We don't want to attempt to look it up again          * because we may be executing in a different scope than where the          * actual opcode exists.          */
 if|if
 condition|(
 operator|(
@@ -1415,7 +1415,7 @@ name|ACPI_PARSEOP_IN_STACK
 operator|)
 condition|)
 block|{
-comment|/*              * If the name is null, this means that this is an              * optional result parameter that was not specified              * in the original ASL.  Create a Zero Constant for a              * placeholder.  (Store to a constant is a Noop.)              */
+comment|/*              * If the name is null, this means that this is an              * optional result parameter that was not specified              * in the original ASL. Create a Zero Constant for a              * placeholder. (Store to a constant is a Noop.)              */
 name|Opcode
 operator|=
 name|AML_ZERO_OP

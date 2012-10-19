@@ -286,6 +286,14 @@ name|FALSE
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|BOOLEAN
+name|Gbl_Cleanup
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/******************************************************************************  *  * FUNCTION:    AsStricmp  *  * DESCRIPTION: Implementation of the non-ANSI stricmp function (compare  *              strings with no case sensitivity)  *  ******************************************************************************/
 end_comment
@@ -417,8 +425,10 @@ name|Source
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 comment|/* Return the filetype -- file or a directory */
@@ -459,7 +469,9 @@ operator|)
 condition|)
 block|{
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 if|if
@@ -492,8 +504,10 @@ literal|'y'
 condition|)
 block|{
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 name|Gbl_Overwrite
@@ -538,14 +552,18 @@ literal|'y'
 condition|)
 block|{
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 block|}
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -906,7 +924,9 @@ name|AsDisplayUsage
 argument_list|()
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 comment|/* Command line options */
@@ -968,6 +988,10 @@ name|ConversionTable
 operator|=
 operator|&
 name|CleanupConversionTable
+expr_stmt|;
+name|Gbl_Cleanup
+operator|=
+name|TRUE
 expr_stmt|;
 break|break;
 case|case
@@ -1046,8 +1070,10 @@ name|AsDisplayUsage
 argument_list|()
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 name|SourcePath
@@ -1072,8 +1098,10 @@ name|AsDisplayUsage
 argument_list|()
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 name|TargetPath
@@ -1091,7 +1119,7 @@ operator|!
 name|ConversionTable
 condition|)
 block|{
-comment|/* Just generate statistics.  Ignore target path */
+comment|/* Just generate statistics. Ignore target path */
 name|TargetPath
 operator|=
 name|SourcePath
@@ -1149,8 +1177,10 @@ argument_list|)
 condition|)
 block|{
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 comment|/* Source/target can be either directories or a files */
@@ -1226,7 +1256,9 @@ name|AsDisplayStats
 argument_list|()
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function

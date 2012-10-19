@@ -830,7 +830,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"[0x%4.4X] (NON-ASCII)"
+literal|"[0x%.8X] (NON-ASCII)"
 argument_list|,
 name|BadName
 argument_list|)

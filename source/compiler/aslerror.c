@@ -100,7 +100,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AeAddToErrorLog  *  * PARAMETERS:  Enode       - An error node to add to the log  *  * RETURN:      None  *  * DESCRIPTION: Add a new error node to the error log.  The error log is  *              ordered by the "logical" line number (cumulative line number  *              including all include files.)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AeAddToErrorLog  *  * PARAMETERS:  Enode       - An error node to add to the log  *  * RETURN:      None  *  * DESCRIPTION: Add a new error node to the error log. The error log is  *              ordered by the "logical" line number (cumulative line number  *              including all include files.)  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1845,7 +1845,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function

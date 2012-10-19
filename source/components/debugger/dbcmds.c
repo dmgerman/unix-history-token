@@ -151,7 +151,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbConvertToNode  *  * PARAMETERS:  InString        - String to convert  *  * RETURN:      Pointer to a NS node  *  * DESCRIPTION: Convert a string to a valid NS pointer.  Handles numeric or  *              alpha strings.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbConvertToNode  *  * PARAMETERS:  InString        - String to convert  *  * RETURN:      Pointer to a NS node  *  * DESCRIPTION: Convert a string to a valid NS pointer. Handles numeric or  *              alpha strings.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -422,11 +422,11 @@ goto|goto
 name|ErrorExit
 goto|;
 block|}
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|Status
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 name|ErrorExit
 label|:
 name|ACPI_EXCEPTION
@@ -440,11 +440,11 @@ literal|"During sleep test"
 operator|)
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|Status
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -504,7 +504,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbDisplayTableInfo  *  * PARAMETERS:  TableArg        - String with name of table to be displayed  *  * RETURN:      None  *  * DESCRIPTION: Display information about loaded tables.  Current  *              implementation displays all loaded tables.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbDisplayTableInfo  *  * PARAMETERS:  TableArg        - String with name of table to be displayed  *  * RETURN:      None  *  * DESCRIPTION: Display information about loaded tables. Current  *              implementation displays all loaded tables.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -804,7 +804,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbSendNotify  *  * PARAMETERS:  Name            - Name of ACPI object to send the notify to  *              Value           - Value of the notify to send.  *  * RETURN:      None  *  * DESCRIPTION: Send an ACPI notification.  The value specified is sent to the  *              named object as an ACPI notify.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbSendNotify  *  * PARAMETERS:  Name            - Name of ACPI object to send the notify to  *              Value           - Value of the notify to send.  *  * RETURN:      None  *  * DESCRIPTION: Send an ACPI notification. The value specified is sent to the  *              named object as an ACPI notify.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1259,7 +1259,7 @@ argument_list|(
 literal|"\nRaw data buffer:\n"
 argument_list|)
 expr_stmt|;
-name|AcpiUtDumpBuffer
+name|AcpiUtDebugDumpBuffer
 argument_list|(
 operator|(
 name|UINT8

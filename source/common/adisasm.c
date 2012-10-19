@@ -651,7 +651,9 @@ argument_list|)
 condition|)
 block|{
 return|return
+operator|(
 name|Status
+operator|)
 return|;
 block|}
 comment|/*          * External filenames separated by commas          * Example: iasl -e file1,file2,file3 -d xxx.aml          */
@@ -705,7 +707,9 @@ argument_list|)
 condition|)
 block|{
 return|return
+operator|(
 name|Status
+operator|)
 return|;
 block|}
 comment|/* Load external table for symbol resolution */
@@ -747,7 +751,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|Status
+operator|)
 return|;
 block|}
 comment|/*                  * Load namespace from names created within control methods                  * Set owner id of nodes in external table                  */
@@ -815,7 +821,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|Status
+operator|)
 return|;
 block|}
 if|if
@@ -825,7 +833,9 @@ name|AcpiGbl_DbOpt_disasm
 condition|)
 block|{
 return|return
+operator|(
 name|AE_OK
+operator|)
 return|;
 block|}
 comment|/* Obtained the local tables, just disassemble the DSDT */
@@ -860,7 +870,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|Status
+operator|)
 return|;
 block|}
 name|AcpiOsPrintf
@@ -1291,10 +1303,17 @@ condition|(
 name|AcpiGbl_DbOpt_disasm
 condition|)
 block|{
+comment|/* This is the real disassembly */
 name|AdDisplayTables
 argument_list|(
 name|Filename
 argument_list|,
+name|Table
+argument_list|)
+expr_stmt|;
+comment|/* Dump hex table if requested (-vt) */
+name|AcpiDmDumpDataTable
+argument_list|(
 name|Table
 argument_list|)
 expr_stmt|;
@@ -1790,7 +1809,9 @@ name|AcpiGbl_ParseOpRoot
 condition|)
 block|{
 return|return
+operator|(
 name|AE_NOT_EXIST
+operator|)
 return|;
 block|}
 if|if
@@ -1826,7 +1847,7 @@ argument_list|(
 literal|"\n\nTable Header:\n"
 argument_list|)
 expr_stmt|;
-name|AcpiUtDumpBuffer
+name|AcpiUtDebugDumpBuffer
 argument_list|(
 operator|(
 name|UINT8
@@ -1853,7 +1874,7 @@ operator|->
 name|Length
 argument_list|)
 expr_stmt|;
-name|AcpiUtDumpBuffer
+name|AcpiUtDebugDumpBuffer
 argument_list|(
 operator|(
 operator|(
@@ -1879,7 +1900,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|AE_OK
+operator|)
 return|;
 block|}
 end_function
@@ -2059,7 +2082,7 @@ argument_list|(
 name|WalkState
 argument_list|)
 expr_stmt|;
-comment|/*      * We need to update all of the Aml offsets, since the parser thought      * that the method began at offset zero.  In reality, it began somewhere      * within the ACPI table, at the BaseAmlOffset.  Walk the entire tree that      * was just created and update the AmlOffset in each Op      */
+comment|/*      * We need to update all of the Aml offsets, since the parser thought      * that the method began at offset zero. In reality, it began somewhere      * within the ACPI table, at the BaseAmlOffset. Walk the entire tree that      * was just created and update the AmlOffset in each Op      */
 name|BaseAmlOffset
 operator|=
 operator|(
@@ -2408,11 +2431,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|return_ACPI_STATUS
-argument_list|(
+return|return
+operator|(
 name|Status
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 break|break;
 case|case
@@ -2480,7 +2503,9 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|Status
+operator|)
 return|;
 block|}
 end_function
@@ -2557,7 +2582,9 @@ literal|"Could not obtain RSDT\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|AE_NO_ACPI_TABLES
+operator|)
 return|;
 block|}
 else|else
@@ -2608,7 +2635,7 @@ name|UINT64
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          * Determine the number of tables pointed to by the RSDT/XSDT.          * This is defined by the ACPI Specification to be the number of          * pointers contained within the RSDT/XSDT.  The size of the pointers          * is architecture-dependent.          */
+comment|/*          * Determine the number of tables pointed to by the RSDT/XSDT.          * This is defined by the ACPI Specification to be the number of          * pointers contained within the RSDT/XSDT. The size of the pointers          * is architecture-dependent.          */
 name|NumTables
 operator|=
 operator|(
@@ -2756,7 +2783,9 @@ literal|"Could not store DSDT\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|AE_NO_ACPI_TABLES
+operator|)
 return|;
 block|}
 block|}
@@ -2770,7 +2799,9 @@ literal|"Could not obtain DSDT\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|AE_NO_ACPI_TABLES
+operator|)
 return|;
 block|}
 if|#
@@ -2783,7 +2814,9 @@ block|ACPI_MOVE_32_TO_32 (TableHeader.Signature, ACPI_SIG_SSDT);     do     {   
 endif|#
 directive|endif
 return|return
+operator|(
 name|AE_OK
+operator|)
 return|;
 block|}
 end_function
@@ -2837,7 +2870,9 @@ name|Table
 condition|)
 block|{
 return|return
+operator|(
 name|AE_NOT_EXIST
+operator|)
 return|;
 block|}
 comment|/* Pass 1:  Parse everything except control method bodies */
@@ -2895,7 +2930,9 @@ name|AcpiGbl_ParseOpRoot
 condition|)
 block|{
 return|return
+operator|(
 name|AE_NO_MEMORY
+operator|)
 return|;
 block|}
 comment|/* Create and initialize a new walk state */
@@ -2986,7 +3023,9 @@ argument_list|)
 condition|)
 block|{
 return|return
+operator|(
 name|Status
+operator|)
 return|;
 block|}
 comment|/* If LoadTable is FALSE, we are parsing the last loaded table */
@@ -3034,7 +3073,9 @@ argument_list|)
 condition|)
 block|{
 return|return
+operator|(
 name|Status
+operator|)
 return|;
 block|}
 name|Status
@@ -3053,7 +3094,9 @@ argument_list|)
 condition|)
 block|{
 return|return
+operator|(
 name|Status
+operator|)
 return|;
 block|}
 if|if
@@ -3079,7 +3122,9 @@ argument_list|)
 condition|)
 block|{
 return|return
+operator|(
 name|Status
+operator|)
 return|;
 block|}
 block|}
@@ -3131,7 +3176,9 @@ name|External
 condition|)
 block|{
 return|return
+operator|(
 name|AE_OK
+operator|)
 return|;
 block|}
 comment|/* Pass 3: Parse control methods and link their parse trees into the main parse tree */
@@ -3156,7 +3203,9 @@ literal|"Parsing completed\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|AE_OK
+operator|)
 return|;
 block|}
 end_function

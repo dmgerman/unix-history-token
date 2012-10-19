@@ -349,7 +349,7 @@ case|case
 name|AML_MID_OP
 case|:
 comment|/* Mid (Source[0], Index[1], Length[2], Result[3]) */
-comment|/*          * Create the return object.  The Source operand is guaranteed to be          * either a String or a Buffer, so just use its type.          */
+comment|/*          * Create the return object. The Source operand is guaranteed to be          * either a String or a Buffer, so just use its type.          */
 name|ReturnDesc
 operator|=
 name|AcpiUtCreateInternalObject

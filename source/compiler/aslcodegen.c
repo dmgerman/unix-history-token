@@ -128,7 +128,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    CgGenerateAmlOutput  *  * PARAMETERS:  None.  *  * RETURN:      None  *  * DESCRIPTION: Generate AML code.  Currently generates the listing file  *              simultaneously.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    CgGenerateAmlOutput  *  * PARAMETERS:  None.  *  * RETURN:      None  *  * DESCRIPTION: Generate AML code. Currently generates the listing file  *              simultaneously.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1154,15 +1154,13 @@ operator|.
 name|Integer
 expr_stmt|;
 comment|/* Compiler ID */
-name|strncpy
+name|ACPI_MOVE_NAME
 argument_list|(
 name|TableHeader
 operator|.
 name|AslCompilerId
 argument_list|,
 name|ASL_CREATOR_ID
-argument_list|,
-literal|4
 argument_list|)
 expr_stmt|;
 comment|/* Compiler version */

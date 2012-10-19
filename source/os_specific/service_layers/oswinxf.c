@@ -474,23 +474,21 @@ directive|ifdef
 name|ACPI_ASL_COMPILER
 comment|/* Attempt to get the table from the registry */
 comment|/* Construct a null-terminated string from table signature */
-name|TableName
-index|[
-name|ACPI_NAME_SIZE
-index|]
-operator|=
-literal|0
-expr_stmt|;
-name|ACPI_STRNCPY
+name|ACPI_MOVE_NAME
 argument_list|(
 name|TableName
 argument_list|,
 name|ExistingTable
 operator|->
 name|Signature
-argument_list|,
-name|ACPI_NAME_SIZE
 argument_list|)
+expr_stmt|;
+name|TableName
+index|[
+name|ACPI_NAME_SIZE
+index|]
+operator|=
+literal|0
 expr_stmt|;
 operator|*
 name|NewTable

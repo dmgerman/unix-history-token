@@ -314,7 +314,9 @@ operator|)
 return|;
 block|}
 return|return
+operator|(
 name|LogicalResult
+operator|)
 return|;
 block|}
 end_function
@@ -513,7 +515,7 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-comment|/*          * Examine each element until a match is found. Both match conditions          * must be satisfied for a match to occur. Within the loop,          * "continue" signifies that the current element does not match          * and the next should be examined.          *          * Upon finding a match, the loop will terminate via "break" at          * the bottom.  If it terminates "normally", MatchValue will be          * ACPI_UINT64_MAX (Ones) (its initial value) indicating that no          * match was found.          */
+comment|/*          * Examine each element until a match is found. Both match conditions          * must be satisfied for a match to occur. Within the loop,          * "continue" signifies that the current element does not match          * and the next should be examined.          *          * Upon finding a match, the loop will terminate via "break" at          * the bottom. If it terminates "normally", MatchValue will be          * ACPI_UINT64_MAX (Ones) (its initial value) indicating that no          * match was found.          */
 for|for
 control|(
 init|;

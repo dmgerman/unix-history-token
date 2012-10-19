@@ -218,8 +218,8 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|ACPI_OBSOLETE_BEHAVIOR
-comment|/*          * NOTE: ACPI versions up to 3.0 specified that the buffer must be          * truncated if the string is smaller than the buffer.  However, "other"          * implementations of ACPI never did this and thus became the defacto          * standard. ACPI 3.0A changes this behavior such that the buffer          * is no longer truncated.          */
-comment|/*          * OBSOLETE BEHAVIOR:          * If the original source was a string, we must truncate the buffer,          * according to the ACPI spec.  Integer-to-Buffer and Buffer-to-Buffer          * copy must not truncate the original buffer.          */
+comment|/*          * NOTE: ACPI versions up to 3.0 specified that the buffer must be          * truncated if the string is smaller than the buffer. However, "other"          * implementations of ACPI never did this and thus became the defacto          * standard. ACPI 3.0A changes this behavior such that the buffer          * is no longer truncated.          */
+comment|/*          * OBSOLETE BEHAVIOR:          * If the original source was a string, we must truncate the buffer,          * according to the ACPI spec. Integer-to-Buffer and Buffer-to-Buffer          * copy must not truncate the original buffer.          */
 if|if
 condition|(
 name|OriginalSrcType

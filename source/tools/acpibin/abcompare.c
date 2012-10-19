@@ -368,11 +368,15 @@ literal|"Header signature is invalid\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 block|}
 return|return
+operator|(
 name|TRUE
+operator|)
 return|;
 block|}
 end_function
@@ -1029,8 +1033,10 @@ name|File1Path
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 name|File2
@@ -1056,8 +1062,10 @@ name|File2Path
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 comment|/* Read the ACPI header from each file */
@@ -1096,8 +1104,10 @@ name|File1Path
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 name|Actual2
@@ -1135,8 +1145,10 @@ name|File2Path
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 if|if
@@ -1161,8 +1173,10 @@ operator|)
 condition|)
 block|{
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 comment|/* Table signatures must match */
@@ -1197,8 +1211,10 @@ literal|"Table signatures do not match\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 if|if
@@ -1225,13 +1241,11 @@ if|if
 condition|(
 name|memcmp
 argument_list|(
+operator|&
 name|Header1
-operator|.
-name|Signature
 argument_list|,
+operator|&
 name|Header2
-operator|.
-name|Signature
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1327,8 +1341,10 @@ literal|"100 Mismatches: Too many mismatches\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 block|}
@@ -1436,7 +1452,9 @@ name|Mismatches
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1498,7 +1516,9 @@ name|Filename
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 comment|/* Need file size to allocate a buffer */
@@ -1690,8 +1710,10 @@ name|File2Path
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 if|if
@@ -1708,8 +1730,10 @@ argument_list|)
 condition|)
 block|{
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 comment|/* Convert binary AML to text, using common dump buffer routine */
@@ -1740,7 +1764,7 @@ name|AcpiDbgLevel
 operator|=
 name|ACPI_UINT32_MAX
 expr_stmt|;
-name|AcpiUtDumpBuffer
+name|AcpiUtDebugDumpBuffer
 argument_list|(
 operator|(
 name|UINT8
@@ -1756,7 +1780,9 @@ name|ACPI_UINT32_MAX
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1832,8 +1858,10 @@ name|File1Path
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 name|FileOutHandle
@@ -1859,8 +1887,10 @@ name|File2Path
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 comment|/* Force input table sig to uppercase */
@@ -1886,14 +1916,11 @@ block|{
 comment|/* The 4-char ACPI signature appears at the beginning of a line */
 if|if
 condition|(
-operator|!
-name|strncmp
+name|ACPI_COMPARE_NAME
 argument_list|(
 name|Buffer
 argument_list|,
 name|TableSig
-argument_list|,
-literal|4
 argument_list|)
 condition|)
 block|{
@@ -1983,6 +2010,8 @@ literal|3
 expr_stmt|;
 comment|/* Go past this hex byte and space */
 comment|/* Write the converted (binary) byte */
+if|if
+condition|(
 name|fwrite
 argument_list|(
 operator|&
@@ -1994,7 +2023,23 @@ literal|1
 argument_list|,
 name|FileOutHandle
 argument_list|)
+operator|<
+literal|1
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Error writing byte %u to output file: %s\n"
+argument_list|,
+name|Count
+argument_list|,
+name|File2Path
+argument_list|)
 expr_stmt|;
+goto|goto
+name|Exit
+goto|;
+block|}
 name|Count
 operator|++
 expr_stmt|;
@@ -2018,8 +2063,10 @@ name|FileHandle
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|Exit
 label|:
@@ -2045,7 +2092,9 @@ name|FileOutHandle
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -2062,7 +2111,9 @@ name|void
 parameter_list|)
 block|{
 return|return
+operator|(
 name|AE_OK
+operator|)
 return|;
 block|}
 end_function

@@ -1352,7 +1352,7 @@ operator|)
 operator|+
 literal|1
 expr_stmt|;
-comment|/*      * Check to see if we're still in bounds.  If not, there's a problem      * with InternalName (invalid format).      */
+comment|/*      * Check to see if we're still in bounds. If not, there's a problem      * with InternalName (invalid format).      */
 if|if
 condition|(
 name|RequiredLength
@@ -1472,65 +1472,44 @@ operator|=
 literal|'.'
 expr_stmt|;
 block|}
+comment|/* Copy and validate the 4-char name segment */
+name|ACPI_MOVE_NAME
+argument_list|(
+operator|&
 operator|(
 operator|*
 name|ConvertedName
 operator|)
 index|[
 name|j
-operator|++
 index|]
-operator|=
+argument_list|,
+operator|&
 name|InternalName
 index|[
 name|NamesIndex
-operator|++
 index|]
+argument_list|)
 expr_stmt|;
+name|AcpiUtRepairName
+argument_list|(
+operator|&
 operator|(
 operator|*
 name|ConvertedName
 operator|)
 index|[
 name|j
-operator|++
 index|]
-operator|=
-name|InternalName
-index|[
-name|NamesIndex
-operator|++
-index|]
+argument_list|)
 expr_stmt|;
-operator|(
-operator|*
-name|ConvertedName
-operator|)
-index|[
 name|j
-operator|++
-index|]
-operator|=
-name|InternalName
-index|[
-name|NamesIndex
-operator|++
-index|]
+operator|+=
+name|ACPI_NAME_SIZE
 expr_stmt|;
-operator|(
-operator|*
-name|ConvertedName
-operator|)
-index|[
-name|j
-operator|++
-index|]
-operator|=
-name|InternalName
-index|[
 name|NamesIndex
-operator|++
-index|]
+operator|+=
+name|ACPI_NAME_SIZE
 expr_stmt|;
 block|}
 block|}
@@ -1750,7 +1729,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsGetNode  *  * PARAMETERS:  *Pathname   - Name to be found, in external (ASL) format. The  *                            \ (backslash) and ^ (carat) prefixes, and the  *                            . (period) to separate segments are supported.  *              PrefixNode   - Root of subtree to be searched, or NS_ALL for the  *                            root of the name space.  If Name is fully  *                            qualified (first INT8 is '\'), the passed value  *                            of Scope will not be accessed.  *              Flags       - Used to indicate whether to perform upsearch or  *                            not.  *              ReturnNode  - Where the Node is returned  *  * DESCRIPTION: Look up a name relative to a given scope and return the  *              corresponding Node.  NOTE: Scope can be null.  *  * MUTEX:       Locks namespace  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsGetNode  *  * PARAMETERS:  *Pathname   - Name to be found, in external (ASL) format. The  *                            \ (backslash) and ^ (carat) prefixes, and the  *                            . (period) to separate segments are supported.  *              PrefixNode   - Root of subtree to be searched, or NS_ALL for the  *                            root of the name space. If Name is fully  *                            qualified (first INT8 is '\'), the passed value  *                            of Scope will not be accessed.  *              Flags       - Used to indicate whether to perform upsearch or  *                            not.  *              ReturnNode  - Where the Node is returned  *  * DESCRIPTION: Look up a name relative to a given scope and return the  *              corresponding Node. NOTE: Scope can be null.  *  * MUTEX:       Locks namespace  *  ******************************************************************************/
 end_comment
 
 begin_function

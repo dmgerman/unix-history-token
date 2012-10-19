@@ -54,6 +54,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|METHOD_NAME__SUB
+value|"_SUB"
+end_define
+
+begin_define
+define|#
+directive|define
 name|METHOD_NAME__ADR
 value|"_ADR"
 end_define
