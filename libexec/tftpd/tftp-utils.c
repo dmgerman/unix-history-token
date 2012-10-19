@@ -430,6 +430,7 @@ comment|/*  * Logging functions  */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|_tftp_logtostdout
 init|=

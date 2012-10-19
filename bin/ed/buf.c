@@ -40,6 +40,7 @@ file|"ed.h"
 end_include
 
 begin_decl_stmt
+specifier|static
 name|FILE
 modifier|*
 name|sfp
@@ -51,6 +52,7 @@ comment|/* scratch file pointer */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|off_t
 name|sfseek
 decl_stmt|;
@@ -61,6 +63,7 @@ comment|/* scratch file position */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|seek_write
 decl_stmt|;
@@ -71,6 +74,7 @@ comment|/* seek before writing */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|line_t
 name|buffer_head
 decl_stmt|;
@@ -797,6 +801,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|sfn
 index|[
@@ -1024,6 +1029,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 name|unsigned
 name|char
 name|ctab

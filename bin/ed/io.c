@@ -210,6 +210,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|sbuf
@@ -221,6 +222,7 @@ comment|/* file i/o buffer */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|sbufsz
 decl_stmt|;

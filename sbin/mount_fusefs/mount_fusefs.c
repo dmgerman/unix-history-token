@@ -104,12 +104,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<libgen.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<limits.h>
 end_include
 
@@ -195,6 +189,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|mntopt
 name|mopts
@@ -395,6 +390,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|mntval
 name|mvals
@@ -425,13 +421,6 @@ block|,
 literal|0
 block|}
 block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|progname
 decl_stmt|;
 end_decl_stmt
 
@@ -673,13 +662,6 @@ name|daemon_opts
 init|=
 name|NULL
 decl_stmt|;
-name|progname
-operator|=
-name|argv
-index|[
-literal|0
-index|]
-expr_stmt|;
 comment|/* 	 * We want a parsing routine which is not sensitive to 	 * the position of args/opts; it should extract the 	 * first two args and stop at the beginning of the rest. 	 * (This makes it easier to call mount_fusefs from external 	 * utils than it is with a strict "util flags args" syntax.) 	 */
 name|iov
 operator|=
@@ -2202,10 +2184,8 @@ name|stderr
 argument_list|,
 literal|"usage:\n%s [-A|-S|-v|-V|-h|-D daemon|-O args|-s special|-m node|-o option...] special node [daemon args...]\n\n"
 argument_list|,
-name|basename
-argument_list|(
-name|progname
-argument_list|)
+name|getprogname
+argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
