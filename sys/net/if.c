@@ -3372,8 +3372,9 @@ name|log
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"if_attachdomain called more than once "
-literal|"on %s\n"
+literal|"%s called more than once on %s\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|ifp
 operator|->
