@@ -2413,6 +2413,24 @@ block|,
 comment|/*quirks*/
 name|DA_Q_NO_SYNC_CACHE
 block|}
+block|,
+block|{
+comment|/* 		 * LaCie external 250GB Hard drive des by Porsche 		 * Submitted by: Ben Stuyts<ben@altesco.nl> 		 * PR: 121474 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"SAMSUNG"
+block|,
+literal|"HM250JI"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_SYNC_CACHE
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
