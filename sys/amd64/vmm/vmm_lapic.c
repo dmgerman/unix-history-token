@@ -337,7 +337,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|lapic_timer_tick
 parameter_list|(
 name|struct
@@ -363,11 +363,14 @@ argument_list|,
 name|cpu
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
 name|vlapic_timer_tick
 argument_list|(
 name|vlapic
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 
