@@ -124,8 +124,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|cflag
-decl_stmt|,
 name|dflag
 decl_stmt|,
 name|eflag
@@ -142,9 +140,16 @@ name|sflag
 decl_stmt|,
 name|uflag
 decl_stmt|,
-name|Uflag
-decl_stmt|,
 name|wflag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|cflag
+decl_stmt|,
+name|Uflag
 decl_stmt|;
 end_decl_stmt
 
