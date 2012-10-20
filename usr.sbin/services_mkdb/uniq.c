@@ -76,17 +76,6 @@ file|"extern.h"
 end_include
 
 begin_function_decl
-name|void
-name|uniq
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|static
 name|int
 name|comp
