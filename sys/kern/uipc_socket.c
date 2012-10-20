@@ -474,7 +474,7 @@ value|VNET_ASSERT(curvnet != NULL,					\ 	    ("%s:%d curvnet is NULL, so=%p", _
 end_define
 
 begin_comment
-comment|/*  * Limit on the number of connections in the listen queue waiting  * for accept(2).  */
+comment|/*  * Limit on the number of connections in the listen queue waiting  * for accept(2).  * NB: The orginal sysctl somaxconn is still available but hidden  * to prevent confusion about the actually purpose of this number.  */
 end_comment
 
 begin_decl_stmt
@@ -564,9 +564,9 @@ name|SYSCTL_PROC
 argument_list|(
 name|_kern_ipc
 argument_list|,
-name|KIPC_SOMAXCONN
+name|OID_AUTO
 argument_list|,
-name|somaxconn
+name|soacceptqueue
 argument_list|,
 name|CTLTYPE_UINT
 operator||
@@ -584,6 +584,37 @@ argument_list|,
 literal|"I"
 argument_list|,
 literal|"Maximum listen socket pending connection accept queue size"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_PROC
+argument_list|(
+name|_kern_ipc
+argument_list|,
+name|KIPC_SOMAXCONN
+argument_list|,
+name|somaxconn
+argument_list|,
+name|CTLTYPE_UINT
+operator||
+name|CTLFLAG_RW
+operator||
+name|CTLFLAG_SKIP
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+argument_list|,
+name|sysctl_somaxconn
+argument_list|,
+literal|"I"
+argument_list|,
+literal|"Maximum listen socket pending connection accept queue size (compat)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
