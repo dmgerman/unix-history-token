@@ -78,8 +78,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PIL_ITHREAD
+name|PIL_PREEMPT
 value|2
+end_define
+
+begin_comment
+comment|/* preempt idle thread CPU IPI */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PIL_ITHREAD
+value|3
 end_define
 
 begin_comment
@@ -90,51 +101,29 @@ begin_define
 define|#
 directive|define
 name|PIL_RENDEZVOUS
-value|3
+value|4
 end_define
 
 begin_comment
-comment|/* smp rendezvous ipi */
+comment|/* SMP rendezvous IPI */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|PIL_AST
-value|4
-end_define
-
-begin_comment
-comment|/* ast ipi */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PIL_STOP
 value|5
 end_define
 
 begin_comment
-comment|/* stop cpu ipi */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PIL_PREEMPT
-value|6
-end_define
-
-begin_comment
-comment|/* preempt idle thread cpu ipi */
+comment|/* asynchronous trap IPI */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|PIL_HARDCLOCK
-value|7
+value|6
 end_define
 
 begin_comment
@@ -145,7 +134,7 @@ begin_define
 define|#
 directive|define
 name|PIL_FILTER
-value|12
+value|11
 end_define
 
 begin_comment
@@ -156,11 +145,22 @@ begin_define
 define|#
 directive|define
 name|PIL_BRIDGE
-value|13
+value|12
 end_define
 
 begin_comment
 comment|/* bridge interrupts */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PIL_STOP
+value|13
+end_define
+
+begin_comment
+comment|/* stop CPU IPI */
 end_comment
 
 begin_define
