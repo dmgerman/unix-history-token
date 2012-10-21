@@ -2080,7 +2080,8 @@ block|{
 name|uprintf
 argument_list|(
 literal|"pid %d comm %s: signal %d err %lx code %d type %d "
-literal|"addr 0x%lx<%02x %02x %02x %02x %02x %02x %02x %02x>\n"
+literal|"addr 0x%lx rip 0x%lx "
+literal|"<%02x %02x %02x %02x %02x %02x %02x %02x>\n"
 argument_list|,
 name|p
 operator|->
@@ -2101,6 +2102,10 @@ argument_list|,
 name|type
 argument_list|,
 name|addr
+argument_list|,
+name|frame
+operator|->
+name|tf_rip
 argument_list|,
 name|fubyte
 argument_list|(
