@@ -797,6 +797,12 @@ name|td_rlqe
 operator|=
 name|NULL
 expr_stmt|;
+name|td
+operator|->
+name|td_vp_reserv
+operator|=
+literal|0
+expr_stmt|;
 name|EVENTHANDLER_INVOKE
 argument_list|(
 name|thread_init

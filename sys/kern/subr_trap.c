@@ -409,6 +409,19 @@ name|td_locks
 operator|)
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|td
+operator|->
+name|td_vp_reserv
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"userret: Returning while holding vnode reservation"
+operator|)
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|VIMAGE

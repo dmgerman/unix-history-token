@@ -991,6 +991,10 @@ modifier|*
 name|td_rlqe
 decl_stmt|;
 comment|/* (k) Associated range lock entry. */
+name|u_int
+name|td_vp_reserv
+decl_stmt|;
+comment|/* (k) Count of reserved vnodes. */
 block|}
 struct|;
 end_struct
