@@ -230,6 +230,7 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -338,6 +339,7 @@ specifier|const
 name|char
 modifier|*
 modifier|*
+specifier|volatile
 modifier|*
 parameter_list|,
 name|int
@@ -745,6 +747,10 @@ name|statfs
 modifier|*
 name|mntp
 decl_stmt|;
+name|mntpt
+operator|=
+name|NULL
+expr_stmt|;
 name|spec
 operator|=
 operator|*
@@ -1271,6 +1277,7 @@ name|char
 modifier|*
 name|mntpt
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|auxopt
@@ -1284,6 +1291,7 @@ specifier|const
 name|char
 modifier|*
 modifier|*
+specifier|volatile
 name|argv
 decl_stmt|;
 name|pid_t
@@ -1365,6 +1373,9 @@ literal|0
 init|;
 name|i
 operator|<
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|vfstype
@@ -1672,13 +1683,15 @@ name|execbase
 argument_list|,
 name|_PATH_SYSPATH
 argument_list|,
-operator|(
+name|__DECONST
+argument_list|(
 name|char
 operator|*
 specifier|const
 operator|*
-operator|)
+argument_list|,
 name|argv
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2319,6 +2332,7 @@ specifier|const
 name|char
 modifier|*
 modifier|*
+specifier|volatile
 modifier|*
 name|argvp
 parameter_list|,
@@ -2507,8 +2521,8 @@ block|}
 end_function
 
 begin_function
-specifier|const
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|getfslab

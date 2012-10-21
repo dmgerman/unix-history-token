@@ -1596,6 +1596,7 @@ comment|/*  * Get type of reserved cluster  */
 end_comment
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|rsrvdcltype
