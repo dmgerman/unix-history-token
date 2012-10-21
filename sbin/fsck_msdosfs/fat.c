@@ -18,7 +18,7 @@ end_ifndef
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: fat.c,v 1.12 2000/10/10 20:24:52 is Exp $"
+literal|"$NetBSD: fat.c,v 1.18 2006/06/05 16:51:18 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -192,6 +192,9 @@ name|ret
 init|=
 literal|0
 decl_stmt|;
+name|size_t
+name|len
+decl_stmt|;
 if|if
 condition|(
 name|boot
@@ -225,6 +228,8 @@ name|buffer
 operator|=
 name|malloc
 argument_list|(
+name|len
+operator|=
 name|boot
 operator|->
 name|bpbBytesPerSec
@@ -237,9 +242,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|perror
+name|perr
 argument_list|(
-literal|"No space for FAT"
+literal|"No space for FAT sectors (%zu)"
+argument_list|,
+name|len
 argument_list|)
 expr_stmt|;
 return|return
@@ -260,7 +267,7 @@ operator|!=
 name|off
 condition|)
 block|{
-name|perror
+name|perr
 argument_list|(
 literal|"Unable to read FAT"
 argument_list|)
@@ -290,7 +297,7 @@ operator|->
 name|bpbBytesPerSec
 condition|)
 block|{
-name|perror
+name|perr
 argument_list|(
 literal|"Unable to read FAT"
 argument_list|)
@@ -666,11 +673,16 @@ block|{
 name|off_t
 name|off
 decl_stmt|;
+name|size_t
+name|len
+decl_stmt|;
 operator|*
 name|buffer
 operator|=
 name|malloc
 argument_list|(
+name|len
+operator|=
 name|boot
 operator|->
 name|FATsecs
@@ -688,9 +700,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|perror
+name|perr
 argument_list|(
-literal|"No space for FAT"
+literal|"No space for FAT sectors (%zu)"
+argument_list|,
+name|len
 argument_list|)
 expr_stmt|;
 return|return
@@ -729,7 +743,7 @@ operator|!=
 name|off
 condition|)
 block|{
-name|perror
+name|perr
 argument_list|(
 literal|"Unable to read FAT"
 argument_list|)
@@ -768,7 +782,7 @@ operator|->
 name|bpbBytesPerSec
 condition|)
 block|{
-name|perror
+name|perr
 argument_list|(
 literal|"Unable to read FAT"
 argument_list|)
@@ -895,9 +909,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|perror
+name|perr
 argument_list|(
-literal|"No space for FAT"
+literal|"No space for FAT clusters (%zu)"
+argument_list|,
+name|len
 argument_list|)
 expr_stmt|;
 name|free
@@ -2222,7 +2238,7 @@ name|head
 parameter_list|,
 name|cl_t
 modifier|*
-name|trunc
+name|truncp
 parameter_list|)
 block|{
 if|if
@@ -2262,7 +2278,7 @@ argument_list|)
 condition|)
 block|{
 operator|*
-name|trunc
+name|truncp
 operator|=
 name|CLUST_EOF
 expr_stmt|;
@@ -2811,9 +2827,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|perror
+name|perr
 argument_list|(
-literal|"No space for FAT"
+literal|"No space for FAT sectors (%zu)"
+argument_list|,
+name|fatsz
 argument_list|)
 expr_stmt|;
 return|return
@@ -3360,7 +3378,7 @@ operator|!=
 name|fatsz
 condition|)
 block|{
-name|perror
+name|perr
 argument_list|(
 literal|"Unable to write FAT"
 argument_list|)

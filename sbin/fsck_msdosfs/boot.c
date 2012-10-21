@@ -18,7 +18,7 @@ end_ifndef
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: boot.c,v 1.9 2003/07/24 19:25:46 ws Exp $"
+literal|"$NetBSD: boot.c,v 1.11 2006/06/05 16:51:18 christos Exp "
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -136,7 +136,7 @@ sizeof|sizeof
 name|block
 condition|)
 block|{
-name|perror
+name|perr
 argument_list|(
 literal|"could not read boot block"
 argument_list|)
@@ -656,7 +656,7 @@ sizeof|sizeof
 name|fsinfo
 condition|)
 block|{
-name|perror
+name|perr
 argument_list|(
 literal|"could not read fsinfo block"
 argument_list|)
@@ -862,7 +862,7 @@ sizeof|sizeof
 name|fsinfo
 condition|)
 block|{
-name|perror
+name|perr
 argument_list|(
 literal|"Unable to write bpbFSInfo"
 argument_list|)
@@ -1003,7 +1003,7 @@ sizeof|sizeof
 name|backup
 condition|)
 block|{
-name|perror
+name|perr
 argument_list|(
 literal|"could not read backup bootblock"
 argument_list|)
@@ -1486,7 +1486,7 @@ sizeof|sizeof
 name|fsinfo
 condition|)
 block|{
-name|perror
+name|perr
 argument_list|(
 literal|"could not read fsinfo block"
 argument_list|)
@@ -1654,7 +1654,7 @@ sizeof|sizeof
 name|fsinfo
 condition|)
 block|{
-name|perror
+name|perr
 argument_list|(
 literal|"Unable to write bpbFSInfo"
 argument_list|)

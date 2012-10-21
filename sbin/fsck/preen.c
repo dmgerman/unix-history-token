@@ -1414,7 +1414,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|devname
+name|dev
 parameter_list|,
 specifier|const
 name|char
@@ -1429,7 +1429,7 @@ name|d
 init|=
 name|finddisk
 argument_list|(
-name|devname
+name|dev
 argument_list|)
 decl_stmt|;
 name|struct
@@ -1453,7 +1453,7 @@ name|p
 operator|->
 name|p_devname
 argument_list|,
-name|devname
+name|dev
 argument_list|)
 operator|==
 literal|0
@@ -1463,7 +1463,7 @@ name|warnx
 argument_list|(
 literal|"%s in fstab more than once!\n"
 argument_list|,
-name|devname
+name|dev
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1485,7 +1485,7 @@ name|p_devname
 operator|=
 name|estrdup
 argument_list|(
-name|devname
+name|dev
 argument_list|)
 expr_stmt|;
 name|p
