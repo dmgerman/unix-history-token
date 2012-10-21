@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  $Id: checklist.c,v 1.127 2011/06/29 23:04:09 tom Exp $  *  *  checklist.c -- implements the checklist box  *  *  Copyright 2000-2010,2011	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  An earlier version of this program lists as authors:  *	Savio Lam (lam836@cs.cuhk.hk)  *	Stuart Herbert - S.Herbert@sheffield.ac.uk: radiolist extension  *	Alessandro Rubini - rubini@ipvvis.unipv.it: merged the two  */
+comment|/*  *  $Id: checklist.c,v 1.135 2012/07/01 16:30:04 Zoltan.Kelemen Exp $  *  *  checklist.c -- implements the checklist box  *  *  Copyright 2000-2011,2012	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  An earlier version of this program lists as authors:  *	Savio Lam (lam836@cs.cuhk.hk)  *	Stuart Herbert - S.Herbert@sheffield.ac.uk: radiolist extension  *	Alessandro Rubini - rubini@ipvvis.unipv.it: merged the two  */
 end_comment
 
 begin_include
@@ -173,7 +173,7 @@ name|list_height
 operator|+
 literal|1
 argument_list|,
-name|menubox_attr
+name|menubox_border2_attr
 argument_list|,
 name|menubox_border_attr
 argument_list|)
@@ -240,6 +240,9 @@ name|int
 name|limit
 decl_stmt|;
 comment|/* Clear 'residue' of last item */
+operator|(
+name|void
+operator|)
 name|wattrset
 argument_list|(
 name|win
@@ -294,6 +297,9 @@ argument_list|,
 name|check_x
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|wattrset
 argument_list|(
 name|win
@@ -330,6 +336,9 @@ name|state
 index|]
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|wattrset
 argument_list|(
 name|win
@@ -368,6 +377,9 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|wattrset
 argument_list|(
 name|win
@@ -440,6 +452,9 @@ operator|>
 literal|1
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|wattrset
 argument_list|(
 name|win
@@ -543,6 +558,9 @@ argument_list|,
 name|item_x
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|wattrset
 argument_list|(
 name|win
@@ -586,6 +604,9 @@ name|help
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|wattrset
 argument_list|(
 name|win
@@ -836,7 +857,7 @@ condition|?
 operator|-
 literal|1
 else|:
-name|dlg_defaultno_button
+name|dlg_default_button
 argument_list|()
 decl_stmt|;
 name|int
@@ -900,6 +921,11 @@ name|buttons
 init|=
 name|dlg_ok_labels
 argument_list|()
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|widget_name
 decl_stmt|;
 name|dlg_does_output
 argument_list|()
@@ -970,6 +996,17 @@ expr_stmt|;
 block|}
 block|}
 block|}
+name|widget_name
+operator|=
+literal|"radiolist"
+expr_stmt|;
+block|}
+else|else
+block|{
+name|widget_name
+operator|=
+literal|"checklist"
+expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
@@ -982,13 +1019,6 @@ name|use_height
 operator|=
 name|list_height
 expr_stmt|;
-if|if
-condition|(
-name|use_height
-operator|==
-literal|0
-condition|)
-block|{
 name|use_width
 operator|=
 name|dlg_calc_list_width
@@ -1000,6 +1030,22 @@ argument_list|)
 operator|+
 literal|10
 expr_stmt|;
+name|use_width
+operator|=
+name|MAX
+argument_list|(
+literal|26
+argument_list|,
+name|use_width
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|use_height
+operator|==
+literal|0
+condition|)
+block|{
 comment|/* calculate height without items (4) */
 name|dlg_auto_size
 argument_list|(
@@ -1015,12 +1061,7 @@ name|width
 argument_list|,
 name|MIN_HIGH
 argument_list|,
-name|MAX
-argument_list|(
-literal|26
-argument_list|,
 name|use_width
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|dlg_calc_listh
@@ -1053,7 +1094,7 @@ name|MIN_HIGH
 operator|+
 name|use_height
 argument_list|,
-literal|26
+name|use_width
 argument_list|)
 expr_stmt|;
 block|}
@@ -1142,7 +1183,7 @@ name|dlg_register_window
 argument_list|(
 name|dialog
 argument_list|,
-literal|"checklist"
+name|widget_name
 argument_list|,
 name|binding
 argument_list|)
@@ -1151,7 +1192,7 @@ name|dlg_register_buttons
 argument_list|(
 name|dialog
 argument_list|,
-literal|"checklist"
+name|widget_name
 argument_list|,
 name|buttons
 argument_list|)
@@ -1163,7 +1204,7 @@ argument_list|,
 name|y
 argument_list|)
 expr_stmt|;
-name|dlg_draw_box
+name|dlg_draw_box2
 argument_list|(
 name|dialog
 argument_list|,
@@ -1178,11 +1219,19 @@ argument_list|,
 name|dialog_attr
 argument_list|,
 name|border_attr
+argument_list|,
+name|border2_attr
 argument_list|)
 expr_stmt|;
-name|dlg_draw_bottom_box
+name|dlg_draw_bottom_box2
 argument_list|(
 name|dialog
+argument_list|,
+name|border_attr
+argument_list|,
+name|border2_attr
+argument_list|,
+name|dialog_attr
 argument_list|)
 expr_stmt|;
 name|dlg_draw_title
@@ -1192,6 +1241,9 @@ argument_list|,
 name|title
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|wattrset
 argument_list|(
 name|dialog
@@ -1328,7 +1380,7 @@ name|MARGIN
 argument_list|,
 name|menubox_border_attr
 argument_list|,
-name|menubox_attr
+name|menubox_border2_attr
 argument_list|)
 expr_stmt|;
 name|text_width
@@ -1622,6 +1674,11 @@ argument_list|,
 name|FALSE
 argument_list|,
 name|width
+argument_list|)
+expr_stmt|;
+name|dlg_trace_win
+argument_list|(
+name|dialog
 argument_list|)
 expr_stmt|;
 while|while
@@ -3442,6 +3499,23 @@ condition|)
 name|dlg_add_separator
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|flag
+operator|==
+name|FLAG_CHECK
+condition|)
+name|dlg_add_quoted
+argument_list|(
+name|listitems
+index|[
+name|i
+index|]
+operator|.
+name|name
+argument_list|)
+expr_stmt|;
+else|else
 name|dlg_add_string
 argument_list|(
 name|listitems
