@@ -494,6 +494,8 @@ name|i
 index|]
 operator|.
 name|sectorsize
+argument_list|,
+literal|0
 argument_list|)
 operator|==
 literal|0
@@ -619,6 +621,8 @@ name|d_unit
 index|]
 operator|.
 name|sectorsize
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 return|;
