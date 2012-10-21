@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  $Id: inputbox.c,v 1.67 2011/06/29 09:48:34 tom Exp $  *  *  inputbox.c -- implements the input box  *  *  Copyright 2000-2010,2011 Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  An earlier version of this program lists as authors:  *	Savio Lam (lam836@cs.cuhk.hk)  */
+comment|/*  *  $Id: inputbox.c,v 1.74 2012/07/01 18:13:40 Zoltan.Kelemen Exp $  *  *  inputbox.c -- implements the input box  *  *  Copyright 2000-2011,2012 Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  An earlier version of this program lists as authors:  *	Savio Lam (lam836@cs.cuhk.hk)  */
 end_comment
 
 begin_include
@@ -221,9 +221,11 @@ name|state
 operator|=
 name|dialog_vars
 operator|.
-name|defaultno
+name|default_button
+operator|>=
+literal|0
 condition|?
-name|dlg_defaultno_button
+name|dlg_default_button
 argument_list|()
 else|:
 name|sTEXT
@@ -398,7 +400,7 @@ argument_list|,
 name|yorg
 argument_list|)
 expr_stmt|;
-name|dlg_draw_box
+name|dlg_draw_box2
 argument_list|(
 name|dialog
 argument_list|,
@@ -413,11 +415,19 @@ argument_list|,
 name|dialog_attr
 argument_list|,
 name|border_attr
+argument_list|,
+name|border2_attr
 argument_list|)
 expr_stmt|;
-name|dlg_draw_bottom_box
+name|dlg_draw_bottom_box2
 argument_list|(
 name|dialog
+argument_list|,
+name|border_attr
+argument_list|,
+name|border2_attr
+argument_list|,
+name|dialog_attr
 argument_list|)
 expr_stmt|;
 name|dlg_draw_title
@@ -427,6 +437,9 @@ argument_list|,
 name|title
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|wattrset
 argument_list|(
 name|dialog
@@ -467,6 +480,11 @@ name|y
 argument_list|,
 name|x
 argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|x
 expr_stmt|;
 name|box_y
 operator|=
@@ -523,7 +541,7 @@ literal|2
 argument_list|,
 name|border_attr
 argument_list|,
-name|dialog_attr
+name|border2_attr
 argument_list|)
 expr_stmt|;
 comment|/* Make a window for the input-field, to associate bindings */
@@ -550,9 +568,14 @@ name|dlg_register_window
 argument_list|(
 name|editor
 argument_list|,
-literal|"inputbox"
+literal|"inputbox2"
 argument_list|,
 name|binding2
+argument_list|)
+expr_stmt|;
+name|dlg_trace_win
+argument_list|(
+name|dialog
 argument_list|)
 expr_stmt|;
 while|while
