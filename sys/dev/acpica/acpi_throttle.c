@@ -709,20 +709,6 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-if|if
-condition|(
-name|resource_disabled
-argument_list|(
-literal|"acpi_throttle"
-argument_list|,
-literal|0
-argument_list|)
-condition|)
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
 comment|/* 	 * On i386 platforms at least, ACPI throttling is accomplished by 	 * the chipset modulating the STPCLK# pin based on the duty cycle. 	 * Since p4tcc uses the same mechanism (but internal to the CPU), 	 * we disable acpi_throttle when p4tcc is also present. 	 */
 if|if
 condition|(

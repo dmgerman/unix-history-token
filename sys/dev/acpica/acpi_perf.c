@@ -747,20 +747,6 @@ name|rid
 decl_stmt|,
 name|type
 decl_stmt|;
-if|if
-condition|(
-name|resource_disabled
-argument_list|(
-literal|"acpi_perf"
-argument_list|,
-literal|0
-argument_list|)
-condition|)
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
 comment|/* 	 * Check the performance state registers.  If they are of type 	 * "functional fixed hardware", we attach quietly since we will 	 * only be providing information on settings to other drivers. 	 */
 name|error
 operator|=

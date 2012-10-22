@@ -954,20 +954,6 @@ name|i
 decl_stmt|,
 name|count
 decl_stmt|;
-if|if
-condition|(
-name|resource_disabled
-argument_list|(
-literal|"acpi"
-argument_list|,
-literal|0
-argument_list|)
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 comment|/* 	 * Map in the RSDP.  Since ACPI uses AcpiOsMapMemory() which in turn 	 * calls pmap_mapbios() to find the RSDP, we assume that we can use 	 * pmap_mapbios() to map the RSDP. 	 */
 if|if
 condition|(

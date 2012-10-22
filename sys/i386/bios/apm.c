@@ -4163,16 +4163,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-if|if
-condition|(
-name|resource_disabled
-argument_list|(
-literal|"apm"
-argument_list|,
-literal|0
-argument_list|)
-condition|)
-return|return;
 name|child
 operator|=
 name|BUS_ADD_CHILD

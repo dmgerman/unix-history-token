@@ -2205,21 +2205,6 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-comment|/* Check that we haven't been disabled with a hint. */
-if|if
-condition|(
-name|resource_disabled
-argument_list|(
-literal|"acpi"
-argument_list|,
-literal|0
-argument_list|)
-condition|)
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
 comment|/* Check for other PM systems. */
 if|if
 condition|(
