@@ -40,7 +40,7 @@ begin_define
 define|#
 directive|define
 name|WIIIPC_IOH_LEN
-value|0x20000
+value|0xc20000
 end_define
 
 begin_endif
