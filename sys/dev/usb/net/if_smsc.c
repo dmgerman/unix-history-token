@@ -4291,7 +4291,6 @@ operator|->
 name|sc_ue
 argument_list|)
 decl_stmt|;
-empty_stmt|;
 name|SMSC_LOCK_ASSERT
 argument_list|(
 name|sc

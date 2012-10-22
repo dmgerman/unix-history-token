@@ -9617,7 +9617,6 @@ name|dir
 operator|=
 name|BUS_DMASYNC_POSTWRITE
 expr_stmt|;
-empty_stmt|;
 name|bus_dmamap_sync
 argument_list|(
 name|sc

@@ -1787,7 +1787,6 @@ operator|)
 operator|-
 literal|1
 expr_stmt|;
-empty_stmt|;
 name|rdsect
 argument_list|(
 name|fd

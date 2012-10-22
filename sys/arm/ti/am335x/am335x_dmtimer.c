@@ -1859,7 +1859,6 @@ operator|+
 literal|1
 operator|)
 expr_stmt|;
-empty_stmt|;
 name|first
 operator|=
 name|am335x_dmtimer_tc_read_4

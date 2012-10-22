@@ -404,7 +404,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-empty_stmt|;
 name|rid
 operator|=
 literal|1

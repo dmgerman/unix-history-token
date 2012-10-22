@@ -4856,7 +4856,6 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-empty_stmt|;
 if|if
 condition|(
 name|error

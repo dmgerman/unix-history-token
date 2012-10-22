@@ -1277,7 +1277,6 @@ condition|)
 goto|goto
 name|lro_free
 goto|;
-empty_stmt|;
 name|sc
 operator|->
 name|vlan_attach
