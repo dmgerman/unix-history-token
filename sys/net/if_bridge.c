@@ -1133,7 +1133,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|bridge_rtable_init
 parameter_list|(
 name|struct
@@ -2835,15 +2835,25 @@ name|bridge_list
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|IFC_SIMPLE_DECLARE
-argument_list|(
-name|bridge
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_decl_stmt
+specifier|static
+name|struct
+name|if_clone
+modifier|*
+name|bridge_cloner
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|bridge_name
+index|[]
+init|=
+literal|"bridge"
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static
@@ -2881,10 +2891,17 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
-name|if_clone_attach
-argument_list|(
-operator|&
 name|bridge_cloner
+operator|=
+name|if_clone_simple
+argument_list|(
+name|bridge_name
+argument_list|,
+name|bridge_clone_create
+argument_list|,
+name|bridge_clone_destroy
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|bridge_rtnode_zone
@@ -2960,7 +2977,6 @@ argument_list|)
 expr_stmt|;
 name|if_clone_detach
 argument_list|(
-operator|&
 name|bridge_cloner
 argument_list|)
 expr_stmt|;
@@ -3321,9 +3337,7 @@ name|if_initname
 argument_list|(
 name|ifp
 argument_list|,
-name|ifc
-operator|->
-name|ifc_name
+name|bridge_name
 argument_list|,
 name|unit
 argument_list|)
@@ -8927,20 +8941,6 @@ name|mbuf
 modifier|*
 name|m0
 decl_stmt|;
-name|len
-operator|=
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|len
-expr_stmt|;
-name|mflags
-operator|=
-name|m
-operator|->
-name|m_flags
-expr_stmt|;
 comment|/* We may be sending a fragment so traverse the mbuf */
 for|for
 control|(
@@ -8963,6 +8963,20 @@ operator|->
 name|m_nextpkt
 operator|=
 name|NULL
+expr_stmt|;
+name|len
+operator|=
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+expr_stmt|;
+name|mflags
+operator|=
+name|m
+operator|->
+name|m_flags
 expr_stmt|;
 comment|/* 		 * If underlying interface can not do VLAN tag insertion itself 		 * then attach a packet tag that holds it. 		 */
 if|if
@@ -9049,16 +9063,15 @@ argument_list|(
 name|m0
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|sc_ifp
+operator|->
+name|if_oerrors
+operator|++
+expr_stmt|;
 break|break;
 block|}
-block|}
-if|if
-condition|(
-name|err
-operator|==
-literal|0
-condition|)
-block|{
 name|sc
 operator|->
 name|sc_ifp
@@ -10833,7 +10846,7 @@ parameter_list|)
 define|\
 value|if ((iface)->if_type == IFT_GIF) \ 		continue; \
 comment|/* It is destined for us. */
-value|\ 	if (memcmp(IF_LLADDR((iface)), eh->ether_dhost,  ETHER_ADDR_LEN) == 0 \ 	    OR_CARP_CHECK_WE_ARE_DST((iface))				\ 	    ) {								\ 		if ((iface)->if_type == IFT_BRIDGE) {			\ 			ETHER_BPF_MTAP(iface, m);			\ 			iface->if_ipackets++;				\
+value|\ 	if (memcmp(IF_LLADDR((iface)), eh->ether_dhost,  ETHER_ADDR_LEN) == 0 \ 	    OR_CARP_CHECK_WE_ARE_DST((iface))				\ 	    ) {								\ 		if ((iface)->if_type == IFT_BRIDGE) {			\ 			ETHER_BPF_MTAP(iface, m);			\ 			iface->if_ipackets++;				\ 			iface->if_ibytes += m->m_pkthdr.len;		\
 comment|/* Filter on the physical interface. */
 value|\ 			if (pfil_local_phys&&				\ 			    (PFIL_HOOKED(&V_inet_pfil_hook)		\ 			     OR_PFIL_HOOKED_INET6)) {			\ 				if (bridge_pfil(&m, NULL, ifp,		\ 				    PFIL_IN) != 0 || m == NULL) {	\ 					BRIDGE_UNLOCK(sc);		\ 					return (NULL);			\ 				}					\ 			}						\ 		}							\ 		if (bif->bif_flags& IFBIF_LEARNING) {			\ 			error = bridge_rtupdate(sc, eh->ether_shost,	\ 			    vlan, bif, 0, IFBAF_DYNAMIC);		\ 			if (error&& bif->bif_addrmax) {		\ 				BRIDGE_UNLOCK(sc);			\ 				m_freem(m);				\ 				return (NULL);				\ 			}						\ 		}							\ 		m->m_pkthdr.rcvif = iface;				\ 		BRIDGE_UNLOCK(sc);					\ 		return (m);						\ 	}								\ 									\
 comment|/* We just received a packet that we sent out. */
@@ -12342,7 +12355,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|bridge_rtable_init
 parameter_list|(
 name|struct
@@ -12372,22 +12385,9 @@ name|BRIDGE_RTHASH_SIZE
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_NOWAIT
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|sc_rthash
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
 for|for
 control|(
 name|i
@@ -12427,11 +12427,6 @@ operator|->
 name|sc_rtlist
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
@@ -13750,41 +13745,6 @@ block|{
 case|case
 name|ETHERTYPE_IP
 case|:
-comment|/* 		 * before calling the firewall, swap fields the same as 		 * IP does. here we assume the header is contiguous 		 */
-name|ip
-operator|=
-name|mtod
-argument_list|(
-operator|*
-name|mp
-argument_list|,
-expr|struct
-name|ip
-operator|*
-argument_list|)
-expr_stmt|;
-name|ip
-operator|->
-name|ip_len
-operator|=
-name|ntohs
-argument_list|(
-name|ip
-operator|->
-name|ip_len
-argument_list|)
-expr_stmt|;
-name|ip
-operator|->
-name|ip_off
-operator|=
-name|ntohs
-argument_list|(
-name|ip
-operator|->
-name|ip_off
-argument_list|)
-expr_stmt|;
 comment|/* 		 * Run pfil on the member interface and the bridge, both can 		 * be skipped by clearing pfil_member or pfil_bridge. 		 * 		 * Keep the order: 		 *   in_if -> bridge_if -> out_if 		 */
 if|if
 condition|(
@@ -13964,7 +13924,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* Recalculate the ip checksum and restore byte ordering */
+comment|/* Recalculate the ip checksum. */
 name|ip
 operator|=
 name|mtod
@@ -14052,28 +14012,6 @@ goto|goto
 name|bad
 goto|;
 block|}
-name|ip
-operator|->
-name|ip_len
-operator|=
-name|htons
-argument_list|(
-name|ip
-operator|->
-name|ip_len
-argument_list|)
-expr_stmt|;
-name|ip
-operator|->
-name|ip_off
-operator|=
-name|htons
-argument_list|(
-name|ip
-operator|->
-name|ip_off
-argument_list|)
-expr_stmt|;
 name|ip
 operator|->
 name|ip_sum

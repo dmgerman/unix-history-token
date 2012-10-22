@@ -27947,12 +27947,12 @@ name|void
 name|usage
 parameter_list|(
 name|int
-name|verbose
+name|printlong
 parameter_list|)
 block|{
 name|fprintf
 argument_list|(
-name|verbose
+name|printlong
 condition|?
 name|stdout
 else|:
@@ -28019,7 +28019,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|verbose
+name|printlong
 condition|)
 return|return;
 ifndef|#

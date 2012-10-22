@@ -70,6 +70,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|VIRTIO_ID_SCSI
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
 name|VIRTIO_ID_9P
 value|0x09
 end_define

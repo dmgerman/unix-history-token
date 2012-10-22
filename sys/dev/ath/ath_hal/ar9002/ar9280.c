@@ -450,6 +450,14 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Enable 2G (fractional) mode for channels which are 5MHz spaced */
+comment|/* 			 * Workaround for talking on PSB non-5MHz channels; 			 * the pre-Merlin chips only had a 2.5MHz channel 			 * spacing so some channels aren't reachable.  			 * 			 * This interoperates on the quarter rate channels 			 * with the AR5112 and later RF synths.  Please note 			 * that the synthesiser isn't able to completely 			 * accurately represent these frequencies (as the 			 * resolution in this reference is 2.5MHz) and thus 			 * it will be slightly "off centre."  This matches 			 * the same slightly incorrect centre frequency 			 * behaviour that the AR5112 and later channel 			 * selection code has. 			 * 			 * This also interoperates with the AR5416 			 * synthesiser modification for programming 			 * fractional frequencies in 5GHz mode.  However 			 * that modification is also disabled by default. 			 * 			 * This is disabled because it hasn't been tested for 			 * regulatory compliance and neither have the NICs 			 * which would use it.  So if you enable this code, 			 * you must first ensure that you've re-certified the 			 * NICs in question beforehand or you will be 			 * violating your local regulatory rules and breaking 			 * the law. 			 */
+if|#
+directive|if
+literal|0
+block|if (freq % 5 == 0) {
+endif|#
+directive|endif
+comment|/* Normal */
 name|fracMode
 operator|=
 literal|1
@@ -468,6 +476,21 @@ operator|)
 operator|/
 literal|15
 expr_stmt|;
+if|#
+directive|if
+literal|0
+block|} else {
+comment|/* Offset by 500KHz */
+block|uint32_t f, ch, ch2;  				fracMode = 1; 				refDivA = 1;
+comment|/* Calculate the "adjusted" frequency */
+block|f = freq - 2; 				ch = (((f - 4800) * 10) / 25) + 1;  				ch2 = ((ch * 25) / 5) + 9600; 				channelSel = (ch2 * 0x4000) / 15;
+comment|//ath_hal_printf(ah,
+comment|//    "%s: freq=%d, ch=%d, ch2=%d, "
+comment|//    "channelSel=%d\n",
+comment|//    __func__, freq, ch, ch2, channelSel);
+block|}
+endif|#
+directive|endif
 comment|/* RefDivA setting */
 name|OS_A_REG_RMW_FIELD
 argument_list|(

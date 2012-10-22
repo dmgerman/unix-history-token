@@ -129,13 +129,6 @@ directive|include
 file|"extern.h"
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|debug
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|void
 name|process_request

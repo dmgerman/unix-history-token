@@ -60,7 +60,7 @@ begin_define
 define|#
 directive|define
 name|__FreeBSD_version
-value|1000018
+value|1000021
 end_define
 
 begin_comment
@@ -987,6 +987,22 @@ name|y
 parameter_list|)
 value|(((x)/(y))*(y))
 end_define
+
+begin_define
+define|#
+directive|define
+name|rounddown2
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|((x)&(~((y)-1)))
+end_define
+
+begin_comment
+comment|/* if y is power of two */
+end_comment
 
 begin_define
 define|#

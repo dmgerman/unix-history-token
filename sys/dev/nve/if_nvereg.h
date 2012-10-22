@@ -710,41 +710,6 @@ parameter_list|)
 value|mtx_assert(&(_sc)->mtx, MA_OWNED)
 end_define
 
-begin_define
-define|#
-directive|define
-name|IF_Kbps
-parameter_list|(
-name|x
-parameter_list|)
-value|((x) * 1000)
-end_define
-
-begin_comment
-comment|/* kilobits/sec. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IF_Mbps
-parameter_list|(
-name|x
-parameter_list|)
-value|(IF_Kbps((x) * 1000))
-end_define
-
-begin_comment
-comment|/* megabits/sec. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ETHER_ALIGN
-value|2
-end_define
-
 begin_function_decl
 specifier|extern
 name|int

@@ -3269,13 +3269,18 @@ end_define
 begin_define
 define|#
 directive|define
-name|HCINT_SUSPEND_ONLY
-value|(1<<21)
+name|HCINT_ERRORS
+define|\
+value|(HCINT_BBLERR | HCINT_XACTERR)
 end_define
 
-begin_comment
-comment|/* BSD only */
-end_comment
+begin_define
+define|#
+directive|define
+name|HCINT_RETRY
+define|\
+value|(HCINT_DATATGLERR | HCINT_FRMOVRUN | HCINT_NAK)
+end_define
 
 begin_define
 define|#

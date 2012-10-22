@@ -41,7 +41,7 @@ end_define
 
 begin_struct
 struct|struct
-name|loader_callbacks_v1
+name|loader_callbacks
 block|{
 comment|/* 	 * Console i/o 	 */
 comment|/*          * Wait until a key is pressed on the console and then return it          */

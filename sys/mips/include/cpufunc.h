@@ -64,7 +64,9 @@ name|defined
 argument_list|(
 name|CPU_NLM
 argument_list|)
-asm|__asm __volatile("" : : : "memory");
+name|__compiler_membar
+argument_list|()
+expr_stmt|;
 else|#
 directive|else
 asm|__asm __volatile (".set noreorder\n\t"

@@ -22,6 +22,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<machine/atomic.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/ath/ath_hal/ah.h>
 end_include
 
@@ -292,7 +298,7 @@ argument_list|(
 argument_list|,
 argument|ath_buf
 argument_list|)
-name|axq_q
+name|tid_q
 expr_stmt|;
 comment|/* pending buffers */
 name|u_int
@@ -331,7 +337,7 @@ argument_list|(
 argument_list|,
 argument|ath_buf
 argument_list|)
-name|axq_q
+name|tid_q
 expr_stmt|;
 comment|/* filtered queue */
 name|u_int
@@ -434,6 +440,10 @@ name|u_int8_t
 name|an_mcastrix
 decl_stmt|;
 comment|/* mcast h/w rate index */
+name|uint32_t
+name|an_is_powersave
+decl_stmt|;
+comment|/* node is sleeping */
 name|struct
 name|ath_buf
 modifier|*
@@ -463,6 +473,10 @@ name|mtx
 name|an_mtx
 decl_stmt|;
 comment|/* protecting the ath_node state */
+name|uint32_t
+name|an_swq_depth
+decl_stmt|;
+comment|/* how many SWQ packets for this 					   node */
 comment|/* variable-length rate control state follows */
 block|}
 struct|;
@@ -1068,6 +1082,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATH_NODE_UNLOCK_ASSERT
+parameter_list|(
+name|_an
+parameter_list|)
+value|mtx_assert(&(_an)->an_mtx,	\ 					    MA_NOTOWNED)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATH_TXQ_LOCK_INIT
 parameter_list|(
 name|_sc
@@ -1165,6 +1189,10 @@ define|\
 value|ATH_TXQ_UNLOCK_ASSERT((_sc)->sc_ac2q[(_tid)->ac])
 end_define
 
+begin_comment
+comment|/*  * These are for the hardware queue.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1227,6 +1255,142 @@ parameter_list|,
 name|_field
 parameter_list|)
 value|TAILQ_LAST(&(_tq)->axq_q, _field)
+end_define
+
+begin_comment
+comment|/*  * These are for the TID software queue.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATH_TID_INSERT_HEAD
+parameter_list|(
+name|_tq
+parameter_list|,
+name|_elm
+parameter_list|,
+name|_field
+parameter_list|)
+value|do { \ 	TAILQ_INSERT_HEAD(&(_tq)->tid_q, (_elm), _field); \ 	(_tq)->axq_depth++; \ 	atomic_add_rel_32(&((_tq)->an)->an_swq_depth, 1); \ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TID_INSERT_TAIL
+parameter_list|(
+name|_tq
+parameter_list|,
+name|_elm
+parameter_list|,
+name|_field
+parameter_list|)
+value|do { \ 	TAILQ_INSERT_TAIL(&(_tq)->tid_q, (_elm), _field); \ 	(_tq)->axq_depth++; \ 	atomic_add_rel_32(&((_tq)->an)->an_swq_depth, 1); \ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TID_REMOVE
+parameter_list|(
+name|_tq
+parameter_list|,
+name|_elm
+parameter_list|,
+name|_field
+parameter_list|)
+value|do { \ 	TAILQ_REMOVE(&(_tq)->tid_q, _elm, _field); \ 	(_tq)->axq_depth--; \ 	atomic_subtract_rel_32(&((_tq)->an)->an_swq_depth, 1); \ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TID_FIRST
+parameter_list|(
+name|_tq
+parameter_list|)
+value|TAILQ_FIRST(&(_tq)->tid_q)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TID_LAST
+parameter_list|(
+name|_tq
+parameter_list|,
+name|_field
+parameter_list|)
+value|TAILQ_LAST(&(_tq)->tid_q, _field)
+end_define
+
+begin_comment
+comment|/*  * These are for the TID filtered frame queue  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATH_TID_FILT_INSERT_HEAD
+parameter_list|(
+name|_tq
+parameter_list|,
+name|_elm
+parameter_list|,
+name|_field
+parameter_list|)
+value|do { \ 	TAILQ_INSERT_HEAD(&(_tq)->filtq.tid_q, (_elm), _field); \ 	(_tq)->axq_depth++; \ 	atomic_add_rel_32(&((_tq)->an)->an_swq_depth, 1); \ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TID_FILT_INSERT_TAIL
+parameter_list|(
+name|_tq
+parameter_list|,
+name|_elm
+parameter_list|,
+name|_field
+parameter_list|)
+value|do { \ 	TAILQ_INSERT_TAIL(&(_tq)->filtq.tid_q, (_elm), _field); \ 	(_tq)->axq_depth++; \ 	atomic_add_rel_32(&((_tq)->an)->an_swq_depth, 1); \ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TID_FILT_REMOVE
+parameter_list|(
+name|_tq
+parameter_list|,
+name|_elm
+parameter_list|,
+name|_field
+parameter_list|)
+value|do { \ 	TAILQ_REMOVE(&(_tq)->filtq.tid_q, _elm, _field); \ 	(_tq)->axq_depth--; \ 	atomic_subtract_rel_32(&((_tq)->an)->an_swq_depth, 1); \ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TID_FILT_FIRST
+parameter_list|(
+name|_tq
+parameter_list|)
+value|TAILQ_FIRST(&(_tq)->filtq.tid_q)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TID_FILT_LAST
+parameter_list|(
+name|_tq
+parameter_list|,
+name|_field
+parameter_list|)
+value|TAILQ_LAST(&(_tq)->filtq.tid_q,_field)
 end_define
 
 begin_struct
@@ -1304,6 +1468,19 @@ parameter_list|(
 name|struct
 name|ieee80211vap
 modifier|*
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|av_node_ps
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211_node
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 block|}
@@ -1642,6 +1819,9 @@ name|sc_intr_stats
 decl_stmt|;
 name|uint64_t
 name|sc_debug
+decl_stmt|;
+name|uint64_t
+name|sc_ktrdebug
 decl_stmt|;
 name|int
 name|sc_nvaps
@@ -2302,6 +2482,11 @@ name|task
 name|sc_txqtask
 decl_stmt|;
 comment|/* tx proc processing */
+name|struct
+name|task
+name|sc_txsndtask
+decl_stmt|;
+comment|/* tx send processing */
 name|struct
 name|ath_descdma
 name|sc_txcompdma

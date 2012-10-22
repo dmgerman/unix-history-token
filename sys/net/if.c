@@ -3295,14 +3295,6 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifp
@@ -3314,11 +3306,6 @@ argument_list|)
 name|if_attachdomain1
 argument_list|(
 name|ifp
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 block|}
@@ -3356,14 +3343,6 @@ name|domain
 modifier|*
 name|dp
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
 comment|/* 	 * Since dp->dom_ifattach calls malloc() with M_WAITOK, we 	 * cannot lock ifp->if_afdata initialization, entirely. 	 */
 if|if
 condition|(
@@ -3374,14 +3353,7 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return;
-block|}
 if|if
 condition|(
 name|ifp
@@ -3396,14 +3368,13 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|splx
+name|log
 argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"if_attachdomain called more than once on %s\n"
+name|LOG_WARNING
+argument_list|,
+literal|"%s called more than once on %s\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|ifp
 operator|->
@@ -3479,11 +3450,6 @@ name|ifp
 argument_list|)
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -8029,7 +7995,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Mark an interface down and notify protocols of  * the transition.  * NOTE: must be called at splnet or eqivalent.  */
+comment|/*  * Mark an interface down and notify protocols of  * the transition.  */
 end_comment
 
 begin_function
@@ -8143,7 +8109,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Mark an interface up and notify protocols of  * the transition.  * NOTE: must be called at splnet or eqivalent.  */
+comment|/*  * Mark an interface up and notify protocols of  * the transition.  */
 end_comment
 
 begin_function
@@ -8649,7 +8615,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Mark an interface down and notify protocols of  * the transition.  * NOTE: must be called at splnet or eqivalent.  */
+comment|/*  * Mark an interface down and notify protocols of  * the transition.  */
 end_comment
 
 begin_function
@@ -8675,7 +8641,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Mark an interface up and notify protocols of  * the transition.  * NOTE: must be called at splnet or eqivalent.  */
+comment|/*  * Mark an interface up and notify protocols of  * the transition.  */
 end_comment
 
 begin_function
@@ -9522,20 +9488,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|int
-name|s
-init|=
-name|splimp
-argument_list|()
-decl_stmt|;
 name|if_down
 argument_list|(
 name|ifp
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 block|}
@@ -9557,20 +9512,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|int
-name|s
-init|=
-name|splimp
-argument_list|()
-decl_stmt|;
 name|if_up
 argument_list|(
 name|ifp
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 block|}
@@ -11694,24 +11638,11 @@ name|if_flags
 operator|&
 name|IFF_UP
 condition|)
-block|{
-name|int
-name|s
-init|=
-name|splimp
-argument_list|()
-decl_stmt|;
 name|in6_if_up
 argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-block|}
 endif|#
 directive|endif
 block|}

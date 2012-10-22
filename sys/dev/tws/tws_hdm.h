@@ -728,6 +728,10 @@ name|TWS_FW_CMD_ATA_PASSTHROUGH
 value|0x11
 end_define
 
+begin_comment
+comment|// This is really a PASSTHROUGH for both ATA and SCSI commands.
+end_comment
+
 begin_define
 define|#
 directive|define

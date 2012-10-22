@@ -127,13 +127,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|DISCNAME
-value|"disc"
-end_define
-
 begin_struct
 struct|struct
 name|disc_softc
@@ -233,28 +226,38 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|discname
+index|[]
+init|=
+literal|"disc"
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_DISC
 argument_list|,
-name|DISCNAME
+name|discname
 argument_list|,
 literal|"Discard interface"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|IFC_SIMPLE_DECLARE
-argument_list|(
-name|disc
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_decl_stmt
+specifier|static
+name|struct
+name|if_clone
+modifier|*
+name|disc_cloner
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static
@@ -341,9 +344,7 @@ name|if_initname
 argument_list|(
 name|ifp
 argument_list|,
-name|ifc
-operator|->
-name|ifc_name
+name|discname
 argument_list|,
 name|unit
 argument_list|)
@@ -497,10 +498,17 @@ block|{
 case|case
 name|MOD_LOAD
 case|:
-name|if_clone_attach
-argument_list|(
-operator|&
 name|disc_cloner
+operator|=
+name|if_clone_simple
+argument_list|(
+name|discname
+argument_list|,
+name|disc_clone_create
+argument_list|,
+name|disc_clone_destroy
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -509,7 +517,6 @@ name|MOD_UNLOAD
 case|:
 name|if_clone_detach
 argument_list|(
-operator|&
 name|disc_cloner
 argument_list|)
 expr_stmt|;

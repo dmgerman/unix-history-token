@@ -1419,6 +1419,9 @@ name|blkno
 decl_stmt|,
 name|start
 decl_stmt|;
+name|ino_t
+name|ino
+decl_stmt|;
 name|ufs2_daddr_t
 name|i
 decl_stmt|,
@@ -1928,15 +1931,15 @@ literal|0
 condition|)
 for|for
 control|(
-name|i
+name|ino
 operator|=
 literal|0
 init|;
-name|i
+name|ino
 operator|<
 name|ROOTINO
 condition|;
-name|i
+name|ino
 operator|++
 control|)
 block|{
@@ -1948,7 +1951,7 @@ operator|&
 name|acg
 argument_list|)
 argument_list|,
-name|i
+name|ino
 argument_list|)
 expr_stmt|;
 name|acg

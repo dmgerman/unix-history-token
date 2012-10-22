@@ -527,7 +527,7 @@ name|u_int16_t
 name|ufid_pad
 decl_stmt|;
 comment|/* Force 32-bit alignment. */
-name|ino_t
+name|uint32_t
 name|ufid_ino
 decl_stmt|;
 comment|/* File number (ino). */

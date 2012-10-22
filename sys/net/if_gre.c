@@ -243,13 +243,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|GRENAME
-value|"gre"
-end_define
-
-begin_define
-define|#
-directive|define
 name|MTAG_COOKIE_GRE
 value|1307983903
 end_define
@@ -292,13 +285,24 @@ name|gre_mtx
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|grename
+index|[]
+init|=
+literal|"gre"
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_GRE
 argument_list|,
-name|GRENAME
+name|grename
 argument_list|,
 literal|"Generic Routing Encapsulation"
 argument_list|)
@@ -340,6 +344,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|if_clone
+modifier|*
+name|gre_cloner
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|int
@@ -380,16 +393,6 @@ name|ro
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_expr_stmt
-name|IFC_SIMPLE_DECLARE
-argument_list|(
-name|gre
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_function_decl
 specifier|static
@@ -670,10 +673,17 @@ operator|&
 name|gre_softc_list
 argument_list|)
 expr_stmt|;
-name|if_clone_attach
-argument_list|(
-operator|&
 name|gre_cloner
+operator|=
+name|if_clone_simple
+argument_list|(
+name|grename
+argument_list|,
+name|gre_clone_create
+argument_list|,
+name|gre_clone_destroy
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -773,9 +783,7 @@ argument_list|(
 name|sc
 argument_list|)
 argument_list|,
-name|ifc
-operator|->
-name|ifc_name
+name|grename
 argument_list|,
 name|unit
 argument_list|)
@@ -2571,9 +2579,6 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 name|struct
 name|sockaddr_in
 name|si
@@ -2610,11 +2615,6 @@ expr_stmt|;
 name|adj
 operator|=
 literal|0
-expr_stmt|;
-name|s
-operator|=
-name|splnet
-argument_list|()
 expr_stmt|;
 switch|switch
 condition|(
@@ -4276,11 +4276,6 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
@@ -4740,7 +4735,6 @@ name|MOD_UNLOAD
 case|:
 name|if_clone_detach
 argument_list|(
-operator|&
 name|gre_cloner
 argument_list|)
 expr_stmt|;

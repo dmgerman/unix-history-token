@@ -1321,7 +1321,7 @@ return|return
 operator|(
 name|gettext
 argument_list|(
-literal|"\tsend [-DnPpRrv] "
+literal|"\tsend [-DnPpRv] "
 literal|"[-i snapshot | -I snapshot]<snapshot>\n"
 argument_list|)
 operator|)
@@ -14342,6 +14342,12 @@ name|parents
 init|=
 name|B_FALSE
 decl_stmt|;
+name|char
+modifier|*
+name|snapshot
+init|=
+name|NULL
+decl_stmt|;
 comment|/* check options */
 while|while
 condition|(
@@ -14645,6 +14651,42 @@ name|ZFS_TYPE_DATASET
 expr_stmt|;
 if|if
 condition|(
+name|flags
+operator|.
+name|recurse
+condition|)
+block|{
+comment|/* 		 * When we do recursive rename we are fine when the given 		 * snapshot for the given dataset doesn't exist - it can 		 * still exists below. 		 */
+name|snapshot
+operator|=
+name|strchr
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+literal|'@'
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|snapshot
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+operator|*
+name|snapshot
+operator|=
+literal|'\0'
+expr_stmt|;
+name|snapshot
+operator|++
+expr_stmt|;
+block|}
+if|if
+condition|(
 operator|(
 name|zhp
 operator|=
@@ -14716,6 +14758,8 @@ operator|(
 name|zfs_rename
 argument_list|(
 name|zhp
+argument_list|,
+name|snapshot
 argument_list|,
 name|argv
 index|[

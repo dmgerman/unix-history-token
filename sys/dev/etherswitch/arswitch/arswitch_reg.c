@@ -562,9 +562,13 @@ name|addr
 operator|+
 literal|2
 argument_list|,
+operator|(
 name|data
 operator|>>
 literal|16
+operator|)
+operator|&
+literal|0xffff
 argument_list|)
 operator|)
 return|;

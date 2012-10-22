@@ -363,31 +363,6 @@ name|NUM_KERNEL_PTS
 value|(KERNEL_PT_VMDATA + KERNEL_PT_VMDATA_NUM)
 end_define
 
-begin_comment
-comment|/* Define various stack sizes in pages */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IRQ_STACK_SIZE
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|ABT_STACK_SIZE
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|UND_STACK_SIZE
-value|1
-end_define
-
 begin_define
 define|#
 directive|define
@@ -1491,43 +1466,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Pages were allocated during the secondary bootstrap for the 	 * stacks for different CPU modes. 	 * We must now set the r13 registers in the different CPU modes to 	 * point to these stacks. 	 * Since the ARM stacks use STMFD etc. we must set r13 to the top end 	 * of the stack memory. 	 */
-name|set_stackptr
+name|set_stackptrs
 argument_list|(
-name|PSR_IRQ32_MODE
-argument_list|,
-name|irqstack
-operator|.
-name|pv_va
-operator|+
-name|IRQ_STACK_SIZE
-operator|*
-name|PAGE_SIZE
-argument_list|)
-expr_stmt|;
-name|set_stackptr
-argument_list|(
-name|PSR_ABT32_MODE
-argument_list|,
-name|abtstack
-operator|.
-name|pv_va
-operator|+
-name|ABT_STACK_SIZE
-operator|*
-name|PAGE_SIZE
-argument_list|)
-expr_stmt|;
-name|set_stackptr
-argument_list|(
-name|PSR_UND32_MODE
-argument_list|,
-name|undstack
-operator|.
-name|pv_va
-operator|+
-name|UND_STACK_SIZE
-operator|*
-name|PAGE_SIZE
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We must now clean the cache again.... 	 * Cleaning may be done by reading new data to displace any 	 * dirty data in the cache. This will have happened in setttb() 	 * but since we are boot strapping the addresses used for the read 	 * may have just been remapped and thus the cache could be out 	 * of sync. A re-clean after the switch will cure this. 	 * After booting there are no gross relocations of the kernel thus 	 * this problem will not occur after initarm(). 	 */

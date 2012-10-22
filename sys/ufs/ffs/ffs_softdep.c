@@ -7936,9 +7936,6 @@ decl_stmt|;
 name|int
 name|progress
 decl_stmt|;
-name|int
-name|vfslocked
-decl_stmt|;
 name|td
 operator|=
 name|curthread
@@ -7958,18 +7955,6 @@ block|{
 name|kproc_suspend_check
 argument_list|(
 name|softdepproc
-argument_list|)
-expr_stmt|;
-name|vfslocked
-operator|=
-name|VFS_LOCK_GIANT
-argument_list|(
-operator|(
-expr|struct
-name|mount
-operator|*
-operator|)
-name|NULL
 argument_list|)
 expr_stmt|;
 name|ACQUIRE_LOCK
@@ -8021,11 +8006,6 @@ name|FREE_LOCK
 argument_list|(
 operator|&
 name|lk
-argument_list|)
-expr_stmt|;
-name|VFS_UNLOCK_GIANT
-argument_list|(
-name|vfslocked
 argument_list|)
 expr_stmt|;
 name|remaining
@@ -8090,13 +8070,6 @@ name|MBF_MNTLSTLOCK
 argument_list|)
 condition|)
 continue|continue;
-name|vfslocked
-operator|=
-name|VFS_LOCK_GIANT
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
 name|progress
 operator|+=
 name|softdep_process_worklist
@@ -8118,11 +8091,6 @@ operator|+=
 name|ump
 operator|->
 name|softdep_on_worklist
-expr_stmt|;
-name|VFS_UNLOCK_GIANT
-argument_list|(
-name|vfslocked
-argument_list|)
 expr_stmt|;
 name|mtx_lock
 argument_list|(
@@ -21749,8 +21717,11 @@ operator|->
 name|i_number
 argument_list|,
 operator|(
-literal|"softdep_setup_mkdir: bad parent %d"
+literal|"softdep_setup_mkdir: bad parent %ju"
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|jaddref
 operator|->
 name|ja_parent
@@ -41487,12 +41458,18 @@ name|i_number
 condition|)
 name|panic
 argument_list|(
-literal|"newdirrem: inum %d should be %d"
+literal|"newdirrem: inum %ju should be %ju"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ip
 operator|->
 name|i_number
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|dap
 operator|->
 name|da_newinum
@@ -45219,14 +45196,20 @@ name|da_newinum
 condition|)
 name|panic
 argument_list|(
-literal|"%s: dir inum %d != new %d"
+literal|"%s: dir inum %ju != new %ju"
 argument_list|,
 literal|"initiate_write_filepage"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ep
 operator|->
 name|d_ino
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|dap
 operator|->
 name|da_newinum
@@ -48069,8 +48052,11 @@ argument_list|)
 condition|)
 name|panic
 argument_list|(
-literal|"softdep_setup_inofree: inode %d not freed."
+literal|"softdep_setup_inofree: inode %ju not freed."
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ino
 argument_list|)
 expr_stmt|;
@@ -48090,8 +48076,11 @@ argument_list|)
 condition|)
 name|panic
 argument_list|(
-literal|"softdep_setup_inofree: ino %d has existing inodedep %p"
+literal|"softdep_setup_inofree: ino %ju has existing inodedep %p"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ino
 argument_list|,
 name|inodedep
@@ -49153,9 +49142,12 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"initiate_write_bmsafemap: inode %d "
+literal|"initiate_write_bmsafemap: inode %ju "
 literal|"marked free"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|jaddref
 operator|->
 name|ja_ino
@@ -58224,10 +58216,13 @@ expr_stmt|;
 name|panic
 argument_list|(
 literal|"flush_pagedep_deps: failed to flush "
-literal|"inodedep %p ino %d dap %p"
+literal|"inodedep %p ino %ju dap %p"
 argument_list|,
 name|inodedep
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|inum
 argument_list|,
 name|dap

@@ -15919,7 +15919,6 @@ name|adapter
 operator|->
 name|ifp
 decl_stmt|;
-empty_stmt|;
 name|struct
 name|mbuf
 modifier|*
@@ -16599,9 +16598,9 @@ block|}
 block|}
 else|else
 block|{
-name|ifp
+name|adapter
 operator|->
-name|if_ierrors
+name|dropped_pkts
 operator|++
 expr_stmt|;
 name|discard

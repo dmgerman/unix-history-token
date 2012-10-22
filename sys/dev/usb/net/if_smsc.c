@@ -1065,6 +1065,7 @@ block|{
 name|usb_ticks_t
 name|start_ticks
 decl_stmt|;
+specifier|const
 name|usb_ticks_t
 name|max_ticks
 init|=
@@ -1148,9 +1149,14 @@ block|}
 do|while
 condition|(
 operator|(
+call|(
+name|usb_ticks_t
+call|)
+argument_list|(
 name|ticks
 operator|-
 name|start_ticks
+argument_list|)
 operator|)
 operator|<
 name|max_ticks
@@ -1192,6 +1198,7 @@ block|{
 name|usb_ticks_t
 name|start_ticks
 decl_stmt|;
+specifier|const
 name|usb_ticks_t
 name|max_ticks
 init|=
@@ -1372,9 +1379,14 @@ block|}
 do|while
 condition|(
 operator|(
+call|(
+name|usb_ticks_t
+call|)
+argument_list|(
 name|ticks
 operator|-
 name|start_ticks
+argument_list|)
 operator|)
 operator|<
 name|max_ticks
@@ -3760,6 +3772,27 @@ literal|2
 expr_stmt|;
 block|}
 comment|/* Finally enqueue the mbuf on the receive queue */
+comment|/* Remove 4 trailing bytes */
+if|if
+condition|(
+name|pktlen
+operator|<
+operator|(
+literal|4
+operator|+
+name|ETHER_HDR_LEN
+operator|)
+condition|)
+block|{
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+goto|goto
+name|tr_setup
+goto|;
+block|}
 name|uether_rxmbuf
 argument_list|(
 name|ue
@@ -3767,6 +3800,8 @@ argument_list|,
 name|m
 argument_list|,
 name|pktlen
+operator|-
+literal|4
 argument_list|)
 expr_stmt|;
 block|}
@@ -4256,7 +4291,6 @@ operator|->
 name|sc_ue
 argument_list|)
 decl_stmt|;
-empty_stmt|;
 name|SMSC_LOCK_ASSERT
 argument_list|(
 name|sc
@@ -4464,6 +4498,7 @@ decl_stmt|;
 name|usb_ticks_t
 name|start_ticks
 decl_stmt|;
+specifier|const
 name|usb_ticks_t
 name|max_ticks
 init|=
@@ -4555,9 +4590,14 @@ do|;
 if|if
 condition|(
 operator|(
+call|(
+name|usb_ticks_t
+call|)
+argument_list|(
 name|ticks
 operator|-
 name|start_ticks
+argument_list|)
 operator|)
 operator|>=
 name|max_ticks

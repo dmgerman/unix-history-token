@@ -384,6 +384,12 @@ argument_list|(
 name|ud_info
 argument_list|)
 expr_stmt|;
+name|disk_cleanup
+argument_list|(
+operator|&
+name|userboot_disk
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -488,6 +494,8 @@ name|i
 index|]
 operator|.
 name|sectorsize
+argument_list|,
+literal|0
 argument_list|)
 operator|==
 literal|0
@@ -613,6 +621,8 @@ name|d_unit
 index|]
 operator|.
 name|sectorsize
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 return|;

@@ -2285,9 +2285,6 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 name|ifp
 operator|=
 name|ifunit
@@ -2327,12 +2324,6 @@ if|#
 directive|if
 literal|1
 comment|/* XXX mucking with a drivers ifqueue size is ugly but we need it 	 * to queue a lot of packets to get close to line rate on a gigabit 	 * interface with small packets. 	 * XXX we should restore the original value at stop or disconnect 	 */
-name|s
-operator|=
-name|splimp
-argument_list|()
-expr_stmt|;
-comment|/* XXX is this required? */
 if|if
 condition|(
 name|ifp
@@ -2366,11 +2357,6 @@ operator|=
 name|NG_SOURCE_DRIVER_IFQ_MAXLEN
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 endif|#
 directive|endif
 return|return

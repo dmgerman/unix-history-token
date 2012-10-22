@@ -629,14 +629,14 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%*lu "
+literal|"%*ju "
 argument_list|,
 name|dp
 operator|->
 name|s_inode
 argument_list|,
 operator|(
-name|u_long
+name|uintmax_t
 operator|)
 name|sp
 operator|->
@@ -1576,7 +1576,7 @@ name|chcnt
 operator|+=
 name|printf
 argument_list|(
-literal|"%*lu "
+literal|"%*ju "
 argument_list|,
 operator|(
 name|int
@@ -1584,7 +1584,7 @@ operator|)
 name|inodefield
 argument_list|,
 operator|(
-name|u_long
+name|uintmax_t
 operator|)
 name|sp
 operator|->

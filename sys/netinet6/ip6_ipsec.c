@@ -455,8 +455,6 @@ modifier|*
 name|sp
 decl_stmt|;
 name|int
-name|s
-decl_stmt|,
 name|error
 decl_stmt|;
 name|mtag
@@ -469,11 +467,6 @@ name|PACKET_TAG_IPSEC_IN_DONE
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|splnet
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -530,11 +523,6 @@ name|NULL
 condition|)
 block|{
 comment|/* NB: can happen if error */
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 comment|/*XXX error stat???*/
 name|DPRINTF
 argument_list|(
@@ -564,11 +552,6 @@ name|KEY_FREESP
 argument_list|(
 operator|&
 name|sp
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 if|if
@@ -630,8 +613,6 @@ modifier|*
 name|sp
 decl_stmt|;
 name|int
-name|s
-decl_stmt|,
 name|error
 decl_stmt|;
 comment|/* 	 * enforce IPsec policy checking if we are seeing last header. 	 * note that we do not visit this with protocols with pcb layer 	 * code - like udp/tcp/raw ip. 	 */
@@ -672,11 +653,6 @@ name|PACKET_TAG_IPSEC_IN_DONE
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|splnet
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -770,11 +746,6 @@ return|return
 literal|1
 return|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|error
@@ -1124,7 +1095,6 @@ name|sp
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* XXX splx(s); */
 goto|goto
 name|done
 goto|;
@@ -1148,6 +1118,11 @@ operator|&
 name|CSUM_DELAY_DATA
 condition|)
 block|{
+name|struct
+name|ip
+modifier|*
+name|ip
+decl_stmt|;
 name|ipseclog
 argument_list|(
 operator|(
@@ -1159,10 +1134,45 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* XXX: in_delayed_cksum() expects net byte order */
+name|ip
+operator|=
+name|mtod
+argument_list|(
+operator|*
+name|m
+argument_list|,
+expr|struct
+name|ip
+operator|*
+argument_list|)
+expr_stmt|;
+name|ip
+operator|->
+name|ip_len
+operator|=
+name|htons
+argument_list|(
+name|ip
+operator|->
+name|ip_len
+argument_list|)
+expr_stmt|;
 name|in_delayed_cksum
 argument_list|(
 operator|*
 name|m
+argument_list|)
+expr_stmt|;
+name|ip
+operator|->
+name|ip_len
+operator|=
+name|ntohs
+argument_list|(
+name|ip
+operator|->
+name|ip_len
 argument_list|)
 expr_stmt|;
 operator|(

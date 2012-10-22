@@ -331,6 +331,9 @@ name|T
 parameter_list|,
 name|StringRef
 name|TT
+parameter_list|,
+name|StringRef
+name|CPU
 parameter_list|)
 function_decl|;
 name|MCAsmBackend
@@ -344,6 +347,9 @@ name|T
 parameter_list|,
 name|StringRef
 name|TT
+parameter_list|,
+name|StringRef
+name|CPU
 parameter_list|)
 function_decl|;
 comment|/// createX86MachObjectWriter - Construct an X86 Mach-O object writer.

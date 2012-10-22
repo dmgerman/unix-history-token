@@ -1129,6 +1129,10 @@ name|buf_ring
 modifier|*
 name|br
 decl_stmt|;
+name|struct
+name|task
+name|txq_task
+decl_stmt|;
 endif|#
 directive|endif
 ifdef|#

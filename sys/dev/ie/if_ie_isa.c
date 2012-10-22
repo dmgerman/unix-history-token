@@ -3784,6 +3784,13 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|devs
+argument_list|,
+name|M_TEMP
+argument_list|)
+expr_stmt|;
 break|break;
 default|default:
 break|break;

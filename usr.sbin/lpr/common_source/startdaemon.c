@@ -223,13 +223,9 @@ parameter_list|)
 value|(strlen((unp)->sun_path) + 2)
 endif|#
 directive|endif
-name|seteuid
-argument_list|(
-name|euid
-argument_list|)
-expr_stmt|;
+name|PRIV_START
 name|connectres
-operator|=
+init|=
 name|connect
 argument_list|(
 name|s
@@ -248,12 +244,8 @@ operator|&
 name|un
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|seteuid
-argument_list|(
-name|uid
-argument_list|)
-expr_stmt|;
+decl_stmt|;
+name|PRIV_END
 if|if
 condition|(
 name|connectres

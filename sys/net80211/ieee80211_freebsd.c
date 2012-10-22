@@ -218,6 +218,26 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|wlanname
+index|[]
+init|=
+literal|"wlan"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|if_clone
+modifier|*
+name|wlan_cloner
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Allocate/free com structure in conjunction with ifnet;  * these routines are registered with if_register_com_alloc  * below and are called automatically by the ifnet code  * when the ifnet of the parent device is created.  */
 end_comment
@@ -516,9 +536,7 @@ name|ic_vap_create
 argument_list|(
 name|ic
 argument_list|,
-name|ifc
-operator|->
-name|ifc_name
+name|wlanname
 argument_list|,
 name|unit
 argument_list|,
@@ -608,16 +626,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_expr_stmt
-name|IFC_SIMPLE_DECLARE
-argument_list|(
-name|wlan
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_function
 name|void
 name|ieee80211_vap_destroy
@@ -630,7 +638,6 @@ parameter_list|)
 block|{
 name|if_clone_destroyif
 argument_list|(
-operator|&
 name|wlan_cloner
 argument_list|,
 name|vap
@@ -4106,10 +4113,17 @@ return|return
 name|ENOMEM
 return|;
 block|}
-name|if_clone_attach
-argument_list|(
-operator|&
 name|wlan_cloner
+operator|=
+name|if_clone_simple
+argument_list|(
+name|wlanname
+argument_list|,
+name|wlan_clone_create
+argument_list|,
+name|wlan_clone_destroy
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|if_register_com_alloc
@@ -4134,7 +4148,6 @@ argument_list|)
 expr_stmt|;
 name|if_clone_detach
 argument_list|(
-operator|&
 name|wlan_cloner
 argument_list|)
 expr_stmt|;
@@ -4168,7 +4181,7 @@ name|moduledata_t
 name|wlan_mod
 init|=
 block|{
-literal|"wlan"
+name|wlanname
 block|,
 name|wlan_modevent
 block|,

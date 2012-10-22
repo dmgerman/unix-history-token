@@ -794,7 +794,7 @@ argument_list|)
 expr_stmt|;
 name|result
 operator|=
-literal|0
+name|BUS_PROBE_DEFAULT
 expr_stmt|;
 block|}
 name|bt_mca_release_resources
@@ -912,11 +912,10 @@ comment|/* flags	*/
 literal|0
 argument_list|,
 comment|/* lockfunc	*/
-name|busdma_lock_mutex
+name|NULL
 argument_list|,
 comment|/* lockarg	*/
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 operator|&
 name|bt
@@ -1006,11 +1005,10 @@ comment|/* flags	*/
 literal|0
 argument_list|,
 comment|/* lockfunc	*/
-name|busdma_lock_mutex
+name|NULL
 argument_list|,
 comment|/* lockarg	*/
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 operator|&
 name|bt

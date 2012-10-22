@@ -438,9 +438,6 @@ modifier|*
 name|dpt
 decl_stmt|;
 name|int
-name|s
-decl_stmt|;
-name|int
 name|error
 init|=
 literal|0
@@ -457,6 +454,11 @@ operator|->
 name|dev
 operator|=
 name|dev
+expr_stmt|;
+name|dpt_alloc
+argument_list|(
+name|dev
+argument_list|)
 expr_stmt|;
 name|dpt
 operator|->
@@ -492,19 +494,16 @@ goto|goto
 name|bad
 goto|;
 block|}
-name|dpt_alloc
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 comment|/* Allocate a dmatag representing the capabilities of this attachment */
-comment|/* XXX Should be a child of the EISA bus dma tag */
 if|if
 condition|(
 name|bus_dma_tag_create
 argument_list|(
 comment|/* parent    */
-name|NULL
+name|bus_get_dma_tag
+argument_list|(
+name|dev
+argument_list|)
 argument_list|,
 comment|/* alignemnt */
 literal|1
@@ -538,11 +537,10 @@ comment|/* flags     */
 literal|0
 argument_list|,
 comment|/* lockfunc  */
-name|busdma_lock_mutex
+name|NULL
 argument_list|,
 comment|/* lockarg   */
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 operator|&
 name|dpt
@@ -561,11 +559,6 @@ goto|goto
 name|bad
 goto|;
 block|}
-name|s
-operator|=
-name|splcam
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|dpt_init
@@ -576,11 +569,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|ENXIO
@@ -593,11 +581,6 @@ comment|/* Register with the XPT */
 name|dpt_attach
 argument_list|(
 name|dpt
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 if|if
@@ -613,6 +596,8 @@ argument_list|,
 name|INTR_TYPE_CAM
 operator||
 name|INTR_ENTROPY
+operator||
+name|INTR_MPSAFE
 argument_list|,
 name|NULL
 argument_list|,

@@ -1767,17 +1767,6 @@ name|bio
 struct_decl|;
 end_struct_decl
 
-begin_comment
-comment|/* TODO: reassess this QD variable - its a workaround for Chatham2 issue */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NVME_QD
-value|(200)
-end_define
-
 begin_struct_decl
 struct_decl|struct
 name|nvme_namespace
@@ -1847,7 +1836,7 @@ comment|/* NVM I/O functions */
 end_comment
 
 begin_function_decl
-name|void
+name|int
 name|nvme_ns_cmd_write
 parameter_list|(
 name|struct
@@ -1876,7 +1865,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|nvme_ns_cmd_read
 parameter_list|(
 name|struct
@@ -1905,7 +1894,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|nvme_ns_cmd_deallocate
 parameter_list|(
 name|struct
@@ -1931,7 +1920,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|nvme_ns_cmd_flush
 parameter_list|(
 name|struct

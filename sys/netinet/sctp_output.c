@@ -31970,6 +31970,7 @@ block|}
 end_function
 
 begin_function_decl
+specifier|static
 name|int
 name|sctp_med_chunk_output
 parameter_list|(
@@ -56326,13 +56327,6 @@ name|sctp_tmit_chunk
 modifier|*
 name|chk
 decl_stmt|;
-name|asoc
-operator|=
-operator|&
-name|stcb
-operator|->
-name|asoc
-expr_stmt|;
 name|SCTP_TCB_LOCK_ASSERT
 argument_list|(
 name|stcb
@@ -56347,6 +56341,13 @@ condition|)
 block|{
 return|return;
 block|}
+name|asoc
+operator|=
+operator|&
+name|stcb
+operator|->
+name|asoc
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|chk
@@ -56696,7 +56697,7 @@ name|uint32_t
 name|last_sent
 parameter_list|)
 block|{
-name|int
+name|uint16_t
 name|len
 decl_stmt|,
 name|old_len
@@ -56936,6 +56937,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|sctp_add_stream_reset_in
 parameter_list|(
@@ -56955,7 +56957,7 @@ name|uint32_t
 name|seq
 parameter_list|)
 block|{
-name|int
+name|uint16_t
 name|len
 decl_stmt|,
 name|old_len
@@ -57177,6 +57179,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|sctp_add_stream_reset_tsn
 parameter_list|(
@@ -57189,7 +57192,7 @@ name|uint32_t
 name|seq
 parameter_list|)
 block|{
-name|int
+name|uint16_t
 name|len
 decl_stmt|,
 name|old_len
@@ -57359,7 +57362,7 @@ name|uint32_t
 name|result
 parameter_list|)
 block|{
-name|int
+name|uint16_t
 name|len
 decl_stmt|,
 name|old_len
@@ -57541,7 +57544,7 @@ name|uint32_t
 name|recv_next
 parameter_list|)
 block|{
-name|int
+name|uint16_t
 name|len
 decl_stmt|,
 name|old_len
@@ -57736,7 +57739,7 @@ name|uint16_t
 name|adding
 parameter_list|)
 block|{
-name|int
+name|uint16_t
 name|len
 decl_stmt|,
 name|old_len
@@ -57923,7 +57926,7 @@ name|uint16_t
 name|adding
 parameter_list|)
 block|{
-name|int
+name|uint16_t
 name|len
 decl_stmt|,
 name|old_len

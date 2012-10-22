@@ -1026,7 +1026,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Indicate 'ipfw' version  * 1: from FreeBSD 7.2  * 0: from FreeBSD 8  * -1: unknow (for now is unused)  *  * It is update when a IP_DUMMYNET_DEL or IP_DUMMYNET_CONFIGURE request arrives  * NOTE: if a IP_DUMMYNET_GET arrives and the 'ipfw' version is unknow,  *       it is suppose to be the FreeBSD 8 version.  */
+comment|/* Indicate 'ipfw' version  * 1: from FreeBSD 7.2  * 0: from FreeBSD 8  * -1: unknown (for now is unused)  *  * It is update when a IP_DUMMYNET_DEL or IP_DUMMYNET_CONFIGURE request arrives  * NOTE: if a IP_DUMMYNET_GET arrives and the 'ipfw' version is unknown,  *       it is suppose to be the FreeBSD 8 version.  */
 end_comment
 
 begin_decl_stmt

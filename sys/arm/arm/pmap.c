@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -87,6 +93,12 @@ begin_include
 include|#
 directive|include
 file|<sys/msgbuf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
 end_include
 
 begin_include
@@ -177,18 +189,6 @@ begin_include
 include|#
 directive|include
 file|<vm/vm_extern.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/lock.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mutex.h>
 end_include
 
 begin_include
@@ -368,6 +368,20 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|vm_paddr_t
+name|pmap_extract_locked
+parameter_list|(
+name|pmap_t
+name|pmap
+parameter_list|,
+name|vm_offset_t
+name|va
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|void
 name|pmap_fix_cache
 parameter_list|(
@@ -512,14 +526,6 @@ end_decl_stmt
 begin_decl_stmt
 name|vm_paddr_t
 name|kernel_l1pa
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-modifier|*
-name|end
 decl_stmt|;
 end_decl_stmt
 
@@ -704,18 +710,6 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/*  * Which pmap is currently 'live' in the cache  *  * XXXSCW: Fix for SMP ...  */
-end_comment
-
-begin_decl_stmt
-name|union
-name|pmap_cache_state
-modifier|*
-name|pmap_cache_state
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -973,30 +967,6 @@ parameter_list|(
 name|va
 parameter_list|)
 value|(((va)& L1_S_FRAME) + L1_S_SIZE)
-end_define
-
-begin_comment
-comment|/*  * L2 allocation.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|pmap_alloc_l2_dtable
-parameter_list|()
-define|\
-value|(void*)uma_zalloc(l2table_zone, M_NOWAIT|M_USE_RESERVE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|pmap_free_l2_dtable
-parameter_list|(
-name|l2
-parameter_list|)
-define|\
-value|uma_zfree(l2table_zone, l2)
 end_define
 
 begin_comment
@@ -2605,8 +2575,6 @@ name|NULL
 condition|)
 block|{
 comment|/* 		 * No mapping at this address, as there is 		 * no entry in the L1 table. 		 * Need to allocate a new l2_dtable. 		 */
-name|again_l2table
-label|:
 name|PMAP_UNLOCK
 argument_list|(
 name|pm
@@ -2623,8 +2591,12 @@ condition|(
 operator|(
 name|l2
 operator|=
-name|pmap_alloc_l2_dtable
-argument_list|()
+name|uma_zalloc
+argument_list|(
+name|l2table_zone
+argument_list|,
+name|M_NOWAIT
+argument_list|)
 operator|)
 operator|==
 name|NULL
@@ -2673,33 +2645,12 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|PMAP_UNLOCK
-argument_list|(
-name|pm
-argument_list|)
-expr_stmt|;
-name|rw_wunlock
-argument_list|(
-operator|&
-name|pvh_global_lock
-argument_list|)
-expr_stmt|;
+comment|/* 			 * Someone already allocated the l2_dtable while 			 * we were doing the same. 			 */
 name|uma_zfree
 argument_list|(
 name|l2table_zone
 argument_list|,
 name|l2
-argument_list|)
-expr_stmt|;
-name|rw_wlock
-argument_list|(
-operator|&
-name|pvh_global_lock
-argument_list|)
-expr_stmt|;
-name|PMAP_LOCK
-argument_list|(
-name|pm
 argument_list|)
 expr_stmt|;
 name|l2
@@ -2714,16 +2665,6 @@ name|l1idx
 argument_list|)
 index|]
 expr_stmt|;
-if|if
-condition|(
-name|l2
-operator|==
-name|NULL
-condition|)
-goto|goto
-name|again_l2table
-goto|;
-comment|/* 			 * Someone already allocated the l2_dtable while 			 * we were doing the same. 			 */
 block|}
 else|else
 block|{
@@ -2781,8 +2722,6 @@ modifier|*
 name|ptep
 decl_stmt|;
 comment|/* 		 * No L2 page table has been allocated. Chances are, this 		 * is because we just allocated the l2_dtable, above. 		 */
-name|again_ptep
-label|:
 name|PMAP_UNLOCK
 argument_list|(
 name|pm
@@ -2796,17 +2735,11 @@ argument_list|)
 expr_stmt|;
 name|ptep
 operator|=
-operator|(
-name|void
-operator|*
-operator|)
 name|uma_zalloc
 argument_list|(
 name|l2zone
 argument_list|,
 name|M_NOWAIT
-operator||
-name|M_USE_RESERVE
 argument_list|)
 expr_stmt|;
 name|rw_wlock
@@ -2830,17 +2763,6 @@ literal|0
 condition|)
 block|{
 comment|/* We lost the race. */
-name|PMAP_UNLOCK
-argument_list|(
-name|pm
-argument_list|)
-expr_stmt|;
-name|rw_wunlock
-argument_list|(
-operator|&
-name|pvh_global_lock
-argument_list|)
-expr_stmt|;
 name|uma_zfree
 argument_list|(
 name|l2zone
@@ -2848,28 +2770,6 @@ argument_list|,
 name|ptep
 argument_list|)
 expr_stmt|;
-name|rw_wlock
-argument_list|(
-operator|&
-name|pvh_global_lock
-argument_list|)
-expr_stmt|;
-name|PMAP_LOCK
-argument_list|(
-name|pm
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|l2b
-operator|->
-name|l2b_kva
-operator|==
-literal|0
-condition|)
-goto|goto
-name|again_ptep
-goto|;
 return|return
 operator|(
 name|l2b
@@ -2914,8 +2814,10 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
-name|pmap_free_l2_dtable
+name|uma_zfree
 argument_list|(
+name|l2table_zone
+argument_list|,
 name|l2
 argument_list|)
 expr_stmt|;
@@ -3202,8 +3104,10 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
-name|pmap_free_l2_dtable
+name|uma_zfree
 argument_list|(
+name|l2table_zone
+argument_list|,
 name|l2
 argument_list|)
 expr_stmt|;
@@ -6586,73 +6490,6 @@ name|PHYSADDR
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * init the pv free list 	 */
-name|pvzone
-operator|=
-name|uma_zcreate
-argument_list|(
-literal|"PV ENTRY"
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|pv_entry
-argument_list|)
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|UMA_ALIGN_PTR
-argument_list|,
-name|UMA_ZONE_VM
-operator||
-name|UMA_ZONE_NOFREE
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Now it is safe to enable pv_table recording. 	 */
-name|PDEBUG
-argument_list|(
-literal|1
-argument_list|,
-name|printf
-argument_list|(
-literal|"pmap_init: done!\n"
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|TUNABLE_INT_FETCH
-argument_list|(
-literal|"vm.pmap.shpgperproc"
-argument_list|,
-operator|&
-name|shpgperproc
-argument_list|)
-expr_stmt|;
-name|pv_entry_max
-operator|=
-name|shpgperproc
-operator|*
-name|maxproc
-operator|+
-name|cnt
-operator|.
-name|v_page_count
-expr_stmt|;
-name|pv_entry_high_water
-operator|=
-literal|9
-operator|*
-operator|(
-name|pv_entry_max
-operator|/
-literal|10
-operator|)
-expr_stmt|;
 name|l2zone
 operator|=
 name|uma_zcreate
@@ -6703,6 +6540,52 @@ operator||
 name|UMA_ZONE_NOFREE
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Initialize the PV entry allocator. 	 */
+name|pvzone
+operator|=
+name|uma_zcreate
+argument_list|(
+literal|"PV ENTRY"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|pv_entry
+argument_list|)
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|UMA_ALIGN_PTR
+argument_list|,
+name|UMA_ZONE_VM
+operator||
+name|UMA_ZONE_NOFREE
+argument_list|)
+expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"vm.pmap.shpgperproc"
+argument_list|,
+operator|&
+name|shpgperproc
+argument_list|)
+expr_stmt|;
+name|pv_entry_max
+operator|=
+name|shpgperproc
+operator|*
+name|maxproc
+operator|+
+name|cnt
+operator|.
+name|v_page_count
+expr_stmt|;
 name|uma_zone_set_obj
 argument_list|(
 name|pvzone
@@ -6711,6 +6594,27 @@ operator|&
 name|pvzone_obj
 argument_list|,
 name|pv_entry_max
+argument_list|)
+expr_stmt|;
+name|pv_entry_high_water
+operator|=
+literal|9
+operator|*
+operator|(
+name|pv_entry_max
+operator|/
+literal|10
+operator|)
+expr_stmt|;
+comment|/* 	 * Now it is safe to enable pv_table recording. 	 */
+name|PDEBUG
+argument_list|(
+literal|1
+argument_list|,
+name|printf
+argument_list|(
+literal|"pmap_init: done!\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -10786,6 +10690,27 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|vm_paddr_t
+name|pmap_kextract
+parameter_list|(
+name|vm_offset_t
+name|va
+parameter_list|)
+block|{
+return|return
+operator|(
+name|pmap_extract_locked
+argument_list|(
+name|kernel_pmap
+argument_list|,
+name|va
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * remove a page from the kernel pagetables  */
 end_comment
@@ -12482,7 +12407,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	The page queues and pmap must be locked.  */
+comment|/*  *	The pvh global and pmap locks must be held.  */
 end_comment
 
 begin_function
@@ -13947,7 +13872,49 @@ name|vm_paddr_t
 name|pmap_extract
 parameter_list|(
 name|pmap_t
-name|pm
+name|pmap
+parameter_list|,
+name|vm_offset_t
+name|va
+parameter_list|)
+block|{
+name|vm_paddr_t
+name|pa
+decl_stmt|;
+name|PMAP_LOCK
+argument_list|(
+name|pmap
+argument_list|)
+expr_stmt|;
+name|pa
+operator|=
+name|pmap_extract_locked
+argument_list|(
+name|pmap
+argument_list|,
+name|va
+argument_list|)
+expr_stmt|;
+name|PMAP_UNLOCK
+argument_list|(
+name|pmap
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|pa
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|vm_paddr_t
+name|pmap_extract_locked
+parameter_list|(
+name|pmap_t
+name|pmap
 parameter_list|,
 name|vm_offset_t
 name|va
@@ -13973,6 +13940,17 @@ decl_stmt|;
 name|u_int
 name|l1idx
 decl_stmt|;
+if|if
+condition|(
+name|pmap
+operator|!=
+name|kernel_pmap
+condition|)
+name|PMAP_ASSERT_LOCKED
+argument_list|(
+name|pmap
+argument_list|)
+expr_stmt|;
 name|l1idx
 operator|=
 name|L1_IDX
@@ -13980,14 +13958,9 @@ argument_list|(
 name|va
 argument_list|)
 expr_stmt|;
-name|PMAP_LOCK
-argument_list|(
-name|pm
-argument_list|)
-expr_stmt|;
 name|l1pd
 operator|=
-name|pm
+name|pmap
 operator|->
 name|pm_l1
 operator|->
@@ -14004,16 +13977,15 @@ name|l1pd
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * These should only happen for pmap_kernel() 		 */
+comment|/* 		 * These should only happen for the kernel pmap. 		 */
 name|KASSERT
 argument_list|(
-name|pm
+name|pmap
 operator|==
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 argument_list|,
 operator|(
-literal|"huh"
+literal|"unexpected section"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -14059,7 +14031,7 @@ block|{
 comment|/* 		 * Note that we can't rely on the validity of the L1 		 * descriptor as an indication that a mapping exists. 		 * We have to look it up in the L2 dtable. 		 */
 name|l2
 operator|=
-name|pm
+name|pmap
 operator|->
 name|pm_l2
 index|[
@@ -14093,21 +14065,13 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|PMAP_UNLOCK
-argument_list|(
-name|pm
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
-name|ptep
+name|pte
 operator|=
-operator|&
 name|ptep
 index|[
 name|l2pte_index
@@ -14116,29 +14080,17 @@ name|va
 argument_list|)
 index|]
 expr_stmt|;
-name|pte
-operator|=
-operator|*
-name|ptep
-expr_stmt|;
 if|if
 condition|(
 name|pte
 operator|==
 literal|0
 condition|)
-block|{
-name|PMAP_UNLOCK
-argument_list|(
-name|pm
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
 switch|switch
 condition|(
 name|pte
@@ -14182,11 +14134,6 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|PMAP_UNLOCK
-argument_list|(
-name|pm
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|pa
@@ -17078,7 +17025,7 @@ condition|(
 name|managed
 condition|)
 block|{
-comment|/* 		 * the ARM pmap tries to maintain a per-mapping 		 * reference bit.  The trouble is that it's kept in 		 * the PV entry, not the PTE, so it's costly to access 		 * here.  You would need to acquire the page queues 		 * lock, call pmap_find_pv(), and introduce a custom 		 * version of vm_page_pa_tryrelock() that releases and 		 * reacquires the page queues lock.  In the end, I 		 * doubt it's worthwhile.  This may falsely report 		 * the given address as referenced. 		 */
+comment|/* 		 * The ARM pmap tries to maintain a per-mapping 		 * reference bit.  The trouble is that it's kept in 		 * the PV entry, not the PTE, so it's costly to access 		 * here.  You would need to acquire the pvh global 		 * lock, call pmap_find_pv(), and introduce a custom 		 * version of vm_page_pa_tryrelock() that releases and 		 * reacquires the pvh global lock.  In the end, I 		 * doubt it's worthwhile.  This may falsely report 		 * the given address as referenced. 		 */
 if|if
 condition|(
 operator|(

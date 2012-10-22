@@ -4516,8 +4516,11 @@ return|return;
 block|}
 name|printf
 argument_list|(
-literal|"Clearing journal flags from inode %d\n"
+literal|"Clearing journal flags from inode %ju\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ino
 argument_list|)
 expr_stmt|;
@@ -4849,8 +4852,11 @@ condition|)
 break|break;
 name|printf
 argument_list|(
-literal|"Using inode %d in cg %d for %jd byte journal\n"
+literal|"Using inode %ju in cg %d for %jd byte journal\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ino
 argument_list|,
 name|cgp

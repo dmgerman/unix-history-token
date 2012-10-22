@@ -2441,6 +2441,10 @@ literal|0x01
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Fall though */
+case|case
+name|HDA_CODEC_VT1818S
+case|:
 comment|/* Don't bypass mixer. */
 name|hda_command
 argument_list|(

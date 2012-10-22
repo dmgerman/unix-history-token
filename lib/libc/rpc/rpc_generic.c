@@ -2556,17 +2556,6 @@ directive|endif
 name|u_int16_t
 name|port
 decl_stmt|;
-if|if
-condition|(
-name|nbuf
-operator|->
-name|len
-operator|<=
-literal|0
-condition|)
-return|return
-name|NULL
-return|;
 switch|switch
 condition|(
 name|af

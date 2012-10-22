@@ -691,7 +691,7 @@ value|0x0002
 end_define
 
 begin_comment
-comment|/* Virtual Channel */
+comment|/* Virtual Channel if MFVC Ext Cap not set */
 end_comment
 
 begin_define
@@ -763,6 +763,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCIZ_VC2
+value|0x0009
+end_define
+
+begin_comment
+comment|/* Virtual Channel if MFVC Ext Cap set */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCIZ_RCRB
 value|0x000a
 end_define
@@ -780,6 +791,17 @@ end_define
 
 begin_comment
 comment|/* Vendor Unique */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIZ_CAC
+value|0x000c
+end_define
+
+begin_comment
+comment|/* Configuration Access Correction -- obsolete */
 end_comment
 
 begin_define
@@ -829,12 +851,45 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCIZ_MRIOV
+value|0x0011
+end_define
+
+begin_comment
+comment|/* Multiple Root IO Virtualization */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCIZ_MULTICAST
 value|0x0012
 end_define
 
 begin_comment
 comment|/* Multicast */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIZ_PAGE_REQ
+value|0x0013
+end_define
+
+begin_comment
+comment|/* Page Request */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIZ_AMD
+value|0x0014
+end_define
+
+begin_comment
+comment|/* Reserved for AMD */
 end_comment
 
 begin_define
@@ -890,6 +945,61 @@ end_define
 
 begin_comment
 comment|/* Secondary PCI Express */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIZ_PMUX
+value|0x001a
+end_define
+
+begin_comment
+comment|/* Protocol Multiplexing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIZ_PASID
+value|0x001b
+end_define
+
+begin_comment
+comment|/* Process Address Space ID */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIZ_LN_REQ
+value|0x001c
+end_define
+
+begin_comment
+comment|/* LN Requester */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIZ_DPC
+value|0x001d
+end_define
+
+begin_comment
+comment|/* Downstream Porto Containment */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIZ_L1PM
+value|0x001e
+end_define
+
+begin_comment
+comment|/* L1 PM Substates */
 end_comment
 
 begin_comment

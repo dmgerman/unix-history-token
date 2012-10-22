@@ -419,6 +419,9 @@ name|T
 parameter_list|,
 name|StringRef
 name|TT
+parameter_list|,
+name|StringRef
+name|CPU
 parameter_list|)
 function_decl|;
 typedef|typedef
@@ -1215,6 +1218,9 @@ name|createMCAsmBackend
 argument_list|(
 name|StringRef
 name|Triple
+argument_list|,
+name|StringRef
+name|CPU
 argument_list|)
 decl|const
 block|{
@@ -1233,6 +1239,8 @@ operator|*
 name|this
 argument_list|,
 name|Triple
+argument_list|,
+name|CPU
 argument_list|)
 return|;
 block|}
@@ -4252,6 +4260,8 @@ argument_list|(
 argument|const Target&T
 argument_list|,
 argument|StringRef Triple
+argument_list|,
+argument|StringRef CPU
 argument_list|)
 block|{
 return|return
@@ -4261,6 +4271,8 @@ argument_list|(
 name|T
 argument_list|,
 name|Triple
+argument_list|,
+name|CPU
 argument_list|)
 return|;
 block|}

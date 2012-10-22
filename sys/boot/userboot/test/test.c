@@ -1554,7 +1554,7 @@ end_function
 
 begin_decl_stmt
 name|struct
-name|loader_callbacks_v1
+name|loader_callbacks
 name|cb
 init|=
 block|{
@@ -1713,7 +1713,7 @@ name|func
 function_decl|)
 parameter_list|(
 name|struct
-name|loader_callbacks_v1
+name|loader_callbacks
 modifier|*
 parameter_list|,
 name|void

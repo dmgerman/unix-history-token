@@ -28,13 +28,6 @@ file|"ed.h"
 end_include
 
 begin_decl_stmt
-specifier|extern
-name|int
-name|patlock
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|const
 name|char
 modifier|*

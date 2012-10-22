@@ -451,25 +451,26 @@ modifier|*
 modifier|*
 name|new_array
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|new_size
-operator|<
+operator|>=
 name|queue
 operator|->
 name|entries
-condition|)
-name|panic
-argument_list|(
-literal|"camq_resize: New queue size can't accomodate "
-literal|"queued entries."
+argument_list|,
+operator|(
+literal|"camq_resize: "
+literal|"New queue size can't accomodate queued entries (%d< %d)."
+operator|,
+name|new_size
+operator|,
+name|queue
+operator|->
+name|entries
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|new_array
 operator|=
 operator|(
@@ -590,26 +591,29 @@ modifier|*
 name|new_entry
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|queue
 operator|->
 name|entries
-operator|>=
+operator|<
 name|queue
 operator|->
 name|array_size
-condition|)
-name|panic
-argument_list|(
-literal|"camq_insert: Attempt to insert into a full queue"
+argument_list|,
+operator|(
+literal|"camq_insert: Attempt to insert into a full queue (%d>= %d)"
+operator|,
+name|queue
+operator|->
+name|entries
+operator|,
+name|queue
+operator|->
+name|array_size
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|queue
 operator|->
 name|entries
@@ -1334,6 +1338,12 @@ operator|->
 name|queue
 argument_list|,
 name|new_size
+operator|+
+operator|(
+name|CAM_RL_VALUES
+operator|-
+literal|1
+operator|)
 argument_list|)
 operator|==
 name|CAM_REQ_CMP
@@ -1402,6 +1412,12 @@ operator|->
 name|queue
 argument_list|,
 name|openings
+operator|+
+operator|(
+name|CAM_RL_VALUES
+operator|-
+literal|1
+operator|)
 argument_list|)
 operator|!=
 literal|0

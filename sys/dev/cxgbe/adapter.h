@@ -1104,12 +1104,6 @@ name|bus_addr_t
 name|ba
 decl_stmt|;
 comment|/* bus address of descriptor ring */
-name|char
-name|lockname
-index|[
-literal|16
-index|]
-decl_stmt|;
 name|uint32_t
 name|flags
 decl_stmt|;
@@ -1661,11 +1655,12 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|member2struct
+name|__containerof
 argument_list|(
-name|sge_rxq
-argument_list|,
 name|iq
+argument_list|,
+expr|struct
+name|sge_rxq
 argument_list|,
 name|iq
 argument_list|)
@@ -1722,11 +1717,12 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|member2struct
+name|__containerof
 argument_list|(
-name|sge_ofld_rxq
-argument_list|,
 name|iq
+argument_list|,
+expr|struct
+name|sge_ofld_rxq
 argument_list|,
 name|iq
 argument_list|)

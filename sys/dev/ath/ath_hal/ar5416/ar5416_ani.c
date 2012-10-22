@@ -3648,7 +3648,7 @@ name|ah_cycleCount
 expr_stmt|;
 name|aniState
 operator|->
-name|txFrameCount
+name|rxFrameCount
 operator|=
 name|AH5416
 argument_list|(
@@ -3659,7 +3659,7 @@ name|ah_rxBusy
 expr_stmt|;
 name|aniState
 operator|->
-name|rxFrameCount
+name|txFrameCount
 operator|=
 name|AH5416
 argument_list|(

@@ -3902,15 +3902,9 @@ name|dev
 argument_list|,
 literal|"No presence detection support at nid %d\n"
 argument_list|,
-name|as
-index|[
-name|i
-index|]
-operator|.
-name|pins
-index|[
-literal|15
-index|]
+name|w
+operator|->
+name|nid
 argument_list|)
 expr_stmt|;
 block|}
@@ -3933,7 +3927,7 @@ argument_list|(
 argument|device_printf(devinfo->dev,
 literal|"Headphones redirection for "
 literal|"association %d nid=%d using %s.\n"
-argument|, 					    w->bindas, w->nid, 					    (poll !=
+argument|, 					    w->bindas, w->nid, 					    (w->unsol<
 literal|0
 argument|) ?
 literal|"polling"
@@ -7064,7 +7058,6 @@ name|HDA_PARAM_PIN_CAP
 argument_list|)
 argument_list|)
 expr_stmt|;
-empty_stmt|;
 name|w
 operator|->
 name|wclass

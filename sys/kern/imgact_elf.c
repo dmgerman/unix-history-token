@@ -2976,8 +2976,6 @@ init|=
 literal|0
 decl_stmt|;
 name|int
-name|vfslocked
-decl_stmt|,
 name|error
 decl_stmt|,
 name|i
@@ -3081,8 +3079,6 @@ name|nd
 argument_list|,
 name|LOOKUP
 argument_list|,
-name|MPSAFE
-operator||
 name|LOCKLEAF
 operator||
 name|FOLLOW
@@ -3093,10 +3089,6 @@ name|file
 argument_list|,
 name|curthread
 argument_list|)
-expr_stmt|;
-name|vfslocked
-operator|=
-literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -3122,13 +3114,6 @@ goto|goto
 name|fail
 goto|;
 block|}
-name|vfslocked
-operator|=
-name|NDHASGIANT
-argument_list|(
-name|nd
-argument_list|)
-expr_stmt|;
 name|NDFREE
 argument_list|(
 name|nd
@@ -3174,13 +3159,12 @@ goto|goto
 name|fail
 goto|;
 comment|/* 	 * Also make certain that the interpreter stays the same, so set 	 * its VV_TEXT flag, too. 	 */
+name|VOP_SET_TEXT
+argument_list|(
 name|nd
 operator|->
 name|ni_vp
-operator|->
-name|v_vflag
-operator||=
-name|VV_TEXT
+argument_list|)
 expr_stmt|;
 name|imgp
 operator|->
@@ -3515,11 +3499,6 @@ argument_list|(
 name|nd
 operator|->
 name|ni_vp
-argument_list|)
-expr_stmt|;
-name|VFS_UNLOCK_GIANT
-argument_list|(
-name|vfslocked
 argument_list|)
 expr_stmt|;
 name|free

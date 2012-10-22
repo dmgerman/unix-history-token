@@ -3552,7 +3552,6 @@ name|ifmultiaddr
 modifier|*
 name|ifma
 decl_stmt|;
-empty_stmt|;
 name|struct
 name|ipoib_mcast
 modifier|*

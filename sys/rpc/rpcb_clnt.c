@@ -1094,12 +1094,7 @@ comment|/* parameter checking */
 end_comment
 
 begin_comment
-unit|if (nconf == NULL) { 		rpc_createerr.cf_stat = RPC_UNKNOWNPROTO; 		return (NULL); 	}  	parms.r_addr = NULL; 	parms.r_netid = nconf->nc_netid;
-comment|/* 	* According to wire captures, the reference implementation 	* (OpenSolaris) sends a blank string here too. 	*/
-end_comment
-
-begin_comment
-unit|parms.r_owner = "";
+unit|if (nconf == NULL) { 		rpc_createerr.cf_stat = RPC_UNKNOWNPROTO; 		return (NULL); 	}  	parms.r_addr = NULL;
 comment|/* 	 * Use default total timeout if no timeout is specified. 	 */
 end_comment
 

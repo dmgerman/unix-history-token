@@ -2619,7 +2619,6 @@ name|bio_disk
 operator|->
 name|d_drv1
 decl_stmt|;
-empty_stmt|;
 comment|/* 	 * We advertise a block size and maximum I/O size up the stack; catch 	 * any attempts to not follow the rules. 	 */
 name|KASSERT
 argument_list|(

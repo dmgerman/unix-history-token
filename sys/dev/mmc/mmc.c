@@ -8133,12 +8133,6 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|ivar
-condition|)
-return|return;
 name|memcpy
 argument_list|(
 name|ivar
@@ -10660,7 +10654,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|mmc
 argument_list|,
-name|sdhci
+name|sdhci_pci
 argument_list|,
 name|mmc_driver
 argument_list|,

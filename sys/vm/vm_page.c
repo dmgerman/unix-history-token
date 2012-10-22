@@ -2617,7 +2617,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_sleep:  *  *	Sleep and release the page and page queues locks.  *  *	The object containing the given page must be locked.  */
+comment|/*  *	vm_page_sleep:  *  *	Sleep and release the page lock.  *  *	The object containing the given page must be locked.  */
 end_comment
 
 begin_function
@@ -2641,17 +2641,6 @@ name|object
 argument_list|,
 name|MA_OWNED
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|mtx_owned
-argument_list|(
-operator|&
-name|vm_page_queue_mtx
-argument_list|)
-condition|)
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -2762,7 +2751,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_insert:		[ internal use only ]  *  *	Inserts the given mem entry into the object and object list.  *  *	The pagetables are not updated but will presumably fault the page  *	in if necessary, or if a kernel page the caller will at some point  *	enter the page into the kernel's pmap.  We are not allowed to block  *	here so we *can't* do this anyway.  *  *	The object and page must be locked.  *	This routine may not block.  */
+comment|/*  *	vm_page_insert:		[ internal use only ]  *  *	Inserts the given mem entry into the object and object list.  *  *	The pagetables are not updated but will presumably fault the page  *	in if necessary, or if a kernel page the caller will at some point  *	enter the page into the kernel's pmap.  We are not allowed to sleep  *	here so we *can't* do this anyway.  *  *	The object must be locked.  */
 end_comment
 
 begin_function
@@ -2965,7 +2954,7 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-comment|/* 	 * show that the object has one more resident page. 	 */
+comment|/* 	 * Show that the object has one more resident page. 	 */
 name|object
 operator|->
 name|resident_page_count
@@ -2988,11 +2977,6 @@ name|OBJT_VNODE
 condition|)
 name|vhold
 argument_list|(
-operator|(
-expr|struct
-name|vnode
-operator|*
-operator|)
 name|object
 operator|->
 name|handle
@@ -3020,7 +3004,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_remove:  *				NOTE: used by device pager as well -wfj  *  *	Removes the given mem entry from the object/offset-page  *	table and the object page list, but do not invalidate/terminate  *	the backing store.  *  *	The object and page must be locked.  *	The underlying pmap entry (if any) is NOT removed here.  *	This routine may not block.  */
+comment|/*  *	vm_page_remove:  *  *	Removes the given mem entry from the object/offset-page  *	table and the object page list, but do not invalidate/terminate  *	the backing store.  *  *	The underlying pmap entry (if any) is NOT removed here.  *  *	The object must be locked.  The page must be locked if it is managed.  */
 end_comment
 
 begin_function
@@ -3144,11 +3128,6 @@ name|OBJT_VNODE
 condition|)
 name|vdrop
 argument_list|(
-operator|(
-expr|struct
-name|vnode
-operator|*
-operator|)
 name|object
 operator|->
 name|handle
@@ -3164,7 +3143,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_lookup:  *  *	Returns the page associated with the object/offset  *	pair specified; if none is found, NULL is returned.  *  *	The object must be locked.  *	This routine may not block.  *	This is a critical path routine  */
+comment|/*  *	vm_page_lookup:  *  *	Returns the page associated with the object/offset  *	pair specified; if none is found, NULL is returned.  *  *	The object must be locked.  */
 end_comment
 
 begin_function
@@ -3202,7 +3181,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_find_least:  *  *	Returns the page associated with the object with least pindex  *	greater than or equal to the parameter pindex, or NULL.  *  *	The object must be locked.  *	The routine may not block.  */
+comment|/*  *	vm_page_find_least:  *  *	Returns the page associated with the object with least pindex  *	greater than or equal to the parameter pindex, or NULL.  *  *	The object must be locked.  */
 end_comment
 
 begin_function
@@ -3375,7 +3354,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_rename:  *  *	Move the given memory entry from its  *	current object to the specified target object/offset.  *  *	The object must be locked.  *	This routine may not block.  *  *	Note: swap associated with the page must be invalidated by the move.  We  *	      have to do this for several reasons:  (1) we aren't freeing the  *	      page, (2) we are dirtying the page, (3) the VM system is probably  *	      moving the page from object A to B, and will then later move  *	      the backing store from A to B and we can't have a conflict.  *  *	Note: we *always* dirty the page.  It is necessary both for the  *	      fact that we moved it, and because we may be invalidating  *	      swap.  If the page is on the cache, we have to deactivate it  *	      or vm_page_dirty() will panic.  Dirty pages are not allowed  *	      on the cache.  */
+comment|/*  *	vm_page_rename:  *  *	Move the given memory entry from its  *	current object to the specified target object/offset.  *  *	Note: swap associated with the page must be invalidated by the move.  We  *	      have to do this for several reasons:  (1) we aren't freeing the  *	      page, (2) we are dirtying the page, (3) the VM system is probably  *	      moving the page from object A to B, and will then later move  *	      the backing store from A to B and we can't have a conflict.  *  *	Note: we *always* dirty the page.  It is necessary both for the  *	      fact that we moved it, and because we may be invalidating  *	      swap.  If the page is on the cache, we have to deactivate it  *	      or vm_page_dirty() will panic.  Dirty pages are not allowed  *	      on the cache.  *  *	The objects must be locked.  The page must be locked if it is managed.  */
 end_comment
 
 begin_function
@@ -6092,7 +6071,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_wait:	(also see VM_WAIT macro)  *  *	Block until free pages are available for allocation  *	- Called in various places before memory allocations.  */
+comment|/*  *	vm_wait:	(also see VM_WAIT macro)  *  *	Sleep until free pages are available for allocation.  *	- Called in various places before memory allocations.  */
 end_comment
 
 begin_function
@@ -6180,7 +6159,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_waitpfault:	(also see VM_WAITPFAULT macro)  *  *	Block until free pages are available for allocation  *	- Called only in vm_fault so that processes page faulting  *	  can be easily tracked.  *	- Sleeps at a lower priority than vm_wait() so that vm_wait()ing  *	  processes will be able to grab memory first.  Do not change  *	  this balance without careful testing first.  */
+comment|/*  *	vm_waitpfault:	(also see VM_WAITPFAULT macro)  *  *	Sleep until free pages are available for allocation.  *	- Called only in vm_fault so that processes page faulting  *	  can be easily tracked.  *	- Sleeps at a lower priority than vm_wait() so that vm_wait()ing  *	  processes will be able to grab memory first.  Do not change  *	  this balance without careful testing first.  */
 end_comment
 
 begin_function
@@ -6230,88 +6209,6 @@ argument_list|,
 literal|"pfault"
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  *	vm_page_requeue:  *  *	Move the given page to the tail of its present page queue.  *  *	The page queues must be locked.  */
-end_comment
-
-begin_function
-name|void
-name|vm_page_requeue
-parameter_list|(
-name|vm_page_t
-name|m
-parameter_list|)
-block|{
-name|struct
-name|vpgqueues
-modifier|*
-name|vpq
-decl_stmt|;
-name|int
-name|queue
-decl_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|vm_page_queue_mtx
-argument_list|,
-name|MA_OWNED
-argument_list|)
-expr_stmt|;
-name|queue
-operator|=
-name|m
-operator|->
-name|queue
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|queue
-operator|!=
-name|PQ_NONE
-argument_list|,
-operator|(
-literal|"vm_page_requeue: page %p is not queued"
-operator|,
-name|m
-operator|)
-argument_list|)
-expr_stmt|;
-name|vpq
-operator|=
-operator|&
-name|vm_page_queues
-index|[
-name|queue
-index|]
-expr_stmt|;
-name|TAILQ_REMOVE
-argument_list|(
-operator|&
-name|vpq
-operator|->
-name|pl
-argument_list|,
-name|m
-argument_list|,
-name|pageq
-argument_list|)
-expr_stmt|;
-name|TAILQ_INSERT_TAIL
-argument_list|(
-operator|&
-name|vpq
-operator|->
-name|pl
-argument_list|,
-name|m
-argument_list|,
-name|pageq
 argument_list|)
 expr_stmt|;
 block|}
@@ -6386,7 +6283,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_pageq_remove:  *  *	Remove a page from its queue.  *  *	The given page must be locked.  *	This routine may not block.  */
+comment|/*  *	vm_pageq_remove:  *  *	Remove a page from its queue.  *  *	The given page must be locked.  */
 end_comment
 
 begin_function
@@ -6500,7 +6397,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_activate:  *  *	Put the specified page on the active list (if appropriate).  *	Ensure that act_count is at least ACT_INIT but do not otherwise  *	mess with it.  *  *	The page must be locked.  *	This routine may not block.  */
+comment|/*  *	vm_page_activate:  *  *	Put the specified page on the active list (if appropriate).  *	Ensure that act_count is at least ACT_INIT but do not otherwise  *	mess with it.  *  *	The page must be locked.  */
 end_comment
 
 begin_function
@@ -6639,7 +6536,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_free_wakeup:  *  *	Helper routine for vm_page_free_toq() and vm_page_cache().  This  *	routine is called when a page has been added to the cache or free  *	queues.  *  *	The page queues must be locked.  *	This routine may not block.  */
+comment|/*  *	vm_page_free_wakeup:  *  *	Helper routine for vm_page_free_toq() and vm_page_cache().  This  *	routine is called when a page has been added to the cache or free  *	queues.  *  *	The page queues must be locked.  */
 end_comment
 
 begin_function
@@ -6715,7 +6612,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_free_toq:  *  *	Returns the given page to the free list,  *	disassociating it with any VM object.  *  *	Object and page must be locked prior to entry.  *	This routine may not block.  */
+comment|/*  *	vm_page_free_toq:  *  *	Returns the given page to the free list,  *	disassociating it with any VM object.  *  *	The object must be locked.  The page must be locked if it is managed.  */
 end_comment
 
 begin_function
@@ -6799,7 +6696,7 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-comment|/* 	 * unqueue, then remove page.  Note that we cannot destroy 	 * the page here because we do not want to call the pager's 	 * callback routine until after we've put the page on the 	 * appropriate free queue. 	 */
+comment|/* 	 * Unqueue, then remove page.  Note that we cannot destroy 	 * the page here because we do not want to call the pager's 	 * callback routine until after we've put the page on the 	 * appropriate free queue. 	 */
 if|if
 condition|(
 operator|(
@@ -6992,7 +6889,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_wire:  *  *	Mark this page as wired down by yet  *	another map, removing it from paging queues  *	as necessary.  *  *	If the page is fictitious, then its wire count must remain one.  *  *	The page must be locked.  *	This routine may not block.  */
+comment|/*  *	vm_page_wire:  *  *	Mark this page as wired down by yet  *	another map, removing it from paging queues  *	as necessary.  *  *	If the page is fictitious, then its wire count must remain one.  *  *	The page must be locked.  */
 end_comment
 
 begin_function
@@ -7260,7 +7157,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Move the specified page to the inactive queue.  *  * Many pages placed on the inactive queue should actually go  * into the cache, but it is difficult to figure out which.  What  * we do instead, if the inactive target is well met, is to put  * clean pages at the head of the inactive queue instead of the tail.  * This will cause them to be moved to the cache more quickly and  * if not actively re-referenced, reclaimed more quickly.  If we just  * stick these pages at the end of the inactive queue, heavy filesystem  * meta-data accesses can cause an unnecessary paging load on memory bound   * processes.  This optimization causes one-time-use metadata to be  * reused more quickly.  *  * Normally athead is 0 resulting in LRU operation.  athead is set  * to 1 if we want this page to be 'as if it were placed in the cache',  * except without unmapping it from the process address space.  *  * This routine may not block.  */
+comment|/*  * Move the specified page to the inactive queue.  *  * Many pages placed on the inactive queue should actually go  * into the cache, but it is difficult to figure out which.  What  * we do instead, if the inactive target is well met, is to put  * clean pages at the head of the inactive queue instead of the tail.  * This will cause them to be moved to the cache more quickly and  * if not actively re-referenced, reclaimed more quickly.  If we just  * stick these pages at the end of the inactive queue, heavy filesystem  * meta-data accesses can cause an unnecessary paging load on memory bound   * processes.  This optimization causes one-time-use metadata to be  * reused more quickly.  *  * Normally athead is 0 resulting in LRU operation.  athead is set  * to 1 if we want this page to be 'as if it were placed in the cache',  * except without unmapping it from the process address space.  *  * The page must be locked.  */
 end_comment
 
 begin_function
@@ -7614,7 +7511,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vm_page_cache  *  * Put the specified page onto the page cache queue (if appropriate).  *  * This routine may not block.  */
+comment|/*  * vm_page_cache  *  * Put the specified page onto the page cache queue (if appropriate).  *  * The object and page must be locked.  */
 end_comment
 
 begin_function
@@ -7963,7 +7860,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*  * vm_page_dontneed  *  *	Cache, deactivate, or do nothing as appropriate.  This routine  *	is typically used by madvise() MADV_DONTNEED.  *  *	Generally speaking we want to move the page into the cache so  *	it gets reused quickly.  However, this can result in a silly syndrome  *	due to the page recycling too quickly.  Small objects will not be  *	fully cached.  On the otherhand, if we move the page to the inactive  *	queue we wind up with a problem whereby very large objects   *	unnecessarily blow away our inactive and cache queues.  *  *	The solution is to move the pages based on a fixed weighting.  We  *	either leave them alone, deactivate them, or move them to the cache,  *	where moving them to the cache has the highest weighting.  *	By forcing some pages into other queues we eventually force the  *	system to balance the queues, potentially recovering other unrelated  *	space from active.  The idea is to not force this to happen too  *	often.  */
+comment|/*  * vm_page_dontneed  *  *	Cache, deactivate, or do nothing as appropriate.  This routine  *	is typically used by madvise() MADV_DONTNEED.  *  *	Generally speaking we want to move the page into the cache so  *	it gets reused quickly.  However, this can result in a silly syndrome  *	due to the page recycling too quickly.  Small objects will not be  *	fully cached.  On the otherhand, if we move the page to the inactive  *	queue we wind up with a problem whereby very large objects   *	unnecessarily blow away our inactive and cache queues.  *  *	The solution is to move the pages based on a fixed weighting.  We  *	either leave them alone, deactivate them, or move them to the cache,  *	where moving them to the cache has the highest weighting.  *	By forcing some pages into other queues we eventually force the  *	system to balance the queues, potentially recovering other unrelated  *	space from active.  The idea is to not force this to happen too  *	often.  *  *	The object and page must be locked.  */
 name|void
 name|vm_page_dontneed
 parameter_list|(
@@ -8106,7 +8003,7 @@ name|head
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  * Grab a page, waiting until we are waken up due to the page  * changing state.  We keep on waiting, if the page continues  * to be in the object.  If the page doesn't exist, first allocate it  * and then conditionally zero it.  *  * The caller must always specify the VM_ALLOC_RETRY flag.  This is intended  * to facilitate its eventual removal.  *  * This routine may block.  */
+comment|/*  * Grab a page, waiting until we are waken up due to the page  * changing state.  We keep on waiting, if the page continues  * to be in the object.  If the page doesn't exist, first allocate it  * and then conditionally zero it.  *  * The caller must always specify the VM_ALLOC_RETRY flag.  This is intended  * to facilitate its eventual removal.  *  * This routine may sleep.  *  * The object must be locked on entry.  The lock will, however, be released  * and reacquired if the routine sleeps.  */
 name|vm_page_t
 name|vm_page_grab
 parameter_list|(
@@ -8344,7 +8241,7 @@ name|m
 operator|)
 return|;
 block|}
-comment|/*  * Mapping function for valid bits or for dirty bits in  * a page.  May not block.  *  * Inputs are required to range within a page.  */
+comment|/*  * Mapping function for valid or dirty bits in a page.  *  * Inputs are required to range within a page.  */
 name|vm_page_bits_t
 name|vm_page_bits
 parameter_list|(
@@ -8803,7 +8700,7 @@ directive|endif
 comment|/* PAGE_SIZE */
 block|}
 block|}
-comment|/*  *	vm_page_set_validclean:  *  *	Sets portions of a page valid and clean.  The arguments are expected  *	to be DEV_BSIZE aligned but if they aren't the bitmap is inclusive  *	of any partial chunks touched by the range.  The invalid portion of  *	such chunks will be zero'd.  *  *	This routine may not block.  *  *	(base + size) must be less then or equal to PAGE_SIZE.  */
+comment|/*  *	vm_page_set_validclean:  *  *	Sets portions of a page valid and clean.  The arguments are expected  *	to be DEV_BSIZE aligned but if they aren't the bitmap is inclusive  *	of any partial chunks touched by the range.  The invalid portion of  *	such chunks will be zero'd.  *  *	(base + size) must be less then or equal to PAGE_SIZE.  */
 name|void
 name|vm_page_set_validclean
 parameter_list|(
@@ -9074,7 +8971,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  *	vm_page_set_invalid:  *  *	Invalidates DEV_BSIZE'd chunks within a page.  Both the  *	valid and dirty bits for the effected areas are cleared.  *  *	May not block.  */
+comment|/*  *	vm_page_set_invalid:  *  *	Invalidates DEV_BSIZE'd chunks within a page.  Both the  *	valid and dirty bits for the effected areas are cleared.  */
 name|void
 name|vm_page_set_invalid
 parameter_list|(
@@ -9291,7 +9188,7 @@ operator|=
 name|VM_PAGE_BITS_ALL
 expr_stmt|;
 block|}
-comment|/*  *	vm_page_is_valid:  *  *	Is (partial) page valid?  Note that the case where size == 0  *	will return FALSE in the degenerate case where the page is  *	entirely invalid, and TRUE otherwise.  *  *	May not block.  */
+comment|/*  *	vm_page_is_valid:  *  *	Is (partial) page valid?  Note that the case where size == 0  *	will return FALSE in the degenerate case where the page is  *	entirely invalid, and TRUE otherwise.  */
 name|int
 name|vm_page_is_valid
 parameter_list|(
@@ -9352,7 +9249,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/*  * update dirty bits from pmap/mmu.  May not block.  */
+comment|/*  * Set the page's dirty bits if the page is modified.  */
 name|void
 name|vm_page_test_dirty
 parameter_list|(
@@ -9549,14 +9446,6 @@ decl_stmt|;
 name|vm_pindex_t
 name|pindex
 decl_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|vm_page_queue_mtx
-argument_list|,
-name|MA_NOTOWNED
-argument_list|)
-expr_stmt|;
 name|vm_page_lock_assert
 argument_list|(
 name|m

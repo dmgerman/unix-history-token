@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/conf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
 end_include
 
@@ -590,6 +596,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|bt_intr_locked
+parameter_list|(
+name|struct
+name|bt_softc
+modifier|*
+name|bt
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Host adapter command functions */
 end_comment
@@ -723,19 +742,17 @@ begin_comment
 comment|/* Our timeout handler */
 end_comment
 
-begin_decl_stmt
-name|timeout_t
+begin_function_decl
+specifier|static
+name|void
 name|bttimeout
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|u_long
-name|bt_unit
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * XXX  * Do our own re-probe protection until a configuration  * manager can do it for us.  This ensures that we don't  * reprobe a card already found by the EISA or PCI probes.  */
@@ -893,15 +910,6 @@ name|dev
 expr_stmt|;
 name|bt
 operator|->
-name|unit
-operator|=
-name|device_get_unit
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-name|bt
-operator|->
 name|port
 operator|=
 name|port
@@ -918,22 +926,18 @@ name|drq
 operator|=
 name|drq
 expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
 name|bt
 operator|->
-name|tag
-operator|=
-name|rman_get_bustag
-argument_list|(
-name|port
-argument_list|)
-expr_stmt|;
-name|bt
-operator|->
-name|bsh
-operator|=
-name|rman_get_bushandle
-argument_list|(
-name|port
+name|lock
+argument_list|,
+literal|"bt"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 block|}
@@ -1213,6 +1217,14 @@ literal|0
 case|:
 break|break;
 block|}
+name|mtx_destroy
+argument_list|(
+operator|&
+name|bt
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1264,6 +1276,14 @@ literal|1
 operator|)
 return|;
 comment|/* 	 * Determine our IRQ, and DMA settings and 	 * export them to the configuration system. 	 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|bt
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|bt_cmd
@@ -1290,6 +1310,14 @@ name|config_data
 argument_list|)
 argument_list|,
 name|DEFAULT_CMD_TIMEOUT
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|bt
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 if|if
@@ -1611,6 +1639,14 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Looking good so far.  Final test is to reset the 	 * adapter and attempt to fetch the extended setup 	 * information.  This should filter out all 1542 cards. 	 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|bt
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1628,6 +1664,14 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|bt
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bootverbose
@@ -1679,6 +1723,14 @@ name|esetup_info
 argument_list|)
 argument_list|,
 name|DEFAULT_CMD_TIMEOUT
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|bt
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 if|if
@@ -1740,6 +1792,14 @@ name|u_int8_t
 name|length_param
 decl_stmt|;
 comment|/* First record the firmware version */
+name|mtx_lock
+argument_list|(
+operator|&
+name|bt
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|bt_cmd
@@ -1775,6 +1835,14 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|bt
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 name|device_printf
 argument_list|(
 name|dev
@@ -1878,6 +1946,14 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|bt
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 name|device_printf
 argument_list|(
 name|dev
@@ -1973,6 +2049,14 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|bt
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 name|device_printf
 argument_list|(
 name|dev
@@ -2061,6 +2145,14 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|bt
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -2248,6 +2340,14 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|bt
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 name|device_printf
 argument_list|(
 name|dev
@@ -2655,6 +2755,14 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|bt
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 name|device_printf
 argument_list|(
 name|dev
@@ -2827,6 +2935,14 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|bt
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 name|device_printf
 argument_list|(
 name|dev
@@ -2946,6 +3062,14 @@ name|config_data
 argument_list|)
 argument_list|,
 name|DEFAULT_CMD_TIMEOUT
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|bt
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 if|if
@@ -3126,7 +3250,9 @@ name|busdma_lock_mutex
 argument_list|,
 comment|/* lockarg	*/
 operator|&
-name|Giant
+name|bt
+operator|->
+name|lock
 argument_list|,
 operator|&
 name|bt
@@ -3203,11 +3329,10 @@ comment|/* flags	*/
 literal|0
 argument_list|,
 comment|/* lockfunc	*/
-name|busdma_lock_mutex
+name|NULL
 argument_list|,
 comment|/* lockarg	*/
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 operator|&
 name|bt
@@ -3328,9 +3453,25 @@ operator|->
 name|num_boxes
 index|]
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|bt
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 name|btinitmboxes
 argument_list|(
 name|bt
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|bt
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 comment|/* DMA tag for our ccb structures */
@@ -3382,11 +3523,10 @@ comment|/* flags	*/
 literal|0
 argument_list|,
 comment|/* lockfunc	*/
-name|busdma_lock_mutex
+name|NULL
 argument_list|,
 comment|/* lockarg	*/
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 operator|&
 name|bt
@@ -3524,11 +3664,10 @@ comment|/* flags	*/
 literal|0
 argument_list|,
 comment|/* lockfunc	*/
-name|busdma_lock_mutex
+name|NULL
 argument_list|,
 comment|/* lockarg	*/
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 operator|&
 name|bt
@@ -3591,7 +3730,7 @@ goto|goto
 name|error_exit
 goto|;
 block|}
-comment|/* 	 * Note that we are going and return (to probe) 	 */
+comment|/* 	 * Note that we are going and return (to attach) 	 */
 return|return
 literal|0
 return|;
@@ -3694,12 +3833,17 @@ literal|"bt"
 argument_list|,
 name|bt
 argument_list|,
+name|device_get_unit
+argument_list|(
 name|bt
 operator|->
-name|unit
+name|dev
+argument_list|)
 argument_list|,
 operator|&
-name|Giant
+name|bt
+operator|->
+name|lock
 argument_list|,
 literal|2
 argument_list|,
@@ -3728,6 +3872,14 @@ name|ENOMEM
 operator|)
 return|;
 block|}
+name|mtx_lock
+argument_list|(
+operator|&
+name|bt
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|xpt_bus_register
@@ -3752,6 +3904,14 @@ name|sim
 argument_list|,
 comment|/*free_devq*/
 name|TRUE
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|bt
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -3807,12 +3967,28 @@ comment|/*free_devq*/
 name|TRUE
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|bt
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|bt
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Setup interrupt. 	 */
 name|error
 operator|=
@@ -3827,6 +4003,8 @@ argument_list|,
 name|INTR_TYPE_CAM
 operator||
 name|INTR_ENTROPY
+operator||
+name|INTR_MPSAFE
 argument_list|,
 name|NULL
 argument_list|,
@@ -4421,6 +4599,21 @@ name|flags
 operator|=
 name|BCCB_FREE
 expr_stmt|;
+name|callout_init_mtx
+argument_list|(
+operator|&
+name|next_ccb
+operator|->
+name|timer
+argument_list|,
+operator|&
+name|bt
+operator|->
+name|lock
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|bus_dmamap_create
@@ -4558,13 +4751,20 @@ modifier|*
 name|bccb
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splcam
-argument_list|()
+if|if
+condition|(
+operator|!
+name|dumping
+condition|)
+name|mtx_assert
+argument_list|(
+operator|&
+name|bt
+operator|->
+name|lock
+argument_list|,
+name|MA_OWNED
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -4655,11 +4855,6 @@ operator|->
 name|active_ccbs
 operator|--
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -4678,14 +4873,24 @@ name|bt_ccb
 operator|*
 name|bccb
 block|;
-name|int
-name|s
-block|;
-name|s
-operator|=
-name|splcam
-argument_list|()
-block|;
+if|if
+condition|(
+operator|!
+name|dumping
+condition|)
+name|mtx_assert
+argument_list|(
+operator|&
+name|bt
+operator|->
+name|lock
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 operator|(
@@ -4719,9 +4924,6 @@ name|active_ccbs
 operator|++
 expr_stmt|;
 block|}
-end_expr_stmt
-
-begin_else
 else|else
 block|{
 name|btallocccbs
@@ -4763,15 +4965,7 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-end_else
-
-begin_expr_stmt
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+end_if
 
 begin_return
 return|return
@@ -4829,6 +5023,16 @@ argument_list|(
 name|sim
 argument_list|)
 expr_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|bt
+operator|->
+name|lock
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|ccb
@@ -4873,24 +5077,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splcam
-argument_list|()
-expr_stmt|;
 name|bt
 operator|->
 name|resource_shortage
 operator|=
 name|TRUE
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 name|xpt_freeze_simq
 argument_list|(
@@ -5334,16 +5525,8 @@ literal|0
 condition|)
 block|{
 name|int
-name|s
-decl_stmt|;
-name|int
 name|error
 decl_stmt|;
-name|s
-operator|=
-name|splsoftvm
-argument_list|()
-expr_stmt|;
 name|error
 operator|=
 name|bus_dmamap_load
@@ -5398,11 +5581,6 @@ operator||=
 name|CAM_RELEASE_SIMQ
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -6400,9 +6578,6 @@ name|bt_softc
 modifier|*
 name|bt
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 name|bccb
 operator|=
 operator|(
@@ -6695,11 +6870,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|s
-operator|=
-name|splcam
-argument_list|()
-expr_stmt|;
 comment|/* 	 * Last time we need to check if this CCB needs to 	 * be aborted. 	 */
 if|if
 condition|(
@@ -6741,11 +6911,6 @@ argument_list|(
 name|ccb
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
 name|bccb
@@ -6779,20 +6944,12 @@ operator|.
 name|le
 argument_list|)
 expr_stmt|;
-name|ccb
-operator|->
-name|ccb_h
-operator|.
-name|timeout_ch
-operator|=
-name|timeout
+name|callout_reset
 argument_list|(
-name|bttimeout
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
+operator|&
 name|bccb
+operator|->
+name|timer
 argument_list|,
 operator|(
 name|ccb
@@ -6805,6 +6962,10 @@ name|hz
 operator|)
 operator|/
 literal|1000
+argument_list|,
+name|bttimeout
+argument_list|,
+name|bccb
 argument_list|)
 expr_stmt|;
 comment|/* Tell the adapter about this command */
@@ -6851,17 +7012,12 @@ operator|->
 name|max_ccbs
 argument_list|)
 expr_stmt|;
-name|untimeout
+name|callout_stop
 argument_list|(
-name|bttimeout
-argument_list|,
+operator|&
 name|bccb
-argument_list|,
-name|ccb
 operator|->
-name|ccb_h
-operator|.
-name|timeout_ch
+name|timer
 argument_list|)
 expr_stmt|;
 if|if
@@ -6941,11 +7097,6 @@ argument_list|(
 name|bt
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -6963,18 +7114,47 @@ name|bt_softc
 modifier|*
 name|bt
 decl_stmt|;
+name|bt
+operator|=
+name|arg
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|bt
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+name|bt_intr_locked
+argument_list|(
+name|bt
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|bt
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|bt_intr_locked
+parameter_list|(
+name|struct
+name|bt_softc
+modifier|*
+name|bt
+parameter_list|)
+block|{
 name|u_int
 name|intstat
 decl_stmt|;
-name|bt
-operator|=
-operator|(
-expr|struct
-name|bt_softc
-operator|*
-operator|)
-name|arg
-expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -7400,18 +7580,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|ccb_h
-operator|->
-name|timeout_ch
-operator|=
-name|timeout
+name|callout_reset
 argument_list|(
-name|bttimeout
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
+operator|&
 name|pending_bccb
+operator|->
+name|timer
 argument_list|,
 operator|(
 name|ccb_h
@@ -7422,6 +7596,10 @@ name|hz
 operator|)
 operator|/
 literal|1000
+argument_list|,
+name|bttimeout
+argument_list|,
+name|pending_bccb
 argument_list|)
 expr_stmt|;
 name|ccb_h
@@ -7448,17 +7626,12 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|untimeout
+name|callout_stop
 argument_list|(
-name|bttimeout
-argument_list|,
+operator|&
 name|bccb
-argument_list|,
-name|ccb
 operator|->
-name|ccb_h
-operator|.
-name|timeout_ch
+name|timer
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -8261,15 +8434,14 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
-argument_list|(
-literal|"%s: btreset - Diagnostic Active failed to "
-literal|"assert. status = 0x%x\n"
-argument_list|,
-name|bt_name
+name|device_printf
 argument_list|(
 name|bt
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"btreset - Diagnostic Active failed to "
+literal|"assert. status = 0x%x\n"
 argument_list|,
 name|status
 argument_list|)
@@ -8395,15 +8567,14 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: btreset - Host adapter failed to come ready. "
-literal|"status = 0x%x\n"
-argument_list|,
-name|bt_name
+name|device_printf
 argument_list|(
 name|bt
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"btreset - Host adapter failed to come ready. "
+literal|"status = 0x%x\n"
 argument_list|,
 name|status
 argument_list|)
@@ -8434,14 +8605,13 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: btreset - Adapter failed diagnostics\n"
-argument_list|,
-name|bt_name
+name|device_printf
 argument_list|(
 name|bt
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"btreset - Adapter failed diagnostics\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -8454,14 +8624,13 @@ operator|)
 operator|!=
 literal|0
 condition|)
-name|printf
-argument_list|(
-literal|"%s: btreset - Host Adapter Error code = 0x%x\n"
-argument_list|,
-name|bt_name
+name|device_printf
 argument_list|(
 name|bt
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"btreset - Host Adapter Error code = 0x%x\n"
 argument_list|,
 name|bt_inb
 argument_list|(
@@ -8621,9 +8790,6 @@ name|u_int
 name|reply_buf_size
 decl_stmt|;
 name|int
-name|s
-decl_stmt|;
-name|int
 name|cmd_complete
 decl_stmt|;
 name|int
@@ -8733,15 +8899,14 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: bt_cmd: Timeout waiting for adapter ready, "
-literal|"status = 0x%x\n"
-argument_list|,
-name|bt_name
+name|device_printf
 argument_list|(
 name|bt
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"bt_cmd: Timeout waiting for adapter ready, "
+literal|"status = 0x%x\n"
 argument_list|,
 name|status
 argument_list|)
@@ -8780,11 +8945,6 @@ argument_list|(
 literal|100
 argument_list|)
 expr_stmt|;
-name|s
-operator|=
-name|splcam
-argument_list|()
-expr_stmt|;
 name|status
 operator|=
 name|bt_inb
@@ -8801,11 +8961,6 @@ argument_list|(
 name|bt
 argument_list|,
 name|INTSTAT_REG
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 if|if
@@ -8907,15 +9062,14 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: bt_cmd: Timeout sending parameters, "
-literal|"status = 0x%x\n"
-argument_list|,
-name|bt_name
+name|device_printf
 argument_list|(
 name|bt
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"bt_cmd: Timeout sending parameters, "
+literal|"status = 0x%x\n"
 argument_list|,
 name|status
 argument_list|)
@@ -8944,11 +9098,6 @@ operator|--
 name|cmd_timeout
 condition|)
 block|{
-name|s
-operator|=
-name|splcam
-argument_list|()
-expr_stmt|;
 name|status
 operator|=
 name|bt_inb
@@ -8986,14 +9135,9 @@ operator||
 name|IMB_LOADED
 operator|)
 condition|)
-name|bt_intr
+name|bt_intr_locked
 argument_list|(
 name|bt
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 if|if
@@ -9113,15 +9257,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
-argument_list|(
-literal|"%s: bt_cmd - Discarded reply data byte "
-literal|"for opcode 0x%x\n"
-argument_list|,
-name|bt_name
+name|device_printf
 argument_list|(
 name|bt
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"bt_cmd - Discarded reply data byte "
+literal|"for opcode 0x%x\n"
 argument_list|,
 name|opcode
 argument_list|)
@@ -9181,23 +9324,26 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: bt_cmd: Timeout waiting for command (%x) "
-literal|"to complete.\n%s: status = 0x%x, intstat = 0x%x, "
-literal|"rlen %d\n"
-argument_list|,
-name|bt_name
+name|device_printf
 argument_list|(
 name|bt
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"bt_cmd: Timeout waiting for command (%x) "
+literal|"to complete.\n"
 argument_list|,
 name|opcode
-argument_list|,
-name|bt_name
+argument_list|)
+expr_stmt|;
+name|device_printf
 argument_list|(
 name|bt
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"status = 0x%x, intstat = 0x%x, "
+literal|"rlen %d\n"
 argument_list|,
 name|status
 argument_list|,
@@ -9213,20 +9359,10 @@ name|ETIMEDOUT
 operator|)
 expr_stmt|;
 block|}
-comment|/* 	 * Clear any pending interrupts.  Block interrupts so our 	 * interrupt handler is not re-entered. 	 */
-name|s
-operator|=
-name|splcam
-argument_list|()
-expr_stmt|;
-name|bt_intr
+comment|/* 	 * Clear any pending interrupts. 	 */
+name|bt_intr_locked
 argument_list|(
 name|bt
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 if|if
@@ -9257,14 +9393,13 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
-argument_list|(
-literal|"%s: Invalid Command 0x%x\n"
-argument_list|,
-name|bt_name
+name|device_printf
 argument_list|(
 name|bt
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"Invalid Command 0x%x\n"
 argument_list|,
 name|opcode
 argument_list|)
@@ -9644,14 +9779,13 @@ condition|(
 name|bootverbose
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: Using Strict Round Robin Mailbox Mode\n"
-argument_list|,
-name|bt_name
+name|device_printf
 argument_list|(
 name|bt
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"Using Strict Round Robin Mailbox Mode\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -9818,14 +9952,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: btfetchtransinfo - Inquire Setup Info Failed %x\n"
-argument_list|,
-name|bt_name
+name|device_printf
 argument_list|(
 name|bt
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"btfetchtransinfo - Inquire Setup Info Failed %x\n"
 argument_list|,
 name|error
 argument_list|)
@@ -10072,15 +10205,14 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: btfetchtransinfo - Inquire Sync "
-literal|"Info Failed 0x%x\n"
-argument_list|,
-name|bt_name
+name|device_printf
 argument_list|(
 name|bt
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"btfetchtransinfo - Inquire Sync "
+literal|"Info Failed 0x%x\n"
 argument_list|,
 name|error
 argument_list|)
@@ -10373,7 +10505,7 @@ modifier|*
 name|sim
 parameter_list|)
 block|{
-name|bt_intr
+name|bt_intr_locked
 argument_list|(
 name|cam_sim_softc
 argument_list|(
@@ -10408,9 +10540,6 @@ name|bt_softc
 modifier|*
 name|bt
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 name|bccb
 operator|=
 operator|(
@@ -10439,6 +10568,16 @@ name|ccb_h
 operator|.
 name|ccb_bt_ptr
 expr_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|bt
+operator|->
+name|lock
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|xpt_print_path
 argument_list|(
 name|ccb
@@ -10458,11 +10597,6 @@ operator|*
 operator|)
 name|bccb
 argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|splcam
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -10495,11 +10629,6 @@ name|void
 operator|*
 operator|)
 name|bccb
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 return|return;
@@ -10586,15 +10715,12 @@ name|ccb_h
 operator|->
 name|ccb_bccb_ptr
 expr_stmt|;
-name|untimeout
+name|callout_stop
 argument_list|(
-name|bttimeout
-argument_list|,
+operator|&
 name|pending_bccb
-argument_list|,
-name|ccb_h
 operator|->
-name|timeout_ch
+name|timer
 argument_list|)
 expr_stmt|;
 name|ccb_h
@@ -10671,14 +10797,13 @@ comment|/*hardreset*/
 name|TRUE
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s: No longer in timeout\n"
-argument_list|,
-name|bt_name
+name|device_printf
 argument_list|(
 name|bt
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"No longer in timeout\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -10691,24 +10816,20 @@ name|flags
 operator||=
 name|BCCB_DEVICE_RESET
 expr_stmt|;
-name|ccb
-operator|->
-name|ccb_h
-operator|.
-name|timeout_ch
-operator|=
-name|timeout
+name|callout_reset
 argument_list|(
-name|bttimeout
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
+operator|&
 name|bccb
+operator|->
+name|timer
 argument_list|,
 literal|2
 operator|*
 name|hz
+argument_list|,
+name|bttimeout
+argument_list|,
+name|bccb
 argument_list|)
 expr_stmt|;
 name|bt
@@ -10815,11 +10936,6 @@ name|bt
 argument_list|)
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

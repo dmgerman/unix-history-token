@@ -307,22 +307,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|void
-name|hostap_recv_pspoll
-parameter_list|(
-name|struct
-name|ieee80211_node
-modifier|*
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 name|void
 name|ieee80211_hostap_attach
@@ -416,6 +400,12 @@ operator|->
 name|iv_deliver_data
 operator|=
 name|hostap_deliver_data
+expr_stmt|;
+name|vap
+operator|->
+name|iv_recv_pspoll
+operator|=
+name|ieee80211_recv_pspoll
 expr_stmt|;
 block|}
 end_function
@@ -2586,7 +2576,9 @@ name|IEEE80211_NODE_PWR_MGT
 operator|)
 operator|)
 condition|)
-name|ieee80211_node_pwrsave
+name|vap
+operator|->
+name|iv_node_ps
 argument_list|(
 name|ni
 argument_list|,
@@ -9771,7 +9763,11 @@ block|{
 case|case
 name|IEEE80211_FC0_SUBTYPE_PS_POLL
 case|:
-name|hostap_recv_pspoll
+name|ni
+operator|->
+name|ni_vap
+operator|->
+name|iv_recv_pspoll
 argument_list|(
 name|ni
 argument_list|,
@@ -9799,9 +9795,8 @@ comment|/*  * Process a received ps-poll frame.  */
 end_comment
 
 begin_function
-specifier|static
 name|void
-name|hostap_recv_pspoll
+name|ieee80211_recv_pspoll
 parameter_list|(
 name|struct
 name|ieee80211_node

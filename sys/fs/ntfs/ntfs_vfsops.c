@@ -3104,8 +3104,11 @@ decl_stmt|;
 name|dprintf
 argument_list|(
 operator|(
-literal|"ntfs_vgetex: ino: %d, attr: 0x%x:%s, lkf: 0x%lx, f: 0x%lx\n"
+literal|"ntfs_vgetex: ino: %ju, attr: 0x%x:%s, lkf: 0x%lx, f: 0x%lx\n"
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|ino
 operator|,
 name|attrtype
@@ -3116,9 +3119,6 @@ name|attrname
 else|:
 literal|""
 operator|,
-operator|(
-name|u_long
-operator|)
 name|lkflags
 operator|,
 operator|(
@@ -3205,8 +3205,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ntfs_vget: CAN'T LOAD ATTRIBUTES FOR INO: %d\n"
+literal|"ntfs_vget: CAN'T LOAD ATTRIBUTES FOR INO: %ju\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ip
 operator|->
 name|i_number
@@ -3499,10 +3502,13 @@ block|}
 name|dprintf
 argument_list|(
 operator|(
-literal|"ntfs_vget: vnode: %p for ntnode: %d\n"
+literal|"ntfs_vget: vnode: %p for ntnode: %ju\n"
 operator|,
 name|vp
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|ino
 operator|)
 argument_list|)

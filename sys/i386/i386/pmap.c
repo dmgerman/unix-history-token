@@ -22,7 +22,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  *	Manages physical address maps.  *  *	In addition to hardware address maps, this  *	module is called upon to provide software-use-only  *	maps which may or may not be stored in the same  *	form as hardware maps.  These pseudo-maps are  *	used to store intermediate results from copy  *	operations to and from address spaces.  *  *	Since the information managed by this module is  *	also stored by the logical address mapping module,  *	this module may throw away valid virtual-to-physical  *	mappings at almost any time.  However, invalidations  *	of virtual-to-physical mappings must be done as  *	requested.  *  *	In order to cope with hardware architectures which  *	make virtual-to-physical map invalidates expensive,  *	this module may delay invalidate or reduced protection  *	operations until such time as they are actually  *	necessary.  This module is given full information as  *	to which processors are currently using which maps,  *	and to when physical maps must be made correct.  */
+comment|/*  *	Manages physical address maps.  *  *	Since the information managed by this module is  *	also stored by the logical address mapping module,  *	this module may throw away valid virtual-to-physical  *	mappings at almost any time.  However, invalidations  *	of virtual-to-physical mappings must be done as  *	requested.  *  *	In order to cope with hardware architectures which  *	make virtual-to-physical map invalidates expensive,  *	this module may delay invalidate or reduced protection  *	operations until such time as they are actually  *	necessary.  This module is given full information as  *	to which processors are currently using which maps,  *	and to when physical maps must be made correct.  */
 end_comment
 
 begin_include
@@ -2292,7 +2292,7 @@ operator|<<
 name|PDRSHIFT
 argument_list|)
 expr_stmt|;
-comment|/* 	 * ptemap is used for pmap_pte_quick 	 */
+comment|/* 	 * PADDR1 and PADDR2 are used by pmap_pte_quick() and pmap_pte(), 	 * respectively. 	 */
 name|SYSMAP
 argument_list|(
 argument|pt_entry_t *
@@ -9933,9 +9933,6 @@ operator|&
 name|newtail
 argument_list|)
 expr_stmt|;
-name|sched_pin
-argument_list|()
-expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -10153,18 +10150,44 @@ condition|)
 continue|continue;
 name|pte
 operator|=
-name|pmap_pte_quick
+name|pmap_pte
 argument_list|(
 name|pmap
 argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
+name|tpte
+operator|=
+operator|*
+name|pte
+expr_stmt|;
 if|if
 condition|(
 operator|(
-operator|*
+name|tpte
+operator|&
+name|PG_W
+operator|)
+operator|==
+literal|0
+condition|)
+name|tpte
+operator|=
+name|pte_load_clear
+argument_list|(
 name|pte
+argument_list|)
+expr_stmt|;
+name|pmap_pte_release
+argument_list|(
+name|pte
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|tpte
 operator|&
 name|PG_W
 operator|)
@@ -10172,11 +10195,19 @@ operator|!=
 literal|0
 condition|)
 continue|continue;
-name|tpte
-operator|=
-name|pte_load_clear
+name|KASSERT
 argument_list|(
-name|pte
+name|tpte
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"pmap_pv_reclaim: pmap %p va %x zero pte"
+operator|,
+name|pmap
+operator|,
+name|va
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -10524,9 +10555,6 @@ block|}
 block|}
 name|out
 label|:
-name|sched_unpin
-argument_list|()
-expr_stmt|;
 name|TAILQ_CONCAT
 argument_list|(
 operator|&
@@ -13250,6 +13278,21 @@ argument_list|(
 name|ptq
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|oldpte
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"pmap_remove_pte: pmap %p va %x zero pte"
+operator|,
+name|pmap
+operator|,
+name|va
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|oldpte
@@ -14076,6 +14119,23 @@ operator|=
 name|pte_load_clear
 argument_list|(
 name|pte
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|tpte
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"pmap_remove_all: pmap %p va %x zero pte"
+operator|,
+name|pmap
+operator|,
+name|pv
+operator|->
+name|pv_va
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -19513,6 +19573,25 @@ argument_list|,
 argument|npc
 argument_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|pc
+operator|->
+name|pc_pmap
+operator|==
+name|pmap
+argument_list|,
+operator|(
+literal|"Wrong pmap %p %p"
+operator|,
+name|pmap
+operator|,
+name|pc
+operator|->
+name|pc_pmap
+operator|)
+argument_list|)
+expr_stmt|;
 name|allfree
 operator|=
 literal|1

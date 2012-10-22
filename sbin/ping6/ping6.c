@@ -3369,16 +3369,38 @@ endif|#
 directive|endif
 block|}
 comment|/* revoke root privilege */
+if|if
+condition|(
 name|seteuid
 argument_list|(
 name|getuid
 argument_list|()
 argument_list|)
+operator|!=
+literal|0
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"seteuid() failed"
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|setuid
 argument_list|(
 name|getuid
 argument_list|()
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"setuid() failed"
 argument_list|)
 expr_stmt|;
 if|if

@@ -317,6 +317,7 @@ typedef|;
 end_typedef
 
 begin_decl_stmt
+specifier|static
 name|int
 name|elf32_offsets
 index|[]
@@ -691,6 +692,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|elf64_offsets
 index|[]
@@ -1616,6 +1618,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -1637,6 +1640,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -1652,6 +1656,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -1669,6 +1674,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -1686,6 +1692,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -1731,6 +1738,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -1758,6 +1766,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -1984,6 +1993,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -2011,6 +2021,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -2032,6 +2043,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -2049,6 +2061,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|dynstr
@@ -2056,6 +2069,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|shstrtab
@@ -2063,6 +2077,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|strtab
@@ -2070,6 +2085,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|FILE
 modifier|*
 name|out
@@ -2077,6 +2093,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|u_int64_t
 name|elf_get_byte
 parameter_list|(
@@ -2095,6 +2112,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|u_int64_t
 name|elf_get_quarter
 parameter_list|(
@@ -2112,25 +2130,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|u_int64_t
-name|elf_get_half
-parameter_list|(
-name|Elf32_Ehdr
-modifier|*
-name|e
-parameter_list|,
-name|void
-modifier|*
-name|base
-parameter_list|,
-name|elf_member_t
-name|member
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static u_int64_t elf_get_half(Elf32_Ehdr *e, void *base, elf_member_t member);
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
+specifier|static
 name|u_int64_t
 name|elf_get_word
 parameter_list|(
@@ -2149,6 +2162,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|u_int64_t
 name|elf_get_quad
 parameter_list|(
@@ -2167,6 +2181,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|elf_print_ehdr
 parameter_list|(
@@ -2178,6 +2193,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|elf_print_phdr
 parameter_list|(
@@ -2193,6 +2209,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|elf_print_shdr
 parameter_list|(
@@ -2208,6 +2225,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|elf_print_symtab
 parameter_list|(
@@ -2227,6 +2245,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|elf_print_dynamic
 parameter_list|(
@@ -2242,6 +2261,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|elf_print_rel
 parameter_list|(
@@ -2257,6 +2277,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|elf_print_rela
 parameter_list|(
@@ -2272,6 +2293,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|elf_print_interp
 parameter_list|(
@@ -2287,6 +2309,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|elf_print_got
 parameter_list|(
@@ -2302,6 +2325,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|elf_print_hash
 parameter_list|(
@@ -2317,6 +2341,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|elf_print_note
 parameter_list|(
@@ -2332,6 +2357,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -3278,6 +3304,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|elf_print_ehdr
 parameter_list|(
@@ -3706,6 +3733,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|elf_print_phdr
 parameter_list|(
@@ -4020,6 +4048,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|elf_print_shdr
 parameter_list|(
@@ -4382,6 +4411,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|elf_print_symtab
 parameter_list|(
@@ -4661,6 +4691,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|elf_print_dynamic
 parameter_list|(
@@ -4951,6 +4982,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|elf_print_rela
 parameter_list|(
@@ -5175,6 +5207,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|elf_print_rel
 parameter_list|(
@@ -5373,6 +5406,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|elf_print_interp
 parameter_list|(
@@ -5433,6 +5467,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|elf_print_got
 parameter_list|(
@@ -5582,6 +5617,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|elf_print_hash
 parameter_list|(
@@ -5599,6 +5635,7 @@ block|{ }
 end_function
 
 begin_function
+specifier|static
 name|void
 name|elf_print_note
 parameter_list|(
@@ -5783,6 +5820,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|u_int64_t
 name|elf_get_byte
 parameter_list|(
@@ -5873,6 +5911,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|u_int64_t
 name|elf_get_quarter
 parameter_list|(
@@ -6042,177 +6081,20 @@ return|;
 block|}
 end_function
 
-begin_function
-name|u_int64_t
-name|elf_get_half
-parameter_list|(
-name|Elf32_Ehdr
-modifier|*
-name|e
-parameter_list|,
-name|void
-modifier|*
-name|base
-parameter_list|,
-name|elf_member_t
-name|member
-parameter_list|)
-block|{
-name|u_int64_t
-name|val
-decl_stmt|;
-name|val
-operator|=
+begin_if
+if|#
+directive|if
 literal|0
-expr_stmt|;
-switch|switch
-condition|(
-name|e
-operator|->
-name|e_ident
-index|[
-name|EI_CLASS
-index|]
-condition|)
-block|{
-case|case
-name|ELFCLASS32
-case|:
-name|base
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|base
-operator|+
-name|elf32_offsets
-index|[
-name|member
-index|]
-expr_stmt|;
-switch|switch
-condition|(
-name|e
-operator|->
-name|e_ident
-index|[
-name|EI_DATA
-index|]
-condition|)
-block|{
-case|case
-name|ELFDATA2MSB
-case|:
-name|val
-operator|=
-name|be16dec
-argument_list|(
-name|base
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ELFDATA2LSB
-case|:
-name|val
-operator|=
-name|le16dec
-argument_list|(
-name|base
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ELFDATANONE
-case|:
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"invalid data format"
-argument_list|)
-expr_stmt|;
-block|}
-break|break;
-case|case
-name|ELFCLASS64
-case|:
-name|base
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|base
-operator|+
-name|elf64_offsets
-index|[
-name|member
-index|]
-expr_stmt|;
-switch|switch
-condition|(
-name|e
-operator|->
-name|e_ident
-index|[
-name|EI_DATA
-index|]
-condition|)
-block|{
-case|case
-name|ELFDATA2MSB
-case|:
-name|val
-operator|=
-name|be32dec
-argument_list|(
-name|base
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ELFDATA2LSB
-case|:
-name|val
-operator|=
-name|le32dec
-argument_list|(
-name|base
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ELFDATANONE
-case|:
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"invalid data format"
-argument_list|)
-expr_stmt|;
-block|}
-break|break;
-case|case
-name|ELFCLASSNONE
-case|:
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"invalid class"
-argument_list|)
-expr_stmt|;
-block|}
-return|return
-name|val
-return|;
-block|}
-end_function
+end_if
+
+begin_endif
+unit|static u_int64_t elf_get_half(Elf32_Ehdr *e, void *base, elf_member_t member) { 	u_int64_t val;  	val = 0; 	switch (e->e_ident[EI_CLASS]) { 	case ELFCLASS32: 		base = (char *)base + elf32_offsets[member]; 		switch (e->e_ident[EI_DATA]) { 		case ELFDATA2MSB: 			val = be16dec(base); 			break; 		case ELFDATA2LSB: 			val = le16dec(base); 			break; 		case ELFDATANONE: 			errx(1, "invalid data format"); 		} 		break; 	case ELFCLASS64: 		base = (char *)base + elf64_offsets[member]; 		switch (e->e_ident[EI_DATA]) { 		case ELFDATA2MSB: 			val = be32dec(base); 			break; 		case ELFDATA2LSB: 			val = le32dec(base); 			break; 		case ELFDATANONE: 			errx(1, "invalid data format"); 		} 		break; 	case ELFCLASSNONE: 		errx(1, "invalid class"); 	}  	return val; }
+endif|#
+directive|endif
+end_endif
 
 begin_function
+specifier|static
 name|u_int64_t
 name|elf_get_word
 parameter_list|(
@@ -6383,6 +6265,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|u_int64_t
 name|elf_get_quad
 parameter_list|(
@@ -6553,6 +6436,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(

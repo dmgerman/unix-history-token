@@ -184,6 +184,11 @@ init|=
 literal|0x400000000ULL
 block|,
 comment|/* SW TX FF */
+name|ATH_DEBUG_NODE_PWRSAVE
+init|=
+literal|0x800000000ULL
+block|,
+comment|/* node powersave */
 name|ATH_DEBUG_ANY
 init|=
 literal|0xffffffffffffffffULL
@@ -191,18 +196,58 @@ block|}
 enum|;
 end_enum
 
-begin_define
-define|#
-directive|define
-name|ATH_KTR_INTR
-value|KTR_SPARE4
-end_define
+begin_enum
+enum|enum
+block|{
+name|ATH_KTR_RXPROC
+init|=
+literal|0x00000001
+block|,
+name|ATH_KTR_TXPROC
+init|=
+literal|0x00000002
+block|,
+name|ATH_KTR_TXCOMP
+init|=
+literal|0x00000004
+block|,
+name|ATH_KTR_SWQ
+init|=
+literal|0x00000008
+block|,
+name|ATH_KTR_INTERRUPTS
+init|=
+literal|0x00000010
+block|,
+name|ATH_KTR_ERROR
+init|=
+literal|0x00000020
+block|,
+name|ATH_KTR_NODE
+init|=
+literal|0x00000040
+block|,
+name|ATH_KTR_TX
+init|=
+literal|0x00000080
+block|, }
+enum|;
+end_enum
 
 begin_define
 define|#
 directive|define
-name|ATH_KTR_ERR
-value|KTR_SPARE3
+name|ATH_KTR
+parameter_list|(
+name|_sc
+parameter_list|,
+name|_km
+parameter_list|,
+name|_kf
+parameter_list|,
+modifier|...
+parameter_list|)
+value|do {	\ 	if (sc->sc_ktrdebug& (_km))		\ 		CTR##_kf(KTR_DEV, __VA_ARGS__);	\ 	} while (0)
 end_define
 
 begin_decl_stmt
@@ -319,15 +364,17 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ATH_KTR_INTR
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATH_KTR_ERR
-value|0
+name|ATH_KTR
+parameter_list|(
+name|_sc
+parameter_list|,
+name|_km
+parameter_list|,
+name|_kf
+parameter_list|,
+modifier|...
+parameter_list|)
+value|do { } while (0)
 end_define
 
 begin_define

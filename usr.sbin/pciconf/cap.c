@@ -3370,7 +3370,7 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|"ecap %04x[%03x] = "
+literal|"    ecap %04x[%03x] = "
 argument_list|,
 name|PCI_EXTCAP_ID
 argument_list|(

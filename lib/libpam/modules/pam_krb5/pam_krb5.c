@@ -2768,7 +2768,6 @@ name|retval
 operator|=
 name|PAM_PERM_DENIED
 expr_stmt|;
-empty_stmt|;
 goto|goto
 name|cleanup
 goto|;

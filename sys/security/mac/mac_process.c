@@ -905,8 +905,6 @@ name|vm_map_entry_t
 name|vme
 decl_stmt|;
 name|int
-name|vfslocked
-decl_stmt|,
 name|result
 decl_stmt|;
 name|vm_prot_t
@@ -1095,15 +1093,6 @@ name|object
 operator|->
 name|handle
 expr_stmt|;
-name|vfslocked
-operator|=
-name|VFS_LOCK_GIANT
-argument_list|(
-name|vp
-operator|->
-name|v_mount
-argument_list|)
-expr_stmt|;
 name|vn_lock
 argument_list|(
 name|vp
@@ -1151,14 +1140,7 @@ condition|(
 operator|!
 name|revokeperms
 condition|)
-block|{
-name|VFS_UNLOCK_GIANT
-argument_list|(
-name|vfslocked
-argument_list|)
-expr_stmt|;
 continue|continue;
-block|}
 name|printf
 argument_list|(
 literal|"pid %ld: revoking %s perms from %#lx:%ld "
@@ -1430,11 +1412,6 @@ name|vme
 argument_list|)
 expr_stmt|;
 block|}
-name|VFS_UNLOCK_GIANT
-argument_list|(
-name|vfslocked
-argument_list|)
-expr_stmt|;
 block|}
 name|vm_map_unlock
 argument_list|(

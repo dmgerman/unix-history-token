@@ -803,9 +803,6 @@ name|group
 modifier|*
 name|grp
 decl_stmt|;
-name|ufs2_daddr_t
-name|blks
-decl_stmt|;
 name|struct
 name|iovec
 modifier|*
@@ -823,7 +820,9 @@ decl_stmt|;
 name|int
 name|cylno
 decl_stmt|;
-name|ino_t
+name|intmax_t
+name|blks
+decl_stmt|,
 name|files
 decl_stmt|;
 name|size_t
@@ -1703,11 +1702,10 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"(%lld frags, %lld blocks, %.1f%% fragmentation)\n"
+literal|"(%jd frags, %jd blocks, %.1f%% fragmentation)\n"
 argument_list|,
 operator|(
-name|long
-name|long
+name|intmax_t
 operator|)
 name|sblock
 operator|.
@@ -1716,8 +1714,7 @@ operator|.
 name|cs_nffree
 argument_list|,
 operator|(
-name|long
-name|long
+name|intmax_t
 operator|)
 name|sblock
 operator|.
@@ -2126,21 +2123,14 @@ name|countdirs
 expr_stmt|;
 name|pwarn
 argument_list|(
-literal|"Reclaimed: %ld directories, %ld files, %lld fragments\n"
+literal|"Reclaimed: %ld directories, %jd files, %jd fragments\n"
 argument_list|,
 name|countdirs
 argument_list|,
-operator|(
-name|long
-operator|)
 name|files
 operator|-
 name|countdirs
 argument_list|,
-operator|(
-name|long
-name|long
-operator|)
 name|blks
 argument_list|)
 expr_stmt|;
@@ -2207,7 +2197,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"%d inodes missing\n"
+literal|"%jd inodes missing\n"
 argument_list|,
 operator|-
 name|files
@@ -2221,13 +2211,9 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"%lld blocks missing\n"
+literal|"%jd blocks missing\n"
 argument_list|,
 operator|-
-operator|(
-name|long
-name|long
-operator|)
 name|blks
 argument_list|)
 expr_stmt|;
@@ -2259,11 +2245,10 @@ name|next
 control|)
 name|printf
 argument_list|(
-literal|" %lld,"
+literal|" %jd,"
 argument_list|,
 operator|(
-name|long
-name|long
+name|intmax_t
 operator|)
 name|dp
 operator|->

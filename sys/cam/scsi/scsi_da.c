@@ -1100,6 +1100,24 @@ name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
 block|{
+comment|/* 		 * USB DISK Pro PMAP 		 * Reported by: jhs 		 * PR: usb/96381 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|" "
+block|,
+literal|"USB DISK Pro"
+block|,
+literal|"PMAP"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_SYNC_CACHE
+block|}
+block|,
+block|{
 comment|/* 		 * Motorola E398 Mobile Phone (TransFlash memory card). 		 * Reported by: Wojciech A. Koszek<dunstan@FreeBSD.czest.pl> 		 * PR: usb/89889 		 */
 block|{
 name|T_DIRECT
@@ -2411,6 +2429,24 @@ block|,
 literal|"USB 2.0"
 block|,
 literal|"(HS) Flash Disk"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_SYNC_CACHE
+block|}
+block|,
+block|{
+comment|/* 		 * LaCie external 250GB Hard drive des by Porsche 		 * Submitted by: Ben Stuyts<ben@altesco.nl> 		 * PR: 121474 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"SAMSUNG"
+block|,
+literal|"HM250JI"
 block|,
 literal|"*"
 block|}
@@ -4299,34 +4335,12 @@ parameter_list|)
 block|{
 name|int
 name|ret
-init|=
-operator|-
-literal|1
 decl_stmt|;
 name|struct
 name|cam_periph
 modifier|*
 name|periph
 decl_stmt|;
-if|if
-condition|(
-name|bp
-operator|->
-name|bio_disk
-operator|==
-name|NULL
-operator|||
-name|bp
-operator|->
-name|bio_disk
-operator|->
-name|d_drv1
-operator|==
-name|NULL
-condition|)
-return|return
-name|ENXIO
-return|;
 name|periph
 operator|=
 operator|(
@@ -4343,14 +4357,19 @@ expr_stmt|;
 if|if
 condition|(
 name|periph
-operator|->
-name|path
 operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|ENXIO
+operator|)
 return|;
+name|cam_periph_lock
+argument_list|(
+name|periph
+argument_list|)
+expr_stmt|;
 name|ret
 operator|=
 name|xpt_getattr
@@ -4370,6 +4389,11 @@ argument_list|,
 name|periph
 operator|->
 name|path
+argument_list|)
+expr_stmt|;
+name|cam_periph_unlock
+argument_list|(
+name|periph
 argument_list|)
 expr_stmt|;
 if|if
@@ -5951,24 +5975,6 @@ operator|*
 operator|)
 name|arg
 expr_stmt|;
-if|if
-condition|(
-name|periph
-operator|==
-name|NULL
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"daregister: periph was NULL!!\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|CAM_REQ_CMP_ERR
-operator|)
-return|;
-block|}
 if|if
 condition|(
 name|cgd

@@ -1050,6 +1050,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/*  * ipfw_nat - perform mbuf header translation.  *  * Note V_layer3_chain has to be locked while calling ipfw_nat() in  * 'global' operation mode (t == NULL).  *  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -1221,11 +1225,6 @@ operator|=
 operator|&
 name|V_layer3_chain
 expr_stmt|;
-name|IPFW_RLOCK
-argument_list|(
-name|chain
-argument_list|)
-expr_stmt|;
 comment|/* Check every nat entry... */
 name|LIST_FOREACH
 argument_list|(
@@ -1286,11 +1285,6 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|IPFW_RUNLOCK
-argument_list|(
-name|chain
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|found
@@ -1516,11 +1510,11 @@ name|udphdr
 modifier|*
 name|uh
 decl_stmt|;
-name|u_short
+name|uint16_t
+name|ip_len
+decl_stmt|,
 name|cksum
 decl_stmt|;
-name|ip
-operator|->
 name|ip_len
 operator|=
 name|ntohs
@@ -1552,8 +1546,6 @@ name|ip
 operator|->
 name|ip_p
 operator|+
-name|ip
-operator|->
 name|ip_len
 operator|-
 operator|(
@@ -1686,17 +1678,6 @@ operator|~
 name|CSUM_DELAY_DATA
 expr_stmt|;
 block|}
-name|ip
-operator|->
-name|ip_len
-operator|=
-name|htons
-argument_list|(
-name|ip
-operator|->
-name|ip_len
-argument_list|)
-expr_stmt|;
 block|}
 name|args
 operator|->

@@ -5719,6 +5719,15 @@ name|struct
 name|timeval
 name|duration_tv
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|timevalisset
+argument_list|(
+name|event_time
+argument_list|)
+condition|)
+return|return;
 name|microtime
 argument_list|(
 operator|&

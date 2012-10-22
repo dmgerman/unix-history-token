@@ -819,7 +819,6 @@ name|ro_rt
 operator|==
 name|NULL
 condition|)
-empty_stmt|;
 return|return;
 name|arpresolve
 argument_list|(

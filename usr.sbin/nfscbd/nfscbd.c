@@ -220,6 +220,7 @@ value|fprintf(stderr,(s))
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|debug
 init|=
@@ -233,6 +234,7 @@ directive|else
 end_else
 
 begin_decl_stmt
+specifier|static
 name|int
 name|debug
 init|=
@@ -246,6 +248,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|static
 name|pid_t
 name|children
 decl_stmt|;

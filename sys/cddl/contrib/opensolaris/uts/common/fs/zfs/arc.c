@@ -17673,6 +17673,14 @@ operator|&
 name|arc_reclaim_thr_cv
 argument_list|)
 expr_stmt|;
+comment|/* 	 * It is unsafe to block here in arbitrary threads, because we can come 	 * here from ARC itself and may hold ARC locks and thus risk a deadlock 	 * with ARC reclaim thread. 	 */
+if|if
+condition|(
+name|curproc
+operator|==
+name|pageproc
+condition|)
+block|{
 while|while
 condition|(
 name|needfree
@@ -17692,6 +17700,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 name|mutex_exit
 argument_list|(
 operator|&

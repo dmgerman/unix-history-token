@@ -264,6 +264,32 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Compiler memory barriers, specific to gcc and clang.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|__compiler_membar
+parameter_list|()
+value|__asm __volatile(" " : : : "memory")
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -3365,6 +3391,24 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__has_extension
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__has_extension
+value|__has_feature
+end_define
 
 begin_endif
 endif|#

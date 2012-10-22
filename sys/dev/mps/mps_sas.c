@@ -4901,7 +4901,15 @@ name|cpi
 operator|->
 name|initiator_id
 operator|=
-literal|255
+name|sassc
+operator|->
+name|sc
+operator|->
+name|facts
+operator|->
+name|MaxTargets
+operator|-
+literal|1
 expr_stmt|;
 name|strncpy
 argument_list|(
@@ -9609,7 +9617,6 @@ name|dir
 operator|=
 name|BUS_DMASYNC_POSTWRITE
 expr_stmt|;
-empty_stmt|;
 name|bus_dmamap_sync
 argument_list|(
 name|sc
@@ -12750,6 +12757,9 @@ operator|(
 name|uint8_t
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|req_sg
 index|[
 literal|0
@@ -12799,6 +12809,9 @@ operator|=
 operator|(
 name|uint8_t
 operator|*
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|rsp_sg
 index|[

@@ -416,8 +416,14 @@ define|\
 value|do {								\   union IEEEl2bits se_u;					\   se_u.e = (d);							\   se_u.xbits.expsign = (v);					\   (d) = se_u.e;							\ } while (0)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
+
 begin_comment
-comment|/* Long double constants are broken on i386.  This workaround is OK always. */
+comment|/* Long double constants are broken on i386. */
 end_comment
 
 begin_define
@@ -429,15 +435,38 @@ name|m
 parameter_list|,
 name|ex
 parameter_list|,
-name|s
+name|v
+parameter_list|)
+value|{						\ 	.xbits.man = __CONCAT(m, ULL),					\ 	.xbits.expsign = (0x3fff + (ex)) | ((v)< 0 ? 0x8000 : 0),	\ }
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* The above works on non-i386 too, but we use this to check v. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LD80C
+parameter_list|(
+name|m
+parameter_list|,
+name|ex
 parameter_list|,
 name|v
 parameter_list|)
-value|{					\
-comment|/* .e = v, */
-comment|/* overwritten */
-value|\ 	.xbits.man = __CONCAT(m, ULL),				\ 	.xbits.expsign = (0x3fff + (ex)) | ((s) ? 0x8000 : 0),	\ }
+value|{ .e = (v), }
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -491,7 +520,7 @@ name|lval
 parameter_list|,
 name|rval
 parameter_list|)
-value|do {	\ 	volatile type __lval;			\ 						\ 	if (sizeof(type)>= sizeof(double))	\ 		(lval) = (rval);		\ 	else {					\ 		__lval = (rval);		\ 		(lval) = __lval;		\ 	}					\ } while (0)
+value|do {	\ 	volatile type __lval;			\ 						\ 	if (sizeof(type)>= sizeof(long double))	\ 		(lval) = (rval);		\ 	else {					\ 		__lval = (rval);		\ 		(lval) = __lval;		\ 	}					\ } while (0)
 end_define
 
 begin_endif
@@ -533,7 +562,7 @@ directive|define
 name|ENTERI
 parameter_list|()
 define|\
-value|long double __retval;			\ 	fp_prec_t __oprec;			\ 						\ 	if ((__oprec = fpgetprec()) != FP_PE)	\ 		fpsetprec(FP_PE);
+value|long double __retval;			\ 	fp_prec_t __oprec;			\ 						\ 	if ((__oprec = fpgetprec()) != FP_PE)	\ 		fpsetprec(FP_PE)
 end_define
 
 begin_define

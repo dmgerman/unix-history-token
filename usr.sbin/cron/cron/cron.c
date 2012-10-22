@@ -184,11 +184,16 @@ name|void
 name|usage
 parameter_list|()
 block|{
+if|#
+directive|if
+name|DEBUGGING
 name|char
 modifier|*
 modifier|*
 name|dflags
 decl_stmt|;
+endif|#
+directive|endif
 name|fprintf
 argument_list|(
 name|stderr
@@ -197,6 +202,9 @@ literal|"usage: cron [-j jitter] [-J rootjitter] "
 literal|"[-m mailto] [-s] [-o] [-x debugflag[,...]]\n"
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|DEBUGGING
 name|fprintf
 argument_list|(
 name|stderr
@@ -235,6 +243,8 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|exit
 argument_list|(
 name|ERROR_EXIT

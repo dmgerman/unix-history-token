@@ -1465,6 +1465,7 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|CODE
 modifier|*
 parameter_list|)
@@ -6012,6 +6013,7 @@ operator|>
 literal|1
 condition|)
 block|{
+specifier|const
 name|CODE
 modifier|*
 name|c
@@ -10836,11 +10838,13 @@ name|char
 modifier|*
 name|name
 parameter_list|,
+specifier|const
 name|CODE
 modifier|*
 name|codetab
 parameter_list|)
 block|{
+specifier|const
 name|CODE
 modifier|*
 name|c

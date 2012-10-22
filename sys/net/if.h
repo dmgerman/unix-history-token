@@ -187,9 +187,9 @@ name|ifi_vhid
 decl_stmt|;
 comment|/* carp vhid */
 name|u_char
-name|ifi_spare_char2
+name|ifi_baudrate_pf
 decl_stmt|;
-comment|/* spare byte */
+comment|/* baudrate power factor */
 name|u_char
 name|ifi_datalen
 decl_stmt|;
@@ -614,7 +614,7 @@ name|IF_Kbps
 parameter_list|(
 name|x
 parameter_list|)
-value|((x) * 1000)
+value|((uintmax_t)(x) * 1000)
 end_define
 
 begin_comment

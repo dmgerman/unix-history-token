@@ -2970,8 +2970,11 @@ name|prtrealloc
 condition|)
 name|printf
 argument_list|(
-literal|"realloc: ino %d, lbns %jd-%jd\n\told:"
+literal|"realloc: ino %ju, lbns %jd-%jd\n\told:"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ip
 operator|->
 name|i_number
@@ -11791,7 +11794,7 @@ name|fs_ncg
 condition|)
 name|panic
 argument_list|(
-literal|"ffs_freefile: range: dev = %s, ino = %lu, fs = %s"
+literal|"ffs_freefile: range: dev = %s, ino = %ju, fs = %s"
 argument_list|,
 name|devtoname
 argument_list|(
@@ -11799,7 +11802,7 @@ name|dev
 argument_list|)
 argument_list|,
 operator|(
-name|u_long
+name|uintmax_t
 operator|)
 name|ino
 argument_list|,
@@ -11917,13 +11920,17 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"dev = %s, ino = %u, fs = %s\n"
+literal|"dev = %s, ino = %ju, fs = %s\n"
 argument_list|,
 name|devtoname
 argument_list|(
 name|dev
 argument_list|)
 argument_list|,
+call|(
+name|uintmax_t
+call|)
+argument_list|(
 name|ino
 operator|+
 name|cg
@@ -11931,6 +11938,7 @@ operator|*
 name|fs
 operator|->
 name|fs_ipg
+argument_list|)
 argument_list|,
 name|fs
 operator|->
@@ -12760,7 +12768,7 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"pid %d (%s), uid %d inumber %d on %s: %s\n"
+literal|"pid %d (%s), uid %d inumber %ju on %s: %s\n"
 argument_list|,
 name|p
 operator|->
@@ -12776,6 +12784,9 @@ name|td_ucred
 operator|->
 name|cr_uid
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|inum
 argument_list|,
 name|fs
@@ -13269,8 +13280,6 @@ modifier|*
 name|vfp
 decl_stmt|;
 name|int
-name|vfslocked
-decl_stmt|,
 name|filetype
 decl_stmt|,
 name|error
@@ -13851,7 +13860,7 @@ literal|1
 condition|)
 name|printf
 argument_list|(
-literal|"%s: free %s inode %d\n"
+literal|"%s: free %s inode %ju\n"
 argument_list|,
 name|mp
 operator|->
@@ -13868,7 +13877,7 @@ else|:
 literal|"file"
 argument_list|,
 operator|(
-name|ino_t
+name|uintmax_t
 operator|)
 name|cmd
 operator|.
@@ -13878,7 +13887,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"%s: free %s inodes %d-%d\n"
+literal|"%s: free %s inodes %ju-%ju\n"
 argument_list|,
 name|mp
 operator|->
@@ -13895,14 +13904,14 @@ else|:
 literal|"file"
 argument_list|,
 operator|(
-name|ino_t
+name|uintmax_t
 operator|)
 name|cmd
 operator|.
 name|value
 argument_list|,
 call|(
-name|ino_t
+name|uintmax_t
 call|)
 argument_list|(
 name|cmd
@@ -14405,15 +14414,6 @@ argument_list|)
 operator|)
 condition|)
 break|break;
-name|vfslocked
-operator|=
-name|VFS_LOCK_GIANT
-argument_list|(
-name|vp
-operator|->
-name|v_mount
-argument_list|)
-expr_stmt|;
 name|AUDIT_ARG_VNODE1
 argument_list|(
 name|vp
@@ -14440,11 +14440,6 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|VFS_UNLOCK_GIANT
-argument_list|(
-name|vfslocked
-argument_list|)
-expr_stmt|;
 break|break;
 block|}
 name|VOP_UNLOCK
@@ -14452,11 +14447,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-name|VFS_UNLOCK_GIANT
-argument_list|(
-name|vfslocked
 argument_list|)
 expr_stmt|;
 name|fdp
@@ -14489,23 +14479,9 @@ argument_list|(
 name|fdp
 argument_list|)
 expr_stmt|;
-name|vfslocked
-operator|=
-name|VFS_LOCK_GIANT
-argument_list|(
-name|vpold
-operator|->
-name|v_mount
-argument_list|)
-expr_stmt|;
 name|vrele
 argument_list|(
 name|vpold
-argument_list|)
-expr_stmt|;
-name|VFS_UNLOCK_GIANT
-argument_list|(
-name|vfslocked
 argument_list|)
 expr_stmt|;
 break|break;
@@ -14874,15 +14850,6 @@ argument_list|)
 operator|)
 condition|)
 break|break;
-name|vfslocked
-operator|=
-name|VFS_LOCK_GIANT
-argument_list|(
-name|vp
-operator|->
-name|v_mount
-argument_list|)
-expr_stmt|;
 name|AUDIT_ARG_VNODE1
 argument_list|(
 name|vp
@@ -14968,11 +14935,6 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|VFS_UNLOCK_GIANT
-argument_list|(
-name|vfslocked
-argument_list|)
-expr_stmt|;
 break|break;
 block|}
 name|ip
@@ -14995,11 +14957,6 @@ expr_stmt|;
 name|vput
 argument_list|(
 name|vp
-argument_list|)
-expr_stmt|;
-name|VFS_UNLOCK_GIANT
-argument_list|(
-name|vfslocked
 argument_list|)
 expr_stmt|;
 break|break;
@@ -15342,8 +15299,6 @@ name|fs
 decl_stmt|;
 name|int
 name|error
-decl_stmt|,
-name|vfslocked
 decl_stmt|;
 name|daddr_t
 name|lbn
@@ -15394,17 +15349,6 @@ argument_list|,
 name|uio
 argument_list|,
 name|flags
-argument_list|)
-expr_stmt|;
-name|vfslocked
-operator|=
-name|VFS_LOCK_GIANT
-argument_list|(
-name|ip
-operator|->
-name|i_vnode
-operator|->
-name|v_mount
 argument_list|)
 expr_stmt|;
 name|vn_lock
@@ -15584,11 +15528,6 @@ argument_list|(
 name|devvp
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-name|VFS_UNLOCK_GIANT
-argument_list|(
-name|vfslocked
 argument_list|)
 expr_stmt|;
 name|foffset_unlock_uio

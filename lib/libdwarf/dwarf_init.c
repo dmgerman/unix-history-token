@@ -2888,7 +2888,6 @@ name|die_offset
 init|=
 name|offset
 decl_stmt|;
-empty_stmt|;
 name|abnum
 operator|=
 name|dwarf_read_uleb128

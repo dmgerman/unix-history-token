@@ -4060,8 +4060,6 @@ decl_stmt|,
 name|flags
 decl_stmt|,
 name|len
-decl_stmt|,
-name|vfslocked
 decl_stmt|;
 name|NDINIT
 argument_list|(
@@ -4071,8 +4069,6 @@ argument_list|,
 name|LOOKUP
 argument_list|,
 name|FOLLOW
-operator||
-name|MPSAFE
 argument_list|,
 name|UIO_SYSSPACE
 argument_list|,
@@ -4109,14 +4105,6 @@ operator|(
 name|error
 operator|)
 return|;
-name|vfslocked
-operator|=
-name|NDHASGIANT
-argument_list|(
-operator|&
-name|nd
-argument_list|)
-expr_stmt|;
 name|NDFREE
 argument_list|(
 operator|&
@@ -4234,11 +4222,6 @@ operator|->
 name|td_ucred
 argument_list|,
 name|td
-argument_list|)
-expr_stmt|;
-name|VFS_UNLOCK_GIANT
-argument_list|(
-name|vfslocked
 argument_list|)
 expr_stmt|;
 return|return

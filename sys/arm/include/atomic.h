@@ -271,6 +271,8 @@ name|setmask
 operator|)
 operator|:
 operator|:
+literal|"cc"
+operator|,
 literal|"memory"
 block|)
 function|;
@@ -327,6 +329,8 @@ name|setmask
 operator|)
 operator|:
 operator|:
+literal|"cc"
+operator|,
 literal|"memory"
 block|)
 function|;
@@ -383,6 +387,8 @@ name|setmask
 operator|)
 operator|:
 operator|:
+literal|"cc"
+operator|,
 literal|"memory"
 block|)
 function|;
@@ -439,6 +445,8 @@ name|setmask
 operator|)
 operator|:
 operator|:
+literal|"cc"
+operator|,
 literal|"memory"
 block|)
 function|;
@@ -498,6 +506,8 @@ name|newval
 operator|)
 operator|:
 operator|:
+literal|"cc"
+operator|,
 literal|"memory"
 block|)
 function|;
@@ -565,6 +575,8 @@ name|newval
 operator|)
 operator|:
 operator|:
+literal|"cc"
+operator|,
 literal|"memory"
 block|)
 function|;
@@ -791,6 +803,8 @@ name|val
 operator|)
 operator|:
 operator|:
+literal|"cc"
+operator|,
 literal|"memory"
 block|)
 function|;
@@ -847,6 +861,8 @@ name|val
 operator|)
 operator|:
 operator|:
+literal|"cc"
+operator|,
 literal|"memory"
 block|)
 function|;
@@ -903,6 +919,8 @@ name|val
 operator|)
 operator|:
 operator|:
+literal|"cc"
+operator|,
 literal|"memory"
 block|)
 function|;
@@ -959,6 +977,8 @@ name|val
 operator|)
 operator|:
 operator|:
+literal|"cc"
+operator|,
 literal|"memory"
 block|)
 function|;
@@ -1066,6 +1086,8 @@ name|val
 operator|)
 operator|:
 operator|:
+literal|"cc"
+block|,
 literal|"memory"
 block|)
 expr_stmt|;
@@ -1129,6 +1151,8 @@ name|p
 operator|)
 operator|:
 operator|:
+literal|"cc"
+operator|,
 literal|"memory"
 block|)
 function|;
@@ -1259,6 +1283,8 @@ name|val
 operator|)
 operator|:
 operator|:
+literal|"cc"
+operator|,
 literal|"memory"
 block|)
 function|;
@@ -1322,6 +1348,8 @@ name|p
 operator|)
 operator|:
 operator|:
+literal|"cc"
+operator|,
 literal|"memory"
 block|)
 function|;
@@ -1733,6 +1761,8 @@ name|newval
 operator|)
 operator|:
 operator|:
+literal|"cc"
+operator|,
 literal|"memory"
 block|)
 function|;

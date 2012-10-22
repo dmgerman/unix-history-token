@@ -2293,9 +2293,6 @@ init|=
 name|NULL
 decl_stmt|;
 name|int
-name|s
-decl_stmt|;
-name|int
 name|error
 decl_stmt|;
 name|bzero
@@ -2367,11 +2364,6 @@ name|new
 operator|->
 name|rtaddr
 expr_stmt|;
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
 name|error
 operator|=
 name|in6_rtrequest
@@ -2440,11 +2432,6 @@ operator|->
 name|installed
 operator|=
 literal|1
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 return|return;
 block|}
@@ -2852,12 +2839,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
-name|s
-init|=
-name|splnet
-argument_list|()
-decl_stmt|;
 name|struct
 name|nd_defrouter
 modifier|*
@@ -2889,14 +2870,7 @@ operator|&
 name|V_nd_defrouter
 argument_list|)
 condition|)
-block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return;
-block|}
 comment|/* 	 * Search for a (probably) reachable router from the list. 	 * We just pick up the first reachable one (if any), assuming that 	 * the ordering rule of the list described in defrtrlist_update(). 	 */
 name|TAILQ_FOREACH
 argument_list|(
@@ -3145,11 +3119,6 @@ name|selected_dr
 argument_list|)
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
 end_function
@@ -3249,12 +3218,6 @@ decl_stmt|,
 modifier|*
 name|n
 decl_stmt|;
-name|int
-name|s
-init|=
-name|splnet
-argument_list|()
-decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -3346,18 +3309,11 @@ argument_list|)
 operator|==
 name|oldpref
 condition|)
-block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|dr
 operator|)
 return|;
-block|}
 comment|/* 			 * preferred router may be changed, so relocate 			 * this router. 			 * XXX: calling TAILQ_REMOVE directly is a bad manner. 			 * However, since defrtrlist_del() has many side 			 * effects, we intentionally do so here. 			 * defrouter_select() below will handle routing 			 * changes later. 			 */
 name|TAILQ_REMOVE
 argument_list|(
@@ -3377,11 +3333,6 @@ goto|goto
 name|insert
 goto|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|dr
@@ -3397,18 +3348,11 @@ name|rtlifetime
 operator|==
 literal|0
 condition|)
-block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
-block|}
 name|n
 operator|=
 operator|(
@@ -3435,18 +3379,11 @@ name|n
 operator|==
 name|NULL
 condition|)
-block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
-block|}
 name|bzero
 argument_list|(
 name|n
@@ -3517,11 +3454,6 @@ argument_list|)
 expr_stmt|;
 name|defrouter_select
 argument_list|()
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -3804,8 +3736,6 @@ literal|0
 decl_stmt|;
 name|int
 name|i
-decl_stmt|,
-name|s
 decl_stmt|;
 name|char
 name|ip6buf
@@ -4002,11 +3932,6 @@ index|[
 name|i
 index|]
 expr_stmt|;
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
 comment|/* link ndpr_entry to nd_prefix list */
 name|LIST_INSERT_HEAD
 argument_list|(
@@ -4016,11 +3941,6 @@ argument_list|,
 name|new
 argument_list|,
 name|ndpr_entry
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 comment|/* ND_OPT_PI_FLAG_ONLINK processing */
@@ -4123,8 +4043,6 @@ name|next
 decl_stmt|;
 name|int
 name|e
-decl_stmt|,
-name|s
 decl_stmt|;
 name|char
 name|ip6buf
@@ -4217,11 +4135,6 @@ literal|0
 condition|)
 return|return;
 comment|/* notice here? */
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
 comment|/* unlink ndpr_entry from nd_prefix list */
 name|LIST_REMOVE
 argument_list|(
@@ -4250,11 +4163,6 @@ name|M_IP6NDP
 argument_list|)
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|free
 argument_list|(
 name|pr
@@ -4326,12 +4234,6 @@ name|struct
 name|nd_prefix
 modifier|*
 name|pr
-decl_stmt|;
-name|int
-name|s
-init|=
-name|splnet
-argument_list|()
 decl_stmt|;
 name|int
 name|error
@@ -5319,11 +5221,6 @@ block|}
 block|}
 name|end
 label|:
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 name|error
 return|;
@@ -8770,12 +8667,6 @@ decl_stmt|;
 name|u_int
 name|fibnum
 decl_stmt|;
-name|int
-name|s
-init|=
-name|splnet
-argument_list|()
-decl_stmt|;
 comment|/* We'll care only link-local addresses */
 if|if
 condition|(
@@ -8785,14 +8676,7 @@ argument_list|(
 name|gateway
 argument_list|)
 condition|)
-block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return;
-block|}
 comment|/* XXX Do we really need to walk any but the default FIB? */
 for|for
 control|(
@@ -8850,11 +8734,6 @@ name|rnh
 argument_list|)
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

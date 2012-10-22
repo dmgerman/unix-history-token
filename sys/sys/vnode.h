@@ -2680,6 +2680,25 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|getnewvnode_reserve
+parameter_list|(
+name|u_int
+name|count
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|getnewvnode_drop_reserve
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|insmntque1
 parameter_list|(

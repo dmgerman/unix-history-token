@@ -32132,9 +32132,6 @@ name|sav
 parameter_list|)
 block|{
 name|int
-name|s
-decl_stmt|;
-name|int
 name|satype
 decl_stmt|;
 name|struct
@@ -32161,13 +32158,6 @@ name|sadb_lifetime
 modifier|*
 name|lt
 decl_stmt|;
-comment|/* XXX: Why do we lock ? */
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
-comment|/*called from softclock()*/
 name|IPSEC_ASSERT
 argument_list|(
 name|sav
@@ -32763,11 +32753,6 @@ operator|.
 name|len
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 name|key_sendup_mbuf
 argument_list|(
@@ -32787,11 +32772,6 @@ condition|)
 name|m_freem
 argument_list|(
 name|result
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 return|return
