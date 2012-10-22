@@ -9920,6 +9920,11 @@ condition|)
 goto|goto
 name|skip_memtest
 goto|;
+name|printf
+argument_list|(
+literal|"testing memory...\n"
+argument_list|)
+expr_stmt|;
 comment|/* 			 * map page into kernel: valid, read/write,non-cacheable 			 */
 operator|*
 name|pte
