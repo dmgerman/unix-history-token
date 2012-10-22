@@ -22215,16 +22215,10 @@ name|ooffset
 decl_stmt|;
 name|int
 name|error
-decl_stmt|,
-name|vfslocked
 decl_stmt|;
 name|fp
 operator|=
 name|NULL
-expr_stmt|;
-name|vfslocked
-operator|=
-literal|0
 expr_stmt|;
 name|error
 operator|=
