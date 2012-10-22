@@ -1538,6 +1538,21 @@ name|out
 goto|;
 comment|/* Nothing more to do */
 block|}
+elseif|else
+if|if
+condition|(
+name|partition
+operator|==
+literal|255
+condition|)
+block|{
+comment|/* 			 * When we try to open GPT partition, but partition 			 * table isn't GPT, reset d_partition value to -1 			 * and try to autodetect appropriate value. 			 */
+name|partition
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
 comment|/* 		 * If d_partition< 0 and we are looking at a BSD slice, 		 * then try to read BSD label, otherwise return the 		 * whole MBR slice. 		 */
 if|if
 condition|(
