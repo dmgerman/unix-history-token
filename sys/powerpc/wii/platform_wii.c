@@ -146,6 +146,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<powerpc/wii/wii_ipcreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"platform_if.h"
 end_include
 
@@ -436,8 +442,6 @@ operator|.
 name|mr_size
 operator|=
 literal|0x01800000
-operator|-
-literal|0x0004000
 expr_stmt|;
 comment|/* 	 * Reserve space for the framebuffer which is located 	 * at the end of this 24MB memory region. See wii_fbreg.h. 	 */
 name|avail_regions
@@ -458,8 +462,6 @@ operator|.
 name|mr_start
 operator|=
 literal|0x10000000
-operator|+
-literal|0x0004000
 expr_stmt|;
 name|avail_regions
 index|[
@@ -469,17 +471,38 @@ operator|.
 name|mr_size
 operator|=
 literal|0x04000000
-operator|-
-literal|0x0004000
 expr_stmt|;
-comment|/* XXX for now only use the first memory region */
-undef|#
-directive|undef
-name|MEM_REGIONS
-define|#
-directive|define
-name|MEM_REGIONS
-value|1
+comment|/* 	 * Reserve space for the DSP. 	 */
+name|avail_regions
+index|[
+literal|1
+index|]
+operator|.
+name|mr_start
+operator|+=
+literal|0x4000
+expr_stmt|;
+name|avail_regions
+index|[
+literal|1
+index|]
+operator|.
+name|mr_size
+operator|-=
+literal|0x4000
+expr_stmt|;
+comment|/* 	 * Reserve space for the IOS I/O memory. 	 */
+name|avail_regions
+index|[
+literal|1
+index|]
+operator|.
+name|mr_size
+operator|-=
+name|WIIIPC_IOH_LEN
+operator|+
+literal|1
+expr_stmt|;
 operator|*
 name|phys
 operator|=
