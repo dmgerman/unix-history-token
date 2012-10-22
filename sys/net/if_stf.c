@@ -2304,13 +2304,15 @@ name|ip
 operator|->
 name|ip_len
 operator|=
+name|htons
+argument_list|(
 name|m
 operator|->
 name|m_pkthdr
 operator|.
 name|len
+argument_list|)
 expr_stmt|;
-comment|/*host order*/
 if|if
 condition|(
 name|ifp

@@ -1060,11 +1060,6 @@ name|INET
 case|case
 name|IPVERSION
 case|:
-name|SET_HOST_IPLEN
-argument_list|(
-name|ip
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ip_output

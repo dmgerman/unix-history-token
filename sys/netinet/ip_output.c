@@ -378,7 +378,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * IP output.  The packet in mbuf chain m contains a skeletal IP  * header (with len, off, ttl, proto, tos, src, dst).  * ip_len and ip_off are in host format.  * The mbuf chain containing the packet will be freed.  * The mbuf opt, if present, will not be freed.  * If route ro is present and has ro_rt initialized, route lookup would be  * skipped and ro->ro_rt would be used. If ro is present but ro->ro_rt is NULL,  * then result of route lookup is stored in ro->ro_rt.  *  * In the IP forwarding case, the packet will arrive with options already  * inserted, so must have a NULL opt pointer.  */
+comment|/*  * IP output.  The packet in mbuf chain m contains a skeletal IP  * header (with len, off, ttl, proto, tos, src, dst).  * The mbuf chain containing the packet will be freed.  * The mbuf opt, if present, will not be freed.  * If route ro is present and has ro_rt initialized, route lookup would be  * skipped and ro->ro_rt would be used. If ro is present but ro->ro_rt is NULL,  * then result of route lookup is stored in ro->ro_rt.  *  * In the IP forwarding case, the packet will arrive with options already  * inserted, so must have a NULL opt pointer.  */
 end_comment
 
 begin_function
@@ -680,6 +680,24 @@ argument_list|,
 expr|struct
 name|ip
 operator|*
+argument_list|)
+expr_stmt|;
+name|ip_len
+operator|=
+name|ntohs
+argument_list|(
+name|ip
+operator|->
+name|ip_len
+argument_list|)
+expr_stmt|;
+name|ip_off
+operator|=
+name|ntohs
+argument_list|(
+name|ip
+operator|->
+name|ip_off
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Fill in IP header.  If we are not allowing fragmentation, 	 * then the ip_id field is meaningless, but we don't set it 	 * to zero.  Doing so causes various problems when devices along 	 * the path (routers, load balancers, firewalls, etc.) illegally 	 * disable DF on our packet.  Note that a 16-bit counter 	 * will wrap around in less than 10 seconds at 100 Mbit/s on a 	 * medium with MTU 1500.  See Steven M. Bellovin, "A Technique 	 * for Counting NATted Hosts", Proc. IMW'02, available at 	 *<http://www.cs.columbia.edu/~smb/papers/fnat.pdf>. 	 */
@@ -1724,8 +1742,6 @@ block|}
 comment|/* 	 * Verify that we have any chance at all of being able to queue the 	 * packet or packet fragments, unless ALTQ is enabled on the given 	 * interface in which case packetdrop should be done by queueing. 	 */
 name|n
 operator|=
-name|ip
-operator|->
 name|ip_len
 operator|/
 name|mtu
@@ -1839,8 +1855,6 @@ block|}
 comment|/* don't allow broadcast messages to be fragmented */
 if|if
 condition|(
-name|ip
-operator|->
 name|ip_len
 operator|>
 name|mtu
@@ -1955,29 +1969,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* IPSEC */
-comment|/* 	 * To network byte order. pfil(9) hooks and ip_fragment() expect this. 	 */
-name|ip
-operator|->
-name|ip_len
-operator|=
-name|htons
-argument_list|(
-name|ip
-operator|->
-name|ip_len
-argument_list|)
-expr_stmt|;
-name|ip
-operator|->
-name|ip_off
-operator|=
-name|htons
-argument_list|(
-name|ip
-operator|->
-name|ip_off
-argument_list|)
-expr_stmt|;
 comment|/* Jump over all PFIL processing if hooks are not active. */
 if|if
 condition|(
@@ -2190,28 +2181,6 @@ operator|->
 name|ia_ifa
 argument_list|)
 expr_stmt|;
-name|ip
-operator|->
-name|ip_len
-operator|=
-name|ntohs
-argument_list|(
-name|ip
-operator|->
-name|ip_len
-argument_list|)
-expr_stmt|;
-name|ip
-operator|->
-name|ip_off
-operator|=
-name|ntohs
-argument_list|(
-name|ip
-operator|->
-name|ip_off
-argument_list|)
-expr_stmt|;
 goto|goto
 name|again
 goto|;
@@ -2398,28 +2367,6 @@ operator|->
 name|ia_ifa
 argument_list|)
 expr_stmt|;
-name|ip
-operator|->
-name|ip_len
-operator|=
-name|ntohs
-argument_list|(
-name|ip
-operator|->
-name|ip_len
-argument_list|)
-expr_stmt|;
-name|ip
-operator|->
-name|ip_off
-operator|=
-name|ntohs
-argument_list|(
-name|ip
-operator|->
-name|ip_off
-argument_list|)
-expr_stmt|;
 goto|goto
 name|again
 goto|;
@@ -2429,24 +2376,6 @@ directive|endif
 comment|/* IPFIREWALL_FORWARD */
 name|passout
 label|:
-name|ip_len
-operator|=
-name|ntohs
-argument_list|(
-name|ip
-operator|->
-name|ip_len
-argument_list|)
-expr_stmt|;
-name|ip_off
-operator|=
-name|ntohs
-argument_list|(
-name|ip
-operator|->
-name|ip_off
-argument_list|)
-expr_stmt|;
 comment|/* 127/8 must not appear on wire - RFC1122. */
 if|if
 condition|(
@@ -5250,7 +5179,7 @@ name|error
 operator|)
 return|;
 block|}
-comment|/*  * Routine called from ip_output() to loop back a copy of an IP multicast  * packet to the input queue of a specified interface.  Note that this  * calls the output routine of the loopback "driver", but with an interface  * pointer that might NOT be a loopback interface -- evil, but easier than  * replicating that code here.  *  * IP header in host byte order.  */
+comment|/*  * Routine called from ip_output() to loop back a copy of an IP multicast  * packet to the input queue of a specified interface.  Note that this  * calls the output routine of the loopback "driver", but with an interface  * pointer that might NOT be a loopback interface -- evil, but easier than  * replicating that code here.  */
 specifier|static
 name|void
 name|ip_mloopback
@@ -5331,39 +5260,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|ip
-operator|=
-name|mtod
-argument_list|(
-name|copym
-argument_list|,
-expr|struct
-name|ip
-operator|*
-argument_list|)
-expr_stmt|;
-name|ip
-operator|->
-name|ip_len
-operator|=
-name|htons
-argument_list|(
-name|ip
-operator|->
-name|ip_len
-argument_list|)
-expr_stmt|;
-name|ip
-operator|->
-name|ip_off
-operator|=
-name|htons
-argument_list|(
-name|ip
-operator|->
-name|ip_off
-argument_list|)
-expr_stmt|;
 comment|/* If needed, compute the checksum and mark it as valid. */
 if|if
 condition|(
@@ -5410,6 +5306,17 @@ literal|0xffff
 expr_stmt|;
 block|}
 comment|/* 		 * We don't bother to fragment if the IP length is greater 		 * than the interface's MTU.  Can this possibly matter? 		 */
+name|ip
+operator|=
+name|mtod
+argument_list|(
+name|copym
+argument_list|,
+expr|struct
+name|ip
+operator|*
+argument_list|)
+expr_stmt|;
 name|ip
 operator|->
 name|ip_sum

@@ -2757,12 +2757,6 @@ name|ICMP_REJECT_RST
 condition|)
 block|{
 comment|/* Send an ICMP unreach */
-comment|/* We need the IP header in host order for icmp_error(). */
-name|SET_HOST_IPLEN
-argument_list|(
-name|ip
-argument_list|)
-expr_stmt|;
 name|icmp_error
 argument_list|(
 name|args
@@ -10183,12 +10177,6 @@ operator|==
 literal|0
 condition|)
 break|break;
-comment|/*  				 * ip_reass() expects len& off in host 				 * byte order. 				 */
-name|SET_HOST_IPLEN
-argument_list|(
-name|ip
-argument_list|)
-expr_stmt|;
 name|args
 operator|->
 name|m
@@ -10238,11 +10226,6 @@ operator|->
 name|ip_hl
 operator|<<
 literal|2
-expr_stmt|;
-name|SET_NET_IPLEN
-argument_list|(
-name|ip
-argument_list|)
 expr_stmt|;
 name|ip
 operator|->

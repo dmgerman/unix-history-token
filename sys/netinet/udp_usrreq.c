@@ -1484,8 +1484,10 @@ name|inpcb
 modifier|*
 name|inp
 decl_stmt|;
-name|int
+name|uint16_t
 name|len
+decl_stmt|,
+name|ip_len
 decl_stmt|;
 name|struct
 name|ip
@@ -1696,10 +1698,17 @@ operator|->
 name|uh_ulen
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|ip_len
+operator|=
+name|ntohs
+argument_list|(
 name|ip
 operator|->
+name|ip_len
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|ip_len
 operator|!=
 name|len
@@ -1709,8 +1718,6 @@ if|if
 condition|(
 name|len
 operator|>
-name|ip
-operator|->
 name|ip_len
 operator|||
 name|len
@@ -1737,12 +1744,9 @@ name|m
 argument_list|,
 name|len
 operator|-
-name|ip
-operator|->
 name|ip_len
 argument_list|)
 expr_stmt|;
-comment|/* ip->ip_len = len; */
 block|}
 comment|/* 	 * Save a copy of the IP header in case we want restore it for 	 * sending an ICMP error message in response. 	 */
 if|if
@@ -2669,8 +2673,13 @@ expr_stmt|;
 name|ip
 operator|->
 name|ip_len
-operator|+=
+operator|=
+name|htons
+argument_list|(
+name|ip_len
+operator|+
 name|iphlen
+argument_list|)
 expr_stmt|;
 name|icmp_error
 argument_list|(
@@ -5409,7 +5418,10 @@ name|ip
 operator|->
 name|ip_off
 operator||=
+name|htons
+argument_list|(
 name|IP_DF
+argument_list|)
 expr_stmt|;
 block|}
 name|ipflags
@@ -5562,6 +5574,8 @@ operator|)
 operator|->
 name|ip_len
 operator|=
+name|htons
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -5569,6 +5583,7 @@ name|udpiphdr
 argument_list|)
 operator|+
 name|len
+argument_list|)
 expr_stmt|;
 operator|(
 operator|(
@@ -6239,8 +6254,18 @@ expr_stmt|;
 name|ip
 operator|->
 name|ip_len
-operator|-=
+operator|=
+name|htons
+argument_list|(
+name|ntohs
+argument_list|(
+name|ip
+operator|->
+name|ip_len
+argument_list|)
+operator|-
 name|skip
+argument_list|)
 expr_stmt|;
 name|ip
 operator|->

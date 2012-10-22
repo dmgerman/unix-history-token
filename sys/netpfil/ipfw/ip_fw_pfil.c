@@ -1906,12 +1906,6 @@ name|mbuf
 modifier|*
 name|reass
 decl_stmt|;
-name|SET_HOST_IPLEN
-argument_list|(
-name|ip
-argument_list|)
-expr_stmt|;
-comment|/* ip_reass wants host order */
 name|reass
 operator|=
 name|ip_reass
@@ -1950,11 +1944,6 @@ operator|->
 name|ip_hl
 operator|<<
 literal|2
-expr_stmt|;
-name|SET_NET_IPLEN
-argument_list|(
-name|ip
-argument_list|)
 expr_stmt|;
 name|ip
 operator|->

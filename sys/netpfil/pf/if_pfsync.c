@@ -7572,7 +7572,10 @@ name|ip
 operator|->
 name|ip_off
 operator|=
+name|htons
+argument_list|(
 name|IP_DF
+argument_list|)
 expr_stmt|;
 name|ip
 operator|->
@@ -8295,11 +8298,14 @@ name|ip
 operator|->
 name|ip_len
 operator|=
+name|htons
+argument_list|(
 name|m
 operator|->
 name|m_pkthdr
 operator|.
 name|len
+argument_list|)
 expr_stmt|;
 name|ip
 operator|->

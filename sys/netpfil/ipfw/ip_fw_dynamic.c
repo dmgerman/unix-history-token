@@ -4429,14 +4429,19 @@ name|h
 operator|->
 name|ip_off
 operator|=
+name|htons
+argument_list|(
 literal|0
+argument_list|)
 expr_stmt|;
-comment|/* ip_len must be in host format for ip_output */
 name|h
 operator|->
 name|ip_len
 operator|=
+name|htons
+argument_list|(
 name|len
+argument_list|)
 expr_stmt|;
 name|h
 operator|->

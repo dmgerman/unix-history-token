@@ -5415,9 +5415,12 @@ name|off
 expr_stmt|;
 name|igmplen
 operator|=
+name|ntohs
+argument_list|(
 name|ip
 operator|->
 name|ip_len
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Validate lengths. 	 */
 if|if
@@ -8045,6 +8048,8 @@ name|ip
 operator|->
 name|ip_len
 operator|=
+name|htons
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -8055,6 +8060,7 @@ sizeof|sizeof
 argument_list|(
 expr|struct
 name|igmp
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ip
@@ -13421,15 +13427,21 @@ name|ip
 operator|->
 name|ip_len
 operator|=
+name|htons
+argument_list|(
 name|hdrlen
 operator|+
 name|igmpreclen
+argument_list|)
 expr_stmt|;
 name|ip
 operator|->
 name|ip_off
 operator|=
+name|htons
+argument_list|(
 name|IP_DF
+argument_list|)
 expr_stmt|;
 name|ip
 operator|->

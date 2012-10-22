@@ -30129,9 +30129,12 @@ name|ip_dst
 expr_stmt|;
 name|length
 operator|=
+name|ntohs
+argument_list|(
 name|ip
 operator|->
 name|ip_len
+argument_list|)
 operator|+
 name|iphlen
 expr_stmt|;

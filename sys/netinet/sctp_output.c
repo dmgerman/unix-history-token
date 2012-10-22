@@ -19112,7 +19112,10 @@ name|ip
 operator|->
 name|ip_off
 operator|=
+name|htons
+argument_list|(
 name|IP_DF
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -19120,7 +19123,10 @@ name|ip
 operator|->
 name|ip_off
 operator|=
+name|htons
+argument_list|(
 literal|0
+argument_list|)
 expr_stmt|;
 comment|/* FreeBSD has a function for ip_id's */
 name|ip
@@ -19146,7 +19152,10 @@ name|ip
 operator|->
 name|ip_len
 operator|=
+name|htons
+argument_list|(
 name|packet_length
+argument_list|)
 expr_stmt|;
 name|ip
 operator|->
@@ -54038,7 +54047,10 @@ name|ip
 operator|->
 name|ip_len
 operator|=
+name|htons
+argument_list|(
 name|len
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
