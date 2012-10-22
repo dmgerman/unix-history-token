@@ -2183,9 +2183,6 @@ name|m_tmp
 decl_stmt|,
 name|next
 decl_stmt|;
-name|int
-name|vfslocked
-decl_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
@@ -2434,15 +2431,6 @@ argument_list|,
 name|V_WAIT
 argument_list|)
 expr_stmt|;
-name|vfslocked
-operator|=
-name|VFS_LOCK_GIANT
-argument_list|(
-name|vp
-operator|->
-name|v_mount
-argument_list|)
-expr_stmt|;
 name|vn_lock
 argument_list|(
 name|vp
@@ -2478,11 +2466,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-name|VFS_UNLOCK_GIANT
-argument_list|(
-name|vfslocked
 argument_list|)
 expr_stmt|;
 name|vm_object_deallocate
@@ -4236,10 +4219,6 @@ block|{
 comment|/* 			 * We always want to try to flush some dirty pages if 			 * we encounter them, to keep the system stable. 			 * Normally this number is small, but under extreme 			 * pressure where there are insufficient clean pages 			 * on the inactive queue, we may have to go all out. 			 */
 name|int
 name|swap_pageouts_ok
-decl_stmt|,
-name|vfslocked
-init|=
-literal|0
 decl_stmt|;
 name|struct
 name|vnode
@@ -4429,15 +4408,6 @@ expr_stmt|;
 name|VM_OBJECT_UNLOCK
 argument_list|(
 name|object
-argument_list|)
-expr_stmt|;
-name|vfslocked
-operator|=
-name|VFS_LOCK_GIANT
-argument_list|(
-name|vp
-operator|->
-name|v_mount
 argument_list|)
 expr_stmt|;
 if|if
@@ -4671,11 +4641,6 @@ condition|)
 name|vput
 argument_list|(
 name|vp
-argument_list|)
-expr_stmt|;
-name|VFS_UNLOCK_GIANT
-argument_list|(
-name|vfslocked
 argument_list|)
 expr_stmt|;
 name|vm_object_deallocate

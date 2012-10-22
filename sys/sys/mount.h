@@ -3221,57 +3221,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|VFS_NEEDSGIANT_
-parameter_list|(
-name|MP
-parameter_list|)
-define|\
-value|((MP) != NULL&& ((MP)->mnt_kern_flag& MNTK_MPSAFE) == 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VFS_NEEDSGIANT
-parameter_list|(
-name|MP
-parameter_list|)
-value|__extension__				\ ({									\ 	struct mount *_mp;						\ 	_mp = (MP);							\ 	VFS_NEEDSGIANT_(_mp);						\ })
-end_define
-
-begin_define
-define|#
-directive|define
-name|VFS_LOCK_GIANT
-parameter_list|(
-name|MP
-parameter_list|)
-value|__extension__				\ ({									\ 	int _locked;							\ 	struct mount *_mp;						\ 	_mp = (MP);							\ 	if (VFS_NEEDSGIANT_(_mp)) {					\ 		mtx_lock(&Giant);					\ 		_locked = 1;						\ 	} else								\ 		_locked = 0;						\ 	_locked;							\ })
-end_define
-
-begin_define
-define|#
-directive|define
-name|VFS_UNLOCK_GIANT
-parameter_list|(
-name|locked
-parameter_list|)
-value|do					\ {									\ 	if ((locked))							\ 		mtx_unlock(&Giant);					\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VFS_ASSERT_GIANT
-parameter_list|(
-name|MP
-parameter_list|)
-value|do						\ {									\ 	struct mount *_mp;						\ 	_mp = (MP);							\ 	if (VFS_NEEDSGIANT_(_mp))					\ 		mtx_assert(&Giant, MA_OWNED);				\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|VFS_KNOTE_LOCKED
 parameter_list|(
 name|vp
@@ -3313,8 +3262,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|VFS_VERSION_01
+value|0x20121030
+end_define
+
+begin_define
+define|#
+directive|define
 name|VFS_VERSION
-value|VFS_VERSION_00
+value|VFS_VERSION_01
 end_define
 
 begin_define

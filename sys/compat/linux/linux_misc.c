@@ -1227,8 +1227,6 @@ name|error
 decl_stmt|;
 name|int
 name|locked
-decl_stmt|,
-name|vfslocked
 decl_stmt|;
 name|LCONVPATHEXIST
 argument_list|(
@@ -1270,10 +1268,6 @@ name|a_out
 operator|=
 name|NULL
 expr_stmt|;
-name|vfslocked
-operator|=
-literal|0
-expr_stmt|;
 name|locked
 operator|=
 literal|0
@@ -1294,8 +1288,6 @@ operator||
 name|FOLLOW
 operator||
 name|LOCKLEAF
-operator||
-name|MPSAFE
 operator||
 name|AUDITVNODE1
 argument_list|,
@@ -1331,14 +1323,6 @@ operator|=
 name|ni
 operator|.
 name|ni_vp
-expr_stmt|;
-name|vfslocked
-operator|=
-name|NDHASGIANT
-argument_list|(
-operator|&
-name|ni
-argument_list|)
 expr_stmt|;
 name|NDFREE
 argument_list|(
@@ -1775,11 +1759,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|VFS_UNLOCK_GIANT
-argument_list|(
-name|vfslocked
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Check if file_offset page aligned. Currently we cannot handle 	 * misalinged file offsets, and so we read in the entire image 	 * (what a waste). 	 */
 if|if
 condition|(
@@ -2102,7 +2081,6 @@ if|if
 condition|(
 name|locked
 condition|)
-block|{
 name|VOP_UNLOCK
 argument_list|(
 name|vp
@@ -2110,12 +2088,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|VFS_UNLOCK_GIANT
-argument_list|(
-name|vfslocked
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Release the temporary mapping. */
 if|if
 condition|(

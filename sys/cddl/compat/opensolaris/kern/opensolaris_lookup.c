@@ -176,8 +176,6 @@ name|LOOKUP
 argument_list|,
 name|LOCKLEAF
 operator||
-name|MPSAFE
-operator||
 name|follow
 argument_list|,
 name|seg

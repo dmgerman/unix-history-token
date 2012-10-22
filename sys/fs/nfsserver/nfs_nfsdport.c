@@ -10286,8 +10286,6 @@ operator||
 name|NOFOLLOW
 operator||
 name|LOCKLEAF
-operator||
-name|MPSAFE
 expr_stmt|;
 if|if
 condition|(
@@ -13388,18 +13386,6 @@ name|nes_numsecflavor
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
-name|VFS_NEEDSGIANT
-argument_list|(
-name|mp
-argument_list|)
-condition|)
-name|error
-operator|=
-name|ESTALE
-expr_stmt|;
-else|else
 name|error
 operator|=
 name|VFS_FHTOVP
@@ -14167,8 +14153,6 @@ argument_list|,
 name|LOOKUP
 argument_list|,
 name|FOLLOW
-operator||
-name|MPSAFE
 argument_list|,
 name|UIO_USERSPACE
 argument_list|,

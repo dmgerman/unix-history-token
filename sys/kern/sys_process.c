@@ -1027,8 +1027,6 @@ name|int
 name|error
 decl_stmt|,
 name|index
-decl_stmt|,
-name|vfslocked
 decl_stmt|;
 name|error
 operator|=
@@ -1416,15 +1414,6 @@ operator|&
 name|freepath
 argument_list|)
 expr_stmt|;
-name|vfslocked
-operator|=
-name|VFS_LOCK_GIANT
-argument_list|(
-name|vp
-operator|->
-name|v_mount
-argument_list|)
-expr_stmt|;
 name|vn_lock
 argument_list|(
 name|vp
@@ -1471,11 +1460,6 @@ block|}
 name|vput
 argument_list|(
 name|vp
-argument_list|)
-expr_stmt|;
-name|VFS_UNLOCK_GIANT
-argument_list|(
-name|vfslocked
 argument_list|)
 expr_stmt|;
 if|if

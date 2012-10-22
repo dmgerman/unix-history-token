@@ -961,8 +961,6 @@ argument_list|,
 name|FOLLOW
 operator||
 name|LOCKLEAF
-operator||
-name|MPSAFE
 argument_list|,
 name|UIO_USERSPACE
 argument_list|,

@@ -15201,9 +15201,6 @@ name|S_IRGRP
 operator||
 name|S_IWGRP
 decl_stmt|;
-name|int
-name|vfslocked
-decl_stmt|;
 for|for
 control|(
 name|n
@@ -15235,8 +15232,6 @@ argument_list|,
 name|LOOKUP
 argument_list|,
 name|NOFOLLOW
-operator||
-name|MPSAFE
 argument_list|,
 name|UIO_SYSSPACE
 argument_list|,
@@ -15305,14 +15300,6 @@ name|NULL
 operator|)
 return|;
 block|}
-name|vfslocked
-operator|=
-name|NDHASGIANT
-argument_list|(
-operator|&
-name|nd
-argument_list|)
-expr_stmt|;
 name|NDFREE
 argument_list|(
 operator|&
@@ -15345,11 +15332,6 @@ operator|->
 name|td_ucred
 argument_list|,
 name|td
-argument_list|)
-expr_stmt|;
-name|VFS_UNLOCK_GIANT
-argument_list|(
-name|vfslocked
 argument_list|)
 expr_stmt|;
 if|if
@@ -15473,9 +15455,6 @@ decl_stmt|;
 comment|/* name of corefile */
 name|off_t
 name|limit
-decl_stmt|;
-name|int
-name|vfslocked
 decl_stmt|;
 name|int
 name|compress
@@ -15714,8 +15693,6 @@ argument_list|,
 name|LOOKUP
 argument_list|,
 name|NOFOLLOW
-operator||
-name|MPSAFE
 argument_list|,
 name|UIO_SYSSPACE
 argument_list|,
@@ -15785,14 +15762,6 @@ name|error
 operator|)
 return|;
 block|}
-name|vfslocked
-operator|=
-name|NDHASGIANT
-argument_list|(
-operator|&
-name|nd
-argument_list|)
-expr_stmt|;
 name|NDFREE
 argument_list|(
 operator|&
@@ -15989,11 +15958,6 @@ condition|)
 goto|goto
 name|out
 goto|;
-name|VFS_UNLOCK_GIANT
-argument_list|(
-name|vfslocked
-argument_list|)
-expr_stmt|;
 goto|goto
 name|restart
 goto|;
@@ -16171,11 +16135,6 @@ argument_list|(
 name|name
 argument_list|,
 name|M_TEMP
-argument_list|)
-expr_stmt|;
-name|VFS_UNLOCK_GIANT
-argument_list|(
-name|vfslocked
 argument_list|)
 expr_stmt|;
 return|return

@@ -14105,8 +14105,6 @@ name|int
 name|error
 decl_stmt|,
 name|save
-decl_stmt|,
-name|vfslocked
 decl_stmt|;
 name|DROP_GIANT
 argument_list|()
@@ -14351,13 +14349,6 @@ name|mnt_stat
 operator|.
 name|f_mntonname
 expr_stmt|;
-name|vfslocked
-operator|=
-name|VFS_LOCK_GIANT
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|vn_start_write
@@ -14377,11 +14368,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|VFS_UNLOCK_GIANT
-argument_list|(
-name|vfslocked
-argument_list|)
-expr_stmt|;
 name|GJ_DEBUG
 argument_list|(
 literal|0
@@ -14496,16 +14482,9 @@ name|error
 operator|!=
 literal|0
 condition|)
-block|{
-name|VFS_UNLOCK_GIANT
-argument_list|(
-name|vfslocked
-argument_list|)
-expr_stmt|;
 goto|goto
 name|next
 goto|;
-block|}
 comment|/* 		 * Send BIO_FLUSH before freezing the file system, so it can be 		 * faster after the freeze. 		 */
 name|GJ_TIMER_START
 argument_list|(
@@ -14547,11 +14526,6 @@ operator|=
 name|vfs_write_suspend
 argument_list|(
 name|mp
-argument_list|)
-expr_stmt|;
-name|VFS_UNLOCK_GIANT
-argument_list|(
-name|vfslocked
 argument_list|)
 expr_stmt|;
 name|GJ_TIMER_STOP
