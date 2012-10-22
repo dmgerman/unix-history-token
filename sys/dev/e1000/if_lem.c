@@ -2469,6 +2469,32 @@ argument_list|(
 literal|"lem_attach: begin"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|resource_disabled
+argument_list|(
+literal|"lem"
+argument_list|,
+name|device_get_unit
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Disabled by device hint\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
 name|adapter
 operator|=
 name|device_get_softc

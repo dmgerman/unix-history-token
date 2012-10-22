@@ -1113,6 +1113,16 @@ name|smb_dev
 decl_stmt|;
 if|if
 condition|(
+name|resource_disabled
+argument_list|(
+literal|"amdsbwd"
+argument_list|,
+literal|0
+argument_list|)
+condition|)
+return|return;
+if|if
+condition|(
 name|device_find_child
 argument_list|(
 name|parent
