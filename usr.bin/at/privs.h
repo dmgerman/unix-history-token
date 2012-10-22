@@ -74,7 +74,7 @@ begin_define
 define|#
 directive|define
 name|RELINQUISH_PRIVS
-value|{ \ 	real_uid = getuid(); \ 	effective_uid = geteuid(); \ 	real_gid = getgid(); \ 	effective_gid = getegid(); \ 	seteuid(real_uid); \ 	setegid(real_gid); \ }
+value|{ \ 	real_uid = getuid(); \ 	effective_uid = geteuid(); \ 	real_gid = getgid(); \ 	effective_gid = getegid(); \ 	if (seteuid(real_uid) != 0) err(1, "seteuid failed"); \ 	if (setegid(real_gid) != 0) err(1, "setegid failed"); \ }
 end_define
 
 begin_define
@@ -86,21 +86,21 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|{ \ 	real_uid = (a); \ 	effective_uid = geteuid(); \ 	real_gid = (b); \ 	effective_gid = getegid(); \ 	setegid(real_gid); \ 	seteuid(real_uid); \ }
+value|{ \ 	real_uid = (a); \ 	effective_uid = geteuid(); \ 	real_gid = (b); \ 	effective_gid = getegid(); \ 	if (setegid(real_gid) != 0) err(1, "setegid failed"); \ 	if (seteuid(real_uid) != 0) err(1, "seteuid failed"); \ }
 end_define
 
 begin_define
 define|#
 directive|define
 name|PRIV_START
-value|{ \ 	seteuid(effective_uid); \ 	setegid(effective_gid); \ }
+value|{ \ 	if (seteuid(effective_uid) != 0) err(1, "seteuid failed"); \ 	if (setegid(effective_gid) != 0) err(1, "setegid failed"); \ }
 end_define
 
 begin_define
 define|#
 directive|define
 name|PRIV_END
-value|{ \ 	setegid(real_gid); \ 	seteuid(real_uid); \ }
+value|{ \ 	if (setegid(real_gid) != 0) err(1, "setegid failed"); \ 	if (seteuid(real_uid) != 0) err(1, "seteuid failed"); \ }
 end_define
 
 begin_define
@@ -112,7 +112,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|{ \ 	PRIV_START \ 	effective_uid = (a); \ 	effective_gid = (b); \ 	setreuid((uid_t)-1, effective_uid); \ 	setregid((gid_t)-1, effective_gid); \ 	PRIV_END \ }
+value|{ \ 	PRIV_START \ 	effective_uid = (a); \ 	effective_gid = (b); \ 	if (setreuid((uid_t)-1, effective_uid) != 0) err(1, "setreuid failed"); \ 	if (setregid((gid_t)-1, effective_gid) != 0) err(1, "setregid failed"); \ 	PRIV_END \ }
 end_define
 
 begin_endif

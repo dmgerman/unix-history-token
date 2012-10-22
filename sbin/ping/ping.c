@@ -1391,10 +1391,21 @@ name|sockerrno
 operator|=
 name|errno
 expr_stmt|;
+if|if
+condition|(
 name|setuid
 argument_list|(
 name|getuid
 argument_list|()
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|err
+argument_list|(
+name|EX_NOPERM
+argument_list|,
+literal|"setuid() failed"
 argument_list|)
 expr_stmt|;
 name|uid
