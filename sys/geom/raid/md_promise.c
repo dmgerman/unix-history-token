@@ -2905,7 +2905,9 @@ name|pd
 operator|->
 name|pd_meta
 index|[
-name|PROMISE_MAX_SUBDISKS
+name|pd
+operator|->
+name|pd_subdisks
 operator|-
 literal|1
 index|]
@@ -3442,7 +3444,9 @@ name|pd
 operator|->
 name|pd_meta
 index|[
-name|PROMISE_MAX_SUBDISKS
+name|pd
+operator|->
+name|pd_subdisks
 operator|-
 literal|1
 index|]
@@ -5860,7 +5864,7 @@ index|]
 expr_stmt|;
 name|metaarr
 index|[
-name|PROMISE_MAX_SUBDISKS
+name|subdisks
 operator|-
 literal|1
 index|]
