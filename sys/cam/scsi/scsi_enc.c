@@ -3886,22 +3886,6 @@ name|arg
 expr_stmt|;
 if|if
 condition|(
-name|periph
-operator|==
-name|NULL
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"enc_ctor: periph was NULL!!\n"
-argument_list|)
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
-if|if
-condition|(
 name|cgd
 operator|==
 name|NULL
