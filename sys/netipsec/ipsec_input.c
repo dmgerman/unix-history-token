@@ -1517,7 +1517,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* Fix IPv4 header */
+comment|/* 		 * Fix IPv4 header 		 * XXXGL: do we need this entire block? 		 */
 if|if
 condition|(
 name|m
@@ -1618,17 +1618,6 @@ operator|->
 name|m_pkthdr
 operator|.
 name|len
-argument_list|)
-expr_stmt|;
-name|ip
-operator|->
-name|ip_off
-operator|=
-name|htons
-argument_list|(
-name|ip
-operator|->
-name|ip_off
 argument_list|)
 expr_stmt|;
 name|ip
