@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
+file|<sys/param.h>
 end_include
 
 begin_expr_stmt
@@ -64,12 +64,6 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/wait.h>
 end_include
 
@@ -101,12 +95,6 @@ begin_include
 include|#
 directive|include
 file|<sys/endian.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
 end_include
 
 begin_include
