@@ -58,7 +58,7 @@ value|0x6B
 end_define
 
 begin_comment
-comment|/*  * Reserved ASCII characters.  Do not use any of these for  * internal opcodes, since they are used to differentiate  * name strings from AML opcodes  */
+comment|/*  * Reserved ASCII characters. Do not use any of these for  * internal opcodes, since they are used to differentiate  * name strings from AML opcodes  */
 end_comment
 
 begin_define
@@ -83,7 +83,7 @@ value|0x6D
 end_define
 
 begin_comment
-comment|/*  * All AML opcodes and the parse-time arguments for each.  Used by the AML  * parser  Each list is compressed into a 32-bit number and stored in the  * master opcode table (in psopcode.c).  */
+comment|/*  * All AML opcodes and the parse-time arguments for each. Used by the AML  * parser  Each list is compressed into a 32-bit number and stored in the  * master opcode table (in psopcode.c).  */
 end_comment
 
 begin_define
@@ -955,7 +955,7 @@ value|ARG_NONE
 end_define
 
 begin_comment
-comment|/*  * All AML opcodes and the runtime arguments for each.  Used by the AML  * interpreter  Each list is compressed into a 32-bit number and stored  * in the master opcode table (in psopcode.c).  *  * (Used by PrepOperands procedure and the ASL Compiler)  */
+comment|/*  * All AML opcodes and the runtime arguments for each. Used by the AML  * interpreter  Each list is compressed into a 32-bit number and stored  * in the master opcode table (in psopcode.c).  *  * (Used by PrepOperands procedure and the ASL Compiler)  */
 end_comment
 
 begin_define

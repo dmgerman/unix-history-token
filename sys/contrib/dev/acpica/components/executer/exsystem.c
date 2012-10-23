@@ -46,7 +46,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExSystemWaitSemaphore  *  * PARAMETERS:  Semaphore       - Semaphore to wait on  *              Timeout         - Max time to wait  *  * RETURN:      Status  *  * DESCRIPTION: Implements a semaphore wait with a check to see if the  *              semaphore is available immediately.  If it is not, the  *              interpreter is released before waiting.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExSystemWaitSemaphore  *  * PARAMETERS:  Semaphore       - Semaphore to wait on  *              Timeout         - Max time to wait  *  * RETURN:      Status  *  * DESCRIPTION: Implements a semaphore wait with a check to see if the  *              semaphore is available immediately. If it is not, the  *              interpreter is released before waiting.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -143,7 +143,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExSystemWaitMutex  *  * PARAMETERS:  Mutex           - Mutex to wait on  *              Timeout         - Max time to wait  *  * RETURN:      Status  *  * DESCRIPTION: Implements a mutex wait with a check to see if the  *              mutex is available immediately.  If it is not, the  *              interpreter is released before waiting.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExSystemWaitMutex  *  * PARAMETERS:  Mutex           - Mutex to wait on  *              Timeout         - Max time to wait  *  * RETURN:      Status  *  * DESCRIPTION: Implements a mutex wait with a check to see if the  *              mutex is available immediately. If it is not, the  *              interpreter is released before waiting.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -236,7 +236,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExSystemDoStall  *  * PARAMETERS:  HowLong         - The amount of time to stall,  *                                in microseconds  *  * RETURN:      Status  *  * DESCRIPTION: Suspend running thread for specified amount of time.  *              Note: ACPI specification requires that Stall() does not  *              relinquish the processor, and delays longer than 100 usec  *              should use Sleep() instead.  We allow stalls up to 255 usec  *              for compatibility with other interpreters and existing BIOSs.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExSystemDoStall  *  * PARAMETERS:  HowLong         - The amount of time to stall,  *                                in microseconds  *  * RETURN:      Status  *  * DESCRIPTION: Suspend running thread for specified amount of time.  *              Note: ACPI specification requires that Stall() does not  *              relinquish the processor, and delays longer than 100 usec  *              should use Sleep() instead. We allow stalls up to 255 usec  *              for compatibility with other interpreters and existing BIOSs.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -396,7 +396,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExSystemWaitEvent  *  * PARAMETERS:  TimeDesc        - The 'time to delay' object descriptor  *              ObjDesc         - The object descriptor for this op  *  * RETURN:      Status  *  * DESCRIPTION: Provides an access point to perform synchronization operations  *              within the AML.  This operation is a request to wait for an  *              event.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExSystemWaitEvent  *  * PARAMETERS:  TimeDesc        - The 'time to delay' object descriptor  *              ObjDesc         - The object descriptor for this op  *  * RETURN:      Status  *  * DESCRIPTION: Provides an access point to perform synchronization operations  *              within the AML. This operation is a request to wait for an  *              event.  *  ******************************************************************************/
 end_comment
 
 begin_function

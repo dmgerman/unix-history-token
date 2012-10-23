@@ -227,7 +227,7 @@ argument_list|(
 name|OptSearchToRoot
 argument_list|)
 expr_stmt|;
-comment|/*      * Check if search-to-root can be utilized.  Use the last NameSeg of      * the NamePath and 1) See if can be found and 2) If found, make      * sure that it is the same node that we want.  If there is another      * name in the search path before the one we want, the nodes will      * not match, and we cannot use this optimization.      */
+comment|/*      * Check if search-to-root can be utilized. Use the last NameSeg of      * the NamePath and 1) See if can be found and 2) If found, make      * sure that it is the same node that we want. If there is another      * name in the search path before the one we want, the nodes will      * not match, and we cannot use this optimization.      */
 name|Path
 operator|=
 operator|&
@@ -298,7 +298,7 @@ name|Status
 operator|)
 return|;
 block|}
-comment|/*      * We found the name, but we must check to make sure that the node      * matches.  Otherwise, there is another identical name in the search      * path that precludes the use of this optimization.      */
+comment|/*      * We found the name, but we must check to make sure that the node      * matches. Otherwise, there is another identical name in the search      * path that precludes the use of this optimization.      */
 if|if
 condition|(
 name|Node
@@ -474,7 +474,7 @@ name|Node
 operator|=
 name|CurrentNode
 expr_stmt|;
-comment|/*      * Determine the maximum number of NameSegs that the Target and Current paths      * can possibly have in common.  (To optimize, we have to have at least 1)      *      * Note: The external NamePath string lengths are always a multiple of 5      * (ACPI_NAME_SIZE + separator)      */
+comment|/*      * Determine the maximum number of NameSegs that the Target and Current paths      * can possibly have in common. (To optimize, we have to have at least 1)      *      * Note: The external NamePath string lengths are always a multiple of 5      * (ACPI_NAME_SIZE + separator)      */
 name|MaxCommonSegments
 operator|=
 name|TargetPath
@@ -521,7 +521,8 @@ block|{
 comment|/* Compare two single NameSegs */
 if|if
 condition|(
-name|ACPI_STRNCMP
+operator|!
+name|ACPI_COMPARE_NAME
 argument_list|(
 operator|&
 operator|(
@@ -562,8 +563,6 @@ operator|)
 operator|+
 literal|1
 index|]
-argument_list|,
-name|ACPI_NAME_SIZE
 argument_list|)
 condition|)
 block|{
@@ -898,7 +897,7 @@ name|AE_NOT_FOUND
 operator|)
 return|;
 block|}
-comment|/*      * Check to make sure that the optimization finds the node we are      * looking for.  This is simply a sanity check on the new      * path that has been created.      */
+comment|/*      * Check to make sure that the optimization finds the node we are      * looking for. This is simply a sanity check on the new      * path that has been created.      */
 name|Status
 operator|=
 name|AcpiNsLookup
@@ -1107,7 +1106,7 @@ literal|'\\'
 operator|)
 condition|)
 block|{
-comment|/*          * The current scope is the root, and the namepath has a root prefix          * that is therefore extraneous.  Remove it.          */
+comment|/*          * The current scope is the root, and the namepath has a root prefix          * that is therefore extraneous. Remove it.          */
 operator|*
 name|NewPath
 operator|=
@@ -1158,7 +1157,7 @@ name|Status
 operator|)
 return|;
 block|}
-comment|/*          * Check to make sure that the optimization finds the node we are          * looking for.  This is simply a sanity check on the new          * path that has been created.          *          * We know that we are at the root, so NULL is used for the scope.          */
+comment|/*          * Check to make sure that the optimization finds the node we are          * looking for. This is simply a sanity check on the new          * path that has been created.          *          * We know that we are at the root, so NULL is used for the scope.          */
 name|Status
 operator|=
 name|AcpiNsLookup
@@ -1296,7 +1295,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    OptOptimizeNamePath  *  * PARAMETERS:  Op                  - Current parser op  *              Flags               - Opcode info flags  *              WalkState           - Current state  *              AmlNameString       - Unoptimized namepath  *              TargetNode          - Node to which AmlNameString refers  *  * RETURN:      None.  If path is optimized, the Op is updated with new path  *  * DESCRIPTION: Optimize a Named Declaration or Reference to the minimal length.  *              Must take into account both the current location in the  *              namespace and the actual reference path.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    OptOptimizeNamePath  *  * PARAMETERS:  Op                  - Current parser op  *              Flags               - Opcode info flags  *              WalkState           - Current state  *              AmlNameString       - Unoptimized namepath  *              TargetNode          - Node to which AmlNameString refers  *  * RETURN:      None. If path is optimized, the Op is updated with new path  *  * DESCRIPTION: Optimize a Named Declaration or Reference to the minimal length.  *              Must take into account both the current location in the  *              namespace and the actual reference path.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1499,7 +1498,7 @@ expr_stmt|;
 name|return_VOID
 expr_stmt|;
 block|}
-comment|/*      * We need to obtain the node that represents the current scope -- where      * we are right now in the namespace.  We will compare this path      * against the Namepath, looking for commonality.      */
+comment|/*      * We need to obtain the node that represents the current scope -- where      * we are right now in the namespace. We will compare this path      * against the Namepath, looking for commonality.      */
 name|CurrentNode
 operator|=
 name|AcpiGbl_RootNode
@@ -1916,7 +1915,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*      * Success from above indicates that the NamePath was successfully      * optimized.  We need to update the parse op with the new name      */
+comment|/*      * Success from above indicates that the NamePath was successfully      * optimized. We need to update the parse op with the new name      */
 if|if
 condition|(
 name|ACPI_SUCCESS

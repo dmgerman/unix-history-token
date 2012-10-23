@@ -473,7 +473,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbDumpNamespace  *  * PARAMETERS:  StartArg        - Node to begin namespace dump  *              DepthArg        - Maximum tree depth to be dumped  *  * RETURN:      None  *  * DESCRIPTION: Dump entire namespace or a subtree.  Each node is displayed  *              with type and other information.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbDumpNamespace  *  * PARAMETERS:  StartArg        - Node to begin namespace dump  *              DepthArg        - Maximum tree depth to be dumped  *  * RETURN:      None  *  * DESCRIPTION: Dump entire namespace or a subtree. Each node is displayed  *              with type and other information.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -692,7 +692,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbWalkAndMatchName  *  * PARAMETERS:  Callback from WalkNamespace  *  * RETURN:      Status  *  * DESCRIPTION: Find a particular name/names within the namespace.  Wildcards  *              are supported -- '?' matches any character.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbWalkAndMatchName  *  * PARAMETERS:  Callback from WalkNamespace  *  * RETURN:      Status  *  * DESCRIPTION: Find a particular name/names within the namespace. Wildcards  *              are supported -- '?' matches any character.  *  ******************************************************************************/
 end_comment
 
 begin_function

@@ -1967,7 +1967,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|AcpiUtDumpBuffer((UINT8 *) a, b, DB_BYTE_DISPLAY, _COMPONENT)
+value|AcpiUtDebugDumpBuffer((UINT8 *) a, b, DB_BYTE_DISPLAY, _COMPONENT)
 end_define
 
 begin_else

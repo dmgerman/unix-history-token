@@ -561,7 +561,7 @@ argument_list|(
 name|ExDoConcatenate
 argument_list|)
 expr_stmt|;
-comment|/*      * Convert the second operand if necessary.  The first operand      * determines the type of the second operand, (See the Data Types      * section of the ACPI specification.)  Both object types are      * guaranteed to be either Integer/String/Buffer by the operand      * resolution mechanism.      */
+comment|/*      * Convert the second operand if necessary. The first operand      * determines the type of the second operand, (See the Data Types      * section of the ACPI specification.)  Both object types are      * guaranteed to be either Integer/String/Buffer by the operand      * resolution mechanism.      */
 switch|switch
 condition|(
 name|Operand0
@@ -1300,7 +1300,7 @@ argument_list|(
 name|ExDoLogicalOp
 argument_list|)
 expr_stmt|;
-comment|/*      * Convert the second operand if necessary.  The first operand      * determines the type of the second operand, (See the Data Types      * section of the ACPI 3.0+ specification.)  Both object types are      * guaranteed to be either Integer/String/Buffer by the operand      * resolution mechanism.      */
+comment|/*      * Convert the second operand if necessary. The first operand      * determines the type of the second operand, (See the Data Types      * section of the ACPI 3.0+ specification.)  Both object types are      * guaranteed to be either Integer/String/Buffer by the operand      * resolution mechanism.      */
 switch|switch
 condition|(
 name|Operand0

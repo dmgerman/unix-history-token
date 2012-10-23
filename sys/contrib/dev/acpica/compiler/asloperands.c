@@ -655,7 +655,7 @@ name|Value
 operator|.
 name|Integer
 expr_stmt|;
-comment|/*      * Generate the flags byte.  The various fields are already      * in the right bit position via translation from the      * keywords by the parser.      */
+comment|/*      * Generate the flags byte. The various fields are already      * in the right bit position via translation from the      * keywords by the parser.      */
 name|FieldFlags
 operator|=
 call|(
@@ -841,7 +841,7 @@ operator|==
 name|CurrentBitOffset
 condition|)
 block|{
-comment|/*                  * Offset is redundant; we don't need to output an                  * offset opcode.  Just set these nodes to default                  */
+comment|/*                  * Offset is redundant; we don't need to output an                  * offset opcode. Just set these nodes to default                  */
 name|Next
 operator|->
 name|Asl
@@ -1141,7 +1141,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    OpnDoRegion  *  * PARAMETERS:  Op        - The parent parse node  *  * RETURN:      None  *  * DESCRIPTION: Tries to get the length of the region.  Can only do this at  *              compile time if the length is a constant.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    OpnDoRegion  *  * PARAMETERS:  Op        - The parent parse node  *  * RETURN:      None  *  * DESCRIPTION: Tries to get the length of the region. Can only do this at  *              compile time if the length is a constant.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1240,7 +1240,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    OpnDoBuffer  *  * PARAMETERS:  Op        - The parent parse node  *  * RETURN:      None  *  * DESCRIPTION: Construct the AML operands for the BUFFER ASL keyword.  We  *              build a single raw byte buffer from the initialization nodes,  *              each parse node contains a buffer byte.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    OpnDoBuffer  *  * PARAMETERS:  Op        - The parent parse node  *  * RETURN:      None  *  * DESCRIPTION: Construct the AML operands for the BUFFER ASL keyword. We  *              build a single raw byte buffer from the initialization nodes,  *              each parse node contains a buffer byte.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1379,7 +1379,7 @@ break|break;
 case|case
 name|PARSEOP_STRING_LITERAL
 case|:
-comment|/*          * Only one initializer, the string.  Buffer must be big enough to hold          * the string plus the null termination byte          */
+comment|/*          * Only one initializer, the string. Buffer must be big enough to hold          * the string plus the null termination byte          */
 name|BufferLength
 operator|=
 name|strlen
@@ -1545,7 +1545,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    OpnDoPackage  *  * PARAMETERS:  Op        - The parent parse node  *  * RETURN:      None  *  * DESCRIPTION: Construct the AML operands for the PACKAGE ASL keyword.  NOTE:  *              can only be called after constants have been folded, to ensure  *              that the PackageLength operand has been fully reduced.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    OpnDoPackage  *  * PARAMETERS:  Op        - The parent parse node  *  * RETURN:      None  *  * DESCRIPTION: Construct the AML operands for the PACKAGE ASL keyword. NOTE:  *              can only be called after constants have been folded, to ensure  *              that the PackageLength operand has been fully reduced.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -2187,7 +2187,7 @@ name|char
 modifier|*
 name|Filename
 decl_stmt|;
-comment|/*      * These nodes get stuffed into the table header.  They are special      * cased when the table is written to the output file.      *      * Mark all of these nodes as non-usable so they won't get output      * as AML opcodes!      */
+comment|/*      * These nodes get stuffed into the table header. They are special      * cased when the table is written to the output file.      *      * Mark all of these nodes as non-usable so they won't get output      * as AML opcodes!      */
 comment|/* Get AML filename. Use it if non-null */
 name|Child
 operator|=
@@ -2544,7 +2544,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    UtGetArg  *  * PARAMETERS:  Op              - Get an argument for this op  *              Argn            - Nth argument to get  *  * RETURN:      The argument (as an Op object).  NULL if argument does not exist  *  * DESCRIPTION: Get the specified op's argument (peer)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    UtGetArg  *  * PARAMETERS:  Op              - Get an argument for this op  *              Argn            - Nth argument to get  *  * RETURN:      The argument (as an Op object). NULL if argument does not exist  *  * DESCRIPTION: Get the specified op's argument (peer)  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -2777,7 +2777,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    OpnGenerateAmlOperands  *  * PARAMETERS:  Op        - The parent parse node  *  * RETURN:      None  *  * DESCRIPTION: Prepare nodes to be output as AML data and operands.  The more  *              complex AML opcodes require processing of the child nodes  *              (arguments/operands).  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    OpnGenerateAmlOperands  *  * PARAMETERS:  Op        - The parent parse node  *  * RETURN:      None  *  * DESCRIPTION: Prepare nodes to be output as AML data and operands. The more  *              complex AML opcodes require processing of the child nodes  *              (arguments/operands).  *  ******************************************************************************/
 end_comment
 
 begin_function

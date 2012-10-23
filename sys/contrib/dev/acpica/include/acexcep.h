@@ -427,7 +427,7 @@ value|0x0005
 end_define
 
 begin_comment
-comment|/*  * AML exceptions.  These are caused by problems with  * the actual AML byte stream  */
+comment|/*  * AML exceptions. These are caused by problems with  * the actual AML byte stream  */
 end_comment
 
 begin_define

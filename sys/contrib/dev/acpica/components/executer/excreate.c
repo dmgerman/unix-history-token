@@ -140,7 +140,7 @@ name|ACPI_TYPE_LOCAL_METHOD_ALIAS
 operator|)
 condition|)
 block|{
-comment|/*          * Dereference an existing alias so that we don't create a chain          * of aliases.  With this code, we guarantee that an alias is          * always exactly one level of indirection away from the          * actual aliased name.          */
+comment|/*          * Dereference an existing alias so that we don't create a chain          * of aliases. With this code, we guarantee that an alias is          * always exactly one level of indirection away from the          * actual aliased name.          */
 name|TargetNode
 operator|=
 name|ACPI_CAST_PTR
@@ -153,7 +153,7 @@ name|Object
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * For objects that can never change (i.e., the NS node will      * permanently point to the same object), we can simply attach      * the object to the new NS node.  For other objects (such as      * Integers, buffers, etc.), we have to point the Alias node      * to the original Node.      */
+comment|/*      * For objects that can never change (i.e., the NS node will      * permanently point to the same object), we can simply attach      * the object to the new NS node. For other objects (such as      * Integers, buffers, etc.), we have to point the Alias node      * to the original Node.      */
 switch|switch
 condition|(
 name|TargetNode
@@ -236,7 +236,7 @@ expr_stmt|;
 break|break;
 default|default:
 comment|/* Attach the original source object to the new Alias Node */
-comment|/*          * The new alias assumes the type of the target, and it points          * to the same object.  The reference count of the object has an          * additional reference to prevent deletion out from under either the          * target node or the alias Node          */
+comment|/*          * The new alias assumes the type of the target, and it points          * to the same object. The reference count of the object has an          * additional reference to prevent deletion out from under either the          * target node or the alias Node          */
 name|Status
 operator|=
 name|AcpiNsAttachObject

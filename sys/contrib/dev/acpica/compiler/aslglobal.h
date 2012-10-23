@@ -20,7 +20,7 @@ name|__ASLGLOBAL_H
 end_define
 
 begin_comment
-comment|/*  * Global variables.  Defined in aslmain.c only, externed in all other files  */
+comment|/*  * Global variables. Defined in aslmain.c only, externed in all other files  */
 end_comment
 
 begin_undef
