@@ -255,6 +255,42 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_CAMDEV
+argument_list|,
+literal|"CAM DEV"
+argument_list|,
+literal|"CAM devices"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_CAMCCB
+argument_list|,
+literal|"CAM CCB"
+argument_list|,
+literal|"CAM CCBs"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_CAMPATH
+argument_list|,
+literal|"CAM path"
+argument_list|,
+literal|"CAM paths"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Object for defering XPT actions to a taskqueue */
 end_comment
@@ -14832,7 +14868,7 @@ operator|*
 name|path
 argument_list|)
 argument_list|,
-name|M_CAMXPT
+name|M_CAMPATH
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -14880,7 +14916,7 @@ name|free
 argument_list|(
 name|path
 argument_list|,
-name|M_CAMXPT
+name|M_CAMPATH
 argument_list|)
 expr_stmt|;
 name|path
@@ -14961,7 +14997,7 @@ operator|*
 name|path
 argument_list|)
 argument_list|,
-name|M_CAMXPT
+name|M_CAMPATH
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -15044,7 +15080,7 @@ name|free
 argument_list|(
 name|path
 argument_list|,
-name|M_CAMXPT
+name|M_CAMPATH
 argument_list|)
 expr_stmt|;
 name|path
@@ -15477,7 +15513,7 @@ name|free
 argument_list|(
 name|path
 argument_list|,
-name|M_CAMXPT
+name|M_CAMPATH
 argument_list|)
 expr_stmt|;
 block|}
@@ -19478,7 +19514,7 @@ operator|*
 name|new_ccb
 argument_list|)
 argument_list|,
-name|M_CAMXPT
+name|M_CAMCCB
 argument_list|,
 name|M_ZERO
 operator||
@@ -19515,7 +19551,7 @@ operator|*
 name|new_ccb
 argument_list|)
 argument_list|,
-name|M_CAMXPT
+name|M_CAMCCB
 argument_list|,
 name|M_ZERO
 operator||
@@ -19544,7 +19580,7 @@ name|free
 argument_list|(
 name|free_ccb
 argument_list|,
-name|M_CAMXPT
+name|M_CAMCCB
 argument_list|)
 expr_stmt|;
 block|}
@@ -20340,7 +20376,7 @@ operator|*
 name|device
 argument_list|)
 argument_list|,
-name|M_CAMXPT
+name|M_CAMDEV
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -20431,7 +20467,7 @@ name|free
 argument_list|(
 name|device
 argument_list|,
-name|M_CAMXPT
+name|M_CAMDEV
 argument_list|)
 expr_stmt|;
 return|return
@@ -20471,7 +20507,7 @@ name|free
 argument_list|(
 name|device
 argument_list|,
-name|M_CAMXPT
+name|M_CAMDEV
 argument_list|)
 expr_stmt|;
 return|return
@@ -20742,7 +20778,7 @@ name|free
 argument_list|(
 name|device
 argument_list|,
-name|M_CAMXPT
+name|M_CAMDEV
 argument_list|)
 expr_stmt|;
 block|}
