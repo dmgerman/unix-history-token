@@ -6858,6 +6858,9 @@ name|cd_params
 modifier|*
 name|cdp
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 name|cdp
 operator|=
 operator|&
@@ -6900,6 +6903,7 @@ operator|->
 name|length
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Retry any UNIT ATTENTION type errors.  They 		 * are expected at boot. 		 */
 if|if
 condition|(
 operator|(
@@ -6913,6 +6917,23 @@ name|CAM_STATUS_MASK
 operator|)
 operator|==
 name|CAM_REQ_CMP
+operator|||
+operator|(
+name|error
+operator|=
+name|cderror
+argument_list|(
+name|done_ccb
+argument_list|,
+name|CAM_RETRY_SELTO
+argument_list|,
+name|SF_RETRY_UA
+operator||
+name|SF_NO_PRINT
+argument_list|)
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|snprintf
@@ -6941,23 +6962,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|int
-name|error
-decl_stmt|;
-comment|/* 			 * Retry any UNIT ATTENTION type errors.  They 			 * are expected at boot. 			 */
-name|error
-operator|=
-name|cderror
-argument_list|(
-name|done_ccb
-argument_list|,
-name|CAM_RETRY_SELTO
-argument_list|,
-name|SF_RETRY_UA
-operator||
-name|SF_NO_PRINT
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|error
@@ -6968,13 +6972,7 @@ block|{
 comment|/* 				 * A retry was scheuled, so 				 * just return. 				 */
 return|return;
 block|}
-elseif|else
-if|if
-condition|(
-name|error
-operator|!=
-literal|0
-condition|)
+else|else
 block|{
 name|struct
 name|scsi_sense_data
