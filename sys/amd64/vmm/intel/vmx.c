@@ -910,6 +910,12 @@ case|:
 return|return
 literal|"vmlaunch"
 return|;
+case|case
+name|VMX_RETURN_AST
+case|:
+return|return
+literal|"ast"
+return|;
 default|default:
 return|return
 literal|"unknown"
@@ -3022,9 +3028,6 @@ name|exit_reason
 parameter_list|,
 name|int
 name|handled
-parameter_list|,
-name|int
-name|astpending
 parameter_list|)
 block|{
 ifdef|#
@@ -3054,11 +3057,33 @@ argument_list|,
 name|rip
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|astpending
-condition|)
-name|VMM_CTR0
+endif|#
+directive|endif
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|vmx_astpending_trace
+parameter_list|(
+name|struct
+name|vmx
+modifier|*
+name|vmx
+parameter_list|,
+name|int
+name|vcpu
+parameter_list|,
+name|uint64_t
+name|rip
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|KTR
+name|VMM_CTR1
 argument_list|(
 name|vmx
 operator|->
@@ -3066,7 +3091,9 @@ name|vm
 argument_list|,
 name|vcpu
 argument_list|,
-literal|"astpending"
+literal|"astpending vmexit at 0x%0lx"
+argument_list|,
+name|rip
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3762,10 +3789,7 @@ name|VMCS_INTERRUPTIBILITY_STI_BLOCKING
 operator||
 name|VMCS_INTERRUPTIBILITY_MOVSS_BLOCKING
 decl_stmt|;
-if|#
-directive|if
-literal|1
-comment|/* 	 * XXX 	 * If an event is being injected from userland then just return. 	 * For e.g. we may inject a breakpoint exception to cause the 	 * guest to enter the debugger so we can inspect its state. 	 */
+comment|/* 	 * If there is already an interrupt pending then just return. 	 * 	 * This could happen if an interrupt was injected on a prior 	 * VM entry but the actual entry into guest mode was aborted 	 * because of a pending AST. 	 */
 name|error
 operator|=
 name|vmread
@@ -3794,8 +3818,6 @@ operator|&
 name|VMCS_INTERRUPTION_INFO_VALID
 condition|)
 return|return;
-endif|#
-directive|endif
 comment|/* 	 * NMI injection has priority so deal with those first 	 */
 if|if
 condition|(
@@ -5121,7 +5143,7 @@ condition|(
 name|handled
 condition|)
 block|{
-comment|/* 		 * It is possible that control is returned to userland 		 * even though we were able to handle the VM exit in the 		 * kernel (for e.g. 'astpending' is set in the run loop). 		 * 		 * In such a case we want to make sure that the userland 		 * restarts guest execution at the instruction *after* 		 * the one we just processed. Therefore we update the 		 * guest rip in the VMCS and in 'vmexit'. 		 */
+comment|/* 		 * It is possible that control is returned to userland 		 * even though we were able to handle the VM exit in the 		 * kernel. 		 * 		 * In such a case we want to make sure that the userland 		 * restarts guest execution at the instruction *after* 		 * the one we just processed. Therefore we update the 		 * guest rip in the VMCS and in 'vmexit'. 		 */
 name|vm_exit_update_rip
 argument_list|(
 name|vmexit
@@ -5274,6 +5296,10 @@ expr_stmt|;
 name|vmxctx
 operator|->
 name|launched
+operator|=
+literal|0
+expr_stmt|;
+name|astpending
 operator|=
 literal|0
 expr_stmt|;
@@ -5457,6 +5483,14 @@ case|:
 break|break;
 comment|/* vm exit */
 case|case
+name|VMX_RETURN_AST
+case|:
+name|astpending
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 name|VMX_RETURN_VMRESUME
 case|:
 name|vie
@@ -5540,15 +5574,6 @@ name|rc
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * XXX locking? 		 * See comments in exception.S about checking for ASTs 		 * atomically while interrupts are disabled. But it is 		 * not clear that they apply in our case. 		 */
-name|astpending
-operator|=
-name|curthread
-operator|->
-name|td_flags
-operator|&
-name|TDF_ASTPENDING
-expr_stmt|;
 comment|/* enable interrupts */
 name|enable_intr
 argument_list|()
@@ -5594,6 +5619,38 @@ operator|=
 name|vmcs_exit_qualification
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|astpending
+condition|)
+block|{
+name|handled
+operator|=
+literal|1
+expr_stmt|;
+name|vmexit
+operator|->
+name|inst_length
+operator|=
+literal|0
+expr_stmt|;
+name|vmexit
+operator|->
+name|exitcode
+operator|=
+name|VM_EXITCODE_BOGUS
+expr_stmt|;
+name|vmx_astpending_trace
+argument_list|(
+name|vmx
+argument_list|,
+name|vcpu
+argument_list|,
+name|rip
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 name|handled
 operator|=
 name|vmx_exit_process
@@ -5616,17 +5673,12 @@ argument_list|,
 name|exit_reason
 argument_list|,
 name|handled
-argument_list|,
-name|astpending
 argument_list|)
 expr_stmt|;
 block|}
 do|while
 condition|(
 name|handled
-operator|&&
-operator|!
-name|astpending
 condition|)
 do|;
 comment|/* 	 * If a VM exit has been handled then the exitcode must be BOGUS 	 * If a VM exit is not handled then the exitcode must not be BOGUS 	 */
@@ -6538,7 +6590,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|uint32_t
+name|uint64_t
 name|info
 decl_stmt|;
 name|struct
@@ -6592,6 +6644,39 @@ block|,
 comment|/* VM_SW_EXCEPTION */
 block|}
 decl_stmt|;
+comment|/* 	 * If there is already an exception pending to be delivered to the 	 * vcpu then just return. 	 */
+name|error
+operator|=
+name|vmcs_getreg
+argument_list|(
+name|vmcs
+argument_list|,
+name|VMCS_ENTRY_INTR_INFO
+argument_list|,
+operator|&
+name|info
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+if|if
+condition|(
+name|info
+operator|&
+name|VMCS_INTERRUPTION_INFO_VALID
+condition|)
+return|return
+operator|(
+name|EAGAIN
+operator|)
+return|;
 name|info
 operator|=
 name|vector

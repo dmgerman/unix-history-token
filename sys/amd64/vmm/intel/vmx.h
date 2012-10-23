@@ -340,8 +340,15 @@ name|VMX_RETURN_VMLAUNCH
 value|3
 end_define
 
+begin_define
+define|#
+directive|define
+name|VMX_RETURN_AST
+value|4
+end_define
+
 begin_comment
-comment|/*  * vmx_setjmp() returns:  * - 0 when it returns directly  * - 1 when it returns from vmx_longjmp  * - 2 when it returns from vmx_resume (which would only be in the error case)  * - 3 when it returns from vmx_launch (which would only be in the error case)  */
+comment|/*  * vmx_setjmp() returns:  * - 0 when it returns directly  * - 1 when it returns from vmx_longjmp  * - 2 when it returns from vmx_resume (which would only be in the error case)  * - 3 when it returns from vmx_launch (which would only be in the error case)  * - 4 when it returns from vmx_resume or vmx_launch because of AST pending  */
 end_comment
 
 begin_function_decl
