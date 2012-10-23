@@ -128,7 +128,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ZERO_COPY_SOCKETS
+name|SOCKET_SEND_COW
 end_ifdef
 
 begin_include
@@ -188,7 +188,7 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ZERO_COPY_SOCKETS
+name|SOCKET_SEND_COW
 end_ifdef
 
 begin_comment
@@ -458,7 +458,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ZERO_COPY_SOCKETS */
+comment|/* SOCKET_SEND_COW */
 end_comment
 
 begin_function
@@ -1088,7 +1088,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ZERO_COPY_SOCKETS
+name|SOCKET_RECV_PFLIP
 end_ifdef
 
 begin_comment
@@ -1554,7 +1554,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ZERO_COPY_SOCKETS */
+comment|/* SOCKET_RECV_PFLIP */
 end_comment
 
 begin_comment

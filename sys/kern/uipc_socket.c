@@ -647,31 +647,19 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ZERO_COPY_SOCKETS
-end_ifdef
-
-begin_comment
-comment|/* These aren't static because they're used in other files. */
-end_comment
-
-begin_decl_stmt
-name|int
-name|so_zero_copy_send
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|so_zero_copy_receive
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SOCKET_SEND_COW
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SOCKET_RECV_PFLIP
+argument_list|)
+end_if
 
 begin_expr_stmt
 name|SYSCTL_NODE
@@ -690,6 +678,20 @@ literal|"Zero copy controls"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SOCKET_RECV_PFLIP
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|so_zero_copy_receive
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -711,6 +713,25 @@ literal|"Enable zero copy receive"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SOCKET_SEND_COW
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|so_zero_copy_send
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -739,7 +760,16 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ZERO_COPY_SOCKETS */
+comment|/* SOCKET_SEND_COW */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SOCKET_SEND_COW || SOCKET_RECV_PFLIP */
 end_comment
 
 begin_comment
@@ -3993,7 +4023,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ZERO_COPY_SOCKETS
+name|SOCKET_SEND_COW
 end_ifdef
 
 begin_struct
@@ -4478,7 +4508,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ZERO_COPY_SOCKETS */
+comment|/* SOCKET_SEND_COW */
 end_comment
 
 begin_define
@@ -4546,7 +4576,7 @@ name|dontroute
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|ZERO_COPY_SOCKETS
+name|SOCKET_SEND_COW
 name|int
 name|atomic
 init|=
@@ -4929,7 +4959,7 @@ else|else
 block|{
 ifdef|#
 directive|ifdef
-name|ZERO_COPY_SOCKETS
+name|SOCKET_SEND_COW
 name|error
 operator|=
 name|sosend_copyin
@@ -5012,6 +5042,7 @@ name|uio_resid
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* SOCKET_SEND_COW */
 name|resid
 operator|=
 name|uio
@@ -5771,7 +5802,7 @@ else|else
 block|{
 ifdef|#
 directive|ifdef
-name|ZERO_COPY_SOCKETS
+name|SOCKET_SEND_COW
 name|error
 operator|=
 name|sosend_copyin
@@ -5866,6 +5897,7 @@ name|uio_resid
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* SOCKET_SEND_COW */
 name|resid
 operator|=
 name|uio
@@ -6255,7 +6287,7 @@ do|do
 block|{
 ifdef|#
 directive|ifdef
-name|ZERO_COPY_SOCKETS
+name|SOCKET_RECV_PFLIP
 if|if
 condition|(
 name|so_zero_copy_receive
@@ -6325,7 +6357,7 @@ block|}
 else|else
 endif|#
 directive|endif
-comment|/* ZERO_COPY_SOCKETS */
+comment|/* SOCKET_RECV_PFLIP */
 name|error
 operator|=
 name|uiomove
@@ -7945,7 +7977,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|ZERO_COPY_SOCKETS
+name|SOCKET_RECV_PFLIP
 if|if
 condition|(
 name|so_zero_copy_receive
@@ -8011,7 +8043,7 @@ block|}
 else|else
 endif|#
 directive|endif
-comment|/* ZERO_COPY_SOCKETS */
+comment|/* SOCKET_RECV_PFLIP */
 name|error
 operator|=
 name|uiomove
