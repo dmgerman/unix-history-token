@@ -21543,10 +21543,9 @@ operator|!=
 name|CAM_DEBUG_NONE
 condition|)
 block|{
-comment|/* 		 * Locking is specifically omitted here.  No SIMs have 		 * registered yet, so xpt_create_path will only be searching 		 * empty lists of targets and devices. 		 */
 if|if
 condition|(
-name|xpt_create_path
+name|xpt_create_path_unlocked
 argument_list|(
 operator|&
 name|cam_dpath
