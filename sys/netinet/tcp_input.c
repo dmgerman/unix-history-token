@@ -3270,6 +3270,8 @@ name|ip
 operator|->
 name|ip_len
 argument_list|)
+operator|-
+name|off0
 expr_stmt|;
 if|if
 condition|(

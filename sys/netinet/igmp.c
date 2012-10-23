@@ -5421,6 +5421,8 @@ name|ip
 operator|->
 name|ip_len
 argument_list|)
+operator|-
+name|off
 expr_stmt|;
 comment|/* 	 * Validate lengths. 	 */
 if|if

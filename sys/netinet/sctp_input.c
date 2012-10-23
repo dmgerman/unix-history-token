@@ -30135,8 +30135,6 @@ name|ip
 operator|->
 name|ip_len
 argument_list|)
-operator|+
-name|iphlen
 expr_stmt|;
 comment|/* Validate mbuf chain length with IP payload length. */
 if|if

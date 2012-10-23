@@ -1706,6 +1706,8 @@ name|ip
 operator|->
 name|ip_len
 argument_list|)
+operator|-
+name|iphlen
 expr_stmt|;
 if|if
 condition|(
@@ -2669,17 +2671,6 @@ operator|*
 name|ip
 operator|=
 name|save_ip
-expr_stmt|;
-name|ip
-operator|->
-name|ip_len
-operator|=
-name|htons
-argument_list|(
-name|ip_len
-operator|+
-name|iphlen
-argument_list|)
 expr_stmt|;
 name|icmp_error
 argument_list|(

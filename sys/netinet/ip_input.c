@@ -3120,18 +3120,6 @@ name|ip_len
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Further protocols expect the packet length to be w/o the 	 * IP header. 	 */
-name|ip
-operator|->
-name|ip_len
-operator|=
-name|htons
-argument_list|(
-name|ip_len
-operator|-
-name|hlen
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|IPSEC

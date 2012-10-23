@@ -1345,7 +1345,7 @@ name|m_pkthdr
 operator|.
 name|rcvif
 expr_stmt|;
-comment|/* 	 * Add back the IP header length which was 	 * removed by ip_input().  Raw sockets do 	 * not modify the packet except for some 	 * byte order swaps. 	 */
+comment|/* 	 * Applications on raw sockets expect host byte order. 	 */
 name|ip
 operator|->
 name|ip_len
@@ -1356,8 +1356,6 @@ name|ip
 operator|->
 name|ip_len
 argument_list|)
-operator|+
-name|off
 expr_stmt|;
 name|ip
 operator|->
@@ -2391,7 +2389,7 @@ operator|=
 name|ip_newid
 argument_list|()
 expr_stmt|;
-comment|/* 		 * Applications on raw sockets expect host byte order. 		 */
+comment|/* 		 * Applications on raw sockets pass us packets 		 * in host byte order. 		 */
 name|ip
 operator|->
 name|ip_len

@@ -1847,6 +1847,8 @@ name|ip
 operator|->
 name|ip_len
 argument_list|)
+operator|-
+name|off
 decl_stmt|;
 name|int
 name|i
@@ -2842,23 +2844,6 @@ argument_list|)
 expr_stmt|;
 name|reflect
 label|:
-comment|/* Since ip_input() deducts this. */
-name|ip
-operator|->
-name|ip_len
-operator|=
-name|htons
-argument_list|(
-name|ntohs
-argument_list|(
-name|ip
-operator|->
-name|ip_len
-argument_list|)
-operator|+
-name|hlen
-argument_list|)
-expr_stmt|;
 name|ICMPSTAT_INC
 argument_list|(
 name|icps_reflect
