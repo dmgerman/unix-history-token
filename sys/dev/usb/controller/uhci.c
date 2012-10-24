@@ -9355,7 +9355,7 @@ name|bus_mtx
 argument_list|,
 name|USB_MS_TO_TICKS
 argument_list|(
-name|USB_PORT_ROOT_RESET_DELAY
+name|usb_port_root_reset_delay
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -9489,7 +9489,7 @@ name|bus_mtx
 argument_list|,
 name|USB_MS_TO_TICKS
 argument_list|(
-name|USB_PORT_RESET_DELAY
+name|usb_port_reset_delay
 argument_list|)
 argument_list|)
 expr_stmt|;
