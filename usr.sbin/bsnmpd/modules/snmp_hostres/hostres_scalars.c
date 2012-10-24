@@ -734,7 +734,7 @@ name|kvm_getprocs
 argument_list|(
 name|hr_kd
 argument_list|,
-name|KERN_PROC_ALL
+name|KERN_PROC_PROC
 argument_list|,
 literal|0
 argument_list|,
