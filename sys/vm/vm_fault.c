@@ -4728,7 +4728,7 @@ operator|&=
 operator|~
 name|VM_PROT_WRITE
 expr_stmt|;
-comment|/* 	 * Loop through all of the pages in the entry's range, copying each 	 * one from the source object (it should be there) to the destination 	 * object. 	 */
+comment|/* 	 * Loop through all of the pages in the entry's range, copying 	 * each one from the source object (it should be there) to the 	 * destination object.  Note that copied pages are not wired 	 * and marked dirty to prevent reclamation without saving the 	 * content into the swap file on pageout. 	 */
 for|for
 control|(
 name|vaddr
@@ -4892,6 +4892,12 @@ expr_stmt|;
 name|dst_m
 operator|->
 name|valid
+operator|=
+name|VM_PAGE_BITS_ALL
+expr_stmt|;
+name|dst_m
+operator|->
+name|dirty
 operator|=
 name|VM_PAGE_BITS_ALL
 expr_stmt|;
