@@ -4151,7 +4151,7 @@ argument_list|)
 block|,
 name|PMCMASK
 argument_list|(
-name|RES_SNOOP_SNPI_NONE
+name|RES_SNOOP_SNP_NONE
 argument_list|,
 operator|(
 literal|1ULL
