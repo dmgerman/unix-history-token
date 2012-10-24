@@ -16729,6 +16729,12 @@ operator|&=
 operator|~
 name|BMSR_EXTSTAT
 expr_stmt|;
+name|sc
+operator|->
+name|bge_phy_flags
+operator||=
+name|BGE_PHY_NO_WIRESPEED
+expr_stmt|;
 block|}
 comment|/* 	 * Some controllers seem to require a special firmware to use 	 * TSO. But the firmware is not available to FreeBSD and Linux 	 * claims that the TSO performed by the firmware is slower than 	 * hardware based TSO. Moreover the firmware based TSO has one 	 * known bug which can't handle TSO if ethernet header + IP/TCP 	 * header is greater than 80 bytes. The workaround for the TSO 	 * bug exist but it seems it's too expensive than not using 	 * TSO at all. Some hardwares also have the TSO bug so limit 	 * the TSO to the controllers that are not affected TSO issues 	 * (e.g. 5755 or higher). 	 */
 if|if
@@ -18023,7 +18029,7 @@ operator||=
 name|BGE_PHY_BER_BUG
 expr_stmt|;
 block|}
-comment|/* 	 * Don't enable Ethernet@WireSpeed for the 5700, 5906, or the 	 * 5705 A0 and A1 chips. 	 */
+comment|/* 	 * Don't enable Ethernet@WireSpeed for the 5700 or the 	 * 5705 A0 and A1 chips. 	 */
 if|if
 condition|(
 name|sc
@@ -18053,12 +18059,6 @@ operator|!=
 name|BGE_CHIPID_BCM5705_A1
 operator|)
 operator|)
-operator|||
-name|sc
-operator|->
-name|bge_asicrev
-operator|==
-name|BGE_ASICREV_BCM5906
 condition|)
 name|sc
 operator|->
