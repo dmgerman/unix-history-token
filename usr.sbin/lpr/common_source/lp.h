@@ -946,14 +946,14 @@ begin_define
 define|#
 directive|define
 name|PRIV_START
-value|{ \     if (seteuid(uid) != 0) err(1, "seteuid failed"); \ }
+value|{ \     if (seteuid(euid) != 0) err(1, "seteuid failed"); \ }
 end_define
 
 begin_define
 define|#
 directive|define
 name|PRIV_END
-value|{ \     if (seteuid(euid) != 0) err(1, "seteuid failed"); \ }
+value|{ \     if (seteuid(uid) != 0) err(1, "seteuid failed"); \ }
 end_define
 
 begin_include
