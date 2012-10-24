@@ -2443,7 +2443,7 @@ name|dev
 argument_list|,
 name|reg
 operator|+
-name|PCIR_EXPRESS_LINK_STA
+name|PCIER_LINK_STA
 argument_list|,
 literal|2
 argument_list|)
@@ -2455,7 +2455,7 @@ operator|=
 operator|(
 name|lnk
 operator|&
-name|PCIM_LINK_STA_WIDTH
+name|PCIEM_LINK_STA_WIDTH
 operator|)
 operator|>>
 literal|4
