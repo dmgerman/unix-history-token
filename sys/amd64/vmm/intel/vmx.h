@@ -151,9 +151,6 @@ struct|struct
 name|vmxstate
 block|{
 name|int
-name|request_nmi
-decl_stmt|;
-name|int
 name|lastcpu
 decl_stmt|;
 comment|/* host cpu that this 'vcpu' last ran on */
