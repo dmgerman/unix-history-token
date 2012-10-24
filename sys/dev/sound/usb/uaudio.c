@@ -5048,6 +5048,13 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|audio_if
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
 operator|(
 name|acdp
 operator|==
@@ -5060,14 +5067,6 @@ operator|->
 name|bDescriptorType
 operator|==
 name|UDESC_CS_INTERFACE
-operator|)
-operator|&&
-operator|(
-name|desc
-operator|->
-name|bDescriptorSubtype
-operator|==
-name|AS_GENERAL
 operator|)
 operator|&&
 operator|(
@@ -5108,6 +5107,9 @@ operator|->
 name|bcdADC
 argument_list|)
 expr_stmt|;
+block|}
+comment|/* 			 * Don't collect any USB audio descriptors if 			 * this is not an USB audio stream interface. 			 */
+continue|continue;
 block|}
 if|if
 condition|(
@@ -5567,10 +5569,6 @@ block|}
 block|}
 if|if
 condition|(
-name|audio_if
-operator|==
-literal|0
-operator|||
 name|asid
 operator|.
 name|v1
@@ -6523,7 +6521,7 @@ case|:
 comment|/* 			 * Due to high bandwidth usage and problems 			 * with HIGH-speed split transactions we 			 * disable surround setups on FULL-speed USB 			 * by default 			 */
 name|channels
 operator|=
-literal|2
+literal|4
 expr_stmt|;
 break|break;
 default|default:
