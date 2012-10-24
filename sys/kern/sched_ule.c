@@ -754,12 +754,24 @@ begin_struct
 struct|struct
 name|tdq
 block|{
-comment|/* Ordered to improve efficiency of cpu_search() and switch(). */
+comment|/*  	 * Ordered to improve efficiency of cpu_search() and switch(). 	 * tdq_lock is padded to avoid false sharing with tdq_load and 	 * tdq_cpu_idle. 	 */
 name|struct
 name|mtx
 name|tdq_lock
 decl_stmt|;
 comment|/* run queue lock. */
+name|char
+name|pad
+index|[
+literal|64
+operator|-
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|mtx
+argument_list|)
+index|]
+decl_stmt|;
 name|struct
 name|cpu_group
 modifier|*
