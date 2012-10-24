@@ -15783,8 +15783,6 @@ name|error
 decl_stmt|,
 name|msicount
 decl_stmt|,
-name|phy_addr
-decl_stmt|,
 name|reg
 decl_stmt|,
 name|rid
@@ -16041,7 +16039,9 @@ name|bge_chipid
 argument_list|)
 expr_stmt|;
 comment|/* Set default PHY address. */
-name|phy_addr
+name|sc
+operator|->
+name|bge_phy_addr
 operator|=
 literal|1
 expr_stmt|;
@@ -16087,7 +16087,9 @@ argument_list|)
 operator|&
 name|BGE_SGDIGSTS_IS_SERDES
 condition|)
-name|phy_addr
+name|sc
+operator|->
+name|bge_phy_addr
 operator|=
 name|sc
 operator|->
@@ -16096,7 +16098,9 @@ operator|+
 literal|8
 expr_stmt|;
 else|else
-name|phy_addr
+name|sc
+operator|->
+name|bge_phy_addr
 operator|=
 name|sc
 operator|->
@@ -16118,7 +16122,9 @@ argument_list|)
 operator|&
 name|BGE_CPMU_PHY_STRAP_IS_SERDES
 condition|)
-name|phy_addr
+name|sc
+operator|->
+name|bge_phy_addr
 operator|=
 name|sc
 operator|->
@@ -16127,7 +16133,9 @@ operator|+
 literal|8
 expr_stmt|;
 else|else
-name|phy_addr
+name|sc
+operator|->
+name|bge_phy_addr
 operator|=
 name|sc
 operator|->
@@ -18192,7 +18200,9 @@ name|bge_ifmedia_sts
 argument_list|,
 name|capmask
 argument_list|,
-name|phy_addr
+name|sc
+operator|->
+name|bge_phy_addr
 argument_list|,
 name|MII_OFFSET_ANY
 argument_list|,
@@ -18229,7 +18239,9 @@ name|sc
 operator|->
 name|bge_dev
 argument_list|,
-literal|1
+name|sc
+operator|->
+name|bge_phy_addr
 argument_list|,
 name|MII_BMCR
 argument_list|,
@@ -28299,7 +28311,9 @@ name|sc
 operator|->
 name|bge_dev
 argument_list|,
-literal|1
+name|sc
+operator|->
+name|bge_phy_addr
 argument_list|,
 name|BRGPHY_MII_ISR
 argument_list|)
@@ -28310,7 +28324,9 @@ name|sc
 operator|->
 name|bge_dev
 argument_list|,
-literal|1
+name|sc
+operator|->
+name|bge_phy_addr
 argument_list|,
 name|BRGPHY_MII_IMR
 argument_list|,
