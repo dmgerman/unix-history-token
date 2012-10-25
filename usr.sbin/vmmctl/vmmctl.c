@@ -8117,7 +8117,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"host_rip[%d]\t\t0x%016lx\n"
+literal|"host_rsp[%d]\t\t0x%016lx\n"
 argument_list|,
 name|vcpu
 argument_list|,
