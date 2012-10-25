@@ -1190,6 +1190,7 @@ block|{
 if|if
 condition|(
 operator|!
+operator|(
 name|attrnames
 index|[
 name|i
@@ -1198,6 +1199,7 @@ operator|.
 name|kind
 operator|&
 name|MDF_SETTABLE
+operator|)
 condition|)
 name|help
 argument_list|(
