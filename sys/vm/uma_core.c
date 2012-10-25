@@ -5624,7 +5624,7 @@ directive|ifdef
 name|UMA_DEBUG
 name|printf
 argument_list|(
-literal|"UMA: %s(%p) size %d(%d) flags %d ipers %d ppera %d out %d free %d\n"
+literal|"UMA: %s(%p) size %d(%d) flags %#x ipers %d ppera %d out %d free %d\n"
 argument_list|,
 name|zone
 operator|->
@@ -12568,7 +12568,7 @@ name|slab
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"keg: %s(%p) size %d(%d) flags %d ipers %d ppera %d "
+literal|"keg: %s(%p) size %d(%d) flags %#x ipers %d ppera %d "
 literal|"out %d free %d limit %d\n"
 argument_list|,
 name|keg
@@ -12706,7 +12706,7 @@ name|i
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"zone: %s(%p) size %d flags %d\n"
+literal|"zone: %s(%p) size %d flags %#x\n"
 argument_list|,
 name|zone
 operator|->
