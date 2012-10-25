@@ -8871,14 +8871,14 @@ name|dev
 argument_list|,
 name|cap
 operator|+
-name|PCIR_EXPRESS_DEVICE_CTL
+name|PCIER_DEVICE_CTL
 argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
 name|val
 operator|&=
-name|PCIM_EXP_CTL_MAX_READ_REQUEST
+name|PCIEM_CTL_MAX_READ_REQUEST
 expr_stmt|;
 name|val
 operator|>>=
@@ -8977,7 +8977,7 @@ name|dev
 argument_list|,
 name|cap
 operator|+
-name|PCIR_EXPRESS_DEVICE_CTL
+name|PCIER_DEVICE_CTL
 argument_list|,
 literal|2
 argument_list|)
@@ -8985,7 +8985,7 @@ expr_stmt|;
 name|val
 operator|&=
 operator|~
-name|PCIM_EXP_CTL_MAX_READ_REQUEST
+name|PCIEM_CTL_MAX_READ_REQUEST
 expr_stmt|;
 name|val
 operator||=
@@ -9006,7 +9006,7 @@ name|dev
 argument_list|,
 name|cap
 operator|+
-name|PCIR_EXPRESS_DEVICE_CTL
+name|PCIER_DEVICE_CTL
 argument_list|,
 name|val
 argument_list|,

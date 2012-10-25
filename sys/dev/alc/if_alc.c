@@ -3874,7 +3874,7 @@ name|sc
 operator|->
 name|alc_expcap
 operator|+
-name|PCIR_EXPRESS_LINK_CTL
+name|PCIER_LINK_CTL
 argument_list|)
 expr_stmt|;
 else|else
@@ -3964,7 +3964,7 @@ name|sc
 operator|->
 name|alc_expcap
 operator|+
-name|PCIR_EXPRESS_LINK_CTL
+name|PCIER_LINK_CTL
 argument_list|,
 name|linkcfg
 argument_list|)
@@ -4471,7 +4471,7 @@ name|sc
 argument_list|,
 name|base
 operator|+
-name|PCIR_EXPRESS_DEVICE_CTL
+name|PCIER_DEVICE_CTL
 argument_list|)
 expr_stmt|;
 name|sc
@@ -4481,7 +4481,7 @@ operator|=
 operator|(
 name|burst
 operator|&
-name|PCIM_EXP_CTL_MAX_READ_REQUEST
+name|PCIEM_CTL_MAX_READ_REQUEST
 operator|)
 operator|>>
 literal|12
@@ -4493,7 +4493,7 @@ operator|=
 operator|(
 name|burst
 operator|&
-name|PCIM_EXP_CTL_MAX_PAYLOAD
+name|PCIEM_CTL_MAX_PAYLOAD
 operator|)
 operator|>>
 literal|5
@@ -4694,7 +4694,7 @@ name|sc
 argument_list|,
 name|base
 operator|+
-name|PCIR_EXPRESS_LINK_CAP
+name|PCIER_LINK_CAP
 argument_list|)
 expr_stmt|;
 if|if
@@ -4702,7 +4702,7 @@ condition|(
 operator|(
 name|cap
 operator|&
-name|PCIM_LINK_CAP_ASPM
+name|PCIEM_LINK_CAP_ASPM
 operator|)
 operator|!=
 literal|0
@@ -4716,7 +4716,7 @@ name|sc
 argument_list|,
 name|base
 operator|+
-name|PCIR_EXPRESS_LINK_CTL
+name|PCIER_LINK_CTL
 argument_list|)
 expr_stmt|;
 if|if
