@@ -239,13 +239,6 @@ name|try
 decl_stmt|,
 name|winner
 decl_stmt|;
-comment|/* revoke setgid privileges */
-name|setgid
-argument_list|(
-name|getgid
-argument_list|()
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|argc
