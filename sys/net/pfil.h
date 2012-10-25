@@ -59,6 +59,12 @@ directive|include
 file|<sys/rmlock.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<net/vnet.h>
+end_include
+
 begin_struct_decl
 struct_decl|struct
 name|mbuf
@@ -76,6 +82,23 @@ struct_decl|struct
 name|inpcb
 struct_decl|;
 end_struct_decl
+
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
+name|int
+argument_list|,
+name|pfilforward
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_pfilforward
+value|VNET(pfilforward)
+end_define
 
 begin_comment
 comment|/*  * The packet filter hooks are designed for anything to call them to  * possibly intercept the packet.  */

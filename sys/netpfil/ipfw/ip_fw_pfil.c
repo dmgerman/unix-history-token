@@ -750,14 +750,15 @@ name|NULL
 condition|)
 break|break;
 comment|/* pass */
+if|if
+condition|(
+name|V_pfilforward
+operator|==
+literal|0
+condition|)
+break|break;
 if|#
 directive|if
-operator|!
-name|defined
-argument_list|(
-name|IPFIREWALL_FORWARD
-argument_list|)
-operator|||
 operator|(
 operator|!
 name|defined
@@ -1034,7 +1035,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* IPFIREWALL_FORWARD */
+comment|/* INET || INET6 */
 break|break;
 case|case
 name|IP_FW_DENY

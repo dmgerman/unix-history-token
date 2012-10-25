@@ -2422,9 +2422,15 @@ name|m_pkthdr
 operator|.
 name|rcvif
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|IPFIREWALL_FORWARD
+if|if
+condition|(
+name|V_pfilforward
+operator|==
+literal|0
+condition|)
+goto|goto
+name|passin
+goto|;
 if|if
 condition|(
 name|m
@@ -2477,9 +2483,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-endif|#
-directive|endif
-comment|/* IPFIREWALL_FORWARD */
 name|passin
 label|:
 comment|/* 	 * Process options and, if not destined for us, 	 * ship it on.  ip_dooptions returns 1 when an 	 * error was detected (causing an icmp message 	 * to be sent and the original packet to be freed). 	 */

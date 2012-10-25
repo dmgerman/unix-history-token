@@ -150,6 +150,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/pfil.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/route.h>
 end_include
 
@@ -590,16 +596,11 @@ name|struct
 name|sockaddr_in6
 name|fromsa
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|IPFIREWALL_FORWARD
 name|struct
 name|m_tag
 modifier|*
 name|fwd_tag
 decl_stmt|;
-endif|#
-directive|endif
 name|uint16_t
 name|uh_sum
 decl_stmt|;
@@ -1408,10 +1409,14 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Locate pcb for datagram. 	 */
-ifdef|#
-directive|ifdef
-name|IPFIREWALL_FORWARD
 comment|/* 	 * Grab info from PACKET_TAG_IPFORWARD tag prepended to the chain. 	 */
+if|if
+condition|(
+name|V_pfilforward
+operator|!=
+literal|0
+operator|&&
+operator|(
 name|fwd_tag
 operator|=
 name|m_tag_find
@@ -1422,10 +1427,7 @@ name|PACKET_TAG_IPFORWARD
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|fwd_tag
+operator|)
 operator|!=
 name|NULL
 condition|)
@@ -1550,9 +1552,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-endif|#
-directive|endif
-comment|/* IPFIREWALL_FORWARD */
 name|inp
 operator|=
 name|in6_pcblookup_mbuf

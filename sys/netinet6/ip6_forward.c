@@ -359,16 +359,11 @@ name|sw_csum
 decl_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|IPFIREWALL_FORWARD
 name|struct
 name|m_tag
 modifier|*
 name|fwd_tag
 decl_stmt|;
-endif|#
-directive|endif
 name|char
 name|ip6bufs
 index|[
@@ -1149,13 +1144,8 @@ name|ip6
 operator|->
 name|ip6_dst
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|IPFIREWALL_FORWARD
 name|again2
 label|:
-endif|#
-directive|endif
 name|rin6
 operator|.
 name|ro_rt
@@ -2046,9 +2036,15 @@ name|again
 goto|;
 comment|/* Redo the routing table lookup. */
 block|}
-ifdef|#
-directive|ifdef
-name|IPFIREWALL_FORWARD
+if|if
+condition|(
+name|V_pfilforward
+operator|==
+literal|0
+condition|)
+goto|goto
+name|pass
+goto|;
 comment|/* See if local, if yes, send it to netisr. */
 if|if
 condition|(
@@ -2206,9 +2202,6 @@ goto|goto
 name|again2
 goto|;
 block|}
-endif|#
-directive|endif
-comment|/* IPFIREWALL_FORWARD */
 name|pass
 label|:
 name|error

@@ -943,16 +943,11 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* IPSEC */
-ifdef|#
-directive|ifdef
-name|IPFIREWALL_FORWARD
 name|struct
 name|m_tag
 modifier|*
 name|fwd_tag
 decl_stmt|;
-endif|#
-directive|endif
 name|ip6
 operator|=
 name|mtod
@@ -3461,9 +3456,15 @@ name|again
 goto|;
 comment|/* Redo the routing table lookup. */
 block|}
-ifdef|#
-directive|ifdef
-name|IPFIREWALL_FORWARD
+if|if
+condition|(
+name|V_pfilforward
+operator|==
+literal|0
+condition|)
+goto|goto
+name|passout
+goto|;
 comment|/* See if local, if yes, send it to netisr. */
 if|if
 condition|(
@@ -3621,9 +3622,6 @@ goto|goto
 name|again
 goto|;
 block|}
-endif|#
-directive|endif
-comment|/* IPFIREWALL_FORWARD */
 name|passout
 label|:
 comment|/* 	 * Send the packet to the outgoing interface. 	 * If necessary, do IPv6 fragmentation before sending. 	 * 	 * the logic here is rather complex: 	 * 1: normal case (dontfrag == 0, alwaysfrag == 0) 	 * 1-a:	send as is if tlen<= path mtu 	 * 1-b:	fragment if tlen> path mtu 	 * 	 * 2: if user asks us not to fragment (dontfrag == 1) 	 * 2-a:	send as is if tlen<= interface mtu 	 * 2-b:	error if tlen> interface mtu 	 * 	 * 3: if we always need to attach fragment header (alwaysfrag == 1) 	 *	always fragment 	 * 	 * 4: if dontfrag == 1&& alwaysfrag == 1 	 *	error, as we cannot handle this conflicting request 	 */

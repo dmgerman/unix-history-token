@@ -211,6 +211,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/pfil.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/vnet.h>
 end_include
 
@@ -10618,16 +10624,7 @@ literal|"(+ipv6) "
 endif|#
 directive|endif
 literal|"initialized, divert %s, nat %s, "
-literal|"rule-based forwarding "
-ifdef|#
-directive|ifdef
-name|IPFIREWALL_FORWARD
-literal|"enabled, "
-else|#
-directive|else
-literal|"disabled, "
-endif|#
-directive|endif
+literal|"rule-based forwarding turned %s, "
 literal|"default to %s, logging "
 argument_list|,
 ifdef|#
@@ -10652,6 +10649,12 @@ literal|"loadable"
 argument_list|,
 endif|#
 directive|endif
+name|V_pfilforward
+condition|?
+literal|"on"
+else|:
+literal|"off"
+argument_list|,
 name|default_to_accept
 condition|?
 literal|"accept"
