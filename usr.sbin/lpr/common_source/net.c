@@ -216,15 +216,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|extern
-name|uid_t
-name|uid
-decl_stmt|,
-name|euid
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Create a TCP connection to host "rhost" at port "rport".  * If rport == 0, then use the printer service port.  * Most of this code comes from rcmd.c.  */
 end_comment

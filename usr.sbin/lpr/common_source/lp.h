@@ -942,6 +942,15 @@ begin_comment
 comment|/*  * seteuid() macros. */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|uid_t
+name|uid
+decl_stmt|,
+name|euid
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define

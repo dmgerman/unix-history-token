@@ -216,19 +216,6 @@ begin_comment
 comment|/* active control file name */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|uid_t
-name|uid
-decl_stmt|,
-name|euid
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* real and effective user id's */
-end_comment
-
 begin_function_decl
 specifier|static
 name|void

@@ -169,15 +169,6 @@ begin_comment
 comment|/* program name */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|uid_t
-name|uid
-decl_stmt|,
-name|euid
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|int

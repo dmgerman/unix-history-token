@@ -114,15 +114,6 @@ directive|include
 file|"pathnames.h"
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|uid_t
-name|uid
-decl_stmt|,
-name|euid
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Tell the printer daemon that there are new files in the spool directory.  */
 end_comment
