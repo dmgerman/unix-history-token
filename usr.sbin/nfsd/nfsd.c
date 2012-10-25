@@ -3147,7 +3147,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"can't create tpc socket"
+literal|"can't create tcp socket"
 argument_list|)
 expr_stmt|;
 name|nfsd_exit
