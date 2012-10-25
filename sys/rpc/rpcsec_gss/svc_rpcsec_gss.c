@@ -4662,6 +4662,7 @@ argument_list|,
 name|min_stat
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Attila Bogar and Herbert Poeckl reported similar problems 		 * w.r.t. a Linux NFS client doing a krb5 NFS mount against the 		 * FreeBSD server. We determined this was a Linux bug: 		 * http://www.spinics.net/lists/linux-nfs/msg32466.html, where 		 * the mount failed to work because a Destroy operation with a 		 * bogus encrypted checksum destroyed the authenticator handle. 		 * Since the checksum is bogus (gss_verify_mic() failed), it 		 * doesn't make sense to destroy the handle and not doing so 		 * fixes the Linux mount. 		 */
 if|if
 condition|(
 name|gcproc
