@@ -3728,14 +3728,14 @@ block|{
 comment|/* 		 * Make sure that fragments have a data length 		 * that's a non-zero multiple of 8 bytes. 		 */
 if|if
 condition|(
-name|ntohs
-argument_list|(
 name|ip
 operator|->
 name|ip_len
-argument_list|)
 operator|==
+name|htons
+argument_list|(
 literal|0
+argument_list|)
 operator|||
 operator|(
 name|ntohs
@@ -3743,12 +3743,12 @@ argument_list|(
 name|ip
 operator|->
 name|ip_len
+argument_list|)
 operator|&
 literal|0x7
-argument_list|)
+operator|)
 operator|!=
 literal|0
-operator|)
 condition|)
 block|{
 name|IPSTAT_INC
