@@ -955,6 +955,11 @@ goto|goto
 name|make_token
 goto|;
 block|}
+name|free
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
