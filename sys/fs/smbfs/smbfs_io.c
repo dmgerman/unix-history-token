@@ -1301,7 +1301,7 @@ return|;
 block|}
 name|SMBVDEBUG
 argument_list|(
-literal|"ofs=%d,resid=%d\n"
+literal|"ofs=%d,resid=%zd\n"
 argument_list|,
 operator|(
 name|int
@@ -1481,7 +1481,7 @@ argument_list|)
 expr_stmt|;
 name|SMBVDEBUG
 argument_list|(
-literal|"after: ofs=%d,resid=%d\n"
+literal|"after: ofs=%d,resid=%zd\n"
 argument_list|,
 operator|(
 name|int
@@ -3075,7 +3075,7 @@ name|td
 expr_stmt|;
 name|SMBVDEBUG
 argument_list|(
-literal|"ofs=%d,resid=%d\n"
+literal|"ofs=%d,resid=%zd\n"
 argument_list|,
 operator|(
 name|int

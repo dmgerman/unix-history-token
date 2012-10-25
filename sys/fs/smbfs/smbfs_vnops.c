@@ -2225,7 +2225,7 @@ name|a_uio
 decl_stmt|;
 name|SMBVDEBUG
 argument_list|(
-literal|"%d,ofs=%d,sz=%d\n"
+literal|"%d,ofs=%d,sz=%zd\n"
 argument_list|,
 name|vp
 operator|->
