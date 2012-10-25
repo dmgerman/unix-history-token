@@ -378,6 +378,15 @@ operator||
 name|CPUID2_AVX
 operator|)
 expr_stmt|;
+comment|/* 			 * Hide monitor/mwait until we know how to deal with 			 * these instructions. 			 */
+name|regs
+index|[
+literal|2
+index|]
+operator|&=
+operator|~
+name|CPUID2_MON
+expr_stmt|;
 comment|/* 			 * Hide thermal monitoring 			 */
 name|regs
 index|[
