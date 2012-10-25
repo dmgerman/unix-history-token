@@ -149,7 +149,7 @@ begin_define
 define|#
 directive|define
 name|MAX_REDIRECT
-value|5
+value|20
 end_define
 
 begin_comment
