@@ -3110,15 +3110,6 @@ name|ip_hl
 operator|<<
 literal|2
 expr_stmt|;
-name|ip_len
-operator|=
-name|ntohs
-argument_list|(
-name|ip
-operator|->
-name|ip_len
-argument_list|)
-expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
