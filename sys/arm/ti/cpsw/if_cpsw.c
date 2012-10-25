@@ -210,13 +210,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<arm/ti/cpsw/if_cpswreg.h>
+file|"if_cpswreg.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<arm/ti/cpsw/if_cpswvar.h>
+file|"if_cpswvar.h"
 end_include
 
 begin_include
