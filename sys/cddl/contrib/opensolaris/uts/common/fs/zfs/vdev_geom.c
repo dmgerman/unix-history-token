@@ -1278,8 +1278,12 @@ operator|!=
 literal|0
 operator|||
 name|state
-operator|>=
+operator|==
 name|POOL_STATE_DESTROYED
+operator|||
+name|state
+operator|>
+name|POOL_STATE_L2CACHE
 condition|)
 block|{
 name|nvlist_free
@@ -1297,6 +1301,15 @@ continue|continue;
 block|}
 if|if
 condition|(
+name|state
+operator|!=
+name|POOL_STATE_SPARE
+operator|&&
+name|state
+operator|!=
+name|POOL_STATE_L2CACHE
+operator|&&
+operator|(
 name|nvlist_lookup_uint64
 argument_list|(
 operator|*
@@ -1313,6 +1326,7 @@ operator|||
 name|txg
 operator|==
 literal|0
+operator|)
 condition|)
 block|{
 name|nvlist_free
