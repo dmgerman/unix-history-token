@@ -3161,6 +3161,14 @@ condition|)
 block|{
 if|if
 condition|(
+name|uaa
+operator|->
+name|info
+operator|.
+name|bInterfaceClass
+operator|!=
+name|UICLASS_VENDOR
+operator|||
 name|usb_test_quirk
 argument_list|(
 name|uaa
