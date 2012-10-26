@@ -2683,6 +2683,10 @@ modifier|*
 name|p_racct
 decl_stmt|;
 comment|/* (b) Resource accounting. */
+name|u_char
+name|p_throttled
+decl_stmt|;
+comment|/* (c) Flag for racct pcpu throttling */
 comment|/* 	 * An orphan is the child that has beed re-parented to the 	 * debugger as a result of attaching to it.  Need to keep 	 * track of them for parent to be able to collect the exit 	 * status of what used to be children. 	 */
 name|LIST_ENTRY
 argument_list|(

@@ -209,8 +209,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|RACCT_PCTCPU
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
 name|RACCT_MAX
-value|RACCT_WALLCLOCK
+value|RACCT_PCTCPU
 end_define
 
 begin_comment
@@ -252,6 +259,13 @@ name|RACCT_SLOPPY
 value|0x10
 end_define
 
+begin_define
+define|#
+directive|define
+name|RACCT_DECAYING
+value|0x20
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -275,7 +289,7 @@ value|(racct_types[X]& RACCT_IN_MILLIONS)
 end_define
 
 begin_comment
-comment|/*  * Resource usage can drop, as opposed to only grow.  */
+comment|/*  * Resource usage can drop, as opposed to only grow.  When the process  * terminates, its resource usage is freed from the respective  * per-credential racct containers.  */
 end_comment
 
 begin_define
@@ -328,6 +342,34 @@ parameter_list|(
 name|X
 parameter_list|)
 value|(racct_types[X]& RACCT_SLOPPY)
+end_define
+
+begin_comment
+comment|/*  * When a process terminates, its resource usage is not automatically  * subtracted from per-credential racct containers.  Instead, the resource  * usage of per-credential racct containers decays in time.  * Resource usage can olso drop for such resource.  * So far, the only such resource is RACCT_PCTCPU.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RACCT_IS_DECAYING
+parameter_list|(
+name|X
+parameter_list|)
+value|(racct_types[X]& RACCT_DECAYING)
+end_define
+
+begin_comment
+comment|/*  * Resource usage can drop, as opposed to only grow.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RACCT_CAN_DROP
+parameter_list|(
+name|X
+parameter_list|)
+value|(RACCT_IS_RECLAIMABLE(X) | RACCT_IS_DECAYING(X))
 end_define
 
 begin_comment
