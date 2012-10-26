@@ -4129,7 +4129,7 @@ literal|"no fragment"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Include the size of next fragment so NAV is 			 * updated properly.  The last fragment uses only 			 * the ACK duration 			 */
+comment|/* 			 * Include the size of next fragment so NAV is 			 * updated properly.  The last fragment uses only 			 * the ACK duration 			 * 			 * XXX TODO: ensure that the rate lookup for each 			 * fragment is the same as the rate used by the 			 * first fragment! 			 */
 name|dur
 operator|+=
 name|ath_hal_computetxtime
