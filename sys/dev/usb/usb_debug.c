@@ -215,6 +215,8 @@ argument_list|,
 name|debug
 argument_list|,
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|usb_debug
@@ -303,6 +305,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|usb_port_reset_delay
@@ -348,6 +352,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|usb_port_root_reset_delay
@@ -393,6 +399,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|usb_port_reset_recovery
@@ -438,6 +446,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|usb_port_powerup_delay
@@ -483,6 +493,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|usb_port_resume_delay
@@ -528,6 +540,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|usb_set_address_settle
@@ -573,6 +587,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|usb_resume_delay
@@ -618,6 +634,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|usb_resume_wait
@@ -663,6 +681,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|usb_resume_recovery
@@ -708,6 +728,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|usb_extra_power_up_time

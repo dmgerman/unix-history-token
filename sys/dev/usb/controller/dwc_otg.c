@@ -294,6 +294,8 @@ argument_list|,
 name|use_hsic
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|dwc_otg_use_hsic

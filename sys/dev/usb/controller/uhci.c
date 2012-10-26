@@ -291,6 +291,8 @@ argument_list|,
 name|debug
 argument_list|,
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|uhcidebug
@@ -298,6 +300,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"uhci debug level"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.usb.uhci.debug"
+argument_list|,
+operator|&
+name|uhcidebug
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -312,6 +325,8 @@ argument_list|,
 name|loop
 argument_list|,
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|uhcinoloop
@@ -319,17 +334,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"uhci noloop"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.usb.uhci.debug"
-argument_list|,
-operator|&
-name|uhcidebug
 argument_list|)
 expr_stmt|;
 end_expr_stmt

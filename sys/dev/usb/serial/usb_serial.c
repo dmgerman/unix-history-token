@@ -387,6 +387,8 @@ argument_list|,
 name|cons_unit
 argument_list|,
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|ucom_cons_unit
@@ -419,6 +421,8 @@ argument_list|,
 name|cons_subunit
 argument_list|,
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|ucom_cons_subunit
@@ -451,6 +455,8 @@ argument_list|,
 name|cons_baud
 argument_list|,
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|ucom_cons_baud
