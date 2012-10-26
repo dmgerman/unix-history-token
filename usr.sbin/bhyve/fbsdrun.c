@@ -134,6 +134,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"mptbl.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"pci_emul.h"
 end_include
 
@@ -402,21 +408,6 @@ name|cpumask
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|void
-modifier|*
-name|oem_tbl_start
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|oem_tbl_size
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|void
@@ -533,7 +524,6 @@ literal|"       -h: help\n"
 literal|"       -z: guest hz (default is %d)\n"
 literal|"       -s:<slot,driver,configinfo> PCI slot config\n"
 literal|"       -S:<slot,driver,configinfo> legacy PCI slot config\n"
-literal|"	-n:<slot,name> PCI slot naming\n"
 literal|"       -m: lowmem in MB\n"
 literal|"       -M: highmem in MB\n"
 literal|"       -x: mux vcpus to 1 hcpu\n"
@@ -641,29 +631,6 @@ operator|(
 name|NULL
 operator|)
 return|;
-block|}
-end_function
-
-begin_function
-name|void
-name|fbsdrun_add_oemtbl
-parameter_list|(
-name|void
-modifier|*
-name|tbl
-parameter_list|,
-name|int
-name|tblsz
-parameter_list|)
-block|{
-name|oem_tbl_start
-operator|=
-name|tbl
-expr_stmt|;
-name|oem_tbl_size
-operator|=
-name|tblsz
-expr_stmt|;
 block|}
 end_function
 
@@ -2595,15 +2562,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|'n'
-case|:
-name|pci_parse_name
-argument_list|(
-name|optarg
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
 literal|'m'
 case|:
 name|lomem_sz
@@ -3076,17 +3034,13 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * build the guest tables, MP etc. 	 */
-name|vm_build_tables
+name|mptable_build
 argument_list|(
 name|ctx
 argument_list|,
 name|guest_ncpus
 argument_list|,
 name|ioapic
-argument_list|,
-name|oem_tbl_start
-argument_list|,
-name|oem_tbl_size
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Add CPU 0 	 */

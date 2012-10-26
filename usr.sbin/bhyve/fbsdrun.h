@@ -137,20 +137,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|fbsdrun_add_oemtbl
-parameter_list|(
-name|void
-modifier|*
-name|tbl
-parameter_list|,
-name|int
-name|tblsz
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|fbsdrun_muxed
 parameter_list|(
