@@ -2327,6 +2327,22 @@ return|;
 block|}
 endif|#
 directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|OCTEON_VENDOR_RADISYS
+argument_list|)
+case|case
+name|CVMX_BOARD_TYPE_CUST_RADISYS_RSYS4GBE
+case|:
+comment|/* No MII.  */
+return|return
+operator|-
+literal|1
+return|;
+endif|#
+directive|endif
 block|}
 comment|/* Some unknown board. Somebody forgot to update this function... */
 name|cvmx_dprintf
