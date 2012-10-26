@@ -298,6 +298,12 @@ name|pa
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|m
+operator|->
+name|valid
+operator|=
+name|VM_PAGE_BITS_ALL
+expr_stmt|;
 name|update_pages_allocated
 argument_list|(
 literal|1
