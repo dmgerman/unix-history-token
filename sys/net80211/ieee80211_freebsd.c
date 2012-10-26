@@ -695,6 +695,14 @@ expr_stmt|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|1000020
+end_if
+
 begin_expr_stmt
 name|IFC_SIMPLE_DECLARE
 argument_list|(
@@ -704,6 +712,11 @@ literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void
