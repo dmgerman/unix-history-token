@@ -2672,6 +2672,7 @@ argument_list|(
 name|curthread
 argument_list|)
 expr_stmt|;
+comment|/* restore guest FPU state */
 name|fpu_stop_emulating
 argument_list|()
 expr_stmt|;
@@ -2681,6 +2682,10 @@ name|vcpu
 operator|->
 name|guestfpu
 argument_list|)
+expr_stmt|;
+comment|/* 	 * The FPU is now "dirty" with the guest's state so turn on emulation 	 * to trap any access to the FPU by the host. 	 */
+name|fpu_start_emulating
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -2696,6 +2701,26 @@ modifier|*
 name|vcpu
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|(
+name|rcr0
+argument_list|()
+operator|&
+name|CR0_TS
+operator|)
+operator|==
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"fpu emulation not enabled in host!"
+argument_list|)
+expr_stmt|;
+comment|/* save guest FPU state */
+name|fpu_stop_emulating
+argument_list|()
+expr_stmt|;
 name|fpusave
 argument_list|(
 name|vcpu

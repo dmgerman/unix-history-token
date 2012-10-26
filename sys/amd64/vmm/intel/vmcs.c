@@ -1469,10 +1469,13 @@ goto|goto
 name|done
 goto|;
 comment|/* Load the control registers */
+comment|/* 	 * We always want CR0.TS to be set when the processor does a VM exit. 	 * 	 * With emulation turned on unconditionally after a VM exit, we are 	 * able to trap inadvertent use of the FPU until the guest FPU state 	 * has been safely squirreled away. 	 */
 name|cr0
 operator|=
 name|rcr0
 argument_list|()
+operator||
+name|CR0_TS
 expr_stmt|;
 if|if
 condition|(
