@@ -10296,6 +10296,14 @@ block|}
 else|else
 block|{
 comment|/* Fragment the packet */
+name|mb_copy
+operator|->
+name|m_pkthdr
+operator|.
+name|csum_flags
+operator||=
+name|CSUM_IP
+expr_stmt|;
 if|if
 condition|(
 name|ip_fragment
@@ -10308,8 +10316,6 @@ argument_list|,
 name|mtu
 argument_list|,
 literal|0
-argument_list|,
-name|CSUM_DELAY_IP
 argument_list|)
 operator|!=
 literal|0

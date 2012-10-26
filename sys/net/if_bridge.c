@@ -15090,6 +15090,14 @@ name|ip
 operator|*
 argument_list|)
 expr_stmt|;
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|csum_flags
+operator||=
+name|CSUM_IP
+expr_stmt|;
 name|error
 operator|=
 name|ip_fragment
@@ -15106,8 +15114,6 @@ argument_list|,
 name|ifp
 operator|->
 name|if_hwassist
-argument_list|,
-name|CSUM_DELAY_IP
 argument_list|)
 expr_stmt|;
 if|if

@@ -926,9 +926,6 @@ name|mtu
 parameter_list|,
 name|u_long
 name|if_hwassist_flags
-parameter_list|,
-name|int
-name|sw_csum
 parameter_list|)
 function_decl|;
 end_function_decl
