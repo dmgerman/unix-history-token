@@ -636,6 +636,15 @@ modifier|*
 name|vap
 parameter_list|)
 block|{
+name|CURVNET_SET
+argument_list|(
+name|vap
+operator|->
+name|iv_ifp
+operator|->
+name|if_vnet
+argument_list|)
+expr_stmt|;
 name|if_clone_destroyif
 argument_list|(
 name|wlan_cloner
@@ -644,6 +653,9 @@ name|vap
 operator|->
 name|iv_ifp
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 block|}
 end_function
