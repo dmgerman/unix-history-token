@@ -1127,8 +1127,7 @@ name|softc
 operator|->
 name|path
 argument_list|,
-comment|/*priority*/
-literal|5
+name|CAM_PRIORITY_NONE
 argument_list|)
 expr_stmt|;
 name|csa
