@@ -409,19 +409,39 @@ return|;
 block|}
 end_function
 
-begin_expr_stmt
-name|INOUT_PORT
-argument_list|(
-name|console
-argument_list|,
+begin_decl_stmt
+specifier|static
+name|struct
+name|inout_port
+name|consport
+init|=
+block|{
+literal|"bvmcons"
+block|,
 name|BVM_CONSOLE_PORT
-argument_list|,
+block|,
 name|IOPORT_F_INOUT
-argument_list|,
+block|,
 name|console_handler
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|void
+name|init_bvmcons
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|register_inout
+argument_list|(
+operator|&
+name|consport
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_function
 
 end_unit
 

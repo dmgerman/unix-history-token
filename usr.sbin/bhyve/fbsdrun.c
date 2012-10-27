@@ -2401,6 +2401,8 @@ decl_stmt|,
 name|err
 decl_stmt|,
 name|ioapic
+decl_stmt|,
+name|bvmcons
 decl_stmt|;
 name|struct
 name|vmctx
@@ -2410,6 +2412,10 @@ decl_stmt|;
 name|uint64_t
 name|rip
 decl_stmt|;
+name|bvmcons
+operator|=
+literal|0
+expr_stmt|;
 name|inject_bkpt
 operator|=
 literal|0
@@ -2447,7 +2453,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"aehBHIPxp:g:c:z:s:S:n:m:M:"
+literal|"abehBHIPxp:g:c:z:s:S:n:m:M:"
 argument_list|)
 operator|)
 operator|!=
@@ -2464,6 +2470,14 @@ case|case
 literal|'a'
 case|:
 name|disable_x2apic
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'b'
+case|:
+name|bvmcons
 operator|=
 literal|1
 expr_stmt|;
@@ -2985,6 +2999,13 @@ name|init_dbgport
 argument_list|(
 name|gdb_port
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bvmcons
+condition|)
+name|init_bvmcons
+argument_list|()
 expr_stmt|;
 name|error
 operator|=
