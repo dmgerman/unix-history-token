@@ -1351,10 +1351,21 @@ operator|=
 name|getegid
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
 name|setegid
 argument_list|(
 name|getgid
 argument_list|()
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"setegid failed"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1373,9 +1384,20 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
 name|setegid
 argument_list|(
 name|egid
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"setegid failed"
 argument_list|)
 expr_stmt|;
 name|warn
@@ -1391,9 +1413,20 @@ literal|1
 operator|)
 return|;
 block|}
+if|if
+condition|(
 name|setegid
 argument_list|(
 name|egid
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"setegid failed"
 argument_list|)
 expr_stmt|;
 while|while

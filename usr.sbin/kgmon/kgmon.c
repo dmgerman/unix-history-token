@@ -369,12 +369,25 @@ decl_stmt|,
 modifier|*
 name|kmemf
 decl_stmt|;
+if|if
+condition|(
 name|seteuid
 argument_list|(
 name|getuid
 argument_list|()
 argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"seteuid failed\n"
+argument_list|)
 expr_stmt|;
+block|}
 name|kmemf
 operator|=
 name|NULL

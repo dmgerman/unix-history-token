@@ -508,13 +508,24 @@ name|sectimeout
 operator|*
 literal|60
 expr_stmt|;
+comment|/* discard privs */
+if|if
+condition|(
 name|setuid
 argument_list|(
 name|getuid
 argument_list|()
 argument_list|)
+operator|!=
+literal|0
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"setuid failed"
+argument_list|)
 expr_stmt|;
-comment|/* discard privs */
 if|if
 condition|(
 name|tcgetattr

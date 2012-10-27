@@ -870,13 +870,31 @@ name|pipein
 operator|++
 expr_stmt|;
 block|}
+comment|/* no longer need or want root privileges */
+if|if
+condition|(
 name|setuid
 argument_list|(
 name|getuid
 argument_list|()
 argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"setuid failed\n"
+argument_list|)
 expr_stmt|;
-comment|/* no longer need or want root privileges */
+name|done
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|magtape
 operator|=
 name|strdup
