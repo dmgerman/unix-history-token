@@ -6320,13 +6320,6 @@ name|pte
 operator|=
 literal|0
 expr_stmt|;
-name|pmap_invalidate_page
-argument_list|(
-name|pmap
-argument_list|,
-name|va
-argument_list|)
-expr_stmt|;
 name|m
 operator|=
 name|PHYS_TO_VM_PAGE
