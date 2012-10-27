@@ -14403,6 +14403,9 @@ goto|goto
 name|resume
 goto|;
 block|}
+name|sched_pin
+argument_list|()
+expr_stmt|;
 block|}
 if|if
 condition|(
