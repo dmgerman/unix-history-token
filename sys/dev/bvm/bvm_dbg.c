@@ -116,6 +116,13 @@ name|BVM_DBG_PORT
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|BVM_DBG_SIG
+value|('B'<< 8 | 'V')
+end_define
+
 begin_function
 specifier|static
 name|int
@@ -147,14 +154,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|disabled
 condition|)
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
+block|{
 if|if
 condition|(
 name|resource_int_value
@@ -175,9 +178,27 @@ name|bvm_dbg_port
 operator|=
 name|port
 expr_stmt|;
-comment|/* 	 * Return a higher priority than 0 to override other 	 * gdb dbgport providers that may be present (e.g. uart) 	 */
+if|if
+condition|(
+name|inw
+argument_list|(
+name|bvm_dbg_port
+argument_list|)
+operator|==
+name|BVM_DBG_SIG
+condition|)
+block|{
+comment|/* 			 * Return a higher priority than 0 to override other 			 * gdb dbgport providers that may be present (e.g. uart) 			 */
 return|return
 operator|(
+literal|1
+operator|)
+return|;
+block|}
+block|}
+return|return
+operator|(
+operator|-
 literal|1
 operator|)
 return|;
