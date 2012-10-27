@@ -1192,12 +1192,8 @@ name|saveindex
 operator|+
 literal|1
 operator|)
-operator|&
-operator|(
+operator|%
 name|KTR_ENTRIES
-operator|-
-literal|1
-operator|)
 expr_stmt|;
 block|}
 do|while
@@ -1511,12 +1507,8 @@ name|ktr_idx
 operator|-
 literal|1
 operator|)
-operator|&
-operator|(
+operator|%
 name|KTR_ENTRIES
-operator|-
-literal|1
-operator|)
 expr_stmt|;
 name|tstate
 operator|.
