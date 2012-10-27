@@ -3855,6 +3855,12 @@ operator|==
 literal|4
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cfgbus
+operator|==
+literal|0
+condition|)
 name|pi
 operator|=
 name|pci_slotinfo
@@ -3866,6 +3872,11 @@ name|cfgfunc
 index|]
 operator|.
 name|si_devi
+expr_stmt|;
+else|else
+name|pi
+operator|=
+name|NULL
 expr_stmt|;
 name|coff
 operator|=
