@@ -2381,7 +2381,7 @@ name|enc
 operator|->
 name|periph
 argument_list|,
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 if|if
