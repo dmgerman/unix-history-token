@@ -1099,6 +1099,7 @@ index|]
 operator|=
 name|val
 expr_stmt|;
+return|return;
 block|}
 comment|/* 	 * True IDE access.  lower 8 bits on a 16-bit bus (see above). 	 */
 specifier|volatile
