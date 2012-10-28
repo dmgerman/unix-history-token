@@ -444,6 +444,14 @@ name|uint32_t
 name|an_is_powersave
 decl_stmt|;
 comment|/* node is sleeping */
+name|uint32_t
+name|an_stack_psq
+decl_stmt|;
+comment|/* net80211 psq isn't empty */
+name|uint32_t
+name|an_tim_set
+decl_stmt|;
+comment|/* TIM has been set */
 name|struct
 name|ath_buf
 modifier|*
@@ -1474,6 +1482,19 @@ name|void
 function_decl|(
 modifier|*
 name|av_node_ps
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211_node
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|av_set_tim
 function_decl|)
 parameter_list|(
 name|struct

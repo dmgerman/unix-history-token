@@ -8735,6 +8735,16 @@ operator|.
 name|ast_tx_raw
 operator|++
 expr_stmt|;
+comment|/* 	 * Update the TIM - if there's anything queued to the 	 * software queue and power save is enabled, we should 	 * set the TIM. 	 */
+name|ath_tx_update_tim
+argument_list|(
+name|sc
+argument_list|,
+name|ni
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|ATH_PCU_LOCK
 argument_list|(
 name|sc
@@ -20116,21 +20126,39 @@ expr_stmt|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
 begin_comment
 comment|/*  * Check if a node is asleep or not.  */
 end_comment
 
-begin_endif
-unit|static int ath_tx_node_is_asleep(struct ath_softc *sc, struct ath_node *an) {  	ATH_NODE_LOCK_ASSERT(an);  	return (an->an_is_powersave); }
-endif|#
-directive|endif
-end_endif
+begin_function
+name|int
+name|ath_tx_node_is_asleep
+parameter_list|(
+name|struct
+name|ath_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
+name|ath_node
+modifier|*
+name|an
+parameter_list|)
+block|{
+name|ATH_NODE_LOCK_ASSERT
+argument_list|(
+name|an
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|an
+operator|->
+name|an_is_powersave
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * Mark a node as currently "in powersaving."  * This suspends all traffic on the node.  *  * This must be called with the node/tx locks free.  *  * XXX TODO: the locking silliness below is due to how the node  * locking currently works.  Right now, the node lock is grabbed  * to do rate control lookups and these are done with the TX  * queue lock held.  This means the node lock can't be grabbed  * first here or a LOR will occur.  *  * Eventually (hopefully!) the TX path code will only grab  * the TXQ lock when transmitting and the ath_node lock when  * doing node/TID operations.  There are other complications -  * the sched/unsched operations involve walking the per-txq  * 'active tid' list and this requires both locks to be held.  */

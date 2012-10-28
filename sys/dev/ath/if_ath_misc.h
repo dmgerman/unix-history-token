@@ -563,6 +563,27 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|void
+name|ath_tx_update_tim
+parameter_list|(
+name|struct
+name|ath_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
+name|ieee80211_node
+modifier|*
+name|ni
+parameter_list|,
+name|int
+name|enable
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * This is only here so that the RX proc function can call it.  * It's very likely that the "start TX after RX" call should be  * done via something in if_ath.c, moving "rx tasklet" into  * if_ath.c and do the ath_start() call there.  Once that's done,  * we can kill this.  */
 end_comment
