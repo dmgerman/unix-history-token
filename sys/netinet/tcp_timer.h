@@ -511,6 +511,14 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
+name|tcp_syn_backoff
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|tcp_finwait2_timeout
 decl_stmt|;
 end_decl_stmt

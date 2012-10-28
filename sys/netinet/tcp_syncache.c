@@ -1879,7 +1879,7 @@ operator|+
 name|TCPTV_RTOBASE
 operator|*
 operator|(
-name|tcp_backoff
+name|tcp_syn_backoff
 index|[
 name|sc
 operator|->
