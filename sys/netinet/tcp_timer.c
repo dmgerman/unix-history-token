@@ -2610,7 +2610,6 @@ operator|->
 name|t_inpcb
 argument_list|)
 expr_stmt|;
-else|else
 endif|#
 directive|endif
 name|tp
