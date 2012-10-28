@@ -61555,6 +61555,22 @@ argument_list|(
 literal|"softdep_deallocate_dependencies: dangling deps"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bp
+operator|->
+name|b_vp
+operator|!=
+name|NULL
+operator|&&
+name|bp
+operator|->
+name|b_vp
+operator|->
+name|v_mount
+operator|!=
+name|NULL
+condition|)
 name|softdep_error
 argument_list|(
 name|bp
@@ -61572,6 +61588,25 @@ operator|->
 name|b_error
 argument_list|)
 expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"softdep_deallocate_dependencies: "
+literal|"got error %d while accessing filesystem\n"
+argument_list|,
+name|bp
+operator|->
+name|b_error
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bp
+operator|->
+name|b_error
+operator|!=
+name|ENXIO
+condition|)
 name|panic
 argument_list|(
 literal|"softdep_deallocate_dependencies: unrecovered I/O error"
