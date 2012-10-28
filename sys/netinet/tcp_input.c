@@ -1861,7 +1861,25 @@ name|tcps_usedssthresh
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Set the initial slow-start flight size. 	 * 	 * RFC3390 says only do this if SYN or SYN/ACK didn't got lost. 	 * XXX: We currently check only in syncache_socket for that. 	 */
+comment|/* 	 * Set the initial slow-start flight size. 	 * 	 * RFC5681 Section 3.1 specifies the default conservative values. 	 * RFC3390 specifies slightly more aggressive values. 	 * 	 * If a SYN or SYN/ACK was lost and retransmitted, we have to 	 * reduce the initial CWND to one segment as congestion is likely 	 * requiring us to be cautious. 	 */
+if|if
+condition|(
+name|tp
+operator|->
+name|snd_cwnd
+operator|==
+literal|1
+condition|)
+name|tp
+operator|->
+name|snd_cwnd
+operator|=
+name|tp
+operator|->
+name|t_maxseg
+expr_stmt|;
+comment|/* SYN(-ACK) lost */
+elseif|else
 if|if
 condition|(
 name|V_tcp_do_rfc3390
