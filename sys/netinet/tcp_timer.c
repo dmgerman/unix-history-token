@@ -2502,10 +2502,7 @@ name|TCPS_SYN_SENT
 condition|)
 name|rexmt
 operator|=
-name|TCP_REXMTVAL
-argument_list|(
-name|tp
-argument_list|)
+name|TCPTV_RTOBASE
 operator|*
 name|tcp_syn_backoff
 index|[
