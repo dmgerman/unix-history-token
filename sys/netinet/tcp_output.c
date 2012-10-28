@@ -2037,7 +2037,7 @@ goto|goto
 name|send
 goto|;
 block|}
-comment|/* 	 * Compare available window to amount of window 	 * known to peer (as advertised window less 	 * next expected input).  If the difference is at least two 	 * max size segments, or at least 50% of the maximum possible 	 * window, then want to send a window update to peer. 	 * Skip this if the connection is in T/TCP half-open state. 	 * Don't send pure window updates when the peer has closed 	 * the connection and won't ever send more data. 	 */
+comment|/* 	 * Compare available window to amount of window 	 * known to peer (as advertised window less 	 * next expected input).  If the difference is at least two 	 * max size segments, or at least 50% of the maximum possible 	 * window, then want to send a window update to peer. 	 * Skip this if the connection is in T/TCP half-open state. 	 * 	 * Don't send an independent window update if a delayed 	 * ACK is pending (it will get piggy-backed on it) or the 	 * remote side already has done a half-close and won't send 	 * more data. 	 */
 if|if
 condition|(
 name|recwin
@@ -2051,6 +2051,15 @@ operator|->
 name|t_flags
 operator|&
 name|TF_NEEDSYN
+operator|)
+operator|&&
+operator|!
+operator|(
+name|tp
+operator|->
+name|t_flags
+operator|&
+name|TF_DELACK
 operator|)
 operator|&&
 operator|!
