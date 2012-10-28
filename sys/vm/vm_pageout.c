@@ -7014,10 +7014,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|limit
-operator|>=
-literal|0
-operator|&&
 name|size
 operator|>=
 name|limit
