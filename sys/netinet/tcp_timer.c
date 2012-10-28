@@ -2569,6 +2569,8 @@ operator|(
 name|TF_REQ_SCALE
 operator||
 name|TF_REQ_TSTMP
+operator||
+name|TF_SACK_PERMIT
 operator|)
 expr_stmt|;
 comment|/* 	 * If we backed off this far, our srtt estimate is probably bogus. 	 * Clobber it so we'll take the next rtt measurement as our srtt; 	 * move the current srtt into rttvar to keep the current 	 * retransmit times until then. 	 */
