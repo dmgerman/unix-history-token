@@ -617,6 +617,9 @@ operator|->
 name|td_pinned
 operator|++
 expr_stmt|;
+name|__compiler_membar
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -629,6 +632,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|__compiler_membar
+argument_list|()
+expr_stmt|;
 name|curthread
 operator|->
 name|td_pinned
