@@ -5764,8 +5764,8 @@ condition|(
 name|pbp
 operator|->
 name|bio_cmd
-operator|==
-name|BIO_WRITE
+operator|!=
+name|BIO_READ
 condition|)
 block|{
 if|if
@@ -5792,6 +5792,12 @@ name|bio_error
 expr_stmt|;
 if|if
 condition|(
+name|pbp
+operator|->
+name|bio_cmd
+operator|==
+name|BIO_WRITE
+operator|&&
 name|bp
 operator|->
 name|bio_error
