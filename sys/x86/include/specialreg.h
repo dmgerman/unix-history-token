@@ -261,6 +261,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CR4_VMXE
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* enable VMX operation (Intel-specific) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CR4_XSAVE
 value|0x00040000
 end_define

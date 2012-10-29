@@ -134,6 +134,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"vmm_host.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"vmm_mem.h"
 end_include
 
@@ -859,6 +865,9 @@ block|{
 name|int
 name|error
 decl_stmt|;
+name|vmm_host_state_init
+argument_list|()
+expr_stmt|;
 name|vmm_ipi_init
 argument_list|()
 expr_stmt|;

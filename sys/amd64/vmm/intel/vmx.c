@@ -128,6 +128,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"vmm_host.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"vmm_lapic.h"
 end_include
 
@@ -190,13 +196,6 @@ include|#
 directive|include
 file|"vmm_instruction_emul.h"
 end_include
-
-begin_define
-define|#
-directive|define
-name|CR4_VMXE
-value|(1UL<< 13)
-end_define
 
 begin_define
 define|#
@@ -335,15 +334,6 @@ literal|"vmx"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|pcpu
-name|__pcpu
-index|[]
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -3200,13 +3190,8 @@ name|vmwrite
 argument_list|(
 name|VMCS_HOST_TR_BASE
 argument_list|,
-operator|(
-name|u_long
-operator|)
-name|PCPU_GET
-argument_list|(
-name|tssp
-argument_list|)
+name|vmm_get_host_trbase
+argument_list|()
 argument_list|)
 expr_stmt|;
 if|if
@@ -3224,16 +3209,8 @@ name|vmwrite
 argument_list|(
 name|VMCS_HOST_GDTR_BASE
 argument_list|,
-operator|(
-name|u_long
-operator|)
-operator|&
-name|gdt
-index|[
-name|NGDT
-operator|*
-name|curcpu
-index|]
+name|vmm_get_host_gdtrbase
+argument_list|()
 argument_list|)
 expr_stmt|;
 if|if
@@ -3251,14 +3228,8 @@ name|vmwrite
 argument_list|(
 name|VMCS_HOST_GS_BASE
 argument_list|,
-operator|(
-name|u_long
-operator|)
-operator|&
-name|__pcpu
-index|[
-name|curcpu
-index|]
+name|vmm_get_host_gsbase
+argument_list|()
 argument_list|)
 expr_stmt|;
 if|if

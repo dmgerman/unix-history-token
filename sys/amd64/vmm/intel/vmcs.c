@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"vmm_host.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"vmcs.h"
 end_include
 
@@ -1209,36 +1215,28 @@ name|uint64_t
 name|eptp
 decl_stmt|,
 name|pat
+decl_stmt|,
+name|fsbase
+decl_stmt|,
+name|idtrbase
 decl_stmt|;
 name|uint32_t
 name|exc_bitmap
 decl_stmt|;
 name|codesel
 operator|=
-name|GSEL
-argument_list|(
-name|GCODE_SEL
-argument_list|,
-name|SEL_KPL
-argument_list|)
+name|vmm_get_host_codesel
+argument_list|()
 expr_stmt|;
 name|datasel
 operator|=
-name|GSEL
-argument_list|(
-name|GDATA_SEL
-argument_list|,
-name|SEL_KPL
-argument_list|)
+name|vmm_get_host_datasel
+argument_list|()
 expr_stmt|;
 name|tsssel
 operator|=
-name|GSEL
-argument_list|(
-name|GPROC0_SEL
-argument_list|,
-name|SEL_KPL
-argument_list|)
+name|vmm_get_host_tsssel
+argument_list|()
 expr_stmt|;
 comment|/* 	 * Make sure we have a "current" VMCS to work with. 	 */
 name|VMPTRLD
@@ -1419,10 +1417,8 @@ comment|/* Host state */
 comment|/* Initialize host IA32_PAT MSR */
 name|pat
 operator|=
-name|rdmsr
-argument_list|(
-name|MSR_PAT
-argument_list|)
+name|vmm_get_host_pat
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -1445,10 +1441,8 @@ goto|;
 comment|/* Load the IA32_EFER MSR */
 name|efer
 operator|=
-name|rdmsr
-argument_list|(
-name|MSR_EFER
-argument_list|)
+name|vmm_get_host_efer
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -1469,13 +1463,10 @@ goto|goto
 name|done
 goto|;
 comment|/* Load the control registers */
-comment|/* 	 * We always want CR0.TS to be set when the processor does a VM exit. 	 * 	 * With emulation turned on unconditionally after a VM exit, we are 	 * able to trap inadvertent use of the FPU until the guest FPU state 	 * has been safely squirreled away. 	 */
 name|cr0
 operator|=
-name|rcr0
+name|vmm_get_host_cr0
 argument_list|()
-operator||
-name|CR0_TS
 expr_stmt|;
 if|if
 condition|(
@@ -1497,8 +1488,10 @@ name|done
 goto|;
 name|cr4
 operator|=
-name|rcr4
+name|vmm_get_host_cr4
 argument_list|()
+operator||
+name|CR4_VMXE
 expr_stmt|;
 if|if
 condition|(
@@ -1646,6 +1639,11 @@ goto|goto
 name|done
 goto|;
 comment|/* 	 * Load the Base-Address for %fs and idtr. 	 * 	 * Note that we exclude %gs, tss and gdtr here because their base 	 * address is pcpu specific. 	 */
+name|fsbase
+operator|=
+name|vmm_get_host_fsbase
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1655,7 +1653,7 @@ name|vmwrite
 argument_list|(
 name|VMCS_HOST_FS_BASE
 argument_list|,
-literal|0
+name|fsbase
 argument_list|)
 operator|)
 operator|!=
@@ -1664,6 +1662,11 @@ condition|)
 goto|goto
 name|done
 goto|;
+name|idtrbase
+operator|=
+name|vmm_get_host_idtrbase
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1673,9 +1676,7 @@ name|vmwrite
 argument_list|(
 name|VMCS_HOST_IDTR_BASE
 argument_list|,
-name|r_idt
-operator|.
-name|rd_base
+name|idtrbase
 argument_list|)
 operator|)
 operator|!=
