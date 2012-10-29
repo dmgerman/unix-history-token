@@ -19119,6 +19119,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|ip
 operator|->
 name|ip_off
@@ -19128,6 +19129,7 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* FreeBSD has a function for ip_id's */
 name|ip
 operator|->
