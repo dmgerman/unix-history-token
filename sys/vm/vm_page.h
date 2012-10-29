@@ -210,13 +210,13 @@ name|aflags
 decl_stmt|;
 comment|/* access is atomic */
 name|uint8_t
-name|flags
-decl_stmt|;
-comment|/* see below, often immutable after alloc */
-name|u_short
 name|oflags
 decl_stmt|;
-comment|/* page flags (O) */
+comment|/* page VPO_* flags (O) */
+name|uint16_t
+name|flags
+decl_stmt|;
+comment|/* page PG_* flags (P) */
 name|u_char
 name|act_count
 decl_stmt|;
@@ -247,7 +247,7 @@ begin_define
 define|#
 directive|define
 name|VPO_BUSY
-value|0x0001
+value|0x01
 end_define
 
 begin_comment
@@ -258,7 +258,7 @@ begin_define
 define|#
 directive|define
 name|VPO_WANTED
-value|0x0002
+value|0x02
 end_define
 
 begin_comment
@@ -269,18 +269,18 @@ begin_define
 define|#
 directive|define
 name|VPO_UNMANAGED
-value|0x0004
+value|0x04
 end_define
 
 begin_comment
-comment|/* No PV management for page */
+comment|/* no PV management for page */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|VPO_SWAPINPROG
-value|0x0200
+value|0x08
 end_define
 
 begin_comment
@@ -291,7 +291,7 @@ begin_define
 define|#
 directive|define
 name|VPO_NOSYNC
-value|0x0400
+value|0x10
 end_define
 
 begin_comment
@@ -322,15 +322,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|PQ_HOLD
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
 name|PQ_COUNT
-value|3
+value|2
 end_define
 
 begin_struct
@@ -723,7 +716,7 @@ begin_define
 define|#
 directive|define
 name|PG_CACHED
-value|0x01
+value|0x0001
 end_define
 
 begin_comment
@@ -734,7 +727,7 @@ begin_define
 define|#
 directive|define
 name|PG_FREE
-value|0x02
+value|0x0002
 end_define
 
 begin_comment
@@ -745,7 +738,7 @@ begin_define
 define|#
 directive|define
 name|PG_FICTITIOUS
-value|0x04
+value|0x0004
 end_define
 
 begin_comment
@@ -756,7 +749,7 @@ begin_define
 define|#
 directive|define
 name|PG_ZERO
-value|0x08
+value|0x0008
 end_define
 
 begin_comment
@@ -767,7 +760,7 @@ begin_define
 define|#
 directive|define
 name|PG_MARKER
-value|0x10
+value|0x0010
 end_define
 
 begin_comment
@@ -778,7 +771,7 @@ begin_define
 define|#
 directive|define
 name|PG_SLAB
-value|0x20
+value|0x0020
 end_define
 
 begin_comment
@@ -789,7 +782,7 @@ begin_define
 define|#
 directive|define
 name|PG_WINATCFLS
-value|0x40
+value|0x0040
 end_define
 
 begin_comment
@@ -800,11 +793,22 @@ begin_define
 define|#
 directive|define
 name|PG_NODUMP
-value|0x80
+value|0x0080
 end_define
 
 begin_comment
 comment|/* don't include this page in a dump */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PG_UNHOLDFREE
+value|0x0100
+end_define
+
+begin_comment
+comment|/* delayed free of a held page */
 end_comment
 
 begin_comment
