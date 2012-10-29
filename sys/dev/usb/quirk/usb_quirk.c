@@ -3749,6 +3749,12 @@ operator|=
 literal|"UQ_KBD_BOOTPROTO"
 block|,
 index|[
+name|UQ_UMS_IGNORE
+index|]
+operator|=
+literal|"UQ_UMS_IGNORE"
+block|,
+index|[
 name|UQ_MS_BAD_CLASS
 index|]
 operator|=

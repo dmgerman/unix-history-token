@@ -22,7 +22,7 @@ end_define
 begin_enum
 enum|enum
 block|{
-comment|/* 	 * Keep in sync with theusb_quirk_str usb_quirk.c, and with the 	 * share/man/man4/usb_quirk.4 	 */
+comment|/* 	 * Keep in sync with usb_quirk_str in usb_quirk.c, and with 	 * share/man/man4/usb_quirk.4 	 */
 name|UQ_NONE
 block|,
 comment|/* not a valid quirk */
@@ -63,6 +63,9 @@ comment|/* device should be ignored by kbd class */
 name|UQ_KBD_BOOTPROTO
 block|,
 comment|/* device should set the boot protocol */
+name|UQ_UMS_IGNORE
+block|,
+comment|/* device should be ignored by ums class */
 name|UQ_MS_BAD_CLASS
 block|,
 comment|/* doesn't identify properly */
@@ -105,7 +108,7 @@ comment|/* select configuration index 0 by default */
 name|UQ_ASSUME_CM_OVER_DATA
 block|,
 comment|/* assume cm over data feature */
-comment|/* USB Mass Storage Quirks. See "storage/umass.c" for a detailed description. */
+comment|/* 	 * USB Mass Storage Quirks. See "storage/umass.c" for a 	 * detailed description. 	 */
 name|UQ_MSC_NO_TEST_UNIT_READY
 block|,
 comment|/* send start/stop instead of TUR */
