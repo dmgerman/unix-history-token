@@ -10999,6 +10999,9 @@ name|lbppbe
 decl_stmt|,
 name|lalba
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 name|softc
 operator|=
 operator|(
@@ -11628,19 +11631,34 @@ operator|&=
 operator|~
 name|DISKFLAG_CANDELETE
 expr_stmt|;
-comment|/* Currently as of 6/13/2012, panics if DIAGNOSTIC is set */
-ifndef|#
-directive|ifndef
-name|DIAGNOSTIC
+name|error
+operator|=
 name|disk_resize
 argument_list|(
 name|softc
 operator|->
 name|disk
+argument_list|,
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+name|xpt_print
+argument_list|(
+name|periph
+operator|->
+name|path
+argument_list|,
+literal|"disk_resize(9) failed, error = %d\n"
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
