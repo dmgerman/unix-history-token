@@ -144,6 +144,39 @@ value|(1<<9)
 end_define
 
 begin_comment
+comment|/* Data timeout is invalid, should use SD clock */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK
+value|(1<<10)
+end_define
+
+begin_comment
+comment|/* Timeout value is invalid, should be overriden */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDHCI_QUIRK_BROKEN_TIMEOUT_VAL
+value|(1<<11)
+end_define
+
+begin_comment
+comment|/* SDHCI_CAPABILITIES is invalid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDHCI_QUIRK_MISSING_CAPS
+value|(1<<12)
+end_define
+
+begin_comment
 comment|/*  * Controller registers  */
 end_comment
 
@@ -568,8 +601,36 @@ end_define
 begin_define
 define|#
 directive|define
+name|SDHCI_DIVIDER_MASK
+value|0xff
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHCI_DIVIDER_MASK_LEN
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
 name|SDHCI_DIVIDER_SHIFT
 value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHCI_DIVIDER_HI_MASK
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHCI_DIVIDER_HI_SHIFT
+value|6
 end_define
 
 begin_define
@@ -985,6 +1046,27 @@ name|SDHCI_SPEC_VER_SHIFT
 value|0
 end_define
 
+begin_define
+define|#
+directive|define
+name|SDHCI_SPEC_100
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHCI_SPEC_200
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHCI_SPEC_300
+value|2
+end_define
+
 begin_struct
 struct|struct
 name|sdhci_slot
@@ -993,6 +1075,10 @@ name|u_int
 name|quirks
 decl_stmt|;
 comment|/* Chip specific quirks */
+name|u_int
+name|caps
+decl_stmt|;
+comment|/* Override SDHCI_CAPABILITIES */
 name|device_t
 name|bus
 decl_stmt|;
