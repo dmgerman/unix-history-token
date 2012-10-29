@@ -6695,7 +6695,10 @@ name|vmcs_getreg
 argument_list|(
 name|vmcs
 argument_list|,
+name|VMCS_IDENT
+argument_list|(
 name|VMCS_ENTRY_INTR_INFO
+argument_list|)
 argument_list|,
 operator|&
 name|info
