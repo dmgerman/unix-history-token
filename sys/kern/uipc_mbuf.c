@@ -5081,7 +5081,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Rearange an mbuf chain so that len bytes are contiguous  * and in the data area of an mbuf (so that mtod and dtom  * will work for a structure of size len).  Returns the resulting  * mbuf chain on success, frees it and returns null on failure.  * If there is room, it will add up to max_protohdr-len extra bytes to the  * contiguous region in an attempt to avoid being called next time.  */
+comment|/*  * Rearange an mbuf chain so that len bytes are contiguous  * and in the data area of an mbuf (so that mtod will work  * for a structure of size len).  Returns the resulting  * mbuf chain on success, frees it and returns null on failure.  * If there is room, it will add up to max_protohdr-len extra bytes to the  * contiguous region in an attempt to avoid being called next time.  */
 end_comment
 
 begin_function

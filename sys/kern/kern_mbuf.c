@@ -953,7 +953,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Ensure that MSIZE doesn't break dtom() - it must be a power of 2 */
+comment|/* Ensure that MSIZE must be a power of 2. */
 end_comment
 
 begin_expr_stmt
