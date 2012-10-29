@@ -201,6 +201,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HTTP_USE_PROXY
+value|305
+end_define
+
+begin_define
+define|#
+directive|define
 name|HTTP_TEMP_REDIRECT
 value|307
 end_define
@@ -247,7 +254,7 @@ name|HTTP_REDIRECT
 parameter_list|(
 name|xyz
 parameter_list|)
-value|((xyz) == HTTP_MOVED_PERM \ 			    || (xyz) == HTTP_MOVED_TEMP \ 			    || (xyz) == HTTP_TEMP_REDIRECT \ 			    || (xyz) == HTTP_SEE_OTHER)
+value|((xyz) == HTTP_MOVED_PERM \ 			    || (xyz) == HTTP_MOVED_TEMP \ 			    || (xyz) == HTTP_TEMP_REDIRECT \ 			    || (xyz) == HTTP_USE_PROXY \ 			    || (xyz) == HTTP_SEE_OTHER)
 end_define
 
 begin_define
@@ -8243,6 +8250,9 @@ case|:
 case|case
 name|HTTP_SEE_OTHER
 case|:
+case|case
+name|HTTP_USE_PROXY
+case|:
 comment|/* 			 * Not so fine, but we still have to read the 			 * headers to get the new location. 			 */
 break|break;
 case|case
@@ -8479,6 +8489,12 @@ operator|->
 name|err
 operator|!=
 name|HTTP_PERM_REDIRECT
+operator|&&
+name|conn
+operator|->
+name|err
+operator|!=
+name|HTTP_USE_PROXY
 condition|)
 block|{
 name|n
