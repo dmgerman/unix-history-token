@@ -214,6 +214,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/vnet.h>
 end_include
 
@@ -2065,19 +2071,38 @@ name|regression_sonewconn_earlytest
 operator|&&
 name|over
 condition|)
+block|{
 else|#
 directive|else
 if|if
 condition|(
 name|over
 condition|)
+block|{
 endif|#
 directive|endif
+name|log
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|"%s: pcb %p: Listen queue overflow: "
+literal|"%i already in queue awaiting acceptance\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|head
+operator|->
+name|so_pcb
+argument_list|,
+name|over
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
+block|}
 name|VNET_ASSERT
 argument_list|(
 name|head
@@ -2112,11 +2137,27 @@ name|so
 operator|==
 name|NULL
 condition|)
+block|{
+name|log
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|"%s: pcb %p: New socket allocation failure: "
+literal|"limit reached or out of memory\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|head
+operator|->
+name|so_pcb
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
+block|}
 if|if
 condition|(
 operator|(
@@ -2278,7 +2319,34 @@ name|so_rcv
 operator|.
 name|sb_hiwat
 argument_list|)
-operator|||
+condition|)
+block|{
+name|sodealloc
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
+name|log
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|"%s: pcb %p: soreserve() failed\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|head
+operator|->
+name|so_pcb
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
+if|if
+condition|(
 call|(
 modifier|*
 name|so
@@ -2301,6 +2369,19 @@ block|{
 name|sodealloc
 argument_list|(
 name|so
+argument_list|)
+expr_stmt|;
+name|log
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|"%s: pcb %p: pru_attach() failed\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|head
+operator|->
+name|so_pcb
 argument_list|)
 expr_stmt|;
 return|return
@@ -2546,9 +2627,6 @@ name|so
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|sobind
 parameter_list|(
@@ -2605,13 +2683,7 @@ return|return
 name|error
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * solisten() transitions a socket from a non-listening state to a listening  * state, but can also be used to update the listen queue depth on an  * existing listen socket.  The protocol will call back into the sockets  * layer using solisten_proto_check() and solisten_proto() to check and set  * socket-layer listen state.  Call backs are used so that the protocol can  * acquire both protocol and socket layer locks in whatever order is required  * by the protocol.  *  * Protocol implementors are advised to hold the socket lock across the  * socket-layer test and set to avoid races at the socket layer.  */
-end_comment
-
-begin_function
 name|int
 name|solisten
 parameter_list|(
@@ -2666,9 +2738,6 @@ return|return
 name|error
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|solisten_proto_check
 parameter_list|(
@@ -2708,9 +2777,6 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|void
 name|solisten_proto
 parameter_list|(
@@ -2755,13 +2821,7 @@ operator||=
 name|SO_ACCEPTCONN
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Evaluate the reference count and named references on a socket; if no  * references remain, free it.  This should be called whenever a reference is  * released, such as in sorele(), but also when named reference flags are  * cleared in socket or protocol code.  *  * sofree() will free the socket if:  *  * - There are no outstanding file descriptor references or related consumers  *   (so_count == 0).  *  * - The socket has been closed by user space, if ever open (SS_NOFDREF).  *  * - The protocol does not have an outstanding strong reference on the socket  *   (SS_PROTOREF).  *  * - The socket is not in a completed connection queue, so a process has been  *   notified that it is present.  If it is removed, the user process may  *   block in accept() despite select() saying the socket was ready.  */
-end_comment
-
-begin_function
 name|void
 name|sofree
 parameter_list|(
@@ -3158,13 +3218,7 @@ name|so
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Close a socket on last file table reference removal.  Initiate disconnect  * if connected.  Free socket when disconnect complete.  *  * This function will sorele() the socket.  Note that soclose() may be called  * prior to the ref count reaching zero.  The actual socket structure will  * not be freed until the ref count reaches zero.  */
-end_comment
-
-begin_function
 name|int
 name|soclose
 parameter_list|(
@@ -3540,13 +3594,7 @@ name|error
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * soabort() is used to abruptly tear down a connection, such as when a  * resource limit is reached (listen queue depth exceeded), or if a listen  * socket is closed while there are sockets waiting to be accepted.  *  * This interface is tricky, because it is called on an unreferenced socket,  * and must be called only by a thread that has actually removed the socket  * from the listen queue it was on, or races with other threads are risked.  *  * This interface will call into the protocol code, so must not be called  * with any socket locks held.  Protocols do call it while holding their own  * recursible protocol mutexes, but this is something that should be subject  * to review in the future.  */
-end_comment
-
-begin_function
 name|void
 name|soabort
 parameter_list|(
@@ -3679,9 +3727,6 @@ name|so
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|int
 name|soaccept
 parameter_list|(
@@ -3768,9 +3813,6 @@ name|error
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|soconnect
 parameter_list|(
@@ -3892,9 +3934,6 @@ name|error
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|soconnect2
 parameter_list|(
@@ -3946,9 +3985,6 @@ name|error
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|sodisconnect
 parameter_list|(
@@ -4018,15 +4054,9 @@ name|error
 operator|)
 return|;
 block|}
-end_function
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|SOCKET_SEND_COW
-end_ifdef
-
-begin_struct
 struct|struct
 name|so_zerocopy_stats
 block|{
@@ -4041,9 +4071,6 @@ name|found_ifp
 decl_stmt|;
 block|}
 struct|;
-end_struct
-
-begin_decl_stmt
 name|struct
 name|so_zerocopy_stats
 name|so_zerocp_stats
@@ -4056,13 +4083,7 @@ block|,
 literal|0
 block|}
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*  * sosend_copyin() is only used if zero copy sockets are enabled.  Otherwise  * sosend_dgram() and sosend_generic() use m_uiotombuf().  *   * sosend_copyin() accepts a uio and prepares an mbuf chain holding part or  * all of the data referenced by the uio.  If desired, it uses zero-copy.  * *space will be updated to reflect data copied in.  *  * NB: If atomic I/O is requested, the caller must already have checked that  * space can hold resid bytes.  *  * NB: In the event of an error, the caller may need to free the partial  * chain pointed to by *mpp.  The contents of both *uio and *space may be  * modified even in the case of an error.  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|sosend_copyin
@@ -4500,18 +4521,9 @@ name|error
 operator|)
 return|;
 block|}
-end_function
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* SOCKET_SEND_COW */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|SBLOCKWAIT
@@ -4519,9 +4531,6 @@ parameter_list|(
 name|f
 parameter_list|)
 value|(((f)& MSG_DONTWAIT) ? 0 : SBL_WAIT)
-end_define
-
-begin_function
 name|int
 name|sosend_dgram
 parameter_list|(
@@ -5229,13 +5238,7 @@ name|error
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Send on a socket.  If send must go all at once and message is larger than  * send buffering, then hard error.  Lock against other senders.  If must go  * all at once and not enough room now, then inform user that this would  * block and do nothing.  Otherwise, if nonblocking, send as much as  * possible.  The data to be sent is described by "uio" if nonzero, otherwise  * by the mbuf chain "top" (which must be null if uio is not).  Data provided  * in mbuf chain must be small enough to send all at once.  *  * Returns nonzero on error, timeout or signal; callers must check for short  * counts if EINTR/ERESTART are returned.  Data and control buffers are freed  * on return.  */
-end_comment
-
-begin_function
 name|int
 name|sosend_generic
 parameter_list|(
@@ -6105,9 +6108,6 @@ name|error
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|sosend
 parameter_list|(
@@ -6189,13 +6189,7 @@ name|error
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * The part of soreceive() that implements reading non-inline out-of-band  * data from a socket.  For more complete comments, see soreceive(), from  * which this code originated.  *  * Note that soreceive_rcvoob(), unlike the remainder of soreceive(), is  * unable to return an mbuf chain to the caller.  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|soreceive_rcvoob
@@ -6427,13 +6421,7 @@ name|error
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Following replacement or removal of the first mbuf on the first mbuf chain  * of a socket buffer, push necessary state changes back into the socket  * buffer so that other consumers see the values consistently.  'nextrecord'  * is the callers locally stored value of the original value of  * sb->sb_mb->m_nextpkt which must be restored when the lead mbuf changes.  * NOTE: 'nextrecord' may be NULL.  */
-end_comment
-
-begin_function
 specifier|static
 name|__inline
 name|void
@@ -6522,13 +6510,7 @@ operator|->
 name|sb_mb
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Implement receive operations on a socket.  We depend on the way that  * records are added to the sockbuf by sbappend.  In particular, each record  * (mbufs linked through m_next) must begin with an address if the protocol  * so specifies, followed by an optional mbuf or mbufs containing ancillary  * data, and then zero or more mbufs of data.  In order to allow parallelism  * between network receive and copying to user space, as well as avoid  * sleeping with a mutex held, we release the socket buffer mutex during the  * user space copy.  Although the sockbuf is locked, new data may still be  * appended, and thus we must maintain consistency of the sockbuf during that  * time.  *  * The caller may receive the data as a single mbuf chain by supplying an  * mbuf **mp0 for use in returning the chain.  The uio is then used only for  * the count in uio_resid.  */
-end_comment
-
-begin_function
 name|int
 name|soreceive_generic
 parameter_list|(
@@ -8935,13 +8917,7 @@ name|error
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Optimized version of soreceive() for stream (TCP) sockets.  */
-end_comment
-
-begin_function
 name|int
 name|soreceive_stream
 parameter_list|(
@@ -9873,13 +9849,7 @@ name|error
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Optimized version of soreceive() for simple datagram cases from userspace.  * Unlike in the stream case, we're able to drop a datagram if copyout()  * fails, and because we handle datagrams atomically, we don't need to use a  * sleep lock to prevent I/O interlacing.  */
-end_comment
-
-begin_function
 name|int
 name|soreceive_dgram
 parameter_list|(
@@ -10827,9 +10797,6 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|soreceive
 parameter_list|(
@@ -10910,9 +10877,6 @@ name|error
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|soshutdown
 parameter_list|(
@@ -11042,9 +11006,6 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|void
 name|sorflush
 parameter_list|(
@@ -11219,13 +11180,7 @@ name|so
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Perhaps this routine, and sooptcopyout(), below, ought to come in an  * additional variant to handle the case where the option value needs to be  * some kind of integer, but not a specific size.  In addition to their use  * here, these functions are also called by the protocol-level pr_ctloutput()  * routines.  */
-end_comment
-
-begin_function
 name|int
 name|sooptcopyin
 parameter_list|(
@@ -11317,13 +11272,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Kernel version of setsockopt(2).  *  * XXX: optlen is size_t, not socklen_t  */
-end_comment
-
-begin_function
 name|int
 name|so_setsockopt
 parameter_list|(
@@ -11398,9 +11347,6 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|sosetopt
 parameter_list|(
@@ -12359,13 +12305,7 @@ name|error
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Helper routine for getsockopt.  */
-end_comment
-
-begin_function
 name|int
 name|sooptcopyout
 parameter_list|(
@@ -12460,9 +12400,6 @@ name|error
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|sogetopt
 parameter_list|(
@@ -13131,9 +13068,6 @@ name|error
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|soopt_getm
 parameter_list|(
@@ -13407,9 +13341,6 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|soopt_mcopyin
 parameter_list|(
@@ -13580,9 +13511,6 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|soopt_mcopyout
 parameter_list|(
@@ -13777,13 +13705,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * sohasoutofband(): protocol notifies socket layer of the arrival of new  * out-of-band data, which will then notify socket consumers.  */
-end_comment
-
-begin_function
 name|void
 name|sohasoutofband
 parameter_list|(
@@ -13826,9 +13748,6 @@ name|PSOCK
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|int
 name|sopoll
 parameter_list|(
@@ -13873,9 +13792,6 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|sopoll_generic
 parameter_list|(
@@ -14155,9 +14071,6 @@ name|revents
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|soo_kqfilter
 parameter_list|(
@@ -14290,13 +14203,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Some routines that return EOPNOTSUPP for entry points that are not  * supported by a protocol.  Fill in as needed.  */
-end_comment
-
-begin_function
 name|int
 name|pru_accept_notsupp
 parameter_list|(
@@ -14316,9 +14223,6 @@ return|return
 name|EOPNOTSUPP
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|pru_attach_notsupp
 parameter_list|(
@@ -14340,9 +14244,6 @@ return|return
 name|EOPNOTSUPP
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|pru_bind_notsupp
 parameter_list|(
@@ -14366,9 +14267,6 @@ return|return
 name|EOPNOTSUPP
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|pru_connect_notsupp
 parameter_list|(
@@ -14392,9 +14290,6 @@ return|return
 name|EOPNOTSUPP
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|pru_connect2_notsupp
 parameter_list|(
@@ -14413,9 +14308,6 @@ return|return
 name|EOPNOTSUPP
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|pru_control_notsupp
 parameter_list|(
@@ -14445,9 +14337,6 @@ return|return
 name|EOPNOTSUPP
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|pru_disconnect_notsupp
 parameter_list|(
@@ -14461,9 +14350,6 @@ return|return
 name|EOPNOTSUPP
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|pru_listen_notsupp
 parameter_list|(
@@ -14485,9 +14371,6 @@ return|return
 name|EOPNOTSUPP
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|pru_peeraddr_notsupp
 parameter_list|(
@@ -14507,9 +14390,6 @@ return|return
 name|EOPNOTSUPP
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|pru_rcvd_notsupp
 parameter_list|(
@@ -14526,9 +14406,6 @@ return|return
 name|EOPNOTSUPP
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|pru_rcvoob_notsupp
 parameter_list|(
@@ -14550,9 +14427,6 @@ return|return
 name|EOPNOTSUPP
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|pru_send_notsupp
 parameter_list|(
@@ -14589,13 +14463,7 @@ return|return
 name|EOPNOTSUPP
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * This isn't really a ``null'' operation, but it's the default one and  * doesn't do anything destructive.  */
-end_comment
-
-begin_function
 name|int
 name|pru_sense_null
 parameter_list|(
@@ -14624,9 +14492,6 @@ return|return
 literal|0
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|pru_shutdown_notsupp
 parameter_list|(
@@ -14640,9 +14505,6 @@ return|return
 name|EOPNOTSUPP
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|pru_sockaddr_notsupp
 parameter_list|(
@@ -14662,9 +14524,6 @@ return|return
 name|EOPNOTSUPP
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|pru_sosend_notsupp
 parameter_list|(
@@ -14706,9 +14565,6 @@ return|return
 name|EOPNOTSUPP
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|pru_soreceive_notsupp
 parameter_list|(
@@ -14749,9 +14605,6 @@ return|return
 name|EOPNOTSUPP
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|pru_sopoll_notsupp
 parameter_list|(
@@ -14778,9 +14631,6 @@ return|return
 name|EOPNOTSUPP
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|filt_sordetach
@@ -14858,13 +14708,7 @@ name|so_rcv
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*ARGSUSED*/
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|filt_soread
@@ -14996,9 +14840,6 @@ name|sb_lowat
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|filt_sowdetach
@@ -15076,13 +14917,7 @@ name|so_snd
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*ARGSUSED*/
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|filt_sowrite
@@ -15238,13 +15073,7 @@ name|sb_lowat
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*ARGSUSED*/
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|filt_solisten
@@ -15290,9 +15119,6 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|socheckuid
 parameter_list|(
@@ -15337,17 +15163,8 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * These functions are used by protocols to notify the socket layer (and its  * consumers) of state changes in the sockets driven by protocol-side events.  */
-end_comment
-
-begin_comment
 comment|/*  * Procedures to manipulate state flags of socket and do appropriate wakeups.  *  * Normal sequence from the active (originating) side is that  * soisconnecting() is called during processing of connect() call, resulting  * in an eventual call to soisconnected() if/when the connection is  * established.  When the connection is torn down soisdisconnecting() is  * called during processing of disconnect() call, and soisdisconnected() is  * called when the connection to the peer is totally severed.  The semantics  * of these routines are such that connectionless protocols can call  * soisconnected() and soisdisconnected() only, bypassing the in-progress  * calls when setting up a ``connection'' takes no time.  *  * From the passive side, a socket is created with two queues of sockets:  * so_incomp for connections in progress and so_comp for connections already  * made and awaiting user acceptance.  As a protocol is preparing incoming  * connections, it creates a socket structure queued on so_incomp by calling  * sonewconn().  When the connection is established, soisconnected() is  * called, and transfers the socket structure to so_comp, making it available  * to accept().  *  * If a socket is closed with sockets on either so_incomp or so_comp, these  * sockets are dropped.  *  * If higher-level protocols are implemented in the kernel, the wakeups done  * here will sometimes cause software-interrupt process scheduling.  */
-end_comment
-
-begin_function
 name|void
 name|soisconnecting
 parameter_list|(
@@ -15385,9 +15202,6 @@ name|so
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|soisconnected
 parameter_list|(
@@ -15648,9 +15462,6 @@ name|so
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|soisdisconnecting
 parameter_list|(
@@ -15725,9 +15536,6 @@ name|so_timeo
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|soisdisconnected
 parameter_list|(
@@ -15822,13 +15630,7 @@ name|so_timeo
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Make a copy of a sockaddr in a malloced buffer of type M_SONAME.  */
-end_comment
-
-begin_function
 name|struct
 name|sockaddr
 modifier|*
@@ -15881,13 +15683,7 @@ return|return
 name|sa2
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Register per-socket buffer upcalls.  */
-end_comment
-
-begin_function
 name|void
 name|soupcall_set
 parameter_list|(
@@ -15990,9 +15786,6 @@ operator||=
 name|SB_UPCALL
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|soupcall_clear
 parameter_list|(
@@ -16082,13 +15875,7 @@ operator|~
 name|SB_UPCALL
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Create an external-format (``xsocket'') structure using the information in  * the kernel-format socket structure pointed to by so.  This is done to  * reduce the spew of irrelevant information over this interface, to isolate  * user code from changes in the kernel structure, and potentially to provide  * information-hiding if we decide that some of this information should be  * hidden from users.  */
-end_comment
-
-begin_function
 name|void
 name|sotoxsocket
 parameter_list|(
@@ -16280,13 +16067,7 @@ operator|->
 name|cr_uid
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Socket accessor functions to provide external consumers with  * a safe interface to socket state  *  */
-end_comment
-
-begin_function
 name|void
 name|so_listeners_apply_all
 parameter_list|(
@@ -16330,9 +16111,6 @@ name|arg
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|struct
 name|sockbuf
 modifier|*
@@ -16353,9 +16131,6 @@ name|so_rcv
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|struct
 name|sockbuf
 modifier|*
@@ -16376,9 +16151,6 @@ name|so_snd
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|so_state_get
 parameter_list|(
@@ -16397,9 +16169,6 @@ name|so_state
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|void
 name|so_state_set
 parameter_list|(
@@ -16419,9 +16188,6 @@ operator|=
 name|val
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|int
 name|so_options_get
 parameter_list|(
@@ -16440,9 +16206,6 @@ name|so_options
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|void
 name|so_options_set
 parameter_list|(
@@ -16462,9 +16225,6 @@ operator|=
 name|val
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|int
 name|so_error_get
 parameter_list|(
@@ -16483,9 +16243,6 @@ name|so_error
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|void
 name|so_error_set
 parameter_list|(
@@ -16505,9 +16262,6 @@ operator|=
 name|val
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|int
 name|so_linger_get
 parameter_list|(
@@ -16526,9 +16280,6 @@ name|so_linger
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|void
 name|so_linger_set
 parameter_list|(
@@ -16548,9 +16299,6 @@ operator|=
 name|val
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|struct
 name|protosw
 modifier|*
@@ -16571,9 +16319,6 @@ name|so_proto
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|void
 name|so_protosw_set
 parameter_list|(
@@ -16595,9 +16340,6 @@ operator|=
 name|val
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|so_sorwakeup
 parameter_list|(
@@ -16613,9 +16355,6 @@ name|so
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|so_sowwakeup
 parameter_list|(
@@ -16631,9 +16370,6 @@ name|so
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|so_sorwakeup_locked
 parameter_list|(
@@ -16649,9 +16385,6 @@ name|so
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|so_sowwakeup_locked
 parameter_list|(
@@ -16667,9 +16400,6 @@ name|so
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|so_lock
 parameter_list|(
@@ -16685,9 +16415,6 @@ name|so
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|so_unlock
 parameter_list|(
