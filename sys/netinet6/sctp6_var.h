@@ -122,32 +122,26 @@ parameter_list|(
 name|struct
 name|sctp_inpcb
 modifier|*
-name|inp
 parameter_list|,
 name|struct
 name|icmp6_hdr
 modifier|*
-name|icmph
 parameter_list|,
 name|struct
 name|sctphdr
 modifier|*
-name|sh
 parameter_list|,
 name|struct
 name|sockaddr
 modifier|*
-name|to
 parameter_list|,
 name|struct
 name|sctp_tcb
 modifier|*
-name|stcb
 parameter_list|,
 name|struct
 name|sctp_nets
 modifier|*
-name|net
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -156,10 +150,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* _KERNEL */
-end_comment
 
 begin_endif
 endif|#
