@@ -34521,9 +34521,9 @@ name|iph
 operator|->
 name|ip_len
 operator|=
-name|ntohs
-argument_list|(
 name|htons
+argument_list|(
+name|ntohs
 argument_list|(
 name|iph
 operator|->
