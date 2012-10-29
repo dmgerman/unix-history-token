@@ -1921,6 +1921,25 @@ name|octeon_bootinfo
 operator|->
 name|led_display_base_addr
 expr_stmt|;
+name|memcpy
+argument_list|(
+name|cvmx_sysinfo_get
+argument_list|()
+operator|->
+name|board_serial_number
+argument_list|,
+name|octeon_bootinfo
+operator|->
+name|board_serial_number
+argument_list|,
+sizeof|sizeof
+name|cvmx_sysinfo_get
+operator|(
+operator|)
+operator|->
+name|board_serial_number
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2257,6 +2276,16 @@ argument_list|(
 literal|"Model: %s\n"
 argument_list|,
 name|cpu_model
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Serial number: %s\n"
+argument_list|,
+name|cvmx_sysinfo_get
+argument_list|()
+operator|->
+name|board_serial_number
 argument_list|)
 expr_stmt|;
 block|}
