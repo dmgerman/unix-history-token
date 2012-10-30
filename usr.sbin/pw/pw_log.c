@@ -167,6 +167,7 @@ index|[
 literal|256
 index|]
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name
