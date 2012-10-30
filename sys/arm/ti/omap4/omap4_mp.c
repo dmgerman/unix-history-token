@@ -212,6 +212,9 @@ name|ti_smc0
 argument_list|(
 name|pmap_kextract
 argument_list|(
+operator|(
+name|vm_offset_t
+operator|)
 name|mpentry
 argument_list|)
 argument_list|,
