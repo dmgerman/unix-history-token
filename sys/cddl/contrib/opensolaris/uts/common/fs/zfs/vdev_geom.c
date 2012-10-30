@@ -1579,7 +1579,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|vdev_geom_dettach_taster
+name|vdev_geom_detach_taster
 parameter_list|(
 name|struct
 name|g_consumer
@@ -1775,7 +1775,7 @@ expr_stmt|;
 name|g_topology_lock
 argument_list|()
 expr_stmt|;
-name|vdev_geom_dettach_taster
+name|vdev_geom_detach_taster
 argument_list|(
 name|zcp
 argument_list|)
@@ -2062,7 +2062,7 @@ expr_stmt|;
 name|g_topology_lock
 argument_list|()
 expr_stmt|;
-name|vdev_geom_dettach_taster
+name|vdev_geom_detach_taster
 argument_list|(
 name|zcp
 argument_list|)
