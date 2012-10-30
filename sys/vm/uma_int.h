@@ -619,6 +619,7 @@ begin_struct
 struct|struct
 name|uma_zone
 block|{
+specifier|const
 name|char
 modifier|*
 name|uz_name

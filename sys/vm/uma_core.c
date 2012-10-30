@@ -451,6 +451,7 @@ begin_struct
 struct|struct
 name|uma_zctor_args
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
@@ -6879,6 +6880,7 @@ begin_function
 name|uma_zone_t
 name|uma_zcreate
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
