@@ -290,6 +290,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<contrib/octeon-sdk/cvmx-helper-cfg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<contrib/octeon-sdk/cvmx-interrupt.h>
 end_include
 
@@ -2237,6 +2243,12 @@ argument_list|()
 operator|->
 name|phy_mem_desc_addr
 argument_list|)
+expr_stmt|;
+name|octeon_feature_init
+argument_list|()
+expr_stmt|;
+name|__cvmx_helper_cfg_init
+argument_list|()
 expr_stmt|;
 name|printf
 argument_list|(
