@@ -2279,10 +2279,6 @@ comment|/* 	 * Prepare map of physical memory regions available to vm subsystem.
 name|physmap_init
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Set initial values of GPIO output ports 	 */
-name|platform_gpio_init
-argument_list|()
-expr_stmt|;
 comment|/* Do basic tuning, hz etc */
 name|init_param2
 argument_list|(
@@ -2354,7 +2350,12 @@ name|initarm_gpio_init
 parameter_list|(
 name|void
 parameter_list|)
-block|{ }
+block|{
+comment|/* 	 * Set initial values of GPIO output ports 	 */
+name|platform_gpio_init
+argument_list|()
+expr_stmt|;
+block|}
 end_function
 
 begin_function
