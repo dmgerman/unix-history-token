@@ -799,9 +799,13 @@ name|fs_unrefs
 decl_stmt|;
 comment|/* number of unreferenced inodes */
 name|int64_t
+name|fs_providersize
+decl_stmt|;
+comment|/* size of underlying GEOM provider */
+name|int64_t
 name|fs_sparecon64
 index|[
-literal|16
+literal|15
 index|]
 decl_stmt|;
 comment|/* old rotation block list head */

@@ -337,6 +337,16 @@ comment|/* file system size */
 end_comment
 
 begin_decl_stmt
+name|off_t
+name|mediasize
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* device size */
+end_comment
+
+begin_decl_stmt
 name|int
 name|sectorsize
 decl_stmt|;
@@ -697,9 +707,6 @@ decl_stmt|,
 name|i
 decl_stmt|,
 name|rval
-decl_stmt|;
-name|off_t
-name|mediasize
 decl_stmt|;
 name|char
 name|part_name

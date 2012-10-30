@@ -7016,6 +7016,20 @@ operator|/
 name|DEV_BSIZE
 argument_list|)
 expr_stmt|;
+name|sblock
+operator|.
+name|fs_providersize
+operator|=
+name|dbtofsb
+argument_list|(
+operator|&
+name|osblock
+argument_list|,
+name|mediasize
+operator|/
+name|DEV_BSIZE
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Are we really growing? 	 */
 if|if
 condition|(

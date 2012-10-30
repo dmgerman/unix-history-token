@@ -276,6 +276,8 @@ name|fs_fsize
 operator|>
 literal|0
 operator|&&
+operator|(
+operator|(
 name|pp
 operator|->
 name|mediasize
@@ -287,6 +289,22 @@ operator|==
 name|fs
 operator|->
 name|fs_size
+operator|)
+operator|||
+operator|(
+name|pp
+operator|->
+name|mediasize
+operator|/
+name|fs
+operator|->
+name|fs_fsize
+operator|==
+name|fs
+operator|->
+name|fs_providersize
+operator|)
+operator|)
 condition|)
 block|{
 comment|/* Valid UFS2. */

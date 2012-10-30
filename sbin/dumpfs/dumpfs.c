@@ -1410,7 +1410,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"volname\t%s\tswuid\t%ju\n"
+literal|"volname\t%s\tswuid\t%ju\tprovidersize\t%ju\n"
 argument_list|,
 name|afs
 operator|.
@@ -1422,6 +1422,13 @@ operator|)
 name|afs
 operator|.
 name|fs_swuid
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|afs
+operator|.
+name|fs_providersize
 argument_list|)
 expr_stmt|;
 name|printf
