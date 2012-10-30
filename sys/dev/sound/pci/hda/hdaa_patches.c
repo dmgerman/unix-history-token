@@ -488,7 +488,7 @@ argument_list|)
 expr_stmt|;
 name|subid
 operator|=
-name|hdaa_subvendor_id
+name|hdaa_card_id
 argument_list|(
 name|w
 operator|->
@@ -1363,7 +1363,7 @@ argument_list|)
 expr_stmt|;
 name|subid
 operator|=
-name|hdaa_subvendor_id
+name|hdaa_card_id
 argument_list|(
 name|devinfo
 argument_list|)
@@ -2388,7 +2388,7 @@ argument_list|)
 expr_stmt|;
 name|subid
 operator|=
-name|hdaa_subvendor_id
+name|hdaa_card_id
 argument_list|(
 name|devinfo
 argument_list|)

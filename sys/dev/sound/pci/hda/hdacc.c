@@ -2720,7 +2720,7 @@ name|codec
 operator|->
 name|fgcnt
 expr_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(dev,
 literal|"Root Node at nid=0: %d subnodes %d-%d\n"
@@ -3165,6 +3165,13 @@ name|dev
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|HDA_BOOTVERBOSE
+argument_list|(
+argument|device_printf(dev,
+literal|"Subsystem ID: 0x%08x\n"
+argument|, 		    hda_get_subsystem_id(dev));
+argument_list|)
+empty_stmt|;
 name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(dev,

@@ -36001,6 +36001,13 @@ expr_stmt|;
 name|HDA_BOOTVERBOSE
 argument_list|(
 argument|device_printf(dev,
+literal|"Subsystem ID: 0x%08x\n"
+argument|, 		    hda_get_subsystem_id(dev));
+argument_list|)
+empty_stmt|;
+name|HDA_BOOTHVERBOSE
+argument_list|(
+argument|device_printf(dev,
 literal|"Audio Function Group at nid=%d: %d subnodes %d-%d\n"
 argument|, 		    nid, devinfo->nodecnt, 		    devinfo->startnode, devinfo->endnode -
 literal|1
