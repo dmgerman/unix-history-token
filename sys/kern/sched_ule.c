@@ -4409,9 +4409,6 @@ argument_list|(
 name|low
 argument_list|)
 expr_stmt|;
-name|sched_pin
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|cpu
@@ -4427,9 +4424,6 @@ name|cpu
 argument_list|,
 name|IPI_PREEMPT
 argument_list|)
-expr_stmt|;
-name|sched_unpin
-argument_list|()
 expr_stmt|;
 block|}
 name|tdq_unlock_pair
