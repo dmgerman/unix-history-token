@@ -1089,6 +1089,7 @@ name|kvm_t
 modifier|*
 name|kvm
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|kvm_pointer
