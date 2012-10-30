@@ -804,6 +804,9 @@ comment|/* Bochs */
 literal|"Xen"
 block|,
 comment|/* Xen */
+literal|"BHYVE"
+block|,
+comment|/* BHyVe */
 name|NULL
 block|}
 decl_stmt|;
