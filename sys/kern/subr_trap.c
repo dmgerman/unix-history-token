@@ -402,7 +402,7 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Check for misbehavior. 	 */
+comment|/* 	 * Check for misbehavior. 	 * 	 * In case there is a callchain tracing ongoing because of 	 * hwpmc(4), skip the scheduler pinning check. 	 * hwpmc(4) subsystem, infact, will collect callchain informations 	 * at ast() checkpoint, which is past userret(). 	 */
 name|WITNESS_WARN
 argument_list|(
 name|WARN_PANIC
@@ -482,6 +482,16 @@ name|td
 operator|->
 name|td_pinned
 operator|==
+literal|0
+operator|||
+operator|(
+name|td
+operator|->
+name|td_pflags
+operator|&
+name|TDP_CALLCHAIN
+operator|)
+operator|!=
 literal|0
 argument_list|,
 operator|(
