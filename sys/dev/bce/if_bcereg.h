@@ -443,7 +443,7 @@ value|"\020"			\ 	"\20AnegCmpl"		\ 	"\17AnegCmplAck"	\ 	"\16AnegAckDet"		\ 	"\15
 end_define
 
 begin_comment
-comment|/*  * Remove before release:  *  * #define BCE_DEBUG  * #define BCE_NVRAM_WRITE_SUPPORT  * #define BCE_JUMBO_HDRSPLIT  */
+comment|/*  * Remove before release:  *  * #define BCE_DEBUG  * #define BCE_NVRAM_WRITE_SUPPORT  */
 end_comment
 
 begin_comment
