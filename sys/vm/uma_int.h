@@ -311,6 +311,7 @@ name|struct
 name|uma_hash
 name|uk_hash
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|uk_name
@@ -700,6 +701,7 @@ begin_struct
 struct|struct
 name|uma_zone
 block|{
+specifier|const
 name|char
 modifier|*
 name|uz_name
