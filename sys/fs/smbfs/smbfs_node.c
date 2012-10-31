@@ -1705,6 +1705,7 @@ argument_list|)
 decl_stmt|;
 name|struct
 name|smb_cred
+modifier|*
 name|scred
 decl_stmt|;
 name|struct
@@ -1741,9 +1742,13 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|scred
+operator|=
+name|smbfs_malloc_scred
+argument_list|()
+expr_stmt|;
 name|smb_makescred
 argument_list|(
-operator|&
 name|scred
 argument_list|,
 name|td
@@ -1794,7 +1799,6 @@ name|np
 operator|->
 name|n_mtime
 argument_list|,
-operator|&
 name|scred
 argument_list|)
 expr_stmt|;
@@ -1824,7 +1828,6 @@ name|np
 operator|->
 name|n_dirseq
 argument_list|,
-operator|&
 name|scred
 argument_list|)
 expr_stmt|;
@@ -1846,6 +1849,11 @@ expr_stmt|;
 name|smbfs_attr_cacheremove
 argument_list|(
 name|vp
+argument_list|)
+expr_stmt|;
+name|smbfs_free_scred
+argument_list|(
+name|scred
 argument_list|)
 expr_stmt|;
 block|}
