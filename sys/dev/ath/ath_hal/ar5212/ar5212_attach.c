@@ -3734,12 +3734,34 @@ name|halHigh2GhzChan
 operator|=
 literal|2732
 expr_stmt|;
+comment|/* 	 * For AR5111 version< 4, the lowest centre frequency supported is 	 * 5130MHz.  For AR5111 version 4, the 4.9GHz channels are supported 	 * but only in 10MHz increments. 	 * 	 * In addition, the programming method is wrong - it uses the IEEE 	 * channel number to calculate the frequency, rather than the 	 * channel centre.  Since half/quarter rates re-use some of the 	 * 5GHz channel IEEE numbers, this will result in a badly programmed 	 * synth. 	 * 	 * Until the relevant support is written, just limit lower frequency 	 * support for AR5111 so things aren't incorrectly programmed. 	 * 	 * XXX It's also possible this code doesn't correctly limit the 	 * centre frequencies of potential channels; this is very important 	 * for half/quarter rate! 	 */
+if|if
+condition|(
+name|AH_RADIO_MAJOR
+argument_list|(
+name|ah
+argument_list|)
+operator|==
+name|AR_RAD5111_SREV_MAJOR
+condition|)
+block|{
+name|pCap
+operator|->
+name|halLow5GhzChan
+operator|=
+literal|5120
+expr_stmt|;
+comment|/* XXX lowest centre = 5130MHz */
+block|}
+else|else
+block|{
 name|pCap
 operator|->
 name|halLow5GhzChan
 operator|=
 literal|4915
 expr_stmt|;
+block|}
 name|pCap
 operator|->
 name|halHigh5GhzChan

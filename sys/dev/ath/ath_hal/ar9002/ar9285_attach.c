@@ -436,7 +436,7 @@ block|,
 operator|.
 name|maxSpurImmunityLevel
 operator|=
-literal|2
+literal|7
 block|,
 operator|.
 name|cycPwrThr1
@@ -447,6 +447,16 @@ block|,
 literal|4
 block|,
 literal|6
+block|,
+literal|8
+block|,
+literal|10
+block|,
+literal|12
+block|,
+literal|14
+block|,
+literal|16
 block|}
 block|,
 operator|.
