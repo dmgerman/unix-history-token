@@ -2576,6 +2576,13 @@ argument_list|()
 operator|->
 name|compact_flash_common_base_addr
 expr_stmt|;
+if|if
+condition|(
+name|phys_base
+operator|==
+literal|0
+condition|)
+return|return;
 name|base_addr
 operator|=
 name|cvmx_phys_to_ptr
