@@ -967,6 +967,10 @@ literal|0
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* 		 * The following code stops trying to sample 		 * non-MCS rates when speaking to an MCS node. 		 * However, at least for CCK rates in 2.4GHz mode, 		 * the non-MCS rates MAY actually provide better 		 * PER at the very far edge of reception. 		 * 		 * However! Until ath_rate_form_aggr() grows 		 * some logic to not form aggregates if the 		 * selected rate is non-MCS, this won't work. 		 * 		 * So don't disable this code until you've taught 		 * ath_rate_form_aggr() to drop out if any of 		 * the selected rates are non-MCS. 		 */
+if|#
+directive|if
+literal|1
 comment|/* if the node is HT and the rate isn't HT, don't bother sample */
 if|if
 condition|(
@@ -1010,6 +1014,8 @@ goto|goto
 name|nextrate
 goto|;
 block|}
+endif|#
+directive|endif
 comment|/* this bit-rate is always worse than the current one */
 if|if
 condition|(
