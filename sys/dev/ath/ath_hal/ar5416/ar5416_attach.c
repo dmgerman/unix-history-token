@@ -325,6 +325,19 @@ operator|<<
 name|HAL_ANI_NOISE_IMMUNITY_LEVEL
 operator|)
 expr_stmt|;
+name|ar5416AniAttach
+argument_list|(
+name|ah
+argument_list|,
+operator|&
+name|aniparams
+argument_list|,
+operator|&
+name|aniparams
+argument_list|,
+name|AH_TRUE
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
