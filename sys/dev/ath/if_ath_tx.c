@@ -8480,6 +8480,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|ATH_TX_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -8760,6 +8765,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|ATH_TX_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -8802,6 +8812,11 @@ argument_list|)
 expr_stmt|;
 name|bad
 label|:
+name|ATH_TX_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ATH_PCU_LOCK
 argument_list|(
 name|sc

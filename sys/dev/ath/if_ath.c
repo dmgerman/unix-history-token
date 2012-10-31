@@ -2358,20 +2358,6 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-name|TASK_INIT
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_txsndtask
-argument_list|,
-literal|0
-argument_list|,
-name|ath_start_task
-argument_list|,
-name|sc
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Allocate hardware transmit queues: one queue for 	 * beacon frames and one data queue for each QoS 	 * priority.  Note that the hal handles resetting 	 * these queues at the needed time. 	 * 	 * XXX PS-Poll 	 */
 name|sc
 operator|->
@@ -9971,9 +9957,31 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
+name|ATH_KTR
+argument_list|(
+name|sc
+argument_list|,
+name|ATH_KTR_TX
+argument_list|,
+literal|0
+argument_list|,
+literal|"ath_start_queue: start"
+argument_list|)
+expr_stmt|;
 name|ath_tx_kick
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+name|ATH_KTR
+argument_list|(
+name|sc
+argument_list|,
+name|ATH_KTR_TX
+argument_list|,
+literal|0
+argument_list|,
+literal|"ath_start_queue: finished"
 argument_list|)
 expr_stmt|;
 block|}
@@ -10012,6 +10020,17 @@ name|sc
 operator|->
 name|sc_ifp
 decl_stmt|;
+name|ATH_KTR
+argument_list|(
+name|sc
+argument_list|,
+name|ATH_KTR_TX
+argument_list|,
+literal|0
+argument_list|,
+literal|"ath_start_task: start"
+argument_list|)
+expr_stmt|;
 comment|/* XXX is it ok to hold the ATH_LOCK here? */
 name|ATH_PCU_LOCK
 argument_list|(
@@ -10072,6 +10091,17 @@ operator|->
 name|if_snd
 argument_list|)
 expr_stmt|;
+name|ATH_KTR
+argument_list|(
+name|sc
+argument_list|,
+name|ATH_KTR_TX
+argument_list|,
+literal|0
+argument_list|,
+literal|"ath_start_task: OACTIVE, finish"
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 name|sc
@@ -10104,6 +10134,17 @@ expr_stmt|;
 name|ATH_PCU_UNLOCK
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+name|ATH_KTR
+argument_list|(
+name|sc
+argument_list|,
+name|ATH_KTR_TX
+argument_list|,
+literal|0
+argument_list|,
+literal|"ath_start_task: finished"
 argument_list|)
 expr_stmt|;
 block|}
@@ -10149,6 +10190,11 @@ decl_stmt|;
 name|ath_bufhead
 name|frags
 decl_stmt|;
+name|int
+name|npkts
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -10166,6 +10212,17 @@ operator|->
 name|sc_invalid
 condition|)
 return|return;
+name|ATH_KTR
+argument_list|(
+name|sc
+argument_list|,
+name|ATH_KTR_TX
+argument_list|,
+literal|0
+argument_list|,
+literal|"ath_start: called"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -10288,6 +10345,9 @@ operator|->
 name|m_pkthdr
 operator|.
 name|rcvif
+expr_stmt|;
+name|npkts
+operator|++
 expr_stmt|;
 comment|/* 		 * Check for fragmentation.  If this frame 		 * has been broken up verify we have enough 		 * buffers to send all the fragments so all 		 * go out or none... 		 */
 name|TAILQ_INIT
@@ -10543,6 +10603,19 @@ operator|=
 literal|5
 expr_stmt|;
 block|}
+name|ATH_KTR
+argument_list|(
+name|sc
+argument_list|,
+name|ATH_KTR_TX
+argument_list|,
+literal|1
+argument_list|,
+literal|"ath_start: finished; npkts=%d"
+argument_list|,
+name|npkts
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

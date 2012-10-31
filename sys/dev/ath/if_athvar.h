@@ -1974,6 +1974,17 @@ literal|32
 index|]
 decl_stmt|;
 name|struct
+name|mtx
+name|sc_tx_mtx
+decl_stmt|;
+comment|/* TX access mutex */
+name|char
+name|sc_tx_mtx_name
+index|[
+literal|32
+index|]
+decl_stmt|;
+name|struct
 name|taskqueue
 modifier|*
 name|sc_tq
@@ -2504,11 +2515,6 @@ name|sc_txqtask
 decl_stmt|;
 comment|/* tx proc processing */
 name|struct
-name|task
-name|sc_txsndtask
-decl_stmt|;
-comment|/* tx send processing */
-name|struct
 name|ath_descdma
 name|sc_txcompdma
 decl_stmt|;
@@ -2888,6 +2894,70 @@ parameter_list|(
 name|_sc
 parameter_list|)
 value|mtx_assert(&(_sc)->sc_mtx, MA_NOTOWNED)
+end_define
+
+begin_comment
+comment|/*  * The TX lock is non-reentrant and serialises the TX send operations.  * (ath_start(), ath_raw_xmit().)  It doesn't yet serialise the TX  * completion operations; thus it can't be used (yet!) to protect  * hardware / software TXQ operations.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATH_TX_LOCK_INIT
+parameter_list|(
+name|_sc
+parameter_list|)
+value|do {\ 	snprintf((_sc)->sc_tx_mtx_name,				\ 	    sizeof((_sc)->sc_tx_mtx_name),				\ 	    "%s TX lock",						\ 	    device_get_nameunit((_sc)->sc_dev));			\ 	mtx_init(&(_sc)->sc_tx_mtx, (_sc)->sc_tx_mtx_name,		\ 		 NULL, MTX_DEF);					\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TX_LOCK_DESTROY
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_destroy(&(_sc)->sc_tx_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TX_LOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_lock(&(_sc)->sc_tx_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TX_UNLOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_unlock(&(_sc)->sc_tx_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TX_LOCK_ASSERT
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_assert(&(_sc)->sc_tx_mtx,	\ 		MA_OWNED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TX_UNLOCK_ASSERT
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_assert(&(_sc)->sc_tx_mtx,	\ 		MA_NOTOWNED)
 end_define
 
 begin_comment
