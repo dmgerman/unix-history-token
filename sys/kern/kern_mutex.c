@@ -261,6 +261,20 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * Return the mutex address when the lock cookie address is provided.  * This functionality assumes that struct mtx* have a member named mtx_lock.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|mtxlock2mtx
+parameter_list|(
+name|c
+parameter_list|)
+value|(__containerof(c, struct mtx, mtx_lock))
+end_define
+
+begin_comment
 comment|/*  * Internal utility macros.  */
 end_comment
 
@@ -771,12 +785,12 @@ end_comment
 
 begin_function
 name|void
-name|_mtx_lock_flags
+name|__mtx_lock_flags
 parameter_list|(
-name|struct
-name|mtx
+specifier|volatile
+name|uintptr_t
 modifier|*
-name|m
+name|c
 parameter_list|,
 name|int
 name|opts
@@ -790,12 +804,24 @@ name|int
 name|line
 parameter_list|)
 block|{
+name|struct
+name|mtx
+modifier|*
+name|m
+decl_stmt|;
 if|if
 condition|(
 name|SCHEDULER_STOPPED
 argument_list|()
 condition|)
 return|return;
+name|m
+operator|=
+name|mtxlock2mtx
+argument_list|(
+name|c
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 operator|!
@@ -945,12 +971,12 @@ end_function
 
 begin_function
 name|void
-name|_mtx_unlock_flags
+name|__mtx_unlock_flags
 parameter_list|(
-name|struct
-name|mtx
+specifier|volatile
+name|uintptr_t
 modifier|*
-name|m
+name|c
 parameter_list|,
 name|int
 name|opts
@@ -964,12 +990,24 @@ name|int
 name|line
 parameter_list|)
 block|{
+name|struct
+name|mtx
+modifier|*
+name|m
+decl_stmt|;
 if|if
 condition|(
 name|SCHEDULER_STOPPED
 argument_list|()
 condition|)
 return|return;
+name|m
+operator|=
+name|mtxlock2mtx
+argument_list|(
+name|c
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|m
@@ -1096,12 +1134,12 @@ end_function
 
 begin_function
 name|void
-name|_mtx_lock_spin_flags
+name|__mtx_lock_spin_flags
 parameter_list|(
-name|struct
-name|mtx
+specifier|volatile
+name|uintptr_t
 modifier|*
-name|m
+name|c
 parameter_list|,
 name|int
 name|opts
@@ -1115,12 +1153,24 @@ name|int
 name|line
 parameter_list|)
 block|{
+name|struct
+name|mtx
+modifier|*
+name|m
+decl_stmt|;
 if|if
 condition|(
 name|SCHEDULER_STOPPED
 argument_list|()
 condition|)
 return|return;
+name|m
+operator|=
+name|mtxlock2mtx
+argument_list|(
+name|c
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|m
@@ -1276,12 +1326,12 @@ end_function
 
 begin_function
 name|void
-name|_mtx_unlock_spin_flags
+name|__mtx_unlock_spin_flags
 parameter_list|(
-name|struct
-name|mtx
+specifier|volatile
+name|uintptr_t
 modifier|*
-name|m
+name|c
 parameter_list|,
 name|int
 name|opts
@@ -1295,12 +1345,24 @@ name|int
 name|line
 parameter_list|)
 block|{
+name|struct
+name|mtx
+modifier|*
+name|m
+decl_stmt|;
 if|if
 condition|(
 name|SCHEDULER_STOPPED
 argument_list|()
 condition|)
 return|return;
+name|m
+operator|=
+name|mtxlock2mtx
+argument_list|(
+name|c
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|m
@@ -1403,12 +1465,12 @@ end_comment
 
 begin_function
 name|int
-name|mtx_trylock_flags_
+name|_mtx_trylock_flags_
 parameter_list|(
-name|struct
-name|mtx
+specifier|volatile
+name|uintptr_t
 modifier|*
-name|m
+name|c
 parameter_list|,
 name|int
 name|opts
@@ -1422,6 +1484,11 @@ name|int
 name|line
 parameter_list|)
 block|{
+name|struct
+name|mtx
+modifier|*
+name|m
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|LOCK_PROFILING
@@ -1450,6 +1517,13 @@ operator|(
 literal|1
 operator|)
 return|;
+name|m
+operator|=
+name|mtxlock2mtx
+argument_list|(
+name|c
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 operator|!
@@ -1652,17 +1726,17 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * _mtx_lock_sleep: the tougher part of acquiring an MTX_DEF lock.  *  * We call this if the lock is either contested (i.e. we need to go to  * sleep waiting for it), or if we need to recurse on it.  */
+comment|/*  * __mtx_lock_sleep: the tougher part of acquiring an MTX_DEF lock.  *  * We call this if the lock is either contested (i.e. we need to go to  * sleep waiting for it), or if we need to recurse on it.  */
 end_comment
 
 begin_function
 name|void
-name|_mtx_lock_sleep
+name|__mtx_lock_sleep
 parameter_list|(
-name|struct
-name|mtx
+specifier|volatile
+name|uintptr_t
 modifier|*
-name|m
+name|c
 parameter_list|,
 name|uintptr_t
 name|tid
@@ -1679,6 +1753,11 @@ name|int
 name|line
 parameter_list|)
 block|{
+name|struct
+name|mtx
+modifier|*
+name|m
+decl_stmt|;
 name|struct
 name|turnstile
 modifier|*
@@ -1749,6 +1828,13 @@ name|SCHEDULER_STOPPED
 argument_list|()
 condition|)
 return|return;
+name|m
+operator|=
+name|mtxlock2mtx
+argument_list|(
+name|c
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|mtx_owned
@@ -2374,17 +2460,17 @@ name|SMP
 end_ifdef
 
 begin_comment
-comment|/*  * _mtx_lock_spin: the tougher part of acquiring an MTX_SPIN lock.  *  * This is only called if we need to actually spin for the lock. Recursion  * is handled inline.  */
+comment|/*  * _mtx_lock_spin_cookie: the tougher part of acquiring an MTX_SPIN lock.  *  * This is only called if we need to actually spin for the lock. Recursion  * is handled inline.  */
 end_comment
 
 begin_function
 name|void
-name|_mtx_lock_spin
+name|_mtx_lock_spin_cookie
 parameter_list|(
-name|struct
-name|mtx
+specifier|volatile
+name|uintptr_t
 modifier|*
-name|m
+name|c
 parameter_list|,
 name|uintptr_t
 name|tid
@@ -2401,6 +2487,11 @@ name|int
 name|line
 parameter_list|)
 block|{
+name|struct
+name|mtx
+modifier|*
+name|m
+decl_stmt|;
 name|int
 name|i
 init|=
@@ -2427,6 +2518,13 @@ name|SCHEDULER_STOPPED
 argument_list|()
 condition|)
 return|return;
+name|m
+operator|=
+name|mtxlock2mtx
+argument_list|(
+name|c
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|LOCK_LOG_TEST
@@ -3179,17 +3277,17 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * _mtx_unlock_sleep: the tougher part of releasing an MTX_DEF lock.  *  * We are only called here if the lock is recursed or contested (i.e. we  * need to wake up a blocked thread).  */
+comment|/*  * __mtx_unlock_sleep: the tougher part of releasing an MTX_DEF lock.  *  * We are only called here if the lock is recursed or contested (i.e. we  * need to wake up a blocked thread).  */
 end_comment
 
 begin_function
 name|void
-name|_mtx_unlock_sleep
+name|__mtx_unlock_sleep
 parameter_list|(
-name|struct
-name|mtx
+specifier|volatile
+name|uintptr_t
 modifier|*
-name|m
+name|c
 parameter_list|,
 name|int
 name|opts
@@ -3204,6 +3302,11 @@ name|line
 parameter_list|)
 block|{
 name|struct
+name|mtx
+modifier|*
+name|m
+decl_stmt|;
+name|struct
 name|turnstile
 modifier|*
 name|ts
@@ -3214,6 +3317,13 @@ name|SCHEDULER_STOPPED
 argument_list|()
 condition|)
 return|return;
+name|m
+operator|=
+name|mtxlock2mtx
+argument_list|(
+name|c
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|mtx_recursed
@@ -3360,13 +3470,13 @@ end_ifdef
 
 begin_function
 name|void
-name|_mtx_assert
+name|__mtx_assert
 parameter_list|(
 specifier|const
-name|struct
-name|mtx
+specifier|volatile
+name|uintptr_t
 modifier|*
-name|m
+name|c
 parameter_list|,
 name|int
 name|what
@@ -3380,6 +3490,12 @@ name|int
 name|line
 parameter_list|)
 block|{
+specifier|const
+name|struct
+name|mtx
+modifier|*
+name|m
+decl_stmt|;
 if|if
 condition|(
 name|panicstr
@@ -3389,6 +3505,13 @@ operator|||
 name|dumping
 condition|)
 return|return;
+name|m
+operator|=
+name|mtxlock2mtx
+argument_list|(
+name|c
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|what
@@ -3638,6 +3761,11 @@ name|arg
 decl_stmt|;
 name|mtx_init
 argument_list|(
+operator|(
+expr|struct
+name|mtx
+operator|*
+operator|)
 name|margs
 operator|->
 name|ma_mtx
@@ -3662,12 +3790,12 @@ end_comment
 
 begin_function
 name|void
-name|mtx_init
+name|_mtx_init
 parameter_list|(
-name|struct
-name|mtx
+specifier|volatile
+name|uintptr_t
 modifier|*
-name|m
+name|c
 parameter_list|,
 specifier|const
 name|char
@@ -3684,6 +3812,11 @@ name|opts
 parameter_list|)
 block|{
 name|struct
+name|mtx
+modifier|*
+name|m
+decl_stmt|;
+name|struct
 name|lock_class
 modifier|*
 name|class
@@ -3691,6 +3824,13 @@ decl_stmt|;
 name|int
 name|flags
 decl_stmt|;
+name|m
+operator|=
+name|mtxlock2mtx
+argument_list|(
+name|c
+argument_list|)
+expr_stmt|;
 name|MPASS
 argument_list|(
 operator|(
@@ -3860,14 +4000,26 @@ end_comment
 
 begin_function
 name|void
-name|mtx_destroy
+name|_mtx_destroy
 parameter_list|(
+specifier|volatile
+name|uintptr_t
+modifier|*
+name|c
+parameter_list|)
+block|{
 name|struct
 name|mtx
 modifier|*
 name|m
-parameter_list|)
-block|{
+decl_stmt|;
+name|m
+operator|=
+name|mtxlock2mtx
+argument_list|(
+name|c
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
