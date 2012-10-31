@@ -781,8 +781,10 @@ name|vcpu
 operator|)
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"addcpu: attempting to add existing cpu %d\n"
 argument_list|,
 name|vcpu
@@ -1306,8 +1308,10 @@ modifier|*
 name|pvcpu
 parameter_list|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"vm exit rdmsr 0x%x, cpu %d\n"
 argument_list|,
 name|vme
@@ -1514,21 +1518,27 @@ modifier|*
 name|pvcpu
 parameter_list|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"vm exit[%d]\n"
 argument_list|,
 operator|*
 name|pvcpu
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\treason\t\tVMX\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\trip\t\t0x%016lx\n"
 argument_list|,
 name|vmexit
@@ -1536,8 +1546,10 @@ operator|->
 name|rip
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\tinst_length\t%d\n"
 argument_list|,
 name|vmexit
@@ -1545,8 +1557,10 @@ operator|->
 name|inst_length
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\terror\t\t%d\n"
 argument_list|,
 name|vmexit
@@ -1558,8 +1572,10 @@ operator|.
 name|error
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\texit_reason\t%u\n"
 argument_list|,
 name|vmexit
@@ -1571,8 +1587,10 @@ operator|.
 name|exit_reason
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\tqualification\t0x%016lx\n"
 argument_list|,
 name|vmexit
@@ -1902,8 +1920,10 @@ operator|==
 name|EINVAL
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Failed to emulate instruction at 0x%lx\n"
 argument_list|,
 name|vmexit
@@ -1920,8 +1940,10 @@ operator|==
 name|ESRCH
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Unhandled memory access to 0x%lx\n"
 argument_list|,
 name|vmexit
@@ -2687,6 +2709,30 @@ name|guest_vcpu_mux
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|guest_ncpus
+operator|>
+name|VM_MAXCPU
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%d vCPUs requested, max %d\n"
+argument_list|,
+name|guest_ncpus
+argument_list|,
+name|VM_MAXCPU
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* vmexit on hlt if guest is muxed */
 if|if
 condition|(
@@ -2761,8 +2807,10 @@ operator|<
 literal|0
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"VM exit on HLT not supported\n"
 argument_list|)
 expr_stmt|;
@@ -2819,8 +2867,10 @@ operator|<
 literal|0
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"SMP mux requested, no pause support\n"
 argument_list|)
 expr_stmt|;
@@ -2882,8 +2932,10 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Unable to set x2apic state (%d)\n"
 argument_list|,
 name|err
