@@ -207,21 +207,21 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|vpglocks
-name|vm_page_queue_lock
+name|mtx_padalign
+name|vm_page_queue_mtx
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|vpglocks
-name|vm_page_queue_free_lock
+name|mtx_padalign
+name|vm_page_queue_free_mtx
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|vpglocks
+name|mtx_padalign
 name|pa_lock
 index|[
 name|PA_LOCK_COUNT
@@ -1045,8 +1045,6 @@ name|pa_lock
 index|[
 name|i
 index|]
-operator|.
-name|data
 argument_list|,
 literal|"vm page"
 argument_list|,

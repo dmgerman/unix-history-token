@@ -353,46 +353,18 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|vpglocks
-block|{
-name|struct
-name|mtx
-name|data
-decl_stmt|;
-name|char
-name|pad
-index|[
-name|CACHE_LINE_SIZE
-operator|-
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|mtx
-argument_list|)
-index|]
-decl_stmt|;
-block|}
-name|__aligned
-argument_list|(
-name|CACHE_LINE_SIZE
-argument_list|)
-struct|;
-end_struct
-
 begin_decl_stmt
 specifier|extern
 name|struct
-name|vpglocks
-name|vm_page_queue_free_lock
+name|mtx_padalign
+name|vm_page_queue_free_mtx
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
 name|struct
-name|vpglocks
+name|mtx_padalign
 name|pa_lock
 index|[]
 decl_stmt|;
@@ -453,7 +425,7 @@ name|PA_LOCKPTR
 parameter_list|(
 name|pa
 parameter_list|)
-value|&pa_lock[pa_index((pa)) % PA_LOCK_COUNT].data
+value|((struct mtx *)(&pa_lock[pa_index(pa) % PA_LOCK_COUNT]))
 end_define
 
 begin_define
@@ -663,13 +635,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|vm_page_queue_free_mtx
-value|vm_page_queue_free_lock.data
-end_define
 
 begin_comment
 comment|/*  * The vm_page's aflags are updated using atomic operations.  To set or clear  * these flags, the functions vm_page_aflag_set() and vm_page_aflag_clear()  * must be used.  Neither these flags nor these functions are part of the KBI.  *  * PGA_REFERENCED may be cleared only if the object containing the page is  * locked.  It is set by both the MI and MD VM layers.  However, kernel  * loadable modules should not directly set this flag.  They should call  * vm_page_reference() instead.  *  * PGA_WRITEABLE is set exclusively on managed pages by pmap_enter().  When it  * does so, the page must be VPO_BUSY.  The MI VM layer must never access this  * flag directly.  Instead, it should call pmap_page_is_write_mapped().  *  * PGA_EXECUTABLE may be set by pmap routines, and indicates that a page has  * at least one executable mapping.  It is not consumed by the MI VM layer.  */
@@ -948,17 +913,10 @@ end_function_decl
 begin_decl_stmt
 specifier|extern
 name|struct
-name|vpglocks
-name|vm_page_queue_lock
+name|mtx_padalign
+name|vm_page_queue_mtx
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|vm_page_queue_mtx
-value|vm_page_queue_lock.data
-end_define
 
 begin_define
 define|#

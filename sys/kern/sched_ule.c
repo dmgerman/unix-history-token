@@ -756,22 +756,10 @@ name|tdq
 block|{
 comment|/*  	 * Ordered to improve efficiency of cpu_search() and switch(). 	 * tdq_lock is padded to avoid false sharing with tdq_load and 	 * tdq_cpu_idle. 	 */
 name|struct
-name|mtx
+name|mtx_padalign
 name|tdq_lock
 decl_stmt|;
 comment|/* run queue lock. */
-name|char
-name|pad
-index|[
-literal|64
-operator|-
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|mtx
-argument_list|)
-index|]
-decl_stmt|;
 name|struct
 name|cpu_group
 modifier|*
@@ -1137,7 +1125,7 @@ name|TDQ_LOCKPTR
 parameter_list|(
 name|t
 parameter_list|)
-value|(&(t)->tdq_lock)
+value|((struct mtx *)(&(t)->tdq_lock))
 end_define
 
 begin_function_decl
