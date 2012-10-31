@@ -21484,9 +21484,7 @@ name|m_len
 expr_stmt|;
 if|if
 condition|(
-name|staterr
-operator|&
-name|IXGBE_RXD_STAT_VP
+name|vtag
 condition|)
 block|{
 name|sendmp
