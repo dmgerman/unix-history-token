@@ -2225,14 +2225,14 @@ name|a_uio
 decl_stmt|;
 name|SMBVDEBUG
 argument_list|(
-literal|"%d,ofs=%d,sz=%zd\n"
+literal|"%d,ofs=%jd,sz=%zd\n"
 argument_list|,
 name|vp
 operator|->
 name|v_type
 argument_list|,
 operator|(
-name|int
+name|intmax_t
 operator|)
 name|uio
 operator|->

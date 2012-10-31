@@ -1301,10 +1301,10 @@ return|;
 block|}
 name|SMBVDEBUG
 argument_list|(
-literal|"ofs=%d,resid=%zd\n"
+literal|"ofs=%jd,resid=%zd\n"
 argument_list|,
 operator|(
-name|int
+name|intmax_t
 operator|)
 name|uiop
 operator|->
@@ -1481,10 +1481,10 @@ argument_list|)
 expr_stmt|;
 name|SMBVDEBUG
 argument_list|(
-literal|"after: ofs=%d,resid=%zd\n"
+literal|"after: ofs=%jd,resid=%zd\n"
 argument_list|,
 operator|(
-name|int
+name|intmax_t
 operator|)
 name|uiop
 operator|->
@@ -3075,10 +3075,10 @@ name|td
 expr_stmt|;
 name|SMBVDEBUG
 argument_list|(
-literal|"ofs=%d,resid=%zd\n"
+literal|"ofs=%jd,resid=%zd\n"
 argument_list|,
 operator|(
-name|int
+name|intmax_t
 operator|)
 name|uio
 operator|.
