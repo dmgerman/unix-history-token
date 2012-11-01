@@ -3778,7 +3778,7 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"Play: %d Hz, %d ch, %s format, "
-literal|"2x%d samples buffer.\n"
+literal|"2x8ms buffer.\n"
 argument_list|,
 name|sc
 operator|->
@@ -3799,29 +3799,6 @@ operator|.
 name|p_fmt
 operator|->
 name|description
-argument_list|,
-operator|(
-name|sc
-operator|->
-name|sc_play_chan
-operator|.
-name|bytes_per_frame
-index|[
-literal|0
-index|]
-operator|*
-name|sc
-operator|->
-name|sc_play_chan
-operator|.
-name|intr_frames
-operator|)
-operator|/
-name|sc
-operator|->
-name|sc_play_chan
-operator|.
-name|sample_size
 argument_list|)
 expr_stmt|;
 block|}
@@ -3849,7 +3826,7 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"Record: %d Hz, %d ch, %s format, "
-literal|"2x%d samples buffer.\n"
+literal|"2x8ms buffer.\n"
 argument_list|,
 name|sc
 operator|->
@@ -3870,29 +3847,6 @@ operator|.
 name|p_fmt
 operator|->
 name|description
-argument_list|,
-operator|(
-name|sc
-operator|->
-name|sc_rec_chan
-operator|.
-name|bytes_per_frame
-index|[
-literal|0
-index|]
-operator|*
-name|sc
-operator|->
-name|sc_rec_chan
-operator|.
-name|intr_frames
-operator|)
-operator|/
-name|sc
-operator|->
-name|sc_rec_chan
-operator|.
-name|sample_size
 argument_list|)
 expr_stmt|;
 block|}
