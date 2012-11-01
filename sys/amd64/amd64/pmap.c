@@ -3132,6 +3132,20 @@ argument_list|(
 name|KPML4phys
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cpu_stdext_feature
+operator|&
+name|CPUID_STDEXT_SMEP
+condition|)
+name|load_cr4
+argument_list|(
+name|rcr4
+argument_list|()
+operator||
+name|CR4_SMEP
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Initialize the kernel pmap (which is statically allocated). 	 */
 name|PMAP_LOCK_INIT
 argument_list|(
