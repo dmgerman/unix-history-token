@@ -1630,6 +1630,24 @@ operator|-
 literal|1
 return|;
 case|case
+name|CVMX_BOARD_TYPE_EBT5600
+case|:
+comment|/* Board has 1 management port */
+if|if
+condition|(
+name|ipd_port
+operator|==
+name|CVMX_HELPER_BOARD_MGMT_IPD_PORT
+condition|)
+return|return
+literal|0
+return|;
+comment|/* Board has 1 XAUI port connected to a switch.  */
+return|return
+operator|-
+literal|1
+return|;
+case|case
 name|CVMX_BOARD_TYPE_EBB5600
 case|:
 block|{
@@ -3968,6 +3986,9 @@ block|}
 comment|/* Fall through to the generic code below */
 break|break;
 case|case
+name|CVMX_BOARD_TYPE_EBT5600
+case|:
+case|case
 name|CVMX_BOARD_TYPE_EBH5600
 case|:
 case|case
@@ -5325,6 +5346,20 @@ literal|0
 return|;
 endif|#
 directive|endif
+break|break;
+case|case
+name|CVMX_BOARD_TYPE_EBT5600
+case|:
+comment|/* Disable loopback.  */
+if|if
+condition|(
+name|interface
+operator|==
+literal|3
+condition|)
+return|return
+literal|0
+return|;
 break|break;
 case|case
 name|CVMX_BOARD_TYPE_EBT5810
