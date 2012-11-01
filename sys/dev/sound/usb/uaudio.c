@@ -10648,7 +10648,7 @@ operator|==
 name|chy
 operator|)
 condition|?
-literal|1
+literal|2
 else|:
 literal|0
 expr_stmt|;
@@ -11634,6 +11634,7 @@ block|{
 case|case
 literal|1
 case|:
+comment|/* 50% */
 name|p_mc_new
 operator|->
 name|wData
@@ -11657,6 +11658,7 @@ break|break;
 case|case
 literal|2
 case|:
+comment|/* 100% */
 name|p_mc_new
 operator|->
 name|wData
@@ -11670,6 +11672,7 @@ name|maxval
 expr_stmt|;
 break|break;
 default|default:
+comment|/* 0% */
 name|p_mc_new
 operator|->
 name|wData
