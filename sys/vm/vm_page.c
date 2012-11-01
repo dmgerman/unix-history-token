@@ -8347,24 +8347,34 @@ argument_list|(
 literal|"vm_page_cache: attempting to cache busy page"
 argument_list|)
 expr_stmt|;
-name|pmap_remove_all
+name|KASSERT
+argument_list|(
+operator|!
+name|pmap_page_is_mapped
 argument_list|(
 name|m
 argument_list|)
+argument_list|,
+operator|(
+literal|"vm_page_cache: page %p is mapped"
+operator|,
+name|m
+operator|)
+argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|m
 operator|->
 name|dirty
-operator|!=
+operator|==
 literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"vm_page_cache: page %p is dirty"
 argument_list|,
+operator|(
+literal|"vm_page_cache: page %p is dirty"
+operator|,
 name|m
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
