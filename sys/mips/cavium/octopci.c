@@ -473,21 +473,6 @@ name|device_t
 name|parent
 parameter_list|)
 block|{
-comment|/* Check whether we are a PCI host.  */
-if|if
-condition|(
-operator|(
-name|cvmx_sysinfo_get
-argument_list|()
-operator|->
-name|bootloader_config_flags
-operator|&
-name|CVMX_BOOTINFO_CFG_FLAG_PCI_HOST
-operator|)
-operator|==
-literal|0
-condition|)
-return|return;
 name|BUS_ADD_CHILD
 argument_list|(
 name|parent
@@ -550,6 +535,25 @@ literal|0
 operator|)
 return|;
 block|}
+comment|/* Check whether we are a PCI host.  */
+if|if
+condition|(
+operator|(
+name|cvmx_sysinfo_get
+argument_list|()
+operator|->
+name|bootloader_config_flags
+operator|&
+name|CVMX_BOOTINFO_CFG_FLAG_PCI_HOST
+operator|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 if|if
 condition|(
 name|device_get_unit
