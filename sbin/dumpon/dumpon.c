@@ -163,7 +163,7 @@ literal|"usage: dumpon [-v] special_file"
 argument_list|,
 literal|"       dumpon [-v] off"
 argument_list|,
-literal|"       dumpon -l"
+literal|"       dumpon [-v] -l"
 argument_list|)
 expr_stmt|;
 name|exit
