@@ -67,7 +67,13 @@ begin_decl_stmt
 name|int
 name|drm_debug_flag
 init|=
-literal|1
+operator|(
+name|DRM_DEBUGBITS_DEBUG
+operator||
+name|DRM_DEBUGBITS_KMS
+operator||
+name|DRM_DEBUGBITS_FAILED_IOCTL
+operator|)
 decl_stmt|;
 end_decl_stmt
 
@@ -80,7 +86,7 @@ begin_decl_stmt
 name|int
 name|drm_debug_flag
 init|=
-literal|2
+literal|0
 decl_stmt|;
 end_decl_stmt
 
