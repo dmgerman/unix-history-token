@@ -71,7 +71,7 @@ begin_define
 define|#
 directive|define
 name|FBSD_LINK_SPEC
-value|"\     %{p:%nconsider using `-pg' instead of `-p' with gprof(1) } \     %{v:-V} \     %{assert*} %{R*} %{rpath*} %{defsym*} \     %{shared:-Bshareable %{h*} %{soname*}} \     %{!shared: \       %{!static: \ 	%{rdynamic: -export-dynamic} \ 	%{!dynamic-linker:-dynamic-linker %(fbsd_dynamic_linker) }} \       %{static:-Bstatic}} \     %{symbolic:-Bsymbolic} "
+value|"\     %{p:%nconsider using `-pg' instead of `-p' with gprof(1) } \     %{v:-V} \     %{assert*} %{R*} %{rpath*} %{defsym*} \     %{shared:-Bshareable %{h*} %{soname*}} \     %{!static:--enable-new-dtags} \     %{!shared: \       %{!static: \ 	%{rdynamic: -export-dynamic} \ 	%{!dynamic-linker:-dynamic-linker %(fbsd_dynamic_linker) }} \       %{static:-Bstatic}} \     %{symbolic:-Bsymbolic} "
 end_define
 
 begin_undef
