@@ -871,7 +871,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|u_int
 name|slength
 parameter_list|(
 name|struct
@@ -907,7 +907,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|u_int
 name|count_stmts
 parameter_list|(
 name|struct
@@ -8667,7 +8667,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|u_int
 name|slength
 parameter_list|(
 name|s
@@ -8678,7 +8678,7 @@ modifier|*
 name|s
 decl_stmt|;
 block|{
-name|int
+name|u_int
 name|n
 init|=
 literal|0
@@ -8851,7 +8851,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|u_int
 name|count_stmts
 parameter_list|(
 name|p
@@ -8862,7 +8862,7 @@ modifier|*
 name|p
 decl_stmt|;
 block|{
-name|int
+name|u_int
 name|n
 decl_stmt|;
 if|if
@@ -10238,12 +10238,12 @@ name|block
 modifier|*
 name|root
 decl_stmt|;
-name|int
+name|u_int
 modifier|*
 name|lenp
 decl_stmt|;
 block|{
-name|int
+name|u_int
 name|n
 decl_stmt|;
 name|struct

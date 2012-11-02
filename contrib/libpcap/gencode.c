@@ -319,6 +319,43 @@ directive|include
 file|"arcnet.h"
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|PF_PACKET
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|SO_ATTACH_FILTER
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<linux/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<linux/if_packet.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<linux/filter.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2612,7 +2649,7 @@ name|xbuf
 init|=
 name|buf
 decl_stmt|;
-name|int
+name|u_int
 name|len
 decl_stmt|;
 name|no_optimize
@@ -5575,9 +5612,6 @@ operator|-
 literal|1
 expr_stmt|;
 return|return;
-ifdef|#
-directive|ifdef
-name|DLT_PFSYNC
 case|case
 name|DLT_PFSYNC
 case|:
@@ -5599,8 +5633,6 @@ operator|=
 literal|0
 expr_stmt|;
 return|return;
-endif|#
-directive|endif
 case|case
 name|DLT_AX25_KISS
 case|:
@@ -10668,9 +10700,6 @@ argument_list|(
 literal|"ERF link-layer type filtering not implemented"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DLT_PFSYNC
 case|case
 name|DLT_PFSYNC
 case|:
@@ -10679,8 +10708,6 @@ argument_list|(
 literal|"PFSYNC link-layer type filtering not implemented"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 case|case
 name|DLT_LINUX_LAPD
 case|:
@@ -20357,6 +20384,21 @@ decl_stmt|,
 modifier|*
 name|b1
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
+ifndef|#
+directive|ifndef
+name|CHASE_CHAIN
+name|struct
+name|block
+modifier|*
+name|b2
+decl_stmt|;
+endif|#
+directive|endif
+endif|#
+directive|endif
 if|if
 condition|(
 name|dir
@@ -20797,7 +20839,44 @@ expr_stmt|;
 ifndef|#
 directive|ifndef
 name|CHASE_CHAIN
+comment|/* 		 * Also check for a fragment header before the final 		 * header. 		 */
+name|b2
+operator|=
+name|gen_cmp
+argument_list|(
+name|OR_NET
+argument_list|,
+literal|6
+argument_list|,
+name|BPF_B
+argument_list|,
+name|IPPROTO_FRAGMENT
+argument_list|)
+expr_stmt|;
 name|b1
+operator|=
+name|gen_cmp
+argument_list|(
+name|OR_NET
+argument_list|,
+literal|40
+argument_list|,
+name|BPF_B
+argument_list|,
+operator|(
+name|bpf_int32
+operator|)
+name|v
+argument_list|)
+expr_stmt|;
+name|gen_and
+argument_list|(
+name|b2
+argument_list|,
+name|b1
+argument_list|)
+expr_stmt|;
+name|b2
 operator|=
 name|gen_cmp
 argument_list|(
@@ -20811,6 +20890,13 @@ operator|(
 name|bpf_int32
 operator|)
 name|v
+argument_list|)
+expr_stmt|;
+name|gen_or
+argument_list|(
+name|b2
+argument_list|,
+name|b1
 argument_list|)
 expr_stmt|;
 else|#
@@ -26660,7 +26746,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * generate command for inbound/outbound.  It's here so we can  * make it link-type specific.  'dir' = 0 implies "inbound",  * = 1 implies "outbound".  */
+comment|/*  * Filter on inbound (dir == 0) or outbound (dir == 1) traffic.  * Outbound traffic is sent by this machine, while inbound traffic is  * sent by a remote machine (and may include packets destined for a  * unicast or multicast link-layer address we are not subscribing to).  * These are the same definitions implemented by pcap_setdirection().  * Capturing only unicast traffic destined for this host is probably  * better accomplished using a higher-layer filter.  */
 end_comment
 
 begin_function
@@ -26761,12 +26847,7 @@ break|break;
 case|case
 name|DLT_LINUX_SLL
 case|:
-if|if
-condition|(
-name|dir
-condition|)
-block|{
-comment|/* 			 * Match packets sent by this machine. 			 */
+comment|/* match outgoing packets */
 name|b0
 operator|=
 name|gen_cmp
@@ -26780,21 +26861,16 @@ argument_list|,
 name|LINUX_SLL_OUTGOING
 argument_list|)
 expr_stmt|;
-block|}
-else|else
+if|if
+condition|(
+operator|!
+name|dir
+condition|)
 block|{
-comment|/* 			 * Match packets sent to this machine. 			 * (No broadcast or multicast packets, or 			 * packets sent to some other machine and 			 * received promiscuously.) 			 * 			 * XXX - packets sent to other machines probably 			 * shouldn't be matched, but what about broadcast 			 * or multicast packets we received? 			 */
-name|b0
-operator|=
-name|gen_cmp
+comment|/* to filter on inbound traffic, invert the match */
+name|gen_not
 argument_list|(
-name|OR_LINK
-argument_list|,
-literal|0
-argument_list|,
-name|BPF_H
-argument_list|,
-name|LINUX_SLL_HOST
+name|b0
 argument_list|)
 expr_stmt|;
 block|}
@@ -26991,6 +27067,76 @@ expr_stmt|;
 block|}
 break|break;
 default|default:
+comment|/* 		 * If we have packet meta-data indicating a direction, 		 * check it, otherwise give up as this link-layer type 		 * has nothing in the packet data. 		 */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|PF_PACKET
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|SO_ATTACH_FILTER
+argument_list|)
+comment|/* 		 * We infer that this is Linux with PF_PACKET support. 		 * If this is a *live* capture, we can look at 		 * special meta-data in the filter expression; 		 * if it's a savefile, we can't. 		 */
+if|if
+condition|(
+name|bpf_pcap
+operator|->
+name|sf
+operator|.
+name|rfile
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* We have a FILE *, so this is a savefile */
+name|bpf_error
+argument_list|(
+literal|"inbound/outbound not supported on linktype %d when reading savefiles"
+argument_list|,
+name|linktype
+argument_list|)
+expr_stmt|;
+name|b0
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* NOTREACHED */
+block|}
+comment|/* match outgoing packets */
+name|b0
+operator|=
+name|gen_cmp
+argument_list|(
+name|OR_LINK
+argument_list|,
+name|SKF_AD_OFF
+operator|+
+name|SKF_AD_PKTTYPE
+argument_list|,
+name|BPF_H
+argument_list|,
+name|PACKET_OUTGOING
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|dir
+condition|)
+block|{
+comment|/* to filter on inbound traffic, invert the match */
+name|gen_not
+argument_list|(
+name|b0
+argument_list|)
+expr_stmt|;
+block|}
+else|#
+directive|else
+comment|/* defined(PF_PACKET)&& defined(SO_ATTACH_FILTER) */
 name|bpf_error
 argument_list|(
 literal|"inbound/outbound not supported on linktype %d"
@@ -27003,6 +27149,9 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* NOTREACHED */
+endif|#
+directive|endif
+comment|/* defined(PF_PACKET)&& defined(SO_ATTACH_FILTER) */
 block|}
 return|return
 operator|(
