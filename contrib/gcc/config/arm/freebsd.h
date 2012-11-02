@@ -72,7 +72,7 @@ begin_define
 define|#
 directive|define
 name|LINK_SPEC
-value|"							\   %{p:%nconsider using `-pg' instead of `-p' with gprof(1) }		\   %{v:-V}								\   %{assert*} %{R*} %{rpath*} %{defsym*}					\   %{shared:-Bshareable %{h*} %{soname*}}				\   %{!shared:								\     %{!static:								\       %{rdynamic:-export-dynamic}					\       %{!dynamic-linker:-dynamic-linker %(fbsd_dynamic_linker) }}	\     %{static:-Bstatic}}							\   %{symbolic:-Bsymbolic}						\   -X %{mbig-endian:-EB} %{mlittle-endian:-EL}"
+value|"							\   %{p:%nconsider using `-pg' instead of `-p' with gprof(1) }		\   %{v:-V}								\   %{assert*} %{R*} %{rpath*} %{defsym*}					\   %{shared:-Bshareable %{h*} %{soname*}}				\   %{!shared:								\     %{!static:								\       %{rdynamic:-export-dynamic}					\       %{!dynamic-linker:-dynamic-linker %(fbsd_dynamic_linker) }}	\     %{static:-Bstatic}}							\   %{!static:--hash-style=both}						\   %{symbolic:-Bsymbolic}						\   -X %{mbig-endian:-EB} %{mlittle-endian:-EL}"
 end_define
 
 begin_comment
