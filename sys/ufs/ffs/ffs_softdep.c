@@ -40534,11 +40534,11 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|panic
-argument_list|(
-literal|"cancel_mkdir_dotdot: Lost inodedep"
-argument_list|)
-expr_stmt|;
+return|return
+operator|(
+name|jremref
+operator|)
+return|;
 name|dap
 operator|=
 name|inodedep
