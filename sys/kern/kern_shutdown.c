@@ -2737,6 +2737,9 @@ modifier|*
 name|devname
 parameter_list|)
 block|{
+name|size_t
+name|wantcopy
+decl_stmt|;
 if|if
 condition|(
 name|di
@@ -2784,6 +2787,8 @@ operator|=
 operator|*
 name|di
 expr_stmt|;
+name|wantcopy
+operator|=
 name|strlcpy
 argument_list|(
 name|dumpdevname
@@ -2798,14 +2803,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|strlen
+name|wantcopy
+operator|>=
+sizeof|sizeof
 argument_list|(
 name|dumpdevname
-argument_list|)
-operator|!=
-name|strlen
-argument_list|(
-name|devname
 argument_list|)
 condition|)
 block|{
