@@ -1478,9 +1478,11 @@ expr_stmt|;
 comment|/* 	 * Destination address changed? 	 */
 if|if
 condition|(
-name|V_pfilforward
-operator|!=
-literal|0
+name|m
+operator|->
+name|m_flags
+operator|&
+name|M_IP_NEXTHOP
 condition|)
 name|fwd_tag
 operator|=
@@ -1582,6 +1584,13 @@ name|m
 argument_list|,
 name|fwd_tag
 argument_list|)
+expr_stmt|;
+name|m
+operator|->
+name|m_flags
+operator|&=
+operator|~
+name|M_IP_NEXTHOP
 expr_stmt|;
 block|}
 name|RTFREE

@@ -750,13 +750,6 @@ name|NULL
 condition|)
 break|break;
 comment|/* pass */
-if|if
-condition|(
-name|V_pfilforward
-operator|==
-literal|0
-condition|)
-break|break;
 if|#
 directive|if
 operator|(
@@ -971,6 +964,15 @@ name|m_flags
 operator||=
 name|M_FASTFWD_OURS
 expr_stmt|;
+operator|(
+operator|*
+name|m0
+operator|)
+operator|->
+name|m_flags
+operator||=
+name|M_IP6_NEXTHOP
+expr_stmt|;
 block|}
 endif|#
 directive|endif
@@ -1020,6 +1022,15 @@ operator|->
 name|m_flags
 operator||=
 name|M_FASTFWD_OURS
+expr_stmt|;
+operator|(
+operator|*
+name|m0
+operator|)
+operator|->
+name|m_flags
+operator||=
+name|M_IP_NEXTHOP
 expr_stmt|;
 block|}
 endif|#

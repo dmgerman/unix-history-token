@@ -2166,15 +2166,6 @@ goto|;
 comment|/* Redo the routing table lookup. */
 block|}
 block|}
-if|if
-condition|(
-name|V_pfilforward
-operator|==
-literal|0
-condition|)
-goto|goto
-name|passout
-goto|;
 comment|/* See if local, if yes, send it to netisr with IP_FASTFWD_OURS. */
 if|if
 condition|(
@@ -2280,6 +2271,17 @@ name|done
 goto|;
 block|}
 comment|/* Or forward to some other address? */
+if|if
+condition|(
+operator|(
+name|m
+operator|->
+name|m_flags
+operator|&
+name|M_IP_NEXTHOP
+operator|)
+operator|&&
+operator|(
 name|fwd_tag
 operator|=
 name|m_tag_find
@@ -2290,10 +2292,9 @@ name|PACKET_TAG_IPFORWARD
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|fwd_tag
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 name|dst
@@ -2330,6 +2331,13 @@ operator|->
 name|m_flags
 operator||=
 name|M_SKIP_FIREWALL
+expr_stmt|;
+name|m
+operator|->
+name|m_flags
+operator|&=
+operator|~
+name|M_IP_NEXTHOP
 expr_stmt|;
 name|m_tag_delete
 argument_list|(

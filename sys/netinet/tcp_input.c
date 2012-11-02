@@ -158,12 +158,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/pfil.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/route.h>
 end_include
 
@@ -3921,9 +3915,11 @@ directive|endif
 comment|/* 	 * Grab info from PACKET_TAG_IPFORWARD tag prepended to the chain. 	 */
 if|if
 condition|(
-name|V_pfilforward
-operator|!=
-literal|0
+name|m
+operator|->
+name|m_flags
+operator|&
+name|M_IP_NEXTHOP
 condition|)
 name|fwd_tag
 operator|=
@@ -4065,6 +4061,13 @@ name|m
 argument_list|,
 name|fwd_tag
 argument_list|)
+expr_stmt|;
+name|m
+operator|->
+name|m_flags
+operator|&=
+operator|~
+name|M_IP_NEXTHOP
 expr_stmt|;
 block|}
 elseif|else
@@ -4252,6 +4255,13 @@ name|m
 argument_list|,
 name|fwd_tag
 argument_list|)
+expr_stmt|;
+name|m
+operator|->
+name|m_flags
+operator|&=
+operator|~
+name|M_IP_NEXTHOP
 expr_stmt|;
 block|}
 else|else

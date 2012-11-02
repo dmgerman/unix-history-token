@@ -10624,7 +10624,6 @@ literal|"(+ipv6) "
 endif|#
 directive|endif
 literal|"initialized, divert %s, nat %s, "
-literal|"rule-based forwarding turned %s, "
 literal|"default to %s, logging "
 argument_list|,
 ifdef|#
@@ -10649,12 +10648,6 @@ literal|"loadable"
 argument_list|,
 endif|#
 directive|endif
-name|V_pfilforward
-condition|?
-literal|"on"
-else|:
-literal|"off"
-argument_list|,
 name|default_to_accept
 condition|?
 literal|"accept"

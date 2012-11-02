@@ -62,12 +62,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sysctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/systm.h>
 end_include
 
@@ -236,60 +230,6 @@ directive|define
 name|V_pfil_lock
 value|VNET(pfil_lock)
 end_define
-
-begin_expr_stmt
-name|VNET_DEFINE
-argument_list|(
-name|int
-argument_list|,
-name|pfilforward
-argument_list|)
-operator|=
-literal|0
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_NODE
-argument_list|(
-name|_net
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|pfil
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-literal|0
-argument_list|,
-literal|"Packer filter interface"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_VNET_INT
-argument_list|(
-name|_net_pfil
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|forward
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|VNET_NAME
-argument_list|(
-name|pfilforward
-argument_list|)
-argument_list|,
-literal|0
-argument_list|,
-literal|"Enable forwarding performed by packet filters"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/*  * pfil_run_hooks() runs the specified packet filter hooks.  */

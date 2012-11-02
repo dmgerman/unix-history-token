@@ -164,12 +164,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/pfil.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/route.h>
 end_include
 
@@ -2397,9 +2391,13 @@ comment|/* 	 * Locate pcb for datagram. 	 */
 comment|/* 	 * Grab info from PACKET_TAG_IPFORWARD tag prepended to the chain. 	 */
 if|if
 condition|(
-name|V_pfilforward
-operator|!=
-literal|0
+operator|(
+name|m
+operator|->
+name|m_flags
+operator|&
+name|M_IP_NEXTHOP
+operator|)
 operator|&&
 operator|(
 name|fwd_tag
@@ -2522,6 +2520,13 @@ name|m
 argument_list|,
 name|fwd_tag
 argument_list|)
+expr_stmt|;
+name|m
+operator|->
+name|m_flags
+operator|&=
+operator|~
+name|M_IP_NEXTHOP
 expr_stmt|;
 block|}
 else|else
