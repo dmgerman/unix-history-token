@@ -579,7 +579,7 @@ begin_define
 define|#
 directive|define
 name|BUSDMA_STATIC_MAPS
-value|500
+value|128
 end_define
 
 begin_decl_stmt
