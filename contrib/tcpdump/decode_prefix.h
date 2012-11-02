@@ -25,6 +25,9 @@ name|u_char
 modifier|*
 name|pptr
 parameter_list|,
+name|u_int
+name|itemlen
+parameter_list|,
 name|char
 modifier|*
 name|buf
@@ -50,6 +53,9 @@ specifier|const
 name|u_char
 modifier|*
 name|pd
+parameter_list|,
+name|u_int
+name|itemlen
 parameter_list|,
 name|char
 modifier|*

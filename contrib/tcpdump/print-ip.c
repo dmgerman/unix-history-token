@@ -2163,6 +2163,12 @@ break|break;
 default|default:
 if|if
 condition|(
+name|ndo
+operator|->
+name|ndo_nflag
+operator|==
+literal|0
+operator|&&
 operator|(
 name|proto
 operator|=
@@ -3139,6 +3145,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|ndo
+operator|->
+name|ndo_nflag
+operator|&&
 operator|(
 name|proto
 operator|=
