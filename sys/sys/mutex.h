@@ -569,7 +569,7 @@ value|mtx_unlock_spin((tdp)->td_lock)
 end_define
 
 begin_comment
-comment|/*  * Top-level macros to provide lock cookie once the actual mtx is passed.  * They will also prevent passing a malformed object to the mtx KPI by  * failing compilation.  */
+comment|/*  * Top-level macros to provide lock cookie once the actual mtx is passed.  * They will also prevent passing a malformed object to the mtx KPI by  * failing compilation as the mtx_lock reserved member will not be found.  */
 end_comment
 
 begin_define
