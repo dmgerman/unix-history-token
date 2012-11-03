@@ -221,17 +221,6 @@ begin_comment
 comment|/* should be prime */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|ARB
-value|1
-end_define
-
-begin_comment
-comment|/* actual size determined at run time */
-end_comment
-
 begin_struct
 struct|struct
 name|tblentry
@@ -261,9 +250,7 @@ decl_stmt|;
 comment|/* if set, cd done since entry created */
 name|char
 name|cmdname
-index|[
-name|ARB
-index|]
+index|[]
 decl_stmt|;
 comment|/* name of command */
 block|}
@@ -2493,8 +2480,6 @@ argument_list|(
 expr|struct
 name|tblentry
 argument_list|)
-operator|-
-name|ARB
 operator|+
 name|strlen
 argument_list|(
