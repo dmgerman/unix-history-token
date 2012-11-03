@@ -1522,15 +1522,14 @@ expr_stmt|;
 if|if
 condition|(
 name|err
+condition|)
+block|{
+if|if
+condition|(
+name|err
 operator|==
 name|ENOSYS
 condition|)
-block|{
-name|debug_printf
-argument_list|(
-literal|"create: got ENOSYS from daemon\n"
-argument_list|)
-expr_stmt|;
 name|fsess_set_notimpl
 argument_list|(
 name|mp
@@ -1538,21 +1537,9 @@ argument_list|,
 name|FUSE_CREATE
 argument_list|)
 expr_stmt|;
-name|fdisp_destroy
-argument_list|(
-name|fdip
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|err
-condition|)
-block|{
 name|debug_printf
 argument_list|(
-literal|"create: darn, got err=%d from daemon\n"
+literal|"create: got err=%d from daemon\n"
 argument_list|,
 name|err
 argument_list|)
