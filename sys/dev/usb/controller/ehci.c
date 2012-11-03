@@ -1594,6 +1594,18 @@ name|usbrev
 operator|=
 name|USB_REV_2_0
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+name|EHCI_SCFLG_DONTRESET
+operator|)
+condition|)
+block|{
 comment|/* Reset the controller */
 name|DPRINTF
 argument_list|(
@@ -1637,6 +1649,7 @@ operator|(
 name|err
 operator|)
 return|;
+block|}
 block|}
 comment|/* 	 * use current frame-list-size selection 0: 1024*4 bytes 1:  512*4 	 * bytes 2:  256*4 bytes 3:      unknown 	 */
 if|if
