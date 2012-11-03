@@ -2021,8 +2021,8 @@ parameter_list|,
 name|u_int
 parameter_list|)
 function_decl|;
-name|unsigned
-name|int
+comment|/* 	 * First set of flags. 	 */
+name|uint32_t
 name|sc_invalid
 range|:
 literal|1
@@ -2183,6 +2183,16 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* supports EDMA */
+comment|/* 	 * Second set of flags. 	 */
+name|u_int32_t
+name|sc_use_ent
+range|:
+literal|1
+decl_stmt|;
+comment|/* 	 * Enterprise mode configuration for AR9380 and later chipsets. 	 */
+name|uint32_t
+name|sc_ent_cfg
+decl_stmt|;
 name|uint32_t
 name|sc_eerd
 decl_stmt|;

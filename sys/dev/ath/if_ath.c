@@ -3442,6 +3442,31 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* XXX should be a capability */
+comment|/* 	 * Query the enterprise mode information the HAL. 	 */
+if|if
+condition|(
+name|ath_hal_getcapability
+argument_list|(
+name|ah
+argument_list|,
+name|HAL_CAP_ENTERPRISE_MODE
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_ent_cfg
+argument_list|)
+operator|==
+name|HAL_OK
+condition|)
+name|sc
+operator|->
+name|sc_use_ent
+operator|=
+literal|1
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|ATH_ENABLE_11N
