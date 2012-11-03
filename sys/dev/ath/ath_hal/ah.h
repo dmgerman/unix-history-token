@@ -1675,6 +1675,36 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+struct|struct
+name|halCounters
+block|{
+name|u_int32_t
+name|tx_frame_count
+decl_stmt|;
+name|u_int32_t
+name|rx_frame_count
+decl_stmt|;
+name|u_int32_t
+name|rx_clear_count
+decl_stmt|;
+name|u_int32_t
+name|cycle_count
+decl_stmt|;
+name|u_int8_t
+name|is_rx_active
+decl_stmt|;
+comment|// true (1) or false (0)
+name|u_int8_t
+name|is_tx_active
+decl_stmt|;
+comment|// true (1) or false (0)
+block|}
+name|HAL_COUNTERS
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 enum|enum
 block|{
 name|HAL_RFGAIN_INACTIVE
@@ -4379,6 +4409,21 @@ name|uint16_t
 name|size
 parameter_list|)
 function_decl|;
+name|void
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_getTxRawTxDesc
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+name|u_int32_t
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/* Receive Functions */
 name|uint32_t
 name|__ahdecl
@@ -5711,6 +5756,8 @@ parameter_list|,
 name|struct
 name|ath_desc
 modifier|*
+parameter_list|,
+name|u_int
 parameter_list|,
 name|u_int
 parameter_list|)
