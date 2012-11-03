@@ -456,45 +456,13 @@ begin_comment
 comment|/* list of unmanaged pages */
 end_comment
 
-begin_comment
-comment|/*  * Isolate the global pv list lock from data and other locks to prevent false  * sharing within the cache.  */
-end_comment
-
-begin_struct
+begin_decl_stmt
 specifier|static
-struct|struct
-block|{
 name|struct
-name|rwlock
-name|lock
-decl_stmt|;
-name|char
-name|padding
-index|[
-name|CACHE_LINE_SIZE
-operator|-
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|rwlock
-argument_list|)
-index|]
-decl_stmt|;
-block|}
-name|pvh_global
-name|__aligned
-argument_list|(
-name|CACHE_LINE_SIZE
-argument_list|)
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
+name|rwlock_padalign
 name|pvh_global_lock
-value|pvh_global.lock
-end_define
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|uma_zone_t
