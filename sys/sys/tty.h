@@ -884,6 +884,24 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|tty_set_winsize
+parameter_list|(
+name|struct
+name|tty
+modifier|*
+name|tp
+parameter_list|,
+specifier|const
+name|struct
+name|winsize
+modifier|*
+name|wsz
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|tty_init_console
 parameter_list|(
 name|struct
