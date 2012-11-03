@@ -341,7 +341,7 @@ end_ifdef
 begin_decl_stmt
 specifier|extern
 name|uint32_t
-name|bp_kernload
+name|bp_ntlb1s
 decl_stmt|;
 end_decl_stmt
 
@@ -349,6 +349,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+name|vm_paddr_t
+name|ccsrbar_pa
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|vm_paddr_t
@@ -4633,15 +4639,6 @@ argument_list|(
 literal|"mmu_booke_bootstrap: entered\n"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SMP
-name|bp_kernload
-operator|=
-name|kernload
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* Initialize invalidation mutex */
 name|mtx_init
 argument_list|(
@@ -6059,7 +6056,7 @@ for|for
 control|(
 name|i
 operator|=
-literal|0
+name|bp_ntlb1s
 init|;
 name|i
 operator|<
@@ -11370,6 +11367,48 @@ decl_stmt|;
 name|vm_size_t
 name|sz
 decl_stmt|;
+comment|/* 	 * CCSR is premapped. Note that (pa + size - 1) is there to make sure 	 * we don't wrap around. Devices on the local bus typically extend all 	 * the way up to and including 0xffffffff. In that case (pa + size) 	 * would be 0. This creates a false positive (i.e. we think it's 	 * within the CCSR) and not create a mapping. 	 */
+if|if
+condition|(
+name|pa
+operator|>=
+name|ccsrbar_pa
+operator|&&
+operator|(
+name|pa
+operator|+
+name|size
+operator|-
+literal|1
+operator|)
+operator|<
+operator|(
+name|ccsrbar_pa
+operator|+
+name|CCSRBAR_SIZE
+operator|)
+condition|)
+block|{
+name|va
+operator|=
+name|CCSRBAR_VA
+operator|+
+operator|(
+name|pa
+operator|-
+name|ccsrbar_pa
+operator|)
+expr_stmt|;
+return|return
+operator|(
+operator|(
+name|void
+operator|*
+operator|)
+name|va
+operator|)
+return|;
+block|}
 name|va
 operator|=
 operator|(
@@ -12927,6 +12966,10 @@ decl_stmt|;
 name|u_int
 name|i
 decl_stmt|;
+name|ccsrbar_pa
+operator|=
+name|ccsrbar
+expr_stmt|;
 if|if
 condition|(
 name|bootinfo
@@ -13102,6 +13145,15 @@ argument_list|,
 name|_TLB_ENTRY_IO
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SMP
+name|bp_ntlb1s
+operator|=
+name|tlb1_idx
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Purge the remaining entries */
 for|for
 control|(

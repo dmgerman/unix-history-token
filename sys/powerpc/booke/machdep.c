@@ -1559,6 +1559,10 @@ argument_list|,
 name|end
 argument_list|)
 expr_stmt|;
+name|pmap_bootstrapped
+operator|=
+literal|1
+expr_stmt|;
 name|debugf
 argument_list|(
 literal|"MSR = 0x%08x\n"
