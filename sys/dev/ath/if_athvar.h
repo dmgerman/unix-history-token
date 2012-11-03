@@ -5307,6 +5307,19 @@ end_define
 begin_define
 define|#
 directive|define
+name|ath_hal_gettxrawtxdesc
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_txstatus
+parameter_list|)
+define|\
+value|((*(_ah)->ah_getTxRawTxDesc)((_ah), (_txstatus)))
+end_define
+
+begin_define
+define|#
+directive|define
 name|ath_hal_setupfirsttxdesc
 parameter_list|(
 name|_ah
@@ -5420,13 +5433,13 @@ parameter_list|,
 name|_num
 parameter_list|)
 define|\
-value|((*(_ah)->ah_set11nAggrFirst)((_ah), (_ds), (_len)))
+value|((*(_ah)->ah_set11nAggrFirst)((_ah), (_ds), (_len), (_num)))
 end_define
 
 begin_define
 define|#
 directive|define
-name|ath_hal_set11naggrmiddle
+name|ath_hal_set11n_aggr_middle
 parameter_list|(
 name|_ah
 parameter_list|,
