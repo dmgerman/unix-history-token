@@ -5636,7 +5636,6 @@ name|logIpfwDenied
 operator|=
 name|yesNoValue
 expr_stmt|;
-empty_stmt|;
 break|break;
 case|case
 name|PidFile

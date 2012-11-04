@@ -2960,7 +2960,6 @@ name|lbalen
 argument_list|)
 argument_list|)
 expr_stmt|;
-empty_stmt|;
 name|STAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -52584,7 +52583,6 @@ name|lbalen
 argument_list|)
 argument_list|)
 expr_stmt|;
-empty_stmt|;
 if|if
 condition|(
 name|ctl_ha_msg_send
