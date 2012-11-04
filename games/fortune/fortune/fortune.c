@@ -111,6 +111,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdbool.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -154,21 +160,14 @@ begin_define
 define|#
 directive|define
 name|TRUE
-value|1
+value|true
 end_define
 
 begin_define
 define|#
 directive|define
 name|FALSE
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|bool
-value|short
+value|false
 end_define
 
 begin_define
