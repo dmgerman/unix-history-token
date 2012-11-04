@@ -1569,6 +1569,9 @@ operator|&
 name|ts
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ATH_DEBUG
 name|ath_hal_gettxrawtxdesc
 argument_list|(
 name|ah
@@ -1576,6 +1579,8 @@ argument_list|,
 name|txstatus
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|ATH_TXSTATUS_UNLOCK
 argument_list|(
 name|sc
