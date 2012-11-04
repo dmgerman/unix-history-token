@@ -15569,7 +15569,6 @@ name|adapter
 operator|->
 name|ifp
 decl_stmt|;
-empty_stmt|;
 name|struct
 name|mbuf
 modifier|*

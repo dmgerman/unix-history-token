@@ -6969,7 +6969,6 @@ name|control_un
 operator|.
 name|control
 expr_stmt|;
-empty_stmt|;
 name|msg
 operator|.
 name|msg_flags

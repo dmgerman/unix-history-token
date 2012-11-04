@@ -330,7 +330,6 @@ argument_list|,
 name|WHITESP
 argument_list|)
 expr_stmt|;
-empty_stmt|;
 name|argv
 index|[
 literal|0
