@@ -809,7 +809,6 @@ argument_list|,
 literal|4
 argument_list|)
 return|;
-empty_stmt|;
 block|}
 end_function
 

@@ -7058,7 +7058,6 @@ name|HDA_PARAM_PIN_CAP
 argument_list|)
 argument_list|)
 expr_stmt|;
-empty_stmt|;
 name|w
 operator|->
 name|wclass

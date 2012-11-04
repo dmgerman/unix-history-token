@@ -16073,7 +16073,6 @@ operator|*
 operator|)
 name|data
 decl_stmt|;
-empty_stmt|;
 name|struct
 name|filter_info
 modifier|*
