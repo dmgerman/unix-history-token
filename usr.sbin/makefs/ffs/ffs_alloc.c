@@ -46,6 +46,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"makefs.h"
 end_include
 
@@ -2216,7 +2222,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"bad block %lld, ino %llu"
+literal|"bad block %lld, ino %ju"
 argument_list|,
 operator|(
 name|long
@@ -2225,9 +2231,7 @@ operator|)
 name|bno
 argument_list|,
 operator|(
-name|unsigned
-name|long
-name|long
+name|uintmax_t
 operator|)
 name|ip
 operator|->

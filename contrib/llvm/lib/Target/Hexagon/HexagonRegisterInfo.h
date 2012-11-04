@@ -263,6 +263,17 @@ return|return
 name|true
 return|;
 block|}
+name|bool
+name|trackLivenessAfterRegAlloc
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
 comment|// Debug information queries.
 name|unsigned
 name|getRARegister

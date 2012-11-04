@@ -32,6 +32,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|NGM_NETFLOW_V9_COOKIE
+value|1349865386
+end_define
+
+begin_define
+define|#
+directive|define
 name|NG_NETFLOW_MAXIFACES
 value|USHRT_MAX
 end_define
@@ -140,6 +147,15 @@ init|=
 literal|9
 block|,
 comment|/* set outgoing interface MTU */
+name|NGM_NETFLOW_V9INFO
+init|=
+literal|10
+operator||
+name|NGM_READONLY
+operator||
+name|NGM_HASREPLY
+block|,
+comment|/* get v9 info */
 block|}
 enum|;
 end_enum
@@ -327,28 +343,80 @@ begin_define
 define|#
 directive|define
 name|NG_NETFLOW_CONF_INGRESS
-value|1
+value|0x01
 end_define
+
+begin_comment
+comment|/* Account on ingress */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|NG_NETFLOW_CONF_EGRESS
-value|2
+value|0x02
 end_define
+
+begin_comment
+comment|/* Account on egress */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|NG_NETFLOW_CONF_ONCE
-value|4
+value|0x04
 end_define
+
+begin_comment
+comment|/* Add tag to account only once */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|NG_NETFLOW_CONF_THISONCE
-value|8
+value|0x08
+end_define
+
+begin_comment
+comment|/* Account once in current node */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_NETFLOW_CONF_NOSRCLOOKUP
+value|0x10
+end_define
+
+begin_comment
+comment|/* No radix lookup on src */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_NETFLOW_CONF_NODSTLOOKUP
+value|0x20
+end_define
+
+begin_comment
+comment|/* No radix lookup on dst */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_NETFLOW_IS_FRAG
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_NETFLOW_FLOW_FLAGS
+value|(NG_NETFLOW_CONF_NOSRCLOOKUP|\ 					NG_NETFLOW_CONF_NODSTLOOKUP)
 end_define
 
 begin_comment
@@ -431,6 +499,30 @@ name|uint32_t
 name|nentries
 decl_stmt|;
 comment|/* number of records in response */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* This structure is used in NGM_NETFLOW_V9INFO message */
+end_comment
+
+begin_struct
+struct|struct
+name|ng_netflow_v9info
+block|{
+name|uint16_t
+name|templ_packets
+decl_stmt|;
+comment|/* v9 template packets */
+name|uint16_t
+name|templ_time
+decl_stmt|;
+comment|/* v9 template time */
+name|uint16_t
+name|mtu
+decl_stmt|;
+comment|/* v9 MTU */
 block|}
 struct|;
 end_struct
@@ -946,6 +1038,17 @@ value|{			\ 	{ "mtu",&ng_parse_uint16_type },	\ 	{ NULL }					\ }
 end_define
 
 begin_comment
+comment|/* Parse the v9info structure */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_NETFLOW_V9INFO_TYPE
+value|{			\ 	{ "v9 template packets",&ng_parse_uint16_type },\ 	{ "v9 template time",&ng_parse_uint16_type },\ 	{ "v9 MTU",&ng_parse_uint16_type },\ 	{ NULL }					\ }
+end_define
+
+begin_comment
 comment|/* Private hook data */
 end_comment
 
@@ -1152,6 +1255,7 @@ name|uint16_t
 name|maxfibs
 decl_stmt|;
 comment|/* number of allocated fibs */
+comment|/* Netflow v9 configuration options */
 comment|/* 	 * RFC 3954 clause 7.3 	 * "Both options MUST be configurable by the user on the Exporter." 	 */
 name|uint16_t
 name|templ_time
@@ -1361,6 +1465,19 @@ name|priv_p
 parameter_list|,
 name|struct
 name|ng_netflow_info
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ng_netflow_copyv9info
+parameter_list|(
+name|priv_p
+parameter_list|,
+name|struct
+name|ng_netflow_v9info
 modifier|*
 parameter_list|)
 function_decl|;

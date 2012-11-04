@@ -380,12 +380,12 @@ struct|struct
 name|callout_cpu
 block|{
 name|struct
-name|cc_mig_ent
-name|cc_migrating_entity
+name|mtx_padalign
+name|cc_lock
 decl_stmt|;
 name|struct
-name|mtx
-name|cc_lock
+name|cc_mig_ent
+name|cc_migrating_entity
 decl_stmt|;
 name|struct
 name|callout

@@ -136,8 +136,6 @@ operator|=
 name|AcpiHwGetGpeRegisterBit
 argument_list|(
 name|GpeEventInfo
-argument_list|,
-name|GpeRegisterInfo
 argument_list|)
 expr_stmt|;
 comment|/* Clear the run bit up front */
@@ -795,6 +793,38 @@ name|EnableForWake
 operator|)
 condition|)
 block|{
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_INTERRUPTS
+operator|,
+literal|"Ignore disabled registers for GPE%02X-GPE%02X: "
+literal|"RunEnable=%02X, WakeEnable=%02X\n"
+operator|,
+name|GpeRegisterInfo
+operator|->
+name|BaseGpeNumber
+operator|,
+name|GpeRegisterInfo
+operator|->
+name|BaseGpeNumber
+operator|+
+operator|(
+name|ACPI_GPE_REGISTER_WIDTH
+operator|-
+literal|1
+operator|)
+operator|,
+name|GpeRegisterInfo
+operator|->
+name|EnableForRun
+operator|,
+name|GpeRegisterInfo
+operator|->
+name|EnableForWake
+operator|)
+argument_list|)
+expr_stmt|;
 continue|continue;
 block|}
 comment|/* Read the Status Register */
@@ -854,15 +884,34 @@ argument_list|(
 operator|(
 name|ACPI_DB_INTERRUPTS
 operator|,
-literal|"Read GPE Register at GPE%02X: Status=%02X, Enable=%02X\n"
+literal|"Read registers for GPE%02X-GPE%02X: Status=%02X, Enable=%02X, "
+literal|"RunEnable=%02X, WakeEnable=%02X\n"
 operator|,
 name|GpeRegisterInfo
 operator|->
 name|BaseGpeNumber
 operator|,
+name|GpeRegisterInfo
+operator|->
+name|BaseGpeNumber
+operator|+
+operator|(
+name|ACPI_GPE_REGISTER_WIDTH
+operator|-
+literal|1
+operator|)
+operator|,
 name|StatusReg
 operator|,
 name|EnableReg
+operator|,
+name|GpeRegisterInfo
+operator|->
+name|EnableForRun
+operator|,
+name|GpeRegisterInfo
+operator|->
+name|EnableForWake
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1006,6 +1055,10 @@ name|ACPI_EVALUATE_INFO
 modifier|*
 name|Info
 decl_stmt|;
+name|ACPI_GPE_NOTIFY_INFO
+modifier|*
+name|Notify
+decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 name|EvAsynchExecuteGpeMethod
@@ -1124,20 +1177,43 @@ block|{
 case|case
 name|ACPI_GPE_DISPATCH_NOTIFY
 case|:
-comment|/*          * Implicit notify.          * Dispatch a DEVICE_WAKE notify to the appropriate handler.          * NOTE: the request is queued for execution after this method          * completes. The notify handlers are NOT invoked synchronously          * from this thread -- because handlers may in turn run other          * control methods.          */
-name|Status
+comment|/*          * Implicit notify.          * Dispatch a DEVICE_WAKE notify to the appropriate handler.          * NOTE: the request is queued for execution after this method          * completes. The notify handlers are NOT invoked synchronously          * from this thread -- because handlers may in turn run other          * control methods.          *          * June 2012: Expand implicit notify mechanism to support          * notifies on multiple device objects.          */
+name|Notify
 operator|=
-name|AcpiEvQueueNotifyRequest
-argument_list|(
 name|LocalGpeEventInfo
 operator|->
 name|Dispatch
 operator|.
+name|NotifyList
+expr_stmt|;
+while|while
+condition|(
+name|ACPI_SUCCESS
+argument_list|(
+name|Status
+argument_list|)
+operator|&&
+name|Notify
+condition|)
+block|{
+name|Status
+operator|=
+name|AcpiEvQueueNotifyRequest
+argument_list|(
+name|Notify
+operator|->
 name|DeviceNode
 argument_list|,
 name|ACPI_NOTIFY_DEVICE_WAKE
 argument_list|)
 expr_stmt|;
+name|Notify
+operator|=
+name|Notify
+operator|->
+name|Next
+expr_stmt|;
+block|}
 break|break;
 case|case
 name|ACPI_GPE_DISPATCH_METHOD

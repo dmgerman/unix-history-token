@@ -32,19 +32,23 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
-comment|// This file defines the ExceptionSpecificationType enumeration and various
+comment|/// \file
 end_comment
 
 begin_comment
-comment|// utility functions.
+comment|/// \brief Defines the ExceptionSpecificationType enumeration and various
 end_comment
 
 begin_comment
-comment|//
+comment|/// utility functions.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -89,9 +93,9 @@ comment|///< noexcept
 name|EST_ComputedNoexcept
 block|,
 comment|///< noexcept(expression)
-name|EST_Delayed
+name|EST_Unevaluated
 block|,
-comment|///< not known yet
+comment|///< not evaluated yet, for special member function
 name|EST_Uninstantiated
 comment|///< not instantiated yet
 block|}
@@ -130,6 +134,24 @@ operator|||
 name|ESpecType
 operator|==
 name|EST_ComputedNoexcept
+return|;
+block|}
+specifier|inline
+name|bool
+name|isUnresolvedExceptionSpec
+parameter_list|(
+name|ExceptionSpecificationType
+name|ESpecType
+parameter_list|)
+block|{
+return|return
+name|ESpecType
+operator|==
+name|EST_Unevaluated
+operator|||
+name|ESpecType
+operator|==
+name|EST_Uninstantiated
 return|;
 block|}
 comment|/// \brief Possible results from evaluation of a noexcept expression.

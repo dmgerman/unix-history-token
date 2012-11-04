@@ -360,13 +360,27 @@ name|SCONV_SET_OPT_UTF8_LIBARCHIVE2X
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCONV_SET_OPT_NORMALIZATION_C
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCONV_SET_OPT_NORMALIZATION_D
+value|4
+end_define
+
 begin_comment
 comment|/* Copy one archive_string to another in locale conversion.  * Return -1 if conversion failes. */
 end_comment
 
 begin_function_decl
 name|int
-name|archive_strncpy_in_locale
+name|archive_strncpy_l
 parameter_list|(
 name|struct
 name|archive_string
@@ -391,7 +405,7 @@ end_comment
 
 begin_function_decl
 name|int
-name|archive_strncat_in_locale
+name|archive_strncat_l
 parameter_list|(
 name|struct
 name|archive_string
@@ -629,7 +643,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|archive_strcpy_in_locale
+name|archive_strcpy_l
 parameter_list|(
 name|as
 parameter_list|,
@@ -638,7 +652,7 @@ parameter_list|,
 name|lo
 parameter_list|)
 define|\
-value|archive_strncpy_in_locale((as), (p), ((p) == NULL ? 0 : strlen(p)), (lo))
+value|archive_strncpy_l((as), (p), ((p) == NULL ? 0 : strlen(p)), (lo))
 end_define
 
 begin_comment

@@ -124,6 +124,9 @@ name|class
 name|TargetInstrInfo
 decl_stmt|;
 name|class
+name|TargetLibraryInfo
+decl_stmt|;
+name|class
 name|TargetLowering
 decl_stmt|;
 name|class
@@ -202,6 +205,11 @@ specifier|const
 name|TargetRegisterInfo
 modifier|&
 name|TRI
+decl_stmt|;
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|LibInfo
 decl_stmt|;
 comment|/// The position of the last instruction for materializing constants
 comment|/// for use in the current block. It resets to EmitStartPt when it
@@ -410,6 +418,11 @@ parameter_list|(
 name|FunctionLoweringInfo
 modifier|&
 name|funcInfo
+parameter_list|,
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|libInfo
 parameter_list|)
 function_decl|;
 comment|/// TargetSelectInstruction - This method is called by target-independent
@@ -858,6 +871,39 @@ name|Op1IsKill
 parameter_list|,
 name|uint64_t
 name|Imm
+parameter_list|)
+function_decl|;
+comment|/// FastEmitInst_rrii - Emit a MachineInstr with two register operands,
+comment|/// two immediates operands, and a result register in the given register
+comment|/// class.
+name|unsigned
+name|FastEmitInst_rrii
+parameter_list|(
+name|unsigned
+name|MachineInstOpcode
+parameter_list|,
+specifier|const
+name|TargetRegisterClass
+modifier|*
+name|RC
+parameter_list|,
+name|unsigned
+name|Op0
+parameter_list|,
+name|bool
+name|Op0IsKill
+parameter_list|,
+name|unsigned
+name|Op1
+parameter_list|,
+name|bool
+name|Op1IsKill
+parameter_list|,
+name|uint64_t
+name|Imm1
+parameter_list|,
+name|uint64_t
+name|Imm2
 parameter_list|)
 function_decl|;
 comment|/// FastEmitInst_i - Emit a MachineInstr with a single immediate

@@ -2325,6 +2325,8 @@ decl_stmt|;
 name|char
 modifier|*
 name|host
+init|=
+name|NULL
 decl_stmt|;
 if|if
 condition|(
@@ -2521,15 +2523,30 @@ name|low
 operator|>
 name|PMAPVERS
 condition|)
+block|{
+if|if
+condition|(
+name|host
+condition|)
 name|warnx
 argument_list|(
-literal|"%s does not support portmapper.  Try rpcinfo %s instead"
+literal|"%s does not support portmapper."
+literal|"Try rpcinfo %s instead"
 argument_list|,
 name|host
 argument_list|,
 name|host
 argument_list|)
 expr_stmt|;
+else|else
+name|warnx
+argument_list|(
+literal|"local host does not support "
+literal|"portmapper.  Try 'rpcinfo' "
+literal|"instead"
+argument_list|)
+expr_stmt|;
+block|}
 name|exit
 argument_list|(
 literal|1

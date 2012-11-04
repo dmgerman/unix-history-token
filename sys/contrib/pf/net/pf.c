@@ -3740,7 +3740,7 @@ name|sk
 operator|->
 name|addr
 index|[
-literal|0
+literal|1
 index|]
 argument_list|,
 name|sk
@@ -3776,7 +3776,7 @@ name|sk
 operator|->
 name|addr
 index|[
-literal|1
+literal|0
 index|]
 argument_list|,
 name|sk

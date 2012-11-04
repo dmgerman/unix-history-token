@@ -996,6 +996,7 @@ name|Pos
 parameter_list|,
 name|Mask
 parameter_list|)
+define|\
 value|((Val<< Pos)& Mask)
 end_define
 
@@ -1012,6 +1013,7 @@ name|Mask
 parameter_list|,
 name|Val
 parameter_list|)
+define|\
 value|Reg = (Reg& (~(Mask))) | ACPI_REGISTER_PREPARE_BITS(Val, Pos, Mask)
 end_define
 
@@ -1026,11 +1028,118 @@ name|Mask
 parameter_list|,
 name|Source
 parameter_list|)
+define|\
 value|Target = ((Target& (~(Mask))) | (Source& Mask))
 end_define
 
 begin_comment
-comment|/*  * An ACPI_NAMESPACE_NODE can appear in some contexts  * where a pointer to an ACPI_OPERAND_OBJECT can also  * appear. This macro is used to distinguish them.  *  * The "Descriptor" field is the first field in both structures.  */
+comment|/* Generic bitfield macros and masks */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_GET_BITS
+parameter_list|(
+name|SourcePtr
+parameter_list|,
+name|Position
+parameter_list|,
+name|Mask
+parameter_list|)
+define|\
+value|((*SourcePtr>> Position)& Mask)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_SET_BITS
+parameter_list|(
+name|TargetPtr
+parameter_list|,
+name|Position
+parameter_list|,
+name|Mask
+parameter_list|,
+name|Value
+parameter_list|)
+define|\
+value|(*TargetPtr |= ((Value& Mask)<< Position))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_1BIT_MASK
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_2BIT_MASK
+value|0x00000003
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_3BIT_MASK
+value|0x00000007
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_4BIT_MASK
+value|0x0000000F
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_5BIT_MASK
+value|0x0000001F
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_6BIT_MASK
+value|0x0000003F
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_7BIT_MASK
+value|0x0000007F
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_8BIT_MASK
+value|0x000000FF
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_16BIT_MASK
+value|0x0000FFFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_24BIT_MASK
+value|0x00FFFFFF
+end_define
+
+begin_comment
+comment|/*  * An object of type ACPI_NAMESPACE_NODE can appear in some contexts  * where a pointer to an object of type ACPI_OPERAND_OBJECT can also  * appear. This macro is used to distinguish them.  *  * The "Descriptor" field is the first field in both structures.  */
 end_comment
 
 begin_define
@@ -1858,7 +1967,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|AcpiUtDumpBuffer((UINT8 *) a, b, DB_BYTE_DISPLAY, _COMPONENT)
+value|AcpiUtDebugDumpBuffer((UINT8 *) a, b, DB_BYTE_DISPLAY, _COMPONENT)
 end_define
 
 begin_else

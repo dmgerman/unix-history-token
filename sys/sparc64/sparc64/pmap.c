@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Manages physical address maps.  *  * In addition to hardware address maps, this module is called upon to  * provide software-use-only maps which may or may not be stored in the  * same form as hardware maps.  These pseudo-maps are used to store  * intermediate results from copy operations to and from address spaces.  *  * Since the information managed by this module is also stored by the  * logical address mapping module, this module may throw away valid virtual  * to physical mappings at almost any time.  However, invalidations of  * mappings must be done as requested.  *  * In order to cope with hardware architectures which make virtual to  * physical map invalidates expensive, this module may delay invalidate  * reduced protection operations until such time as they are actually  * necessary.  This module is given full information as to which processors  * are currently using which maps, and to when physical maps must be made  * correct.  */
+comment|/*  * Manages physical address maps.  *  * Since the information managed by this module is also stored by the  * logical address mapping module, this module may throw away valid virtual  * to physical mappings at almost any time.  However, invalidations of  * mappings must be done as requested.  *  * In order to cope with hardware architectures which make virtual to  * physical map invalidates expensive, this module may delay invalidate  * reduced protection operations until such time as they are actually  * necessary.  This module is given full information as to which processors  * are currently using which maps, and to when physical maps must be made  * correct.  */
 end_comment
 
 begin_include
@@ -362,15 +362,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Global tte list lock  */
+comment|/*  * Isolate the global TTE list lock from data and other locks to prevent  * false sharing within the cache (see also the declaration of struct  * tte_list_lock).  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|struct
-name|rwlock
-name|tte_list_global_lock
-decl_stmt|;
-end_decl_stmt
+name|tte_list_lock
+name|tte_list_global
+name|__aligned
+parameter_list|(
+name|CACHE_LINE_SIZE
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Allocate physical memory for use in pmap_bootstrap.  */
@@ -3054,13 +3058,13 @@ operator|->
 name|pm_active
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Initialize the global tte list lock. 	 */
+comment|/* 	 * Initialize the global tte list lock, which is more commonly 	 * known as the pmap pv global lock. 	 */
 name|rw_init
 argument_list|(
 operator|&
 name|tte_list_global_lock
 argument_list|,
-literal|"tte list global"
+literal|"pmap pv global"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Flush all non-locked TLB entries possibly left over by the 	 * firmware. 	 */

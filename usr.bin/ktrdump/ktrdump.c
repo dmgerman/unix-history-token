@@ -1061,12 +1061,8 @@ name|index
 operator|-
 literal|1
 operator|)
-operator|&
-operator|(
+operator|%
 name|entries
-operator|-
-literal|1
-operator|)
 expr_stmt|;
 name|tlast
 operator|=
@@ -1628,12 +1624,8 @@ name|i
 operator|-
 literal|1
 operator|)
-operator|&
-operator|(
+operator|%
 name|entries
-operator|-
-literal|1
-operator|)
 expr_stmt|;
 block|}
 else|else

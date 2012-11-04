@@ -415,12 +415,6 @@ name|NULL
 expr_stmt|;
 name|cache
 operator|->
-name|maps
-operator|=
-name|NULL
-expr_stmt|;
-name|cache
-operator|->
 name|any_skip
 operator|=
 operator|-

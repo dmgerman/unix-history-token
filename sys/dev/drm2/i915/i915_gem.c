@@ -5184,7 +5184,7 @@ name|pmap_unmapdev
 argument_list|(
 name|mkva
 argument_list|,
-name|PAGE_SIZE
+name|size
 argument_list|)
 expr_stmt|;
 return|return

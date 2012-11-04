@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: scp.c,v 1.170 2010/12/09 14:13:33 jmc Exp $ */
+comment|/* $OpenBSD: scp.c,v 1.171 2011/09/09 22:37:01 djm Exp $ */
 end_comment
 
 begin_comment
@@ -2834,9 +2834,18 @@ argument_list|(
 operator|&
 name|bp
 argument_list|,
-literal|"%s -f -- %s"
+literal|"%s -f %s%s"
 argument_list|,
 name|cmd
+argument_list|,
+operator|*
+name|src
+operator|==
+literal|'-'
+condition|?
+literal|"-- "
+else|:
+literal|""
 argument_list|,
 name|src
 argument_list|)
@@ -2885,9 +2894,18 @@ argument_list|(
 operator|&
 name|bp
 argument_list|,
-literal|"%s -t -- %s"
+literal|"%s -t %s%s"
 argument_list|,
 name|cmd
+argument_list|,
+operator|*
+name|targ
+operator|==
+literal|'-'
+condition|?
+literal|"-- "
+else|:
+literal|""
 argument_list|,
 name|targ
 argument_list|)
@@ -3227,9 +3245,18 @@ argument_list|(
 operator|&
 name|bp
 argument_list|,
-literal|"%s -t -- %s"
+literal|"%s -t %s%s"
 argument_list|,
 name|cmd
+argument_list|,
+operator|*
+name|targ
+operator|==
+literal|'-'
+condition|?
+literal|"-- "
+else|:
+literal|""
 argument_list|,
 name|targ
 argument_list|)
@@ -3567,9 +3594,18 @@ argument_list|(
 operator|&
 name|bp
 argument_list|,
-literal|"%s -f -- %s"
+literal|"%s -f %s%s"
 argument_list|,
 name|cmd
+argument_list|,
+operator|*
+name|src
+operator|==
+literal|'-'
+condition|?
+literal|"-- "
+else|:
+literal|""
 argument_list|,
 name|src
 argument_list|)

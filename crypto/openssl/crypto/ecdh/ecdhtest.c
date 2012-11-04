@@ -526,6 +526,9 @@ goto|goto
 name|err
 goto|;
 block|}
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_EC2M
 else|else
 block|{
 if|if
@@ -551,6 +554,8 @@ goto|goto
 name|err
 goto|;
 block|}
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|NOISY
@@ -671,6 +676,9 @@ goto|goto
 name|err
 goto|;
 block|}
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_EC2M
 else|else
 block|{
 if|if
@@ -696,6 +704,8 @@ goto|goto
 name|err
 goto|;
 block|}
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|NOISY
@@ -1545,6 +1555,9 @@ condition|)
 goto|goto
 name|err
 goto|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_EC2M
 comment|/* NIST BINARY CURVES TESTS */
 if|if
 condition|(
@@ -1716,6 +1729,8 @@ condition|)
 goto|goto
 name|err
 goto|;
+endif|#
+directive|endif
 name|ret
 operator|=
 literal|0
@@ -1744,9 +1759,9 @@ expr_stmt|;
 name|CRYPTO_cleanup_all_ex_data
 argument_list|()
 expr_stmt|;
-name|ERR_remove_state
+name|ERR_remove_thread_state
 argument_list|(
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|CRYPTO_mem_leaks_fp

@@ -280,7 +280,7 @@ argument_list|(
 operator|&
 name|ntime
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|electiontime
@@ -386,12 +386,7 @@ argument_list|(
 operator|&
 name|ntime
 argument_list|,
-operator|(
-expr|struct
-name|timezone
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -561,7 +556,7 @@ argument_list|(
 operator|&
 name|ntime
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|looktime
@@ -724,7 +719,7 @@ argument_list|(
 operator|&
 name|ntime
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|looptime
@@ -973,7 +968,7 @@ argument_list|(
 operator|&
 name|otime
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -1037,7 +1032,7 @@ argument_list|(
 operator|&
 name|ntime
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|electiontime
@@ -1101,7 +1096,7 @@ argument_list|(
 operator|&
 name|otime
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|adj_msg_time
@@ -1335,7 +1330,7 @@ argument_list|(
 operator|&
 name|ntime
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|electiontime
@@ -1455,7 +1450,7 @@ argument_list|(
 operator|&
 name|ntime
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|electiontime
@@ -1499,7 +1494,7 @@ argument_list|(
 operator|&
 name|ntime
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|electiontime
@@ -1682,7 +1677,7 @@ argument_list|(
 operator|&
 name|ntime
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|electiontime
@@ -2454,7 +2449,7 @@ argument_list|(
 operator|&
 name|ntime
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|looptime
@@ -2730,7 +2725,7 @@ argument_list|(
 operator|&
 name|ntime
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|looptime
@@ -2971,7 +2966,7 @@ argument_list|(
 operator|&
 name|otime
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|adj_msg_time

@@ -36,15 +36,19 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This file forward declares and imports various common LLVM datatypes that
+comment|/// \file
 end_comment
 
 begin_comment
-comment|// clang wants to use unqualified.
+comment|/// \brief Forward declares and imports various common LLVM datatypes that
 end_comment
 
 begin_comment
-comment|//
+comment|/// clang wants to use unqualified.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment

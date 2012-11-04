@@ -803,9 +803,6 @@ name|group
 modifier|*
 name|grp
 decl_stmt|;
-name|ufs2_daddr_t
-name|blks
-decl_stmt|;
 name|struct
 name|iovec
 modifier|*
@@ -823,7 +820,9 @@ decl_stmt|;
 name|int
 name|cylno
 decl_stmt|;
-name|ino_t
+name|intmax_t
+name|blks
+decl_stmt|,
 name|files
 decl_stmt|;
 name|size_t
@@ -1153,9 +1152,7 @@ else|else
 block|{
 name|pfatal
 argument_list|(
-literal|"UNEXPECTED INCONSISTENCY, %s\n"
-argument_list|,
-literal|"CANNOT RUN FAST FSCK\n"
+literal|"UNEXPECTED INCONSISTENCY, CANNOT RUN FAST FSCK\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1204,9 +1201,7 @@ literal|0
 expr_stmt|;
 name|pfatal
 argument_list|(
-literal|"NOT USING SOFT UPDATES, %s\n"
-argument_list|,
-literal|"CANNOT RUN IN BACKGROUND"
+literal|"NOT USING SOFT UPDATES, CANNOT RUN IN BACKGROUND\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1280,9 +1275,7 @@ literal|0
 expr_stmt|;
 name|pfatal
 argument_list|(
-literal|"UNEXPECTED INCONSISTENCY, %s\n"
-argument_list|,
-literal|"CANNOT RUN IN BACKGROUND\n"
+literal|"UNEXPECTED INCONSISTENCY, CANNOT RUN IN BACKGROUND\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1306,9 +1299,7 @@ block|{
 comment|/* 					 * file system is clean; 					 * skip snapshot and report it clean 					 */
 name|pwarn
 argument_list|(
-literal|"FILE SYSTEM CLEAN; %s\n"
-argument_list|,
-literal|"SKIPPING CHECKS"
+literal|"FILE SYSTEM CLEAN; SKIPPING CHECKS\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1367,9 +1358,7 @@ literal|0
 expr_stmt|;
 name|pfatal
 argument_list|(
-literal|"CANNOT FIND %s %s: %s, %s\n"
-argument_list|,
-literal|"SNAPSHOT DIRECTORY"
+literal|"CANNOT FIND SNAPSHOT DIRECTORY %s: %s, CANNOT RUN IN BACKGROUND\n"
 argument_list|,
 name|snapname
 argument_list|,
@@ -1377,8 +1366,6 @@ name|strerror
 argument_list|(
 name|errno
 argument_list|)
-argument_list|,
-literal|"CANNOT RUN IN BACKGROUND"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1435,9 +1422,7 @@ literal|0
 expr_stmt|;
 name|pfatal
 argument_list|(
-literal|"CANNOT CREATE %s %s: %s, %s\n"
-argument_list|,
-literal|"SNAPSHOT DIRECTORY"
+literal|"CANNOT CREATE SNAPSHOT DIRECTORY %s: %s, CANNOT RUN IN BACKGROUND\n"
 argument_list|,
 name|snapname
 argument_list|,
@@ -1445,8 +1430,6 @@ name|strerror
 argument_list|(
 name|errno
 argument_list|)
-argument_list|,
-literal|"CANNOT RUN IN BACKGROUND"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1469,11 +1452,9 @@ literal|0
 expr_stmt|;
 name|pfatal
 argument_list|(
-literal|"%s IS NOT A DIRECTORY, %s\n"
+literal|"%s IS NOT A DIRECTORY, CANNOT RUN IN BACKGROUND\n"
 argument_list|,
 name|snapname
-argument_list|,
-literal|"CANNOT RUN IN BACKGROUND"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1721,11 +1702,10 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"(%lld frags, %lld blocks, %.1f%% fragmentation)\n"
+literal|"(%jd frags, %jd blocks, %.1f%% fragmentation)\n"
 argument_list|,
 operator|(
-name|long
-name|long
+name|intmax_t
 operator|)
 name|sblock
 operator|.
@@ -1734,8 +1714,7 @@ operator|.
 name|cs_nffree
 argument_list|,
 operator|(
-name|long
-name|long
+name|intmax_t
 operator|)
 name|sblock
 operator|.
@@ -2144,21 +2123,14 @@ name|countdirs
 expr_stmt|;
 name|pwarn
 argument_list|(
-literal|"Reclaimed: %ld directories, %ld files, %lld fragments\n"
+literal|"Reclaimed: %ld directories, %jd files, %jd fragments\n"
 argument_list|,
 name|countdirs
 argument_list|,
-operator|(
-name|long
-operator|)
 name|files
 operator|-
 name|countdirs
 argument_list|,
-operator|(
-name|long
-name|long
-operator|)
 name|blks
 argument_list|)
 expr_stmt|;
@@ -2225,7 +2197,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"%d inodes missing\n"
+literal|"%jd inodes missing\n"
 argument_list|,
 operator|-
 name|files
@@ -2239,13 +2211,9 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"%lld blocks missing\n"
+literal|"%jd blocks missing\n"
 argument_list|,
 operator|-
-operator|(
-name|long
-name|long
-operator|)
 name|blks
 argument_list|)
 expr_stmt|;
@@ -2277,11 +2245,10 @@ name|next
 control|)
 name|printf
 argument_list|(
-literal|" %lld,"
+literal|" %jd,"
 argument_list|,
 operator|(
-name|long
-name|long
+name|intmax_t
 operator|)
 name|dp
 operator|->
@@ -3026,8 +2993,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-BEFfnpry] [-b block] [-c level] [-m mode] "
-literal|"filesystem ...\n"
+literal|"usage: %s [-BEFfnpry] [-b block] [-c level] [-m mode] filesystem ...\n"
 argument_list|,
 name|getprogname
 argument_list|()

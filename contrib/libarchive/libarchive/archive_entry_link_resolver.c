@@ -1496,6 +1496,10 @@ argument_list|)
 expr_stmt|;
 name|hash
 operator|=
+call|(
+name|size_t
+call|)
+argument_list|(
 name|archive_entry_dev
 argument_list|(
 name|entry
@@ -1504,6 +1508,7 @@ operator|^
 name|archive_entry_ino64
 argument_list|(
 name|entry
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|bucket

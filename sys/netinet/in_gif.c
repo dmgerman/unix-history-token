@@ -846,6 +846,8 @@ name|iphdr
 operator|.
 name|ip_len
 operator|=
+name|htons
+argument_list|(
 name|m
 operator|->
 name|m_pkthdr
@@ -856,6 +858,7 @@ sizeof|sizeof
 argument_list|(
 expr|struct
 name|ip
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ip_ecn_ingress
@@ -1205,11 +1208,6 @@ block|ifp->if_mtu = sc->gif_ro.ro_rt->rt_ifp->if_mtu 			- sizeof(struct ip);
 endif|#
 directive|endif
 block|}
-name|m_addr_changed
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|ip_output

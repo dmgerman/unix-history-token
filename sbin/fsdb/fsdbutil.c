@@ -742,10 +742,10 @@ break|break;
 block|}
 name|printf
 argument_list|(
-literal|"I=%lu MODE=%o SIZE=%ju"
+literal|"I=%ju MODE=%o SIZE=%ju"
 argument_list|,
 operator|(
-name|u_long
+name|uintmax_t
 operator|)
 name|inum
 argument_list|,
@@ -1561,8 +1561,11 @@ name|blkno
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"Blocks for inode %d:\n"
+literal|"Blocks for inode %ju:\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|inum
 argument_list|)
 expr_stmt|;
@@ -1850,8 +1853,11 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"inode %d not a directory"
+literal|"inode %ju not a directory"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|curinum
 argument_list|)
 expr_stmt|;
@@ -1942,8 +1948,11 @@ literal|0
 case|:
 name|printf
 argument_list|(
-literal|"current inode %d: unallocated inode\n"
+literal|"current inode %ju: unallocated inode\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|curinum
 argument_list|)
 expr_stmt|;
@@ -1951,8 +1960,11 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"current inode %d: screwy itype 0%o (mode 0%o)?\n"
+literal|"current inode %ju: screwy itype 0%o (mode 0%o)?\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|curinum
 argument_list|,
 name|DIP

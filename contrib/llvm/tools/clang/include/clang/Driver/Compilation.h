@@ -246,6 +246,16 @@ operator|*
 name|TranslatedArgs
 return|;
 block|}
+name|DerivedArgList
+modifier|&
+name|getArgs
+parameter_list|()
+block|{
+return|return
+operator|*
+name|TranslatedArgs
+return|;
+block|}
 name|ActionList
 modifier|&
 name|getActions

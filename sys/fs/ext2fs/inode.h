@@ -536,10 +536,6 @@ name|int
 name|in_off
 decl_stmt|;
 comment|/* Offset in buffer. */
-name|int
-name|in_exists
-decl_stmt|;
-comment|/* Flag if the block exists. */
 block|}
 struct|;
 end_struct

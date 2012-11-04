@@ -15,12 +15,6 @@ directive|define
 name|_VIRTIO_VIRTQUEUE_H
 end_define
 
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
 begin_struct_decl
 struct_decl|struct
 name|virtqueue
@@ -45,7 +39,7 @@ value|(1<< 28)
 end_define
 
 begin_comment
-comment|/* The guest publishes the used index for which it expects an interrupt  * at the end of the avail ring. Host should ignore the avail->flags field.  * The host publishes the avail index for which it expects a kick  * at the end of the used ring. Guest should ignore the used->flags field.  */
+comment|/* Support to suppress interrupt until specific index is reached. */
 end_comment
 
 begin_define

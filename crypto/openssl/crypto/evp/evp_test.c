@@ -590,10 +590,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Key length doesn't match, got %d expected %d\n"
+literal|"Key length doesn't match, got %d expected %lu\n"
 argument_list|,
 name|kn
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|c
 operator|->
 name|key_len
@@ -1945,6 +1949,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|fclose
+argument_list|(
+name|f
+argument_list|)
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_ENGINE
@@ -1959,9 +1968,9 @@ expr_stmt|;
 name|CRYPTO_cleanup_all_ex_data
 argument_list|()
 expr_stmt|;
-name|ERR_remove_state
+name|ERR_remove_thread_state
 argument_list|(
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|ERR_free_strings

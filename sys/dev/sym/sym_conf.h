@@ -64,14 +64,14 @@ value|(1UL<< 24)
 end_define
 
 begin_comment
-comment|/*  *  Max number of scatter/gather entries for en IO.  *  Each entry costs 8 bytes in the internal CCB data structure.  *  For now 65 should suffice given the BSD O/Ses capabilities.  */
+comment|/*  *  Max number of scatter/gather entries for an I/O.  *  Each entry costs 8 bytes in the internal CCB data structure.  *  We use at most 33 segments but also no more than required for handling  *  MAXPHYS.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SYM_CONF_MAX_SG
-value|(33)
+value|(MIN(33, (MAXPHYS / PAGE_SIZE) + 1))
 end_define
 
 begin_comment

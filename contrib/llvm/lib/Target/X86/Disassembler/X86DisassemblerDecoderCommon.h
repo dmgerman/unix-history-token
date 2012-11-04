@@ -272,7 +272,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * ModRMDecisionType - describes the type of ModR/M decision, allowing the   * consumer to determine the number of entries in it.  *  * MODRM_ONEENTRY - No matter what the value of the ModR/M byte is, the decoded  *                  instruction is the same.  * MODRM_SPLITRM  - If the ModR/M byte is between 0x00 and 0xbf, the opcode  *                  corresponds to one instruction; otherwise, it corresponds to  *                  a different instruction.  * MODRM_SPLITREG - ModR/M byte divided by 8 is used to select instruction. This                     corresponds to instructions that use reg field as opcode  * MODRM_FULL     - Potentially, each value of the ModR/M byte could correspond  *                  to a different instruction.  */
+comment|/*  * ModRMDecisionType - describes the type of ModR/M decision, allowing the  * consumer to determine the number of entries in it.  *  * MODRM_ONEENTRY - No matter what the value of the ModR/M byte is, the decoded  *                  instruction is the same.  * MODRM_SPLITRM  - If the ModR/M byte is between 0x00 and 0xbf, the opcode  *                  corresponds to one instruction; otherwise, it corresponds to  *                  a different instruction.  * MODRM_SPLITREG - ModR/M byte divided by 8 is used to select instruction. This                     corresponds to instructions that use reg field as opcode  * MODRM_FULL     - Potentially, each value of the ModR/M byte could correspond  *                  to a different instruction.  */
 end_comment
 
 begin_define
@@ -311,7 +311,7 @@ name|ENUM_ENTRY
 end_undef
 
 begin_comment
-comment|/*  * ModRMDecision - Specifies whether a ModR/M byte is needed and (if so) which   *  instruction each possible value of the ModR/M byte corresponds to.  Once  *  this information is known, we have narrowed down to a single instruction.  */
+comment|/*  * ModRMDecision - Specifies whether a ModR/M byte is needed and (if so) which  *  instruction each possible value of the ModR/M byte corresponds to.  Once  *  this information is known, we have narrowed down to a single instruction.  */
 end_comment
 
 begin_struct
@@ -366,7 +366,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*   * Physical encodings of instruction operands.  */
+comment|/*  * Physical encodings of instruction operands.  */
 end_comment
 
 begin_define
@@ -407,7 +407,7 @@ name|ENUM_ENTRY
 end_undef
 
 begin_comment
-comment|/*   * Semantic interpretations of instruction operands.  */
+comment|/*  * Semantic interpretations of instruction operands.  */
 end_comment
 
 begin_define
@@ -448,7 +448,7 @@ name|ENUM_ENTRY
 end_undef
 
 begin_comment
-comment|/*   * OperandSpecifier - The specification for how to extract and interpret one  *   operand.  */
+comment|/*  * OperandSpecifier - The specification for how to extract and interpret one  *   operand.  */
 end_comment
 
 begin_struct
@@ -524,13 +524,6 @@ name|modifierType
 decl_stmt|;
 name|uint8_t
 name|modifierBase
-decl_stmt|;
-name|struct
-name|OperandSpecifier
-name|operands
-index|[
-name|X86_MAX_OPERANDS
-index|]
 decl_stmt|;
 comment|/* The macro below must be defined wherever this file is included. */
 name|INSTRUCTION_SPECIFIER_FIELDS

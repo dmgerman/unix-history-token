@@ -296,7 +296,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_expr_stmt
-specifier|static
+specifier|inline
 name|bool
 name|operator
 operator|==
@@ -337,7 +337,7 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
-specifier|static
+specifier|inline
 name|bool
 name|operator
 operator|<
@@ -528,6 +528,11 @@ name|Result
 argument_list|)
 decl|const
 decl_stmt|;
+name|DataRefImpl
+name|getRawDataRefImpl
+argument_list|()
+specifier|const
+expr_stmt|;
 block|}
 end_decl_stmt
 
@@ -2859,6 +2864,21 @@ name|RelocationPimpl
 argument_list|,
 name|Result
 argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|inline
+name|DataRefImpl
+name|RelocationRef
+operator|::
+name|getRawDataRefImpl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RelocationPimpl
 return|;
 block|}
 end_expr_stmt

@@ -326,11 +326,13 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-modifier|*
 name|fmt_padding
 index|[]
 index|[
 literal|4
+index|]
+index|[
+literal|5
 index|]
 init|=
 block|{

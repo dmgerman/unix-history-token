@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/Pass.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/CodeGen.h"
 end_include
 
@@ -800,6 +806,16 @@ name|bool
 comment|/*DisableVerify*/
 init|=
 name|true
+parameter_list|,
+name|AnalysisID
+name|StartAfter
+init|=
+literal|0
+parameter_list|,
+name|AnalysisID
+name|StopAfter
+init|=
+literal|0
 parameter_list|)
 block|{
 return|return
@@ -922,6 +938,12 @@ argument_list|,
 argument|CodeGenFileType FileType
 argument_list|,
 argument|bool DisableVerify = true
+argument_list|,
+argument|AnalysisID StartAfter =
+literal|0
+argument_list|,
+argument|AnalysisID StopAfter =
+literal|0
 argument_list|)
 block|;
 comment|/// addPassesToEmitMachineCode - Add passes to the specified pass manager to

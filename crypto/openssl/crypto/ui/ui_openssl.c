@@ -25,12 +25,32 @@ begin_comment
 comment|/* need for #define _POSIX_C_SOURCE arises whenever you pass -ansi to gcc  * [maybe others?], because it masks interfaces not discussed in standard,  * sigaction and fileno included. -pedantic would be more appropriate for  * the intended purposes, but we can't prevent users from adding -ansi.  */
 end_comment
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_POSIX_C_SOURCE
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|OPENSSL_SYS_VMS
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
 name|_POSIX_C_SOURCE
-value|1
+value|2
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1985,6 +2005,11 @@ operator|||
 name|defined
 argument_list|(
 name|OPENSSL_SYS_NETWARE
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|OPENSSL_SYS_BEOS
 argument_list|)
 name|tty_in
 operator|=

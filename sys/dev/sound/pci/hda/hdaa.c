@@ -2459,6 +2459,8 @@ name|res
 decl_stmt|;
 name|int
 name|connected
+decl_stmt|,
+name|old
 decl_stmt|;
 if|if
 condition|(
@@ -2549,10 +2551,8 @@ operator|=
 operator|!
 name|connected
 expr_stmt|;
-if|if
-condition|(
-name|connected
-operator|==
+name|old
+operator|=
 name|w
 operator|->
 name|wclass
@@ -2560,6 +2560,12 @@ operator|.
 name|pin
 operator|.
 name|connected
+expr_stmt|;
+if|if
+condition|(
+name|connected
+operator|==
+name|old
 condition|)
 return|return;
 name|w
@@ -2574,13 +2580,15 @@ name|connected
 expr_stmt|;
 name|HDA_BOOTVERBOSE
 argument_list|(
-argument|device_printf(devinfo->dev,
+argument|if (connected || old !=
+literal|2
+argument|) { 			device_printf(devinfo->dev,
 literal|"Pin sense: nid=%d sence=0x%08x (%sconnected)\n"
-argument|, 		    w->nid, res, !w->wclass.pin.connected ?
+argument|, 			    w->nid, res, !connected ?
 literal|"dis"
 argument|:
 literal|""
-argument|);
+argument|); 		}
 argument_list|)
 empty_stmt|;
 name|as
@@ -2626,6 +2634,10 @@ operator|->
 name|dir
 operator|==
 name|HDAA_CTL_IN
+operator|&&
+name|old
+operator|!=
+literal|2
 condition|)
 name|hdaa_autorecsrc_handler
 argument_list|(
@@ -3902,15 +3914,9 @@ name|dev
 argument_list|,
 literal|"No presence detection support at nid %d\n"
 argument_list|,
-name|as
-index|[
-name|i
-index|]
-operator|.
-name|pins
-index|[
-literal|15
-index|]
+name|w
+operator|->
+name|nid
 argument_list|)
 expr_stmt|;
 block|}
@@ -3933,7 +3939,7 @@ argument_list|(
 argument|device_printf(devinfo->dev,
 literal|"Headphones redirection for "
 literal|"association %d nid=%d using %s.\n"
-argument|, 					    w->bindas, w->nid, 					    (poll !=
+argument|, 					    w->bindas, w->nid, 					    (w->unsol<
 literal|0
 argument|) ?
 literal|"polling"
@@ -7064,7 +7070,6 @@ name|HDA_PARAM_PIN_CAP
 argument_list|)
 argument_list|)
 expr_stmt|;
-empty_stmt|;
 name|w
 operator|->
 name|wclass
@@ -7084,6 +7089,16 @@ argument_list|,
 name|nid
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|w
+operator|->
+name|wclass
+operator|.
+name|pin
+operator|.
+name|connected
+operator|=
+literal|2
 expr_stmt|;
 if|if
 condition|(
@@ -7634,48 +7649,6 @@ operator|->
 name|name
 argument_list|)
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|HDA_PARAM_PIN_CAP_PRESENCE_DETECT_CAP
-argument_list|(
-name|w
-operator|->
-name|wclass
-operator|.
-name|pin
-operator|.
-name|cap
-argument_list|)
-operator|==
-literal|0
-operator|||
-operator|(
-name|HDA_CONFIG_DEFAULTCONF_MISC
-argument_list|(
-name|w
-operator|->
-name|wclass
-operator|.
-name|pin
-operator|.
-name|config
-argument_list|)
-operator|&
-literal|1
-operator|)
-operator|!=
-literal|0
-condition|)
-name|w
-operator|->
-name|wclass
-operator|.
-name|pin
-operator|.
-name|connected
-operator|=
-literal|2
 expr_stmt|;
 block|}
 block|}
@@ -13074,7 +13047,10 @@ operator|->
 name|bindas
 operator|<
 literal|0
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|pdevinfo
 operator|->
 name|index
@@ -13082,6 +13058,9 @@ operator|!=
 literal|0
 condition|)
 continue|continue;
+block|}
+else|else
+block|{
 if|if
 condition|(
 name|w
@@ -13101,6 +13080,7 @@ operator|->
 name|recas
 condition|)
 continue|continue;
+block|}
 if|if
 condition|(
 name|dev
@@ -18142,12 +18122,6 @@ name|w
 operator|->
 name|nid
 expr_stmt|;
-if|if
-condition|(
-name|length
-operator|!=
-name|NULL
-condition|)
 operator|*
 name|length
 operator|=
@@ -18302,10 +18276,6 @@ name|ret
 operator|==
 name|m
 operator|&&
-name|length
-operator|!=
-name|NULL
-operator|&&
 operator|*
 name|length
 operator|<
@@ -18327,6 +18297,12 @@ operator|*
 name|length
 expr_stmt|;
 block|}
+else|else
+operator|*
+name|length
+operator|=
+name|lm
+expr_stmt|;
 if|if
 condition|(
 name|only
@@ -35777,6 +35753,11 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+specifier|const
+name|char
+modifier|*
+name|pdesc
+decl_stmt|;
 name|char
 name|buf
 index|[
@@ -35797,6 +35778,16 @@ operator|(
 name|ENXIO
 operator|)
 return|;
+name|pdesc
+operator|=
+name|device_get_desc
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|snprintf
 argument_list|(
 name|buf
@@ -35806,15 +35797,21 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"%s Audio Function Group"
+literal|"%.*s Audio Function Group"
 argument_list|,
-name|device_get_desc
+call|(
+name|int
+call|)
 argument_list|(
-name|device_get_parent
+name|strlen
 argument_list|(
-name|dev
+name|pdesc
 argument_list|)
+operator|-
+literal|10
 argument_list|)
+argument_list|,
+name|pdesc
 argument_list|)
 expr_stmt|;
 name|device_set_desc_copy
@@ -35982,6 +35979,13 @@ operator|->
 name|nodecnt
 expr_stmt|;
 name|HDA_BOOTVERBOSE
+argument_list|(
+argument|device_printf(dev,
+literal|"Subsystem ID: 0x%08x\n"
+argument|, 		    hda_get_subsystem_id(dev));
+argument_list|)
+empty_stmt|;
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(dev,
 literal|"Audio Function Group at nid=%d: %d subnodes %d-%d\n"
@@ -38013,6 +38017,11 @@ name|pdevinfo
 operator|->
 name|devinfo
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|pdesc
+decl_stmt|;
 name|char
 name|chans1
 index|[
@@ -38363,6 +38372,16 @@ operator|=
 operator|-
 literal|2
 expr_stmt|;
+name|pdesc
+operator|=
+name|device_get_desc
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|snprintf
 argument_list|(
 name|buf
@@ -38372,18 +38391,21 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"%s PCM (%s%s%s%s%s%s%s%s%s)"
+literal|"%.*s (%s%s%s%s%s%s%s%s%s)"
 argument_list|,
-name|device_get_desc
+call|(
+name|int
+call|)
 argument_list|(
-name|device_get_parent
+name|strlen
 argument_list|(
-name|device_get_parent
-argument_list|(
-name|dev
+name|pdesc
 argument_list|)
+operator|-
+literal|21
 argument_list|)
-argument_list|)
+argument_list|,
+name|pdesc
 argument_list|,
 name|loc1
 operator|>=

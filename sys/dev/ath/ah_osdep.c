@@ -97,6 +97,12 @@ directive|include
 file|<dev/ath/ath_hal/ah.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/ath/ath_hal/ah_debug.h>
+end_include
+
 begin_comment
 comment|/*  * WiSoC boards overload the bus tag with information about the  * board layout.  We must extract the bus space tag from that  * indirect structure.  For everyone else the tag is passed in  * directly.  * XXX cache indirect ref privately  */
 end_comment
@@ -575,17 +581,6 @@ ifdef|#
 directive|ifdef
 name|AH_DEBUG
 end_ifdef
-
-begin_comment
-comment|/* This must match the definition in ath_hal/ah_debug.h */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAL_DEBUG_UNMASKABLE
-value|0xf0000000
-end_define
 
 begin_function
 name|void

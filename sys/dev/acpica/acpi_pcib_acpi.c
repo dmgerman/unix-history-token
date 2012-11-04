@@ -2341,7 +2341,7 @@ name|sc
 operator|=
 name|device_get_softc
 argument_list|(
-name|dev
+name|pcib
 argument_list|)
 expr_stmt|;
 if|if

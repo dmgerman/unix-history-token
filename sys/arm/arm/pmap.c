@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -92,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/vmmeter.h>
 end_include
 
@@ -99,6 +111,12 @@ begin_include
 include|#
 directive|include
 file|<sys/mman.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/rwlock.h>
 end_include
 
 begin_include
@@ -117,6 +135,12 @@ begin_include
 include|#
 directive|include
 file|<vm/vm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_param.h>
 end_include
 
 begin_include
@@ -170,25 +194,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/lock.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mutex.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/md_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/vmparam.h>
 end_include
 
 begin_include
@@ -362,6 +368,20 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|vm_paddr_t
+name|pmap_extract_locked
+parameter_list|(
+name|pmap_t
+name|pmap
+parameter_list|,
+name|vm_offset_t
+name|va
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|void
 name|pmap_fix_cache
 parameter_list|(
@@ -506,14 +526,6 @@ end_decl_stmt
 begin_decl_stmt
 name|vm_paddr_t
 name|kernel_l1pa
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-modifier|*
-name|end
 decl_stmt|;
 end_decl_stmt
 
@@ -698,18 +710,6 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/*  * Which pmap is currently 'live' in the cache  *  * XXXSCW: Fix for SMP ...  */
-end_comment
-
-begin_decl_stmt
-name|union
-name|pmap_cache_state
-modifier|*
-name|pmap_cache_state
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -970,30 +970,6 @@ value|(((va)& L1_S_FRAME) + L1_S_SIZE)
 end_define
 
 begin_comment
-comment|/*  * L2 allocation.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|pmap_alloc_l2_dtable
-parameter_list|()
-define|\
-value|(void*)uma_zalloc(l2table_zone, M_NOWAIT|M_USE_RESERVE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|pmap_free_l2_dtable
-parameter_list|(
-name|l2
-parameter_list|)
-define|\
-value|uma_zfree(l2table_zone, l2)
-end_define
-
-begin_comment
 comment|/*  * We try to map the page tables write-through, if possible.  However, not  * all CPUs have a write-through cache mode, so on those we have to sync  * the cache when we frob page tables.  *  * We try to evaluate this at compile time, if possible.  However, it's  * not always possible to do that, hence this run-time var.  */
 end_comment
 
@@ -1124,6 +1100,14 @@ decl_stmt|,
 name|pv_entry_high_water
 init|=
 literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|rwlock
+name|pvh_global_lock
 decl_stmt|;
 end_decl_stmt
 
@@ -2521,7 +2505,7 @@ end_return
 
 begin_comment
 unit|}
-comment|/*  * Returns a pointer to the L2 bucket associated with the specified pmap  * and VA.  *  * If no L2 bucket exists, perform the necessary allocations to put an L2  * bucket/page table in place.  *  * Note that if a new L2 bucket/page was allocated, the caller *must*  * increment the bucket occupancy counter appropriately *before*   * releasing the pmap's lock to ensure no other thread or cpu deallocates  * the bucket/page in the meantime.  */
+comment|/*  * Returns a pointer to the L2 bucket associated with the specified pmap  * and VA.  *  * If no L2 bucket exists, perform the necessary allocations to put an L2  * bucket/page table in place.  *  * Note that if a new L2 bucket/page was allocated, the caller *must*  * increment the bucket occupancy counter appropriately *before*  * releasing the pmap's lock to ensure no other thread or cpu deallocates  * the bucket/page in the meantime.  */
 end_comment
 
 begin_function
@@ -2563,12 +2547,12 @@ argument_list|(
 name|pm
 argument_list|)
 expr_stmt|;
-name|mtx_assert
+name|rw_assert
 argument_list|(
 operator|&
-name|vm_page_queue_mtx
+name|pvh_global_lock
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 if|if
@@ -2591,30 +2575,38 @@ name|NULL
 condition|)
 block|{
 comment|/* 		 * No mapping at this address, as there is 		 * no entry in the L1 table. 		 * Need to allocate a new l2_dtable. 		 */
-name|again_l2table
-label|:
 name|PMAP_UNLOCK
 argument_list|(
 name|pm
 argument_list|)
 expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
+name|rw_wunlock
+argument_list|(
+operator|&
+name|pvh_global_lock
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|(
 name|l2
 operator|=
-name|pmap_alloc_l2_dtable
-argument_list|()
+name|uma_zalloc
+argument_list|(
+name|l2table_zone
+argument_list|,
+name|M_NOWAIT
+argument_list|)
 operator|)
 operator|==
 name|NULL
 condition|)
 block|{
-name|vm_page_lock_queues
-argument_list|()
+name|rw_wlock
+argument_list|(
+operator|&
+name|pvh_global_lock
+argument_list|)
 expr_stmt|;
 name|PMAP_LOCK
 argument_list|(
@@ -2627,8 +2619,11 @@ name|NULL
 operator|)
 return|;
 block|}
-name|vm_page_lock_queues
-argument_list|()
+name|rw_wlock
+argument_list|(
+operator|&
+name|pvh_global_lock
+argument_list|)
 expr_stmt|;
 name|PMAP_LOCK
 argument_list|(
@@ -2650,27 +2645,12 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|PMAP_UNLOCK
-argument_list|(
-name|pm
-argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
-expr_stmt|;
+comment|/* 			 * Someone already allocated the l2_dtable while 			 * we were doing the same. 			 */
 name|uma_zfree
 argument_list|(
 name|l2table_zone
 argument_list|,
 name|l2
-argument_list|)
-expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
-name|PMAP_LOCK
-argument_list|(
-name|pm
 argument_list|)
 expr_stmt|;
 name|l2
@@ -2685,16 +2665,6 @@ name|l1idx
 argument_list|)
 index|]
 expr_stmt|;
-if|if
-condition|(
-name|l2
-operator|==
-name|NULL
-condition|)
-goto|goto
-name|again_l2table
-goto|;
-comment|/* 			 * Someone already allocated the l2_dtable while 			 * we were doing the same. 			 */
 block|}
 else|else
 block|{
@@ -2752,33 +2722,31 @@ modifier|*
 name|ptep
 decl_stmt|;
 comment|/* 		 * No L2 page table has been allocated. Chances are, this 		 * is because we just allocated the l2_dtable, above. 		 */
-name|again_ptep
-label|:
 name|PMAP_UNLOCK
 argument_list|(
 name|pm
 argument_list|)
 expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
+name|rw_wunlock
+argument_list|(
+operator|&
+name|pvh_global_lock
+argument_list|)
 expr_stmt|;
 name|ptep
 operator|=
-operator|(
-name|void
-operator|*
-operator|)
 name|uma_zalloc
 argument_list|(
 name|l2zone
 argument_list|,
 name|M_NOWAIT
-operator||
-name|M_USE_RESERVE
 argument_list|)
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
+name|rw_wlock
+argument_list|(
+operator|&
+name|pvh_global_lock
+argument_list|)
 expr_stmt|;
 name|PMAP_LOCK
 argument_list|(
@@ -2795,14 +2763,6 @@ literal|0
 condition|)
 block|{
 comment|/* We lost the race. */
-name|PMAP_UNLOCK
-argument_list|(
-name|pm
-argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
-expr_stmt|;
 name|uma_zfree
 argument_list|(
 name|l2zone
@@ -2810,25 +2770,6 @@ argument_list|,
 name|ptep
 argument_list|)
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
-name|PMAP_LOCK
-argument_list|(
-name|pm
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|l2b
-operator|->
-name|l2b_kva
-operator|==
-literal|0
-condition|)
-goto|goto
-name|again_ptep
-goto|;
 return|return
 operator|(
 name|l2b
@@ -2873,8 +2814,10 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
-name|pmap_free_l2_dtable
+name|uma_zfree
 argument_list|(
+name|l2table_zone
+argument_list|,
 name|l2
 argument_list|)
 expr_stmt|;
@@ -3161,8 +3104,10 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
-name|pmap_free_l2_dtable
+name|uma_zfree
 argument_list|(
+name|l2table_zone
+argument_list|,
 name|l2
 argument_list|)
 expr_stmt|;
@@ -3297,7 +3242,7 @@ operator|!=
 name|pte_l2_s_cache_mode_pt
 condition|)
 block|{
-comment|/* 			 * Page tables must have the cache-mode set to  			 * Write-Thru. 			 */
+comment|/* 			 * Page tables must have the cache-mode set to 			 * Write-Thru. 			 */
 operator|*
 name|ptep
 operator|=
@@ -4271,12 +4216,12 @@ name|pv_entry
 modifier|*
 name|pv
 decl_stmt|;
-name|mtx_assert
+name|rw_assert
 argument_list|(
 operator|&
-name|vm_page_queue_mtx
+name|pvh_global_lock
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 comment|/* the cache gets written back/invalidated on context switch. 	 * therefore, if a user page shares an entry in the same page or 	 * with the kernel map and at least one is writable, then the 	 * cache entry must be set write-through. 	 */
@@ -4779,8 +4724,11 @@ name|count
 init|=
 literal|0
 decl_stmt|;
-name|vm_page_lock_queues
-argument_list|()
+name|rw_wlock
+argument_list|(
+operator|&
+name|pvh_global_lock
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -4823,8 +4771,11 @@ name|pv_list
 argument_list|)
 condition|)
 block|{
-name|vm_page_unlock_queues
-argument_list|()
+name|rw_wunlock
+argument_list|(
+operator|&
+name|pvh_global_lock
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -5007,7 +4958,7 @@ name|PVF_NC
 operator|)
 condition|)
 block|{
-comment|/*  				 * Entry is not cacheable: 				 * 				 * Don't turn caching on again if this is a  				 * modified emulation. This would be 				 * inconsitent with the settings created by 				 * pmap_fix_cache(). Otherwise, it's safe 				 * to re-enable cacheing. 				 * 				 * There's no need to call pmap_fix_cache() 				 * here: all pages are losing their write 				 * permission. 				 */
+comment|/* 				 * Entry is not cacheable: 				 * 				 * Don't turn caching on again if this is a 				 * modified emulation. This would be 				 * inconsitent with the settings created by 				 * pmap_fix_cache(). Otherwise, it's safe 				 * to re-enable cacheing. 				 * 				 * There's no need to call pmap_fix_cache() 				 * here: all pages are losing their write 				 * permission. 				 */
 if|if
 condition|(
 name|maskbits
@@ -5045,7 +4996,7 @@ argument_list|(
 name|pg
 argument_list|)
 expr_stmt|;
-comment|/*  				 * Entry is writable/cacheable: check if pmap 				 * is current if it is flush it, otherwise it 				 * won't be in the cache 				 */
+comment|/* 				 * Entry is writable/cacheable: check if pmap 				 * is current if it is flush it, otherwise it 				 * won't be in the cache 				 */
 if|if
 condition|(
 name|PV_BEEN_EXECD
@@ -5326,8 +5277,11 @@ argument_list|,
 name|PGA_WRITEABLE
 argument_list|)
 expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
+name|rw_wunlock
+argument_list|(
+operator|&
+name|pvh_global_lock
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -5338,11 +5292,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * main pv_entry manipulation functions:  *   pmap_enter_pv: enter a mapping onto a vm_page list  *   pmap_remove_pv: remove a mappiing from a vm_page list  *  * NOTE: pmap_enter_pv expects to lock the pvh itself  *       pmap_remove_pv expects te caller to lock the pvh before calling  */
+comment|/*  * main pv_entry manipulation functions:  *   pmap_enter_pv: enter a mapping onto a vm_page list  *   pmap_remove_pv: remove a mappiing from a vm_page list  *  * NOTE: pmap_enter_pv expects to lock the pvh itself  *       pmap_remove_pv expects the caller to lock the pvh before calling  */
 end_comment
 
 begin_comment
-comment|/*  * pmap_enter_pv: enter a mapping onto a vm_page lst  *  * => caller should hold the proper lock on pmap_main_lock  * => caller should have pmap locked  * => we will gain the lock on the vm_page and allocate the new pv_entry  * => caller should adjust ptp's wire_count before calling  * => caller should not adjust pmap's wire_count  */
+comment|/*  * pmap_enter_pv: enter a mapping onto a vm_page's PV list  *  * => caller should hold the proper lock on pvh_global_lock  * => caller should have pmap locked  * => we will (someday) gain the lock on the vm_page's PV list  * => caller should adjust ptp's wire_count before calling  * => caller should not adjust pmap's wire_count  */
 end_comment
 
 begin_function
@@ -5370,15 +5324,17 @@ name|u_int
 name|flags
 parameter_list|)
 block|{
-name|int
-name|km
-decl_stmt|;
-name|mtx_assert
+name|rw_assert
 argument_list|(
 operator|&
-name|vm_page_queue_mtx
+name|pvh_global_lock
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
+argument_list|)
+expr_stmt|;
+name|PMAP_ASSERT_LOCKED
+argument_list|(
+name|pm
 argument_list|)
 expr_stmt|;
 if|if
@@ -5388,15 +5344,15 @@ operator|->
 name|md
 operator|.
 name|pv_kva
+operator|!=
+literal|0
 condition|)
 block|{
-comment|/* PMAP_ASSERT_LOCKED(pmap_kernel()); */
 name|pve
 operator|->
 name|pv_pmap
 operator|=
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 expr_stmt|;
 name|pve
 operator|->
@@ -5416,31 +5372,15 @@ name|PVF_WRITE
 operator||
 name|PVF_UNMAN
 expr_stmt|;
-name|pg
-operator|->
-name|md
-operator|.
-name|pv_kva
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
-operator|!
-operator|(
-name|km
-operator|=
-name|PMAP_OWNED
-argument_list|(
-name|pmap_kernel
-argument_list|()
-argument_list|)
-operator|)
+name|pm
+operator|!=
+name|kernel_pmap
 condition|)
 name|PMAP_LOCK
 argument_list|(
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 argument_list|)
 expr_stmt|;
 name|TAILQ_INSERT_HEAD
@@ -5460,9 +5400,7 @@ expr_stmt|;
 name|TAILQ_INSERT_HEAD
 argument_list|(
 operator|&
-name|pve
-operator|->
-name|pv_pmap
+name|kernel_pmap
 operator|->
 name|pm_pvlist
 argument_list|,
@@ -5471,14 +5409,24 @@ argument_list|,
 name|pv_plist
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pm
+operator|!=
+name|kernel_pmap
+condition|)
 name|PMAP_UNLOCK
 argument_list|(
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 argument_list|)
 expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
+name|pg
+operator|->
+name|md
+operator|.
+name|pv_kva
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -5493,28 +5441,10 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"pmap_kenter_internal: no pv entries"
-argument_list|)
-expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|km
-condition|)
-name|PMAP_LOCK
-argument_list|(
-name|pmap_kernel
-argument_list|()
+literal|"pmap_kenter_pv: no pv entries"
 argument_list|)
 expr_stmt|;
 block|}
-name|PMAP_ASSERT_LOCKED
-argument_list|(
-name|pm
-argument_list|)
-expr_stmt|;
 name|pve
 operator|->
 name|pv_pmap
@@ -5621,12 +5551,12 @@ name|pv_entry
 operator|*
 name|pv
 block|;
-name|mtx_assert
+name|rw_assert
 argument_list|(
 operator|&
-name|vm_page_queue_mtx
+name|pvh_global_lock
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 block|;
 name|TAILQ_FOREACH
@@ -5771,12 +5701,12 @@ name|pv_entry
 modifier|*
 name|pv
 decl_stmt|;
-name|mtx_assert
+name|rw_assert
 argument_list|(
 operator|&
-name|vm_page_queue_mtx
+name|pvh_global_lock
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|PMAP_ASSERT_LOCKED
@@ -6117,12 +6047,12 @@ name|pv_entry
 modifier|*
 name|pve
 decl_stmt|;
-name|mtx_assert
+name|rw_assert
 argument_list|(
 operator|&
-name|vm_page_queue_mtx
+name|pvh_global_lock
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|pve
@@ -6211,7 +6141,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  * pmap_modify_pv: Update pv flags  *  * => caller should hold lock on vm_page [so that attrs can be adjusted]  * => caller should NOT adjust pmap's wire_count  * => we return the old flags  *   * Modify a physical-virtual mapping in the pv table  */
+comment|/*  *  * pmap_modify_pv: Update pv flags  *  * => caller should hold lock on vm_page [so that attrs can be adjusted]  * => caller should NOT adjust pmap's wire_count  * => we return the old flags  *  * Modify a physical-virtual mapping in the pv table  */
 end_comment
 
 begin_function
@@ -6252,12 +6182,12 @@ argument_list|(
 name|pm
 argument_list|)
 expr_stmt|;
-name|mtx_assert
+name|rw_assert
 argument_list|(
 operator|&
-name|vm_page_queue_mtx
+name|pvh_global_lock
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 if|if
@@ -6560,73 +6490,6 @@ name|PHYSADDR
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * init the pv free list 	 */
-name|pvzone
-operator|=
-name|uma_zcreate
-argument_list|(
-literal|"PV ENTRY"
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|pv_entry
-argument_list|)
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|UMA_ALIGN_PTR
-argument_list|,
-name|UMA_ZONE_VM
-operator||
-name|UMA_ZONE_NOFREE
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Now it is safe to enable pv_table recording. 	 */
-name|PDEBUG
-argument_list|(
-literal|1
-argument_list|,
-name|printf
-argument_list|(
-literal|"pmap_init: done!\n"
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|TUNABLE_INT_FETCH
-argument_list|(
-literal|"vm.pmap.shpgperproc"
-argument_list|,
-operator|&
-name|shpgperproc
-argument_list|)
-expr_stmt|;
-name|pv_entry_max
-operator|=
-name|shpgperproc
-operator|*
-name|maxproc
-operator|+
-name|cnt
-operator|.
-name|v_page_count
-expr_stmt|;
-name|pv_entry_high_water
-operator|=
-literal|9
-operator|*
-operator|(
-name|pv_entry_max
-operator|/
-literal|10
-operator|)
-expr_stmt|;
 name|l2zone
 operator|=
 name|uma_zcreate
@@ -6677,6 +6540,52 @@ operator||
 name|UMA_ZONE_NOFREE
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Initialize the PV entry allocator. 	 */
+name|pvzone
+operator|=
+name|uma_zcreate
+argument_list|(
+literal|"PV ENTRY"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|pv_entry
+argument_list|)
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|UMA_ALIGN_PTR
+argument_list|,
+name|UMA_ZONE_VM
+operator||
+name|UMA_ZONE_NOFREE
+argument_list|)
+expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"vm.pmap.shpgperproc"
+argument_list|,
+operator|&
+name|shpgperproc
+argument_list|)
+expr_stmt|;
+name|pv_entry_max
+operator|=
+name|shpgperproc
+operator|*
+name|maxproc
+operator|+
+name|cnt
+operator|.
+name|v_page_count
+expr_stmt|;
 name|uma_zone_set_obj
 argument_list|(
 name|pvzone
@@ -6685,6 +6594,27 @@ operator|&
 name|pvzone_obj
 argument_list|,
 name|pv_entry_max
+argument_list|)
+expr_stmt|;
+name|pv_entry_high_water
+operator|=
+literal|9
+operator|*
+operator|(
+name|pv_entry_max
+operator|/
+literal|10
+operator|)
+expr_stmt|;
+comment|/* 	 * Now it is safe to enable pv_table recording. 	 */
+name|PDEBUG
+argument_list|(
+literal|1
+argument_list|,
+name|printf
+argument_list|(
+literal|"pmap_init: done!\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -6747,8 +6677,11 @@ argument_list|(
 name|va
 argument_list|)
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
+name|rw_wlock
+argument_list|(
+operator|&
+name|pvh_global_lock
+argument_list|)
 expr_stmt|;
 name|PMAP_LOCK
 argument_list|(
@@ -6973,7 +6906,7 @@ name|PVF_REF
 operator||
 name|PVF_MOD
 expr_stmt|;
-comment|/*  		 * Re-enable write permissions for the page.  No need to call 		 * pmap_fix_cache(), since this is just a 		 * modified-emulation fault, and the PVF_WRITE bit isn't 		 * changing. We've already set the cacheable bits based on 		 * the assumption that we can write to this page. 		 */
+comment|/* 		 * Re-enable write permissions for the page.  No need to call 		 * pmap_fix_cache(), since this is just a 		 * modified-emulation fault, and the PVF_WRITE bit isn't 		 * changing. We've already set the cacheable bits based on 		 * the assumption that we can write to this page. 		 */
 operator|*
 name|ptep
 operator|=
@@ -7341,8 +7274,11 @@ literal|1
 expr_stmt|;
 name|out
 label|:
-name|vm_page_unlock_queues
-argument_list|()
+name|rw_wunlock
+argument_list|(
+operator|&
+name|pvh_global_lock
+argument_list|)
 expr_stmt|;
 name|PMAP_UNLOCK
 argument_list|(
@@ -8657,6 +8593,17 @@ operator|->
 name|pm_pvlist
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Initialize the global pv list lock. 	 */
+name|rw_init_flags
+argument_list|(
+operator|&
+name|pvh_global_lock
+argument_list|,
+literal|"pmap pv global"
+argument_list|,
+name|RW_RECURSE
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Reserve some special page table entries/VA space for temporary 	 * mapping of pages. 	 */
 define|#
 directive|define
@@ -9714,8 +9661,11 @@ name|pt_entry_t
 modifier|*
 name|pt
 decl_stmt|;
-name|vm_page_lock_queues
-argument_list|()
+name|rw_wlock
+argument_list|(
+operator|&
+name|pvh_global_lock
+argument_list|)
 expr_stmt|;
 name|PMAP_LOCK
 argument_list|(
@@ -9939,8 +9889,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|vm_page_unlock_queues
-argument_list|()
+name|rw_wunlock
+argument_list|(
+operator|&
+name|pvh_global_lock
+argument_list|)
 expr_stmt|;
 name|cpu_tlb_flushID
 argument_list|()
@@ -10528,7 +10481,7 @@ argument_list|(
 name|pte
 argument_list|)
 expr_stmt|;
-comment|/* kernel direct mappings can be shared, so use a pv_entry 		 * to ensure proper caching. 		 * 		 * The pvzone is used to delay the recording of kernel 		 * mappings until the VM is running. 		 *  		 * This expects the physical memory to have vm_page_array entry. 		 */
+comment|/* 	 * A kernel mapping may not be the page's only mapping, so create a PV 	 * entry to ensure proper caching.  	 * 	 * The existence test for the pvzone is used to delay the recording of 	 * kernel mappings until the VM system is fully initialized. 	 * 	 * This expects the physical memory to have a vm_page_array entry. 	 */
 if|if
 condition|(
 name|pvzone
@@ -10543,10 +10496,15 @@ argument_list|(
 name|pa
 argument_list|)
 operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
-name|vm_page_lock_queues
-argument_list|()
+name|rw_wlock
+argument_list|(
+operator|&
+name|pvh_global_lock
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -10566,12 +10524,10 @@ operator|->
 name|md
 operator|.
 name|pv_kva
+operator|!=
+literal|0
 condition|)
 block|{
-comment|/* release vm_page lock for pv_entry UMA */
-name|vm_page_unlock_queues
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -10587,9 +10543,6 @@ name|panic
 argument_list|(
 literal|"pmap_kenter_internal: no pv entries"
 argument_list|)
-expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
 expr_stmt|;
 name|PMAP_LOCK
 argument_list|(
@@ -10641,8 +10594,11 @@ operator|=
 name|va
 expr_stmt|;
 block|}
-name|vm_page_unlock_queues
-argument_list|()
+name|rw_wunlock
+argument_list|(
+operator|&
+name|pvh_global_lock
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -10731,6 +10687,27 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|vm_paddr_t
+name|pmap_kextract
+parameter_list|(
+name|vm_offset_t
+name|va
+parameter_list|)
+block|{
+return|return
+operator|(
+name|pmap_extract_locked
+argument_list|(
+name|kernel_pmap
+argument_list|,
+name|va
+argument_list|)
+operator|)
+return|;
 block|}
 end_function
 
@@ -10865,8 +10842,11 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* note: should never have to remove an allocation 			 * before the pvzone is initialized. 			 */
-name|vm_page_lock_queues
-argument_list|()
+name|rw_wlock
+argument_list|(
+operator|&
+name|pvh_global_lock
+argument_list|)
 expr_stmt|;
 name|PMAP_LOCK
 argument_list|(
@@ -10914,8 +10894,11 @@ name|pmap_kernel
 argument_list|()
 argument_list|)
 expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
+name|rw_wunlock
+argument_list|(
+operator|&
+name|pvh_global_lock
+argument_list|)
 expr_stmt|;
 name|va
 operator|=
@@ -11671,8 +11654,11 @@ name|pv_list
 argument_list|)
 condition|)
 return|return;
-name|vm_page_lock_queues
-argument_list|()
+name|rw_wlock
+argument_list|(
+operator|&
+name|pvh_global_lock
+argument_list|)
 expr_stmt|;
 name|pmap_remove_write
 argument_list|(
@@ -11941,8 +11927,11 @@ argument_list|,
 name|PGA_WRITEABLE
 argument_list|)
 expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
+name|rw_wunlock
+argument_list|(
+operator|&
+name|pvh_global_lock
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -12035,8 +12024,11 @@ block|{
 comment|/* 		 * If this is a read->write transition, just ignore it and let 		 * vm_fault() take care of it later. 		 */
 return|return;
 block|}
-name|vm_page_lock_queues
-argument_list|()
+name|rw_wlock
+argument_list|(
+operator|&
+name|pvh_global_lock
+argument_list|)
 expr_stmt|;
 name|PMAP_LOCK
 argument_list|(
@@ -12205,13 +12197,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pg
-operator|!=
-name|NULL
-condition|)
-block|{
-if|if
-condition|(
 operator|!
 operator|(
 name|pg
@@ -12237,6 +12222,12 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|f
+operator|&
+name|PVF_WRITE
+condition|)
 name|vm_page_dirty
 argument_list|(
 name|pg
@@ -12247,14 +12238,6 @@ else|else
 name|f
 operator|=
 literal|0
-expr_stmt|;
-block|}
-else|else
-name|f
-operator|=
-name|PVF_REF
-operator||
-name|PVF_EXEC
 expr_stmt|;
 if|if
 condition|(
@@ -12342,8 +12325,11 @@ name|pm
 argument_list|)
 expr_stmt|;
 block|}
-name|vm_page_unlock_queues
-argument_list|()
+name|rw_wunlock
+argument_list|(
+operator|&
+name|pvh_global_lock
+argument_list|)
 expr_stmt|;
 name|PMAP_UNLOCK
 argument_list|(
@@ -12380,8 +12366,11 @@ name|boolean_t
 name|wired
 parameter_list|)
 block|{
-name|vm_page_lock_queues
-argument_list|()
+name|rw_wlock
+argument_list|(
+operator|&
+name|pvh_global_lock
+argument_list|)
 expr_stmt|;
 name|PMAP_LOCK
 argument_list|(
@@ -12403,8 +12392,11 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
+name|rw_wunlock
+argument_list|(
+operator|&
+name|pvh_global_lock
+argument_list|)
 expr_stmt|;
 name|PMAP_UNLOCK
 argument_list|(
@@ -12415,7 +12407,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	The page queues and pmap must be locked.  */
+comment|/*  *	The pvh global and pmap locks must be held.  */
 end_comment
 
 begin_function
@@ -12483,12 +12475,12 @@ argument_list|(
 name|pmap
 argument_list|)
 expr_stmt|;
-name|mtx_assert
+name|rw_assert
 argument_list|(
 operator|&
-name|vm_page_queue_mtx
+name|pvh_global_lock
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 if|if
@@ -12674,13 +12666,19 @@ argument_list|(
 name|pmap
 argument_list|)
 expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
+name|rw_wunlock
+argument_list|(
+operator|&
+name|pvh_global_lock
+argument_list|)
 expr_stmt|;
 name|VM_WAIT
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
+name|rw_wlock
+argument_list|(
+operator|&
+name|pvh_global_lock
+argument_list|)
 expr_stmt|;
 name|PMAP_LOCK
 argument_list|(
@@ -13566,8 +13564,11 @@ name|m
 operator|=
 name|m_start
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
+name|rw_wlock
+argument_list|(
+operator|&
+name|pvh_global_lock
+argument_list|)
 expr_stmt|;
 name|PMAP_LOCK
 argument_list|(
@@ -13631,8 +13632,11 @@ name|listq
 argument_list|)
 expr_stmt|;
 block|}
-name|vm_page_unlock_queues
-argument_list|()
+name|rw_wunlock
+argument_list|(
+operator|&
+name|pvh_global_lock
+argument_list|)
 expr_stmt|;
 name|PMAP_UNLOCK
 argument_list|(
@@ -13663,8 +13667,11 @@ name|vm_prot_t
 name|prot
 parameter_list|)
 block|{
-name|vm_page_lock_queues
-argument_list|()
+name|rw_wlock
+argument_list|(
+operator|&
+name|pvh_global_lock
+argument_list|)
 expr_stmt|;
 name|PMAP_LOCK
 argument_list|(
@@ -13692,8 +13699,11 @@ argument_list|,
 name|M_NOWAIT
 argument_list|)
 expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
+name|rw_wunlock
+argument_list|(
+operator|&
+name|pvh_global_lock
+argument_list|)
 expr_stmt|;
 name|PMAP_UNLOCK
 argument_list|(
@@ -13735,8 +13745,11 @@ decl_stmt|;
 name|vm_page_t
 name|pg
 decl_stmt|;
-name|vm_page_lock_queues
-argument_list|()
+name|rw_wlock
+argument_list|(
+operator|&
+name|pvh_global_lock
+argument_list|)
 expr_stmt|;
 name|PMAP_LOCK
 argument_list|(
@@ -13810,8 +13823,11 @@ else|:
 literal|0
 argument_list|)
 expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
+name|rw_wunlock
+argument_list|(
+operator|&
+name|pvh_global_lock
+argument_list|)
 expr_stmt|;
 name|PMAP_UNLOCK
 argument_list|(
@@ -13856,7 +13872,49 @@ name|vm_paddr_t
 name|pmap_extract
 parameter_list|(
 name|pmap_t
-name|pm
+name|pmap
+parameter_list|,
+name|vm_offset_t
+name|va
+parameter_list|)
+block|{
+name|vm_paddr_t
+name|pa
+decl_stmt|;
+name|PMAP_LOCK
+argument_list|(
+name|pmap
+argument_list|)
+expr_stmt|;
+name|pa
+operator|=
+name|pmap_extract_locked
+argument_list|(
+name|pmap
+argument_list|,
+name|va
+argument_list|)
+expr_stmt|;
+name|PMAP_UNLOCK
+argument_list|(
+name|pmap
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|pa
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|vm_paddr_t
+name|pmap_extract_locked
+parameter_list|(
+name|pmap_t
+name|pmap
 parameter_list|,
 name|vm_offset_t
 name|va
@@ -13882,6 +13940,17 @@ decl_stmt|;
 name|u_int
 name|l1idx
 decl_stmt|;
+if|if
+condition|(
+name|pmap
+operator|!=
+name|kernel_pmap
+condition|)
+name|PMAP_ASSERT_LOCKED
+argument_list|(
+name|pmap
+argument_list|)
+expr_stmt|;
 name|l1idx
 operator|=
 name|L1_IDX
@@ -13889,14 +13958,9 @@ argument_list|(
 name|va
 argument_list|)
 expr_stmt|;
-name|PMAP_LOCK
-argument_list|(
-name|pm
-argument_list|)
-expr_stmt|;
 name|l1pd
 operator|=
-name|pm
+name|pmap
 operator|->
 name|pm_l1
 operator|->
@@ -13913,16 +13977,15 @@ name|l1pd
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * These should only happen for pmap_kernel() 		 */
+comment|/* 		 * These should only happen for the kernel pmap. 		 */
 name|KASSERT
 argument_list|(
-name|pm
+name|pmap
 operator|==
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 argument_list|,
 operator|(
-literal|"huh"
+literal|"unexpected section"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -13968,7 +14031,7 @@ block|{
 comment|/* 		 * Note that we can't rely on the validity of the L1 		 * descriptor as an indication that a mapping exists. 		 * We have to look it up in the L2 dtable. 		 */
 name|l2
 operator|=
-name|pm
+name|pmap
 operator|->
 name|pm_l2
 index|[
@@ -14002,21 +14065,13 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|PMAP_UNLOCK
-argument_list|(
-name|pm
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
-name|ptep
+name|pte
 operator|=
-operator|&
 name|ptep
 index|[
 name|l2pte_index
@@ -14025,29 +14080,17 @@ name|va
 argument_list|)
 index|]
 expr_stmt|;
-name|pte
-operator|=
-operator|*
-name|ptep
-expr_stmt|;
 if|if
 condition|(
 name|pte
 operator|==
 literal|0
 condition|)
-block|{
-name|PMAP_UNLOCK
-argument_list|(
-name|pm
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
 switch|switch
 condition|(
 name|pte
@@ -14091,11 +14134,6 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|PMAP_UNLOCK
-argument_list|(
-name|pm
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|pa
@@ -14717,8 +14755,11 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* 	 * we lock in the pmap => pv_head direction 	 */
-name|vm_page_lock_queues
-argument_list|()
+name|rw_wlock
+argument_list|(
+operator|&
+name|pvh_global_lock
+argument_list|)
 expr_stmt|;
 name|PMAP_LOCK
 argument_list|(
@@ -15046,8 +15087,11 @@ name|mappings
 argument_list|)
 expr_stmt|;
 block|}
-name|vm_page_unlock_queues
-argument_list|()
+name|rw_wunlock
+argument_list|(
+operator|&
+name|pvh_global_lock
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -15065,7 +15109,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * pmap_zero_page()  *   * Zero a given physical page by mapping it at a page hook point.  * In doing the zero page op, the page we zero is mapped cachable, as with  * StrongARM accesses to non-cached pages are non-burst making writing  * _any_ bulk data very slow.  */
+comment|/*  * pmap_zero_page()  *  * Zero a given physical page by mapping it at a page hook point.  * In doing the zero page op, the page we zero is mapped cachable, as with  * StrongARM accesses to non-cached pages are non-burst making writing  * _any_ bulk data very slow.  */
 end_comment
 
 begin_if
@@ -15718,7 +15762,7 @@ comment|/* ARM_MMU_XSCALE == 1 */
 end_comment
 
 begin_comment
-comment|/*  *	pmap_zero_page zeros the specified hardware page by mapping   *	the page into KVM and using bzero to clear its contents.  */
+comment|/*  *	pmap_zero_page zeros the specified hardware page by mapping  *	the page into KVM and using bzero to clear its contents.  */
 end_comment
 
 begin_function
@@ -15745,7 +15789,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	pmap_zero_page_area zeros the specified hardware page by mapping   *	the page into KVM and using bzero to clear its contents.  *  *	off and size may not cover an area beyond a single hardware page.  */
+comment|/*  *	pmap_zero_page_area zeros the specified hardware page by mapping  *	the page into KVM and using bzero to clear its contents.  *  *	off and size may not cover an area beyond a single hardware page.  */
 end_comment
 
 begin_function
@@ -15778,7 +15822,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	pmap_zero_page_idle zeros the specified hardware page by mapping   *	the page into KVM and using bzero to clear its contents.  This  *	is intended to be called from the vm_pagezero process only and  *	outside of Giant.  */
+comment|/*  *	pmap_zero_page_idle zeros the specified hardware page by mapping  *	the page into KVM and using bzero to clear its contents.  This  *	is intended to be called from the vm_pagezero process only and  *	outside of Giant.  */
 end_comment
 
 begin_function
@@ -15819,7 +15863,7 @@ end_comment
 
 begin_comment
 unit|if (curthread) 		pm = vmspace_pmap(curproc->p_vmspace); 	else 		pm = pmap_kernel();  	for (npv = pv; npv; npv = TAILQ_NEXT(npv, pv_list)) { 		if (npv->pv_pmap == pmap_kernel() || npv->pv_pmap == pm) { 			flags |= npv->pv_flags;
-comment|/* 			 * The page is mapped non-cacheable in  			 * this map.  No need to flush the cache. 			 */
+comment|/* 			 * The page is mapped non-cacheable in 			 * this map.  No need to flush the cache. 			 */
 end_comment
 
 begin_ifdef
@@ -16318,8 +16362,11 @@ name|rv
 operator|=
 name|FALSE
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
+name|rw_wlock
+argument_list|(
+operator|&
+name|pvh_global_lock
+argument_list|)
 expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
@@ -16356,8 +16403,11 @@ literal|16
 condition|)
 break|break;
 block|}
-name|vm_page_unlock_queues
-argument_list|()
+name|rw_wunlock
+argument_list|(
+operator|&
+name|pvh_global_lock
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -16406,8 +16456,11 @@ operator|(
 name|count
 operator|)
 return|;
-name|vm_page_lock_queues
-argument_list|()
+name|rw_wlock
+argument_list|(
+operator|&
+name|pvh_global_lock
+argument_list|)
 expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
@@ -16432,8 +16485,11 @@ condition|)
 name|count
 operator|++
 expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
+name|rw_wunlock
+argument_list|(
+operator|&
+name|pvh_global_lock
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -16969,7 +17025,7 @@ condition|(
 name|managed
 condition|)
 block|{
-comment|/* 		 * the ARM pmap tries to maintain a per-mapping 		 * reference bit.  The trouble is that it's kept in 		 * the PV entry, not the PTE, so it's costly to access 		 * here.  You would need to acquire the page queues 		 * lock, call pmap_find_pv(), and introduce a custom 		 * version of vm_page_pa_tryrelock() that releases and 		 * reacquires the page queues lock.  In the end, I 		 * doubt it's worthwhile.  This may falsely report 		 * the given address as referenced. 		 */
+comment|/* 		 * The ARM pmap tries to maintain a per-mapping 		 * reference bit.  The trouble is that it's kept in 		 * the PV entry, not the PTE, so it's costly to access 		 * here.  You would need to acquire the pvh global 		 * lock, call pmap_find_pv(), and introduce a custom 		 * version of vm_page_pa_tryrelock() that releases and 		 * reacquires the pvh global lock.  In the end, I 		 * doubt it's worthwhile.  This may falsely report 		 * the given address as referenced. 		 */
 if|if
 condition|(
 operator|(

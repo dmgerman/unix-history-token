@@ -6440,13 +6440,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|VIS_BLOCKSIZE
-value|64
-end_define
-
 begin_function
 specifier|static
 name|void

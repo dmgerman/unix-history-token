@@ -4388,6 +4388,9 @@ parameter_list|,
 name|gss_qop_t
 modifier|*
 name|qop
+parameter_list|,
+name|rpc_gss_proc_t
+name|gcproc
 parameter_list|)
 block|{
 name|struct
@@ -4659,6 +4662,13 @@ argument_list|,
 name|min_stat
 argument_list|)
 expr_stmt|;
+comment|/* 		 * A bug in some versions of the Linux client generates a 		 * Destroy operation with a bogus encrypted checksum. Deleting 		 * the credential handle for that case causes the mount to fail. 		 * Since the checksum is bogus (gss_verify_mic() failed), it 		 * doesn't make sense to destroy the handle and not doing so 		 * fixes the Linux mount. 		 */
+if|if
+condition|(
+name|gcproc
+operator|!=
+name|RPCSEC_GSS_DESTROY
+condition|)
 name|client
 operator|->
 name|cl_state
@@ -5990,6 +6000,10 @@ name|msg
 argument_list|,
 operator|&
 name|qop
+argument_list|,
+name|gc
+operator|.
+name|gc_proc
 argument_list|)
 condition|)
 block|{

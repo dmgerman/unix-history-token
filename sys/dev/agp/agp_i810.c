@@ -162,6 +162,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm_param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm_object.h>
 end_include
 
@@ -3354,7 +3360,7 @@ block|{
 operator|.
 name|devid
 operator|=
-literal|0x01088086
+literal|0x010a8086
 block|,
 operator|.
 name|name

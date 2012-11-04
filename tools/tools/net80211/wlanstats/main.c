@@ -102,7 +102,8 @@ block|{
 literal|"ampdu"
 block|,
 literal|"input,output,ampdu_reorder,ampdu_oor,rx_dup,ampdu_flush,ampdu_move,"
-literal|"ampdu_drop,ampdu_bar,ampdu_baroow,ampdu_barmove,rssi,rate"
+literal|"ampdu_drop,ampdu_bar,ampdu_baroow,ampdu_barmove,ampdu_bartx,"
+literal|"ampdu_bartxfail,ampdu_bartxretry,rssi,rate"
 block|}
 block|, }
 struct|;

@@ -217,8 +217,8 @@ comment|/// @{
 comment|/// \brief A macro definition.
 name|MacroDefinitionKind
 block|,
-comment|/// \brief An inclusion directive, such as \c #include, \c
-comment|/// #import, or \c #include_next.
+comment|/// \brief An inclusion directive, such as \c \#include, \c
+comment|/// \#import, or \c \#include_next.
 name|InclusionDirectiveKind
 block|,
 comment|/// @}
@@ -770,7 +770,7 @@ block|}
 expr|}
 block|;
 comment|/// \brief Record the location of an inclusion directive, such as an
-comment|/// \c #include or \c #import statement.
+comment|/// \c \#include or \c \#import statement.
 name|class
 name|InclusionDirective
 operator|:
@@ -784,16 +784,16 @@ comment|/// preprocessor.
 expr|enum
 name|InclusionKind
 block|{
-comment|/// \brief An \c #include directive.
+comment|/// \brief An \c \#include directive.
 name|Include
 block|,
-comment|/// \brief An Objective-C \c #import directive.
+comment|/// \brief An Objective-C \c \#import directive.
 name|Import
 block|,
-comment|/// \brief A GNU \c #include_next directive.
+comment|/// \brief A GNU \c \#include_next directive.
 name|IncludeNext
 block|,
-comment|/// \brief A Clang \c #__include_macros directive.
+comment|/// \brief A Clang \c \#__include_macros directive.
 name|IncludeMacros
 block|}
 block|;
@@ -2073,7 +2073,7 @@ comment|/// preprocessed entities if we only care about entities of a specific f
 end_comment
 
 begin_comment
-comment|/// and not from files #included in the range given at
+comment|/// and not from files \#included in the range given at
 end_comment
 
 begin_comment
@@ -2133,7 +2133,7 @@ comment|/// \brief Returns true if the given range intersects with a conditional
 end_comment
 
 begin_comment
-comment|/// directive. if a #if/#endif block is fully contained within the range,
+comment|/// directive. if a \#if/\#endif block is fully contained within the range,
 end_comment
 
 begin_comment

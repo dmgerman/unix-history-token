@@ -489,6 +489,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|struct
 name|compress_types
@@ -766,16 +767,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|SLIST_HEAD
 argument_list|(
 argument|swlisthead
 argument_list|,
 argument|sigwork_entry
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|swhead
 operator|=
 name|SLIST_HEAD_INITIALIZER
@@ -785,16 +784,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|SLIST_HEAD
 argument_list|(
 argument|zwlisthead
 argument_list|,
 argument|zipwork_entry
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|zwhead
 operator|=
 name|SLIST_HEAD_INITIALIZER
@@ -825,6 +822,7 @@ comment|/* -D Show details of 'trim_at' code */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|archtodir
 init|=
@@ -837,6 +835,7 @@ comment|/* Archive old logfiles to other directory */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|createlogs
 decl_stmt|;
@@ -867,6 +866,7 @@ comment|/* Print out what's going on */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|needroot
 init|=
@@ -891,6 +891,7 @@ comment|/* Don't do anything, just show it */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|norotate
 init|=
@@ -903,6 +904,7 @@ comment|/* Don't rotate */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|nosignal
 decl_stmt|;
@@ -913,6 +915,7 @@ comment|/* Do not send any signals */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|enforcepid
 init|=
@@ -925,6 +928,7 @@ comment|/* If PID file does not exist or empty, do nothing */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|force
 init|=
@@ -937,6 +941,7 @@ comment|/* Force the trim no matter what */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|rotatereq
 init|=
@@ -961,6 +966,7 @@ comment|/*    the run command). */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|requestor
@@ -972,6 +978,7 @@ comment|/* The name given on a -R request */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|timefnamefmt
@@ -981,10 +988,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Use time based filenames instead of .0 etc */
+comment|/* Use time based filenames instead of .0 */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|archdirname
@@ -996,6 +1004,7 @@ comment|/* Directory path to old logfiles archive */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|destdir
@@ -1009,6 +1018,7 @@ comment|/* Directory to treat at root for logs */
 end_comment
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -1033,6 +1043,7 @@ comment|/* A "timenow" value set via -D option */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|ptime_data
 modifier|*
@@ -1052,6 +1063,7 @@ value|16
 end_define
 
 begin_decl_stmt
+specifier|static
 name|char
 name|daytime
 index|[
@@ -1061,10 +1073,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The current time in human readable form, 				 * used for rotation-tracking messages. */
+comment|/* The current time in human readable form, 				  * used for rotation-tracking messages. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|hostname
 index|[
@@ -1078,6 +1091,7 @@ comment|/* hostname */
 end_comment
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -9218,6 +9232,14 @@ operator|->
 name|zw_swork
 operator|!=
 name|NULL
+operator|&&
+name|zwork
+operator|->
+name|zw_swork
+operator|->
+name|run_cmd
+operator|==
+literal|0
 operator|&&
 name|zwork
 operator|->

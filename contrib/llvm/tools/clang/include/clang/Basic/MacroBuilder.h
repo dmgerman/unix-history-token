@@ -32,15 +32,19 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
-comment|//  This file defines the MacroBuilder utility class.
+comment|/// \file
 end_comment
 
 begin_comment
-comment|//
+comment|/// \brief Defines the clang::MacroBuilder utility class.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -96,7 +100,7 @@ argument_list|(
 argument|Output
 argument_list|)
 block|{}
-comment|/// Append a #define line for macro of the form "#define Name Value\n".
+comment|/// Append a \#define line for macro of the form "\#define Name Value\n".
 name|void
 name|defineMacro
 argument_list|(
@@ -118,8 +122,8 @@ name|Value
 operator|<<
 literal|'\n'
 block|;   }
-comment|/// Append a #undef line for Name.  Name should be of the form XXX
-comment|/// and we emit "#undef XXX".
+comment|/// Append a \#undef line for Name.  Name should be of the form XXX
+comment|/// and we emit "\#undef XXX".
 name|void
 name|undefineMacro
 argument_list|(

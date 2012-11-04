@@ -570,6 +570,10 @@ name|vdev_nowritecache
 decl_stmt|;
 comment|/* true if flushwritecache failed */
 name|boolean_t
+name|vdev_notrim
+decl_stmt|;
+comment|/* true if trim failed */
+name|boolean_t
 name|vdev_checkremove
 decl_stmt|;
 comment|/* temporary online test	*/
@@ -631,7 +635,12 @@ name|vdev_aux_t
 name|vdev_label_aux
 decl_stmt|;
 comment|/* on-disk aux state		*/
-comment|/* 	 * For DTrace to work in userland (libzpool) context, these fields must 	 * remain at the end of the structure.  DTrace will use the kernel's 	 * CTF definition for 'struct vdev', and since the size of a kmutex_t is 	 * larger in userland, the offsets for the rest fields would be 	 * incorrect. 	 */
+name|struct
+name|trim_map
+modifier|*
+name|vdev_trimmap
+decl_stmt|;
+comment|/* 	 * For DTrace to work in userland (libzpool) context, these fields must 	 * remain at the end of the structure.  DTrace will use the kernel's 	 * CTF definition for 'struct vdev', and since the size of a kmutex_t is 	 * larger in userland, the offsets for the rest of the fields would be 	 * incorrect. 	 */
 name|kmutex_t
 name|vdev_dtl_lock
 decl_stmt|;
@@ -786,6 +795,10 @@ define|#
 directive|define
 name|VDEV_LABELS
 value|4
+define|#
+directive|define
+name|VDEV_BEST_LABEL
+value|VDEV_LABELS
 define|#
 directive|define
 name|VDEV_ALLOC_LOAD

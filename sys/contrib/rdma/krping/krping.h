@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<contrib/rdma/ib_verbs.h>
+file|<rdma/ib_verbs.h>
 end_include
 
 begin_include
@@ -266,6 +266,10 @@ name|int
 name|validate
 decl_stmt|;
 comment|/* validate ping data */
+name|uint64_t
+name|memlimit
+decl_stmt|;
+comment|/* limit of the physical memory that 					   can be registered with dma_mr mode */
 comment|/* CM stuff */
 name|struct
 name|rdma_cm_id

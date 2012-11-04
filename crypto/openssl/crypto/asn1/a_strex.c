@@ -64,6 +64,13 @@ name|CHARTYPE_BS_ESC
 value|(ASN1_STRFLGS_ESC_2253 | CHARTYPE_FIRST_ESC_2253 | CHARTYPE_LAST_ESC_2253)
 end_define
 
+begin_define
+define|#
+directive|define
+name|ESC_FLAGS
+value|(ASN1_STRFLGS_ESC_2253 | \ 		  ASN1_STRFLGS_ESC_QUOTE | \ 		  ASN1_STRFLGS_ESC_CTRL | \ 		  ASN1_STRFLGS_ESC_MSB)
+end_define
+
 begin_comment
 comment|/* Three IO functions for sending data to memory, a BIO and  * and a FILE pointer.  */
 end_comment
@@ -493,6 +500,38 @@ literal|1
 return|;
 return|return
 literal|3
+return|;
+block|}
+comment|/* If we get this far and do any escaping at all must escape  	 * the escape character itself: backslash. 	 */
+if|if
+condition|(
+name|chtmp
+operator|==
+literal|'\\'
+operator|&&
+name|flags
+operator|&
+name|ESC_FLAGS
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|io_ch
+argument_list|(
+name|arg
+argument_list|,
+literal|"\\\\"
+argument_list|,
+literal|2
+argument_list|)
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+return|return
+literal|2
 return|;
 block|}
 if|if
@@ -1338,13 +1377,6 @@ comment|/* 28-30 */
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|ESC_FLAGS
-value|(ASN1_STRFLGS_ESC_2253 | \ 		  ASN1_STRFLGS_ESC_QUOTE | \ 		  ASN1_STRFLGS_ESC_CTRL | \ 		  ASN1_STRFLGS_ESC_MSB)
-end_define
 
 begin_comment
 comment|/* This is the main function, print out an  * ASN1_STRING taking note of various escape  * and display options. Returns number of  * characters written or -1 if an error  * occurred.  */

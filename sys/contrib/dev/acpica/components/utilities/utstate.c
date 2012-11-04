@@ -207,7 +207,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtCreateGenericState  *  * PARAMETERS:  None  *  * RETURN:      The new state object. NULL on failure.  *  * DESCRIPTION: Create a generic state object.  Attempt to obtain one from  *              the global state cache;  If none available, create a new one.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtCreateGenericState  *  * PARAMETERS:  None  *  * RETURN:      The new state object. NULL on failure.  *  * DESCRIPTION: Create a generic state object. Attempt to obtain one from  *              the global state cache;  If none available, create a new one.  *  ******************************************************************************/
 end_comment
 
 begin_function

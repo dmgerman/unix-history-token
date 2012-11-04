@@ -414,6 +414,16 @@ argument|raw_ostream&O
 argument_list|)
 block|;
 name|void
+name|printAdrLabelOperand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNum
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
 name|printThumbS4ImmOperand
 argument_list|(
 argument|const MCInst *MI

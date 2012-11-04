@@ -120,7 +120,7 @@ value|((PAGE_MASK>> TLBMASK_SHIFT)<< TLBMASK_SHIFT)
 end_define
 
 begin_comment
-comment|/*  * PFN for EntryLo register.  Upper bits are 0, which is to say that  * bit 29 is the last hardware bit;  Bits 30 and upwards (EntryLo is  * 64 bit though it can be referred to in 32-bits providing 2 software  * bits safely.  We use it as 64 bits to get many software bits, and  * god knows what else.) are unacknowledged by hardware.  They may be  * written as anything, but otherwise they have as much meaning as  * other 0 fields.  */
+comment|/*  * PFN for EntryLo register.  Upper bits are 0, which is to say that  * bit 28 is the last hardware bit;  Bits 29 and upwards (EntryLo is  * 64 bit though it can be referred to in 32-bits providing 3 software  * bits safely.  We use it as 64 bits to get many software bits, and  * god knows what else.) are unacknowledged by hardware.  They may be  * written as anything, but otherwise they have as much meaning as  * other 0 fields.  */
 end_comment
 
 begin_if
@@ -164,14 +164,14 @@ begin_define
 define|#
 directive|define
 name|TLBLO_SWBITS_SHIFT
-value|(30)
+value|(29)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TLBLO_PFN_MASK
-value|(0x3FFFFFC0)
+value|(0x1FFFFFC0)
 end_define
 
 begin_endif
@@ -190,7 +190,7 @@ begin_define
 define|#
 directive|define
 name|TLBLO_SWBITS_MASK
-value|((pt_entry_t)0x3<< TLBLO_SWBITS_SHIFT)
+value|((pt_entry_t)0x7<< TLBLO_SWBITS_SHIFT)
 end_define
 
 begin_define
@@ -432,7 +432,7 @@ value|0x01
 end_define
 
 begin_comment
-comment|/*  * VM flags managed in software:  * 	RO:	Read only.  Never set PTE_D on this page, and don't  * 		listen to requests to write to it.  * 	W:	Wired.  ???  */
+comment|/*  * VM flags managed in software:  * 	RO:	Read only.  Never set PTE_D on this page, and don't  * 		listen to requests to write to it.  * 	W:	Wired.  ???  *	MANAGED:Managed.  This PTE maps a managed page.  */
 end_comment
 
 begin_define
@@ -447,6 +447,13 @@ define|#
 directive|define
 name|PTE_W
 value|((pt_entry_t)0x02<< TLBLO_SWBITS_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTE_MANAGED
+value|((pt_entry_t)0x04<< TLBLO_SWBITS_SHIFT)
 end_define
 
 begin_comment
@@ -630,11 +637,11 @@ name|CLEAR_PTE_SWBITS
 parameter_list|(
 name|r
 parameter_list|)
-value|sll r, 2; srl r, 2
+value|sll r, 3; srl r, 3
 end_define
 
 begin_comment
-comment|/* remove 2 high bits */
+comment|/* remove 3 high bits */
 end_comment
 
 begin_endif

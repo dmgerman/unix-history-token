@@ -72,18 +72,21 @@ begin_comment
 comment|/* Init a 'CONF' structure from an old LHASH */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|void
 name|CONF_set_nconf
-parameter_list|(
+argument_list|(
 name|CONF
-modifier|*
+operator|*
 name|conf
-parameter_list|,
-name|LHASH
-modifier|*
+argument_list|,
+name|LHASH_OF
+argument_list|(
+name|CONF_VALUE
+argument_list|)
+operator|*
 name|hash
-parameter_list|)
+argument_list|)
 block|{
 if|if
 condition|(
@@ -110,7 +113,7 @@ operator|=
 name|hash
 expr_stmt|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/* The following section contains the "CONF classic" functions,    rewritten in terms of the new CONF interface. */
@@ -135,35 +138,34 @@ return|;
 block|}
 end_function
 
-begin_function
-name|LHASH
-modifier|*
+begin_expr_stmt
+name|LHASH_OF
+argument_list|(
+name|CONF_VALUE
+argument_list|)
+operator|*
 name|CONF_load
-parameter_list|(
-name|LHASH
-modifier|*
-name|conf
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|file
-parameter_list|,
-name|long
-modifier|*
-name|eline
-parameter_list|)
+argument_list|(
+argument|LHASH_OF(CONF_VALUE) *conf
+argument_list|,
+argument|const char *file
+argument_list|,
+argument|long *eline
+argument_list|)
 block|{
-name|LHASH
-modifier|*
+name|LHASH_OF
+argument_list|(
+name|CONF_VALUE
+argument_list|)
+operator|*
 name|ltmp
-decl_stmt|;
+block|;
 name|BIO
-modifier|*
+operator|*
 name|in
-init|=
+operator|=
 name|NULL
-decl_stmt|;
+block|;
 ifdef|#
 directive|ifdef
 name|OPENSSL_SYS_VMS
@@ -175,7 +177,7 @@ name|file
 argument_list|,
 literal|"r"
 argument_list|)
-expr_stmt|;
+block|;
 else|#
 directive|else
 name|in
@@ -186,7 +188,7 @@ name|file
 argument_list|,
 literal|"rb"
 argument_list|)
-expr_stmt|;
+block|;
 endif|#
 directive|endif
 if|if
@@ -218,49 +220,55 @@ argument_list|,
 name|eline
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|BIO_free
 argument_list|(
 name|in
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 name|ltmp
 return|;
-block|}
-end_function
+end_return
 
 begin_ifndef
+unit|}
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_FP_API
 end_ifndef
 
-begin_function
-name|LHASH
-modifier|*
+begin_expr_stmt
+unit|LHASH_OF
+operator|(
+name|CONF_VALUE
+operator|)
+operator|*
 name|CONF_load_fp
-parameter_list|(
-name|LHASH
-modifier|*
-name|conf
-parameter_list|,
-name|FILE
-modifier|*
-name|fp
-parameter_list|,
-name|long
-modifier|*
-name|eline
-parameter_list|)
+argument_list|(
+argument|LHASH_OF(CONF_VALUE) *conf
+argument_list|,
+argument|FILE *fp
+argument_list|,
+argument|long *eline
+argument_list|)
 block|{
 name|BIO
-modifier|*
+operator|*
 name|btmp
-decl_stmt|;
-name|LHASH
-modifier|*
+block|;
+name|LHASH_OF
+argument_list|(
+name|CONF_VALUE
+argument_list|)
+operator|*
 name|ltmp
-decl_stmt|;
+block|;
 if|if
 condition|(
 operator|!
@@ -298,46 +306,49 @@ argument_list|,
 name|eline
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|BIO_free
 argument_list|(
 name|btmp
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 name|ltmp
 return|;
-block|}
-end_function
+end_return
 
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif
 
-begin_function
-name|LHASH
-modifier|*
+begin_expr_stmt
+unit|LHASH_OF
+operator|(
+name|CONF_VALUE
+operator|)
+operator|*
 name|CONF_load_bio
-parameter_list|(
-name|LHASH
-modifier|*
-name|conf
-parameter_list|,
-name|BIO
-modifier|*
-name|bp
-parameter_list|,
-name|long
-modifier|*
-name|eline
-parameter_list|)
+argument_list|(
+argument|LHASH_OF(CONF_VALUE) *conf
+argument_list|,
+argument|BIO *bp
+argument_list|,
+argument|long *eline
+argument_list|)
 block|{
 name|CONF
 name|ctmp
-decl_stmt|;
+block|;
 name|int
 name|ret
-decl_stmt|;
+block|;
 name|CONF_set_nconf
 argument_list|(
 operator|&
@@ -345,7 +356,7 @@ name|ctmp
 argument_list|,
 name|conf
 argument_list|)
-expr_stmt|;
+block|;
 name|ret
 operator|=
 name|NCONF_load_bio
@@ -357,7 +368,7 @@ name|bp
 argument_list|,
 name|eline
 argument_list|)
-expr_stmt|;
+block|;
 if|if
 condition|(
 name|ret
@@ -367,21 +378,23 @@ name|ctmp
 operator|.
 name|data
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 name|NULL
 return|;
-block|}
-end_function
+end_return
 
 begin_expr_stmt
-name|STACK_OF
-argument_list|(
+unit|}  STACK_OF
+operator|(
 name|CONF_VALUE
-argument_list|)
+operator|)
 operator|*
 name|CONF_get_section
 argument_list|(
-argument|LHASH *conf
+argument|LHASH_OF(CONF_VALUE) *conf
 argument_list|,
 argument|const char *section
 argument_list|)
@@ -430,7 +443,7 @@ unit|}  char
 operator|*
 name|CONF_get_string
 argument_list|(
-argument|LHASH *conf
+argument|LHASH_OF(CONF_VALUE) *conf
 argument_list|,
 argument|const char *group
 argument_list|,
@@ -489,7 +502,7 @@ begin_macro
 unit|}  long
 name|CONF_get_number
 argument_list|(
-argument|LHASH *conf
+argument|LHASH_OF(CONF_VALUE) *conf
 argument_list|,
 argument|const char *group
 argument_list|,
@@ -576,14 +589,17 @@ return|;
 block|}
 end_block
 
-begin_function
+begin_decl_stmt
 name|void
 name|CONF_free
-parameter_list|(
-name|LHASH
-modifier|*
+argument_list|(
+name|LHASH_OF
+argument_list|(
+name|CONF_VALUE
+argument_list|)
+operator|*
 name|conf
-parameter_list|)
+argument_list|)
 block|{
 name|CONF
 name|ctmp
@@ -603,7 +619,7 @@ name|ctmp
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_decl_stmt
 
 begin_ifndef
 ifndef|#
@@ -611,18 +627,21 @@ directive|ifndef
 name|OPENSSL_NO_FP_API
 end_ifndef
 
-begin_function
+begin_decl_stmt
 name|int
 name|CONF_dump_fp
-parameter_list|(
-name|LHASH
-modifier|*
+argument_list|(
+name|LHASH_OF
+argument_list|(
+name|CONF_VALUE
+argument_list|)
+operator|*
 name|conf
-parameter_list|,
+argument_list|,
 name|FILE
-modifier|*
+operator|*
 name|out
-parameter_list|)
+argument_list|)
 block|{
 name|BIO
 modifier|*
@@ -675,25 +694,28 @@ return|return
 name|ret
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_function
+begin_decl_stmt
 name|int
 name|CONF_dump_bio
-parameter_list|(
-name|LHASH
-modifier|*
+argument_list|(
+name|LHASH_OF
+argument_list|(
+name|CONF_VALUE
+argument_list|)
+operator|*
 name|conf
-parameter_list|,
+argument_list|,
 name|BIO
-modifier|*
+operator|*
 name|out
-parameter_list|)
+argument_list|)
 block|{
 name|CONF
 name|ctmp
@@ -716,7 +738,7 @@ name|out
 argument_list|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/* The following section contains the "New CONF" functions.  They are    completely centralised around a new CONF structure that may contain    basically anything, but at least a method pointer and a table of data.    These functions are also written in terms of the bridge functions used    by the "CONF classic" functions, for consistency.  */

@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/ASTContext.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/LangOptions.h"
 end_include
 
@@ -877,6 +883,40 @@ end_comment
 begin_decl_stmt
 name|bool
 name|ShouldCacheCodeCompletionResults
+range|:
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Whether to include brief documentation within the set of code
+end_comment
+
+begin_comment
+comment|/// completions cached.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|IncludeBriefCommentsInCodeCompletion
+range|:
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief True if non-system source files should be treated as volatile
+end_comment
+
+begin_comment
+comment|/// (likely to change while trying to use them).
+end_comment
+
+begin_decl_stmt
+name|bool
+name|UserFilesAreVolatile
+range|:
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -992,10 +1032,9 @@ comment|/// contain this completion result.
 comment|///
 comment|/// The bits in the bitmask correspond to the values of
 comment|/// CodeCompleteContext::Kind. To map from a completion context kind to a
-comment|/// bit, subtract one from the completion context kind and shift 1 by that
-comment|/// number of bits. Many completions can occur in several different
-comment|/// contexts.
-name|unsigned
+comment|/// bit, shift 1 by that number of bits. Many completions can occur in
+comment|/// several different contexts.
+name|uint64_t
 name|ShowInContexts
 decl_stmt|;
 comment|/// \brief The priority given to this code-completion result.
@@ -1431,11 +1470,16 @@ begin_decl_stmt
 name|class
 name|ConcurrencyState
 block|{
+ifndef|#
+directive|ifndef
+name|NDEBUG
 name|void
 modifier|*
 name|Mutex
 decl_stmt|;
 comment|// a llvm::sys::MutexImpl in debug;
+endif|#
+directive|endif
 name|public
 label|:
 name|ConcurrencyState
@@ -2625,8 +2669,9 @@ name|Diags
 argument_list|,
 name|bool
 name|CaptureDiagnostics
-operator|=
-name|false
+argument_list|,
+name|bool
+name|UserFilesAreVolatile
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -2710,6 +2755,11 @@ name|false
 argument_list|,
 name|bool
 name|AllowPCHWithCompilerErrors
+operator|=
+name|false
+argument_list|,
+name|bool
+name|UserFilesAreVolatile
 operator|=
 name|false
 argument_list|)
@@ -2927,6 +2977,16 @@ name|CacheCodeCompletionResults
 operator|=
 name|false
 argument_list|,
+name|bool
+name|IncludeBriefCommentsInCodeCompletion
+operator|=
+name|false
+argument_list|,
+name|bool
+name|UserFilesAreVolatile
+operator|=
+name|false
+argument_list|,
 name|OwningPtr
 operator|<
 name|ASTUnit
@@ -3021,6 +3081,16 @@ name|TU_Complete
 argument_list|,
 name|bool
 name|CacheCodeCompletionResults
+operator|=
+name|false
+argument_list|,
+name|bool
+name|IncludeBriefCommentsInCodeCompletion
+operator|=
+name|false
+argument_list|,
+name|bool
+name|UserFilesAreVolatile
 operator|=
 name|false
 argument_list|)
@@ -3168,12 +3238,22 @@ operator|=
 name|false
 argument_list|,
 name|bool
+name|IncludeBriefCommentsInCodeCompletion
+operator|=
+name|false
+argument_list|,
+name|bool
 name|AllowPCHWithCompilerErrors
 operator|=
 name|false
 argument_list|,
 name|bool
 name|SkipFunctionBodies
+operator|=
+name|false
+argument_list|,
+name|bool
+name|UserFilesAreVolatile
 operator|=
 name|false
 argument_list|,
@@ -3288,6 +3368,18 @@ comment|///
 end_comment
 
 begin_comment
+comment|/// \param IncludeBriefComments Whether to include brief documentation within
+end_comment
+
+begin_comment
+comment|/// the set of code completions returned.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// FIXME: The Diag, LangOpts, SourceMgr, FileMgr, StoredDiagnostics, and
 end_comment
 
@@ -3320,6 +3412,9 @@ name|IncludeMacros
 argument_list|,
 name|bool
 name|IncludeCodePatterns
+argument_list|,
+name|bool
+name|IncludeBriefComments
 argument_list|,
 name|CodeCompleteConsumer
 operator|&

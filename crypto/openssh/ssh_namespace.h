@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Namespace munging inspired by an equivalent hack in NetBSD's tree: add  * the "ssh_" prefix to every symbol in libssh which doesn't already have  * it.  This prevents collisions between symbols in libssh and symbols in  * other libraries or applications which link with libssh, either directly  * or indirectly (e.g. through PAM loading pam_ssh).  *  * A list of symbols which need munging is obtained as follows:  *  * nm libssh.a | awk '/[0-9a-z] [A-Z] /&& $3 !~ /^ssh_/ { print "#define " $3 "\t\tssh_" $3 }'  *  * $FreeBSD$  */
+comment|/*  * Namespace munging inspired by an equivalent hack in NetBSD's tree: add  * the "ssh_" prefix to every symbol in libssh which doesn't already have  * it.  This prevents collisions between symbols in libssh and symbols in  * other libraries or applications which link with libssh, either directly  * or indirectly (e.g. through PAM loading pam_ssh).  *  * A list of symbols which need munging is obtained as follows:  *  * nm libssh.a | awk '/[0-9a-z] [A-Z] /&& $3 !~ /^ssh_/ { printf("#define %-39s ssh_%s\n", $3, $3) }' | unexpand -a | sort  * $FreeBSD$  */
 end_comment
 
 begin_define
@@ -594,6 +594,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|channel_cancel_lport_listener
+value|ssh_channel_cancel_lport_listener
+end_define
+
+begin_define
+define|#
+directive|define
 name|channel_cancel_rport_listener
 value|ssh_channel_cancel_rport_listener
 end_define
@@ -645,6 +652,13 @@ define|#
 directive|define
 name|channel_connect_to
 value|ssh_channel_connect_to
+end_define
+
+begin_define
+define|#
+directive|define
+name|channel_disable_adm_local_opens
+value|ssh_channel_disable_adm_local_opens
 end_define
 
 begin_define
@@ -932,6 +946,13 @@ define|#
 directive|define
 name|channel_stop_listening
 value|ssh_channel_stop_listening
+end_define
+
+begin_define
+define|#
+directive|define
+name|channel_update_permitted_opens
+value|ssh_channel_update_permitted_opens
 end_define
 
 begin_define
@@ -1583,13 +1604,6 @@ define|#
 directive|define
 name|init_hostkeys
 value|ssh_init_hostkeys
-end_define
-
-begin_define
-define|#
-directive|define
-name|init_rng
-value|ssh_init_rng
 end_define
 
 begin_define
@@ -2295,13 +2309,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|packet_connection_is_ipv4
-value|ssh_packet_connection_is_ipv4
-end_define
-
-begin_define
-define|#
-directive|define
 name|packet_connection_is_on_socket
 value|ssh_packet_connection_is_on_socket
 end_define
@@ -2596,13 +2603,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|packet_read_poll
-value|ssh_packet_read_poll
-end_define
-
-begin_define
-define|#
-directive|define
 name|packet_read_poll_seqnr
 value|ssh_packet_read_poll_seqnr
 end_define
@@ -2801,6 +2801,13 @@ define|#
 directive|define
 name|permanently_set_uid
 value|ssh_permanently_set_uid
+end_define
+
+begin_define
+define|#
+directive|define
+name|permitopen_port
+value|ssh_permitopen_port
 end_define
 
 begin_define

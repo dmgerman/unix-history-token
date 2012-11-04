@@ -1293,17 +1293,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|mtx_assert
-argument_list|(
-operator|&
-name|Giant
-argument_list|,
-name|MA_NOTOWNED
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_function
 unit|}  static
 name|void

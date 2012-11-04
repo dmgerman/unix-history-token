@@ -91,7 +91,7 @@ name|class
 name|Module
 decl_stmt|;
 comment|/// DirectoryLookup - This class represents one entry in the search list that
-comment|/// specifies the search order for directories in #include directives.  It
+comment|/// specifies the search order for directories in \#include directives.  It
 comment|/// represents either a directory, a framework, or a headermap.
 comment|///
 name|class
@@ -425,9 +425,9 @@ comment|/// \param SuggestedModule If non-null, and the file found is semantical
 comment|/// part of a known module, this will be set to the module that should
 comment|/// be imported instead of preprocessing/parsing the file found.
 comment|///
-comment|/// \param InUserSpecifiedSystemHeader [out] If the file is found, set to true
-comment|/// if the file is located in a framework that has been user-specified to be
-comment|/// treated as a system framework.
+comment|/// \param [out] InUserSpecifiedSystemFramework If the file is found,
+comment|/// set to true if the file is located in a framework that has been
+comment|/// user-specified to be treated as a system framework.
 specifier|const
 name|FileEntry
 modifier|*
@@ -461,7 +461,7 @@ name|SuggestedModule
 argument_list|,
 name|bool
 operator|&
-name|InUserSpecifiedSystemHeader
+name|InUserSpecifiedSystemFramework
 argument_list|)
 decl|const
 decl_stmt|;

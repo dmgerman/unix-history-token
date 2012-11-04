@@ -721,6 +721,10 @@ expr_stmt|;
 if|if
 condition|(
 name|cmsg
+operator|==
+name|NULL
+operator|||
+name|cmsg
 operator|->
 name|cmsg_level
 operator|!=

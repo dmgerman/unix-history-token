@@ -39,6 +39,7 @@ comment|/* undo stack size */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|undo_t
 modifier|*
 name|ustack
@@ -52,6 +53,7 @@ comment|/* undo stack */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|long
 name|usize
 init|=
@@ -64,6 +66,7 @@ comment|/* stack size variable */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|long
 name|u_p
 init|=

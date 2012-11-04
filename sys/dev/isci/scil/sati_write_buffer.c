@@ -63,7 +63,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|BLOCK_SIZE
+name|DOWNLOAD_MICROCODE_BLOCK_SIZE
 value|512
 end_define
 
@@ -104,6 +104,9 @@ name|SATI_FAILURE
 decl_stmt|;
 name|U32
 name|allocation_length
+decl_stmt|;
+name|U32
+name|allocation_blocks
 decl_stmt|;
 name|U32
 name|buffer_offset
@@ -184,6 +187,12 @@ name|allocation_length
 operator|=
 name|allocation_length
 expr_stmt|;
+name|allocation_blocks
+operator|=
+name|allocation_length
+operator|/
+name|DOWNLOAD_MICROCODE_BLOCK_SIZE
+expr_stmt|;
 switch|switch
 condition|(
 name|sati_get_cdb_byte
@@ -202,7 +211,7 @@ condition|(
 operator|(
 name|allocation_length
 operator|==
-name|BLOCK_SIZE
+name|DOWNLOAD_MICROCODE_BLOCK_SIZE
 operator|)
 operator|&&
 operator|(
@@ -336,7 +345,7 @@ literal|0
 operator|)
 operator|&&
 operator|(
-name|allocation_length
+name|allocation_blocks
 operator|<=
 name|sequence
 operator|->
@@ -346,13 +355,21 @@ name|max_blocks_per_microcode_command
 operator|)
 operator|&&
 operator|(
-name|allocation_length
+operator|(
+name|allocation_blocks
 operator|>=
 name|sequence
 operator|->
 name|device
 operator|->
 name|min_blocks_per_microcode_command
+operator|)
+operator|||
+operator|(
+name|allocation_length
+operator|==
+literal|0
+operator|)
 operator|)
 condition|)
 block|{

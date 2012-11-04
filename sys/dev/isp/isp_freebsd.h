@@ -192,7 +192,7 @@ begin_define
 define|#
 directive|define
 name|ISP_PLATFORM_VERSION_MINOR
-value|0
+value|10
 end_define
 
 begin_comment
@@ -235,6 +235,73 @@ directive|define
 name|ISP_IFLAGS
 value|INTR_TYPE_CAM | INTR_ENTROPY | INTR_MPSAFE
 end_define
+
+begin_define
+define|#
+directive|define
+name|N_XCMDS
+value|64
+end_define
+
+begin_define
+define|#
+directive|define
+name|XCMD_SIZE
+value|512
+end_define
+
+begin_struct_decl
+struct_decl|struct
+name|ispsoftc
+struct_decl|;
+end_struct_decl
+
+begin_typedef
+typedef|typedef
+union|union
+name|isp_ecmd
+block|{
+name|union
+name|isp_ecmd
+modifier|*
+name|next
+decl_stmt|;
+name|uint8_t
+name|data
+index|[
+name|XCMD_SIZE
+index|]
+decl_stmt|;
+block|}
+name|isp_ecmd_t
+typedef|;
+end_typedef
+
+begin_function_decl
+name|isp_ecmd_t
+modifier|*
+name|isp_get_ecmd
+parameter_list|(
+name|struct
+name|ispsoftc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|isp_put_ecmd
+parameter_list|(
+name|struct
+name|ispsoftc
+modifier|*
+parameter_list|,
+name|isp_ecmd_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_ifdef
 ifdef|#
@@ -319,11 +386,12 @@ name|uint32_t
 name|bytes_xfered
 decl_stmt|;
 name|uint32_t
-name|last_xframt
+name|bytes_in_transit
 decl_stmt|;
 name|uint32_t
 name|tag
 decl_stmt|;
+comment|/* typically f/w RX_ID */
 name|uint32_t
 name|lun
 decl_stmt|;
@@ -336,15 +404,36 @@ decl_stmt|;
 name|uint32_t
 name|portid
 decl_stmt|;
-name|uint32_t
+name|uint16_t
+name|rxid
+decl_stmt|;
+comment|/* wire rxid */
+name|uint16_t
 name|oxid
+decl_stmt|;
+comment|/* wire oxid */
+name|uint16_t
+name|word3
+decl_stmt|;
+comment|/* PRLI word3 params */
+name|uint16_t
+name|ctcnt
+decl_stmt|;
+comment|/* number of CTIOs currently active */
+name|uint8_t
+name|seqno
+decl_stmt|;
+comment|/* CTIO sequence number */
+name|uint32_t
+name|srr_notify_rcvd
 range|:
-literal|16
+literal|1
 decl_stmt|,
 name|cdb0
 range|:
 literal|8
 decl_stmt|,
+name|sendst
 range|:
 literal|1
 decl_stmt|,
@@ -359,6 +448,25 @@ decl_stmt|,
 name|state
 range|:
 literal|3
+decl_stmt|;
+name|void
+modifier|*
+name|ests
+decl_stmt|;
+comment|/* 	 * The current SRR notify copy 	 */
+name|uint8_t
+name|srr
+index|[
+literal|64
+index|]
+decl_stmt|;
+comment|/*  sb QENTRY_LEN, but order of definitions is wrong */
+name|void
+modifier|*
+name|srr_ccb
+decl_stmt|;
+name|uint32_t
+name|nsrr
 decl_stmt|;
 block|}
 name|atio_private_data_t
@@ -407,6 +515,59 @@ name|ATPD_STATE_PDON
 value|5
 end_define
 
+begin_define
+define|#
+directive|define
+name|ATPD_CCB_OUTSTANDING
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATPD_SEQ_MASK
+value|0x7f
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATPD_SEQ_NOTIFY_CAM
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATPD_SET_SEQNO
+parameter_list|(
+name|hdrp
+parameter_list|,
+name|atp
+parameter_list|)
+value|((isphdr_t *)hdrp)->rqs_seqno&= ~ATPD_SEQ_MASK, ((isphdr_t *)hdrp)->rqs_seqno |= (atp)->seqno
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATPD_GET_SEQNO
+parameter_list|(
+name|hdrp
+parameter_list|)
+value|(((isphdr_t *)hdrp)->rqs_seqno& ATPD_SEQ_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATPD_GET_NCAM
+parameter_list|(
+name|hdrp
+parameter_list|)
+value|((((isphdr_t *)hdrp)->rqs_seqno& ATPD_SEQ_NOTIFY_CAM) != 0)
+end_define
+
 begin_typedef
 typedef|typedef
 name|union
@@ -451,6 +612,41 @@ end_union
 begin_typedef
 typedef|typedef
 struct|struct
+name|isp_timed_notify_ack
+block|{
+name|void
+modifier|*
+name|isp
+decl_stmt|;
+name|void
+modifier|*
+name|not
+decl_stmt|;
+name|uint8_t
+name|data
+index|[
+literal|64
+index|]
+decl_stmt|;
+comment|/* sb QENTRY_LEN, but order of definitions is wrong */
+block|}
+name|isp_tna_t
+typedef|;
+end_typedef
+
+begin_expr_stmt
+name|TAILQ_HEAD
+argument_list|(
+name|isp_ccbq
+argument_list|,
+name|ccb_hdr
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_typedef
+typedef|typedef
+struct|struct
 name|tstate
 block|{
 name|SLIST_ENTRY
@@ -465,6 +661,11 @@ modifier|*
 name|owner
 decl_stmt|;
 name|struct
+name|isp_ccbq
+name|waitq
+decl_stmt|;
+comment|/* waiting CCBs */
+name|struct
 name|ccb_hdr_slist
 name|atios
 decl_stmt|;
@@ -475,11 +676,18 @@ decl_stmt|;
 name|uint32_t
 name|hold
 decl_stmt|;
-name|int
+name|uint32_t
+name|enabled
+range|:
+literal|1
+decl_stmt|,
 name|atio_count
-decl_stmt|;
-name|int
+range|:
+literal|15
+decl_stmt|,
 name|inot_count
+range|:
+literal|15
 decl_stmt|;
 name|inot_private_data_t
 modifier|*
@@ -560,6 +768,22 @@ name|callout
 name|wdog
 decl_stmt|;
 comment|/* watchdog timer */
+name|uint32_t
+name|datalen
+decl_stmt|;
+comment|/* data length for this command (target mode only) */
+name|uint8_t
+name|totslen
+decl_stmt|;
+comment|/* sense length on status response */
+name|uint8_t
+name|cumslen
+decl_stmt|;
+comment|/* sense length on status response */
+name|uint8_t
+name|crn
+decl_stmt|;
+comment|/* command reference number */
 block|}
 struct|;
 end_struct
@@ -582,6 +806,66 @@ parameter_list|(
 name|ccb
 parameter_list|)
 value|((struct isp_pcmd *)ISP_PCMD(ccb))
+end_define
+
+begin_comment
+comment|/*  * Per nexus info.  */
+end_comment
+
+begin_struct
+struct|struct
+name|isp_nexus
+block|{
+name|struct
+name|isp_nexus
+modifier|*
+name|next
+decl_stmt|;
+name|uint32_t
+name|crnseed
+range|:
+literal|8
+decl_stmt|;
+comment|/* next command reference number */
+name|uint32_t
+name|tgt
+range|:
+literal|16
+decl_stmt|,
+comment|/* TGT for target */
+name|lun
+range|:
+literal|16
+decl_stmt|;
+comment|/* LUN for target */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|NEXUS_HASH_WIDTH
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|INITIAL_NEXUS_COUNT
+value|MAX_FC_TARG
+end_define
+
+begin_define
+define|#
+directive|define
+name|NEXUS_HASH
+parameter_list|(
+name|tgt
+parameter_list|,
+name|lun
+parameter_list|)
+value|((tgt + lun) % NEXUS_HASH_WIDTH)
 end_define
 
 begin_comment
@@ -642,6 +926,20 @@ name|loop_down_limit
 decl_stmt|;
 name|uint32_t
 name|gone_device_time
+decl_stmt|;
+comment|/* 	 * Per target/lun info- just to keep a per-ITL nexus crn count 	 */
+name|struct
+name|isp_nexus
+modifier|*
+name|nexus_hash
+index|[
+name|NEXUS_HASH_WIDTH
+index|]
+decl_stmt|;
+name|struct
+name|isp_nexus
+modifier|*
+name|nexus_free_list
 decl_stmt|;
 name|uint32_t
 ifdef|#
@@ -738,6 +1036,18 @@ name|struct
 name|proc
 modifier|*
 name|target_proc
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|DEBUG
+argument_list|)
+name|unsigned
+name|int
+name|inject_lost_data_frame
 decl_stmt|;
 endif|#
 directive|endif
@@ -905,10 +1215,11 @@ literal|2
 decl_stmt|,
 endif|#
 directive|endif
-name|forcemulti
+name|sixtyfourbit
 range|:
 literal|1
 decl_stmt|,
+comment|/* sixtyfour bit platform */
 name|timer_active
 range|:
 literal|1
@@ -965,6 +1276,17 @@ name|rptr
 decl_stmt|;
 endif|#
 directive|endif
+name|bus_addr_t
+name|ecmd_dma
+decl_stmt|;
+name|isp_ecmd_t
+modifier|*
+name|ecmd_base
+decl_stmt|;
+name|isp_ecmd_t
+modifier|*
+name|ecmd_free
+decl_stmt|;
 comment|/* 	 * Per-type private storage... 	 */
 union|union
 block|{
@@ -1062,6 +1384,13 @@ name|val
 parameter_list|)
 define|\
 value|if (IS_SCSI(isp)) {				\ 		ISP_SPI_PC(isp, chan)-> tag = val;	\ 	} else {					\ 		ISP_FC_PC(isp, chan)-> tag = val;	\ 	}
+end_define
+
+begin_define
+define|#
+directive|define
+name|FCP_NEXT_CRN
+value|isp_fcp_next_crn
 end_define
 
 begin_define
@@ -1550,12 +1879,21 @@ end_define
 begin_define
 define|#
 directive|define
-name|XS_SNSLEN
+name|XS_TOT_SNSLEN
 parameter_list|(
 name|ccb
 parameter_list|)
-define|\
-value|imin((sizeof((ccb)->sense_data)), ccb->sense_len - ccb->sense_resid)
+value|ccb->sense_len
+end_define
+
+begin_define
+define|#
+directive|define
+name|XS_CUR_SNSLEN
+parameter_list|(
+name|ccb
+parameter_list|)
+value|(ccb->sense_len - ccb->sense_resid)
 end_define
 
 begin_define
@@ -1565,9 +1903,7 @@ name|XS_SNSKEY
 parameter_list|(
 name|ccb
 parameter_list|)
-value|(scsi_get_sense_key(&(ccb)->sense_data, \ 				 ccb->sense_len - ccb->sense_resid, 	\
-comment|/*show_errors*/
-value|1))
+value|(scsi_get_sense_key(&(ccb)->sense_data, \ 				 ccb->sense_len - ccb->sense_resid, 1))
 end_define
 
 begin_define
@@ -1577,9 +1913,7 @@ name|XS_SNSASC
 parameter_list|(
 name|ccb
 parameter_list|)
-value|(scsi_get_asc(&(ccb)->sense_data,	\ 				 ccb->sense_len - ccb->sense_resid, 	\
-comment|/*show_errors*/
-value|1))
+value|(scsi_get_asc(&(ccb)->sense_data,	\ 				 ccb->sense_len - ccb->sense_resid, 1))
 end_define
 
 begin_define
@@ -1589,9 +1923,7 @@ name|XS_SNSASCQ
 parameter_list|(
 name|ccb
 parameter_list|)
-value|(scsi_get_ascq(&(ccb)->sense_data,	\ 				 ccb->sense_len - ccb->sense_resid, 	\
-comment|/*show_errors*/
-value|1))
+value|(scsi_get_ascq(&(ccb)->sense_data,	\ 				 ccb->sense_len - ccb->sense_resid, 1))
 end_define
 
 begin_define
@@ -1625,7 +1957,7 @@ name|ccb
 parameter_list|,
 name|v
 parameter_list|)
-value|(ccb)->ccb_h.status&= ~CAM_STATUS_MASK, \ 				(ccb)->ccb_h.status |= v, \ 				(ccb)->ccb_h.spriv_field0 |= ISP_SPRIV_ERRSET
+value|(ccb)->ccb_h.status&= ~CAM_STATUS_MASK, \ 				(ccb)->ccb_h.status |= v
 end_define
 
 begin_define
@@ -1708,8 +2040,7 @@ name|XS_NOERR
 parameter_list|(
 name|ccb
 parameter_list|)
-define|\
-value|(((ccb)->ccb_h.spriv_field0& ISP_SPRIV_ERRSET) == 0 || \ 	 ((ccb)->ccb_h.status& CAM_STATUS_MASK) == CAM_REQ_INPROG)
+value|(((ccb)->ccb_h.status& CAM_STATUS_MASK) == CAM_REQ_INPROG)
 end_define
 
 begin_define
@@ -1719,8 +2050,7 @@ name|XS_INITERR
 parameter_list|(
 name|ccb
 parameter_list|)
-define|\
-value|XS_SETERR(ccb, CAM_REQ_INPROG), (ccb)->ccb_h.spriv_field0 = 0
+value|XS_SETERR(ccb, CAM_REQ_INPROG), ccb->sense_resid = ccb->sense_len
 end_define
 
 begin_define
@@ -1732,9 +2062,25 @@ name|xs
 parameter_list|,
 name|sense_ptr
 parameter_list|,
+name|totslen
+parameter_list|,
 name|slen
 parameter_list|)
-value|do {			\ 		(xs)->ccb_h.status |= CAM_AUTOSNS_VALID;		\ 		memset(&(xs)->sense_data, 0, sizeof((xs)->sense_data));	\ 		memcpy(&(xs)->sense_data, sense_ptr, imin(XS_SNSLEN(xs),\ 		       slen)); 						\ 		if (slen< (xs)->sense_len) 				\ 			(xs)->sense_resid = (xs)->sense_len - slen;	\ 	} while (0);
+value|do {			\ 		uint32_t tlen = slen;						\ 		if (tlen> (xs)->sense_len)					\ 			tlen = (xs)->sense_len;					\ 		PISP_PCMD(xs)->totslen = imin((xs)->sense_len, totslen);	\ 		PISP_PCMD(xs)->cumslen = tlen;					\ 		memcpy(&(xs)->sense_data, sense_ptr, tlen);			\ 		(xs)->sense_resid = (xs)->sense_len - tlen;			\ 		(xs)->ccb_h.status |= CAM_AUTOSNS_VALID;			\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XS_SENSE_APPEND
+parameter_list|(
+name|xs
+parameter_list|,
+name|xsnsp
+parameter_list|,
+name|xsnsl
+parameter_list|)
+value|do {				\ 		uint32_t off = PISP_PCMD(xs)->cumslen;				\ 		uint8_t *ptr =&((uint8_t *)(&(xs)->sense_data))[off];		\ 		uint32_t amt = imin(xsnsl, PISP_PCMD(xs)->totslen - off);	\ 		if (amt) {							\ 			memcpy(ptr, xsnsp, amt);				\ 			(xs)->sense_resid -= amt;				\ 			PISP_PCMD(xs)->cumslen += amt;				\ 		}								\ 	} while (0)
 end_define
 
 begin_define
@@ -2557,134 +2903,6 @@ begin_comment
 comment|/*  * Platform private flags  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|ISP_SPRIV_ERRSET
-value|0x1
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP_SPRIV_TACTIVE
-value|0x2
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP_SPRIV_DONE
-value|0x8
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP_SPRIV_WPEND
-value|0x10
-end_define
-
-begin_define
-define|#
-directive|define
-name|XS_S_TACTIVE
-parameter_list|(
-name|sccb
-parameter_list|)
-value|(sccb)->ccb_h.spriv_field0 |= ISP_SPRIV_TACTIVE
-end_define
-
-begin_define
-define|#
-directive|define
-name|XS_C_TACTIVE
-parameter_list|(
-name|sccb
-parameter_list|)
-value|(sccb)->ccb_h.spriv_field0&= ~ISP_SPRIV_TACTIVE
-end_define
-
-begin_define
-define|#
-directive|define
-name|XS_TACTIVE_P
-parameter_list|(
-name|sccb
-parameter_list|)
-value|((sccb)->ccb_h.spriv_field0& ISP_SPRIV_TACTIVE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|XS_CMD_S_DONE
-parameter_list|(
-name|sccb
-parameter_list|)
-value|(sccb)->ccb_h.spriv_field0 |= ISP_SPRIV_DONE
-end_define
-
-begin_define
-define|#
-directive|define
-name|XS_CMD_C_DONE
-parameter_list|(
-name|sccb
-parameter_list|)
-value|(sccb)->ccb_h.spriv_field0&= ~ISP_SPRIV_DONE
-end_define
-
-begin_define
-define|#
-directive|define
-name|XS_CMD_DONE_P
-parameter_list|(
-name|sccb
-parameter_list|)
-value|((sccb)->ccb_h.spriv_field0& ISP_SPRIV_DONE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|XS_CMD_S_WPEND
-parameter_list|(
-name|sccb
-parameter_list|)
-value|(sccb)->ccb_h.spriv_field0 |= ISP_SPRIV_WPEND
-end_define
-
-begin_define
-define|#
-directive|define
-name|XS_CMD_C_WPEND
-parameter_list|(
-name|sccb
-parameter_list|)
-value|(sccb)->ccb_h.spriv_field0&= ~ISP_SPRIV_WPEND
-end_define
-
-begin_define
-define|#
-directive|define
-name|XS_CMD_WPEND_P
-parameter_list|(
-name|sccb
-parameter_list|)
-value|((sccb)->ccb_h.spriv_field0& ISP_SPRIV_WPEND)
-end_define
-
-begin_define
-define|#
-directive|define
-name|XS_CMD_S_CLEAR
-parameter_list|(
-name|sccb
-parameter_list|)
-value|(sccb)->ccb_h.spriv_field0 = 0
-end_define
-
 begin_comment
 comment|/*  * Platform Library Functions  */
 end_comment
@@ -2853,6 +3071,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|isp_fcp_next_crn
+parameter_list|(
+name|ispsoftc_t
+modifier|*
+parameter_list|,
+name|uint8_t
+modifier|*
+parameter_list|,
+name|XS_T
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Platform Version specific defines  */
 end_comment
@@ -2930,17 +3164,6 @@ name|h
 parameter_list|)
 define|\
 value|cam_sim_alloc(a, b, c, d, e,&(d)->isp_osinfo.lock, f, g, h)
-end_define
-
-begin_comment
-comment|/* Should be BUS_SPACE_MAXSIZE, but MAXPHYS is larger than BUS_SPACE_MAXSIZE */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ISP_NSEGS
-value|((MAXPHYS / PAGE_SIZE) + 1)
 end_define
 
 begin_define

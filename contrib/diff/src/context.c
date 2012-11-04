@@ -71,7 +71,7 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
-name|int
+name|long
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -248,7 +248,7 @@ operator|.
 name|st_mtime
 argument_list|)
 decl_stmt|;
-name|int
+name|long
 name|nsec
 init|=
 name|TIMESPEC_NS
@@ -284,8 +284,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|long
-name|int
+name|time_t
 name|sec
 init|=
 name|inf
@@ -313,8 +312,11 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%ld.%.9d"
+literal|"%jd.%.9d"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|sec
 argument_list|,
 name|nsec

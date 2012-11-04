@@ -32,15 +32,19 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
-comment|//  This file defines the FileManager interface.
+comment|/// \file
 end_comment
 
 begin_comment
-comment|//
+comment|/// \brief Defines the clang::FileManager interface and associated types.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -169,9 +173,8 @@ decl_stmt|;
 name|class
 name|FileSystemStatCache
 decl_stmt|;
-comment|/// DirectoryEntry - Cached information about one directory (either on
-comment|/// the disk or in the virtual file system).
-comment|///
+comment|/// \brief Cached information about one directory (either on disk or in
+comment|/// the virtual file system).
 name|class
 name|DirectoryEntry
 block|{
@@ -208,10 +211,11 @@ return|;
 block|}
 block|}
 empty_stmt|;
-comment|/// FileEntry - Cached information about one file (either on the disk
-comment|/// or in the virtual file system).  If the 'FD' member is valid, then
-comment|/// this FileEntry has an open file descriptor for the file.
+comment|/// \brief Cached information about one file (either on disk
+comment|/// or in the virtual file system).
 comment|///
+comment|/// If the 'FD' member is valid, then this FileEntry has an open file
+comment|/// descriptor for the file.
 name|class
 name|FileEntry
 block|{
@@ -458,8 +462,7 @@ return|return
 name|FileMode
 return|;
 block|}
-comment|/// getDir - Return the directory the file lives in.
-comment|///
+comment|/// \brief Return the directory the file lives in.
 specifier|const
 name|DirectoryEntry
 operator|*
@@ -506,10 +509,12 @@ return|;
 block|}
 block|}
 empty_stmt|;
-comment|/// FileManager - Implements support for file system lookup, file system
-comment|/// caching, and directory search management.  This also handles more advanced
-comment|/// properties, such as uniquing files based on "inode", so that a file with two
-comment|/// names (e.g. symlinked) will be treated as a single file.
+comment|/// \brief Implements support for file system lookup, file system caching,
+comment|/// and directory search management.
+comment|///
+comment|/// This also handles more advanced properties, such as uniquing files based
+comment|/// on "inode", so that a file with two names (e.g. symlinked) will be treated
+comment|/// as a single file.
 comment|///
 name|class
 name|FileManager
@@ -529,19 +534,19 @@ block|;
 name|class
 name|UniqueFileContainer
 block|;
-comment|/// UniqueRealDirs/UniqueRealFiles - Cache for existing real
-comment|/// directories/files.
-comment|///
+comment|/// \brief Cache for existing real directories.
 name|UniqueDirContainer
 operator|&
 name|UniqueRealDirs
 block|;
+comment|/// \brief Cache for existing real files.
 name|UniqueFileContainer
 operator|&
 name|UniqueRealFiles
 block|;
-comment|/// \brief The virtual directories that we have allocated.  For each
-comment|/// virtual file (e.g. foo/bar/baz.cpp), we add all of its parent
+comment|/// \brief The virtual directories that we have allocated.
+comment|///
+comment|/// For each virtual file (e.g. foo/bar/baz.cpp), we add all of its parent
 comment|/// directories (foo/ and foo/bar/) here.
 name|SmallVector
 operator|<
@@ -562,9 +567,10 @@ literal|4
 operator|>
 name|VirtualFileEntries
 block|;
-comment|/// SeenDirEntries/SeenFileEntries - This is a cache that maps paths
-comment|/// to directory/file entries (either real or virtual) we have
-comment|/// looked up.  The actual Entries for real directories/files are
+comment|/// \brief A cache that maps paths to directory entries (either real or
+comment|/// virtual) we have looked up
+comment|///
+comment|/// The actual Entries for real directories/files are
 comment|/// owned by UniqueRealDirs/UniqueRealFiles above, while the Entries
 comment|/// for virtual directories/files are owned by
 comment|/// VirtualDirectoryEntries/VirtualFileEntries above.
@@ -582,6 +588,10 @@ name|BumpPtrAllocator
 operator|>
 name|SeenDirEntries
 block|;
+comment|/// \brief A cache that maps paths to file entries (either real or
+comment|/// virtual) we have looked up.
+comment|///
+comment|/// \see SeenDirEntries
 name|llvm
 operator|::
 name|StringMap
@@ -595,7 +605,7 @@ name|BumpPtrAllocator
 operator|>
 name|SeenFileEntries
 block|;
-comment|/// NextFileUID - Each FileEntry we create is assigned a unique ID #.
+comment|/// \brief Each FileEntry we create is assigned a unique ID #.
 comment|///
 name|unsigned
 name|NextFileUID
@@ -686,8 +696,15 @@ operator|*
 name|statCache
 argument_list|)
 block|;
-comment|/// getDirectory - Lookup, cache, and verify the specified directory
-comment|/// (real or virtual).  This returns NULL if the directory doesn't exist.
+comment|/// \brief Removes all FileSystemStatCache objects from the manager.
+name|void
+name|clearStatCaches
+argument_list|()
+block|;
+comment|/// \brief Lookup, cache, and verify the specified directory (real or
+comment|/// virtual).
+comment|///
+comment|/// This returns NULL if the directory doesn't exist.
 comment|///
 comment|/// \param CacheFailure If true and the file does not exist, we'll cache
 comment|/// the failure to find this file.
@@ -702,7 +719,9 @@ argument|bool CacheFailure = true
 argument_list|)
 block|;
 comment|/// \brief Lookup, cache, and verify the specified file (real or
-comment|/// virtual).  This returns NULL if the file doesn't exist.
+comment|/// virtual).
+comment|///
+comment|/// This returns NULL if the file doesn't exist.
 comment|///
 comment|/// \param OpenFile if true and the file exists, it will be opened.
 comment|///
@@ -732,8 +751,9 @@ name|FileSystemOpts
 return|;
 block|}
 comment|/// \brief Retrieve a file entry for a "virtual" file that acts as
-comment|/// if there were a file with the given name on disk. The file
-comment|/// itself is not accessed.
+comment|/// if there were a file with the given name on disk.
+comment|///
+comment|/// The file itself is not accessed.
 specifier|const
 name|FileEntry
 operator|*
@@ -754,18 +774,12 @@ name|MemoryBuffer
 operator|*
 name|getBufferForFile
 argument_list|(
-specifier|const
-name|FileEntry
-operator|*
-name|Entry
+argument|const FileEntry *Entry
 argument_list|,
-name|std
-operator|::
-name|string
-operator|*
-name|ErrorStr
-operator|=
+argument|std::string *ErrorStr =
 literal|0
+argument_list|,
+argument|bool isVolatile = false
 argument_list|)
 block|;
 name|llvm
@@ -780,15 +794,26 @@ argument|std::string *ErrorStr =
 literal|0
 argument_list|)
 block|;
-comment|// getNoncachedStatValue - Will get the 'stat' information for the given path.
-comment|// If the path is relative, it will be resolved against the WorkingDir of the
-comment|// FileManager's FileSystemOptions.
+comment|/// \brief Get the 'stat' information for the given \p Path.
+comment|///
+comment|/// If the path is relative, it will be resolved against the WorkingDir of the
+comment|/// FileManager's FileSystemOptions.
 name|bool
 name|getNoncachedStatValue
 argument_list|(
 argument|StringRef Path
 argument_list|,
 argument|struct stat&StatBuf
+argument_list|)
+block|;
+comment|/// \brief Remove the real file \p Entry from the cache.
+name|void
+name|invalidateCache
+argument_list|(
+specifier|const
+name|FileEntry
+operator|*
+name|Entry
 argument_list|)
 block|;
 comment|/// \brief If path is not absolute and FileSystemOptions set the working
@@ -809,6 +834,19 @@ argument_list|(
 argument|SmallVectorImpl<const FileEntry *>&UIDToFiles
 argument_list|)
 specifier|const
+block|;
+comment|/// \brief Modifies the size and modification time of a previously created
+comment|/// FileEntry. Use with caution.
+specifier|static
+name|void
+name|modifyFileEntry
+argument_list|(
+argument|FileEntry *File
+argument_list|,
+argument|off_t Size
+argument_list|,
+argument|time_t ModificationTime
+argument_list|)
 block|;
 name|void
 name|PrintStats

@@ -290,8 +290,6 @@ operator|+
 name|encdesc
 operator|->
 name|length
-operator|+
-literal|1
 operator|)
 return|;
 block|}

@@ -60,7 +60,7 @@ begin_define
 define|#
 directive|define
 name|__FreeBSD_version
-value|1000013
+value|1000022
 end_define
 
 begin_comment
@@ -969,6 +969,16 @@ end_endif
 begin_define
 define|#
 directive|define
+name|nitems
+parameter_list|(
+name|x
+parameter_list|)
+value|(sizeof((x)) / sizeof((x)[0]))
+end_define
+
+begin_define
+define|#
+directive|define
 name|rounddown
 parameter_list|(
 name|x
@@ -977,6 +987,22 @@ name|y
 parameter_list|)
 value|(((x)/(y))*(y))
 end_define
+
+begin_define
+define|#
+directive|define
+name|rounddown2
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|((x)&(~((y)-1)))
+end_define
+
+begin_comment
+comment|/* if y is power of two */
+end_comment
 
 begin_define
 define|#
@@ -1259,7 +1285,7 @@ value|((db)<< (PAGE_SHIFT - DEV_BSHIFT))
 end_define
 
 begin_comment
-comment|/*  * Given the pointer x to the member m of the struct s, return  * a pointer to the containing structure.  */
+comment|/*  * Old spelling of __containerof().  */
 end_comment
 
 begin_define

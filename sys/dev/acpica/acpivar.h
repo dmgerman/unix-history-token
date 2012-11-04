@@ -156,12 +156,6 @@ decl_stmt|;
 name|int
 name|acpi_handle_reboot
 decl_stmt|;
-name|bus_dma_tag_t
-name|acpi_waketag
-decl_stmt|;
-name|bus_dmamap_t
-name|acpi_wakemap
-decl_stmt|;
 name|vm_offset_t
 name|acpi_wakeaddr
 decl_stmt|;
@@ -722,17 +716,6 @@ directive|define
 name|ACPI_Q_MADT_IRQ0
 value|(1<< 2)
 end_define
-
-begin_comment
-comment|/*  * Sleep flags.  See actypes.h for available flags.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|acpi_sleep_flags
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * Note that the low ivar values are reserved to provide  * interface compatibility with ISA drivers which can also  * attach to ACPI.  */

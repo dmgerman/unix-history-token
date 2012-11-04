@@ -2765,7 +2765,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"  Family = %x"
+literal|"  Family = 0x%x"
 argument_list|,
 name|CPUID_TO_FAMILY
 argument_list|(
@@ -2775,7 +2775,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  Model = %x"
+literal|"  Model = 0x%x"
 argument_list|,
 name|CPUID_TO_MODEL
 argument_list|(

@@ -181,7 +181,7 @@ parameter_list|,
 name|_what
 parameter_list|)
 define|\
-value|mtx_assert(&(_s)c->sc_mtx, (_what))
+value|mtx_assert(&(_sc)->sc_mtx, (_what))
 end_define
 
 begin_define

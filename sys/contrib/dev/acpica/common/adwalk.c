@@ -1842,8 +1842,7 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
-name|ACPI_STRNCMP
+name|ACPI_COMPARE_NAME
 argument_list|(
 name|Node
 operator|->
@@ -1857,8 +1856,6 @@ name|PreDefineIndex
 index|]
 operator|.
 name|Name
-argument_list|,
-literal|4
 argument_list|)
 condition|)
 block|{
@@ -2267,7 +2264,7 @@ goto|goto
 name|Exit
 goto|;
 block|}
-comment|/*      * Lookup the name in the namespace.  Name must exist at this point, or it      * is an invalid reference.      *      * The namespace is also used as a lookup table for references to resource      * descriptors and the fields within them.      */
+comment|/*      * Lookup the name in the namespace. Name must exist at this point, or it      * is an invalid reference.      *      * The namespace is also used as a lookup table for references to resource      * descriptors and the fields within them.      */
 name|Status
 operator|=
 name|AcpiNsLookup

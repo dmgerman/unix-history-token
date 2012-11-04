@@ -2462,6 +2462,11 @@ begin_typedef
 typedef|typedef
 enum|enum
 block|{
+name|AC_UNIT_ATTENTION
+init|=
+literal|0x4000
+block|,
+comment|/* Device reported UNIT ATTENTION */
 name|AC_ADVINFO_CHANGED
 init|=
 literal|0x2000
@@ -2775,6 +2780,29 @@ end_struct
 
 begin_struct
 struct|struct
+name|ccb_trans_settings_ata
+block|{
+name|u_int
+name|valid
+decl_stmt|;
+comment|/* Which fields to honor */
+define|#
+directive|define
+name|CTS_ATA_VALID_TQ
+value|0x01
+name|u_int
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|CTS_ATA_FLAGS_TAG_ENB
+value|0x01
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|ccb_trans_settings_spi
 block|{
 name|u_int
@@ -2890,7 +2918,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|ccb_trans_settings_ata
+name|ccb_trans_settings_pata
 block|{
 name|u_int
 name|valid
@@ -3061,6 +3089,10 @@ name|valid
 decl_stmt|;
 comment|/* Which fields to honor */
 name|struct
+name|ccb_trans_settings_ata
+name|ata
+decl_stmt|;
+name|struct
 name|ccb_trans_settings_scsi
 name|scsi
 decl_stmt|;
@@ -3086,7 +3118,7 @@ name|ccb_trans_settings_sas
 name|sas
 decl_stmt|;
 name|struct
-name|ccb_trans_settings_ata
+name|ccb_trans_settings_pata
 name|ata
 decl_stmt|;
 name|struct

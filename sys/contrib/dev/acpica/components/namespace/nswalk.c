@@ -46,7 +46,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsGetNextNode  *  * PARAMETERS:  ParentNode          - Parent node whose children we are  *                                    getting  *              ChildNode           - Previous child that was found.  *                                    The NEXT child will be returned  *  * RETURN:      ACPI_NAMESPACE_NODE - Pointer to the NEXT child or NULL if  *                                    none is found.  *  * DESCRIPTION: Return the next peer node within the namespace.  If Handle  *              is valid, Scope is ignored.  Otherwise, the first node  *              within Scope is returned.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsGetNextNode  *  * PARAMETERS:  ParentNode          - Parent node whose children we are  *                                    getting  *              ChildNode           - Previous child that was found.  *                                    The NEXT child will be returned  *  * RETURN:      ACPI_NAMESPACE_NODE - Pointer to the NEXT child or NULL if  *                                    none is found.  *  * DESCRIPTION: Return the next peer node within the namespace. If Handle  *              is valid, Scope is ignored. Otherwise, the first node  *              within Scope is returned.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -93,7 +93,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsGetNextNodeTyped  *  * PARAMETERS:  Type                - Type of node to be searched for  *              ParentNode          - Parent node whose children we are  *                                    getting  *              ChildNode           - Previous child that was found.  *                                    The NEXT child will be returned  *  * RETURN:      ACPI_NAMESPACE_NODE - Pointer to the NEXT child or NULL if  *                                    none is found.  *  * DESCRIPTION: Return the next peer node within the namespace.  If Handle  *              is valid, Scope is ignored.  Otherwise, the first node  *              within Scope is returned.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsGetNextNodeTyped  *  * PARAMETERS:  Type                - Type of node to be searched for  *              ParentNode          - Parent node whose children we are  *                                    getting  *              ChildNode           - Previous child that was found.  *                                    The NEXT child will be returned  *  * RETURN:      ACPI_NAMESPACE_NODE - Pointer to the NEXT child or NULL if  *                                    none is found.  *  * DESCRIPTION: Return the next peer node within the namespace. If Handle  *              is valid, Scope is ignored. Otherwise, the first node  *              within Scope is returned.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -487,7 +487,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*          * Depth first search: Attempt to go down another level in the          * namespace if we are allowed to.  Don't go any further if we have          * reached the caller specified maximum depth or if the user          * function has specified that the maximum depth has been reached.          */
+comment|/*          * Depth first search: Attempt to go down another level in the          * namespace if we are allowed to. Don't go any further if we have          * reached the caller specified maximum depth or if the user          * function has specified that the maximum depth has been reached.          */
 if|if
 condition|(
 operator|!

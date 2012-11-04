@@ -112,7 +112,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|wchar_t
+name|wint_t
 name|symbol_decimal_point
 init|=
 literal|L'
@@ -125,7 +125,7 @@ comment|/* there is no default thousands separator in collate rules: */
 end_comment
 
 begin_decl_stmt
-name|wchar_t
+name|wint_t
 name|symbol_thousands_sep
 init|=
 literal|0
@@ -133,7 +133,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|wchar_t
+name|wint_t
 name|symbol_negative_sign
 init|=
 literal|L'
@@ -142,7 +142,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|wchar_t
+name|wint_t
 name|symbol_positive_sign
 init|=
 literal|L'
@@ -1185,6 +1185,9 @@ argument_list|,
 name|cpos
 argument_list|)
 operator|==
+operator|(
+name|wchar_t
+operator|)
 name|sort_opts_vals
 operator|.
 name|field_sep
@@ -1427,6 +1430,9 @@ operator|.
 name|tflag
 operator|&&
 operator|(
+operator|(
+name|wchar_t
+operator|)
 name|sort_opts_vals
 operator|.
 name|field_sep
@@ -3130,7 +3136,7 @@ name|wchar_t
 modifier|*
 name|smain
 parameter_list|,
-name|int
+name|size_t
 modifier|*
 name|main_len
 parameter_list|,
@@ -3138,7 +3144,7 @@ name|wchar_t
 modifier|*
 name|sfrac
 parameter_list|,
-name|int
+name|size_t
 modifier|*
 name|frac_len
 parameter_list|,
@@ -3192,6 +3198,9 @@ argument_list|(
 name|s
 argument_list|)
 operator|==
+operator|(
+name|wchar_t
+operator|)
 name|symbol_negative_sign
 condition|)
 block|{
@@ -3302,6 +3311,9 @@ argument_list|(
 name|s
 argument_list|)
 operator|==
+operator|(
+name|wchar_t
+operator|)
 name|symbol_thousands_sep
 operator|)
 condition|)
@@ -3332,6 +3344,9 @@ argument_list|(
 name|s
 argument_list|)
 operator|==
+operator|(
+name|wchar_t
+operator|)
 name|symbol_decimal_point
 condition|)
 block|{
@@ -3633,6 +3648,7 @@ name|kv2
 parameter_list|,
 name|size_t
 name|offset
+name|__unused
 parameter_list|,
 name|bool
 name|use_suffix
@@ -3679,6 +3695,11 @@ decl_stmt|;
 name|int
 name|cmp_res
 decl_stmt|,
+name|sign1
+decl_stmt|,
+name|sign2
+decl_stmt|;
+name|size_t
 name|frac1
 decl_stmt|,
 name|frac2
@@ -3686,10 +3707,6 @@ decl_stmt|,
 name|main1
 decl_stmt|,
 name|main2
-decl_stmt|,
-name|sign1
-decl_stmt|,
-name|sign2
 decl_stmt|;
 name|unsigned
 name|char
@@ -3745,11 +3762,6 @@ operator|=
 name|key2_read
 operator|=
 name|false
-expr_stmt|;
-name|UNUSED_ARG
-argument_list|(
-name|offset
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -4714,6 +4726,7 @@ name|kv2
 parameter_list|,
 name|size_t
 name|offset
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -4736,11 +4749,6 @@ decl_stmt|,
 modifier|*
 name|b2
 decl_stmt|;
-name|UNUSED_ARG
-argument_list|(
-name|offset
-argument_list|)
-expr_stmt|;
 name|s1
 operator|=
 name|kv1
@@ -4995,6 +5003,7 @@ name|kv2
 parameter_list|,
 name|size_t
 name|offset
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -5005,11 +5014,6 @@ decl_stmt|,
 modifier|*
 name|s2
 decl_stmt|;
-name|UNUSED_ARG
-argument_list|(
-name|offset
-argument_list|)
-expr_stmt|;
 name|s1
 operator|=
 name|kv1
@@ -5280,6 +5284,7 @@ name|kv2
 parameter_list|,
 name|size_t
 name|offset
+name|__unused
 parameter_list|)
 block|{
 name|double
@@ -5318,11 +5323,6 @@ operator|=
 name|key2_read
 operator|=
 name|false
-expr_stmt|;
-name|UNUSED_ARG
-argument_list|(
-name|offset
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -6186,6 +6186,7 @@ name|kv2
 parameter_list|,
 name|size_t
 name|offset
+name|__unused
 parameter_list|)
 block|{
 name|int
@@ -6209,11 +6210,6 @@ operator|=
 name|key2_read
 operator|=
 name|false
-expr_stmt|;
-name|UNUSED_ARG
-argument_list|(
-name|offset
-argument_list|)
 expr_stmt|;
 if|if
 condition|(

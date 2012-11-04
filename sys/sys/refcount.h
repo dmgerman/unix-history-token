@@ -18,6 +18,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/atomic.h>
 end_include
 
@@ -93,6 +99,20 @@ modifier|*
 name|count
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+operator|*
+name|count
+operator|<
+name|UINT_MAX
+argument_list|,
+operator|(
+literal|"refcount %p overflowed"
+operator|,
+name|count
+operator|)
+argument_list|)
+expr_stmt|;
 name|atomic_add_acq_int
 argument_list|(
 name|count

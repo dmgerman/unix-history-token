@@ -411,7 +411,7 @@ argument_list|,
 name|ParentPath
 argument_list|)
 expr_stmt|;
-comment|/* Add dot separator (don't need dot if parent fullpath is a single "\") */
+comment|/*      * Add dot separator      * (don't need dot if parent fullpath is a single backslash)      */
 if|if
 condition|(
 name|ParentPath

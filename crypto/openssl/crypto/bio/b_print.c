@@ -191,18 +191,18 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|HAVE_LONG_LONG
-end_if
+end_ifdef
 
 begin_if
 if|#
 directive|if
 name|defined
 argument_list|(
-name|OPENSSL_SYS_WIN32
+name|_WIN32
 argument_list|)
 operator|&&
 operator|!

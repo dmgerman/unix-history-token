@@ -7,6 +7,10 @@ begin_comment
 comment|/*  * Copyright 2005 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
+begin_comment
+comment|/*  * Copyright (c) 2011, Joyent, Inc. All rights reserved.  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -105,6 +109,19 @@ name|int
 name|dtrace_in_probe
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+specifier|extern
+name|void
+name|dtrace_getnanotime
+parameter_list|(
+name|struct
+name|timespec
+modifier|*
+name|tsp
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int
@@ -1137,13 +1154,19 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * If we've executed the original instruction, but haven't performed 	 * the jmp back to t->t_dtrace_npc or the clean up of any registers 	 * used to emulate %rip-relative instructions in 64-bit mode, do that 	 * here and take the signal right away. We detect this condition by 	 * seeing if the program counter is the range [scrpc + isz, astpc). 	 */
+comment|/* 	 * If we have executed the original instruction, but we have performed 	 * neither the jmp back to t->t_dtrace_npc nor the clean up of any 	 * registers used to emulate %rip-relative instructions in 64-bit mode, 	 * we'll save ourselves some effort by doing that here and taking the 	 * signal right away.  We detect this condition by seeing if the program 	 * counter is the range [scrpc + isz, astpc). 	 */
 if|if
 condition|(
+name|rp
+operator|->
+name|r_pc
+operator|>=
 name|t
 operator|->
-name|t_dtrace_astpc
-operator|-
+name|t_dtrace_scrpc
+operator|+
+name|isz
+operator|&&
 name|rp
 operator|->
 name|r_pc
@@ -1151,12 +1174,6 @@ operator|<
 name|t
 operator|->
 name|t_dtrace_astpc
-operator|-
-name|t
-operator|->
-name|t_dtrace_scrpc
-operator|-
-name|isz
 condition|)
 block|{
 ifdef|#
@@ -1592,7 +1609,7 @@ name|tsc
 operator|=
 name|rdtsc
 argument_list|()
-operator|+
+operator|-
 name|tsc_skew
 index|[
 name|curcpu
@@ -1645,18 +1662,27 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|printf
+name|struct
+name|timespec
+name|current_time
+decl_stmt|;
+name|dtrace_getnanotime
 argument_list|(
-literal|"%s(%d): XXX\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|__LINE__
+operator|&
+name|current_time
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|current_time
+operator|.
+name|tv_sec
+operator|*
+literal|1000000000ULL
+operator|+
+name|current_time
+operator|.
+name|tv_nsec
 operator|)
 return|;
 block|}

@@ -139,6 +139,14 @@ literal|1
 operator|<<
 literal|8
 operator|)
+block|,
+name|CC1Option
+init|=
+operator|(
+literal|1
+operator|<<
+literal|9
+operator|)
 block|}
 enum|;
 block|}
@@ -154,7 +162,7 @@ decl_stmt|;
 name|class
 name|Option
 decl_stmt|;
-comment|/// OptTable - Provide access to the Option info table.
+comment|/// \brief Provide access to the Option info table.
 comment|///
 comment|/// The OptTable class provides a layer of indirection which allows Option
 comment|/// instance to be created lazily. In the common case, only a few options will
@@ -166,7 +174,7 @@ name|OptTable
 block|{
 name|public
 label|:
-comment|/// Info - Entry for a single option instance in the option data table.
+comment|/// \brief Entry for a single option instance in the option data table.
 struct|struct
 name|Info
 block|{
@@ -209,7 +217,7 @@ block|}
 struct|;
 name|private
 label|:
-comment|/// The static option information table.
+comment|/// \brief The static option information table.
 specifier|const
 name|Info
 modifier|*
@@ -218,20 +226,20 @@ decl_stmt|;
 name|unsigned
 name|NumOptionInfos
 decl_stmt|;
-comment|/// The lazily constructed options table, indexed by option::ID - 1.
+comment|/// \brief The lazily constructed options table, indexed by option::ID - 1.
 name|mutable
 name|Option
 modifier|*
 modifier|*
 name|Options
 decl_stmt|;
-comment|/// Prebound input option instance.
+comment|/// \brief Prebound input option instance.
 specifier|const
 name|Option
 modifier|*
 name|TheInputOption
 decl_stmt|;
-comment|/// Prebound unknown option instance.
+comment|/// \brief Prebound unknown option instance.
 specifier|const
 name|Option
 modifier|*
@@ -311,7 +319,7 @@ operator|~
 name|OptTable
 argument_list|()
 expr_stmt|;
-comment|/// getNumOptions - Return the total number of option classes.
+comment|/// \brief Return the total number of option classes.
 name|unsigned
 name|getNumOptions
 argument_list|()
@@ -321,7 +329,7 @@ return|return
 name|NumOptionInfos
 return|;
 block|}
-comment|/// getOption - Get the given \arg id's Option instance, lazily creating it
+comment|/// \brief Get the given Opt's Option instance, lazily creating it
 comment|/// if necessary.
 comment|///
 comment|/// \return The option, or null for the INVALID option id.
@@ -397,7 +405,7 @@ return|return
 name|Entry
 return|;
 block|}
-comment|/// getOptionName - Lookup the name of the given option.
+comment|/// \brief Lookup the name of the given option.
 specifier|const
 name|char
 modifier|*
@@ -417,7 +425,7 @@ operator|.
 name|Name
 return|;
 block|}
-comment|/// getOptionKind - Get the kind of the given option.
+comment|/// \brief Get the kind of the given option.
 name|unsigned
 name|getOptionKind
 argument_list|(
@@ -435,7 +443,7 @@ operator|.
 name|Kind
 return|;
 block|}
-comment|/// getOptionGroupID - Get the group id for the given option.
+comment|/// \brief Get the group id for the given option.
 name|unsigned
 name|getOptionGroupID
 argument_list|(
@@ -453,8 +461,7 @@ operator|.
 name|GroupID
 return|;
 block|}
-comment|/// isOptionHelpHidden - Should the help for the given option be hidden by
-comment|/// default.
+comment|/// \brief Should the help for the given option be hidden by default.
 name|bool
 name|isOptionHelpHidden
 argument_list|(
@@ -476,7 +483,7 @@ operator|::
 name|HelpHidden
 return|;
 block|}
-comment|/// getOptionHelpText - Get the help text to use to describe this option.
+comment|/// \brief Get the help text to use to describe this option.
 specifier|const
 name|char
 modifier|*
@@ -496,7 +503,7 @@ operator|.
 name|HelpText
 return|;
 block|}
-comment|/// getOptionMetaVar - Get the meta-variable name to use when describing
+comment|/// \brief Get the meta-variable name to use when describing
 comment|/// this options values in the help text.
 specifier|const
 name|char
@@ -517,14 +524,14 @@ operator|.
 name|MetaVar
 return|;
 block|}
-comment|/// ParseOneArg - Parse a single argument; returning the new argument and
+comment|/// \brief Parse a single argument; returning the new argument and
 comment|/// updating Index.
 comment|///
-comment|/// \param [in] [out] Index - The current parsing position in the argument
+comment|/// \param [in,out] Index - The current parsing position in the argument
 comment|/// string list; on return this will be the index of the next argument
 comment|/// string to parse.
 comment|///
-comment|/// \return - The parsed argument, or 0 if the argument is missing values
+comment|/// \return The parsed argument, or 0 if the argument is missing values
 comment|/// (in which case Index still points at the conceptual next argument string
 comment|/// to parse).
 name|Arg
@@ -542,21 +549,21 @@ name|Index
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// ParseArgs - Parse an list of arguments into an InputArgList.
+comment|/// \brief Parse an list of arguments into an InputArgList.
 comment|///
-comment|/// The resulting InputArgList will reference the strings in [ArgBegin,
-comment|/// ArgEnd), and their lifetime should extend past that of the returned
+comment|/// The resulting InputArgList will reference the strings in [\p ArgBegin,
+comment|/// \p ArgEnd), and their lifetime should extend past that of the returned
 comment|/// InputArgList.
 comment|///
 comment|/// The only error that can occur in this routine is if an argument is
-comment|/// missing values; in this case \arg MissingArgCount will be non-zero.
+comment|/// missing values; in this case \p MissingArgCount will be non-zero.
 comment|///
 comment|/// \param ArgBegin - The beginning of the argument vector.
 comment|/// \param ArgEnd - The end of the argument vector.
 comment|/// \param MissingArgIndex - On error, the index of the option which could
 comment|/// not be parsed.
 comment|/// \param MissingArgCount - On error, the number of missing options.
-comment|/// \return - An InputArgList; on error this will contain all the options
+comment|/// \return An InputArgList; on error this will contain all the options
 comment|/// which could be parsed.
 name|InputArgList
 modifier|*
@@ -586,7 +593,7 @@ name|MissingArgCount
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// PrintHelp - Render the help text for an option table.
+comment|/// \brief Render the help text for an option table.
 comment|///
 comment|/// \param OS - The stream to write the help text to.
 comment|/// \param Name - The name to use in the usage line.

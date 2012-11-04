@@ -550,7 +550,7 @@ value|18
 end_define
 
 begin_comment
-comment|/* , int, FILE **)		*/
+comment|/* , int, FILE **);		*/
 end_comment
 
 begin_define
@@ -561,7 +561,7 @@ value|19
 end_define
 
 begin_comment
-comment|/* , int, FILE *)		*/
+comment|/* , int, FILE *);		*/
 end_comment
 
 begin_define
@@ -640,34 +640,6 @@ end_comment
 begin_function_decl
 name|void
 name|el_resize
-parameter_list|(
-name|EditLine
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  * Set user private data.  */
-end_comment
-
-begin_function_decl
-name|void
-name|el_data_set
-parameter_list|(
-name|EditLine
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-modifier|*
-name|el_data_get
 parameter_list|(
 name|EditLine
 modifier|*

@@ -22,6 +22,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<machine/atomic.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/ath/ath_hal/ah.h>
 end_include
 
@@ -54,6 +60,17 @@ define|#
 directive|define
 name|ATH_TIMEOUT
 value|1000
+end_define
+
+begin_comment
+comment|/*  * There is a separate TX ath_buf pool for management frames.  * This ensures that management frames such as probe responses  * and BAR frames can be transmitted during periods of high  * TX activity.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATH_MGMT_TXBUF
+value|32
 end_define
 
 begin_comment
@@ -281,7 +298,7 @@ argument_list|(
 argument_list|,
 argument|ath_buf
 argument_list|)
-name|axq_q
+name|tid_q
 expr_stmt|;
 comment|/* pending buffers */
 name|u_int
@@ -313,6 +330,30 @@ name|int
 name|hwq_depth
 decl_stmt|;
 comment|/* how many buffers are on HW */
+struct|struct
+block|{
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|ath_buf
+argument_list|)
+name|tid_q
+expr_stmt|;
+comment|/* filtered queue */
+name|u_int
+name|axq_depth
+decl_stmt|;
+comment|/* SW queue depth */
+name|char
+name|axq_name
+index|[
+literal|48
+index|]
+decl_stmt|;
+comment|/* lock name */
+block|}
+name|filtq
+struct|;
 comment|/* 	 * Entry on the ath_txq; when there's traffic 	 * to send 	 */
 name|TAILQ_ENTRY
 argument_list|(
@@ -327,6 +368,7 @@ name|int
 name|paused
 decl_stmt|;
 comment|/*>0 if the TID has been paused */
+comment|/* 	 * These are flags - perhaps later collapse 	 * down to a single uint32_t ? 	 */
 name|int
 name|addba_tx_pending
 decl_stmt|;
@@ -339,6 +381,14 @@ name|int
 name|bar_tx
 decl_stmt|;
 comment|/* BAR TXed */
+name|int
+name|isfiltered
+decl_stmt|;
+comment|/* is this node currently filtered */
+name|int
+name|clrdmask
+decl_stmt|;
+comment|/* has clrdmask been set */
 comment|/* 	 * Is the TID being cleaned up after a transition 	 * from aggregation to non-aggregation? 	 * When this is set to 1, this TID will be paused 	 * and no further traffic will be queued until all 	 * the hardware packets pending for this TID have been 	 * TXed/completed; at which point (non-aggregation) 	 * traffic will resume being TXed. 	 */
 name|int
 name|cleanup_inprogress
@@ -390,6 +440,18 @@ name|u_int8_t
 name|an_mcastrix
 decl_stmt|;
 comment|/* mcast h/w rate index */
+name|uint32_t
+name|an_is_powersave
+decl_stmt|;
+comment|/* node is sleeping */
+name|uint32_t
+name|an_stack_psq
+decl_stmt|;
+comment|/* net80211 psq isn't empty */
+name|uint32_t
+name|an_tim_set
+decl_stmt|;
+comment|/* TIM has been set */
 name|struct
 name|ath_buf
 modifier|*
@@ -419,6 +481,10 @@ name|mtx
 name|an_mtx
 decl_stmt|;
 comment|/* protecting the ath_node state */
+name|uint32_t
+name|an_swq_depth
+decl_stmt|;
+comment|/* how many SWQ packets for this 					   node */
 comment|/* variable-length rate control state follows */
 block|}
 struct|;
@@ -530,6 +596,22 @@ parameter_list|)
 value|ATH_EP_RND(x, HAL_RSSI_EP_MULTIPLIER)
 end_define
 
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|ATH_BUFTYPE_NORMAL
+init|=
+literal|0
+block|,
+name|ATH_BUFTYPE_MGMT
+init|=
+literal|1
+block|, }
+name|ath_buf_type_t
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
 name|ath_buf
@@ -549,10 +631,17 @@ comment|/* next buffer in the aggregate */
 name|int
 name|bf_nseg
 decl_stmt|;
+name|HAL_STATUS
+name|bf_rxstatus
+decl_stmt|;
 name|uint16_t
 name|bf_flags
 decl_stmt|;
 comment|/* status flags (below) */
+name|uint16_t
+name|bf_descid
+decl_stmt|;
+comment|/* 16 bit descriptor ID */
 name|struct
 name|ath_desc
 modifier|*
@@ -635,19 +724,27 @@ function_decl|;
 comment|/* This state is kept to support software retries and aggregation */
 struct|struct
 block|{
-name|int
+name|uint16_t
 name|bfs_seqno
 decl_stmt|;
 comment|/* sequence number of this packet */
-name|int
+name|uint16_t
+name|bfs_ndelim
+decl_stmt|;
+comment|/* number of delims for padding */
+name|uint8_t
 name|bfs_retries
 decl_stmt|;
 comment|/* retry count */
-name|uint16_t
+name|uint8_t
 name|bfs_tid
 decl_stmt|;
 comment|/* packet TID (or TID_MAX for no QoS) */
-name|uint16_t
+name|uint8_t
+name|bfs_nframes
+decl_stmt|;
+comment|/* number of frames in aggregate */
+name|uint8_t
 name|bfs_pri
 decl_stmt|;
 comment|/* packet AC priority */
@@ -657,18 +754,6 @@ modifier|*
 name|bfs_txq
 decl_stmt|;
 comment|/* eventual dest hardware TXQ */
-name|uint16_t
-name|bfs_pktdur
-decl_stmt|;
-comment|/* packet duration (at current rate?) */
-name|uint16_t
-name|bfs_nframes
-decl_stmt|;
-comment|/* number of frames in aggregate */
-name|uint16_t
-name|bfs_ndelim
-decl_stmt|;
-comment|/* number of delims for padding */
 name|u_int32_t
 name|bfs_aggr
 range|:
@@ -718,32 +803,19 @@ comment|/* do RTS/CTS based protection */
 name|bfs_doratelookup
 range|:
 literal|1
-decl_stmt|,
+decl_stmt|;
 comment|/* do rate lookup before each TX */
-name|bfs_need_seqno
-range|:
-literal|1
-decl_stmt|,
-comment|/* need to assign a seqno for aggr */
-name|bfs_seqno_assigned
-range|:
-literal|1
-decl_stmt|;
-comment|/* seqno has been assigned */
-name|int
-name|bfs_nfl
-decl_stmt|;
-comment|/* next fragment length */
 comment|/* 		 * These fields are passed into the 		 * descriptor setup functions. 		 */
+comment|/* Make this an 8 bit value? */
 name|HAL_PKT_TYPE
 name|bfs_atype
 decl_stmt|;
 comment|/* packet type */
-name|int
+name|uint32_t
 name|bfs_pktlen
 decl_stmt|;
 comment|/* length of this packet */
-name|int
+name|uint16_t
 name|bfs_hdrlen
 decl_stmt|;
 comment|/* length of this packet header */
@@ -751,43 +823,46 @@ name|uint16_t
 name|bfs_al
 decl_stmt|;
 comment|/* length of aggregate */
-name|int
+name|uint16_t
 name|bfs_txflags
 decl_stmt|;
 comment|/* HAL (tx) descriptor flags */
-name|int
+name|uint8_t
 name|bfs_txrate0
 decl_stmt|;
 comment|/* first TX rate */
-name|int
+name|uint8_t
 name|bfs_try0
 decl_stmt|;
 comment|/* first try count */
+name|uint16_t
+name|bfs_txpower
+decl_stmt|;
+comment|/* tx power */
 name|uint8_t
 name|bfs_ctsrate0
 decl_stmt|;
 comment|/* Non-zero - use this as ctsrate */
-name|int
+name|uint8_t
+name|bfs_ctsrate
+decl_stmt|;
+comment|/* CTS rate */
+comment|/* 16 bit? */
+name|int32_t
 name|bfs_keyix
 decl_stmt|;
 comment|/* crypto key index */
-name|int
-name|bfs_txpower
-decl_stmt|;
-comment|/* tx power */
-name|int
+name|int32_t
 name|bfs_txantenna
 decl_stmt|;
 comment|/* TX antenna config */
+comment|/* Make this an 8 bit value? */
 name|enum
 name|ieee80211_protmode
 name|bfs_protmode
 decl_stmt|;
-name|int
-name|bfs_ctsrate
-decl_stmt|;
-comment|/* CTS rate */
-name|int
+comment|/* 16 bit? */
+name|uint32_t
 name|bfs_ctsduration
 decl_stmt|;
 comment|/* CTS duration (pre-11n NICs) */
@@ -821,6 +896,17 @@ end_typedef
 begin_define
 define|#
 directive|define
+name|ATH_BUF_MGMT
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* (tx) desc is a mgmt desc */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ATH_BUF_BUSY
 value|0x00000002
 end_define
@@ -848,6 +934,10 @@ modifier|*
 name|dd_desc
 decl_stmt|;
 comment|/* descriptors */
+name|int
+name|dd_descsize
+decl_stmt|;
+comment|/* size of single descriptor */
 name|bus_addr_t
 name|dd_desc_paddr
 decl_stmt|;
@@ -920,6 +1010,10 @@ name|u_int
 name|axq_aggr_depth
 decl_stmt|;
 comment|/* how many aggregates are queued */
+name|u_int
+name|axq_fifo_depth
+decl_stmt|;
+comment|/* depth of FIFO frames */
 name|u_int
 name|axq_intrcnt
 decl_stmt|;
@@ -996,6 +1090,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATH_NODE_UNLOCK_ASSERT
+parameter_list|(
+name|_an
+parameter_list|)
+value|mtx_assert(&(_an)->an_mtx,	\ 					    MA_NOTOWNED)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATH_TXQ_LOCK_INIT
 parameter_list|(
 name|_sc
@@ -1042,7 +1146,19 @@ name|ATH_TXQ_LOCK_ASSERT
 parameter_list|(
 name|_tq
 parameter_list|)
+define|\
 value|mtx_assert(&(_tq)->axq_lock, MA_OWNED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TXQ_UNLOCK_ASSERT
+parameter_list|(
+name|_tq
+parameter_list|)
+define|\
+value|mtx_assert(&(_tq)->axq_lock, MA_NOTOWNED)
 end_define
 
 begin_define
@@ -1054,6 +1170,36 @@ name|_tq
 parameter_list|)
 value|mtx_owned(&(_tq)->axq_lock)
 end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TID_LOCK_ASSERT
+parameter_list|(
+name|_sc
+parameter_list|,
+name|_tid
+parameter_list|)
+define|\
+value|ATH_TXQ_LOCK_ASSERT((_sc)->sc_ac2q[(_tid)->ac])
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TID_UNLOCK_ASSERT
+parameter_list|(
+name|_sc
+parameter_list|,
+name|_tid
+parameter_list|)
+define|\
+value|ATH_TXQ_UNLOCK_ASSERT((_sc)->sc_ac2q[(_tid)->ac])
+end_define
+
+begin_comment
+comment|/*  * These are for the hardware queue.  */
+end_comment
 
 begin_define
 define|#
@@ -1100,6 +1246,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATH_TXQ_FIRST
+parameter_list|(
+name|_tq
+parameter_list|)
+value|TAILQ_FIRST(&(_tq)->axq_q)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATH_TXQ_LAST
 parameter_list|(
 name|_tq
@@ -1107,6 +1263,142 @@ parameter_list|,
 name|_field
 parameter_list|)
 value|TAILQ_LAST(&(_tq)->axq_q, _field)
+end_define
+
+begin_comment
+comment|/*  * These are for the TID software queue.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATH_TID_INSERT_HEAD
+parameter_list|(
+name|_tq
+parameter_list|,
+name|_elm
+parameter_list|,
+name|_field
+parameter_list|)
+value|do { \ 	TAILQ_INSERT_HEAD(&(_tq)->tid_q, (_elm), _field); \ 	(_tq)->axq_depth++; \ 	atomic_add_rel_32(&((_tq)->an)->an_swq_depth, 1); \ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TID_INSERT_TAIL
+parameter_list|(
+name|_tq
+parameter_list|,
+name|_elm
+parameter_list|,
+name|_field
+parameter_list|)
+value|do { \ 	TAILQ_INSERT_TAIL(&(_tq)->tid_q, (_elm), _field); \ 	(_tq)->axq_depth++; \ 	atomic_add_rel_32(&((_tq)->an)->an_swq_depth, 1); \ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TID_REMOVE
+parameter_list|(
+name|_tq
+parameter_list|,
+name|_elm
+parameter_list|,
+name|_field
+parameter_list|)
+value|do { \ 	TAILQ_REMOVE(&(_tq)->tid_q, _elm, _field); \ 	(_tq)->axq_depth--; \ 	atomic_subtract_rel_32(&((_tq)->an)->an_swq_depth, 1); \ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TID_FIRST
+parameter_list|(
+name|_tq
+parameter_list|)
+value|TAILQ_FIRST(&(_tq)->tid_q)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TID_LAST
+parameter_list|(
+name|_tq
+parameter_list|,
+name|_field
+parameter_list|)
+value|TAILQ_LAST(&(_tq)->tid_q, _field)
+end_define
+
+begin_comment
+comment|/*  * These are for the TID filtered frame queue  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATH_TID_FILT_INSERT_HEAD
+parameter_list|(
+name|_tq
+parameter_list|,
+name|_elm
+parameter_list|,
+name|_field
+parameter_list|)
+value|do { \ 	TAILQ_INSERT_HEAD(&(_tq)->filtq.tid_q, (_elm), _field); \ 	(_tq)->axq_depth++; \ 	atomic_add_rel_32(&((_tq)->an)->an_swq_depth, 1); \ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TID_FILT_INSERT_TAIL
+parameter_list|(
+name|_tq
+parameter_list|,
+name|_elm
+parameter_list|,
+name|_field
+parameter_list|)
+value|do { \ 	TAILQ_INSERT_TAIL(&(_tq)->filtq.tid_q, (_elm), _field); \ 	(_tq)->axq_depth++; \ 	atomic_add_rel_32(&((_tq)->an)->an_swq_depth, 1); \ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TID_FILT_REMOVE
+parameter_list|(
+name|_tq
+parameter_list|,
+name|_elm
+parameter_list|,
+name|_field
+parameter_list|)
+value|do { \ 	TAILQ_REMOVE(&(_tq)->filtq.tid_q, _elm, _field); \ 	(_tq)->axq_depth--; \ 	atomic_subtract_rel_32(&((_tq)->an)->an_swq_depth, 1); \ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TID_FILT_FIRST
+parameter_list|(
+name|_tq
+parameter_list|)
+value|TAILQ_FIRST(&(_tq)->filtq.tid_q)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TID_FILT_LAST
+parameter_list|(
+name|_tq
+parameter_list|,
+name|_field
+parameter_list|)
+value|TAILQ_LAST(&(_tq)->filtq.tid_q,_field)
 end_define
 
 begin_struct
@@ -1186,6 +1478,32 @@ name|ieee80211vap
 modifier|*
 parameter_list|)
 function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|av_node_ps
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211_node
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|av_set_tim
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211_node
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct
@@ -1238,6 +1556,267 @@ end_typedef
 
 begin_struct
 struct|struct
+name|ath_rx_methods
+block|{
+name|void
+function_decl|(
+modifier|*
+name|recv_stop
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_softc
+modifier|*
+name|sc
+parameter_list|,
+name|int
+name|dodelay
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|recv_start
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|recv_flush
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|recv_tasklet
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|,
+name|int
+name|npending
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|recv_rxbuf_init
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
+name|ath_buf
+modifier|*
+name|bf
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|recv_setup
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|recv_teardown
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Represent the current state of the RX FIFO.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ath_rx_edma
+block|{
+name|struct
+name|ath_buf
+modifier|*
+modifier|*
+name|m_fifo
+decl_stmt|;
+name|int
+name|m_fifolen
+decl_stmt|;
+name|int
+name|m_fifo_head
+decl_stmt|;
+name|int
+name|m_fifo_tail
+decl_stmt|;
+name|int
+name|m_fifo_depth
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|m_rxpending
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ath_tx_edma_fifo
+block|{
+name|struct
+name|ath_buf
+modifier|*
+modifier|*
+name|m_fifo
+decl_stmt|;
+name|int
+name|m_fifolen
+decl_stmt|;
+name|int
+name|m_fifo_head
+decl_stmt|;
+name|int
+name|m_fifo_tail
+decl_stmt|;
+name|int
+name|m_fifo_depth
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ath_tx_methods
+block|{
+name|int
+function_decl|(
+modifier|*
+name|xmit_setup
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|xmit_teardown
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|xmit_attach_comp_func
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|xmit_dma_restart
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
+name|ath_txq
+modifier|*
+name|txq
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|xmit_handoff
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
+name|ath_txq
+modifier|*
+name|txq
+parameter_list|,
+name|struct
+name|ath_buf
+modifier|*
+name|bf
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|xmit_drain
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_softc
+modifier|*
+name|sc
+parameter_list|,
+name|ATH_RESET_TYPE
+name|reset_type
+parameter_list|)
+function_decl|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|ath_softc
 block|{
 name|struct
@@ -1261,6 +1840,9 @@ name|sc_intr_stats
 decl_stmt|;
 name|uint64_t
 name|sc_debug
+decl_stmt|;
+name|uint64_t
+name|sc_ktrdebug
 decl_stmt|;
 name|int
 name|sc_nvaps
@@ -1288,6 +1870,45 @@ name|uint32_t
 name|sc_bssidmask
 decl_stmt|;
 comment|/* bssid mask */
+name|struct
+name|ath_rx_methods
+name|sc_rx
+decl_stmt|;
+name|struct
+name|ath_rx_edma
+name|sc_rxedma
+index|[
+name|HAL_NUM_RX_QUEUES
+index|]
+decl_stmt|;
+comment|/* HP/LP queues */
+name|struct
+name|ath_tx_methods
+name|sc_tx
+decl_stmt|;
+name|struct
+name|ath_tx_edma_fifo
+name|sc_txedma
+index|[
+name|HAL_NUM_TX_QUEUES
+index|]
+decl_stmt|;
+name|int
+name|sc_rx_statuslen
+decl_stmt|;
+name|int
+name|sc_tx_desclen
+decl_stmt|;
+name|int
+name|sc_tx_statuslen
+decl_stmt|;
+name|int
+name|sc_tx_nmaps
+decl_stmt|;
+comment|/* Number of TX maps */
+name|int
+name|sc_edma_bufsize
+decl_stmt|;
 name|void
 function_decl|(
 modifier|*
@@ -1342,6 +1963,28 @@ literal|32
 index|]
 decl_stmt|;
 name|struct
+name|mtx
+name|sc_rx_mtx
+decl_stmt|;
+comment|/* RX access mutex */
+name|char
+name|sc_rx_mtx_name
+index|[
+literal|32
+index|]
+decl_stmt|;
+name|struct
+name|mtx
+name|sc_tx_mtx
+decl_stmt|;
+comment|/* TX access mutex */
+name|char
+name|sc_tx_mtx_name
+index|[
+literal|32
+index|]
+decl_stmt|;
+name|struct
 name|taskqueue
 modifier|*
 name|sc_tq
@@ -1390,6 +2033,11 @@ range|:
 literal|1
 decl_stmt|,
 comment|/* multi-rate retry support */
+name|sc_mrrprot
+range|:
+literal|1
+decl_stmt|,
+comment|/* MRR + protection support */
 name|sc_softled
 range|:
 literal|1
@@ -1528,8 +2176,13 @@ comment|/* do self-linked final descriptor */
 name|sc_rxtsf32
 range|:
 literal|1
-decl_stmt|;
+decl_stmt|,
 comment|/* RX dec TSF is 32 bits */
+name|sc_isedma
+range|:
+literal|1
+decl_stmt|;
+comment|/* supports EDMA */
 name|uint32_t
 name|sc_eerd
 decl_stmt|;
@@ -1746,12 +2399,6 @@ name|ath_bufhead
 name|sc_rxbuf
 decl_stmt|;
 comment|/* receive buffer */
-name|struct
-name|mbuf
-modifier|*
-name|sc_rxpending
-decl_stmt|;
-comment|/* pending receive data */
 name|u_int32_t
 modifier|*
 name|sc_rxlink
@@ -1796,10 +2443,31 @@ name|ath_descdma
 name|sc_txdma
 decl_stmt|;
 comment|/* TX descriptors */
+name|uint16_t
+name|sc_txbuf_descid
+decl_stmt|;
 name|ath_bufhead
 name|sc_txbuf
 decl_stmt|;
 comment|/* transmit buffer */
+name|int
+name|sc_txbuf_cnt
+decl_stmt|;
+comment|/* how many buffers avail */
+name|struct
+name|ath_descdma
+name|sc_txdma_mgmt
+decl_stmt|;
+comment|/* mgmt TX descriptors */
+name|ath_bufhead
+name|sc_txbuf_mgmt
+decl_stmt|;
+comment|/* mgmt transmit buffer */
+name|struct
+name|ath_descdma
+name|sc_txsdma
+decl_stmt|;
+comment|/* EDMA TX status desc's */
 name|struct
 name|mtx
 name|sc_txbuflock
@@ -1846,6 +2514,23 @@ name|task
 name|sc_txqtask
 decl_stmt|;
 comment|/* tx proc processing */
+name|struct
+name|ath_descdma
+name|sc_txcompdma
+decl_stmt|;
+comment|/* TX EDMA completion */
+name|struct
+name|mtx
+name|sc_txcomplock
+decl_stmt|;
+comment|/* TX EDMA completion lock */
+name|char
+name|sc_txcompname
+index|[
+literal|12
+index|]
+decl_stmt|;
+comment|/* eg ath0_txcomp */
 name|int
 name|sc_wd_timer
 decl_stmt|;
@@ -2212,6 +2897,70 @@ value|mtx_assert(&(_sc)->sc_mtx, MA_NOTOWNED)
 end_define
 
 begin_comment
+comment|/*  * The TX lock is non-reentrant and serialises the TX send operations.  * (ath_start(), ath_raw_xmit().)  It doesn't yet serialise the TX  * completion operations; thus it can't be used (yet!) to protect  * hardware / software TXQ operations.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATH_TX_LOCK_INIT
+parameter_list|(
+name|_sc
+parameter_list|)
+value|do {\ 	snprintf((_sc)->sc_tx_mtx_name,				\ 	    sizeof((_sc)->sc_tx_mtx_name),				\ 	    "%s TX lock",						\ 	    device_get_nameunit((_sc)->sc_dev));			\ 	mtx_init(&(_sc)->sc_tx_mtx, (_sc)->sc_tx_mtx_name,		\ 		 NULL, MTX_DEF);					\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TX_LOCK_DESTROY
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_destroy(&(_sc)->sc_tx_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TX_LOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_lock(&(_sc)->sc_tx_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TX_UNLOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_unlock(&(_sc)->sc_tx_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TX_LOCK_ASSERT
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_assert(&(_sc)->sc_tx_mtx,	\ 		MA_OWNED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TX_UNLOCK_ASSERT
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_assert(&(_sc)->sc_tx_mtx,	\ 		MA_NOTOWNED)
+end_define
+
+begin_comment
 comment|/*  * The PCU lock is non-recursive and should be treated as a spinlock.  * Although currently the interrupt code is run in netisr context and  * doesn't require this, this may change in the future.  * Please keep this in mind when protecting certain code paths  * with the PCU lock.  *  * The PCU lock is used to serialise access to the PCU so things such  * as TX, RX, state change (eg channel change), channel reset and updates  * from interrupt context (eg kickpcu, txqactive bits) do not clash.  *  * Although the current single-thread taskqueue mechanism protects the  * majority of these situations by simply serialising them, there are  * a few others which occur at the same time. These include the TX path  * (which only acquires ATH_LOCK when recycling buffers to the free list),  * ath_set_channel, the channel scanning API and perhaps quite a bit more.  */
 end_comment
 
@@ -2275,6 +3024,70 @@ parameter_list|)
 value|mtx_assert(&(_sc)->sc_pcu_mtx,	\ 		MA_NOTOWNED)
 end_define
 
+begin_comment
+comment|/*  * The RX lock is primarily a(nother) workaround to ensure that the  * RX FIFO/list isn't modified by various execution paths.  * Even though RX occurs in a single context (the ath taskqueue), the  * RX path can be executed via various reset/channel change paths.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATH_RX_LOCK_INIT
+parameter_list|(
+name|_sc
+parameter_list|)
+value|do {\ 	snprintf((_sc)->sc_rx_mtx_name,					\ 	    sizeof((_sc)->sc_rx_mtx_name),				\ 	    "%s RX lock",						\ 	    device_get_nameunit((_sc)->sc_dev));			\ 	mtx_init(&(_sc)->sc_rx_mtx, (_sc)->sc_rx_mtx_name,		\ 		 NULL, MTX_DEF);					\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_RX_LOCK_DESTROY
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_destroy(&(_sc)->sc_rx_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_RX_LOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_lock(&(_sc)->sc_rx_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_RX_UNLOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_unlock(&(_sc)->sc_rx_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_RX_LOCK_ASSERT
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_assert(&(_sc)->sc_rx_mtx,	\ 		MA_OWNED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_RX_UNLOCK_ASSERT
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_assert(&(_sc)->sc_rx_mtx,	\ 		MA_NOTOWNED)
+end_define
+
 begin_define
 define|#
 directive|define
@@ -2336,6 +3149,57 @@ name|_sc
 parameter_list|)
 define|\
 value|mtx_assert(&(_sc)->sc_txbuflock, MA_OWNED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TXSTATUS_LOCK_INIT
+parameter_list|(
+name|_sc
+parameter_list|)
+value|do { \ 	snprintf((_sc)->sc_txcompname, sizeof((_sc)->sc_txcompname), \ 		"%s_buf", \ 		device_get_nameunit((_sc)->sc_dev)); \ 	mtx_init(&(_sc)->sc_txcomplock, (_sc)->sc_txcompname, NULL, \ 		MTX_DEF); \ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TXSTATUS_LOCK_DESTROY
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_destroy(&(_sc)->sc_txcomplock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TXSTATUS_LOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_lock(&(_sc)->sc_txcomplock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TXSTATUS_UNLOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_unlock(&(_sc)->sc_txcomplock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TXSTATUS_LOCK_ASSERT
+parameter_list|(
+name|_sc
+parameter_list|)
+define|\
+value|mtx_assert(&(_sc)->sc_txcomplock, MA_OWNED)
 end_define
 
 begin_function_decl
@@ -2718,9 +3582,11 @@ parameter_list|(
 name|_ah
 parameter_list|,
 name|_bufaddr
+parameter_list|,
+name|_rxq
 parameter_list|)
 define|\
-value|((*(_ah)->ah_setRxDP)((_ah), (_bufaddr)))
+value|((*(_ah)->ah_setRxDP)((_ah), (_bufaddr), (_rxq)))
 end_define
 
 begin_comment
@@ -2829,9 +3695,11 @@ directive|define
 name|ath_hal_getrxbuf
 parameter_list|(
 name|_ah
+parameter_list|,
+name|_rxq
 parameter_list|)
 define|\
-value|((*(_ah)->ah_getRxDP)((_ah)))
+value|((*(_ah)->ah_getRxDP)((_ah), (_rxq)))
 end_define
 
 begin_define
@@ -3998,6 +4866,101 @@ define|\
 value|ath_hal_setcapability(_ah, HAL_CAP_INTMIT, \ 	HAL_CAP_INTMIT_ENABLE, _v, NULL)
 end_define
 
+begin_comment
+comment|/* EDMA definitions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ath_hal_hasedma
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_ENHANCED_DMA_SUPPORT,	\ 	0, NULL) == HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_getrxfifodepth
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_qtype
+parameter_list|,
+name|_req
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_RXFIFODEPTH, _qtype, _req)	\ 	== HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_getntxmaps
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_req
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_NUM_TXMAPS, 0, _req)	\ 	== HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_gettxdesclen
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_req
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_TXDESCLEN, 0, _req)		\ 	== HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_gettxstatuslen
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_req
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_TXSTATUSLEN, 0, _req)	\ 	== HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_getrxstatuslen
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_req
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_RXSTATUSLEN, 0, _req)	\ 	== HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_setrxbufsize
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_req
+parameter_list|)
+define|\
+value|(ath_hal_setcapability(_ah, HAL_CAP_RXBUFSIZE, 0, _req, NULL)	\ 	== HAL_OK)
+end_define
+
 begin_define
 define|#
 directive|define
@@ -4010,6 +4973,10 @@ parameter_list|)
 define|\
 value|((*(_ah)->ah_getChanNoise)((_ah), (_c)))
 end_define
+
+begin_comment
+comment|/* 802.11n HAL methods */
+end_comment
 
 begin_define
 define|#
@@ -4212,7 +5179,13 @@ name|_ah
 parameter_list|,
 name|_ds
 parameter_list|,
+name|_b
+parameter_list|,
 name|_l
+parameter_list|,
+name|_did
+parameter_list|,
+name|_qid
 parameter_list|,
 name|_first
 parameter_list|,
@@ -4221,7 +5194,7 @@ parameter_list|,
 name|_ds0
 parameter_list|)
 define|\
-value|((*(_ah)->ah_fillTxDesc)((_ah), (_ds), (_l), (_first), (_last), (_ds0)))
+value|((*(_ah)->ah_fillTxDesc)((_ah), (_ds), (_b), (_l), (_did), (_qid), \ 		(_first), (_last), (_ds0)))
 end_define
 
 begin_define
@@ -4272,6 +5245,81 @@ end_define
 begin_define
 define|#
 directive|define
+name|ath_hal_settxdesclink
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_ds
+parameter_list|,
+name|_link
+parameter_list|)
+define|\
+value|((*(_ah)->ah_setTxDescLink)((_ah), (_ds), (_link)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_gettxdesclink
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_ds
+parameter_list|,
+name|_link
+parameter_list|)
+define|\
+value|((*(_ah)->ah_getTxDescLink)((_ah), (_ds), (_link)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_gettxdesclinkptr
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_ds
+parameter_list|,
+name|_linkptr
+parameter_list|)
+define|\
+value|((*(_ah)->ah_getTxDescLinkPtr)((_ah), (_ds), (_linkptr)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_setuptxstatusring
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_tsstart
+parameter_list|,
+name|_tspstart
+parameter_list|,
+name|_size
+parameter_list|)
+define|\
+value|((*(_ah)->ah_setupTxStatusRing)((_ah), (_tsstart), (_tspstart), \ 		(_size)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_gettxrawtxdesc
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_txstatus
+parameter_list|)
+define|\
+value|((*(_ah)->ah_getTxRawTxDesc)((_ah), (_txstatus)))
+end_define
+
+begin_define
+define|#
+directive|define
 name|ath_hal_setupfirsttxdesc
 parameter_list|(
 name|_ah
@@ -4307,19 +5355,21 @@ name|_ah
 parameter_list|,
 name|_ds
 parameter_list|,
+name|_bl
+parameter_list|,
+name|_sl
+parameter_list|,
 name|_pktlen
 parameter_list|,
 name|_hdrlen
 parameter_list|,
 name|_type
-parameter_list|,
-name|_keyix
 parameter_list|, \
+name|_keyix
+parameter_list|,
 name|_cipher
 parameter_list|,
 name|_delims
-parameter_list|,
-name|_seglen
 parameter_list|,
 name|_first
 parameter_list|,
@@ -4328,7 +5378,7 @@ parameter_list|,
 name|_lastaggr
 parameter_list|)
 define|\
-value|((*(_ah)->ah_chainTxDesc)((_ah), (_ds), (_pktlen), (_hdrlen), \ 	(_type), (_keyix), (_cipher), (_delims), (_seglen), \ 	(_first), (_last), (_lastaggr)))
+value|((*(_ah)->ah_chainTxDesc)((_ah), (_ds), (_bl), (_sl), \ 	(_pktlen), (_hdrlen), (_type), (_keyix), (_cipher), (_delims), \ 	(_first), (_last), (_lastaggr)))
 end_define
 
 begin_define
@@ -4389,7 +5439,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ath_hal_set11naggrmiddle
+name|ath_hal_set11n_aggr_middle
 parameter_list|(
 name|_ah
 parameter_list|,
@@ -4558,6 +5608,19 @@ name|_param
 parameter_list|)
 define|\
 value|((*(_ah)->ah_getDfsThresh)((_ah), (_param)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_getdfsdefaultthresh
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_param
+parameter_list|)
+define|\
+value|((*(_ah)->ah_getDfsDefaultThresh)((_ah), (_param)))
 end_define
 
 begin_define

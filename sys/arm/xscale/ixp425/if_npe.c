@@ -260,7 +260,7 @@ file|"miibus_if.h"
 end_include
 
 begin_comment
-comment|/*   * XXX: For the main bus dma tag. Can go away if the new method to get the   * dma tag from the parent got MFC'd into RELENG_6.  */
+comment|/*  * XXX: For the main bus dma tag. Can go away if the new method to get the  * dma tag from the parent got MFC'd into RELENG_6.  */
 end_comment
 
 begin_decl_stmt
@@ -7676,7 +7676,7 @@ argument_list|)
 expr_stmt|;
 comment|/* XXX go into loopback& drain q's? */
 comment|/* XXX but beware of disabling tx above */
-comment|/* 	 * The MAC core rx/tx disable may leave the MAC hardware in an 	 * unpredictable state. A hw reset is executed before resetting  	 * all the MAC parameters to a known value. 	 */
+comment|/* 	 * The MAC core rx/tx disable may leave the MAC hardware in an 	 * unpredictable state. A hw reset is executed before resetting 	 * all the MAC parameters to a known value. 	 */
 name|WR4
 argument_list|(
 name|sc

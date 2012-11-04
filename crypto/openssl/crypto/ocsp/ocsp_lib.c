@@ -63,6 +63,12 @@ directive|include
 file|<openssl/ocsp.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<openssl/asn1t.h>
+end_include
+
 begin_comment
 comment|/* Convert a certificate and its issuer to an OCSP_CERTID */
 end_comment
@@ -354,6 +360,9 @@ goto|goto
 name|err
 goto|;
 comment|/* Calculate the issuerKey hash, excluding tag and length */
+if|if
+condition|(
+operator|!
 name|EVP_Digest
 argument_list|(
 name|issuerKey
@@ -373,7 +382,10 @@ name|dgst
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|err
+goto|;
 if|if
 condition|(
 operator|!
@@ -620,6 +632,21 @@ decl_stmt|,
 modifier|*
 name|port
 decl_stmt|;
+operator|*
+name|phost
+operator|=
+name|NULL
+expr_stmt|;
+operator|*
+name|pport
+operator|=
+name|NULL
+expr_stmt|;
+operator|*
+name|ppath
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* dup the buffer since we are going to mess with it */
 name|buf
 operator|=
@@ -636,21 +663,6 @@ condition|)
 goto|goto
 name|mem_err
 goto|;
-operator|*
-name|phost
-operator|=
-name|NULL
-expr_stmt|;
-operator|*
-name|pport
-operator|=
-name|NULL
-expr_stmt|;
-operator|*
-name|ppath
-operator|=
-name|NULL
-expr_stmt|;
 comment|/* Check for initial colon */
 name|p
 operator|=
@@ -962,6 +974,13 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_macro
+name|IMPLEMENT_ASN1_DUP_FUNCTION
+argument_list|(
+argument|OCSP_CERTID
+argument_list|)
+end_macro
 
 end_unit
 

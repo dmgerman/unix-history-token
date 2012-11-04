@@ -118,6 +118,11 @@ name|void
 modifier|*
 name|provider_data
 decl_stmt|;
+name|struct
+name|socket
+modifier|*
+name|so
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -230,6 +235,11 @@ name|iw_cm_id
 modifier|*
 parameter_list|)
 function_decl|;
+name|struct
+name|socket
+modifier|*
+name|so
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -403,6 +413,11 @@ name|struct
 name|ib_device
 modifier|*
 name|device
+parameter_list|,
+name|struct
+name|socket
+modifier|*
+name|so
 parameter_list|,
 name|iw_cm_handler
 name|cm_handler

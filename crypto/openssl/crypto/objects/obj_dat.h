@@ -15,37 +15,38 @@ begin_define
 define|#
 directive|define
 name|NUM_NID
-value|893
+value|920
 end_define
 
 begin_define
 define|#
 directive|define
 name|NUM_SN
-value|886
+value|913
 end_define
 
 begin_define
 define|#
 directive|define
 name|NUM_LN
-value|886
+value|913
 end_define
 
 begin_define
 define|#
 directive|define
 name|NUM_OBJ
-value|840
+value|857
 end_define
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|unsigned
 name|char
 name|lvalues
 index|[
-literal|5824
+literal|5980
 index|]
 init|=
 block|{
@@ -12535,12 +12536,342 @@ block|,
 literal|0x36
 block|,
 comment|/* [5820] OBJ_dmdName */
+literal|0x2A
+block|,
+literal|0x86
+block|,
+literal|0x48
+block|,
+literal|0x86
+block|,
+literal|0xF7
+block|,
+literal|0x0D
+block|,
+literal|0x01
+block|,
+literal|0x09
+block|,
+literal|0x10
+block|,
+literal|0x03
+block|,
+literal|0x09
+block|,
+comment|/* [5823] OBJ_id_alg_PWRI_KEK */
+literal|0x60
+block|,
+literal|0x86
+block|,
+literal|0x48
+block|,
+literal|0x01
+block|,
+literal|0x65
+block|,
+literal|0x03
+block|,
+literal|0x04
+block|,
+literal|0x01
+block|,
+literal|0x06
+block|,
+comment|/* [5834] OBJ_aes_128_gcm */
+literal|0x60
+block|,
+literal|0x86
+block|,
+literal|0x48
+block|,
+literal|0x01
+block|,
+literal|0x65
+block|,
+literal|0x03
+block|,
+literal|0x04
+block|,
+literal|0x01
+block|,
+literal|0x07
+block|,
+comment|/* [5843] OBJ_aes_128_ccm */
+literal|0x60
+block|,
+literal|0x86
+block|,
+literal|0x48
+block|,
+literal|0x01
+block|,
+literal|0x65
+block|,
+literal|0x03
+block|,
+literal|0x04
+block|,
+literal|0x01
+block|,
+literal|0x08
+block|,
+comment|/* [5852] OBJ_id_aes128_wrap_pad */
+literal|0x60
+block|,
+literal|0x86
+block|,
+literal|0x48
+block|,
+literal|0x01
+block|,
+literal|0x65
+block|,
+literal|0x03
+block|,
+literal|0x04
+block|,
+literal|0x01
+block|,
+literal|0x1A
+block|,
+comment|/* [5861] OBJ_aes_192_gcm */
+literal|0x60
+block|,
+literal|0x86
+block|,
+literal|0x48
+block|,
+literal|0x01
+block|,
+literal|0x65
+block|,
+literal|0x03
+block|,
+literal|0x04
+block|,
+literal|0x01
+block|,
+literal|0x1B
+block|,
+comment|/* [5870] OBJ_aes_192_ccm */
+literal|0x60
+block|,
+literal|0x86
+block|,
+literal|0x48
+block|,
+literal|0x01
+block|,
+literal|0x65
+block|,
+literal|0x03
+block|,
+literal|0x04
+block|,
+literal|0x01
+block|,
+literal|0x1C
+block|,
+comment|/* [5879] OBJ_id_aes192_wrap_pad */
+literal|0x60
+block|,
+literal|0x86
+block|,
+literal|0x48
+block|,
+literal|0x01
+block|,
+literal|0x65
+block|,
+literal|0x03
+block|,
+literal|0x04
+block|,
+literal|0x01
+block|,
+literal|0x2E
+block|,
+comment|/* [5888] OBJ_aes_256_gcm */
+literal|0x60
+block|,
+literal|0x86
+block|,
+literal|0x48
+block|,
+literal|0x01
+block|,
+literal|0x65
+block|,
+literal|0x03
+block|,
+literal|0x04
+block|,
+literal|0x01
+block|,
+literal|0x2F
+block|,
+comment|/* [5897] OBJ_aes_256_ccm */
+literal|0x60
+block|,
+literal|0x86
+block|,
+literal|0x48
+block|,
+literal|0x01
+block|,
+literal|0x65
+block|,
+literal|0x03
+block|,
+literal|0x04
+block|,
+literal|0x01
+block|,
+literal|0x30
+block|,
+comment|/* [5906] OBJ_id_aes256_wrap_pad */
+literal|0x2A
+block|,
+literal|0x83
+block|,
+literal|0x08
+block|,
+literal|0x8C
+block|,
+literal|0x9A
+block|,
+literal|0x4B
+block|,
+literal|0x3D
+block|,
+literal|0x01
+block|,
+literal|0x01
+block|,
+literal|0x03
+block|,
+literal|0x02
+block|,
+comment|/* [5915] OBJ_id_camellia128_wrap */
+literal|0x2A
+block|,
+literal|0x83
+block|,
+literal|0x08
+block|,
+literal|0x8C
+block|,
+literal|0x9A
+block|,
+literal|0x4B
+block|,
+literal|0x3D
+block|,
+literal|0x01
+block|,
+literal|0x01
+block|,
+literal|0x03
+block|,
+literal|0x03
+block|,
+comment|/* [5926] OBJ_id_camellia192_wrap */
+literal|0x2A
+block|,
+literal|0x83
+block|,
+literal|0x08
+block|,
+literal|0x8C
+block|,
+literal|0x9A
+block|,
+literal|0x4B
+block|,
+literal|0x3D
+block|,
+literal|0x01
+block|,
+literal|0x01
+block|,
+literal|0x03
+block|,
+literal|0x04
+block|,
+comment|/* [5937] OBJ_id_camellia256_wrap */
+literal|0x55
+block|,
+literal|0x1D
+block|,
+literal|0x25
+block|,
+literal|0x00
+block|,
+comment|/* [5948] OBJ_anyExtendedKeyUsage */
+literal|0x2A
+block|,
+literal|0x86
+block|,
+literal|0x48
+block|,
+literal|0x86
+block|,
+literal|0xF7
+block|,
+literal|0x0D
+block|,
+literal|0x01
+block|,
+literal|0x01
+block|,
+literal|0x08
+block|,
+comment|/* [5952] OBJ_mgf1 */
+literal|0x2A
+block|,
+literal|0x86
+block|,
+literal|0x48
+block|,
+literal|0x86
+block|,
+literal|0xF7
+block|,
+literal|0x0D
+block|,
+literal|0x01
+block|,
+literal|0x01
+block|,
+literal|0x0A
+block|,
+comment|/* [5961] OBJ_rsassaPss */
+literal|0x2A
+block|,
+literal|0x86
+block|,
+literal|0x48
+block|,
+literal|0x86
+block|,
+literal|0xF7
+block|,
+literal|0x0D
+block|,
+literal|0x01
+block|,
+literal|0x01
+block|,
+literal|0x07
+block|,
+comment|/* [5970] OBJ_rsaesOaep */
 block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|ASN1_OBJECT
 name|nid_objs
 index|[
@@ -30089,7992 +30420,3238 @@ operator|)
 block|,
 literal|0
 block|}
+block|,
+block|{
+literal|"id-alg-PWRI-KEK"
+block|,
+literal|"id-alg-PWRI-KEK"
+block|,
+name|NID_id_alg_PWRI_KEK
+block|,
+literal|11
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5823
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"CMAC"
+block|,
+literal|"cmac"
+block|,
+name|NID_cmac
+block|,
+literal|0
+block|,
+name|NULL
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"id-aes128-GCM"
+block|,
+literal|"aes-128-gcm"
+block|,
+name|NID_aes_128_gcm
+block|,
+literal|9
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5834
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"id-aes128-CCM"
+block|,
+literal|"aes-128-ccm"
+block|,
+name|NID_aes_128_ccm
+block|,
+literal|9
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5843
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"id-aes128-wrap-pad"
+block|,
+literal|"id-aes128-wrap-pad"
+block|,
+name|NID_id_aes128_wrap_pad
+block|,
+literal|9
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5852
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"id-aes192-GCM"
+block|,
+literal|"aes-192-gcm"
+block|,
+name|NID_aes_192_gcm
+block|,
+literal|9
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5861
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"id-aes192-CCM"
+block|,
+literal|"aes-192-ccm"
+block|,
+name|NID_aes_192_ccm
+block|,
+literal|9
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5870
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"id-aes192-wrap-pad"
+block|,
+literal|"id-aes192-wrap-pad"
+block|,
+name|NID_id_aes192_wrap_pad
+block|,
+literal|9
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5879
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"id-aes256-GCM"
+block|,
+literal|"aes-256-gcm"
+block|,
+name|NID_aes_256_gcm
+block|,
+literal|9
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5888
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"id-aes256-CCM"
+block|,
+literal|"aes-256-ccm"
+block|,
+name|NID_aes_256_ccm
+block|,
+literal|9
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5897
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"id-aes256-wrap-pad"
+block|,
+literal|"id-aes256-wrap-pad"
+block|,
+name|NID_id_aes256_wrap_pad
+block|,
+literal|9
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5906
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"AES-128-CTR"
+block|,
+literal|"aes-128-ctr"
+block|,
+name|NID_aes_128_ctr
+block|,
+literal|0
+block|,
+name|NULL
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"AES-192-CTR"
+block|,
+literal|"aes-192-ctr"
+block|,
+name|NID_aes_192_ctr
+block|,
+literal|0
+block|,
+name|NULL
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"AES-256-CTR"
+block|,
+literal|"aes-256-ctr"
+block|,
+name|NID_aes_256_ctr
+block|,
+literal|0
+block|,
+name|NULL
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"id-camellia128-wrap"
+block|,
+literal|"id-camellia128-wrap"
+block|,
+name|NID_id_camellia128_wrap
+block|,
+literal|11
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5915
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"id-camellia192-wrap"
+block|,
+literal|"id-camellia192-wrap"
+block|,
+name|NID_id_camellia192_wrap
+block|,
+literal|11
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5926
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"id-camellia256-wrap"
+block|,
+literal|"id-camellia256-wrap"
+block|,
+name|NID_id_camellia256_wrap
+block|,
+literal|11
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5937
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"anyExtendedKeyUsage"
+block|,
+literal|"Any Extended Key Usage"
+block|,
+name|NID_anyExtendedKeyUsage
+block|,
+literal|4
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5948
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"MGF1"
+block|,
+literal|"mgf1"
+block|,
+name|NID_mgf1
+block|,
+literal|9
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5952
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"RSASSA-PSS"
+block|,
+literal|"rsassaPss"
+block|,
+name|NID_rsassaPss
+block|,
+literal|9
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5961
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"AES-128-XTS"
+block|,
+literal|"aes-128-xts"
+block|,
+name|NID_aes_128_xts
+block|,
+literal|0
+block|,
+name|NULL
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"AES-256-XTS"
+block|,
+literal|"aes-256-xts"
+block|,
+name|NID_aes_256_xts
+block|,
+literal|0
+block|,
+name|NULL
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"RC4-HMAC-MD5"
+block|,
+literal|"rc4-hmac-md5"
+block|,
+name|NID_rc4_hmac_md5
+block|,
+literal|0
+block|,
+name|NULL
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"AES-128-CBC-HMAC-SHA1"
+block|,
+literal|"aes-128-cbc-hmac-sha1"
+block|,
+name|NID_aes_128_cbc_hmac_sha1
+block|,
+literal|0
+block|,
+name|NULL
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"AES-192-CBC-HMAC-SHA1"
+block|,
+literal|"aes-192-cbc-hmac-sha1"
+block|,
+name|NID_aes_192_cbc_hmac_sha1
+block|,
+literal|0
+block|,
+name|NULL
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"AES-256-CBC-HMAC-SHA1"
+block|,
+literal|"aes-256-cbc-hmac-sha1"
+block|,
+name|NID_aes_256_cbc_hmac_sha1
+block|,
+literal|0
+block|,
+name|NULL
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"RSAES-OAEP"
+block|,
+literal|"rsaesOaep"
+block|,
+name|NID_rsaesOaep
+block|,
+literal|9
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5970
+index|]
+operator|)
+block|,
+literal|0
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|ASN1_OBJECT
-modifier|*
+specifier|const
+name|unsigned
+name|int
 name|sn_objs
 index|[
 name|NUM_SN
 index|]
 init|=
 block|{
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|364
-index|]
-operator|)
 block|,
 comment|/* "AD_DVCS" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|419
-index|]
-operator|)
 block|,
 comment|/* "AES-128-CBC" */
-operator|&
-operator|(
-name|nid_objs
-index|[
+literal|916
+block|,
+comment|/* "AES-128-CBC-HMAC-SHA1" */
 literal|421
-index|]
-operator|)
 block|,
 comment|/* "AES-128-CFB" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|650
-index|]
-operator|)
 block|,
 comment|/* "AES-128-CFB1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|653
-index|]
-operator|)
 block|,
 comment|/* "AES-128-CFB8" */
-operator|&
-operator|(
-name|nid_objs
-index|[
+literal|904
+block|,
+comment|/* "AES-128-CTR" */
 literal|418
-index|]
-operator|)
 block|,
 comment|/* "AES-128-ECB" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|420
-index|]
-operator|)
 block|,
 comment|/* "AES-128-OFB" */
-operator|&
-operator|(
-name|nid_objs
-index|[
+literal|913
+block|,
+comment|/* "AES-128-XTS" */
 literal|423
-index|]
-operator|)
 block|,
 comment|/* "AES-192-CBC" */
-operator|&
-operator|(
-name|nid_objs
-index|[
+literal|917
+block|,
+comment|/* "AES-192-CBC-HMAC-SHA1" */
 literal|425
-index|]
-operator|)
 block|,
 comment|/* "AES-192-CFB" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|651
-index|]
-operator|)
 block|,
 comment|/* "AES-192-CFB1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|654
-index|]
-operator|)
 block|,
 comment|/* "AES-192-CFB8" */
-operator|&
-operator|(
-name|nid_objs
-index|[
+literal|905
+block|,
+comment|/* "AES-192-CTR" */
 literal|422
-index|]
-operator|)
 block|,
 comment|/* "AES-192-ECB" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|424
-index|]
-operator|)
 block|,
 comment|/* "AES-192-OFB" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|427
-index|]
-operator|)
 block|,
 comment|/* "AES-256-CBC" */
-operator|&
-operator|(
-name|nid_objs
-index|[
+literal|918
+block|,
+comment|/* "AES-256-CBC-HMAC-SHA1" */
 literal|429
-index|]
-operator|)
 block|,
 comment|/* "AES-256-CFB" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|652
-index|]
-operator|)
 block|,
 comment|/* "AES-256-CFB1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|655
-index|]
-operator|)
 block|,
 comment|/* "AES-256-CFB8" */
-operator|&
-operator|(
-name|nid_objs
-index|[
+literal|906
+block|,
+comment|/* "AES-256-CTR" */
 literal|426
-index|]
-operator|)
 block|,
 comment|/* "AES-256-ECB" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|428
-index|]
-operator|)
 block|,
 comment|/* "AES-256-OFB" */
-operator|&
-operator|(
-name|nid_objs
-index|[
+literal|914
+block|,
+comment|/* "AES-256-XTS" */
 literal|91
-index|]
-operator|)
 block|,
 comment|/* "BF-CBC" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|93
-index|]
-operator|)
 block|,
 comment|/* "BF-CFB" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|92
-index|]
-operator|)
 block|,
 comment|/* "BF-ECB" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|94
-index|]
-operator|)
 block|,
 comment|/* "BF-OFB" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|14
-index|]
-operator|)
 block|,
 comment|/* "C" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|751
-index|]
-operator|)
 block|,
 comment|/* "CAMELLIA-128-CBC" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|757
-index|]
-operator|)
 block|,
 comment|/* "CAMELLIA-128-CFB" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|760
-index|]
-operator|)
 block|,
 comment|/* "CAMELLIA-128-CFB1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|763
-index|]
-operator|)
 block|,
 comment|/* "CAMELLIA-128-CFB8" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|754
-index|]
-operator|)
 block|,
 comment|/* "CAMELLIA-128-ECB" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|766
-index|]
-operator|)
 block|,
 comment|/* "CAMELLIA-128-OFB" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|752
-index|]
-operator|)
 block|,
 comment|/* "CAMELLIA-192-CBC" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|758
-index|]
-operator|)
 block|,
 comment|/* "CAMELLIA-192-CFB" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|761
-index|]
-operator|)
 block|,
 comment|/* "CAMELLIA-192-CFB1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|764
-index|]
-operator|)
 block|,
 comment|/* "CAMELLIA-192-CFB8" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|755
-index|]
-operator|)
 block|,
 comment|/* "CAMELLIA-192-ECB" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|767
-index|]
-operator|)
 block|,
 comment|/* "CAMELLIA-192-OFB" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|753
-index|]
-operator|)
 block|,
 comment|/* "CAMELLIA-256-CBC" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|759
-index|]
-operator|)
 block|,
 comment|/* "CAMELLIA-256-CFB" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|762
-index|]
-operator|)
 block|,
 comment|/* "CAMELLIA-256-CFB1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|765
-index|]
-operator|)
 block|,
 comment|/* "CAMELLIA-256-CFB8" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|756
-index|]
-operator|)
 block|,
 comment|/* "CAMELLIA-256-ECB" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|768
-index|]
-operator|)
 block|,
 comment|/* "CAMELLIA-256-OFB" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|108
-index|]
-operator|)
 block|,
 comment|/* "CAST5-CBC" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|110
-index|]
-operator|)
 block|,
 comment|/* "CAST5-CFB" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|109
-index|]
-operator|)
 block|,
 comment|/* "CAST5-ECB" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|111
-index|]
-operator|)
 block|,
 comment|/* "CAST5-OFB" */
-operator|&
-operator|(
-name|nid_objs
-index|[
+literal|894
+block|,
+comment|/* "CMAC" */
 literal|13
-index|]
-operator|)
 block|,
 comment|/* "CN" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|141
-index|]
-operator|)
 block|,
 comment|/* "CRLReason" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|417
-index|]
-operator|)
 block|,
 comment|/* "CSPName" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|367
-index|]
-operator|)
 block|,
 comment|/* "CrlID" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|391
-index|]
-operator|)
 block|,
 comment|/* "DC" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|31
-index|]
-operator|)
 block|,
 comment|/* "DES-CBC" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|643
-index|]
-operator|)
 block|,
 comment|/* "DES-CDMF" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|30
-index|]
-operator|)
 block|,
 comment|/* "DES-CFB" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|656
-index|]
-operator|)
 block|,
 comment|/* "DES-CFB1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|657
-index|]
-operator|)
 block|,
 comment|/* "DES-CFB8" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|29
-index|]
-operator|)
 block|,
 comment|/* "DES-ECB" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|32
-index|]
-operator|)
 block|,
 comment|/* "DES-EDE" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|43
-index|]
-operator|)
 block|,
 comment|/* "DES-EDE-CBC" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|60
-index|]
-operator|)
 block|,
 comment|/* "DES-EDE-CFB" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|62
-index|]
-operator|)
 block|,
 comment|/* "DES-EDE-OFB" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|33
-index|]
-operator|)
 block|,
 comment|/* "DES-EDE3" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|44
-index|]
-operator|)
 block|,
 comment|/* "DES-EDE3-CBC" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|61
-index|]
-operator|)
 block|,
 comment|/* "DES-EDE3-CFB" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|658
-index|]
-operator|)
 block|,
 comment|/* "DES-EDE3-CFB1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|659
-index|]
-operator|)
 block|,
 comment|/* "DES-EDE3-CFB8" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|63
-index|]
-operator|)
 block|,
 comment|/* "DES-EDE3-OFB" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|45
-index|]
-operator|)
 block|,
 comment|/* "DES-OFB" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|80
-index|]
-operator|)
 block|,
 comment|/* "DESX-CBC" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|380
-index|]
-operator|)
 block|,
 comment|/* "DOD" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|116
-index|]
-operator|)
 block|,
 comment|/* "DSA" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|66
-index|]
-operator|)
 block|,
 comment|/* "DSA-SHA" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|113
-index|]
-operator|)
 block|,
 comment|/* "DSA-SHA1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|70
-index|]
-operator|)
 block|,
 comment|/* "DSA-SHA1-old" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|67
-index|]
-operator|)
 block|,
 comment|/* "DSA-old" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|297
-index|]
-operator|)
 block|,
 comment|/* "DVCS" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|99
-index|]
-operator|)
 block|,
 comment|/* "GN" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|855
-index|]
-operator|)
 block|,
 comment|/* "HMAC" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|780
-index|]
-operator|)
 block|,
 comment|/* "HMAC-MD5" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|781
-index|]
-operator|)
 block|,
 comment|/* "HMAC-SHA1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|381
-index|]
-operator|)
 block|,
 comment|/* "IANA" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|34
-index|]
-operator|)
 block|,
 comment|/* "IDEA-CBC" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|35
-index|]
-operator|)
 block|,
 comment|/* "IDEA-CFB" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|36
-index|]
-operator|)
 block|,
 comment|/* "IDEA-ECB" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|46
-index|]
-operator|)
 block|,
 comment|/* "IDEA-OFB" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|181
-index|]
-operator|)
 block|,
 comment|/* "ISO" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|183
-index|]
-operator|)
 block|,
 comment|/* "ISO-US" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|645
-index|]
-operator|)
 block|,
 comment|/* "ITU-T" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|646
-index|]
-operator|)
 block|,
 comment|/* "JOINT-ISO-ITU-T" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|773
-index|]
-operator|)
 block|,
 comment|/* "KISA" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|15
-index|]
-operator|)
 block|,
 comment|/* "L" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|856
-index|]
-operator|)
 block|,
 comment|/* "LocalKeySet" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|3
-index|]
-operator|)
 block|,
 comment|/* "MD2" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|257
-index|]
-operator|)
 block|,
 comment|/* "MD4" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|4
-index|]
-operator|)
 block|,
 comment|/* "MD5" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|114
-index|]
-operator|)
 block|,
 comment|/* "MD5-SHA1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|95
-index|]
-operator|)
 block|,
 comment|/* "MDC2" */
-operator|&
-operator|(
-name|nid_objs
-index|[
+literal|911
+block|,
+comment|/* "MGF1" */
 literal|388
-index|]
-operator|)
 block|,
 comment|/* "Mail" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|393
-index|]
-operator|)
 block|,
 comment|/* "NULL" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|404
-index|]
-operator|)
 block|,
 comment|/* "NULL" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|57
-index|]
-operator|)
 block|,
 comment|/* "Netscape" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|366
-index|]
-operator|)
 block|,
 comment|/* "Nonce" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|17
-index|]
-operator|)
 block|,
 comment|/* "O" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|178
-index|]
-operator|)
 block|,
 comment|/* "OCSP" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|180
-index|]
-operator|)
 block|,
 comment|/* "OCSPSigning" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|379
-index|]
-operator|)
 block|,
 comment|/* "ORG" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|18
-index|]
-operator|)
 block|,
 comment|/* "OU" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|749
-index|]
-operator|)
 block|,
 comment|/* "Oakley-EC2N-3" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|750
-index|]
-operator|)
 block|,
 comment|/* "Oakley-EC2N-4" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|9
-index|]
-operator|)
 block|,
 comment|/* "PBE-MD2-DES" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|168
-index|]
-operator|)
 block|,
 comment|/* "PBE-MD2-RC2-64" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|10
-index|]
-operator|)
 block|,
 comment|/* "PBE-MD5-DES" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|169
-index|]
-operator|)
 block|,
 comment|/* "PBE-MD5-RC2-64" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|147
-index|]
-operator|)
 block|,
 comment|/* "PBE-SHA1-2DES" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|146
-index|]
-operator|)
 block|,
 comment|/* "PBE-SHA1-3DES" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|170
-index|]
-operator|)
 block|,
 comment|/* "PBE-SHA1-DES" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|148
-index|]
-operator|)
 block|,
 comment|/* "PBE-SHA1-RC2-128" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|149
-index|]
-operator|)
 block|,
 comment|/* "PBE-SHA1-RC2-40" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|68
-index|]
-operator|)
 block|,
 comment|/* "PBE-SHA1-RC2-64" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|144
-index|]
-operator|)
 block|,
 comment|/* "PBE-SHA1-RC4-128" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|145
-index|]
-operator|)
 block|,
 comment|/* "PBE-SHA1-RC4-40" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|161
-index|]
-operator|)
 block|,
 comment|/* "PBES2" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|69
-index|]
-operator|)
 block|,
 comment|/* "PBKDF2" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|162
-index|]
-operator|)
 block|,
 comment|/* "PBMAC1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|127
-index|]
-operator|)
 block|,
 comment|/* "PKIX" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|98
-index|]
-operator|)
 block|,
 comment|/* "RC2-40-CBC" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|166
-index|]
-operator|)
 block|,
 comment|/* "RC2-64-CBC" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|37
-index|]
-operator|)
 block|,
 comment|/* "RC2-CBC" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|39
-index|]
-operator|)
 block|,
 comment|/* "RC2-CFB" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|38
-index|]
-operator|)
 block|,
 comment|/* "RC2-ECB" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|40
-index|]
-operator|)
 block|,
 comment|/* "RC2-OFB" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|5
-index|]
-operator|)
 block|,
 comment|/* "RC4" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|97
-index|]
-operator|)
 block|,
 comment|/* "RC4-40" */
-operator|&
-operator|(
-name|nid_objs
-index|[
+literal|915
+block|,
+comment|/* "RC4-HMAC-MD5" */
 literal|120
-index|]
-operator|)
 block|,
 comment|/* "RC5-CBC" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|122
-index|]
-operator|)
 block|,
 comment|/* "RC5-CFB" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|121
-index|]
-operator|)
 block|,
 comment|/* "RC5-ECB" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|123
-index|]
-operator|)
 block|,
 comment|/* "RC5-OFB" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|117
-index|]
-operator|)
 block|,
 comment|/* "RIPEMD160" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|124
-index|]
-operator|)
 block|,
 comment|/* "RLE" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|19
-index|]
-operator|)
 block|,
 comment|/* "RSA" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|7
-index|]
-operator|)
 block|,
 comment|/* "RSA-MD2" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|396
-index|]
-operator|)
 block|,
 comment|/* "RSA-MD4" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|8
-index|]
-operator|)
 block|,
 comment|/* "RSA-MD5" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|96
-index|]
-operator|)
 block|,
 comment|/* "RSA-MDC2" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|104
-index|]
-operator|)
 block|,
 comment|/* "RSA-NP-MD5" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|119
-index|]
-operator|)
 block|,
 comment|/* "RSA-RIPEMD160" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|42
-index|]
-operator|)
 block|,
 comment|/* "RSA-SHA" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|65
-index|]
-operator|)
 block|,
 comment|/* "RSA-SHA1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|115
-index|]
-operator|)
 block|,
 comment|/* "RSA-SHA1-2" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|671
-index|]
-operator|)
 block|,
 comment|/* "RSA-SHA224" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|668
-index|]
-operator|)
 block|,
 comment|/* "RSA-SHA256" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|669
-index|]
-operator|)
 block|,
 comment|/* "RSA-SHA384" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|670
-index|]
-operator|)
 block|,
 comment|/* "RSA-SHA512" */
-operator|&
-operator|(
-name|nid_objs
-index|[
+literal|919
+block|,
+comment|/* "RSAES-OAEP" */
+literal|912
+block|,
+comment|/* "RSASSA-PSS" */
 literal|777
-index|]
-operator|)
 block|,
 comment|/* "SEED-CBC" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|779
-index|]
-operator|)
 block|,
 comment|/* "SEED-CFB" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|776
-index|]
-operator|)
 block|,
 comment|/* "SEED-ECB" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|778
-index|]
-operator|)
 block|,
 comment|/* "SEED-OFB" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|41
-index|]
-operator|)
 block|,
 comment|/* "SHA" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|64
-index|]
-operator|)
 block|,
 comment|/* "SHA1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|675
-index|]
-operator|)
 block|,
 comment|/* "SHA224" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|672
-index|]
-operator|)
 block|,
 comment|/* "SHA256" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|673
-index|]
-operator|)
 block|,
 comment|/* "SHA384" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|674
-index|]
-operator|)
 block|,
 comment|/* "SHA512" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|188
-index|]
-operator|)
 block|,
 comment|/* "SMIME" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|167
-index|]
-operator|)
 block|,
 comment|/* "SMIME-CAPS" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|100
-index|]
-operator|)
 block|,
 comment|/* "SN" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|16
-index|]
-operator|)
 block|,
 comment|/* "ST" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|143
-index|]
-operator|)
 block|,
 comment|/* "SXNetID" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|458
-index|]
-operator|)
 block|,
 comment|/* "UID" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|0
-index|]
-operator|)
 block|,
 comment|/* "UNDEF" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|11
-index|]
-operator|)
 block|,
 comment|/* "X500" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|378
-index|]
-operator|)
 block|,
 comment|/* "X500algorithms" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|12
-index|]
-operator|)
 block|,
 comment|/* "X509" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|184
-index|]
-operator|)
 block|,
 comment|/* "X9-57" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|185
-index|]
-operator|)
 block|,
 comment|/* "X9cm" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|125
-index|]
-operator|)
 block|,
 comment|/* "ZLIB" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|478
-index|]
-operator|)
 block|,
 comment|/* "aRecord" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|289
-index|]
-operator|)
 block|,
 comment|/* "aaControls" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|287
-index|]
-operator|)
 block|,
 comment|/* "ac-auditEntity" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|397
-index|]
-operator|)
 block|,
 comment|/* "ac-proxying" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|288
-index|]
-operator|)
 block|,
 comment|/* "ac-targeting" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|368
-index|]
-operator|)
 block|,
 comment|/* "acceptableResponses" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|446
-index|]
-operator|)
 block|,
 comment|/* "account" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|363
-index|]
-operator|)
 block|,
 comment|/* "ad_timestamping" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|376
-index|]
-operator|)
 block|,
 comment|/* "algorithm" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|405
-index|]
-operator|)
 block|,
 comment|/* "ansi-X9-62" */
-operator|&
-operator|(
-name|nid_objs
-index|[
+literal|910
+block|,
+comment|/* "anyExtendedKeyUsage" */
 literal|746
-index|]
-operator|)
 block|,
 comment|/* "anyPolicy" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|370
-index|]
-operator|)
 block|,
 comment|/* "archiveCutoff" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|484
-index|]
-operator|)
 block|,
 comment|/* "associatedDomain" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|485
-index|]
-operator|)
 block|,
 comment|/* "associatedName" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|501
-index|]
-operator|)
 block|,
 comment|/* "audio" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|177
-index|]
-operator|)
 block|,
 comment|/* "authorityInfoAccess" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|90
-index|]
-operator|)
 block|,
 comment|/* "authorityKeyIdentifier" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|882
-index|]
-operator|)
 block|,
 comment|/* "authorityRevocationList" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|87
-index|]
-operator|)
 block|,
 comment|/* "basicConstraints" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|365
-index|]
-operator|)
 block|,
 comment|/* "basicOCSPResponse" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|285
-index|]
-operator|)
 block|,
 comment|/* "biometricInfo" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|494
-index|]
-operator|)
 block|,
 comment|/* "buildingName" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|860
-index|]
-operator|)
 block|,
 comment|/* "businessCategory" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|691
-index|]
-operator|)
 block|,
 comment|/* "c2onb191v4" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|692
-index|]
-operator|)
 block|,
 comment|/* "c2onb191v5" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|697
-index|]
-operator|)
 block|,
 comment|/* "c2onb239v4" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|698
-index|]
-operator|)
 block|,
 comment|/* "c2onb239v5" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|684
-index|]
-operator|)
 block|,
 comment|/* "c2pnb163v1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|685
-index|]
-operator|)
 block|,
 comment|/* "c2pnb163v2" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|686
-index|]
-operator|)
 block|,
 comment|/* "c2pnb163v3" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|687
-index|]
-operator|)
 block|,
 comment|/* "c2pnb176v1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|693
-index|]
-operator|)
 block|,
 comment|/* "c2pnb208w1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|699
-index|]
-operator|)
 block|,
 comment|/* "c2pnb272w1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|700
-index|]
-operator|)
 block|,
 comment|/* "c2pnb304w1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|702
-index|]
-operator|)
 block|,
 comment|/* "c2pnb368w1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|688
-index|]
-operator|)
 block|,
 comment|/* "c2tnb191v1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|689
-index|]
-operator|)
 block|,
 comment|/* "c2tnb191v2" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|690
-index|]
-operator|)
 block|,
 comment|/* "c2tnb191v3" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|694
-index|]
-operator|)
 block|,
 comment|/* "c2tnb239v1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|695
-index|]
-operator|)
 block|,
 comment|/* "c2tnb239v2" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|696
-index|]
-operator|)
 block|,
 comment|/* "c2tnb239v3" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|701
-index|]
-operator|)
 block|,
 comment|/* "c2tnb359v1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|703
-index|]
-operator|)
 block|,
 comment|/* "c2tnb431r1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|881
-index|]
-operator|)
 block|,
 comment|/* "cACertificate" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|483
-index|]
-operator|)
 block|,
 comment|/* "cNAMERecord" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|179
-index|]
-operator|)
 block|,
 comment|/* "caIssuers" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|785
-index|]
-operator|)
 block|,
 comment|/* "caRepository" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|443
-index|]
-operator|)
 block|,
 comment|/* "caseIgnoreIA5StringSyntax" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|152
-index|]
-operator|)
 block|,
 comment|/* "certBag" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|677
-index|]
-operator|)
 block|,
 comment|/* "certicom-arc" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|771
-index|]
-operator|)
 block|,
 comment|/* "certificateIssuer" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|89
-index|]
-operator|)
 block|,
 comment|/* "certificatePolicies" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|883
-index|]
-operator|)
 block|,
 comment|/* "certificateRevocationList" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|54
-index|]
-operator|)
 block|,
 comment|/* "challengePassword" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|407
-index|]
-operator|)
 block|,
 comment|/* "characteristic-two-field" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|395
-index|]
-operator|)
 block|,
 comment|/* "clearance" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|130
-index|]
-operator|)
 block|,
 comment|/* "clientAuth" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|131
-index|]
-operator|)
 block|,
 comment|/* "codeSigning" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|50
-index|]
-operator|)
 block|,
 comment|/* "contentType" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|53
-index|]
-operator|)
 block|,
 comment|/* "countersignature" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|153
-index|]
-operator|)
 block|,
 comment|/* "crlBag" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|103
-index|]
-operator|)
 block|,
 comment|/* "crlDistributionPoints" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|88
-index|]
-operator|)
 block|,
 comment|/* "crlNumber" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|884
-index|]
-operator|)
 block|,
 comment|/* "crossCertificatePair" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|806
-index|]
-operator|)
 block|,
 comment|/* "cryptocom" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|805
-index|]
-operator|)
 block|,
 comment|/* "cryptopro" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|500
-index|]
-operator|)
 block|,
 comment|/* "dITRedirect" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|451
-index|]
-operator|)
 block|,
 comment|/* "dNSDomain" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|495
-index|]
-operator|)
 block|,
 comment|/* "dSAQuality" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|434
-index|]
-operator|)
 block|,
 comment|/* "data" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|390
-index|]
-operator|)
 block|,
 comment|/* "dcobject" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|140
-index|]
-operator|)
 block|,
 comment|/* "deltaCRL" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|891
-index|]
-operator|)
 block|,
 comment|/* "deltaRevocationList" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|107
-index|]
-operator|)
 block|,
 comment|/* "description" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|871
-index|]
-operator|)
 block|,
 comment|/* "destinationIndicator" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|28
-index|]
-operator|)
 block|,
 comment|/* "dhKeyAgreement" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|382
-index|]
-operator|)
 block|,
 comment|/* "directory" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|887
-index|]
-operator|)
 block|,
 comment|/* "distinguishedName" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|892
-index|]
-operator|)
 block|,
 comment|/* "dmdName" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|174
-index|]
-operator|)
 block|,
 comment|/* "dnQualifier" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|447
-index|]
-operator|)
 block|,
 comment|/* "document" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|471
-index|]
-operator|)
 block|,
 comment|/* "documentAuthor" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|468
-index|]
-operator|)
 block|,
 comment|/* "documentIdentifier" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|472
-index|]
-operator|)
 block|,
 comment|/* "documentLocation" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|502
-index|]
-operator|)
 block|,
 comment|/* "documentPublisher" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|449
-index|]
-operator|)
 block|,
 comment|/* "documentSeries" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|469
-index|]
-operator|)
 block|,
 comment|/* "documentTitle" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|470
-index|]
-operator|)
 block|,
 comment|/* "documentVersion" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|392
-index|]
-operator|)
 block|,
 comment|/* "domain" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|452
-index|]
-operator|)
 block|,
 comment|/* "domainRelatedObject" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|802
-index|]
-operator|)
 block|,
 comment|/* "dsa_with_SHA224" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|803
-index|]
-operator|)
 block|,
 comment|/* "dsa_with_SHA256" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|791
-index|]
-operator|)
 block|,
 comment|/* "ecdsa-with-Recommended" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|416
-index|]
-operator|)
 block|,
 comment|/* "ecdsa-with-SHA1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|793
-index|]
-operator|)
 block|,
 comment|/* "ecdsa-with-SHA224" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|794
-index|]
-operator|)
 block|,
 comment|/* "ecdsa-with-SHA256" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|795
-index|]
-operator|)
 block|,
 comment|/* "ecdsa-with-SHA384" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|796
-index|]
-operator|)
 block|,
 comment|/* "ecdsa-with-SHA512" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|792
-index|]
-operator|)
 block|,
 comment|/* "ecdsa-with-Specified" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|48
-index|]
-operator|)
 block|,
 comment|/* "emailAddress" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|132
-index|]
-operator|)
 block|,
 comment|/* "emailProtection" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|885
-index|]
-operator|)
 block|,
 comment|/* "enhancedSearchGuide" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|389
-index|]
-operator|)
 block|,
 comment|/* "enterprises" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|384
-index|]
-operator|)
 block|,
 comment|/* "experimental" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|172
-index|]
-operator|)
 block|,
 comment|/* "extReq" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|56
-index|]
-operator|)
 block|,
 comment|/* "extendedCertificateAttributes" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|126
-index|]
-operator|)
 block|,
 comment|/* "extendedKeyUsage" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|372
-index|]
-operator|)
 block|,
 comment|/* "extendedStatus" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|867
-index|]
-operator|)
 block|,
 comment|/* "facsimileTelephoneNumber" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|462
-index|]
-operator|)
 block|,
 comment|/* "favouriteDrink" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|857
-index|]
-operator|)
 block|,
 comment|/* "freshestCRL" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|453
-index|]
-operator|)
 block|,
 comment|/* "friendlyCountry" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|490
-index|]
-operator|)
 block|,
 comment|/* "friendlyCountryName" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|156
-index|]
-operator|)
 block|,
 comment|/* "friendlyName" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|509
-index|]
-operator|)
 block|,
 comment|/* "generationQualifier" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|815
-index|]
-operator|)
 block|,
 comment|/* "gost-mac" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|811
-index|]
-operator|)
 block|,
 comment|/* "gost2001" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|851
-index|]
-operator|)
 block|,
 comment|/* "gost2001cc" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|813
-index|]
-operator|)
 block|,
 comment|/* "gost89" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|814
-index|]
-operator|)
 block|,
 comment|/* "gost89-cnt" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|812
-index|]
-operator|)
 block|,
 comment|/* "gost94" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|850
-index|]
-operator|)
 block|,
 comment|/* "gost94cc" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|797
-index|]
-operator|)
 block|,
 comment|/* "hmacWithMD5" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|163
-index|]
-operator|)
 block|,
 comment|/* "hmacWithSHA1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|798
-index|]
-operator|)
 block|,
 comment|/* "hmacWithSHA224" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|799
-index|]
-operator|)
 block|,
 comment|/* "hmacWithSHA256" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|800
-index|]
-operator|)
 block|,
 comment|/* "hmacWithSHA384" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|801
-index|]
-operator|)
 block|,
 comment|/* "hmacWithSHA512" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|432
-index|]
-operator|)
 block|,
 comment|/* "holdInstructionCallIssuer" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|430
-index|]
-operator|)
 block|,
 comment|/* "holdInstructionCode" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|431
-index|]
-operator|)
 block|,
 comment|/* "holdInstructionNone" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|433
-index|]
-operator|)
 block|,
 comment|/* "holdInstructionReject" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|486
-index|]
-operator|)
 block|,
 comment|/* "homePostalAddress" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|473
-index|]
-operator|)
 block|,
 comment|/* "homeTelephoneNumber" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|466
-index|]
-operator|)
 block|,
 comment|/* "host" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|889
-index|]
-operator|)
 block|,
 comment|/* "houseIdentifier" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|442
-index|]
-operator|)
 block|,
 comment|/* "iA5StringSyntax" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|783
-index|]
-operator|)
 block|,
 comment|/* "id-DHBasedMac" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|824
-index|]
-operator|)
 block|,
 comment|/* "id-Gost28147-89-CryptoPro-A-ParamSet" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|825
-index|]
-operator|)
 block|,
 comment|/* "id-Gost28147-89-CryptoPro-B-ParamSet" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|826
-index|]
-operator|)
 block|,
 comment|/* "id-Gost28147-89-CryptoPro-C-ParamSet" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|827
-index|]
-operator|)
 block|,
 comment|/* "id-Gost28147-89-CryptoPro-D-ParamSet" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|819
-index|]
-operator|)
 block|,
 comment|/* "id-Gost28147-89-CryptoPro-KeyMeshing" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|829
-index|]
-operator|)
 block|,
 comment|/* "id-Gost28147-89-CryptoPro-Oscar-1-0-ParamSet" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|828
-index|]
-operator|)
 block|,
 comment|/* "id-Gost28147-89-CryptoPro-Oscar-1-1-ParamSet" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|830
-index|]
-operator|)
 block|,
 comment|/* "id-Gost28147-89-CryptoPro-RIC-1-ParamSet" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|820
-index|]
-operator|)
 block|,
 comment|/* "id-Gost28147-89-None-KeyMeshing" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|823
-index|]
-operator|)
 block|,
 comment|/* "id-Gost28147-89-TestParamSet" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|849
-index|]
-operator|)
 block|,
 comment|/* "id-Gost28147-89-cc" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|840
-index|]
-operator|)
 block|,
 comment|/* "id-GostR3410-2001-CryptoPro-A-ParamSet" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|841
-index|]
-operator|)
 block|,
 comment|/* "id-GostR3410-2001-CryptoPro-B-ParamSet" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|842
-index|]
-operator|)
 block|,
 comment|/* "id-GostR3410-2001-CryptoPro-C-ParamSet" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|843
-index|]
-operator|)
 block|,
 comment|/* "id-GostR3410-2001-CryptoPro-XchA-ParamSet" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|844
-index|]
-operator|)
 block|,
 comment|/* "id-GostR3410-2001-CryptoPro-XchB-ParamSet" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|854
-index|]
-operator|)
 block|,
 comment|/* "id-GostR3410-2001-ParamSet-cc" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|839
-index|]
-operator|)
 block|,
 comment|/* "id-GostR3410-2001-TestParamSet" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|817
-index|]
-operator|)
 block|,
 comment|/* "id-GostR3410-2001DH" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|832
-index|]
-operator|)
 block|,
 comment|/* "id-GostR3410-94-CryptoPro-A-ParamSet" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|833
-index|]
-operator|)
 block|,
 comment|/* "id-GostR3410-94-CryptoPro-B-ParamSet" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|834
-index|]
-operator|)
 block|,
 comment|/* "id-GostR3410-94-CryptoPro-C-ParamSet" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|835
-index|]
-operator|)
 block|,
 comment|/* "id-GostR3410-94-CryptoPro-D-ParamSet" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|836
-index|]
-operator|)
 block|,
 comment|/* "id-GostR3410-94-CryptoPro-XchA-ParamSet" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|837
-index|]
-operator|)
 block|,
 comment|/* "id-GostR3410-94-CryptoPro-XchB-ParamSet" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|838
-index|]
-operator|)
 block|,
 comment|/* "id-GostR3410-94-CryptoPro-XchC-ParamSet" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|831
-index|]
-operator|)
 block|,
 comment|/* "id-GostR3410-94-TestParamSet" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|845
-index|]
-operator|)
 block|,
 comment|/* "id-GostR3410-94-a" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|846
-index|]
-operator|)
 block|,
 comment|/* "id-GostR3410-94-aBis" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|847
-index|]
-operator|)
 block|,
 comment|/* "id-GostR3410-94-b" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|848
-index|]
-operator|)
 block|,
 comment|/* "id-GostR3410-94-bBis" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|818
-index|]
-operator|)
 block|,
 comment|/* "id-GostR3410-94DH" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|822
-index|]
-operator|)
 block|,
 comment|/* "id-GostR3411-94-CryptoProParamSet" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|821
-index|]
-operator|)
 block|,
 comment|/* "id-GostR3411-94-TestParamSet" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|807
-index|]
-operator|)
 block|,
 comment|/* "id-GostR3411-94-with-GostR3410-2001" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|853
-index|]
-operator|)
 block|,
 comment|/* "id-GostR3411-94-with-GostR3410-2001-cc" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|808
-index|]
-operator|)
 block|,
 comment|/* "id-GostR3411-94-with-GostR3410-94" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|852
-index|]
-operator|)
 block|,
 comment|/* "id-GostR3411-94-with-GostR3410-94-cc" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|810
-index|]
-operator|)
 block|,
 comment|/* "id-HMACGostR3411-94" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|782
-index|]
-operator|)
 block|,
 comment|/* "id-PasswordBasedMAC" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|266
-index|]
-operator|)
 block|,
 comment|/* "id-aca" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|355
-index|]
-operator|)
 block|,
 comment|/* "id-aca-accessIdentity" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|354
-index|]
-operator|)
 block|,
 comment|/* "id-aca-authenticationInfo" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|356
-index|]
-operator|)
 block|,
 comment|/* "id-aca-chargingIdentity" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|399
-index|]
-operator|)
 block|,
 comment|/* "id-aca-encAttrs" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|357
-index|]
-operator|)
 block|,
 comment|/* "id-aca-group" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|358
-index|]
-operator|)
 block|,
 comment|/* "id-aca-role" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|176
-index|]
-operator|)
 block|,
 comment|/* "id-ad" */
-operator|&
-operator|(
-name|nid_objs
-index|[
+literal|896
+block|,
+comment|/* "id-aes128-CCM" */
+literal|895
+block|,
+comment|/* "id-aes128-GCM" */
 literal|788
-index|]
-operator|)
 block|,
 comment|/* "id-aes128-wrap" */
-operator|&
-operator|(
-name|nid_objs
-index|[
+literal|897
+block|,
+comment|/* "id-aes128-wrap-pad" */
+literal|899
+block|,
+comment|/* "id-aes192-CCM" */
+literal|898
+block|,
+comment|/* "id-aes192-GCM" */
 literal|789
-index|]
-operator|)
 block|,
 comment|/* "id-aes192-wrap" */
-operator|&
-operator|(
-name|nid_objs
-index|[
+literal|900
+block|,
+comment|/* "id-aes192-wrap-pad" */
+literal|902
+block|,
+comment|/* "id-aes256-CCM" */
+literal|901
+block|,
+comment|/* "id-aes256-GCM" */
 literal|790
-index|]
-operator|)
 block|,
 comment|/* "id-aes256-wrap" */
-operator|&
-operator|(
-name|nid_objs
-index|[
+literal|903
+block|,
+comment|/* "id-aes256-wrap-pad" */
 literal|262
-index|]
-operator|)
 block|,
 comment|/* "id-alg" */
-operator|&
-operator|(
-name|nid_objs
-index|[
+literal|893
+block|,
+comment|/* "id-alg-PWRI-KEK" */
 literal|323
-index|]
-operator|)
 block|,
 comment|/* "id-alg-des40" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|326
-index|]
-operator|)
 block|,
 comment|/* "id-alg-dh-pop" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|325
-index|]
-operator|)
 block|,
 comment|/* "id-alg-dh-sig-hmac-sha1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|324
-index|]
-operator|)
 block|,
 comment|/* "id-alg-noSignature" */
-operator|&
-operator|(
-name|nid_objs
-index|[
+literal|907
+block|,
+comment|/* "id-camellia128-wrap" */
+literal|908
+block|,
+comment|/* "id-camellia192-wrap" */
+literal|909
+block|,
+comment|/* "id-camellia256-wrap" */
 literal|268
-index|]
-operator|)
 block|,
 comment|/* "id-cct" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|361
-index|]
-operator|)
 block|,
 comment|/* "id-cct-PKIData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|362
-index|]
-operator|)
 block|,
 comment|/* "id-cct-PKIResponse" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|360
-index|]
-operator|)
 block|,
 comment|/* "id-cct-crs" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|81
-index|]
-operator|)
 block|,
 comment|/* "id-ce" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|680
-index|]
-operator|)
 block|,
 comment|/* "id-characteristic-two-basis" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|263
-index|]
-operator|)
 block|,
 comment|/* "id-cmc" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|334
-index|]
-operator|)
 block|,
 comment|/* "id-cmc-addExtensions" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|346
-index|]
-operator|)
 block|,
 comment|/* "id-cmc-confirmCertAcceptance" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|330
-index|]
-operator|)
 block|,
 comment|/* "id-cmc-dataReturn" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|336
-index|]
-operator|)
 block|,
 comment|/* "id-cmc-decryptedPOP" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|335
-index|]
-operator|)
 block|,
 comment|/* "id-cmc-encryptedPOP" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|339
-index|]
-operator|)
 block|,
 comment|/* "id-cmc-getCRL" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|338
-index|]
-operator|)
 block|,
 comment|/* "id-cmc-getCert" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|328
-index|]
-operator|)
 block|,
 comment|/* "id-cmc-identification" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|329
-index|]
-operator|)
 block|,
 comment|/* "id-cmc-identityProof" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|337
-index|]
-operator|)
 block|,
 comment|/* "id-cmc-lraPOPWitness" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|344
-index|]
-operator|)
 block|,
 comment|/* "id-cmc-popLinkRandom" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|345
-index|]
-operator|)
 block|,
 comment|/* "id-cmc-popLinkWitness" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|343
-index|]
-operator|)
 block|,
 comment|/* "id-cmc-queryPending" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|333
-index|]
-operator|)
 block|,
 comment|/* "id-cmc-recipientNonce" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|341
-index|]
-operator|)
 block|,
 comment|/* "id-cmc-regInfo" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|342
-index|]
-operator|)
 block|,
 comment|/* "id-cmc-responseInfo" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|340
-index|]
-operator|)
 block|,
 comment|/* "id-cmc-revokeRequest" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|332
-index|]
-operator|)
 block|,
 comment|/* "id-cmc-senderNonce" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|327
-index|]
-operator|)
 block|,
 comment|/* "id-cmc-statusInfo" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|331
-index|]
-operator|)
 block|,
 comment|/* "id-cmc-transactionId" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|787
-index|]
-operator|)
 block|,
 comment|/* "id-ct-asciiTextWithCRLF" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|408
-index|]
-operator|)
 block|,
 comment|/* "id-ecPublicKey" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|508
-index|]
-operator|)
 block|,
 comment|/* "id-hex-multipart-message" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|507
-index|]
-operator|)
 block|,
 comment|/* "id-hex-partial-message" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|260
-index|]
-operator|)
 block|,
 comment|/* "id-it" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|302
-index|]
-operator|)
 block|,
 comment|/* "id-it-caKeyUpdateInfo" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|298
-index|]
-operator|)
 block|,
 comment|/* "id-it-caProtEncCert" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|311
-index|]
-operator|)
 block|,
 comment|/* "id-it-confirmWaitTime" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|303
-index|]
-operator|)
 block|,
 comment|/* "id-it-currentCRL" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|300
-index|]
-operator|)
 block|,
 comment|/* "id-it-encKeyPairTypes" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|310
-index|]
-operator|)
 block|,
 comment|/* "id-it-implicitConfirm" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|308
-index|]
-operator|)
 block|,
 comment|/* "id-it-keyPairParamRep" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|307
-index|]
-operator|)
 block|,
 comment|/* "id-it-keyPairParamReq" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|312
-index|]
-operator|)
 block|,
 comment|/* "id-it-origPKIMessage" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|301
-index|]
-operator|)
 block|,
 comment|/* "id-it-preferredSymmAlg" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|309
-index|]
-operator|)
 block|,
 comment|/* "id-it-revPassphrase" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|299
-index|]
-operator|)
 block|,
 comment|/* "id-it-signKeyPairTypes" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|305
-index|]
-operator|)
 block|,
 comment|/* "id-it-subscriptionRequest" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|306
-index|]
-operator|)
 block|,
 comment|/* "id-it-subscriptionResponse" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|784
-index|]
-operator|)
 block|,
 comment|/* "id-it-suppLangTags" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|304
-index|]
-operator|)
 block|,
 comment|/* "id-it-unsupportedOIDs" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|128
-index|]
-operator|)
 block|,
 comment|/* "id-kp" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|280
-index|]
-operator|)
 block|,
 comment|/* "id-mod-attribute-cert" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|274
-index|]
-operator|)
 block|,
 comment|/* "id-mod-cmc" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|277
-index|]
-operator|)
 block|,
 comment|/* "id-mod-cmp" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|284
-index|]
-operator|)
 block|,
 comment|/* "id-mod-cmp2000" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|273
-index|]
-operator|)
 block|,
 comment|/* "id-mod-crmf" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|283
-index|]
-operator|)
 block|,
 comment|/* "id-mod-dvcs" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|275
-index|]
-operator|)
 block|,
 comment|/* "id-mod-kea-profile-88" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|276
-index|]
-operator|)
 block|,
 comment|/* "id-mod-kea-profile-93" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|282
-index|]
-operator|)
 block|,
 comment|/* "id-mod-ocsp" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|278
-index|]
-operator|)
 block|,
 comment|/* "id-mod-qualified-cert-88" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|279
-index|]
-operator|)
 block|,
 comment|/* "id-mod-qualified-cert-93" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|281
-index|]
-operator|)
 block|,
 comment|/* "id-mod-timestamp-protocol" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|264
-index|]
-operator|)
 block|,
 comment|/* "id-on" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|858
-index|]
-operator|)
 block|,
 comment|/* "id-on-permanentIdentifier" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|347
-index|]
-operator|)
 block|,
 comment|/* "id-on-personalData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|265
-index|]
-operator|)
 block|,
 comment|/* "id-pda" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|352
-index|]
-operator|)
 block|,
 comment|/* "id-pda-countryOfCitizenship" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|353
-index|]
-operator|)
 block|,
 comment|/* "id-pda-countryOfResidence" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|348
-index|]
-operator|)
 block|,
 comment|/* "id-pda-dateOfBirth" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|351
-index|]
-operator|)
 block|,
 comment|/* "id-pda-gender" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|349
-index|]
-operator|)
 block|,
 comment|/* "id-pda-placeOfBirth" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|175
-index|]
-operator|)
 block|,
 comment|/* "id-pe" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|261
-index|]
-operator|)
 block|,
 comment|/* "id-pkip" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|258
-index|]
-operator|)
 block|,
 comment|/* "id-pkix-mod" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|269
-index|]
-operator|)
 block|,
 comment|/* "id-pkix1-explicit-88" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|271
-index|]
-operator|)
 block|,
 comment|/* "id-pkix1-explicit-93" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|270
-index|]
-operator|)
 block|,
 comment|/* "id-pkix1-implicit-88" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|272
-index|]
-operator|)
 block|,
 comment|/* "id-pkix1-implicit-93" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|662
-index|]
-operator|)
 block|,
 comment|/* "id-ppl" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|664
-index|]
-operator|)
 block|,
 comment|/* "id-ppl-anyLanguage" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|667
-index|]
-operator|)
 block|,
 comment|/* "id-ppl-independent" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|665
-index|]
-operator|)
 block|,
 comment|/* "id-ppl-inheritAll" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|267
-index|]
-operator|)
 block|,
 comment|/* "id-qcs" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|359
-index|]
-operator|)
 block|,
 comment|/* "id-qcs-pkixQCSyntax-v1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|259
-index|]
-operator|)
 block|,
 comment|/* "id-qt" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|164
-index|]
-operator|)
 block|,
 comment|/* "id-qt-cps" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|165
-index|]
-operator|)
 block|,
 comment|/* "id-qt-unotice" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|313
-index|]
-operator|)
 block|,
 comment|/* "id-regCtrl" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|316
-index|]
-operator|)
 block|,
 comment|/* "id-regCtrl-authenticator" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|319
-index|]
-operator|)
 block|,
 comment|/* "id-regCtrl-oldCertID" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|318
-index|]
-operator|)
 block|,
 comment|/* "id-regCtrl-pkiArchiveOptions" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|317
-index|]
-operator|)
 block|,
 comment|/* "id-regCtrl-pkiPublicationInfo" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|320
-index|]
-operator|)
 block|,
 comment|/* "id-regCtrl-protocolEncrKey" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|315
-index|]
-operator|)
 block|,
 comment|/* "id-regCtrl-regToken" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|314
-index|]
-operator|)
 block|,
 comment|/* "id-regInfo" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|322
-index|]
-operator|)
 block|,
 comment|/* "id-regInfo-certReq" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|321
-index|]
-operator|)
 block|,
 comment|/* "id-regInfo-utf8Pairs" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|512
-index|]
-operator|)
 block|,
 comment|/* "id-set" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|191
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|215
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-contentHint" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|218
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-contentIdentifier" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|221
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-contentReference" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|240
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-dvcs-dvc" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|217
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-encapContentType" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|222
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-encrypKeyPref" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|220
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-equivalentLabels" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|232
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-ets-CertificateRefs" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|233
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-ets-RevocationRefs" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|238
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-ets-archiveTimeStamp" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|237
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-ets-certCRLTimestamp" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|234
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-ets-certValues" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|227
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-ets-commitmentType" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|231
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-ets-contentTimestamp" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|236
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-ets-escTimeStamp" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|230
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-ets-otherSigCert" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|235
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-ets-revocationValues" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|226
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-ets-sigPolicyId" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|229
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-ets-signerAttr" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|228
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-ets-signerLocation" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|219
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-macValue" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|214
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-mlExpandHistory" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|216
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-msgSigDigest" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|212
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-receiptRequest" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|213
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-securityLabel" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|239
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-signatureType" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|223
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-signingCertificate" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|224
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-smimeEncryptCerts" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|225
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-timeStampToken" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|192
-index|]
-operator|)
 block|,
 comment|/* "id-smime-alg" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|243
-index|]
-operator|)
 block|,
 comment|/* "id-smime-alg-3DESwrap" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|246
-index|]
-operator|)
 block|,
 comment|/* "id-smime-alg-CMS3DESwrap" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|247
-index|]
-operator|)
 block|,
 comment|/* "id-smime-alg-CMSRC2wrap" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|245
-index|]
-operator|)
 block|,
 comment|/* "id-smime-alg-ESDH" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|241
-index|]
-operator|)
 block|,
 comment|/* "id-smime-alg-ESDHwith3DES" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|242
-index|]
-operator|)
 block|,
 comment|/* "id-smime-alg-ESDHwithRC2" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|244
-index|]
-operator|)
 block|,
 comment|/* "id-smime-alg-RC2wrap" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|193
-index|]
-operator|)
 block|,
 comment|/* "id-smime-cd" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|248
-index|]
-operator|)
 block|,
 comment|/* "id-smime-cd-ldap" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|190
-index|]
-operator|)
 block|,
 comment|/* "id-smime-ct" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|210
-index|]
-operator|)
 block|,
 comment|/* "id-smime-ct-DVCSRequestData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|211
-index|]
-operator|)
 block|,
 comment|/* "id-smime-ct-DVCSResponseData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|208
-index|]
-operator|)
 block|,
 comment|/* "id-smime-ct-TDTInfo" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|207
-index|]
-operator|)
 block|,
 comment|/* "id-smime-ct-TSTInfo" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|205
-index|]
-operator|)
 block|,
 comment|/* "id-smime-ct-authData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|786
-index|]
-operator|)
 block|,
 comment|/* "id-smime-ct-compressedData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|209
-index|]
-operator|)
 block|,
 comment|/* "id-smime-ct-contentInfo" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|206
-index|]
-operator|)
 block|,
 comment|/* "id-smime-ct-publishCert" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|204
-index|]
-operator|)
 block|,
 comment|/* "id-smime-ct-receipt" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|195
-index|]
-operator|)
 block|,
 comment|/* "id-smime-cti" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|255
-index|]
-operator|)
 block|,
 comment|/* "id-smime-cti-ets-proofOfApproval" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|256
-index|]
-operator|)
 block|,
 comment|/* "id-smime-cti-ets-proofOfCreation" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|253
-index|]
-operator|)
 block|,
 comment|/* "id-smime-cti-ets-proofOfDelivery" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|251
-index|]
-operator|)
 block|,
 comment|/* "id-smime-cti-ets-proofOfOrigin" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|252
-index|]
-operator|)
 block|,
 comment|/* "id-smime-cti-ets-proofOfReceipt" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|254
-index|]
-operator|)
 block|,
 comment|/* "id-smime-cti-ets-proofOfSender" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|189
-index|]
-operator|)
 block|,
 comment|/* "id-smime-mod" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|196
-index|]
-operator|)
 block|,
 comment|/* "id-smime-mod-cms" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|197
-index|]
-operator|)
 block|,
 comment|/* "id-smime-mod-ess" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|202
-index|]
-operator|)
 block|,
 comment|/* "id-smime-mod-ets-eSigPolicy-88" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|203
-index|]
-operator|)
 block|,
 comment|/* "id-smime-mod-ets-eSigPolicy-97" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|200
-index|]
-operator|)
 block|,
 comment|/* "id-smime-mod-ets-eSignature-88" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|201
-index|]
-operator|)
 block|,
 comment|/* "id-smime-mod-ets-eSignature-97" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|199
-index|]
-operator|)
 block|,
 comment|/* "id-smime-mod-msg-v3" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|198
-index|]
-operator|)
 block|,
 comment|/* "id-smime-mod-oid" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|194
-index|]
-operator|)
 block|,
 comment|/* "id-smime-spq" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|250
-index|]
-operator|)
 block|,
 comment|/* "id-smime-spq-ets-sqt-unotice" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|249
-index|]
-operator|)
 block|,
 comment|/* "id-smime-spq-ets-sqt-uri" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|676
-index|]
-operator|)
 block|,
 comment|/* "identified-organization" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|461
-index|]
-operator|)
 block|,
 comment|/* "info" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|748
-index|]
-operator|)
 block|,
 comment|/* "inhibitAnyPolicy" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|101
-index|]
-operator|)
 block|,
 comment|/* "initials" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|647
-index|]
-operator|)
 block|,
 comment|/* "international-organizations" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|869
-index|]
-operator|)
 block|,
 comment|/* "internationaliSDNNumber" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|142
-index|]
-operator|)
 block|,
 comment|/* "invalidityDate" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|294
-index|]
-operator|)
 block|,
 comment|/* "ipsecEndSystem" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|295
-index|]
-operator|)
 block|,
 comment|/* "ipsecTunnel" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|296
-index|]
-operator|)
 block|,
 comment|/* "ipsecUser" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|86
-index|]
-operator|)
 block|,
 comment|/* "issuerAltName" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|770
-index|]
-operator|)
 block|,
 comment|/* "issuingDistributionPoint" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|492
-index|]
-operator|)
 block|,
 comment|/* "janetMailbox" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|150
-index|]
-operator|)
 block|,
 comment|/* "keyBag" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|83
-index|]
-operator|)
 block|,
 comment|/* "keyUsage" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|477
-index|]
-operator|)
 block|,
 comment|/* "lastModifiedBy" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|476
-index|]
-operator|)
 block|,
 comment|/* "lastModifiedTime" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|157
-index|]
-operator|)
 block|,
 comment|/* "localKeyID" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|480
-index|]
-operator|)
 block|,
 comment|/* "mXRecord" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|460
-index|]
-operator|)
 block|,
 comment|/* "mail" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|493
-index|]
-operator|)
 block|,
 comment|/* "mailPreferenceOption" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|467
-index|]
-operator|)
 block|,
 comment|/* "manager" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|809
-index|]
-operator|)
 block|,
 comment|/* "md_gost94" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|875
-index|]
-operator|)
 block|,
 comment|/* "member" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|182
-index|]
-operator|)
 block|,
 comment|/* "member-body" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|51
-index|]
-operator|)
 block|,
 comment|/* "messageDigest" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|383
-index|]
-operator|)
 block|,
 comment|/* "mgmt" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|504
-index|]
-operator|)
 block|,
 comment|/* "mime-mhs" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|506
-index|]
-operator|)
 block|,
 comment|/* "mime-mhs-bodies" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|505
-index|]
-operator|)
 block|,
 comment|/* "mime-mhs-headings" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|488
-index|]
-operator|)
 block|,
 comment|/* "mobileTelephoneNumber" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|136
-index|]
-operator|)
 block|,
 comment|/* "msCTLSign" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|135
-index|]
-operator|)
 block|,
 comment|/* "msCodeCom" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|134
-index|]
-operator|)
 block|,
 comment|/* "msCodeInd" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|138
-index|]
-operator|)
 block|,
 comment|/* "msEFS" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|171
-index|]
-operator|)
 block|,
 comment|/* "msExtReq" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|137
-index|]
-operator|)
 block|,
 comment|/* "msSGC" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|648
-index|]
-operator|)
 block|,
 comment|/* "msSmartcardLogin" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|649
-index|]
-operator|)
 block|,
 comment|/* "msUPN" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|481
-index|]
-operator|)
 block|,
 comment|/* "nSRecord" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|173
-index|]
-operator|)
 block|,
 comment|/* "name" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|666
-index|]
-operator|)
 block|,
 comment|/* "nameConstraints" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|369
-index|]
-operator|)
 block|,
 comment|/* "noCheck" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|403
-index|]
-operator|)
 block|,
 comment|/* "noRevAvail" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|72
-index|]
-operator|)
 block|,
 comment|/* "nsBaseUrl" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|76
-index|]
-operator|)
 block|,
 comment|/* "nsCaPolicyUrl" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|74
-index|]
-operator|)
 block|,
 comment|/* "nsCaRevocationUrl" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|58
-index|]
-operator|)
 block|,
 comment|/* "nsCertExt" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|79
-index|]
-operator|)
 block|,
 comment|/* "nsCertSequence" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|71
-index|]
-operator|)
 block|,
 comment|/* "nsCertType" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|78
-index|]
-operator|)
 block|,
 comment|/* "nsComment" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|59
-index|]
-operator|)
 block|,
 comment|/* "nsDataType" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|75
-index|]
-operator|)
 block|,
 comment|/* "nsRenewalUrl" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|73
-index|]
-operator|)
 block|,
 comment|/* "nsRevocationUrl" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|139
-index|]
-operator|)
 block|,
 comment|/* "nsSGC" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|77
-index|]
-operator|)
 block|,
 comment|/* "nsSslServerName" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|681
-index|]
-operator|)
 block|,
 comment|/* "onBasis" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|491
-index|]
-operator|)
 block|,
 comment|/* "organizationalStatus" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|475
-index|]
-operator|)
 block|,
 comment|/* "otherMailbox" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|876
-index|]
-operator|)
 block|,
 comment|/* "owner" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|489
-index|]
-operator|)
 block|,
 comment|/* "pagerTelephoneNumber" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|374
-index|]
-operator|)
 block|,
 comment|/* "path" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|112
-index|]
-operator|)
 block|,
 comment|/* "pbeWithMD5AndCast5CBC" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|499
-index|]
-operator|)
 block|,
 comment|/* "personalSignature" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|487
-index|]
-operator|)
 block|,
 comment|/* "personalTitle" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|464
-index|]
-operator|)
 block|,
 comment|/* "photo" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|863
-index|]
-operator|)
 block|,
 comment|/* "physicalDeliveryOfficeName" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|437
-index|]
-operator|)
 block|,
 comment|/* "pilot" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|439
-index|]
-operator|)
 block|,
 comment|/* "pilotAttributeSyntax" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|438
-index|]
-operator|)
 block|,
 comment|/* "pilotAttributeType" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|479
-index|]
-operator|)
 block|,
 comment|/* "pilotAttributeType27" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|456
-index|]
-operator|)
 block|,
 comment|/* "pilotDSA" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|441
-index|]
-operator|)
 block|,
 comment|/* "pilotGroups" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|444
-index|]
-operator|)
 block|,
 comment|/* "pilotObject" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|440
-index|]
-operator|)
 block|,
 comment|/* "pilotObjectClass" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|455
-index|]
-operator|)
 block|,
 comment|/* "pilotOrganization" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|445
-index|]
-operator|)
 block|,
 comment|/* "pilotPerson" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|2
-index|]
-operator|)
 block|,
 comment|/* "pkcs" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|186
-index|]
-operator|)
 block|,
 comment|/* "pkcs1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|27
-index|]
-operator|)
 block|,
 comment|/* "pkcs3" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|187
-index|]
-operator|)
 block|,
 comment|/* "pkcs5" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|20
-index|]
-operator|)
 block|,
 comment|/* "pkcs7" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|21
-index|]
-operator|)
 block|,
 comment|/* "pkcs7-data" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|25
-index|]
-operator|)
 block|,
 comment|/* "pkcs7-digestData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|26
-index|]
-operator|)
 block|,
 comment|/* "pkcs7-encryptedData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|23
-index|]
-operator|)
 block|,
 comment|/* "pkcs7-envelopedData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|24
-index|]
-operator|)
 block|,
 comment|/* "pkcs7-signedAndEnvelopedData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|22
-index|]
-operator|)
 block|,
 comment|/* "pkcs7-signedData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|151
-index|]
-operator|)
 block|,
 comment|/* "pkcs8ShroudedKeyBag" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|47
-index|]
-operator|)
 block|,
 comment|/* "pkcs9" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|401
-index|]
-operator|)
 block|,
 comment|/* "policyConstraints" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|747
-index|]
-operator|)
 block|,
 comment|/* "policyMappings" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|862
-index|]
-operator|)
 block|,
 comment|/* "postOfficeBox" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|861
-index|]
-operator|)
 block|,
 comment|/* "postalAddress" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|661
-index|]
-operator|)
 block|,
 comment|/* "postalCode" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|683
-index|]
-operator|)
 block|,
 comment|/* "ppBasis" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|872
-index|]
-operator|)
 block|,
 comment|/* "preferredDeliveryMethod" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|873
-index|]
-operator|)
 block|,
 comment|/* "presentationAddress" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|816
-index|]
-operator|)
 block|,
 comment|/* "prf-gostr3411-94" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|406
-index|]
-operator|)
 block|,
 comment|/* "prime-field" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|409
-index|]
-operator|)
 block|,
 comment|/* "prime192v1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|410
-index|]
-operator|)
 block|,
 comment|/* "prime192v2" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|411
-index|]
-operator|)
 block|,
 comment|/* "prime192v3" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|412
-index|]
-operator|)
 block|,
 comment|/* "prime239v1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|413
-index|]
-operator|)
 block|,
 comment|/* "prime239v2" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|414
-index|]
-operator|)
 block|,
 comment|/* "prime239v3" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|415
-index|]
-operator|)
 block|,
 comment|/* "prime256v1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|385
-index|]
-operator|)
 block|,
 comment|/* "private" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|84
-index|]
-operator|)
 block|,
 comment|/* "privateKeyUsagePeriod" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|886
-index|]
-operator|)
 block|,
 comment|/* "protocolInformation" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|663
-index|]
-operator|)
 block|,
 comment|/* "proxyCertInfo" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|510
-index|]
-operator|)
 block|,
 comment|/* "pseudonym" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|435
-index|]
-operator|)
 block|,
 comment|/* "pss" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|286
-index|]
-operator|)
 block|,
 comment|/* "qcStatements" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|457
-index|]
-operator|)
 block|,
 comment|/* "qualityLabelledData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|450
-index|]
-operator|)
 block|,
 comment|/* "rFC822localPart" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|870
-index|]
-operator|)
 block|,
 comment|/* "registeredAddress" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|400
-index|]
-operator|)
 block|,
 comment|/* "role" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|877
-index|]
-operator|)
 block|,
 comment|/* "roleOccupant" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|448
-index|]
-operator|)
 block|,
 comment|/* "room" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|463
-index|]
-operator|)
 block|,
 comment|/* "roomNumber" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|6
-index|]
-operator|)
 block|,
 comment|/* "rsaEncryption" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|644
-index|]
-operator|)
 block|,
 comment|/* "rsaOAEPEncryptionSET" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|377
-index|]
-operator|)
 block|,
 comment|/* "rsaSignature" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|1
-index|]
-operator|)
 block|,
 comment|/* "rsadsi" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|482
-index|]
-operator|)
 block|,
 comment|/* "sOARecord" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|155
-index|]
-operator|)
 block|,
 comment|/* "safeContentsBag" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|291
-index|]
-operator|)
 block|,
 comment|/* "sbgp-autonomousSysNum" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|290
-index|]
-operator|)
 block|,
 comment|/* "sbgp-ipAddrBlock" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|292
-index|]
-operator|)
 block|,
 comment|/* "sbgp-routerIdentifier" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|159
-index|]
-operator|)
 block|,
 comment|/* "sdsiCertificate" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|859
-index|]
-operator|)
 block|,
 comment|/* "searchGuide" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|704
-index|]
-operator|)
 block|,
 comment|/* "secp112r1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|705
-index|]
-operator|)
 block|,
 comment|/* "secp112r2" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|706
-index|]
-operator|)
 block|,
 comment|/* "secp128r1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|707
-index|]
-operator|)
 block|,
 comment|/* "secp128r2" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|708
-index|]
-operator|)
 block|,
 comment|/* "secp160k1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|709
-index|]
-operator|)
 block|,
 comment|/* "secp160r1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|710
-index|]
-operator|)
 block|,
 comment|/* "secp160r2" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|711
-index|]
-operator|)
 block|,
 comment|/* "secp192k1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|712
-index|]
-operator|)
 block|,
 comment|/* "secp224k1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|713
-index|]
-operator|)
 block|,
 comment|/* "secp224r1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|714
-index|]
-operator|)
 block|,
 comment|/* "secp256k1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|715
-index|]
-operator|)
 block|,
 comment|/* "secp384r1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|716
-index|]
-operator|)
 block|,
 comment|/* "secp521r1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|154
-index|]
-operator|)
 block|,
 comment|/* "secretBag" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|474
-index|]
-operator|)
 block|,
 comment|/* "secretary" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|717
-index|]
-operator|)
 block|,
 comment|/* "sect113r1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|718
-index|]
-operator|)
 block|,
 comment|/* "sect113r2" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|719
-index|]
-operator|)
 block|,
 comment|/* "sect131r1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|720
-index|]
-operator|)
 block|,
 comment|/* "sect131r2" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|721
-index|]
-operator|)
 block|,
 comment|/* "sect163k1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|722
-index|]
-operator|)
 block|,
 comment|/* "sect163r1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|723
-index|]
-operator|)
 block|,
 comment|/* "sect163r2" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|724
-index|]
-operator|)
 block|,
 comment|/* "sect193r1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|725
-index|]
-operator|)
 block|,
 comment|/* "sect193r2" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|726
-index|]
-operator|)
 block|,
 comment|/* "sect233k1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|727
-index|]
-operator|)
 block|,
 comment|/* "sect233r1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|728
-index|]
-operator|)
 block|,
 comment|/* "sect239k1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|729
-index|]
-operator|)
 block|,
 comment|/* "sect283k1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|730
-index|]
-operator|)
 block|,
 comment|/* "sect283r1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|731
-index|]
-operator|)
 block|,
 comment|/* "sect409k1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|732
-index|]
-operator|)
 block|,
 comment|/* "sect409r1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|733
-index|]
-operator|)
 block|,
 comment|/* "sect571k1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|734
-index|]
-operator|)
 block|,
 comment|/* "sect571r1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|386
-index|]
-operator|)
 block|,
 comment|/* "security" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|878
-index|]
-operator|)
 block|,
 comment|/* "seeAlso" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|394
-index|]
-operator|)
 block|,
 comment|/* "selected-attribute-types" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|105
-index|]
-operator|)
 block|,
 comment|/* "serialNumber" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|129
-index|]
-operator|)
 block|,
 comment|/* "serverAuth" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|371
-index|]
-operator|)
 block|,
 comment|/* "serviceLocator" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|625
-index|]
-operator|)
 block|,
 comment|/* "set-addPolicy" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|515
-index|]
-operator|)
 block|,
 comment|/* "set-attr" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|518
-index|]
-operator|)
 block|,
 comment|/* "set-brand" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|638
-index|]
-operator|)
 block|,
 comment|/* "set-brand-AmericanExpress" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|637
-index|]
-operator|)
 block|,
 comment|/* "set-brand-Diners" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|636
-index|]
-operator|)
 block|,
 comment|/* "set-brand-IATA-ATA" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|639
-index|]
-operator|)
 block|,
 comment|/* "set-brand-JCB" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|641
-index|]
-operator|)
 block|,
 comment|/* "set-brand-MasterCard" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|642
-index|]
-operator|)
 block|,
 comment|/* "set-brand-Novus" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|640
-index|]
-operator|)
 block|,
 comment|/* "set-brand-Visa" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|517
-index|]
-operator|)
 block|,
 comment|/* "set-certExt" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|513
-index|]
-operator|)
 block|,
 comment|/* "set-ctype" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|514
-index|]
-operator|)
 block|,
 comment|/* "set-msgExt" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|516
-index|]
-operator|)
 block|,
 comment|/* "set-policy" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|607
-index|]
-operator|)
 block|,
 comment|/* "set-policy-root" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|624
-index|]
-operator|)
 block|,
 comment|/* "set-rootKeyThumb" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|620
-index|]
-operator|)
 block|,
 comment|/* "setAttr-Cert" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|631
-index|]
-operator|)
 block|,
 comment|/* "setAttr-GenCryptgrm" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|623
-index|]
-operator|)
 block|,
 comment|/* "setAttr-IssCap" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|628
-index|]
-operator|)
 block|,
 comment|/* "setAttr-IssCap-CVM" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|630
-index|]
-operator|)
 block|,
 comment|/* "setAttr-IssCap-Sig" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|629
-index|]
-operator|)
 block|,
 comment|/* "setAttr-IssCap-T2" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|621
-index|]
-operator|)
 block|,
 comment|/* "setAttr-PGWYcap" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|635
-index|]
-operator|)
 block|,
 comment|/* "setAttr-SecDevSig" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|632
-index|]
-operator|)
 block|,
 comment|/* "setAttr-T2Enc" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|633
-index|]
-operator|)
 block|,
 comment|/* "setAttr-T2cleartxt" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|634
-index|]
-operator|)
 block|,
 comment|/* "setAttr-TokICCsig" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|627
-index|]
-operator|)
 block|,
 comment|/* "setAttr-Token-B0Prime" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|626
-index|]
-operator|)
 block|,
 comment|/* "setAttr-Token-EMV" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|622
-index|]
-operator|)
 block|,
 comment|/* "setAttr-TokenType" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|619
-index|]
-operator|)
 block|,
 comment|/* "setCext-IssuerCapabilities" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|615
-index|]
-operator|)
 block|,
 comment|/* "setCext-PGWYcapabilities" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|616
-index|]
-operator|)
 block|,
 comment|/* "setCext-TokenIdentifier" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|618
-index|]
-operator|)
 block|,
 comment|/* "setCext-TokenType" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|617
-index|]
-operator|)
 block|,
 comment|/* "setCext-Track2Data" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|611
-index|]
-operator|)
 block|,
 comment|/* "setCext-cCertRequired" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|609
-index|]
-operator|)
 block|,
 comment|/* "setCext-certType" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|608
-index|]
-operator|)
 block|,
 comment|/* "setCext-hashedRoot" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|610
-index|]
-operator|)
 block|,
 comment|/* "setCext-merchData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|613
-index|]
-operator|)
 block|,
 comment|/* "setCext-setExt" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|614
-index|]
-operator|)
 block|,
 comment|/* "setCext-setQualf" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|612
-index|]
-operator|)
 block|,
 comment|/* "setCext-tunneling" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|540
-index|]
-operator|)
 block|,
 comment|/* "setct-AcqCardCodeMsg" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|576
-index|]
-operator|)
 block|,
 comment|/* "setct-AcqCardCodeMsgTBE" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|570
-index|]
-operator|)
 block|,
 comment|/* "setct-AuthReqTBE" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|534
-index|]
-operator|)
 block|,
 comment|/* "setct-AuthReqTBS" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|527
-index|]
-operator|)
 block|,
 comment|/* "setct-AuthResBaggage" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|571
-index|]
-operator|)
 block|,
 comment|/* "setct-AuthResTBE" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|572
-index|]
-operator|)
 block|,
 comment|/* "setct-AuthResTBEX" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|535
-index|]
-operator|)
 block|,
 comment|/* "setct-AuthResTBS" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|536
-index|]
-operator|)
 block|,
 comment|/* "setct-AuthResTBSX" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|528
-index|]
-operator|)
 block|,
 comment|/* "setct-AuthRevReqBaggage" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|577
-index|]
-operator|)
 block|,
 comment|/* "setct-AuthRevReqTBE" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|541
-index|]
-operator|)
 block|,
 comment|/* "setct-AuthRevReqTBS" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|529
-index|]
-operator|)
 block|,
 comment|/* "setct-AuthRevResBaggage" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|542
-index|]
-operator|)
 block|,
 comment|/* "setct-AuthRevResData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|578
-index|]
-operator|)
 block|,
 comment|/* "setct-AuthRevResTBE" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|579
-index|]
-operator|)
 block|,
 comment|/* "setct-AuthRevResTBEB" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|543
-index|]
-operator|)
 block|,
 comment|/* "setct-AuthRevResTBS" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|573
-index|]
-operator|)
 block|,
 comment|/* "setct-AuthTokenTBE" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|537
-index|]
-operator|)
 block|,
 comment|/* "setct-AuthTokenTBS" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|600
-index|]
-operator|)
 block|,
 comment|/* "setct-BCIDistributionTBS" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|558
-index|]
-operator|)
 block|,
 comment|/* "setct-BatchAdminReqData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|592
-index|]
-operator|)
 block|,
 comment|/* "setct-BatchAdminReqTBE" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|559
-index|]
-operator|)
 block|,
 comment|/* "setct-BatchAdminResData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|593
-index|]
-operator|)
 block|,
 comment|/* "setct-BatchAdminResTBE" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|599
-index|]
-operator|)
 block|,
 comment|/* "setct-CRLNotificationResTBS" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|598
-index|]
-operator|)
 block|,
 comment|/* "setct-CRLNotificationTBS" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|580
-index|]
-operator|)
 block|,
 comment|/* "setct-CapReqTBE" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|581
-index|]
-operator|)
 block|,
 comment|/* "setct-CapReqTBEX" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|544
-index|]
-operator|)
 block|,
 comment|/* "setct-CapReqTBS" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|545
-index|]
-operator|)
 block|,
 comment|/* "setct-CapReqTBSX" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|546
-index|]
-operator|)
 block|,
 comment|/* "setct-CapResData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|582
-index|]
-operator|)
 block|,
 comment|/* "setct-CapResTBE" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|583
-index|]
-operator|)
 block|,
 comment|/* "setct-CapRevReqTBE" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|584
-index|]
-operator|)
 block|,
 comment|/* "setct-CapRevReqTBEX" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|547
-index|]
-operator|)
 block|,
 comment|/* "setct-CapRevReqTBS" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|548
-index|]
-operator|)
 block|,
 comment|/* "setct-CapRevReqTBSX" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|549
-index|]
-operator|)
 block|,
 comment|/* "setct-CapRevResData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|585
-index|]
-operator|)
 block|,
 comment|/* "setct-CapRevResTBE" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|538
-index|]
-operator|)
 block|,
 comment|/* "setct-CapTokenData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|530
-index|]
-operator|)
 block|,
 comment|/* "setct-CapTokenSeq" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|574
-index|]
-operator|)
 block|,
 comment|/* "setct-CapTokenTBE" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|575
-index|]
-operator|)
 block|,
 comment|/* "setct-CapTokenTBEX" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|539
-index|]
-operator|)
 block|,
 comment|/* "setct-CapTokenTBS" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|560
-index|]
-operator|)
 block|,
 comment|/* "setct-CardCInitResTBS" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|566
-index|]
-operator|)
 block|,
 comment|/* "setct-CertInqReqTBS" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|563
-index|]
-operator|)
 block|,
 comment|/* "setct-CertReqData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|595
-index|]
-operator|)
 block|,
 comment|/* "setct-CertReqTBE" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|596
-index|]
-operator|)
 block|,
 comment|/* "setct-CertReqTBEX" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|564
-index|]
-operator|)
 block|,
 comment|/* "setct-CertReqTBS" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|565
-index|]
-operator|)
 block|,
 comment|/* "setct-CertResData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|597
-index|]
-operator|)
 block|,
 comment|/* "setct-CertResTBE" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|586
-index|]
-operator|)
 block|,
 comment|/* "setct-CredReqTBE" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|587
-index|]
-operator|)
 block|,
 comment|/* "setct-CredReqTBEX" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|550
-index|]
-operator|)
 block|,
 comment|/* "setct-CredReqTBS" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|551
-index|]
-operator|)
 block|,
 comment|/* "setct-CredReqTBSX" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|552
-index|]
-operator|)
 block|,
 comment|/* "setct-CredResData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|588
-index|]
-operator|)
 block|,
 comment|/* "setct-CredResTBE" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|589
-index|]
-operator|)
 block|,
 comment|/* "setct-CredRevReqTBE" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|590
-index|]
-operator|)
 block|,
 comment|/* "setct-CredRevReqTBEX" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|553
-index|]
-operator|)
 block|,
 comment|/* "setct-CredRevReqTBS" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|554
-index|]
-operator|)
 block|,
 comment|/* "setct-CredRevReqTBSX" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|555
-index|]
-operator|)
 block|,
 comment|/* "setct-CredRevResData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|591
-index|]
-operator|)
 block|,
 comment|/* "setct-CredRevResTBE" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|567
-index|]
-operator|)
 block|,
 comment|/* "setct-ErrorTBS" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|526
-index|]
-operator|)
 block|,
 comment|/* "setct-HODInput" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|561
-index|]
-operator|)
 block|,
 comment|/* "setct-MeAqCInitResTBS" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|522
-index|]
-operator|)
 block|,
 comment|/* "setct-OIData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|519
-index|]
-operator|)
 block|,
 comment|/* "setct-PANData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|521
-index|]
-operator|)
 block|,
 comment|/* "setct-PANOnly" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|520
-index|]
-operator|)
 block|,
 comment|/* "setct-PANToken" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|556
-index|]
-operator|)
 block|,
 comment|/* "setct-PCertReqData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|557
-index|]
-operator|)
 block|,
 comment|/* "setct-PCertResTBS" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|523
-index|]
-operator|)
 block|,
 comment|/* "setct-PI" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|532
-index|]
-operator|)
 block|,
 comment|/* "setct-PI-TBS" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|524
-index|]
-operator|)
 block|,
 comment|/* "setct-PIData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|525
-index|]
-operator|)
 block|,
 comment|/* "setct-PIDataUnsigned" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|568
-index|]
-operator|)
 block|,
 comment|/* "setct-PIDualSignedTBE" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|569
-index|]
-operator|)
 block|,
 comment|/* "setct-PIUnsignedTBE" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|531
-index|]
-operator|)
 block|,
 comment|/* "setct-PInitResData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|533
-index|]
-operator|)
 block|,
 comment|/* "setct-PResData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|594
-index|]
-operator|)
 block|,
 comment|/* "setct-RegFormReqTBE" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|562
-index|]
-operator|)
 block|,
 comment|/* "setct-RegFormResTBS" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|606
-index|]
-operator|)
 block|,
 comment|/* "setext-cv" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|601
-index|]
-operator|)
 block|,
 comment|/* "setext-genCrypt" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|602
-index|]
-operator|)
 block|,
 comment|/* "setext-miAuth" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|604
-index|]
-operator|)
 block|,
 comment|/* "setext-pinAny" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|603
-index|]
-operator|)
 block|,
 comment|/* "setext-pinSecure" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|605
-index|]
-operator|)
 block|,
 comment|/* "setext-track2" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|52
-index|]
-operator|)
 block|,
 comment|/* "signingTime" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|454
-index|]
-operator|)
 block|,
 comment|/* "simpleSecurityObject" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|496
-index|]
-operator|)
 block|,
 comment|/* "singleLevelQuality" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|387
-index|]
-operator|)
 block|,
 comment|/* "snmpv2" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|660
-index|]
-operator|)
 block|,
 comment|/* "street" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|85
-index|]
-operator|)
 block|,
 comment|/* "subjectAltName" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|769
-index|]
-operator|)
 block|,
 comment|/* "subjectDirectoryAttributes" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|398
-index|]
-operator|)
 block|,
 comment|/* "subjectInfoAccess" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|82
-index|]
-operator|)
 block|,
 comment|/* "subjectKeyIdentifier" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|498
-index|]
-operator|)
 block|,
 comment|/* "subtreeMaximumQuality" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|497
-index|]
-operator|)
 block|,
 comment|/* "subtreeMinimumQuality" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|890
-index|]
-operator|)
 block|,
 comment|/* "supportedAlgorithms" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|874
-index|]
-operator|)
 block|,
 comment|/* "supportedApplicationContext" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|402
-index|]
-operator|)
 block|,
 comment|/* "targetInformation" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|864
-index|]
-operator|)
 block|,
 comment|/* "telephoneNumber" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|866
-index|]
-operator|)
 block|,
 comment|/* "teletexTerminalIdentifier" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|865
-index|]
-operator|)
 block|,
 comment|/* "telexNumber" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|459
-index|]
-operator|)
 block|,
 comment|/* "textEncodedORAddress" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|293
-index|]
-operator|)
 block|,
 comment|/* "textNotice" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|133
-index|]
-operator|)
 block|,
 comment|/* "timeStamping" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|106
-index|]
-operator|)
 block|,
 comment|/* "title" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|682
-index|]
-operator|)
 block|,
 comment|/* "tpBasis" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|375
-index|]
-operator|)
 block|,
 comment|/* "trustRoot" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|436
-index|]
-operator|)
 block|,
 comment|/* "ucl" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|888
-index|]
-operator|)
 block|,
 comment|/* "uniqueMember" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|55
-index|]
-operator|)
 block|,
 comment|/* "unstructuredAddress" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|49
-index|]
-operator|)
 block|,
 comment|/* "unstructuredName" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|880
-index|]
-operator|)
 block|,
 comment|/* "userCertificate" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|465
-index|]
-operator|)
 block|,
 comment|/* "userClass" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|879
-index|]
-operator|)
 block|,
 comment|/* "userPassword" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|373
-index|]
-operator|)
 block|,
 comment|/* "valid" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|678
-index|]
-operator|)
 block|,
 comment|/* "wap" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|679
-index|]
-operator|)
 block|,
 comment|/* "wap-wsg" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|735
-index|]
-operator|)
 block|,
 comment|/* "wap-wsg-idm-ecid-wtls1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|743
-index|]
-operator|)
 block|,
 comment|/* "wap-wsg-idm-ecid-wtls10" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|744
-index|]
-operator|)
 block|,
 comment|/* "wap-wsg-idm-ecid-wtls11" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|745
-index|]
-operator|)
 block|,
 comment|/* "wap-wsg-idm-ecid-wtls12" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|736
-index|]
-operator|)
 block|,
 comment|/* "wap-wsg-idm-ecid-wtls3" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|737
-index|]
-operator|)
 block|,
 comment|/* "wap-wsg-idm-ecid-wtls4" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|738
-index|]
-operator|)
 block|,
 comment|/* "wap-wsg-idm-ecid-wtls5" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|739
-index|]
-operator|)
 block|,
 comment|/* "wap-wsg-idm-ecid-wtls6" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|740
-index|]
-operator|)
 block|,
 comment|/* "wap-wsg-idm-ecid-wtls7" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|741
-index|]
-operator|)
 block|,
 comment|/* "wap-wsg-idm-ecid-wtls8" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|742
-index|]
-operator|)
 block|,
 comment|/* "wap-wsg-idm-ecid-wtls9" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|804
-index|]
-operator|)
 block|,
 comment|/* "whirlpool" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|868
-index|]
-operator|)
 block|,
 comment|/* "x121Address" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|503
-index|]
-operator|)
 block|,
 comment|/* "x500UniqueIdentifier" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|158
-index|]
-operator|)
 block|,
 comment|/* "x509Certificate" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|160
-index|]
-operator|)
 block|,
 comment|/* "x509Crl" */
 block|}
@@ -38083,7986 +33660,2752 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|ASN1_OBJECT
-modifier|*
+specifier|const
+name|unsigned
+name|int
 name|ln_objs
 index|[
 name|NUM_LN
 index|]
 init|=
 block|{
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|363
-index|]
-operator|)
 block|,
 comment|/* "AD Time Stamping" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|405
-index|]
-operator|)
 block|,
 comment|/* "ANSI X9.62" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|368
-index|]
-operator|)
 block|,
 comment|/* "Acceptable OCSP Responses" */
-operator|&
-operator|(
-name|nid_objs
-index|[
+literal|910
+block|,
+comment|/* "Any Extended Key Usage" */
 literal|664
-index|]
-operator|)
 block|,
 comment|/* "Any language" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|177
-index|]
-operator|)
 block|,
 comment|/* "Authority Information Access" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|365
-index|]
-operator|)
 block|,
 comment|/* "Basic OCSP Response" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|285
-index|]
-operator|)
 block|,
 comment|/* "Biometric Info" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|179
-index|]
-operator|)
 block|,
 comment|/* "CA Issuers" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|785
-index|]
-operator|)
 block|,
 comment|/* "CA Repository" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|131
-index|]
-operator|)
 block|,
 comment|/* "Code Signing" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|783
-index|]
-operator|)
 block|,
 comment|/* "Diffie-Hellman based MAC" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|382
-index|]
-operator|)
 block|,
 comment|/* "Directory" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|392
-index|]
-operator|)
 block|,
 comment|/* "Domain" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|132
-index|]
-operator|)
 block|,
 comment|/* "E-mail Protection" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|389
-index|]
-operator|)
 block|,
 comment|/* "Enterprises" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|384
-index|]
-operator|)
 block|,
 comment|/* "Experimental" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|372
-index|]
-operator|)
 block|,
 comment|/* "Extended OCSP Status" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|172
-index|]
-operator|)
 block|,
 comment|/* "Extension Request" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|813
-index|]
-operator|)
 block|,
 comment|/* "GOST 28147-89" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|849
-index|]
-operator|)
 block|,
 comment|/* "GOST 28147-89 Cryptocom ParamSet" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|815
-index|]
-operator|)
 block|,
 comment|/* "GOST 28147-89 MAC" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|851
-index|]
-operator|)
 block|,
 comment|/* "GOST 34.10-2001 Cryptocom" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|850
-index|]
-operator|)
 block|,
 comment|/* "GOST 34.10-94 Cryptocom" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|811
-index|]
-operator|)
 block|,
 comment|/* "GOST R 34.10-2001" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|817
-index|]
-operator|)
 block|,
 comment|/* "GOST R 34.10-2001 DH" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|812
-index|]
-operator|)
 block|,
 comment|/* "GOST R 34.10-94" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|818
-index|]
-operator|)
 block|,
 comment|/* "GOST R 34.10-94 DH" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|809
-index|]
-operator|)
 block|,
 comment|/* "GOST R 34.11-94" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|816
-index|]
-operator|)
 block|,
 comment|/* "GOST R 34.11-94 PRF" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|807
-index|]
-operator|)
 block|,
 comment|/* "GOST R 34.11-94 with GOST R 34.10-2001" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|853
-index|]
-operator|)
 block|,
 comment|/* "GOST R 34.11-94 with GOST R 34.10-2001 Cryptocom" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|808
-index|]
-operator|)
 block|,
 comment|/* "GOST R 34.11-94 with GOST R 34.10-94" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|852
-index|]
-operator|)
 block|,
 comment|/* "GOST R 34.11-94 with GOST R 34.10-94 Cryptocom" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|854
-index|]
-operator|)
 block|,
 comment|/* "GOST R 3410-2001 Parameter Set Cryptocom" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|810
-index|]
-operator|)
 block|,
 comment|/* "HMAC GOST 34.11-94" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|432
-index|]
-operator|)
 block|,
 comment|/* "Hold Instruction Call Issuer" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|430
-index|]
-operator|)
 block|,
 comment|/* "Hold Instruction Code" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|431
-index|]
-operator|)
 block|,
 comment|/* "Hold Instruction None" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|433
-index|]
-operator|)
 block|,
 comment|/* "Hold Instruction Reject" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|634
-index|]
-operator|)
 block|,
 comment|/* "ICC or token signature" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|294
-index|]
-operator|)
 block|,
 comment|/* "IPSec End System" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|295
-index|]
-operator|)
 block|,
 comment|/* "IPSec Tunnel" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|296
-index|]
-operator|)
 block|,
 comment|/* "IPSec User" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|182
-index|]
-operator|)
 block|,
 comment|/* "ISO Member Body" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|183
-index|]
-operator|)
 block|,
 comment|/* "ISO US Member Body" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|667
-index|]
-operator|)
 block|,
 comment|/* "Independent" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|665
-index|]
-operator|)
 block|,
 comment|/* "Inherit all" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|647
-index|]
-operator|)
 block|,
 comment|/* "International Organizations" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|142
-index|]
-operator|)
 block|,
 comment|/* "Invalidity Date" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|504
-index|]
-operator|)
 block|,
 comment|/* "MIME MHS" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|388
-index|]
-operator|)
 block|,
 comment|/* "Mail" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|383
-index|]
-operator|)
 block|,
 comment|/* "Management" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|417
-index|]
-operator|)
 block|,
 comment|/* "Microsoft CSP Name" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|135
-index|]
-operator|)
 block|,
 comment|/* "Microsoft Commercial Code Signing" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|138
-index|]
-operator|)
 block|,
 comment|/* "Microsoft Encrypted File System" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|171
-index|]
-operator|)
 block|,
 comment|/* "Microsoft Extension Request" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|134
-index|]
-operator|)
 block|,
 comment|/* "Microsoft Individual Code Signing" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|856
-index|]
-operator|)
 block|,
 comment|/* "Microsoft Local Key set" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|137
-index|]
-operator|)
 block|,
 comment|/* "Microsoft Server Gated Crypto" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|648
-index|]
-operator|)
 block|,
 comment|/* "Microsoft Smartcardlogin" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|136
-index|]
-operator|)
 block|,
 comment|/* "Microsoft Trust List Signing" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|649
-index|]
-operator|)
 block|,
 comment|/* "Microsoft Universal Principal Name" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|393
-index|]
-operator|)
 block|,
 comment|/* "NULL" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|404
-index|]
-operator|)
 block|,
 comment|/* "NULL" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|72
-index|]
-operator|)
 block|,
 comment|/* "Netscape Base Url" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|76
-index|]
-operator|)
 block|,
 comment|/* "Netscape CA Policy Url" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|74
-index|]
-operator|)
 block|,
 comment|/* "Netscape CA Revocation Url" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|71
-index|]
-operator|)
 block|,
 comment|/* "Netscape Cert Type" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|58
-index|]
-operator|)
 block|,
 comment|/* "Netscape Certificate Extension" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|79
-index|]
-operator|)
 block|,
 comment|/* "Netscape Certificate Sequence" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|78
-index|]
-operator|)
 block|,
 comment|/* "Netscape Comment" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|57
-index|]
-operator|)
 block|,
 comment|/* "Netscape Communications Corp." */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|59
-index|]
-operator|)
 block|,
 comment|/* "Netscape Data Type" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|75
-index|]
-operator|)
 block|,
 comment|/* "Netscape Renewal Url" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|73
-index|]
-operator|)
 block|,
 comment|/* "Netscape Revocation Url" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|77
-index|]
-operator|)
 block|,
 comment|/* "Netscape SSL Server Name" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|139
-index|]
-operator|)
 block|,
 comment|/* "Netscape Server Gated Crypto" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|178
-index|]
-operator|)
 block|,
 comment|/* "OCSP" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|370
-index|]
-operator|)
 block|,
 comment|/* "OCSP Archive Cutoff" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|367
-index|]
-operator|)
 block|,
 comment|/* "OCSP CRL ID" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|369
-index|]
-operator|)
 block|,
 comment|/* "OCSP No Check" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|366
-index|]
-operator|)
 block|,
 comment|/* "OCSP Nonce" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|371
-index|]
-operator|)
 block|,
 comment|/* "OCSP Service Locator" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|180
-index|]
-operator|)
 block|,
 comment|/* "OCSP Signing" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|161
-index|]
-operator|)
 block|,
 comment|/* "PBES2" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|69
-index|]
-operator|)
 block|,
 comment|/* "PBKDF2" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|162
-index|]
-operator|)
 block|,
 comment|/* "PBMAC1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|127
-index|]
-operator|)
 block|,
 comment|/* "PKIX" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|858
-index|]
-operator|)
 block|,
 comment|/* "Permanent Identifier" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|164
-index|]
-operator|)
 block|,
 comment|/* "Policy Qualifier CPS" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|165
-index|]
-operator|)
 block|,
 comment|/* "Policy Qualifier User Notice" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|385
-index|]
-operator|)
 block|,
 comment|/* "Private" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|663
-index|]
-operator|)
 block|,
 comment|/* "Proxy Certificate Information" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|1
-index|]
-operator|)
 block|,
 comment|/* "RSA Data Security, Inc." */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|2
-index|]
-operator|)
 block|,
 comment|/* "RSA Data Security, Inc. PKCS" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|188
-index|]
-operator|)
 block|,
 comment|/* "S/MIME" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|167
-index|]
-operator|)
 block|,
 comment|/* "S/MIME Capabilities" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|387
-index|]
-operator|)
 block|,
 comment|/* "SNMPv2" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|512
-index|]
-operator|)
 block|,
 comment|/* "Secure Electronic Transactions" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|386
-index|]
-operator|)
 block|,
 comment|/* "Security" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|394
-index|]
-operator|)
 block|,
 comment|/* "Selected Attribute Types" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|143
-index|]
-operator|)
 block|,
 comment|/* "Strong Extranet ID" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|398
-index|]
-operator|)
 block|,
 comment|/* "Subject Information Access" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|130
-index|]
-operator|)
 block|,
 comment|/* "TLS Web Client Authentication" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|129
-index|]
-operator|)
 block|,
 comment|/* "TLS Web Server Authentication" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|133
-index|]
-operator|)
 block|,
 comment|/* "Time Stamping" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|375
-index|]
-operator|)
 block|,
 comment|/* "Trust Root" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|12
-index|]
-operator|)
 block|,
 comment|/* "X509" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|402
-index|]
-operator|)
 block|,
 comment|/* "X509v3 AC Targeting" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|746
-index|]
-operator|)
 block|,
 comment|/* "X509v3 Any Policy" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|90
-index|]
-operator|)
 block|,
 comment|/* "X509v3 Authority Key Identifier" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|87
-index|]
-operator|)
 block|,
 comment|/* "X509v3 Basic Constraints" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|103
-index|]
-operator|)
 block|,
 comment|/* "X509v3 CRL Distribution Points" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|88
-index|]
-operator|)
 block|,
 comment|/* "X509v3 CRL Number" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|141
-index|]
-operator|)
 block|,
 comment|/* "X509v3 CRL Reason Code" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|771
-index|]
-operator|)
 block|,
 comment|/* "X509v3 Certificate Issuer" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|89
-index|]
-operator|)
 block|,
 comment|/* "X509v3 Certificate Policies" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|140
-index|]
-operator|)
 block|,
 comment|/* "X509v3 Delta CRL Indicator" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|126
-index|]
-operator|)
 block|,
 comment|/* "X509v3 Extended Key Usage" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|857
-index|]
-operator|)
 block|,
 comment|/* "X509v3 Freshest CRL" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|748
-index|]
-operator|)
 block|,
 comment|/* "X509v3 Inhibit Any Policy" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|86
-index|]
-operator|)
 block|,
 comment|/* "X509v3 Issuer Alternative Name" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|770
-index|]
-operator|)
 block|,
 comment|/* "X509v3 Issuing Distrubution Point" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|83
-index|]
-operator|)
 block|,
 comment|/* "X509v3 Key Usage" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|666
-index|]
-operator|)
 block|,
 comment|/* "X509v3 Name Constraints" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|403
-index|]
-operator|)
 block|,
 comment|/* "X509v3 No Revocation Available" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|401
-index|]
-operator|)
 block|,
 comment|/* "X509v3 Policy Constraints" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|747
-index|]
-operator|)
 block|,
 comment|/* "X509v3 Policy Mappings" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|84
-index|]
-operator|)
 block|,
 comment|/* "X509v3 Private Key Usage Period" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|85
-index|]
-operator|)
 block|,
 comment|/* "X509v3 Subject Alternative Name" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|769
-index|]
-operator|)
 block|,
 comment|/* "X509v3 Subject Directory Attributes" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|82
-index|]
-operator|)
 block|,
 comment|/* "X509v3 Subject Key Identifier" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|184
-index|]
-operator|)
 block|,
 comment|/* "X9.57" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|185
-index|]
-operator|)
 block|,
 comment|/* "X9.57 CM ?" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|478
-index|]
-operator|)
 block|,
 comment|/* "aRecord" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|289
-index|]
-operator|)
 block|,
 comment|/* "aaControls" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|287
-index|]
-operator|)
 block|,
 comment|/* "ac-auditEntity" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|397
-index|]
-operator|)
 block|,
 comment|/* "ac-proxying" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|288
-index|]
-operator|)
 block|,
 comment|/* "ac-targeting" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|446
-index|]
-operator|)
 block|,
 comment|/* "account" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|364
-index|]
-operator|)
 block|,
 comment|/* "ad dvcs" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|606
-index|]
-operator|)
 block|,
 comment|/* "additional verification" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|419
-index|]
-operator|)
 block|,
 comment|/* "aes-128-cbc" */
-operator|&
-operator|(
-name|nid_objs
-index|[
+literal|916
+block|,
+comment|/* "aes-128-cbc-hmac-sha1" */
+literal|896
+block|,
+comment|/* "aes-128-ccm" */
 literal|421
-index|]
-operator|)
 block|,
 comment|/* "aes-128-cfb" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|650
-index|]
-operator|)
 block|,
 comment|/* "aes-128-cfb1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|653
-index|]
-operator|)
 block|,
 comment|/* "aes-128-cfb8" */
-operator|&
-operator|(
-name|nid_objs
-index|[
+literal|904
+block|,
+comment|/* "aes-128-ctr" */
 literal|418
-index|]
-operator|)
 block|,
 comment|/* "aes-128-ecb" */
-operator|&
-operator|(
-name|nid_objs
-index|[
+literal|895
+block|,
+comment|/* "aes-128-gcm" */
 literal|420
-index|]
-operator|)
 block|,
 comment|/* "aes-128-ofb" */
-operator|&
-operator|(
-name|nid_objs
-index|[
+literal|913
+block|,
+comment|/* "aes-128-xts" */
 literal|423
-index|]
-operator|)
 block|,
 comment|/* "aes-192-cbc" */
-operator|&
-operator|(
-name|nid_objs
-index|[
+literal|917
+block|,
+comment|/* "aes-192-cbc-hmac-sha1" */
+literal|899
+block|,
+comment|/* "aes-192-ccm" */
 literal|425
-index|]
-operator|)
 block|,
 comment|/* "aes-192-cfb" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|651
-index|]
-operator|)
 block|,
 comment|/* "aes-192-cfb1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|654
-index|]
-operator|)
 block|,
 comment|/* "aes-192-cfb8" */
-operator|&
-operator|(
-name|nid_objs
-index|[
+literal|905
+block|,
+comment|/* "aes-192-ctr" */
 literal|422
-index|]
-operator|)
 block|,
 comment|/* "aes-192-ecb" */
-operator|&
-operator|(
-name|nid_objs
-index|[
+literal|898
+block|,
+comment|/* "aes-192-gcm" */
 literal|424
-index|]
-operator|)
 block|,
 comment|/* "aes-192-ofb" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|427
-index|]
-operator|)
 block|,
 comment|/* "aes-256-cbc" */
-operator|&
-operator|(
-name|nid_objs
-index|[
+literal|918
+block|,
+comment|/* "aes-256-cbc-hmac-sha1" */
+literal|902
+block|,
+comment|/* "aes-256-ccm" */
 literal|429
-index|]
-operator|)
 block|,
 comment|/* "aes-256-cfb" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|652
-index|]
-operator|)
 block|,
 comment|/* "aes-256-cfb1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|655
-index|]
-operator|)
 block|,
 comment|/* "aes-256-cfb8" */
-operator|&
-operator|(
-name|nid_objs
-index|[
+literal|906
+block|,
+comment|/* "aes-256-ctr" */
 literal|426
-index|]
-operator|)
 block|,
 comment|/* "aes-256-ecb" */
-operator|&
-operator|(
-name|nid_objs
-index|[
+literal|901
+block|,
+comment|/* "aes-256-gcm" */
 literal|428
-index|]
-operator|)
 block|,
 comment|/* "aes-256-ofb" */
-operator|&
-operator|(
-name|nid_objs
-index|[
+literal|914
+block|,
+comment|/* "aes-256-xts" */
 literal|376
-index|]
-operator|)
 block|,
 comment|/* "algorithm" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|484
-index|]
-operator|)
 block|,
 comment|/* "associatedDomain" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|485
-index|]
-operator|)
 block|,
 comment|/* "associatedName" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|501
-index|]
-operator|)
 block|,
 comment|/* "audio" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|882
-index|]
-operator|)
 block|,
 comment|/* "authorityRevocationList" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|91
-index|]
-operator|)
 block|,
 comment|/* "bf-cbc" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|93
-index|]
-operator|)
 block|,
 comment|/* "bf-cfb" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|92
-index|]
-operator|)
 block|,
 comment|/* "bf-ecb" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|94
-index|]
-operator|)
 block|,
 comment|/* "bf-ofb" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|494
-index|]
-operator|)
 block|,
 comment|/* "buildingName" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|860
-index|]
-operator|)
 block|,
 comment|/* "businessCategory" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|691
-index|]
-operator|)
 block|,
 comment|/* "c2onb191v4" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|692
-index|]
-operator|)
 block|,
 comment|/* "c2onb191v5" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|697
-index|]
-operator|)
 block|,
 comment|/* "c2onb239v4" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|698
-index|]
-operator|)
 block|,
 comment|/* "c2onb239v5" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|684
-index|]
-operator|)
 block|,
 comment|/* "c2pnb163v1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|685
-index|]
-operator|)
 block|,
 comment|/* "c2pnb163v2" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|686
-index|]
-operator|)
 block|,
 comment|/* "c2pnb163v3" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|687
-index|]
-operator|)
 block|,
 comment|/* "c2pnb176v1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|693
-index|]
-operator|)
 block|,
 comment|/* "c2pnb208w1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|699
-index|]
-operator|)
 block|,
 comment|/* "c2pnb272w1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|700
-index|]
-operator|)
 block|,
 comment|/* "c2pnb304w1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|702
-index|]
-operator|)
 block|,
 comment|/* "c2pnb368w1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|688
-index|]
-operator|)
 block|,
 comment|/* "c2tnb191v1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|689
-index|]
-operator|)
 block|,
 comment|/* "c2tnb191v2" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|690
-index|]
-operator|)
 block|,
 comment|/* "c2tnb191v3" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|694
-index|]
-operator|)
 block|,
 comment|/* "c2tnb239v1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|695
-index|]
-operator|)
 block|,
 comment|/* "c2tnb239v2" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|696
-index|]
-operator|)
 block|,
 comment|/* "c2tnb239v3" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|701
-index|]
-operator|)
 block|,
 comment|/* "c2tnb359v1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|703
-index|]
-operator|)
 block|,
 comment|/* "c2tnb431r1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|881
-index|]
-operator|)
 block|,
 comment|/* "cACertificate" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|483
-index|]
-operator|)
 block|,
 comment|/* "cNAMERecord" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|751
-index|]
-operator|)
 block|,
 comment|/* "camellia-128-cbc" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|757
-index|]
-operator|)
 block|,
 comment|/* "camellia-128-cfb" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|760
-index|]
-operator|)
 block|,
 comment|/* "camellia-128-cfb1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|763
-index|]
-operator|)
 block|,
 comment|/* "camellia-128-cfb8" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|754
-index|]
-operator|)
 block|,
 comment|/* "camellia-128-ecb" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|766
-index|]
-operator|)
 block|,
 comment|/* "camellia-128-ofb" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|752
-index|]
-operator|)
 block|,
 comment|/* "camellia-192-cbc" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|758
-index|]
-operator|)
 block|,
 comment|/* "camellia-192-cfb" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|761
-index|]
-operator|)
 block|,
 comment|/* "camellia-192-cfb1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|764
-index|]
-operator|)
 block|,
 comment|/* "camellia-192-cfb8" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|755
-index|]
-operator|)
 block|,
 comment|/* "camellia-192-ecb" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|767
-index|]
-operator|)
 block|,
 comment|/* "camellia-192-ofb" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|753
-index|]
-operator|)
 block|,
 comment|/* "camellia-256-cbc" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|759
-index|]
-operator|)
 block|,
 comment|/* "camellia-256-cfb" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|762
-index|]
-operator|)
 block|,
 comment|/* "camellia-256-cfb1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|765
-index|]
-operator|)
 block|,
 comment|/* "camellia-256-cfb8" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|756
-index|]
-operator|)
 block|,
 comment|/* "camellia-256-ecb" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|768
-index|]
-operator|)
 block|,
 comment|/* "camellia-256-ofb" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|443
-index|]
-operator|)
 block|,
 comment|/* "caseIgnoreIA5StringSyntax" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|108
-index|]
-operator|)
 block|,
 comment|/* "cast5-cbc" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|110
-index|]
-operator|)
 block|,
 comment|/* "cast5-cfb" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|109
-index|]
-operator|)
 block|,
 comment|/* "cast5-ecb" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|111
-index|]
-operator|)
 block|,
 comment|/* "cast5-ofb" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|152
-index|]
-operator|)
 block|,
 comment|/* "certBag" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|677
-index|]
-operator|)
 block|,
 comment|/* "certicom-arc" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|517
-index|]
-operator|)
 block|,
 comment|/* "certificate extensions" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|883
-index|]
-operator|)
 block|,
 comment|/* "certificateRevocationList" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|54
-index|]
-operator|)
 block|,
 comment|/* "challengePassword" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|407
-index|]
-operator|)
 block|,
 comment|/* "characteristic-two-field" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|395
-index|]
-operator|)
 block|,
 comment|/* "clearance" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|633
-index|]
-operator|)
 block|,
 comment|/* "cleartext track 2" */
-operator|&
-operator|(
-name|nid_objs
-index|[
+literal|894
+block|,
+comment|/* "cmac" */
 literal|13
-index|]
-operator|)
 block|,
 comment|/* "commonName" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|513
-index|]
-operator|)
 block|,
 comment|/* "content types" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|50
-index|]
-operator|)
 block|,
 comment|/* "contentType" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|53
-index|]
-operator|)
 block|,
 comment|/* "countersignature" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|14
-index|]
-operator|)
 block|,
 comment|/* "countryName" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|153
-index|]
-operator|)
 block|,
 comment|/* "crlBag" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|884
-index|]
-operator|)
 block|,
 comment|/* "crossCertificatePair" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|806
-index|]
-operator|)
 block|,
 comment|/* "cryptocom" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|805
-index|]
-operator|)
 block|,
 comment|/* "cryptopro" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|500
-index|]
-operator|)
 block|,
 comment|/* "dITRedirect" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|451
-index|]
-operator|)
 block|,
 comment|/* "dNSDomain" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|495
-index|]
-operator|)
 block|,
 comment|/* "dSAQuality" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|434
-index|]
-operator|)
 block|,
 comment|/* "data" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|390
-index|]
-operator|)
 block|,
 comment|/* "dcObject" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|891
-index|]
-operator|)
 block|,
 comment|/* "deltaRevocationList" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|31
-index|]
-operator|)
 block|,
 comment|/* "des-cbc" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|643
-index|]
-operator|)
 block|,
 comment|/* "des-cdmf" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|30
-index|]
-operator|)
 block|,
 comment|/* "des-cfb" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|656
-index|]
-operator|)
 block|,
 comment|/* "des-cfb1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|657
-index|]
-operator|)
 block|,
 comment|/* "des-cfb8" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|29
-index|]
-operator|)
 block|,
 comment|/* "des-ecb" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|32
-index|]
-operator|)
 block|,
 comment|/* "des-ede" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|43
-index|]
-operator|)
 block|,
 comment|/* "des-ede-cbc" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|60
-index|]
-operator|)
 block|,
 comment|/* "des-ede-cfb" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|62
-index|]
-operator|)
 block|,
 comment|/* "des-ede-ofb" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|33
-index|]
-operator|)
 block|,
 comment|/* "des-ede3" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|44
-index|]
-operator|)
 block|,
 comment|/* "des-ede3-cbc" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|61
-index|]
-operator|)
 block|,
 comment|/* "des-ede3-cfb" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|658
-index|]
-operator|)
 block|,
 comment|/* "des-ede3-cfb1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|659
-index|]
-operator|)
 block|,
 comment|/* "des-ede3-cfb8" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|63
-index|]
-operator|)
 block|,
 comment|/* "des-ede3-ofb" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|45
-index|]
-operator|)
 block|,
 comment|/* "des-ofb" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|107
-index|]
-operator|)
 block|,
 comment|/* "description" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|871
-index|]
-operator|)
 block|,
 comment|/* "destinationIndicator" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|80
-index|]
-operator|)
 block|,
 comment|/* "desx-cbc" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|28
-index|]
-operator|)
 block|,
 comment|/* "dhKeyAgreement" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|11
-index|]
-operator|)
 block|,
 comment|/* "directory services (X.500)" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|378
-index|]
-operator|)
 block|,
 comment|/* "directory services - algorithms" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|887
-index|]
-operator|)
 block|,
 comment|/* "distinguishedName" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|892
-index|]
-operator|)
 block|,
 comment|/* "dmdName" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|174
-index|]
-operator|)
 block|,
 comment|/* "dnQualifier" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|447
-index|]
-operator|)
 block|,
 comment|/* "document" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|471
-index|]
-operator|)
 block|,
 comment|/* "documentAuthor" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|468
-index|]
-operator|)
 block|,
 comment|/* "documentIdentifier" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|472
-index|]
-operator|)
 block|,
 comment|/* "documentLocation" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|502
-index|]
-operator|)
 block|,
 comment|/* "documentPublisher" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|449
-index|]
-operator|)
 block|,
 comment|/* "documentSeries" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|469
-index|]
-operator|)
 block|,
 comment|/* "documentTitle" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|470
-index|]
-operator|)
 block|,
 comment|/* "documentVersion" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|380
-index|]
-operator|)
 block|,
 comment|/* "dod" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|391
-index|]
-operator|)
 block|,
 comment|/* "domainComponent" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|452
-index|]
-operator|)
 block|,
 comment|/* "domainRelatedObject" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|116
-index|]
-operator|)
 block|,
 comment|/* "dsaEncryption" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|67
-index|]
-operator|)
 block|,
 comment|/* "dsaEncryption-old" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|66
-index|]
-operator|)
 block|,
 comment|/* "dsaWithSHA" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|113
-index|]
-operator|)
 block|,
 comment|/* "dsaWithSHA1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|70
-index|]
-operator|)
 block|,
 comment|/* "dsaWithSHA1-old" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|802
-index|]
-operator|)
 block|,
 comment|/* "dsa_with_SHA224" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|803
-index|]
-operator|)
 block|,
 comment|/* "dsa_with_SHA256" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|297
-index|]
-operator|)
 block|,
 comment|/* "dvcs" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|791
-index|]
-operator|)
 block|,
 comment|/* "ecdsa-with-Recommended" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|416
-index|]
-operator|)
 block|,
 comment|/* "ecdsa-with-SHA1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|793
-index|]
-operator|)
 block|,
 comment|/* "ecdsa-with-SHA224" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|794
-index|]
-operator|)
 block|,
 comment|/* "ecdsa-with-SHA256" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|795
-index|]
-operator|)
 block|,
 comment|/* "ecdsa-with-SHA384" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|796
-index|]
-operator|)
 block|,
 comment|/* "ecdsa-with-SHA512" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|792
-index|]
-operator|)
 block|,
 comment|/* "ecdsa-with-Specified" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|48
-index|]
-operator|)
 block|,
 comment|/* "emailAddress" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|632
-index|]
-operator|)
 block|,
 comment|/* "encrypted track 2" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|885
-index|]
-operator|)
 block|,
 comment|/* "enhancedSearchGuide" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|56
-index|]
-operator|)
 block|,
 comment|/* "extendedCertificateAttributes" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|867
-index|]
-operator|)
 block|,
 comment|/* "facsimileTelephoneNumber" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|462
-index|]
-operator|)
 block|,
 comment|/* "favouriteDrink" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|453
-index|]
-operator|)
 block|,
 comment|/* "friendlyCountry" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|490
-index|]
-operator|)
 block|,
 comment|/* "friendlyCountryName" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|156
-index|]
-operator|)
 block|,
 comment|/* "friendlyName" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|631
-index|]
-operator|)
 block|,
 comment|/* "generate cryptogram" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|509
-index|]
-operator|)
 block|,
 comment|/* "generationQualifier" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|601
-index|]
-operator|)
 block|,
 comment|/* "generic cryptogram" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|99
-index|]
-operator|)
 block|,
 comment|/* "givenName" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|814
-index|]
-operator|)
 block|,
 comment|/* "gost89-cnt" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|855
-index|]
-operator|)
 block|,
 comment|/* "hmac" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|780
-index|]
-operator|)
 block|,
 comment|/* "hmac-md5" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|781
-index|]
-operator|)
 block|,
 comment|/* "hmac-sha1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|797
-index|]
-operator|)
 block|,
 comment|/* "hmacWithMD5" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|163
-index|]
-operator|)
 block|,
 comment|/* "hmacWithSHA1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|798
-index|]
-operator|)
 block|,
 comment|/* "hmacWithSHA224" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|799
-index|]
-operator|)
 block|,
 comment|/* "hmacWithSHA256" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|800
-index|]
-operator|)
 block|,
 comment|/* "hmacWithSHA384" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|801
-index|]
-operator|)
 block|,
 comment|/* "hmacWithSHA512" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|486
-index|]
-operator|)
 block|,
 comment|/* "homePostalAddress" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|473
-index|]
-operator|)
 block|,
 comment|/* "homeTelephoneNumber" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|466
-index|]
-operator|)
 block|,
 comment|/* "host" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|889
-index|]
-operator|)
 block|,
 comment|/* "houseIdentifier" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|442
-index|]
-operator|)
 block|,
 comment|/* "iA5StringSyntax" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|381
-index|]
-operator|)
 block|,
 comment|/* "iana" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|824
-index|]
-operator|)
 block|,
 comment|/* "id-Gost28147-89-CryptoPro-A-ParamSet" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|825
-index|]
-operator|)
 block|,
 comment|/* "id-Gost28147-89-CryptoPro-B-ParamSet" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|826
-index|]
-operator|)
 block|,
 comment|/* "id-Gost28147-89-CryptoPro-C-ParamSet" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|827
-index|]
-operator|)
 block|,
 comment|/* "id-Gost28147-89-CryptoPro-D-ParamSet" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|819
-index|]
-operator|)
 block|,
 comment|/* "id-Gost28147-89-CryptoPro-KeyMeshing" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|829
-index|]
-operator|)
 block|,
 comment|/* "id-Gost28147-89-CryptoPro-Oscar-1-0-ParamSet" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|828
-index|]
-operator|)
 block|,
 comment|/* "id-Gost28147-89-CryptoPro-Oscar-1-1-ParamSet" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|830
-index|]
-operator|)
 block|,
 comment|/* "id-Gost28147-89-CryptoPro-RIC-1-ParamSet" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|820
-index|]
-operator|)
 block|,
 comment|/* "id-Gost28147-89-None-KeyMeshing" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|823
-index|]
-operator|)
 block|,
 comment|/* "id-Gost28147-89-TestParamSet" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|840
-index|]
-operator|)
 block|,
 comment|/* "id-GostR3410-2001-CryptoPro-A-ParamSet" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|841
-index|]
-operator|)
 block|,
 comment|/* "id-GostR3410-2001-CryptoPro-B-ParamSet" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|842
-index|]
-operator|)
 block|,
 comment|/* "id-GostR3410-2001-CryptoPro-C-ParamSet" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|843
-index|]
-operator|)
 block|,
 comment|/* "id-GostR3410-2001-CryptoPro-XchA-ParamSet" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|844
-index|]
-operator|)
 block|,
 comment|/* "id-GostR3410-2001-CryptoPro-XchB-ParamSet" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|839
-index|]
-operator|)
 block|,
 comment|/* "id-GostR3410-2001-TestParamSet" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|832
-index|]
-operator|)
 block|,
 comment|/* "id-GostR3410-94-CryptoPro-A-ParamSet" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|833
-index|]
-operator|)
 block|,
 comment|/* "id-GostR3410-94-CryptoPro-B-ParamSet" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|834
-index|]
-operator|)
 block|,
 comment|/* "id-GostR3410-94-CryptoPro-C-ParamSet" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|835
-index|]
-operator|)
 block|,
 comment|/* "id-GostR3410-94-CryptoPro-D-ParamSet" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|836
-index|]
-operator|)
 block|,
 comment|/* "id-GostR3410-94-CryptoPro-XchA-ParamSet" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|837
-index|]
-operator|)
 block|,
 comment|/* "id-GostR3410-94-CryptoPro-XchB-ParamSet" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|838
-index|]
-operator|)
 block|,
 comment|/* "id-GostR3410-94-CryptoPro-XchC-ParamSet" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|831
-index|]
-operator|)
 block|,
 comment|/* "id-GostR3410-94-TestParamSet" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|845
-index|]
-operator|)
 block|,
 comment|/* "id-GostR3410-94-a" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|846
-index|]
-operator|)
 block|,
 comment|/* "id-GostR3410-94-aBis" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|847
-index|]
-operator|)
 block|,
 comment|/* "id-GostR3410-94-b" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|848
-index|]
-operator|)
 block|,
 comment|/* "id-GostR3410-94-bBis" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|822
-index|]
-operator|)
 block|,
 comment|/* "id-GostR3411-94-CryptoProParamSet" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|821
-index|]
-operator|)
 block|,
 comment|/* "id-GostR3411-94-TestParamSet" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|266
-index|]
-operator|)
 block|,
 comment|/* "id-aca" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|355
-index|]
-operator|)
 block|,
 comment|/* "id-aca-accessIdentity" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|354
-index|]
-operator|)
 block|,
 comment|/* "id-aca-authenticationInfo" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|356
-index|]
-operator|)
 block|,
 comment|/* "id-aca-chargingIdentity" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|399
-index|]
-operator|)
 block|,
 comment|/* "id-aca-encAttrs" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|357
-index|]
-operator|)
 block|,
 comment|/* "id-aca-group" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|358
-index|]
-operator|)
 block|,
 comment|/* "id-aca-role" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|176
-index|]
-operator|)
 block|,
 comment|/* "id-ad" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|788
-index|]
-operator|)
 block|,
 comment|/* "id-aes128-wrap" */
-operator|&
-operator|(
-name|nid_objs
-index|[
+literal|897
+block|,
+comment|/* "id-aes128-wrap-pad" */
 literal|789
-index|]
-operator|)
 block|,
 comment|/* "id-aes192-wrap" */
-operator|&
-operator|(
-name|nid_objs
-index|[
+literal|900
+block|,
+comment|/* "id-aes192-wrap-pad" */
 literal|790
-index|]
-operator|)
 block|,
 comment|/* "id-aes256-wrap" */
-operator|&
-operator|(
-name|nid_objs
-index|[
+literal|903
+block|,
+comment|/* "id-aes256-wrap-pad" */
 literal|262
-index|]
-operator|)
 block|,
 comment|/* "id-alg" */
-operator|&
-operator|(
-name|nid_objs
-index|[
+literal|893
+block|,
+comment|/* "id-alg-PWRI-KEK" */
 literal|323
-index|]
-operator|)
 block|,
 comment|/* "id-alg-des40" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|326
-index|]
-operator|)
 block|,
 comment|/* "id-alg-dh-pop" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|325
-index|]
-operator|)
 block|,
 comment|/* "id-alg-dh-sig-hmac-sha1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|324
-index|]
-operator|)
 block|,
 comment|/* "id-alg-noSignature" */
-operator|&
-operator|(
-name|nid_objs
-index|[
+literal|907
+block|,
+comment|/* "id-camellia128-wrap" */
+literal|908
+block|,
+comment|/* "id-camellia192-wrap" */
+literal|909
+block|,
+comment|/* "id-camellia256-wrap" */
 literal|268
-index|]
-operator|)
 block|,
 comment|/* "id-cct" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|361
-index|]
-operator|)
 block|,
 comment|/* "id-cct-PKIData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|362
-index|]
-operator|)
 block|,
 comment|/* "id-cct-PKIResponse" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|360
-index|]
-operator|)
 block|,
 comment|/* "id-cct-crs" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|81
-index|]
-operator|)
 block|,
 comment|/* "id-ce" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|680
-index|]
-operator|)
 block|,
 comment|/* "id-characteristic-two-basis" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|263
-index|]
-operator|)
 block|,
 comment|/* "id-cmc" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|334
-index|]
-operator|)
 block|,
 comment|/* "id-cmc-addExtensions" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|346
-index|]
-operator|)
 block|,
 comment|/* "id-cmc-confirmCertAcceptance" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|330
-index|]
-operator|)
 block|,
 comment|/* "id-cmc-dataReturn" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|336
-index|]
-operator|)
 block|,
 comment|/* "id-cmc-decryptedPOP" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|335
-index|]
-operator|)
 block|,
 comment|/* "id-cmc-encryptedPOP" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|339
-index|]
-operator|)
 block|,
 comment|/* "id-cmc-getCRL" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|338
-index|]
-operator|)
 block|,
 comment|/* "id-cmc-getCert" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|328
-index|]
-operator|)
 block|,
 comment|/* "id-cmc-identification" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|329
-index|]
-operator|)
 block|,
 comment|/* "id-cmc-identityProof" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|337
-index|]
-operator|)
 block|,
 comment|/* "id-cmc-lraPOPWitness" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|344
-index|]
-operator|)
 block|,
 comment|/* "id-cmc-popLinkRandom" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|345
-index|]
-operator|)
 block|,
 comment|/* "id-cmc-popLinkWitness" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|343
-index|]
-operator|)
 block|,
 comment|/* "id-cmc-queryPending" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|333
-index|]
-operator|)
 block|,
 comment|/* "id-cmc-recipientNonce" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|341
-index|]
-operator|)
 block|,
 comment|/* "id-cmc-regInfo" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|342
-index|]
-operator|)
 block|,
 comment|/* "id-cmc-responseInfo" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|340
-index|]
-operator|)
 block|,
 comment|/* "id-cmc-revokeRequest" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|332
-index|]
-operator|)
 block|,
 comment|/* "id-cmc-senderNonce" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|327
-index|]
-operator|)
 block|,
 comment|/* "id-cmc-statusInfo" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|331
-index|]
-operator|)
 block|,
 comment|/* "id-cmc-transactionId" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|787
-index|]
-operator|)
 block|,
 comment|/* "id-ct-asciiTextWithCRLF" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|408
-index|]
-operator|)
 block|,
 comment|/* "id-ecPublicKey" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|508
-index|]
-operator|)
 block|,
 comment|/* "id-hex-multipart-message" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|507
-index|]
-operator|)
 block|,
 comment|/* "id-hex-partial-message" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|260
-index|]
-operator|)
 block|,
 comment|/* "id-it" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|302
-index|]
-operator|)
 block|,
 comment|/* "id-it-caKeyUpdateInfo" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|298
-index|]
-operator|)
 block|,
 comment|/* "id-it-caProtEncCert" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|311
-index|]
-operator|)
 block|,
 comment|/* "id-it-confirmWaitTime" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|303
-index|]
-operator|)
 block|,
 comment|/* "id-it-currentCRL" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|300
-index|]
-operator|)
 block|,
 comment|/* "id-it-encKeyPairTypes" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|310
-index|]
-operator|)
 block|,
 comment|/* "id-it-implicitConfirm" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|308
-index|]
-operator|)
 block|,
 comment|/* "id-it-keyPairParamRep" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|307
-index|]
-operator|)
 block|,
 comment|/* "id-it-keyPairParamReq" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|312
-index|]
-operator|)
 block|,
 comment|/* "id-it-origPKIMessage" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|301
-index|]
-operator|)
 block|,
 comment|/* "id-it-preferredSymmAlg" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|309
-index|]
-operator|)
 block|,
 comment|/* "id-it-revPassphrase" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|299
-index|]
-operator|)
 block|,
 comment|/* "id-it-signKeyPairTypes" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|305
-index|]
-operator|)
 block|,
 comment|/* "id-it-subscriptionRequest" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|306
-index|]
-operator|)
 block|,
 comment|/* "id-it-subscriptionResponse" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|784
-index|]
-operator|)
 block|,
 comment|/* "id-it-suppLangTags" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|304
-index|]
-operator|)
 block|,
 comment|/* "id-it-unsupportedOIDs" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|128
-index|]
-operator|)
 block|,
 comment|/* "id-kp" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|280
-index|]
-operator|)
 block|,
 comment|/* "id-mod-attribute-cert" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|274
-index|]
-operator|)
 block|,
 comment|/* "id-mod-cmc" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|277
-index|]
-operator|)
 block|,
 comment|/* "id-mod-cmp" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|284
-index|]
-operator|)
 block|,
 comment|/* "id-mod-cmp2000" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|273
-index|]
-operator|)
 block|,
 comment|/* "id-mod-crmf" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|283
-index|]
-operator|)
 block|,
 comment|/* "id-mod-dvcs" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|275
-index|]
-operator|)
 block|,
 comment|/* "id-mod-kea-profile-88" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|276
-index|]
-operator|)
 block|,
 comment|/* "id-mod-kea-profile-93" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|282
-index|]
-operator|)
 block|,
 comment|/* "id-mod-ocsp" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|278
-index|]
-operator|)
 block|,
 comment|/* "id-mod-qualified-cert-88" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|279
-index|]
-operator|)
 block|,
 comment|/* "id-mod-qualified-cert-93" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|281
-index|]
-operator|)
 block|,
 comment|/* "id-mod-timestamp-protocol" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|264
-index|]
-operator|)
 block|,
 comment|/* "id-on" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|347
-index|]
-operator|)
 block|,
 comment|/* "id-on-personalData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|265
-index|]
-operator|)
 block|,
 comment|/* "id-pda" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|352
-index|]
-operator|)
 block|,
 comment|/* "id-pda-countryOfCitizenship" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|353
-index|]
-operator|)
 block|,
 comment|/* "id-pda-countryOfResidence" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|348
-index|]
-operator|)
 block|,
 comment|/* "id-pda-dateOfBirth" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|351
-index|]
-operator|)
 block|,
 comment|/* "id-pda-gender" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|349
-index|]
-operator|)
 block|,
 comment|/* "id-pda-placeOfBirth" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|175
-index|]
-operator|)
 block|,
 comment|/* "id-pe" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|261
-index|]
-operator|)
 block|,
 comment|/* "id-pkip" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|258
-index|]
-operator|)
 block|,
 comment|/* "id-pkix-mod" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|269
-index|]
-operator|)
 block|,
 comment|/* "id-pkix1-explicit-88" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|271
-index|]
-operator|)
 block|,
 comment|/* "id-pkix1-explicit-93" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|270
-index|]
-operator|)
 block|,
 comment|/* "id-pkix1-implicit-88" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|272
-index|]
-operator|)
 block|,
 comment|/* "id-pkix1-implicit-93" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|662
-index|]
-operator|)
 block|,
 comment|/* "id-ppl" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|267
-index|]
-operator|)
 block|,
 comment|/* "id-qcs" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|359
-index|]
-operator|)
 block|,
 comment|/* "id-qcs-pkixQCSyntax-v1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|259
-index|]
-operator|)
 block|,
 comment|/* "id-qt" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|313
-index|]
-operator|)
 block|,
 comment|/* "id-regCtrl" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|316
-index|]
-operator|)
 block|,
 comment|/* "id-regCtrl-authenticator" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|319
-index|]
-operator|)
 block|,
 comment|/* "id-regCtrl-oldCertID" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|318
-index|]
-operator|)
 block|,
 comment|/* "id-regCtrl-pkiArchiveOptions" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|317
-index|]
-operator|)
 block|,
 comment|/* "id-regCtrl-pkiPublicationInfo" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|320
-index|]
-operator|)
 block|,
 comment|/* "id-regCtrl-protocolEncrKey" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|315
-index|]
-operator|)
 block|,
 comment|/* "id-regCtrl-regToken" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|314
-index|]
-operator|)
 block|,
 comment|/* "id-regInfo" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|322
-index|]
-operator|)
 block|,
 comment|/* "id-regInfo-certReq" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|321
-index|]
-operator|)
 block|,
 comment|/* "id-regInfo-utf8Pairs" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|191
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|215
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-contentHint" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|218
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-contentIdentifier" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|221
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-contentReference" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|240
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-dvcs-dvc" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|217
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-encapContentType" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|222
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-encrypKeyPref" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|220
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-equivalentLabels" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|232
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-ets-CertificateRefs" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|233
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-ets-RevocationRefs" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|238
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-ets-archiveTimeStamp" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|237
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-ets-certCRLTimestamp" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|234
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-ets-certValues" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|227
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-ets-commitmentType" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|231
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-ets-contentTimestamp" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|236
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-ets-escTimeStamp" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|230
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-ets-otherSigCert" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|235
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-ets-revocationValues" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|226
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-ets-sigPolicyId" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|229
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-ets-signerAttr" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|228
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-ets-signerLocation" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|219
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-macValue" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|214
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-mlExpandHistory" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|216
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-msgSigDigest" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|212
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-receiptRequest" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|213
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-securityLabel" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|239
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-signatureType" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|223
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-signingCertificate" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|224
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-smimeEncryptCerts" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|225
-index|]
-operator|)
 block|,
 comment|/* "id-smime-aa-timeStampToken" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|192
-index|]
-operator|)
 block|,
 comment|/* "id-smime-alg" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|243
-index|]
-operator|)
 block|,
 comment|/* "id-smime-alg-3DESwrap" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|246
-index|]
-operator|)
 block|,
 comment|/* "id-smime-alg-CMS3DESwrap" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|247
-index|]
-operator|)
 block|,
 comment|/* "id-smime-alg-CMSRC2wrap" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|245
-index|]
-operator|)
 block|,
 comment|/* "id-smime-alg-ESDH" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|241
-index|]
-operator|)
 block|,
 comment|/* "id-smime-alg-ESDHwith3DES" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|242
-index|]
-operator|)
 block|,
 comment|/* "id-smime-alg-ESDHwithRC2" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|244
-index|]
-operator|)
 block|,
 comment|/* "id-smime-alg-RC2wrap" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|193
-index|]
-operator|)
 block|,
 comment|/* "id-smime-cd" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|248
-index|]
-operator|)
 block|,
 comment|/* "id-smime-cd-ldap" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|190
-index|]
-operator|)
 block|,
 comment|/* "id-smime-ct" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|210
-index|]
-operator|)
 block|,
 comment|/* "id-smime-ct-DVCSRequestData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|211
-index|]
-operator|)
 block|,
 comment|/* "id-smime-ct-DVCSResponseData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|208
-index|]
-operator|)
 block|,
 comment|/* "id-smime-ct-TDTInfo" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|207
-index|]
-operator|)
 block|,
 comment|/* "id-smime-ct-TSTInfo" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|205
-index|]
-operator|)
 block|,
 comment|/* "id-smime-ct-authData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|786
-index|]
-operator|)
 block|,
 comment|/* "id-smime-ct-compressedData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|209
-index|]
-operator|)
 block|,
 comment|/* "id-smime-ct-contentInfo" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|206
-index|]
-operator|)
 block|,
 comment|/* "id-smime-ct-publishCert" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|204
-index|]
-operator|)
 block|,
 comment|/* "id-smime-ct-receipt" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|195
-index|]
-operator|)
 block|,
 comment|/* "id-smime-cti" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|255
-index|]
-operator|)
 block|,
 comment|/* "id-smime-cti-ets-proofOfApproval" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|256
-index|]
-operator|)
 block|,
 comment|/* "id-smime-cti-ets-proofOfCreation" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|253
-index|]
-operator|)
 block|,
 comment|/* "id-smime-cti-ets-proofOfDelivery" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|251
-index|]
-operator|)
 block|,
 comment|/* "id-smime-cti-ets-proofOfOrigin" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|252
-index|]
-operator|)
 block|,
 comment|/* "id-smime-cti-ets-proofOfReceipt" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|254
-index|]
-operator|)
 block|,
 comment|/* "id-smime-cti-ets-proofOfSender" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|189
-index|]
-operator|)
 block|,
 comment|/* "id-smime-mod" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|196
-index|]
-operator|)
 block|,
 comment|/* "id-smime-mod-cms" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|197
-index|]
-operator|)
 block|,
 comment|/* "id-smime-mod-ess" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|202
-index|]
-operator|)
 block|,
 comment|/* "id-smime-mod-ets-eSigPolicy-88" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|203
-index|]
-operator|)
 block|,
 comment|/* "id-smime-mod-ets-eSigPolicy-97" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|200
-index|]
-operator|)
 block|,
 comment|/* "id-smime-mod-ets-eSignature-88" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|201
-index|]
-operator|)
 block|,
 comment|/* "id-smime-mod-ets-eSignature-97" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|199
-index|]
-operator|)
 block|,
 comment|/* "id-smime-mod-msg-v3" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|198
-index|]
-operator|)
 block|,
 comment|/* "id-smime-mod-oid" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|194
-index|]
-operator|)
 block|,
 comment|/* "id-smime-spq" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|250
-index|]
-operator|)
 block|,
 comment|/* "id-smime-spq-ets-sqt-unotice" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|249
-index|]
-operator|)
 block|,
 comment|/* "id-smime-spq-ets-sqt-uri" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|34
-index|]
-operator|)
 block|,
 comment|/* "idea-cbc" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|35
-index|]
-operator|)
 block|,
 comment|/* "idea-cfb" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|36
-index|]
-operator|)
 block|,
 comment|/* "idea-ecb" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|46
-index|]
-operator|)
 block|,
 comment|/* "idea-ofb" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|676
-index|]
-operator|)
 block|,
 comment|/* "identified-organization" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|461
-index|]
-operator|)
 block|,
 comment|/* "info" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|101
-index|]
-operator|)
 block|,
 comment|/* "initials" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|869
-index|]
-operator|)
 block|,
 comment|/* "internationaliSDNNumber" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|749
-index|]
-operator|)
 block|,
 comment|/* "ipsec3" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|750
-index|]
-operator|)
 block|,
 comment|/* "ipsec4" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|181
-index|]
-operator|)
 block|,
 comment|/* "iso" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|623
-index|]
-operator|)
 block|,
 comment|/* "issuer capabilities" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|645
-index|]
-operator|)
 block|,
 comment|/* "itu-t" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|492
-index|]
-operator|)
 block|,
 comment|/* "janetMailbox" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|646
-index|]
-operator|)
 block|,
 comment|/* "joint-iso-itu-t" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|150
-index|]
-operator|)
 block|,
 comment|/* "keyBag" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|773
-index|]
-operator|)
 block|,
 comment|/* "kisa" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|477
-index|]
-operator|)
 block|,
 comment|/* "lastModifiedBy" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|476
-index|]
-operator|)
 block|,
 comment|/* "lastModifiedTime" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|157
-index|]
-operator|)
 block|,
 comment|/* "localKeyID" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|15
-index|]
-operator|)
 block|,
 comment|/* "localityName" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|480
-index|]
-operator|)
 block|,
 comment|/* "mXRecord" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|493
-index|]
-operator|)
 block|,
 comment|/* "mailPreferenceOption" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|467
-index|]
-operator|)
 block|,
 comment|/* "manager" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|3
-index|]
-operator|)
 block|,
 comment|/* "md2" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|7
-index|]
-operator|)
 block|,
 comment|/* "md2WithRSAEncryption" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|257
-index|]
-operator|)
 block|,
 comment|/* "md4" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|396
-index|]
-operator|)
 block|,
 comment|/* "md4WithRSAEncryption" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|4
-index|]
-operator|)
 block|,
 comment|/* "md5" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|114
-index|]
-operator|)
 block|,
 comment|/* "md5-sha1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|104
-index|]
-operator|)
 block|,
 comment|/* "md5WithRSA" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|8
-index|]
-operator|)
 block|,
 comment|/* "md5WithRSAEncryption" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|95
-index|]
-operator|)
 block|,
 comment|/* "mdc2" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|96
-index|]
-operator|)
 block|,
 comment|/* "mdc2WithRSA" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|875
-index|]
-operator|)
 block|,
 comment|/* "member" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|602
-index|]
-operator|)
 block|,
 comment|/* "merchant initiated auth" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|514
-index|]
-operator|)
 block|,
 comment|/* "message extensions" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|51
-index|]
-operator|)
 block|,
 comment|/* "messageDigest" */
-operator|&
-operator|(
-name|nid_objs
-index|[
+literal|911
+block|,
+comment|/* "mgf1" */
 literal|506
-index|]
-operator|)
 block|,
 comment|/* "mime-mhs-bodies" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|505
-index|]
-operator|)
 block|,
 comment|/* "mime-mhs-headings" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|488
-index|]
-operator|)
 block|,
 comment|/* "mobileTelephoneNumber" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|481
-index|]
-operator|)
 block|,
 comment|/* "nSRecord" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|173
-index|]
-operator|)
 block|,
 comment|/* "name" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|681
-index|]
-operator|)
 block|,
 comment|/* "onBasis" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|379
-index|]
-operator|)
 block|,
 comment|/* "org" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|17
-index|]
-operator|)
 block|,
 comment|/* "organizationName" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|491
-index|]
-operator|)
 block|,
 comment|/* "organizationalStatus" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|18
-index|]
-operator|)
 block|,
 comment|/* "organizationalUnitName" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|475
-index|]
-operator|)
 block|,
 comment|/* "otherMailbox" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|876
-index|]
-operator|)
 block|,
 comment|/* "owner" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|489
-index|]
-operator|)
 block|,
 comment|/* "pagerTelephoneNumber" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|782
-index|]
-operator|)
 block|,
 comment|/* "password based MAC" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|374
-index|]
-operator|)
 block|,
 comment|/* "path" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|621
-index|]
-operator|)
 block|,
 comment|/* "payment gateway capabilities" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|9
-index|]
-operator|)
 block|,
 comment|/* "pbeWithMD2AndDES-CBC" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|168
-index|]
-operator|)
 block|,
 comment|/* "pbeWithMD2AndRC2-CBC" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|112
-index|]
-operator|)
 block|,
 comment|/* "pbeWithMD5AndCast5CBC" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|10
-index|]
-operator|)
 block|,
 comment|/* "pbeWithMD5AndDES-CBC" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|169
-index|]
-operator|)
 block|,
 comment|/* "pbeWithMD5AndRC2-CBC" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|148
-index|]
-operator|)
 block|,
 comment|/* "pbeWithSHA1And128BitRC2-CBC" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|144
-index|]
-operator|)
 block|,
 comment|/* "pbeWithSHA1And128BitRC4" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|147
-index|]
-operator|)
 block|,
 comment|/* "pbeWithSHA1And2-KeyTripleDES-CBC" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|146
-index|]
-operator|)
 block|,
 comment|/* "pbeWithSHA1And3-KeyTripleDES-CBC" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|149
-index|]
-operator|)
 block|,
 comment|/* "pbeWithSHA1And40BitRC2-CBC" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|145
-index|]
-operator|)
 block|,
 comment|/* "pbeWithSHA1And40BitRC4" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|170
-index|]
-operator|)
 block|,
 comment|/* "pbeWithSHA1AndDES-CBC" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|68
-index|]
-operator|)
 block|,
 comment|/* "pbeWithSHA1AndRC2-CBC" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|499
-index|]
-operator|)
 block|,
 comment|/* "personalSignature" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|487
-index|]
-operator|)
 block|,
 comment|/* "personalTitle" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|464
-index|]
-operator|)
 block|,
 comment|/* "photo" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|863
-index|]
-operator|)
 block|,
 comment|/* "physicalDeliveryOfficeName" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|437
-index|]
-operator|)
 block|,
 comment|/* "pilot" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|439
-index|]
-operator|)
 block|,
 comment|/* "pilotAttributeSyntax" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|438
-index|]
-operator|)
 block|,
 comment|/* "pilotAttributeType" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|479
-index|]
-operator|)
 block|,
 comment|/* "pilotAttributeType27" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|456
-index|]
-operator|)
 block|,
 comment|/* "pilotDSA" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|441
-index|]
-operator|)
 block|,
 comment|/* "pilotGroups" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|444
-index|]
-operator|)
 block|,
 comment|/* "pilotObject" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|440
-index|]
-operator|)
 block|,
 comment|/* "pilotObjectClass" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|455
-index|]
-operator|)
 block|,
 comment|/* "pilotOrganization" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|445
-index|]
-operator|)
 block|,
 comment|/* "pilotPerson" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|186
-index|]
-operator|)
 block|,
 comment|/* "pkcs1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|27
-index|]
-operator|)
 block|,
 comment|/* "pkcs3" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|187
-index|]
-operator|)
 block|,
 comment|/* "pkcs5" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|20
-index|]
-operator|)
 block|,
 comment|/* "pkcs7" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|21
-index|]
-operator|)
 block|,
 comment|/* "pkcs7-data" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|25
-index|]
-operator|)
 block|,
 comment|/* "pkcs7-digestData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|26
-index|]
-operator|)
 block|,
 comment|/* "pkcs7-encryptedData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|23
-index|]
-operator|)
 block|,
 comment|/* "pkcs7-envelopedData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|24
-index|]
-operator|)
 block|,
 comment|/* "pkcs7-signedAndEnvelopedData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|22
-index|]
-operator|)
 block|,
 comment|/* "pkcs7-signedData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|151
-index|]
-operator|)
 block|,
 comment|/* "pkcs8ShroudedKeyBag" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|47
-index|]
-operator|)
 block|,
 comment|/* "pkcs9" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|862
-index|]
-operator|)
 block|,
 comment|/* "postOfficeBox" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|861
-index|]
-operator|)
 block|,
 comment|/* "postalAddress" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|661
-index|]
-operator|)
 block|,
 comment|/* "postalCode" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|683
-index|]
-operator|)
 block|,
 comment|/* "ppBasis" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|872
-index|]
-operator|)
 block|,
 comment|/* "preferredDeliveryMethod" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|873
-index|]
-operator|)
 block|,
 comment|/* "presentationAddress" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|406
-index|]
-operator|)
 block|,
 comment|/* "prime-field" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|409
-index|]
-operator|)
 block|,
 comment|/* "prime192v1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|410
-index|]
-operator|)
 block|,
 comment|/* "prime192v2" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|411
-index|]
-operator|)
 block|,
 comment|/* "prime192v3" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|412
-index|]
-operator|)
 block|,
 comment|/* "prime239v1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|413
-index|]
-operator|)
 block|,
 comment|/* "prime239v2" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|414
-index|]
-operator|)
 block|,
 comment|/* "prime239v3" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|415
-index|]
-operator|)
 block|,
 comment|/* "prime256v1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|886
-index|]
-operator|)
 block|,
 comment|/* "protocolInformation" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|510
-index|]
-operator|)
 block|,
 comment|/* "pseudonym" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|435
-index|]
-operator|)
 block|,
 comment|/* "pss" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|286
-index|]
-operator|)
 block|,
 comment|/* "qcStatements" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|457
-index|]
-operator|)
 block|,
 comment|/* "qualityLabelledData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|450
-index|]
-operator|)
 block|,
 comment|/* "rFC822localPart" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|98
-index|]
-operator|)
 block|,
 comment|/* "rc2-40-cbc" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|166
-index|]
-operator|)
 block|,
 comment|/* "rc2-64-cbc" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|37
-index|]
-operator|)
 block|,
 comment|/* "rc2-cbc" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|39
-index|]
-operator|)
 block|,
 comment|/* "rc2-cfb" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|38
-index|]
-operator|)
 block|,
 comment|/* "rc2-ecb" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|40
-index|]
-operator|)
 block|,
 comment|/* "rc2-ofb" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|5
-index|]
-operator|)
 block|,
 comment|/* "rc4" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|97
-index|]
-operator|)
 block|,
 comment|/* "rc4-40" */
-operator|&
-operator|(
-name|nid_objs
-index|[
+literal|915
+block|,
+comment|/* "rc4-hmac-md5" */
 literal|120
-index|]
-operator|)
 block|,
 comment|/* "rc5-cbc" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|122
-index|]
-operator|)
 block|,
 comment|/* "rc5-cfb" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|121
-index|]
-operator|)
 block|,
 comment|/* "rc5-ecb" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|123
-index|]
-operator|)
 block|,
 comment|/* "rc5-ofb" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|870
-index|]
-operator|)
 block|,
 comment|/* "registeredAddress" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|460
-index|]
-operator|)
 block|,
 comment|/* "rfc822Mailbox" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|117
-index|]
-operator|)
 block|,
 comment|/* "ripemd160" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|119
-index|]
-operator|)
 block|,
 comment|/* "ripemd160WithRSA" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|400
-index|]
-operator|)
 block|,
 comment|/* "role" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|877
-index|]
-operator|)
 block|,
 comment|/* "roleOccupant" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|448
-index|]
-operator|)
 block|,
 comment|/* "room" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|463
-index|]
-operator|)
 block|,
 comment|/* "roomNumber" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|19
-index|]
-operator|)
 block|,
 comment|/* "rsa" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|6
-index|]
-operator|)
 block|,
 comment|/* "rsaEncryption" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|644
-index|]
-operator|)
 block|,
 comment|/* "rsaOAEPEncryptionSET" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|377
-index|]
-operator|)
 block|,
 comment|/* "rsaSignature" */
-operator|&
-operator|(
-name|nid_objs
-index|[
+literal|919
+block|,
+comment|/* "rsaesOaep" */
+literal|912
+block|,
+comment|/* "rsassaPss" */
 literal|124
-index|]
-operator|)
 block|,
 comment|/* "run length compression" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|482
-index|]
-operator|)
 block|,
 comment|/* "sOARecord" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|155
-index|]
-operator|)
 block|,
 comment|/* "safeContentsBag" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|291
-index|]
-operator|)
 block|,
 comment|/* "sbgp-autonomousSysNum" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|290
-index|]
-operator|)
 block|,
 comment|/* "sbgp-ipAddrBlock" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|292
-index|]
-operator|)
 block|,
 comment|/* "sbgp-routerIdentifier" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|159
-index|]
-operator|)
 block|,
 comment|/* "sdsiCertificate" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|859
-index|]
-operator|)
 block|,
 comment|/* "searchGuide" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|704
-index|]
-operator|)
 block|,
 comment|/* "secp112r1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|705
-index|]
-operator|)
 block|,
 comment|/* "secp112r2" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|706
-index|]
-operator|)
 block|,
 comment|/* "secp128r1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|707
-index|]
-operator|)
 block|,
 comment|/* "secp128r2" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|708
-index|]
-operator|)
 block|,
 comment|/* "secp160k1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|709
-index|]
-operator|)
 block|,
 comment|/* "secp160r1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|710
-index|]
-operator|)
 block|,
 comment|/* "secp160r2" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|711
-index|]
-operator|)
 block|,
 comment|/* "secp192k1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|712
-index|]
-operator|)
 block|,
 comment|/* "secp224k1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|713
-index|]
-operator|)
 block|,
 comment|/* "secp224r1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|714
-index|]
-operator|)
 block|,
 comment|/* "secp256k1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|715
-index|]
-operator|)
 block|,
 comment|/* "secp384r1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|716
-index|]
-operator|)
 block|,
 comment|/* "secp521r1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|154
-index|]
-operator|)
 block|,
 comment|/* "secretBag" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|474
-index|]
-operator|)
 block|,
 comment|/* "secretary" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|717
-index|]
-operator|)
 block|,
 comment|/* "sect113r1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|718
-index|]
-operator|)
 block|,
 comment|/* "sect113r2" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|719
-index|]
-operator|)
 block|,
 comment|/* "sect131r1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|720
-index|]
-operator|)
 block|,
 comment|/* "sect131r2" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|721
-index|]
-operator|)
 block|,
 comment|/* "sect163k1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|722
-index|]
-operator|)
 block|,
 comment|/* "sect163r1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|723
-index|]
-operator|)
 block|,
 comment|/* "sect163r2" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|724
-index|]
-operator|)
 block|,
 comment|/* "sect193r1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|725
-index|]
-operator|)
 block|,
 comment|/* "sect193r2" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|726
-index|]
-operator|)
 block|,
 comment|/* "sect233k1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|727
-index|]
-operator|)
 block|,
 comment|/* "sect233r1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|728
-index|]
-operator|)
 block|,
 comment|/* "sect239k1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|729
-index|]
-operator|)
 block|,
 comment|/* "sect283k1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|730
-index|]
-operator|)
 block|,
 comment|/* "sect283r1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|731
-index|]
-operator|)
 block|,
 comment|/* "sect409k1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|732
-index|]
-operator|)
 block|,
 comment|/* "sect409r1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|733
-index|]
-operator|)
 block|,
 comment|/* "sect571k1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|734
-index|]
-operator|)
 block|,
 comment|/* "sect571r1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|635
-index|]
-operator|)
 block|,
 comment|/* "secure device signature" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|878
-index|]
-operator|)
 block|,
 comment|/* "seeAlso" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|777
-index|]
-operator|)
 block|,
 comment|/* "seed-cbc" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|779
-index|]
-operator|)
 block|,
 comment|/* "seed-cfb" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|776
-index|]
-operator|)
 block|,
 comment|/* "seed-ecb" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|778
-index|]
-operator|)
 block|,
 comment|/* "seed-ofb" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|105
-index|]
-operator|)
 block|,
 comment|/* "serialNumber" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|625
-index|]
-operator|)
 block|,
 comment|/* "set-addPolicy" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|515
-index|]
-operator|)
 block|,
 comment|/* "set-attr" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|518
-index|]
-operator|)
 block|,
 comment|/* "set-brand" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|638
-index|]
-operator|)
 block|,
 comment|/* "set-brand-AmericanExpress" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|637
-index|]
-operator|)
 block|,
 comment|/* "set-brand-Diners" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|636
-index|]
-operator|)
 block|,
 comment|/* "set-brand-IATA-ATA" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|639
-index|]
-operator|)
 block|,
 comment|/* "set-brand-JCB" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|641
-index|]
-operator|)
 block|,
 comment|/* "set-brand-MasterCard" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|642
-index|]
-operator|)
 block|,
 comment|/* "set-brand-Novus" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|640
-index|]
-operator|)
 block|,
 comment|/* "set-brand-Visa" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|516
-index|]
-operator|)
 block|,
 comment|/* "set-policy" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|607
-index|]
-operator|)
 block|,
 comment|/* "set-policy-root" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|624
-index|]
-operator|)
 block|,
 comment|/* "set-rootKeyThumb" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|620
-index|]
-operator|)
 block|,
 comment|/* "setAttr-Cert" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|628
-index|]
-operator|)
 block|,
 comment|/* "setAttr-IssCap-CVM" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|630
-index|]
-operator|)
 block|,
 comment|/* "setAttr-IssCap-Sig" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|629
-index|]
-operator|)
 block|,
 comment|/* "setAttr-IssCap-T2" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|627
-index|]
-operator|)
 block|,
 comment|/* "setAttr-Token-B0Prime" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|626
-index|]
-operator|)
 block|,
 comment|/* "setAttr-Token-EMV" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|622
-index|]
-operator|)
 block|,
 comment|/* "setAttr-TokenType" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|619
-index|]
-operator|)
 block|,
 comment|/* "setCext-IssuerCapabilities" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|615
-index|]
-operator|)
 block|,
 comment|/* "setCext-PGWYcapabilities" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|616
-index|]
-operator|)
 block|,
 comment|/* "setCext-TokenIdentifier" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|618
-index|]
-operator|)
 block|,
 comment|/* "setCext-TokenType" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|617
-index|]
-operator|)
 block|,
 comment|/* "setCext-Track2Data" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|611
-index|]
-operator|)
 block|,
 comment|/* "setCext-cCertRequired" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|609
-index|]
-operator|)
 block|,
 comment|/* "setCext-certType" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|608
-index|]
-operator|)
 block|,
 comment|/* "setCext-hashedRoot" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|610
-index|]
-operator|)
 block|,
 comment|/* "setCext-merchData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|613
-index|]
-operator|)
 block|,
 comment|/* "setCext-setExt" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|614
-index|]
-operator|)
 block|,
 comment|/* "setCext-setQualf" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|612
-index|]
-operator|)
 block|,
 comment|/* "setCext-tunneling" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|540
-index|]
-operator|)
 block|,
 comment|/* "setct-AcqCardCodeMsg" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|576
-index|]
-operator|)
 block|,
 comment|/* "setct-AcqCardCodeMsgTBE" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|570
-index|]
-operator|)
 block|,
 comment|/* "setct-AuthReqTBE" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|534
-index|]
-operator|)
 block|,
 comment|/* "setct-AuthReqTBS" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|527
-index|]
-operator|)
 block|,
 comment|/* "setct-AuthResBaggage" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|571
-index|]
-operator|)
 block|,
 comment|/* "setct-AuthResTBE" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|572
-index|]
-operator|)
 block|,
 comment|/* "setct-AuthResTBEX" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|535
-index|]
-operator|)
 block|,
 comment|/* "setct-AuthResTBS" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|536
-index|]
-operator|)
 block|,
 comment|/* "setct-AuthResTBSX" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|528
-index|]
-operator|)
 block|,
 comment|/* "setct-AuthRevReqBaggage" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|577
-index|]
-operator|)
 block|,
 comment|/* "setct-AuthRevReqTBE" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|541
-index|]
-operator|)
 block|,
 comment|/* "setct-AuthRevReqTBS" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|529
-index|]
-operator|)
 block|,
 comment|/* "setct-AuthRevResBaggage" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|542
-index|]
-operator|)
 block|,
 comment|/* "setct-AuthRevResData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|578
-index|]
-operator|)
 block|,
 comment|/* "setct-AuthRevResTBE" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|579
-index|]
-operator|)
 block|,
 comment|/* "setct-AuthRevResTBEB" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|543
-index|]
-operator|)
 block|,
 comment|/* "setct-AuthRevResTBS" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|573
-index|]
-operator|)
 block|,
 comment|/* "setct-AuthTokenTBE" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|537
-index|]
-operator|)
 block|,
 comment|/* "setct-AuthTokenTBS" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|600
-index|]
-operator|)
 block|,
 comment|/* "setct-BCIDistributionTBS" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|558
-index|]
-operator|)
 block|,
 comment|/* "setct-BatchAdminReqData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|592
-index|]
-operator|)
 block|,
 comment|/* "setct-BatchAdminReqTBE" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|559
-index|]
-operator|)
 block|,
 comment|/* "setct-BatchAdminResData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|593
-index|]
-operator|)
 block|,
 comment|/* "setct-BatchAdminResTBE" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|599
-index|]
-operator|)
 block|,
 comment|/* "setct-CRLNotificationResTBS" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|598
-index|]
-operator|)
 block|,
 comment|/* "setct-CRLNotificationTBS" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|580
-index|]
-operator|)
 block|,
 comment|/* "setct-CapReqTBE" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|581
-index|]
-operator|)
 block|,
 comment|/* "setct-CapReqTBEX" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|544
-index|]
-operator|)
 block|,
 comment|/* "setct-CapReqTBS" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|545
-index|]
-operator|)
 block|,
 comment|/* "setct-CapReqTBSX" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|546
-index|]
-operator|)
 block|,
 comment|/* "setct-CapResData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|582
-index|]
-operator|)
 block|,
 comment|/* "setct-CapResTBE" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|583
-index|]
-operator|)
 block|,
 comment|/* "setct-CapRevReqTBE" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|584
-index|]
-operator|)
 block|,
 comment|/* "setct-CapRevReqTBEX" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|547
-index|]
-operator|)
 block|,
 comment|/* "setct-CapRevReqTBS" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|548
-index|]
-operator|)
 block|,
 comment|/* "setct-CapRevReqTBSX" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|549
-index|]
-operator|)
 block|,
 comment|/* "setct-CapRevResData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|585
-index|]
-operator|)
 block|,
 comment|/* "setct-CapRevResTBE" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|538
-index|]
-operator|)
 block|,
 comment|/* "setct-CapTokenData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|530
-index|]
-operator|)
 block|,
 comment|/* "setct-CapTokenSeq" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|574
-index|]
-operator|)
 block|,
 comment|/* "setct-CapTokenTBE" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|575
-index|]
-operator|)
 block|,
 comment|/* "setct-CapTokenTBEX" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|539
-index|]
-operator|)
 block|,
 comment|/* "setct-CapTokenTBS" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|560
-index|]
-operator|)
 block|,
 comment|/* "setct-CardCInitResTBS" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|566
-index|]
-operator|)
 block|,
 comment|/* "setct-CertInqReqTBS" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|563
-index|]
-operator|)
 block|,
 comment|/* "setct-CertReqData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|595
-index|]
-operator|)
 block|,
 comment|/* "setct-CertReqTBE" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|596
-index|]
-operator|)
 block|,
 comment|/* "setct-CertReqTBEX" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|564
-index|]
-operator|)
 block|,
 comment|/* "setct-CertReqTBS" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|565
-index|]
-operator|)
 block|,
 comment|/* "setct-CertResData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|597
-index|]
-operator|)
 block|,
 comment|/* "setct-CertResTBE" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|586
-index|]
-operator|)
 block|,
 comment|/* "setct-CredReqTBE" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|587
-index|]
-operator|)
 block|,
 comment|/* "setct-CredReqTBEX" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|550
-index|]
-operator|)
 block|,
 comment|/* "setct-CredReqTBS" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|551
-index|]
-operator|)
 block|,
 comment|/* "setct-CredReqTBSX" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|552
-index|]
-operator|)
 block|,
 comment|/* "setct-CredResData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|588
-index|]
-operator|)
 block|,
 comment|/* "setct-CredResTBE" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|589
-index|]
-operator|)
 block|,
 comment|/* "setct-CredRevReqTBE" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|590
-index|]
-operator|)
 block|,
 comment|/* "setct-CredRevReqTBEX" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|553
-index|]
-operator|)
 block|,
 comment|/* "setct-CredRevReqTBS" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|554
-index|]
-operator|)
 block|,
 comment|/* "setct-CredRevReqTBSX" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|555
-index|]
-operator|)
 block|,
 comment|/* "setct-CredRevResData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|591
-index|]
-operator|)
 block|,
 comment|/* "setct-CredRevResTBE" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|567
-index|]
-operator|)
 block|,
 comment|/* "setct-ErrorTBS" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|526
-index|]
-operator|)
 block|,
 comment|/* "setct-HODInput" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|561
-index|]
-operator|)
 block|,
 comment|/* "setct-MeAqCInitResTBS" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|522
-index|]
-operator|)
 block|,
 comment|/* "setct-OIData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|519
-index|]
-operator|)
 block|,
 comment|/* "setct-PANData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|521
-index|]
-operator|)
 block|,
 comment|/* "setct-PANOnly" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|520
-index|]
-operator|)
 block|,
 comment|/* "setct-PANToken" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|556
-index|]
-operator|)
 block|,
 comment|/* "setct-PCertReqData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|557
-index|]
-operator|)
 block|,
 comment|/* "setct-PCertResTBS" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|523
-index|]
-operator|)
 block|,
 comment|/* "setct-PI" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|532
-index|]
-operator|)
 block|,
 comment|/* "setct-PI-TBS" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|524
-index|]
-operator|)
 block|,
 comment|/* "setct-PIData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|525
-index|]
-operator|)
 block|,
 comment|/* "setct-PIDataUnsigned" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|568
-index|]
-operator|)
 block|,
 comment|/* "setct-PIDualSignedTBE" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|569
-index|]
-operator|)
 block|,
 comment|/* "setct-PIUnsignedTBE" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|531
-index|]
-operator|)
 block|,
 comment|/* "setct-PInitResData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|533
-index|]
-operator|)
 block|,
 comment|/* "setct-PResData" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|594
-index|]
-operator|)
 block|,
 comment|/* "setct-RegFormReqTBE" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|562
-index|]
-operator|)
 block|,
 comment|/* "setct-RegFormResTBS" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|604
-index|]
-operator|)
 block|,
 comment|/* "setext-pinAny" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|603
-index|]
-operator|)
 block|,
 comment|/* "setext-pinSecure" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|605
-index|]
-operator|)
 block|,
 comment|/* "setext-track2" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|41
-index|]
-operator|)
 block|,
 comment|/* "sha" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|64
-index|]
-operator|)
 block|,
 comment|/* "sha1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|115
-index|]
-operator|)
 block|,
 comment|/* "sha1WithRSA" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|65
-index|]
-operator|)
 block|,
 comment|/* "sha1WithRSAEncryption" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|675
-index|]
-operator|)
 block|,
 comment|/* "sha224" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|671
-index|]
-operator|)
 block|,
 comment|/* "sha224WithRSAEncryption" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|672
-index|]
-operator|)
 block|,
 comment|/* "sha256" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|668
-index|]
-operator|)
 block|,
 comment|/* "sha256WithRSAEncryption" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|673
-index|]
-operator|)
 block|,
 comment|/* "sha384" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|669
-index|]
-operator|)
 block|,
 comment|/* "sha384WithRSAEncryption" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|674
-index|]
-operator|)
 block|,
 comment|/* "sha512" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|670
-index|]
-operator|)
 block|,
 comment|/* "sha512WithRSAEncryption" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|42
-index|]
-operator|)
 block|,
 comment|/* "shaWithRSAEncryption" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|52
-index|]
-operator|)
 block|,
 comment|/* "signingTime" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|454
-index|]
-operator|)
 block|,
 comment|/* "simpleSecurityObject" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|496
-index|]
-operator|)
 block|,
 comment|/* "singleLevelQuality" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|16
-index|]
-operator|)
 block|,
 comment|/* "stateOrProvinceName" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|660
-index|]
-operator|)
 block|,
 comment|/* "streetAddress" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|498
-index|]
-operator|)
 block|,
 comment|/* "subtreeMaximumQuality" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|497
-index|]
-operator|)
 block|,
 comment|/* "subtreeMinimumQuality" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|890
-index|]
-operator|)
 block|,
 comment|/* "supportedAlgorithms" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|874
-index|]
-operator|)
 block|,
 comment|/* "supportedApplicationContext" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|100
-index|]
-operator|)
 block|,
 comment|/* "surname" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|864
-index|]
-operator|)
 block|,
 comment|/* "telephoneNumber" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|866
-index|]
-operator|)
 block|,
 comment|/* "teletexTerminalIdentifier" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|865
-index|]
-operator|)
 block|,
 comment|/* "telexNumber" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|459
-index|]
-operator|)
 block|,
 comment|/* "textEncodedORAddress" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|293
-index|]
-operator|)
 block|,
 comment|/* "textNotice" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|106
-index|]
-operator|)
 block|,
 comment|/* "title" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|682
-index|]
-operator|)
 block|,
 comment|/* "tpBasis" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|436
-index|]
-operator|)
 block|,
 comment|/* "ucl" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|0
-index|]
-operator|)
 block|,
 comment|/* "undefined" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|888
-index|]
-operator|)
 block|,
 comment|/* "uniqueMember" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|55
-index|]
-operator|)
 block|,
 comment|/* "unstructuredAddress" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|49
-index|]
-operator|)
 block|,
 comment|/* "unstructuredName" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|880
-index|]
-operator|)
 block|,
 comment|/* "userCertificate" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|465
-index|]
-operator|)
 block|,
 comment|/* "userClass" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|458
-index|]
-operator|)
 block|,
 comment|/* "userId" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|879
-index|]
-operator|)
 block|,
 comment|/* "userPassword" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|373
-index|]
-operator|)
 block|,
 comment|/* "valid" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|678
-index|]
-operator|)
 block|,
 comment|/* "wap" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|679
-index|]
-operator|)
 block|,
 comment|/* "wap-wsg" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|735
-index|]
-operator|)
 block|,
 comment|/* "wap-wsg-idm-ecid-wtls1" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|743
-index|]
-operator|)
 block|,
 comment|/* "wap-wsg-idm-ecid-wtls10" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|744
-index|]
-operator|)
 block|,
 comment|/* "wap-wsg-idm-ecid-wtls11" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|745
-index|]
-operator|)
 block|,
 comment|/* "wap-wsg-idm-ecid-wtls12" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|736
-index|]
-operator|)
 block|,
 comment|/* "wap-wsg-idm-ecid-wtls3" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|737
-index|]
-operator|)
 block|,
 comment|/* "wap-wsg-idm-ecid-wtls4" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|738
-index|]
-operator|)
 block|,
 comment|/* "wap-wsg-idm-ecid-wtls5" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|739
-index|]
-operator|)
 block|,
 comment|/* "wap-wsg-idm-ecid-wtls6" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|740
-index|]
-operator|)
 block|,
 comment|/* "wap-wsg-idm-ecid-wtls7" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|741
-index|]
-operator|)
 block|,
 comment|/* "wap-wsg-idm-ecid-wtls8" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|742
-index|]
-operator|)
 block|,
 comment|/* "wap-wsg-idm-ecid-wtls9" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|804
-index|]
-operator|)
 block|,
 comment|/* "whirlpool" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|868
-index|]
-operator|)
 block|,
 comment|/* "x121Address" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|503
-index|]
-operator|)
 block|,
 comment|/* "x500UniqueIdentifier" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|158
-index|]
-operator|)
 block|,
 comment|/* "x509Certificate" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|160
-index|]
-operator|)
 block|,
 comment|/* "x509Crl" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|125
-index|]
-operator|)
 block|,
 comment|/* "zlib compression" */
 block|}
@@ -46071,7572 +36414,2584 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|ASN1_OBJECT
-modifier|*
+specifier|const
+name|unsigned
+name|int
 name|obj_objs
 index|[
 name|NUM_OBJ
 index|]
 init|=
 block|{
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|0
-index|]
-operator|)
 block|,
 comment|/* OBJ_undef                        0 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|393
-index|]
-operator|)
 block|,
 comment|/* OBJ_joint_iso_ccitt              OBJ_joint_iso_itu_t */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|404
-index|]
-operator|)
 block|,
 comment|/* OBJ_ccitt                        OBJ_itu_t */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|645
-index|]
-operator|)
 block|,
 comment|/* OBJ_itu_t                        0 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|434
-index|]
-operator|)
 block|,
 comment|/* OBJ_data                         0 9 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|181
-index|]
-operator|)
 block|,
 comment|/* OBJ_iso                          1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|182
-index|]
-operator|)
 block|,
 comment|/* OBJ_member_body                  1 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|379
-index|]
-operator|)
 block|,
 comment|/* OBJ_org                          1 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|676
-index|]
-operator|)
 block|,
 comment|/* OBJ_identified_organization      1 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|646
-index|]
-operator|)
 block|,
 comment|/* OBJ_joint_iso_itu_t              2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|11
-index|]
-operator|)
 block|,
 comment|/* OBJ_X500                         2 5 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|647
-index|]
-operator|)
 block|,
 comment|/* OBJ_international_organizations  2 23 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|380
-index|]
-operator|)
 block|,
 comment|/* OBJ_dod                          1 3 6 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|12
-index|]
-operator|)
 block|,
 comment|/* OBJ_X509                         2 5 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|378
-index|]
-operator|)
 block|,
 comment|/* OBJ_X500algorithms               2 5 8 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|81
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_ce                        2 5 29 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|512
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_set                       2 23 42 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|678
-index|]
-operator|)
 block|,
 comment|/* OBJ_wap                          2 23 43 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|435
-index|]
-operator|)
 block|,
 comment|/* OBJ_pss                          0 9 2342 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|183
-index|]
-operator|)
 block|,
 comment|/* OBJ_ISO_US                       1 2 840 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|381
-index|]
-operator|)
 block|,
 comment|/* OBJ_iana                         1 3 6 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|677
-index|]
-operator|)
 block|,
 comment|/* OBJ_certicom_arc                 1 3 132 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|394
-index|]
-operator|)
 block|,
 comment|/* OBJ_selected_attribute_types     2 5 1 5 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|13
-index|]
-operator|)
 block|,
 comment|/* OBJ_commonName                   2 5 4 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|100
-index|]
-operator|)
 block|,
 comment|/* OBJ_surname                      2 5 4 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|105
-index|]
-operator|)
 block|,
 comment|/* OBJ_serialNumber                 2 5 4 5 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|14
-index|]
-operator|)
 block|,
 comment|/* OBJ_countryName                  2 5 4 6 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|15
-index|]
-operator|)
 block|,
 comment|/* OBJ_localityName                 2 5 4 7 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|16
-index|]
-operator|)
 block|,
 comment|/* OBJ_stateOrProvinceName          2 5 4 8 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|660
-index|]
-operator|)
 block|,
 comment|/* OBJ_streetAddress                2 5 4 9 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|17
-index|]
-operator|)
 block|,
 comment|/* OBJ_organizationName             2 5 4 10 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|18
-index|]
-operator|)
 block|,
 comment|/* OBJ_organizationalUnitName       2 5 4 11 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|106
-index|]
-operator|)
 block|,
 comment|/* OBJ_title                        2 5 4 12 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|107
-index|]
-operator|)
 block|,
 comment|/* OBJ_description                  2 5 4 13 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|859
-index|]
-operator|)
 block|,
 comment|/* OBJ_searchGuide                  2 5 4 14 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|860
-index|]
-operator|)
 block|,
 comment|/* OBJ_businessCategory             2 5 4 15 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|861
-index|]
-operator|)
 block|,
 comment|/* OBJ_postalAddress                2 5 4 16 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|661
-index|]
-operator|)
 block|,
 comment|/* OBJ_postalCode                   2 5 4 17 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|862
-index|]
-operator|)
 block|,
 comment|/* OBJ_postOfficeBox                2 5 4 18 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|863
-index|]
-operator|)
 block|,
 comment|/* OBJ_physicalDeliveryOfficeName   2 5 4 19 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|864
-index|]
-operator|)
 block|,
 comment|/* OBJ_telephoneNumber              2 5 4 20 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|865
-index|]
-operator|)
 block|,
 comment|/* OBJ_telexNumber                  2 5 4 21 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|866
-index|]
-operator|)
 block|,
 comment|/* OBJ_teletexTerminalIdentifier    2 5 4 22 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|867
-index|]
-operator|)
 block|,
 comment|/* OBJ_facsimileTelephoneNumber     2 5 4 23 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|868
-index|]
-operator|)
 block|,
 comment|/* OBJ_x121Address                  2 5 4 24 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|869
-index|]
-operator|)
 block|,
 comment|/* OBJ_internationaliSDNNumber      2 5 4 25 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|870
-index|]
-operator|)
 block|,
 comment|/* OBJ_registeredAddress            2 5 4 26 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|871
-index|]
-operator|)
 block|,
 comment|/* OBJ_destinationIndicator         2 5 4 27 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|872
-index|]
-operator|)
 block|,
 comment|/* OBJ_preferredDeliveryMethod      2 5 4 28 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|873
-index|]
-operator|)
 block|,
 comment|/* OBJ_presentationAddress          2 5 4 29 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|874
-index|]
-operator|)
 block|,
 comment|/* OBJ_supportedApplicationContext  2 5 4 30 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|875
-index|]
-operator|)
 block|,
 comment|/* OBJ_member                       2 5 4 31 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|876
-index|]
-operator|)
 block|,
 comment|/* OBJ_owner                        2 5 4 32 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|877
-index|]
-operator|)
 block|,
 comment|/* OBJ_roleOccupant                 2 5 4 33 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|878
-index|]
-operator|)
 block|,
 comment|/* OBJ_seeAlso                      2 5 4 34 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|879
-index|]
-operator|)
 block|,
 comment|/* OBJ_userPassword                 2 5 4 35 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|880
-index|]
-operator|)
 block|,
 comment|/* OBJ_userCertificate              2 5 4 36 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|881
-index|]
-operator|)
 block|,
 comment|/* OBJ_cACertificate                2 5 4 37 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|882
-index|]
-operator|)
 block|,
 comment|/* OBJ_authorityRevocationList      2 5 4 38 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|883
-index|]
-operator|)
 block|,
 comment|/* OBJ_certificateRevocationList    2 5 4 39 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|884
-index|]
-operator|)
 block|,
 comment|/* OBJ_crossCertificatePair         2 5 4 40 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|173
-index|]
-operator|)
 block|,
 comment|/* OBJ_name                         2 5 4 41 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|99
-index|]
-operator|)
 block|,
 comment|/* OBJ_givenName                    2 5 4 42 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|101
-index|]
-operator|)
 block|,
 comment|/* OBJ_initials                     2 5 4 43 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|509
-index|]
-operator|)
 block|,
 comment|/* OBJ_generationQualifier          2 5 4 44 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|503
-index|]
-operator|)
 block|,
 comment|/* OBJ_x500UniqueIdentifier         2 5 4 45 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|174
-index|]
-operator|)
 block|,
 comment|/* OBJ_dnQualifier                  2 5 4 46 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|885
-index|]
-operator|)
 block|,
 comment|/* OBJ_enhancedSearchGuide          2 5 4 47 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|886
-index|]
-operator|)
 block|,
 comment|/* OBJ_protocolInformation          2 5 4 48 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|887
-index|]
-operator|)
 block|,
 comment|/* OBJ_distinguishedName            2 5 4 49 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|888
-index|]
-operator|)
 block|,
 comment|/* OBJ_uniqueMember                 2 5 4 50 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|889
-index|]
-operator|)
 block|,
 comment|/* OBJ_houseIdentifier              2 5 4 51 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|890
-index|]
-operator|)
 block|,
 comment|/* OBJ_supportedAlgorithms          2 5 4 52 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|891
-index|]
-operator|)
 block|,
 comment|/* OBJ_deltaRevocationList          2 5 4 53 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|892
-index|]
-operator|)
 block|,
 comment|/* OBJ_dmdName                      2 5 4 54 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|510
-index|]
-operator|)
 block|,
 comment|/* OBJ_pseudonym                    2 5 4 65 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|400
-index|]
-operator|)
 block|,
 comment|/* OBJ_role                         2 5 4 72 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|769
-index|]
-operator|)
 block|,
 comment|/* OBJ_subject_directory_attributes 2 5 29 9 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|82
-index|]
-operator|)
 block|,
 comment|/* OBJ_subject_key_identifier       2 5 29 14 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|83
-index|]
-operator|)
 block|,
 comment|/* OBJ_key_usage                    2 5 29 15 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|84
-index|]
-operator|)
 block|,
 comment|/* OBJ_private_key_usage_period     2 5 29 16 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|85
-index|]
-operator|)
 block|,
 comment|/* OBJ_subject_alt_name             2 5 29 17 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|86
-index|]
-operator|)
 block|,
 comment|/* OBJ_issuer_alt_name              2 5 29 18 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|87
-index|]
-operator|)
 block|,
 comment|/* OBJ_basic_constraints            2 5 29 19 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|88
-index|]
-operator|)
 block|,
 comment|/* OBJ_crl_number                   2 5 29 20 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|141
-index|]
-operator|)
 block|,
 comment|/* OBJ_crl_reason                   2 5 29 21 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|430
-index|]
-operator|)
 block|,
 comment|/* OBJ_hold_instruction_code        2 5 29 23 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|142
-index|]
-operator|)
 block|,
 comment|/* OBJ_invalidity_date              2 5 29 24 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|140
-index|]
-operator|)
 block|,
 comment|/* OBJ_delta_crl                    2 5 29 27 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|770
-index|]
-operator|)
 block|,
 comment|/* OBJ_issuing_distribution_point   2 5 29 28 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|771
-index|]
-operator|)
 block|,
 comment|/* OBJ_certificate_issuer           2 5 29 29 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|666
-index|]
-operator|)
 block|,
 comment|/* OBJ_name_constraints             2 5 29 30 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|103
-index|]
-operator|)
 block|,
 comment|/* OBJ_crl_distribution_points      2 5 29 31 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|89
-index|]
-operator|)
 block|,
 comment|/* OBJ_certificate_policies         2 5 29 32 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|747
-index|]
-operator|)
 block|,
 comment|/* OBJ_policy_mappings              2 5 29 33 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|90
-index|]
-operator|)
 block|,
 comment|/* OBJ_authority_key_identifier     2 5 29 35 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|401
-index|]
-operator|)
 block|,
 comment|/* OBJ_policy_constraints           2 5 29 36 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|126
-index|]
-operator|)
 block|,
 comment|/* OBJ_ext_key_usage                2 5 29 37 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|857
-index|]
-operator|)
 block|,
 comment|/* OBJ_freshest_crl                 2 5 29 46 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|748
-index|]
-operator|)
 block|,
 comment|/* OBJ_inhibit_any_policy           2 5 29 54 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|402
-index|]
-operator|)
 block|,
 comment|/* OBJ_target_information           2 5 29 55 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|403
-index|]
-operator|)
 block|,
 comment|/* OBJ_no_rev_avail                 2 5 29 56 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|513
-index|]
-operator|)
 block|,
 comment|/* OBJ_set_ctype                    2 23 42 0 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|514
-index|]
-operator|)
 block|,
 comment|/* OBJ_set_msgExt                   2 23 42 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|515
-index|]
-operator|)
 block|,
 comment|/* OBJ_set_attr                     2 23 42 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|516
-index|]
-operator|)
 block|,
 comment|/* OBJ_set_policy                   2 23 42 5 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|517
-index|]
-operator|)
 block|,
 comment|/* OBJ_set_certExt                  2 23 42 7 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|518
-index|]
-operator|)
 block|,
 comment|/* OBJ_set_brand                    2 23 42 8 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|679
-index|]
-operator|)
 block|,
 comment|/* OBJ_wap_wsg                      2 23 43 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|382
-index|]
-operator|)
 block|,
 comment|/* OBJ_Directory                    1 3 6 1 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|383
-index|]
-operator|)
 block|,
 comment|/* OBJ_Management                   1 3 6 1 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|384
-index|]
-operator|)
 block|,
 comment|/* OBJ_Experimental                 1 3 6 1 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|385
-index|]
-operator|)
 block|,
 comment|/* OBJ_Private                      1 3 6 1 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|386
-index|]
-operator|)
 block|,
 comment|/* OBJ_Security                     1 3 6 1 5 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|387
-index|]
-operator|)
 block|,
 comment|/* OBJ_SNMPv2                       1 3 6 1 6 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|388
-index|]
-operator|)
 block|,
 comment|/* OBJ_Mail                         1 3 6 1 7 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|376
-index|]
-operator|)
 block|,
 comment|/* OBJ_algorithm                    1 3 14 3 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|395
-index|]
-operator|)
 block|,
 comment|/* OBJ_clearance                    2 5 1 5 55 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|19
-index|]
-operator|)
 block|,
 comment|/* OBJ_rsa                          2 5 8 1 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|96
-index|]
-operator|)
 block|,
 comment|/* OBJ_mdc2WithRSA                  2 5 8 3 100 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|95
-index|]
-operator|)
 block|,
 comment|/* OBJ_mdc2                         2 5 8 3 101 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|746
-index|]
-operator|)
 block|,
 comment|/* OBJ_any_policy                   2 5 29 32 0 */
-operator|&
-operator|(
-name|nid_objs
-index|[
+literal|910
+block|,
+comment|/* OBJ_anyExtendedKeyUsage          2 5 29 37 0 */
 literal|519
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_PANData                2 23 42 0 0 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|520
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_PANToken               2 23 42 0 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|521
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_PANOnly                2 23 42 0 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|522
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_OIData                 2 23 42 0 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|523
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_PI                     2 23 42 0 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|524
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_PIData                 2 23 42 0 5 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|525
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_PIDataUnsigned         2 23 42 0 6 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|526
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_HODInput               2 23 42 0 7 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|527
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_AuthResBaggage         2 23 42 0 8 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|528
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_AuthRevReqBaggage      2 23 42 0 9 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|529
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_AuthRevResBaggage      2 23 42 0 10 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|530
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_CapTokenSeq            2 23 42 0 11 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|531
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_PInitResData           2 23 42 0 12 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|532
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_PI_TBS                 2 23 42 0 13 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|533
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_PResData               2 23 42 0 14 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|534
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_AuthReqTBS             2 23 42 0 16 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|535
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_AuthResTBS             2 23 42 0 17 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|536
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_AuthResTBSX            2 23 42 0 18 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|537
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_AuthTokenTBS           2 23 42 0 19 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|538
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_CapTokenData           2 23 42 0 20 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|539
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_CapTokenTBS            2 23 42 0 21 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|540
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_AcqCardCodeMsg         2 23 42 0 22 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|541
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_AuthRevReqTBS          2 23 42 0 23 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|542
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_AuthRevResData         2 23 42 0 24 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|543
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_AuthRevResTBS          2 23 42 0 25 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|544
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_CapReqTBS              2 23 42 0 26 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|545
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_CapReqTBSX             2 23 42 0 27 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|546
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_CapResData             2 23 42 0 28 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|547
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_CapRevReqTBS           2 23 42 0 29 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|548
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_CapRevReqTBSX          2 23 42 0 30 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|549
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_CapRevResData          2 23 42 0 31 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|550
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_CredReqTBS             2 23 42 0 32 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|551
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_CredReqTBSX            2 23 42 0 33 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|552
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_CredResData            2 23 42 0 34 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|553
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_CredRevReqTBS          2 23 42 0 35 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|554
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_CredRevReqTBSX         2 23 42 0 36 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|555
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_CredRevResData         2 23 42 0 37 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|556
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_PCertReqData           2 23 42 0 38 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|557
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_PCertResTBS            2 23 42 0 39 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|558
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_BatchAdminReqData      2 23 42 0 40 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|559
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_BatchAdminResData      2 23 42 0 41 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|560
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_CardCInitResTBS        2 23 42 0 42 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|561
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_MeAqCInitResTBS        2 23 42 0 43 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|562
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_RegFormResTBS          2 23 42 0 44 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|563
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_CertReqData            2 23 42 0 45 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|564
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_CertReqTBS             2 23 42 0 46 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|565
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_CertResData            2 23 42 0 47 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|566
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_CertInqReqTBS          2 23 42 0 48 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|567
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_ErrorTBS               2 23 42 0 49 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|568
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_PIDualSignedTBE        2 23 42 0 50 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|569
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_PIUnsignedTBE          2 23 42 0 51 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|570
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_AuthReqTBE             2 23 42 0 52 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|571
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_AuthResTBE             2 23 42 0 53 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|572
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_AuthResTBEX            2 23 42 0 54 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|573
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_AuthTokenTBE           2 23 42 0 55 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|574
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_CapTokenTBE            2 23 42 0 56 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|575
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_CapTokenTBEX           2 23 42 0 57 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|576
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_AcqCardCodeMsgTBE      2 23 42 0 58 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|577
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_AuthRevReqTBE          2 23 42 0 59 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|578
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_AuthRevResTBE          2 23 42 0 60 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|579
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_AuthRevResTBEB         2 23 42 0 61 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|580
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_CapReqTBE              2 23 42 0 62 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|581
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_CapReqTBEX             2 23 42 0 63 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|582
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_CapResTBE              2 23 42 0 64 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|583
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_CapRevReqTBE           2 23 42 0 65 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|584
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_CapRevReqTBEX          2 23 42 0 66 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|585
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_CapRevResTBE           2 23 42 0 67 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|586
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_CredReqTBE             2 23 42 0 68 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|587
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_CredReqTBEX            2 23 42 0 69 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|588
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_CredResTBE             2 23 42 0 70 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|589
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_CredRevReqTBE          2 23 42 0 71 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|590
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_CredRevReqTBEX         2 23 42 0 72 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|591
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_CredRevResTBE          2 23 42 0 73 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|592
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_BatchAdminReqTBE       2 23 42 0 74 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|593
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_BatchAdminResTBE       2 23 42 0 75 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|594
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_RegFormReqTBE          2 23 42 0 76 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|595
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_CertReqTBE             2 23 42 0 77 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|596
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_CertReqTBEX            2 23 42 0 78 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|597
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_CertResTBE             2 23 42 0 79 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|598
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_CRLNotificationTBS     2 23 42 0 80 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|599
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_CRLNotificationResTBS  2 23 42 0 81 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|600
-index|]
-operator|)
 block|,
 comment|/* OBJ_setct_BCIDistributionTBS     2 23 42 0 82 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|601
-index|]
-operator|)
 block|,
 comment|/* OBJ_setext_genCrypt              2 23 42 1 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|602
-index|]
-operator|)
 block|,
 comment|/* OBJ_setext_miAuth                2 23 42 1 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|603
-index|]
-operator|)
 block|,
 comment|/* OBJ_setext_pinSecure             2 23 42 1 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|604
-index|]
-operator|)
 block|,
 comment|/* OBJ_setext_pinAny                2 23 42 1 5 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|605
-index|]
-operator|)
 block|,
 comment|/* OBJ_setext_track2                2 23 42 1 7 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|606
-index|]
-operator|)
 block|,
 comment|/* OBJ_setext_cv                    2 23 42 1 8 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|620
-index|]
-operator|)
 block|,
 comment|/* OBJ_setAttr_Cert                 2 23 42 3 0 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|621
-index|]
-operator|)
 block|,
 comment|/* OBJ_setAttr_PGWYcap              2 23 42 3 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|622
-index|]
-operator|)
 block|,
 comment|/* OBJ_setAttr_TokenType            2 23 42 3 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|623
-index|]
-operator|)
 block|,
 comment|/* OBJ_setAttr_IssCap               2 23 42 3 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|607
-index|]
-operator|)
 block|,
 comment|/* OBJ_set_policy_root              2 23 42 5 0 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|608
-index|]
-operator|)
 block|,
 comment|/* OBJ_setCext_hashedRoot           2 23 42 7 0 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|609
-index|]
-operator|)
 block|,
 comment|/* OBJ_setCext_certType             2 23 42 7 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|610
-index|]
-operator|)
 block|,
 comment|/* OBJ_setCext_merchData            2 23 42 7 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|611
-index|]
-operator|)
 block|,
 comment|/* OBJ_setCext_cCertRequired        2 23 42 7 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|612
-index|]
-operator|)
 block|,
 comment|/* OBJ_setCext_tunneling            2 23 42 7 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|613
-index|]
-operator|)
 block|,
 comment|/* OBJ_setCext_setExt               2 23 42 7 5 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|614
-index|]
-operator|)
 block|,
 comment|/* OBJ_setCext_setQualf             2 23 42 7 6 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|615
-index|]
-operator|)
 block|,
 comment|/* OBJ_setCext_PGWYcapabilities     2 23 42 7 7 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|616
-index|]
-operator|)
 block|,
 comment|/* OBJ_setCext_TokenIdentifier      2 23 42 7 8 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|617
-index|]
-operator|)
 block|,
 comment|/* OBJ_setCext_Track2Data           2 23 42 7 9 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|618
-index|]
-operator|)
 block|,
 comment|/* OBJ_setCext_TokenType            2 23 42 7 10 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|619
-index|]
-operator|)
 block|,
 comment|/* OBJ_setCext_IssuerCapabilities   2 23 42 7 11 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|636
-index|]
-operator|)
 block|,
 comment|/* OBJ_set_brand_IATA_ATA           2 23 42 8 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|640
-index|]
-operator|)
 block|,
 comment|/* OBJ_set_brand_Visa               2 23 42 8 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|641
-index|]
-operator|)
 block|,
 comment|/* OBJ_set_brand_MasterCard         2 23 42 8 5 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|637
-index|]
-operator|)
 block|,
 comment|/* OBJ_set_brand_Diners             2 23 42 8 30 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|638
-index|]
-operator|)
 block|,
 comment|/* OBJ_set_brand_AmericanExpress    2 23 42 8 34 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|639
-index|]
-operator|)
 block|,
 comment|/* OBJ_set_brand_JCB                2 23 42 8 35 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|805
-index|]
-operator|)
 block|,
 comment|/* OBJ_cryptopro                    1 2 643 2 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|806
-index|]
-operator|)
 block|,
 comment|/* OBJ_cryptocom                    1 2 643 2 9 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|184
-index|]
-operator|)
 block|,
 comment|/* OBJ_X9_57                        1 2 840 10040 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|405
-index|]
-operator|)
 block|,
 comment|/* OBJ_ansi_X9_62                   1 2 840 10045 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|389
-index|]
-operator|)
 block|,
 comment|/* OBJ_Enterprises                  1 3 6 1 4 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|504
-index|]
-operator|)
 block|,
 comment|/* OBJ_mime_mhs                     1 3 6 1 7 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|104
-index|]
-operator|)
 block|,
 comment|/* OBJ_md5WithRSA                   1 3 14 3 2 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|29
-index|]
-operator|)
 block|,
 comment|/* OBJ_des_ecb                      1 3 14 3 2 6 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|31
-index|]
-operator|)
 block|,
 comment|/* OBJ_des_cbc                      1 3 14 3 2 7 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|45
-index|]
-operator|)
 block|,
 comment|/* OBJ_des_ofb64                    1 3 14 3 2 8 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|30
-index|]
-operator|)
 block|,
 comment|/* OBJ_des_cfb64                    1 3 14 3 2 9 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|377
-index|]
-operator|)
 block|,
 comment|/* OBJ_rsaSignature                 1 3 14 3 2 11 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|67
-index|]
-operator|)
 block|,
 comment|/* OBJ_dsa_2                        1 3 14 3 2 12 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|66
-index|]
-operator|)
 block|,
 comment|/* OBJ_dsaWithSHA                   1 3 14 3 2 13 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|42
-index|]
-operator|)
 block|,
 comment|/* OBJ_shaWithRSAEncryption         1 3 14 3 2 15 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|32
-index|]
-operator|)
 block|,
 comment|/* OBJ_des_ede_ecb                  1 3 14 3 2 17 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|41
-index|]
-operator|)
 block|,
 comment|/* OBJ_sha                          1 3 14 3 2 18 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|64
-index|]
-operator|)
 block|,
 comment|/* OBJ_sha1                         1 3 14 3 2 26 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|70
-index|]
-operator|)
 block|,
 comment|/* OBJ_dsaWithSHA1_2                1 3 14 3 2 27 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|115
-index|]
-operator|)
 block|,
 comment|/* OBJ_sha1WithRSA                  1 3 14 3 2 29 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|117
-index|]
-operator|)
 block|,
 comment|/* OBJ_ripemd160                    1 3 36 3 2 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|143
-index|]
-operator|)
 block|,
 comment|/* OBJ_sxnet                        1 3 101 1 4 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|721
-index|]
-operator|)
 block|,
 comment|/* OBJ_sect163k1                    1 3 132 0 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|722
-index|]
-operator|)
 block|,
 comment|/* OBJ_sect163r1                    1 3 132 0 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|728
-index|]
-operator|)
 block|,
 comment|/* OBJ_sect239k1                    1 3 132 0 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|717
-index|]
-operator|)
 block|,
 comment|/* OBJ_sect113r1                    1 3 132 0 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|718
-index|]
-operator|)
 block|,
 comment|/* OBJ_sect113r2                    1 3 132 0 5 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|704
-index|]
-operator|)
 block|,
 comment|/* OBJ_secp112r1                    1 3 132 0 6 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|705
-index|]
-operator|)
 block|,
 comment|/* OBJ_secp112r2                    1 3 132 0 7 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|709
-index|]
-operator|)
 block|,
 comment|/* OBJ_secp160r1                    1 3 132 0 8 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|708
-index|]
-operator|)
 block|,
 comment|/* OBJ_secp160k1                    1 3 132 0 9 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|714
-index|]
-operator|)
 block|,
 comment|/* OBJ_secp256k1                    1 3 132 0 10 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|723
-index|]
-operator|)
 block|,
 comment|/* OBJ_sect163r2                    1 3 132 0 15 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|729
-index|]
-operator|)
 block|,
 comment|/* OBJ_sect283k1                    1 3 132 0 16 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|730
-index|]
-operator|)
 block|,
 comment|/* OBJ_sect283r1                    1 3 132 0 17 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|719
-index|]
-operator|)
 block|,
 comment|/* OBJ_sect131r1                    1 3 132 0 22 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|720
-index|]
-operator|)
 block|,
 comment|/* OBJ_sect131r2                    1 3 132 0 23 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|724
-index|]
-operator|)
 block|,
 comment|/* OBJ_sect193r1                    1 3 132 0 24 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|725
-index|]
-operator|)
 block|,
 comment|/* OBJ_sect193r2                    1 3 132 0 25 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|726
-index|]
-operator|)
 block|,
 comment|/* OBJ_sect233k1                    1 3 132 0 26 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|727
-index|]
-operator|)
 block|,
 comment|/* OBJ_sect233r1                    1 3 132 0 27 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|706
-index|]
-operator|)
 block|,
 comment|/* OBJ_secp128r1                    1 3 132 0 28 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|707
-index|]
-operator|)
 block|,
 comment|/* OBJ_secp128r2                    1 3 132 0 29 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|710
-index|]
-operator|)
 block|,
 comment|/* OBJ_secp160r2                    1 3 132 0 30 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|711
-index|]
-operator|)
 block|,
 comment|/* OBJ_secp192k1                    1 3 132 0 31 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|712
-index|]
-operator|)
 block|,
 comment|/* OBJ_secp224k1                    1 3 132 0 32 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|713
-index|]
-operator|)
 block|,
 comment|/* OBJ_secp224r1                    1 3 132 0 33 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|715
-index|]
-operator|)
 block|,
 comment|/* OBJ_secp384r1                    1 3 132 0 34 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|716
-index|]
-operator|)
 block|,
 comment|/* OBJ_secp521r1                    1 3 132 0 35 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|731
-index|]
-operator|)
 block|,
 comment|/* OBJ_sect409k1                    1 3 132 0 36 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|732
-index|]
-operator|)
 block|,
 comment|/* OBJ_sect409r1                    1 3 132 0 37 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|733
-index|]
-operator|)
 block|,
 comment|/* OBJ_sect571k1                    1 3 132 0 38 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|734
-index|]
-operator|)
 block|,
 comment|/* OBJ_sect571r1                    1 3 132 0 39 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|624
-index|]
-operator|)
 block|,
 comment|/* OBJ_set_rootKeyThumb             2 23 42 3 0 0 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|625
-index|]
-operator|)
 block|,
 comment|/* OBJ_set_addPolicy                2 23 42 3 0 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|626
-index|]
-operator|)
 block|,
 comment|/* OBJ_setAttr_Token_EMV            2 23 42 3 2 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|627
-index|]
-operator|)
 block|,
 comment|/* OBJ_setAttr_Token_B0Prime        2 23 42 3 2 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|628
-index|]
-operator|)
 block|,
 comment|/* OBJ_setAttr_IssCap_CVM           2 23 42 3 3 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|629
-index|]
-operator|)
 block|,
 comment|/* OBJ_setAttr_IssCap_T2            2 23 42 3 3 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|630
-index|]
-operator|)
 block|,
 comment|/* OBJ_setAttr_IssCap_Sig           2 23 42 3 3 5 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|642
-index|]
-operator|)
 block|,
 comment|/* OBJ_set_brand_Novus              2 23 42 8 6011 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|735
-index|]
-operator|)
 block|,
 comment|/* OBJ_wap_wsg_idm_ecid_wtls1       2 23 43 1 4 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|736
-index|]
-operator|)
 block|,
 comment|/* OBJ_wap_wsg_idm_ecid_wtls3       2 23 43 1 4 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|737
-index|]
-operator|)
 block|,
 comment|/* OBJ_wap_wsg_idm_ecid_wtls4       2 23 43 1 4 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|738
-index|]
-operator|)
 block|,
 comment|/* OBJ_wap_wsg_idm_ecid_wtls5       2 23 43 1 4 5 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|739
-index|]
-operator|)
 block|,
 comment|/* OBJ_wap_wsg_idm_ecid_wtls6       2 23 43 1 4 6 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|740
-index|]
-operator|)
 block|,
 comment|/* OBJ_wap_wsg_idm_ecid_wtls7       2 23 43 1 4 7 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|741
-index|]
-operator|)
 block|,
 comment|/* OBJ_wap_wsg_idm_ecid_wtls8       2 23 43 1 4 8 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|742
-index|]
-operator|)
 block|,
 comment|/* OBJ_wap_wsg_idm_ecid_wtls9       2 23 43 1 4 9 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|743
-index|]
-operator|)
 block|,
 comment|/* OBJ_wap_wsg_idm_ecid_wtls10      2 23 43 1 4 10 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|744
-index|]
-operator|)
 block|,
 comment|/* OBJ_wap_wsg_idm_ecid_wtls11      2 23 43 1 4 11 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|745
-index|]
-operator|)
 block|,
 comment|/* OBJ_wap_wsg_idm_ecid_wtls12      2 23 43 1 4 12 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|804
-index|]
-operator|)
 block|,
 comment|/* OBJ_whirlpool                    1 0 10118 3 0 55 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|124
-index|]
-operator|)
 block|,
 comment|/* OBJ_rle_compression              1 1 1 1 666 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|773
-index|]
-operator|)
 block|,
 comment|/* OBJ_kisa                         1 2 410 200004 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|807
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_GostR3411_94_with_GostR3410_2001 1 2 643 2 2 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|808
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_GostR3411_94_with_GostR3410_94 1 2 643 2 2 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|809
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_GostR3411_94              1 2 643 2 2 9 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|810
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_HMACGostR3411_94          1 2 643 2 2 10 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|811
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_GostR3410_2001            1 2 643 2 2 19 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|812
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_GostR3410_94              1 2 643 2 2 20 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|813
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_Gost28147_89              1 2 643 2 2 21 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|815
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_Gost28147_89_MAC          1 2 643 2 2 22 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|816
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_GostR3411_94_prf          1 2 643 2 2 23 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|817
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_GostR3410_2001DH          1 2 643 2 2 98 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|818
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_GostR3410_94DH            1 2 643 2 2 99 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|1
-index|]
-operator|)
 block|,
 comment|/* OBJ_rsadsi                       1 2 840 113549 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|185
-index|]
-operator|)
 block|,
 comment|/* OBJ_X9cm                         1 2 840 10040 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|127
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_pkix                      1 3 6 1 5 5 7 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|505
-index|]
-operator|)
 block|,
 comment|/* OBJ_mime_mhs_headings            1 3 6 1 7 1 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|506
-index|]
-operator|)
 block|,
 comment|/* OBJ_mime_mhs_bodies              1 3 6 1 7 1 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|119
-index|]
-operator|)
 block|,
 comment|/* OBJ_ripemd160WithRSA             1 3 36 3 3 1 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|631
-index|]
-operator|)
 block|,
 comment|/* OBJ_setAttr_GenCryptgrm          2 23 42 3 3 3 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|632
-index|]
-operator|)
 block|,
 comment|/* OBJ_setAttr_T2Enc                2 23 42 3 3 4 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|633
-index|]
-operator|)
 block|,
 comment|/* OBJ_setAttr_T2cleartxt           2 23 42 3 3 4 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|634
-index|]
-operator|)
 block|,
 comment|/* OBJ_setAttr_TokICCsig            2 23 42 3 3 5 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|635
-index|]
-operator|)
 block|,
 comment|/* OBJ_setAttr_SecDevSig            2 23 42 3 3 5 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|436
-index|]
-operator|)
 block|,
 comment|/* OBJ_ucl                          0 9 2342 19200300 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|820
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_Gost28147_89_None_KeyMeshing 1 2 643 2 2 14 0 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|819
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_Gost28147_89_CryptoPro_KeyMeshing 1 2 643 2 2 14 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|845
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_GostR3410_94_a            1 2 643 2 2 20 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|846
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_GostR3410_94_aBis         1 2 643 2 2 20 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|847
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_GostR3410_94_b            1 2 643 2 2 20 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|848
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_GostR3410_94_bBis         1 2 643 2 2 20 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|821
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_GostR3411_94_TestParamSet 1 2 643 2 2 30 0 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|822
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_GostR3411_94_CryptoProParamSet 1 2 643 2 2 30 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|823
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_Gost28147_89_TestParamSet 1 2 643 2 2 31 0 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|824
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_Gost28147_89_CryptoPro_A_ParamSet 1 2 643 2 2 31 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|825
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_Gost28147_89_CryptoPro_B_ParamSet 1 2 643 2 2 31 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|826
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_Gost28147_89_CryptoPro_C_ParamSet 1 2 643 2 2 31 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|827
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_Gost28147_89_CryptoPro_D_ParamSet 1 2 643 2 2 31 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|828
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_Gost28147_89_CryptoPro_Oscar_1_1_ParamSet 1 2 643 2 2 31 5 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|829
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_Gost28147_89_CryptoPro_Oscar_1_0_ParamSet 1 2 643 2 2 31 6 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|830
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_Gost28147_89_CryptoPro_RIC_1_ParamSet 1 2 643 2 2 31 7 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|831
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_GostR3410_94_TestParamSet 1 2 643 2 2 32 0 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|832
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_GostR3410_94_CryptoPro_A_ParamSet 1 2 643 2 2 32 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|833
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_GostR3410_94_CryptoPro_B_ParamSet 1 2 643 2 2 32 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|834
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_GostR3410_94_CryptoPro_C_ParamSet 1 2 643 2 2 32 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|835
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_GostR3410_94_CryptoPro_D_ParamSet 1 2 643 2 2 32 5 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|836
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_GostR3410_94_CryptoPro_XchA_ParamSet 1 2 643 2 2 33 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|837
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_GostR3410_94_CryptoPro_XchB_ParamSet 1 2 643 2 2 33 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|838
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_GostR3410_94_CryptoPro_XchC_ParamSet 1 2 643 2 2 33 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|839
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_GostR3410_2001_TestParamSet 1 2 643 2 2 35 0 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|840
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_GostR3410_2001_CryptoPro_A_ParamSet 1 2 643 2 2 35 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|841
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_GostR3410_2001_CryptoPro_B_ParamSet 1 2 643 2 2 35 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|842
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_GostR3410_2001_CryptoPro_C_ParamSet 1 2 643 2 2 35 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|843
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_GostR3410_2001_CryptoPro_XchA_ParamSet 1 2 643 2 2 36 0 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|844
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_GostR3410_2001_CryptoPro_XchB_ParamSet 1 2 643 2 2 36 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|2
-index|]
-operator|)
 block|,
 comment|/* OBJ_pkcs                         1 2 840 113549 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|431
-index|]
-operator|)
 block|,
 comment|/* OBJ_hold_instruction_none        1 2 840 10040 2 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|432
-index|]
-operator|)
 block|,
 comment|/* OBJ_hold_instruction_call_issuer 1 2 840 10040 2 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|433
-index|]
-operator|)
 block|,
 comment|/* OBJ_hold_instruction_reject      1 2 840 10040 2 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|116
-index|]
-operator|)
 block|,
 comment|/* OBJ_dsa                          1 2 840 10040 4 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|113
-index|]
-operator|)
 block|,
 comment|/* OBJ_dsaWithSHA1                  1 2 840 10040 4 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|406
-index|]
-operator|)
 block|,
 comment|/* OBJ_X9_62_prime_field            1 2 840 10045 1 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|407
-index|]
-operator|)
 block|,
 comment|/* OBJ_X9_62_characteristic_two_field 1 2 840 10045 1 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|408
-index|]
-operator|)
 block|,
 comment|/* OBJ_X9_62_id_ecPublicKey         1 2 840 10045 2 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|416
-index|]
-operator|)
 block|,
 comment|/* OBJ_ecdsa_with_SHA1              1 2 840 10045 4 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|791
-index|]
-operator|)
 block|,
 comment|/* OBJ_ecdsa_with_Recommended       1 2 840 10045 4 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|792
-index|]
-operator|)
 block|,
 comment|/* OBJ_ecdsa_with_Specified         1 2 840 10045 4 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|258
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_pkix_mod                  1 3 6 1 5 5 7 0 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|175
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_pe                        1 3 6 1 5 5 7 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|259
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_qt                        1 3 6 1 5 5 7 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|128
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_kp                        1 3 6 1 5 5 7 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|260
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_it                        1 3 6 1 5 5 7 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|261
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_pkip                      1 3 6 1 5 5 7 5 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|262
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_alg                       1 3 6 1 5 5 7 6 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|263
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_cmc                       1 3 6 1 5 5 7 7 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|264
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_on                        1 3 6 1 5 5 7 8 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|265
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_pda                       1 3 6 1 5 5 7 9 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|266
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_aca                       1 3 6 1 5 5 7 10 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|267
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_qcs                       1 3 6 1 5 5 7 11 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|268
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_cct                       1 3 6 1 5 5 7 12 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|662
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_ppl                       1 3 6 1 5 5 7 21 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|176
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_ad                        1 3 6 1 5 5 7 48 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|507
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_hex_partial_message       1 3 6 1 7 1 1 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|508
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_hex_multipart_message     1 3 6 1 7 1 1 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|57
-index|]
-operator|)
 block|,
 comment|/* OBJ_netscape                     2 16 840 1 113730 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|754
-index|]
-operator|)
 block|,
 comment|/* OBJ_camellia_128_ecb             0 3 4401 5 3 1 9 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|766
-index|]
-operator|)
 block|,
 comment|/* OBJ_camellia_128_ofb128          0 3 4401 5 3 1 9 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|757
-index|]
-operator|)
 block|,
 comment|/* OBJ_camellia_128_cfb128          0 3 4401 5 3 1 9 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|755
-index|]
-operator|)
 block|,
 comment|/* OBJ_camellia_192_ecb             0 3 4401 5 3 1 9 21 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|767
-index|]
-operator|)
 block|,
 comment|/* OBJ_camellia_192_ofb128          0 3 4401 5 3 1 9 23 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|758
-index|]
-operator|)
 block|,
 comment|/* OBJ_camellia_192_cfb128          0 3 4401 5 3 1 9 24 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|756
-index|]
-operator|)
 block|,
 comment|/* OBJ_camellia_256_ecb             0 3 4401 5 3 1 9 41 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|768
-index|]
-operator|)
 block|,
 comment|/* OBJ_camellia_256_ofb128          0 3 4401 5 3 1 9 43 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|759
-index|]
-operator|)
 block|,
 comment|/* OBJ_camellia_256_cfb128          0 3 4401 5 3 1 9 44 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|437
-index|]
-operator|)
 block|,
 comment|/* OBJ_pilot                        0 9 2342 19200300 100 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|776
-index|]
-operator|)
 block|,
 comment|/* OBJ_seed_ecb                     1 2 410 200004 1 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|777
-index|]
-operator|)
 block|,
 comment|/* OBJ_seed_cbc                     1 2 410 200004 1 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|779
-index|]
-operator|)
 block|,
 comment|/* OBJ_seed_cfb128                  1 2 410 200004 1 5 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|778
-index|]
-operator|)
 block|,
 comment|/* OBJ_seed_ofb128                  1 2 410 200004 1 6 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|852
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_GostR3411_94_with_GostR3410_94_cc 1 2 643 2 9 1 3 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|853
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_GostR3411_94_with_GostR3410_2001_cc 1 2 643 2 9 1 3 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|850
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_GostR3410_94_cc           1 2 643 2 9 1 5 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|851
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_GostR3410_2001_cc         1 2 643 2 9 1 5 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|849
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_Gost28147_89_cc           1 2 643 2 9 1 6 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|854
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_GostR3410_2001_ParamSet_cc 1 2 643 2 9 1 8 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|186
-index|]
-operator|)
 block|,
 comment|/* OBJ_pkcs1                        1 2 840 113549 1 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|27
-index|]
-operator|)
 block|,
 comment|/* OBJ_pkcs3                        1 2 840 113549 1 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|187
-index|]
-operator|)
 block|,
 comment|/* OBJ_pkcs5                        1 2 840 113549 1 5 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|20
-index|]
-operator|)
 block|,
 comment|/* OBJ_pkcs7                        1 2 840 113549 1 7 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|47
-index|]
-operator|)
 block|,
 comment|/* OBJ_pkcs9                        1 2 840 113549 1 9 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|3
-index|]
-operator|)
 block|,
 comment|/* OBJ_md2                          1 2 840 113549 2 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|257
-index|]
-operator|)
 block|,
 comment|/* OBJ_md4                          1 2 840 113549 2 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|4
-index|]
-operator|)
 block|,
 comment|/* OBJ_md5                          1 2 840 113549 2 5 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|797
-index|]
-operator|)
 block|,
 comment|/* OBJ_hmacWithMD5                  1 2 840 113549 2 6 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|163
-index|]
-operator|)
 block|,
 comment|/* OBJ_hmacWithSHA1                 1 2 840 113549 2 7 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|798
-index|]
-operator|)
 block|,
 comment|/* OBJ_hmacWithSHA224               1 2 840 113549 2 8 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|799
-index|]
-operator|)
 block|,
 comment|/* OBJ_hmacWithSHA256               1 2 840 113549 2 9 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|800
-index|]
-operator|)
 block|,
 comment|/* OBJ_hmacWithSHA384               1 2 840 113549 2 10 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|801
-index|]
-operator|)
 block|,
 comment|/* OBJ_hmacWithSHA512               1 2 840 113549 2 11 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|37
-index|]
-operator|)
 block|,
 comment|/* OBJ_rc2_cbc                      1 2 840 113549 3 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|5
-index|]
-operator|)
 block|,
 comment|/* OBJ_rc4                          1 2 840 113549 3 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|44
-index|]
-operator|)
 block|,
 comment|/* OBJ_des_ede3_cbc                 1 2 840 113549 3 7 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|120
-index|]
-operator|)
 block|,
 comment|/* OBJ_rc5_cbc                      1 2 840 113549 3 8 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|643
-index|]
-operator|)
 block|,
 comment|/* OBJ_des_cdmf                     1 2 840 113549 3 10 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|680
-index|]
-operator|)
 block|,
 comment|/* OBJ_X9_62_id_characteristic_two_basis 1 2 840 10045 1 2 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|684
-index|]
-operator|)
 block|,
 comment|/* OBJ_X9_62_c2pnb163v1             1 2 840 10045 3 0 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|685
-index|]
-operator|)
 block|,
 comment|/* OBJ_X9_62_c2pnb163v2             1 2 840 10045 3 0 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|686
-index|]
-operator|)
 block|,
 comment|/* OBJ_X9_62_c2pnb163v3             1 2 840 10045 3 0 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|687
-index|]
-operator|)
 block|,
 comment|/* OBJ_X9_62_c2pnb176v1             1 2 840 10045 3 0 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|688
-index|]
-operator|)
 block|,
 comment|/* OBJ_X9_62_c2tnb191v1             1 2 840 10045 3 0 5 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|689
-index|]
-operator|)
 block|,
 comment|/* OBJ_X9_62_c2tnb191v2             1 2 840 10045 3 0 6 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|690
-index|]
-operator|)
 block|,
 comment|/* OBJ_X9_62_c2tnb191v3             1 2 840 10045 3 0 7 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|691
-index|]
-operator|)
 block|,
 comment|/* OBJ_X9_62_c2onb191v4             1 2 840 10045 3 0 8 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|692
-index|]
-operator|)
 block|,
 comment|/* OBJ_X9_62_c2onb191v5             1 2 840 10045 3 0 9 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|693
-index|]
-operator|)
 block|,
 comment|/* OBJ_X9_62_c2pnb208w1             1 2 840 10045 3 0 10 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|694
-index|]
-operator|)
 block|,
 comment|/* OBJ_X9_62_c2tnb239v1             1 2 840 10045 3 0 11 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|695
-index|]
-operator|)
 block|,
 comment|/* OBJ_X9_62_c2tnb239v2             1 2 840 10045 3 0 12 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|696
-index|]
-operator|)
 block|,
 comment|/* OBJ_X9_62_c2tnb239v3             1 2 840 10045 3 0 13 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|697
-index|]
-operator|)
 block|,
 comment|/* OBJ_X9_62_c2onb239v4             1 2 840 10045 3 0 14 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|698
-index|]
-operator|)
 block|,
 comment|/* OBJ_X9_62_c2onb239v5             1 2 840 10045 3 0 15 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|699
-index|]
-operator|)
 block|,
 comment|/* OBJ_X9_62_c2pnb272w1             1 2 840 10045 3 0 16 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|700
-index|]
-operator|)
 block|,
 comment|/* OBJ_X9_62_c2pnb304w1             1 2 840 10045 3 0 17 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|701
-index|]
-operator|)
 block|,
 comment|/* OBJ_X9_62_c2tnb359v1             1 2 840 10045 3 0 18 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|702
-index|]
-operator|)
 block|,
 comment|/* OBJ_X9_62_c2pnb368w1             1 2 840 10045 3 0 19 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|703
-index|]
-operator|)
 block|,
 comment|/* OBJ_X9_62_c2tnb431r1             1 2 840 10045 3 0 20 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|409
-index|]
-operator|)
 block|,
 comment|/* OBJ_X9_62_prime192v1             1 2 840 10045 3 1 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|410
-index|]
-operator|)
 block|,
 comment|/* OBJ_X9_62_prime192v2             1 2 840 10045 3 1 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|411
-index|]
-operator|)
 block|,
 comment|/* OBJ_X9_62_prime192v3             1 2 840 10045 3 1 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|412
-index|]
-operator|)
 block|,
 comment|/* OBJ_X9_62_prime239v1             1 2 840 10045 3 1 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|413
-index|]
-operator|)
 block|,
 comment|/* OBJ_X9_62_prime239v2             1 2 840 10045 3 1 5 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|414
-index|]
-operator|)
 block|,
 comment|/* OBJ_X9_62_prime239v3             1 2 840 10045 3 1 6 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|415
-index|]
-operator|)
 block|,
 comment|/* OBJ_X9_62_prime256v1             1 2 840 10045 3 1 7 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|793
-index|]
-operator|)
 block|,
 comment|/* OBJ_ecdsa_with_SHA224            1 2 840 10045 4 3 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|794
-index|]
-operator|)
 block|,
 comment|/* OBJ_ecdsa_with_SHA256            1 2 840 10045 4 3 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|795
-index|]
-operator|)
 block|,
 comment|/* OBJ_ecdsa_with_SHA384            1 2 840 10045 4 3 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|796
-index|]
-operator|)
 block|,
 comment|/* OBJ_ecdsa_with_SHA512            1 2 840 10045 4 3 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|269
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_pkix1_explicit_88         1 3 6 1 5 5 7 0 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|270
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_pkix1_implicit_88         1 3 6 1 5 5 7 0 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|271
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_pkix1_explicit_93         1 3 6 1 5 5 7 0 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|272
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_pkix1_implicit_93         1 3 6 1 5 5 7 0 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|273
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_mod_crmf                  1 3 6 1 5 5 7 0 5 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|274
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_mod_cmc                   1 3 6 1 5 5 7 0 6 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|275
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_mod_kea_profile_88        1 3 6 1 5 5 7 0 7 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|276
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_mod_kea_profile_93        1 3 6 1 5 5 7 0 8 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|277
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_mod_cmp                   1 3 6 1 5 5 7 0 9 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|278
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_mod_qualified_cert_88     1 3 6 1 5 5 7 0 10 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|279
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_mod_qualified_cert_93     1 3 6 1 5 5 7 0 11 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|280
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_mod_attribute_cert        1 3 6 1 5 5 7 0 12 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|281
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_mod_timestamp_protocol    1 3 6 1 5 5 7 0 13 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|282
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_mod_ocsp                  1 3 6 1 5 5 7 0 14 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|283
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_mod_dvcs                  1 3 6 1 5 5 7 0 15 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|284
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_mod_cmp2000               1 3 6 1 5 5 7 0 16 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|177
-index|]
-operator|)
 block|,
 comment|/* OBJ_info_access                  1 3 6 1 5 5 7 1 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|285
-index|]
-operator|)
 block|,
 comment|/* OBJ_biometricInfo                1 3 6 1 5 5 7 1 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|286
-index|]
-operator|)
 block|,
 comment|/* OBJ_qcStatements                 1 3 6 1 5 5 7 1 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|287
-index|]
-operator|)
 block|,
 comment|/* OBJ_ac_auditEntity               1 3 6 1 5 5 7 1 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|288
-index|]
-operator|)
 block|,
 comment|/* OBJ_ac_targeting                 1 3 6 1 5 5 7 1 5 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|289
-index|]
-operator|)
 block|,
 comment|/* OBJ_aaControls                   1 3 6 1 5 5 7 1 6 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|290
-index|]
-operator|)
 block|,
 comment|/* OBJ_sbgp_ipAddrBlock             1 3 6 1 5 5 7 1 7 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|291
-index|]
-operator|)
 block|,
 comment|/* OBJ_sbgp_autonomousSysNum        1 3 6 1 5 5 7 1 8 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|292
-index|]
-operator|)
 block|,
 comment|/* OBJ_sbgp_routerIdentifier        1 3 6 1 5 5 7 1 9 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|397
-index|]
-operator|)
 block|,
 comment|/* OBJ_ac_proxying                  1 3 6 1 5 5 7 1 10 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|398
-index|]
-operator|)
 block|,
 comment|/* OBJ_sinfo_access                 1 3 6 1 5 5 7 1 11 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|663
-index|]
-operator|)
 block|,
 comment|/* OBJ_proxyCertInfo                1 3 6 1 5 5 7 1 14 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|164
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_qt_cps                    1 3 6 1 5 5 7 2 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|165
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_qt_unotice                1 3 6 1 5 5 7 2 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|293
-index|]
-operator|)
 block|,
 comment|/* OBJ_textNotice                   1 3 6 1 5 5 7 2 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|129
-index|]
-operator|)
 block|,
 comment|/* OBJ_server_auth                  1 3 6 1 5 5 7 3 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|130
-index|]
-operator|)
 block|,
 comment|/* OBJ_client_auth                  1 3 6 1 5 5 7 3 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|131
-index|]
-operator|)
 block|,
 comment|/* OBJ_code_sign                    1 3 6 1 5 5 7 3 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|132
-index|]
-operator|)
 block|,
 comment|/* OBJ_email_protect                1 3 6 1 5 5 7 3 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|294
-index|]
-operator|)
 block|,
 comment|/* OBJ_ipsecEndSystem               1 3 6 1 5 5 7 3 5 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|295
-index|]
-operator|)
 block|,
 comment|/* OBJ_ipsecTunnel                  1 3 6 1 5 5 7 3 6 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|296
-index|]
-operator|)
 block|,
 comment|/* OBJ_ipsecUser                    1 3 6 1 5 5 7 3 7 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|133
-index|]
-operator|)
 block|,
 comment|/* OBJ_time_stamp                   1 3 6 1 5 5 7 3 8 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|180
-index|]
-operator|)
 block|,
 comment|/* OBJ_OCSP_sign                    1 3 6 1 5 5 7 3 9 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|297
-index|]
-operator|)
 block|,
 comment|/* OBJ_dvcs                         1 3 6 1 5 5 7 3 10 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|298
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_it_caProtEncCert          1 3 6 1 5 5 7 4 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|299
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_it_signKeyPairTypes       1 3 6 1 5 5 7 4 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|300
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_it_encKeyPairTypes        1 3 6 1 5 5 7 4 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|301
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_it_preferredSymmAlg       1 3 6 1 5 5 7 4 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|302
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_it_caKeyUpdateInfo        1 3 6 1 5 5 7 4 5 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|303
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_it_currentCRL             1 3 6 1 5 5 7 4 6 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|304
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_it_unsupportedOIDs        1 3 6 1 5 5 7 4 7 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|305
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_it_subscriptionRequest    1 3 6 1 5 5 7 4 8 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|306
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_it_subscriptionResponse   1 3 6 1 5 5 7 4 9 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|307
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_it_keyPairParamReq        1 3 6 1 5 5 7 4 10 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|308
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_it_keyPairParamRep        1 3 6 1 5 5 7 4 11 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|309
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_it_revPassphrase          1 3 6 1 5 5 7 4 12 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|310
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_it_implicitConfirm        1 3 6 1 5 5 7 4 13 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|311
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_it_confirmWaitTime        1 3 6 1 5 5 7 4 14 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|312
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_it_origPKIMessage         1 3 6 1 5 5 7 4 15 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|784
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_it_suppLangTags           1 3 6 1 5 5 7 4 16 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|313
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_regCtrl                   1 3 6 1 5 5 7 5 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|314
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_regInfo                   1 3 6 1 5 5 7 5 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|323
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_alg_des40                 1 3 6 1 5 5 7 6 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|324
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_alg_noSignature           1 3 6 1 5 5 7 6 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|325
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_alg_dh_sig_hmac_sha1      1 3 6 1 5 5 7 6 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|326
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_alg_dh_pop                1 3 6 1 5 5 7 6 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|327
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_cmc_statusInfo            1 3 6 1 5 5 7 7 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|328
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_cmc_identification        1 3 6 1 5 5 7 7 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|329
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_cmc_identityProof         1 3 6 1 5 5 7 7 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|330
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_cmc_dataReturn            1 3 6 1 5 5 7 7 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|331
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_cmc_transactionId         1 3 6 1 5 5 7 7 5 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|332
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_cmc_senderNonce           1 3 6 1 5 5 7 7 6 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|333
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_cmc_recipientNonce        1 3 6 1 5 5 7 7 7 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|334
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_cmc_addExtensions         1 3 6 1 5 5 7 7 8 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|335
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_cmc_encryptedPOP          1 3 6 1 5 5 7 7 9 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|336
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_cmc_decryptedPOP          1 3 6 1 5 5 7 7 10 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|337
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_cmc_lraPOPWitness         1 3 6 1 5 5 7 7 11 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|338
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_cmc_getCert               1 3 6 1 5 5 7 7 15 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|339
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_cmc_getCRL                1 3 6 1 5 5 7 7 16 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|340
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_cmc_revokeRequest         1 3 6 1 5 5 7 7 17 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|341
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_cmc_regInfo               1 3 6 1 5 5 7 7 18 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|342
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_cmc_responseInfo          1 3 6 1 5 5 7 7 19 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|343
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_cmc_queryPending          1 3 6 1 5 5 7 7 21 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|344
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_cmc_popLinkRandom         1 3 6 1 5 5 7 7 22 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|345
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_cmc_popLinkWitness        1 3 6 1 5 5 7 7 23 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|346
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_cmc_confirmCertAcceptance 1 3 6 1 5 5 7 7 24 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|347
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_on_personalData           1 3 6 1 5 5 7 8 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|858
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_on_permanentIdentifier    1 3 6 1 5 5 7 8 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|348
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_pda_dateOfBirth           1 3 6 1 5 5 7 9 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|349
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_pda_placeOfBirth          1 3 6 1 5 5 7 9 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|351
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_pda_gender                1 3 6 1 5 5 7 9 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|352
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_pda_countryOfCitizenship  1 3 6 1 5 5 7 9 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|353
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_pda_countryOfResidence    1 3 6 1 5 5 7 9 5 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|354
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_aca_authenticationInfo    1 3 6 1 5 5 7 10 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|355
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_aca_accessIdentity        1 3 6 1 5 5 7 10 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|356
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_aca_chargingIdentity      1 3 6 1 5 5 7 10 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|357
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_aca_group                 1 3 6 1 5 5 7 10 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|358
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_aca_role                  1 3 6 1 5 5 7 10 5 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|399
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_aca_encAttrs              1 3 6 1 5 5 7 10 6 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|359
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_qcs_pkixQCSyntax_v1       1 3 6 1 5 5 7 11 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|360
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_cct_crs                   1 3 6 1 5 5 7 12 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|361
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_cct_PKIData               1 3 6 1 5 5 7 12 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|362
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_cct_PKIResponse           1 3 6 1 5 5 7 12 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|664
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_ppl_anyLanguage           1 3 6 1 5 5 7 21 0 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|665
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_ppl_inheritAll            1 3 6 1 5 5 7 21 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|667
-index|]
-operator|)
 block|,
 comment|/* OBJ_Independent                  1 3 6 1 5 5 7 21 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|178
-index|]
-operator|)
 block|,
 comment|/* OBJ_ad_OCSP                      1 3 6 1 5 5 7 48 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|179
-index|]
-operator|)
 block|,
 comment|/* OBJ_ad_ca_issuers                1 3 6 1 5 5 7 48 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|363
-index|]
-operator|)
 block|,
 comment|/* OBJ_ad_timeStamping              1 3 6 1 5 5 7 48 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|364
-index|]
-operator|)
 block|,
 comment|/* OBJ_ad_dvcs                      1 3 6 1 5 5 7 48 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|785
-index|]
-operator|)
 block|,
 comment|/* OBJ_caRepository                 1 3 6 1 5 5 7 48 5 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|780
-index|]
-operator|)
 block|,
 comment|/* OBJ_hmac_md5                     1 3 6 1 5 5 8 1 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|781
-index|]
-operator|)
 block|,
 comment|/* OBJ_hmac_sha1                    1 3 6 1 5 5 8 1 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|58
-index|]
-operator|)
 block|,
 comment|/* OBJ_netscape_cert_extension      2 16 840 1 113730 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|59
-index|]
-operator|)
 block|,
 comment|/* OBJ_netscape_data_type           2 16 840 1 113730 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|438
-index|]
-operator|)
 block|,
 comment|/* OBJ_pilotAttributeType           0 9 2342 19200300 100 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|439
-index|]
-operator|)
 block|,
 comment|/* OBJ_pilotAttributeSyntax         0 9 2342 19200300 100 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|440
-index|]
-operator|)
 block|,
 comment|/* OBJ_pilotObjectClass             0 9 2342 19200300 100 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|441
-index|]
-operator|)
 block|,
 comment|/* OBJ_pilotGroups                  0 9 2342 19200300 100 10 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|108
-index|]
-operator|)
 block|,
 comment|/* OBJ_cast5_cbc                    1 2 840 113533 7 66 10 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|112
-index|]
-operator|)
 block|,
 comment|/* OBJ_pbeWithMD5AndCast5_CBC       1 2 840 113533 7 66 12 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|782
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_PasswordBasedMAC          1 2 840 113533 7 66 13 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|783
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_DHBasedMac                1 2 840 113533 7 66 30 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|6
-index|]
-operator|)
 block|,
 comment|/* OBJ_rsaEncryption                1 2 840 113549 1 1 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|7
-index|]
-operator|)
 block|,
 comment|/* OBJ_md2WithRSAEncryption         1 2 840 113549 1 1 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|396
-index|]
-operator|)
 block|,
 comment|/* OBJ_md4WithRSAEncryption         1 2 840 113549 1 1 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|8
-index|]
-operator|)
 block|,
 comment|/* OBJ_md5WithRSAEncryption         1 2 840 113549 1 1 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|65
-index|]
-operator|)
 block|,
 comment|/* OBJ_sha1WithRSAEncryption        1 2 840 113549 1 1 5 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|644
-index|]
-operator|)
 block|,
 comment|/* OBJ_rsaOAEPEncryptionSET         1 2 840 113549 1 1 6 */
-operator|&
-operator|(
-name|nid_objs
-index|[
+literal|919
+block|,
+comment|/* OBJ_rsaesOaep                    1 2 840 113549 1 1 7 */
+literal|911
+block|,
+comment|/* OBJ_mgf1                         1 2 840 113549 1 1 8 */
+literal|912
+block|,
+comment|/* OBJ_rsassaPss                    1 2 840 113549 1 1 10 */
 literal|668
-index|]
-operator|)
 block|,
 comment|/* OBJ_sha256WithRSAEncryption      1 2 840 113549 1 1 11 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|669
-index|]
-operator|)
 block|,
 comment|/* OBJ_sha384WithRSAEncryption      1 2 840 113549 1 1 12 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|670
-index|]
-operator|)
 block|,
 comment|/* OBJ_sha512WithRSAEncryption      1 2 840 113549 1 1 13 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|671
-index|]
-operator|)
 block|,
 comment|/* OBJ_sha224WithRSAEncryption      1 2 840 113549 1 1 14 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|28
-index|]
-operator|)
 block|,
 comment|/* OBJ_dhKeyAgreement               1 2 840 113549 1 3 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|9
-index|]
-operator|)
 block|,
 comment|/* OBJ_pbeWithMD2AndDES_CBC         1 2 840 113549 1 5 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|10
-index|]
-operator|)
 block|,
 comment|/* OBJ_pbeWithMD5AndDES_CBC         1 2 840 113549 1 5 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|168
-index|]
-operator|)
 block|,
 comment|/* OBJ_pbeWithMD2AndRC2_CBC         1 2 840 113549 1 5 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|169
-index|]
-operator|)
 block|,
 comment|/* OBJ_pbeWithMD5AndRC2_CBC         1 2 840 113549 1 5 6 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|170
-index|]
-operator|)
 block|,
 comment|/* OBJ_pbeWithSHA1AndDES_CBC        1 2 840 113549 1 5 10 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|68
-index|]
-operator|)
 block|,
 comment|/* OBJ_pbeWithSHA1AndRC2_CBC        1 2 840 113549 1 5 11 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|69
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_pbkdf2                    1 2 840 113549 1 5 12 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|161
-index|]
-operator|)
 block|,
 comment|/* OBJ_pbes2                        1 2 840 113549 1 5 13 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|162
-index|]
-operator|)
 block|,
 comment|/* OBJ_pbmac1                       1 2 840 113549 1 5 14 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|21
-index|]
-operator|)
 block|,
 comment|/* OBJ_pkcs7_data                   1 2 840 113549 1 7 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|22
-index|]
-operator|)
 block|,
 comment|/* OBJ_pkcs7_signed                 1 2 840 113549 1 7 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|23
-index|]
-operator|)
 block|,
 comment|/* OBJ_pkcs7_enveloped              1 2 840 113549 1 7 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|24
-index|]
-operator|)
 block|,
 comment|/* OBJ_pkcs7_signedAndEnveloped     1 2 840 113549 1 7 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|25
-index|]
-operator|)
 block|,
 comment|/* OBJ_pkcs7_digest                 1 2 840 113549 1 7 5 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|26
-index|]
-operator|)
 block|,
 comment|/* OBJ_pkcs7_encrypted              1 2 840 113549 1 7 6 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|48
-index|]
-operator|)
 block|,
 comment|/* OBJ_pkcs9_emailAddress           1 2 840 113549 1 9 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|49
-index|]
-operator|)
 block|,
 comment|/* OBJ_pkcs9_unstructuredName       1 2 840 113549 1 9 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|50
-index|]
-operator|)
 block|,
 comment|/* OBJ_pkcs9_contentType            1 2 840 113549 1 9 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|51
-index|]
-operator|)
 block|,
 comment|/* OBJ_pkcs9_messageDigest          1 2 840 113549 1 9 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|52
-index|]
-operator|)
 block|,
 comment|/* OBJ_pkcs9_signingTime            1 2 840 113549 1 9 5 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|53
-index|]
-operator|)
 block|,
 comment|/* OBJ_pkcs9_countersignature       1 2 840 113549 1 9 6 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|54
-index|]
-operator|)
 block|,
 comment|/* OBJ_pkcs9_challengePassword      1 2 840 113549 1 9 7 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|55
-index|]
-operator|)
 block|,
 comment|/* OBJ_pkcs9_unstructuredAddress    1 2 840 113549 1 9 8 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|56
-index|]
-operator|)
 block|,
 comment|/* OBJ_pkcs9_extCertAttributes      1 2 840 113549 1 9 9 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|172
-index|]
-operator|)
 block|,
 comment|/* OBJ_ext_req                      1 2 840 113549 1 9 14 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|167
-index|]
-operator|)
 block|,
 comment|/* OBJ_SMIMECapabilities            1 2 840 113549 1 9 15 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|188
-index|]
-operator|)
 block|,
 comment|/* OBJ_SMIME                        1 2 840 113549 1 9 16 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|156
-index|]
-operator|)
 block|,
 comment|/* OBJ_friendlyName                 1 2 840 113549 1 9 20 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|157
-index|]
-operator|)
 block|,
 comment|/* OBJ_localKeyID                   1 2 840 113549 1 9 21 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|681
-index|]
-operator|)
 block|,
 comment|/* OBJ_X9_62_onBasis                1 2 840 10045 1 2 3 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|682
-index|]
-operator|)
 block|,
 comment|/* OBJ_X9_62_tpBasis                1 2 840 10045 1 2 3 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|683
-index|]
-operator|)
 block|,
 comment|/* OBJ_X9_62_ppBasis                1 2 840 10045 1 2 3 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|417
-index|]
-operator|)
 block|,
 comment|/* OBJ_ms_csp_name                  1 3 6 1 4 1 311 17 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|856
-index|]
-operator|)
 block|,
 comment|/* OBJ_LocalKeySet                  1 3 6 1 4 1 311 17 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|390
-index|]
-operator|)
 block|,
 comment|/* OBJ_dcObject                     1 3 6 1 4 1 1466 344 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|91
-index|]
-operator|)
 block|,
 comment|/* OBJ_bf_cbc                       1 3 6 1 4 1 3029 1 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|315
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_regCtrl_regToken          1 3 6 1 5 5 7 5 1 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|316
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_regCtrl_authenticator     1 3 6 1 5 5 7 5 1 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|317
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_regCtrl_pkiPublicationInfo 1 3 6 1 5 5 7 5 1 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|318
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_regCtrl_pkiArchiveOptions 1 3 6 1 5 5 7 5 1 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|319
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_regCtrl_oldCertID         1 3 6 1 5 5 7 5 1 5 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|320
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_regCtrl_protocolEncrKey   1 3 6 1 5 5 7 5 1 6 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|321
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_regInfo_utf8Pairs         1 3 6 1 5 5 7 5 2 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|322
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_regInfo_certReq           1 3 6 1 5 5 7 5 2 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|365
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_pkix_OCSP_basic           1 3 6 1 5 5 7 48 1 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|366
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_pkix_OCSP_Nonce           1 3 6 1 5 5 7 48 1 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|367
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_pkix_OCSP_CrlID           1 3 6 1 5 5 7 48 1 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|368
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_pkix_OCSP_acceptableResponses 1 3 6 1 5 5 7 48 1 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|369
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_pkix_OCSP_noCheck         1 3 6 1 5 5 7 48 1 5 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|370
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_pkix_OCSP_archiveCutoff   1 3 6 1 5 5 7 48 1 6 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|371
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_pkix_OCSP_serviceLocator  1 3 6 1 5 5 7 48 1 7 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|372
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_pkix_OCSP_extendedStatus  1 3 6 1 5 5 7 48 1 8 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|373
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_pkix_OCSP_valid           1 3 6 1 5 5 7 48 1 9 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|374
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_pkix_OCSP_path            1 3 6 1 5 5 7 48 1 10 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|375
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_pkix_OCSP_trustRoot       1 3 6 1 5 5 7 48 1 11 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|418
-index|]
-operator|)
 block|,
 comment|/* OBJ_aes_128_ecb                  2 16 840 1 101 3 4 1 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|419
-index|]
-operator|)
 block|,
 comment|/* OBJ_aes_128_cbc                  2 16 840 1 101 3 4 1 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|420
-index|]
-operator|)
 block|,
 comment|/* OBJ_aes_128_ofb128               2 16 840 1 101 3 4 1 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|421
-index|]
-operator|)
 block|,
 comment|/* OBJ_aes_128_cfb128               2 16 840 1 101 3 4 1 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|788
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_aes128_wrap               2 16 840 1 101 3 4 1 5 */
-operator|&
-operator|(
-name|nid_objs
-index|[
+literal|895
+block|,
+comment|/* OBJ_aes_128_gcm                  2 16 840 1 101 3 4 1 6 */
+literal|896
+block|,
+comment|/* OBJ_aes_128_ccm                  2 16 840 1 101 3 4 1 7 */
+literal|897
+block|,
+comment|/* OBJ_id_aes128_wrap_pad           2 16 840 1 101 3 4 1 8 */
 literal|422
-index|]
-operator|)
 block|,
 comment|/* OBJ_aes_192_ecb                  2 16 840 1 101 3 4 1 21 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|423
-index|]
-operator|)
 block|,
 comment|/* OBJ_aes_192_cbc                  2 16 840 1 101 3 4 1 22 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|424
-index|]
-operator|)
 block|,
 comment|/* OBJ_aes_192_ofb128               2 16 840 1 101 3 4 1 23 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|425
-index|]
-operator|)
 block|,
 comment|/* OBJ_aes_192_cfb128               2 16 840 1 101 3 4 1 24 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|789
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_aes192_wrap               2 16 840 1 101 3 4 1 25 */
-operator|&
-operator|(
-name|nid_objs
-index|[
+literal|898
+block|,
+comment|/* OBJ_aes_192_gcm                  2 16 840 1 101 3 4 1 26 */
+literal|899
+block|,
+comment|/* OBJ_aes_192_ccm                  2 16 840 1 101 3 4 1 27 */
+literal|900
+block|,
+comment|/* OBJ_id_aes192_wrap_pad           2 16 840 1 101 3 4 1 28 */
 literal|426
-index|]
-operator|)
 block|,
 comment|/* OBJ_aes_256_ecb                  2 16 840 1 101 3 4 1 41 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|427
-index|]
-operator|)
 block|,
 comment|/* OBJ_aes_256_cbc                  2 16 840 1 101 3 4 1 42 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|428
-index|]
-operator|)
 block|,
 comment|/* OBJ_aes_256_ofb128               2 16 840 1 101 3 4 1 43 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|429
-index|]
-operator|)
 block|,
 comment|/* OBJ_aes_256_cfb128               2 16 840 1 101 3 4 1 44 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|790
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_aes256_wrap               2 16 840 1 101 3 4 1 45 */
-operator|&
-operator|(
-name|nid_objs
-index|[
+literal|901
+block|,
+comment|/* OBJ_aes_256_gcm                  2 16 840 1 101 3 4 1 46 */
+literal|902
+block|,
+comment|/* OBJ_aes_256_ccm                  2 16 840 1 101 3 4 1 47 */
+literal|903
+block|,
+comment|/* OBJ_id_aes256_wrap_pad           2 16 840 1 101 3 4 1 48 */
 literal|672
-index|]
-operator|)
 block|,
 comment|/* OBJ_sha256                       2 16 840 1 101 3 4 2 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|673
-index|]
-operator|)
 block|,
 comment|/* OBJ_sha384                       2 16 840 1 101 3 4 2 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|674
-index|]
-operator|)
 block|,
 comment|/* OBJ_sha512                       2 16 840 1 101 3 4 2 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|675
-index|]
-operator|)
 block|,
 comment|/* OBJ_sha224                       2 16 840 1 101 3 4 2 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|802
-index|]
-operator|)
 block|,
 comment|/* OBJ_dsa_with_SHA224              2 16 840 1 101 3 4 3 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|803
-index|]
-operator|)
 block|,
 comment|/* OBJ_dsa_with_SHA256              2 16 840 1 101 3 4 3 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|71
-index|]
-operator|)
 block|,
 comment|/* OBJ_netscape_cert_type           2 16 840 1 113730 1 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|72
-index|]
-operator|)
 block|,
 comment|/* OBJ_netscape_base_url            2 16 840 1 113730 1 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|73
-index|]
-operator|)
 block|,
 comment|/* OBJ_netscape_revocation_url      2 16 840 1 113730 1 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|74
-index|]
-operator|)
 block|,
 comment|/* OBJ_netscape_ca_revocation_url   2 16 840 1 113730 1 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|75
-index|]
-operator|)
 block|,
 comment|/* OBJ_netscape_renewal_url         2 16 840 1 113730 1 7 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|76
-index|]
-operator|)
 block|,
 comment|/* OBJ_netscape_ca_policy_url       2 16 840 1 113730 1 8 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|77
-index|]
-operator|)
 block|,
 comment|/* OBJ_netscape_ssl_server_name     2 16 840 1 113730 1 12 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|78
-index|]
-operator|)
 block|,
 comment|/* OBJ_netscape_comment             2 16 840 1 113730 1 13 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|79
-index|]
-operator|)
 block|,
 comment|/* OBJ_netscape_cert_sequence       2 16 840 1 113730 2 5 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|139
-index|]
-operator|)
 block|,
 comment|/* OBJ_ns_sgc                       2 16 840 1 113730 4 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|458
-index|]
-operator|)
 block|,
 comment|/* OBJ_userId                       0 9 2342 19200300 100 1 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|459
-index|]
-operator|)
 block|,
 comment|/* OBJ_textEncodedORAddress         0 9 2342 19200300 100 1 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|460
-index|]
-operator|)
 block|,
 comment|/* OBJ_rfc822Mailbox                0 9 2342 19200300 100 1 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|461
-index|]
-operator|)
 block|,
 comment|/* OBJ_info                         0 9 2342 19200300 100 1 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|462
-index|]
-operator|)
 block|,
 comment|/* OBJ_favouriteDrink               0 9 2342 19200300 100 1 5 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|463
-index|]
-operator|)
 block|,
 comment|/* OBJ_roomNumber                   0 9 2342 19200300 100 1 6 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|464
-index|]
-operator|)
 block|,
 comment|/* OBJ_photo                        0 9 2342 19200300 100 1 7 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|465
-index|]
-operator|)
 block|,
 comment|/* OBJ_userClass                    0 9 2342 19200300 100 1 8 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|466
-index|]
-operator|)
 block|,
 comment|/* OBJ_host                         0 9 2342 19200300 100 1 9 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|467
-index|]
-operator|)
 block|,
 comment|/* OBJ_manager                      0 9 2342 19200300 100 1 10 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|468
-index|]
-operator|)
 block|,
 comment|/* OBJ_documentIdentifier           0 9 2342 19200300 100 1 11 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|469
-index|]
-operator|)
 block|,
 comment|/* OBJ_documentTitle                0 9 2342 19200300 100 1 12 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|470
-index|]
-operator|)
 block|,
 comment|/* OBJ_documentVersion              0 9 2342 19200300 100 1 13 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|471
-index|]
-operator|)
 block|,
 comment|/* OBJ_documentAuthor               0 9 2342 19200300 100 1 14 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|472
-index|]
-operator|)
 block|,
 comment|/* OBJ_documentLocation             0 9 2342 19200300 100 1 15 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|473
-index|]
-operator|)
 block|,
 comment|/* OBJ_homeTelephoneNumber          0 9 2342 19200300 100 1 20 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|474
-index|]
-operator|)
 block|,
 comment|/* OBJ_secretary                    0 9 2342 19200300 100 1 21 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|475
-index|]
-operator|)
 block|,
 comment|/* OBJ_otherMailbox                 0 9 2342 19200300 100 1 22 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|476
-index|]
-operator|)
 block|,
 comment|/* OBJ_lastModifiedTime             0 9 2342 19200300 100 1 23 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|477
-index|]
-operator|)
 block|,
 comment|/* OBJ_lastModifiedBy               0 9 2342 19200300 100 1 24 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|391
-index|]
-operator|)
 block|,
 comment|/* OBJ_domainComponent              0 9 2342 19200300 100 1 25 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|478
-index|]
-operator|)
 block|,
 comment|/* OBJ_aRecord                      0 9 2342 19200300 100 1 26 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|479
-index|]
-operator|)
 block|,
 comment|/* OBJ_pilotAttributeType27         0 9 2342 19200300 100 1 27 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|480
-index|]
-operator|)
 block|,
 comment|/* OBJ_mXRecord                     0 9 2342 19200300 100 1 28 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|481
-index|]
-operator|)
 block|,
 comment|/* OBJ_nSRecord                     0 9 2342 19200300 100 1 29 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|482
-index|]
-operator|)
 block|,
 comment|/* OBJ_sOARecord                    0 9 2342 19200300 100 1 30 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|483
-index|]
-operator|)
 block|,
 comment|/* OBJ_cNAMERecord                  0 9 2342 19200300 100 1 31 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|484
-index|]
-operator|)
 block|,
 comment|/* OBJ_associatedDomain             0 9 2342 19200300 100 1 37 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|485
-index|]
-operator|)
 block|,
 comment|/* OBJ_associatedName               0 9 2342 19200300 100 1 38 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|486
-index|]
-operator|)
 block|,
 comment|/* OBJ_homePostalAddress            0 9 2342 19200300 100 1 39 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|487
-index|]
-operator|)
 block|,
 comment|/* OBJ_personalTitle                0 9 2342 19200300 100 1 40 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|488
-index|]
-operator|)
 block|,
 comment|/* OBJ_mobileTelephoneNumber        0 9 2342 19200300 100 1 41 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|489
-index|]
-operator|)
 block|,
 comment|/* OBJ_pagerTelephoneNumber         0 9 2342 19200300 100 1 42 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|490
-index|]
-operator|)
 block|,
 comment|/* OBJ_friendlyCountryName          0 9 2342 19200300 100 1 43 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|491
-index|]
-operator|)
 block|,
 comment|/* OBJ_organizationalStatus         0 9 2342 19200300 100 1 45 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|492
-index|]
-operator|)
 block|,
 comment|/* OBJ_janetMailbox                 0 9 2342 19200300 100 1 46 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|493
-index|]
-operator|)
 block|,
 comment|/* OBJ_mailPreferenceOption         0 9 2342 19200300 100 1 47 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|494
-index|]
-operator|)
 block|,
 comment|/* OBJ_buildingName                 0 9 2342 19200300 100 1 48 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|495
-index|]
-operator|)
 block|,
 comment|/* OBJ_dSAQuality                   0 9 2342 19200300 100 1 49 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|496
-index|]
-operator|)
 block|,
 comment|/* OBJ_singleLevelQuality           0 9 2342 19200300 100 1 50 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|497
-index|]
-operator|)
 block|,
 comment|/* OBJ_subtreeMinimumQuality        0 9 2342 19200300 100 1 51 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|498
-index|]
-operator|)
 block|,
 comment|/* OBJ_subtreeMaximumQuality        0 9 2342 19200300 100 1 52 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|499
-index|]
-operator|)
 block|,
 comment|/* OBJ_personalSignature            0 9 2342 19200300 100 1 53 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|500
-index|]
-operator|)
 block|,
 comment|/* OBJ_dITRedirect                  0 9 2342 19200300 100 1 54 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|501
-index|]
-operator|)
 block|,
 comment|/* OBJ_audio                        0 9 2342 19200300 100 1 55 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|502
-index|]
-operator|)
 block|,
 comment|/* OBJ_documentPublisher            0 9 2342 19200300 100 1 56 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|442
-index|]
-operator|)
 block|,
 comment|/* OBJ_iA5StringSyntax              0 9 2342 19200300 100 3 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|443
-index|]
-operator|)
 block|,
 comment|/* OBJ_caseIgnoreIA5StringSyntax    0 9 2342 19200300 100 3 5 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|444
-index|]
-operator|)
 block|,
 comment|/* OBJ_pilotObject                  0 9 2342 19200300 100 4 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|445
-index|]
-operator|)
 block|,
 comment|/* OBJ_pilotPerson                  0 9 2342 19200300 100 4 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|446
-index|]
-operator|)
 block|,
 comment|/* OBJ_account                      0 9 2342 19200300 100 4 5 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|447
-index|]
-operator|)
 block|,
 comment|/* OBJ_document                     0 9 2342 19200300 100 4 6 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|448
-index|]
-operator|)
 block|,
 comment|/* OBJ_room                         0 9 2342 19200300 100 4 7 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|449
-index|]
-operator|)
 block|,
 comment|/* OBJ_documentSeries               0 9 2342 19200300 100 4 9 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|392
-index|]
-operator|)
 block|,
 comment|/* OBJ_Domain                       0 9 2342 19200300 100 4 13 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|450
-index|]
-operator|)
 block|,
 comment|/* OBJ_rFC822localPart              0 9 2342 19200300 100 4 14 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|451
-index|]
-operator|)
 block|,
 comment|/* OBJ_dNSDomain                    0 9 2342 19200300 100 4 15 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|452
-index|]
-operator|)
 block|,
 comment|/* OBJ_domainRelatedObject          0 9 2342 19200300 100 4 17 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|453
-index|]
-operator|)
 block|,
 comment|/* OBJ_friendlyCountry              0 9 2342 19200300 100 4 18 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|454
-index|]
-operator|)
 block|,
 comment|/* OBJ_simpleSecurityObject         0 9 2342 19200300 100 4 19 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|455
-index|]
-operator|)
 block|,
 comment|/* OBJ_pilotOrganization            0 9 2342 19200300 100 4 20 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|456
-index|]
-operator|)
 block|,
 comment|/* OBJ_pilotDSA                     0 9 2342 19200300 100 4 21 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|457
-index|]
-operator|)
 block|,
 comment|/* OBJ_qualityLabelledData          0 9 2342 19200300 100 4 22 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|189
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_mod                 1 2 840 113549 1 9 16 0 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|190
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_ct                  1 2 840 113549 1 9 16 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|191
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_aa                  1 2 840 113549 1 9 16 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|192
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_alg                 1 2 840 113549 1 9 16 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|193
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_cd                  1 2 840 113549 1 9 16 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|194
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_spq                 1 2 840 113549 1 9 16 5 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|195
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_cti                 1 2 840 113549 1 9 16 6 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|158
-index|]
-operator|)
 block|,
 comment|/* OBJ_x509Certificate              1 2 840 113549 1 9 22 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|159
-index|]
-operator|)
 block|,
 comment|/* OBJ_sdsiCertificate              1 2 840 113549 1 9 22 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|160
-index|]
-operator|)
 block|,
 comment|/* OBJ_x509Crl                      1 2 840 113549 1 9 23 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|144
-index|]
-operator|)
 block|,
 comment|/* OBJ_pbe_WithSHA1And128BitRC4     1 2 840 113549 1 12 1 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|145
-index|]
-operator|)
 block|,
 comment|/* OBJ_pbe_WithSHA1And40BitRC4      1 2 840 113549 1 12 1 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|146
-index|]
-operator|)
 block|,
 comment|/* OBJ_pbe_WithSHA1And3_Key_TripleDES_CBC 1 2 840 113549 1 12 1 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|147
-index|]
-operator|)
 block|,
 comment|/* OBJ_pbe_WithSHA1And2_Key_TripleDES_CBC 1 2 840 113549 1 12 1 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|148
-index|]
-operator|)
 block|,
 comment|/* OBJ_pbe_WithSHA1And128BitRC2_CBC 1 2 840 113549 1 12 1 5 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|149
-index|]
-operator|)
 block|,
 comment|/* OBJ_pbe_WithSHA1And40BitRC2_CBC  1 2 840 113549 1 12 1 6 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|171
-index|]
-operator|)
 block|,
 comment|/* OBJ_ms_ext_req                   1 3 6 1 4 1 311 2 1 14 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|134
-index|]
-operator|)
 block|,
 comment|/* OBJ_ms_code_ind                  1 3 6 1 4 1 311 2 1 21 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|135
-index|]
-operator|)
 block|,
 comment|/* OBJ_ms_code_com                  1 3 6 1 4 1 311 2 1 22 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|136
-index|]
-operator|)
 block|,
 comment|/* OBJ_ms_ctl_sign                  1 3 6 1 4 1 311 10 3 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|137
-index|]
-operator|)
 block|,
 comment|/* OBJ_ms_sgc                       1 3 6 1 4 1 311 10 3 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|138
-index|]
-operator|)
 block|,
 comment|/* OBJ_ms_efs                       1 3 6 1 4 1 311 10 3 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|648
-index|]
-operator|)
 block|,
 comment|/* OBJ_ms_smartcard_login           1 3 6 1 4 1 311 20 2 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|649
-index|]
-operator|)
 block|,
 comment|/* OBJ_ms_upn                       1 3 6 1 4 1 311 20 2 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|751
-index|]
-operator|)
 block|,
 comment|/* OBJ_camellia_128_cbc             1 2 392 200011 61 1 1 1 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|752
-index|]
-operator|)
 block|,
 comment|/* OBJ_camellia_192_cbc             1 2 392 200011 61 1 1 1 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|753
-index|]
-operator|)
 block|,
 comment|/* OBJ_camellia_256_cbc             1 2 392 200011 61 1 1 1 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
+literal|907
+block|,
+comment|/* OBJ_id_camellia128_wrap          1 2 392 200011 61 1 1 3 2 */
+literal|908
+block|,
+comment|/* OBJ_id_camellia192_wrap          1 2 392 200011 61 1 1 3 3 */
+literal|909
+block|,
+comment|/* OBJ_id_camellia256_wrap          1 2 392 200011 61 1 1 3 4 */
 literal|196
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_mod_cms             1 2 840 113549 1 9 16 0 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|197
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_mod_ess             1 2 840 113549 1 9 16 0 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|198
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_mod_oid             1 2 840 113549 1 9 16 0 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|199
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_mod_msg_v3          1 2 840 113549 1 9 16 0 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|200
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_mod_ets_eSignature_88 1 2 840 113549 1 9 16 0 5 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|201
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_mod_ets_eSignature_97 1 2 840 113549 1 9 16 0 6 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|202
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_mod_ets_eSigPolicy_88 1 2 840 113549 1 9 16 0 7 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|203
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_mod_ets_eSigPolicy_97 1 2 840 113549 1 9 16 0 8 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|204
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_ct_receipt          1 2 840 113549 1 9 16 1 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|205
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_ct_authData         1 2 840 113549 1 9 16 1 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|206
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_ct_publishCert      1 2 840 113549 1 9 16 1 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|207
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_ct_TSTInfo          1 2 840 113549 1 9 16 1 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|208
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_ct_TDTInfo          1 2 840 113549 1 9 16 1 5 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|209
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_ct_contentInfo      1 2 840 113549 1 9 16 1 6 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|210
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_ct_DVCSRequestData  1 2 840 113549 1 9 16 1 7 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|211
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_ct_DVCSResponseData 1 2 840 113549 1 9 16 1 8 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|786
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_ct_compressedData   1 2 840 113549 1 9 16 1 9 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|787
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_ct_asciiTextWithCRLF      1 2 840 113549 1 9 16 1 27 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|212
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_aa_receiptRequest   1 2 840 113549 1 9 16 2 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|213
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_aa_securityLabel    1 2 840 113549 1 9 16 2 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|214
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_aa_mlExpandHistory  1 2 840 113549 1 9 16 2 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|215
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_aa_contentHint      1 2 840 113549 1 9 16 2 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|216
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_aa_msgSigDigest     1 2 840 113549 1 9 16 2 5 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|217
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_aa_encapContentType 1 2 840 113549 1 9 16 2 6 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|218
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_aa_contentIdentifier 1 2 840 113549 1 9 16 2 7 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|219
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_aa_macValue         1 2 840 113549 1 9 16 2 8 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|220
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_aa_equivalentLabels 1 2 840 113549 1 9 16 2 9 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|221
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_aa_contentReference 1 2 840 113549 1 9 16 2 10 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|222
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_aa_encrypKeyPref    1 2 840 113549 1 9 16 2 11 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|223
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_aa_signingCertificate 1 2 840 113549 1 9 16 2 12 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|224
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_aa_smimeEncryptCerts 1 2 840 113549 1 9 16 2 13 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|225
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_aa_timeStampToken   1 2 840 113549 1 9 16 2 14 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|226
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_aa_ets_sigPolicyId  1 2 840 113549 1 9 16 2 15 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|227
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_aa_ets_commitmentType 1 2 840 113549 1 9 16 2 16 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|228
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_aa_ets_signerLocation 1 2 840 113549 1 9 16 2 17 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|229
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_aa_ets_signerAttr   1 2 840 113549 1 9 16 2 18 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|230
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_aa_ets_otherSigCert 1 2 840 113549 1 9 16 2 19 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|231
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_aa_ets_contentTimestamp 1 2 840 113549 1 9 16 2 20 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|232
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_aa_ets_CertificateRefs 1 2 840 113549 1 9 16 2 21 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|233
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_aa_ets_RevocationRefs 1 2 840 113549 1 9 16 2 22 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|234
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_aa_ets_certValues   1 2 840 113549 1 9 16 2 23 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|235
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_aa_ets_revocationValues 1 2 840 113549 1 9 16 2 24 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|236
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_aa_ets_escTimeStamp 1 2 840 113549 1 9 16 2 25 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|237
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_aa_ets_certCRLTimestamp 1 2 840 113549 1 9 16 2 26 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|238
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_aa_ets_archiveTimeStamp 1 2 840 113549 1 9 16 2 27 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|239
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_aa_signatureType    1 2 840 113549 1 9 16 2 28 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|240
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_aa_dvcs_dvc         1 2 840 113549 1 9 16 2 29 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|241
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_alg_ESDHwith3DES    1 2 840 113549 1 9 16 3 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|242
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_alg_ESDHwithRC2     1 2 840 113549 1 9 16 3 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|243
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_alg_3DESwrap        1 2 840 113549 1 9 16 3 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|244
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_alg_RC2wrap         1 2 840 113549 1 9 16 3 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|245
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_alg_ESDH            1 2 840 113549 1 9 16 3 5 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|246
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_alg_CMS3DESwrap     1 2 840 113549 1 9 16 3 6 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|247
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_alg_CMSRC2wrap      1 2 840 113549 1 9 16 3 7 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|125
-index|]
-operator|)
 block|,
 comment|/* OBJ_zlib_compression             1 2 840 113549 1 9 16 3 8 */
-operator|&
-operator|(
-name|nid_objs
-index|[
+literal|893
+block|,
+comment|/* OBJ_id_alg_PWRI_KEK              1 2 840 113549 1 9 16 3 9 */
 literal|248
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_cd_ldap             1 2 840 113549 1 9 16 4 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|249
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_spq_ets_sqt_uri     1 2 840 113549 1 9 16 5 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|250
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_spq_ets_sqt_unotice 1 2 840 113549 1 9 16 5 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|251
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_cti_ets_proofOfOrigin 1 2 840 113549 1 9 16 6 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|252
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_cti_ets_proofOfReceipt 1 2 840 113549 1 9 16 6 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|253
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_cti_ets_proofOfDelivery 1 2 840 113549 1 9 16 6 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|254
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_cti_ets_proofOfSender 1 2 840 113549 1 9 16 6 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|255
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_cti_ets_proofOfApproval 1 2 840 113549 1 9 16 6 5 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|256
-index|]
-operator|)
 block|,
 comment|/* OBJ_id_smime_cti_ets_proofOfCreation 1 2 840 113549 1 9 16 6 6 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|150
-index|]
-operator|)
 block|,
 comment|/* OBJ_keyBag                       1 2 840 113549 1 12 10 1 1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|151
-index|]
-operator|)
 block|,
 comment|/* OBJ_pkcs8ShroudedKeyBag          1 2 840 113549 1 12 10 1 2 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|152
-index|]
-operator|)
 block|,
 comment|/* OBJ_certBag                      1 2 840 113549 1 12 10 1 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|153
-index|]
-operator|)
 block|,
 comment|/* OBJ_crlBag                       1 2 840 113549 1 12 10 1 4 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|154
-index|]
-operator|)
 block|,
 comment|/* OBJ_secretBag                    1 2 840 113549 1 12 10 1 5 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|155
-index|]
-operator|)
 block|,
 comment|/* OBJ_safeContentsBag              1 2 840 113549 1 12 10 1 6 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|34
-index|]
-operator|)
 block|,
 comment|/* OBJ_idea_cbc                     1 3 6 1 4 1 188 7 1 1 2 */
 block|}

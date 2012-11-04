@@ -15,25 +15,41 @@ directive|define
 name|_GSSAPI_GSSAPI_H_
 end_define
 
-begin_comment
-comment|/*  * First, include stddef.h to get size_t defined.  */
-end_comment
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
 begin_include
 include|#
 directive|include
-file|<stddef.h>
+file|<sys/_types.h>
 end_include
 
-begin_comment
-comment|/*  * Include stdint.h to get explicitly sized data types.  */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SIZE_T_DECLARED
+end_ifndef
 
-begin_include
-include|#
-directive|include
-file|<stdint.h>
-end_include
+begin_typedef
+typedef|typedef
+name|__size_t
+name|size_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|_SIZE_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -117,7 +133,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|uint32_t
+name|__uint32_t
 name|gss_uint32
 typedef|;
 end_typedef
@@ -185,7 +201,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|uint64_t
+name|__uint64_t
 name|OM_uint64
 typedef|;
 end_typedef

@@ -986,6 +986,10 @@ name|NC_TCP
 argument_list|)
 operator|==
 literal|0
+operator|&&
+name|netid_tcp
+operator|==
+name|NULL
 condition|)
 block|{
 name|netid_tcp
@@ -1031,6 +1035,10 @@ name|NC_UDP
 argument_list|)
 operator|==
 literal|0
+operator|&&
+name|netid_udp
+operator|==
+name|NULL
 condition|)
 block|{
 name|netid_udp

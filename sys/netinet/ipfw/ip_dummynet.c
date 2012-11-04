@@ -358,7 +358,7 @@ operator|(
 name|name
 operator|&&
 operator|!
-name|strcmp
+name|strcasecmp
 argument_list|(
 name|d
 operator|->

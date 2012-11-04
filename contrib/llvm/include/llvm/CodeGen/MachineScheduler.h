@@ -84,7 +84,7 @@ comment|// Inside<Target>PassConfig:
 end_comment
 
 begin_comment
-comment|//   enablePass(MachineSchedulerID);
+comment|//   enablePass(&MachineSchedulerID);
 end_comment
 
 begin_comment
@@ -134,6 +134,9 @@ name|class
 name|MachineLoopInfo
 decl_stmt|;
 name|class
+name|RegisterClassInfo
+decl_stmt|;
+name|class
 name|ScheduleDAGInstrs
 decl_stmt|;
 comment|/// MachineSchedContext provides enough context from the MachineScheduler pass
@@ -168,39 +171,18 @@ name|LiveIntervals
 modifier|*
 name|LIS
 decl_stmt|;
+name|RegisterClassInfo
+modifier|*
+name|RegClassInfo
+decl_stmt|;
 name|MachineSchedContext
 argument_list|()
-operator|:
-name|MF
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|MLI
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|MDT
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|PassConfig
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|AA
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|LIS
-argument_list|(
-literal|0
-argument_list|)
-block|{}
+expr_stmt|;
+name|virtual
+operator|~
+name|MachineSchedContext
+argument_list|()
+expr_stmt|;
 block|}
 struct|;
 comment|/// MachineSchedRegistry provides a selection of available machine instruction
@@ -338,6 +320,22 @@ operator|(
 name|MachinePassCtor
 operator|)
 name|C
+argument_list|)
+expr_stmt|;
+block|}
+specifier|static
+name|void
+name|setDefault
+parameter_list|(
+name|StringRef
+name|Name
+parameter_list|)
+block|{
+name|Registry
+operator|.
+name|setDefault
+argument_list|(
+name|Name
 argument_list|)
 expr_stmt|;
 block|}

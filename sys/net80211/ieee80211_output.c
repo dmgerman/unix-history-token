@@ -5721,15 +5721,13 @@ name|iv_opmode
 operator|==
 name|IEEE80211_M_MBSS
 condition|)
-block|{
 name|qos
 index|[
 literal|1
 index|]
-operator||=
+operator|=
 name|IEEE80211_QOS_MC
 expr_stmt|;
-block|}
 else|else
 endif|#
 directive|endif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: mkpar.c,v 1.11 2010/06/09 08:53:17 tom Exp $ */
+comment|/* $Id: mkpar.c,v 1.12 2012/05/26 00:42:18 tom Exp $ */
 end_comment
 
 begin_include
@@ -920,21 +920,11 @@ name|p
 decl_stmt|;
 name|rules_used
 operator|=
-operator|(
-name|Value_t
-operator|*
-operator|)
-name|MALLOC
+name|TMALLOC
 argument_list|(
-operator|(
-name|unsigned
-operator|)
+name|Value_t
+argument_list|,
 name|nrules
-operator|*
-sizeof|sizeof
-argument_list|(
-name|Value_t
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|NO_SPACE

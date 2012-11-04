@@ -2885,6 +2885,25 @@ name|AllocaInsertPt
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/// BoundsChecking - Emit run-time bounds checks. Higher values mean
+end_comment
+
+begin_comment
+comment|/// potentially higher performance penalties.
+end_comment
+
+begin_decl_stmt
+name|unsigned
+name|char
+name|BoundsChecking
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// CatchUndefined - Emit run-time checks to catch undefined behaviors.
+end_comment
+
 begin_decl_stmt
 name|bool
 name|CatchUndefined
@@ -5428,13 +5447,35 @@ name|BasicBlock
 operator|*
 name|TrapBB
 block|;
+comment|/// Add a kernel metadata node to the named metadata node 'opencl.kernels'.
+comment|/// In the kernel metadata node, reference the kernel function and metadata
+comment|/// nodes for its optional attribute qualifiers (OpenCL 1.1 6.7.2):
+comment|/// - A node for the work_group_size_hint(X,Y,Z) qualifier contains string
+comment|///   "work_group_size_hint", and three 32-bit integers X, Y and Z.
+comment|/// - A node for the reqd_work_group_size(X,Y,Z) qualifier contains string
+comment|///   "reqd_work_group_size", and three 32-bit integers X, Y and Z.
+name|void
+name|EmitOpenCLKernelMetadata
+argument_list|(
+specifier|const
+name|FunctionDecl
+operator|*
+name|FD
+argument_list|,
+name|llvm
+operator|::
+name|Function
+operator|*
+name|Fn
+argument_list|)
+block|;
 name|public
 operator|:
 name|CodeGenFunction
 argument_list|(
-name|CodeGenModule
-operator|&
-name|cgm
+argument|CodeGenModule&cgm
+argument_list|,
+argument|bool suppressNewContext=false
 argument_list|)
 block|;
 operator|~
@@ -6090,6 +6131,11 @@ specifier|const
 name|ObjCPropertyImplDecl
 operator|*
 name|propImpl
+argument_list|,
+specifier|const
+name|ObjCMethodDecl
+operator|*
+name|GetterMothodDecl
 argument_list|,
 name|llvm
 operator|::
@@ -7921,7 +7967,7 @@ modifier|*
 name|E
 parameter_list|,
 name|AggValueSlot
-name|AggSlot
+name|aggSlot
 init|=
 name|AggValueSlot
 operator|::
@@ -7929,7 +7975,7 @@ name|ignored
 argument_list|()
 parameter_list|,
 name|bool
-name|IgnoreResult
+name|ignoreResult
 init|=
 name|false
 parameter_list|)
@@ -8082,10 +8128,13 @@ name|isVolatile
 operator|=
 name|false
 argument_list|,
-name|unsigned
+name|CharUnits
 name|Alignment
 operator|=
-literal|0
+name|CharUnits
+operator|::
+name|Zero
+argument_list|()
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -9972,6 +10021,18 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|EmitMSAsmStmt
+parameter_list|(
+specifier|const
+name|MSAsmStmt
+modifier|&
+name|S
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|EmitObjCForCollectionStmt
 parameter_list|(
 specifier|const
@@ -10832,6 +10893,18 @@ end_function_decl
 
 begin_function_decl
 name|LValue
+name|EmitInitListLValue
+parameter_list|(
+specifier|const
+name|InitListExpr
+modifier|*
+name|E
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|LValue
 name|EmitConditionalOperatorLValue
 parameter_list|(
 specifier|const
@@ -11137,27 +11210,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-name|LValue
-name|EmitLValueForAnonRecordField
-argument_list|(
-name|llvm
-operator|::
-name|Value
-operator|*
-name|Base
-argument_list|,
-specifier|const
-name|IndirectFieldDecl
-operator|*
-name|Field
-argument_list|,
-name|unsigned
-name|CVRQualifiers
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 name|LValue
 name|EmitLValueForField
@@ -11217,27 +11269,6 @@ specifier|const
 name|ObjCIvarDecl
 operator|*
 name|Ivar
-argument_list|,
-name|unsigned
-name|CVRQualifiers
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|LValue
-name|EmitLValueForBitfield
-argument_list|(
-name|llvm
-operator|::
-name|Value
-operator|*
-name|Base
-argument_list|,
-specifier|const
-name|FieldDecl
-operator|*
-name|Field
 argument_list|,
 name|unsigned
 name|CVRQualifiers
@@ -11944,20 +11975,6 @@ name|llvm
 operator|::
 name|Value
 operator|*
-name|EmitHexagonBuiltinExpr
-argument_list|(
-argument|unsigned BuiltinID
-argument_list|,
-argument|const CallExpr *E
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|llvm
-operator|::
-name|Value
-operator|*
 name|EmitPPCBuiltinExpr
 argument_list|(
 argument|unsigned BuiltinID
@@ -12002,10 +12019,10 @@ name|llvm
 operator|::
 name|Value
 operator|*
-name|EmitObjCNumericLiteral
+name|EmitObjCBoxedExpr
 argument_list|(
 specifier|const
-name|ObjCNumericLiteral
+name|ObjCBoxedExpr
 operator|*
 name|E
 argument_list|)
@@ -12794,11 +12811,6 @@ name|E
 parameter_list|,
 name|AggValueSlot
 name|AS
-parameter_list|,
-name|bool
-name|IgnoreResult
-init|=
-name|false
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -13067,28 +13079,28 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// EmitCXXGlobalDtorRegistration - Emits a call to register the global ptr
+comment|/// Call atexit() with a function that passes the given argument to
 end_comment
 
 begin_comment
-comment|/// with the C++ runtime so that its destructor will be called at exit.
+comment|/// the given function.
 end_comment
 
 begin_decl_stmt
 name|void
-name|EmitCXXGlobalDtorRegistration
+name|registerGlobalDtorWithAtExit
 argument_list|(
 name|llvm
 operator|::
 name|Constant
 operator|*
-name|DtorFn
+name|fn
 argument_list|,
 name|llvm
 operator|::
 name|Constant
 operator|*
-name|DeclPtr
+name|addr
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -13563,7 +13575,7 @@ name|Cond
 argument_list|,
 name|llvm
 operator|::
-name|APInt
+name|APSInt
 operator|&
 name|Result
 argument_list|)

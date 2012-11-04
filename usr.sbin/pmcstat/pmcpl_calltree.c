@@ -363,6 +363,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|pmcpl_ct_sample
 name|pmcpl_ct_callid
@@ -402,6 +403,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|pmcpl_ct_line
 name|pmcpl_ct_topmax
@@ -414,6 +416,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|pmcpl_ct_node
 modifier|*

@@ -913,7 +913,9 @@ break|break;
 case|case
 name|IEEE80211_S_SLEEP
 case|:
-name|ieee80211_sta_pwrsave
+name|vap
+operator|->
+name|iv_sta_ps
 argument_list|(
 name|vap
 argument_list|,

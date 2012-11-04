@@ -2282,12 +2282,13 @@ decl_stmt|;
 name|long
 name|maxblock
 decl_stmt|;
+name|uintmax_t
+name|maxinode
+decl_stmt|;
 name|u_long
 name|btotal
 decl_stmt|,
 name|labelstrlen
-decl_stmt|,
-name|maxinode
 decl_stmt|,
 name|maxlen
 decl_stmt|,
@@ -2391,12 +2392,12 @@ name|maxlabelstr
 operator|=
 name|maxblock
 operator|=
-name|maxinode
-operator|=
 name|maxlen
 operator|=
 name|maxnlink
 operator|=
+literal|0
+expr_stmt|;
 name|maxuser
 operator|=
 name|maxgroup
@@ -2404,6 +2405,10 @@ operator|=
 name|maxflags
 operator|=
 name|maxsize
+operator|=
+literal|0
+expr_stmt|;
+name|maxinode
 operator|=
 literal|0
 expr_stmt|;
@@ -2590,7 +2595,7 @@ name|sscanf
 argument_list|(
 name|jinitmax
 argument_list|,
-literal|" %lu : %ld : %lu : %u : %u : %i : %jd : %lu : %lu "
+literal|" %ju : %ld : %lu : %u : %u : %i : %jd : %lu : %lu "
 argument_list|,
 operator|&
 name|maxinode
@@ -3768,7 +3773,7 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|,
-literal|"%lu"
+literal|"%ju"
 argument_list|,
 name|maxinode
 argument_list|)

@@ -143,6 +143,16 @@ directive|include
 file|<netgraph/ng_ether.h>
 end_include
 
+begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|ng_ether
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_define
 define|#
 directive|define
@@ -764,7 +774,7 @@ comment|/****************************************************************** 		  
 end_comment
 
 begin_comment
-comment|/*  * Handle a packet that has come in on an interface. We get to  * look at it here before any upper layer protocols do.  *  * NOTE: this function will get called at splimp()  */
+comment|/*  * Handle a packet that has come in on an interface. We get to  * look at it here before any upper layer protocols do.  */
 end_comment
 
 begin_function
@@ -832,7 +842,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Handle a packet that has come in on an interface, and which  * does not match any of our known protocols (an ``orphan'').  *  * NOTE: this function will get called at splimp()  */
+comment|/*  * Handle a packet that has come in on an interface, and which  * does not match any of our known protocols (an ``orphan'').  */
 end_comment
 
 begin_function
@@ -3113,14 +3123,6 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
 switch|switch
 condition|(
 name|event
@@ -3205,11 +3207,6 @@ name|EOPNOTSUPP
 expr_stmt|;
 break|break;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error

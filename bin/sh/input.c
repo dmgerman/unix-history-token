@@ -671,7 +671,14 @@ name|NULL
 condition|)
 name|nr
 operator|=
+name|el_len
+operator|==
 literal|0
+condition|?
+literal|0
+else|:
+operator|-
+literal|1
 expr_stmt|;
 else|else
 block|{

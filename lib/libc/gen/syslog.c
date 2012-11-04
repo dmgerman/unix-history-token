@@ -1244,6 +1244,8 @@ argument_list|,
 name|O_WRONLY
 operator||
 name|O_NONBLOCK
+operator||
+name|O_CLOEXEC
 argument_list|,
 literal|0
 argument_list|)
@@ -1748,6 +1750,14 @@ block|{
 name|THREAD_LOCK
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|LogFile
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -1761,6 +1771,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+block|}
 name|LogTag
 operator|=
 name|NULL

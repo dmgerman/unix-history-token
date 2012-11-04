@@ -146,8 +146,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|G_MIRROR_DISK_FLAG_CANDELETE
+value|0x0000000000000040ULL
+end_define
+
+begin_define
+define|#
+directive|define
 name|G_MIRROR_DISK_FLAG_MASK
-value|(G_MIRROR_DISK_FLAG_DIRTY |	\ 					 G_MIRROR_DISK_FLAG_SYNCHRONIZING | \ 					 G_MIRROR_DISK_FLAG_FORCE_SYNC | \ 					 G_MIRROR_DISK_FLAG_INACTIVE)
+value|(G_MIRROR_DISK_FLAG_DIRTY |	\ 					 G_MIRROR_DISK_FLAG_SYNCHRONIZING | \ 					 G_MIRROR_DISK_FLAG_FORCE_SYNC | \ 					 G_MIRROR_DISK_FLAG_INACTIVE | \ 					 G_MIRROR_DISK_FLAG_CANDELETE)
 end_define
 
 begin_define

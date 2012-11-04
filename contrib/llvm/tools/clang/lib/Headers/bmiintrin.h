@@ -72,7 +72,7 @@ operator|,
 name|__nodebug__
 operator|)
 argument_list|)
-name|__tzcnt16
+name|__tzcnt_u16
 argument_list|(
 name|unsigned
 name|short
@@ -262,7 +262,7 @@ operator|,
 name|__nodebug__
 operator|)
 argument_list|)
-name|__tzcnt32
+name|__tzcnt_u32
 argument_list|(
 name|unsigned
 name|int
@@ -471,7 +471,7 @@ operator|,
 name|__nodebug__
 operator|)
 argument_list|)
-name|__tzcnt64
+name|__tzcnt_u64
 argument_list|(
 name|unsigned
 name|long

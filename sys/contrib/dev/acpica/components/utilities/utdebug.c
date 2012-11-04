@@ -408,7 +408,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDebugPrintRaw  *  * PARAMETERS:  RequestedDebugLevel - Requested debug print level  *              LineNumber          - Caller's line number  *              FunctionName        - Caller's procedure name  *              ModuleName          - Caller's module name  *              ComponentId         - Caller's component ID  *              Format              - Printf format field  *              ...                 - Optional printf arguments  *  * RETURN:      None  *  * DESCRIPTION: Print message with no headers.  Has same interface as  *              DebugPrint so that the same macros can be used.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDebugPrintRaw  *  * PARAMETERS:  RequestedDebugLevel - Requested debug print level  *              LineNumber          - Caller's line number  *              FunctionName        - Caller's procedure name  *              ModuleName          - Caller's module name  *              ComponentId         - Caller's component ID  *              Format              - Printf format field  *              ...                 - Optional printf arguments  *  * RETURN:      None  *  * DESCRIPTION: Print message with no headers. Has same interface as  *              DebugPrint so that the same macros can be used.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -495,7 +495,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtTrace  *  * PARAMETERS:  LineNumber          - Caller's line number  *              FunctionName        - Caller's procedure name  *              ModuleName          - Caller's module name  *              ComponentId         - Caller's component ID  *  * RETURN:      None  *  * DESCRIPTION: Function entry trace.  Prints only if TRACE_FUNCTIONS bit is  *              set in DebugLevel  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtTrace  *  * PARAMETERS:  LineNumber          - Caller's line number  *              FunctionName        - Caller's procedure name  *              ModuleName          - Caller's module name  *              ComponentId         - Caller's component ID  *  * RETURN:      None  *  * DESCRIPTION: Function entry trace. Prints only if TRACE_FUNCTIONS bit is  *              set in DebugLevel  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -553,7 +553,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtTracePtr  *  * PARAMETERS:  LineNumber          - Caller's line number  *              FunctionName        - Caller's procedure name  *              ModuleName          - Caller's module name  *              ComponentId         - Caller's component ID  *              Pointer             - Pointer to display  *  * RETURN:      None  *  * DESCRIPTION: Function entry trace.  Prints only if TRACE_FUNCTIONS bit is  *              set in DebugLevel  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtTracePtr  *  * PARAMETERS:  LineNumber          - Caller's line number  *              FunctionName        - Caller's procedure name  *              ModuleName          - Caller's module name  *              ComponentId         - Caller's component ID  *              Pointer             - Pointer to display  *  * RETURN:      None  *  * DESCRIPTION: Function entry trace. Prints only if TRACE_FUNCTIONS bit is  *              set in DebugLevel  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -610,7 +610,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtTraceStr  *  * PARAMETERS:  LineNumber          - Caller's line number  *              FunctionName        - Caller's procedure name  *              ModuleName          - Caller's module name  *              ComponentId         - Caller's component ID  *              String              - Additional string to display  *  * RETURN:      None  *  * DESCRIPTION: Function entry trace.  Prints only if TRACE_FUNCTIONS bit is  *              set in DebugLevel  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtTraceStr  *  * PARAMETERS:  LineNumber          - Caller's line number  *              FunctionName        - Caller's procedure name  *              ModuleName          - Caller's module name  *              ComponentId         - Caller's component ID  *              String              - Additional string to display  *  * RETURN:      None  *  * DESCRIPTION: Function entry trace. Prints only if TRACE_FUNCTIONS bit is  *              set in DebugLevel  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -667,7 +667,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtTraceU32  *  * PARAMETERS:  LineNumber          - Caller's line number  *              FunctionName        - Caller's procedure name  *              ModuleName          - Caller's module name  *              ComponentId         - Caller's component ID  *              Integer             - Integer to display  *  * RETURN:      None  *  * DESCRIPTION: Function entry trace.  Prints only if TRACE_FUNCTIONS bit is  *              set in DebugLevel  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtTraceU32  *  * PARAMETERS:  LineNumber          - Caller's line number  *              FunctionName        - Caller's procedure name  *              ModuleName          - Caller's module name  *              ComponentId         - Caller's component ID  *              Integer             - Integer to display  *  * RETURN:      None  *  * DESCRIPTION: Function entry trace. Prints only if TRACE_FUNCTIONS bit is  *              set in DebugLevel  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -723,7 +723,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtExit  *  * PARAMETERS:  LineNumber          - Caller's line number  *              FunctionName        - Caller's procedure name  *              ModuleName          - Caller's module name  *              ComponentId         - Caller's component ID  *  * RETURN:      None  *  * DESCRIPTION: Function exit trace.  Prints only if TRACE_FUNCTIONS bit is  *              set in DebugLevel  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtExit  *  * PARAMETERS:  LineNumber          - Caller's line number  *              FunctionName        - Caller's procedure name  *              ModuleName          - Caller's module name  *              ComponentId         - Caller's component ID  *  * RETURN:      None  *  * DESCRIPTION: Function exit trace. Prints only if TRACE_FUNCTIONS bit is  *              set in DebugLevel  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -778,7 +778,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtStatusExit  *  * PARAMETERS:  LineNumber          - Caller's line number  *              FunctionName        - Caller's procedure name  *              ModuleName          - Caller's module name  *              ComponentId         - Caller's component ID  *              Status              - Exit status code  *  * RETURN:      None  *  * DESCRIPTION: Function exit trace.  Prints only if TRACE_FUNCTIONS bit is  *              set in DebugLevel.  Prints exit status also.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtStatusExit  *  * PARAMETERS:  LineNumber          - Caller's line number  *              FunctionName        - Caller's procedure name  *              ModuleName          - Caller's module name  *              ComponentId         - Caller's component ID  *              Status              - Exit status code  *  * RETURN:      None  *  * DESCRIPTION: Function exit trace. Prints only if TRACE_FUNCTIONS bit is  *              set in DebugLevel. Prints exit status also.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -875,7 +875,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtValueExit  *  * PARAMETERS:  LineNumber          - Caller's line number  *              FunctionName        - Caller's procedure name  *              ModuleName          - Caller's module name  *              ComponentId         - Caller's component ID  *              Value               - Value to be printed with exit msg  *  * RETURN:      None  *  * DESCRIPTION: Function exit trace.  Prints only if TRACE_FUNCTIONS bit is  *              set in DebugLevel.  Prints exit value also.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtValueExit  *  * PARAMETERS:  LineNumber          - Caller's line number  *              FunctionName        - Caller's procedure name  *              ModuleName          - Caller's module name  *              ComponentId         - Caller's component ID  *              Value               - Value to be printed with exit msg  *  * RETURN:      None  *  * DESCRIPTION: Function exit trace. Prints only if TRACE_FUNCTIONS bit is  *              set in DebugLevel. Prints exit value also.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -938,7 +938,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtPtrExit  *  * PARAMETERS:  LineNumber          - Caller's line number  *              FunctionName        - Caller's procedure name  *              ModuleName          - Caller's module name  *              ComponentId         - Caller's component ID  *              Ptr                 - Pointer to display  *  * RETURN:      None  *  * DESCRIPTION: Function exit trace.  Prints only if TRACE_FUNCTIONS bit is  *              set in DebugLevel.  Prints exit value also.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtPtrExit  *  * PARAMETERS:  LineNumber          - Caller's line number  *              FunctionName        - Caller's procedure name  *              ModuleName          - Caller's module name  *              ComponentId         - Caller's component ID  *              Ptr                 - Pointer to display  *  * RETURN:      None  *  * DESCRIPTION: Function exit trace. Prints only if TRACE_FUNCTIONS bit is  *              set in DebugLevel. Prints exit value also.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -997,12 +997,12 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtDumpBuffer  *  * PARAMETERS:  Buffer              - Buffer to dump  *              Count               - Amount to dump, in bytes  *              Display             - BYTE, WORD, DWORD, or QWORD display  *              ComponentID         - Caller's component ID  *  * RETURN:      None  *  * DESCRIPTION: Generic dump buffer in both hex and ascii.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtDumpBuffer  *  * PARAMETERS:  Buffer              - Buffer to dump  *              Count               - Amount to dump, in bytes  *              Display             - BYTE, WORD, DWORD, or QWORD display  *              Offset              - Beginning buffer offset (display only)  *  * RETURN:      None  *  * DESCRIPTION: Generic dump buffer in both hex and ascii.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
-name|AcpiUtDumpBuffer2
+name|AcpiUtDumpBuffer
 parameter_list|(
 name|UINT8
 modifier|*
@@ -1013,6 +1013,9 @@ name|Count
 parameter_list|,
 name|UINT32
 name|Display
+parameter_list|,
+name|UINT32
+name|BaseOffset
 parameter_list|)
 block|{
 name|UINT32
@@ -1075,7 +1078,11 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"%6.4X: "
 argument_list|,
+operator|(
+name|BaseOffset
+operator|+
 name|i
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Print 16 hex chars */
@@ -1355,12 +1362,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtDumpBuffer  *  * PARAMETERS:  Buffer              - Buffer to dump  *              Count               - Amount to dump, in bytes  *              Display             - BYTE, WORD, DWORD, or QWORD display  *              ComponentID         - Caller's component ID  *  * RETURN:      None  *  * DESCRIPTION: Generic dump buffer in both hex and ascii.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtDebugDumpBuffer  *  * PARAMETERS:  Buffer              - Buffer to dump  *              Count               - Amount to dump, in bytes  *              Display             - BYTE, WORD, DWORD, or QWORD display  *              ComponentID         - Caller's component ID  *  * RETURN:      None  *  * DESCRIPTION: Generic dump buffer in both hex and ascii.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
-name|AcpiUtDumpBuffer
+name|AcpiUtDebugDumpBuffer
 parameter_list|(
 name|UINT8
 modifier|*
@@ -1397,13 +1404,15 @@ condition|)
 block|{
 return|return;
 block|}
-name|AcpiUtDumpBuffer2
+name|AcpiUtDumpBuffer
 argument_list|(
 name|Buffer
 argument_list|,
 name|Count
 argument_list|,
 name|Display
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

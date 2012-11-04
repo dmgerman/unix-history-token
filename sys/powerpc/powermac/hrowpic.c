@@ -956,11 +956,9 @@ name|hrowpic_eoi
 parameter_list|(
 name|device_t
 name|dev
-name|__unused
 parameter_list|,
 name|u_int
 name|irq
-name|__unused
 parameter_list|)
 block|{
 name|struct

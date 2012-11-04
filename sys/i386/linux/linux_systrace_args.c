@@ -2749,7 +2749,7 @@ name|p
 operator|->
 name|up
 expr_stmt|;
-comment|/* struct ostat * */
+comment|/* struct l_stat * */
 operator|*
 name|n_args
 operator|=
@@ -13093,7 +13093,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct ostat *"
+literal|"struct l_stat *"
 expr_stmt|;
 break|break;
 default|default:

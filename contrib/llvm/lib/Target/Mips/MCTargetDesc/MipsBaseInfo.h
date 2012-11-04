@@ -167,6 +167,12 @@ block|,
 name|MO_GOT_PAGE
 block|,
 name|MO_GOT_OFST
+block|,
+comment|/// MO_HIGHER/HIGHEST - Represents the highest or higher half word of a
+comment|/// 64-bit symbol address.
+name|MO_HIGHER
+block|,
+name|MO_HIGHEST
 block|}
 enum|;
 enum|enum

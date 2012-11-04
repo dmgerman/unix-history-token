@@ -509,9 +509,6 @@ name|plimit
 modifier|*
 name|plim
 decl_stmt|;
-name|int
-name|locked
-decl_stmt|;
 name|mtx_assert
 argument_list|(
 operator|&
@@ -574,7 +571,7 @@ operator|&
 name|P_HADTHREADS
 condition|)
 block|{
-comment|/* 		 * First check if some other thread got here before us.. 		 * if so, act apropriatly, (exit or suspend); 		 */
+comment|/* 		 * First check if some other thread got here before us. 		 * If so, act appropriately: exit or suspend. 		 */
 name|thread_suspend_check
 argument_list|(
 literal|0
@@ -628,6 +625,27 @@ argument_list|,
 name|S_EXIT
 argument_list|,
 name|rv
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Ignore any pending request to stop due to a stop signal. 	 * Once P_WEXIT is set, future requests will be ignored as 	 * well. 	 */
+name|p
+operator|->
+name|p_flag
+operator|&=
+operator|~
+name|P_STOPPED_SIG
+expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|!
+name|P_SHOULDSTOP
+argument_list|(
+name|p
+argument_list|)
+argument_list|,
+operator|(
+literal|"exiting process is stopped"
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Note that we are exiting and do another wakeup of anyone in 	 * PIOCWAIT in case they aren't listening for S_EXIT stops or 	 * decided to wait again after we told them we are exiting. 	 */
@@ -1242,23 +1260,9 @@ name|p_textvp
 operator|=
 name|NULL
 expr_stmt|;
-name|locked
-operator|=
-name|VFS_LOCK_GIANT
-argument_list|(
-name|vtmp
-operator|->
-name|v_mount
-argument_list|)
-expr_stmt|;
 name|vrele
 argument_list|(
 name|vtmp
-argument_list|)
-expr_stmt|;
-name|VFS_UNLOCK_GIANT
-argument_list|(
-name|locked
 argument_list|)
 expr_stmt|;
 block|}

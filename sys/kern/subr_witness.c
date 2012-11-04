@@ -2682,14 +2682,14 @@ block|}
 block|,
 comment|/* 	 * CDEV 	 */
 block|{
-literal|"system map"
+literal|"vm map (system)"
 block|,
 operator|&
 name|lock_class_mtx_sleep
 block|}
 block|,
 block|{
-literal|"vm page queue mutex"
+literal|"vm page queue"
 block|,
 operator|&
 name|lock_class_mtx_sleep
@@ -2715,7 +2715,14 @@ block|,
 name|NULL
 block|}
 block|,
-comment|/* 	 * VM 	 *  	 */
+comment|/* 	 * VM 	 */
+block|{
+literal|"vm map (user)"
+block|,
+operator|&
+name|lock_class_sx
+block|}
+block|,
 block|{
 literal|"vm object"
 block|,
@@ -2724,21 +2731,42 @@ name|lock_class_mtx_sleep
 block|}
 block|,
 block|{
-literal|"page lock"
+literal|"vm page"
 block|,
 operator|&
 name|lock_class_mtx_sleep
 block|}
 block|,
 block|{
-literal|"vm page queue mutex"
+literal|"vm page queue"
 block|,
 operator|&
 name|lock_class_mtx_sleep
+block|}
+block|,
+block|{
+literal|"pmap pv global"
+block|,
+operator|&
+name|lock_class_rw
 block|}
 block|,
 block|{
 literal|"pmap"
+block|,
+operator|&
+name|lock_class_mtx_sleep
+block|}
+block|,
+block|{
+literal|"pmap pv list"
+block|,
+operator|&
+name|lock_class_rw
+block|}
+block|,
+block|{
+literal|"vm page free queue"
 block|,
 operator|&
 name|lock_class_mtx_sleep
@@ -3027,26 +3055,6 @@ operator|&
 name|lock_class_mtx_spin
 block|}
 block|,
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SMP
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|__sparc64__
-argument_list|)
-block|{
-literal|"ipi"
-block|,
-operator|&
-name|lock_class_mtx_spin
-block|}
-block|,
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|__i386__
@@ -4395,6 +4403,11 @@ control|)
 block|{
 if|if
 condition|(
+name|db_pager_quit
+condition|)
+return|return;
+if|if
+condition|(
 name|w_rmatrix
 index|[
 name|w
@@ -4488,6 +4501,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|db_pager_quit
+condition|)
+return|return;
 block|}
 block|}
 end_function
@@ -4562,6 +4580,11 @@ operator|&
 name|w_sleep
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|db_pager_quit
+condition|)
+return|return;
 comment|/* 	 * Now do spin locks which have been acquired at least once. 	 */
 name|prnt
 argument_list|(
@@ -4576,6 +4599,11 @@ operator|&
 name|w_spin
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|db_pager_quit
+condition|)
+return|return;
 comment|/* 	 * Finally, any locks which have not been acquired yet. 	 */
 name|prnt
 argument_list|(
@@ -4625,6 +4653,11 @@ operator|->
 name|w_ddb_level
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|db_pager_quit
+condition|)
+return|return;
 block|}
 block|}
 end_function
@@ -11320,6 +11353,11 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|db_pager_quit
+condition|)
+return|return;
 block|}
 block|}
 block|}

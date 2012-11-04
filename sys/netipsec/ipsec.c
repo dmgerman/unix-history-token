@@ -3154,7 +3154,6 @@ literal|"packet too short"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* NB: ip_input() flips it into host endian. XXX Need more checking. */
 if|if
 condition|(
 name|m
@@ -3188,11 +3187,12 @@ name|ip
 operator|->
 name|ip_off
 operator|&
-operator|(
+name|htons
+argument_list|(
 name|IP_MF
 operator||
 name|IP_OFFMASK
-operator|)
+argument_list|)
 condition|)
 goto|goto
 name|done
@@ -3261,11 +3261,12 @@ name|ih
 operator|.
 name|ip_off
 operator|&
-operator|(
+name|htons
+argument_list|(
 name|IP_MF
 operator||
 name|IP_OFFMASK
-operator|)
+argument_list|)
 condition|)
 goto|goto
 name|done

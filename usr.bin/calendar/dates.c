@@ -82,7 +82,6 @@ modifier|*
 name|nextyear
 decl_stmt|;
 block|}
-name|cal_year
 struct|;
 end_struct
 
@@ -119,7 +118,6 @@ modifier|*
 name|nextmonth
 decl_stmt|;
 block|}
-name|cal_month
 struct|;
 end_struct
 
@@ -162,7 +160,6 @@ modifier|*
 name|events
 decl_stmt|;
 block|}
-name|cal_day
 struct|;
 end_struct
 
@@ -175,6 +172,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|cal_year
 modifier|*
@@ -187,13 +185,6 @@ end_decl_stmt
 begin_comment
 comment|/* 1-based month, 0-based days, cumulative */
 end_comment
-
-begin_decl_stmt
-name|int
-modifier|*
-name|cumdays
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -274,6 +265,7 @@ comment|/* 1-based month, individual */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 modifier|*
 name|mondays

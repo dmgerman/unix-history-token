@@ -32,7 +32,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AH_MIMO_MAX_CHAINS
+name|AH_MAX_CHAINS
 value|3
 end_define
 
@@ -162,6 +162,11 @@ init|=
 literal|17
 block|,
 comment|/* EEPROM invalid country code */
+name|HAL_INV_PMODE
+init|=
+literal|18
+block|,
+comment|/* Couldn't bring out of sleep state */
 block|}
 name|HAL_STATUS
 typedef|;
@@ -316,6 +321,10 @@ init|=
 literal|28
 block|,
 comment|/* 11d beacon support for changing cc */
+name|HAL_CAP_PCIE_PS
+init|=
+literal|29
+block|,
 name|HAL_CAP_HT
 init|=
 literal|30
@@ -351,6 +360,18 @@ init|=
 literal|38
 block|,
 comment|/* hardware supports carrier sense timeout */
+name|HAL_CAP_RIFS_RX
+init|=
+literal|39
+block|,
+name|HAL_CAP_RIFS_TX
+init|=
+literal|40
+block|,
+name|HAL_CAP_FORCE_PPM
+init|=
+literal|41
+block|,
 name|HAL_CAP_RTS_AGGR_LIMIT
 init|=
 literal|42
@@ -396,26 +417,172 @@ init|=
 literal|51
 block|,
 comment|/* Regulatory domain flags */
+name|HAL_CAP_BB_RIFS_HANG
+init|=
+literal|52
+block|,
+name|HAL_CAP_RIFS_RX_ENABLED
+init|=
+literal|53
+block|,
+name|HAL_CAP_BB_DFS_HANG
+init|=
+literal|54
+block|,
 name|HAL_CAP_BT_COEX
 init|=
 literal|60
 block|,
 comment|/* hardware is capable of bluetooth coexistence */
+name|HAL_CAP_DYNAMIC_SMPS
+init|=
+literal|61
+block|,
+comment|/* Dynamic MIMO Power Save hardware support */
+name|HAL_CAP_DS
+init|=
+literal|67
+block|,
+comment|/* 2 stream */
+name|HAL_CAP_BB_RX_CLEAR_STUCK_HANG
+init|=
+literal|68
+block|,
+name|HAL_CAP_MAC_HANG
+init|=
+literal|69
+block|,
+comment|/* can MAC hang */
+name|HAL_CAP_MFP
+init|=
+literal|70
+block|,
+comment|/* Management Frame Protection in hardware */
+name|HAL_CAP_TS
+init|=
+literal|72
+block|,
+comment|/* 3 stream */
+name|HAL_CAP_ENHANCED_DMA_SUPPORT
+init|=
+literal|75
+block|,
+comment|/* DMA FIFO support */
+name|HAL_CAP_NUM_TXMAPS
+init|=
+literal|76
+block|,
+comment|/* Number of buffers in a transmit descriptor */
+name|HAL_CAP_TXDESCLEN
+init|=
+literal|77
+block|,
+comment|/* Length of transmit descriptor */
+name|HAL_CAP_TXSTATUSLEN
+init|=
+literal|78
+block|,
+comment|/* Length of transmit status descriptor */
+name|HAL_CAP_RXSTATUSLEN
+init|=
+literal|79
+block|,
+comment|/* Length of transmit status descriptor */
+name|HAL_CAP_RXFIFODEPTH
+init|=
+literal|80
+block|,
+comment|/* Receive hardware FIFO depth */
+name|HAL_CAP_RXBUFSIZE
+init|=
+literal|81
+block|,
+comment|/* Receive Buffer Length */
+name|HAL_CAP_NUM_MR_RETRIES
+init|=
+literal|82
+block|,
+comment|/* limit on multirate retries */
+name|HAL_CAP_OL_PWRCTRL
+init|=
+literal|84
+block|,
+comment|/* Open loop TX power control */
+name|HAL_CAP_BB_PANIC_WATCHDOG
+init|=
+literal|92
+block|,
 name|HAL_CAP_HT20_SGI
 init|=
 literal|96
 block|,
 comment|/* hardware supports HT20 short GI */
+name|HAL_CAP_LDPC
+init|=
+literal|99
+block|,
 name|HAL_CAP_RXTSTAMP_PREC
 init|=
 literal|100
 block|,
 comment|/* rx desc tstamp precision (bits) */
+name|HAL_CAP_PHYRESTART_CLR_WAR
+init|=
+literal|106
+block|,
+comment|/* in some cases, clear phy restart to fix bb hang */
+name|HAL_CAP_ENTERPRISE_MODE
+init|=
+literal|107
+block|,
+comment|/* Enterprise mode features */
+name|HAL_CAP_LDPCWAR
+init|=
+literal|108
+block|,
+name|HAL_CAP_CHANNEL_SWITCH_TIME_USEC
+init|=
+literal|109
+block|,
+comment|/* Channel change time, usec */
+name|HAL_CAP_ENABLE_APM
+init|=
+literal|110
+block|,
+comment|/* APM enabled */
+name|HAL_CAP_PCIE_LCR_EXTSYNC_EN
+init|=
+literal|111
+block|,
+name|HAL_CAP_PCIE_LCR_OFFSET
+init|=
+literal|112
+block|,
 name|HAL_CAP_ENHANCED_DFS_SUPPORT
 init|=
 literal|117
 block|,
 comment|/* hardware supports enhanced DFS */
+name|HAL_CAP_MCI
+init|=
+literal|118
+block|,
+name|HAL_CAP_SMARTANTENNA
+init|=
+literal|119
+block|,
+name|HAL_CAP_TRAFFIC_FAST_RECOVER
+init|=
+literal|120
+block|,
+name|HAL_CAP_TX_DIVERSITY
+init|=
+literal|121
+block|,
+name|HAL_CAP_CRDC
+init|=
+literal|122
+block|,
 comment|/* The following are private to the FreeBSD HAL (224 onward) */
 name|HAL_CAP_INTMIT
 init|=
@@ -432,11 +599,6 @@ init|=
 literal|235
 block|,
 comment|/* can baseband hang */
-name|HAL_CAP_MAC_HANG
-init|=
-literal|236
-block|,
-comment|/* can MAC hang */
 name|HAL_CAP_INTRMASK
 init|=
 literal|237
@@ -547,7 +709,14 @@ init|=
 literal|5
 block|,
 comment|/* power save poll xmit q */
-block|}
+name|HAL_TX_QUEUE_CFEND
+init|=
+literal|6
+block|,
+name|HAL_TX_QUEUE_PAPRD
+init|=
+literal|7
+block|, }
 name|HAL_TX_QUEUE
 typedef|;
 end_typedef
@@ -561,6 +730,51 @@ end_define
 
 begin_comment
 comment|/* max possible # of queues */
+end_comment
+
+begin_comment
+comment|/*  * Receive queue types.  These are used to tag  * each transmit queue in the hardware and to identify a set  * of transmit queues for operations such as start/stop dma.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|HAL_RX_QUEUE_HP
+init|=
+literal|0
+block|,
+comment|/* high priority recv queue */
+name|HAL_RX_QUEUE_LP
+init|=
+literal|1
+block|,
+comment|/* low priority recv queue */
+block|}
+name|HAL_RX_QUEUE
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|HAL_NUM_RX_QUEUES
+value|2
+end_define
+
+begin_comment
+comment|/* max possible # of queues */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAL_TXFIFO_DEPTH
+value|8
+end_define
+
+begin_comment
+comment|/* transmit fifo depth */
 end_comment
 
 begin_comment
@@ -959,6 +1173,94 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/*  * Enterprise mode flags  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AH_ENT_DUAL_BAND_DISABLE
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|AH_ENT_CHAIN2_DISABLE
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|AH_ENT_5MHZ_DISABLE
+value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|AH_ENT_10MHZ_DISABLE
+value|0x00000008
+end_define
+
+begin_define
+define|#
+directive|define
+name|AH_ENT_49GHZ_DISABLE
+value|0x00000010
+end_define
+
+begin_define
+define|#
+directive|define
+name|AH_ENT_LOOPBACK_DISABLE
+value|0x00000020
+end_define
+
+begin_define
+define|#
+directive|define
+name|AH_ENT_TPC_PERF_DISABLE
+value|0x00000040
+end_define
+
+begin_define
+define|#
+directive|define
+name|AH_ENT_MIN_PKT_SIZE_DISABLE
+value|0x00000080
+end_define
+
+begin_define
+define|#
+directive|define
+name|AH_ENT_SPECTRAL_PRECISION
+value|0x00000300
+end_define
+
+begin_define
+define|#
+directive|define
+name|AH_ENT_SPECTRAL_PRECISION_S
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|AH_ENT_RTSCTS_DELIM_WAR
+value|0x00010000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AH_FIRST_DESC_NDELIMS
+value|60
+end_define
+
+begin_comment
 comment|/*  * NOTE WELL:  * These are mapped to take advantage of the common locations for many of  * the bits on all of the currently supported MAC chips. This is to make  * the ISR as efficient as possible, while still abstracting HW differences.  * When new hardware breaks this commonality this enumerated type, as well  * as the HAL functions using it, must be modified. All values are directly  * mapped unless commented otherwise.  */
 end_comment
 
@@ -975,6 +1277,21 @@ name|HAL_INT_RXDESC
 init|=
 literal|0x00000002
 block|,
+comment|/* Legacy mapping */
+name|HAL_INT_RXERR
+init|=
+literal|0x00000004
+block|,
+name|HAL_INT_RXHP
+init|=
+literal|0x00000001
+block|,
+comment|/* EDMA */
+name|HAL_INT_RXLP
+init|=
+literal|0x00000002
+block|,
+comment|/* EDMA */
 name|HAL_INT_RXNOFRM
 init|=
 literal|0x00000008
@@ -1000,6 +1317,14 @@ name|HAL_INT_TIM_TIMER
 init|=
 literal|0x00000100
 block|,
+name|HAL_INT_MCI
+init|=
+literal|0x00000200
+block|,
+name|HAL_INT_BBPANIC
+init|=
+literal|0x00000400
+block|,
 name|HAL_INT_TXURN
 init|=
 literal|0x00000800
@@ -1019,6 +1344,10 @@ block|,
 name|HAL_INT_SWBA
 init|=
 literal|0x00010000
+block|,
+name|HAL_INT_BRSSI
+init|=
+literal|0x00020000
 block|,
 name|HAL_INT_BMISS
 init|=
@@ -1058,6 +1387,12 @@ literal|0x04000000
 block|,
 comment|/* Non-common mapping */
 name|HAL_INT_TBTT
+init|=
+literal|0x08000000
+block|,
+comment|/* Non-common mapping */
+comment|/* Atheros ref driver has a generic timer interrupt now..*/
+name|HAL_INT_GENTIMER
 init|=
 literal|0x08000000
 block|,
@@ -1119,6 +1454,8 @@ name|HAL_INT_SWBA
 operator||
 name|HAL_INT_BMISS
 operator||
+name|HAL_INT_BRSSI
+operator||
 name|HAL_INT_BNR
 operator||
 name|HAL_INT_GPIO
@@ -1127,35 +1464,188 @@ name|HAL_INT
 typedef|;
 end_typedef
 
+begin_comment
+comment|/*  * MSI vector assignments  */
+end_comment
+
 begin_typedef
 typedef|typedef
 enum|enum
 block|{
-name|HAL_GPIO_MUX_OUTPUT
+name|HAL_MSIVEC_MISC
 init|=
 literal|0
 block|,
-name|HAL_GPIO_MUX_PCIE_ATTENTION_LED
+name|HAL_MSIVEC_TX
 init|=
 literal|1
 block|,
-name|HAL_GPIO_MUX_PCIE_POWER_LED
+name|HAL_MSIVEC_RXLP
 init|=
 literal|2
 block|,
-name|HAL_GPIO_MUX_TX_FRAME
+name|HAL_MSIVEC_RXHP
+init|=
+literal|3
+block|, }
+name|HAL_MSIVEC
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|HAL_INT_LINE
+init|=
+literal|0
+block|,
+name|HAL_INT_MSI
+init|=
+literal|1
+block|, }
+name|HAL_INT_TYPE
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* For interrupt mitigation registers */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|HAL_INT_RX_FIRSTPKT
+init|=
+literal|0
+block|,
+name|HAL_INT_RX_LASTPKT
+block|,
+name|HAL_INT_TX_FIRSTPKT
+block|,
+name|HAL_INT_TX_LASTPKT
+block|,
+name|HAL_INT_THRESHOLD
+block|}
+name|HAL_INT_MITIGATION
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* XXX this is duplicate information! */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|u_int32_t
+name|cyclecnt_diff
+decl_stmt|;
+comment|/* delta cycle count */
+name|u_int32_t
+name|rxclr_cnt
+decl_stmt|;
+comment|/* rx clear count */
+name|u_int32_t
+name|txframecnt_diff
+decl_stmt|;
+comment|/* delta tx frame count */
+name|u_int32_t
+name|rxframecnt_diff
+decl_stmt|;
+comment|/* delta rx frame count */
+name|u_int32_t
+name|listen_time
+decl_stmt|;
+comment|/* listen time in msec - time for which ch is free */
+name|u_int32_t
+name|ofdmphyerr_cnt
+decl_stmt|;
+comment|/* OFDM err count since last reset */
+name|u_int32_t
+name|cckphyerr_cnt
+decl_stmt|;
+comment|/* CCK err count since last reset */
+name|u_int32_t
+name|ofdmphyerrcnt_diff
+decl_stmt|;
+comment|/* delta OFDM Phy Error Count */
+name|HAL_BOOL
+name|valid
+decl_stmt|;
+comment|/* if the stats are valid*/
+block|}
+name|HAL_ANISTATS
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|u_int8_t
+name|txctl_offset
+decl_stmt|;
+name|u_int8_t
+name|txctl_numwords
+decl_stmt|;
+name|u_int8_t
+name|txstatus_offset
+decl_stmt|;
+name|u_int8_t
+name|txstatus_numwords
+decl_stmt|;
+name|u_int8_t
+name|rxctl_offset
+decl_stmt|;
+name|u_int8_t
+name|rxctl_numwords
+decl_stmt|;
+name|u_int8_t
+name|rxstatus_offset
+decl_stmt|;
+name|u_int8_t
+name|rxstatus_numwords
+decl_stmt|;
+name|u_int8_t
+name|macRevision
+decl_stmt|;
+block|}
+name|HAL_DESC_INFO
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|HAL_GPIO_OUTPUT_MUX_AS_OUTPUT
+init|=
+literal|0
+block|,
+name|HAL_GPIO_OUTPUT_MUX_PCIE_ATTENTION_LED
+init|=
+literal|1
+block|,
+name|HAL_GPIO_OUTPUT_MUX_PCIE_POWER_LED
+init|=
+literal|2
+block|,
+name|HAL_GPIO_OUTPUT_MUX_MAC_NETWORK_LED
 init|=
 literal|3
 block|,
-name|HAL_GPIO_MUX_RX_CLEAR_EXTERNAL
+name|HAL_GPIO_OUTPUT_MUX_MAC_POWER_LED
 init|=
 literal|4
 block|,
-name|HAL_GPIO_MUX_MAC_NETWORK_LED
+name|HAL_GPIO_OUTPUT_MUX_AS_WLAN_ACTIVE
 init|=
 literal|5
 block|,
-name|HAL_GPIO_MUX_MAC_POWER_LED
+name|HAL_GPIO_OUTPUT_MUX_AS_TX_FRAME
 init|=
 literal|6
 block|}
@@ -1180,6 +1670,36 @@ init|=
 literal|2
 block|}
 name|HAL_GPIO_INTR_TYPE
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|halCounters
+block|{
+name|u_int32_t
+name|tx_frame_count
+decl_stmt|;
+name|u_int32_t
+name|rx_frame_count
+decl_stmt|;
+name|u_int32_t
+name|rx_clear_count
+decl_stmt|;
+name|u_int32_t
+name|cycle_count
+decl_stmt|;
+name|u_int8_t
+name|is_rx_active
+decl_stmt|;
+comment|// true (1) or false (0)
+name|u_int8_t
+name|is_tx_active
+decl_stmt|;
+comment|// true (1) or false (0)
+block|}
+name|HAL_COUNTERS
 typedef|;
 end_typedef
 
@@ -1274,6 +1794,38 @@ name|beacons
 decl_stmt|;
 block|}
 name|HAL_MIB_STATS
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * These bits represent what's in ah_currentRDext.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|REG_EXT_FCC_MIDBAND
+init|=
+literal|0
+block|,
+name|REG_EXT_JAPAN_MIDBAND
+init|=
+literal|1
+block|,
+name|REG_EXT_FCC_DFS_HT40
+init|=
+literal|2
+block|,
+name|REG_EXT_JAPAN_NONDFS_HT40
+init|=
+literal|3
+block|,
+name|REG_EXT_JAPAN_DFS_HT40
+init|=
+literal|4
+block|}
+name|REG_EXT_BITMAP
 typedef|;
 end_typedef
 
@@ -1389,7 +1941,7 @@ comment|/* NB: for proper padding */
 name|uint8_t
 name|rateCodeToIndex
 index|[
-literal|144
+literal|256
 index|]
 decl_stmt|;
 comment|/* back mapping */
@@ -1434,7 +1986,7 @@ comment|/* short preamble ACK duration*/
 block|}
 name|info
 index|[
-literal|32
+literal|64
 index|]
 struct|;
 block|}
@@ -1453,7 +2005,7 @@ comment|/* number of valid entries */
 name|uint8_t
 name|rs_rates
 index|[
-literal|32
+literal|64
 index|]
 decl_stmt|;
 comment|/* rates */
@@ -1495,6 +2047,11 @@ decl_stmt|;
 name|u_int
 name|Rate
 decl_stmt|;
+comment|/* hardware rate code */
+name|u_int
+name|RateIndex
+decl_stmt|;
+comment|/* rate series table index */
 name|u_int
 name|PktDuration
 decl_stmt|;
@@ -1519,6 +2076,15 @@ directive|define
 name|HAL_RATESERIES_HALFGI
 value|0x0004
 comment|/* use half-gi for series */
+define|#
+directive|define
+name|HAL_RATESERIES_STBC
+value|0x0008
+comment|/* use STBC for series */
+name|u_int
+name|tx_power_cap
+decl_stmt|;
+comment|/* in 1/2 dBm units XXX TODO */
 block|}
 name|HAL_11N_RATE_SERIES
 typedef|;
@@ -1600,6 +2166,22 @@ name|HAL_HT_RXCLEAR
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|HAL_FREQ_BAND_5GHZ
+init|=
+literal|0
+block|,
+name|HAL_FREQ_BAND_2GHZ
+init|=
+literal|1
+block|, }
+name|HAL_FREQ_BAND
+typedef|;
+end_typedef
+
 begin_comment
 comment|/*  * Antenna switch control.  By default antenna selection  * enables multiple (2) antenna use.  To force use of the  * A or B antenna only specify a fixed setting.  Fixing  * the antenna will also disable any diversity support.  */
 end_comment
@@ -1665,8 +2247,9 @@ name|kv_type
 decl_stmt|;
 comment|/* one of HAL_CIPHER */
 name|uint8_t
-name|kv_pad
+name|kv_apsd
 decl_stmt|;
+comment|/* Mask for APSD enabled ACs */
 name|uint16_t
 name|kv_len
 decl_stmt|;
@@ -1694,6 +2277,33 @@ decl_stmt|;
 comment|/* TKIP TX MIC key (optional) */
 block|}
 name|HAL_KEYVAL
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * This is the TX descriptor field which marks the key padding requirement.  * The naming is unfortunately unclear.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AH_KEYTYPE_MASK
+value|0x0F
+end_define
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|HAL_KEY_TYPE_CLEAR
+block|,
+name|HAL_KEY_TYPE_WEP
+block|,
+name|HAL_KEY_TYPE_AES
+block|,
+name|HAL_KEY_TYPE_TKIP
+block|, }
+name|HAL_KEY_TYPE
 typedef|;
 end_typedef
 
@@ -1781,6 +2391,11 @@ value|0x0000ffff
 comment|/* beacon interval period */
 define|#
 directive|define
+name|HAL_BEACON_PERIOD_TU8
+value|0x0007ffff
+comment|/* beacon interval, tu/8 */
+define|#
+directive|define
 name|HAL_BEACON_ENA
 value|0x00800000
 comment|/* beacon xmit enable */
@@ -1789,6 +2404,11 @@ directive|define
 name|HAL_BEACON_RESET_TSF
 value|0x01000000
 comment|/* clear TSF */
+define|#
+directive|define
+name|HAL_TSFOOR_THRESHOLD
+value|0x00004240
+comment|/* TSF OOR thresh (16k uS) */
 name|uint32_t
 name|bs_dtimperiod
 decl_stmt|;
@@ -1816,6 +2436,10 @@ name|uint32_t
 name|bs_sleepduration
 decl_stmt|;
 comment|/* max sleep duration */
+name|uint32_t
+name|bs_tsfoor_threshold
+decl_stmt|;
+comment|/* TSF out of range threshold */
 block|}
 name|HAL_BEACON_STATE
 typedef|;
@@ -2050,10 +2674,20 @@ init|=
 literal|7
 block|,
 comment|/* reset phy error stats */
-block|}
+name|HAL_ANI_MRC_CCK
+init|=
+literal|8
+block|, }
 name|HAL_ANI_CMD
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|HAL_ANI_ALL
+value|0xffffffff
+end_define
 
 begin_comment
 comment|/*  * This is the layout of the ANI INTMIT capability.  *  * Notice that the command values differ to HAL_ANI_CMD.  */
@@ -2204,6 +2838,115 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/*  * MFP decryption options for initializing the MAC.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|HAL_MFP_QOSDATA
+init|=
+literal|0
+block|,
+comment|/* Decrypt MFP frames like QoS data frames. All chips before Merlin. */
+name|HAL_MFP_PASSTHRU
+block|,
+comment|/* Don't decrypt MFP frames at all. Passthrough */
+name|HAL_MFP_HW_CRYPTO
+comment|/* hardware decryption enabled. Merlin can do it. */
+block|}
+name|HAL_MFP_OPT_T
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* LNA config supported */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|HAL_ANT_DIV_COMB_LNA1_MINUS_LNA2
+init|=
+literal|0
+block|,
+name|HAL_ANT_DIV_COMB_LNA2
+init|=
+literal|1
+block|,
+name|HAL_ANT_DIV_COMB_LNA1
+init|=
+literal|2
+block|,
+name|HAL_ANT_DIV_COMB_LNA1_PLUS_LNA2
+init|=
+literal|3
+block|, }
+name|HAL_ANT_DIV_COMB_LNA_CONF
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|u_int8_t
+name|main_lna_conf
+decl_stmt|;
+name|u_int8_t
+name|alt_lna_conf
+decl_stmt|;
+name|u_int8_t
+name|fast_div_bias
+decl_stmt|;
+name|u_int8_t
+name|main_gaintb
+decl_stmt|;
+name|u_int8_t
+name|alt_gaintb
+decl_stmt|;
+name|u_int8_t
+name|antdiv_configgroup
+decl_stmt|;
+name|int8_t
+name|lna1_lna2_delta
+decl_stmt|;
+block|}
+name|HAL_ANT_COMB_CONFIG
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_ANTDIV_CONFIG_GROUP
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAL_ANTDIV_CONFIG_GROUP_1
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAL_ANTDIV_CONFIG_GROUP_2
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAL_ANTDIV_CONFIG_GROUP_3
+value|0x03
+end_define
+
+begin_comment
 comment|/*  * Flag for setting QUIET period  */
 end_comment
 
@@ -2298,6 +3041,455 @@ name|HAL_DFS_EVENT
 typedef|;
 end_typedef
 
+begin_comment
+comment|/*  * Generic Timer domain  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|HAL_GEN_TIMER_TSF
+init|=
+literal|0
+block|,
+name|HAL_GEN_TIMER_TSF2
+block|,
+name|HAL_GEN_TIMER_TSF_ANY
+block|}
+name|HAL_GEN_TIMER_DOMAIN
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|HAL_RESET_NONE
+init|=
+literal|0x0
+block|,
+name|HAL_RESET_BBPANIC
+init|=
+literal|0x1
+block|, }
+name|HAL_RESET_TYPE
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * BT Co-existence definitions  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|HAL_BT_MODULE_CSR_BC4
+init|=
+literal|0
+block|,
+comment|/* CSR BlueCore v4 */
+name|HAL_BT_MODULE_JANUS
+init|=
+literal|1
+block|,
+comment|/* Kite + Valkyrie combo */
+name|HAL_BT_MODULE_HELIUS
+init|=
+literal|2
+block|,
+comment|/* Kiwi + Valkyrie combo */
+name|HAL_MAX_BT_MODULES
+block|}
+name|HAL_BT_MODULE
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|HAL_BT_MODULE
+name|bt_module
+decl_stmt|;
+name|u_int8_t
+name|bt_coex_config
+decl_stmt|;
+name|u_int8_t
+name|bt_gpio_bt_active
+decl_stmt|;
+name|u_int8_t
+name|bt_gpio_bt_priority
+decl_stmt|;
+name|u_int8_t
+name|bt_gpio_wlan_active
+decl_stmt|;
+name|u_int8_t
+name|bt_active_polarity
+decl_stmt|;
+name|HAL_BOOL
+name|bt_single_ant
+decl_stmt|;
+name|u_int8_t
+name|bt_dutyCycle
+decl_stmt|;
+name|u_int8_t
+name|bt_isolation
+decl_stmt|;
+name|u_int8_t
+name|bt_period
+decl_stmt|;
+block|}
+name|HAL_BT_COEX_INFO
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|HAL_BT_COEX_MODE_LEGACY
+init|=
+literal|0
+block|,
+comment|/* legacy rx_clear mode */
+name|HAL_BT_COEX_MODE_UNSLOTTED
+init|=
+literal|1
+block|,
+comment|/* untimed/unslotted mode */
+name|HAL_BT_COEX_MODE_SLOTTED
+init|=
+literal|2
+block|,
+comment|/* slotted mode */
+name|HAL_BT_COEX_MODE_DISALBED
+init|=
+literal|3
+block|,
+comment|/* coexistence disabled */
+block|}
+name|HAL_BT_COEX_MODE
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|HAL_BT_COEX_CFG_NONE
+block|,
+comment|/* No bt coex enabled */
+name|HAL_BT_COEX_CFG_2WIRE_2CH
+block|,
+comment|/* 2-wire with 2 chains */
+name|HAL_BT_COEX_CFG_2WIRE_CH1
+block|,
+comment|/* 2-wire with ch1 */
+name|HAL_BT_COEX_CFG_2WIRE_CH0
+block|,
+comment|/* 2-wire with ch0 */
+name|HAL_BT_COEX_CFG_3WIRE
+block|,
+comment|/* 3-wire */
+name|HAL_BT_COEX_CFG_MCI
+comment|/* MCI */
+block|}
+name|HAL_BT_COEX_CFG
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|HAL_BT_COEX_SET_ACK_PWR
+init|=
+literal|0
+block|,
+comment|/* Change ACK power setting */
+name|HAL_BT_COEX_LOWER_TX_PWR
+block|,
+comment|/* Change transmit power */
+name|HAL_BT_COEX_ANTENNA_DIVERSITY
+block|,
+comment|/* Enable RX diversity for Kite */
+block|}
+name|HAL_BT_COEX_SET_PARAMETER
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|HAL_BT_COEX_FLAG_LOW_ACK_PWR
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAL_BT_COEX_FLAG_LOWER_TX_PWR
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* Check Rx Diversity is allowed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAL_BT_COEX_FLAG_ANT_DIV_ALLOW
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* Check Diversity is on or off */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAL_BT_COEX_FLAG_ANT_DIV_ENABLE
+value|0x00000008
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAL_BT_COEX_ANTDIV_CONTROL1_ENABLE
+value|0x0b
+end_define
+
+begin_comment
+comment|/* main: LNA1, alt: LNA2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAL_BT_COEX_ANTDIV_CONTROL2_ENABLE
+value|0x09
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAL_BT_COEX_ANTDIV_CONTROL1_FIXED_A
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAL_BT_COEX_ANTDIV_CONTROL2_FIXED_A
+value|0x09
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAL_BT_COEX_ANTDIV_CONTROL1_FIXED_B
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAL_BT_COEX_ANTDIV_CONTROL2_FIXED_B
+value|0x06
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAL_BT_COEX_ISOLATION_FOR_NO_COEX
+value|30
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAL_BT_COEX_ANT_DIV_SWITCH_COM
+value|0x66666666
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAL_BT_COEX_HELIUS_CHAINMASK
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAL_BT_COEX_LOW_ACK_POWER
+value|0x0
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAL_BT_COEX_HIGH_ACK_POWER
+value|0x3f3f3f
+end_define
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|HAL_BT_COEX_NO_STOMP
+init|=
+literal|0
+block|,
+name|HAL_BT_COEX_STOMP_ALL
+block|,
+name|HAL_BT_COEX_STOMP_LOW
+block|,
+name|HAL_BT_COEX_STOMP_NONE
+block|,
+name|HAL_BT_COEX_STOMP_ALL_FORCE
+block|,
+name|HAL_BT_COEX_STOMP_LOW_FORCE
+block|, }
+name|HAL_BT_COEX_STOMP_TYPE
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+comment|/* extend rx_clear after tx/rx to protect the burst (in usec). */
+name|u_int8_t
+name|bt_time_extend
+decl_stmt|;
+comment|/* 	 * extend rx_clear as long as txsm is 	 * transmitting or waiting for ack. 	 */
+name|HAL_BOOL
+name|bt_txstate_extend
+decl_stmt|;
+comment|/* 	 * extend rx_clear so that when tx_frame 	 * is asserted, rx_clear will drop. 	 */
+name|HAL_BOOL
+name|bt_txframe_extend
+decl_stmt|;
+comment|/* 	 * coexistence mode 	 */
+name|HAL_BT_COEX_MODE
+name|bt_mode
+decl_stmt|;
+comment|/* 	 * treat BT high priority traffic as 	 * a quiet collision 	 */
+name|HAL_BOOL
+name|bt_quiet_collision
+decl_stmt|;
+comment|/* 	 * invert rx_clear as WLAN_ACTIVE 	 */
+name|HAL_BOOL
+name|bt_rxclear_polarity
+decl_stmt|;
+comment|/* 	 * slotted mode only. indicate the time in usec 	 * from the rising edge of BT_ACTIVE to the time 	 * BT_PRIORITY can be sampled to indicate priority. 	 */
+name|u_int8_t
+name|bt_priority_time
+decl_stmt|;
+comment|/* 	 * slotted mode only. indicate the time in usec 	 * from the rising edge of BT_ACTIVE to the time 	 * BT_PRIORITY can be sampled to indicate tx/rx and 	 * BT_FREQ is sampled. 	 */
+name|u_int8_t
+name|bt_first_slot_time
+decl_stmt|;
+comment|/* 	 * slotted mode only. rx_clear and bt_ant decision 	 * will be held the entire time that BT_ACTIVE is asserted, 	 * otherwise the decision is made before every slot boundry. 	 */
+name|HAL_BOOL
+name|bt_hold_rxclear
+decl_stmt|;
+block|}
+name|HAL_BT_COEX_CONFIG
+typedef|;
+end_typedef
+
+begin_struct
+struct|struct
+name|hal_bb_panic_info
+block|{
+name|u_int32_t
+name|status
+decl_stmt|;
+name|u_int32_t
+name|tsf
+decl_stmt|;
+name|u_int32_t
+name|phy_panic_wd_ctl1
+decl_stmt|;
+name|u_int32_t
+name|phy_panic_wd_ctl2
+decl_stmt|;
+name|u_int32_t
+name|phy_gen_ctrl
+decl_stmt|;
+name|u_int32_t
+name|rxc_pcnt
+decl_stmt|;
+name|u_int32_t
+name|rxf_pcnt
+decl_stmt|;
+name|u_int32_t
+name|txf_pcnt
+decl_stmt|;
+name|u_int32_t
+name|cycles
+decl_stmt|;
+name|u_int32_t
+name|wd
+decl_stmt|;
+name|u_int32_t
+name|det
+decl_stmt|;
+name|u_int32_t
+name|rdar
+decl_stmt|;
+name|u_int32_t
+name|r_odfm
+decl_stmt|;
+name|u_int32_t
+name|r_cck
+decl_stmt|;
+name|u_int32_t
+name|t_odfm
+decl_stmt|;
+name|u_int32_t
+name|t_cck
+decl_stmt|;
+name|u_int32_t
+name|agc
+decl_stmt|;
+name|u_int32_t
+name|src
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Serialize Register Access Mode */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|SER_REG_MODE_OFF
+init|=
+literal|0
+block|,
+name|SER_REG_MODE_ON
+init|=
+literal|1
+block|,
+name|SER_REG_MODE_AUTO
+init|=
+literal|2
+block|, }
+name|SER_REG_MODE
+typedef|;
+end_typedef
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -2331,6 +3523,104 @@ name|int
 name|ah_serialise_reg_war
 decl_stmt|;
 comment|/* force serialisation of register IO */
+comment|/* XXX these don't belong here, they're just for the ar9300  HAL port effort */
+name|int
+name|ath_hal_desc_tpc
+decl_stmt|;
+comment|/* Per-packet TPC */
+name|int
+name|ath_hal_sta_update_tx_pwr_enable
+decl_stmt|;
+comment|/* GreenTX */
+name|int
+name|ath_hal_sta_update_tx_pwr_enable_S1
+decl_stmt|;
+comment|/* GreenTX */
+name|int
+name|ath_hal_sta_update_tx_pwr_enable_S2
+decl_stmt|;
+comment|/* GreenTX */
+name|int
+name|ath_hal_sta_update_tx_pwr_enable_S3
+decl_stmt|;
+comment|/* GreenTX */
+comment|/* I'm not sure what the default values for these should be */
+name|int
+name|ath_hal_pll_pwr_save
+decl_stmt|;
+name|int
+name|ath_hal_pcie_power_save_enable
+decl_stmt|;
+name|int
+name|ath_hal_intr_mitigation_rx
+decl_stmt|;
+name|int
+name|ath_hal_intr_mitigation_tx
+decl_stmt|;
+name|int
+name|ath_hal_pcie_clock_req
+decl_stmt|;
+define|#
+directive|define
+name|AR_PCIE_PLL_PWRSAVE_CONTROL
+value|(1<<0)
+define|#
+directive|define
+name|AR_PCIE_PLL_PWRSAVE_ON_D3
+value|(1<<1)
+define|#
+directive|define
+name|AR_PCIE_PLL_PWRSAVE_ON_D0
+value|(1<<2)
+name|int
+name|ath_hal_pcie_waen
+decl_stmt|;
+name|int
+name|ath_hal_pcie_ser_des_write
+decl_stmt|;
+comment|/* these are important for correct AR9300 behaviour */
+name|int
+name|ath_hal_ht_enable
+decl_stmt|;
+comment|/* needs to be enabled for AR9300 HT */
+name|int
+name|ath_hal_diversity_control
+decl_stmt|;
+name|int
+name|ath_hal_antenna_switch_swap
+decl_stmt|;
+name|int
+name|ath_hal_ext_lna_ctl_gpio
+decl_stmt|;
+name|int
+name|ath_hal_spur_mode
+decl_stmt|;
+name|int
+name|ath_hal_6mb_ack
+decl_stmt|;
+comment|/* should set this to 1 for 11a/11na? */
+name|int
+name|ath_hal_enable_msi
+decl_stmt|;
+comment|/* enable MSI interrupts (needed?) */
+name|int
+name|ath_hal_beacon_filter_interval
+decl_stmt|;
+comment|/* ok to be 0 for now? */
+comment|/* For now, set this to 0 - net80211 needs to know about hardware MFP support */
+name|int
+name|ath_hal_mfp_support
+decl_stmt|;
+name|int
+name|ath_hal_enable_ani
+decl_stmt|;
+comment|/* should set this.. */
+name|int
+name|ath_hal_cwm_ignore_ext_cca
+decl_stmt|;
+name|int
+name|ath_hal_show_bb_panic
+decl_stmt|;
 block|}
 name|HAL_OPS_CONFIG
 typedef|;
@@ -2931,8 +4221,19 @@ name|struct
 name|ath_desc
 modifier|*
 parameter_list|,
+name|HAL_DMA_ADDR
+modifier|*
+name|bufAddrList
+parameter_list|,
+name|uint32_t
+modifier|*
+name|segLenList
+parameter_list|,
 name|u_int
-name|segLen
+name|descId
+parameter_list|,
+name|u_int
+name|qcuId
 parameter_list|,
 name|HAL_BOOL
 name|firstSeg
@@ -3023,6 +4324,106 @@ modifier|*
 name|tries
 parameter_list|)
 function_decl|;
+name|void
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_setTxDescLink
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|void
+modifier|*
+name|ds
+parameter_list|,
+name|uint32_t
+name|link
+parameter_list|)
+function_decl|;
+name|void
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_getTxDescLink
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|void
+modifier|*
+name|ds
+parameter_list|,
+name|uint32_t
+modifier|*
+name|link
+parameter_list|)
+function_decl|;
+name|void
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_getTxDescLinkPtr
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|void
+modifier|*
+name|ds
+parameter_list|,
+name|uint32_t
+modifier|*
+modifier|*
+name|linkptr
+parameter_list|)
+function_decl|;
+name|void
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_setupTxStatusRing
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+name|ts_start
+parameter_list|,
+name|uint32_t
+name|ts_paddr_start
+parameter_list|,
+name|uint16_t
+name|size
+parameter_list|)
+function_decl|;
+name|void
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_getTxRawTxDesc
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+name|u_int32_t
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/* Receive Functions */
 name|uint32_t
 name|__ahdecl
@@ -3034,6 +4435,8 @@ parameter_list|(
 name|struct
 name|ath_hal
 modifier|*
+parameter_list|,
+name|HAL_RX_QUEUE
 parameter_list|)
 function_decl|;
 name|void
@@ -3049,6 +4452,8 @@ modifier|*
 parameter_list|,
 name|uint32_t
 name|rxdp
+parameter_list|,
+name|HAL_RX_QUEUE
 parameter_list|)
 function_decl|;
 name|void
@@ -3925,6 +5330,23 @@ name|HAL_BOOL
 name|__ahdecl
 function_decl|(
 modifier|*
+name|ah_getDfsDefaultThresh
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|HAL_PHYERR_PARAM
+modifier|*
+name|pe
+parameter_list|)
+function_decl|;
+name|HAL_BOOL
+name|__ahdecl
+function_decl|(
+modifier|*
 name|ah_procRadarEvent
 function_decl|)
 parameter_list|(
@@ -4187,6 +5609,14 @@ name|struct
 name|ath_desc
 modifier|*
 parameter_list|,
+name|HAL_DMA_ADDR
+modifier|*
+name|bufAddrList
+parameter_list|,
+name|uint32_t
+modifier|*
+name|segLenList
+parameter_list|,
 name|u_int
 parameter_list|,
 name|u_int
@@ -4198,8 +5628,6 @@ parameter_list|,
 name|HAL_CIPHER
 parameter_list|,
 name|uint8_t
-parameter_list|,
-name|u_int
 parameter_list|,
 name|HAL_BOOL
 parameter_list|,
@@ -4282,6 +5710,32 @@ name|u_int
 parameter_list|,
 name|HAL_11N_RATE_SERIES
 index|[]
+parameter_list|,
+name|u_int
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
+comment|/* 	 * The next 4 (set11ntxdesc -> set11naggrlast) are specific 	 * to the EDMA HAL.  Descriptors are chained together by 	 * using filltxdesc (not ChainTxDesc) and then setting the 	 * aggregate flags appropriately using first/middle/last. 	 */
+name|void
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_set11nTxDesc
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|,
+name|HAL_PKT_TYPE
+parameter_list|,
+name|u_int
 parameter_list|,
 name|u_int
 parameter_list|,
@@ -4774,6 +6228,29 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * Get the HAL wireless mode for the given channel.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|ath_hal_get_curmode
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_channel
+modifier|*
+name|chan
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Calculate the packet TX time for a legacy or 11n frame  */
 end_comment
 
@@ -4948,6 +6425,29 @@ name|data
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*  * For now, simply pass through MFP frames.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|u_int32_t
+name|ath_hal_get_mfp_qos
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|)
+block|{
+comment|//return AH_PRIVATE(ah)->ah_mfp_qos;
+return|return
+name|HAL_MFP_QOSDATA
+return|;
+block|}
+end_function
 
 begin_endif
 endif|#

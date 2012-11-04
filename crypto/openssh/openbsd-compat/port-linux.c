@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: port-linux.c,v 1.16 2011/08/29 06:09:57 djm Exp $ */
+comment|/* $Id: port-linux.c,v 1.17 2012/03/08 23:25:18 djm Exp $ */
 end_comment
 
 begin_comment
@@ -186,6 +186,8 @@ parameter_list|)
 block|{
 name|security_context_t
 name|sc
+init|=
+name|NULL
 decl_stmt|;
 name|char
 modifier|*
@@ -305,6 +307,10 @@ argument_list|,
 name|pwname
 argument_list|)
 expr_stmt|;
+name|sc
+operator|=
+name|NULL
+expr_stmt|;
 break|break;
 default|default:
 name|fatal
@@ -347,9 +353,7 @@ expr_stmt|;
 endif|#
 directive|endif
 return|return
-operator|(
 name|sc
-operator|)
 return|;
 block|}
 end_function

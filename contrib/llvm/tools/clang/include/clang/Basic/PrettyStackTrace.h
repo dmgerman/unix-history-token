@@ -32,23 +32,27 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
-comment|// This file defines the PrettyStackTraceEntry class, which is used to make
+comment|/// \file
 end_comment
 
 begin_comment
-comment|// crashes give more contextual information about what the program was doing
+comment|/// \brief Defines the PrettyStackTraceEntry class, which is used to make
 end_comment
 
 begin_comment
-comment|// when it crashed.
+comment|/// crashes give more contextual information about what the program was doing
 end_comment
 
 begin_comment
-comment|//
+comment|/// when it crashed.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -83,8 +87,8 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
-comment|/// PrettyStackTraceLoc - If a crash happens while one of these objects are
-comment|/// live, the message is printed out along with the specified source location.
+comment|/// If a crash happens while one of these objects are live, the message
+comment|/// is printed out along with the specified source location.
 name|class
 name|PrettyStackTraceLoc
 range|:

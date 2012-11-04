@@ -70,6 +70,20 @@ name|SORT_RADIXSORT
 value|4
 end_define
 
+begin_define
+define|#
+directive|define
+name|DEFAULT_SORT_ALGORITHM
+value|SORT_HEAPSORT
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_SORT_FUNC
+value|heapsort
+end_define
+
 begin_comment
 comment|/*  * List of data to be sorted.  */
 end_comment
@@ -125,10 +139,10 @@ modifier|*
 modifier|*
 name|fns
 decl_stmt|;
-name|int
+name|size_t
 name|count
 decl_stmt|;
-name|int
+name|size_t
 name|sz
 decl_stmt|;
 name|bool

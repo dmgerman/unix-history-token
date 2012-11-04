@@ -97,6 +97,10 @@ name|progname
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* XXX TODO: include if_ath_debug.h */
+end_comment
+
 begin_enum
 enum|enum
 block|{
@@ -236,7 +240,7 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
-name|u_int
+name|uint64_t
 name|bit
 decl_stmt|;
 block|}
@@ -393,7 +397,7 @@ end_struct
 
 begin_function
 specifier|static
-name|u_int
+name|uint64_t
 name|getflag
 parameter_list|(
 specifier|const
@@ -613,7 +617,7 @@ name|op
 decl_stmt|,
 name|i
 decl_stmt|;
-name|u_int32_t
+name|uint64_t
 name|debug
 decl_stmt|,
 name|ndebug

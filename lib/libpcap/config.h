@@ -692,6 +692,10 @@ name|NETINET_IF_ETHER_H_DECLARES_ETHER_HOSTTON
 end_define
 
 begin_comment
+comment|/**/
+end_comment
+
+begin_comment
 comment|/* do not use protochain */
 end_comment
 
@@ -744,6 +748,17 @@ value|""
 end_define
 
 begin_comment
+comment|/* Define to the home page for this package. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PACKAGE_URL
+value|""
+end_define
+
+begin_comment
 comment|/* Define to the version of this package. */
 end_comment
 
@@ -776,6 +791,14 @@ end_comment
 
 begin_comment
 comment|/* #undef PCAP_SUPPORT_CAN */
+end_comment
+
+begin_comment
+comment|/* target host supports canusb */
+end_comment
+
+begin_comment
+comment|/* #undef PCAP_SUPPORT_CANUSB */
 end_comment
 
 begin_comment

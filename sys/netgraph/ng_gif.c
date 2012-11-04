@@ -520,7 +520,7 @@ comment|/****************************************************************** 		  
 end_comment
 
 begin_comment
-comment|/*  * Handle a packet that has come in on an interface. We get to  * look at it here before any upper layer protocols do.  *  * NOTE: this function will get called at splimp()  */
+comment|/*  * Handle a packet that has come in on an interface. We get to  * look at it here before any upper layer protocols do.  */
 end_comment
 
 begin_function
@@ -588,7 +588,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Handle a packet that has come in on an interface, and which  * does not match any of our known protocols (an ``orphan'').  *  * NOTE: this function will get called at splimp()  */
+comment|/*  * Handle a packet that has come in on an interface, and which  * does not match any of our known protocols (an ``orphan'').  */
 end_comment
 
 begin_function
@@ -675,7 +675,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Handle a packet that has come in on a gif interface.  * Attach the address family to the mbuf for later use.  *  * NOTE: this function will get called at splimp()  */
+comment|/*  * Handle a packet that has come in on a gif interface.  * Attach the address family to the mbuf for later use.  */
 end_comment
 
 begin_function
@@ -1925,14 +1925,6 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
 switch|switch
 condition|(
 name|event
@@ -2052,11 +2044,6 @@ name|EOPNOTSUPP
 expr_stmt|;
 break|break;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error

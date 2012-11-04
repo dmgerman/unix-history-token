@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: monitor.c,v 1.115 2011/06/23 23:35:42 djm Exp $ */
+comment|/* $OpenBSD: monitor.c,v 1.117 2012/06/22 12:30:26 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -2626,20 +2626,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|close
-argument_list|(
-name|pmonitor
-operator|->
-name|m_sendfd
-argument_list|)
-expr_stmt|;
-name|pmonitor
-operator|->
-name|m_sendfd
-operator|=
-operator|-
-literal|1
-expr_stmt|;
 block|}
 end_function
 
@@ -2753,6 +2739,12 @@ operator|==
 name|EPIPE
 condition|)
 block|{
+name|buffer_free
+argument_list|(
+operator|&
+name|logmsg
+argument_list|)
+expr_stmt|;
 name|debug
 argument_list|(
 literal|"%s: child log fd closed"

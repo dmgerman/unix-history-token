@@ -50,6 +50,44 @@ name|__i386__
 argument_list|)
 end_if
 
+begin_function
+specifier|static
+name|__inline
+name|void
+name|copyw
+parameter_list|(
+name|uint16_t
+modifier|*
+name|src
+parameter_list|,
+name|uint16_t
+modifier|*
+name|dst
+parameter_list|,
+name|size_t
+name|size
+parameter_list|)
+block|{
+name|size
+operator|>>=
+literal|1
+expr_stmt|;
+while|while
+condition|(
+name|size
+operator|--
+condition|)
+operator|*
+name|dst
+operator|++
+operator|=
+operator|*
+name|src
+operator|++
+expr_stmt|;
+block|}
+end_function
+
 begin_define
 define|#
 directive|define
@@ -61,7 +99,7 @@ name|d
 parameter_list|,
 name|c
 parameter_list|)
-value|bcopy((void *)(s), (void *)(d), (c))
+value|copyw((void*)(s), (void*)(d), (c))
 end_define
 
 begin_define
@@ -75,7 +113,7 @@ name|d
 parameter_list|,
 name|c
 parameter_list|)
-value|bcopy((void *)(s), (void *)(d), (c))
+value|copyw((void*)(s), (void*)(d), (c))
 end_define
 
 begin_define
@@ -89,7 +127,7 @@ name|d
 parameter_list|,
 name|c
 parameter_list|)
-value|bcopy((void *)(s), (void *)(d), (c))
+value|copyw((void*)(s), (void*)(d), (c))
 end_define
 
 begin_define
@@ -532,6 +570,173 @@ name|val
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__mips__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
+end_elif
+
+begin_comment
+comment|/*  * Use amd64/i386-like settings under the assumption that MIPS-based display  * drivers will have to add a level of indirection between a syscons-managed  * frame buffer and the actual video hardware.  We are forced to do this  * because syscons doesn't carry around required busspace handles and tags to  * use here.  This is only really a problem for true VGA devices hooked up to  * MIPS, as others will be performing a translation anyway.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|bcopy_io
+parameter_list|(
+name|s
+parameter_list|,
+name|d
+parameter_list|,
+name|c
+parameter_list|)
+value|memcpy((void *)(d), (void *)(s), (c))
+end_define
+
+begin_define
+define|#
+directive|define
+name|bcopy_toio
+parameter_list|(
+name|s
+parameter_list|,
+name|d
+parameter_list|,
+name|c
+parameter_list|)
+value|memcpy((void *)(d), (void *)(s), (c))
+end_define
+
+begin_define
+define|#
+directive|define
+name|bcopy_fromio
+parameter_list|(
+name|s
+parameter_list|,
+name|d
+parameter_list|,
+name|c
+parameter_list|)
+value|memcpy((void *)(d), (void *)(s), (c))
+end_define
+
+begin_define
+define|#
+directive|define
+name|bzero_io
+parameter_list|(
+name|d
+parameter_list|,
+name|c
+parameter_list|)
+value|memset((void *)(d), 0, (c))
+end_define
+
+begin_define
+define|#
+directive|define
+name|fill_io
+parameter_list|(
+name|p
+parameter_list|,
+name|d
+parameter_list|,
+name|c
+parameter_list|)
+value|memset((void *)(d), (p), (c))
+end_define
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|fillw
+parameter_list|(
+name|int
+name|val
+parameter_list|,
+name|uint16_t
+modifier|*
+name|buf
+parameter_list|,
+name|size_t
+name|size
+parameter_list|)
+block|{
+while|while
+condition|(
+name|size
+operator|--
+condition|)
+operator|*
+name|buf
+operator|++
+operator|=
+name|val
+expr_stmt|;
+block|}
+end_function
+
+begin_define
+define|#
+directive|define
+name|fillw_io
+parameter_list|(
+name|p
+parameter_list|,
+name|d
+parameter_list|,
+name|c
+parameter_list|)
+value|fillw((p), (void *)(d), (c))
+end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|readw
+parameter_list|(
+name|a
+parameter_list|)
+value|(*(uint16_t*)(a))
+end_define
+
+begin_define
+define|#
+directive|define
+name|writew
+parameter_list|(
+name|a
+parameter_list|,
+name|v
+parameter_list|)
+value|(*(uint16_t*)(a) = (v))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#

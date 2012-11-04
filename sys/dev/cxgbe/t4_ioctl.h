@@ -69,6 +69,12 @@ comment|/* flash firmware */
 name|T4_GET_MEM
 block|,
 comment|/* read memory */
+name|T4_GET_I2C
+block|,
+comment|/* read from i2c addressible device */
+name|T4_CLEAR_STATS
+block|,
+comment|/* clear a port's MAC statistics */
 block|}
 enum|;
 end_enum
@@ -126,6 +132,32 @@ decl_stmt|;
 name|uint8_t
 modifier|*
 name|data
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|t4_i2c_data
+block|{
+name|uint8_t
+name|port_id
+decl_stmt|;
+name|uint8_t
+name|dev_addr
+decl_stmt|;
+name|uint8_t
+name|offset
+decl_stmt|;
+name|uint8_t
+name|len
+decl_stmt|;
+name|uint8_t
+name|data
+index|[
+literal|8
+index|]
 decl_stmt|;
 block|}
 struct|;
@@ -788,6 +820,20 @@ define|#
 directive|define
 name|CHELSIO_T4_GET_MEM
 value|_IOW('f', T4_GET_MEM, struct t4_mem_range)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHELSIO_T4_GET_I2C
+value|_IOWR('f', T4_GET_I2C, struct t4_i2c_data)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHELSIO_T4_CLEAR_STATS
+value|_IOW('f', T4_CLEAR_STATS, uint32_t)
 end_define
 
 begin_endif

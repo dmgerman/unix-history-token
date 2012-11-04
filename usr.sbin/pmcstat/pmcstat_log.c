@@ -282,6 +282,7 @@ comment|/* statistics */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ps_samples_period
 decl_stmt|;
@@ -328,6 +329,7 @@ file|"pmcpl_calltree.h"
 end_include
 
 begin_struct
+specifier|static
 struct|struct
 name|pmc_plugins
 block|{
@@ -603,6 +605,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|int
 name|pmcstat_mergepmc
 decl_stmt|;
@@ -903,6 +906,7 @@ comment|/*  * PMC Top mode pause state.  */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|pmcstat_pause
 decl_stmt|;
@@ -2071,6 +2075,52 @@ operator|==
 name|NULL
 condition|)
 continue|continue;
+ifdef|#
+directive|ifdef
+name|__arm__
+comment|/* Remove spurious ARM function name. */
+if|if
+condition|(
+name|fnname
+index|[
+literal|0
+index|]
+operator|==
+literal|'$'
+operator|&&
+operator|(
+name|fnname
+index|[
+literal|1
+index|]
+operator|==
+literal|'a'
+operator|||
+name|fnname
+index|[
+literal|1
+index|]
+operator|==
+literal|'t'
+operator|||
+name|fnname
+index|[
+literal|1
+index|]
+operator|==
+literal|'d'
+operator|)
+operator|&&
+name|fnname
+index|[
+literal|2
+index|]
+operator|==
+literal|'\0'
+condition|)
+continue|continue;
+endif|#
+directive|endif
 name|symptr
 operator|->
 name|ps_name
@@ -2117,6 +2167,15 @@ name|pi_symcount
 operator|+=
 name|newsyms
 expr_stmt|;
+if|if
+condition|(
+name|image
+operator|->
+name|pi_symcount
+operator|==
+literal|0
+condition|)
+return|return;
 name|assert
 argument_list|(
 name|newsyms

@@ -303,12 +303,6 @@ directive|include
 file|<netinet/tcp_syncache.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netinet/tcp_offload.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -359,6 +353,23 @@ begin_include
 include|#
 directive|include
 file|<netinet6/ip6protosw.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TCP_OFFLOAD
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netinet/tcp_offload.h>
 end_include
 
 begin_endif
@@ -2555,11 +2566,6 @@ name|caddr_t
 operator|)
 name|ipgen
 expr_stmt|;
-name|m_addr_changed
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 comment|/* m_len is set later */
 name|tlen
 operator|=
@@ -2770,7 +2776,10 @@ name|ip
 operator|->
 name|ip_len
 operator|=
+name|htons
+argument_list|(
 name|tlen
+argument_list|)
 expr_stmt|;
 name|ip
 operator|->
@@ -2786,7 +2795,10 @@ name|ip
 operator|->
 name|ip_off
 operator||=
+name|htons
+argument_list|(
 name|IP_DF
+argument_list|)
 expr_stmt|;
 block|}
 endif|#
@@ -3845,7 +3857,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|tcp_output_reset
+name|tcp_output
 argument_list|(
 name|tp
 argument_list|)
@@ -4186,12 +4198,25 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TCP_OFFLOAD
 comment|/* Disconnect offload device, if any. */
+if|if
+condition|(
+name|tp
+operator|->
+name|t_flags
+operator|&
+name|TF_TOE
+condition|)
 name|tcp_offload_detach
 argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|tcp_free_sackholes
 argument_list|(
 name|tp
@@ -4298,7 +4323,9 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-comment|/* Notify any offload devices of listener close */
+ifdef|#
+directive|ifdef
+name|TCP_OFFLOAD
 if|if
 condition|(
 name|tp
@@ -4307,11 +4334,13 @@ name|t_state
 operator|==
 name|TCPS_LISTEN
 condition|)
-name|tcp_offload_listen_close
+name|tcp_offload_listen_stop
 argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|in_pcbdrop
 argument_list|(
 name|inp
@@ -6608,7 +6637,7 @@ operator|->
 name|icmp_nextmtu
 argument_list|)
 expr_stmt|;
-comment|/* 					     * If no alternative MTU was 					     * proposed, try the next smaller 					     * one.  ip->ip_len has already 					     * been swapped in icmp_input(). 					     */
+comment|/* 					     * If no alternative MTU was 					     * proposed, try the next smaller 					     * one. 					     */
 if|if
 condition|(
 operator|!
@@ -6618,9 +6647,12 @@ name|mtu
 operator|=
 name|ip_next_mtu
 argument_list|(
+name|ntohs
+argument_list|(
 name|ip
 operator|->
 name|ip_len
+argument_list|)
 argument_list|,
 literal|1
 argument_list|)
@@ -8018,7 +8050,7 @@ operator|->
 name|t_flags
 argument_list|)
 expr_stmt|;
-name|tcp_output_send
+name|tcp_output
 argument_list|(
 name|tp
 argument_list|)

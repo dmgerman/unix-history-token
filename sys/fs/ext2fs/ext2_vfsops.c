@@ -487,7 +487,7 @@ name|ext2mount
 modifier|*
 name|ump
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|struct
 name|m_ext2fs
@@ -4073,7 +4073,7 @@ name|E2FS_MAGIC
 condition|)
 name|panic
 argument_list|(
-literal|"ext2fs_statvfs"
+literal|"ext2fs_statfs"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Compute the overhead (FS structures) 	 */

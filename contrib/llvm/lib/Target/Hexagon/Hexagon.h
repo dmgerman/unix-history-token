@@ -184,8 +184,18 @@ modifier|*
 name|createHexagonFixupHwLoops
 parameter_list|()
 function_decl|;
+name|FunctionPass
+modifier|*
+name|createHexagonPacketizer
+parameter_list|()
+function_decl|;
+name|FunctionPass
+modifier|*
+name|createHexagonNewValueJump
+parameter_list|()
+function_decl|;
 comment|/* TODO: object output.   MCCodeEmitter *createHexagonMCCodeEmitter(const Target&,                                             TargetMachine&TM,                                             MCContext&Ctx); */
-comment|/* TODO: assembler input.   TargetAsmBackend *createHexagonAsmBackend(const Target&, const std::string&); */
+comment|/* TODO: assembler input.   TargetAsmBackend *createHexagonAsmBackend(const Target&,                                                   const std::string&); */
 name|void
 name|HexagonLowerToMC
 parameter_list|(
@@ -272,7 +282,7 @@ value|4
 end_define
 
 begin_comment
-comment|// Maximum number of words in a packet (in instructions).
+comment|// Maximum number of words and instructions in a packet.
 end_comment
 
 begin_define

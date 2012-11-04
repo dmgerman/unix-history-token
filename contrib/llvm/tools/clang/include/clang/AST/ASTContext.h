@@ -140,6 +140,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/RawCommentList.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
@@ -230,9 +236,6 @@ name|class
 name|SelectorTable
 decl_stmt|;
 name|class
-name|SourceManager
-decl_stmt|;
-name|class
 name|TargetInfo
 decl_stmt|;
 name|class
@@ -310,6 +313,13 @@ name|Builtin
 block|{
 name|class
 name|Context
+decl_stmt|;
+block|}
+name|namespace
+name|comments
+block|{
+name|class
+name|FullComment
 decl_stmt|;
 block|}
 comment|/// ASTContext - This class holds long-lived AST nodes (such as types and
@@ -918,11 +928,12 @@ name|TypedefDecl
 modifier|*
 name|UInt128Decl
 decl_stmt|;
-comment|/// BuiltinVaListType - built-in va list type.
-comment|/// This is initially null and set by Sema::LazilyCreateBuiltin when
-comment|/// a builtin that takes a valist is encountered.
-name|QualType
-name|BuiltinVaListType
+comment|/// \brief The typedef for the target specific predefined
+comment|/// __builtin_va_list type.
+name|mutable
+name|TypedefDecl
+modifier|*
+name|BuiltinVaListDecl
 decl_stmt|;
 comment|/// \brief The typedef for the predefined 'id' type.
 name|mutable
@@ -1361,6 +1372,18 @@ return|return
 name|SourceMgr
 return|;
 block|}
+name|llvm
+operator|::
+name|BumpPtrAllocator
+operator|&
+name|getAllocator
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BumpAlloc
+return|;
+block|}
 name|void
 modifier|*
 name|Allocate
@@ -1472,6 +1495,272 @@ name|SourceMgr
 argument_list|)
 return|;
 block|}
+comment|/// \brief All comments in this translation unit.
+name|RawCommentList
+name|Comments
+decl_stmt|;
+comment|/// \brief True if comments are already loaded from ExternalASTSource.
+name|mutable
+name|bool
+name|CommentsLoaded
+decl_stmt|;
+name|class
+name|RawCommentAndCacheFlags
+block|{
+name|public
+label|:
+enum|enum
+name|Kind
+block|{
+comment|/// We searched for a comment attached to the particular declaration, but
+comment|/// didn't find any.
+comment|///
+comment|/// getRaw() == 0.
+name|NoCommentInDecl
+init|=
+literal|0
+block|,
+comment|/// We have found a comment attached to this particular declaration.
+comment|///
+comment|/// getRaw() != 0.
+name|FromDecl
+block|,
+comment|/// This declaration does not have an attached comment, and we have
+comment|/// searched the redeclaration chain.
+comment|///
+comment|/// If getRaw() == 0, the whole redeclaration chain does not have any
+comment|/// comments.
+comment|///
+comment|/// If getRaw() != 0, it is a comment propagated from other
+comment|/// redeclaration.
+name|FromRedecl
+block|}
+enum|;
+name|Kind
+name|getKind
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|Data
+operator|.
+name|getInt
+argument_list|()
+return|;
+block|}
+name|void
+name|setKind
+parameter_list|(
+name|Kind
+name|K
+parameter_list|)
+block|{
+name|Data
+operator|.
+name|setInt
+argument_list|(
+name|K
+argument_list|)
+expr_stmt|;
+block|}
+specifier|const
+name|RawComment
+operator|*
+name|getRaw
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|Data
+operator|.
+name|getPointer
+argument_list|()
+return|;
+block|}
+name|void
+name|setRaw
+parameter_list|(
+specifier|const
+name|RawComment
+modifier|*
+name|RC
+parameter_list|)
+block|{
+name|Data
+operator|.
+name|setPointer
+argument_list|(
+name|RC
+argument_list|)
+expr_stmt|;
+block|}
+specifier|const
+name|Decl
+operator|*
+name|getOriginalDecl
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|OriginalDecl
+return|;
+block|}
+name|void
+name|setOriginalDecl
+parameter_list|(
+specifier|const
+name|Decl
+modifier|*
+name|Orig
+parameter_list|)
+block|{
+name|OriginalDecl
+operator|=
+name|Orig
+expr_stmt|;
+block|}
+name|private
+label|:
+name|llvm
+operator|::
+name|PointerIntPair
+operator|<
+specifier|const
+name|RawComment
+operator|*
+operator|,
+literal|2
+operator|,
+name|Kind
+operator|>
+name|Data
+expr_stmt|;
+specifier|const
+name|Decl
+modifier|*
+name|OriginalDecl
+decl_stmt|;
+block|}
+empty_stmt|;
+comment|/// \brief Mapping from declarations to comments attached to any
+comment|/// redeclaration.
+comment|///
+comment|/// Raw comments are owned by Comments list.  This mapping is populated
+comment|/// lazily.
+name|mutable
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|Decl
+operator|*
+operator|,
+name|RawCommentAndCacheFlags
+operator|>
+name|RedeclComments
+expr_stmt|;
+comment|/// \brief Mapping from declarations to parsed comments attached to any
+comment|/// redeclaration.
+name|mutable
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|Decl
+operator|*
+operator|,
+name|comments
+operator|::
+name|FullComment
+operator|*
+operator|>
+name|ParsedComments
+expr_stmt|;
+comment|/// \brief Return the documentation comment attached to a given declaration,
+comment|/// without looking into cache.
+name|RawComment
+modifier|*
+name|getRawCommentForDeclNoCache
+argument_list|(
+specifier|const
+name|Decl
+operator|*
+name|D
+argument_list|)
+decl|const
+decl_stmt|;
+name|public
+label|:
+name|RawCommentList
+modifier|&
+name|getRawCommentList
+parameter_list|()
+block|{
+return|return
+name|Comments
+return|;
+block|}
+name|void
+name|addComment
+parameter_list|(
+specifier|const
+name|RawComment
+modifier|&
+name|RC
+parameter_list|)
+block|{
+name|Comments
+operator|.
+name|addComment
+argument_list|(
+name|RC
+argument_list|,
+name|BumpAlloc
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// \brief Return the documentation comment attached to a given declaration.
+comment|/// Returns NULL if no comment is attached.
+comment|///
+comment|/// \param OriginalDecl if not NULL, is set to declaration AST node that had
+comment|/// the comment, if the comment we found comes from a redeclaration.
+specifier|const
+name|RawComment
+modifier|*
+name|getRawCommentForAnyRedecl
+argument_list|(
+specifier|const
+name|Decl
+operator|*
+name|D
+argument_list|,
+specifier|const
+name|Decl
+operator|*
+operator|*
+name|OriginalDecl
+operator|=
+name|NULL
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Return parsed documentation comment attached to a given declaration.
+comment|/// Returns NULL if no comment is attached.
+name|comments
+operator|::
+name|FullComment
+operator|*
+name|getCommentForDecl
+argument_list|(
+argument|const Decl *D
+argument_list|)
+specifier|const
+expr_stmt|;
 comment|/// \brief Retrieve the attributes for the given declaration.
 name|AttrVec
 modifier|&
@@ -2030,6 +2319,16 @@ end_comment
 
 begin_decl_stmt
 name|CanQualType
+name|WIntTy
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// [C99 7.24.1], integer type unchanged by default promotions.
+end_comment
+
+begin_decl_stmt
+name|CanQualType
 name|Char16Ty
 decl_stmt|;
 end_decl_stmt
@@ -2183,6 +2482,21 @@ end_decl_stmt
 begin_comment
 comment|// Deduction against 'auto&&'.
 end_comment
+
+begin_comment
+comment|// Type used to help define __builtin_va_list for some targets.
+end_comment
+
+begin_comment
+comment|// The type is built when constructing 'BuiltinVaListDecl'.
+end_comment
+
+begin_decl_stmt
+name|mutable
+name|QualType
+name|VaListTagTy
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|ASTContext
@@ -3998,6 +4312,26 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/// getWIntType - In C99, this returns a type compatible with the type
+end_comment
+
+begin_comment
+comment|/// defined in<stddef.h> as defined by the target.
+end_comment
+
+begin_expr_stmt
+name|QualType
+name|getWIntType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|WIntTy
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|/// getPointerDiffType - Return the unique type for "ptrdiff_t" (C99 7.17)
 end_comment
 
@@ -4981,15 +5315,26 @@ return|;
 block|}
 end_expr_stmt
 
-begin_function_decl
-name|void
-name|setBuiltinVaListType
-parameter_list|(
-name|QualType
-name|T
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_comment
+comment|/// \brief Retrieve the C type declaration corresponding to the predefined
+end_comment
+
+begin_comment
+comment|/// __builtin_va_list type.
+end_comment
+
+begin_expr_stmt
+name|TypedefDecl
+operator|*
+name|getBuiltinVaListDecl
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Retrieve the type of the __builtin_va_list type.
+end_comment
 
 begin_expr_stmt
 name|QualType
@@ -4998,9 +5343,33 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|BuiltinVaListType
+name|getTypeDeclType
+argument_list|(
+name|getBuiltinVaListDecl
+argument_list|()
+argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Retrieve the C type declaration corresponding to the predefined
+end_comment
+
+begin_comment
+comment|/// __va_list_tag type used to help define the __builtin_va_list type for
+end_comment
+
+begin_comment
+comment|/// some targets.
+end_comment
+
+begin_expr_stmt
+name|QualType
+name|getVaListTagType
+argument_list|()
+specifier|const
+expr_stmt|;
 end_expr_stmt
 
 begin_comment
@@ -5359,15 +5728,15 @@ name|GetBuiltinTypeError
 block|{
 name|GE_None
 block|,
-comment|//< No error
+comment|///< No error
 name|GE_Missing_stdio
 block|,
-comment|//< Missing a type from<stdio.h>
+comment|///< Missing a type from<stdio.h>
 name|GE_Missing_setjmp
 block|,
-comment|//< Missing a type from<setjmp.h>
+comment|///< Missing a type from<setjmp.h>
 name|GE_Missing_ucontext
-comment|//< Missing a type from<ucontext.h>
+comment|///< Missing a type from<ucontext.h>
 block|}
 enum|;
 end_enum
@@ -6548,8 +6917,11 @@ end_comment
 
 begin_function_decl
 name|CallingConv
-name|getDefaultMethodCallConv
-parameter_list|()
+name|getDefaultCXXMethodCallConv
+parameter_list|(
+name|bool
+name|isVariadic
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -6569,25 +6941,7 @@ name|CallingConv
 name|CC
 argument_list|)
 decl|const
-block|{
-if|if
-condition|(
-operator|!
-name|LangOpts
-operator|.
-name|MRTD
-operator|&&
-name|CC
-operator|==
-name|CC_C
-condition|)
-return|return
-name|CC_Default
-return|;
-return|return
-name|CC
-return|;
-block|}
+decl_stmt|;
 end_decl_stmt
 
 begin_comment
@@ -6654,7 +7008,7 @@ comment|/// the template std::vector can be referred to via a variety of
 end_comment
 
 begin_comment
-comment|/// names---std::vector, ::std::vector, vector (if vector is in
+comment|/// names---std::vector, \::std::vector, vector (if vector is in
 end_comment
 
 begin_comment
@@ -6972,15 +7326,16 @@ begin_comment
 comment|/// C++ [dcl.fct]p3). The adjusted parameter type is returned.
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|QualType
 name|getAdjustedParameterType
-parameter_list|(
+argument_list|(
 name|QualType
 name|T
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// \brief Retrieve the parameter type as adjusted for use in the signature
@@ -6994,15 +7349,16 @@ begin_comment
 comment|/// cv-qualifiers.
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|QualType
 name|getSignatureParameterType
-parameter_list|(
+argument_list|(
 name|QualType
 name|T
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// getArrayDecayedType - Return the properly qualified result of decaying the
@@ -7971,7 +8327,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief returns true if there is at lease one @implementation in TU.
+comment|/// \brief returns true if there is at least one \@implementation in TU.
 end_comment
 
 begin_function
@@ -8048,45 +8404,13 @@ name|MD
 argument_list|)
 decl|const
 block|{
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-specifier|const
-name|ObjCMethodDecl
-operator|*
-operator|,
-specifier|const
-name|ObjCMethodDecl
-operator|*
-operator|>
-operator|::
-name|const_iterator
-name|I
-operator|=
+return|return
 name|ObjCMethodRedecls
 operator|.
-name|find
+name|lookup
 argument_list|(
 name|MD
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|I
-operator|==
-name|ObjCMethodRedecls
-operator|.
-name|end
-argument_list|()
-condition|)
-return|return
-literal|0
-return|;
-return|return
-name|I
-operator|->
-name|second
 return|;
 block|}
 end_decl_stmt
@@ -8106,6 +8430,17 @@ modifier|*
 name|Redecl
 parameter_list|)
 block|{
+name|assert
+argument_list|(
+operator|!
+name|getObjCMethodRedeclaration
+argument_list|(
+name|MD
+argument_list|)
+operator|&&
+literal|"MD already has a redeclaration"
+argument_list|)
+expr_stmt|;
 name|ObjCMethodRedecls
 index|[
 name|MD

@@ -173,8 +173,9 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|unsigned
-name|long
+name|int
 name|OPENSSL_ia32cap_P
+index|[]
 decl_stmt|;
 name|void
 name|OPENSSL_showfatal

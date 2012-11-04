@@ -803,6 +803,42 @@ block|}
 end_function
 
 begin_comment
+comment|/* Check existence of a property of a package. */
+end_comment
+
+begin_function
+name|int
+name|OF_hasprop
+parameter_list|(
+name|phandle_t
+name|package
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|propname
+parameter_list|)
+block|{
+return|return
+operator|(
+name|OF_getproplen
+argument_list|(
+name|package
+argument_list|,
+name|propname
+argument_list|)
+operator|>=
+literal|0
+condition|?
+literal|1
+else|:
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/* Get the value of a property of a package. */
 end_comment
 

@@ -811,7 +811,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * Bitmapped ACPI types.  Used internally only  */
+comment|/*  * Bitmapped ACPI types. Used internally only  */
 end_comment
 
 begin_define
@@ -1303,6 +1303,30 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/* Notify info for implicit notify, multiple device objects */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_gpe_notify_info
+block|{
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|DeviceNode
+decl_stmt|;
+comment|/* Device to be notified */
+name|struct
+name|acpi_gpe_notify_info
+modifier|*
+name|Next
+decl_stmt|;
+block|}
+name|ACPI_GPE_NOTIFY_INFO
+typedef|;
+end_typedef
+
+begin_comment
 comment|/*  * GPE dispatch info. At any time, the GPE can have at most one type  * of dispatch - Method, Handler, or Implicit Notify.  */
 end_comment
 
@@ -1316,17 +1340,16 @@ modifier|*
 name|MethodNode
 decl_stmt|;
 comment|/* Method node for this GPE level */
-name|struct
-name|acpi_gpe_handler_info
+name|ACPI_GPE_HANDLER_INFO
 modifier|*
 name|Handler
 decl_stmt|;
 comment|/* Installed GPE handler */
-name|ACPI_NAMESPACE_NODE
+name|ACPI_GPE_NOTIFY_INFO
 modifier|*
-name|DeviceNode
+name|NotifyList
 decl_stmt|;
-comment|/* Parent _PRW device for implicit notify */
+comment|/* List of _PRW devices for implicit notifies */
 block|}
 name|ACPI_GPE_DISPATCH_INFO
 typedef|;
@@ -1345,7 +1368,7 @@ name|union
 name|acpi_gpe_dispatch_info
 name|Dispatch
 decl_stmt|;
-comment|/* Either Method or Handler */
+comment|/* Either Method, Handler, or NotifyList */
 name|struct
 name|acpi_gpe_register_info
 modifier|*
@@ -1857,7 +1880,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Thread state - one per thread across multiple walk states.  Multiple walk  * states are created when there are nested control methods executing.  */
+comment|/*  * Thread state - one per thread across multiple walk states. Multiple walk  * states are created when there are nested control methods executing.  */
 end_comment
 
 begin_typedef
@@ -2290,12 +2313,20 @@ begin_comment
 comment|/* Op name (debug only) */
 end_comment
 
+begin_comment
+comment|/* Flags for DisasmFlags field  above */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|ACPI_DASM_BUFFER
 value|0x00
 end_define
+
+begin_comment
+comment|/* Buffer is a simple data buffer */
+end_comment
 
 begin_define
 define|#
@@ -2304,12 +2335,20 @@ name|ACPI_DASM_RESOURCE
 value|0x01
 end_define
 
+begin_comment
+comment|/* Buffer is a Resource Descriptor */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|ACPI_DASM_STRING
 value|0x02
 end_define
+
+begin_comment
+comment|/* Buffer is a ASCII string */
+end_comment
 
 begin_define
 define|#
@@ -2318,40 +2357,75 @@ name|ACPI_DASM_UNICODE
 value|0x03
 end_define
 
+begin_comment
+comment|/* Buffer is a Unicode string */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_DASM_PLD_METHOD
+value|0x04
+end_define
+
+begin_comment
+comment|/* Buffer is a _PLD method bit-packed buffer */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|ACPI_DASM_EISAID
-value|0x04
+value|0x05
 end_define
+
+begin_comment
+comment|/* Integer is an EISAID */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|ACPI_DASM_MATCHOP
-value|0x05
+value|0x06
 end_define
+
+begin_comment
+comment|/* Parent opcode is a Match() operator */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|ACPI_DASM_LNOT_PREFIX
-value|0x06
+value|0x07
 end_define
+
+begin_comment
+comment|/* Start of a LNotEqual (etc.) pair of opcodes */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|ACPI_DASM_LNOT_SUFFIX
-value|0x07
+value|0x08
 end_define
+
+begin_comment
+comment|/* End  of a LNotEqual (etc.) pair of opcodes */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|ACPI_DASM_IGNORE
-value|0x08
+value|0x09
 end_define
+
+begin_comment
+comment|/* Not used at this time */
+end_comment
 
 begin_comment
 comment|/*  * Generic operation (for example:  If, While, Store)  */
@@ -2666,6 +2740,13 @@ define|#
 directive|define
 name|ACPI_PARSEOP_EMPTY_TERMLIST
 value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PARSEOP_PREDEF_CHECKED
+value|0x08
 end_define
 
 begin_define
@@ -3225,6 +3306,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_OSI_WIN_8
+value|0x0C
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_ALWAYS_ILLEGAL
 value|0x00
 end_define
@@ -3651,6 +3739,9 @@ struct|struct
 name|acpi_db_method_info
 block|{
 name|ACPI_HANDLE
+name|Method
+decl_stmt|;
+name|ACPI_HANDLE
 name|MainThreadGate
 decl_stmt|;
 name|ACPI_HANDLE
@@ -3863,6 +3954,37 @@ directive|define
 name|ACPI_NUM_MEM_LISTS
 value|2
 end_define
+
+begin_comment
+comment|/*****************************************************************************  *  * Info/help support  *  ****************************************************************************/
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|ah_predefined_name
+block|{
+name|char
+modifier|*
+name|Name
+decl_stmt|;
+name|char
+modifier|*
+name|Description
+decl_stmt|;
+ifndef|#
+directive|ifndef
+name|ACPI_ASL_COMPILER
+name|char
+modifier|*
+name|Action
+decl_stmt|;
+endif|#
+directive|endif
+block|}
+name|AH_PREDEFINED_NAME
+typedef|;
+end_typedef
 
 begin_endif
 endif|#

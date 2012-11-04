@@ -161,12 +161,6 @@ directive|include
 file|<cam/scsi/scsi_enc_internal.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<opt_enc.h>
-end_include
-
 begin_expr_stmt
 name|MALLOC_DEFINE
 argument_list|(
@@ -182,20 +176,6 @@ end_expr_stmt
 begin_comment
 comment|/* Enclosure type independent driver */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|SEN_ID
-value|"UNISYS           SUN_SEN"
-end_define
-
-begin_define
-define|#
-directive|define
-name|SEN_ID_LEN
-value|24
-end_define
 
 begin_decl_stmt
 specifier|static
@@ -424,6 +404,38 @@ end_function
 begin_function
 specifier|static
 name|void
+name|enc_devgonecb
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
+name|struct
+name|cam_periph
+modifier|*
+name|periph
+decl_stmt|;
+name|periph
+operator|=
+operator|(
+expr|struct
+name|cam_periph
+operator|*
+operator|)
+name|arg
+expr_stmt|;
+name|cam_periph_release
+argument_list|(
+name|periph
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
 name|enc_oninvalidate
 parameter_list|(
 name|struct
@@ -516,6 +528,17 @@ operator|->
 name|status_updater
 argument_list|)
 expr_stmt|;
+name|destroy_dev_sched_cb
+argument_list|(
+name|enc
+operator|->
+name|enc_dev
+argument_list|,
+name|enc_devgonecb
+argument_list|,
+name|periph
+argument_list|)
+expr_stmt|;
 name|xpt_print
 argument_list|(
 name|periph
@@ -557,23 +580,6 @@ operator|->
 name|path
 argument_list|,
 literal|"removing device entry\n"
-argument_list|)
-expr_stmt|;
-name|cam_periph_unlock
-argument_list|(
-name|periph
-argument_list|)
-expr_stmt|;
-name|destroy_dev
-argument_list|(
-name|enc
-operator|->
-name|enc_dev
-argument_list|)
-expr_stmt|;
-name|cam_periph_lock
-argument_list|(
-name|periph
 argument_list|)
 expr_stmt|;
 comment|/* If the sub-driver has a cleanup routine, call it */
@@ -2375,7 +2381,7 @@ name|enc
 operator|->
 name|periph
 argument_list|,
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 if|if
@@ -2790,7 +2796,7 @@ comment|/*  * The code after this point runs on many platforms,  * so forgive th
 end_comment
 
 begin_comment
-comment|/*  * Is this a device that supports enclosure services?  *  * It's a a pretty simple ruleset- if it is device type 0x0D (13), it's  * an ENC device. If it happens to be an old UNISYS SEN device, we can  * handle that too.  */
+comment|/*  * Is this a device that supports enclosure services?  *  * It's a pretty simple ruleset- if it is device type  * 0x0D (13), it's an ENCLOSURE device.  */
 end_comment
 
 begin_define
@@ -2949,19 +2955,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|buflen
-operator|<
-literal|8
-operator|+
-name|SEN_ID_LEN
-condition|)
-return|return
-operator|(
-name|ENC_NONE
-operator|)
-return|;
-if|if
-condition|(
 operator|(
 name|iqd
 index|[
@@ -2974,31 +2967,6 @@ operator|==
 name|T_ENCLOSURE
 condition|)
 block|{
-if|if
-condition|(
-name|STRNCMP
-argument_list|(
-operator|&
-name|iqd
-index|[
-literal|8
-index|]
-argument_list|,
-name|SEN_ID
-argument_list|,
-name|SEN_ID_LEN
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-return|return
-operator|(
-name|ENC_SEN
-operator|)
-return|;
-block|}
-elseif|else
 if|if
 condition|(
 operator|(
@@ -3918,22 +3886,6 @@ name|arg
 expr_stmt|;
 if|if
 condition|(
-name|periph
-operator|==
-name|NULL
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"enc_ctor: periph was NULL!!\n"
-argument_list|)
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
-if|if
-condition|(
 name|cgd
 operator|==
 name|NULL
@@ -4048,9 +4000,6 @@ name|enc
 argument_list|)
 expr_stmt|;
 break|break;
-case|case
-name|ENC_SEN
-case|:
 case|case
 name|ENC_NONE
 case|:
@@ -4174,6 +4123,39 @@ name|out
 goto|;
 block|}
 block|}
+if|if
+condition|(
+name|cam_periph_acquire
+argument_list|(
+name|periph
+argument_list|)
+operator|!=
+name|CAM_REQ_CMP
+condition|)
+block|{
+name|xpt_print
+argument_list|(
+name|periph
+operator|->
+name|path
+argument_list|,
+literal|"%s: lost periph during "
+literal|"registration!\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+name|cam_periph_lock
+argument_list|(
+name|periph
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|CAM_REQ_CMP_ERR
+operator|)
+return|;
+block|}
 name|enc
 operator|->
 name|enc_dev
@@ -4275,14 +4257,6 @@ case|:
 name|tname
 operator|=
 literal|"ENC Passthrough Device"
-expr_stmt|;
-break|break;
-case|case
-name|ENC_SEN
-case|:
-name|tname
-operator|=
-literal|"UNISYS SEN Device (NOT HANDLED YET)"
 expr_stmt|;
 break|break;
 case|case

@@ -782,8 +782,12 @@ operator|-
 literal|1
 operator|)
 return|;
-name|restart_write
-label|:
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
 do|do
 block|{
 name|ret
@@ -910,9 +914,7 @@ operator|->
 name|child_stdout
 argument_list|)
 expr_stmt|;
-goto|goto
-name|restart_write
-goto|;
+continue|continue;
 block|}
 do|do
 block|{
@@ -997,9 +999,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-goto|goto
-name|restart_write
-goto|;
+continue|continue;
 block|}
 if|if
 condition|(
@@ -1024,9 +1024,7 @@ operator|->
 name|child_stdout
 argument_list|)
 expr_stmt|;
-goto|goto
-name|restart_write
-goto|;
+continue|continue;
 block|}
 if|if
 condition|(
@@ -1114,9 +1112,7 @@ name|child_buf_avail
 operator|-=
 name|ret
 expr_stmt|;
-goto|goto
-name|restart_write
-goto|;
+block|}
 block|}
 end_function
 

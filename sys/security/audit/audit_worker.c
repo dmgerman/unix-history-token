@@ -357,8 +357,6 @@ name|mnt_stat
 decl_stmt|;
 name|int
 name|error
-decl_stmt|,
-name|vfslocked
 decl_stmt|;
 specifier|static
 name|int
@@ -389,15 +387,6 @@ operator|->
 name|v_mount
 operator|->
 name|mnt_stat
-expr_stmt|;
-name|vfslocked
-operator|=
-name|VFS_LOCK_GIANT
-argument_list|(
-name|vp
-operator|->
-name|v_mount
-argument_list|)
 expr_stmt|;
 comment|/* 	 * First, gather statistics on the audit log file and file system so 	 * that we know how we're doing on space.  Consider failure of these 	 * operations to indicate a future inability to write to the file. 	 */
 name|error
@@ -765,11 +754,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|VFS_UNLOCK_GIANT
-argument_list|(
-name|vfslocked
-argument_list|)
-expr_stmt|;
 return|return;
 name|fail_enospc
 label|:
@@ -889,11 +873,6 @@ argument_list|(
 literal|"audit_worker: write error %d\n"
 argument_list|,
 name|error
-argument_list|)
-expr_stmt|;
-name|VFS_UNLOCK_GIANT
-argument_list|(
-name|vfslocked
 argument_list|)
 expr_stmt|;
 block|}
@@ -1459,9 +1438,6 @@ name|vnode
 modifier|*
 name|old_audit_vp
 decl_stmt|;
-name|int
-name|vfslocked
-decl_stmt|;
 name|KASSERT
 argument_list|(
 operator|(
@@ -1536,15 +1512,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|vfslocked
-operator|=
-name|VFS_LOCK_GIANT
-argument_list|(
-name|old_audit_vp
-operator|->
-name|v_mount
-argument_list|)
-expr_stmt|;
 name|vn_close
 argument_list|(
 name|old_audit_vp
@@ -1554,11 +1521,6 @@ argument_list|,
 name|old_audit_cred
 argument_list|,
 name|curthread
-argument_list|)
-expr_stmt|;
-name|VFS_UNLOCK_GIANT
-argument_list|(
-name|vfslocked
 argument_list|)
 expr_stmt|;
 name|crfree

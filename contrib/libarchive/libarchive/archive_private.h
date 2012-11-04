@@ -141,6 +141,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ARCHIVE_MATCH_MAGIC
+value|(0xcad11c9U)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ARCHIVE_STATE_NEW
 value|1U
 end_define

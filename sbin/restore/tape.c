@@ -870,13 +870,31 @@ name|pipein
 operator|++
 expr_stmt|;
 block|}
+comment|/* no longer need or want root privileges */
+if|if
+condition|(
 name|setuid
 argument_list|(
 name|getuid
 argument_list|()
 argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"setuid failed\n"
+argument_list|)
 expr_stmt|;
-comment|/* no longer need or want root privileges */
+name|done
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|magtape
 operator|=
 name|strdup
@@ -1488,8 +1506,11 @@ name|dprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"maxino = %d\n"
+literal|"maxino = %ju\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|maxino
 argument_list|)
 expr_stmt|;
@@ -5496,12 +5517,15 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Cannot extract %d bytes %s for inode %d, name %s\n"
+literal|"Cannot extract %d bytes %s for inode %ju, name %s\n"
 argument_list|,
 name|extsize
 argument_list|,
 literal|"of extended attributes"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|curfile
 operator|.
 name|ino
@@ -5613,8 +5637,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"write error extracting inode %d, name %s\nwrite: %s\n"
+literal|"write error extracting inode %ju, name %s\nwrite: %s\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|curfile
 operator|.
 name|ino
@@ -5673,8 +5700,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"seek error extracting inode %d, name %s\nlseek: %s\n"
+literal|"seek error extracting inode %ju, name %s\nlseek: %s\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|curfile
 operator|.
 name|ino
@@ -6283,8 +6313,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"skipping over inode %d\n"
+literal|"skipping over inode %ju\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|curfile
 operator|.
 name|ino
@@ -7361,8 +7394,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"File header, ino %d"
+literal|"File header, ino %ju"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|previno
 argument_list|)
 expr_stmt|;
@@ -7374,8 +7410,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"File continuation header, ino %d"
+literal|"File continuation header, ino %ju"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|previno
 argument_list|)
 expr_stmt|;
@@ -8025,10 +8064,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Checksum error %o, inode %d file %s\n"
+literal|"Checksum error %o, inode %ju file %s\n"
 argument_list|,
 name|i
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|curfile
 operator|.
 name|ino

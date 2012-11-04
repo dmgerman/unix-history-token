@@ -487,10 +487,6 @@ case|case
 literal|0x2A
 case|:
 comment|/* Per Intel document 253669-039US 05/2011. */
-case|case
-literal|0x2D
-case|:
-comment|/* Per Intel document 253669-041US 12/2011. */
 name|cputype
 operator|=
 name|PMC_CPU_INTEL_SANDYBRIDGE
@@ -498,6 +494,32 @@ expr_stmt|;
 name|nclasses
 operator|=
 literal|5
+expr_stmt|;
+break|break;
+case|case
+literal|0x2D
+case|:
+comment|/* Per Intel document 253669-044US 08/2012. */
+name|cputype
+operator|=
+name|PMC_CPU_INTEL_SANDYBRIDGE_XEON
+expr_stmt|;
+name|nclasses
+operator|=
+literal|3
+expr_stmt|;
+break|break;
+case|case
+literal|0x3A
+case|:
+comment|/* Per Intel document 253669-043US 05/2012. */
+name|cputype
+operator|=
+name|PMC_CPU_INTEL_IVYBRIDGE
+expr_stmt|;
+name|nclasses
+operator|=
+literal|3
 expr_stmt|;
 break|break;
 block|}
@@ -638,10 +660,16 @@ case|case
 name|PMC_CPU_INTEL_COREI7
 case|:
 case|case
+name|PMC_CPU_INTEL_IVYBRIDGE
+case|:
+case|case
 name|PMC_CPU_INTEL_SANDYBRIDGE
 case|:
 case|case
 name|PMC_CPU_INTEL_WESTMERE
+case|:
+case|case
+name|PMC_CPU_INTEL_SANDYBRIDGE_XEON
 case|:
 name|error
 operator|=
@@ -855,10 +883,16 @@ case|case
 name|PMC_CPU_INTEL_COREI7
 case|:
 case|case
+name|PMC_CPU_INTEL_IVYBRIDGE
+case|:
+case|case
 name|PMC_CPU_INTEL_SANDYBRIDGE
 case|:
 case|case
 name|PMC_CPU_INTEL_WESTMERE
+case|:
+case|case
+name|PMC_CPU_INTEL_SANDYBRIDGE_XEON
 case|:
 name|pmc_core_finalize
 argument_list|(

@@ -94,6 +94,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|DEFAULT_POSITIVE_CONF_THRESH
+value|(1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|DEFAULT_NEGATIVE_ELEMENTS_SIZE
 value|(2048)
 end_define
@@ -104,6 +111,17 @@ directive|define
 name|DEFAULT_NEGATIVE_LIFETIME
 value|(60)
 end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_NEGATIVE_CONF_THRESH
+value|(1)
+end_define
+
+begin_comment
+comment|/* (2) ??? */
+end_comment
 
 begin_define
 define|#

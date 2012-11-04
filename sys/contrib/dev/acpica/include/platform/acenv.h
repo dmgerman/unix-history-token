@@ -243,12 +243,6 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|ACPI_DEBUG_OUTPUT
-end_define
-
-begin_define
-define|#
-directive|define
 name|ACPI_APPLICATION
 end_define
 
@@ -256,6 +250,12 @@ begin_define
 define|#
 directive|define
 name|ACPI_SINGLE_THREADED
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_NO_ERROR_MESSAGES
 end_define
 
 begin_endif
@@ -540,6 +540,21 @@ begin_include
 include|#
 directive|include
 file|"acefi.h"
+end_include
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__HAIKU__
+argument_list|)
+end_elif
+
+begin_include
+include|#
+directive|include
+file|"achaiku.h"
 end_include
 
 begin_else
@@ -1260,7 +1275,7 @@ name|va_end
 parameter_list|(
 name|ap
 parameter_list|)
-value|(void) 0
+value|(ap = (va_list) NULL)
 end_define
 
 begin_define

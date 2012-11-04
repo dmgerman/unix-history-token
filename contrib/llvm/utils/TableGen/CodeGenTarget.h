@@ -109,6 +109,9 @@ struct_decl|struct
 name|CodeGenRegister
 struct_decl|;
 name|class
+name|CodeGenSchedModels
+decl_stmt|;
+name|class
 name|CodeGenTarget
 decl_stmt|;
 comment|// SelectionDAG node properties.
@@ -252,6 +255,11 @@ argument_list|()
 specifier|const
 expr_stmt|;
 name|mutable
+name|CodeGenSchedModels
+modifier|*
+name|SchedModels
+decl_stmt|;
+name|mutable
 name|std
 operator|::
 name|vector
@@ -270,6 +278,10 @@ name|RecordKeeper
 operator|&
 name|Records
 argument_list|)
+expr_stmt|;
+operator|~
+name|CodeGenTarget
+argument_list|()
 expr_stmt|;
 name|Record
 operator|*
@@ -529,6 +541,15 @@ name|false
 return|;
 block|}
 end_decl_stmt
+
+begin_expr_stmt
+name|CodeGenSchedModels
+operator|&
+name|getSchedModels
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
 
 begin_label
 name|private

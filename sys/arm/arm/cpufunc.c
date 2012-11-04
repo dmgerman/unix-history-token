@@ -270,6 +270,27 @@ name|arm_dcache_align_mask
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|u_int
+name|arm_cache_level
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|u_int
+name|arm_cache_type
+index|[
+literal|14
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|u_int
+name|arm_cache_loc
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* 1 == use cpu_sleep(), 0 == don't */
 end_comment
@@ -1223,6 +1244,295 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|CPU_MV_PJ4B
+end_ifdef
+
+begin_decl_stmt
+name|struct
+name|cpu_functions
+name|pj4bv7_cpufuncs
+init|=
+block|{
+comment|/* CPU functions */
+name|cpufunc_id
+block|,
+comment|/* id			*/
+name|arm11_drain_writebuf
+block|,
+comment|/* cpwait		*/
+comment|/* MMU functions */
+name|cpufunc_control
+block|,
+comment|/* control		*/
+name|cpufunc_domains
+block|,
+comment|/* Domain		*/
+name|pj4b_setttb
+block|,
+comment|/* Setttb		*/
+name|cpufunc_faultstatus
+block|,
+comment|/* Faultstatus		*/
+name|cpufunc_faultaddress
+block|,
+comment|/* Faultaddress		*/
+comment|/* TLB functions */
+name|armv7_tlb_flushID
+block|,
+comment|/* tlb_flushID		*/
+name|armv7_tlb_flushID_SE
+block|,
+comment|/* tlb_flushID_SE	*/
+name|armv7_tlb_flushID
+block|,
+comment|/* tlb_flushI		*/
+name|armv7_tlb_flushID_SE
+block|,
+comment|/* tlb_flushI_SE	*/
+name|armv7_tlb_flushID
+block|,
+comment|/* tlb_flushD		*/
+name|armv7_tlb_flushID_SE
+block|,
+comment|/* tlb_flushD_SE	*/
+comment|/* Cache operations */
+name|armv7_idcache_wbinv_all
+block|,
+comment|/* icache_sync_all	*/
+name|armv7_icache_sync_range
+block|,
+comment|/* icache_sync_range	*/
+name|armv7_dcache_wbinv_all
+block|,
+comment|/* dcache_wbinv_all	*/
+name|armv7_dcache_wbinv_range
+block|,
+comment|/* dcache_wbinv_range	*/
+name|armv7_dcache_inv_range
+block|,
+comment|/* dcache_inv_range	*/
+name|armv7_dcache_wb_range
+block|,
+comment|/* dcache_wb_range	*/
+name|armv7_idcache_wbinv_all
+block|,
+comment|/* idcache_wbinv_all	*/
+name|armv7_idcache_wbinv_range
+block|,
+comment|/* idcache_wbinv_all	*/
+operator|(
+name|void
+operator|*
+operator|)
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_wbinv_all	*/
+operator|(
+name|void
+operator|*
+operator|)
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_wbinv_range	*/
+operator|(
+name|void
+operator|*
+operator|)
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_inv_range	*/
+operator|(
+name|void
+operator|*
+operator|)
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_wb_range	*/
+comment|/* Other functions */
+name|pj4b_drain_readbuf
+block|,
+comment|/* flush_prefetchbuf	*/
+name|arm11_drain_writebuf
+block|,
+comment|/* drain_writebuf	*/
+name|pj4b_flush_brnchtgt_all
+block|,
+comment|/* flush_brnchtgt_C	*/
+name|pj4b_flush_brnchtgt_va
+block|,
+comment|/* flush_brnchtgt_E	*/
+operator|(
+name|void
+operator|*
+operator|)
+name|cpufunc_nullop
+block|,
+comment|/* sleep		*/
+comment|/* Soft functions */
+name|cpufunc_null_fixup
+block|,
+comment|/* dataabt_fixup	*/
+name|cpufunc_null_fixup
+block|,
+comment|/* prefetchabt_fixup	*/
+name|arm11_context_switch
+block|,
+comment|/* context_switch	*/
+name|pj4bv7_setup
+comment|/* cpu setup		*/
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|cpu_functions
+name|pj4bv6_cpufuncs
+init|=
+block|{
+comment|/* CPU functions */
+name|cpufunc_id
+block|,
+comment|/* id			*/
+name|arm11_drain_writebuf
+block|,
+comment|/* cpwait		*/
+comment|/* MMU functions */
+name|cpufunc_control
+block|,
+comment|/* control		*/
+name|cpufunc_domains
+block|,
+comment|/* Domain		*/
+name|pj4b_setttb
+block|,
+comment|/* Setttb		*/
+name|cpufunc_faultstatus
+block|,
+comment|/* Faultstatus		*/
+name|cpufunc_faultaddress
+block|,
+comment|/* Faultaddress		*/
+comment|/* TLB functions */
+name|arm11_tlb_flushID
+block|,
+comment|/* tlb_flushID		*/
+name|arm11_tlb_flushID_SE
+block|,
+comment|/* tlb_flushID_SE	*/
+name|arm11_tlb_flushI
+block|,
+comment|/* tlb_flushI		*/
+name|arm11_tlb_flushI_SE
+block|,
+comment|/* tlb_flushI_SE	*/
+name|arm11_tlb_flushD
+block|,
+comment|/* tlb_flushD		*/
+name|arm11_tlb_flushD_SE
+block|,
+comment|/* tlb_flushD_SE	*/
+comment|/* Cache operations */
+name|armv6_icache_sync_all
+block|,
+comment|/* icache_sync_all	*/
+name|pj4b_icache_sync_range
+block|,
+comment|/* icache_sync_range	*/
+name|armv6_dcache_wbinv_all
+block|,
+comment|/* dcache_wbinv_all	*/
+name|pj4b_dcache_wbinv_range
+block|,
+comment|/* dcache_wbinv_range	*/
+name|pj4b_dcache_inv_range
+block|,
+comment|/* dcache_inv_range	*/
+name|pj4b_dcache_wb_range
+block|,
+comment|/* dcache_wb_range	*/
+name|armv6_idcache_wbinv_all
+block|,
+comment|/* idcache_wbinv_all	*/
+name|pj4b_idcache_wbinv_range
+block|,
+comment|/* idcache_wbinv_all	*/
+operator|(
+name|void
+operator|*
+operator|)
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_wbinv_all	*/
+operator|(
+name|void
+operator|*
+operator|)
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_wbinv_range	*/
+operator|(
+name|void
+operator|*
+operator|)
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_inv_range	*/
+operator|(
+name|void
+operator|*
+operator|)
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_wb_range	*/
+comment|/* Other functions */
+name|pj4b_drain_readbuf
+block|,
+comment|/* flush_prefetchbuf	*/
+name|arm11_drain_writebuf
+block|,
+comment|/* drain_writebuf	*/
+name|pj4b_flush_brnchtgt_all
+block|,
+comment|/* flush_brnchtgt_C	*/
+name|pj4b_flush_brnchtgt_va
+block|,
+comment|/* flush_brnchtgt_E	*/
+operator|(
+name|void
+operator|*
+operator|)
+name|cpufunc_nullop
+block|,
+comment|/* sleep		*/
+comment|/* Soft functions */
+name|cpufunc_null_fixup
+block|,
+comment|/* dataabt_fixup	*/
+name|cpufunc_null_fixup
+block|,
+comment|/* prefetchabt_fixup	*/
+name|arm11_context_switch
+block|,
+comment|/* context_switch	*/
+name|pj4bv6_setup
+comment|/* cpu setup		*/
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CPU_MV_PJ4B */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|CPU_SA110
 end_ifdef
 
@@ -2164,6 +2474,313 @@ begin_comment
 comment|/* CPU_FA526 || CPU_FA626TE */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CPU_ARM11
+argument_list|)
+end_if
+
+begin_decl_stmt
+name|struct
+name|cpu_functions
+name|arm11_cpufuncs
+init|=
+block|{
+comment|/* CPU functions */
+name|cpufunc_id
+block|,
+comment|/* id                   */
+name|arm11_drain_writebuf
+block|,
+comment|/* cpwait               */
+comment|/* MMU functions */
+name|cpufunc_control
+block|,
+comment|/* control              */
+name|cpufunc_domains
+block|,
+comment|/* Domain               */
+name|arm11_setttb
+block|,
+comment|/* Setttb               */
+name|cpufunc_faultstatus
+block|,
+comment|/* Faultstatus          */
+name|cpufunc_faultaddress
+block|,
+comment|/* Faultaddress         */
+comment|/* TLB functions */
+name|arm11_tlb_flushID
+block|,
+comment|/* tlb_flushID          */
+name|arm11_tlb_flushID_SE
+block|,
+comment|/* tlb_flushID_SE       */
+name|arm11_tlb_flushI
+block|,
+comment|/* tlb_flushI           */
+name|arm11_tlb_flushI_SE
+block|,
+comment|/* tlb_flushI_SE        */
+name|arm11_tlb_flushD
+block|,
+comment|/* tlb_flushD           */
+name|arm11_tlb_flushD_SE
+block|,
+comment|/* tlb_flushD_SE        */
+comment|/* Cache operations */
+name|armv6_icache_sync_all
+block|,
+comment|/* icache_sync_all      */
+name|armv6_icache_sync_range
+block|,
+comment|/* icache_sync_range    */
+name|armv6_dcache_wbinv_all
+block|,
+comment|/* dcache_wbinv_all     */
+name|armv6_dcache_wbinv_range
+block|,
+comment|/* dcache_wbinv_range   */
+name|armv6_dcache_inv_range
+block|,
+comment|/* dcache_inv_range     */
+name|armv6_dcache_wb_range
+block|,
+comment|/* dcache_wb_range      */
+name|armv6_idcache_wbinv_all
+block|,
+comment|/* idcache_wbinv_all    */
+name|armv6_idcache_wbinv_range
+block|,
+comment|/* idcache_wbinv_range  */
+operator|(
+name|void
+operator|*
+operator|)
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_wbinv_all    */
+operator|(
+name|void
+operator|*
+operator|)
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_wbinv_range  */
+operator|(
+name|void
+operator|*
+operator|)
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_inv_range    */
+operator|(
+name|void
+operator|*
+operator|)
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_wb_range     */
+comment|/* Other functions */
+name|cpufunc_nullop
+block|,
+comment|/* flush_prefetchbuf    */
+name|arm11_drain_writebuf
+block|,
+comment|/* drain_writebuf       */
+name|cpufunc_nullop
+block|,
+comment|/* flush_brnchtgt_C     */
+operator|(
+name|void
+operator|*
+operator|)
+name|cpufunc_nullop
+block|,
+comment|/* flush_brnchtgt_E     */
+name|arm11_sleep
+block|,
+comment|/* sleep                */
+comment|/* Soft functions */
+name|cpufunc_null_fixup
+block|,
+comment|/* dataabt_fixup        */
+name|cpufunc_null_fixup
+block|,
+comment|/* prefetchabt_fixup    */
+name|arm11_context_switch
+block|,
+comment|/* context_switch       */
+name|arm11_setup
+comment|/* cpu setup            */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CPU_ARM11 */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CPU_CORTEXA
+argument_list|)
+end_if
+
+begin_decl_stmt
+name|struct
+name|cpu_functions
+name|cortexa_cpufuncs
+init|=
+block|{
+comment|/* CPU functions */
+name|cpufunc_id
+block|,
+comment|/* id                   */
+name|cpufunc_nullop
+block|,
+comment|/* cpwait               */
+comment|/* MMU functions */
+name|cpufunc_control
+block|,
+comment|/* control              */
+name|cpufunc_domains
+block|,
+comment|/* Domain               */
+name|armv7_setttb
+block|,
+comment|/* Setttb               */
+name|cpufunc_faultstatus
+block|,
+comment|/* Faultstatus          */
+name|cpufunc_faultaddress
+block|,
+comment|/* Faultaddress         */
+comment|/* TLB functions */
+name|arm11_tlb_flushID
+block|,
+comment|/* tlb_flushID          */
+name|armv7_tlb_flushID_SE
+block|,
+comment|/* tlb_flushID_SE       */
+name|arm11_tlb_flushI
+block|,
+comment|/* tlb_flushI           */
+name|arm11_tlb_flushI_SE
+block|,
+comment|/* tlb_flushI_SE        */
+name|arm11_tlb_flushD
+block|,
+comment|/* tlb_flushD           */
+name|arm11_tlb_flushD_SE
+block|,
+comment|/* tlb_flushD_SE        */
+comment|/* Cache operations */
+name|armv7_idcache_wbinv_all
+block|,
+comment|/* icache_sync_all      */
+name|armv7_icache_sync_range
+block|,
+comment|/* icache_sync_range    */
+name|armv7_dcache_wbinv_all
+block|,
+comment|/* dcache_wbinv_all     */
+name|armv7_dcache_wbinv_range
+block|,
+comment|/* dcache_wbinv_range   */
+name|armv7_dcache_inv_range
+block|,
+comment|/* dcache_inv_range     */
+name|armv7_dcache_wb_range
+block|,
+comment|/* dcache_wb_range      */
+name|armv7_idcache_wbinv_all
+block|,
+comment|/* idcache_wbinv_all    */
+name|armv7_idcache_wbinv_range
+block|,
+comment|/* idcache_wbinv_range  */
+comment|/* Note: From OMAP4 the L2 ops are filled in when the 	 * L2 cache controller is actually enabled. 	 */
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_wbinv_all    */
+operator|(
+name|void
+operator|*
+operator|)
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_wbinv_range  */
+operator|(
+name|void
+operator|*
+operator|)
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_inv_range    */
+operator|(
+name|void
+operator|*
+operator|)
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_wb_range     */
+comment|/* Other functions */
+name|cpufunc_nullop
+block|,
+comment|/* flush_prefetchbuf    */
+name|arm11_drain_writebuf
+block|,
+comment|/* drain_writebuf       */
+name|cpufunc_nullop
+block|,
+comment|/* flush_brnchtgt_C     */
+operator|(
+name|void
+operator|*
+operator|)
+name|cpufunc_nullop
+block|,
+comment|/* flush_brnchtgt_E     */
+name|arm11_sleep
+block|,
+comment|/* sleep                */
+comment|/* Soft functions */
+name|cpufunc_null_fixup
+block|,
+comment|/* dataabt_fixup        */
+name|cpufunc_null_fixup
+block|,
+comment|/* prefetchabt_fixup    */
+name|arm11_context_switch
+block|,
+comment|/* context_switch       */
+name|cortexa_setup
+comment|/* cpu setup            */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CPU_CORTEXA */
+end_comment
+
 begin_comment
 comment|/*  * Global constants also used by locore.s  */
 end_comment
@@ -2220,6 +2837,11 @@ argument_list|(
 name|CPU_ARM10
 argument_list|)
 operator|||
+name|defined
+argument_list|(
+name|CPU_ARM11
+argument_list|)
+operator|||
 expr|\
 name|defined
 argument_list|(
@@ -2253,6 +2875,11 @@ argument_list|(
 name|CPU_FA626TE
 argument_list|)
 operator|||
+name|defined
+argument_list|(
+name|CPU_MV_PJ4B
+argument_list|)
+operator|||
 expr|\
 name|defined
 argument_list|(
@@ -2262,6 +2889,12 @@ operator|||
 name|defined
 argument_list|(
 name|CPU_XSCALE_81342
+argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|CPU_CORTEXA
 argument_list|)
 end_if
 
@@ -2312,9 +2945,23 @@ decl_stmt|,
 name|isize
 decl_stmt|,
 name|dsize
+decl_stmt|,
+name|cpuid
+decl_stmt|;
+name|u_int
+name|clevel
+decl_stmt|,
+name|csize
+decl_stmt|,
+name|i
+decl_stmt|,
+name|sel
 decl_stmt|;
 name|u_int
 name|multiplier
+decl_stmt|;
+name|u_char
+name|type
 decl_stmt|;
 asm|__asm __volatile("mrc p15, 0, %0, c0, c0, 1"
 block|:
@@ -2326,6 +2973,14 @@ block|)
 function|;
 end_function
 
+begin_expr_stmt
+name|cpuid
+operator|=
+name|cpufunc_id
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* 	 * ...and thus spake the ARM ARM: 	 * 	 * If an<opcode2> value corresponding to an unimplemented or 	 * reserved ID register is encountered, the System Control 	 * processor returns the value of the main ID register. 	 */
 end_comment
@@ -2335,8 +2990,7 @@ if|if
 condition|(
 name|ctype
 operator|==
-name|cpufunc_id
-argument_list|()
+name|cpuid
 condition|)
 goto|goto
 name|out
@@ -2344,6 +2998,219 @@ goto|;
 end_if
 
 begin_if
+if|if
+condition|(
+name|CPU_CT_FORMAT
+argument_list|(
+name|ctype
+argument_list|)
+operator|==
+name|CPU_CT_ARMV7
+condition|)
+block|{
+asm|__asm __volatile("mrc p15, 1, %0, c0, c0, 1"
+block|:
+literal|"=r"
+operator|(
+name|clevel
+operator|)
+block|)
+empty_stmt|;
+end_if
+
+begin_expr_stmt
+name|arm_cache_level
+operator|=
+name|clevel
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|arm_cache_loc
+operator|=
+name|CPU_CLIDR_LOC
+argument_list|(
+name|arm_cache_level
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|i
+operator|=
+literal|0
+expr_stmt|;
+end_expr_stmt
+
+begin_while
+while|while
+condition|(
+operator|(
+name|type
+operator|=
+operator|(
+name|clevel
+operator|&
+literal|0x7
+operator|)
+operator|)
+operator|&&
+name|i
+operator|<
+literal|7
+condition|)
+block|{
+if|if
+condition|(
+name|type
+operator|==
+name|CACHE_DCACHE
+operator|||
+name|type
+operator|==
+name|CACHE_UNI_CACHE
+operator|||
+name|type
+operator|==
+name|CACHE_SEP_CACHE
+condition|)
+block|{
+name|sel
+operator|=
+name|i
+operator|<<
+literal|1
+expr_stmt|;
+asm|__asm __volatile("mcr p15, 2, %0, c0, c0, 0"
+block|: :
+literal|"r"
+operator|(
+name|sel
+operator|)
+block|)
+empty_stmt|;
+asm|__asm __volatile("mrc p15, 1, %0, c0, c0, 0"
+block|:
+literal|"=r"
+operator|(
+name|csize
+operator|)
+block|)
+empty_stmt|;
+end_while
+
+begin_expr_stmt
+name|arm_cache_type
+index|[
+name|sel
+index|]
+operator|=
+name|csize
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|arm_dcache_align
+operator|=
+literal|1
+operator|<<
+operator|(
+name|CPUV7_CT_xSIZE_LEN
+argument_list|(
+name|csize
+argument_list|)
+operator|+
+literal|4
+operator|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|arm_dcache_align_mask
+operator|=
+name|arm_dcache_align
+operator|-
+literal|1
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+unit|} 			if
+operator|(
+name|type
+operator|==
+name|CACHE_ICACHE
+operator|||
+name|type
+operator|==
+name|CACHE_SEP_CACHE
+operator|)
+block|{
+name|sel
+operator|=
+operator|(
+name|i
+operator|<<
+literal|1
+operator|)
+operator||
+literal|1
+block|;
+asm|__asm __volatile("mcr p15, 2, %0, c0, c0, 0"
+operator|:
+operator|:
+literal|"r"
+operator|(
+name|sel
+operator|)
+block|)
+expr_stmt|;
+end_expr_stmt
+
+begin_asm
+asm|__asm __volatile("mrc p15, 1, %0, c0, c0, 0"
+end_asm
+
+begin_expr_stmt
+unit|:
+literal|"=r"
+operator|(
+name|csize
+operator|)
+end_expr_stmt
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
+name|arm_cache_type
+index|[
+name|sel
+index|]
+operator|=
+name|csize
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+unit|} 			i
+operator|++
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|clevel
+operator|>>=
+literal|3
+expr_stmt|;
+end_expr_stmt
+
+begin_else
+unit|} 	}
+else|else
+block|{
 if|if
 condition|(
 operator|(
@@ -2358,13 +3225,7 @@ name|arm_pcache_unified
 operator|=
 literal|1
 expr_stmt|;
-end_if
-
-begin_comment
-comment|/* 	 * If you want to know how this code works, go read the ARM ARM. 	 */
-end_comment
-
-begin_expr_stmt
+comment|/* 		 * If you want to know how this code works, go read the ARM ARM. 		 */
 name|arm_pcache_type
 operator|=
 name|CPU_CT_CTYPE
@@ -2372,9 +3233,6 @@ argument_list|(
 name|ctype
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|arm_pcache_unified
@@ -2471,9 +3329,6 @@ literal|8
 operator|)
 expr_stmt|;
 block|}
-end_if
-
-begin_expr_stmt
 name|dsize
 operator|=
 name|CPU_CT_DSIZE
@@ -2481,9 +3336,6 @@ argument_list|(
 name|ctype
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|multiplier
 operator|=
 operator|(
@@ -2496,9 +3348,6 @@ literal|3
 else|:
 literal|2
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|arm_pdcache_line_size
 operator|=
 literal|1U
@@ -2512,9 +3361,6 @@ operator|+
 literal|3
 operator|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|CPU_CT_xSIZE_ASSOC
@@ -2558,9 +3404,6 @@ literal|1
 operator|)
 expr_stmt|;
 block|}
-end_if
-
-begin_expr_stmt
 name|arm_pdcache_size
 operator|=
 name|multiplier
@@ -2574,16 +3417,10 @@ operator|+
 literal|8
 operator|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|arm_dcache_align
 operator|=
 name|arm_pdcache_line_size
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|arm_dcache_l2_assoc
 operator|=
 name|CPU_CT_xSIZE_ASSOC
@@ -2595,9 +3432,6 @@ name|multiplier
 operator|-
 literal|2
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|arm_dcache_l2_linesize
 operator|=
 name|CPU_CT_xSIZE_LEN
@@ -2607,9 +3441,6 @@ argument_list|)
 operator|+
 literal|3
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|arm_dcache_l2_nsets
 operator|=
 literal|6
@@ -2629,21 +3460,16 @@ argument_list|(
 name|dsize
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_label
 name|out
 label|:
-end_label
-
-begin_expr_stmt
 name|arm_dcache_align_mask
 operator|=
 name|arm_dcache_align
 operator|-
 literal|1
 expr_stmt|;
-end_expr_stmt
+block|}
+end_else
 
 begin_endif
 unit|}
@@ -3217,104 +4043,85 @@ if|if
 condition|(
 name|cputype
 operator|==
+name|CPU_ID_MV88FR131
+operator|||
+name|cputype
+operator|==
+name|CPU_ID_MV88FR571_VD
+operator|||
+name|cputype
+operator|==
+name|CPU_ID_MV88FR571_41
+condition|)
+block|{
+name|uint32_t
+name|sheeva_ctrl
+decl_stmt|;
+name|sheeva_ctrl
+operator|=
+operator|(
+name|MV_DC_STREAM_ENABLE
+operator||
+name|MV_BTB_DISABLE
+operator||
+name|MV_L2_ENABLE
+operator|)
+expr_stmt|;
+comment|/* 		 * Workaround for Marvell MV78100 CPU: Cache prefetch 		 * mechanism may affect the cache coherency validity, 		 * so it needs to be disabled. 		 * 		 * Refer to errata document MV-S501058-00C.pdf (p. 3.1 		 * L2 Prefetching Mechanism) for details. 		 */
+if|if
+condition|(
+name|cputype
+operator|==
+name|CPU_ID_MV88FR571_VD
+operator|||
+name|cputype
+operator|==
+name|CPU_ID_MV88FR571_41
+condition|)
+name|sheeva_ctrl
+operator||=
+name|MV_L2_PREFETCH_DISABLE
+expr_stmt|;
+name|sheeva_control_ext
+argument_list|(
+literal|0xffffffff
+operator|&
+operator|~
+name|MV_WA_ENABLE
+argument_list|,
+name|sheeva_ctrl
+argument_list|)
+expr_stmt|;
+name|cpufuncs
+operator|=
+name|sheeva_cpufuncs
+expr_stmt|;
+name|get_cachetype_cp15
+argument_list|()
+expr_stmt|;
+name|pmap_pte_init_generic
+argument_list|()
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+elseif|else
+if|if
+condition|(
+name|cputype
+operator|==
 name|CPU_ID_ARM926EJS
 operator|||
 name|cputype
 operator|==
 name|CPU_ID_ARM1026EJS
-operator|||
-name|cputype
-operator|==
-name|CPU_ID_MV88FR131
-operator|||
-name|cputype
-operator|==
-name|CPU_ID_MV88FR571_VD
-operator|||
-name|cputype
-operator|==
-name|CPU_ID_MV88FR571_41
 condition|)
 block|{
-if|if
-condition|(
-name|cputype
-operator|==
-name|CPU_ID_MV88FR131
-operator|||
-name|cputype
-operator|==
-name|CPU_ID_MV88FR571_VD
-operator|||
-name|cputype
-operator|==
-name|CPU_ID_MV88FR571_41
-condition|)
-block|{
-name|cpufuncs
-operator|=
-name|sheeva_cpufuncs
-expr_stmt|;
-comment|/* 			 * Workaround for Marvell MV78100 CPU: Cache prefetch 			 * mechanism may affect the cache coherency validity, 			 * so it needs to be disabled. 			 * 			 * Refer to errata document MV-S501058-00C.pdf (p. 3.1 			 * L2 Prefetching Mechanism) for details. 			 */
-if|if
-condition|(
-name|cputype
-operator|==
-name|CPU_ID_MV88FR571_VD
-operator|||
-name|cputype
-operator|==
-name|CPU_ID_MV88FR571_41
-condition|)
-block|{
-name|sheeva_control_ext
-argument_list|(
-literal|0xffffffff
-argument_list|,
-name|FC_DCACHE_STREAM_EN
-operator||
-name|FC_WR_ALLOC_EN
-operator||
-name|FC_BRANCH_TARG_BUF_DIS
-operator||
-name|FC_L2CACHE_EN
-operator||
-name|FC_L2_PREF_DIS
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|sheeva_control_ext
-argument_list|(
-literal|0xffffffff
-argument_list|,
-name|FC_DCACHE_STREAM_EN
-operator||
-name|FC_WR_ALLOC_EN
-operator||
-name|FC_BRANCH_TARG_BUF_DIS
-operator||
-name|FC_L2CACHE_EN
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* Use powersave on this CPU. */
-name|cpu_do_powersave
-operator|=
-literal|1
-expr_stmt|;
-block|}
-else|else
 name|cpufuncs
 operator|=
 name|armv5_ec_cpufuncs
 expr_stmt|;
-name|cpu_reset_needs_v4_MMU_disable
-operator|=
-literal|1
-expr_stmt|;
-comment|/* V4 or higher */
 name|get_cachetype_cp15
 argument_list|()
 expr_stmt|;
@@ -3398,6 +4205,169 @@ block|}
 endif|#
 directive|endif
 comment|/* CPU_ARM10 */
+ifdef|#
+directive|ifdef
+name|CPU_ARM11
+name|cpufuncs
+operator|=
+name|arm11_cpufuncs
+expr_stmt|;
+name|cpu_reset_needs_v4_MMU_disable
+operator|=
+literal|1
+expr_stmt|;
+comment|/* V4 or higher */
+name|get_cachetype_cp15
+argument_list|()
+expr_stmt|;
+name|pmap_pte_init_mmu_v6
+argument_list|()
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+endif|#
+directive|endif
+comment|/* CPU_ARM11 */
+ifdef|#
+directive|ifdef
+name|CPU_CORTEXA
+if|if
+condition|(
+name|cputype
+operator|==
+name|CPU_ID_CORTEXA8R1
+operator|||
+name|cputype
+operator|==
+name|CPU_ID_CORTEXA8R2
+operator|||
+name|cputype
+operator|==
+name|CPU_ID_CORTEXA8R3
+operator|||
+name|cputype
+operator|==
+name|CPU_ID_CORTEXA9R1
+operator|||
+name|cputype
+operator|==
+name|CPU_ID_CORTEXA9R2
+condition|)
+block|{
+name|cpufuncs
+operator|=
+name|cortexa_cpufuncs
+expr_stmt|;
+name|cpu_reset_needs_v4_MMU_disable
+operator|=
+literal|1
+expr_stmt|;
+comment|/* V4 or higher */
+name|get_cachetype_cp15
+argument_list|()
+expr_stmt|;
+name|pmap_pte_init_mmu_v6
+argument_list|()
+expr_stmt|;
+comment|/* Use powersave on this CPU. */
+name|cpu_do_powersave
+operator|=
+literal|1
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+endif|#
+directive|endif
+comment|/* CPU_CORTEXA */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CPU_MV_PJ4B
+argument_list|)
+if|if
+condition|(
+name|cputype
+operator|==
+name|CPU_ID_MV88SV581X_V6
+operator|||
+name|cputype
+operator|==
+name|CPU_ID_MV88SV581X_V7
+operator|||
+name|cputype
+operator|==
+name|CPU_ID_MV88SV584X_V7
+operator|||
+name|cputype
+operator|==
+name|CPU_ID_ARM_88SV581X_V6
+operator|||
+name|cputype
+operator|==
+name|CPU_ID_ARM_88SV581X_V7
+condition|)
+block|{
+if|if
+condition|(
+name|cpu_pfr
+argument_list|(
+literal|0
+argument_list|)
+operator|&
+name|ARM_PFR0_THUMBEE_MASK
+condition|)
+name|cpufuncs
+operator|=
+name|pj4bv7_cpufuncs
+expr_stmt|;
+else|else
+name|cpufuncs
+operator|=
+name|pj4bv6_cpufuncs
+expr_stmt|;
+name|get_cachetype_cp15
+argument_list|()
+expr_stmt|;
+name|pmap_pte_init_mmu_v6
+argument_list|()
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+elseif|else
+if|if
+condition|(
+name|cputype
+operator|==
+name|CPU_ID_ARM_88SV584X_V6
+operator|||
+name|cputype
+operator|==
+name|CPU_ID_MV88SV584X_V6
+condition|)
+block|{
+name|cpufuncs
+operator|=
+name|pj4bv6_cpufuncs
+expr_stmt|;
+name|get_cachetype_cp15
+argument_list|()
+expr_stmt|;
+name|pmap_pte_init_mmu_v6
+argument_list|()
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+endif|#
+directive|endif
+comment|/* CPU_MV_PJ4B */
 ifdef|#
 directive|ifdef
 name|CPU_SA110
@@ -6827,41 +7797,10 @@ decl_stmt|;
 block|{
 name|int
 name|cpuctrl
-decl_stmt|,
-name|cpuctrlmask
 decl_stmt|;
 name|cpuctrl
 operator|=
 name|CPU_CONTROL_MMU_ENABLE
-operator||
-name|CPU_CONTROL_SYST_ENABLE
-operator||
-name|CPU_CONTROL_IC_ENABLE
-operator||
-name|CPU_CONTROL_DC_ENABLE
-comment|/* | CPU_CONTROL_BPRD_ENABLE */
-expr_stmt|;
-name|cpuctrlmask
-operator|=
-name|CPU_CONTROL_MMU_ENABLE
-operator||
-name|CPU_CONTROL_SYST_ENABLE
-operator||
-name|CPU_CONTROL_IC_ENABLE
-operator||
-name|CPU_CONTROL_DC_ENABLE
-operator||
-name|CPU_CONTROL_ROM_ENABLE
-operator||
-name|CPU_CONTROL_BPRD_ENABLE
-operator||
-name|CPU_CONTROL_BEND_ENABLE
-operator||
-name|CPU_CONTROL_AFLT_ENABLE
-operator||
-name|CPU_CONTROL_ROUNDROBIN
-operator||
-name|CPU_CONTROL_CPCLK
 expr_stmt|;
 ifndef|#
 directive|ifndef
@@ -6872,6 +7811,18 @@ name|CPU_CONTROL_AFLT_ENABLE
 expr_stmt|;
 endif|#
 directive|endif
+name|cpuctrl
+operator||=
+name|CPU_CONTROL_DC_ENABLE
+expr_stmt|;
+name|cpuctrl
+operator||=
+operator|(
+literal|0xf
+operator|<<
+literal|3
+operator|)
+expr_stmt|;
 name|cpuctrl
 operator|=
 name|parse_cpu_options
@@ -6892,23 +7843,286 @@ name|CPU_CONTROL_BEND_ENABLE
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Clear out the cache */
+name|cpuctrl
+operator||=
+name|CPU_CONTROL_SYST_ENABLE
+expr_stmt|;
+name|cpuctrl
+operator||=
+name|CPU_CONTROL_BPRD_ENABLE
+expr_stmt|;
+name|cpuctrl
+operator||=
+name|CPU_CONTROL_IC_ENABLE
+expr_stmt|;
+if|if
+condition|(
+name|vector_page
+operator|==
+name|ARM_VECTORS_HIGH
+condition|)
+name|cpuctrl
+operator||=
+name|CPU_CONTROL_VECRELOC
+expr_stmt|;
+name|cpuctrl
+operator||=
+operator|(
+literal|0x5
+operator|<<
+literal|16
+operator|)
+expr_stmt|;
+name|cpuctrl
+operator||=
+name|CPU_CONTROL_V6_EXTPAGE
+expr_stmt|;
+comment|/* Make sure caches are clean.  */
 name|cpu_idcache_wbinv_all
 argument_list|()
 expr_stmt|;
-comment|/* Now really make sure they are clean.  */
-asm|__asm __volatile ("mcr\tp15, 0, r0, c7, c7, 0" : : );
-comment|/* Set the control register */
-name|curcpu
+name|cpu_l2cache_wbinv_all
 argument_list|()
-operator|->
-name|ci_ctrl
+expr_stmt|;
+comment|/* Set the control register */
+name|ctrl
 operator|=
 name|cpuctrl
 expr_stmt|;
 name|cpu_control
 argument_list|(
 literal|0xffffffff
+argument_list|,
+name|cpuctrl
+argument_list|)
+expr_stmt|;
+name|cpu_idcache_wbinv_all
+argument_list|()
+expr_stmt|;
+name|cpu_l2cache_wbinv_all
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CPU_ARM11 */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CPU_MV_PJ4B
+end_ifdef
+
+begin_function
+name|void
+name|pj4bv6_setup
+parameter_list|(
+name|char
+modifier|*
+name|args
+parameter_list|)
+block|{
+name|int
+name|cpuctrl
+decl_stmt|;
+name|pj4b_config
+argument_list|()
+expr_stmt|;
+name|cpuctrl
+operator|=
+name|CPU_CONTROL_MMU_ENABLE
+expr_stmt|;
+ifndef|#
+directive|ifndef
+name|ARM32_DISABLE_ALIGNMENT_FAULTS
+name|cpuctrl
+operator||=
+name|CPU_CONTROL_AFLT_ENABLE
+expr_stmt|;
+endif|#
+directive|endif
+name|cpuctrl
+operator||=
+name|CPU_CONTROL_DC_ENABLE
+expr_stmt|;
+name|cpuctrl
+operator||=
+operator|(
+literal|0xf
+operator|<<
+literal|3
+operator|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__ARMEB__
+name|cpuctrl
+operator||=
+name|CPU_CONTROL_BEND_ENABLE
+expr_stmt|;
+endif|#
+directive|endif
+name|cpuctrl
+operator||=
+name|CPU_CONTROL_SYST_ENABLE
+expr_stmt|;
+name|cpuctrl
+operator||=
+name|CPU_CONTROL_BPRD_ENABLE
+expr_stmt|;
+name|cpuctrl
+operator||=
+name|CPU_CONTROL_IC_ENABLE
+expr_stmt|;
+if|if
+condition|(
+name|vector_page
+operator|==
+name|ARM_VECTORS_HIGH
+condition|)
+name|cpuctrl
+operator||=
+name|CPU_CONTROL_VECRELOC
+expr_stmt|;
+name|cpuctrl
+operator||=
+operator|(
+literal|0x5
+operator|<<
+literal|16
+operator|)
+expr_stmt|;
+name|cpuctrl
+operator||=
+name|CPU_CONTROL_V6_EXTPAGE
+expr_stmt|;
+comment|/* XXX not yet */
+comment|/* cpuctrl |= CPU_CONTROL_L2_ENABLE; */
+comment|/* Make sure caches are clean.  */
+name|cpu_idcache_wbinv_all
+argument_list|()
+expr_stmt|;
+name|cpu_l2cache_wbinv_all
+argument_list|()
+expr_stmt|;
+comment|/* Set the control register */
+name|ctrl
+operator|=
+name|cpuctrl
+expr_stmt|;
+name|cpu_control
+argument_list|(
+literal|0xffffffff
+argument_list|,
+name|cpuctrl
+argument_list|)
+expr_stmt|;
+name|cpu_idcache_wbinv_all
+argument_list|()
+expr_stmt|;
+name|cpu_l2cache_wbinv_all
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|pj4bv7_setup
+parameter_list|(
+name|args
+parameter_list|)
+name|char
+modifier|*
+name|args
+decl_stmt|;
+block|{
+name|int
+name|cpuctrl
+decl_stmt|;
+name|pj4b_config
+argument_list|()
+expr_stmt|;
+name|cpuctrl
+operator|=
+name|CPU_CONTROL_MMU_ENABLE
+expr_stmt|;
+ifndef|#
+directive|ifndef
+name|ARM32_DISABLE_ALIGNMENT_FAULTS
+name|cpuctrl
+operator||=
+name|CPU_CONTROL_AFLT_ENABLE
+expr_stmt|;
+endif|#
+directive|endif
+name|cpuctrl
+operator||=
+name|CPU_CONTROL_DC_ENABLE
+expr_stmt|;
+name|cpuctrl
+operator||=
+operator|(
+literal|0xf
+operator|<<
+literal|3
+operator|)
+expr_stmt|;
+name|cpuctrl
+operator||=
+name|CPU_CONTROL_BPRD_ENABLE
+expr_stmt|;
+name|cpuctrl
+operator||=
+name|CPU_CONTROL_IC_ENABLE
+expr_stmt|;
+if|if
+condition|(
+name|vector_page
+operator|==
+name|ARM_VECTORS_HIGH
+condition|)
+name|cpuctrl
+operator||=
+name|CPU_CONTROL_VECRELOC
+expr_stmt|;
+name|cpuctrl
+operator||=
+operator|(
+literal|0x5
+operator|<<
+literal|16
+operator|)
+operator||
+operator|(
+literal|1
+operator|<
+literal|22
+operator|)
+expr_stmt|;
+name|cpuctrl
+operator||=
+name|CPU_CONTROL_V6_EXTPAGE
+expr_stmt|;
+comment|/* Clear out the cache */
+name|cpu_idcache_wbinv_all
+argument_list|()
+expr_stmt|;
+comment|/* Set the control register */
+name|ctrl
+operator|=
+name|cpuctrl
+expr_stmt|;
+name|cpu_control
+argument_list|(
+literal|0xFFFFFFFF
 argument_list|,
 name|cpuctrl
 argument_list|)
@@ -6926,7 +8140,152 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* CPU_ARM11 */
+comment|/* CPU_MV_PJ4B */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CPU_CORTEXA
+end_ifdef
+
+begin_function
+name|void
+name|cortexa_setup
+parameter_list|(
+name|char
+modifier|*
+name|args
+parameter_list|)
+block|{
+name|int
+name|cpuctrl
+decl_stmt|,
+name|cpuctrlmask
+decl_stmt|;
+name|cpuctrlmask
+operator|=
+name|CPU_CONTROL_MMU_ENABLE
+operator||
+comment|/* MMU enable         [0] */
+name|CPU_CONTROL_AFLT_ENABLE
+operator||
+comment|/* Alignment fault    [1] */
+name|CPU_CONTROL_DC_ENABLE
+operator||
+comment|/* DCache enable      [2] */
+name|CPU_CONTROL_BPRD_ENABLE
+operator||
+comment|/* Branch prediction [11] */
+name|CPU_CONTROL_IC_ENABLE
+operator||
+comment|/* ICache enable     [12] */
+name|CPU_CONTROL_VECRELOC
+expr_stmt|;
+comment|/* Vector relocation [13] */
+name|cpuctrl
+operator|=
+name|CPU_CONTROL_MMU_ENABLE
+operator||
+name|CPU_CONTROL_IC_ENABLE
+operator||
+name|CPU_CONTROL_DC_ENABLE
+operator||
+name|CPU_CONTROL_BPRD_ENABLE
+expr_stmt|;
+ifndef|#
+directive|ifndef
+name|ARM32_DISABLE_ALIGNMENT_FAULTS
+name|cpuctrl
+operator||=
+name|CPU_CONTROL_AFLT_ENABLE
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* Switch to big endian */
+ifdef|#
+directive|ifdef
+name|__ARMEB__
+name|cpuctrl
+operator||=
+name|CPU_CONTROL_BEND_ENABLE
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* Check if the vector page is at the high address (0xffff0000) */
+if|if
+condition|(
+name|vector_page
+operator|==
+name|ARM_VECTORS_HIGH
+condition|)
+name|cpuctrl
+operator||=
+name|CPU_CONTROL_VECRELOC
+expr_stmt|;
+comment|/* Clear out the cache */
+name|cpu_idcache_wbinv_all
+argument_list|()
+expr_stmt|;
+comment|/* Set the control register */
+name|ctrl
+operator|=
+name|cpuctrl
+expr_stmt|;
+name|cpu_control
+argument_list|(
+name|cpuctrlmask
+argument_list|,
+name|cpuctrl
+argument_list|)
+expr_stmt|;
+comment|/* And again. */
+name|cpu_idcache_wbinv_all
+argument_list|()
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SMP
+name|armv7_auxctrl
+argument_list|(
+operator|(
+literal|1
+operator|<<
+literal|6
+operator|)
+operator||
+operator|(
+literal|1
+operator|<<
+literal|0
+operator|)
+argument_list|,
+operator|(
+literal|1
+operator|<<
+literal|6
+operator|)
+operator||
+operator|(
+literal|1
+operator|<<
+literal|0
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Enable SMP + TLB broadcasting  */
+endif|#
+directive|endif
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CPU_CORTEXA */
 end_comment
 
 begin_ifdef
@@ -7183,7 +8542,7 @@ argument_list|,
 name|cpuctrl
 argument_list|)
 expr_stmt|;
-comment|/*  	 * enable clockswitching, note that this doesn't read or write to r0, 	 * r0 is just to make it valid asm 	 */
+comment|/* 	 * enable clockswitching, note that this doesn't read or write to r0, 	 * r0 is just to make it valid asm 	 */
 asm|__asm ("mcr 15, 0, r0, c15, c1, 2");
 block|}
 end_function
@@ -8361,7 +9720,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* CPU_XSCALE_80200 || CPU_XSCALE_80321 || CPU_XSCALE_PXA2X0 || CPU_XSCALE_IXP425  	   CPU_XSCALE_80219 */
+comment|/* CPU_XSCALE_80200 || CPU_XSCALE_80321 || CPU_XSCALE_PXA2X0 || CPU_XSCALE_IXP425 	   CPU_XSCALE_80219 */
 end_comment
 
 end_unit

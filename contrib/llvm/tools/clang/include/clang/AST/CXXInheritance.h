@@ -288,9 +288,9 @@ comment|/// whether we found a path to a virtual base for that class type,
 comment|/// while the element contains the number of non-virtual base
 comment|/// class subobjects for that class type. The key of the map is
 comment|/// the cv-unqualified canonical type of the base class subobject.
-name|std
+name|llvm
 operator|::
-name|map
+name|SmallDenseMap
 operator|<
 name|QualType
 operator|,
@@ -303,7 +303,7 @@ operator|,
 name|unsigned
 operator|>
 operator|,
-name|QualTypeOrdering
+literal|8
 operator|>
 name|ClassSubobjects
 expr_stmt|;

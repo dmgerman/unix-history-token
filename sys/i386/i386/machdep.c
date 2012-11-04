@@ -224,6 +224,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/memrange.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/msgbuf.h>
 end_include
 
@@ -1213,6 +1219,13 @@ name|icu_lock
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|mem_range_softc
+name|mem_range_softc
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -1587,12 +1600,6 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Add BSP as an interrupt target. 	 */
-name|intr_add_cpu
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -2426,14 +2433,48 @@ name|int
 operator|)
 name|fp
 expr_stmt|;
+if|if
+condition|(
+name|p
+operator|->
+name|p_sysent
+operator|->
+name|sv_sigcode_base
+operator|!=
+literal|0
+condition|)
+block|{
 name|regs
 operator|->
 name|tf_eip
 operator|=
-name|PS_STRINGS
+name|p
+operator|->
+name|p_sysent
+operator|->
+name|sv_sigcode_base
+operator|+
+name|szsigcode
 operator|-
 name|szosigcode
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* a.out sysentvec does not use shared page */
+name|regs
+operator|->
+name|tf_eip
+operator|=
+name|p
+operator|->
+name|p_sysent
+operator|->
+name|sv_psstrings
+operator|-
+name|szosigcode
+expr_stmt|;
+block|}
 name|regs
 operator|->
 name|tf_eflags
@@ -3248,7 +3289,13 @@ name|regs
 operator|->
 name|tf_eip
 operator|=
-name|PS_STRINGS
+name|p
+operator|->
+name|p_sysent
+operator|->
+name|sv_sigcode_base
+operator|+
+name|szsigcode
 operator|-
 name|szfreebsd4_sigcode
 expr_stmt|;
@@ -4201,16 +4248,11 @@ name|regs
 operator|->
 name|tf_eip
 operator|=
-name|PS_STRINGS
-operator|-
-operator|*
-operator|(
 name|p
 operator|->
 name|p_sysent
 operator|->
-name|sv_szsigcode
-operator|)
+name|sv_sigcode_base
 expr_stmt|;
 name|regs
 operator|->
@@ -7912,10 +7954,7 @@ if|if
 condition|(
 name|pcb
 operator|==
-name|PCPU_GET
-argument_list|(
 name|curpcb
-argument_list|)
 condition|)
 block|{
 comment|/* 			 * Clear the debug registers on the running 			 * CPU, otherwise they will end up affecting 			 * the next process we switch to. 			 */
@@ -10581,6 +10620,8 @@ name|int
 name|hasbrokenint12
 decl_stmt|,
 name|i
+decl_stmt|,
+name|res
 decl_stmt|;
 name|u_int
 name|extmem
@@ -10943,6 +10984,8 @@ name|PAGE_SHIFT
 operator|)
 argument_list|)
 expr_stmt|;
+name|res
+operator|=
 name|vm86_getptr
 argument_list|(
 operator|&
@@ -10962,6 +11005,17 @@ operator|&
 name|vmf
 operator|.
 name|vmf_di
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|res
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"vm86_getptr() failed: address not found"
+operator|)
 argument_list|)
 expr_stmt|;
 name|vmf

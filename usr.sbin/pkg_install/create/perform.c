@@ -1067,6 +1067,16 @@ condition|(
 name|Prefix
 condition|)
 block|{
+if|if
+condition|(
+name|Prefix
+index|[
+literal|0
+index|]
+operator|!=
+literal|'/'
+condition|)
+block|{
 name|char
 name|resolved_prefix
 index|[
@@ -1103,6 +1113,20 @@ argument_list|,
 name|resolved_prefix
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|add_plist_top
+argument_list|(
+operator|&
+name|plist
+argument_list|,
+name|PLIST_CWD
+argument_list|,
+name|Prefix
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 comment|/* Add the origin if asked, at the top */
 if|if

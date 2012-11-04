@@ -306,6 +306,11 @@ modifier|&
 name|MCII
 parameter_list|,
 specifier|const
+name|MCRegisterInfo
+modifier|&
+name|MRI
+parameter_list|,
+specifier|const
 name|MCSubtargetInfo
 modifier|&
 name|STI
@@ -326,6 +331,9 @@ name|T
 parameter_list|,
 name|StringRef
 name|TT
+parameter_list|,
+name|StringRef
+name|CPU
 parameter_list|)
 function_decl|;
 name|MCAsmBackend
@@ -339,6 +347,9 @@ name|T
 parameter_list|,
 name|StringRef
 name|TT
+parameter_list|,
+name|StringRef
+name|CPU
 parameter_list|)
 function_decl|;
 comment|/// createX86MachObjectWriter - Construct an X86 Mach-O object writer.

@@ -1076,6 +1076,13 @@ comment|/* failed I/O, failmode 'continue' */
 name|ZPOOL_STATUS_BAD_LOG
 block|,
 comment|/* cannot read log chain(s) */
+comment|/* 	 * If the pool has unsupported features but can still be opened in 	 * read-only mode, its status is ZPOOL_STATUS_UNSUP_FEAT_WRITE. If the 	 * pool has unsupported features but cannot be opened at all, its 	 * status is ZPOOL_STATUS_UNSUP_FEAT_READ. 	 */
+name|ZPOOL_STATUS_UNSUP_FEAT_READ
+block|,
+comment|/* unsupported features for read */
+name|ZPOOL_STATUS_UNSUP_FEAT_WRITE
+block|,
+comment|/* unsupported features for write */
 comment|/* 	 * These faults have no corresponding message ID.  At the time we are 	 * checking the status, the original reason for the FMA fault (I/O or 	 * checksum errors) has been lost. 	 */
 name|ZPOOL_STATUS_FAULTED_DEV_R
 block|,
@@ -1086,7 +1093,10 @@ comment|/* faulted device with no replicas */
 comment|/* 	 * The following are not faults per se, but still an error possibly 	 * requiring administrative attention.  There is no corresponding 	 * message ID. 	 */
 name|ZPOOL_STATUS_VERSION_OLDER
 block|,
-comment|/* older on-disk version */
+comment|/* older legacy on-disk version */
+name|ZPOOL_STATUS_FEAT_DISABLED
+block|,
+comment|/* supported features are disabled */
 name|ZPOOL_STATUS_RESILVERING
 block|,
 comment|/* device being resilvered */
@@ -1151,6 +1161,15 @@ modifier|*
 parameter_list|,
 name|nvlist_t
 modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|nvlist_t
+modifier|*
+name|zpool_get_features
+parameter_list|(
+name|zpool_handle_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1233,6 +1252,15 @@ name|nvlist_t
 modifier|*
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|zpool_print_unsup_feat
+parameter_list|(
+name|nvlist_t
+modifier|*
+name|config
 parameter_list|)
 function_decl|;
 comment|/*  * Search for pools to import  */
@@ -1798,6 +1826,27 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|int
+name|zfs_prop_get_feature
+parameter_list|(
+name|zfs_handle_t
+modifier|*
+name|zhp
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|propname
+parameter_list|,
+name|char
+modifier|*
+name|buf
+parameter_list|,
+name|size_t
+name|len
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
 name|zfs_get_snapused_int
 parameter_list|(
 name|zfs_handle_t
@@ -1945,6 +1994,26 @@ define|#
 directive|define
 name|ZFS_MOUNTPOINT_LEGACY
 value|"legacy"
+define|#
+directive|define
+name|ZFS_FEATURE_DISABLED
+value|"disabled"
+define|#
+directive|define
+name|ZFS_FEATURE_ENABLED
+value|"enabled"
+define|#
+directive|define
+name|ZFS_FEATURE_ACTIVE
+value|"active"
+define|#
+directive|define
+name|ZFS_UNSUPPORTED_INACTIVE
+value|"inactive"
+define|#
+directive|define
+name|ZFS_UNSUPPORTED_READONLY
+value|"readonly"
 comment|/*  * zpool property management  */
 specifier|extern
 name|int
@@ -1956,6 +2025,23 @@ parameter_list|,
 name|zprop_list_t
 modifier|*
 modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|zpool_prop_get_feature
+parameter_list|(
+name|zpool_handle_t
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|size_t
 parameter_list|)
 function_decl|;
 specifier|extern
@@ -2439,6 +2525,10 @@ name|int
 name|zfs_rename
 parameter_list|(
 name|zfs_handle_t
+modifier|*
+parameter_list|,
+specifier|const
+name|char
 modifier|*
 parameter_list|,
 specifier|const

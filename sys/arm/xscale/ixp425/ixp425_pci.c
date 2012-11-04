@@ -542,7 +542,7 @@ argument_list|(
 literal|"couldn't create the PCI dma tag !"
 argument_list|)
 expr_stmt|;
-comment|/*  	 * The PCI bus can only address 64MB. However, due to the way our 	 * implementation of busdma works, busdma can't tell if a device 	 * is a PCI device or not. So defaults to the PCI dma tag, which 	 * restrict the DMA'able memory to the first 64MB, and explicitely 	 * create less restrictive tags for non-PCI devices. 	 */
+comment|/* 	 * The PCI bus can only address 64MB. However, due to the way our 	 * implementation of busdma works, busdma can't tell if a device 	 * is a PCI device or not. So defaults to the PCI dma tag, which 	 * restrict the DMA'able memory to the first 64MB, and explicitely 	 * create less restrictive tags for non-PCI devices. 	 */
 name|arm_root_dma_tag
 operator|=
 name|sc

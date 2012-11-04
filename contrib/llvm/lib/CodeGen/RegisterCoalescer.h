@@ -86,11 +86,6 @@ name|class
 name|CoalescerPair
 block|{
 specifier|const
-name|TargetInstrInfo
-modifier|&
-name|TII
-decl_stmt|;
-specifier|const
 name|TargetRegisterInfo
 modifier|&
 name|TRI
@@ -104,11 +99,15 @@ comment|/// SrcReg - the virtual register that will be coalesced into dstReg.
 name|unsigned
 name|SrcReg
 decl_stmt|;
-comment|/// subReg_ - The subregister index of srcReg in DstReg. It is possible the
-comment|/// coalesce SrcReg into a subreg of the larger DstReg when DstReg is a
-comment|/// virtual register.
+comment|/// DstIdx - The sub-register index of the old DstReg in the new coalesced
+comment|/// register.
 name|unsigned
-name|SubIdx
+name|DstIdx
+decl_stmt|;
+comment|/// SrcIdx - The sub-register index of the old SrcReg in the new coalesced
+comment|/// register.
+name|unsigned
+name|SrcIdx
 decl_stmt|;
 comment|/// Partial - True when the original copy was a partial subregister copy.
 name|bool
@@ -124,7 +123,8 @@ name|bool
 name|Flipped
 decl_stmt|;
 comment|/// NewRC - The register class of the coalesced register, or NULL if DstReg
-comment|/// is a physreg.
+comment|/// is a physreg. This register class may be a super-register of both
+comment|/// SrcReg and DstReg.
 specifier|const
 name|TargetRegisterClass
 modifier|*
@@ -135,21 +135,11 @@ label|:
 name|CoalescerPair
 argument_list|(
 specifier|const
-name|TargetInstrInfo
-operator|&
-name|tii
-argument_list|,
-specifier|const
 name|TargetRegisterInfo
 operator|&
 name|tri
 argument_list|)
 operator|:
-name|TII
-argument_list|(
-name|tii
-argument_list|)
-operator|,
 name|TRI
 argument_list|(
 name|tri
@@ -165,7 +155,12 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
-name|SubIdx
+name|DstIdx
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|SrcIdx
 argument_list|(
 literal|0
 argument_list|)
@@ -282,15 +277,26 @@ return|return
 name|SrcReg
 return|;
 block|}
-comment|/// getSubIdx - Return the subregister index in DstReg that SrcReg will be
-comment|/// coalesced into, or 0.
+comment|/// getDstIdx - Return the subregister index that DstReg will be coalesced
+comment|/// into, or 0.
 name|unsigned
-name|getSubIdx
+name|getDstIdx
 argument_list|()
 specifier|const
 block|{
 return|return
-name|SubIdx
+name|DstIdx
+return|;
+block|}
+comment|/// getSrcIdx - Return the subregister index that SrcReg will be coalesced
+comment|/// into, or 0.
+name|unsigned
+name|getSrcIdx
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SrcIdx
 return|;
 block|}
 comment|/// getNewRC - Return the register class of the coalesced register.

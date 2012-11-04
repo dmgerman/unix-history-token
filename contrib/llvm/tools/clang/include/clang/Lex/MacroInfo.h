@@ -90,7 +90,7 @@ block|{
 name|class
 name|Preprocessor
 decl_stmt|;
-comment|/// MacroInfo - Each identifier that is #define'd has an instance of this class
+comment|/// MacroInfo - Each identifier that is \#define'd has an instance of this class
 comment|/// associated with it, used to implement macro expansion.
 name|class
 name|MacroInfo
@@ -107,7 +107,7 @@ name|EndLocation
 decl_stmt|;
 comment|/// Arguments - The list of arguments for a function-like macro.  This can be
 comment|/// empty, for, e.g. "#define X()".  In a C99-style variadic macro, this
-comment|/// includes the __VA_ARGS__ identifier on the list.
+comment|/// includes the \c __VA_ARGS__ identifier on the list.
 name|IdentifierInfo
 modifier|*
 modifier|*
@@ -123,8 +123,7 @@ comment|/// If invalid, this macro has not been explicitly given any visibility.
 name|SourceLocation
 name|VisibilityLocation
 decl_stmt|;
-comment|/// ReplacementTokens - This is the list of tokens that the macro is defined
-comment|/// to.
+comment|/// \brief This is the list of tokens that the macro is defined to.
 name|SmallVector
 operator|<
 name|Token
@@ -144,7 +143,7 @@ name|IsDefinitionLengthCached
 range|:
 literal|1
 decl_stmt|;
-comment|/// IsFunctionLike - True if this macro is a function-like macro, false if it
+comment|/// \brief True if this macro is a function-like macro, false if it
 comment|/// is an object-like macro.
 name|bool
 name|IsFunctionLike
@@ -174,7 +173,7 @@ name|IsBuiltinMacro
 range|:
 literal|1
 decl_stmt|;
-comment|/// IsFromAST - True if this macro was loaded from an AST file.
+comment|/// \brief True if this macro was loaded from an AST file.
 name|bool
 name|IsFromAST
 range|:
@@ -191,8 +190,8 @@ label|:
 comment|//===--------------------------------------------------------------------===//
 comment|// State that changes as the macro is used.
 comment|/// IsDisabled - True if we have started an expansion of this macro already.
-comment|/// This disbles recursive expansion, which would be quite bad for things like
-comment|/// #define A A.
+comment|/// This disables recursive expansion, which would be quite bad for things
+comment|/// like \#define A A.
 name|bool
 name|IsDisabled
 range|:

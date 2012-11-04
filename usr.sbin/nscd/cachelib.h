@@ -181,6 +181,10 @@ name|size_t
 name|satisf_elemsize
 decl_stmt|;
 comment|/* if entry size is exceeded, 					 * this number of elements will be left, 					 * others will be deleted */
+name|int
+name|confidence_threshold
+decl_stmt|;
+comment|/* number matching replies required */
 name|struct
 name|timeval
 name|max_lifetime
@@ -249,6 +253,10 @@ name|cache_policy_item_
 modifier|*
 name|fifo_policy_item
 decl_stmt|;
+name|int
+name|confidence
+decl_stmt|;
+comment|/* incremented for each verification */
 block|}
 struct|;
 end_struct

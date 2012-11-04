@@ -63,7 +63,7 @@ name|namespace
 name|frontend
 block|{
 comment|/// IncludeDirGroup - Identifiers the group a include entry belongs to, which
-comment|/// represents its relative positive in the search list.  A #include of a ""
+comment|/// represents its relative positive in the search list.  A \#include of a ""
 comment|/// path starts at the -iquote group, then searches the Angled group, then
 comment|/// searches the system group, etc.
 enum|enum
@@ -73,10 +73,10 @@ name|Quoted
 init|=
 literal|0
 block|,
-comment|///< '#include ""' paths, added by'gcc -iquote'.
+comment|///< '\#include ""' paths, added by 'gcc -iquote'.
 name|Angled
 block|,
-comment|///< Paths for '#include<>' added by '-I'.
+comment|///< Paths for '\#include<>' added by '-I'.
 name|IndexHeaderMap
 block|,
 comment|///< Like Angled, but marks header maps used when
@@ -211,6 +211,39 @@ argument_list|)
 block|{}
 block|}
 struct|;
+struct|struct
+name|SystemHeaderPrefix
+block|{
+comment|/// A prefix to be matched against paths in \#include directives.
+name|std
+operator|::
+name|string
+name|Prefix
+expr_stmt|;
+comment|/// True if paths beginning with this prefix should be treated as system
+comment|/// headers.
+name|bool
+name|IsSystemHeader
+decl_stmt|;
+name|SystemHeaderPrefix
+argument_list|(
+argument|StringRef Prefix
+argument_list|,
+argument|bool IsSystemHeader
+argument_list|)
+block|:
+name|Prefix
+argument_list|(
+name|Prefix
+argument_list|)
+operator|,
+name|IsSystemHeader
+argument_list|(
+argument|IsSystemHeader
+argument_list|)
+block|{}
+block|}
+struct|;
 comment|/// If non-empty, the directory to use as a "virtual system root" for include
 comment|/// paths.
 name|std
@@ -226,6 +259,15 @@ operator|<
 name|Entry
 operator|>
 name|UserEntries
+expr_stmt|;
+comment|/// User-specified system header prefixes.
+name|std
+operator|::
+name|vector
+operator|<
+name|SystemHeaderPrefix
+operator|>
+name|SystemHeaderPrefixes
 expr_stmt|;
 comment|/// The directory which holds the compiler resource files (builtin includes,
 comment|/// etc.).
@@ -360,6 +402,29 @@ argument_list|,
 name|IsInternal
 argument_list|,
 name|ImplicitExternC
+argument_list|)
+argument_list|)
+block|;   }
+comment|/// AddSystemHeaderPrefix - Override whether \#include directives naming a
+comment|/// path starting with \arg Prefix should be considered as naming a system
+comment|/// header.
+name|void
+name|AddSystemHeaderPrefix
+argument_list|(
+argument|StringRef Prefix
+argument_list|,
+argument|bool IsSystemHeader
+argument_list|)
+block|{
+name|SystemHeaderPrefixes
+operator|.
+name|push_back
+argument_list|(
+name|SystemHeaderPrefix
+argument_list|(
+name|Prefix
+argument_list|,
+name|IsSystemHeader
 argument_list|)
 argument_list|)
 block|;   }

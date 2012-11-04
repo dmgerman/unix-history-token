@@ -594,6 +594,16 @@ operator|&
 name|Layout
 argument_list|)
 block|;
+name|void
+name|WriteLinkeditLoadCommand
+argument_list|(
+argument|uint32_t Type
+argument_list|,
+argument|uint32_t DataOffset
+argument_list|,
+argument|uint32_t DataSize
+argument_list|)
+block|;
 comment|// FIXME: We really need to improve the relocation validation. Basically, we
 comment|// want to implement a separate computation which evaluates the relocation
 comment|// entry as the linker would, and verifies that the resultant fixup value is

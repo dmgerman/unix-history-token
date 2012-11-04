@@ -965,7 +965,7 @@ literal|0xf5
 case|:
 return|return
 operator|(
-literal|"SECURITY_FREE_LOCK"
+literal|"SECURITY_FREEZE_LOCK"
 operator|)
 return|;
 case|case
@@ -973,7 +973,7 @@ literal|0xf6
 case|:
 return|return
 operator|(
-literal|"SECURITY DISABLE PASSWORD"
+literal|"SECURITY_DISABLE_PASSWORD"
 operator|)
 return|;
 case|case
@@ -2205,7 +2205,7 @@ name|cmd
 operator|.
 name|device
 operator|=
-literal|0x40
+name|ATA_DEV_LBA
 operator||
 operator|(
 operator|(
@@ -2369,7 +2369,7 @@ name|cmd
 operator|.
 name|device
 operator|=
-literal|0x40
+name|ATA_DEV_LBA
 expr_stmt|;
 name|ataio
 operator|->
@@ -2526,7 +2526,7 @@ name|cmd
 operator|.
 name|device
 operator|=
-literal|0x40
+name|ATA_DEV_LBA
 expr_stmt|;
 name|ataio
 operator|->

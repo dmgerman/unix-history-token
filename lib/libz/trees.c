@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* trees.c -- output deflated data using Huffman coding  * Copyright (C) 1995-2010 Jean-loup Gailly  * detect_data_type() function provided freely by Cosmin Truta, 2006  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* trees.c -- output deflated data using Huffman coding  * Copyright (C) 1995-2012 Jean-loup Gailly  * detect_data_type() function provided freely by Cosmin Truta, 2006  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_comment
@@ -348,17 +348,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* The lengths of the bit length codes are sent in order of decreasing  * probability, to avoid transmitting the lengths for unused bit length codes.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|Buf_size
-value|(8 * 2*sizeof(char))
-end_define
-
-begin_comment
-comment|/* Number of bits used within bi_buf. (bi_buf might be implemented on  * more than 16 bits on some systems.)  */
 end_comment
 
 begin_comment
@@ -2204,13 +2193,6 @@ name|bi_valid
 operator|=
 literal|0
 expr_stmt|;
-name|s
-operator|->
-name|last_eob_len
-operator|=
-literal|8
-expr_stmt|;
-comment|/* enough lookahead for inflate */
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -4962,7 +4944,31 @@ block|}
 end_function
 
 begin_comment
-comment|/* ===========================================================================  * Send one empty static block to give enough lookahead for inflate.  * This takes 10 bits, of which 7 may remain in the bit buffer.  * The current inflate code requires 9 bits of lookahead. If the  * last two codes for the previous block (real code plus EOB) were coded  * on 5 bits or less, inflate may have only 5+3 bits of lookahead to decode  * the last real code. In this case we send two empty static blocks instead  * of one. (There are no problems if the previous block is stored or fixed.)  * To simplify the code, we assume the worst case of last real code encoded  * on one bit only.  */
+comment|/* ===========================================================================  * Flush the bits in the bit buffer to pending output (leaves at most 7 bits)  */
+end_comment
+
+begin_function
+name|void
+name|ZLIB_INTERNAL
+name|_tr_flush_bits
+parameter_list|(
+name|s
+parameter_list|)
+name|deflate_state
+modifier|*
+name|s
+decl_stmt|;
+block|{
+name|bi_flush
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* ===========================================================================  * Send one empty static block to give enough lookahead for inflate.  * This takes 10 bits, of which 7 may remain in the bit buffer.  */
 end_comment
 
 begin_function
@@ -5013,67 +5019,6 @@ name|bi_flush
 argument_list|(
 name|s
 argument_list|)
-expr_stmt|;
-comment|/* Of the 10 bits for the empty block, we have already sent      * (10 - bi_valid) bits. The lookahead for the last real code (before      * the EOB of the previous block) was thus at least one plus the length      * of the EOB plus what we have just sent of the empty static block.      */
-if|if
-condition|(
-literal|1
-operator|+
-name|s
-operator|->
-name|last_eob_len
-operator|+
-literal|10
-operator|-
-name|s
-operator|->
-name|bi_valid
-operator|<
-literal|9
-condition|)
-block|{
-name|send_bits
-argument_list|(
-name|s
-argument_list|,
-name|STATIC_TREES
-operator|<<
-literal|1
-argument_list|,
-literal|3
-argument_list|)
-expr_stmt|;
-name|send_code
-argument_list|(
-name|s
-argument_list|,
-name|END_BLOCK
-argument_list|,
-name|static_ltree
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|s
-operator|->
-name|compressed_len
-operator|+=
-literal|10L
-expr_stmt|;
-endif|#
-directive|endif
-name|bi_flush
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-block|}
-name|s
-operator|->
-name|last_eob_len
-operator|=
-literal|7
 expr_stmt|;
 block|}
 end_function
@@ -6200,17 +6145,6 @@ argument_list|,
 name|ltree
 argument_list|)
 expr_stmt|;
-name|s
-operator|->
-name|last_eob_len
-operator|=
-name|ltree
-index|[
-name|END_BLOCK
-index|]
-operator|.
-name|Len
-expr_stmt|;
 block|}
 comment|/* ===========================================================================  * Check if the data type is TEXT or BINARY, using the following algorithm:  * - TEXT if the two conditions below are satisfied:  *    a) There are no non-portable control characters belonging to the  *       "black list" (0..6, 14..25, 28..31).  *    b) There is at least one printable character belonging to the  *       "white list" (9 {TAB}, 10 {LF}, 13 {CR}, 32..255).  * - BINARY otherwise.  * - The following partially-portable control characters form a  *   "gray list" that is ignored in this detection algorithm:  *   (7 {BEL}, 8 {BS}, 11 {VT}, 12 {FF}, 26 {SUB}, 27 {ESC}).  * IN assertion: the fields Freq of dyn_ltree are set.  */
 name|local
@@ -6607,13 +6541,6 @@ name|s
 argument_list|)
 expr_stmt|;
 comment|/* align on byte boundary */
-name|s
-operator|->
-name|last_eob_len
-operator|=
-literal|8
-expr_stmt|;
-comment|/* enough lookahead for inflate */
 if|if
 condition|(
 name|header

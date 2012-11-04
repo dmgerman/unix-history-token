@@ -284,6 +284,8 @@ argument_list|,
 name|debug
 argument_list|,
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|uhub_debug
@@ -410,12 +412,6 @@ define|#
 directive|define
 name|UHUB_FLAG_DID_EXPLORE
 value|0x01
-name|char
-name|sc_name
-index|[
-literal|32
-index|]
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -722,11 +718,7 @@ argument_list|,
 name|uhub_driver_added
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1598,7 +1590,7 @@ name|NULL
 argument_list|,
 name|USB_MS_TO_TICKS
 argument_list|(
-name|USB_PORT_POWERUP_DELAY
+name|usb_port_powerup_delay
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1964,6 +1956,28 @@ expr_stmt|;
 block|}
 block|}
 comment|/* 	 * Figure out the device mode 	 * 	 * NOTE: This part is currently FreeBSD specific. 	 */
+if|if
+condition|(
+name|udev
+operator|->
+name|parent_hub
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* inherit mode from the parent HUB */
+name|mode
+operator|=
+name|udev
+operator|->
+name|parent_hub
+operator|->
+name|flags
+operator|.
+name|usb_mode
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|sc
@@ -3411,27 +3425,6 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
-name|snprintf
-argument_list|(
-name|sc
-operator|->
-name|sc_name
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|sc
-operator|->
-name|sc_name
-argument_list|)
-argument_list|,
-literal|"%s"
-argument_list|,
-name|device_get_nameunit
-argument_list|(
-name|dev
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|device_set_usb_desc
 argument_list|(
 name|dev
@@ -3648,7 +3641,7 @@ operator|*
 name|UHD_PWRON_FACTOR
 operator|)
 operator|+
-name|USB_EXTRA_POWER_UP_TIME
+name|usb_extra_power_up_time
 operator|)
 expr_stmt|;
 comment|/* get complete HUB descriptor */
@@ -3848,7 +3841,7 @@ operator|*
 name|UHD_PWRON_FACTOR
 operator|)
 operator|+
-name|USB_EXTRA_POWER_UP_TIME
+name|usb_extra_power_up_time
 operator|)
 expr_stmt|;
 comment|/* get complete HUB descriptor */
@@ -3976,7 +3969,7 @@ operator|*
 name|UHD_PWRON_FACTOR
 operator|)
 operator|+
-name|USB_EXTRA_POWER_UP_TIME
+name|usb_extra_power_up_time
 operator|)
 expr_stmt|;
 break|break;
@@ -6552,12 +6545,14 @@ operator|+=
 name|len
 expr_stmt|;
 block|}
-comment|/* check double buffered transfers */
+comment|/* 		 * Check double buffered transfers. Only stream ID 		 * equal to zero is valid here! 		 */
 name|TAILQ_FOREACH
 argument_list|(
 argument|pipe_xfer
 argument_list|,
-argument|&xfer->endpoint->endpoint_q.head
+argument|&xfer->endpoint->endpoint_q[
+literal|0
+argument|].head
 argument_list|,
 argument|wait_entry
 argument_list|)
@@ -8449,7 +8444,7 @@ name|NULL
 argument_list|,
 name|USB_MS_TO_TICKS
 argument_list|(
-name|USB_PORT_RESUME_DELAY
+name|usb_port_resume_delay
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -8993,7 +8988,7 @@ name|NULL
 argument_list|,
 name|USB_MS_TO_TICKS
 argument_list|(
-name|USB_PORT_RESUME_DELAY
+name|usb_port_resume_delay
 argument_list|)
 argument_list|)
 expr_stmt|;

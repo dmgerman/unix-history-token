@@ -316,6 +316,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|EXT_G_MDIO_DIV_WITH_HW_DIV64
+value|0x00000010
+end_define
+
+begin_define
+define|#
+directive|define
 name|EXT_G_MDIO_RD_STAT_MASK
 value|0x0000FFFF
 end_define

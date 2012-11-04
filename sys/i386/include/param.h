@@ -430,7 +430,7 @@ comment|/* pages of kstack guard; 0 disables */
 end_comment
 
 begin_comment
-comment|/*  * Ceiling on amount of swblock kva space, can be changed via  * the kern.maxswzone /boot/loader.conf variable.  */
+comment|/*  * Ceiling on amount of swblock kva space, can be changed via  * the kern.maxswzone /boot/loader.conf variable.  *  * 276 is sizeof(struct swblock), but we do not always have a definition  * in scope for struct swblock, so we have to hardcode it.  Each struct  * swblock holds metadata for 32 pages, so in theory, this is enough for  * 16 GB of swap.  In practice, however, the usable amount is considerably  * lower due to fragmentation.  */
 end_comment
 
 begin_ifndef
@@ -443,7 +443,7 @@ begin_define
 define|#
 directive|define
 name|VM_SWZONE_SIZE_MAX
-value|(32 * 1024 * 1024)
+value|(276 * 128 * 1024)
 end_define
 
 begin_endif

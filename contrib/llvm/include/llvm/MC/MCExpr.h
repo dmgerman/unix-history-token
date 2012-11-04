@@ -556,6 +556,12 @@ comment|// symbol@ha
 name|VK_PPC_GAS_LO16
 block|,
 comment|// symbol@l
+name|VK_PPC_TPREL16_HA
+block|,
+comment|// symbol@tprel@ha
+name|VK_PPC_TPREL16_LO
+block|,
+comment|// symbol@tprel@l
 name|VK_Mips_GPREL
 block|,
 name|VK_Mips_GOT_CALL
@@ -591,6 +597,10 @@ block|,
 name|VK_Mips_GOT_PAGE
 block|,
 name|VK_Mips_GOT_OFST
+block|,
+name|VK_Mips_HIGHER
+block|,
+name|VK_Mips_HIGHEST
 block|}
 block|;
 name|private

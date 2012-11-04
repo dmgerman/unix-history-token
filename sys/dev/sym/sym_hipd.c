@@ -5788,10 +5788,6 @@ name|maxburst
 decl_stmt|;
 comment|/* log base 2 of dwords burst	*/
 name|u_char
-name|maxsegcnt
-decl_stmt|;
-comment|/* Max DMA S/G segments		*/
-name|u_char
 name|maxwide
 decl_stmt|;
 comment|/* Maximum transfer width	*/
@@ -31695,11 +31691,9 @@ name|cpi
 operator|->
 name|maxio
 operator|=
-name|np
-operator|->
-name|maxsegcnt
+name|SYM_CONF_MAX_SG
 operator|*
-name|SYM_CONF_DMA_BOUNDARY
+name|PAGE_SIZE
 expr_stmt|;
 name|sym_xpt_done2
 argument_list|(
@@ -33337,11 +33331,6 @@ name|FE_LEDC
 block|}
 block|}
 decl_stmt|;
-define|#
-directive|define
-name|sym_pci_num_devs
-define|\
-value|(sizeof(sym_pci_dev_table) / sizeof(sym_pci_dev_table[0]))
 comment|/*  *  Look up the chip table.  *  *  Return a pointer to the chip entry if found,  *  zero otherwise.  */
 specifier|static
 specifier|const
@@ -33403,7 +33392,10 @@ literal|0
 init|;
 name|i
 operator|<
-name|sym_pci_num_devs
+name|nitems
+argument_list|(
+name|sym_pci_dev_table
+argument_list|)
 condition|;
 name|i
 operator|++
@@ -33809,23 +33801,6 @@ name|cam_ccbq
 argument_list|)
 expr_stmt|;
 comment|/* 	 *  Allocate a tag for the DMA of user data. 	 */
-name|np
-operator|->
-name|maxsegcnt
-operator|=
-name|MIN
-argument_list|(
-name|SYM_CONF_MAX_SG
-argument_list|,
-operator|(
-name|MAXPHYS
-operator|/
-name|SYM_CONF_DMA_BOUNDARY
-operator|)
-operator|+
-literal|1
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|bus_dma_tag_create
@@ -33846,15 +33821,13 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-name|BUS_SPACE_MAXSIZE
+name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
-name|np
-operator|->
-name|maxsegcnt
+name|SYM_CONF_MAX_SG
 argument_list|,
 name|SYM_CONF_DMA_BOUNDARY
 argument_list|,
-name|BUS_DMA_ALLOCNOW
+literal|0
 argument_list|,
 name|busdma_lock_mutex
 argument_list|,

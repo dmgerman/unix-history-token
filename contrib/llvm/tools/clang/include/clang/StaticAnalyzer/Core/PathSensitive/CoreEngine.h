@@ -214,10 +214,12 @@ expr_stmt|;
 comment|/// WList - A set of queued nodes that need to be processed by the
 comment|///  worklist algorithm.  It is up to the implementation of WList to decide
 comment|///  the order that nodes are processed.
+name|OwningPtr
+operator|<
 name|WorkList
-modifier|*
+operator|>
 name|WList
-decl_stmt|;
+expr_stmt|;
 comment|/// BCounterFactory - A factory object for created BlockCounter objects.
 comment|///   These are used to record for key nodes in the ExplodedGraph the
 comment|///   number of times different CFGBlocks have been visited along a path.
@@ -364,7 +366,7 @@ operator|)
 decl_stmt|;
 name|ExplodedNode
 modifier|*
-name|generateCallExitNode
+name|generateCallExitBeginNode
 parameter_list|(
 name|ExplodedNode
 modifier|*
@@ -373,8 +375,7 @@ parameter_list|)
 function_decl|;
 name|public
 label|:
-comment|/// Construct a CoreEngine object to analyze the provided CFG using
-comment|///  a DFS exploration of the exploded graph.
+comment|/// Construct a CoreEngine object to analyze the provided CFG.
 name|CoreEngine
 argument_list|(
 name|SubEngine
@@ -404,7 +405,7 @@ name|WList
 argument_list|(
 name|WorkList
 operator|::
-name|makeBFS
+name|makeDFS
 argument_list|()
 argument_list|)
 operator|,
@@ -426,13 +427,6 @@ argument_list|(
 argument|FS
 argument_list|)
 block|{}
-operator|~
-name|CoreEngine
-argument_list|()
-block|{
-name|delete
-name|WList
-block|;   }
 comment|/// getGraph - Returns the exploded graph.
 name|ExplodedGraph
 operator|&
@@ -600,6 +594,9 @@ specifier|const
 block|{
 return|return
 name|WList
+operator|.
+name|get
+argument_list|()
 return|;
 block|}
 name|BlocksExhausted
@@ -718,6 +715,7 @@ comment|// TODO: Turn into a calss.
 struct|struct
 name|NodeBuilderContext
 block|{
+specifier|const
 name|CoreEngine
 modifier|&
 name|Eng
@@ -733,6 +731,7 @@ name|Pred
 decl_stmt|;
 name|NodeBuilderContext
 argument_list|(
+specifier|const
 name|CoreEngine
 operator|&
 name|E

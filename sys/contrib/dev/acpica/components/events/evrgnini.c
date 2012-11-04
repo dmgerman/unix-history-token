@@ -805,11 +805,11 @@ block|{
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-name|ACPI_DEVICE_ID
+name|ACPI_PNP_DEVICE_ID
 modifier|*
 name|Hid
 decl_stmt|;
-name|ACPI_DEVICE_ID_LIST
+name|ACPI_PNP_DEVICE_ID_LIST
 modifier|*
 name|Cid
 decl_stmt|;

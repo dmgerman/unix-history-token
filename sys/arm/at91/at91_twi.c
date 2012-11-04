@@ -1268,15 +1268,6 @@ operator|->
 name|cwgr
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"setting cwgr to %#x\n"
-argument_list|,
-name|sc
-operator|->
-name|cwgr
-argument_list|)
-expr_stmt|;
 name|AT91_TWI_UNLOCK
 argument_list|(
 name|sc

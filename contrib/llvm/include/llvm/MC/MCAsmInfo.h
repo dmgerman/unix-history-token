@@ -329,6 +329,12 @@ comment|// FIXME: Make this a more general encoding setting?
 name|bool
 name|AllowUTF8
 decl_stmt|;
+comment|/// UseDataRegionDirectives - This is true if data region markers should
+comment|/// be printed as ".data_region/.end_data_region" directives. If false,
+comment|/// use "$d/$a" labels instead.
+name|bool
+name|UseDataRegionDirectives
+decl_stmt|;
 comment|//===--- Data Emission Directives -------------------------------------===//
 comment|/// ZeroDirective - this should be set to the directive used to get some
 comment|/// number of zero bytes emitted to the current section.  Common cases are
@@ -384,44 +390,6 @@ modifier|*
 name|Data64bitsDirective
 decl_stmt|;
 comment|// Defaults to "\t.quad\t"
-comment|/// [Data|Code]Begin - These magic labels are used to marked a region as
-comment|/// data or code, and are used to provide additional information for
-comment|/// correct disassembly on targets that like to mix data and code within
-comment|/// a segment.  These labels will be implicitly suffixed by the streamer
-comment|/// to give them unique names.
-specifier|const
-name|char
-modifier|*
-name|DataBegin
-decl_stmt|;
-comment|// Defaults to "$d."
-specifier|const
-name|char
-modifier|*
-name|CodeBegin
-decl_stmt|;
-comment|// Defaults to "$a."
-specifier|const
-name|char
-modifier|*
-name|JT8Begin
-decl_stmt|;
-comment|// Defaults to "$a."
-specifier|const
-name|char
-modifier|*
-name|JT16Begin
-decl_stmt|;
-comment|// Defaults to "$a."
-specifier|const
-name|char
-modifier|*
-name|JT32Begin
-decl_stmt|;
-comment|// Defaults to "$a."
-name|bool
-name|SupportsDataRegions
-decl_stmt|;
 comment|/// GPRel64Directive - if non-null, a directive that is used to emit a word
 comment|/// which should be relocated as a 64-bit GP-relative offset, e.g. .gpdword
 comment|/// on Mips.
@@ -658,21 +626,10 @@ modifier|*
 name|DwarfSectionOffsetDirective
 decl_stmt|;
 comment|// Defaults to NULL
-comment|/// DwarfRequiresRelocationForSectionOffset - True if we need to produce a
-comment|/// relocation when we want a section offset in dwarf.
+comment|/// DwarfUsesRelocationsAcrossSections - True if Dwarf2 output generally
+comment|/// uses relocations for references to other .debug_* sections.
 name|bool
-name|DwarfRequiresRelocationForSectionOffset
-decl_stmt|;
-comment|// Defaults to true;
-comment|/// DwarfUsesLabelOffsetDifference - True if Dwarf2 output can
-comment|/// use EmitLabelOffsetDifference.
-name|bool
-name|DwarfUsesLabelOffsetForRanges
-decl_stmt|;
-comment|/// DwarfUsesRelocationsForStringPool - True if this Dwarf output must use
-comment|/// relocations to refer to entries in the string pool.
-name|bool
-name|DwarfUsesRelocationsForStringPool
+name|DwarfUsesRelocationsAcrossSections
 decl_stmt|;
 comment|/// DwarfRegNumForCFI - True if dwarf register numbers are printed
 comment|/// instead of symbolic register names in .cfi_* directives.
@@ -680,15 +637,6 @@ name|bool
 name|DwarfRegNumForCFI
 decl_stmt|;
 comment|// Defaults to false;
-comment|//===--- CBE Asm Translation Table -----------------------------------===//
-specifier|const
-name|char
-modifier|*
-specifier|const
-modifier|*
-name|AsmTransCBE
-decl_stmt|;
-comment|// Defaults to empty
 comment|//===--- Prologue State ----------------------------------------------===//
 name|std
 operator|::
@@ -895,71 +843,6 @@ specifier|const
 block|{
 return|return
 name|GPRel32Directive
-return|;
-block|}
-comment|/// [Code|Data]Begin label name accessors.
-specifier|const
-name|char
-operator|*
-name|getCodeBeginLabelName
-argument_list|()
-specifier|const
-block|{
-return|return
-name|CodeBegin
-return|;
-block|}
-specifier|const
-name|char
-operator|*
-name|getDataBeginLabelName
-argument_list|()
-specifier|const
-block|{
-return|return
-name|DataBegin
-return|;
-block|}
-specifier|const
-name|char
-operator|*
-name|getJumpTable8BeginLabelName
-argument_list|()
-specifier|const
-block|{
-return|return
-name|JT8Begin
-return|;
-block|}
-specifier|const
-name|char
-operator|*
-name|getJumpTable16BeginLabelName
-argument_list|()
-specifier|const
-block|{
-return|return
-name|JT16Begin
-return|;
-block|}
-specifier|const
-name|char
-operator|*
-name|getJumpTable32BeginLabelName
-argument_list|()
-specifier|const
-block|{
-return|return
-name|JT32Begin
-return|;
-block|}
-name|bool
-name|getSupportsDataRegions
-argument_list|()
-specifier|const
-block|{
-return|return
-name|SupportsDataRegions
 return|;
 block|}
 comment|/// getNonexecutableStackSection - Targets can implement this method to
@@ -1280,6 +1163,15 @@ return|return
 name|AllowUTF8
 return|;
 block|}
+name|bool
+name|doesSupportDataRegionDirectives
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UseDataRegionDirectives
+return|;
+block|}
 specifier|const
 name|char
 operator|*
@@ -1588,30 +1480,12 @@ name|DwarfSectionOffsetDirective
 return|;
 block|}
 name|bool
-name|doesDwarfRequireRelocationForSectionOffset
+name|doesDwarfUseRelocationsAcrossSections
 argument_list|()
 specifier|const
 block|{
 return|return
-name|DwarfRequiresRelocationForSectionOffset
-return|;
-block|}
-name|bool
-name|doesDwarfUseLabelOffsetForRanges
-argument_list|()
-specifier|const
-block|{
-return|return
-name|DwarfUsesLabelOffsetForRanges
-return|;
-block|}
-name|bool
-name|doesDwarfUseRelocationsForStringPool
-argument_list|()
-specifier|const
-block|{
-return|return
-name|DwarfUsesRelocationsForStringPool
+name|DwarfUsesRelocationsAcrossSections
 return|;
 block|}
 name|bool
@@ -1621,19 +1495,6 @@ specifier|const
 block|{
 return|return
 name|DwarfRegNumForCFI
-return|;
-block|}
-specifier|const
-name|char
-operator|*
-specifier|const
-operator|*
-name|getAsmCBE
-argument_list|()
-specifier|const
-block|{
-return|return
-name|AsmTransCBE
 return|;
 block|}
 name|void

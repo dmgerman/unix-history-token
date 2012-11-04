@@ -128,16 +128,14 @@ block|}
 struct|;
 end_struct
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|LIST_HEAD
 argument_list|(
 argument|acpi_user_mapping_list
 argument_list|,
 argument|acpi_user_mapping
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|maplist
 expr_stmt|;
 end_expr_stmt

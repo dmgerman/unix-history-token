@@ -293,6 +293,37 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SIGINFO
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SIGNAL_REQ_INFO
+value|SIGINFO
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|SIGUSR1
+end_elif
+
+begin_define
+define|#
+directive|define
+name|SIGNAL_REQ_INFO
+value|SIGUSR1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|netdissect_options
 name|Gndo
@@ -612,7 +643,7 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|SIGINFO
+name|SIGNAL_REQ_INFO
 end_ifdef
 
 begin_function_decl
@@ -5729,7 +5760,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|SIGINFO
+name|SIGNAL_REQ_INFO
 comment|/* 	 * We can't get statistics when reading from a file rather 	 * than capturing from a device. 	 */
 if|if
 condition|(
@@ -5742,7 +5773,7 @@ name|void
 operator|)
 name|setsignal
 argument_list|(
-name|SIGINFO
+name|SIGNAL_REQ_INFO
 argument_list|,
 name|requestinfo
 argument_list|)
@@ -7551,7 +7582,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|SIGINFO
+name|SIGNAL_REQ_INFO
 end_ifdef
 
 begin_function

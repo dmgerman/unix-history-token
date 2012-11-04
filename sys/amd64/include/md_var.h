@@ -106,6 +106,13 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|u_int
+name|cpu_stdext_feature
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_int
 name|cpu_fxsr
 decl_stmt|;
 end_decl_stmt
@@ -164,6 +171,14 @@ begin_decl_stmt
 specifier|extern
 name|u_int
 name|cpu_vendor_id
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|ctx_switch_xsave
+index|[]
 decl_stmt|;
 end_decl_stmt
 

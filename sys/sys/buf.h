@@ -675,12 +675,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|B_NEEDSGIANT
+name|B_02000000
 value|0x02000000
 end_define
 
 begin_comment
-comment|/* Buffer's vnode needs giant. */
+comment|/* Available flag. */
 end_comment
 
 begin_define
@@ -753,7 +753,7 @@ begin_define
 define|#
 directive|define
 name|PRINT_BUF_FLAGS
-value|"\20\40remfree\37cluster\36vmio\35ram\34b27" \ 	"\33paging\32b25\31b24\30b23\27relbuf\26dirty\25b20" \ 	"\24b19\23b18\22clusterok\21malloc\20nocache\17b14\16inval" \ 	"\15b12\14b11\13eintr\12done\11persist\10delwri\7validsuspwrt" \ 	"\6cache\5deferred\4direct\3async\2needcommit\1age"
+value|"\20\40remfree\37cluster\36vmio\35ram\34managed" \ 	"\33paging\32needsgiant\31nocopy\30b23\27relbuf\26dirty\25b20" \ 	"\24b19\23b18\22clusterok\21malloc\20nocache\17b14\16inval" \ 	"\15b12\14b11\13eintr\12done\11persist\10delwri\7validsuspwrt" \ 	"\6cache\5deferred\4direct\3async\2needcommit\1age"
 end_define
 
 begin_comment
@@ -818,6 +818,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PRINT_BUF_XFLAGS
+value|"\20\7altdata\6bkgrdmarker\5bkgrdwrite\2clean\1dirty"
+end_define
+
+begin_define
+define|#
+directive|define
 name|NOOFFSET
 value|(-1LL)
 end_define
@@ -873,6 +880,13 @@ end_define
 begin_comment
 comment|/* buf is counted in numfreebufs */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|PRINT_BUF_VFLAGS
+value|"\20\40infreecnt\3bkgrdwait\2bkgrdinprog\1scanned"
+end_define
 
 begin_ifdef
 ifdef|#
@@ -1565,11 +1579,6 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-name|BUF_LOCKFREE
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -1761,17 +1770,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|buf_maxio
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* nominal maximum I/O for buffer */
-end_comment
-
-begin_decl_stmt
-specifier|extern
 name|struct
 name|buf
 modifier|*
@@ -1781,29 +1779,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* The buffer headers. */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|buffers
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* The buffer contents. */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|bufpages
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Number of memory pages in the buffer pool. */
 end_comment
 
 begin_decl_stmt

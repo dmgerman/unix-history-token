@@ -138,13 +138,6 @@ begin_comment
 comment|/* seconds */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|retval
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Set the date in the machines controlled by timedaemons by communicating the  * new date to the local timedaemon.  If the timedaemon is in the master state,  * it performs the correction on all slaves.  If it is in the slave state, it  * notifies the master that a correction is needed.  * Returns 0 on success.  Returns> 0 on failure, setting retval to 2;  */
 end_comment

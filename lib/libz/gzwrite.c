@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* gzwrite.c -- zlib functions for writing gzip files  * Copyright (C) 2004, 2005, 2010 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* gzwrite.c -- zlib functions for writing gzip files  * Copyright (C) 2004, 2005, 2010, 2011, 2012 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
+end_comment
+
+begin_comment
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_include
@@ -90,21 +94,10 @@ operator|->
 name|strm
 operator|)
 decl_stmt|;
-comment|/* allocate input and output buffers */
+comment|/* allocate input buffer */
 name|state
 operator|->
 name|in
-operator|=
-name|malloc
-argument_list|(
-name|state
-operator|->
-name|want
-argument_list|)
-expr_stmt|;
-name|state
-operator|->
-name|out
 operator|=
 name|malloc
 argument_list|(
@@ -120,7 +113,45 @@ operator|->
 name|in
 operator|==
 name|NULL
-operator|||
+condition|)
+block|{
+name|gz_error
+argument_list|(
+name|state
+argument_list|,
+name|Z_MEM_ERROR
+argument_list|,
+literal|"out of memory"
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+comment|/* only need output buffer and deflate state if compressing */
+if|if
+condition|(
+operator|!
+name|state
+operator|->
+name|direct
+condition|)
+block|{
+comment|/* allocate output buffer */
+name|state
+operator|->
+name|out
+operator|=
+name|malloc
+argument_list|(
+name|state
+operator|->
+name|want
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|state
 operator|->
 name|out
@@ -128,29 +159,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
-name|state
-operator|->
-name|out
-operator|!=
-name|NULL
-condition|)
-name|free
-argument_list|(
-name|state
-operator|->
-name|out
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|state
-operator|->
-name|in
-operator|!=
-name|NULL
-condition|)
 name|free
 argument_list|(
 name|state
@@ -203,11 +211,11 @@ name|level
 argument_list|,
 name|Z_DEFLATED
 argument_list|,
-literal|15
+name|MAX_WBITS
 operator|+
 literal|16
 argument_list|,
-literal|8
+name|DEF_MEM_LEVEL
 argument_list|,
 name|state
 operator|->
@@ -221,6 +229,13 @@ operator|!=
 name|Z_OK
 condition|)
 block|{
+name|free
+argument_list|(
+name|state
+operator|->
+name|out
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|state
@@ -242,6 +257,7 @@ operator|-
 literal|1
 return|;
 block|}
+block|}
 comment|/* mark state as initialized */
 name|state
 operator|->
@@ -251,7 +267,15 @@ name|state
 operator|->
 name|want
 expr_stmt|;
-comment|/* initialize write buffer */
+comment|/* initialize write buffer if compressing */
+if|if
+condition|(
+operator|!
+name|state
+operator|->
+name|direct
+condition|)
+block|{
 name|strm
 operator|->
 name|avail_out
@@ -270,12 +294,15 @@ name|out
 expr_stmt|;
 name|state
 operator|->
+name|x
+operator|.
 name|next
 operator|=
 name|strm
 operator|->
 name|next_out
 expr_stmt|;
+block|}
 return|return
 literal|0
 return|;
@@ -283,7 +310,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Compress whatever is at avail_in and next_in and write to the output file.    Return -1 if there is an error writing to the output file, otherwise 0.    flush is assumed to be a valid deflate() flush value.  If flush is Z_FINISH,    then the deflate() state is reset to start a new gzip stream. */
+comment|/* Compress whatever is at avail_in and next_in and write to the output file.    Return -1 if there is an error writing to the output file, otherwise 0.    flush is assumed to be a valid deflate() flush value.  If flush is Z_FINISH,    then the deflate() state is reset to start a new gzip stream.  If gz->direct    is true, then simply write to the output file without compressing, and    ignore flush. */
 end_comment
 
 begin_function
@@ -341,6 +368,72 @@ return|return
 operator|-
 literal|1
 return|;
+comment|/* write directly if requested */
+if|if
+condition|(
+name|state
+operator|->
+name|direct
+condition|)
+block|{
+name|got
+operator|=
+name|write
+argument_list|(
+name|state
+operator|->
+name|fd
+argument_list|,
+name|strm
+operator|->
+name|next_in
+argument_list|,
+name|strm
+operator|->
+name|avail_in
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|got
+operator|<
+literal|0
+operator|||
+operator|(
+name|unsigned
+operator|)
+name|got
+operator|!=
+name|strm
+operator|->
+name|avail_in
+condition|)
+block|{
+name|gz_error
+argument_list|(
+name|state
+argument_list|,
+name|Z_ERRNO
+argument_list|,
+name|zstrerror
+argument_list|()
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+name|strm
+operator|->
+name|avail_in
+operator|=
+literal|0
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 comment|/* run deflate() on provided input until it produces no more output */
 name|ret
 operator|=
@@ -386,6 +479,8 @@ name|next_out
 operator|-
 name|state
 operator|->
+name|x
+operator|.
 name|next
 argument_list|)
 expr_stmt|;
@@ -405,6 +500,8 @@ name|fd
 argument_list|,
 name|state
 operator|->
+name|x
+operator|.
 name|next
 argument_list|,
 name|have
@@ -465,6 +562,8 @@ expr_stmt|;
 block|}
 name|state
 operator|->
+name|x
+operator|.
 name|next
 operator|=
 name|strm
@@ -671,6 +770,8 @@ name|in
 expr_stmt|;
 name|state
 operator|->
+name|x
+operator|.
 name|pos
 operator|+=
 name|n
@@ -800,7 +901,7 @@ name|gz_error
 argument_list|(
 name|state
 argument_list|,
-name|Z_BUF_ERROR
+name|Z_DATA_ERROR
 argument_list|,
 literal|"requested length does not fit in int"
 argument_list|)
@@ -943,6 +1044,8 @@ name|n
 expr_stmt|;
 name|state
 operator|->
+name|x
+operator|.
 name|pos
 operator|+=
 name|n
@@ -1025,6 +1128,8 @@ name|buf
 expr_stmt|;
 name|state
 operator|->
+name|x
+operator|.
 name|pos
 operator|+=
 name|len
@@ -1209,11 +1314,15 @@ name|c
 expr_stmt|;
 name|state
 operator|->
+name|x
+operator|.
 name|pos
 operator|++
 expr_stmt|;
 return|return
 name|c
+operator|&
+literal|0xff
 return|;
 block|}
 comment|/* no room in buffer or not initialized, use gz_write() */
@@ -1243,6 +1352,8 @@ literal|1
 return|;
 return|return
 name|c
+operator|&
+literal|0xff
 return|;
 block|}
 end_function
@@ -1314,11 +1425,19 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|STDC
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|Z_HAVE_STDARG_H
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -1518,9 +1637,15 @@ name|void
 operator|)
 name|vsprintf
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|(
 name|state
 operator|->
 name|in
+operator|)
 argument_list|,
 name|format
 argument_list|,
@@ -1563,9 +1688,15 @@ name|len
 operator|=
 name|vsprintf
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|(
 name|state
 operator|->
 name|in
+operator|)
 argument_list|,
 name|format
 argument_list|,
@@ -1589,9 +1720,15 @@ name|void
 operator|)
 name|vsnprintf
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|(
 name|state
 operator|->
 name|in
+operator|)
 argument_list|,
 name|size
 argument_list|,
@@ -1609,9 +1746,15 @@ name|len
 operator|=
 name|strlen
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|(
 name|state
 operator|->
 name|in
+operator|)
 argument_list|)
 expr_stmt|;
 else|#
@@ -1694,6 +1837,8 @@ name|in
 expr_stmt|;
 name|state
 operator|->
+name|x
+operator|.
 name|pos
 operator|+=
 name|len
@@ -1710,7 +1855,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !STDC */
+comment|/* !STDC&& !Z_HAVE_STDARG_H */
 end_comment
 
 begin_comment
@@ -1854,6 +1999,23 @@ operator|->
 name|strm
 operator|)
 expr_stmt|;
+comment|/* check that can really pass pointer in ints */
+if|if
+condition|(
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+operator|!=
+sizeof|sizeof
+argument_list|(
+name|void
+operator|*
+argument_list|)
+condition|)
+return|return
+literal|0
+return|;
 comment|/* check that we're writing and that there's no error */
 if|if
 condition|(
@@ -1975,9 +2137,15 @@ directive|ifdef
 name|HAS_sprintf_void
 name|sprintf
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|(
 name|state
 operator|->
 name|in
+operator|)
 argument_list|,
 name|format
 argument_list|,
@@ -2053,9 +2221,15 @@ name|len
 operator|=
 name|sprintf
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|(
 name|state
 operator|->
 name|in
+operator|)
 argument_list|,
 name|format
 argument_list|,
@@ -2109,9 +2283,15 @@ directive|ifdef
 name|HAS_snprintf_void
 name|snprintf
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|(
 name|state
 operator|->
 name|in
+operator|)
 argument_list|,
 name|size
 argument_list|,
@@ -2162,9 +2342,15 @@ name|len
 operator|=
 name|strlen
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|(
 name|state
 operator|->
 name|in
+operator|)
 argument_list|)
 expr_stmt|;
 else|#
@@ -2173,9 +2359,15 @@ name|len
 operator|=
 name|snprintf
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|(
 name|state
 operator|->
 name|in
+operator|)
 argument_list|,
 name|size
 argument_list|,
@@ -2274,6 +2466,8 @@ name|in
 expr_stmt|;
 name|state
 operator|->
+name|x
+operator|.
 name|pos
 operator|+=
 name|len
@@ -2613,7 +2807,7 @@ block|{
 name|int
 name|ret
 init|=
-literal|0
+name|Z_OK
 decl_stmt|;
 name|gz_statep
 name|state
@@ -2661,8 +2855,8 @@ name|seek
 operator|=
 literal|0
 expr_stmt|;
-name|ret
-operator|+=
+if|if
+condition|(
 name|gz_zero
 argument_list|(
 name|state
@@ -2671,18 +2865,51 @@ name|state
 operator|->
 name|skip
 argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|ret
+operator|=
+name|state
+operator|->
+name|err
 expr_stmt|;
 block|}
 comment|/* flush, free memory, and close file */
-name|ret
-operator|+=
+if|if
+condition|(
+name|state
+operator|->
+name|size
+condition|)
+block|{
+if|if
+condition|(
 name|gz_comp
 argument_list|(
 name|state
 argument_list|,
 name|Z_FINISH
 argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|ret
+operator|=
+name|state
+operator|->
+name|err
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|state
+operator|->
+name|direct
+condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -2703,6 +2930,7 @@ operator|->
 name|out
 argument_list|)
 expr_stmt|;
+block|}
 name|free
 argument_list|(
 name|state
@@ -2710,6 +2938,7 @@ operator|->
 name|in
 argument_list|)
 expr_stmt|;
+block|}
 name|gz_error
 argument_list|(
 name|state
@@ -2726,14 +2955,21 @@ operator|->
 name|path
 argument_list|)
 expr_stmt|;
-name|ret
-operator|+=
+if|if
+condition|(
 name|close
 argument_list|(
 name|state
 operator|->
 name|fd
 argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|ret
+operator|=
+name|Z_ERRNO
 expr_stmt|;
 name|free
 argument_list|(
@@ -2742,10 +2978,6 @@ argument_list|)
 expr_stmt|;
 return|return
 name|ret
-condition|?
-name|Z_ERRNO
-else|:
-name|Z_OK
 return|;
 block|}
 end_function

@@ -24,16 +24,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_expr_stmt
-name|ARM_EABI_FNALIAS
-argument_list|(
-name|ldivmod
-argument_list|,
-name|divmoddi4
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/* Returns: a / b, *rem = a % b  */
 end_comment

@@ -15,42 +15,20 @@ directive|define
 name|__T4_OFFLOAD_H__
 end_define
 
-begin_comment
-comment|/* XXX: flagrant misuse of mbuf fields (during tx by TOM) */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|MBUF_EQ
+name|INIT_ULPTX_WRH
 parameter_list|(
-name|m
+name|w
+parameter_list|,
+name|wrlen
+parameter_list|,
+name|atomic
+parameter_list|,
+name|tid
 parameter_list|)
-value|(*((void **)(&(m)->m_pkthdr.rcvif)))
-end_define
-
-begin_comment
-comment|/* These have to work for !M_PKTHDR so we use a field from m_hdr. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MBUF_TX_CREDITS
-parameter_list|(
-name|m
-parameter_list|)
-value|((m)->m_hdr.pad[0])
-end_define
-
-begin_define
-define|#
-directive|define
-name|MBUF_DMA_MAPPED
-parameter_list|(
-name|m
-parameter_list|)
-value|((m)->m_hdr.pad[1])
+value|do { \ 	(w)->wr_hi = htonl(V_FW_WR_OP(FW_ULPTX_WR) | V_FW_WR_ATOMIC(atomic)); \ 	(w)->wr_mid = htonl(V_FW_WR_LEN16(DIV_ROUND_UP(wrlen, 16)) | \ 			       V_FW_WR_FLOWID(tid)); \ 	(w)->wr_lo = cpu_to_be64(0); \ } while (0)
 end_define
 
 begin_define
@@ -66,7 +44,8 @@ name|atomic
 parameter_list|,
 name|tid
 parameter_list|)
-value|do { \ 	(w)->wr.wr_hi = htonl(V_FW_WR_OP(FW_ULPTX_WR) | V_FW_WR_ATOMIC(atomic)); \ 	(w)->wr.wr_mid = htonl(V_FW_WR_LEN16(DIV_ROUND_UP(wrlen, 16)) | \ 			       V_FW_WR_FLOWID(tid)); \ 	(w)->wr.wr_lo = cpu_to_be64(0); \ } while (0)
+define|\
+value|INIT_ULPTX_WRH(&((w)->wr), wrlen, atomic, tid)
 end_define
 
 begin_define
@@ -287,11 +266,11 @@ block|}
 struct|;
 end_struct
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|TCP_OFFLOAD_DISABLE
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TCP_OFFLOAD
+end_ifdef
 
 begin_enum
 enum|enum
@@ -334,45 +313,25 @@ decl_stmt|;
 name|int
 function_decl|(
 modifier|*
-name|attach
+name|activate
 function_decl|)
 parameter_list|(
 name|struct
 name|adapter
-modifier|*
-parameter_list|,
-name|void
-modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
 name|int
 function_decl|(
 modifier|*
-name|detach
+name|deactivate
 function_decl|)
 parameter_list|(
-name|void
+name|struct
+name|adapter
 modifier|*
 parameter_list|)
 function_decl|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|uld_softc
-block|{
-name|struct
-name|uld_info
-modifier|*
-name|uld
-decl_stmt|;
-name|void
-modifier|*
-name|softc
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -415,6 +374,32 @@ parameter_list|(
 name|struct
 name|uld_info
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|t4_activate_uld
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|t4_deactivate_uld
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

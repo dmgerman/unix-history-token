@@ -10,13 +10,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|ARM_AT91_AT91RSTREG_H
+name|ARM_AT91_AT91_RSTREG_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|ARM_AT91_AT91RSTREG_H
+name|ARM_AT91_AT91_RSTREG_H
 end_define
 
 begin_define
@@ -234,13 +234,33 @@ name|RST_MR_KEY
 value|(0xa5<<24)
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__ASSEMBLER__
+end_ifndef
+
+begin_function_decl
+name|void
+name|at91_rst_cpu_reset
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* ARM_AT91_AT91RSTREG_H */
+comment|/* ARM_AT91_AT91_RSTREG_H */
 end_comment
 
 end_unit

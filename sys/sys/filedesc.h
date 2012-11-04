@@ -303,6 +303,16 @@ parameter_list|)
 value|sx_assert(&(fdp)->fd_sx, SX_XLOCKED | \ 					    SX_NOTRECURSED)
 end_define
 
+begin_define
+define|#
+directive|define
+name|FILEDESC_UNLOCK_ASSERT
+parameter_list|(
+name|fdp
+parameter_list|)
+value|sx_assert(&(fdp)->fd_sx, SX_UNLOCKED)
+end_define
+
 begin_struct_decl
 struct_decl|struct
 name|thread
@@ -341,16 +351,17 @@ modifier|*
 name|fdp
 parameter_list|,
 name|int
-name|indx
-parameter_list|,
-name|int
 name|dfd
 parameter_list|,
 name|int
 name|mode
 parameter_list|,
 name|int
-name|error
+name|openerror
+parameter_list|,
+name|int
+modifier|*
+name|indxp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -691,8 +702,13 @@ argument_list|,
 argument|int fd
 argument_list|)
 block|{
-return|return
-operator|(
+name|FILEDESC_LOCK_ASSERT
+argument_list|(
+name|fdp
+argument_list|)
+block|;
+if|if
+condition|(
 name|fd
 operator|<
 literal|0
@@ -702,9 +718,17 @@ operator|>=
 name|fdp
 operator|->
 name|fd_nfiles
-operator|?
+condition|)
+return|return
+operator|(
 name|NULL
-operator|:
+operator|)
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+operator|(
 name|fdp
 operator|->
 name|fd_ofiles
@@ -713,10 +737,10 @@ name|fd
 index|]
 operator|)
 return|;
-block|}
-end_expr_stmt
+end_return
 
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif

@@ -179,6 +179,7 @@ name|X509_CRL
 modifier|*
 name|x
 parameter_list|,
+specifier|const
 name|ASN1_TIME
 modifier|*
 name|tm
@@ -265,6 +266,7 @@ name|X509_CRL
 modifier|*
 name|x
 parameter_list|,
+specifier|const
 name|ASN1_TIME
 modifier|*
 name|tm

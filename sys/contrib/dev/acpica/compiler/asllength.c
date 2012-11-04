@@ -96,7 +96,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    LnInitLengthsWalk  *  * PARAMETERS:  ASL_WALK_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: Walk callback to initialize (and re-initialize) the node  *              subtree length(s) to zero.  The Subtree lengths are bubbled  *              up to the root node in order to get a total AML length.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    LnInitLengthsWalk  *  * PARAMETERS:  ASL_WALK_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: Walk callback to initialize (and re-initialize) the node  *              subtree length(s) to zero. The Subtree lengths are bubbled  *              up to the root node in order to get a total AML length.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -132,7 +132,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    LnPackageLengthWalk  *  * PARAMETERS:  ASL_WALK_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: Walk callback to calculate the total AML length.  *              1) Calculate the AML lengths (opcode, package length, etc.) for  *                 THIS node.  *              2) Bubbble up all of these lengths to the parent node by summing  *                 them all into the parent subtree length.  *  * Note:  The SubtreeLength represents the total AML length of all child nodes  *        in all subtrees under a given node.  Therefore, once this walk is  *        complete, the Root Node subtree length is the AML length of the entire  *        tree (and thus, the entire ACPI table)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    LnPackageLengthWalk  *  * PARAMETERS:  ASL_WALK_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: Walk callback to calculate the total AML length.  *              1) Calculate the AML lengths (opcode, package length, etc.) for  *                 THIS node.  *              2) Bubbble up all of these lengths to the parent node by summing  *                 them all into the parent subtree length.  *  * Note:  The SubtreeLength represents the total AML length of all child nodes  *        in all subtrees under a given node. Therefore, once this walk is  *        complete, the Root Node subtree length is the AML length of the entire  *        tree (and thus, the entire ACPI table)  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -920,7 +920,7 @@ name|ACPI_OBSOLETE_FUNCTIONS
 end_ifdef
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    LnAdjustLengthToRoot  *  * PARAMETERS:  Op      - Node whose Length was changed  *  * RETURN:      None.  *  * DESCRIPTION: Change the Subtree length of the given node, and bubble the  *              change all the way up to the root node.  This allows for  *              last second changes to a package length (for example, if the  *              package length encoding gets shorter or longer.)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    LnAdjustLengthToRoot  *  * PARAMETERS:  Op      - Node whose Length was changed  *  * RETURN:      None.  *  * DESCRIPTION: Change the Subtree length of the given node, and bubble the  *              change all the way up to the root node. This allows for  *              last second changes to a package length (for example, if the  *              package length encoding gets shorter or longer.)  *  ******************************************************************************/
 end_comment
 
 begin_function

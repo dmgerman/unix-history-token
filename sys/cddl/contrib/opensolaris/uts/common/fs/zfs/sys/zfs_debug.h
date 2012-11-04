@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -62,9 +62,18 @@ name|defined
 argument_list|(
 name|_KERNEL
 argument_list|)
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|ZFS_DEBUG
+argument_list|)
 define|#
 directive|define
 name|ZFS_DEBUG
+endif|#
+directive|endif
 endif|#
 directive|endif
 specifier|extern
@@ -197,6 +206,27 @@ parameter_list|,
 modifier|...
 parameter_list|)
 function_decl|;
+ifdef|#
+directive|ifdef
+name|illumos
+ifndef|#
+directive|ifndef
+name|_KERNEL
+specifier|extern
+name|int
+name|dprintf_find_string
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|string
+parameter_list|)
+function_decl|;
+endif|#
+directive|endif
+endif|#
+directive|endif
+comment|/* illumos */
 ifdef|#
 directive|ifdef
 name|__cplusplus

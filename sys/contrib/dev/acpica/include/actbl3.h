@@ -155,17 +155,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ACPI_SIG_DBG2
-value|"DBG2"
-end_define
-
-begin_comment
-comment|/* Debug Port table 2 */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|ACPI_SIG_MATR
 value|"MATR"
 end_define
@@ -210,7 +199,7 @@ name|)
 end_pragma
 
 begin_comment
-comment|/*  * Note about bitfields: The UINT8 type is used for bitfields in ACPI tables.  * This is the only type that is even remotely portable. Anything else is not  * portable, so do not use any other bitfield types.  */
+comment|/*  * Note: C bitfields are not used for this reason:  *  * "Bitfields are great and easy to read, but unfortunately the C language  * does not specify the layout of bitfields in memory, which means they are  * essentially useless for dealing with packed data in on-disk formats or  * binary wire protocols." (Or ACPI tables and buffers.) "If you ask me,  * this decision was a design error in C. Ritchie could have picked an order  * and stuck with it." Norman Ramsey.  * See http://stackoverflow.com/a/1053662/41661  */
 end_comment
 
 begin_comment
@@ -666,7 +655,7 @@ define|#
 directive|define
 name|ACPI_MPST_CHANNEL_INFO
 define|\
-value|UINT16                  Reserved1; \     UINT8                   ChannelId; \     UINT8                   Reserved2; \     UINT16                  PowerNodeCount;
+value|UINT8                   ChannelId; \     UINT8                   Reserved1[3]; \     UINT16                  PowerNodeCount; \     UINT16                  Reserved2;
 end_define
 
 begin_comment
@@ -732,14 +721,11 @@ decl_stmt|;
 name|UINT64
 name|RangeLength
 decl_stmt|;
-name|UINT8
+name|UINT32
 name|NumPowerStates
 decl_stmt|;
-name|UINT8
+name|UINT32
 name|NumPhysicalComponents
-decl_stmt|;
-name|UINT16
-name|Reserved2
 decl_stmt|;
 block|}
 name|ACPI_MPST_POWER_NODE
@@ -820,6 +806,9 @@ block|{
 name|UINT16
 name|CharacteristicsCount
 decl_stmt|;
+name|UINT16
+name|Reserved
+decl_stmt|;
 block|}
 name|ACPI_MPST_DATA_HDR
 typedef|;
@@ -831,7 +820,7 @@ struct|struct
 name|acpi_mpst_power_data
 block|{
 name|UINT8
-name|Revision
+name|StructureId
 decl_stmt|;
 name|UINT8
 name|Flags
@@ -899,16 +888,16 @@ decl_stmt|;
 name|UINT16
 name|PccStatus
 decl_stmt|;
-name|UINT16
+name|UINT32
 name|CommandRegister
 decl_stmt|;
-name|UINT16
+name|UINT32
 name|StatusRegister
 decl_stmt|;
-name|UINT16
+name|UINT32
 name|PowerStateId
 decl_stmt|;
-name|UINT16
+name|UINT32
 name|PowerNodeId
 decl_stmt|;
 name|UINT64

@@ -1571,6 +1571,20 @@ name|xtp
 operator|->
 name|xt_socket
 expr_stmt|;
+name|protoname
+operator|=
+name|xtp
+operator|->
+name|xt_tp
+operator|.
+name|t_flags
+operator|&
+name|TF_TOE
+condition|?
+literal|"toe"
+else|:
+literal|"tcp"
+expr_stmt|;
 break|break;
 case|case
 name|IPPROTO_UDP
@@ -4150,7 +4164,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: sockstat [-46cLlu] [-p ports] [-P protocols]\n"
+literal|"Usage: sockstat [-46cLlu] [-j jid] [-p ports] [-P protocols]\n"
 argument_list|)
 expr_stmt|;
 name|exit

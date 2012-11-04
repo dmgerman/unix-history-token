@@ -422,6 +422,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * The adv_b stuff to handle twin-channel cards will not work in its current  * incarnation.  It tries to reuse the same softc since adv_alloc() doesn't  * actually allocate a softc.  It also tries to reuse the same unit number  * for both sims.  This can be re-enabled if someone fixes it properly.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -436,11 +440,12 @@ name|adv_softc
 modifier|*
 name|adv
 decl_stmt|;
-name|struct
-name|adv_softc
-modifier|*
-name|adv_b
-decl_stmt|;
+if|#
+directive|if
+literal|0
+block|struct adv_softc *adv_b;
+endif|#
+directive|endif
 name|struct
 name|resource
 modifier|*
@@ -460,10 +465,12 @@ name|void
 modifier|*
 name|ih
 decl_stmt|;
-name|adv_b
-operator|=
-name|NULL
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|adv_b = NULL;
+endif|#
+directive|endif
 name|rid
 operator|=
 literal|0
@@ -561,122 +568,40 @@ block|{
 case|case
 name|EISA_DEVICE_ID_ADVANSYS_750
 case|:
-name|adv_b
-operator|=
-name|adv_alloc
-argument_list|(
-name|dev
-argument_list|,
-name|rman_get_bustag
-argument_list|(
-name|io
-argument_list|)
-argument_list|,
-name|rman_get_bushandle
-argument_list|(
-name|io
-argument_list|)
-operator|+
-name|ADV_EISA_OFFSET_CHAN2
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|adv_b
-operator|==
-name|NULL
-condition|)
-goto|goto
-name|bad
-goto|;
+if|#
+directive|if
+literal|0
+block|adv_b = adv_alloc(dev, io, ADV_EISA_OFFSET_CHAN2); 		if (adv_b == NULL) 			goto bad;
 comment|/* 		 * Allocate a parent dmatag for all tags created 		 * by the MI portions of the advansys driver 		 */
-name|error
-operator|=
-name|bus_dma_tag_create
-argument_list|(
+block|error = bus_dma_tag_create(
 comment|/* parent	*/
-name|bus_get_dma_tag
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
+block|bus_get_dma_tag(dev),
 comment|/* alignment	*/
-literal|1
-argument_list|,
+block|1,
 comment|/* boundary	*/
-literal|0
-argument_list|,
+block|0,
 comment|/* lowaddr	*/
-name|ADV_EISA_MAX_DMA_ADDR
-argument_list|,
+block|ADV_EISA_MAX_DMA_ADDR,
 comment|/* highaddr	*/
-name|BUS_SPACE_MAXADDR
-argument_list|,
+block|BUS_SPACE_MAXADDR,
 comment|/* filter	*/
-name|NULL
-argument_list|,
+block|NULL,
 comment|/* filterarg	*/
-name|NULL
-argument_list|,
+block|NULL,
 comment|/* maxsize	*/
-name|BUS_SPACE_MAXSIZE_32BIT
-argument_list|,
+block|BUS_SPACE_MAXSIZE_32BIT,
 comment|/* nsegments	*/
-operator|~
-literal|0
-argument_list|,
+block|~0,
 comment|/* maxsegsz	*/
-name|ADV_EISA_MAX_DMA_COUNT
-argument_list|,
+block|ADV_EISA_MAX_DMA_COUNT,
 comment|/* flags	*/
-literal|0
-argument_list|,
+block|0,
 comment|/* lockfunc	*/
-name|busdma_lock_mutex
-argument_list|,
+block|NULL,
 comment|/* lockarg	*/
-operator|&
-name|Giant
-argument_list|,
-operator|&
-name|adv_b
-operator|->
-name|parent_dmat
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-operator|!=
-literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%s: Could not allocate DMA tag - error %d\n"
-argument_list|,
-name|adv_name
-argument_list|(
-name|adv_b
-argument_list|)
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
-name|adv_free
-argument_list|(
-name|adv_b
-argument_list|)
-expr_stmt|;
-goto|goto
-name|bad
-goto|;
-block|}
-name|adv_b
-operator|->
-name|init_level
-operator|++
-expr_stmt|;
+block|NULL,&adv_b->parent_dmat);   		if (error != 0) { 			device_printf(dev, "Could not allocate DMA tag - error %d\n", 			       error); 			adv_free(adv_b); 			goto bad; 		}  		adv_b->init_level++;
+endif|#
+directive|endif
 comment|/* FALLTHROUGH */
 case|case
 name|EISA_DEVICE_ID_ADVANSYS_740
@@ -687,16 +612,8 @@ name|adv_alloc
 argument_list|(
 name|dev
 argument_list|,
-name|rman_get_bustag
-argument_list|(
 name|io
-argument_list|)
 argument_list|,
-name|rman_get_bushandle
-argument_list|(
-name|io
-argument_list|)
-operator|+
 name|ADV_EISA_OFFSET_CHAN1
 argument_list|)
 expr_stmt|;
@@ -707,17 +624,12 @@ operator|==
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
-name|adv_b
-operator|!=
-name|NULL
-condition|)
-name|adv_free
-argument_list|(
-name|adv_b
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|if (adv_b != NULL) 				adv_free(adv_b);
+endif|#
+directive|endif
 goto|goto
 name|bad
 goto|;
@@ -765,11 +677,10 @@ comment|/* flags	*/
 literal|0
 argument_list|,
 comment|/* lockfunc	*/
-name|busdma_lock_mutex
+name|NULL
 argument_list|,
 comment|/* lockarg	*/
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 operator|&
 name|adv
@@ -784,14 +695,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: Could not allocate DMA tag - error %d\n"
+name|dev
 argument_list|,
-name|adv_name
-argument_list|(
-name|adv
-argument_list|)
+literal|"Could not allocate DMA tag - error %d\n"
 argument_list|,
 name|error
 argument_list|)
@@ -835,9 +743,10 @@ condition|(
 name|bus_dma_tag_create
 argument_list|(
 comment|/* parent	*/
-name|adv
-operator|->
-name|parent_dmat
+name|bus_get_dma_tag
+argument_list|(
+name|dev
+argument_list|)
 argument_list|,
 comment|/* alignment	*/
 literal|8
@@ -870,11 +779,10 @@ comment|/* flags	*/
 literal|0
 argument_list|,
 comment|/* lockfunc	*/
-name|busdma_lock_mutex
+name|NULL
 argument_list|,
 comment|/* lockarg	*/
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 operator|&
 name|overrun_dmat
@@ -996,23 +904,15 @@ argument_list|(
 name|adv
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|adv_b
-operator|!=
-name|NULL
-condition|)
-name|adv_free
-argument_list|(
-name|adv_b
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
+if|#
+directive|if
+literal|0
+block|if (adv_b != NULL) 			adv_free(adv_b);
+endif|#
+directive|endif
+goto|goto
+name|bad
+goto|;
 block|}
 name|adv
 operator|->
@@ -1026,81 +926,17 @@ name|max_dma_addr
 operator|=
 name|ADV_EISA_MAX_DMA_ADDR
 expr_stmt|;
-if|if
-condition|(
-name|adv_b
-operator|!=
-name|NULL
-condition|)
-block|{
+if|#
+directive|if
+literal|0
+block|if (adv_b != NULL) {
 comment|/* 		 * Stop the chip. 		 */
-name|ADV_OUTB
-argument_list|(
-name|adv_b
-argument_list|,
-name|ADV_CHIP_CTRL
-argument_list|,
-name|ADV_CC_HALT
-argument_list|)
-expr_stmt|;
-name|ADV_OUTW
-argument_list|(
-name|adv_b
-argument_list|,
-name|ADV_CHIP_STATUS
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|adv_b
-operator|->
-name|chip_version
-operator|=
-name|EISA_REVISION_ID
-argument_list|(
-name|eisa_get_id
-argument_list|(
-name|dev
-argument_list|)
-argument_list|)
-operator|+
-name|ADV_CHIP_MIN_VER_EISA
-operator|-
-literal|1
-expr_stmt|;
+block|ADV_OUTB(adv_b, ADV_CHIP_CTRL, ADV_CC_HALT); 		ADV_OUTW(adv_b, ADV_CHIP_STATUS, 0);  		adv_b->chip_version = EISA_REVISION_ID(eisa_get_id(dev)) 				    + ADV_CHIP_MIN_VER_EISA - 1;  		if (adv_init(adv_b) != 0) { 			adv_free(adv_b); 		} else { 			adv_b->max_dma_count = ADV_EISA_MAX_DMA_COUNT; 			adv_b->max_dma_addr = ADV_EISA_MAX_DMA_ADDR; 		} 	}
+endif|#
+directive|endif
+comment|/* 	 * Enable our interrupt handler. 	 */
 if|if
 condition|(
-name|adv_init
-argument_list|(
-name|adv_b
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|adv_free
-argument_list|(
-name|adv_b
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|adv_b
-operator|->
-name|max_dma_count
-operator|=
-name|ADV_EISA_MAX_DMA_COUNT
-expr_stmt|;
-name|adv_b
-operator|->
-name|max_dma_addr
-operator|=
-name|ADV_EISA_MAX_DMA_ADDR
-expr_stmt|;
-block|}
-block|}
-comment|/* 	 * Enable our interrupt handler. 	 */
 name|bus_setup_intr
 argument_list|(
 name|dev
@@ -1110,6 +946,8 @@ argument_list|,
 name|INTR_TYPE_CAM
 operator||
 name|INTR_ENTROPY
+operator||
+name|INTR_MPSAFE
 argument_list|,
 name|NULL
 argument_list|,
@@ -1120,24 +958,45 @@ argument_list|,
 operator|&
 name|ih
 argument_list|)
-expr_stmt|;
-comment|/* Attach sub-devices - always succeeds */
-name|adv_attach
+operator|!=
+literal|0
+condition|)
+block|{
+name|adv_free
 argument_list|(
 name|adv
 argument_list|)
 expr_stmt|;
+goto|goto
+name|bad
+goto|;
+block|}
+comment|/* Attach sub-devices */
 if|if
 condition|(
-name|adv_b
-operator|!=
-name|NULL
-condition|)
 name|adv_attach
 argument_list|(
-name|adv_b
+name|adv
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|adv_free
+argument_list|(
+name|adv
 argument_list|)
 expr_stmt|;
+goto|goto
+name|bad
+goto|;
+block|}
+if|#
+directive|if
+literal|0
+block|if (adv_b != NULL) 		adv_attach(adv_b);
+endif|#
+directive|endif
 return|return
 literal|0
 return|;
@@ -1166,8 +1025,7 @@ name|irq
 argument_list|)
 expr_stmt|;
 return|return
-operator|-
-literal|1
+name|ENXIO
 return|;
 block|}
 end_function

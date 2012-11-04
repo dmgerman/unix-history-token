@@ -269,6 +269,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* Helper routine for checking existence of a prop */
+end_comment
+
+begin_function_decl
+name|int
+name|ofw_bus_has_prop
+parameter_list|(
+name|device_t
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/AST/Decl.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/Expr.h"
 end_include
 
@@ -146,6 +152,15 @@ comment|/// \brief The overloaded operator.
 name|OverloadedOperatorKind
 name|Operator
 block|;
+name|SourceRange
+name|Range
+block|;
+name|SourceRange
+name|getSourceRangeImpl
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|;
 name|public
 operator|:
 name|CXXOperatorCallExpr
@@ -192,7 +207,12 @@ name|Operator
 argument_list|(
 argument|Op
 argument_list|)
-block|{}
+block|{
+name|Range
+operator|=
+name|getSourceRangeImpl
+argument_list|()
+block|;   }
 name|explicit
 name|CXXOperatorCallExpr
 argument_list|(
@@ -221,16 +241,6 @@ return|return
 name|Operator
 return|;
 block|}
-name|void
-name|setOperator
-argument_list|(
-argument|OverloadedOperatorKind Kind
-argument_list|)
-block|{
-name|Operator
-operator|=
-name|Kind
-block|; }
 comment|/// getOperatorLoc - Returns the location of the operator symbol in
 comment|/// the expression. When @c getOperator()==OO_Call, this is the
 comment|/// location of the right parentheses; when @c
@@ -250,8 +260,11 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
-name|LLVM_READONLY
-block|;
+block|{
+return|return
+name|Range
+return|;
+block|}
 specifier|static
 name|bool
 name|classof
@@ -279,8 +292,15 @@ return|return
 name|true
 return|;
 block|}
-expr|}
+name|friend
+name|class
+name|ASTStmtReader
 block|;
+name|friend
+name|class
+name|ASTStmtWriter
+block|; }
+decl_stmt|;
 comment|/// CXXMemberCallExpr - Represents a call to a member function that
 comment|/// may be written either with member call syntax (e.g., "obj.func()"
 comment|/// or "objptr->func()") or with normal function-call syntax
@@ -291,7 +311,7 @@ comment|/// arguments are the arguments within the parentheses (not including
 comment|/// the object argument).
 name|class
 name|CXXMemberCallExpr
-operator|:
+range|:
 name|public
 name|CallExpr
 block|{
@@ -376,6 +396,7 @@ name|CXXRecordDecl
 operator|*
 name|getRecordDecl
 argument_list|()
+specifier|const
 block|;
 specifier|static
 name|bool
@@ -1427,6 +1448,58 @@ name|getCookedLiteral
 argument_list|()
 return|;
 block|}
+name|SourceLocation
+name|getLocStart
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|getLiteralOperatorKind
+argument_list|()
+operator|==
+name|LOK_Template
+condition|)
+return|return
+name|getRParenLoc
+argument_list|()
+return|;
+return|return
+name|getArg
+argument_list|(
+literal|0
+argument_list|)
+operator|->
+name|getLocStart
+argument_list|()
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getRParenLoc
+argument_list|()
+return|;
+block|}
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SourceRange
+argument_list|(
+name|getLocStart
+argument_list|()
+argument_list|,
+name|getLocEnd
+argument_list|()
+argument_list|)
+return|;
+block|}
 comment|/// getUDSuffixLoc - Returns the location of a ud-suffix in the expression.
 comment|/// For a string literal, there may be multiple identical suffixes. This
 comment|/// returns the first.
@@ -1436,8 +1509,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|getRParenLoc
-argument_list|()
+name|UDSuffixLoc
 return|;
 block|}
 comment|/// getUDSuffix - Returns the ud-suffix specified for this literal.
@@ -1945,6 +2017,13 @@ operator|)
 literal|0
 expr_stmt|;
 block|}
+comment|/// Determine whether this typeid has a type operand which is potentially
+comment|/// evaluated, per C++11 [expr.typeid]p3.
+name|bool
+name|isPotentiallyEvaluated
+argument_list|()
+specifier|const
+block|;
 name|bool
 name|isTypeOperand
 argument_list|()
@@ -3678,7 +3757,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// CXXConstructExpr - Represents a call to a C++ constructor.
+comment|/// \brief Represents a call to a C++ constructor.
 name|class
 name|CXXConstructExpr
 operator|:
@@ -4240,6 +4319,16 @@ return|return
 name|ParenRange
 return|;
 block|}
+name|void
+name|setParenRange
+argument_list|(
+argument|SourceRange Range
+argument_list|)
+block|{
+name|ParenRange
+operator|=
+name|Range
+block|; }
 specifier|static
 name|bool
 name|classof
@@ -4303,9 +4392,13 @@ name|class
 name|ASTStmtReader
 block|; }
 block|;
-comment|/// CXXFunctionalCastExpr - Represents an explicit C++ type conversion
-comment|/// that uses "functional" notion (C++ [expr.type.conv]). Example: @c
-comment|/// x = int(0.5);
+comment|/// \brief Represents an explicit C++ type conversion that uses "functional"
+comment|/// notation (C++ [expr.type.conv]).
+comment|///
+comment|/// Example:
+comment|/// @code
+comment|///   x = int(0.5);
+comment|/// @endcode
 name|class
 name|CXXFunctionalCastExpr
 operator|:
@@ -4924,6 +5017,8 @@ argument_list|,
 argument|ArrayRef<unsigned> ArrayIndexStarts
 argument_list|,
 argument|SourceLocation ClosingBrace
+argument_list|,
+argument|bool ContainsUnexpandedParameterPack
 argument_list|)
 block|;
 comment|/// \brief Construct an empty lambda expression.
@@ -5082,6 +5177,8 @@ argument_list|,
 argument|ArrayRef<unsigned> ArrayIndexStarts
 argument_list|,
 argument|SourceLocation ClosingBrace
+argument_list|,
+argument|bool ContainsUnexpandedParameterPack
 argument_list|)
 block|;
 comment|/// \brief Construct a new lambda expression that will be deserialized from
@@ -5511,8 +5608,8 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// CXXNewExpr - A new expression for memory allocation and constructor calls,
-comment|/// e.g: "new CXXNewExpr(foo)".
+comment|/// @brief Represents a new-expression for memory allocation and constructor
+comment|// calls, e.g: "new CXXNewExpr(foo)".
 name|class
 name|CXXNewExpr
 operator|:
@@ -5526,12 +5623,13 @@ operator|*
 operator|*
 name|SubExprs
 block|;
-comment|// Points to the allocation function used.
+comment|/// \brief Points to the allocation function used.
 name|FunctionDecl
 operator|*
 name|OperatorNew
 block|;
-comment|// Points to the deallocation function used in case of error. May be null.
+comment|/// \brief Points to the deallocation function used in case of error. May be
+comment|/// null.
 name|FunctionDecl
 operator|*
 name|OperatorDelete
@@ -6270,8 +6368,8 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// CXXDeleteExpr - A delete expression for memory deallocation and destructor
-comment|/// calls, e.g. "delete[] pArray".
+comment|/// \brief Represents a \c delete expression for memory deallocation and
+comment|/// destructor calls, e.g. "delete[] pArray".
 name|class
 name|CXXDeleteExpr
 operator|:
@@ -6581,8 +6679,7 @@ name|class
 name|ASTStmtReader
 block|; }
 block|;
-comment|/// \brief Structure used to store the type being destroyed by a
-comment|/// pseudo-destructor expression.
+comment|/// \brief Stores the type being destroyed by a pseudo-destructor expression.
 name|class
 name|PseudoDestructorTypeStorage
 block|{
@@ -7065,11 +7162,14 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// UnaryTypeTraitExpr - A GCC or MS unary type trait, as used in the
-comment|/// implementation of TR1/C++0x type trait templates.
+comment|/// \brief Represents a GCC or MS unary type trait, as used in the
+comment|/// implementation of TR1/C++11 type trait templates.
+comment|///
 comment|/// Example:
-comment|/// __is_pod(int) == true
-comment|/// __is_enum(std::string) == false
+comment|/// @code
+comment|///   __is_pod(int) == true
+comment|///   __is_enum(std::string) == false
+comment|/// @endcode
 name|class
 name|UnaryTypeTraitExpr
 operator|:
@@ -7309,10 +7409,13 @@ name|class
 name|ASTStmtReader
 block|; }
 block|;
-comment|/// BinaryTypeTraitExpr - A GCC or MS binary type trait, as used in the
-comment|/// implementation of TR1/C++0x type trait templates.
+comment|/// \brief Represents a GCC or MS binary type trait, as used in the
+comment|/// implementation of TR1/C++11 type trait templates.
+comment|///
 comment|/// Example:
-comment|/// __is_base_of(Base, Derived) == true
+comment|/// @code
+comment|///   __is_base_of(Base, Derived) == true
+comment|/// @endcode
 name|class
 name|BinaryTypeTraitExpr
 operator|:
@@ -7970,11 +8073,14 @@ name|class
 name|ASTStmtWriter
 block|;  }
 block|;
-comment|/// ArrayTypeTraitExpr - An Embarcadero array type trait, as used in the
-comment|/// implementation of __array_rank and __array_extent.
+comment|/// \brief An Embarcadero array type trait, as used in the implementation of
+comment|/// __array_rank and __array_extent.
+comment|///
 comment|/// Example:
-comment|/// __array_rank(int[10][20]) == 2
-comment|/// __array_extent(int, 1)    == 20
+comment|/// @code
+comment|///   __array_rank(int[10][20]) == 2
+comment|///   __array_extent(int, 1)    == 20
+comment|/// @endcode
 name|class
 name|ArrayTypeTraitExpr
 operator|:
@@ -7986,30 +8092,30 @@ name|void
 name|anchor
 argument_list|()
 block|;
-comment|/// ATT - The trait. An ArrayTypeTrait enum in MSVC compat unsigned.
+comment|/// \brief The trait. An ArrayTypeTrait enum in MSVC compat unsigned.
 name|unsigned
 name|ATT
 operator|:
 literal|2
 block|;
-comment|/// The value of the type trait. Unspecified if dependent.
+comment|/// \brief The value of the type trait. Unspecified if dependent.
 name|uint64_t
 name|Value
 block|;
-comment|/// The array dimension being queried, or -1 if not used
+comment|/// \brief The array dimension being queried, or -1 if not used.
 name|Expr
 operator|*
 name|Dimension
 block|;
-comment|/// Loc - The location of the type trait keyword.
+comment|/// \brief The location of the type trait keyword.
 name|SourceLocation
 name|Loc
 block|;
-comment|/// RParen - The location of the closing paren.
+comment|/// \brief The location of the closing paren.
 name|SourceLocation
 name|RParen
 block|;
-comment|/// The type being queried.
+comment|/// \brief The type being queried.
 name|TypeSourceInfo
 operator|*
 name|QueriedType
@@ -8263,36 +8369,40 @@ name|class
 name|ASTStmtReader
 block|; }
 block|;
-comment|/// ExpressionTraitExpr - An expression trait intrinsic
+comment|/// \brief An expression trait intrinsic.
+comment|///
 comment|/// Example:
-comment|/// __is_lvalue_expr(std::cout) == true
-comment|/// __is_lvalue_expr(1) == false
+comment|/// @code
+comment|///   __is_lvalue_expr(std::cout) == true
+comment|///   __is_lvalue_expr(1) == false
+comment|/// @endcode
 name|class
 name|ExpressionTraitExpr
 operator|:
 name|public
 name|Expr
 block|{
-comment|/// ET - The trait. A ExpressionTrait enum in MSVC compat unsigned.
+comment|/// \brief The trait. A ExpressionTrait enum in MSVC compat unsigned.
 name|unsigned
 name|ET
 operator|:
 literal|31
 block|;
-comment|/// The value of the type trait. Unspecified if dependent.
+comment|/// \brief The value of the type trait. Unspecified if dependent.
 name|bool
 name|Value
 operator|:
 literal|1
 block|;
-comment|/// Loc - The location of the type trait keyword.
+comment|/// \brief The location of the type trait keyword.
 name|SourceLocation
 name|Loc
 block|;
-comment|/// RParen - The location of the closing paren.
+comment|/// \brief The location of the closing paren.
 name|SourceLocation
 name|RParen
 block|;
+comment|/// \brief The expression being queried.
 name|Expr
 operator|*
 name|QueriedExpression
@@ -8487,14 +8597,14 @@ name|ASTStmtReader
 block|; }
 block|;
 comment|/// \brief A reference to an overloaded function set, either an
-comment|/// \t UnresolvedLookupExpr or an \t UnresolvedMemberExpr.
+comment|/// \c UnresolvedLookupExpr or an \c UnresolvedMemberExpr.
 name|class
 name|OverloadExpr
 operator|:
 name|public
 name|Expr
 block|{
-comment|/// The common name of these declarations.
+comment|/// \brief The common name of these declarations.
 name|DeclarationNameInfo
 name|NameInfo
 block|;
@@ -8783,7 +8893,7 @@ return|return
 name|Result
 return|;
 block|}
-comment|/// Gets the naming class of this lookup, if any.
+comment|/// \brief Gets the naming class of this lookup, if any.
 name|CXXRecordDecl
 operator|*
 name|getNamingClass
@@ -8822,7 +8932,7 @@ name|NumResults
 argument_list|)
 return|;
 block|}
-comment|/// Gets the number of declarations in the unresolved set.
+comment|/// \brief Gets the number of declarations in the unresolved set.
 name|unsigned
 name|getNumDecls
 argument_list|()
@@ -8832,7 +8942,7 @@ return|return
 name|NumResults
 return|;
 block|}
-comment|/// Gets the full name info.
+comment|/// \brief Gets the full name info.
 specifier|const
 name|DeclarationNameInfo
 operator|&
@@ -8844,7 +8954,7 @@ return|return
 name|NameInfo
 return|;
 block|}
-comment|/// Gets the name looked up.
+comment|/// \brief Gets the name looked up.
 name|DeclarationName
 name|getName
 argument_list|()
@@ -8857,7 +8967,7 @@ name|getName
 argument_list|()
 return|;
 block|}
-comment|/// Gets the location of the name.
+comment|/// \brief Gets the location of the name.
 name|SourceLocation
 name|getNameLoc
 argument_list|()
@@ -8870,7 +8980,7 @@ name|getLoc
 argument_list|()
 return|;
 block|}
-comment|/// Fetches the nested-name qualifier, if one was given.
+comment|/// \brief Fetches the nested-name qualifier, if one was given.
 name|NestedNameSpecifier
 operator|*
 name|getQualifier
@@ -8884,8 +8994,8 @@ name|getNestedNameSpecifier
 argument_list|()
 return|;
 block|}
-comment|/// Fetches the nested-name qualifier with source-location information, if
-comment|/// one was given.
+comment|/// \brief Fetches the nested-name qualifier with source-location
+comment|/// information, if one was given.
 name|NestedNameSpecifierLoc
 name|getQualifierLoc
 argument_list|()
@@ -8965,7 +9075,7 @@ operator|->
 name|RAngleLoc
 return|;
 block|}
-comment|/// Determines whether the name was preceded by the template keyword.
+comment|/// \brief Determines whether the name was preceded by the template keyword.
 name|bool
 name|hasTemplateKeyword
 argument_list|()
@@ -8979,7 +9089,7 @@ name|isValid
 argument_list|()
 return|;
 block|}
-comment|/// Determines whether this expression had explicit template arguments.
+comment|/// \brief Determines whether this expression had explicit template arguments.
 name|bool
 name|hasExplicitTemplateArgs
 argument_list|()
@@ -9061,7 +9171,7 @@ operator|.
 name|NumTemplateArgs
 return|;
 block|}
-comment|/// Copies the template arguments into the given structure.
+comment|/// \brief Copies the template arguments into the given structure.
 name|void
 name|copyTemplateArgumentsInto
 argument_list|(
@@ -9078,6 +9188,7 @@ name|List
 argument_list|)
 block|;   }
 comment|/// \brief Retrieves the optional explicit template arguments.
+comment|///
 comment|/// This points to the same data as getExplicitTemplateArgs(), but
 comment|/// returns null if there are no explicit template arguments.
 specifier|const
@@ -9143,20 +9254,20 @@ name|friend
 name|class
 name|ASTStmtWriter
 block|; }
-block|;
+decl_stmt|;
 comment|/// \brief A reference to a name which we were able to look up during
-comment|/// parsing but could not resolve to a specific declaration.  This
-comment|/// arises in several ways:
+comment|/// parsing but could not resolve to a specific declaration.
+comment|///
+comment|/// This arises in several ways:
 comment|///   * we might be waiting for argument-dependent lookup
 comment|///   * the name might resolve to an overloaded function
 comment|/// and eventually:
 comment|///   * the lookup might have included a function template
-comment|/// These never include UnresolvedUsingValueDecls, which are always
-comment|/// class members and therefore appear only in
-comment|/// UnresolvedMemberLookupExprs.
+comment|/// These never include UnresolvedUsingValueDecls, which are always class
+comment|/// members and therefore appear only in UnresolvedMemberLookupExprs.
 name|class
 name|UnresolvedLookupExpr
-operator|:
+range|:
 name|public
 name|OverloadExpr
 block|{
@@ -9408,8 +9519,8 @@ return|return
 name|RequiresADL
 return|;
 block|}
-comment|/// True if namespace ::std should be artificially added to the set of
-comment|/// associated namespaecs for argument-dependent lookup purposes.
+comment|/// True if namespace \::std should be artificially added to the set of
+comment|/// associated namespaces for argument-dependent lookup purposes.
 name|bool
 name|isStdAssociatedNamespace
 argument_list|()
@@ -9491,21 +9602,30 @@ return|return
 name|Range
 return|;
 block|}
+end_decl_stmt
+
+begin_function
 name|child_range
 name|children
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|child_range
 argument_list|()
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const Stmt *T
-argument_list|)
+parameter_list|(
+specifier|const
+name|Stmt
+modifier|*
+name|T
+parameter_list|)
 block|{
 return|return
 name|T
@@ -9516,36 +9636,85 @@ operator|==
 name|UnresolvedLookupExprClass
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const UnresolvedLookupExpr *
-argument_list|)
+parameter_list|(
+specifier|const
+name|UnresolvedLookupExpr
+modifier|*
+parameter_list|)
 block|{
 return|return
 name|true
 return|;
 block|}
-expr|}
-block|;
+end_function
+
+begin_comment
+unit|};
 comment|/// \brief A qualified reference to a name whose declaration cannot
+end_comment
+
+begin_comment
 comment|/// yet be resolved.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// DependentScopeDeclRefExpr is similar to DeclRefExpr in that
+end_comment
+
+begin_comment
 comment|/// it expresses a reference to a declaration such as
+end_comment
+
+begin_comment
 comment|/// X<T>::value. The difference, however, is that an
+end_comment
+
+begin_comment
 comment|/// DependentScopeDeclRefExpr node is used only within C++ templates when
+end_comment
+
+begin_comment
 comment|/// the qualification (e.g., X<T>::) refers to a dependent type. In
+end_comment
+
+begin_comment
 comment|/// this case, X<T>::value cannot resolve to a declaration because the
+end_comment
+
+begin_comment
 comment|/// declaration will differ from on instantiation of X<T> to the
+end_comment
+
+begin_comment
 comment|/// next. Therefore, DependentScopeDeclRefExpr keeps track of the
+end_comment
+
+begin_comment
 comment|/// qualifier (X<T>::) and the name of the entity being referenced
+end_comment
+
+begin_comment
 comment|/// ("value"). Such expressions will instantiate to a DeclRefExpr once the
+end_comment
+
+begin_comment
 comment|/// declaration can be found.
+end_comment
+
+begin_decl_stmt
 name|class
 name|DependentScopeDeclRefExpr
-operator|:
+range|:
 name|public
 name|Expr
 block|{
@@ -9590,7 +9759,13 @@ literal|1
 operator|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Return the optional template keyword and arguments info.
+end_comment
+
+begin_expr_stmt
 specifier|const
 name|ASTTemplateKWAndArgsInfo
 operator|*
@@ -9612,6 +9787,9 @@ name|getTemplateKWAndArgsInfo
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_macro
 name|DependentScopeDeclRefExpr
 argument_list|(
 argument|QualType T
@@ -9624,38 +9802,70 @@ argument|const DeclarationNameInfo&NameInfo
 argument_list|,
 argument|const TemplateArgumentListInfo *Args
 argument_list|)
-block|;
+end_macro
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_label
 name|public
-operator|:
+label|:
+end_label
+
+begin_function_decl
 specifier|static
 name|DependentScopeDeclRefExpr
-operator|*
+modifier|*
 name|Create
-argument_list|(
-argument|ASTContext&C
-argument_list|,
-argument|NestedNameSpecifierLoc QualifierLoc
-argument_list|,
-argument|SourceLocation TemplateKWLoc
-argument_list|,
-argument|const DeclarationNameInfo&NameInfo
-argument_list|,
-argument|const TemplateArgumentListInfo *TemplateArgs
-argument_list|)
-block|;
+parameter_list|(
+name|ASTContext
+modifier|&
+name|C
+parameter_list|,
+name|NestedNameSpecifierLoc
+name|QualifierLoc
+parameter_list|,
+name|SourceLocation
+name|TemplateKWLoc
+parameter_list|,
+specifier|const
+name|DeclarationNameInfo
+modifier|&
+name|NameInfo
+parameter_list|,
+specifier|const
+name|TemplateArgumentListInfo
+modifier|*
+name|TemplateArgs
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|static
 name|DependentScopeDeclRefExpr
-operator|*
+modifier|*
 name|CreateEmpty
-argument_list|(
-argument|ASTContext&C
-argument_list|,
-argument|bool HasTemplateKWAndArgsInfo
-argument_list|,
-argument|unsigned NumTemplateArgs
-argument_list|)
-block|;
+parameter_list|(
+name|ASTContext
+modifier|&
+name|C
+parameter_list|,
+name|bool
+name|HasTemplateKWAndArgsInfo
+parameter_list|,
+name|unsigned
+name|NumTemplateArgs
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// \brief Retrieve the name that this expression refers to.
+end_comment
+
+begin_expr_stmt
 specifier|const
 name|DeclarationNameInfo
 operator|&
@@ -9667,7 +9877,13 @@ return|return
 name|NameInfo
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Retrieve the name that this expression refers to.
+end_comment
+
+begin_expr_stmt
 name|DeclarationName
 name|getDeclName
 argument_list|()
@@ -9680,7 +9896,13 @@ name|getName
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Retrieve the location of the name within the expression.
+end_comment
+
+begin_expr_stmt
 name|SourceLocation
 name|getLocation
 argument_list|()
@@ -9693,8 +9915,17 @@ name|getLoc
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Retrieve the nested-name-specifier that qualifies the
+end_comment
+
+begin_comment
 comment|/// name, with source location information.
+end_comment
+
+begin_expr_stmt
 name|NestedNameSpecifierLoc
 name|getQualifierLoc
 argument_list|()
@@ -9704,8 +9935,17 @@ return|return
 name|QualifierLoc
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Retrieve the nested-name-specifier that qualifies this
+end_comment
+
+begin_comment
 comment|/// declaration.
+end_comment
+
+begin_expr_stmt
 name|NestedNameSpecifier
 operator|*
 name|getQualifier
@@ -9719,8 +9959,17 @@ name|getNestedNameSpecifier
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Retrieve the location of the template keyword preceding
+end_comment
+
+begin_comment
 comment|/// this name, if any.
+end_comment
+
+begin_expr_stmt
 name|SourceLocation
 name|getTemplateKeywordLoc
 argument_list|()
@@ -9735,6 +9984,9 @@ return|return
 name|SourceLocation
 argument_list|()
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 name|getTemplateKWAndArgsInfo
 argument_list|()
@@ -9742,12 +9994,24 @@ operator|->
 name|getTemplateKeywordLoc
 argument_list|()
 return|;
-block|}
+end_return
+
+begin_comment
+unit|}
 comment|/// \brief Retrieve the location of the left angle bracket starting the
+end_comment
+
+begin_comment
 comment|/// explicit template argument list following the name, if any.
-name|SourceLocation
+end_comment
+
+begin_macro
+unit|SourceLocation
 name|getLAngleLoc
 argument_list|()
+end_macro
+
+begin_expr_stmt
 specifier|const
 block|{
 if|if
@@ -9759,16 +10023,19 @@ return|return
 name|SourceLocation
 argument_list|()
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 name|getTemplateKWAndArgsInfo
 argument_list|()
 operator|->
 name|LAngleLoc
 return|;
-block|}
-end_decl_stmt
+end_return
 
 begin_comment
+unit|}
 comment|/// \brief Retrieve the location of the right angle bracket ending the
 end_comment
 
@@ -9776,10 +10043,13 @@ begin_comment
 comment|/// explicit template argument list following the name, if any.
 end_comment
 
-begin_expr_stmt
-name|SourceLocation
+begin_macro
+unit|SourceLocation
 name|getRAngleLoc
 argument_list|()
+end_macro
+
+begin_expr_stmt
 specifier|const
 block|{
 if|if
@@ -10552,15 +10822,15 @@ comment|/// The explicit type conversions expressed by
 end_comment
 
 begin_comment
-comment|/// CXXUnresolvedConstructExpr have the form \c T(a1, a2, ..., aN),
+comment|/// CXXUnresolvedConstructExpr have the form<tt>T(a1, a2, ..., aN)</tt>,
 end_comment
 
 begin_comment
-comment|/// where \c T is some type and \c a1, a2, ..., aN are values, and
+comment|/// where \c T is some type and \c a1, \c a2, ..., \c aN are values, and
 end_comment
 
 begin_comment
-comment|/// either \C T is a dependent type or one or more of the \c a's is
+comment|/// either \c T is a dependent type or one or more of the<tt>a</tt>'s is
 end_comment
 
 begin_comment

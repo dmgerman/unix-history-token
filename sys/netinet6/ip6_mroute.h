@@ -703,11 +703,6 @@ name|u_quad_t
 name|m6_bytes_out
 decl_stmt|;
 comment|/* # bytes out on interface	     */
-name|struct
-name|route_in6
-name|m6_route
-decl_stmt|;
-comment|/* cached route */
 ifdef|#
 directive|ifdef
 name|notyet

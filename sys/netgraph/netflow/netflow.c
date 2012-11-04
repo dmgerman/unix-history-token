@@ -339,6 +339,8 @@ parameter_list|,
 name|int
 parameter_list|,
 name|uint8_t
+parameter_list|,
+name|uint8_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -365,6 +367,8 @@ name|flow6_rec
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|uint8_t
 parameter_list|,
 name|uint8_t
 parameter_list|)
@@ -1484,7 +1488,6 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline
 name|int
 name|hash_insert
 parameter_list|(
@@ -1503,6 +1506,9 @@ name|r
 parameter_list|,
 name|int
 name|plen
+parameter_list|,
+name|uint8_t
+name|flags
 parameter_list|,
 name|uint8_t
 name|tcp_flags
@@ -1636,6 +1642,17 @@ operator|=
 name|time_uptime
 expr_stmt|;
 comment|/* 	 * First we do route table lookup on destination address. So we can 	 * fill in out_ifx, dst_mask, nexthop, and dst_as in future releases. 	 */
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|NG_NETFLOW_CONF_NODSTLOOKUP
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
 name|bzero
 argument_list|(
 operator|&
@@ -1808,7 +1825,19 @@ name|rt
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 comment|/* Do route lookup on source address, to fill in src_mask. */
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|NG_NETFLOW_CONF_NOSRCLOOKUP
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
 name|bzero
 argument_list|(
 operator|&
@@ -1932,6 +1961,7 @@ name|rt
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 comment|/* Push new flow at the and of hash. */
 name|TAILQ_INSERT_TAIL
 argument_list|(
@@ -1973,13 +2003,18 @@ parameter_list|)
 value|bitcount32((x).__u6_addr.__u6_addr32[0]) + \ 				bitcount32((x).__u6_addr.__u6_addr32[1]) + \ 				bitcount32((x).__u6_addr.__u6_addr32[2]) + \ 				bitcount32((x).__u6_addr.__u6_addr32[3])
 end_define
 
-begin_comment
-comment|/* XXX: Do we need inline here ? */
-end_comment
+begin_define
+define|#
+directive|define
+name|RT_MASK6
+parameter_list|(
+name|x
+parameter_list|)
+value|(ipv6_masklen(((struct sockaddr_in6 *)rt_mask(x))->sin6_addr))
+end_define
 
 begin_function
 specifier|static
-name|__inline
 name|int
 name|hash6_insert
 parameter_list|(
@@ -1998,6 +2033,9 @@ name|r
 parameter_list|,
 name|int
 name|plen
+parameter_list|,
+name|uint8_t
+name|flags
 parameter_list|,
 name|uint8_t
 name|tcp_flags
@@ -2139,6 +2177,17 @@ operator|=
 name|time_uptime
 expr_stmt|;
 comment|/* 	 * First we do route table lookup on destination address. So we can 	 * fill in out_ifx, dst_mask, nexthop, and dst_as in future releases. 	 */
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|NG_NETFLOW_CONF_NODSTLOOKUP
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
 name|bzero
 argument_list|(
 operator|&
@@ -2290,21 +2339,9 @@ name|f
 operator|.
 name|dst_mask
 operator|=
-name|ipv6_masklen
-argument_list|(
-operator|(
-operator|(
-expr|struct
-name|sockaddr_in6
-operator|*
-operator|)
-name|rt_mask
+name|RT_MASK6
 argument_list|(
 name|rt
-argument_list|)
-operator|)
-operator|->
-name|sin6_addr
 argument_list|)
 expr_stmt|;
 else|else
@@ -2322,6 +2359,18 @@ name|rt
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|NG_NETFLOW_CONF_NODSTLOOKUP
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
 comment|/* Do route lookup on source address, to fill in src_mask. */
 name|bzero
 argument_list|(
@@ -2423,21 +2472,9 @@ name|f
 operator|.
 name|src_mask
 operator|=
-name|ipv6_masklen
-argument_list|(
-operator|(
-operator|(
-expr|struct
-name|sockaddr_in6
-operator|*
-operator|)
-name|rt_mask
+name|RT_MASK6
 argument_list|(
 name|rt
-argument_list|)
-operator|)
-operator|->
-name|sin6_addr
 argument_list|)
 expr_stmt|;
 else|else
@@ -2454,6 +2491,7 @@ argument_list|(
 name|rt
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* Push new flow at the and of hash. */
 name|TAILQ_INSERT_TAIL
@@ -2480,6 +2518,18 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_undef
+undef|#
+directive|undef
+name|ipv6_masklen
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|RT_MASK6
+end_undef
 
 begin_endif
 endif|#
@@ -3434,7 +3484,7 @@ name|uint8_t
 name|upper_proto
 parameter_list|,
 name|uint8_t
-name|is_frag
+name|flags
 parameter_list|,
 name|unsigned
 name|int
@@ -4015,6 +4065,8 @@ name|r
 argument_list|,
 name|plen
 argument_list|,
+name|flags
+argument_list|,
 name|tcp_flags
 argument_list|)
 expr_stmt|;
@@ -4066,7 +4118,7 @@ name|uint8_t
 name|upper_proto
 parameter_list|,
 name|uint8_t
-name|is_frag
+name|flags
 parameter_list|,
 name|unsigned
 name|int
@@ -4201,7 +4253,11 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|is_frag
+operator|(
+name|flags
+operator|&
+name|NG_NETFLOW_IS_FRAG
+operator|)
 operator|==
 literal|0
 condition|)
@@ -4638,6 +4694,8 @@ operator|&
 name|r
 argument_list|,
 name|plen
+argument_list|,
+name|flags
 argument_list|,
 name|tcp_flags
 argument_list|)

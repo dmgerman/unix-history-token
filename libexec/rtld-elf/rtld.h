@@ -875,6 +875,11 @@ modifier|*
 name|rpath
 decl_stmt|;
 comment|/* Search path specified in object */
+name|char
+modifier|*
+name|runpath
+decl_stmt|;
+comment|/* Search path with different priority */
 name|Needed_Entry
 modifier|*
 name|needed
@@ -1037,6 +1042,12 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* Immediately load filtees */
+name|bool
+name|z_nodeflib
+range|:
+literal|1
+decl_stmt|;
+comment|/* Don't search default library path */
 name|bool
 name|ref_nodel
 range|:
@@ -1322,6 +1333,35 @@ name|lockstate
 decl_stmt|;
 name|sigjmp_buf
 name|env
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|fill_search_info_args
+block|{
+name|int
+name|request
+decl_stmt|;
+name|unsigned
+name|int
+name|flags
+decl_stmt|;
+name|struct
+name|dl_serinfo
+modifier|*
+name|serinfo
+decl_stmt|;
+name|struct
+name|dl_serpath
+modifier|*
+name|serpath
+decl_stmt|;
+name|char
+modifier|*
+name|strspace
 decl_stmt|;
 block|}
 struct|;

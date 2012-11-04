@@ -5,6 +5,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|unsigned
 name|char
 name|char_type

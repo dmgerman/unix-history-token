@@ -5172,6 +5172,21 @@ decl_stmt|;
 name|int
 name|tid
 decl_stmt|;
+name|IEEE80211_NOTE
+argument_list|(
+name|ni
+operator|->
+name|ni_vap
+argument_list|,
+name|IEEE80211_MSG_11N
+argument_list|,
+name|ni
+argument_list|,
+literal|"%s: called"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ni
@@ -5182,6 +5197,21 @@ name|IEEE80211_NODE_HT
 condition|)
 block|{
 comment|/* 		 * Clean AMPDU state on re-associate.  This handles the case 		 * where a station leaves w/o notifying us and then returns 		 * before node is reaped for inactivity. 		 */
+name|IEEE80211_NOTE
+argument_list|(
+name|ni
+operator|->
+name|ni_vap
+argument_list|,
+name|IEEE80211_MSG_11N
+argument_list|,
+name|ni
+argument_list|,
+literal|"%s: calling cleanup"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|ieee80211_ht_node_cleanup
 argument_list|(
 name|ni
@@ -5263,6 +5293,21 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|IEEE80211_NOTE
+argument_list|(
+name|ni
+operator|->
+name|ni_vap
+argument_list|,
+name|IEEE80211_MSG_11N
+argument_list|,
+name|ni
+argument_list|,
+literal|"%s: called"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|ni
@@ -8018,6 +8063,25 @@ name|ni
 operator|->
 name|ni_ic
 decl_stmt|;
+name|IEEE80211_NOTE
+argument_list|(
+name|tap
+operator|->
+name|txa_ni
+operator|->
+name|ni_vap
+argument_list|,
+name|IEEE80211_MSG_11N
+argument_list|,
+name|tap
+operator|->
+name|txa_ni
+argument_list|,
+literal|"%s: called"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|tap
@@ -10306,6 +10370,21 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|IEEE80211_NOTE
+argument_list|(
+name|ni
+operator|->
+name|ni_vap
+argument_list|,
+name|IEEE80211_MSG_11N
+argument_list|,
+name|ni
+argument_list|,
+literal|"%s: failed to TX, starting timer\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 comment|/* 			 * If ieee80211_send_bar() fails here, the 			 * timer may have stopped and/or the pending 			 * flag may be clear.  Because of this, 			 * fake the BARPEND and reset the timer. 			 * A retransmission attempt will then occur 			 * during the next timeout. 			 */
 comment|/* XXX locking */
 name|tap
@@ -10335,6 +10414,25 @@ modifier|*
 name|tap
 parameter_list|)
 block|{
+name|IEEE80211_NOTE
+argument_list|(
+name|tap
+operator|->
+name|txa_ni
+operator|->
+name|ni_vap
+argument_list|,
+name|IEEE80211_MSG_11N
+argument_list|,
+name|tap
+operator|->
+name|txa_ni
+argument_list|,
+literal|"%s: called"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|callout_reset
 argument_list|(
 operator|&
@@ -10363,6 +10461,25 @@ modifier|*
 name|tap
 parameter_list|)
 block|{
+name|IEEE80211_NOTE
+argument_list|(
+name|tap
+operator|->
+name|txa_ni
+operator|->
+name|ni_vap
+argument_list|,
+name|IEEE80211_MSG_11N
+argument_list|,
+name|tap
+operator|->
+name|txa_ni
+argument_list|,
+literal|"%s: called"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|callout_stop
 argument_list|(
 operator|&
@@ -10517,6 +10634,25 @@ name|int
 name|status
 parameter_list|)
 block|{
+name|IEEE80211_NOTE
+argument_list|(
+name|tap
+operator|->
+name|txa_ni
+operator|->
+name|ni_vap
+argument_list|,
+name|IEEE80211_MSG_11N
+argument_list|,
+name|tap
+operator|->
+name|txa_ni
+argument_list|,
+literal|"%s: called"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|status
@@ -10660,6 +10796,25 @@ name|tid
 decl_stmt|,
 name|ret
 decl_stmt|;
+name|IEEE80211_NOTE
+argument_list|(
+name|tap
+operator|->
+name|txa_ni
+operator|->
+name|ni_vap
+argument_list|,
+name|IEEE80211_MSG_11N
+argument_list|,
+name|tap
+operator|->
+name|txa_ni
+argument_list|,
+literal|"%s: called"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -10974,6 +11129,21 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|IEEE80211_NOTE
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_MSG_DEBUG
+operator||
+name|IEEE80211_MSG_11N
+argument_list|,
+name|ni
+argument_list|,
+literal|"send BAR: failed: (ret = %d)\n"
+argument_list|,
+name|ret
+argument_list|)
+expr_stmt|;
 comment|/* xmit failed, clear state flag */
 name|tap
 operator|->
@@ -11012,6 +11182,27 @@ literal|0
 return|;
 name|bad
 label|:
+name|IEEE80211_NOTE
+argument_list|(
+name|tap
+operator|->
+name|txa_ni
+operator|->
+name|ni_vap
+argument_list|,
+name|IEEE80211_MSG_11N
+argument_list|,
+name|tap
+operator|->
+name|txa_ni
+argument_list|,
+literal|"%s: bad! ret=%d"
+argument_list|,
+name|__func__
+argument_list|,
+name|ret
+argument_list|)
+expr_stmt|;
 name|vap
 operator|->
 name|iv_stats

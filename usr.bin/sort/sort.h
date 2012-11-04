@@ -72,16 +72,6 @@ name|VERSION
 value|"2.3-FreeBSD"
 end_define
 
-begin_define
-define|#
-directive|define
-name|UNUSED_ARG
-parameter_list|(
-name|A
-parameter_list|)
-value|do { A=A; } while(0)
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -210,7 +200,7 @@ begin_struct
 struct|struct
 name|sort_opts
 block|{
-name|wchar_t
+name|wint_t
 name|field_sep
 decl_stmt|;
 name|int

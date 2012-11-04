@@ -47,14 +47,11 @@ directive|include
 file|<netinet/sctp_var.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|INET6
-argument_list|)
-end_if
+end_ifdef
 
 begin_endif
 endif|#
@@ -718,9 +715,12 @@ return|return;
 block|}
 name|totsz
 operator|=
+name|ntohs
+argument_list|(
 name|ip
 operator|->
 name|ip_len
+argument_list|)
 expr_stmt|;
 name|nxtsz
 operator|=
@@ -1549,7 +1549,7 @@ name|sockaddr
 operator|*
 operator|)
 operator|&
-name|from
+name|to
 argument_list|,
 operator|(
 expr|struct
@@ -1557,7 +1557,7 @@ name|sockaddr
 operator|*
 operator|)
 operator|&
-name|to
+name|from
 argument_list|,
 operator|&
 name|inp
@@ -1787,7 +1787,7 @@ argument_list|(
 operator|&
 name|addrs
 index|[
-literal|0
+literal|1
 index|]
 argument_list|)
 argument_list|,
@@ -1796,7 +1796,7 @@ argument_list|(
 operator|&
 name|addrs
 index|[
-literal|1
+literal|0
 index|]
 argument_list|)
 argument_list|,
@@ -26652,9 +26652,6 @@ name|sctp_getaddresses
 modifier|*
 name|addrs
 decl_stmt|;
-name|size_t
-name|sz
-decl_stmt|;
 name|struct
 name|thread
 modifier|*
@@ -26695,8 +26692,10 @@ operator|==
 name|AF_INET
 condition|)
 block|{
-name|sz
-operator|=
+if|if
+condition|(
+name|optsize
+operator|<
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -26714,12 +26713,6 @@ argument_list|(
 expr|struct
 name|sockaddr_in
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|optsize
-operator|<
-name|sz
 condition|)
 block|{
 name|SCTP_LTRACE_ERR_RET
@@ -26810,8 +26803,10 @@ operator|==
 name|AF_INET6
 condition|)
 block|{
-name|sz
-operator|=
+if|if
+condition|(
+name|optsize
+operator|<
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -26829,12 +26824,6 @@ argument_list|(
 expr|struct
 name|sockaddr_in6
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|optsize
-operator|<
-name|sz
 condition|)
 block|{
 name|SCTP_LTRACE_ERR_RET
@@ -26962,9 +26951,6 @@ name|sctp_getaddresses
 modifier|*
 name|addrs
 decl_stmt|;
-name|size_t
-name|sz
-decl_stmt|;
 name|struct
 name|thread
 modifier|*
@@ -27005,8 +26991,10 @@ operator|==
 name|AF_INET
 condition|)
 block|{
-name|sz
-operator|=
+if|if
+condition|(
+name|optsize
+operator|<
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -27024,12 +27012,6 @@ argument_list|(
 expr|struct
 name|sockaddr_in
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|optsize
-operator|<
-name|sz
 condition|)
 block|{
 name|SCTP_LTRACE_ERR_RET
@@ -27120,8 +27102,10 @@ operator|==
 name|AF_INET6
 condition|)
 block|{
-name|sz
-operator|=
+if|if
+condition|(
+name|optsize
+operator|<
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -27139,12 +27123,6 @@ argument_list|(
 expr|struct
 name|sockaddr_in6
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|optsize
-operator|<
-name|sz
 condition|)
 block|{
 name|SCTP_LTRACE_ERR_RET
@@ -33211,12 +33189,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET
-end_ifdef
-
 begin_decl_stmt
 name|struct
 name|pr_usrreqs
@@ -33315,11 +33287,6 @@ name|sctp_soreceive
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

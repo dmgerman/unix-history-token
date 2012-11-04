@@ -22,13 +22,28 @@ end_define
 begin_define
 define|#
 directive|define
+name|_NETMAP_OFFSET
+parameter_list|(
+name|type
+parameter_list|,
+name|ptr
+parameter_list|,
+name|offset
+parameter_list|)
+define|\
+value|((type)(void *)((char *)(ptr) + (offset)))
+end_define
+
+begin_define
+define|#
+directive|define
 name|NETMAP_IF
 parameter_list|(
 name|b
 parameter_list|,
 name|o
 parameter_list|)
-value|(struct netmap_if *)((char *)(b) + (o))
+value|_NETMAP_OFFSET(struct netmap_if *, b, o)
 end_define
 
 begin_define
@@ -40,8 +55,7 @@ name|nifp
 parameter_list|,
 name|index
 parameter_list|)
-define|\
-value|((struct netmap_ring *)((char *)(nifp) +	\ 		(nifp)->ring_ofs[index] ) )
+value|_NETMAP_OFFSET(struct netmap_ring *, \ 	nifp, (nifp)->ring_ofs[index] )
 end_define
 
 begin_define
@@ -53,8 +67,7 @@ name|nifp
 parameter_list|,
 name|index
 parameter_list|)
-define|\
-value|((struct netmap_ring *)((char *)(nifp) +	\ 	    (nifp)->ring_ofs[index + (nifp)->ni_tx_rings + 1] ) )
+value|_NETMAP_OFFSET(struct netmap_ring *,	\ 	nifp, (nifp)->ring_ofs[index + (nifp)->ni_tx_rings + 1] )
 end_define
 
 begin_define

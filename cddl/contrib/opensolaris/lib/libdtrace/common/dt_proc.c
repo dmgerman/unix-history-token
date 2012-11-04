@@ -4027,6 +4027,12 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|err
+operator|==
+literal|0
+condition|)
 operator|(
 name|void
 operator|)

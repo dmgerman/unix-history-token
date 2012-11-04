@@ -152,6 +152,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Twine.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/LLVM.h"
 end_include
 
@@ -1720,14 +1726,6 @@ name|hasConst
 argument_list|()
 return|;
 block|}
-name|bool
-name|isSupersetOf
-argument_list|(
-name|Qualifiers
-name|Other
-argument_list|)
-decl|const
-decl_stmt|;
 comment|/// \brief Determine whether this set of qualifiers is a strict superset of
 comment|/// another set of qualifiers, not considering qualifier compatibility.
 name|bool
@@ -1884,36 +1882,33 @@ argument_list|(
 argument|const PrintingPolicy&Policy
 argument_list|)
 specifier|const
-block|{
-name|std
-operator|::
-name|string
-name|Buffer
-block|;
-name|getAsStringInternal
+expr_stmt|;
+name|bool
+name|isEmptyWhenPrinted
 argument_list|(
-name|Buffer
-argument_list|,
+specifier|const
+name|PrintingPolicy
+operator|&
 name|Policy
 argument_list|)
-block|;
-return|return
-name|Buffer
-return|;
-block|}
+decl|const
+decl_stmt|;
 name|void
-name|getAsStringInternal
+name|print
 argument_list|(
-name|std
-operator|::
-name|string
+name|raw_ostream
 operator|&
-name|S
+name|OS
 argument_list|,
 specifier|const
 name|PrintingPolicy
 operator|&
 name|Policy
+argument_list|,
+name|bool
+name|appendSpaceIfNonEmpty
+operator|=
+name|false
 argument_list|)
 decl|const
 decl_stmt|;
@@ -2374,8 +2369,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/// Retrieves a pointer to the underlying (unqualified) type.
-comment|/// This should really return a const Type, but it's not worth
-comment|/// changing all the users right now.
 comment|///
 comment|/// This function requires that the type not be NULL. If the type might be
 comment|/// NULL, use the (slightly less efficient) \c getTypePtrOrNull().
@@ -2688,6 +2681,18 @@ block|}
 comment|/// \brief Determine whether this is a Plain Old Data (POD) type (C++ 3.9p10).
 name|bool
 name|isPODType
+argument_list|(
+name|ASTContext
+operator|&
+name|Context
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// isCXX98PODType() - Return true if this is a POD type according to the
+comment|/// rules of the C++98 standard, regardless of the current compilation's
+comment|/// language.
+name|bool
+name|isCXX98PODType
 argument_list|(
 name|ASTContext
 operator|&
@@ -3334,24 +3339,120 @@ argument_list|(
 argument|const PrintingPolicy&Policy
 argument_list|)
 specifier|const
-block|{
-name|std
-operator|::
-name|string
-name|S
-block|;
-name|getAsStringInternal
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|void
+name|print
 argument_list|(
-name|S
+name|raw_ostream
+operator|&
+name|OS
+argument_list|,
+specifier|const
+name|PrintingPolicy
+operator|&
+name|Policy
+argument_list|,
+specifier|const
+name|Twine
+operator|&
+name|PlaceHolder
+operator|=
+name|Twine
+argument_list|()
+argument_list|)
+decl|const
+block|{
+name|print
+argument_list|(
+name|split
+argument_list|()
+argument_list|,
+name|OS
 argument_list|,
 name|Policy
+argument_list|,
+name|PlaceHolder
 argument_list|)
-block|;
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_function
+specifier|static
+name|void
+name|print
+parameter_list|(
+name|SplitQualType
+name|split
+parameter_list|,
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|,
+specifier|const
+name|PrintingPolicy
+modifier|&
+name|policy
+parameter_list|,
+specifier|const
+name|Twine
+modifier|&
+name|PlaceHolder
+parameter_list|)
+block|{
 return|return
-name|S
+name|print
+argument_list|(
+name|split
+operator|.
+name|Ty
+argument_list|,
+name|split
+operator|.
+name|Quals
+argument_list|,
+name|OS
+argument_list|,
+name|policy
+argument_list|,
+name|PlaceHolder
+argument_list|)
 return|;
 block|}
-end_expr_stmt
+end_function
+
+begin_function_decl
+specifier|static
+name|void
+name|print
+parameter_list|(
+specifier|const
+name|Type
+modifier|*
+name|ty
+parameter_list|,
+name|Qualifiers
+name|qs
+parameter_list|,
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|,
+specifier|const
+name|PrintingPolicy
+modifier|&
+name|policy
+parameter_list|,
+specifier|const
+name|Twine
+modifier|&
+name|PlaceHolder
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|void
@@ -3448,6 +3549,137 @@ operator|&
 name|policy
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|class
+name|StreamedQualTypeHelper
+block|{
+specifier|const
+name|QualType
+modifier|&
+name|T
+decl_stmt|;
+specifier|const
+name|PrintingPolicy
+modifier|&
+name|Policy
+decl_stmt|;
+specifier|const
+name|Twine
+modifier|&
+name|PlaceHolder
+decl_stmt|;
+name|public
+label|:
+name|StreamedQualTypeHelper
+argument_list|(
+specifier|const
+name|QualType
+operator|&
+name|T
+argument_list|,
+specifier|const
+name|PrintingPolicy
+operator|&
+name|Policy
+argument_list|,
+specifier|const
+name|Twine
+operator|&
+name|PlaceHolder
+argument_list|)
+operator|:
+name|T
+argument_list|(
+name|T
+argument_list|)
+operator|,
+name|Policy
+argument_list|(
+name|Policy
+argument_list|)
+operator|,
+name|PlaceHolder
+argument_list|(
+argument|PlaceHolder
+argument_list|)
+block|{ }
+name|friend
+name|raw_ostream
+operator|&
+name|operator
+operator|<<
+operator|(
+name|raw_ostream
+operator|&
+name|OS
+operator|,
+specifier|const
+name|StreamedQualTypeHelper
+operator|&
+name|SQT
+operator|)
+block|{
+name|SQT
+operator|.
+name|T
+operator|.
+name|print
+argument_list|(
+name|OS
+argument_list|,
+name|SQT
+operator|.
+name|Policy
+argument_list|,
+name|SQT
+operator|.
+name|PlaceHolder
+argument_list|)
+block|;
+return|return
+name|OS
+return|;
+block|}
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_decl_stmt
+name|StreamedQualTypeHelper
+name|stream
+argument_list|(
+specifier|const
+name|PrintingPolicy
+operator|&
+name|Policy
+argument_list|,
+specifier|const
+name|Twine
+operator|&
+name|PlaceHolder
+operator|=
+name|Twine
+argument_list|()
+argument_list|)
+decl|const
+block|{
+return|return
+name|StreamedQualTypeHelper
+argument_list|(
+operator|*
+name|this
+argument_list|,
+name|Policy
+argument_list|,
+name|PlaceHolder
+argument_list|)
+return|;
+block|}
 end_decl_stmt
 
 begin_decl_stmt
@@ -4455,8 +4687,6 @@ operator|:
 literal|8
 block|;
 comment|/// Dependent - Whether this type is a dependent type (C++ [temp.dep.type]).
-comment|/// Note that this should stay at the end of the ivars for Type so that
-comment|/// subclasses can pack their bitfields into the same word.
 name|unsigned
 name|Dependent
 operator|:
@@ -5896,7 +6126,7 @@ argument_list|()
 specifier|const
 block|;
 comment|/// Member-template getAs<specific type>'.  Look through sugar for
-comment|/// an instance of<specific type>.   This scheme will eventually
+comment|/// an instance of \<specific type>.   This scheme will eventually
 comment|/// replace the specific getAsXXXX methods above.
 comment|///
 comment|/// There are some specializations of this member template listed
@@ -5923,7 +6153,7 @@ argument_list|()
 specifier|const
 block|;
 comment|/// Member-template castAs<specific type>.  Look through sugar for
-comment|/// the underlying instance of<specific type>.
+comment|/// the underlying instance of \<specific type>.
 comment|///
 comment|/// This method has the same relationship to getAs<T> as cast<T> has
 comment|/// to dyn_cast<T>; which is to say, the underlying type *must*
@@ -6122,10 +6352,11 @@ name|class
 name|ASTWriter
 block|; }
 block|;
+comment|/// \brief This will check for a TypedefType by removing any existing sugar
+comment|/// until it reaches a TypedefType or a non-sugared type.
 name|template
 operator|<
 operator|>
-specifier|inline
 specifier|const
 name|TypedefType
 operator|*
@@ -6134,17 +6365,7 @@ operator|::
 name|getAs
 argument_list|()
 specifier|const
-block|{
-return|return
-name|dyn_cast
-operator|<
-name|TypedefType
-operator|>
-operator|(
-name|this
-operator|)
-return|;
-block|}
+block|;
 comment|// We can do canonical leaf types faster, because we don't have to
 comment|// worry about preserving child type decoration.
 define|#
@@ -6249,15 +6470,60 @@ name|Kind
 operator|)
 return|;
 block|}
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getName
 argument_list|(
 argument|const PrintingPolicy&Policy
 argument_list|)
 specifier|const
 block|;
+specifier|const
+name|char
+operator|*
+name|getNameAsCString
+argument_list|(
+argument|const PrintingPolicy&Policy
+argument_list|)
+specifier|const
+block|{
+comment|// The StringRef is null-terminated.
+name|StringRef
+name|str
+operator|=
+name|getName
+argument_list|(
+name|Policy
+argument_list|)
+block|;
+name|assert
+argument_list|(
+operator|!
+name|str
+operator|.
+name|empty
+argument_list|()
+operator|&&
+name|str
+operator|.
+name|data
+argument_list|()
+index|[
+name|str
+operator|.
+name|size
+argument_list|()
+index|]
+operator|==
+literal|'\0'
+argument_list|)
+block|;
+return|return
+name|str
+operator|.
+name|data
+argument_list|()
+return|;
+block|}
 name|bool
 name|isSugared
 argument_list|()
@@ -10077,6 +10343,48 @@ name|ExtInfo
 argument_list|)
 return|;
 block|}
+name|bool
+name|isConst
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getTypeQuals
+argument_list|()
+operator|&
+name|Qualifiers
+operator|::
+name|Const
+return|;
+block|}
+name|bool
+name|isVolatile
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getTypeQuals
+argument_list|()
+operator|&
+name|Qualifiers
+operator|::
+name|Volatile
+return|;
+block|}
+name|bool
+name|isRestrict
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getTypeQuals
+argument_list|()
+operator|&
+name|Qualifiers
+operator|::
+name|Restrict
+return|;
+block|}
 comment|/// \brief Determine the type of an expression that calls a function of
 comment|/// this type.
 name|QualType
@@ -10753,6 +11061,24 @@ name|getExceptionSpecTemplate
 argument_list|()
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|EPI
+operator|.
+name|ExceptionSpecType
+operator|==
+name|EST_Unevaluated
+condition|)
+block|{
+name|EPI
+operator|.
+name|ExceptionSpecDecl
+operator|=
+name|getExceptionSpecDecl
+argument_list|()
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|hasAnyConsumedArgs
@@ -10919,9 +11245,10 @@ argument_list|()
 operator|)
 return|;
 block|}
-comment|/// \brief If this function type has an uninstantiated exception
-comment|/// specification, this is the function whose exception specification
-comment|/// is represented by this type.
+comment|/// \brief If this function type has an exception specification which hasn't
+comment|/// been determined yet (either because it has not been evaluated or because
+comment|/// it has not been instantiated), this is the function whose exception
+comment|/// specification is represented by this type.
 name|FunctionDecl
 operator|*
 name|getExceptionSpecDecl
@@ -10934,6 +11261,11 @@ name|getExceptionSpecType
 argument_list|()
 operator|!=
 name|EST_Uninstantiated
+operator|&&
+name|getExceptionSpecType
+argument_list|()
+operator|!=
+name|EST_Unevaluated
 condition|)
 return|return
 literal|0
@@ -11009,7 +11341,7 @@ name|assert
 argument_list|(
 name|EST
 operator|!=
-name|EST_Delayed
+name|EST_Unevaluated
 operator|&&
 name|EST
 operator|!=
@@ -11243,10 +11575,20 @@ literal|0
 argument_list|)
 return|;
 block|}
+comment|// FIXME: Remove the string version.
 name|void
 name|printExceptionSpecification
 argument_list|(
 argument|std::string&S
+argument_list|,
+argument|PrintingPolicy Policy
+argument_list|)
+specifier|const
+block|;
+name|void
+name|printExceptionSpecification
+argument_list|(
+argument|raw_ostream&OS
 argument_list|,
 argument|PrintingPolicy Policy
 argument_list|)
@@ -13743,6 +14085,7 @@ argument_list|)
 block|;
 comment|/// \brief Print a template argument list, including the '<' and '>'
 comment|/// enclosing the template arguments.
+comment|// FIXME: remove the string ones.
 specifier|static
 name|std
 operator|::
@@ -13777,6 +14120,54 @@ operator|::
 name|string
 name|PrintTemplateArgumentList
 argument_list|(
+specifier|const
+name|TemplateArgumentListInfo
+operator|&
+argument_list|,
+specifier|const
+name|PrintingPolicy
+operator|&
+name|Policy
+argument_list|)
+block|;
+comment|/// \brief Print a template argument list, including the '<' and '>'
+comment|/// enclosing the template arguments.
+specifier|static
+name|void
+name|PrintTemplateArgumentList
+argument_list|(
+argument|raw_ostream&OS
+argument_list|,
+argument|const TemplateArgument *Args
+argument_list|,
+argument|unsigned NumArgs
+argument_list|,
+argument|const PrintingPolicy&Policy
+argument_list|,
+argument|bool SkipBrackets = false
+argument_list|)
+block|;
+specifier|static
+name|void
+name|PrintTemplateArgumentList
+argument_list|(
+argument|raw_ostream&OS
+argument_list|,
+argument|const TemplateArgumentLoc *Args
+argument_list|,
+argument|unsigned NumArgs
+argument_list|,
+argument|const PrintingPolicy&Policy
+argument_list|)
+block|;
+specifier|static
+name|void
+name|PrintTemplateArgumentList
+argument_list|(
+name|raw_ostream
+operator|&
+name|OS
+argument_list|,
 specifier|const
 name|TemplateArgumentListInfo
 operator|&
@@ -13923,7 +14314,7 @@ name|NumArgs
 return|;
 block|}
 comment|/// \brief Retrieve a specific template argument as a type.
-comment|/// \precondition @c isArgType(Arg)
+comment|/// \pre @c isArgType(Arg)
 specifier|const
 name|TemplateArgument
 operator|&
@@ -15224,7 +15615,10 @@ argument_list|,
 name|Canon
 argument_list|,
 comment|/*Dependent=*/
-name|true
+name|Pattern
+operator|->
+name|isDependentType
+argument_list|()
 argument_list|,
 comment|/*InstantiationDependent=*/
 name|true
@@ -15418,8 +15812,10 @@ comment|/// Every Objective C type is a combination of a base type and a
 comment|/// list of protocols.
 comment|///
 comment|/// Given the following declarations:
-comment|///   @class C;
-comment|///   @protocol P;
+comment|/// \code
+comment|///   \@class C;
+comment|///   \@protocol P;
+comment|/// \endcode
 comment|///
 comment|/// 'C' is an ObjCInterfaceType C.  It is sugar for an ObjCObjectType
 comment|/// with base C and no protocols.
@@ -16186,11 +16582,13 @@ comment|///
 comment|/// This method is equivalent to getPointeeType() except that
 comment|/// it discards any typedefs (or other sugar) between this
 comment|/// type and the "outermost" object type.  So for:
-comment|///   @class A; @protocol P; @protocol Q;
+comment|/// \code
+comment|///   \@class A; \@protocol P; \@protocol Q;
 comment|///   typedef A<P> AP;
 comment|///   typedef A A1;
 comment|///   typedef A1<P> A1P;
 comment|///   typedef A1P<Q> A1PQ;
+comment|/// \endcode
 comment|/// For 'A*', getObjectType() will return 'A'.
 comment|/// For 'A<P>*', getObjectType() will return 'A<P>'.
 comment|/// For 'AP*', getObjectType() will return 'A<P>'.
@@ -16221,7 +16619,7 @@ operator|)
 return|;
 block|}
 comment|/// getInterfaceType - If this pointer points to an Objective C
-comment|/// @interface type, gets the type for that interface.  Any protocol
+comment|/// \@interface type, gets the type for that interface.  Any protocol
 comment|/// qualifiers on the interface are ignored.
 comment|///
 comment|/// \return null if the base type for this pointer is 'id' or 'Class'
@@ -16247,7 +16645,7 @@ operator|(
 operator|)
 return|;
 block|}
-comment|/// getInterfaceDecl - If this pointer points to an Objective @interface
+comment|/// getInterfaceDecl - If this pointer points to an Objective \@interface
 comment|/// type, gets the declaration for that interface.
 comment|///
 comment|/// \return null if the base type for this pointer is 'id' or 'Class'
@@ -19449,7 +19847,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// Member-template getAs<specific type>'.
+comment|// Member-template getAs<specific type>'.
 end_comment
 
 begin_expr_stmt

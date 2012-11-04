@@ -760,7 +760,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    LsGenerateListing  *  * PARAMETERS:  FileId      - ID of listing file  *  * RETURN:      None  *  * DESCRIPTION: Generate a listing file.  This can be one of the several types  *              of "listings" supported.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    LsGenerateListing  *  * PARAMETERS:  FileId      - ID of listing file  *  * RETURN:      None  *  * DESCRIPTION: Generate a listing file. This can be one of the several types  *              of "listings" supported.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -905,7 +905,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    LsPushNode  *  * PARAMETERS:  Filename        - Pointer to the include filename  *  * RETURN:      None  *  * DESCRIPTION: Push a listing node on the listing/include file stack.  This  *              stack enables tracking of include files (infinitely nested)  *              and resumption of the listing of the parent file when the  *              include file is finished.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    LsPushNode  *  * PARAMETERS:  Filename        - Pointer to the include filename  *  * RETURN:      None  *  * DESCRIPTION: Push a listing node on the listing/include file stack. This  *              stack enables tracking of include files (infinitely nested)  *              and resumption of the listing of the parent file when the  *              include file is finished.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1009,7 +1009,9 @@ literal|"Could not pop empty listing stack"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|Gbl_ListingNode
+operator|)
 return|;
 block|}
 name|Gbl_ListingNode
@@ -1033,7 +1035,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    LsCheckException  *  * PARAMETERS:  LineNumber          - Current logical (cumulative) line #  *              FileId              - ID of output listing file  *  * RETURN:      None  *  * DESCRIPTION: Check if there is an exception for this line, and if there is,  *              put it in the listing immediately.  Handles multiple errors  *              per line.  Gbl_NextError points to the next error in the  *              sorted (by line #) list of compile errors/warnings.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    LsCheckException  *  * PARAMETERS:  LineNumber          - Current logical (cumulative) line #  *              FileId              - ID of output listing file  *  * RETURN:      None  *  * DESCRIPTION: Check if there is an exception for this line, and if there is,  *              put it in the listing immediately. Handles multiple errors  *              per line. Gbl_NextError points to the next error in the  *              sorted (by line #) list of compile errors/warnings.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1115,7 +1117,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    LsFlushListingBuffer  *  * PARAMETERS:  FileId          - ID of the listing file  *  * RETURN:      None  *  * DESCRIPTION: Flush out the current contents of the 16-byte hex AML code  *              buffer.  Usually called at the termination of a single line  *              of source code or when the buffer is full.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    LsFlushListingBuffer  *  * PARAMETERS:  FileId          - ID of the listing file  *  * RETURN:      None  *  * DESCRIPTION: Flush out the current contents of the 16-byte hex AML code  *              buffer. Usually called at the termination of a single line  *              of source code or when the buffer is full.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1431,7 +1433,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    LsWriteListingHexBytes  *  * PARAMETERS:  Buffer          - AML code buffer  *              Length          - Number of AML bytes to write  *              FileId          - ID of current listing file.  *  * RETURN:      None  *  * DESCRIPTION: Write the contents of the AML buffer to the listing file via  *              the listing buffer.  The listing buffer is flushed every 16  *              AML bytes.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    LsWriteListingHexBytes  *  * PARAMETERS:  Buffer          - AML code buffer  *              Length          - Number of AML bytes to write  *              FileId          - ID of current listing file.  *  * RETURN:      None  *  * DESCRIPTION: Write the contents of the AML buffer to the listing file via  *              the listing buffer. The listing buffer is flushed every 16  *              AML bytes.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1740,7 +1742,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    LsFinishSourceListing  *  * PARAMETERS:  FileId          - ID of current listing file.  *  * RETURN:      None  *  * DESCRIPTION: Cleanup routine for the listing file.  Flush the hex AML  *              listing buffer, and flush out any remaining lines in the  *              source input file.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    LsFinishSourceListing  *  * PARAMETERS:  FileId          - ID of current listing file.  *  * RETURN:      None  *  * DESCRIPTION: Cleanup routine for the listing file. Flush the hex AML  *              listing buffer, and flush out any remaining lines in the  *              source input file.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1870,7 +1872,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    LsWriteSourceLines  *  * PARAMETERS:  ToLineNumber            -  *              ToLogicalLineNumber     - Write up to this source line number  *              FileId                  - ID of current listing file  *  * RETURN:      None  *  * DESCRIPTION: Read then write source lines to the listing file until we have  *              reached the specified logical (cumulative) line number.  This  *              automatically echos out comment blocks and other non-AML  *              generating text until we get to the actual AML-generating line  *              of ASL code specified by the logical line number.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    LsWriteSourceLines  *  * PARAMETERS:  ToLineNumber            -  *              ToLogicalLineNumber     - Write up to this source line number  *              FileId                  - ID of current listing file  *  * RETURN:      None  *  * DESCRIPTION: Read then write source lines to the listing file until we have  *              reached the specified logical (cumulative) line number. This  *              automatically echos out comment blocks and other non-AML  *              generating text until we get to the actual AML-generating line  *              of ASL code specified by the logical line number.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -2000,7 +2002,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    LsWriteNodeToListing  *  * PARAMETERS:  Op            - Parse node to write to the listing file.  *              FileId          - ID of current listing file  *  * RETURN:      None.  *  * DESCRIPTION: Write "a node" to the listing file.  This means to  *              1) Write out all of the source text associated with the node  *              2) Write out all of the AML bytes associated with the node  *              3) Write any compiler exceptions associated with the node  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    LsWriteNodeToListing  *  * PARAMETERS:  Op            - Parse node to write to the listing file.  *              FileId          - ID of current listing file  *  * RETURN:      None.  *  * DESCRIPTION: Write "a node" to the listing file. This means to  *              1) Write out all of the source text associated with the node  *              2) Write out all of the AML bytes associated with the node  *              3) Write any compiler exceptions associated with the node  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -2827,7 +2829,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    LsDoHexOutputC  *  * PARAMETERS:  None  *  * RETURN:      None.  *  * DESCRIPTION: Create the hex output file.  This is the same data as the AML  *              output file, but formatted into hex/ascii bytes suitable for  *              inclusion into a C source file.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    LsDoHexOutputC  *  * PARAMETERS:  None  *  * RETURN:      None.  *  * DESCRIPTION: Create the hex output file. This is the same data as the AML  *              output file, but formatted into hex/ascii bytes suitable for  *              inclusion into a C source file.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -3072,7 +3074,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    LsDoHexOutputAsl  *  * PARAMETERS:  None  *  * RETURN:      None.  *  * DESCRIPTION: Create the hex output file.  This is the same data as the AML  *              output file, but formatted into hex/ascii bytes suitable for  *              inclusion into a C source file.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    LsDoHexOutputAsl  *  * PARAMETERS:  None  *  * RETURN:      None.  *  * DESCRIPTION: Create the hex output file. This is the same data as the AML  *              output file, but formatted into hex/ascii bytes suitable for  *              inclusion into a C source file.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -3317,7 +3319,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    LsDoHexOutputAsm  *  * PARAMETERS:  None  *  * RETURN:      None.  *  * DESCRIPTION: Create the hex output file.  This is the same data as the AML  *              output file, but formatted into hex/ascii bytes suitable for  *              inclusion into a ASM source file.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    LsDoHexOutputAsm  *  * PARAMETERS:  None  *  * RETURN:      None.  *  * DESCRIPTION: Create the hex output file. This is the same data as the AML  *              output file, but formatted into hex/ascii bytes suitable for  *              inclusion into a ASM source file.  *  ******************************************************************************/
 end_comment
 
 begin_function

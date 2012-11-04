@@ -224,13 +224,13 @@ comment|/// HasAES - Target has AES instructions
 name|bool
 name|HasAES
 block|;
-comment|/// HasCLMUL - Target has carry-less multiplication
+comment|/// HasPCLMUL - Target has carry-less multiplication
 name|bool
-name|HasCLMUL
+name|HasPCLMUL
 block|;
-comment|/// HasFMA3 - Target has 3-operand fused multiply-add
+comment|/// HasFMA - Target has 3-operand fused multiply-add
 name|bool
-name|HasFMA3
+name|HasFMA
 block|;
 comment|/// HasFMA4 - Target has 4-operand fused multiply-add
 name|bool
@@ -564,21 +564,21 @@ name|HasAES
 return|;
 block|}
 name|bool
-name|hasCLMUL
+name|hasPCLMUL
 argument_list|()
 specifier|const
 block|{
 return|return
-name|HasCLMUL
+name|HasPCLMUL
 return|;
 block|}
 name|bool
-name|hasFMA3
+name|hasFMA
 argument_list|()
 specifier|const
 block|{
 return|return
-name|HasFMA3
+name|HasFMA
 return|;
 block|}
 name|bool
@@ -1113,6 +1113,15 @@ argument|RegClassVector& CriticalPathRCs
 argument_list|)
 specifier|const
 block|;
+name|bool
+name|postRAScheduler
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PostRAScheduler
+return|;
+block|}
 comment|/// getInstrItins = Return the instruction itineraries based on the
 comment|/// subtarget selection.
 specifier|const

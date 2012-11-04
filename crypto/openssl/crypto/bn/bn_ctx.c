@@ -482,7 +482,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%02x "
+literal|"%03x "
 argument_list|,
 name|item
 operator|->
@@ -556,14 +556,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"   "
+literal|"    "
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"^^ "
+literal|"^^^ "
 argument_list|)
 expr_stmt|;
 name|bnidx

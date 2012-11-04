@@ -61,6 +61,21 @@ value|0x1
 end_define
 
 begin_comment
+comment|/* XXX: not used anywhere */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RT_NORTREF
+value|0x2
+end_define
+
+begin_comment
+comment|/* doesn't hold reference on ro_rt */
+end_comment
+
+begin_comment
 comment|/*  * These numbers are used by reliable protocols for determining  * retransmission behavior and are included in the routing structure.  */
 end_comment
 
@@ -1417,6 +1432,16 @@ parameter_list|(
 name|_rt
 parameter_list|)
 value|do {					\ 	RT_LOCK(_rt);						\ 	RTFREE_LOCKED(_rt);					\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RO_RTFREE
+parameter_list|(
+name|_ro
+parameter_list|)
+value|do {					\ 	if ((_ro)->ro_rt) {					\ 		if ((_ro)->ro_flags& RT_NORTREF) {		\ 			(_ro)->ro_flags&= ~RT_NORTREF;		\ 			(_ro)->ro_rt = NULL;			\ 		} else {					\ 			RT_LOCK((_ro)->ro_rt);			\ 			RTFREE_LOCKED((_ro)->ro_rt);		\ 		}						\ 	}							\ } while (0)
 end_define
 
 begin_function_decl

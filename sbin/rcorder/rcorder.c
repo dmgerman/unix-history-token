@@ -300,6 +300,7 @@ value|FALSE
 end_define
 
 begin_decl_stmt
+specifier|static
 name|Hash_Table
 name|provide_hash_s
 decl_stmt|,

@@ -207,7 +207,7 @@ literal|0xFULL
 operator|<<
 literal|6
 decl_stmt|;
-comment|//< Struct alignment
+comment|///< Struct alignment
 specifier|static
 specifier|const
 name|uint64_t
@@ -256,7 +256,7 @@ literal|0xffffffffULL
 operator|<<
 literal|32
 decl_stmt|;
-comment|//< Struct size
+comment|///< Struct size
 specifier|static
 specifier|const
 name|uint64_t
@@ -271,7 +271,7 @@ name|One
 init|=
 literal|1ULL
 decl_stmt|;
-comment|//< 1 of this type, for shifts
+comment|///< 1 of this type, for shifts
 name|uint64_t
 name|Flags
 decl_stmt|;

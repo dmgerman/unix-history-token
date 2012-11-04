@@ -1145,6 +1145,12 @@ name|pd_proc
 operator|=
 name|NULL
 expr_stmt|;
+name|p
+operator|->
+name|p_procdesc
+operator|=
+name|NULL
+expr_stmt|;
 name|procdesc_free
 argument_list|(
 name|pd
@@ -1154,7 +1160,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * procdesc_close() - last close on a process descriptor.  If the process is  * still running, terminate with SIGKILL (unless PD_DAEMON is set) and let  * init(8) clean up the mess; if not, we have to clean up the zombie ourselves.  */
+comment|/*  * procdesc_close() - last close on a process descriptor.  If the process is  * still running, terminate with SIGKILL (unless PDF_DAEMON is set) and let  * init(8) clean up the mess; if not, we have to clean up the zombie ourselves.  */
 end_comment
 
 begin_function
@@ -1243,11 +1249,22 @@ name|pd
 operator|->
 name|pd_proc
 expr_stmt|;
-name|PROC_LOCK
-argument_list|(
+if|if
+condition|(
 name|p
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* 		 * This is the case where process' exit status was already 		 * collected and procdesc_reap() was already called. 		 */
+name|sx_xunlock
+argument_list|(
+operator|&
+name|proctree_lock
 argument_list|)
 expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|p
@@ -1258,6 +1275,11 @@ name|PRS_ZOMBIE
 condition|)
 block|{
 comment|/* 		 * If the process is already dead and just awaiting reaping, 		 * do that now.  This will release the process's reference to 		 * the process descriptor when it calls back into 		 * procdesc_reap(). 		 */
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|PROC_SLOCK
 argument_list|(
 name|p
@@ -1280,6 +1302,11 @@ block|}
 else|else
 block|{
 comment|/* 		 * If the process is not yet dead, we need to kill it, but we 		 * can't wait around synchronously for it to go away, as that 		 * path leads to madness (and deadlocks).  First, detach the 		 * process from its descriptor so that its exit status will 		 * be reported normally. 		 */
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|pd
 operator|->
 name|pd_proc
@@ -1318,7 +1345,7 @@ name|pd
 operator|->
 name|pd_flags
 operator|&
-name|PD_DAEMON
+name|PDF_DAEMON
 operator|)
 operator|==
 literal|0

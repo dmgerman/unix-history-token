@@ -296,7 +296,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsCreateBufferField  *  * PARAMETERS:  Op                  - Current parse op (CreateXXField)  *              WalkState           - Current state  *  * RETURN:      Status  *  * DESCRIPTION: Execute the CreateField operators:  *              CreateBitFieldOp,  *              CreateByteFieldOp,  *              CreateWordFieldOp,  *              CreateDWordFieldOp,  *              CreateQWordFieldOp,  *              CreateFieldOp       (all of which define a field in a buffer)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsCreateBufferField  *  * PARAMETERS:  Op                  - Current parse op (CreateXXField)  *              WalkState           - Current state  *  * RETURN:      Status  *  * DESCRIPTION: Execute the CreateField operators:  *              CreateBitFieldOp,  *              CreateByteFieldOp,  *              CreateWordFieldOp,  *              CreateDwordFieldOp,  *              CreateQwordFieldOp,  *              CreateFieldOp       (all of which define a field in a buffer)  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -649,7 +649,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsGetFieldNames  *  * PARAMETERS:  Info            - CreateField info structure  *  `           WalkState       - Current method state  *              Arg             - First parser arg for the field name list  *  * RETURN:      Status  *  * DESCRIPTION: Process all named fields in a field declaration.  Names are  *              entered into the namespace.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsGetFieldNames  *  * PARAMETERS:  Info            - CreateField info structure  *  `           WalkState       - Current method state  *              Arg             - First parser arg for the field name list  *  * RETURN:      Status  *  * DESCRIPTION: Process all named fields in a field declaration. Names are  *              entered into the namespace.  *  ******************************************************************************/
 end_comment
 
 begin_function

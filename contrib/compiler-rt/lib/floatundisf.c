@@ -21,15 +21,14 @@ directive|include
 file|"int_lib.h"
 end_include
 
-begin_expr_stmt
+begin_macro
 name|ARM_EABI_FNALIAS
 argument_list|(
-name|ul2f
+argument|ul2f
 argument_list|,
-name|floatundisf
+argument|floatundisf
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+end_macro
 
 begin_function
 name|COMPILER_RT_ABI

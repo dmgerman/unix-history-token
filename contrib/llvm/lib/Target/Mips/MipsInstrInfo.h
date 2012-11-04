@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"MipsAnalyzeImmediate.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"MipsRegisterInfo.h"
 end_include
 
@@ -99,35 +105,17 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|namespace
-name|Mips
-block|{
-comment|/// GetOppositeBranchOpc - Return the inverse of the specified
-comment|/// opcode, e.g. turning BEQ to BNE.
-name|unsigned
-name|GetOppositeBranchOpc
-parameter_list|(
-name|unsigned
-name|Opc
-parameter_list|)
-function_decl|;
-block|}
 name|class
 name|MipsInstrInfo
 range|:
 name|public
 name|MipsGenInstrInfo
 block|{
+name|protected
+operator|:
 name|MipsTargetMachine
 operator|&
 name|TM
-block|;
-name|bool
-name|IsN64
-block|;
-specifier|const
-name|MipsRegisterInfo
-name|RI
 block|;
 name|unsigned
 name|UncondBrOpc
@@ -137,52 +125,21 @@ operator|:
 name|explicit
 name|MipsInstrInfo
 argument_list|(
+argument|MipsTargetMachine&TM
+argument_list|,
+argument|unsigned UncondBrOpc
+argument_list|)
+block|;
+specifier|static
+specifier|const
+name|MipsInstrInfo
+operator|*
+name|create
+argument_list|(
 name|MipsTargetMachine
 operator|&
 name|TM
 argument_list|)
-block|;
-comment|/// getRegisterInfo - TargetInstrInfo is a superset of MRegister info.  As
-comment|/// such, whenever a client has an instance of instruction info, it should
-comment|/// always be able to get register info as well (through this method).
-comment|///
-name|virtual
-specifier|const
-name|MipsRegisterInfo
-operator|&
-name|getRegisterInfo
-argument_list|()
-specifier|const
-block|;
-comment|/// isLoadFromStackSlot - If the specified machine instruction is a direct
-comment|/// load from a stack slot, return the virtual or physical register number of
-comment|/// the destination along with the FrameIndex of the loaded stack slot.  If
-comment|/// not, return 0.  This predicate must return 0 if the instruction has
-comment|/// any side effects other than loading from the stack slot.
-name|virtual
-name|unsigned
-name|isLoadFromStackSlot
-argument_list|(
-argument|const MachineInstr *MI
-argument_list|,
-argument|int&FrameIndex
-argument_list|)
-specifier|const
-block|;
-comment|/// isStoreToStackSlot - If the specified machine instruction is a direct
-comment|/// store to a stack slot, return the virtual or physical register number of
-comment|/// the source reg along with the FrameIndex of the loaded stack slot.  If
-comment|/// not, return 0.  This predicate must return 0 if the instruction has
-comment|/// any side effects other than storing to the stack slot.
-name|virtual
-name|unsigned
-name|isStoreToStackSlot
-argument_list|(
-argument|const MachineInstr *MI
-argument_list|,
-argument|int&FrameIndex
-argument_list|)
-specifier|const
 block|;
 comment|/// Branch Analysis
 name|virtual
@@ -209,23 +166,6 @@ argument|MachineBasicBlock&MBB
 argument_list|)
 specifier|const
 block|;
-name|private
-operator|:
-name|void
-name|BuildCondBr
-argument_list|(
-argument|MachineBasicBlock&MBB
-argument_list|,
-argument|MachineBasicBlock *TBB
-argument_list|,
-argument|DebugLoc DL
-argument_list|,
-argument|const SmallVectorImpl<MachineOperand>& Cond
-argument_list|)
-specifier|const
-block|;
-name|public
-operator|:
 name|virtual
 name|unsigned
 name|InsertBranch
@@ -243,58 +183,10 @@ argument_list|)
 specifier|const
 block|;
 name|virtual
-name|void
-name|copyPhysReg
+name|bool
+name|ReverseBranchCondition
 argument_list|(
-argument|MachineBasicBlock&MBB
-argument_list|,
-argument|MachineBasicBlock::iterator MI
-argument_list|,
-argument|DebugLoc DL
-argument_list|,
-argument|unsigned DestReg
-argument_list|,
-argument|unsigned SrcReg
-argument_list|,
-argument|bool KillSrc
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|void
-name|storeRegToStackSlot
-argument_list|(
-argument|MachineBasicBlock&MBB
-argument_list|,
-argument|MachineBasicBlock::iterator MBBI
-argument_list|,
-argument|unsigned SrcReg
-argument_list|,
-argument|bool isKill
-argument_list|,
-argument|int FrameIndex
-argument_list|,
-argument|const TargetRegisterClass *RC
-argument_list|,
-argument|const TargetRegisterInfo *TRI
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|void
-name|loadRegFromStackSlot
-argument_list|(
-argument|MachineBasicBlock&MBB
-argument_list|,
-argument|MachineBasicBlock::iterator MBBI
-argument_list|,
-argument|unsigned DestReg
-argument_list|,
-argument|int FrameIndex
-argument_list|,
-argument|const TargetRegisterClass *RC
-argument_list|,
-argument|const TargetRegisterInfo *TRI
+argument|SmallVectorImpl<MachineOperand>&Cond
 argument_list|)
 specifier|const
 block|;
@@ -315,14 +207,6 @@ argument|DebugLoc DL
 argument_list|)
 specifier|const
 block|;
-name|virtual
-name|bool
-name|ReverseBranchCondition
-argument_list|(
-argument|SmallVectorImpl<MachineOperand>&Cond
-argument_list|)
-specifier|const
-block|;
 comment|/// Insert nop instruction when hazard condition is found
 name|virtual
 name|void
@@ -333,8 +217,164 @@ argument_list|,
 argument|MachineBasicBlock::iterator MI
 argument_list|)
 specifier|const
+block|;
+comment|/// getRegisterInfo - TargetInstrInfo is a superset of MRegister info.  As
+comment|/// such, whenever a client has an instance of instruction info, it should
+comment|/// always be able to get register info as well (through this method).
+comment|///
+name|virtual
+specifier|const
+name|MipsRegisterInfo
+operator|&
+name|getRegisterInfo
+argument_list|()
+specifier|const
+operator|=
+literal|0
+block|;
+name|virtual
+name|unsigned
+name|GetOppositeBranchOpc
+argument_list|(
+argument|unsigned Opc
+argument_list|)
+specifier|const
+operator|=
+literal|0
+block|;
+comment|/// Return the number of bytes of code the specified instruction may be.
+name|unsigned
+name|GetInstSizeInBytes
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|protected
+operator|:
+name|bool
+name|isZeroImm
+argument_list|(
+argument|const MachineOperand&op
+argument_list|)
+specifier|const
+block|;
+name|MachineMemOperand
+operator|*
+name|GetMemOperand
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|int FI
+argument_list|,
+argument|unsigned Flag
+argument_list|)
+specifier|const
+block|;
+name|private
+operator|:
+name|virtual
+name|unsigned
+name|GetAnalyzableBrOpc
+argument_list|(
+argument|unsigned Opc
+argument_list|)
+specifier|const
+operator|=
+literal|0
+block|;
+name|void
+name|AnalyzeCondBr
+argument_list|(
+argument|const MachineInstr *Inst
+argument_list|,
+argument|unsigned Opc
+argument_list|,
+argument|MachineBasicBlock *&BB
+argument_list|,
+argument|SmallVectorImpl<MachineOperand>&Cond
+argument_list|)
+specifier|const
+block|;
+name|void
+name|BuildCondBr
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock *TBB
+argument_list|,
+argument|DebugLoc DL
+argument_list|,
+argument|const SmallVectorImpl<MachineOperand>& Cond
+argument_list|)
+specifier|const
 block|; }
 decl_stmt|;
+name|namespace
+name|Mips
+block|{
+comment|/// Emit a series of instructions to load an immediate. All instructions
+comment|/// except for the last one are emitted. The function returns the number of
+comment|/// MachineInstrs generated. The opcode-immediate pair of the last
+comment|/// instruction is returned in LastInst, if it is not 0.
+name|unsigned
+name|loadImmediate
+argument_list|(
+name|int64_t
+name|Imm
+argument_list|,
+name|bool
+name|IsN64
+argument_list|,
+specifier|const
+name|TargetInstrInfo
+operator|&
+name|TII
+argument_list|,
+name|MachineBasicBlock
+operator|&
+name|MBB
+argument_list|,
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|II
+argument_list|,
+name|DebugLoc
+name|DL
+argument_list|,
+name|bool
+name|LastInstrIsADDiu
+argument_list|,
+name|MipsAnalyzeImmediate
+operator|::
+name|Inst
+operator|*
+name|LastInst
+argument_list|)
+decl_stmt|;
+block|}
+comment|/// Create MipsInstrInfo objects.
+specifier|const
+name|MipsInstrInfo
+modifier|*
+name|createMips16InstrInfo
+parameter_list|(
+name|MipsTargetMachine
+modifier|&
+name|TM
+parameter_list|)
+function_decl|;
+specifier|const
+name|MipsInstrInfo
+modifier|*
+name|createMipsSEInstrInfo
+parameter_list|(
+name|MipsTargetMachine
+modifier|&
+name|TM
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

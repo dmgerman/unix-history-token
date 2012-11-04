@@ -555,39 +555,6 @@ name|SIZE_MAX
 value|UINT32_MAX
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|WCHAR_MIN
-end_ifndef
-
-begin_comment
-comment|/* Also possibly defined in<wchar.h> */
-end_comment
-
-begin_comment
-comment|/* Limits of wchar_t. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WCHAR_MIN
-value|INT32_MIN
-end_define
-
-begin_define
-define|#
-directive|define
-name|WCHAR_MAX
-value|INT32_MAX
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* Limits of wint_t. */
 end_comment

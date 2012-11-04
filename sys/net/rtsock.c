@@ -1365,8 +1365,6 @@ modifier|*
 name|rp
 decl_stmt|;
 name|int
-name|s
-decl_stmt|,
 name|error
 decl_stmt|;
 name|KASSERT
@@ -1407,12 +1405,6 @@ condition|)
 return|return
 name|ENOBUFS
 return|;
-comment|/* 	 * The splnet() is necessary to block protocols from sending 	 * error notifications (like RTM_REDIRECT or RTM_LOSING) while 	 * this PCB is extant but incompletely initialized. 	 * Probably we should try to do more of this work beforehand and 	 * eliminate the spl. 	 */
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
 name|so
 operator|->
 name|so_pcb
@@ -1453,11 +1445,6 @@ condition|(
 name|error
 condition|)
 block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|so
 operator|->
 name|so_pcb
@@ -1533,11 +1520,6 @@ operator|->
 name|so_options
 operator||=
 name|SO_USELOOPBACK
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 return|return
 literal|0

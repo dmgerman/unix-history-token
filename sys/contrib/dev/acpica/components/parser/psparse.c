@@ -8,7 +8,7 @@ comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  * 
 end_comment
 
 begin_comment
-comment|/*  * Parse the AML and build an operation tree as most interpreters,  * like Perl, do.  Parsing is done by hand rather than with a YACC  * generated parser to tightly constrain stack and dynamic memory  * usage.  At the same time, parsing is kept flexible and the code  * fairly compact by parsing based on a list of AML opcode  * templates in AmlOpInfo[]  */
+comment|/*  * Parse the AML and build an operation tree as most interpreters,  * like Perl, do. Parsing is done by hand rather than with a YACC  * generated parser to tightly constrain stack and dynamic memory  * usage. At the same time, parsing is kept flexible and the code  * fairly compact by parsing based on a list of AML opcode  * templates in AmlOpInfo[]  */
 end_comment
 
 begin_include
@@ -329,7 +329,7 @@ break|break;
 case|case
 name|AML_CLASS_CREATE
 case|:
-comment|/*              * These opcodes contain TermArg operands.  The current              * op must be replaced by a placeholder return op              */
+comment|/*              * These opcodes contain TermArg operands. The current              * op must be replaced by a placeholder return op              */
 name|ReplacementOp
 operator|=
 name|AcpiPsAllocOp
@@ -352,7 +352,7 @@ break|break;
 case|case
 name|AML_CLASS_NAMED_OBJECT
 case|:
-comment|/*              * These opcodes contain TermArg operands.  The current              * op must be replaced by a placeholder return op              */
+comment|/*              * These opcodes contain TermArg operands. The current              * op must be replaced by a placeholder return op              */
 if|if
 condition|(
 operator|(
@@ -960,7 +960,7 @@ break|break;
 case|case
 name|AE_CTRL_FALSE
 case|:
-comment|/*          * Either an IF/WHILE Predicate was false or we encountered a BREAK          * opcode.  In both cases, we do not execute the rest of the          * package;  We simply close out the parent (finishing the walk of          * this branch of the tree) and continue execution at the parent          * level.          */
+comment|/*          * Either an IF/WHILE Predicate was false or we encountered a BREAK          * opcode. In both cases, we do not execute the rest of the          * package;  We simply close out the parent (finishing the walk of          * this branch of the tree) and continue execution at the parent          * level.          */
 name|ParserState
 operator|->
 name|Aml
@@ -1227,7 +1227,7 @@ name|AcpiGbl_CurrentWalkList
 operator|=
 name|Thread
 expr_stmt|;
-comment|/*      * Execute the walk loop as long as there is a valid Walk State.  This      * handles nested control method invocations without recursion.      */
+comment|/*      * Execute the walk loop as long as there is a valid Walk State. This      * handles nested control method invocations without recursion.      */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(

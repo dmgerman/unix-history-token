@@ -1082,6 +1082,7 @@ return|return
 name|getPointerToGlobal
 argument_list|(
 operator|(
+specifier|const
 name|GlobalValue
 operator|*
 operator|)

@@ -662,7 +662,7 @@ name|frame
 operator|->
 name|tf_pc
 expr_stmt|;
-comment|/*  	 * Get the current thread/proc structure or thread0/proc0 if there is  	 * none. 	 */
+comment|/* 	 * Get the current thread/proc structure or thread0/proc0 if there is 	 * none. 	 */
 name|td
 operator|=
 name|curthread
@@ -756,6 +756,10 @@ endif|#
 directive|endif
 comment|/* Check for coprocessor instruction */
 comment|/* 	 * According to the datasheets you only need to look at bit 27 of the 	 * instruction to tell the difference between and undefined 	 * instruction and a coprocessor instruction following an undefined 	 * instruction trap. 	 */
+name|coprocessor
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -780,11 +784,43 @@ operator|)
 operator|&
 literal|0x0f
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ARM_VFP_SUPPORT
 else|else
+block|{
+comment|/* check for special instructions */
+if|if
+condition|(
+operator|(
+operator|(
+name|fault_instruction
+operator|&
+literal|0xfe000000
+operator|)
+operator|==
+literal|0xf2000000
+operator|)
+operator|||
+operator|(
+operator|(
+name|fault_instruction
+operator|&
+literal|0xff100000
+operator|)
+operator|==
+literal|0xf4000000
+operator|)
+condition|)
 name|coprocessor
 operator|=
-literal|0
+literal|10
 expr_stmt|;
+comment|/* vfp / simd */
+block|}
+endif|#
+directive|endif
+comment|/* ARM_VFP_SUPPORT */
 if|if
 condition|(
 operator|(

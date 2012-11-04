@@ -146,6 +146,8 @@ name|TargetRegisterClass
 operator|*
 name|getPointerRegClass
 argument_list|(
+argument|const MachineFunction&MF
+argument_list|,
 argument|unsigned Kind =
 literal|0
 argument_list|)

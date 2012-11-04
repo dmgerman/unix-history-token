@@ -708,7 +708,7 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-comment|/* 	 * set a byte in the positions array to indicate if a field or 	 * column is to be selected; use +1, it's 1-based, not 0-based. 	 * Numbers and number ranges may be overlapping, repeated, and in 	 * any order. We handle "-3-5" although there's no real reason too. 	 */
+comment|/* 	 * set a byte in the positions array to indicate if a field or 	 * column is to be selected; use +1, it's 1-based, not 0-based. 	 * Numbers and number ranges may be overlapping, repeated, and in 	 * any order. We handle "-3-5" although there's no real reason to. 	 */
 for|for
 control|(
 init|;
@@ -863,7 +863,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"[-cf] list: illegal list value"
+literal|"[-bcf] list: illegal list value"
 argument_list|)
 expr_stmt|;
 if|if
@@ -878,7 +878,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"[-cf] list: values may not include zero"
+literal|"[-bcf] list: values may not include zero"
 argument_list|)
 expr_stmt|;
 if|if

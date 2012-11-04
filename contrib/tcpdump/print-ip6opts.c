@@ -546,6 +546,13 @@ name|optlen
 init|=
 literal|0
 decl_stmt|;
+if|if
+condition|(
+name|len
+operator|==
+literal|0
+condition|)
+return|return;
 for|for
 control|(
 name|i
@@ -1368,7 +1375,7 @@ goto|;
 block|}
 name|printf
 argument_list|(
-literal|"(opt_type 0x%02x: len=%d) "
+literal|"(opt_type 0x%02x: len=%d)"
 argument_list|,
 name|bp
 index|[
@@ -1386,6 +1393,11 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+name|printf
+argument_list|(
+literal|" "
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 literal|0

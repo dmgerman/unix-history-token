@@ -777,7 +777,7 @@ name|map
 operator|->
 name|system_mtx
 argument_list|,
-literal|"system map"
+literal|"vm map (system)"
 argument_list|,
 name|NULL
 argument_list|,
@@ -793,7 +793,7 @@ name|map
 operator|->
 name|lock
 argument_list|,
-literal|"user map"
+literal|"vm map (user)"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1830,6 +1830,8 @@ name|td
 decl_stmt|;
 name|vm_map_entry_t
 name|entry
+decl_stmt|,
+name|next
 decl_stmt|;
 name|vm_object_t
 name|object
@@ -1838,22 +1840,26 @@ name|td
 operator|=
 name|curthread
 expr_stmt|;
-while|while
-condition|(
-operator|(
 name|entry
 operator|=
 name|td
 operator|->
 name|td_map_def_user
-operator|)
+expr_stmt|;
+name|td
+operator|->
+name|td_map_def_user
+operator|=
+name|NULL
+expr_stmt|;
+while|while
+condition|(
+name|entry
 operator|!=
 name|NULL
 condition|)
 block|{
-name|td
-operator|->
-name|td_map_def_user
+name|next
 operator|=
 name|entry
 operator|->
@@ -1929,6 +1935,10 @@ name|entry
 argument_list|,
 name|FALSE
 argument_list|)
+expr_stmt|;
+name|entry
+operator|=
+name|next
 expr_stmt|;
 block|}
 block|}
@@ -13210,6 +13220,8 @@ decl_stmt|,
 name|top
 decl_stmt|;
 name|vm_size_t
+name|growsize
+decl_stmt|,
 name|init_ssize
 decl_stmt|;
 name|int
@@ -13274,17 +13286,21 @@ operator|(
 name|KERN_NO_SPACE
 operator|)
 return|;
+name|growsize
+operator|=
+name|sgrowsiz
+expr_stmt|;
 name|init_ssize
 operator|=
 operator|(
 name|max_ssize
 operator|<
-name|sgrowsiz
+name|growsize
 operator|)
 condition|?
 name|max_ssize
 else|:
-name|sgrowsiz
+name|growsize
 expr_stmt|;
 name|PROC_LOCK
 argument_list|(
@@ -13655,6 +13671,9 @@ name|vm_map
 decl_stmt|;
 name|vm_offset_t
 name|end
+decl_stmt|;
+name|vm_size_t
+name|growsize
 decl_stmt|;
 name|size_t
 name|grow_amount
@@ -14157,14 +14176,18 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Round up the grow amount modulo SGROWSIZ */
+comment|/* Round up the grow amount modulo sgrowsiz */
+name|growsize
+operator|=
+name|sgrowsiz
+expr_stmt|;
 name|grow_amount
 operator|=
 name|roundup
 argument_list|(
 name|grow_amount
 argument_list|,
-name|sgrowsiz
+name|growsize
 argument_list|)
 expr_stmt|;
 if|if
@@ -14413,13 +14436,13 @@ name|stack_entry
 operator|->
 name|start
 argument_list|,
-name|p
+name|next_entry
 operator|->
-name|p_sysent
-operator|->
-name|sv_stackprot
+name|protection
 argument_list|,
-name|VM_PROT_ALL
+name|next_entry
+operator|->
+name|max_protection
 argument_list|,
 literal|0
 argument_list|)

@@ -454,16 +454,6 @@ name|err
 goto|;
 if|if
 condition|(
-operator|!
-name|dgst
-condition|)
-name|dgst
-operator|=
-name|EVP_sha1
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
 name|key
 condition|)
 block|{

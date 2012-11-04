@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -416,18 +422,6 @@ name|error
 init|=
 name|ENOMEM
 decl_stmt|;
-name|int
-name|unit
-init|=
-name|device_get_unit
-argument_list|(
-name|dev
-argument_list|)
-decl_stmt|;
-name|void
-modifier|*
-name|ih
-decl_stmt|;
 name|sc
 operator|->
 name|portrid
@@ -563,22 +557,6 @@ block|}
 name|aha_alloc
 argument_list|(
 name|sc
-argument_list|,
-name|unit
-argument_list|,
-name|rman_get_bustag
-argument_list|(
-name|sc
-operator|->
-name|port
-argument_list|)
-argument_list|,
-name|rman_get_bushandle
-argument_list|(
-name|sc
-operator|->
-name|port
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|error
@@ -679,11 +657,10 @@ comment|/* flags	*/
 literal|0
 argument_list|,
 comment|/* lockfunc	*/
-name|busdma_lock_mutex
+name|NULL
 argument_list|,
 comment|/* lockarg	*/
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 operator|&
 name|sc
@@ -766,6 +743,8 @@ argument_list|,
 name|INTR_TYPE_CAM
 operator||
 name|INTR_ENTROPY
+operator||
+name|INTR_MPSAFE
 argument_list|,
 name|NULL
 argument_list|,
@@ -774,6 +753,8 @@ argument_list|,
 name|sc
 argument_list|,
 operator|&
+name|sc
+operator|->
 name|ih
 argument_list|)
 expr_stmt|;
@@ -787,6 +768,11 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"Unable to register interrupt handler\n"
+argument_list|)
+expr_stmt|;
+name|aha_detach
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 goto|goto

@@ -103,6 +103,37 @@ name|uint8_t
 name|ts_flags
 decl_stmt|;
 comment|/* misc flags */
+name|uint8_t
+name|ts_queue_id
+decl_stmt|;
+comment|/* AR9300: TX queue id */
+name|uint8_t
+name|ts_desc_id
+decl_stmt|;
+comment|/* AR9300: TX descriptor id */
+name|uint8_t
+name|ts_tid
+decl_stmt|;
+comment|/* TID */
+comment|/* #define ts_rssi ts_rssi_combined */
+name|uint32_t
+name|ts_ba_low
+decl_stmt|;
+comment|/* blockack bitmap low */
+name|uint32_t
+name|ts_ba_high
+decl_stmt|;
+comment|/* blockack bitmap high */
+name|uint32_t
+name|ts_evm0
+decl_stmt|;
+comment|/* evm bytes */
+name|uint32_t
+name|ts_evm1
+decl_stmt|;
+name|uint32_t
+name|ts_evm2
+decl_stmt|;
 name|int8_t
 name|ts_rssi_ctl
 index|[
@@ -117,28 +148,11 @@ literal|3
 index|]
 decl_stmt|;
 comment|/* tx ack RSSI [ext, chain 0-2] */
-comment|/* #define ts_rssi ts_rssi_combined */
-name|uint32_t
-name|ts_ba_low
-decl_stmt|;
-comment|/* blockack bitmap low */
-name|uint32_t
-name|ts_ba_high
-decl_stmt|;
-comment|/* blockack bitmap high */
 name|uint8_t
-name|ts_tid
-decl_stmt|;
-comment|/* TID */
-name|uint32_t
-name|ts_evm0
-decl_stmt|;
-comment|/* evm bytes */
-name|uint32_t
-name|ts_evm1
-decl_stmt|;
-name|uint32_t
-name|ts_evm2
+name|ts_pad
+index|[
+literal|2
+index|]
 decl_stmt|;
 endif|#
 directive|endif
@@ -335,14 +349,18 @@ name|uint8_t
 name|rs_moreaggr
 decl_stmt|;
 comment|/* more frames in aggr to follow */
+name|uint16_t
+name|rs_flags
+decl_stmt|;
+comment|/* misc flags */
 name|uint8_t
 name|rs_num_delims
 decl_stmt|;
 comment|/* number of delims in aggr */
 name|uint8_t
-name|rs_flags
+name|rs_spare0
 decl_stmt|;
-comment|/* misc flags */
+comment|/* padding */
 name|uint32_t
 name|rs_evm0
 decl_stmt|;
@@ -427,6 +445,28 @@ begin_comment
 comment|/* Michael MIC decrypt error */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|HAL_RXERR_INCOMP
+value|0x20
+end_define
+
+begin_comment
+comment|/* Rx Desc processing is incomplete */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAL_RXERR_KEYMISS
+value|0x40
+end_define
+
+begin_comment
+comment|/* Key not found in keycache */
+end_comment
+
 begin_comment
 comment|/* bits found in rs_flags */
 end_comment
@@ -435,7 +475,7 @@ begin_define
 define|#
 directive|define
 name|HAL_RX_MORE
-value|0x01
+value|0x0001
 end_define
 
 begin_comment
@@ -446,7 +486,7 @@ begin_define
 define|#
 directive|define
 name|HAL_RX_MORE_AGGR
-value|0x02
+value|0x0002
 end_define
 
 begin_comment
@@ -457,7 +497,7 @@ begin_define
 define|#
 directive|define
 name|HAL_RX_GI
-value|0x04
+value|0x0004
 end_define
 
 begin_comment
@@ -468,7 +508,7 @@ begin_define
 define|#
 directive|define
 name|HAL_RX_2040
-value|0x08
+value|0x0008
 end_define
 
 begin_comment
@@ -479,7 +519,7 @@ begin_define
 define|#
 directive|define
 name|HAL_RX_DELIM_CRC_PRE
-value|0x10
+value|0x0010
 end_define
 
 begin_comment
@@ -490,7 +530,7 @@ begin_define
 define|#
 directive|define
 name|HAL_RX_DELIM_CRC_POST
-value|0x20
+value|0x0020
 end_define
 
 begin_comment
@@ -501,7 +541,7 @@ begin_define
 define|#
 directive|define
 name|HAL_RX_DECRYPT_BUSY
-value|0x40
+value|0x0040
 end_define
 
 begin_comment
@@ -512,11 +552,22 @@ begin_define
 define|#
 directive|define
 name|HAL_RX_HI_RX_CHAIN
-value|0x80
+value|0x0080
 end_define
 
 begin_comment
 comment|/* SM power save: hi Rx chain control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAL_RX_IS_APSD
+value|0x0100
+end_define
+
+begin_comment
+comment|/* Is ASPD trigger frame */
 end_comment
 
 begin_enum
@@ -654,7 +705,10 @@ init|=
 literal|36
 block|,
 comment|/* */
-block|}
+name|HAL_PHYERR_SPECTRAL
+init|=
+literal|38
+block|, }
 enum|;
 end_enum
 
@@ -756,6 +810,27 @@ end_struct
 
 begin_struct
 struct|struct
+name|ath_desc_txedma
+block|{
+name|uint32_t
+name|ds_info
+decl_stmt|;
+name|uint32_t
+name|ds_link
+decl_stmt|;
+name|uint32_t
+name|ds_hw
+index|[
+literal|21
+index|]
+decl_stmt|;
+comment|/* includes buf/len */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|ath_desc_status
 block|{
 union|union
@@ -793,6 +868,10 @@ end_define
 
 begin_comment
 comment|/* flags passed to tx descriptor setup methods */
+end_comment
+
+begin_comment
+comment|/* This is a uint16_t field in ath_buf, just be warned! */
 end_comment
 
 begin_define
@@ -908,6 +987,24 @@ end_define
 begin_comment
 comment|/* virtual more frag */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|HAL_TXDESC_LOWRXCHAIN
+value|0x0400
+end_define
+
+begin_comment
+comment|/* switch to low RX chain */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAL_TXDESC_LDPC
+value|0x1000
+end_define
 
 begin_comment
 comment|/* flags passed to rx descriptor setup methods */

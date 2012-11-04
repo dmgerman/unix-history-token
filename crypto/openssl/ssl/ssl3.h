@@ -62,12 +62,6 @@ directive|include
 file|<openssl/ssl.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<openssl/pq_compat.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -193,6 +187,9 @@ define|#
 directive|define
 name|SSL3_CK_ADH_DES_192_CBC_SHA
 value|0x0300001B
+if|#
+directive|if
+literal|0
 define|#
 directive|define
 name|SSL3_CK_FZA_DMS_NULL_SHA
@@ -204,11 +201,13 @@ value|0x0300001D
 if|#
 directive|if
 literal|0
-comment|/* Because it clashes with KRB5, is never used any more, and is safe 	 to remove according to David Hopwood<david.hopwood@zetnet.co.uk> 	 of the ietf-tls list */
+comment|/* Because it clashes with KRB5, is never used any more, and is safe 		 to remove according to David Hopwood<david.hopwood@zetnet.co.uk> 		 of the ietf-tls list */
 define|#
 directive|define
 name|SSL3_CK_FZA_DMS_RC4_SHA
 value|0x0300001E
+endif|#
+directive|endif
 endif|#
 directive|endif
 comment|/*    VRS Additional Kerberos5 entries  */
@@ -376,6 +375,9 @@ define|#
 directive|define
 name|SSL3_TXT_ADH_DES_192_CBC_SHA
 value|"ADH-DES-CBC3-SHA"
+if|#
+directive|if
+literal|0
 define|#
 directive|define
 name|SSL3_TXT_FZA_DMS_NULL_SHA
@@ -388,6 +390,8 @@ define|#
 directive|define
 name|SSL3_TXT_FZA_DMS_RC4_SHA
 value|"FZA-RC4-SHA"
+endif|#
+directive|endif
 define|#
 directive|define
 name|SSL3_TXT_KRB5_DES_64_CBC_SHA
@@ -468,43 +472,75 @@ define|#
 directive|define
 name|SSL3_RT_HEADER_LENGTH
 value|5
-comment|/* Due to MS stuffing up, this can change.... */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|OPENSSL_SYS_WIN16
-argument_list|)
-operator|||
-expr|\
-operator|(
-name|defined
-argument_list|(
-name|OPENSSL_SYS_MSDOS
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|OPENSSL_SYS_WIN32
-argument_list|)
-operator|)
+ifndef|#
+directive|ifndef
+name|SSL3_ALIGN_PAYLOAD
+comment|/* Some will argue that this increases memory footprint, but it's   * not actually true. Point is that malloc has to return at least   * 64-bit aligned pointers, meaning that allocating 5 bytes wastes   * 3 bytes in either case. Suggested pre-gaping simply moves these   * wasted bytes from the end of allocated region to its front,   * but makes data payload aligned, which improves performance:-) */
 define|#
 directive|define
-name|SSL3_RT_MAX_EXTRA
-value|(14000)
+name|SSL3_ALIGN_PAYLOAD
+value|8
 else|#
 directive|else
+if|#
+directive|if
+operator|(
+name|SSL3_ALIGN_PAYLOAD
+operator|&
+operator|(
+name|SSL3_ALIGN_PAYLOAD
+operator|-
+literal|1
+operator|)
+operator|)
+operator|!=
+literal|0
+error|#
+directive|error
+literal|"insane SSL3_ALIGN_PAYLOAD"
+undef|#
+directive|undef
+name|SSL3_ALIGN_PAYLOAD
+endif|#
+directive|endif
+endif|#
+directive|endif
+comment|/* This is the maximum MAC (digest) size used by the SSL library.  * Currently maximum of 20 is used by SHA1, but we reserve for  * future extension for 512-bit hashes.  */
+define|#
+directive|define
+name|SSL3_RT_MAX_MD_SIZE
+value|64
+comment|/* Maximum block size used in all ciphersuites. Currently 16 for AES.  */
+define|#
+directive|define
+name|SSL_RT_MAX_CIPHER_BLOCK_SIZE
+value|16
 define|#
 directive|define
 name|SSL3_RT_MAX_EXTRA
 value|(16384)
-endif|#
-directive|endif
+comment|/* Maximum plaintext length: defined by SSL/TLS standards */
 define|#
 directive|define
 name|SSL3_RT_MAX_PLAIN_LENGTH
 value|16384
+comment|/* Maximum compression overhead: defined by SSL/TLS standards */
+define|#
+directive|define
+name|SSL3_RT_MAX_COMPRESSED_OVERHEAD
+value|1024
+comment|/* The standards give a maximum encryption overhead of 1024 bytes.  * In practice the value is lower than this. The overhead is the maximum  * number of padding bytes (256) plus the mac size.  */
+define|#
+directive|define
+name|SSL3_RT_MAX_ENCRYPTED_OVERHEAD
+value|(256 + SSL3_RT_MAX_MD_SIZE)
+comment|/* OpenSSL currently only uses a padding length of at most one block so  * the send overhead is smaller.  */
+define|#
+directive|define
+name|SSL3_RT_SEND_MAX_ENCRYPTED_OVERHEAD
+define|\
+value|(SSL_RT_MAX_CIPHER_BLOCK_SIZE + SSL3_RT_MAX_MD_SIZE)
+comment|/* If compression isn't used don't include the compression overhead */
 ifdef|#
 directive|ifdef
 name|OPENSSL_NO_COMP
@@ -517,21 +553,20 @@ directive|else
 define|#
 directive|define
 name|SSL3_RT_MAX_COMPRESSED_LENGTH
-value|(1024+SSL3_RT_MAX_PLAIN_LENGTH)
+define|\
+value|(SSL3_RT_MAX_PLAIN_LENGTH+SSL3_RT_MAX_COMPRESSED_OVERHEAD)
 endif|#
 directive|endif
 define|#
 directive|define
 name|SSL3_RT_MAX_ENCRYPTED_LENGTH
-value|(1024+SSL3_RT_MAX_COMPRESSED_LENGTH)
+define|\
+value|(SSL3_RT_MAX_ENCRYPTED_OVERHEAD+SSL3_RT_MAX_COMPRESSED_LENGTH)
 define|#
 directive|define
 name|SSL3_RT_MAX_PACKET_SIZE
+define|\
 value|(SSL3_RT_MAX_ENCRYPTED_LENGTH+SSL3_RT_HEADER_LENGTH)
-define|#
-directive|define
-name|SSL3_RT_MAX_DATA_SIZE
-value|(1024*1024)
 define|#
 directive|define
 name|SSL3_MD_CLIENT_FINISHED_CONST
@@ -568,6 +603,10 @@ define|#
 directive|define
 name|SSL3_RT_APPLICATION_DATA
 value|23
+define|#
+directive|define
+name|TLS1_RT_HEARTBEAT
+value|24
 define|#
 directive|define
 name|SSL3_AL_WARNING
@@ -629,6 +668,17 @@ directive|define
 name|SSL3_AD_ILLEGAL_PARAMETER
 value|47
 comment|/* fatal */
+define|#
+directive|define
+name|TLS1_HB_REQUEST
+value|1
+define|#
+directive|define
+name|TLS1_HB_RESPONSE
+value|2
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_SSL_INTERN
 typedef|typedef
 struct|struct
 name|ssl3_record_st
@@ -678,8 +728,12 @@ name|epoch
 decl_stmt|;
 comment|/* epoch number, needed by DTLS1 */
 comment|/*r */
-name|PQ_64BIT
+name|unsigned
+name|char
 name|seq_num
+index|[
+literal|8
+index|]
 decl_stmt|;
 comment|/* sequence number, needed by DTLS1 */
 block|}
@@ -710,6 +764,8 @@ comment|/* how many bytes left */
 block|}
 name|SSL3_BUFFER
 typedef|;
+endif|#
+directive|endif
 define|#
 directive|define
 name|SSL3_CT_RSA_SIGN
@@ -742,7 +798,7 @@ comment|/* SSL3_CT_NUMBER is used to size arrays and it must be large  * enough 
 define|#
 directive|define
 name|SSL3_CT_NUMBER
-value|7
+value|9
 define|#
 directive|define
 name|SSL3_FLAGS_NO_RENEGOTIATE_CIPHERS
@@ -759,11 +815,22 @@ define|#
 directive|define
 name|TLS1_FLAGS_TLS_PADDING_BUG
 value|0x0008
+define|#
+directive|define
+name|TLS1_FLAGS_SKIP_CERT_VERIFY
+value|0x0010
+define|#
+directive|define
+name|TLS1_FLAGS_KEEP_HANDSHAKE
+value|0x0020
 comment|/* SSL3_FLAGS_SGC_RESTART_DONE is set when we  * restart a handshake because of MS SGC and so prevents us  * from restarting the handshake in a loop. It's reset on a  * renegotiation, so effectively limits the client to one restart  * per negotiation. This limits the possibility of a DDoS  * attack where the client handshakes in a loop using SGC to  * restart. Servers which permit renegotiation can still be  * effected, but we can't prevent that.  */
 define|#
 directive|define
 name|SSL3_FLAGS_SGC_RESTART_DONE
 value|0x0040
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_SSL_INTERN
 typedef|typedef
 struct|struct
 name|ssl3_state_st
@@ -781,6 +848,9 @@ index|[
 literal|8
 index|]
 decl_stmt|;
+name|int
+name|read_mac_secret_size
+decl_stmt|;
 name|unsigned
 name|char
 name|read_mac_secret
@@ -794,6 +864,9 @@ name|write_sequence
 index|[
 literal|8
 index|]
+decl_stmt|;
+name|int
+name|write_mac_secret_size
 decl_stmt|;
 name|unsigned
 name|char
@@ -822,6 +895,10 @@ name|need_empty_fragments
 decl_stmt|;
 name|int
 name|empty_fragment_done
+decl_stmt|;
+comment|/* The value of 'extra' when the buffers were initialized */
+name|int
+name|init_extra
 decl_stmt|;
 name|SSL3_BUFFER
 name|rbuf
@@ -886,11 +963,15 @@ modifier|*
 name|wpend_buf
 decl_stmt|;
 comment|/* used during startup, digest all incoming/outgoing packets */
-name|EVP_MD_CTX
-name|finish_dgst1
+name|BIO
+modifier|*
+name|handshake_buffer
 decl_stmt|;
+comment|/* When set of handshake digests is determined, buffer is hashed 	 * and freed and MD_CTX-es for all required digests are stored in 	 * this array */
 name|EVP_MD_CTX
-name|finish_dgst2
+modifier|*
+modifier|*
+name|handshake_dgst
 decl_stmt|;
 comment|/* this is set whenerver we see a change_cipher_spec message 	 * come in when we are not looking for one */
 name|int
@@ -925,6 +1006,21 @@ name|num_renegotiations
 decl_stmt|;
 name|int
 name|in_read_app_data
+decl_stmt|;
+comment|/* Opaque PRF input as used for the current handshake. 	 * These fields are used only if TLSEXT_TYPE_opaque_prf_input is defined 	 * (otherwise, they are merely present to improve binary compatibility) */
+name|void
+modifier|*
+name|client_opaque_prf_input
+decl_stmt|;
+name|size_t
+name|client_opaque_prf_input_len
+decl_stmt|;
+name|void
+modifier|*
+name|server_opaque_prf_input
+decl_stmt|;
+name|size_t
+name|server_opaque_prf_input_len
 decl_stmt|;
 struct|struct
 block|{
@@ -971,6 +1067,7 @@ name|int
 name|message_type
 decl_stmt|;
 comment|/* used to hold the new cipher we are going to use */
+specifier|const
 name|SSL_CIPHER
 modifier|*
 name|new_cipher
@@ -1042,6 +1139,12 @@ name|EVP_MD
 modifier|*
 name|new_hash
 decl_stmt|;
+name|int
+name|new_mac_pkey_type
+decl_stmt|;
+name|int
+name|new_mac_secret_size
+decl_stmt|;
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_COMP
@@ -1091,9 +1194,20 @@ name|int
 name|send_connection_binding
 decl_stmt|;
 comment|/* TODOEKR */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_NEXTPROTONEG
+comment|/* Set if we saw the Next Protocol Negotiation extension from our peer. */
+name|int
+name|next_proto_neg_seen
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 name|SSL3_STATE
 typedef|;
+endif|#
+directive|endif
 comment|/* SSLv3 */
 comment|/*client */
 comment|/* extra state */
@@ -1101,6 +1215,19 @@ define|#
 directive|define
 name|SSL3_ST_CW_FLUSH
 value|(0x100|SSL_ST_CONNECT)
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_SCTP
+define|#
+directive|define
+name|DTLS1_SCTP_ST_CW_WRITE_SOCK
+value|(0x310|SSL_ST_CONNECT)
+define|#
+directive|define
+name|DTLS1_SCTP_ST_CR_READ_SOCK
+value|(0x320|SSL_ST_CONNECT)
+endif|#
+directive|endif
 comment|/* write to server */
 define|#
 directive|define
@@ -1202,6 +1329,14 @@ name|SSL3_ST_CW_CHANGE_B
 value|(0x1A1|SSL_ST_CONNECT)
 define|#
 directive|define
+name|SSL3_ST_CW_NEXT_PROTO_A
+value|(0x200|SSL_ST_CONNECT)
+define|#
+directive|define
+name|SSL3_ST_CW_NEXT_PROTO_B
+value|(0x201|SSL_ST_CONNECT)
+define|#
+directive|define
 name|SSL3_ST_CW_FINISHED_A
 value|(0x1B0|SSL_ST_CONNECT)
 define|#
@@ -1247,6 +1382,19 @@ define|#
 directive|define
 name|SSL3_ST_SW_FLUSH
 value|(0x100|SSL_ST_ACCEPT)
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_SCTP
+define|#
+directive|define
+name|DTLS1_SCTP_ST_SW_WRITE_SOCK
+value|(0x310|SSL_ST_ACCEPT)
+define|#
+directive|define
+name|DTLS1_SCTP_ST_SR_READ_SOCK
+value|(0x320|SSL_ST_ACCEPT)
+endif|#
+directive|endif
 comment|/* read from client */
 comment|/* Do not change the number values, they do matter */
 define|#
@@ -1357,6 +1505,14 @@ name|SSL3_ST_SR_CHANGE_B
 value|(0x1B1|SSL_ST_ACCEPT)
 define|#
 directive|define
+name|SSL3_ST_SR_NEXT_PROTO_A
+value|(0x210|SSL_ST_ACCEPT)
+define|#
+directive|define
+name|SSL3_ST_SR_NEXT_PROTO_B
+value|(0x211|SSL_ST_ACCEPT)
+define|#
+directive|define
 name|SSL3_ST_SR_FINISHED_A
 value|(0x1C0|SSL_ST_ACCEPT)
 define|#
@@ -1444,6 +1600,10 @@ define|#
 directive|define
 name|SSL3_MT_CERTIFICATE_STATUS
 value|22
+define|#
+directive|define
+name|SSL3_MT_NEXT_PROTO
+value|67
 define|#
 directive|define
 name|DTLS1_MT_HELLO_VERIFY_REQUEST

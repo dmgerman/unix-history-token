@@ -1558,7 +1558,6 @@ return|return
 name|HAL_EEREAD
 return|;
 block|}
-block|}
 name|HALDEBUG
 argument_list|(
 name|ah
@@ -1591,6 +1590,7 @@ expr_stmt|;
 return|return
 name|HAL_EEMAGIC
 return|;
+block|}
 block|}
 name|ee
 operator|=

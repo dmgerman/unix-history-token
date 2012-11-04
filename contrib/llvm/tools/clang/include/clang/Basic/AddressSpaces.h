@@ -32,19 +32,23 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
-comment|//  This file provides definitions for the various language-specific address
+comment|/// \file
 end_comment
 
 begin_comment
-comment|//  spaces.
+comment|/// \brief Provides definitions for the various language-specific address
 end_comment
 
 begin_comment
-comment|//
+comment|/// spaces.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -70,8 +74,9 @@ block|{
 name|namespace
 name|LangAS
 block|{
-comment|/// This enum defines the set of possible language-specific address spaces.
-comment|/// It uses a high starting offset so as not to conflict with any address
+comment|/// \brief Defines the set of possible language-specific address spaces.
+comment|///
+comment|/// This uses a high starting offset so as not to conflict with any address
 comment|/// space used by a target.
 enum|enum
 name|ID
@@ -87,6 +92,12 @@ block|,
 name|opencl_local
 block|,
 name|opencl_constant
+block|,
+name|cuda_device
+block|,
+name|cuda_constant
+block|,
+name|cuda_shared
 block|,
 name|Last
 block|,

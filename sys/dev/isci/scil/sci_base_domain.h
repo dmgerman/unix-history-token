@@ -55,7 +55,7 @@ block|,
 comment|/**     * This state indicates that the domain has successfully been stopped.     * In this state no new IO operations are permitted.     * This state is entered from the INITIAL state.     * This state is entered from the DISCOVERING state.     */
 name|SCI_BASE_DOMAIN_STATE_STARTING
 block|,
-comment|/**     * This state indicates the the domain is now ready.  Thus, the user     * is able to perform IO operations to remote devices in this domain.     * This state is entered from the STOPPED state.     * This state is entered from the STOPPING state.     * This state is entered from the DISCOVERING state.     */
+comment|/**     * This state indicates the domain is now ready.  Thus, the user     * is able to perform IO operations to remote devices in this domain.     * This state is entered from the STOPPED state.     * This state is entered from the STOPPING state.     * This state is entered from the DISCOVERING state.     */
 name|SCI_BASE_DOMAIN_STATE_READY
 block|,
 comment|/**     * This state indicates that the domain is in the process of stopping.     * In this state no new IO operations are permitted, but existing IO     * operations in the domain are allowed to complete.     * This state is entered from the READY state.     * This state is entered from the DISCOVERING state.     */

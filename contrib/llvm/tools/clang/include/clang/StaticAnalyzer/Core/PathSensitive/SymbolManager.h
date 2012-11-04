@@ -380,8 +380,12 @@ name|symbol_iterator
 argument_list|()
 return|;
 block|}
-expr|}
-block|;
+name|unsigned
+name|computeComplexity
+argument_list|()
+specifier|const
+block|; }
+decl_stmt|;
 typedef|typedef
 specifier|const
 name|SymExpr
@@ -2485,6 +2489,7 @@ return|;
 block|}
 expr|}
 block|;
+comment|/// \brief A class responsible for cleaning up unused symbols.
 name|class
 name|SymbolReaper
 block|{   enum
@@ -2539,7 +2544,7 @@ name|RegionSetTy
 name|RegionRoots
 block|;
 specifier|const
-name|LocationContext
+name|StackFrameContext
 operator|*
 name|LCtx
 block|;
@@ -2569,6 +2574,11 @@ name|includedRegionCache
 block|;
 name|public
 operator|:
+comment|/// \brief Construct a reaper object, which removes everything which is not
+comment|/// live before we execute statement s in the given location context.
+comment|///
+comment|/// If the statement is NULL, everything is this and parent contexts is
+comment|/// considered live.
 name|SymbolReaper
 argument_list|(
 specifier|const
@@ -2593,6 +2603,9 @@ operator|:
 name|LCtx
 argument_list|(
 name|ctx
+operator|->
+name|getCurrentStackFrame
+argument_list|()
 argument_list|)
 block|,
 name|Loc
@@ -2625,17 +2638,6 @@ specifier|const
 block|{
 return|return
 name|LCtx
-return|;
-block|}
-specifier|const
-name|Stmt
-operator|*
-name|getCurrentStatement
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Loc
 return|;
 block|}
 name|bool

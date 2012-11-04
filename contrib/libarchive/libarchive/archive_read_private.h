@@ -355,10 +355,10 @@ comment|/* Dev/ino of the archive being read/written. */
 name|int
 name|skip_file_set
 decl_stmt|;
-name|dev_t
+name|int64_t
 name|skip_file_dev
 decl_stmt|;
-name|ino_t
+name|int64_t
 name|skip_file_ino
 decl_stmt|;
 comment|/* 	 * Used by archive_read_data() to track blocks and copy 	 * data to client buffers, filling gaps with zero bytes. 	 */

@@ -1871,7 +1871,6 @@ parameter_list|)
 function_decl|;
 comment|/// MinAlign - A and B are either alignments or offsets.  Return the minimum
 comment|/// alignment that may be assumed after adding the two together.
-specifier|static
 specifier|inline
 name|uint64_t
 name|MinAlign
@@ -1901,7 +1900,6 @@ return|;
 block|}
 comment|/// NextPowerOf2 - Returns the next power of two (in 64-bits)
 comment|/// that is strictly greater than A.  Returns zero on overflow.
-specifier|static
 specifier|inline
 name|uint64_t
 name|NextPowerOf2

@@ -1431,7 +1431,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|boolean_t
+name|int
 name|mmu_booke_ts_referenced
 parameter_list|(
 name|mmu_t
@@ -13100,6 +13100,25 @@ argument_list|,
 name|CCSRBAR_SIZE
 argument_list|,
 name|_TLB_ENTRY_IO
+argument_list|)
+expr_stmt|;
+comment|/* Purge the remaining entries */
+for|for
+control|(
+name|i
+operator|=
+name|tlb1_idx
+init|;
+name|i
+operator|<
+name|TLB1_ENTRIES
+condition|;
+name|i
+operator|++
+control|)
+name|tlb1_write_entry
+argument_list|(
+name|i
 argument_list|)
 expr_stmt|;
 comment|/* Setup TLB miss defaults */

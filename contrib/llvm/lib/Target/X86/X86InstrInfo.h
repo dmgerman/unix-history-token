@@ -580,8 +580,8 @@ specifier|const
 name|X86RegisterInfo
 name|RI
 block|;
-comment|/// RegOp2MemOpTable2Addr, RegOp2MemOpTable0, RegOp2MemOpTable1,
-comment|/// RegOp2MemOpTable2 - Load / store folding opcode maps.
+comment|/// RegOp2MemOpTable3Addr, RegOp2MemOpTable0, RegOp2MemOpTable1,
+comment|/// RegOp2MemOpTable2, RegOp2MemOpTable3 - Load / store folding opcode maps.
 comment|///
 typedef|typedef
 name|DenseMap
@@ -611,6 +611,9 @@ decl_stmt|;
 name|RegOp2MemOpTableType
 name|RegOp2MemOpTable2
 decl_stmt|;
+name|RegOp2MemOpTableType
+name|RegOp2MemOpTable3
+decl_stmt|;
 comment|/// MemOp2RegOpTable - Load / store unfolding opcode map.
 comment|///
 typedef|typedef
@@ -632,6 +635,7 @@ expr_stmt|;
 name|MemOp2RegOpTableType
 name|MemOp2RegOpTable
 decl_stmt|;
+specifier|static
 name|void
 name|AddTableEntry
 parameter_list|(
@@ -942,6 +946,72 @@ name|Cond
 argument_list|,
 name|DebugLoc
 name|DL
+argument_list|)
+decl|const
+decl_stmt|;
+name|virtual
+name|bool
+name|canInsertSelect
+argument_list|(
+specifier|const
+name|MachineBasicBlock
+operator|&
+argument_list|,
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|MachineOperand
+operator|>
+operator|&
+name|Cond
+argument_list|,
+name|unsigned
+argument_list|,
+name|unsigned
+argument_list|,
+name|int
+operator|&
+argument_list|,
+name|int
+operator|&
+argument_list|,
+name|int
+operator|&
+argument_list|)
+decl|const
+decl_stmt|;
+name|virtual
+name|void
+name|insertSelect
+argument_list|(
+name|MachineBasicBlock
+operator|&
+name|MBB
+argument_list|,
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|MI
+argument_list|,
+name|DebugLoc
+name|DL
+argument_list|,
+name|unsigned
+name|DstReg
+argument_list|,
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|MachineOperand
+operator|>
+operator|&
+name|Cond
+argument_list|,
+name|unsigned
+name|TrueReg
+argument_list|,
+name|unsigned
+name|FalseReg
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1594,6 +1664,99 @@ name|UseMI
 argument_list|,
 name|unsigned
 name|UseIdx
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// analyzeCompare - For a comparison instruction, return the source registers
+comment|/// in SrcReg and SrcReg2 if having two register operands, and the value it
+comment|/// compares against in CmpValue. Return true if the comparison instruction
+comment|/// can be analyzed.
+name|virtual
+name|bool
+name|analyzeCompare
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|*
+name|MI
+argument_list|,
+name|unsigned
+operator|&
+name|SrcReg
+argument_list|,
+name|unsigned
+operator|&
+name|SrcReg2
+argument_list|,
+name|int
+operator|&
+name|CmpMask
+argument_list|,
+name|int
+operator|&
+name|CmpValue
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// optimizeCompareInstr - Check if there exists an earlier instruction that
+comment|/// operates on the same source operands and sets flags in the same way as
+comment|/// Compare; remove Compare if possible.
+name|virtual
+name|bool
+name|optimizeCompareInstr
+argument_list|(
+name|MachineInstr
+operator|*
+name|CmpInstr
+argument_list|,
+name|unsigned
+name|SrcReg
+argument_list|,
+name|unsigned
+name|SrcReg2
+argument_list|,
+name|int
+name|CmpMask
+argument_list|,
+name|int
+name|CmpValue
+argument_list|,
+specifier|const
+name|MachineRegisterInfo
+operator|*
+name|MRI
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// optimizeLoadInstr - Try to remove the load by folding it to a register
+comment|/// operand at the use. We fold the load instructions if and only if the
+comment|/// def and use are in the same BB. We only look at one load and see
+comment|/// whether it can be folded into MI. FoldAsLoadDefReg is the virtual register
+comment|/// defined by the load we are trying to fold. DefMI returns the machine
+comment|/// instruction that defines FoldAsLoadDefReg, and the function returns
+comment|/// the machine instruction generated due to folding.
+name|virtual
+name|MachineInstr
+modifier|*
+name|optimizeLoadInstr
+argument_list|(
+name|MachineInstr
+operator|*
+name|MI
+argument_list|,
+specifier|const
+name|MachineRegisterInfo
+operator|*
+name|MRI
+argument_list|,
+name|unsigned
+operator|&
+name|FoldAsLoadDefReg
+argument_list|,
+name|MachineInstr
+operator|*
+operator|&
+name|DefMI
 argument_list|)
 decl|const
 decl_stmt|;

@@ -196,7 +196,7 @@ comment|/*implicit*/
 name|ArrayRef
 argument_list|(
 specifier|const
-name|SmallVectorImpl
+name|SmallVectorTemplateCommon
 operator|<
 name|T
 operator|>

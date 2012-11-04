@@ -146,19 +146,6 @@ begin_comment
 comment|/*  * To support usage of rmlock in CVs and msleep yet another list for the  * priority tracker would be needed.  Using this lock for cv and msleep also  * does not seem very useful  */
 end_comment
 
-begin_function
-specifier|static
-name|__inline
-name|void
-name|compiler_memory_barrier
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-asm|__asm __volatile("":::"memory");
-block|}
-end_function
-
 begin_function_decl
 specifier|static
 name|void
@@ -1443,7 +1430,7 @@ name|td_critnest
 operator|++
 expr_stmt|;
 comment|/* critical_enter(); */
-name|compiler_memory_barrier
+name|__compiler_membar
 argument_list|()
 expr_stmt|;
 name|pc
@@ -1466,7 +1453,7 @@ expr_stmt|;
 name|sched_pin
 argument_list|()
 expr_stmt|;
-name|compiler_memory_barrier
+name|__compiler_membar
 argument_list|()
 expr_stmt|;
 name|td
@@ -2005,6 +1992,31 @@ name|SCHEDULER_STOPPED
 argument_list|()
 condition|)
 return|return;
+name|KASSERT
+argument_list|(
+operator|!
+name|TD_IS_IDLETHREAD
+argument_list|(
+name|curthread
+argument_list|)
+argument_list|,
+operator|(
+literal|"rm_wlock() by idle thread %p on rmlock %s @ %s:%d"
+operator|,
+name|curthread
+operator|,
+name|rm
+operator|->
+name|lock_object
+operator|.
+name|lo_name
+operator|,
+name|file
+operator|,
+name|line
+operator|)
+argument_list|)
+expr_stmt|;
 name|WITNESS_CHECKORDER
 argument_list|(
 operator|&
@@ -2227,6 +2239,31 @@ operator|(
 literal|1
 operator|)
 return|;
+name|KASSERT
+argument_list|(
+operator|!
+name|TD_IS_IDLETHREAD
+argument_list|(
+name|curthread
+argument_list|)
+argument_list|,
+operator|(
+literal|"rm_rlock() by idle thread %p on rmlock %s @ %s:%d"
+operator|,
+name|curthread
+operator|,
+name|rm
+operator|->
+name|lock_object
+operator|.
+name|lo_name
+operator|,
+name|file
+operator|,
+name|line
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!

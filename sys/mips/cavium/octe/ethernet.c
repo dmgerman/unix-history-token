@@ -204,16 +204,6 @@ begin_comment
 comment|/* 		 "\t\tPOW group to receive packets from. All ethernet hardware\n" 		 "\t\twill be configured to send incomming packets to this POW\n" 		 "\t\tgroup. Also any other software can submit packets to this\n" 		 "\t\tgroup for the kernel to process." */
 end_comment
 
-begin_function_decl
-specifier|extern
-name|int
-name|octeon_is_simulation
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/**  * Periodic timer to check auto negotiation  */
 end_comment
@@ -814,9 +804,12 @@ expr_stmt|;
 comment|/* Enable the MII interface */
 if|if
 condition|(
-operator|!
-name|octeon_is_simulation
+name|cvmx_sysinfo_get
 argument_list|()
+operator|->
+name|board_type
+operator|!=
+name|CVMX_BOARD_TYPE_SIM
 condition|)
 name|cvmx_write_csr
 argument_list|(

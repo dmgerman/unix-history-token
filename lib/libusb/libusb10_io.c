@@ -1291,7 +1291,7 @@ name|err
 operator|=
 name|clock_gettime
 argument_list|(
-name|CLOCK_REALTIME
+name|CLOCK_MONOTONIC
 argument_list|,
 operator|&
 name|ts
@@ -1308,10 +1308,11 @@ operator|(
 name|LIBUSB_ERROR_OTHER
 operator|)
 return|;
+comment|/* 	 * The "tv" arguments points to a relative time structure and 	 * not an absolute time structure. 	 */
 name|ts
 operator|.
 name|tv_sec
-operator|=
+operator|+=
 name|tv
 operator|->
 name|tv_sec
@@ -1319,7 +1320,7 @@ expr_stmt|;
 name|ts
 operator|.
 name|tv_nsec
-operator|=
+operator|+=
 name|tv
 operator|->
 name|tv_usec

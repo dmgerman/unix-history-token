@@ -1391,11 +1391,6 @@ name|ad
 operator|->
 name|ad_timestamp
 argument_list|,
-operator|(
-expr|struct
-name|timezone
-operator|*
-operator|)
 name|NULL
 argument_list|)
 expr_stmt|;

@@ -198,6 +198,27 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|smbcmp
+block|{
+name|struct
+name|vnode
+modifier|*
+name|n_parent
+decl_stmt|;
+name|int
+name|n_nmlen
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|n_name
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define

@@ -119,7 +119,7 @@ begin_define
 define|#
 directive|define
 name|CISCO_SH_FLOW_HEADER
-value|"SrcIf         SrcIPaddress    DstIf         DstIPaddress    Pr SrcP DstP  Pkts\n"
+value|"SrcIf         SrcIPaddress    " \ "DstIf         DstIPaddress    Pr SrcP DstP  Pkts\n"
 end_define
 
 begin_define
@@ -129,11 +129,29 @@ name|CISCO_SH_FLOW
 value|"%-13s %-15s %-13s %-15s %2u %4.4x %4.4x %6lu\n"
 end_define
 
+begin_comment
+comment|/* human-readable IPv4 header */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CISCO_SH_FLOW_HHEADER
+value|"SrcIf         SrcIPaddress    " \ "DstIf         DstIPaddress    Proto  SrcPort  DstPort     Pkts\n"
+end_define
+
+begin_define
+define|#
+directive|define
+name|CISCO_SH_FLOW_H
+value|"%-13s %-15s %-13s %-15s %5u %8d %8d %8lu\n"
+end_define
+
 begin_define
 define|#
 directive|define
 name|CISCO_SH_FLOW6_HEADER
-value|"SrcIf         SrcIPaddress                   DstIf         DstIPaddress                   Pr SrcP DstP  Pkts\n"
+value|"SrcIf         SrcIPaddress                   " \ "DstIf         DstIPaddress                   Pr SrcP DstP  Pkts\n"
 end_define
 
 begin_define
@@ -143,11 +161,29 @@ name|CISCO_SH_FLOW6
 value|"%-13s %-30s %-13s %-30s %2u %4.4x %4.4x %6lu\n"
 end_define
 
+begin_comment
+comment|/* Human-readable IPv6 headers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CISCO_SH_FLOW6_HHEADER
+value|"SrcIf         SrcIPaddress                         " \ "DstIf         DstIPaddress                         Proto  SrcPort  DstPort     Pkts\n"
+end_define
+
+begin_define
+define|#
+directive|define
+name|CISCO_SH_FLOW6_H
+value|"%-13s %-36s %-13s %-36s %5u %8d %8d %8lu\n"
+end_define
+
 begin_define
 define|#
 directive|define
 name|CISCO_SH_VERB_FLOW_HEADER
-value|"SrcIf          SrcIPaddress    DstIf          DstIPaddress    Pr TOS Flgs  Pkts\n" \ "Port Msk AS                    Port Msk AS    NextHop              B/Pk  Active\n"
+value|"SrcIf          SrcIPaddress    " \ "DstIf          DstIPaddress    Pr TOS Flgs  Pkts\n" \ "Port Msk AS                    Port Msk AS    NextHop              B/Pk  Active\n"
 end_define
 
 begin_define
@@ -161,7 +197,7 @@ begin_define
 define|#
 directive|define
 name|CISCO_SH_VERB_FLOW6_HEADER
-value|"SrcIf          SrcIPaddress                   DstIf          DstIPaddress                   Pr TOS Flgs  Pkts\n" \ "Port Msk AS                    Port Msk AS    NextHop                             B/Pk  Active\n"
+value|"SrcIf          SrcIPaddress                   " \ "DstIf          DstIPaddress                   Pr TOS Flgs  Pkts\n" \ "Port Msk AS                    Port Msk AS    NextHop                             B/Pk  Active\n"
 end_define
 
 begin_define
@@ -375,6 +411,10 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|cs
+decl_stmt|,
+name|human
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -851,6 +891,35 @@ name|verbose
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|argc
+operator|>
+literal|0
+operator|&&
+operator|!
+name|strncmp
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+literal|"human"
+argument_list|,
+name|strlen
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
+argument_list|)
+condition|)
+name|human
+operator|=
+literal|1
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INET
@@ -1258,8 +1327,20 @@ operator|->
 name|version
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|resp
+operator|->
+name|nentries
+operator|>
+literal|0
+condition|)
 name|printf
 argument_list|(
+name|human
+condition|?
+name|CISCO_SH_FLOW_HHEADER
+else|:
 name|CISCO_SH_FLOW_HEADER
 argument_list|)
 expr_stmt|;
@@ -1335,6 +1416,10 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+name|human
+condition|?
+name|CISCO_SH_FLOW_H
+else|:
 name|CISCO_SH_FLOW
 argument_list|,
 name|if_indextoname
@@ -1465,8 +1550,20 @@ operator|->
 name|version
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|resp
+operator|->
+name|nentries
+operator|>
+literal|0
+condition|)
 name|printf
 argument_list|(
+name|human
+condition|?
+name|CISCO_SH_FLOW6_HHEADER
+else|:
 name|CISCO_SH_FLOW6_HEADER
 argument_list|)
 expr_stmt|;
@@ -1546,6 +1643,10 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+name|human
+condition|?
+name|CISCO_SH_FLOW6_H
+else|:
 name|CISCO_SH_FLOW6
 argument_list|,
 name|if_indextoname

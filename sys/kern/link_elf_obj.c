@@ -2443,9 +2443,6 @@ decl_stmt|;
 name|int
 name|alignmask
 decl_stmt|;
-name|int
-name|vfslocked
-decl_stmt|;
 name|shdr
 operator|=
 name|NULL
@@ -2470,8 +2467,6 @@ argument_list|,
 name|LOOKUP
 argument_list|,
 name|FOLLOW
-operator||
-name|MPSAFE
 argument_list|,
 name|UIO_SYSSPACE
 argument_list|,
@@ -2506,14 +2501,6 @@ condition|)
 return|return
 name|error
 return|;
-name|vfslocked
-operator|=
-name|NDHASGIANT
-argument_list|(
-operator|&
-name|nd
-argument_list|)
-expr_stmt|;
 name|NDFREE
 argument_list|(
 operator|&
@@ -4907,11 +4894,6 @@ operator|->
 name|td_ucred
 argument_list|,
 name|td
-argument_list|)
-expr_stmt|;
-name|VFS_UNLOCK_GIANT
-argument_list|(
-name|vfslocked
 argument_list|)
 expr_stmt|;
 if|if

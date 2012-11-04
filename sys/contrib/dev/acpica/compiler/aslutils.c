@@ -57,93 +57,6 @@ literal|"aslutils"
 argument_list|)
 end_macro
 
-begin_decl_stmt
-name|char
-name|AslHexLookup
-index|[]
-init|=
-block|{
-literal|'0'
-block|,
-literal|'1'
-block|,
-literal|'2'
-block|,
-literal|'3'
-block|,
-literal|'4'
-block|,
-literal|'5'
-block|,
-literal|'6'
-block|,
-literal|'7'
-block|,
-literal|'8'
-block|,
-literal|'9'
-block|,
-literal|'A'
-block|,
-literal|'B'
-block|,
-literal|'C'
-block|,
-literal|'D'
-block|,
-literal|'E'
-block|,
-literal|'F'
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Table below must match ASL_FILE_TYPES in asltypes.h */
-end_comment
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-modifier|*
-name|AslFileTypeNames
-index|[
-name|ASL_NUM_FILES
-index|]
-init|=
-block|{
-literal|"stdout:       "
-block|,
-literal|"stderr:       "
-block|,
-literal|"Table Input:  "
-block|,
-literal|"Binary Output:"
-block|,
-literal|"Source Output:"
-block|,
-literal|"Preprocessor: "
-block|,
-literal|"Listing File: "
-block|,
-literal|"Hex Dump:     "
-block|,
-literal|"Namespace:    "
-block|,
-literal|"Debug File:   "
-block|,
-literal|"ASM Source:   "
-block|,
-literal|"C Source:     "
-block|,
-literal|"ASM Include:  "
-block|,
-literal|"C Include:    "
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* Local prototypes */
 end_comment
@@ -184,6 +97,13 @@ begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    UtDisplaySupportedTables  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Print all supported ACPI table names.  *  ******************************************************************************/
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ACPI_TABLE_HELP_FORMAT
+value|"%8u) %s    %s\n"
+end_define
+
 begin_function
 name|void
 name|UtDisplaySupportedTables
@@ -197,16 +117,11 @@ name|TableData
 decl_stmt|;
 name|UINT32
 name|i
-init|=
-literal|6
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"\nACPI tables supported by iASL subsystems in "
-literal|"version %8.8X:\n"
-literal|"  ASL and Data Table compilers\n"
-literal|"  AML and Data Table disassemblers\n"
-literal|"  ACPI table template generator\n\n"
+literal|"\nACPI tables supported by iASL version %8.8X:\n"
+literal|"  (Compiler, Disassembler, Template Generator)\n\n"
 argument_list|,
 name|ACPI_CA_VERSION
 argument_list|)
@@ -214,42 +129,25 @@ expr_stmt|;
 comment|/* Special tables */
 name|printf
 argument_list|(
-literal|"%8u) %s    %s\n"
+literal|"  Special tables and AML tables:\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+name|ACPI_TABLE_HELP_FORMAT
 argument_list|,
 literal|1
 argument_list|,
-name|ACPI_SIG_DSDT
+name|ACPI_RSDP_NAME
 argument_list|,
-literal|"Differentiated System Description Table"
+literal|"Root System Description Pointer"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%8u) %s    %s\n"
+name|ACPI_TABLE_HELP_FORMAT
 argument_list|,
 literal|2
-argument_list|,
-name|ACPI_SIG_SSDT
-argument_list|,
-literal|"Secondary System Description Table"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%8u) %s    %s\n"
-argument_list|,
-literal|3
-argument_list|,
-name|ACPI_SIG_FADT
-argument_list|,
-literal|"Fixed ACPI Description Table (FADT)"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%8u) %s    %s\n"
-argument_list|,
-literal|4
 argument_list|,
 name|ACPI_SIG_FACS
 argument_list|,
@@ -258,21 +156,41 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%8u) %s    %s\n"
+name|ACPI_TABLE_HELP_FORMAT
 argument_list|,
-literal|5
+literal|3
 argument_list|,
-name|ACPI_RSDP_NAME
+name|ACPI_SIG_DSDT
 argument_list|,
-literal|"Root System Description Pointer"
+literal|"Differentiated System Description Table"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+name|ACPI_TABLE_HELP_FORMAT
+argument_list|,
+literal|4
+argument_list|,
+name|ACPI_SIG_SSDT
+argument_list|,
+literal|"Secondary System Description Table"
 argument_list|)
 expr_stmt|;
 comment|/* All data tables with common table header */
+name|printf
+argument_list|(
+literal|"\n  Standard ACPI data tables:\n"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|TableData
 operator|=
 name|AcpiDmTableData
+operator|,
+name|i
+operator|=
+literal|5
 init|;
 name|TableData
 operator|->
@@ -280,11 +198,14 @@ name|Signature
 condition|;
 name|TableData
 operator|++
+operator|,
+name|i
+operator|++
 control|)
 block|{
 name|printf
 argument_list|(
-literal|"%8u) %s    %s\n"
+name|ACPI_TABLE_HELP_FORMAT
 argument_list|,
 name|i
 argument_list|,
@@ -297,15 +218,12 @@ operator|->
 name|Name
 argument_list|)
 expr_stmt|;
-name|i
-operator|++
-expr_stmt|;
 block|}
 block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsDisplayConstantOpcodes  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Print AML opcodes that can be used in constant expressions.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    UtDisplayConstantOpcodes  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Print AML opcodes that can be used in constant expressions.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -375,7 +293,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    UtLocalCalloc  *  * PARAMETERS:  Size        - Bytes to be allocated  *  * RETURN:      Pointer to the allocated memory.  Guaranteed to be valid.  *  * DESCRIPTION: Allocate zero-initialized memory.  Aborts the compile on an  *              allocation failure, on the assumption that nothing more can be  *              accomplished.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    UtLocalCalloc  *  * PARAMETERS:  Size                - Bytes to be allocated  *  * RETURN:      Pointer to the allocated memory. Guaranteed to be valid.  *  * DESCRIPTION: Allocate zero-initialized memory. Aborts the compile on an  *              allocation failure, on the assumption that nothing more can be  *              accomplished.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -453,7 +371,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    UtBeginEvent  *  * PARAMETERS:  Name        - Ascii name of this event  *  * RETURN:      Event       - Event number (integer index)  *  * DESCRIPTION: Saves the current time with this event  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    UtBeginEvent  *  * PARAMETERS:  Name                - Ascii name of this event  *  * RETURN:      Event number (integer index)  *  * DESCRIPTION: Saves the current time with this event  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -522,7 +440,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    UtEndEvent  *  * PARAMETERS:  Event       - Event number (integer index)  *  * RETURN:      None  *  * DESCRIPTION: Saves the current time (end time) with this event  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    UtEndEvent  *  * PARAMETERS:  Event               - Event number (integer index)  *  * RETURN:      None  *  * DESCRIPTION: Saves the current time (end time) with this event  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -557,7 +475,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    UtHexCharToValue  *  * PARAMETERS:  HexChar         - Hex character in Ascii  *  * RETURN:      The binary value of the hex character  *  * DESCRIPTION: Perform ascii-to-hex translation  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    UtHexCharToValue  *  * PARAMETERS:  HexChar             - Hex character in Ascii  *  * RETURN:      The binary value of the hex character  *  * DESCRIPTION: Perform ascii-to-hex translation  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -624,7 +542,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    UtConvertByteToHex  *  * PARAMETERS:  RawByte         - Binary data  *              Buffer          - Pointer to where the hex bytes will be stored  *  * RETURN:      Ascii hex byte is stored in Buffer.  *  * DESCRIPTION: Perform hex-to-ascii translation.  The return data is prefixed  *              with "0x"  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    UtConvertByteToHex  *  * PARAMETERS:  RawByte             - Binary data  *              Buffer              - Pointer to where the hex bytes will be  *                                    stored  *  * RETURN:      Ascii hex byte is stored in Buffer.  *  * DESCRIPTION: Perform hex-to-ascii translation. The return data is prefixed  *              with "0x"  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -691,7 +609,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    UtConvertByteToAsmHex  *  * PARAMETERS:  RawByte         - Binary data  *              Buffer          - Pointer to where the hex bytes will be stored  *  * RETURN:      Ascii hex byte is stored in Buffer.  *  * DESCRIPTION: Perform hex-to-ascii translation.  The return data is prefixed  *              with "0x"  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    UtConvertByteToAsmHex  *  * PARAMETERS:  RawByte             - Binary data  *              Buffer              - Pointer to where the hex bytes will be  *                                    stored  *  * RETURN:      Ascii hex byte is stored in Buffer.  *  * DESCRIPTION: Perform hex-to-ascii translation. The return data is prefixed  *              with "0x"  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -758,7 +676,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    DbgPrint  *  * PARAMETERS:  Type            - Type of output  *              Fmt             - Printf format string  *              ...             - variable printf list  *  * RETURN:      None  *  * DESCRIPTION: Conditional print statement.  Prints to stderr only if the  *              debug flag is set.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    DbgPrint  *  * PARAMETERS:  Type                - Type of output  *              Fmt                 - Printf format string  *              ...                 - variable printf list  *  * RETURN:      None  *  * DESCRIPTION: Conditional print statement. Prints to stderr only if the  *              debug flag is set.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -916,7 +834,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    UtSetParseOpName  *  * PARAMETERS:  Op  *  * RETURN:      None  *  * DESCRIPTION: Insert the ascii name of the parse opcode  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    UtSetParseOpName  *  * PARAMETERS:  Op                  - Parse op to be named.  *  * RETURN:      None  *  * DESCRIPTION: Insert the ascii name of the parse opcode  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -952,7 +870,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    UtDisplaySummary  *  * PARAMETERS:  FileID          - ID of outpout file  *  * RETURN:      None  *  * DESCRIPTION: Display compilation statistics  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    UtDisplaySummary  *  * PARAMETERS:  FileID              - ID of outpout file  *  * RETURN:      None  *  * DESCRIPTION: Display compilation statistics  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1198,10 +1116,12 @@ name|FileId
 argument_list|,
 literal|"%14s %s - %u bytes\n"
 argument_list|,
-name|AslFileTypeNames
+name|Gbl_Files
 index|[
 name|i
 index|]
+operator|.
+name|ShortDescription
 argument_list|,
 name|Gbl_Files
 index|[
@@ -1281,7 +1201,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    UtDisplaySummary  *  * PARAMETERS:  Op              - Integer parse node  *              LowValue        - Smallest allowed value  *              HighValue       - Largest allowed value  *  * RETURN:      Op if OK, otherwise NULL  *  * DESCRIPTION: Check integer for an allowable range  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    UtCheckIntegerRange  *  * PARAMETERS:  Op                  - Integer parse node  *              LowValue            - Smallest allowed value  *              HighValue           - Largest allowed value  *  * RETURN:      Op if OK, otherwise NULL  *  * DESCRIPTION: Check integer for an allowable range  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1300,18 +1220,6 @@ name|UINT32
 name|HighValue
 parameter_list|)
 block|{
-name|char
-modifier|*
-name|ParseError
-init|=
-name|NULL
-decl_stmt|;
-name|char
-name|Buffer
-index|[
-literal|64
-index|]
-decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -1319,11 +1227,14 @@ name|Op
 condition|)
 block|{
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 if|if
 condition|(
+operator|(
 name|Op
 operator|->
 name|Asl
@@ -1333,25 +1244,9 @@ operator|.
 name|Integer
 operator|<
 name|LowValue
-condition|)
-block|{
-name|ParseError
-operator|=
-literal|"Value below valid range"
-expr_stmt|;
-name|Op
-operator|->
-name|Asl
-operator|.
-name|Value
-operator|.
-name|Integer
-operator|=
-name|LowValue
-expr_stmt|;
-block|}
-if|if
-condition|(
+operator|)
+operator|||
+operator|(
 name|Op
 operator|->
 name|Asl
@@ -1361,12 +1256,18 @@ operator|.
 name|Integer
 operator|>
 name|HighValue
+operator|)
 condition|)
 block|{
-name|ParseError
-operator|=
-literal|"Value above valid range"
-expr_stmt|;
+name|sprintf
+argument_list|(
+name|MsgBuffer
+argument_list|,
+literal|"0x%X, allowable: 0x%X-0x%X"
+argument_list|,
+operator|(
+name|UINT32
+operator|)
 name|Op
 operator|->
 name|Asl
@@ -1374,45 +1275,39 @@ operator|.
 name|Value
 operator|.
 name|Integer
-operator|=
-name|HighValue
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|ParseError
-condition|)
-block|{
-name|sprintf
-argument_list|(
-name|Buffer
-argument_list|,
-literal|"%s 0x%X-0x%X"
-argument_list|,
-name|ParseError
 argument_list|,
 name|LowValue
 argument_list|,
 name|HighValue
 argument_list|)
 expr_stmt|;
-name|AslCompilererror
+name|AslError
 argument_list|(
-name|Buffer
+name|ASL_ERROR
+argument_list|,
+name|ASL_MSG_RANGE
+argument_list|,
+name|Op
+argument_list|,
+name|MsgBuffer
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 return|return
+operator|(
 name|Op
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    UtGetStringBuffer  *  * PARAMETERS:  Length          - Size of buffer requested  *  * RETURN:      Pointer to the buffer.  Aborts on allocation failure  *  * DESCRIPTION: Allocate a string buffer.  Bypass the local  *              dynamic memory manager for performance reasons (This has a  *              major impact on the speed of the compiler.)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    UtGetStringBuffer  *  * PARAMETERS:  Length              - Size of buffer requested  *  * RETURN:      Pointer to the buffer. Aborts on allocation failure  *  * DESCRIPTION: Allocate a string buffer. Bypass the local  *              dynamic memory manager for performance reasons (This has a  *              major impact on the speed of the compiler.)  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1474,7 +1369,161 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    UtInternalizeName  *  * PARAMETERS:  ExternalName            - Name to convert  *              ConvertedName           - Where the converted name is returned  *  * RETURN:      Status  *  * DESCRIPTION: Convert an external (ASL) name to an internal (AML) name  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    UtExpandLineBuffers  *  * PARAMETERS:  None. Updates global line buffer pointers.  *  * RETURN:      None. Reallocates the global line buffers  *  * DESCRIPTION: Called if the current line buffer becomes filled. Reallocates  *              all global line buffers and updates Gbl_LineBufferSize. NOTE:  *              Also used for the initial allocation of the buffers, when  *              all of the buffer pointers are NULL. Initial allocations are  *              of size ASL_DEFAULT_LINE_BUFFER_SIZE  *  *****************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|UtExpandLineBuffers
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|UINT32
+name|NewSize
+decl_stmt|;
+comment|/* Attempt to double the size of all line buffers */
+name|NewSize
+operator|=
+name|Gbl_LineBufferSize
+operator|*
+literal|2
+expr_stmt|;
+if|if
+condition|(
+name|Gbl_CurrentLineBuffer
+condition|)
+block|{
+name|DbgPrint
+argument_list|(
+name|ASL_DEBUG_OUTPUT
+argument_list|,
+literal|"Increasing line buffer size from %u to %u\n"
+argument_list|,
+name|Gbl_LineBufferSize
+argument_list|,
+name|NewSize
+argument_list|)
+expr_stmt|;
+block|}
+name|Gbl_CurrentLineBuffer
+operator|=
+name|realloc
+argument_list|(
+name|Gbl_CurrentLineBuffer
+argument_list|,
+name|NewSize
+argument_list|)
+expr_stmt|;
+name|Gbl_LineBufPtr
+operator|=
+name|Gbl_CurrentLineBuffer
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Gbl_CurrentLineBuffer
+condition|)
+block|{
+goto|goto
+name|ErrorExit
+goto|;
+block|}
+name|Gbl_MainTokenBuffer
+operator|=
+name|realloc
+argument_list|(
+name|Gbl_MainTokenBuffer
+argument_list|,
+name|NewSize
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Gbl_MainTokenBuffer
+condition|)
+block|{
+goto|goto
+name|ErrorExit
+goto|;
+block|}
+name|Gbl_MacroTokenBuffer
+operator|=
+name|realloc
+argument_list|(
+name|Gbl_MacroTokenBuffer
+argument_list|,
+name|NewSize
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Gbl_MacroTokenBuffer
+condition|)
+block|{
+goto|goto
+name|ErrorExit
+goto|;
+block|}
+name|Gbl_ExpressionTokenBuffer
+operator|=
+name|realloc
+argument_list|(
+name|Gbl_ExpressionTokenBuffer
+argument_list|,
+name|NewSize
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Gbl_ExpressionTokenBuffer
+condition|)
+block|{
+goto|goto
+name|ErrorExit
+goto|;
+block|}
+name|Gbl_LineBufferSize
+operator|=
+name|NewSize
+expr_stmt|;
+return|return;
+comment|/* On error above, simply issue error messages and abort, cannot continue */
+name|ErrorExit
+label|:
+name|printf
+argument_list|(
+literal|"Could not increase line buffer size from %u to %u\n"
+argument_list|,
+name|Gbl_LineBufferSize
+argument_list|,
+name|Gbl_LineBufferSize
+operator|*
+literal|2
+argument_list|)
+expr_stmt|;
+name|AslError
+argument_list|(
+name|ASL_ERROR
+argument_list|,
+name|ASL_MSG_BUFFER_ALLOCATION
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|AslAbort
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    UtInternalizeName  *  * PARAMETERS:  ExternalName        - Name to convert  *              ConvertedName       - Where the converted name is returned  *  * RETURN:      Status  *  * DESCRIPTION: Convert an external (ASL) name to an internal (AML) name  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1587,7 +1636,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    UtPadNameWithUnderscores  *  * PARAMETERS:  NameSeg         - Input nameseg  *              PaddedNameSeg   - Output padded nameseg  *  * RETURN:      Padded nameseg.  *  * DESCRIPTION: Pads a NameSeg with underscores if necessary to form a full  *              ACPI_NAME.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    UtPadNameWithUnderscores  *  * PARAMETERS:  NameSeg             - Input nameseg  *              PaddedNameSeg       - Output padded nameseg  *  * RETURN:      Padded nameseg.  *  * DESCRIPTION: Pads a NameSeg with underscores if necessary to form a full  *              ACPI_NAME.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1655,7 +1704,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    UtAttachNameseg  *  * PARAMETERS:  Op              - Parent parse node  *              Name            - Full ExternalName  *  * RETURN:      None; Sets the NameSeg field in parent node  *  * DESCRIPTION: Extract the last nameseg of the ExternalName and store it  *              in the NameSeg field of the Op.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    UtAttachNameseg  *  * PARAMETERS:  Op                  - Parent parse node  *              Name                - Full ExternalName  *  * RETURN:      None; Sets the NameSeg field in parent node  *  * DESCRIPTION: Extract the last nameseg of the ExternalName and store it  *              in the NameSeg field of the Op.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1742,7 +1791,7 @@ name|Name
 operator|++
 expr_stmt|;
 block|}
-comment|/* Remaing string should be one single nameseg */
+comment|/* Remaining string should be one single nameseg */
 name|UtPadNameWithUnderscores
 argument_list|(
 name|Name
@@ -1751,7 +1800,7 @@ name|PaddedNameSeg
 argument_list|)
 expr_stmt|;
 block|}
-name|strncpy
+name|ACPI_MOVE_NAME
 argument_list|(
 name|Op
 operator|->
@@ -1760,15 +1809,13 @@ operator|.
 name|NameSeg
 argument_list|,
 name|PaddedNameSeg
-argument_list|,
-literal|4
 argument_list|)
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    UtAttachNamepathToOwner  *  * PARAMETERS:  Op            - Parent parse node  *              NameOp        - Node that contains the name  *  * RETURN:      Sets the ExternalName and Namepath in the parent node  *  * DESCRIPTION: Store the name in two forms in the parent node:  The original  *              (external) name, and the internalized name that is used within  *              the ACPI namespace manager.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    UtAttachNamepathToOwner  *  * PARAMETERS:  Op                  - Parent parse node  *              NameOp              - Node that contains the name  *  * RETURN:      Sets the ExternalName and Namepath in the parent node  *  * DESCRIPTION: Store the name in two forms in the parent node: The original  *              (external) name, and the internalized name that is used within  *              the ACPI namespace manager.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1862,7 +1909,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    UtDoConstant  *  * PARAMETERS:  String      - Hex, Octal, or Decimal string  *  * RETURN:      Converted Integer  *  * DESCRIPTION: Convert a string to an integer.  With error checking.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    UtDoConstant  *  * PARAMETERS:  String              - Hex, Octal, or Decimal string  *  * RETURN:      Converted Integer  *  * DESCRIPTION: Convert a string to an integer, with error checking.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1939,7 +1986,7 @@ comment|/* TBD: use version in ACPI CA main code base? */
 end_comment
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    UtStrtoul64  *  * PARAMETERS:  String          - Null terminated string  *              Terminater      - Where a pointer to the terminating byte is  *                                returned  *              Base            - Radix of the string  *  * RETURN:      Converted value  *  * DESCRIPTION: Convert a string into an unsigned value.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    UtStrtoul64  *  * PARAMETERS:  String              - Null terminated string  *              Terminater          - Where a pointer to the terminating byte  *                                    is returned  *              Base                - Radix of the string  *  * RETURN:      Converted value  *  * DESCRIPTION: Convert a string into an unsigned value.  *  ******************************************************************************/
 end_comment
 
 begin_function

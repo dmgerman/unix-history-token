@@ -1769,7 +1769,7 @@ operator|(
 name|size_t
 operator|)
 name|remaining
-operator|>
+operator|>=
 name|state
 operator|->
 name|buffer_size
@@ -2991,6 +2991,9 @@ argument_list|(
 name|entry
 argument_list|)
 operator|==
+operator|(
+name|dev_t
+operator|)
 name|a
 operator|->
 name|skip_file_dev

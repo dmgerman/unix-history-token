@@ -346,7 +346,7 @@ value|4
 end_define
 
 begin_comment
-comment|/* delimiter size   */
+comment|/* delimiter size */
 end_comment
 
 begin_define
@@ -360,16 +360,16 @@ begin_comment
 comment|/* in bytes, minimum packet length */
 end_comment
 
+begin_comment
+comment|/* number of delimiters for encryption padding */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|ATH_AGGR_ENCRYPTDELIM
 value|10
 end_define
-
-begin_comment
-comment|/* number of delimiters for encryption padding */
-end_comment
 
 begin_comment
 comment|/*  * returns delimiter padding required given the packet length  */
@@ -1876,7 +1876,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|4
+name|ATH_RC_NUM
 condition|;
 name|i
 operator|++
@@ -1965,13 +1965,6 @@ modifier|*
 name|series
 parameter_list|)
 block|{
-define|#
-directive|define
-name|HT_RC_2_STREAMS
-parameter_list|(
-name|_rc
-parameter_list|)
-value|((((_rc)& 0x78)>> 3) + 1)
 name|struct
 name|ieee80211com
 modifier|*
@@ -2101,7 +2094,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|4
+name|ATH_RC_NUM
 condition|;
 name|i
 operator|++
@@ -2263,7 +2256,31 @@ index|]
 operator|.
 name|rateCode
 expr_stmt|;
-comment|/* PktDuration doesn't include slot, ACK, RTS, etc timing - it's just the packet duration */
+name|series
+index|[
+name|i
+index|]
+operator|.
+name|RateIndex
+operator|=
+name|rc
+index|[
+name|i
+index|]
+operator|.
+name|rix
+expr_stmt|;
+name|series
+index|[
+name|i
+index|]
+operator|.
+name|tx_power_cap
+operator|=
+literal|0x3f
+expr_stmt|;
+comment|/* XXX for now */
+comment|/* 		 * PktDuration doesn't include slot, ACK, RTS, etc timing - 		 * it's just the packet duration 		 */
 if|if
 condition|(
 name|series
@@ -2378,9 +2395,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-undef|#
-directive|undef
-name|HT_RC_2_STREAMS
 block|}
 end_function
 
@@ -2391,7 +2405,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static void ath_rateseries_print(HAL_11N_RATE_SERIES *series) { 	int i; 	for (i = 0; i< 4; i++) { 		printf("series %d: rate %x; tries %d; pktDuration %d; chSel %d; rateFlags %x\n", 		    i, 		    series[i].Rate, 		    series[i].Tries, 		    series[i].PktDuration, 		    series[i].ChSel, 		    series[i].RateFlags); 	} }
+unit|static void ath_rateseries_print(struct ath_softc *sc, HAL_11N_RATE_SERIES *series) { 	int i; 	for (i = 0; i< ATH_RC_NUM; i++) { 		device_printf(sc->sc_dev ,"series %d: rate %x; tries %d; " 		    "pktDuration %d; chSel %d; rateFlags %x\n", 		    i, 		    series[i].Rate, 		    series[i].Tries, 		    series[i].PktDuration, 		    series[i].ChSel, 		    series[i].RateFlags); 	} }
 endif|#
 directive|endif
 end_endif
@@ -2434,13 +2448,6 @@ init|=
 name|bf
 operator|->
 name|bf_desc
-decl_stmt|;
-name|struct
-name|ath_desc
-modifier|*
-name|lastds
-init|=
-name|NULL
 decl_stmt|;
 name|struct
 name|ath_hal
@@ -2507,22 +2514,14 @@ argument_list|,
 name|series
 argument_list|)
 expr_stmt|;
-comment|/* Enforce AR5416 aggregate limit - can't do RTS w/ an agg frame> 8k */
-comment|/* Enforce RTS and CTS are mutually exclusive */
-comment|/* Get a pointer to the last tx descriptor in the list */
-name|lastds
-operator|=
-name|bf
-operator|->
-name|bf_lastds
-expr_stmt|;
 if|#
 directive|if
 literal|0
-block|printf("pktlen: %d; flags 0x%x\n", pktlen, flags); 	ath_rateseries_print(series);
+block|printf("pktlen: %d; flags 0x%x\n", pktlen, flags); 	ath_rateseries_print(sc, series);
 endif|#
 directive|endif
 comment|/* Set rate scenario */
+comment|/* 	 * Note: Don't allow hardware to override the duration on 	 * ps-poll packets. 	 */
 name|ath_hal_set11nratescenario
 argument_list|(
 name|ah
@@ -2533,7 +2532,6 @@ operator|!
 name|is_pspoll
 argument_list|,
 comment|/* whether to override the duration or not */
-comment|/* don't allow hardware to override the duration on ps-poll packets */
 name|ctsrate
 argument_list|,
 comment|/* rts/cts rate */
@@ -2546,16 +2544,6 @@ comment|/* number of series */
 name|flags
 argument_list|)
 expr_stmt|;
-comment|/* Setup the last descriptor in the chain */
-name|ath_hal_setuplasttxdesc
-argument_list|(
-name|ah
-argument_list|,
-name|lastds
-argument_list|,
-name|ds
-argument_list|)
-expr_stmt|;
 comment|/* Set burst duration */
 comment|/* 	 * This is only required when doing 11n burst, not aggregation 	 * ie, if there's a second frame in a RIFS or A-MPDU burst 	 * w/>1 A-MPDU frame bursting back to back. 	 * Normal A-MPDU doesn't do bursting -between- aggregates. 	 * 	 * .. and it's highly likely this won't ever be implemented 	 */
 comment|//ath_hal_set11nburstduration(ah, ds, 8192);
@@ -2563,7 +2551,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Form an aggregate packet list.  *  * This function enforces the aggregate restrictions/requirements.  *  * These are:  *  * + The aggregate size maximum (64k for AR9160 and later, 8K for  *   AR5416 when doing RTS frame protection.)  * + Maximum number of sub-frames for an aggregate  * + The aggregate delimiter size, giving MACs time to do whatever is  *   needed before each frame  * + Enforce the BAW limit  *  * Each descriptor queued should have the DMA setup.  * The rate series, descriptor setup, linking, etc is all done  * externally. This routine simply chains them together.  * ath_tx_setds_11n() will take care of configuring the per-  * descriptor setup, and ath_buf_set_rate() will configure the  * rate control.  *  * Note that the TID lock is only grabbed when dequeuing packets from  * the TID queue. If some code in another thread adds to the head of this  * list, very strange behaviour will occur. Since retransmission is the  * only reason this will occur, and this routine is designed to be called  * from within the scheduler task, it won't ever clash with the completion  * task.  *  * So if you want to call this from an upper layer context (eg, to direct-  * dispatch aggregate frames to the hardware), please keep this in mind.  */
+comment|/*  * Form an aggregate packet list.  *  * This function enforces the aggregate restrictions/requirements.  *  * These are:  *  * + The aggregate size maximum (64k for AR9160 and later, 8K for  *   AR5416 when doing RTS frame protection.)  * + Maximum number of sub-frames for an aggregate  * + The aggregate delimiter size, giving MACs time to do whatever is  *   needed before each frame  * + Enforce the BAW limit  *  * Each descriptor queued should have the DMA setup.  * The rate series, descriptor setup, linking, etc is all done  * externally. This routine simply chains them together.  * ath_tx_setds_11n() will take care of configuring the per-  * descriptor setup, and ath_buf_set_rate() will configure the  * rate control.  *  * The TID lock is required for the entirety of this function.  *  * If some code in another thread adds to the head of this  * list, very strange behaviour will occur. Since retransmission is the  * only reason this will occur, and this routine is designed to be called  * from within the scheduler task, it won't ever clash with the completion  * task.  *  * So if you want to call this from an upper layer context (eg, to direct-  * dispatch aggregate frames to the hardware), please keep this in mind.  */
 end_comment
 
 begin_function
@@ -2590,16 +2578,7 @@ modifier|*
 name|bf_q
 parameter_list|)
 block|{
-name|struct
-name|ieee80211_node
-modifier|*
-name|ni
-init|=
-operator|&
-name|an
-operator|->
-name|an_node
-decl_stmt|;
+comment|//struct ieee80211_node *ni =&an->an_node;
 name|struct
 name|ath_buf
 modifier|*
@@ -2713,12 +2692,9 @@ control|)
 block|{
 name|bf
 operator|=
-name|TAILQ_FIRST
+name|ATH_TID_FIRST
 argument_list|(
-operator|&
 name|tid
-operator|->
-name|axq_q
 argument_list|)
 expr_stmt|;
 if|if
@@ -2895,6 +2871,7 @@ name|bf_state
 operator|.
 name|bfs_txflags
 operator|&=
+operator|~
 operator|(
 name|HAL_TXDESC_RTSENA
 operator||
@@ -2919,146 +2896,6 @@ operator||
 name|HAL_TXDESC_CTSENA
 operator|)
 expr_stmt|;
-comment|/* 		 * TODO: If it's _before_ the BAW left edge, complain very 		 * loudly. 		 * 		 * This means something (else) has slid the left edge along 		 * before we got a chance to be TXed. 		 */
-comment|/* 		 * Check if we have space in the BAW for this frame before 		 * we add it. 		 * 		 * see ath_tx_xmit_aggr() for more info. 		 */
-if|if
-condition|(
-name|bf
-operator|->
-name|bf_state
-operator|.
-name|bfs_dobaw
-condition|)
-block|{
-name|ieee80211_seq
-name|seqno
-decl_stmt|;
-comment|/* 			 * If the sequence number is allocated, use it. 			 * Otherwise, use the sequence number we WOULD 			 * allocate. 			 */
-if|if
-condition|(
-name|bf
-operator|->
-name|bf_state
-operator|.
-name|bfs_seqno_assigned
-condition|)
-name|seqno
-operator|=
-name|SEQNO
-argument_list|(
-name|bf
-operator|->
-name|bf_state
-operator|.
-name|bfs_seqno
-argument_list|)
-expr_stmt|;
-else|else
-name|seqno
-operator|=
-name|ni
-operator|->
-name|ni_txseqs
-index|[
-name|bf
-operator|->
-name|bf_state
-operator|.
-name|bfs_tid
-index|]
-expr_stmt|;
-comment|/* 			 * Check whether either the currently allocated 			 * sequence number _OR_ the to-be allocated 			 * sequence number is inside the BAW. 			 */
-if|if
-condition|(
-operator|!
-name|BAW_WITHIN
-argument_list|(
-name|tap
-operator|->
-name|txa_start
-argument_list|,
-name|tap
-operator|->
-name|txa_wnd
-argument_list|,
-name|seqno
-argument_list|)
-condition|)
-block|{
-name|status
-operator|=
-name|ATH_AGGR_BAW_CLOSED
-expr_stmt|;
-break|break;
-block|}
-comment|/* XXX check for bfs_need_seqno? */
-if|if
-condition|(
-operator|!
-name|bf
-operator|->
-name|bf_state
-operator|.
-name|bfs_seqno_assigned
-condition|)
-block|{
-name|int
-name|seqno
-decl_stmt|;
-name|seqno
-operator|=
-name|ath_tx_tid_seqno_assign
-argument_list|(
-name|sc
-argument_list|,
-name|ni
-argument_list|,
-name|bf
-argument_list|,
-name|bf
-operator|->
-name|bf_m
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|seqno
-operator|<
-literal|0
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|,
-literal|"%s: bf=%p, huh, seqno=-1?\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|bf
-argument_list|)
-expr_stmt|;
-comment|/* XXX what can we even do here? */
-block|}
-comment|/* Flush seqno update to RAM */
-comment|/* 				 * XXX This is required because the dmasetup 				 * XXX is done early rather than at dispatch 				 * XXX time. Ew, we should fix this! 				 */
-name|bus_dmamap_sync
-argument_list|(
-name|sc
-operator|->
-name|sc_dmat
-argument_list|,
-name|bf
-operator|->
-name|bf_dmamap
-argument_list|,
-name|BUS_DMASYNC_PREWRITE
-argument_list|)
-expr_stmt|;
-block|}
-block|}
 comment|/* 		 * If the packet has a sequence number, do not 		 * step outside of the block-ack window. 		 */
 if|if
 condition|(
@@ -3084,28 +2921,6 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|,
-literal|"%s: bf=%p, seqno=%d, outside?!\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|bf
-argument_list|,
-name|SEQNO
-argument_list|(
-name|bf
-operator|->
-name|bf_state
-operator|.
-name|bfs_seqno
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|status
 operator|=
 name|ATH_AGGR_BAW_CLOSED
@@ -3113,7 +2928,7 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* 		 * this packet is part of an aggregate. 		 */
-name|ATH_TXQ_REMOVE
+name|ATH_TID_REMOVE
 argument_list|(
 name|tid
 argument_list|,

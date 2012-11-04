@@ -24,6 +24,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_ath.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_inet.h"
 end_include
 
@@ -1895,6 +1901,35 @@ argument_list|,
 literal|"rate control: # good periods before raising rate"
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|ath_rate_fetch_node_stats
+parameter_list|(
+name|struct
+name|ath_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
+name|ath_node
+modifier|*
+name|an
+parameter_list|,
+name|struct
+name|ath_rateioctl
+modifier|*
+name|re
+parameter_list|)
+block|{
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 block|}
 end_function
 

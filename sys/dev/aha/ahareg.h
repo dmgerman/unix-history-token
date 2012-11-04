@@ -1073,6 +1073,10 @@ decl_stmt|;
 name|bus_dmamap_t
 name|dmamap
 decl_stmt|;
+name|struct
+name|callout
+name|timer
+decl_stmt|;
 name|aha_sg_t
 modifier|*
 name|sg_list
@@ -1112,12 +1116,6 @@ begin_struct
 struct|struct
 name|aha_softc
 block|{
-name|bus_space_tag_t
-name|tag
-decl_stmt|;
-name|bus_space_handle_t
-name|bsh
-decl_stmt|;
 name|struct
 name|cam_sim
 modifier|*
@@ -1341,11 +1339,14 @@ name|drqrid
 decl_stmt|;
 name|void
 modifier|*
-modifier|*
 name|ih
 decl_stmt|;
 name|device_t
 name|dev
+decl_stmt|;
+name|struct
+name|mtx
+name|lock
 decl_stmt|;
 block|}
 struct|;
@@ -1358,12 +1359,6 @@ parameter_list|(
 name|struct
 name|aha_softc
 modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|bus_space_tag_t
-parameter_list|,
-name|bus_space_handle_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1502,10 +1497,10 @@ name|aha_inb
 parameter_list|(
 name|aha
 parameter_list|,
-name|port
+name|reg
 parameter_list|)
 define|\
-value|bus_space_read_1((aha)->tag, (aha)->bsh, port)
+value|bus_read_1((aha)->port, reg)
 end_define
 
 begin_define
@@ -1515,12 +1510,12 @@ name|aha_outb
 parameter_list|(
 name|aha
 parameter_list|,
-name|port
+name|reg
 parameter_list|,
 name|value
 parameter_list|)
 define|\
-value|bus_space_write_1((aha)->tag, (aha)->bsh, port, value)
+value|bus_write_1((aha)->port, reg, value)
 end_define
 
 begin_define

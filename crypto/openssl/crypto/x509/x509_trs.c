@@ -269,6 +269,20 @@ name|NID_ad_OCSP
 block|,
 name|NULL
 block|}
+block|,
+block|{
+name|X509_TRUST_TSA
+block|,
+literal|0
+block|,
+name|trust_1oidany
+block|,
+literal|"TSA server"
+block|,
+name|NID_time_stamp
+block|,
+name|NULL
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt

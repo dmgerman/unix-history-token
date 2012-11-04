@@ -76,7 +76,7 @@ name|UNUSED
 parameter_list|(
 name|x
 parameter_list|)
-value|(x) = (x)
+value|(void)(x)
 end_define
 
 begin_endif

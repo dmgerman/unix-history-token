@@ -2092,16 +2092,6 @@ name|provider
 expr_stmt|;
 name|pp
 operator|->
-name|flags
-operator|=
-name|pp2
-operator|->
-name|flags
-operator|&
-name|G_PF_CANDELETE
-expr_stmt|;
-name|pp
-operator|->
 name|stripesize
 operator|=
 name|pp2
@@ -2513,6 +2503,12 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+name|cp
+operator|->
+name|flags
+operator||=
+name|G_CF_ORPHAN
+expr_stmt|;
 name|gsp
 operator|=
 name|gp
@@ -2848,21 +2844,6 @@ expr_stmt|;
 name|g_topology_assert
 argument_list|()
 expr_stmt|;
-name|KASSERT
-argument_list|(
-name|cp
-operator|->
-name|provider
-operator|->
-name|error
-operator|!=
-literal|0
-argument_list|,
-operator|(
-literal|"g_slice_orphan with error == 0"
-operator|)
-argument_list|)
-expr_stmt|;
 comment|/* XXX: Not good enough we leak the softc and its suballocations */
 name|g_slice_free
 argument_list|(
@@ -2879,11 +2860,7 @@ name|cp
 operator|->
 name|geom
 argument_list|,
-name|cp
-operator|->
-name|provider
-operator|->
-name|error
+name|ENXIO
 argument_list|)
 expr_stmt|;
 block|}

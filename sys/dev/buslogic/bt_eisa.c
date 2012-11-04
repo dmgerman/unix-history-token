@@ -611,7 +611,7 @@ block|}
 else|else
 name|irq
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|bt
 operator|->
@@ -1164,7 +1164,7 @@ argument_list|)
 expr_stmt|;
 name|result
 operator|=
-literal|0
+name|BUS_PROBE_DEFAULT
 expr_stmt|;
 block|}
 name|bt_eisa_release_resources
@@ -1246,11 +1246,10 @@ comment|/* flags	*/
 literal|0
 argument_list|,
 comment|/* lockfunc	*/
-name|busdma_lock_mutex
+name|NULL
 argument_list|,
 comment|/* lockarg,	*/
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 operator|&
 name|bt
@@ -1267,8 +1266,9 @@ name|dev
 argument_list|)
 expr_stmt|;
 return|return
-operator|-
-literal|1
+operator|(
+name|ENOMEM
+operator|)
 return|;
 block|}
 comment|/* 	 * Now that we know we own the resources we need, do the full 	 * card initialization. 	 */
@@ -1296,8 +1296,9 @@ name|dev
 argument_list|)
 expr_stmt|;
 return|return
-operator|-
-literal|1
+operator|(
+name|ENXIO
+operator|)
 return|;
 block|}
 comment|/* Attach sub-devices - always succeeds (sets up intr) */

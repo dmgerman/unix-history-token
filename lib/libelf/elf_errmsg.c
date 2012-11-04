@@ -40,6 +40,7 @@ comment|/*  * Retrieve a human readable translation for an error message.  */
 end_comment
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*

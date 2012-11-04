@@ -286,7 +286,7 @@ name|defined
 argument_list|(
 name|SORT_THREADS
 argument_list|)
-literal|"[--nthreads thread_no] "
+literal|"[--parallel thread_no] "
 endif|#
 directive|endif
 literal|"[--human-numeric-sort] "
@@ -385,9 +385,12 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|int
+name|size_t
 name|argc_from_file0
 init|=
+operator|(
+name|size_t
+operator|)
 operator|-
 literal|1
 decl_stmt|;
@@ -431,7 +434,7 @@ name|defined
 argument_list|(
 name|SORT_THREADS
 argument_list|)
-name|NTHREADS_OPT
+name|PARALLEL_OPT
 block|,
 endif|#
 directive|endif
@@ -485,6 +488,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|option
 name|long_options
@@ -728,13 +732,13 @@ argument_list|(
 name|SORT_THREADS
 argument_list|)
 block|{
-literal|"nthreads"
+literal|"parallel"
 block|,
 name|required_argument
 block|,
 name|NULL
 block|,
-name|NTHREADS_OPT
+name|PARALLEL_OPT
 block|}
 block|,
 endif|#
@@ -1129,18 +1133,22 @@ operator|*
 name|line
 condition|)
 block|{
-operator|++
-name|argc_from_file0
-expr_stmt|;
 if|if
 condition|(
 name|argc_from_file0
-operator|<
+operator|==
+operator|(
+name|size_t
+operator|)
+operator|-
 literal|1
 condition|)
 name|argc_from_file0
 operator|=
-literal|1
+literal|0
+expr_stmt|;
+operator|++
+name|argc_from_file0
 expr_stmt|;
 name|argv_from_file0
 operator|=
@@ -5177,7 +5185,7 @@ argument_list|(
 name|SORT_THREADS
 argument_list|)
 case|case
-name|NTHREADS_OPT
+name|PARALLEL_OPT
 case|:
 name|nthreads
 operator|=
@@ -5658,9 +5666,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|argc_from_file0
-operator|>=
-literal|0
+name|argv_from_file0
 condition|)
 block|{
 name|argc

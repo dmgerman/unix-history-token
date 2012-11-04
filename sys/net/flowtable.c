@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/hash.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -248,12 +254,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/sctp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<libkern/jenkins.h>
 end_include
 
 begin_include
@@ -2768,7 +2768,7 @@ name|proto
 expr_stmt|;
 return|return
 operator|(
-name|jenkins_hashword
+name|jenkins_hash32
 argument_list|(
 name|key
 argument_list|,
@@ -3020,6 +3020,12 @@ name|fle
 operator|->
 name|f_lle
 argument_list|)
+expr_stmt|;
+name|ro
+operator|->
+name|ro_flags
+operator||=
+name|RT_NORTREF
 expr_stmt|;
 block|}
 end_function
@@ -3945,7 +3951,7 @@ name|proto
 expr_stmt|;
 return|return
 operator|(
-name|jenkins_hashword
+name|jenkins_hash32
 argument_list|(
 name|key
 argument_list|,
@@ -4206,6 +4212,12 @@ name|fle
 operator|->
 name|f_lle
 argument_list|)
+expr_stmt|;
+name|ro
+operator|->
+name|ro_flags
+operator||=
+name|RT_NORTREF
 expr_stmt|;
 block|}
 end_function
@@ -6630,10 +6642,11 @@ name|ro
 operator|->
 name|ro_dst
 expr_stmt|;
-name|llentry_update
-argument_list|(
-operator|&
 name|lle
+operator|=
+name|llentry_alloc
+argument_list|(
+name|ifp
 argument_list|,
 name|LLTABLE6
 argument_list|(
@@ -6641,8 +6654,6 @@ name|ifp
 argument_list|)
 argument_list|,
 name|l3addr
-argument_list|,
-name|ifp
 argument_list|)
 expr_stmt|;
 block|}
@@ -6692,10 +6703,11 @@ name|ro
 operator|->
 name|ro_dst
 expr_stmt|;
-name|llentry_update
-argument_list|(
-operator|&
 name|lle
+operator|=
+name|llentry_alloc
+argument_list|(
+name|ifp
 argument_list|,
 name|LLTABLE
 argument_list|(
@@ -6703,8 +6715,6 @@ name|ifp
 argument_list|)
 argument_list|,
 name|l3addr
-argument_list|,
-name|ifp
 argument_list|)
 expr_stmt|;
 block|}

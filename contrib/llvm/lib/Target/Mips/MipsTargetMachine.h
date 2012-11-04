@@ -121,6 +121,9 @@ name|class
 name|formatted_raw_ostream
 decl_stmt|;
 name|class
+name|MipsRegisterInfo
+decl_stmt|;
+name|class
 name|MipsTargetMachine
 range|:
 name|public
@@ -134,10 +137,14 @@ name|TargetData
 name|DataLayout
 block|;
 comment|// Calculates type size& alignment
+specifier|const
 name|MipsInstrInfo
+operator|*
 name|InstrInfo
 block|;
+specifier|const
 name|MipsFrameLowering
+operator|*
 name|FrameLowering
 block|;
 name|MipsTargetLowering
@@ -173,6 +180,14 @@ argument|bool isLittle
 argument_list|)
 block|;
 name|virtual
+operator|~
+name|MipsTargetMachine
+argument_list|()
+block|{
+name|delete
+name|InstrInfo
+block|; }
+name|virtual
 specifier|const
 name|MipsInstrInfo
 operator|*
@@ -181,7 +196,6 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|&
 name|InstrInfo
 return|;
 block|}
@@ -194,7 +208,6 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|&
 name|FrameLowering
 return|;
 block|}
@@ -246,7 +259,7 @@ block|{
 return|return
 operator|&
 name|InstrInfo
-operator|.
+operator|->
 name|getRegisterInfo
 argument_list|()
 return|;
@@ -300,9 +313,9 @@ name|JITCodeEmitter
 operator|&
 name|JCE
 argument_list|)
-block|;    }
+block|; }
 decl_stmt|;
-comment|/// MipsebTargetMachine - Mips32 big endian target machine.
+comment|/// MipsebTargetMachine - Mips32/64 big endian target machine.
 comment|///
 name|class
 name|MipsebTargetMachine
@@ -337,7 +350,7 @@ argument|CodeGenOpt::Level OL
 argument_list|)
 block|; }
 decl_stmt|;
-comment|/// MipselTargetMachine - Mips32 little endian target machine.
+comment|/// MipselTargetMachine - Mips32/64 little endian target machine.
 comment|///
 name|class
 name|MipselTargetMachine
@@ -353,76 +366,6 @@ block|;
 name|public
 operator|:
 name|MipselTargetMachine
-argument_list|(
-argument|const Target&T
-argument_list|,
-argument|StringRef TT
-argument_list|,
-argument|StringRef CPU
-argument_list|,
-argument|StringRef FS
-argument_list|,
-argument|const TargetOptions&Options
-argument_list|,
-argument|Reloc::Model RM
-argument_list|,
-argument|CodeModel::Model CM
-argument_list|,
-argument|CodeGenOpt::Level OL
-argument_list|)
-block|; }
-decl_stmt|;
-comment|/// Mips64ebTargetMachine - Mips64 big endian target machine.
-comment|///
-name|class
-name|Mips64ebTargetMachine
-range|:
-name|public
-name|MipsTargetMachine
-block|{
-name|virtual
-name|void
-name|anchor
-argument_list|()
-block|;
-name|public
-operator|:
-name|Mips64ebTargetMachine
-argument_list|(
-argument|const Target&T
-argument_list|,
-argument|StringRef TT
-argument_list|,
-argument|StringRef CPU
-argument_list|,
-argument|StringRef FS
-argument_list|,
-argument|const TargetOptions&Options
-argument_list|,
-argument|Reloc::Model RM
-argument_list|,
-argument|CodeModel::Model CM
-argument_list|,
-argument|CodeGenOpt::Level OL
-argument_list|)
-block|; }
-decl_stmt|;
-comment|/// Mips64elTargetMachine - Mips64 little endian target machine.
-comment|///
-name|class
-name|Mips64elTargetMachine
-range|:
-name|public
-name|MipsTargetMachine
-block|{
-name|virtual
-name|void
-name|anchor
-argument_list|()
-block|;
-name|public
-operator|:
-name|Mips64elTargetMachine
 argument_list|(
 argument|const Target&T
 argument_list|,

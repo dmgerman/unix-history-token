@@ -1163,6 +1163,27 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
+comment|/* Write temporary BAR0 to map the NIC into a fixed location */
+name|ar724x_pci_write_config
+argument_list|(
+name|dev
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|PCIR_BAR
+argument_list|(
+literal|0
+argument_list|)
+argument_list|,
+name|AR71XX_PCI_MEM_BASE
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
 name|val
 operator|=
 name|ar724x_pci_read_config

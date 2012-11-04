@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -1442,8 +1448,11 @@ argument_list|(
 name|pstring
 argument_list|)
 argument_list|,
-literal|"fsdb (inum: %d)> "
+literal|"fsdb (inum: %ju)> "
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|curinum
 argument_list|)
 expr_stmt|;
@@ -1933,7 +1942,7 @@ name|ac
 parameter_list|,
 name|inum
 parameter_list|)
-value|inum = strtoul(argv[ac],&cp, 0); \     if (inum< ROOTINO || inum> maxino || cp == argv[ac] || *cp != '\0' ) { \ 	printf("inode %d out of range; range is [%d,%d]\n", \ 	       inum, ROOTINO, maxino); \ 	return 1; \     }
+value|inum = strtoul(argv[ac],&cp, 0); \     if (inum< ROOTINO || inum> maxino || cp == argv[ac] || *cp != '\0' ) { \ 	printf("inode %ju out of range; range is [%ju,%ju]\n",		\ 	    (uintmax_t)inum, (uintmax_t)ROOTINO, (uintmax_t)maxino);	\ 	return 1; \     }
 end_define
 
 begin_comment
@@ -2173,8 +2182,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"inode %d link count now %d\n"
+literal|"inode %ju link count now %d\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|curinum
 argument_list|,
 name|DIP
@@ -2230,8 +2242,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"inode %d link count now %d\n"
+literal|"inode %ju link count now %d\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|curinum
 argument_list|,
 name|DIP
@@ -2784,7 +2799,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"block %llu: inode block (%d-%d)\n"
+literal|"block %llu: inode block (%ju-%ju)\n"
 argument_list|,
 operator|(
 name|unsigned
@@ -2805,7 +2820,10 @@ name|inum
 argument_list|)
 argument_list|)
 argument_list|,
-operator|(
+call|(
+name|uintmax_t
+call|)
+argument_list|(
 name|inum
 operator|/
 name|INOPB
@@ -2813,7 +2831,7 @@ argument_list|(
 operator|&
 name|sblock
 argument_list|)
-operator|)
+argument_list|)
 operator|*
 name|INOPB
 argument_list|(
@@ -2821,7 +2839,10 @@ operator|&
 name|sblock
 argument_list|)
 argument_list|,
-operator|(
+call|(
+name|uintmax_t
+call|)
+argument_list|(
 name|inum
 operator|/
 name|INOPB
@@ -2831,7 +2852,7 @@ name|sblock
 argument_list|)
 operator|+
 literal|1
-operator|)
+argument_list|)
 operator|*
 name|INOPB
 argument_list|(
@@ -3281,7 +3302,7 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"%llu: data block of inode %d\n"
+literal|"%llu: data block of inode %ju\n"
 argument_list|,
 operator|(
 name|unsigned
@@ -3296,6 +3317,9 @@ argument_list|,
 name|blk
 argument_list|)
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|curinum
 argument_list|)
 expr_stmt|;
@@ -4158,8 +4182,11 @@ name|rval
 condition|)
 name|printf
 argument_list|(
-literal|"Ino %d entered as `%s'\n"
+literal|"Ino %ju entered as `%s'\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|inum
 argument_list|,
 name|argv

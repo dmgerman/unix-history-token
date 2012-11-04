@@ -8577,21 +8577,9 @@ argument_list|(
 argument|Record *R
 argument_list|)
 block|{
-name|assert
-argument_list|(
-name|getClass
-argument_list|(
-name|R
-operator|->
-name|getNameInitAsString
-argument_list|()
-argument_list|)
-operator|==
-literal|0
-operator|&&
-literal|"Class already exists!"
-argument_list|)
-block|;
+name|bool
+name|Ins
+operator|=
 name|Classes
 operator|.
 name|insert
@@ -8602,11 +8590,25 @@ name|make_pair
 argument_list|(
 name|R
 operator|->
-name|getNameInitAsString
+name|getName
 argument_list|()
 argument_list|,
 name|R
 argument_list|)
+argument_list|)
+operator|.
+name|second
+block|;
+operator|(
+name|void
+operator|)
+name|Ins
+block|;
+name|assert
+argument_list|(
+name|Ins
+operator|&&
+literal|"Class already exists"
 argument_list|)
 block|;   }
 name|void
@@ -8615,21 +8617,9 @@ argument_list|(
 argument|Record *R
 argument_list|)
 block|{
-name|assert
-argument_list|(
-name|getDef
-argument_list|(
-name|R
-operator|->
-name|getNameInitAsString
-argument_list|()
-argument_list|)
-operator|==
-literal|0
-operator|&&
-literal|"Def already exists!"
-argument_list|)
-block|;
+name|bool
+name|Ins
+operator|=
 name|Defs
 operator|.
 name|insert
@@ -8640,11 +8630,25 @@ name|make_pair
 argument_list|(
 name|R
 operator|->
-name|getNameInitAsString
+name|getName
 argument_list|()
 argument_list|,
 name|R
 argument_list|)
+argument_list|)
+operator|.
+name|second
+block|;
+operator|(
+name|void
+operator|)
+name|Ins
+block|;
+name|assert
+argument_list|(
+name|Ins
+operator|&&
+literal|"Record already exists"
 argument_list|)
 block|;   }
 comment|/// removeClass - Remove, but do not delete, the specified record.

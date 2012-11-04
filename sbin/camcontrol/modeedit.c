@@ -113,14 +113,6 @@ directive|include
 file|"camcontrol.h"
 end_include
 
-begin_decl_stmt
-name|int
-name|verbose
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define

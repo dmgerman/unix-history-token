@@ -271,6 +271,8 @@ argument_list|,
 name|pval
 argument_list|,
 name|it
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -348,6 +350,8 @@ argument_list|,
 name|pval
 argument_list|,
 name|it
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -457,6 +461,8 @@ argument_list|,
 name|pval
 argument_list|,
 name|it
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -556,6 +562,8 @@ argument_list|,
 name|pval
 argument_list|,
 name|it
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if

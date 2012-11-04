@@ -851,7 +851,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"  Family = %x"
+literal|"  Family = 0x%x"
 argument_list|,
 name|CPUID_TO_FAMILY
 argument_list|(
@@ -861,7 +861,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  Model = %x"
+literal|"  Model = 0x%x"
 argument_list|,
 name|CPUID_TO_MODEL
 argument_list|(
@@ -1185,6 +1185,28 @@ literal|"\035<b28>"
 literal|"\036<b29>"
 literal|"\037<b30>"
 literal|"\040<b31>"
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|cpu_stdext_feature
+operator|!=
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"\n  Standard Extended Features=0x%b"
+argument_list|,
+name|cpu_stdext_feature
+argument_list|,
+literal|"\020"
+literal|"\001GSFSBASE"
+literal|"\002TSCADJ"
+literal|"\010SMEP"
+literal|"\012ENHMOVSB"
+literal|"\013INVPCID"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1598,6 +1620,30 @@ literal|0
 index|]
 expr_stmt|;
 block|}
+block|}
+if|if
+condition|(
+name|cpu_high
+operator|>=
+literal|7
+condition|)
+block|{
+name|cpuid_count
+argument_list|(
+literal|7
+argument_list|,
+literal|0
+argument_list|,
+name|regs
+argument_list|)
+expr_stmt|;
+name|cpu_stdext_feature
+operator|=
+name|regs
+index|[
+literal|1
+index|]
+expr_stmt|;
 block|}
 if|if
 condition|(

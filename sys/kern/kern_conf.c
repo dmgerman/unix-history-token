@@ -1271,12 +1271,6 @@ operator|=
 name|D_VERSION
 block|,
 operator|.
-name|d_flags
-operator|=
-name|D_NEEDGIANT
-block|,
-comment|/* XXX: does dead_strategy need this ? */
-operator|.
 name|d_open
 operator|=
 name|dead_open
@@ -7227,22 +7221,7 @@ argument_list|)
 expr_stmt|;
 name|SI_FLAG
 argument_list|(
-name|SI_DEVOPEN
-argument_list|)
-expr_stmt|;
-name|SI_FLAG
-argument_list|(
-name|SI_CONSOPEN
-argument_list|)
-expr_stmt|;
-name|SI_FLAG
-argument_list|(
 name|SI_DUMPDEV
-argument_list|)
-expr_stmt|;
-name|SI_FLAG
-argument_list|(
-name|SI_CANDELETE
 argument_list|)
 expr_stmt|;
 name|SI_FLAG

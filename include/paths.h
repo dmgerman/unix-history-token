@@ -57,13 +57,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|_PATH_AUTHCONF
-value|"/etc/auth.conf"
-end_define
-
-begin_define
-define|#
-directive|define
 name|_PATH_BSHELL
 value|"/bin/sh"
 end_define

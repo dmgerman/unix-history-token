@@ -51,6 +51,12 @@ directive|include
 file|"opt_compat.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"opt_nfs.h"
+end_include
+
 begin_function
 specifier|static
 name|int
@@ -185,6 +191,22 @@ name|MODULE_DEPEND
 argument_list|(
 name|dtraceall
 argument_list|,
+name|dtio
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|dtraceall
+argument_list|,
 name|dtmalloc
 argument_list|,
 literal|1
@@ -212,6 +234,15 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|NFSCLIENT
+argument_list|)
+end_if
+
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
@@ -227,6 +258,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#

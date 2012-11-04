@@ -293,6 +293,19 @@ argument|const ScheduleDAG *DAG
 argument_list|)
 specifier|const
 block|;
+name|bool
+name|isCoalescableExtInstr
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|,
+argument|unsigned&SrcReg
+argument_list|,
+argument|unsigned&DstReg
+argument_list|,
+argument|unsigned&SubIdx
+argument_list|)
+specifier|const
+block|;
 name|unsigned
 name|isLoadFromStackSlot
 argument_list|(

@@ -993,17 +993,10 @@ case|case
 name|MOD_SHUTDOWN
 case|:
 break|break;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|500000
 case|case
 name|MOD_QUIESCE
 case|:
 break|break;
-endif|#
-directive|endif
 case|case
 name|MOD_UNLOAD
 case|:
@@ -5771,11 +5764,6 @@ name|MPI_FUNCTION_IOC_FACTS
 operator|)
 condition|)
 block|{
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|500000
 name|mpt_prt
 argument_list|(
 name|mpt
@@ -5798,32 +5786,6 @@ operator|->
 name|Function
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|mpt_prt
-argument_list|(
-name|mpt
-argument_list|,
-literal|"reply length does not match message length: "
-literal|"got %x; expected %x for function %x\n"
-argument_list|,
-name|hdr
-operator|->
-name|MsgLength
-operator|<<
-literal|2
-argument_list|,
-name|reply_len
-operator|<<
-literal|1
-argument_list|,
-name|hdr
-operator|->
-name|Function
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 comment|/* Get rest of the reply; but don't overflow the provided buffer */
 name|left
@@ -9214,11 +9176,6 @@ modifier|*
 name|mpt
 parameter_list|)
 block|{
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|500000
 name|struct
 name|sysctl_ctx_list
 modifier|*
@@ -9322,8 +9279,6 @@ argument_list|,
 literal|"Next Target to Fail"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 endif|#
 directive|endif
 block|}

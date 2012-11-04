@@ -23,7 +23,7 @@ begin_define
 define|#
 directive|define
 name|ARCHIVE_VERSION_NUMBER
-value|3000003
+value|3000004
 end_define
 
 begin_comment
@@ -79,11 +79,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Get appropriate definitions of standard POSIX-style types. */
-end_comment
-
-begin_comment
-comment|/* These should match the types used in 'struct stat' */
+comment|/* Get a suitable 64-bit integer type. */
 end_comment
 
 begin_if
@@ -107,97 +103,6 @@ directive|define
 name|__LA_INT64_T
 value|__int64
 end_define
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__BORLANDC__
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|__LA_UID_T
-value|uid_t
-end_define
-
-begin_comment
-comment|/* Remove in libarchive 3.2 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|__LA_GID_T
-value|gid_t
-end_define
-
-begin_comment
-comment|/* Remove in libarchive 3.2 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|__LA_DEV_T
-value|dev_t
-end_define
-
-begin_define
-define|#
-directive|define
-name|__LA_MODE_T
-value|mode_t
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|__LA_UID_T
-value|short
-end_define
-
-begin_comment
-comment|/* Remove in libarchive 3.2 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|__LA_GID_T
-value|short
-end_define
-
-begin_comment
-comment|/* Remove in libarchive 3.2 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|__LA_DEV_T
-value|unsigned int
-end_define
-
-begin_define
-define|#
-directive|define
-name|__LA_MODE_T
-value|unsigned short
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_else
 else|#
@@ -243,34 +148,66 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|__LA_UID_T
-value|uid_t
-end_define
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
-comment|/* Remove in libarchive 3.2 */
+comment|/* Get a suitable definition for mode_t */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|ARCHIVE_VERSION_NUMBER
+operator|>=
+literal|3999000
+end_if
+
+begin_comment
+comment|/* Switch to plain 'int' for libarchive 4.0.  It's less broken than 'mode_t' */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|__LA_GID_T
-value|gid_t
+name|__LA_MODE_T
+value|int
 end_define
 
-begin_comment
-comment|/* Remove in libarchive 3.2 */
-end_comment
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__BORLANDC__
+argument_list|)
+end_elif
 
 begin_define
 define|#
 directive|define
-name|__LA_DEV_T
-value|dev_t
+name|__LA_MODE_T
+value|unsigned short
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -283,17 +220,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * Remove this for libarchive 3.2, since ino_t is no longer used.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|__LA_INO_T
-value|ino_t
-end_define
 
 begin_comment
 comment|/*  * On Windows, define LIBARCHIVE_STATIC if you're building or using a  * .lib.  The default here assumes you're building a DLL.  Only  * libarchive source should ever define __LIBARCHIVE_BUILD.  */
@@ -441,38 +367,39 @@ struct_decl|struct
 name|archive_entry
 struct_decl|;
 comment|/*  * File-type constants.  These are returned from archive_entry_filetype()  * and passed to archive_entry_set_filetype().  *  * These values match S_XXX defines on every platform I've checked,  * including Windows, AIX, Linux, Solaris, and BSD.  They're  * (re)defined here because platforms generally don't define the ones  * they don't support.  For example, Windows doesn't define S_IFLNK or  * S_IFBLK.  Instead of having a mass of conditional logic and system  * checks to define any S_XXX values that aren't supported locally,  * I've just defined a new set of such constants so that  * libarchive-based applications can manipulate and identify archive  * entries properly even if the hosting platform can't store them on  * disk.  *  * These values are also used directly within some portable formats,  * such as cpio.  If you find a platform that varies from these, the  * correct solution is to leave these alone and translate from these  * portable values to platform-native values when entries are read from  * or written to disk.  */
+comment|/*  * In libarchive 4.0, we can drop the casts here.  * They're needed to work around Borland C's broken mode_t.  */
 define|#
 directive|define
 name|AE_IFMT
-value|0170000
+value|((__LA_MODE_T)0170000)
 define|#
 directive|define
 name|AE_IFREG
-value|0100000
+value|((__LA_MODE_T)0100000)
 define|#
 directive|define
 name|AE_IFLNK
-value|0120000
+value|((__LA_MODE_T)0120000)
 define|#
 directive|define
 name|AE_IFSOCK
-value|0140000
+value|((__LA_MODE_T)0140000)
 define|#
 directive|define
 name|AE_IFCHR
-value|0020000
+value|((__LA_MODE_T)0020000)
 define|#
 directive|define
 name|AE_IFBLK
-value|0060000
+value|((__LA_MODE_T)0060000)
 define|#
 directive|define
 name|AE_IFDIR
-value|0040000
+value|((__LA_MODE_T)0040000)
 define|#
 directive|define
 name|AE_IFIFO
-value|0010000
+value|((__LA_MODE_T)0010000)
 comment|/*  * Basic object manipulation  */
 name|__LA_DECL
 name|struct
@@ -1650,7 +1577,7 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/*  * Routines to bulk copy fields to/from a platform-native "struct  * stat."  Libarchive used to just store a struct stat inside of each  * archive_entry object, but this created issues when trying to  * manipulate archives on systems different than the ones they were  * created on.  *  * TODO: On Linux, provide both stat32 and stat64 versions of these functions.  */
+comment|/*  * Routines to bulk copy fields to/from a platform-native "struct  * stat."  Libarchive used to just store a struct stat inside of each  * archive_entry object, but this created issues when trying to  * manipulate archives on systems different than the ones they were  * created on.  *  * TODO: On Linux and other LFS systems, provide both stat32 and  * stat64 versions of these functions and all of the macro glue so  * that archive_entry_stat is magically defined to  * archive_entry_stat32 or archive_entry_stat64 as appropriate.  */
 name|__LA_DECL
 specifier|const
 expr|struct

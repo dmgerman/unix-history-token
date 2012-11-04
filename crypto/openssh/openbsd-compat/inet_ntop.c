@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: inet_ntop.c,v 1.7 2005/08/06 20:30:03 espie Exp $	*/
+comment|/*	$OpenBSD: inet_ntop.c,v 1.8 2008/12/09 19:38:38 otto Exp $	*/
 end_comment
 
 begin_comment
@@ -191,7 +191,7 @@ name|char
 modifier|*
 name|dst
 parameter_list|,
-name|size_t
+name|socklen_t
 name|size
 parameter_list|)
 block|{
@@ -211,6 +211,9 @@ name|src
 argument_list|,
 name|dst
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|size
 argument_list|)
 operator|)
@@ -226,6 +229,9 @@ name|src
 argument_list|,
 name|dst
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|size
 argument_list|)
 operator|)

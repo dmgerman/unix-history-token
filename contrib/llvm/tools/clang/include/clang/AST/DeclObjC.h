@@ -556,7 +556,7 @@ range|:
 literal|1
 decl_stmt|;
 comment|// NOTE: VC++ treats enums as signed, avoid using ImplementationControl enum
-comment|/// @required/@optional
+comment|/// \@required/\@optional
 name|unsigned
 name|DeclImplementation
 range|:
@@ -582,6 +582,18 @@ name|SelLocsKind
 range|:
 literal|2
 decl_stmt|;
+comment|/// \brief Whether this method overrides any other in the class hierarchy.
+comment|///
+comment|/// A method is said to override any method in the class's
+comment|/// base classes, its protocols, or its categories' protocols, that has
+comment|/// the same selector and is of the same kind (class or instance).
+comment|/// A method in an implementation is not considered as overriding the same
+comment|/// method in the interface or its categories.
+name|unsigned
+name|IsOverriding
+range|:
+literal|1
+decl_stmt|;
 comment|// Result type of this method.
 name|QualType
 name|MethodDeclType
@@ -602,9 +614,9 @@ name|NumParams
 decl_stmt|;
 comment|/// List of attributes for this method declaration.
 name|SourceLocation
-name|EndLoc
+name|DeclEndLoc
 decl_stmt|;
-comment|// the location of the ';' or '}'.
+comment|// the location of the ';' or '{'.
 comment|// The following are only used for method definitions, null otherwise.
 comment|// FIXME: space savings opportunity, consider a sub-class.
 name|Stmt
@@ -883,6 +895,11 @@ argument_list|(
 name|SelLoc_StandardNoSpace
 argument_list|)
 operator|,
+name|IsOverriding
+argument_list|(
+literal|0
+argument_list|)
+operator|,
 name|MethodDeclType
 argument_list|(
 name|T
@@ -903,7 +920,7 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
-name|EndLoc
+name|DeclEndLoc
 argument_list|(
 name|endLoc
 argument_list|)
@@ -1161,6 +1178,30 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// \brief Returns the location where the declarator ends. It will be
+end_comment
+
+begin_comment
+comment|/// the location of ';' for a method declaration and the location of '{'
+end_comment
+
+begin_comment
+comment|/// for a method definition.
+end_comment
+
+begin_expr_stmt
+name|SourceLocation
+name|getDeclaratorEndLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DeclEndLoc
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|// Location information, modeled after the Stmt API.
 end_comment
 
@@ -1184,27 +1225,8 @@ name|getLocEnd
 argument_list|()
 specifier|const
 name|LLVM_READONLY
-block|{
-return|return
-name|EndLoc
-return|;
-block|}
-end_expr_stmt
-
-begin_function
-name|void
-name|setEndLoc
-parameter_list|(
-name|SourceLocation
-name|Loc
-parameter_list|)
-block|{
-name|EndLoc
-operator|=
-name|Loc
 expr_stmt|;
-block|}
-end_function
+end_expr_stmt
 
 begin_expr_stmt
 name|virtual
@@ -1220,7 +1242,8 @@ argument_list|(
 name|getLocation
 argument_list|()
 argument_list|,
-name|EndLoc
+name|getLocEnd
+argument_list|()
 argument_list|)
 return|;
 block|}
@@ -1309,7 +1332,7 @@ argument_list|,
 name|NumParams
 argument_list|)
 argument_list|,
-name|EndLoc
+name|DeclEndLoc
 argument_list|)
 return|;
 end_expr_stmt
@@ -1981,7 +2004,62 @@ block|}
 end_function
 
 begin_comment
-comment|// Related to protocols declared in  @protocol
+comment|/// \brief Whether this method overrides any other in the class hierarchy.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// A method is said to override any method in the class's
+end_comment
+
+begin_comment
+comment|/// base classes, its protocols, or its categories' protocols, that has
+end_comment
+
+begin_comment
+comment|/// the same selector and is of the same kind (class or instance).
+end_comment
+
+begin_comment
+comment|/// A method in an implementation is not considered as overriding the same
+end_comment
+
+begin_comment
+comment|/// method in the interface or its categories.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isOverriding
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsOverriding
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|void
+name|setOverriding
+parameter_list|(
+name|bool
+name|isOverriding
+parameter_list|)
+block|{
+name|IsOverriding
+operator|=
+name|isOverriding
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// Related to protocols declared in  \@protocol
 end_comment
 
 begin_function
@@ -2692,7 +2770,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/// ObjCInterfaceDecl - Represents an ObjC class declaration. For example:
+comment|/// \brief Represents an ObjC class declaration.
 end_comment
 
 begin_comment
@@ -2700,11 +2778,23 @@ comment|///
 end_comment
 
 begin_comment
+comment|/// For example:
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
 comment|///   // MostPrimitive declares no super class (not particularly useful).
 end_comment
 
 begin_comment
-comment|///   @interface MostPrimitive
+comment|///   \@interface MostPrimitive
 end_comment
 
 begin_comment
@@ -2712,7 +2802,7 @@ comment|///     // no instance variables or methods.
 end_comment
 
 begin_comment
-comment|///   @end
+comment|///   \@end
 end_comment
 
 begin_comment
@@ -2724,7 +2814,7 @@ comment|///   // NSResponder inherits from NSObject& implements NSCoding (a prot
 end_comment
 
 begin_comment
-comment|///   @interface NSResponder : NSObject<NSCoding>
+comment|///   \@interface NSResponder : NSObject \<NSCoding>
 end_comment
 
 begin_comment
@@ -2748,7 +2838,11 @@ comment|///   - (void)mouseMoved:(NSEvent *)theEvent; // return void, takes a po
 end_comment
 
 begin_comment
-comment|///   @end                                    // to an NSEvent.
+comment|///   \@end                                    // to an NSEvent.
+end_comment
+
+begin_comment
+comment|/// \endcode
 end_comment
 
 begin_comment
@@ -2756,11 +2850,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|///   Unlike C/C++, forward class declarations are accomplished with @class.
+comment|///   Unlike C/C++, forward class declarations are accomplished with \@class.
 end_comment
 
 begin_comment
-comment|///   Unlike C/C++, @class allows for a list of classes to be forward declared.
+comment|///   Unlike C/C++, \@class allows for a list of classes to be forward declared.
 end_comment
 
 begin_comment
@@ -2819,11 +2913,11 @@ name|ObjCInterfaceDecl
 modifier|*
 name|SuperClass
 decl_stmt|;
-comment|/// Protocols referenced in the @interface  declaration
+comment|/// Protocols referenced in the \@interface  declaration
 name|ObjCProtocolList
 name|ReferencedProtocols
 decl_stmt|;
-comment|/// Protocols reference in both the @interface and class extensions.
+comment|/// Protocols reference in both the \@interface and class extensions.
 name|ObjCList
 operator|<
 name|ObjCProtocolDecl
@@ -3837,11 +3931,11 @@ comment|/// \brief Retrieve the definition of this class, or NULL if this class
 end_comment
 
 begin_comment
-comment|/// has been forward-declared (with @class) but not yet defined (with
+comment|/// has been forward-declared (with \@class) but not yet defined (with
 end_comment
 
 begin_comment
-comment|/// @interface).
+comment|/// \@interface).
 end_comment
 
 begin_function
@@ -3868,11 +3962,11 @@ comment|/// \brief Retrieve the definition of this class, or NULL if this class
 end_comment
 
 begin_comment
-comment|/// has been forward-declared (with @class) but not yet defined (with
+comment|/// has been forward-declared (with \@class) but not yet defined (with
 end_comment
 
 begin_comment
-comment|/// @interface).
+comment|/// \@interface).
 end_comment
 
 begin_expr_stmt
@@ -3901,7 +3995,7 @@ comment|/// \brief Starts the definition of this Objective-C class, taking it fr
 end_comment
 
 begin_comment
-comment|/// a forward declaration (@class) to a definition (@interface).
+comment|/// a forward declaration (\@class) to a definition (\@interface).
 end_comment
 
 begin_function_decl
@@ -4184,11 +4278,11 @@ comment|/// isObjCRequiresPropertyDefs - Checks that a class or one of its super
 end_comment
 
 begin_comment
-comment|/// classes must not be auto-synthesized. Returns class decl. if it must not be;
+comment|/// classes must not be auto-synthesized. Returns class decl. if it must not
 end_comment
 
 begin_comment
-comment|/// 0, otherwise.
+comment|/// be; 0, otherwise.
 end_comment
 
 begin_expr_stmt
@@ -4383,26 +4477,49 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// Lookup a method in the classes implementation hierarchy.
+comment|/// \brief Lookup a method in the classes implementation hierarchy.
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|ObjCMethodDecl
 modifier|*
 name|lookupPrivateMethod
+argument_list|(
+specifier|const
+name|Selector
+operator|&
+name|Sel
+argument_list|,
+name|bool
+name|Instance
+operator|=
+name|true
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|ObjCMethodDecl
+modifier|*
+name|lookupPrivateClassMethod
 parameter_list|(
 specifier|const
 name|Selector
 modifier|&
 name|Sel
-parameter_list|,
-name|bool
-name|Instance
-init|=
-name|true
 parameter_list|)
-function_decl|;
-end_function_decl
+block|{
+return|return
+name|lookupPrivateMethod
+argument_list|(
+name|Sel
+argument_list|,
+name|false
+argument_list|)
+return|;
+block|}
+end_function
 
 begin_expr_stmt
 name|SourceLocation
@@ -4489,11 +4606,11 @@ comment|/// isImplicitInterfaceDecl - check that this is an implicitly declared
 end_comment
 
 begin_comment
-comment|/// ObjCInterfaceDecl node. This is for legacy objective-c @implementation
+comment|/// ObjCInterfaceDecl node. This is for legacy objective-c \@implementation
 end_comment
 
 begin_comment
-comment|/// declaration without an @interface declaration.
+comment|/// declaration without an \@interface declaration.
 end_comment
 
 begin_expr_stmt
@@ -4755,7 +4872,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|///   @interface IvarExample : NSObject
+comment|///   \@interface IvarExample : NSObject
 end_comment
 
 begin_comment
@@ -4767,7 +4884,7 @@ comment|///     id defaultToProtected;
 end_comment
 
 begin_comment
-comment|///   @public:
+comment|///   \@public:
 end_comment
 
 begin_comment
@@ -4775,7 +4892,7 @@ comment|///     id canBePublic; // same as C++.
 end_comment
 
 begin_comment
-comment|///   @protected:
+comment|///   \@protected:
 end_comment
 
 begin_comment
@@ -4783,7 +4900,7 @@ comment|///     id canBeProtected; // same as C++.
 end_comment
 
 begin_comment
-comment|///   @package:
+comment|///   \@package:
 end_comment
 
 begin_comment
@@ -4871,7 +4988,7 @@ comment|/*Mutable=*/
 name|false
 argument_list|,
 comment|/*HasInit=*/
-name|false
+name|ICIS_NoInit
 argument_list|)
 block|,
 name|NextIvar
@@ -5092,11 +5209,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// ObjCAtDefsFieldDecl - Represents a field declaration created by an
-end_comment
-
-begin_comment
-comment|///  @defs(...).
+comment|/// \brief Represents a field declaration created by an \@defs(...).
 end_comment
 
 begin_decl_stmt
@@ -5150,7 +5263,7 @@ comment|/*Mutable=*/
 argument|false
 argument_list|,
 comment|/*HasInit=*/
-argument|false
+argument|ICIS_NoInit
 argument_list|)
 block|{}
 name|public
@@ -5229,29 +5342,35 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// ObjCProtocolDecl - Represents a protocol declaration. ObjC protocols
-comment|/// declare a pure abstract type (i.e no instance variables are permitted).
-comment|/// Protocols originally drew inspiration from C++ pure virtual functions (a C++
-comment|/// feature with nice semantics and lousy syntax:-). Here is an example:
+comment|/// \brief Represents an Objective-C protocol declaration.
 comment|///
-comment|/// @protocol NSDraggingInfo<refproto1, refproto2>
+comment|/// Objective-C protocols declare a pure abstract type (i.e., no instance
+comment|/// variables are permitted).  Protocols originally drew inspiration from
+comment|/// C++ pure virtual functions (a C++ feature with nice semantics and lousy
+comment|/// syntax:-). Here is an example:
+comment|///
+comment|/// \code
+comment|/// \@protocol NSDraggingInfo<refproto1, refproto2>
 comment|/// - (NSWindow *)draggingDestinationWindow;
 comment|/// - (NSImage *)draggedImage;
-comment|/// @end
+comment|/// \@end
+comment|/// \endcode
 comment|///
 comment|/// This says that NSDraggingInfo requires two methods and requires everything
 comment|/// that the two "referenced protocols" 'refproto1' and 'refproto2' require as
 comment|/// well.
 comment|///
-comment|/// @interface ImplementsNSDraggingInfo : NSObject<NSDraggingInfo>
-comment|/// @end
+comment|/// \code
+comment|/// \@interface ImplementsNSDraggingInfo : NSObject \<NSDraggingInfo>
+comment|/// \@end
+comment|/// \endcode
 comment|///
 comment|/// ObjC protocols inspired Java interfaces. Unlike Java, ObjC classes and
 comment|/// protocols are in distinct namespaces. For example, Cocoa defines both
 comment|/// an NSObject protocol and class (which isn't allowed in Java). As a result,
 comment|/// protocols are referenced using angle brackets as follows:
 comment|///
-comment|/// id<NSDraggingInfo> anyObjectThatImplementsNSDraggingInfo;
+comment|/// id \<NSDraggingInfo> anyObjectThatImplementsNSDraggingInfo;
 comment|///
 name|class
 name|ObjCProtocolDecl
@@ -6026,7 +6145,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// @interface NSView (MyViewMethods)
+comment|/// \@interface NSView (MyViewMethods)
 end_comment
 
 begin_comment
@@ -6034,7 +6153,7 @@ comment|/// - myMethod;
 end_comment
 
 begin_comment
-comment|/// @end
+comment|/// \@end
 end_comment
 
 begin_comment
@@ -6096,12 +6215,6 @@ name|ObjCCategoryDecl
 operator|*
 name|NextClassCategory
 block|;
-comment|/// true of class extension has at least one bitfield ivar.
-name|bool
-name|HasSynthBitfield
-operator|:
-literal|1
-block|;
 comment|/// \brief The location of the category name in this declaration.
 name|SourceLocation
 name|CategoryNameLoc
@@ -6153,11 +6266,6 @@ block|,
 name|NextClassCategory
 argument_list|(
 literal|0
-argument_list|)
-block|,
-name|HasSynthBitfield
-argument_list|(
-name|false
 argument_list|)
 block|,
 name|CategoryNameLoc
@@ -6403,33 +6511,6 @@ argument_list|()
 specifier|const
 expr_stmt|;
 end_expr_stmt
-
-begin_expr_stmt
-name|bool
-name|hasSynthBitfield
-argument_list|()
-specifier|const
-block|{
-return|return
-name|HasSynthBitfield
-return|;
-block|}
-end_expr_stmt
-
-begin_function
-name|void
-name|setHasSynthBitfield
-parameter_list|(
-name|bool
-name|val
-parameter_list|)
-block|{
-name|HasSynthBitfield
-operator|=
-name|val
-expr_stmt|;
-block|}
-end_function
 
 begin_typedef
 typedef|typedef
@@ -6903,7 +6984,7 @@ comment|/// ObjCCategoryImplDecl - An object of this class encapsulates a catego
 end_comment
 
 begin_comment
-comment|/// @implementation declaration. If a category class has declaration of a
+comment|/// \@implementation declaration. If a category class has declaration of a
 end_comment
 
 begin_comment
@@ -6911,35 +6992,35 @@ comment|/// property, its implementation must be specified in the category's
 end_comment
 
 begin_comment
-comment|/// @implementation declaration. Example:
+comment|/// \@implementation declaration. Example:
 end_comment
 
 begin_comment
-comment|/// @interface I @end
+comment|/// \@interface I \@end
 end_comment
 
 begin_comment
-comment|/// @interface I(CATEGORY)
+comment|/// \@interface I(CATEGORY)
 end_comment
 
 begin_comment
-comment|///    @property int p1, d1;
+comment|///    \@property int p1, d1;
 end_comment
 
 begin_comment
-comment|/// @end
+comment|/// \@end
 end_comment
 
 begin_comment
-comment|/// @implementation I(CATEGORY)
+comment|/// \@implementation I(CATEGORY)
 end_comment
 
 begin_comment
-comment|///  @dynamic p1,d1;
+comment|///  \@dynamic p1,d1;
 end_comment
 
 begin_comment
-comment|/// @end
+comment|/// \@end
 end_comment
 
 begin_comment
@@ -7105,29 +7186,6 @@ operator|:
 literal|""
 return|;
 block|}
-comment|/// getNameAsCString - Get the name of identifier for the class
-comment|/// interface associated with this implementation as a C string
-comment|/// (const char*).
-comment|//
-comment|// FIXME: Deprecated, move clients to getName().
-specifier|const
-name|char
-operator|*
-name|getNameAsCString
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Id
-condition|?
-name|Id
-operator|->
-name|getNameStart
-argument_list|()
-else|:
-literal|""
-return|;
-block|}
 comment|/// @brief Get the name of the class associated with this interface.
 comment|//
 comment|// FIXME: Deprecated, move clients to getName().
@@ -7230,7 +7288,7 @@ comment|/// @code
 end_comment
 
 begin_comment
-comment|/// @implementation MyClass
+comment|/// \@implementation MyClass
 end_comment
 
 begin_comment
@@ -7238,7 +7296,7 @@ comment|/// - (void)myMethod { /* do something */ }
 end_comment
 
 begin_comment
-comment|/// @end
+comment|/// \@end
 end_comment
 
 begin_comment
@@ -7286,7 +7344,7 @@ name|ObjCInterfaceDecl
 operator|*
 name|SuperClass
 block|;
-comment|/// @implementation may have private ivars.
+comment|/// \@implementation may have private ivars.
 name|SourceLocation
 name|IvarLBraceLoc
 block|;
@@ -7306,12 +7364,6 @@ block|;
 comment|/// true if class has a .cxx_[construct,destruct] method.
 name|bool
 name|HasCXXStructors
-operator|:
-literal|1
-block|;
-comment|/// true of class extension has at least one bitfield ivar.
-name|bool
-name|HasSynthBitfield
 operator|:
 literal|1
 block|;
@@ -7371,11 +7423,6 @@ literal|0
 argument_list|)
 block|,
 name|HasCXXStructors
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|HasSynthBitfield
 argument_list|(
 argument|false
 argument_list|)
@@ -7580,33 +7627,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_expr_stmt
-name|bool
-name|hasSynthBitfield
-argument_list|()
-specifier|const
-block|{
-return|return
-name|HasSynthBitfield
-return|;
-block|}
-end_expr_stmt
-
-begin_function
-name|void
-name|setHasSynthBitfield
-parameter_list|(
-name|bool
-name|val
-parameter_list|)
-block|{
-name|HasSynthBitfield
-operator|=
-name|val
-expr_stmt|;
-block|}
-end_function
-
 begin_comment
 comment|/// getIdentifier - Get the identifier that names the class
 end_comment
@@ -7671,44 +7691,6 @@ name|getIdentifier
 argument_list|()
 operator|->
 name|getName
-argument_list|()
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
-comment|/// getNameAsCString - Get the name of identifier for the class
-end_comment
-
-begin_comment
-comment|/// interface associated with this implementation as a C string
-end_comment
-
-begin_comment
-comment|/// (const char*).
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// FIXME: Move to StringRef API.
-end_comment
-
-begin_expr_stmt
-specifier|const
-name|char
-operator|*
-name|getNameAsCString
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getName
-argument_list|()
-operator|.
-name|data
 argument_list|()
 return|;
 block|}
@@ -8011,7 +7993,7 @@ comment|/// ObjCCompatibleAliasDecl - Represents alias of a class. This alias is
 end_comment
 
 begin_comment
-comment|/// declared as @compatibility_alias alias class.
+comment|/// declared as \@compatibility_alias alias class.
 end_comment
 
 begin_decl_stmt
@@ -8159,10 +8141,12 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// ObjCPropertyDecl - Represents one property declaration in an interface.
-comment|/// For example:
-comment|/// @property (assign, readwrite) int MyProperty;
+comment|/// \brief Represents one property declaration in an Objective-C interface.
 comment|///
+comment|/// For example:
+comment|/// \code{.mm}
+comment|/// \@property (assign, readwrite) int MyProperty;
+comment|/// \endcode
 name|class
 name|ObjCPropertyDecl
 operator|:
@@ -8265,7 +8249,7 @@ operator|:
 name|SourceLocation
 name|AtLoc
 block|;
-comment|// location of @property
+comment|// location of \@property
 name|SourceLocation
 name|LParenLoc
 block|;
@@ -8284,7 +8268,7 @@ name|PropertyAttributesAsWritten
 operator|:
 name|NumPropertyAttrsBits
 block|;
-comment|// @required/@optional
+comment|// \@required/\@optional
 name|unsigned
 name|PropertyImplementation
 operator|:
@@ -8810,7 +8794,7 @@ block|}
 end_function
 
 begin_comment
-comment|// Related to @optional/@required declared in @protocol
+comment|// Related to \@optional/\@required declared in \@protocol
 end_comment
 
 begin_function
@@ -8981,7 +8965,7 @@ comment|/// in a class or category implementation block. For example:
 end_comment
 
 begin_comment
-comment|/// @synthesize prop1 = ivar1;
+comment|/// \@synthesize prop1 = ivar1;
 end_comment
 
 begin_comment
@@ -9010,12 +8994,12 @@ operator|:
 name|SourceLocation
 name|AtLoc
 block|;
-comment|// location of @synthesize or @dynamic
-comment|/// \brief For @synthesize, the location of the ivar, if it was written in
+comment|// location of \@synthesize or \@dynamic
+comment|/// \brief For \@synthesize, the location of the ivar, if it was written in
 comment|/// the source code.
 comment|///
 comment|/// \code
-comment|/// @synthesize int a = b
+comment|/// \@synthesize int a = b
 comment|/// \endcode
 name|SourceLocation
 name|IvarLoc
@@ -9025,17 +9009,18 @@ name|ObjCPropertyDecl
 operator|*
 name|PropertyDecl
 block|;
-comment|/// Null for @dynamic. Required for @synthesize.
+comment|/// Null for \@dynamic. Required for \@synthesize.
 name|ObjCIvarDecl
 operator|*
 name|PropertyIvarDecl
 block|;
-comment|/// Null for @dynamic. Non-null if property must be copy-constructed in getter
+comment|/// Null for \@dynamic. Non-null if property must be copy-constructed in
+comment|/// getter.
 name|Expr
 operator|*
 name|GetterCXXConstructor
 block|;
-comment|/// Null for @dynamic. Non-null if property has assignment operator to call
+comment|/// Null for \@dynamic. Non-null if property has assignment operator to call
 comment|/// in Setter synthesis.
 name|Expr
 operator|*
@@ -9237,6 +9222,30 @@ name|IvarLoc
 operator|=
 name|IvarLoc
 block|;   }
+comment|/// \brief For \@synthesize, returns true if an ivar name was explicitly
+comment|/// specified.
+comment|///
+comment|/// \code
+comment|/// \@synthesize int a = b; // true
+comment|/// \@synthesize int a; // false
+comment|/// \endcode
+name|bool
+name|isIvarNameSpecified
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IvarLoc
+operator|.
+name|isValid
+argument_list|()
+operator|&&
+name|IvarLoc
+operator|!=
+name|getLocation
+argument_list|()
+return|;
+block|}
 name|Expr
 operator|*
 name|getGetterCXXConstructor

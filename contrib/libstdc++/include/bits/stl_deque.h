@@ -1957,34 +1957,35 @@ name|const_iterator
 expr_stmt|;
 end_typedef
 
-begin_macro
+begin_expr_stmt
+name|_Deque_base
+argument_list|()
+operator|:
+name|_M_impl
+argument_list|()
+block|{
+name|_M_initialize_map
+argument_list|(
+literal|0
+argument_list|)
+block|; }
 name|_Deque_base
 argument_list|(
 argument|const allocator_type& __a
 argument_list|,
 argument|size_t __num_elements
 argument_list|)
-end_macro
-
-begin_macro
-unit|:
+operator|:
 name|_M_impl
 argument_list|(
 argument|__a
 argument_list|)
-end_macro
-
-begin_block
 block|{
 name|_M_initialize_map
 argument_list|(
 name|__num_elements
 argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_expr_stmt
+block|; }
 name|_Deque_base
 argument_list|(
 specifier|const
@@ -2075,6 +2076,28 @@ block|;
 name|iterator
 name|_M_finish
 block|;
+name|_Deque_impl
+argument_list|()
+operator|:
+name|_Tp_alloc_type
+argument_list|()
+block|,
+name|_M_map
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|_M_map_size
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|_M_start
+argument_list|()
+block|,
+name|_M_finish
+argument_list|()
+block|{ }
 name|_Deque_impl
 argument_list|(
 specifier|const
@@ -3081,20 +3104,20 @@ begin_comment
 comment|/**        *  @brief  Default constructor creates no elements.        */
 end_comment
 
-begin_macro
-name|explicit
-end_macro
-
 begin_expr_stmt
+name|deque
+argument_list|()
+operator|:
+name|_Base
+argument_list|()
+block|{ }
+name|explicit
 name|deque
 argument_list|(
 specifier|const
 name|allocator_type
 operator|&
 name|__a
-operator|=
-name|allocator_type
-argument_list|()
 argument_list|)
 operator|:
 name|_Base

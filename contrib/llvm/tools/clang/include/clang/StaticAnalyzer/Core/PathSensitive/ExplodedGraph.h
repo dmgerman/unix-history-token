@@ -476,6 +476,21 @@ argument_list|()
 return|;
 block|}
 specifier|const
+name|StackFrameContext
+operator|*
+name|getStackFrame
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getLocationContext
+argument_list|()
+operator|->
+name|getCurrentStackFrame
+argument_list|()
+return|;
+block|}
+specifier|const
 name|Decl
 operator|&
 name|getCodeDecl
@@ -586,7 +601,7 @@ argument|llvm::FoldingSetNodeID&ID
 argument_list|,
 argument|const ProgramPoint&Loc
 argument_list|,
-argument|ProgramStateRef state
+argument|const ProgramStateRef&state
 argument_list|,
 argument|bool IsSink
 argument_list|)

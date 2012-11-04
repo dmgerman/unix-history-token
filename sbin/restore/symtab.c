@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -296,8 +302,11 @@ name|maxino
 condition|)
 name|panic
 argument_list|(
-literal|"addino: out of range %d\n"
+literal|"addino: out of range %ju\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|inum
 argument_list|)
 expr_stmt|;
@@ -404,8 +413,11 @@ name|maxino
 condition|)
 name|panic
 argument_list|(
-literal|"deleteino: out of range %d\n"
+literal|"deleteino: out of range %ju\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|inum
 argument_list|)
 expr_stmt|;
@@ -471,8 +483,11 @@ expr_stmt|;
 block|}
 name|panic
 argument_list|(
-literal|"deleteino: %d not found\n"
+literal|"deleteino: %ju not found\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|inum
 argument_list|)
 expr_stmt|;

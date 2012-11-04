@@ -105,7 +105,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtCreateInternalObjectDbg  *  * PARAMETERS:  ModuleName          - Source file name of caller  *              LineNumber          - Line number of caller  *              ComponentId         - Component type of caller  *              Type                - ACPI Type of the new object  *  * RETURN:      A new internal object, null on failure  *  * DESCRIPTION: Create and initialize a new internal object.  *  * NOTE:        We always allocate the worst-case object descriptor because  *              these objects are cached, and we want them to be  *              one-size-satisifies-any-request.  This in itself may not be  *              the most memory efficient, but the efficiency of the object  *              cache should more than make up for this!  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtCreateInternalObjectDbg  *  * PARAMETERS:  ModuleName          - Source file name of caller  *              LineNumber          - Line number of caller  *              ComponentId         - Component type of caller  *              Type                - ACPI Type of the new object  *  * RETURN:      A new internal object, null on failure  *  * DESCRIPTION: Create and initialize a new internal object.  *  * NOTE:        We always allocate the worst-case object descriptor because  *              these objects are cached, and we want them to be  *              one-size-satisifies-any-request. This in itself may not be  *              the most memory efficient, but the efficiency of the object  *              cache should more than make up for this!  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -696,7 +696,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtValidInternalObject  *  * PARAMETERS:  Object              - Object to be validated  *  * RETURN:      TRUE if object is valid, FALSE otherwise  *  * DESCRIPTION: Validate a pointer to be an ACPI_OPERAND_OBJECT  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtValidInternalObject  *  * PARAMETERS:  Object              - Object to be validated  *  * RETURN:      TRUE if object is valid, FALSE otherwise  *  * DESCRIPTION: Validate a pointer to be of type ACPI_OPERAND_OBJECT  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -747,7 +747,7 @@ block|{
 case|case
 name|ACPI_DESC_TYPE_OPERAND
 case|:
-comment|/* The object appears to be a valid ACPI_OPERAND_OBJECT  */
+comment|/* The object appears to be a valid ACPI_OPERAND_OBJECT */
 return|return
 operator|(
 name|TRUE
@@ -781,7 +781,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtAllocateObjectDescDbg  *  * PARAMETERS:  ModuleName          - Caller's module name (for error output)  *              LineNumber          - Caller's line number (for error output)  *              ComponentId         - Caller's component ID (for error output)  *  * RETURN:      Pointer to newly allocated object descriptor.  Null on error  *  * DESCRIPTION: Allocate a new object descriptor.  Gracefully handle  *              error conditions.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtAllocateObjectDescDbg  *  * PARAMETERS:  ModuleName          - Caller's module name (for error output)  *              LineNumber          - Caller's line number (for error output)  *              ComponentId         - Caller's component ID (for error output)  *  * RETURN:      Pointer to newly allocated object descriptor. Null on error  *  * DESCRIPTION: Allocate a new object descriptor. Gracefully handle  *              error conditions.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -895,7 +895,7 @@ argument_list|,
 name|Object
 argument_list|)
 expr_stmt|;
-comment|/* Object must be an ACPI_OPERAND_OBJECT  */
+comment|/* Object must be of type ACPI_OPERAND_OBJECT */
 if|if
 condition|(
 name|ACPI_GET_DESCRIPTOR_TYPE
@@ -1186,7 +1186,7 @@ name|AE_TYPE
 expr_stmt|;
 break|break;
 block|}
-comment|/*      * Account for the space required by the object rounded up to the next      * multiple of the machine word size.  This keeps each object aligned      * on a machine word boundary. (preventing alignment faults on some      * machines.)      */
+comment|/*      * Account for the space required by the object rounded up to the next      * multiple of the machine word size. This keeps each object aligned      * on a machine word boundary. (preventing alignment faults on some      * machines.)      */
 operator|*
 name|ObjLength
 operator|=

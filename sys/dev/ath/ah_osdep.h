@@ -82,6 +82,17 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/*  * Although the underlying hardware may support 64 bit DMA, the  * current Atheros hardware only supports 32 bit addressing.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|uint32_t
+name|HAL_DMA_ADDR
+typedef|;
+end_typedef
+
+begin_comment
 comment|/*  * Linker set writearounds for chip and RF backend registration.  */
 end_comment
 
@@ -166,6 +177,20 @@ parameter_list|,
 name|_n
 parameter_list|)
 value|memcpy(_d,_s,_n)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OS_MEMCMP
+parameter_list|(
+name|_a
+parameter_list|,
+name|_b
+parameter_list|,
+name|_l
+parameter_list|)
+value|memcmp((_a), (_b), (_l))
 end_define
 
 begin_define

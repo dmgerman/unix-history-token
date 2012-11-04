@@ -181,22 +181,35 @@ name|DTLS1_AL_HEADER_LENGTH
 value|2
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_SSL_INTERN
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_SCTP
+define|#
+directive|define
+name|DTLS1_SCTP_AUTH_LABEL
+value|"EXPORTER_DTLS_OVER_SCTP"
+endif|#
+directive|endif
 typedef|typedef
 struct|struct
 name|dtls1_bitmap_st
 block|{
-name|PQ_64BIT
-name|map
-decl_stmt|;
 name|unsigned
 name|long
-name|length
+name|map
 decl_stmt|;
-comment|/* sizeof the bitmap in bits */
-name|PQ_64BIT
+comment|/* track 32 packets on 32-bit systems 					   and 64 - on 64-bit systems */
+name|unsigned
+name|char
 name|max_seq_num
+index|[
+literal|8
+index|]
 decl_stmt|;
-comment|/* max record number seen so far */
+comment|/* max record number seen so far, 					   64-bit value in big-endian 					   encoding */
 block|}
 name|DTLS1_BITMAP
 typedef|;
@@ -208,8 +221,7 @@ modifier|*
 name|enc_write_ctx
 decl_stmt|;
 comment|/* cryptographic state */
-specifier|const
-name|EVP_MD
+name|EVP_MD_CTX
 modifier|*
 name|write_hash
 decl_stmt|;
@@ -446,7 +458,7 @@ name|struct
 name|dtls1_timeout_st
 name|timeout
 decl_stmt|;
-comment|/* Indicates when the last handshake msg sent will timeout */
+comment|/* Indicates when the last handshake msg or heartbeat sent will timeout */
 name|struct
 name|timeval
 name|next_timeout
@@ -487,6 +499,18 @@ name|unsigned
 name|int
 name|change_cipher_spec_ok
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_SCTP
+comment|/* used when SSL_ST_XX_FLUSH is entered */
+name|int
+name|next_state
+decl_stmt|;
+name|int
+name|shutdown_received
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 name|DTLS1_STATE
 typedef|;
@@ -509,9 +533,20 @@ decl_stmt|;
 name|SSL3_RECORD
 name|rrec
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_SCTP
+name|struct
+name|bio_dgram_sctp_rcvinfo
+name|recordinfo
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 name|DTLS1_RECORD_DATA
 typedef|;
+endif|#
+directive|endif
 comment|/* Timeout multipliers (timeout slice is defined in apps/timeouts.h */
 define|#
 directive|define

@@ -32,19 +32,23 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
-comment|// These enums/classes describe ABI related information about constructors,
+comment|/// \file
 end_comment
 
 begin_comment
-comment|// destructors and thunks.
+comment|/// \brief Enums/classes describing ABI related information about constructors,
 end_comment
 
 begin_comment
-comment|//
+comment|/// destructors and thunks.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -73,44 +77,44 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
-comment|/// CXXCtorType - C++ constructor types
+comment|/// \brief C++ constructor types.
 enum|enum
 name|CXXCtorType
 block|{
 name|Ctor_Complete
 block|,
-comment|// Complete object ctor
+comment|///< Complete object ctor
 name|Ctor_Base
 block|,
-comment|// Base object ctor
+comment|///< Base object ctor
 name|Ctor_CompleteAllocating
-comment|// Complete object allocating ctor
+comment|///< Complete object allocating ctor
 block|}
 enum|;
-comment|/// CXXDtorType - C++ destructor types
+comment|/// \brief C++ destructor types.
 enum|enum
 name|CXXDtorType
 block|{
 name|Dtor_Deleting
 block|,
-comment|// Deleting dtor
+comment|///< Deleting dtor
 name|Dtor_Complete
 block|,
-comment|// Complete object dtor
+comment|///< Complete object dtor
 name|Dtor_Base
-comment|// Base object dtor
+comment|///< Base object dtor
 block|}
 enum|;
-comment|/// ReturnAdjustment - A return adjustment.
+comment|/// \brief A return adjustment.
 struct|struct
 name|ReturnAdjustment
 block|{
-comment|/// NonVirtual - The non-virtual adjustment from the derived object to its
+comment|/// \brief The non-virtual adjustment from the derived object to its
 comment|/// nearest virtual base.
 name|int64_t
 name|NonVirtual
 decl_stmt|;
-comment|/// VBaseOffsetOffset - The offset (in bytes), relative to the address point
+comment|/// \brief The offset (in bytes), relative to the address point
 comment|/// of the virtual base class offset.
 name|int64_t
 name|VBaseOffsetOffset
@@ -230,19 +234,19 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/// ThisAdjustment - A 'this' pointer adjustment.
+comment|/// \brief A \c this pointer adjustment.
 end_comment
 
 begin_struct
 struct|struct
 name|ThisAdjustment
 block|{
-comment|/// NonVirtual - The non-virtual adjustment from the derived object to its
+comment|/// \brief The non-virtual adjustment from the derived object to its
 comment|/// nearest virtual base.
 name|int64_t
 name|NonVirtual
 decl_stmt|;
-comment|/// VCallOffsetOffset - The offset (in bytes), relative to the address point,
+comment|/// \brief The offset (in bytes), relative to the address point,
 comment|/// of the virtual call offset.
 name|int64_t
 name|VCallOffsetOffset
@@ -358,7 +362,7 @@ end_struct
 
 begin_comment
 unit|};
-comment|/// ThunkInfo - The 'this' pointer adjustment as well as an optional return
+comment|/// \brief The \c this pointer adjustment as well as an optional return
 end_comment
 
 begin_comment
@@ -369,11 +373,11 @@ begin_struct
 struct|struct
 name|ThunkInfo
 block|{
-comment|/// This - The 'this' pointer adjustment.
+comment|/// \brief The \c this pointer adjustment.
 name|ThisAdjustment
 name|This
 decl_stmt|;
-comment|/// Return - The return adjustment.
+comment|/// \brief The return adjustment.
 name|ReturnAdjustment
 name|Return
 decl_stmt|;

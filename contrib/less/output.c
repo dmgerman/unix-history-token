@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2011  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2012  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_comment
@@ -583,6 +583,10 @@ name|p_next
 operator|=
 name|p
 expr_stmt|;
+name|at
+operator|=
+literal|0
+expr_stmt|;
 name|WIN32setcolors
 argument_list|(
 name|nm_fg_color
@@ -953,6 +957,18 @@ operator|&
 literal|1
 condition|)
 block|{
+comment|/* 						 * If \e[1m use defined bold 						 * color, else set intensity. 						 */
+if|if
+condition|(
+name|p
+index|[
+operator|-
+literal|2
+index|]
+operator|==
+literal|'['
+condition|)
+block|{
 name|fg
 operator|=
 name|bo_fg_color
@@ -960,6 +976,12 @@ expr_stmt|;
 name|bg
 operator|=
 name|bo_bg_color
+expr_stmt|;
+block|}
+else|else
+name|fg
+operator||=
+literal|8
 expr_stmt|;
 block|}
 elseif|else

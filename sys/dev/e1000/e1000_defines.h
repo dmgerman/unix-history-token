@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2011, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2012, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -9973,6 +9973,95 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_EECD_FLUPD_I210
+value|0x00800000
+end_define
+
+begin_comment
+comment|/* Update FLASH */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_EECD_FLUDONE_I210
+value|0x04000000
+end_define
+
+begin_comment
+comment|/* Update FLASH done */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_EECD_FLASH_DETECTED_I210
+value|0x00080000
+end_define
+
+begin_comment
+comment|/* FLASH detected */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_FLUDONE_ATTEMPTS
+value|20000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_EERD_EEWR_MAX_COUNT
+value|512
+end_define
+
+begin_comment
+comment|/* buffered EEPROM words rw */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_I210_FIFO_SEL_RX
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_I210_FIFO_SEL_TX_QAV
+parameter_list|(
+name|_i
+parameter_list|)
+value|(0x02 + (_i))
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_I210_FIFO_SEL_TX_LEGACY
+value|E1000_I210_FIFO_SEL_TX_QAV(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_I210_FIFO_SEL_BMC2OS_TX
+value|0x06
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_I210_FIFO_SEL_BMC2OS_RX
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_NVM_SWDPIN0
 value|0x0001
 end_define
@@ -10106,6 +10195,90 @@ define|#
 directive|define
 name|NVM_PHY_CLASS_WORD
 value|0x0007
+end_define
+
+begin_define
+define|#
+directive|define
+name|NVM_ETRACK_WORD
+value|0x0042
+end_define
+
+begin_define
+define|#
+directive|define
+name|NVM_COMB_VER_OFF
+value|0x0083
+end_define
+
+begin_define
+define|#
+directive|define
+name|NVM_COMB_VER_PTR
+value|0x003d
+end_define
+
+begin_define
+define|#
+directive|define
+name|NVM_MAC_ADDR
+value|0x0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|NVM_SUB_DEV_ID
+value|0x000B
+end_define
+
+begin_define
+define|#
+directive|define
+name|NVM_SUB_VEN_ID
+value|0x000C
+end_define
+
+begin_define
+define|#
+directive|define
+name|NVM_DEV_ID
+value|0x000D
+end_define
+
+begin_define
+define|#
+directive|define
+name|NVM_VEN_ID
+value|0x000E
+end_define
+
+begin_define
+define|#
+directive|define
+name|NVM_INIT_CTRL_2
+value|0x000F
+end_define
+
+begin_define
+define|#
+directive|define
+name|NVM_INIT_CTRL_4
+value|0x0013
+end_define
+
+begin_define
+define|#
+directive|define
+name|NVM_LED_1_CFG
+value|0x001C
+end_define
+
+begin_define
+define|#
+directive|define
+name|NVM_LED_0_2_CFG
+value|0x001F
 end_define
 
 begin_define
@@ -10250,7 +10423,7 @@ name|NVM_82580_LAN_FUNC_OFFSET
 parameter_list|(
 name|a
 parameter_list|)
-value|(a ? (0x40 + (0x40 * a)) : 0)
+value|((a) ? (0x40 + (0x40 * (a))) : 0)
 end_define
 
 begin_comment
@@ -10280,7 +10453,7 @@ comment|/* MDIO accesses routed extrnl */
 end_comment
 
 begin_comment
-comment|/* Offset of Link Mode bits for 82575 up to Kawela */
+comment|/* Offset of Link Mode bits for 82575/82576 */
 end_comment
 
 begin_define
@@ -11107,6 +11280,13 @@ define|#
 directive|define
 name|I350_I_PHY_ID
 value|0x015403B0
+end_define
+
+begin_define
+define|#
+directive|define
+name|I210_I_PHY_ID
+value|0x01410C00
 end_define
 
 begin_define
@@ -12660,6 +12840,17 @@ comment|/* Enable DMA Coalescing */
 end_comment
 
 begin_comment
+comment|/* DMA Coalescing BMC-to-OS Watchdog Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_DMACR_DC_BMC2OSW_EN
+value|0x00008000
+end_define
+
+begin_comment
 comment|/* DMA Coalescing Transmit Threshold */
 end_comment
 
@@ -12746,23 +12937,34 @@ end_define
 begin_define
 define|#
 directive|define
-name|E1000_LTRC_EEEMS_EN
-value|0x00000005
-end_define
-
-begin_comment
-comment|/* Enable EEE LTR max send */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|E1000_RXPBS_SIZE_I210_MASK
 value|0x0000003F
 end_define
 
 begin_comment
 comment|/* Rx packet buffer size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TXPB0S_SIZE_I210_MASK
+value|0x0000003F
+end_define
+
+begin_comment
+comment|/* Tx packet buffer 0 size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_LTRC_EEEMS_EN
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* Enable EEE LTR max send */
 end_comment
 
 begin_comment
@@ -12859,6 +13061,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_LTRMINV_LSNP_REQ
+value|0x00008000
+end_define
+
+begin_comment
+comment|/* LTR Snoop Requirement */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|E1000_LTRMAXV_SCALE_MASK
 value|0x00001C00
 end_define
@@ -12895,6 +13108,17 @@ directive|define
 name|E1000_LTRMAXV_SCALE_32768
 value|3
 end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LTRMAXV_LSNP_REQ
+value|0x00008000
+end_define
+
+begin_comment
+comment|/* LTR Snoop Requirement */
+end_comment
 
 begin_define
 define|#

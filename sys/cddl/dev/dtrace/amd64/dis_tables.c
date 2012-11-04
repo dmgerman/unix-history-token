@@ -6032,7 +6032,12 @@ name|INVALID
 block|,
 name|INVALID
 block|,
-name|INVALID
+name|TS
+argument_list|(
+literal|"nopw"
+argument_list|,
+name|Mw
+argument_list|)
 block|, }
 block|,
 block|{
@@ -10329,7 +10334,7 @@ argument_list|,
 name|IA
 argument_list|)
 block|,
-name|TNSx
+name|TNS
 argument_list|(
 literal|"%es:"
 argument_list|,
@@ -10387,7 +10392,7 @@ argument_list|,
 name|IA
 argument_list|)
 block|,
-name|TNSx
+name|TNS
 argument_list|(
 literal|"%cs:"
 argument_list|,
@@ -10447,7 +10452,7 @@ argument_list|,
 name|IA
 argument_list|)
 block|,
-name|TNSx
+name|TNS
 argument_list|(
 literal|"%ss:"
 argument_list|,
@@ -10505,7 +10510,7 @@ argument_list|,
 name|IA
 argument_list|)
 block|,
-name|TNSx
+name|TNS
 argument_list|(
 literal|"%ds:"
 argument_list|,

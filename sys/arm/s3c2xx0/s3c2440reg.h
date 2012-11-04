@@ -4,7 +4,7 @@ comment|/*-  * Copyright (C) 2009 Andrew Turner  * All rights reserved.  *  * Re
 end_comment
 
 begin_comment
-comment|/*  * Samsung S3C2440X processor is ARM920T based integrated CPU  *  * Reference:  *  S3C2440A/S3C2442B User's Manual   */
+comment|/*  * Samsung S3C2440X processor is ARM920T based integrated CPU  *  * Reference:  *  S3C2440A/S3C2442B User's Manual  */
 end_comment
 
 begin_ifndef

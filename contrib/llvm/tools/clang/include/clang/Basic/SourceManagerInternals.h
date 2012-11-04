@@ -32,19 +32,19 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
-comment|//  This file defines the implementation details of the SourceManager
+comment|/// \file
 end_comment
 
 begin_comment
-comment|//  class.
+comment|/// \brief Defines implementation details of the clang::SourceManager class.
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
@@ -62,6 +62,12 @@ define|#
 directive|define
 name|LLVM_CLANG_SOURCEMANAGER_INTERNALS_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|"clang/Basic/SourceLocation.h"
+end_include
 
 begin_include
 include|#
@@ -91,28 +97,29 @@ comment|//===-------------------------------------------------------------------
 struct|struct
 name|LineEntry
 block|{
-comment|/// FileOffset - The offset in this file that the line entry occurs at.
+comment|/// \brief The offset in this file that the line entry occurs at.
 name|unsigned
 name|FileOffset
 decl_stmt|;
-comment|/// LineNo - The presumed line number of this line entry: #line 4.
+comment|/// \brief The presumed line number of this line entry: \#line 4.
 name|unsigned
 name|LineNo
 decl_stmt|;
-comment|/// FilenameID - The ID of the filename identified by this line entry:
-comment|/// #line 4 "foo.c".  This is -1 if not specified.
+comment|/// \brief The ID of the filename identified by this line entry:
+comment|/// \#line 4 "foo.c".  This is -1 if not specified.
 name|int
 name|FilenameID
 decl_stmt|;
-comment|/// Flags - Set the 0 if no flags, 1 if a system header,
+comment|/// \brief Set the 0 if no flags, 1 if a system header,
 name|SrcMgr
 operator|::
 name|CharacteristicKind
 name|FileKind
 expr_stmt|;
-comment|/// IncludeOffset - This is the offset of the virtual include stack location,
-comment|/// which is manipulated by GNU linemarker directives.  If this is 0 then
-comment|/// there is no virtual #includer.
+comment|/// \brief The offset of the virtual include stack location,
+comment|/// which is manipulated by GNU linemarker directives.
+comment|///
+comment|/// If this is 0 then there is no virtual \#includer.
 name|unsigned
 name|IncludeOffset
 decl_stmt|;
@@ -249,13 +256,13 @@ operator|.
 name|FileOffset
 return|;
 block|}
-comment|/// LineTableInfo - This class is used to hold and unique data used to
-comment|/// represent #line information.
+comment|/// \brief Used to hold and unique data used to represent \#line information.
 name|class
 name|LineTableInfo
 block|{
-comment|/// FilenameIDs - This map is used to assign unique IDs to filenames in
-comment|/// #line directives.  This allows us to unique the filenames that
+comment|/// \brief Map used to assign unique IDs to filenames in \#line directives.
+comment|///
+comment|/// This allows us to unique the filenames that
 comment|/// frequently reoccur and reference them with indices.  FilenameIDs holds
 comment|/// the mapping from string -> ID, and FilenamesByID holds the mapping of ID
 comment|/// to string.
@@ -285,13 +292,13 @@ operator|*
 operator|>
 name|FilenamesByID
 expr_stmt|;
-comment|/// LineEntries - This is a map from FileIDs to a list of line entries (sorted
-comment|/// by the offset they occur in the file.
+comment|/// \brief Map from FileIDs to a list of line entries (sorted by the offset
+comment|/// at which they occur in the file).
 name|std
 operator|::
 name|map
 operator|<
-name|int
+name|FileID
 operator|,
 name|std
 operator|::
@@ -384,7 +391,7 @@ block|}
 name|void
 name|AddLineNote
 parameter_list|(
-name|int
+name|FileID
 name|FID
 parameter_list|,
 name|unsigned
@@ -400,7 +407,7 @@ function_decl|;
 name|void
 name|AddLineNote
 argument_list|(
-name|int
+name|FileID
 name|FID
 argument_list|,
 name|unsigned
@@ -421,14 +428,15 @@ name|CharacteristicKind
 name|FileKind
 argument_list|)
 decl_stmt|;
-comment|/// FindNearestLineEntry - Find the line entry nearest to FID that is before
-comment|/// it.  If there is no line entry before Offset in FID, return null.
+comment|/// \brief Find the line entry nearest to FID that is before it.
+comment|///
+comment|/// If there is no line entry before \p Offset in \p FID, returns null.
 specifier|const
 name|LineEntry
 modifier|*
 name|FindNearestLineEntry
 parameter_list|(
-name|int
+name|FileID
 name|FID
 parameter_list|,
 name|unsigned
@@ -441,7 +449,7 @@ name|std
 operator|::
 name|map
 operator|<
-name|int
+name|FileID
 operator|,
 name|std
 operator|::
@@ -481,7 +489,7 @@ comment|/// the internal representation of the line table.
 name|void
 name|AddEntry
 argument_list|(
-name|int
+name|FileID
 name|FID
 argument_list|,
 specifier|const

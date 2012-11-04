@@ -7856,7 +7856,7 @@ block|}
 end_function
 
 begin_comment
-comment|/** xnb_mbufc2pkt on a a two-mbuf chain with short data regions */
+comment|/** xnb_mbufc2pkt on a two-mbuf chain with short data regions */
 end_comment
 
 begin_function
@@ -8085,7 +8085,7 @@ block|}
 end_function
 
 begin_comment
-comment|/** xnb_mbufc2pkt on a a mbuf chain with>1 mbuf cluster */
+comment|/** xnb_mbufc2pkt on a mbuf chain with>1 mbuf cluster */
 end_comment
 
 begin_function
@@ -8306,7 +8306,7 @@ block|}
 end_function
 
 begin_comment
-comment|/** xnb_mbufc2pkt on a a mbuf chain with>1 mbuf cluster and extra info */
+comment|/** xnb_mbufc2pkt on a mbuf chain with>1 mbuf cluster and extra info */
 end_comment
 
 begin_function

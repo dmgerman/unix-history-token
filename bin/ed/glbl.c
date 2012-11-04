@@ -605,6 +605,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 name|line_t
 modifier|*
 modifier|*
@@ -617,6 +618,7 @@ comment|/* list of lines active in a global command */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|long
 name|active_last
 decl_stmt|;
@@ -627,6 +629,7 @@ comment|/* index of last active line in active_list */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|long
 name|active_size
 decl_stmt|;
@@ -637,6 +640,7 @@ comment|/* size of active_list */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|long
 name|active_ptr
 decl_stmt|;
@@ -647,6 +651,7 @@ comment|/* active_list index (non-decreasing) */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|long
 name|active_ndx
 decl_stmt|;

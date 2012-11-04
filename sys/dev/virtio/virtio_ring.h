@@ -15,12 +15,6 @@ directive|define
 name|VIRTIO_RING_H
 end_define
 
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
 begin_comment
 comment|/* This marks a buffer as continuing via the next field. */
 end_comment
@@ -264,6 +258,11 @@ argument_list|(
 name|uint16_t
 argument_list|)
 operator|)
+operator|+
+sizeof|sizeof
+argument_list|(
+name|uint16_t
+argument_list|)
 expr_stmt|;
 name|size
 operator|=
@@ -299,6 +298,11 @@ expr|struct
 name|vring_used_elem
 argument_list|)
 operator|)
+operator|+
+sizeof|sizeof
+argument_list|(
+name|uint16_t
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
