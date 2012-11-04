@@ -13550,6 +13550,11 @@ argument_list|)
 expr_stmt|;
 name|MNT_FLAG
 argument_list|(
+name|MNT_NFS4ACLS
+argument_list|)
+expr_stmt|;
+name|MNT_FLAG
+argument_list|(
 name|MNT_UNION
 argument_list|)
 expr_stmt|;
@@ -13566,11 +13571,6 @@ expr_stmt|;
 name|MNT_FLAG
 argument_list|(
 name|MNT_SOFTDEP
-argument_list|)
-expr_stmt|;
-name|MNT_FLAG
-argument_list|(
-name|MNT_SUJ
 argument_list|)
 expr_stmt|;
 name|MNT_FLAG
@@ -13610,7 +13610,7 @@ argument_list|)
 expr_stmt|;
 name|MNT_FLAG
 argument_list|(
-name|MNT_NFS4ACLS
+name|MNT_SUJ
 argument_list|)
 expr_stmt|;
 name|MNT_FLAG
