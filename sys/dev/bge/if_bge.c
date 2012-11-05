@@ -370,7 +370,6 @@ name|uint16_t
 name|bge_did
 decl_stmt|;
 block|}
-decl|const
 name|bge_devs
 index|[]
 init|=
@@ -915,7 +914,6 @@ modifier|*
 name|v_name
 decl_stmt|;
 block|}
-decl|const
 name|bge_vendors
 index|[]
 init|=
@@ -986,7 +984,6 @@ modifier|*
 name|br_name
 decl_stmt|;
 block|}
-decl|const
 name|bge_revisions
 index|[]
 init|=
@@ -1394,7 +1391,6 @@ specifier|static
 specifier|const
 name|struct
 name|bge_revision
-specifier|const
 name|bge_majorrevs
 index|[]
 init|=
@@ -15344,7 +15340,6 @@ modifier|*
 name|desc
 decl_stmt|;
 block|}
-decl|const
 name|mbox_reorder_lists
 index|[]
 init|=

@@ -285,7 +285,6 @@ specifier|static
 specifier|const
 name|struct
 name|ste_type
-specifier|const
 name|ste_devs
 index|[]
 init|=

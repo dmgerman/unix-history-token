@@ -380,7 +380,6 @@ specifier|static
 specifier|const
 name|struct
 name|rl_type
-specifier|const
 name|re_devs
 index|[]
 init|=
@@ -493,7 +492,6 @@ specifier|static
 specifier|const
 name|struct
 name|rl_hwrev
-specifier|const
 name|re_hwrevs
 index|[]
 init|=

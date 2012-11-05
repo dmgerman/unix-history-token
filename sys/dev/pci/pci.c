@@ -1194,7 +1194,6 @@ specifier|static
 specifier|const
 name|struct
 name|pci_quirk
-specifier|const
 name|pci_quirks
 index|[]
 init|=
