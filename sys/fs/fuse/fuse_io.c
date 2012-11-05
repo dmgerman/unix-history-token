@@ -416,6 +416,12 @@ operator|->
 name|v_type
 operator|==
 name|VREG
+operator|||
+name|vp
+operator|->
+name|v_type
+operator|==
+name|VDIR
 argument_list|)
 expr_stmt|;
 name|err
@@ -2531,6 +2537,12 @@ operator|->
 name|v_type
 operator|==
 name|VREG
+operator|||
+name|vp
+operator|->
+name|v_type
+operator|==
+name|VDIR
 argument_list|)
 expr_stmt|;
 name|MPASS
