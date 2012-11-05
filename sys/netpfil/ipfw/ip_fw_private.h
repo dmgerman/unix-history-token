@@ -920,6 +920,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|IPFW_RLOCK_ASSERT
+parameter_list|(
+name|_chain
+parameter_list|)
+value|rw_assert(&(_chain)->rwmtx, RA_RLOCKED)
+end_define
+
+begin_define
+define|#
+directive|define
 name|IPFW_WLOCK_ASSERT
 parameter_list|(
 name|_chain

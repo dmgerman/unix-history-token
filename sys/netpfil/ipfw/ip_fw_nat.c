@@ -1225,6 +1225,11 @@ operator|=
 operator|&
 name|V_layer3_chain
 expr_stmt|;
+name|IPFW_RLOCK_ASSERT
+argument_list|(
+name|chain
+argument_list|)
+expr_stmt|;
 comment|/* Check every nat entry... */
 name|LIST_FOREACH
 argument_list|(
