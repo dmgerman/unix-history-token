@@ -2772,6 +2772,37 @@ block|}
 elseif|else
 if|if
 condition|(
+name|url
+operator|->
+name|offset
+operator|>
+name|sb
+operator|.
+name|st_size
+condition|)
+block|{
+comment|/* gap between what we asked for and what we got */
+name|warnx
+argument_list|(
+literal|"%s: gap in resume mode"
+argument_list|,
+name|URL
+argument_list|)
+expr_stmt|;
+name|fclose
+argument_list|(
+name|of
+argument_list|)
+expr_stmt|;
+name|of
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* picked up again later */
+block|}
+elseif|else
+if|if
+condition|(
 name|us
 operator|.
 name|size
@@ -2937,6 +2968,46 @@ name|sb
 operator|=
 name|nsb
 expr_stmt|;
+comment|/* picked up again later */
+block|}
+comment|/* seek to where we left off */
+if|if
+condition|(
+name|of
+operator|!=
+name|NULL
+operator|&&
+name|fseek
+argument_list|(
+name|of
+argument_list|,
+name|url
+operator|->
+name|offset
+argument_list|,
+name|SEEK_SET
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|warn
+argument_list|(
+literal|"%s: fseek()"
+argument_list|,
+name|path
+argument_list|)
+expr_stmt|;
+name|fclose
+argument_list|(
+name|of
+argument_list|)
+expr_stmt|;
+name|of
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* picked up again later */
 block|}
 block|}
 block|}
