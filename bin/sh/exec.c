@@ -240,7 +240,8 @@ name|int
 name|special
 decl_stmt|;
 comment|/* flag for special builtin commands */
-name|short
+name|signed
+name|char
 name|cmdtype
 decl_stmt|;
 comment|/* index identifying command */
