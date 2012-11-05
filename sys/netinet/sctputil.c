@@ -5989,7 +5989,7 @@ index|[
 name|i
 index|]
 operator|.
-name|next_sequence_sent
+name|next_sequence_send
 operator|=
 literal|0x0
 expr_stmt|;
@@ -15493,9 +15493,7 @@ name|ssf_info
 operator|.
 name|sinfo_ssn
 operator|=
-name|sp
-operator|->
-name|strseq
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -24894,6 +24892,11 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * Still no eom found. That means there is stuff left on the 		 * stream out queue.. yuck. 		 */
+name|SCTP_TCB_SEND_LOCK
+argument_list|(
+name|stcb
+argument_list|)
+expr_stmt|;
 name|strq
 operator|=
 operator|&
@@ -24906,40 +24909,21 @@ index|[
 name|stream
 index|]
 expr_stmt|;
-name|SCTP_TCB_SEND_LOCK
+name|sp
+operator|=
+name|TAILQ_FIRST
 argument_list|(
-name|stcb
+operator|&
+name|strq
+operator|->
+name|outqueue
 argument_list|)
 expr_stmt|;
-name|TAILQ_FOREACH
-argument_list|(
-argument|sp
-argument_list|,
-argument|&strq->outqueue
-argument_list|,
-argument|next
-argument_list|)
-block|{
-comment|/* FIXME: Shouldn't this be a serial number check? */
 if|if
 condition|(
 name|sp
-operator|->
-name|strseq
-operator|>
-name|seq
-condition|)
-block|{
-break|break;
-block|}
-comment|/* Check if its our SEQ */
-if|if
-condition|(
-name|sp
-operator|->
-name|strseq
-operator|==
-name|seq
+operator|!=
+name|NULL
 condition|)
 block|{
 name|sp
@@ -24948,7 +24932,7 @@ name|discard_rest
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 				 * We may need to put a chunk on the queue 				 * that holds the TSN that would have been 				 * sent with the LAST bit. 				 */
+comment|/* 			 * We may need to put a chunk on the queue that 			 * holds the TSN that would have been sent with the 			 * LAST bit. 			 */
 if|if
 condition|(
 name|chk
@@ -24971,7 +24955,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 						 * we are hosed. All we can 						 * do is nothing.. which 						 * will cause an abort if 						 * the peer is paying 						 * attention. 						 */
+comment|/* 					 * we are hosed. All we can do is 					 * nothing.. which will cause an 					 * abort if the peer is paying 					 * attention. 					 */
 goto|goto
 name|oh_well
 goto|;
@@ -25022,9 +25006,9 @@ name|data
 operator|.
 name|stream_seq
 operator|=
-name|sp
+name|strq
 operator|->
-name|strseq
+name|next_sequence_send
 expr_stmt|;
 name|chk
 operator|->
@@ -25182,6 +25166,11 @@ operator||=
 name|SCTP_DATA_LAST_FRAG
 expr_stmt|;
 block|}
+name|strq
+operator|->
+name|next_sequence_send
+operator|++
+expr_stmt|;
 name|oh_well
 label|:
 if|if
@@ -25191,7 +25180,7 @@ operator|->
 name|data
 condition|)
 block|{
-comment|/* 					 * Pull any data to free up the SB 					 * and allow sender to "add more" 					 * while we will throw away :-) 					 */
+comment|/* 				 * Pull any data to free up the SB and allow 				 * sender to "add more" while we will throw 				 * away :-) 				 */
 name|sctp_free_spbufspace
 argument_list|(
 name|stcb
@@ -25246,10 +25235,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-break|break;
 block|}
-block|}
-comment|/* End tailq_foreach */
 name|SCTP_TCB_SEND_UNLOCK
 argument_list|(
 name|stcb
