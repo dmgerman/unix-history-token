@@ -367,7 +367,18 @@ literal|0
 end_if
 
 begin_comment
-comment|/* old sizes for small memory machines #define	CMDBUF_SIZE	512	/* Buffer for multichar commands */
+comment|/* old sizes for small memory machines */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CMDBUF_SIZE
+value|512
+end_define
+
+begin_comment
+comment|/* Buffer for multichar commands */
 end_comment
 
 begin_define
