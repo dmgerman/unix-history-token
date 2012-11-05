@@ -575,9 +575,9 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_INFO
+name|LOG_NOTICE
 argument_list|,
-literal|"%s: Enclosure Status Has Information"
+literal|"%s: Enclosure Has Information"
 argument_list|,
 name|v
 index|[
