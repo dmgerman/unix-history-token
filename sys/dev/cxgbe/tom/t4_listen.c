@@ -6427,6 +6427,15 @@ name|rcvif
 operator|=
 name|ifp
 expr_stmt|;
+name|remove_tid
+argument_list|(
+name|sc
+argument_list|,
+name|synqe
+operator|->
+name|tid
+argument_list|)
+expr_stmt|;
 name|release_synqe
 argument_list|(
 name|synqe
