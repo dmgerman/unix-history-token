@@ -26922,10 +26922,6 @@ literal|0
 operator|)
 argument_list|)
 expr_stmt|;
-name|sockbuf_lock
-operator|=
-literal|1
-expr_stmt|;
 if|if
 condition|(
 name|error
@@ -26935,6 +26931,10 @@ goto|goto
 name|release_unlocked
 goto|;
 block|}
+name|sockbuf_lock
+operator|=
+literal|1
+expr_stmt|;
 name|restart
 label|:
 name|restart_nosblocks
