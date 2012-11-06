@@ -2955,7 +2955,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|msic
+name|msixc
 operator|==
 name|ALE_MSIX_MESSAGES
 condition|)
