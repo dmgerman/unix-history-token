@@ -10,8 +10,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USERBOOT_VERSION_1
-value|1
+name|USERBOOT_VERSION_3
+value|3
 end_define
 
 begin_comment
@@ -448,6 +448,23 @@ parameter_list|,
 name|uint64_t
 modifier|*
 name|highmem
+parameter_list|)
+function_decl|;
+comment|/* 	 * Returns an environment variable in the form "name=value". 	 * 	 * If there are no more variables that need to be set in the 	 * loader environment then return NULL. 	 * 	 * 'num' is used as a handle for the callback to identify which 	 * environment variable to return next. It will begin at 0 and 	 * each invocation will add 1 to the previous value of 'num'. 	 */
+specifier|const
+name|char
+modifier|*
+function_decl|(
+modifier|*
+name|getenv
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|,
+name|int
+name|num
 parameter_list|)
 function_decl|;
 block|}
