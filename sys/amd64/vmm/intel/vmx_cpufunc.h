@@ -50,15 +50,12 @@ begin_define
 define|#
 directive|define
 name|VMX_SET_ERROR_CODE
-parameter_list|(
-name|varname
-parameter_list|)
 define|\
-value|do {								\ 	__asm __volatile("	jnc 1f;"				\ 			 "	mov $1, %0;"
+value|"	jnc 1f;"						\ 	"	mov $1, %[error];"
 comment|/* CF: error = 1 */
-value|\ 			 "	jmp 3f;"				\ 			 "1:	jnz 2f;"				\ 			 "	mov $2, %0;"
+value|\ 	"	jmp 3f;"						\ 	"1:	jnz 2f;"						\ 	"	mov $2, %[error];"
 comment|/* ZF: error = 2 */
-value|\ 			 "	jmp 3f;"				\ 			 "2:	mov $0, %0;"				\ 			 "3:	nop"					\ 			 :"=r" (varname));				\ 	} while (0)
+value|\ 	"	jmp 3f;"						\ 	"2:	mov $0, %[error];"					\ 	"3:"
 end_define
 
 begin_comment
@@ -89,26 +86,51 @@ argument_list|(
 name|region
 argument_list|)
 expr_stmt|;
-asm|__asm __volatile("vmxon %0" : : "m" (*(uint64_t *)&addr) : "memory");
+asm|__asm __volatile("vmxon %[addr];"
 name|VMX_SET_ERROR_CODE
-argument_list|(
+label|:
+index|[
 name|error
-argument_list|)
-expr_stmt|;
+index|]
+literal|"=r"
+operator|(
+name|error
+operator|)
+operator|:
+index|[
+name|addr
+index|]
+literal|"m"
+operator|(
+operator|*
+operator|(
+name|uint64_t
+operator|*
+operator|)
+operator|&
+name|addr
+operator|)
+operator|:
+literal|"memory"
+block|)
+function|;
+end_function
+
+begin_return
 return|return
 operator|(
 name|error
 operator|)
 return|;
-block|}
-end_function
+end_return
 
 begin_comment
+unit|}
 comment|/* returns 0 on success and non-zero on failure */
 end_comment
 
 begin_function
-specifier|static
+unit|static
 name|__inline
 name|int
 name|vmclear
@@ -132,22 +154,46 @@ argument_list|(
 name|vmcs
 argument_list|)
 expr_stmt|;
-asm|__asm __volatile("vmclear %0" : : "m" (*(uint64_t *)&addr) : "memory");
+asm|__asm __volatile("vmclear %[addr];"
 name|VMX_SET_ERROR_CODE
-argument_list|(
+label|:
+index|[
 name|error
-argument_list|)
-expr_stmt|;
+index|]
+literal|"=r"
+operator|(
+name|error
+operator|)
+operator|:
+index|[
+name|addr
+index|]
+literal|"m"
+operator|(
+operator|*
+operator|(
+name|uint64_t
+operator|*
+operator|)
+operator|&
+name|addr
+operator|)
+operator|:
+literal|"memory"
+block|)
+function|;
+end_function
+
+begin_return
 return|return
 operator|(
 name|error
 operator|)
 return|;
-block|}
-end_function
+end_return
 
 begin_function
-specifier|static
+unit|}  static
 name|__inline
 name|void
 name|vmxoff
@@ -170,7 +216,7 @@ modifier|*
 name|addr
 parameter_list|)
 block|{
-asm|__asm __volatile("vmptrst %0" : : "m" (*addr) : "memory");
+asm|__asm __volatile("vmptrst %[addr]" :: [addr]"m" (*addr) : "memory");
 block|}
 end_function
 
@@ -199,22 +245,46 @@ argument_list|(
 name|vmcs
 argument_list|)
 expr_stmt|;
-asm|__asm __volatile("vmptrld %0" : : "m" (*(uint64_t *)&addr) : "memory");
+asm|__asm __volatile("vmptrld %[addr];"
 name|VMX_SET_ERROR_CODE
-argument_list|(
+label|:
+index|[
 name|error
-argument_list|)
-expr_stmt|;
+index|]
+literal|"=r"
+operator|(
+name|error
+operator|)
+operator|:
+index|[
+name|addr
+index|]
+literal|"m"
+operator|(
+operator|*
+operator|(
+name|uint64_t
+operator|*
+operator|)
+operator|&
+name|addr
+operator|)
+operator|:
+literal|"memory"
+block|)
+function|;
+end_function
+
+begin_return
 return|return
 operator|(
 name|error
 operator|)
 return|;
-block|}
-end_function
+end_return
 
 begin_function
-specifier|static
+unit|}  static
 name|__inline
 name|int
 name|vmwrite
@@ -229,22 +299,48 @@ block|{
 name|int
 name|error
 decl_stmt|;
-asm|__asm __volatile("vmwrite %0, %1" : : "r" (val), "r" (reg) : "memory");
+asm|__asm __volatile("vmwrite %[val], %[reg];"
 name|VMX_SET_ERROR_CODE
-argument_list|(
+label|:
+index|[
 name|error
-argument_list|)
-expr_stmt|;
+index|]
+literal|"=r"
+operator|(
+name|error
+operator|)
+operator|:
+index|[
+name|val
+index|]
+literal|"r"
+operator|(
+name|val
+operator|)
+operator|,
+index|[
+name|reg
+index|]
+literal|"r"
+operator|(
+name|reg
+operator|)
+operator|:
+literal|"memory"
+block|)
+function|;
+end_function
+
+begin_return
 return|return
 operator|(
 name|error
 operator|)
 return|;
-block|}
-end_function
+end_return
 
 begin_function
-specifier|static
+unit|}  static
 name|__inline
 name|int
 name|vmread
@@ -260,22 +356,49 @@ block|{
 name|int
 name|error
 decl_stmt|;
-asm|__asm __volatile("vmread %0, %1" : : "r" (r), "m" (*addr) : "memory");
+asm|__asm __volatile("vmread %[r], %[addr];"
 name|VMX_SET_ERROR_CODE
-argument_list|(
+label|:
+index|[
 name|error
-argument_list|)
-expr_stmt|;
+index|]
+literal|"=r"
+operator|(
+name|error
+operator|)
+operator|:
+index|[
+name|r
+index|]
+literal|"r"
+operator|(
+name|r
+operator|)
+operator|,
+index|[
+name|addr
+index|]
+literal|"m"
+operator|(
+operator|*
+name|addr
+operator|)
+operator|:
+literal|"memory"
+block|)
+function|;
+end_function
+
+begin_return
 return|return
 operator|(
 name|error
 operator|)
 return|;
-block|}
-end_function
+end_return
 
 begin_function
-specifier|static
+unit|}  static
 name|void
 name|__inline
 name|VMCLEAR
@@ -436,12 +559,39 @@ block|{
 name|int
 name|error
 decl_stmt|;
-asm|__asm __volatile("invvpid %0, %1" :: "m" (desc), "r" (type) : "memory");
+asm|__asm __volatile("invvpid %[desc], %[type];"
 name|VMX_SET_ERROR_CODE
-argument_list|(
+label|:
+index|[
 name|error
-argument_list|)
-expr_stmt|;
+index|]
+literal|"=r"
+operator|(
+name|error
+operator|)
+operator|:
+index|[
+name|desc
+index|]
+literal|"m"
+operator|(
+name|desc
+operator|)
+operator|,
+index|[
+name|type
+index|]
+literal|"r"
+operator|(
+name|type
+operator|)
+operator|:
+literal|"memory"
+block|)
+function|;
+end_function
+
+begin_if
 if|if
 condition|(
 name|error
@@ -453,10 +603,10 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-block|}
-end_function
+end_if
 
 begin_define
+unit|}
 define|#
 directive|define
 name|INVEPT_TYPE_SINGLE_CONTEXT
@@ -470,9 +620,12 @@ name|INVEPT_TYPE_ALL_CONTEXTS
 value|2UL
 end_define
 
-begin_struct
-struct|struct
+begin_macro
+unit|struct
 name|invept_desc
+end_macro
+
+begin_block
 block|{
 name|uint64_t
 name|eptp
@@ -481,8 +634,11 @@ name|uint64_t
 name|_res
 decl_stmt|;
 block|}
-struct|;
-end_struct
+end_block
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_expr_stmt
 name|CTASSERT
@@ -515,12 +671,39 @@ block|{
 name|int
 name|error
 decl_stmt|;
-asm|__asm __volatile("invept %0, %1" :: "m" (desc), "r" (type) : "memory");
+asm|__asm __volatile("invept %[desc], %[type];"
 name|VMX_SET_ERROR_CODE
-argument_list|(
+label|:
+index|[
 name|error
-argument_list|)
-expr_stmt|;
+index|]
+literal|"=r"
+operator|(
+name|error
+operator|)
+operator|:
+index|[
+name|desc
+index|]
+literal|"m"
+operator|(
+name|desc
+operator|)
+operator|,
+index|[
+name|type
+index|]
+literal|"r"
+operator|(
+name|type
+operator|)
+operator|:
+literal|"memory"
+block|)
+function|;
+end_function
+
+begin_if
 if|if
 condition|(
 name|error
@@ -532,10 +715,10 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-block|}
-end_function
+end_if
 
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif
