@@ -410,7 +410,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ATH_DEBUG
+name|ATH_DEBUG_ALQ
 end_ifdef
 
 begin_include
@@ -4171,7 +4171,7 @@ comment|/* ATH_ENABLE_RADIOTAP_VENDOR_EXT */
 comment|/* 	 * Setup the ALQ logging if required 	 */
 ifdef|#
 directive|ifdef
-name|ATH_DEBUG
+name|ATH_DEBUG_ALQ
 name|if_ath_alq_init
 argument_list|(
 operator|&
@@ -4377,7 +4377,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|ATH_DEBUG
+name|ATH_DEBUG_ALQ
 name|if_ath_alq_tidyup
 argument_list|(
 operator|&
