@@ -447,7 +447,7 @@ operator|)
 operator|/
 literal|10
 expr_stmt|;
-comment|/* Provide an ouput buffer for 0.2 seconds of data. */
+comment|/* Provide an output buffer for 0.2 seconds of data. */
 name|bs
 operator|=
 name|MIN
