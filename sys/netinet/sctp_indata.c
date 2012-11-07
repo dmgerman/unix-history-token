@@ -15253,6 +15253,12 @@ condition|(
 name|nr_sacking
 condition|)
 block|{
+name|tp1
+operator|->
+name|sent
+operator|=
+name|SCTP_DATAGRAM_NR_MARKED
+expr_stmt|;
 if|if
 condition|(
 name|tp1
@@ -17582,6 +17588,12 @@ operator|->
 name|sent
 operator|!=
 name|SCTP_DATAGRAM_RESEND
+operator|&&
+name|tp1
+operator|->
+name|sent
+operator|!=
+name|SCTP_DATAGRAM_NR_MARKED
 condition|)
 block|{
 comment|/* no chance to advance, out of here */
@@ -17736,11 +17748,21 @@ block|}
 comment|/* 		 * Ok now if this chunk is marked to drop it we can clean up 		 * the chunk, advance our peer ack point and we can check 		 * the next chunk. 		 */
 if|if
 condition|(
+operator|(
 name|tp1
 operator|->
 name|sent
 operator|==
 name|SCTP_FORWARD_TSN_SKIP
+operator|)
+operator|||
+operator|(
+name|tp1
+operator|->
+name|sent
+operator|==
+name|SCTP_DATAGRAM_NR_MARKED
+operator|)
 condition|)
 block|{
 comment|/* advance PeerAckPoint goes forward */
