@@ -407,6 +407,33 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ATH_DEBUG
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<dev/ath/if_ath_alq.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Only enable this if you're working on PS-POLL support.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ATH_SW_PSQ
+end_undef
+
 begin_comment
 comment|/*  * ATH_BCBUF determines the number of vap's that can transmit  * beacons and also (currently) the number of vap's that can  * have unique mac addresses/bssid.  When staggering beacons  * 4 is probably a good max as otherwise the beacons become  * very closely spaced and there is limited time for cab q traffic  * to go out.  You can burst beacons instead but that is not good  * for stations in power save and at some point you really want  * another radio (and channel).  *  * The limit on the number of mac addresses is tied to our use of  * the U/L bit and tracking addresses in a byte; it would be  * worthwhile to allow more for applications like proxy sta.  */
 end_comment
@@ -4141,6 +4168,27 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* ATH_ENABLE_RADIOTAP_VENDOR_EXT */
+comment|/* 	 * Setup the ALQ logging if required 	 */
+ifdef|#
+directive|ifdef
+name|ATH_DEBUG
+name|if_ath_alq_init
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_alq
+argument_list|,
+name|device_get_nameunit
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Setup dynamic sysctl's now that country code and 	 * regdomain are available from the hal. 	 */
 name|ath_sysctlattach
 argument_list|(
@@ -4327,6 +4375,19 @@ operator|->
 name|sc_rc
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ATH_DEBUG
+name|if_ath_alq_tidyup
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_alq
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|ath_dfs_detach
 argument_list|(
 name|sc
@@ -23321,6 +23382,9 @@ name|int
 name|enable
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|ATH_SW_PSQ
 name|struct
 name|ath_node
 modifier|*
@@ -23414,6 +23478,33 @@ argument_list|,
 name|enable
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|struct
+name|ath_vap
+modifier|*
+name|avp
+init|=
+name|ATH_VAP
+argument_list|(
+name|ni
+operator|->
+name|ni_vap
+argument_list|)
+decl_stmt|;
+comment|/* Update net80211 state */
+name|avp
+operator|->
+name|av_node_ps
+argument_list|(
+name|ni
+argument_list|,
+name|enable
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* ATH_SW_PSQ */
 block|}
 end_function
 
@@ -23435,6 +23526,9 @@ name|int
 name|enable
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|ATH_SW_PSQ
 name|struct
 name|ieee80211com
 modifier|*
@@ -23729,6 +23823,35 @@ operator|(
 name|changed
 operator|)
 return|;
+else|#
+directive|else
+name|struct
+name|ath_vap
+modifier|*
+name|avp
+init|=
+name|ATH_VAP
+argument_list|(
+name|ni
+operator|->
+name|ni_vap
+argument_list|)
+decl_stmt|;
+return|return
+operator|(
+name|avp
+operator|->
+name|av_set_tim
+argument_list|(
+name|ni
+argument_list|,
+name|enable
+argument_list|)
+operator|)
+return|;
+endif|#
+directive|endif
+comment|/* ATH_SW_PSQ */
 block|}
 end_function
 
@@ -23754,6 +23877,9 @@ name|int
 name|enable
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|ATH_SW_PSQ
 name|struct
 name|ath_node
 modifier|*
@@ -23993,6 +24119,12 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+else|#
+directive|else
+return|return;
+endif|#
+directive|endif
+comment|/* ATH_SW_PSQ */
 block|}
 end_function
 
