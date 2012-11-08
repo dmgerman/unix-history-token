@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2006, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2006, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -1948,6 +1948,47 @@ argument_list|)
 operator|==
 literal|0
 argument_list|)
+expr_stmt|;
+block|}
+comment|/* 	 * Device faults can take on three different forms: 	 * 1). delayed or hanging I/O 	 * 2). zfs label faults 	 * 3). generic disk faults 	 */
+if|if
+condition|(
+name|record
+operator|->
+name|zi_timer
+operator|!=
+literal|0
+condition|)
+block|{
+name|record
+operator|->
+name|zi_cmd
+operator|=
+name|ZINJECT_DELAY_IO
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|label_type
+operator|!=
+name|TYPE_INVAL
+condition|)
+block|{
+name|record
+operator|->
+name|zi_cmd
+operator|=
+name|ZINJECT_LABEL_FAULT
+expr_stmt|;
+block|}
+else|else
+block|{
+name|record
+operator|->
+name|zi_cmd
+operator|=
+name|ZINJECT_DEVICE_FAULT
 expr_stmt|;
 block|}
 switch|switch

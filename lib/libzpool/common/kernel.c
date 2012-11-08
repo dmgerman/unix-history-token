@@ -130,6 +130,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|kmutex_t
+name|cpu_lock
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|vmem_t
 modifier|*
 name|zio_arena
@@ -3557,6 +3563,68 @@ block|}
 end_function
 
 begin_comment
+comment|/* ARGSUSED */
+end_comment
+
+begin_function
+name|cyclic_id_t
+name|cyclic_add
+parameter_list|(
+name|cyc_handler_t
+modifier|*
+name|hdlr
+parameter_list|,
+name|cyc_time_t
+modifier|*
+name|when
+parameter_list|)
+block|{
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
+begin_function
+name|void
+name|cyclic_remove
+parameter_list|(
+name|cyclic_id_t
+name|id
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
+begin_function
+name|int
+name|cyclic_reprogram
+parameter_list|(
+name|cyclic_id_t
+name|id
+parameter_list|,
+name|hrtime_t
+name|expiration
+parameter_list|)
+block|{
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * =========================================================================  * kernel emulation setup& teardown  * =========================================================================  */
 end_comment
 
@@ -3705,6 +3773,18 @@ argument_list|)
 expr_stmt|;
 name|system_taskq_init
 argument_list|()
+expr_stmt|;
+name|mutex_init
+argument_list|(
+operator|&
+name|cpu_lock
+argument_list|,
+name|NULL
+argument_list|,
+name|MUTEX_DEFAULT
+argument_list|,
+name|NULL
+argument_list|)
 expr_stmt|;
 name|spa_init
 argument_list|(
