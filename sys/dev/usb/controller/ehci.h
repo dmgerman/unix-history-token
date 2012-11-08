@@ -1571,6 +1571,16 @@ directive|define
 name|EHCI_SCFLG_IAADBUG
 value|0x0080
 comment|/* workaround for nVidia chipsets */
+define|#
+directive|define
+name|EHCI_SCFLG_DONTRESET
+value|0x0100
+comment|/* don't reset ctrl. in ehci_init() */
+define|#
+directive|define
+name|EHCI_SCFLG_DONEINIT
+value|0x1000
+comment|/* ehci_init() has been called. */
 name|uint8_t
 name|sc_offs
 decl_stmt|;
