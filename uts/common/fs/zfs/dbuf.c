@@ -11257,12 +11257,20 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* 			 * A dbuf will be eligible for eviction if either the 			 * 'primarycache' property is set or a duplicate 			 * copy of this buffer is already cached in the arc. 			 * 			 * In the case of the 'primarycache' a buffer 			 * is considered for eviction if it matches the 			 * criteria set in the property. 			 * 			 * To decide if our buffer is considered a 			 * duplicate, we must call into the arc to determine 			 * if multiple buffers are referencing the same 			 * block on-disk. If so, then we simply evict 			 * ourselves. 			 */
 if|if
 condition|(
 operator|!
 name|DBUF_IS_CACHEABLE
 argument_list|(
 name|db
+argument_list|)
+operator|||
+name|arc_buf_eviction_needed
+argument_list|(
+name|db
+operator|->
+name|db_buf
 argument_list|)
 condition|)
 name|dbuf_clear
