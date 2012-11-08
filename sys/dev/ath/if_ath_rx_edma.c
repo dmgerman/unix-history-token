@@ -972,11 +972,11 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_RECV
 argument_list|,
 literal|"%s: called\n"
 argument_list|,
