@@ -333,6 +333,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ATH_DEBUG_ALQ
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<dev/ath/if_ath_alq.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|int
@@ -2351,6 +2368,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ATH_DEBUG_ALQ
+end_ifdef
+
 begin_function
 specifier|static
 name|int
@@ -2442,12 +2465,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ATH_DEBUG
-end_ifdef
 
 begin_comment
 comment|/*  * Attach the ALQ debugging if required.  */
@@ -2637,6 +2654,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* ATH_DEBUG_ALQ */
+end_comment
+
 begin_function
 name|void
 name|ath_sysctlattach
@@ -2732,7 +2753,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|ATH_DEBUG
+name|ATH_DEBUG_ALQ
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -2781,6 +2802,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* ATH_DEBUG_ALQ */
 name|SYSCTL_ADD_PROC
 argument_list|(
 name|ctx
