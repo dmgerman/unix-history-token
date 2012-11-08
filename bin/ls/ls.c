@@ -222,7 +222,7 @@ value|(1 + CHAR_BIT * sizeof(t) / 3 + 1)
 end_define
 
 begin_comment
-comment|/*  * MAKENINES(n) turns n into (10**n)-1.  This is useful for converting a width  * into a number that wide in decimal.  * XXX: Overflows are not considered.  */
+comment|/*  * MAKENINES(n) turns n into (10**n)-1.	 This is useful for converting a width  * into a number that wide in decimal.  * XXX: Overflows are not considered.  */
 end_comment
 
 begin_define
@@ -1152,7 +1152,7 @@ operator|=
 literal|0
 expr_stmt|;
 break|break;
-comment|/* Other flags.  Please keep alphabetic. */
+comment|/* Other flags.	 Please keep alphabetic. */
 case|case
 literal|','
 case|:
@@ -2174,7 +2174,7 @@ operator|!
 name|f_listdot
 condition|)
 break|break;
-comment|/* 			 * If already output something, put out a newline as 			 * a separator.  If multiple arguments, precede each 			 * directory with its name. 			 */
+comment|/* 			 * If already output something, put out a newline as 			 * a separator.	 If multiple arguments, precede each 			 * directory with its name. 			 */
 if|if
 condition|(
 name|output
@@ -3937,7 +3937,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Ordering for mastercmp:  * If ordering the argv (fts_level = FTS_ROOTLEVEL) return non-directories  * as larger than directories.  Within either group, use the sort function.  * All other levels use the sort function.  Error entries remain unsorted.  */
+comment|/*  * Ordering for mastercmp:  * If ordering the argv (fts_level = FTS_ROOTLEVEL) return non-directories  * as larger than directories.	Within either group, use the sort function.  * All other levels use the sort function.  Error entries remain unsorted.  */
 end_comment
 
 begin_function

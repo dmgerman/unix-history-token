@@ -497,7 +497,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The fts system makes it difficult to replace fts_name with a different-  * sized string, so we just calculate the real length here and do the  * conversion in prn_octal()  *  * XXX when using f_octal_escape (-b) rather than f_octal (-B), the  * length computed by len_octal may be too big. I just can't be buggered  * to fix this as an efficient fix would involve a lookup table. Same goes  * for the rather inelegant code in prn_octal.  *  *                                              DES 1998/04/23  */
+comment|/*  * The fts system makes it difficult to replace fts_name with a different-  * sized string, so we just calculate the real length here and do the  * conversion in prn_octal()  *  * XXX when using f_octal_escape (-b) rather than f_octal (-B), the  * length computed by len_octal may be too big. I just can't be buggered  * to fix this as an efficient fix would involve a lookup table. Same goes  * for the rather inelegant code in prn_octal.  *  *						DES 1998/04/23  */
 end_comment
 
 begin_function
