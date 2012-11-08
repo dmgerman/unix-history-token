@@ -603,6 +603,32 @@ value|(30)
 end_define
 
 begin_comment
+comment|/*  * These parameters determine the slice behavior for batch work.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCHED_SLICE_DEFAULT_DIVISOR
+value|10
+end_define
+
+begin_comment
+comment|/* ~94 ms, 12 stathz ticks. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCHED_SLICE_MIN_DIVISOR
+value|6
+end_define
+
+begin_comment
+comment|/* DEFAULT/MIN = ~16 ms. */
+end_comment
+
+begin_comment
 comment|/* Flags kept in td_flags. */
 end_comment
 
@@ -633,15 +659,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|realstathz
-init|=
-literal|127
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
 name|tickincr
 init|=
 literal|8
@@ -653,11 +670,41 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|sched_slice
+name|realstathz
 init|=
-literal|12
+literal|127
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* reset during boot. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|sched_slice
+init|=
+literal|10
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* reset during boot. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|sched_slice_min
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* reset during boot. */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -2786,6 +2833,66 @@ operator|->
 name|tdq_load
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Bound timeshare latency by decreasing slice size as load increases.  We  * consider the maximum latency as the sum of the threads waiting to run  * aside from curthread and target no more than sched_slice latency but  * no less than sched_slice_min runtime.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|tdq_slice
+parameter_list|(
+name|struct
+name|tdq
+modifier|*
+name|tdq
+parameter_list|)
+block|{
+name|int
+name|load
+decl_stmt|;
+comment|/* 	 * It is safe to use sys_load here because this is called from 	 * contexts where timeshare threads are running and so there 	 * cannot be higher priority load in the system. 	 */
+name|load
+operator|=
+name|tdq
+operator|->
+name|tdq_sysload
+operator|-
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|load
+operator|>=
+name|SCHED_SLICE_MIN_DIVISOR
+condition|)
+return|return
+operator|(
+name|sched_slice_min
+operator|)
+return|;
+if|if
+condition|(
+name|load
+operator|<=
+literal|1
+condition|)
+return|return
+operator|(
+name|sched_slice
+operator|)
+return|;
+return|return
+operator|(
+name|sched_slice
+operator|/
+name|load
+operator|)
+return|;
 block|}
 end_function
 
@@ -6638,9 +6745,14 @@ name|sched_slice
 operator|=
 name|realstathz
 operator|/
-literal|10
+name|SCHED_SLICE_DEFAULT_DIVISOR
 expr_stmt|;
-comment|/* ~100ms */
+name|sched_slice_min
+operator|=
+name|sched_slice
+operator|/
+name|SCHED_SLICE_MIN_DIVISOR
+expr_stmt|;
 name|hogticks
 operator|=
 name|imax
@@ -7335,7 +7447,7 @@ name|td_sched0
 operator|.
 name|ts_slice
 operator|=
-name|sched_slice
+literal|0
 expr_stmt|;
 block|}
 end_function
@@ -9034,12 +9146,12 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Reset the slice value after we sleep. */
+comment|/* 	 * Reset the slice value since we slept and advanced the round-robin. 	 */
 name|ts
 operator|->
 name|ts_slice
 operator|=
-name|sched_slice
+literal|0
 expr_stmt|;
 name|sched_add
 argument_list|(
@@ -9154,6 +9266,16 @@ name|td_sched
 modifier|*
 name|ts2
 decl_stmt|;
+name|struct
+name|tdq
+modifier|*
+name|tdq
+decl_stmt|;
+name|tdq
+operator|=
+name|TDQ_SELF
+argument_list|()
+expr_stmt|;
 name|THREAD_LOCK_ASSERT
 argument_list|(
 name|td
@@ -9180,8 +9302,7 @@ name|td_lock
 operator|=
 name|TDQ_LOCKPTR
 argument_list|(
-name|TDQ_SELF
-argument_list|()
+name|tdq
 argument_list|)
 expr_stmt|;
 name|child
@@ -9260,13 +9381,18 @@ name|ts
 operator|->
 name|ts_runtime
 expr_stmt|;
+comment|/* Attempt to quickly learn interactivity. */
 name|ts2
 operator|->
 name|ts_slice
 operator|=
-literal|1
+name|tdq_slice
+argument_list|(
+name|tdq
+argument_list|)
+operator|-
+name|sched_slice_min
 expr_stmt|;
-comment|/* Attempt to quickly learn interactivity. */
 ifdef|#
 directive|ifdef
 name|KTR
@@ -9870,19 +9996,22 @@ argument_list|(
 name|td
 argument_list|)
 operator|&&
-operator|--
+operator|++
 name|ts
 operator|->
 name|ts_slice
-operator|<=
-literal|0
+operator|>=
+name|tdq_slice
+argument_list|(
+name|tdq
+argument_list|)
 condition|)
 block|{
 name|ts
 operator|->
 name|ts_slice
 operator|=
-name|sched_slice
+literal|0
 expr_stmt|;
 name|td
 operator|->
@@ -12370,6 +12499,12 @@ operator|)
 operator|/
 name|period
 argument_list|)
+expr_stmt|;
+name|sched_slice_min
+operator|=
+name|sched_slice
+operator|/
+name|SCHED_SLICE_MIN_DIVISOR
 expr_stmt|;
 name|hogticks
 operator|=
