@@ -665,11 +665,6 @@ name|fh_type
 operator|=
 name|FUFH_INVALID
 expr_stmt|;
-name|fuse_invalidate_attr
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 return|return
 name|err
 return|;

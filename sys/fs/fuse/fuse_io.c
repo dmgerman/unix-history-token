@@ -598,11 +598,6 @@ argument_list|,
 name|fufh
 argument_list|)
 expr_stmt|;
-name|fuse_invalidate_attr
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 block|{
