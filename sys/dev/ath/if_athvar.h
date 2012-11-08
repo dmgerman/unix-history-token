@@ -55,6 +55,23 @@ directive|include
 file|<dev/ath/if_athrate.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ATH_DEBUG_ALQ
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<dev/ath/if_ath_alq.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -2748,6 +2765,16 @@ name|task
 name|sc_dfstask
 decl_stmt|;
 comment|/* DFS processing task */
+comment|/* ALQ */
+ifdef|#
+directive|ifdef
+name|ATH_DEBUG
+name|struct
+name|if_ath_alq
+name|sc_alq
+decl_stmt|;
+endif|#
+directive|endif
 comment|/* TX AMPDU handling */
 name|int
 function_decl|(
