@@ -448,6 +448,22 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_function_decl
+specifier|static
+name|void
+name|ath_edma_tx_processq
+parameter_list|(
+name|struct
+name|ath_softc
+modifier|*
+name|sc
+parameter_list|,
+name|int
+name|dosched
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 specifier|static
 name|void
@@ -600,11 +616,11 @@ modifier|*
 name|txq
 parameter_list|)
 block|{
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_RESET
 argument_list|,
 literal|"%s: called: txq=%p, qnum=%d\n"
 argument_list|,
@@ -1341,11 +1357,11 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_RESET
 argument_list|,
 literal|"%s: called\n"
 argument_list|,
@@ -1361,9 +1377,23 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If reset type is noloss, the TX FIFO needs to be serviced 	 * and those frames need to be handled. 	 * 	 * Otherwise, just toss everything in each TX queue. 	 */
-comment|/* XXX dump out the TX completion FIFO contents */
-comment|/* XXX dump out the frames */
-comment|/* XXX for now, just drain */
+if|if
+condition|(
+name|reset_type
+operator|==
+name|ATH_RESET_NOLOSS
+condition|)
+block|{
+name|ath_edma_tx_processq
+argument_list|(
+name|sc
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 for|for
 control|(
 name|i
@@ -1401,6 +1431,9 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+comment|/* XXX dump out the TX completion FIFO contents */
+comment|/* XXX dump out the frames */
 name|IF_LOCK
 argument_list|(
 operator|&
@@ -1434,7 +1467,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Process the TX status queue.  */
+comment|/*  * TX completion tasklet.  */
 end_comment
 
 begin_function
@@ -1462,6 +1495,47 @@ operator|*
 operator|)
 name|arg
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|ATH_DEBUG_TX_PROC
+argument_list|,
+literal|"%s: called, npending=%d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|npending
+argument_list|)
+expr_stmt|;
+name|ath_edma_tx_processq
+argument_list|(
+name|sc
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Process the TX status queue.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|ath_edma_tx_processq
+parameter_list|(
+name|struct
+name|ath_softc
+modifier|*
+name|sc
+parameter_list|,
+name|int
+name|dosched
+parameter_list|)
+block|{
 name|struct
 name|ath_hal
 modifier|*
@@ -1513,19 +1587,6 @@ index|]
 decl_stmt|;
 endif|#
 directive|endif
-name|DPRINTF
-argument_list|(
-name|sc
-argument_list|,
-name|ATH_DEBUG_TX_PROC
-argument_list|,
-literal|"%s: called, npending=%d\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|npending
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|idx
@@ -1553,6 +1614,18 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ATH_DEBUG
+name|ath_hal_gettxrawtxdesc
+argument_list|(
+name|ah
+argument_list|,
+name|txstatus
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|status
 operator|=
 name|ath_hal_txprocdesc
@@ -1569,18 +1642,6 @@ operator|&
 name|ts
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ATH_DEBUG
-name|ath_hal_gettxrawtxdesc
-argument_list|(
-name|ah
-argument_list|,
-name|txstatus
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|ATH_TXSTATUS_UNLOCK
 argument_list|(
 name|sc
@@ -1911,6 +1972,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|dosched
+operator|&&
 name|txq
 operator|->
 name|axq_fifo_depth
@@ -1977,6 +2040,10 @@ expr_stmt|;
 block|}
 comment|/* Kick software scheduler */
 comment|/* 	 * XXX It's inefficient to do this if the FIFO queue is full, 	 * but there's no easy way right now to only populate 	 * the txq task for _one_ TXQ.  This should be fixed. 	 */
+if|if
+condition|(
+name|dosched
+condition|)
 name|taskqueue_enqueue
 argument_list|(
 name|sc
