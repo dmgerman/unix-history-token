@@ -667,7 +667,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_long
+name|vm_offset_t
 name|vm_min_kernel_address
 init|=
 name|VM_MIN_KERNEL_ADDRESS
@@ -695,14 +695,25 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__sparc64__
+end_ifndef
+
 begin_decl_stmt
 specifier|static
-name|u_long
+name|vm_offset_t
 name|vm_max_kernel_address
 init|=
 name|VM_MAX_KERNEL_ADDRESS
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|SYSCTL_ULONG
