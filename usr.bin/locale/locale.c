@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2002, 2003 Alexey Zelkin<phantom@FreeBSD.org>  * Al
 end_comment
 
 begin_comment
-comment|/*  * XXX: implement missing era_* (LC_TIME) keywords (require libc&  *	nl_langinfo(3) extensions)  *  * XXX: correctly handle reserved 'charmap' keyword and '-m' option (require  *      localedef(1) implementation).  Currently it's handled via  *	nl_langinfo(CODESET).  */
+comment|/*  * XXX: implement missing era_* (LC_TIME) keywords (require libc&  *	nl_langinfo(3) extensions)  *  * XXX: correctly handle reserved 'charmap' keyword and '-m' option (require  *	localedef(1) implementation).  Currently it's handled via  *	nl_langinfo(CODESET).  */
 end_comment
 
 begin_include
@@ -1984,7 +1984,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Output information about all available locales  *  * XXX actually output of this function does not guarantee that locale  *     is really available to application, since it can be broken or  *     inconsistent thus setlocale() will fail.  Maybe add '-V' function to  *     also validate these locales?  */
+comment|/*  * Output information about all available locales  *  * XXX actually output of this function does not guarantee that locale  *     is really available to application, since it can be broken or  *     inconsistent thus setlocale() will fail.	 Maybe add '-V' function to  *     also validate these locales?  */
 end_comment
 
 begin_function
@@ -2447,7 +2447,7 @@ argument_list|(
 name|dirp
 argument_list|)
 expr_stmt|;
-comment|/* make sure that 'POSIX' and 'C' locales are present in the list. 	 * POSIX 1003.1-2001 requires presence of 'POSIX' name only here, but          * we also list 'C' for constistency          */
+comment|/* make sure that 'POSIX' and 'C' locales are present in the list. 	 * POSIX 1003.1-2001 requires presence of 'POSIX' name only here, but 	 * we also list 'C' for constistency 	 */
 if|if
 condition|(
 name|sl_find
