@@ -413,6 +413,16 @@ comment|/* print size in kilobytes */
 end_comment
 
 begin_decl_stmt
+name|int
+name|f_label
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* show MAC label */
+end_comment
+
+begin_decl_stmt
 specifier|static
 name|int
 name|f_listdir
@@ -435,6 +445,16 @@ comment|/* list files beginning with . */
 end_comment
 
 begin_decl_stmt
+name|int
+name|f_longform
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* long listing format */
+end_comment
+
+begin_decl_stmt
 specifier|static
 name|int
 name|f_noautodot
@@ -443,16 +463,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* do not automatically enable -A for root */
-end_comment
-
-begin_decl_stmt
-name|int
-name|f_longform
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* long listing format */
 end_comment
 
 begin_decl_stmt
@@ -552,12 +562,22 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|f_samesort
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* sort time and name in same direction */
+end_comment
+
+begin_decl_stmt
+name|int
 name|f_sectime
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* print the real time for all files */
+comment|/* print full time information */
 end_comment
 
 begin_decl_stmt
@@ -580,6 +600,13 @@ end_decl_stmt
 begin_comment
 comment|/* list size in short listing */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|f_sizesort
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -623,14 +650,13 @@ comment|/* stream the output, separate with commas */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|int
-name|f_timesort
+name|f_thousands
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* sort by time vice name */
+comment|/* show file sizes with thousands separators */
 end_comment
 
 begin_decl_stmt
@@ -647,9 +673,13 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|int
-name|f_sizesort
+name|f_timesort
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* sort by time vice name */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -670,16 +700,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* show whiteout entries */
-end_comment
-
-begin_decl_stmt
-name|int
-name|f_label
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* show MAC label */
 end_comment
 
 begin_ifdef
@@ -946,6 +966,17 @@ name|fts_options
 operator|=
 name|FTS_PHYSICAL
 expr_stmt|;
+if|if
+condition|(
+name|getenv
+argument_list|(
+literal|"LS_SAMESORT"
+argument_list|)
+condition|)
+name|f_samesort
+operator|=
+literal|1
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -957,7 +988,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"1ABCD:FGHILPRSTUWZabcdfghiklmnopqrstuwx"
+literal|"1ABCD:FGHILPRSTUWXZabcdfghiklmnopqrstuwxy,"
 argument_list|)
 operator|)
 operator|!=
@@ -1122,6 +1153,14 @@ literal|0
 expr_stmt|;
 break|break;
 comment|/* Other flags.  Please keep alphabetic. */
+case|case
+literal|','
+case|:
+name|f_thousands
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 case|case
 literal|'B'
 case|:
@@ -1422,6 +1461,14 @@ expr_stmt|;
 name|f_octal_escape
 operator|=
 literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|'y'
+case|:
+name|f_samesort
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 default|default:
@@ -3832,6 +3879,25 @@ operator|=
 name|maxuser
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|f_thousands
+condition|)
+comment|/* make space for commas */
+name|d
+operator|.
+name|s_size
+operator|+=
+operator|(
+name|d
+operator|.
+name|s_size
+operator|-
+literal|1
+operator|)
+operator|/
+literal|3
+expr_stmt|;
 name|printfcn
 argument_list|(
 operator|&
