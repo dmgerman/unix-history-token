@@ -687,7 +687,7 @@ argument_list|,
 name|KM_SLEEP
 argument_list|)
 expr_stmt|;
-comment|/* 	 * When opening a disk device, we want to preserve the user's original 	 * intent.  We always want to open the device by the path the user gave 	 * us, even if it is one of multiple paths to the save device.  But we 	 * also want to be able to survive disks being removed/recabled. 	 * Therefore the sequence of opening devices is: 	 * 	 * 1. Try opening the device by path.  For legacy pools without the 	 *    'whole_disk' property, attempt to fix the path by appending 's0'. 	 * 	 * 2. If the devid of the device matches the stored value, return 	 *    success. 	 * 	 * 3. Otherwise, the device may have moved.  Try opening the device 	 *    by the devid instead. 	 */
+comment|/* 	 * When opening a disk device, we want to preserve the user's original 	 * intent.  We always want to open the device by the path the user gave 	 * us, even if it is one of multiple paths to the same device.  But we 	 * also want to be able to survive disks being removed/recabled. 	 * Therefore the sequence of opening devices is: 	 * 	 * 1. Try opening the device by path.  For legacy pools without the 	 *    'whole_disk' property, attempt to fix the path by appending 's0'. 	 * 	 * 2. If the devid of the device matches the stored value, return 	 *    success. 	 * 	 * 3. Otherwise, the device may have moved.  Try opening the device 	 *    by the devid instead. 	 */
 if|if
 condition|(
 name|vd
