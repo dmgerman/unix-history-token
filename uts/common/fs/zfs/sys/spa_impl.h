@@ -755,6 +755,22 @@ name|uint64_t
 name|spa_feat_desc_obj
 decl_stmt|;
 comment|/* Feature descriptions */
+name|cyclic_id_t
+name|spa_deadman_cycid
+decl_stmt|;
+comment|/* cyclic id */
+name|uint64_t
+name|spa_deadman_calls
+decl_stmt|;
+comment|/* number of deadman calls */
+name|uint64_t
+name|spa_sync_starttime
+decl_stmt|;
+comment|/* starting time fo spa_sync */
+name|uint64_t
+name|spa_deadman_synctime
+decl_stmt|;
+comment|/* deadman expiration timer */
 comment|/* 	 * spa_refcnt& spa_config_lock must be the last elements 	 * because refcount_t changes size based on compilation options. 	 * In order for the MDB module to function correctly, the other 	 * fields must remain in the same location. 	 */
 name|spa_config_lock_t
 name|spa_config_lock

@@ -2182,6 +2182,15 @@ modifier|*
 name|spa
 parameter_list|)
 function_decl|;
+specifier|extern
+name|uint64_t
+name|spa_deadman_synctime
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|)
+function_decl|;
 comment|/* Miscellaneous support routines */
 specifier|extern
 name|void
