@@ -1089,6 +1089,23 @@ specifier|extern
 name|int
 name|zfs_vdev_cache_size
 decl_stmt|;
+comment|/*  * The vdev_buf_t is used to translate between zio_t and buf_t, and back again.  */
+typedef|typedef
+struct|struct
+name|vdev_buf
+block|{
+name|buf_t
+name|vb_buf
+decl_stmt|;
+comment|/* buffer that describes the io */
+name|zio_t
+modifier|*
+name|vb_io
+decl_stmt|;
+comment|/* pointer back to the original zio_t */
+block|}
+name|vdev_buf_t
+typedef|;
 ifdef|#
 directive|ifdef
 name|__cplusplus

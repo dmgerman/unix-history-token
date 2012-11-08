@@ -13967,9 +13967,6 @@ operator|==
 name|NULL
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|taskq_dispatch_ent
 argument_list|(
 name|spa
