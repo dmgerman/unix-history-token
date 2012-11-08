@@ -283,6 +283,8 @@ argument_list|,
 name|debug
 argument_list|,
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|uhub_debug
@@ -1597,7 +1599,7 @@ name|NULL
 argument_list|,
 name|USB_MS_TO_TICKS
 argument_list|(
-name|USB_PORT_POWERUP_DELAY
+name|usb_port_powerup_delay
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3647,7 +3649,7 @@ operator|*
 name|UHD_PWRON_FACTOR
 operator|)
 operator|+
-name|USB_EXTRA_POWER_UP_TIME
+name|usb_extra_power_up_time
 operator|)
 expr_stmt|;
 comment|/* get complete HUB descriptor */
@@ -3847,7 +3849,7 @@ operator|*
 name|UHD_PWRON_FACTOR
 operator|)
 operator|+
-name|USB_EXTRA_POWER_UP_TIME
+name|usb_extra_power_up_time
 operator|)
 expr_stmt|;
 comment|/* get complete HUB descriptor */
@@ -3975,7 +3977,7 @@ operator|*
 name|UHD_PWRON_FACTOR
 operator|)
 operator|+
-name|USB_EXTRA_POWER_UP_TIME
+name|usb_extra_power_up_time
 operator|)
 expr_stmt|;
 break|break;
@@ -8448,7 +8450,7 @@ name|NULL
 argument_list|,
 name|USB_MS_TO_TICKS
 argument_list|(
-name|USB_PORT_RESUME_DELAY
+name|usb_port_resume_delay
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -8992,7 +8994,7 @@ name|NULL
 argument_list|,
 name|USB_MS_TO_TICKS
 argument_list|(
-name|USB_PORT_RESUME_DELAY
+name|usb_port_resume_delay
 argument_list|)
 argument_list|)
 expr_stmt|;

@@ -355,12 +355,6 @@ begin_comment
 comment|/* force resume */
 end_comment
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
 begin_comment
 comment|/* These are the values from the USB specification. */
 end_comment
@@ -368,7 +362,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USB_PORT_RESET_DELAY
+name|USB_PORT_RESET_DELAY_SPEC
 value|10
 end_define
 
@@ -379,7 +373,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USB_PORT_ROOT_RESET_DELAY
+name|USB_PORT_ROOT_RESET_DELAY_SPEC
 value|50
 end_define
 
@@ -390,7 +384,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USB_PORT_RESET_RECOVERY
+name|USB_PORT_RESET_RECOVERY_SPEC
 value|10
 end_define
 
@@ -401,7 +395,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USB_PORT_POWERUP_DELAY
+name|USB_PORT_POWERUP_DELAY_SPEC
 value|100
 end_define
 
@@ -412,7 +406,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USB_PORT_RESUME_DELAY
+name|USB_PORT_RESUME_DELAY_SPEC
 value|20
 end_define
 
@@ -423,7 +417,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USB_SET_ADDRESS_SETTLE
+name|USB_SET_ADDRESS_SETTLE_SPEC
 value|2
 end_define
 
@@ -434,7 +428,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USB_RESUME_DELAY
+name|USB_RESUME_DELAY_SPEC
 value|(20*5)
 end_define
 
@@ -445,7 +439,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USB_RESUME_WAIT
+name|USB_RESUME_WAIT_SPEC
 value|10
 end_define
 
@@ -456,7 +450,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USB_RESUME_RECOVERY
+name|USB_RESUME_RECOVERY_SPEC
 value|10
 end_define
 
@@ -467,18 +461,13 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USB_EXTRA_POWER_UP_TIME
+name|USB_EXTRA_POWER_UP_TIME_SPEC
 value|0
 end_define
 
 begin_comment
 comment|/* ms */
 end_comment
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_comment
 comment|/* Allow for marginal and non-conforming devices. */
@@ -593,11 +582,6 @@ end_define
 begin_comment
 comment|/* ms */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

@@ -286,6 +286,8 @@ argument_list|,
 name|debug
 argument_list|,
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|urtw_debug
@@ -424,6 +426,8 @@ argument_list|,
 name|preamble_mode
 argument_list|,
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|urtw_preamble_mode

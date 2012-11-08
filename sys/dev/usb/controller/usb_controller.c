@@ -358,7 +358,9 @@ name|OID_AUTO
 argument_list|,
 name|no_boot_wait
 argument_list|,
-name|CTLFLAG_RDTUN
+name|CTLFLAG_RD
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|usb_no_boot_wait
