@@ -3257,8 +3257,18 @@ name|err
 operator|!=
 name|ERR_CSW_FAILED
 condition|)
-break|break;
+block|{
+name|DPRINTF
+argument_list|(
+literal|"Device is not responding "
+literal|"properly to SCSI INQUIRY command.\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|error
+goto|;
 comment|/* non retryable error */
+block|}
 name|usb_pause_mtx
 argument_list|(
 name|NULL
