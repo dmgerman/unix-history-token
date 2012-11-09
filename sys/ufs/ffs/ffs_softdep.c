@@ -21071,6 +21071,19 @@ return|return;
 block|}
 if|if
 condition|(
+operator|(
+name|jseg
+operator|->
+name|js_state
+operator|&
+name|ALLCOMPLETE
+operator|)
+operator|!=
+name|ALLCOMPLETE
+condition|)
+break|break;
+if|if
+condition|(
 name|jseg
 operator|->
 name|js_seq
@@ -21083,6 +21096,14 @@ break|break;
 comment|/* 		 * We can free jsegs that didn't write entries when 		 * oldestwrseq == js_seq. 		 */
 if|if
 condition|(
+name|jseg
+operator|->
+name|js_seq
+operator|==
+name|jblocks
+operator|->
+name|jb_oldestwrseq
+operator|&&
 name|jseg
 operator|->
 name|js_cnt
