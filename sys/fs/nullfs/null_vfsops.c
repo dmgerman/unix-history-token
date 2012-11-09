@@ -614,8 +614,6 @@ operator|->
 name|mnt_kern_flag
 operator|&
 operator|(
-name|MNTK_MPSAFE
-operator||
 name|MNTK_SHARED_WRITES
 operator||
 name|MNTK_LOOKUP_SHARED
