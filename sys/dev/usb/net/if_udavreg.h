@@ -996,6 +996,10 @@ define|#
 directive|define
 name|UDAV_FLAG_EXT_PHY
 value|0x0040
+define|#
+directive|define
+name|UDAV_FLAG_NO_PHY
+value|0x0080
 block|}
 struct|;
 end_struct
