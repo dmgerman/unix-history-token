@@ -3969,6 +3969,9 @@ parameter_list|)
 block|{
 if|if
 condition|(
+operator|(
+name|int
+operator|)
 name|cause
 operator|>=
 literal|128
@@ -4315,6 +4318,9 @@ condition|)
 return|return;
 if|if
 condition|(
+operator|(
+name|int
+operator|)
 name|ie
 operator|->
 name|cause
@@ -4347,6 +4353,9 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+operator|(
+name|int
+operator|)
 name|ie
 operator|->
 name|cause
@@ -5433,6 +5442,9 @@ name|ptr
 decl_stmt|;
 if|if
 condition|(
+operator|(
+name|int
+operator|)
 name|ie
 operator|->
 name|cause
