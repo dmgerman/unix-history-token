@@ -203,7 +203,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s (%s): detached\n"
+literal|"%s (%s): attached\n"
 argument_list|,
 name|__func__
 argument_list|,
