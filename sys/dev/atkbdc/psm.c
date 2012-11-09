@@ -11674,7 +11674,7 @@ modifier|*
 name|z
 parameter_list|)
 block|{
-comment|/* 	 * PS2++ protocl packet 	 * 	 *          b7 b6 b5 b4 b3 b2 b1 b0 	 * byte 1:  *  1  p3 p2 1  *  *  * 	 * byte 2:  c1 c2 p1 p0 d1 d0 1  0 	 * 	 * p3-p0: packet type 	 * c1, c2: c1& c2 == 1, if p2 == 0 	 *         c1& c2 == 0, if p2 == 1 	 * 	 * packet type: 0 (device type) 	 * See comments in enable_mmanplus() below. 	 * 	 * packet type: 1 (wheel data) 	 * 	 *          b7 b6 b5 b4 b3 b2 b1 b0 	 * byte 3:  h  *  B5 B4 s  d2 d1 d0 	 * 	 * h: 1, if horizontal roller data 	 *    0, if vertical roller data 	 * B4, B5: button 4 and 5 	 * s: sign bit 	 * d2-d0: roller data 	 * 	 * packet type: 2 (reserved) 	 */
+comment|/* 	 * PS2++ protocol packet 	 * 	 *          b7 b6 b5 b4 b3 b2 b1 b0 	 * byte 1:  *  1  p3 p2 1  *  *  * 	 * byte 2:  c1 c2 p1 p0 d1 d0 1  0 	 * 	 * p3-p0: packet type 	 * c1, c2: c1& c2 == 1, if p2 == 0 	 *         c1& c2 == 0, if p2 == 1 	 * 	 * packet type: 0 (device type) 	 * See comments in enable_mmanplus() below. 	 * 	 * packet type: 1 (wheel data) 	 * 	 *          b7 b6 b5 b4 b3 b2 b1 b0 	 * byte 3:  h  *  B5 B4 s  d2 d1 d0 	 * 	 * h: 1, if horizontal roller data 	 *    0, if vertical roller data 	 * B4, B5: button 4 and 5 	 * s: sign bit 	 * d2-d0: roller data 	 * 	 * packet type: 2 (reserved) 	 */
 if|if
 condition|(
 operator|(
@@ -17397,7 +17397,7 @@ operator|(
 name|FALSE
 operator|)
 return|;
-comment|/* 	 * PS2++ protocl, packet type 0 	 * 	 *          b7 b6 b5 b4 b3 b2 b1 b0 	 * byte 1:  *  1  p3 p2 1  *  *  * 	 * byte 2:  1  1  p1 p0 m1 m0 1  0 	 * byte 3:  m7 m6 m5 m4 m3 m2 m1 m0 	 * 	 * p3-p0: packet type: 0 	 * m7-m0: model ID: MouseMan+:0x50, 	 *		    FirstMouse+:0x51, 	 *		    ScrollPoint:0x58... 	 */
+comment|/* 	 * PS2++ protocol, packet type 0 	 * 	 *          b7 b6 b5 b4 b3 b2 b1 b0 	 * byte 1:  *  1  p3 p2 1  *  *  * 	 * byte 2:  1  1  p1 p0 m1 m0 1  0 	 * byte 3:  m7 m6 m5 m4 m3 m2 m1 m0 	 * 	 * p3-p0: packet type: 0 	 * m7-m0: model ID: MouseMan+:0x50, 	 *		    FirstMouse+:0x51, 	 *		    ScrollPoint:0x58... 	 */
 comment|/* check constant bits */
 if|if
 condition|(

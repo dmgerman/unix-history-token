@@ -6238,7 +6238,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * This method will perform the actions required by the SCIC_SDS_PHY on  * entering the SCI_BASE_PHY_STATE_STARTING.  *    - This function sets the state handlers for the phy object base state  * machine starting state.  *    - The SCU hardware is requested to start OOB/SN on this protocl engine.  *    - The phy starting substate machine is started.  *    - If the previous state was the ready state then the  *      SCIC_SDS_CONTROLLER is informed that the phy has gone link down.  *  * @param[in] object This is the SCI_BASE_OBJECT which is cast to a  *       SCIC_SDS_PHY object.  *  * @return none  */
+comment|/**  * This method will perform the actions required by the SCIC_SDS_PHY on  * entering the SCI_BASE_PHY_STATE_STARTING.  *    - This function sets the state handlers for the phy object base state  * machine starting state.  *    - The SCU hardware is requested to start OOB/SN on this protocol engine.  *    - The phy starting substate machine is started.  *    - If the previous state was the ready state then the  *      SCIC_SDS_CONTROLLER is informed that the phy has gone link down.  *  * @param[in] object This is the SCI_BASE_OBJECT which is cast to a  *       SCIC_SDS_PHY object.  *  * @return none  */
 end_comment
 
 begin_function
