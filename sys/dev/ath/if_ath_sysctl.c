@@ -3818,7 +3818,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|ATH_DEBUG
+name|ATH_DEBUG_ALQ
 name|ath_sysctl_alq_attach
 argument_list|(
 name|sc
