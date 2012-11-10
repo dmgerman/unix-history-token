@@ -2768,7 +2768,7 @@ comment|/* DFS processing task */
 comment|/* ALQ */
 ifdef|#
 directive|ifdef
-name|ATH_DEBUG
+name|ATH_DEBUG_ALQ
 name|struct
 name|if_ath_alq
 name|sc_alq
