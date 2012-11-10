@@ -1984,7 +1984,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Output information about all available locales  *  * XXX actually output of this function does not guarantee that locale  *     is really available to application, since it can be broken or  *     inconsistent thus setlocale() will fail.	 Maybe add '-V' function to  *     also validate these locales?  */
+comment|/*  * Output information about all available locales  *  * XXX actually output of this function does not guarantee that locale  *     is really available to application, since it can be broken or  *     inconsistent thus setlocale() will fail.  Maybe add '-V' function to  *     also validate these locales?  */
 end_comment
 
 begin_function
