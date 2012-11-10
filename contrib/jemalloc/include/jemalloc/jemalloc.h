@@ -32,7 +32,7 @@ file|<strings.h>
 define|#
 directive|define
 name|JEMALLOC_VERSION
-value|"3.0.0-0-gfc9b1dbf69f59d7ecfc4ac68da9847e017e1d046"
+value|"3.2.0-0-g87499f6748ebe4817571e817e9f680ccb5bf54a9"
 define|#
 directive|define
 name|JEMALLOC_VERSION_MAJOR
@@ -40,7 +40,7 @@ value|3
 define|#
 directive|define
 name|JEMALLOC_VERSION_MINOR
-value|0
+value|2
 define|#
 directive|define
 name|JEMALLOC_VERSION_BUGFIX
@@ -52,7 +52,7 @@ value|0
 define|#
 directive|define
 name|JEMALLOC_VERSION_GID
-value|"fc9b1dbf69f59d7ecfc4ac68da9847e017e1d046"
+value|"87499f6748ebe4817571e817e9f680ccb5bf54a9"
 include|#
 directive|include
 file|"jemalloc_defs.h"
@@ -100,6 +100,14 @@ define|#
 directive|define
 name|ALLOCM_NO_MOVE
 value|((int)0x80)
+comment|/* Bias arena index bits so that 0 encodes "ALLOCM_ARENA() unspecified". */
+define|#
+directive|define
+name|ALLOCM_ARENA
+parameter_list|(
+name|a
+parameter_list|)
+value|((int)(((a)+1)<< 8))
 define|#
 directive|define
 name|ALLOCM_SUCCESS
@@ -306,7 +314,7 @@ name|JEMALLOC_EXPORT
 name|size_t
 name|je_malloc_usable_size
 parameter_list|(
-specifier|const
+name|JEMALLOC_USABLE_SIZE_CONST
 name|void
 modifier|*
 name|ptr

@@ -170,6 +170,9 @@ name|false
 argument_list|,
 operator|&
 name|is_zeroed
+argument_list|,
+name|chunk_dss_prec_get
+argument_list|()
 argument_list|)
 expr_stmt|;
 if|if
@@ -421,6 +424,9 @@ name|alignment
 parameter_list|,
 name|bool
 name|zero
+parameter_list|,
+name|bool
+name|try_tcache_dalloc
 parameter_list|)
 block|{
 name|void
@@ -689,9 +695,11 @@ argument_list|,
 name|copysize
 argument_list|)
 expr_stmt|;
-name|iqalloc
+name|iqallocx
 argument_list|(
 name|ptr
+argument_list|,
+name|try_tcache_dalloc
 argument_list|)
 expr_stmt|;
 block|}
