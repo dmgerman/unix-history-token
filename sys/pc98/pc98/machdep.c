@@ -6293,9 +6293,12 @@ argument_list|,
 name|curcpu
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|MP_WATCHDOG
+argument_list|)
 name|ap_watchdog
 argument_list|(
 name|PCPU_GET
@@ -10346,6 +10349,9 @@ index|]
 operator|+
 name|off
 argument_list|)
+expr_stmt|;
+name|PT_UPDATES_FLUSH
+argument_list|()
 expr_stmt|;
 block|}
 end_function
