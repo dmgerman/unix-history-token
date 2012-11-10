@@ -19,6 +19,12 @@ begin_comment
 comment|/*  * XXX These routines belong in libm, but they must remain in libc for  *     binary compat until we can bump libm's major version number.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PIC
+end_ifdef
+
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
@@ -128,6 +134,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* PIC */
+end_comment
 
 end_unit
 
