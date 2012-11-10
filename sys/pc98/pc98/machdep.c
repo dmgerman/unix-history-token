@@ -13236,6 +13236,13 @@ name|TD_IS_SUSPENDED
 argument_list|(
 name|td
 argument_list|)
+operator|||
+name|P_SHOULDSTOP
+argument_list|(
+name|td
+operator|->
+name|td_proc
+argument_list|)
 argument_list|,
 operator|(
 literal|"not suspended thread %p"
@@ -14193,6 +14200,20 @@ modifier|*
 name|td
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|PCB_USER_FPU
+argument_list|(
+name|td
+operator|->
+name|td_pcb
+argument_list|)
+argument_list|,
+operator|(
+literal|"fpstate_drop: kernel-owned fpu"
+operator|)
+argument_list|)
+expr_stmt|;
 name|critical_enter
 argument_list|()
 expr_stmt|;
