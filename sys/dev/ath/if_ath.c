@@ -23837,6 +23837,20 @@ operator|->
 name|ni_vap
 argument_list|)
 decl_stmt|;
+comment|/* 	 * Some operating omdes don't set av_set_tim(), so don't 	 * update it here. 	 */
+if|if
+condition|(
+name|avp
+operator|->
+name|av_set_tim
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 return|return
 operator|(
 name|avp
