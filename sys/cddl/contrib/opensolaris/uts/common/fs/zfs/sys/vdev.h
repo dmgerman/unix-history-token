@@ -86,6 +86,10 @@ name|boolean_t
 name|zfs_nocacheflush
 decl_stmt|;
 specifier|extern
+name|boolean_t
+name|zfs_notrim
+decl_stmt|;
+specifier|extern
 name|int
 name|vdev_open
 parameter_list|(
@@ -821,8 +825,8 @@ name|vdev_t
 modifier|*
 name|vd
 parameter_list|,
-name|int
-name|label
+name|uint64_t
+name|txg
 parameter_list|)
 function_decl|;
 specifier|extern

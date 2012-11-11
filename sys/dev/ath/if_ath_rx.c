@@ -2286,6 +2286,27 @@ name|ast_rx_badcrypt
 operator|++
 expr_stmt|;
 block|}
+comment|/* 		 * Similar as above - if the failure was a keymiss 		 * just punt it up to the upper layers for now. 		 */
+if|if
+condition|(
+name|rs
+operator|->
+name|rs_status
+operator|&
+name|HAL_RXERR_KEYMISS
+condition|)
+block|{
+name|sc
+operator|->
+name|sc_stats
+operator|.
+name|ast_rx_keymiss
+operator|++
+expr_stmt|;
+goto|goto
+name|rx_accept
+goto|;
+block|}
 if|if
 condition|(
 name|rs
@@ -3198,6 +3219,13 @@ return|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|ATH_RX_MAX
+value|128
+end_define
+
 begin_function
 specifier|static
 name|void
@@ -3360,6 +3388,14 @@ argument_list|)
 expr_stmt|;
 do|do
 block|{
+comment|/* 		 * Don't process too many packets at a time; give the 		 * TX thread time to also run - otherwise the TX 		 * latency can jump by quite a bit, causing throughput 		 * degredation. 		 */
+if|if
+condition|(
+name|npkts
+operator|>=
+name|ATH_RX_MAX
+condition|)
+break|break;
 name|bf
 operator|=
 name|TAILQ_FIRST
@@ -3637,9 +3673,13 @@ name|sc_lastrx
 operator|=
 name|tsf
 expr_stmt|;
-name|CTR2
+name|ATH_KTR
 argument_list|(
-name|ATH_KTR_INTR
+name|sc
+argument_list|,
+name|ATH_KTR_RXPROC
+argument_list|,
+literal|2
 argument_list|,
 literal|"ath_rx_proc: npkts=%d, ngood=%d"
 argument_list|,
@@ -3689,9 +3729,13 @@ operator|->
 name|sc_kickpcu
 condition|)
 block|{
-name|CTR0
+name|ATH_KTR
 argument_list|(
-name|ATH_KTR_ERR
+name|sc
+argument_list|,
+name|ATH_KTR_ERROR
+argument_list|,
+literal|0
 argument_list|,
 literal|"ath_rx_proc: kickpcu"
 argument_list|)
@@ -3819,6 +3863,25 @@ block|}
 undef|#
 directive|undef
 name|PA2DESC
+comment|/* 	 * If we hit the maximum number of frames in this round, 	 * reschedule for another immediate pass.  This gives 	 * the TX and TX completion routines time to run, which 	 * will reduce latency. 	 */
+if|if
+condition|(
+name|npkts
+operator|>=
+name|ATH_RX_MAX
+condition|)
+name|taskqueue_enqueue
+argument_list|(
+name|sc
+operator|->
+name|sc_tq
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_rxtask
+argument_list|)
+expr_stmt|;
 name|ATH_PCU_LOCK
 argument_list|(
 name|sc
@@ -3836,6 +3899,12 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_undef
+undef|#
+directive|undef
+name|ATH_RX_MAX
+end_undef
 
 begin_comment
 comment|/*  * Only run the RX proc if it's not already running.  * Since this may get run as part of the reset/flush path,  * the task can't clash with an existing, running tasklet.  */
@@ -3861,9 +3930,13 @@ name|sc
 init|=
 name|arg
 decl_stmt|;
-name|CTR1
+name|ATH_KTR
 argument_list|(
-name|ATH_KTR_INTR
+name|sc
+argument_list|,
+name|ATH_KTR_RXPROC
+argument_list|,
+literal|1
 argument_list|,
 literal|"ath_rx_proc: pending=%d"
 argument_list|,
@@ -4416,17 +4489,6 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|,
-literal|"%s: called\n"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|ath_descdma_setup
@@ -4444,6 +4506,12 @@ operator|->
 name|sc_rxbuf
 argument_list|,
 literal|"rx"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ath_desc
+argument_list|)
 argument_list|,
 name|ath_rxbuf
 argument_list|,
@@ -4480,17 +4548,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|,
-literal|"%s: called\n"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -4534,14 +4591,12 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|device_printf
-argument_list|(
+comment|/* Sensible legacy defaults */
 name|sc
 operator|->
-name|sc_dev
-argument_list|,
-literal|"DMA setup: legacy\n"
-argument_list|)
+name|sc_rx_statuslen
+operator|=
+literal|0
 expr_stmt|;
 name|sc
 operator|->

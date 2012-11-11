@@ -1751,7 +1751,7 @@ block|}
 case|case
 literal|'^'
 case|:
-comment|/* 		 * Carat means CONTROL. 		 */
+comment|/* 		 * Caret means CONTROL. 		 */
 operator|*
 name|pp
 operator|=

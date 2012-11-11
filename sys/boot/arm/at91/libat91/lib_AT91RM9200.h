@@ -358,7 +358,7 @@ operator|(
 name|unsigned
 name|int
 operator|)
-name|AT91C_PA28_MCCDA
+name|AT91C_PIO_PA28
 operator|)
 operator||
 operator|(
@@ -366,7 +366,7 @@ operator|(
 name|unsigned
 name|int
 operator|)
-name|AT91C_PA29_MCDA0
+name|AT91C_PIO_PA29
 operator|)
 operator||
 operator|(
@@ -374,7 +374,7 @@ operator|(
 name|unsigned
 name|int
 operator|)
-name|AT91C_PA27_MCCK
+name|AT91C_PIO_PA27
 operator|)
 argument_list|,
 comment|// Peripheral A
@@ -396,7 +396,7 @@ operator|(
 name|unsigned
 name|int
 operator|)
-name|AT91C_PB5_MCDA3
+name|AT91C_PIO_PB5
 operator|)
 operator||
 operator|(
@@ -404,7 +404,7 @@ operator|(
 name|unsigned
 name|int
 operator|)
-name|AT91C_PB3_MCDA1
+name|AT91C_PIO_PB3
 operator|)
 operator||
 operator|(
@@ -412,7 +412,7 @@ operator|(
 name|unsigned
 name|int
 operator|)
-name|AT91C_PB4_MCDA2
+name|AT91C_PIO_PB4
 operator|)
 argument_list|)
 expr_stmt|;

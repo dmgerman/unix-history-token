@@ -3368,15 +3368,11 @@ name|t
 index|]
 argument_list|)
 expr_stmt|;
-name|ASSERT3S
+name|ASSERT0
 argument_list|(
 name|msp
 operator|->
 name|ms_deferspace
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|mutex_exit

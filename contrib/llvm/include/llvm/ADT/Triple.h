@@ -159,12 +159,12 @@ comment|// XCore: xcore
 name|mblaze
 block|,
 comment|// MBlaze: mblaze
-name|ptx32
+name|nvptx
 block|,
-comment|// PTX: ptx (32-bit)
-name|ptx64
+comment|// NVPTX: 32-bit
+name|nvptx64
 block|,
-comment|// PTX: ptx (64-bit)
+comment|// NVPTX: 64-bit
 name|le32
 block|,
 comment|// le32: generic little-endian 32-bit CPU (PNaCl / Emscripten)
@@ -234,7 +234,9 @@ block|,
 name|NativeClient
 block|,
 name|CNK
+block|,
 comment|// BG/P Compute-Node Kernel
+name|Bitrig
 block|}
 enum|;
 enum|enum
@@ -481,6 +483,25 @@ comment|/// This may also be called with IOS triples but the OS X version number
 comment|/// just set to a constant 10.4.0 in that case.  Returns true if successful.
 name|bool
 name|getMacOSXVersion
+argument_list|(
+name|unsigned
+operator|&
+name|Major
+argument_list|,
+name|unsigned
+operator|&
+name|Minor
+argument_list|,
+name|unsigned
+operator|&
+name|Micro
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// getiOSVersion - Parse the version number as with getOSVersion.  This should
+comment|/// only be called with IOS triples.
+name|void
+name|getiOSVersion
 argument_list|(
 name|unsigned
 operator|&

@@ -712,17 +712,6 @@ modifier|*
 name|Pred
 parameter_list|)
 function_decl|;
-comment|/// GetFirstDebugLocInBasicBlock - Return first valid DebugLoc entry in a
-comment|/// given basic block.
-name|DebugLoc
-name|GetFirstDebugLocInBasicBlock
-parameter_list|(
-specifier|const
-name|BasicBlock
-modifier|*
-name|BB
-parameter_list|)
-function_decl|;
 block|}
 end_decl_stmt
 

@@ -87,6 +87,12 @@ directive|include
 file|"clang/StaticAnalyzer/Core/BugReporter/PathDiagnostic.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"clang/StaticAnalyzer/Core/PathDiagnosticConsumers.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -124,11 +130,8 @@ name|LangOptions
 operator|&
 name|LangOpts
 block|;
-name|OwningPtr
-operator|<
-name|PathDiagnosticConsumer
-operator|>
-name|PD
+name|PathDiagnosticConsumers
+name|PathConsumers
 block|;
 comment|// Configurable components creators.
 name|StoreManagerCreator
@@ -140,14 +143,6 @@ block|;
 name|CheckerManager
 operator|*
 name|CheckerMgr
-block|;    enum
-name|AnalysisScope
-block|{
-name|ScopeTU
-block|,
-name|ScopeDecl
-block|}
-name|AScope
 block|;
 comment|/// \brief The maximum number of exploded nodes the analyzer will generate.
 name|unsigned
@@ -219,7 +214,7 @@ argument|DiagnosticsEngine&diags
 argument_list|,
 argument|const LangOptions&lang
 argument_list|,
-argument|PathDiagnosticConsumer *pd
+argument|const PathDiagnosticConsumers&Consumers
 argument_list|,
 argument|StoreManagerCreator storemgr
 argument_list|,
@@ -245,8 +240,6 @@ argument|bool useUnoptimizedCFG
 argument_list|,
 argument|bool addImplicitDtors
 argument_list|,
-argument|bool addInitializers
-argument_list|,
 argument|bool eagerlyTrimEGraph
 argument_list|,
 argument|AnalysisIPAMode ipa
@@ -260,30 +253,10 @@ argument_list|,
 argument|bool NoRetry
 argument_list|)
 block|;
-comment|/// Construct a clone of the given AnalysisManager with the given ASTContext
-comment|/// and DiagnosticsEngine.
-name|AnalysisManager
-argument_list|(
-name|ASTContext
-operator|&
-name|ctx
-argument_list|,
-name|DiagnosticsEngine
-operator|&
-name|diags
-argument_list|,
-name|AnalysisManager
-operator|&
-name|ParentAM
-argument_list|)
-block|;
 operator|~
 name|AnalysisManager
 argument_list|()
-block|{
-name|FlushDiagnostics
-argument_list|()
-block|; }
+block|;
 name|void
 name|ClearContexts
 argument_list|()
@@ -373,38 +346,22 @@ return|return
 name|LangOpts
 return|;
 block|}
-name|virtual
+name|ArrayRef
+operator|<
 name|PathDiagnosticConsumer
 operator|*
-name|getPathDiagnosticConsumer
+operator|>
+name|getPathDiagnosticConsumers
 argument_list|()
 block|{
 return|return
-name|PD
-operator|.
-name|get
-argument_list|()
+name|PathConsumers
 return|;
 block|}
 name|void
 name|FlushDiagnostics
 argument_list|()
-block|{
-if|if
-condition|(
-name|PD
-operator|.
-name|get
-argument_list|()
-condition|)
-name|PD
-operator|->
-name|FlushDiagnostics
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
+block|;
 name|unsigned
 name|getMaxNodes
 argument_list|()
@@ -496,8 +453,8 @@ block|{
 return|return
 operator|(
 name|IPAMode
-operator|==
-name|Inlining
+operator|!=
+name|None
 operator|)
 return|;
 block|}
@@ -580,26 +537,6 @@ operator|.
 name|getContext
 argument_list|(
 name|D
-argument_list|)
-return|;
-block|}
-name|AnalysisDeclContext
-operator|*
-name|getAnalysisDeclContext
-argument_list|(
-argument|const Decl *D
-argument_list|,
-argument|idx::TranslationUnit *TU
-argument_list|)
-block|{
-return|return
-name|AnaCtxMgr
-operator|.
-name|getContext
-argument_list|(
-name|D
-argument_list|,
-name|TU
 argument_list|)
 return|;
 block|}

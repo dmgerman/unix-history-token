@@ -195,19 +195,6 @@ argument|const TargetRegisterInfo *TRI
 argument_list|)
 specifier|const
 block|;
-comment|/// scheduleTwoAddrSource - Schedule the copy / re-mat of the source of the
-comment|/// two-addrss instruction inserted by two-address pass.
-name|void
-name|scheduleTwoAddrSource
-argument_list|(
-argument|MachineInstr *SrcMI
-argument_list|,
-argument|MachineInstr *UseMI
-argument_list|,
-argument|const TargetRegisterInfo&TRI
-argument_list|)
-specifier|const
-block|;
 comment|/// getRegisterInfo - TargetInstrInfo is a superset of MRegister info.  As
 comment|/// such, whenever a client has an instance of instruction info, it should
 comment|/// always be able to get register info as well (through this method).

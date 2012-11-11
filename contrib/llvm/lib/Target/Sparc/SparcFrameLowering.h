@@ -90,11 +90,6 @@ range|:
 name|public
 name|TargetFrameLowering
 block|{
-specifier|const
-name|SparcSubtarget
-operator|&
-name|STI
-block|;
 name|public
 operator|:
 name|explicit
@@ -103,23 +98,16 @@ argument_list|(
 specifier|const
 name|SparcSubtarget
 operator|&
-name|sti
+comment|/*sti*/
 argument_list|)
 operator|:
 name|TargetFrameLowering
 argument_list|(
-name|TargetFrameLowering
-operator|::
-name|StackGrowsDown
+argument|TargetFrameLowering::StackGrowsDown
 argument_list|,
 literal|8
 argument_list|,
 literal|0
-argument_list|)
-block|,
-name|STI
-argument_list|(
-argument|sti
 argument_list|)
 block|{   }
 comment|/// emitProlog/emitEpilog - These methods insert prolog and epilog code into

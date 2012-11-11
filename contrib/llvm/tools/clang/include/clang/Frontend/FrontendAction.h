@@ -521,7 +521,7 @@ name|Input
 parameter_list|)
 function_decl|;
 comment|/// Execute - Set the source managers main input file, and run the action.
-name|void
+name|bool
 name|Execute
 parameter_list|()
 function_decl|;

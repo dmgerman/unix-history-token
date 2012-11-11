@@ -450,7 +450,7 @@ end_function
 begin_macro
 name|ARM_BOARD
 argument_list|(
-argument|NONE
+argument|ETHERNUT5
 argument_list|,
 literal|"Ethernut 5"
 argument_list|)

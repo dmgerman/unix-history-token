@@ -1021,8 +1021,6 @@ operator|=
 name|AcpiEnterSleepState
 argument_list|(
 name|state
-argument_list|,
-name|acpi_sleep_flags
 argument_list|)
 expr_stmt|;
 if|if

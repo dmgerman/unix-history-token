@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/STLExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -105,12 +111,27 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|/// SparseSetFunctor - Objects in a SparseSet are identified by small integer
-comment|/// keys.  A functor object is used to compute the key of an object.  The
-comment|/// functor's operator() must return an unsigned smaller than the universe.
+comment|/// SparseSetValTraits - Objects in a SparseSet are identified by keys that can
+comment|/// be uniquely converted to a small integer less than the set's universe. This
+comment|/// class allows the set to hold values that differ from the set's key type as
+comment|/// long as an index can still be derived from the value. SparseSet never
+comment|/// directly compares ValueT, only their indices, so it can map keys to
+comment|/// arbitrary values. SparseSetValTraits computes the index from the value
+comment|/// object. To compute the index from a key, SparseSet uses a separate
+comment|/// KeyFunctorT template argument.
 comment|///
-comment|/// The default functor implementation forwards to a getSparseSetKey() method
-comment|/// on the object.  It is intended for sparse sets holding ad-hoc structs.
+comment|/// A simple type declaration, SparseSet<Type>, handles these cases:
+comment|/// - unsigned key, identity index, identity value
+comment|/// - unsigned key, identity index, fat value providing getSparseSetIndex()
+comment|///
+comment|/// The type declaration SparseSet<Type, UnaryFunction> handles:
+comment|/// - unsigned key, remapped index, identity value (virtual registers)
+comment|/// - pointer key, pointer-derived index, identity value (node+ID)
+comment|/// - pointer key, pointer-derived index, fat value with getSparseSetIndex()
+comment|///
+comment|/// Only other, unexpected cases require specializing SparseSetValTraits.
+comment|///
+comment|/// For best results, ValueT should not require a destructor.
 comment|///
 name|template
 operator|<
@@ -118,7 +139,41 @@ name|typename
 name|ValueT
 operator|>
 expr|struct
-name|SparseSetFunctor
+name|SparseSetValTraits
+block|{
+specifier|static
+name|unsigned
+name|getValIndex
+argument_list|(
+argument|const ValueT&Val
+argument_list|)
+block|{
+return|return
+name|Val
+operator|.
+name|getSparseSetIndex
+argument_list|()
+return|;
+block|}
+expr|}
+block|;
+comment|/// SparseSetValFunctor - Helper class for selecting SparseSetValTraits. The
+comment|/// generic implementation handles ValueT classes which either provide
+comment|/// getSparseSetIndex() or specialize SparseSetValTraits<>.
+comment|///
+name|template
+operator|<
+name|typename
+name|KeyT
+block|,
+name|typename
+name|ValueT
+block|,
+name|typename
+name|KeyFunctorT
+operator|>
+expr|struct
+name|SparseSetValFunctor
 block|{
 name|unsigned
 name|operator
@@ -129,43 +184,64 @@ name|ValueT
 operator|&
 name|Val
 operator|)
+specifier|const
 block|{
 return|return
+name|SparseSetValTraits
+operator|<
+name|ValueT
+operator|>
+operator|::
+name|getValIndex
+argument_list|(
 name|Val
-operator|.
-name|getSparseSetKey
-argument_list|()
+argument_list|)
 return|;
 block|}
 expr|}
 block|;
-comment|/// SparseSetFunctor<unsigned> - Provide a trivial identity functor for
-comment|/// SparseSet<unsigned>.
-comment|///
+comment|/// SparseSetValFunctor<KeyT, KeyT> - Helper class for the common case of
+comment|/// identity key/value sets.
 name|template
 operator|<
+name|typename
+name|KeyT
+block|,
+name|typename
+name|KeyFunctorT
 operator|>
 expr|struct
-name|SparseSetFunctor
+name|SparseSetValFunctor
 operator|<
-name|unsigned
+name|KeyT
+block|,
+name|KeyT
+block|,
+name|KeyFunctorT
 operator|>
 block|{
 name|unsigned
 name|operator
 argument_list|()
 operator|(
-name|unsigned
-name|Val
+specifier|const
+name|KeyT
+operator|&
+name|Key
 operator|)
+specifier|const
 block|{
 return|return
-name|Val
+name|KeyFunctorT
+argument_list|()
+argument_list|(
+name|Key
+argument_list|)
 return|;
 block|}
 expr|}
 block|;
-comment|/// SparseSet - Fast set implementation for objects that can be identified by
+comment|/// SparseSet - Fast set implmentation for objects that can be identified by
 comment|/// small unsigned keys.
 comment|///
 comment|/// SparseSet allocates memory proportional to the size of the key universe, so
@@ -200,8 +276,8 @@ comment|/// For sets that may grow to thousands of elements, SparseT should be s
 comment|/// uint16_t or uint32_t.
 comment|///
 comment|/// @param ValueT      The type of objects in the set.
+comment|/// @param KeyFunctorT A functor that computes an unsigned index from KeyT.
 comment|/// @param SparseT     An unsigned integer type. See above.
-comment|/// @param KeyFunctorT A functor that computes the unsigned key of a ValueT.
 comment|///
 name|template
 operator|<
@@ -209,21 +285,30 @@ name|typename
 name|ValueT
 block|,
 name|typename
+name|KeyFunctorT
+operator|=
+name|llvm
+operator|::
+name|identity
+operator|<
+name|unsigned
+operator|>
+block|,
+name|typename
 name|SparseT
 operator|=
 name|uint8_t
-block|,
-name|typename
-name|KeyFunctorT
-operator|=
-name|SparseSetFunctor
-operator|<
-name|ValueT
 operator|>
-expr|>
 name|class
 name|SparseSet
 block|{
+typedef|typedef
+name|typename
+name|KeyFunctorT
+operator|::
+name|argument_type
+name|KeyT
+expr_stmt|;
 typedef|typedef
 name|SmallVector
 operator|<
@@ -244,7 +329,17 @@ name|unsigned
 name|Universe
 block|;
 name|KeyFunctorT
-name|KeyOf
+name|KeyIndexOf
+block|;
+name|SparseSetValFunctor
+operator|<
+name|KeyT
+block|,
+name|ValueT
+block|,
+name|KeyFunctorT
+operator|>
+name|ValIndexOf
 block|;
 comment|// Disable copy construction and assignment.
 comment|// This data structure is not meant to be used that way.
@@ -558,7 +653,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// find - Find an element by its key.
+comment|/// findIndex - Find an element by its index.
 end_comment
 
 begin_comment
@@ -566,7 +661,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// @param   Key A valid key to find.
+comment|/// @param   Idx A valid index to find.
 end_comment
 
 begin_comment
@@ -579,15 +674,15 @@ end_comment
 
 begin_function
 name|iterator
-name|find
+name|findIndex
 parameter_list|(
 name|unsigned
-name|Key
+name|Idx
 parameter_list|)
 block|{
 name|assert
 argument_list|(
-name|Key
+name|Idx
 operator|<
 name|Universe
 operator|&&
@@ -641,7 +736,7 @@ name|i
 init|=
 name|Sparse
 index|[
-name|Key
+name|Idx
 index|]
 init|,
 name|e
@@ -660,9 +755,9 @@ control|)
 block|{
 specifier|const
 name|unsigned
-name|FoundKey
+name|FoundIdx
 init|=
-name|KeyOf
+name|ValIndexOf
 argument_list|(
 name|Dense
 index|[
@@ -672,7 +767,7 @@ argument_list|)
 decl_stmt|;
 name|assert
 argument_list|(
-name|FoundKey
+name|FoundIdx
 operator|<
 name|Universe
 operator|&&
@@ -681,9 +776,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|Key
+name|Idx
 operator|==
-name|FoundKey
+name|FoundIdx
 condition|)
 return|return
 name|begin
@@ -706,11 +801,55 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// find - Find an element by its key.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// @param   Key A valid key to find.
+end_comment
+
+begin_comment
+comment|/// @returns An iterator to the element identified by key, or end().
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_function
+name|iterator
+name|find
+parameter_list|(
+specifier|const
+name|KeyT
+modifier|&
+name|Key
+parameter_list|)
+block|{
+return|return
+name|findIndex
+argument_list|(
+name|KeyIndexOf
+argument_list|(
+name|Key
+argument_list|)
+argument_list|)
+return|;
+block|}
+end_function
+
 begin_decl_stmt
 name|const_iterator
 name|find
 argument_list|(
-name|unsigned
+specifier|const
+name|KeyT
+operator|&
 name|Key
 argument_list|)
 decl|const
@@ -725,9 +864,12 @@ operator|(
 name|this
 operator|)
 operator|->
-name|find
+name|findIndex
+argument_list|(
+name|KeyIndexOf
 argument_list|(
 name|Key
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -745,7 +887,9 @@ begin_decl_stmt
 name|bool
 name|count
 argument_list|(
-name|unsigned
+specifier|const
+name|KeyT
+operator|&
 name|Key
 argument_list|)
 decl|const
@@ -817,9 +961,9 @@ argument|const ValueT&Val
 argument_list|)
 block|{
 name|unsigned
-name|Key
+name|Idx
 operator|=
-name|KeyOf
+name|ValIndexOf
 argument_list|(
 name|Val
 argument_list|)
@@ -827,9 +971,9 @@ block|;
 name|iterator
 name|I
 operator|=
-name|find
+name|findIndex
 argument_list|(
-name|Key
+name|Idx
 argument_list|)
 block|;
 if|if
@@ -851,7 +995,7 @@ argument_list|)
 return|;
 name|Sparse
 index|[
-name|Key
+name|Idx
 index|]
 operator|=
 name|size
@@ -904,7 +1048,9 @@ operator|&
 name|operator
 index|[]
 operator|(
-name|unsigned
+specifier|const
+name|KeyT
+operator|&
 name|Key
 operator|)
 block|{
@@ -1022,9 +1168,9 @@ name|back
 argument_list|()
 expr_stmt|;
 name|unsigned
-name|BackKey
+name|BackIdx
 init|=
-name|KeyOf
+name|ValIndexOf
 argument_list|(
 name|Dense
 operator|.
@@ -1034,7 +1180,7 @@ argument_list|)
 decl_stmt|;
 name|assert
 argument_list|(
-name|BackKey
+name|BackIdx
 operator|<
 name|Universe
 operator|&&
@@ -1043,7 +1189,7 @@ argument_list|)
 expr_stmt|;
 name|Sparse
 index|[
-name|BackKey
+name|BackIdx
 index|]
 operator|=
 name|I
@@ -1089,7 +1235,9 @@ begin_function
 name|bool
 name|erase
 parameter_list|(
-name|unsigned
+specifier|const
+name|KeyT
+modifier|&
 name|Key
 parameter_list|)
 block|{

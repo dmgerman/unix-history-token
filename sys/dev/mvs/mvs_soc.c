@@ -246,6 +246,20 @@ name|MVS_Q_SOC
 block|}
 block|,
 block|{
+name|MV_DEV_88F6282
+block|,
+literal|0x00
+block|,
+literal|"Marvell 88F6282"
+block|,
+literal|2
+block|,
+name|MVS_Q_GENIIE
+operator||
+name|MVS_Q_SOC
+block|}
+block|,
+block|{
 name|MV_DEV_MV78100
 block|,
 literal|0x00

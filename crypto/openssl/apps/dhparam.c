@@ -2098,6 +2098,37 @@ return|;
 block|}
 end_function
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !OPENSSL_NO_DH */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|PEDANTIC
+end_if
+
+begin_decl_stmt
+specifier|static
+name|void
+modifier|*
+name|dummy
+init|=
+operator|&
+name|dummy
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif

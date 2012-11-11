@@ -391,7 +391,7 @@ operator|>
 name|Regions
 argument_list|,
 specifier|const
-name|CallOrObjCMessage
+name|CallEvent
 operator|*
 name|Call
 argument_list|)

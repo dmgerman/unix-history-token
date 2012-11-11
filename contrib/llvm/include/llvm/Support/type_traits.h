@@ -89,6 +89,33 @@ directive|include
 file|<utility>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__has_feature
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LLVM_DEFINED_HAS_FEATURE
+end_define
+
+begin_define
+define|#
+directive|define
+name|__has_feature
+parameter_list|(
+name|x
+parameter_list|)
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|// This is actually the conforming implementation which works with abstract
 end_comment
@@ -197,6 +224,26 @@ operator|>
 expr|struct
 name|isPodLike
 block|{
+if|#
+directive|if
+name|__has_feature
+argument_list|(
+name|is_trivially_copyable
+argument_list|)
+comment|// If the compiler supports the is_trivially_copyable trait use it, as it
+comment|// matches the definition of isPodLike closely.
+specifier|static
+specifier|const
+name|bool
+name|value
+operator|=
+name|__is_trivially_copyable
+argument_list|(
+name|T
+argument_list|)
+block|;
+else|#
+directive|else
 comment|// If we don't know anything else, we can (at least) assume that all non-class
 comment|// types are PODs.
 specifier|static
@@ -211,7 +258,10 @@ name|T
 operator|>
 operator|::
 name|value
-block|; }
+block|;
+endif|#
+directive|endif
+block|}
 expr_stmt|;
 comment|// std::pair's are pod-like if their elements are.
 name|template
@@ -1388,8 +1438,25 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
-begin_endif
+begin_ifdef
 unit|}
+ifdef|#
+directive|ifdef
+name|LLVM_DEFINED_HAS_FEATURE
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|__has_feature
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
 endif|#
 directive|endif
 end_endif

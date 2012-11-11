@@ -172,6 +172,9 @@ name|private
 label|:
 comment|/// StoredNameKind - The kind of name that is actually stored in the
 comment|/// upper bits of the Ptr field. This is only used internally.
+comment|///
+comment|/// Note: The entries here are synchronized with the entries in Selector,
+comment|/// for efficient translation between the two.
 enum|enum
 name|StoredNameKind
 block|{
@@ -180,10 +183,16 @@ init|=
 literal|0
 block|,
 name|StoredObjCZeroArgSelector
+init|=
+literal|0x01
 block|,
 name|StoredObjCOneArgSelector
+init|=
+literal|0x02
 block|,
 name|StoredDeclarationNameExtra
+init|=
+literal|0x03
 block|,
 name|PtrMask
 init|=
@@ -273,15 +282,19 @@ name|getAsCXXSpecialName
 argument_list|()
 specifier|const
 block|{
-if|if
-condition|(
+name|NameKind
+name|Kind
+operator|=
 name|getNameKind
 argument_list|()
+block|;
+if|if
+condition|(
+name|Kind
 operator|>=
 name|CXXConstructorName
 operator|&&
-name|getNameKind
-argument_list|()
+name|Kind
 operator|<=
 name|CXXConversionFunctionName
 condition|)
@@ -494,17 +507,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getFETokenInfoAsVoid - Retrieves the front end-specified pointer
+comment|/// getFETokenInfoAsVoidSlow - Retrieves the front end-specified pointer
 end_comment
 
 begin_comment
-comment|/// for this name as a void pointer.
+comment|/// for this name as a void pointer if it's not an identifier.
 end_comment
 
 begin_expr_stmt
 name|void
 operator|*
-name|getFETokenInfoAsVoid
+name|getFETokenInfoAsVoidSlow
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -560,20 +573,19 @@ name|DeclarationName
 argument_list|(
 argument|Selector Sel
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
+operator|:
+name|Ptr
+argument_list|(
+argument|Sel.InfoPtr
+argument_list|)
+block|{ }
 comment|/// getUsingDirectiveName - Return name for all using-directives.
-end_comment
-
-begin_function_decl
 specifier|static
 name|DeclarationName
 name|getUsingDirectiveName
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|// operator bool() - Evaluates true when this declaration name is
@@ -959,7 +971,40 @@ name|Selector
 name|getObjCSelector
 argument_list|()
 specifier|const
-expr_stmt|;
+block|{
+name|assert
+argument_list|(
+operator|(
+name|getNameKind
+argument_list|()
+operator|==
+name|ObjCZeroArgSelector
+operator|||
+name|getNameKind
+argument_list|()
+operator|==
+name|ObjCOneArgSelector
+operator|||
+name|getNameKind
+argument_list|()
+operator|==
+name|ObjCMultiArgSelector
+operator|||
+name|Ptr
+operator|==
+literal|0
+operator|)
+operator|&&
+literal|"Not a selector!"
+argument_list|)
+block|;
+return|return
+name|Selector
+argument_list|(
+name|Ptr
+argument_list|)
+return|;
+block|}
 end_expr_stmt
 
 begin_comment
@@ -990,6 +1035,29 @@ name|getFETokenInfo
 argument_list|()
 specifier|const
 block|{
+if|if
+condition|(
+specifier|const
+name|IdentifierInfo
+modifier|*
+name|Info
+init|=
+name|getAsIdentifierInfo
+argument_list|()
+condition|)
+return|return
+name|Info
+operator|->
+name|getFETokenInfo
+operator|<
+name|T
+operator|>
+operator|(
+operator|)
+return|;
+end_expr_stmt
+
+begin_return
 return|return
 name|static_cast
 operator|<
@@ -997,23 +1065,22 @@ name|T
 operator|*
 operator|>
 operator|(
-name|getFETokenInfoAsVoid
+name|getFETokenInfoAsVoidSlow
 argument_list|()
 operator|)
 return|;
-block|}
-end_expr_stmt
+end_return
 
-begin_function_decl
-name|void
+begin_expr_stmt
+unit|}    void
 name|setFETokenInfo
-parameter_list|(
+argument_list|(
 name|void
-modifier|*
+operator|*
 name|T
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// operator== - Determine whether the specified names are identical..
@@ -2299,8 +2366,25 @@ argument_list|(
 name|clang
 operator|::
 name|DeclarationName
+name|Name
 argument_list|)
-decl_stmt|;
+block|{
+return|return
+name|DenseMapInfo
+operator|<
+name|void
+operator|*
+operator|>
+operator|::
+name|getHashValue
+argument_list|(
+name|Name
+operator|.
+name|getAsOpaquePtr
+argument_list|()
+argument_list|)
+return|;
+block|}
 specifier|static
 specifier|inline
 name|bool

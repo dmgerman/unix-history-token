@@ -86,9 +86,43 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
+name|AcpiDbDisplayCommandInfo
+parameter_list|(
+name|char
+modifier|*
+name|Command
+parameter_list|,
+name|BOOLEAN
+name|DisplayAll
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
 name|AcpiDbDisplayHelp
 parameter_list|(
-name|void
+name|char
+modifier|*
+name|Command
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|BOOLEAN
+name|AcpiDbMatchCommandHelp
+parameter_list|(
+name|char
+modifier|*
+name|Command
+parameter_list|,
+specifier|const
+name|ACPI_DB_COMMAND_HELP
+modifier|*
+name|Help
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -130,6 +164,8 @@ block|,
 name|CMD_DUMP
 block|,
 name|CMD_ENABLEACPI
+block|,
+name|CMD_EVALUATE
 block|,
 name|CMD_EVENT
 block|,
@@ -240,7 +276,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 specifier|const
-name|COMMAND_INFO
+name|ACPI_DB_COMMAND_INFO
 name|AcpiGbl_DbCommands
 index|[]
 init|=
@@ -327,6 +363,12 @@ block|{
 literal|"ENABLEACPI"
 block|,
 literal|0
+block|}
+block|,
+block|{
+literal|"EVALUATE"
+block|,
+literal|1
 block|}
 block|,
 block|{
@@ -548,7 +590,7 @@ block|,
 block|{
 literal|"STATS"
 block|,
-literal|0
+literal|1
 block|}
 block|,
 block|{
@@ -615,7 +657,830 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbDisplayHelp  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Print a usage message.  *  ******************************************************************************/
+comment|/*  * Help for all debugger commands. First argument is the number of lines  * of help to output for the command.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|ACPI_DB_COMMAND_HELP
+name|AcpiGbl_DbCommandHelp
+index|[]
+init|=
+block|{
+block|{
+literal|0
+block|,
+literal|"\nGeneral-Purpose Commands:"
+block|,
+literal|"\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Allocations"
+block|,
+literal|"Display list of current memory allocations\n"
+block|}
+block|,
+block|{
+literal|2
+block|,
+literal|"  Dump<Address>|<Namepath>"
+block|,
+literal|"\n"
+block|}
+block|,
+block|{
+literal|0
+block|,
+literal|"       [Byte|Word|Dword|Qword]"
+block|,
+literal|"Display ACPI objects or memory\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  EnableAcpi"
+block|,
+literal|"Enable ACPI (hardware) mode\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Handlers"
+block|,
+literal|"Info about global handlers\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Help [Command]"
+block|,
+literal|"This help screen or individual command\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  History"
+block|,
+literal|"Display command history buffer\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Level<DebugLevel>] [console]"
+block|,
+literal|"Get/Set debug level for file or console\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Locks"
+block|,
+literal|"Current status of internal mutexes\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Osi [Install|Remove<name>]"
+block|,
+literal|"Display or modify global _OSI list\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Quit or Exit"
+block|,
+literal|"Exit this command\n"
+block|}
+block|,
+block|{
+literal|9
+block|,
+literal|"  Stats [Allocations|Memory|Misc|"
+block|,
+literal|"\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"      Objects|Sizes|Stack|Tables]"
+block|,
+literal|"Display namespace and memory statistics\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"     Allocations"
+block|,
+literal|"Display list of current memory allocations\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"     Memory"
+block|,
+literal|"Dump internal memory lists\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"     Misc"
+block|,
+literal|"Namespace search and mutex stats\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"     Objects"
+block|,
+literal|"Summary of namespace objects\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"     Sizes"
+block|,
+literal|"Sizes for each of the internal objects\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"     Stack"
+block|,
+literal|"Display CPU stack usage\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"     Tables"
+block|,
+literal|"Info about current ACPI table(s)\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Tables"
+block|,
+literal|"Display info about loaded ACPI tables\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Unload<Namepath>"
+block|,
+literal|"Unload an ACPI table via namespace object\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  !<CommandNumber>"
+block|,
+literal|"Execute command from history buffer\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  !!"
+block|,
+literal|"Execute last command again\n"
+block|}
+block|,
+block|{
+literal|0
+block|,
+literal|"\nNamespace Access Commands:"
+block|,
+literal|"\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Businfo"
+block|,
+literal|"Display system bus info\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Disassemble<Method>"
+block|,
+literal|"Disassemble a control method\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Event<F|G><Value>"
+block|,
+literal|"Generate AcpiEvent (Fixed/GPE)\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Find<AcpiName> (? is wildcard)"
+block|,
+literal|"Find ACPI name(s) with wildcards\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Gpe<GpeNum><GpeBlock>"
+block|,
+literal|"Simulate a GPE\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Gpes"
+block|,
+literal|"Display info on all GPEs\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Integrity"
+block|,
+literal|"Validate namespace integrity\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Methods"
+block|,
+literal|"Display list of loaded control methods\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Namespace [Object] [Depth]"
+block|,
+literal|"Display loaded namespace tree/subtree\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Notify<Object><Value>"
+block|,
+literal|"Send a notification on Object\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Objects<ObjectType>"
+block|,
+literal|"Display all objects of the given type\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Owner<OwnerId> [Depth]"
+block|,
+literal|"Display loaded namespace by object owner\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Predefined"
+block|,
+literal|"Check all predefined names\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Prefix [<NamePath>]"
+block|,
+literal|"Set or Get current execution prefix\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  References<Addr>"
+block|,
+literal|"Find all references to object at addr\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Resources<DeviceName | *>"
+block|,
+literal|"Display Device resources (* = all devices)\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Set N<NamedObject><Value>"
+block|,
+literal|"Set value for named integer\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Sleep<SleepState>"
+block|,
+literal|"Simulate sleep/wake sequence\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Template<Object>"
+block|,
+literal|"Format/dump a Buffer/ResourceTemplate\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Terminate"
+block|,
+literal|"Delete namespace and all internal objects\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Type<Object>"
+block|,
+literal|"Display object type\n"
+block|}
+block|,
+block|{
+literal|0
+block|,
+literal|"\nControl Method Execution Commands:"
+block|,
+literal|"\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Arguments (or Args)"
+block|,
+literal|"Display method arguments\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Breakpoint<AmlOffset>"
+block|,
+literal|"Set an AML execution breakpoint\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Call"
+block|,
+literal|"Run to next control method invocation\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Debug<Namepath> [Arguments]"
+block|,
+literal|"Single Step a control method\n"
+block|}
+block|,
+block|{
+literal|6
+block|,
+literal|"  Evaluate"
+block|,
+literal|"Synonym for Execute\n"
+block|}
+block|,
+block|{
+literal|5
+block|,
+literal|"  Execute<Namepath> [Arguments]"
+block|,
+literal|"Execute control method\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"     Hex Integer"
+block|,
+literal|"Integer method argument\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"     \"Ascii String\""
+block|,
+literal|"String method argument\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"     (Byte List)"
+block|,
+literal|"Buffer method argument\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"     [Package Element List]"
+block|,
+literal|"Package method argument\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Go"
+block|,
+literal|"Allow method to run to completion\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Information"
+block|,
+literal|"Display info about the current method\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Into"
+block|,
+literal|"Step into (not over) a method call\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  List [# of Aml Opcodes]"
+block|,
+literal|"Display method ASL statements\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Locals"
+block|,
+literal|"Display method local variables\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Results"
+block|,
+literal|"Display method result stack\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Set<A|L><#><Value>"
+block|,
+literal|"Set method data (Arguments/Locals)\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Stop"
+block|,
+literal|"Terminate control method\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Thread<Threads><Loops><NamePath>"
+block|,
+literal|"Spawn threads to execute method(s)\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Trace<method name>"
+block|,
+literal|"Trace method execution\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Tree"
+block|,
+literal|"Display control method calling tree\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"<Enter>"
+block|,
+literal|"Single step next AML opcode (over calls)\n"
+block|}
+block|,
+block|{
+literal|0
+block|,
+literal|"\nFile I/O Commands:"
+block|,
+literal|"\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Close"
+block|,
+literal|"Close debug output file\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Load<Input Filename>"
+block|,
+literal|"Load ACPI table from a file\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Open<Output Filename>"
+block|,
+literal|"Open a file for debug output\n"
+block|}
+block|,
+block|{
+literal|0
+block|,
+name|NULL
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbMatchCommandHelp  *  * PARAMETERS:  Command             - Command string to match  *              Help                - Help table entry to attempt match  *  * RETURN:      TRUE if command matched, FALSE otherwise  *  * DESCRIPTION: Attempt to match a command in the help table in order to  *              print help information for a single command.  *  ******************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|BOOLEAN
+name|AcpiDbMatchCommandHelp
+parameter_list|(
+name|char
+modifier|*
+name|Command
+parameter_list|,
+specifier|const
+name|ACPI_DB_COMMAND_HELP
+modifier|*
+name|Help
+parameter_list|)
+block|{
+name|char
+modifier|*
+name|Invocation
+init|=
+name|Help
+operator|->
+name|Invocation
+decl_stmt|;
+name|UINT32
+name|LineCount
+decl_stmt|;
+comment|/* Valid commands in the help table begin with a couple of spaces */
+if|if
+condition|(
+operator|*
+name|Invocation
+operator|!=
+literal|' '
+condition|)
+block|{
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
+block|}
+while|while
+condition|(
+operator|*
+name|Invocation
+operator|==
+literal|' '
+condition|)
+block|{
+name|Invocation
+operator|++
+expr_stmt|;
+block|}
+comment|/* Match command name (full command or substring) */
+while|while
+condition|(
+operator|(
+operator|*
+name|Command
+operator|)
+operator|&&
+operator|(
+operator|*
+name|Invocation
+operator|)
+operator|&&
+operator|(
+operator|*
+name|Invocation
+operator|!=
+literal|' '
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+name|ACPI_TOLOWER
+argument_list|(
+operator|*
+name|Command
+argument_list|)
+operator|!=
+name|ACPI_TOLOWER
+argument_list|(
+operator|*
+name|Invocation
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
+block|}
+name|Invocation
+operator|++
+expr_stmt|;
+name|Command
+operator|++
+expr_stmt|;
+block|}
+comment|/* Print the appropriate number of help lines */
+name|LineCount
+operator|=
+name|Help
+operator|->
+name|LineCount
+expr_stmt|;
+while|while
+condition|(
+name|LineCount
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"%-38s : %s"
+argument_list|,
+name|Help
+operator|->
+name|Invocation
+argument_list|,
+name|Help
+operator|->
+name|Description
+argument_list|)
+expr_stmt|;
+name|Help
+operator|++
+expr_stmt|;
+name|LineCount
+operator|--
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|TRUE
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbDisplayCommandInfo  *  * PARAMETERS:  Command             - Command string to match  *              DisplayAll          - Display all matching commands, or just  *                                    the first one (substring match)  *  * RETURN:      None  *  * DESCRIPTION: Display help information for a Debugger command.  *  ******************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|AcpiDbDisplayCommandInfo
+parameter_list|(
+name|char
+modifier|*
+name|Command
+parameter_list|,
+name|BOOLEAN
+name|DisplayAll
+parameter_list|)
+block|{
+specifier|const
+name|ACPI_DB_COMMAND_HELP
+modifier|*
+name|Next
+decl_stmt|;
+name|BOOLEAN
+name|Matched
+decl_stmt|;
+name|Next
+operator|=
+name|AcpiGbl_DbCommandHelp
+expr_stmt|;
+while|while
+condition|(
+name|Next
+operator|->
+name|Invocation
+condition|)
+block|{
+name|Matched
+operator|=
+name|AcpiDbMatchCommandHelp
+argument_list|(
+name|Command
+argument_list|,
+name|Next
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|DisplayAll
+operator|&&
+name|Matched
+condition|)
+block|{
+return|return;
+block|}
+name|Next
+operator|++
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbDisplayHelp  *  * PARAMETERS:  Command             - Optional command string to display help.  *                                    if not specified, all debugger command  *                                    help strings are displayed  *  * RETURN:      None  *  * DESCRIPTION: Display help for a single debugger command, or all of them.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -623,379 +1488,66 @@ specifier|static
 name|void
 name|AcpiDbDisplayHelp
 parameter_list|(
-name|void
+name|char
+modifier|*
+name|Command
 parameter_list|)
+block|{
+specifier|const
+name|ACPI_DB_COMMAND_HELP
+modifier|*
+name|Next
+init|=
+name|AcpiGbl_DbCommandHelp
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|Command
+condition|)
+block|{
+comment|/* No argument to help, display help for all commands */
+while|while
+condition|(
+name|Next
+operator|->
+name|Invocation
+condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"\nGeneral-Purpose Commands:\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  Allocations                         Display list of current memory allocations\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  Dump<Address>|<Namepath>\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"       [Byte|Word|Dword|Qword]        Display ACPI objects or memory\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  EnableAcpi                          Enable ACPI (hardware) mode\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  Handlers                            Info about global handlers\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  Help                                This help screen\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  History                             Display command history buffer\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  Level [<DebugLevel>] [console]      Get/Set debug level for file or console\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  Locks                               Current status of internal mutexes\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  Osi [Install|Remove<name>]         Display or modify global _OSI list\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  Quit or Exit                        Exit this command\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  Stats [Allocations|Memory|Misc|\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"        Objects|Sizes|Stack|Tables]   Display namespace and memory statistics\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"     Allocations                      Display list of current memory allocations\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"     Memory                           Dump internal memory lists\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"     Misc                             Namespace search and mutex stats\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"     Objects                          Summary of namespace objects\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"     Sizes                            Sizes for each of the internal objects\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"     Stack                            Display CPU stack usage\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"     Tables                           Info about current ACPI table(s)\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  Tables                              Display info about loaded ACPI tables\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  Unload<TableSig> [Instance]        Unload an ACPI table\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  !<CommandNumber>                   Execute command from history buffer\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  !!                                  Execute last command again\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"\nNamespace Access Commands:\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  Businfo                             Display system bus info\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  Disassemble<Method>                Disassemble a control method\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  Event<F|G><Value>                 Generate AcpiEvent (Fixed/GPE)\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  Find<AcpiName>  (? is wildcard)    Find ACPI name(s) with wildcards\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  Gpe<GpeNum><GpeBlock>             Simulate a GPE\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  Gpes                                Display info on all GPEs\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  Integrity                           Validate namespace integrity\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  Methods                             Display list of loaded control methods\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  Namespace [Object] [Depth]          Display loaded namespace tree/subtree\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  Notify<Object><Value>             Send a notification on Object\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  Objects<ObjectType>                Display all objects of the given type\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  Owner<OwnerId> [Depth]             Display loaded namespace by object owner\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  Predefined                          Check all predefined names\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  Prefix [<NamePath>]                 Set or Get current execution prefix\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  References<Addr>                   Find all references to object at addr\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  Resources<DeviceName | *>          Display Device resources (* = all devices)\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  Set N<NamedObject><Value>         Set value for named integer\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  Sleep<SleepState>                  Simulate sleep/wake sequence\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  Template<Object>                   Format/dump a Buffer/ResourceTemplate\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  Terminate                           Delete namespace and all internal objects\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  Type<Object>                       Display object type\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"\nControl Method Execution Commands:\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  Arguments (or Args)                 Display method arguments\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  Breakpoint<AmlOffset>              Set an AML execution breakpoint\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  Call                                Run to next control method invocation\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  Debug<Namepath> [Arguments]        Single Step a control method\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  Execute<Namepath> [Arguments]      Execute control method\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"     Hex Integer                      Integer method argument\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"     \"Ascii String\"                   String method argument\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"     (Byte List)                      Buffer method argument\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"     [Package Element List]           Package method argument\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  Go                                  Allow method to run to completion\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  Information                         Display info about the current method\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  Into                                Step into (not over) a method call\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  List [# of Aml Opcodes]             Display method ASL statements\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  Locals                              Display method local variables\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  Results                             Display method result stack\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  Set<A|L><#><Value>               Set method data (Arguments/Locals)\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  Stop                                Terminate control method\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  Thread<Threads><Loops><NamePath>   Spawn threads to execute method(s)\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  Trace<method name>                 Trace method execution\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  Tree                                Display control method calling tree\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"<Enter>                             Single step next AML opcode (over calls)\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"\nFile I/O Commands:\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  Close                               Close debug output file\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  Load<Input Filename>               Load ACPI table from a file\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  Open<Output Filename>              Open a file for debug output\n"
-argument_list|)
-expr_stmt|;
+literal|"%-38s%s"
+argument_list|,
+name|Next
+operator|->
+name|Invocation
+argument_list|,
+name|Next
+operator|->
+name|Description
+argument_list|)
+expr_stmt|;
+name|Next
+operator|++
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+comment|/* Display help for all commands that match the subtring */
+name|AcpiDbDisplayCommandInfo
+argument_list|(
+name|Command
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbGetNextToken  *  * PARAMETERS:  String          - Command buffer  *              Next            - Return value, end of next token  *  * RETURN:      Pointer to the start of the next token.  *  * DESCRIPTION: Command line parsing.  Get the next token on the command line  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbGetNextToken  *  * PARAMETERS:  String          - Command buffer  *              Next            - Return value, end of next token  *  * RETURN:      Pointer to the start of the next token.  *  * DESCRIPTION: Command line parsing. Get the next token on the command line  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1343,7 +1895,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbGetLine  *  * PARAMETERS:  InputBuffer         - Command line buffer  *  * RETURN:      Count of arguments to the command  *  * DESCRIPTION: Get the next command line from the user.  Gets entire line  *              up to the next newline  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbGetLine  *  * PARAMETERS:  InputBuffer         - Command line buffer  *  * RETURN:      Count of arguments to the command  *  * DESCRIPTION: Get the next command line from the user. Gets entire line  *              up to the next newline  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1667,6 +2219,18 @@ operator|.
 name|MinArgs
 argument_list|)
 expr_stmt|;
+name|AcpiDbDisplayCommandInfo
+argument_list|(
+name|AcpiGbl_DbCommands
+index|[
+name|CommandIndex
+index|]
+operator|.
+name|Name
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|AE_CTRL_TRUE
@@ -1886,6 +2450,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|CMD_EVALUATE
+case|:
+case|case
 name|CMD_EXECUTE
 case|:
 name|AcpiDbExecute
@@ -1975,7 +2542,12 @@ case|case
 name|CMD_HELP2
 case|:
 name|AcpiDbDisplayHelp
-argument_list|()
+argument_list|(
+name|AcpiGbl_DbArgs
+index|[
+literal|1
+index|]
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -2586,11 +3158,6 @@ name|AcpiGbl_DbArgs
 index|[
 literal|1
 index|]
-argument_list|,
-name|AcpiGbl_DbArgs
-index|[
-literal|2
-index|]
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2682,7 +3249,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbExecuteThread  *  * PARAMETERS:  Context         - Not used  *  * RETURN:      None  *  * DESCRIPTION: Debugger execute thread.  Waits for a command line, then  *              simply dispatches it.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbExecuteThread  *  * PARAMETERS:  Context         - Not used  *  * RETURN:      None  *  * DESCRIPTION: Debugger execute thread. Waits for a command line, then  *              simply dispatches it.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -2768,7 +3335,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbSingleThread  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Debugger execute thread.  Waits for a command line, then  *              simply dispatches it.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbSingleThread  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Debugger execute thread. Waits for a command line, then  *              simply dispatches it.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -2803,7 +3370,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbUserCommands  *  * PARAMETERS:  Prompt              - User prompt (depends on mode)  *              Op                  - Current executing parse op  *  * RETURN:      None  *  * DESCRIPTION: Command line execution for the AML debugger.  Commands are  *              matched and dispatched here.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbUserCommands  *  * PARAMETERS:  Prompt              - User prompt (depends on mode)  *              Op                  - Current executing parse op  *  * RETURN:      None  *  * DESCRIPTION: Command line execution for the AML debugger. Commands are  *              matched and dispatched here.  *  ******************************************************************************/
 end_comment
 
 begin_function

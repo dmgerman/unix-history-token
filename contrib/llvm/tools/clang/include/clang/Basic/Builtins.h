@@ -32,19 +32,23 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
-comment|// This file defines enum values for all the target-independent builtin
+comment|/// \file
 end_comment
 
 begin_comment
-comment|// functions.
+comment|/// \brief Defines enum values for all the target-independent builtin
 end_comment
 
 begin_comment
-comment|//
+comment|/// functions.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -252,7 +256,7 @@ return|;
 block|}
 block|}
 struct|;
-comment|/// Builtin::Context - This holds information about target-independent and
+comment|/// \brief Holds information about both target-independent and
 comment|/// target-specific builtins, allowing easy queries by clients.
 name|class
 name|Context
@@ -280,7 +284,7 @@ modifier|&
 name|Target
 parameter_list|)
 function_decl|;
-comment|/// InitializeBuiltins - Mark the identifiers for all the builtins with their
+comment|/// \brief Mark the identifiers for all the builtins with their
 comment|/// appropriate builtin ID # and mark any non-portable builtin identifiers as
 comment|/// such.
 name|void
@@ -313,7 +317,7 @@ name|bool
 name|NoBuiltins
 argument_list|)
 decl_stmt|;
-comment|/// Builtin::GetName - Return the identifier name for the specified builtin,
+comment|/// \brief Return the identifier name for the specified builtin,
 comment|/// e.g. "__builtin_abs".
 specifier|const
 name|char
@@ -334,7 +338,7 @@ operator|.
 name|Name
 return|;
 block|}
-comment|/// GetTypeString - Get the type descriptor string for the specified builtin.
+comment|/// \brief Get the type descriptor string for the specified builtin.
 specifier|const
 name|char
 modifier|*
@@ -354,7 +358,7 @@ operator|.
 name|Type
 return|;
 block|}
-comment|/// isConst - Return true if this function has no side effects and doesn't
+comment|/// \brief Return true if this function has no side effects and doesn't
 comment|/// read memory.
 name|bool
 name|isConst
@@ -380,7 +384,7 @@ operator|!=
 literal|0
 return|;
 block|}
-comment|/// isNoThrow - Return true if we know this builtin never throws an exception.
+comment|/// \brief Return true if we know this builtin never throws an exception.
 name|bool
 name|isNoThrow
 argument_list|(
@@ -405,7 +409,7 @@ operator|!=
 literal|0
 return|;
 block|}
-comment|/// isNoReturn - Return true if we know this builtin never returns.
+comment|/// \brief Return true if we know this builtin never returns.
 name|bool
 name|isNoReturn
 argument_list|(
@@ -430,7 +434,7 @@ operator|!=
 literal|0
 return|;
 block|}
-comment|/// isReturnsTwice - Return true if we know this builtin can return twice.
+comment|/// \brief Return true if we know this builtin can return twice.
 name|bool
 name|isReturnsTwice
 argument_list|(
@@ -455,7 +459,7 @@ operator|!=
 literal|0
 return|;
 block|}
-comment|/// isLibFunction - Return true if this is a builtin for a libc/libm function,
+comment|/// \brief Return true if this is a builtin for a libc/libm function,
 comment|/// with a "__builtin_" prefix (e.g. __builtin_abs).
 name|bool
 name|isLibFunction
@@ -603,10 +607,10 @@ modifier|&
 name|HasVAListArg
 parameter_list|)
 function_decl|;
-comment|/// isConstWithoutErrno - Return true if this function has no side
-comment|/// effects and doesn't read memory, except for possibly errno. Such
-comment|/// functions can be const when the MathErrno lang option is
-comment|/// disabled.
+comment|/// \brief Return true if this function has no side effects and doesn't
+comment|/// read memory, except for possibly errno.
+comment|///
+comment|/// Such functions can be const when the MathErrno lang option is disabled.
 name|bool
 name|isConstWithoutErrno
 argument_list|(

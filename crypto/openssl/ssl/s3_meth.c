@@ -27,6 +27,7 @@ end_include
 
 begin_function_decl
 specifier|static
+specifier|const
 name|SSL_METHOD
 modifier|*
 name|ssl3_get_method
@@ -39,6 +40,7 @@ end_function_decl
 
 begin_function
 specifier|static
+specifier|const
 name|SSL_METHOD
 modifier|*
 name|ssl3_get_method

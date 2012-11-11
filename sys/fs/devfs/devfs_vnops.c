@@ -5527,6 +5527,16 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+comment|/* cleanup any cdevpriv upon error */
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+name|devfs_clear_cdevpriv
+argument_list|()
+expr_stmt|;
 name|td
 operator|->
 name|td_fpop

@@ -129,12 +129,6 @@ directive|include
 file|<cam/scsi/scsi_enc_internal.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<opt_enc.h>
-end_include
-
 begin_comment
 comment|/* SES Native Type Device Support */
 end_comment
@@ -2832,6 +2826,11 @@ name|ses_path_iter_args_t
 modifier|*
 name|args
 decl_stmt|;
+name|struct
+name|cam_sim
+modifier|*
+name|sim
+decl_stmt|;
 name|args
 operator|=
 operator|(
@@ -2917,7 +2916,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|xpt_create_path
+name|xpt_create_path_unlocked
 argument_list|(
 operator|&
 name|cdm
@@ -2985,6 +2984,22 @@ operator|=
 operator|&
 name|match_result
 expr_stmt|;
+name|sim
+operator|=
+name|xpt_path_sim
+argument_list|(
+name|cdm
+operator|.
+name|ccb_h
+operator|.
+name|path
+argument_list|)
+expr_stmt|;
+name|CAM_SIM_LOCK
+argument_list|(
+name|sim
+argument_list|)
+expr_stmt|;
 name|xpt_action
 argument_list|(
 operator|(
@@ -3003,6 +3018,11 @@ operator|.
 name|ccb_h
 operator|.
 name|path
+argument_list|)
+expr_stmt|;
+name|CAM_SIM_UNLOCK
+argument_list|(
+name|sim
 argument_list|)
 expr_stmt|;
 if|if
@@ -3051,7 +3071,7 @@ name|device_result
 expr_stmt|;
 if|if
 condition|(
-name|xpt_create_path
+name|xpt_create_path_unlocked
 argument_list|(
 operator|&
 name|cdm
@@ -3098,6 +3118,22 @@ operator|->
 name|callback_arg
 argument_list|)
 expr_stmt|;
+name|sim
+operator|=
+name|xpt_path_sim
+argument_list|(
+name|cdm
+operator|.
+name|ccb_h
+operator|.
+name|path
+argument_list|)
+expr_stmt|;
+name|CAM_SIM_LOCK
+argument_list|(
+name|sim
+argument_list|)
+expr_stmt|;
 name|xpt_free_path
 argument_list|(
 name|cdm
@@ -3105,6 +3141,11 @@ operator|.
 name|ccb_h
 operator|.
 name|path
+argument_list|)
+expr_stmt|;
+name|CAM_SIM_UNLOCK
+argument_list|(
+name|sim
 argument_list|)
 expr_stmt|;
 block|}
@@ -3297,6 +3338,13 @@ argument_list|,
 name|M_WAITOK
 operator||
 name|M_ZERO
+argument_list|)
+expr_stmt|;
+name|cam_periph_lock
+argument_list|(
+name|enc
+operator|->
+name|periph
 argument_list|)
 expr_stmt|;
 name|xpt_setup_ccb
@@ -3514,6 +3562,13 @@ name|num_set
 operator|++
 expr_stmt|;
 block|}
+name|cam_periph_unlock
+argument_list|(
+name|enc
+operator|->
+name|periph
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|old_physpath
@@ -3645,6 +3700,13 @@ goto|goto
 name|out
 goto|;
 block|}
+name|cam_periph_lock
+argument_list|(
+name|enc
+operator|->
+name|periph
+argument_list|)
+expr_stmt|;
 name|xpt_action
 argument_list|(
 operator|(
@@ -3685,6 +3747,13 @@ argument_list|,
 literal|0
 argument_list|,
 name|FALSE
+argument_list|)
+expr_stmt|;
+name|cam_periph_unlock
+argument_list|(
+name|enc
+operator|->
+name|periph
 argument_list|)
 expr_stmt|;
 if|if
@@ -4153,7 +4222,7 @@ operator|!=
 name|CAM_REQ_CMP
 condition|)
 block|{
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -4281,7 +4350,7 @@ operator|!=
 name|CAM_REQ_CMP
 condition|)
 block|{
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -4473,7 +4542,7 @@ name|page
 argument_list|)
 condition|)
 block|{
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -4522,7 +4591,7 @@ operator|>
 name|xfer_len
 condition|)
 block|{
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -4787,7 +4856,6 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-empty_stmt|;
 if|if
 condition|(
 name|error
@@ -4815,7 +4883,7 @@ name|hdr
 argument_list|)
 condition|)
 block|{
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -4856,7 +4924,7 @@ operator|>
 name|xfer_len
 condition|)
 block|{
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -5038,7 +5106,7 @@ name|last_valid_byte
 argument_list|)
 condition|)
 block|{
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -5233,7 +5301,7 @@ operator|>
 name|last_valid_byte
 condition|)
 block|{
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -5270,7 +5338,7 @@ name|cur_buf_type
 operator|->
 name|etype_txt_len
 expr_stmt|;
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -5544,9 +5612,11 @@ if|if
 condition|(
 name|err
 condition|)
-name|ses_softc_cleanup
+name|ses_cache_free
 argument_list|(
 name|enc
+argument_list|,
+name|enc_cache
 argument_list|)
 expr_stmt|;
 else|else
@@ -5771,7 +5841,7 @@ operator|>
 name|xfer_len
 condition|)
 block|{
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -5804,7 +5874,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -6020,7 +6090,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -6037,7 +6107,7 @@ name|cur_stat
 operator|<=
 name|last_stat
 condition|)
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -6423,7 +6493,7 @@ name|ses_elm_addlstatus_base_hdr
 argument_list|)
 condition|)
 block|{
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -6441,7 +6511,7 @@ operator|>
 name|xfer_len
 condition|)
 block|{
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -6680,7 +6750,7 @@ operator|==
 name|TYPE_ADDLSTATUS_MANDATORY
 condition|)
 block|{
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -6781,7 +6851,7 @@ operator|>
 name|length
 condition|)
 block|{
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -6914,7 +6984,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -7418,7 +7488,7 @@ name|ses_page_hdr
 argument_list|)
 condition|)
 block|{
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -7436,7 +7506,7 @@ operator|>
 name|xfer_len
 condition|)
 block|{
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -7532,7 +7602,7 @@ operator|>
 name|plength
 condition|)
 block|{
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -7612,7 +7682,7 @@ operator|>
 name|plength
 condition|)
 block|{
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -8471,7 +8541,7 @@ name|int
 name|bufsiz
 parameter_list|)
 block|{
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -9646,7 +9716,7 @@ literal|4
 operator|)
 condition|)
 block|{
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -9874,7 +9944,7 @@ name|offset
 operator|)
 condition|)
 block|{
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -9951,7 +10021,7 @@ literal|4
 operator|)
 condition|)
 block|{
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -10117,7 +10187,7 @@ name|ELMTYP_ARRAY_DEV
 case|:
 break|break;
 default|default:
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -10195,7 +10265,7 @@ name|ELMTYP_ESCC
 case|:
 break|break;
 default|default:
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,
@@ -10243,7 +10313,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|ENC_LOG
+name|ENC_VLOG
 argument_list|(
 name|enc
 argument_list|,

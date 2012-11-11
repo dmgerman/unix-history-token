@@ -299,6 +299,12 @@ comment|/// TargetTriple - What processor and OS we're targeting.
 name|Triple
 name|TargetTriple
 block|;
+comment|/// SchedModel - Processor specific instruction costs.
+specifier|const
+name|MCSchedModel
+operator|*
+name|SchedModel
+block|;
 comment|/// Selected instruction itineraries (one entry per itinerary class.)
 name|InstrItineraryData
 name|InstrItins

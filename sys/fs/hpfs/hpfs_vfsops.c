@@ -2297,8 +2297,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"hpfs_vget: can't read ino %d\n"
+literal|"hpfs_vget: can't read ino %ju\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ino
 argument_list|)
 expr_stmt|;

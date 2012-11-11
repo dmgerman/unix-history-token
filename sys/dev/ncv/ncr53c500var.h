@@ -40,28 +40,6 @@ name|scsi_low_softc
 name|sc_sclow
 decl_stmt|;
 comment|/* generic data */
-ifdef|#
-directive|ifdef
-name|__NetBSD__
-name|bus_space_tag_t
-name|sc_iot
-decl_stmt|;
-name|bus_space_tag_t
-name|sc_memt
-decl_stmt|;
-name|bus_space_handle_t
-name|sc_ioh
-decl_stmt|;
-name|void
-modifier|*
-name|sc_ih
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* __NetBSD__ */
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 name|bus_space_tag_t
 name|sc_iot
 decl_stmt|;
@@ -107,9 +85,6 @@ name|void
 modifier|*
 name|ncv_intrhand
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* __FreeBSD__ */
 name|int
 name|sc_tmaxcnt
 decl_stmt|;
@@ -199,20 +174,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ncvprint
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|ncvintr
 parameter_list|(
 name|void
@@ -220,54 +181,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
-operator|&&
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|SOFT_INTR_REQUIRED
-parameter_list|(
-name|slp
-parameter_list|)
-value|(softintr((slp)->sl_irq))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !__i386__ */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SOFT_INTR_REQUIRED
-parameter_list|(
-name|slp
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !__i386__ */
-end_comment
 
 begin_endif
 endif|#

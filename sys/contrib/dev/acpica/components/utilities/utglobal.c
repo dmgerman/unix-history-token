@@ -636,7 +636,7 @@ comment|/* !ACPI_REDUCED_HARDWARE */
 end_comment
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtInitGlobals  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Init ACPICA globals.  All globals that require specific  *              initialization should be initialized here!  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtInitGlobals  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Initialize ACPICA globals. All globals that require specific  *              initialization should be initialized here. This allows for  *              a warm restart.  *  ******************************************************************************/
 end_comment
 
 begin_function

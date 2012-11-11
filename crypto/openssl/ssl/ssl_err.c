@@ -240,6 +240,15 @@ block|,
 block|{
 name|ERR_FUNC
 argument_list|(
+name|SSL_F_DTLS1_HEARTBEAT
+argument_list|)
+block|,
+literal|"DTLS1_HEARTBEAT"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
 name|SSL_F_DTLS1_OUTPUT_CERT_CHAIN
 argument_list|)
 block|,
@@ -726,6 +735,15 @@ block|,
 block|{
 name|ERR_FUNC
 argument_list|(
+name|SSL_F_SSL3_DIGEST_CACHED_RECORDS
+argument_list|)
+block|,
+literal|"SSL3_DIGEST_CACHED_RECORDS"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
 name|SSL_F_SSL3_DO_CHANGE_CIPHER_SPEC
 argument_list|)
 block|,
@@ -843,6 +861,15 @@ block|,
 block|{
 name|ERR_FUNC
 argument_list|(
+name|SSL_F_SSL3_GET_NEXT_PROTO
+argument_list|)
+block|,
+literal|"SSL3_GET_NEXT_PROTO"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
 name|SSL_F_SSL3_GET_RECORD
 argument_list|)
 block|,
@@ -874,6 +901,15 @@ name|SSL_F_SSL3_GET_SERVER_HELLO
 argument_list|)
 block|,
 literal|"SSL3_GET_SERVER_HELLO"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|SSL_F_SSL3_HANDSHAKE_MAC
+argument_list|)
+block|,
+literal|"ssl3_handshake_mac"
 block|}
 block|,
 block|{
@@ -987,19 +1023,28 @@ block|,
 block|{
 name|ERR_FUNC
 argument_list|(
-name|SSL_F_SSL3_SETUP_BUFFERS
+name|SSL_F_SSL3_SETUP_KEY_BLOCK
 argument_list|)
 block|,
-literal|"SSL3_SETUP_BUFFERS"
+literal|"SSL3_SETUP_KEY_BLOCK"
 block|}
 block|,
 block|{
 name|ERR_FUNC
 argument_list|(
-name|SSL_F_SSL3_SETUP_KEY_BLOCK
+name|SSL_F_SSL3_SETUP_READ_BUFFER
 argument_list|)
 block|,
-literal|"SSL3_SETUP_KEY_BLOCK"
+literal|"SSL3_SETUP_READ_BUFFER"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|SSL_F_SSL3_SETUP_WRITE_BUFFER
+argument_list|)
+block|,
+literal|"SSL3_SETUP_WRITE_BUFFER"
 block|}
 block|,
 block|{
@@ -1041,6 +1086,15 @@ block|,
 block|{
 name|ERR_FUNC
 argument_list|(
+name|SSL_F_SSL_ADD_CLIENTHELLO_USE_SRTP_EXT
+argument_list|)
+block|,
+literal|"SSL_ADD_CLIENTHELLO_USE_SRTP_EXT"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
 name|SSL_F_SSL_ADD_DIR_CERT_SUBJECTS_TO_STACK
 argument_list|)
 block|,
@@ -1072,6 +1126,15 @@ name|SSL_F_SSL_ADD_SERVERHELLO_TLSEXT
 argument_list|)
 block|,
 literal|"SSL_ADD_SERVERHELLO_TLSEXT"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|SSL_F_SSL_ADD_SERVERHELLO_USE_SRTP_EXT
+argument_list|)
+block|,
+literal|"SSL_ADD_SERVERHELLO_USE_SRTP_EXT"
 block|}
 block|,
 block|{
@@ -1149,6 +1212,15 @@ block|,
 block|{
 name|ERR_FUNC
 argument_list|(
+name|SSL_F_SSL_CHECK_SRVR_ECC_CERT_AND_ALG
+argument_list|)
+block|,
+literal|"SSL_CHECK_SRVR_ECC_CERT_AND_ALG"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
 name|SSL_F_SSL_CIPHER_PROCESS_RULESTR
 argument_list|)
 block|,
@@ -1207,6 +1279,15 @@ name|SSL_F_SSL_CTX_CHECK_PRIVATE_KEY
 argument_list|)
 block|,
 literal|"SSL_CTX_check_private_key"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|SSL_F_SSL_CTX_MAKE_PROFILES
+argument_list|)
+block|,
+literal|"SSL_CTX_MAKE_PROFILES"
 block|}
 block|,
 block|{
@@ -1338,6 +1419,15 @@ block|,
 block|{
 name|ERR_FUNC
 argument_list|(
+name|SSL_F_SSL_CTX_USE_PSK_IDENTITY_HINT
+argument_list|)
+block|,
+literal|"SSL_CTX_use_psk_identity_hint"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
 name|SSL_F_SSL_CTX_USE_RSAPRIVATEKEY
 argument_list|)
 block|,
@@ -1455,6 +1545,15 @@ block|,
 block|{
 name|ERR_FUNC
 argument_list|(
+name|SSL_F_SSL_PARSE_CLIENTHELLO_USE_SRTP_EXT
+argument_list|)
+block|,
+literal|"SSL_PARSE_CLIENTHELLO_USE_SRTP_EXT"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
 name|SSL_F_SSL_PARSE_SERVERHELLO_RENEGOTIATE_EXT
 argument_list|)
 block|,
@@ -1468,6 +1567,15 @@ name|SSL_F_SSL_PARSE_SERVERHELLO_TLSEXT
 argument_list|)
 block|,
 literal|"SSL_PARSE_SERVERHELLO_TLSEXT"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|SSL_F_SSL_PARSE_SERVERHELLO_USE_SRTP_EXT
+argument_list|)
+block|,
+literal|"SSL_PARSE_SERVERHELLO_USE_SRTP_EXT"
 block|}
 block|,
 block|{
@@ -1540,6 +1648,15 @@ name|SSL_F_SSL_SESSION_PRINT_FP
 argument_list|)
 block|,
 literal|"SSL_SESSION_print_fp"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|SSL_F_SSL_SESSION_SET1_ID_CONTEXT
+argument_list|)
+block|,
+literal|"SSL_SESSION_set1_id_context"
 block|}
 block|,
 block|{
@@ -1626,6 +1743,15 @@ block|,
 block|{
 name|ERR_FUNC
 argument_list|(
+name|SSL_F_SSL_SET_SESSION_TICKET_EXT
+argument_list|)
+block|,
+literal|"SSL_set_session_ticket_ext"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
 name|SSL_F_SSL_SET_TRUST
 argument_list|)
 block|,
@@ -1648,6 +1774,15 @@ name|SSL_F_SSL_SHUTDOWN
 argument_list|)
 block|,
 literal|"SSL_shutdown"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|SSL_F_SSL_SRP_CTX_INIT
+argument_list|)
+block|,
+literal|"SSL_SRP_CTX_init"
 block|}
 block|,
 block|{
@@ -1734,6 +1869,15 @@ block|,
 block|{
 name|ERR_FUNC
 argument_list|(
+name|SSL_F_SSL_USE_PSK_IDENTITY_HINT
+argument_list|)
+block|,
+literal|"SSL_use_psk_identity_hint"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
 name|SSL_F_SSL_USE_RSAPRIVATEKEY
 argument_list|)
 block|,
@@ -1779,6 +1923,15 @@ block|,
 block|{
 name|ERR_FUNC
 argument_list|(
+name|SSL_F_TLS1_CERT_VERIFY_MAC
+argument_list|)
+block|,
+literal|"tls1_cert_verify_mac"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
 name|SSL_F_TLS1_CHANGE_CIPHER_STATE
 argument_list|)
 block|,
@@ -1788,10 +1941,64 @@ block|,
 block|{
 name|ERR_FUNC
 argument_list|(
+name|SSL_F_TLS1_CHECK_SERVERHELLO_TLSEXT
+argument_list|)
+block|,
+literal|"TLS1_CHECK_SERVERHELLO_TLSEXT"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
 name|SSL_F_TLS1_ENC
 argument_list|)
 block|,
 literal|"TLS1_ENC"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|SSL_F_TLS1_EXPORT_KEYING_MATERIAL
+argument_list|)
+block|,
+literal|"TLS1_EXPORT_KEYING_MATERIAL"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|SSL_F_TLS1_HEARTBEAT
+argument_list|)
+block|,
+literal|"SSL_F_TLS1_HEARTBEAT"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|SSL_F_TLS1_PREPARE_CLIENTHELLO_TLSEXT
+argument_list|)
+block|,
+literal|"TLS1_PREPARE_CLIENTHELLO_TLSEXT"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|SSL_F_TLS1_PREPARE_SERVERHELLO_TLSEXT
+argument_list|)
+block|,
+literal|"TLS1_PREPARE_SERVERHELLO_TLSEXT"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|SSL_F_TLS1_PRF
+argument_list|)
+block|,
+literal|"tls1_prf"
 block|}
 block|,
 block|{
@@ -1975,6 +2182,15 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|SSL_R_BAD_HANDSHAKE_LENGTH
+argument_list|)
+block|,
+literal|"bad handshake length"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|SSL_R_BAD_HELLO_REQUEST
 argument_list|)
 block|,
@@ -2002,6 +2218,15 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|SSL_R_BAD_MAC_LENGTH
+argument_list|)
+block|,
+literal|"bad mac length"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|SSL_R_BAD_MESSAGE_TYPE
 argument_list|)
 block|,
@@ -2024,6 +2249,15 @@ name|SSL_R_BAD_PROTOCOL_VERSION_NUMBER
 argument_list|)
 block|,
 literal|"bad protocol version number"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_BAD_PSK_IDENTITY_HINT_LENGTH
+argument_list|)
+block|,
+literal|"bad psk identity hint length"
 block|}
 block|,
 block|{
@@ -2087,6 +2321,69 @@ name|SSL_R_BAD_SIGNATURE
 argument_list|)
 block|,
 literal|"bad signature"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_BAD_SRP_A_LENGTH
+argument_list|)
+block|,
+literal|"bad srp a length"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_BAD_SRP_B_LENGTH
+argument_list|)
+block|,
+literal|"bad srp b length"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_BAD_SRP_G_LENGTH
+argument_list|)
+block|,
+literal|"bad srp g length"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_BAD_SRP_N_LENGTH
+argument_list|)
+block|,
+literal|"bad srp n length"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_BAD_SRP_S_LENGTH
+argument_list|)
+block|,
+literal|"bad srp s length"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_BAD_SRTP_MKI_VALUE
+argument_list|)
+block|,
+literal|"bad srtp mki value"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_BAD_SRTP_PROTECTION_PROFILE_LIST
+argument_list|)
+block|,
+literal|"bad srtp protection profile list"
 block|}
 block|,
 block|{
@@ -2254,6 +2551,15 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|SSL_R_COMPRESSION_DISABLED
+argument_list|)
+block|,
+literal|"compression disabled"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|SSL_R_COMPRESSION_FAILURE
 argument_list|)
 block|,
@@ -2380,10 +2686,55 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|SSL_R_ECC_CERT_NOT_FOR_KEY_AGREEMENT
+argument_list|)
+block|,
+literal|"ecc cert not for key agreement"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_ECC_CERT_NOT_FOR_SIGNING
+argument_list|)
+block|,
+literal|"ecc cert not for signing"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_ECC_CERT_SHOULD_HAVE_RSA_SIGNATURE
+argument_list|)
+block|,
+literal|"ecc cert should have rsa signature"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_ECC_CERT_SHOULD_HAVE_SHA1_SIGNATURE
+argument_list|)
+block|,
+literal|"ecc cert should have sha1 signature"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|SSL_R_ECGROUP_TOO_LARGE_FOR_CIPHER
 argument_list|)
 block|,
 literal|"ecgroup too large for cipher"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_EMPTY_SRTP_PROTECTION_PROFILE_LIST
+argument_list|)
+block|,
+literal|"empty srtp protection profile list"
 block|}
 block|,
 block|{
@@ -2443,6 +2794,24 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|SSL_R_GOT_NEXT_PROTO_BEFORE_A_CCS
+argument_list|)
+block|,
+literal|"got next proto before a ccs"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_GOT_NEXT_PROTO_WITHOUT_EXTENSION
+argument_list|)
+block|,
+literal|"got next proto without seeing extension"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|SSL_R_HTTPS_PROXY_REQUEST
 argument_list|)
 block|,
@@ -2470,6 +2839,15 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|SSL_R_INCONSISTENT_COMPRESSION
+argument_list|)
+block|,
+literal|"inconsistent compression"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|SSL_R_INVALID_CHALLENGE_LENGTH
 argument_list|)
 block|,
@@ -2488,10 +2866,28 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|SSL_R_INVALID_COMPRESSION_ALGORITHM
+argument_list|)
+block|,
+literal|"invalid compression algorithm"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|SSL_R_INVALID_PURPOSE
 argument_list|)
 block|,
 literal|"invalid purpose"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_INVALID_SRP_USERNAME
+argument_list|)
+block|,
+literal|"invalid srp username"
 block|}
 block|,
 block|{
@@ -2758,6 +3154,15 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|SSL_R_MISSING_SRP_PARAM
+argument_list|)
+block|,
+literal|"can't find SRP server param"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|SSL_R_MISSING_TMP_DH_KEY
 argument_list|)
 block|,
@@ -2938,6 +3343,15 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|SSL_R_NO_GOST_CERTIFICATE_SENT_BY_PEER
+argument_list|)
+block|,
+literal|"Peer haven't sent GOST certificate, required for selected ciphersuite"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|SSL_R_NO_METHOD_SPECIFIED
 argument_list|)
 block|,
@@ -2992,10 +3406,28 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|SSL_R_NO_REQUIRED_DIGEST
+argument_list|)
+block|,
+literal|"digest requred for handshake isn't computed"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|SSL_R_NO_SHARED_CIPHER
 argument_list|)
 block|,
 literal|"no shared cipher"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_NO_SRTP_PROFILES
+argument_list|)
+block|,
+literal|"no srtp profiles"
 block|}
 block|,
 block|{
@@ -3037,10 +3469,28 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|SSL_R_OLD_SESSION_COMPRESSION_ALGORITHM_NOT_RETURNED
+argument_list|)
+block|,
+literal|"old session compression algorithm not returned"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|SSL_R_ONLY_TLS_ALLOWED_IN_FIPS_MODE
 argument_list|)
 block|,
 literal|"only tls allowed in fips mode"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_OPAQUE_PRF_INPUT_TOO_LONG
+argument_list|)
+block|,
+literal|"opaque PRF input too long"
 block|}
 block|,
 block|{
@@ -3149,6 +3599,33 @@ name|SSL_R_PROTOCOL_IS_SHUTDOWN
 argument_list|)
 block|,
 literal|"protocol is shutdown"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_PSK_IDENTITY_NOT_FOUND
+argument_list|)
+block|,
+literal|"psk identity not found"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_PSK_NO_CLIENT_CB
+argument_list|)
+block|,
+literal|"psk no client cb"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_PSK_NO_SERVER_CB
+argument_list|)
+block|,
+literal|"psk no server cb"
 block|}
 block|,
 block|{
@@ -3271,6 +3748,15 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|SSL_R_REQUIRED_COMPRESSSION_ALGORITHM_MISSING
+argument_list|)
+block|,
+literal|"required compresssion algorithm missing"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|SSL_R_REUSE_CERT_LENGTH_NOT_ZERO
 argument_list|)
 block|,
@@ -3334,10 +3820,55 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|SSL_R_SIGNATURE_ALGORITHMS_ERROR
+argument_list|)
+block|,
+literal|"signature algorithms error"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|SSL_R_SIGNATURE_FOR_NON_SIGNING_CERTIFICATE
 argument_list|)
 block|,
 literal|"signature for non signing certificate"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_SRP_A_CALC
+argument_list|)
+block|,
+literal|"error with the srp params"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_SRTP_COULD_NOT_ALLOCATE_PROFILES
+argument_list|)
+block|,
+literal|"srtp could not allocate profiles"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_SRTP_PROTECTION_PROFILE_LIST_TOO_LONG
+argument_list|)
+block|,
+literal|"srtp protection profile list too long"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_SRTP_UNKNOWN_PROTECTION_PROFILE
+argument_list|)
+block|,
+literal|"srtp unknown protection profile"
 block|}
 block|,
 block|{
@@ -3356,6 +3887,15 @@ name|SSL_R_SSL2_CONNECTION_ID_TOO_LONG
 argument_list|)
 block|,
 literal|"ssl2 connection id too long"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_SSL3_EXT_INVALID_ECPOINTFORMAT
+argument_list|)
+block|,
+literal|"ssl3 ext invalid ecpointformat"
 block|}
 block|,
 block|{
@@ -3676,10 +4216,82 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|SSL_R_TLSV1_BAD_CERTIFICATE_HASH_VALUE
+argument_list|)
+block|,
+literal|"tlsv1 bad certificate hash value"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_TLSV1_BAD_CERTIFICATE_STATUS_RESPONSE
+argument_list|)
+block|,
+literal|"tlsv1 bad certificate status response"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_TLSV1_CERTIFICATE_UNOBTAINABLE
+argument_list|)
+block|,
+literal|"tlsv1 certificate unobtainable"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_TLSV1_UNRECOGNIZED_NAME
+argument_list|)
+block|,
+literal|"tlsv1 unrecognized name"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_TLSV1_UNSUPPORTED_EXTENSION
+argument_list|)
+block|,
+literal|"tlsv1 unsupported extension"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|SSL_R_TLS_CLIENT_CERT_REQ_WITH_ANON_CIPHER
 argument_list|)
 block|,
 literal|"tls client cert req with anon cipher"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_TLS_HEARTBEAT_PEER_DOESNT_ACCEPT
+argument_list|)
+block|,
+literal|"peer does not accept heartbearts"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_TLS_HEARTBEAT_PENDING
+argument_list|)
+block|,
+literal|"heartbeat request already pending"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_TLS_ILLEGAL_EXPORTER_LABEL
+argument_list|)
+block|,
+literal|"tls illegal exporter label"
 block|}
 block|,
 block|{
@@ -3874,6 +4486,15 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|SSL_R_UNKNOWN_DIGEST
+argument_list|)
+block|,
+literal|"unknown digest"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|SSL_R_UNKNOWN_KEY_EXCHANGE_TYPE
 argument_list|)
 block|,
@@ -3955,6 +4576,15 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|SSL_R_UNSUPPORTED_DIGEST_TYPE
+argument_list|)
+block|,
+literal|"unsupported digest type"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|SSL_R_UNSUPPORTED_ELLIPTIC_CURVE
 argument_list|)
 block|,
@@ -3986,6 +4616,15 @@ name|SSL_R_UNSUPPORTED_STATUS_TYPE
 argument_list|)
 block|,
 literal|"unsupported status type"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_USE_SRTP_NOT_NEGOTIATED
+argument_list|)
+block|,
+literal|"use srtp not negotiated"
 block|}
 block|,
 block|{
@@ -4040,6 +4679,15 @@ name|SSL_R_WRONG_SIGNATURE_SIZE
 argument_list|)
 block|,
 literal|"wrong signature size"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_WRONG_SIGNATURE_TYPE
+argument_list|)
+block|,
+literal|"wrong signature type"
 block|}
 block|,
 block|{

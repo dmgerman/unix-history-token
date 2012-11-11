@@ -32,19 +32,23 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
-comment|// This header defines the VersionTuple class, which represents a version in
+comment|/// \file
 end_comment
 
 begin_comment
-comment|// the form major[.minor[.subminor]].
+comment|/// \brief Defines the clang::VersionTuple class, which represents a version in
 end_comment
 
 begin_comment
-comment|//
+comment|/// the form major[.minor[.subminor]].
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -388,11 +392,15 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Determine if two version numbers are not equivalent. If
+comment|/// \brief Determine if two version numbers are not equivalent.
 end_comment
 
 begin_comment
-comment|/// not provided, minor and subminor version numbers are considered to be
+comment|///
+end_comment
+
+begin_comment
+comment|/// If not provided, minor and subminor version numbers are considered to be
 end_comment
 
 begin_comment
@@ -428,11 +436,19 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Determine whether one version number precedes another. If not
+comment|/// \brief Determine whether one version number precedes another.
 end_comment
 
 begin_comment
-comment|/// provided, minor and subminor version numbers are considered to be zero.
+comment|///
+end_comment
+
+begin_comment
+comment|/// If not provided, minor and subminor version numbers are considered to be
+end_comment
+
+begin_comment
+comment|/// zero.
 end_comment
 
 begin_expr_stmt
@@ -509,11 +525,19 @@ end_return
 
 begin_comment
 unit|}
-comment|/// \brief Determine whether one version number follows another. If not
+comment|/// \brief Determine whether one version number follows another.
 end_comment
 
 begin_comment
-comment|/// provided, minor and subminor version numbers are considered to be zero.
+comment|///
+end_comment
+
+begin_comment
+comment|/// If not provided, minor and subminor version numbers are considered to be
+end_comment
+
+begin_comment
+comment|/// zero.
 end_comment
 
 begin_expr_stmt
@@ -546,11 +570,19 @@ comment|/// \brief Determine whether one version number precedes or is
 end_comment
 
 begin_comment
-comment|/// equivalent to another. If not provided, minor and subminor
+comment|/// equivalent to another.
 end_comment
 
 begin_comment
-comment|/// version numbers are considered to be zero.
+comment|///
+end_comment
+
+begin_comment
+comment|/// If not provided, minor and subminor version numbers are considered to be
+end_comment
+
+begin_comment
+comment|/// zero.
 end_comment
 
 begin_expr_stmt
@@ -586,11 +618,19 @@ comment|/// \brief Determine whether one version number follows or is
 end_comment
 
 begin_comment
-comment|/// equivalent to another. If not provided, minor and subminor
+comment|/// equivalent to another.
 end_comment
 
 begin_comment
-comment|/// version numbers are considered to be zero.
+comment|///
+end_comment
+
+begin_comment
+comment|/// If not provided, minor and subminor version numbers are considered to be
+end_comment
+
+begin_comment
+comment|/// zero.
 end_comment
 
 begin_expr_stmt
@@ -622,7 +662,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Retrieve a string representation of the version number/
+comment|/// \brief Retrieve a string representation of the version number.
 end_comment
 
 begin_expr_stmt
@@ -634,6 +674,28 @@ argument_list|()
 specifier|const
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/// \brief Try to parse the given string as a version number.
+end_comment
+
+begin_comment
+comment|/// \returns \c true if the string does not match the regular expression
+end_comment
+
+begin_comment
+comment|///   [0-9]+(\.[0-9]+(\.[0-9]+))
+end_comment
+
+begin_function_decl
+name|bool
+name|tryParse
+parameter_list|(
+name|StringRef
+name|string
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 unit|};

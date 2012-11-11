@@ -218,7 +218,7 @@ begin_define
 define|#
 directive|define
 name|TCPTV_DELACK
-value|(hz / PR_FASTHZ / 2)
+value|( hz/10 )
 end_define
 
 begin_comment
@@ -504,6 +504,14 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|tcp_backoff
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|tcp_syn_backoff
 index|[]
 decl_stmt|;
 end_decl_stmt

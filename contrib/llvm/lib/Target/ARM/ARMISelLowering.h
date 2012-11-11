@@ -147,6 +147,9 @@ comment|// PIC mode.
 name|WrapperJT
 block|,
 comment|// WrapperJT - A wrapper node for TargetJumpTable
+comment|// Add pseudo op to model memcpy for struct byval.
+name|COPY_STRUCT_BYVAL
+block|,
 name|CALL
 block|,
 comment|// Function call.
@@ -177,6 +180,9 @@ comment|// Add with a PC operand and a PIC label.
 name|CMP
 block|,
 comment|// ARM compare instructions.
+name|CMN
+block|,
+comment|// ARM CMN instructions.
 name|CMPZ
 block|,
 comment|// ARM compare that sets only Z flag.
@@ -876,6 +882,8 @@ operator|*
 name|createFastISel
 argument_list|(
 argument|FunctionLoweringInfo&funcInfo
+argument_list|,
+argument|const TargetLibraryInfo *libInfo
 argument_list|)
 specifier|const
 block|;
@@ -974,23 +982,23 @@ block|;
 name|void
 name|addTypeForNEON
 argument_list|(
-argument|EVT VT
+argument|MVT VT
 argument_list|,
-argument|EVT PromotedLdStVT
+argument|MVT PromotedLdStVT
 argument_list|,
-argument|EVT PromotedBitwiseVT
+argument|MVT PromotedBitwiseVT
 argument_list|)
 block|;
 name|void
 name|addDRTypeForNEON
 argument_list|(
-argument|EVT VT
+argument|MVT VT
 argument_list|)
 block|;
 name|void
 name|addQRTypeForNEON
 argument_list|(
-argument|EVT VT
+argument|MVT VT
 argument_list|)
 block|;
 typedef|typedef
@@ -1221,6 +1229,11 @@ argument_list|,
 name|SelectionDAG
 operator|&
 name|DAG
+argument_list|,
+name|TLSModel
+operator|::
+name|Model
+name|model
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1534,61 +1547,11 @@ name|virtual
 name|SDValue
 name|LowerCall
 argument_list|(
-name|SDValue
-name|Chain
-argument_list|,
-name|SDValue
-name|Callee
-argument_list|,
-name|CallingConv
+name|TargetLowering
 operator|::
-name|ID
-name|CallConv
-argument_list|,
-name|bool
-name|isVarArg
-argument_list|,
-name|bool
-name|doesNotRet
-argument_list|,
-name|bool
+name|CallLoweringInfo
 operator|&
-name|isTailCall
-argument_list|,
-specifier|const
-name|SmallVectorImpl
-operator|<
-name|ISD
-operator|::
-name|OutputArg
-operator|>
-operator|&
-name|Outs
-argument_list|,
-specifier|const
-name|SmallVectorImpl
-operator|<
-name|SDValue
-operator|>
-operator|&
-name|OutVals
-argument_list|,
-specifier|const
-name|SmallVectorImpl
-operator|<
-name|ISD
-operator|::
-name|InputArg
-operator|>
-operator|&
-name|Ins
-argument_list|,
-name|DebugLoc
-name|dl
-argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+name|CLI
 argument_list|,
 name|SmallVectorImpl
 operator|<
@@ -1943,6 +1906,20 @@ name|BB
 argument_list|)
 decl|const
 decl_stmt|;
+name|MachineBasicBlock
+modifier|*
+name|EmitStructByval
+argument_list|(
+name|MachineInstr
+operator|*
+name|MI
+argument_list|,
+name|MachineBasicBlock
+operator|*
+name|MBB
+argument_list|)
+decl|const
+decl_stmt|;
 block|}
 end_decl_stmt
 
@@ -1974,6 +1951,11 @@ parameter_list|(
 name|FunctionLoweringInfo
 modifier|&
 name|funcInfo
+parameter_list|,
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|libInfo
 parameter_list|)
 function_decl|;
 block|}

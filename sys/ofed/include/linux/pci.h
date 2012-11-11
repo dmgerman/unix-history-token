@@ -277,14 +277,14 @@ begin_define
 define|#
 directive|define
 name|PCI_EXP_DEVCTL
-value|PCIR_EXPRESS_DEVICE_CTL
+value|PCIER_DEVICE_CTL
 end_define
 
 begin_define
 define|#
 directive|define
 name|PCI_EXP_LNKCTL
-value|PCIR_EXPRESS_LINK_CTL
+value|PCIER_LINK_CTL
 end_define
 
 begin_define

@@ -276,7 +276,6 @@ specifier|static
 specifier|const
 name|struct
 name|tl_type
-specifier|const
 name|tl_devs
 index|[]
 init|=

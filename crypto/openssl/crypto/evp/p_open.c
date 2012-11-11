@@ -204,7 +204,7 @@ goto|;
 block|}
 name|i
 operator|=
-name|EVP_PKEY_decrypt
+name|EVP_PKEY_decrypt_old
 argument_list|(
 name|key
 argument_list|,
@@ -320,6 +320,12 @@ argument_list|,
 name|outl
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|i
+condition|)
+name|i
+operator|=
 name|EVP_DecryptInit_ex
 argument_list|(
 name|ctx

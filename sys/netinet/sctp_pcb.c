@@ -2341,6 +2341,10 @@ name|ifn_name
 argument_list|,
 name|ifn_index
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|sctp_ifap
 argument_list|)
 expr_stmt|;
@@ -2427,6 +2431,10 @@ name|SCTP_DEBUG_PCB4
 argument_list|,
 literal|"Moving ifa %p from %s (0x%x) to %s (0x%x)\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|sctp_ifap
 argument_list|,
 name|sctp_ifap
@@ -2479,8 +2487,16 @@ name|SCTP_DEBUG_PCB4
 argument_list|,
 literal|"Repairing ifn %p for ifa %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|sctp_ifnp
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|sctp_ifap
 argument_list|)
 expr_stmt|;
@@ -3331,6 +3347,10 @@ name|SCTP_DEBUG_PCB4
 argument_list|,
 literal|"Deleting ifa %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|sctp_ifap
 argument_list|)
 expr_stmt|;
@@ -5085,15 +5105,19 @@ operator|=
 operator|*
 name|inp_p
 expr_stmt|;
-if|if
+switch|switch
 condition|(
 name|remote
 operator|->
 name|sa_family
-operator|==
-name|AF_INET
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|INET
+case|case
+name|AF_INET
+case|:
 name|rport
 operator|=
 operator|(
@@ -5109,17 +5133,15 @@ operator|->
 name|sin_port
 operator|)
 expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|remote
-operator|->
-name|sa_family
-operator|==
+break|break;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|INET6
+case|case
 name|AF_INET6
-condition|)
-block|{
+case|:
 name|rport
 operator|=
 operator|(
@@ -5135,9 +5157,10 @@ operator|->
 name|sin6_port
 operator|)
 expr_stmt|;
-block|}
-else|else
-block|{
+break|break;
+endif|#
+directive|endif
+default|default:
 return|return
 operator|(
 name|NULL
@@ -6956,6 +6979,10 @@ name|SCTP_DEBUG_PCB1
 argument_list|,
 literal|"Ok laddr->ifa:%p is possible, "
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|laddr
 operator|->
 name|ifa
@@ -8609,16 +8636,6 @@ name|sctp_tcb
 modifier|*
 name|stcb
 decl_stmt|;
-operator|*
-name|netp
-operator|=
-name|NULL
-expr_stmt|;
-operator|*
-name|inp_p
-operator|=
-name|NULL
-expr_stmt|;
 name|SCTP_INP_INFO_RLOCK
 argument_list|()
 expr_stmt|;
@@ -9175,8 +9192,16 @@ name|SCTP_DEBUG_PCB1
 argument_list|,
 literal|"retval:%p inp:%p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|retval
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|inp
 argument_list|)
 expr_stmt|;
@@ -9275,6 +9300,10 @@ name|SCTP_DEBUG_PCB1
 argument_list|,
 literal|"retval is %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|retval
 argument_list|)
 expr_stmt|;
@@ -9817,7 +9846,20 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 		 * SCTP_PRINTF("findassociation_ep_asconf: zero lookup 		 * address finds stcb 0x%x\n", (uint32_t)stcb); 		 */
+if|if
+condition|(
+name|stcb
+operator|!=
+name|NULL
+condition|)
+block|{
+name|SCTP_INP_DECR_REF
+argument_list|(
+operator|*
+name|inp_p
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -12293,7 +12335,7 @@ condition|(
 name|lport
 condition|)
 block|{
-comment|/* 		 * Did the caller specify a port? if so we must see if a ep 		 * already has this one bound. 		 */
+comment|/* 		 * Did the caller specify a port? if so we must see if an ep 		 * already has this one bound. 		 */
 comment|/* got to be root to get at low ports */
 if|if
 condition|(
@@ -13200,6 +13242,9 @@ operator|->
 name|sa_family
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|INET
 case|case
 name|AF_INET
 case|:
@@ -13240,6 +13285,11 @@ literal|0
 expr_stmt|;
 break|break;
 block|}
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|INET6
 case|case
 name|AF_INET6
 case|:
@@ -13280,6 +13330,8 @@ literal|0
 expr_stmt|;
 break|break;
 block|}
+endif|#
+directive|endif
 default|default:
 break|break;
 block|}
@@ -13290,10 +13342,12 @@ name|sctp_ifap
 operator|!=
 name|NULL
 condition|)
+block|{
 name|ifa
 operator|=
 name|sctp_ifap
 expr_stmt|;
+block|}
 else|else
 block|{
 comment|/* 			 * Note for BSD we hit here always other O/S's will 			 * pass things in via the sctp_ifap argument 			 * (Panda). 			 */
@@ -13540,6 +13594,10 @@ name|SCTP_DEBUG_PCB1
 argument_list|,
 literal|"Main hash to bind at head:%p, bound port:%d - in tcp_pool=%d\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|head
 argument_list|,
 name|ntohs
@@ -14748,6 +14806,10 @@ name|SCTP_PRINTF
 argument_list|(
 literal|"Error, sp is NULL, locked on sending is %p strm:%d\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|asoc
 operator|->
 name|asoc
@@ -19466,6 +19528,10 @@ name|SCTP_DEBUG_PCB1
 argument_list|,
 literal|"Association %p now allocated\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|stcb
 argument_list|)
 expr_stmt|;
@@ -22125,6 +22191,15 @@ argument_list|,
 name|next
 argument_list|)
 expr_stmt|;
+name|sctp_free_spbufspace
+argument_list|(
+name|stcb
+argument_list|,
+name|asoc
+argument_list|,
+name|sp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sp
@@ -22182,6 +22257,12 @@ name|tail_mbuf
 operator|=
 name|NULL
 expr_stmt|;
+name|sp
+operator|->
+name|length
+operator|=
+literal|0
+expr_stmt|;
 block|}
 block|}
 if|if
@@ -22205,47 +22286,15 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|sctp_free_spbufspace
-argument_list|(
-name|stcb
-argument_list|,
-name|asoc
-argument_list|,
-name|sp
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sp
-operator|->
-name|holds_key_ref
-condition|)
-name|sctp_auth_key_release
+name|sctp_free_a_strmoq
 argument_list|(
 name|stcb
 argument_list|,
 name|sp
-operator|->
-name|auth_keyid
 argument_list|,
 name|SCTP_SO_LOCKED
 argument_list|)
 expr_stmt|;
-comment|/* Free the zone stuff  */
-name|SCTP_ZONE_FREE
-argument_list|(
-name|SCTP_BASE_INFO
-argument_list|(
-name|ipi_zone_strmoq
-argument_list|)
-argument_list|,
-name|sp
-argument_list|)
-expr_stmt|;
-name|SCTP_DECR_STRMOQ_COUNT
-argument_list|()
-expr_stmt|;
-comment|/* sa_ignore FREED_MEMORY */
 block|}
 block|}
 comment|/* sa_ignore FREED_MEMORY */
@@ -23623,6 +23672,9 @@ operator|->
 name|sa_family
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|INET6
 case|case
 name|AF_INET6
 case|:
@@ -23639,6 +23691,11 @@ operator|&
 name|INP_IPV6
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|INET
 case|case
 name|AF_INET
 case|:
@@ -23655,6 +23712,8 @@ operator|&
 name|INP_IPV4
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 default|default:
 comment|/* invalid family, so it's unreachable */
 name|answer
@@ -23977,7 +24036,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|INET6
+name|INET
 case|case
 name|AF_INET
 case|:

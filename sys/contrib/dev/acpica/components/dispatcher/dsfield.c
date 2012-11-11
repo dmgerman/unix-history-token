@@ -649,7 +649,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsGetFieldNames  *  * PARAMETERS:  Info            - CreateField info structure  *  `           WalkState       - Current method state  *              Arg             - First parser arg for the field name list  *  * RETURN:      Status  *  * DESCRIPTION: Process all named fields in a field declaration.  Names are  *              entered into the namespace.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsGetFieldNames  *  * PARAMETERS:  Info            - CreateField info structure  *  `           WalkState       - Current method state  *              Arg             - First parser arg for the field name list  *  * RETURN:      Status  *  * DESCRIPTION: Process all named fields in a field declaration. Names are  *              entered into the namespace.  *  ******************************************************************************/
 end_comment
 
 begin_function

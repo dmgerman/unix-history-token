@@ -37,12 +37,6 @@ directive|include
 file|<contrib/dev/acpica/include/acdisasm.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<contrib/dev/acpica/include/acnamesp.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -546,6 +540,14 @@ operator|.
 name|Node
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Tag
+condition|)
+block|{
+return|return;
+block|}
 comment|/* Match the name in the info table */
 for|for
 control|(
@@ -1452,7 +1454,7 @@ break|break;
 case|case
 name|AML_BUFFER_OP
 case|:
-comment|/*          * Determine the type of buffer.  We can have one of the following:          *          * 1) ResourceTemplate containing Resource Descriptors.          * 2) Unicode String buffer          * 3) ASCII String buffer          * 4) Raw data buffer (if none of the above)          *          * Since there are no special AML opcodes to differentiate these          * types of buffers, we have to closely look at the data in the          * buffer to determine the type.          */
+comment|/*          * Determine the type of buffer. We can have one of the following:          *          * 1) ResourceTemplate containing Resource Descriptors.          * 2) Unicode String buffer          * 3) ASCII String buffer          * 4) Raw data buffer (if none of the above)          *          * Since there are no special AML opcodes to differentiate these          * types of buffers, we have to closely look at the data in the          * buffer to determine the type.          */
 if|if
 condition|(
 operator|!
@@ -1542,6 +1544,29 @@ operator|.
 name|DisasmOpcode
 operator|=
 name|ACPI_DASM_STRING
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"Buffer"
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|AcpiDmIsPldBuffer
+argument_list|(
+name|Op
+argument_list|)
+condition|)
+block|{
+name|Op
+operator|->
+name|Common
+operator|.
+name|DisasmOpcode
+operator|=
+name|ACPI_DASM_PLD_METHOD
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(

@@ -1334,7 +1334,7 @@ block|{
 comment|/* Drop any packet received for a device that 			   doesn't exist */
 name|DEBUGPRINT
 argument_list|(
-literal|"Port %d not controlled by Linux, packet dropped\n"
+literal|"Port %d not controlled by FreeBSD, packet dropped\n"
 argument_list|,
 name|work
 operator|->

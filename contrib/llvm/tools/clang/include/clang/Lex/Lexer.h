@@ -254,8 +254,8 @@ argument|Preprocessor&PP
 argument_list|)
 block|;
 comment|/// Lexer constructor - Create a new raw lexer object.  This object is only
-comment|/// suitable for calls to 'LexRawToken'.  This lexer assumes that the text
-comment|/// range will outlive it, so it doesn't take ownership of it.
+comment|/// suitable for calls to 'LexFromRawLexer'.  This lexer assumes that the
+comment|/// text range will outlive it, so it doesn't take ownership of it.
 name|Lexer
 argument_list|(
 argument|SourceLocation FileLoc
@@ -270,8 +270,8 @@ argument|const char *BufEnd
 argument_list|)
 block|;
 comment|/// Lexer constructor - Create a new raw lexer object.  This object is only
-comment|/// suitable for calls to 'LexRawToken'.  This lexer assumes that the text
-comment|/// range will outlive it, so it doesn't take ownership of it.
+comment|/// suitable for calls to 'LexFromRawLexer'.  This lexer assumes that the
+comment|/// text range will outlive it, so it doesn't take ownership of it.
 name|Lexer
 argument_list|(
 argument|FileID FID
@@ -520,11 +520,18 @@ return|;
 block|}
 comment|/// ReadToEndOfLine - Read the rest of the current preprocessor line as an
 comment|/// uninterpreted string.  This switches the lexer out of directive mode.
-name|std
-operator|::
-name|string
+name|void
 name|ReadToEndOfLine
-argument_list|()
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|*
+name|Result
+operator|=
+literal|0
+argument_list|)
 block|;
 comment|/// Diag - Forwarding function for diagnostics.  This translate a source
 comment|/// position in the current buffer into a SourceLocation object for rendering.
@@ -818,6 +825,28 @@ comment|/// \brief Accepts a range and returns a character range with file locat
 comment|///
 comment|/// Returns a null range if a part of the range resides inside a macro
 comment|/// expansion or the range does not reside on the same FileID.
+comment|///
+comment|/// This function is trying to deal with macros and return a range based on
+comment|/// file locations. The cases where it can successfully handle macros are:
+comment|///
+comment|/// -begin or end range lies at the start or end of a macro expansion, in
+comment|///  which case the location will be set to the expansion point, e.g:
+comment|///    \#define M 1 2
+comment|///    a M
+comment|/// If you have a range [a, 2] (where 2 came from the macro), the function
+comment|/// will return a range for "a M"
+comment|/// if you have range [a, 1], the function will fail because the range
+comment|/// overlaps with only a part of the macro
+comment|///
+comment|/// -The macro is a function macro and the range can be mapped to the macro
+comment|///  arguments, e.g:
+comment|///    \#define M 1 2
+comment|///    \#define FM(x) x
+comment|///    FM(a b M)
+comment|/// if you have range [b, 2], the function will return the file range "b M"
+comment|/// inside the macro arguments.
+comment|/// if you have range [a, 2], the function will return the file range
+comment|/// "FM(a b M)" since the range includes all of the macro expansion.
 specifier|static
 name|CharSourceRange
 name|makeFileCharRange
@@ -1317,6 +1346,20 @@ name|bool
 name|SkipTrailingWhitespaceAndNewLine
 argument_list|)
 decl_stmt|;
+comment|/// \brief Returns true if the given character could appear in an identifier.
+specifier|static
+name|bool
+name|isIdentifierBodyChar
+parameter_list|(
+name|char
+name|c
+parameter_list|,
+specifier|const
+name|LangOptions
+modifier|&
+name|LangOpts
+parameter_list|)
+function_decl|;
 name|private
 label|:
 comment|/// getCharAndSizeSlowNoWarn - Same as getCharAndSizeSlow, but never emits a

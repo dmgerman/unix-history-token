@@ -211,7 +211,7 @@ comment|///
 name|ScopeKind
 name|Kind
 decl_stmt|;
-comment|/// \brief Whether this function contains a VLA, @try, try, C++
+comment|/// \brief Whether this function contains a VLA, \@try, try, C++
 comment|/// initializer, or anything else that can't be jumped past.
 name|bool
 name|HasBranchProtectedScope
@@ -223,6 +223,16 @@ decl_stmt|;
 comment|/// \brief Whether this function contains any indirect gotos.
 name|bool
 name|HasIndirectGoto
+decl_stmt|;
+comment|/// A flag that is set when parsing a -dealloc method and no [super dealloc]
+comment|/// call was found yet.
+name|bool
+name|ObjCShouldCallSuperDealloc
+decl_stmt|;
+comment|/// A flag that is set when parsing a -finalize method and no [super finalize]
+comment|/// call was found yet.
+name|bool
+name|ObjCShouldCallSuperFinalize
 decl_stmt|;
 comment|/// \brief Used to determine if errors occurred in this function or block.
 name|DiagnosticErrorTrap
@@ -241,7 +251,7 @@ name|SwitchStack
 expr_stmt|;
 comment|/// \brief The list of return statements that occur within the function or
 comment|/// block, if there is any chance of applying the named return value
-comment|/// optimization.
+comment|/// optimization, or if we need to infer a return type.
 name|SmallVector
 operator|<
 name|ReturnStmt
@@ -337,6 +347,16 @@ name|false
 argument_list|)
 operator|,
 name|HasIndirectGoto
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|ObjCShouldCallSuperDealloc
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|ObjCShouldCallSuperFinalize
 argument_list|(
 name|false
 argument_list|)
@@ -1163,6 +1183,10 @@ comment|/// \brief Whether any of the capture expressions requires cleanups.
 name|bool
 name|ExprNeedsCleanups
 block|;
+comment|/// \brief Whether the lambda contains an unexpanded parameter pack.
+name|bool
+name|ContainsUnexpandedParameterPack
+block|;
 comment|/// \brief Variables used to index into by-copy array captures.
 name|llvm
 operator|::
@@ -1230,6 +1254,11 @@ name|false
 argument_list|)
 block|,
 name|ExprNeedsCleanups
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|ContainsUnexpandedParameterPack
 argument_list|(
 argument|false
 argument_list|)

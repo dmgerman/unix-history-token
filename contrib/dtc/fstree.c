@@ -229,8 +229,6 @@ name|st
 operator|.
 name|st_size
 argument_list|)
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|add_property
@@ -282,8 +280,6 @@ name|de
 operator|->
 name|d_name
 argument_list|)
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|add_child
@@ -300,6 +296,11 @@ name|tmpnam
 argument_list|)
 expr_stmt|;
 block|}
+name|closedir
+argument_list|(
+name|d
+argument_list|)
+expr_stmt|;
 return|return
 name|tree
 return|;
@@ -337,8 +338,6 @@ argument_list|(
 name|tree
 argument_list|,
 literal|""
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 return|return
@@ -348,7 +347,10 @@ name|NULL
 argument_list|,
 name|tree
 argument_list|,
-literal|0
+name|guess_boot_cpuid
+argument_list|(
+name|tree
+argument_list|)
 argument_list|)
 return|;
 block|}

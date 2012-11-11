@@ -109,6 +109,23 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|__SSE4A__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<ammintrin.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__FMA4__
 end_ifdef
 
@@ -123,8 +140,25 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__XOP__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<xopintrin.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|// FIXME: SSE4A, XOP, LWP, ABM
+comment|// FIXME: LWP
 end_comment
 
 begin_endif

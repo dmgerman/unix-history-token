@@ -89,6 +89,70 @@ directive|include
 file|<wincrypt.h>
 end_include
 
+begin_comment
+comment|/*  * This module uses several "new" interfaces, among which is  * CertGetCertificateContextProperty. CERT_KEY_PROV_INFO_PROP_ID is  * one of possible values you can pass to function in question. By  * checking if it's defined we can see if wincrypt.h and accompanying  * crypt32.lib are in shape. The native MingW32 headers up to and  * including __W32API_VERSION 3.14 lack of struct DSSPUBKEY and the  * defines CERT_STORE_PROV_SYSTEM_A and CERT_STORE_READONLY_FLAG,  * so we check for these too and avoid compiling.  * Yes, it's rather "weak" test and if compilation fails,  * then re-configure with -DOPENSSL_NO_CAPIENG.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CERT_KEY_PROV_INFO_PROP_ID
+argument_list|)
+operator|&&
+expr|\
+name|defined
+argument_list|(
+name|CERT_STORE_PROV_SYSTEM_A
+argument_list|)
+operator|&&
+expr|\
+name|defined
+argument_list|(
+name|CERT_STORE_READONLY_FLAG
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|__COMPILE_CAPIENG
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CERT_KEY_PROV_INFO_PROP_ID */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* OPENSSL_NO_CAPIENG */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* OPENSSL_SYS_WIN32 */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__COMPILE_CAPIENG
+end_ifdef
+
 begin_undef
 undef|#
 directive|undef
@@ -2067,6 +2131,14 @@ argument_list|(
 name|e
 argument_list|,
 name|engine_capi_name
+argument_list|)
+operator|||
+operator|!
+name|ENGINE_set_flags
+argument_list|(
+name|e
+argument_list|,
+name|ENGINE_FLAGS_NO_REGISTER_ALL
 argument_list|)
 operator|||
 operator|!
@@ -8111,18 +8183,13 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_else
 else|#
 directive|else
 end_else
 
 begin_comment
-comment|/* !WIN32 */
+comment|/* !__COMPILE_CAPIENG */
 end_comment
 
 begin_include
@@ -8136,6 +8203,28 @@ ifndef|#
 directive|ifndef
 name|OPENSSL_NO_DYNAMIC_ENGINE
 end_ifndef
+
+begin_function_decl
+name|OPENSSL_EXPORT
+name|int
+name|bind_engine
+parameter_list|(
+name|ENGINE
+modifier|*
+name|e
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|id
+parameter_list|,
+specifier|const
+name|dynamic_fns
+modifier|*
+name|fns
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|OPENSSL_EXPORT
@@ -8167,6 +8256,20 @@ begin_macro
 name|IMPLEMENT_DYNAMIC_CHECK_FN
 argument_list|()
 end_macro
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function
+name|void
+name|ENGINE_load_capi
+parameter_list|(
+name|void
+parameter_list|)
+block|{}
+end_function
 
 begin_endif
 endif|#

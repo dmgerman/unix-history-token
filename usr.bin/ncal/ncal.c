@@ -3,31 +3,19 @@ begin_comment
 comment|/*-  * Copyright (c) 1997 Wolfgang Helbig  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
 literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not lint */
-end_comment
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -759,6 +747,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|djswitch
 modifier|*
@@ -790,6 +779,7 @@ comment|/* Table used to print day of month and week numbers */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|daystr
 index|[]
@@ -806,6 +796,7 @@ comment|/* Table used to print day of year and week numbers */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|jdaystr
 index|[]
@@ -851,6 +842,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|flag_nohighlight
 decl_stmt|;
@@ -861,6 +853,7 @@ comment|/* user doesn't want a highlighted today */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|flag_weeks
 decl_stmt|;
@@ -871,6 +864,7 @@ comment|/* user wants number of week */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|nswitch
 decl_stmt|;
@@ -881,6 +875,7 @@ comment|/* user defined switch date */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|nswitchb
 decl_stmt|;
@@ -891,12 +886,14 @@ comment|/* switch date for backward compatibility */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|highlightdate
 decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|center
@@ -916,6 +913,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|wchar_t
 modifier|*
 name|wcenter
@@ -935,6 +933,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|firstday
 parameter_list|(
@@ -948,6 +947,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|highlight
 parameter_list|(
@@ -970,6 +970,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|mkmonthr
 parameter_list|(
@@ -991,6 +992,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|mkmonthb
 parameter_list|(
@@ -1012,6 +1014,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|mkweekdays
 parameter_list|(
@@ -1024,6 +1027,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|monthranger
 parameter_list|(
@@ -1046,6 +1050,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|monthrangeb
 parameter_list|(
@@ -1068,6 +1073,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|parsemonth
 parameter_list|(
@@ -1088,6 +1094,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|printcc
 parameter_list|(
@@ -1097,6 +1104,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|printeaster
 parameter_list|(
@@ -1113,6 +1121,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|date
 modifier|*
 name|sdater
@@ -1129,6 +1138,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|date
 modifier|*
 name|sdateb
@@ -1145,6 +1155,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|sndaysr
 parameter_list|(
@@ -1157,6 +1168,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|sndaysb
 parameter_list|(
@@ -2571,6 +2583,7 @@ comment|/* Print the assumed switches for all countries. */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|printcc
 parameter_list|(
@@ -2695,6 +2708,7 @@ comment|/* Print the date of easter sunday. */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|printeaster
 parameter_list|(
@@ -2924,6 +2938,7 @@ comment|/* Print all months for the period in the range [ before .. y-m .. after
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|monthrangeb
 parameter_list|(
@@ -3480,6 +3495,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|monthranger
 parameter_list|(
@@ -3963,6 +3979,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|mkmonthr
 parameter_list|(
@@ -4451,6 +4468,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|mkmonthb
 parameter_list|(
@@ -4955,6 +4973,7 @@ comment|/* Put the local names of weekdays into the wds. */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|mkweekdays
 parameter_list|(
@@ -5139,6 +5158,7 @@ comment|/*  * Compute the day number of the first existing date after the first 
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|firstday
 parameter_list|(
@@ -5236,6 +5256,7 @@ comment|/*  * Compute the number of days from date, obey the local switch from  
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|sndaysr
 parameter_list|(
@@ -5292,6 +5313,7 @@ comment|/*  * Compute the number of days from date, obey the switch from  * Juli
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|sndaysb
 parameter_list|(
@@ -5335,6 +5357,7 @@ comment|/* Inverse of sndays. */
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|date
 modifier|*
@@ -5384,6 +5407,7 @@ comment|/* Inverse of sndaysb. */
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|date
 modifier|*
@@ -5433,6 +5457,7 @@ comment|/* Center string t in string s of length w by putting enough leading bla
 end_comment
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|center
@@ -5505,6 +5530,7 @@ comment|/* Center string t in string s of length w by putting enough leading bla
 end_comment
 
 begin_function
+specifier|static
 name|wchar_t
 modifier|*
 name|wcenter
@@ -5575,6 +5601,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|parsemonth
 parameter_list|(
@@ -5779,6 +5806,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|highlight
 parameter_list|(

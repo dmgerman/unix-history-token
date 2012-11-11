@@ -69,7 +69,7 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|// These enumeration declarations were orignally in MipsInstrInfo.h but
+comment|// These enumeration declarations were originally in MipsInstrInfo.h but
 comment|// had to be moved here to avoid circular dependencies between
 comment|// LLVMMipsCodeGen and LLVMMipsAsmPrinter.
 name|namespace

@@ -749,7 +749,7 @@ label|:
 name|explicit
 name|Option
 argument_list|(
-argument|enum NumOccurrencesFlag Occurrences
+argument|enum NumOccurrencesFlag OccurrencesFlag
 argument_list|,
 argument|enum OptionHidden Hidden
 argument_list|)
@@ -761,7 +761,12 @@ argument_list|)
 operator|,
 name|Occurrences
 argument_list|(
-name|Occurrences
+name|OccurrencesFlag
+argument_list|)
+operator|,
+name|Value
+argument_list|(
+literal|0
 argument_list|)
 operator|,
 name|HiddenFlag
@@ -772,6 +777,11 @@ operator|,
 name|Formatting
 argument_list|(
 name|NormalFormatting
+argument_list|)
+operator|,
+name|Misc
+argument_list|(
+literal|0
 argument_list|)
 operator|,
 name|Position

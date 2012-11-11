@@ -487,7 +487,7 @@ name|ext2mount
 modifier|*
 name|ump
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|struct
 name|m_ext2fs

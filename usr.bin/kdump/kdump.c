@@ -6113,20 +6113,34 @@ name|action
 operator|==
 name|SIG_DFL
 condition|)
+block|{
 name|printf
 argument_list|(
-literal|"SIG_DFL code=0x%x\n"
+literal|"SIG_DFL code="
+argument_list|)
+expr_stmt|;
+name|sigcodename
+argument_list|(
+name|psig
+operator|->
+name|signo
 argument_list|,
 name|psig
 operator|->
 name|code
 argument_list|)
 expr_stmt|;
+name|putchar
+argument_list|(
+literal|'\n'
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 block|{
 name|printf
 argument_list|(
-literal|"caught handler=0x%lx mask=0x%x code=0x%x\n"
+literal|"caught handler=0x%lx mask=0x%x code="
 argument_list|,
 operator|(
 name|u_long
@@ -6143,10 +6157,22 @@ name|__bits
 index|[
 literal|0
 index|]
+argument_list|)
+expr_stmt|;
+name|sigcodename
+argument_list|(
+name|psig
+operator|->
+name|signo
 argument_list|,
 name|psig
 operator|->
 name|code
+argument_list|)
+expr_stmt|;
+name|putchar
+argument_list|(
+literal|'\n'
 argument_list|)
 expr_stmt|;
 block|}
@@ -6977,7 +7003,7 @@ modifier|*
 name|sa
 parameter_list|)
 block|{
-comment|/*  TODO: Support additional address families 	#include<netnatm/natm.h> 	struct sockaddr_natm	*natm; 	#include<netsmb/netbios.h> 	struct sockaddr_nb	*nb; */
+comment|/*  TODO: Support additional address families 	#include<netnatm/natm.h> 	struct sockaddr_natm	*natm; */
 name|char
 name|addr
 index|[

@@ -264,6 +264,32 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Compiler memory barriers, specific to gcc and clang.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|__compiler_membar
+parameter_list|()
+value|__asm __volatile(" " : : : "memory")
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1975,6 +2001,60 @@ value|(__offsetof(type, end) - __offsetof(type, start))
 end_define
 
 begin_comment
+comment|/*  * Given the pointer x to the member m of the struct s, return  * a pointer to the containing structure.  When using GCC, we first  * assign pointer x to a local variable, to check that its type is  * compatible with member m.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__GNUC_PREREQ__
+argument_list|(
+literal|3
+operator|,
+literal|1
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|__containerof
+parameter_list|(
+name|x
+parameter_list|,
+name|s
+parameter_list|,
+name|m
+parameter_list|)
+value|({					\ 	const volatile __typeof(((s *)0)->m) *__x = (x);		\ 	__DEQUALIFY(s *, (const volatile char *)__x - __offsetof(s, m));\ })
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|__containerof
+parameter_list|(
+name|x
+parameter_list|,
+name|s
+parameter_list|,
+name|m
+parameter_list|)
+define|\
+value|__DEQUALIFY(s *, (const volatile char *)(x) - __offsetof(s, m))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * Compiler-dependent macros to declare that functions take printf-like  * or scanf-like arguments.  They are null except for versions of gcc  * that are known to support the features properly (old versions of gcc-2  * didn't permit keeping the keywords out of the application namespace).  */
 end_comment
 
@@ -3311,6 +3391,24 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__has_extension
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__has_extension
+value|__has_feature
+end_define
 
 begin_endif
 endif|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshconnect2.c,v 1.188 2011/05/24 07:15:47 djm Exp $ */
+comment|/* $OpenBSD: sshconnect2.c,v 1.189 2012/06/22 12:30:26 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -9808,17 +9808,6 @@ name|current
 return|;
 block|}
 block|}
-if|if
-condition|(
-name|name
-operator|!=
-name|NULL
-condition|)
-name|xfree
-argument_list|(
-name|name
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

@@ -161,7 +161,7 @@ name|NID_dsaWithSHA1
 block|,
 name|SHA_DIGEST_LENGTH
 block|,
-literal|0
+name|EVP_MD_FLAG_PKEY_DIGEST
 block|,
 name|init
 block|,

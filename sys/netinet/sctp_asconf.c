@@ -9897,6 +9897,10 @@ name|SCTP_DEBUG_ASCONF1
 argument_list|,
 literal|"set_primary_ip_address_sa: queued on tcb=%p, "
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|stcb
 argument_list|)
 expr_stmt|;
@@ -9963,6 +9967,10 @@ name|SCTP_DEBUG_ASCONF1
 argument_list|,
 literal|"set_primary_ip_address_sa: failed to add to queue on tcb=%p, "
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|stcb
 argument_list|)
 expr_stmt|;
@@ -10049,6 +10057,10 @@ name|SCTP_DEBUG_ASCONF1
 argument_list|,
 literal|"set_primary_ip_address: queued on stcb=%p, "
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|stcb
 argument_list|)
 expr_stmt|;
@@ -12120,13 +12132,13 @@ name|sctp_ifa
 modifier|*
 name|sctp_ifa
 decl_stmt|;
-name|struct
-name|sctp_ipv6addr_param
-name|addr_store
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|INET6
+name|struct
+name|sctp_ipv6addr_param
+name|addr6_store
+decl_stmt|;
 name|struct
 name|sockaddr_in6
 name|sin6
@@ -12136,6 +12148,10 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|INET
+name|struct
+name|sctp_ipv4addr_param
+name|addr4_store
+decl_stmt|;
 name|struct
 name|sockaddr_in
 name|sin
@@ -12361,7 +12377,7 @@ name|uint8_t
 operator|*
 operator|)
 operator|&
-name|addr_store
+name|addr6_store
 argument_list|)
 expr_stmt|;
 if|if
@@ -12450,7 +12466,7 @@ name|uint8_t
 operator|*
 operator|)
 operator|&
-name|addr_store
+name|addr4_store
 argument_list|)
 expr_stmt|;
 if|if
@@ -12749,10 +12765,6 @@ name|plen
 decl_stmt|,
 name|ptype
 decl_stmt|;
-name|struct
-name|sctp_ipv6addr_param
-name|addr_store
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|INET
@@ -12765,6 +12777,10 @@ name|struct
 name|sctp_ipv4addr_param
 modifier|*
 name|a4p
+decl_stmt|;
+name|struct
+name|sctp_ipv6addr_param
+name|addr4_store
 decl_stmt|;
 endif|#
 directive|endif
@@ -12780,6 +12796,10 @@ name|struct
 name|sctp_ipv6addr_param
 modifier|*
 name|a6p
+decl_stmt|;
+name|struct
+name|sctp_ipv6addr_param
+name|addr6_store
 decl_stmt|;
 name|struct
 name|sockaddr_in6
@@ -12978,7 +12998,7 @@ name|uint8_t
 operator|*
 operator|)
 operator|&
-name|addr_store
+name|addr6_store
 argument_list|)
 expr_stmt|;
 if|if
@@ -13131,7 +13151,7 @@ name|uint8_t
 operator|*
 operator|)
 operator|&
-name|addr_store
+name|addr4_store
 argument_list|)
 expr_stmt|;
 if|if

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (C) 2007-2008 MARVELL INTERNATIONAL LTD.  * All rights reserved.  *  * Developed by Semihalf.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of MARVELL nor the names of contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (C) 2007-2011 MARVELL INTERNATIONAL LTD.  * All rights reserved.  *  * Developed by Semihalf.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of MARVELL nor the names of contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -16,7 +16,15 @@ name|_MVWIN_H_
 end_define
 
 begin_comment
-comment|/*  * Physical addresses of integrated SoC peripherals  */
+comment|/*  * Decode windows addresses.  *  * All decoding windows must be aligned to their size, which has to be  * a power of 2.  */
+end_comment
+
+begin_comment
+comment|/*  * SoC Integrated devices: 0xF1000000, 16 MB (VA == PA)  */
+end_comment
+
+begin_comment
+comment|/* SoC Regs */
 end_comment
 
 begin_define
@@ -30,82 +38,215 @@ begin_define
 define|#
 directive|define
 name|MV_SIZE
-value|0x100000
+value|(1024 * 1024)
 end_define
 
 begin_comment
-comment|/*  * Decode windows addresses (physical)  */
+comment|/* 1 MB */
+end_comment
+
+begin_comment
+comment|/* SRAM */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MV_PCIE_IO_PHYS_BASE
-value|(MV_PHYS_BASE + MV_SIZE)
+name|MV_CESA_SRAM_BASE
+value|0xF1100000
+end_define
+
+begin_comment
+comment|/* AXI Regs */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SOC_MV_DOVE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|MV_AXI_PHYS_BASE
+value|0xF1800000
 end_define
 
 begin_define
 define|#
 directive|define
-name|MV_PCIE_IO_BASE
-value|MV_PCIE_IO_PHYS_BASE
+name|MV_AXI_BASE
+value|MV_AXI_PHYS_BASE
 end_define
 
 begin_define
 define|#
 directive|define
-name|MV_PCIE_IO_SIZE
-value|(1024 * 1024)
+name|MV_AXI_SIZE
+value|(16 * 1024 * 1024)
 end_define
+
+begin_comment
+comment|/* 16 MB */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * External devices: 0x80000000, 1 GB (VA == PA)  * Includes Device Bus, PCI and PCIE.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SOC_MV_ORION
+argument_list|)
+end_if
 
 begin_define
 define|#
 directive|define
-name|MV_PCI_IO_PHYS_BASE
-value|(MV_PCIE_IO_PHYS_BASE + MV_PCIE_IO_SIZE)
+name|MV_PCI_PORTS
+value|2
 end_define
+
+begin_comment
+comment|/* 1x PCI + 1x PCIE */
+end_comment
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|SOC_MV_KIRKWOOD
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SOC_MV_FREY
+argument_list|)
+end_elif
 
 begin_define
 define|#
 directive|define
-name|MV_PCI_IO_BASE
-value|MV_PCI_IO_PHYS_BASE
+name|MV_PCI_PORTS
+value|1
 end_define
+
+begin_comment
+comment|/* 1x PCIE */
+end_comment
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|SOC_MV_DISCOVERY
+argument_list|)
+end_elif
 
 begin_define
 define|#
 directive|define
-name|MV_PCI_IO_SIZE
-value|(1024 * 1024)
+name|MV_PCI_PORTS
+value|8
 end_define
+
+begin_comment
+comment|/* 8x PCIE */
+end_comment
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|SOC_MV_DOVE
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SOC_MV_LOKIPLUS
+argument_list|)
+end_elif
 
 begin_define
 define|#
 directive|define
-name|MV_PCIE_MEM_PHYS_BASE
-value|(MV_PCI_IO_PHYS_BASE + MV_PCI_IO_SIZE)
+name|MV_PCI_PORTS
+value|2
 end_define
+
+begin_comment
+comment|/* 2x PCIE */
+end_comment
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|SOC_MV_ARMADAXP
+argument_list|)
+end_elif
 
 begin_define
 define|#
 directive|define
-name|MV_PCIE_MEM_BASE
-value|MV_PCIE_MEM_PHYS_BASE
+name|MV_PCI_PORTS
+value|3
 end_define
 
-begin_define
-define|#
-directive|define
-name|MV_PCIE_MEM_SIZE
-value|(64 * 1024 * 1024)
-end_define
+begin_comment
+comment|/* 3x PCIE */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_error
+error|#
+directive|error
+literal|"MV_PCI_PORTS not configured !"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* PCI/PCIE Memory */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|MV_PCI_MEM_PHYS_BASE
-value|(MV_PCIE_MEM_PHYS_BASE + MV_PCIE_MEM_SIZE)
+value|0x80000000
 end_define
+
+begin_define
+define|#
+directive|define
+name|MV_PCI_MEM_SIZE
+value|(512 * 1024 * 1024)
+end_define
+
+begin_comment
+comment|/* 512 MB */
+end_comment
 
 begin_define
 define|#
@@ -117,9 +258,109 @@ end_define
 begin_define
 define|#
 directive|define
-name|MV_PCI_MEM_SIZE
-value|(64 * 1024 * 1024)
+name|MV_PCI_MEM_SLICE_SIZE
+value|(MV_PCI_MEM_SIZE / MV_PCI_PORTS)
 end_define
+
+begin_define
+define|#
+directive|define
+name|MV_PCI_MEM_SLICE
+parameter_list|(
+name|n
+parameter_list|)
+value|(MV_PCI_MEM_BASE + ((n) * \ 				    MV_PCI_MEM_SLICE_SIZE))
+end_define
+
+begin_comment
+comment|/* PCI/PCIE I/O */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MV_PCI_IO_PHYS_BASE
+value|0xBF000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_PCI_IO_SIZE
+value|(16 * 1024 * 1024)
+end_define
+
+begin_comment
+comment|/* 16 MB */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MV_PCI_IO_BASE
+value|MV_PCI_IO_PHYS_BASE
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_PCI_IO_SLICE_SIZE
+value|(MV_PCI_IO_SIZE / MV_PCI_PORTS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_PCI_IO_SLICE
+parameter_list|(
+name|n
+parameter_list|)
+value|(MV_PCI_IO_BASE + ((n) * MV_PCI_IO_SLICE_SIZE))
+end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SOC_MV_FREY
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|MV_PCI_VA_MEM_BASE
+value|MV_PCI_MEM_BASE
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|MV_PCI_VA_MEM_BASE
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|MV_PCI_VA_IO_BASE
+value|0
+end_define
+
+begin_comment
+comment|/*  * Device Bus (VA == PA)  */
+end_comment
 
 begin_define
 define|#
@@ -193,60 +434,6 @@ begin_comment
 comment|/* 1 MB */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|MV_CESA_SRAM_PHYS_BASE
-value|0xFD000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|MV_CESA_SRAM_BASE
-value|MV_CESA_SRAM_PHYS_BASE
-end_define
-
-begin_comment
-comment|/* VA == PA mapping */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MV_CESA_SRAM_SIZE
-value|(1024 * 1024)
-end_define
-
-begin_comment
-comment|/* XXX this is probably not robust against wraparounds... */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|(
-operator|(
-name|MV_CESA_SRAM_PHYS_BASE
-operator|+
-name|MV_CESA_SRAM_SIZE
-operator|)
-operator|>
-literal|0xFFFEFFFF
-operator|)
-end_if
-
-begin_error
-error|#
-directive|error
-error|Devices memory layout overlaps reset vectors range!
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Integrated SoC peripherals addresses  */
 end_comment
@@ -262,6 +449,43 @@ begin_comment
 comment|/* VA == PA mapping */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SOC_MV_DOVE
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|MV_DDR_CADR_BASE
+value|(MV_AXI_BASE + 0x100)
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|SOC_MV_LOKIPLUS
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|MV_DDR_CADR_BASE
+value|(MV_BASE + 0xF1500)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -269,12 +493,71 @@ name|MV_DDR_CADR_BASE
 value|(MV_BASE + 0x1500)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
 name|MV_MPP_BASE
 value|(MV_BASE + 0x10000)
 end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SOC_MV_ARMADAXP
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|MV_MISC_BASE
+value|(MV_BASE + 0x18200)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_MBUS_BRIDGE_BASE
+value|(MV_BASE + 0x20000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_INTREGS_BASE
+value|(MV_MBUS_BRIDGE_BASE + 0x80)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_MP_CLOCKS_BASE
+value|(MV_MBUS_BRIDGE_BASE + 0x700)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_CPU_CONTROL_BASE
+value|(MV_MBUS_BRIDGE_BASE + 0x1800)
+end_define
+
+begin_elif
+elif|#
+directive|elif
+operator|!
+name|defined
+argument_list|(
+name|SOC_MV_FREY
+argument_list|)
+end_elif
 
 begin_define
 define|#
@@ -297,6 +580,23 @@ name|MV_CPU_CONTROL_BASE
 value|(MV_MBUS_BRIDGE_BASE + 0x100)
 end_define
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|MV_CPU_CONTROL_BASE
+value|(MV_BASE + 0x10000)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -311,12 +611,38 @@ name|MV_PCI_SIZE
 value|0x2000
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SOC_MV_FREY
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|MV_PCIE_BASE
+value|(MV_BASE + 0x8000)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|MV_PCIE_BASE
 value|(MV_BASE + 0x40000)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -381,9 +707,77 @@ name|MV_PCIE13_BASE
 value|(MV_PCIE_BASE + 0x4C000)
 end_define
 
+begin_define
+define|#
+directive|define
+name|MV_SDIO_BASE
+value|(MV_BASE + 0x90000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_SDIO_SIZE
+value|0x10000
+end_define
+
 begin_comment
 comment|/*  * Decode windows definitions and macros  */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SOC_MV_ARMADAXP
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_CPU_CTRL
+parameter_list|(
+name|n
+parameter_list|)
+value|(((n)< 8) ? 0x10 * (n) :  0x90 + (0x8 * ((n) - 8)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_CPU_BASE
+parameter_list|(
+name|n
+parameter_list|)
+value|((((n)< 8) ? 0x10 * (n) :  0x90 + (0x8 * ((n) - 8))) + 0x4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_CPU_REMAP_LO
+parameter_list|(
+name|n
+parameter_list|)
+value|(0x10 * (n) +  0x008)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_CPU_REMAP_HI
+parameter_list|(
+name|n
+parameter_list|)
+value|(0x10 * (n) +  0x00C)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -425,6 +819,11 @@ parameter_list|)
 value|(0x10 * (n) + (((n)< 8) ? 0x00C : 0x88C))
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
@@ -439,6 +838,22 @@ define|#
 directive|define
 name|MV_WIN_CPU_MAX
 value|14
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|SOC_MV_ARMADAXP
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_CPU_MAX
+value|20
 end_define
 
 begin_else
@@ -461,6 +876,123 @@ end_endif
 begin_define
 define|#
 directive|define
+name|MV_WIN_CPU_ATTR_SHIFT
+value|8
+end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SOC_MV_LOKIPLUS
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_CPU_TARGET_SHIFT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_CPU_ENABLE_BIT
+value|(1<< 5)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_CPU_TARGET_SHIFT
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_CPU_ENABLE_BIT
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SOC_MV_DOVE
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_DDR_MAX
+value|2
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* SOC_MV_DOVE */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SOC_MV_LOKIPLUS
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_DDR_BASE
+parameter_list|(
+name|n
+parameter_list|)
+value|(0xc * (n) + 0x4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_DDR_SIZE
+parameter_list|(
+name|n
+parameter_list|)
+value|(0xc * (n) + 0x0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* SOC_MV_LOKIPLUS */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MV_WIN_DDR_BASE
 parameter_list|(
 name|n
@@ -478,12 +1010,30 @@ parameter_list|)
 value|(0x8 * (n) + 0x4)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SOC_MV_LOKIPLUS */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|MV_WIN_DDR_MAX
 value|4
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SOC_MV_DOVE */
+end_comment
 
 begin_define
 define|#
@@ -566,7 +1116,7 @@ name|MV_WIN_USB_CTRL
 parameter_list|(
 name|n
 parameter_list|)
-value|(0x10 * (n) + 0x0)
+value|(0x10 * (n) + 0x320)
 end_define
 
 begin_define
@@ -576,7 +1126,7 @@ name|MV_WIN_USB_BASE
 parameter_list|(
 name|n
 parameter_list|)
-value|(0x10 * (n) + 0x4)
+value|(0x10 * (n) + 0x324)
 end_define
 
 begin_define
@@ -765,12 +1315,25 @@ name|defined
 argument_list|(
 name|SOC_MV_DISCOVERY
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SOC_MV_KIRKWOOD
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SOC_MV_DOVE
+argument_list|)
 end_if
 
 begin_define
 define|#
 directive|define
-name|MV_WIN_PCIE_MEM_TARGET
+name|MV_WIN_PCIE_TARGET
+parameter_list|(
+name|n
+parameter_list|)
 value|4
 end_define
 
@@ -778,20 +1341,19 @@ begin_define
 define|#
 directive|define
 name|MV_WIN_PCIE_MEM_ATTR
+parameter_list|(
+name|n
+parameter_list|)
 value|0xE8
 end_define
 
 begin_define
 define|#
 directive|define
-name|MV_WIN_PCIE_IO_TARGET
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
 name|MV_WIN_PCIE_IO_ATTR
+parameter_list|(
+name|n
+parameter_list|)
 value|0xE0
 end_define
 
@@ -800,36 +1362,38 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|SOC_MV_KIRKWOOD
+name|SOC_MV_ARMADAXP
 argument_list|)
 end_elif
 
 begin_define
 define|#
 directive|define
-name|MV_WIN_PCIE_MEM_TARGET
-value|4
+name|MV_WIN_PCIE_TARGET
+parameter_list|(
+name|n
+parameter_list|)
+value|(4 + (4 * ((n) % 2)))
 end_define
 
 begin_define
 define|#
 directive|define
 name|MV_WIN_PCIE_MEM_ATTR
-value|0xE8
-end_define
-
-begin_define
-define|#
-directive|define
-name|MV_WIN_PCIE_IO_TARGET
-value|4
+parameter_list|(
+name|n
+parameter_list|)
+value|(0xE8 + (0x10 * ((n) / 2)))
 end_define
 
 begin_define
 define|#
 directive|define
 name|MV_WIN_PCIE_IO_ATTR
-value|0xE0
+parameter_list|(
+name|n
+parameter_list|)
+value|(0xE0 + (0x10 * ((n) / 2)))
 end_define
 
 begin_elif
@@ -844,7 +1408,10 @@ end_elif
 begin_define
 define|#
 directive|define
-name|MV_WIN_PCIE_MEM_TARGET
+name|MV_WIN_PCIE_TARGET
+parameter_list|(
+name|n
+parameter_list|)
 value|4
 end_define
 
@@ -852,27 +1419,70 @@ begin_define
 define|#
 directive|define
 name|MV_WIN_PCIE_MEM_ATTR
+parameter_list|(
+name|n
+parameter_list|)
 value|0x59
 end_define
 
 begin_define
 define|#
 directive|define
-name|MV_WIN_PCIE_IO_TARGET
-value|4
+name|MV_WIN_PCIE_IO_ATTR
+parameter_list|(
+name|n
+parameter_list|)
+value|0x51
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|SOC_MV_LOKIPLUS
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_PCIE_TARGET
+parameter_list|(
+name|n
+parameter_list|)
+value|(3 + (n))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_PCIE_MEM_ATTR
+parameter_list|(
+name|n
+parameter_list|)
+value|0x59
 end_define
 
 begin_define
 define|#
 directive|define
 name|MV_WIN_PCIE_IO_ATTR
+parameter_list|(
+name|n
+parameter_list|)
 value|0x51
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
 directive|define
-name|MV_WIN_PCI_MEM_TARGET
+name|MV_WIN_PCI_TARGET
 value|3
 end_define
 
@@ -886,21 +1496,9 @@ end_define
 begin_define
 define|#
 directive|define
-name|MV_WIN_PCI_IO_TARGET
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
 name|MV_WIN_PCI_IO_ATTR
 value|0x51
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -942,18 +1540,66 @@ end_define
 begin_define
 define|#
 directive|define
-name|MV_PCIE_BAR
+name|MV_PCIE_BAR_CTRL
 parameter_list|(
 name|n
 parameter_list|)
-value|(0x04 * (n) + 0x1804)
+value|(0x04 * (n) + 0x1800)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_PCIE_BAR_BASE
+parameter_list|(
+name|n
+parameter_list|)
+value|(0x08 * ((n)< 3 ? (n) : 4) + 0x0010)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_PCIE_BAR_BASE_H
+parameter_list|(
+name|n
+parameter_list|)
+value|(0x08 * (n) + 0x0014)
 end_define
 
 begin_define
 define|#
 directive|define
 name|MV_PCIE_BAR_MAX
-value|3
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_PCIE_BAR_64BIT
+value|(0x4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_PCIE_BAR_PREFETCH_EN
+value|(0x8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_PCIE_CONTROL
+value|(0x1a00)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_PCIE_ROOT_CMPLX
+value|(1<< 1)
 end_define
 
 begin_define

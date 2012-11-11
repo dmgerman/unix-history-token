@@ -219,14 +219,6 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|pmcstat_interrupt
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|pmcstat_displayheight
 init|=
 name|DEFAULT_DISPLAY_HEIGHT
@@ -242,6 +234,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|pmcstat_sockpair
 index|[
@@ -251,12 +244,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|pmcstat_kq
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|kvm_t
 modifier|*
 name|pmcstat_kvm
@@ -264,6 +259,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|kinfo_proc
 modifier|*
@@ -2120,6 +2116,7 @@ literal|"\t -d\t\t (toggle) track descendants\n"
 literal|"\t -f spec\t pass \"spec\" to as plugin option\n"
 literal|"\t -g\t\t produce gprof(1) compatible profiles\n"
 literal|"\t -k dir\t\t set the path to the kernel\n"
+literal|"\t -m file\t print sampled PCs to \"file\"\n"
 literal|"\t -n rate\t set sampling rate\n"
 literal|"\t -o file\t send print output to \"file\"\n"
 literal|"\t -p spec\t allocate a process-private counting PMC\n"

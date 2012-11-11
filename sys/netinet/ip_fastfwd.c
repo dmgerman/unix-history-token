@@ -465,10 +465,12 @@ name|odest
 decl_stmt|,
 name|dest
 decl_stmt|;
-name|u_short
+name|uint16_t
 name|sum
 decl_stmt|,
 name|ip_len
+decl_stmt|,
+name|ip_off
 decl_stmt|;
 name|int
 name|error
@@ -480,16 +482,13 @@ name|hlen
 decl_stmt|,
 name|mtu
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|IPFIREWALL_FORWARD
 name|struct
 name|m_tag
 modifier|*
 name|fwd_tag
+init|=
+name|NULL
 decl_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Are we active and forwarding packets? 	 */
 if|if
 condition|(
@@ -1130,29 +1129,6 @@ name|ips_total
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Step 3: incoming packet firewall processing 	 */
-comment|/* 	 * Convert to host representation 	 */
-name|ip
-operator|->
-name|ip_len
-operator|=
-name|ntohs
-argument_list|(
-name|ip
-operator|->
-name|ip_len
-argument_list|)
-expr_stmt|;
-name|ip
-operator|->
-name|ip_off
-operator|=
-name|ntohs
-argument_list|(
-name|ip
-operator|->
-name|ip_off
-argument_list|)
-expr_stmt|;
 name|odest
 operator|.
 name|s_addr
@@ -1265,9 +1241,6 @@ name|forwardlocal
 goto|;
 comment|/* 		 * Go on with new destination address 		 */
 block|}
-ifdef|#
-directive|ifdef
-name|IPFIREWALL_FORWARD
 if|if
 condition|(
 name|m
@@ -1282,9 +1255,6 @@ goto|goto
 name|forwardlocal
 goto|;
 block|}
-endif|#
-directive|endif
-comment|/* IPFIREWALL_FORWARD */
 name|passin
 label|:
 comment|/* 	 * Step 4: decrement TTL and look up route 	 */
@@ -1506,22 +1476,14 @@ operator|.
 name|s_addr
 expr_stmt|;
 comment|/* 	 * Destination address changed? 	 */
-ifndef|#
-directive|ifndef
-name|IPFIREWALL_FORWARD
 if|if
 condition|(
-name|odest
-operator|.
-name|s_addr
-operator|!=
-name|dest
-operator|.
-name|s_addr
+name|m
+operator|->
+name|m_flags
+operator|&
+name|M_IP_NEXTHOP
 condition|)
-block|{
-else|#
-directive|else
 name|fwd_tag
 operator|=
 name|m_tag_find
@@ -1548,23 +1510,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-endif|#
-directive|endif
-comment|/* IPFIREWALL_FORWARD */
 comment|/* 		 * Is it now for a local address on this host? 		 */
-ifndef|#
-directive|ifndef
-name|IPFIREWALL_FORWARD
-if|if
-condition|(
-name|in_localip
-argument_list|(
-name|dest
-argument_list|)
-condition|)
-block|{
-else|#
-directive|else
 if|if
 condition|(
 name|m
@@ -1579,12 +1525,9 @@ name|dest
 argument_list|)
 condition|)
 block|{
-endif|#
-directive|endif
-comment|/* IPFIREWALL_FORWARD */
 name|forwardlocal
 label|:
-comment|/* 			 * Return packet for processing by ip_input(). 			 * Keep host byte order as expected at ip_input's 			 * "ours"-label. 			 */
+comment|/* 			 * Return packet for processing by ip_input(). 			 */
 name|m
 operator|->
 name|m_flags
@@ -1609,9 +1552,6 @@ name|m
 return|;
 block|}
 comment|/* 		 * Redo route lookup with new destination address 		 */
-ifdef|#
-directive|ifdef
-name|IPFIREWALL_FORWARD
 if|if
 condition|(
 name|fwd_tag
@@ -1645,10 +1585,14 @@ argument_list|,
 name|fwd_tag
 argument_list|)
 expr_stmt|;
+name|m
+operator|->
+name|m_flags
+operator|&=
+operator|~
+name|M_IP_NEXTHOP
+expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* IPFIREWALL_FORWARD */
 name|RTFREE
 argument_list|(
 name|ro
@@ -1690,6 +1634,24 @@ block|}
 name|passout
 label|:
 comment|/* 	 * Step 6: send off the packet 	 */
+name|ip_len
+operator|=
+name|ntohs
+argument_list|(
+name|ip
+operator|->
+name|ip_len
+argument_list|)
+expr_stmt|;
+name|ip_off
+operator|=
+name|ntohs
+argument_list|(
+name|ip
+operator|->
+name|ip_off
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Check if route is dampned (when ARP is unable to resolve) 	 */
 if|if
 condition|(
@@ -1756,8 +1718,6 @@ name|if_snd
 operator|.
 name|ifq_len
 operator|+
-name|ip
-operator|->
 name|ip_len
 operator|/
 name|ifp
@@ -1850,8 +1810,6 @@ name|if_mtu
 expr_stmt|;
 if|if
 condition|(
-name|ip
-operator|->
 name|ip_len
 operator|<=
 name|mtu
@@ -1864,8 +1822,6 @@ operator|&
 name|CSUM_FRAGMENT
 operator|&&
 operator|(
-name|ip
-operator|->
 name|ip_off
 operator|&
 name|IP_DF
@@ -1875,29 +1831,6 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* 		 * Restore packet header fields to original values 		 */
-name|ip
-operator|->
-name|ip_len
-operator|=
-name|htons
-argument_list|(
-name|ip
-operator|->
-name|ip_len
-argument_list|)
-expr_stmt|;
-name|ip
-operator|->
-name|ip_off
-operator|=
-name|htons
-argument_list|(
-name|ip
-operator|->
-name|ip_off
-argument_list|)
-expr_stmt|;
 comment|/* 		 * Send off the packet via outgoing interface 		 */
 name|error
 operator|=
@@ -1929,8 +1862,6 @@ block|{
 comment|/* 		 * Handle EMSGSIZE with icmp reply needfrag for TCP MTU discovery 		 */
 if|if
 condition|(
-name|ip
-operator|->
 name|ip_off
 operator|&
 name|IP_DF
@@ -1969,7 +1900,6 @@ name|csum_flags
 operator||=
 name|CSUM_IP
 expr_stmt|;
-comment|/* 			 * ip_fragment expects ip_len and ip_off in host byte 			 * order but returns all packets in network byte order 			 */
 if|if
 condition|(
 name|ip_fragment
@@ -1984,22 +1914,11 @@ argument_list|,
 name|ifp
 operator|->
 name|if_hwassist
-argument_list|,
-operator|(
-operator|~
-name|ifp
-operator|->
-name|if_hwassist
-operator|&
-name|CSUM_DELAY_IP
-operator|)
 argument_list|)
 condition|)
-block|{
 goto|goto
 name|drop
 goto|;
-block|}
 name|KASSERT
 argument_list|(
 name|m

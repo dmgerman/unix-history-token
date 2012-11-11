@@ -603,6 +603,21 @@ value|(30)
 end_define
 
 begin_comment
+comment|/* Flags kept in td_flags. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDF_SLICEEND
+value|TDF_SCHED2
+end_define
+
+begin_comment
+comment|/* Thread time slice is over. */
+end_comment
+
+begin_comment
 comment|/*  * tickincr:		Converts a stathz tick into a hz domain scaled by  *			the shift factor.  Without the shift the error rate  *			due to rounding would be unacceptably high.  * realstathz:		stathz is sometimes 0 and run off of hz.  * sched_slice:		Runtime of each thread before rescheduling.  * preempt_thresh:	Priority threshold for preemption and remote IPIs.  */
 end_comment
 
@@ -619,6 +634,8 @@ begin_decl_stmt
 specifier|static
 name|int
 name|realstathz
+init|=
+literal|127
 decl_stmt|;
 end_decl_stmt
 
@@ -626,6 +643,10 @@ begin_decl_stmt
 specifier|static
 name|int
 name|tickincr
+init|=
+literal|8
+operator|<<
+name|SCHED_TICK_SHIFT
 decl_stmt|;
 end_decl_stmt
 
@@ -634,7 +655,7 @@ specifier|static
 name|int
 name|sched_slice
 init|=
-literal|1
+literal|12
 decl_stmt|;
 end_decl_stmt
 
@@ -733,9 +754,9 @@ begin_struct
 struct|struct
 name|tdq
 block|{
-comment|/* Ordered to improve efficiency of cpu_search() and switch(). */
+comment|/*  	 * Ordered to improve efficiency of cpu_search() and switch(). 	 * tdq_lock is padded to avoid false sharing with tdq_load and 	 * tdq_cpu_idle. 	 */
 name|struct
-name|mtx
+name|mtx_padalign
 name|tdq_lock
 decl_stmt|;
 comment|/* run queue lock. */
@@ -1104,7 +1125,7 @@ name|TDQ_LOCKPTR
 parameter_list|(
 name|t
 parameter_list|)
-value|(&(t)->tdq_lock)
+value|((struct mtx *)(&(t)->tdq_lock))
 end_define
 
 begin_function_decl
@@ -4376,9 +4397,6 @@ argument_list|(
 name|low
 argument_list|)
 expr_stmt|;
-name|sched_pin
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|cpu
@@ -4394,9 +4412,6 @@ name|cpu
 argument_list|,
 name|IPI_PREEMPT
 argument_list|)
-expr_stmt|;
-name|sched_unpin
-argument_list|()
 expr_stmt|;
 block|}
 name|tdq_unlock_pair
@@ -6550,26 +6565,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * To avoid divide-by-zero, we set realstathz a dummy value 	 * in case which sched_clock() called before sched_initticks(). 	 */
-name|realstathz
-operator|=
-name|hz
-expr_stmt|;
-name|sched_slice
-operator|=
-operator|(
-name|realstathz
-operator|/
-literal|10
-operator|)
-expr_stmt|;
-comment|/* ~100ms */
-name|tickincr
-operator|=
-literal|1
-operator|<<
-name|SCHED_TICK_SHIFT
-expr_stmt|;
 comment|/* Add thread0's load since it's running. */
 name|TDQ_LOCK
 argument_list|(
@@ -6611,7 +6606,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This routine determines the tickincr after stathz and hz are setup.  */
+comment|/*  * This routine determines time constants after stathz and hz are setup.  */
 end_comment
 
 begin_comment
@@ -6641,13 +6636,32 @@ name|hz
 expr_stmt|;
 name|sched_slice
 operator|=
-operator|(
 name|realstathz
 operator|/
 literal|10
-operator|)
 expr_stmt|;
 comment|/* ~100ms */
+name|hogticks
+operator|=
+name|imax
+argument_list|(
+literal|1
+argument_list|,
+operator|(
+literal|2
+operator|*
+name|hz
+operator|*
+name|sched_slice
+operator|+
+name|realstathz
+operator|/
+literal|2
+operator|)
+operator|/
+name|realstathz
+argument_list|)
+expr_stmt|;
 comment|/* 	 * tickincr is shifted out by 10 to avoid rounding errors due to 	 * hz not being evenly divisible by stathz on all platforms. 	 */
 name|incr
 operator|=
@@ -6682,21 +6696,6 @@ name|balance_interval
 operator|=
 name|realstathz
 expr_stmt|;
-comment|/* 	 * Set steal thresh to roughly log2(mp_ncpu) but no greater than 4.  	 * This prevents excess thrashing on large machines and excess idle  	 * on smaller machines. 	 */
-name|steal_thresh
-operator|=
-name|min
-argument_list|(
-name|fls
-argument_list|(
-name|mp_ncpus
-argument_list|)
-operator|-
-literal|1
-argument_list|,
-literal|3
-argument_list|)
-expr_stmt|;
 name|affinity
 operator|=
 name|SCHED_AFFINITY_DEFAULT
@@ -6711,7 +6710,7 @@ literal|0
 condition|)
 name|sched_idlespinthresh
 operator|=
-name|max
+name|imax
 argument_list|(
 literal|16
 argument_list|,
@@ -7352,16 +7351,25 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|/* Convert sched_slice to hz */
+comment|/* Convert sched_slice from stathz to hz. */
 return|return
 operator|(
-name|hz
-operator|/
+name|imax
+argument_list|(
+literal|1
+argument_list|,
 operator|(
+name|sched_slice
+operator|*
+name|hz
+operator|+
 name|realstathz
 operator|/
-name|sched_slice
+literal|2
 operator|)
+operator|/
+name|realstathz
+argument_list|)
 operator|)
 return|;
 block|}
@@ -7580,7 +7588,7 @@ operator|!=
 name|curthread
 operator|&&
 name|prio
-operator|>
+operator|<
 name|td
 operator|->
 name|td_priority
@@ -8264,6 +8272,8 @@ name|srqflag
 decl_stmt|;
 name|int
 name|cpuid
+decl_stmt|,
+name|preempted
 decl_stmt|;
 name|THREAD_LOCK_ASSERT
 argument_list|(
@@ -8336,21 +8346,27 @@ name|td_oncpu
 operator|=
 name|NOCPU
 expr_stmt|;
-if|if
-condition|(
+name|preempted
+operator|=
 operator|!
 operator|(
-name|flags
+name|td
+operator|->
+name|td_flags
 operator|&
-name|SW_PREEMPT
+name|TDF_SLICEEND
 operator|)
-condition|)
+expr_stmt|;
 name|td
 operator|->
 name|td_flags
 operator|&=
 operator|~
+operator|(
 name|TDF_NEEDRESCHED
+operator||
+name|TDF_SLICEEND
+operator|)
 expr_stmt|;
 name|td
 operator|->
@@ -8413,11 +8429,7 @@ argument_list|)
 expr_stmt|;
 name|srqflag
 operator|=
-operator|(
-name|flags
-operator|&
-name|SW_PREEMPT
-operator|)
+name|preempted
 condition|?
 name|SRQ_OURSELF
 operator||
@@ -9849,18 +9861,23 @@ name|td
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * We used up one time slice. 	 */
+comment|/* 	 * Force a context switch if the current thread has used up a full 	 * time slice (default is 100ms). 	 */
 if|if
 condition|(
+operator|!
+name|TD_IS_IDLETHREAD
+argument_list|(
+name|td
+argument_list|)
+operator|&&
 operator|--
 name|ts
 operator|->
 name|ts_slice
-operator|>
+operator|<=
 literal|0
 condition|)
-return|return;
-comment|/* 	 * We're out of time, force a requeue at userret(). 	 */
+block|{
 name|ts
 operator|->
 name|ts_slice
@@ -9872,7 +9889,10 @@ operator|->
 name|td_flags
 operator||=
 name|TDF_NEEDRESCHED
+operator||
+name|TDF_SLICEEND
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -11278,6 +11298,9 @@ operator|=
 name|TDQ_SELF
 argument_list|()
 expr_stmt|;
+name|THREAD_NO_SLEEPING
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -12262,6 +12285,121 @@ endif|#
 directive|endif
 end_endif
 
+begin_function
+specifier|static
+name|int
+name|sysctl_kern_quantum
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+block|{
+name|int
+name|error
+decl_stmt|,
+name|new_val
+decl_stmt|,
+name|period
+decl_stmt|;
+name|period
+operator|=
+literal|1000000
+operator|/
+name|realstathz
+expr_stmt|;
+name|new_val
+operator|=
+name|period
+operator|*
+name|sched_slice
+expr_stmt|;
+name|error
+operator|=
+name|sysctl_handle_int
+argument_list|(
+name|oidp
+argument_list|,
+operator|&
+name|new_val
+argument_list|,
+literal|0
+argument_list|,
+name|req
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+operator|||
+name|req
+operator|->
+name|newptr
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+if|if
+condition|(
+name|new_val
+operator|<=
+literal|0
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+name|sched_slice
+operator|=
+name|imax
+argument_list|(
+literal|1
+argument_list|,
+operator|(
+name|new_val
+operator|+
+name|period
+operator|/
+literal|2
+operator|)
+operator|/
+name|period
+argument_list|)
+expr_stmt|;
+name|hogticks
+operator|=
+name|imax
+argument_list|(
+literal|1
+argument_list|,
+operator|(
+literal|2
+operator|*
+name|hz
+operator|*
+name|sched_slice
+operator|+
+name|realstathz
+operator|/
+literal|2
+operator|)
+operator|/
+name|realstathz
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
 begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(
@@ -12301,6 +12439,32 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|SYSCTL_PROC
+argument_list|(
+name|_kern_sched
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|quantum
+argument_list|,
+name|CTLTYPE_INT
+operator||
+name|CTLFLAG_RW
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+name|sysctl_kern_quantum
+argument_list|,
+literal|"I"
+argument_list|,
+literal|"Quantum for timeshare threads in microseconds"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_kern_sched
@@ -12316,7 +12480,7 @@ name|sched_slice
 argument_list|,
 literal|0
 argument_list|,
-literal|"Slice size for timeshare threads"
+literal|"Quantum for timeshare threads in stathz ticks"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -12358,7 +12522,7 @@ name|preempt_thresh
 argument_list|,
 literal|0
 argument_list|,
-literal|"Min priority for preemption, lower priorities have greater precedence"
+literal|"Maximal (lowest) priority for preemption"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -12379,7 +12543,7 @@ name|static_boost
 argument_list|,
 literal|0
 argument_list|,
-literal|"Controls whether static kernel priorities are assigned to sleeping threads."
+literal|"Assign static kernel priorities to sleeping threads"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -12400,7 +12564,7 @@ name|sched_idlespins
 argument_list|,
 literal|0
 argument_list|,
-literal|"Number of times idle will spin waiting for new work."
+literal|"Number of times idle thread will spin waiting for new work"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -12421,7 +12585,7 @@ name|sched_idlespinthresh
 argument_list|,
 literal|0
 argument_list|,
-literal|"Threshold before we will permit idle spinning."
+literal|"Threshold before we will permit idle thread spinning"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -12490,7 +12654,7 @@ name|balance_interval
 argument_list|,
 literal|0
 argument_list|,
-literal|"Average frequency in stathz ticks to run the long-term balancer"
+literal|"Average period in stathz ticks to run the long-term balancer"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -12532,14 +12696,10 @@ name|steal_thresh
 argument_list|,
 literal|0
 argument_list|,
-literal|"Minimum load on remote cpu before we'll steal"
+literal|"Minimum load on remote CPU before we'll steal"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|/* Retrieve SMP topology */
-end_comment
 
 begin_expr_stmt
 name|SYSCTL_PROC

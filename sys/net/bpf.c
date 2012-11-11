@@ -3509,6 +3509,16 @@ argument_list|(
 name|d
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|d
+operator|->
+name|bd_hbuf
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* Free the hold buffer only if it is still valid. */
 name|d
 operator|->
 name|bd_fbuf
@@ -3534,6 +3544,7 @@ argument_list|(
 name|d
 argument_list|)
 expr_stmt|;
+block|}
 name|BPFD_UNLOCK
 argument_list|(
 name|d

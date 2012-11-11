@@ -55,6 +55,7 @@ end_include
 
 begin_function_decl
 specifier|static
+specifier|const
 name|SSL_METHOD
 modifier|*
 name|ssl2_get_server_method
@@ -186,6 +187,7 @@ end_define
 
 begin_function
 specifier|static
+specifier|const
 name|SSL_METHOD
 modifier|*
 name|ssl2_get_server_method
@@ -1218,6 +1220,7 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+specifier|const
 name|SSL_CIPHER
 modifier|*
 name|cp
@@ -1849,6 +1852,10 @@ name|c
 argument_list|,
 operator|&
 name|md
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|)

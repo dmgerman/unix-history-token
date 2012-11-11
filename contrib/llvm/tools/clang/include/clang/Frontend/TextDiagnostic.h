@@ -114,11 +114,6 @@ operator|&
 name|OS
 argument_list|,
 specifier|const
-name|SourceManager
-operator|&
-name|SM
-argument_list|,
-specifier|const
 name|LangOptions
 operator|&
 name|LangOpts
@@ -156,7 +151,7 @@ comment|/// \brief Pretty-print a diagnostic message to a raw_ostream.
 comment|///
 comment|/// This is a static helper to handle the line wrapping, colorizing, and
 comment|/// rendering of a diagnostic message to a particular ostream. It is
-comment|/// publically visible so that clients which do not have sufficient state to
+comment|/// publicly visible so that clients which do not have sufficient state to
 comment|/// build a complete TextDiagnostic object can still get consistent
 comment|/// formatting of their diagnostic messages.
 comment|///
@@ -201,6 +196,8 @@ argument|StringRef Message
 argument_list|,
 argument|ArrayRef<CharSourceRange> Ranges
 argument_list|,
+argument|const SourceManager *SM
+argument_list|,
 argument|DiagOrStoredDiag D
 argument_list|)
 block|;
@@ -215,6 +212,8 @@ argument_list|,
 argument|DiagnosticsEngine::Level Level
 argument_list|,
 argument|ArrayRef<CharSourceRange> Ranges
+argument_list|,
+argument|const SourceManager&SM
 argument_list|)
 block|;
 name|virtual
@@ -228,6 +227,8 @@ argument_list|,
 argument|SmallVectorImpl<CharSourceRange>& Ranges
 argument_list|,
 argument|ArrayRef<FixItHint> Hints
+argument_list|,
+argument|const SourceManager&SM
 argument_list|)
 block|{
 name|emitSnippetAndCaret
@@ -239,6 +240,8 @@ argument_list|,
 name|Ranges
 argument_list|,
 name|Hints
+argument_list|,
+name|SM
 argument_list|)
 block|;   }
 name|virtual
@@ -255,6 +258,8 @@ argument_list|(
 argument|SourceLocation Loc
 argument_list|,
 argument|PresumedLoc PLoc
+argument_list|,
+argument|const SourceManager&SM
 argument_list|)
 block|;
 name|private
@@ -269,6 +274,8 @@ argument_list|,
 argument|SmallVectorImpl<CharSourceRange>& Ranges
 argument_list|,
 argument|ArrayRef<FixItHint> Hints
+argument_list|,
+argument|const SourceManager&SM
 argument_list|)
 block|;
 name|void
@@ -289,6 +296,8 @@ argument_list|,
 argument|const SourceColumnMap&map
 argument_list|,
 argument|std::string&CaretLine
+argument_list|,
+argument|const SourceManager&SM
 argument_list|)
 block|;
 name|std
@@ -301,6 +310,8 @@ argument_list|,
 argument|const SourceColumnMap&map
 argument_list|,
 argument|ArrayRef<FixItHint> Hints
+argument_list|,
+argument|const SourceManager&SM
 argument_list|)
 block|;
 name|void
@@ -311,6 +322,11 @@ operator|<
 name|FixItHint
 operator|>
 name|Hints
+argument_list|,
+specifier|const
+name|SourceManager
+operator|&
+name|SM
 argument_list|)
 block|; }
 decl_stmt|;

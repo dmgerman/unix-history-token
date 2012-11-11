@@ -181,6 +181,17 @@ begin_comment
 comment|/* do not update atime */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|EXT2_HTREE
+value|0x00001000
+end_define
+
+begin_comment
+comment|/* HTree-indexed directory */
+end_comment
+
 begin_comment
 comment|/*  * Definitions for nanosecond timestamps.  * Ext3 inode versioning, 2006-12-13.  */
 end_comment

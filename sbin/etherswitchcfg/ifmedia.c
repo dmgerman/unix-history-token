@@ -415,6 +415,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|ifmedia_description
 name|ifm_subtype_ieee80211_mode_descriptions
@@ -425,6 +426,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|ifmedia_description
 name|ifm_subtype_ieee80211_mode_aliases

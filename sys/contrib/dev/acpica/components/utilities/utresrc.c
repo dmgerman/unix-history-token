@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: utresrc - Resource managment utilities  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: utresrc - Resource management utilities  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -60,7 +60,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * Strings used to decode resource descriptors.  * Used by both the disasssembler and the debugger resource dump routines  */
+comment|/*  * Strings used to decode resource descriptors.  * Used by both the disassembler and the debugger resource dump routines  */
 end_comment
 
 begin_decl_stmt

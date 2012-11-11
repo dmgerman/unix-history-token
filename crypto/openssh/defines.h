@@ -16,7 +16,7 @@ name|_DEFINES_H
 end_define
 
 begin_comment
-comment|/* $Id: defines.h,v 1.167 2011/06/03 01:17:49 tim Exp $ */
+comment|/* $Id: defines.h,v 1.169 2012/02/15 04:13:06 tim Exp $ */
 end_comment
 
 begin_comment
@@ -351,6 +351,35 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|PATH_MAX
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_POSIX_PATH_MAX
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|PATH_MAX
+value|_POSIX_PATH_MAX
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|MAXPATHLEN
 end_ifndef
 
@@ -426,35 +455,6 @@ end_endif
 begin_comment
 comment|/* MAXPATHLEN */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PATH_MAX
-end_ifndef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_POSIX_PATH_MAX
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|PATH_MAX
-value|_POSIX_PATH_MAX
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
@@ -990,38 +990,13 @@ directive|ifndef
 name|HAVE_INTXX_T
 end_ifndef
 
-begin_if
-if|#
-directive|if
-operator|(
-name|SIZEOF_CHAR
-operator|==
-literal|1
-operator|)
-end_if
-
 begin_typedef
 typedef|typedef
+name|signed
 name|char
 name|int8_t
 typedef|;
 end_typedef
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_error
-error|#
-directive|error
-literal|"8 bit int type not found."
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#

@@ -77,15 +77,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_expr_stmt
+begin_macro
 name|ARM_EABI_FNALIAS
 argument_list|(
-name|fsub
+argument|fsub
 argument_list|,
-name|subsf3
+argument|subsf3
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+end_macro
 
 begin_comment
 comment|// Subtraction; flip the sign bit of b and add.

@@ -12,7 +12,7 @@ end_include
 begin_decl_stmt
 specifier|extern
 name|struct
-name|loader_callbacks_v1
+name|loader_callbacks
 modifier|*
 name|callbacks
 decl_stmt|;

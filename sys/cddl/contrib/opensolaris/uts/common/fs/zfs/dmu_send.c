@@ -190,15 +190,11 @@ name|struct
 name|iovec
 name|aiov
 decl_stmt|;
-name|ASSERT3U
+name|ASSERT0
 argument_list|(
 name|len
 operator|%
 literal|8
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|fletcher_4_incremental_native
@@ -5287,15 +5283,11 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* some things will require 8-byte alignment, so everything must */
-name|ASSERT3U
+name|ASSERT0
 argument_list|(
 name|len
 operator|%
 literal|8
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 while|while
@@ -8723,18 +8715,6 @@ name|err
 decl_stmt|,
 name|myerr
 decl_stmt|;
-comment|/* 	 * XXX hack; seems the ds is still dirty and dsl_pool_zil_clean() 	 * expects it to have a ds_user_ptr (and zil), but clone_swap() 	 * can close it. 	 */
-name|txg_wait_synced
-argument_list|(
-name|ds
-operator|->
-name|ds_dir
-operator|->
-name|dd_pool
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|dsl_dataset_tryown
@@ -8932,13 +8912,9 @@ argument_list|,
 name|B_FALSE
 argument_list|)
 expr_stmt|;
-name|ASSERT3U
+name|ASSERT0
 argument_list|(
 name|myerr
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return

@@ -108,7 +108,7 @@ block|{
 name|class
 name|CallGraphNode
 decl_stmt|;
-comment|/// \class The AST-based call graph.
+comment|/// \brief The AST-based call graph.
 comment|///
 comment|/// The call graph extends itself with the given declarations by implementing
 comment|/// the recursive AST visitor, which constructs the graph by visiting the given
@@ -398,7 +398,8 @@ name|viewGraph
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// Part of recursive declaration visitation.
+comment|/// Part of recursive declaration visitation. We recursively visit all the
+comment|/// Declarations to collect the root functions.
 name|bool
 name|VisitFunctionDecl
 parameter_list|(
@@ -458,6 +459,28 @@ argument_list|)
 expr_stmt|;
 return|return
 name|true
+return|;
+block|}
+comment|// We are only collecting the declarations, so do not step into the bodies.
+name|bool
+name|TraverseStmt
+parameter_list|(
+name|Stmt
+modifier|*
+name|S
+parameter_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+name|bool
+name|shouldWalkTypesOfTypeLocs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
 return|;
 block|}
 name|private

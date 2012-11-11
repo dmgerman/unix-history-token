@@ -691,7 +691,7 @@ function_decl|;
 specifier|const
 name|CGFunctionInfo
 modifier|&
-name|arrangeFunctionCall
+name|arrangeFreeFunctionCall
 parameter_list|(
 specifier|const
 name|CallArgList
@@ -707,7 +707,7 @@ function_decl|;
 specifier|const
 name|CGFunctionInfo
 modifier|&
-name|arrangeFunctionCall
+name|arrangeFreeFunctionCall
 argument_list|(
 name|QualType
 name|ResTy
@@ -717,11 +717,9 @@ name|CallArgList
 operator|&
 name|args
 argument_list|,
-specifier|const
 name|FunctionType
 operator|::
 name|ExtInfo
-operator|&
 name|info
 argument_list|,
 name|RequiredArgs
@@ -731,7 +729,26 @@ decl_stmt|;
 specifier|const
 name|CGFunctionInfo
 modifier|&
-name|arrangeFunctionType
+name|arrangeCXXMethodCall
+parameter_list|(
+specifier|const
+name|CallArgList
+modifier|&
+name|args
+parameter_list|,
+specifier|const
+name|FunctionProtoType
+modifier|*
+name|type
+parameter_list|,
+name|RequiredArgs
+name|required
+parameter_list|)
+function_decl|;
+specifier|const
+name|CGFunctionInfo
+modifier|&
+name|arrangeFreeFunctionType
 argument_list|(
 name|CanQual
 operator|<
@@ -743,7 +760,7 @@ decl_stmt|;
 specifier|const
 name|CGFunctionInfo
 modifier|&
-name|arrangeFunctionType
+name|arrangeFreeFunctionType
 argument_list|(
 name|CanQual
 operator|<
@@ -768,14 +785,16 @@ modifier|*
 name|FTP
 parameter_list|)
 function_decl|;
-comment|/// Retrieves the ABI information for the given function signature.
-comment|/// This is the "core" routine to which all the others defer.
+comment|/// "Arrange" the LLVM information for a call or type with the given
+comment|/// signature.  This is largely an internal method; other clients
+comment|/// should use one of the above routines, which ultimately defer to
+comment|/// this.
 comment|///
 comment|/// \param argTypes - must all actually be canonical as params
 specifier|const
 name|CGFunctionInfo
 modifier|&
-name|arrangeFunctionType
+name|arrangeLLVMFunctionInfo
 argument_list|(
 name|CanQualType
 name|returnType
@@ -786,11 +805,9 @@ name|CanQualType
 operator|>
 name|argTypes
 argument_list|,
-specifier|const
 name|FunctionType
 operator|::
 name|ExtInfo
-operator|&
 name|info
 argument_list|,
 name|RequiredArgs

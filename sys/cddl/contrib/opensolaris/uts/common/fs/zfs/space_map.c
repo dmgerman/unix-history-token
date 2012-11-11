@@ -7,6 +7,10 @@ begin_comment
 comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
+begin_comment
+comment|/*  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -310,15 +314,11 @@ operator|->
 name|sm_loading
 argument_list|)
 expr_stmt|;
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|sm
 operator|->
 name|sm_space
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|avl_destroy
@@ -1722,15 +1722,11 @@ operator|==
 name|NULL
 argument_list|)
 expr_stmt|;
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|sm
 operator|->
 name|sm_space
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -2768,15 +2764,11 @@ argument_list|,
 name|bufsize
 argument_list|)
 expr_stmt|;
-name|VERIFY3U
+name|VERIFY0
 argument_list|(
 name|sm
 operator|->
 name|sm_space
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}

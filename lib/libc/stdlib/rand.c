@@ -361,6 +361,8 @@ argument_list|(
 literal|"/dev/random"
 argument_list|,
 name|O_RDONLY
+operator||
+name|O_CLOEXEC
 argument_list|,
 literal|0
 argument_list|)
@@ -416,10 +418,6 @@ name|struct
 name|timeval
 name|tv
 decl_stmt|;
-name|unsigned
-name|long
-name|junk
-decl_stmt|;
 name|gettimeofday
 argument_list|(
 operator|&
@@ -444,8 +442,6 @@ operator|^
 name|tv
 operator|.
 name|tv_usec
-operator|^
-name|junk
 argument_list|)
 expr_stmt|;
 block|}

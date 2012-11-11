@@ -32,19 +32,23 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
-comment|// This file defines the Module class, which describes a module in the source
+comment|/// \file
 end_comment
 
 begin_comment
-comment|// code.
+comment|/// \brief Defines the clang::Module class, which describes a module in the
 end_comment
 
 begin_comment
-comment|//
+comment|/// source code.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -377,7 +381,7 @@ operator|>
 name|Exports
 expr_stmt|;
 comment|/// \brief Describes an exported module that has not yet been resolved
-comment|/// (perhaps because tASThe module it refers to has not yet been loaded).
+comment|/// (perhaps because the module it refers to has not yet been loaded).
 struct|struct
 name|UnresolvedExportDecl
 block|{
@@ -716,7 +720,7 @@ operator|(
 operator|)
 return|;
 block|}
-comment|/// \briaf Add the given feature requirement to the list of features
+comment|/// \brief Add the given feature requirement to the list of features
 comment|/// required by this module.
 comment|///
 comment|/// \param Feature The feature that is required by this module (and

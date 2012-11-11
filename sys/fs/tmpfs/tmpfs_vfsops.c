@@ -1194,8 +1194,11 @@ operator|==
 literal|2
 argument_list|,
 operator|(
-literal|"tmpfs root with invalid ino: %d"
+literal|"tmpfs root with invalid ino: %ju"
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|root
 operator|->
 name|tn_id

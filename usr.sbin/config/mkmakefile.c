@@ -2077,7 +2077,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: %s missing compile command string.\n"
+literal|"%s: %s missing dependency string.\n"
 argument_list|,
 name|fname
 argument_list|,
@@ -3813,7 +3813,7 @@ argument_list|(
 name|cmd
 argument_list|)
 argument_list|,
-literal|"${%s_%c%s}\n"
+literal|"${%s_%c%s}"
 argument_list|,
 name|ftype
 argument_list|,

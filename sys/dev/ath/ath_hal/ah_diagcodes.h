@@ -162,7 +162,22 @@ init|=
 literal|34
 block|,
 comment|/* channel survey */
-block|}
+name|HAL_DIAG_PRINT_REG
+init|=
+literal|35
+block|,
+name|HAL_DIAG_PRINT_REG_ALL
+init|=
+literal|36
+block|,
+name|HAL_DIAG_CHANNELS
+init|=
+literal|37
+block|,
+name|HAL_DIAG_PRINT_REG_COUNTER
+init|=
+literal|38
+block|, }
 enum|;
 end_enum
 

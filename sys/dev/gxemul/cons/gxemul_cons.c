@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/reboot.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/tty.h>
 end_include
 
@@ -579,13 +585,21 @@ name|cp
 operator|->
 name|cn_name
 argument_list|,
-literal|"gxcons"
+literal|"ttyu0"
 argument_list|)
 expr_stmt|;
 name|cp
 operator|->
 name|cn_pri
 operator|=
+operator|(
+name|boothowto
+operator|&
+name|RB_SERIAL
+operator|)
+condition|?
+name|CN_REMOTE
+else|:
 name|CN_NORMAL
 expr_stmt|;
 block|}
@@ -760,7 +774,7 @@ name|NULL
 argument_list|,
 literal|"%s"
 argument_list|,
-literal|"gxcons"
+literal|"ttyu0"
 argument_list|)
 expr_stmt|;
 name|callout_init

@@ -11659,6 +11659,7 @@ block|{
 if|#
 directive|if
 operator|(
+operator|(
 name|defined
 argument_list|(
 name|OpenBSD
@@ -11668,6 +11669,13 @@ operator|(
 name|OpenBSD
 operator|>=
 literal|200311
+operator|)
+operator|)
+operator|||
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|1000019
 operator|)
 operator|)
 operator|&&
@@ -12874,6 +12882,12 @@ name|OpenBSD
 operator|>=
 literal|200311
 operator|)
+operator|)
+operator|||
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|1000019
 operator|)
 if|if
 condition|(

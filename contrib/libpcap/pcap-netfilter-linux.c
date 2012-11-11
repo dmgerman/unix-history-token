@@ -2282,12 +2282,16 @@ operator|<
 literal|0
 condition|)
 block|{
-comment|/* if netlink is not supported this this is not fatal */
+comment|/* if netlink is not supported this is not fatal */
 if|if
 condition|(
 name|errno
 operator|==
 name|EAFNOSUPPORT
+operator|||
+name|errno
+operator|==
+name|EPROTONOSUPPORT
 condition|)
 return|return
 literal|0

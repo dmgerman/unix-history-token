@@ -32,11 +32,40 @@ directive|define
 name|ARCHIVE_WRITE_DISK_PRIVATE_H_INCLUDED
 end_define
 
+begin_include
+include|#
+directive|include
+file|"archive_acl_private.h"
+end_include
+
 begin_struct_decl
 struct_decl|struct
 name|archive_write_disk
 struct_decl|;
 end_struct_decl
+
+begin_function_decl
+name|int
+name|archive_write_disk_set_acls
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|,
+name|int
+comment|/* fd */
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+comment|/* pathname */
+parameter_list|,
+name|struct
+name|archive_acl
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

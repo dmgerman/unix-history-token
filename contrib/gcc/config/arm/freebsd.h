@@ -72,25 +72,12 @@ begin_define
 define|#
 directive|define
 name|LINK_SPEC
-value|"							\   %{p:%nconsider using `-pg' instead of `-p' with gprof(1) }		\   %{v:-V}								\   %{assert*} %{R*} %{rpath*} %{defsym*}					\   %{shared:-Bshareable %{h*} %{soname*}}				\   %{!shared:								\     %{!static:								\       %{rdynamic:-export-dynamic}					\       %{!dynamic-linker:-dynamic-linker %(fbsd_dynamic_linker) }}	\     %{static:-Bstatic}}							\   %{!static:--hash-style=both}						\   %{symbolic:-Bsymbolic}						\   -X %{mbig-endian:-EB} %{mlittle-endian:-EL}"
+value|"							\   %{p:%nconsider using `-pg' instead of `-p' with gprof(1) }		\   %{v:-V}								\   %{assert*} %{R*} %{rpath*} %{defsym*}					\   %{shared:-Bshareable %{h*} %{soname*}}				\   %{!shared:								\     %{!static:								\       %{rdynamic:-export-dynamic}					\       %{!dynamic-linker:-dynamic-linker %(fbsd_dynamic_linker) }}	\     %{static:-Bstatic}}							\   %{!static:--hash-style=both --enable-new-dtags}			\   %{symbolic:-Bsymbolic}						\   -X %{mbig-endian:-EB} %{mlittle-endian:-EL}"
 end_define
 
 begin_comment
 comment|/************************[  Target stuff  ]***********************************/
 end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|TARGET_VERSION
-end_undef
-
-begin_define
-define|#
-directive|define
-name|TARGET_VERSION
-value|fprintf (stderr, " (FreeBSD/StrongARM ELF)");
-end_define
 
 begin_ifndef
 ifndef|#
@@ -185,6 +172,61 @@ directive|undef
 name|WCHAR_TYPE
 end_undef
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|FREEBSD_ARCH_armv6
+argument_list|)
+end_if
+
+begin_undef
+undef|#
+directive|undef
+name|SUBTARGET_CPU_DEFAULT
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SUBTARGET_CPU_DEFAULT
+value|TARGET_CPU_arm1176jzs
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|FBSD_TARGET_CPU_CPP_BUILTINS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|FBSD_TARGET_CPU_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do {						\     builtin_define ("__FreeBSD_ARCH_armv6__");	\   } while (0)
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_VERSION
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_VERSION
+value|fprintf (stderr, " (FreeBSD/armv6 ELF)");
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_undef
 undef|#
 directive|undef
@@ -197,6 +239,24 @@ directive|define
 name|SUBTARGET_CPU_DEFAULT
 value|TARGET_CPU_strongarm
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_VERSION
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_VERSION
+value|fprintf (stderr, " (FreeBSD/StrongARM ELF)");
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* FreeBSD does its profiling differently to the Acorn compiler. We    don't need a word following the mcount call; and to skip it    requires either an assembly stub or use of fomit-frame-pointer when    compiling the profiling functions.  Since we break Acorn CC    compatibility below a little more won't hurt.  */

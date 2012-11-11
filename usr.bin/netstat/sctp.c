@@ -357,6 +357,12 @@ begin_comment
 comment|/*  * Construct an Internet address representation.  * If numeric_addr has been supplied, give  * numeric value, otherwise try for symbolic name.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_function
 specifier|static
 name|char
@@ -615,6 +621,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -916,6 +927,9 @@ operator|.
 name|sa_family
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|INET
 case|case
 name|AF_INET
 case|:
@@ -943,6 +957,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|INET6

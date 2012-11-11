@@ -156,13 +156,6 @@ end_include
 begin_define
 define|#
 directive|define
-name|VLANNAME
-value|"vlan"
-end_define
-
-begin_define
-define|#
-directive|define
 name|VLAN_DEF_HWIDTH
 value|4
 end_define
@@ -511,13 +504,24 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|vlanname
+index|[]
+init|=
+literal|"vlan"
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_VLAN
 argument_list|,
-name|VLANNAME
+name|vlanname
 argument_list|,
 literal|"802.1Q Virtual LAN Interface"
 argument_list|)
@@ -597,7 +601,7 @@ name|TRUNK_LOCK_INIT
 parameter_list|(
 name|trunk
 parameter_list|)
-value|rw_init(&(trunk)->rw, VLANNAME)
+value|rw_init(&(trunk)->rw, vlanname)
 end_define
 
 begin_define
@@ -950,6 +954,9 @@ name|struct
 name|ifnet
 modifier|*
 name|ifp
+parameter_list|,
+name|int
+name|departing
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1124,24 +1131,8 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|if_clone
+modifier|*
 name|vlan_cloner
-init|=
-name|IFC_CLONE_INITIALIZER
-argument_list|(
-name|VLANNAME
-argument_list|,
-name|NULL
-argument_list|,
-name|IF_MAXUNIT
-argument_list|,
-name|NULL
-argument_list|,
-name|vlan_clone_match
-argument_list|,
-name|vlan_clone_create
-argument_list|,
-name|vlan_clone_destroy
-argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -1157,6 +1148,7 @@ name|VNET_DEFINE
 argument_list|(
 expr|struct
 name|if_clone
+operator|*
 argument_list|,
 name|vlan_cloner
 argument_list|)
@@ -2755,6 +2747,8 @@ argument_list|(
 name|ifv
 operator|->
 name|ifv_ifp
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -2818,6 +2812,8 @@ argument_list|(
 name|ifv
 operator|->
 name|ifv_ifp
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -3290,10 +3286,19 @@ expr_stmt|;
 ifndef|#
 directive|ifndef
 name|VIMAGE
-name|if_clone_attach
-argument_list|(
-operator|&
 name|vlan_cloner
+operator|=
+name|if_clone_advanced
+argument_list|(
+name|vlanname
+argument_list|,
+literal|0
+argument_list|,
+name|vlan_clone_match
+argument_list|,
+name|vlan_clone_create
+argument_list|,
+name|vlan_clone_destroy
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3326,7 +3331,6 @@ directive|ifndef
 name|VIMAGE
 name|if_clone_detach
 argument_list|(
-operator|&
 name|vlan_cloner
 argument_list|)
 expr_stmt|;
@@ -3448,15 +3452,24 @@ name|unused
 name|__unused
 parameter_list|)
 block|{
+name|vlan_cloner
+operator|=
+name|if_clone_advanced
+argument_list|(
+name|vlanname
+argument_list|,
+literal|0
+argument_list|,
+name|vlan_clone_match
+argument_list|,
+name|vlan_clone_create
+argument_list|,
+name|vlan_clone_destroy
+argument_list|)
+expr_stmt|;
 name|V_vlan_cloner
 operator|=
 name|vlan_cloner
-expr_stmt|;
-name|if_clone_attach
-argument_list|(
-operator|&
-name|V_vlan_cloner
-argument_list|)
 expr_stmt|;
 block|}
 name|VNET_SYSINIT
@@ -3485,7 +3498,6 @@ parameter_list|)
 block|{
 name|if_clone_detach
 argument_list|(
-operator|&
 name|V_vlan_cloner
 argument_list|)
 expr_stmt|;
@@ -3728,13 +3740,13 @@ if|if
 condition|(
 name|strncmp
 argument_list|(
-name|VLANNAME
+name|vlanname
 argument_list|,
 name|name
 argument_list|,
 name|strlen
 argument_list|(
-name|VLANNAME
+name|vlanname
 argument_list|)
 argument_list|)
 operator|!=
@@ -4213,9 +4225,7 @@ name|ifp
 operator|->
 name|if_dname
 operator|=
-name|ifc
-operator|->
-name|ifc_name
+name|vlanname
 expr_stmt|;
 name|ifp
 operator|->
@@ -4347,7 +4357,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 			 * Since we've partialy failed, we need to back 			 * out all the way, otherwise userland could get 			 * confused.  Thus, we destroy the interface. 			 */
+comment|/* 			 * Since we've partially failed, we need to back 			 * out all the way, otherwise userland could get 			 * confused.  Thus, we destroy the interface. 			 */
 name|ether_ifdetach
 argument_list|(
 name|ifp
@@ -5605,6 +5615,8 @@ expr_stmt|;
 name|vlan_unconfig_locked
 argument_list|(
 name|ifp
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|VLAN_UNLOCK
@@ -5619,6 +5631,9 @@ name|struct
 name|ifnet
 modifier|*
 name|ifp
+parameter_list|,
+name|int
+name|departing
 parameter_list|)
 block|{
 name|struct
@@ -5640,6 +5655,9 @@ name|struct
 name|ifnet
 modifier|*
 name|parent
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 name|VLAN_LOCK_ASSERT
 argument_list|()
@@ -5696,10 +5714,15 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 			 * This may fail if the parent interface is 			 * being detached.  Regardless, we should do a 			 * best effort to free this interface as much 			 * as possible as all callers expect vlan 			 * destruction to succeed. 			 */
-operator|(
-name|void
-operator|)
+comment|/* 			 * If the parent interface is being detached, 			 * all its multicast addresses have already 			 * been removed.  Warn about errors if 			 * if_delmulti() does fail, but don't abort as 			 * all callers expect vlan destruction to 			 * succeed. 			 */
+if|if
+condition|(
+operator|!
+name|departing
+condition|)
+block|{
+name|error
+operator|=
 name|if_delmulti
 argument_list|(
 name|parent
@@ -5715,6 +5738,20 @@ operator|->
 name|mc_addr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+name|if_printf
+argument_list|(
+name|ifp
+argument_list|,
+literal|"Failed to delete multicast address from parent: %d\n"
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+block|}
 name|SLIST_REMOVE_HEAD
 argument_list|(
 operator|&

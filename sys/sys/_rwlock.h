@@ -15,8 +15,14 @@ directive|define
 name|_SYS__RWLOCK_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<machine/param.h>
+end_include
+
 begin_comment
-comment|/*  * Reader/writer lock.  */
+comment|/*  * Reader/writer lock.  *  * The layout of the first 2 members of struct rwlock* is considered fixed.  * More specifically, it is assumed that there is a member called rw_lock  * for every struct rwlock* and that other locking primitive structures are  * not allowed to use such name for their members.  * If this needs to change, the bits in the rwlock implementation might be  * modified appropriately.  */
 end_comment
 
 begin_struct
@@ -32,6 +38,30 @@ name|uintptr_t
 name|rw_lock
 decl_stmt|;
 block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Members of struct rwlock_padalign must mirror members of struct rwlock.  * rwlock_padalign rwlocks can use rwlock(9) KPI transparently, without  * modifies.  * When using pad-aligned rwlocks within structures, they should generally  * stay as the first member of the struct.  This is because otherwise the  * compiler can generate ever more padding for the struct to keep a correct  * alignment for the rwlock.  */
+end_comment
+
+begin_struct
+struct|struct
+name|rwlock_padalign
+block|{
+name|struct
+name|lock_object
+name|lock_object
+decl_stmt|;
+specifier|volatile
+name|uintptr_t
+name|rw_lock
+decl_stmt|;
+block|}
+name|__aligned
+argument_list|(
+name|CACHE_LINE_SIZE
+argument_list|)
 struct|;
 end_struct
 

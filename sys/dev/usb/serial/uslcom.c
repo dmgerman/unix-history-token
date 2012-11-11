@@ -21,6 +21,10 @@ begin_comment
 comment|/*  * Copyright (c) 2006 Jonathan Gray<jsg@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
+begin_comment
+comment|/*  * Driver for Silicon Laboratories CP2101/CP2102/CP2103/CP2104/CP2105  * USB-Serial adapters.  Based on datasheet AN571, publicly available from  * http://www.silabs.com/Support%20Documents/TechnicalDocs/AN571.pdf  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -258,23 +262,6 @@ name|USLCOM_CONFIG_INDEX
 value|0
 end_define
 
-begin_define
-define|#
-directive|define
-name|USLCOM_IFACE_INDEX
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|USLCOM_SET_DATA_BITS
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)<< 8)
-end_define
-
 begin_comment
 comment|/* Request types */
 end_comment
@@ -300,50 +287,57 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USLCOM_UART
+name|USLCOM_IFC_ENABLE
 value|0x00
 end_define
 
 begin_define
 define|#
 directive|define
-name|USLCOM_BAUD_RATE
+name|USLCOM_SET_BAUDDIV
 value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
-name|USLCOM_DATA
+name|USLCOM_SET_LINE_CTL
 value|0x03
 end_define
 
 begin_define
 define|#
 directive|define
-name|USLCOM_BREAK
+name|USLCOM_SET_BREAK
 value|0x05
 end_define
 
 begin_define
 define|#
 directive|define
-name|USLCOM_CTRL
+name|USLCOM_SET_MHS
 value|0x07
 end_define
 
 begin_define
 define|#
 directive|define
-name|USLCOM_RCTRL
+name|USLCOM_GET_MDMSTS
 value|0x08
 end_define
 
 begin_define
 define|#
 directive|define
-name|USLCOM_SET_FLOWCTRL
+name|USLCOM_SET_FLOW
 value|0x13
+end_define
+
+begin_define
+define|#
+directive|define
+name|USLCOM_SET_BAUDRATE
+value|0x1e
 end_define
 
 begin_define
@@ -354,96 +348,100 @@ value|0xff
 end_define
 
 begin_comment
-comment|/* USLCOM_UART values */
+comment|/* USLCOM_IFC_ENABLE values */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|USLCOM_UART_DISABLE
+name|USLCOM_IFC_ENABLE_DIS
 value|0x00
 end_define
 
 begin_define
 define|#
 directive|define
-name|USLCOM_UART_ENABLE
+name|USLCOM_IFC_ENABLE_EN
 value|0x01
 end_define
 
 begin_comment
-comment|/* USLCOM_CTRL/USLCOM_RCTRL values */
+comment|/* USLCOM_SET_MHS/USLCOM_GET_MDMSTS values */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|USLCOM_CTRL_DTR_ON
+name|USLCOM_MHS_DTR_ON
 value|0x0001
 end_define
 
 begin_define
 define|#
 directive|define
-name|USLCOM_CTRL_DTR_SET
+name|USLCOM_MHS_DTR_SET
 value|0x0100
 end_define
 
 begin_define
 define|#
 directive|define
-name|USLCOM_CTRL_RTS_ON
+name|USLCOM_MHS_RTS_ON
 value|0x0002
 end_define
 
 begin_define
 define|#
 directive|define
-name|USLCOM_CTRL_RTS_SET
+name|USLCOM_MHS_RTS_SET
 value|0x0200
 end_define
 
 begin_define
 define|#
 directive|define
-name|USLCOM_CTRL_CTS
+name|USLCOM_MHS_CTS
 value|0x0010
 end_define
 
 begin_define
 define|#
 directive|define
-name|USLCOM_CTRL_DSR
+name|USLCOM_MHS_DSR
 value|0x0020
 end_define
 
 begin_define
 define|#
 directive|define
-name|USLCOM_CTRL_RI
+name|USLCOM_MHS_RI
 value|0x0040
 end_define
 
 begin_define
 define|#
 directive|define
-name|USLCOM_CTRL_DCD
+name|USLCOM_MHS_DCD
 value|0x0080
 end_define
 
 begin_comment
-comment|/* USLCOM_BAUD_RATE values */
+comment|/* USLCOM_SET_BAUDDIV values */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|USLCOM_BAUD_REF
-value|0x384000
+name|USLCOM_BAUDDIV_REF
+value|3686400
 end_define
 
 begin_comment
-comment|/* USLCOM_DATA values */
+comment|/* 3.6864 MHz */
+end_comment
+
+begin_comment
+comment|/* USLCOM_SET_LINE_CTL values */
 end_comment
 
 begin_define
@@ -484,30 +482,33 @@ end_define
 begin_define
 define|#
 directive|define
-name|USLCOM_PORT_NO
-value|0x0000
+name|USLCOM_SET_DATA_BITS
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< 8)
 end_define
 
 begin_comment
-comment|/* USLCOM_BREAK values */
+comment|/* USLCOM_SET_BREAK values */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|USLCOM_BREAK_OFF
+name|USLCOM_SET_BREAK_OFF
 value|0x00
 end_define
 
 begin_define
 define|#
 directive|define
-name|USLCOM_BREAK_ON
+name|USLCOM_SET_BREAK_ON
 value|0x01
 end_define
 
 begin_comment
-comment|/* USLCOM_SET_FLOWCTRL values - 1st word */
+comment|/* USLCOM_SET_FLOW values - 1st word */
 end_comment
 
 begin_define
@@ -533,7 +534,7 @@ comment|/* CTS handshake */
 end_comment
 
 begin_comment
-comment|/* USLCOM_SET_FLOWCTRL values - 2nd word */
+comment|/* USLCOM_SET_FLOW values - 2nd word */
 end_comment
 
 begin_define
@@ -629,6 +630,9 @@ decl_stmt|;
 name|uint8_t
 name|sc_lsr
 decl_stmt|;
+name|uint8_t
+name|sc_iface_no
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -654,6 +658,18 @@ name|uslcom_detach
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|static
+name|void
+name|uslcom_free_softc
+parameter_list|(
+name|struct
+name|uslcom_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|static
 name|usb_callback_t
@@ -674,6 +690,18 @@ name|usb_callback_t
 name|uslcom_control_callback
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+specifier|static
+name|void
+name|uslcom_free
+parameter_list|(
+name|struct
+name|ucom_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
@@ -1122,6 +1150,12 @@ name|ucom_poll
 operator|=
 operator|&
 name|uslcom_poll
+block|,
+operator|.
+name|ucom_free
+operator|=
+operator|&
+name|uslcom_free
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -1154,7 +1188,49 @@ name|USLCOM_DEV
 argument_list|(
 name|CLIPSAL
 argument_list|,
+literal|5000CT2
+argument_list|)
+block|,
+name|USLCOM_DEV
+argument_list|(
+name|CLIPSAL
+argument_list|,
+literal|5500PACA
+argument_list|)
+block|,
+name|USLCOM_DEV
+argument_list|(
+name|CLIPSAL
+argument_list|,
 literal|5500PCU
+argument_list|)
+block|,
+name|USLCOM_DEV
+argument_list|(
+name|CLIPSAL
+argument_list|,
+literal|560884
+argument_list|)
+block|,
+name|USLCOM_DEV
+argument_list|(
+name|CLIPSAL
+argument_list|,
+literal|5800PC
+argument_list|)
+block|,
+name|USLCOM_DEV
+argument_list|(
+name|CLIPSAL
+argument_list|,
+name|C5000CT2
+argument_list|)
+block|,
+name|USLCOM_DEV
+argument_list|(
+name|CLIPSAL
+argument_list|,
+name|L51xx
 argument_list|)
 block|,
 name|USLCOM_DEV
@@ -1208,6 +1284,20 @@ argument_list|)
 block|,
 name|USLCOM_DEV
 argument_list|(
+name|FESTO
+argument_list|,
+name|CMSP
+argument_list|)
+block|,
+name|USLCOM_DEV
+argument_list|(
+name|FESTO
+argument_list|,
+name|CPX_USB
+argument_list|)
+block|,
+name|USLCOM_DEV
+argument_list|(
 name|FOXCONN
 argument_list|,
 name|PIRELLI_DP_L10
@@ -1236,6 +1326,41 @@ argument_list|)
 block|,
 name|USLCOM_DEV
 argument_list|(
+name|KAMSTRUP
+argument_list|,
+name|OPTICALEYE
+argument_list|)
+block|,
+name|USLCOM_DEV
+argument_list|(
+name|KAMSTRUP
+argument_list|,
+name|MBUS_250D
+argument_list|)
+block|,
+name|USLCOM_DEV
+argument_list|(
+name|LINKINSTRUMENTS
+argument_list|,
+name|MSO19
+argument_list|)
+block|,
+name|USLCOM_DEV
+argument_list|(
+name|LINKINSTRUMENTS
+argument_list|,
+name|MSO28
+argument_list|)
+block|,
+name|USLCOM_DEV
+argument_list|(
+name|LINKINSTRUMENTS
+argument_list|,
+name|MSO28_2
+argument_list|)
+block|,
+name|USLCOM_DEV
+argument_list|(
 name|MEI
 argument_list|,
 name|CASHFLOW_SC
@@ -1246,13 +1371,6 @@ argument_list|(
 name|MEI
 argument_list|,
 name|S2000
-argument_list|)
-block|,
-name|USLCOM_DEV
-argument_list|(
-name|JABLOTRON
-argument_list|,
-name|PC60B
 argument_list|)
 block|,
 name|USLCOM_DEV
@@ -1281,6 +1399,34 @@ argument_list|(
 name|RENESAS
 argument_list|,
 name|RX610
+argument_list|)
+block|,
+name|USLCOM_DEV
+argument_list|(
+name|SILABS
+argument_list|,
+name|AC_SERV_CAN
+argument_list|)
+block|,
+name|USLCOM_DEV
+argument_list|(
+name|SILABS
+argument_list|,
+name|AC_SERV_CIS
+argument_list|)
+block|,
+name|USLCOM_DEV
+argument_list|(
+name|SILABS
+argument_list|,
+name|AC_SERV_IBUS
+argument_list|)
+block|,
+name|USLCOM_DEV
+argument_list|(
+name|SILABS
+argument_list|,
+name|AC_SERV_OBD
 argument_list|)
 block|,
 name|USLCOM_DEV
@@ -1392,6 +1538,20 @@ name|USLCOM_DEV
 argument_list|(
 name|SILABS
 argument_list|,
+name|CP210X_3
+argument_list|)
+block|,
+name|USLCOM_DEV
+argument_list|(
+name|SILABS
+argument_list|,
+name|CP210X_4
+argument_list|)
+block|,
+name|USLCOM_DEV
+argument_list|(
+name|SILABS
+argument_list|,
 name|CRUMB128
 argument_list|)
 block|,
@@ -1427,7 +1587,21 @@ name|USLCOM_DEV
 argument_list|(
 name|SILABS
 argument_list|,
+name|DEKTEK_DTAPLUS
+argument_list|)
+block|,
+name|USLCOM_DEV
+argument_list|(
+name|SILABS
+argument_list|,
 name|EMS_C1007
+argument_list|)
+block|,
+name|USLCOM_DEV
+argument_list|(
+name|SILABS
+argument_list|,
+name|HAMLINKUSB
 argument_list|)
 block|,
 name|USLCOM_DEV
@@ -1456,6 +1630,13 @@ argument_list|(
 name|SILABS
 argument_list|,
 name|INSYS_MODEM
+argument_list|)
+block|,
+name|USLCOM_DEV
+argument_list|(
+name|SILABS
+argument_list|,
+name|IRZ_SG10
 argument_list|)
 block|,
 name|USLCOM_DEV
@@ -1511,6 +1692,20 @@ name|USLCOM_DEV
 argument_list|(
 name|SILABS
 argument_list|,
+name|MULTIPLEX_RC
+argument_list|)
+block|,
+name|USLCOM_DEV
+argument_list|(
+name|SILABS
+argument_list|,
+name|OPTRIS_MSPRO
+argument_list|)
+block|,
+name|USLCOM_DEV
+argument_list|(
+name|SILABS
+argument_list|,
 name|POLOLU
 argument_list|)
 block|,
@@ -1546,7 +1741,7 @@ name|USLCOM_DEV
 argument_list|(
 name|SILABS
 argument_list|,
-name|TELEGESYS_ETRX2
+name|TELEGESIS_ETRX2
 argument_list|)
 block|,
 name|USLCOM_DEV
@@ -1752,11 +1947,7 @@ argument_list|,
 name|uslcom_detach
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1971,23 +2162,6 @@ name|ENXIO
 operator|)
 return|;
 block|}
-if|if
-condition|(
-name|uaa
-operator|->
-name|info
-operator|.
-name|bIfaceIndex
-operator|!=
-name|USLCOM_IFACE_INDEX
-condition|)
-block|{
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
 return|return
 operator|(
 name|usbd_lookup_id_by_uaa
@@ -2064,6 +2238,14 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
+name|ucom_ref
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_super_ucom
+argument_list|)
+expr_stmt|;
 name|usb_callout_init_mtx
 argument_list|(
 operator|&
@@ -2086,6 +2268,17 @@ operator|=
 name|uaa
 operator|->
 name|device
+expr_stmt|;
+comment|/* use the interface number from the USB interface descriptor */
+name|sc
+operator|->
+name|sc_iface_no
+operator|=
+name|uaa
+operator|->
+name|info
+operator|.
+name|bIfaceNum
 expr_stmt|;
 name|error
 operator|=
@@ -2297,6 +2490,54 @@ operator|->
 name|sc_watchdog
 argument_list|)
 expr_stmt|;
+name|device_claim_softc
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+name|uslcom_free_softc
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_expr_stmt
+name|UCOM_UNLOAD_DRAIN
+argument_list|(
+name|uslcom
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_function
+specifier|static
+name|void
+name|uslcom_free_softc
+parameter_list|(
+name|struct
+name|uslcom_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+if|if
+condition|(
+name|ucom_unref
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_super_ucom
+argument_list|)
+condition|)
+block|{
 name|mtx_destroy
 argument_list|(
 operator|&
@@ -2305,11 +2546,33 @@ operator|->
 name|sc_mtx
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+name|device_free_softc
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|uslcom_free
+parameter_list|(
+name|struct
+name|ucom_softc
+modifier|*
+name|ucom
+parameter_list|)
+block|{
+name|uslcom_free_softc
+argument_list|(
+name|ucom
+operator|->
+name|sc_parent
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2347,7 +2610,7 @@ name|req
 operator|.
 name|bRequest
 operator|=
-name|USLCOM_UART
+name|USLCOM_IFC_ENABLE
 expr_stmt|;
 name|USETW
 argument_list|(
@@ -2355,7 +2618,7 @@ name|req
 operator|.
 name|wValue
 argument_list|,
-name|USLCOM_UART_ENABLE
+name|USLCOM_IFC_ENABLE_EN
 argument_list|)
 expr_stmt|;
 name|USETW
@@ -2364,7 +2627,9 @@ name|req
 operator|.
 name|wIndex
 argument_list|,
-name|USLCOM_PORT_NO
+name|sc
+operator|->
+name|sc_iface_no
 argument_list|)
 expr_stmt|;
 name|USETW
@@ -2458,7 +2723,7 @@ name|req
 operator|.
 name|bRequest
 operator|=
-name|USLCOM_UART
+name|USLCOM_IFC_ENABLE
 expr_stmt|;
 name|USETW
 argument_list|(
@@ -2466,7 +2731,7 @@ name|req
 operator|.
 name|wValue
 argument_list|,
-name|USLCOM_UART_DISABLE
+name|USLCOM_IFC_ENABLE_DIS
 argument_list|)
 expr_stmt|;
 name|USETW
@@ -2475,7 +2740,9 @@ name|req
 operator|.
 name|wIndex
 argument_list|,
-name|USLCOM_PORT_NO
+name|sc
+operator|->
+name|sc_iface_no
 argument_list|)
 expr_stmt|;
 name|USETW
@@ -2561,13 +2828,13 @@ name|ctl
 operator|=
 name|onoff
 condition|?
-name|USLCOM_CTRL_DTR_ON
+name|USLCOM_MHS_DTR_ON
 else|:
 literal|0
 expr_stmt|;
 name|ctl
 operator||=
-name|USLCOM_CTRL_DTR_SET
+name|USLCOM_MHS_DTR_SET
 expr_stmt|;
 name|req
 operator|.
@@ -2579,7 +2846,7 @@ name|req
 operator|.
 name|bRequest
 operator|=
-name|USLCOM_CTRL
+name|USLCOM_SET_MHS
 expr_stmt|;
 name|USETW
 argument_list|(
@@ -2596,7 +2863,9 @@ name|req
 operator|.
 name|wIndex
 argument_list|,
-name|USLCOM_PORT_NO
+name|sc
+operator|->
+name|sc_iface_no
 argument_list|)
 expr_stmt|;
 name|USETW
@@ -2682,13 +2951,13 @@ name|ctl
 operator|=
 name|onoff
 condition|?
-name|USLCOM_CTRL_RTS_ON
+name|USLCOM_MHS_RTS_ON
 else|:
 literal|0
 expr_stmt|;
 name|ctl
 operator||=
-name|USLCOM_CTRL_RTS_SET
+name|USLCOM_MHS_RTS_SET
 expr_stmt|;
 name|req
 operator|.
@@ -2700,7 +2969,7 @@ name|req
 operator|.
 name|bRequest
 operator|=
-name|USLCOM_CTRL
+name|USLCOM_SET_MHS
 expr_stmt|;
 name|USETW
 argument_list|(
@@ -2717,7 +2986,9 @@ name|req
 operator|.
 name|wIndex
 argument_list|,
-name|USLCOM_PORT_NO
+name|sc
+operator|->
+name|sc_iface_no
 argument_list|)
 expr_stmt|;
 name|USETW
@@ -2835,6 +3106,8 @@ name|usb_device_request
 name|req
 decl_stmt|;
 name|uint32_t
+name|baudrate
+decl_stmt|,
 name|flowctrl
 index|[
 literal|4
@@ -2848,6 +3121,12 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+name|baudrate
+operator|=
+name|t
+operator|->
+name|c_ospeed
+expr_stmt|;
 name|req
 operator|.
 name|bmRequestType
@@ -2858,7 +3137,7 @@ name|req
 operator|.
 name|bRequest
 operator|=
-name|USLCOM_BAUD_RATE
+name|USLCOM_SET_BAUDRATE
 expr_stmt|;
 name|USETW
 argument_list|(
@@ -2866,11 +3145,7 @@ name|req
 operator|.
 name|wValue
 argument_list|,
-name|USLCOM_BAUD_REF
-operator|/
-name|t
-operator|->
-name|c_ospeed
+literal|0
 argument_list|)
 expr_stmt|;
 name|USETW
@@ -2879,7 +3154,9 @@ name|req
 operator|.
 name|wIndex
 argument_list|,
-name|USLCOM_PORT_NO
+name|sc
+operator|->
+name|sc_iface_no
 argument_list|)
 expr_stmt|;
 name|USETW
@@ -2888,7 +3165,10 @@ name|req
 operator|.
 name|wLength
 argument_list|,
-literal|0
+sizeof|sizeof
+argument_list|(
+name|baudrate
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2907,7 +3187,8 @@ argument_list|,
 operator|&
 name|req
 argument_list|,
-name|NULL
+operator|&
+name|baudrate
 argument_list|,
 literal|0
 argument_list|,
@@ -3034,7 +3315,7 @@ name|req
 operator|.
 name|bRequest
 operator|=
-name|USLCOM_DATA
+name|USLCOM_SET_LINE_CTL
 expr_stmt|;
 name|USETW
 argument_list|(
@@ -3051,7 +3332,9 @@ name|req
 operator|.
 name|wIndex
 argument_list|,
-name|USLCOM_PORT_NO
+name|sc
+operator|->
+name|sc_iface_no
 argument_list|)
 expr_stmt|;
 name|USETW
@@ -3124,20 +3407,6 @@ argument_list|(
 name|USLCOM_FLOW_RTS_HS
 argument_list|)
 expr_stmt|;
-name|flowctrl
-index|[
-literal|2
-index|]
-operator|=
-literal|0
-expr_stmt|;
-name|flowctrl
-index|[
-literal|3
-index|]
-operator|=
-literal|0
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -3161,6 +3430,7 @@ argument_list|(
 name|USLCOM_FLOW_RTS_ON
 argument_list|)
 expr_stmt|;
+block|}
 name|flowctrl
 index|[
 literal|2
@@ -3175,7 +3445,6 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-block|}
 name|req
 operator|.
 name|bmRequestType
@@ -3186,7 +3455,7 @@ name|req
 operator|.
 name|bRequest
 operator|=
-name|USLCOM_SET_FLOWCTRL
+name|USLCOM_SET_FLOW
 expr_stmt|;
 name|USETW
 argument_list|(
@@ -3203,7 +3472,9 @@ name|req
 operator|.
 name|wIndex
 argument_list|,
-name|USLCOM_PORT_NO
+name|sc
+operator|->
+name|sc_iface_no
 argument_list|)
 expr_stmt|;
 name|USETW
@@ -3333,9 +3604,9 @@ name|brk
 init|=
 name|onoff
 condition|?
-name|USLCOM_BREAK_ON
+name|USLCOM_SET_BREAK_ON
 else|:
-name|USLCOM_BREAK_OFF
+name|USLCOM_SET_BREAK_OFF
 decl_stmt|;
 name|req
 operator|.
@@ -3347,7 +3618,7 @@ name|req
 operator|.
 name|bRequest
 operator|=
-name|USLCOM_BREAK
+name|USLCOM_SET_BREAK
 expr_stmt|;
 name|USETW
 argument_list|(
@@ -3364,7 +3635,9 @@ name|req
 operator|.
 name|wIndex
 argument_list|,
-name|USLCOM_PORT_NO
+name|sc
+operator|->
+name|sc_iface_no
 argument_list|)
 expr_stmt|;
 name|USETW
@@ -3992,7 +4265,7 @@ if|if
 condition|(
 name|buf
 operator|&
-name|USLCOM_CTRL_CTS
+name|USLCOM_MHS_CTS
 condition|)
 name|msr
 operator||=
@@ -4002,7 +4275,7 @@ if|if
 condition|(
 name|buf
 operator|&
-name|USLCOM_CTRL_DSR
+name|USLCOM_MHS_DSR
 condition|)
 name|msr
 operator||=
@@ -4012,7 +4285,7 @@ if|if
 condition|(
 name|buf
 operator|&
-name|USLCOM_CTRL_RI
+name|USLCOM_MHS_RI
 condition|)
 name|msr
 operator||=
@@ -4022,7 +4295,7 @@ if|if
 condition|(
 name|buf
 operator|&
-name|USLCOM_CTRL_DCD
+name|USLCOM_MHS_DCD
 condition|)
 name|msr
 operator||=
@@ -4078,7 +4351,7 @@ name|req
 operator|.
 name|bRequest
 operator|=
-name|USLCOM_RCTRL
+name|USLCOM_GET_MDMSTS
 expr_stmt|;
 name|USETW
 argument_list|(
@@ -4095,7 +4368,9 @@ name|req
 operator|.
 name|wIndex
 argument_list|,
-name|USLCOM_PORT_NO
+name|sc
+operator|->
+name|sc_iface_no
 argument_list|)
 expr_stmt|;
 name|USETW

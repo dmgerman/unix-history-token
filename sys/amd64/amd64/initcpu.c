@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/pcpu.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
 end_include
 
@@ -302,6 +308,12 @@ end_decl_stmt
 
 begin_decl_stmt
 name|u_int
+name|cpu_stdext_feature
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|u_int
 name|cpu_max_ext_state_size
 decl_stmt|;
 end_decl_stmt
@@ -356,7 +368,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|/* 	 * Work around Erratum 721 for Family 10h and 12h processors. 	 * These processors may incorrectly update the stack pointer 	 * after a long series of push and/or near-call instructions, 	 * or a long series of pop and/or near-return instructions. 	 * 	 * http://support.amd.com/us/Processor_TechDocs/41322_10h_Rev_Gd.pdf 	 * http://support.amd.com/us/Processor_TechDocs/44739_12h_Rev_Gd.pdf 	 */
+comment|/* 	 * Work around Erratum 721 for Family 10h and 12h processors. 	 * These processors may incorrectly update the stack pointer 	 * after a long series of push and/or near-call instructions, 	 * or a long series of pop and/or near-return instructions. 	 * 	 * http://support.amd.com/us/Processor_TechDocs/41322_10h_Rev_Gd.pdf 	 * http://support.amd.com/us/Processor_TechDocs/44739_12h_Rev_Gd.pdf 	 * 	 * Hypervisors do not provide access to the errata MSR, 	 * causing #GP exception on attempt to apply the errata.  The 	 * MSR write shall be done on host and persist globally 	 * anyway, so do not try to do it when under virtualization. 	 */
 switch|switch
 condition|(
 name|CPUID_TO_FAMILY
@@ -371,6 +383,16 @@ case|:
 case|case
 literal|0x12
 case|:
+if|if
+condition|(
+operator|(
+name|cpu_feature2
+operator|&
+name|CPUID2_HV
+operator|)
+operator|==
+literal|0
+condition|)
 name|wrmsr
 argument_list|(
 literal|0xc0011029
@@ -568,6 +590,14 @@ block|{
 name|uint64_t
 name|msr
 decl_stmt|;
+name|uint32_t
+name|cr4
+decl_stmt|;
+name|cr4
+operator|=
+name|rcr4
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -583,15 +613,11 @@ name|CPUID_FXSR
 operator|)
 condition|)
 block|{
-name|load_cr4
-argument_list|(
-name|rcr4
-argument_list|()
-operator||
+name|cr4
+operator||=
 name|CR4_FXSR
 operator||
 name|CR4_XMM
-argument_list|)
 expr_stmt|;
 name|cpu_fxsr
 operator|=
@@ -600,6 +626,38 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|cpu_stdext_feature
+operator|&
+name|CPUID_STDEXT_FSGSBASE
+condition|)
+name|cr4
+operator||=
+name|CR4_FSGSBASE
+expr_stmt|;
+comment|/* 	 * Postpone enabling the SMEP on the boot CPU until the page 	 * tables are switched from the boot loader identity mapping 	 * to the kernel tables.  The boot loader enables the U bit in 	 * its tables. 	 */
+if|if
+condition|(
+operator|!
+name|IS_BSP
+argument_list|()
+operator|&&
+operator|(
+name|cpu_stdext_feature
+operator|&
+name|CPUID_STDEXT_SMEP
+operator|)
+condition|)
+name|cr4
+operator||=
+name|CR4_SMEP
+expr_stmt|;
+name|load_cr4
+argument_list|(
+name|cr4
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(

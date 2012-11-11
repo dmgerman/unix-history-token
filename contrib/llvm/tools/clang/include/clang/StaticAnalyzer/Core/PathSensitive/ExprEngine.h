@@ -156,10 +156,10 @@ name|class
 name|AnalysisManager
 decl_stmt|;
 name|class
-name|CallOrObjCMessage
+name|CallEvent
 decl_stmt|;
 name|class
-name|ObjCMessage
+name|SimpleCall
 decl_stmt|;
 name|class
 name|ExprEngine
@@ -480,6 +480,36 @@ return|return
 name|G
 return|;
 block|}
+comment|/// \brief Run the analyzer's garbage collection - remove dead symbols and
+comment|/// bindings.
+comment|///
+comment|/// \param Node - The predecessor node, from which the processing should
+comment|/// start.
+comment|/// \param Out - The returned set of output nodes.
+comment|/// \param ReferenceStmt - Run garbage collection using the symbols,
+comment|/// which are live before the given statement.
+comment|/// \param LC - The location context of the ReferenceStmt.
+comment|/// \param DiagnosticStmt - the statement used to associate the diagnostic
+comment|/// message, if any warnings should occur while removing the dead (leaks
+comment|/// are usually reported here).
+comment|/// \param K - In some cases it is possible to use PreStmt kind. (Do
+comment|/// not use it unless you know what you are doing.)
+name|void
+name|removeDead
+argument_list|(
+argument|ExplodedNode *Node
+argument_list|,
+argument|ExplodedNodeSet&Out
+argument_list|,
+argument|const Stmt *ReferenceStmt
+argument_list|,
+argument|const LocationContext *LC
+argument_list|,
+argument|const Stmt *DiagnosticStmt
+argument_list|,
+argument|ProgramPoint::Kind K = ProgramPoint::PreStmtPurgeDeadSymbolsKind
+argument_list|)
+block|;
 comment|/// processCFGElement - Called by CoreEngine. Used to generate new successor
 comment|///  nodes by processing the 'effects' of a CFG element.
 name|void
@@ -650,7 +680,8 @@ argument_list|,
 argument|ExplodedNode *Pred
 argument_list|)
 block|;
-comment|/// Generate the first post callsite node.
+comment|/// Generate the sequence of nodes that simulate the call exit and the post
+comment|/// visit for CallExpr.
 name|void
 name|processCallExit
 argument_list|(
@@ -699,7 +730,7 @@ argument|ArrayRef<const MemRegion *> ExplicitRegions
 argument_list|,
 argument|ArrayRef<const MemRegion *> Regions
 argument_list|,
-argument|const CallOrObjCMessage *Call
+argument|const CallEvent *Call
 argument_list|)
 block|;
 comment|/// printState - Called by ProgramStateManager to print checker-specific data.
@@ -894,6 +925,24 @@ name|VisitAsmStmt
 argument_list|(
 specifier|const
 name|AsmStmt
+operator|*
+name|A
+argument_list|,
+name|ExplodedNode
+operator|*
+name|Pred
+argument_list|,
+name|ExplodedNodeSet
+operator|&
+name|Dst
+argument_list|)
+block|;
+comment|/// VisitMSAsmStmt - Transfer function logic for MS inline asm.
+name|void
+name|VisitMSAsmStmt
+argument_list|(
+specifier|const
+name|MSAsmStmt
 operator|*
 name|A
 argument_list|,
@@ -1182,9 +1231,9 @@ name|void
 name|VisitObjCMessage
 argument_list|(
 specifier|const
-name|ObjCMessage
-operator|&
-name|msg
+name|ObjCMessageExpr
+operator|*
+name|ME
 argument_list|,
 name|ExplodedNode
 operator|*
@@ -1320,34 +1369,12 @@ name|Dst
 argument_list|)
 block|;
 name|void
-name|VisitCXXTemporaryObjectExpr
-argument_list|(
-specifier|const
-name|CXXTemporaryObjectExpr
-operator|*
-name|expr
-argument_list|,
-name|ExplodedNode
-operator|*
-name|Pred
-argument_list|,
-name|ExplodedNodeSet
-operator|&
-name|Dst
-argument_list|)
-block|;
-name|void
 name|VisitCXXConstructExpr
 argument_list|(
 specifier|const
 name|CXXConstructExpr
 operator|*
 name|E
-argument_list|,
-specifier|const
-name|MemRegion
-operator|*
-name|Dest
 argument_list|,
 name|ExplodedNode
 operator|*
@@ -1361,28 +1388,15 @@ block|;
 name|void
 name|VisitCXXDestructor
 argument_list|(
-specifier|const
-name|CXXDestructorDecl
-operator|*
-name|DD
+argument|QualType ObjectType
 argument_list|,
-specifier|const
-name|MemRegion
-operator|*
-name|Dest
+argument|const MemRegion *Dest
 argument_list|,
-specifier|const
-name|Stmt
-operator|*
-name|S
+argument|const Stmt *S
 argument_list|,
-name|ExplodedNode
-operator|*
-name|Pred
+argument|ExplodedNode *Pred
 argument_list|,
-name|ExplodedNodeSet
-operator|&
-name|Dst
+argument|ExplodedNodeSet&Dst
 argument_list|)
 block|;
 name|void
@@ -1435,39 +1449,6 @@ argument_list|,
 name|ExplodedNodeSet
 operator|&
 name|Dst
-argument_list|)
-block|;
-comment|/// Synthesize CXXThisRegion.
-specifier|const
-name|CXXThisRegion
-operator|*
-name|getCXXThisRegion
-argument_list|(
-specifier|const
-name|CXXRecordDecl
-operator|*
-name|RD
-argument_list|,
-specifier|const
-name|StackFrameContext
-operator|*
-name|SFC
-argument_list|)
-block|;
-specifier|const
-name|CXXThisRegion
-operator|*
-name|getCXXThisRegion
-argument_list|(
-specifier|const
-name|CXXMethodDecl
-operator|*
-name|decl
-argument_list|,
-specifier|const
-name|StackFrameContext
-operator|*
-name|frameCtx
 argument_list|)
 block|;
 comment|/// evalEagerlyAssume - Given the nodes in 'Src', eagerly assume symbolic
@@ -1671,42 +1652,6 @@ return|;
 block|}
 name|protected
 operator|:
-name|void
-name|evalObjCMessage
-argument_list|(
-argument|StmtNodeBuilder&Bldr
-argument_list|,
-argument|const ObjCMessage&msg
-argument_list|,
-argument|ExplodedNode *Pred
-argument_list|,
-argument|ProgramStateRef state
-argument_list|,
-argument|bool GenSink
-argument_list|)
-block|;
-name|ProgramStateRef
-name|invalidateArguments
-argument_list|(
-argument|ProgramStateRef State
-argument_list|,
-argument|const CallOrObjCMessage&Call
-argument_list|,
-argument|const LocationContext *LC
-argument_list|)
-block|;
-name|ProgramStateRef
-name|MarkBranch
-argument_list|(
-argument|ProgramStateRef state
-argument_list|,
-argument|const Stmt *Terminator
-argument_list|,
-argument|const LocationContext *LCtx
-argument_list|,
-argument|bool branchTaken
-argument_list|)
-block|;
 comment|/// evalBind - Handle the semantics of binding a value to a specific location.
 comment|///  This method is used by evalStore, VisitDeclStmt, and others.
 name|void
@@ -1778,6 +1723,55 @@ argument|const ProgramPointTag *tag =
 literal|0
 argument_list|)
 block|;
+comment|/// \brief Create a new state in which the call return value is binded to the
+comment|/// call origin expression.
+name|ProgramStateRef
+name|bindReturnValue
+argument_list|(
+argument|const CallEvent&Call
+argument_list|,
+argument|const LocationContext *LCtx
+argument_list|,
+argument|ProgramStateRef State
+argument_list|)
+block|;
+comment|/// Evaluate a call, running pre- and post-call checks and allowing checkers
+comment|/// to be responsible for handling the evaluation of the call itself.
+name|void
+name|evalCall
+argument_list|(
+name|ExplodedNodeSet
+operator|&
+name|Dst
+argument_list|,
+name|ExplodedNode
+operator|*
+name|Pred
+argument_list|,
+specifier|const
+name|CallEvent
+operator|&
+name|Call
+argument_list|)
+block|;
+comment|/// \brief Default implementation of call evaluation.
+name|void
+name|defaultEvalCall
+argument_list|(
+name|NodeBuilder
+operator|&
+name|B
+argument_list|,
+name|ExplodedNode
+operator|*
+name|Pred
+argument_list|,
+specifier|const
+name|CallEvent
+operator|&
+name|Call
+argument_list|)
+block|;
 name|private
 operator|:
 name|void
@@ -1828,9 +1822,9 @@ name|bool
 name|shouldInlineDecl
 argument_list|(
 specifier|const
-name|FunctionDecl
+name|Decl
 operator|*
-name|FD
+name|D
 argument_list|,
 name|ExplodedNode
 operator|*
@@ -1838,16 +1832,56 @@ name|Pred
 argument_list|)
 block|;
 name|bool
-name|InlineCall
+name|inlineCall
 argument_list|(
-name|ExplodedNodeSet
-operator|&
-name|Dst
+argument|const CallEvent&Call
+argument_list|,
+argument|const Decl *D
+argument_list|,
+argument|NodeBuilder&Bldr
+argument_list|,
+argument|ExplodedNode *Pred
+argument_list|,
+argument|ProgramStateRef State
+argument_list|)
+block|;
+comment|/// \brief Conservatively evaluate call by invalidating regions and binding
+comment|/// a conjured return value.
+name|void
+name|conservativeEvalCall
+argument_list|(
+argument|const CallEvent&Call
+argument_list|,
+argument|NodeBuilder&Bldr
+argument_list|,
+argument|ExplodedNode *Pred
+argument_list|,
+argument|ProgramStateRef State
+argument_list|)
+block|;
+comment|/// \brief Either inline or process the call conservatively (or both), based
+comment|/// on DynamicDispatchBifurcation data.
+name|void
+name|BifurcateCall
+argument_list|(
+specifier|const
+name|MemRegion
+operator|*
+name|BifurReg
 argument_list|,
 specifier|const
-name|CallExpr
+name|CallEvent
+operator|&
+name|Call
+argument_list|,
+specifier|const
+name|Decl
 operator|*
-name|CE
+name|D
+argument_list|,
+name|NodeBuilder
+operator|&
+name|Bldr
 argument_list|,
 name|ExplodedNode
 operator|*

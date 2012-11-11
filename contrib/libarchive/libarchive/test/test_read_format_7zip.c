@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Extract a non-encorded file.  * The header of the 7z archive files is not encdoed.  */
+comment|/*  * Extract a non-encoded file.  * The header of the 7z archive files is not encoded.  */
 end_comment
 
 begin_function
@@ -128,7 +128,7 @@ argument_list|(
 operator|(
 name|AE_IFREG
 operator||
-literal|0777
+literal|0666
 operator|)
 argument_list|,
 name|archive_entry_mode
@@ -647,7 +647,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Extract an encoded file.  * The header of the 7z archive files is not encdoed.  */
+comment|/*  * Extract an encoded file.  * The header of the 7z archive files is not encoded.  */
 end_comment
 
 begin_function
@@ -899,7 +899,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Extract multi files.  * The header of the 7z archive files is encdoed with LZMA.  */
+comment|/*  * Extract multi files.  * The header of the 7z archive files is encoded with LZMA.  */
 end_comment
 
 begin_function
@@ -1456,7 +1456,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Extract last file.  * The header of the 7z archive files is encdoed with LZMA.  */
+comment|/*  * Extract last file.  * The header of the 7z archive files is encoded with LZMA.  */
 end_comment
 
 begin_function
@@ -1935,7 +1935,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Extract a mixed archive file which has both  LZMA and LZMA2 encoded files.  *  LZMA: file1, file2, file3, file4  *  LZMA2: zfile1, zfile2, zfile3, zfile4  */
+comment|/*  * Extract a mixed archive file which has both LZMA and LZMA2 encoded files.  *  LZMA: file1, file2, file3, file4  *  LZMA2: zfile1, zfile2, zfile3, zfile4  */
 end_comment
 
 begin_function
@@ -3265,13 +3265,16 @@ argument_list|(
 operator|(
 name|AE_IFREG
 operator||
-literal|0555
+literal|0444
 operator|)
 argument_list|,
 name|archive_entry_mode
 argument_list|(
 name|ae
 argument_list|)
+operator|&
+operator|~
+literal|0111
 argument_list|)
 expr_stmt|;
 name|assertEqualString
@@ -3582,7 +3585,7 @@ argument_list|(
 operator|(
 name|AE_IFREG
 operator||
-literal|0777
+literal|0666
 operator|)
 argument_list|,
 name|archive_entry_mode

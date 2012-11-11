@@ -33821,13 +33821,13 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-name|BUS_SPACE_MAXSIZE
+name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
 name|SYM_CONF_MAX_SG
 argument_list|,
 name|SYM_CONF_DMA_BOUNDARY
 argument_list|,
-name|BUS_DMA_ALLOCNOW
+literal|0
 argument_list|,
 name|busdma_lock_mutex
 argument_list|,

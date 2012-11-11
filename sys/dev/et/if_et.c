@@ -3578,7 +3578,7 @@ name|sc
 operator|->
 name|sc_expcap
 operator|+
-name|PCIR_EXPRESS_DEVICE_CAP
+name|PCIER_DEVICE_CAP
 argument_list|,
 literal|4
 argument_list|)
@@ -3587,7 +3587,7 @@ name|max_plsz
 operator|=
 name|val
 operator|&
-name|PCIM_EXP_CAP_MAX_PAYLOAD
+name|PCIEM_CAP_MAX_PAYLOAD
 expr_stmt|;
 switch|switch
 condition|(
@@ -3712,9 +3712,9 @@ name|val
 operator|&=
 operator|~
 operator|(
-name|PCIM_LINK_CAP_L0S_EXIT
+name|PCIEM_LINK_CAP_L0S_EXIT
 operator||
-name|PCIM_LINK_CAP_L1_EXIT
+name|PCIEM_LINK_CAP_L1_EXIT
 operator|)
 expr_stmt|;
 comment|/* L0s exit latency : 2us */

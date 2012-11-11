@@ -5231,6 +5231,17 @@ name|ptr
 operator|=
 literal|'\0'
 expr_stmt|;
+name|DEBUGF
+argument_list|(
+name|VAR
+argument_list|,
+operator|(
+literal|"Pattern :%s\n"
+operator|,
+name|patt
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|modifier
@@ -6574,6 +6585,8 @@ specifier|const
 name|char
 modifier|*
 name|error
+init|=
+name|NULL
 decl_stmt|;
 if|if
 condition|(

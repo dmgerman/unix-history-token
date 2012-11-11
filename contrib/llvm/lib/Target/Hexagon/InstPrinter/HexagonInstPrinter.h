@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"HexagonMCInst.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/MC/MCInstPrinter.h"
 end_include
 
@@ -110,6 +116,16 @@ name|void
 name|printInst
 argument_list|(
 argument|const MCInst *MI
+argument_list|,
+argument|raw_ostream&O
+argument_list|,
+argument|StringRef Annot
+argument_list|)
+block|;
+name|void
+name|printInst
+argument_list|(
+argument|const HexagonMCInst *MI
 argument_list|,
 argument|raw_ostream&O
 argument_list|,

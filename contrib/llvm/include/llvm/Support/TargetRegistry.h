@@ -419,6 +419,9 @@ name|T
 parameter_list|,
 name|StringRef
 name|TT
+parameter_list|,
+name|StringRef
+name|CPU
 parameter_list|)
 function_decl|;
 typedef|typedef
@@ -530,6 +533,11 @@ specifier|const
 name|MCInstrInfo
 modifier|&
 name|II
+parameter_list|,
+specifier|const
+name|MCRegisterInfo
+modifier|&
+name|MRI
 parameter_list|,
 specifier|const
 name|MCSubtargetInfo
@@ -1210,6 +1218,9 @@ name|createMCAsmBackend
 argument_list|(
 name|StringRef
 name|Triple
+argument_list|,
+name|StringRef
+name|CPU
 argument_list|)
 decl|const
 block|{
@@ -1228,6 +1239,8 @@ operator|*
 name|this
 argument_list|,
 name|Triple
+argument_list|,
+name|CPU
 argument_list|)
 return|;
 block|}
@@ -1432,6 +1445,11 @@ operator|&
 name|II
 argument_list|,
 specifier|const
+name|MCRegisterInfo
+operator|&
+name|MRI
+argument_list|,
+specifier|const
 name|MCSubtargetInfo
 operator|&
 name|STI
@@ -1454,6 +1472,8 @@ return|return
 name|MCCodeEmitterCtorFn
 argument_list|(
 name|II
+argument_list|,
+name|MRI
 argument_list|,
 name|STI
 argument_list|,
@@ -1872,6 +1892,77 @@ operator|::
 name|string
 operator|&
 name|Triple
+argument_list|,
+name|std
+operator|::
+name|string
+operator|&
+name|Error
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// lookupTarget - Lookup a target based on an architecture name
+end_comment
+
+begin_comment
+comment|/// and a target triple.  If the architecture name is non-empty,
+end_comment
+
+begin_comment
+comment|/// then the lookup is done by architecture.  Otherwise, the target
+end_comment
+
+begin_comment
+comment|/// triple is used.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param ArchName - The architecture to use for finding a target.
+end_comment
+
+begin_comment
+comment|/// \param TheTriple - The triple to use for finding a target.  The
+end_comment
+
+begin_comment
+comment|/// triple is updated with canonical architecture name if a lookup
+end_comment
+
+begin_comment
+comment|/// by architecture is done.
+end_comment
+
+begin_comment
+comment|/// \param Error - On failure, an error string describing why no target was
+end_comment
+
+begin_comment
+comment|/// found.
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|Target
+modifier|*
+name|lookupTarget
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|ArchName
+argument_list|,
+name|Triple
+operator|&
+name|TheTriple
 argument_list|,
 name|std
 operator|::
@@ -4169,6 +4260,8 @@ argument_list|(
 argument|const Target&T
 argument_list|,
 argument|StringRef Triple
+argument_list|,
+argument|StringRef CPU
 argument_list|)
 block|{
 return|return
@@ -4178,6 +4271,8 @@ argument_list|(
 name|T
 argument_list|,
 name|Triple
+argument_list|,
+name|CPU
 argument_list|)
 return|;
 block|}
@@ -4495,6 +4590,8 @@ operator|*
 name|Allocator
 argument_list|(
 argument|const MCInstrInfo&II
+argument_list|,
+argument|const MCRegisterInfo&MRI
 argument_list|,
 argument|const MCSubtargetInfo&STI
 argument_list|,

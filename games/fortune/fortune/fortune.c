@@ -111,6 +111,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdbool.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -154,21 +160,14 @@ begin_define
 define|#
 directive|define
 name|TRUE
-value|1
+value|true
 end_define
 
 begin_define
 define|#
 directive|define
 name|FALSE
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|bool
-value|short
+value|false
 end_define
 
 begin_define
@@ -474,6 +473,19 @@ end_decl_stmt
 
 begin_comment
 comment|/* dump fortunes matching a pattern */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|bool
+name|WriteToDisk
+init|=
+name|false
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* use files on disk to save state */
 end_comment
 
 begin_ifdef
@@ -1039,15 +1051,22 @@ name|argv
 index|[]
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|OK_TO_WRITE_DISK
 name|int
 name|fd
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* OK_TO_WRITE_DISK */
+if|if
+condition|(
+name|getenv
+argument_list|(
+literal|"FORTUNE_SAVESTATE"
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+name|WriteToDisk
+operator|=
+name|true
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1115,9 +1134,11 @@ argument_list|(
 name|Fortfile
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|OK_TO_WRITE_DISK
+if|if
+condition|(
+name|WriteToDisk
+condition|)
+block|{
 if|if
 condition|(
 operator|(
@@ -1149,13 +1170,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|LOCK_EX
-comment|/* 	 * if we can, we exclusive lock, but since it isn't very 	 * important, we just punt if we don't have easy locking 	 * available. 	 */
-operator|(
-name|void
-operator|)
+comment|/* 		 * if we can, we exclusive lock, but since it isn't very 		 * important, we just punt if we don't have easy locking 		 * available. 		 */
 name|flock
 argument_list|(
 name|fd
@@ -1163,9 +1178,6 @@ argument_list|,
 name|LOCK_EX
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* LOCK_EX */
 name|write
 argument_list|(
 name|fd
@@ -1192,9 +1204,6 @@ name|Fortfile
 operator|->
 name|was_pos_file
 condition|)
-operator|(
-name|void
-operator|)
 name|chmod
 argument_list|(
 name|Fortfile
@@ -1204,12 +1213,6 @@ argument_list|,
 literal|0666
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LOCK_EX
-operator|(
-name|void
-operator|)
 name|flock
 argument_list|(
 name|fd
@@ -1217,12 +1220,7 @@ argument_list|,
 name|LOCK_UN
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* LOCK_EX */
-endif|#
-directive|endif
-comment|/* OK_TO_WRITE_DISK */
+block|}
 if|if
 condition|(
 name|Wait
@@ -3032,9 +3030,10 @@ operator|=
 name|fp
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|OK_TO_WRITE_DISK
+if|if
+condition|(
+name|WriteToDisk
+condition|)
 name|fp
 operator|->
 name|was_pos_file
@@ -3052,9 +3051,6 @@ operator|>=
 literal|0
 operator|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* OK_TO_WRITE_DISK */
 return|return
 operator|(
 name|TRUE
@@ -3514,11 +3510,12 @@ name|obscene
 operator|->
 name|read_tbl
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|OK_TO_WRITE_DISK
+if|if
+condition|(
+name|WriteToDisk
+condition|)
 name|obscene
 operator|->
 name|was_pos_file
@@ -3536,9 +3533,6 @@ operator|>=
 literal|0
 operator|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* OK_TO_WRITE_DISK */
 block|}
 end_function
 
@@ -4215,9 +4209,11 @@ operator|!=
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|OK_TO_WRITE_DISK
+if|if
+condition|(
+name|WriteToDisk
+condition|)
+block|{
 operator|*
 name|posp
 operator|=
@@ -4240,9 +4236,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* +4 for ".dat" */
-operator|(
-name|void
-operator|)
 name|strcat
 argument_list|(
 operator|*
@@ -4251,16 +4244,15 @@ argument_list|,
 literal|".pos"
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+block|}
+else|else
+block|{
 operator|*
 name|posp
 operator|=
 name|NULL
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* OK_TO_WRITE_DISK */
+block|}
 block|}
 name|DPRINTF
 argument_list|(
@@ -5577,15 +5569,9 @@ modifier|*
 name|fp
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|OK_TO_WRITE_DISK
 name|int
 name|fd
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* OK_TO_WRITE_DISK */
 name|assert
 argument_list|(
 name|fp
@@ -5602,9 +5588,11 @@ operator|==
 name|POS_UNKNOWN
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|OK_TO_WRITE_DISK
+if|if
+condition|(
+name|WriteToDisk
+condition|)
+block|{
 if|if
 condition|(
 operator|(
@@ -5684,16 +5672,13 @@ name|fd
 operator|>=
 literal|0
 condition|)
-operator|(
-name|void
-operator|)
 name|close
 argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+block|}
+else|else
 name|fp
 operator|->
 name|pos
@@ -5707,9 +5692,6 @@ operator|.
 name|str_numstr
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* OK_TO_WRITE_DISK */
 block|}
 if|if
 condition|(

@@ -1639,6 +1639,29 @@ name|ndelim
 operator|+=
 name|ATH_AGGR_ENCRYPTDELIM
 expr_stmt|;
+comment|/* 	 * For AR9380, there's a minimum number of delimeters 	 * required when doing RTS. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_use_ent
+operator|&&
+operator|(
+name|sc
+operator|->
+name|sc_ent_cfg
+operator|&
+name|AH_ENT_RTSCTS_DELIM_WAR
+operator|)
+operator|&&
+name|ndelim
+operator|<
+name|AH_FIRST_DESC_NDELIMS
+condition|)
+name|ndelim
+operator|=
+name|AH_FIRST_DESC_NDELIMS
+expr_stmt|;
 name|DPRINTF
 argument_list|(
 name|sc
@@ -2256,6 +2279,30 @@ index|]
 operator|.
 name|rateCode
 expr_stmt|;
+name|series
+index|[
+name|i
+index|]
+operator|.
+name|RateIndex
+operator|=
+name|rc
+index|[
+name|i
+index|]
+operator|.
+name|rix
+expr_stmt|;
+name|series
+index|[
+name|i
+index|]
+operator|.
+name|tx_power_cap
+operator|=
+literal|0x3f
+expr_stmt|;
+comment|/* XXX for now */
 comment|/* 		 * PktDuration doesn't include slot, ACK, RTS, etc timing - 		 * it's just the packet duration 		 */
 if|if
 condition|(
@@ -2381,7 +2428,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static void ath_rateseries_print(struct ath_softc *sc, HAL_11N_RATE_SERIES *series) { 	int i; 	for (i = 0; i< ATH_RC_NUM; i++) { 		device_printf(sc->sc_dev ,"series %d: rate %x; tries %d; " 		    "pktDuration %d; chSel %d; rateFlags %x\n", 		    i, 		    series[i].Rate, 		    series[i].Tries, 		    series[i].PktDuration, 		    series[i].ChSel, 		    series[i].RateFlags); 	} }
+unit|static void ath_rateseries_print(struct ath_softc *sc, HAL_11N_RATE_SERIES *series) { 	int i; 	for (i = 0; i< ATH_RC_NUM; i++) { 		device_printf(sc->sc_dev ,"series %d: rate %x; tries %d; " 		    "pktDuration %d; chSel %d; txpowcap %d, rateFlags %x\n", 		    i, 		    series[i].Rate, 		    series[i].Tries, 		    series[i].PktDuration, 		    series[i].ChSel, 		    series[i].tx_power_cap, 		    series[i].RateFlags); 	} }
 endif|#
 directive|endif
 end_endif
@@ -2424,13 +2471,6 @@ init|=
 name|bf
 operator|->
 name|bf_desc
-decl_stmt|;
-name|struct
-name|ath_desc
-modifier|*
-name|lastds
-init|=
-name|NULL
 decl_stmt|;
 name|struct
 name|ath_hal
@@ -2497,19 +2537,10 @@ argument_list|,
 name|series
 argument_list|)
 expr_stmt|;
-comment|/* Enforce AR5416 aggregate limit - can't do RTS w/ an agg frame> 8k */
-comment|/* Enforce RTS and CTS are mutually exclusive */
-comment|/* Get a pointer to the last tx descriptor in the list */
-name|lastds
-operator|=
-name|bf
-operator|->
-name|bf_lastds
-expr_stmt|;
 if|#
 directive|if
 literal|0
-block|printf("pktlen: %d; flags 0x%x\n", pktlen, flags); 	ath_rateseries_print(sc, series);
+block|ath_rateseries_print(sc, series);
 endif|#
 directive|endif
 comment|/* Set rate scenario */
@@ -2534,17 +2565,6 @@ literal|4
 argument_list|,
 comment|/* number of series */
 name|flags
-argument_list|)
-expr_stmt|;
-comment|/* Setup the last descriptor in the chain */
-comment|/* 	 * XXX Why is this done here, and not in the upper layer? 	 * The rate control code stores a copy of the RC info in 	 * the last descriptor as well as the first, then uses 	 * the shadow copy in the last descriptor to see what the RC 	 * decisions were.  I'm not sure why; perhaps earlier hardware 	 * overwrote the first descriptor contents. 	 * 	 * In the 802.11n case, it also clears the moreaggr/delim 	 * fields.  Again, this should be done by the caller of 	 * ath_buf_set_rate(). 	 */
-name|ath_hal_setuplasttxdesc
-argument_list|(
-name|ah
-argument_list|,
-name|lastds
-argument_list|,
-name|ds
 argument_list|)
 expr_stmt|;
 comment|/* Set burst duration */
@@ -2695,12 +2715,9 @@ control|)
 block|{
 name|bf
 operator|=
-name|TAILQ_FIRST
+name|ATH_TID_FIRST
 argument_list|(
-operator|&
 name|tid
-operator|->
-name|axq_q
 argument_list|)
 expr_stmt|;
 if|if
@@ -2877,6 +2894,7 @@ name|bf_state
 operator|.
 name|bfs_txflags
 operator|&=
+operator|~
 operator|(
 name|HAL_TXDESC_RTSENA
 operator||
@@ -2933,7 +2951,7 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* 		 * this packet is part of an aggregate. 		 */
-name|ATH_TXQ_REMOVE
+name|ATH_TID_REMOVE
 argument_list|(
 name|tid
 argument_list|,

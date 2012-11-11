@@ -313,6 +313,7 @@ name|X509
 modifier|*
 name|x
 parameter_list|,
+specifier|const
 name|ASN1_TIME
 modifier|*
 name|tm
@@ -417,6 +418,7 @@ name|X509
 modifier|*
 name|x
 parameter_list|,
+specifier|const
 name|ASN1_TIME
 modifier|*
 name|tm

@@ -3771,6 +3771,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|ta_ops
 name|libthr_db_ops

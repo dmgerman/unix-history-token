@@ -57,7 +57,7 @@ comment|/* typedef struct buf_mem_st BUF_MEM; */
 struct|struct
 name|buf_mem_st
 block|{
-name|int
+name|size_t
 name|length
 decl_stmt|;
 comment|/* current number of bytes */
@@ -65,7 +65,7 @@ name|char
 modifier|*
 name|data
 decl_stmt|;
-name|int
+name|size_t
 name|max
 decl_stmt|;
 comment|/* size of buffer */
@@ -93,7 +93,7 @@ name|BUF_MEM
 modifier|*
 name|str
 parameter_list|,
-name|int
+name|size_t
 name|len
 parameter_list|)
 function_decl|;
@@ -104,7 +104,7 @@ name|BUF_MEM
 modifier|*
 name|str
 parameter_list|,
-name|int
+name|size_t
 name|len
 parameter_list|)
 function_decl|;
@@ -139,6 +139,23 @@ specifier|const
 name|void
 modifier|*
 name|data
+parameter_list|,
+name|size_t
+name|siz
+parameter_list|)
+function_decl|;
+name|void
+name|BUF_reverse
+parameter_list|(
+name|unsigned
+name|char
+modifier|*
+name|out
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+name|in
 parameter_list|,
 name|size_t
 name|siz

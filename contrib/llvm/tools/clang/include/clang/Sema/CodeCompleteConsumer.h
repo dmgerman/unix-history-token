@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Sema/CodeCompleteOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -472,7 +478,7 @@ comment|/// This context usually implies that no completions should be added,
 comment|/// unless they come from an appropriate natural-language dictionary.
 name|CCC_NaturalLanguage
 block|,
-comment|/// \brief Code completion for a selector, as in an @selector expression.
+comment|/// \brief Code completion for a selector, as in an \@selector expression.
 name|CCC_SelectorName
 block|,
 comment|/// \brief Code completion within a type-qualifier list.
@@ -760,7 +766,7 @@ block|,
 comment|/// \brief Horizontal whitespace (' ').
 name|CK_HorizontalSpace
 block|,
-comment|/// \brief Verticle whitespace ('\n' or '\r\n', depending on the
+comment|/// \brief Vertical whitespace ('\\n' or '\\r\\n', depending on the
 comment|/// platform).
 name|CK_VerticalSpace
 block|}
@@ -919,6 +925,13 @@ comment|/// \brief The name of the parent context.
 name|StringRef
 name|ParentName
 decl_stmt|;
+comment|/// \brief A brief documentation comment attached to the declaration of
+comment|/// entity being completed by this result.
+specifier|const
+name|char
+modifier|*
+name|BriefComment
+decl_stmt|;
 name|CodeCompletionString
 argument_list|(
 specifier|const
@@ -955,6 +968,8 @@ argument_list|,
 argument|CXCursorKind ParentKind
 argument_list|,
 argument|StringRef ParentName
+argument_list|,
+argument|const char *BriefComment
 argument_list|)
 empty_stmt|;
 operator|~
@@ -1123,6 +1138,17 @@ specifier|const
 block|{
 return|return
 name|ParentName
+return|;
+block|}
+specifier|const
+name|char
+operator|*
+name|getBriefComment
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BriefComment
 return|;
 block|}
 comment|/// \brief Retrieve a string representation of the code completion string,
@@ -1355,6 +1381,11 @@ block|;
 name|StringRef
 name|ParentName
 block|;
+specifier|const
+name|char
+operator|*
+name|BriefComment
+block|;
 comment|/// \brief The chunks stored in this string.
 name|SmallVector
 operator|<
@@ -1409,7 +1440,12 @@ argument_list|)
 block|,
 name|ParentKind
 argument_list|(
-argument|CXCursor_NotImplemented
+name|CXCursor_NotImplemented
+argument_list|)
+block|,
+name|BriefComment
+argument_list|(
+argument|NULL
 argument_list|)
 block|{ }
 name|CodeCompletionBuilder
@@ -1445,7 +1481,12 @@ argument_list|)
 block|,
 name|ParentKind
 argument_list|(
-argument|CXCursor_NotImplemented
+name|CXCursor_NotImplemented
+argument_list|)
+block|,
+name|BriefComment
+argument_list|(
+argument|NULL
 argument_list|)
 block|{ }
 comment|/// \brief Retrieve the allocator into which the code completion
@@ -1579,6 +1620,12 @@ operator|*
 name|DC
 argument_list|)
 block|;
+name|void
+name|addBriefComment
+argument_list|(
+argument|StringRef Comment
+argument_list|)
+block|;
 name|CXCursorKind
 name|getParentKind
 argument_list|()
@@ -1613,20 +1660,16 @@ name|RK_Declaration
 operator|=
 literal|0
 block|,
-comment|//< Refers to a declaration
+comment|///< Refers to a declaration
 name|RK_Keyword
 block|,
-comment|//< Refers to a keyword or symbol.
+comment|///< Refers to a keyword or symbol.
 name|RK_Macro
 block|,
-comment|//< Refers to a macro
+comment|///< Refers to a macro
 name|RK_Pattern
-comment|//< Refers to a precomputed pattern.
+comment|///< Refers to a precomputed pattern.
 block|}
-block|;
-comment|/// \brief The kind of result stored here.
-name|ResultKind
-name|Kind
 block|;
 comment|/// \brief When Kind == RK_Declaration or RK_Pattern, the declaration we are
 comment|/// referring to. In the latter case, the declaration might be NULL.
@@ -1659,6 +1702,15 @@ comment|/// \brief The priority of this particular code-completion result.
 name|unsigned
 name|Priority
 block|;
+comment|/// \brief Specifies which parameter (of a function, Objective-C method,
+comment|/// macro, etc.) we should start with when formatting the result.
+name|unsigned
+name|StartParameter
+block|;
+comment|/// \brief The kind of result stored here.
+name|ResultKind
+name|Kind
+block|;
 comment|/// \brief The cursor kind that describes this result.
 name|CXCursorKind
 name|CursorKind
@@ -1666,11 +1718,6 @@ block|;
 comment|/// \brief The availability of this result.
 name|CXAvailabilityKind
 name|Availability
-block|;
-comment|/// \brief Specifies which parameter (of a function, Objective-C method,
-comment|/// macro, etc.) we should start with when formatting the result.
-name|unsigned
-name|StartParameter
 block|;
 comment|/// \brief Whether this result is hidden by another name.
 name|bool
@@ -1725,11 +1772,6 @@ argument_list|,
 argument|bool Accessible = true
 argument_list|)
 operator|:
-name|Kind
-argument_list|(
-name|RK_Declaration
-argument_list|)
-block|,
 name|Declaration
 argument_list|(
 name|Declaration
@@ -1743,14 +1785,19 @@ name|Declaration
 argument_list|)
 argument_list|)
 block|,
-name|Availability
-argument_list|(
-name|CXAvailability_Available
-argument_list|)
-block|,
 name|StartParameter
 argument_list|(
 literal|0
+argument_list|)
+block|,
+name|Kind
+argument_list|(
+name|RK_Declaration
+argument_list|)
+block|,
+name|Availability
+argument_list|(
+name|CXAvailability_Available
 argument_list|)
 block|,
 name|Hidden
@@ -1796,11 +1843,6 @@ argument_list|,
 argument|unsigned Priority = CCP_Keyword
 argument_list|)
 operator|:
-name|Kind
-argument_list|(
-name|RK_Keyword
-argument_list|)
-block|,
 name|Declaration
 argument_list|(
 literal|0
@@ -1816,14 +1858,24 @@ argument_list|(
 name|Priority
 argument_list|)
 block|,
-name|Availability
-argument_list|(
-name|CXAvailability_Available
-argument_list|)
-block|,
 name|StartParameter
 argument_list|(
 literal|0
+argument_list|)
+block|,
+name|Kind
+argument_list|(
+name|RK_Keyword
+argument_list|)
+block|,
+name|CursorKind
+argument_list|(
+name|CXCursor_NotImplemented
+argument_list|)
+block|,
+name|Availability
+argument_list|(
+name|CXAvailability_Available
 argument_list|)
 block|,
 name|Hidden
@@ -1855,10 +1907,7 @@ name|Qualifier
 argument_list|(
 literal|0
 argument_list|)
-block|{
-name|computeCursorKindAndAvailability
-argument_list|()
-block|;   }
+block|{   }
 comment|/// \brief Build a result that refers to a macro.
 name|CodeCompletionResult
 argument_list|(
@@ -1867,11 +1916,6 @@ argument_list|,
 argument|unsigned Priority = CCP_Macro
 argument_list|)
 operator|:
-name|Kind
-argument_list|(
-name|RK_Macro
-argument_list|)
-block|,
 name|Declaration
 argument_list|(
 literal|0
@@ -1887,14 +1931,24 @@ argument_list|(
 name|Priority
 argument_list|)
 block|,
-name|Availability
-argument_list|(
-name|CXAvailability_Available
-argument_list|)
-block|,
 name|StartParameter
 argument_list|(
 literal|0
+argument_list|)
+block|,
+name|Kind
+argument_list|(
+name|RK_Macro
+argument_list|)
+block|,
+name|CursorKind
+argument_list|(
+name|CXCursor_MacroDefinition
+argument_list|)
+block|,
+name|Availability
+argument_list|(
+name|CXAvailability_Available
 argument_list|)
 block|,
 name|Hidden
@@ -1926,10 +1980,7 @@ name|Qualifier
 argument_list|(
 literal|0
 argument_list|)
-block|{
-name|computeCursorKindAndAvailability
-argument_list|()
-block|;   }
+block|{   }
 comment|/// \brief Build a result that refers to a pattern.
 name|CodeCompletionResult
 argument_list|(
@@ -1945,11 +1996,6 @@ argument|NamedDecl *D =
 literal|0
 argument_list|)
 operator|:
-name|Kind
-argument_list|(
-name|RK_Pattern
-argument_list|)
-block|,
 name|Declaration
 argument_list|(
 name|D
@@ -1965,19 +2011,24 @@ argument_list|(
 name|Priority
 argument_list|)
 block|,
-name|CursorKind
-argument_list|(
-name|CursorKind
-argument_list|)
-block|,
-name|Availability
-argument_list|(
-name|Availability
-argument_list|)
-block|,
 name|StartParameter
 argument_list|(
 literal|0
+argument_list|)
+block|,
+name|Kind
+argument_list|(
+name|RK_Pattern
+argument_list|)
+block|,
+name|CursorKind
+argument_list|(
+name|CursorKind
+argument_list|)
+block|,
+name|Availability
+argument_list|(
+name|Availability
 argument_list|)
 block|,
 name|Hidden
@@ -2021,11 +2072,6 @@ argument_list|,
 argument|unsigned Priority
 argument_list|)
 operator|:
-name|Kind
-argument_list|(
-name|RK_Pattern
-argument_list|)
-block|,
 name|Declaration
 argument_list|(
 name|D
@@ -2041,14 +2087,19 @@ argument_list|(
 name|Priority
 argument_list|)
 block|,
-name|Availability
-argument_list|(
-name|CXAvailability_Available
-argument_list|)
-block|,
 name|StartParameter
 argument_list|(
 literal|0
+argument_list|)
+block|,
+name|Kind
+argument_list|(
+name|RK_Pattern
+argument_list|)
+block|,
+name|Availability
+argument_list|(
+name|CXAvailability_Available
 argument_list|)
 block|,
 name|Hidden
@@ -2136,38 +2187,28 @@ name|CodeCompletionString
 operator|*
 name|CreateCodeCompletionString
 argument_list|(
-name|Sema
-operator|&
-name|S
+argument|Sema&S
 argument_list|,
-name|CodeCompletionAllocator
-operator|&
-name|Allocator
+argument|CodeCompletionAllocator&Allocator
 argument_list|,
-name|CodeCompletionTUInfo
-operator|&
-name|CCTUInfo
+argument|CodeCompletionTUInfo&CCTUInfo
+argument_list|,
+argument|bool IncludeBriefComments
 argument_list|)
 block|;
 name|CodeCompletionString
 operator|*
 name|CreateCodeCompletionString
 argument_list|(
-name|ASTContext
-operator|&
-name|Ctx
+argument|ASTContext&Ctx
 argument_list|,
-name|Preprocessor
-operator|&
-name|PP
+argument|Preprocessor&PP
 argument_list|,
-name|CodeCompletionAllocator
-operator|&
-name|Allocator
+argument|CodeCompletionAllocator&Allocator
 argument_list|,
-name|CodeCompletionTUInfo
-operator|&
-name|CCTUInfo
+argument|CodeCompletionTUInfo&CCTUInfo
+argument_list|,
+argument|bool IncludeBriefComments
 argument_list|)
 block|;
 comment|/// \brief Determine a base priority for the given declaration.
@@ -2298,19 +2339,9 @@ name|CodeCompleteConsumer
 block|{
 name|protected
 operator|:
-comment|/// \brief Whether to include macros in the code-completion results.
-name|bool
-name|IncludeMacros
-block|;
-comment|/// \brief Whether to include code patterns (such as for loops) within
-comment|/// the completion results.
-name|bool
-name|IncludeCodePatterns
-block|;
-comment|/// \brief Whether to include global (top-level) declarations and names in
-comment|/// the completion results.
-name|bool
-name|IncludeGlobals
+specifier|const
+name|CodeCompleteOptions
+name|CodeCompleteOpts
 block|;
 comment|/// \brief Whether the output format for the code-completion consumer is
 comment|/// binary.
@@ -2487,52 +2518,15 @@ specifier|const
 block|;   }
 block|;
 name|CodeCompleteConsumer
-argument_list|()
-operator|:
-name|IncludeMacros
 argument_list|(
-name|false
-argument_list|)
-block|,
-name|IncludeCodePatterns
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|IncludeGlobals
-argument_list|(
-name|true
-argument_list|)
-block|,
-name|OutputIsBinary
-argument_list|(
-argument|false
-argument_list|)
-block|{ }
-name|CodeCompleteConsumer
-argument_list|(
-argument|bool IncludeMacros
-argument_list|,
-argument|bool IncludeCodePatterns
-argument_list|,
-argument|bool IncludeGlobals
+argument|const CodeCompleteOptions&CodeCompleteOpts
 argument_list|,
 argument|bool OutputIsBinary
 argument_list|)
 operator|:
-name|IncludeMacros
+name|CodeCompleteOpts
 argument_list|(
-name|IncludeMacros
-argument_list|)
-block|,
-name|IncludeCodePatterns
-argument_list|(
-name|IncludeCodePatterns
-argument_list|)
-block|,
-name|IncludeGlobals
-argument_list|(
-name|IncludeGlobals
+name|CodeCompleteOpts
 argument_list|)
 block|,
 name|OutputIsBinary
@@ -2547,6 +2541,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|CodeCompleteOpts
+operator|.
 name|IncludeMacros
 return|;
 block|}
@@ -2557,6 +2553,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|CodeCompleteOpts
+operator|.
 name|IncludeCodePatterns
 return|;
 block|}
@@ -2567,7 +2565,22 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|CodeCompleteOpts
+operator|.
 name|IncludeGlobals
+return|;
+block|}
+comment|/// \brief Whether to include brief documentation comments within the set of
+comment|/// code completions returned.
+name|bool
+name|includeBriefComments
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CodeCompleteOpts
+operator|.
+name|IncludeBriefComments
 return|;
 block|}
 comment|/// \brief Determine whether the output of this consumer is binary.
@@ -2665,22 +2678,19 @@ comment|/// \brief Create a new printing code-completion consumer that prints it
 comment|/// results to the given raw output stream.
 name|PrintingCodeCompleteConsumer
 argument_list|(
-argument|bool IncludeMacros
+specifier|const
+name|CodeCompleteOptions
+operator|&
+name|CodeCompleteOpts
 argument_list|,
-argument|bool IncludeCodePatterns
-argument_list|,
-argument|bool IncludeGlobals
-argument_list|,
-argument|raw_ostream&OS
+name|raw_ostream
+operator|&
+name|OS
 argument_list|)
 operator|:
 name|CodeCompleteConsumer
 argument_list|(
-name|IncludeMacros
-argument_list|,
-name|IncludeCodePatterns
-argument_list|,
-name|IncludeGlobals
+name|CodeCompleteOpts
 argument_list|,
 name|false
 argument_list|)

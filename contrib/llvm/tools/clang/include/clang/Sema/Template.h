@@ -531,6 +531,8 @@ comment|/// \brief Construct an integral non-type template argument that
 comment|/// has been deduced, possibly from an array bound.
 name|DeducedTemplateArgument
 argument_list|(
+argument|ASTContext&Ctx
+argument_list|,
 argument|const llvm::APSInt&Value
 argument_list|,
 argument|QualType ValueType
@@ -540,6 +542,8 @@ argument_list|)
 operator|:
 name|TemplateArgument
 argument_list|(
+name|Ctx
+argument_list|,
 name|Value
 argument_list|,
 name|ValueType
@@ -1273,8 +1277,9 @@ name|SubstIndex
 argument_list|(
 name|SemaRef
 argument_list|,
-operator|-
-literal|1
+name|SemaRef
+operator|.
+name|ArgumentPackSubstitutionIndex
 argument_list|)
 operator|,
 name|Owner

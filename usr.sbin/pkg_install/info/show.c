@@ -246,6 +246,7 @@ condition|(
 operator|!
 name|Quiet
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"%s%s"
@@ -255,6 +256,12 @@ argument_list|,
 name|title
 argument_list|)
 expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
+block|}
 name|fp
 operator|=
 name|fopen
@@ -399,6 +406,7 @@ condition|(
 operator|!
 name|Quiet
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"%s%s"
@@ -408,6 +416,12 @@ argument_list|,
 name|title
 argument_list|)
 expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
+block|}
 name|p
 operator|=
 name|plist
@@ -1161,6 +1175,7 @@ condition|(
 operator|!
 name|Quiet
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"%s%s"
@@ -1170,6 +1185,12 @@ argument_list|,
 name|title
 argument_list|)
 expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
+block|}
 for|for
 control|(
 name|p
@@ -1371,7 +1392,7 @@ comment|/* Show files that don't match the recorded checksum */
 end_comment
 
 begin_function
-name|void
+name|int
 name|show_cksum
 parameter_list|(
 specifier|const
@@ -1406,11 +1427,17 @@ index|[
 name|FILENAME_MAX
 index|]
 decl_stmt|;
+name|int
+name|errcode
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 operator|!
 name|Quiet
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"%s%s"
@@ -1420,6 +1447,12 @@ argument_list|,
 name|title
 argument_list|)
 expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
+block|}
 for|for
 control|(
 name|p
@@ -1514,6 +1547,7 @@ argument_list|(
 name|tmp
 argument_list|)
 condition|)
+block|{
 name|warnx
 argument_list|(
 literal|"%s doesn't exist"
@@ -1521,6 +1555,11 @@ argument_list|,
 name|tmp
 argument_list|)
 expr_stmt|;
+name|errcode
+operator|=
+literal|1
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -1701,6 +1740,11 @@ expr_stmt|;
 block|}
 block|}
 block|}
+return|return
+operator|(
+name|errcode
+operator|)
+return|;
 block|}
 end_function
 
@@ -1727,6 +1771,7 @@ condition|(
 operator|!
 name|Quiet
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"%s%s"
@@ -1736,6 +1781,12 @@ argument_list|,
 name|title
 argument_list|)
 expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"%s\n"
@@ -1779,6 +1830,7 @@ condition|(
 operator|!
 name|Quiet
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"%s%s"
@@ -1788,6 +1840,12 @@ argument_list|,
 name|title
 argument_list|)
 expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"%d.%d\n"

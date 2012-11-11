@@ -204,6 +204,7 @@ begin_function_decl
 name|uma_zone_t
 name|uma_zcreate
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name

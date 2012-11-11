@@ -234,7 +234,7 @@ block|,
 operator|.
 name|maxSpurImmunityLevel
 operator|=
-literal|2
+literal|7
 block|,
 operator|.
 name|cycPwrThr1
@@ -245,6 +245,16 @@ block|,
 literal|4
 block|,
 literal|6
+block|,
+literal|8
+block|,
+literal|10
+block|,
+literal|12
+block|,
+literal|14
+block|,
+literal|16
 block|}
 block|,
 operator|.
@@ -755,6 +765,12 @@ operator|->
 name|ah_getDfsThresh
 operator|=
 name|ar5416GetDfsThresh
+expr_stmt|;
+name|ah
+operator|->
+name|ah_getDfsDefaultThresh
+operator|=
+name|ar5416GetDfsDefaultThresh
 expr_stmt|;
 name|ah
 operator|->
@@ -4938,6 +4954,20 @@ expr_stmt|;
 comment|/* XXX fixed in later revs? */
 name|pCap
 operator|->
+name|halNumMRRetries
+operator|=
+literal|4
+expr_stmt|;
+comment|/* Hardware supports 4 MRR */
+name|pCap
+operator|->
+name|halNumTxMaps
+operator|=
+literal|1
+expr_stmt|;
+comment|/* Single TX ptr per descr */
+name|pCap
+operator|->
 name|halVEOLSupport
 operator|=
 name|AH_TRUE
@@ -5022,21 +5052,19 @@ name|halKeyCacheSize
 operator|=
 name|AR5416_KEYTABLE_SIZE
 expr_stmt|;
-comment|/* XXX not needed */
+comment|/* XXX Which chips? */
 name|pCap
 operator|->
 name|halChanHalfRate
 operator|=
-name|AH_FALSE
+name|AH_TRUE
 expr_stmt|;
-comment|/* XXX ? */
 name|pCap
 operator|->
 name|halChanQuarterRate
 operator|=
-name|AH_FALSE
+name|AH_TRUE
 expr_stmt|;
-comment|/* XXX ? */
 name|pCap
 operator|->
 name|halTstampPrecision

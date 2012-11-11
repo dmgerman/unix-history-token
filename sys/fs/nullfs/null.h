@@ -137,6 +137,25 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|struct
+name|vnode
+modifier|*
+name|null_hashget
+parameter_list|(
+name|struct
+name|mount
+modifier|*
+name|mp
+parameter_list|,
+name|struct
+name|vnode
+modifier|*
+name|lowervp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|null_hashrem
 parameter_list|(

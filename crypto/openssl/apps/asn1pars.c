@@ -242,12 +242,15 @@ name|buf
 init|=
 name|NULL
 decl_stmt|;
-name|STACK
-modifier|*
+name|STACK_OF
+argument_list|(
+name|OPENSSL_STRING
+argument_list|)
+operator|*
 name|osk
-init|=
+operator|=
 name|NULL
-decl_stmt|;
+expr_stmt|;
 name|ASN1_TYPE
 modifier|*
 name|at
@@ -323,7 +326,7 @@ condition|(
 operator|(
 name|osk
 operator|=
-name|sk_new_null
+name|sk_OPENSSL_STRING_new_null
 argument_list|()
 operator|)
 operator|==
@@ -688,7 +691,7 @@ condition|)
 goto|goto
 name|bad
 goto|;
-name|sk_push
+name|sk_OPENSSL_STRING_push
 argument_list|(
 name|osk
 argument_list|,
@@ -1310,7 +1313,7 @@ expr_stmt|;
 comment|/* If any structs to parse go through in sequence */
 if|if
 condition|(
-name|sk_num
+name|sk_OPENSSL_STRING_num
 argument_list|(
 name|osk
 argument_list|)
@@ -1337,7 +1340,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|sk_num
+name|sk_OPENSSL_STRING_num
 argument_list|(
 name|osk
 argument_list|)
@@ -1357,7 +1360,7 @@ name|j
 operator|=
 name|atoi
 argument_list|(
-name|sk_value
+name|sk_OPENSSL_STRING_value
 argument_list|(
 name|osk
 argument_list|,
@@ -1378,7 +1381,7 @@ name|bio_err
 argument_list|,
 literal|"'%s' is an invalid number\n"
 argument_list|,
-name|sk_value
+name|sk_OPENSSL_STRING_value
 argument_list|(
 name|osk
 argument_list|,
@@ -1735,7 +1738,7 @@ name|osk
 operator|!=
 name|NULL
 condition|)
-name|sk_free
+name|sk_OPENSSL_STRING_free
 argument_list|(
 name|osk
 argument_list|)

@@ -458,14 +458,17 @@ decl_stmt|;
 name|dprintf
 argument_list|(
 operator|(
-literal|"ntfs_read: ino: %d, off: %d resid: %d, segflg: %d\n"
+literal|"ntfs_read: ino: %ju, off: %jd resid: %d, segflg: %d\n"
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|ip
 operator|->
 name|i_number
 operator|,
 operator|(
-name|u_int32_t
+name|intmax_t
 operator|)
 name|uio
 operator|->
@@ -717,8 +720,11 @@ decl_stmt|;
 name|dprintf
 argument_list|(
 operator|(
-literal|"ntfs_getattr: %d, flags: %d\n"
+literal|"ntfs_getattr: %ju, flags: %d\n"
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|ip
 operator|->
 name|i_number
@@ -951,12 +957,15 @@ directive|endif
 name|dprintf
 argument_list|(
 operator|(
-literal|"ntfs_inactive: vnode: %p, ntnode: %d\n"
+literal|"ntfs_inactive: vnode: %p, ntnode: %ju\n"
 operator|,
 name|ap
 operator|->
 name|a_vp
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|ip
 operator|->
 name|i_number
@@ -1027,10 +1036,13 @@ decl_stmt|;
 name|dprintf
 argument_list|(
 operator|(
-literal|"ntfs_reclaim: vnode: %p, ntnode: %d\n"
+literal|"ntfs_reclaim: vnode: %p, ntnode: %ju\n"
 operator|,
 name|vp
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|ip
 operator|->
 name|i_number
@@ -2823,8 +2835,11 @@ block|}
 name|dprintf
 argument_list|(
 operator|(
-literal|"ntfs_lookup: found ino: %d\n"
+literal|"ntfs_lookup: found ino: %ju\n"
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|VTONT
 argument_list|(
 operator|*

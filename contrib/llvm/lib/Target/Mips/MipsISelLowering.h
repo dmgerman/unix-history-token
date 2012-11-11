@@ -165,6 +165,27 @@ block|,
 name|Ext
 block|,
 name|Ins
+block|,
+comment|// Load/Store Left/Right nodes.
+name|LWL
+init|=
+name|ISD
+operator|::
+name|FIRST_TARGET_MEMORY_OPCODE
+block|,
+name|LWR
+block|,
+name|SWL
+block|,
+name|SWR
+block|,
+name|LDL
+block|,
+name|LDR
+block|,
+name|SDL
+block|,
+name|SDR
 block|}
 enum|;
 block|}
@@ -307,15 +328,6 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
-name|LowerDYNAMIC_STACKALLOC
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
 name|LowerGlobalAddress
 argument_list|(
 argument|SDValue Op
@@ -353,6 +365,15 @@ specifier|const
 block|;
 name|SDValue
 name|LowerSELECT
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerSELECT_CC
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -406,6 +427,15 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
+name|LowerRETURNADDR
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
 name|LowerMEMBARRIER
 argument_list|(
 argument|SDValue Op
@@ -420,6 +450,44 @@ argument_list|(
 argument|SDValue Op
 argument_list|,
 argument|SelectionDAG& DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerShiftLeftParts
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG& DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerShiftRightParts
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG& DAG
+argument_list|,
+argument|bool IsSRA
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerLOAD
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerSTORE
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|;
@@ -447,27 +515,7 @@ name|virtual
 name|SDValue
 name|LowerCall
 argument_list|(
-argument|SDValue Chain
-argument_list|,
-argument|SDValue Callee
-argument_list|,
-argument|CallingConv::ID CallConv
-argument_list|,
-argument|bool isVarArg
-argument_list|,
-argument|bool doesNotRet
-argument_list|,
-argument|bool&isTailCall
-argument_list|,
-argument|const SmallVectorImpl<ISD::OutputArg>&Outs
-argument_list|,
-argument|const SmallVectorImpl<SDValue>&OutVals
-argument_list|,
-argument|const SmallVectorImpl<ISD::InputArg>&Ins
-argument_list|,
-argument|DebugLoc dl
-argument_list|,
-argument|SelectionDAG&DAG
+argument|TargetLowering::CallLoweringInfo&CLI
 argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
@@ -541,11 +589,47 @@ argument|EVT VT
 argument_list|)
 specifier|const
 block|;
+comment|/// LowerAsmOperandForConstraint - Lower the specified operand into the Ops
+comment|/// vector.  If it is invalid, don't add anything to Ops. If hasMemory is
+comment|/// true it means one of the asm constraint of the inline asm instruction
+comment|/// being processed is 'm'.
+name|virtual
+name|void
+name|LowerAsmOperandForConstraint
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|std::string&Constraint
+argument_list|,
+argument|std::vector<SDValue>&Ops
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
 name|virtual
 name|bool
 name|isOffsetFoldingLegal
 argument_list|(
 argument|const GlobalAddressSDNode *GA
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|EVT
+name|getOptimalMemOpType
+argument_list|(
+argument|uint64_t Size
+argument_list|,
+argument|unsigned DstAlign
+argument_list|,
+argument|unsigned SrcAlign
+argument_list|,
+argument|bool IsZeroVal
+argument_list|,
+argument|bool MemcpyStrSrc
+argument_list|,
+argument|MachineFunction&MF
 argument_list|)
 specifier|const
 block|;

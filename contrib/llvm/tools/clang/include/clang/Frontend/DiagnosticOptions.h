@@ -190,6 +190,18 @@ comment|/// Check that diagnostics match the expected
 comment|/// diagnostics, indicated by markers in the
 comment|/// input source file.
 name|unsigned
+name|ElideType
+range|:
+literal|1
+decl_stmt|;
+comment|/// Elide identical types in template diffing
+name|unsigned
+name|ShowTemplateTree
+range|:
+literal|1
+decl_stmt|;
+comment|/// Print a template tree when diffing
+name|unsigned
 name|ErrorLimit
 decl_stmt|;
 comment|/// Limit # errors emitted.

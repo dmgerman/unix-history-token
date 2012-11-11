@@ -235,6 +235,7 @@ operator|~
 name|RuntimeDyld
 argument_list|()
 expr_stmt|;
+comment|/// Load an in-memory object file into the dynamic linker.
 name|bool
 name|loadObject
 parameter_list|(
@@ -243,9 +244,9 @@ modifier|*
 name|InputBuffer
 parameter_list|)
 function_decl|;
-comment|// Get the address of our local copy of the symbol. This may or may not
-comment|// be the address used for relocation (clients can copy the data around
-comment|// and resolve relocatons based on where they put it).
+comment|/// Get the address of our local copy of the symbol. This may or may not
+comment|/// be the address used for relocation (clients can copy the data around
+comment|/// and resolve relocatons based on where they put it).
 name|void
 modifier|*
 name|getSymbolAddress
@@ -254,7 +255,7 @@ name|StringRef
 name|Name
 parameter_list|)
 function_decl|;
-comment|// Resolve the relocations for all symbols we currently know about.
+comment|/// Resolve the relocations for all symbols we currently know about.
 name|void
 name|resolveRelocations
 parameter_list|()

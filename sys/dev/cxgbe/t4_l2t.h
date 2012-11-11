@@ -323,7 +323,7 @@ name|l2t_data
 modifier|*
 name|d
 init|=
-name|container_of
+name|__containerof
 argument_list|(
 name|e
 argument_list|,

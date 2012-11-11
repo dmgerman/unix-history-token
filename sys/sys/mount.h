@@ -636,6 +636,21 @@ name|lock
 name|mnt_explock
 decl_stmt|;
 comment|/* vfs_export walkers lock */
+name|TAILQ_ENTRY
+argument_list|(
+argument|mount
+argument_list|)
+name|mnt_upper_link
+expr_stmt|;
+comment|/* (m) we in the all uppers */
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|mount
+argument_list|)
+name|mnt_uppers
+expr_stmt|;
+comment|/* (m) upper mounts over us*/
 block|}
 struct|;
 end_struct
@@ -1516,6 +1531,34 @@ end_define
 begin_comment
 comment|/* Disallow page faults during reads 					   and writes. Filesystem shall properly 					   handle i/o state on EFAULT. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MNTK_VGONE_UPPER
+value|0x00000200
+end_define
+
+begin_define
+define|#
+directive|define
+name|MNTK_VGONE_WAITER
+value|0x00000400
+end_define
+
+begin_define
+define|#
+directive|define
+name|MNTK_LOOKUP_EXCL_DOTDOT
+value|0x00000800
+end_define
+
+begin_define
+define|#
+directive|define
+name|MNTK_MARKER
+value|0x00001000
+end_define
 
 begin_define
 define|#
@@ -2888,6 +2931,24 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|void
+name|vfs_reclaim_lowervp_t
+parameter_list|(
+name|struct
+name|mount
+modifier|*
+name|mp
+parameter_list|,
+name|struct
+name|vnode
+modifier|*
+name|lowervp
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_struct
 struct|struct
 name|vfsops
@@ -2951,6 +3012,10 @@ decl_stmt|;
 name|vfs_susp_clean_t
 modifier|*
 name|vfs_susp_clean
+decl_stmt|;
+name|vfs_reclaim_lowervp_t
+modifier|*
+name|vfs_reclaim_lowervp
 decl_stmt|;
 block|}
 struct|;
@@ -3143,52 +3208,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|VFS_NEEDSGIANT_
+name|VFS_RECLAIM_LOWERVP
 parameter_list|(
 name|MP
+parameter_list|,
+name|VP
 parameter_list|)
 define|\
-value|((MP) != NULL&& ((MP)->mnt_kern_flag& MNTK_MPSAFE) == 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VFS_NEEDSGIANT
-parameter_list|(
-name|MP
-parameter_list|)
-value|__extension__				\ ({									\ 	struct mount *_mp;						\ 	_mp = (MP);							\ 	VFS_NEEDSGIANT_(_mp);						\ })
-end_define
-
-begin_define
-define|#
-directive|define
-name|VFS_LOCK_GIANT
-parameter_list|(
-name|MP
-parameter_list|)
-value|__extension__				\ ({									\ 	int _locked;							\ 	struct mount *_mp;						\ 	_mp = (MP);							\ 	if (VFS_NEEDSGIANT_(_mp)) {					\ 		mtx_lock(&Giant);					\ 		_locked = 1;						\ 	} else								\ 		_locked = 0;						\ 	_locked;							\ })
-end_define
-
-begin_define
-define|#
-directive|define
-name|VFS_UNLOCK_GIANT
-parameter_list|(
-name|locked
-parameter_list|)
-value|do					\ {									\ 	if ((locked))							\ 		mtx_unlock(&Giant);					\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VFS_ASSERT_GIANT
-parameter_list|(
-name|MP
-parameter_list|)
-value|do						\ {									\ 	struct mount *_mp;						\ 	_mp = (MP);							\ 	if (VFS_NEEDSGIANT_(_mp))					\ 		mtx_assert(&Giant, MA_OWNED);				\ } while (0)
+value|({if (*(MP)->mnt_op->vfs_reclaim_lowervp != NULL)	\ 		(*(MP)->mnt_op->vfs_reclaim_lowervp)((MP), (VP)); })
 end_define
 
 begin_define
@@ -3235,8 +3262,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|VFS_VERSION_01
+value|0x20121030
+end_define
+
+begin_define
+define|#
+directive|define
 name|VFS_VERSION
-value|VFS_VERSION_00
+value|VFS_VERSION_01
 end_define
 
 begin_define

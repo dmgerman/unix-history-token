@@ -49,33 +49,11 @@ directive|include
 file|<sys/kernel.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-name|__FreeBSD_version
-operator|>
-literal|500001
-end_if
-
 begin_include
 include|#
 directive|include
 file|<sys/bio.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __ FreeBSD__ */
-end_comment
 
 begin_include
 include|#
@@ -107,111 +85,6 @@ directive|include
 file|<vm/vm.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__NetBSD__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/device.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/intr.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/scsipi/scsi_all.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/scsipi/scsipi_all.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/scsipi/scsiconf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/scsipi/scsi_disk.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/dvcfg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/physio_proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/Cbus/dev/scsi_low.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/ic/wd33c93reg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/Cbus/dev/ct/ctvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/Cbus/dev/ct/ct_machdep.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/Cbus/dev/ct/bshwvar.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __NetBSD__ */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -228,12 +101,6 @@ begin_include
 include|#
 directive|include
 file|<compat/netbsd/dvcfg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<compat/netbsd/physio_proc.h>
 end_include
 
 begin_include
@@ -272,15 +139,6 @@ directive|include
 file|<vm/pmap.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __FreeBSD__ */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -316,41 +174,6 @@ begin_comment
 comment|/*********************************************************  * OS dep part  *********************************************************/
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__NetBSD__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|BSHW_PAGE_SIZE
-value|NBPG
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __NetBSD__ */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|BSHW_PAGE_SIZE
-value|PAGE_SIZE
-end_define
-
 begin_typedef
 typedef|typedef
 name|unsigned
@@ -358,15 +181,6 @@ name|long
 name|vaddr_t
 typedef|;
 end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __FreeBSD__ */
-end_comment
 
 begin_comment
 comment|/*********************************************************  * GENERIC MACHDEP FUNCTIONS  *********************************************************/
@@ -571,13 +385,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: change mode using external DMA (%x)\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"change mode using external DMA (%x)\n"
 argument_list|,
 operator|(
 name|u_int
@@ -684,7 +498,7 @@ argument_list|,
 name|regv
 argument_list|)
 expr_stmt|;
-name|SCSI_LOW_DELAY
+name|DELAY
 argument_list|(
 literal|500000
 argument_list|)
@@ -1206,15 +1020,15 @@ literal|0
 return|;
 block|}
 block|}
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: SMIT fifo status timeout\n"
-argument_list|,
 name|ct
 operator|->
 name|sc_sclow
 operator|.
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"SMIT fifo status timeout\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1382,13 +1196,13 @@ condition|)
 block|{
 name|bad
 label|:
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: smit_xfer_end: cnt error\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"smit_xfer_end: cnt error\n"
 argument_list|)
 expr_stmt|;
 name|slp
@@ -1406,13 +1220,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: smit_xfer_end: phase miss\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"smit_xfer_end: phase miss\n"
 argument_list|)
 expr_stmt|;
 name|slp
@@ -2178,7 +1992,7 @@ condition|(
 operator|(
 name|va
 operator|+=
-name|BSHW_PAGE_SIZE
+name|PAGE_SIZE
 operator|)
 operator|>=
 name|endva
@@ -2205,7 +2019,7 @@ if|if
 condition|(
 name|phys
 operator|+
-name|BSHW_PAGE_SIZE
+name|PAGE_SIZE
 operator|!=
 name|nphys
 operator|||
@@ -2434,13 +2248,13 @@ operator|->
 name|sc_seglen
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: port data %x != seglen %x\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"port data %x != seglen %x\n"
 argument_list|,
 name|count
 argument_list|,
@@ -2464,13 +2278,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: extra DMA interrupt\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"extra DMA interrupt\n"
 argument_list|)
 expr_stmt|;
 name|slp

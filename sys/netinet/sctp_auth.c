@@ -2418,6 +2418,10 @@ literal|"%s: stcb %p key %u refcount acquire to %d\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|stcb
 argument_list|,
 name|key_id
@@ -2501,6 +2505,10 @@ literal|"%s: stcb %p key %u refcount release to %d\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|stcb
 argument_list|,
 name|key_id
@@ -2550,6 +2558,10 @@ literal|"%s: stcb %p key %u no longer used, %d\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|stcb
 argument_list|,
 name|key_id

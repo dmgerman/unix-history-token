@@ -399,16 +399,13 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
-argument_list|(
-literal|"adv%d: Invalid baseport of 0x%lx specified. "
-literal|"Nearest valid baseport is 0x%x.  Failing "
-literal|"probe.\n"
-argument_list|,
-name|device_get_unit
+name|device_printf
 argument_list|(
 name|dev
-argument_list|)
+argument_list|,
+literal|"Invalid baseport of 0x%lx specified. "
+literal|"Nearest valid baseport is 0x%x.  Failing "
+literal|"probe.\n"
 argument_list|,
 name|iobase
 argument_list|,
@@ -528,15 +525,7 @@ if|if
 condition|(
 name|adv_find_signature
 argument_list|(
-name|rman_get_bustag
-argument_list|(
 name|iores
-argument_list|)
-argument_list|,
-name|rman_get_bushandle
-argument_list|(
-name|iores
-argument_list|)
 argument_list|)
 operator|==
 literal|0
@@ -562,15 +551,9 @@ name|adv_alloc
 argument_list|(
 name|dev
 argument_list|,
-name|rman_get_bustag
-argument_list|(
 name|iores
-argument_list|)
 argument_list|,
-name|rman_get_bushandle
-argument_list|(
-name|iores
-argument_list|)
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -819,11 +802,10 @@ comment|/* flags	*/
 literal|0
 argument_list|,
 comment|/* lockfunc	*/
-name|busdma_lock_mutex
+name|NULL
 argument_list|,
 comment|/* lockarg	*/
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 operator|&
 name|adv
@@ -838,14 +820,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: Could not allocate DMA tag - error %d\n"
+name|dev
 argument_list|,
-name|adv_name
-argument_list|(
-name|adv
-argument_list|)
+literal|"Could not allocate DMA tag - error %d\n"
 argument_list|,
 name|error
 argument_list|)
@@ -1222,6 +1201,8 @@ argument_list|,
 name|INTR_TYPE_CAM
 operator||
 name|INTR_ENTROPY
+operator||
+name|INTR_MPSAFE
 argument_list|,
 name|NULL
 argument_list|,
@@ -1232,8 +1213,27 @@ argument_list|,
 operator|&
 name|ih
 argument_list|)
+operator|!=
+literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|irqres
+operator|!=
+name|NULL
+condition|)
+name|bus_release_resource
+argument_list|(
+name|dev
+argument_list|,
+name|SYS_RES_IRQ
+argument_list|,
+name|rid
+argument_list|,
+name|irqres
+argument_list|)
+expr_stmt|;
 name|bus_dmamap_unload
 argument_list|(
 name|overrun_dmat

@@ -319,7 +319,6 @@ modifier|*
 name|vr_name
 decl_stmt|;
 block|}
-decl|const
 name|vr_devs
 index|[]
 init|=
@@ -999,7 +998,6 @@ name|int
 name|value
 decl_stmt|;
 block|}
-decl|const
 name|vr_tx_threshold_tables
 index|[]
 init|=

@@ -2069,6 +2069,24 @@ function_decl|;
 end_typedef
 
 begin_function_decl
+name|int
+name|ieee80211_iterate_nt
+parameter_list|(
+name|struct
+name|ieee80211_node_table
+modifier|*
+parameter_list|,
+name|struct
+name|ieee80211_node
+modifier|*
+modifier|*
+parameter_list|,
+name|uint16_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|ieee80211_iterate_nodes
 parameter_list|(

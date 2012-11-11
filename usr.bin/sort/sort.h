@@ -200,7 +200,7 @@ begin_struct
 struct|struct
 name|sort_opts
 block|{
-name|wchar_t
+name|wint_t
 name|field_sep
 decl_stmt|;
 name|int

@@ -3769,6 +3769,17 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|#
+directive|if
+name|MSDOS_COMPILER
+name|char
+modifier|*
+name|qword
+init|=
+name|NULL
+decl_stmt|;
+else|#
+directive|else
 name|char
 modifier|*
 name|qword
@@ -3780,6 +3791,8 @@ operator|+
 literal|1
 argument_list|)
 decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|qword

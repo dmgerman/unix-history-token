@@ -2690,9 +2690,6 @@ operator|->
 name|sc_usize
 argument_list|)
 expr_stmt|;
-name|devfs_clear_cdevpriv
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 name|error

@@ -160,6 +160,8 @@ block|,
 name|LEK_LockedSomePredecessors
 block|,
 name|LEK_LockedAtEndOfFunction
+block|,
+name|LEK_NotLockedAtEndOfFunction
 block|}
 enum|;
 comment|/// Handler class for thread safety warnings.
@@ -296,11 +298,11 @@ parameter_list|)
 block|{}
 comment|/// Warn when a protected operation occurs while the specific mutex protecting
 comment|/// the operation is not locked.
-comment|/// \param LockName -- A StringRef name for the lock expression, to be printed
-comment|/// in the error message.
 comment|/// \param D -- The decl for the protected variable or function
 comment|/// \param POK -- The kind of protected operation (e.g. variable access)
-comment|/// \param AK -- The kind of access (i.e. read or write) that occurred
+comment|/// \param LockName -- A StringRef name for the lock expression, to be printed
+comment|/// in the error message.
+comment|/// \param LK -- The kind of access (i.e. read or write) that occurred
 comment|/// \param Loc -- The location of the protected operation.
 name|virtual
 name|void

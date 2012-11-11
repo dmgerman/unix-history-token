@@ -1681,11 +1681,12 @@ return|;
 block|}
 name|obj
 operator|=
-name|member2struct
+name|__containerof
 argument_list|(
-name|drm_gem_object
-argument_list|,
 name|map_list
+argument_list|,
+expr|struct
+name|drm_gem_object
 argument_list|,
 name|map_list
 argument_list|)

@@ -452,6 +452,18 @@ name|CI
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief Subtract the specified range from this range (aka relative
+comment|/// complement of the sets).
+name|ConstantRange
+name|difference
+argument_list|(
+specifier|const
+name|ConstantRange
+operator|&
+name|CR
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// intersectWith - Return the range that results from the intersection of
 comment|/// this range with another range.  The resultant range is guaranteed to
 comment|/// include all elements contained in both input ranges, and to have the

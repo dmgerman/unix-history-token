@@ -233,6 +233,25 @@ begin_comment
 comment|/* 20-bit counter */
 end_comment
 
+begin_function_decl
+name|void
+name|at91_st_delay
+parameter_list|(
+name|int
+name|n
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|at91_st_cpu_reset
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

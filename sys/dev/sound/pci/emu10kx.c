@@ -18449,30 +18449,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|resource_disabled
-argument_list|(
-literal|"emu10kx"
-argument_list|,
-name|unit
-argument_list|)
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"disabled by kernel hints\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-comment|/* XXX to avoid unit reuse */
-block|}
 comment|/* Get configuration */
 name|sc
 operator|->

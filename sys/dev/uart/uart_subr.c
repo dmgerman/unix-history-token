@@ -146,6 +146,9 @@ name|uart_sab82532_class
 block|,
 operator|&
 name|uart_z8530_class
+block|,
+operator|&
+name|uart_lpc_class
 block|, }
 decl_stmt|;
 end_decl_stmt

@@ -32,15 +32,19 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
-comment|//  This file defines some OpenCL-specific enums.
+comment|/// \file
 end_comment
 
 begin_comment
-comment|//
+comment|/// \brief Defines some OpenCL-specific enums.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -63,7 +67,7 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
-comment|/// Names for the OpenCL image access qualifiers (OpenCL 1.1 6.6).
+comment|/// \brief Names for the OpenCL image access qualifiers (OpenCL 1.1 6.6).
 enum|enum
 name|OpenCLImageAccess
 block|{

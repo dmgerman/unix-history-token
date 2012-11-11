@@ -129,12 +129,12 @@ operator|:
 name|explicit
 name|StringSwitch
 argument_list|(
-argument|StringRef Str
+argument|StringRef S
 argument_list|)
 operator|:
 name|Str
 argument_list|(
-name|Str
+name|S
 argument_list|)
 block|,
 name|Result

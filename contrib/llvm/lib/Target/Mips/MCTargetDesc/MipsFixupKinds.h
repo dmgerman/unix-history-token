@@ -141,6 +141,27 @@ block|,
 comment|// PC relative branch fixup resulting in - R_MIPS_PC16
 name|fixup_Mips_Branch_PCRel
 block|,
+comment|// resulting in - R_MIPS_GPREL16/R_MIPS_SUB/R_MIPS_HI16
+name|fixup_Mips_GPOFF_HI
+block|,
+comment|// resulting in - R_MIPS_GPREL16/R_MIPS_SUB/R_MIPS_LO16
+name|fixup_Mips_GPOFF_LO
+block|,
+comment|// resulting in - R_MIPS_PAGE
+name|fixup_Mips_GOT_PAGE
+block|,
+comment|// resulting in - R_MIPS_GOT_OFST
+name|fixup_Mips_GOT_OFST
+block|,
+comment|// resulting in - R_MIPS_GOT_DISP
+name|fixup_Mips_GOT_DISP
+block|,
+comment|// resulting in - R_MIPS_GOT_HIGHER
+name|fixup_Mips_HIGHER
+block|,
+comment|// resulting in - R_MIPS_HIGHEST
+name|fixup_Mips_HIGHEST
+block|,
 comment|// Marker
 name|LastTargetFixupKind
 block|,

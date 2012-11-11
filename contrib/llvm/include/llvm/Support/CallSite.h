@@ -837,6 +837,22 @@ name|PAL
 argument_list|)
 argument_list|)
 block|;   }
+comment|/// \brief Return true if this function has the given attribute.
+name|bool
+name|hasFnAttr
+argument_list|(
+argument|Attributes N
+argument_list|)
+specifier|const
+block|{
+name|CALLSITE_DELEGATE_GETTER
+argument_list|(
+name|hasFnAttr
+argument_list|(
+name|N
+argument_list|)
+argument_list|)
+block|;   }
 comment|/// paramHasAttr - whether the call or the callee has the given attribute.
 name|bool
 name|paramHasAttr

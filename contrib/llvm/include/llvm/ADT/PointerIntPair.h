@@ -483,6 +483,39 @@ return|return
 name|P
 return|;
 block|}
+comment|// Allow PointerIntPairs to be created from const void * if and only if the
+comment|// pointer type could be created from a const void *.
+specifier|static
+name|PointerIntPair
+name|getFromOpaqueValue
+argument_list|(
+argument|const void *V
+argument_list|)
+block|{
+operator|(
+name|void
+operator|)
+name|PtrTraits
+operator|::
+name|getFromVoidPointer
+argument_list|(
+name|V
+argument_list|)
+block|;
+return|return
+name|getFromOpaqueValue
+argument_list|(
+name|const_cast
+operator|<
+name|void
+operator|*
+operator|>
+operator|(
+name|V
+operator|)
+argument_list|)
+return|;
+block|}
 name|bool
 name|operator
 operator|==
@@ -874,6 +907,37 @@ operator|>
 name|getFromVoidPointer
 argument_list|(
 argument|void *P
+argument_list|)
+block|{
+return|return
+name|PointerIntPair
+operator|<
+name|PointerTy
+operator|,
+name|IntBits
+operator|,
+name|IntType
+operator|>
+operator|::
+name|getFromOpaqueValue
+argument_list|(
+name|P
+argument_list|)
+return|;
+block|}
+specifier|static
+specifier|inline
+name|PointerIntPair
+operator|<
+name|PointerTy
+block|,
+name|IntBits
+block|,
+name|IntType
+operator|>
+name|getFromVoidPointer
+argument_list|(
+argument|const void *P
 argument_list|)
 block|{
 return|return

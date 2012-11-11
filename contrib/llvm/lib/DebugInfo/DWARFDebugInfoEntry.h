@@ -562,6 +562,36 @@ name|debug_aranges
 argument_list|)
 decl|const
 decl_stmt|;
+name|bool
+name|addressRangeContainsAddress
+argument_list|(
+specifier|const
+name|DWARFCompileUnit
+operator|*
+name|cu
+argument_list|,
+specifier|const
+name|uint64_t
+name|address
+argument_list|)
+decl|const
+decl_stmt|;
+comment|// If a DIE represents a subprogram, returns its mangled name
+comment|// (or short name, if mangled is missing). This name may be fetched
+comment|// from specification or abstract origin for this subprogram.
+comment|// Returns null if no name is found.
+specifier|const
+name|char
+modifier|*
+name|getSubprogramName
+argument_list|(
+specifier|const
+name|DWARFCompileUnit
+operator|*
+name|cu
+argument_list|)
+decl|const
+decl_stmt|;
 block|}
 empty_stmt|;
 block|}

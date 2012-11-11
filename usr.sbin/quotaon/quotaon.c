@@ -131,16 +131,7 @@ file|<unistd.h>
 end_include
 
 begin_decl_stmt
-specifier|const
-name|char
-modifier|*
-name|qfname
-init|=
-name|QUOTAFILENAME
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -152,6 +143,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|aflag
 decl_stmt|;
@@ -162,6 +154,7 @@ comment|/* all filesystems */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|gflag
 decl_stmt|;
@@ -172,6 +165,7 @@ comment|/* operate on group quotas */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|uflag
 decl_stmt|;
@@ -182,6 +176,7 @@ comment|/* operate on user quotas */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|vflag
 decl_stmt|;
@@ -192,6 +187,7 @@ comment|/* verbose */
 end_comment
 
 begin_function_decl
+specifier|static
 name|int
 name|oneof
 parameter_list|(
@@ -208,6 +204,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|quotaonoff
 parameter_list|(
@@ -636,6 +633,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|quotaonoff
 parameter_list|(
@@ -807,6 +805,7 @@ comment|/*  * Check to see if target appears in list of size cnt.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|oneof
 parameter_list|(

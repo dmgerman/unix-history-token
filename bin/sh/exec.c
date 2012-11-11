@@ -221,17 +221,6 @@ begin_comment
 comment|/* should be prime */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|ARB
-value|1
-end_define
-
-begin_comment
-comment|/* actual size determined at run time */
-end_comment
-
 begin_struct
 struct|struct
 name|tblentry
@@ -251,7 +240,8 @@ name|int
 name|special
 decl_stmt|;
 comment|/* flag for special builtin commands */
-name|short
+name|signed
+name|char
 name|cmdtype
 decl_stmt|;
 comment|/* index identifying command */
@@ -261,9 +251,7 @@ decl_stmt|;
 comment|/* if set, cd done since entry created */
 name|char
 name|cmdname
-index|[
-name|ARB
-index|]
+index|[]
 decl_stmt|;
 comment|/* name of command */
 block|}
@@ -2493,8 +2481,6 @@ argument_list|(
 expr|struct
 name|tblentry
 argument_list|)
-operator|-
-name|ARB
 operator|+
 name|strlen
 argument_list|(
@@ -2778,6 +2764,50 @@ block|}
 return|return
 operator|(
 literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Check if a function by a certain name exists.  */
+end_comment
+
+begin_function
+name|int
+name|isfunc
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
+block|{
+name|struct
+name|tblentry
+modifier|*
+name|cmdp
+decl_stmt|;
+name|cmdp
+operator|=
+name|cmdlookup
+argument_list|(
+name|name
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|cmdp
+operator|!=
+name|NULL
+operator|&&
+name|cmdp
+operator|->
+name|cmdtype
+operator|==
+name|CMDFUNCTION
 operator|)
 return|;
 block|}

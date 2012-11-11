@@ -43,29 +43,6 @@ directive|include
 file|<openssl/crypto.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OPENSSL_FIPS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<openssl/fips.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|<openssl/err.h>
-end_include
-
 begin_decl_stmt
 specifier|const
 name|char
@@ -112,6 +89,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|MD2_INT
 name|S
 index|[
@@ -667,7 +645,7 @@ block|}
 end_function
 
 begin_macro
-name|FIPS_NON_FIPS_MD_Init
+name|fips_md_init
 argument_list|(
 argument|MD2
 argument_list|)

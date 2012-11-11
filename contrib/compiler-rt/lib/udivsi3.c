@@ -17,15 +17,18 @@ begin_comment
 comment|/* Translated from Figure 3-40 of The PowerPC Compiler Writer's Guide */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|ARM_EABI_FNALIAS
 argument_list|(
-name|uidiv
+argument|uidiv
 argument_list|,
-name|udivsi3
+argument|udivsi3
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+end_macro
+
+begin_comment
+comment|/* This function should not call __divsi3! */
+end_comment
 
 begin_function
 name|COMPILER_RT_ABI

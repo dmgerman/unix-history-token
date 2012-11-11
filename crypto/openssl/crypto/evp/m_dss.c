@@ -60,6 +60,12 @@ directive|ifndef
 name|OPENSSL_NO_SHA
 end_ifndef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_FIPS
+end_ifndef
+
 begin_function
 specifier|static
 name|int
@@ -155,7 +161,7 @@ name|NID_dsaWithSHA
 block|,
 name|SHA_DIGEST_LENGTH
 block|,
-name|EVP_MD_FLAG_FIPS
+name|EVP_MD_FLAG_PKEY_DIGEST
 block|,
 name|init
 block|,
@@ -202,6 +208,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

@@ -474,6 +474,16 @@ name|i
 argument_list|)
 expr_stmt|;
 block|}
+name|SelectionDAG
+operator|&
+name|getDAG
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DAG
+return|;
+block|}
 name|private
 label|:
 name|SDNode
@@ -565,7 +575,7 @@ parameter_list|)
 function_decl|;
 comment|/// DisintegrateMERGE_VALUES - Replace each result of the given MERGE_VALUES
 comment|/// node with the corresponding input operand, except for the result 'ResNo',
-comment|/// which is returned.
+comment|/// for which the corresponding input operand is returned.
 name|SDValue
 name|DisintegrateMERGE_VALUES
 parameter_list|(
@@ -3374,6 +3384,14 @@ name|N
 parameter_list|)
 function_decl|;
 name|SDValue
+name|ScalarizeVecRes_TernaryOp
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+name|SDValue
 name|ScalarizeVecRes_UnaryOp
 parameter_list|(
 name|SDNode
@@ -3391,6 +3409,14 @@ parameter_list|)
 function_decl|;
 name|SDValue
 name|ScalarizeVecRes_BITCAST
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+name|SDValue
+name|ScalarizeVecRes_BUILD_VECTOR
 parameter_list|(
 name|SDNode
 modifier|*
@@ -3616,6 +3642,22 @@ parameter_list|)
 function_decl|;
 name|void
 name|SplitVecRes_BinOp
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|,
+name|SDValue
+modifier|&
+name|Lo
+parameter_list|,
+name|SDValue
+modifier|&
+name|Hi
+parameter_list|)
+function_decl|;
+name|void
+name|SplitVecRes_TernaryOp
 parameter_list|(
 name|SDNode
 modifier|*

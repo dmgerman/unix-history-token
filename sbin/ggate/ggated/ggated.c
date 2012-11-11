@@ -320,6 +320,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|in_addr_t
 name|bindaddr
 decl_stmt|;
@@ -358,6 +359,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
+specifier|static
 name|pthread_mutex_t
 name|inqueue_mtx
 decl_stmt|,
@@ -366,6 +368,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|pthread_cond_t
 name|inqueue_cond
 decl_stmt|,

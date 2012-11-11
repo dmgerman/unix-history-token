@@ -157,7 +157,7 @@ modifier|&
 name|OS
 parameter_list|)
 function_decl|;
-comment|/// Matcher - Base class for all the the DAG ISel Matcher representation
+comment|/// Matcher - Base class for all the DAG ISel Matcher representation
 comment|/// nodes.
 name|class
 name|Matcher

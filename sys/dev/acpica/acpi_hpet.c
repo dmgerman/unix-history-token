@@ -176,6 +176,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HPET_VENDID_AMD2
+value|0x1022
+end_define
+
+begin_define
+define|#
+directive|define
 name|HPET_VENDID_INTEL
 value|0x8086
 end_define
@@ -2774,6 +2781,10 @@ condition|(
 name|vendor
 operator|==
 name|HPET_VENDID_AMD
+operator|||
+name|vendor
+operator|==
+name|HPET_VENDID_AMD2
 condition|)
 name|sc
 operator|->

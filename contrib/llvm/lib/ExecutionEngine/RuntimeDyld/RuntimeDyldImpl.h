@@ -62,13 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ExecutionEngine/RuntimeDyld.h"
+file|"ObjectImage.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Object/ObjectFile.h"
+file|"llvm/ExecutionEngine/RuntimeDyld.h"
 end_include
 
 begin_include
@@ -80,43 +80,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/Twine.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Memory.h"
+file|"llvm/ADT/StringMap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/MemoryBuffer.h"
+file|"llvm/ADT/Triple.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/system_error.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/raw_ostream.h"
+file|"llvm/Object/ObjectFile.h"
 end_include
 
 begin_include
@@ -134,25 +116,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/Triple.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<map>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/Format.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ObjectImage.h"
+file|"llvm/Support/raw_ostream.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/system_error.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<map>
 end_include
 
 begin_decl_stmt
@@ -176,37 +158,47 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|MemoryBuffer
+decl_stmt|;
+name|class
+name|Twine
+decl_stmt|;
+comment|/// SectionEntry - represents a section emitted into memory by the dynamic
+comment|/// linker.
+name|class
 name|SectionEntry
 block|{
 name|public
 label|:
+comment|/// Address - address in the linker's memory where the section resides.
 name|uint8_t
 modifier|*
 name|Address
 decl_stmt|;
+comment|/// Size - section size.
 name|size_t
 name|Size
 decl_stmt|;
+comment|/// LoadAddress - the address of the section in the target process's memory.
+comment|/// Used for situations in which JIT-ed code is being executed in the address
+comment|/// space of a separate process.  If the code executes in the same address
+comment|/// space where it was JIT-ed, this just equals Address.
 name|uint64_t
 name|LoadAddress
 decl_stmt|;
-comment|// For each section, the address it will be
-comment|// considered to live at for relocations. The same
-comment|// as the pointer to the above memory block for
-comment|// hosted JITs.
+comment|/// StubOffset - used for architectures with stub functions for far
+comment|/// relocations (like ARM).
 name|uintptr_t
 name|StubOffset
 decl_stmt|;
-comment|// It's used for architecturies with stub
-comment|// functions for far relocations like ARM.
+comment|/// ObjAddress - address of the section in the in-memory object file.  Used
+comment|/// for calculating relocations in some object formats (like MachO).
 name|uintptr_t
 name|ObjAddress
 decl_stmt|;
-comment|// Section address in object file. It's use for
-comment|// calculate MachO relocation addend
 name|SectionEntry
 argument_list|(
-argument|uint8_t* address
+argument|uint8_t *address
 argument_list|,
 argument|size_t size
 argument_list|,
@@ -245,37 +237,37 @@ argument_list|)
 block|{}
 block|}
 empty_stmt|;
+comment|/// RelocationEntry - used to represent relocations internally in the dynamic
+comment|/// linker.
 name|class
 name|RelocationEntry
 block|{
 name|public
 label|:
+comment|/// SectionID - the section this relocation points to.
 name|unsigned
 name|SectionID
 decl_stmt|;
-comment|// Section the relocation is contained in.
+comment|/// Offset - offset into the section.
 name|uintptr_t
 name|Offset
 decl_stmt|;
-comment|// Offset into the section for the relocation.
+comment|/// RelType - relocation type.
 name|uint32_t
-name|Data
+name|RelType
 decl_stmt|;
-comment|// Relocatino data. Including type of relocation
-comment|// and another flags and parameners from
+comment|/// Addend - the relocation addend encoded in the instruction itself.  Also
+comment|/// used to make a relocation section relative instead of symbol relative.
 name|intptr_t
 name|Addend
 decl_stmt|;
-comment|// Addend encoded in the instruction itself, if any,
-comment|// plus the offset into the source section for
-comment|// the symbol once the relocation is resolvable.
 name|RelocationEntry
 argument_list|(
 argument|unsigned id
 argument_list|,
 argument|uint64_t offset
 argument_list|,
-argument|uint32_t data
+argument|uint32_t type
 argument_list|,
 argument|int64_t addend
 argument_list|)
@@ -290,9 +282,9 @@ argument_list|(
 name|offset
 argument_list|)
 operator|,
-name|Data
+name|RelType
 argument_list|(
-name|data
+name|type
 argument_list|)
 operator|,
 name|Addend
@@ -302,7 +294,9 @@ argument_list|)
 block|{}
 block|}
 empty_stmt|;
-comment|// Raw relocation data from object file
+comment|/// ObjRelocationInfo - relocation information as read from the object file.
+comment|/// Used to pass around data taken from object::RelocationRef, together with
+comment|/// the section to which the relocation points (represented by a SectionID).
 name|class
 name|ObjRelocationInfo
 block|{
@@ -433,7 +427,8 @@ name|RTDyldMemoryManager
 modifier|*
 name|MemMgr
 decl_stmt|;
-comment|// A list of emmitted sections.
+comment|// A list of all sections emitted by the dynamic linker.  These sections are
+comment|// referenced in the code by means of their index in this list - SectionID.
 typedef|typedef
 name|SmallVector
 operator|<
@@ -459,8 +454,8 @@ name|unsigned
 operator|>
 name|ObjSectionToIDMap
 expr_stmt|;
-comment|// Master symbol table. As modules are loaded and external symbols are
-comment|// resolved, their addresses are stored here as a SectionID/Offset pair.
+comment|// A global symbol table for symbols from all loaded modules.  Maps the
+comment|// symbol name to a (SectionID, offset in section) pair.
 typedef|typedef
 name|std
 operator|::
@@ -472,23 +467,16 @@ name|uintptr_t
 operator|>
 name|SymbolLoc
 expr_stmt|;
+typedef|typedef
 name|StringMap
 operator|<
 name|SymbolLoc
 operator|>
-name|SymbolTable
+name|SymbolTableMap
 expr_stmt|;
-typedef|typedef
-name|DenseMap
-operator|<
-specifier|const
-name|char
-operator|*
-operator|,
-name|SymbolLoc
-operator|>
-name|LocalSymbolMap
-expr_stmt|;
+name|SymbolTableMap
+name|GlobalSymbolTable
+decl_stmt|;
 comment|// Keep a map of common symbols to their sizes
 typedef|typedef
 name|std
@@ -516,7 +504,7 @@ operator|>
 name|RelocationList
 expr_stmt|;
 comment|// Relocations to sections already loaded. Indexed by SectionID which is the
-comment|// source of the address. The target where the address will be writen is
+comment|// source of the address. The target where the address will be written is
 comment|// SectionID/Offset in the relocation itself.
 name|DenseMap
 operator|<
@@ -526,13 +514,14 @@ name|RelocationList
 operator|>
 name|Relocations
 expr_stmt|;
-comment|// Relocations to external symbols that are not yet resolved.
-comment|// Indexed by symbol name.
+comment|// Relocations to external symbols that are not yet resolved.  Symbols are
+comment|// external when they aren't found in the global symbol table of all loaded
+comment|// modules.  This map is indexed by symbol name.
 name|StringMap
 operator|<
 name|RelocationList
 operator|>
-name|SymbolRelocations
+name|ExternalSymbolRelocations
 expr_stmt|;
 typedef|typedef
 name|std
@@ -632,9 +621,10 @@ operator|.
 name|Address
 return|;
 block|}
-comment|/// \brief Emits a section containing common symbols.
-comment|/// \return SectionID.
-name|unsigned
+comment|/// \brief Given the common symbols discovered in the object file, emit a
+comment|/// new section for them and update the symbol mappings in the object and
+comment|/// symbol table.
+name|void
 name|emitCommonSymbols
 parameter_list|(
 name|ObjectImage
@@ -644,19 +634,19 @@ parameter_list|,
 specifier|const
 name|CommonSymbolMap
 modifier|&
-name|Map
+name|CommonSymbols
 parameter_list|,
 name|uint64_t
 name|TotalSize
 parameter_list|,
-name|LocalSymbolMap
+name|SymbolTableMap
 modifier|&
-name|Symbols
+name|SymbolTable
 parameter_list|)
 function_decl|;
 comment|/// \brief Emits section data from the object file to the MemoryManager.
 comment|/// \param IsCode if it's true then allocateCodeSection() will be
-comment|///        used for emmits, else allocateDataSection() will be used.
+comment|///        used for emits, else allocateDataSection() will be used.
 comment|/// \return SectionID.
 name|unsigned
 name|emitSection
@@ -699,24 +689,31 @@ modifier|&
 name|LocalSections
 parameter_list|)
 function_decl|;
-comment|/// \brief If Value.SymbolName is NULL then store relocation to the
-comment|///        Relocations, else store it in the SymbolRelocations.
+comment|// \brief Add a relocation entry that uses the given section.
 name|void
-name|AddRelocation
+name|addRelocationForSection
 parameter_list|(
 specifier|const
-name|RelocationValueRef
+name|RelocationEntry
 modifier|&
-name|Value
+name|RE
 parameter_list|,
 name|unsigned
 name|SectionID
+parameter_list|)
+function_decl|;
+comment|// \brief Add a relocation entry that uses the given symbol.  This symbol may
+comment|// be found in the global symbol table, or it may be external.
+name|void
+name|addRelocationForSymbol
+parameter_list|(
+specifier|const
+name|RelocationEntry
+modifier|&
+name|RE
 parameter_list|,
-name|uintptr_t
-name|Offset
-parameter_list|,
-name|uint32_t
-name|RelType
+name|StringRef
+name|SymbolName
 parameter_list|)
 function_decl|;
 comment|/// \brief Emits long jump instruction to Addr.
@@ -784,8 +781,8 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|/// \brief Parses the object file relocation and store it to Relocations
-comment|///        or SymbolRelocations. Its depend from object file type.
+comment|/// \brief Parses the object file relocation and stores it to Relocations
+comment|///        or SymbolRelocations (this depends on the object file type).
 name|virtual
 name|void
 name|processRelocationRef
@@ -803,7 +800,8 @@ name|ObjSectionToIDMap
 modifier|&
 name|ObjSectionToID
 parameter_list|,
-name|LocalSymbolMap
+specifier|const
+name|SymbolTableMap
 modifier|&
 name|Symbols
 parameter_list|,
@@ -814,8 +812,9 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
+comment|/// \brief Resolve relocations to external symbols.
 name|void
-name|resolveSymbols
+name|resolveExternalSymbols
 parameter_list|()
 function_decl|;
 name|virtual
@@ -888,14 +887,14 @@ comment|// FIXME: Just look up as a function for now. Overly simple of course.
 comment|// Work in progress.
 if|if
 condition|(
-name|SymbolTable
+name|GlobalSymbolTable
 operator|.
 name|find
 argument_list|(
 name|Name
 argument_list|)
 operator|==
-name|SymbolTable
+name|GlobalSymbolTable
 operator|.
 name|end
 argument_list|()
@@ -906,7 +905,7 @@ return|;
 name|SymbolLoc
 name|Loc
 init|=
-name|SymbolTable
+name|GlobalSymbolTable
 operator|.
 name|lookup
 argument_list|(

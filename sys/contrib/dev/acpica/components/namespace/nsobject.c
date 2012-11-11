@@ -46,7 +46,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsAttachObject  *  * PARAMETERS:  Node                - Parent Node  *              Object              - Object to be attached  *              Type                - Type of object, or ACPI_TYPE_ANY if not  *                                    known  *  * RETURN:      Status  *  * DESCRIPTION: Record the given object as the value associated with the  *              name whose ACPI_HANDLE is passed.  If Object is NULL  *              and Type is ACPI_TYPE_ANY, set the name as having no value.  *              Note: Future may require that the Node->Flags field be passed  *              as a parameter.  *  * MUTEX:       Assumes namespace is locked  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsAttachObject  *  * PARAMETERS:  Node                - Parent Node  *              Object              - Object to be attached  *              Type                - Type of object, or ACPI_TYPE_ANY if not  *                                    known  *  * RETURN:      Status  *  * DESCRIPTION: Record the given object as the value associated with the  *              name whose ACPI_HANDLE is passed. If Object is NULL  *              and Type is ACPI_TYPE_ANY, set the name as having no value.  *              Note: Future may require that the Node->Flags field be passed  *              as a parameter.  *  * MUTEX:       Assumes namespace is locked  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -236,7 +236,7 @@ operator|->
 name|Object
 condition|)
 block|{
-comment|/*          * Value passed is a name handle and that name has a          * non-null value.  Use that name's value and type.          */
+comment|/*          * Value passed is a name handle and that name has a          * non-null value. Use that name's value and type.          */
 name|ObjDesc
 operator|=
 operator|(
@@ -744,7 +744,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsAttachData  *  * PARAMETERS:  Node            - Namespace node  *              Handler         - Handler to be associated with the data  *              Data            - Data to be attached  *  * RETURN:      Status  *  * DESCRIPTION: Low-level attach data.  Create and attach a Data object.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsAttachData  *  * PARAMETERS:  Node            - Namespace node  *              Handler         - Handler to be associated with the data  *              Data            - Data to be attached  *  * RETURN:      Status  *  * DESCRIPTION: Low-level attach data. Create and attach a Data object.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -902,7 +902,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsDetachData  *  * PARAMETERS:  Node            - Namespace node  *              Handler         - Handler associated with the data  *  * RETURN:      Status  *  * DESCRIPTION: Low-level detach data.  Delete the data node, but the caller  *              is responsible for the actual data.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsDetachData  *  * PARAMETERS:  Node            - Namespace node  *              Handler         - Handler associated with the data  *  * RETURN:      Status  *  * DESCRIPTION: Low-level detach data. Delete the data node, but the caller  *              is responsible for the actual data.  *  ******************************************************************************/
 end_comment
 
 begin_function

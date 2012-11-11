@@ -271,6 +271,17 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/*  * Enable/disable strong signal fast diversity  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAL_CAP_STRONG_DIV
+value|2
+end_define
+
+begin_comment
 comment|/*  * Each chip or class of chips registers to offer support.  */
 end_comment
 
@@ -465,6 +476,168 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|HAL_NF_CAL_HIST_LEN_FULL
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAL_NF_CAL_HIST_LEN_SMALL
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAL_NUM_NF_READINGS
+value|6
+end_define
+
+begin_comment
+comment|/* 3 chains * (ctl + ext) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAL_NF_LOAD_DELAY
+value|1000
+end_define
+
+begin_comment
+comment|/*  * PER_CHAN doesn't work for now, as it looks like the device layer  * has to pre-populate the per-channel list with nominal values.  */
+end_comment
+
+begin_comment
+comment|//#define	ATH_NF_PER_CHAN		1
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|u_int8_t
+name|curr_index
+decl_stmt|;
+name|int8_t
+name|invalidNFcount
+decl_stmt|;
+comment|/* TO DO: REMOVE THIS! */
+name|int16_t
+name|priv_nf
+index|[
+name|HAL_NUM_NF_READINGS
+index|]
+decl_stmt|;
+block|}
+name|HAL_NFCAL_BASE
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|HAL_NFCAL_BASE
+name|base
+decl_stmt|;
+name|int16_t
+name|nf_cal_buffer
+index|[
+name|HAL_NF_CAL_HIST_LEN_FULL
+index|]
+index|[
+name|HAL_NUM_NF_READINGS
+index|]
+decl_stmt|;
+block|}
+name|HAL_NFCAL_HIST_FULL
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|HAL_NFCAL_BASE
+name|base
+decl_stmt|;
+name|int16_t
+name|nf_cal_buffer
+index|[
+name|HAL_NF_CAL_HIST_LEN_SMALL
+index|]
+index|[
+name|HAL_NUM_NF_READINGS
+index|]
+decl_stmt|;
+block|}
+name|HAL_NFCAL_HIST_SMALL
+typedef|;
+end_typedef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ATH_NF_PER_CHAN
+end_ifdef
+
+begin_typedef
+typedef|typedef
+name|HAL_NFCAL_HIST_FULL
+name|HAL_CHAN_NFCAL_HIST
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|AH_HOME_CHAN_NFCAL_HIST
+parameter_list|(
+name|ah
+parameter_list|,
+name|ichan
+parameter_list|)
+value|(ichan ?&ichan->nf_cal_hist: NULL)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_typedef
+typedef|typedef
+name|HAL_NFCAL_HIST_SMALL
+name|HAL_CHAN_NFCAL_HIST
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|AH_HOME_CHAN_NFCAL_HIST
+parameter_list|(
+name|ah
+parameter_list|,
+name|ichan
+parameter_list|)
+value|(&AH_PRIVATE(ah)->nf_cal_hist)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ATH_NF_PER_CHAN */
+end_comment
+
 begin_comment
 comment|/*  * Internal per-channel state.  These are found  * using ic_devdata in the ieee80211_channel.  */
 end_comment
@@ -522,13 +695,13 @@ name|AH_SUPPORT_AR5416
 name|int16_t
 name|noiseFloorCtl
 index|[
-name|AH_MIMO_MAX_CHAINS
+name|AH_MAX_CHAINS
 index|]
 decl_stmt|;
 name|int16_t
 name|noiseFloorExt
 index|[
-name|AH_MIMO_MAX_CHAINS
+name|AH_MAX_CHAINS
 index|]
 decl_stmt|;
 endif|#
@@ -538,6 +711,24 @@ name|uint16_t
 name|mainSpur
 decl_stmt|;
 comment|/* cached spur value for this channel */
+comment|/*XXX TODO: make these part of privFlags */
+name|uint8_t
+name|paprd_done
+range|:
+literal|1
+decl_stmt|,
+comment|/* 1: PAPRD DONE, 0: PAPRD Cal not done */
+name|paprd_table_write_done
+range|:
+literal|1
+decl_stmt|;
+comment|/* 1: DONE, 0: Cal data write not done */
+name|int
+name|one_time_cals_done
+decl_stmt|;
+name|HAL_CHAN_NFCAL_HIST
+name|nf_cal_hist
+decl_stmt|;
 block|}
 name|HAL_CHANNEL_INTERNAL
 typedef|;
@@ -836,6 +1027,14 @@ decl_stmt|,
 name|halIntrMitigation
 range|:
 literal|1
+decl_stmt|,
+name|hal49GhzSupport
+range|:
+literal|1
+decl_stmt|,
+name|halAntDivCombSupport
+range|:
+literal|1
 decl_stmt|;
 name|uint32_t
 name|halWirelessModes
@@ -886,6 +1085,19 @@ decl_stmt|;
 name|uint8_t
 name|halRxStreams
 decl_stmt|;
+name|HAL_MFP_OPT_T
+name|halMfpSupport
+decl_stmt|;
+comment|/* AR9300 HAL porting capabilities */
+name|int
+name|hal_paprd_enabled
+decl_stmt|;
+name|int
+name|hal_pcie_lcr_offset
+decl_stmt|;
+name|int
+name|hal_pcie_lcr_extsync_en
+decl_stmt|;
 name|int
 name|halNumTxMaps
 decl_stmt|;
@@ -904,6 +1116,19 @@ decl_stmt|;
 name|int
 name|halRxLpFifoDepth
 decl_stmt|;
+name|uint32_t
+name|halRegCap
+decl_stmt|;
+comment|/* XXX needed? */
+name|int
+name|halNumMRRetries
+decl_stmt|;
+name|int
+name|hal_ani_poll_interval
+decl_stmt|;
+name|int
+name|hal_channel_switch_time_usec
+decl_stmt|;
 block|}
 name|HAL_CAPABILITIES
 typedef|;
@@ -914,6 +1139,24 @@ struct_decl|struct
 name|regDomain
 struct_decl|;
 end_struct_decl
+
+begin_comment
+comment|/*  * Definitions for ah_flags in ath_hal_private  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AH_USE_EEPROM
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|AH_IS_HB63
+value|0x2
+end_define
 
 begin_comment
 comment|/*  * The ``private area'' follows immediately after the ``public area''  * in the data structure returned by ath_hal_attach.  Private data are  * used by device-independent code such as the regulatory domain support.  * In general, code within the HAL should never depend on data in the  * public area.  Instead any public data needed internally should be  * shadowed here.  *  * When declaring a device-specific ath_hal data structure this structure  * is assumed to at the front; e.g.  *  *	struct ath_hal_5212 {  *		struct ath_hal_private	ah_priv;  *		...  *	};  *  * It might be better to manage the method pointers in this structure  * using an indirect pointer to a read-only data structure but this would  * disallow class-style method overriding.  */
@@ -1168,10 +1411,18 @@ name|uint16_t
 name|ah_analog2GhzRev
 decl_stmt|;
 comment|/* 5GHz radio revision */
+name|uint32_t
+name|ah_flags
+decl_stmt|;
+comment|/* misc flags */
 name|uint8_t
 name|ah_ispcie
 decl_stmt|;
 comment|/* PCIE, special treatment */
+name|uint8_t
+name|ah_devType
+decl_stmt|;
+comment|/* card type - CB, PCI, PCIe */
 name|HAL_OPMODE
 name|ah_opmode
 decl_stmt|;
@@ -1270,6 +1521,15 @@ name|int
 name|ah_rxornIsFatal
 decl_stmt|;
 comment|/* how to treat HAL_INT_RXORN */
+ifndef|#
+directive|ifndef
+name|ATH_NF_PER_CHAN
+name|HAL_NFCAL_HIST_FULL
+name|nf_cal_hist
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* ! ATH_NF_PER_CHAN */
 block|}
 struct|;
 end_struct
@@ -1489,6 +1749,41 @@ name|_mask
 parameter_list|)
 define|\
 value|(_ah)->ah_setInterrupts(_ah, _mask)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_isrfkillenabled
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_RFSILENT, 1, AH_NULL) == HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_enable_rfkill
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_v
+parameter_list|)
+define|\
+value|ath_hal_setcapability(_ah, HAL_CAP_RFSILENT, 1, _v, AH_NULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_hasrfkill_int
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_RFSILENT, 3, AH_NULL) == HAL_OK)
 end_define
 
 begin_define
@@ -2073,6 +2368,53 @@ define|\
 value|((OS_REG_READ(_a, _r)& (_f)) != 0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|OS_REG_RMW_FIELD_ALT
+parameter_list|(
+name|_a
+parameter_list|,
+name|_r
+parameter_list|,
+name|_f
+parameter_list|,
+name|_v
+parameter_list|)
+define|\
+value|OS_REG_WRITE(_a, _r, \ 	    (OS_REG_READ(_a, _r)&~(_f<<_f##_S)) | \ 	    (((_v)<< _f##_S)& (_f<<_f##_S)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|OS_REG_READ_FIELD
+parameter_list|(
+name|_a
+parameter_list|,
+name|_r
+parameter_list|,
+name|_f
+parameter_list|)
+define|\
+value|(((OS_REG_READ(_a, _r)& _f)>> _f##_S))
+end_define
+
+begin_define
+define|#
+directive|define
+name|OS_REG_READ_FIELD_ALT
+parameter_list|(
+name|_a
+parameter_list|,
+name|_r
+parameter_list|,
+name|_f
+parameter_list|)
+define|\
+value|((OS_REG_READ(_a, _r)>> (_f##_S))&(_f))
+end_define
+
 begin_comment
 comment|/* Analog register writes may require a delay between each one (eg Merlin?) */
 end_comment
@@ -2091,7 +2433,7 @@ parameter_list|,
 name|_v
 parameter_list|)
 define|\
-value|do { OS_REG_WRITE(_a, _r, (OS_REG_READ(_a, _r)&~ (_f)) | (((_v)<< _f##_S)& (_f))) ; OS_DELAY(100); } while (0)
+value|do { OS_REG_WRITE(_a, _r, (OS_REG_READ(_a, _r)&~ (_f)) | \ 	    (((_v)<< _f##_S)& (_f))) ; OS_DELAY(100); } while (0)
 end_define
 
 begin_define
@@ -2931,6 +3273,47 @@ enum|;
 end_enum
 
 begin_comment
+comment|/* Merge these with above */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+name|hal_hw_hangs
+block|{
+name|HAL_DFS_BB_HANG_WAR
+init|=
+literal|0x1
+block|,
+name|HAL_RIFS_BB_HANG_WAR
+init|=
+literal|0x2
+block|,
+name|HAL_RX_STUCK_LOW_BB_HANG_WAR
+init|=
+literal|0x4
+block|,
+name|HAL_MAC_HANG_WAR
+init|=
+literal|0x8
+block|,
+name|HAL_PHYRESTART_CLR_WAR
+init|=
+literal|0x10
+block|,
+name|HAL_MAC_HANG_DETECTED
+init|=
+literal|0x40000000
+block|,
+name|HAL_BB_HANG_DETECTED
+init|=
+literal|0x80000000
+block|}
+name|hal_hw_hangs_t
+typedef|;
+end_typedef
+
+begin_comment
 comment|/*  * Device revision information.  */
 end_comment
 
@@ -3638,6 +4021,116 @@ parameter_list|)
 define|\
 value|(IEEE80211_IS_CHAN_5GHZ(_c)&& \ 	 AH_PRIVATE((_ah))->ah_caps.halSupportsFastClock5GHz&& \ 	ath_hal_eepromGetFlag((_ah), AR_EEP_FSTCLK_5G))
 end_define
+
+begin_comment
+comment|/*  * Fetch the maximum regulatory domain power for the given channel  * in 1/2dBm steps.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|ath_hal_get_twice_max_regpower
+parameter_list|(
+name|struct
+name|ath_hal_private
+modifier|*
+name|ahp
+parameter_list|,
+specifier|const
+name|HAL_CHANNEL_INTERNAL
+modifier|*
+name|ichan
+parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_channel
+modifier|*
+name|chan
+parameter_list|)
+block|{
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+init|=
+operator|&
+name|ahp
+operator|->
+name|h
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|chan
+condition|)
+block|{
+name|ath_hal_printf
+argument_list|(
+name|ah
+argument_list|,
+literal|"%s: called with chan=NULL!\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+return|return
+operator|(
+name|chan
+operator|->
+name|ic_maxpower
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Get the maximum antenna gain allowed, in 1/2dBm steps.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|ath_hal_getantennaallowed
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_channel
+modifier|*
+name|chan
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|chan
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+return|return
+operator|(
+name|chan
+operator|->
+name|ic_maxantgain
+operator|)
+return|;
+block|}
+end_function
 
 begin_endif
 endif|#

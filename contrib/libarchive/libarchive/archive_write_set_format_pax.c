@@ -1559,7 +1559,7 @@ block|{
 comment|/* Convert narrow-character to UTF-8. */
 name|r
 operator|=
-name|archive_strcpy_in_locale
+name|archive_strcpy_l
 argument_list|(
 operator|&
 operator|(
@@ -5920,6 +5920,9 @@ name|__archive_write_nulls
 argument_list|(
 name|a
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|pax
 operator|->
 name|entry_padding
@@ -7190,11 +7193,16 @@ name|__archive_write_nulls
 argument_list|(
 name|a
 argument_list|,
+call|(
+name|size_t
+call|)
+argument_list|(
 name|remaining
 operator|+
 name|pax
 operator|->
 name|entry_padding
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|pax
@@ -7444,6 +7452,9 @@ name|remaining
 condition|)
 name|ws
 operator|=
+operator|(
+name|size_t
+operator|)
 name|pax
 operator|->
 name|sparse_list

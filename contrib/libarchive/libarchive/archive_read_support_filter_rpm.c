@@ -731,11 +731,16 @@ else|else
 block|{
 name|n
 operator|=
+call|(
+name|size_t
+call|)
+argument_list|(
 name|RPM_LEAD_SIZE
 operator|-
 name|rpm
 operator|->
 name|total_in
+argument_list|)
 expr_stmt|;
 name|used
 operator|+=

@@ -415,7 +415,7 @@ end_define
 begin_decl_stmt
 specifier|extern
 name|struct
-name|rwlock
+name|rwlock_padalign
 name|tte_list_global_lock
 decl_stmt|;
 end_decl_stmt

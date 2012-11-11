@@ -7,7 +7,7 @@ begin_define
 define|#
 directive|define
 name|MAX_USERCMD
-value|500
+value|1000
 end_define
 
 begin_define

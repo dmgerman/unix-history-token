@@ -419,6 +419,58 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|__i386__
+end_ifdef
+
+begin_comment
+comment|/* Long double constants are broken on i386. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LD80C
+parameter_list|(
+name|m
+parameter_list|,
+name|ex
+parameter_list|,
+name|v
+parameter_list|)
+value|{						\ 	.xbits.man = __CONCAT(m, ULL),					\ 	.xbits.expsign = (0x3fff + (ex)) | ((v)< 0 ? 0x8000 : 0),	\ }
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* The above works on non-i386 too, but we use this to check v. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LD80C
+parameter_list|(
+name|m
+parameter_list|,
+name|ex
+parameter_list|,
+name|v
+parameter_list|)
+value|{ .e = (v), }
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|FLT_EVAL_METHOD
 end_ifdef
 
@@ -468,7 +520,7 @@ name|lval
 parameter_list|,
 name|rval
 parameter_list|)
-value|do {	\ 	volatile type __lval;			\ 						\ 	if (sizeof(type)>= sizeof(double))	\ 		(lval) = (rval);		\ 	else {					\ 		__lval = (rval);		\ 		(lval) = __lval;		\ 	}					\ } while (0)
+value|do {	\ 	volatile type __lval;			\ 						\ 	if (sizeof(type)>= sizeof(long double))	\ 		(lval) = (rval);		\ 	else {					\ 		__lval = (rval);		\ 		(lval) = __lval;		\ 	}					\ } while (0)
 end_define
 
 begin_endif
@@ -480,6 +532,91 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* FLT_EVAL_METHOD */
+end_comment
+
+begin_comment
+comment|/* Support switching the mode to FP_PE if necessary. */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|NO_FPSETPREC
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ENTERI
+parameter_list|()
+define|\
+value|long double __retval;			\ 	fp_prec_t __oprec;			\ 						\ 	if ((__oprec = fpgetprec()) != FP_PE)	\ 		fpsetprec(FP_PE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RETURNI
+parameter_list|(
+name|x
+parameter_list|)
+value|do {				\ 	__retval = (x);				\ 	if (__oprec != FP_PE)			\ 		fpsetprec(__oprec);		\ 	RETURNF(__retval);			\ } while (0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ENTERI
+parameter_list|(
+name|x
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RETURNI
+parameter_list|(
+name|x
+parameter_list|)
+value|RETURNF(x)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Default return statement if hack*_t() is not used. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RETURNF
+parameter_list|(
+name|v
+parameter_list|)
+value|return (v)
+end_define
 
 begin_comment
 comment|/*  * Common routine to process the arguments to nan(), nanf(), and nanl().  */
@@ -813,6 +950,54 @@ begin_define
 define|#
 directive|define
 name|HAVE_EFFICIENT_IRINT
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+end_if
+
+begin_function
+specifier|static
+name|__inline
+name|int
+name|irintl
+parameter_list|(
+name|long
+name|double
+name|x
+parameter_list|)
+block|{
+name|int
+name|n
+decl_stmt|;
+asm|asm("fistl %0" : "=m" (n) : "t" (x));
+return|return
+operator|(
+name|n
+operator|)
+return|;
+block|}
+end_function
+
+begin_define
+define|#
+directive|define
+name|HAVE_EFFICIENT_IRINTL
 end_define
 
 begin_endif
@@ -1238,16 +1423,13 @@ begin_comment
 comment|/* double precision kernel functions */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|INLINE_REM_PIO2
-end_ifdef
+end_ifndef
 
 begin_function_decl
-name|__inline
-endif|#
-directive|endif
 name|int
 name|__ieee754_rem_pio2
 parameter_list|(
@@ -1258,6 +1440,11 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|double
@@ -1335,16 +1522,13 @@ begin_comment
 comment|/* float precision kernel functions */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|INLINE_REM_PIO2F
-end_ifdef
+end_ifndef
 
 begin_function_decl
-name|__inline
-endif|#
-directive|endif
 name|int
 name|__ieee754_rem_pio2f
 parameter_list|(
@@ -1356,16 +1540,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INLINE_KERNEL_SINDF
-end_ifdef
-
-begin_function_decl
-name|__inline
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|INLINE_KERNEL_SINDF
+end_ifndef
+
+begin_function_decl
 name|float
 name|__kernel_sindf
 parameter_list|(
@@ -1374,16 +1560,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INLINE_KERNEL_COSDF
-end_ifdef
-
-begin_function_decl
-name|__inline
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|INLINE_KERNEL_COSDF
+end_ifndef
+
+begin_function_decl
 name|float
 name|__kernel_cosdf
 parameter_list|(
@@ -1392,16 +1580,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INLINE_KERNEL_TANDF
-end_ifdef
-
-begin_function_decl
-name|__inline
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|INLINE_KERNEL_TANDF
+end_ifndef
+
+begin_function_decl
 name|float
 name|__kernel_tandf
 parameter_list|(
@@ -1411,6 +1601,11 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|float

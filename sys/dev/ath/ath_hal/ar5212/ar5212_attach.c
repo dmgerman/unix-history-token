@@ -260,6 +260,21 @@ name|ah_getTxCompletionRates
 operator|=
 name|ar5212GetTxCompletionRates
 block|,
+operator|.
+name|ah_setTxDescLink
+operator|=
+name|ar5212SetTxDescLink
+block|,
+operator|.
+name|ah_getTxDescLink
+operator|=
+name|ar5212GetTxDescLink
+block|,
+operator|.
+name|ah_getTxDescLinkPtr
+operator|=
+name|ar5212GetTxDescLinkPtr
+block|,
 comment|/* RX Functions */
 operator|.
 name|ah_getRxDP
@@ -547,6 +562,11 @@ operator|.
 name|ah_getDfsThresh
 operator|=
 name|ar5212GetDfsThresh
+block|,
+operator|.
+name|ah_getDfsDefaultThresh
+operator|=
+name|ar5212GetDfsDefaultThresh
 block|,
 operator|.
 name|ah_procRadarEvent
@@ -3714,12 +3734,34 @@ name|halHigh2GhzChan
 operator|=
 literal|2732
 expr_stmt|;
+comment|/* 	 * For AR5111 version< 4, the lowest centre frequency supported is 	 * 5130MHz.  For AR5111 version 4, the 4.9GHz channels are supported 	 * but only in 10MHz increments. 	 * 	 * In addition, the programming method is wrong - it uses the IEEE 	 * channel number to calculate the frequency, rather than the 	 * channel centre.  Since half/quarter rates re-use some of the 	 * 5GHz channel IEEE numbers, this will result in a badly programmed 	 * synth. 	 * 	 * Until the relevant support is written, just limit lower frequency 	 * support for AR5111 so things aren't incorrectly programmed. 	 * 	 * XXX It's also possible this code doesn't correctly limit the 	 * centre frequencies of potential channels; this is very important 	 * for half/quarter rate! 	 */
+if|if
+condition|(
+name|AH_RADIO_MAJOR
+argument_list|(
+name|ah
+argument_list|)
+operator|==
+name|AR_RAD5111_SREV_MAJOR
+condition|)
+block|{
+name|pCap
+operator|->
+name|halLow5GhzChan
+operator|=
+literal|5120
+expr_stmt|;
+comment|/* XXX lowest centre = 5130MHz */
+block|}
+else|else
+block|{
 name|pCap
 operator|->
 name|halLow5GhzChan
 operator|=
 literal|4915
 expr_stmt|;
+block|}
 name|pCap
 operator|->
 name|halHigh5GhzChan
@@ -3953,6 +3995,20 @@ operator|=
 name|AH_TRUE
 expr_stmt|;
 comment|/* XXX fixed in later revs? */
+name|pCap
+operator|->
+name|halNumMRRetries
+operator|=
+literal|4
+expr_stmt|;
+comment|/* Hardware supports 4 MRR */
+name|pCap
+operator|->
+name|halNumTxMaps
+operator|=
+literal|1
+expr_stmt|;
+comment|/* Single TX ptr per descr */
 name|pCap
 operator|->
 name|halVEOLSupport

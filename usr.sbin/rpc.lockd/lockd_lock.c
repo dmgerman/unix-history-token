@@ -2679,11 +2679,6 @@ return|return
 literal|1
 return|;
 block|}
-return|return
-operator|(
-name|result
-operator|)
-return|;
 block|}
 end_function
 

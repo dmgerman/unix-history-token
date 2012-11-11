@@ -126,7 +126,6 @@ return|return
 name|MachineI
 return|;
 block|}
-block|;
 name|void
 name|setMI
 argument_list|(
@@ -137,7 +136,6 @@ name|MachineI
 operator|=
 name|MI
 block|; }
-block|;
 name|bool
 name|isStartPacket
 argument_list|()
@@ -149,7 +147,6 @@ name|startPacket
 operator|)
 return|;
 block|}
-block|;
 name|bool
 name|isEndPacket
 argument_list|()
@@ -161,7 +158,6 @@ name|endPacket
 operator|)
 return|;
 block|}
-block|;
 name|void
 name|setStartPacket
 argument_list|(
@@ -172,7 +168,6 @@ name|startPacket
 operator|=
 name|yes
 block|; }
-block|;
 name|void
 name|setEndPacket
 argument_list|(
@@ -183,9 +178,8 @@ name|endPacket
 operator|=
 name|yes
 block|; }
-block|;   }
-decl_stmt|;
-block|}
+expr|}
+block|; }
 end_decl_stmt
 
 begin_endif

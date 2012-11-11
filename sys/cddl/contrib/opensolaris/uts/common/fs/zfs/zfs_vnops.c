@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -289,6 +289,12 @@ begin_include
 include|#
 directive|include
 file|<sys/acl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_param.h>
 end_include
 
 begin_include
@@ -4464,9 +4470,6 @@ name|z_zfsvfs
 operator|->
 name|z_os
 decl_stmt|;
-name|int
-name|vfslocked
-decl_stmt|;
 if|if
 condition|(
 name|zgd
@@ -4487,17 +4490,6 @@ argument_list|(
 name|zgd
 operator|->
 name|zgd_rl
-argument_list|)
-expr_stmt|;
-name|vfslocked
-operator|=
-name|VFS_LOCK_GIANT
-argument_list|(
-name|zp
-operator|->
-name|z_zfsvfs
-operator|->
-name|z_vfs
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Release the vnode asynchronously as we currently have the 	 * txg stopped from syncing. 	 */
@@ -4546,11 +4538,6 @@ sizeof|sizeof
 argument_list|(
 name|zgd_t
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|VFS_UNLOCK_GIANT
-argument_list|(
-name|vfslocked
 argument_list|)
 expr_stmt|;
 block|}
@@ -7663,13 +7650,9 @@ operator|&
 name|xzp
 argument_list|)
 expr_stmt|;
-name|ASSERT3U
+name|ASSERT0
 argument_list|(
 name|error
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|dmu_tx_hold_sa
@@ -8082,13 +8065,9 @@ argument_list|,
 name|tx
 argument_list|)
 expr_stmt|;
-name|ASSERT3U
+name|ASSERT0
 argument_list|(
 name|error
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -8102,15 +8081,11 @@ operator|->
 name|v_count
 operator|--
 expr_stmt|;
-name|ASSERT3U
+name|ASSERT0
 argument_list|(
 name|vp
 operator|->
 name|v_count
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|VI_UNLOCK
@@ -14552,13 +14527,9 @@ argument_list|,
 name|tx
 argument_list|)
 expr_stmt|;
-name|ASSERT3U
+name|ASSERT0
 argument_list|(
 name|err
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -16825,13 +16796,9 @@ argument_list|,
 name|tx
 argument_list|)
 expr_stmt|;
-name|ASSERT3U
+name|ASSERT0
 argument_list|(
 name|error
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|error
@@ -16951,6 +16918,26 @@ expr_stmt|;
 name|cache_purge
 argument_list|(
 name|tdvp
+argument_list|)
+expr_stmt|;
+name|cache_purge
+argument_list|(
+name|ZTOV
+argument_list|(
+name|szp
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tzp
+condition|)
+name|cache_purge
+argument_list|(
+name|ZTOV
+argument_list|(
+name|tzp
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -24919,7 +24906,7 @@ name|ap
 operator|->
 name|a_fflag
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 literal|0
 argument_list|,
@@ -27621,8 +27608,6 @@ argument_list|,
 name|LOOKUP
 argument_list|,
 name|NOFOLLOW
-operator||
-name|MPSAFE
 argument_list|,
 name|UIO_SYSSPACE
 argument_list|,
@@ -27988,8 +27973,6 @@ operator||
 name|LOCKPARENT
 operator||
 name|LOCKLEAF
-operator||
-name|MPSAFE
 argument_list|,
 name|UIO_SYSSPACE
 argument_list|,
@@ -28304,8 +28287,6 @@ argument_list|,
 name|LOOKUP
 argument_list|,
 name|NOFOLLOW
-operator||
-name|MPSAFE
 argument_list|,
 name|UIO_SYSSPACE
 argument_list|,
@@ -28711,8 +28692,6 @@ operator||
 name|LOCKLEAF
 operator||
 name|LOCKSHARED
-operator||
-name|MPSAFE
 argument_list|,
 name|UIO_SYSSPACE
 argument_list|,

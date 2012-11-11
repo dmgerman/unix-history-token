@@ -2422,6 +2422,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * XXX: EVFILT_TIMER should perhaps live in kern_time.c beside the  * interval timer support code.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -2472,10 +2476,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* XXX - move to kern_timeout.c? */
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -2511,6 +2511,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* XXX - handle locking */
+comment|/* 	 * timertoticks() uses tvtohz() which always adds 1 to allow 	 * for the time until the next clock interrupt being strictly 	 * less than 1 clock tick.  We don't want that here since we 	 * want to appear to be in sync with the clock interrupt even 	 * when we're delayed. 	 */
 if|if
 condition|(
 operator|(
@@ -2545,6 +2546,8 @@ name|kn
 operator|->
 name|kn_sdata
 argument_list|)
+operator|-
+literal|1
 argument_list|,
 name|filt_timerexpire
 argument_list|,
@@ -2557,10 +2560,6 @@ end_function
 
 begin_comment
 comment|/*  * data contains amount of time to sleep, in milliseconds  */
-end_comment
-
-begin_comment
-comment|/* XXX - move to kern_timeout.c? */
 end_comment
 
 begin_function
@@ -2676,10 +2675,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* XXX - move to kern_timeout.c? */
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -2737,10 +2732,6 @@ expr_stmt|;
 comment|/* knlist_remove usually clears it */
 block|}
 end_function
-
-begin_comment
-comment|/* XXX - move to kern_timeout.c? */
-end_comment
 
 begin_function
 specifier|static

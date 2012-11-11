@@ -1570,32 +1570,6 @@ argument_list|(
 literal|"ixv_attach: begin"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|resource_disabled
-argument_list|(
-literal|"ixgbe"
-argument_list|,
-name|device_get_unit
-argument_list|(
-name|dev
-argument_list|)
-argument_list|)
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"Disabled by device hint\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
 comment|/* Allocate, clear, and link in our adapter structure */
 name|adapter
 operator|=
@@ -3064,20 +3038,28 @@ block|}
 name|enqueued
 operator|++
 expr_stmt|;
-name|drbr_stats_update
-argument_list|(
 name|ifp
-argument_list|,
+operator|->
+name|if_obytes
+operator|+=
 name|next
 operator|->
 name|m_pkthdr
 operator|.
 name|len
-argument_list|,
+expr_stmt|;
+if|if
+condition|(
 name|next
 operator|->
 name|m_flags
-argument_list|)
+operator|&
+name|M_MCAST
+condition|)
+name|ifp
+operator|->
+name|if_omcasts
+operator|++
 expr_stmt|;
 comment|/* Send a copy of the frame to the BPF listener */
 name|ETHER_BPF_MTAP

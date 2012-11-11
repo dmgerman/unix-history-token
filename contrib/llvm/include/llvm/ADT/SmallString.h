@@ -176,7 +176,7 @@ comment|/// Assign from a repeated element
 name|void
 name|assign
 argument_list|(
-argument|unsigned NumElts
+argument|size_t NumElts
 argument_list|,
 argument|char Elt
 argument_list|)
@@ -313,6 +313,26 @@ argument_list|(
 name|S
 argument_list|,
 name|E
+argument_list|)
+block|;   }
+name|void
+name|append
+argument_list|(
+argument|size_t NumInputs
+argument_list|,
+argument|char Elt
+argument_list|)
+block|{
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|::
+name|append
+argument_list|(
+name|NumInputs
+argument_list|,
+name|Elt
 argument_list|)
 block|;   }
 comment|/// Append from a StringRef

@@ -432,17 +432,6 @@ parameter_list|)
 function_decl|;
 block|}
 empty_stmt|;
-comment|/// callIsSmall - If a call is likely to lower to a single target instruction,
-comment|/// or is otherwise deemed small return true.
-name|bool
-name|callIsSmall
-parameter_list|(
-specifier|const
-name|Function
-modifier|*
-name|Callee
-parameter_list|)
-function_decl|;
 block|}
 end_decl_stmt
 

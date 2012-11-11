@@ -582,6 +582,16 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|int
+name|syncache_sysctl_count
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|void
 name|syncache_timeout
 parameter_list|(
@@ -785,7 +795,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_UINT
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_tcp_syncache
 argument_list|,
@@ -793,17 +803,20 @@ name|OID_AUTO
 argument_list|,
 name|count
 argument_list|,
+operator|(
+name|CTLTYPE_UINT
+operator||
 name|CTLFLAG_RD
+operator|)
 argument_list|,
-operator|&
-name|VNET_NAME
-argument_list|(
-name|tcp_syncache
-operator|.
-name|cache_count
-argument_list|)
+name|NULL
 argument_list|,
 literal|0
+argument_list|,
+operator|&
+name|syncache_sysctl_count
+argument_list|,
+literal|"IU"
 argument_list|,
 literal|"Current number of entries in syncache"
 argument_list|)
@@ -1070,12 +1083,6 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|V_tcp_syncache
-operator|.
-name|cache_count
-operator|=
-literal|0
-expr_stmt|;
 name|V_tcp_syncache
 operator|.
 name|hashsize
@@ -1348,6 +1355,17 @@ operator|.
 name|cache_limit
 argument_list|)
 expr_stmt|;
+name|V_tcp_syncache
+operator|.
+name|cache_limit
+operator|=
+name|uma_zone_get_max
+argument_list|(
+name|V_tcp_syncache
+operator|.
+name|zone
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1489,20 +1507,19 @@ expr_stmt|;
 block|}
 name|KASSERT
 argument_list|(
+name|uma_zone_get_cur
+argument_list|(
 name|V_tcp_syncache
 operator|.
-name|cache_count
+name|zone
+argument_list|)
 operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"%s: cache_count %d not 0"
+literal|"%s: cache_count not 0"
 operator|,
 name|__func__
-operator|,
-name|V_tcp_syncache
-operator|.
-name|cache_count
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1530,6 +1547,47 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_function
+specifier|static
+name|int
+name|syncache_sysctl_count
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+block|{
+name|int
+name|count
+decl_stmt|;
+name|count
+operator|=
+name|uma_zone_get_cur
+argument_list|(
+name|V_tcp_syncache
+operator|.
+name|zone
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|sysctl_handle_int
+argument_list|(
+name|oidp
+argument_list|,
+operator|&
+name|count
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|count
+argument_list|)
+argument_list|,
+name|req
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * Inserts a syncache entry into the specified bucket row.  * Locks and unlocks the syncache_head autonomously.  */
@@ -1697,11 +1755,6 @@ argument_list|(
 name|sch
 argument_list|)
 expr_stmt|;
-name|V_tcp_syncache
-operator|.
-name|cache_count
-operator|++
-expr_stmt|;
 name|TCPSTAT_INC
 argument_list|(
 name|tcps_sc_added
@@ -1791,11 +1844,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|V_tcp_syncache
-operator|.
-name|cache_count
-operator|--
-expr_stmt|;
 block|}
 end_function
 
@@ -1831,7 +1879,7 @@ operator|+
 name|TCPTV_RTOBASE
 operator|*
 operator|(
-name|tcp_backoff
+name|tcp_syn_backoff
 index|[
 name|sc
 operator|->
@@ -3996,7 +4044,7 @@ operator|->
 name|sc_peer_mss
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If the SYN,ACK was retransmitted, reset cwnd to 1 segment. 	 * NB: sc_rxmits counts all SYN,ACK transmits, not just retransmits. 	 */
+comment|/* 	 * If the SYN,ACK was retransmitted, indicate that CWND to be 	 * limited to one segment in cc_conn_init(). 	 * NB: sc_rxmits counts all SYN,ACK transmits, not just retransmits. 	 */
 if|if
 condition|(
 name|sc
@@ -4009,9 +4057,7 @@ name|tp
 operator|->
 name|snd_cwnd
 operator|=
-name|tp
-operator|->
-name|t_maxseg
+literal|1
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -4434,11 +4480,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-name|V_tcp_syncache
-operator|.
-name|cache_count
-operator|--
-expr_stmt|;
 name|SCH_UNLOCK
 argument_list|(
 name|sch
@@ -6315,7 +6356,10 @@ name|ip
 operator|->
 name|ip_len
 operator|=
+name|htons
+argument_list|(
 name|tlen
+argument_list|)
 expr_stmt|;
 name|ip
 operator|->
@@ -6398,7 +6442,10 @@ name|ip
 operator|->
 name|ip_off
 operator||=
+name|htons
+argument_list|(
 name|IP_DF
+argument_list|)
 expr_stmt|;
 name|th
 operator|=
@@ -6761,8 +6808,18 @@ directive|endif
 name|ip
 operator|->
 name|ip_len
-operator|+=
+operator|=
+name|htons
+argument_list|(
+name|ntohs
+argument_list|(
+name|ip
+operator|->
+name|ip_len
+argument_list|)
+operator|+
 name|optlen
+argument_list|)
 expr_stmt|;
 block|}
 else|else

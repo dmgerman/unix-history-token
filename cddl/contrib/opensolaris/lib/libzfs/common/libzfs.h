@@ -1093,7 +1093,10 @@ comment|/* faulted device with no replicas */
 comment|/* 	 * The following are not faults per se, but still an error possibly 	 * requiring administrative attention.  There is no corresponding 	 * message ID. 	 */
 name|ZPOOL_STATUS_VERSION_OLDER
 block|,
-comment|/* older on-disk version */
+comment|/* older legacy on-disk version */
+name|ZPOOL_STATUS_FEAT_DISABLED
+block|,
+comment|/* supported features are disabled */
 name|ZPOOL_STATUS_RESILVERING
 block|,
 comment|/* device being resilvered */
@@ -2522,6 +2525,10 @@ name|int
 name|zfs_rename
 parameter_list|(
 name|zfs_handle_t
+modifier|*
+parameter_list|,
+specifier|const
+name|char
 modifier|*
 parameter_list|,
 specifier|const

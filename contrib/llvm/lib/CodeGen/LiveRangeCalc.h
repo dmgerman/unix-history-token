@@ -135,6 +135,25 @@ expr_stmt|;
 name|class
 name|LiveRangeCalc
 block|{
+specifier|const
+name|MachineRegisterInfo
+modifier|*
+name|MRI
+decl_stmt|;
+name|SlotIndexes
+modifier|*
+name|Indexes
+decl_stmt|;
+name|MachineDominatorTree
+modifier|*
+name|DomTree
+decl_stmt|;
+name|VNInfo
+operator|::
+name|Allocator
+operator|*
+name|Alloc
+expr_stmt|;
 comment|/// Seen - Bit vector of active entries in LiveOut, also used as a visited
 comment|/// set by findReachingDefs.  One entry per basic block, indexed by block
 comment|/// number.  This is kept as a separate bit vector because it can be cleared
@@ -263,6 +282,8 @@ comment|/// Kill, search for values that can reach KillMBB.  All blocks that nee
 comment|/// to be live-in are added to LiveIn.  If a unique reaching def is found,
 comment|/// its value is returned, if Kill is jointly dominated by multiple values,
 comment|/// NULL is returned.
+comment|///
+comment|/// PhysReg, when set, is used to verify live-in lists on basic blocks.
 name|VNInfo
 modifier|*
 name|findReachingDefs
@@ -278,13 +299,8 @@ parameter_list|,
 name|SlotIndex
 name|Kill
 parameter_list|,
-name|SlotIndexes
-modifier|*
-name|Indexes
-parameter_list|,
-name|MachineDominatorTree
-modifier|*
-name|DomTree
+name|unsigned
+name|PhysReg
 parameter_list|)
 function_decl|;
 comment|/// updateSSA - Compute the values that will be live in to all requested
@@ -294,22 +310,8 @@ comment|/// Every live-in block must be jointly dominated by the added live-out
 comment|/// blocks.  No values are read from the live ranges.
 name|void
 name|updateSSA
-argument_list|(
-name|SlotIndexes
-operator|*
-name|Indexes
-argument_list|,
-name|MachineDominatorTree
-operator|*
-name|DomTree
-argument_list|,
-name|VNInfo
-operator|::
-name|Allocator
-operator|*
-name|Alloc
-argument_list|)
-decl_stmt|;
+parameter_list|()
+function_decl|;
 comment|/// updateLiveIns - Add liveness as specified in the LiveIn vector, using VNI
 comment|/// as a wildcard value for LiveIn entries without a value.
 name|void
@@ -318,13 +320,33 @@ parameter_list|(
 name|VNInfo
 modifier|*
 name|VNI
-parameter_list|,
-name|SlotIndexes
-modifier|*
 parameter_list|)
 function_decl|;
 name|public
 label|:
+name|LiveRangeCalc
+argument_list|()
+operator|:
+name|MRI
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Indexes
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|DomTree
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Alloc
+argument_list|(
+literal|0
+argument_list|)
+block|{}
 comment|//===--------------------------------------------------------------------===//
 comment|// High-level interface.
 comment|//===--------------------------------------------------------------------===//
@@ -338,37 +360,34 @@ comment|/// live range in a function.  If live ranges are not known to be
 comment|/// non-overlapping, call reset before each.
 name|void
 name|reset
-parameter_list|(
+argument_list|(
 specifier|const
 name|MachineFunction
-modifier|*
+operator|*
 name|MF
-parameter_list|)
-function_decl|;
-comment|/// calculate - Calculate the live range of a virtual register from its defs
-comment|/// and uses.  LI must be empty with no values.
-name|void
-name|calculate
-argument_list|(
-name|LiveInterval
-operator|*
-name|LI
-argument_list|,
-name|MachineRegisterInfo
-operator|*
-name|MRI
 argument_list|,
 name|SlotIndexes
 operator|*
-name|Indexes
+argument_list|,
+name|MachineDominatorTree
+operator|*
 argument_list|,
 name|VNInfo
 operator|::
 name|Allocator
 operator|*
-name|Alloc
 argument_list|)
-decl_stmt|;
+expr_stmt|;
+comment|/// calculate - Calculate the live range of a virtual register from its defs
+comment|/// and uses.  LI must be empty with no values.
+name|void
+name|calculate
+parameter_list|(
+name|LiveInterval
+modifier|*
+name|LI
+parameter_list|)
+function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Mid-level interface.
 comment|//===--------------------------------------------------------------------===//
@@ -381,61 +400,91 @@ comment|/// The existing values in LI must be live so they jointly dominate Kill
 comment|/// Kill is not dominated by a single existing value, PHI-defs are inserted
 comment|/// as required to preserve SSA form.  If Kill is known to be dominated by a
 comment|/// single existing value, Alloc may be null.
+comment|///
+comment|/// PhysReg, when set, is used to verify live-in lists on basic blocks.
 name|void
 name|extend
-argument_list|(
+parameter_list|(
 name|LiveInterval
-operator|*
+modifier|*
 name|LI
-argument_list|,
+parameter_list|,
 name|SlotIndex
 name|Kill
+parameter_list|,
+name|unsigned
+name|PhysReg
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+comment|/// createDeadDefs - Create a dead def in LI for every def operand of Reg.
+comment|/// Each instruction defining Reg gets a new VNInfo with a corresponding
+comment|/// minimal live range.
+name|void
+name|createDeadDefs
+parameter_list|(
+name|LiveInterval
+modifier|*
+name|LI
+parameter_list|,
+name|unsigned
+name|Reg
+parameter_list|)
+function_decl|;
+comment|/// createDeadDefs - Create a dead def in LI for every def of LI->reg.
+name|void
+name|createDeadDefs
+parameter_list|(
+name|LiveInterval
+modifier|*
+name|LI
+parameter_list|)
+block|{
+name|createDeadDefs
+argument_list|(
+name|LI
 argument_list|,
-name|SlotIndexes
-operator|*
-name|Indexes
-argument_list|,
-name|MachineDominatorTree
-operator|*
-name|DomTree
-argument_list|,
-name|VNInfo
-operator|::
-name|Allocator
-operator|*
-name|Alloc
+name|LI
+operator|->
+name|reg
 argument_list|)
-decl_stmt|;
-comment|/// extendToUses - Extend the live range of LI to reach all uses.
+expr_stmt|;
+block|}
+comment|/// extendToUses - Extend the live range of LI to reach all uses of Reg.
 comment|///
 comment|/// All uses must be jointly dominated by existing liveness.  PHI-defs are
 comment|/// inserted as needed to preserve SSA form.
 name|void
 name|extendToUses
-argument_list|(
+parameter_list|(
 name|LiveInterval
-operator|*
+modifier|*
+name|LI
+parameter_list|,
+name|unsigned
+name|Reg
+parameter_list|)
+function_decl|;
+comment|/// extendToUses - Extend the live range of LI to reach all uses of LI->reg.
+name|void
+name|extendToUses
+parameter_list|(
+name|LiveInterval
+modifier|*
+name|LI
+parameter_list|)
+block|{
+name|extendToUses
+argument_list|(
 name|LI
 argument_list|,
-name|MachineRegisterInfo
-operator|*
-name|MRI
-argument_list|,
-name|SlotIndexes
-operator|*
-name|Indexes
-argument_list|,
-name|MachineDominatorTree
-operator|*
-name|DomTree
-argument_list|,
-name|VNInfo
-operator|::
-name|Allocator
-operator|*
-name|Alloc
+name|LI
+operator|->
+name|reg
 argument_list|)
-decl_stmt|;
+expr_stmt|;
+block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// Low-level interface.
 comment|//===--------------------------------------------------------------------===//
@@ -544,22 +593,8 @@ comment|/// Every predecessor of a live-in block must have been given a value wi
 comment|/// setLiveOutValue, the value may be null for live-trough blocks.
 name|void
 name|calculateValues
-argument_list|(
-name|SlotIndexes
-operator|*
-name|Indexes
-argument_list|,
-name|MachineDominatorTree
-operator|*
-name|DomTree
-argument_list|,
-name|VNInfo
-operator|::
-name|Allocator
-operator|*
-name|Alloc
-argument_list|)
-decl_stmt|;
+parameter_list|()
+function_decl|;
 block|}
 empty_stmt|;
 block|}

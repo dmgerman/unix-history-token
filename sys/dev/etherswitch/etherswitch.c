@@ -897,6 +897,11 @@ operator|*
 operator|)
 name|data
 expr_stmt|;
+name|ETHERSWITCH_LOCK
+argument_list|(
+name|etherswitch
+argument_list|)
+expr_stmt|;
 name|reg
 operator|->
 name|val
@@ -908,6 +913,11 @@ argument_list|,
 name|reg
 operator|->
 name|reg
+argument_list|)
+expr_stmt|;
+name|ETHERSWITCH_UNLOCK
+argument_list|(
+name|etherswitch
 argument_list|)
 expr_stmt|;
 break|break;
@@ -922,6 +932,11 @@ operator|*
 operator|)
 name|data
 expr_stmt|;
+name|ETHERSWITCH_LOCK
+argument_list|(
+name|etherswitch
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|ETHERSWITCH_WRITEREG
@@ -935,6 +950,11 @@ argument_list|,
 name|reg
 operator|->
 name|val
+argument_list|)
+expr_stmt|;
+name|ETHERSWITCH_UNLOCK
+argument_list|(
+name|etherswitch
 argument_list|)
 expr_stmt|;
 break|break;

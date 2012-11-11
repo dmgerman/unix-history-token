@@ -3278,7 +3278,7 @@ comment|/*******************************************************************  * 
 end_comment
 
 begin_comment
-comment|/*  * We tell the I/O APIC code about all the CPUs we want to receive  * interrupts.  If we don't want certain CPUs to receive IRQs we  * can simply not tell the I/O APIC code about them in this function.  */
+comment|/*  * We tell the I/O APIC code about all the CPUs we want to receive  * interrupts.  If we don't want certain CPUs to receive IRQs we  * can simply not tell the I/O APIC code about them in this function.  * We also do not tell it about the BSP since it tells itself about  * the BSP internally to work with UP kernels and on UP machines.  */
 end_comment
 
 begin_function
@@ -3321,6 +3321,16 @@ name|apic_id
 operator|==
 operator|-
 literal|1
+condition|)
+continue|continue;
+if|if
+condition|(
+name|cpu_info
+index|[
+name|apic_id
+index|]
+operator|.
+name|cpu_bsp
 condition|)
 continue|continue;
 if|if
@@ -4629,8 +4639,7 @@ name|int
 name|vector
 parameter_list|)
 block|{
-comment|/* 	 * first we do an INIT/RESET IPI this INIT IPI might be run, reseting 	 * and running the target CPU. OR this INIT IPI might be latched (P5 	 * bug), CPU waiting for STARTUP IPI. OR this INIT IPI might be 	 * ignored. 	 */
-comment|/* do an INIT IPI: assert RESET */
+comment|/* 	 * first we do an INIT IPI: this INIT IPI might be run, resetting 	 * and running the target CPU. OR this INIT IPI might be latched (P5 	 * bug), CPU waiting for STARTUP IPI. OR this INIT IPI might be 	 * ignored. 	 */
 name|lapic_ipi_raw
 argument_list|(
 name|APIC_DEST_DESTFLD
@@ -4646,44 +4655,19 @@ argument_list|,
 name|apic_id
 argument_list|)
 expr_stmt|;
-comment|/* wait for pending status end */
 name|lapic_ipi_wait
 argument_list|(
 operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* do an INIT IPI: deassert RESET */
-name|lapic_ipi_raw
-argument_list|(
-name|APIC_DEST_ALLESELF
-operator||
-name|APIC_TRIGMOD_LEVEL
-operator||
-name|APIC_LEVEL_DEASSERT
-operator||
-name|APIC_DESTMODE_PHY
-operator||
-name|APIC_DELMODE_INIT
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* wait for pending status end */
 name|DELAY
 argument_list|(
 literal|10000
 argument_list|)
 expr_stmt|;
 comment|/* wait ~10mS */
-name|lapic_ipi_wait
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
 comment|/* 	 * next we do a STARTUP IPI: the previous INIT IPI might still be 	 * latched, (P5 bug) this 1st STARTUP would then terminate 	 * immediately, and the previously started INIT IPI would continue. OR 	 * the previous INIT IPI has already run. and this STARTUP IPI will 	 * run. OR the previous INIT IPI was ignored. and this STARTUP IPI 	 * will run. 	 */
-comment|/* do a STARTUP IPI */
 name|lapic_ipi_raw
 argument_list|(
 name|APIC_DEST_DESTFLD

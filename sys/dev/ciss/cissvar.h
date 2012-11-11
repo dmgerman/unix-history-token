@@ -41,7 +41,7 @@ begin_define
 define|#
 directive|define
 name|CISS_MAX_LOGICAL
-value|15
+value|63
 end_define
 
 begin_comment

@@ -610,7 +610,7 @@ name|udf_mnt
 modifier|*
 name|imp
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|struct
 name|vfsoptlist

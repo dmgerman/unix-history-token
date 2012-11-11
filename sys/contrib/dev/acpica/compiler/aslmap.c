@@ -116,7 +116,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * DATA STRUCTURE:  AslKeywordMapping  *  * DESCRIPTION:     Maps the ParseOpcode to the actual AML opcode.  The parse  *                  opcodes are generated from Bison, and this table must  *                  track any additions to them.  *  * Each entry in the table contains the following items:  *  * AML opcode   - Opcode that is written to the AML file  * Value        - Value of the object to be written (if applicable)  * Flags        - 1) Whether this opcode opens an AML "package".  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * DATA STRUCTURE:  AslKeywordMapping  *  * DESCRIPTION:     Maps the ParseOpcode to the actual AML opcode. The parse  *                  opcodes are generated from Bison, and this table must  *                  track any additions to them.  *  * Each entry in the table contains the following items:  *  * AML opcode   - Opcode that is written to the AML file  * Value        - Value of the object to be written (if applicable)  * Flags        - 1) Whether this opcode opens an AML "package".  *  ******************************************************************************/
 end_comment
 
 begin_comment

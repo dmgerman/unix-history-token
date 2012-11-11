@@ -619,7 +619,7 @@ name|iso_mnt
 modifier|*
 name|imp
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|td
 operator|=
@@ -980,7 +980,7 @@ name|iso_volume_descriptor
 modifier|*
 name|vdp
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|struct
 name|iso_primary_descriptor

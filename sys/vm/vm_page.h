@@ -210,13 +210,13 @@ name|aflags
 decl_stmt|;
 comment|/* access is atomic */
 name|uint8_t
-name|flags
-decl_stmt|;
-comment|/* see below, often immutable after alloc */
-name|u_short
 name|oflags
 decl_stmt|;
-comment|/* page flags (O) */
+comment|/* page VPO_* flags (O) */
+name|uint16_t
+name|flags
+decl_stmt|;
+comment|/* page PG_* flags (P) */
 name|u_char
 name|act_count
 decl_stmt|;
@@ -247,7 +247,7 @@ begin_define
 define|#
 directive|define
 name|VPO_BUSY
-value|0x0001
+value|0x01
 end_define
 
 begin_comment
@@ -258,7 +258,7 @@ begin_define
 define|#
 directive|define
 name|VPO_WANTED
-value|0x0002
+value|0x02
 end_define
 
 begin_comment
@@ -269,18 +269,18 @@ begin_define
 define|#
 directive|define
 name|VPO_UNMANAGED
-value|0x0004
+value|0x04
 end_define
 
 begin_comment
-comment|/* No PV management for page */
+comment|/* no PV management for page */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|VPO_SWAPINPROG
-value|0x0200
+value|0x08
 end_define
 
 begin_comment
@@ -291,7 +291,7 @@ begin_define
 define|#
 directive|define
 name|VPO_NOSYNC
-value|0x0400
+value|0x10
 end_define
 
 begin_comment
@@ -322,15 +322,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|PQ_HOLD
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
 name|PQ_COUNT
-value|3
+value|2
 end_define
 
 begin_struct
@@ -360,46 +353,18 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|vpglocks
-block|{
-name|struct
-name|mtx
-name|data
-decl_stmt|;
-name|char
-name|pad
-index|[
-name|CACHE_LINE_SIZE
-operator|-
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|mtx
-argument_list|)
-index|]
-decl_stmt|;
-block|}
-name|__aligned
-argument_list|(
-name|CACHE_LINE_SIZE
-argument_list|)
-struct|;
-end_struct
-
 begin_decl_stmt
 specifier|extern
 name|struct
-name|vpglocks
-name|vm_page_queue_free_lock
+name|mtx_padalign
+name|vm_page_queue_free_mtx
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
 name|struct
-name|vpglocks
+name|mtx_padalign
 name|pa_lock
 index|[]
 decl_stmt|;
@@ -460,7 +425,7 @@ name|PA_LOCKPTR
 parameter_list|(
 name|pa
 parameter_list|)
-value|&pa_lock[pa_index((pa)) % PA_LOCK_COUNT].data
+value|((struct mtx *)(&pa_lock[pa_index(pa) % PA_LOCK_COUNT]))
 end_define
 
 begin_define
@@ -671,15 +636,8 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|vm_page_queue_free_mtx
-value|vm_page_queue_free_lock.data
-end_define
-
 begin_comment
-comment|/*  * These are the flags defined for vm_page.  *  * aflags are updated by atomic accesses.  Use the vm_page_aflag_set()  * and vm_page_aflag_clear() functions to set and clear the flags.  *  * PGA_REFERENCED may be cleared only if the object containing the page is  * locked.  It is set by both the MI and MD VM layers.  *  * PGA_WRITEABLE is set exclusively on managed pages by pmap_enter().  When it  * does so, the page must be VPO_BUSY.  The MI VM layer must never access this  * flag directly.  Instead, it should call pmap_page_is_write_mapped().  *  * PGA_EXECUTABLE may be set by pmap routines, and indicates that a page has  * at least one executable mapping.  It is not consumed by the MI VM layer.  */
+comment|/*  * The vm_page's aflags are updated using atomic operations.  To set or clear  * these flags, the functions vm_page_aflag_set() and vm_page_aflag_clear()  * must be used.  Neither these flags nor these functions are part of the KBI.  *  * PGA_REFERENCED may be cleared only if the object containing the page is  * locked.  It is set by both the MI and MD VM layers.  However, kernel  * loadable modules should not directly set this flag.  They should call  * vm_page_reference() instead.  *  * PGA_WRITEABLE is set exclusively on managed pages by pmap_enter().  When it  * does so, the page must be VPO_BUSY.  The MI VM layer must never access this  * flag directly.  Instead, it should call pmap_page_is_write_mapped().  *  * PGA_EXECUTABLE may be set by pmap routines, and indicates that a page has  * at least one executable mapping.  It is not consumed by the MI VM layer.  */
 end_comment
 
 begin_define
@@ -723,7 +681,7 @@ begin_define
 define|#
 directive|define
 name|PG_CACHED
-value|0x01
+value|0x0001
 end_define
 
 begin_comment
@@ -734,7 +692,7 @@ begin_define
 define|#
 directive|define
 name|PG_FREE
-value|0x02
+value|0x0002
 end_define
 
 begin_comment
@@ -745,7 +703,7 @@ begin_define
 define|#
 directive|define
 name|PG_FICTITIOUS
-value|0x04
+value|0x0004
 end_define
 
 begin_comment
@@ -756,7 +714,7 @@ begin_define
 define|#
 directive|define
 name|PG_ZERO
-value|0x08
+value|0x0008
 end_define
 
 begin_comment
@@ -767,7 +725,7 @@ begin_define
 define|#
 directive|define
 name|PG_MARKER
-value|0x10
+value|0x0010
 end_define
 
 begin_comment
@@ -778,7 +736,7 @@ begin_define
 define|#
 directive|define
 name|PG_SLAB
-value|0x20
+value|0x0020
 end_define
 
 begin_comment
@@ -789,7 +747,7 @@ begin_define
 define|#
 directive|define
 name|PG_WINATCFLS
-value|0x40
+value|0x0040
 end_define
 
 begin_comment
@@ -800,11 +758,22 @@ begin_define
 define|#
 directive|define
 name|PG_NODUMP
-value|0x80
+value|0x0080
 end_define
 
 begin_comment
 comment|/* don't include this page in a dump */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PG_UNHOLDFREE
+value|0x0100
+end_define
+
+begin_comment
+comment|/* delayed free of a held page */
 end_comment
 
 begin_comment
@@ -848,18 +817,18 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<vm/vm_param.h>
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/atomic.h>
 end_include
 
 begin_comment
 comment|/*  * Each pageable resident page falls into one of five lists:  *  *	free  *		Available for allocation now.  *  *	cache  *		Almost available for allocation. Still associated with  *		an object, but clean and immediately freeable.  *  *	hold  *		Will become free after a pending I/O operation  *		completes.  *  * The following lists are LRU sorted:  *  *	inactive  *		Low activity, candidates for reclamation.  *		This is the list of pages that should be  *		paged out next.  *  *	active  *		Pages that are "active" i.e. they have been  *		recently referenced.  *  */
 end_comment
-
-begin_struct_decl
-struct_decl|struct
-name|vnode
-struct_decl|;
-end_struct_decl
 
 begin_decl_stmt
 specifier|extern
@@ -944,17 +913,10 @@ end_function_decl
 begin_decl_stmt
 specifier|extern
 name|struct
-name|vpglocks
-name|vm_page_queue_lock
+name|mtx_padalign
+name|vm_page_queue_mtx
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|vm_page_queue_mtx
-value|vm_page_queue_lock.data
-end_define
 
 begin_define
 define|#
@@ -1123,32 +1085,6 @@ name|count
 parameter_list|)
 value|((count)<< VM_ALLOC_COUNT_SHIFT)
 end_define
-
-begin_function_decl
-name|void
-name|vm_page_aflag_set
-parameter_list|(
-name|vm_page_t
-name|m
-parameter_list|,
-name|uint8_t
-name|bits
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|vm_page_aflag_clear
-parameter_list|(
-name|vm_page_t
-name|m
-parameter_list|,
-name|uint8_t
-name|bits
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|void
@@ -1524,6 +1460,16 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|vm_page_readahead_finish
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|vm_page_reference
 parameter_list|(
 name|vm_page_t
@@ -1550,16 +1496,6 @@ parameter_list|,
 name|vm_object_t
 parameter_list|,
 name|vm_pindex_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|vm_page_requeue
-parameter_list|(
-name|vm_page_t
-name|m
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1948,6 +1884,247 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * We want to use atomic updates for the aflags field, which is 8 bits wide.  * However, not all architectures support atomic operations on 8-bit  * destinations.  In order that we can easily use a 32-bit operation, we  * require that the aflags field be 32-bit aligned.  */
+end_comment
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+name|offsetof
+argument_list|(
+expr|struct
+name|vm_page
+argument_list|,
+name|aflags
+argument_list|)
+operator|%
+sizeof|sizeof
+argument_list|(
+name|uint32_t
+argument_list|)
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/*  *	Clear the given bits in the specified page.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|vm_page_aflag_clear
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|,
+name|uint8_t
+name|bits
+parameter_list|)
+block|{
+name|uint32_t
+modifier|*
+name|addr
+decl_stmt|,
+name|val
+decl_stmt|;
+comment|/* 	 * The PGA_REFERENCED flag can only be cleared if the object 	 * containing the page is locked. 	 */
+if|if
+condition|(
+operator|(
+name|bits
+operator|&
+name|PGA_REFERENCED
+operator|)
+operator|!=
+literal|0
+condition|)
+name|VM_PAGE_OBJECT_LOCK_ASSERT
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Access the whole 32-bit word containing the aflags field with an 	 * atomic update.  Parallel non-atomic updates to the other fields 	 * within this word are handled properly by the atomic update. 	 */
+name|addr
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+name|m
+operator|->
+name|aflags
+expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+operator|(
+name|uintptr_t
+operator|)
+name|addr
+operator|&
+operator|(
+sizeof|sizeof
+argument_list|(
+name|uint32_t
+argument_list|)
+operator|-
+literal|1
+operator|)
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"vm_page_aflag_clear: aflags is misaligned"
+operator|)
+argument_list|)
+expr_stmt|;
+name|val
+operator|=
+name|bits
+expr_stmt|;
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
+name|BIG_ENDIAN
+name|val
+operator|<<=
+literal|24
+expr_stmt|;
+endif|#
+directive|endif
+name|atomic_clear_32
+argument_list|(
+name|addr
+argument_list|,
+name|val
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  *	Set the given bits in the specified page.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|vm_page_aflag_set
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|,
+name|uint8_t
+name|bits
+parameter_list|)
+block|{
+name|uint32_t
+modifier|*
+name|addr
+decl_stmt|,
+name|val
+decl_stmt|;
+comment|/* 	 * The PGA_WRITEABLE flag can only be set if the page is managed and 	 * VPO_BUSY.  Currently, this flag is only set by pmap_enter(). 	 */
+name|KASSERT
+argument_list|(
+operator|(
+name|bits
+operator|&
+name|PGA_WRITEABLE
+operator|)
+operator|==
+literal|0
+operator|||
+operator|(
+name|m
+operator|->
+name|oflags
+operator|&
+operator|(
+name|VPO_UNMANAGED
+operator||
+name|VPO_BUSY
+operator|)
+operator|)
+operator|==
+name|VPO_BUSY
+argument_list|,
+operator|(
+literal|"vm_page_aflag_set: PGA_WRITEABLE and !VPO_BUSY"
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Access the whole 32-bit word containing the aflags field with an 	 * atomic update.  Parallel non-atomic updates to the other fields 	 * within this word are handled properly by the atomic update. 	 */
+name|addr
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+name|m
+operator|->
+name|aflags
+expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+operator|(
+name|uintptr_t
+operator|)
+name|addr
+operator|&
+operator|(
+sizeof|sizeof
+argument_list|(
+name|uint32_t
+argument_list|)
+operator|-
+literal|1
+operator|)
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"vm_page_aflag_set: aflags is misaligned"
+operator|)
+argument_list|)
+expr_stmt|;
+name|val
+operator|=
+name|bits
+expr_stmt|;
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
+name|BIG_ENDIAN
+name|val
+operator|<<=
+literal|24
+expr_stmt|;
+endif|#
+directive|endif
+name|atomic_set_32
+argument_list|(
+name|addr
+argument_list|,
+name|val
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/*  *	vm_page_dirty:  *  *	Set all bits in the page's dirty field.  *  *	The object containing the specified page must be locked if the  *	call is made from the machine-independent layer.  *  *	See vm_page_clear_dirty_mask().  */

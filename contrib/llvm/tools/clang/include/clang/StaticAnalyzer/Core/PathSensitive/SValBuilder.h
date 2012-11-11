@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/AST/ASTContext.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/Expr.h"
 end_include
 
@@ -317,7 +323,7 @@ name|Ty2
 argument_list|)
 operator|||
 operator|(
-name|Ty2
+name|Ty1
 operator|->
 name|isIntegerType
 argument_list|()
@@ -459,12 +465,9 @@ argument_list|)
 operator|=
 literal|0
 expr_stmt|;
-comment|/// Handles generation of the value in case the builder is not smart enough to
-comment|/// handle the given binary expression. Depending on the state, decides to
-comment|/// either keep the expression or forget the history and generate an
-comment|/// UnknownVal.
+comment|/// Constructs a symbolic expression for two non-location values.
 name|SVal
-name|makeGenericVal
+name|makeSymExprValNN
 argument_list|(
 name|ProgramStateRef
 name|state
@@ -805,6 +808,26 @@ name|type
 parameter_list|,
 name|unsigned
 name|visitCount
+parameter_list|)
+function_decl|;
+comment|/// \brief Conjure a symbol representing heap allocated memory region.
+comment|///
+comment|/// Note, the expression should represent a location.
+name|DefinedOrUnknownSVal
+name|getConjuredHeapSymbolVal
+parameter_list|(
+specifier|const
+name|Expr
+modifier|*
+name|E
+parameter_list|,
+specifier|const
+name|LocationContext
+modifier|*
+name|LCtx
+parameter_list|,
+name|unsigned
+name|Count
 parameter_list|)
 function_decl|;
 name|DefinedOrUnknownSVal
@@ -1516,6 +1539,40 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+comment|/// Return a memory region for the 'this' object reference.
+name|loc
+operator|::
+name|MemRegionVal
+name|getCXXThis
+argument_list|(
+specifier|const
+name|CXXMethodDecl
+operator|*
+name|D
+argument_list|,
+specifier|const
+name|StackFrameContext
+operator|*
+name|SFC
+argument_list|)
+expr_stmt|;
+comment|/// Return a memory region for the 'this' object reference.
+name|loc
+operator|::
+name|MemRegionVal
+name|getCXXThis
+argument_list|(
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|D
+argument_list|,
+specifier|const
+name|StackFrameContext
+operator|*
+name|SFC
+argument_list|)
+expr_stmt|;
 block|}
 empty_stmt|;
 name|SValBuilder

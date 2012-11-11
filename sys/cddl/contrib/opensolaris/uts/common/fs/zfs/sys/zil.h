@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -909,6 +909,19 @@ name|zilog
 parameter_list|,
 name|boolean_t
 name|keep_first
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|zil_destroy_sync
+parameter_list|(
+name|zilog_t
+modifier|*
+name|zilog
+parameter_list|,
+name|dmu_tx_t
+modifier|*
+name|tx
 parameter_list|)
 function_decl|;
 specifier|extern

@@ -117,6 +117,11 @@ block|{
 case|case
 name|PT_GETXSTATE
 case|:
+name|fpugetregs
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
 name|savefpu
 operator|=
 operator|(
@@ -200,6 +205,12 @@ name|error
 operator|==
 literal|0
 condition|)
+block|{
+name|fpugetregs
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|fpusetxstate
@@ -211,6 +222,7 @@ argument_list|,
 name|data
 argument_list|)
 expr_stmt|;
+block|}
 name|free
 argument_list|(
 name|savefpu
@@ -305,6 +317,11 @@ block|{
 case|case
 name|PT_I386_GETXMMREGS
 case|:
+name|fpugetregs
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|copyout
@@ -327,6 +344,11 @@ break|break;
 case|case
 name|PT_I386_SETXMMREGS
 case|:
+name|fpugetregs
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
 name|fpstate
 operator|=
 name|get_pcb_user_save_td

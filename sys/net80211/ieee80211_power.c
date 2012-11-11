@@ -185,6 +185,18 @@ operator|=
 name|ieee80211_set_tim
 expr_stmt|;
 block|}
+name|vap
+operator|->
+name|iv_node_ps
+operator|=
+name|ieee80211_node_pwrsave
+expr_stmt|;
+name|vap
+operator|->
+name|iv_sta_ps
+operator|=
+name|ieee80211_sta_pwrsave
+expr_stmt|;
 block|}
 end_function
 

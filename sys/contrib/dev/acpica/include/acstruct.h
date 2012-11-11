@@ -28,7 +28,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Walk state - current state of a parse tree walk.  Used for both a leisurely  * stroll through the tree (for whatever reason), and for control method  * execution.  */
+comment|/*  * Walk state - current state of a parse tree walk. Used for both a leisurely  * stroll through the tree (for whatever reason), and for control method  * execution.  */
 end_comment
 
 begin_define

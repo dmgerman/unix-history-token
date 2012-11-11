@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2011-2012 Matteo Landi, Luigi Rizzo. All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (C) 2011-2012 Matteo Landi, Luigi Rizzo. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
-comment|/*  * $FreeBSD$  * $Id: netmap_kern.h 10602 2012-02-21 16:47:55Z luigi $  *  * The header contains the definitions of constants and function  * prototypes used only in kernelspace.  */
+comment|/*  * $FreeBSD$  * $Id: netmap_kern.h 11829 2012-09-26 04:06:34Z luigi $  *  * The header contains the definitions of constants and function  * prototypes used only in kernelspace.  */
 end_comment
 
 begin_ifndef
@@ -37,6 +37,26 @@ argument_list|(
 name|__FreeBSD__
 argument_list|)
 end_if
+
+begin_define
+define|#
+directive|define
+name|likely
+parameter_list|(
+name|x
+parameter_list|)
+value|__builtin_expect(!!(x), 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|unlikely
+parameter_list|(
+name|x
+parameter_list|)
+value|__builtin_expect(!!(x), 0)
+end_define
 
 begin_define
 define|#
@@ -119,6 +139,137 @@ parameter_list|)
 value|netif_rx(m)
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DEV_NETMAP
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|DEV_NETMAP
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * IFCAP_NETMAP goes into net_device's priv_flags (if_capenable).  * This was 16 bits up to linux 2.6.36, so we need a 16 bit value on older  * platforms and tolerate the clash with IFF_DYNAMIC and IFF_BRIDGE_PORT.  * For the 32-bit value, 0x100000 has no clashes until at least 3.5.1  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|LINUX_VERSION_CODE
+operator|<
+name|KERNEL_VERSION
+argument_list|(
+literal|2
+operator|,
+literal|6
+operator|,
+literal|37
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|IFCAP_NETMAP
+value|0x8000
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|IFCAP_NETMAP
+value|0x100000
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__APPLE__
+argument_list|)
+end_elif
+
+begin_warning
+warning|#
+directive|warning
+warning|apple support is incomplete.
+end_warning
+
+begin_define
+define|#
+directive|define
+name|likely
+parameter_list|(
+name|x
+parameter_list|)
+value|__builtin_expect(!!(x), 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|unlikely
+parameter_list|(
+name|x
+parameter_list|)
+value|__builtin_expect(!!(x), 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NM_LOCK_T
+value|IOLock *
+end_define
+
+begin_define
+define|#
+directive|define
+name|NM_SELINFO_T
+value|struct selinfo
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBUF_LEN
+parameter_list|(
+name|m
+parameter_list|)
+value|((m)->m_pkthdr.len)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NM_SEND_UP
+parameter_list|(
+name|ifp
+parameter_list|,
+name|m
+parameter_list|)
+value|((ifp)->if_input)(ifp, m)
+end_define
+
 begin_else
 else|#
 directive|else
@@ -129,25 +280,6 @@ error|#
 directive|error
 error|unsupported platform
 end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MALLOC_DECLARE
-end_ifdef
-
-begin_expr_stmt
-name|MALLOC_DECLARE
-argument_list|(
-name|M_NETMAP
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_endif
 endif|#
@@ -176,6 +308,25 @@ modifier|...
 parameter_list|)
 define|\
 value|do {							\ 		struct timeval __xxts;				\ 		microtime(&__xxts);				\ 		printf("%03d.%06d %s [%d] " format "\n",	\ 		(int)__xxts.tv_sec % 1000, (int)__xxts.tv_usec,	\ 		__FUNCTION__, __LINE__, ##__VA_ARGS__);		\ 	} while (0)
+end_define
+
+begin_comment
+comment|/* rate limited, lps indicates how many per second */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RD
+parameter_list|(
+name|lps
+parameter_list|,
+name|format
+parameter_list|,
+modifier|...
+parameter_list|)
+define|\
+value|do {							\ 		static int t0, __cnt;				\ 		if (t0 != time_second) {			\ 			t0 = time_second;			\ 			__cnt = 0;				\ 		}						\ 		if (__cnt++< lps)				\ 			D(format, ##__VA_ARGS__);		\ 	} while (0)
 end_define
 
 begin_struct_decl
@@ -253,6 +404,19 @@ begin_struct
 struct|struct
 name|netmap_adapter
 block|{
+comment|/* 	 * On linux we do not have a good way to tell if an interface 	 * is netmap-capable. So we use the following trick: 	 * NA(ifp) points here, and the first entry (which hopefully 	 * always exists and is at least 32 bits) contains a magic 	 * value which we can use to detect that the interface is good. 	 */
+name|uint32_t
+name|magic
+decl_stmt|;
+name|uint32_t
+name|na_flags
+decl_stmt|;
+comment|/* future place for IFCAP_NETMAP */
+define|#
+directive|define
+name|NAF_SKIP_INTR
+value|1
+comment|/* use the regular interrupt handler. 				 * useful during initialization 				 */
 name|int
 name|refcount
 decl_stmt|;
@@ -273,11 +437,11 @@ comment|/* set if the interface suports different 			       locks for rx, tx and
 name|u_int
 name|num_rx_rings
 decl_stmt|;
-comment|/* number of tx/rx ring pairs */
+comment|/* number of adapter receive rings */
 name|u_int
 name|num_tx_rings
 decl_stmt|;
-comment|// if nonzero, overrides num_rx_rings
+comment|/* number of adapter transmit rings */
 name|u_int
 name|num_tx_desc
 decl_stmt|;
@@ -285,7 +449,6 @@ comment|/* number of descriptor in each queue */
 name|u_int
 name|num_rx_desc
 decl_stmt|;
-comment|//u_int buff_size;	// XXX deprecate, use NETMAP_BUF_SIZE
 comment|/* tx_rings and rx_rings are private but allocated 	 * as a contiguous chunk of memory. Each array has 	 * N+1 entries, for the adapter queues and for the host queue. 	 */
 name|struct
 name|netmap_kring
@@ -397,6 +560,9 @@ name|int
 name|lock
 parameter_list|)
 function_decl|;
+name|int
+name|bdg_port
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|linux
@@ -404,6 +570,10 @@ name|struct
 name|net_device_ops
 name|nm_ndo
 decl_stmt|;
+name|int
+name|if_refcount
+decl_stmt|;
+comment|// XXX additions for bridge
 endif|#
 directive|endif
 comment|/* linux */
@@ -412,7 +582,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * The combination of "enable" (ifp->if_capabilities&IFCAP_NETMAP)  * and refcount gives the status of the interface, namely:  *  *	enable	refcount	Status  *  *	FALSE	0		normal operation  *	FALSE	!= 0		-- (impossible)  *	TRUE	1		netmap mode  *	TRUE	0		being deleted.  */
+comment|/*  * The combination of "enable" (ifp->if_capenable& IFCAP_NETMAP)  * and refcount gives the status of the interface, namely:  *  *	enable	refcount	Status  *  *	FALSE	0		normal operation  *	FALSE	!= 0		-- (impossible)  *	TRUE	1		netmap mode  *	TRUE	0		being deleted.  */
 end_comment
 
 begin_define
@@ -565,7 +735,7 @@ end_function_decl
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|u_int
 name|netmap_buf_size
 decl_stmt|;
 end_decl_stmt
@@ -697,6 +867,97 @@ value|((struct netmap_adapter *)WNA(_ifp))
 end_define
 
 begin_comment
+comment|/*  * Macros to determine if an interface is netmap capable or netmap enabled.  * See the magic field in struct netmap_adapter.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_comment
+comment|/*  * on FreeBSD just use if_capabilities and if_capenable.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NETMAP_CAPABLE
+parameter_list|(
+name|ifp
+parameter_list|)
+value|(NA(ifp)&&		\ 	(ifp)->if_capabilities& IFCAP_NETMAP )
+end_define
+
+begin_define
+define|#
+directive|define
+name|NETMAP_SET_CAPABLE
+parameter_list|(
+name|ifp
+parameter_list|)
+define|\
+value|(ifp)->if_capabilities |= IFCAP_NETMAP
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* linux */
+end_comment
+
+begin_comment
+comment|/*  * on linux:  * we check if NA(ifp) is set and its first element has a related  * magic value. The capenable is within the struct netmap_adapter.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NETMAP_MAGIC
+value|0x52697a7a
+end_define
+
+begin_define
+define|#
+directive|define
+name|NETMAP_CAPABLE
+parameter_list|(
+name|ifp
+parameter_list|)
+value|(NA(ifp)&&		\ 	((uint32_t)(uintptr_t)NA(ifp) ^ NA(ifp)->magic) == NETMAP_MAGIC )
+end_define
+
+begin_define
+define|#
+directive|define
+name|NETMAP_SET_CAPABLE
+parameter_list|(
+name|ifp
+parameter_list|)
+define|\
+value|NA(ifp)->magic = ((uint32_t)(uintptr_t)NA(ifp)) ^ NETMAP_MAGIC
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* linux */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_comment
 comment|/* Callback invoked by the dma machinery after a successfull dmamap_load */
 end_comment
 
@@ -824,6 +1085,110 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* linux */
+end_comment
+
+begin_comment
+comment|/*  * XXX How do we redefine these functions:  *  * on linux we need  *	dma_map_single(&pdev->dev, virt_addr, len, direction)  *	dma_unmap_single(&adapter->pdev->dev, phys_addr, len, direction  * The len can be implicit (on netmap it is NETMAP_BUF_SIZE)  * unfortunately the direction is not, so we need to change  * something to have a cross API  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|netmap_load_map
+parameter_list|(
+name|_t
+parameter_list|,
+name|_m
+parameter_list|,
+name|_b
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|netmap_reload_map
+parameter_list|(
+name|_t
+parameter_list|,
+name|_m
+parameter_list|,
+name|_b
+parameter_list|)
+end_define
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+unit|struct e1000_buffer *buffer_info =&tx_ring->buffer_info[l];
+comment|/* set time_stamp *before* dma to help avoid a possible race */
+end_comment
+
+begin_comment
+unit|buffer_info->time_stamp = jiffies; 	buffer_info->mapped_as_page = false; 	buffer_info->length = len;
+comment|//buffer_info->next_to_watch = l;
+end_comment
+
+begin_comment
+comment|/* reload dma map */
+end_comment
+
+begin_comment
+unit|dma_unmap_single(&adapter->pdev->dev, buffer_info->dma, 			NETMAP_BUF_SIZE, DMA_TO_DEVICE); 	buffer_info->dma = dma_map_single(&adapter->pdev->dev, 			addr, NETMAP_BUF_SIZE, DMA_TO_DEVICE);  	if (dma_mapping_error(&adapter->pdev->dev, buffer_info->dma)) { 		D("dma mapping error");
+comment|/* goto dma_error; See e1000_put_txbuf() */
+end_comment
+
+begin_comment
+comment|/* XXX reset */
+end_comment
+
+begin_comment
+unit|} 	tx_desc->buffer_addr = htole64(buffer_info->dma);
+comment|//XXX
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * The bus_dmamap_sync() can be one of wmb() or rmb() depending on direction.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|bus_dmamap_sync
+parameter_list|(
+name|_a
+parameter_list|,
+name|_b
+parameter_list|,
+name|_c
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* linux */
+end_comment
 
 begin_comment
 comment|/*  * functions to map NIC to KRING indexes (n2k) and vice versa (k2n)  */
@@ -1061,9 +1426,12 @@ name|buf_idx
 decl_stmt|;
 return|return
 operator|(
+name|unlikely
+argument_list|(
 name|i
 operator|>=
 name|netmap_total_buffers
+argument_list|)
 operator|)
 condition|?
 name|NMB_VA
@@ -1194,6 +1562,13 @@ name|_q
 parameter_list|)
 value|netmap_rx_irq(_n, _q, NULL)
 end_define
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|netmap_copy
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

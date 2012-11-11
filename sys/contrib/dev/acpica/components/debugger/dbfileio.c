@@ -694,7 +694,8 @@ name|ACPI_OBSOLETE_CODE
 comment|/* We only support a limited number of table types */
 if|if
 condition|(
-name|ACPI_STRNCMP
+operator|!
+name|ACPI_COMPARE_NAME
 argument_list|(
 operator|(
 name|char
@@ -704,12 +705,11 @@ name|TableHeader
 operator|.
 name|Signature
 argument_list|,
-name|DSDT_SIG
-argument_list|,
-literal|4
+name|ACPI_SIG_DSDT
 argument_list|)
 operator|&&
-name|ACPI_STRNCMP
+operator|!
+name|ACPI_COMPARE_NAME
 argument_list|(
 operator|(
 name|char
@@ -719,12 +719,11 @@ name|TableHeader
 operator|.
 name|Signature
 argument_list|,
-name|PSDT_SIG
-argument_list|,
-literal|4
+name|ACPI_SIG_PSDT
 argument_list|)
 operator|&&
-name|ACPI_STRNCMP
+operator|!
+name|ACPI_COMPARE_NAME
 argument_list|(
 operator|(
 name|char
@@ -734,9 +733,7 @@ name|TableHeader
 operator|.
 name|Signature
 argument_list|,
-name|SSDT_SIG
-argument_list|,
-literal|4
+name|ACPI_SIG_SSDT
 argument_list|)
 condition|)
 block|{

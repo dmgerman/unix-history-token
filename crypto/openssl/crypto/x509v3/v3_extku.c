@@ -47,6 +47,7 @@ name|void
 modifier|*
 name|v2i_EXTENDED_KEY_USAGE
 argument_list|(
+specifier|const
 name|X509V3_EXT_METHOD
 operator|*
 name|method
@@ -74,6 +75,7 @@ argument_list|)
 operator|*
 name|i2v_EXTENDED_KEY_USAGE
 argument_list|(
+specifier|const
 name|X509V3_EXT_METHOD
 operator|*
 name|method
@@ -208,7 +210,7 @@ argument_list|)
 operator|*
 name|i2v_EXTENDED_KEY_USAGE
 argument_list|(
-argument|X509V3_EXT_METHOD *method
+argument|const X509V3_EXT_METHOD *method
 argument_list|,
 argument|void *a
 argument_list|,
@@ -294,6 +296,7 @@ name|void
 modifier|*
 name|v2i_EXTENDED_KEY_USAGE
 argument_list|(
+specifier|const
 name|X509V3_EXT_METHOD
 operator|*
 name|method

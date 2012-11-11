@@ -4268,6 +4268,10 @@ name|SCTP_PRINTF
 argument_list|(
 literal|"net:%p flight was %d corrected to %d\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|lnet
 argument_list|,
 name|lnet
@@ -5985,7 +5989,7 @@ index|[
 name|i
 index|]
 operator|.
-name|next_sequence_sent
+name|next_sequence_send
 operator|=
 literal|0x0
 expr_stmt|;
@@ -8100,7 +8104,7 @@ operator|)
 name|tmr
 condition|)
 block|{
-comment|/* 		 * SCTP_PRINTF("Stale SCTP timer fired (%p), ignoring...\n", 		 * tmr); 		 */
+comment|/* 		 * SCTP_PRINTF("Stale SCTP timer fired (%p), ignoring...\n", 		 * (void *)tmr); 		 */
 name|CURVNET_RESTORE
 argument_list|()
 expr_stmt|;
@@ -11106,6 +11110,10 @@ name|t_type
 argument_list|,
 name|to_ticks
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|tmr
 argument_list|)
 expr_stmt|;
@@ -12159,7 +12167,7 @@ operator|=
 operator|(
 name|uint64_t
 operator|)
-literal|10000000
+literal|1000000
 operator|*
 operator|(
 name|uint64_t
@@ -15291,7 +15299,7 @@ name|ssfe
 operator|->
 name|ssfe_type
 operator|=
-name|SCTP_SEND_FAILED
+name|SCTP_SEND_FAILED_EVENT
 expr_stmt|;
 name|ssfe
 operator|->
@@ -15485,9 +15493,7 @@ name|ssf_info
 operator|.
 name|sinfo_ssn
 operator|=
-name|sp
-operator|->
-name|strseq
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -19918,6 +19924,18 @@ name|data
 operator|=
 name|NULL
 expr_stmt|;
+name|sp
+operator|->
+name|tail_mbuf
+operator|=
+name|NULL
+expr_stmt|;
+name|sp
+operator|->
+name|length
+operator|=
+literal|0
+expr_stmt|;
 block|}
 block|}
 if|if
@@ -22188,13 +22206,6 @@ index|[
 name|INET6_ADDRSTRLEN
 index|]
 decl_stmt|;
-name|ip6buf
-index|[
-literal|0
-index|]
-operator|=
-literal|0
-expr_stmt|;
 endif|#
 directive|endif
 switch|switch
@@ -24881,6 +24892,11 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * Still no eom found. That means there is stuff left on the 		 * stream out queue.. yuck. 		 */
+name|SCTP_TCB_SEND_LOCK
+argument_list|(
+name|stcb
+argument_list|)
+expr_stmt|;
 name|strq
 operator|=
 operator|&
@@ -24893,40 +24909,21 @@ index|[
 name|stream
 index|]
 expr_stmt|;
-name|SCTP_TCB_SEND_LOCK
+name|sp
+operator|=
+name|TAILQ_FIRST
 argument_list|(
-name|stcb
+operator|&
+name|strq
+operator|->
+name|outqueue
 argument_list|)
 expr_stmt|;
-name|TAILQ_FOREACH
-argument_list|(
-argument|sp
-argument_list|,
-argument|&strq->outqueue
-argument_list|,
-argument|next
-argument_list|)
-block|{
-comment|/* FIXME: Shouldn't this be a serial number check? */
 if|if
 condition|(
 name|sp
-operator|->
-name|strseq
-operator|>
-name|seq
-condition|)
-block|{
-break|break;
-block|}
-comment|/* Check if its our SEQ */
-if|if
-condition|(
-name|sp
-operator|->
-name|strseq
-operator|==
-name|seq
+operator|!=
+name|NULL
 condition|)
 block|{
 name|sp
@@ -24935,7 +24932,7 @@ name|discard_rest
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 				 * We may need to put a chunk on the queue 				 * that holds the TSN that would have been 				 * sent with the LAST bit. 				 */
+comment|/* 			 * We may need to put a chunk on the queue that 			 * holds the TSN that would have been sent with the 			 * LAST bit. 			 */
 if|if
 condition|(
 name|chk
@@ -24958,7 +24955,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 						 * we are hosed. All we can 						 * do is nothing.. which 						 * will cause an abort if 						 * the peer is paying 						 * attention. 						 */
+comment|/* 					 * we are hosed. All we can do is 					 * nothing.. which will cause an 					 * abort if the peer is paying 					 * attention. 					 */
 goto|goto
 name|oh_well
 goto|;
@@ -25009,9 +25006,9 @@ name|data
 operator|.
 name|stream_seq
 operator|=
-name|sp
+name|strq
 operator|->
-name|strseq
+name|next_sequence_send
 expr_stmt|;
 name|chk
 operator|->
@@ -25169,6 +25166,11 @@ operator||=
 name|SCTP_DATA_LAST_FRAG
 expr_stmt|;
 block|}
+name|strq
+operator|->
+name|next_sequence_send
+operator|++
+expr_stmt|;
 name|oh_well
 label|:
 if|if
@@ -25178,7 +25180,7 @@ operator|->
 name|data
 condition|)
 block|{
-comment|/* 					 * Pull any data to free up the SB 					 * and allow sender to "add more" 					 * whilc we will throw away :-) 					 */
+comment|/* 				 * Pull any data to free up the SB and allow 				 * sender to "add more" while we will throw 				 * away :-) 				 */
 name|sctp_free_spbufspace
 argument_list|(
 name|stcb
@@ -25216,12 +25218,6 @@ argument_list|)
 expr_stmt|;
 name|sp
 operator|->
-name|length
-operator|=
-literal|0
-expr_stmt|;
-name|sp
-operator|->
 name|data
 operator|=
 name|NULL
@@ -25232,11 +25228,14 @@ name|tail_mbuf
 operator|=
 name|NULL
 expr_stmt|;
+name|sp
+operator|->
+name|length
+operator|=
+literal|0
+expr_stmt|;
 block|}
-break|break;
 block|}
-block|}
-comment|/* End tailq_foreach */
 name|SCTP_TCB_SEND_UNLOCK
 argument_list|(
 name|stcb
@@ -26923,10 +26922,6 @@ literal|0
 operator|)
 argument_list|)
 expr_stmt|;
-name|sockbuf_lock
-operator|=
-literal|1
-expr_stmt|;
 if|if
 condition|(
 name|error
@@ -26936,6 +26931,10 @@ goto|goto
 name|release_unlocked
 goto|;
 block|}
+name|sockbuf_lock
+operator|=
+literal|1
+expr_stmt|;
 name|restart
 label|:
 name|restart_nosblocks
@@ -28909,12 +28908,9 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|INET6
-argument_list|)
 block|{
 name|struct
 name|sockaddr_in6
@@ -33208,12 +33204,9 @@ name|addr_touse
 operator|=
 name|sa
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|INET6
-argument_list|)
 if|if
 condition|(
 name|sa
@@ -34513,11 +34506,21 @@ case|:
 name|iph
 operator|->
 name|ip_len
-operator|-=
+operator|=
+name|htons
+argument_list|(
+name|ntohs
+argument_list|(
+name|iph
+operator|->
+name|ip_len
+argument_list|)
+operator|-
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|udphdr
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|sctp_input_with_port

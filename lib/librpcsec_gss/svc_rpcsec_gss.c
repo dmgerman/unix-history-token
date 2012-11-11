@@ -391,6 +391,7 @@ value|128
 end_define
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|svc_rpc_gss_client_list
 name|svc_rpc_gss_client_hash
@@ -401,6 +402,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|svc_rpc_gss_client_list
 name|svc_rpc_gss_clients

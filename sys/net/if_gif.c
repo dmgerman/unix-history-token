@@ -322,12 +322,16 @@ directive|include
 file|<security/mac/mac_framework.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|GIFNAME
-value|"gif"
-end_define
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|gifname
+index|[]
+init|=
+literal|"gif"
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * gif_mtx protects the global gif_softc_list.  */
@@ -492,15 +496,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_expr_stmt
-name|IFC_SIMPLE_DECLARE
-argument_list|(
-name|gif
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_decl_stmt
+specifier|static
+name|struct
+name|if_clone
+modifier|*
+name|gif_cloner
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -847,9 +850,7 @@ argument_list|(
 name|sc
 argument_list|)
 argument_list|,
-name|ifc
-operator|->
-name|ifc_name
+name|gifname
 argument_list|,
 name|unit
 argument_list|)
@@ -1269,10 +1270,17 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
-name|if_clone_attach
-argument_list|(
-operator|&
 name|gif_cloner
+operator|=
+name|if_clone_simple
+argument_list|(
+name|gifname
+argument_list|,
+name|gif_clone_create
+argument_list|,
+name|gif_clone_destroy
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1281,7 +1289,6 @@ name|MOD_UNLOAD
 case|:
 name|if_clone_detach
 argument_list|(
-operator|&
 name|gif_cloner
 argument_list|)
 expr_stmt|;

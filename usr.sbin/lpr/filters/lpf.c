@@ -123,6 +123,7 @@ value|10
 end_define
 
 begin_decl_stmt
+specifier|static
 name|char
 name|buf
 index|[
@@ -135,6 +136,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|maxcol
 index|[
@@ -149,12 +151,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|lineno
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|width
 init|=
@@ -167,6 +171,7 @@ comment|/* default line length */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|length
 init|=
@@ -179,6 +184,7 @@ comment|/* page length */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|indent
 decl_stmt|;
@@ -189,6 +195,7 @@ comment|/* indentation length */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|npages
 init|=
@@ -197,6 +204,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|literal
 decl_stmt|;
@@ -207,6 +215,7 @@ comment|/* print control characters */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|name
@@ -218,6 +227,7 @@ comment|/* user's login name */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|host
@@ -229,6 +239,7 @@ comment|/* user's machine name */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|acctfile

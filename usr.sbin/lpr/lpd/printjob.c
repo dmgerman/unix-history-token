@@ -141,6 +141,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -1156,10 +1162,21 @@ name|O_WRONLY
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
 name|setgid
 argument_list|(
 name|getegid
 argument_list|()
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"setgid() failed"
 argument_list|)
 expr_stmt|;
 name|printpid
@@ -9041,9 +9058,6 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
-name|cp
-operator|=
 name|strchr
 argument_list|(
 name|pp
@@ -9052,7 +9066,6 @@ name|lp
 argument_list|,
 literal|'@'
 argument_list|)
-operator|)
 operator|!=
 name|NULL
 condition|)

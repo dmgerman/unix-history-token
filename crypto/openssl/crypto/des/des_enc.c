@@ -13,6 +13,12 @@ directive|include
 file|"des_locl.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"spr.h"
+end_include
+
 begin_function
 name|void
 name|DES_encrypt1
@@ -310,7 +316,7 @@ literal|32
 condition|;
 name|i
 operator|+=
-literal|8
+literal|4
 control|)
 block|{
 name|D_ENCRYPT
@@ -337,30 +343,6 @@ literal|2
 argument_list|)
 expr_stmt|;
 comment|/*  2 */
-name|D_ENCRYPT
-argument_list|(
-name|l
-argument_list|,
-name|r
-argument_list|,
-name|i
-operator|+
-literal|4
-argument_list|)
-expr_stmt|;
-comment|/*  3 */
-name|D_ENCRYPT
-argument_list|(
-name|r
-argument_list|,
-name|l
-argument_list|,
-name|i
-operator|+
-literal|6
-argument_list|)
-expr_stmt|;
-comment|/*  4 */
 block|}
 endif|#
 directive|endif
@@ -544,7 +526,7 @@ literal|0
 condition|;
 name|i
 operator|-=
-literal|8
+literal|4
 control|)
 block|{
 name|D_ENCRYPT
@@ -571,30 +553,6 @@ literal|2
 argument_list|)
 expr_stmt|;
 comment|/* 15 */
-name|D_ENCRYPT
-argument_list|(
-name|l
-argument_list|,
-name|r
-argument_list|,
-name|i
-operator|-
-literal|4
-argument_list|)
-expr_stmt|;
-comment|/* 14 */
-name|D_ENCRYPT
-argument_list|(
-name|r
-argument_list|,
-name|l
-argument_list|,
-name|i
-operator|-
-literal|6
-argument_list|)
-expr_stmt|;
-comment|/* 13 */
 block|}
 endif|#
 directive|endif
@@ -945,7 +903,7 @@ literal|32
 condition|;
 name|i
 operator|+=
-literal|8
+literal|4
 control|)
 block|{
 name|D_ENCRYPT
@@ -972,30 +930,6 @@ literal|2
 argument_list|)
 expr_stmt|;
 comment|/*  2 */
-name|D_ENCRYPT
-argument_list|(
-name|l
-argument_list|,
-name|r
-argument_list|,
-name|i
-operator|+
-literal|4
-argument_list|)
-expr_stmt|;
-comment|/*  3 */
-name|D_ENCRYPT
-argument_list|(
-name|r
-argument_list|,
-name|l
-argument_list|,
-name|i
-operator|+
-literal|6
-argument_list|)
-expr_stmt|;
-comment|/*  4 */
 block|}
 endif|#
 directive|endif
@@ -1179,7 +1113,7 @@ literal|0
 condition|;
 name|i
 operator|-=
-literal|8
+literal|4
 control|)
 block|{
 name|D_ENCRYPT
@@ -1206,30 +1140,6 @@ literal|2
 argument_list|)
 expr_stmt|;
 comment|/* 15 */
-name|D_ENCRYPT
-argument_list|(
-name|l
-argument_list|,
-name|r
-argument_list|,
-name|i
-operator|-
-literal|4
-argument_list|)
-expr_stmt|;
-comment|/* 14 */
-name|D_ENCRYPT
-argument_list|(
-name|r
-argument_list|,
-name|l
-argument_list|,
-name|i
-operator|-
-literal|6
-argument_list|)
-expr_stmt|;
-comment|/* 13 */
 block|}
 endif|#
 directive|endif
@@ -1559,16 +1469,6 @@ ifndef|#
 directive|ifndef
 name|DES_DEFAULT_OPTIONS
 end_ifndef
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|OPENSSL_FIPS_DES_ASM
-argument_list|)
-end_if
 
 begin_undef
 undef|#
@@ -2205,11 +2105,6 @@ literal|0
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

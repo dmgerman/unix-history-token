@@ -196,6 +196,7 @@ modifier|*
 name|dummy
 parameter_list|)
 block|{
+comment|/* This has to be done before VM init. */
 name|TUNABLE_INT_FETCH
 argument_list|(
 literal|"kern.ipc.nmbclusters"
@@ -204,7 +205,6 @@ operator|&
 name|nmbclusters
 argument_list|)
 expr_stmt|;
-comment|/* This has to be done before VM init. */
 if|if
 condition|(
 name|nmbclusters
@@ -219,23 +219,65 @@ name|maxusers
 operator|*
 literal|64
 expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"kern.ipc.nmbjumbop"
+argument_list|,
+operator|&
+name|nmbjumbop
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|nmbjumbop
+operator|==
+literal|0
+condition|)
 name|nmbjumbop
 operator|=
 name|nmbclusters
 operator|/
 literal|2
 expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"kern.ipc.nmbjumbo9"
+argument_list|,
+operator|&
+name|nmbjumbo9
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|nmbjumbo9
+operator|==
+literal|0
+condition|)
 name|nmbjumbo9
 operator|=
-name|nmbjumbop
+name|nmbclusters
 operator|/
-literal|2
+literal|4
 expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"kern.ipc.nmbjumbo16"
+argument_list|,
+operator|&
+name|nmbjumbo16
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|nmbjumbo16
+operator|==
+literal|0
+condition|)
 name|nmbjumbo16
 operator|=
-name|nmbjumbo9
+name|nmbclusters
 operator|/
-literal|2
+literal|8
 expr_stmt|;
 block|}
 end_function
@@ -911,7 +953,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Ensure that MSIZE doesn't break dtom() - it must be a power of 2 */
+comment|/* Ensure that MSIZE must be a power of 2. */
 end_comment
 
 begin_expr_stmt

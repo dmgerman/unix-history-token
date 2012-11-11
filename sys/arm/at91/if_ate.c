@@ -2840,7 +2840,7 @@ operator|->
 name|rx_desc_phys
 argument_list|)
 expr_stmt|;
-comment|/* 	 * DMA tag and map for the TX descriptors. 	 * XXX Old EMAC (not EMACB) doesn't really need DMA'able 	 * memory. We could just malloc it. gja XXX 	 */
+comment|/* 	 * DMA tag and map for the TX descriptors. 	 */
 if|if
 condition|(
 name|bus_dma_tag_create
@@ -3078,14 +3078,7 @@ operator|->
 name|tx_desc_phys
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* EMACB: Enable transceiver input clock */
-if|if
-condition|(
-name|sc
-operator|->
-name|is_emacb
-condition|)
 name|WR4
 argument_list|(
 name|sc
@@ -3102,6 +3095,7 @@ operator||
 name|ETHB_UIO_CLKE
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
@@ -4835,7 +4829,7 @@ operator|->
 name|rx_buf_size
 argument_list|)
 expr_stmt|;
-comment|/* XXX Performance robbing copy. Could 						 * recieve directly to mbufs if not an 						 * RM9200. XXX  */
+comment|/* XXX Performance robbing copy. Could 						 * recieve directly to mbufs if not an 						 * RM9200. And even then we could likely 						 * copy just the protocol headers. XXX  */
 name|m_append
 argument_list|(
 name|mb
@@ -5268,6 +5262,7 @@ name|ETH_CTL_RE
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* XXX need to work around SAM9260 errata 43.2.4.1: 	 * disable the mac, reset tx buffer, enable mac on TUND */
 block|}
 end_function
 

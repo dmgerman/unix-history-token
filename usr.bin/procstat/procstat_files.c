@@ -1991,6 +1991,13 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
+name|procstat_freefiles
+argument_list|(
+name|procstat
+argument_list|,
+name|head
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

@@ -694,6 +694,8 @@ argument_list|)
 else|:
 endif|#
 directive|endif
+name|ntohs
+argument_list|(
 operator|(
 operator|(
 expr|struct
@@ -704,6 +706,7 @@ name|ipgen
 operator|)
 operator|->
 name|ip_len
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -724,16 +727,6 @@ operator|=
 name|ntohl
 argument_list|(
 name|ack
-argument_list|)
-expr_stmt|;
-name|len
-operator|=
-name|ntohs
-argument_list|(
-operator|(
-name|u_short
-operator|)
-name|len
 argument_list|)
 expr_stmt|;
 block|}

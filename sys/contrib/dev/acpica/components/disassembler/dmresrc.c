@@ -697,7 +697,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmIsResourceTemplate  *  * PARAMETERS:  Op          - Buffer Op to be examined  *  * RETURN:      Status. AE_OK if valid template  *  * DESCRIPTION: Walk a byte list to determine if it consists of a valid set  *              of resource descriptors.  Nothing is output.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmIsResourceTemplate  *  * PARAMETERS:  Op          - Buffer Op to be examined  *  * RETURN:      Status. AE_OK if valid template  *  * DESCRIPTION: Walk a byte list to determine if it consists of a valid set  *              of resource descriptors. Nothing is output.  *  ******************************************************************************/
 end_comment
 
 begin_function

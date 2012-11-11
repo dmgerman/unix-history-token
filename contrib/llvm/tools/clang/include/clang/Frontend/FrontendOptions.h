@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Sema/CodeCompleteOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
@@ -77,6 +83,9 @@ block|{
 enum|enum
 name|ActionKind
 block|{
+name|ASTDeclList
+block|,
+comment|///< Parse ASTs and list Decl nodes.
 name|ASTDump
 block|,
 comment|///< Parse ASTs and dump them.
@@ -148,7 +157,7 @@ block|,
 comment|///< -E mode.
 name|RewriteMacros
 block|,
-comment|///< Expand macros but not #includes.
+comment|///< Expand macros but not \#includes.
 name|RewriteObjC
 block|,
 comment|///< ObjC->C Rewriter.
@@ -280,27 +289,6 @@ literal|1
 decl_stmt|;
 comment|///< Show the -help text.
 name|unsigned
-name|ShowMacrosInCodeCompletion
-range|:
-literal|1
-decl_stmt|;
-comment|///< Show macros in code completion
-comment|/// results.
-name|unsigned
-name|ShowCodePatternsInCodeCompletion
-range|:
-literal|1
-decl_stmt|;
-comment|///< Show code patterns in code
-comment|/// completion results.
-name|unsigned
-name|ShowGlobalSymbolsInCodeCompletion
-range|:
-literal|1
-decl_stmt|;
-comment|///< Show top-level decls in
-comment|/// code completion results.
-name|unsigned
 name|ShowStats
 range|:
 literal|1
@@ -361,6 +349,9 @@ comment|///< Skip over function bodies to
 comment|/// speed up parsing in cases you do
 comment|/// not need them (e.g. with code
 comment|/// completion).
+name|CodeCompleteOptions
+name|CodeCompleteOpts
+decl_stmt|;
 enum|enum
 block|{
 name|ARCMT_None
@@ -423,6 +414,12 @@ name|std
 operator|::
 name|string
 name|FixItSuffix
+expr_stmt|;
+comment|/// If given, filter dumped AST Decl nodes by this substring.
+name|std
+operator|::
+name|string
+name|ASTDumpFilter
 expr_stmt|;
 comment|/// If given, enable code completion at the provided location.
 name|ParsedSourceLocation
@@ -545,18 +542,6 @@ expr_stmt|;
 name|ShowHelp
 operator|=
 literal|0
-expr_stmt|;
-name|ShowMacrosInCodeCompletion
-operator|=
-literal|0
-expr_stmt|;
-name|ShowCodePatternsInCodeCompletion
-operator|=
-literal|0
-expr_stmt|;
-name|ShowGlobalSymbolsInCodeCompletion
-operator|=
-literal|1
 expr_stmt|;
 name|ShowStats
 operator|=

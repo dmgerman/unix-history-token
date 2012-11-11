@@ -1377,6 +1377,11 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+name|free
+argument_list|(
+name|user
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|errbuff

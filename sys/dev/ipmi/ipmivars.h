@@ -297,6 +297,9 @@ expr_stmt|;
 name|eventhandler_tag
 name|ipmi_watchdog_tag
 decl_stmt|;
+name|int
+name|ipmi_watchdog_active
+decl_stmt|;
 name|struct
 name|intr_config_hook
 name|ipmi_ich

@@ -171,15 +171,6 @@ decl_stmt|;
 name|int
 name|sc_size_cells
 decl_stmt|;
-name|u_long
-name|sc_start_pa
-decl_stmt|;
-name|u_long
-name|sc_start_va
-decl_stmt|;
-name|u_long
-name|sc_size
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -602,24 +593,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
-name|sc_start_pa
-operator|=
-name|fdt_immr_pa
-expr_stmt|;
-name|sc
-operator|->
-name|sc_start_va
-operator|=
-name|fdt_immr_va
-expr_stmt|;
-name|sc
-operator|->
-name|sc_size
-operator|=
-name|fdt_immr_size
-expr_stmt|;
 comment|/* 	 * Walk simple-bus and add direct subordinates as our children. 	 */
 name|dt_node
 operator|=
@@ -738,10 +711,6 @@ operator|&
 name|di
 operator|->
 name|di_res
-argument_list|,
-name|sc
-operator|->
-name|sc_start_va
 argument_list|)
 condition|)
 block|{
@@ -759,6 +728,7 @@ operator|.
 name|obd_name
 argument_list|)
 expr_stmt|;
+comment|/* XXX should unmap */
 name|ofw_bus_gen_destroy_devinfo
 argument_list|(
 operator|&
@@ -815,6 +785,7 @@ operator|->
 name|di_res
 argument_list|)
 expr_stmt|;
+comment|/* XXX should unmap */
 name|ofw_bus_gen_destroy_devinfo
 argument_list|(
 operator|&
@@ -873,6 +844,7 @@ operator|->
 name|di_res
 argument_list|)
 expr_stmt|;
+comment|/* XXX should unmap */
 name|ofw_bus_gen_destroy_devinfo
 argument_list|(
 operator|&

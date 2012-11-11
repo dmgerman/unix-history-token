@@ -53,9 +53,16 @@ directive|include
 file|"libuserboot.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|USERBOOT_VERSION
+value|USERBOOT_VERSION_3
+end_define
+
 begin_decl_stmt
 name|struct
-name|loader_callbacks_v1
+name|loader_callbacks
 modifier|*
 name|callbacks
 decl_stmt|;
@@ -176,7 +183,7 @@ name|void
 name|loader_main
 parameter_list|(
 name|struct
-name|loader_callbacks_v1
+name|loader_callbacks
 modifier|*
 name|cb
 parameter_list|,
@@ -212,7 +219,7 @@ if|if
 condition|(
 name|version
 operator|!=
-name|USERBOOT_VERSION_3
+name|USERBOOT_VERSION
 condition|)
 name|abort
 argument_list|()

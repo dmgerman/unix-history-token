@@ -276,12 +276,13 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|ACPI_ERROR
+name|ACPI_BIOS_ERROR
 argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Table has invalid signature [%4.4s] (0x%8.8X), must be SSDT or OEMx"
+literal|"Table has invalid signature [%4.4s] (0x%8.8X), "
+literal|"must be SSDT or OEMx"
 operator|,
 name|AcpiUtValidAcpiName
 argument_list|(
@@ -860,6 +861,9 @@ name|ACPI_TABLE_DESC
 modifier|*
 name|Tables
 decl_stmt|;
+name|UINT32
+name|TableCount
+decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 name|TbResizeRootTableList
@@ -894,6 +898,31 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Increase the Table Array size */
+if|if
+condition|(
+name|AcpiGbl_RootTableList
+operator|.
+name|Flags
+operator|&
+name|ACPI_ROOT_ORIGIN_ALLOCATED
+condition|)
+block|{
+name|TableCount
+operator|=
+name|AcpiGbl_RootTableList
+operator|.
+name|MaxTableCount
+expr_stmt|;
+block|}
+else|else
+block|{
+name|TableCount
+operator|=
+name|AcpiGbl_RootTableList
+operator|.
+name|CurrentTableCount
+expr_stmt|;
+block|}
 name|Tables
 operator|=
 name|ACPI_ALLOCATE_ZEROED
@@ -902,9 +931,7 @@ operator|(
 operator|(
 name|ACPI_SIZE
 operator|)
-name|AcpiGbl_RootTableList
-operator|.
-name|MaxTableCount
+name|TableCount
 operator|+
 name|ACPI_ROOT_TABLE_SIZE_INCREMENT
 operator|)
@@ -955,9 +982,7 @@ argument_list|,
 operator|(
 name|ACPI_SIZE
 operator|)
-name|AcpiGbl_RootTableList
-operator|.
-name|MaxTableCount
+name|TableCount
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -992,16 +1017,15 @@ expr_stmt|;
 name|AcpiGbl_RootTableList
 operator|.
 name|MaxTableCount
-operator|+=
+operator|=
+name|TableCount
+operator|+
 name|ACPI_ROOT_TABLE_SIZE_INCREMENT
 expr_stmt|;
 name|AcpiGbl_RootTableList
 operator|.
 name|Flags
 operator||=
-operator|(
-name|UINT8
-operator|)
 name|ACPI_ROOT_ORIGIN_ALLOCATED
 expr_stmt|;
 name|return_ACPI_STATUS
@@ -1332,6 +1356,8 @@ name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_TABLES
 argument_list|)
+expr_stmt|;
+name|return_VOID
 expr_stmt|;
 block|}
 end_function

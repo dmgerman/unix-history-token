@@ -74,6 +74,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -519,13 +525,9 @@ name|tv_usec
 operator|=
 literal|0
 expr_stmt|;
-name|seteuid
-argument_list|(
-name|euid
-argument_list|)
-expr_stmt|;
+name|PRIV_START
 name|ret
-operator|=
+init|=
 name|utimes
 argument_list|(
 name|jq
@@ -534,12 +536,8 @@ name|job_cfname
 argument_list|,
 name|tvp
 argument_list|)
-expr_stmt|;
-name|seteuid
-argument_list|(
-name|uid
-argument_list|)
-expr_stmt|;
+decl_stmt|;
+name|PRIV_END
 if|if
 condition|(
 name|ret

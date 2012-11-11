@@ -7156,10 +7156,16 @@ name|i_number
 condition|)
 name|panic
 argument_list|(
-literal|"ufs_rename: ino mismatch %d != %d\n"
+literal|"ufs_rename: ino mismatch %ju != %ju\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ino
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|fip
 operator|->
 name|i_number

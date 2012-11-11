@@ -235,6 +235,7 @@ value|fprintf(stderr,s)
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|debug
 init|=
@@ -248,6 +249,7 @@ directive|else
 end_else
 
 begin_decl_stmt
+specifier|static
 name|int
 name|debug
 init|=
@@ -289,6 +291,7 @@ value|4
 end_define
 
 begin_decl_stmt
+specifier|static
 name|pid_t
 name|children
 index|[
@@ -302,6 +305,7 @@ comment|/* PIDs of children */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|nfsdcnt
 decl_stmt|;
@@ -312,12 +316,14 @@ comment|/* number of children */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|new_syscall
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|run_v4server
 init|=
@@ -330,6 +336,7 @@ comment|/* Force running of nfsv4 server */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|nfssvc_nfsd
 decl_stmt|;
@@ -340,6 +347,7 @@ comment|/* Set to correct NFSSVC_xxx flag */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|stablefd
 init|=
@@ -353,6 +361,7 @@ comment|/* Fd for the stable restart file */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|backupfd
 decl_stmt|;
@@ -3147,7 +3156,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"can't create tpc socket"
+literal|"can't create tcp socket"
 argument_list|)
 expr_stmt|;
 name|nfsd_exit

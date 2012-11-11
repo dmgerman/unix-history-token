@@ -1645,8 +1645,8 @@ name|dropAllReferences
 parameter_list|()
 function_decl|;
 comment|/// hasAddressTaken - returns true if there are any uses of this function
-comment|/// other than direct calls or invokes to it. Optionally passes back the
-comment|/// offending user for diagnostic purposes.
+comment|/// other than direct calls or invokes to it, or blockaddress expressions.
+comment|/// Optionally passes back an offending user for diagnostic purposes.
 comment|///
 name|bool
 name|hasAddressTaken

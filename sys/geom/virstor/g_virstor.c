@@ -1220,6 +1220,27 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|==
+name|NULL
+condition|)
+block|{
+name|gctl_error
+argument_list|(
+name|req
+argument_list|,
+literal|"Don't know anything about '%s'"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+name|g_topology_unlock
+argument_list|()
+expr_stmt|;
+return|return;
+block|}
 name|LOG_MSG
 argument_list|(
 name|LVL_INFO

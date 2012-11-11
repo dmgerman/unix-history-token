@@ -5024,12 +5024,15 @@ name|e2fs_gcount
 condition|)
 name|panic
 argument_list|(
-literal|"ext2_vfree: range: devvp = %p, ino = %d, fs = %s"
+literal|"ext2_vfree: range: devvp = %p, ino = %ju, fs = %s"
 argument_list|,
 name|pip
 operator|->
 name|i_devvp
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ino
 argument_list|,
 name|fs

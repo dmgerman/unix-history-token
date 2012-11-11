@@ -811,7 +811,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * Bitmapped ACPI types.  Used internally only  */
+comment|/*  * Bitmapped ACPI types. Used internally only  */
 end_comment
 
 begin_define
@@ -1880,7 +1880,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Thread state - one per thread across multiple walk states.  Multiple walk  * states are created when there are nested control methods executing.  */
+comment|/*  * Thread state - one per thread across multiple walk states. Multiple walk  * states are created when there are nested control methods executing.  */
 end_comment
 
 begin_typedef
@@ -2313,12 +2313,20 @@ begin_comment
 comment|/* Op name (debug only) */
 end_comment
 
+begin_comment
+comment|/* Flags for DisasmFlags field  above */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|ACPI_DASM_BUFFER
 value|0x00
 end_define
+
+begin_comment
+comment|/* Buffer is a simple data buffer */
+end_comment
 
 begin_define
 define|#
@@ -2327,12 +2335,20 @@ name|ACPI_DASM_RESOURCE
 value|0x01
 end_define
 
+begin_comment
+comment|/* Buffer is a Resource Descriptor */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|ACPI_DASM_STRING
 value|0x02
 end_define
+
+begin_comment
+comment|/* Buffer is a ASCII string */
+end_comment
 
 begin_define
 define|#
@@ -2341,40 +2357,75 @@ name|ACPI_DASM_UNICODE
 value|0x03
 end_define
 
+begin_comment
+comment|/* Buffer is a Unicode string */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_DASM_PLD_METHOD
+value|0x04
+end_define
+
+begin_comment
+comment|/* Buffer is a _PLD method bit-packed buffer */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|ACPI_DASM_EISAID
-value|0x04
+value|0x05
 end_define
+
+begin_comment
+comment|/* Integer is an EISAID */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|ACPI_DASM_MATCHOP
-value|0x05
+value|0x06
 end_define
+
+begin_comment
+comment|/* Parent opcode is a Match() operator */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|ACPI_DASM_LNOT_PREFIX
-value|0x06
+value|0x07
 end_define
+
+begin_comment
+comment|/* Start of a LNotEqual (etc.) pair of opcodes */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|ACPI_DASM_LNOT_SUFFIX
-value|0x07
+value|0x08
 end_define
+
+begin_comment
+comment|/* End  of a LNotEqual (etc.) pair of opcodes */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|ACPI_DASM_IGNORE
-value|0x08
+value|0x09
 end_define
+
+begin_comment
+comment|/* Not used at this time */
+end_comment
 
 begin_comment
 comment|/*  * Generic operation (for example:  If, While, Store)  */
@@ -3255,6 +3306,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_OSI_WIN_8
+value|0x0C
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_ALWAYS_ILLEGAL
 value|0x00
 end_define
@@ -3680,6 +3738,9 @@ typedef|typedef
 struct|struct
 name|acpi_db_method_info
 block|{
+name|ACPI_HANDLE
+name|Method
+decl_stmt|;
 name|ACPI_HANDLE
 name|MainThreadGate
 decl_stmt|;

@@ -166,7 +166,7 @@ name|abbrevs
 parameter_list|)
 function_decl|;
 comment|/// extractDIEsIfNeeded - Parses a compile unit and indexes its DIEs if it
-comment|/// hasn't already been done.
+comment|/// hasn't already been done. Returns the number of DIEs parsed at this call.
 name|size_t
 name|extractDIEsIfNeeded
 parameter_list|(
@@ -358,6 +358,12 @@ literal|0
 index|]
 return|;
 block|}
+specifier|const
+name|char
+modifier|*
+name|getCompilationDir
+parameter_list|()
+function_decl|;
 comment|/// setDIERelations - We read in all of the DIE entries into our flat list
 comment|/// of DIE entries and now we need to go back through all of them and set the
 comment|/// parent, sibling and child pointers for quick DIE navigation.
@@ -424,6 +430,19 @@ name|debug_aranges
 parameter_list|,
 name|bool
 name|clear_dies_if_already_not_parsed
+parameter_list|)
+function_decl|;
+comment|/// getFunctionDIEForAddress - Returns pointer to parsed subprogram DIE,
+comment|/// address ranges of which contain the provided address,
+comment|/// or NULL if there is no such subprogram. The pointer
+comment|/// is valid until DWARFCompileUnit::clear() or clearDIEs() is called.
+specifier|const
+name|DWARFDebugInfoEntryMinimal
+modifier|*
+name|getFunctionDIEForAddress
+parameter_list|(
+name|int64_t
+name|address
 parameter_list|)
 function_decl|;
 block|}

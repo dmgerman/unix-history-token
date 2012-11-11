@@ -819,6 +819,10 @@ name|pid_t
 name|td_dbg_forked
 decl_stmt|;
 comment|/* (c) Child pid for debugger. */
+name|u_int
+name|td_vp_reserv
+decl_stmt|;
+comment|/* (k) Count of reserved vnodes. */
 define|#
 directive|define
 name|td_endzero
@@ -2679,6 +2683,10 @@ modifier|*
 name|p_racct
 decl_stmt|;
 comment|/* (b) Resource accounting. */
+name|u_char
+name|p_throttled
+decl_stmt|;
+comment|/* (c) Flag for racct pcpu throttling */
 comment|/* 	 * An orphan is the child that has beed re-parented to the 	 * debugger as a result of attaching to it.  Need to keep 	 * track of them for parent to be able to collect the exit 	 * status of what used to be children. 	 */
 name|LIST_ENTRY
 argument_list|(
@@ -3531,7 +3539,7 @@ value|TAILQ_FIRST(&(p)->p_threads)
 end_define
 
 begin_comment
-comment|/*  * We use process IDs<= PID_MAX; PID_MAX + 1 must also fit in a pid_t,  * as it is used to represent "no process group".  */
+comment|/*  * We use process IDs<= pid_max<= PID_MAX; PID_MAX + 1 must also fit  * in a pid_t, as it is used to represent "no process group".  */
 end_comment
 
 begin_define
@@ -3547,6 +3555,13 @@ directive|define
 name|NO_PID
 value|100000
 end_define
+
+begin_decl_stmt
+specifier|extern
+name|pid_t
+name|pid_max
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#

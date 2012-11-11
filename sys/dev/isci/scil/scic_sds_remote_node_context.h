@@ -232,7 +232,7 @@ block|,
 name|SCIC_SDS_REMOTE_NODE_DESTINATION_STATE_FINAL
 block|}
 enum|;
-comment|/**  * @struct SCIC_SDS_REMOTE_NODE_CONTEXT  *  * @brief  This structure contains the data associated with the remote  *         node context object.  The remote node context (RNC) object models  *         the the remote device information necessary to manage the  *         silicon RNC.  */
+comment|/**  * @struct SCIC_SDS_REMOTE_NODE_CONTEXT  *  * @brief  This structure contains the data associated with the remote  *         node context object.  The remote node context (RNC) object models  *         the remote device information necessary to manage the  *         silicon RNC.  */
 typedef|typedef
 struct|struct
 name|SCIC_SDS_REMOTE_NODE_CONTEXT

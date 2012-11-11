@@ -384,7 +384,7 @@ argument_list|)
 return|;
 block|}
 comment|/// isClobber - Return true if this MemDepResult represents a query that is
-comment|/// a instruction clobber dependency.
+comment|/// an instruction clobber dependency.
 name|bool
 name|isClobber
 argument_list|()
@@ -400,7 +400,7 @@ name|Clobber
 return|;
 block|}
 comment|/// isDef - Return true if this MemDepResult represents a query that is
-comment|/// a instruction definition dependency.
+comment|/// an instruction definition dependency.
 name|bool
 name|isDef
 argument_list|()
@@ -1802,27 +1802,6 @@ name|P
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_expr_stmt
-name|AliasAnalysis
-operator|::
-name|ModRefResult
-name|getModRefInfo
-argument_list|(
-specifier|const
-name|Instruction
-operator|*
-name|Inst
-argument_list|,
-specifier|const
-name|AliasAnalysis
-operator|::
-name|Location
-operator|&
-name|Loc
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/// verifyRemoved - Verify that the specified instruction does not occur

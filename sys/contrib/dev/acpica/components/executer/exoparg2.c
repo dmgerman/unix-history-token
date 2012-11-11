@@ -188,7 +188,7 @@ name|AE_AML_OPERAND_TYPE
 expr_stmt|;
 break|break;
 block|}
-comment|/*          * Dispatch the notify to the appropriate handler          * NOTE: the request is queued for execution after this method          * completes.  The notify handlers are NOT invoked synchronously          * from this thread -- because handlers may in turn run other          * control methods.          */
+comment|/*          * Dispatch the notify to the appropriate handler          * NOTE: the request is queued for execution after this method          * completes. The notify handlers are NOT invoked synchronously          * from this thread -- because handlers may in turn run other          * control methods.          */
 name|Status
 operator|=
 name|AcpiEvQueueNotifyRequest

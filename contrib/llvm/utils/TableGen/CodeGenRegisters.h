@@ -157,15 +157,34 @@ modifier|*
 specifier|const
 name|TheDef
 decl_stmt|;
+name|std
+operator|::
+name|string
+name|Name
+expr_stmt|;
+name|std
+operator|::
+name|string
+name|Namespace
+expr_stmt|;
+name|public
+label|:
 specifier|const
 name|unsigned
 name|EnumValue
 decl_stmt|;
-name|public
-label|:
 name|CodeGenSubRegIndex
 argument_list|(
 argument|Record *R
+argument_list|,
+argument|unsigned Enum
+argument_list|)
+empty_stmt|;
+name|CodeGenSubRegIndex
+argument_list|(
+argument|StringRef N
+argument_list|,
+argument|StringRef Nspace
 argument_list|,
 argument|unsigned Enum
 argument_list|)
@@ -178,14 +197,24 @@ operator|&
 name|getName
 argument_list|()
 specifier|const
-expr_stmt|;
+block|{
+return|return
+name|Name
+return|;
+block|}
+specifier|const
 name|std
 operator|::
 name|string
+operator|&
 name|getNamespace
 argument_list|()
 specifier|const
-expr_stmt|;
+block|{
+return|return
+name|Namespace
+return|;
+block|}
 name|std
 operator|::
 name|string
@@ -302,6 +331,13 @@ modifier|*
 name|B
 parameter_list|)
 block|{
+name|assert
+argument_list|(
+name|A
+operator|&&
+name|B
+argument_list|)
+expr_stmt|;
 name|std
 operator|::
 name|pair
@@ -435,12 +471,38 @@ name|getName
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|// Get a map of sub-registers computed lazily.
+comment|// Extract more information from TheDef. This is used to build an object
+comment|// graph after all CodeGenRegister objects have been created.
+name|void
+name|buildObjectGraph
+parameter_list|(
+name|CodeGenRegBank
+modifier|&
+parameter_list|)
+function_decl|;
+comment|// Lazily compute a map of all sub-registers.
 comment|// This includes unique entries for all sub-sub-registers.
 specifier|const
 name|SubRegMap
 modifier|&
-name|getSubRegs
+name|computeSubRegs
+parameter_list|(
+name|CodeGenRegBank
+modifier|&
+parameter_list|)
+function_decl|;
+comment|// Compute extra sub-registers by combining the existing sub-registers.
+name|void
+name|computeSecondarySubRegs
+parameter_list|(
+name|CodeGenRegBank
+modifier|&
+parameter_list|)
+function_decl|;
+comment|// Add this as a super-register to all sub-registers after the sub-register
+comment|// graph has been built.
+name|void
+name|computeSuperRegs
 parameter_list|(
 name|CodeGenRegBank
 modifier|&
@@ -482,7 +544,28 @@ operator|&
 argument_list|)
 decl|const
 decl_stmt|;
-comment|// List of super-registers in topological order, small to large.
+comment|// Return the sub-register index naming Reg as a sub-register of this
+comment|// register. Returns NULL if Reg is not a sub-register.
+name|CodeGenSubRegIndex
+modifier|*
+name|getSubRegIndex
+argument_list|(
+specifier|const
+name|CodeGenRegister
+operator|*
+name|Reg
+argument_list|)
+decl|const
+block|{
+return|return
+name|SubReg2Idx
+operator|.
+name|lookup
+argument_list|(
+name|Reg
+argument_list|)
+return|;
+block|}
 typedef|typedef
 name|std
 operator|::
@@ -494,8 +577,9 @@ operator|*
 operator|>
 name|SuperRegList
 expr_stmt|;
-comment|// Get the list of super-registers. This is valid after getSubReg
-comment|// visits all registers during RegBank construction.
+comment|// Get the list of super-registers in topological order, small to large.
+comment|// This is valid after computeSubRegs visits all registers during RegBank
+comment|// construction.
 specifier|const
 name|SuperRegList
 operator|&
@@ -514,6 +598,43 @@ return|return
 name|SuperRegs
 return|;
 block|}
+comment|// Get the list of ad hoc aliases. The graph is symmetric, so the list
+comment|// contains all registers in 'Aliases', and all registers that mention this
+comment|// register in 'Aliases'.
+name|ArrayRef
+operator|<
+name|CodeGenRegister
+operator|*
+operator|>
+name|getExplicitAliases
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ExplicitAliases
+return|;
+block|}
+comment|// Get the topological signature of this register. This is a small integer
+comment|// less than RegBank.getNumTopoSigs(). Registers with the same TopoSig have
+comment|// identical sub-register structure. That is, they support the same set of
+comment|// sub-register indices mapping to the same kind of sub-registers
+comment|// (TopoSig-wise).
+name|unsigned
+name|getTopoSig
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|SuperRegsComplete
+operator|&&
+literal|"TopoSigs haven't been computed yet."
+argument_list|)
+block|;
+return|return
+name|TopoSig
+return|;
+block|}
 comment|// List of register units in ascending order.
 typedef|typedef
 name|SmallVector
@@ -524,8 +645,12 @@ literal|16
 operator|>
 name|RegUnitList
 expr_stmt|;
+comment|// How many entries in RegUnitList are native?
+name|unsigned
+name|NumNativeRegUnits
+decl_stmt|;
 comment|// Get the list of register units.
-comment|// This is only valid after getSubRegs() completes.
+comment|// This is only valid after computeSubRegs() completes.
 specifier|const
 name|RegUnitList
 operator|&
@@ -535,6 +660,29 @@ specifier|const
 block|{
 return|return
 name|RegUnits
+return|;
+block|}
+comment|// Get the native register units. This is a prefix of getRegUnits().
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|getNativeRegUnits
+argument_list|()
+specifier|const
+block|{
+return|return
+name|makeArrayRef
+argument_list|(
+name|RegUnits
+argument_list|)
+operator|.
+name|slice
+argument_list|(
+literal|0
+argument_list|,
+name|NumNativeRegUnits
+argument_list|)
 return|;
 block|}
 comment|// Inherit register units from subregisters.
@@ -628,10 +776,63 @@ name|Less
 operator|>
 name|Set
 expr_stmt|;
+comment|// Compute the set of registers overlapping this.
+name|void
+name|computeOverlaps
+argument_list|(
+name|Set
+operator|&
+name|Overlaps
+argument_list|,
+specifier|const
+name|CodeGenRegBank
+operator|&
+argument_list|)
+decl|const
+decl_stmt|;
 name|private
 label|:
 name|bool
 name|SubRegsComplete
+decl_stmt|;
+name|bool
+name|SuperRegsComplete
+decl_stmt|;
+name|unsigned
+name|TopoSig
+decl_stmt|;
+comment|// The sub-registers explicit in the .td file form a tree.
+name|SmallVector
+operator|<
+name|CodeGenSubRegIndex
+operator|*
+operator|,
+literal|8
+operator|>
+name|ExplicitSubRegIndices
+expr_stmt|;
+name|SmallVector
+operator|<
+name|CodeGenRegister
+operator|*
+operator|,
+literal|8
+operator|>
+name|ExplicitSubRegs
+expr_stmt|;
+comment|// Explicit ad hoc aliases, symmetrized to form an undirected graph.
+name|SmallVector
+operator|<
+name|CodeGenRegister
+operator|*
+operator|,
+literal|8
+operator|>
+name|ExplicitAliases
+expr_stmt|;
+comment|// Super-registers where this is the first explicit sub-register.
+name|SuperRegList
+name|LeadingSuperRegs
 decl_stmt|;
 name|SubRegMap
 name|SubRegs
@@ -639,6 +840,17 @@ decl_stmt|;
 name|SuperRegList
 name|SuperRegs
 decl_stmt|;
+name|DenseMap
+operator|<
+specifier|const
+name|CodeGenRegister
+operator|*
+operator|,
+name|CodeGenSubRegIndex
+operator|*
+operator|>
+name|SubReg2Idx
+expr_stmt|;
 name|RegUnitList
 name|RegUnits
 decl_stmt|;
@@ -732,6 +944,11 @@ operator|>
 expr|>
 name|SuperRegClasses
 expr_stmt|;
+comment|// Bit vector of TopoSigs for the registers in this class. This will be
+comment|// very sparse on regular architectures.
+name|BitVector
+name|TopoSigs
+decl_stmt|;
 name|public
 label|:
 name|unsigned
@@ -764,17 +981,6 @@ decl_stmt|;
 name|bool
 name|Allocatable
 decl_stmt|;
-comment|// Map SubRegIndex -> RegisterClass
-name|DenseMap
-operator|<
-name|Record
-operator|*
-operator|,
-name|Record
-operator|*
-operator|>
-name|SubRegClasses
-expr_stmt|;
 name|std
 operator|::
 name|string
@@ -1071,6 +1277,18 @@ return|return
 name|Members
 return|;
 block|}
+comment|// Get a bit vector of TopoSigs present in this register class.
+specifier|const
+name|BitVector
+operator|&
+name|getTopoSigs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TopoSigs
+return|;
+block|}
 comment|// Populate a unique sorted list of units from a register set.
 name|void
 name|buildRegUnitSet
@@ -1213,6 +1431,8 @@ struct|;
 comment|// Create a non-user defined register class.
 name|CodeGenRegisterClass
 argument_list|(
+argument|CodeGenRegBank&
+argument_list|,
 argument|StringRef Name
 argument_list|,
 argument|Key Props
@@ -1233,6 +1453,125 @@ end_decl_stmt
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
+
+begin_comment
+comment|// Register units are used to model interference and register pressure.
+end_comment
+
+begin_comment
+comment|// Every register is assigned one or more register units such that two
+end_comment
+
+begin_comment
+comment|// registers overlap if and only if they have a register unit in common.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Normally, one register unit is created per leaf register. Non-leaf
+end_comment
+
+begin_comment
+comment|// registers inherit the units of their sub-registers.
+end_comment
+
+begin_struct
+struct|struct
+name|RegUnit
+block|{
+comment|// Weight assigned to this RegUnit for estimating register pressure.
+comment|// This is useful when equalizing weights in register classes with mixed
+comment|// register topologies.
+name|unsigned
+name|Weight
+decl_stmt|;
+comment|// Each native RegUnit corresponds to one or two root registers. The full
+comment|// set of registers containing this unit can be computed as the union of
+comment|// these two registers and their super-registers.
+specifier|const
+name|CodeGenRegister
+modifier|*
+name|Roots
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|RegUnit
+argument_list|()
+operator|:
+name|Weight
+argument_list|(
+literal|0
+argument_list|)
+block|{
+name|Roots
+index|[
+literal|0
+index|]
+operator|=
+name|Roots
+index|[
+literal|1
+index|]
+operator|=
+literal|0
+block|; }
+name|ArrayRef
+operator|<
+specifier|const
+name|CodeGenRegister
+operator|*
+operator|>
+name|getRoots
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+operator|!
+operator|(
+name|Roots
+index|[
+literal|1
+index|]
+operator|&&
+operator|!
+name|Roots
+index|[
+literal|0
+index|]
+operator|)
+operator|&&
+literal|"Invalid roots array"
+argument_list|)
+block|;
+return|return
+name|makeArrayRef
+argument_list|(
+name|Roots
+argument_list|,
+operator|!
+operator|!
+name|Roots
+index|[
+literal|0
+index|]
+operator|+
+operator|!
+operator|!
+name|Roots
+index|[
+literal|1
+index|]
+argument_list|)
+return|;
+block|}
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|// Each RegUnitSet is a sorted vector with a name.
@@ -1271,6 +1610,26 @@ struct|;
 end_struct
 
 begin_comment
+comment|// Base vector for identifying TopoSigs. The contents uniquely identify a
+end_comment
+
+begin_comment
+comment|// TopoSig, only computeSuperRegs needs to know how.
+end_comment
+
+begin_typedef
+typedef|typedef
+name|SmallVector
+operator|<
+name|unsigned
+operator|,
+literal|16
+operator|>
+name|TopoSigId
+expr_stmt|;
+end_typedef
+
+begin_comment
 comment|// CodeGenRegBank - Represent a target's registers and the relations between
 end_comment
 
@@ -1282,10 +1641,6 @@ begin_decl_stmt
 name|class
 name|CodeGenRegBank
 block|{
-name|RecordKeeper
-modifier|&
-name|Records
-decl_stmt|;
 name|SetTheory
 name|Sets
 decl_stmt|;
@@ -1309,8 +1664,37 @@ operator|*
 operator|>
 name|Def2SubRegIdx
 expr_stmt|;
-name|unsigned
-name|NumNamedIndices
+name|CodeGenSubRegIndex
+modifier|*
+name|createSubRegIndex
+parameter_list|(
+name|StringRef
+name|Name
+parameter_list|,
+name|StringRef
+name|NameSpace
+parameter_list|)
+function_decl|;
+typedef|typedef
+name|std
+operator|::
+name|map
+operator|<
+name|SmallVector
+operator|<
+name|CodeGenSubRegIndex
+operator|*
+operator|,
+literal|8
+operator|>
+operator|,
+name|CodeGenSubRegIndex
+operator|*
+operator|>
+name|ConcatIdxMap
+expr_stmt|;
+name|ConcatIdxMap
+name|ConcatIdx
 decl_stmt|;
 comment|// Registers.
 name|std
@@ -1335,19 +1719,24 @@ expr_stmt|;
 name|unsigned
 name|NumNativeRegUnits
 decl_stmt|;
-name|unsigned
-name|NumRegUnits
-decl_stmt|;
-comment|// # native + adopted register units.
-comment|// Map each register unit to a weight (for register pressure).
-comment|// Includes native and adopted register units.
 name|std
 operator|::
-name|vector
+name|map
 operator|<
+name|TopoSigId
+operator|,
 name|unsigned
 operator|>
-name|RegUnitWeights
+name|TopoSigs
+expr_stmt|;
+comment|// Includes native (0..NumNativeRegUnits-1) and adopted register units.
+name|SmallVector
+operator|<
+name|RegUnit
+operator|,
+literal|8
+operator|>
+name|RegUnits
 expr_stmt|;
 comment|// Register classes.
 name|std
@@ -1527,14 +1916,6 @@ return|return
 name|SubRegIndices
 return|;
 block|}
-name|unsigned
-name|getNumNamedIndices
-parameter_list|()
-block|{
-return|return
-name|NumNamedIndices
-return|;
-block|}
 comment|// Find a SubRegIndex form its Record def.
 name|CodeGenSubRegIndex
 modifier|*
@@ -1558,6 +1939,57 @@ modifier|*
 name|B
 parameter_list|)
 function_decl|;
+comment|// Find or create a sub-register index representing the concatenation of
+comment|// non-overlapping sibling indices.
+name|CodeGenSubRegIndex
+modifier|*
+name|getConcatSubRegIndex
+argument_list|(
+specifier|const
+name|SmallVector
+operator|<
+name|CodeGenSubRegIndex
+operator|*
+argument_list|,
+literal|8
+operator|>
+operator|&
+argument_list|)
+decl_stmt|;
+name|void
+name|addConcatSubRegIndex
+argument_list|(
+specifier|const
+name|SmallVector
+operator|<
+name|CodeGenSubRegIndex
+operator|*
+argument_list|,
+literal|8
+operator|>
+operator|&
+name|Parts
+argument_list|,
+name|CodeGenSubRegIndex
+operator|*
+name|Idx
+argument_list|)
+block|{
+name|ConcatIdx
+operator|.
+name|insert
+argument_list|(
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|Parts
+argument_list|,
+name|Idx
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 specifier|const
 name|std
 operator|::
@@ -1602,6 +2034,116 @@ operator|-
 literal|1
 return|;
 block|}
+comment|// Return the number of allocated TopoSigs. The first TopoSig representing
+comment|// leaf registers is allocated number 0.
+name|unsigned
+name|getNumTopoSigs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TopoSigs
+operator|.
+name|size
+argument_list|()
+return|;
+block|}
+comment|// Find or create a TopoSig for the given TopoSigId.
+comment|// This function is only for use by CodeGenRegister::computeSuperRegs().
+comment|// Others should simply use Reg->getTopoSig().
+name|unsigned
+name|getTopoSig
+parameter_list|(
+specifier|const
+name|TopoSigId
+modifier|&
+name|Id
+parameter_list|)
+block|{
+return|return
+name|TopoSigs
+operator|.
+name|insert
+argument_list|(
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|Id
+argument_list|,
+name|TopoSigs
+operator|.
+name|size
+argument_list|()
+argument_list|)
+argument_list|)
+operator|.
+name|first
+operator|->
+name|second
+return|;
+block|}
+comment|// Create a native register unit that is associated with one or two root
+comment|// registers.
+name|unsigned
+name|newRegUnit
+parameter_list|(
+name|CodeGenRegister
+modifier|*
+name|R0
+parameter_list|,
+name|CodeGenRegister
+modifier|*
+name|R1
+init|=
+literal|0
+parameter_list|)
+block|{
+name|RegUnits
+operator|.
+name|resize
+argument_list|(
+name|RegUnits
+operator|.
+name|size
+argument_list|()
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+name|RegUnits
+operator|.
+name|back
+argument_list|()
+operator|.
+name|Roots
+index|[
+literal|0
+index|]
+operator|=
+name|R0
+expr_stmt|;
+name|RegUnits
+operator|.
+name|back
+argument_list|()
+operator|.
+name|Roots
+index|[
+literal|1
+index|]
+operator|=
+name|R1
+expr_stmt|;
+return|return
+name|RegUnits
+operator|.
+name|size
+argument_list|()
+operator|-
+literal|1
+return|;
+block|}
 comment|// Create a new non-native register unit that can be adopted by a register
 comment|// to increase its pressure. Note that NumNativeRegUnits is not increased.
 name|unsigned
@@ -1611,42 +2153,34 @@ name|unsigned
 name|Weight
 parameter_list|)
 block|{
-if|if
-condition|(
-operator|!
-name|RegUnitWeights
-operator|.
-name|empty
-argument_list|()
-condition|)
-block|{
-name|assert
-argument_list|(
-name|Weight
-operator|&&
-literal|"should only add allocatable units"
-argument_list|)
-expr_stmt|;
-name|RegUnitWeights
+name|RegUnits
 operator|.
 name|resize
 argument_list|(
-name|NumRegUnits
+name|RegUnits
+operator|.
+name|size
+argument_list|()
 operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-name|RegUnitWeights
-index|[
-name|NumRegUnits
-index|]
+name|RegUnits
+operator|.
+name|back
+argument_list|()
+operator|.
+name|Weight
 operator|=
 name|Weight
 expr_stmt|;
-block|}
 return|return
-name|NumRegUnits
-operator|++
+name|RegUnits
+operator|.
+name|size
+argument_list|()
+operator|-
+literal|1
 return|;
 block|}
 comment|// Native units are the singular unit of a leaf register. Register aliasing
@@ -1663,6 +2197,47 @@ return|return
 name|RUID
 operator|<
 name|NumNativeRegUnits
+return|;
+block|}
+name|unsigned
+name|getNumNativeRegUnits
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NumNativeRegUnits
+return|;
+block|}
+name|RegUnit
+modifier|&
+name|getRegUnit
+parameter_list|(
+name|unsigned
+name|RUID
+parameter_list|)
+block|{
+return|return
+name|RegUnits
+index|[
+name|RUID
+index|]
+return|;
+block|}
+specifier|const
+name|RegUnit
+modifier|&
+name|getRegUnit
+argument_list|(
+name|unsigned
+name|RUID
+argument_list|)
+decl|const
+block|{
+return|return
+name|RegUnits
+index|[
+name|RUID
+index|]
 return|;
 block|}
 name|ArrayRef
@@ -1702,22 +2277,6 @@ modifier|*
 name|R
 parameter_list|)
 function_decl|;
-comment|// Get a register unit's weight. Zero for unallocatable registers.
-name|unsigned
-name|getRegUnitWeight
-argument_list|(
-name|unsigned
-name|RUID
-argument_list|)
-decl|const
-block|{
-return|return
-name|RegUnitWeights
-index|[
-name|RUID
-index|]
-return|;
-block|}
 comment|// Get the sum of unit weights.
 name|unsigned
 name|getRegUnitSetWeight
@@ -1772,11 +2331,13 @@ name|I
 control|)
 name|Weight
 operator|+=
-name|getRegUnitWeight
+name|getRegUnit
 argument_list|(
 operator|*
 name|I
 argument_list|)
+operator|.
+name|Weight
 expr_stmt|;
 return|return
 name|Weight
@@ -1793,10 +2354,12 @@ name|unsigned
 name|Inc
 parameter_list|)
 block|{
-name|RegUnitWeights
-index|[
+name|getRegUnit
+argument_list|(
 name|RUID
-index|]
+argument_list|)
+operator|.
+name|Weight
 operator|+=
 name|Inc
 expr_stmt|;
@@ -1856,31 +2419,6 @@ name|void
 name|computeDerivedInfo
 parameter_list|()
 function_decl|;
-comment|// Compute full overlap sets for every register. These sets include the
-comment|// rarely used aliases that are neither sub nor super-registers.
-comment|//
-comment|// Map[R1].count(R2) is reflexive and symmetric, but not transitive.
-comment|//
-comment|// If R1 is a sub-register of R2, Map[R1] is a subset of Map[R2].
-name|void
-name|computeOverlaps
-argument_list|(
-name|std
-operator|::
-name|map
-operator|<
-specifier|const
-name|CodeGenRegister
-operator|*
-argument_list|,
-name|CodeGenRegister
-operator|::
-name|Set
-operator|>
-operator|&
-name|Map
-argument_list|)
-decl_stmt|;
 comment|// Compute the set of registers completely covered by the registers in Regs.
 comment|// The returned BitVector will have a bit set for each register in Regs,
 comment|// all sub-registers, and all super-registers that are covered by the

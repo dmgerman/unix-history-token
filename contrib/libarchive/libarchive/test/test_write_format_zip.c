@@ -427,7 +427,7 @@ name|assertEqualInt
 argument_list|(
 name|AE_IFREG
 operator||
-literal|0777
+literal|0666
 argument_list|,
 name|archive_entry_mode
 argument_list|(

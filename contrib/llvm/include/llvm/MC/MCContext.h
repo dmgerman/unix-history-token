@@ -493,6 +493,17 @@ modifier|*
 name|CreateTempSymbol
 parameter_list|()
 function_decl|;
+comment|/// getUniqueSymbolID() - Return a unique identifier for use in constructing
+comment|/// symbol names.
+name|unsigned
+name|getUniqueSymbolID
+parameter_list|()
+block|{
+return|return
+name|NextUniqueID
+operator|++
+return|;
+block|}
 comment|/// CreateDirectionalLocalSymbol - Create the definition of a directional
 comment|/// local symbol for numbered label (used for "1:" definitions).
 name|MCSymbol

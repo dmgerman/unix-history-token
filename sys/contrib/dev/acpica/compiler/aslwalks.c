@@ -1521,7 +1521,7 @@ name|MethodInfo
 operator|->
 name|Op
 expr_stmt|;
-comment|/*          * If there is a peer node after the return statement, then this          * node is unreachable code -- i.e., it won't be executed because of          * the preceeding Return() statement.          */
+comment|/*          * If there is a peer node after the return statement, then this          * node is unreachable code -- i.e., it won't be executed because of          * the preceding Return() statement.          */
 if|if
 condition|(
 name|Op

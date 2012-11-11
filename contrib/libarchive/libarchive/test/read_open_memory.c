@@ -234,7 +234,7 @@ end_comment
 
 begin_function
 name|int
-name|read_open_memory2
+name|read_open_memory_minimal
 parameter_list|(
 name|struct
 name|archive

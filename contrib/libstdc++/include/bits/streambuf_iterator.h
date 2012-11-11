@@ -708,9 +708,11 @@ argument_list|()
 block|;
 return|return
 operator|(
+operator|(
 name|__thiseof
 operator|&&
 name|__beof
+operator|)
 operator|||
 operator|(
 operator|!

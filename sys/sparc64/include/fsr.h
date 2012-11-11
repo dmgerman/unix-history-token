@@ -36,6 +36,13 @@ name|FPRS_FEF
 value|(1<< 2)
 end_define
 
+begin_define
+define|#
+directive|define
+name|VIS_BLOCKSIZE
+value|64
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef

@@ -502,6 +502,13 @@ name|i
 index|]
 operator|!=
 name|NULL_POSITION
+operator|&&
+name|table
+index|[
+name|i
+index|]
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(

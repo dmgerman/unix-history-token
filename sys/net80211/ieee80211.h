@@ -3797,7 +3797,7 @@ value|(sizeof(struct ieee80211_country_ie) + 3*(IEEE80211_COUNTRY_MAX_BANDS-1))
 end_define
 
 begin_comment
-comment|/*  * 802.11h Channel Switch Announcement (CSA).  */
+comment|/*  * 802.11h Quiet Time Element.  */
 end_comment
 
 begin_struct

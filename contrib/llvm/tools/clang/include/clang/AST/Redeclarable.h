@@ -92,12 +92,9 @@ name|Redeclarable
 block|{
 name|protected
 operator|:
-comment|// FIXME: PointerIntPair is a value class that should not be inherited from.
-comment|// This should change to using containment.
-expr|struct
+name|class
 name|DeclLink
-operator|:
-name|public
+block|{
 name|llvm
 operator|::
 name|PointerIntPair
@@ -109,7 +106,10 @@ literal|1
 block|,
 name|bool
 operator|>
-block|{
+name|NextAndIsPrevious
+block|;
+name|public
+operator|:
 name|DeclLink
 argument_list|(
 argument|decl_type *D
@@ -117,49 +117,24 @@ argument_list|,
 argument|bool isLatest
 argument_list|)
 operator|:
-name|llvm
-operator|::
-name|PointerIntPair
-operator|<
-name|decl_type
-operator|*
-block|,
-literal|1
-block|,
-name|bool
-operator|>
-operator|(
-name|D
-operator|,
-name|isLatest
-operator|)
+name|NextAndIsPrevious
+argument_list|(
+argument|D
+argument_list|,
+argument|isLatest
+argument_list|)
 block|{ }
-typedef|typedef
-name|llvm
-operator|::
-name|PointerIntPair
-operator|<
-name|decl_type
-operator|*
-operator|,
-literal|1
-operator|,
-name|bool
-operator|>
-name|base_type
-expr_stmt|;
 name|bool
 name|NextIsPrevious
 argument_list|()
 specifier|const
 block|{
 return|return
-name|base_type
-operator|::
+operator|!
+name|NextAndIsPrevious
+operator|.
 name|getInt
 argument_list|()
-operator|==
-name|false
 return|;
 block|}
 name|bool
@@ -168,12 +143,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|base_type
-operator|::
+name|NextAndIsPrevious
+operator|.
 name|getInt
 argument_list|()
-operator|==
-name|true
 return|;
 block|}
 name|decl_type
@@ -183,56 +156,59 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|base_type
-operator|::
+name|NextAndIsPrevious
+operator|.
 name|getPointer
 argument_list|()
 return|;
 block|}
+name|void
+name|setNext
+argument_list|(
+argument|decl_type *D
+argument_list|)
+block|{
+name|NextAndIsPrevious
+operator|.
+name|setPointer
+argument_list|(
+name|D
+argument_list|)
+block|; }
 expr|}
-block|;    struct
-name|PreviousDeclLink
-operator|:
-name|public
-name|DeclLink
-block|{
-name|PreviousDeclLink
-argument_list|(
-name|decl_type
-operator|*
-name|D
-argument_list|)
-operator|:
-name|DeclLink
-argument_list|(
-argument|D
-argument_list|,
-argument|false
-argument_list|)
-block|{ }
-block|}
-block|;    struct
-name|LatestDeclLink
-operator|:
-name|public
-name|DeclLink
-block|{
-name|LatestDeclLink
-argument_list|(
-name|decl_type
-operator|*
-name|D
-argument_list|)
-operator|:
-name|DeclLink
-argument_list|(
-argument|D
-argument_list|,
-argument|true
-argument_list|)
-block|{ }
-block|}
 block|;
+specifier|static
+name|DeclLink
+name|PreviousDeclLink
+argument_list|(
+argument|decl_type *D
+argument_list|)
+block|{
+return|return
+name|DeclLink
+argument_list|(
+name|D
+argument_list|,
+name|false
+argument_list|)
+return|;
+block|}
+specifier|static
+name|DeclLink
+name|LatestDeclLink
+argument_list|(
+argument|decl_type *D
+argument_list|)
+block|{
+return|return
+name|DeclLink
+argument_list|(
+name|D
+argument_list|,
+name|true
+argument_list|)
+return|;
+block|}
 comment|/// \brief Points to the next redeclaration in the chain.
 comment|///
 comment|/// If NextIsPrevious() is true, this is a link to the previous declaration
@@ -313,14 +289,14 @@ block|}
 comment|/// \brief Return the first declaration of this declaration or itself if this
 comment|/// is the only declaration.
 name|decl_type
-modifier|*
+operator|*
 name|getFirstDeclaration
-parameter_list|()
+argument_list|()
 block|{
 name|decl_type
-modifier|*
+operator|*
 name|D
-init|=
+operator|=
 name|static_cast
 operator|<
 name|decl_type
@@ -329,7 +305,7 @@ operator|>
 operator|(
 name|this
 operator|)
-decl_stmt|;
+block|;
 while|while
 condition|(
 name|D

@@ -670,6 +670,13 @@ argument_list|)
 block|,
 name|RUN_DEV
 argument_list|(
+name|ASUS
+argument_list|,
+name|USB_N53
+argument_list|)
+block|,
+name|RUN_DEV
+argument_list|(
 name|ASUS2
 argument_list|,
 name|USBN11

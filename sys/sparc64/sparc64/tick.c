@@ -1058,6 +1058,15 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
+name|td
+operator|=
+name|curthread
+expr_stmt|;
+name|td
+operator|->
+name|td_intr_nesting_level
+operator|++
+expr_stmt|;
 name|critical_enter
 argument_list|()
 expr_stmt|;
@@ -1068,10 +1077,6 @@ operator|.
 name|et_active
 condition|)
 block|{
-name|td
-operator|=
-name|curthread
-expr_stmt|;
 name|oldframe
 operator|=
 name|td
@@ -1103,6 +1108,11 @@ operator|=
 name|oldframe
 expr_stmt|;
 block|}
+name|td
+operator|->
+name|td_intr_nesting_level
+operator|--
+expr_stmt|;
 name|critical_exit
 argument_list|()
 expr_stmt|;
@@ -1397,7 +1407,7 @@ name|rdstick
 argument_list|()
 expr_stmt|;
 else|else
-name|ipi_wait
+name|ipi_wait_unlocked
 argument_list|(
 name|ipi_rd
 argument_list|(
@@ -1452,7 +1462,7 @@ name|tick
 argument_list|)
 expr_stmt|;
 else|else
-name|ipi_wait
+name|ipi_wait_unlocked
 argument_list|(
 name|ipi_rd
 argument_list|(

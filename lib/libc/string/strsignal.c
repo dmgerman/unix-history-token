@@ -478,7 +478,6 @@ name|sig_ebuf
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 name|signum
 operator|=
 name|num
@@ -578,6 +577,7 @@ name|p
 operator|=
 literal|'\0'
 expr_stmt|;
+block|}
 if|#
 directive|if
 name|defined

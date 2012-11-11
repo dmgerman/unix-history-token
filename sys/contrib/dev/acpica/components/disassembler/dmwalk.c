@@ -151,7 +151,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmDisassemble  *  * PARAMETERS:  WalkState       - Current state  *              Origin          - Starting object  *              NumOpcodes      - Max number of opcodes to be displayed  *  * RETURN:      None  *  * DESCRIPTION: Disassemble parser object and its children.  This is the  *              main entry point of the disassembler.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmDisassemble  *  * PARAMETERS:  WalkState       - Current state  *              Origin          - Starting object  *              NumOpcodes      - Max number of opcodes to be displayed  *  * RETURN:      None  *  * DESCRIPTION: Disassemble parser object and its children. This is the  *              main entry point of the disassembler.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1895,7 +1895,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmAscendingOp  *  * PARAMETERS:  ASL_WALK_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: Second visitation of a parse object, during ascent of parse  *              tree.  Close out any parameter lists and complete the opcode.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmAscendingOp  *  * PARAMETERS:  ASL_WALK_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: Second visitation of a parse object, during ascent of parse  *              tree. Close out any parameter lists and complete the opcode.  *  ******************************************************************************/
 end_comment
 
 begin_function

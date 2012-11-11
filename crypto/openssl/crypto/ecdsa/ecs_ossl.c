@@ -544,6 +544,9 @@ name|err
 goto|;
 block|}
 block|}
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_EC2M
 else|else
 comment|/* NID_X9_62_characteristic_two_field */
 block|{
@@ -576,6 +579,8 @@ name|err
 goto|;
 block|}
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -1930,6 +1935,9 @@ name|err
 goto|;
 block|}
 block|}
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_EC2M
 else|else
 comment|/* NID_X9_62_characteristic_two_field */
 block|{
@@ -1962,6 +1970,8 @@ name|err
 goto|;
 block|}
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!

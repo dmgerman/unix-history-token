@@ -277,6 +277,44 @@ operator|&
 name|ErrorMessage
 argument_list|)
 decl_stmt|;
+comment|/// \brief Tries to detect a compilation database location and load it.
+comment|///
+comment|/// Looks for a compilation database in all parent paths of file 'SourceFile'
+comment|/// by calling loadFromDirectory.
+specifier|static
+name|CompilationDatabase
+modifier|*
+name|autoDetectFromSource
+argument_list|(
+name|StringRef
+name|SourceFile
+argument_list|,
+name|std
+operator|::
+name|string
+operator|&
+name|ErrorMessage
+argument_list|)
+decl_stmt|;
+comment|/// \brief Tries to detect a compilation database location and load it.
+comment|///
+comment|/// Looks for a compilation database in directory 'SourceDir' and all
+comment|/// its parent paths by calling loadFromDirectory.
+specifier|static
+name|CompilationDatabase
+modifier|*
+name|autoDetectFromDirectory
+argument_list|(
+name|StringRef
+name|SourceDir
+argument_list|,
+name|std
+operator|::
+name|string
+operator|&
+name|ErrorMessage
+argument_list|)
+decl_stmt|;
 comment|/// \brief Returns all compile commands in which the specified file was
 comment|/// compiled.
 comment|///
@@ -297,6 +335,22 @@ name|getCompileCommands
 argument_list|(
 argument|StringRef FilePath
 argument_list|)
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
+comment|/// \brief Returns the list of all files available in the compilation database.
+name|virtual
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|getAllFiles
+argument_list|()
 specifier|const
 operator|=
 literal|0
@@ -380,6 +434,22 @@ argument|StringRef FilePath
 argument_list|)
 specifier|const
 block|;
+comment|/// \brief Returns the list of all files available in the compilation database.
+comment|///
+comment|/// Note: This is always an empty list for the fixed compilation database.
+name|virtual
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|getAllFiles
+argument_list|()
+specifier|const
+block|;
 name|private
 operator|:
 comment|/// This is built up to contain a single entry vector to be returned from
@@ -461,6 +531,22 @@ name|getCompileCommands
 argument_list|(
 argument|StringRef FilePath
 argument_list|)
+specifier|const
+block|;
+comment|/// \brief Returns the list of all files available in the compilation database.
+comment|///
+comment|/// These are the 'file' entries of the JSON objects.
+name|virtual
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|getAllFiles
+argument_list|()
 specifier|const
 block|;
 name|private

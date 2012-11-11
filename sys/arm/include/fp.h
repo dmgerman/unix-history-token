@@ -54,6 +54,34 @@ begin_comment
 comment|/*  * Information about the FPE-SP state that is stored in the pcb  *  * This needs to move and be hidden from userland.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ARM_VFP_SUPPORT
+end_ifdef
+
+begin_struct
+struct|struct
+name|vfp_state
+block|{
+name|u_int64_t
+name|reg
+index|[
+literal|32
+index|]
+decl_stmt|;
+name|u_int32_t
+name|fpscr
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_struct
 struct|struct
 name|fpe_sp_state
@@ -79,6 +107,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Type for a saved FP context, if we want to translate the context to a  * user-readable form  */

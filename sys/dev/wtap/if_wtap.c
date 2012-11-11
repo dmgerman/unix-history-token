@@ -907,23 +907,26 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|KASSERT
-argument_list|(
+if|if
+condition|(
 name|vap
 operator|->
 name|iv_state
-operator|>=
+operator|<
 name|IEEE80211_S_RUN
+condition|)
+block|{
+name|DWTAP_PRINTF
+argument_list|(
+literal|"Skip beacon, not running, state %d"
 argument_list|,
-operator|(
-literal|"not running, state %d"
-operator|,
 name|vap
 operator|->
 name|iv_state
-operator|)
 argument_list|)
 expr_stmt|;
+return|return ;
+block|}
 name|DWTAP_PRINTF
 argument_list|(
 literal|"[%d] beacon intrp\n"
@@ -1083,9 +1086,12 @@ argument_list|)
 expr_stmt|;
 name|ni
 operator|=
+name|ieee80211_ref_node
+argument_list|(
 name|vap
 operator|->
 name|iv_bss
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Invoke the parent method to do net80211 work. 	 */
 name|error
@@ -1118,11 +1124,19 @@ name|IEEE80211_S_RUN
 condition|)
 block|{
 comment|/* NB: collect bss node again, it may have changed */
+name|ieee80211_free_node
+argument_list|(
+name|ni
+argument_list|)
+expr_stmt|;
 name|ni
 operator|=
+name|ieee80211_ref_node
+argument_list|(
 name|vap
 operator|->
 name|iv_bss
+argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
@@ -1182,6 +1196,28 @@ name|bad
 goto|;
 block|}
 block|}
+elseif|else
+if|if
+condition|(
+name|nstate
+operator|==
+name|IEEE80211_S_INIT
+condition|)
+block|{
+name|callout_stop
+argument_list|(
+operator|&
+name|avp
+operator|->
+name|av_swba
+argument_list|)
+expr_stmt|;
+block|}
+name|ieee80211_free_node
+argument_list|(
+name|ni
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -1192,6 +1228,11 @@ argument_list|(
 literal|"%s: bad\n"
 argument_list|,
 name|__func__
+argument_list|)
+expr_stmt|;
+name|ieee80211_free_node
+argument_list|(
+name|ni
 argument_list|)
 expr_stmt|;
 return|return
@@ -1307,6 +1348,11 @@ name|avp
 decl_stmt|;
 name|int
 name|error
+decl_stmt|;
+name|struct
+name|ieee80211_node
+modifier|*
+name|ni
 decl_stmt|;
 name|DWTAP_PRINTF
 argument_list|(
@@ -1495,13 +1541,25 @@ name|if_xname
 argument_list|)
 expr_stmt|;
 comment|/* TODO this is a hack to force it to choose the rate we want */
+name|ni
+operator|=
+name|ieee80211_ref_node
+argument_list|(
 name|vap
 operator|->
 name|iv_bss
+argument_list|)
+expr_stmt|;
+name|ni
 operator|->
 name|ni_txrate
 operator|=
 literal|130
+expr_stmt|;
+name|ieee80211_free_node
+argument_list|(
+name|ni
+argument_list|)
 expr_stmt|;
 return|return
 name|vap

@@ -471,6 +471,24 @@ value|0x10000
 end_define
 
 begin_comment
+comment|/*  * Used for optimizing small rx mbufs.  Effort is made to keep the copy  * small and aligned for the CPU L1 cache.  *   * MHLEN is typically 168 bytes, giving us 8-byte alignment.  Getting  * 32 byte alignment needed for the fast bcopy results in 8 bytes being  * wasted.  Getting 64 byte alignment, which _should_ be ideal for  * modern Intel CPUs, results in 40 bytes wasted and a significant drop  * in observed efficiency of the optimization, 97.9% -> 81.8%.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_RX_COPY_LEN
+value|160
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_RX_COPY_ALIGN
+value|(MHLEN - IXGBE_RX_COPY_LEN)
+end_define
+
+begin_comment
 comment|/* Keep older OS drivers building... */
 end_comment
 
@@ -933,6 +951,16 @@ decl_stmt|;
 name|bus_dmamap_t
 name|pmap
 decl_stmt|;
+name|u_int
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|IXGBE_RX_COPY
+value|0x01
+name|uint64_t
+name|paddr
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1101,6 +1129,10 @@ name|buf_ring
 modifier|*
 name|br
 decl_stmt|;
+name|struct
+name|task
+name|txq_task
+decl_stmt|;
 endif|#
 directive|endif
 ifdef|#
@@ -1216,6 +1248,9 @@ name|rx_irq
 decl_stmt|;
 name|u64
 name|rx_split_packets
+decl_stmt|;
+name|u64
+name|rx_copies
 decl_stmt|;
 name|u64
 name|rx_packets

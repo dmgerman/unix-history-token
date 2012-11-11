@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: serverloop.c,v 1.160 2011/05/15 08:09:01 djm Exp $ */
+comment|/* $OpenBSD: serverloop.c,v 1.162 2012/06/20 04:42:58 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1232,6 +1232,11 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
+name|time_t
+name|minwait_secs
+init|=
+literal|0
+decl_stmt|;
 name|int
 name|client_alive_scheduled
 init|=
@@ -1242,6 +1247,43 @@ name|program_alive_scheduled
 init|=
 literal|0
 decl_stmt|;
+comment|/* Allocate and update select() masks for channel descriptors. */
+name|channel_prepare_select
+argument_list|(
+name|readsetp
+argument_list|,
+name|writesetp
+argument_list|,
+name|maxfdp
+argument_list|,
+name|nallocp
+argument_list|,
+operator|&
+name|minwait_secs
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|minwait_secs
+operator|!=
+literal|0
+condition|)
+name|max_time_milliseconds
+operator|=
+name|MIN
+argument_list|(
+name|max_time_milliseconds
+argument_list|,
+operator|(
+name|u_int
+operator|)
+name|minwait_secs
+operator|*
+literal|1000
+argument_list|)
+expr_stmt|;
 comment|/* 	 * if using client_alive, set the max timeout accordingly, 	 * and indicate that this particular timeout was for client 	 * alive by setting the client_alive_scheduled flag. 	 * 	 * this could be randomized somewhat to make traffic 	 * analysis more difficult, but we're not doing it yet. 	 */
 if|if
 condition|(
@@ -1269,20 +1311,6 @@ operator|*
 literal|1000
 expr_stmt|;
 block|}
-comment|/* Allocate and update select() masks for channel descriptors. */
-name|channel_prepare_select
-argument_list|(
-name|readsetp
-argument_list|,
-name|writesetp
-argument_list|,
-name|maxfdp
-argument_list|,
-name|nallocp
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|compat20
@@ -2969,8 +2997,7 @@ argument_list|()
 expr_stmt|;
 name|debug
 argument_list|(
-literal|"End of interactive session; stdin %ld, stdout (read %ld, "
-literal|"sent %ld), stderr %ld bytes."
+literal|"End of interactive session; stdin %ld, stdout (read %ld, sent %ld), stderr %ld bytes."
 argument_list|,
 name|stdin_bytes
 argument_list|,

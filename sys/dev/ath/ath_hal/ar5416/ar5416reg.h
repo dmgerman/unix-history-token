@@ -757,6 +757,54 @@ begin_comment
 comment|/* AH_SUPPORT_AR9130 */
 end_comment
 
+begin_comment
+comment|/* AR_USEC: 0x801c */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR5416_USEC_TX_LAT
+value|0x007FC000
+end_define
+
+begin_comment
+comment|/* tx latency to start of SIGNAL (usec) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR5416_USEC_TX_LAT_S
+value|14
+end_define
+
+begin_comment
+comment|/* tx latency to start of SIGNAL (usec) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR5416_USEC_RX_LAT
+value|0x1F800000
+end_define
+
+begin_comment
+comment|/* rx latency to start of SIGNAL (usec) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR5416_USEC_RX_LAT_S
+value|23
+end_define
+
+begin_comment
+comment|/* rx latency to start of SIGNAL (usec) */
+end_comment
+
 begin_define
 define|#
 directive|define

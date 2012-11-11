@@ -207,6 +207,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * Don't call these directly from the stack; they are vap methods  * that should be overridden.  */
+end_comment
+
 begin_function_decl
 name|int
 name|ieee80211_pwrsave

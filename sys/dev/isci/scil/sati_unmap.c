@@ -914,9 +914,9 @@ name|sequence
 argument_list|,
 name|scsi_io
 argument_list|,
-name|SCSI_STATUS_CHECK_CONDITION
+name|SCSI_STATUS_BUSY
 argument_list|,
-name|SCSI_SENSE_ABORTED_COMMAND
+name|SCSI_SENSE_NO_SENSE
 argument_list|,
 name|SCSI_ASC_NO_ADDITIONAL_SENSE
 argument_list|,

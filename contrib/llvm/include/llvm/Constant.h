@@ -362,8 +362,8 @@ operator|*
 name|Ty
 argument_list|)
 block|;
-comment|/// @returns the value for an integer constant of the given type that has all
-comment|/// its bits set to true.
+comment|/// @returns the value for an integer or vector of integer constant of the
+comment|/// given type that has all its bits set to true.
 comment|/// @brief Get the all ones value
 specifier|static
 name|Constant

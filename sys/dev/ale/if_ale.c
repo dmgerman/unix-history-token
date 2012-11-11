@@ -366,7 +366,6 @@ modifier|*
 name|ale_name
 decl_stmt|;
 block|}
-decl|const
 name|ale_devs
 index|[]
 init|=
@@ -2955,7 +2954,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|msic
+name|msixc
 operator|==
 name|ALE_MSIX_MESSAGES
 condition|)

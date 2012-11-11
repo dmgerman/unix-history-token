@@ -133,7 +133,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|ARGUMENT_INFO
+name|ACPI_DB_ARGUMENT_INFO
 name|AcpiDbStatTypes
 index|[]
 init|=
@@ -795,7 +795,9 @@ operator|++
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|AE_OK
+operator|)
 return|;
 ifdef|#
 directive|ifdef
@@ -997,23 +999,6 @@ decl_stmt|;
 name|UINT32
 name|Temp
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|TypeArg
-condition|)
-block|{
-name|AcpiOsPrintf
-argument_list|(
-literal|"The following subcommands are available:\n    ALLOCATIONS, OBJECTS, MEMORY, MISC, SIZES, TABLES\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|AE_OK
-operator|)
-return|;
-block|}
 name|AcpiUtStrupr
 argument_list|(
 name|TypeArg

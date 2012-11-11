@@ -332,15 +332,15 @@ name|GCCParentLibPath
 return|;
 block|}
 comment|/// \brief Get the detected GCC version string.
-name|StringRef
+specifier|const
+name|GCCVersion
+operator|&
 name|getVersion
 argument_list|()
 specifier|const
 block|{
 return|return
 name|Version
-operator|.
-name|Text
 return|;
 block|}
 name|private
@@ -634,34 +634,6 @@ name|mutable
 name|bool
 name|TargetInitialized
 block|;
-comment|// FIXME: Remove this once there is a proper way to detect an ARC runtime
-comment|// for the simulator.
-name|public
-operator|:
-name|mutable
-expr|enum
-block|{
-name|ARCSimulator_None
-block|,
-name|ARCSimulator_HasARCRuntime
-block|,
-name|ARCSimulator_NoARCRuntime
-block|}
-name|ARCRuntimeForSimulator
-block|;
-name|mutable
-expr|enum
-block|{
-name|LibCXXSimulator_None
-block|,
-name|LibCXXSimulator_NotAvailable
-block|,
-name|LibCXXSimulator_Available
-block|}
-name|LibCXXForSimulator
-block|;
-name|private
-operator|:
 comment|/// Whether we are targeting iPhoneOS target.
 name|mutable
 name|bool
@@ -677,6 +649,16 @@ name|mutable
 name|VersionTuple
 name|TargetVersion
 block|;
+name|protected
+operator|:
+comment|// FIXME: Remove this once there is a proper way to detect an ARC runtime
+comment|// for the simulator.
+name|mutable
+name|VersionTuple
+name|TargetSimulatorVersionFromDefines
+block|;
+name|private
+operator|:
 comment|/// The default macosx-version-min of this tool chain; empty until
 comment|/// initialized.
 name|std
@@ -684,15 +666,12 @@ operator|::
 name|string
 name|MacosxVersionMin
 block|;
-name|bool
-name|hasARCRuntime
-argument_list|()
-specifier|const
-block|;
-name|bool
-name|hasSubscriptingRuntime
-argument_list|()
-specifier|const
+comment|/// The default ios-version-min of this tool chain; empty until
+comment|/// initialized.
+name|std
+operator|::
+name|string
+name|iOSVersionMin
 block|;
 name|private
 operator|:
@@ -869,9 +848,10 @@ operator|!
 name|isTargetIPhoneOS
 argument_list|()
 operator|&&
-name|ARCRuntimeForSimulator
+name|TargetSimulatorVersionFromDefines
 operator|==
-name|ARCSimulator_None
+name|VersionTuple
+argument_list|()
 return|;
 block|}
 name|bool
@@ -978,23 +958,6 @@ name|V2
 argument_list|)
 return|;
 block|}
-comment|/// AddLinkSearchPathArgs - Add the linker search paths to \arg CmdArgs.
-comment|///
-comment|/// \param Args - The input argument list.
-comment|/// \param CmdArgs [out] - The command argument list to append the paths
-comment|/// (prefixed by -L) to.
-name|virtual
-name|void
-name|AddLinkSearchPathArgs
-argument_list|(
-argument|const ArgList&Args
-argument_list|,
-argument|ArgStringList&CmdArgs
-argument_list|)
-specifier|const
-operator|=
-literal|0
-block|;
 comment|/// AddLinkARCArgs - Add the linker arguments to link the ARC runtime library.
 name|virtual
 name|void
@@ -1042,10 +1005,10 @@ argument_list|()
 specifier|const
 block|;
 name|virtual
-name|void
-name|configureObjCRuntime
+name|ObjCRuntime
+name|getDefaultObjCRuntime
 argument_list|(
-argument|ObjCRuntime&runtime
+argument|bool isNonFragile
 argument_list|)
 specifier|const
 block|;
@@ -1137,6 +1100,16 @@ directive|endif
 block|}
 name|virtual
 name|bool
+name|IsMathErrnoDefault
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+name|virtual
+name|bool
 name|IsObjCDefaultSynthPropertiesDefault
 argument_list|()
 specifier|const
@@ -1164,28 +1137,6 @@ operator|::
 name|Triple
 operator|::
 name|x86
-return|;
-block|}
-name|virtual
-name|bool
-name|IsObjCLegacyDispatchDefault
-argument_list|()
-specifier|const
-block|{
-comment|// This is only used with the non-fragile ABI.
-comment|// Legacy dispatch is used everywhere except on x86_64.
-return|return
-name|getTriple
-argument_list|()
-operator|.
-name|getArch
-argument_list|()
-operator|!=
-name|llvm
-operator|::
-name|Triple
-operator|::
-name|x86_64
 return|;
 block|}
 name|virtual
@@ -1353,16 +1304,6 @@ argument_list|)
 block|;
 comment|/// @name Darwin ToolChain Implementation
 comment|/// {
-name|virtual
-name|void
-name|AddLinkSearchPathArgs
-argument_list|(
-argument|const ArgList&Args
-argument_list|,
-argument|ArgStringList&CmdArgs
-argument_list|)
-specifier|const
-block|;
 name|virtual
 name|void
 name|AddLinkRuntimeLibArgs
@@ -1689,62 +1630,20 @@ argument_list|)
 block|;
 name|virtual
 name|bool
-name|IsObjCNonFragileABIDefault
+name|IsMathErrnoDefault
 argument_list|()
 specifier|const
 block|{
 return|return
-name|true
+name|false
 return|;
 block|}
 name|virtual
 name|bool
-name|IsObjCLegacyDispatchDefault
+name|IsObjCNonFragileABIDefault
 argument_list|()
 specifier|const
 block|{
-name|llvm
-operator|::
-name|Triple
-operator|::
-name|ArchType
-name|Arch
-operator|=
-name|getTriple
-argument_list|()
-operator|.
-name|getArch
-argument_list|()
-block|;
-if|if
-condition|(
-name|Arch
-operator|==
-name|llvm
-operator|::
-name|Triple
-operator|::
-name|arm
-operator|||
-name|Arch
-operator|==
-name|llvm
-operator|::
-name|Triple
-operator|::
-name|x86
-operator|||
-name|Arch
-operator|==
-name|llvm
-operator|::
-name|Triple
-operator|::
-name|x86_64
-condition|)
-return|return
-name|false
-return|;
 return|return
 name|true
 return|;
@@ -1762,6 +1661,112 @@ argument|const ActionList&Inputs
 argument_list|)
 specifier|const
 block|; }
+block|;
+name|class
+name|LLVM_LIBRARY_VISIBILITY
+name|Bitrig
+operator|:
+name|public
+name|Generic_ELF
+block|{
+name|public
+operator|:
+name|Bitrig
+argument_list|(
+specifier|const
+name|Driver
+operator|&
+name|D
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|Triple
+operator|&
+name|Triple
+argument_list|,
+specifier|const
+name|ArgList
+operator|&
+name|Args
+argument_list|)
+block|;
+name|virtual
+name|bool
+name|IsMathErrnoDefault
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+name|virtual
+name|bool
+name|IsObjCNonFragileABIDefault
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+name|virtual
+name|bool
+name|IsObjCLegacyDispatchDefault
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+name|virtual
+name|Tool
+operator|&
+name|SelectTool
+argument_list|(
+argument|const Compilation&C
+argument_list|,
+argument|const JobAction&JA
+argument_list|,
+argument|const ActionList&Inputs
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|void
+name|AddClangCXXStdlibIncludeArgs
+argument_list|(
+argument|const ArgList&DriverArgs
+argument_list|,
+argument|ArgStringList&CC1Args
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|void
+name|AddCXXStdlibLibArgs
+argument_list|(
+argument|const ArgList&Args
+argument_list|,
+argument|ArgStringList&CmdArgs
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|unsigned
+name|GetDefaultStackProtectorLevel
+argument_list|(
+argument|bool KernelOrKext
+argument_list|)
+specifier|const
+block|{
+return|return
+literal|1
+return|;
+block|}
+expr|}
 block|;
 name|class
 name|LLVM_LIBRARY_VISIBILITY
@@ -1794,62 +1799,20 @@ argument_list|)
 block|;
 name|virtual
 name|bool
-name|IsObjCNonFragileABIDefault
+name|IsMathErrnoDefault
 argument_list|()
 specifier|const
 block|{
 return|return
-name|true
+name|false
 return|;
 block|}
 name|virtual
 name|bool
-name|IsObjCLegacyDispatchDefault
+name|IsObjCNonFragileABIDefault
 argument_list|()
 specifier|const
 block|{
-name|llvm
-operator|::
-name|Triple
-operator|::
-name|ArchType
-name|Arch
-operator|=
-name|getTriple
-argument_list|()
-operator|.
-name|getArch
-argument_list|()
-block|;
-if|if
-condition|(
-name|Arch
-operator|==
-name|llvm
-operator|::
-name|Triple
-operator|::
-name|arm
-operator|||
-name|Arch
-operator|==
-name|llvm
-operator|::
-name|Triple
-operator|::
-name|x86
-operator|||
-name|Arch
-operator|==
-name|llvm
-operator|::
-name|Triple
-operator|::
-name|x86_64
-condition|)
-return|return
-name|false
-return|;
 return|return
 name|true
 return|;
@@ -1899,6 +1862,16 @@ argument_list|)
 block|;
 name|virtual
 name|bool
+name|IsMathErrnoDefault
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+name|virtual
+name|bool
 name|IsObjCNonFragileABIDefault
 argument_list|()
 specifier|const
@@ -1908,55 +1881,99 @@ name|true
 return|;
 block|}
 name|virtual
+name|Tool
+operator|&
+name|SelectTool
+argument_list|(
+argument|const Compilation&C
+argument_list|,
+argument|const JobAction&JA
+argument_list|,
+argument|const ActionList&Inputs
+argument_list|)
+specifier|const
+block|; }
+block|;
+name|class
+name|LLVM_LIBRARY_VISIBILITY
+name|Minix
+operator|:
+name|public
+name|Generic_ELF
+block|{
+name|public
+operator|:
+name|Minix
+argument_list|(
+specifier|const
+name|Driver
+operator|&
+name|D
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|Triple
+operator|&
+name|Triple
+argument_list|,
+specifier|const
+name|ArgList
+operator|&
+name|Args
+argument_list|)
+block|;
+name|virtual
+name|Tool
+operator|&
+name|SelectTool
+argument_list|(
+argument|const Compilation&C
+argument_list|,
+argument|const JobAction&JA
+argument_list|,
+argument|const ActionList&Inputs
+argument_list|)
+specifier|const
+block|; }
+block|;
+name|class
+name|LLVM_LIBRARY_VISIBILITY
+name|DragonFly
+operator|:
+name|public
+name|Generic_ELF
+block|{
+name|public
+operator|:
+name|DragonFly
+argument_list|(
+specifier|const
+name|Driver
+operator|&
+name|D
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|Triple
+operator|&
+name|Triple
+argument_list|,
+specifier|const
+name|ArgList
+operator|&
+name|Args
+argument_list|)
+block|;
+name|virtual
 name|bool
-name|IsObjCLegacyDispatchDefault
+name|IsMathErrnoDefault
 argument_list|()
 specifier|const
 block|{
-name|llvm
-operator|::
-name|Triple
-operator|::
-name|ArchType
-name|Arch
-operator|=
-name|getTriple
-argument_list|()
-operator|.
-name|getArch
-argument_list|()
-block|;
-if|if
-condition|(
-name|Arch
-operator|==
-name|llvm
-operator|::
-name|Triple
-operator|::
-name|arm
-operator|||
-name|Arch
-operator|==
-name|llvm
-operator|::
-name|Triple
-operator|::
-name|x86
-operator|||
-name|Arch
-operator|==
-name|llvm
-operator|::
-name|Triple
-operator|::
-name|x86_64
-condition|)
 return|return
 name|false
-return|;
-return|return
-name|true
 return|;
 block|}
 name|virtual
@@ -1972,97 +1989,11 @@ argument|const ActionList&Inputs
 argument_list|)
 specifier|const
 block|; }
-decl_stmt|;
-name|class
-name|LLVM_LIBRARY_VISIBILITY
-name|Minix
-range|:
-name|public
-name|Generic_ELF
-block|{
-name|public
-operator|:
-name|Minix
-argument_list|(
-specifier|const
-name|Driver
-operator|&
-name|D
-argument_list|,
-specifier|const
-name|llvm
-operator|::
-name|Triple
-operator|&
-name|Triple
-argument_list|,
-specifier|const
-name|ArgList
-operator|&
-name|Args
-argument_list|)
 block|;
-name|virtual
-name|Tool
-operator|&
-name|SelectTool
-argument_list|(
-argument|const Compilation&C
-argument_list|,
-argument|const JobAction&JA
-argument_list|,
-argument|const ActionList&Inputs
-argument_list|)
-specifier|const
-block|; }
-decl_stmt|;
-name|class
-name|LLVM_LIBRARY_VISIBILITY
-name|DragonFly
-range|:
-name|public
-name|Generic_ELF
-block|{
-name|public
-operator|:
-name|DragonFly
-argument_list|(
-specifier|const
-name|Driver
-operator|&
-name|D
-argument_list|,
-specifier|const
-name|llvm
-operator|::
-name|Triple
-operator|&
-name|Triple
-argument_list|,
-specifier|const
-name|ArgList
-operator|&
-name|Args
-argument_list|)
-block|;
-name|virtual
-name|Tool
-operator|&
-name|SelectTool
-argument_list|(
-argument|const Compilation&C
-argument_list|,
-argument|const JobAction&JA
-argument_list|,
-argument|const ActionList&Inputs
-argument_list|)
-specifier|const
-block|; }
-decl_stmt|;
 name|class
 name|LLVM_LIBRARY_VISIBILITY
 name|Linux
-range|:
+operator|:
 name|public
 name|Generic_ELF
 block|{
@@ -2119,6 +2050,14 @@ specifier|const
 block|;
 name|virtual
 name|void
+name|addClangTargetOptions
+argument_list|(
+argument|ArgStringList&CC1Args
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|void
 name|AddClangCXXStdlibIncludeArgs
 argument_list|(
 argument|const ArgList&DriverArgs
@@ -2157,13 +2096,13 @@ argument_list|,
 argument|ArgStringList&CC1Args
 argument_list|)
 block|; }
-decl_stmt|;
+block|;
 comment|/// TCEToolChain - A tool chain using the llvm bitcode tools to perform
 comment|/// all subcommands. See http://tce.cs.tut.fi for our peculiar target.
 name|class
 name|LLVM_LIBRARY_VISIBILITY
 name|TCEToolChain
-range|:
+operator|:
 name|public
 name|ToolChain
 block|{
@@ -2239,11 +2178,11 @@ operator|*
 operator|>
 name|Tools
 block|;  }
-decl_stmt|;
+block|;
 name|class
 name|LLVM_LIBRARY_VISIBILITY
 name|Windows
-range|:
+operator|:
 name|public
 name|ToolChain
 block|{
@@ -2289,6 +2228,16 @@ argument|const ActionList&Inputs
 argument_list|)
 specifier|const
 block|;
+name|virtual
+name|bool
+name|IsObjCDefaultSynthPropertiesDefault
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
 name|virtual
 name|bool
 name|IsIntegratedAssemblerDefault
@@ -2337,18 +2286,14 @@ argument|ArgStringList&CC1Args
 argument_list|)
 specifier|const
 block|;  }
-decl_stmt|;
-block|}
+block|;  }
 comment|// end namespace toolchains
+block|}
+comment|// end namespace driver
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// end namespace driver
-end_comment
-
-begin_comment
-unit|}
 comment|// end namespace clang
 end_comment
 

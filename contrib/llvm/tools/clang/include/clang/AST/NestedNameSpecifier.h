@@ -116,7 +116,7 @@ name|class
 name|LangOptions
 decl_stmt|;
 comment|/// \brief Represents a C++ nested name specifier, such as
-comment|/// "::std::vector<int>::".
+comment|/// "\::std::vector<int>::".
 comment|///
 comment|/// C++ nested name specifiers are the prefixes to qualified
 comment|/// namespaces. For example, "foo::" in "foo::x" is a nested name
@@ -548,7 +548,7 @@ comment|/// \brief Whether this nested-name-specifier contains an unexpanded
 end_comment
 
 begin_comment
-comment|/// parameter pack (for C++0x variadic templates).
+comment|/// parameter pack (for C++11 variadic templates).
 end_comment
 
 begin_expr_stmt
@@ -756,7 +756,7 @@ comment|/// \brief Retrieve the source range covering the entirety of this
 comment|/// nested-name-specifier.
 comment|///
 comment|/// For example, if this instance refers to a nested-name-specifier
-comment|/// \c ::std::vector<int>::, the returned source range would cover
+comment|/// \c \::std::vector<int>::, the returned source range would cover
 comment|/// from the initial '::' to the last '::'.
 name|SourceRange
 name|getSourceRange
@@ -768,7 +768,7 @@ comment|/// \brief Retrieve the source range covering just the last part of
 comment|/// this nested-name-specifier, not including the prefix.
 comment|///
 comment|/// For example, if this instance refers to a nested-name-specifier
-comment|/// \c ::std::vector<int>::, the returned source range would cover
+comment|/// \c \::std::vector<int>::, the returned source range would cover
 comment|/// from "vector" to the last '::'.
 name|SourceRange
 name|getLocalSourceRange
@@ -838,7 +838,7 @@ block|}
 comment|/// \brief Return the prefix of this nested-name-specifier.
 comment|///
 comment|/// For example, if this instance refers to a nested-name-specifier
-comment|/// \c ::std::vector<int>::, the prefix is \c ::std::. Note that the
+comment|/// \c \::std::vector<int>::, the prefix is \c \::std::. Note that the
 comment|/// returned prefix may be empty, if this is the first component of
 comment|/// the nested-name-specifier.
 name|NestedNameSpecifierLoc
@@ -1270,8 +1270,9 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// \brief Retrieve a nested-name-specifier with location
-comment|/// information based on the information in this builder.  This loc
-comment|/// will contain references to the builder's internal data and may
+comment|/// information based on the information in this builder.
+comment|///
+comment|/// This loc will contain references to the builder's internal data and may
 comment|/// be invalidated by any change to the builder.
 name|NestedNameSpecifierLoc
 name|getTemporary

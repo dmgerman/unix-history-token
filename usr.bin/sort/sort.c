@@ -385,9 +385,12 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|int
+name|size_t
 name|argc_from_file0
 init|=
+operator|(
+name|size_t
+operator|)
 operator|-
 literal|1
 decl_stmt|;
@@ -485,6 +488,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|option
 name|long_options
@@ -1129,18 +1133,22 @@ operator|*
 name|line
 condition|)
 block|{
-operator|++
-name|argc_from_file0
-expr_stmt|;
 if|if
 condition|(
 name|argc_from_file0
-operator|<
+operator|==
+operator|(
+name|size_t
+operator|)
+operator|-
 literal|1
 condition|)
 name|argc_from_file0
 operator|=
-literal|1
+literal|0
+expr_stmt|;
+operator|++
+name|argc_from_file0
 expr_stmt|;
 name|argv_from_file0
 operator|=
@@ -5658,9 +5666,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|argc_from_file0
-operator|>=
-literal|0
+name|argv_from_file0
 condition|)
 block|{
 name|argc

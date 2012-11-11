@@ -30,6 +30,8 @@ directive|endif
 define|#
 directive|define
 name|INSTRUCTION_SPECIFIER_FIELDS
+define|\
+value|uint16_t operands;
 define|#
 directive|define
 name|INSTRUCTION_IDS
@@ -280,7 +282,7 @@ directive|define
 name|ALL_REGS
 define|\
 value|REGS_8BIT           \   REGS_16BIT          \   REGS_32BIT          \   REGS_64BIT          \   REGS_MMX            \   REGS_XMM            \   REGS_YMM            \   REGS_SEGMENT        \   REGS_DEBUG          \   REGS_CONTROL        \   ENTRY(RIP)
-comment|/*  * EABase - All possible values of the base field for effective-address   *   computations, a.k.a. the Mod and R/M fields of the ModR/M byte.  We  *   distinguish between bases (EA_BASE_*) and registers that just happen to be  *   referred to when Mod == 0b11 (EA_REG_*).  */
+comment|/*  * EABase - All possible values of the base field for effective-address  *   computations, a.k.a. the Mod and R/M fields of the ModR/M byte.  We  *   distinguish between bases (EA_BASE_*) and registers that just happen to be  *   referred to when Mod == 0b11 (EA_REG_*).  */
 typedef|typedef
 enum|enum
 block|{
@@ -312,7 +314,7 @@ name|EA_max
 block|}
 name|EABase
 typedef|;
-comment|/*   * SIBIndex - All possible values of the SIB index field.  *   Borrows entries from ALL_EA_BASES with the special case that  *   sib is synonymous with NONE.  */
+comment|/*  * SIBIndex - All possible values of the SIB index field.  *   Borrows entries from ALL_EA_BASES with the special case that  *   sib is synonymous with NONE.  * Vector SIB: index can be XMM or YMM.  */
 typedef|typedef
 enum|enum
 block|{
@@ -326,6 +328,8 @@ name|x
 parameter_list|)
 value|SIB_INDEX_##x,
 name|ALL_EA_BASES
+name|REGS_XMM
+name|REGS_YMM
 undef|#
 directive|undef
 name|ENTRY
@@ -701,6 +705,12 @@ name|sibScale
 decl_stmt|;
 name|SIBBase
 name|sibBase
+decl_stmt|;
+specifier|const
+name|struct
+name|OperandSpecifier
+modifier|*
+name|operands
 decl_stmt|;
 block|}
 struct|;

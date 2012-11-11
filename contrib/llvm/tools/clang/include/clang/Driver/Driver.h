@@ -422,6 +422,12 @@ name|CCCUseClangCPP
 range|:
 literal|1
 decl_stmt|;
+comment|/// \brief Force use of clang frontend.
+name|unsigned
+name|ForcedClangUse
+range|:
+literal|1
+decl_stmt|;
 name|public
 label|:
 comment|/// Use lazy precompiled headers for PCH support.
@@ -475,7 +481,7 @@ expr_stmt|;
 comment|/// \brief Cache of all the ToolChains in use by the driver.
 comment|///
 comment|/// This maps from the string representation of a triple to a ToolChain
-comment|/// created targetting that triple. The driver owns all the ToolChain objects
+comment|/// created targeting that triple. The driver owns all the ToolChain objects
 comment|/// stored in it, and will clean them up when torn down.
 name|mutable
 name|llvm
@@ -675,6 +681,29 @@ block|{
 name|InstalledDir
 operator|=
 name|Value
+expr_stmt|;
+block|}
+name|bool
+name|shouldForceClangUse
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ForcedClangUse
+return|;
+block|}
+name|void
+name|setForcedClangUse
+parameter_list|(
+name|bool
+name|V
+init|=
+name|true
+parameter_list|)
+block|{
+name|ForcedClangUse
+operator|=
+name|V
 expr_stmt|;
 block|}
 comment|/// @}

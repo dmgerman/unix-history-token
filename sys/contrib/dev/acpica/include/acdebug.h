@@ -33,7 +33,7 @@ end_comment
 begin_typedef
 typedef|typedef
 struct|struct
-name|CommandInfo
+name|acpi_db_command_info
 block|{
 name|char
 modifier|*
@@ -45,14 +45,38 @@ name|MinArgs
 decl_stmt|;
 comment|/* Minimum arguments required */
 block|}
-name|COMMAND_INFO
+name|ACPI_DB_COMMAND_INFO
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
 struct|struct
-name|ArgumentInfo
+name|acpi_db_command_help
+block|{
+name|UINT8
+name|LineCount
+decl_stmt|;
+comment|/* Number of help lines */
+name|char
+modifier|*
+name|Invocation
+decl_stmt|;
+comment|/* Command Invocation */
+name|char
+modifier|*
+name|Description
+decl_stmt|;
+comment|/* Command Description */
+block|}
+name|ACPI_DB_COMMAND_HELP
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_db_argument_info
 block|{
 name|char
 modifier|*
@@ -60,14 +84,14 @@ name|Name
 decl_stmt|;
 comment|/* Argument Name */
 block|}
-name|ARGUMENT_INFO
+name|ACPI_DB_ARGUMENT_INFO
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
 struct|struct
-name|acpi_execute_walk
+name|acpi_db_execute_walk
 block|{
 name|UINT32
 name|Count
@@ -76,7 +100,7 @@ name|UINT32
 name|MaxCount
 decl_stmt|;
 block|}
-name|ACPI_EXECUTE_WALK
+name|ACPI_DB_EXECUTE_WALK
 typedef|;
 end_typedef
 
@@ -208,11 +232,7 @@ name|AcpiDbUnloadAcpiTable
 parameter_list|(
 name|char
 modifier|*
-name|TableArg
-parameter_list|,
-name|char
-modifier|*
-name|InstanceArg
+name|Name
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -697,7 +717,7 @@ name|char
 modifier|*
 name|UserArgument
 parameter_list|,
-name|ARGUMENT_INFO
+name|ACPI_DB_ARGUMENT_INFO
 modifier|*
 name|Arguments
 parameter_list|)

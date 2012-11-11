@@ -100,7 +100,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AeAddToErrorLog  *  * PARAMETERS:  Enode       - An error node to add to the log  *  * RETURN:      None  *  * DESCRIPTION: Add a new error node to the error log.  The error log is  *              ordered by the "logical" line number (cumulative line number  *              including all include files.)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AeAddToErrorLog  *  * PARAMETERS:  Enode       - An error node to add to the log  *  * RETURN:      None  *  * DESCRIPTION: Add a new error node to the error log. The error log is  *              ordered by the "logical" line number (cumulative line number  *              including all include files.)  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -263,6 +263,11 @@ name|BOOLEAN
 name|PrematureEOF
 init|=
 name|FALSE
+decl_stmt|;
+name|UINT32
+name|Total
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -566,6 +571,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 while|while
 condition|(
 name|RActual
@@ -576,6 +582,12 @@ operator|(
 name|SourceByte
 operator|!=
 literal|'\n'
+operator|)
+operator|&&
+operator|(
+name|Total
+operator|<
+literal|256
 operator|)
 condition|)
 block|{
@@ -605,6 +617,29 @@ argument_list|,
 name|SourceFile
 argument_list|)
 expr_stmt|;
+name|Total
+operator|++
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|Total
+operator|>=
+literal|256
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|OutputFile
+argument_list|,
+literal|"\n[*** iASL: Long input line, an error occurred at column %u ***]"
+argument_list|,
+name|Enode
+operator|->
+name|Column
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 block|}
@@ -834,6 +869,25 @@ operator|!
 name|PrematureEOF
 condition|)
 block|{
+if|if
+condition|(
+name|Total
+operator|>=
+literal|256
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|OutputFile
+argument_list|,
+literal|"    %s"
+argument_list|,
+name|MainMessage
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|SourceColumn
 operator|=
 name|Enode
@@ -924,6 +978,7 @@ argument_list|,
 name|MainMessage
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 else|else
@@ -1790,7 +1845,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function

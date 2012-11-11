@@ -957,6 +957,18 @@ operator|&
 literal|1
 condition|)
 block|{
+comment|/* 						 * If \e[1m use defined bold 						 * color, else set intensity. 						 */
+if|if
+condition|(
+name|p
+index|[
+operator|-
+literal|2
+index|]
+operator|==
+literal|'['
+condition|)
+block|{
 if|#
 directive|if
 name|MSDOS_COMPILER
@@ -982,6 +994,12 @@ name|bo_bg_color
 expr_stmt|;
 endif|#
 directive|endif
+block|}
+else|else
+name|fg
+operator||=
+literal|8
+expr_stmt|;
 block|}
 elseif|else
 if|if

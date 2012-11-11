@@ -624,7 +624,7 @@ argument_list|(
 operator|&
 name|rtout
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|timevaladd
@@ -655,7 +655,7 @@ argument_list|(
 operator|&
 name|rtime
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|timevalsub
@@ -936,12 +936,7 @@ argument_list|(
 operator|&
 name|from_when
 argument_list|,
-operator|(
-expr|struct
-name|timezone
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|bytehostorder
