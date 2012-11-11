@@ -1269,7 +1269,7 @@ value|((db)<< (PAGE_SHIFT - DEV_BSHIFT))
 end_define
 
 begin_comment
-comment|/*  * Given the pointer x to the member m of the struct s, return  * a pointer to the containing structure.  */
+comment|/*  * Old spelling of __containerof().  */
 end_comment
 
 begin_define
