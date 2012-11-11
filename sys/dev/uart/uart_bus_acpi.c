@@ -180,12 +180,40 @@ block|}
 block|,
 comment|/* PNP0501 */
 block|{
+literal|0x0205d041
+block|,
+literal|"Multiport serial device (non-intelligent 16550)"
+block|}
+block|,
+comment|/* PNP0502 */
+block|{
+literal|0x1005d041
+block|,
+literal|"Generic IRDA-compatible device"
+block|}
+block|,
+comment|/* PNP0510 */
+block|{
+literal|0x1105d041
+block|,
+literal|"Generic IRDA-compatible device"
+block|}
+block|,
+comment|/* PNP0511 */
+block|{
 literal|0x04f0235c
 block|,
 literal|"Wacom Tablet PC Screen"
 block|}
 block|,
 comment|/* WACF004 */
+block|{
+literal|0xe502aa1a
+block|,
+literal|"Wacom Tablet at FuS Lifebook T"
+block|}
+block|,
+comment|/* FUJ02E5 */
 block|{
 literal|0
 block|}
