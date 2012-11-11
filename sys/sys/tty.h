@@ -745,6 +745,26 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|tty_wait_background
+parameter_list|(
+name|struct
+name|tty
+modifier|*
+name|tp
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|int
+name|sig
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|tty_timedwait
 parameter_list|(
 name|struct
