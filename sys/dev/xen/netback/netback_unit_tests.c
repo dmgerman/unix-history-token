@@ -76,7 +76,7 @@ name|XNB_ASSERT
 parameter_list|(
 name|cond
 parameter_list|)
-value|do (						\ 	int passed = (cond);						\ 	char *_buffer = (buffer);					\ 	size_t _buflen = (buflen);					\ 	if (! passed) {							\ 		strlcat(_buffer, __func__, _buflen);			\ 		strlcat(_buffer, ":" TOSTRING(__LINE__) 		\ 		  " Assertion Error: " #cond "\n", _buflen);		\ 	}								\ 	} while (0)
+value|do {						\ 	int passed = (cond);						\ 	char *_buffer = (buffer);					\ 	size_t _buflen = (buflen);					\ 	if (! passed) {							\ 		strlcat(_buffer, __func__, _buflen);			\ 		strlcat(_buffer, ":" TOSTRING(__LINE__) 		\ 		  " Assertion Error: " #cond "\n", _buflen);		\ 	}								\ 	} while (0)
 end_define
 
 begin_comment
