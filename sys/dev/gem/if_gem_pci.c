@@ -398,7 +398,6 @@ modifier|*
 name|gpd_desc
 decl_stmt|;
 block|}
-decl|const
 name|gem_pci_devlist
 index|[]
 init|=

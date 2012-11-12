@@ -344,7 +344,6 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|u_char
-specifier|const
 name|fxp_cb_config_template
 index|[]
 init|=
@@ -476,7 +475,6 @@ specifier|static
 specifier|const
 name|struct
 name|fxp_ident
-specifier|const
 name|fxp_ident_table
 index|[]
 init|=
@@ -14755,7 +14753,6 @@ name|u_short
 name|bundle_max_offset
 decl_stmt|;
 block|}
-decl|const
 name|ucode_table
 index|[]
 init|=

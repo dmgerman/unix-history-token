@@ -458,7 +458,6 @@ specifier|static
 specifier|const
 name|struct
 name|ata_chip_id
-specifier|const
 name|ids
 index|[]
 init|=
@@ -790,7 +789,6 @@ specifier|static
 specifier|const
 name|struct
 name|ata_chip_id
-specifier|const
 name|new_ids
 index|[]
 init|=

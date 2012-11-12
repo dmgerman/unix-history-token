@@ -306,7 +306,6 @@ specifier|static
 specifier|const
 name|struct
 name|xl_type
-specifier|const
 name|xl_devs
 index|[]
 init|=

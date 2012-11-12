@@ -613,7 +613,6 @@ modifier|*
 name|ah
 parameter_list|,
 specifier|const
-specifier|const
 name|struct
 name|ieee80211_channel
 modifier|*

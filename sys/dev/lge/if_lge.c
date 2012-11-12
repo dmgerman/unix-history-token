@@ -210,7 +210,6 @@ specifier|static
 specifier|const
 name|struct
 name|lge_type
-specifier|const
 name|lge_devs
 index|[]
 init|=

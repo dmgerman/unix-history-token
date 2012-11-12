@@ -300,7 +300,6 @@ specifier|static
 specifier|const
 name|struct
 name|dc_type
-specifier|const
 name|dc_devs
 index|[]
 init|=

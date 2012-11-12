@@ -297,7 +297,6 @@ modifier|*
 name|stge_name
 decl_stmt|;
 block|}
-decl|const
 name|stge_products
 index|[]
 init|=
