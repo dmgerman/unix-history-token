@@ -57,7 +57,7 @@ begin_define
 define|#
 directive|define
 name|USERBOOT_VERSION
-value|USERBOOT_VERSION_2
+value|USERBOOT_VERSION_3
 end_define
 
 begin_decl_stmt
@@ -207,6 +207,11 @@ operator|*
 literal|1024
 index|]
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|var
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -335,6 +340,39 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* optional */
+comment|/* 	 * Set custom environment variables 	 */
+name|i
+operator|=
+literal|0
+expr_stmt|;
+while|while
+condition|(
+literal|1
+condition|)
+block|{
+name|var
+operator|=
+name|CALLBACK
+argument_list|(
+name|getenv
+argument_list|,
+name|i
+operator|++
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|var
+operator|==
+name|NULL
+condition|)
+break|break;
+name|putenv
+argument_list|(
+name|var
+argument_list|)
+expr_stmt|;
+block|}
 name|archsw
 operator|.
 name|arch_autoload
