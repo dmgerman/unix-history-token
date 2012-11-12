@@ -1935,17 +1935,12 @@ operator|->
 name|val
 argument_list|)
 operator|&&
-name|atoi
-argument_list|(
+operator|*
 name|a_name
 operator|->
 name|val
-argument_list|)
-operator|>
-literal|0
 condition|)
 block|{
-comment|/* Assume uid */
 operator|(
 name|a_uid
 operator|=
