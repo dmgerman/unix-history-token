@@ -366,7 +366,6 @@ modifier|*
 name|ale_name
 decl_stmt|;
 block|}
-decl|const
 name|ale_devs
 index|[]
 init|=

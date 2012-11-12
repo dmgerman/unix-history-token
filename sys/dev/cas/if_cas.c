@@ -13489,7 +13489,6 @@ modifier|*
 name|cpd_desc
 decl_stmt|;
 block|}
-decl|const
 name|cas_pci_devlist
 index|[]
 init|=

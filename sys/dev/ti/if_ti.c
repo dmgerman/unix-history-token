@@ -314,7 +314,6 @@ specifier|static
 specifier|const
 name|struct
 name|ti_type
-specifier|const
 name|ti_devs
 index|[]
 init|=

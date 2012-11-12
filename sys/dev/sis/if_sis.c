@@ -378,7 +378,6 @@ specifier|static
 specifier|const
 name|struct
 name|sis_type
-specifier|const
 name|sis_devs
 index|[]
 init|=
