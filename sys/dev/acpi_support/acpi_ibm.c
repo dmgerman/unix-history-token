@@ -1279,6 +1279,8 @@ init|=
 block|{
 literal|"IBM0068"
 block|,
+literal|"LEN0068"
+block|,
 name|NULL
 block|}
 decl_stmt|;
