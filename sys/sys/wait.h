@@ -254,6 +254,28 @@ begin_comment
 comment|/* Poll only. Don't delete the proc entry. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|WEXITED
+value|16
+end_define
+
+begin_comment
+comment|/* Wait for exited processes. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WTRAPPED
+value|32
+end_define
+
+begin_comment
+comment|/* Wait for a process to hit a trap or 				   a breakpoint. */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -277,7 +299,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Tokens for special values of the "pid" parameter to wait4.  */
+comment|/*  * Tokens for special values of the "pid" parameter to wait4.  * Extended struct __wrusage to collect rusage for both the target  * process and its children within one wait6() call.  */
 end_comment
 
 begin_if
@@ -329,8 +351,17 @@ directive|include
 file|<sys/types.h>
 end_include
 
-begin_function_decl
+begin_macro
 name|__BEGIN_DECLS
+end_macro
+
+begin_struct_decl
+struct_decl|struct
+name|__siginfo
+struct_decl|;
+end_struct_decl
+
+begin_function_decl
 name|pid_t
 name|wait
 parameter_list|(
@@ -357,12 +388,48 @@ end_function_decl
 begin_if
 if|#
 directive|if
+name|__POSIX_VISIBLE
+operator|>=
+literal|200112
+end_if
+
+begin_function_decl
+name|int
+name|waitid
+parameter_list|(
+name|idtype_t
+parameter_list|,
+name|id_t
+parameter_list|,
+name|struct
+name|__siginfo
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
 name|__BSD_VISIBLE
 end_if
 
 begin_struct_decl
 struct_decl|struct
 name|rusage
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|__wrusage
 struct_decl|;
 end_struct_decl
 
@@ -395,6 +462,30 @@ name|int
 parameter_list|,
 name|struct
 name|rusage
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|pid_t
+name|wait6
+parameter_list|(
+name|idtype_t
+parameter_list|,
+name|id_t
+parameter_list|,
+name|int
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|struct
+name|__wrusage
+modifier|*
+parameter_list|,
+name|struct
+name|__siginfo
 modifier|*
 parameter_list|)
 function_decl|;

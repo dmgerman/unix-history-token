@@ -4798,11 +4798,6 @@ name|status
 parameter_list|,
 name|int
 name|options
-parameter_list|,
-name|struct
-name|rusage
-modifier|*
-name|rusage
 parameter_list|)
 function_decl|;
 end_function_decl

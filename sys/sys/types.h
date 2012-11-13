@@ -573,6 +573,115 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|_IDTYPE_T_DECLARED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+enum|enum
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BSD_VISIBLE
+argument_list|)
+name|idtype
+comment|/* pollutes XPG4.2 namespace */
+endif|#
+directive|endif
+block|{
+comment|/* 	 * These names were mostly lifted from Solaris source code and 	 * still use Solaris style naming to avoid breaking any 	 * OpenSolaris code which has been ported to FreeBSD.  There 	 * is no clear FreeBSD counterpart for all of the names, but 	 * some have a clear correspondence to FreeBSD entities. 	 */
+name|P_PID
+block|,
+comment|/* A process identifier.		*/
+name|P_PPID
+block|,
+comment|/* A parent process identifier.		*/
+name|P_PGID
+block|,
+comment|/* A process group identifier.		*/
+name|P_SID
+block|,
+comment|/* A session identifier.		*/
+name|P_CID
+block|,
+comment|/* A scheduling class identifier.	*/
+name|P_UID
+block|,
+comment|/* A user identifier.			*/
+name|P_GID
+block|,
+comment|/* A group identifier.			*/
+name|P_ALL
+block|,
+comment|/* All processes.			*/
+name|P_LWPID
+block|,
+comment|/* An LWP identifier.			*/
+name|P_TASKID
+block|,
+comment|/* A task identifier.			*/
+name|P_PROJID
+block|,
+comment|/* A project identifier.		*/
+name|P_POOLID
+block|,
+comment|/* A pool identifier.			*/
+name|P_JAILID
+block|,
+comment|/* A zone identifier.			*/
+name|P_CTID
+block|,
+comment|/* A (process) contract identifier.	*/
+name|P_CPUID
+block|,
+comment|/* CPU identifier.			*/
+name|P_PSETID
+comment|/* Processor set identifier		*/
+block|}
+name|idtype_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* The type of id_t we are using.	*/
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BSD_VISIBLE
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|P_ZONEID
+value|P_JAILID
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|_IDTYPE_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|_INO_T_DECLARED
 end_ifndef
 
