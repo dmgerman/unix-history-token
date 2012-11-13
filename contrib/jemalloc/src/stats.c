@@ -982,6 +982,11 @@ block|{
 name|unsigned
 name|nthreads
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|dss
+decl_stmt|;
 name|size_t
 name|page
 decl_stmt|,
@@ -1047,6 +1052,29 @@ argument_list|,
 literal|"assigned threads: %u\n"
 argument_list|,
 name|nthreads
+argument_list|)
+expr_stmt|;
+name|CTL_I_GET
+argument_list|(
+literal|"stats.arenas.0.dss"
+argument_list|,
+operator|&
+name|dss
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|)
+expr_stmt|;
+name|malloc_cprintf
+argument_list|(
+name|write_cb
+argument_list|,
+name|cbopaque
+argument_list|,
+literal|"dss allocation precedence: %s\n"
+argument_list|,
+name|dss
 argument_list|)
 expr_stmt|;
 name|CTL_I_GET
@@ -1746,6 +1774,10 @@ name|OPT_WRITE_SIZE_T
 argument_list|(
 argument|lg_chunk
 argument_list|)
+name|OPT_WRITE_CHAR_P
+argument_list|(
+argument|dss
+argument_list|)
 name|OPT_WRITE_SIZE_T
 argument_list|(
 argument|narenas
@@ -1869,7 +1901,7 @@ name|write_cb
 argument_list|,
 name|cbopaque
 argument_list|,
-literal|"Max arenas: %u\n"
+literal|"Arenas: %u\n"
 argument_list|,
 name|uv
 argument_list|)
@@ -2309,7 +2341,7 @@ name|cbopaque
 argument_list|,
 literal|"  %13"
 name|PRIu64
-literal|"%13zu%13zu\n"
+literal|" %12zu %12zu\n"
 argument_list|,
 name|chunks_total
 argument_list|,

@@ -1514,9 +1514,13 @@ operator|(
 name|tcache_t
 operator|*
 operator|)
-name|icalloc
+name|icallocx
 argument_list|(
 name|size
+argument_list|,
+name|false
+argument_list|,
+name|arena
 argument_list|)
 expr_stmt|;
 if|if
@@ -2007,9 +2011,11 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|idalloc
+name|idallocx
 argument_list|(
 name|tcache
+argument_list|,
+name|false
 argument_list|)
 expr_stmt|;
 block|}

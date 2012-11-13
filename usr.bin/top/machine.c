@@ -940,6 +940,8 @@ literal|"ivcsw"
 block|,
 literal|"jid"
 block|,
+literal|"pid"
+block|,
 name|NULL
 block|}
 decl_stmt|;

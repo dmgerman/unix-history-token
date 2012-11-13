@@ -317,6 +317,28 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc__
+end_ifdef
+
+begin_comment
+comment|/*  * This value is bogus just to make module compilable on powerpc  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PROF_ARTIFICIAL_FRAMES
+value|3
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_typedef
 typedef|typedef
 struct|struct

@@ -2882,7 +2882,7 @@ name|rdma_notify
 argument_list|(
 name|id
 argument_list|,
-name|RDMA_CM_EVENT_ESTABLISHED
+name|IB_EVENT_COMM_EST
 argument_list|)
 expr_stmt|;
 goto|goto

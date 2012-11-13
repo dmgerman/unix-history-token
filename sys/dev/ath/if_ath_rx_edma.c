@@ -401,6 +401,23 @@ directive|include
 file|<dev/ath/if_ath_rx_edma.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ATH_DEBUG_ALQ
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<dev/ath/if_ath_alq.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * some general macros   */
 end_comment
@@ -972,11 +989,11 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_RECV
 argument_list|,
 literal|"%s: called\n"
 argument_list|,
@@ -1275,6 +1292,45 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* ATH_DEBUG */
+ifdef|#
+directive|ifdef
+name|ATH_DEBUG_ALQ
+if|if
+condition|(
+name|if_ath_alq_checkdebug
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_alq
+argument_list|,
+name|ATH_ALQ_EDMA_RXSTATUS
+argument_list|)
+condition|)
+name|if_ath_alq_post
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_alq
+argument_list|,
+name|ATH_ALQ_EDMA_RXSTATUS
+argument_list|,
+name|sc
+operator|->
+name|sc_rx_statuslen
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|ds
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* ATH_DEBUG */
 if|if
 condition|(
 name|bf

@@ -1315,29 +1315,28 @@ name|maxusers
 operator|=
 literal|32
 expr_stmt|;
-comment|/* 		 * Clips maxusers to 384 on machines with<= 4GB RAM or 32bit. 		 * Scales it down 6x for large memory machines. 		 */
+ifdef|#
+directive|ifdef
+name|VM_MAX_AUTOTUNE_MAXUSERS
+if|if
+condition|(
+name|maxusers
+operator|>
+name|VM_MAX_AUTOTUNE_MAXUSERS
+condition|)
+name|maxusers
+operator|=
+name|VM_MAX_AUTOTUNE_MAXUSERS
+expr_stmt|;
+endif|#
+directive|endif
+comment|/*                  * Scales down the function in which maxusers grows once                  * we hit 384.                  */
 if|if
 condition|(
 name|maxusers
 operator|>
 literal|384
 condition|)
-block|{
-if|if
-condition|(
-sizeof|sizeof
-argument_list|(
-name|void
-operator|*
-argument_list|)
-operator|<=
-literal|4
-condition|)
-name|maxusers
-operator|=
-literal|384
-expr_stmt|;
-else|else
 name|maxusers
 operator|=
 literal|384
@@ -1349,10 +1348,9 @@ operator|-
 literal|384
 operator|)
 operator|/
-literal|6
+literal|8
 operator|)
 expr_stmt|;
-block|}
 block|}
 comment|/* 	 * The following can be overridden after boot via sysctl.  Note: 	 * unless overriden, these macros are ultimately based on maxusers. 	 */
 name|maxproc

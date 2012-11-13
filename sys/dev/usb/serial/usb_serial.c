@@ -1897,10 +1897,6 @@ name|ucom_cons_subunit
 operator|)
 condition|)
 block|{
-name|struct
-name|termios
-name|t
-decl_stmt|;
 name|DPRINTF
 argument_list|(
 literal|"unit %d subunit %d is console"
@@ -1918,38 +1914,12 @@ name|ucom_cons_softc
 operator|=
 name|sc
 expr_stmt|;
-name|memset
+name|tty_init_console
 argument_list|(
-operator|&
-name|t
+name|tp
 argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|t
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|t
-operator|.
-name|c_ispeed
-operator|=
 name|ucom_cons_baud
-expr_stmt|;
-name|t
-operator|.
-name|c_ospeed
-operator|=
-name|t
-operator|.
-name|c_ispeed
-expr_stmt|;
-name|t
-operator|.
-name|c_cflag
-operator|=
-name|CS8
+argument_list|)
 expr_stmt|;
 name|UCOM_MTX_LOCK
 argument_list|(
@@ -1992,7 +1962,9 @@ operator|->
 name|sc_tty
 argument_list|,
 operator|&
-name|t
+name|tp
+operator|->
+name|t_termios_init_in
 argument_list|)
 expr_stmt|;
 name|UCOM_MTX_UNLOCK
@@ -3409,8 +3381,17 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|tty_lock
+name|UCOM_MTX_ASSERT
 argument_list|(
+name|sc
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+literal|"tp=%p\n"
+argument_list|,
 name|tp
 argument_list|)
 expr_stmt|;
@@ -3434,11 +3415,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|tty_unlock
-argument_list|(
-name|tp
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
 name|pos
@@ -3530,11 +3506,6 @@ argument_list|(
 name|sc
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-name|tty_unlock
-argument_list|(
-name|tp
 argument_list|)
 expr_stmt|;
 block|}
@@ -5182,6 +5153,7 @@ operator|)
 condition|)
 block|{
 comment|/* XXX the TTY layer should call "open()" first! */
+comment|/* 		 * Not quite: Its ordering is partly backwards, but 		 * some parameters must be set early in ttydev_open(), 		 * possibly before calling ttydevsw_open(). 		 */
 name|error
 operator|=
 name|ucom_open
@@ -5193,11 +5165,9 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
 goto|goto
 name|done
 goto|;
-block|}
 name|opened
 operator|=
 literal|1
@@ -5228,6 +5198,7 @@ name|c_ospeed
 operator|)
 condition|)
 block|{
+comment|/* XXX c_ospeed == 0 is perfectly valid. */
 name|DPRINTF
 argument_list|(
 literal|"mismatch ispeed and ospeed\n"

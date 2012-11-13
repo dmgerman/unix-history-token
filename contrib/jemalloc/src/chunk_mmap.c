@@ -507,7 +507,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|bool
 name|pages_purge
 parameter_list|(
 name|void
@@ -518,6 +518,9 @@ name|size_t
 name|length
 parameter_list|)
 block|{
+name|bool
+name|unzeroed
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|_WIN32
@@ -532,6 +535,10 @@ argument_list|,
 name|PAGE_READWRITE
 argument_list|)
 expr_stmt|;
+name|unzeroed
+operator|=
+name|true
+expr_stmt|;
 else|#
 directive|else
 ifdef|#
@@ -541,6 +548,10 @@ define|#
 directive|define
 name|JEMALLOC_MADV_PURGE
 value|MADV_DONTNEED
+define|#
+directive|define
+name|JEMALLOC_MADV_ZEROS
+value|true
 elif|#
 directive|elif
 name|defined
@@ -551,6 +562,10 @@ define|#
 directive|define
 name|JEMALLOC_MADV_PURGE
 value|MADV_FREE
+define|#
+directive|define
+name|JEMALLOC_MADV_ZEROS
+value|false
 else|#
 directive|else
 error|#
@@ -558,6 +573,9 @@ directive|error
 literal|"No method defined for purging unused dirty pages."
 endif|#
 directive|endif
+name|int
+name|err
+init|=
 name|madvise
 argument_list|(
 name|addr
@@ -566,9 +584,32 @@ name|length
 argument_list|,
 name|JEMALLOC_MADV_PURGE
 argument_list|)
+decl_stmt|;
+name|unzeroed
+operator|=
+operator|(
+name|JEMALLOC_MADV_ZEROS
+operator|==
+name|false
+operator|||
+name|err
+operator|!=
+literal|0
+operator|)
 expr_stmt|;
+undef|#
+directive|undef
+name|JEMALLOC_MADV_PURGE
+undef|#
+directive|undef
+name|JEMALLOC_MADV_ZEROS
 endif|#
 directive|endif
+return|return
+operator|(
+name|unzeroed
+operator|)
+return|;
 block|}
 end_function
 

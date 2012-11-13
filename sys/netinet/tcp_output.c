@@ -609,7 +609,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Wrapper for the TCP established ouput helper hook.  */
+comment|/*  * Wrapper for the TCP established output helper hook.  */
 end_comment
 
 begin_function

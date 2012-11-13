@@ -401,6 +401,23 @@ directive|include
 file|<dev/ath/if_ath_tx_edma.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ATH_DEBUG_ALQ
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<dev/ath/if_ath_alq.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * some general macros  */
 end_comment
@@ -447,6 +464,163 @@ name|M_ATHDEV
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_function_decl
+specifier|static
+name|void
+name|ath_edma_tx_processq
+parameter_list|(
+name|struct
+name|ath_softc
+modifier|*
+name|sc
+parameter_list|,
+name|int
+name|dosched
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ATH_DEBUG_ALQ
+end_ifdef
+
+begin_function
+specifier|static
+name|void
+name|ath_edma_tx_alq_post
+parameter_list|(
+name|struct
+name|ath_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
+name|ath_buf
+modifier|*
+name|bf_first
+parameter_list|)
+block|{
+name|struct
+name|ath_buf
+modifier|*
+name|bf
+decl_stmt|;
+name|int
+name|i
+decl_stmt|,
+name|n
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|ds
+decl_stmt|;
+comment|/* XXX we should skip out early if debugging isn't enabled! */
+name|bf
+operator|=
+name|bf_first
+expr_stmt|;
+while|while
+condition|(
+name|bf
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* XXX assume nmaps = 4! */
+comment|/* XXX should ensure bf_nseg> 0! */
+if|if
+condition|(
+name|bf
+operator|->
+name|bf_nseg
+operator|==
+literal|0
+condition|)
+break|break;
+name|n
+operator|=
+operator|(
+operator|(
+name|bf
+operator|->
+name|bf_nseg
+operator|-
+literal|1
+operator|)
+operator|/
+literal|4
+operator|)
+operator|+
+literal|1
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+operator|,
+name|ds
+operator|=
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+name|bf
+operator|->
+name|bf_desc
+init|;
+name|i
+operator|<
+name|n
+condition|;
+name|i
+operator|++
+operator|,
+name|ds
+operator|+=
+name|sc
+operator|->
+name|sc_tx_desclen
+control|)
+block|{
+name|if_ath_alq_post
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_alq
+argument_list|,
+name|ATH_ALQ_EDMA_TXDESC
+argument_list|,
+literal|96
+argument_list|,
+name|ds
+argument_list|)
+expr_stmt|;
+block|}
+name|bf
+operator|=
+name|bf
+operator|->
+name|bf_next
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ATH_DEBUG_ALQ */
+end_comment
 
 begin_function
 specifier|static
@@ -551,6 +725,32 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* ATH_DEBUG */
+ifdef|#
+directive|ifdef
+name|ATH_DEBUG_ALQ
+if|if
+condition|(
+name|if_ath_alq_checkdebug
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_alq
+argument_list|,
+name|ATH_ALQ_EDMA_TXDESC
+argument_list|)
+condition|)
+name|ath_edma_tx_alq_post
+argument_list|(
+name|sc
+argument_list|,
+name|bf
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* ATH_DEBUG_ALQ */
 name|txq
 operator|->
 name|axq_fifo_depth
@@ -581,7 +781,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Re-initialise the DMA FIFO with the current contents of  * said TXQ.  *  * This should only be called as part of the chip reset path, as it  * assumes the FIFO is currently empty.  *  * TODO: verify that a cold/warm reset does clear the TX FIFO, so  * writing in a partially-filled FIFO will not cause double-entries  * to appear.  */
+comment|/*  * Re-initialise the DMA FIFO with the current contents of  * said TXQ.  *  * This should only be called as part of the chip reset path, as it  * assumes the FIFO is currently empty.  */
 end_comment
 
 begin_function
@@ -600,11 +800,11 @@ modifier|*
 name|txq
 parameter_list|)
 block|{
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_RESET
 argument_list|,
 literal|"%s: called: txq=%p, qnum=%d\n"
 argument_list|,
@@ -758,6 +958,31 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* ATH_DEBUG */
+ifdef|#
+directive|ifdef
+name|ATH_DEBUG_ALQ
+if|if
+condition|(
+name|if_ath_alq_checkdebug
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_alq
+argument_list|,
+name|ATH_ALQ_EDMA_TXDESC
+argument_list|)
+condition|)
+name|ath_edma_tx_alq_post
+argument_list|(
+name|sc
+argument_list|,
+name|bf
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* ATH_DEBUG_ALQ */
 name|ath_hal_puttxbuf
 argument_list|(
 name|ah
@@ -1341,11 +1566,11 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_RESET
 argument_list|,
 literal|"%s: called\n"
 argument_list|,
@@ -1361,9 +1586,23 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If reset type is noloss, the TX FIFO needs to be serviced 	 * and those frames need to be handled. 	 * 	 * Otherwise, just toss everything in each TX queue. 	 */
-comment|/* XXX dump out the TX completion FIFO contents */
-comment|/* XXX dump out the frames */
-comment|/* XXX for now, just drain */
+if|if
+condition|(
+name|reset_type
+operator|==
+name|ATH_RESET_NOLOSS
+condition|)
+block|{
+name|ath_edma_tx_processq
+argument_list|(
+name|sc
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 for|for
 control|(
 name|i
@@ -1401,6 +1640,9 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+comment|/* XXX dump out the TX completion FIFO contents */
+comment|/* XXX dump out the frames */
 name|IF_LOCK
 argument_list|(
 operator|&
@@ -1434,7 +1676,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Process the TX status queue.  */
+comment|/*  * TX completion tasklet.  */
 end_comment
 
 begin_function
@@ -1462,6 +1704,47 @@ operator|*
 operator|)
 name|arg
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|ATH_DEBUG_TX_PROC
+argument_list|,
+literal|"%s: called, npending=%d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|npending
+argument_list|)
+expr_stmt|;
+name|ath_edma_tx_processq
+argument_list|(
+name|sc
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Process the TX status queue.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|ath_edma_tx_processq
+parameter_list|(
+name|struct
+name|ath_softc
+modifier|*
+name|sc
+parameter_list|,
+name|int
+name|dosched
+parameter_list|)
+block|{
 name|struct
 name|ath_hal
 modifier|*
@@ -1513,19 +1796,6 @@ index|]
 decl_stmt|;
 endif|#
 directive|endif
-name|DPRINTF
-argument_list|(
-name|sc
-argument_list|,
-name|ATH_DEBUG_TX_PROC
-argument_list|,
-literal|"%s: called, npending=%d\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|npending
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|idx
@@ -1553,6 +1823,18 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ATH_DEBUG
+name|ath_hal_gettxrawtxdesc
+argument_list|(
+name|ah
+argument_list|,
+name|txstatus
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|status
 operator|=
 name|ath_hal_txprocdesc
@@ -1569,18 +1851,6 @@ operator|&
 name|ts
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ATH_DEBUG
-name|ath_hal_gettxrawtxdesc
-argument_list|(
-name|ah
-argument_list|,
-name|txstatus
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|ATH_TXSTATUS_UNLOCK
 argument_list|(
 name|sc
@@ -1648,6 +1918,44 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+ifdef|#
+directive|ifdef
+name|ATH_DEBUG_ALQ
+if|if
+condition|(
+name|if_ath_alq_checkdebug
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_alq
+argument_list|,
+name|ATH_ALQ_EDMA_TXSTATUS
+argument_list|)
+condition|)
+name|if_ath_alq_post
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_alq
+argument_list|,
+name|ATH_ALQ_EDMA_TXSTATUS
+argument_list|,
+name|sc
+operator|->
+name|sc_tx_statuslen
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|txstatus
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* ATH_DEBUG_ALQ */
 comment|/* 		 * At this point we have a valid status descriptor. 		 * The QID and descriptor ID (which currently isn't set) 		 * is part of the status. 		 * 		 * We then assume that the descriptor in question is the 		 * -head- of the given QID.  Eventually we should verify 		 * this by using the descriptor ID. 		 */
 comment|/* 		 * The beacon queue is not currently a "real" queue. 		 * Frames aren't pushed onto it and the lock isn't setup. 		 * So skip it for now; the beacon handling code will 		 * free and alloc more beacon buffers as appropriate. 		 */
 if|if
@@ -1747,7 +2055,7 @@ argument_list|(
 name|txq
 argument_list|)
 expr_stmt|;
-comment|/* 		 * First we need to make sure ts_rate is valid. 		 * 		 * Pre-EDMA chips pass the whole TX descriptor to 		 * the proctxdesc function which will then fill out 		 * ts_rate based on the ts_finaltsi (final TX index) 		 * in the TX descriptor.  However the TX completion 		 * FIFO doesn't have this information.  So here we 		 * do a separate HAL call to populate that information. 		 */
+comment|/* 		 * First we need to make sure ts_rate is valid. 		 * 		 * Pre-EDMA chips pass the whole TX descriptor to 		 * the proctxdesc function which will then fill out 		 * ts_rate based on the ts_finaltsi (final TX index) 		 * in the TX descriptor.  However the TX completion 		 * FIFO doesn't have this information.  So here we 		 * do a separate HAL call to populate that information. 		 * 		 * The same problem exists with ts_longretry. 		 * The FreeBSD HAL corrects ts_longretry in the HAL layer; 		 * the AR9380 HAL currently doesn't.  So until the HAL 		 * is imported and this can be added, we correct for it 		 * here. 		 */
 comment|/* XXX TODO */
 comment|/* XXX faked for now. Ew. */
 if|if
@@ -1776,6 +2084,68 @@ index|]
 operator|.
 name|ratecode
 expr_stmt|;
+switch|switch
+condition|(
+name|ts
+operator|.
+name|ts_finaltsi
+condition|)
+block|{
+case|case
+literal|3
+case|:
+name|ts
+operator|.
+name|ts_longretry
+operator|+=
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_rc
+index|[
+literal|2
+index|]
+operator|.
+name|tries
+expr_stmt|;
+case|case
+literal|2
+case|:
+name|ts
+operator|.
+name|ts_longretry
+operator|+=
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_rc
+index|[
+literal|1
+index|]
+operator|.
+name|tries
+expr_stmt|;
+case|case
+literal|1
+case|:
+name|ts
+operator|.
+name|ts_longretry
+operator|+=
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_rc
+index|[
+literal|0
+index|]
+operator|.
+name|tries
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -1911,6 +2281,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|dosched
+operator|&&
 name|txq
 operator|->
 name|axq_fifo_depth
@@ -1977,6 +2349,10 @@ expr_stmt|;
 block|}
 comment|/* Kick software scheduler */
 comment|/* 	 * XXX It's inefficient to do this if the FIFO queue is full, 	 * but there's no easy way right now to only populate 	 * the txq task for _one_ TXQ.  This should be fixed. 	 */
+if|if
+condition|(
+name|dosched
+condition|)
 name|taskqueue_enqueue
 argument_list|(
 name|sc

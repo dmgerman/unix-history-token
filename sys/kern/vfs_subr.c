@@ -13944,11 +13944,6 @@ argument_list|)
 expr_stmt|;
 name|MNT_KERN_FLAG
 argument_list|(
-name|MNTK_MPSAFE
-argument_list|)
-expr_stmt|;
-name|MNT_KERN_FLAG
-argument_list|(
 name|MNTK_LOOKUP_SHARED
 argument_list|)
 expr_stmt|;

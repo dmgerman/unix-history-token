@@ -5513,12 +5513,6 @@ name|vfsp
 operator|->
 name|mnt_kern_flag
 operator||=
-name|MNTK_MPSAFE
-expr_stmt|;
-name|vfsp
-operator|->
-name|mnt_kern_flag
-operator||=
 name|MNTK_LOOKUP_SHARED
 expr_stmt|;
 name|vfsp

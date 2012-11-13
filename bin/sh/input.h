@@ -54,6 +54,12 @@ end_comment
 
 begin_struct_decl
 struct_decl|struct
+name|alias
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|parsefile
 struct_decl|;
 end_struct_decl
@@ -116,7 +122,8 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
-name|void
+name|struct
+name|alias
 modifier|*
 parameter_list|)
 function_decl|;

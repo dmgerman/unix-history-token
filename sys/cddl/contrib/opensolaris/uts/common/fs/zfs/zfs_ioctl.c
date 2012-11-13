@@ -14113,6 +14113,14 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|zvol_remove_minor
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
 block|}
 name|err
 operator|=

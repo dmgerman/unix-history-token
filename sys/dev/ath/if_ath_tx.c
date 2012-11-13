@@ -333,6 +333,23 @@ directive|include
 file|<dev/ath/if_ath_tx_ht.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ATH_DEBUG_ALQ
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<dev/ath/if_ath_alq.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * How many retries to perform in software  */
 end_comment

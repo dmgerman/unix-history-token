@@ -3621,6 +3621,15 @@ decl_stmt|;
 name|int
 name|ath_hal_show_bb_panic
 decl_stmt|;
+name|int
+name|ath_hal_ant_ctrl_comm2g_switch_enable
+decl_stmt|;
+name|int
+name|ath_hal_ext_atten_margin_cfg
+decl_stmt|;
+name|int
+name|ath_hal_war70c
+decl_stmt|;
 block|}
 name|HAL_OPS_CONFIG
 typedef|;

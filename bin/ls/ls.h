@@ -141,6 +141,17 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
+name|f_samesort
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* sort time and name in same direction */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|f_sectime
 decl_stmt|;
 end_decl_stmt
@@ -191,6 +202,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* use time of last mode change */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|f_thousands
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* show file sizes with thousands separators */
 end_comment
 
 begin_decl_stmt

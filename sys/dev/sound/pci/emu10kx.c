@@ -19202,7 +19202,7 @@ name|output_base
 operator|=
 literal|0x20
 expr_stmt|;
-comment|/* 		 * XXX 5.1 Analog outputs are inside efxc address space! 		 * They use ouput+0x11/+0x12 (=efxc+1/+2). 		 * Don't use this efx registers for recording on SB Live! 5.1! 		 */
+comment|/* 		 * XXX 5.1 Analog outputs are inside efxc address space! 		 * They use output+0x11/+0x12 (=efxc+1/+2). 		 * Don't use this efx registers for recording on SB Live! 5.1! 		 */
 name|sc
 operator|->
 name|efxc_base

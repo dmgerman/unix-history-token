@@ -3077,6 +3077,37 @@ name|buf
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|f_thousands
+condition|)
+block|{
+comment|/* with commas */
+comment|/* This format assignment needed to work round gcc bug. */
+specifier|const
+name|char
+modifier|*
+name|format
+init|=
+literal|"%*j'd "
+decl_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+name|format
+argument_list|,
+operator|(
+name|u_int
+operator|)
+name|width
+argument_list|,
+name|bytes
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 operator|(
 name|void

@@ -27754,7 +27754,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 	     * Logging Error messages in the excess temperature, 	     * Bias current, laser ouput for three cycle 	     */
+comment|/* 	     * Logging Error messages in the excess temperature, 	     * Bias current, laser output for three cycle 	     */
 name|__hal_updt_stats_xpak
 argument_list|(
 name|hldev

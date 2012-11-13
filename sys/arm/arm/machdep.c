@@ -5708,6 +5708,10 @@ expr_stmt|;
 name|pcpu0_init
 argument_list|()
 expr_stmt|;
+comment|/* Do basic tuning, hz etc */
+name|init_param1
+argument_list|()
+expr_stmt|;
 comment|/* Calculate number of L2 tables needed for mapping vm_page_array */
 name|l2size
 operator|=
@@ -5750,10 +5754,6 @@ operator|&
 operator|~
 literal|3
 expr_stmt|;
-define|#
-directive|define
-name|KERNEL_TEXT_BASE
-value|(KERNBASE)
 name|freemempos
 operator|=
 operator|(
@@ -5775,7 +5775,7 @@ parameter_list|,
 name|np
 parameter_list|)
 define|\
-value|alloc_pages((var).pv_va, (np));         \ 	(var).pv_pa = (var).pv_va + (KERNPHYSADDR - KERNVIRTADDR);
+value|alloc_pages((var).pv_va, (np));					\ 	(var).pv_pa = (var).pv_va + (KERNPHYSADDR - KERNVIRTADDR);
 define|#
 directive|define
 name|alloc_pages
@@ -5785,7 +5785,7 @@ parameter_list|,
 name|np
 parameter_list|)
 define|\
-value|(var) = freemempos;		\ 	freemempos += (np * PAGE_SIZE);		\ 	memset((char *)(var), 0, ((np) * PAGE_SIZE));
+value|(var) = freemempos;						\ 	freemempos += (np * PAGE_SIZE);					\ 	memset((char *)(var), 0, ((np) * PAGE_SIZE));
 while|while
 condition|(
 operator|(
@@ -5942,48 +5942,37 @@ name|valloc_pages
 argument_list|(
 name|irqstack
 argument_list|,
-operator|(
 name|IRQ_STACK_SIZE
 operator|*
 name|MAXCPU
-operator|)
 argument_list|)
 expr_stmt|;
 name|valloc_pages
 argument_list|(
 name|abtstack
 argument_list|,
-operator|(
 name|ABT_STACK_SIZE
 operator|*
 name|MAXCPU
-operator|)
 argument_list|)
 expr_stmt|;
 name|valloc_pages
 argument_list|(
 name|undstack
 argument_list|,
-operator|(
 name|UND_STACK_SIZE
 operator|*
 name|MAXCPU
-operator|)
 argument_list|)
 expr_stmt|;
 name|valloc_pages
 argument_list|(
 name|kernelstack
 argument_list|,
-operator|(
 name|KSTACK_PAGES
 operator|*
 name|MAXCPU
-operator|)
 argument_list|)
-expr_stmt|;
-name|init_param1
-argument_list|()
 expr_stmt|;
 name|valloc_pages
 argument_list|(
@@ -6470,7 +6459,6 @@ argument_list|,
 name|availmem_regions_sz
 argument_list|)
 expr_stmt|;
-comment|/* Do basic tuning, hz etc */
 name|init_param2
 argument_list|(
 name|physmem
