@@ -2753,7 +2753,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|ATH_DEBUG_ALQ
+name|ATH_DEBUG
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -2777,6 +2777,11 @@ argument_list|,
 literal|"control debugging printfs"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|ATH_DEBUG_ALQ
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
