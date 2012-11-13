@@ -1308,7 +1308,7 @@ goto|goto
 name|RetryFault
 goto|;
 block|}
-name|vm_pageq_remove
+name|vm_page_remque
 argument_list|(
 name|fs
 operator|.
