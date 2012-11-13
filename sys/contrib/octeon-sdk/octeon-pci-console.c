@@ -181,6 +181,12 @@ name|defined
 argument_list|(
 name|__linux__
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|CVMX_BUILD_FOR_LINUX_KERNEL
+argument_list|)
 end_if
 
 begin_decl_stmt
@@ -338,6 +344,7 @@ operator|)
 end_if
 
 begin_function
+specifier|static
 name|int
 name|octeon_pci_console_buffer_free_bytes
 parameter_list|(
@@ -388,6 +395,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|octeon_pci_console_buffer_avail_bytes
 parameter_list|(
@@ -1317,6 +1325,11 @@ name|CONFIG_SYS_PCI_CONSOLE
 argument_list|)
 operator|)
 operator|)
+operator|||
+name|defined
+argument_list|(
+name|CVMX_BUILD_FOR_LINUX_KERNEL
+argument_list|)
 end_if
 
 begin_function
