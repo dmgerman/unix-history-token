@@ -3581,6 +3581,33 @@ argument_list|,
 name|UQ_MATCH_VENDOR_ONLY
 argument_list|)
 block|,
+comment|/* Non-standard USB AUDIO devices */
+name|USB_QUIRK
+argument_list|(
+name|MAUDIO
+argument_list|,
+name|FASTTRACKULTRA
+argument_list|,
+literal|0x0000
+argument_list|,
+literal|0xffff
+argument_list|,
+name|UQ_AU_VENDOR_CLASS
+argument_list|)
+block|,
+name|USB_QUIRK
+argument_list|(
+name|MAUDIO
+argument_list|,
+name|FASTTRACKULTRA8R
+argument_list|,
+literal|0x0000
+argument_list|,
+literal|0xffff
+argument_list|,
+name|UQ_AU_VENDOR_CLASS
+argument_list|)
+block|,
 comment|/* 	 * Quirks for manufacturers which USB devices does not respond 	 * after issuing non-supported commands: 	 */
 name|USB_QUIRK
 argument_list|(
