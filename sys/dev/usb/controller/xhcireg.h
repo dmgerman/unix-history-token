@@ -67,6 +67,28 @@ begin_comment
 comment|/* RW frame length adjust */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PCI_XHCI_INTEL_XUSB2PR
+value|0xD0
+end_define
+
+begin_comment
+comment|/* Intel USB2 Port Routing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_XHCI_INTEL_USB3_PSSEN
+value|0xD8
+end_define
+
+begin_comment
+comment|/* Intel USB3 Port SuperSpeed Enable */
+end_comment
+
 begin_comment
 comment|/* XHCI capability registers */
 end_comment
