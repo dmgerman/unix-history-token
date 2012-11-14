@@ -2668,7 +2668,7 @@ name|cpufunc_faultaddress
 block|,
 comment|/* Faultaddress         */
 comment|/* TLB functions */
-name|arm11_tlb_flushID
+name|armv7_tlb_flushID
 block|,
 comment|/* tlb_flushID          */
 name|armv7_tlb_flushID_SE
