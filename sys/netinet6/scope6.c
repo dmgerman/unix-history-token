@@ -431,9 +431,6 @@ return|;
 block|}
 comment|/* 	 * XXX: We need more consistency checks of the relationship among 	 * scopes (e.g. an organization should be larger than a site). 	 */
 comment|/* 	 * TODO(XXX): after setting, we should reflect the changes to 	 * interface addresses, routing table entries, PCB entries... 	 */
-name|SCOPE6_LOCK
-argument_list|()
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -496,9 +493,6 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|SCOPE6_UNLOCK
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 name|EINVAL
@@ -527,9 +521,6 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|SCOPE6_UNLOCK
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 name|EINVAL
@@ -553,9 +544,6 @@ index|]
 expr_stmt|;
 block|}
 block|}
-name|SCOPE6_UNLOCK
-argument_list|()
-expr_stmt|;
 name|IF_AFDATA_UNLOCK
 argument_list|(
 name|ifp
@@ -619,17 +607,11 @@ name|EINVAL
 operator|)
 return|;
 block|}
-name|SCOPE6_LOCK
-argument_list|()
-expr_stmt|;
 operator|*
 name|idlist
 operator|=
 operator|*
 name|sid
-expr_stmt|;
-name|SCOPE6_UNLOCK
-argument_list|()
 expr_stmt|;
 name|IF_AFDATA_UNLOCK
 argument_list|(
@@ -1395,9 +1377,6 @@ argument_list|(
 name|in6
 argument_list|)
 expr_stmt|;
-name|SCOPE6_LOCK
-argument_list|()
-expr_stmt|;
 switch|switch
 condition|(
 name|scope
@@ -1464,9 +1443,6 @@ expr_stmt|;
 comment|/* XXX: treat as global. */
 break|break;
 block|}
-name|SCOPE6_UNLOCK
-argument_list|()
-expr_stmt|;
 name|IF_AFDATA_UNLOCK
 argument_list|(
 name|ifp
