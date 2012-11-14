@@ -496,10 +496,10 @@ end_ifdef
 
 begin_decl_stmt
 specifier|static
-name|bool
+name|int
 name|Debug
 init|=
-name|FALSE
+literal|0
 decl_stmt|;
 end_decl_stmt
 
