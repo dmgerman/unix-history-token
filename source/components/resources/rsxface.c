@@ -1307,15 +1307,9 @@ block|}
 comment|/* Get the next resource descriptor */
 name|Resource
 operator|=
-name|ACPI_ADD_PTR
+name|ACPI_NEXT_RESOURCE
 argument_list|(
-name|ACPI_RESOURCE
-argument_list|,
 name|Resource
-argument_list|,
-name|Resource
-operator|->
-name|Length
 argument_list|)
 expr_stmt|;
 block|}

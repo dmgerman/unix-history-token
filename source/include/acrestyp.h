@@ -1984,6 +1984,10 @@ parameter_list|)
 value|(UINT32) (ACPI_RS_SIZE_NO_DATA + sizeof (Type))
 end_define
 
+begin_comment
+comment|/* Macro for walking resource templates with multiple descriptors */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1991,7 +1995,8 @@ name|ACPI_NEXT_RESOURCE
 parameter_list|(
 name|Res
 parameter_list|)
-value|(ACPI_RESOURCE *)((UINT8 *) Res + Res->Length)
+define|\
+value|ACPI_ADD_PTR (ACPI_RESOURCE, (Res), (Res)->Length)
 end_define
 
 begin_typedef

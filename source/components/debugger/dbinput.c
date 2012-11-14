@@ -161,6 +161,8 @@ name|CMD_DEBUG
 block|,
 name|CMD_DISASSEMBLE
 block|,
+name|CMD_DISASM
+block|,
 name|CMD_DUMP
 block|,
 name|CMD_ENABLEACPI
@@ -349,6 +351,12 @@ block|}
 block|,
 block|{
 literal|"DISASSEMBLE"
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"DISASM"
 block|,
 literal|1
 block|}
@@ -2371,6 +2379,9 @@ expr_stmt|;
 break|break;
 case|case
 name|CMD_DISASSEMBLE
+case|:
+case|case
+name|CMD_DISASM
 case|:
 operator|(
 name|void

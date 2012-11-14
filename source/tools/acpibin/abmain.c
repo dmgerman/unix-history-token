@@ -75,7 +75,7 @@ name|ACPI_OPTION
 argument_list|(
 literal|"-c<File1><File2>"
 argument_list|,
-literal|"Compare two AML files"
+literal|"Compare two binary AML files"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
@@ -89,7 +89,7 @@ name|ACPI_OPTION
 argument_list|(
 literal|"-e<Sig><In><Out>"
 argument_list|,
-literal|"Extract binary AML table from AcpiDmp file"
+literal|"Extract binary AML table from AcpiDump file"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION

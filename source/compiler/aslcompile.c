@@ -46,6 +46,19 @@ argument_list|)
 end_macro
 
 begin_comment
+comment|/*  * Main parser entry  * External is here in case the parser emits the same external in the  * generated header. (Newer versions of Bison)  */
+end_comment
+
+begin_function_decl
+name|int
+name|AslCompilerparse
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Local prototypes */
 end_comment
 
@@ -488,6 +501,8 @@ literal|1
 argument_list|,
 name|Handle
 argument_list|)
+operator|==
+literal|1
 condition|)
 block|{
 comment|/* Scan until comment close is found */
@@ -585,6 +600,8 @@ literal|1
 argument_list|,
 name|Handle
 argument_list|)
+operator|==
+literal|1
 condition|)
 block|{
 name|Status
@@ -673,6 +690,8 @@ literal|1
 argument_list|,
 name|Handle
 argument_list|)
+operator|==
+literal|1
 condition|)
 block|{
 comment|/* Ignore comment fields (allow non-ascii within) */

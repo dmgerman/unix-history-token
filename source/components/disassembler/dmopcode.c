@@ -1465,6 +1465,8 @@ name|Status
 operator|=
 name|AcpiDmIsResourceTemplate
 argument_list|(
+name|WalkState
+argument_list|,
 name|Op
 argument_list|)
 expr_stmt|;

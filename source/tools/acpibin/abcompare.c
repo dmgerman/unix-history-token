@@ -39,13 +39,6 @@ name|Header2
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|struct
-name|stat
-name|Gbl_StatBuf
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -118,6 +111,22 @@ parameter_list|(
 name|ACPI_TABLE_HEADER
 modifier|*
 name|Header
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|AbPrintHeadersInfo
+parameter_list|(
+name|ACPI_TABLE_HEADER
+modifier|*
+name|Header
+parameter_list|,
+name|ACPI_TABLE_HEADER
+modifier|*
+name|Header2
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -571,6 +580,146 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|AbPrintHeadersInfo
+parameter_list|(
+name|ACPI_TABLE_HEADER
+modifier|*
+name|Header
+parameter_list|,
+name|ACPI_TABLE_HEADER
+modifier|*
+name|Header2
+parameter_list|)
+block|{
+comment|/* Display header information for both headers */
+name|printf
+argument_list|(
+literal|"Signature          %8.4s : %4.4s\n"
+argument_list|,
+name|Header
+operator|->
+name|Signature
+argument_list|,
+name|Header2
+operator|->
+name|Signature
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Length             %8.8X : %8.8X\n"
+argument_list|,
+name|Header
+operator|->
+name|Length
+argument_list|,
+name|Header2
+operator|->
+name|Length
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Revision           %8.2X : %2.2X\n"
+argument_list|,
+name|Header
+operator|->
+name|Revision
+argument_list|,
+name|Header2
+operator|->
+name|Revision
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Checksum           %8.2X : %2.2X\n"
+argument_list|,
+name|Header
+operator|->
+name|Checksum
+argument_list|,
+name|Header2
+operator|->
+name|Checksum
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"OEM ID             %8.6s : %6.6s\n"
+argument_list|,
+name|Header
+operator|->
+name|OemId
+argument_list|,
+name|Header2
+operator|->
+name|OemId
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"OEM Table ID       %8.8s : %8.8s\n"
+argument_list|,
+name|Header
+operator|->
+name|OemTableId
+argument_list|,
+name|Header2
+operator|->
+name|OemTableId
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"OEM Revision       %8.8X : %8.8X\n"
+argument_list|,
+name|Header
+operator|->
+name|OemRevision
+argument_list|,
+name|Header2
+operator|->
+name|OemRevision
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"ASL Compiler ID    %8.4s : %4.4s\n"
+argument_list|,
+name|Header
+operator|->
+name|AslCompilerId
+argument_list|,
+name|Header2
+operator|->
+name|AslCompilerId
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Compiler Revision  %8.8X : %8.8X\n"
+argument_list|,
+name|Header
+operator|->
+name|AslCompilerRevision
+argument_list|,
+name|Header2
+operator|->
+name|AslCompilerRevision
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/******************************************************************************  *  * FUNCTION:    AbDisplayHeader  *  * DESCRIPTION: Display an ACPI table header  *  ******************************************************************************/
 end_comment
@@ -585,7 +734,7 @@ name|File1Path
 parameter_list|)
 block|{
 name|UINT32
-name|Actual1
+name|Actual
 decl_stmt|;
 name|File1
 operator|=
@@ -611,7 +760,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|Actual1
+name|Actual
 operator|=
 name|fread
 argument_list|(
@@ -630,8 +779,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|Actual1
-operator|<
+name|Actual
+operator|!=
 sizeof|sizeof
 argument_list|(
 name|ACPI_TABLE_HEADER
@@ -682,7 +831,7 @@ name|File1Path
 parameter_list|)
 block|{
 name|UINT32
-name|Actual1
+name|Actual
 decl_stmt|;
 name|ACPI_TABLE_HEADER
 modifier|*
@@ -715,7 +864,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|Actual1
+name|Actual
 operator|=
 name|fread
 argument_list|(
@@ -734,7 +883,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|Actual1
+name|Actual
 operator|<
 sizeof|sizeof
 argument_list|(
@@ -809,7 +958,7 @@ argument_list|,
 name|SEEK_SET
 argument_list|)
 expr_stmt|;
-name|Actual1
+name|Actual
 operator|=
 name|fread
 argument_list|(
@@ -826,8 +975,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|Actual1
-operator|<
+name|Actual
+operator|!=
 name|Header1
 operator|.
 name|Length
@@ -835,7 +984,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"could not read table\n"
+literal|"could not read table, length %u\n"
+argument_list|,
+name|Header1
+operator|.
+name|Length
 argument_list|)
 expr_stmt|;
 return|return;
@@ -925,7 +1078,7 @@ name|Checksum
 operator|=
 name|Checksum
 expr_stmt|;
-name|Actual1
+name|Actual
 operator|=
 name|fwrite
 argument_list|(
@@ -944,8 +1097,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|Actual1
-operator|<
+name|Actual
+operator|!=
 sizeof|sizeof
 argument_list|(
 name|ACPI_TABLE_HEADER
@@ -1089,7 +1242,7 @@ expr_stmt|;
 if|if
 condition|(
 name|Actual1
-operator|<
+operator|!=
 sizeof|sizeof
 argument_list|(
 name|ACPI_TABLE_HEADER
@@ -1130,7 +1283,7 @@ expr_stmt|;
 if|if
 condition|(
 name|Actual2
-operator|<
+operator|!=
 sizeof|sizeof
 argument_list|(
 name|ACPI_TABLE_HEADER
@@ -1224,14 +1377,11 @@ name|Gbl_TerseMode
 condition|)
 block|{
 comment|/* Display header information */
-name|AbPrintHeaderInfo
+name|AbPrintHeadersInfo
 argument_list|(
 operator|&
 name|Header1
-argument_list|)
-expr_stmt|;
-name|AbPrintHeaderInfo
-argument_list|(
+argument_list|,
 operator|&
 name|Header2
 argument_list|)
@@ -1302,9 +1452,17 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|Actual1
+operator|==
+literal|1
+operator|)
 operator|&&
+operator|(
 name|Actual2
+operator|==
+literal|1
+operator|)
 condition|)
 block|{
 if|if
@@ -1460,7 +1618,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AsGetFile  *  * DESCRIPTION: Open a file and read it entirely into a new buffer  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AbGetFile  *  * DESCRIPTION: Open a file and read it entirely into a new buffer  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1478,8 +1636,9 @@ modifier|*
 name|FileSize
 parameter_list|)
 block|{
-name|int
-name|FileHandle
+name|FILE
+modifier|*
+name|File
 decl_stmt|;
 name|UINT32
 name|Size
@@ -1490,27 +1649,34 @@ name|Buffer
 init|=
 name|NULL
 decl_stmt|;
+name|int
+name|Seek1
+decl_stmt|;
+name|int
+name|Seek2
+decl_stmt|;
+name|size_t
+name|Actual
+decl_stmt|;
 comment|/* Binary mode does not alter CR/LF pairs */
-name|FileHandle
+name|File
 operator|=
-name|open
+name|fopen
 argument_list|(
 name|Filename
 argument_list|,
-name|O_BINARY
-operator||
-name|O_RDONLY
+literal|"rb"
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|!
-name|FileHandle
+name|File
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Could not open %s\n"
+literal|"Could not open file %s\n"
 argument_list|,
 name|Filename
 argument_list|)
@@ -1522,20 +1688,52 @@ operator|)
 return|;
 block|}
 comment|/* Need file size to allocate a buffer */
+name|Seek1
+operator|=
+name|fseek
+argument_list|(
+name|File
+argument_list|,
+literal|0L
+argument_list|,
+name|SEEK_END
+argument_list|)
+expr_stmt|;
+name|Size
+operator|=
+name|ftell
+argument_list|(
+name|File
+argument_list|)
+expr_stmt|;
+name|Seek2
+operator|=
+name|fseek
+argument_list|(
+name|File
+argument_list|,
+literal|0L
+argument_list|,
+name|SEEK_SET
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|fstat
-argument_list|(
-name|FileHandle
-argument_list|,
-operator|&
-name|Gbl_StatBuf
-argument_list|)
+name|Seek1
+operator|||
+name|Seek2
+operator|||
+operator|(
+name|Size
+operator|==
+operator|-
+literal|1
+operator|)
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Could not get file status for %s\n"
+literal|"Could not get file size (seek) for %s\n"
 argument_list|,
 name|Filename
 argument_list|)
@@ -1545,12 +1743,6 @@ name|ErrorExit
 goto|;
 block|}
 comment|/* Allocate a buffer for the entire file */
-name|Size
-operator|=
-name|Gbl_StatBuf
-operator|.
-name|st_size
-expr_stmt|;
 name|Buffer
 operator|=
 name|calloc
@@ -1578,23 +1770,24 @@ name|ErrorExit
 goto|;
 block|}
 comment|/* Read the entire file */
-name|Size
+name|Actual
 operator|=
-name|read
+name|fread
 argument_list|(
-name|FileHandle
-argument_list|,
 name|Buffer
 argument_list|,
+literal|1
+argument_list|,
 name|Size
+argument_list|,
+name|File
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|Actual
+operator|!=
 name|Size
-operator|==
-operator|-
-literal|1
 condition|)
 block|{
 name|printf
@@ -1624,9 +1817,9 @@ name|Size
 expr_stmt|;
 name|ErrorExit
 label|:
-name|close
+name|fclose
 argument_list|(
-name|FileHandle
+name|File
 argument_list|)
 expr_stmt|;
 return|return
@@ -1704,7 +1897,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Could not open %s\n"
+literal|"Could not open file %s\n"
 argument_list|,
 name|File2Path
 argument_list|)
@@ -1747,7 +1940,7 @@ name|ACPI_DB_REDIRECTABLE_OUTPUT
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%4.4s\n"
+literal|"%4.4s @ 0x%8.8X\n"
 argument_list|,
 operator|(
 operator|(
@@ -1758,6 +1951,8 @@ name|FileBuffer
 operator|)
 operator|->
 name|Signature
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|AcpiDbgLevel
@@ -1788,7 +1983,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AbExtractAmlFile  *  * DESCRIPTION: Extract a binary AML file from a text file (as produced by the  *              DumpAmlFile procedure or the "acpidmp" table utility.  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AbExtractAmlFile  *  * DESCRIPTION: Extract a binary AML file from a text file (as produced by the  *              DumpAmlFile procedure or the "acpidump" table utility.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1852,7 +2047,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Could not open %s\n"
+literal|"Could not open file %s\n"
 argument_list|,
 name|File1Path
 argument_list|)
@@ -1881,7 +2076,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Could not open %s\n"
+literal|"Could not open file %s\n"
 argument_list|,
 name|File2Path
 argument_list|)
@@ -2023,7 +2218,7 @@ literal|1
 argument_list|,
 name|FileOutHandle
 argument_list|)
-operator|<
+operator|!=
 literal|1
 condition|)
 block|{

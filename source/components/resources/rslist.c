@@ -507,6 +507,8 @@ name|Status
 operator|=
 name|AcpiUtValidateResource
 argument_list|(
+name|NULL
+argument_list|,
 name|ACPI_CAST_PTR
 argument_list|(
 name|AML_RESOURCE

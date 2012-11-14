@@ -825,7 +825,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Could not open %s\n"
+literal|"Could not open file %s\n"
 argument_list|,
 name|InputPathname
 argument_list|)
@@ -1153,7 +1153,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Could not open %s\n"
+literal|"Could not open file %s\n"
 argument_list|,
 name|InputPathname
 argument_list|)
@@ -1390,7 +1390,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Could not open %s\n"
+literal|"Could not open file %s\n"
 argument_list|,
 name|Filename
 argument_list|)
@@ -1505,7 +1505,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Write error on %s\n"
+literal|"Error when writing file %s\n"
 argument_list|,
 name|Filename
 argument_list|)
@@ -1674,7 +1674,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Could not open %s\n"
+literal|"Could not open file %s\n"
 argument_list|,
 name|InputPathname
 argument_list|)
