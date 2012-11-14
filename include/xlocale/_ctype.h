@@ -166,10 +166,16 @@ end_ifndef
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
 name|__GNUC__
+argument_list|)
 operator|&&
 operator|!
+name|defined
+argument_list|(
 name|__GNUC_STDC_INLINE__
+argument_list|)
 end_if
 
 begin_comment
