@@ -1603,7 +1603,7 @@ argument_list|,
 name|gettext
 argument_list|(
 literal|"\nThe feature@ properties must be "
-literal|"appended with a feature name.\nSee zpool-features(5).\n"
+literal|"appended with a feature name.\nSee zpool-features(7).\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -18256,7 +18256,7 @@ argument_list|(
 literal|"action: Enable all features using "
 literal|"'zpool upgrade'. Once this is done,\n\tthe pool may no "
 literal|"longer be accessible by software that does not support\n\t"
-literal|"the features. See zpool-features(5) for details.\n"
+literal|"the features. See zpool-features(7) for details.\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -20297,7 +20297,7 @@ literal|"Once a\nfeature is enabled the "
 literal|"pool may become incompatible with "
 literal|"software\nthat does not support "
 literal|"the feature. See "
-literal|"zpool-features(5) for "
+literal|"zpool-features(7) for "
 literal|"details.\n\n"
 argument_list|)
 argument_list|)
