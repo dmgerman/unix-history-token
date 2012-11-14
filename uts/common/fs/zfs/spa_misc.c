@@ -300,7 +300,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Expiration time in units of zfs_txg_synctime_ms. This value has two  * meanings. First it is used to determine when the spa_deadman logic  * should fire. By default the spa_deadman will fire if spa_sync has  * not completed in 1000 * zfs_txg_synctime_ms (i.e. 1000 seconds).  * Secondly, the value determines if an I/O is considered "hung".  * Any I/O that has not completed in zfs_deadman_synctime is considered  * "hung" resulting in a system panic.  * 1000 zfs_txg_synctime_ms (i.e. 1000 seconds).  */
+comment|/*  * Expiration time in units of zfs_txg_synctime_ms. This value has two  * meanings. First it is used to determine when the spa_deadman logic  * should fire. By default the spa_deadman will fire if spa_sync has  * not completed in 1000 * zfs_txg_synctime_ms (i.e. 1000 seconds).  * Secondly, the value determines if an I/O is considered "hung".  * Any I/O that has not completed in zfs_deadman_synctime is considered  * "hung" resulting in a system panic.  */
 end_comment
 
 begin_decl_stmt

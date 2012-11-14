@@ -2054,7 +2054,7 @@ argument_list|(
 name|zio
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Now that the datasets have been completely synced, we can 	 * clean up our in-memory structures accumulated while syncing: 	 * 	 *  - move dead blocks from the pending deadlist to the on-disk deadlist 	 *  - clean up zil records 	 *  - release hold from dsl_dataset_dirty() 	 */
+comment|/* 	 * Now that the datasets have been completely synced, we can 	 * clean up our in-memory structures accumulated while syncing: 	 * 	 *  - move dead blocks from the pending deadlist to the on-disk deadlist 	 *  - release hold from dsl_dataset_dirty() 	 */
 while|while
 condition|(
 name|ds
