@@ -353,18 +353,6 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|init_editline
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* editline library initialized? */
-end_comment
-
-begin_decl_stmt
-name|int
 name|whichprompt
 decl_stmt|;
 end_decl_stmt
