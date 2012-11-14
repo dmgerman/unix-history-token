@@ -399,7 +399,7 @@ name|sid
 init|=
 name|NULL
 decl_stmt|;
-name|IF_AFDATA_LOCK
+name|IF_AFDATA_WLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -418,7 +418,7 @@ name|sid
 condition|)
 block|{
 comment|/* paranoid? */
-name|IF_AFDATA_UNLOCK
+name|IF_AFDATA_WUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -488,7 +488,7 @@ operator|->
 name|if_index
 condition|)
 block|{
-name|IF_AFDATA_UNLOCK
+name|IF_AFDATA_WUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -516,7 +516,7 @@ name|V_if_index
 condition|)
 block|{
 comment|/* 				 * XXX: theoretically, there should be no 				 * relationship between link IDs and interface 				 * IDs, but we check the consistency for 				 * safety in later use. 				 */
-name|IF_AFDATA_UNLOCK
+name|IF_AFDATA_WUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -544,7 +544,7 @@ index|]
 expr_stmt|;
 block|}
 block|}
-name|IF_AFDATA_UNLOCK
+name|IF_AFDATA_WUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -572,22 +572,24 @@ modifier|*
 name|idlist
 parameter_list|)
 block|{
-comment|/* We only need to lock the interface's afdata for SID() to work. */
-name|IF_AFDATA_LOCK
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
 name|struct
 name|scope6_id
 modifier|*
 name|sid
-init|=
+decl_stmt|;
+comment|/* We only need to lock the interface's afdata for SID() to work. */
+name|IF_AFDATA_RLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+name|sid
+operator|=
 name|SID
 argument_list|(
 name|ifp
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|sid
@@ -596,7 +598,7 @@ name|NULL
 condition|)
 block|{
 comment|/* paranoid? */
-name|IF_AFDATA_UNLOCK
+name|IF_AFDATA_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -613,7 +615,7 @@ operator|=
 operator|*
 name|sid
 expr_stmt|;
-name|IF_AFDATA_UNLOCK
+name|IF_AFDATA_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -1280,7 +1282,7 @@ name|scope6_id
 modifier|*
 name|sid
 decl_stmt|;
-name|IF_AFDATA_LOCK
+name|IF_AFDATA_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -1333,7 +1335,7 @@ name|IFF_LOOPBACK
 operator|)
 condition|)
 block|{
-name|IF_AFDATA_UNLOCK
+name|IF_AFDATA_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -1358,7 +1360,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* there's no ambiguity */
-name|IF_AFDATA_UNLOCK
+name|IF_AFDATA_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -1443,7 +1445,7 @@ expr_stmt|;
 comment|/* XXX: treat as global. */
 break|break;
 block|}
-name|IF_AFDATA_UNLOCK
+name|IF_AFDATA_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
