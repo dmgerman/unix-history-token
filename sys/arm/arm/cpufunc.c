@@ -2711,7 +2711,7 @@ comment|/* idcache_wbinv_all    */
 name|armv7_idcache_wbinv_range
 block|,
 comment|/* idcache_wbinv_range  */
-comment|/* Note: From OMAP4 the L2 ops are filled in when the 	 * L2 cache controller is actually enabled. 	 */
+comment|/*  	 * Note: For CPUs using the PL310 the L2 ops are filled in when the 	 * L2 cache controller is actually enabled. 	 */
 name|cpufunc_nullop
 block|,
 comment|/* l2cache_wbinv_all    */
