@@ -1215,10 +1215,6 @@ block|{
 comment|/* sanity check */
 if|if
 condition|(
-name|zoneid
-operator|<
-literal|0
-operator|||
 name|V_if_index
 operator|<
 name|zoneid
