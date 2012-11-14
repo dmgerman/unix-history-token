@@ -168,7 +168,7 @@ begin_define
 define|#
 directive|define
 name|MAXLOGNAME
-value|17
+value|33
 end_define
 
 begin_comment
