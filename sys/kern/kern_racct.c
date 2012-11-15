@@ -2095,7 +2095,11 @@ operator|>=
 literal|0
 argument_list|,
 operator|(
-literal|"racct propagation meltdown: dest< 0"
+literal|"%s: resource %d propagation meltdown: dest< 0"
+operator|,
+name|__func__
+operator|,
+name|i
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2111,7 +2115,11 @@ operator|>=
 literal|0
 argument_list|,
 operator|(
-literal|"racct propagation meltdown: src< 0"
+literal|"%s: resource %d propagation meltdown: src< 0"
+operator|,
+name|__func__
+operator|,
+name|i
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2203,7 +2211,11 @@ operator|>=
 literal|0
 argument_list|,
 operator|(
-literal|"racct propagation meltdown: dest< 0"
+literal|"%s: resource %d propagation meltdown: dest< 0"
+operator|,
+name|__func__
+operator|,
+name|i
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2219,7 +2231,11 @@ operator|>=
 literal|0
 argument_list|,
 operator|(
-literal|"racct propagation meltdown: src< 0"
+literal|"%s: resource %d propagation meltdown: src< 0"
+operator|,
+name|__func__
+operator|,
+name|i
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2240,7 +2256,11 @@ name|i
 index|]
 argument_list|,
 operator|(
-literal|"racct propagation meltdown: src> dest"
+literal|"%s: resource %d propagation meltdown: src> dest"
+operator|,
+name|__func__
+operator|,
+name|i
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2292,7 +2312,11 @@ name|i
 argument_list|)
 argument_list|,
 operator|(
-literal|"racct_sub_racct: usage< 0"
+literal|"%s: resource %d usage< 0"
+operator|,
+name|__func__
+operator|,
+name|i
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2625,7 +2649,11 @@ name|resource
 argument_list|)
 argument_list|,
 operator|(
-literal|"racct_alloc_resource: usage< 0"
+literal|"%s: resource %d usage< 0"
+operator|,
+name|__func__
+operator|,
+name|resource
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3225,7 +3253,9 @@ name|resource
 argument_list|)
 argument_list|,
 operator|(
-literal|"racct_set: usage of non-droppable resource %d dropping"
+literal|"%s: usage of non-droppable resource %d dropping"
+operator|,
+name|__func__
 operator|,
 name|resource
 operator|)
@@ -3775,7 +3805,9 @@ name|resource
 argument_list|)
 argument_list|,
 operator|(
-literal|"racct_sub: called for non-droppable resource %d"
+literal|"%s: called for non-droppable resource %d"
+operator|,
+name|__func__
 operator|,
 name|resource
 operator|)
@@ -3801,8 +3833,10 @@ name|resource
 index|]
 argument_list|,
 operator|(
-literal|"racct_sub: freeing %ju of resource %d, which is more "
+literal|"%s: freeing %ju of resource %d, which is more "
 literal|"than allocated %jd for %s (pid %d)"
+operator|,
+name|__func__
 operator|,
 name|amount
 operator|,
@@ -3916,7 +3950,9 @@ name|resource
 argument_list|)
 argument_list|,
 operator|(
-literal|"racct_sub_cred: called for resource %d which can not drop"
+literal|"%s: called for resource %d which can not drop"
+operator|,
+name|__func__
 operator|,
 name|resource
 operator|)
