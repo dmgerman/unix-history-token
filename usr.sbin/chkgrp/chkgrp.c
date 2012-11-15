@@ -215,11 +215,6 @@ case|case
 literal|'?'
 case|:
 default|default:
-name|printf
-argument_list|(
-literal|"hello\n"
-argument_list|)
-expr_stmt|;
 name|usage
 argument_list|()
 expr_stmt|;
