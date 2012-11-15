@@ -11515,8 +11515,6 @@ literal|0
 condition|)
 continue|continue;
 block|}
-endif|#
-directive|endif
 name|switchcnt
 operator|=
 name|tdq
@@ -11527,6 +11525,14 @@ name|tdq
 operator|->
 name|tdq_oldswitchcnt
 expr_stmt|;
+else|#
+directive|else
+name|oldswitchcnt
+operator|=
+name|switchcnt
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 		 * If we're switching very frequently, spin while checking 		 * for load rather than entering a low power state that  		 * may require an IPI.  However, don't do any busy 		 * loops while on SMT machines as this simply steals 		 * cycles from cores doing useful work. 		 */
 if|if
 condition|(
