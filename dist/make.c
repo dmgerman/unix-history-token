@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: make.c,v 1.87 2012/06/12 19:21:51 joerg Exp $	*/
+comment|/*	$NetBSD: make.c,v 1.88 2012/11/09 18:53:05 sjg Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: make.c,v 1.87 2012/06/12 19:21:51 joerg Exp $"
+literal|"$NetBSD: make.c,v 1.88 2012/11/09 18:53:05 sjg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: make.c,v 1.87 2012/06/12 19:21:51 joerg Exp $"
+literal|"$NetBSD: make.c,v 1.88 2012/11/09 18:53:05 sjg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3234,8 +3234,9 @@ operator|=
 name|DEFERRED
 expr_stmt|;
 return|return
-literal|1
+literal|0
 return|;
+comment|/* but keep looking */
 block|}
 if|if
 condition|(
@@ -3325,7 +3326,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* When a .ORDER RHS node completes we do this on each LHS */
+comment|/* When a .ORDER LHS node completes we do this on each RHS */
 end_comment
 
 begin_function
