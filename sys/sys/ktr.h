@@ -544,8 +544,8 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|ktr_entry
+modifier|*
 name|ktr_buf
-index|[]
 decl_stmt|;
 end_decl_stmt
 
