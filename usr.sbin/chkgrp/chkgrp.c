@@ -272,7 +272,8 @@ name|n
 argument_list|)
 expr_stmt|;
 name|e
-operator|++
+operator|=
+literal|1
 expr_stmt|;
 block|}
 while|while
@@ -451,7 +452,8 @@ operator|=
 name|empty
 expr_stmt|;
 name|e
-operator|++
+operator|=
+literal|1
 expr_stmt|;
 block|}
 for|for
@@ -522,7 +524,8 @@ name|cp
 argument_list|)
 expr_stmt|;
 name|e
-operator|++
+operator|=
+literal|1
 expr_stmt|;
 block|}
 block|}
@@ -585,7 +588,8 @@ name|cp
 argument_list|)
 expr_stmt|;
 name|e
-operator|++
+operator|=
+literal|1
 expr_stmt|;
 block|}
 block|}
@@ -607,7 +611,8 @@ name|n
 argument_list|)
 expr_stmt|;
 name|e
-operator|++
+operator|=
+literal|1
 expr_stmt|;
 block|}
 comment|/* check that none of the fields contain whitespace */
@@ -660,7 +665,8 @@ literal|1
 argument_list|)
 expr_stmt|;
 name|e
-operator|++
+operator|=
+literal|1
 expr_stmt|;
 block|}
 block|}
@@ -696,7 +702,8 @@ name|n
 argument_list|)
 expr_stmt|;
 name|e
-operator|++
+operator|=
+literal|1
 expr_stmt|;
 block|}
 comment|/* check the range of the group id */
@@ -760,7 +767,8 @@ name|GID_MAX
 argument_list|)
 expr_stmt|;
 name|e
-operator|++
+operator|=
+literal|1
 expr_stmt|;
 block|}
 if|#
