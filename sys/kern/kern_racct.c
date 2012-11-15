@@ -2183,6 +2183,12 @@ name|RACCT_IS_SLOPPY
 argument_list|(
 name|i
 argument_list|)
+operator|&&
+operator|!
+name|RACCT_IS_DECAYING
+argument_list|(
+name|i
+argument_list|)
 condition|)
 block|{
 name|KASSERT
@@ -2276,6 +2282,11 @@ block|{
 name|KASSERT
 argument_list|(
 name|RACCT_IS_SLOPPY
+argument_list|(
+name|i
+argument_list|)
+operator|||
+name|RACCT_IS_DECAYING
 argument_list|(
 name|i
 argument_list|)
