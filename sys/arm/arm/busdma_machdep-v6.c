@@ -6983,11 +6983,6 @@ name|bounce_page
 modifier|*
 name|bpage
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"add bounce page\n"
-argument_list|)
-expr_stmt|;
 name|KASSERT
 argument_list|(
 name|dmat
