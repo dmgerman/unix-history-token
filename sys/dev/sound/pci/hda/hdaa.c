@@ -2459,6 +2459,8 @@ name|res
 decl_stmt|;
 name|int
 name|connected
+decl_stmt|,
+name|old
 decl_stmt|;
 if|if
 condition|(
@@ -2549,10 +2551,8 @@ operator|=
 operator|!
 name|connected
 expr_stmt|;
-if|if
-condition|(
-name|connected
-operator|==
+name|old
+operator|=
 name|w
 operator|->
 name|wclass
@@ -2560,6 +2560,12 @@ operator|.
 name|pin
 operator|.
 name|connected
+expr_stmt|;
+if|if
+condition|(
+name|connected
+operator|==
+name|old
 condition|)
 return|return;
 name|w
@@ -2574,13 +2580,15 @@ name|connected
 expr_stmt|;
 name|HDA_BOOTVERBOSE
 argument_list|(
-argument|device_printf(devinfo->dev,
+argument|if (connected || old !=
+literal|2
+argument|) { 			device_printf(devinfo->dev,
 literal|"Pin sense: nid=%d sence=0x%08x (%sconnected)\n"
-argument|, 		    w->nid, res, !w->wclass.pin.connected ?
+argument|, 			    w->nid, res, !connected ?
 literal|"dis"
 argument|:
 literal|""
-argument|);
+argument|); 		}
 argument_list|)
 empty_stmt|;
 name|as
@@ -2626,6 +2634,10 @@ operator|->
 name|dir
 operator|==
 name|HDAA_CTL_IN
+operator|&&
+name|old
+operator|!=
+literal|2
 condition|)
 name|hdaa_autorecsrc_handler
 argument_list|(
@@ -7078,6 +7090,16 @@ name|nid
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|w
+operator|->
+name|wclass
+operator|.
+name|pin
+operator|.
+name|connected
+operator|=
+literal|2
+expr_stmt|;
 if|if
 condition|(
 name|HDA_PARAM_PIN_CAP_EAPD_CAP
@@ -7627,48 +7649,6 @@ operator|->
 name|name
 argument_list|)
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|HDA_PARAM_PIN_CAP_PRESENCE_DETECT_CAP
-argument_list|(
-name|w
-operator|->
-name|wclass
-operator|.
-name|pin
-operator|.
-name|cap
-argument_list|)
-operator|==
-literal|0
-operator|||
-operator|(
-name|HDA_CONFIG_DEFAULTCONF_MISC
-argument_list|(
-name|w
-operator|->
-name|wclass
-operator|.
-name|pin
-operator|.
-name|config
-argument_list|)
-operator|&
-literal|1
-operator|)
-operator|!=
-literal|0
-condition|)
-name|w
-operator|->
-name|wclass
-operator|.
-name|pin
-operator|.
-name|connected
-operator|=
-literal|2
 expr_stmt|;
 block|}
 block|}
