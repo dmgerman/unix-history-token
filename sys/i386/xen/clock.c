@@ -1792,6 +1792,9 @@ index|]
 operator|.
 name|time
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|do_div
 argument_list|(
 name|__cpu_khz
