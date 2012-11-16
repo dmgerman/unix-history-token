@@ -1776,7 +1776,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Convert statfs returned file system size into BLOCKSIZE units.  * Attempts to avoid overflow for large file systems.  */
+comment|/*  * Convert statfs returned file system size into BLOCKSIZE units.  */
 end_comment
 
 begin_function
@@ -1794,43 +1794,16 @@ name|u_long
 name|bs
 parameter_list|)
 block|{
-if|if
-condition|(
-name|fsbs
-operator|!=
-literal|0
-operator|&&
-name|fsbs
-operator|<
-name|bs
-condition|)
-return|return
-operator|(
-name|num
-operator|/
-call|(
-name|intmax_t
-call|)
-argument_list|(
-name|bs
-operator|/
-name|fsbs
-argument_list|)
-operator|)
-return|;
-else|else
 return|return
 operator|(
 name|num
 operator|*
-call|(
+operator|(
 name|intmax_t
-call|)
-argument_list|(
+operator|)
 name|fsbs
 operator|/
 name|bs
-argument_list|)
 operator|)
 return|;
 block|}
@@ -2243,6 +2216,32 @@ name|printf
 argument_list|(
 literal|"  Mounted on\n"
 argument_list|)
+expr_stmt|;
+block|}
+comment|/* Check for 0 block size.  Can this happen? */
+if|if
+condition|(
+name|sfsp
+operator|->
+name|f_bsize
+operator|==
+literal|0
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"File system %s does not have a block size, assuming 512."
+argument_list|,
+name|sfsp
+operator|->
+name|f_mntonname
+argument_list|)
+expr_stmt|;
+name|sfsp
+operator|->
+name|f_bsize
+operator|=
+literal|512
 expr_stmt|;
 block|}
 operator|(
