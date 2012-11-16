@@ -2807,7 +2807,8 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
-name|idtype_t
+name|enum
+name|idtype
 name|idtype
 parameter_list|,
 name|id_t
