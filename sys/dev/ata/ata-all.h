@@ -2246,6 +2246,10 @@ name|ATA_R_DIRECT
 value|0x00001000
 define|#
 directive|define
+name|ATA_R_NEEDRESULT
+value|0x00002000
+define|#
+directive|define
 name|ATA_R_ATAPI16
 value|0x00010000
 define|#
