@@ -133,6 +133,13 @@ begin_comment
 comment|/* Cache Disable */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CR3_PCID_SAVE
+value|0x8000000000000000
+end_define
+
 begin_comment
 comment|/*  * Bits in PPro special registers  */
 end_comment
@@ -261,12 +268,45 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CR4_FSGSBASE
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* Enable FS/GS BASE accessing instructions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CR4_PCIDE
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* Enable Context ID */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CR4_XSAVE
 value|0x00040000
 end_define
 
 begin_comment
 comment|/* XSETBV/XGETBV */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CR4_SMEP
+value|0x00100000
+end_define
+
+begin_comment
+comment|/* Supervisor-Mode Execution Prevention */
 end_comment
 
 begin_comment
@@ -1289,6 +1329,41 @@ define|#
 directive|define
 name|AMDID_COREID_SIZE_SHIFT
 value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID_STDEXT_FSGSBASE
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID_STDEXT_TSC_ADJUST
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID_STDEXT_SMEP
+value|0x00000080
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID_STDEXT_ENH_MOVSB
+value|0x00000200
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID_STDEXT_INVPCID
+value|0x00000400
 end_define
 
 begin_comment
