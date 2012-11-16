@@ -868,6 +868,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_SC_SPD_SPEED_GEN3
+value|0x00000040
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_SC_IPM_MASK
 value|0x00000f00
 end_define
