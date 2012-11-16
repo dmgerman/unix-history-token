@@ -2537,16 +2537,16 @@ decl_stmt|,
 modifier|*
 name|sip
 decl_stmt|;
-name|int
-name|error
-decl_stmt|,
-name|status
-decl_stmt|;
 name|idtype_t
 name|idtype
 decl_stmt|;
 name|id_t
 name|id
+decl_stmt|;
+name|int
+name|error
+decl_stmt|,
+name|status
 decl_stmt|;
 name|idtype
 operator|=
@@ -3496,7 +3496,6 @@ operator|(
 literal|0
 operator|)
 return|;
-break|break;
 block|}
 if|if
 condition|(
@@ -3909,7 +3908,7 @@ name|wrup
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 	 *  For backward compatibility we implicitly add flags WEXITED 	 *  and WTRAPPED here. 	 */
+comment|/* 	 * For backward compatibility we implicitly add flags WEXITED 	 * and WTRAPPED here. 	 */
 name|options
 operator||=
 name|WEXITED
