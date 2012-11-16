@@ -4170,6 +4170,18 @@ end_comment
 
 begin_function_decl
 name|struct
+name|proc
+modifier|*
+name|pfind_locked
+parameter_list|(
+name|pid_t
+name|pid
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
 name|pgrp
 modifier|*
 name|pgfind
