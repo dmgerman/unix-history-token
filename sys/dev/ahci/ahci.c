@@ -1470,7 +1470,7 @@ literal|0x611111ab
 block|,
 literal|0x00
 block|,
-literal|"Marvell 88SX6111"
+literal|"Marvell 88SE6111"
 block|,
 name|AHCI_Q_NOFORCE
 operator||
@@ -1484,7 +1484,7 @@ literal|0x612111ab
 block|,
 literal|0x00
 block|,
-literal|"Marvell 88SX6121"
+literal|"Marvell 88SE6121"
 block|,
 name|AHCI_Q_NOFORCE
 operator||
@@ -1502,7 +1502,7 @@ literal|0x614111ab
 block|,
 literal|0x00
 block|,
-literal|"Marvell 88SX6141"
+literal|"Marvell 88SE6141"
 block|,
 name|AHCI_Q_NOFORCE
 operator||
@@ -1520,7 +1520,7 @@ literal|0x614511ab
 block|,
 literal|0x00
 block|,
-literal|"Marvell 88SX6145"
+literal|"Marvell 88SE6145"
 block|,
 name|AHCI_Q_NOFORCE
 operator||

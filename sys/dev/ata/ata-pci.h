@@ -1569,42 +1569,42 @@ end_define
 begin_define
 define|#
 directive|define
-name|ATA_M88SX6101
+name|ATA_M88SE6101
 value|0x610111ab
 end_define
 
 begin_define
 define|#
 directive|define
-name|ATA_M88SX6102
+name|ATA_M88SE6102
 value|0x610211ab
 end_define
 
 begin_define
 define|#
 directive|define
-name|ATA_M88SX6111
+name|ATA_M88SE6111
 value|0x611111ab
 end_define
 
 begin_define
 define|#
 directive|define
-name|ATA_M88SX6121
+name|ATA_M88SE6121
 value|0x612111ab
 end_define
 
 begin_define
 define|#
 directive|define
-name|ATA_M88SX6141
+name|ATA_M88SE6141
 value|0x614111ab
 end_define
 
 begin_define
 define|#
 directive|define
-name|ATA_M88SX6145
+name|ATA_M88SE6145
 value|0x614511ab
 end_define
 

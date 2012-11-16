@@ -1017,7 +1017,7 @@ argument_list|(
 name|dev
 argument_list|)
 operator|==
-name|ATA_M88SX6111
+name|ATA_M88SE6111
 condition|)
 name|ctlr
 operator|->
@@ -1033,7 +1033,7 @@ argument_list|(
 name|dev
 argument_list|)
 operator|==
-name|ATA_M88SX6121
+name|ATA_M88SE6121
 condition|)
 name|ctlr
 operator|->
@@ -1049,14 +1049,14 @@ argument_list|(
 name|dev
 argument_list|)
 operator|==
-name|ATA_M88SX6141
+name|ATA_M88SE6141
 operator|||
 name|pci_get_devid
 argument_list|(
 name|dev
 argument_list|)
 operator|==
-name|ATA_M88SX6145
+name|ATA_M88SE6145
 condition|)
 name|ctlr
 operator|->
