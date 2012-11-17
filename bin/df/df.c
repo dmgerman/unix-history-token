@@ -105,6 +105,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<locale.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdint.h>
 end_include
 
@@ -397,6 +403,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|int
+name|thousands
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|struct
 name|ufs_args
 name|mdev
@@ -467,6 +480,16 @@ name|fstype
 operator|=
 literal|"ufs"
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|setlocale
+argument_list|(
+name|LC_ALL
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -512,7 +535,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"abcgHhiklmnPt:T"
+literal|"abcgHhiklmnPt:T,"
 argument_list|)
 operator|)
 operator|!=
@@ -725,6 +748,14 @@ case|case
 literal|'T'
 case|:
 name|Tflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|','
+case|:
+name|thousands
 operator|=
 literal|1
 expr_stmt|;
@@ -1745,7 +1776,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Convert statfs returned file system size into BLOCKSIZE units.  * Attempts to avoid overflow for large file systems.  */
+comment|/*  * Convert statfs returned file system size into BLOCKSIZE units.  */
 end_comment
 
 begin_function
@@ -1763,43 +1794,16 @@ name|u_long
 name|bs
 parameter_list|)
 block|{
-if|if
-condition|(
-name|fsbs
-operator|!=
-literal|0
-operator|&&
-name|fsbs
-operator|<
-name|bs
-condition|)
-return|return
-operator|(
-name|num
-operator|/
-call|(
-name|intmax_t
-call|)
-argument_list|(
-name|bs
-operator|/
-name|fsbs
-argument_list|)
-operator|)
-return|;
-else|else
 return|return
 operator|(
 name|num
 operator|*
-call|(
+operator|(
 name|intmax_t
-call|)
-argument_list|(
+operator|)
 name|fsbs
 operator|/
 name|bs
-argument_list|)
 operator|)
 return|;
 block|}
@@ -1850,6 +1854,11 @@ name|availblks
 decl_stmt|,
 name|inodes
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|format
+decl_stmt|;
 if|if
 condition|(
 operator|++
@@ -1896,6 +1905,83 @@ literal|"Type"
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|thousands
+condition|)
+block|{
+comment|/* make space for commas */
+name|mwp
+operator|->
+name|total
+operator|+=
+operator|(
+name|mwp
+operator|->
+name|total
+operator|-
+literal|1
+operator|)
+operator|/
+literal|3
+expr_stmt|;
+name|mwp
+operator|->
+name|used
+operator|+=
+operator|(
+name|mwp
+operator|->
+name|used
+operator|-
+literal|1
+operator|)
+operator|/
+literal|3
+expr_stmt|;
+name|mwp
+operator|->
+name|avail
+operator|+=
+operator|(
+name|mwp
+operator|->
+name|avail
+operator|-
+literal|1
+operator|)
+operator|/
+literal|3
+expr_stmt|;
+name|mwp
+operator|->
+name|iused
+operator|+=
+operator|(
+name|mwp
+operator|->
+name|iused
+operator|-
+literal|1
+operator|)
+operator|/
+literal|3
+expr_stmt|;
+name|mwp
+operator|->
+name|ifree
+operator|+=
+operator|(
+name|mwp
+operator|->
+name|ifree
+operator|-
+literal|1
+operator|)
+operator|/
+literal|3
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|hflag
@@ -2028,7 +2114,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" %-*s %*s %*s Capacity"
+literal|" %*s %*s %*s Capacity"
 argument_list|,
 name|mwp
 operator|->
@@ -2132,6 +2218,32 @@ literal|"  Mounted on\n"
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Check for 0 block size.  Can this happen? */
+if|if
+condition|(
+name|sfsp
+operator|->
+name|f_bsize
+operator|==
+literal|0
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"File system %s does not have a block size, assuming 512."
+argument_list|,
+name|sfsp
+operator|->
+name|f_mntonname
+argument_list|)
+expr_stmt|;
+name|sfsp
+operator|->
+name|f_bsize
+operator|=
+literal|512
+expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -2201,12 +2313,25 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|thousands
+condition|)
+name|format
+operator|=
+literal|" %*j'd %*j'd %*j'd"
+expr_stmt|;
+else|else
+name|format
+operator|=
+literal|" %*jd %*jd %*jd"
+expr_stmt|;
 operator|(
 name|void
 operator|)
 name|printf
 argument_list|(
-literal|" %*jd %*jd %*jd"
+name|format
 argument_list|,
 name|mwp
 operator|->
@@ -2332,12 +2457,25 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|thousands
+condition|)
+name|format
+operator|=
+literal|" %*j'd %*j'd"
+expr_stmt|;
+else|else
+name|format
+operator|=
+literal|" %*jd %*jd"
+expr_stmt|;
 operator|(
 name|void
 operator|)
 name|printf
 argument_list|(
-literal|" %*jd %*jd"
+name|format
 argument_list|,
 name|mwp
 operator|->
@@ -2815,7 +2953,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: df [-b | -g | -H | -h | -k | -m | -P] [-acilnT] [-t type] [file | filesystem ...]\n"
+literal|"usage: df [-b | -g | -H | -h | -k | -m | -P] [-acilnT] [-t type] [-,] [file | filesystem ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit

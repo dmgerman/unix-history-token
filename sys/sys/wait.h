@@ -254,6 +254,28 @@ begin_comment
 comment|/* Poll only. Don't delete the proc entry. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|WEXITED
+value|16
+end_define
+
+begin_comment
+comment|/* Wait for exited processes. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WTRAPPED
+value|32
+end_define
+
+begin_comment
+comment|/* Wait for a process to hit a trap or 				   a breakpoint. */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -276,8 +298,111 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_IDTYPE_T_DECLARED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+enum|enum
+if|#
+directive|if
+name|__BSD_VISIBLE
+name|idtype
+comment|/* pollutes XPG4.2 namespace */
+endif|#
+directive|endif
+block|{
+comment|/* 	 * These names were mostly lifted from Solaris source code and 	 * still use Solaris style naming to avoid breaking any 	 * OpenSolaris code which has been ported to FreeBSD.  There 	 * is no clear FreeBSD counterpart for all of the names, but 	 * some have a clear correspondence to FreeBSD entities. 	 * 	 * The numerical values are kept synchronized with the Solaris 	 * values. 	 */
+name|P_PID
+block|,
+comment|/* A process identifier. */
+name|P_PPID
+block|,
+comment|/* A parent process identifier.	*/
+name|P_PGID
+block|,
+comment|/* A process group identifier. */
+name|P_SID
+block|,
+comment|/* A session identifier. */
+name|P_CID
+block|,
+comment|/* A scheduling class identifier. */
+name|P_UID
+block|,
+comment|/* A user identifier. */
+name|P_GID
+block|,
+comment|/* A group identifier. */
+name|P_ALL
+block|,
+comment|/* All processes. */
+name|P_LWPID
+block|,
+comment|/* An LWP identifier. */
+name|P_TASKID
+block|,
+comment|/* A task identifier. */
+name|P_PROJID
+block|,
+comment|/* A project identifier. */
+name|P_POOLID
+block|,
+comment|/* A pool identifier. */
+name|P_JAILID
+block|,
+comment|/* A zone identifier. */
+name|P_CTID
+block|,
+comment|/* A (process) contract identifier. */
+name|P_CPUID
+block|,
+comment|/* CPU identifier. */
+name|P_PSETID
+comment|/* Processor set identifier. */
+block|}
+name|idtype_t
+typedef|;
+end_typedef
+
 begin_comment
-comment|/*  * Tokens for special values of the "pid" parameter to wait4.  */
+comment|/* The type of id_t we are using. */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
+begin_define
+define|#
+directive|define
+name|P_ZONEID
+value|P_JAILID
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|_IDTYPE_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Tokens for special values of the "pid" parameter to wait4.  * Extended struct __wrusage to collect rusage for both the target  * process and its children within one wait6() call.  */
 end_comment
 
 begin_if
@@ -329,8 +454,17 @@ directive|include
 file|<sys/types.h>
 end_include
 
-begin_function_decl
+begin_macro
 name|__BEGIN_DECLS
+end_macro
+
+begin_struct_decl
+struct_decl|struct
+name|__siginfo
+struct_decl|;
+end_struct_decl
+
+begin_function_decl
 name|pid_t
 name|wait
 parameter_list|(
@@ -357,12 +491,48 @@ end_function_decl
 begin_if
 if|#
 directive|if
+name|__POSIX_VISIBLE
+operator|>=
+literal|200112
+end_if
+
+begin_function_decl
+name|int
+name|waitid
+parameter_list|(
+name|idtype_t
+parameter_list|,
+name|id_t
+parameter_list|,
+name|struct
+name|__siginfo
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
 name|__BSD_VISIBLE
 end_if
 
 begin_struct_decl
 struct_decl|struct
 name|rusage
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|__wrusage
 struct_decl|;
 end_struct_decl
 
@@ -395,6 +565,30 @@ name|int
 parameter_list|,
 name|struct
 name|rusage
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|pid_t
+name|wait6
+parameter_list|(
+name|idtype_t
+parameter_list|,
+name|id_t
+parameter_list|,
+name|int
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|struct
+name|__wrusage
+modifier|*
+parameter_list|,
+name|struct
+name|__siginfo
 modifier|*
 parameter_list|)
 function_decl|;

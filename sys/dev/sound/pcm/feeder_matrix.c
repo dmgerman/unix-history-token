@@ -224,6 +224,12 @@ operator|=
 name|SND_CHN_MATRIX_MAP_3_0
 block|,
 index|[
+name|SND_CHN_MATRIX_3_1
+index|]
+operator|=
+name|SND_CHN_MATRIX_MAP_3_1
+block|,
+index|[
 name|SND_CHN_MATRIX_4_0
 index|]
 operator|=
@@ -258,6 +264,12 @@ name|SND_CHN_MATRIX_6_1
 index|]
 operator|=
 name|SND_CHN_MATRIX_MAP_6_1
+block|,
+index|[
+name|SND_CHN_MATRIX_7_0
+index|]
+operator|=
+name|SND_CHN_MATRIX_MAP_7_0
 block|,
 index|[
 name|SND_CHN_MATRIX_7_1

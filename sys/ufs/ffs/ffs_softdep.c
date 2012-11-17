@@ -101,6 +101,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ktr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/limits.h>
 end_include
 
@@ -259,6 +265,17 @@ include|#
 directive|include
 file|<ddb/ddb.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|KTR_SUJ
+value|0
+end_define
+
+begin_comment
+comment|/* Define to KTR_SPARE. */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -2825,6 +2842,109 @@ struct_decl|struct
 name|bmsafemap_hashhead
 struct_decl|;
 end_struct_decl
+
+begin_comment
+comment|/*  * Private journaling structures.  */
+end_comment
+
+begin_struct
+struct|struct
+name|jblocks
+block|{
+name|struct
+name|jseglst
+name|jb_segs
+decl_stmt|;
+comment|/* TAILQ of current segments. */
+name|struct
+name|jseg
+modifier|*
+name|jb_writeseg
+decl_stmt|;
+comment|/* Next write to complete. */
+name|struct
+name|jseg
+modifier|*
+name|jb_oldestseg
+decl_stmt|;
+comment|/* Oldest segment with valid entries. */
+name|struct
+name|jextent
+modifier|*
+name|jb_extent
+decl_stmt|;
+comment|/* Extent array. */
+name|uint64_t
+name|jb_nextseq
+decl_stmt|;
+comment|/* Next sequence number. */
+name|uint64_t
+name|jb_oldestwrseq
+decl_stmt|;
+comment|/* Oldest written sequence number. */
+name|uint8_t
+name|jb_needseg
+decl_stmt|;
+comment|/* Need a forced segment. */
+name|uint8_t
+name|jb_suspended
+decl_stmt|;
+comment|/* Did journal suspend writes? */
+name|int
+name|jb_avail
+decl_stmt|;
+comment|/* Available extents. */
+name|int
+name|jb_used
+decl_stmt|;
+comment|/* Last used extent. */
+name|int
+name|jb_head
+decl_stmt|;
+comment|/* Allocator head. */
+name|int
+name|jb_off
+decl_stmt|;
+comment|/* Allocator extent offset. */
+name|int
+name|jb_blocks
+decl_stmt|;
+comment|/* Total disk blocks covered. */
+name|int
+name|jb_free
+decl_stmt|;
+comment|/* Total disk blocks free. */
+name|int
+name|jb_min
+decl_stmt|;
+comment|/* Minimum free space. */
+name|int
+name|jb_low
+decl_stmt|;
+comment|/* Low on space. */
+name|int
+name|jb_age
+decl_stmt|;
+comment|/* Insertion time of oldest rec. */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|jextent
+block|{
+name|ufs2_daddr_t
+name|je_daddr
+decl_stmt|;
+comment|/* Disk block address. */
+name|int
+name|je_blocks
+decl_stmt|;
+comment|/* Disk block count. */
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * Internal function prototypes.  */
@@ -11962,63 +12082,51 @@ name|freework
 decl_stmt|;
 block|{
 name|struct
-name|freeblks
+name|jblocks
 modifier|*
-name|freeblks
+name|jblocks
 decl_stmt|;
 name|struct
-name|jsegdep
+name|jseg
 modifier|*
-name|jsegdep
+name|jseg
 decl_stmt|;
-name|struct
-name|worklist
-modifier|*
-name|wk
-decl_stmt|;
-name|freeblks
+name|jblocks
 operator|=
+name|VFSTOUFS
+argument_list|(
 name|freework
 operator|->
-name|fw_freeblks
-expr_stmt|;
-name|LIST_FOREACH
-argument_list|(
-argument|wk
-argument_list|,
-argument|&freeblks->fb_jwork
-argument_list|,
-argument|wk_list
+name|fw_list
+operator|.
+name|wk_mp
 argument_list|)
-if|if
-condition|(
-name|wk
 operator|->
-name|wk_type
-operator|==
-name|D_JSEGDEP
-condition|)
-break|break;
+name|softdep_jblocks
+expr_stmt|;
+name|jseg
+operator|=
+name|TAILQ_LAST
+argument_list|(
+operator|&
+name|jblocks
+operator|->
+name|jb_segs
+argument_list|,
+name|jseglst
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|wk
+name|jseg
 operator|==
 name|NULL
 condition|)
 return|return;
-name|jsegdep
-operator|=
-name|WK_JSEGDEP
-argument_list|(
-name|wk
-argument_list|)
-expr_stmt|;
 name|LIST_INSERT_HEAD
 argument_list|(
 operator|&
-name|jsegdep
-operator|->
-name|jd_seg
+name|jseg
 operator|->
 name|js_indirs
 argument_list|,
@@ -12848,105 +12956,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_struct
-struct|struct
-name|jblocks
-block|{
-name|struct
-name|jseglst
-name|jb_segs
-decl_stmt|;
-comment|/* TAILQ of current segments. */
-name|struct
-name|jseg
-modifier|*
-name|jb_writeseg
-decl_stmt|;
-comment|/* Next write to complete. */
-name|struct
-name|jseg
-modifier|*
-name|jb_oldestseg
-decl_stmt|;
-comment|/* Oldest segment with valid entries. */
-name|struct
-name|jextent
-modifier|*
-name|jb_extent
-decl_stmt|;
-comment|/* Extent array. */
-name|uint64_t
-name|jb_nextseq
-decl_stmt|;
-comment|/* Next sequence number. */
-name|uint64_t
-name|jb_oldestwrseq
-decl_stmt|;
-comment|/* Oldest written sequence number. */
-name|uint8_t
-name|jb_needseg
-decl_stmt|;
-comment|/* Need a forced segment. */
-name|uint8_t
-name|jb_suspended
-decl_stmt|;
-comment|/* Did journal suspend writes? */
-name|int
-name|jb_avail
-decl_stmt|;
-comment|/* Available extents. */
-name|int
-name|jb_used
-decl_stmt|;
-comment|/* Last used extent. */
-name|int
-name|jb_head
-decl_stmt|;
-comment|/* Allocator head. */
-name|int
-name|jb_off
-decl_stmt|;
-comment|/* Allocator extent offset. */
-name|int
-name|jb_blocks
-decl_stmt|;
-comment|/* Total disk blocks covered. */
-name|int
-name|jb_free
-decl_stmt|;
-comment|/* Total disk blocks free. */
-name|int
-name|jb_min
-decl_stmt|;
-comment|/* Minimum free space. */
-name|int
-name|jb_low
-decl_stmt|;
-comment|/* Low on space. */
-name|int
-name|jb_age
-decl_stmt|;
-comment|/* Insertion time of oldest rec. */
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|jextent
-block|{
-name|ufs2_daddr_t
-name|je_daddr
-decl_stmt|;
-comment|/* Disk block address. */
-name|int
-name|je_blocks
-decl_stmt|;
-comment|/* Disk block count. */
-block|}
-struct|;
-end_struct
 
 begin_function
 specifier|static
@@ -18262,17 +18271,14 @@ name|ff_jdep
 operator|=
 name|NULL
 expr_stmt|;
-name|WORKLIST_INSERT
+name|jwork_insert
 argument_list|(
 operator|&
 name|freefrag
 operator|->
 name|ff_jwork
 argument_list|,
-operator|&
 name|jsegdep
-operator|->
-name|jd_list
 argument_list|)
 expr_stmt|;
 break|break;
@@ -18295,7 +18301,7 @@ name|fw_jnewblk
 operator|=
 name|NULL
 expr_stmt|;
-name|WORKLIST_INSERT
+name|jwork_insert
 argument_list|(
 operator|&
 name|freework
@@ -18304,10 +18310,7 @@ name|fw_freeblks
 operator|->
 name|fb_jwork
 argument_list|,
-operator|&
 name|jsegdep
-operator|->
-name|jd_list
 argument_list|)
 expr_stmt|;
 break|break;
@@ -18403,6 +18406,17 @@ operator|->
 name|ff_state
 operator||=
 name|DEPCOMPLETE
+expr_stmt|;
+name|CTR1
+argument_list|(
+name|KTR_SUJ
+argument_list|,
+literal|"cancel_jfreefrag: blkno %jd"
+argument_list|,
+name|freefrag
+operator|->
+name|ff_blkno
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -18648,17 +18662,14 @@ argument_list|,
 name|jb_deps
 argument_list|)
 expr_stmt|;
-name|WORKLIST_INSERT
+name|jwork_insert
 argument_list|(
 operator|&
 name|freeblks
 operator|->
 name|fb_jwork
 argument_list|,
-operator|&
 name|jsegdep
-operator|->
-name|jd_list
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If the freeblks is all journaled, we can add it to the worklist. 	 */
@@ -19614,6 +19625,15 @@ operator|==
 name|NULL
 condition|)
 return|return;
+name|CTR1
+argument_list|(
+name|KTR_SUJ
+argument_list|,
+literal|"cancel_jfreeblk: blkno %jd"
+argument_list|,
+name|blkno
+argument_list|)
+expr_stmt|;
 name|free_jsegdep
 argument_list|(
 name|jblkdep
@@ -20717,6 +20737,17 @@ name|jsegdep
 modifier|*
 name|jsegdep
 decl_stmt|;
+name|CTR1
+argument_list|(
+name|KTR_SUJ
+argument_list|,
+literal|"cancel_jnewblk: blkno %jd"
+argument_list|,
+name|jnewblk
+operator|->
+name|jn_blkno
+argument_list|)
+expr_stmt|;
 name|jsegdep
 operator|=
 name|jnewblk
@@ -23536,6 +23567,19 @@ block|}
 endif|#
 directive|endif
 block|}
+name|CTR3
+argument_list|(
+name|KTR_SUJ
+argument_list|,
+literal|"softdep_setup_blkmapdep: blkno %jd frags %d oldfrags %d"
+argument_list|,
+name|newblkno
+argument_list|,
+name|frags
+argument_list|,
+name|oldfrags
+argument_list|)
+expr_stmt|;
 name|ACQUIRE_LOCK
 argument_list|(
 operator|&
@@ -24267,6 +24311,28 @@ else|else
 name|freefrag
 operator|=
 name|NULL
+expr_stmt|;
+name|CTR6
+argument_list|(
+name|KTR_SUJ
+argument_list|,
+literal|"softdep_setup_allocdirect: ino %d blkno %jd oldblkno %jd "
+literal|"off %jd newsize %ld oldsize %d"
+argument_list|,
+name|ip
+operator|->
+name|i_number
+argument_list|,
+name|newblkno
+argument_list|,
+name|oldblkno
+argument_list|,
+name|off
+argument_list|,
+name|newsize
+argument_list|,
+name|oldsize
+argument_list|)
 expr_stmt|;
 name|ACQUIRE_LOCK
 argument_list|(
@@ -25494,6 +25560,23 @@ name|fs
 modifier|*
 name|fs
 decl_stmt|;
+name|CTR4
+argument_list|(
+name|KTR_SUJ
+argument_list|,
+literal|"newfreefrag: ino %d blkno %jd size %ld lbn %jd"
+argument_list|,
+name|ip
+operator|->
+name|i_number
+argument_list|,
+name|blkno
+argument_list|,
+name|size
+argument_list|,
+name|lbn
+argument_list|)
+expr_stmt|;
 name|fs
 operator|=
 name|ip
@@ -25696,6 +25779,25 @@ name|struct
 name|workhead
 name|wkhd
 decl_stmt|;
+name|CTR3
+argument_list|(
+name|KTR_SUJ
+argument_list|,
+literal|"handle_workitem_freefrag: ino %d blkno %jd size %ld"
+argument_list|,
+name|freefrag
+operator|->
+name|ff_inum
+argument_list|,
+name|freefrag
+operator|->
+name|ff_blkno
+argument_list|,
+name|freefrag
+operator|->
+name|ff_fragsize
+argument_list|)
+expr_stmt|;
 comment|/* 	 * It would be illegal to add new completion items to the 	 * freefrag after it was schedule to be done so it must be 	 * safe to modify the list head here. 	 */
 name|LIST_INIT
 argument_list|(
@@ -26656,6 +26758,24 @@ operator|->
 name|b_lblkno
 argument_list|)
 expr_stmt|;
+name|CTR4
+argument_list|(
+name|KTR_SUJ
+argument_list|,
+literal|"softdep_setup_allocindir_page: ino %d blkno %jd oldblkno %jd "
+literal|"lbn %jd"
+argument_list|,
+name|ip
+operator|->
+name|i_number
+argument_list|,
+name|newblkno
+argument_list|,
+name|oldblkno
+argument_list|,
+name|lbn
+argument_list|)
+expr_stmt|;
 name|ASSERT_VOP_LOCKED
 argument_list|(
 name|ITOV
@@ -26862,6 +26982,21 @@ decl_stmt|;
 name|int
 name|dflags
 decl_stmt|;
+name|CTR3
+argument_list|(
+name|KTR_SUJ
+argument_list|,
+literal|"softdep_setup_allocindir_meta: ino %d blkno %jd ptrno %d"
+argument_list|,
+name|ip
+operator|->
+name|i_number
+argument_list|,
+name|newblkno
+argument_list|,
+name|ptrno
+argument_list|)
+expr_stmt|;
 name|lbn
 operator|=
 name|nbp
@@ -29829,6 +29964,14 @@ modifier|*
 name|fbn
 decl_stmt|;
 name|struct
+name|worklist
+modifier|*
+name|wk
+decl_stmt|,
+modifier|*
+name|wkn
+decl_stmt|;
+name|struct
 name|inodedep
 modifier|*
 name|inodedep
@@ -30010,6 +30153,21 @@ condition|)
 name|needj
 operator|=
 literal|0
+expr_stmt|;
+name|CTR3
+argument_list|(
+name|KTR_SUJ
+argument_list|,
+literal|"softdep_journal_freeblks: ip %d length %ld needj %d"
+argument_list|,
+name|ip
+operator|->
+name|i_number
+argument_list|,
+name|length
+argument_list|,
+name|needj
+argument_list|)
 expr_stmt|;
 name|FREE_LOCK
 argument_list|(
@@ -30886,6 +31044,109 @@ argument_list|,
 name|freeblks
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Scan the bufwait list for newblock dependencies that will never 	 * make it to disk. 	 */
+name|LIST_FOREACH_SAFE
+argument_list|(
+argument|wk
+argument_list|,
+argument|&inodedep->id_bufwait
+argument_list|,
+argument|wk_list
+argument_list|,
+argument|wkn
+argument_list|)
+block|{
+if|if
+condition|(
+name|wk
+operator|->
+name|wk_type
+operator|!=
+name|D_ALLOCDIRECT
+condition|)
+continue|continue;
+name|adp
+operator|=
+name|WK_ALLOCDIRECT
+argument_list|(
+name|wk
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+operator|(
+name|flags
+operator|&
+name|IO_NORMAL
+operator|)
+operator|!=
+literal|0
+operator|&&
+operator|(
+name|adp
+operator|->
+name|ad_offset
+operator|>
+name|iboff
+operator|)
+operator|)
+operator|||
+operator|(
+operator|(
+name|flags
+operator|&
+name|IO_EXT
+operator|)
+operator|!=
+literal|0
+operator|&&
+operator|(
+name|adp
+operator|->
+name|ad_state
+operator|&
+name|EXTDATA
+operator|)
+operator|)
+condition|)
+block|{
+name|cancel_jfreeblk
+argument_list|(
+name|freeblks
+argument_list|,
+name|adp
+operator|->
+name|ad_newblkno
+argument_list|)
+expr_stmt|;
+name|cancel_newblk
+argument_list|(
+name|WK_NEWBLK
+argument_list|(
+name|wk
+argument_list|)
+argument_list|,
+name|NULL
+argument_list|,
+operator|&
+name|freeblks
+operator|->
+name|fb_jwork
+argument_list|)
+expr_stmt|;
+name|WORKLIST_INSERT
+argument_list|(
+operator|&
+name|freeblks
+operator|->
+name|fb_freeworkhd
+argument_list|,
+name|wk
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 comment|/* 	 * Add journal work. 	 */
 name|LIST_FOREACH
 argument_list|(
@@ -31460,6 +31721,19 @@ decl_stmt|;
 name|ufs_lbn_t
 name|lbn
 decl_stmt|;
+name|CTR2
+argument_list|(
+name|KTR_SUJ
+argument_list|,
+literal|"softdep_setup_freeblks: ip %d length %ld"
+argument_list|,
+name|ip
+operator|->
+name|i_number
+argument_list|,
+name|length
+argument_list|)
+expr_stmt|;
 name|fs
 operator|=
 name|ip
@@ -33818,6 +34092,17 @@ name|jnewblk
 modifier|*
 name|jnewblk
 decl_stmt|;
+name|CTR1
+argument_list|(
+name|KTR_SUJ
+argument_list|,
+literal|"cancel_newblk: blkno %jd"
+argument_list|,
+name|newblk
+operator|->
+name|nb_newblkno
+argument_list|)
+expr_stmt|;
 name|newblk
 operator|->
 name|nb_state
@@ -35377,6 +35662,27 @@ name|btodb
 argument_list|(
 name|bsize
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|CTR4
+argument_list|(
+name|KTR_SUJ
+argument_list|,
+literal|"freework_freeblock: ino %d blkno %jd lbn %jd size %ld"
+argument_list|,
+name|freeblks
+operator|->
+name|fb_inum
+argument_list|,
+name|freework
+operator|->
+name|fw_blkno
+argument_list|,
+name|freework
+operator|->
+name|fw_lbn
+argument_list|,
+name|bsize
 argument_list|)
 expr_stmt|;
 name|ffs_blkfree
@@ -37267,6 +37573,23 @@ name|freedeps
 operator|++
 expr_stmt|;
 block|}
+name|CTR3
+argument_list|(
+name|KTR_SUJ
+argument_list|,
+literal|"indir_trunc: ino %d blkno %jd size %ld"
+argument_list|,
+name|freeblks
+operator|->
+name|fb_inum
+argument_list|,
+name|nb
+argument_list|,
+name|fs
+operator|->
+name|fs_bsize
+argument_list|)
+expr_stmt|;
 name|ffs_blkfree
 argument_list|(
 name|ump
@@ -37429,6 +37752,23 @@ argument_list|(
 name|fs
 argument_list|,
 name|dbn
+argument_list|)
+expr_stmt|;
+name|CTR3
+argument_list|(
+name|KTR_SUJ
+argument_list|,
+literal|"indir_trunc 2: ino %d blkno %jd size %ld"
+argument_list|,
+name|freeblks
+operator|->
+name|fb_inum
+argument_list|,
+name|dbn
+argument_list|,
+name|fs
+operator|->
+name|fs_bsize
 argument_list|)
 expr_stmt|;
 name|ffs_blkfree
@@ -48716,6 +49056,19 @@ name|i
 decl_stmt|;
 endif|#
 directive|endif
+name|CTR3
+argument_list|(
+name|KTR_SUJ
+argument_list|,
+literal|"softdep_setup_blkfree: blkno %jd frags %d wk head %p"
+argument_list|,
+name|blkno
+argument_list|,
+name|frags
+argument_list|,
+name|wkhd
+argument_list|)
+expr_stmt|;
 name|ACQUIRE_LOCK
 argument_list|(
 operator|&
@@ -48770,6 +49123,19 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|CTR2
+argument_list|(
+name|KTR_SUJ
+argument_list|,
+literal|"softdep_setup_blkfree: blkno %jd wk type %d"
+argument_list|,
+name|blkno
+argument_list|,
+name|wk
+operator|->
+name|wk_type
+argument_list|)
+expr_stmt|;
 name|WORKLIST_REMOVE
 argument_list|(
 name|wk

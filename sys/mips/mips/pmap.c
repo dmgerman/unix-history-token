@@ -607,6 +607,21 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|vm_page_t
+name|pmap_alloc_direct_page
+parameter_list|(
+name|unsigned
+name|int
+name|index
+parameter_list|,
+name|int
+name|req
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|vm_page_t
 name|pmap_enter_quick_locked
 parameter_list|(
 name|pmap_t
@@ -4461,6 +4476,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|vm_page_t
 name|pmap_alloc_direct_page
 parameter_list|(

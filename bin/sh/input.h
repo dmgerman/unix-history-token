@@ -41,17 +41,6 @@ begin_comment
 comment|/* next character in input buffer */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|init_editline
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* 0 == not setup, 1 == OK, -1 == failed */
-end_comment
-
 begin_struct_decl
 struct_decl|struct
 name|alias

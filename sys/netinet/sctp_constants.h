@@ -1548,7 +1548,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|SCTP_DATAGRAM_NR_MARKED
+name|SCTP_DATAGRAM_NR_ACKED
 value|40010
 end_define
 

@@ -483,7 +483,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"%juMB (%ju sectors) SYSPD volume\n"
+literal|"%juMB (%ju sectors) SYSPD volume (deviceid: %d)\n"
 argument_list|,
 name|sectors
 operator|/
@@ -496,6 +496,10 @@ name|secsize
 operator|)
 argument_list|,
 name|sectors
+argument_list|,
+name|sc
+operator|->
+name|pd_id
 argument_list|)
 expr_stmt|;
 name|sc

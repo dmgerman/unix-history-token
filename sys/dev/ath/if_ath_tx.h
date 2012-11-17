@@ -665,6 +665,43 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * Misc debugging stuff  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ATH_DEBUG_ALQ
+end_ifdef
+
+begin_function_decl
+specifier|extern
+name|void
+name|ath_tx_alq_post
+parameter_list|(
+name|struct
+name|ath_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
+name|ath_buf
+modifier|*
+name|bf_first
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ATH_DEBUG_ALQ */
+end_comment
+
+begin_comment
 comment|/*  * Setup path  */
 end_comment
 
