@@ -616,6 +616,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|NV_API_CALL
 name|NV_SINT32
 name|nve_osalloc
 parameter_list|(
@@ -628,6 +629,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|NV_API_CALL
 name|NV_SINT32
 name|nve_osfree
 parameter_list|(
@@ -640,6 +642,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|NV_API_CALL
 name|NV_SINT32
 name|nve_osallocex
 parameter_list|(
@@ -652,6 +655,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|NV_API_CALL
 name|NV_SINT32
 name|nve_osfreeex
 parameter_list|(
@@ -664,6 +668,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|NV_API_CALL
 name|NV_SINT32
 name|nve_osclear
 parameter_list|(
@@ -678,6 +683,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|NV_API_CALL
 name|NV_SINT32
 name|nve_osdelay
 parameter_list|(
@@ -690,6 +696,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|NV_API_CALL
 name|NV_SINT32
 name|nve_osallocrxbuf
 parameter_list|(
@@ -705,6 +712,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|NV_API_CALL
 name|NV_SINT32
 name|nve_osfreerxbuf
 parameter_list|(
@@ -719,6 +727,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|NV_API_CALL
 name|NV_SINT32
 name|nve_ospackettx
 parameter_list|(
@@ -733,6 +742,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|NV_API_CALL
 name|NV_SINT32
 name|nve_ospacketrx
 parameter_list|(
@@ -752,6 +762,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|NV_API_CALL
 name|NV_SINT32
 name|nve_oslinkchg
 parameter_list|(
@@ -764,6 +775,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|NV_API_CALL
 name|NV_SINT32
 name|nve_osalloctimer
 parameter_list|(
@@ -777,6 +789,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|NV_API_CALL
 name|NV_SINT32
 name|nve_osfreetimer
 parameter_list|(
@@ -789,6 +802,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|NV_API_CALL
 name|NV_SINT32
 name|nve_osinittimer
 parameter_list|(
@@ -805,6 +819,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|NV_API_CALL
 name|NV_SINT32
 name|nve_ossettimer
 parameter_list|(
@@ -819,6 +834,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|NV_API_CALL
 name|NV_SINT32
 name|nve_oscanceltimer
 parameter_list|(
@@ -831,6 +847,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|NV_API_CALL
 name|NV_SINT32
 name|nve_ospreprocpkt
 parameter_list|(
@@ -851,6 +868,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|NV_API_CALL
 name|PNV_VOID
 name|nve_ospreprocpktnopq
 parameter_list|(
@@ -863,6 +881,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|NV_API_CALL
 name|NV_SINT32
 name|nve_osindicatepkt
 parameter_list|(
@@ -878,6 +897,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|NV_API_CALL
 name|NV_SINT32
 name|nve_oslockalloc
 parameter_list|(
@@ -893,6 +913,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|NV_API_CALL
 name|NV_SINT32
 name|nve_oslockacquire
 parameter_list|(
@@ -907,6 +928,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|NV_API_CALL
 name|NV_SINT32
 name|nve_oslockrelease
 parameter_list|(
@@ -921,6 +943,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|NV_API_CALL
 name|PNV_VOID
 name|nve_osreturnbufvirt
 parameter_list|(
@@ -6533,6 +6556,7 @@ end_comment
 
 begin_function
 specifier|static
+name|NV_API_CALL
 name|NV_SINT32
 name|nve_osalloc
 parameter_list|(
@@ -6698,6 +6722,7 @@ end_comment
 
 begin_function
 specifier|static
+name|NV_API_CALL
 name|NV_SINT32
 name|nve_osfree
 parameter_list|(
@@ -6754,6 +6779,7 @@ end_comment
 
 begin_function
 specifier|static
+name|NV_API_CALL
 name|NV_SINT32
 name|nve_osallocex
 parameter_list|(
@@ -6992,6 +7018,7 @@ end_comment
 
 begin_function
 specifier|static
+name|NV_API_CALL
 name|NV_SINT32
 name|nve_osfreeex
 parameter_list|(
@@ -7064,6 +7091,7 @@ end_comment
 
 begin_function
 specifier|static
+name|NV_API_CALL
 name|NV_SINT32
 name|nve_osclear
 parameter_list|(
@@ -7107,6 +7135,7 @@ end_comment
 
 begin_function
 specifier|static
+name|NV_API_CALL
 name|NV_SINT32
 name|nve_osdelay
 parameter_list|(
@@ -7136,6 +7165,7 @@ end_comment
 
 begin_function
 specifier|static
+name|NV_API_CALL
 name|NV_SINT32
 name|nve_osallocrxbuf
 parameter_list|(
@@ -7474,6 +7504,7 @@ end_comment
 
 begin_function
 specifier|static
+name|NV_API_CALL
 name|NV_SINT32
 name|nve_osfreerxbuf
 parameter_list|(
@@ -7589,6 +7620,7 @@ end_comment
 
 begin_function
 specifier|static
+name|NV_API_CALL
 name|NV_SINT32
 name|nve_ospackettx
 parameter_list|(
@@ -7770,6 +7802,7 @@ end_comment
 
 begin_function
 specifier|static
+name|NV_API_CALL
 name|NV_SINT32
 name|nve_ospacketrx
 parameter_list|(
@@ -8051,6 +8084,7 @@ end_comment
 
 begin_function
 specifier|static
+name|NV_API_CALL
 name|NV_SINT32
 name|nve_oslinkchg
 parameter_list|(
@@ -8082,6 +8116,7 @@ end_comment
 
 begin_function
 specifier|static
+name|NV_API_CALL
 name|NV_SINT32
 name|nve_osalloctimer
 parameter_list|(
@@ -8144,6 +8179,7 @@ end_comment
 
 begin_function
 specifier|static
+name|NV_API_CALL
 name|NV_SINT32
 name|nve_osfreetimer
 parameter_list|(
@@ -8185,6 +8221,7 @@ end_comment
 
 begin_function
 specifier|static
+name|NV_API_CALL
 name|NV_SINT32
 name|nve_osinittimer
 parameter_list|(
@@ -8246,6 +8283,7 @@ end_comment
 
 begin_function
 specifier|static
+name|NV_API_CALL
 name|NV_SINT32
 name|nve_ossettimer
 parameter_list|(
@@ -8307,6 +8345,7 @@ end_comment
 
 begin_function
 specifier|static
+name|NV_API_CALL
 name|NV_SINT32
 name|nve_oscanceltimer
 parameter_list|(
@@ -8344,6 +8383,7 @@ end_function
 
 begin_function
 specifier|static
+name|NV_API_CALL
 name|NV_SINT32
 name|nve_ospreprocpkt
 parameter_list|(
@@ -8383,6 +8423,7 @@ end_function
 
 begin_function
 specifier|static
+name|NV_API_CALL
 name|PNV_VOID
 name|nve_ospreprocpktnopq
 parameter_list|(
@@ -8411,6 +8452,7 @@ end_function
 
 begin_function
 specifier|static
+name|NV_API_CALL
 name|NV_SINT32
 name|nve_osindicatepkt
 parameter_list|(
@@ -8447,6 +8489,7 @@ end_comment
 
 begin_function
 specifier|static
+name|NV_API_CALL
 name|NV_SINT32
 name|nve_oslockalloc
 parameter_list|(
@@ -8504,6 +8547,7 @@ end_comment
 
 begin_function
 specifier|static
+name|NV_API_CALL
 name|NV_SINT32
 name|nve_oslockacquire
 parameter_list|(
@@ -8538,6 +8582,7 @@ end_comment
 
 begin_function
 specifier|static
+name|NV_API_CALL
 name|NV_SINT32
 name|nve_oslockrelease
 parameter_list|(
@@ -8572,6 +8617,7 @@ end_comment
 
 begin_function
 specifier|static
+name|NV_API_CALL
 name|PNV_VOID
 name|nve_osreturnbufvirt
 parameter_list|(
