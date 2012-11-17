@@ -97,6 +97,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|"ar5212_ds.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ar5416_ds.h"
 end_include
 
@@ -426,12 +432,23 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-if|#
-directive|if
-literal|0
-block|if (be32toh(hdr.sc_hal_magic) == AR9300_MAGIC) 					ar9300_alq_payload(a);
-endif|#
-directive|endif
+if|if
+condition|(
+name|be32toh
+argument_list|(
+name|hdr
+operator|.
+name|sc_hal_magic
+argument_list|)
+operator|==
+name|AR5212_MAGIC
+condition|)
+name|ar5212_alq_payload
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|be32toh
@@ -448,6 +465,12 @@ argument_list|(
 name|a
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
+if|else if (be32toh(hdr.sc_hal_magic) == AR9300_MAGIC) 					ar9300_alq_payload(a);
+endif|#
+directive|endif
 else|else
 name|printf
 argument_list|(
