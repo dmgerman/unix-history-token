@@ -97,6 +97,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|"ar5210_ds.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ar5211_ds.h"
 end_include
 
@@ -438,6 +444,23 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
+if|if
+condition|(
+name|be32toh
+argument_list|(
+name|hdr
+operator|.
+name|sc_hal_magic
+argument_list|)
+operator|==
+name|AR5210_MAGIC
+condition|)
+name|ar5210_alq_payload
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|be32toh
