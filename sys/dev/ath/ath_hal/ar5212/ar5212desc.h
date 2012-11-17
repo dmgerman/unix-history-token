@@ -19,12 +19,6 @@ begin_comment
 comment|/*  * Hardware-specific descriptor structures.  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"ah_desc.h"
-end_include
-
 begin_comment
 comment|/*  * AR5212-specific tx/rx descriptor definition.  */
 end_comment
