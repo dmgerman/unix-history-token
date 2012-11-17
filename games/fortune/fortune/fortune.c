@@ -485,7 +485,7 @@ name|DEBUG
 end_ifdef
 
 begin_decl_stmt
-name|bool
+name|int
 name|Debug
 init|=
 name|FALSE
