@@ -617,7 +617,7 @@ argument_list|,
 name|AR_RcvSigStrength
 argument_list|)
 argument_list|,
-name|MS
+name|MF
 argument_list|(
 name|rxs
 operator|.
