@@ -7724,11 +7724,11 @@ name|sockaddr_in6
 modifier|*
 name|sin6
 decl_stmt|;
-endif|#
-directive|endif
 name|int
 name|i
 decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|w
