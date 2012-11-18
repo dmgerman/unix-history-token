@@ -116,6 +116,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ioccom.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -225,22 +231,6 @@ decl_stmt|,
 name|uma_ufs2
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-specifier|static
-name|int
-name|ffs_reload
-parameter_list|(
-name|struct
-name|mount
-modifier|*
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|static
@@ -1590,6 +1580,8 @@ argument_list|(
 name|mp
 argument_list|,
 name|td
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 operator|!=
@@ -2747,11 +2739,10 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Reload all incore data for a filesystem (used after running fsck on  * the root filesystem and finding things to fix). The filesystem must  * be mounted read-only.  *  * Things to do to update the mount:  *	1) invalidate all cached meta-data.  *	2) re-read superblock from disk.  *	3) re-read summary information from disk.  *	4) invalidate all inactive vnodes.  *	5) invalidate all cached file data.  *	6) re-read inode data for all active vnodes.  */
+comment|/*  * Reload all incore data for a filesystem (used after running fsck on  * the root filesystem and finding things to fix). If the 'force' flag  * is 0, the filesystem must be mounted read-only.  *  * Things to do to update the mount:  *	1) invalidate all cached meta-data.  *	2) re-read superblock from disk.  *	3) re-read summary information from disk.  *	4) invalidate all inactive vnodes.  *	5) invalidate all cached file data.  *	6) re-read inode data for all active vnodes.  */
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|ffs_reload
 parameter_list|(
@@ -2764,6 +2755,9 @@ name|struct
 name|thread
 modifier|*
 name|td
+parameter_list|,
+name|int
+name|force
 parameter_list|)
 block|{
 name|struct
@@ -2820,6 +2814,18 @@ name|int32_t
 modifier|*
 name|lp
 decl_stmt|;
+name|ump
+operator|=
+name|VFSTOUFS
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
+name|MNT_ILOCK
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2831,15 +2837,24 @@ name|MNT_RDONLY
 operator|)
 operator|==
 literal|0
+operator|&&
+name|force
+operator|==
+literal|0
 condition|)
+block|{
+name|MNT_IUNLOCK
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
-name|ump
-operator|=
-name|VFSTOUFS
+block|}
+name|MNT_IUNLOCK
 argument_list|(
 name|mp
 argument_list|)
@@ -3023,12 +3038,13 @@ name|fs
 operator|->
 name|fs_active
 expr_stmt|;
-comment|/* The file system is still read-only. */
 name|newfs
 operator|->
 name|fs_ronly
 operator|=
-literal|1
+name|fs
+operator|->
+name|fs_ronly
 expr_stmt|;
 name|sblockloc
 operator|=
@@ -3407,6 +3423,23 @@ argument_list|,
 argument|mvp
 argument_list|)
 block|{
+comment|/* 		 * Skip syncer vnode. 		 */
+if|if
+condition|(
+name|vp
+operator|->
+name|v_type
+operator|==
+name|VNON
+condition|)
+block|{
+name|VI_UNLOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 comment|/* 		 * Step 4: invalidate all cached file data. 		 */
 if|if
 condition|(
@@ -9032,6 +9065,9 @@ modifier|*
 name|vfsp
 decl_stmt|;
 block|{
+name|ffs_susp_initialize
+argument_list|()
+expr_stmt|;
 name|softdep_initialize
 argument_list|()
 expr_stmt|;
@@ -9074,6 +9110,9 @@ name|vfsp
 argument_list|)
 expr_stmt|;
 name|softdep_uninitialize
+argument_list|()
+expr_stmt|;
+name|ffs_susp_uninitialize
 argument_list|()
 expr_stmt|;
 return|return
@@ -10722,6 +10761,39 @@ argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|int
+name|ffs_own_mount
+parameter_list|(
+specifier|const
+name|struct
+name|mount
+modifier|*
+name|mp
+parameter_list|)
+block|{
+if|if
+condition|(
+name|mp
+operator|->
+name|mnt_op
+operator|==
+operator|&
+name|ufs_vfsops
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

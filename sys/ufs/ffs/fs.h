@@ -15,6 +15,12 @@ directive|define
 name|_UFS_FFS_FS_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/mount.h>
+end_include
+
 begin_comment
 comment|/*  * Each disk drive contains some number of filesystems.  * A filesystem consists of a number of cylinder groups.  * Each cylinder group has inodes and data.  *  * A filesystem is described by its super-block, which in turn  * describes the cylinder groups.  The super-block is critical  * data and is replicated in each cylinder group to protect against  * catastrophic loss.  This is done at `newfs' time and the critical  * super-block data does not change, so the copies need not be  * referenced further unless disaster strikes.  *  * For filesystem fs, the offsets of the various blocks of interest  * are given in the super block as:  *	[fs->fs_sblkno]		Super-block  *	[fs->fs_cblkno]		Cylinder group block  *	[fs->fs_iblkno]		Inode blocks  *	[fs->fs_dblkno]		Data blocks  * The beginning of cylinder group cg in fs, is given by  * the ``cgbase(fs, cg)'' macro.  *  * Depending on the architecture and the media, the superblock may  * reside in any one of four places. For tiny media where every block   * counts, it is placed at the very front of the partition. Historically,  * UFS1 placed it 8K from the front to leave room for the disk label and  * a small bootstrap. For UFS2 it got moved to 64K from the front to leave  * room for the disk label and a bigger bootstrap, and for really piggy  * systems we check at 256K from the front if the first three fail. In  * all cases the size of the superblock will be SBLOCKSIZE. All values are  * given in byte-offset form, so they do not imply a sector size. The  * SBLOCKSEARCH specifies the order in which the locations should be searched.  */
 end_comment
@@ -2521,6 +2527,24 @@ name|fragtbl
 index|[]
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * IOCTLs used for filesystem write suspension.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UFSSUSPEND
+value|_IOW('U', 1, fsid_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UFSRESUME
+value|_IO('U', 2)
+end_define
 
 begin_endif
 endif|#
