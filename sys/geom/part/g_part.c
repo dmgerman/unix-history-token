@@ -308,6 +308,12 @@ name|G_PART_ALIAS_FREEBSD_BOOT
 block|}
 block|,
 block|{
+literal|"freebsd-nandfs"
+block|,
+name|G_PART_ALIAS_FREEBSD_NANDFS
+block|}
+block|,
+block|{
 literal|"freebsd-swap"
 block|,
 name|G_PART_ALIAS_FREEBSD_SWAP

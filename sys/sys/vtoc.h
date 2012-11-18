@@ -172,6 +172,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|VTOC_TAG_FREEBSD_NANDFS
+value|0x0905
+end_define
+
+begin_define
+define|#
+directive|define
 name|VTOC_FLAG_UNMNT
 value|0x01
 end_define
