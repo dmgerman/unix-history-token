@@ -539,6 +539,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|camcontrol_opts
 name|option_table
@@ -1025,12 +1026,14 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|cam_cmdmask
 name|cmdlist
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|cam_argmask
 name|arglist
 decl_stmt|;
@@ -23333,6 +23336,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|camcontrol_opts
 name|phy_ops
