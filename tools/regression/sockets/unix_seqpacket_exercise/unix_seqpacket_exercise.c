@@ -129,7 +129,7 @@ name|str
 parameter_list|,
 name|n
 parameter_list|)
-value|err(-1, "%s %d: %s", __func__, n, str)
+value|err(-1, "%s %zd: %s", __func__, n, str)
 end_define
 
 begin_define
@@ -143,7 +143,7 @@ name|n
 parameter_list|,
 name|m
 parameter_list|)
-value|err(-1, "%s %d %d: %s", __func__, n, m, str)
+value|err(-1, "%s %zd %d: %s", __func__, n, m, str)
 end_define
 
 begin_define
@@ -165,7 +165,7 @@ name|str
 parameter_list|,
 name|n
 parameter_list|)
-value|errx(-1, "%s %d: %s", __func__, n, str)
+value|errx(-1, "%s %zd: %s", __func__, n, str)
 end_define
 
 begin_define
@@ -179,7 +179,7 @@ name|n
 parameter_list|,
 name|m
 parameter_list|)
-value|errx(-1, "%s %d %d: %s", __func__, n, m, str)
+value|errx(-1, "%s %zd %d: %s", __func__, n, m, str)
 end_define
 
 begin_decl_stmt
@@ -206,7 +206,7 @@ name|ANNN
 parameter_list|(
 name|n
 parameter_list|)
-value|(ann ? warnx("%s %d: start", __func__, (n)) : 0)
+value|(ann ? warnx("%s %zd: start", __func__, (n)) : 0)
 end_define
 
 begin_define
@@ -218,7 +218,7 @@ name|n
 parameter_list|,
 name|m
 parameter_list|)
-value|(ann ? warnx("%s %d %d: start", __func__, (n), (m)) : 0)
+value|(ann ? warnx("%s %zd %d: start", __func__, (n), (m)):0)
 end_define
 
 begin_define
@@ -236,7 +236,7 @@ name|OKN
 parameter_list|(
 name|n
 parameter_list|)
-value|warnx("%s %d: ok", __func__, (n))
+value|warnx("%s %zd: ok", __func__, (n))
 end_define
 
 begin_define
@@ -248,7 +248,7 @@ name|n
 parameter_list|,
 name|m
 parameter_list|)
-value|warnx("%s %d %d: ok", __func__, (n), (m))
+value|warnx("%s %zd %d: ok", __func__, (n), (m))
 end_define
 
 begin_ifdef
@@ -570,7 +570,7 @@ name|ssize_recv
 condition|)
 name|warnx
 argument_list|(
-literal|"server: recv %d sent %d"
+literal|"server: recv %zd sent %zd"
 argument_list|,
 name|ssize_recv
 argument_list|,
