@@ -7930,6 +7930,16 @@ condition|(
 name|delete_now
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|panic
+argument_list|(
+literal|"zfs_remove: delete_now branch taken"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|xattr_obj_unlinked
