@@ -8130,6 +8130,17 @@ argument_list|,
 name|tx
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|vp
+operator|->
+name|v_vflag
+operator||=
+name|VV_NOSYNC
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|txtype
 operator|=
