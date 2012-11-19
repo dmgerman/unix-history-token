@@ -1074,7 +1074,7 @@ operator|==
 literal|0
 condition|)
 continue|continue;
-comment|/* 			 * Prefer a geometry with sectors> 1, but only if 			 * it doesn't bump down the numbver of heads to 1. 			 */
+comment|/* 			 * Prefer a geometry with sectors> 1, but only if 			 * it doesn't bump down the number of heads to 1. 			 */
 if|if
 condition|(
 name|chs
