@@ -8351,7 +8351,6 @@ name|ump
 operator|->
 name|um_fs
 expr_stmt|;
-comment|/* 	 * If this malloc() is performed after the getnewvnode() 	 * it might block, leaving a vnode with a NULL v_data to be 	 * found by ffs_sync() if a sync happens to fire right then, 	 * which will cause a panic because ffs_sync() blindly 	 * dereferences vp->v_data (as well it should). 	 */
 name|ip
 operator|=
 name|uma_zalloc
