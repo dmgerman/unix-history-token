@@ -116,6 +116,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"acpi.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"inout.h"
 end_include
 
@@ -375,6 +381,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|int
+name|acpi
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|lomem_addr
@@ -515,9 +528,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [-aehBHIP][-g<gdb port>][-z<hz>][-s<pci>]"
+literal|"Usage: %s [-aehABHIP][-g<gdb port>][-z<hz>][-s<pci>]"
 literal|"[-S<pci>][-p pincpu][-n<pci>][-m lowmem][-M highmem]<vm>\n"
 literal|"       -a: local apic is in XAPIC mode (default is X2APIC)\n"
+literal|"       -A: create an ACPI table\n"
 literal|"       -g: gdb port (default is %d and 0 means don't open)\n"
 literal|"       -c: # cpus (default 1)\n"
 literal|"       -p: pin vcpu 'n' to host cpu 'pincpu + n'\n"
@@ -2516,7 +2530,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"abehBHIPxp:g:c:z:s:S:n:m:M:"
+literal|"abehABHIPxp:g:c:z:s:S:n:m:M:"
 argument_list|)
 operator|)
 operator|!=
@@ -2533,6 +2547,14 @@ case|case
 literal|'a'
 case|:
 name|disable_x2apic
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'A'
+case|:
+name|acpi
 operator|=
 literal|1
 expr_stmt|;
@@ -3157,6 +3179,30 @@ argument_list|,
 name|ioapic
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|acpi
+condition|)
+block|{
+name|error
+operator|=
+name|acpi_build
+argument_list|(
+name|ctx
+argument_list|,
+name|guest_ncpus
+argument_list|,
+name|ioapic
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|error
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Add CPU 0 	 */
 name|fbsdrun_addcpu
 argument_list|(
