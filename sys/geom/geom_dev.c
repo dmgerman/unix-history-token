@@ -777,6 +777,8 @@ name|g_new_geomf
 argument_list|(
 name|mp
 argument_list|,
+literal|"%s"
+argument_list|,
 name|pp
 operator|->
 name|name
