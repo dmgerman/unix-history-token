@@ -462,6 +462,9 @@ break|break;
 case|case
 name|CPUID_0000_0006
 case|:
+case|case
+name|CPUID_0000_0007
+case|:
 comment|/* 			 * Handle the access, but report 0 for 			 * all options 			 */
 name|regs
 index|[
