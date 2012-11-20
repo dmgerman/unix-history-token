@@ -2589,6 +2589,10 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiUtWalkAmlResources
 parameter_list|(
+name|ACPI_WALK_STATE
+modifier|*
+name|WalkState
+parameter_list|,
 name|UINT8
 modifier|*
 name|Aml
@@ -2610,6 +2614,10 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiUtValidateResource
 parameter_list|(
+name|ACPI_WALK_STATE
+modifier|*
+name|WalkState
+parameter_list|,
 name|void
 modifier|*
 name|Aml

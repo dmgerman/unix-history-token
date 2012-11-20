@@ -766,6 +766,13 @@ name|Status
 operator|)
 return|;
 block|}
+if|#
+directive|if
+literal|0
+comment|/* TBD: Handle additional output files for disassembler */
+block|Status = FlOpenMiscOutputFiles (Gbl_OutputFilenamePrefix);         LsDisplayNamespace ();
+endif|#
+directive|endif
 comment|/* Shutdown compiler and ACPICA subsystem */
 name|AeClearErrorLog
 argument_list|()

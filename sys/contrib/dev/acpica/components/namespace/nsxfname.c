@@ -645,9 +645,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
-goto|goto
-name|Cleanup
-goto|;
+return|return
+operator|(
+name|Status
+operator|)
+return|;
 block|}
 name|Node
 operator|=

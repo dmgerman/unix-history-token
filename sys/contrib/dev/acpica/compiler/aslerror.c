@@ -551,8 +551,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|RActual
+operator|!=
+literal|1
 condition|)
 block|{
 name|fprintf
@@ -591,6 +592,8 @@ literal|256
 operator|)
 condition|)
 block|{
+if|if
+condition|(
 name|fwrite
 argument_list|(
 operator|&
@@ -602,7 +605,17 @@ literal|1
 argument_list|,
 name|OutputFile
 argument_list|)
+operator|!=
+literal|1
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"[*** iASL: Write error on output file ***]\n"
+argument_list|)
 expr_stmt|;
+return|return;
+block|}
 name|RActual
 operator|=
 name|fread
@@ -617,6 +630,29 @@ argument_list|,
 name|SourceFile
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|RActual
+operator|!=
+literal|1
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|OutputFile
+argument_list|,
+literal|"[*** iASL: Read error on source code temp file %s ***]"
+argument_list|,
+name|Gbl_Files
+index|[
+name|ASL_FILE_SOURCE_OUTPUT
+index|]
+operator|.
+name|Filename
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|Total
 operator|++
 expr_stmt|;

@@ -229,9 +229,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|AcpiGbl_DebugFile
 condition|)
 block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"Could not open debug file %s\n"
+argument_list|,
+name|Name
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|AcpiOsPrintf
 argument_list|(
 literal|"Debug output file %s opened\n"
@@ -250,17 +260,6 @@ name|AcpiGbl_DbOutputToFile
 operator|=
 name|TRUE
 expr_stmt|;
-block|}
-else|else
-block|{
-name|AcpiOsPrintf
-argument_list|(
-literal|"Could not open debug file %s\n"
-argument_list|,
-name|Name
-argument_list|)
-expr_stmt|;
-block|}
 endif|#
 directive|endif
 block|}
@@ -595,7 +594,7 @@ literal|1
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|TableHeader
+name|ACPI_TABLE_HEADER
 argument_list|)
 argument_list|,
 name|fp
@@ -1053,7 +1052,7 @@ parameter_list|)
 block|{
 name|FILE
 modifier|*
-name|fp
+name|File
 decl_stmt|;
 name|UINT32
 name|TableLength
@@ -1062,7 +1061,7 @@ name|ACPI_STATUS
 name|Status
 decl_stmt|;
 comment|/* Open the file */
-name|fp
+name|File
 operator|=
 name|fopen
 argument_list|(
@@ -1074,7 +1073,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|fp
+name|File
 condition|)
 block|{
 name|AcpiOsPrintf
@@ -1104,7 +1103,7 @@ name|Status
 operator|=
 name|AcpiDbReadTable
 argument_list|(
-name|fp
+name|File
 argument_list|,
 name|Table
 argument_list|,
@@ -1114,7 +1113,7 @@ argument_list|)
 expr_stmt|;
 name|fclose
 argument_list|(
-name|fp
+name|File
 argument_list|)
 expr_stmt|;
 if|if

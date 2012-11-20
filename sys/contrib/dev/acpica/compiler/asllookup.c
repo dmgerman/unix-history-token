@@ -951,20 +951,11 @@ break|break;
 case|case
 name|ACPI_TYPE_LOCAL_RESOURCE_FIELD
 case|:
-if|if
-condition|(
-name|Node
-operator|->
-name|Flags
-operator|&
-literal|0x80
-condition|)
-block|{
 name|FlPrintFile
 argument_list|(
 name|ASL_FILE_NAMESPACE_OUTPUT
 argument_list|,
-literal|"   [Field Offset    0x%.4X Bits 0x%.4X Bytes]"
+literal|"   [Field Offset    0x%.4X Bits 0x%.4X Bytes] "
 argument_list|,
 name|Node
 operator|->
@@ -977,6 +968,22 @@ operator|/
 literal|8
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Node
+operator|->
+name|Flags
+operator|&
+name|ANOBJ_IS_REFERENCED
+condition|)
+block|{
+name|FlPrintFile
+argument_list|(
+name|ASL_FILE_NAMESPACE_OUTPUT
+argument_list|,
+literal|"Referenced"
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -984,11 +991,7 @@ name|FlPrintFile
 argument_list|(
 name|ASL_FILE_NAMESPACE_OUTPUT
 argument_list|,
-literal|"   [Field Offset    0x%.4X Bytes]"
-argument_list|,
-name|Node
-operator|->
-name|Value
+literal|"Name not referenced"
 argument_list|)
 expr_stmt|;
 block|}

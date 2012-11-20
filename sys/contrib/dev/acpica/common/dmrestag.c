@@ -2482,6 +2482,8 @@ name|Status
 operator|=
 name|AcpiUtValidateResource
 argument_list|(
+name|NULL
+argument_list|,
 name|Aml
 argument_list|,
 operator|&
@@ -3189,6 +3191,8 @@ name|ACPI_SUCCESS
 argument_list|(
 name|AcpiDmIsResourceTemplate
 argument_list|(
+name|NULL
+argument_list|,
 name|Op
 argument_list|)
 argument_list|)
@@ -3296,6 +3300,8 @@ expr_stmt|;
 comment|/*      * Insert each resource into the namespace      * NextOp contains the Aml pointer and the Aml length      */
 name|AcpiUtWalkAmlResources
 argument_list|(
+name|NULL
+argument_list|,
 operator|(
 name|UINT8
 operator|*
