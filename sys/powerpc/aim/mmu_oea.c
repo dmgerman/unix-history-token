@@ -2762,8 +2762,33 @@ name|isync
 argument_list|()
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|WII
+comment|/* 	 * Special case for the Wii: don't install the PCI BAT. 	 */
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|installed_platform
+argument_list|()
+argument_list|,
+literal|"wii"
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+endif|#
+directive|endif
 asm|__asm __volatile("mtdbatu 1,%0" :: "r"(battable[8].batu));
 asm|__asm __volatile("mtdbatl 1,%0" :: "r"(battable[8].batl));
+ifdef|#
+directive|ifdef
+name|WII
+block|}
+endif|#
+directive|endif
 name|isync
 argument_list|()
 expr_stmt|;
@@ -2912,7 +2937,7 @@ argument_list|,
 name|BAT_Vs
 argument_list|)
 expr_stmt|;
-comment|/*          * Map PCI memory space.          */
+comment|/* 	 * Map PCI memory space. 	 */
 name|battable
 index|[
 literal|0x8
@@ -3049,7 +3074,7 @@ argument_list|,
 name|BAT_Vs
 argument_list|)
 expr_stmt|;
-comment|/*          * Map obio devices.          */
+comment|/* 	 * Map obio devices. 	 */
 name|battable
 index|[
 literal|0xf
@@ -3133,17 +3158,41 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WII
+end_ifdef
+
+begin_if
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|installed_platform
+argument_list|()
+argument_list|,
+literal|"wii"
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+endif|#
+directive|endif
 comment|/* map pci space */
-end_comment
-
-begin_asm
 asm|__asm __volatile("mtdbatu 1,%0" :: "r"(battable[8].batu));
-end_asm
-
-begin_asm
 asm|__asm __volatile("mtdbatl 1,%0" :: "r"(battable[8].batl));
-end_asm
+ifdef|#
+directive|ifdef
+name|WII
+block|}
+end_if
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|isync
