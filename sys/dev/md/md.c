@@ -489,13 +489,6 @@ end_function_decl
 
 begin_decl_stmt
 specifier|static
-name|int
-name|mdunits
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|struct
 name|cdev
 modifier|*
@@ -6940,6 +6933,11 @@ name|image
 parameter_list|,
 name|size_t
 name|length
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
 parameter_list|)
 block|{
 name|struct
@@ -7026,6 +7024,31 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|name
+operator|!=
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s%d: Preloaded image<%s> %zd bytes at %p\n"
+argument_list|,
+name|MD_NAME
+argument_list|,
+name|sc
+operator|->
+name|unit
+argument_list|,
+name|name
+argument_list|,
+name|length
+argument_list|,
+name|image
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -7128,6 +7151,8 @@ name|mfs_root
 operator|.
 name|start
 argument_list|)
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|sx_xunlock
@@ -7235,21 +7260,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s%d: Preloaded image<%s> %d bytes at %p\n"
-argument_list|,
-name|MD_NAME
-argument_list|,
-name|mdunits
-argument_list|,
-name|name
-argument_list|,
-name|len
-argument_list|,
-name|ptr
-argument_list|)
-expr_stmt|;
 name|sx_xlock
 argument_list|(
 operator|&
@@ -7261,6 +7271,8 @@ argument_list|(
 name|ptr
 argument_list|,
 name|len
+argument_list|,
+name|name
 argument_list|)
 expr_stmt|;
 name|sx_xunlock
