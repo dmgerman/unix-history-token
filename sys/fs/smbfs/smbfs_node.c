@@ -491,11 +491,6 @@ name|n_name
 operator|=
 name|name
 expr_stmt|;
-operator|*
-name|vpp
-operator|=
-name|NULL
-expr_stmt|;
 if|if
 condition|(
 name|smp
@@ -642,11 +637,6 @@ return|return
 name|EINVAL
 return|;
 block|}
-operator|*
-name|vpp
-operator|=
-name|NULL
-expr_stmt|;
 name|error
 operator|=
 name|vfs_hash_get
@@ -1218,11 +1208,6 @@ name|error
 decl_stmt|,
 name|sep
 decl_stmt|;
-operator|*
-name|vpp
-operator|=
-name|NULL
-expr_stmt|;
 name|dnp
 operator|=
 operator|(

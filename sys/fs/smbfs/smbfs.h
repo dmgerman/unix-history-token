@@ -228,7 +228,6 @@ name|smb_share
 modifier|*
 name|sm_share
 decl_stmt|;
-comment|/*	struct simplelock	sm_npslock;*/
 name|struct
 name|smbnode
 modifier|*
