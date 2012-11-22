@@ -2907,7 +2907,7 @@ argument_list|,
 argument|dr_entry
 argument_list|)
 block|{
-name|IF_AFDATA_LOCK
+name|IF_AFDATA_RLOCK
 argument_list|(
 name|dr
 operator|->
@@ -2949,7 +2949,7 @@ operator|=
 name|dr
 expr_stmt|;
 block|}
-name|IF_AFDATA_UNLOCK
+name|IF_AFDATA_RUNLOCK
 argument_list|(
 name|dr
 operator|->
@@ -3055,7 +3055,7 @@ condition|(
 name|installed_dr
 condition|)
 block|{
-name|IF_AFDATA_LOCK
+name|IF_AFDATA_RLOCK
 argument_list|(
 name|installed_dr
 operator|->
@@ -3103,7 +3103,7 @@ operator|=
 name|installed_dr
 expr_stmt|;
 block|}
-name|IF_AFDATA_UNLOCK
+name|IF_AFDATA_RUNLOCK
 argument_list|(
 name|installed_dr
 operator|->
@@ -5369,7 +5369,7 @@ argument_list|,
 argument|pfr_entry
 argument_list|)
 block|{
-name|IF_AFDATA_LOCK
+name|IF_AFDATA_RLOCK
 argument_list|(
 name|pfxrtr
 operator|->
@@ -5398,7 +5398,7 @@ operator|->
 name|ifp
 argument_list|)
 expr_stmt|;
-name|IF_AFDATA_UNLOCK
+name|IF_AFDATA_RUNLOCK
 argument_list|(
 name|pfxrtr
 operator|->

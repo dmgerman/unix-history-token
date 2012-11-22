@@ -11539,7 +11539,7 @@ name|char
 modifier|*
 name|lladdr
 decl_stmt|;
-name|IF_AFDATA_LOCK
+name|IF_AFDATA_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -11555,7 +11555,7 @@ argument_list|,
 name|ifp
 argument_list|)
 expr_stmt|;
-name|IF_AFDATA_UNLOCK
+name|IF_AFDATA_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
