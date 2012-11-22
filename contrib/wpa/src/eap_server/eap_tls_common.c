@@ -1007,6 +1007,37 @@ operator|-
 literal|1
 return|;
 block|}
+if|if
+condition|(
+name|len
+operator|>
+name|message_length
+condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_INFO
+argument_list|,
+literal|"SSL: Too much data (%d bytes) in "
+literal|"first fragment of frame (TLS Message "
+literal|"Length %d bytes)"
+argument_list|,
+operator|(
+name|int
+operator|)
+name|len
+argument_list|,
+operator|(
+name|int
+operator|)
+name|message_length
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 name|data
 operator|->
 name|in_buf
