@@ -3795,7 +3795,7 @@ literal|1
 operator|)
 return|;
 comment|/* 	 * Even if the address matches none of our addresses, it might be 	 * in the neighbor cache. 	 */
-name|IF_AFDATA_LOCK
+name|IF_AFDATA_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -3831,7 +3831,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-name|IF_AFDATA_UNLOCK
+name|IF_AFDATA_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -5871,7 +5871,7 @@ operator|(
 name|error
 operator|)
 return|;
-name|IF_AFDATA_LOCK
+name|IF_AFDATA_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -5888,7 +5888,7 @@ argument_list|,
 name|ifp
 argument_list|)
 expr_stmt|;
-name|IF_AFDATA_UNLOCK
+name|IF_AFDATA_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -8337,7 +8337,7 @@ return|;
 block|}
 block|}
 comment|/* 	 * the entry should have been created in nd6_store_lladdr 	 */
-name|IF_AFDATA_LOCK
+name|IF_AFDATA_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -8356,7 +8356,7 @@ argument_list|,
 name|dst
 argument_list|)
 expr_stmt|;
-name|IF_AFDATA_UNLOCK
+name|IF_AFDATA_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)

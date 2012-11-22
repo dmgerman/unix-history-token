@@ -2434,7 +2434,7 @@ name|rt
 operator|->
 name|rt_ifp
 expr_stmt|;
-name|IF_AFDATA_LOCK
+name|IF_AFDATA_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -2461,7 +2461,7 @@ operator|->
 name|sin6_addr
 argument_list|)
 expr_stmt|;
-name|IF_AFDATA_UNLOCK
+name|IF_AFDATA_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
