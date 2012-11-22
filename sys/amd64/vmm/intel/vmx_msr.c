@@ -534,10 +534,6 @@ decl_stmt|;
 if|if
 condition|(
 name|msr
-operator|>=
-literal|0x00000000
-operator|&&
-name|msr
 operator|<=
 literal|0x00001FFF
 condition|)
