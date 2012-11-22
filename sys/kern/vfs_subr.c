@@ -18549,31 +18549,6 @@ end_function
 
 begin_function
 name|void
-name|vop_lookup_pre
-parameter_list|(
-name|void
-modifier|*
-name|ap
-parameter_list|)
-block|{ }
-end_function
-
-begin_function
-name|void
-name|vop_lookup_post
-parameter_list|(
-name|void
-modifier|*
-name|ap
-parameter_list|,
-name|int
-name|rc
-parameter_list|)
-block|{ }
-end_function
-
-begin_function
-name|void
 name|vop_lock_pre
 parameter_list|(
 name|void
