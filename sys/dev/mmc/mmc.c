@@ -5004,7 +5004,7 @@ operator|->
 name|card_id_string
 argument_list|)
 argument_list|,
-literal|"%s%s %s %d.%d SN %d MFG %02d/%04d by %d %s"
+literal|"%s%s %s %d.%d SN %u MFG %02d/%04d by %d %s"
 argument_list|,
 name|ivar
 operator|->
