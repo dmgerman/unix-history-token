@@ -3146,12 +3146,6 @@ name|pi
 operator|->
 name|pi_msix
 operator|.
-name|enabled
-operator|&&
-name|pi
-operator|->
-name|pi_msix
-operator|.
 name|table_bar
 operator|==
 name|baridx
@@ -3299,12 +3293,6 @@ name|pi_arg
 expr_stmt|;
 if|if
 condition|(
-name|pi
-operator|->
-name|pi_msix
-operator|.
-name|enabled
-operator|&&
 name|pi
 operator|->
 name|pi_msix
