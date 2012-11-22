@@ -132,31 +132,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/ipfw/ip_fw_private.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ipfw/dn_heap.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/ip_dummynet.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netinet/ipfw/ip_dn_private.h>
+file|<netpfil/ipfw/ip_fw_private.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netinet/ipfw/dn_sched.h>
+file|<netpfil/ipfw/dn_heap.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netpfil/ipfw/ip_dn_private.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netpfil/ipfw/dn_sched.h>
 end_include
 
 begin_comment

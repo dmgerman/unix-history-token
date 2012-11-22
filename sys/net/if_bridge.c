@@ -360,7 +360,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/ipfw/ip_fw_private.h>
+file|<netpfil/ipfw/ip_fw_private.h>
 end_include
 
 begin_comment

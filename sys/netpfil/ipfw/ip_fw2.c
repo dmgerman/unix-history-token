@@ -259,12 +259,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/ipfw/ip_fw_private.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/ip_carp.h>
 end_include
 
@@ -338,6 +332,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<netpfil/ipfw/ip_fw_private.h>
+end_include
 
 begin_include
 include|#
