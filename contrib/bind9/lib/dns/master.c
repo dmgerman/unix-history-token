@@ -232,7 +232,7 @@ begin_define
 define|#
 directive|define
 name|MINTSIZ
-value|(65535 - 12 - 1 - 2 - 2 - 4 - 2)
+value|DNS_RDATA_MAXLENGTH
 end_define
 
 begin_comment
