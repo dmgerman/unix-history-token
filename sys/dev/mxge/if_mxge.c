@@ -113,16 +113,6 @@ directive|include
 file|<sys/taskqueue.h>
 end_include
 
-begin_comment
-comment|/* count xmits ourselves, rather than via drbr */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NO_SLOW_STATS
-end_define
-
 begin_include
 include|#
 directive|include
