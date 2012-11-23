@@ -3666,6 +3666,19 @@ end_define
 begin_define
 define|#
 directive|define
+name|ath_hal_settsf64
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_val
+parameter_list|)
+define|\
+value|((*(_ah)->ah_setTsf64)((_ah), (_val)))
+end_define
+
+begin_define
+define|#
+directive|define
 name|ath_hal_resettsf
 parameter_list|(
 name|_ah
