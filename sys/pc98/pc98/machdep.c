@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_kdtrace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -5872,7 +5878,9 @@ control|(
 init|;
 condition|;
 control|)
-asm|__asm__ ("hlt");
+name|halt
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -5971,7 +5979,7 @@ name|state
 operator|=
 name|STATE_SLEEPING
 expr_stmt|;
-comment|/* 	 * We must absolutely guarentee that hlt is the next instruction 	 * after sti or we introduce a timing window. 	 */
+comment|/* 	 * Since we may be in a critical section from cpu_idle(), if 	 * an interrupt fires during that critical section we may have 	 * a pending preemption.  If the CPU halts, then that thread 	 * may not execute until a later interrupt awakens the CPU. 	 * To handle this race, check for a runnable thread after 	 * disabling interrupts and immediately return if one is 	 * found.  Also, we must absolutely guarentee that hlt is 	 * the next instruction after sti.  This ensures that any 	 * interrupt that fires after the call to disable_intr() will 	 * immediately awaken the CPU from hlt.  Finally, please note 	 * that on x86 this works fine because of interrupts enabled only 	 * after the instruction following sti takes place, while IF is set 	 * to 1 immediately, allowing hlt instruction to acknowledge the 	 * interrupt. 	 */
 name|disable_intr
 argument_list|()
 expr_stmt|;
@@ -6061,13 +6069,26 @@ name|state
 operator|=
 name|STATE_MWAIT
 expr_stmt|;
+comment|/* See comments in cpu_idle_hlt(). */
+name|disable_intr
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
-operator|!
 name|sched_runnable
 argument_list|()
 condition|)
 block|{
+name|enable_intr
+argument_list|()
+expr_stmt|;
+operator|*
+name|state
+operator|=
+name|STATE_RUNNING
+expr_stmt|;
+return|return;
+block|}
 name|cpu_monitor
 argument_list|(
 name|state
@@ -6084,14 +6105,11 @@ name|state
 operator|==
 name|STATE_MWAIT
 condition|)
-name|cpu_mwait
-argument_list|(
-literal|0
-argument_list|,
-name|MWAIT_C1
-argument_list|)
+asm|__asm __volatile("sti; mwait" : : "a" (MWAIT_C1), "c" (0));
+else|else
+name|enable_intr
+argument_list|()
 expr_stmt|;
-block|}
 operator|*
 name|state
 operator|=
@@ -6132,6 +6150,7 @@ name|state
 operator|=
 name|STATE_RUNNING
 expr_stmt|;
+comment|/* 	 * The sched_runnable() call is racy but as long as there is 	 * a loop missing it one time will have just a little impact if any  	 * (and it is much better than missing the check at all). 	 */
 for|for
 control|(
 name|i
@@ -6181,9 +6200,12 @@ name|int
 name|busy
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|SMP
+argument_list|)
 if|if
 condition|(
 name|mp_grab_cpu_hlt
@@ -8667,6 +8689,16 @@ argument_list|(
 name|xmm
 argument_list|)
 decl_stmt|,
+ifdef|#
+directive|ifdef
+name|KDTRACE_HOOKS
+name|IDTVEC
+argument_list|(
+name|dtrace_ret
+argument_list|)
+decl_stmt|,
+endif|#
+directive|endif
 name|IDTVEC
 argument_list|(
 name|lcall_syscall
@@ -10115,6 +10147,9 @@ operator|+
 name|off
 argument_list|)
 expr_stmt|;
+name|PT_UPDATES_FLUSH
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -11137,6 +11172,33 @@ name|SEL_KPL
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KDTRACE_HOOKS
+name|setidt
+argument_list|(
+name|IDT_DTRACE_RET
+argument_list|,
+operator|&
+name|IDTVEC
+argument_list|(
+name|dtrace_ret
+argument_list|)
+argument_list|,
+name|SDT_SYS386TGT
+argument_list|,
+name|SEL_UPL
+argument_list|,
+name|GSEL
+argument_list|(
+name|GCODE_SEL
+argument_list|,
+name|SEL_KPL
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|r_idt
 operator|.
 name|rd_limit
@@ -12916,6 +12978,13 @@ name|TD_IS_SUSPENDED
 argument_list|(
 name|td
 argument_list|)
+operator|||
+name|P_SHOULDSTOP
+argument_list|(
+name|td
+operator|->
+name|td_proc
+argument_list|)
 argument_list|,
 operator|(
 literal|"not suspended thread %p"
@@ -13873,6 +13942,20 @@ modifier|*
 name|td
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|PCB_USER_FPU
+argument_list|(
+name|td
+operator|->
+name|td_pcb
+argument_list|)
+argument_list|,
+operator|(
+literal|"fpstate_drop: kernel-owned fpu"
+operator|)
+argument_list|)
+expr_stmt|;
 name|critical_enter
 argument_list|()
 expr_stmt|;
