@@ -1263,12 +1263,22 @@ operator|&
 name|HAL_BEACON_PERIOD
 expr_stmt|;
 comment|/* 	 * Retrieve the hardware NextTBTT in usecs 	 * and calculate the difference between what the 	 * other station thinks and what we have programmed.  This 	 * lets us figure how to adjust our timers to match.  The 	 * adjustments are done by pulling the TSF forward and possibly 	 * rewriting the beacon timers. 	 */
+comment|/* 	 * The logic here assumes the nexttbtt counter is in TSF 	 * but the prr-11n NICs are in TU.  The HAL shifts them 	 * to TSF but there's two important differences: 	 * 	 * + The TU->TSF values have 0's for the low 9 bits, and 	 * + The counter wraps at TU_TO_TSF(HAL_BEACON_PERIOD + 1) for 	 *   the pre-11n NICs, but not for the 11n NICs. 	 * 	 * So for now, just make sure the nexttbtt value we get 	 * matches the second issue or once nexttbtt exceeds this 	 * value, tsfdelta ends up becoming very negative and all 	 * of the adjustments get very messed up. 	 */
 name|nexttbtt
 operator|=
 name|ath_hal_getnexttbtt
 argument_list|(
 name|ah
 argument_list|)
+operator|%
+operator|(
+name|TU_TO_TSF
+argument_list|(
+name|HAL_BEACON_PERIOD
+operator|+
+literal|1
+argument_list|)
+operator|)
 expr_stmt|;
 name|tsfdelta
 operator|=
