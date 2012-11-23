@@ -78,9 +78,6 @@ comment|/* mouse has Z-axis reversed */
 name|UQ_NO_STRINGS
 block|,
 comment|/* string descriptors are broken */
-name|UQ_OPEN_CLEARSTALL
-block|,
-comment|/* device needs clear endpoint stall */
 name|UQ_POWER_CLAIM
 block|,
 comment|/* hub lies about power status */

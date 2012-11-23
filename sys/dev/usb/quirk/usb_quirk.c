@@ -3965,12 +3965,6 @@ operator|=
 literal|"UQ_NO_STRINGS"
 block|,
 index|[
-name|UQ_OPEN_CLEARSTALL
-index|]
-operator|=
-literal|"UQ_OPEN_CLEARSTALL"
-block|,
-index|[
 name|UQ_POWER_CLAIM
 index|]
 operator|=
