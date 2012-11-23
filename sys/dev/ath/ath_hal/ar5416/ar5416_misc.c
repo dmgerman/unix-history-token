@@ -347,6 +347,13 @@ name|uint64_t
 name|tsf64
 parameter_list|)
 block|{
+comment|/* XXX check if this is correct! */
+if|#
+directive|if
+literal|0
+block|int i; 	uint32_t v;  	for (i = 0; i< 10; i++) { 		v = OS_REG_READ(ah, AR_SLP32_MODE); 		if ((v& AR_SLP32_TSF_WRITE_STATUS) == 0) 			break; 		OS_DELAY(10); 	} 	if (i == 10) 		ath_hal_printf(ah, "%s: couldn't slew things right!\n", __func__);
+endif|#
+directive|endif
 name|OS_REG_WRITE
 argument_list|(
 name|ah
