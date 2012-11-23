@@ -1519,10 +1519,23 @@ operator|>
 literal|0
 condition|)
 block|{
-name|ath_hal_adjusttsf
+name|uint64_t
+name|tsf
+decl_stmt|;
+comment|/* XXX should just teach ath_hal_adjusttsf() to do this */
+name|tsf
+operator|=
+name|ath_hal_gettsf64
+argument_list|(
+name|ah
+argument_list|)
+expr_stmt|;
+name|ath_hal_settsf64
 argument_list|(
 name|ah
 argument_list|,
+name|tsf
+operator|+
 name|tsfdelta
 argument_list|)
 expr_stmt|;
