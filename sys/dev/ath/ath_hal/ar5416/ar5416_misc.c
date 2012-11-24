@@ -334,6 +334,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Update the TSF.  *  * The full TSF is only updated once the upper 32 bits have  * been written.  Writing only the lower 32 bits of the TSF  * will not actually correctly update the TSF.  *  * The #if 0'ed code is to check whether the previous TSF  * reset or write has completed before writing to the  * TSF.  Strictly speaking, it should be also checked before  * reading the TSF as the write/reset may not have completed.  */
+end_comment
+
 begin_function
 name|void
 name|ar5416SetTsf64
