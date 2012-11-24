@@ -1111,6 +1111,9 @@ decl_stmt|;
 name|uint64_t
 name|platform_counter_freq
 decl_stmt|;
+name|int
+name|rv
+decl_stmt|;
 name|mips_postboot_fixup
 argument_list|()
 expr_stmt|;
@@ -1136,7 +1139,51 @@ comment|/* Initialize console.  */
 name|cninit
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Display information about the board/CPU. 	 */
+comment|/* 	 * Display information about the CPU. 	 */
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|OCTEON_MODEL
+argument_list|)
+name|printf
+argument_list|(
+literal|"Using runtime CPU model checks.\n"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|printf
+argument_list|(
+literal|"Compiled for CPU model: "
+name|__XSTRING
+argument_list|(
+name|OCTEON_MODEL
+argument_list|)
+literal|"\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|strcpy
+argument_list|(
+name|cpu_model
+argument_list|,
+name|octeon_model_get_string
+argument_list|(
+name|cvmx_get_proc_id
+argument_list|()
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"CPU Model: %s\n"
+argument_list|,
+name|cpu_model
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"CPU clock: %uMHz  Core Mask: %#x\n"
@@ -1154,43 +1201,29 @@ operator|->
 name|core_mask
 argument_list|)
 expr_stmt|;
-name|printf
+name|rv
+operator|=
+name|octeon_model_version_check
 argument_list|(
-literal|"Board Type: %u  Revision: %u/%u\n"
-argument_list|,
-name|cvmx_sysinfo_get
+name|cvmx_get_proc_id
 argument_list|()
-operator|->
-name|board_type
-argument_list|,
-name|cvmx_sysinfo_get
-argument_list|()
-operator|->
-name|board_rev_major
-argument_list|,
-name|cvmx_sysinfo_get
-argument_list|()
-operator|->
-name|board_rev_minor
 argument_list|)
 expr_stmt|;
-name|printf
+if|if
+condition|(
+name|rv
+operator|==
+operator|-
+literal|1
+condition|)
+name|panic
 argument_list|(
-literal|"MAC address base: %6D (%u configured)\n"
+literal|"%s: kernel not compatible with this processor."
 argument_list|,
-name|cvmx_sysinfo_get
-argument_list|()
-operator|->
-name|mac_addr_base
-argument_list|,
-literal|":"
-argument_list|,
-name|cvmx_sysinfo_get
-argument_list|()
-operator|->
-name|mac_addr_count
+name|__func__
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Display information about the board. 	 */
 if|#
 directive|if
 name|defined
@@ -1254,22 +1287,24 @@ argument_list|,
 name|cpu_board
 argument_list|)
 expr_stmt|;
-name|strcpy
-argument_list|(
-name|cpu_model
-argument_list|,
-name|octeon_model_get_string
-argument_list|(
-name|cvmx_get_proc_id
-argument_list|()
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
-literal|"Model: %s\n"
+literal|"Board Type: %u  Revision: %u/%u\n"
 argument_list|,
-name|cpu_model
+name|cvmx_sysinfo_get
+argument_list|()
+operator|->
+name|board_type
+argument_list|,
+name|cvmx_sysinfo_get
+argument_list|()
+operator|->
+name|board_rev_major
+argument_list|,
+name|cvmx_sysinfo_get
+argument_list|()
+operator|->
+name|board_rev_minor
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1280,6 +1315,24 @@ name|cvmx_sysinfo_get
 argument_list|()
 operator|->
 name|board_serial_number
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Additional on-chip hardware/settings. 	 * 	 * XXX Display PCI host/target?  What else? 	 */
+name|printf
+argument_list|(
+literal|"MAC address base: %6D (%u configured)\n"
+argument_list|,
+name|cvmx_sysinfo_get
+argument_list|()
+operator|->
+name|mac_addr_base
+argument_list|,
+literal|":"
+argument_list|,
+name|cvmx_sysinfo_get
+argument_list|()
+operator|->
+name|mac_addr_count
 argument_list|)
 expr_stmt|;
 name|octeon_ciu_reset
