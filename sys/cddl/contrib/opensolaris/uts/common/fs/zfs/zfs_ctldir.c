@@ -4406,6 +4406,22 @@ name|se_root
 condition|)
 block|{
 comment|/* 			 * The snapshot was unmounted behind our backs, 			 * try to remount it. 			 */
+name|VERIFY
+argument_list|(
+name|zfsctl_snapshot_zname
+argument_list|(
+name|dvp
+argument_list|,
+name|nm
+argument_list|,
+name|MAXNAMELEN
+argument_list|,
+name|snapname
+argument_list|)
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
 goto|goto
 name|domount
 goto|;
