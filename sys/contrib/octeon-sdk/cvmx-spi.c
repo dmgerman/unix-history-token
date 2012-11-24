@@ -453,9 +453,6 @@ condition|)
 return|return
 name|res
 return|;
-if|#
-directive|if
-name|CVMX_ENABLE_DEBUG_PRINTS
 name|cvmx_dprintf
 argument_list|(
 literal|"SPI%d: Restart %s\n"
@@ -468,8 +465,6 @@ name|mode
 index|]
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|// Callback to perform SPI4 reset
 name|INVOKE_CB
 argument_list|(
