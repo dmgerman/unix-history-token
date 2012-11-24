@@ -277,7 +277,7 @@ specifier|static
 name|int
 name|is_delim
 parameter_list|(
-name|int
+name|wchar_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1791,7 +1791,7 @@ specifier|static
 name|int
 name|is_delim
 parameter_list|(
-name|int
+name|wchar_t
 name|ch
 parameter_list|)
 block|{
