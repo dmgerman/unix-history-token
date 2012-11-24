@@ -17302,13 +17302,6 @@ name|error
 operator|)
 return|;
 block|}
-name|spa_history_log_version
-argument_list|(
-name|spa
-argument_list|,
-name|LOG_POOL_IMPORT
-argument_list|)
-expr_stmt|;
 name|spa_config_enter
 argument_list|(
 name|spa
