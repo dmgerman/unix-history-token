@@ -151,6 +151,11 @@ argument_list|,
 name|adx
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function
