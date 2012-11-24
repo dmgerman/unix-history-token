@@ -733,6 +733,10 @@ modifier|*
 name|authunix_create_default
 parameter_list|()
 block|{
+name|AUTH
+modifier|*
+name|auth
+decl_stmt|;
 name|int
 name|ngids
 decl_stmt|;
@@ -856,8 +860,8 @@ operator|=
 name|NGRPS
 expr_stmt|;
 comment|/* XXX: interface problem; those should all have been unsigned */
-return|return
-operator|(
+name|auth
+operator|=
 name|authunix_create
 argument_list|(
 name|machname
@@ -880,6 +884,15 @@ operator|*
 operator|)
 name|gids
 argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|gids
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|auth
 operator|)
 return|;
 block|}
