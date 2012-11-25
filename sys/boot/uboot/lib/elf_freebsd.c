@@ -292,6 +292,15 @@ operator|)
 name|entry
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"Kernel args: %s\n"
+argument_list|,
+name|fp
+operator|->
+name|f_args
+argument_list|)
+expr_stmt|;
 name|dev_cleanup
 argument_list|()
 expr_stmt|;
