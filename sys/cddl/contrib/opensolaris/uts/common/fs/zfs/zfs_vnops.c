@@ -27334,9 +27334,6 @@ name|zp
 operator|->
 name|z_zfsvfs
 decl_stmt|;
-name|int
-name|refcnt
-decl_stmt|;
 name|ASSERT
 argument_list|(
 name|zp
