@@ -485,7 +485,19 @@ init|=
 literal|1
 operator|<<
 literal|24
-block|}
+block|,
+name|ZIO_FLAG_NOPWRITE
+init|=
+literal|1
+operator|<<
+literal|25
+block|,
+name|ZIO_FLAG_REEXECUTED
+init|=
+literal|1
+operator|<<
+literal|26
+block|, }
 enum|;
 define|#
 directive|define
@@ -673,11 +685,14 @@ decl_stmt|;
 name|uint8_t
 name|zp_copies
 decl_stmt|;
-name|uint8_t
+name|boolean_t
 name|zp_dedup
 decl_stmt|;
-name|uint8_t
+name|boolean_t
 name|zp_dedup_verify
+decl_stmt|;
+name|boolean_t
+name|zp_nopwrite
 decl_stmt|;
 block|}
 name|zio_prop_t
@@ -1420,6 +1435,9 @@ name|bp
 parameter_list|,
 name|int
 name|copies
+parameter_list|,
+name|boolean_t
+name|nopwrite
 parameter_list|)
 function_decl|;
 specifier|extern
