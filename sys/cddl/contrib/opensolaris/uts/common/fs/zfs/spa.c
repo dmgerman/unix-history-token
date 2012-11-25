@@ -668,6 +668,13 @@ begin_comment
 comment|/* no process ==> no sysdc */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|zfs_sync_pass_deferred_free
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * This (illegal) pool name is used when temporarily importing a spa_t in order  * to get the vdev stats associated with the imported devices.  */
 end_comment
@@ -28326,8 +28333,8 @@ expr_stmt|;
 if|if
 condition|(
 name|pass
-operator|<=
-name|SYNC_PASS_DEFERRED_FREE
+operator|<
+name|zfs_sync_pass_deferred_free
 condition|)
 block|{
 name|zio_t

@@ -7,6 +7,10 @@ begin_comment
 comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
+begin_comment
+comment|/*  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -279,7 +283,7 @@ define|#
 directive|define
 name|ZIO_FREE_PIPELINE
 define|\
-value|(ZIO_INTERLOCK_STAGES |			\ 	ZIO_STAGE_FREE_BP_INIT |		\ 	ZIO_STAGE_DVA_FREE |			\ 	ZIO_STAGE_VDEV_IO_START |		\ 	ZIO_STAGE_VDEV_IO_ASSESS)
+value|(ZIO_INTERLOCK_STAGES |			\ 	ZIO_STAGE_FREE_BP_INIT |		\ 	ZIO_STAGE_ISSUE_ASYNC |			\ 	ZIO_STAGE_DVA_FREE |			\ 	ZIO_STAGE_VDEV_IO_START |		\ 	ZIO_STAGE_VDEV_IO_ASSESS)
 define|#
 directive|define
 name|ZIO_DDT_FREE_PIPELINE

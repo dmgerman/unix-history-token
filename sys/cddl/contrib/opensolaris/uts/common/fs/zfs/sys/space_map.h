@@ -7,6 +7,10 @@ begin_comment
 comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
+begin_comment
+comment|/*  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -402,6 +406,20 @@ name|start
 parameter_list|,
 name|uint64_t
 name|size
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|space_map_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|space_map_fini
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 specifier|extern
