@@ -2895,6 +2895,17 @@ argument_list|,
 name|ETHER_VLAN_ENCAP_LEN
 argument_list|)
 expr_stmt|;
+name|eh
+operator|=
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+expr|struct
+name|ether_header
+operator|*
+argument_list|)
+expr_stmt|;
 block|}
 name|M_SETFIB
 argument_list|(
