@@ -2268,14 +2268,14 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BGE_PCISTATE_WANT_EXPROM
+name|BGE_PCISTATE_ROM_ENABLE
 value|0x00000020
 end_define
 
 begin_define
 define|#
 directive|define
-name|BGE_PCISTATE_EXPROM_RETRY
+name|BGE_PCISTATE_ROM_RETRY_ENABLE
 value|0x00000040
 end_define
 
@@ -2291,6 +2291,13 @@ define|#
 directive|define
 name|BGE_PCISTATE_PCI_TGT_RETRY_MAX
 value|0x00000E00
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_PCISTATE_RETRY_SAME_DMA
+value|0x00002000
 end_define
 
 begin_comment
