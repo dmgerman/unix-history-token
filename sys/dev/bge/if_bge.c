@@ -4775,7 +4775,7 @@ name|sc
 operator|->
 name|bge_dev
 argument_list|,
-literal|"PHY write timed out (phy %d, reg %d, val %d)\n"
+literal|"PHY write timed out (phy %d, reg %d, val 0x%04x)\n"
 argument_list|,
 name|phy
 argument_list|,
@@ -7915,7 +7915,22 @@ operator|&
 name|BGE_FLAG_PCIE
 condition|)
 block|{
-comment|/* Read watermark not used, 128 bytes for write. */
+if|if
+condition|(
+name|sc
+operator|->
+name|bge_mps
+operator|>=
+literal|256
+condition|)
+name|dma_rw_ctl
+operator||=
+name|BGE_PCIDMARWCTL_WR_WAT_SHIFT
+argument_list|(
+literal|7
+argument_list|)
+expr_stmt|;
+else|else
 name|dma_rw_ctl
 operator||=
 name|BGE_PCIDMARWCTL_WR_WAT_SHIFT
@@ -10340,6 +10355,7 @@ argument_list|,
 name|BGE_RXLSMODE_ENABLE
 argument_list|)
 expr_stmt|;
+comment|/* Turn on DMA, clear stats. */
 name|val
 operator|=
 name|BGE_MACMODE_TXDMA_ENB
@@ -10386,7 +10402,6 @@ name|val
 operator||=
 name|BGE_PORTMODE_MII
 expr_stmt|;
-comment|/* Turn on DMA, clear stats */
 name|CSR_WRITE_4
 argument_list|(
 name|sc
@@ -15583,6 +15598,38 @@ name|bge_expcap
 operator|=
 name|reg
 expr_stmt|;
+comment|/* Extract supported maximum payload size. */
+name|sc
+operator|->
+name|bge_mps
+operator|=
+name|pci_read_config
+argument_list|(
+name|dev
+argument_list|,
+name|sc
+operator|->
+name|bge_expcap
+operator|+
+name|PCIER_DEVICE_CAP
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|bge_mps
+operator|=
+literal|128
+operator|<<
+operator|(
+name|sc
+operator|->
+name|bge_mps
+operator|&
+name|PCIEM_CAP_MAX_PAYLOAD
+operator|)
+expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -15597,28 +15644,26 @@ name|bge_asicrev
 operator|==
 name|BGE_ASICREV_BCM5720
 condition|)
-name|pci_set_max_read_req
-argument_list|(
-name|dev
-argument_list|,
+name|sc
+operator|->
+name|bge_expmrq
+operator|=
 literal|2048
-argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|pci_get_max_read_req
-argument_list|(
-name|dev
-argument_list|)
-operator|!=
+else|else
+name|sc
+operator|->
+name|bge_expmrq
+operator|=
 literal|4096
-condition|)
+expr_stmt|;
 name|pci_set_max_read_req
 argument_list|(
 name|dev
 argument_list|,
-literal|4096
+name|sc
+operator|->
+name|bge_expmrq
 argument_list|)
 expr_stmt|;
 block|}
@@ -16526,7 +16571,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|BGE_IS_5714_FAMILY
+name|BGE_IS_5705_PLUS
 argument_list|(
 name|sc
 argument_list|)
@@ -17529,6 +17574,25 @@ condition|)
 block|{
 if|if
 condition|(
+name|sc
+operator|->
+name|bge_asicrev
+operator|!=
+name|BGE_ASICREV_BCM5785
+operator|&&
+operator|(
+name|sc
+operator|->
+name|bge_flags
+operator|&
+name|BGE_FLAG_5717_PLUS
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
 name|CSR_READ_4
 argument_list|(
 name|sc
@@ -17548,6 +17612,7 @@ argument_list|,
 literal|0x20
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|sc
@@ -17577,38 +17642,6 @@ literal|29
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Set GPHY Power Down Override to leave GPHY 	 * powered up in D0 uninitialized. 	 */
-if|if
-condition|(
-name|BGE_IS_5705_PLUS
-argument_list|(
-name|sc
-argument_list|)
-operator|&&
-operator|(
-name|sc
-operator|->
-name|bge_flags
-operator|&
-name|BGE_FLAG_CPMU_PRESENT
-operator|)
-operator|==
-literal|0
-condition|)
-name|reset
-operator||=
-name|BGE_MISCCFG_GPHY_PD_OVERRIDE
-expr_stmt|;
-comment|/* Issue global reset */
-name|write_op
-argument_list|(
-name|sc
-argument_list|,
-name|BGE_MISC_CFG
-argument_list|,
-name|reset
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -17660,6 +17693,38 @@ name|BGE_VCPU_EXT_CTRL_HALT_CPU
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Set GPHY Power Down Override to leave GPHY 	 * powered up in D0 uninitialized. 	 */
+if|if
+condition|(
+name|BGE_IS_5705_PLUS
+argument_list|(
+name|sc
+argument_list|)
+operator|&&
+operator|(
+name|sc
+operator|->
+name|bge_flags
+operator|&
+name|BGE_FLAG_CPMU_PRESENT
+operator|)
+operator|==
+literal|0
+condition|)
+name|reset
+operator||=
+name|BGE_MISCCFG_GPHY_PD_OVERRIDE
+expr_stmt|;
+comment|/* Issue global reset */
+name|write_op
+argument_list|(
+name|sc
+argument_list|,
+name|BGE_MISC_CFG
+argument_list|,
+name|reset
+argument_list|)
+expr_stmt|;
 name|DELAY
 argument_list|(
 literal|1000
@@ -17757,6 +17822,15 @@ argument_list|,
 name|devctl
 argument_list|,
 literal|2
+argument_list|)
+expr_stmt|;
+name|pci_set_max_read_req
+argument_list|(
+name|dev
+argument_list|,
+name|sc
+operator|->
+name|bge_expmrq
 argument_list|)
 expr_stmt|;
 comment|/* Clear error status. */
@@ -18350,11 +18424,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|DELAY
-argument_list|(
-literal|10000
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -19811,6 +19880,7 @@ operator||
 name|BUS_DMASYNC_POSTWRITE
 argument_list|)
 expr_stmt|;
+comment|/* Fetch updates from the status block. */
 name|rx_prod
 operator|=
 name|sc
@@ -19851,6 +19921,7 @@ name|bge_status_block
 operator|->
 name|bge_status
 expr_stmt|;
+comment|/* Clear the status so the next pass only sees the changes. */
 name|sc
 operator|->
 name|bge_ldata
@@ -20154,7 +20225,7 @@ operator||
 name|BUS_DMASYNC_POSTWRITE
 argument_list|)
 expr_stmt|;
-comment|/* Save producer/consumer indexess. */
+comment|/* Save producer/consumer indices. */
 name|rx_prod
 operator|=
 name|sc
@@ -20207,6 +20278,7 @@ name|bge_status_tag
 operator|<<
 literal|24
 expr_stmt|;
+comment|/* Dirty the status flag. */
 name|sc
 operator|->
 name|bge_ldata
@@ -26983,7 +27055,7 @@ name|bge_dev
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Clear the attention. */
+comment|/* Disable MAC attention when link is up. */
 name|CSR_WRITE_4
 argument_list|(
 name|sc
