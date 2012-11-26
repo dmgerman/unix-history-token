@@ -32379,6 +32379,8 @@ decl_stmt|,
 name|j
 decl_stmt|,
 name|printed
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
