@@ -908,6 +908,11 @@ operator|+=
 name|nmlen
 expr_stmt|;
 block|}
+operator|*
+name|p
+operator|=
+literal|'\0'
+expr_stmt|;
 name|MPASS
 argument_list|(
 name|p
