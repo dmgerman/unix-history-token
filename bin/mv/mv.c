@@ -799,6 +799,11 @@ argument_list|,
 operator|&
 name|sb
 argument_list|)
+operator|&&
+name|isatty
+argument_list|(
+name|STDIN_FILENO
+argument_list|)
 condition|)
 block|{
 name|strmode
