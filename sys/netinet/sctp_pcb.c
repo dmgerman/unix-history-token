@@ -5196,11 +5196,21 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|inp
 operator|->
 name|sctp_flags
 operator|&
 name|SCTP_PCB_FLAGS_TCPTYPE
+operator|)
+operator|||
+operator|(
+name|inp
+operator|->
+name|sctp_flags
+operator|&
+name|SCTP_PCB_FLAGS_IN_TCPPOOL
+operator|)
 condition|)
 block|{
 comment|/*- 		 * Now either this guy is our listener or it's the 		 * connector. If it is the one that issued the connect, then 		 * it's only chance is to be the first TCB in the list. If 		 * it is the acceptor, then do the special_lookup to hash 		 * and find the real inp. 		 */
