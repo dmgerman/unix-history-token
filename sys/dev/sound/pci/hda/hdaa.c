@@ -7721,12 +7721,6 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
-name|sbuf_trim
-argument_list|(
-operator|&
-name|sb
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|sbuf_finish
