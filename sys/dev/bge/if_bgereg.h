@@ -15849,6 +15849,9 @@ decl_stmt|;
 name|int
 name|bge_func_addr
 decl_stmt|;
+name|int
+name|bge_phy_addr
+decl_stmt|;
 name|uint32_t
 name|bge_phy_flags
 decl_stmt|;
