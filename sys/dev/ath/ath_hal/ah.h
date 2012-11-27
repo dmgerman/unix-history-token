@@ -2384,6 +2384,7 @@ name|uint32_t
 name|bs_intval
 decl_stmt|;
 comment|/* beacon interval+flags */
+comment|/*  * HAL_BEACON_PERIOD, HAL_BEACON_ENA and HAL_BEACON_RESET_TSF  * are all 1:1 correspondances with the pre-11n chip AR_BEACON  * register.  */
 define|#
 directive|define
 name|HAL_BEACON_PERIOD
