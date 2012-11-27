@@ -693,6 +693,16 @@ name|IN_CAPABILITY_MODE
 argument_list|(
 name|td
 argument_list|)
+operator|&&
+operator|(
+name|cnp
+operator|->
+name|cn_flags
+operator|&
+name|NOCAPCHECK
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|ndp
