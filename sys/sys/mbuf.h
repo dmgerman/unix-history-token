@@ -1167,17 +1167,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CSUM_IP_FRAGS
-value|0x0008
-end_define
-
-begin_comment
-comment|/* will csum IP fragments */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|CSUM_FRAGMENT
 value|0x0010
 end_define
