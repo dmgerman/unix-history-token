@@ -988,6 +988,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.sugid_coredump"
+argument_list|,
+operator|&
+name|sugid_coredump
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_kern
@@ -14715,6 +14726,21 @@ literal|"%N.core"
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_STR
+argument_list|(
+literal|"kern.corefile"
+argument_list|,
+name|corefilename
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|corefilename
+argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_STRING
