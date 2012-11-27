@@ -2186,7 +2186,7 @@ literal|"%s: calling ath_hal_adjusttsf: TSF=%llu, tsfdelta=%d\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|tsf_1
+name|tsf
 argument_list|,
 name|tsfdelta
 argument_list|)
