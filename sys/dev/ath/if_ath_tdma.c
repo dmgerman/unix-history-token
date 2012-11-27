@@ -569,6 +569,9 @@ literal|0
 block|DPRINTF(sc, ATH_DEBUG_TDMA_TIMER, 	    "%s: intval=%d (0x%08x) nexttbtt=%u (0x%08x), nextdba=%u (0x%08x), nextswba=%u (0x%08x),nextatim=%u (0x%08x)\n", 	    __func__, 	    bt.bt_intval, 	    bt.bt_intval, 	    bt.bt_nexttbtt, 	    bt.bt_nexttbtt, 	    bt.bt_nextdba, 	    bt.bt_nextdba, 	    bt.bt_nextswba, 	    bt.bt_nextswba, 	    bt.bt_nextatim, 	    bt.bt_nextatim);
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|ATH_DEBUG_ALQ
 if|if
 condition|(
 name|if_ath_alq_checkdebug
@@ -697,6 +700,8 @@ name|t
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|DPRINTF
 argument_list|(
 name|sc
