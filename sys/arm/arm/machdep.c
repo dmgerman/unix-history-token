@@ -4906,72 +4906,6 @@ end_function
 begin_function
 specifier|static
 name|void
-name|print_kernel_section_addr
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|debugf
-argument_list|(
-literal|"kernel image addresses:\n"
-argument_list|)
-expr_stmt|;
-name|debugf
-argument_list|(
-literal|" kernbase       = 0x%08x\n"
-argument_list|,
-operator|(
-name|uint32_t
-operator|)
-name|kernbase
-argument_list|)
-expr_stmt|;
-name|debugf
-argument_list|(
-literal|" _etext (sdata) = 0x%08x\n"
-argument_list|,
-operator|(
-name|uint32_t
-operator|)
-name|_etext
-argument_list|)
-expr_stmt|;
-name|debugf
-argument_list|(
-literal|" _edata         = 0x%08x\n"
-argument_list|,
-operator|(
-name|uint32_t
-operator|)
-name|_edata
-argument_list|)
-expr_stmt|;
-name|debugf
-argument_list|(
-literal|" __bss_start    = 0x%08x\n"
-argument_list|,
-operator|(
-name|uint32_t
-operator|)
-name|__bss_start
-argument_list|)
-expr_stmt|;
-name|debugf
-argument_list|(
-literal|" _end           = 0x%08x\n"
-argument_list|,
-operator|(
-name|uint32_t
-operator|)
-name|_end
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
 name|physmap_init
 parameter_list|(
 name|struct
@@ -6299,9 +6233,6 @@ name|uint32_t
 operator|)
 name|dtbp
 argument_list|)
-expr_stmt|;
-name|print_kernel_section_addr
-argument_list|()
 expr_stmt|;
 name|print_kenv
 argument_list|()
