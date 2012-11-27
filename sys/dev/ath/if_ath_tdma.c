@@ -1308,7 +1308,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Update tdma operation.  Called from the 802.11 layer  * when a beacon is received from the TDMA station operating  * in the slot immediately preceding us in the bss.  Use  * the rx timestamp for the beacon frame to update our  * beacon timers so we follow their schedule.  Note that  * by using the rx timestamp we implicitly include the  * propagation delay in our schedule.  */
+comment|/*  * Update tdma operation.  Called from the 802.11 layer  * when a beacon is received from the TDMA station operating  * in the slot immediately preceding us in the bss.  Use  * the rx timestamp for the beacon frame to update our  * beacon timers so we follow their schedule.  Note that  * by using the rx timestamp we implicitly include the  * propagation delay in our schedule.  *  * XXX TODO: since the changes for the AR5416 and later chips  * involved changing the TSF/TU calculations, we need to make  * sure that various calculations wrap consistently.  *  * A lot of the problems stemmed from the calculations wrapping  * at 65,535 TU.  Since a lot of the math is still being done in  * TU, please audit it to ensure that when the TU values programmed  * into the timers wrap at (2^31)-1 TSF, all the various terms  * wrap consistently.  */
 end_comment
 
 begin_function
@@ -2226,7 +2226,7 @@ name|tsf64_old
 operator|=
 name|htobe64
 argument_list|(
-name|tsf_1
+name|tsf
 argument_list|)
 expr_stmt|;
 name|t
@@ -2235,7 +2235,7 @@ name|tsf64_new
 operator|=
 name|htobe64
 argument_list|(
-name|tsf_1
+name|tsf
 operator|+
 name|tsfdelta
 argument_list|)
