@@ -1066,6 +1066,8 @@ decl_stmt|,
 name|nextslot
 decl_stmt|,
 name|nexttbtt
+decl_stmt|,
+name|nexttbtt_full
 decl_stmt|;
 name|u_int32_t
 name|txtime
@@ -1249,6 +1251,7 @@ operator|<<
 literal|9
 operator|)
 expr_stmt|;
+comment|/* 	 * For 802.11n chips: nextslottu needs to be the full TSF space, 	 * not just 0..65535 TU. 	 */
 name|nextslottu
 operator|=
 name|TSF_TO_TU
@@ -1259,17 +1262,20 @@ literal|32
 argument_list|,
 name|nextslot
 argument_list|)
-operator|&
-name|HAL_BEACON_PERIOD
 expr_stmt|;
 comment|/* 	 * Retrieve the hardware NextTBTT in usecs 	 * and calculate the difference between what the 	 * other station thinks and what we have programmed.  This 	 * lets us figure how to adjust our timers to match.  The 	 * adjustments are done by pulling the TSF forward and possibly 	 * rewriting the beacon timers. 	 */
 comment|/* 	 * The logic here assumes the nexttbtt counter is in TSF 	 * but the prr-11n NICs are in TU.  The HAL shifts them 	 * to TSF but there's two important differences: 	 * 	 * + The TU->TSF values have 0's for the low 9 bits, and 	 * + The counter wraps at TU_TO_TSF(HAL_BEACON_PERIOD + 1) for 	 *   the pre-11n NICs, but not for the 11n NICs. 	 * 	 * So for now, just make sure the nexttbtt value we get 	 * matches the second issue or once nexttbtt exceeds this 	 * value, tsfdelta ends up becoming very negative and all 	 * of the adjustments get very messed up. 	 */
-name|nexttbtt
+comment|/* 	 * We need to track the full nexttbtt rather than having it 	 * truncated at HAL_BEACON_PERIOD, as programming the 	 * nexttbtt (and related) registers for the 11n chips is 	 * actually going to take the full 32 bit space, rather than 	 * just 0..65535 TU. 	 */
+name|nexttbtt_full
 operator|=
 name|ath_hal_getnexttbtt
 argument_list|(
 name|ah
 argument_list|)
+expr_stmt|;
+name|nexttbtt
+operator|=
+name|nexttbtt_full
 operator|%
 operator|(
 name|TU_TO_TSF
@@ -1429,11 +1435,11 @@ name|nextslottu
 operator|-
 name|TSF_TO_TU
 argument_list|(
-name|nexttbtt
+name|nexttbtt_full
 operator|>>
 literal|32
 argument_list|,
-name|nexttbtt
+name|nexttbtt_full
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Copy sender's timetstamp into tdma ie so they can 	 * calculate roundtrip time.  We submit a beacon frame 	 * below after any timer adjustment.  The frame goes out 	 * at the next TBTT so the sender can calculate the 	 * roundtrip by inspecting the tdma ie in our beacon frame. 	 * 	 * NB: This tstamp is subtlely preserved when 	 *     IEEE80211_BEACON_TDMA is marked (e.g. when the 	 *     slot position changes) because ieee80211_add_tdma 	 *     skips over the data. 	 */
