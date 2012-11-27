@@ -482,9 +482,6 @@ name|struct
 name|in_addr
 name|odst
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|IPFIREWALL_FORWARD
 name|struct
 name|m_tag
 modifier|*
@@ -492,8 +489,6 @@ name|fwd_tag
 init|=
 name|NULL
 decl_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|IPSEC
@@ -822,9 +817,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|IPFIREWALL_FORWARD
 if|if
 condition|(
 name|rte
@@ -836,17 +828,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-else|#
-directive|else
-if|if
-condition|(
-name|rte
-operator|==
-name|NULL
-condition|)
-block|{
-endif|#
-directive|endif
 name|bzero
 argument_list|(
 name|dst
@@ -2168,9 +2149,6 @@ goto|;
 comment|/* Redo the routing table lookup. */
 block|}
 block|}
-ifdef|#
-directive|ifdef
-name|IPFIREWALL_FORWARD
 comment|/* See if local, if yes, send it to netisr with IP_FASTFWD_OURS. */
 if|if
 condition|(
@@ -2276,6 +2254,17 @@ name|done
 goto|;
 block|}
 comment|/* Or forward to some other address? */
+if|if
+condition|(
+operator|(
+name|m
+operator|->
+name|m_flags
+operator|&
+name|M_IP_NEXTHOP
+operator|)
+operator|&&
+operator|(
 name|fwd_tag
 operator|=
 name|m_tag_find
@@ -2286,10 +2275,9 @@ name|PACKET_TAG_IPFORWARD
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|fwd_tag
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 name|dst
@@ -2327,6 +2315,13 @@ name|m_flags
 operator||=
 name|M_SKIP_FIREWALL
 expr_stmt|;
+name|m
+operator|->
+name|m_flags
+operator|&=
+operator|~
+name|M_IP_NEXTHOP
+expr_stmt|;
 name|m_tag_delete
 argument_list|(
 name|m
@@ -2352,9 +2347,6 @@ goto|goto
 name|again
 goto|;
 block|}
-endif|#
-directive|endif
-comment|/* IPFIREWALL_FORWARD */
 name|passout
 label|:
 comment|/* 127/8 must not appear on wire - RFC1122. */
@@ -2933,7 +2925,13 @@ goto|goto
 name|done
 goto|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Create a chain of fragments which fit the given mtu. m_frag points to the  * mbuf to be fragmented; on return it points to the chain with the fragments.  * Return 0 if no error. If error, m_frag may contain a partially built  * chain of fragments that should be freed by the caller.  *  * if_hwassist_flags is the hw offload capabilities (see if_data.ifi_hwassist)  * sw_csum contains the delayed checksums flags (e.g., CSUM_DELAY_IP).  */
+end_comment
+
+begin_function
 name|int
 name|ip_fragment
 parameter_list|(
@@ -3727,6 +3725,9 @@ return|return
 name|error
 return|;
 block|}
+end_function
+
+begin_function
 name|void
 name|in_delayed_cksum
 parameter_list|(
@@ -3853,7 +3854,13 @@ operator|=
 name|csum
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * IP socket option processing.  */
+end_comment
+
+begin_function
 name|int
 name|ip_ctloutput
 parameter_list|(
@@ -5174,7 +5181,13 @@ name|error
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Routine called from ip_output() to loop back a copy of an IP multicast  * packet to the input queue of a specified interface.  Note that this  * calls the output routine of the loopback "driver", but with an interface  * pointer that might NOT be a loopback interface -- evil, but easier than  * replicating that code here.  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|ip_mloopback

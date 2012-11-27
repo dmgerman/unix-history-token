@@ -2924,16 +2924,13 @@ name|iptos
 init|=
 literal|0
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|IPFIREWALL_FORWARD
 name|struct
 name|m_tag
 modifier|*
 name|fwd_tag
+init|=
+name|NULL
 decl_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|INET6
@@ -3929,10 +3926,15 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|IPFIREWALL_FORWARD
 comment|/* 	 * Grab info from PACKET_TAG_IPFORWARD tag prepended to the chain. 	 */
+if|if
+condition|(
+name|m
+operator|->
+name|m_flags
+operator|&
+name|M_IP_NEXTHOP
+condition|)
 name|fwd_tag
 operator|=
 name|m_tag_find
@@ -3944,15 +3946,9 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* IPFIREWALL_FORWARD */
 ifdef|#
 directive|ifdef
 name|INET6
-ifdef|#
-directive|ifdef
-name|IPFIREWALL_FORWARD
 if|if
 condition|(
 name|isipv6
@@ -4080,11 +4076,15 @@ argument_list|,
 name|fwd_tag
 argument_list|)
 expr_stmt|;
+name|m
+operator|->
+name|m_flags
+operator|&=
+operator|~
+name|M_IP_NEXTHOP
+expr_stmt|;
 block|}
 elseif|else
-endif|#
-directive|endif
-comment|/* IPFIREWALL_FORWARD */
 if|if
 condition|(
 name|isipv6
@@ -4149,9 +4149,6 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|INET
-ifdef|#
-directive|ifdef
-name|IPFIREWALL_FORWARD
 if|if
 condition|(
 name|fwd_tag
@@ -4273,11 +4270,15 @@ argument_list|,
 name|fwd_tag
 argument_list|)
 expr_stmt|;
+name|m
+operator|->
+name|m_flags
+operator|&=
+operator|~
+name|M_IP_NEXTHOP
+expr_stmt|;
 block|}
 else|else
-endif|#
-directive|endif
-comment|/* IPFIREWALL_FORWARD */
 name|inp
 operator|=
 name|in_pcblookup_mbuf

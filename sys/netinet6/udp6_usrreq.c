@@ -590,16 +590,11 @@ name|struct
 name|sockaddr_in6
 name|fromsa
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|IPFIREWALL_FORWARD
 name|struct
 name|m_tag
 modifier|*
 name|fwd_tag
 decl_stmt|;
-endif|#
-directive|endif
 name|uint16_t
 name|uh_sum
 decl_stmt|;
@@ -1408,10 +1403,18 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Locate pcb for datagram. 	 */
-ifdef|#
-directive|ifdef
-name|IPFIREWALL_FORWARD
 comment|/* 	 * Grab info from PACKET_TAG_IPFORWARD tag prepended to the chain. 	 */
+if|if
+condition|(
+operator|(
+name|m
+operator|->
+name|m_flags
+operator|&
+name|M_IP6_NEXTHOP
+operator|)
+operator|&&
+operator|(
 name|fwd_tag
 operator|=
 name|m_tag_find
@@ -1422,10 +1425,7 @@ name|PACKET_TAG_IPFORWARD
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|fwd_tag
+operator|)
 operator|!=
 name|NULL
 condition|)
@@ -1548,11 +1548,15 @@ argument_list|,
 name|fwd_tag
 argument_list|)
 expr_stmt|;
+name|m
+operator|->
+name|m_flags
+operator|&=
+operator|~
+name|M_IP6_NEXTHOP
+expr_stmt|;
 block|}
 else|else
-endif|#
-directive|endif
-comment|/* IPFIREWALL_FORWARD */
 name|inp
 operator|=
 name|in6_pcblookup_mbuf

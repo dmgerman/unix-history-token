@@ -2438,9 +2438,6 @@ name|m_pkthdr
 operator|.
 name|rcvif
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|IPFIREWALL_FORWARD
 if|if
 condition|(
 name|m
@@ -2463,7 +2460,13 @@ goto|;
 block|}
 if|if
 condition|(
-operator|(
+name|m
+operator|->
+name|m_flags
+operator|&
+name|M_IP_NEXTHOP
+condition|)
+block|{
 name|dchg
 operator|=
 operator|(
@@ -2478,24 +2481,25 @@ argument_list|)
 operator|!=
 name|NULL
 operator|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|dchg
 operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 		 * Directly ship the packet on.  This allows forwarding 		 * packets originally destined to us to some other directly 		 * connected host. 		 */
+comment|/* 			 * Directly ship the packet on.  This allows 			 * forwarding packets originally destined to us 			 * to some other directly connected host. 			 */
 name|ip_forward
 argument_list|(
 name|m
 argument_list|,
-name|dchg
+literal|1
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-endif|#
-directive|endif
-comment|/* IPFIREWALL_FORWARD */
+block|}
 name|passin
 label|:
 comment|/* 	 * Process options and, if not destined for us, 	 * ship it on.  ip_dooptions returns 1 when an 	 * error was detected (causing an icmp message 	 * to be sent and the original packet to be freed). 	 */

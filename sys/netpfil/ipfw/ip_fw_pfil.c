@@ -694,12 +694,6 @@ break|break;
 comment|/* pass */
 if|#
 directive|if
-operator|!
-name|defined
-argument_list|(
-name|IPFIREWALL_FORWARD
-argument_list|)
-operator|||
 operator|(
 operator|!
 name|defined
@@ -912,6 +906,15 @@ name|m_flags
 operator||=
 name|M_FASTFWD_OURS
 expr_stmt|;
+operator|(
+operator|*
+name|m0
+operator|)
+operator|->
+name|m_flags
+operator||=
+name|M_IP6_NEXTHOP
+expr_stmt|;
 block|}
 endif|#
 directive|endif
@@ -962,6 +965,15 @@ name|m_flags
 operator||=
 name|M_FASTFWD_OURS
 expr_stmt|;
+operator|(
+operator|*
+name|m0
+operator|)
+operator|->
+name|m_flags
+operator||=
+name|M_IP_NEXTHOP
+expr_stmt|;
 block|}
 endif|#
 directive|endif
@@ -976,7 +988,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* IPFIREWALL_FORWARD */
+comment|/* INET || INET6 */
 break|break;
 case|case
 name|IP_FW_DENY

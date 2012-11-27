@@ -211,6 +211,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/pfil.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/vnet.h>
 end_include
 
@@ -10595,16 +10601,6 @@ literal|"(+ipv6) "
 endif|#
 directive|endif
 literal|"initialized, divert %s, nat %s, "
-literal|"rule-based forwarding "
-ifdef|#
-directive|ifdef
-name|IPFIREWALL_FORWARD
-literal|"enabled, "
-else|#
-directive|else
-literal|"disabled, "
-endif|#
-directive|endif
 literal|"default to %s, logging "
 argument_list|,
 ifdef|#

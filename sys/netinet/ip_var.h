@@ -528,6 +528,17 @@ begin_comment
 comment|/* changed dst to local */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|M_IP_NEXTHOP
+value|M_PROTO2
+end_define
+
+begin_comment
+comment|/* explicit ip nexthop */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
