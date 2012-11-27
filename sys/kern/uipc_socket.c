@@ -2443,7 +2443,7 @@ if|if
 condition|(
 operator|!
 operator|(
-name|so
+name|head
 operator|->
 name|so_options
 operator|&
