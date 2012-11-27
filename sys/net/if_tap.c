@@ -981,7 +981,7 @@ argument_list|(
 operator|&
 name|tap_cdevsw
 argument_list|,
-literal|0
+name|unit
 argument_list|,
 name|UID_ROOT
 argument_list|,
