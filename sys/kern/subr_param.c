@@ -347,6 +347,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|long
+name|maxmbufmem
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* max mbuf memory */
+end_comment
+
+begin_decl_stmt
 name|pid_t
 name|pid_max
 init|=
@@ -1268,6 +1278,9 @@ name|long
 name|physpages
 parameter_list|)
 block|{
+name|long
+name|realmem
+decl_stmt|;
 comment|/* Base parameters */
 name|maxusers
 operator|=
@@ -1349,7 +1362,7 @@ literal|8
 operator|)
 expr_stmt|;
 block|}
-comment|/* 	 * The following can be overridden after boot via sysctl.  Note: 	 * unless overriden, these macros are ultimately based on maxusers. 	 */
+comment|/* 	 * The following can be overridden after boot via sysctl.  Note: 	 * unless overriden, these macros are ultimately based on maxusers. 	 * Limit maxproc so that kmap entries cannot be exhausted by 	 * processes. 	 */
 name|maxproc
 operator|=
 name|NPROC
@@ -1362,7 +1375,6 @@ operator|&
 name|maxproc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Limit maxproc so that kmap entries cannot be exhausted by 	 * processes. 	 */
 if|if
 condition|(
 name|maxproc
@@ -1379,18 +1391,6 @@ name|physpages
 operator|/
 literal|12
 expr_stmt|;
-name|maxfiles
-operator|=
-name|MAXFILES
-expr_stmt|;
-name|TUNABLE_INT_FETCH
-argument_list|(
-literal|"kern.maxfiles"
-argument_list|,
-operator|&
-name|maxfiles
-argument_list|)
-expr_stmt|;
 name|maxprocperuid
 operator|=
 operator|(
@@ -1401,15 +1401,51 @@ operator|)
 operator|/
 literal|10
 expr_stmt|;
+comment|/* 	 * The default limit for maxfiles is 1/12 of the number of 	 * physical page but not less than 16 times maxusers. 	 * At most it can be 1/6 the number of physical pages. 	 */
+name|maxfiles
+operator|=
+name|imax
+argument_list|(
+name|MAXFILES
+argument_list|,
+name|physpages
+operator|/
+literal|8
+argument_list|)
+expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"kern.maxfiles"
+argument_list|,
+operator|&
+name|maxfiles
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|maxfiles
+operator|>
+operator|(
+name|physpages
+operator|/
+literal|4
+operator|)
+condition|)
+name|maxfiles
+operator|=
+name|physpages
+operator|/
+literal|4
+expr_stmt|;
 name|maxfilesperproc
 operator|=
 operator|(
 name|maxfiles
-operator|*
-literal|9
-operator|)
 operator|/
 literal|10
+operator|)
+operator|*
+literal|9
 expr_stmt|;
 comment|/* 	 * Cannot be changed after boot. 	 */
 name|nbuf
@@ -1424,6 +1460,7 @@ operator|&
 name|nbuf
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXX: Does the callout wheel have to be so big? 	 */
 name|ncallout
 operator|=
 literal|16
@@ -1440,6 +1477,56 @@ operator|&
 name|ncallout
 argument_list|)
 expr_stmt|;
+comment|/* 	 * The default limit for all mbuf related memory is 1/2 of all 	 * available kernel memory (physical or kmem). 	 * At most it can be 3/4 of available kernel memory. 	 */
+name|realmem
+operator|=
+name|lmin
+argument_list|(
+name|physpages
+operator|*
+name|PAGE_SIZE
+argument_list|,
+name|VM_MAX_KERNEL_ADDRESS
+operator|-
+name|VM_MIN_KERNEL_ADDRESS
+argument_list|)
+expr_stmt|;
+name|maxmbufmem
+operator|=
+name|realmem
+operator|/
+literal|2
+expr_stmt|;
+name|TUNABLE_LONG_FETCH
+argument_list|(
+literal|"kern.maxmbufmem"
+argument_list|,
+operator|&
+name|maxmbufmem
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|maxmbufmem
+operator|>
+operator|(
+name|realmem
+operator|/
+literal|4
+operator|)
+operator|*
+literal|3
+condition|)
+name|maxmbufmem
+operator|=
+operator|(
+name|realmem
+operator|/
+literal|4
+operator|)
+operator|*
+literal|3
+expr_stmt|;
 comment|/* 	 * The default for maxpipekva is min(1/64 of the kernel address space, 	 * max(1/64 of main memory, 512KB)).  See sys_pipe.c for more details. 	 */
 name|maxpipekva
 operator|=
@@ -1450,6 +1537,14 @@ literal|64
 operator|)
 operator|*
 name|PAGE_SIZE
+expr_stmt|;
+name|TUNABLE_LONG_FETCH
+argument_list|(
+literal|"kern.ipc.maxpipekva"
+argument_list|,
+operator|&
+name|maxpipekva
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1486,14 +1581,6 @@ name|VM_MIN_KERNEL_ADDRESS
 operator|)
 operator|/
 literal|64
-expr_stmt|;
-name|TUNABLE_LONG_FETCH
-argument_list|(
-literal|"kern.ipc.maxpipekva"
-argument_list|,
-operator|&
-name|maxpipekva
-argument_list|)
 expr_stmt|;
 block|}
 end_function
