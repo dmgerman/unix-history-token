@@ -2230,7 +2230,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"nfsd counta too high %d; reset to %d"
+literal|"nfsd count too high %d; reset to %d"
 argument_list|,
 name|nfsdcnt
 argument_list|,
