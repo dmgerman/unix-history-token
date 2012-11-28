@@ -2008,6 +2008,13 @@ name|tries
 operator|=
 literal|0
 expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* 	 * If NOACK is set, just set ntries=1. 	 */
+block|else if (bf->bf_state.bfs_txflags& HAL_TXDESC_NOACK) { 		rc[1].tries = rc[2].tries = rc[3].tries = 0; 		rc[0].tries = 1; 	}
+endif|#
+directive|endif
 comment|/* 	 * Always call - that way a retried descriptor will 	 * have the MRR fields overwritten. 	 * 	 * XXX TODO: see if this is really needed - setting up 	 * the first descriptor should set the MRR fields to 0 	 * for us anyway. 	 */
 if|if
 condition|(
