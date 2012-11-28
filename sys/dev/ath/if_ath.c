@@ -4290,11 +4290,16 @@ argument_list|(
 name|ah
 argument_list|)
 expr_stmt|;
+comment|/* 	 * To work around scoping issues with CURVNET_SET/CURVNET_RESTORE.. 	 */
 if|if
 condition|(
 name|ifp
 operator|!=
 name|NULL
+operator|&&
+name|ifp
+operator|->
+name|if_vnet
 condition|)
 block|{
 name|CURVNET_SET
@@ -4313,6 +4318,18 @@ name|CURVNET_RESTORE
 argument_list|()
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|ifp
+operator|!=
+name|NULL
+condition|)
+name|if_free
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|sc_invalid
