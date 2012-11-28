@@ -1022,6 +1022,28 @@ name|argc
 operator|-=
 name|optind
 expr_stmt|;
+if|if
+condition|(
+name|minthreads_set
+operator|&&
+name|maxthreads_set
+operator|&&
+name|minthreads
+operator|>
+name|maxthreads
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"error: minthreads(%d) can't be greater than "
+literal|"maxthreads(%d)"
+argument_list|,
+name|minthreads
+argument_list|,
+name|maxthreads
+argument_list|)
+expr_stmt|;
 comment|/* 	 * XXX 	 * Backward compatibility, trailing number is the count of daemons. 	 */
 if|if
 condition|(
