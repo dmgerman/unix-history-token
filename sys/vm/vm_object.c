@@ -1079,6 +1079,9 @@ case|case
 name|OBJT_DEVICE
 case|:
 case|case
+name|OBJT_MGTDEVICE
+case|:
+case|case
 name|OBJT_PHYS
 case|:
 case|case
@@ -1115,6 +1118,14 @@ operator|(
 name|KERN_INVALID_ARGUMENT
 operator|)
 return|;
+default|default:
+name|panic
+argument_list|(
+literal|"vm_object_set_memattr: object %p is of undefined type"
+argument_list|,
+name|object
+argument_list|)
+expr_stmt|;
 block|}
 name|object
 operator|->
