@@ -286,6 +286,14 @@ parameter_list|()
 value|vmcs_read(VMCS_GUEST_PHYSICAL_ADDRESS)
 end_define
 
+begin_define
+define|#
+directive|define
+name|vmcs_gla
+parameter_list|()
+value|vmcs_read(VMCS_GUEST_LINEAR_ADDRESS)
+end_define
+
 begin_endif
 endif|#
 directive|endif

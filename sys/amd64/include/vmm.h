@@ -1112,6 +1112,12 @@ begin_comment
 comment|/* KERNEL */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<machine/vmm_instruction_emul.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -1376,6 +1382,10 @@ name|gpa
 decl_stmt|;
 name|int
 name|rwx
+decl_stmt|;
+name|struct
+name|vie
+name|vie
 decl_stmt|;
 block|}
 name|paging

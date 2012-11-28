@@ -164,12 +164,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"instruction_emul.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ioapic.h"
 end_include
 
@@ -1961,6 +1955,15 @@ operator|.
 name|paging
 operator|.
 name|rwx
+argument_list|,
+operator|&
+name|vmexit
+operator|->
+name|u
+operator|.
+name|paging
+operator|.
+name|vie
 argument_list|)
 expr_stmt|;
 if|if

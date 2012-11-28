@@ -74,12 +74,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"instruction_emul.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"fbsdrun.h"
 end_include
 

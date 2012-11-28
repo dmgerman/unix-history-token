@@ -150,6 +150,11 @@ name|cr3
 parameter_list|,
 name|int
 name|mode
+parameter_list|,
+name|struct
+name|vie
+modifier|*
+name|vie
 parameter_list|)
 function_decl|;
 end_function_decl
