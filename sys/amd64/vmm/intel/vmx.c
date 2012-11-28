@@ -4676,7 +4676,7 @@ name|vmxctx
 operator|->
 name|guest_rcx
 expr_stmt|;
-name|handled
+name|error
 operator|=
 name|emulate_rdmsr
 argument_list|(
@@ -4691,8 +4691,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|handled
+name|error
 condition|)
 block|{
 name|vmexit
@@ -4712,6 +4711,11 @@ operator|=
 name|ecx
 expr_stmt|;
 block|}
+else|else
+name|handled
+operator|=
+literal|1
+expr_stmt|;
 break|break;
 case|case
 name|EXIT_REASON_WRMSR
@@ -4734,7 +4738,7 @@ name|vmxctx
 operator|->
 name|guest_rdx
 expr_stmt|;
-name|handled
+name|error
 operator|=
 name|emulate_wrmsr
 argument_list|(
@@ -4758,8 +4762,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|handled
+name|error
 condition|)
 block|{
 name|vmexit
@@ -4796,6 +4799,11 @@ operator||
 name|eax
 expr_stmt|;
 block|}
+else|else
+name|handled
+operator|=
+literal|1
+expr_stmt|;
 break|break;
 case|case
 name|EXIT_REASON_HLT
