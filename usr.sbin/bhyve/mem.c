@@ -537,15 +537,6 @@ parameter_list|,
 name|uint64_t
 name|paddr
 parameter_list|,
-name|uint64_t
-name|rip
-parameter_list|,
-name|uint64_t
-name|cr3
-parameter_list|,
-name|int
-name|mode
-parameter_list|,
 name|struct
 name|vie
 modifier|*
