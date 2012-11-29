@@ -1041,11 +1041,6 @@ break|break;
 case|case
 literal|0x81
 case|:
-name|printf
-argument_list|(
-literal|"0x81 AND\n"
-argument_list|)
-expr_stmt|;
 comment|/* 		 * AND reg (ModRM:reg) with immediate and store the 		 * result in reg 		 * 		 * 81/          and r/m32, imm32 		 * REX.W + 81/  and r/m64, imm32 sign-extended to 64 		 */
 if|if
 condition|(
