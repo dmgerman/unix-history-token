@@ -197,6 +197,15 @@ literal|11
 operator|)
 block|,
 comment|/* toepcb ready, tid context updated */
+name|TPF_SYNQE_HAS_L2TE
+init|=
+operator|(
+literal|1
+operator|<<
+literal|12
+operator|)
+block|,
+comment|/* we've replied to PASS_ACCEPT_REQ */
 block|}
 enum|;
 end_enum
