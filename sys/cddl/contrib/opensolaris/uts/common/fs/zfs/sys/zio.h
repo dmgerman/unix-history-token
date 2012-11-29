@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -626,6 +626,22 @@ define|#
 directive|define
 name|ZB_ZIL_LEVEL
 value|(-2LL)
+define|#
+directive|define
+name|ZB_IS_ZERO
+parameter_list|(
+name|zb
+parameter_list|)
+define|\
+value|((zb)->zb_objset == 0&& (zb)->zb_object == 0&&	\ 	(zb)->zb_level == 0&& (zb)->zb_blkid == 0)
+define|#
+directive|define
+name|ZB_IS_ROOT
+parameter_list|(
+name|zb
+parameter_list|)
+define|\
+value|((zb)->zb_object == ZB_ROOT_OBJECT&&	\ 	(zb)->zb_level == ZB_ROOT_LEVEL&&	\ 	(zb)->zb_blkid == ZB_ROOT_BLKID)
 typedef|typedef
 struct|struct
 name|zio_prop
@@ -691,6 +707,9 @@ struct_decl|struct
 name|zio_bad_cksum
 struct_decl|;
 comment|/* defined in zio_checksum.h */
+struct_decl|struct
+name|dnode_phys
+struct_decl|;
 struct|struct
 name|zio_cksum_report
 block|{
@@ -2208,6 +2227,27 @@ parameter_list|(
 name|spa_t
 modifier|*
 name|spa
+parameter_list|)
+function_decl|;
+comment|/* zbookmark functions */
+name|boolean_t
+name|zbookmark_is_before
+parameter_list|(
+specifier|const
+name|struct
+name|dnode_phys
+modifier|*
+name|dnp
+parameter_list|,
+specifier|const
+name|zbookmark_t
+modifier|*
+name|zb1
+parameter_list|,
+specifier|const
+name|zbookmark_t
+modifier|*
+name|zb2
 parameter_list|)
 function_decl|;
 ifdef|#

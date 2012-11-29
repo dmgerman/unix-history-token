@@ -11,6 +11,13 @@ begin_comment
 comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MAXNAMELEN
+value|256
+end_define
+
 begin_comment
 comment|/* CRC64 table */
 end_comment
@@ -1684,6 +1691,13 @@ name|SPA_VERSION_28
 value|28ULL
 end_define
 
+begin_define
+define|#
+directive|define
+name|SPA_VERSION_5000
+value|5000ULL
+end_define
+
 begin_comment
 comment|/*  * When bumping up SPA_VERSION, make sure GRUB ZFS understands the on-disk  * format change. Go to usr/src/grub/grub-0.97/stage2/{zfs-include/, fsys_zfs*},  * and do the appropriate changes.  Also bump the version number in  * usr/src/grub/capability.  */
 end_comment
@@ -1692,14 +1706,14 @@ begin_define
 define|#
 directive|define
 name|SPA_VERSION
-value|SPA_VERSION_28
+value|SPA_VERSION_5000
 end_define
 
 begin_define
 define|#
 directive|define
 name|SPA_VERSION_STRING
-value|"28"
+value|"5000"
 end_define
 
 begin_comment
@@ -1972,6 +1986,31 @@ name|SPA_VERSION_MULTI_REPLACE
 value|SPA_VERSION_28
 end_define
 
+begin_define
+define|#
+directive|define
+name|SPA_VERSION_BEFORE_FEATURES
+value|SPA_VERSION_28
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPA_VERSION_FEATURES
+value|SPA_VERSION_5000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPA_VERSION_IS_SUPPORTED
+parameter_list|(
+name|v
+parameter_list|)
+define|\
+value|(((v)>= SPA_VERSION_INITIAL&& (v)<= SPA_VERSION_BEFORE_FEATURES) || \ 	((v)>= SPA_VERSION_FEATURES&& (v)<= SPA_VERSION))
+end_define
+
 begin_comment
 comment|/*  * The following are configuration names used in the nvlist describing a pool's  * configuration.  */
 end_comment
@@ -2189,6 +2228,13 @@ end_define
 begin_comment
 comment|/* not stored on disk */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|ZPOOL_CONFIG_FEATURES_FOR_READ
+value|"features_for_read"
+end_define
 
 begin_comment
 comment|/*  * The persistent vdev state is stored as separate values rather than a single  * 'vdev_state' entry.  This is because a device can be in multiple states, such  * as offline and degraded.  */

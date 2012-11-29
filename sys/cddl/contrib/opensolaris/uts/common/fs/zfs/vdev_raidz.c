@@ -1565,15 +1565,11 @@ name|zio
 operator|->
 name|io_vsd
 decl_stmt|;
-name|ASSERT3U
+name|ASSERT0
 argument_list|(
 name|rm
 operator|->
 name|rm_freed
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|rm
@@ -5687,7 +5683,7 @@ name|j
 operator|++
 control|)
 block|{
-name|ASSERT3U
+name|ASSERT0
 argument_list|(
 name|rows
 index|[
@@ -5696,10 +5692,6 @@ index|]
 index|[
 name|j
 index|]
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -5968,7 +5960,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|ASSERT3U
+name|ASSERT0
 argument_list|(
 name|rows
 index|[
@@ -5977,10 +5969,6 @@ index|]
 index|[
 name|j
 index|]
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}

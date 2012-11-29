@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -140,6 +140,35 @@ name|ds
 parameter_list|,
 name|uint64_t
 name|txg_start
+parameter_list|,
+name|int
+name|flags
+parameter_list|,
+name|blkptr_cb_t
+name|func
+parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|)
+function_decl|;
+name|int
+name|traverse_dataset_destroyed
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|,
+name|blkptr_t
+modifier|*
+name|blkptr
+parameter_list|,
+name|uint64_t
+name|txg_start
+parameter_list|,
+name|zbookmark_t
+modifier|*
+name|resume
 parameter_list|,
 name|int
 name|flags

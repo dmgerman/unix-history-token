@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -376,6 +376,10 @@ name|uint_t
 name|zl_prev_rotor
 decl_stmt|;
 comment|/* rotor for zl_prev[] */
+name|txg_node_t
+name|zl_dirty_link
+decl_stmt|;
+comment|/* protected by dp_dirty_zilogs list */
 block|}
 struct|;
 typedef|typedef
