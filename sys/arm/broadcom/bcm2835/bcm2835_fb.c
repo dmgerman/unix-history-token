@@ -3524,7 +3524,13 @@ operator|->
 name|stride
 operator|)
 operator|+
-literal|3
+operator|(
+name|sc
+operator|->
+name|depth
+operator|/
+literal|8
+operator|)
 operator|*
 operator|(
 name|col
