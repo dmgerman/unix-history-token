@@ -1145,6 +1145,14 @@ name|remain
 operator|-=
 name|length
 expr_stmt|;
+if|if
+condition|(
+name|bp
+operator|->
+name|bio_cmd
+operator|!=
+name|BIO_DELETE
+condition|)
 name|addr
 operator|+=
 name|length

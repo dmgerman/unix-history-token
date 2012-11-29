@@ -437,6 +437,10 @@ name|g_kerneldump
 name|d_kd
 decl_stmt|;
 comment|/* Kernel dumping method/args. */
+name|int
+name|d_candelete
+decl_stmt|;
+comment|/* BIO_DELETE supported. */
 name|uint64_t
 name|d_flags
 decl_stmt|;
@@ -1727,6 +1731,18 @@ specifier|const
 name|char
 modifier|*
 name|g_raid_get_diskname
+parameter_list|(
+name|struct
+name|g_raid_disk
+modifier|*
+name|disk
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|g_raid_get_disk_info
 parameter_list|(
 name|struct
 name|g_raid_disk
