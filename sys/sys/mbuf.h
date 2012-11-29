@@ -1639,7 +1639,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|long
+name|quad_t
 name|maxmbufmem
 decl_stmt|;
 end_decl_stmt

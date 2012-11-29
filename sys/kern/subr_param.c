@@ -347,7 +347,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|long
+name|quad_t
 name|maxmbufmem
 decl_stmt|;
 end_decl_stmt
@@ -1278,7 +1278,7 @@ name|long
 name|physpages
 parameter_list|)
 block|{
-name|long
+name|quad_t
 name|realmem
 decl_stmt|;
 comment|/* Base parameters */
@@ -1480,7 +1480,7 @@ expr_stmt|;
 comment|/* 	 * The default limit for all mbuf related memory is 1/2 of all 	 * available kernel memory (physical or kmem). 	 * At most it can be 3/4 of available kernel memory. 	 */
 name|realmem
 operator|=
-name|lmin
+name|qmin
 argument_list|(
 name|physpages
 operator|*
@@ -1497,7 +1497,7 @@ name|realmem
 operator|/
 literal|2
 expr_stmt|;
-name|TUNABLE_LONG_FETCH
+name|TUNABLE_QUAD_FETCH
 argument_list|(
 literal|"kern.maxmbufmem"
 argument_list|,
