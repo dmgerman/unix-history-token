@@ -4393,7 +4393,7 @@ operator|(
 name|UNHANDLED
 operator|)
 return|;
-comment|/* EPT violation must be a read fault or a write fault but not both */
+comment|/* EPT violation must be a read fault or a write fault */
 name|read
 operator|=
 name|ept_qual
@@ -4418,7 +4418,7 @@ if|if
 condition|(
 operator|(
 name|read
-operator|^
+operator||
 name|write
 operator|)
 operator|==
@@ -4429,7 +4429,7 @@ operator|(
 name|UNHANDLED
 operator|)
 return|;
-comment|/* 	 * The EPT violation must have been caused by accessing a guest-physical 	 * address that is a translation of a guest-linear address. 	 */
+comment|/* 	 * The EPT violation must have been caused by accessing a 	 * guest-physical address that is a translation of a guest-linear 	 * address. 	 */
 if|if
 condition|(
 operator|(
