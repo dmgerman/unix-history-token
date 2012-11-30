@@ -158,8 +158,6 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|naptime
-decl_stmt|,
 name|col
 decl_stmt|;
 end_decl_stmt
@@ -189,6 +187,14 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|verbose
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|int
+name|delay
 decl_stmt|;
 end_decl_stmt
 
@@ -490,7 +496,7 @@ begin_function_decl
 name|void
 name|display
 parameter_list|(
-name|int
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
