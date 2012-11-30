@@ -1840,6 +1840,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|BGE_ASICREV_BCM57766
+value|0x57766
+end_define
+
+begin_define
+define|#
+directive|define
 name|BGE_ASICREV_BCM57780
 value|0x57780
 end_define
@@ -14026,8 +14033,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|BCOM_DEVICEID_BCM57762
+value|0x1682
+end_define
+
+begin_define
+define|#
+directive|define
 name|BCOM_DEVICEID_BCM57765
 value|0x16B4
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCOM_DEVICEID_BCM57766
+value|0x1686
 end_define
 
 begin_define
@@ -15742,6 +15763,10 @@ define|#
 directive|define
 name|BGE_FLAG_5717_PLUS
 value|0x00400000
+define|#
+directive|define
+name|BGE_FLAG_57765_PLUS
+value|0x00800000
 define|#
 directive|define
 name|BGE_FLAG_40BIT_BUG
