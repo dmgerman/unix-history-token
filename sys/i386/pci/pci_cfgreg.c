@@ -2747,7 +2747,6 @@ name|pcie_cfg_elem
 modifier|*
 name|elem
 decl_stmt|;
-specifier|volatile
 name|vm_offset_t
 name|va
 decl_stmt|;
@@ -2842,12 +2841,13 @@ block|{
 case|case
 literal|4
 case|:
-asm|__asm __volatile("movl %1, %0" : "=a" (data)
+asm|__asm("movl %1, %0" : "=a" (data)
 block|:
 literal|"m"
 operator|(
 operator|*
 operator|(
+specifier|volatile
 name|uint32_t
 operator|*
 operator|)
@@ -2859,12 +2859,13 @@ break|break;
 case|case
 literal|2
 case|:
-asm|__asm __volatile("movzwl %1, %0" : "=a" (data)
+asm|__asm("movzwl %1, %0" : "=a" (data)
 block|:
 literal|"m"
 operator|(
 operator|*
 operator|(
+specifier|volatile
 name|uint16_t
 operator|*
 operator|)
@@ -2885,7 +2886,7 @@ case|:
 end_case
 
 begin_asm
-asm|__asm __volatile("movzbl %1, %0" : "=a" (data)
+asm|__asm("movzbl %1, %0" : "=a" (data)
 end_asm
 
 begin_expr_stmt
@@ -2894,6 +2895,7 @@ literal|"m"
 operator|(
 operator|*
 operator|(
+specifier|volatile
 name|uint8_t
 operator|*
 operator|)
@@ -2954,7 +2956,6 @@ name|pcie_cfg_elem
 modifier|*
 name|elem
 decl_stmt|;
-specifier|volatile
 name|vm_offset_t
 name|va
 decl_stmt|;
@@ -3038,7 +3039,7 @@ block|{
 case|case
 literal|4
 case|:
-asm|__asm __volatile("movl %1, %0" : "=m" (*(uint32_t *)va)
+asm|__asm("movl %1, %0" : "=m" (*(volatile uint32_t *)va)
 block|:
 literal|"a"
 operator|(
@@ -3050,7 +3051,7 @@ break|break;
 case|case
 literal|2
 case|:
-asm|__asm __volatile("movw %1, %0" : "=m" (*(uint16_t *)va)
+asm|__asm("movw %1, %0" : "=m" (*(volatile uint16_t *)va)
 block|:
 literal|"a"
 operator|(
@@ -3074,7 +3075,7 @@ case|:
 end_case
 
 begin_asm
-asm|__asm __volatile("movb %1, %0" : "=m" (*(uint8_t *)va)
+asm|__asm("movb %1, %0" : "=m" (*(volatile uint8_t *)va)
 end_asm
 
 begin_expr_stmt
