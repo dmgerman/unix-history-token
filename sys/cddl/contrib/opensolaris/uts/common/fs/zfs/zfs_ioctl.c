@@ -5062,7 +5062,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Find a zfsvfs_t for a mounted filesystem, or create our own, in which  * case its z_vfs will be NULL, and it will be opened as the owner.  */
+comment|/*  * Find a zfsvfs_t for a mounted filesystem, or create our own, in which  * case its z_vfs will be NULL, and it will be opened as the owner.  * If 'writer' is set, the z_teardown_lock will be held for RW_WRITER,  * which prevents all vnode ops from running.  */
 end_comment
 
 begin_function
@@ -5380,13 +5380,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|SPA_VERSION_IS_SUPPORTED
+argument_list|(
 name|version
-operator|<
-name|SPA_VERSION_INITIAL
-operator|||
-name|version
-operator|>
-name|SPA_VERSION
+argument_list|)
 condition|)
 block|{
 name|error
@@ -5973,6 +5971,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * inputs:  * zc_name		name of the pool  *  * outputs:  * zc_cookie		real errno  * zc_nvlist_dst	config nvlist  * zc_nvlist_dst_size	size of config nvlist  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -6362,11 +6364,13 @@ argument_list|(
 name|spa
 argument_list|)
 operator|||
+operator|!
+name|SPA_VERSION_IS_SUPPORTED
+argument_list|(
 name|zc
 operator|->
 name|zc_cookie
-operator|>
-name|SPA_VERSION
+argument_list|)
 condition|)
 block|{
 name|spa_close
@@ -8013,13 +8017,9 @@ operator|(
 name|error
 operator|)
 return|;
-name|VERIFY3S
+name|VERIFY0
 argument_list|(
 name|error
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -18012,12 +18012,30 @@ argument_list|,
 name|SCL_NONE
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If a resilver is already in progress then set the 	 * spa_scrub_reopen flag to B_TRUE so that we don't restart 	 * the scan as a side effect of the reopen. Otherwise, let 	 * vdev_open() decided if a resilver is required. 	 */
+name|spa
+operator|->
+name|spa_scrub_reopen
+operator|=
+name|dsl_scan_resilvering
+argument_list|(
+name|spa
+operator|->
+name|spa_dsl_pool
+argument_list|)
+expr_stmt|;
 name|vdev_reopen
 argument_list|(
 name|spa
 operator|->
 name|spa_root_vdev
 argument_list|)
+expr_stmt|;
+name|spa
+operator|->
+name|spa_scrub_reopen
+operator|=
+name|B_FALSE
 expr_stmt|;
 operator|(
 name|void
@@ -23829,9 +23847,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"ZFS storage pool version "
+literal|"ZFS storage pool version: features support ("
 name|SPA_VERSION_STRING
-literal|"\n"
+literal|")\n"
 argument_list|)
 expr_stmt|;
 name|root_mount_rel

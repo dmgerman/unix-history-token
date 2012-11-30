@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -166,6 +166,21 @@ modifier|*
 name|tx
 parameter_list|)
 function_decl|;
+name|uint64_t
+name|bpobj_alloc_empty
+parameter_list|(
+name|objset_t
+modifier|*
+name|os
+parameter_list|,
+name|int
+name|blocksize
+parameter_list|,
+name|dmu_tx_t
+modifier|*
+name|tx
+parameter_list|)
+function_decl|;
 name|void
 name|bpobj_free
 parameter_list|(
@@ -175,6 +190,18 @@ name|os
 parameter_list|,
 name|uint64_t
 name|obj
+parameter_list|,
+name|dmu_tx_t
+modifier|*
+name|tx
+parameter_list|)
+function_decl|;
+name|void
+name|bpobj_decr_empty
+parameter_list|(
+name|objset_t
+modifier|*
+name|os
 parameter_list|,
 name|dmu_tx_t
 modifier|*
