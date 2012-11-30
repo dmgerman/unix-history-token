@@ -1417,7 +1417,7 @@ block|{
 case|case
 literal|4
 case|:
-asm|__asm __volatile("mov %1, %%eax" : "=a" (data)
+asm|__asm __volatile("movl %1, %0" : "=a" (data)
 block|:
 literal|"m"
 operator|(
@@ -1434,7 +1434,7 @@ break|break;
 case|case
 literal|2
 case|:
-asm|__asm __volatile("movzwl %1, %%eax" : "=a" (data)
+asm|__asm __volatile("movzwl %1, %0" : "=a" (data)
 block|:
 literal|"m"
 operator|(
@@ -1460,7 +1460,7 @@ case|:
 end_case
 
 begin_asm
-asm|__asm __volatile("movzbl %1, %%eax" : "=a" (data)
+asm|__asm __volatile("movzbl %1, %0" : "=a" (data)
 end_asm
 
 begin_expr_stmt
@@ -1567,7 +1567,7 @@ block|{
 case|case
 literal|4
 case|:
-asm|__asm __volatile("mov %%eax, %0" : "=m" (*(uint32_t *)va)
+asm|__asm __volatile("movl %1, %0" : "=m" (*(uint32_t *)va)
 block|:
 literal|"a"
 operator|(
@@ -1579,10 +1579,13 @@ break|break;
 case|case
 literal|2
 case|:
-asm|__asm __volatile("mov %%ax, %0" : "=m" (*(uint16_t *)va)
+asm|__asm __volatile("movw %1, %0" : "=m" (*(uint16_t *)va)
 block|:
 literal|"a"
 operator|(
+operator|(
+name|uint16_t
+operator|)
 name|data
 operator|)
 block|)
@@ -1600,13 +1603,16 @@ case|:
 end_case
 
 begin_asm
-asm|__asm __volatile("mov %%al, %0" : "=m" (*(uint8_t *)va)
+asm|__asm __volatile("movb %1, %0" : "=m" (*(uint8_t *)va)
 end_asm
 
 begin_expr_stmt
 unit|:
 literal|"a"
 operator|(
+operator|(
+name|uint8_t
+operator|)
 name|data
 operator|)
 end_expr_stmt
