@@ -1764,7 +1764,7 @@ name|bus_dmamap_sync
 argument_list|(
 name|rxr
 operator|->
-name|ptag
+name|tag
 argument_list|,
 name|rxr
 operator|->
@@ -1773,7 +1773,7 @@ index|[
 name|l
 index|]
 operator|.
-name|pmap
+name|map
 argument_list|,
 name|BUS_DMASYNC_POSTREAD
 argument_list|)
@@ -2029,11 +2029,11 @@ name|netmap_reload_map
 argument_list|(
 name|rxr
 operator|->
-name|ptag
+name|tag
 argument_list|,
 name|rxbuf
 operator|->
-name|pmap
+name|map
 argument_list|,
 name|addr
 argument_list|)
@@ -2071,11 +2071,11 @@ name|bus_dmamap_sync
 argument_list|(
 name|rxr
 operator|->
-name|ptag
+name|tag
 argument_list|,
 name|rxbuf
 operator|->
-name|pmap
+name|map
 argument_list|,
 name|BUS_DMASYNC_PREREAD
 argument_list|)

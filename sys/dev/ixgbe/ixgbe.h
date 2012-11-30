@@ -933,12 +933,7 @@ block|{
 name|struct
 name|mbuf
 modifier|*
-name|m_head
-decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-name|m_pack
+name|buf
 decl_stmt|;
 name|struct
 name|mbuf
@@ -946,10 +941,7 @@ modifier|*
 name|fmp
 decl_stmt|;
 name|bus_dmamap_t
-name|hmap
-decl_stmt|;
-name|bus_dmamap_t
-name|pmap
+name|map
 decl_stmt|;
 name|u_int
 name|flags
@@ -959,7 +951,7 @@ directive|define
 name|IXGBE_RX_COPY
 value|0x01
 name|uint64_t
-name|paddr
+name|addr
 decl_stmt|;
 block|}
 struct|;
@@ -1201,9 +1193,6 @@ name|bool
 name|lro_enabled
 decl_stmt|;
 name|bool
-name|hdr_split
-decl_stmt|;
-name|bool
 name|hw_rsc
 decl_stmt|;
 name|bool
@@ -1230,10 +1219,7 @@ modifier|*
 name|rx_buffers
 decl_stmt|;
 name|bus_dma_tag_t
-name|htag
-decl_stmt|;
-name|bus_dma_tag_t
-name|ptag
+name|tag
 decl_stmt|;
 name|u32
 name|bytes
@@ -1245,9 +1231,6 @@ decl_stmt|;
 comment|/* Soft stats */
 name|u64
 name|rx_irq
-decl_stmt|;
-name|u64
-name|rx_split_packets
 decl_stmt|;
 name|u64
 name|rx_copies
