@@ -57,7 +57,7 @@ name|char
 name|ixgbe_driver_version
 index|[]
 init|=
-literal|"2.5.0 - 5"
+literal|"2.5.0 - 6"
 decl_stmt|;
 end_decl_stmt
 
@@ -437,13 +437,48 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IXGBE_LEGACY_TX
+end_ifdef
+
+begin_function_decl
+specifier|static
+name|void
+name|ixgbe_start
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|ixgbe_start_locked
+parameter_list|(
+name|struct
+name|tx_ring
+modifier|*
+parameter_list|,
+name|struct
+name|ifnet
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* ! IXGBE_LEGACY_TX */
+end_comment
 
 begin_function_decl
 specifier|static
@@ -506,43 +541,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-specifier|static
-name|void
-name|ixgbe_start
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|ixgbe_start_locked
-parameter_list|(
-name|struct
-name|tx_ring
-modifier|*
-parameter_list|,
-name|struct
-name|ifnet
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* IXGBE_LEGACY_TX */
+end_comment
 
 begin_function_decl
 specifier|static
@@ -2708,13 +2714,6 @@ name|error
 operator|=
 name|EIO
 expr_stmt|;
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"Hardware Initialization Failure\n"
-argument_list|)
-expr_stmt|;
 goto|goto
 name|err_late
 goto|;
@@ -3184,11 +3183,9 @@ operator|->
 name|tq
 condition|)
 block|{
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
+ifdef|#
+directive|ifdef
+name|IXGBE_LEGACY_TX
 name|taskqueue_drain
 argument_list|(
 name|que
@@ -3481,13 +3478,11 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|800000
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IXGBE_LEGACY_TX
+end_ifdef
 
 begin_comment
 comment|/*********************************************************************  *  Transmit entry point  *  *  ixgbe_start is called by the stack to initiate a transmit.  *  The driver will remain in this routine as long as there are  *  packets to transmit and transmit resources are available.  *  In case resources are not available stack is notified and  *  the packet is requeued.  **********************************************************************/
@@ -3710,6 +3705,10 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_comment
+comment|/* ! IXGBE_LEGACY_TX */
+end_comment
 
 begin_comment
 comment|/* ** Multiqueue Transmit driver ** */
@@ -4355,7 +4354,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __FreeBSD_version>= 800000 */
+comment|/* IXGBE_LEGACY_TX */
 end_comment
 
 begin_comment
@@ -6701,11 +6700,9 @@ argument_list|(
 name|txr
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
+ifndef|#
+directive|ifndef
+name|IXGBE_LEGACY_TX
 if|if
 condition|(
 operator|!
@@ -7097,11 +7094,9 @@ name|txr
 argument_list|)
 expr_stmt|;
 comment|/* 	** Make certain that if the stack  	** has anything queued the task gets 	** scheduled to handle it. 	*/
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|800000
+ifdef|#
+directive|ifdef
+name|IXGBE_LEGACY_TX
 if|if
 condition|(
 operator|!
@@ -8324,20 +8319,27 @@ operator|->
 name|no_desc_avail
 operator|++
 expr_stmt|;
-name|error
-operator|=
-name|ENOBUFS
+name|bus_dmamap_unload
+argument_list|(
+name|txr
+operator|->
+name|txtag
+argument_list|,
+name|map
+argument_list|)
 expr_stmt|;
-goto|goto
-name|xmit_fail
-goto|;
+return|return
+operator|(
+name|ENOBUFS
+operator|)
+return|;
 block|}
 name|m_head
 operator|=
 operator|*
 name|m_headp
 expr_stmt|;
-comment|/* 	** Set up the appropriate offload context 	** this becomes the first descriptor of  	** a packet. 	*/
+comment|/* 	** Set up the appropriate offload context 	** this will consume the first descriptor 	*/
 if|if
 condition|(
 name|m_head
@@ -8644,7 +8646,7 @@ name|m_head
 operator|=
 name|m_head
 expr_stmt|;
-comment|/* Swap the dma map between the first and last descriptor */
+comment|/* 	** Here we swap the map so the last descriptor, 	** which gets the completion interrupt has the 	** real map, and the first descriptor gets the 	** unused map from this descriptor. 	*/
 name|txr
 operator|->
 name|tx_buffers
@@ -8737,24 +8739,6 @@ expr_stmt|;
 return|return
 operator|(
 literal|0
-operator|)
-return|;
-name|xmit_fail
-label|:
-name|bus_dmamap_unload
-argument_list|(
-name|txr
-operator|->
-name|txtag
-argument_list|,
-name|txbuf
-operator|->
-name|map
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|error
 operator|)
 return|;
 block|}
@@ -10122,11 +10106,9 @@ name|adapter
 operator|->
 name|queues
 decl_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
+ifndef|#
+directive|ifndef
+name|IXGBE_LEGACY_TX
 name|struct
 name|tx_ring
 modifier|*
@@ -10201,11 +10183,9 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Try allocating a fast interrupt and the associated deferred 	 * processing contexts. 	 */
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
+ifndef|#
+directive|ifndef
+name|IXGBE_LEGACY_TX
 name|TASK_INIT
 argument_list|(
 operator|&
@@ -10706,11 +10686,9 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
+ifdef|#
+directive|ifdef
+name|IXGBE_LEGACY_TX
 name|TASK_INIT
 argument_list|(
 operator|&
@@ -11925,11 +11903,9 @@ name|if_ioctl
 operator|=
 name|ixgbe_ioctl
 expr_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
+ifndef|#
+directive|ifndef
+name|IXGBE_LEGACY_TX
 name|ifp
 operator|->
 name|if_transmit
@@ -13166,11 +13142,9 @@ goto|goto
 name|err_tx_desc
 goto|;
 block|}
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
+ifndef|#
+directive|ifndef
+name|IXGBE_LEGACY_TX
 comment|/* Allocate a buf ring */
 name|txr
 operator|->
@@ -14794,11 +14768,9 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
+ifdef|#
+directive|ifdef
+name|IXGBE_LEGACY_TX
 if|if
 condition|(
 name|txr
@@ -15008,7 +14980,7 @@ index|[
 name|ctxd
 index|]
 expr_stmt|;
-comment|/* 	** In advanced descriptors the vlan tag must  	** be placed into the descriptor itself. 	*/
+comment|/* 	** In advanced descriptors the vlan tag must  	** be placed into the context descriptor. Hence 	** we need to make one even if not doing offloads. 	*/
 if|if
 condition|(
 name|mp

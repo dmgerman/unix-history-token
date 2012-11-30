@@ -31,13 +31,11 @@ directive|include
 file|<sys/systm.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
-end_if
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IXGBE_LEGACY_TX
+end_ifndef
 
 begin_include
 include|#
@@ -755,59 +753,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* For 6.X code compatibility */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|ETHER_BPF_MTAP
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|ETHER_BPF_MTAP
-value|BPF_MTAP
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|700000
-end_if
-
-begin_define
-define|#
-directive|define
-name|CSUM_TSO
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|IFCAP_TSO4
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/*  * Interrupt Moderation parameters   */
 end_comment
 
@@ -1111,11 +1056,9 @@ index|[
 literal|16
 index|]
 decl_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
+ifndef|#
+directive|ifndef
+name|IXGBE_LEGACY_TX
 name|struct
 name|buf_ring
 modifier|*
