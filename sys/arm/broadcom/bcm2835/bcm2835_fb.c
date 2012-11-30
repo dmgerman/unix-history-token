@@ -3758,7 +3758,7 @@ operator|>>
 literal|3
 operator|)
 operator|<<
-literal|10
+literal|11
 expr_stmt|;
 name|rgb
 operator||=
@@ -3770,7 +3770,7 @@ index|]
 operator|.
 name|g
 operator|>>
-literal|3
+literal|2
 operator|)
 operator|<<
 literal|5
@@ -3795,11 +3795,7 @@ operator|*
 name|j
 index|]
 operator|=
-operator|(
 name|rgb
-operator|>>
-literal|8
-operator|)
 operator|&
 literal|0xff
 expr_stmt|;
@@ -3812,7 +3808,11 @@ operator|+
 literal|1
 index|]
 operator|=
+operator|(
 name|rgb
+operator|>>
+literal|8
+operator|)
 operator|&
 literal|0xff
 expr_stmt|;
