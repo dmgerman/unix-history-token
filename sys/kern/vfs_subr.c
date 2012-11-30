@@ -21715,12 +21715,12 @@ name|VMARKER
 expr_stmt|;
 name|vp
 operator|=
-name|TAILQ_NEXT
+name|TAILQ_FIRST
 argument_list|(
-operator|*
-name|mvp
-argument_list|,
-name|v_actfreelist
+operator|&
+name|mp
+operator|->
+name|mnt_activevnodelist
 argument_list|)
 expr_stmt|;
 while|while
