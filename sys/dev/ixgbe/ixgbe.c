@@ -57,7 +57,7 @@ name|char
 name|ixgbe_driver_version
 index|[]
 init|=
-literal|"2.5.0 - 7"
+literal|"2.5.0 - 8"
 decl_stmt|;
 end_decl_stmt
 
@@ -1131,10 +1131,10 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-name|int
+name|u16
 modifier|*
 parameter_list|,
-name|int
+name|u16
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -8204,7 +8204,7 @@ operator|==
 name|ENOMEM
 condition|)
 block|{
-name|adapter
+name|txr
 operator|->
 name|no_tx_dma_setup
 operator|++
@@ -8223,7 +8223,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|adapter
+name|txr
 operator|->
 name|no_tx_dma_setup
 operator|++
@@ -8254,7 +8254,7 @@ operator|==
 name|ENOMEM
 condition|)
 block|{
-name|adapter
+name|txr
 operator|->
 name|no_tx_dma_setup
 operator|++
@@ -8273,7 +8273,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|adapter
+name|txr
 operator|->
 name|no_tx_dma_setup
 operator|++
@@ -8377,7 +8377,7 @@ operator|<<
 name|IXGBE_ADVTXD_PAYLEN_SHIFT
 expr_stmt|;
 operator|++
-name|adapter
+name|txr
 operator|->
 name|tso_tx
 expr_stmt|;
@@ -8586,9 +8586,9 @@ condition|(
 operator|++
 name|i
 operator|==
-name|adapter
+name|txr
 operator|->
-name|num_tx_desc
+name|num_desc
 condition|)
 name|i
 operator|=
@@ -13009,6 +13009,14 @@ name|me
 operator|=
 name|i
 expr_stmt|;
+name|txr
+operator|->
+name|num_desc
+operator|=
+name|adapter
+operator|->
+name|num_tx_desc
+expr_stmt|;
 comment|/* Initialize the TX side lock */
 name|snprintf
 argument_list|(
@@ -13244,6 +13252,14 @@ operator|->
 name|me
 operator|=
 name|i
+expr_stmt|;
+name|rxr
+operator|->
+name|num_desc
+operator|=
+name|adapter
+operator|->
+name|num_rx_desc
 expr_stmt|;
 comment|/* Initialize the RX side lock */
 name|snprintf
@@ -13912,9 +13928,9 @@ literal|0
 init|;
 name|i
 operator|<
-name|adapter
+name|txr
 operator|->
-name|num_tx_desc
+name|num_desc
 condition|;
 name|i
 operator|++
@@ -14873,15 +14889,6 @@ name|mp
 parameter_list|)
 block|{
 name|struct
-name|adapter
-modifier|*
-name|adapter
-init|=
-name|txr
-operator|->
-name|adapter
-decl_stmt|;
-name|struct
 name|ixgbe_adv_tx_context_desc
 modifier|*
 name|TXD
@@ -15319,9 +15326,9 @@ condition|(
 operator|++
 name|ctxd
 operator|==
-name|adapter
+name|txr
 operator|->
-name|num_tx_desc
+name|num_desc
 condition|)
 name|ctxd
 operator|=
@@ -15374,15 +15381,6 @@ modifier|*
 name|olinfo_status
 parameter_list|)
 block|{
-name|struct
-name|adapter
-modifier|*
-name|adapter
-init|=
-name|txr
-operator|->
-name|adapter
-decl_stmt|;
 name|struct
 name|ixgbe_adv_tx_context_desc
 modifier|*
@@ -15934,9 +15932,9 @@ condition|(
 operator|++
 name|ctxd
 operator|==
-name|adapter
+name|txr
 operator|->
-name|num_tx_desc
+name|num_desc
 condition|)
 name|ctxd
 operator|=
@@ -16568,9 +16566,9 @@ name|txr
 operator|->
 name|tx_avail
 operator|==
-name|adapter
+name|txr
 operator|->
-name|num_tx_desc
+name|num_desc
 condition|)
 block|{
 name|txr
@@ -16971,9 +16969,9 @@ name|txr
 operator|->
 name|tx_avail
 operator|==
-name|adapter
+name|txr
 operator|->
-name|num_tx_desc
+name|num_desc
 condition|)
 block|{
 name|txr
@@ -17065,9 +17063,9 @@ condition|(
 operator|++
 name|j
 operator|==
-name|adapter
+name|rxr
 operator|->
-name|num_rx_desc
+name|num_desc
 condition|)
 name|j
 operator|=
@@ -17109,9 +17107,9 @@ name|MT_DATA
 argument_list|,
 name|M_PKTHDR
 argument_list|,
-name|adapter
+name|rxr
 operator|->
-name|rx_mbuf_sz
+name|mbuf_sz
 argument_list|)
 expr_stmt|;
 if|if
@@ -17141,9 +17139,9 @@ name|mp
 operator|->
 name|m_len
 operator|=
-name|adapter
+name|rxr
 operator|->
-name|rx_mbuf_sz
+name|mbuf_sz
 expr_stmt|;
 comment|/* If we're dealing with an mbuf that was copied rather 		 * than replaced, there's no need to go through busdma. 		 */
 if|if
@@ -17302,9 +17300,9 @@ condition|(
 operator|++
 name|j
 operator|==
-name|adapter
+name|rxr
 operator|->
-name|num_rx_desc
+name|num_desc
 condition|)
 name|j
 operator|=
@@ -17392,9 +17390,9 @@ expr|struct
 name|ixgbe_rx_buf
 argument_list|)
 operator|*
-name|adapter
+name|rxr
 operator|->
-name|num_rx_desc
+name|num_desc
 expr_stmt|;
 if|if
 condition|(
@@ -17511,9 +17509,9 @@ literal|0
 init|;
 name|i
 operator|<
-name|adapter
+name|rxr
 operator|->
-name|num_rx_desc
+name|num_desc
 condition|;
 name|i
 operator|++
@@ -17773,9 +17771,9 @@ expr_stmt|;
 comment|/* 	** Limit the total number of descriptors that 	** can be combined, so it does not exceed 64K 	*/
 if|if
 condition|(
-name|adapter
+name|rxr
 operator|->
-name|rx_mbuf_sz
+name|mbuf_sz
 operator|==
 name|MCLBYTES
 condition|)
@@ -17786,9 +17784,9 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|adapter
+name|rxr
 operator|->
-name|rx_mbuf_sz
+name|mbuf_sz
 operator|==
 name|MJUMPAGESIZE
 condition|)
@@ -17799,9 +17797,9 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|adapter
+name|rxr
 operator|->
-name|rx_mbuf_sz
+name|mbuf_sz
 operator|==
 name|MJUM9BYTES
 condition|)
@@ -17894,11 +17892,6 @@ name|rxr
 parameter_list|)
 block|{
 name|struct
-name|adapter
-modifier|*
-name|adapter
-decl_stmt|;
-name|struct
 name|ixgbe_rx_buf
 modifier|*
 name|rxbuf
@@ -17906,12 +17899,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|adapter
-operator|=
-name|rxr
-operator|->
-name|adapter
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -17920,9 +17907,9 @@ literal|0
 init|;
 name|i
 operator|<
-name|adapter
+name|rxr
 operator|->
-name|num_rx_desc
+name|num_desc
 condition|;
 name|i
 operator|++
@@ -18156,6 +18143,15 @@ argument_list|,
 name|rsize
 argument_list|)
 expr_stmt|;
+comment|/* Cache the size */
+name|rxr
+operator|->
+name|mbuf_sz
+operator|=
+name|adapter
+operator|->
+name|rx_mbuf_sz
+expr_stmt|;
 comment|/* Free current RX buffer structs and their mbufs */
 name|ixgbe_free_receive_ring
 argument_list|(
@@ -18172,9 +18168,9 @@ literal|0
 init|;
 name|j
 operator|!=
-name|adapter
+name|rxr
 operator|->
-name|num_rx_desc
+name|num_desc
 condition|;
 operator|++
 name|j
@@ -18326,9 +18322,9 @@ name|mp
 operator|->
 name|m_len
 operator|=
-name|adapter
+name|rxr
 operator|->
-name|rx_mbuf_sz
+name|mbuf_sz
 expr_stmt|;
 comment|/* Get the memory mapping */
 name|error
@@ -19908,7 +19904,7 @@ name|staterr
 init|=
 literal|0
 decl_stmt|;
-name|u32
+name|u16
 name|count
 init|=
 name|rxr
@@ -20706,9 +20702,9 @@ condition|(
 operator|++
 name|i
 operator|==
-name|adapter
+name|rxr
 operator|->
-name|num_rx_desc
+name|num_desc
 condition|)
 name|i
 operator|=
@@ -24855,26 +24851,6 @@ name|child
 argument_list|,
 name|OID_AUTO
 argument_list|,
-literal|"no_tx_dma_setup"
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|adapter
-operator|->
-name|no_tx_dma_setup
-argument_list|,
-literal|"Driver tx dma failure in xmit"
-argument_list|)
-expr_stmt|;
-name|SYSCTL_ADD_ULONG
-argument_list|(
-name|ctx
-argument_list|,
-name|child
-argument_list|,
-name|OID_AUTO
-argument_list|,
 literal|"watchdog_events"
 argument_list|,
 name|CTLFLAG_RD
@@ -24885,26 +24861,6 @@ operator|->
 name|watchdog_events
 argument_list|,
 literal|"Watchdog timeouts"
-argument_list|)
-expr_stmt|;
-name|SYSCTL_ADD_ULONG
-argument_list|(
-name|ctx
-argument_list|,
-name|child
-argument_list|,
-name|OID_AUTO
-argument_list|,
-literal|"tso_tx"
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|adapter
-operator|->
-name|tso_tx
-argument_list|,
-literal|"TSO"
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_ULONG
@@ -25105,6 +25061,46 @@ argument_list|,
 literal|"IU"
 argument_list|,
 literal|"Transmit Descriptor Tail"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_ULONG
+argument_list|(
+name|ctx
+argument_list|,
+name|queue_list
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"tso_tx"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|txr
+operator|->
+name|tso_tx
+argument_list|,
+literal|"TSO"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_ULONG
+argument_list|(
+name|ctx
+argument_list|,
+name|queue_list
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"no_tx_dma_setup"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|txr
+operator|->
+name|no_tx_dma_setup
+argument_list|,
+literal|"Driver tx dma failure in xmit"
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_UQUAD
@@ -26485,11 +26481,11 @@ name|char
 modifier|*
 name|description
 parameter_list|,
-name|int
+name|u16
 modifier|*
 name|limit
 parameter_list|,
-name|int
+name|u16
 name|value
 parameter_list|)
 block|{
