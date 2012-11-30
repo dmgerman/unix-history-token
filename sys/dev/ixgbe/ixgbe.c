@@ -57,7 +57,7 @@ name|char
 name|ixgbe_driver_version
 index|[]
 init|=
-literal|"2.5.0 - 6"
+literal|"2.5.0 - 7"
 decl_stmt|;
 end_decl_stmt
 
@@ -961,8 +961,6 @@ parameter_list|(
 name|struct
 name|ix_queue
 modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1119,7 +1117,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|ixgbe_add_rx_process_limit
+name|ixgbe_add_process_limit
 parameter_list|(
 name|struct
 name|adapter
@@ -1700,7 +1698,7 @@ specifier|static
 name|int
 name|ixgbe_rx_process_limit
 init|=
-literal|128
+literal|256
 decl_stmt|;
 end_decl_stmt
 
@@ -1711,6 +1709,30 @@ literal|"hw.ixgbe.rx_process_limit"
 argument_list|,
 operator|&
 name|ixgbe_rx_process_limit
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* How many packets txeof tries to clean at a time */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|ixgbe_tx_process_limit
+init|=
+literal|256
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.ixgbe.tx_process_limit"
+argument_list|,
+operator|&
+name|ixgbe_tx_process_limit
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2788,23 +2810,6 @@ condition|)
 goto|goto
 name|err_late
 goto|;
-comment|/* Sysctl for limiting the amount of work done in the taskqueue */
-name|ixgbe_add_rx_process_limit
-argument_list|(
-name|adapter
-argument_list|,
-literal|"rx_processing_limit"
-argument_list|,
-literal|"max number of rx packets to process"
-argument_list|,
-operator|&
-name|adapter
-operator|->
-name|rx_process_limit
-argument_list|,
-name|ixgbe_rx_process_limit
-argument_list|)
-expr_stmt|;
 comment|/* Initialize statistics */
 name|ixgbe_update_stats_counters
 argument_list|(
@@ -6684,10 +6689,6 @@ operator|=
 name|ixgbe_rxeof
 argument_list|(
 name|que
-argument_list|,
-name|adapter
-operator|->
-name|rx_process_limit
 argument_list|)
 expr_stmt|;
 name|IXGBE_TX_LOCK
@@ -6879,10 +6880,6 @@ operator|=
 name|ixgbe_rxeof
 argument_list|(
 name|que
-argument_list|,
-name|adapter
-operator|->
-name|rx_process_limit
 argument_list|)
 expr_stmt|;
 name|IXGBE_TX_LOCK
@@ -7075,10 +7072,6 @@ operator|=
 name|ixgbe_rxeof
 argument_list|(
 name|que
-argument_list|,
-name|adapter
-operator|->
-name|rx_process_limit
 argument_list|)
 expr_stmt|;
 name|IXGBE_TX_LOCK
@@ -14218,6 +14211,23 @@ decl_stmt|;
 name|u32
 name|txctrl
 decl_stmt|;
+comment|/* Sysctl for limiting work done in tx clean */
+name|ixgbe_add_process_limit
+argument_list|(
+name|adapter
+argument_list|,
+literal|"tx_processing_limit"
+argument_list|,
+literal|"max number of packets to process"
+argument_list|,
+operator|&
+name|txr
+operator|->
+name|process_limit
+argument_list|,
+name|ixgbe_tx_process_limit
+argument_list|)
+expr_stmt|;
 name|IXGBE_WRITE_REG
 argument_list|(
 name|hw
@@ -18887,6 +18897,23 @@ name|rxdma
 operator|.
 name|dma_paddr
 decl_stmt|;
+comment|/* Sysctl for limiting work done in rx clean */
+name|ixgbe_add_process_limit
+argument_list|(
+name|adapter
+argument_list|,
+literal|"rx_processing_limit"
+argument_list|,
+literal|"max number of packets to process"
+argument_list|,
+operator|&
+name|rxr
+operator|->
+name|process_limit
+argument_list|,
+name|ixgbe_rx_process_limit
+argument_list|)
+expr_stmt|;
 comment|/* Setup the Base and Length of the Rx Descriptor Ring */
 name|IXGBE_WRITE_REG
 argument_list|(
@@ -19823,9 +19850,6 @@ name|struct
 name|ix_queue
 modifier|*
 name|que
-parameter_list|,
-name|int
-name|count
 parameter_list|)
 block|{
 name|struct
@@ -19883,6 +19907,13 @@ name|u32
 name|staterr
 init|=
 literal|0
+decl_stmt|;
+name|u32
+name|count
+init|=
+name|rxr
+operator|->
+name|process_limit
 decl_stmt|;
 name|union
 name|ixgbe_adv_rx_desc
@@ -26437,7 +26468,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|ixgbe_add_rx_process_limit
+name|ixgbe_add_process_limit
 parameter_list|(
 name|struct
 name|adapter
@@ -26467,7 +26498,7 @@ name|limit
 operator|=
 name|value
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_UINT
 argument_list|(
 name|device_get_sysctl_ctx
 argument_list|(
@@ -26490,7 +26521,7 @@ name|OID_AUTO
 argument_list|,
 name|name
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,

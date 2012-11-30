@@ -1017,6 +1017,9 @@ name|IXGBE_QUEUE_HUNG
 block|, 	}
 name|queue_status
 enum|;
+name|u32
+name|process_limit
+decl_stmt|;
 name|int
 name|watchdog_time
 decl_stmt|;
@@ -1149,6 +1152,9 @@ name|next_to_refresh
 decl_stmt|;
 name|u32
 name|next_to_check
+decl_stmt|;
+name|u32
+name|process_limit
 decl_stmt|;
 name|char
 name|mtx_name
@@ -1381,9 +1387,6 @@ name|num_rx_desc
 decl_stmt|;
 name|u64
 name|que_mask
-decl_stmt|;
-name|u32
-name|rx_process_limit
 decl_stmt|;
 comment|/* Multicast array memory */
 name|u8
