@@ -57,7 +57,7 @@ name|char
 name|ixgbe_driver_version
 index|[]
 init|=
-literal|"2.5.0 - 4"
+literal|"2.5.0 - 5"
 decl_stmt|;
 end_decl_stmt
 
@@ -8410,27 +8410,6 @@ name|IXGBE_TXD_POPTS_TXSM
 operator|<<
 literal|8
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|IXGBE_IEEE1588
-comment|/* This is changing soon to an mtag detection */
-if|if
-condition|(
-name|we
-name|detect
-name|this
-name|mbuf
-name|has
-name|a
-name|TSTAMP
-name|mtag
-condition|)
-name|cmd_type_len
-operator||=
-name|IXGBE_ADVTXD_MAC_TSTAMP
-expr_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|IXGBE_FDIR
