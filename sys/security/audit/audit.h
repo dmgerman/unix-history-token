@@ -485,6 +485,9 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
+name|int
+name|dirfd
+parameter_list|,
 name|char
 modifier|*
 name|upath
@@ -500,6 +503,9 @@ name|struct
 name|thread
 modifier|*
 name|td
+parameter_list|,
+name|int
+name|dirfd
 parameter_list|,
 name|char
 modifier|*
@@ -1139,9 +1145,11 @@ name|AUDIT_ARG_UPATH1
 parameter_list|(
 name|td
 parameter_list|,
+name|dirfd
+parameter_list|,
 name|upath
 parameter_list|)
-value|do {				\ 	if (AUDITING_TD(curthread))					\ 		audit_arg_upath1((td), (upath));			\ } while (0)
+value|do {				\ 	if (AUDITING_TD(curthread))					\ 		audit_arg_upath1((td), (dirfd), (upath));		\ } while (0)
 end_define
 
 begin_define
@@ -1151,9 +1159,11 @@ name|AUDIT_ARG_UPATH2
 parameter_list|(
 name|td
 parameter_list|,
+name|dirfd
+parameter_list|,
 name|upath
 parameter_list|)
-value|do {				\ 	if (AUDITING_TD(curthread))					\ 		audit_arg_upath2((td), (upath));			\ } while (0)
+value|do {				\ 	if (AUDITING_TD(curthread))					\ 		audit_arg_upath2((td), (dirfd), (upath));		\ } while (0)
 end_define
 
 begin_define
@@ -1527,6 +1537,8 @@ name|AUDIT_ARG_UPATH1
 parameter_list|(
 name|td
 parameter_list|,
+name|dirfd
+parameter_list|,
 name|upath
 parameter_list|)
 end_define
@@ -1537,6 +1549,8 @@ directive|define
 name|AUDIT_ARG_UPATH2
 parameter_list|(
 name|td
+parameter_list|,
+name|dirfd
 parameter_list|,
 name|upath
 parameter_list|)
