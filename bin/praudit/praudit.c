@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2004-2008 Apple Inc.  * Copyright (c) 2006 Martin Voros  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Computer, Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * $P4: //depot/projects/trustedbsd/openbsm/bin/praudit/praudit.c#14 $  */
+comment|/*-  * Copyright (c) 2004-2009 Apple Inc.  * Copyright (c) 2006 Martin Voros  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Computer, Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * $P4: //depot/projects/trustedbsd/openbsm/bin/praudit/praudit.c#15 $  */
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*  * Tool used to parse audit records conforming to the BSM structure. 
 end_comment
 
 begin_comment
-comment|/*  * praudit [-lpx] [-r | -s] [-d del] [file ...]  */
+comment|/*  * praudit [-lnpx] [-r | -s] [-d del] [file ...]  */
 end_comment
 
 begin_include
@@ -82,24 +82,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|raw
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|shortfrm
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
 name|partial
 init|=
 literal|0
@@ -109,9 +91,9 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|xml
+name|oflags
 init|=
-literal|0
+name|AU_OFLAG_NONE
 decl_stmt|;
 end_decl_stmt
 
@@ -127,7 +109,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: praudit [-lpx] [-r | -s] [-d del] "
+literal|"usage: praudit [-lnpx] [-r | -s] [-d del] "
 literal|"[file ...]\n"
 argument_list|)
 expr_stmt|;
@@ -253,11 +235,7 @@ name|bytesread
 argument_list|)
 condition|)
 break|break;
-if|if
-condition|(
-name|xml
-condition|)
-name|au_print_tok_xml
+name|au_print_flags_tok
 argument_list|(
 name|stdout
 argument_list|,
@@ -266,24 +244,7 @@ name|tok
 argument_list|,
 name|del
 argument_list|,
-name|raw
-argument_list|,
-name|shortfrm
-argument_list|)
-expr_stmt|;
-else|else
-name|au_print_tok
-argument_list|(
-name|stdout
-argument_list|,
-operator|&
-name|tok
-argument_list|,
-name|del
-argument_list|,
-name|raw
-argument_list|,
-name|shortfrm
+name|oflags
 argument_list|)
 expr_stmt|;
 name|bytesread
@@ -300,7 +261,11 @@ block|{
 if|if
 condition|(
 operator|!
-name|xml
+operator|(
+name|oflags
+operator|&
+name|AU_OFLAG_XML
+operator|)
 condition|)
 name|printf
 argument_list|(
@@ -379,7 +344,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"d:lprsx"
+literal|"d:lnprsx"
 argument_list|)
 operator|)
 operator|!=
@@ -409,6 +374,14 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+literal|'n'
+case|:
+name|oflags
+operator||=
+name|AU_OFLAG_NORESOLVE
+expr_stmt|;
+break|break;
+case|case
 literal|'p'
 case|:
 name|partial
@@ -421,15 +394,17 @@ literal|'r'
 case|:
 if|if
 condition|(
-name|shortfrm
+name|oflags
+operator|&
+name|AU_OFLAG_SHORT
 condition|)
 name|usage
 argument_list|()
 expr_stmt|;
 comment|/* Exclusive from shortfrm. */
-name|raw
-operator|=
-literal|1
+name|oflags
+operator||=
+name|AU_OFLAG_RAW
 expr_stmt|;
 break|break;
 case|case
@@ -437,23 +412,25 @@ literal|'s'
 case|:
 if|if
 condition|(
-name|raw
+name|oflags
+operator|&
+name|AU_OFLAG_RAW
 condition|)
 name|usage
 argument_list|()
 expr_stmt|;
 comment|/* Exclusive from raw. */
-name|shortfrm
-operator|=
-literal|1
+name|oflags
+operator||=
+name|AU_OFLAG_SHORT
 expr_stmt|;
 break|break;
 case|case
 literal|'x'
 case|:
-name|xml
-operator|=
-literal|1
+name|oflags
+operator||=
+name|AU_OFLAG_XML
 expr_stmt|;
 break|break;
 case|case
@@ -467,7 +444,9 @@ block|}
 block|}
 if|if
 condition|(
-name|xml
+name|oflags
+operator|&
+name|AU_OFLAG_XML
 condition|)
 name|au_print_xml_header
 argument_list|(
@@ -559,7 +538,9 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|xml
+name|oflags
+operator|&
+name|AU_OFLAG_XML
 condition|)
 name|au_print_xml_footer
 argument_list|(
