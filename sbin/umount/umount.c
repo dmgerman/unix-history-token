@@ -1720,11 +1720,18 @@ argument_list|(
 name|ai
 argument_list|)
 condition|)
+block|{
+name|free
+argument_list|(
+name|orignfsdirname
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1
 operator|)
 return|;
+block|}
 comment|/* First try to unmount using the file system ID. */
 name|snprintf
 argument_list|(
@@ -1814,11 +1821,18 @@ name|errno
 operator|!=
 name|ENOENT
 condition|)
+block|{
+name|free
+argument_list|(
+name|orignfsdirname
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1
 operator|)
 return|;
+block|}
 comment|/* Compatibility for old kernels. */
 if|if
 condition|(
@@ -1870,6 +1884,11 @@ argument_list|,
 name|sfs
 operator|->
 name|f_mntonname
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|orignfsdirname
 argument_list|)
 expr_stmt|;
 return|return
@@ -1963,6 +1982,11 @@ literal|"MOUNTPROG"
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|orignfsdirname
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1
@@ -2037,6 +2061,11 @@ literal|"RPCMNT_UMOUNT"
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|orignfsdirname
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1
@@ -2080,11 +2109,6 @@ name|free_mtab
 argument_list|()
 expr_stmt|;
 block|}
-name|free
-argument_list|(
-name|orignfsdirname
-argument_list|)
-expr_stmt|;
 name|auth_destroy
 argument_list|(
 name|clp
@@ -2098,6 +2122,11 @@ name|clp
 argument_list|)
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|orignfsdirname
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
