@@ -485,7 +485,7 @@ name|d_partition
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 		 * Figure out if we are using MBR or GPT - for GPT we 		 * set the partition to 0 since everything is a GPT slice. 		 */
+comment|/* 		 * If we cannot auto-detect the partition type then 		 * access the disk as a raw device. 		 */
 if|if
 condition|(
 name|dev
@@ -500,12 +500,22 @@ operator|&
 name|dev
 argument_list|)
 condition|)
+block|{
+name|dev
+operator|.
+name|d_slice
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|dev
 operator|.
 name|d_partition
 operator|=
-literal|255
+operator|-
+literal|1
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
