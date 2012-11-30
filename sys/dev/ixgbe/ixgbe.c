@@ -57,7 +57,7 @@ name|char
 name|ixgbe_driver_version
 index|[]
 init|=
-literal|"2.5.0 - 3"
+literal|"2.5.0 - 4"
 decl_stmt|;
 end_decl_stmt
 
@@ -25598,6 +25598,7 @@ argument_list|,
 literal|"Receive Length Errors"
 argument_list|)
 expr_stmt|;
+comment|/* Flow Control stats */
 name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
@@ -25606,7 +25607,7 @@ name|stat_list
 argument_list|,
 name|OID_AUTO
 argument_list|,
-literal|"link_xon_txd"
+literal|"xon_txd"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
@@ -25626,7 +25627,7 @@ name|stat_list
 argument_list|,
 name|OID_AUTO
 argument_list|,
-literal|"link_xon_rcvd"
+literal|"xon_recvd"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
@@ -25646,7 +25647,7 @@ name|stat_list
 argument_list|,
 name|OID_AUTO
 argument_list|,
-literal|"link_xoff_txd"
+literal|"xoff_txd"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
@@ -25666,7 +25667,7 @@ name|stat_list
 argument_list|,
 name|OID_AUTO
 argument_list|,
-literal|"link_xoff_rcvd"
+literal|"xoff_recvd"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
@@ -26298,147 +26299,6 @@ operator|->
 name|ptc1522
 argument_list|,
 literal|"1024-1522 byte frames transmitted"
-argument_list|)
-expr_stmt|;
-comment|/* FC Stats */
-name|SYSCTL_ADD_UQUAD
-argument_list|(
-name|ctx
-argument_list|,
-name|stat_list
-argument_list|,
-name|OID_AUTO
-argument_list|,
-literal|"fc_crc"
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|stats
-operator|->
-name|fccrc
-argument_list|,
-literal|"FC CRC Errors"
-argument_list|)
-expr_stmt|;
-name|SYSCTL_ADD_UQUAD
-argument_list|(
-name|ctx
-argument_list|,
-name|stat_list
-argument_list|,
-name|OID_AUTO
-argument_list|,
-literal|"fc_last"
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|stats
-operator|->
-name|fclast
-argument_list|,
-literal|"FC Last Error"
-argument_list|)
-expr_stmt|;
-name|SYSCTL_ADD_UQUAD
-argument_list|(
-name|ctx
-argument_list|,
-name|stat_list
-argument_list|,
-name|OID_AUTO
-argument_list|,
-literal|"fc_drpd"
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|stats
-operator|->
-name|fcoerpdc
-argument_list|,
-literal|"FCoE Packets Dropped"
-argument_list|)
-expr_stmt|;
-name|SYSCTL_ADD_UQUAD
-argument_list|(
-name|ctx
-argument_list|,
-name|stat_list
-argument_list|,
-name|OID_AUTO
-argument_list|,
-literal|"fc_pkts_rcvd"
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|stats
-operator|->
-name|fcoeprc
-argument_list|,
-literal|"FCoE Packets Received"
-argument_list|)
-expr_stmt|;
-name|SYSCTL_ADD_UQUAD
-argument_list|(
-name|ctx
-argument_list|,
-name|stat_list
-argument_list|,
-name|OID_AUTO
-argument_list|,
-literal|"fc_pkts_txd"
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|stats
-operator|->
-name|fcoeptc
-argument_list|,
-literal|"FCoE Packets Transmitted"
-argument_list|)
-expr_stmt|;
-name|SYSCTL_ADD_UQUAD
-argument_list|(
-name|ctx
-argument_list|,
-name|stat_list
-argument_list|,
-name|OID_AUTO
-argument_list|,
-literal|"fc_dword_rcvd"
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|stats
-operator|->
-name|fcoedwrc
-argument_list|,
-literal|"FCoE DWords Received"
-argument_list|)
-expr_stmt|;
-name|SYSCTL_ADD_UQUAD
-argument_list|(
-name|ctx
-argument_list|,
-name|stat_list
-argument_list|,
-name|OID_AUTO
-argument_list|,
-literal|"fc_dword_txd"
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|stats
-operator|->
-name|fcoedwtc
-argument_list|,
-literal|"FCoE DWords Transmitted"
 argument_list|)
 expr_stmt|;
 block|}
