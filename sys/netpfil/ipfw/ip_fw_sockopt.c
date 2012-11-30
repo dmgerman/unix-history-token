@@ -1592,9 +1592,13 @@ name|static_len
 operator|-=
 name|l
 expr_stmt|;
-name|ipfw_remove_dyn_children
+name|ipfw_expire_dyn_rules
 argument_list|(
+name|chain
+argument_list|,
 name|rule
+argument_list|,
+name|RESVD_SET
 argument_list|)
 expr_stmt|;
 name|rule
@@ -3747,6 +3751,8 @@ expr_stmt|;
 block|}
 name|ipfw_get_dynamic
 argument_list|(
+name|chain
+argument_list|,
 operator|&
 name|bp
 argument_list|,

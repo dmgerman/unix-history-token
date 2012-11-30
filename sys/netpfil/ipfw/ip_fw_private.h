@@ -493,11 +493,36 @@ begin_comment
 comment|/*  * The lock for dynamic rules is only used once outside the file,  * and only to release the result of lookup_dyn_rule().  * Eventually we may implement it with a callback on the function.  */
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|ip_fw_chain
+struct_decl|;
+end_struct_decl
+
+begin_function_decl
+name|void
+name|ipfw_expire_dyn_rules
+parameter_list|(
+name|struct
+name|ip_fw_chain
+modifier|*
+parameter_list|,
+name|struct
+name|ip_fw
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function_decl
 name|void
 name|ipfw_dyn_unlock
 parameter_list|(
-name|void
+name|ipfw_dyn_rule
+modifier|*
+name|q
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -593,6 +618,11 @@ begin_function_decl
 name|void
 name|ipfw_get_dynamic
 parameter_list|(
+name|struct
+name|ip_fw_chain
+modifier|*
+name|chain
+parameter_list|,
 name|char
 modifier|*
 modifier|*
@@ -608,35 +638,11 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ipfw_dyn_attach
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* uma_zcreate .... */
-end_comment
-
-begin_function_decl
-name|void
-name|ipfw_dyn_detach
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* uma_zdestroy ... */
-end_comment
-
-begin_function_decl
-name|void
 name|ipfw_dyn_init
 parameter_list|(
-name|void
+name|struct
+name|ip_fw_chain
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -975,6 +981,26 @@ parameter_list|(
 name|p
 parameter_list|)
 value|rw_wunlock(&(p)->rwmtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPFW_UH_RLOCK_ASSERT
+parameter_list|(
+name|_chain
+parameter_list|)
+value|rw_assert(&(_chain)->uh_lock, RA_RLOCKED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPFW_UH_WLOCK_ASSERT
+parameter_list|(
+name|_chain
+parameter_list|)
+value|rw_assert(&(_chain)->uh_lock, RA_WLOCKED)
 end_define
 
 begin_define
