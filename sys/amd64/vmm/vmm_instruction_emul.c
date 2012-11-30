@@ -244,6 +244,7 @@ literal|0x81
 index|]
 operator|=
 block|{
+comment|/* XXX Group 1 extended opcode - not just AND */
 operator|.
 name|op_byte
 operator|=
@@ -1041,7 +1042,20 @@ break|break;
 case|case
 literal|0x81
 case|:
-comment|/* 		 * AND reg (ModRM:reg) with immediate and store the 		 * result in reg 		 * 		 * 81/          and r/m32, imm32 		 * REX.W + 81/  and r/m64, imm32 sign-extended to 64 		 */
+comment|/* 		 * AND reg (ModRM:reg) with immediate and store the 		 * result in reg 		 * 		 * 81/          and r/m32, imm32 		 * REX.W + 81/  and r/m64, imm32 sign-extended to 64 		 * 		 * Currently, only the AND operation of the 0x81 opcode 		 * is implemented (ModRM:reg = b100). 		 */
+if|if
+condition|(
+operator|(
+name|vie
+operator|->
+name|reg
+operator|&
+literal|7
+operator|)
+operator|!=
+literal|4
+condition|)
+break|break;
 if|if
 condition|(
 name|vie
