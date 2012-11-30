@@ -5875,13 +5875,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|AUDIT_ARG_UPATH1
-argument_list|(
-name|td
-argument_list|,
-name|pathbuf
-argument_list|)
-expr_stmt|;
 comment|/* 		 * Try to find global path for path argument. 		 */
 name|NDINIT
 argument_list|(
