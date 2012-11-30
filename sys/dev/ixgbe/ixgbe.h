@@ -724,34 +724,6 @@ name|IXGBE_QUEUE_MIN_FREE
 value|32
 end_define
 
-begin_define
-define|#
-directive|define
-name|IXGBE_QUEUE_IDLE
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_QUEUE_WORKING
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_QUEUE_HUNG
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_QUEUE_DEPLETED
-value|8
-end_define
-
 begin_comment
 comment|/* Offload bits in mbuf flag */
 end_comment
@@ -1069,9 +1041,16 @@ decl_stmt|;
 name|u32
 name|me
 decl_stmt|;
-name|int
+enum|enum
+block|{
+name|IXGBE_QUEUE_IDLE
+block|,
+name|IXGBE_QUEUE_WORKING
+block|,
+name|IXGBE_QUEUE_HUNG
+block|, 	}
 name|queue_status
-decl_stmt|;
+enum|;
 name|int
 name|watchdog_time
 decl_stmt|;
