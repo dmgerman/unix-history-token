@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2012 NetApp, Inc.  * All rights reserved.  *  * Red
 end_comment
 
 begin_comment
-comment|/*  * bhyve ACPI table generator.  *  * Create the minimal set of ACPI tables required to boot FreeBSD (and  * hopefully other o/s's) by writing out ASL template files for each of  * the tables and the compiling them to AML with the Intel iasl compiler.  * The AML files are then read into guest memory.  *  *  The tables are placed in the guest's ROM area just below 1MB physical,  * above the MPTable.  *  *  Layout  *  ------  *   RSDP  ->   0xf0400    (36 bytes fixed)  *   RSDT  ->   0xf0440    (36 bytes + 4*N table addrs, 2 used)  *     MADT  ->   0xf04a0  (depends on #CPUs)  *     FADT  ->   0xf0600  (268 bytes)  *        FACS  ->   0xf0780 (64 bytes)  *        DSDT  ->   0xf0800 (variable - can go up to 0x100000)  */
+comment|/*  * bhyve ACPI table generator.  *  * Create the minimal set of ACPI tables required to boot FreeBSD (and  * hopefully other o/s's) by writing out ASL template files for each of  * the tables and the compiling them to AML with the Intel iasl compiler.  * The AML files are then read into guest memory.  *  *  The tables are placed in the guest's ROM area just below 1MB physical,  * above the MPTable.  *  *  Layout  *  ------  *   RSDP  ->   0xf0400    (36 bytes fixed)  *     RSDT  ->   0xf0440    (36 bytes + 4*N table addrs, 2 used)  *     XSDT  ->   0xf0480    (36 bytes + 8*N table addrs, 2 used)  *       MADT  ->   0xf0500  (depends on #CPUs)  *       FADT  ->   0xf0600  (268 bytes)  *         FACS  ->   0xf0780 (64 bytes)  *         DSDT  ->   0xf0800 (variable - can go up to 0x100000)  */
 end_comment
 
 begin_include
@@ -102,8 +102,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|XSDT_OFFSET
+value|0x080
+end_define
+
+begin_define
+define|#
+directive|define
 name|MADT_OFFSET
-value|0x0a0
+value|0x100
 end_define
 
 begin_define
@@ -340,7 +347,11 @@ name|EFPRINTF
 argument_list|(
 name|fp
 argument_list|,
-literal|"[0008]\t\tXSDT Address : 0000000000000000\n"
+literal|"[0008]\t\tXSDT Address : 00000000%08X\n"
+argument_list|,
+name|basl_acpi_base
+operator|+
+name|XSDT_OFFSET
 argument_list|)
 expr_stmt|;
 name|EFPRINTF
@@ -503,6 +514,158 @@ argument_list|(
 name|fp
 argument_list|,
 literal|"[0004]\t\tACPI Table Address 1 : %08X\n"
+argument_list|,
+name|basl_acpi_base
+operator|+
+name|FADT_OFFSET
+argument_list|)
+expr_stmt|;
+name|EFFLUSH
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+name|err_exit
+label|:
+return|return
+operator|(
+name|errno
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|basl_fwrite_xsdt
+parameter_list|(
+name|FILE
+modifier|*
+name|fp
+parameter_list|)
+block|{
+name|int
+name|err
+decl_stmt|;
+name|err
+operator|=
+literal|0
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"/*\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|" * bhyve XSDT template\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|" */\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0004]\t\tSignature : \"XSDT\"\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0004]\t\tTable Length : 00000000\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0001]\t\tRevision : 01\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0001]\t\tChecksum : 00\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0006]\t\tOem ID : \"BHYVE \"\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0008]\t\tOem Table ID : \"BVXSDT  \"\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0004]\t\tOem Revision : 00000001\n"
+argument_list|)
+expr_stmt|;
+comment|/* iasl will fill in the compiler ID/revision fields */
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0004]\t\tAsl Compiler ID : \"xxxx\"\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0004]\t\tAsl Compiler Revision : 00000000\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+comment|/* Add in pointers to the MADT and FADT */
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0004]\t\tACPI Table Address 0 : 00000000%08X\n"
+argument_list|,
+name|basl_acpi_base
+operator|+
+name|MADT_OFFSET
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0004]\t\tACPI Table Address 1 : 00000000%08X\n"
 argument_list|,
 name|basl_acpi_base
 operator|+
@@ -2245,7 +2408,7 @@ argument_list|(
 name|fp
 argument_list|,
 literal|"DefinitionBlock (\"bhyve_dsdt.aml\", \"DSDT\", 2,"
-literal|"\"BHYV\", \"BVDSDT\", 0x00000001)\n"
+literal|"\"BHYVE \", \"BVDSDT  \", 0x00000001)\n"
 argument_list|)
 expr_stmt|;
 name|EFPRINTF
@@ -3566,6 +3729,12 @@ block|{
 name|basl_fwrite_rsdt
 block|,
 name|RSDT_OFFSET
+block|}
+block|,
+block|{
+name|basl_fwrite_xsdt
+block|,
+name|XSDT_OFFSET
 block|}
 block|,
 block|{
