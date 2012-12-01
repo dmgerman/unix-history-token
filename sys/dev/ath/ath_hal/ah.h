@@ -634,6 +634,11 @@ init|=
 literal|245
 block|,
 comment|/* serialise register access on PCI */
+name|HAL_CAP_ENFORCE_TXOP
+init|=
+literal|246
+block|,
+comment|/* Enforce TXOP if supported */
 block|}
 name|HAL_CAPABILITY_TYPE
 typedef|;
