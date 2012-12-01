@@ -849,8 +849,10 @@ begin_struct
 struct|struct
 name|ixgbe_tx_buf
 block|{
-name|u32
-name|eop_index
+name|union
+name|ixgbe_adv_tx_desc
+modifier|*
+name|eop
 decl_stmt|;
 name|struct
 name|mbuf
