@@ -831,7 +831,7 @@ argument_list|,
 name|ndp
 operator|->
 name|ni_dirfd
-argument_list|, ,
+argument_list|,
 name|cnp
 operator|->
 name|cn_pnbuf
@@ -852,7 +852,7 @@ argument_list|,
 name|ndp
 operator|->
 name|ni_dirfd
-argument_list|, ,
+argument_list|,
 name|cnp
 operator|->
 name|cn_pnbuf
