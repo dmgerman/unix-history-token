@@ -44,6 +44,51 @@ begin_comment
 comment|/* **  In order to ensure that storage leaks are tracked, and to prevent **  conflicts between the sm_heap package and sasl, we tell sasl to **  use the following heap allocation functions.  Unfortunately, **  the sasl package incorrectly specifies the size of a block **  using unsigned long: for portability, it should be size_t. */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SASL_VERSION_FULL
+argument_list|)
+operator|&&
+name|SASL_VERSION_FULL
+operator|>=
+literal|0x02011a
+end_if
+
+begin_define
+define|#
+directive|define
+name|SM_SASL_SIZE_T
+value|size_t
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* defined(SASL_VERSION_FULL)&& SASL_VERSION_FULL>= 0x02011a */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SM_SASL_SIZE_T
+value|unsigned long
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(SASL_VERSION_FULL)&& SASL_VERSION_FULL>= 0x02011a */
+end_comment
+
 begin_decl_stmt
 name|void
 modifier|*
@@ -51,8 +96,7 @@ name|sm_sasl_malloc
 name|__P
 argument_list|(
 operator|(
-name|unsigned
-name|long
+name|SM_SASL_SIZE_T
 operator|)
 argument_list|)
 decl_stmt|;
@@ -66,11 +110,9 @@ name|sm_sasl_calloc
 name|__P
 argument_list|(
 operator|(
-name|unsigned
-name|long
+name|SM_SASL_SIZE_T
 operator|,
-name|unsigned
-name|long
+name|SM_SASL_SIZE_T
 operator|)
 argument_list|)
 decl_stmt|;
@@ -87,8 +129,7 @@ operator|(
 name|void
 operator|*
 operator|,
-name|unsigned
-name|long
+name|SM_SASL_SIZE_T
 operator|)
 argument_list|)
 decl_stmt|;
@@ -122,8 +163,7 @@ name|sm_sasl_malloc
 parameter_list|(
 name|size
 parameter_list|)
-name|unsigned
-name|long
+name|SM_SASL_SIZE_T
 name|size
 decl_stmt|;
 block|{
@@ -153,12 +193,10 @@ name|nelem
 parameter_list|,
 name|elemsize
 parameter_list|)
-name|unsigned
-name|long
+name|SM_SASL_SIZE_T
 name|nelem
 decl_stmt|;
-name|unsigned
-name|long
+name|SM_SASL_SIZE_T
 name|elemsize
 decl_stmt|;
 block|{
@@ -230,8 +268,7 @@ name|void
 modifier|*
 name|o
 decl_stmt|;
-name|unsigned
-name|long
+name|SM_SASL_SIZE_T
 name|size
 decl_stmt|;
 block|{
