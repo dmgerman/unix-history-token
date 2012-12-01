@@ -1312,10 +1312,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * AMD BIOS And Kernel Developer's Guides for CPU families starting with 10h  * have a requirement that all accesses to the memory mapped PCI configuration  * space are done using AX class of registers.  * Since other vendors do not currently have any contradicting requirements  * the AMD access pattern is applied universally.  */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -1334,6 +1330,10 @@ parameter_list|)
 define|\
 value|((base)				+	\ 	((((bus)& 0xff)<< 20)		|	\ 	(((slot)& 0x1f)<< 15)		|	\ 	(((func)& 0x7)<< 12)		|	\ 	((reg)& 0xfff)))
 end_define
+
+begin_comment
+comment|/*  * AMD BIOS And Kernel Developer's Guides for CPU families starting with 10h  * have a requirement that all accesses to the memory mapped PCI configuration  * space are done using AX class of registers.  * Since other vendors do not currently have any contradicting requirements  * the AMD access pattern is applied universally.  */
+end_comment
 
 begin_function
 specifier|static
