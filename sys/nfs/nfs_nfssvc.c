@@ -437,6 +437,10 @@ operator||
 name|NFSSVC_DUMPLOCKS
 operator||
 name|NFSSVC_BACKUPSTABLE
+operator||
+name|NFSSVC_SUSPENDNFSD
+operator||
+name|NFSSVC_RESUMENFSD
 operator|)
 operator|)
 operator|&&
